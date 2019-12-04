@@ -10,10 +10,10 @@
 </template>
 
 <script>
-import Header from "./Header";
-import sideBar from "./SideBar";
+import Header from "./header";
+import sideBar from "./sideBar";
 export default {
-  name: "Home.vue",
+  name: "home",
   components: {Header,sideBar}
 }
 
@@ -34,6 +34,7 @@ export default {
     height: calc(100% - 50px);
     box-sizing: border-box;
     transform: translateY(0);
+    padding: 20px
 }
 @media screen and (max-width: 1600px) {
     .content-box {

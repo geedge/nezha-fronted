@@ -11,11 +11,11 @@ export default new Router({
     },
     {
       path: '/login',
-      component: resolve => require(['../components/common/Login.vue'], resolve),
+      component: resolve => require(['../components/common/login.vue'], resolve),
     },
     {
       path: '/',
-      component: resolve => require(['../components/common/Home.vue'], resolve),
+      component: resolve => require(['../components/common/home.vue'], resolve),
       children: [
         {
           path: '/dashboard',
@@ -27,7 +27,11 @@ export default new Router({
         },
         {
           path: '/asset',
-          component: resolve => require(['../components/page/project/project.vue'], resolve),
+          component: resolve => require(['../components/page/asset/asset.vue'], resolve),
+        },
+        {
+          path: '/alarm',
+          component: resolve => require(['../components/page/config/account.vue'], resolve),
         }
       ]
     },

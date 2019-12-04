@@ -21,6 +21,12 @@
                     <el-menu-item index="2-2">选项2</el-menu-item>
                     <el-menu-item index="2-3">选项3</el-menu-item>
                 </el-submenu>
+                <el-submenu index="4">
+                    <template slot="title"><div @click="jumpTo('alarm')">{{$t('overall.asset')}}</div></template>
+                    <el-menu-item index="2-1">选项1</el-menu-item>
+                    <el-menu-item index="2-2">选项2</el-menu-item>
+                    <el-menu-item index="2-3">选项3</el-menu-item>
+                </el-submenu>
             </el-menu>
         </div>
         <div class="header-right">
@@ -91,7 +97,7 @@ export default {
 <style scoped>
 .submenu{
     padding-left: 50%;
-    width: 300px;
+    width: 400px;
     float: left;
 }
 .header {
@@ -101,7 +107,7 @@ export default {
     height: 60px;
     font-size: 22px;
     background-color: #ffffff;
-    z-index: 999;
+    z-index: 500;
     box-shadow: 0px 20px 13px -19px #5E5E5E;
 }
 .header-right {

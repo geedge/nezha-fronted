@@ -3,9 +3,9 @@
         <div class="cartTitle">
             <div>Project</div>
         </div>
-        <div v-for="{item} in arr" v-infinite-scroll="loadMore" infinite-scroll-disabled="busy" infinite-scroll-distance="1">
-            <div class="projectCard" :id="gett(item)"></div>
-        </div>
+<!--        <div v-for="{item} in arr" v-infinite-scroll="loadMore" infinite-scroll-disabled="busy" infinite-scroll-distance="1">-->
+<!--            <div class="projectCard" :id="gett(item)"></div>-->
+<!--        </div>-->
     </div>
 </template>
 
@@ -14,20 +14,20 @@ export default {
   name: "SiderBar",
   data(){
     return{
-      arr:[12,3,4,5,6,7,8,98,54]
+      // arr:[12,3,4,5,6,7,8,98,54]
     }
   },
   methods: {
-    gett: function (index) {
-      return "sdf" + index
-    },
-    loadMore() {
-      this.busy = true
-      setTimeout(() => {
-        this.page++
-      }, 1000)
-      this.arr.push('1')
-    }
+    // gett: function (index) {
+    //   return "sdf" + index
+    // },
+    // loadMore() {
+    //   this.busy = true
+    //   setTimeout(() => {
+    //     this.page++
+    //   }, 1000)
+    //   this.arr.push('1')
+    // }
   }
 }
 
