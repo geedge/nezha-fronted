@@ -32,3 +32,30 @@ html {
 .el-form-item__content .el-input{
     width: 90%;
 }
+
+.config-receiver-dropdown {
+  width: 550px;
+}
+.config-receiver-dropdown__btn {
+  display: inline-block;
+  margin-left: 7px;
+  float: right;
+  color: #60BEFF;
+  font-size: 13px
+}
+.config-receiver-dropdown__btn:hover {
+  color: #409EFF;
+}
+.config-receiver-dropdown__btn_delete {
+  color: #F98D9A;
+  font-size: 13px
+}
+.config-receiver-dropdown__btn_delete:hover {
+  color: #D96D7A;
+}
+.config-receiver-dropdown.is-multiple .el-select-dropdown__item.selected::after {
+  content: "" !important;
+}
+.config-receiver-dropdown__error-message {
+  color: #F98D9A;
+}
