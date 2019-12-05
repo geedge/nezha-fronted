@@ -11,7 +11,7 @@ module.exports = {
     assetsPublicPath: '/',
     proxyTable: {
       '/api': {
-        target: 'http://localhost:8088/nz-admin', //设置调用接口域名和端口号别忘了加http
+        target: 'http://192.168.40.247:8080/nz-admin', //设置调用接口域名和端口号别忘了加http
         changeOrigin: true,
         pathRewrite: {
           '^/api': '/' //这里理解成用‘/api’代替target里面的地址，组件中我们调接口时直接用/api代替

@@ -1,6 +1,6 @@
 import axios from 'axios'
 import qs from 'qs' //引入数据格式化
-
+axios.defaults.baseURL = 'http://192.168.40.247:8080/nz-admin';
 axios.interceptors.request.use(config => {
       config.headers = {
         "Content-Type": 'application/x-www-form-urlencoded',
@@ -31,6 +31,7 @@ export function post(url, params) {
     axios.post(url, params).then(response => {
       resolve(response.data)
     }).catch(err => {
+      console.info(err)
       reject(err.response.data)
     })
   })

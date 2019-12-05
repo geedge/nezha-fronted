@@ -24,7 +24,7 @@ export default {
 
 .content-box {
     position: absolute;
-    left: 300px;
+    left: 370px;
     right: 30px;
     top: 60px;
     bottom: 0;

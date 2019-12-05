@@ -3,9 +3,30 @@
     height: 100%;
   }
   .account-list {
-
+    height: calc(100% - 51px);
   }
-
+  .account-list-option {
+    cursor: pointer;
+    display: inline-block;
+    margin-right: 6px;
+  }
+  .account-list-option .el-icon-delete {
+    color: #F98D9A;
+  }
+  .account-list-option .el-icon-delete:hover {
+    color: #D96D7A;
+  }
+  .account-list-option .el-icon-view {
+    color: #60BEFF;
+  }
+  .account-list-option .el-icon-view:hover {
+    color: #409EFF;
+  }
+  .account-list-search {
+    float: right;
+    width: 220px;
+    margin: 15px 0;
+  }
   /* begin--右侧弹框*/
   .right-box {
     position: fixed;
@@ -17,15 +38,15 @@
     background-color: white;
     padding: 0 20px;
   }
-  .right-box_account {
+  .right-box-account {
     width: 550px;
-    height: calc(100% - 60px);
+    height: calc(100% - 61px);
   }
   /* begin--右侧弹框--顶部按钮*/
-  .right-box__top-btns {
+  .right-box-top-btns {
     text-align: center;
   }
-  .right-box__top-btn {
+  .right-box-top-btn {
     border-radius: 0 0 9px 9px;
     float: right;
     color: #656565;
@@ -37,7 +58,7 @@
     cursor: pointer;
     margin-left: 20px;
   }
-  .right-box__top-btn_full {
+  .right-box-top-btn-full {
     background-color: #656565;
     border: 1px solid #656565;
     border-top: none;
@@ -46,37 +67,37 @@
   /* end--右侧弹框--顶部按钮*/
 
   /* begin--右侧弹框--内容*/
-  .right-box__title {
+  .right-box-title {
     height: 30px;
     line-height: 40px;
     text-align: left;
   }
-  .right-box__form {
+  .right-box-form {
     margin-top: 35px;
   }
-  .right-box__form-row {
+  .right-box-form-row {
     margin-top: 25px;
   }
-  .right-box__form-label {
+  .right-box-form-label {
     margin-bottom: 8px;
     text-align: left;
   }
-  .right-box__form-content {
+  .right-box-form-content {
     height: 32px;
     line-height: 32px;
     text-align: left;
     width: 100%;
   }
-  .right-box__form-content-txt {
+  .right-box-form-content-txt {
     padding-left: 11px;
   }
-  .right-box__form-content .el-select {
-    width: calc(100% - 37px);
+  .right-box-form-content .el-select {
+    width: calc(100% - 38px);
     vertical-align: top;
   }
-  .el-select__add-btn {
-    width: 32px;
-    height: 32px;
+  .el-select-add-btn {
+    width: 33px;
+    height: 33px;
     display: inline-block;
     text-align: center;
     border-radius: 5px;
@@ -85,14 +106,14 @@
     color: #C7C9CE;
     transition: border-color .2s cubic-bezier(.645,.045,.355,1);
   }
-  .el-select__add-btn:hover {
+  .el-select-add-btn:hover {
     border: 1px solid #C0C4CC;
     cursor: pointer;
   }
   /* end--右侧弹框--内容*/
 
   /* begin--右侧弹框--底部按钮*/
-  .right-box__bottom-btns {
+  .right-box-bottom-btns {
     position: absolute;
     bottom: 0;
     width: 100%;
@@ -100,13 +121,13 @@
     left: 0;
     text-align: center;
   }
-  .right-box__bottom-btn:first-of-type {
+  .right-box-bottom-btn:first-of-type {
     border-bottom-left-radius: 8px;
   }
-  .right-box__bottom-btn:last-of-type{
+  .right-box-bottom-btn:last-of-type{
     border-bottom-right-radius: 8px;
   }
-  .right-box__bottom-btn {
+  .right-box-bottom-btn {
     display: inline-block;
     background-color: #656565;
     color: white;
@@ -115,15 +136,15 @@
     cursor: pointer;
     width: 100%;
   }
-  .config-receiver-dropdown__label_input {
+  .config-receiver-dropdown-label-input {
     width: 50%;
     display: inline-block;
   }
-  .right-box__bottom-btn_cancel {
+  .right-box-bottom-btn-cancel {
     background-color: #DADADA;
     color: #656565;
   }
-  .right-box__bottom-btn_50 {
+  .right-box-bottom-btn-50 {
     width: 50%;
   }
   /* end--右侧弹框--底部按钮*/
@@ -149,69 +170,86 @@
 <template>
     <div class="account">
         <div class="account-list">
-          <button @click="add">add button</button>
+            <el-input
+              class="account-list-search"
+              type="text"
+              :placeholder="$t('overall.search')"
+              size="small"
+            ></el-input>
             <el-table
                   :data="tableData"
                   border
-                  style="width: 100%">
+                  height="calc(100% - 65px)"
+                  style="width: 100%;">
                 <el-table-column
                   v-for="(item, index) in tableTitle"
                   v-if="item.show"
                   :width="item.width"
-                  :key="`col_${index}`"
+                  :key="`col-${index}`"
                   :label="item.label"
                 >
                     <template slot-scope="scope" :column="item">
-                        <div v-if="item.prop == 'option'">
-                            <a @click="del(scope.row)">Delete</a>
-                            <a @click="detail(scope.row)">Detail</a>
-                            <a @click="edit(scope.row)">Edit</a>
+                        <div v-if="item.prop == 'option'" class="account-list-options">
+                            <span @click="del(scope.row)" class="account-list-option"><i class="el-icon-delete"></i></span>
+                            <span @click="detail(scope.row)" class="account-list-option"><i class="el-icon-view"></i></span>
+                            <span @click="edit(scope.row)" class="account-list-option"><i class="el-icon-edit-outline"></i></span>
                         </div>
-                        <span v-if="item.prop == 'lang'">
+                        <span v-else-if="item.prop == 'lang'">
                             {{scope.row[item.prop] == 'en' ? 'English' : ''}}
                             {{scope.row[item.prop] == 'zh' ? '中文' : ''}}
                             {{scope.row[item.prop] == 'ru' ? 'русский' : ''}}
+                        </span>
+                        <span v-else-if="item.prop == 'receiver'">
+                            <template v-for="rec in scope.row[item.prop]">{{rec.name}}&nbsp;&nbsp;</template>
+                        </span>
+                        <span v-else-if="item.prop == 'status'">
+                            <el-switch
+                              v-model="scope.row[item.prop]"
+                              active-value="1"
+                              inactive-value="0">
+                            </el-switch>
                         </span>
                         <span v-else>{{scope.row[item.prop]}}</span>
                     </template>
                 </el-table-column>
             </el-table>
         </div>
+        <Pagination :pageObj="pageObj" @pageNo='pageNo' @pageSize='pageSize' ref="Pagination"></Pagination>
         <transition name="right-box">
-            <div class="right-box right-box_account" v-if="rightBox.show">
+            <div class="right-box right-box-account" v-if="rightBox.show">
                 <!-- begin--顶部按钮-->
-                <div class="right-box__top-btns">
-                    <div class="right-box__top-btn right-box__top-btn_full" @click="esc">
-                        <div class="right-box__btn-icon">
+                <div class="right-box-top-btns">
+                    <div class="right-box-top-btn right-box-top-btn-full" @click="esc(user.userId)">
+                        <div class="right-box-btn-icon">
                             <i class="el-icon-close"></i>
                         </div>
-                        <span>Esc</span>
+                        <span>{{$t('overall.esc')}}</span>
                     </div>
-                    <div class="right-box__top-btn right-box__top-btn_full" @click="saveOrToEdit">
-                        <div class="right-box__btn-icon">
+                    <div class="right-box-top-btn right-box-top-btn-full" @click="saveOrToEdit">
+                        <div class="right-box-btn-icon">
                             <i class="el-icon-edit-outline"></i>
                         </div>
-                        <span v-if="rightBox.isEdit">Save</span>
-                        <span v-else>Edit</span>
+                        <span v-if="rightBox.isEdit">{{$t('overall.save')}}</span>
+                        <span v-else>{{$t('overall.edit')}}</span>
                     </div>
-                    <div class="right-box__top-btn" v-if="rightBox.isEdit && user.userId != ''">
-                        <div class="right-box__btn-icon">
+                    <div class="right-box-top-btn" v-if="rightBox.isEdit && user.userId != ''">
+                        <div class="right-box-btn-icon">
                             <i class="el-icon-delete"></i>
                         </div>
-                        <span>Delete</span>
+                        <span>{{$t('overall.delete')}}</span>
                     </div>
                 </div>
                 <!-- end--顶部按钮-->
 
                 <!-- begin--标题-->
-                <div class="right-box__title">{{rightBox.title}}</div>
+                <div class="right-box-title">{{rightBox.title}}</div>
                 <!-- end--标题-->
 
                 <!-- begin--表单-->
-                <div class="right-box__form">
-                    <div class="right-box__form-row">
-                        <div class="right-box__form-label">Account</div>
-                        <div class="right-box__form-content">
+                <div class="right-box-form">
+                    <div class="right-box-form-row">
+                        <div class="right-box-form-label">{{$t('config.account.account')}}</div>
+                        <div class="right-box-form-content">
                             <el-input
                               v-if="rightBox.isEdit"
                               type="text"
@@ -221,12 +259,12 @@
                               show-word-limit
                               size="small"
                             ></el-input>
-                            <div v-if="!rightBox.isEdit" class="right-box__form-content-txt">{{user.username}}</div>
+                            <div v-if="!rightBox.isEdit" class="right-box-form-content-txt">{{user.username}}</div>
                         </div>
                     </div>
-                    <div class="right-box__form-row">
-                        <div class="right-box__form-label">E-mail</div>
-                        <div class="right-box__form-content">
+                    <div class="right-box-form-row">
+                        <div class="right-box-form-label">E-mail</div>
+                        <div class="right-box-form-content">
                             <el-input
                               type="text"
                               v-if="rightBox.isEdit"
@@ -234,51 +272,54 @@
                               v-model="user.email"
                               size="small"
                             ></el-input>
-                          <div v-if="!rightBox.isEdit" class="right-box__form-content-txt">{{user.email}}</div>
+                          <div v-if="!rightBox.isEdit" class="right-box-form-content-txt">{{user.email}}</div>
                         </div>
                     </div>
-                    <div class="right-box__form-row">
-                        <div class="right-box__form-label">Receiver</div>
-                        <div class="right-box__form-content">
-                            <el-select popper-class="config-receiver-dropdown" multiple v-model="user.receiver" placeholder="" v-if="rightBox.isEdit" size="small">
+                    <div class="right-box-form-row">
+                        <div class="right-box-form-label">{{$t('config.account.receiver')}}</div>
+                        <div class="right-box-form-content">
+                            <el-select value-key="id" popper-class="config-receiver-dropdown" multiple v-model="user.receiver" placeholder="" v-if="rightBox.isEdit" size="small">
                                 <el-option
                                   @click.native="blurEditReceiver()"
                                   v-for="item in receiverData"
                                   :key="item.id"
                                   :label="item.name"
-                                  :value="item.id">
-                                    <span class="config-receiver-dropdown__label_txt" v-if="!item.isEdit">{{item.name}}</span>
-                                    <span class="config-receiver-dropdown__label_input" v-if="item.isEdit" @click.stop="stopFun">
+                                  :value="item">
+                                    <span class="config-receiver-dropdown-label-txt" v-if="!item.isEdit">{{item.name}}</span>
+                                    <span class="config-receiver-dropdown-label-input" v-if="item.isEdit" @click.stop="stopFun">
                                         <el-input
                                           type="text"
                                           v-model="item.name"
                                           size="mini"
                                         ></el-input>
                                     </span>
-                                    <span class="config-receiver-dropdown__error-message">{{item.errorMessage}}</span>
-                                    <span class="config-receiver-dropdown__btn" @click.stop="toEditReceiver(item)">
+                                    <span class="config-receiver-dropdown-error-message">{{item.errorMessage}}</span>
+                                    <span class="config-receiver-dropdown-btn" @click.stop="toEditReceiver(item)">
                                         <i class="el-icon-edit-outline" v-if="!item.isEdit"></i>
                                         <i class="el-icon-check" v-if="item.isEdit"></i>
                                     </span>
-                                    <span class="config-receiver-dropdown__btn config-receiver-dropdown__btn_delete" @click.stop="toDelReceiver(item)"><i class="el-icon-delete"></i></span>
+                                    <span class="config-receiver-dropdown-btn config-receiver-dropdown-btn-delete" @click.stop="toDelReceiver(item)"><i class="el-icon-delete"></i></span>
                                 </el-option>
                             </el-select>
-                            <div class="el-select__add-btn" v-if="rightBox.isEdit">
+                            <div class="el-select-add-btn" v-if="rightBox.isEdit">
                                 <span class="el-icon-plus"></span>
+                            </div>
+                            <div class="right-box-form-content-txt" v-if="!rightBox.isEdit">
+                                <template v-for="rec in user.receiver">{{rec.name}}</template>
                             </div>
                         </div>
                     </div>
-                    <div class="right-box__form-row">
-                        <div class="right-box__form-label">Language</div>
-                        <div class="right-box__form-content">
+                    <div class="right-box-form-row">
+                        <div class="right-box-form-label">{{$t('config.account.language')}}</div>
+                        <div class="right-box-form-content">
                             <el-radio v-model="user.lang" label="en" :disabled="!rightBox.isEdit && user.lang != 'en'">English</el-radio>
                             <el-radio v-model="user.lang" label="zh" :disabled="!rightBox.isEdit && user.lang != 'zh'">中文</el-radio>
-                            <el-radio v-model="user.lang" label="ru" disabled>русский（暂不支持）</el-radio>
+                            <el-radio v-model="user.lang" label="ru" disabled>русский（{{$t('config.account.notCurrentlySupport')}}）</el-radio>
                         </div>
                     </div>
-                    <div class="right-box__form-row">
-                        <div class="right-box__form-label">Enable</div>
-                        <div class="right-box__form-content">
+                    <div class="right-box-form-row">
+                        <div class="right-box-form-label">{{$t('config.account.enable')}}</div>
+                        <div class="right-box-form-content">
                             <el-switch
                               v-model="user.status"
                               :disabled="!rightBox.isEdit"
@@ -287,18 +328,18 @@
                             </el-switch>
                         </div>
                     </div>
-                    <div class="right-box__form-row" v-if="!rightBox.isEdit">
-                        <div class="right-box__form-label">Create Time</div>
-                        <div class="right-box__form-content">
-                            <div class="right-box__form-content-txt">{{user.createTime}}</div>
+                    <div class="right-box-form-row" v-if="!rightBox.isEdit">
+                        <div class="right-box-form-label">{{$t('config.account.createTime')}}</div>
+                        <div class="right-box-form-content">
+                            <div class="right-box-form-content-txt">{{user.createTime}}</div>
                         </div>
                     </div>
                 </div>
                 <!-- end--表单-->
 
                 <!-- begin--底部按钮-->
-                <div class="right-box__bottom-btns">
-                    <div @click="esc" :class="{'right-box__bottom-btn_50': rightBox.isEdit}" class="right-box__bottom-btn right-box__bottom-btn_cancel">Cancel</div><div v-if="rightBox.isEdit" class="right-box__bottom-btn right-box__bottom-btn_50">{{user.userId == '' ? 'Create' : 'Save'}}</div>
+                <div class="right-box-bottom-btns">
+                    <div @click="esc(user.userId)" :class="{'right-box-bottom-btn-50': rightBox.isEdit}" class="right-box-bottom-btn right-box-bottom-btn-cancel">{{$t('overall.cancel')}}</div><div v-if="rightBox.isEdit" class="right-box-bottom-btn right-box-bottom-btn-50">{{user.userId == '' ? $t('overall.create') : $t('overall.save')}}</div>
                 </div>
                 <!-- end--底部按钮-->
 
@@ -326,6 +367,11 @@ export default {
         receiver: [],
         lang: ''
       },
+      pageObj: {
+        pageNo: 1,
+        pageSize: 20,
+        total:13
+      },
       tableTitle: [
         {
           label: 'ID',
@@ -333,37 +379,37 @@ export default {
           show: true,
           width: 80
         }, {
-          label: 'Account',
+          label: this.$t("config.account.account"),
           prop: 'username',
           show: true,
-          width: 250
+          width: 240
         }, {
           label: 'E-mail',
           prop: 'email',
           show: true,
-          width: 250
+          width: 240
         }, {
-          label: 'Language',
+          label: this.$t("config.account.language"),
           prop: 'lang',
           show: true,
           width: 200
         }, {
-          label: 'Receiver',
+          label: this.$t('config.account.receiver'),
           prop: 'receiver',
           show: true,
-          width: 250
+          width: 240
         }, {
-          label: 'Create Time',
+          label: this.$t('config.account.createTime'),
           prop: 'createTime',
           show: true,
-          width: 250
+          width: 240
         }, {
-          label: 'Enable',
+          label: this.$t('config.account.enable'),
           prop: 'status',
           show: true,
           width: 100
         }, {
-          label: 'Option',
+          label: this.$t('config.account.option'),
           prop: 'option',
           show: true,
         }
@@ -373,7 +419,13 @@ export default {
         username: '王小虎1',
         email: 'c92c@qq.com',
         lang: 'en',
-        receiver: 'A01',
+        receiver: [{
+          id: '1',
+          name: 'group1'
+        }, {
+          id: '2',
+          name: 'group2'
+        }],
         createTime: '2019-11-28  21:39:05',
         status: '1'
       }, {
@@ -381,7 +433,13 @@ export default {
         username: '王小虎2',
         email: 'c92c@qq.com',
         lang: 'en',
-        receiver: 'A02',
+        receiver: [{
+          id: '1',
+          name: 'group1'
+        }, {
+          id: '2',
+          name: 'group2'
+        }],
         createTime: '2019-11-28  21:39:05',
         status: '0'
       }, {
@@ -389,7 +447,13 @@ export default {
         username: '王小虎3',
         email: 'c92c@qq.com',
         lang: 'en',
-        receiver: 'A03',
+        receiver: [{
+          id: '1',
+          name: 'group1'
+        }, {
+          id: '2',
+          name: 'group2'
+        }],
         createTime: '2019-11-28  21:39:05',
         status: '1'
       }, {
@@ -397,7 +461,13 @@ export default {
         username: '王小虎4',
         email: 'c92c@qq.com',
         lang: 'zh',
-        receiver: 'A04',
+        receiver: [{
+          id: '1',
+          name: 'group1'
+        }, {
+          id: '2',
+          name: 'group2'
+        }],
         createTime: '2019-11-28  21:39:05',
         status: '1'
       }, {
@@ -405,7 +475,13 @@ export default {
         username: '王小虎5',
         email: 'c92c@qq.com',
         lang: 'en',
-        receiver: 'A05',
+        receiver: [{
+          id: '1',
+          name: 'group1'
+        }, {
+          id: '2',
+          name: 'group2'
+        }],
         createTime: '2019-11-28  21:39:05',
         status: '1'
       }, {
@@ -413,7 +489,13 @@ export default {
         username: '王小虎6',
         email: 'c92c@qq.com',
         lang: 'en',
-        receiver: 'A06',
+        receiver: [{
+          id: '1',
+          name: 'group1'
+        }, {
+          id: '2',
+          name: 'group2'
+        }],
         createTime: '2019-11-28  21:39:05',
         status: '1'
       }, {
@@ -421,7 +503,13 @@ export default {
         username: '王小虎7',
         email: 'c92c@qq.com',
         lang: 'en',
-        receiver: 'A07',
+        receiver: [{
+          id: '1',
+          name: 'group1'
+        }, {
+          id: '2',
+          name: 'group2'
+        }],
         createTime: '2019-11-28  21:39:05',
         status: '1'
       }, {
@@ -429,7 +517,17 @@ export default {
         username: '王小虎8',
         email: 'c92c@qq.com',
         lang: 'en',
-        receiver: 'A08',
+        receiver: [{
+          id: '1',
+          name: 'group1'
+        }, {
+          id: '2',
+          name: 'group2'
+        }, {
+          id: '5',
+          isEdit: false,
+          name: '小组啊小组5'
+        }],
         createTime: '2019-11-28  21:39:05',
         status: '1'
       }, {
@@ -437,7 +535,13 @@ export default {
         username: '王小虎9',
         email: 'c92c@qq.com',
         lang: 'en',
-        receiver: 'A09',
+        receiver: [{
+          id: '1',
+          name: 'group1'
+        }, {
+          id: '2',
+          name: 'group2'
+        }],
         createTime: '2019-11-28  21:39:05',
         status: '1'
       }, {
@@ -445,7 +549,13 @@ export default {
         username: '王小虎',
         email: 'c92c@qq.com',
         lang: 'en',
-        receiver: 'A01',
+        receiver: [{
+          id: '1',
+          name: 'group1'
+        }, {
+          id: '2',
+          name: 'group2'
+        }],
         createTime: '2019-11-28  21:39:05',
         status: '1'
       }, {
@@ -453,7 +563,69 @@ export default {
         username: '王小虎',
         email: 'c92c@qq.com',
         lang: 'en',
-        receiver: 'A01',
+        receiver: [{
+          id: '1',
+          name: 'group1'
+        }, {
+          id: '2',
+          name: 'group2'
+        }],
+        createTime: '2019-11-28  21:39:05',
+        status: '1'
+      }, {
+        id: '223',
+        username: '王小虎',
+        email: 'c92c@qq.com',
+        lang: 'en',
+        receiver: [{
+          id: '1',
+          name: 'group1'
+        }, {
+          id: '2',
+          name: 'group2'
+        }],
+        createTime: '2019-11-28  21:39:05',
+        status: '1'
+      }, {
+        id: '224',
+        username: '王小虎',
+        email: 'c92c@qq.com',
+        lang: 'en',
+        receiver: [{
+          id: '1',
+          name: 'group1'
+        }, {
+          id: '2',
+          name: 'group2'
+        }],
+        createTime: '2019-11-28  21:39:05',
+        status: '1'
+      }, {
+        id: '226',
+        username: '王小虎',
+        email: 'c92c@qq.com',
+        lang: 'en',
+        receiver: [{
+          id: '1',
+          name: 'group1'
+        }, {
+          id: '2',
+          name: 'group2'
+        }],
+        createTime: '2019-11-28  21:39:05',
+        status: '1'
+      }, {
+        id: '225',
+        username: '王小虎',
+        email: 'c92c@qq.com',
+        lang: 'en',
+        receiver: [{
+          id: '1',
+          name: 'group1'
+        }, {
+          id: '2',
+          name: 'group2'
+        }],
         createTime: '2019-11-28  21:39:05',
         status: '1'
       }, {
@@ -461,7 +633,13 @@ export default {
         username: '王小虎',
         email: 'c92c@qq.com',
         lang: 'en',
-        receiver: 'A01',
+        receiver: [{
+          id: '1',
+          name: 'group1'
+        }, {
+          id: '2',
+          name: 'group2'
+        }],
         createTime: '2019-11-28  21:39:05',
         status: '1'
       }, {
@@ -469,19 +647,28 @@ export default {
         username: '王小虎',
         email: 'c92c@qq.com',
         lang: 'en',
-        receiver: 'A01',
+        receiver: [{
+          id: '1',
+          name: 'group1'
+        }, {
+          id: '2',
+          name: 'group2'
+        }, {
+          id: '3',
+          name: '小组3'
+        }],
         createTime: '2019-11-28  21:39:05',
         status: '1'
       }],
       receiverData: [{
         id: '1',
         isEdit: false,
-        name: '小组1',
+        name: 'group1',
         description: '小组1desc'
       }, {
         id: '2',
         isEdit: false,
-        name: '小组啊小组的小组2',
+        name: 'group2',
         description: '小组2desc'
       }, {
         id: '3',
@@ -508,29 +695,29 @@ export default {
   },
   methods: {
     edit: function(u) {
-      this.user = u;
+      this.user = Object.assign({}, u);
       this.rightBox.isEdit = true;
-      this.rightBox.title = "Edit  Account  ID：" + u.id;
+      this.rightBox.title = this.$t("config.account.editAccount") + "  ID：" + u.id;
       this.rightBox.show = true;
     },
     del: function(u) {
     },
     detail: function(u) {
-      this.user = u;
+      this.user = Object.assign({}, u);
       this.rightBox.isEdit = false;
-      this.rightBox.title = "Account  ID：" + u.id;
+      this.rightBox.title = this.$t("config.account.account") + "  ID：" + u.id;
       this.rightBox.show = true;
     },
     add: function() {
       this.cleanUser();
       this.rightBox.isEdit = true;
-      this.rightBox.title = "Create  Account";
+      this.rightBox.title = this.$t("config.account.createAccount");
       this.rightBox.show = true;
     },
     saveOrToEdit: function() {
       if (!this.rightBox.isEdit) {
         this.rightBox.isEdit = true;
-        this.rightBox.title = "Edit  Account  ID：" + this.user.id;
+        this.rightBox.title = this.$t("config.account.editAccount") + "  ID：" + this.user.id;
       }
     },
     toEditReceiver: function(item) {
@@ -590,8 +777,12 @@ export default {
         email: '',
         status: '1',
         createTime: '',
+        receiver: [],
         lang: 'en'
       }
+    },
+    getUserById: function(userId) {
+
     }
   },
   mounted() {
