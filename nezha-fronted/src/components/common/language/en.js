@@ -3,7 +3,14 @@ const en = {
   overall:{
     dashboard:'dashboard',
     project:'project',
-    asset:'asset'
+    asset:'asset',
+    create: 'Create',
+    edit: 'Edit',
+    delete: 'Delete',
+    esc: 'Esc',
+    cancel: 'Cancel',
+    save: 'Save',
+    search: 'Search'
   },
   asset:{
     tableTitle: {
@@ -28,6 +35,23 @@ const en = {
       endPoint: 'EndPoint',
       alarm: 'Alarm',
     },
+  },
+  config: {
+    account: {
+      //列表表头
+      account: "Account",
+      language: "Language",
+      receiver: "Receiver",
+      createTime: "Create Time",
+      enable: "Enable",
+      option: "Option",
+
+      //侧滑框
+      accountId: "Accound ID",
+      createAccount: "Create Account",
+      editAccount: "Edit Account",
+      notCurrentlySupport: 'Not currently supported'
+    }
   },
   ...enLocale
 }
