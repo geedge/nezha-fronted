@@ -27,10 +27,21 @@
                         </el-menu-item>
                     </template>
                 </el-submenu>
-                <el-submenu index="4">
+                <!--<el-submenu index="4">
                     <template slot="title">
                         <div @click="jumpTo('alarm')">{{$t('overall.alarm')}}</div>
                     </template>
+                </el-submenu>-->
+                <el-submenu index="5">
+                    <template slot="title">
+                        <div @click="jumpTo('account')">{{$t('overall.config')}}</div>
+                    </template>
+                    <el-menu-item index="1">
+                        <div @click="jumpTo('account')">{{$t('config.account.account')}}</div>
+                    </el-menu-item>
+                    <el-menu-item index="2">
+                        <div @click="jumpTo('promServer')">Prometheus Server</div>
+                    </el-menu-item>
                 </el-submenu>
             </el-menu>
 
@@ -80,7 +91,8 @@ export default {
   },
   methods: {
     jumpTo(data,id) {
-      this.$store.state.assetSelect = id
+      this.$store.state.assetData.moduleData = data
+      this.$store.state.assetData.selectedData = id
       this.$router.push({
         path: "/" + data,
         query: {

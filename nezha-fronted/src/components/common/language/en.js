@@ -4,6 +4,7 @@ const en = {
     dashboard:'dashboard',
     project:'project',
     asset:'asset',
+    config:'config',
     create: 'Create',
     edit: 'Edit',
     delete: 'Delete',
@@ -51,7 +52,13 @@ const en = {
       createAccount: "Create Account",
       editAccount: "Edit Account",
       notCurrentlySupport: 'Not currently supported'
-    }
+    },
+    promServer: {
+      //侧滑框
+      promId: "Prometheus Server ID",
+      createProm: "Create Prometheus Server",
+      editProm: "Edit Prometheus Server"
+    },
   },
   ...enLocale
 }

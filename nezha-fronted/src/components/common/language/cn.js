@@ -4,6 +4,7 @@ const cn = {
     dashboard:'仪表盘',
     project:'工程',
     asset:'资产',
+    config:'设置',
     create: '新增',
     edit: '修改',
     delete: '删除',
@@ -51,7 +52,13 @@ const cn = {
       createAccount: "新增用户",
       editAccount: "修改用户",
       notCurrentlySupport: '暂不支持'
-    }
+    },
+    promServer: {
+      //侧滑框
+      promId: "Prometheus Server ID",
+      createProm: "新增Prometheus Server",
+      editProm: "修改Prometheus Server"
+    },
   },
   ...zhLocale
 }

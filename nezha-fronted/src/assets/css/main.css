@@ -33,29 +33,29 @@ html {
     width: 90%;
 }
 
-.config-receiver-dropdown {
+.config-dropdown {
   width: 550px;
 }
-.config-receiver-dropdown-btn {
+.config-dropdown-btn {
   display: inline-block;
   margin-left: 7px;
   float: right;
   color: #60BEFF;
   font-size: 13px
 }
-.config-receiver-dropdown-btn:hover {
+.config-dropdown-btn:hover {
   color: #409EFF;
 }
-.config-receiver-dropdown-btn-delete {
+.config-dropdown-btn-delete {
   color: #F98D9A;
   font-size: 13px
 }
-.config-receiver-dropdown-btn-delete:hover {
+.config-dropdown-btn-delete:hover {
   color: #D96D7A;
 }
-.config-receiver-dropdown.is-multiple .el-select-dropdown__item.selected::after {
+.config-dropdown.is-multiple .el-select-dropdown__item.selected::after {
   content: "" !important;
 }
-.config-receiver-dropdown-error-message {
+.config-dropdown-error-message {
   color: #F98D9A;
 }

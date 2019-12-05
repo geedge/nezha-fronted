@@ -136,7 +136,7 @@
     cursor: pointer;
     width: 100%;
   }
-  .config-receiver-dropdown-label-input {
+  .config-dropdown-label-input {
     width: 50%;
     display: inline-block;
   }
@@ -219,7 +219,7 @@
             <div class="right-box right-box-account" v-if="rightBox.show">
                 <!-- begin--顶部按钮-->
                 <div class="right-box-top-btns">
-                    <div class="right-box-top-btn right-box-top-btn-full" @click="esc(user.userId)">
+                    <div class="right-box-top-btn right-box-top-btn-full" @click="esc()">
                         <div class="right-box-btn-icon">
                             <i class="el-icon-close"></i>
                         </div>
@@ -278,27 +278,27 @@
                     <div class="right-box-form-row">
                         <div class="right-box-form-label">{{$t('config.account.receiver')}}</div>
                         <div class="right-box-form-content">
-                            <el-select value-key="id" popper-class="config-receiver-dropdown" multiple v-model="user.receiver" placeholder="" v-if="rightBox.isEdit" size="small">
+                            <el-select value-key="id" popper-class="config-dropdown" multiple v-model="user.receiver" placeholder="" v-if="rightBox.isEdit" size="small">
                                 <el-option
                                   @click.native="blurEditReceiver()"
                                   v-for="item in receiverData"
                                   :key="item.id"
                                   :label="item.name"
                                   :value="item">
-                                    <span class="config-receiver-dropdown-label-txt" v-if="!item.isEdit">{{item.name}}</span>
-                                    <span class="config-receiver-dropdown-label-input" v-if="item.isEdit" @click.stop="stopFun">
+                                    <span class="config-dropdown-label-txt" v-if="!item.isEdit">{{item.name}}</span>
+                                    <span class="config-dropdown-label-input" v-if="item.isEdit" @click.stop="stopFun">
                                         <el-input
                                           type="text"
                                           v-model="item.name"
                                           size="mini"
                                         ></el-input>
                                     </span>
-                                    <span class="config-receiver-dropdown-error-message">{{item.errorMessage}}</span>
-                                    <span class="config-receiver-dropdown-btn" @click.stop="toEditReceiver(item)">
+                                    <span class="config-dropdown-error-message">{{item.errorMessage}}</span>
+                                    <span class="config-dropdown-btn" @click.stop="toEditReceiver(item)">
                                         <i class="el-icon-edit-outline" v-if="!item.isEdit"></i>
                                         <i class="el-icon-check" v-if="item.isEdit"></i>
                                     </span>
-                                    <span class="config-receiver-dropdown-btn config-receiver-dropdown-btn-delete" @click.stop="toDelReceiver(item)"><i class="el-icon-delete"></i></span>
+                                    <span class="config-dropdown-btn config-dropdown-btn-delete" @click.stop="toDelReceiver(item)"><i class="el-icon-delete"></i></span>
                                 </el-option>
                             </el-select>
                             <div class="el-select-add-btn" v-if="rightBox.isEdit">
@@ -339,7 +339,7 @@
 
                 <!-- begin--底部按钮-->
                 <div class="right-box-bottom-btns">
-                    <div @click="esc(user.userId)" :class="{'right-box-bottom-btn-50': rightBox.isEdit}" class="right-box-bottom-btn right-box-bottom-btn-cancel">{{$t('overall.cancel')}}</div><div v-if="rightBox.isEdit" class="right-box-bottom-btn right-box-bottom-btn-50">{{user.userId == '' ? $t('overall.create') : $t('overall.save')}}</div>
+                    <div @click="esc()" :class="{'right-box-bottom-btn-50': rightBox.isEdit}" class="right-box-bottom-btn right-box-bottom-btn-cancel">{{$t('overall.cancel')}}</div><div v-if="rightBox.isEdit" class="right-box-bottom-btn right-box-bottom-btn-50">{{user.userId == '' ? $t('overall.create') : $t('overall.save')}}</div>
                 </div>
                 <!-- end--底部按钮-->
 
@@ -662,32 +662,26 @@ export default {
       }],
       receiverData: [{
         id: '1',
-        isEdit: false,
         name: 'group1',
         description: '小组1desc'
       }, {
         id: '2',
-        isEdit: false,
         name: 'group2',
         description: '小组2desc'
       }, {
         id: '3',
-        isEdit: false,
         name: '小组3',
         description: '小组3desc'
       }, {
         id: '4',
-        isEdit: false,
         name: '小组4',
         description: '小组4desc'
       }, {
         id: '5',
-        isEdit: false,
         name: '小组啊小组5',
         description: '小组5desc'
       }, {
         id: '6',
-        isEdit: false,
         name: '小组6',
         description: '小组6desc'
       }]
@@ -697,7 +691,7 @@ export default {
     edit: function(u) {
       this.user = Object.assign({}, u);
       this.rightBox.isEdit = true;
-      this.rightBox.title = this.$t("config.account.editAccount") + "  ID：" + u.id;
+      this.rightBox.title = this.$t("config.account.editAccount") + "  ID：" + u.userId;
       this.rightBox.show = true;
     },
     del: function(u) {
@@ -705,7 +699,7 @@ export default {
     detail: function(u) {
       this.user = Object.assign({}, u);
       this.rightBox.isEdit = false;
-      this.rightBox.title = this.$t("config.account.account") + "  ID：" + u.id;
+      this.rightBox.title = this.$t("config.account.account") + "  ID：" + u.userId;
       this.rightBox.show = true;
     },
     add: function() {
@@ -717,7 +711,7 @@ export default {
     saveOrToEdit: function() {
       if (!this.rightBox.isEdit) {
         this.rightBox.isEdit = true;
-        this.rightBox.title = this.$t("config.account.editAccount") + "  ID：" + this.user.id;
+        this.rightBox.title = this.$t("config.account.editAccount") + "  ID：" + this.user.userId;
       }
     },
     toEditReceiver: function(item) {
@@ -751,9 +745,10 @@ export default {
       this.blurEditReceiver();
       //TODO 请求后台，删除组
     },
-    setOldNameForReceiver: function() {
+    initReceiverData: function() {
       for (var i = 0; i < this.receiverData.length; i++) {
         this.$set(this.receiverData[i], 'oldName', this.receiverData[i].name);
+        this.$set(this.receiverData[i], 'isEdit', false);
       }
     },
     esc: function() {
@@ -780,13 +775,10 @@ export default {
         receiver: [],
         lang: 'en'
       }
-    },
-    getUserById: function(userId) {
-
     }
   },
   mounted() {
-    this.setOldNameForReceiver();
+    this.initReceiverData();
   }
 }
 </script>

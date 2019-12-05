@@ -30,8 +30,12 @@ export default new Router({
           component: resolve => require(['../components/page/asset/asset.vue'], resolve),
         },
         {
-          path: '/alarm',
+          path: '/account',
           component: resolve => require(['../components/page/config/account.vue'], resolve),
+        },
+        {
+          path: '/promServer',
+          component: resolve => require(['../components/page/config/promServer.vue'], resolve),
         }
       ]
     },
