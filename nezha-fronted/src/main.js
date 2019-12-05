@@ -5,10 +5,14 @@ import ElementUI from 'element-ui';
 import i18n from './components/common/i18n'
 
 import Vue from 'vue'
+import Vuex from 'vuex'
+import store from './store/index';
 import App from './App'
 import router from './router'
+
+
 import axios from 'axios';
-import { post, get} from './http.js'
+import {post, get} from './http.js'
 
 import Pagination from "./components/common/pagination"; //引入全局分页组件
 Vue.component("Pagination", Pagination);
@@ -19,6 +23,7 @@ Vue.prototype.$get = get;
 
 Vue.config.productionTip = false
 Vue.use(ElementUI)
+Vue.use(Vuex)
 
 
 const clickoutside = {
@@ -40,6 +45,7 @@ const clickoutside = {
 
       }
     }
+
     // 给当前元素绑定个私有变量，方便在unbind中可以解除事件监听
     el.__vueClickOutside__ = documentHandler;
     document.addEventListener('click', documentHandler);
@@ -60,6 +66,7 @@ new Vue({
   el: '#app',
   router,
   i18n,
-  components: { App },
+  store,
+  components: {App},
   template: '<App/>'
 })

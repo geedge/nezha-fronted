@@ -1,6 +1,8 @@
 <template>
     <div>
-        <iframe src="http://192.168.40.247:3000/" height="630" width="1200"></iframe>
+        <div>
+            <iframe src="http://192.168.40.247:3000/" class="dashboard"></iframe>
+        </div>
     </div>
 </template>
 
@@ -11,5 +13,8 @@ export default {
 </script>
 
 <style scoped>
-
+.dashboard{
+    height: calc(90vh);
+    width: calc(100%);
+}
 </style>

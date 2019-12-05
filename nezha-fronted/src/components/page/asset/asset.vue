@@ -198,7 +198,7 @@
                                     </template>
                                 </el-table-column>
                             </el-table>
-<!--                            <Pagination :pageobj="pageObj" ref="Pagination"></Pagination>-->
+                            <!--                            <Pagination :pageobj="pageObj" ref="Pagination"></Pagination>-->
                             <el-divider></el-divider>
                             <span>默认CLI账户</span>
                             <div style="padding-top: 10px">
@@ -239,8 +239,83 @@ export default {
   name: "asset",
   data() {
     return {
-      tableTitle: this.$t('asset.tableTitle'),
-      tagTableTitle: this.$t('asset.tagTableTitle'),
+      tableTitle: [
+        {
+          label: this.$t("asset.tableTitle.id"),
+          prop: 'ID',
+          show: true,
+        }, {
+          label: this.$t("asset.tableTitle.assetType"),
+          prop: '资产类型',
+          show: true,
+        }, {
+          label: this.$t("asset.tableTitle.Device"),
+          prop: 'Device SN',
+          show: true,
+        }, {
+          label: this.$t("asset.tableTitle.IP"),
+          prop: 'IP',
+          show: true,
+        }, {
+          label: this.$t("asset.tableTitle.assetState"),
+          prop: '资产状态',
+          show: true,
+        }, {
+          label: this.$t("asset.tableTitle.Module"),
+          prop: 'Module',
+          show: true,
+        }, {
+          label: this.$t("asset.tableTitle.Alarm"),
+          prop: 'Alarm',
+          show: true,
+        }, {
+          label: this.$t("asset.tableTitle.dataCenter"),
+          prop: '数据中心',
+          show: true,
+        }, {
+          label: this.$t("asset.tableTitle.cabinet"),
+          prop: '机柜',
+          show: true,
+        }, {
+          label: this.$t("asset.tableTitle.model"),
+          prop: '型号',
+          show: true,
+        }, {
+          label: this.$t("asset.tableTitle.manufacturer"),
+          prop: '厂商',
+          show: true,
+        }, {
+          label: this.$t("asset.tableTitle.procurementDate"),
+          prop: '采购日期',
+          show: true,
+        }, {
+          label: this.$t("asset.tableTitle.warrantyDate"),
+          prop: '保修截止期',
+          show: true,
+        }, {
+          label: this.$t("asset.tableTitle.deviceDuty"),
+          prop: '设备责任人',
+          show: true,
+        }],
+      tagTableTitle: [
+        {
+          label: this.$t("asset.tagTableTitle.projectName"),
+          prop: 'projectName',
+          show: true,
+        }, {
+          label: this.$t("asset.tagTableTitle.moduleName"),
+          prop: 'moduleName',
+          show: true,
+        }, {
+          label: this.$t("asset.tagTableTitle.endPoint"),
+          prop: 'endPoint',
+          show: true,
+        }, {
+          label: this.$t("asset.tagTableTitle.alarm"),
+          prop: 'alarm',
+          show: true,
+        },
+      ],
       tableData: [],
       tagTableData: [
         {
@@ -263,12 +338,12 @@ export default {
           projectName: '2016-05-02',
           moduleName: '王小虎',
           endPoint: '上海市普陀区金沙江路 1518 弄'
-        },
+        }
       ],
       pageObj: {
         pageNo: 1,
         pageSize: 20,
-        total:0
+        total: 0
       },
       input: '',
       tabShow: false,
@@ -280,18 +355,11 @@ export default {
   },
   methods: {
     getListData() {
-      new Promise((resolve, reject) => {
-        this.$get('api/asset',this.pageObj).
-        then(response => {
-          if(response.code==200){
-            this.tableData = response.data.list
-            console.log(this.tableData)
-            this.pageObj.total = response.data.total
-          }
-          resolve(response.data)
-        }).catch(err => {
-          reject(err.response)
-        })
+      this.$get('asset', this.pageObj).then(response => {
+        if (response.code == 200) {
+          this.tableData = response.data.list
+          this.pageObj.total = response.data.total
+        }
       })
     },
     tagShow(t) {
@@ -309,7 +377,7 @@ export default {
       this.pageObj.pageNo = val;
       this.getListData()
     },
-    pageSize(val){
+    pageSize(val) {
       this.pageObj.pageSize = val;
       this.getListData()
     }
@@ -320,7 +388,7 @@ export default {
 }
 </script>
 <style>
-.el-table{
+.el-table {
     font-size: 10px;
 }
 
@@ -352,7 +420,6 @@ export default {
     height: calc(100% - 60px);
     overflow-y: auto
 }
-
 
 .right-box__top-btn {
     border-radius: 0 0 9px 9px;
