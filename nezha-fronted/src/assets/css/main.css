@@ -4,19 +4,10 @@
 }
 
 body {
-    font-family: NotoSansSC-Light;
-    min-width: 1350px;
-    background: #F2F7F8;
-    overflow-x: hidden !important;
     height: 100%;
-    box-sizing: border-box;
 }
 html {
-    overflow: auto;
-    overflow-y: hidden;
-    overflow-x: hidden !important;
     height: 100%;
-    box-sizing: border-box;
 }
 /*侧滑文字*/
 .el-form-item .el-form-item__label{

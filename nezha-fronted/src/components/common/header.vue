@@ -119,6 +119,9 @@ export default {
 </script>
 
 <style>
+.el-menu.el-menu--horizontal{
+    border-bottom:0px
+}
 .el-submenu__title .el-submenu__icon-arrow {
     display: none;
 }
