@@ -147,7 +147,7 @@ export default {
     height: 60px;
     font-size: 22px;
     background-color: #ffffff;
-    z-index: 500;
+    z-index: 510;
     box-shadow: 0px 20px 13px -19px #5E5E5E;
 }
 

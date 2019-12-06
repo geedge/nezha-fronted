@@ -1,10 +1,10 @@
 import zhLocale from 'element-ui/lib/locale/lang/zh-CN' //引入element语言包
 const cn = {
-  overall:{
-    dashboard:'仪表盘',
-    project:'工程',
-    asset:'资产',
-    config:'设置',
+  overall: {
+    dashboard: '仪表盘',
+    project: '工程',
+    asset: '资产',
+    config: '设置',
     create: '新增',
     edit: '修改',
     delete: '删除',
@@ -29,6 +29,7 @@ const cn = {
       procurementDate: '采购日期',
       warrantyDate: '保修截止期',
       deviceDuty: '设备责任人',
+      option: '操作',
     },
     tagTableTitle: {
       projectName: '项目名称',

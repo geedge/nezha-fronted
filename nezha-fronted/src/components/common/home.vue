@@ -10,7 +10,6 @@
 
 <script>
 import Header from "./header";
-import sideBar from "./sideBar";
 export default {
   name: "home",
   components: {Header}

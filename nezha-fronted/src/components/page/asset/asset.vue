@@ -5,7 +5,7 @@
                 <div>Project</div>
                 <div class="sidebar-info">
                     <div class="sidebar-info-header">ALL</div>
-                    <div class="sidebar-info-footer" v-if="sidebarState">
+                    <div class="sidebar-info-footer">
                         <el-checkbox-group v-model="checkList" size="small">
                             <el-checkbox v-for="(item,key) in checkListData" :key="key" border :label=item.id>{{item.name}}
                                 <div class="checkbox-edit" @click.prevent="edit(item.id)">编辑</div>
@@ -16,6 +16,12 @@
             </div>
         </div>
         <div class="content-right">
+            <el-input
+                    class="account-list-search"
+                    type="text"
+                    :placeholder="$t('overall.search')"
+                    size="small"
+            ></el-input>
             <div>
                 <el-table
                         :height="tableHeight"
@@ -40,25 +46,21 @@
                                     <span>{{scope.row['host']}}</span>
                                 </p>
                             </div>
-                        </template>
-                    </el-table-column>
-                    <el-table-column
-                            fixed="right"
-                            label="操作"
-                            width="100">
-                        <template slot-scope="scope">
-                            <el-button type="text" size="small" @click.stop="tagShow('showAdd')">查看</el-button>
-                            <el-button type="text" size="small" @click.stop="tagShow('showEdit')">编辑</el-button>
+                            <div v-if="item.prop == 'option'" class="account-list-options">
+                                <span @click.stop="tagShow('showDel')" class="account-list-option"><i class="el-icon-delete"></i></span>
+                                <span @click.stop="tagShow('showEdit')" class="account-list-option"><i class="el-icon-view"></i></span>
+                                <span @click.stop="tagShow('showView')" class="account-list-option"><i class="el-icon-edit-outline"></i></span>
+                            </div>
                         </template>
                     </el-table-column>
                 </el-table>
                 <Pagination :pageObj="pageObj" @pageNo='pageNo' @pageSize='pageSize' ref="Pagination"></Pagination>
-                <transition name="el-zoom-in-center" @click.stop>
+                <transition name="right-box" @click.stop>
                     <div class="right-menu" v-if="tabShow" v-clickoutside:tagHide="tagShow">
                         <div v-if="this.tagType=='add'">
                             <el-form ref="form" :model="form" label-width="120px">
                                 <div class="right-box__top-btns">
-                                    <div class="right-box__top-btn right-box__top-btn_full">
+                                    <div class="right-box__top-btn right-box__top-btn_full" @click="tagShow()">
                                         <div class="right-box__btn-icon">
                                             <i class="el-icon-close"></i>
                                         </div>
@@ -109,9 +111,9 @@
                             </el-form>
                         </div>
                         <div v-if="this.tagType=='edit'">
-                            <el-form ref="form" :model="form" label-width="120px" size="small">
+                            <el-form ref="form" :model="form" label-width="120px" size="small" >
                                 <div class="right-box__top-btns">
-                                    <div class="right-box__top-btn right-box__top-btn_full">
+                                    <div class="right-box__top-btn right-box__top-btn_full" @click="tagShow()">
                                         <div class="right-box__btn-icon">
                                             <i class="el-icon-close"></i>
                                         </div>
@@ -193,6 +195,7 @@
                                                     <div class="tableSquare">{{11}}/{{111}}</div>
                                                 </div>
                                             </template>
+
                                         </el-table-column>
                                         <el-table-column
                                                 fixed="right"
@@ -249,7 +252,7 @@ export default {
   name: "asset",
   data() {
     return {
-      checkList: [0],
+      checkList: [],
       checkListData: [],
       sidebarState:'',
       tableTitle: [
@@ -262,11 +265,11 @@ export default {
           prop: '资产类型',
           show: true,
         }, {
-          label: this.$t("asset.tableTitle.Device"),
+          label: this.$t("asset.tableTitle.device"),
           prop: 'Device SN',
           show: true,
         }, {
-          label: this.$t("asset.tableTitle.IP"),
+          label: this.$t("asset.tableTitle.ip"),
           prop: 'IP',
           show: true,
         }, {
@@ -274,11 +277,11 @@ export default {
           prop: '资产状态',
           show: true,
         }, {
-          label: this.$t("asset.tableTitle.Module"),
+          label: this.$t("asset.tableTitle.module"),
           prop: 'Module',
           show: true,
         }, {
-          label: this.$t("asset.tableTitle.Alarm"),
+          label: this.$t("asset.tableTitle.alarm"),
           prop: 'Alarm',
           show: true,
         }, {
@@ -308,6 +311,10 @@ export default {
         }, {
           label: this.$t("asset.tableTitle.deviceDuty"),
           prop: '设备责任人',
+          show: true,
+        }, {
+          label: this.$t('config.account.option'),
+          prop: 'option',
           show: true,
         }],
       tagTableTitle: [
@@ -359,7 +366,7 @@ export default {
         pageSize: 20,
         total: 0,
       },
-      tableHeight:document.documentElement.clientHeight-150,
+      tableHeight:document.documentElement.clientHeight-200,
       tabShow: false,
       tagType: 'add',
       form: {
@@ -383,27 +390,26 @@ export default {
           this.sidebarState=true
         }else{
           this.sidebarState=false
-          this.getAssetData()
+          this.getAssetData();
           this.checkListData=[0]
         }
       },
       deep: true,
     },
-
   },
   methods: {
+    getAssetData() {
+      this.$get('idc', this.pageObj).then(response => {
+        if (response.code == 200) {
+          this.checkListData = response.data.list
+        }
+      })
+    },
     getListData() {
       this.$get('asset', this.pageObj).then(response => {
         if (response.code === 200) {
           this.tableData = response.data.list;
           this.pageObj.total = response.data.total
-        }
-      })
-    },
-    getAssetData() {
-      this.$get('idc', this.pageObj).then(response => {
-        if (response.code == 200) {
-          this.checkListData = response.data.list
         }
       })
     },
@@ -429,11 +435,10 @@ export default {
   },
 
   mounted() {
-    this.getListData()
-    this.getAssetData()
+    this.getListData();
+    this.getAssetData();
     window.onresize = () => {
-      this.tableHeight = document.documentElement.clientHeight-150;
-      console.log(this.tableHeight)
+      this.tableHeight = document.documentElement.clientHeight-200;
     }
   }
 }
@@ -507,10 +512,7 @@ export default {
     position: absolute;
     top: 8px;
     left: 230px;
-
 }
-
-
 
 .right-box__top-btn {
     border-radius: 0 0 9px 9px;
@@ -535,6 +537,19 @@ export default {
 .el-form-style {
     padding-top: 40px;
 }
+.right-menu {
+    position: fixed;
+    top: 60px;
+    right: 0;
+    z-index: 500;
+    border-radius: 8px;
+    box-shadow: 0 0 15px #ccc;
+    background-color: white;
+    padding: 0 20px;
+    width: 580px;
+    height: calc(90% - 60px);
+    overflow-y:auto
+}
 
 .tableSquare {
     border: 1px solid #000;
@@ -542,5 +557,26 @@ export default {
     width: 90px;
     border-radius: 8px;
     text-align: center;
+}
+
+.account-list-search {
+    float: right;
+    width: 220px;
+    margin: 15px 0;
+}
+
+@keyframes slide-in-from-right {
+    from {right: -800px}
+    to {right: 0}
+}
+@keyframes slide-out-to-right {
+    from {right: 0}
+    to {right: -800px}
+}
+.right-box-enter-active {
+    animation: slide-in-from-right 0.4s;
+}
+.right-box-leave-active {
+    animation: slide-out-to-right 0.4s;
 }
 </style>

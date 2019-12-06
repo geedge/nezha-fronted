@@ -16,19 +16,20 @@ const en = {
   asset:{
     tableTitle: {
       id: 'ID',
-      assetType: 'assetType',
+      assetType: '资产类型',
       device: 'Device SN',
       ip: 'IP',
-      assetState: 'assetState',
+      assetState: '资产状态',
       module: 'Module',
       alarm: 'Alarm',
-      dataCenter: 'dataCenter',
-      cabinet: 'cabinet',
-      model: 'model',
-      manufacturer: 'manufacturer',
+      dataCenter: '数据中心',
+      cabinet: '机柜',
+      model: '型号',
+      manufacturer: '厂商',
       procurementDate: '采购日期',
       warrantyDate: '保修截止期',
       deviceDuty: '设备责任人',
+      option: "Option"
     },
     tagTableTitle: {
       projectName: '项目名称',
