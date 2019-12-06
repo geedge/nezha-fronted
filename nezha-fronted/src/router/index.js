@@ -36,6 +36,14 @@ export default new Router({
         {
           path: '/promServer',
           component: resolve => require(['../components/page/config/promServer.vue'], resolve),
+        },
+        {
+          path: '/alarmList',
+          component: resolve => require(['../components/page/alarm/list.vue'], resolve),
+        },
+        {
+          path: '/alarmConfig',
+          component: resolve => require(['../components/page/alarm/config.vue'], resolve),
         }
       ]
     },
