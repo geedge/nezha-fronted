@@ -2,8 +2,42 @@
   .prom {
     height: 100%;
   }
+  .content-left {
+    float: left;
+    width: 370px;
+    height: 100%;
+  }
+  .sidebar-title {
+    padding-left: 30px;
+    padding-top: 20px;
+  }
+
+  .sidebar-info {
+    margin-top: 20px;
+    border: 1px solid #acacac;
+    border-radius: 8px;
+    height: calc(90vh - 55px);
+    width: calc(100% - 30px);
+  }
+
+  .sidebar-info-header {
+    background: #acacac;
+    text-align: center;
+    line-height: 50px;
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+    height: 60px;
+    width: 100%;
+  }
+
+  .sidebar-info-footer {
+    padding-top: 15px;
+    padding-left: 15px;
+  }
   .prom-list {
-    height: calc(100% - 51px);
+    height: calc(100% - 131px);
+    margin-left: 370px;
+    padding: 0 15px 0 0;
   }
   .prom-list-option {
     cursor: pointer;
@@ -30,8 +64,8 @@
   /* begin--右侧弹框*/
   .right-box {
     position: fixed;
-    top: 20px;
-    right: 0;
+    top: 80px;
+    right: 15px;
     z-index: 1;
     border-radius: 8px;
     box-shadow: 0 0 15px #ccc;
@@ -40,7 +74,7 @@
   }
   .right-box-prom {
     width: 550px;
-    height: calc(100% - 61px);
+    height: calc(100% - 100px);
   }
   /* begin--右侧弹框--顶部按钮*/
   .right-box-top-btns {
@@ -83,7 +117,6 @@
     text-align: left;
   }
   .right-box-form-content {
-    height: 32px;
     line-height: 32px;
     text-align: left;
     width: 100%;
@@ -169,6 +202,15 @@
 </style>
 <template>
     <div class="prom">
+        <div class="content-left">
+            <div class="sidebar-title">
+                <div>Config</div>
+                <div class="sidebar-info">
+                    <div class="sidebar-info-footer" v-if="sidebarState">
+                    </div>
+                </div>
+            </div>
+        </div>
         <div class="prom-list">
             <el-input
               class="prom-list-search"
@@ -203,8 +245,9 @@
                   </template>
                 </el-table-column>
             </el-table>
+            <Pagination :pageObj="pageObj" @pageNo='pageNo' @pageSize='pageSize' ref="Pagination"></Pagination>
         </div>
-        <Pagination :pageObj="pageObj" @pageNo='pageNo' @pageSize='pageSize' ref="Pagination"></Pagination>
+
         <transition name="right-box">
             <div class="right-box right-box-prom" v-if="rightBox.show">
                 <!-- begin--顶部按钮-->
@@ -381,7 +424,7 @@ export default {
     edit: function(u) {
       this.promServer = Object.assign({}, u);
       this.rightBox.isEdit = true;
-      this.rightBox.title = this.$t("config.prom.editProm") + "  ID：" + u.id;
+      this.rightBox.title = this.$t("config.promServer.editProm") + "  ID：" + u.id;
       this.rightBox.show = true;
     },
     del: function(u) {
@@ -395,13 +438,13 @@ export default {
     add: function() {
       this.cleanPromServer();
       this.rightBox.isEdit = true;
-      this.rightBox.title = this.$t("config.prom.createProm");
+      this.rightBox.title = this.$t("config.promServer.createProm");
       this.rightBox.show = true;
     },
     saveOrToEdit: function() {
       if (!this.rightBox.isEdit) {
         this.rightBox.isEdit = true;
-        this.rightBox.title = this.$t("config.prom.editProm") + "  ID：" + this.promServer.id;
+        this.rightBox.title = this.$t("config.promServer.editProm") + "  ID：" + this.promServer.id;
       }
     },
     toEditIdc: function(item) {

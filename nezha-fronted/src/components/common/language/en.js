@@ -3,6 +3,7 @@ const en = {
   overall:{
     dashboard:'dashboard',
     project:'project',
+    alarm: "alarm",
     asset:'asset',
     config:'config',
     create: 'Create',
@@ -60,6 +61,40 @@ const en = {
       createProm: "Create Prometheus Server",
       editProm: "Edit Prometheus Server"
     },
+  },
+  alarm: {
+    alarmList: "Alarm List",
+    alarmConfig: "Alarm Config",
+    alarmName: "Alarm Name",
+    severity: "Severity",
+    description: "Desc",
+    summary: "Summary",
+    startAt: "Time",
+    endAt: "End Time",
+    list: {
+      //表头
+      linkedId: "Linked ID",
+      type: "Type",
+      state: "Status",
+      charts: "Charts",
+
+      //表内容
+      projectAlarm: "Project Alarm",
+      moduleAlarm: "Module Alarm",
+      deviceAlarm: "Device Alarm",
+      pending: "Pending",
+      expired: "Expired"
+    },
+    config: {
+      name: "Name",
+      receiver: "Receiver",
+      expr: "Expr",
+      for: "For",
+      option: "Option",
+      alarmConfig: "Alarm Config",
+      createAlarmConfig: "Create Alarm Config",
+      editAlarmConfig: "Edit Alarm Config",
+    }
   },
   ...enLocale
 }

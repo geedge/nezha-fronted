@@ -9,6 +9,9 @@ body {
 html {
     height: 100%;
 }
+.content-box {
+  height: 100%;
+}
 /*侧滑文字*/
 .el-form-item .el-form-item__label{
     font-size: 10px;

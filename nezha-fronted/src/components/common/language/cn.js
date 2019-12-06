@@ -3,6 +3,7 @@ const cn = {
   overall: {
     dashboard: '仪表盘',
     project: '工程',
+    alarm: "告警",
     asset: '资产',
     config: '设置',
     create: '新增',
@@ -60,6 +61,29 @@ const cn = {
       createProm: "新增Prometheus Server",
       editProm: "修改Prometheus Server"
     },
+  },
+  alarm: {
+    alarmList: "告警列表",
+    alarmConfig: "告警设置",
+    list: {
+      alarmName: "告警名称",
+      linkedId: "关联ID",
+      severity: "告警级别",
+      type: "类型",
+      summary: "摘要",
+      description: "描述",
+      state: "状态",
+      startAt: "时间",
+      endAt: "消除时间",
+      charts: "图表",
+
+      //表内容
+      projectAlarm: "Project Alarm",
+      moduleAlarm: "Module Alarm",
+      deviceAlarm: "Device Alarm",
+      pending: "Pending",
+      expired: "Expired"
+    }
   },
   ...zhLocale
 }

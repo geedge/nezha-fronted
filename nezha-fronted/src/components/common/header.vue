@@ -27,11 +27,17 @@
                         </el-menu-item>
                     </template>
                 </el-submenu>
-                <!--<el-submenu index="4">
-                    <template slot="title">
-                        <div @click="jumpTo('alarm')">{{$t('overall.alarm')}}</div>
-                    </template>
-                </el-submenu>-->
+              <el-submenu index="4">
+                <template slot="title">
+                  <div @click="jumpTo('alarmList')">{{$t('overall.alarm')}}</div>
+                </template>
+                <el-menu-item index="1">
+                  <div @click="jumpTo('alarmList')">{{$t('alarm.alarmList')}}</div>
+                </el-menu-item>
+                <el-menu-item index="2">
+                  <div @click="jumpTo('alarmConfig')">{{$t('alarm.alarmConfig')}}</div>
+                </el-menu-item>
+              </el-submenu>
                 <el-submenu index="5">
                     <template slot="title">
                         <div @click="jumpTo('account')">{{$t('overall.config')}}</div>
@@ -136,7 +142,7 @@ export default {
 <style scoped>
 .submenu {
     padding-left: 50%;
-    width: 400px;
+    width: 500px;
     float: left;
 }
 
