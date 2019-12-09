@@ -357,7 +357,7 @@ export default {
       pageObj: {
         pageNo: 1,
         pageSize: 20,
-        total:6
+        total:0
       },
       tableTitle: [
         {
@@ -375,7 +375,8 @@ export default {
           show: true,
         }
       ],
-      tableData: [
+      tableData: [],
+      /*tableData: [
         {
           id: '1',
           host: '192.168.40.241',
@@ -406,8 +407,9 @@ export default {
           host: '192.168.40.246',
           idc: {id: '9', name: 'idc151657', location: 'fj'}
         },
-      ],
-      idcData: [
+      ],*/
+      idcData: []
+      /*idcData: [
         {id: '1', name: 'idc151656', location: 'gd'},
         {id: '2', name: 'idc151656', location: 'gd'},
         {id: '3', name: 'aerareqarew', location: 'zhaertaewr'},
@@ -417,7 +419,7 @@ export default {
         {id: '7', name: 'idc151656', location: 'gd'},
         {id: '8', name: 'idc151656', location: 'gd'},
         {id: '9', name: 'idc151657', location: 'fj'},
-      ]
+      ]*/
     }
   },
   methods: {
@@ -428,6 +430,14 @@ export default {
       this.rightBox.show = true;
     },
     del: function(u) {
+    },
+    getTableData: function() {
+      this.$get('promServer', this.pageObj).then(response => {
+        if (response.code === 200) {
+          this.tableData = response.data.list;
+          this.pageObj.total = response.data.total
+        }
+      })
     },
     detail: function(u) {
       this.promServer = Object.assign({}, u);
@@ -445,6 +455,14 @@ export default {
       if (!this.rightBox.isEdit) {
         this.rightBox.isEdit = true;
         this.rightBox.title = this.$t("config.promServer.editProm") + "  ID：" + this.promServer.id;
+      } else {
+        this.$put('promServer', this.promServer).then(response => {
+          if (response.code === 200) {
+            this.getTableData();
+            this.rightBox.isEdit = false;
+
+          }
+        })
       }
     },
     toEditIdc: function(item) {
@@ -478,7 +496,12 @@ export default {
       this.blurEditIdc();
       //TODO 请求后台，删除
     },
-    initIdcData: function() {
+    getIdcData: function() {
+      this.$get('idc', this.pageObj).then(response => {
+        if (response.code === 200) {
+          this.idcData = response.data.list;
+        }
+      })
       for (var i = 0; i < this.idcData.length; i++) {
         this.$set(this.idcData[i], 'oldName', this.idcData[i].name);
         this.$set(this.idcData[i], 'isEdit', false);
@@ -489,6 +512,23 @@ export default {
     },
     stopFun: function() {
 
+    },
+    getTableData: function() {
+      this.$get('promServer', this.pageObj).then(response => {
+        if (response.code === 200) {
+          console.info(this.idcData)
+          for (var i = 0; i < response.data.list.length; i++) {
+            for (var j = 0; j < this.idcData.length; j++) {
+              if (response.data.list[i].idcId == this.idcData[j].id) {
+                response.data.list[i].idc = this.idcData[j];
+                break;
+              }
+            }
+          }
+          this.tableData = response.data.list;
+          this.pageObj.total = response.data.total
+        }
+      })
     },
     updateIdcName: function(item) {
       //TODO 请求接口改名
@@ -502,12 +542,22 @@ export default {
       this.promServer = {
         id: '',
         host: '',
+        idcId: '',
         idc: {id: '', name: '', location: ''}
       }
+    },
+    pageNo(val) {
+      this.pageObj.pageNo = val;
+      this.getTableData();
+    },
+    pageSize(val) {
+      this.pageObj.pageSize = val;
+      this.getTableData();
     }
   },
   mounted() {
-    this.initIdcData();
+    this.getIdcData();
+    this.getTableData();
   }
 }
 </script>

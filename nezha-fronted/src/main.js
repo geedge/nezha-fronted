@@ -12,7 +12,7 @@ import router from './router'
 
 
 import axios from 'axios';
-import {post, get} from './http.js'
+import {post, get, put, del} from './http.js'
 
 import Pagination from "./components/common/pagination"; //引入全局分页组件
 Vue.component("Pagination", Pagination);
@@ -20,6 +20,8 @@ Vue.component("Pagination", Pagination);
 Vue.prototype.$axios = axios
 Vue.prototype.$post = post;
 Vue.prototype.$get = get;
+Vue.prototype.$put = put;
+Vue.prototype.$delete = del;
 
 Vue.config.productionTip = false
 Vue.use(ElementUI)

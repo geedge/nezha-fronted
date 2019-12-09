@@ -202,15 +202,14 @@
 </style>
 <template>
     <div class="account">
-      <div class="content-left">
-        <div class="sidebar-title">
-          <div>Config</div>
-          <div class="sidebar-info">
-            <div class="sidebar-info-footer" v-if="sidebarState">
+        <div class="content-left">
+            <div class="sidebar-title">
+                <div>Config</div>
+                <div class="sidebar-info">
+                    <div class="sidebar-info-footer" v-if="sidebarState"></div>
+                </div>
             </div>
-          </div>
         </div>
-      </div>
         <div class="account-list">
             <el-input
               class="account-list-search"
@@ -442,7 +441,7 @@ export default {
       pageObj: {
         pageNo: 1,
         pageSize: 20,
-        total:9
+        total:0
       },
       tableTitle: [
         {

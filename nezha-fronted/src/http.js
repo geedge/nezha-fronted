@@ -36,3 +36,27 @@ export function post(url, params) {
     })
   })
 }
+
+export function put(url, params) {
+  return new Promise((resolve, reject) => {
+    //params = qs.stringify(Object.assign(params));
+    //console.info(params);
+    axios.put(url, params).then(response => {
+      resolve(response.data)
+    }).catch(err => {
+      console.info(err)
+      reject(err.response.data)
+    })
+  })
+}
+
+export function del(url, params) {
+  return new Promise((resolve, reject) => {
+    axios.delete(url, params).then(response => {
+      resolve(response.data)
+    }).catch(err => {
+      console.info(err)
+      reject(err.response.data)
+    })
+  })
+}

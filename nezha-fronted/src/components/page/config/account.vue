@@ -246,7 +246,7 @@
                         </span>
                         <span v-else-if="item.prop == 'status'">
                             <el-switch
-                              v-model="scope.row[item.prop]"
+                              v-model="scope.row.status"
                               active-value="1"
                               inactive-value="0">
                             </el-switch>
@@ -413,12 +413,12 @@ export default {
       pageObj: {
         pageNo: 1,
         pageSize: 20,
-        total:13
+        total:0
       },
       tableTitle: [
         {
           label: 'ID',
-          prop: 'id',
+          prop: 'userId',
           show: true,
           width: 80
         }, {
@@ -457,8 +457,9 @@ export default {
           show: true,
         }
       ],
-      tableData: [{
-        id: '1',
+      tableData: [],
+      /*tableData: [{
+        userId: '1',
         username: '王小虎1',
         email: 'c92c@qq.com',
         lang: 'en',
@@ -472,7 +473,7 @@ export default {
         createTime: '2019-11-28  21:39:05',
         status: '1'
       }, {
-        id: '2',
+        userId: '2',
         username: '王小虎2',
         email: 'c92c@qq.com',
         lang: 'en',
@@ -486,7 +487,7 @@ export default {
         createTime: '2019-11-28  21:39:05',
         status: '0'
       }, {
-        id: '3',
+        userId: '3',
         username: '王小虎3',
         email: 'c92c@qq.com',
         lang: 'en',
@@ -500,7 +501,7 @@ export default {
         createTime: '2019-11-28  21:39:05',
         status: '1'
       }, {
-        id: '4',
+        userId: '4',
         username: '王小虎4',
         email: 'c92c@qq.com',
         lang: 'zh',
@@ -514,7 +515,7 @@ export default {
         createTime: '2019-11-28  21:39:05',
         status: '1'
       }, {
-        id: '5',
+        userId: '5',
         username: '王小虎5',
         email: 'c92c@qq.com',
         lang: 'en',
@@ -528,7 +529,7 @@ export default {
         createTime: '2019-11-28  21:39:05',
         status: '1'
       }, {
-        id: '6',
+        userId: '6',
         username: '王小虎6',
         email: 'c92c@qq.com',
         lang: 'en',
@@ -542,7 +543,7 @@ export default {
         createTime: '2019-11-28  21:39:05',
         status: '1'
       }, {
-        id: '7',
+        userId: '7',
         username: '王小虎7',
         email: 'c92c@qq.com',
         lang: 'en',
@@ -556,7 +557,7 @@ export default {
         createTime: '2019-11-28  21:39:05',
         status: '1'
       }, {
-        id: '8',
+        userId: '8',
         username: '王小虎8',
         email: 'c92c@qq.com',
         lang: 'en',
@@ -574,7 +575,7 @@ export default {
         createTime: '2019-11-28  21:39:05',
         status: '1'
       }, {
-        id: '9',
+        userId: '9',
         username: '王小虎9',
         email: 'c92c@qq.com',
         lang: 'en',
@@ -588,7 +589,7 @@ export default {
         createTime: '2019-11-28  21:39:05',
         status: '1'
       }, {
-        id: '10',
+        userId: '10',
         username: '王小虎',
         email: 'c92c@qq.com',
         lang: 'en',
@@ -602,7 +603,7 @@ export default {
         createTime: '2019-11-28  21:39:05',
         status: '1'
       }, {
-        id: '222',
+        userId: '222',
         username: '王小虎',
         email: 'c92c@qq.com',
         lang: 'en',
@@ -616,7 +617,7 @@ export default {
         createTime: '2019-11-28  21:39:05',
         status: '1'
       }, {
-        id: '223',
+        userId: '223',
         username: '王小虎',
         email: 'c92c@qq.com',
         lang: 'en',
@@ -630,7 +631,7 @@ export default {
         createTime: '2019-11-28  21:39:05',
         status: '1'
       }, {
-        id: '224',
+        userId: '224',
         username: '王小虎',
         email: 'c92c@qq.com',
         lang: 'en',
@@ -644,7 +645,7 @@ export default {
         createTime: '2019-11-28  21:39:05',
         status: '1'
       }, {
-        id: '226',
+        userId: '226',
         username: '王小虎',
         email: 'c92c@qq.com',
         lang: 'en',
@@ -658,7 +659,7 @@ export default {
         createTime: '2019-11-28  21:39:05',
         status: '1'
       }, {
-        id: '225',
+        userId: '225',
         username: '王小虎',
         email: 'c92c@qq.com',
         lang: 'en',
@@ -672,7 +673,7 @@ export default {
         createTime: '2019-11-28  21:39:05',
         status: '1'
       }, {
-        id: '2',
+        userId: '2',
         username: '王小虎',
         email: 'c92c@qq.com',
         lang: 'en',
@@ -686,7 +687,7 @@ export default {
         createTime: '2019-11-28  21:39:05',
         status: '1'
       }, {
-        id: '2',
+        userId: '2',
         username: '王小虎',
         email: 'c92c@qq.com',
         lang: 'en',
@@ -702,7 +703,7 @@ export default {
         }],
         createTime: '2019-11-28  21:39:05',
         status: '1'
-      }],
+      }],*/
       receiverData: [{
         id: '1',
         name: 'group1',
@@ -745,6 +746,17 @@ export default {
       this.rightBox.title = this.$t("config.account.account") + "  ID：" + u.userId;
       this.rightBox.show = true;
     },
+    getTableData: function() {
+      this.$get('sys/user/list', this.pageObj).then(response => {
+        if (response.code === 200) {
+          for (var i = 0; i < response.data.list.length; i++) {
+            response.data.list[i].status = response.data.list[i].status + "";
+          }
+          this.tableData = response.data.list;
+          this.pageObj.total = response.data.total
+        }
+      })
+    },
     add: function() {
       this.cleanUser();
       this.rightBox.isEdit = true;
@@ -755,6 +767,8 @@ export default {
       if (!this.rightBox.isEdit) {
         this.rightBox.isEdit = true;
         this.rightBox.title = this.$t("config.account.editAccount") + "  ID：" + this.user.userId;
+      } else {
+
       }
     },
     toEditReceiver: function(item) {
@@ -786,7 +800,7 @@ export default {
     },
     toDelReceiver: function(item) {
       this.blurEditReceiver();
-      //TODO 请求后台，删除组
+      //TODO 请求后台，删除用户组
     },
     initReceiverData: function() {
       for (var i = 0; i < this.receiverData.length; i++) {
@@ -818,9 +832,18 @@ export default {
         receiver: [],
         lang: 'en'
       }
+    },
+    pageNo(val) {
+      this.pageObj.pageNo = val;
+      this.getTableData();
+    },
+    pageSize(val) {
+      this.pageObj.pageSize = val;
+      this.getTableData();
     }
   },
   mounted() {
+    this.getTableData();
     this.initReceiverData();
   }
 }
