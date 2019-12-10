@@ -7,8 +7,8 @@
                     <div class="sidebar-info-header">ALL</div>
                     <div class="sidebar-info-footer">
                         <el-checkbox-group v-model="checkList" size="small">
-                            <el-checkbox v-for="(item,key) in checkListData" :key="key" border :label=item.id
-                                         @change="getCheckedData(item)">{{item.name}}
+                            <el-checkbox v-for="(item,key) in checkListData" :key="key" border :label=item.id>
+                                {{item.name}}
                                 <div class="checkbox-edit" @click.prevent="edit(item.id)">编辑</div>
                             </el-checkbox>
                         </el-checkbox-group>
@@ -47,7 +47,7 @@
                                     <span>{{scope.row['host']}}</span>
                                 </p>
                             </div>
-                            <div v-if="item.prop == 'option'" class="account-list-options">
+                            <div v-if="item.prop == 'option'">
                                 <span @click.stop="tagShow('showDel')" class="account-list-option"><i
                                         class="el-icon-delete"></i></span>
                                 <span @click.stop="tagShow('showAdd')" class="account-list-option"><i
@@ -82,7 +82,8 @@
                                     <span>{{$t('overall.delete')}}</span>
                                 </div>
                             </div>
-                            <div class="right-box-title">111</div>
+                            <div class="right-box-title">Create Asset
+                            </div>
                             <el-form ref="form" :model="form" label-width="120px">
                                 <div class="el-form-style">
                                     <el-form-item label="IP">
@@ -102,14 +103,16 @@
                                     </el-form-item>
                                     <div style="font-size: 10px">资产信息</div>
                                     <el-divider></el-divider>
+                                    <!------------------------------------------资产类型---------------------------------------------->
                                     <el-form-item label="资产类型">
                                         <div class="select-style">
                                             <el-select value-key="id" v-model="assetType">
                                                 <el-option
-                                                        v-for="item in assetOptionData"
+                                                        v-for="item in assetTypeOptionData"
                                                         :key="item.key"
                                                         :label="item.name"
-                                                        :value="item.name">
+                                                        :value="item.name"
+                                                >
                                                     <span v-if="!item.isEdit">{{ item.name }}</span>
                                                     <span class="config-dropdown-label-input" v-if="item.isEdit"
                                                           @click.stop="editing">
@@ -129,41 +132,45 @@
                                                 <el-popover
                                                         placement="bottom"
                                                         trigger="click"
+                                                        v-model="popTypeVisible"
                                                 >
-                                                    <div class="pop-window-company">
-                                                        <span style="display: block;padding-bottom: 20px">资产类型</span>
-                                                        <span style="display: block;padding-bottom: 20px">新增资产类型</span>
-                                                            <input v-model="form.name"/><div>111</div>
-                                                        <span style="display: block;padding-bottom: 20px">已有资产类型</span>
-                                                        <div class="rm-c-list">
-                                                            <ul>
-                                                                <li style="cursor: pointer;">
-                                                                    <div>
-                                                                        <span> 1111</span>
-                                                                        <i class="el-icon-edit-outline"></i>
+                                                    <div class="pop-window-assetType">
+                                                        <div class="pop-window-assetType-content">
+                                                            <div class="right-box-top-btns">
+                                                                <div class="right-box-top-btn right-box-top-btn-full"
+                                                                     @click="popoverClose('type')">
+                                                                    <div class="right-box-btn-icon">
+                                                                        <i class="el-icon-close"></i>
                                                                     </div>
-                                                                    <div>
-                                                                        <span> 1111</span>
-                                                                        <i class="el-icon-edit-outline"></i>
-                                                                    </div>
-                                                                    <div>
-                                                                        <span> 1111</span>
-                                                                        <i class="el-icon-edit-outline"></i>
-                                                                    </div>
-                                                                    <div>
-                                                                        <span> 1111</span>
-                                                                        <i class="el-icon-edit-outline"></i>
-                                                                    </div>
-                                                                    <div>
-                                                                        <span> 1111</span>
-                                                                        <i class="el-icon-edit-outline"></i>
-                                                                    </div>
-                                                                    <div>
-                                                                        <span> 1111</span>
-                                                                        <i class="el-icon-edit-outline"></i>
-                                                                    </div>
-                                                                </li>
-                                                            </ul>
+                                                                    <span>{{$t('overall.esc')}}</span>
+                                                                </div>
+                                                            </div>
+                                                            <span style="display: block;padding-bottom: 20px">资产类型</span>
+                                                            <span style="display: block;padding-bottom: 20px">新增资产类型</span>
+                                                            <input v-model="assetTypeData"/><input type="button"
+                                                                                                   value="+Add"></input>
+                                                            <span style="display: block;padding-bottom: 20px">已有资产类型</span>
+                                                            <div class="rm-c-list">
+                                                                <ul>
+                                                                    <li style="cursor: pointer;"
+                                                                        v-for="(item,index) in assetTypeOptionData"
+                                                                        :key="index">
+                                                                        <div>
+                                                                            <span>{{item.name}}</span>
+                                                                            <i class="el-icon-edit-outline"></i>
+                                                                        </div>
+                                                                    </li>
+                                                                </ul>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="right-box-bottom-btns">
+                                                        <div class="right-box-bottom-btn right-box-bottom-btn-cancel"
+                                                             @click="popoverClose('type')">
+                                                            {{$t('overall.cancel')}}
+                                                        </div>
+                                                        <div class="right-box-bottom-btn right-box-bottom-btn-50">
+                                                            {{$t('overall.save')}}
                                                         </div>
                                                     </div>
                                                     <span class="el-icon-plus" slot="reference"></span>
@@ -171,101 +178,109 @@
                                             </div>
                                         </div>
                                     </el-form-item>
-
+                                    <!------------------------------------------厂商/型号---------------------------------------------->
                                     <el-form-item label="厂商/型号">
                                         <div class="select-style">
-                                            <el-select value-key="id" v-model="assetType">
-                                                <el-option
-                                                        v-for="item in assetOptionData"
-                                                        :key="item.key"
-                                                        :label="item.name"
-                                                        :value="item.name">
-                                                    <span v-if="!item.isEdit">{{ item.name }}</span>
-                                                    <span class="config-dropdown-label-input" v-if="item.isEdit"
-                                                          @click.stop="editing">
-                                                    <el-input type="text" v-model="item.name" size="mini"/>
-                                                </span>
-                                                    <span class="config-dropdown-btn"
-                                                          @click.stop="editOptionData(item)">
-                                                    <i class="el-icon-edit-outline" v-if="!item.isEdit"></i>
-                                                    <i class="el-icon-check" v-if="item.isEdit"></i>
-                                                </span>
-                                                    <span class="config-dropdown-btn config-dropdown-btn-delete"
-                                                          @click.stop="delOptionData(item)"><i
-                                                            class="el-icon-delete"></i></span>
-                                                </el-option>
-                                            </el-select>
+                                            <el-cascader
+                                                    :options="companyTypeOptionData"
+                                            >
+                                            </el-cascader>
                                             <div class="el-select-add-btn">
                                                 <el-popover
                                                         placement="bottom"
                                                         trigger="click"
+                                                        v-model="popCompVisible"
                                                 >
-                                                    <div class="pop-window-type">
-                                                        <span style="display: block;padding-bottom: 20px">商场/型号</span>
-                                                        <span style="display: block;padding-bottom: 20px">新厂商名称</span>
-                                                        <input v-model="form.name"/><div>111</div>
-                                                        <span style="display: block;padding-bottom: 20px">已有厂商</span>
-                                                        <div class="companyList">
-                                                            <ul>
-                                                                <li style="cursor: pointer;">
-                                                                    <div>
-                                                                        <span> 1111</span>
-                                                                        <i class="el-icon-edit-outline"></i>
+                                                    <div class="pop-window-assetType">
+                                                        <div class="pop-window-assetType-content">
+                                                            <div class="right-box-top-btns">
+                                                                <div class="right-box-top-btn right-box-top-btn-full"
+                                                                     @click="popoverClose('comp')">
+                                                                    <div class="right-box-btn-icon">
+                                                                        <i class="el-icon-close"></i>
                                                                     </div>
-                                                                    <div>
-                                                                        <span> 1111</span>
-                                                                        <i class="el-icon-edit-outline"></i>
-                                                                    </div>
-                                                                    <div>
-                                                                        <span> 1111</span>
-                                                                        <i class="el-icon-edit-outline"></i>
-                                                                    </div>
-                                                                    <div>
-                                                                        <span> 1111</span>
-                                                                        <i class="el-icon-edit-outline"></i>
-                                                                    </div>
-                                                                    <div>
-                                                                        <span> 1111</span>
-                                                                        <i class="el-icon-edit-outline"></i>
-                                                                    </div>
-                                                                    <div>
-                                                                        <span> 1111</span>
-                                                                        <i class="el-icon-edit-outline"></i>
-                                                                    </div>
-                                                                </li>
-                                                            </ul>
+                                                                    <span>{{$t('overall.esc')}}</span>
+                                                                </div>
+                                                            </div>
+                                                            <div class="pop-window-assetType">
+                                                                <span style="display: block;padding-bottom: 20px">商场/型号</span>
+                                                                <input v-model="assetTypeData"/><input type="button"
+                                                                                                       value="+Add"></input>
+                                                                <span style="display: block;padding-bottom: 20px">已有厂商</span>
+                                                                <div class="companyList">
+                                                                    <ul>
+                                                                        <li style="cursor: pointer;">
+                                                                            <div>
+                                                                                <span> 1111</span>
+                                                                                <i class="el-icon-edit-outline"></i>
+                                                                            </div>
+                                                                            <div>
+                                                                                <span> 1111</span>
+                                                                                <i class="el-icon-edit-outline"></i>
+                                                                            </div>
+                                                                            <div>
+                                                                                <span> 1111</span>
+                                                                                <i class="el-icon-edit-outline"></i>
+                                                                            </div>
+                                                                            <div>
+                                                                                <span> 1111</span>
+                                                                                <i class="el-icon-edit-outline"></i>
+                                                                            </div>
+                                                                            <div>
+                                                                                <span> 1111</span>
+                                                                                <i class="el-icon-edit-outline"></i>
+                                                                            </div>
+                                                                            <div>
+                                                                                <span> 1111</span>
+                                                                                <i class="el-icon-edit-outline"></i>
+                                                                            </div>
+                                                                        </li>
+                                                                    </ul>
+                                                                </div>
+                                                                <span style="display: block;padding-bottom: 20px">已有型号</span>
+                                                                <input v-model="assetTypeData"/><input type="button"
+                                                                                                       value="+Add"></input>
+                                                                <div class="companyList">
+                                                                    <ul>
+                                                                        <li style="cursor: pointer;">
+                                                                            <div>
+                                                                                <span> 1111</span>
+                                                                                <i class="el-icon-edit-outline"></i>
+                                                                            </div>
+                                                                            <div>
+                                                                                <span> 1111</span>
+                                                                                <i class="el-icon-edit-outline"></i>
+                                                                            </div>
+                                                                            <div>
+                                                                                <span> 1111</span>
+                                                                                <i class="el-icon-edit-outline"></i>
+                                                                            </div>
+                                                                            <div>
+                                                                                <span> 1111</span>
+                                                                                <i class="el-icon-edit-outline"></i>
+                                                                            </div>
+                                                                            <div>
+                                                                                <span> 1111</span>
+                                                                                <i class="el-icon-edit-outline"></i>
+                                                                            </div>
+                                                                            <div>
+                                                                                <span> 1111</span>
+                                                                                <i class="el-icon-edit-outline"></i>
+                                                                            </div>
+                                                                        </li>
+                                                                    </ul>
+                                                                </div>
+                                                            </div>
                                                         </div>
-                                                        <span style="display: block;padding-bottom: 20px">已有型号</span>
-                                                        <input v-model="form.name"/><div>111</div>
-                                                        <div class="companyList">
-                                                            <ul>
-                                                                <li style="cursor: pointer;">
-                                                                    <div>
-                                                                        <span> 1111</span>
-                                                                        <i class="el-icon-edit-outline"></i>
-                                                                    </div>
-                                                                    <div>
-                                                                        <span> 1111</span>
-                                                                        <i class="el-icon-edit-outline"></i>
-                                                                    </div>
-                                                                    <div>
-                                                                        <span> 1111</span>
-                                                                        <i class="el-icon-edit-outline"></i>
-                                                                    </div>
-                                                                    <div>
-                                                                        <span> 1111</span>
-                                                                        <i class="el-icon-edit-outline"></i>
-                                                                    </div>
-                                                                    <div>
-                                                                        <span> 1111</span>
-                                                                        <i class="el-icon-edit-outline"></i>
-                                                                    </div>
-                                                                    <div>
-                                                                        <span> 1111</span>
-                                                                        <i class="el-icon-edit-outline"></i>
-                                                                    </div>
-                                                                </li>
-                                                            </ul>
+                                                    </div>
+
+                                                    <div class="right-box-bottom-btns">
+                                                        <div class="right-box-bottom-btn right-box-bottom-btn-cancel"
+                                                             @click="popoverClose('comp')">
+                                                            {{$t('overall.cancel')}}
+                                                        </div>
+                                                        <div class="right-box-bottom-btn right-box-bottom-btn-50">
+                                                            {{$t('overall.save')}}
                                                         </div>
                                                     </div>
                                                     <span class="el-icon-plus" slot="reference"></span>
@@ -275,39 +290,25 @@
                                     </el-form-item>
                                     <el-form-item label="购买日期">
                                         <div class="select-style">
-                                            <el-select value-key="id" v-model="assetType">
-                                                <el-option
-                                                        v-for="item in assetOptionData"
-                                                        :key="item.key"
-                                                        :label="item.name"
-                                                        :value="item.name">
-                                                    <span v-if="!item.isEdit">{{ item.name }}</span>
-                                                    <span class="config-dropdown-label-input" v-if="item.isEdit"
-                                                          @click.stop="editing">
-                                                    <el-input type="text" v-model="item.name" size="mini"/>
-                                                </span>
-                                                    <span class="config-dropdown-btn"
-                                                          @click.stop="editOptionData(item)">
-                                                    <i class="el-icon-edit-outline" v-if="!item.isEdit"></i>
-                                                    <i class="el-icon-check" v-if="item.isEdit"></i>
-                                                </span>
-                                                    <span class="config-dropdown-btn config-dropdown-btn-delete"
-                                                          @click.stop="delOptionData(item)"><i
-                                                            class="el-icon-delete"></i></span>
-                                                </el-option>
-                                            </el-select>
+                                            <el-date-picker
+                                                    v-model="value1"
+                                                    type="date"
+                                                    placeholder="选择日期">
+                                            </el-date-picker>
                                         </div>
                                     </el-form-item>
                                     <div style="font-size: 10px">IDC</div>
                                     <el-divider></el-divider>
+                                    <!------------------------------------------IDC---------------------------------------------->
                                     <el-form-item label="IDC Name">
                                         <div class="select-style">
-                                            <el-select value-key="id" v-model="assetType">
+                                            <el-select v-model="cabinetIDCData" clearable @change="getSingleIDCData">
                                                 <el-option
-                                                        v-for="item in assetOptionData"
+                                                        v-for="item in IDCOptionData"
                                                         :key="item.key"
                                                         :label="item.name"
-                                                        :value="item.name">
+                                                        :value="item.name"
+                                                >
                                                     <span v-if="!item.isEdit">{{ item.name }}</span>
                                                     <span class="config-dropdown-label-input" v-if="item.isEdit"
                                                           @click.stop="editing">
@@ -327,42 +328,69 @@
                                                 <el-popover
                                                         placement="bottom"
                                                         trigger="click"
+                                                        v-model="popIDCVisible"
                                                 >
-                                                    <div class="pop-window">
-                                                        <span style="display: block;padding-bottom: 20px">标题</span>
-                                                        <el-form-item label="IP">
-                                                            <el-input v-model="form.name"/>
-                                                        </el-form-item>
-                                                        <el-form-item label="SN">
-                                                            <el-input v-model="form.name"/>
-                                                        </el-form-item>
-                                                        <el-form-item label="Asset Type">
-                                                            <el-input v-model="form.name"/>
-                                                        </el-form-item>
+                                                    <div class="pop-window-assetType-content">
+                                                        <div class="right-box-top-btns">
+                                                            <div class="right-box-top-btn right-box-top-btn-full"
+                                                                 @click="popoverClose('IDC')">
+                                                                <div class="right-box-btn-icon">
+                                                                    <i class="el-icon-close"></i>
+                                                                </div>
+                                                                <span>{{$t('overall.esc')}}</span>
+                                                            </div>
+                                                        </div>
+                                                        <div class="pop-window">
+                                                            <span style="display: block;padding-bottom: 20px">标题</span>
+                                                            <el-form-item label="IDC Name">
+                                                                <el-input v-model="form.name"/>
+                                                            </el-form-item>
+                                                            <el-form-item label="Location">
+                                                                <el-input v-model="form.name"/>
+                                                            </el-form-item>
+                                                            <el-form-item label="负责人">
+                                                                <el-input v-model="form.name"/>
+                                                            </el-form-item>
+                                                            <el-form-item label="Tel">
+                                                                <el-input v-model="form.name"/>
+                                                            </el-form-item>
+                                                        </div>
+                                                    </div>
+                                                    <div class="right-box-bottom-btns">
+                                                        <div class="right-box-bottom-btn right-box-bottom-btn-cancel"
+                                                             @click="popoverClose('IDC')">
+                                                            {{$t('overall.cancel')}}
+                                                        </div>
+                                                        <div class="right-box-bottom-btn right-box-bottom-btn-50">
+                                                            {{$t('overall.save')}}
+                                                        </div>
                                                     </div>
                                                     <span class="el-icon-plus" slot="reference"></span>
                                                 </el-popover>
                                             </div>
                                         </div>
                                     </el-form-item>
-                                    <el-form-item label="IP">
-                                        <span></span>
+                                    <el-form-item label="Location">
+                                        <span>{{idcSelectedData.location}}</span>
                                     </el-form-item>
-                                    <el-form-item label="IP">
-                                        <span></span>
+                                    <el-form-item label="负责人">
+                                        <span>{{idcSelectedData.principal}}</span>
                                     </el-form-item>
-                                    <el-form-item label="IP">
-                                        <span></span>
+                                    <el-form-item label="Tel">
+                                        <span>{{idcSelectedData.tel}}</span>
                                     </el-form-item>
                                     <el-divider></el-divider>
+                                    <!------------------------------------------cabinet---------------------------------------------->
                                     <el-form-item label="机柜">
                                         <div class="select-style">
-                                            <el-select value-key="id" v-model="assetType">
+                                            <el-select clearable v-model="cabinetModelData"
+                                                       @change="getSingleCabinetData">
                                                 <el-option
-                                                        v-for="item in assetOptionData"
+                                                        v-for="item in cabinetOptionData"
                                                         :key="item.key"
                                                         :label="item.name"
-                                                        :value="item.name">
+                                                        :value="item.name"
+                                                >
                                                     <span v-if="!item.isEdit">{{ item.name }}</span>
                                                     <span class="config-dropdown-label-input" v-if="item.isEdit"
                                                           @click.stop="editing">
@@ -382,48 +410,71 @@
                                                 <el-popover
                                                         placement="bottom"
                                                         trigger="click"
+                                                        v-model="popCabinetVisible"
                                                 >
-                                                    <div class="pop-window">
-                                                        <span style="display: block;padding-bottom: 20px">标题</span>
-                                                        <el-form-item label="Name">
-                                                            <el-input v-model="form.name"/>
-                                                        </el-form-item>
-                                                        <el-form-item label="SN">
-                                                            <div>{{value1}}</div><el-slider v-model="value1"></el-slider>
-                                                        </el-form-item>
-                                                        <el-form-item label="Asset Type">
-                                                            <el-input v-model="form.name" type="textarea" :rows="2"/>
-                                                        </el-form-item>
-                                                        <el-form-item label="Asset Type">
-                                                            <el-input v-model="form.name"/>
-                                                        </el-form-item>
+                                                    <div class="pop-window-assetType-content">
+                                                        <div class="right-box-top-btns">
+                                                            <div class="right-box-top-btn right-box-top-btn-full"
+                                                                 @click="popoverClose('equip')">
+                                                                <div class="right-box-btn-icon">
+                                                                    <i class="el-icon-close"></i>
+                                                                </div>
+                                                                <span>{{$t('overall.esc')}}</span>
+                                                            </div>
+                                                        </div>
+                                                        <div class="pop-window">
+                                                            <span style="display: block;padding-bottom: 20px">标题</span>
+                                                            <el-form-item label="Name">
+                                                                <el-input v-model="form.name"/>
+                                                            </el-form-item>
+                                                            <el-form-item label="U Size">
+                                                                <div>{{value1}}</div>
+                                                                <el-slider v-model="value1"></el-slider>
+                                                            </el-form-item>
+                                                            <el-form-item label="Desc">
+                                                                <el-input v-model="form.name" type="textarea"
+                                                                          :rows="2"/>
+                                                            </el-form-item>
+                                                            <el-form-item label="IDC">
+                                                                <el-input v-model="form.name"/>
+                                                            </el-form-item>
+                                                        </div>
+                                                    </div>
+                                                    <div class="right-box-bottom-btns">
+                                                        <div class="right-box-bottom-btn right-box-bottom-btn-cancel"
+                                                             @click="popoverClose('equip')">
+                                                            {{$t('overall.cancel')}}
+                                                        </div>
+                                                        <div class="right-box-bottom-btn right-box-bottom-btn-50">
+                                                            {{$t('overall.save')}}
+                                                        </div>
                                                     </div>
                                                     <span class="el-icon-plus" slot="reference"></span>
                                                 </el-popover>
                                             </div>
                                         </div>
                                     </el-form-item>
-                                    <el-form-item label="IP">
-                                        <span></span>
+                                    <el-form-item label="U Size">
+                                        <span>{{cabinetSelectedData.uSize}}</span>
                                     </el-form-item>
-                                    <el-form-item label="IP">
-                                        <span></span>
+                                    <el-form-item label="Desc">
+                                        <span>{{cabinetSelectedData.desc}}</span>
                                     </el-form-item>
-                                    <div style="font-size: 10px">IDC</div>
+                                    <div style="font-size: 10px">CLI Account</div>
                                     <el-divider></el-divider>
                                     <el-form-item label="IP">
-                                        <el-radio-group>
+                                        <el-radio-group size="mini" v-model="accountType">
                                             <el-radio-button label="Password"></el-radio-button>
                                             <el-radio-button label="SSH私钥"></el-radio-button>
                                         </el-radio-group>
                                     </el-form-item>
-                                    <el-form-item label="IP">
+                                    <el-form-item label="Account">
                                         <el-input v-model="form.name"/>
                                     </el-form-item>
-                                    <el-form-item label="SN">
+                                    <el-form-item label="Password">
                                         <el-input v-model="form.name"/>
                                     </el-form-item>
-                                    <el-form-item label="IP">
+                                    <el-form-item label="Port">
                                         <el-input v-model="form.name"/>
                                     </el-form-item>
                                 </div>
@@ -441,7 +492,9 @@ export default {
   name: "asset",
   data() {
     return {
-      value1:100,
+      cabinetModelData: '',
+      cabinetIDCData: '',
+      value1: 100,
       checkList: [],
       sidebarState: '',
       tableTitle: [
@@ -470,8 +523,8 @@ export default {
           prop: 'Module',
           show: true,
         }, {
-          label: this.$t("asset.tableTitle.alarm"),
-          prop: 'Alarm',
+          label: this.$t("asset.tableTitle.alert"),
+          prop: 'alert',
           show: true,
         }, {
           label: this.$t("asset.tableTitle.dataCenter"),
@@ -550,26 +603,61 @@ export default {
         }
       ],
       checkListData: [],
-      assetOptionData: [
+      assetTypeData: '',
+      assetTypeOptionData: [
         {
           id: '1',
-          name: 'group1',
+          name: '座机',
         }, {
           id: '2',
-          name: 'group2',
+          name: '路由器',
         }, {
           id: '3',
-          name: '小组3',
-        }, {
-          id: '4',
-          name: '小组4',
-        }, {
-          id: '5',
-          name: '小组啊小组5',
-        }, {
-          id: '6',
-          name: '小组6',
+          name: '台式机',
         }],
+      companyTypeData: '',
+      companyTypeOptionData: [
+        {
+          value: 'zhinan',
+          label: '指南',
+          children: [
+            {
+              value: 'shejiyuanze',
+              label: '设计原则',
+            }, {
+              value: 'daohang',
+              label: '导航',
+            }
+          ]
+        }, {
+          value: 'zujian',
+          label: '组件',
+          children: [
+            {
+              value: '11',
+              label: '设计原22则',
+            }, {
+              value: '33',
+              label: '导44航',
+            }
+          ]
+        }, {
+          value: 'ziyuan',
+          label: '资源',
+          children: [
+            {
+              value: 'shejiyuanze',
+              label: '设计原则',
+            }, {
+              value: 'daohang',
+              label: '导航',
+            }
+          ]
+        }],
+      IDCData: '',
+      IDCOptionData: [],
+      cabinetData: '',
+      cabinetOptionData: [],
       input: '',
       pageObj: {
         pageNo: 1,
@@ -589,6 +677,24 @@ export default {
         title: ''
       },
       assetType: {},
+      accountType: '',
+      idcSelectedData: {
+        id: '',
+        name: '',
+        location: '',
+        principal: '',
+        tel: ''
+      },
+      cabinetSelectedData: {
+        name: '',
+        uSize: '',
+        desc: '',
+        idc: ''
+      },
+      popTypeVisible: false,
+      popCompVisible: false,
+      popIDCVisible: false,
+      popCabinetVisible: false
     }
   },
   computed: {
@@ -613,13 +719,6 @@ export default {
   },
   methods: {
     getAssetData() {
-      this.$get('idc', this.pageObj).then(response => {
-        if (response.code == 200) {
-          this.checkListData = response.data.list
-        }
-      })
-    },
-    getListData() {
       this.$get('asset', this.pageObj).then(response => {
         if (response.code === 200) {
           this.tableData = response.data.list;
@@ -627,17 +726,31 @@ export default {
         }
       })
     },
+    getIDCOptionData() {
+      this.$get('idc', this.pageObj).then(response => {
+        if (response.code === 200) {
+          this.checkListData = this.IDCOptionData = response.data.list;
+        }
+      })
+    },
+    getCabinetOptionData() {
+      this.$get('cabinet', this.pageObj).then(response => {
+        if (response.code === 200) {
+          this.cabinetOptionData = response.data.list;
+        }
+      })
+    },
     markOptionData() {
-      for (let i in this.assetOptionData) {
-        this.$set(this.assetOptionData[i], 'isEdit', false);
-        this.$set(this.assetOptionData[i], 'oldName', this.assetOptionData[i].name);
-      }
+      this.assetTypeOptionData.forEach(item => {
+        this.$set(item, 'isEdit', false);
+        this.$set(item, 'oldName', item.name);
+      })
     },
     editOptionData(item) {
       if (!item.isEdit) {
         item.isEdit = true;
       } else {
-        if (item.name != item.oldName) {
+        if (item.name !== item.oldName) {
           item.isEdit = false;
         } else {
           item.isEdit = false;
@@ -661,19 +774,51 @@ export default {
     editing() {
 
     },
+    getSingleIDCData(data) {
+      console.log(data)
+      this.idcSelectedData = ''
+      this.IDCOptionData.forEach(item => {
+        if (item.name == data) {
+          this.idcSelectedData = item
+          console.log(this.idcSelectedData)
+        }
+      })
+    },
+    getSingleCabinetData(data) {
+      this.cabinetOptionData.forEach(item => {
+        if (item.name === data) {
+          this.cabinetSelectedData = item
+        }
+      })
+    },
     pageNo(val) {
       this.pageObj.pageNo = val;
-      this.getListData()
+      this.getAssetData()
     },
     pageSize(val) {
       this.pageObj.pageSize = val;
-      this.getListData()
-    }
+      this.getAssetData()
+    },
+    popoverClose(data) {
+      if (data === 'type') {
+        this.popTypeVisible = false
+      }
+      if (data === 'comp') {
+        this.popCompVisible = false
+      }
+      if (data === 'IDC') {
+        this.popIDCVisible = false
+      }
+      if (data === 'equip') {
+        this.popCabinetVisible = false
+      }
+    },
   },
   mounted() {
     this.markOptionData();
-    this.getListData();
     this.getAssetData();
+    this.getIDCOptionData();
+    this.getCabinetOptionData();
     window.onresize = () => {
       this.tableHeight = document.documentElement.clientHeight - 200;
     }
@@ -683,6 +828,11 @@ export default {
 <style>
 .el-table {
     font-size: 10px;
+}
+
+.el-popover {
+    padding: 0px;
+    border-radius: 10px;
 }
 
 .el-form-style .el-form-item {
@@ -700,7 +850,7 @@ export default {
 }
 
 .el-divider--horizontal {
-    margin: 12px;
+    margin: 15px;
 }
 
 .el-checkbox-group {
@@ -800,6 +950,12 @@ export default {
     margin: 15px 0;
 }
 
+.account-list-option {
+    cursor: pointer;
+    display: inline-block;
+    margin-right: 6px;
+}
+
 .right-box-top-btns {
     text-align: center;
 }
@@ -853,32 +1009,59 @@ export default {
     height: 300px;
     width: 400px;
 }
-.pop-window-company{
-    height: 600px;
+
+.pop-window-assetType {
+    height: 500px;
     width: 400px;
 }
 
-.pop-window-type{
-    height: 600px;
-    width: 400px;
+.pop-window-assetType-content {
+    padding: 1px 15px 15px 20px;
 }
 
-.companyList{
+.companyList {
     width: 300px;
     height: 150px;
     border: 1px solid #000000;
 }
 
-.rm-c-list li{
-    width: 300px;
-    height: 400px;
+.rm-c-list li {
     border: 1px solid #000000;
 }
 
-.rm-c-list span:hover{
-    background-color:#888;color:#fff;
+.rm-c-list span:hover {
+    background-color: #888;
+    color: #fff;
 }
 
+.right-box-bottom-btn {
+    display: inline-block;
+    background-color: #656565;
+    color: white;
+    line-height: 35px;
+    cursor: pointer;
+    text-align: center;
+}
+
+.right-box-bottom-btns {
+    position: absolute;
+    bottom: 0px;
+    width: 100%;
+    text-align: center;
+}
+
+.right-box-bottom-btn-cancel {
+    background-color: #DADADA;
+    color: #656565;
+    width: 50%;
+    border-bottom-left-radius: 8px;
+}
+
+.right-box-bottom-btn-50 {
+    width: 50%;
+    float: right;
+    border-bottom-right-radius: 8px;
+}
 
 @keyframes slide-in-from-right {
     from {

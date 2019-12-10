@@ -11,7 +11,7 @@
                 </div>
 
                 <div class="login-input">
-                    <input v-model="loginData.password" class="inputL" @keyup.enter="login" placeholder="password" ></input>
+                    <input v-model="loginData.password" type="password" class="inputL" @keyup.enter="login" placeholder="password" ></input>
                 </div>
                 <div class="login-button">
                     <button @click="login">登录</button>
