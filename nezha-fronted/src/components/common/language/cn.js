@@ -3,7 +3,7 @@ const cn = {
   overall: {
     dashboard: '仪表盘',
     project: '工程',
-    alarm: "告警",
+    alert: "告警",
     asset: '资产',
     config: '设置',
     create: '新增',
@@ -12,7 +12,9 @@ const cn = {
     esc: '取消',
     cancel: '取消',
     save: '保存',
-    search: '搜索'
+    search: '搜索',
+    add: '新增',
+    option: "操作"
   },
   asset: {
     tableTitle: {
@@ -22,7 +24,7 @@ const cn = {
       ip: 'IP',
       assetState: '资产状态',
       module: 'Module',
-      alarm: 'Alarm',
+      alert: 'alert',
       dataCenter: '数据中心',
       cabinet: '机柜',
       model: '型号',
@@ -36,7 +38,7 @@ const cn = {
       projectName: '项目名称',
       moduleName: 'Module Name',
       endPoint: 'EndPoint',
-      alarm: 'Alarm',
+      alert: 'alert',
     },
   },
   config: {
@@ -62,11 +64,12 @@ const cn = {
       editProm: "修改Prometheus Server"
     },
   },
-  alarm: {
-    alarmList: "告警列表",
-    alarmConfig: "告警设置",
+  alert: {
+    alert: "告警",
+    alertList: "告警列表",
+    alertConfig: "告警设置",
     list: {
-      alarmName: "告警名称",
+      alertName: "告警名称",
       linkedId: "关联ID",
       severity: "告警级别",
       type: "类型",
@@ -78,12 +81,25 @@ const cn = {
       charts: "图表",
 
       //表内容
-      projectAlarm: "Project Alarm",
-      moduleAlarm: "Module Alarm",
-      deviceAlarm: "Device Alarm",
+      projectalert: "Project Alert",
+      modulealert: "Module Alert",
+      devicealert: "Device Alert",
       pending: "Pending",
       expired: "Expired"
     }
+  },
+  project: {
+    endpoint: {
+      endpoint: "Endpoint",
+      endpointId: "Endpoint ID",
+      host: "Host",
+      port: "Port",
+      param: "Param",
+      path: "Path",
+      asset: "Asset",
+      lastUpdate: "Last Update",
+    },
+    metrics: "Metrics",
   },
   ...zhLocale
 }

@@ -55,10 +55,4 @@ export default {
 </script>
 
 <style>
-.pagination {
-  display: inline-block;
-  margin-top: 10px;
-  margin-left: 50%;
-  transform: translate(-50%);
-}
 </style>

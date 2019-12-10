@@ -12,6 +12,31 @@ html {
 .content-box {
   height: 100%;
 }
+/*通用*/
+.margin-l-5 {
+  margin-left: 5px !important;
+}
+.margin-r-5 {
+  margin-right: 5px !important;
+}
+.margin-t-5 {
+  margin-top: 5px !important;
+}
+.margin-b-5 {
+  margin-bottom: 5px !important;
+}
+.margin-l-10 {
+  margin-left: 10px !important;
+}
+.margin-r-10 {
+  margin-right: 10px !important;
+}
+.margin-t-10 {
+  margin-top: 10px !important;
+}
+.margin-b-10 {
+  margin-bottom: 10px !important;
+}
 /*侧滑文字*/
 .el-form-item .el-form-item__label{
     font-size: 10px;
@@ -27,6 +52,126 @@ html {
     width: 90%;
 }
 
+/* begin--左侧列表*/
+.content-left {
+  float: left;
+  width: 322px;
+  height: 100%;
+  background-color: #eeeeee;
+  border-right: 1px solid #dadada;
+  padding: 0 12px 0 11px;
+  box-sizing: border-box;
+  font-size: 14px;
+}
+.sidebar-title {
+  padding: 20px 0 0 15px;
+  color: #5e5e5e;
+}
+.sidebar-info {
+  margin-top: 27px;
+  border: 1px solid #cacaca;
+  border-radius: 6px;
+  height: calc(90vh - 55px);
+  width: 100%;
+}
+.sidebar-info-top {
+  border-radius: 6px 6px 0 0;
+}
+.sidebar-info-item {
+height: 39px;
+line-height: 39px;
+padding: 0 8px 0 32px;
+border-bottom: 1px solid #cacaca;
+cursor: pointer;
+color: #5e5e5e;
+}
+.sidebar-info-item-active {
+background-color: #5e5e5e;
+color: white;
+}
+.sidebar-info-foot {
+  border-radius: 6px 6px 0 0;
+}
+/* end--左侧列表*/
+
+/* begin--右侧内容*/
+  /* begin--顶部工具栏*/
+.top-tools {
+  padding: 22px 0 13px 0;
+}
+.top-tools .el-button--mini {
+  padding-top: 6px;
+  padding-bottom: 6px;
+}
+.top-tools .top-tool {
+  float: left;
+}
+.top-tools .top-tool-right {
+  float: right;
+}
+.top-tools .top-tool-search {
+  width: 220px;
+}
+.top-tools .el-button-group {
+  float: left;
+}
+.top-tools .top-tool-btn {
+  border-radius: 5px;
+  width: 100px;
+}
+.top-tools .top-tool-btn:focus, .top-tools .top-tool-btn:hover {
+  color: #606266;
+  background-color: white;
+}
+.top-tools .top-tool-btn-active {
+  color: white;
+  background-color: #656565;
+}
+.top-tools .top-tool-btn-active:focus, .top-tools .top-tool-btn-active:hover {
+  color: white;
+  background-color: #656565;
+}
+.top-tools .top-tool-btn-txt {
+  font-size: 14px;
+}
+  /* end--顶部工具栏*/
+  /* start--内容*/
+.content-right>.el-table{
+  border-radius: 4px;
+  border: 1px solid #D7D7D7;
+  margin-top: 30px;
+}
+.content-right {
+  height: calc(100% - 131px);
+  margin-left: 322px;
+  padding: 0 15px 0 25px;
+}
+  /* end--内容*/
+  /* start--分页*/
+.pagination {
+  padding-top: 18px;
+  text-align: center;
+}
+  /* end--分页*/
+  /* begin--右弹框滑入滑出动画*/
+@keyframes slide-in-from-right {
+  from {right: -800px}
+  to {right: 0}
+}
+@keyframes slide-out-to-right {
+  from {right: 0}
+  to {right: -800px}
+}
+.right-box-enter-active {
+  animation: slide-in-from-right 0.4s;
+}
+.right-box-leave-active {
+  animation: slide-out-to-right 0.4s;
+}
+  /* end--右弹框滑入滑出动画*/
+/* end--右侧内容*/
+
+/* start--自定义可编辑的el-select下拉框样式*/
 .config-dropdown {
   width: 550px;
 }
@@ -53,3 +198,4 @@ html {
 .config-dropdown-error-message {
   color: #F98D9A;
 }
+/* end--自定义可编辑的el-select下拉框样式*/

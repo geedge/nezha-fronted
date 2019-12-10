@@ -3,7 +3,7 @@ const en = {
   overall:{
     dashboard:'dashboard',
     project:'project',
-    alarm: "alarm",
+    alert: "alert",
     asset:'asset',
     config:'config',
     create: 'Create',
@@ -12,7 +12,9 @@ const en = {
     esc: 'Esc',
     cancel: 'Cancel',
     save: 'Save',
-    search: 'Search'
+    search: 'Search',
+    add: "Add",
+    option: "Option"
   },
   asset:{
     tableTitle: {
@@ -22,7 +24,7 @@ const en = {
       ip: 'IP',
       assetState: '资产状态',
       module: 'Module',
-      alarm: 'Alarm',
+      alert: 'alert',
       dataCenter: '数据中心',
       cabinet: '机柜',
       model: '型号',
@@ -36,11 +38,13 @@ const en = {
       projectName: '项目名称',
       moduleName: 'Module Name',
       endPoint: 'EndPoint',
-      alarm: 'Alarm',
+      alert: 'alert',
     },
   },
   config: {
+    config: "Config",
     account: {
+      accountList: "Account List",
       //列表表头
       account: "Account",
       language: "Language",
@@ -56,16 +60,18 @@ const en = {
       notCurrentlySupport: 'Not currently supported'
     },
     promServer: {
+      promServerList: "Prometheus Server",
       //侧滑框
       promId: "Prometheus Server ID",
       createProm: "Create Prometheus Server",
       editProm: "Edit Prometheus Server"
     },
   },
-  alarm: {
-    alarmList: "Alarm List",
-    alarmConfig: "Alarm Config",
-    alarmName: "Alarm Name",
+  alert: {
+    alert: "Alert",
+    alertList: "Alert List",
+    alertConfig: "Alert Config",
+    alertName: "Alert Name",
     severity: "Severity",
     description: "Desc",
     summary: "Summary",
@@ -79,9 +85,9 @@ const en = {
       charts: "Charts",
 
       //表内容
-      projectAlarm: "Project Alarm",
-      moduleAlarm: "Module Alarm",
-      deviceAlarm: "Device Alarm",
+      projectalert: "Project Alert",
+      modulealert: "Module Alert",
+      devicealert: "Device Alert",
       pending: "Pending",
       expired: "Expired"
     },
@@ -91,10 +97,25 @@ const en = {
       expr: "Expr",
       for: "For",
       option: "Option",
-      alarmConfig: "Alarm Config",
-      createAlarmConfig: "Create Alarm Config",
-      editAlarmConfig: "Edit Alarm Config",
+      alertConfig: "Alert Config",
+      createalertConfig: "Create Alert Config",
+      editalertConfig: "Edit Alert Config",
     }
+  },
+  project: {
+    endpoint: {
+      createEndpoint: "Create Endpoint",
+      editEndpoint: "Edit Endpoint",
+      endpoint: "Endpoint",
+      endpointId: "Endpoint ID",
+      host: "Host",
+      port: "Port",
+      param: "Param",
+      path: "Path",
+      asset: "Asset",
+      lastUpdate: "Last Update",
+    },
+    metrics: "Metrics"
   },
   ...enLocale
 }

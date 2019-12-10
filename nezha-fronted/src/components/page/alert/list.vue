@@ -2,43 +2,6 @@
   .account {
     height: 100%;
   }
-  .content-left {
-    float: left;
-    width: 370px;
-    height: 100%;
-  }
-  .sidebar-title {
-    padding-left: 30px;
-    padding-top: 20px;
-  }
-
-  .sidebar-info {
-    margin-top: 20px;
-    border: 1px solid #acacac;
-    border-radius: 8px;
-    height: calc(90vh - 55px);
-    width: calc(100% - 30px);
-  }
-
-  .sidebar-info-header {
-    background: #acacac;
-    text-align: center;
-    line-height: 50px;
-    border-top-left-radius: 8px;
-    border-top-right-radius: 8px;
-    height: 60px;
-    width: 100%;
-  }
-
-  .sidebar-info-footer {
-    padding-top: 15px;
-    padding-left: 15px;
-  }
-  .account-list {
-    height: calc(100% - 131px);
-    margin-left: 370px;
-    padding: 0 15px 0 0;
-  }
   .account-list-option {
     cursor: pointer;
     display: inline-block;
@@ -55,11 +18,6 @@
   }
   .account-list-option .el-icon-view:hover {
     color: #409EFF;
-  }
-  .account-list-search {
-    float: right;
-    width: 220px;
-    margin: 15px 0;
   }
   /* begin--右侧弹框*/
   .right-box {
@@ -202,22 +160,26 @@
 </style>
 <template>
     <div class="account">
-      <div class="content-left">
-        <div class="sidebar-title">
-          <div>Config</div>
-          <div class="sidebar-info">
-            <div class="sidebar-info-footer" v-if="sidebarState">
+        <div class="content-left">
+            <div class="sidebar-title">{{$t('alert.alert')}}</div>
+            <div class="sidebar-info">
+                <div class="sidebar-info-item sidebar-info-top sidebar-info-item-active">{{$t('alert.alertList')}}</div>
+                <div class="sidebar-info-item" @click="jumpTo('alertConfig')">{{$t('alert.alertConfig')}}</div>
             </div>
-          </div>
         </div>
-      </div>
-        <div class="account-list">
-            <el-input
-              class="account-list-search"
-              type="text"
-              :placeholder="$t('overall.search')"
-              size="small"
-            ></el-input>
+        <div class="content-right">
+            <div class="top-tools">
+              <el-button @click="toAdd" class="top-tool-btn top-tool-btn-active margin-l-10 top-tool top-tool-right" size="mini">
+                <span><i class="el-icon-plus"></i></span>
+                <span class="top-tool-btn-txt">{{$t('overall.add')}}</span>
+              </el-button>
+              <el-input
+                  class="top-tool-search top-tool top-tool-right"
+                  type="text"
+                  :placeholder="$t('overall.search')"
+                  size="mini"
+                ></el-input>
+            </div>
             <el-table
                   :data="tableData"
                   border
@@ -232,9 +194,9 @@
                 >
                     <template slot-scope="scope" :column="item">
                         <div v-if="item.prop == 'type'" class="account-list-options">
-                            <span v-if="scope.row[item.prop] == 1" class="account-list-option">Project Alarm</span>
-                            <span v-if="scope.row[item.prop] == 2" class="account-list-option">Module Alarm</span>
-                            <span v-if="scope.row[item.prop] == 3" class="account-list-option">Device Alarm</span>
+                            <span v-if="scope.row[item.prop] == 1" class="account-list-option">Project alert</span>
+                            <span v-if="scope.row[item.prop] == 2" class="account-list-option">Module alert</span>
+                            <span v-if="scope.row[item.prop] == 3" class="account-list-option">Device alert</span>
                         </div>
                         <div v-else-if="item.prop == 'linkObject'">
                             <span v-if="scope.row['type'] == 1 || scope.row['type'] == 2" class="account-list-option">{{scope.row[item.prop].name}}</span>
@@ -250,7 +212,7 @@
                     </template>
                 </el-table-column>
             </el-table>
-          <Pagination :pageObj="pageObj" @pageNo='pageNo' @pageSize='pageSize' ref="Pagination"></Pagination>
+            <Pagination :pageObj="pageObj" @pageNo='pageNo' @pageSize='pageSize' ref="Pagination"></Pagination>
         </div>
 
     </div>
@@ -258,7 +220,7 @@
 </template>
 <script>
 export default {
-  name: "alarmList",
+  name: "alertList",
   data() {
     return {
       pageObj: {
@@ -268,39 +230,39 @@ export default {
       },
       tableTitle: [
         {
-          label: this.$t("alarm.alarmName"),
+          label: this.$t("alert.alertName"),
           prop: 'alertName',
           show: true
         }, {
-          label: this.$t("alarm.startAt"),
+          label: this.$t("alert.startAt"),
           prop: 'startAt',
           show: true,
         }, {
-          label: this.$t("alarm.list.type"),
+          label: this.$t("alert.list.type"),
           prop: 'type',
           show: true,
         }, {
-          label: this.$t("alarm.list.linkedId"),
+          label: this.$t("alert.list.linkedId"),
           prop: 'linkObject',
           show: true,
         }, {
-          label: this.$t("alarm.severity"),
+          label: this.$t("alert.severity"),
           prop: 'severity',
           show: true,
         }, {
-          label: this.$t('alarm.summary'),
+          label: this.$t('alert.summary'),
           prop: 'summary',
           show: true,
         }, {
-          label: this.$t('alarm.description'),
+          label: this.$t('alert.description'),
           prop: 'description',
           show: true,
         }, {
-          label: this.$t('alarm.list.state'),
+          label: this.$t('alert.list.state'),
           prop: 'state',
           show: true,
         }, {
-          label: this.$t('alarm.endAt'),
+          label: this.$t('alert.endAt'),
           prop: 'endAt',
           show: true,
         }
@@ -309,17 +271,27 @@ export default {
     }
   },
   methods: {
-    getAlarmList: function() {
+    getAlertList: function() {
       this.$get('alert/message', this.pageObj).then(response => {
         if (response.code == 200) {
           this.tableData = response.data.list
           this.pageObj.total = response.data.total
         }
       })
-    }
+    },
+    jumpTo(data,id) {
+      this.$store.state.assetData.moduleData = data
+      this.$store.state.assetData.selectedData = id
+      this.$router.push({
+        path: "/" + data,
+        query: {
+          t: +new Date()
+        }
+      });
+    },
   },
   mounted() {
-    this.getAlarmList();
+    this.getAlertList();
   }
 }
 </script>

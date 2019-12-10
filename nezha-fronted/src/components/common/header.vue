@@ -29,13 +29,13 @@
                 </el-submenu>
               <el-submenu index="4">
                 <template slot="title">
-                  <div @click="jumpTo('alarmList')">{{$t('overall.alarm')}}</div>
+                  <div @click="jumpTo('alertList')">{{$t('overall.alert')}}</div>
                 </template>
                 <el-menu-item index="1">
-                  <div @click="jumpTo('alarmList')">{{$t('alarm.alarmList')}}</div>
+                  <div @click="jumpTo('alertList')">{{$t('alert.alertList')}}</div>
                 </el-menu-item>
                 <el-menu-item index="2">
-                  <div @click="jumpTo('alarmConfig')">{{$t('alarm.alarmConfig')}}</div>
+                  <div @click="jumpTo('alertConfig')">{{$t('alert.alertConfig')}}</div>
                 </el-menu-item>
               </el-submenu>
                 <el-submenu index="5">

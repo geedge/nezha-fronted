@@ -2,64 +2,26 @@
   .prom {
     height: 100%;
   }
-  .content-left {
-    float: left;
-    width: 370px;
-    height: 100%;
-  }
-  .sidebar-title {
-    padding-left: 30px;
-    padding-top: 20px;
+  .prom .el-table {
+    border-radius: 5px;
   }
 
-  .sidebar-info {
-    margin-top: 20px;
-    border: 1px solid #acacac;
-    border-radius: 8px;
-    height: calc(90vh - 55px);
-    width: calc(100% - 30px);
-  }
-
-  .sidebar-info-header {
-    background: #acacac;
-    text-align: center;
-    line-height: 50px;
-    border-top-left-radius: 8px;
-    border-top-right-radius: 8px;
-    height: 60px;
-    width: 100%;
-  }
-
-  .sidebar-info-footer {
-    padding-top: 15px;
-    padding-left: 15px;
-  }
-  .prom-list {
-    height: calc(100% - 131px);
-    margin-left: 370px;
-    padding: 0 15px 0 0;
-  }
-  .prom-list-option {
+  .content-right-option {
     cursor: pointer;
     display: inline-block;
     margin-right: 6px;
   }
-  .prom-list-option .el-icon-delete {
+  .content-right-option .el-icon-delete {
     color: #F98D9A;
   }
-  .prom-list-option .el-icon-delete:hover {
+  .content-right-option .el-icon-delete:hover {
     color: #D96D7A;
   }
-  .prom-list-option .el-icon-view {
+  .content-right-option .el-icon-view {
     color: #60BEFF;
   }
-  .prom-list-option .el-icon-view:hover {
+  .content-right-option .el-icon-view:hover {
     color: #409EFF;
-  }
-  .prom-list-search {
-    float: right;
-    width: 220px;
-    margin: 15px 0;
   }
   /* begin--右侧弹框*/
   .right-box {
@@ -203,21 +165,25 @@
 <template>
     <div class="prom">
         <div class="content-left">
-            <div class="sidebar-title">
-                <div>Config</div>
-                <div class="sidebar-info">
-                    <div class="sidebar-info-footer" v-if="sidebarState">
-                    </div>
-                </div>
+            <div class="sidebar-title">{{$t('config.config')}}</div>
+            <div class="sidebar-info">
+                <div class="sidebar-info-item sidebar-info-top" @click="jumpTo('account')">{{$t('config.account.accountList')}}</div>
+                <div class="sidebar-info-item sidebar-info-item-active">{{$t('config.promServer.promServerList')}}</div>
             </div>
         </div>
-        <div class="prom-list">
-            <el-input
-              class="prom-list-search"
-              type="text"
-              :placeholder="$t('overall.search')"
-              size="small"
-            ></el-input>
+        <div class="content-right">
+            <div class="top-tools">
+              <el-button @click="toAdd" class="top-tool-btn top-tool-btn-active margin-l-10 top-tool top-tool-right" size="mini">
+                <span><i class="el-icon-plus"></i></span>
+                <span class="top-tool-btn-txt">{{$t('overall.add')}}</span>
+              </el-button>
+              <el-input
+                  class="top-tool-search top-tool top-tool-right"
+                  type="text"
+                  :placeholder="$t('overall.search')"
+                  size="mini"
+                ></el-input>
+            </div>
             <el-table
                   :data="tableData"
                   border
@@ -237,10 +203,10 @@
                 </el-table-column>
                 <el-table-column :label="$t('config.account.option')" width="100">
                   <template slot-scope="scope" :column="item">
-                    <div class="prom-list-options">
-                        <span @click="del(scope.row)" class="prom-list-option"><i class="el-icon-delete"></i></span>
-                        <span @click="detail(scope.row)" class="prom-list-option"><i class="el-icon-view"></i></span>
-                        <span @click="edit(scope.row)" class="prom-list-option"><i class="el-icon-edit-outline"></i></span>
+                    <div class="content-right-options">
+                        <span @click="del(scope.row)" class="content-right-option"><i class="el-icon-delete"></i></span>
+                        <span @click="detail(scope.row)" class="content-right-option"><i class="el-icon-view"></i></span>
+                        <span @click="toEdit(scope.row)" class="content-right-option"><i class="el-icon-edit-outline"></i></span>
                     </div>
                   </template>
                 </el-table-column>
@@ -330,7 +296,7 @@
 
                 <!-- begin--底部按钮-->
                 <div class="right-box-bottom-btns">
-                    <div @click="esc()" :class="{'right-box-bottom-btn-50': rightBox.isEdit}" class="right-box-bottom-btn right-box-bottom-btn-cancel">{{$t('overall.cancel')}}</div><div v-if="rightBox.isEdit" class="right-box-bottom-btn right-box-bottom-btn-50">{{promServer.id == '' ? $t('overall.create') : $t('overall.save')}}</div>
+                    <div @click="esc()" :class="{'right-box-bottom-btn-50': rightBox.isEdit}" class="right-box-bottom-btn right-box-bottom-btn-cancel">{{$t('overall.cancel')}}</div><div @click="save()" v-if="rightBox.isEdit" class="right-box-bottom-btn right-box-bottom-btn-50">{{promServer.id == '' ? $t('overall.create') : $t('overall.save')}}</div>
                 </div>
                 <!-- end--底部按钮-->
 
@@ -423,7 +389,7 @@ export default {
     }
   },
   methods: {
-    edit: function(u) {
+    toEdit: function(u) {
       this.promServer = Object.assign({}, u);
       this.rightBox.isEdit = true;
       this.rightBox.title = this.$t("config.promServer.editProm") + "  ID：" + u.id;
@@ -445,24 +411,34 @@ export default {
       this.rightBox.title = "Prometheus Server ID：" + u.id;
       this.rightBox.show = true;
     },
-    add: function() {
+    toAdd: function() {
       this.cleanPromServer();
       this.rightBox.isEdit = true;
       this.rightBox.title = this.$t("config.promServer.createProm");
       this.rightBox.show = true;
     },
-    saveOrToEdit: function() {
-      if (!this.rightBox.isEdit) {
-        this.rightBox.isEdit = true;
-        this.rightBox.title = this.$t("config.promServer.editProm") + "  ID：" + this.promServer.id;
-      } else {
+    save: function() {
+      if (this.promServer.id) {
         this.$put('promServer', this.promServer).then(response => {
           if (response.code === 200) {
             this.getTableData();
             this.rightBox.isEdit = false;
-
           }
-        })
+        });
+      } else {
+        this.$post('promServer', this.promServer).then(response => {
+          if (response.code === 200) {
+            this.getTableData();
+            this.rightBox.isEdit = false;
+          }
+        });
+      }
+    },
+    saveOrToEdit: function() {
+      if (!this.rightBox.isEdit) {
+        this.toEdit(this.promServer);
+      } else {
+        this.save();
       }
     },
     toEditIdc: function(item) {
@@ -473,9 +449,16 @@ export default {
       } else {
         //如果已在编辑状态，判断name是否有变更，有变更则发请求
         if (item.name != item.oldName) {
-          if (this.updateIdcName(item) == 200) {
-            item.isEdit = false;
-          }
+          this.$put('idc', item).then(response => {
+            if (response.code === 200) {
+              item.errorMessage = '';
+              item.oldName = item.name;
+              item.isEdit = false;
+            } else {
+              console.info(response.msg)
+              this.$set(item, 'errorMessage', response.msg);
+            }
+          })
         } else {
           item.errorMessage = '';
           item.isEdit = false;
@@ -496,10 +479,12 @@ export default {
       this.blurEditIdc();
       //TODO 请求后台，删除
     },
-    getIdcData: function() {
-      this.$get('idc', this.pageObj).then(response => {
+    getIdcData: async function() {
+      console.info(1)
+      await this.$get('idc', this.pageObj).then(response => {
         if (response.code === 200) {
           this.idcData = response.data.list;
+          this.getTableData();
         }
       })
       for (var i = 0; i < this.idcData.length; i++) {
@@ -513,11 +498,21 @@ export default {
     stopFun: function() {
 
     },
+    jumpTo(data,id) {
+      this.$store.state.assetData.moduleData = data
+      this.$store.state.assetData.selectedData = id
+      this.$router.push({
+        path: "/" + data,
+        query: {
+          t: +new Date()
+        }
+      });
+    },
     getTableData: function() {
       this.$get('promServer', this.pageObj).then(response => {
         if (response.code === 200) {
-          console.info(this.idcData)
           for (var i = 0; i < response.data.list.length; i++) {
+            console.info(this.idcData)
             for (var j = 0; j < this.idcData.length; j++) {
               if (response.data.list[i].idcId == this.idcData[j].id) {
                 response.data.list[i].idc = this.idcData[j];
@@ -529,14 +524,6 @@ export default {
           this.pageObj.total = response.data.total
         }
       })
-    },
-    updateIdcName: function(item) {
-      //TODO 请求接口改名
-      var code = 200;
-      //this.$set(item, 'errorMessage', 'err');
-      item.errorMessage = '';
-      item.oldName = item.name;
-      return code;
     },
     cleanPromServer: function() {
       this.promServer = {
@@ -555,9 +542,13 @@ export default {
       this.getTableData();
     }
   },
-  mounted() {
+  mounted: function() {
     this.getIdcData();
-    this.getTableData();
+  },
+  watch: {
+    'promServer.idc': function(n, o) {
+      this.promServer.idcId = n.id;
+    }
   }
 }
 </script>

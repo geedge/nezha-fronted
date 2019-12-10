@@ -2,64 +2,28 @@
   .account {
     height: 100%;
   }
-  .content-left {
-    float: left;
-    width: 370px;
-    height: 100%;
-  }
-  .sidebar-title {
-    padding-left: 30px;
-    padding-top: 20px;
-  }
 
-  .sidebar-info {
-    margin-top: 20px;
-    border: 1px solid #acacac;
-    border-radius: 8px;
-    height: calc(90vh - 55px);
-    width: calc(100% - 30px);
-  }
-
-  .sidebar-info-header {
-    background: #acacac;
-    text-align: center;
-    line-height: 50px;
-    border-top-left-radius: 8px;
-    border-top-right-radius: 8px;
-    height: 60px;
-    width: 100%;
-  }
-
-  .sidebar-info-footer {
-    padding-top: 15px;
-    padding-left: 15px;
-  }
-  .account-list {
+  .content-right {
     height: calc(100% - 131px);
-    margin-left: 370px;
-    padding: 0 15px 0 0;
+    margin-left: 322px;
+    padding: 0 15px 0 25px;
   }
-  .account-list-option {
+  .content-right-option {
     cursor: pointer;
     display: inline-block;
     margin-right: 6px;
   }
-  .account-list-option .el-icon-delete {
+  .content-right-option .el-icon-delete {
     color: #F98D9A;
   }
-  .account-list-option .el-icon-delete:hover {
+  .content-right-option .el-icon-delete:hover {
     color: #D96D7A;
   }
-  .account-list-option .el-icon-view {
+  .content-right-option .el-icon-view {
     color: #60BEFF;
   }
-  .account-list-option .el-icon-view:hover {
+  .content-right-option .el-icon-view:hover {
     color: #409EFF;
-  }
-  .account-list-search {
-    float: right;
-    width: 220px;
-    margin: 15px 0;
   }
   /* begin--右侧弹框*/
   .right-box {
@@ -203,21 +167,25 @@
 <template>
     <div class="account">
         <div class="content-left">
-            <div class="sidebar-title">
-                <div>Config</div>
-                <div class="sidebar-info">
-                    <div class="sidebar-info-footer" v-if="sidebarState">
-                    </div>
-                </div>
+            <div class="sidebar-title">Config</div>
+            <div class="sidebar-info">
+                <div class="sidebar-info-item sidebar-info-top sidebar-info-item-active">Account List</div>
+                <div class="sidebar-info-item" @click="jumpTo('promServer')">Prometheus Server</div>
             </div>
         </div>
-        <div class="account-list">
-            <el-input
-              class="account-list-search"
-              type="text"
-              :placeholder="$t('overall.search')"
-              size="small"
-            ></el-input>
+        <div class="content-right">
+            <div class="top-tools">
+              <el-button @click="toAdd" class="top-tool-btn top-tool-btn-active top-tool margin-l-10 top-tool-right" size="mini">
+                <span><i class="el-icon-plus"></i></span>
+                <span class="top-tool-btn-txt">{{$t('overall.add')}}</span>
+              </el-button>
+              <el-input
+                  class="top-tool-search top-tool top-tool-right"
+                  type="text"
+                  :placeholder="$t('overall.search')"
+                  size="mini"
+                ></el-input>
+            </div>
             <el-table
                   :data="tableData"
                   border
@@ -231,10 +199,10 @@
                   :label="item.label"
                 >
                     <template slot-scope="scope" :column="item">
-                        <div v-if="item.prop == 'option'" class="account-list-options">
-                            <span @click="del(scope.row)" class="account-list-option"><i class="el-icon-delete"></i></span>
-                            <span @click="detail(scope.row)" class="account-list-option"><i class="el-icon-view"></i></span>
-                            <span @click="edit(scope.row)" class="account-list-option"><i class="el-icon-edit-outline"></i></span>
+                        <div v-if="item.prop == 'option'" class="content-right-options">
+                            <span @click="del(scope.row)" class="content-right-option"><i class="el-icon-delete"></i></span>
+                            <span @click="detail(scope.row)" class="content-right-option"><i class="el-icon-view"></i></span>
+                            <span @click="edit(scope.row)" class="content-right-option"><i class="el-icon-edit-outline"></i></span>
                         </div>
                         <span v-else-if="item.prop == 'lang'">
                             {{scope.row[item.prop] == 'en' ? 'English' : ''}}
@@ -757,7 +725,7 @@ export default {
         }
       })
     },
-    add: function() {
+    toAdd: function() {
       this.cleanUser();
       this.rightBox.isEdit = true;
       this.rightBox.title = this.$t("config.account.createAccount");
@@ -770,6 +738,16 @@ export default {
       } else {
 
       }
+    },
+    jumpTo(data,id) {
+      this.$store.state.assetData.moduleData = data
+      this.$store.state.assetData.selectedData = id
+      this.$router.push({
+        path: "/" + data,
+        query: {
+          t: +new Date()
+        }
+      });
     },
     toEditReceiver: function(item) {
       if (!item.isEdit) {

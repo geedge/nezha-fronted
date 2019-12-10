@@ -2,43 +2,6 @@
   .account {
     height: 100%;
   }
-  .content-left {
-    float: left;
-    width: 370px;
-    height: 100%;
-  }
-  .sidebar-title {
-    padding-left: 30px;
-    padding-top: 20px;
-  }
-
-  .sidebar-info {
-    margin-top: 20px;
-    border: 1px solid #acacac;
-    border-radius: 8px;
-    height: calc(90vh - 55px);
-    width: calc(100% - 30px);
-  }
-
-  .sidebar-info-header {
-    background: #acacac;
-    text-align: center;
-    line-height: 50px;
-    border-top-left-radius: 8px;
-    border-top-right-radius: 8px;
-    height: 60px;
-    width: 100%;
-  }
-
-  .sidebar-info-footer {
-    padding-top: 15px;
-    padding-left: 15px;
-  }
-  .account-list {
-    height: calc(100% - 131px);
-    margin-left: 370px;
-    padding: 0 15px 0 0;
-  }
   .account-list-option {
     cursor: pointer;
     display: inline-block;
@@ -55,11 +18,6 @@
   }
   .account-list-option .el-icon-view:hover {
     color: #409EFF;
-  }
-  .account-list-search {
-    float: right;
-    width: 220px;
-    margin: 15px 0;
   }
   /* begin--右侧弹框*/
   .right-box {
@@ -182,41 +140,29 @@
   }
   /* end--右侧弹框--底部按钮*/
   /* end--右侧弹框*/
-
-  /* begin--右弹框滑入滑出动画*/
-  @keyframes slide-in-from-right {
-    from {right: -800px}
-    to {right: 0}
-  }
-  @keyframes slide-out-to-right {
-    from {right: 0}
-    to {right: -800px}
-  }
-  .right-box-enter-active {
-    animation: slide-in-from-right 0.4s;
-  }
-  .right-box-leave-active {
-    animation: slide-out-to-right 0.4s;
-  }
-  /* end--右弹框滑入滑出动画*/
 </style>
 <template>
     <div class="account">
         <div class="content-left">
-            <div class="sidebar-title">
-                <div>Config</div>
-                <div class="sidebar-info">
-                    <div class="sidebar-info-footer" v-if="sidebarState"></div>
-                </div>
+            <div class="sidebar-title">{{$t('alert.alert')}}</div>
+            <div class="sidebar-info">
+                <div class="sidebar-info-item sidebar-info-top" @click="jumpTo('alertList')">{{$t('alert.alertList')}}</div>
+                <div class="sidebar-info-item sidebar-info-item-active">{{$t('alert.alertConfig')}}</div>
             </div>
         </div>
-        <div class="account-list">
-            <el-input
-              class="account-list-search"
-              type="text"
-              :placeholder="$t('overall.search')"
-              size="small"
-            ></el-input>
+        <div class="content-right">
+            <div class="top-tools">
+              <el-button @click="toAdd" class="top-tool-btn top-tool-btn-active top-tool top-tool-right margin-l-10" size="mini">
+                <span><i class="el-icon-plus"></i></span>
+                <span class="top-tool-btn-txt">{{$t('overall.add')}}</span>
+              </el-button>
+              <el-input
+                  class="top-tool-search top-tool top-tool-right"
+                  type="text"
+                  :placeholder="$t('overall.search')"
+                  size="mini"
+                ></el-input>
+            </div>
             <el-table
                   :data="tableData"
                   border
@@ -236,21 +182,6 @@
                             <span @click="detail(scope.row)" class="account-list-option"><i class="el-icon-view"></i></span>
                             <span @click="edit(scope.row)" class="account-list-option"><i class="el-icon-edit-outline"></i></span>
                         </div>
-                      <!--<span v-else-if="item.prop == 'lang'">
-                          {{scope.row[item.prop] == 'en' ? 'English' : ''}}
-                          {{scope.row[item.prop] == 'zh' ? '中文' : ''}}
-                          {{scope.row[item.prop] == 'ru' ? 'русский' : ''}}
-                      </span>
-                      <span v-else-if="item.prop == 'receiver'">
-                          <template v-for="rec in scope.row[item.prop]">{{rec.name}}&nbsp;&nbsp;</template>
-                      </span>
-                      <span v-else-if="item.prop == 'status'">
-                          <el-switch
-                            v-model="scope.row[item.prop]"
-                            active-value="1"
-                            inactive-value="0">
-                          </el-switch>
-                      </span>-->
                         <span v-else>{{scope.row[item.prop]}}</span>
                     </template>
                 </el-table-column>
@@ -291,7 +222,7 @@
                 <!-- begin--表单-->
                 <div class="right-box-form">
                     <div class="right-box-form-row">
-                        <div class="right-box-form-label">{{$t('alarm.config.name')}}</div>
+                        <div class="right-box-form-label">{{$t('alert.config.name')}}</div>
                         <div class="right-box-form-content">
                             <el-input
                               v-if="rightBox.isEdit"
@@ -306,7 +237,7 @@
                         </div>
                     </div>
                     <div class="right-box-form-row">
-                        <div class="right-box-form-label">{{$t('alarm.config.expr')}}</div>
+                        <div class="right-box-form-label">{{$t('alert.config.expr')}}</div>
                         <div class="right-box-form-content">
                             <el-input
                               type="textarea"
@@ -319,7 +250,7 @@
                         </div>
                     </div>
                     <div class="right-box-form-row">
-                        <div class="right-box-form-label">{{$t('alarm.config.for')}}</div>
+                        <div class="right-box-form-label">{{$t('alert.config.for')}}</div>
                         <div class="right-box-form-content">
                             <el-input
                               type="text"
@@ -332,7 +263,7 @@
                         </div>
                     </div>
                     <div class="right-box-form-row">
-                        <div class="right-box-form-label">{{$t('alarm.severity')}}</div>
+                        <div class="right-box-form-label">{{$t('alert.severity')}}</div>
                         <div class="right-box-form-content">
                             <el-input
                               type="text"
@@ -345,7 +276,7 @@
                         </div>
                     </div>
                     <div class="right-box-form-row">
-                        <div class="right-box-form-label">{{$t('alarm.summary')}}</div>
+                        <div class="right-box-form-label">{{$t('alert.summary')}}</div>
                         <div class="right-box-form-content">
                             <el-input
                               type="text"
@@ -358,7 +289,7 @@
                         </div>
                     </div>
                     <div class="right-box-form-row">
-                        <div class="right-box-form-label">{{$t('alarm.description')}}</div>
+                        <div class="right-box-form-label">{{$t('alert.description')}}</div>
                         <div class="right-box-form-content">
                             <el-input
                               type="textarea"
@@ -450,31 +381,31 @@ export default {
           show: true,
           width: 80
         }, {
-          label: this.$t("alarm.alarmName"),
+          label: this.$t("alert.alertName"),
           prop: 'alertName',
           show: true,
         }, {
-          label: this.$t("alarm.config.expr"),
+          label: this.$t("alert.config.expr"),
           prop: 'expr',
           show: true,
         }, {
-          label: this.$t("alarm.config.for"),
+          label: this.$t("alert.config.for"),
           prop: 'last',
           show: true,
         }, {
-          label: this.$t('alarm.severity'),
+          label: this.$t('alert.severity'),
           prop: 'severity',
           show: true,
         }, {
-          label: this.$t('alarm.description'),
+          label: this.$t('alert.description'),
           prop: 'description',
           show: true,
         }, {
-          label: this.$t('alarm.config.receiver'),
+          label: this.$t('alert.config.receiver'),
           prop: 'receiver',
           show: true,
         }, {
-          label: this.$t('alarm.config.option'),
+          label: this.$t('alert.config.option'),
           prop: 'option',
           show: true,
         }
@@ -511,27 +442,27 @@ export default {
     edit: function(u) {
       this.alertRule = Object.assign({}, u);
       this.rightBox.isEdit = true;
-      this.rightBox.title = this.$t("alarm.config.editAlarmConfig") + "  ID：" + u.id;
+      this.rightBox.title = this.$t("alert.config.editalertConfig") + "  ID：" + u.id;
       this.rightBox.show = true;
     },
     del: function(u) {
     },
+    toAdd: function() {
+      this.cleanAlertRule();
+      this.rightBox.isEdit = true;
+      this.rightBox.title = this.$t("alert.config.createalertConfig");
+      this.rightBox.show = true;
+    },
     detail: function(u) {
       this.alertRule = Object.assign({}, u);
       this.rightBox.isEdit = false;
-      this.rightBox.title = this.$t("alarm.config.alarmConfig") + "  ID：" + u.id;
-      this.rightBox.show = true;
-    },
-    add: function() {
-      this.cleanAlertRule();
-      this.rightBox.isEdit = true;
-      this.rightBox.title = this.$t("alarm.config.createAlarmConfig");
+      this.rightBox.title = this.$t("alert.config.alertConfig") + "  ID：" + u.id;
       this.rightBox.show = true;
     },
     saveOrToEdit: function() {
       if (!this.rightBox.isEdit) {
         this.rightBox.isEdit = true;
-        this.rightBox.title = this.$t("alarm.config.editAlarmConfig") + "  ID：" + this.alertRule.id;
+        this.rightBox.title = this.$t("alert.config.editalertConfig") + "  ID：" + this.alertRule.id;
       }
     },
     toEditReceiver: function(item) {
@@ -574,8 +505,8 @@ export default {
     getTableData: function() {
       this.$get('alert/rule', this.pageObj).then(response => {
         if (response.code == 200) {
-          this.tableData = response.data.list
-          this.pageObj.total = response.data.total
+          this.tableData = response.data.list;
+          this.pageObj.total = response.data.total;
         }
       })
     },
@@ -606,6 +537,16 @@ export default {
         description: '',
         receiver: '',
       }
+    },
+    jumpTo(data,id) {
+      this.$store.state.assetData.moduleData = data
+      this.$store.state.assetData.selectedData = id
+      this.$router.push({
+        path: "/" + data,
+        query: {
+          t: +new Date()
+        }
+      });
     },
     pageNo(val) {
       this.pageObj.pageNo = val;
