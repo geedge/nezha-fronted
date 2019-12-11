@@ -125,11 +125,13 @@ color: white;
 }
 .top-tools .top-tool-btn-active {
   color: white;
+  border: 1px solid #656565;
   background-color: #656565;
 }
 .top-tools .top-tool-btn-active:focus, .top-tools .top-tool-btn-active:hover {
   color: white;
   background-color: #656565;
+  border: 1px solid #656565;
 }
 .top-tools .top-tool-btn-txt {
   font-size: 14px;
@@ -153,6 +155,7 @@ color: white;
   text-align: center;
 }
   /* end--分页*/
+
   /* begin--右弹框滑入滑出动画*/
 @keyframes slide-in-from-right {
   from {right: -800px}
@@ -169,9 +172,179 @@ color: white;
   animation: slide-out-to-right 0.4s;
 }
   /* end--右弹框滑入滑出动画*/
+
+  /* begin--右子弹框动画*/
+@keyframes appear {
+  from {opacity:0}
+  to {opacity:1}
+}
+@keyframes disappear {
+  from {opacity:1}
+  to {opacity:0}
+}
+.right-sub-box-enter-active {
+  animation: appear 0.4s;
+}
+.right-sub-box-leave-active {
+  animation: disappear 0.4s;
+}
+  /* end--右子弹框动画*/
 /* end--右侧内容*/
 
-/* start--自定义可编辑的el-select下拉框样式*/
+/* begin--右侧弹框*/
+.right-box, .right-sub-box {
+  position: fixed;
+  top: 80px;
+  right: 15px;
+  z-index: 1;
+  border-radius: 8px;
+  box-shadow: 0 0 15px #ccc;
+  background-color: white;
+  padding: 0 20px;
+}
+
+  /*此处自定义弹框尺寸，不同功能可能需要的尺寸不一样，需自行添加*/
+.right-box-account, .right-box-prom, .right-box-alert-config, .right-box-endpoint {
+  width: 520px;
+  height: calc(100% - 100px);
+}
+  /* begin--右侧弹框--顶部按钮*/
+.right-box-top-btns {
+  text-align: center;
+}
+.right-box-top-btn {
+  border-radius: 0 0 9px 9px;
+  float: right;
+  color: #656565;
+  height: 30px;
+  font-size: 12px;
+  padding: 3px 8px 1px 8px;
+  border: 1px solid #aaaaaa;
+  border-top: none;
+  cursor: pointer;
+  margin-left: 20px;
+}
+.right-box-top-btn-full {
+  background-color: #656565;
+  border: 1px solid #656565;
+  border-top: none;
+  color: white;
+}
+  /* end--右侧弹框--顶部按钮*/
+
+  /* begin--右侧弹框--内容*/
+.right-box-title {
+  height: 30px;
+  line-height: 40px;
+  text-align: left;
+  display: inline-block;
+}
+.right-box-form {
+  margin-top: 35px;
+}
+.right-box-form-row {
+  margin-top: 20px;
+}
+.right-box-form-label {
+  margin-bottom: 8px;
+  text-align: left;
+}
+.right-box-form-content {
+  line-height: 32px;
+  text-align: left;
+  width: 100%;
+}
+.right-box-form-content-txt {
+  padding-left: 11px;
+}
+.right-box-form-content .el-select {
+  width: 100%;
+}
+.right-box-form-content .right-box-row-with-btn {
+  width: calc(100% - 38px);
+  vertical-align: top;
+}
+.right-box-row-btn {
+  width: 33px;
+  height: 33px;
+  display: inline-block;
+  text-align: center;
+  border-radius: 5px;
+  border: 1px solid #DCDFE6;
+  box-sizing: border-box;
+  color: #C7C9CE;
+  transition: border-color .2s cubic-bezier(.645,.045,.355,1);
+  cursor: pointer;
+}
+.right-box-row-btn-active {
+  color: white;
+  border: 1px solid #656565;
+  background-color: #656565;
+}
+.right-box-row-btn:hover {
+  border: 1px solid #C0C4CC;
+}
+.right-box-row-btn-active:hover {
+  border: 1px solid #656565;
+}
+  /* end--右侧弹框--内容*/
+
+  /* begin--右侧弹框--底部按钮*/
+.right-box-bottom-btns {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  height: 40px;
+  left: 0;
+  text-align: center;
+}
+.right-box-bottom-btn:first-of-type {
+  border-bottom-left-radius: 8px;
+}
+.right-box-bottom-btn:last-of-type{
+  border-bottom-right-radius: 8px;
+}
+.right-box-bottom-btn {
+  display: inline-block;
+  background-color: #656565;
+  color: white;
+  height: 100%;
+  line-height: 40px;
+  cursor: pointer;
+  width: 100%;
+}
+.config-dropdown-label-input {
+  width: 50%;
+  display: inline-block;
+}
+.right-box-bottom-btn-cancel {
+  background-color: #DADADA;
+  color: #656565;
+}
+.right-box-bottom-btn-50 {
+  width: 50%;
+}
+  /* end--右侧弹框--底部按钮*/
+/* end--右侧弹框*/
+/* begin--endpoint->子弹框asset搜索框前缀和后缀*/
+.right-sub-box .el-input-group__append, .right-sub-box .el-input-group__prepend {
+  background-color: #656565;
+  color: white;
+  vertical-align: middle;
+  display: table-cell;
+  position: relative;
+  padding: 0 8px;
+  border: none;
+  font-size: 13px;
+}
+.right-sub-box .el-input-group__prepend {
+  border-radius: 4px 0 0 4px;
+}
+.right-sub-box .el-input-group__append {
+  border-radius: 0 4px 4px 0;
+}
+/* end--endpoint->子弹框asset搜索框前缀和后缀*/
+/* begin--自定义可编辑的el-select下拉框样式*/
 .config-dropdown {
   width: 550px;
 }

@@ -14,7 +14,8 @@ const en = {
     save: 'Save',
     search: 'Search',
     add: "Add",
-    option: "Option"
+    option: "Option",
+    clearAll: "Clear All"
   },
   asset:{
     tableTitle: {
@@ -103,6 +104,12 @@ const en = {
     }
   },
   project: {
+    project: {
+      project: "Project"
+    },
+    module: {
+      module: "Module"
+    },
     endpoint: {
       createEndpoint: "Create Endpoint",
       editEndpoint: "Edit Endpoint",
