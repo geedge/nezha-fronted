@@ -17,12 +17,19 @@
             </div>
         </div>
         <div class="content-right">
-            <el-input
-                    class="account-list-search"
-                    type="text"
-                    :placeholder="$t('overall.search')"
-                    size="small"
-            ></el-input>
+            <div>
+                <button style="float: right;margin-top: 10px;width: 100px;height: 32px;margin-left: 10px"
+                        @click.stop="tagShow('showAdd')">+ADD
+                </button>
+                <el-input
+                        type="text"
+                        :placeholder="$t('overall.search')"
+                        size="small"
+                        style="width: 200px;float: right;padding-top: 10px"
+
+                >
+                </el-input>
+            </div>
             <div>
                 <el-table
                         :height="tableHeight"
@@ -63,13 +70,13 @@
                     <div class="right-menu" v-if="tabShow" v-clickoutside:tagHide="tagShow">
                         <div v-if="this.tagType=='add'">
                             <div class="right-box-top-btns">
-                                <div class="right-box-top-btn right-box-top-btn-full">
+                                <div class="right-box-top-btn right-box-top-btn-full" @click.stop="tagShow()">
                                     <div class="right-box-btn-icon">
                                         <i class="el-icon-close"></i>
                                     </div>
                                     <span>{{$t('overall.esc')}}</span>
                                 </div>
-                                <div class="right-box-top-btn right-box-top-btn-full">
+                                <div class="right-box-top-btn right-box-top-btn-full" @click.stop="show1()">
                                     <div class="right-box-btn-icon">
                                         <i class="el-icon-edit-outline"></i>
                                     </div>
@@ -82,18 +89,26 @@
                                     <span>{{$t('overall.delete')}}</span>
                                 </div>
                             </div>
-                            <div class="right-box-title">Create Asset
-                            </div>
-                            <el-form ref="form" :model="form" label-width="120px">
+                            <div class="right-box-title">Create Asset</div>
+                            <el-form ref="form" :model="assetData" label-width="120px">
                                 <div class="el-form-style">
-                                    <el-form-item label="IP">
-                                        <el-input v-model="form.name"/>
-                                    </el-form-item>
                                     <el-form-item label="SN">
-                                        <el-input v-model="form.name"/>
+                                        <el-input v-model="assetData.sn"/>
                                     </el-form-item>
-                                    <el-form-item label="Asset Type">
-                                        <el-input v-model="form.name"/>
+                                    <el-form-item label="Host">
+                                        <el-input v-model="assetData.host"/>
+                                    </el-form-item>
+                                    <el-form-item label="State">
+                                        <div class="select-style">
+                                            <el-select v-model="assetData.state" placeholder="请选择">
+                                                <el-option
+                                                        v-for="item in assetStateOption"
+                                                        :key="item.value"
+                                                        :label="item.label"
+                                                        :value="item.value">
+                                                </el-option>
+                                            </el-select>
+                                        </div>
                                     </el-form-item>
                                     <el-form-item label="ModelId">
                                         <div class="tab-input-square">342</div>
@@ -106,14 +121,14 @@
                                     <!------------------------------------------资产类型---------------------------------------------->
                                     <el-form-item label="资产类型">
                                         <div class="select-style">
-                                            <el-select value-key="id" v-model="assetType">
+                                            <el-select v-model="assetType">
                                                 <el-option
                                                         v-for="item in assetTypeOptionData"
-                                                        :key="item.key"
-                                                        :label="item.name"
-                                                        :value="item.name"
+                                                        :key="item.id"
+                                                        :value="item.code"
+                                                        :label="item.value"
                                                 >
-                                                    <span v-if="!item.isEdit">{{ item.name }}</span>
+                                                    <span v-if="!item.isEdit">{{ item.value }}</span>
                                                     <span class="config-dropdown-label-input" v-if="item.isEdit"
                                                           @click.stop="editing">
                                                     <el-input type="text" v-model="item.name" size="mini"/>
@@ -125,12 +140,13 @@
                                                 </span>
                                                     <span class="config-dropdown-btn config-dropdown-btn-delete"
                                                           @click.stop="delOptionData(item)"><i
-                                                            class="el-icon-delete"></i></span>
+                                                            class="el-icon-delete"></i>
+                                                    </span>
                                                 </el-option>
                                             </el-select>
                                             <div class="el-select-add-btn">
                                                 <el-popover
-                                                        placement="bottom"
+                                                        placement="left"
                                                         trigger="click"
                                                         v-model="popTypeVisible"
                                                 >
@@ -147,16 +163,17 @@
                                                             </div>
                                                             <span style="display: block;padding-bottom: 20px">资产类型</span>
                                                             <span style="display: block;padding-bottom: 20px">新增资产类型</span>
-                                                            <input v-model="assetTypeData"/><input type="button"
-                                                                                                   value="+Add"></input>
+                                                            <input v-model="assetTypeData.value"/>
+                                                            <input type="button" value="+Add"
+                                                                   @click="addNewData('assetType')"></input>
                                                             <span style="display: block;padding-bottom: 20px">已有资产类型</span>
-                                                            <div class="rm-c-list">
-                                                                <ul>
+                                                            <div class="li-list">
+                                                                <ul style="list-style: none">
                                                                     <li style="cursor: pointer;"
                                                                         v-for="(item,index) in assetTypeOptionData"
                                                                         :key="index">
                                                                         <div>
-                                                                            <span>{{item.name}}</span>
+                                                                            <span>{{item.value}}</span>
                                                                             <i class="el-icon-edit-outline"></i>
                                                                         </div>
                                                                     </li>
@@ -187,7 +204,7 @@
                                             </el-cascader>
                                             <div class="el-select-add-btn">
                                                 <el-popover
-                                                        placement="bottom"
+                                                        placement="left"
                                                         trigger="click"
                                                         v-model="popCompVisible"
                                                 >
@@ -203,68 +220,38 @@
                                                                 </div>
                                                             </div>
                                                             <div class="pop-window-assetType">
-                                                                <span style="display: block;padding-bottom: 20px">商场/型号</span>
-                                                                <input v-model="assetTypeData"/><input type="button"
-                                                                                                       value="+Add"></input>
+                                                                <span style="display: block;padding-bottom: 15px">商场/型号</span>
+                                                                <span style="display: block;padding-bottom: 20px">新厂商名称</span>
+                                                                <input v-model="assetTypeData.value"/>
+                                                                <input type="button" value="+Add"
+                                                                       @click="addNewData('assetType')"></input>
                                                                 <span style="display: block;padding-bottom: 20px">已有厂商</span>
-                                                                <div class="companyList">
-                                                                    <ul>
-                                                                        <li style="cursor: pointer;">
+                                                                <div class="li-list-part">
+                                                                    <ul style="list-style: none">
+                                                                        <li style="cursor: pointer;"
+                                                                            v-for="(item,index) in vendorUlData"
+                                                                            @click="getLidata(index,item)"
+                                                                            :class="{activeColor:vendorCount === index}"
+                                                                            :key="index">
                                                                             <div>
-                                                                                <span> 1111</span>
-                                                                                <i class="el-icon-edit-outline"></i>
-                                                                            </div>
-                                                                            <div>
-                                                                                <span> 1111</span>
-                                                                                <i class="el-icon-edit-outline"></i>
-                                                                            </div>
-                                                                            <div>
-                                                                                <span> 1111</span>
-                                                                                <i class="el-icon-edit-outline"></i>
-                                                                            </div>
-                                                                            <div>
-                                                                                <span> 1111</span>
-                                                                                <i class="el-icon-edit-outline"></i>
-                                                                            </div>
-                                                                            <div>
-                                                                                <span> 1111</span>
-                                                                                <i class="el-icon-edit-outline"></i>
-                                                                            </div>
-                                                                            <div>
-                                                                                <span> 1111</span>
+                                                                                <span>{{item.value}}</span>
                                                                                 <i class="el-icon-edit-outline"></i>
                                                                             </div>
                                                                         </li>
                                                                     </ul>
                                                                 </div>
+                                                                <span style="display: block;padding-bottom: 15px">新型号名称</span>
+                                                                <input v-model="assetTypeData.value"/>
+                                                                <input type="button" value="+Add"
+                                                                       @click="addNewData('assetType')"></input>
                                                                 <span style="display: block;padding-bottom: 20px">已有型号</span>
-                                                                <input v-model="assetTypeData"/><input type="button"
-                                                                                                       value="+Add"></input>
-                                                                <div class="companyList">
-                                                                    <ul>
-                                                                        <li style="cursor: pointer;">
+                                                                <div class="li-list-part">
+                                                                    <ul style="list-style: none">
+                                                                        <li style="cursor: pointer;"
+                                                                            v-for="(item,index) in modelUlData"
+                                                                            :key="index">
                                                                             <div>
-                                                                                <span> 1111</span>
-                                                                                <i class="el-icon-edit-outline"></i>
-                                                                            </div>
-                                                                            <div>
-                                                                                <span> 1111</span>
-                                                                                <i class="el-icon-edit-outline"></i>
-                                                                            </div>
-                                                                            <div>
-                                                                                <span> 1111</span>
-                                                                                <i class="el-icon-edit-outline"></i>
-                                                                            </div>
-                                                                            <div>
-                                                                                <span> 1111</span>
-                                                                                <i class="el-icon-edit-outline"></i>
-                                                                            </div>
-                                                                            <div>
-                                                                                <span> 1111</span>
-                                                                                <i class="el-icon-edit-outline"></i>
-                                                                            </div>
-                                                                            <div>
-                                                                                <span> 1111</span>
+                                                                                <span>{{item.name}}</span>
                                                                                 <i class="el-icon-edit-outline"></i>
                                                                             </div>
                                                                         </li>
@@ -273,7 +260,6 @@
                                                             </div>
                                                         </div>
                                                     </div>
-
                                                     <div class="right-box-bottom-btns">
                                                         <div class="right-box-bottom-btn right-box-bottom-btn-cancel"
                                                              @click="popoverClose('comp')">
@@ -291,7 +277,8 @@
                                     <el-form-item label="购买日期">
                                         <div class="select-style">
                                             <el-date-picker
-                                                    v-model="value1"
+                                                    v-model="assetData.purchaseDate"
+                                                    value-format="yyyy-MM-dd"
                                                     type="date"
                                                     placeholder="选择日期">
                                             </el-date-picker>
@@ -302,12 +289,12 @@
                                     <!------------------------------------------IDC---------------------------------------------->
                                     <el-form-item label="IDC Name">
                                         <div class="select-style">
-                                            <el-select v-model="cabinetIDCData" clearable @change="getSingleIDCData">
+                                            <el-select v-model="assetData.idcId" clearable @change="getSingleIDCData">
                                                 <el-option
                                                         v-for="item in IDCOptionData"
                                                         :key="item.key"
                                                         :label="item.name"
-                                                        :value="item.name"
+                                                        :value="item.id"
                                                 >
                                                     <span v-if="!item.isEdit">{{ item.name }}</span>
                                                     <span class="config-dropdown-label-input" v-if="item.isEdit"
@@ -326,7 +313,7 @@
                                             </el-select>
                                             <div class="el-select-add-btn">
                                                 <el-popover
-                                                        placement="bottom"
+                                                        placement="left"
                                                         trigger="click"
                                                         v-model="popIDCVisible"
                                                 >
@@ -343,16 +330,16 @@
                                                         <div class="pop-window">
                                                             <span style="display: block;padding-bottom: 20px">标题</span>
                                                             <el-form-item label="IDC Name">
-                                                                <el-input v-model="form.name"/>
+                                                                <el-input v-model="addIdcData.name"/>
                                                             </el-form-item>
                                                             <el-form-item label="Location">
-                                                                <el-input v-model="form.name"/>
+                                                                <el-input v-model="addIdcData.location"/>
                                                             </el-form-item>
                                                             <el-form-item label="负责人">
-                                                                <el-input v-model="form.name"/>
+                                                                <el-input v-model="addIdcData.principal"/>
                                                             </el-form-item>
                                                             <el-form-item label="Tel">
-                                                                <el-input v-model="form.name"/>
+                                                                <el-input v-model="addIdcData.tel"/>
                                                             </el-form-item>
                                                         </div>
                                                     </div>
@@ -361,7 +348,8 @@
                                                              @click="popoverClose('IDC')">
                                                             {{$t('overall.cancel')}}
                                                         </div>
-                                                        <div class="right-box-bottom-btn right-box-bottom-btn-50">
+                                                        <div class="right-box-bottom-btn right-box-bottom-btn-50"
+                                                             @click="addNewData('IDC')">
                                                             {{$t('overall.save')}}
                                                         </div>
                                                     </div>
@@ -383,13 +371,13 @@
                                     <!------------------------------------------cabinet---------------------------------------------->
                                     <el-form-item label="机柜">
                                         <div class="select-style">
-                                            <el-select clearable v-model="cabinetModelData"
+                                            <el-select clearable v-model="assetData.cabinetId"
                                                        @change="getSingleCabinetData">
                                                 <el-option
                                                         v-for="item in cabinetOptionData"
                                                         :key="item.key"
                                                         :label="item.name"
-                                                        :value="item.name"
+                                                        :value="item.id"
                                                 >
                                                     <span v-if="!item.isEdit">{{ item.name }}</span>
                                                     <span class="config-dropdown-label-input" v-if="item.isEdit"
@@ -408,7 +396,7 @@
                                             </el-select>
                                             <div class="el-select-add-btn">
                                                 <el-popover
-                                                        placement="bottom"
+                                                        placement="left"
                                                         trigger="click"
                                                         v-model="popCabinetVisible"
                                                 >
@@ -480,6 +468,16 @@
                                 </div>
                             </el-form>
                         </div>
+                        <div class="">
+                            <div class="right-box-bottom-btn right-box-bottom-btn-cancel"
+                                 @click.stop="tagShow()">
+                                {{$t('overall.cancel')}}
+                            </div>
+                            <div class="right-box-bottom-btn right-box-bottom-btn-50"
+                                 @click="addNewData('asset')">
+                                {{$t('overall.save')}}
+                            </div>
+                        </div>
                     </div>
                 </transition>
             </div>
@@ -492,8 +490,23 @@ export default {
   name: "asset",
   data() {
     return {
+      assetData:{
+        sn:'',
+        host:'',
+        state:'',
+        purchaseDate:'',
+        idcId:'',
+        cabinetId:'',
+        modelId:1
+      },
+      assetStateOption: [{
+        value: 1,
+        label: '在库'
+      }, {
+        value: 2,
+        label: '出库'
+      }],
       cabinetModelData: '',
-      cabinetIDCData: '',
       value1: 100,
       checkList: [],
       sidebarState: '',
@@ -559,62 +572,10 @@ export default {
           prop: 'option',
           show: true,
         }],
-      tagTableTitle: [
-        {
-          label: this.$t("asset.tagTableTitle.projectName"),
-          prop: 'projectName',
-          show: true,
-        }, {
-          label: this.$t("asset.tagTableTitle.moduleName"),
-          prop: 'moduleName',
-          show: true,
-        }, {
-          label: this.$t("asset.tagTableTitle.endPoint"),
-          prop: 'endPoint',
-          show: true,
-        }, {
-          label: this.$t("asset.tagTableTitle.alarm"),
-          prop: 'alarm',
-          show: true,
-        },
-      ],
       tableData: [],
-      tagTableData: [
-        {
-          projectName: '2016-05-02',
-          moduleName: '王小虎',
-          endPoint: '上海市普陀区金沙江路 1518 弄'
-        }, {
-          projectName: '2016-05-04',
-          moduleName: '王小虎',
-          endPoint: '上海市普陀区金沙江路 1517 弄'
-        }, {
-          projectName: '2016-05-01',
-          moduleName: '王小虎',
-          endPoint: '上海市普陀区金沙江路 1519 弄'
-        }, {
-          projectName: '2016-05-03',
-          moduleName: '王小虎',
-          endPoint: '上海市普陀区金沙江路 1516 弄'
-        }, {
-          projectName: '2016-05-02',
-          moduleName: '王小虎',
-          endPoint: '上海市普陀区金沙江路 1518 弄'
-        }
-      ],
       checkListData: [],
-      assetTypeData: '',
-      assetTypeOptionData: [
-        {
-          id: '1',
-          name: '座机',
-        }, {
-          id: '2',
-          name: '路由器',
-        }, {
-          id: '3',
-          name: '台式机',
-        }],
+      assetTypeData11111: '',
+      assetTypeOptionData: [],
       companyTypeData: '',
       companyTypeOptionData: [
         {
@@ -654,6 +615,9 @@ export default {
             }
           ]
         }],
+      vendorUlData:'',
+      modelUlData:'',
+      vendorCode:'',
       IDCData: '',
       IDCOptionData: [],
       cabinetData: '',
@@ -676,9 +640,20 @@ export default {
         isEdit: false, //false查看，true编辑
         title: ''
       },
-      assetType: {},
+      assetType: '',
+      assetTypeData: {
+        type: 'assetType',
+        value: '',
+      },
       accountType: '',
       idcSelectedData: {
+        id: '',
+        name: '',
+        location: '',
+        principal: '',
+        tel: ''
+      },
+      addIdcData: {
         id: '',
         name: '',
         location: '',
@@ -694,7 +669,8 @@ export default {
       popTypeVisible: false,
       popCompVisible: false,
       popIDCVisible: false,
-      popCabinetVisible: false
+      popCabinetVisible: false,
+      vendorCount:''
     }
   },
   computed: {
@@ -706,7 +682,7 @@ export default {
     getData: {
       handler(newVal, oldVal) {
         this.checkList.splice(0, 0, newVal.selectedData)
-        if (newVal.moduleData == 'asset') {
+        if (newVal.moduleData === 'asset') {
           this.sidebarState = true
         } else {
           this.sidebarState = false
@@ -727,23 +703,62 @@ export default {
       })
     },
     getIDCOptionData() {
-      this.$get('idc', this.pageObj).then(response => {
+      this.$get('idc').then(response => {
         if (response.code === 200) {
           this.checkListData = this.IDCOptionData = response.data.list;
         }
       })
     },
-    getCabinetOptionData() {
-      this.$get('cabinet', this.pageObj).then(response => {
+    getCabinetOptionData(data) {
+      this.$get('cabinet?idcId='+data).then(response => {
         if (response.code === 200) {
           this.cabinetOptionData = response.data.list;
         }
       })
     },
-    markOptionData() {
-      this.assetTypeOptionData.forEach(item => {
+    getAssetTypeOptionData() {
+      this.$get('sys/dict/all?type=assetType').then(response => {
+        if (response.code === 200) {
+          this.assetTypeOptionData = response.data
+          this.markOptionData(this.assetTypeOptionData)
+        }
+      })
+    },
+    getVendorOptionData() {
+      this.$get('sys/dict/all?type=vendor').then(response => {
+        if (response.code === 200) {
+          this.vendorUlData = response.data
+          this.markOptionData(this.vendorUlData)
+        }
+      })
+    },
+    getModelOptionData(assetType,vendorCode) {
+      this.$get('model?typeCode='+assetType+'&vendorCode='+vendorCode).then(response => {
+        if (response.code === 200) {
+          this.modelUlData = response.data.list
+          console.log(this.modelUlData.i)
+        }
+      })
+    },
+    addNewData(type) {
+      if (type === 'IDC') {
+        this.$post('idc', this.addIdcData).then(res => {
+        })
+      }
+      if (type === 'assetType') {
+        this.$post('sys/dict/save', this.assetTypeData).then(res => {
+        })
+      }
+      if (type === 'asset') {
+        this.$post('asset', this.assetData).then(res => {
+        })
+      }
+    },
+    markOptionData(data) {
+      data.forEach(item => {
+        console.log(item)
         this.$set(item, 'isEdit', false);
-        this.$set(item, 'oldName', item.name);
+        this.$set(item, 'oldName', item.value);
       })
     },
     editOptionData(item) {
@@ -757,9 +772,7 @@ export default {
         }
       }
     },
-    delOptionData(data) {
-
-    },
+    delOptionData(data) {},
     tagShow(t) {
       this.tabShow = false;
       if (t === 'showAdd') {
@@ -775,21 +788,26 @@ export default {
 
     },
     getSingleIDCData(data) {
-      console.log(data)
-      this.idcSelectedData = ''
+      this.idcSelectedData = '';
       this.IDCOptionData.forEach(item => {
-        if (item.name == data) {
+        if (item.id === data) {
           this.idcSelectedData = item
-          console.log(this.idcSelectedData)
         }
-      })
+      });
+      this.getCabinetOptionData(this.assetData.idcId);
+      this.assetData.cabinetId=''
     },
     getSingleCabinetData(data) {
       this.cabinetOptionData.forEach(item => {
-        if (item.name === data) {
+        if (item.id === data) {
           this.cabinetSelectedData = item
         }
       })
+    },
+    getLidata(index,item){
+      this.vendorCount=index;
+      this.vendorCode = item.code;
+      this.getModelOptionData(this.assetType,this.vendorCode)
     },
     pageNo(val) {
       this.pageObj.pageNo = val;
@@ -804,7 +822,9 @@ export default {
         this.popTypeVisible = false
       }
       if (data === 'comp') {
-        this.popCompVisible = false
+        this.popCompVisible = false;
+        this.modelUlData = '';
+        this.vendorCount = ''
       }
       if (data === 'IDC') {
         this.popIDCVisible = false
@@ -813,12 +833,15 @@ export default {
         this.popCabinetVisible = false
       }
     },
+    show1(){
+      console.log(this.assetData.idcId)
+    }
   },
   mounted() {
-    this.markOptionData();
     this.getAssetData();
     this.getIDCOptionData();
-    this.getCabinetOptionData();
+    this.getVendorOptionData();
+    this.getAssetTypeOptionData();
     window.onresize = () => {
       this.tableHeight = document.documentElement.clientHeight - 200;
     }
@@ -944,12 +967,6 @@ export default {
     color: #aaaaaa;
 }
 
-.account-list-search {
-    float: right;
-    width: 220px;
-    margin: 15px 0;
-}
-
 .account-list-option {
     cursor: pointer;
     display: inline-block;
@@ -1011,7 +1028,7 @@ export default {
 }
 
 .pop-window-assetType {
-    height: 500px;
+    height: 550px;
     width: 400px;
 }
 
@@ -1019,14 +1036,16 @@ export default {
     padding: 1px 15px 15px 20px;
 }
 
-.companyList {
-    width: 300px;
-    height: 150px;
-    border: 1px solid #000000;
+.li-list {
+    width: 97%;
+    height: 300px;
+    border: 1px solid #cfcfcf;
 }
 
-.rm-c-list li {
-    border: 1px solid #000000;
+.li-list-part {
+    width: 90%;
+    height: 130px;
+    border: 1px solid #cfcfcf;
 }
 
 .rm-c-list span:hover {
@@ -1062,7 +1081,9 @@ export default {
     float: right;
     border-bottom-right-radius: 8px;
 }
-
+.activeColor{
+    background-color:#409EFF;
+}
 @keyframes slide-in-from-right {
     from {
         right: -800px
