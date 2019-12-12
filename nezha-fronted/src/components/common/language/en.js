@@ -1,11 +1,11 @@
 import enLocale from 'element-ui/lib/locale/lang/en' //引入element语言包
 const en = {
   overall:{
-    dashboard:'dashboard',
-    project:'project',
-    alert: "alert",
-    asset:'asset',
-    config:'config',
+    dashboard:'Dashboard',
+    project:'Projects',
+    alert: "Alert",
+    asset:'Assets',
+    config:'Config',
     create: 'Create',
     edit: 'Edit',
     delete: 'Delete',
@@ -20,18 +20,18 @@ const en = {
     tableTitle: {
       id: 'ID',
       assetType: '资产类型',
-      device: 'Device SN',
-      ip: 'IP',
-      assetState: '资产状态',
+      device: 'SN',
+      host: 'Host',
+      assetState: 'State',
       module: 'Module',
-      alert: 'alert',
+      alert: 'Alert',
       dataCenter: '数据中心',
       cabinet: '机柜',
       model: '型号',
       manufacturer: '厂商',
-      procurementDate: '采购日期',
-      warrantyDate: '保修截止期',
-      deviceDuty: '设备责任人',
+      procurementDate: '购买日期',
+      principal: '责任人',
+      principalTel: '责任人电话',
       option: "Option"
     },
     tagTableTitle: {

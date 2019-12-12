@@ -1,7 +1,11 @@
 import axios from 'axios'
+import router from './router'
+
 import qs from 'qs' //引入数据格式化
 //axios.defaults.baseURL = 'http://localhost:8088/nz-admin';
-axios.defaults.baseURL = 'http://192.168.40.247:8080/nz-admin';
+axios.defaults.baseURL = 'http://192.168.41.69:8080/nz-admin';
+// axios.defaults.baseURL = 'http://192.168.40.247:8080/nz-admin';
+
 axios.interceptors.request.use(config => {
       // config.headers = {
       //   "Content-Type": 'application/x-www-form-urlencoded',
@@ -13,8 +17,23 @@ axios.interceptors.request.use(config => {
       }
       return config;
     },
-    err => Promise.reject(err));
-
+    err => Promise.reject(err)
+);
+axios.interceptors.response.use(
+    response => {
+      if(response.status === 200){
+        if(response.data.code == 101007){
+          router.push({
+            path: "/login"
+          })
+        }
+      }
+      return response
+    },
+    error => {
+      return Promise.reject(error)
+    }
+)
 export function get(url, params) {
   return new Promise((resolve, reject) => {
     axios.get(url, {
@@ -33,7 +52,7 @@ export function post(url, params) {
       resolve(response.data)
     }).catch(err => {
       console.info(err)
-      resolve(err.response.data)
+      resolve('失败')
     })
   })
 }
