@@ -7,11 +7,27 @@ const store = new Vuex.Store({
     assetData:{
       selectedData:'',
       moduleData:'',
-    }
+    },
+    projectData: {
+      id: '',
+      name: ''
+    },
+    projectBoxShow: false,
+    projectListReload: false
   },
   getters: {
   },
   mutations: {
+    setProject(state, project) {
+      state.projectData = Object.assign({}, project);
+      state.projectBoxShow = false;
+    },
+    projectRightBoxShow(state, show) {
+      state.projectBoxShow = show;
+    },
+    projectListReload(state, reload) {
+      state.projectListReload = reload;
+    }
   },
   actions: {
   }

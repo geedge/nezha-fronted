@@ -14,16 +14,24 @@
                 </el-menu-item>
                 <el-submenu index="2">
                     <template slot="title">
-                        <div @click="jumpTo('project')">{{$t('overall.project')}}</div>
+                        <div @click="jumpToProject('project', projectData[0])">{{$t('overall.project')}}</div>
+                    </template>
+                    <template v-for="(item, index) in projectData">
+                        <el-menu-item :index="index.toString()">
+                            <div @click="jumpToProject('project', item)">
+                              <span>{{item.name}}</span>
+                              <div @click.stop="toEditProject(item)" class="menu-edit"><i class="el-icon-edit-outline"></i></div>
+                            </div>
+                        </el-menu-item>
                     </template>
                 </el-submenu>
                 <el-submenu index="3">
                     <template slot="title">
-                        <div @click="jumpTo('asset')">{{$t('overall.asset')}}</div>
+                        <div @click="jumpToAsset('asset')">{{$t('overall.asset')}}</div>
                     </template>
                     <template v-for="(item, index) in assetData">
                         <el-menu-item :index="index.toString()">
-                            <div @click="jumpTo('asset',item.id)">{{item.name}}</div>
+                            <div @click="jumpToAsset('asset',item.id)">{{item.name}}</div>
                         </el-menu-item>
                     </template>
                 </el-submenu>
@@ -46,7 +54,7 @@
                         <div @click="jumpTo('account')">{{$t('config.account.account')}}</div>
                     </el-menu-item>
                     <el-menu-item index="2">
-                        <div @click="jumpTo('promServer')">Prometheus Server</div>
+                        <div @click="jumpTo('promServer')">{{$t('config.promServer.promServerList')}}</div>
                     </el-menu-item>
                 </el-submenu>
             </el-menu>
@@ -92,19 +100,27 @@ export default {
   data() {
     return {
       language: localStorage.getItem("language"),
-      assetData: []
+      assetData: [],
+      projectData: []
     }
   },
   methods: {
-    jumpTo(data,id) {
-      this.$store.state.assetData.moduleData = data
-      this.$store.state.assetData.selectedData = id
+    jumpTo(data) {
       this.$router.push({
         path: "/" + data,
         query: {
           t: +new Date()
         }
       });
+    },
+    jumpToAsset(data, id) {
+      this.$store.state.assetData.moduleData = data;
+      this.$store.state.assetData.selectedData = id;
+      this.jumpTo(data);
+    },
+    jumpToProject(data, p) {
+      this.$store.commit('setProject', p);
+      this.jumpTo(data);
     },
     changeLocal(lang) {
       localStorage.setItem("language", lang);
@@ -117,9 +133,35 @@ export default {
         }
       })
     },
+    getProjectData() {
+      this.$get('project', this.pageObj).then(response => {
+        if (response.code == 200) {
+          this.projectData = response.data.list;
+        }
+      })
+    },
+    toEditProject(p) {
+      this.$store.commit('setProject', p);
+      this.$store.commit('projectRightBoxShow', true);
+      this.jumpTo('project');
+    }
   },
   mounted() {
-    this.getAssetData()
+    this.getAssetData();
+    this.getProjectData();
+  },
+  computed: {
+    projectListReload() {
+      return this.$store.state.projectListReload;
+    }
+  },
+  watch: {
+    projectListReloadWatch(n, o) {
+      if (n) {
+        this.getProjectData();
+        this.$store.commit('projectListReload', false);
+      }
+    }
   }
 }
 </script>
@@ -223,5 +265,9 @@ export default {
 
 .header-name-jiantou {
     position: static !important;
+}
+.menu-edit {
+    line-height: 36px;
+    float: right;
 }
 </style>

@@ -105,10 +105,20 @@ const en = {
   },
   project: {
     project: {
-      project: "Project"
+      project: "Project",
+      projectName: "Project Name",
+      editProject: "Edit Project",
+      description: "Description"
     },
     module: {
-      module: "Module"
+      module: "Module",
+      moduleName: "Module Name",
+      editModule: "Edit Module",
+      description: "Description",
+      tip: {
+        defaultEndpointSet: "Default Endpoint Set",
+        relation: "Endpoints associated with Module will reference Port/Path/Param/Params by default"
+      }
     },
     endpoint: {
       createEndpoint: "Create Endpoint",

@@ -46,10 +46,15 @@
 }
 
 .param-box {
-  height: 303px;
   border: 1px solid #DCDFE6;
   border-radius: 4px;
   padding: 0 10px;
+}
+.param-box-endpoint {
+  height: 325px;
+}
+.param-box-module {
+  height: 227px;
 }
 .param-box-row {
   padding: 7px 0 0 0;
@@ -92,18 +97,20 @@
 
 /* begin--子弹框*/
 .right-sub-box {
-  width: 330px;
-  height: calc(50%);
+  width: 380px;
+  height: 520px;
   position: absolute;
   top: 380px;
   right: 100px;
   z-index: 2;
+  padding: 0 10px;
 }
 .right-sub-box .el-input-group {
-  width: 60%;
+  width: 227px;
   float: right;
   margin: 7px 0 0 0;
 }
+  /* begin--搜索框*/
 .endpoint-asset-prepend {
   border-radius: 4px 0 0 4px;
 }
@@ -128,6 +135,7 @@
 .endpoint-asset-label-txt {
   display: inline-block;
   width: 19px;
+  text-align: center;
 }
 .endpoint-asset-dropdown-item:first-of-type {
   border-radius: 4px 4px 0 0;
@@ -138,15 +146,104 @@
 .endpoint-asset-dropdown-item:hover {
   background-color: #3a8ee6;
 }
+  /* end--搜索框*/
+  /* begin--table*/
+.endpoint-sub-table {
+  margin-top: 25px;
+}
+.line-100 {
+  margin-bottom: 3px;
+}
+.endpoint-sub-table-head {
+  line-height: 28px;
+  height: 30px;
+}
+.endpoint-sub-table-row {
+  line-height: 28px;
+  height: 30px;
+  color: #656565;
+}
+.endpoint-sub-table-row-active {
+  background-color: #dadada;
+}
+.endpoint-sub-table-col {
+  display: inline-block;
+  width: 45%;
+  padding-left: 10px;
+}
+.endpoint-sub-table-paginate-all {
+  position: absolute;
+  left: 10px;
+  bottom: 17px;
+  color: #5a5a5a;
+}
+.endpoint-sub-table-body {
+  font-size: 15px;
+}
+  /* end--table*/
+
 /* end--子弹框*/
 </style>
+<style>
+  /* begin--覆盖分页组件样式*/
+  .right-sub-box .el-pagination.is-background .btn-next, .right-sub-box .el-pagination.is-background .btn-prev, .right-sub-box .el-pagination.is-background .el-pager li {
+    margin: 0 3px;
+    min-width: 25px;
+  }
+  .right-sub-box .el-pagination button, .right-sub-box .el-pagination span:not([class*=suffix]) {
+    margin: 0 3px;
+    height: 25px;
+    line-height: 25px;
+  }
+  .right-sub-box .el-pager li {
+    height: 25px;
+    line-height: 25px;
+  }
+  .right-sub-box .el-pagination.is-background .el-pager li:not(.disabled).active {
+    background-color: #656565;
+    border: 1px solid #656565;
+  }
+  .right-sub-box .el-pagination.is-background .btn-next, .right-sub-box .el-pagination.is-background .btn-prev, .right-sub-box .el-pagination.is-background .el-pager li {
+    background-color: white;
+  }
+  .right-sub-box .el-pagination button, .right-sub-box .el-pager li {
+    border: 1px solid #DADADA;
+  }
+  .right-sub-box .el-pager li.active+li {
+    border: 1px solid #DADADA;
+  }
+  .right-sub-box .el-pagination.is-background .el-pager li:not(.disabled):hover {
+    color: black;
+  }
+  .right-sub-box .el-pagination.is-background .el-pager li.active:hover {
+    color: white;
+  }
+  .endpoint-sub-table-paginate .el-pagination {
+    position: absolute;
+    right: 10px;
+    bottom: 13px;
+  }
+  .el-input-group__append {
+    cursor: pointer;
+  }
+
+  /* end--覆盖分页组件样式*/
+</style>
+
 <template>
   <div class="project">
     <div class="content-left">
-      <div class="sidebar-title">Config</div>
+      <div class="sidebar-title">{{$store.state.projectData.name}}</div>
       <div class="sidebar-info">
-        <div class="sidebar-info-item sidebar-info-top sidebar-info-item-active">Account List</div>
-        <div class="sidebar-info-item">Prometheus Server</div>
+        <div
+          v-for="item in moduleData"
+          class="sidebar-info-item"
+          :class="{'sidebar-info-item-active': item.id == currentModule.id}"
+          @click="changeListModule(item)"
+        >
+          {{item.name}}
+          <div class="side-bar-menu-edit" @click.stop="toEditModule(item)"><i class="el-icon-edit-outline"></i></div>
+        </div>
       </div>
     </div>
     <div class="content-right">
@@ -204,7 +301,7 @@
       <div class="right-box right-box-endpoint" v-if="rightBox.show">
         <!-- begin--顶部按钮-->
         <div class="right-box-top-btns">
-          <div class="right-box-top-btn right-box-top-btn-full" @click="esc">
+          <div class="right-box-top-btn right-box-top-btn-full" @click="esc(1)">
             <div class="right-box-btn-icon">
               <i class="el-icon-close"></i>
             </div>
@@ -236,7 +333,7 @@
           <div class="right-box-form-row">
             <div class="right-box-form-label">{{$t("project.project.project")}}</div>
             <div class="right-box-form-content">
-              <el-select @change="((val) => {getModuleData(val.id)})" value-key="id" popper-class="config-dropdown" v-model="endpoint.project" placeholder="" v-if="rightBox.isEdit" size="small">
+              <el-select @change="((val) => {getToSelectModuleData(val.id)})" value-key="id" popper-class="config-dropdown" v-model="endpoint.project" placeholder="" v-if="rightBox.isEdit" size="small">
                 <el-option v-for="item in projectData" :key="item.id" :label="item.name" :value="item"></el-option>
               </el-select>
               <div v-if="!rightBox.isEdit" class="right-box-form-content-txt">{{endpoint.project.name}}</div>
@@ -246,8 +343,8 @@
           <div class="right-box-form-row">
             <div class="right-box-form-label">{{$t("project.module.module")}}</div>
             <div class="right-box-form-content">
-              <el-select @change="((val) => {changeModule(val.id)})" value-key="id" popper-class="config-dropdown" v-model="selectedModule" placeholder="" v-if="rightBox.isEdit" size="small">
-                <el-option v-for="item in moduleData" :key="item.id" :label="item.name" :value="item"></el-option>
+              <el-select @change="((val) => {changeSelectedModule(val.id)})" value-key="id" popper-class="config-dropdown" v-model="selectedModule" placeholder="" v-if="rightBox.isEdit" size="small">
+                <el-option v-for="item in toSelectModuleData" :key="item.id" :label="item.name" :value="item"></el-option>
               </el-select>
               <div v-if="!rightBox.isEdit" class="right-box-form-content-txt">{{endpoint.module.name}}</div>
             </div>
@@ -263,7 +360,7 @@
                 v-model="endpoint.host"
                 size="small"
               ></el-input>
-              <div @click="showSubShow" class="right-box-row-btn right-box-row-btn-active" v-if="rightBox.isEdit">
+              <div @click="showSubBox" class="right-box-row-btn right-box-row-btn-active" v-if="rightBox.isEdit">
                 <span class="el-icon-more"></span>
               </div>
               <div v-if="!rightBox.isEdit" class="right-box-form-content-txt">{{endpoint.host}}</div>
@@ -303,7 +400,7 @@
               <el-button class="param-btn param-btn-clear" size="mini" @click="clearAllParam">{{$t('overall.clearAll')}}</el-button>
             </div>
             <div class="right-box-form-content">
-              <div class="param-box">
+              <div class="param-box param-box-endpoint">
                 <div class="param-box-row" v-for="(item, index) in paramObj">
                   <el-input placeholder="key" class="param-box-row-key" size="mini" v-model="item.key"></el-input>
                   <span class="param-box-row-eq">=</span>
@@ -318,7 +415,7 @@
 
         <!-- begin--底部按钮-->
         <div class="right-box-bottom-btns">
-          <div @click="esc()" :class="{'right-box-bottom-btn-50': rightBox.isEdit}" class="right-box-bottom-btn right-box-bottom-btn-cancel">{{$t('overall.cancel')}}</div><div @click="save()" v-if="rightBox.isEdit" class="right-box-bottom-btn right-box-bottom-btn-50">{{endpoint.id == '' ? $t('overall.create') : $t('overall.save')}}</div>
+          <div @click="esc(1)" :class="{'right-box-bottom-btn-50': rightBox.isEdit}" class="right-box-bottom-btn right-box-bottom-btn-cancel">{{$t('overall.cancel')}}</div><div @click="save()" v-if="rightBox.isEdit" class="right-box-bottom-btn right-box-bottom-btn-50">{{endpoint.id == '' ? $t('overall.create') : $t('overall.save')}}</div>
         </div>
         <!-- end--底部按钮-->
       </div>
@@ -348,12 +445,241 @@
               </div>
             </div>
           </template>
-          <template slot="append"><i class="el-icon-search"></i></template>
+          <template slot="append"><i @click="searchAsset" class="el-icon-search"></i></template>
         </el-input>
         <!-- end--搜索框-->
+
+        <!-- begin--table-->
+        <div class="endpoint-sub-table">
+          <div class="endpoint-sub-table-head">
+            <div class="endpoint-sub-table-col">IP</div>
+            <div class="endpoint-sub-table-col">SN</div>
+          </div>
+          <div class="line-100"></div>
+          <div class="endpoint-sub-table-body">
+            <div v-if="selectedAsset.id != ''" :data="selectedAsset.id" class="endpoint-sub-table-row endpoint-sub-table-row-active">
+              <div class="endpoint-sub-table-col">{{selectedAsset.host}}</div>
+              <div class="endpoint-sub-table-col">{{selectedAsset.sn}}</div>
+            </div>
+            <div @click="selectAsset(item)" :data="item.id" v-for="item in assetData" class="endpoint-sub-table-row" :class="{'endpoint-sub-table-row-active': item.id == selectedAsset.id}">
+              <div class="endpoint-sub-table-col">{{item.host}}</div>
+              <div class="endpoint-sub-table-col">{{item.sn}}</div>
+            </div>
+          </div>
+          <div class="endpoint-sub-table-paginate">
+            <div class="endpoint-sub-table-paginate-all">All:&nbsp;{{assetPageObj.total}}</div>
+            <el-pagination
+              background
+              :pager-count="5"
+              layout="prev, pager, next"
+              @current-change="(currentPage) => {getAssetData(currentPage)}"
+              :total="assetPageObj.total">
+            </el-pagination>
+          </div>
+        </div>
+        <!-- end--table-->
       </div>
     </transition>
     <!-- end--子弹框-->
+
+    <!-- begin--project弹框-->
+    <transition name="right-box">
+      <div class="right-box right-box-endpoint" v-if="projectRightBox.show">
+        <!-- begin--顶部按钮-->
+        <div class="right-box-top-btns">
+          <div class="right-box-top-btn right-box-top-btn-full" @click="esc(2)">
+            <div class="right-box-btn-icon">
+              <i class="el-icon-close"></i>
+            </div>
+            <span>{{$t('overall.esc')}}</span>
+          </div>
+          <div class="right-box-top-btn right-box-top-btn-full" @click="projectSave">
+            <div class="right-box-btn-icon">
+              <i class="el-icon-edit-outline"></i>
+            </div>
+            <span>{{$t('overall.save')}}</span>
+          </div>
+          <div class="right-box-top-btn" v-if="project.id != ''">
+            <div class="right-box-btn-icon">
+              <i class="el-icon-delete"></i>
+            </div>
+            <span>{{$t('overall.delete')}}</span>
+          </div>
+        </div>
+        <!-- end--顶部按钮-->
+
+        <!-- begin--标题-->
+        <div class="right-box-title">{{projectRightBox.title}}</div>
+        <!-- end--标题-->
+
+        <!-- begin--表单-->
+        <div class="right-box-form">
+          <!--name-->
+          <div class="right-box-form-row">
+            <div class="right-box-form-label">{{$t("project.project.projectName")}}</div>
+            <div class="right-box-form-content">
+              <el-input
+                placeholder=""
+                maxlength="64"
+                show-word-limit
+                v-model="project.name"
+                size="small"
+              ></el-input>
+            </div>
+          </div>
+          <!--description-->
+          <div class="right-box-form-row">
+            <div class="right-box-form-label">{{$t("project.project.description")}}</div>
+            <div class="right-box-form-content">
+              <el-input
+                type="textarea"
+                placeholder=""
+                maxlength="1024"
+                show-word-limit
+                v-model="project.remark"
+                size="small"
+              ></el-input>
+            </div>
+          </div>
+        </div>
+
+        <!-- begin--底部按钮-->
+        <div class="right-box-bottom-btns">
+          <div @click="esc(2)" class="right-box-bottom-btn right-box-bottom-btn-cancel right-box-bottom-btn-50">{{$t('overall.cancel')}}</div><div @click="projectSave" class="right-box-bottom-btn right-box-bottom-btn-50">{{project.id == '' ? $t('overall.create') : $t('overall.save')}}</div>
+        </div>
+        <!-- end--底部按钮-->
+      </div>
+    </transition>
+    <!-- end--project弹框-->
+
+    <!-- begin--module弹框-->
+    <transition name="right-box">
+      <div class="right-box right-box-endpoint" v-if="moduleRightBox.show">
+        <!-- begin--顶部按钮-->
+        <div class="right-box-top-btns">
+          <div class="right-box-top-btn right-box-top-btn-full" @click="esc(3)">
+            <div class="right-box-btn-icon">
+              <i class="el-icon-close"></i>
+            </div>
+            <span>{{$t('overall.esc')}}</span>
+          </div>
+          <div class="right-box-top-btn right-box-top-btn-full" @click="moduleSave">
+            <div class="right-box-btn-icon">
+              <i class="el-icon-edit-outline"></i>
+            </div>
+            <span>{{$t('overall.save')}}</span>
+          </div>
+          <div class="right-box-top-btn" v-if="currentModule.id != ''">
+            <div class="right-box-btn-icon">
+              <i class="el-icon-delete"></i>
+            </div>
+            <span>{{$t('overall.delete')}}</span>
+          </div>
+        </div>
+        <!-- end--顶部按钮-->
+
+        <!-- begin--标题-->
+        <div class="right-box-title">{{moduleRightBox.title}}</div>
+        <!-- end--标题-->
+
+        <!-- begin--表单-->
+        <div class="right-box-form">
+          <!--project-->
+          <div class="right-box-form-row">
+            <div class="right-box-form-label">{{$t("project.project.project")}}</div>
+            <div class="right-box-form-content">
+              <el-select value-key="id" popper-class="config-dropdown" v-model="currentModule.project" placeholder="" size="small">
+                <el-option v-for="item in projectData" :key="item.id" :label="item.name" :value="item"></el-option>
+              </el-select>
+            </div>
+          </div>
+          <!--name-->
+          <div class="right-box-form-row">
+            <div class="right-box-form-label">{{$t("project.module.moduleName")}}</div>
+            <div class="right-box-form-content">
+              <el-input
+                placeholder=""
+                maxlength="64"
+                show-word-limit
+                v-model="currentModule.name"
+                size="small"
+              ></el-input>
+            </div>
+          </div>
+          <!--description-->
+          <div class="right-box-form-row">
+            <div class="right-box-form-label">{{$t("project.module.description")}}</div>
+            <div class="right-box-form-content">
+              <el-input
+                type="textarea"
+                placeholder=""
+                maxlength="1024"
+                show-word-limit
+                v-model="currentModule.remark"
+                size="small"
+              ></el-input>
+            </div>
+          </div>
+          <!--tip-->
+          <div class="right-box-form-row">
+            <div class="right-box-form-content">
+              <div class="right-box-form-tip">
+                {{$t('project.module.tip.defaultEndpointSet')}}
+                <div class="line-100"></div>
+                {{$t('project.module.tip.relation')}}
+              </div>
+            </div>
+          </div>
+          <!--port-->
+          <div class="right-box-form-row">
+            <div class="right-box-form-label">{{$t("project.endpoint.port")}}</div>
+            <div class="right-box-form-content">
+              <el-input
+                placeholder=""
+                v-model="currentModule.port"
+                size="small"
+              ></el-input>
+            </div>
+          </div>
+          <!--path-->
+          <div class="right-box-form-row">
+            <div class="right-box-form-label">{{$t("project.endpoint.path")}}</div>
+            <div class="right-box-form-content">
+              <el-input
+                placeholder=""
+                v-model="currentModule.path"
+                size="small"
+              ></el-input>
+            </div>
+          </div>
+          <!--param-->
+          <div class="right-box-form-row">
+            <div class="right-box-form-label">
+              {{$t("project.endpoint.param")}}
+              <el-button class="param-btn param-btn-active margin-l-10" size="mini" @click="addParam"><i class="el-icon-plus"></i>{{$t('overall.add')}}</el-button>
+              <el-button class="param-btn param-btn-clear" size="mini" @click="clearAllParam">{{$t('overall.clearAll')}}</el-button>
+            </div>
+            <div class="right-box-form-content">
+              <div class="param-box param-box-module">
+                <div class="param-box-row" v-for="(item, index) in paramObj">
+                  <el-input placeholder="key" class="param-box-row-key" size="mini" v-model="item.key"></el-input>
+                  <span class="param-box-row-eq">=</span>
+                  <el-input placeholder="value" class="param-box-row-value" size="mini" v-model="item.value"></el-input>
+                  <span class="param-box-row-symbol" @click="removeParam(index)"><i class="el-icon-minus"></i></span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- begin--底部按钮-->
+        <div class="right-box-bottom-btns">
+          <div @click="esc(3)" class="right-box-bottom-btn right-box-bottom-btn-cancel right-box-bottom-btn-50">{{$t('overall.cancel')}}</div><div @click="moduleSave" class="right-box-bottom-btn right-box-bottom-btn-50">{{currentModule.id == '' ? $t('overall.create') : $t('overall.save')}}</div>
+        </div>
+        <!-- end--底部按钮-->
+      </div>
+    </transition>
+    <!-- end--module弹框-->
   </div>
 </template>
 
@@ -362,6 +688,11 @@ export default {
   name: "project",
   data() {
     return {
+      projectRightBox: {
+        show: false,
+        title: ''
+      },
+      project: {id: '', name: '', remark: ''},
       rightBox: { //弹出框相关
         show: false,
         isEdit: false, //false查看，true编辑
@@ -371,8 +702,8 @@ export default {
         show: false,
         title: this.$t("overall.asset")
       },
-      assetSearch: {
-        ip: '',
+      assetSearch: { //侧滑框中asset的搜索相关
+        host: '',
         sn: '',
         text: '',
         label: 'IP',
@@ -382,6 +713,11 @@ export default {
         pageNo: 1,
         pageSize: 20,
         total:0
+      },
+      assetPageObj: {
+        pageNo: 1,
+        pageSize: 11,
+        total: 0
       },
       endpoint: {
         id: '',
@@ -393,9 +729,22 @@ export default {
         project: {id: '', name: ''},
         module: {id: '', name: '', param: '', paramObj: {}}
       },
-      selectedModule: {
+      moduleRightBox: {
+        show: false,
+        title: ''
+      },
+      currentModule: { //左侧列表当前选中的module
         id: '',
         name: ''
+      },
+      selectedModule: { //侧滑框中选中的module
+        id: '',
+        name: ''
+      },
+      selectedAsset: { //侧滑框中选中的asset
+        id: '',
+        host: '',
+        sn: ''
       },
       tableTitle: [
         {
@@ -431,23 +780,30 @@ export default {
         }
       ],
       endPointTableData: [],
-      projectData: [],
-      moduleData: [],
-      paramObj: []
+      projectData: [], //侧滑框中可选的project
+      moduleData: [], //左侧列表的module信息
+      toSelectModuleData: [], //侧滑框中可选的module
+      paramObj: [], //侧滑框中的param信息
+      assetData: [] //侧滑框中可选的asset
     }
   },
   methods: {
-    showSubShow: function() {
+    // endpoint弹框中asset子弹框控制
+    showSubBox: function() {
       this.rightSubBox.show = !this.rightSubBox.show;
+      this.selectedAsset = this.endpoint.asset;
     },
+    // table数据
     getEndPointTableData: function() {
+      this.$set(this.pageObj, 'moduleId', this.currentModule.id);
       this.$get('endpoint', this.pageObj).then(response => {
         if (response.code === 200) {
           for (var i = 0; i < response.data.list.length; i++) {
             try {
               var tempObj = JSON.parse(response.data.list[i].param);
             } catch (err) {
-
+              console.info(response.data.list[i]);
+              console.info(err);
             }
             response.data.list[i].paramObj = [];
             for (let k in tempObj) {
@@ -459,6 +815,7 @@ export default {
         }
       });
     },
+    // 获取module、endpoint弹框中project下拉框数据
     getProjectData: function() {
       this.$get('project').then(response => {
         if (response.code === 200) {
@@ -466,76 +823,204 @@ export default {
         }
       });
     },
-    getModuleData: function(projectId) {
-      // module选择改变时，记录旧module的id值(endpoint.moduleId)和对应的endpoint的param(endpoint.和对应的endpoint.param)，
-      // 然后改变，改变后param用module的值，如果改回旧module，则恢复endpoint的param
-      this.selectedModule = {id: '', name: ''};
-      this.$get('module', {projectId: projectId}).then(response => {
+    // 获取endpoint弹框中的asset子弹框里asset列表数据
+    getAssetData: function(currentPage) {
+      if (currentPage) {
+        this.assetPageObj.pageNo = currentPage;
+      } else {
+        this.assetPageObj.pageNo = 1;
+      }
+      this.$get('asset', this.assetPageObj).then(response => {
         if (response.code === 200) {
+          this.assetData = response.data.list;
+          this.assetPageObj.total = response.data.total;
+        }
+      });
+    },
+    // endpoint弹框中的asset子弹框里asset选择事件
+    selectAsset: function(obj) {
+      this.selectedAsset = obj;
+    },
+    // endpoint弹框中的asset子弹框搜索
+    searchAsset: function() {
+      if (this.assetSearch.label == 'IP') {
+        this.assetSearch.host = this.assetSearch.text;
+        this.assetSearch.sn = '';
+      } else if (this.assetSearch.label == 'SN') {
+        this.assetSearch.sn = this.assetSearch.text;
+        this.assetSearch.host = '';
+      }
+      this.assetPageObj = Object.assign({}, this.assetPageObj, this.assetSearch);
+      this.getAssetData(false);
+    },
+    // 获取左侧module列表数据
+    getModuleData: function() {
+      this.$get('module', {projectId: this.$store.state.projectData.id}).then(response => {
+        if (response.code === 200) {
+          this.moduleData = response.data.list;
           for (var i = 0; i < response.data.list.length; i++) {
-            var tempObj = JSON.parse(response.data.list[i].param);
+            try {
+              var tempObj = JSON.parse(response.data.list[i].param);
+            } catch (err) {
+              console.info(response.data.list[i]);
+              console.info(err);
+            }
             response.data.list[i].paramObj = [];
             for (let k in tempObj) {
               response.data.list[i].paramObj.push({key: k, value: tempObj[k]})
             }
           }
-          this.moduleData = response.data.list;
+          if (this.moduleData.length > 0) {
+            this.currentModule = this.moduleData[0];
+            this.getEndPointTableData();
+          } else {
+            this.endPointTableData = [];
+            this.pageObj.total = 0;
+          }
+
         }
       });
     },
-    changeModule: function(moduleId) {
+    // 获取endpoint弹框中module下拉框数据
+    getToSelectModuleData: function(projectId) {
+      this.selectedModule = {id: '', name: ''};
+      this.$get('module', {projectId: projectId}).then(response => {
+        if (response.code === 200) {
+          for (var i = 0; i < response.data.list.length; i++) {
+            try {
+              var tempObj = JSON.parse(response.data.list[i].param);
+            } catch(err) {
+              console.info(response.data.list[i]);
+              console.info(err);
+            }
+            response.data.list[i].paramObj = [];
+            for (let k in tempObj) {
+              response.data.list[i].paramObj.push({key: k, value: tempObj[k]})
+            }
+          }
+          this.toSelectModuleData = response.data.list;
+        }
+      });
+    },
+    // 左侧module列表点击事件
+    changeListModule: function(module) {
+      this.currentModule = Object.assign({}, module);
+      this.moduleRightBox.show = false;
+      this.getEndPointTableData();
+    },
+    // endpoint弹框中module下拉框点击事件
+    changeSelectedModule: function(moduleId) {
       if (moduleId == this.endpoint.moduleId) {
-        this.paramObj = JSON.parse(JSON.stringify(this.endpoint.paramObj));
+        try {
+          this.paramObj = JSON.parse(JSON.stringify(this.endpoint.paramObj));
+        } catch(err) {
+          console.info(this.endpoint.paramObj);
+          console.info(err);
+        }
       } else {
-        this.paramObj = JSON.parse(JSON.stringify(this.selectedModule.paramObj));
+        try {
+          this.paramObj = JSON.parse(JSON.stringify(this.selectedModule.paramObj));
+        } catch(err) {
+          console.info(this.selectedModule.paramObj);
+          console.info(err);
+        }
       }
     },
-    toEdit: function(u) {
-      this.getModuleData(u.project.id);
-      this.selectedModule = Object.assign({}, u.module);
-      this.endpoint = Object.assign({}, u);
-      //this.paramObj = this.endpoint.paramObj;
-      this.paramObj = JSON.parse(JSON.stringify(this.endpoint.paramObj));
+    // 打开endpoint编辑页
+    toEdit: function(endpoint) {
+      this.getToSelectModuleData(endpoint.project.id);
+      this.selectedModule = Object.assign({}, endpoint.module);
+      this.endpoint = Object.assign({}, endpoint);
+      try {
+        this.paramObj = JSON.parse(JSON.stringify(this.endpoint.paramObj));
+      } catch(err) {
+        console.info(this.endpoint.paramObj);
+        console.info(err);
+      }
+
       this.rightBox.isEdit = true;
-      this.rightBox.title = this.$t("project.endpoint.editEndpoint") + "  ID：" + u.id;
+      this.rightBox.title = this.$t("project.endpoint.editEndpoint") + "  ID：" + endpoint.id;
       this.rightBox.show = true;
     },
+    // 打开module编辑页
+    toEditModule: function(module) {
+      this.currentModule = Object.assign({}, module);
+      try {
+        this.paramObj = JSON.parse(JSON.stringify(this.currentModule.paramObj));
+      } catch(err) {
+        console.info(this.currentModule.paramObj);
+        console.info(err);
+      }
+      this.moduleRightBox.show = true;
+      this.getEndPointTableData();
+      this.moduleRightBox.title = this.$t('project.module.editModule') + "  ID：" + module.id;
+    },
+    // 删除endpoint
     del: function(u) {
     },
+    // 打开endpoint新增页
     toAdd: function() {
       this.cleanEndpoint();
       this.paramObj = [];
-      this.moduleData = [];
+      this.toSelectModuleData = [];
       this.rightBox.isEdit = true;
       this.rightBox.title = this.$t("project.endpoint.createEndpoint");
       this.rightBox.show = true;
     },
+    // 打开endpoint详情页
     detail: function(u) {
       this.endpoint = Object.assign({}, u);
       this.rightBox.isEdit = false;
       this.rightBox.title = this.$t("project.endpoint.endpoint") + "  ID：" + u.id;
       this.rightBox.show = true;
     },
+    // endpoint弹框保存或编辑
     saveOrToEdit: function() {
       if (!this.rightBox.isEdit) {
         this.rightBox.isEdit = true;
         this.rightBox.title = this.$t("project.endpoint.editEndpoint") + "  ID：" + this.endpoint.id;
       }
     },
+    // 保存project
+    projectSave: function() {
+      this.$put('project', this.project).then(response => {
+        if (response.code === 200) {
+          this.$store.commit('projectListReload', true);
+          this.projectRightBox.show = false;
+        }
+      });
+    },
+    // 保存module
+    moduleSave: function() {
+
+    },
+    // 保存endpoint
     save: function() {
 
     },
+    // 清除module、endpoint弹框中的param
     clearAllParam: function() {
       this.paramObj = [];
     },
+    // 新增module、endpoint弹框中的param
     addParam: function() {
       this.paramObj.push({key: '', value: ''});
     },
+    // 移除单个module、endpoint弹框中的param
     removeParam: function(index) {
       this.paramObj.splice(index, 1);
     },
-    esc: function() {
-      this.rightBox.show = false;
+    // 关闭右侧弹框
+    esc: function(type) {
+      if (type == 1) {
+        this.rightBox.show = false;
+      }
+      if (type == 2) {
+        this.$store.commit('projectRightBoxShow', false);
+      }
+      if (type == 3) {
+        this.moduleRightBox.show = false;
+      }
     },
     cleanEndpoint: function() {
       this.endpoint = {
@@ -557,15 +1042,35 @@ export default {
       this.pageObj.pageSize = val;
       this.getEndPointTableData();
     },
-
+    // endpoint弹框的子弹框顶部搜索条件选中事件
     dropdownSelect: function(label) {
       this.assetSearch.label = label;
       this.assetSearch.dropdownShow = false;
     }
   },
   mounted: function() {
-    this.getEndPointTableData();
+    this.getModuleData();
     this.getProjectData();
+    this.getAssetData();
+  },
+  computed:{
+    sProject() {
+      return this.$store.state.projectData;
+    },
+    projectBoxShow() {
+      return this.$store.state.projectBoxShow;
+    }
+  },
+  watch: {
+    sProject(n, o) {
+      this.project = Object.assign({}, n);
+      this.projectRightBox.title = this.$t("project.project.editProject") + "  ID：" + n.id;
+      this.getModuleData();
+    },
+    projectBoxShow(n, o) {
+      console.info(n)
+      this.projectRightBox.show = n;
+    }
   }
 }
 </script>
