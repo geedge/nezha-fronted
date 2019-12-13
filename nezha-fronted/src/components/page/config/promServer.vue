@@ -60,6 +60,10 @@
                 >
                     <template slot-scope="scope" :column="item">
                         <span v-if="item.prop == 'idc'">{{scope.row[item.prop].name}}</span>
+                        <span v-else-if="item.prop == 'type'">
+                            {{scope.row[item.prop] == '1' ? 'Global' : ''}}
+                            {{scope.row[item.prop] == '2' ? 'Per-Datacenter' : ''}}
+                        </span>
                         <span v-else>{{scope.row[item.prop]}}</span>
                     </template>
                 </el-table-column>
@@ -93,7 +97,7 @@
                         <span v-if="rightBox.isEdit">{{$t('overall.save')}}</span>
                         <span v-else>{{$t('overall.edit')}}</span>
                     </div>
-                    <div class="right-box-top-btn" v-if="rightBox.isEdit && promServer.id != ''">
+                    <div @click="del" class="right-box-top-btn" v-if="rightBox.isEdit && promServer.id != ''">
                         <div class="right-box-btn-icon">
                             <i class="el-icon-delete"></i>
                         </div>
@@ -119,7 +123,7 @@
                                   :label="item.name"
                                   :value="item">
                                     <span class="config-dropdown-label-txt" v-if="!item.isEdit">{{item.name}}</span>
-                                    <span class="config-dropdown-label-input" v-if="item.isEdit" @click.stop="stopFun">
+                                    <span class="config-dropdown-label-input" v-if="item.isEdit" @click.stop>
                                         <el-input
                                           type="text"
                                           v-model="item.name"
@@ -151,6 +155,33 @@
                               size="small"
                             ></el-input>
                             <div v-if="!rightBox.isEdit" class="right-box-form-content-txt">{{promServer.host}}</div>
+                        </div>
+                    </div>
+                    <div class="right-box-form-row">
+                        <div class="right-box-form-label">Port</div>
+                        <div class="right-box-form-content">
+                            <el-input
+                              type="text"
+                              v-if="rightBox.isEdit"
+                              placeholder=""
+                              v-model="promServer.port"
+                              size="small"
+                            ></el-input>
+                            <div v-if="!rightBox.isEdit" class="right-box-form-content-txt">{{promServer.port}}</div>
+                        </div>
+                    </div>
+                    <div class="right-box-form-row">
+                        <div class="right-box-form-label">{{$t('config.promServer.type')}}</div>
+                        <div class="right-box-form-content">
+                            <el-select popper-class="config-dropdown" v-model="promServer.type" placeholder="" v-if="rightBox.isEdit" size="small">
+                                <el-option
+                                  v-for="item in typeData"
+                                  :key="item.key"
+                                  :label="item.value"
+                                  :value="item.key">
+                                </el-option>
+                            </el-select>
+                            <div v-for="item in typeData" v-if="!rightBox.isEdit && item.key == promServer.type" class="right-box-form-content-txt">{{item.value}}</div>
                         </div>
                     </div>
                 </div>
@@ -201,53 +232,27 @@ export default {
           label: 'Host',
           prop: 'host',
           show: true,
+        }, {
+          label: 'Port',
+          prop: 'port',
+          show: true,
+        }, {
+          label: this.$t("config.promServer.type"),
+          prop: 'type',
+          show: true,
         }
       ],
       tableData: [],
-      /*tableData: [
+      idcData: [],
+      typeData: [
         {
-          id: '1',
-          host: '192.168.40.241',
-          idc: {id: '3', name: 'aerareqarew', location: 'zhaertaewr'}
-        },
-        {
-          id: '2',
-          host: '192.168.40.242',
-          idc: {id: '5', name: 'idc151654', location: 'bj'}
-        },
-        {
-          id: '3',
-          host: '192.168.40.243',
-          idc: {id: '6', name: 'idc151655', location: 'sh'}
-        },
-        {
-          id: '4',
-          host: '192.168.40.244',
-          idc: {id: '6', name: 'idc151655', location: 'sh'}
-        },
-        {
-          id: '5',
-          host: '192.168.40.245',
-          idc: {id: '7', name: 'idc151656', location: 'gd'}
-        },
-        {
-          id: '6',
-          host: '192.168.40.246',
-          idc: {id: '9', name: 'idc151657', location: 'fj'}
-        },
-      ],*/
-      idcData: []
-      /*idcData: [
-        {id: '1', name: 'idc151656', location: 'gd'},
-        {id: '2', name: 'idc151656', location: 'gd'},
-        {id: '3', name: 'aerareqarew', location: 'zhaertaewr'},
-        {id: '4', name: 'idc151656', location: 'gd'},
-        {id: '5', name: 'idc151654', location: 'bj'},
-        {id: '6', name: 'idc151655', location: 'sh'},
-        {id: '7', name: 'idc151656', location: 'gd'},
-        {id: '8', name: 'idc151656', location: 'gd'},
-        {id: '9', name: 'idc151657', location: 'fj'},
-      ]*/
+          key: 1,
+          value: 'Global'
+        }, {
+          key: 2,
+          value: 'Per-Datacenter'
+        }
+      ]
     }
   },
   methods: {
@@ -258,6 +263,20 @@ export default {
       this.rightBox.show = true;
     },
     del: function(u) {
+      this.$confirm(this.$t("tip.confirmDelete"), {
+        confirmButtonText: this.$t("tip.yes"),
+        cancelButtonText: this.$t("tip.no"),
+        type: 'warning'
+      }).then(() => {
+        this.$delete("promServer?ids=" + u.id).then(response => {
+          if (response.code === 200) {
+            this.$message({type: 'success', message: this.$t("tip.deleteSuccess")});
+            this.getTableData();
+          } else {
+            this.$message.error(response.msg);
+          }
+        })
+      });
     },
     getTableData: function() {
       this.$get('promServer', this.pageObj).then(response => {
@@ -285,6 +304,7 @@ export default {
           if (response.code === 200) {
             this.getTableData();
             this.rightBox.isEdit = false;
+            this.esc();
           }
         });
       } else {
@@ -292,6 +312,7 @@ export default {
           if (response.code === 200) {
             this.getTableData();
             this.rightBox.isEdit = false;
+            this.esc();
           }
         });
       }
@@ -316,8 +337,8 @@ export default {
               item.errorMessage = '';
               item.oldName = item.name;
               item.isEdit = false;
+              this.getIdcData();
             } else {
-              console.info(response.msg)
               this.$set(item, 'errorMessage', response.msg);
             }
           })
@@ -341,24 +362,21 @@ export default {
       this.blurEditIdc();
       //TODO 请求后台，删除
     },
-    getIdcData: async function() {
-      console.info(1)
-      await this.$get('idc', this.pageObj).then(response => {
+    getIdcData: function() {
+      this.$get('idc', this.pageObj).then(response => {
         if (response.code === 200) {
           this.idcData = response.data.list;
+          for (var i = 0; i < this.idcData.length; i++) {
+            this.$set(this.idcData[i], 'oldName', this.idcData[i].name);
+            this.$set(this.idcData[i], 'isEdit', false);
+          }
           this.getTableData();
         }
       })
-      for (var i = 0; i < this.idcData.length; i++) {
-        this.$set(this.idcData[i], 'oldName', this.idcData[i].name);
-        this.$set(this.idcData[i], 'isEdit', false);
-      }
+
     },
     esc: function() {
       this.rightBox.show = false;
-    },
-    stopFun: function() {
-
     },
     jumpTo(data,id) {
       this.$store.state.assetData.moduleData = data
@@ -374,10 +392,9 @@ export default {
       this.$get('promServer', this.pageObj).then(response => {
         if (response.code === 200) {
           for (var i = 0; i < response.data.list.length; i++) {
-            console.info(this.idcData)
             for (var j = 0; j < this.idcData.length; j++) {
               if (response.data.list[i].idcId == this.idcData[j].id) {
-                response.data.list[i].idc = this.idcData[j];
+                response.data.list[i].idc = Object.assign({}, this.idcData[j]);
                 break;
               }
             }

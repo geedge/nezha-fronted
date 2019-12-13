@@ -1,12 +1,28 @@
 <template>
     <div class="header">
         <div class="submenu">
+
             <el-menu
                     class="el-menu-demo"
                     mode="horizontal"
                     background-color="#ffffff"
                     unique-opened
             >
+                <el-submenu index="0">
+                    <template slot="title">
+                        <div class="menu-create">
+                          &nbsp;&nbsp;<i class="el-icon-plus"></i>
+                          <div>{{$t('overall.create')}}</div>
+                        </div>
+                    </template>
+                    <template v-for="(item, index) in createMenu">
+                        <el-menu-item :index="'0-' + index.toString()">
+                            <div @click="createBox(item)">
+                                <span>{{item.label}}</span>
+                            </div>
+                        </el-menu-item>
+                    </template>
+                </el-submenu>
                 <el-menu-item index="1" @click="jumpTo('dashboard')">
                     <div>
                         {{$t('overall.dashboard')}}
@@ -17,7 +33,7 @@
                         <div @click="jumpToProject('project', projectData[0])">{{$t('overall.project')}}</div>
                     </template>
                     <template v-for="(item, index) in projectData">
-                        <el-menu-item :index="index.toString()">
+                        <el-menu-item :index="'2-' + index.toString()">
                             <div @click="jumpToProject('project', item)">
                               <span>{{item.name}}</span>
                               <div @click.stop="toEditProject(item)" class="menu-edit"><i class="el-icon-edit-outline"></i></div>
@@ -30,7 +46,7 @@
                         <div @click="jumpToAsset('asset')">{{$t('overall.asset')}}</div>
                     </template>
                     <template v-for="(item, index) in assetData">
-                        <el-menu-item :index="index.toString()">
+                        <el-menu-item :index="'3-' + index.toString()">
                             <div @click="jumpToAsset('asset',item.id)">{{item.name}}</div>
                         </el-menu-item>
                     </template>
@@ -39,10 +55,10 @@
                 <template slot="title">
                   <div @click="jumpTo('alertList')">{{$t('overall.alert')}}</div>
                 </template>
-                <el-menu-item index="1">
+                <el-menu-item index="4-0">
                   <div @click="jumpTo('alertList')">{{$t('alert.alertList')}}</div>
                 </el-menu-item>
-                <el-menu-item index="2">
+                <el-menu-item index="4-1">
                   <div @click="jumpTo('alertConfig')">{{$t('alert.alertConfig')}}</div>
                 </el-menu-item>
               </el-submenu>
@@ -50,10 +66,10 @@
                     <template slot="title">
                         <div @click="jumpTo('account')">{{$t('overall.config')}}</div>
                     </template>
-                    <el-menu-item index="1">
+                    <el-menu-item index="5-0">
                         <div @click="jumpTo('account')">{{$t('config.account.account')}}</div>
                     </el-menu-item>
-                    <el-menu-item index="2">
+                    <el-menu-item index="5-1">
                         <div @click="jumpTo('promServer')">{{$t('config.promServer.promServerList')}}</div>
                     </el-menu-item>
                 </el-submenu>
@@ -101,7 +117,32 @@ export default {
     return {
       language: localStorage.getItem("language"),
       assetData: [],
-      projectData: []
+      projectData: [],
+      createMenu: [
+        {
+          label: this.$t('project.project.createProject'),
+          url: 'project',
+          type: 1
+        },
+        {
+          label: this.$t('project.module.createModule'),
+          url: 'project',
+          type: 2
+        },
+        {
+          label: this.$t('project.endpoint.createEndpoint'),
+          url: 'project',
+          type: 3
+        },
+        {
+          label: this.$t('asset.createAsset'),
+          url: 'asset'
+        },
+        {
+          label: this.$t('alert.config.createAlertConfig'),
+          url: 'alertConfig'
+        }
+      ]
     }
   },
   methods: {
@@ -112,6 +153,9 @@ export default {
           t: +new Date()
         }
       });
+    },
+    createBox(item) {
+
     },
     jumpToAsset(data, id) {
       this.$store.state.assetData.moduleData = data;
@@ -151,7 +195,7 @@ export default {
     this.getProjectData();
   },
   computed: {
-    projectListReload() {
+    projectListReloadWatch() {
       return this.$store.state.projectListReload;
     }
   },
@@ -159,7 +203,7 @@ export default {
     projectListReloadWatch(n, o) {
       if (n) {
         this.getProjectData();
-        this.$store.commit('projectListReload', false);
+        this.$store.commit('projectListReloadChange', false);
       }
     }
   }
@@ -265,6 +309,20 @@ export default {
 
 .header-name-jiantou {
     position: static !important;
+}
+.el-menu-demo>li:first-of-type {
+  position: fixed;
+  left: 40%;
+  top: 0;
+}
+.menu-create {
+  line-height: 15px;
+  text-align: center;
+  padding-top: 15px;
+}
+.menu-create .el-icon-plus {
+  font-size: 12px;
+  line-height: 12px;
 }
 .menu-edit {
     line-height: 36px;

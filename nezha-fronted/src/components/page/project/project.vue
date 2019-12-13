@@ -246,17 +246,57 @@
         </div>
       </div>
     </div>
-    <div class="content-right">
+    
+    <!--metrics-->
+    <div class="content-right" v-if="tableShow == 2">
+      <div class="top-tools">
+        <el-button-group>
+          <el-button @click="tableShow = 1" class="top-tool-btn top-tool" size="mini">
+            <span class="top-tool-btn-txt">{{$t('project.endpoint.endpoint')}}</span>
+          </el-button>
+          <el-button @click="" class="top-tool-btn top-tool top-tool-btn-active" size="mini">
+            <span class="top-tool-btn-txt">{{$t('project.metrics.metrics')}}</span>
+          </el-button>
+        </el-button-group>
+        <el-input
+          class="top-tool-search top-tool top-tool-right"
+          type="text"
+          :placeholder="$t('overall.search')"
+          size="mini"
+        ></el-input>
+      </div>
+      <el-table
+        :data="metricsTableData"
+        border
+        height="calc(100% - 65px)"
+        style="width: 100%;">
+        <el-table-column
+          v-for="(item, index) in metricsTableTitle"
+          v-if="item.show"
+          :width="item.width"
+          :key="`col-${index}`"
+          :label="item.label"
+        >
+          <template slot-scope="scope" :column="item">
+            <span>{{scope.row[item.prop]}}</span>
+          </template>
+        </el-table-column>
+      </el-table>
+      <Pagination :pageObj="metricsPageObj" @pageNo='pageNo' @pageSize='pageSize' ref="Pagination"></Pagination>
+    </div>
+
+    <!--endpoint-->
+    <div class="content-right" v-if="tableShow == 1">
       <div class="top-tools">
         <el-button-group>
           <el-button @click="" class="top-tool-btn top-tool top-tool-btn-active" size="mini">
             <span class="top-tool-btn-txt">{{$t('project.endpoint.endpoint')}}</span>
           </el-button>
-          <el-button @click="" class="top-tool-btn top-tool" size="mini">
-            <span class="top-tool-btn-txt">{{$t('project.metrics')}}</span>
+          <el-button @click="tableShow = 2" class="top-tool-btn top-tool" size="mini">
+            <span class="top-tool-btn-txt">{{$t('project.metrics.metrics')}}</span>
           </el-button>
         </el-button-group>
-        <el-button @click="toAdd" class="top-tool-btn top-tool-btn-active top-tool margin-l-10 top-tool-right" size="mini">
+        <el-button @click.stop="toAdd" class="top-tool-btn top-tool-btn-active top-tool margin-l-10 top-tool-right" size="mini">
           <span><i class="el-icon-plus"></i></span>
           <span class="top-tool-btn-txt">{{$t('overall.add')}}</span>
         </el-button>
@@ -273,7 +313,7 @@
         height="calc(100% - 65px)"
         style="width: 100%;">
         <el-table-column
-          v-for="(item, index) in tableTitle"
+          v-for="(item, index) in endpointTableTitle"
           v-if="item.show"
           :width="item.width"
           :key="`col-${index}`"
@@ -287,8 +327,8 @@
         <el-table-column :label="$t('overall.option')" width="100">
           <template slot-scope="scope" :column="item">
             <div class="content-right-options">
-              <span @click="detail(scope.row)" class="content-right-option"><i class="el-icon-view"></i></span>
-              <span @click="toEdit(scope.row)" class="content-right-option"><i class="el-icon-edit-outline"></i></span>
+              <span @click.stop="detail(scope.row)" class="content-right-option"><i class="el-icon-view"></i></span>
+              <span @click.stop="toEdit(scope.row)" class="content-right-option"><i class="el-icon-edit-outline"></i></span>
             </div>
           </template>
         </el-table-column>
@@ -298,7 +338,7 @@
 
     <!-- begin--右弹框-->
     <transition name="right-box">
-      <div class="right-box right-box-endpoint" v-if="rightBox.show">
+      <div class="right-box right-box-endpoint" v-if="rightBox.show" @click.stop>
         <!-- begin--顶部按钮-->
         <div class="right-box-top-btns">
           <div class="right-box-top-btn right-box-top-btn-full" @click="esc(1)">
@@ -314,7 +354,7 @@
             <span v-if="rightBox.isEdit">{{$t('overall.save')}}</span>
             <span v-else>{{$t('overall.edit')}}</span>
           </div>
-          <div class="right-box-top-btn" v-if="rightBox.isEdit && endpoint.id != ''">
+          <div class="right-box-top-btn" v-if="rightBox.isEdit && endpoint.id != ''" @click="del()">
             <div class="right-box-btn-icon">
               <i class="el-icon-delete"></i>
             </div>
@@ -343,7 +383,7 @@
           <div class="right-box-form-row">
             <div class="right-box-form-label">{{$t("project.module.module")}}</div>
             <div class="right-box-form-content">
-              <el-select @change="((val) => {changeSelectedModule(val.id)})" value-key="id" popper-class="config-dropdown" v-model="selectedModule" placeholder="" v-if="rightBox.isEdit" size="small">
+              <el-select @change="((val) => {changeSelectedModule(val)})" value-key="id" popper-class="config-dropdown" v-model="selectedModule" placeholder="" v-if="rightBox.isEdit" size="small">
                 <el-option v-for="item in toSelectModuleData" :key="item.id" :label="item.name" :value="item"></el-option>
               </el-select>
               <div v-if="!rightBox.isEdit" class="right-box-form-content-txt">{{endpoint.module.name}}</div>
@@ -396,16 +436,16 @@
           <div class="right-box-form-row">
             <div class="right-box-form-label">
               {{$t("project.endpoint.param")}}
-              <el-button class="param-btn param-btn-active margin-l-10" size="mini" @click="addParam"><i class="el-icon-plus"></i>{{$t('overall.add')}}</el-button>
-              <el-button class="param-btn param-btn-clear" size="mini" @click="clearAllParam">{{$t('overall.clearAll')}}</el-button>
+              <el-button v-if="rightBox.isEdit" class="param-btn param-btn-active margin-l-10" size="mini" @click="addParam"><i class="el-icon-plus"></i>{{$t('overall.add')}}</el-button>
+              <el-button v-if="rightBox.isEdit" class="param-btn param-btn-clear" size="mini" @click="clearAllParam">{{$t('overall.clearAll')}}</el-button>
             </div>
             <div class="right-box-form-content">
               <div class="param-box param-box-endpoint">
                 <div class="param-box-row" v-for="(item, index) in paramObj">
-                  <el-input placeholder="key" class="param-box-row-key" size="mini" v-model="item.key"></el-input>
+                  <el-input :disabled="!rightBox.isEdit" placeholder="key" class="param-box-row-key" size="mini" v-model="item.key"></el-input>
                   <span class="param-box-row-eq">=</span>
-                  <el-input placeholder="value" class="param-box-row-value" size="mini" v-model="item.value"></el-input>
-                  <span class="param-box-row-symbol" @click="removeParam(index)"><i class="el-icon-minus"></i></span>
+                  <el-input :disabled="!rightBox.isEdit" placeholder="value" class="param-box-row-value" size="mini" v-model="item.value"></el-input>
+                  <span v-if="rightBox.isEdit" class="param-box-row-symbol" @click="removeParam(index)"><i class="el-icon-minus"></i></span>
                 </div>
               </div>
             </div>
@@ -423,7 +463,7 @@
 
     <!-- begin--子弹框-->
     <transition name="right-sub-box">
-      <div class="right-sub-box" v-if="rightSubBox.show">
+      <div class="right-sub-box" @click.stop v-if="rightSubBox.show">
         <!-- begin--标题-->
         <div class="right-box-title">{{rightSubBox.title}}</div>
         <!-- end--标题-->
@@ -484,7 +524,7 @@
 
     <!-- begin--project弹框-->
     <transition name="right-box">
-      <div class="right-box right-box-endpoint" v-if="projectRightBox.show">
+      <div class="right-box right-box-endpoint" v-if="projectRightBox.show" @click.stop>
         <!-- begin--顶部按钮-->
         <div class="right-box-top-btns">
           <div class="right-box-top-btn right-box-top-btn-full" @click="esc(2)">
@@ -499,7 +539,7 @@
             </div>
             <span>{{$t('overall.save')}}</span>
           </div>
-          <div class="right-box-top-btn" v-if="project.id != ''">
+          <div class="right-box-top-btn" v-if="project.id != ''" @click="projectDel">
             <div class="right-box-btn-icon">
               <i class="el-icon-delete"></i>
             </div>
@@ -554,7 +594,7 @@
 
     <!-- begin--module弹框-->
     <transition name="right-box">
-      <div class="right-box right-box-endpoint" v-if="moduleRightBox.show">
+      <div class="right-box right-box-endpoint" v-if="moduleRightBox.show" @click.stop>
         <!-- begin--顶部按钮-->
         <div class="right-box-top-btns">
           <div class="right-box-top-btn right-box-top-btn-full" @click="esc(3)">
@@ -569,7 +609,7 @@
             </div>
             <span>{{$t('overall.save')}}</span>
           </div>
-          <div class="right-box-top-btn" v-if="currentModule.id != ''">
+          <div class="right-box-top-btn" v-if="currentModule.id != ''" @click="moduleDel">
             <div class="right-box-btn-icon">
               <i class="el-icon-delete"></i>
             </div>
@@ -688,6 +728,7 @@ export default {
   name: "project",
   data() {
     return {
+      tableShow: 1, // 1.endpoint; 2.metrics
       projectRightBox: {
         show: false,
         title: ''
@@ -719,6 +760,11 @@ export default {
         pageSize: 11,
         total: 0
       },
+      metricsPageObj: {
+        pageNo: 1,
+        pageSize: 20,
+        total: 0
+      },
       endpoint: {
         id: '',
         host: '',
@@ -727,7 +773,9 @@ export default {
         path: '',
         asset: {id: '', name: '', host: ''},
         project: {id: '', name: ''},
-        module: {id: '', name: '', param: '', paramObj: {}}
+        module: {id: '', name: '', param: '', paramObj: {}, projectId: ''},
+        moduleId: '',
+        assetId: ''
       },
       moduleRightBox: {
         show: false,
@@ -735,18 +783,20 @@ export default {
       },
       currentModule: { //左侧列表当前选中的module
         id: '',
-        name: ''
+        name: '',
+        projectId: ''
       },
       selectedModule: { //侧滑框中选中的module
         id: '',
-        name: ''
+        name: '',
+        projectId: ''
       },
       selectedAsset: { //侧滑框中选中的asset
         id: '',
         host: '',
         sn: ''
       },
-      tableTitle: [
+      endpointTableTitle: [
         {
           label: this.$t("project.endpoint.endpointId"),
           prop: 'id',
@@ -784,7 +834,31 @@ export default {
       moduleData: [], //左侧列表的module信息
       toSelectModuleData: [], //侧滑框中可选的module
       paramObj: [], //侧滑框中的param信息
-      assetData: [] //侧滑框中可选的asset
+      assetData: [],  //侧滑框中可选的asset
+      metricsTableData: [
+        {
+          name: 'Topic.msg',
+          type: 'Counter',
+          desc: '10000'
+        }
+      ],
+      metricsTableTitle: [
+        {
+          label: this.$t("project.metrics.name"),
+          prop: 'name',
+          show: true,
+        },
+        {
+          label: this.$t("project.metrics.type"),
+          prop: 'type',
+          show: true,
+        },
+        {
+          label: this.$t("project.metrics.description"),
+          prop: 'desc',
+          show: true,
+        },
+      ]
     }
   },
   methods: {
@@ -820,6 +894,9 @@ export default {
       this.$get('project').then(response => {
         if (response.code === 200) {
           this.projectData = response.data.list;
+          console.info(this.project);
+          this.project = this.projectData[0];
+          console.info(this.project);
         }
       });
     },
@@ -840,6 +917,8 @@ export default {
     // endpoint弹框中的asset子弹框里asset选择事件
     selectAsset: function(obj) {
       this.selectedAsset = obj;
+      this.endpoint.host = obj.host;
+      this.endpoint.assetId = obj.id;
     },
     // endpoint弹框中的asset子弹框搜索
     searchAsset: function() {
@@ -905,12 +984,12 @@ export default {
     // 左侧module列表点击事件
     changeListModule: function(module) {
       this.currentModule = Object.assign({}, module);
-      this.moduleRightBox.show = false;
+      this.esc(3);
       this.getEndPointTableData();
     },
     // endpoint弹框中module下拉框点击事件
-    changeSelectedModule: function(moduleId) {
-      if (moduleId == this.endpoint.moduleId) {
+    changeSelectedModule: function(module) {
+      if (module.id == this.endpoint.moduleId) {
         try {
           this.paramObj = JSON.parse(JSON.stringify(this.endpoint.paramObj));
         } catch(err) {
@@ -925,6 +1004,8 @@ export default {
           console.info(err);
         }
       }
+      this.endpoint.port = module.port;
+      this.endpoint.path = module.path;
     },
     // 打开endpoint编辑页
     toEdit: function(endpoint) {
@@ -956,13 +1037,71 @@ export default {
       this.moduleRightBox.title = this.$t('project.module.editModule') + "  ID：" + module.id;
     },
     // 删除endpoint
-    del: function(u) {
+    del: function() {
+      this.$confirm(this.$t("tip.confirmDelete"), {
+        confirmButtonText: this.$t("tip.yes"),
+        cancelButtonText: this.$t("tip.no"),
+        type: 'warning'
+      }).then(() => {
+        this.$delete("endpoint?ids=" + this.endpoint.id).then(response => {
+          if (response.code === 200) {
+            this.$message({duration: 3000, type: 'success', message: this.$t("tip.deleteSuccess")});
+            this.getEndPointTableData();
+          } else {
+            this.$message.error(response.msg);
+          }
+        })
+      });
+    },
+    // 删除module
+    moduleDel: function() {
+      this.$confirm(this.$t("tip.confirmDelete"), {
+        confirmButtonText: this.$t("tip.yes"),
+        cancelButtonText: this.$t("tip.no"),
+        type: 'warning'
+      }).then(() => {
+        this.$delete("module?ids=" + this.currentModule.id).then(response => {
+          if (response.code === 200) {
+            this.$message({duration: 3000, type: 'success', message: this.$t("tip.deleteSuccess")});
+            this.esc(3);
+            this.getModuleData();
+          } else {
+            this.$message.error(response.msg);
+          }
+        })
+      });
+    },
+    projectDel: function() {
+      this.$confirm(this.$t("tip.confirmDelete"), {
+        confirmButtonText: this.$t("tip.yes"),
+        cancelButtonText: this.$t("tip.no"),
+        type: 'warning'
+      }).then(() => {
+        this.$delete("project?ids=" + this.project.id).then(response => {
+          if (response.code === 200) {
+            this.$message({duration: 3000, type: 'success', message: this.$t("tip.deleteSuccess")});
+            this.$store.commit('projectRightBoxShow', false);
+            this.getProjectData();
+            this.getModuleData();
+            if (this.projectData.length > 0) {
+              this.$store.commit('setProject', this.projectData[0]);
+            }
+            this.$store.commit('projectListReloadChange', true);
+          } else {
+            this.$message.error(response.msg);
+          }
+        })
+      });
     },
     // 打开endpoint新增页
     toAdd: function() {
       this.cleanEndpoint();
-      this.paramObj = [];
-      this.toSelectModuleData = [];
+      this.endpoint.project = Object.assign({}, this.project);
+      this.paramObj = Object.assign([], this.currentModule.paramObj);
+      this.getToSelectModuleData(this.project.id);
+      this.selectedModule = Object.assign({}, this.currentModule);
+      this.endpoint.port = this.selectedModule.port;
+      this.endpoint.path = this.selectedModule.path;
       this.rightBox.isEdit = true;
       this.rightBox.title = this.$t("project.endpoint.createEndpoint");
       this.rightBox.show = true;
@@ -970,6 +1109,7 @@ export default {
     // 打开endpoint详情页
     detail: function(u) {
       this.endpoint = Object.assign({}, u);
+      this.paramObj = Object.assign([], u.paramObj);
       this.rightBox.isEdit = false;
       this.rightBox.title = this.$t("project.endpoint.endpoint") + "  ID：" + u.id;
       this.rightBox.show = true;
@@ -978,25 +1118,67 @@ export default {
     saveOrToEdit: function() {
       if (!this.rightBox.isEdit) {
         this.rightBox.isEdit = true;
+        this.getToSelectModuleData(this.endpoint.project.id);
+        this.selectedModule = Object.assign({}, this.currentModule);
         this.rightBox.title = this.$t("project.endpoint.editEndpoint") + "  ID：" + this.endpoint.id;
+      } else {
+        this.save();
       }
     },
     // 保存project
     projectSave: function() {
       this.$put('project', this.project).then(response => {
         if (response.code === 200) {
-          this.$store.commit('projectListReload', true);
-          this.projectRightBox.show = false;
+          this.$store.commit('setProject', this.project);
+          this.$store.commit('projectListReloadChange', true);
+          this.$store.commit('projectRightBoxShow', false);
         }
       });
     },
     // 保存module
     moduleSave: function() {
-
+      this.currentModule.param = this.paramToJson();
+      this.currentModule.projectId = this.currentModule.project.id;
+      this.$put('module', this.currentModule).then(response => {
+        if (response.code === 200) {
+          this.esc(3);
+          this.getModuleData();
+        }
+      });
     },
     // 保存endpoint
     save: function() {
-
+      this.endpoint.param = this.paramToJson();
+      this.endpoint.moduleId = this.selectedModule.id;
+      if (this.endpoint.id) {
+        this.$put('endpoint', this.endpoint).then(response => {
+          if (response.code === 200) {
+            this.rightBox.isEdit = false;
+            this.esc(1);
+            this.getEndPointTableData();
+          }
+        });
+      } else {
+        this.$post('endpoint', this.endpoint).then(response => {
+          if (response.code === 200) {
+            this.rightBox.isEdit = false;
+            this.esc(1);
+            this.getEndPointTableData();
+          }
+        });
+      }
+    },
+    paramToJson: function() {
+      let tempParam = {};
+      for (let i = 0; i < this.paramObj.length; i++) {
+        eval('tempParam.' + this.paramObj[i].key + '="' + this.paramObj[i].value + '"');
+      }
+      let jsonString = JSON.stringify(tempParam);
+      if (jsonString == '{}') {
+        return "";
+      } else {
+        return jsonString;
+      }
     },
     // 清除module、endpoint弹框中的param
     clearAllParam: function() {
@@ -1042,13 +1224,18 @@ export default {
       this.pageObj.pageSize = val;
       this.getEndPointTableData();
     },
-    // endpoint弹框的子弹框顶部搜索条件选中事件
+    // endpoint弹框的asset子弹框顶部搜索条件选中事件
     dropdownSelect: function(label) {
       this.assetSearch.label = label;
       this.assetSearch.dropdownShow = false;
     }
   },
   mounted: function() {
+    window.addEventListener('click', () => {
+      this.esc(1);
+      this.$store.commit('projectRightBoxShow', false);
+      this.esc(3);
+    });
     this.getModuleData();
     this.getProjectData();
     this.getAssetData();
@@ -1064,11 +1251,12 @@ export default {
   watch: {
     sProject(n, o) {
       this.project = Object.assign({}, n);
+      this.esc(3);
+      this.esc(1);
       this.projectRightBox.title = this.$t("project.project.editProject") + "  ID：" + n.id;
       this.getModuleData();
     },
     projectBoxShow(n, o) {
-      console.info(n)
       this.projectRightBox.show = n;
     }
   }

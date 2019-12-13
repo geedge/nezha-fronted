@@ -25,7 +25,7 @@ const store = new Vuex.Store({
     projectRightBoxShow(state, show) {
       state.projectBoxShow = show;
     },
-    projectListReload(state, reload) {
+    projectListReloadChange(state, reload) {
       state.projectListReload = reload;
     }
   },

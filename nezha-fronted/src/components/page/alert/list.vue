@@ -169,7 +169,7 @@
         </div>
         <div class="content-right">
             <div class="top-tools">
-              <el-button @click="toAdd" class="top-tool-btn top-tool-btn-active margin-l-10 top-tool top-tool-right" size="mini">
+              <el-button @click="" class="top-tool-btn top-tool-btn-active margin-l-10 top-tool top-tool-right" size="mini">
                 <span><i class="el-icon-plus"></i></span>
                 <span class="top-tool-btn-txt">{{$t('overall.add')}}</span>
               </el-button>
@@ -289,6 +289,14 @@ export default {
         }
       });
     },
+    pageNo(val) {
+      this.pageObj.pageNo = val;
+      this.getAlertList();
+    },
+    pageSize(val) {
+      this.pageObj.pageSize = val;
+      this.getAlertList();
+    }
   },
   mounted() {
     this.getAlertList();

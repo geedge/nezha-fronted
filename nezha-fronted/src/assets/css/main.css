@@ -361,7 +361,7 @@ html {
 /* end--endpoint->子弹框asset搜索框前缀和后缀*/
 /* begin--自定义可编辑的el-select下拉框样式*/
 .config-dropdown {
-  width: 550px;
+  width: 520px;
 }
 .config-dropdown-btn {
   display: inline-block;

@@ -3,8 +3,8 @@ import router from './router'
 
 import qs from 'qs' //引入数据格式化
 //axios.defaults.baseURL = 'http://localhost:8088/nz-admin';
-axios.defaults.baseURL = 'http://192.168.41.69:8080/nz-admin';
-// axios.defaults.baseURL = 'http://192.168.40.247:8080/nz-admin';
+//axios.defaults.baseURL = 'http://192.168.41.69:8080/nz-admin';
+axios.defaults.baseURL = 'http://192.168.40.247:8080/nz-admin';
 
 axios.interceptors.request.use(config => {
       // config.headers = {
@@ -41,7 +41,7 @@ export function get(url, params) {
     }).then(response => {
       resolve(response.data)
     }).catch(err => {
-      resolve(err.response.data)
+      //resolve(err.response.data)
     })
   })
 }
@@ -51,8 +51,7 @@ export function post(url, params) {
     axios.post(url, params).then(response => {
       resolve(response.data)
     }).catch(err => {
-      console.info(err)
-      resolve('失败')
+      resolve(err.response.data);
     })
   })
 }
