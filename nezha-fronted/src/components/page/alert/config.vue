@@ -579,6 +579,16 @@ export default {
   mounted() {
     this.getTableData();
     this.initReceiverData();
+  },
+  computed: {
+    sProject() {
+      return this.$store.state.createAlertConfig;
+    }
+  },
+  watch: {
+    sProject(n, o) {
+      this.toAdd();
+    }
   }
 }
 </script>

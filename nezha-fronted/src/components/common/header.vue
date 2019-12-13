@@ -136,11 +136,13 @@ export default {
         },
         {
           label: this.$t('asset.createAsset'),
-          url: 'asset'
+          url: 'asset',
+          type: 4
         },
         {
           label: this.$t('alert.config.createAlertConfig'),
-          url: 'alertConfig'
+          url: 'alertConfig',
+          type: 5
         }
       ]
     }
@@ -155,7 +157,28 @@ export default {
       });
     },
     createBox(item) {
-
+      this.jumpTo(item.url);
+      setTimeout(() =>{
+        if (item.type == 1) {
+          if (this.projectData.length > 0) {
+            this.$store.commit('setProject', this.projectData[0]);
+          }
+          this.$store.commit('toCreateProject', true);
+          this.$store.commit('projectRightBoxShow', true);
+        } else if (item.type == 2) {
+          if (this.projectData.length > 0) {
+            this.$store.commit('setProject', this.projectData[0]);
+          }
+          this.$store.commit('toCreateModule', true);
+        } else if (item.type == 3) {
+          if (this.projectData.length > 0) {
+            this.$store.commit('setProject', this.projectData[0]);
+          }
+          this.$store.commit('toCreateEndpoint', true);
+        } else if (item.type == 5) {
+          this.$store.commit('toCreateAlertConfig', true);
+        }
+      }, 120);
     },
     jumpToAsset(data, id) {
       this.$store.state.assetData.moduleData = data;
@@ -185,9 +208,12 @@ export default {
       })
     },
     toEditProject(p) {
-      this.$store.commit('setProject', p);
-      this.$store.commit('projectRightBoxShow', true);
       this.jumpTo('project');
+      setTimeout(() =>{
+        this.$store.commit('setProject', p);
+        this.$store.commit('projectRightBoxShow', true);
+      }, 50);
+
     }
   },
   mounted() {

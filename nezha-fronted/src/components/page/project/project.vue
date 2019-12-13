@@ -558,27 +558,16 @@
           <div class="right-box-form-row">
             <div class="right-box-form-label">{{$t("project.project.projectName")}}</div>
             <div class="right-box-form-content">
-              <el-input
-                placeholder=""
-                maxlength="64"
-                show-word-limit
-                v-model="project.name"
-                size="small"
-              ></el-input>
+              <el-input v-if="!projectRightBox.isCreate" placeholder="" maxlength="64" show-word-limit v-model="project.name" size="small"></el-input>
+              <el-input v-if="projectRightBox.isCreate" placeholder="" maxlength="64" show-word-limit v-model="newProject.name" size="small"></el-input>
             </div>
           </div>
           <!--description-->
           <div class="right-box-form-row">
             <div class="right-box-form-label">{{$t("project.project.description")}}</div>
             <div class="right-box-form-content">
-              <el-input
-                type="textarea"
-                placeholder=""
-                maxlength="1024"
-                show-word-limit
-                v-model="project.remark"
-                size="small"
-              ></el-input>
+              <el-input v-if="!projectRightBox.isCreate" type="textarea" placeholder="" maxlength="1024" show-word-limit v-model="project.remark" size="small"></el-input>
+              <el-input v-if="projectRightBox.isCreate" type="textarea" placeholder="" maxlength="1024" show-word-limit v-model="newProject.remark" size="small"></el-input>
             </div>
           </div>
         </div>
@@ -609,7 +598,7 @@
             </div>
             <span>{{$t('overall.save')}}</span>
           </div>
-          <div class="right-box-top-btn" v-if="currentModule.id != ''" @click="moduleDel">
+          <div class="right-box-top-btn" v-if="currentModule.id != '' && !moduleRightBox.isCreate" @click="moduleDel">
             <div class="right-box-btn-icon">
               <i class="el-icon-delete"></i>
             </div>
@@ -628,8 +617,11 @@
           <div class="right-box-form-row">
             <div class="right-box-form-label">{{$t("project.project.project")}}</div>
             <div class="right-box-form-content">
-              <el-select value-key="id" popper-class="config-dropdown" v-model="currentModule.project" placeholder="" size="small">
+              <el-select v-if="!moduleRightBox.isCreate" value-key="id" popper-class="config-dropdown" v-model="currentModule.project" placeholder="" size="small">
                 <el-option v-for="item in projectData" :key="item.id" :label="item.name" :value="item"></el-option>
+              </el-select>
+              <el-select v-if="moduleRightBox.isCreate" popper-class="config-dropdown" v-model="newModule.projectId" placeholder="" size="small">
+                <el-option v-for="item in projectData" :key="item.id" :label="item.name" :value="item.id"></el-option>
               </el-select>
             </div>
           </div>
@@ -637,27 +629,16 @@
           <div class="right-box-form-row">
             <div class="right-box-form-label">{{$t("project.module.moduleName")}}</div>
             <div class="right-box-form-content">
-              <el-input
-                placeholder=""
-                maxlength="64"
-                show-word-limit
-                v-model="currentModule.name"
-                size="small"
-              ></el-input>
+              <el-input v-if="!moduleRightBox.isCreate" placeholder="" maxlength="64" show-word-limit v-model="currentModule.name" size="small"></el-input>
+              <el-input v-if="moduleRightBox.isCreate" placeholder="" maxlength="64" show-word-limit v-model="newModule.name" size="small"></el-input>
             </div>
           </div>
           <!--description-->
           <div class="right-box-form-row">
             <div class="right-box-form-label">{{$t("project.module.description")}}</div>
             <div class="right-box-form-content">
-              <el-input
-                type="textarea"
-                placeholder=""
-                maxlength="1024"
-                show-word-limit
-                v-model="currentModule.remark"
-                size="small"
-              ></el-input>
+              <el-input v-if="!moduleRightBox.isCreate" type="textarea" placeholder="" maxlength="1024" show-word-limit v-model="currentModule.remark" size="small"></el-input>
+              <el-input v-if="moduleRightBox.isCreate" type="textarea" placeholder="" maxlength="1024" show-word-limit v-model="newModule.remark" size="small"></el-input>
             </div>
           </div>
           <!--tip-->
@@ -674,22 +655,16 @@
           <div class="right-box-form-row">
             <div class="right-box-form-label">{{$t("project.endpoint.port")}}</div>
             <div class="right-box-form-content">
-              <el-input
-                placeholder=""
-                v-model="currentModule.port"
-                size="small"
-              ></el-input>
+              <el-input v-if="!moduleRightBox.isCreate" placeholder="" v-model="currentModule.port" size="small"></el-input>
+              <el-input v-if="moduleRightBox.isCreate" placeholder="" v-model="newModule.port" size="small"></el-input>
             </div>
           </div>
           <!--path-->
           <div class="right-box-form-row">
             <div class="right-box-form-label">{{$t("project.endpoint.path")}}</div>
             <div class="right-box-form-content">
-              <el-input
-                placeholder=""
-                v-model="currentModule.path"
-                size="small"
-              ></el-input>
+              <el-input v-if="!moduleRightBox.isCreate" placeholder="" v-model="currentModule.path" size="small"></el-input>
+              <el-input v-if="moduleRightBox.isCreate" placeholder="" v-model="newModule.path" size="small"></el-input>
             </div>
           </div>
           <!--param-->
@@ -714,7 +689,7 @@
 
         <!-- begin--底部按钮-->
         <div class="right-box-bottom-btns">
-          <div @click="esc(3)" class="right-box-bottom-btn right-box-bottom-btn-cancel right-box-bottom-btn-50">{{$t('overall.cancel')}}</div><div @click="moduleSave" class="right-box-bottom-btn right-box-bottom-btn-50">{{currentModule.id == '' ? $t('overall.create') : $t('overall.save')}}</div>
+          <div @click="esc(3)" class="right-box-bottom-btn right-box-bottom-btn-cancel right-box-bottom-btn-50">{{$t('overall.cancel')}}</div><div @click="moduleSave" class="right-box-bottom-btn right-box-bottom-btn-50">{{currentModule.id == '' && moduleRightBox.isCreate ? $t('overall.create') : $t('overall.save')}}</div>
         </div>
         <!-- end--底部按钮-->
       </div>
@@ -731,9 +706,12 @@ export default {
       tableShow: 1, // 1.endpoint; 2.metrics
       projectRightBox: {
         show: false,
-        title: ''
+        title: '',
+        isCreate: false
       },
       project: {id: '', name: '', remark: ''},
+      newProject: {id: '', name: '', remark: ''},
+      newModule: {id: '', name: '', project: {}, port: '', path: '', param: '', paramObj: []},
       rightBox: { //弹出框相关
         show: false,
         isEdit: false, //false查看，true编辑
@@ -779,19 +757,20 @@ export default {
       },
       moduleRightBox: {
         show: false,
-        title: ''
+        title: '',
+        isCreate: false
       },
       currentModule: { //左侧列表当前选中的module
         id: '',
         name: '',
         projectId: ''
       },
-      selectedModule: { //侧滑框中选中的module
+      selectedModule: { //endpoint侧滑框中选中的module
         id: '',
         name: '',
         projectId: ''
       },
-      selectedAsset: { //侧滑框中选中的asset
+      selectedAsset: { //endpoint侧滑框中选中的asset
         id: '',
         host: '',
         sn: ''
@@ -890,13 +869,21 @@ export default {
       });
     },
     // 获取module、endpoint弹框中project下拉框数据
-    getProjectData: function() {
+    getProjectData: function(name) {
       this.$get('project').then(response => {
         if (response.code === 200) {
           this.projectData = response.data.list;
-          console.info(this.project);
-          this.project = this.projectData[0];
-          console.info(this.project);
+          if (name) {
+            for (let i = 0; i < this.projectData.length; i++) {
+              if (this.projectData[i].name == name) {
+                this.project = this.projectData[i];
+                this.$store.commit('setProject', this.project);
+                break;
+              }
+            }
+          } else {
+            this.project = this.projectData[0];
+          }
         }
       });
     },
@@ -937,7 +924,7 @@ export default {
       this.$get('module', {projectId: this.$store.state.projectData.id}).then(response => {
         if (response.code === 200) {
           this.moduleData = response.data.list;
-          for (var i = 0; i < response.data.list.length; i++) {
+          for (let i = 0; i < response.data.list.length; i++) {
             try {
               var tempObj = JSON.parse(response.data.list[i].param);
             } catch (err) {
@@ -956,7 +943,6 @@ export default {
             this.endPointTableData = [];
             this.pageObj.total = 0;
           }
-
         }
       });
     },
@@ -1082,7 +1068,10 @@ export default {
             this.$message({duration: 3000, type: 'success', message: this.$t("tip.deleteSuccess")});
             this.$store.commit('projectRightBoxShow', false);
             this.getProjectData();
-            this.getModuleData();
+            setTimeout(() => {
+              this.getModuleData();
+            }, 50);
+
             if (this.projectData.length > 0) {
               this.$store.commit('setProject', this.projectData[0]);
             }
@@ -1106,6 +1095,9 @@ export default {
       this.rightBox.title = this.$t("project.endpoint.createEndpoint");
       this.rightBox.show = true;
     },
+    toAddProject: function() {
+
+    },
     // 打开endpoint详情页
     detail: function(u) {
       this.endpoint = Object.assign({}, u);
@@ -1127,24 +1119,48 @@ export default {
     },
     // 保存project
     projectSave: function() {
-      this.$put('project', this.project).then(response => {
-        if (response.code === 200) {
-          this.$store.commit('setProject', this.project);
-          this.$store.commit('projectListReloadChange', true);
-          this.$store.commit('projectRightBoxShow', false);
-        }
-      });
+      if (!this.projectRightBox.isCreate) {
+        this.$put('project', this.project).then(response => {
+          if (response.code === 200) {
+            this.$store.commit('setProject', this.project);
+            this.$store.commit('projectListReloadChange', true);
+            this.$store.commit('projectRightBoxShow', false);
+          }
+        });
+      } else {
+        this.$post('project', this.newProject).then(response => {
+          if (response.code === 200) {
+            this.projectRightBox.isCreate = false;
+            this.getProjectData(this.newProject.name);
+            this.$store.commit('projectListReloadChange', true);
+            this.$store.commit('projectRightBoxShow', false);
+            this.getModuleData();
+            this.newProject = {id:'', name:'', remark:''};
+          }
+        });
+      }
     },
     // 保存module
     moduleSave: function() {
-      this.currentModule.param = this.paramToJson();
-      this.currentModule.projectId = this.currentModule.project.id;
-      this.$put('module', this.currentModule).then(response => {
-        if (response.code === 200) {
-          this.esc(3);
-          this.getModuleData();
-        }
-      });
+      if (!this.moduleRightBox.isCreate) {
+        this.currentModule.param = this.paramToJson();
+        this.currentModule.projectId = this.currentModule.project.id;
+        this.$put('module', this.currentModule).then(response => {
+          if (response.code === 200) {
+            this.esc(3);
+            this.getModuleData();
+          }
+        });
+      } else {
+        this.newModule.param = this.paramToJson();
+        this.$post('module', this.newModule).then(response => {
+          if (response.code === 200) {
+            this.esc(3);
+            this.getModuleData();
+            this.moduleRightBox.isCreate = false;
+          }
+        });
+      }
     },
     // 保存endpoint
     save: function() {
@@ -1246,7 +1262,16 @@ export default {
     },
     projectBoxShow() {
       return this.$store.state.projectBoxShow;
-    }
+    },
+    toCreateProject() {
+      return this.$store.state.createProject;
+    },
+    toCreateModule() {
+      return this.$store.state.createModule;
+    },
+    toCreateEndpoint() {
+      return this.$store.state.createEndpoint;
+    },
   },
   watch: {
     sProject(n, o) {
@@ -1258,6 +1283,32 @@ export default {
     },
     projectBoxShow(n, o) {
       this.projectRightBox.show = n;
+    },
+    toCreateProject(n ,o) {
+      if (n) {
+        this.$store.commit('toCreateProject', false);
+        this.projectRightBox.isCreate = true;
+        this.projectRightBox.title = this.$t('project.project.createProject');
+      }
+    },
+    toCreateModule(n ,o) {
+      if (n) {
+        this.$store.commit('toCreateModule', false);
+        this.moduleRightBox.show = true;
+        this.moduleRightBox.isCreate = true;
+        this.moduleRightBox.title = this.$t('project.module.createModule');
+        this.newModule = {id: '', name: '', projectId: this.project.id, project: this.project, port: '', path: '', param: '', paramObj: []};
+        this.paramObj = [];
+      }
+    },
+    toCreateEndpoint(n, o) {
+      if (n) {
+        this.$store.commit('toCreateEndpoint', false);
+        this.cleanEndpoint();
+        this.rightBox.show = true;
+        this.rightBox.isEdit = true;
+        this.rightBox.title = this.$t('project.endpoint.createEndpoint');
+      }
     }
   }
 }

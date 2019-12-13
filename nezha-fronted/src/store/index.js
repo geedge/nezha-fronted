@@ -13,7 +13,11 @@ const store = new Vuex.Store({
       name: ''
     },
     projectBoxShow: false,
-    projectListReload: false
+    projectListReload: false,
+    createProject: false,
+    createModule: false,
+    createEndpoint: false,
+    createAlertConfig: false,
   },
   getters: {
   },
@@ -27,7 +31,19 @@ const store = new Vuex.Store({
     },
     projectListReloadChange(state, reload) {
       state.projectListReload = reload;
-    }
+    },
+    toCreateProject(state, status) {
+      state.createProject = status;
+    },
+    toCreateModule(state, status) {
+      state.createModule = status;
+    },
+    toCreateEndpoint(state, status) {
+      state.createEndpoint = status;
+    },
+    toCreateAlertConfig(state, status) {
+      state.createAlertConfig = status;
+    },
   },
   actions: {
   }
