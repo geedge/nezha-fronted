@@ -1246,7 +1246,7 @@ export default {
       this.assetSearch.dropdownShow = false;
     }
   },
-  mounted: function() {
+  created: function() {
     window.addEventListener('click', () => {
       this.esc(1);
       this.$store.commit('projectRightBoxShow', false);

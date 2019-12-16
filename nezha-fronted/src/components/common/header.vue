@@ -176,6 +176,7 @@ export default {
           }
           this.$store.commit('toCreateEndpoint', true);
         } else if (item.type == 5) {
+          this.$store.commit('projectRightBoxShow', false);
           this.$store.commit('toCreateAlertConfig', true);
         }
       }, 120);

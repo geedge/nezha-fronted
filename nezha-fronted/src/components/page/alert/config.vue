@@ -452,7 +452,7 @@ export default {
     toAdd: function() {
       this.cleanAlertRule();
       this.rightBox.isEdit = true;
-      this.rightBox.title = this.$t("alert.config.createalertConfig");
+      this.rightBox.title = this.$t("alert.config.createAlertConfig");
       this.rightBox.show = true;
     },
     detail: function(u) {
@@ -587,6 +587,7 @@ export default {
   },
   watch: {
     sProject(n, o) {
+      this.$store.commit('toCreateAlertConfig', false);
       this.toAdd();
     }
   }
