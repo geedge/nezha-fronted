@@ -15,7 +15,10 @@ import axios from 'axios';
 import {post, get, put, del} from './http.js'
 
 import Pagination from "./components/common/pagination"; //引入全局分页组件
+import searchInput from "./components/common/searchInput";
+
 Vue.component("Pagination", Pagination);
+Vue.component("searchInput", searchInput);
 
 Vue.prototype.$axios = axios
 Vue.prototype.$post = post;

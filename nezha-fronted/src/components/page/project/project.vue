@@ -584,6 +584,7 @@
     <!-- begin--module弹框-->
     <transition name="right-box">
       <div class="right-box right-box-endpoint" v-if="moduleRightBox.show" @click.stop>
+        <el-scrollbar style="height: 100%">
         <!-- begin--顶部按钮-->
         <div class="right-box-top-btns">
           <div class="right-box-top-btn right-box-top-btn-full" @click="esc(3)">
@@ -692,6 +693,7 @@
           <div @click="esc(3)" class="right-box-bottom-btn right-box-bottom-btn-cancel right-box-bottom-btn-50">{{$t('overall.cancel')}}</div><div @click="moduleSave" class="right-box-bottom-btn right-box-bottom-btn-50">{{currentModule.id == '' && moduleRightBox.isCreate ? $t('overall.create') : $t('overall.save')}}</div>
         </div>
         <!-- end--底部按钮-->
+        </el-scrollbar>
       </div>
     </transition>
     <!-- end--module弹框-->

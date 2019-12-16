@@ -2,6 +2,23 @@
   .account {
     height: 100%;
   }
+  .right-box::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 5px rgba(0,0,0,0.2);
+    border-radius: 0;
+    background: rgba(0,0,0,0.1);
+  }
+  .right-box::-webkit-scrollbar-thumb {
+    border-radius: 5px;
+    -webkit-box-shadow: inset 0 0 5px rgba(0,0,0,0.2);
+    background: rgba(0,0,0,0.2);
+  }
+  .right-box::-webkit-scrollbar {
+    width: 4px;
+    height: 4px;
+  }
+  .right-box {
+    overflow: auto;
+  }
   .account-list-option {
     cursor: pointer;
     display: inline-block;
@@ -35,12 +52,14 @@
                 <span><i class="el-icon-plus"></i></span>
                 <span class="top-tool-btn-txt">{{$t('overall.add')}}</span>
               </el-button>
-              <el-input
+              <!--<el-input
                   class="top-tool-search top-tool top-tool-right"
                   type="text"
                   :placeholder="$t('overall.search')"
                   size="mini"
-                ></el-input>
+                ></el-input>-->
+              <div class="top-tool-search top-tool top-tool-right"><search-input :Search_msg="Search_msg" ></search-input></div>
+
             </div>
             <el-table
                   :data="tableData"
@@ -303,6 +322,23 @@ export default {
   name: "alert-config",
   data() {
     return {
+      Search_msg: {
+        zheze_none: true,
+        selectListEN: [{
+          id: 1,
+          name: 'ID',
+          type: 'input',
+          label: 'id',
+          disabled: false
+        },
+        {
+          id: 2,
+          name: 'Name',
+          type: 'input',
+          label: 'name',
+          disabled: false
+        }],
+      },
       rightBox: { //弹出框相关
         show: false,
         isEdit: false, //false查看，true编辑
