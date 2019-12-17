@@ -39,12 +39,7 @@
                 <span><i class="el-icon-plus"></i></span>
                 <span class="top-tool-btn-txt">{{$t('overall.add')}}</span>
               </el-button>
-              <el-input
-                  class="top-tool-search top-tool top-tool-right"
-                  type="text"
-                  :placeholder="$t('overall.search')"
-                  size="mini"
-                ></el-input>
+              <div class="top-tool-search top-tool top-tool-right"><search-input :searchMsg="searchMsg" @search="search"></search-input></div>
             </div>
             <el-table
                   :data="tableData"
@@ -113,7 +108,7 @@
                 <!-- begin--表单-->
                 <div class="right-box-form">
                     <div class="right-box-form-row">
-                        <div class="right-box-form-label">IDC</div>
+                        <div class="right-box-form-label">DC</div>
                         <div class="right-box-form-content">
                             <el-select class="right-box-row-with-btn" value-key="id" popper-class="config-dropdown" v-model="promServer.idc" placeholder="" v-if="rightBox.isEdit" size="small">
                                 <el-option
@@ -225,7 +220,7 @@ export default {
           show: true,
           width: 80
         }, {
-          label: 'IDC',
+          label: 'DC',
           prop: 'idc',
           show: true,
         }, {
@@ -252,7 +247,44 @@ export default {
           key: 2,
           value: 'Per-Datacenter'
         }
-      ]
+      ],
+      searchMsg: { //给搜索框子组件传递的信息
+        zheze_none: true,
+        searchLabelList: [{
+          id: 1,
+          name: 'ID',
+          type: 'input',
+          label: 'id',
+          disabled: false
+        },{
+          id: 5,
+          name: 'DC',
+          type: 'dc',
+          label: 'dc',
+          disabled: false
+        },{
+          id: 6,
+          name: this.$t('config.promServer.type'),
+          type: 'select',
+          label: 'promType',
+          disabled: false
+        },{
+          id: 8,
+          name: this.$t('project.endpoint.host'),
+          type: 'input',
+          label: 'host',
+          disabled: false
+        },{
+          id: 9,
+          name: this.$t('project.endpoint.port'),
+          type: 'input',
+          label: 'port',
+          disabled: false
+        }],
+      },
+      searchLabel: { //搜索参数
+
+      },
     }
   },
   methods: {
@@ -277,14 +309,6 @@ export default {
           }
         })
       });
-    },
-    getTableData: function() {
-      this.$get('promServer', this.pageObj).then(response => {
-        if (response.code === 200) {
-          this.tableData = response.data.list;
-          this.pageObj.total = response.data.total
-        }
-      })
     },
     detail: function(u) {
       this.promServer = Object.assign({}, u);
@@ -389,7 +413,9 @@ export default {
       });
     },
     getTableData: function() {
-      this.$get('promServer', this.pageObj).then(response => {
+      this.$set(this.searchLabel, "pageNo", this.pageObj.pageNo);
+      this.$set(this.searchLabel, "pageSize", this.pageObj.pageSize);
+      this.$get('promServer', this.searchLabel).then(response => {
         if (response.code === 200) {
           for (var i = 0; i < response.data.list.length; i++) {
             for (var j = 0; j < this.idcData.length; j++) {
@@ -418,6 +444,15 @@ export default {
     },
     pageSize(val) {
       this.pageObj.pageSize = val;
+      this.getTableData();
+    },
+    search: function(searchObj) {
+      this.searchLabel = {};
+      for (let item in searchObj) {
+        if (searchObj[item]) {
+          this.$set(this.searchLabel, item, searchObj[item]);
+        }
+      }
       this.getTableData();
     }
   },

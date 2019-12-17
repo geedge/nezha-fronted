@@ -17,6 +17,8 @@ const en = {
     option: "Option",
     clearAll: "Clear All",
     name: 'Name',
+  },
+  search: {
     searchTip: 'Press Enter or click to search'
   },
   tip: {

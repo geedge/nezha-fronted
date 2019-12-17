@@ -48,18 +48,11 @@
         </div>
         <div class="content-right">
             <div class="top-tools">
-              <el-button @click="toAdd" class="top-tool-btn top-tool-btn-active top-tool top-tool-right margin-l-10" size="mini">
-                <span><i class="el-icon-plus"></i></span>
-                <span class="top-tool-btn-txt">{{$t('overall.add')}}</span>
-              </el-button>
-              <!--<el-input
-                  class="top-tool-search top-tool top-tool-right"
-                  type="text"
-                  :placeholder="$t('overall.search')"
-                  size="mini"
-                ></el-input>-->
-              <div class="top-tool-search top-tool top-tool-right"><search-input :Search_msg="Search_msg" ></search-input></div>
-
+                <el-button @click="toAdd" class="top-tool-btn top-tool-btn-active top-tool top-tool-right margin-l-10" size="mini">
+                    <span><i class="el-icon-plus"></i></span>
+                    <span class="top-tool-btn-txt">{{$t('overall.add')}}</span>
+                </el-button>
+                <div class="top-tool-search top-tool top-tool-right"><search-input :searchMsg="searchMsg" @search="search"></search-input></div>
             </div>
             <el-table
                   :data="tableData"
@@ -322,22 +315,36 @@ export default {
   name: "alert-config",
   data() {
     return {
-      Search_msg: {
+      searchMsg: { //给搜索框子组件传递的信息
         zheze_none: true,
-        selectListEN: [{
+        searchLabelList: [{
           id: 1,
           name: 'ID',
           type: 'input',
           label: 'id',
           disabled: false
-        },
-        {
+        },{
           id: 2,
-          name: 'Name',
+          name: this.$t('alert.alertName'),
           type: 'input',
-          label: 'name',
+          label: 'alertName',
+          disabled: false
+        },{
+          id: 3,
+          name: this.$t('alert.list.type'),
+          type: 'select',
+          label: 'alertType',
+          disabled: false
+        },{
+          id: 4,
+          name: this.$t('alert.severity'),
+          type: 'selectString',
+          label: 'severity',
           disabled: false
         }],
+      },
+      searchLabel: { //搜索参数
+
       },
       rightBox: { //弹出框相关
         show: false,
@@ -560,7 +567,9 @@ export default {
       }
     },
     getTableData: function() {
-      this.$get('alert/rule', this.pageObj).then(response => {
+      this.$set(this.searchLabel, "pageNo", this.pageObj.pageNo);
+      this.$set(this.searchLabel, "pageSize", this.pageObj.pageSize);
+      this.$get('alert/rule', this.searchLabel).then(response => {
         if (response.code == 200) {
           this.tableData = response.data.list;
           this.pageObj.total = response.data.total;
@@ -609,6 +618,15 @@ export default {
     },
     pageSize(val) {
       this.pageObj.pageSize = val;
+      this.getTableData();
+    },
+    search: function(searchObj) {
+      this.searchLabel = {};
+      for (let item in searchObj) {
+        if (searchObj[item]) {
+          this.$set(this.searchLabel, item, searchObj[item]);
+        }
+      }
       this.getTableData();
     }
   },

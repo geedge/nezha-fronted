@@ -7,7 +7,7 @@
                 <div :class="localStorage_display?'localStorage_list_box none':'localStorage_list_box'">
                     <div class="list_box_title">
                         <span>{{other.recentSearch}}</span>
-                        <i class="iconfont icon-close" @click="localStorage_display=!localStorage_display"></i>
+                        <i class="el-icon-close" @click="localStorage_display=!localStorage_display"></i>
                     </div>
                     <div class="list_box_content" v-if="history_once.length>0">
                         <ul>
@@ -21,7 +21,7 @@
                     </div>
                     <div class="list_box_clear">
                         <span v-if="history_once.length>0" @click="clear_history">{{other.clearReSearch}}</span>
-                        <span v-else class="no_history_list">{{other.noRecentSearch}}</span>
+                        <span v-else class="no_historyList">{{other.noRecentSearch}}</span>
                     </div>
                 </div>
             </div>
@@ -32,20 +32,25 @@
                         <div class="select_condition">
                             {{val.name}}
                         </div>
-                        <div class="select_content" v-if="val.val&&ind!=sreach_num">
-                            <span :style="val.id==7?'min-width:260px':''">{{val.val}}</span>
+                        <div class="select_content" v-if="val.val && ind!=sreach_num">
+                            <span :style="val.id==7?'min-width:260px':''">{{val.valString ? val.valString : val.val}}</span>
                             <i class="el-icon-close" @click="close_selcet_list(ind,$event)"></i>
                         </div>
                         <div v-else-if="!change_sreach_show && ind==sreach_num && val.id!==7 " class="select_input">
-                            <input type="text" id="sreach_input" v-model="input_sreach" @keyup="enter" @click="stop_click" v-if="val.id!==6&&val.id!==28">
+                            <input type="text" id="sreach_input" v-model="input_sreach" @keyup="enter" @click="stop_click">
                             <div class="select_info_list" v-if="val.type == 'select'">
                                 <ul>
                                     <li v-for="(item,key) in selectInfoList[val.label]" :key="key" @click="tr_selectInfo(val.label,item.value,item.label,$event)" :class="search_select_style_num==key?'search-style-ind':''">{{item.label}}</li>
                                 </ul>
                             </div>
-                            <div class="select_info_list" v-if="val.type == 'selectSelf'">
+                            <div class="select_info_list" v-if="val.type == 'selectString'">
                                 <ul>
-                                    <li v-for="(item,key) in OperatorInfo" :key="key" @click="tr_selectInfo(val.label,item.id,item.name,$event)">{{item.name}}</li>
+                                    <li v-for="(item,key) in selectInfoList[val.label]" :key="key" @click="stringSelectInfo(val, item, $event)" :class="search_select_style_num==key?'search-style-ind':''">{{item.label}}</li>
+                                </ul>
+                            </div>
+                            <div class="select_info_list" v-if="val.type == 'dc'">
+                                <ul>
+                                    <li v-for="(item,key) in dcSelect" :key="key" @click="selectDc(val, item, $event)" :class="search_select_style_num==key?'search-style-ind':''">{{item.name}}</li>
                                 </ul>
                             </div>
                             <!-- 新增日志模块action下拉选择 -->
@@ -93,16 +98,16 @@
                 </ul>
             </div>
             <div class="clear-search" @click="clear_input">
-                <i class="iconfont icon-close"></i>
+                <i class="el-icon-close"></i>
             </div>
             <div :class="input_list?'input_list none':'input_list'" @click="stop_click" id="input_list">
                 <ul>
-                    <li v-for="(val,ind) in selectList"  v-if="val.name!='Protocol'" @click="select_name(val.name,ind,val.id,val.type,val.label,val.disabled)" :key="ind" :class="{'search-style-ind':search_style_num==ind,'is-disabled':val.disabled}">
+                    <li v-for="(val,ind) in searchLabelList"  v-if="val.name!='Protocol'" @click="select_name(val.name,ind,val.id,val.type,val.label,val.disabled)" :key="ind" :class="{'search-style-ind':searchStyleNum==ind,'is-disabled':val.disabled}">
                         <span>{{val.name}}</span>
                     </li>
-                    <li v-for="(val,ind) in selectList"  v-if="val.name=='Protocol'" @click="select_type(val.name,ind,val.id,val.type,val.label,val.disabled)" :key="ind" :class="{'search-style-ind':search_style_num==ind,'is-disabled':val.disabled}">
+                    <!--<li v-for="(val,ind) in searchLabelList"  v-if="val.name=='Protocol'" @click="select_type(val.name,ind,val.id,val.type,val.label,val.disabled)" :key="ind" :class="{'search-style-ind':searchStyleNum==ind,'is-disabled':val.disabled}">
                         <span>{{val.name}}</span>
-                    </li>
+                    </li>-->
                 </ul>
             </div>
         </div>
@@ -113,28 +118,29 @@
 </template>
 
 <script>
+    import searchSelectInfo from "./searchSelectInfo"; //搜索框组件--下拉框内容
     export default {
         name: "index",
         data() {
             return {
                 select_conditionsName:'',
-                selectInfoList:this.$t('i18n.overall.searchList.selectInfo'),
+                selectInfoList: searchSelectInfo,
                 select_title:this.$t('i18n.overall.searchList.select_title'),
                 other:this.$t('i18n.overall.other'),
                 localStorage_display: true,
                 input_list: true,
                 change_sreach_show: true,
-                select_list: [],
-                history_list: [],
+                select_list: [], //下拉列表
+                historyList: [],
                 actionSelect:[],
+                dcSelect: [], //数据中心
                 schemaTypeSelect:[], //日志检索Protocol下拉菜单
                 TypeSelect:[],//Protocol二层下拉菜单
                 secondShow:'',//二层显示控制
-                OperatorInfo:[],
                 input_sreach: '',
                 sreach_num: 0,
-                selectList: [
-                    {id: 0, name: this.$t('overall.searchTip'), icon: 'el-icon-search'},
+                searchLabelList: [
+                    {id: 0, name: this.$t('search.searchTip'), icon: 'el-icon-search'},
                 ],
                 bool: false,
                 no_condition: '',
@@ -152,8 +158,8 @@
                 timeFrame: [new Date(new Date() - 1 * 60 * 60 * 1000), new Date()],
                 dataBackG:true,
                 delBool : false,
-                search_style_num:-1,
-                Issearch_num :-1,
+                searchStyleNum:-1,
+                isSearchNum :-1,
                 search_select_style_num:-1,
                 keyBool : false,
                 delnum :0,
@@ -180,7 +186,7 @@
                 }
             }
         },
-        props:['Search_msg','defaultItem','defaultValue'],
+        props:['searchMsg','defaultItem','defaultValue'],
         methods: {
           // isValidIP(ip) {
           //     var reg = /^(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])$/
@@ -191,10 +197,10 @@
           //     }
           // } ,
               //点击选择protocol类型  (日志新增)
-              select_type(val, ind, id, type,label,disabled){
+              /*select_type(val, ind, id, type,label,disabled){
                         this.downBool = false;
                         this.secondShow=false;
-                        this.selectList.splice(ind, 1)
+                        this.searchLabelList.splice(ind, 1)
                         this.select_list.push({
                           name: val,
                           id:id,
@@ -205,11 +211,32 @@
                         this.change_sreach_show = false
                         this.sreach_num = this.select_list.length-1
                         this.input_list = !this.input_list
-                },
+                },*/
+              //dc
+              selectDc(column, selectItem, e) {
+                this.stop_click(e);
+                this.searchLabelList.forEach(val=>{
+                  if(val.type == 'dc'){
+                    val.val = selectItem.name;
+                    val.valnum = selectItem.id;
+                    val.valString = '';
+                  }
+                })
+                //this.select_list.push({type: 'dc', val: selectItem.name, valnum: selectItem.id});
+                this.input_sreach = '';
+                this.sreach_num = this.select_list.length;
+                this.change_sreach_show = true;
+                this.input_list = false;
+                var _this = this;
+                setTimeout("document.getElementById(\"one-input\").focus()", 500);
+                setTimeout(function () {
+                  _this.getHeight();
+                });
+              },
                //一层下拉点击
-               tr_selectTypeInfo(val){
+              tr_selectTypeInfo(val){
                   this.TypeSelect=[];
-                  val.data.length!=0?this.TypeSelect.push(val.data[0]):''
+                  val.data.length!=0?this.TypeSelect.push(val.data[0]):'';
                   val.data.length!=0?this.secondShow=true:''
               },
                //二层下拉点击
@@ -231,55 +258,80 @@
                     _this.getHeight()
                   },)
             },
-              Iskeywords(ind){
-                if(this.select_list[ind].id==29){
-                  this.selectList.forEach(val=>{
-                    if(val.id==30||val.id==31||val.id==32||val.id==33){
-                      val.disabled = false
-                    }
-                  })
-                }else if(this.select_list[ind].id==30||this.select_list[ind].id==31||this.select_list[ind].id==32||this.select_list[ind].id==33){
-                  this.selectList.forEach(val=>{
-                    if(val.id==29){
-                      val.disabled = false
-                    }
-                  })
+            Iskeywords(ind){
+              if(this.select_list[ind].id==29){
+                this.searchLabelList.forEach(val=>{
+                  if(val.id==30||val.id==31||val.id==32||val.id==33){
+                    val.disabled = false
+                  }
+                })
+              }else if(this.select_list[ind].id==30||this.select_list[ind].id==31||this.select_list[ind].id==32||this.select_list[ind].id==33){
+                this.searchLabelList.forEach(val=>{
+                  if(val.id==29){
+                    val.disabled = false
+                  }
+                })
+              }
+            },
+            getDcData() {
+              this.$get('idc', {pageNo: 1, pageSize: 999}).then(response => {
+                if (response.code === 200) {
+                  this.dcSelect = response.data.list;
                 }
-              },
+              });
+            },
             //点击确认选择下拉内容
             tr_selectInfo(selectLabel,value,label,e){
-                this.stop_click(e)
+                this.stop_click(e);
                 this.select_list.forEach(val=>{
                     if(val.label == selectLabel){
-                        val.val = label
-                        val.valnum = value
+                        val.val = label;
+                        val.valnum = value;
                     }
-                })
-                this.input_sreach = ''
-                this.sreach_num = this.select_list.length
-                this.change_sreach_show = true
-                this.input_list = false
-                 var _this = this
+                });
+                this.input_sreach = '';
+                this.sreach_num = this.select_list.length;
+                this.change_sreach_show = true;
+                this.input_list = false;
+                 var _this = this;
                 setTimeout("document.getElementById(\"one-input\").focus()", 500);
+                setTimeout(function () {
+                  _this.getHeight();
+                });
+            },
+            //点击确认value是string类型的下拉内容, param: 字段对象，选中的选项
+            stringSelectInfo(column, selectItem, e){
+              this.stop_click(e);
+              this.select_list.forEach(val=>{
+                if(val.label == column.label){
+                  val.val = selectItem.value;
+                  val.valString = selectItem.label;
+                }
+              });
+              this.input_sreach = '';
+              this.sreach_num = this.select_list.length;
+              this.change_sreach_show = true;
+              this.input_list = false;
+              var _this = this;
+              setTimeout("document.getElementById(\"one-input\").focus()", 500);
               setTimeout(function () {
-                _this.getHeight()
-              })
-
+                _this.getHeight();
+              });
             },
             // 点击历史记录图标
             look_history(e){
-                this.stop_click(e)
-                this.localStorage_display=!this.localStorage_display
+                this.stop_click(e);
+                this.localStorage_display=!this.localStorage_display;
             },
             backtime(t){
-                let myDate=new Date(t)
+                let myDate=new Date(t);
                 let nt=myDate.getFullYear()+'-'+(myDate.getMonth()>8?'':0)
                     +(myDate.getMonth()+1)+'-'+(myDate.getDate()>9?'':0)
                     + myDate.getDate()+' '
                     +(myDate.getHours()>9?'':'0')+myDate.getHours()+':'
                     +(myDate.getMinutes()>9?'':0)+myDate.getMinutes()+':'
-                    +(myDate.getSeconds()>9?'':0)+myDate.getSeconds()
-                return nt
+                    +(myDate.getSeconds()>9?'':0)+myDate.getSeconds();
+                return nt;
             },
             changeDate(){
                 this.dataBackG = false
@@ -289,61 +341,24 @@
                     this.input_sreach = ''
                     this.sreach_num++
                 }
-                
             },
             //选择时间计划
             selectSul(name){
-                this.change_sreach_show = true
-                this.select_list[this.sreach_num].val = name
-                this.input_sreach = ''
-                this.sreach_num++
-              this.getHeight()
+                this.change_sreach_show = true;
+                this.select_list[this.sreach_num].val = name;
+                this.input_sreach = '';
+                this.sreach_num++;
+                this.getHeight();
             },
             //点击搜索
             select() {
-                let objectInfo = {
-                    name:'',//name
-                    profileId:'',//ID
-                    schdule:'',//时间计划
-                    modifyBy:'',//操作人
-                    modifyTime:'',//操作时间
-                    sn:'',//SN
-                    transProto:'',//协议类型
-                    addrType:'',//地址类型
-                    serverIp:'',//服务器IP
-                    clientIp:'',//客户端IP
-                    serverPort:'',//服务器Port(后补充)
-                    isp:'',//运营商
-                    direction:'',//传输方向
-                    capIp:'',//处理机IP
-                    clientLocation:'',//客户端地址定位信息
-                    serverLocation:'',//服务端地址定位信息
-                    host:'',//主机地址
-                    domain:'',//域名
-                    sni:'',//sni
-                    san:'',//san
-                    cn:'',//cn
-                    appId:'',//app
-                    protocolId:'',//protocol
-                    pinningst:'',//pinningstatus
-                    interceptState:'',//intercepted
-                    uid:'',//Log ID
-                    action:'',//动作
-                    type:'',//类型
-                    keywords:'',//对象中 keywords
-                    subobject:'',//对象中 subobject
-                    description:'',//对象中 description
-                    clientIp1:'',//对象中 clientIp1
-                    serverIp1:'',//对象中 serverIp1
-                    clientPort1:'',//对象中 clientPort1
-                    serverPort1:'',//对象中 serverPort1
-                }
-                this.change_sreach_show = true
-                this.profileName = '', this.profileId = ''
+                let objectInfo = {};
+                this.change_sreach_show = true;
+                this.profileName = '', this.profileId = '';
                 if (this.input_sreach != '') {
-                  this.select_list[this.sreach_num].val = this.input_sreach
-                    this.input_sreach = ''
-                    this.sreach_num=this.select_list.length
+                  this.select_list[this.sreach_num].val = this.input_sreach;
+                    this.input_sreach = '';
+                    this.sreach_num=this.select_list.length;
                 }
                 //input有值  默认添加到name中
                 if (this.no_condition != '') {
@@ -351,155 +366,160 @@
                     if(this.select_list.length==0){
                       //日志模块新增路由判断
                       if(route == '/Log_SecurityEventLogs'||route == '/Log_ProxyEventLogs'||route=='/Log_SesssionRecords'||route=='/Log_RadiusLogs'){
-                        no_condition_str = 'logId'
+                        no_condition_str = 'logId';
                       }else if(route == '/Device_DeviceList'){
-                        no_condition_str = 'sn'
+                        no_condition_str = 'sn';
                       }else if(route=='/system_PolicyConfigurationLog' || route=='/system_LoginLog'){
-                        no_condition_str='modifyBy'
+                        no_condition_str='modifyBy';
                       }else {
-                        no_condition_str='profileName'
+                        no_condition_str='profileName';
                       }
                       if(no_condition_str=='profileName'){
-                        this.select_list.push({name: this.select_title.name, id:2, type:'input',val:this.no_condition,label:'profileName'})
-                        this.selectList.forEach((val,ind)=>{
+                        this.select_list.push({name: this.select_title.name, id:2, type:'input',val:this.no_condition,label:'profileName'});
+                        this.searchLabelList.forEach((val,ind)=>{
                           if(val.id == 2){
-                            this.selectList.splice(ind,1)
+                            this.searchLabelList.splice(ind,1);
                           }
                         })
                       }else if(no_condition_str=='modifyBy'){
-                        this.select_list.push({name: this.select_title.Operator, id:6, type:'input',val:this.no_condition,label:'modifyBy'})
-                        this.selectList.forEach((val,ind)=>{
+                        this.select_list.push({name: this.select_title.Operator, id:6, type:'input',val:this.no_condition,label:'modifyBy'});
+                        this.searchLabelList.forEach((val,ind)=>{
                           if(val.id == 6){
-                            this.selectList.splice(ind,1)
+                            this.searchLabelList.splice(ind,1);
                           }
                         })
                       }else if(no_condition_str=='sn'){
-                        this.select_list.push({name: this.select_title.SN, id:8, type:'input',val:this.no_condition,label:'sn'})
-                        this.selectList.forEach((val,ind)=>{
+                        this.select_list.push({name: this.select_title.SN, id:8, type:'input',val:this.no_condition,label:'sn'});
+                        this.searchLabelList.forEach((val,ind)=>{
                           if(val.id == 8){
-                            this.selectList.splice(ind,1)
+                            this.searchLabelList.splice(ind,1);
                           }
                         })
                       }else if(no_condition_str=='profileId'){
-                        this.select_list.push({name: this.select_title.Policy_ID, id:1, type:'input',val:this.no_condition,label:'profileId'})
-                        this.selectList.forEach((val,ind)=>{
+                        this.select_list.push({name: this.select_title.Policy_ID, id:1, type:'input',val:this.no_condition,label:'profileId'});
+                        this.searchLabelList.forEach((val,ind)=>{
                           if(val.id == 1){
-                            this.selectList.splice(ind,1)
+                            this.searchLabelList.splice(ind,1);
                           }
                         })
                       }else if(no_condition_str=='logId'){ //日志模块新增判断
-                        this.select_list.push({  name: 'Log ID',  type: 'input', label: 'Log Id', val:this.no_condition,})
-                        this.selectList.forEach((val,ind)=>{
+                        this.select_list.push({  name: 'Log ID',  type: 'input', label: 'Log Id', val:this.no_condition,});
+                        this.searchLabelList.forEach((val,ind)=>{
                           if(val.id == 1){
-                            this.selectList.splice(ind,1)
+                            this.searchLabelList.splice(ind,1);
                           }
                         })
                       }
-                        this.sreach_num++
+                        this.sreach_num++;
                     }else {
-                      let no_condition_bool = false,no_condition_str = '',route = this.$route.path,bool = true
+                      let no_condition_bool = false,no_condition_str = '',route = this.$route.path,bool = true;
                       if(route == '/Log_SesssionRecords'||route == '/Log_EventLogs'){
-                        no_condition_str = 'profileId'
+                        no_condition_str = 'profileId';
                       }else if(route == '/Device_DeviceList'){
-                        no_condition_str = 'sn'
+                        no_condition_str = 'sn';
                       }else if(route=='/system_PolicyConfigurationLog' || route=='/system_UserManagement' || route=='/system_LoginLog'){
-                        no_condition_str='modifyBy'
+                        no_condition_str='modifyBy';
                       }else {
-                        no_condition_str='profileName'
+                        no_condition_str='profileName';
                       }
                         this.select_list.forEach(val => {
                             if(val.label==no_condition_str){
-                                bool = false
-                                val.val += ','+this.no_condition
+                                bool = false;
+                                val.val += ','+this.no_condition;
                             }
-                        })
+                        });
                         if(bool){
-                            this.selectList.forEach((val,ind)=>{
+                            this.searchLabelList.forEach((val,ind)=>{
                                 if(val.label == no_condition_str){
-                                  val.val = this.no_condition
-                                  this.select_list.push(val)
-                                  this.selectList.splice(ind,1)
+                                  val.val = this.no_condition;
+                                  this.select_list.push(val);
+                                  this.searchLabelList.splice(ind,1);
                                 }
-                            })
-                            this.sreach_num++
+                            });
+                            this.sreach_num++;
                         }
                     }
-                    this.no_condition = ''
+                    this.no_condition = '';
                 }
-                let labelBool = true
+                let labelBool = true;
                 this.select_list.forEach(val=>{
-                    if(val.val!==undefined&&val.val!==''){
+                    if (typeof (val.val) !== 'undefined' && val.val) {
                         if(val.type == 'select'){
-                            if(val.valnum==undefined||val.valnum == ''){
+                            if (val.label == 'alertType' || val.label == 'promType') {
+                                objectInfo.type = val.valnum;
+                            } else if(typeof(val.valnum) == "undefined"||val.valnum == ''){
                                 this.selectInfoList[val.label].forEach(item=>{
                                     if(item.label == val.val){
-                                        labelBool = false
-                                        objectInfo[val.label] = item.value
+                                        labelBool = false;
+                                        objectInfo[val.label] = item.value;
                                     }
                                 })
                                 if(labelBool){
-                                    objectInfo[val.label] = val.val
+                                    objectInfo[val.label] = val.val;
                                 }
                             }else {
-                                objectInfo[val.label] = val.valnum
+                                objectInfo[val.label] = val.valnum;
                             }
-                        }else if(val.type == 'selectSelf'){
-                          objectInfo[val.label] = val.valnum
+                            console.info(val)
+                        } else if(val.type == 'selectSelf'){
+                          objectInfo[val.label] = val.valnum;
                         } else if(val.type == 'selectAction'){ //新增日志判断
-                          objectInfo[val.label] = val.valnum
-                        }else {
-                            objectInfo[val.label] = val.val
+                          objectInfo[val.label] = val.valnum;
+                        } else if (val.type == 'dc') {
+                          objectInfo.idcId = val.valnum;
+                        } else {
+                            objectInfo[val.label] = val.val;
                         }
                     }
-                })
+                });
                 this.getHeight()
                 //搜索完成后存储在本地历史记录中
                 if(this.select_list.length!=0){
                     if (JSON.parse(localStorage.getItem('NZ_history_'+this.$route.path)) == undefined || JSON.parse(localStorage.getItem('NZ_history_'+this.$route.path)) == []) {
-                        this.history_list.unshift(this.select_list)
-                        localStorage.setItem('NZ_history_'+this.$route.path, JSON.stringify(this.history_list))
+                        this.historyList.unshift(this.select_list);
+                        localStorage.setItem('NZ_history_'+this.$route.path, JSON.stringify(this.historyList));
                     } else {
-                        this.history_list = JSON.parse(localStorage.getItem('NZ_history_'+this.$route.path))
-                        this.history_list.unshift(this.select_list)
-                        if (this.history_list.length > 10) {
-                            this.history_list.length = 10
+                        this.historyList = JSON.parse(localStorage.getItem('NZ_history_'+this.$route.path));
+                        this.historyList.unshift(this.select_list);
+                        if (this.historyList.length > 10) {
+                            this.historyList.length = 10;
                         }
-                        localStorage.setItem('NZ_history_'+this.$route.path, JSON.stringify(this.history_list))
+                        localStorage.setItem('NZ_history_'+this.$route.path, JSON.stringify(this.historyList));
                     }
                 }
-                this.input_list = true
-                this.restructure_historyDate()
-                this.$emit("SearchElsea",objectInfo)
+                this.input_list = true;
+                this.restructure_historyDate();
+                this.$emit("search", objectInfo);
             },
             //清空历史记录
             clear_history() {
-                this.history_list = []
-                this.history_once = []
-                localStorage.setItem('NZ_history_'+this.$route.path, JSON.stringify(this.history_list))
+                this.historyList = [];
+                this.history_once = [];
+                localStorage.setItem('NZ_history_'+this.$route.path, JSON.stringify(this.historyList));
             },
             //再次点击之前的历史记录
             select_history(ind,e) {
-                this.stop_click(e)
-                this.input_list = true
-                this.change_sreach_show = true
-                this.localStorage_display = !this.localStorage_display
-                this.select_list = []
-                JSON.parse(localStorage.getItem('NZ_history_'+this.$route.path)).splice(ind,1)
-                this.select_list = JSON.parse(JSON.stringify(this.history_once[ind]))
-                this.sreach_num = this.select_list.length
+                this.stop_click(e);
+                this.input_list = true;
+                this.change_sreach_show = true;
+                this.localStorage_display = !this.localStorage_display;
+                this.select_list = [];
+                JSON.parse(localStorage.getItem('NZ_history_'+this.$route.path)).splice(ind,1);
+                this.select_list = JSON.parse(JSON.stringify(this.history_once[ind]));
+                this.sreach_num = this.select_list.length;
                 this.select_list.forEach(val => {
-                    this.selectList.forEach((item, index) => {
+                    this.searchLabelList.forEach((item, index) => {
                         if (val.id == item.id) {
-                            this.selectList.splice(index, 1)
+                            this.searchLabelList.splice(index, 1);
                         }
                     })
-                })
+                });
                 this.select()
             },
             // 获取历史记录  数据进行处理以便循环展示
             restructure_historyDate() {
                 if (localStorage.getItem('NZ_history_'+this.$route.path) !== undefined && localStorage.getItem('NZ_history_'+this.$route.path) !== null) {
-                    this.history_once = JSON.parse(localStorage.getItem('NZ_history_'+this.$route.path))
+                    this.history_once = JSON.parse(localStorage.getItem('NZ_history_'+this.$route.path));
                 }
             },
             clear_search_list(e){
@@ -509,44 +529,44 @@
             enter_one(e){
                 var keyCode = window.event ? e.keyCode : e.which;
                 if(keyCode == 40){
-                    if(this.search_style_num<this.selectList.length-1){
-                      var disabledNum = 0
-                      this.selectList.forEach(val=>{
+                    if(this.searchStyleNum<this.searchLabelList.length-1){
+                      var disabledNum = 0;
+                      this.searchLabelList.forEach(val=>{
                         if(val.disabled){
-                          disabledNum++
+                          disabledNum++;
                         }
-                      })
-                      this.Issearch_num=this.search_style_num
-                      this.Issearch_num++
-                      if(!(this.selectList[this.Issearch_num].disabled)){
-                        this.search_style_num++
+                      });
+                      this.isSearchNum=this.searchStyleNum;
+                      this.isSearchNum++;
+                      if(!(this.searchLabelList[this.isSearchNum].disabled)){
+                        this.searchStyleNum++;
                       }else {
-                        this.search_style_num+=disabledNum+1
+                        this.searchStyleNum+=disabledNum+1;
                       }
                     }
-                    if(this.search_style_num>=7){
-                      document.getElementById('input_list').scrollTop+=28
+                    if(this.searchStyleNum>=7){
+                      document.getElementById('input_list').scrollTop+=28;
                     }
                 }
                 if(keyCode == 38){
-                  if(this.search_style_num>=0){
-                    var disabledNum = 0
-                    this.selectList.forEach(val=>{
+                  if(this.searchStyleNum>=0){
+                    var disabledNum = 0;
+                    this.searchLabelList.forEach(val=>{
                       if(val.disabled){
-                        disabledNum++
+                        disabledNum++;
                       }
                     })
-                    this.Issearch_num=this.search_style_num
-                    if(this.Issearch_num>0){
-                      this.Issearch_num--
+                    this.isSearchNum=this.searchStyleNum;
+                    if(this.isSearchNum>0){
+                      this.isSearchNum--
                     }
-                    if(!(this.selectList[this.Issearch_num].disabled)){
-                      this.search_style_num--
+                    if(!(this.searchLabelList[this.isSearchNum].disabled)){
+                      this.searchStyleNum--
                     }else {
-                      this.search_style_num-=disabledNum+1
+                      this.searchStyleNum-=disabledNum+1
                     }
                   }
-                  if(this.search_style_num<=this.selectList.length-8){
+                  if(this.searchStyleNum<=this.searchLabelList.length-8){
                     document.getElementById('input_list').scrollTop -= 28
                   }
                 }
@@ -571,16 +591,16 @@
                     }
                 }
                 if (keyCode == 13) {
-                    if(this.search_style_num<=0){
+                    if(this.searchStyleNum<=0){
                         this.select()
                     }else {
-                        let val = this.selectList[this.search_style_num].name,
-                            ind = this.search_style_num,
-                            id= this.selectList[this.search_style_num].id,
-                            type= this.selectList[this.search_style_num].type,
-                            label= this.selectList[this.search_style_num].label,
-                          disabled= this.selectList[this.search_style_num].disabled
-                        this.search_style_num = -1
+                        let val = this.searchLabelList[this.searchStyleNum].name,
+                            ind = this.searchStyleNum,
+                            id= this.searchLabelList[this.searchStyleNum].id,
+                            type= this.searchLabelList[this.searchStyleNum].type,
+                            label= this.searchLabelList[this.searchStyleNum].label,
+                          disabled= this.searchLabelList[this.searchStyleNum].disabled
+                        this.searchStyleNum = -1
                         this.select_name(val, ind, id, type,label,disabled)
                     }
 
@@ -596,9 +616,9 @@
                if(this.delBool){
                    if(keyCode==8){
                        if(this.input_sreach==''){
-                           this.Search_msg.selectListEN.forEach((val, k) => {
+                           this.searchMsg.searchLabelList.forEach((val, k) => {
                                if (this.select_list[this.sreach_num].id == val.id) {
-                                   this.selectList.splice(k + 1, 0, val)
+                                   this.searchLabelList.splice(k + 1, 0, val)
                                  this.Iskeywords(this.sreach_num)
                                }
                            })
@@ -612,9 +632,9 @@
                }else {
                    if(keyCode==8){
                        if(this.delcriteriaBool){
-                           this.Search_msg.selectListEN.forEach((val, k) => {
+                           this.searchMsg.searchLabelList.forEach((val, k) => {
                                if (this.select_list[this.sreach_num].id == val.id) {
-                                   this.selectList.splice(k + 1, 0, val)
+                                   this.searchLabelList.splice(k + 1, 0, val)
                                  this.Iskeywords(this.sreach_num)
                                }
                            })
@@ -654,7 +674,7 @@
                      }
                    }
                }else if(keyCode == 13) {
-                 this.Search_msg.zheze_none = true
+                 this.searchMsg.zheze_none = true
                  //回车键
                  if (!this.selectInfo) {
                    this.select()
@@ -663,8 +683,6 @@
                    this.tr_selectInfo(this.select_list[this.sreach_num].label, this.selectInfoList[this.select_list[this.sreach_num].label][this.search_select_style_num].label, this.selectInfoList[this.select_list[this.sreach_num].label][this.search_select_style_num].value, e)
                  }
                }
-
-
             },
             // 清空已输入的搜索条件
             clear_input(e) {
@@ -672,14 +690,15 @@
               this.no_condition = ''
               this.input_sreach = ''
                 this.select_list = []
-                this.selectList = [{id: 0, name: 'Press Enter or click to search', icon: 'el-icon-search'},]
-                JSON.parse(JSON.stringify(this.Search_msg.selectListEN)).forEach(val => {
-                    this.selectList.push(val)
+                this.searchLabelList = [{id: 0, name: 'Press Enter or click to search', icon: 'el-icon-search'},]
+                JSON.parse(JSON.stringify(this.searchMsg.searchLabelList)).forEach(val => {
+                    this.searchLabelList.push(val)
                 })
             },
             //修改已有参数
             update_sreach(ind,e) {
-                if(this.select_list[ind].id==6||this.select_list[ind].id==28){
+                //if(this.select_list[ind].id==6||this.select_list[ind].id==28){
+                if(false){
                     this.sreach_num = ind
                     this.downBool = false
                     this.change_sreach_show = false
@@ -696,15 +715,15 @@
                     }
                     setTimeout("document.getElementById(\"sreach_input\").focus()", 50);
                     this.getHeight()
-                    this.Search_msg.zheze_none = false
+                    this.searchMsg.zheze_none = false
                 }
             },
             //删除要搜索的条件
             close_selcet_list(ind, e){
                 this.stop_click(e)
-                this.Search_msg.selectListEN.forEach((val, key) => {
+                this.searchMsg.searchLabelList.forEach((val, key) => {
                     if (this.select_list[ind].id == val.id) {
-                        this.selectList.splice(key + 1, 0, val)
+                        this.searchLabelList.splice(key + 1, 0, val)
                         this.Iskeywords(ind)
                     }
                 })
@@ -719,7 +738,7 @@
             //点击遮罩层
             zhezhao_click() {
                 if(this.input_sreach!=''){
-                  if(!this.Search_msg.zheze_none){
+                  if(!this.searchMsg.zheze_none){
                     if (this.input_sreach!='') {
                       this.change_sreach_show = true
                       let IDsplit,
@@ -777,9 +796,9 @@
                       this.change_sreach_show = true
                       if(this.select_list.length==0){
                         this.select_list.push({name: 'Name', id:2, type:'input',val:this.no_condition,label:'profileName'})
-                        this.selectList.forEach((val,ind)=>{
+                        this.searchLabelList.forEach((val,ind)=>{
                           if(val.id == 2){
-                            this.selectList.splice(ind,1)
+                            this.searchLabelList.splice(ind,1)
                           }
                         })
                         this.sreach_num++
@@ -793,9 +812,9 @@
                         })
                         if(bool){
                           this.select_list.push({name: 'Name', id:2, type:'input',val:this.no_condition,label:'profileName'})
-                          this.selectList.forEach((val,ind)=>{
+                          this.searchLabelList.forEach((val,ind)=>{
                             if(val.id == 2){
-                              this.selectList.splice(ind,1)
+                              this.searchLabelList.splice(ind,1)
                             }
                           })
                           this.sreach_num++
@@ -810,7 +829,7 @@
                     setTimeout(function () {
                       _this.getHeight()
                     },)
-                    this.Search_msg.zheze_none = true
+                    this.searchMsg.zheze_none = true
                   }
                 }
 
@@ -827,21 +846,18 @@
                 // if(id==43||id==45||id==48){  //根据id判断是否开启ip验证
                 //     this.select_conditionsName=true
                 // }
-                if(type=='input'){
-                  this.downBool = true
-                }else {
-                  if(id == 6){
-                    this.OperatorList()
-                  }
-                  this.downBool = false
-                }
-                this.no_condition = ''
-                this.Search_msg.zheze_none = false
+              if(type=='input'){
+                this.downBool = true;
+              }else {
+                this.downBool = false;
+              }
+              this.no_condition = '';
+              this.searchMsg.zheze_none = false;
               if(!disabled){
                 if (ind == 0) {
                   this.select()
                 }else if(id == 7){
-                  this.selectList.splice(ind, 1)
+                  this.searchLabelList.splice(ind, 1)
                   this.select_list.push({
                     name: val,
                     id:id,
@@ -852,7 +868,7 @@
                   this.change_sreach_show = false
                   this.input_list = !this.input_list
                 }else if(id==29){
-                  this.selectList.splice(ind, 1)
+                  this.searchLabelList.splice(ind, 1)
                   this.select_list.push({
                     name: val,
                     id:id,
@@ -864,14 +880,14 @@
                   this.sreach_num = this.select_list.length-1
                   this.input_list = !this.input_list
                   setTimeout("document.getElementById(\"sreach_input\").focus()", 500);
-                  this.selectList.forEach(val=>{
+                  this.searchLabelList.forEach(val=>{
                     if(val.id==30||val.id==31||val.id==32||val.id==33){
                       val.disabled = true
                     }
                   })
 
                 }else if(id==30||id==31||id==32||id==33){
-                  this.selectList.splice(ind, 1)
+                  this.searchLabelList.splice(ind, 1)
                   this.select_list.push({
                     name: val,
                     id:id,
@@ -883,13 +899,13 @@
                   this.sreach_num = this.select_list.length-1
                   this.input_list = !this.input_list
                   setTimeout("document.getElementById(\"sreach_input\").focus()", 500);
-                  this.selectList.forEach(val=>{
+                  this.searchLabelList.forEach(val=>{
                     if(val.id==29){
                       val.disabled = true
                     }
                   })
                 }else {
-                  this.selectList.splice(ind, 1)
+                  this.searchLabelList.splice(ind, 1)
                   this.select_list.push({
                     name: val,
                     id:id,
@@ -920,7 +936,7 @@
           },
             chlick_sreach(e) {
                 this.stop_click(e)
-                this.Search_msg.zheze_none = false
+                this.searchMsg.zheze_none = false
             },
             // 时间计划
             schelistget(){
@@ -932,27 +948,18 @@
                 })
 
             },
-          //获取所有管理员信息
-          OperatorList(){
-            this.OperatorInfo = []
-            this.$get("/user",'').then(data => {
-              if (data.code == 200) {
-                for(let i = 0 ; i<data.data.list.length ; i++){
-                  this.OperatorInfo.push({name:data.data.list[i].name,id:data.data.list[i].id})
-                }
-              }
-            })
-          }
         },
         mounted() {
-            this.defaultItem!=''?this.select_list.push({name:this.defaultItem,label:this.defaultItem}):'';
-            this.defaultValue!=''? this.no_condition=this.defaultValue:'';
+            this.defaultItem ? this.select_list.push({name:this.defaultItem,label:this.defaultItem}) : '';
+            this.defaultValue != '' ? this.no_condition=this.defaultValue:'';
             this.restructure_historyDate()
             if(this.$route.path=='/Objects_Objects'){
               this.schelistget()
             }
-
-            JSON.parse(JSON.stringify(this.Search_msg.selectListEN)).forEach(val => {
+            if (this.$route.path == '/promServer') {
+              this.getDcData();
+            }
+            JSON.parse(JSON.stringify(this.searchMsg.searchLabelList)).forEach(val => {
               if(val.name=='Protocol'){
                   this.schemaTypeSelect=val.doc.data
               }
@@ -963,10 +970,10 @@
                   item.id=item.code;
                   item.label=val.label;
                   item.name=val.label;
-              })
-                this.selectList.push(val)
-            })
-            var _this = this
+              });
+              this.searchLabelList.push(val);
+            });
+            var _this = this;
             document.onkeydown=function(event) {
                 var e = event || window.event || arguments.callee.caller.arguments[0];
                 if(e.keyCode==27){
@@ -1034,6 +1041,7 @@
     .search-input-all .clear-search{
         padding: 0 5px;
         text-align: center;
+        font-size: 12px;
     }
     .dataBackG{
         background: #f0f0f0;
@@ -1178,7 +1186,8 @@
     }
     .selectinfo_box .select_content{
         float: left;
-        line-height: 12px;
+        line-height: 16px;
+        height: 16px;
         padding: 3px;
         background: #f0f0f0;
         color: rgba(0,0,0,0.85);
