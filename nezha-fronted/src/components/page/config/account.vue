@@ -176,7 +176,7 @@
                                   :label="item.name"
                                   :value="item">
                                     <span class="config-dropdown-label-txt" v-if="!item.isEdit">{{item.name}}</span>
-                                    <span class="config-dropdown-label-input" v-if="item.isEdit" @click.stop="stopFun">
+                                    <span class="config-dropdown-label-input" v-if="item.isEdit" @click.stop>
                                         <el-input
                                           type="text"
                                           v-model="item.name"
@@ -229,7 +229,7 @@
 
                 <!-- begin--底部按钮-->
                 <div class="right-box-bottom-btns">
-                    <div @click="esc()" :class="{'right-box-bottom-btn-50': rightBox.isEdit}" class="right-box-bottom-btn right-box-bottom-btn-cancel">{{$t('overall.cancel')}}</div><div v-if="rightBox.isEdit" class="right-box-bottom-btn right-box-bottom-btn-50">{{user.userId == '' ? $t('overall.create') : $t('overall.save')}}</div>
+                    <div @click="esc()" :class="{'right-box-bottom-btn-50': rightBox.isEdit}" class="right-box-bottom-btn right-box-bottom-btn-cancel">{{$t('overall.cancel')}}</div><div @click="save" v-if="rightBox.isEdit" class="right-box-bottom-btn right-box-bottom-btn-50">{{user.userId == '' ? $t('overall.create') : $t('overall.save')}}</div>
                 </div>
                 <!-- end--底部按钮-->
 
@@ -364,17 +364,24 @@ export default {
       this.rightBox.title = this.$t("config.account.createAccount");
       this.rightBox.show = true;
     },
+    save: function() {
+      this.$post('sys/user/update', this.user).then(response => {
+        if (response.code === 200) {
+          this.rightBox.isEdit = false;
+        }
+      });
+    },
     saveOrToEdit: function() {
       if (!this.rightBox.isEdit) {
         this.rightBox.isEdit = true;
         this.rightBox.title = this.$t("config.account.editAccount") + "  ID：" + this.user.userId;
       } else {
-
+        this.save();
       }
     },
     jumpTo(data,id) {
-      this.$store.state.assetData.moduleData = data
-      this.$store.state.assetData.selectedData = id
+      this.$store.state.assetData.moduleData = data;
+      this.$store.state.assetData.selectedData = id;
       this.$router.push({
         path: "/" + data,
         query: {
@@ -421,9 +428,6 @@ export default {
     },
     esc: function() {
       this.rightBox.show = false;
-    },
-    stopFun: function() {
-
     },
     updateReceiverName: function(item) {
       //TODO 请求接口改名

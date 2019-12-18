@@ -15,9 +15,20 @@ const en = {
     search: 'Search',
     add: "Add",
     option: "Option",
-    clearAll: "Clear All"
+    clearAll: "Clear All",
+    name: 'Name',
+  },
+  search: {
+    searchTip: 'Press Enter or click to search'
+  },
+  tip: {
+    confirmDelete: "Confirm Delete?",
+    yes: "Yes",
+    no: "No",
+    deleteSuccess: "Successfully Deleted"
   },
   asset:{
+    createAsset: "Create Asset",
     tableTitle: {
       id: 'ID',
       assetType: '资产类型',
@@ -65,7 +76,8 @@ const en = {
       //侧滑框
       promId: "Prometheus Server ID",
       createProm: "Create Prometheus Server",
-      editProm: "Edit Prometheus Server"
+      editProm: "Edit Prometheus Server",
+      type: "Type"
     },
   },
   alert: {
@@ -86,9 +98,9 @@ const en = {
       charts: "Charts",
 
       //表内容
-      projectalert: "Project Alert",
-      modulealert: "Module Alert",
-      devicealert: "Device Alert",
+      projectAlert: "Project Alert",
+      moduleAlert: "Module Alert",
+      deviceAlert: "Device Alert",
       pending: "Pending",
       expired: "Expired"
     },
@@ -96,11 +108,20 @@ const en = {
       name: "Name",
       receiver: "Receiver",
       expr: "Expr",
-      for: "For",
+      for: "For (s)",
+      link: 'Link',
       option: "Option",
       alertConfig: "Alert Config",
-      createalertConfig: "Create Alert Config",
-      editalertConfig: "Edit Alert Config",
+      createAlertConfig: "Create Alert Config",
+      editAlertConfig: "Edit Alert Config",
+      medium: "Medium",
+      high: "High",
+      low: "Low",
+      typeOption: {
+        project: 'Project',
+        module: 'Module',
+        asset: 'Asset'
+      }
     }
   },
   project: {
@@ -108,13 +129,15 @@ const en = {
       project: "Project",
       projectName: "Project Name",
       editProject: "Edit Project",
-      description: "Description"
+      description: "Description",
+      createProject: "Create Project"
     },
     module: {
       module: "Module",
       moduleName: "Module Name",
       editModule: "Edit Module",
       description: "Description",
+      createModule: "Create Module",
       tip: {
         defaultEndpointSet: "Default Endpoint Set",
         relation: "Endpoints associated with Module will reference Port/Path/Param/Params by default"
@@ -132,7 +155,12 @@ const en = {
       asset: "Asset",
       lastUpdate: "Last Update",
     },
-    metrics: "Metrics"
+    metrics: {
+      metrics: "Metrics",
+      name: 'name',
+      type: 'Type',
+      description: 'Desc'
+    }
   },
   ...enLocale
 }

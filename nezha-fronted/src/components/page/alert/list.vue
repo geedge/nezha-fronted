@@ -169,16 +169,7 @@
         </div>
         <div class="content-right">
             <div class="top-tools">
-              <el-button @click="toAdd" class="top-tool-btn top-tool-btn-active margin-l-10 top-tool top-tool-right" size="mini">
-                <span><i class="el-icon-plus"></i></span>
-                <span class="top-tool-btn-txt">{{$t('overall.add')}}</span>
-              </el-button>
-              <el-input
-                  class="top-tool-search top-tool top-tool-right"
-                  type="text"
-                  :placeholder="$t('overall.search')"
-                  size="mini"
-                ></el-input>
+                <div class="top-tool-search top-tool top-tool-right"><search-input :searchMsg="searchMsg" @search="search"></search-input></div>
             </div>
             <el-table
                   :data="tableData"
@@ -194,13 +185,18 @@
                 >
                     <template slot-scope="scope" :column="item">
                         <div v-if="item.prop == 'type'" class="account-list-options">
-                            <span v-if="scope.row[item.prop] == 1" class="account-list-option">Project alert</span>
-                            <span v-if="scope.row[item.prop] == 2" class="account-list-option">Module alert</span>
-                            <span v-if="scope.row[item.prop] == 3" class="account-list-option">Device alert</span>
+                            <span v-if="scope.row[item.prop] == 1" class="account-list-option">Project</span>
+                            <span v-if="scope.row[item.prop] == 2" class="account-list-option">Module</span>
+                            <span v-if="scope.row[item.prop] == 3" class="account-list-option">Device</span>
                         </div>
+                        <span v-else-if="item.prop == 'severity'">
+                            <span v-if="scope.row[item.prop] == 'high'"><i class="el-icon-arrow-up"></i>&nbsp;{{severityData[1].value}}</span>
+                            <span style="padding-left: 18px;" v-if="scope.row[item.prop] == 'medium'">{{severityData[0].value}}</span>
+                            <span v-if="scope.row[item.prop] == 'low'"><i class="el-icon-arrow-down"></i>&nbsp;{{severityData[2].value}}</span>
+                        </span>
                         <div v-else-if="item.prop == 'linkObject'">
-                            <span v-if="scope.row['type'] == 1 || scope.row['type'] == 2" class="account-list-option">{{scope.row[item.prop].name}}</span>
-                            <span v-if="scope.row['type'] == 3" class="account-list-option">{{scope.row[item.prop].host}}</span>
+                            <span v-if="(scope.row['type'] == 1 || scope.row['type'] == 2) && scope.row[item.prop]" class="account-list-option">{{scope.row[item.prop].name}}</span>
+                            <span v-if="scope.row['type'] == 3 && scope.row[item.prop]" class="account-list-option">{{scope.row[item.prop].host}}</span>
                         </div>
                         <div v-else-if="item.prop == 'state'">
                             <span class="account-list-option">
@@ -267,12 +263,53 @@ export default {
           show: true,
         }
       ],
+      searchMsg: { //给搜索框子组件传递的信息
+        zheze_none: true,
+        searchLabelList: [{
+          id: 2,
+          name: this.$t('alert.alertName'),
+          type: 'input',
+          label: 'alertName',
+          disabled: false
+        },{
+          id: 3,
+          name: this.$t('alert.list.type'),
+          type: 'select',
+          label: 'alertType',
+          disabled: false
+        },{
+          id: 4,
+          name: this.$t('alert.severity'),
+          type: 'selectString',
+          label: 'severity',
+          disabled: false
+        }],
+      },
+      searchLabel: { //搜索参数
+
+      },
+      severityData: [
+        {
+          key: 'medium',
+          value: this.$t("alert.config.medium")
+        },
+        {
+          key: 'high',
+          value: this.$t("alert.config.high")
+        },
+        {
+          key: 'low',
+          value: this.$t("alert.config.low")
+        }
+      ],
       tableData: []
     }
   },
   methods: {
     getAlertList: function() {
-      this.$get('alert/message', this.pageObj).then(response => {
+      this.$set(this.searchLabel, "pageNo", this.pageObj.pageNo);
+      this.$set(this.searchLabel, "pageSize", this.pageObj.pageSize);
+      this.$get('alert/message', this.searchLabel).then(response => {
         if (response.code == 200) {
           this.tableData = response.data.list
           this.pageObj.total = response.data.total
@@ -289,6 +326,23 @@ export default {
         }
       });
     },
+    pageNo(val) {
+      this.pageObj.pageNo = val;
+      this.getAlertList();
+    },
+    pageSize(val) {
+      this.pageObj.pageSize = val;
+      this.getAlertList();
+    },
+    search: function(searchObj) {
+      this.searchLabel = {};
+      for (let item in searchObj) {
+        if (searchObj[item]) {
+          this.$set(this.searchLabel, item, searchObj[item]);
+        }
+      }
+      this.getAlertList();
+    }
   },
   mounted() {
     this.getAlertList();
