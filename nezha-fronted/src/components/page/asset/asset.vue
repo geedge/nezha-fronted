@@ -110,7 +110,7 @@
                             </div>
                             <div v-if="item.prop=='责任人'">
                                 <p>
-                                    <span>{{scope.row.idc.principal}}</span>
+                                    <span>{{getPrincipalName(scope.row.idc.principal)}}</span>
                                 </p>
                             </div>
                             <div v-if="item.prop=='责任人电话'">
@@ -119,11 +119,12 @@
                                 </p>
                             </div>
                             <div v-if="item.prop == 'option'">
-                                <span @click.stop="tagShow('showDel')" class="account-list-option"><i
+                                <span @click="ssss" class="account-list-option"><i class="el-icon-monitor"></i></span>
+                                <span @click.stop="deleteData('asset',scope.row.id)" class="account-list-option"><i
                                         class="el-icon-delete"></i></span>
                                 <span @click.stop="tagShow('showEdit',scope.row.id)" class="account-list-option"><i
                                         class="el-icon-edit-outline"></i></span>
-                                <span @click.stop="tagShow('showView',scope.row.id)"class="account-list-option"><i
+                                <span @click.stop="tagShow('showView',scope.row.id)" class="account-list-option"><i
                                         class="el-icon-view"></i></span>
                             </div>
                         </template>
@@ -180,7 +181,7 @@
                                     <!------------------------------------------资产类型---------------------------------------------->
                                     <el-form-item label="资产类型" prop="assetType">
                                         <div class="select-style">
-                                            <el-select v-model="assetType" clearable @change="getAllModelOptionData()">
+                                            <el-select v-model="assetType" clearable @change="getAllModelOptionData">
                                                 <el-option
                                                         v-for="item in assetTypeOptionData"
                                                         :key="item.id"
@@ -199,7 +200,7 @@
                                                        @click="editData('sys/dict/update',item)"></i>
                                                 </span>
                                                     <span class="config-dropdown-btn config-dropdown-btn-delete"
-                                                          ><i
+                                                    ><i
                                                             class="el-icon-delete"></i>
                                                     </span>
                                                 </el-option>
@@ -231,7 +232,7 @@
                                                                 <ul style="list-style: none">
                                                                     <li style="cursor: pointer;"
                                                                         v-for="(item,index) in assetTypeOptionData"
-                                                                        @click="clickState(index)"
+                                                                        @click="clickState(index,item,'type')"
                                                                         :class="{activeColor:modelCount === index}"
                                                                         :key="index">
                                                                         <div>
@@ -248,7 +249,7 @@
                                                        @click="editData('sys/dict/update',item)"></i>
                                                 </span>
                                                                             <span class="config-dropdown-btn config-dropdown-btn-delete"
-                                                                                  @click.stop="delOptionData(item)"><i
+                                                                                  @click.stop="deleteData('/sys/dict/delete',item.id)"><i
                                                                                     class="el-icon-delete"></i>
                                                     </span>
                                                                         </div>
@@ -262,11 +263,13 @@
                                                              @click="popoverClose('type')">
                                                             {{$t('overall.cancel')}}
                                                         </div>
-                                                        <div class="right-box-bottom-btn right-box-bottom-btn-50">
+                                                        <div class="right-box-bottom-btn right-box-bottom-btn-50"
+                                                             @click="transferData('type')">
                                                             {{$t('overall.save')}}
                                                         </div>
                                                     </div>
-                                                    <span class="el-icon-plus" slot="reference"></span>
+                                                    <!--                                                     <div slot="reference" style="font-size: 18px">+</div>-->
+                                                    <div slot="reference" style="font-size: 18px">+</div>
                                                 </el-popover>
                                             </div>
                                         </div>
@@ -276,9 +279,9 @@
                                         <div class="select-style">
                                             <el-cascader
                                                     :options="vendorTypeOptionData"
+                                                    :key="isResourceShow"
                                                     v-model="assetData.modelId"
-                                                    @focus="getConnectData()"
-                                                    prop="modelId"
+                                                    :disabled="this.assetType!=''?false:true"
                                                     clearable
                                             >
                                             </el-cascader>
@@ -287,6 +290,7 @@
                                                         placement="left"
                                                         trigger="click"
                                                         v-model="popCompVisible"
+                                                        :disabled=popState
                                                 >
                                                     <div class="pop-window-assetType">
                                                         <div class="pop-window-assetType-content">
@@ -304,7 +308,7 @@
                                                                 <span style="display: block;padding-bottom: 20px">新厂商名称</span>
                                                                 <input v-model="addVendorData.value"/>
                                                                 <input type="button" value="+Add"
-                                                                       @click="addNewData('assetType')"></input>
+                                                                       @click="addNewData('vendor')"></input>
                                                                 <span style="display: block;padding-bottom: 20px">已有厂商</span>
                                                                 <div class="li-list-part">
                                                                     <ul style="list-style: none">
@@ -327,7 +331,7 @@
                                                        @click="editData('sys/dict/update',item)"></i>
                                                 </span>
                                                                                 <span class="config-dropdown-btn config-dropdown-btn-delete"
-                                                                                      @click.stop="delOptionData(item)"><i
+                                                                                      @click.stop="deleteData('/sys/dict/delete',item.id)"><i
                                                                                         class="el-icon-delete"></i>
                                                     </span>
                                                                             </div>
@@ -343,7 +347,7 @@
                                                                     <ul style="list-style: none">
                                                                         <li style="cursor: pointer;"
                                                                             v-for="(item,index) in modelUlData"
-                                                                            @click="clickState(index)"
+                                                                            @click=" clickState(index,item,'model') "
                                                                             :class="{activeColor:modelCount === index}"
                                                                             :key="index">
                                                                             <div>
@@ -378,11 +382,12 @@
                                                              @click="popoverClose('vendor')">
                                                             {{$t('overall.cancel')}}
                                                         </div>
-                                                        <div class="right-box-bottom-btn right-box-bottom-btn-50">
+                                                        <div class="right-box-bottom-btn right-box-bottom-btn-50"
+                                                             @click="transferData('model')">
                                                             {{$t('overall.save')}}
                                                         </div>
                                                     </div>
-                                                    <span class="el-icon-plus" slot="reference"></span>
+                                                    <div slot="reference" style="font-size: 18px">+</div>
                                                 </el-popover>
                                             </div>
                                         </div>
@@ -450,7 +455,16 @@
                                                                 <el-input v-model="addIdcData.location"/>
                                                             </el-form-item>
                                                             <el-form-item label="负责人">
-                                                                <el-input v-model="addIdcData.principal"/>
+                                                                <el-select v-model="addIdcData.principal" clearable
+                                                                           @change="getSingleIDCData">
+                                                                    <el-option
+                                                                            v-for="item in idcUserData"
+                                                                            :key="item.key"
+                                                                            :label="item.username"
+                                                                            :value="item.userId"
+                                                                    >
+                                                                    </el-option>
+                                                                </el-select>
                                                             </el-form-item>
                                                             <el-form-item label="Tel">
                                                                 <el-input v-model="addIdcData.tel"/>
@@ -467,7 +481,7 @@
                                                             {{$t('overall.save')}}
                                                         </div>
                                                     </div>
-                                                    <span class="el-icon-plus" slot="reference"></span>
+                                                    <div slot="reference" style="font-size: 18px">+</div>
                                                 </el-popover>
                                             </div>
                                         </div>
@@ -535,12 +549,38 @@
                                                                 <el-slider v-model="addCabinetData.uSize"></el-slider>
                                                             </el-form-item>
                                                             <el-form-item label="Desc">
-                                                                <el-input v-model="addCabinetData.desc" type="textarea"
+                                                                <el-input v-model="addCabinetData.remark"
+                                                                          type="textarea"
                                                                           :rows="2"/>
                                                             </el-form-item>
                                                             <el-form-item label="IDC">
-                                                                <el-input v-model="addCabinetData.idc"/>
+                                                                <el-select v-model="addCabinetData.idc" clearable
+                                                                           @change="getSingleIDCData">
+                                                                    <el-option
+                                                                            v-for="item in IDCOptionData"
+                                                                            :key="item.key"
+                                                                            :label="item.name"
+                                                                            :value="item.id"
+                                                                    >
+                                                                        <span v-if="!item.isEdit">{{ item.name }}</span>
+                                                                        <span class="config-dropdown-label-input"
+                                                                              v-if="item.isEdit"
+                                                                              @click.stop="editing">
+                                                    <el-input type="text" v-model="item.name" size="mini"/>
+                                                </span>
+                                                                        <span class="config-dropdown-btn"
+                                                                              @click.stop="editOptionData(item)">
+                                                    <i class="el-icon-edit-outline" v-if="!item.isEdit"></i>
+                                                    <i class="el-icon-check" v-if="item.isEdit"
+                                                       @click="editData('idc',item)"></i>
+                                                </span>
+                                                                        <span class="config-dropdown-btn config-dropdown-btn-delete"
+                                                                              @click.stop="deleteData('idc',item.id)"><i
+                                                                                class="el-icon-delete"></i></span>
+                                                                    </el-option>
+                                                                </el-select>
                                                             </el-form-item>
+
                                                         </div>
                                                     </div>
                                                     <div class="right-box-bottom-btns">
@@ -553,7 +593,7 @@
                                                             {{$t('overall.save')}}
                                                         </div>
                                                     </div>
-                                                    <span class="el-icon-plus" slot="reference"></span>
+                                                    <div slot="reference" style="font-size: 18px">+</div>
                                                 </el-popover>
                                             </div>
                                         </div>
@@ -562,7 +602,7 @@
                                         <span>{{cabinetSelectedData.uSize}}</span>
                                     </el-form-item>
                                     <el-form-item label="Desc">
-                                        <span>{{cabinetSelectedData.desc}}</span>
+                                        <span>{{cabinetSelectedData.remark}}</span>
                                     </el-form-item>
                                     <div style="font-size: 10px">CLI Account</div>
                                     <el-divider></el-divider>
@@ -607,13 +647,15 @@
                                     </div>
                                     <span>{{$t('overall.esc')}}</span>
                                 </div>
-                                <div class="right-box-top-btn right-box-top-btn-full" @click="editData('asset')" v-if="!tabView">
+                                <div class="right-box-top-btn right-box-top-btn-full" @click="editData('asset')"
+                                     v-if="!tabView">
                                     <div class="right-box-btn-icon">
                                         <i class="el-icon-edit-outline"></i>
                                     </div>
                                     <span v-if="!tabView">{{$t('overall.save')}}</span>
                                 </div>
-                                <div class="right-box-top-btn right-box-top-btn-full" @click="tabView=false" v-if="tabView">
+                                <div class="right-box-top-btn right-box-top-btn-full" @click="tabView=false"
+                                     v-if="tabView">
                                     <div class="right-box-btn-icon">
                                         <i class="el-icon-edit-outline"></i>
                                     </div>
@@ -661,7 +703,8 @@
                                     <!------------------------------------------资产类型---------------------------------------------->
                                     <el-form-item label="资产类型">
                                         <div class="select-style">
-                                            <el-select v-if="!tabView" v-model="assetType" clearable @change="getAllModelOptionData()">
+                                            <el-select v-if="!tabView" v-model="assetType" clearable
+                                                       @change="getAllModelOptionData()">
                                                 <el-option
                                                         v-for="item in assetTypeOptionData"
                                                         :key="item.id"
@@ -712,7 +755,7 @@
                                                                 <ul style="list-style: none">
                                                                     <li style="cursor: pointer;"
                                                                         v-for="(item,index) in assetTypeOptionData"
-                                                                        @click="clickState(index)"
+                                                                        @click="clickState(index,item,'type')"
                                                                         :class="{activeColor:modelCount === index}"
                                                                         :key="index">
                                                                         <div>
@@ -729,11 +772,9 @@
                                                        @click="editData('sys/dict/update',item)"></i>
                                                 </span>
                                                                             <span class="config-dropdown-btn config-dropdown-btn-delete"
-                                                                                  @click.stop="delOptionData(item)"><i
+                                                                                  @click.stop="deleteData('/sys/dict/delete',item.id)"><i
                                                                                     class="el-icon-delete"></i>
                                                     </span>
-                                                                            <!--                                                                            <span>{{item.value}}</span>-->
-                                                                            <!--                                                                            <i class="el-icon-edit-outline"></i>-->
                                                                         </div>
                                                                     </li>
                                                                 </ul>
@@ -749,7 +790,7 @@
                                                             {{$t('overall.save')}}
                                                         </div>
                                                     </div>
-                                                    <span class="el-icon-plus" slot="reference"></span>
+                                                    <div slot="reference" style="font-size: 18px">+</div>
                                                 </el-popover>
                                             </div>
                                         </div>
@@ -760,8 +801,9 @@
                                         <div class="select-style" v-if="!tabView">
                                             <el-cascader
                                                     :options="vendorTypeOptionData"
+                                                    :key="isResourceShow"
+                                                    :disabled="this.assetType!=''?false:true"
                                                     v-model="assetData.modelId"
-                                                    @focus="getConnectData()"
                                                     clearable
                                             >
                                             </el-cascader>
@@ -787,7 +829,7 @@
                                                                 <span style="display: block;padding-bottom: 20px">新厂商名称</span>
                                                                 <input v-model="addVendorData.value"/>
                                                                 <input type="button" value="+Add"
-                                                                       @click="addNewData('assetType')"></input>
+                                                                       @click="addNewData('vendor')"></input>
                                                                 <span style="display: block;padding-bottom: 20px">已有厂商</span>
                                                                 <div class="li-list-part">
                                                                     <ul style="list-style: none">
@@ -810,7 +852,7 @@
                                                        @click="editData('sys/dict/update',item)"></i>
                                                 </span>
                                                                                 <span class="config-dropdown-btn config-dropdown-btn-delete"
-                                                                                      @click.stop="delOptionData(item)"><i
+                                                                                      @click.stop="deleteData('/sys/dict/delete',item.id)"><i
                                                                                         class="el-icon-delete"></i>
                                                     </span>
                                                                             </div>
@@ -826,7 +868,7 @@
                                                                     <ul style="list-style: none">
                                                                         <li style="cursor: pointer;"
                                                                             v-for="(item,index) in modelUlData"
-                                                                            @click="clickState(index)"
+                                                                            @click=" clickState(index,item,'model') "
                                                                             :class="{activeColor:modelCount === index}"
                                                                             :key="index">
                                                                             <div>
@@ -862,7 +904,7 @@
                                                             {{$t('overall.save')}}
                                                         </div>
                                                     </div>
-                                                    <span class="el-icon-plus" slot="reference"></span>
+                                                    <div slot="reference" style="font-size: 18px">+</div>
                                                 </el-popover>
                                             </div>
                                         </div>
@@ -932,7 +974,16 @@
                                                                 <el-input v-model="addIdcData.location"/>
                                                             </el-form-item>
                                                             <el-form-item label="负责人">
-                                                                <el-input v-model="addIdcData.principal"/>
+                                                                <el-select v-model="addIdcData.principal" clearable
+                                                                           @change="getSingleIDCData">
+                                                                    <el-option
+                                                                            v-for="item in idcUserData"
+                                                                            :key="item.key"
+                                                                            :label="item.username"
+                                                                            :value="item.userId"
+                                                                    >
+                                                                    </el-option>
+                                                                </el-select>
                                                             </el-form-item>
                                                             <el-form-item label="Tel">
                                                                 <el-input v-model="addIdcData.tel"/>
@@ -949,7 +1000,7 @@
                                                             {{$t('overall.save')}}
                                                         </div>
                                                     </div>
-                                                    <span class="el-icon-plus" slot="reference"></span>
+                                                    <div slot="reference" style="font-size: 18px">+</div>
                                                 </el-popover>
                                             </div>
                                         </div>
@@ -989,7 +1040,8 @@
                                                 </span>
                                                     <span class="config-dropdown-btn config-dropdown-btn-delete"
                                                           @click.stop="deleteData('cabinet',item.id)"><i
-                                                            class="el-icon-delete"></i></span>
+                                                            cla
+                                                            s="el-icon-delete"></i></span>
                                                 </el-option>
                                             </el-select>
                                             <div class="el-select-add-btn">
@@ -1018,7 +1070,8 @@
                                                                 <el-slider v-model="addCabinetData.uSize"></el-slider>
                                                             </el-form-item>
                                                             <el-form-item label="Desc">
-                                                                <el-input v-model="addCabinetData.desc" type="textarea"
+                                                                <el-input v-model="addCabinetData.remark"
+                                                                          type="textarea"
                                                                           :rows="2"/>
                                                             </el-form-item>
                                                             <el-form-item label="IDC">
@@ -1036,7 +1089,7 @@
                                                             {{$t('overall.save')}}
                                                         </div>
                                                     </div>
-                                                    <span class="el-icon-plus" slot="reference"></span>
+                                                    <div slot="reference" style="font-size: 18px">+</div>
                                                 </el-popover>
                                             </div>
                                         </div>
@@ -1046,7 +1099,7 @@
                                         <span>{{cabinetSelectedData.uSize}}</span>
                                     </el-form-item>
                                     <el-form-item label="Desc">
-                                        <span>{{cabinetSelectedData.desc}}</span>
+                                        <span>{{cabinetSelectedData.remark}}</span>
                                     </el-form-item>
                                     <div style="font-size: 10px">CLI Account</div>
                                     <el-divider></el-divider>
@@ -1101,14 +1154,14 @@ export default {
         cabinetId: '',
         modelId: ''
       },
-      assetViewData:{
-        assetType:'',
-        vendor:'',
-        model:'',
-        moduleNum:'',
-        alertNum:'',
-        idcName:'',
-        cabinetName:''
+      assetViewData: {
+        assetType: '',
+        vendor: '',
+        model: '',
+        moduleNum: '',
+        alertNum: '',
+        idcName: '',
+        cabinetName: ''
       },
       assetStateOption: [
         {
@@ -1184,15 +1237,9 @@ export default {
         }],
       tableData: [],
       checkListData: [],
-      assetTypeData11111: '',
       assetTypeOptionData: [],
       vendorTypeData: '',
-      vendorTypeOptionData: [
-        {
-          value: '',
-          label: '',
-          children: []
-        }],
+      vendorTypeOptionData: [],
       vendorUlData: '',
       modelUlData: '',
       vendorCode: '',
@@ -1250,9 +1297,10 @@ export default {
         principal: '',
         tel: ''
       },
+      idcUserData: '',
       cabinetSelectedData: {
         uSize: '',
-        desc: '',
+        remark: '',
       },
       addCabinetData: {
         name: '',
@@ -1269,7 +1317,6 @@ export default {
       editPopVendorVisible: false,
       editPopIDCVisible: false,
       editPopCabinetVisible: false,
-
       vendorCount: '',
       modelCount: '',
       allModelUlData: '',
@@ -1277,7 +1324,14 @@ export default {
         sn: '',
         host: '',
         state: '',
-      }
+      },
+      tempData: '',
+      tempModelData: [],
+      isResourceShow: 0,
+      unitDisable: '',
+      modelClickData: '',
+      popState:true,
+      obj: null
     }
   },
   computed: {
@@ -1287,32 +1341,49 @@ export default {
   },
   watch: {
     getData: {
-      handler(newVal, oldVal) {
+      handler(newVal) {
         this.checkList.splice(0, 0, newVal.selectedData)
-        console.log(newVal.selectedData)
       },
       deep: true,
     },
+    allModelUlData(newVal) {
+      if (newVal) {
+        this.getConnectData()
+        if(this.pageObj.id!=''){
+          this.assetData.modelId = [this.obj.model.vendor.code, this.obj.model.id]
+        }
+      }
+    },
+    assetType(newVal) {
+      if(newVal==''){
+        this.popState=true
+      }else{
+        this.popState=false
+      }
+    },
   },
   methods: {
-    changeState(){
-      this.tabView=false
-
+    ssss() {
+      let routeData = this.$router.resolve({
+        name: "terminal",
+        query: {id:96}
+      });
+      window.open(routeData.href);
     },
     getAssetData(data) {
       if (data !== undefined) {
         this.pageObj.id = data
         this.$get('asset', this.pageObj).then(response => {
           if (response.code === 200) {
-            console.log(response.data.list[0])
+            this.obj = response.data.list[0];
             this.assetViewData.assetType = response.data.list[0].model.type.value
             this.assetViewData.vendor = response.data.list[0].model.vendor.value
             this.assetViewData.model = response.data.list[0].model.name
             this.assetViewData.idcName = response.data.list[0].idc.name
-            this.assetViewData.cabinetName = response.data.list[0].cabinet==null ? '' : response.data.list[0].cabinet.name
+            this.assetViewData.cabinetName = response.data.list[0].cabinet == null ? '' : response.data.list[0].cabinet.name
             this.assetViewData.moduleNum = response.data.list[0].moduleNum
             this.assetViewData.alertNum = response.data.list[0].alertNum
-            this.assetViewData.cabinetName = response.data.list[0].cabinet==null ? '' : response.data.list[0].cabinet.name
+            this.assetViewData.cabinetName = response.data.list[0].cabinet == null ? '' : response.data.list[0].cabinet.name
             this.getCabinetOptionData(response.data.list[0].idc.id)
             this.assetType = response.data.list[0].model.type.code
             this.assetData.sn = response.data.list[0].sn
@@ -1322,16 +1393,15 @@ export default {
             this.assetData.cabinetId = response.data.list[0].cabinet == null ? '' : response.data.list[0].cabinet.id
             this.assetData.purchaseDate = response.data.list[0].purchaseDate
             this.idcSelectedData.location = response.data.list[0].idc.location
-            this.idcSelectedData.principal = response.data.list[0].idc.principal
+            this.idcSelectedData.principal = this.getPrincipalName(response.data.list[0].idc.principal)
             this.idcSelectedData.tel = response.data.list[0].idc.tel
             this.cabinetSelectedData.uSize = response.data.list[0].cabinet == null ? '' : response.data.list[0].cabinet.uSize
-            this.cabinetSelectedData.desc = response.data.list[0].cabinet == null ? '' : response.data.list[0].cabinet.remark
-            this.assetData.modelId = [response.data.list[0].model.vendor.value, response.data.list[0].model.id]
-            this.getConnectData()
+            this.cabinetSelectedData.remark = response.data.list[0].cabinet == null ? '' : response.data.list[0].cabinet.remark
+            this.getAllModelOptionData(this.assetType)
           }
         })
       } else {
-        this.pageObj.id=''
+        this.pageObj.id = ''
         this.$get('asset', this.pageObj).then(response => {
           if (response.code === 200) {
             this.tableData = response.data.list;
@@ -1345,6 +1415,13 @@ export default {
         if (response.code === 200) {
           this.checkListData = this.IDCOptionData = response.data.list;
           this.markOptionData(this.IDCOptionData)
+        }
+      })
+    },
+    getUserData() {
+      this.$get('sys/user/list').then(response => {
+        if (response.code === 200) {
+          this.idcUserData = response.data.list
         }
       })
     },
@@ -1380,12 +1457,59 @@ export default {
         }
       })
     },
-    getAllModelOptionData() {
+    getAllModelOptionData(data) {
       this.$get('model?typeCode=' + this.assetType).then(response => {
         if (response.code === 200) {
           this.allModelUlData = response.data.list
         }
       })
+    },
+    editData(data, item) {
+      let obj = {
+        id: '',
+        type: '',
+        value: '',
+        code: ''
+      }
+      if (data === 'asset') {
+        console.log('asset')
+        this.assetData.modelId = this.assetData.modelId.join(',').split(',')[1]
+        this.$put('asset', this.assetData).then(res => {
+          if (res.code === 200) {
+            const h = this.$createElement;
+            this.$notify({
+              message: h('i', {style: 'color: teal'}, '修改成功'),
+              duration: 2000
+            });
+            this.pageObj.id = ''
+            this.getAssetData();
+          }
+        })
+      } else {
+        if (data === 'model') {
+          item.vendorCode = this.vendorCode
+          item.typeCode = this.assetType
+        }
+        if (data === 'vendor') {
+          obj.id = item.id
+          obj.code = item.code
+          obj.type = item.type
+          obj.value = item.label
+          data = 'sys/dict/update'
+          item = obj
+        }
+        this.$put(data, item).then(res => {
+          if (res.code === 200) {
+            const h = this.$createElement;
+            this.$notify({
+              message: h('i', {style: 'color: teal'}, '修改成功'),
+              duration: 2000
+            })
+            this.getAssetData();
+            this.getAllModelOptionData();
+          }
+        })
+      }
     },
     addNewData(type) {
       if (type === 'IDC') {
@@ -1427,6 +1551,19 @@ export default {
           }
         })
       }
+      if (type === 'vendor') {
+        console.log(this.addVendorData)
+        this.$post('sys/dict/save', this.addVendorData).then(res => {
+          if (res.code === 200) {
+            const h = this.$createElement;
+            this.$notify({
+              message: h('i', {style: 'color: teal'}, '添加成功'),
+              duration: 2000
+            });
+            this.getVendorOptionData()
+          }
+        })
+      }
       if (type === 'model') {
         this.addNewModelData.typeCode = this.assetType
         this.addNewModelData.vendorCode = this.vendorCode
@@ -1438,7 +1575,7 @@ export default {
               message: h('i', {style: 'color: teal'}, '添加成功'),
               duration: 2000
             });
-            this.getConnectData()
+            this.getAllModelOptionData(this.assetType)
           } else {
             const h = this.$createElement;
             this.$notify({
@@ -1451,62 +1588,45 @@ export default {
       if (type === 'cabinet') {
         this.addCabinetData.idcId = this.assetData.idcId
         this.$post('cabinet', this.addCabinetData).then(res => {
+          const h = this.$createElement;
           if (res.code === 200) {
-            const h = this.$createElement;
             this.$notify({
               message: h('i', {style: 'color: teal'}, '添加成功'),
               duration: 2000
             });
             this.getCabinetOptionData(this.addCabinetData.idcId)
             this.popoverClose('cabinet')
-          }
-        })
-      }
-    },
-    editData(data, item) {
-      if (data === 'asset') {
-        console.log('asset')
-        this.assetData.modelId = this.assetData.modelId.join(',').split(',')[1]
-        this.$put('asset', this.assetData).then(res => {
-          if (res.code === 200) {
-            const h = this.$createElement;
+          } else {
             this.$notify({
-              message: h('i', {style: 'color: teal'}, '修改成功'),
+              message: h('i', {style: 'color: teal'}, res.msg),
               duration: 2000
             });
-            this.pageObj.id = ''
-            this.getAssetData();
-          }
-        })
-      } else {
-        if (data === 'model') {
-          item.vendorCode = this.vendorCode
-          item.typeCode = this.assetType
-        }
-        this.$put(data, item).then(res => {
-          if (res.code === 200) {
-            const h = this.$createElement;
-            this.$notify({
-              message: h('i', {style: 'color: teal'}, '修改成功'),
-              duration: 2000
-            })
-            this.getAssetData();
           }
         })
       }
     },
-    deleteData(data,item){
-      this.$delete(data+"?ids="+item).then(response => {
+    deleteData(data, item) {
+      this.$delete(data + "?ids=" + item).then(response => {
+        const h = this.$createElement;
         if (response.code === 200) {
-          const h = this.$createElement;
           this.$notify({
             message: h('i', {style: 'color: teal'}, '删除成功'),
             duration: 2000
           });
-          this.getIDCOptionData()
+
           this.getAssetData()
+          this.getIDCOptionData()
+          this.getVendorOptionData()
           this.getCabinetOptionData(this.assetData.idcId)
+          this.getAllModelOptionData(this.assetType)
           this.getModelOptionData(this.assetType, this.vendorCode)
+
+        } else {
+          console.log(response)
+          this.$notify({
+            message: h('i', {style: 'color: teal'}, response.msg),
+            duration: 2000
+          });
         }
       })
     },
@@ -1517,26 +1637,39 @@ export default {
       })
     },
     getConnectData() {
-      this.getAllModelOptionData()
-      var resultData = []
-      let venData = this.vendorUlData
+      this.isResourceShow += 1
+      let resultData = []
       let modelData = this.allModelUlData
-      for (var i = 0; i < venData.length; i++) {
-        var obj = {}
-        obj.value = venData[i].value
-        obj.label = venData[i].value
+      console.log(modelData)
+      for (let i = 0; i < modelData.length; i++) {
+        let obj = {}
+        obj.id = modelData[i].vendor.id
+        obj.code = modelData[i].vendor.code
+        obj.value = modelData[i].vendor.code
+        obj.label = modelData[i].vendor.value
         obj.children = []
-        for (var j = 0; j < modelData.length; j++) {
-          if (venData[i].code === modelData[j].vendor.code) {
-            var obj1 = {}
-            obj1.value = modelData[j].id
-            obj1.label = modelData[j].name
-            obj.children.push(obj1)
-          }
-        }
         resultData.push(obj)
       }
-      this.vendorTypeOptionData = resultData
+      var result = [];
+      var obj1 = {};
+      for (let i = 0; i < resultData.length; i++) {
+        if (!obj1[resultData[i].id]) {
+          result.push(resultData[i]);
+          obj1[resultData[i].id] = true;
+        }
+      }
+      for (let x = 0; x < result.length; x++) {
+        for (let y = 0; y < modelData.length; y++) {
+          if (result[x].code === modelData[y].vendor.code) {
+            let obj2 = {}
+            obj2.value = modelData[y].id
+            obj2.label = modelData[y].name
+            result[x].children.push(obj2)
+          }
+        }
+      }
+      console.log(result)
+      this.vendorTypeOptionData = result
     },
     editOptionData(item) {
       if (!item.isEdit) {
@@ -1560,11 +1693,12 @@ export default {
         this.assetType = ''
         this.assetData.idcId = ''
         this.assetData.cabinetId = ''
+        this.assetData.modelId = ''
         this.idcSelectedData.location = ''
         this.idcSelectedData.principal = ''
         this.idcSelectedData.tel = ''
         this.cabinetSelectedData.uSize = ''
-        this.cabinetSelectedData.desc = ''
+        this.cabinetSelectedData.remark = ''
 
       }
       if (t === 'showEdit') {
@@ -1594,6 +1728,8 @@ export default {
       });
       this.getCabinetOptionData(this.assetData.idcId);
       this.assetData.cabinetId = ''
+      this.cabinetSelectedData.uSize = ''
+      this.cabinetSelectedData.remark = ''
     }
     ,
     getSingleCabinetData(data) {
@@ -1623,8 +1759,27 @@ export default {
       this.pageObj.pageSize = val;
       this.getAssetData()
     },
-    clickState(index) {
-      this.modelCount = index;
+    clickState(index, item, data) {
+      if (data === 'type') {
+        this.modelCount = index;
+        this.tempData = item;
+      }
+      if (data === 'model') {
+        this.modelCount = index;
+        this.modelClickData = item.id
+      }
+    },
+    transferData(data) {
+      if (data === 'type') {
+        this.assetType = this.tempData.code
+        this.popTypeVisible = false
+        this.tempData = ''
+      }
+      if (data === 'model') {
+        this.assetData.modelId = [this.vendorCode, this.modelClickData]
+        this.popCompVisible = false
+        this.tempData = ''
+      }
     },
     popoverClose(data) {
       if (data === 'type') {
@@ -1660,6 +1815,13 @@ export default {
         this.editPopCabinetVisible = !this.editPopCabinetVisible
       }
     },
+    getPrincipalName(data){
+      for(let item in this.idcUserData){
+        if(this.idcUserData[item].userId === data){
+          return this.idcUserData[item].username
+        }
+      }
+    },
     returnData(data) {
       if (data && data !== '--') {
         return data.name;
@@ -1671,6 +1833,8 @@ export default {
     }
   },
   mounted() {
+    this.getCabinetOptionData('')
+    this.getUserData()
     this.getAssetData();
     this.getIDCOptionData();
     this.getVendorOptionData();
@@ -1678,6 +1842,9 @@ export default {
     window.onresize = () => {
       this.tableHeight = document.documentElement.clientHeight - 200;
     }
+    // let terminalContainer = document.getElementById('terminal-container')
+    // let term = new Terminal()
+    // term.open(terminalContainer)
   }
 }
 </script>
