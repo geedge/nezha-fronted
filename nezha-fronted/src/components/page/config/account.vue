@@ -58,12 +58,7 @@
                 <span><i class="el-icon-plus"></i></span>
                 <span class="top-tool-btn-txt">{{$t('overall.add')}}</span>
               </el-button>
-              <el-input
-                  class="top-tool-search top-tool top-tool-right"
-                  type="text"
-                  :placeholder="$t('overall.search')"
-                  size="mini"
-                ></el-input>
+              <div class="top-tool-search top-tool top-tool-right"><search-input :searchMsg="searchMsg" @search="search"></search-input></div>
             </div>
             <el-table
                   :data="tableData"
@@ -329,7 +324,32 @@ export default {
         id: '6',
         name: '小组6',
         description: '小组6desc'
-      }]
+      }],
+      searchMsg: { //给搜索框子组件传递的信息
+        zheze_none: true,
+        searchLabelList: [/*{
+          id: 1,
+          name: 'ID',
+          type: 'input',
+          label: 'userId',
+          disabled: false
+        },*/{
+          id: 10,
+          name: this.$t('config.account.account'),
+          type: 'input',
+          label: 'username',
+          disabled: false
+        }/*,{
+          id: 11,
+          name: 'E-mail',
+          type: 'input',
+          label: 'email',
+          disabled: false
+        }*/],
+      },
+      searchLabel: { //搜索参数
+
+      },
     }
   },
   methods: {
@@ -348,7 +368,9 @@ export default {
       this.rightBox.show = true;
     },
     getTableData: function() {
-      this.$get('sys/user/list', this.pageObj).then(response => {
+      this.$set(this.searchLabel, "pageNo", this.pageObj.pageNo);
+      this.$set(this.searchLabel, "pageSize", this.pageObj.pageSize);
+      this.$get('sys/user/list', this.searchLabel).then(response => {
         if (response.code === 200) {
           for (var i = 0; i < response.data.list.length; i++) {
             response.data.list[i].status = response.data.list[i].status + "";
@@ -454,6 +476,15 @@ export default {
     },
     pageSize(val) {
       this.pageObj.pageSize = val;
+      this.getTableData();
+    },
+    search: function(searchObj) {
+      this.searchLabel = {};
+      for (let item in searchObj) {
+        if (searchObj[item]) {
+          this.$set(this.searchLabel, item, searchObj[item]);
+        }
+      }
       this.getTableData();
     }
   },

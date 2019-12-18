@@ -25,10 +25,12 @@ const en = {
     confirmDelete: "Confirm Delete?",
     yes: "Yes",
     no: "No",
-    deleteSuccess: "Successfully Deleted"
+    deleteSuccess: "Successfully Deleted",
+    saveSuccess: "Successfully Saved"
   },
   asset:{
     createAsset: "Create Asset",
+    asset: 'Asset',
     tableTitle: {
       id: 'ID',
       assetType: '资产类型',

@@ -215,7 +215,8 @@
               //dc
               selectDc(column, selectItem, e) {
                 this.stop_click(e);
-                this.searchLabelList.forEach(val=>{
+                this.select_list.forEach(val=>{
+                  console.info(val)
                   if(val.type == 'dc'){
                     val.val = selectItem.name;
                     val.valnum = selectItem.id;

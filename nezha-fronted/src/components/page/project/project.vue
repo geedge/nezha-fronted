@@ -258,12 +258,7 @@
             <span class="top-tool-btn-txt">{{$t('project.metrics.metrics')}}</span>
           </el-button>
         </el-button-group>
-        <el-input
-          class="top-tool-search top-tool top-tool-right"
-          type="text"
-          :placeholder="$t('overall.search')"
-          size="mini"
-        ></el-input>
+        <div class="top-tool-search top-tool top-tool-right"><search-input :searchMsg="searchMsg" @search="search"></search-input></div>
       </div>
       <el-table
         :data="metricsTableData"
@@ -300,12 +295,7 @@
           <span><i class="el-icon-plus"></i></span>
           <span class="top-tool-btn-txt">{{$t('overall.add')}}</span>
         </el-button>
-        <el-input
-          class="top-tool-search top-tool top-tool-right"
-          type="text"
-          :placeholder="$t('overall.search')"
-          size="mini"
-        ></el-input>
+        <div class="top-tool-search top-tool top-tool-right"><search-input :searchMsg="searchMsg" @search="search"></search-input></div>
       </div>
       <el-table
         :data="endPointTableData"
@@ -777,6 +767,37 @@ export default {
         host: '',
         sn: ''
       },
+      searchMsg: { //给搜索框子组件传递的信息
+        zheze_none: true,
+        searchLabelList: [{
+          id: 1,
+          name: 'ID',
+          type: 'input',
+          label: 'id',
+          disabled: false
+        },{
+          id: 12,
+          name: this.$t('project.project.project'),
+          type: 'project',
+          label: 'project',
+          disabled: false
+        },{
+          id: 13,
+          name: this.$t('project.module.module'),
+          type: 'module',
+          label: 'module',
+          disabled: false
+        },{
+          id: 14,
+          name: this.$t('asset.asset'),
+          type: 'asset',
+          label: 'asset',
+          disabled: false
+        }],
+      },
+      searchLabel: { //搜索参数
+
+      },
       endpointTableTitle: [
         {
           label: this.$t("project.endpoint.endpointId"),
@@ -850,8 +871,10 @@ export default {
     },
     // table数据
     getEndPointTableData: function() {
-      this.$set(this.pageObj, 'moduleId', this.currentModule.id);
-      this.$get('endpoint', this.pageObj).then(response => {
+      this.$set(this.searchLabel, "pageNo", this.pageObj.pageNo);
+      this.$set(this.searchLabel, "pageSize", this.pageObj.pageSize);
+      this.$set(this.searchLabel, 'moduleId', this.currentModule.id);
+      this.$get('endpoint', this.searchLabel).then(response => {
         if (response.code === 200) {
           for (var i = 0; i < response.data.list.length; i++) {
             try {
@@ -928,7 +951,7 @@ export default {
           this.moduleData = response.data.list;
           for (let i = 0; i < response.data.list.length; i++) {
             try {
-              var tempObj = JSON.parse(response.data.list[i].param);
+              let tempObj = JSON.parse(response.data.list[i].param);
             } catch (err) {
               console.info(response.data.list[i]);
               console.info(err);
@@ -1246,6 +1269,15 @@ export default {
     dropdownSelect: function(label) {
       this.assetSearch.label = label;
       this.assetSearch.dropdownShow = false;
+    },
+    search: function(searchObj) {
+      this.searchLabel = {};
+      for (let item in searchObj) {
+        if (searchObj[item]) {
+          this.$set(this.searchLabel, item, searchObj[item]);
+        }
+      }
+      this.getEndPointTableData();
     }
   },
   created: function() {

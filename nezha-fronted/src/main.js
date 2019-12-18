@@ -16,9 +16,15 @@ import {post, get, put, del} from './http.js'
 
 import Pagination from "./components/common/pagination"; //引入全局分页组件
 import searchInput from "./components/common/searchInput"; //搜索框组件
+import projectBox from './components/common/rightBox/projectBox'; //project弹框组件
+import moduleBox from './components/common/rightBox/moduleBox'; //module弹框组件
+import endpointBox from './components/common/rightBox/endpointBox'; //endpoint弹框组件
 
 Vue.component("Pagination", Pagination);
 Vue.component("searchInput", searchInput);
+Vue.component("project-box", projectBox);
+Vue.component("module-box", moduleBox);
+Vue.component("endpoint-box", endpointBox);
 
 Vue.prototype.$axios = axios;
 Vue.prototype.$post = post;

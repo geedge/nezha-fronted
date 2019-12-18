@@ -1,7 +1,6 @@
 <template>
     <div class="header">
         <div class="submenu">
-
             <el-menu
                     class="el-menu-demo"
                     mode="horizontal"
@@ -107,6 +106,11 @@
                 </el-popover>
             </div>
         </div>
+
+        <project-box :project="editProject" @reload="projectReload" ref="projectBox"></project-box>
+        <module-box :currentProject="currentProject" :module="editModule" @reload="" ref="moduleBox"></module-box>
+        <endpoint-box :currentProject="currentProject" :currentModule="currentModule" :endpoint="editEndpoint" @reload="" ref="endpointBox"></endpoint-box>
+
     </div>
 </template>
 
@@ -117,8 +121,24 @@ export default {
     return {
       language: localStorage.getItem("language"),
       assetData: [],
-      projectData: [],
-      createMenu: [
+      projectData: [], //顶部菜单project列表中的数据
+      editProject: {id: '', name: '', remark: ''}, //新增/编辑的project
+      currentProject: {id: '', name: '', remark: ''}, //module/endpoint弹框用来回显project，此处固定为空对象
+      editModule: {id: '', name: '', project: {}, port: '', path: '', param: '', paramObj: []}, //新增/编辑的module
+      currentModule: {id: '', name: '', project: {}, port: '', path: '', param: '', paramObj: []}, //endpoint弹框用来回显module，此处固定为空对象
+      editEndpoint: { //新增/编辑的endpoint
+        id: '',
+        host: '',
+        port: '',
+        param: '',
+        path: '',
+        asset: {id: '', name: '', host: ''},
+        project: {id: '', name: ''},
+        module: {id: '', name: '', param: '', paramObj: {}, projectId: ''},
+        moduleId: '',
+        assetId: ''
+      },
+      createMenu: [ //新增按钮内容
         {
           label: this.$t('project.project.createProject'),
           url: 'project',
@@ -157,7 +177,16 @@ export default {
       });
     },
     createBox(item) {
-      this.jumpTo(item.url);
+      if (item.type == 1) {
+        this.$refs.projectBox.show(true);
+        this.editProject = {id: '', name: '', remark: ''};
+      } else if (item.type == 2) {
+        this.$refs.moduleBox.show(true);
+        this.editModule = {id: '', name: '', project: {}, port: '', path: '', param: '', paramObj: []};
+      } else if (item.type == 3) {
+        this.$refs.endpointBox.show(true);
+      }
+      /*this.jumpTo(item.url);
       setTimeout(() =>{
         if (item.type == 1) {
           if (this.projectData.length > 0) {
@@ -179,7 +208,7 @@ export default {
           this.$store.commit('projectRightBoxShow', false);
           this.$store.commit('toCreateAlertConfig', true);
         }
-      }, 120);
+      }, 120);*/
     },
     jumpToAsset(data, id) {
       this.$store.state.assetData.moduleData = data;
@@ -202,19 +231,18 @@ export default {
       })
     },
     getProjectData() {
-      this.$get('project', this.pageObj).then(response => {
+      this.$get('project', {}).then(response => {
         if (response.code == 200) {
           this.projectData = response.data.list;
         }
       })
     },
     toEditProject(p) {
-      this.jumpTo('project');
-      setTimeout(() =>{
-        this.$store.commit('setProject', p);
-        this.$store.commit('projectRightBoxShow', true);
-      }, 50);
-
+      this.$refs.projectBox.show(true);
+      this.editProject = Object.assign({}, p);
+    },
+    projectReload() {
+      this.getProjectData();
     }
   },
   mounted() {
@@ -257,6 +285,7 @@ export default {
     padding-left: 50%;
     width: 500px;
     float: left;
+    font-size: 22px;
 }
 
 .header {
@@ -264,7 +293,6 @@ export default {
     box-sizing: border-box;
     width: 100%;
     height: 60px;
-    font-size: 22px;
     background-color: #ffffff;
     z-index: 510;
     box-shadow: 0px 20px 13px -19px #5E5E5E;
