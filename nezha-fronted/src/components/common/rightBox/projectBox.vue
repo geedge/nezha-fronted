@@ -84,7 +84,7 @@
         if (this.project.id) {
           this.$put('project', this.project).then(response => {
             if (response.code === 200) {
-              this.$message({duration: 3000, type: 'success', message: this.$t("tip.saveSuccess")});
+              this.$message({duration: 1000, type: 'success', message: this.$t("tip.saveSuccess")});
               this.$emit("reload");
               this.rightBox.show = false;
             } else {
@@ -94,7 +94,7 @@
         } else {
           this.$post('project', this.project).then(response => {
             if (response.code === 200) {
-              this.$message({duration: 3000, type: 'success', message: this.$t("tip.saveSuccess")});
+              this.$message({duration: 1000, type: 'success', message: this.$t("tip.saveSuccess")});
               this.$emit("reload");
               this.rightBox.show = false;
             } else {
@@ -113,7 +113,7 @@
         }).then(() => {
           this.$delete("project?ids=" + this.project.id).then(response => {
             if (response.code === 200) {
-              this.$message({duration: 3000, type: 'success', message: this.$t("tip.deleteSuccess")});
+              this.$message({duration: 1000, type: 'success', message: this.$t("tip.deleteSuccess")});
               this.rightBox.show = false;
               this.$emit("reload");
             } else {

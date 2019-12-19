@@ -3,6 +3,15 @@
     <div class="content-left">
       <div class="sidebar-title">{{currentProject.name}}</div>
       <div class="sidebar-info">
+        <div
+          v-for="item in moduleList"
+          class="sidebar-info-item"
+          :class="{'sidebar-info-item-active': item.id == currentModule.id}"
+          @click="changeModule(item)"
+        >
+          {{item.name}}
+          <div class="side-bar-menu-edit" @click.stop="toEditModule(item)"><i class="el-icon-edit-outline"></i></div>
+        </div>
       </div>
     </div>
 
@@ -12,11 +21,11 @@
           <el-button @click="" class="top-tool-btn top-tool top-tool-btn-active" size="mini">
             <span class="top-tool-btn-txt">{{$t('project.endpoint.endpoint')}}</span>
           </el-button>
-          <el-button @click="" class="top-tool-btn top-tool" size="mini">
+          <el-button disabled @click="" class="top-tool-btn top-tool" size="mini">
             <span class="top-tool-btn-txt">{{$t('project.metrics.metrics')}}</span>
           </el-button>
         </el-button-group>
-        <el-button @click.stop="toAdd" class="top-tool-btn top-tool-btn-active top-tool margin-l-10 top-tool-right" size="mini">
+        <el-button disabled @click.stop="toCreateEndpoint" class="top-tool-btn top-tool-btn-active top-tool margin-l-10 top-tool-right" size="mini">
           <span><i class="el-icon-plus"></i></span>
           <span class="top-tool-btn-txt">{{$t('overall.add')}}</span>
         </el-button>
@@ -35,15 +44,18 @@
           :label="item.label"
         >
           <template slot-scope="scope" :column="item">
-            <span v-if="item.prop == 'asset'">{{scope.row[item.prop].host}}</span>
+            <span v-if="item.prop == 'asset' && scope.row[item.prop]">{{scope.row[item.prop].host}}</span>
+            <span v-else-if="item.prop == 'param'">
+              <span v-for="p in scope.row.paramObj">{{p.key}}={{p.value}}，</span>
+            </span>
             <span v-else>{{scope.row[item.prop]}}</span>
           </template>
         </el-table-column>
         <el-table-column :label="$t('overall.option')" width="100">
           <template slot-scope="scope" :column="item">
             <div class="content-right-options">
-              <span @click.stop="detail(scope.row)" class="content-right-option"><i class="el-icon-view"></i></span>
-              <span @click.stop="toEdit(scope.row)" class="content-right-option"><i class="el-icon-edit-outline"></i></span>
+              <span @click.stop="endpointDetail(scope.row)" class="content-right-option"><i class="el-icon-view"></i></span>
+              <span @click.stop="toEditEndpoint(scope.row)" class="content-right-option"><i class="el-icon-edit-outline"></i></span>
             </div>
           </template>
         </el-table-column>
@@ -51,17 +63,17 @@
       <Pagination :pageObj="endpointPageObj" @pageNo='endpointPageNo' @pageSize='endpointPageSize' ref="Pagination"></Pagination>
     </div>
 
-    <module-box :currentProject="currentProject" :module="editModule" @reload="" ref="moduleBox"></module-box>
+    <module-box :currentProject="currentProject" :module="editModule" @reload="getModuleList" ref="moduleBox"></module-box>
+    <edit-endpoint-box :currentProject="currentProject" :currentModule="currentModule" :endpoint="editEndpoint" @reload="getEndPointTableData" ref="editEndpointBox"></edit-endpoint-box>
   </div>
 </template>
 
 <script>
-import projectBox from '../../common/rightBox/projectBox';
 export default {
   name: "project2",
   data() {
     return {
-      endpoint: {id: '', host: '', port: '', param: '', path: '', asset: {}, project: {}, module: {}, moduleId: '', assetId: ''},
+      editEndpoint: {id: '', host: '', port: '', param: '', path: '', asset: {}, project: {}, module: {}, moduleId: '', assetId: '', paramObj: []},
       endpointTableTitle: [
         {
           label: this.$t("project.endpoint.endpointId"),
@@ -97,26 +109,29 @@ export default {
         total:0
       },
       moduleList: [],
+      projectList: [],
       currentProject: {id: '', name: '', remark: ''}, //endpoint弹框、module列表用来回显project
       editModule: {id: '', name: '', project: {}, port: '', path: '', param: '', paramObj: []}, //编辑的module
       currentModule: {id: '', name: '', project: {}, port: '', path: '', param: '', paramObj: []}, //endpoint弹框用来回显module
-
+      searchLabel: {moduleId: ''}, //endpoint搜索参数
     }
   },
   methods: {
     getEndPointTableData() {
-      this.$get('endpoint', this.endpointPageObj).then(response => {
+      this.searchLabel.moduleId = this.currentModule.id;
+      this.$set(this.searchLabel, 'pageNo', this.endpointPageObj.pageNo);
+      this.$set(this.searchLabel, 'pageSize', this.endpointPageObj.pageSize);
+      this.$get('endpoint', this.searchLabel).then(response => {
         if (response.code === 200) {
           for (let i = 0; i < response.data.list.length; i++) {
             try {
-              var tempObj = JSON.parse(response.data.list[i].param);
+              let tempObj = JSON.parse(response.data.list[i].param);
+              response.data.list[i].paramObj = [];
+              for (let k in tempObj) {
+                response.data.list[i].paramObj.push({key: k, value: tempObj[k]})
+              }
             } catch (err) {
-              console.info(response.data.list[i]);
-              console.info(err);
-            }
-            response.data.list[i].paramObj = [];
-            for (let k in tempObj) {
-              response.data.list[i].paramObj.push({key: k, value: tempObj[k]})
+              console.info(response.data.list[i], err);
             }
           }
           this.endpointTableData = response.data.list;
@@ -132,9 +147,150 @@ export default {
       this.endpointPageObj.pageSize = val;
       this.getEndPointTableData();
     },
+
+    // 获取左侧module列表数据
+    getModuleList() {
+      //若currentProject不存在（如页面刷新了），默认取project列表的第一个
+      if (this.currentProject && this.currentProject.id) {
+        this.$get('module', {projectId: this.currentProject.id, pageSize: 999, pageNo: 1}).then(response => {
+          if (response.code === 200) {
+            this.moduleList = response.data.list;
+            for (let i = 0; i < this.moduleList.length; i++) {
+              try {
+                let tempObj = JSON.parse(this.moduleList[i].param);
+                this.$set(this.moduleList[i], 'paramObj', []);
+                for (let k in tempObj) {
+                  this.moduleList[i].paramObj.push({key: k, value: tempObj[k]});
+                }
+              } catch (err) {
+                console.info(response.data.list[i], err);
+              }
+            }
+            if (this.moduleList.length > 0) {
+              this.currentModule = this.moduleList[0];
+            } else {
+              this.currentModule = {id: '', name: '', project: {}, port: '', path: '', param: '', paramObj: []};
+            }
+          }
+        });
+      } else {
+        if (this.projectList && this.projectList.length > 0) {
+          this.$store.commit('setProject', this.projectList[0]);
+        } else {
+          this.$get('project', {pageSize: 999, pageNo: 1}).then(response => {
+            if (response.code == 200) {
+              this.projectList = response.data.list;
+              if (this.projectList.length > 0) {
+                this.getModuleList();
+              } else {
+                return;
+              }
+            }
+          });
+        }
+      }
+    },
+
+    //左侧module列表选中切换
+    changeModule(module) {
+      this.currentModule = module;
+    },
+
+    //弹出endpoint编辑页
+    toEditEndpoint(endpoint) {
+      this.rightBoxHandler(3);
+      this.$refs.editEndpointBox.toEdit(true);
+      this.editEndpoint = JSON.parse(JSON.stringify(endpoint));
+    },
+
+    toCreateEndpoint() {
+      
+    },
+
+    //查看endpoint详情
+    endpointDetail(endpoint) {
+      this.editEndpoint = JSON.parse(JSON.stringify(endpoint));
+      this.rightBoxHandler(3);
+      this.$refs.editEndpointBox.toEdit(false);
+    },
+
+    //弹出module编辑页
+    toEditModule(module) {
+      console.info(module)
+      this.currentModule = JSON.parse(JSON.stringify(module));
+      if (!this.currentModule.paramObj) {
+        this.$set(this.currentModule, 'paramObj', []);
+      }
+      this.editModule = JSON.parse(JSON.stringify(module));
+      if (!this.editModule.paramObj) {
+        this.$set(this.editModule, 'paramObj', []);
+      }
+      this.rightBoxHandler(2);
+    },
+    
+    //控制弹框状态 type  1:project; 2:module; 3:editEndponit; 4:addEndpoint;
+    rightBoxHandler(type) {
+      if (type == 1) {
+        this.$refs.projectBox.show(true);
+
+        if (this.$refs.moduleBox) {
+          this.$refs.moduleBox.show(false);
+        }
+        if (this.$refs.editEndpointBox) {
+          this.$refs.editEndpointBox.show(false);
+        }
+        //this.$refs.addEndpointBox.show(false);
+      } else if (type == 2) {
+        this.$refs.moduleBox.show(true);
+
+        if (this.$refs.projectBox) {
+          this.$refs.projectBox.show(false);
+        }
+        if (this.$refs.editEndpointBox) {
+          this.$refs.editEndpointBox.show(false);
+        }
+        //this.$refs.addEndpointBox.show(false);
+      } else if (type == 3) {
+        this.$refs.editEndpointBox.show(true);
+        if (this.$refs.projectBox) {
+          this.$refs.projectBox.show(false);
+        }
+        if (this.$refs.moduleBox) {
+          this.$refs.moduleBox.show(false);
+        }
+        //this.$refs.addEndpointBox.show(false);
+      } else if (type == 4) {
+      }
+    }
   },
   created() {
-    this.getEndPointTableData();
+    this.currentProject = this.$store.state.currentProject;
+    this.getModuleList();
+  },
+  mounted() {
+    setTimeout(()=>{
+      this.getEndPointTableData();
+    }, 200);
+  },
+  computed: {
+    currentProjectChange() {
+      return this.$store.state.currentProject;
+    }
+  },
+  watch: {
+    currentProjectChange(n, o) {
+      this.currentProject = Object.assign({}, n);
+    },
+    currentProject(n, o) {
+      this.getModuleList();
+    },
+    currentModule(n, o) {
+      if (n && n.id) {
+        this.getEndPointTableData();
+      } else {
+        this.endpointTableData = [];
+      }
+    }
   }
 }
 </script>

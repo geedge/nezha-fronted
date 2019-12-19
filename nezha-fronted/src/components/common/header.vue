@@ -29,11 +29,11 @@
                 </el-menu-item>
                 <el-submenu index="2">
                     <template slot="title">
-                        <div @click="jumpToProject('project', projectData[0])">{{$t('overall.project')}}</div>
+                        <div @click="jumpToProject(projectData[0])">{{$t('overall.project')}}</div>
                     </template>
                     <template v-for="(item, index) in projectData">
                         <el-menu-item :index="'2-' + index.toString()">
-                            <div @click="jumpToProject('project', item)">
+                            <div @click="jumpToProject(item)">
                               <span>{{item.name}}</span>
                               <div @click.stop="toEditProject(item)" class="menu-edit"><i class="el-icon-edit-outline"></i></div>
                             </div>
@@ -109,7 +109,7 @@
 
         <project-box :project="editProject" @reload="projectReload" ref="projectBox"></project-box>
         <module-box :currentProject="currentProject" :module="editModule" @reload="" ref="moduleBox"></module-box>
-        <endpoint-box :currentProject="currentProject" :currentModule="currentModule" :endpoint="editEndpoint" @reload="" ref="endpointBox"></endpoint-box>
+        <edit-endpoint-box :currentProject="currentProject" :currentModule="currentModule" :endpoint="editEndpoint" @reload="" ref="endpointBox"></edit-endpoint-box>
 
     </div>
 </template>
@@ -123,7 +123,7 @@ export default {
       assetData: [],
       projectData: [], //顶部菜单project列表中的数据
       editProject: {id: '', name: '', remark: ''}, //新增/编辑的project
-      currentProject: {id: '', name: '', remark: ''}, //module/endpoint弹框用来回显project，此处固定为空对象
+      currentProject: {id: '', name: '', remark: ''}, //module/endpoint弹框用来回显project
       editModule: {id: '', name: '', project: {}, port: '', path: '', param: '', paramObj: []}, //新增/编辑的module
       currentModule: {id: '', name: '', project: {}, port: '', path: '', param: '', paramObj: []}, //endpoint弹框用来回显module，此处固定为空对象
       editEndpoint: { //新增/编辑的endpoint
@@ -182,42 +182,19 @@ export default {
         this.editProject = {id: '', name: '', remark: ''};
       } else if (item.type == 2) {
         this.$refs.moduleBox.show(true);
-        this.editModule = {id: '', name: '', project: {}, port: '', path: '', param: '', paramObj: []};
+        this.editModule = {id: '', name: '', project: this.$store.state.currentProject, port: '', path: '', param: '', paramObj: []};
       } else if (item.type == 3) {
-        this.$refs.endpointBox.show(true);
+        //this.$refs.endpointBox.show(true);
       }
-      /*this.jumpTo(item.url);
-      setTimeout(() =>{
-        if (item.type == 1) {
-          if (this.projectData.length > 0) {
-            this.$store.commit('setProject', this.projectData[0]);
-          }
-          this.$store.commit('toCreateProject', true);
-          this.$store.commit('projectRightBoxShow', true);
-        } else if (item.type == 2) {
-          if (this.projectData.length > 0) {
-            this.$store.commit('setProject', this.projectData[0]);
-          }
-          this.$store.commit('toCreateModule', true);
-        } else if (item.type == 3) {
-          if (this.projectData.length > 0) {
-            this.$store.commit('setProject', this.projectData[0]);
-          }
-          this.$store.commit('toCreateEndpoint', true);
-        } else if (item.type == 5) {
-          this.$store.commit('projectRightBoxShow', false);
-          this.$store.commit('toCreateAlertConfig', true);
-        }
-      }, 120);*/
     },
     jumpToAsset(data, id) {
       this.$store.state.assetData.moduleData = data;
       this.$store.state.assetData.selectedData = id;
       this.jumpTo(data);
     },
-    jumpToProject(data, p) {
+    jumpToProject(p) {
       this.$store.commit('setProject', p);
-      this.jumpTo(data);
+      this.jumpTo('project');
     },
     changeLocal(lang) {
       localStorage.setItem("language", lang);
@@ -230,7 +207,7 @@ export default {
         }
       })
     },
-    getProjectData() {
+    getProjectList() {
       this.$get('project', {}).then(response => {
         if (response.code == 200) {
           this.projectData = response.data.list;
@@ -242,12 +219,12 @@ export default {
       this.editProject = Object.assign({}, p);
     },
     projectReload() {
-      this.getProjectData();
+      this.getProjectList();
     }
   },
   mounted() {
     this.getAssetData();
-    this.getProjectData();
+    this.getProjectList();
   },
   computed: {
     projectListReloadWatch() {
@@ -257,8 +234,8 @@ export default {
   watch: {
     projectListReloadWatch(n, o) {
       if (n) {
-        this.getProjectData();
-        this.$store.commit('projectListReloadChange', false);
+        this.getProjectList();
+        this.$store.commit('projectListChange', false);
       }
     }
   }

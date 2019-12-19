@@ -90,7 +90,8 @@
                             <el-switch
                               v-model="scope.row.status"
                               active-value="1"
-                              inactive-value="0">
+                              inactive-value="0"
+                              @change="(val)=>{statusChange(scope.row)}">
                             </el-switch>
                         </span>
                         <span v-else>{{scope.row[item.prop]}}</span>
@@ -117,7 +118,7 @@
                         <span v-if="rightBox.isEdit">{{$t('overall.save')}}</span>
                         <span v-else>{{$t('overall.edit')}}</span>
                     </div>
-                    <div class="right-box-top-btn" v-if="rightBox.isEdit && user.userId != ''">
+                    <div class="right-box-top-btn" v-if="rightBox.isEdit && user.userId != ''" @click="del(user)">
                         <div class="right-box-btn-icon">
                             <i class="el-icon-delete"></i>
                         </div>
@@ -360,6 +361,22 @@ export default {
       this.rightBox.show = true;
     },
     del: function(u) {
+      this.$confirm(this.$t("tip.confirmDelete"), {
+        confirmButtonText: this.$t("tip.yes"),
+        cancelButtonText: this.$t("tip.no"),
+        type: 'warning'
+      }).then(() => {
+        this.$delete("sys/user/delete?userIds=" + u.userId).then(response => {
+          if (response.code === 200) {
+            this.$message({duration: 1000, type: 'success', message: this.$t("tip.deleteSuccess")});
+            this.rightBox.show = false;
+            this.getTableData();
+          } else {
+            this.$message.error(response.msg);
+          }
+        });
+      });
+
     },
     detail: function(u) {
       this.user = Object.assign({}, u);
@@ -387,11 +404,27 @@ export default {
       this.rightBox.show = true;
     },
     save: function() {
-      this.$post('sys/user/update', this.user).then(response => {
-        if (response.code === 200) {
-          this.rightBox.isEdit = false;
-        }
-      });
+      if (this.user.userId) {
+        this.$put('sys/user/update', this.user).then(response => {
+          if (response.code === 200) {
+            this.rightBox.show = false;
+            this.$message({duration: 1000, type: 'success', message: this.$t("tip.saveSuccess")});
+          } else {
+            this.$message.error(response.msg);
+          }
+          this.getTableData();
+        });
+      } else {
+        this.$post('sys/user/save', this.user).then(response => {
+          if (response.code === 200) {
+            this.rightBox.show = false;
+            this.$message({duration: 1000, type: 'success', message: this.$t("tip.saveSuccess")});
+            this.getTableData();
+          } else {
+            this.$message.error(response.msg);
+          }
+        });
+      }
     },
     saveOrToEdit: function() {
       if (!this.rightBox.isEdit) {
@@ -400,6 +433,10 @@ export default {
       } else {
         this.save();
       }
+    },
+    statusChange: function(user) {
+      this.user = user;
+      this.save();
     },
     jumpTo(data,id) {
       this.$store.state.assetData.moduleData = data;

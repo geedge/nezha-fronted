@@ -92,7 +92,7 @@
                         <span v-if="rightBox.isEdit">{{$t('overall.save')}}</span>
                         <span v-else>{{$t('overall.edit')}}</span>
                     </div>
-                    <div @click="del" class="right-box-top-btn" v-if="rightBox.isEdit && promServer.id != ''">
+                    <div @click="del(promServer)" class="right-box-top-btn" v-if="rightBox.isEdit && promServer.id != ''">
                         <div class="right-box-btn-icon">
                             <i class="el-icon-delete"></i>
                         </div>
@@ -282,9 +282,7 @@ export default {
           disabled: false
         }],
       },
-      searchLabel: { //搜索参数
-
-      },
+      searchLabel: {}, //搜索参数
     }
   },
   methods: {
@@ -302,8 +300,9 @@ export default {
       }).then(() => {
         this.$delete("promServer?ids=" + u.id).then(response => {
           if (response.code === 200) {
-            this.$message({type: 'success', message: this.$t("tip.deleteSuccess")});
+            this.$message({duration: 1000, type: 'success', message: this.$t("tip.deleteSuccess")});
             this.getTableData();
+            this.rightBox.show = false;
           } else {
             this.$message.error(response.msg);
           }
@@ -326,17 +325,23 @@ export default {
       if (this.promServer.id) {
         this.$put('promServer', this.promServer).then(response => {
           if (response.code === 200) {
+            this.$message({duration: 1000, type: 'success', message: this.$t("tip.saveSuccess")});
             this.getTableData();
             this.rightBox.isEdit = false;
             this.esc();
+          } else {
+            this.$message.error(response.msg);
           }
         });
       } else {
         this.$post('promServer', this.promServer).then(response => {
           if (response.code === 200) {
+            this.$message({duration: 1000, type: 'success', message: this.$t("tip.saveSuccess")});
             this.getTableData();
             this.rightBox.isEdit = false;
             this.esc();
+          } else {
+            this.$message.error(response.msg);
           }
         });
       }
@@ -384,7 +389,21 @@ export default {
     },
     toDelIdc: function(item) {
       this.blurEditIdc();
-      //TODO 请求后台，删除
+      this.$confirm(this.$t("tip.confirmDelete"), {
+        confirmButtonText: this.$t("tip.yes"),
+        cancelButtonText: this.$t("tip.no"),
+        type: 'warning'
+      }).then(() => {
+        this.$delete("idc?ids=" + item.id).then(response => {
+          if (response.code === 200) {
+            this.$message({duration: 1000, type: 'success', message: this.$t("tip.deleteSuccess")});
+            this.getTableData();
+            this.getIdcData();
+          } else {
+            this.$message.error(response.msg);
+          }
+        });
+      });
     },
     getIdcData: function() {
       this.$get('idc', this.pageObj).then(response => {

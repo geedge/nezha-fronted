@@ -8,11 +8,11 @@ const store = new Vuex.Store({
       selectedData:'',
       moduleData:'',
     },
-    projectData: {
+    currentProject: {
       id: '',
-      name: ''
+      name: '',
+      remark: ''
     },
-    projectBoxShow: false,
     projectListReload: false,
     createProject: false,
     createModule: false,
@@ -23,13 +23,12 @@ const store = new Vuex.Store({
   },
   mutations: {
     setProject(state, project) {
-      state.projectData = Object.assign({}, project);
-      state.projectBoxShow = false;
+      state.currentProject = Object.assign({}, project);
     },
     projectRightBoxShow(state, show) {
       state.projectBoxShow = show;
     },
-    projectListReloadChange(state, reload) {
+    projectListChange(state, reload) {
       state.projectListReload = reload;
     },
     toCreateProject(state, status) {

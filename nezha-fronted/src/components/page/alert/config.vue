@@ -81,7 +81,7 @@
                         <span v-else-if="item.prop == 'type'">
                             <template v-for="type in typeData" v-if="type.key == scope.row[item.prop]">{{type.value}}</template>
                         </span>
-                        <span v-else-if="item.prop == 'linkObject'">{{scope.row[item.prop].name}}</span>
+                        <span v-else-if="item.prop == 'linkObject' && scope.row[item.prop]">{{scope.row[item.prop].name}}</span>
                         <span v-else>{{scope.row[item.prop]}}</span>
                     </template>
                 </el-table-column>
@@ -508,15 +508,21 @@ export default {
       if (this.alertRule.id) {
         this.$put('alert/rule', this.alertRule).then(response => {
           if (response.code === 200) {
+            this.$message({duration: 1000, type: 'success', message: this.$t("tip.saveSuccess")});
             this.getTableData();
-            this.rightBox.isEdit = false;
+            this.rightBox.show = false;
+          } else {
+            this.$message.error(response.msg);
           }
         });
       } else {
         this.$post('alert/rule', this.alertRule).then(response => {
           if (response.code === 200) {
+            this.$message({duration: 1000, type: 'success', message: this.$t("tip.saveSuccess")});
             this.getTableData();
-            this.rightBox.isEdit = false;
+            this.rightBox.show = false;
+          } else {
+            this.$message.error(response.msg);
           }
         });
       }
