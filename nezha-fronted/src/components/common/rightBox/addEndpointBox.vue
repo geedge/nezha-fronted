@@ -76,7 +76,7 @@
               </div>
               <div class="line-100"></div>
               <div class="endpoint-sub-table-body">
-                <div @click="selectAsset(item)" :data="item.id" v-for="item in assetList" class="endpoint-sub-table-row" :class="{'endpoint-sub-table-row-active': item.id == selectedAsset.id}">
+                <div @click="selectAsset(item, index)" :data="item.id" v-for="item,index in assetList" class="endpoint-sub-table-row">
                   <div class="endpoint-sub-table-col">{{item.host}}</div>
                   <div class="endpoint-sub-table-col">{{item.sn}}</div>
                 </div>
@@ -85,9 +85,78 @@
             <!-- end--table-->
           </div>
           <div class="right-child-box endpoints-box">
-            <div class="endpoints-box-module-info"></div>
-            <div class="endpoints-box-endpoints-info">
-
+            <div class="endpoints-box-module-info">
+              <div class="title">{{$t('project.endpoint.moduleParameter')}}:</div>
+              <el-input class="module-info module-info-port" size="mini" v-model="currentModule.port"></el-input>
+              <el-popover
+                placement="top"
+                width="200"
+                trigger="hover"
+              >
+                <div class="endpoint-param-pop">
+                  <div v-for="item,index in currentModule.paramObj">{{item.key}}={{item.value}}</div>
+                </div>
+                <el-input slot="reference" disabled class="module-info module-info-param" size="mini" v-model="currentModule.param"></el-input>
+              </el-popover>
+              <el-input class="module-info module-info-path" size="mini" v-model="currentModule.path"></el-input>
+              <el-button class="module-info module-info-cover" size="mini">{{$t('overall.cover')}}</el-button>
+            </div>
+            <div class="endpoints-box-endpoints">
+              <el-table
+                :data="endpointList"
+                style="width: 100%;border-radius: 4px;"
+                height="calc(100% - 40px)"
+                empty-text=" ">
+                <el-table-column
+                  type="selection"
+                  width="25"
+                style="padding: 0 1px;">
+                </el-table-column>
+                <el-table-column
+                  label-class-name="endpoints-box-endpoints-title"
+                  v-for="(item, index) in endpointTableTitle"
+                  v-if="item.show"
+                  :width="item.width"
+                  :key="`col-${index}`"
+                  :label="item.label"
+                >
+                  <template slot-scope="scope" :column="item">
+                    <span v-if="item.prop == 'asset' && scope.row[item.prop]">{{scope.row[item.prop].host}}</span>
+                    <span v-else-if="item.prop == 'param'">
+                      <el-popover
+                        placement="top"
+                        width="200"
+                        trigger="hover"
+                      >
+                        <div class="endpoint-param-pop">
+                          <div v-for="p in scope.row.paramObj">{{p.key}}={{p.value}}</div>
+                        </div>
+                        <span slot="reference">{{scope.row.param.length > 8 ? scope.row.param.substring(0, 8) + '...' : scope.row.param}}</span>
+                      </el-popover>
+                    </span>
+                    <span v-else-if="item.prop == 'path'">
+                      <el-popover
+                        placement="top"
+                        width="100"
+                        trigger="hover"
+                        :content="scope.row[item.prop]"
+                      >
+                        <span slot="reference">{{scope.row.path.length > 5 ? scope.row.path.substring(0, 5) + '...' : scope.row.path}}</span>
+                      </el-popover>
+                    </span>
+                    <span v-else>{{scope.row[item.prop]}}</span>
+                  </template>
+                </el-table-column>
+                <el-table-column label="" width="56">
+                  <template slot-scope="scope" :column="item">
+                    <div>
+                      <span class="param-box-row-symbol"><i class="el-icon-edit-outline"></i></span>
+                      <span class="param-box-row-symbol"><i class="el-icon-minus"></i></span>
+                    </div>
+                  </template>
+                </el-table-column>
+              </el-table>
+              <div><el-button class="endpoints-clear-btn" size="mini">{{$t('overall.clear')}}</el-button></div>
             </div>
           </div>
         </div>
@@ -117,13 +186,42 @@
         rightBox: {show: false, title: this.$t('project.endpoint.createEndpoint'),isEdit: false},
         editParamBox: {show: false}, //param编辑弹框
         viewParamBox: {show: false}, //param查看弹框
+        moduleParamShow: false, //module默认参数param悬浮窗
         assetSearch: {host: '', sn: '', text: '', label: 'IP', dropdownShow: false}, //侧滑框中asset的搜索相关
         assetPageObj: {pageNo: 1, pageSize: 9999},
         selectedAssets: [], //侧滑框中选中的asset
-        selectedAsset: {id: '', host: '', sn: ''}, //endpoint侧滑框中选中的asset
         projectList: [],
         moduleList: [],
-        assetList: []
+        assetList: [],
+        endpointList: [],
+        endpointTableTitle: [
+          {
+            label: this.$t("project.endpoint.asset"),
+            prop: 'asset',
+            width: 123,
+            show: true,
+          },{
+            label: this.$t("project.endpoint.host"),
+            prop: 'host',
+            width: 123,
+            show: true,
+          },{
+            label: this.$t("project.endpoint.port"),
+            prop: 'port',
+            width: 55,
+            show: true,
+          },{
+            label: this.$t("project.endpoint.param"),
+            prop: 'param',
+            width: 93,
+            show: true,
+          },{
+            label: this.$t("project.endpoint.path"),
+            prop: 'path',
+            width: 63,
+            show: true,
+          }
+        ],
       }
     },
     methods: {
@@ -205,10 +303,32 @@
       },
 
       // endpoint弹框中的asset子弹框里asset选择事件
-      selectAsset(obj) {
-        this.selectedAsset = obj;
-        this.endpoint.host = obj.host;
-        this.endpoint.assetId = obj.id;
+      selectAsset(obj, index) {
+        this.endpointList.push({
+          assetId: obj.id,
+          asset: obj,
+          host: obj.host,
+          param: this.currentModule.param,
+          paramObj: this.currentModule.paramObj,
+          port: this.currentModule.port,
+          path: this.currentModule.path,
+          moduleId: this.currentModule.id
+        });
+        this.assetList.splice(index, 1);
+      },
+
+      //将param转为json字符串格式
+      paramToJson(param) {
+        let tempParam = {};
+        for (let i = 0; i < param.length; i++) {
+          eval('tempParam.' + param[i].key + '="' + param[i].value + '"');
+        }
+        let jsonString = JSON.stringify(tempParam);
+        if (jsonString == '{}') {
+          return "";
+        } else {
+          return jsonString;
+        }
       },
 
       // 获取endpoint弹框中module下拉框数据
@@ -245,6 +365,10 @@
             this.$message.error(response.msg);
           }
         });
+      },
+
+      //param展示悬浮框
+      viewParam(item, flag, event) {
       },
 
       //删除endpoint
@@ -346,17 +470,27 @@
     line-height: 32px;
     color: #c4c7cF;
   }
-  .param-box-row-symbol {
+  .param-box-row-symbol:first-of-type {
+    font-size: 18px;
+    color: #bbbbbb;
+    text-align: center;
+    display: inline-block;
+    position: absolute;
+    top: 6px;
+    right: 34px;
+    cursor: pointer;
+  }
+  .param-box-row-symbol:last-of-type {
     font-size: 12px;
-    color: #c4c7cF;
-    border: 1px solid #c4c7cF;
+    color: #bbbbbb;
+    border: 1px solid #bbbbbb;
     text-align: center;
     height: 12px;
     width: 14px;
     display: inline-block;
     position: absolute;
-    top: 17px;
-    right: 25px;
+    top: 9px;
+    right: 14px;
     cursor: pointer;
   }
   .param-box-row-symbol>i {
@@ -389,20 +523,70 @@
   }
   .endpoints-box {
     margin: 0 0 0 280px;
-    background-color: gray;
-    width: 440px;
+    width: 540px;
   }
   .right-child-box .el-input-group {
     width: 187px;
     float: right;
     margin: 7px 5px 0 0;
   }
+  .right-child-box .module-info .el-input {
+    display: inline-block;
+  }
+
+  .right-child-box .module-info {
+    display: inline-block;
+    height: 33px;
+    vertical-align: middle;
+    position: absolute;
+    top: 2px;
+  }
   .right-child-box-title {
     padding: 9px 0 0 4px;
     display: inline-block;
   }
-
-
+  .endpoints-box-module-info {
+    background: #eeeeee;
+    width: 100%;
+    height: 33px;
+    position: relative;
+  }
+  .endpoints-box-module-info .title {
+    line-height: 33px;
+    color: #5e5e5e;
+    padding-left: 5px;
+    display: inline-block;
+  }
+  .module-info-port {
+    width: 55px;
+    right: 210px;
+  }
+  .module-info-param {
+    width: 88px;
+    right: 118px;
+  }
+  .module-info-path {
+    width: 60px;
+    right: 52px;
+  }
+  .right-child-box .module-info-cover {
+    right: 4px;
+    height: 28px;
+    padding: 5px 5px;
+    background: #656565;
+    color: white;
+    border-radius: 4px;
+  }
+  .endpoints-box-endpoints {
+    border-radius: 4px;
+    border: 1px solid #dcdfe6;
+    height: calc(100% - 39px);
+    margin-top: 6px;
+  }
+  .endpoint-param-pop{
+    max-height: 200px;
+    overflow: auto;
+  }
   /* end--小盒子*/
 
   /* begin--子弹框*/
@@ -473,6 +657,10 @@
     height: 30px;
     color: #656565;
   }
+  .endpoint-sub-table-row:hover {
+    background-color: #dadada;
+    cursor: default;
+  }
   .endpoint-sub-table-row-active {
     background-color: #dadada;
   }
@@ -496,7 +684,38 @@
     overflow: auto;
     height: calc(100% - 95px);
   }
+  .endpoints-clear-btn {
+    margin: 6px 0 0 10px;
+  }
   /* end--table*/
 
   /* end--子弹框*/
+</style>
+<style>
+  .module-info.el-input input {
+    padding: 0 5px;
+  }
+  .endpoints-box-endpoints-title {
+    color: black;
+    font-weight: 400;
+  }
+  .endpoints-box-endpoints .el-table td, .el-table th {
+    padding: 5px 0 !important;
+  }
+  .endpoints-box-endpoints .cell {
+    padding: 0 2px 0 10px;
+  }
+  .endpoints-box-endpoints .el-table .el-table__row td{
+    padding: 5px 0;
+  }
+  .module-info-param.el-input.is-disabled .el-input__inner {
+    cursor: pointer;
+    background-color: white;
+    border-color: #DCDFE6;
+    color: #606266;
+    transition: border-color .2s cubic-bezier(.645,.045,.355,1);
+  }
+  .module-info-param.el-input.is-disabled .el-input__inner:hover {
+    border-color: #c0c4cc;
+  }
 </style>

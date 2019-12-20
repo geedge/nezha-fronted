@@ -16,7 +16,9 @@ const en = {
     add: "Add",
     option: "Option",
     clearAll: "Clear All",
+    clear: "Clear",
     name: 'Name',
+    cover: 'Cover'
   },
   search: {
     searchTip: 'Press Enter or click to search'
@@ -156,6 +158,7 @@ const en = {
       path: "Path",
       asset: "Asset",
       lastUpdate: "Last Update",
+      moduleParameter: "Module's Parameter"
     },
     metrics: {
       metrics: "Metrics",
