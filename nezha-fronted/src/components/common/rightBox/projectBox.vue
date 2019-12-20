@@ -1,6 +1,6 @@
 <template>
   <transition name="right-box">
-    <div class="right-box right-box-endpoint" v-if="rightBox.show" @click.stop>
+    <div class="right-box right-box-project" v-if="rightBox.show">
       <!-- begin--顶部按钮-->
       <div class="right-box-top-btns">
         <div class="right-box-top-btn right-box-top-btn-full" @click="esc">

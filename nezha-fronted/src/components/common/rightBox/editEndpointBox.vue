@@ -1,6 +1,6 @@
 <template>
   <transition name="right-box">
-    <div class="right-box right-box-endpoint" v-if="rightBox.show" @click.stop>
+    <div class="right-box right-box-edit-endpoint" v-if="rightBox.show">
       <!-- begin--顶部按钮-->
       <div class="right-box-top-btns">
         <div class="right-box-top-btn right-box-top-btn-full" @click="esc">
@@ -41,7 +41,7 @@
         <div class="right-box-form-row">
           <div class="right-box-form-label">{{$t("project.project.project")}}</div>
           <div class="right-box-form-content">
-            <el-select @change="((val) => {})" value-key="id" popper-class="config-dropdown" v-model="currentProject" placeholder="" v-if="rightBox.isEdit" size="small">
+            <el-select @change="((val) => {changeProject(val);})" value-key="id" popper-class="config-dropdown" v-model="currentProject" placeholder="" v-if="rightBox.isEdit" size="small">
               <el-option v-for="item in projectList" :key="item.id" :label="item.name" :value="item"></el-option>
             </el-select>
             <div v-if="!rightBox.isEdit" class="right-box-form-content-txt">{{endpoint.project.name}}</div>
@@ -51,7 +51,7 @@
         <div class="right-box-form-row">
           <div class="right-box-form-label">{{$t("project.module.module")}}</div>
           <div class="right-box-form-content">
-            <el-select @change="((val) => {})" value-key="id" popper-class="config-dropdown" v-model="currentModule" placeholder="" v-if="rightBox.isEdit" size="small">
+            <el-select @change="((val) => {changeModule(val);})" value-key="id" popper-class="config-dropdown" v-model="currentModule" placeholder="" v-if="rightBox.isEdit" size="small">
               <el-option v-for="item in moduleList" :key="item.id" :label="item.name" :value="item"></el-option>
             </el-select>
             <div v-if="!rightBox.isEdit" class="right-box-form-content-txt">{{endpoint.module.name}}</div>
@@ -136,12 +136,12 @@
           <!-- begin--标题-->
           <div class="right-box-title">{{subBox.title}}</div>
           <!-- end--标题-->
-            <div class="right-box-top-btn right-box-top-btn-full" @click="subEsc">
-              <div class="right-box-btn-icon">
-                <i class="el-icon-close"></i>
-              </div>
-              <span>{{$t('overall.esc')}}</span>
+          <div class="right-box-top-btn right-box-top-btn-full" @click="subEsc">
+            <div class="right-box-btn-icon">
+              <i class="el-icon-close"></i>
             </div>
+            <span>{{$t('overall.esc')}}</span>
+          </div>
           <!-- begin--搜索框-->
           <el-input placeholder="" v-model="assetSearch.text">
             <template slot="prepend">
@@ -279,8 +279,25 @@
         this.$get('project', {pageSize: 999, pageNo: 1}).then(response => {
           if (response.code === 200) {
             this.projectList = response.data.list;
+            if ((!this.currentProject || !this.currentProject.id) && this.projectList.length > 0) {
+              this.currentProject = this.projectList[0];
+            }
           }
         });
+      },
+
+      //project下拉框点击事件
+      changeProject(project) {
+        this.currentModule = {id: '', name: '', project: {}, port: '', path: '', param: '', paramObj: []};
+        this.getModuleList(project.id);
+      },
+
+      //project下拉框点击事件
+      changeModule(module) {
+        this.currentModule = module;
+        this.endpoint.port = module.port;
+        this.endpoint.path = module.path;
+        this.endpoint.paramObj = module.paramObj;
       },
 
       // 获取endpoint弹框中的asset子弹框里asset列表数据
@@ -383,7 +400,7 @@
       this.getAssetList();
     },
     mounted() {
-      this.getModuleList(this.currentProject.id);
+      setTimeout(()=>{this.getModuleList(this.currentProject.id);}, 100);
     },
     watch: {
       endpoint(n, o) {
@@ -525,7 +542,7 @@
   /* end--搜索框*/
   /* begin--table*/
   .endpoint-sub-table {
-    margin-top: 25px;
+    padding-top: 25px;
   }
   .line-100 {
     margin-bottom: 3px;

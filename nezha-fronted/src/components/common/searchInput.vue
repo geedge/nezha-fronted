@@ -50,7 +50,12 @@
                             </div>
                             <div class="select_info_list" v-if="val.type == 'dc'">
                                 <ul>
-                                    <li v-for="(item,key) in dcSelect" :key="key" @click="selectDc(val, item, $event)" :class="search_select_style_num==key?'search-style-ind':''">{{item.name}}</li>
+                                    <li v-for="(item,key) in dcSelect" :key="key" @click="selectObject(val, item, $event)" :class="search_select_style_num==key?'search-style-ind':''">{{item.name}}</li>
+                                </ul>
+                            </div>
+                            <div class="select_info_list" v-if="val.type == 'asset'">
+                                <ul>
+                                    <li v-for="(item,key) in assetSelect" :key="key" @click="selectObject(val, item, $event)" :class="search_select_style_num==key?'search-style-ind':''">{{item.host}}</li>
                                 </ul>
                             </div>
                             <!-- 新增日志模块action下拉选择 -->
@@ -125,8 +130,8 @@
             return {
                 select_conditionsName:'',
                 selectInfoList: searchSelectInfo,
-                select_title:this.$t('i18n.overall.searchList.select_title'),
-                other:this.$t('i18n.overall.other'),
+                select_title: '',
+                other: '',
                 localStorage_display: true,
                 input_list: true,
                 change_sreach_show: true,
@@ -134,6 +139,7 @@
                 historyList: [],
                 actionSelect:[],
                 dcSelect: [], //数据中心
+                assetSelect: [], //资产
                 schemaTypeSelect:[], //日志检索Protocol下拉菜单
                 TypeSelect:[],//Protocol二层下拉菜单
                 secondShow:'',//二层显示控制
@@ -213,16 +219,19 @@
                         this.input_list = !this.input_list
                 },*/
               //dc
-              selectDc(column, selectItem, e) {
+              selectObject(column, selectItem, e) {
                 this.stop_click(e);
                 this.select_list.forEach(val=>{
-                  console.info(val)
-                  if(val.type == 'dc'){
+                  if (val.type == 'dc'){
                     val.val = selectItem.name;
                     val.valnum = selectItem.id;
                     val.valString = '';
+                  } else if (val.type == 'asset') {
+                    val.val = selectItem.host;
+                    val.valnum = selectItem.id;
+                    val.valString = '';
                   }
-                })
+                });
                 //this.select_list.push({type: 'dc', val: selectItem.name, valnum: selectItem.id});
                 this.input_sreach = '';
                 this.sreach_num = this.select_list.length;
@@ -278,6 +287,13 @@
               this.$get('idc', {pageNo: 1, pageSize: 999}).then(response => {
                 if (response.code === 200) {
                   this.dcSelect = response.data.list;
+                }
+              });
+            },
+            getAssetData() {
+              this.$get('asset', {pageNo: 1, pageSize: 999}).then(response => {
+                if (response.code === 200) {
+                  this.assetSelect = response.data.list;
                 }
               });
             },
@@ -468,6 +484,8 @@
                           objectInfo[val.label] = val.valnum;
                         } else if (val.type == 'dc') {
                           objectInfo.idcId = val.valnum;
+                        } else if (val.type == 'asset') {
+                          objectInfo.assetId = val.valnum;
                         } else {
                             objectInfo[val.label] = val.val;
                         }
@@ -913,7 +931,7 @@
                     type:type,
                     label:label,
                     disabled:disabled
-                  })
+                  });
                   this.change_sreach_show = false
                   this.sreach_num = this.select_list.length-1
                   this.input_list = !this.input_list
@@ -959,6 +977,9 @@
             }
             if (this.$route.path == '/promServer') {
               this.getDcData();
+            }
+            if (this.$route.path == '/project') {
+              this.getAssetData();
             }
             JSON.parse(JSON.stringify(this.searchMsg.searchLabelList)).forEach(val => {
               if(val.name=='Protocol'){
