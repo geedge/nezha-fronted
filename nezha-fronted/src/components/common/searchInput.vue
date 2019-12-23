@@ -37,7 +37,7 @@
                             <i class="el-icon-close" @click="close_selcet_list(ind,$event)"></i>
                         </div>
                         <div v-else-if="!change_sreach_show && ind==sreach_num && val.id!==7 " class="select_input">
-                            <input type="text" id="sreach_input" v-model="input_sreach" @keyup="enter" @click="stop_click">
+                            <input type="text" id="sreach_input" v-model="input_sreach" @keyup="enter(val.name, $event)" @click="stop_click">
                             <div class="select_info_list" v-if="val.type == 'select'">
                                 <ul>
                                     <li v-for="(item,key) in selectInfoList[val.label]" :key="key" @click="tr_selectInfo(val.label,item.value,item.label,$event)" :class="search_select_style_num==key?'search-style-ind':''">{{item.label}}</li>
@@ -626,8 +626,17 @@
                 }
             },
             // input框监听是按删除还是回车
-            enter(e) {
+            enter(val, e) {
               var keyCode = window.event ? e.keyCode : e.which;
+              if(val == 'ID'&&keyCode == 13){
+                let id = /^[0-9]*$/
+                if (!id.test(this.input_sreach) || this.input_sreach > 2147483647) {
+                  //如果有不正确的值 进行删除
+                  this.input_sreach = ''
+                  this.$message.error(this.other.delErrorId)
+                  return false;
+                }
+              }
               if(keyCode!==8){
                 this.delBool = false
                 this.delcriteriaBool = false
