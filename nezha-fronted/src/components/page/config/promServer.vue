@@ -466,6 +466,7 @@ export default {
       this.getTableData();
     },
     search: function(searchObj) {
+      console.info(searchObj);
       this.searchLabel = {};
       for (let item in searchObj) {
         if (searchObj[item]) {

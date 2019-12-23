@@ -15,21 +15,55 @@
       </div>
     </div>
 
-    <div class="content-right">
+    <!--metrics-->
+    <div class="content-right" v-show="tableShow == 2">
+      <div class="top-tools">
+        <el-button-group>
+          <el-button @click="tableShow = 1" class="top-tool-btn top-tool" size="mini">
+            <span class="top-tool-btn-txt">{{$t('project.endpoint.endpoint')}}</span>
+          </el-button>
+          <el-button class="top-tool-btn top-tool top-tool-btn-active" size="mini">
+            <span class="top-tool-btn-txt">{{$t('project.metrics.metrics')}}</span>
+          </el-button>
+        </el-button-group>
+        <div class="top-tool-search top-tool top-tool-right"><search-input :searchMsg="metricSearchMsg" @search="metricSearch"></search-input></div>
+      </div>
+      <el-table
+        :data="metricsTableData"
+        border
+        height="calc(100% - 65px)"
+        style="width: 100%;">
+        <el-table-column
+          v-for="(item, index) in metricsTableTitle"
+          v-if="item.show"
+          :width="item.width"
+          :key="`col-${index}`"
+          :label="item.label"
+        >
+          <template slot-scope="scope" :column="item">
+            <span>{{scope.row[item.prop]}}</span>
+          </template>
+        </el-table-column>
+      </el-table>
+      <Pagination v-cloak :pageObj="metricPageObj" @pageNo='metricsPageNo' @pageSize='metricsPageSize' ref="metricPagination"></Pagination>
+    </div>
+
+    <!--endpoint-->
+    <div class="content-right" v-show="tableShow == 1">
       <div class="top-tools">
         <el-button-group>
           <el-button @click="" class="top-tool-btn top-tool top-tool-btn-active" size="mini">
             <span class="top-tool-btn-txt">{{$t('project.endpoint.endpoint')}}</span>
           </el-button>
-          <el-button disabled @click="" class="top-tool-btn top-tool" size="mini">
+          <el-button @click="tableShow = 2" class="top-tool-btn top-tool" size="mini">
             <span class="top-tool-btn-txt">{{$t('project.metrics.metrics')}}</span>
           </el-button>
         </el-button-group>
-        <el-button disabled @click.stop="toCreateEndpoint" class="top-tool-btn top-tool-btn-active top-tool margin-l-10 top-tool-right" size="mini">
+        <el-button @click="toCreateEndpoint" class="top-tool-btn top-tool-btn-active top-tool margin-l-10 top-tool-right" size="mini">
           <span><i class="el-icon-plus"></i></span>
           <span class="top-tool-btn-txt">{{$t('overall.add')}}</span>
         </el-button>
-        <div class="top-tool-search top-tool top-tool-right"></div>
+        <div class="top-tool-search top-tool top-tool-right"><search-input :searchMsg="endpointSearchMsg" @search="endpointSearch"></search-input></div>
       </div>
       <el-table
         :data="endpointTableData"
@@ -60,11 +94,12 @@
           </template>
         </el-table-column>
       </el-table>
-      <Pagination :pageObj="endpointPageObj" @pageNo='endpointPageNo' @pageSize='endpointPageSize' ref="Pagination"></Pagination>
+      <Pagination v-cloak :pageObj="endpointPageObj" @pageNo='endpointPageNo' @pageSize='endpointPageSize' ref="endpointPagination"></Pagination>
     </div>
 
     <module-box :currentProject="currentProject" :module="editModule" @reload="getModuleList" ref="moduleBox"></module-box>
-    <edit-endpoint-box :currentProject="currentProject" :currentModule="currentModule" :endpoint="editEndpoint" @reload="getEndPointTableData" ref="editEndpointBox"></edit-endpoint-box>
+    <edit-endpoint-box :currentProject="currentProject" :currentModule="currentModule" :endpoint="editEndpoint" @reload="getEndpointTableData" ref="editEndpointBox"></edit-endpoint-box>
+    <add-endpoint-box :currentProject="currentProject" :currentModule="currentModule" :endpoint="editEndpoint" @reload="getEndpointTableData" ref="addEndpointBox"></add-endpoint-box>
   </div>
 </template>
 
@@ -73,6 +108,7 @@ export default {
   name: "project2",
   data() {
     return {
+      tableShow: 1, // 1.endpoint; 2.metrics
       editEndpoint: {id: '', host: '', port: '', param: '', path: '', asset: {}, project: {}, module: {}, moduleId: '', assetId: '', paramObj: []},
       endpointTableTitle: [
         {
@@ -108,20 +144,76 @@ export default {
         pageSize: 20,
         total:0
       },
+      metricsTableTitle: [
+        {
+          label: "ID",
+          prop: 'id',
+          show: true,
+          width: 100
+        },
+        {
+          label: this.$t("project.metrics.name"),
+          prop: 'metric',
+          show: true,
+        },
+        {
+          label: this.$t("project.metrics.type"),
+          prop: 'type',
+          show: true,
+        },
+        {
+          label: this.$t("project.metrics.description"),
+          prop: 'help',
+          show: true,
+        },
+      ],
+      metricsTableData: [],
+      metricPageObj: {
+        pageNo: 1,
+        pageSize: 20,
+        total: 0
+      },
       moduleList: [],
       projectList: [],
       currentProject: {id: '', name: '', remark: ''}, //endpoint弹框、module列表用来回显project
       editModule: {id: '', name: '', project: {}, port: '', path: '', param: '', paramObj: []}, //编辑的module
       currentModule: {id: '', name: '', project: {}, port: '', path: '', param: '', paramObj: []}, //endpoint弹框用来回显module
-      searchLabel: {moduleId: ''}, //endpoint搜索参数
+      endpointSearchLabel: {moduleId: ''}, //endpoint搜索参数
+      metricSearchLabel: {moduleId: ''}, //metrics搜索参数
+      endpointSearchMsg: { //给搜索框子组件传递的信息
+        zheze_none: true,
+        searchLabelList: [{
+          id: 1,
+          name: "ID",
+          type: 'input',
+          label: 'id',
+          disabled: false
+        }, {
+          id: 11,
+          name: this.$t('asset.asset'),
+          type: 'asset',
+          label: 'asset',
+          disabled: false
+        }],
+      },
+      metricSearchMsg: { //给搜索框子组件传递的信息
+        zheze_none: true,
+        searchLabelList: [{
+          id: 12,
+          name: 'Metric',
+          type: 'input',
+          label: 'metric',
+          disabled: false
+        }],
+      },
     }
   },
   methods: {
-    getEndPointTableData() {
-      this.searchLabel.moduleId = this.currentModule.id;
-      this.$set(this.searchLabel, 'pageNo', this.endpointPageObj.pageNo);
-      this.$set(this.searchLabel, 'pageSize', this.endpointPageObj.pageSize);
-      this.$get('endpoint', this.searchLabel).then(response => {
+    getEndpointTableData() {
+      this.endpointSearchLabel.moduleId = this.currentModule.id;
+      this.$set(this.endpointSearchLabel, 'pageNo', this.endpointPageObj.pageNo);
+      this.$set(this.endpointSearchLabel, 'pageSize', this.endpointPageObj.pageSize);
+      this.$get('endpoint', this.endpointSearchLabel).then(response => {
         if (response.code === 200) {
           for (let i = 0; i < response.data.list.length; i++) {
             try {
@@ -139,13 +231,32 @@ export default {
         }
       });
     },
+    getMetricsTableData() {
+      this.metricSearchLabel.moduleId = this.currentModule.id;
+      this.$set(this.metricSearchLabel, 'pageNo', this.metricPageObj.pageNo);
+      this.$set(this.metricSearchLabel, 'pageSize', this.metricPageObj.pageSize);
+      this.$get('metric', this.metricPageObj).then(response => {
+        if (response.code === 200) {
+          this.metricsTableData = response.data.list;
+          this.metricPageObj.total = response.data.total;
+        }
+      });
+    },
     endpointPageNo(val) {
       this.endpointPageObj.pageNo = val;
-      this.getEndPointTableData();
+      this.getEndpointTableData();
     },
     endpointPageSize(val) {
       this.endpointPageObj.pageSize = val;
-      this.getEndPointTableData();
+      this.getEndpointTableData();
+    },
+    metricsPageNo(val) {
+      this.metricPageObj.pageNo = val;
+      this.getMetricsTableData();
+    },
+    metricsPageSize(val) {
+      this.metricPageObj.pageSize = val;
+      this.getMetricsTableData();
     },
 
     // 获取左侧module列表数据
@@ -201,15 +312,21 @@ export default {
       this.rightBoxHandler(3);
       this.$refs.editEndpointBox.toEdit(true);
       this.editEndpoint = JSON.parse(JSON.stringify(endpoint));
+      if (!this.editEndpoint.paramObj) {
+        this.$set(this.editEndpoint, 'paramObj', []);
+      }
     },
 
     toCreateEndpoint() {
-      
+      this.$refs.addEndpointBox.show(true);
     },
 
     //查看endpoint详情
     endpointDetail(endpoint) {
       this.editEndpoint = JSON.parse(JSON.stringify(endpoint));
+      if (!this.editEndpoint.paramObj) {
+        this.$set(this.editEndpoint, 'paramObj', []);
+      }
       this.rightBoxHandler(3);
       this.$refs.editEndpointBox.toEdit(false);
     },
@@ -227,7 +344,28 @@ export default {
       }
       this.rightBoxHandler(2);
     },
-    
+
+    //搜索
+    endpointSearch: function(searchObj) {
+      this.endpointSearchLabel = {};
+      for (let item in searchObj) {
+        if (searchObj[item]) {
+          this.$set(this.endpointSearchLabel, item, searchObj[item]);
+        }
+      }
+      this.getEndpointTableData();
+    },
+    //搜索
+    metricSearch: function(searchObj) {
+      this.metricSearchLabel = {};
+      for (let item in searchObj) {
+        if (searchObj[item]) {
+          this.$set(this.metricSearchLabel, item, searchObj[item]);
+        }
+      }
+      this.getMetricsTableData();
+    },
+
     //控制弹框状态 type  1:project; 2:module; 3:editEndponit; 4:addEndpoint;
     rightBoxHandler(type) {
       if (type == 1) {
@@ -266,10 +404,11 @@ export default {
   created() {
     this.currentProject = this.$store.state.currentProject;
     this.getModuleList();
+    this.getMetricsTableData();
   },
   mounted() {
     setTimeout(()=>{
-      this.getEndPointTableData();
+      this.getEndpointTableData();
     }, 200);
   },
   computed: {
@@ -285,10 +424,14 @@ export default {
       this.getModuleList();
     },
     currentModule(n, o) {
+      this.metricPageObj.pageNo = 1;
+      this.endpointPageObj.pageNo = 1;
       if (n && n.id) {
-        this.getEndPointTableData();
+        this.getEndpointTableData();
+        this.getMetricsTableData();
       } else {
         this.endpointTableData = [];
+        this.metricsTableData = [];
       }
     }
   }
@@ -520,7 +663,7 @@ export default {
     right: 10px;
     bottom: 13px;
   }
-  .el-input-group__append {
+  .el-input-group__append>i {
     cursor: pointer;
   }
 

@@ -328,29 +328,15 @@ export default {
       }],
       searchMsg: { //给搜索框子组件传递的信息
         zheze_none: true,
-        searchLabelList: [/*{
-          id: 1,
-          name: 'ID',
-          type: 'input',
-          label: 'userId',
-          disabled: false
-        },*/{
+        searchLabelList: [{
           id: 10,
           name: this.$t('config.account.account'),
           type: 'input',
           label: 'username',
           disabled: false
-        }/*,{
-          id: 11,
-          name: 'E-mail',
-          type: 'input',
-          label: 'email',
-          disabled: false
-        }*/],
+        }],
       },
-      searchLabel: { //搜索参数
-
-      },
+      searchLabel: {}, //搜索参数
     }
   },
   methods: {

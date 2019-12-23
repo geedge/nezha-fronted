@@ -15,7 +15,7 @@
                         </div>
                     </template>
                     <template v-for="(item, index) in createMenu">
-                        <el-menu-item :index="'0-' + index.toString()">
+                        <el-menu-item :index="'0-' + index">
                             <div @click="createBox(item)">
                                 <span>{{item.label}}</span>
                             </div>
@@ -32,7 +32,7 @@
                         <div @click="jumpToProject(projectData[0])">{{$t('overall.project')}}</div>
                     </template>
                     <template v-for="(item, index) in projectData">
-                        <el-menu-item :index="'2-' + index.toString()">
+                        <el-menu-item :index="'2-' + index">
                             <div @click="jumpToProject(item)">
                               <span>{{item.name}}</span>
                               <div @click.stop="toEditProject(item)" class="menu-edit"><i class="el-icon-edit-outline"></i></div>
@@ -45,19 +45,19 @@
                         <div @click="jumpToAsset('asset')">{{$t('overall.asset')}}</div>
                     </template>
                     <template v-for="(item, index) in assetData">
-                        <el-menu-item :index="'3-' + index.toString()">
+                        <el-menu-item :index="'3-' + index">
                             <div @click="jumpToAsset('asset',item.id)">{{item.name}}</div>
                         </el-menu-item>
                     </template>
                 </el-submenu>
-              <el-submenu index="4">
+              <el-submenu index="4-0">
                 <template slot="title">
                   <div @click="jumpTo('alertList')">{{$t('overall.alert')}}</div>
                 </template>
-                <el-menu-item index="4-0">
+                <el-menu-item index="4-1">
                   <div @click="jumpTo('alertList')">{{$t('alert.alertList')}}</div>
                 </el-menu-item>
-                <el-menu-item index="4-1">
+                <el-menu-item index="4-2">
                   <div @click="jumpTo('alertConfig')">{{$t('alert.alertConfig')}}</div>
                 </el-menu-item>
               </el-submenu>
@@ -109,7 +109,7 @@
 
         <project-box :project="editProject" @reload="projectReload" ref="projectBox"></project-box>
         <module-box :currentProject="currentProject" :module="editModule" @reload="" ref="moduleBox"></module-box>
-        <edit-endpoint-box :currentProject="currentProject" :currentModule="currentModule" :endpoint="editEndpoint" @reload="" ref="endpointBox"></edit-endpoint-box>
+        <!--<add-endpoint-box :currentProject="currentProject" :currentModule="currentModule" @reload="" ref="addEndpointBox"></add-endpoint-box>-->
 
     </div>
 </template>
@@ -184,7 +184,7 @@ export default {
         this.$refs.moduleBox.show(true);
         this.editModule = {id: '', name: '', project: this.$store.state.currentProject, port: '', path: '', param: '', paramObj: []};
       } else if (item.type == 3) {
-        //this.$refs.endpointBox.show(true);
+        this.$refs.addEndpointBox.show(true);
       }
     },
     jumpToAsset(data, id) {

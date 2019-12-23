@@ -7,6 +7,7 @@
       @prev-click="prev"
       @next-click="next"
       @current-change="current"
+      :current-page="pageObj.pageNo"
       :page-sizes="[20, 50, 100, 300]"
       :page-size="20"
       layout="prev, pager, next, jumper, sizes, total"
@@ -48,6 +49,7 @@ export default {
       this.list = this.$refs.page.$el.children[2].children;
       for (let i = 0; i < this.list.length; i++) {
         const element = this.list[i];
+        console.info(element)
       }
     },
   }

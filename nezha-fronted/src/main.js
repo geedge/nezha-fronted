@@ -18,17 +18,15 @@ import Pagination from "./components/common/pagination"; //引入全局分页组
 import searchInput from "./components/common/searchInput"; //搜索框组件
 import projectBox from './components/common/rightBox/projectBox'; //project弹框组件
 import moduleBox from './components/common/rightBox/moduleBox'; //module弹框组件
-import editEndpointBox from './components/common/rightBox/endpointBox'; //endpoint弹框组件
-import assetAddUnit from "./components/page/asset/assetAddUnit"; //资产添加组件
-import assetEditUnit from "./components/page/asset/assetEditUnit"; //资产添加组件
+import editEndpointBox from './components/common/rightBox/editEndpointBox'; //endpoint弹框组件
+import addEndpointBox from './components/common/rightBox/addEndpointBox'; //endpoint弹框组件
 
 Vue.component("Pagination", Pagination);
 Vue.component("searchInput", searchInput);
 Vue.component("project-box", projectBox);
 Vue.component("module-box", moduleBox);
 Vue.component("edit-endpoint-box", editEndpointBox);
-Vue.component("assetAddUnit", assetAddUnit);
-Vue.component("assetEditUnit", assetEditUnit);
+Vue.component("add-endpoint-box", addEndpointBox);
 
 Vue.prototype.$axios = axios;
 Vue.prototype.$post = post;
