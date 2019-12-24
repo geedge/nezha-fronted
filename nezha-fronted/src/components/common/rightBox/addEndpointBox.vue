@@ -1,6 +1,6 @@
 <template>
   <transition name="right-box">
-    <div class="right-box right-box-add-endpoint" v-if="rightBox.show" @click="showEditParamBox(false)">
+    <div class="right-box right-box-add-endpoint" v-if="rightBox.show" @mousedown="showEditParamBox(false)">
       <!-- begin--顶部按钮-->
       <div class="right-box-top-btns">
         <div class="right-box-top-btn right-box-top-btn-full" @click="esc">
@@ -28,7 +28,7 @@
         <div class="right-box-form-row">
           <div class="right-box-form-label">{{$t("project.project.project")}}</div>
           <div class="right-box-form-content">
-            <el-select @change="((val) => {})" value-key="id" popper-class="config-dropdown" v-model="currentProject" placeholder="" size="small">
+            <el-select @change="((val) => {changeProject(val)})" value-key="id" popper-class="config-dropdown" v-model="currentProject" placeholder="" size="small">
               <el-option v-for="item in projectList" :key="item.id" :label="item.name" :value="item"></el-option>
             </el-select>
           </div>
@@ -37,7 +37,7 @@
         <div class="right-box-form-row">
           <div class="right-box-form-label">{{$t("project.module.module")}}</div>
           <div class="right-box-form-content">
-            <el-select @change="((val) => {})" value-key="id" popper-class="config-dropdown" v-model="currentModuleCopy" placeholder="" size="small">
+            <el-select @change="((val) => {changeModule(val)})" value-key="id" popper-class="config-dropdown" v-model="currentModuleCopy" placeholder="" size="small">
               <el-option v-for="item in moduleList" :key="item.id" :label="item.name" :value="item"></el-option>
             </el-select>
           </div>
@@ -101,12 +101,13 @@
                 <el-input @click.native.stop="showEditParamBox(true, currentModuleCopy, 1, $event)" slot="reference" disabled class="module-info module-info-param" size="mini" v-model="currentModuleCopy.param"></el-input>
               </el-popover>
               <el-input class="module-info module-info-path" size="mini" v-model="currentModuleCopy.path"></el-input>
-              <el-button class="module-info module-info-cover" size="mini">{{$t('overall.cover')}}</el-button>
+              <el-button class="module-info module-info-cover" size="mini" @click="coverEndpoint">{{$t('overall.cover')}}</el-button>
             </div>
             <!--endpoints-->
             <div class="endpoints-box-endpoints">
               <el-table
                 :data="endpointList"
+                ref="endpointTable"
                 style="width: 100%;border-radius: 4px;"
                 height="calc(100% - 40px)"
                 empty-text=" ">
@@ -135,8 +136,8 @@
                           <div v-for="p in scope.row.paramObj">{{p.key}}={{p.value}}</div>
                         </div>
                         <span slot="reference">
-                          <span v-if="!scope.row.isEdit">{{scope.row.param.length > 8 ? scope.row.param.substring(0, 8) + '...' : scope.row.param}}</span>
-                          <span v-else @click.stop="showEditParamBox(true, scope.row, 2, $event)"><el-input disabled class="endpoint-info endpoint-info-param" size="mini" v-model="scope.row.param"></el-input></span>
+                          <span @mousedown.stop v-if="!scope.row.isEdit">{{scope.row.param.length > 8 ? scope.row.param.substring(0, 8) + '...' : scope.row.param}}</span>
+                          <span @mousedown.stop v-else @click.stop="showEditParamBox(true, scope.row, 2, $event)"><el-input disabled class="endpoint-info endpoint-info-param" size="mini" v-model="scope.row.param"></el-input></span>
                         </span>
                       </el-popover>
                     </span>
@@ -149,17 +150,17 @@
                       >
                         <span slot="reference">
                           <span v-if="!scope.row.isEdit">{{scope.row.path.length > 5 ? scope.row.path.substring(0, 5) + '...' : scope.row.path}}</span>
-                          <span v-else><el-input size="mini" class="endpoint-info" v-model="scope.row.path"></el-input></span>
+                          <span @mousedown.stop v-else><el-input size="mini" class="endpoint-info" v-model="scope.row.path"></el-input></span>
                         </span>
                       </el-popover>
                     </span>
                     <span v-else-if="title.prop == 'port'">
                       <span v-if="!scope.row.isEdit">{{scope.row.port}}</span>
-                      <span v-else><el-input size="mini" class="endpoint-info" v-model="scope.row.port"></el-input></span>
+                      <span @mousedown.stop v-else><el-input size="mini" class="endpoint-info" v-model="scope.row.port"></el-input></span>
                     </span>
                     <span v-else-if="title.prop == 'host'">
                       <span v-if="!scope.row.isEdit">{{scope.row.host}}</span>
-                      <span v-else><el-input size="mini" class="endpoint-info" v-model="scope.row.host"></el-input></span>
+                      <span @mousedown.stop v-else><el-input size="mini" class="endpoint-info" v-model="scope.row.host"></el-input></span>
                     </span>
                   </template>
                 </el-table-column>
@@ -173,7 +174,10 @@
                   </template>
                 </el-table-column>
               </el-table>
-              <div><el-button class="endpoints-clear-btn" size="mini">{{$t('overall.clear')}}</el-button></div>
+              <div>
+                <el-button class="endpoints-clear-btn" size="mini" @click="clearSelection">{{$t('overall.clear')}}</el-button>
+                <span style="display: inline-block; float: right;line-height: 39px;padding-right: 15px;">All: {{this.endpointList.length}}</span>
+              </div>
             </div>
           </div>
         </div>
@@ -188,7 +192,7 @@
 
       <!--start--param编辑框-->
       <transition name="right-sub-box">
-        <div @click.stop class="right-sub-box" v-if="editParamBox.show" :style="'top: ' + editParamBox.top + 'px; left: ' + editParamBox.left + 'px;'">
+        <div @mousedown.stop class="right-sub-box" v-if="editParamBox.show" :style="'top: ' + editParamBox.top + 'px; left: ' + editParamBox.left + 'px;'">
           <div class="param-box">
             <div class="param-box-row" v-for="(item, index) in tempParamObj">
               <el-input placeholder="key" class="param-box-row-key" size="mini" v-model="item.key"></el-input>
@@ -211,7 +215,6 @@
   export default {
     name: "endpointBox",
     props: {
-      endpoint: Object,
       currentProject: Object,
       currentModule: Object
     },
@@ -221,7 +224,7 @@
         tempParamObj: [],
         tempEndpoint: {},
         rightBox: {show: false, title: this.$t('project.endpoint.createEndpoint'),isEdit: false},
-        editParamBox: {show: false, top: 0, left: 0, type: 1}, //param编辑弹框
+        editParamBox: {show: false, top: 0, left: 0, type: 0}, //param编辑弹框
         moduleParamShow: false, //module默认参数param悬浮窗
         assetSearch: {host: '', sn: '', text: '', label: 'IP', dropdownShow: false}, //侧滑框中asset的搜索相关
         assetPageObj: {pageNo: 1, pageSize: 9999},
@@ -282,6 +285,14 @@
             this.tempParamObj = JSON.parse(JSON.stringify(obj.paramObj));
           }
         } else {
+          if (this.endpointList.length > 0) {
+            for (let i = 0; i < this.endpointList.length; i++) {
+              this.endpointList[i].isEdit = false;
+            }
+          }
+          if (!this.editParamBox.show) {
+            return;
+          }
           if (this.editParamBox.type == 1) {
             this.currentModuleCopy.paramObj = this.tempParamObj;
             this.currentModuleCopy.param = this.paramToJson(this.tempParamObj);
@@ -303,17 +314,16 @@
       esc() {
         this.rightBox.show = false;
         this.editParamBox.show = false;
-        this.viewParamBox.show = false;
       },
 
       // 新增param
       addParam() {
-        this.currentModuleCopy.paramObj.push({key: '', value: ''});
+        this.tempParamObj.push({key: '', value: ''});
       },
 
       // 移除单个param
       removeParam(index) {
-        this.endpoint.paramObj.splice(index, 1);
+        this.tempParamObj.splice(index, 1);
       },
 
       //编辑endpoint
@@ -336,29 +346,16 @@
         }
       },
 
-      //将param转为json字符串格式
-      paramToJson(param) {
-        let tempParam = {};
-        if (!param) {
-          param = [];
-        }
-        for (let i = 0; i < param.length; i++) {
-          eval('tempParam.' + param[i].key + '="' + param[i].value + '"');
-        }
-        let jsonString = JSON.stringify(tempParam);
-        if (jsonString == '{}') {
-          return "";
-        } else {
-          return jsonString;
-        }
-      },
-
       /*获取project列表*/
       getProjectList() {
         this.$get('project', {pageSize: 999, pageNo: 1}).then(response => {
           if (response.code === 200) {
             this.projectList = response.data.list;
+            if (this.moduleList.length == 0) {
+              this.getModuleList(this.currentProject.id);
+            }
           }
+
         });
       },
 
@@ -384,6 +381,27 @@
         this.getAssetList();
       },
 
+      changeProject(project) {
+        this.currentModuleCopy = {};
+        this.editParamBox.show = false;
+        this.tempParamObj = [];
+      },
+
+      changeModule(module) {
+        this.editParamBox.show = false;
+        this.tempParamObj = [];
+      },
+
+      //清空勾选的endpoint
+      clearSelection() {
+        let selections = this.$refs.endpointTable.selection;
+        if (selections && selections.length > 0) {
+          for (let i = 0; i < selections.length; i++) {
+            this.removeEndpoint(selections[i])
+          }
+        }
+      },
+
       // endpoint弹框中的asset子弹框里asset选择事件
       selectAsset(obj, index) {
         this.endpointList.push({
@@ -404,7 +422,7 @@
       paramToJson(param) {
         let tempParam = {};
         for (let i = 0; i < param.length; i++) {
-          eval('tempParam.' + param[i].key + '="' + param[i].value + '"');
+          eval('tempParam["' + param[i].key + '"]="' + param[i].value + '"');
         }
         let jsonString = JSON.stringify(tempParam);
         if (jsonString == '{}') {
@@ -436,10 +454,7 @@
 
       //保存endpoint
       save() {
-        this.endpoint.moduleId = this.currentModuleCopy.id;
-        this.endpoint.projectId = this.currentProject.id;
-        this.endpoint.param = this.paramToJson(this.endpoint.paramObj);
-        this.$put('endpoint', this.endpoint).then(response => {
+        this.$post('endpoint', this.endpointList).then(response => {
           if (response.code === 200) {
             this.$message({duration: 1000, type: 'success', message: this.$t("tip.saveSuccess")});
             this.esc();
@@ -450,8 +465,17 @@
         });
       },
 
-      //param展示悬浮框
-      viewParam(item, flag, event) {
+      //覆盖endpoint的port/path/param
+      coverEndpoint() {
+        if (this.endpointList.length > 0) {
+          for (let i = 0; i < this.endpointList.length; i++) {
+            this.endpointList[i].port = this.currentModuleCopy.port;
+            this.endpointList[i].param = this.currentModuleCopy.param;
+            this.endpointList[i].paramObj = this.currentModuleCopy.paramObj;
+            this.endpointList[i].path = this.currentModuleCopy.path;
+          }
+          this.$message({duration: 1000, type: 'success', message: this.$t("tip.coverSuccess")});
+        }
       },
 
       //删除endpoint
@@ -476,8 +500,12 @@
       dropdownSelect(label) {
         this.assetSearch.label = label;
         this.assetSearch.dropdownShow = false;
-        this.currentModuleCopy = JSON.parse(JSON.stringify(this.currentModule));
       },
+
+      clearEndpoints() {
+        this.getAssetList();
+        this.endpointList = [];
+      }
     },
     created() {
       this.getProjectList();

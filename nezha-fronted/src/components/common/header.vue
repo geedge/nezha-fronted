@@ -109,8 +109,8 @@
 
         <project-box :project="editProject" @reload="projectReload" ref="projectBox"></project-box>
         <module-box :currentProject="currentProject" :module="editModule" @reload="" ref="moduleBox"></module-box>
-        <!--<add-endpoint-box :currentProject="currentProject" :currentModule="currentModule" @reload="" ref="addEndpointBox"></add-endpoint-box>-->
-
+        <add-endpoint-box :currentProject="currentProject" :currentModule="currentModule" @reload="" ref="addEndpointBox"></add-endpoint-box>
+        <alert-config-box :parentAlertRule="alertRule" @reload="" ref="alertConfigBox"></alert-config-box>
     </div>
 </template>
 
@@ -137,6 +137,19 @@ export default {
         module: {id: '', name: '', param: '', paramObj: {}, projectId: ''},
         moduleId: '',
         assetId: ''
+      },
+      alertRule: {
+        id: '',
+        alertName: '',
+        type: '',
+        linkObject: {id: '', name: ''},
+        linkId: '',
+        expr: '',
+        last: '',
+        severity: '',
+        summary: '',
+        description: '',
+        receiver: '',
       },
       createMenu: [ //新增按钮内容
         {
@@ -185,6 +198,8 @@ export default {
         this.editModule = {id: '', name: '', project: this.$store.state.currentProject, port: '', path: '', param: '', paramObj: []};
       } else if (item.type == 3) {
         this.$refs.addEndpointBox.show(true);
+      } else if (item.type == 5) {
+        this.$refs.alertConfigBox.show(true, true);
       }
     },
     jumpToAsset(data, id) {
@@ -193,6 +208,7 @@ export default {
       this.jumpTo(data);
     },
     jumpToProject(p) {
+      this.currentProject = p;
       this.$store.commit('setProject', p);
       this.jumpTo('project');
     },
@@ -211,6 +227,18 @@ export default {
       this.$get('project', {}).then(response => {
         if (response.code == 200) {
           this.projectData = response.data.list;
+          let flag = false;
+          //如果currentProject不在新取到的数据里，说明它被删了
+          for (let i = 0; i < this.projectData.length; i++) {
+            if (this.projectData[i].id == this.currentProject.id) {
+              flag = true;
+              break;
+            }
+          }
+          if (!flag && this.projectData.length > 0) {
+            this.currentProject = this.projectData[0];
+            this.$store.commit('setProject', this.currentProject);
+          }
         }
       })
     },

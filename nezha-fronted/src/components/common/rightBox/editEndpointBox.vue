@@ -264,7 +264,7 @@
       paramToJson(param) {
         let tempParam = {};
         for (let i = 0; i < param.length; i++) {
-          eval('tempParam.' + param[i].key + '="' + param[i].value + '"');
+          eval('tempParam["' + param[i].key + '"]="' + param[i].value + '"');
         }
         let jsonString = JSON.stringify(tempParam);
         if (jsonString == '{}') {
@@ -360,7 +360,9 @@
         this.endpoint.moduleId = this.currentModule.id;
         this.endpoint.projectId = this.currentProject.id;
         this.endpoint.param = this.paramToJson(this.endpoint.paramObj);
-        this.$put('endpoint', this.endpoint).then(response => {
+        let requestData = [];
+        requestData.push(this.endpoint);
+        this.$put('endpoint', requestData).then(response => {
           if (response.code === 200) {
             this.$message({duration: 1000, type: 'success', message: this.$t("tip.saveSuccess")});
             this.esc();

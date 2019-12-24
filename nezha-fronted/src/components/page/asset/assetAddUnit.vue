@@ -74,7 +74,7 @@
                             <div class="el-select-add-btn">
                                 <el-popover
                                         placement="left"
-                                        trigger="click"
+                                        trigger="manual"
                                         v-model="popTypeVisible"
                                 >
                                     <div class="pop-window-assetType">

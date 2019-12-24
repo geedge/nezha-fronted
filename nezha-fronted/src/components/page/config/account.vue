@@ -148,6 +148,19 @@
                             <div v-if="!rightBox.isEdit" class="right-box-form-content-txt">{{user.username}}</div>
                         </div>
                     </div>
+                    <div class="right-box-form-row" v-if="rightBox.isEdit && !user.userId">
+                        <div class="right-box-form-label">{{$t('config.account.password')}}</div>
+                        <div class="right-box-form-content">
+                            <el-input
+                              type="text"
+                              placeholder=""
+                              v-model="user.password"
+                              maxlength="16"
+                              show-word-limit
+                              size="small"
+                            ></el-input>
+                        </div>
+                    </div>
                     <div class="right-box-form-row">
                         <div class="right-box-form-label">E-mail</div>
                         <div class="right-box-form-content">

@@ -82,6 +82,8 @@
             <span v-else-if="item.prop == 'param'">
               <span v-for="p in scope.row.paramObj">{{p.key}}={{p.value}}，</span>
             </span>
+            <span v-else-if="item.prop == 'lastUpdate'">{{dateFormat(scope.row.lastUpdate)}}</span>
+            <span v-else-if="item.prop == 'state'">{{scope.row.state == 1 ? 'up' : ''}}{{scope.row.state == 0 ? 'down' : ''}}</span>
             <span v-else>{{scope.row[item.prop]}}</span>
           </template>
         </el-table-column>
@@ -99,7 +101,7 @@
 
     <module-box :currentProject="currentProject" :module="editModule" @reload="getModuleList" ref="moduleBox"></module-box>
     <edit-endpoint-box :currentProject="currentProject" :currentModule="currentModule" :endpoint="editEndpoint" @reload="getEndpointTableData" ref="editEndpointBox"></edit-endpoint-box>
-    <add-endpoint-box :currentProject="currentProject" :currentModule="currentModule" :endpoint="editEndpoint" @reload="getEndpointTableData" ref="addEndpointBox"></add-endpoint-box>
+    <add-endpoint-box :currentProject="currentProject" :currentModule="currentModule" @reload="getEndpointTableData" ref="addEndpointBox"></add-endpoint-box>
   </div>
 </template>
 
@@ -131,6 +133,14 @@ export default {
         },{
           label: this.$t("project.endpoint.path"),
           prop: 'path',
+          show: true,
+        },{
+          label: this.$t("alert.list.state"),
+          prop: 'state',
+          show: true,
+        },{
+          label: this.$t("project.endpoint.lastUpdate"),
+          prop: 'lastUpdate',
           show: true,
         },{
           label: this.$t("project.endpoint.asset"),
@@ -235,7 +245,7 @@ export default {
       this.metricSearchLabel.moduleId = this.currentModule.id;
       this.$set(this.metricSearchLabel, 'pageNo', this.metricPageObj.pageNo);
       this.$set(this.metricSearchLabel, 'pageSize', this.metricPageObj.pageSize);
-      this.$get('metric', this.metricPageObj).then(response => {
+      this.$get('metric', this.metricSearchLabel).then(response => {
         if (response.code === 200) {
           this.metricsTableData = response.data.list;
           this.metricPageObj.total = response.data.total;
@@ -319,6 +329,7 @@ export default {
 
     toCreateEndpoint() {
       this.$refs.addEndpointBox.show(true);
+      this.$refs.addEndpointBox.clearEndpoints();
     },
 
     //查看endpoint详情
@@ -333,7 +344,6 @@ export default {
 
     //弹出module编辑页
     toEditModule(module) {
-      console.info(module)
       this.currentModule = JSON.parse(JSON.stringify(module));
       if (!this.currentModule.paramObj) {
         this.$set(this.currentModule, 'paramObj', []);
@@ -399,7 +409,23 @@ export default {
         //this.$refs.addEndpointBox.show(false);
       } else if (type == 4) {
       }
+    },
+
+    dateFormat(time) {
+      if (!time) {
+        return;
+      }
+      let date = new Date(time*1000);
+      let year = date.getFullYear();
+      let month = date.getMonth() + 1 < 10 ? "0" + (date.getMonth() + 1) : date.getMonth() + 1;
+      let day = date.getDate() < 10 ? "0" + date.getDate() : date.getDate();
+      let hours = date.getHours() < 10 ? "0" + date.getHours() : date.getHours();
+      let minutes = date.getMinutes() < 10 ? "0" + date.getMinutes() : date.getMinutes();
+      let seconds = date.getSeconds() < 10 ? "0" + date.getSeconds() : date.getSeconds();
+
+      return year + "-" + month + "-" + day + " " + hours + ":" + minutes + ":" + seconds;
     }
+
   },
   created() {
     this.currentProject = this.$store.state.currentProject;

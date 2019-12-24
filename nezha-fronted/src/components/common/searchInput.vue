@@ -6,7 +6,7 @@
                 <i class="el-icon-time" @click="look_history"></i>
                 <div :class="localStorage_display?'localStorage_list_box none':'localStorage_list_box'">
                     <div class="list_box_title">
-                        <span>{{other.recentSearch}}</span>
+                        <span>{{$t('search.recentSearch')}}</span>
                         <i class="el-icon-close" @click="localStorage_display=!localStorage_display"></i>
                     </div>
                     <div class="list_box_content" v-if="history_once.length>0">
@@ -21,7 +21,7 @@
                     </div>
                     <div class="list_box_clear">
                         <span v-if="history_once.length>0" @click="clear_history">{{other.clearReSearch}}</span>
-                        <span v-else class="no_historyList">{{other.noRecentSearch}}</span>
+                        <span v-else class="no_historyList">{{$t('search.noRecentSearch')}}</span>
                     </div>
                 </div>
             </div>
