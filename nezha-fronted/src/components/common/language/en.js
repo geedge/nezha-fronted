@@ -18,7 +18,8 @@ const en = {
     clearAll: "Clear All",
     clear: "Clear",
     name: 'Name',
-    cover: 'Cover'
+    cover: 'Cover',
+    signOut: 'Sign Out'
   },
   search: {
     searchTip: 'Press Enter or click to search',

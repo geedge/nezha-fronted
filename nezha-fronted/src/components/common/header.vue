@@ -2,7 +2,7 @@
     <div class="header">
         <div class="submenu">
             <el-menu
-                    class="el-menu-demo"
+                    class="nz-menu"
                     mode="horizontal"
                     background-color="#232f3e"
                     text-color="#ffffff"
@@ -77,7 +77,29 @@
 
         </div>
         <div class="header-right">
-            <div class="header-user-con">
+          <el-menu
+            class=""
+            mode="horizontal"
+            background-color="#232f3e"
+            text-color="#ffffff"
+            unique-opened
+          >
+            <el-submenu index="6" popper-class="nz-submenu">
+              <template slot="title">
+                <div>[username]</div>
+              </template>
+              <el-menu-item index="6-0">
+                <div :style="language=='en'?'color:#f90':''" @click="changeLocal('en')">English</div>
+              </el-menu-item>
+              <el-menu-item index="6-1">
+                <div :style="language=='cn'?'color:#f90':''" @click="changeLocal('cn')">中文</div>
+              </el-menu-item>
+              <el-menu-item index="6-2">
+                <div @click="jumpTo('')">{{$t('overall.signOut')}}</div>
+              </el-menu-item>
+            </el-submenu>
+          </el-menu>
+            <!--<div class="header-user-con">
                 <div class="flagselect">
                 </div>
                 <el-popover
@@ -105,7 +127,7 @@
                         <i class="el-submenu__icon-arrow el-icon-arrow-down header-name-jiantou"></i>
                     </div>
                 </el-popover>
-            </div>
+            </div>-->
         </div>
 
         <project-box :project="editProject" @reload="projectReload" ref="projectBox"></project-box>
@@ -398,7 +420,7 @@ export default {
     opacity: .8;
 }
 
-.el-menu-demo>li:first-of-type {
+.nz-menu>li:first-of-type {
   position: fixed;
   left: 40%;
   top: 0;

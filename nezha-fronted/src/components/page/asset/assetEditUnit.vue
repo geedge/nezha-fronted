@@ -1429,10 +1429,6 @@ export default {
 </script>
 
 <style>
-.el-table {
-    font-size: 10px;
-}
-
 .el-popover {
     padding: 0px;
     border-radius: 10px;

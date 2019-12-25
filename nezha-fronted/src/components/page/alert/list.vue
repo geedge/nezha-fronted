@@ -169,7 +169,7 @@
         </div>
         <div class="content-right">
             <div class="top-tools">
-                <div class="top-tool-search top-tool top-tool-right"><search-input :searchMsg="searchMsg" @search="search"></search-input></div>
+                <div class="top-tool-search float-right"><search-input :searchMsg="searchMsg" @search="search"></search-input></div>
             </div>
             <el-table
                   :data="tableData"

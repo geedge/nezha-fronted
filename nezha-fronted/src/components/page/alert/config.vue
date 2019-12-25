@@ -49,14 +49,9 @@
         <div class="content-right">
             <div class="top-tools">
                 <button @click="toAdd" class="nz-btn nz-btn-size-normal nz-btn-style-normal float-right">
-                    <span><i class="el-icon-plus"></i></span>
                     <span class="top-tool-btn-txt">{{$t('overall.add')}}</span>
                 </button>
-                <!--<el-button @click="toAdd" class="top-tool-btn top-tool-btn-active top-tool top-tool-right margin-l-10" size="mini">
-                    <span><i class="el-icon-plus"></i></span>
-                    <span class="top-tool-btn-txt">{{$t('overall.add')}}</span>
-                </el-button>-->
-                <div class="top-tool-search top-tool top-tool-right"><search-input :searchMsg="searchMsg" @search="search"></search-input></div>
+                <div class="top-tool-search float-right"><search-input :searchMsg="searchMsg" @search="search"></search-input></div>
             </div>
             <el-table
                   :data="tableData"

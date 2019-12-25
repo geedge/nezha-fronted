@@ -23,7 +23,7 @@ export default new Router({
         },
         {
           path: '/project',
-          component: resolve => require(['../components/page/project/project2.vue'], resolve),
+          component: resolve => require(['../components/page/project/project.vue'], resolve),
         },
         {
           path: '/asset',
