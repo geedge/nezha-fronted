@@ -4,10 +4,11 @@
             <el-menu
                     class="el-menu-demo"
                     mode="horizontal"
-                    background-color="#ffffff"
+                    background-color="#232f3e"
+                    text-color="#ffffff"
                     unique-opened
             >
-                <el-submenu index="0">
+                <el-submenu index="0" popper-class="nz-submenu">
                     <template slot="title">
                         <div class="menu-create">
                           &nbsp;&nbsp;<i class="el-icon-plus"></i>
@@ -27,7 +28,7 @@
                         {{$t('overall.dashboard')}}
                     </div>
                 </el-menu-item>
-                <el-submenu index="2">
+                <el-submenu index="2" popper-class="nz-submenu">
                     <template slot="title">
                         <div @click="jumpToProject(projectData[0])">{{$t('overall.project')}}</div>
                     </template>
@@ -35,12 +36,12 @@
                         <el-menu-item :index="'2-' + index">
                             <div @click="jumpToProject(item)">
                               <span>{{item.name}}</span>
-                              <div @click.stop="toEditProject(item)" class="menu-edit"><i class="el-icon-edit-outline"></i></div>
+                              <div @click.stop="toEditProject(item)" class="menu-edit"><i style="color: inherit" class="el-icon-edit-outline"></i></div>
                             </div>
                         </el-menu-item>
                     </template>
                 </el-submenu>
-                <el-submenu index="3">
+                <el-submenu index="3" popper-class="nz-submenu">
                     <template slot="title">
                         <div @click="jumpToAsset('asset')">{{$t('overall.asset')}}</div>
                     </template>
@@ -50,7 +51,7 @@
                         </el-menu-item>
                     </template>
                 </el-submenu>
-              <el-submenu index="4-0">
+              <el-submenu index="4-0" popper-class="nz-submenu">
                 <template slot="title">
                   <div @click="jumpTo('alertList')">{{$t('overall.alert')}}</div>
                 </template>
@@ -61,7 +62,7 @@
                   <div @click="jumpTo('alertConfig')">{{$t('alert.alertConfig')}}</div>
                 </el-menu-item>
               </el-submenu>
-                <el-submenu index="5">
+                <el-submenu index="5" popper-class="nz-submenu">
                     <template slot="title">
                         <div @click="jumpTo('account')">{{$t('overall.config')}}</div>
                     </template>
@@ -96,7 +97,7 @@
                             <p>русский</p>
                         </div>
                     </div>
-                    <div class="SignOut" @click="jumpTo('')">
+                    <div class="sign-out" @click="jumpTo('')">
                         退出登录
                     </div>
                     <div slot="reference" class="user-avator">
@@ -198,6 +199,7 @@ export default {
         this.editModule = {id: '', name: '', project: this.$store.state.currentProject, port: '', path: '', param: '', paramObj: []};
       } else if (item.type == 3) {
         this.$refs.addEndpointBox.show(true);
+        this.$refs.addEndpointBox.clearEndpoints();
       } else if (item.type == 5) {
         this.$refs.alertConfigBox.show(true, true);
       }
@@ -272,16 +274,46 @@ export default {
 
 <style>
 .el-menu.el-menu--horizontal{
-    border-bottom:0px
+  border-bottom: 0px;
 }
 .el-submenu__title .el-submenu__icon-arrow {
-    display: none;
+  display: none;
 }
 .el-menu--horizontal>.el-menu-item.is-active{
-    border-bottom:0px
+  border-bottom: 0px;
 }
-.el-menu--horizontal>.el-submenu.is-active .el-submenu__title{
-    border-bottom:0px
+.el-menu--horizontal>.el-submenu.is-active .el-submenu__title,
+.el-menu--horizontal>.el-menu-item.is-active,
+.el-menu--horizontal .el-menu-item:not(.is-disabled):focus, .el-menu--horizontal .el-menu-item:not(.is-disabled):hover {
+  border-bottom: 0px;
+  color: white;
+}
+.el-menu--horizontal.nz-submenu {
+  border: 1px solid #bbbbbb;
+  border-top: none;
+}
+.nz-submenu .el-menu--popup {
+  background-color: white !important;
+}
+.nz-submenu .el-menu--popup .el-menu-item {
+  background-color: white !important;
+}
+.nz-submenu .el-menu--popup-bottom-start {
+  margin-top: 0;
+}
+.nz-submenu.el-menu--horizontal .el-menu .el-menu-item {
+  padding: 0 20px;
+  color: #444444 !important;
+  transition: none;
+}
+.nz-submenu.el-menu--horizontal .el-menu .el-menu-item:hover {
+  color: #ff9900 !important;
+}
+.el-submenu__title .el-icon-plus {
+  color: white;
+}
+.el-menu-item>div, .el-menu-item>div>div {
+  font-size: 15px;
 }
 </style>
 
@@ -290,7 +322,6 @@ export default {
     padding-left: 50%;
     width: 500px;
     float: left;
-    font-size: 22px;
 }
 
 .header {
@@ -298,9 +329,8 @@ export default {
     box-sizing: border-box;
     width: 100%;
     height: 60px;
-    background-color: #ffffff;
+    background-color: #232f3e;
     z-index: 510;
-    box-shadow: 0px 20px 13px -19px #5E5E5E;
 }
 
 .header-right {
@@ -327,8 +357,9 @@ export default {
 }
 
 .user-avator span {
-    font-size: 16px;
-    margin: 0 5px;
+  font-size: 16px;
+  margin: 0 5px;
+  color: white;
 }
 
 .user-avator i.iconfont {
@@ -352,7 +383,7 @@ export default {
     text-align: center;
 }
 
-.SignOut {
+.sign-out {
     width: 100%;
     height: 30px;
     color: #fff;
@@ -363,13 +394,10 @@ export default {
     cursor: pointer;
 }
 
-.SignOut:hover {
+.sign-out:hover {
     opacity: .8;
 }
 
-.header-name-jiantou {
-    position: static !important;
-}
 .el-menu-demo>li:first-of-type {
   position: fixed;
   left: 40%;
@@ -385,7 +413,7 @@ export default {
   line-height: 12px;
 }
 .menu-edit {
-    line-height: 36px;
-    float: right;
+  line-height: 36px;
+  float: right;
 }
 </style>

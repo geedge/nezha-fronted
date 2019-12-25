@@ -17,7 +17,7 @@ export default {
 </script>
 
 <style scoped>
-@media screen and (max-width: 1600px) {
+/*@media screen and (max-width: 1600px) {
     .content-box {
         background: #a0eea6;
     }
@@ -26,5 +26,5 @@ export default {
     .content-box {
         background: #b94b7e;
     }
-}
+}*/
 </style>

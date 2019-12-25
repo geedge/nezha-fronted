@@ -3,11 +3,6 @@
     height: 100%;
   }
 
-  .content-right {
-    height: calc(100% - 131px);
-    margin-left: 322px;
-    padding: 0 15px 0 25px;
-  }
   .content-right-option {
     cursor: pointer;
     display: inline-block;
@@ -54,10 +49,14 @@
         </div>
         <div class="content-right">
             <div class="top-tools">
-              <el-button @click="toAdd" class="top-tool-btn top-tool-btn-active top-tool margin-l-10 top-tool-right" size="mini">
+              <button @click="toAdd" class="nz-btn nz-btn-size-normal nz-btn-style-normal float-right">
                 <span><i class="el-icon-plus"></i></span>
                 <span class="top-tool-btn-txt">{{$t('overall.add')}}</span>
-              </el-button>
+              </button>
+              <!--<el-button @click="toAdd" class="top-tool-btn top-tool-btn-active top-tool margin-l-10 top-tool-right" size="mini">
+                <span><i class="el-icon-plus"></i></span>
+                <span class="top-tool-btn-txt">{{$t('overall.add')}}</span>
+              </el-button>-->
               <div class="top-tool-search top-tool top-tool-right"><search-input :searchMsg="searchMsg" @search="search"></search-input></div>
             </div>
             <el-table
@@ -174,7 +173,7 @@
                           <div v-if="!rightBox.isEdit" class="right-box-form-content-txt">{{user.email}}</div>
                         </div>
                     </div>
-                    <div class="right-box-form-row">
+                    <!--<div class="right-box-form-row">
                         <div class="right-box-form-label">{{$t('config.account.receiver')}}</div>
                         <div class="right-box-form-content">
                             <el-select class="right-box-row-with-btn" value-key="id" popper-class="config-dropdown" multiple v-model="user.receiver" placeholder="" v-if="rightBox.isEdit" size="small">
@@ -207,13 +206,13 @@
                                 <template v-for="rec in user.receiver">{{rec.name}}</template>
                             </div>
                         </div>
-                    </div>
+                    </div>-->
                     <div class="right-box-form-row">
                         <div class="right-box-form-label">{{$t('config.account.language')}}</div>
                         <div class="right-box-form-content">
                             <el-radio v-model="user.lang" label="en" :disabled="!rightBox.isEdit && user.lang != 'en'">English</el-radio>
                             <el-radio v-model="user.lang" label="zh" :disabled="!rightBox.isEdit && user.lang != 'zh'">中文</el-radio>
-                            <el-radio v-model="user.lang" label="ru" disabled>русский（{{$t('config.account.notCurrentlySupport')}}）</el-radio>
+                            <!--<el-radio v-model="user.lang" label="ru" disabled>русский（{{$t('config.account.notCurrentlySupport')}}）</el-radio>-->
                         </div>
                     </div>
                     <div class="right-box-form-row">
@@ -295,7 +294,7 @@ export default {
         }, {
           label: this.$t('config.account.receiver'),
           prop: 'receiver',
-          show: true,
+          show: false,
           width: 240
         }, {
           label: this.$t('config.account.createTime'),

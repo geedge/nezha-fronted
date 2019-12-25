@@ -76,6 +76,7 @@
               </div>
               <div class="line-100"></div>
               <div class="endpoint-sub-table-body">
+                <div v-if="!currentModuleCopy.id" class="endpoint-sub-table-body-dialog"></div>
                 <div @click="selectAsset(item, index)" :data="item.id" v-for="item,index in assetList" class="endpoint-sub-table-row">
                   <div class="endpoint-sub-table-col">{{item.host}}</div>
                   <div class="endpoint-sub-table-col">{{item.sn}}</div>
@@ -341,6 +342,7 @@
           if (this.endpointList[i].assetId == endpoint.assetId) {
             this.endpointList.splice(i, 1);
             this.assetList.unshift(endpoint.asset);
+            i--;
             break;
           }
         }
@@ -363,6 +365,16 @@
       getAssetList() {
         this.$get('asset', this.assetPageObj).then(response => {
           if (response.code === 200) {
+            let respData = response.data.list;
+            for (let i = 0; i < respData.length; i++) {
+              for (let j = 0; j < this.endpointList.length; j++) {
+                if (respData[i].id == this.endpointList[j].assetId) {
+                  respData.splice(i, 1);
+                  i--;
+                  break;
+                }
+              }
+            }
             this.assetList = response.data.list;
           }
         });
@@ -385,6 +397,8 @@
         this.currentModuleCopy = {};
         this.editParamBox.show = false;
         this.tempParamObj = [];
+        this.endpointList = [];
+        this.getAssetList();
       },
 
       changeModule(module) {
@@ -750,7 +764,7 @@
     line-height: 28px;
     height: 30px;
   }
-  .endpoint-sub-table-row {
+  .endpoint-sub-table-row, .endpoint-sub-table-row-disabled {
     line-height: 28px;
     height: 30px;
     color: #656565;
@@ -779,8 +793,16 @@
   }
   .endpoint-sub-table-body {
     font-size: 15px;
+    position: relative;
     overflow: auto;
     height: calc(100% - 95px);
+  }
+  .endpoint-sub-table-body-dialog {
+    width: 100%;
+    height: 100%;
+    background-color: #e9ebec;
+    position: absolute;
+    opacity: 0.2;
   }
   .endpoints-clear-btn {
     margin: 6px 0 0 10px;

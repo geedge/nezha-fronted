@@ -51,7 +51,7 @@
         <div class="right-box-form-row">
           <div class="right-box-form-label">{{$t('alert.list.type')}}</div>
           <div class="right-box-form-content">
-            <el-select popper-class="config-dropdown" v-model="alertRule.type" placeholder="" v-if="rightBox.isEdit" size="small" >
+            <el-select @change="(val) => {changeType(val);}" popper-class="config-dropdown" v-model="alertRule.type" placeholder="" v-if="rightBox.isEdit" size="small" >
               <el-option
                 v-for="item in typeData"
                 :key="item.key"
@@ -66,30 +66,15 @@
         <div class="right-box-form-row">
           <div class="right-box-form-label">{{$t('alert.config.link')}}</div>
           <div class="right-box-form-content">
-            <el-input
-              v-if="rightBox.isEdit"
-              type="text"
-              v-model="alertRule.linkId"
-              size="mini"
-            ></el-input>
-            <div v-if="!rightBox.isEdit" class="right-box-form-content-txt">{{alertRule.linkObject.name}}</div>
-            <!--<el-select popper-class="config-dropdown" v-model="alertRule.severity" placeholder="" v-if="rightBox.isEdit" size="small">
+            <div v-if="!rightBox.isEdit" class="right-box-form-content-txt">{{alertRule.linkObject ? alertRule.linkObject.name : ''}}</div>
+            <el-select v-model="alertRule.linkId" placeholder="" v-if="rightBox.isEdit" size="small">
                 <el-option
-                  v-for="item in severityData"
-                  :key="item.key"
-                  :label="item.value"
-                  :value="item.key">
-                    <span class="config-dropdown-label-txt" v-if="!item.isEdit">{{item.value}}</span>
-                    <span class="config-dropdown-label-input" v-if="item.isEdit" @click.stop>
-                        <el-input
-                          type="text"
-                          v-model="item.name"
-                          size="mini"
-                        ></el-input>
-                    </span>
+                  v-for="item in linkObjList"
+                  :key="item.id"
+                  :label="alertRule.type == 3 ? item.host : item.name"
+                  :value="item.id">
                 </el-option>
               </el-select>
-            <div v-if="!rightBox.isEdit" class="right-box-form-content-txt">{{alertRule.severity}}</div>-->
           </div>
         </div>
         <!--expr-->
@@ -174,7 +159,7 @@
           </div>
         </div>
         <!--receiver-->
-        <div class="right-box-form-row">
+        <!--<div class="right-box-form-row">
           <div class="right-box-form-label">{{$t('config.account.receiver')}}</div>
           <div class="right-box-form-content">
             <el-select class="right-box-row-with-btn" value-key="id" popper-class="config-dropdown" v-model="alertRule.receiver" placeholder="" v-if="rightBox.isEdit" size="small">
@@ -205,7 +190,7 @@
             </div>
             <div class="right-box-form-content-txt" v-if="!rightBox.isEdit">{{alertRule.receiver}}</div>
           </div>
-        </div>
+        </div>-->
       </div>
       <!-- end--表单-->
 
@@ -245,15 +230,15 @@
         ],
         typeData: [
           {
-            key: 1,
+            key: 1, //project
             value: this.$t('alert.config.typeOption.project')
           },
           {
-            key: 2,
+            key: 2, //module
             value: this.$t('alert.config.typeOption.module')
           },
           {
-            key: 3,
+            key: 3, //asset
             value: this.$t('alert.config.typeOption.asset')
           }
         ],
@@ -311,6 +296,16 @@
               this.$message.error(response.msg);
             }
           });
+        }
+      },
+      changeType(type) {
+        this.alertRule.linkId = '';
+        if (type == 1) {
+          this.getProjectList();
+        } else if (type == 2) {
+          this.getModuleList();
+        } else if (type == 3) {
+          this.getAssetList();
         }
       },
       del: function(u) {
@@ -378,9 +373,29 @@
         this.rightBox.show = false;
       },
 
-      getLinkObj() {
+      getProjectList() {
+        this.$get('project', {pageNo: 1, pageSize: 9999}).then(response => {
+          if (response.code == 200) {
+            this.linkObjList = response.data.list;
+          }
+        })
+      },
 
-      }
+      getModuleList() {
+        this.$get('module', {pageNo: 1, pageSize: 9999}).then(response => {
+          if (response.code == 200) {
+            this.linkObjList = response.data.list;
+          }
+        })
+      },
+
+      getAssetList() {
+        this.$get('asset', {pageNo: 1, pageSize: 9999}).then(response => {
+          if (response.code == 200) {
+            this.linkObjList = response.data.list;
+          }
+        })
+      },
     },
     created() {
       this.initReceiverData();
@@ -391,6 +406,15 @@
         deep: true,
         handler(n, o) {
           this.alertRule = n;
+          if (this.alertRule.id) {
+            if (this.alertRule.type == 1) {
+              this.getProjectList();
+            } else if (this.alertRule.type == 2) {
+              this.getModuleList();
+            } else if (this.alertRule.type == 3) {
+              this.getAssetList();
+            }
+          }
           if (this.rightBox.show) {
             if (this.rightBox.isEdit && this.alertRule.id) {
               this.rightBox.title = this.$t("alert.config.editAlertConfig") + "  ID：" + this.alertRule.id;

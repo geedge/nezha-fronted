@@ -48,10 +48,14 @@
         </div>
         <div class="content-right">
             <div class="top-tools">
-                <el-button @click="toAdd" class="top-tool-btn top-tool-btn-active top-tool top-tool-right margin-l-10" size="mini">
+                <button @click="toAdd" class="nz-btn nz-btn-size-normal nz-btn-style-normal float-right">
                     <span><i class="el-icon-plus"></i></span>
                     <span class="top-tool-btn-txt">{{$t('overall.add')}}</span>
-                </el-button>
+                </button>
+                <!--<el-button @click="toAdd" class="top-tool-btn top-tool-btn-active top-tool top-tool-right margin-l-10" size="mini">
+                    <span><i class="el-icon-plus"></i></span>
+                    <span class="top-tool-btn-txt">{{$t('overall.add')}}</span>
+                </el-button>-->
                 <div class="top-tool-search top-tool top-tool-right"><search-input :searchMsg="searchMsg" @search="search"></search-input></div>
             </div>
             <el-table
@@ -81,7 +85,7 @@
                         <span v-else-if="item.prop == 'type'">
                             <template v-for="type in typeData" v-if="type.key == scope.row[item.prop]">{{type.value}}</template>
                         </span>
-                        <span v-else-if="item.prop == 'linkObject' && scope.row[item.prop]">{{scope.row[item.prop].name}}</span>
+                        <span v-else-if="item.prop == 'linkObject' && scope.row[item.prop]">{{scope.row.type != 3 && scope.row.linkObject ? scope.row[item.prop].name : scope.row[item.prop].host}}</span>
                         <span v-else>{{scope.row[item.prop]}}</span>
                     </template>
                 </el-table-column>

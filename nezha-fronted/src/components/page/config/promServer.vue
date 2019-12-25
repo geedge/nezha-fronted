@@ -23,6 +23,42 @@
   .content-right-option .el-icon-view:hover {
     color: #409EFF;
   }
+  .pop-window {
+    height: 370px;
+    width: 400px;
+  }
+
+  .pop-window-assetType {
+    height: 550px;
+    width: 400px;
+  }
+
+  .pop-window-assetType-content {
+    padding: 1px 15px 15px 20px;
+  }
+  .sidebar-pop-input {
+    position: absolute;
+    right: 50px;
+    width: 200px;
+    height: 26px;
+    border-radius: 4px;
+    border: 1px solid #DCDFE6;
+    color: #606266;
+    display: inline-block;
+    padding: 0px 15px;
+  }
+
+  .sidebar-pop-input-select {
+    position: absolute;
+    right: 83px;
+    width: 200px;
+    height: 26px;
+    border-radius: 4px;
+    border: 1px solid #DCDFE6;
+    color: #606266;
+    display: inline-block;
+    padding: 0px 15px;
+  }
 </style>
 <template>
     <div class="prom">
@@ -35,10 +71,14 @@
         </div>
         <div class="content-right">
             <div class="top-tools">
-              <el-button @click="toAdd" class="top-tool-btn top-tool-btn-active margin-l-10 top-tool top-tool-right" size="mini">
+              <button @click="toAdd" class="nz-btn nz-btn-size-normal nz-btn-style-normal float-right">
                 <span><i class="el-icon-plus"></i></span>
                 <span class="top-tool-btn-txt">{{$t('overall.add')}}</span>
-              </el-button>
+              </button>
+              <!--<el-button @click="toAdd" class="top-tool-btn top-tool-btn-active margin-l-10 top-tool top-tool-right" size="mini">
+                <span><i class="el-icon-plus"></i></span>
+                <span class="top-tool-btn-txt">{{$t('overall.add')}}</span>
+              </el-button>-->
               <div class="top-tool-search top-tool top-tool-right"><search-input :searchMsg="searchMsg" @search="search"></search-input></div>
             </div>
             <el-table
@@ -117,24 +157,116 @@
                                   :key="item.id"
                                   :label="item.name"
                                   :value="item">
-                                    <span class="config-dropdown-label-txt" v-if="!item.isEdit">{{item.name}}</span>
-                                    <span class="config-dropdown-label-input" v-if="item.isEdit" @click.stop>
-                                        <el-input
-                                          type="text"
-                                          v-model="item.name"
-                                          size="mini"
-                                        ></el-input>
-                                    </span>
-                                    <span class="config-dropdown-error-message">{{item.errorMessage}}</span>
-                                    <span class="config-dropdown-btn" @click.stop="toEditIdc(item)">
-                                        <i class="el-icon-edit-outline" v-if="!item.isEdit"></i>
-                                        <i class="el-icon-check" v-if="item.isEdit"></i>
-                                    </span>
+                                    <span class="config-dropdown-label-txt">{{item.name}}</span>
+                                  <el-popover
+                                    placement="left"
+                                    v-model="item[item.name]"
+                                  >
+                                    <div class="pop-window-assetType-content">
+                                      <div class="right-box-top-btns">
+                                        <div class="right-box-top-btn right-box-top-btn-full"
+                                             @click="item[item.name] = false">
+                                          <div class="right-box-btn-icon">
+                                            <i class="el-icon-close"></i>
+                                          </div>
+                                          <span>{{$t('overall.esc')}}</span>
+                                        </div>
+                                      </div>
+                                      <div class="pop-window">
+                                        <span style="display: block;padding-bottom: 20px">标题</span>
+                                          <el-input v-model="popIdcData.name"/>
+                                          <el-input v-model="popIdcData.location"/>
+                                          <el-select v-model="popIdcData.principal" clearable>
+                                            <el-option
+                                              v-for="item in idcUserData"
+                                              :key="item.key"
+                                              :label="item.username"
+                                              :value="item.userId"
+                                            >
+                                            </el-option>
+                                          </el-select>
+                                          <el-input v-model="popIdcData.tel"/>
+                                      </div>
+                                    </div>
+                                    <div class="right-box-bottom-btns">
+                                      <div class="right-box-bottom-btn right-box-bottom-btn-cancel"
+                                           @click.stop="item[item.name]= false">
+                                        {{$t('overall.cancel')}}
+                                      </div>
+                                      <div class="right-box-bottom-btn right-box-bottom-btn-50"
+                                           @click="editData('idc', item.id, popIdcData)">
+                                        {{$t('overall.save')}}
+                                      </div>
+                                    </div>
+                                    <span class="config-dropdown-btn" slot="reference"
+                                          @click.stop="getSingleIDCData(item.id,'edit')"><i
+                                      class="el-icon-edit-outline"></i></span>
+                                  </el-popover>
                                     <span class="config-dropdown-btn config-dropdown-btn-delete" @click.stop="toDelIdc(item)"><i class="el-icon-delete"></i></span>
                                 </el-option>
                             </el-select>
                             <div class="right-box-row-btn" v-if="rightBox.isEdit">
-                                <span class="el-icon-plus"></span>
+                              <el-popover
+                                placement="left"
+                                v-model="visible"
+                              >
+                                <div class="pop-window-assetType-content">
+                                  <div class="right-box-top-btns">
+                                    <div class="right-box-top-btn right-box-top-btn-full"
+                                         @click="visible = false">
+                                      <div class="right-box-btn-icon">
+                                        <i class="el-icon-close"></i>
+                                      </div>
+                                      <span>{{$t('overall.esc')}}</span>
+                                    </div>
+                                  </div>
+                                  <div class="pop-window">
+                                    <span style="display: block;padding-bottom: 20px">标题</span>
+                                    <div style="padding-top: 10px;padding-left: 20px">
+                                      <div>
+                                        <label style="font-size: 12px">DN name</label>
+                                        <input class='sidebar-pop-input' v-model="addIdcData.name"/>
+                                      </div>
+                                      <div style="padding-top: 40px">
+                                        <label style="font-size: 12px">Loaction</label>
+                                        <input class='sidebar-pop-input' v-model="addIdcData.location"/>
+                                      </div>
+                                      <div style="padding-top: 40px">
+                                        <label style="font-size: 12px;padding-right: 20px">负责人</label>
+                                        <select class='sidebar-pop-input-select'
+                                                style="margin-left:-40px "
+                                                v-model="addIdcData.principal"
+                                                clearable>
+                                          <option
+                                            v-for="item in idcUserData"
+                                            :key="item.key"
+                                            :label="item.username"
+                                            :value="item.userId"
+                                          >
+                                          </option>
+                                        </select>
+                                      </div>
+                                      <div style="padding-top: 40px">
+                                        <label style="font-size: 12px">Tel</label>
+                                        <input class='sidebar-pop-input' v-model="addIdcData.tel"/>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                                <div class="right-box-bottom-btns">
+                                  <div class="right-box-bottom-btn right-box-bottom-btn-cancel"
+                                       @click.stop="visible= false">
+                                    {{$t('overall.cancel')}}
+                                  </div>
+                                  <div class="right-box-bottom-btn right-box-bottom-btn-50"
+                                       @click="addNewData('IDC')">
+                                    {{$t('overall.save')}}
+                                  </div>
+                                </div>
+                                <span slot="reference"
+                                      @click.prevent=''><i
+                                  class="el-icon-plus"></i></span>
+                              </el-popover>
                             </div>
                             <div class="right-box-form-content-txt" v-if="!rightBox.isEdit">{{promServer.idc.name}}</div>
                         </div>
@@ -198,6 +330,7 @@ export default {
   name: "prom",
   data() {
     return {
+      visible:false,
       rightBox: { //弹出框相关
         show: false,
         isEdit: false, //false查看，true编辑
@@ -283,6 +416,28 @@ export default {
         }],
       },
       searchLabel: {}, //搜索参数
+      idcSelectedData: {
+        id: '',
+        name: '',
+        location: '',
+        principal: '',
+        tel: ''
+      },
+      addIdcData: {
+        id: '',
+        name: '',
+        location: '',
+        principal: '',
+        tel: ''
+      },
+      popIdcData: {
+        id: '',
+        name: '',
+        location: '',
+        principal: '',
+        tel: ''
+      },
+      idcUserData: '',
     }
   },
   methods: {
@@ -382,6 +537,7 @@ export default {
         if (this.idcData[i].isEdit) {
           this.idcData[i].name = this.idcData[i].oldName;
           this.idcData[i].isEdit = false;
+
           this.idcData[i].errorMessage = '';
           break;
         }
@@ -412,6 +568,7 @@ export default {
           for (var i = 0; i < this.idcData.length; i++) {
             this.$set(this.idcData[i], 'oldName', this.idcData[i].name);
             this.$set(this.idcData[i], 'isEdit', false);
+            this.$set(this.idcData[i], this.idcData[i].name, false)
           }
           this.getTableData();
         }
@@ -466,7 +623,6 @@ export default {
       this.getTableData();
     },
     search: function(searchObj) {
-      console.info(searchObj);
       this.searchLabel = {};
       for (let item in searchObj) {
         if (searchObj[item]) {
@@ -474,10 +630,77 @@ export default {
         }
       }
       this.getTableData();
-    }
+    },
+    addNewData(type) {
+      if (type === 'IDC') {
+        this.$post('idc', this.addIdcData).then(res => {
+          if (res.code === 200) {
+            const h = this.$createElement;
+            this.$notify({
+              message: h('i', {style: 'color: teal'}, '添加成功'),
+              duration: 2000
+            });
+            this.getIdcData()
+          }else{
+            const h = this.$createElement;
+            this.$notify({
+              message: h('i', {style: 'color: teal'}, res.msg),
+              duration: 2000
+            });
+          }
+        })
+      }
+    },
+    getSingleIDCData(data, item) {
+      if (item !== 'edit') {
+        this.idcSelectedData = '';
+        this.idcData.forEach(item => {
+          if (item.id === data) {
+            this.idcSelectedData = item
+          }
+        });
+      } else {
+        this.idcData.forEach(item => {
+          if (item.id === data) {
+            console.log(item)
+            this.popIdcData.name = item.name
+            this.popIdcData.location = item.location
+            this.popIdcData.principal = item.principal
+            this.popIdcData.tel = item.tel
+          }
+        });
+      }
+    },
+    getUserData() {
+      this.$get('sys/user/list').then(response => {
+
+        if (response.code === 200) {
+          this.idcUserData = response.data.list
+        }
+      })
+    },
+    editData(data, id, item) {
+        item.id = id;
+        this.$put(data, item).then(res => {
+          if (res.code === 200) {
+            const h = this.$createElement;
+            this.$notify({
+              message: h('i', {style: 'color: teal'}, '修改成功'),
+              duration: 2000
+            })
+          }else{
+            const h = this.$createElement;
+            this.$notify({
+              message: h('i', {style: 'color: teal'}, res.msg),
+              duration: 2000
+            })
+          }
+        })
+    },
   },
   mounted: function() {
     this.getIdcData();
+    this.getUserData();
   },
   watch: {
     'promServer.idc': function(n, o) {

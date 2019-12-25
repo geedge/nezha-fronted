@@ -1022,14 +1022,14 @@
         display: flex;
         position: relative;
         box-shadow: 0px 0px 20px 0px rgba(0,0,0,.08);
-        line-height: 28px;
+        line-height: 31px;
     }
     .new-search .search-input-all{
         width: 300px;
         background: #fff;
         color: rgba(0,0,0,.55);
-        height: 28px;
-        line-height: 28px;
+        height: 31px;
+        line-height: 31px;
         border-bottom-left-radius: 5px;
         border-top-left-radius: 5px;
         display: flex;
@@ -1042,8 +1042,8 @@
     }
     .search-input-all .search-history{
         padding: 0px 10px;
-        height: 20px;
-        line-height: 20px;
+        height: 23px;
+        line-height: 23px;
         text-align: center;
         border-right: 1px solid #e5e5e5;
         margin-top: 4px;

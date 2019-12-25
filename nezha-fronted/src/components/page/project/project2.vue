@@ -1,7 +1,7 @@
 <template>
   <div class="project">
     <div class="content-left">
-      <div class="sidebar-title">{{currentProject.name}}</div>
+      <div class="sidebar-title">{{$t('project.project.project')}}：{{currentProject.name}}</div>
       <div class="sidebar-info">
         <div
           v-for="item in moduleList"
@@ -59,10 +59,14 @@
             <span class="top-tool-btn-txt">{{$t('project.metrics.metrics')}}</span>
           </el-button>
         </el-button-group>
-        <el-button @click="toCreateEndpoint" class="top-tool-btn top-tool-btn-active top-tool margin-l-10 top-tool-right" size="mini">
+        <button @click="toCreateEndpoint" class="nz-btn nz-btn-size-normal nz-btn-style-normal float-right">
           <span><i class="el-icon-plus"></i></span>
           <span class="top-tool-btn-txt">{{$t('overall.add')}}</span>
-        </el-button>
+        </button>
+        <!--<el-button @click="toCreateEndpoint" class="top-tool-btn top-tool-btn-active top-tool margin-l-10 top-tool-right" size="mini">
+          <span><i class="el-icon-plus"></i></span>
+          <span class="top-tool-btn-txt">{{$t('overall.add')}}</span>
+        </el-button>-->
         <div class="top-tool-search top-tool top-tool-right"><search-input :searchMsg="endpointSearchMsg" @search="endpointSearch"></search-input></div>
       </div>
       <el-table
