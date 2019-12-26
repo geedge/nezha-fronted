@@ -267,6 +267,7 @@
     methods: {
       show(show) {
         this.rightBox.show = show;
+        this.currentModuleCopy = JSON.parse(JSON.stringify(this.currentModule)); //打开弹框时将currentModule还原
       },
 
       //子弹框控制  obj: module或endpoint对象  type:1module2endpoint

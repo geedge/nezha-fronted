@@ -56,9 +56,9 @@
       </div>-->
 
       <!-- begin--底部按钮-->
-      <div class="right-box-bottom-btns">
+      <!--<div class="right-box-bottom-btns">
         <div @click="esc" class="right-box-bottom-btn right-box-bottom-btn-cancel right-box-bottom-btn-50">{{$t('overall.cancel')}}</div><div @click="save" class="right-box-bottom-btn right-box-bottom-btn-50">{{project.id == '' ? $t('overall.create') : $t('overall.save')}}</div>
-      </div>
+      </div>-->
       <!-- end--底部按钮-->
     </div>
   </transition>

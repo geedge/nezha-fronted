@@ -11,7 +11,7 @@ axios.interceptors.request.use(config => {
       //   "Content-Type": 'application/x-www-form-urlencoded',
       // }
       // config.data = qs.stringify(config.data);
-      let token = sessionStorage.getItem('token')
+      let token = sessionStorage.getItem('nz-token')
       if (token) {
         config.headers['Authorization'] = token //请求头token
       }

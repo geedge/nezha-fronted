@@ -60,6 +60,7 @@
                   height="calc(100% - 65px)"
                   style="width: 100%;">
                 <el-table-column
+                  :resizable="false"
                   v-for="(item, index) in tableTitle"
                   v-if="item.show"
                   :width="item.width"
@@ -382,7 +383,7 @@ export default {
       this.$set(this.searchLabel, "pageSize", this.pageObj.pageSize);
       this.$get('sys/user/list', this.searchLabel).then(response => {
         if (response.code === 200) {
-          for (var i = 0; i < response.data.list.length; i++) {
+          for (let i = 0; i < response.data.list.length; i++) {
             response.data.list[i].status = response.data.list[i].status + "";
           }
           this.tableData = response.data.list;
@@ -459,7 +460,7 @@ export default {
       }
     },
     blurEditReceiver: function() {
-      for (var i = 0; i < this.receiverData.length; i++) {
+      for (let i = 0; i < this.receiverData.length; i++) {
         if (this.receiverData[i].isEdit) {
           this.receiverData[i].name = this.receiverData[i].oldName;
           this.receiverData[i].isEdit = false;
@@ -473,7 +474,7 @@ export default {
       //TODO 请求后台，删除用户组
     },
     initReceiverData: function() {
-      for (var i = 0; i < this.receiverData.length; i++) {
+      for (let i = 0; i < this.receiverData.length; i++) {
         this.$set(this.receiverData[i], 'oldName', this.receiverData[i].name);
         this.$set(this.receiverData[i], 'isEdit', false);
       }
@@ -483,7 +484,7 @@ export default {
     },
     updateReceiverName: function(item) {
       //TODO 请求接口改名
-      var code = 200;
+      let code = 200;
       //this.$set(item, 'errorMessage', 'err');
       item.errorMessage = '';
       item.oldName = item.name;

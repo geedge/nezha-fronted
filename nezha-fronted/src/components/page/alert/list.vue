@@ -177,6 +177,7 @@
                   height="calc(100% - 65px)"
                   style="width: 100%;">
                 <el-table-column
+                  :resizable="false"
                   v-for="(item, index) in tableTitle"
                   v-if="item.show"
                   :width="item.width"

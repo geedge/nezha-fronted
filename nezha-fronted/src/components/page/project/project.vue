@@ -34,6 +34,7 @@
         height="calc(100% - 65px)"
         style="width: 100%;">
         <el-table-column
+          :resizable="false"
           v-for="(item, index) in metricsTableTitle"
           v-if="item.show"
           :width="item.width"
@@ -70,6 +71,7 @@
         height="calc(100% - 65px)"
         style="width: 100%;">
         <el-table-column
+          :resizable="false"
           v-for="(item, index) in endpointTableTitle"
           v-if="item.show"
           :width="item.width"
@@ -86,7 +88,7 @@
             <span v-else>{{scope.row[item.prop]}}</span>
           </template>
         </el-table-column>
-        <el-table-column :label="$t('overall.option')" width="100">
+        <el-table-column :resizable="false" :label="$t('overall.option')" width="100">
           <template slot-scope="scope" :column="item">
             <div class="content-right-options">
               <span @click.stop="endpointDetail(scope.row)" class="content-right-option"><i class="el-icon-view"></i></span>
