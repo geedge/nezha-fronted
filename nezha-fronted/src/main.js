@@ -1,7 +1,7 @@
 import "./assets/css/main.css";
 import 'element-ui/lib/theme-chalk/index.css';
 import ElementUI from 'element-ui';
-
+import 'xterm/dist/xterm.css'
 import i18n from './components/common/i18n'
 
 import Vue from 'vue'
@@ -79,7 +79,7 @@ Vue.directive('clickoutside',
 )
 
 /* eslint-disable no-new */
-new Vue({
+window.vm = new Vue({
   el: '#app',
   router,
   i18n,
@@ -88,7 +88,7 @@ new Vue({
   template: '<App/>'
 })
 
-
+export default vm
 router.beforeEach((to, from, next) => {
   if (to.path === '/login') {
     next()

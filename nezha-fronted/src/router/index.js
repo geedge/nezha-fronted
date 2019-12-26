@@ -14,6 +14,21 @@ export default new Router({
       component: resolve => require(['../components/common/login.vue'], resolve),
     },
     {
+      path: '/terminal',
+      name: "terminal",
+      component: resolve => require(['../components/page/asset/WebSSH.vue'], resolve),
+    },
+    {
+      path: '/cloneChat',
+      name: "cloneChat",
+      component: resolve => require(['../components/page/asset/cloneChat.vue'], resolve),
+    },
+    {
+      path: '/newChat',
+      name: "newChat",
+      component: resolve => require(['../components/page/asset/newChat.vue'], resolve),
+    },
+    {
       path: '/',
       component: resolve => require(['../components/common/home.vue'], resolve),
       children: [

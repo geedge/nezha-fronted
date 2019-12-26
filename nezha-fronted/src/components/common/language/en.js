@@ -33,6 +33,73 @@ const en = {
   asset:{
     createAsset: "Create Asset",
     asset: 'Asset',
+    createAssetTab:{
+      title:'Create Asset',
+      host:'host',
+      state:'state',
+      selectTip:'please select',
+      assetInfo:'资产信息',
+      assetType:'资产类型',
+      assetTypeTab:{
+        assetType:'资产类型',
+        addAssetType:'新增资产类型',
+        existAssetType:'已有资产类型'
+      },
+      vendor:'厂商/型号',
+      vendorTab:{
+        vendor:'厂商/型号',
+        vendorName:'新厂商名称',
+        existVendor:'已有厂商',
+        modelName:'新型号名称',
+        existModel:'已有型号'
+      },
+      purchaseDate:'购买日期',
+      dataSelectTip:'please select data',
+      dc:'DC',
+      dcName:'DC Name',
+      AddIdcTab:{
+        title:'+Add IDC',
+        dcName:'DC Name',
+        location:'Location',
+        principal:'负责人',
+        tel:'Tel'
+      },
+      editIdcTab:{
+        title:'Edit IDC',
+        dcName:'DC Name',
+        location:'Location',
+        principal:'负责人',
+        tel:'Tel'
+      },
+      location:'Location',
+      principal:'负责人',
+      tel:'Tel',
+      cabinet: '机柜',
+      AddCabinetTab:{
+        title:'+Add机柜',
+        name:'Name',
+        uSize:'U Size',
+        remark:'Desc',
+        DC:'DC',
+      },
+      editCabinetTab:{
+        title:'Edit 机柜',
+        name:'Name',
+        uSize:'U Size',
+        remark:'Desc',
+        DC:'DC',
+      },
+      uSize:'U Size',
+      remark:'Desc',
+      cli:'CLI Account',
+      loginType:'登录方式',
+      password:'password',
+      ssh:'SSH私钥',
+      account:'Account',
+      port:'Port',
+      upload:'Upload',
+      clickToUpload:'点击上传'
+    },
     tableTitle: {
       id: 'ID',
       assetType: '资产类型',
@@ -56,6 +123,7 @@ const en = {
       endPoint: 'EndPoint',
       alert: 'alert',
     },
+
   },
   config: {
     config: "Config",

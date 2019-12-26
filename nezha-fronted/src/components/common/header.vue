@@ -10,8 +10,8 @@
                 <el-submenu index="0">
                     <template slot="title">
                         <div class="menu-create">
-                          &nbsp;&nbsp;<i class="el-icon-plus"></i>
-                          <div>{{$t('overall.create')}}</div>
+                            &nbsp;&nbsp;<i class="el-icon-plus"></i>
+                            <div>{{$t('overall.create')}}</div>
                         </div>
                     </template>
                     <template v-for="(item, index) in createMenu">
@@ -34,33 +34,98 @@
                     <template v-for="(item, index) in projectData">
                         <el-menu-item :index="'2-' + index">
                             <div @click="jumpToProject(item)">
-                              <span>{{item.name}}</span>
-                              <div @click.stop="toEditProject(item)" class="menu-edit"><i class="el-icon-edit-outline"></i></div>
+                                <span>{{item.name}}</span>
+                                <div @click.stop="toEditProject(item)" class="menu-edit"><i
+                                        class="el-icon-edit-outline"></i></div>
                             </div>
                         </el-menu-item>
                     </template>
                 </el-submenu>
                 <el-submenu index="3">
                     <template slot="title">
-                        <div @click="jumpToAsset('asset')">{{$t('overall.asset')}}</div>
+                        <div @click="jumpTo('asset')">{{$t('overall.asset')}}</div>
                     </template>
                     <template v-for="(item, index) in assetData">
                         <el-menu-item :index="'3-' + index">
-                            <div @click="jumpToAsset('asset',item.id)">{{item.name}}</div>
+                            <div @click="jumpToAsset('asset',item.id)">
+                                <span>{{item.name}}</span>
+                                <el-popover
+                                        placement="bottom"
+                                        v-model="item[item.name]"
+                                        trigger="click"
+                                >
+                                    <div class="pop-window-assetType-content">
+                                        <div class="right-box-top-btns">
+                                            <div class="right-box-top-btn right-box-top-btn-full"
+                                                 @click="item[item.name] = false">
+                                                <div class="right-box-btn-icon">
+                                                    <i class="el-icon-close"></i>
+                                                </div>
+                                                <span>{{$t('overall.esc')}}</span>
+                                            </div>
+                                        </div>
+                                        <div class="pop-window">
+                                            <span style="display: block;padding-bottom: 20px">标题</span>
+                                            <div style="padding-top: 10px;padding-left: 20px">
+                                                <div>
+                                                    <label style="font-size: 12px">DN name</label>
+                                                    <input class='sidebar-pop-input' v-model="addIdcData.name"/>
+                                                </div>
+                                                <div style="padding-top: 40px">
+                                                    <label style="font-size: 12px">Loaction</label>
+                                                    <input class='sidebar-pop-input' v-model="addIdcData.location"/>
+                                                </div>
+                                                <div style="padding-top: 40px">
+                                                    <label style="font-size: 12px;padding-right: 20px">负责人</label>
+                                                    <select class='sidebar-pop-input-select'
+                                                            style="margin-left:-40px "
+                                                            v-model="addIdcData.principal"
+                                                            clearable>
+                                                        <option
+                                                                v-for="item in idcUserData"
+                                                                :key="item.key"
+                                                                :label="item.username"
+                                                                :value="item.userId"
+                                                        >
+                                                        </option>
+                                                    </select>
+                                                </div>
+                                                <div style="padding-top: 40px">
+                                                    <label style="font-size: 12px">Tel</label>
+                                                    <input class='sidebar-pop-input' v-model="addIdcData.tel"/>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="right-box-bottom-btns">
+                                        <div class="right-box-bottom-btn right-box-bottom-btn-cancel"
+                                             @click.stop="item[item.name]= false">
+                                            {{$t('overall.cancel')}}
+                                        </div>
+                                        <div class="right-box-bottom-btn right-box-bottom-btn-50"
+                                             @click="editData('idc',item.id)">
+                                            {{$t('overall.save')}}
+                                        </div>
+                                    </div>
+                                    <div @click.stop="getIDCOptionData(item.id)" slot="reference" class="menu-edit">
+                                        <i class="el-icon-edit-outline"></i>
+                                    </div>
+                                </el-popover>
+                            </div>
                         </el-menu-item>
                     </template>
                 </el-submenu>
-              <el-submenu index="4-0">
-                <template slot="title">
-                  <div @click="jumpTo('alertList')">{{$t('overall.alert')}}</div>
-                </template>
-                <el-menu-item index="4-1">
-                  <div @click="jumpTo('alertList')">{{$t('alert.alertList')}}</div>
-                </el-menu-item>
-                <el-menu-item index="4-2">
-                  <div @click="jumpTo('alertConfig')">{{$t('alert.alertConfig')}}</div>
-                </el-menu-item>
-              </el-submenu>
+                <el-submenu index="4-0">
+                    <template slot="title">
+                        <div @click="jumpTo('alertList')">{{$t('overall.alert')}}</div>
+                    </template>
+                    <el-menu-item index="4-1">
+                        <div @click="jumpTo('alertList')">{{$t('alert.alertList')}}</div>
+                    </el-menu-item>
+                    <el-menu-item index="4-2">
+                        <div @click="jumpTo('alertConfig')">{{$t('alert.alertConfig')}}</div>
+                    </el-menu-item>
+                </el-submenu>
                 <el-submenu index="5">
                     <template slot="title">
                         <div @click="jumpTo('account')">{{$t('overall.config')}}</div>
@@ -73,7 +138,6 @@
                     </el-menu-item>
                 </el-submenu>
             </el-menu>
-
         </div>
         <div class="header-right">
             <div class="header-user-con">
@@ -106,11 +170,9 @@
                 </el-popover>
             </div>
         </div>
-
-        <project-box :project="editProject" @reload="projectReload" ref="projectBox"></project-box>
+        <!--        <project-box :project="editProject" @reload="projectReload" ref="projectBox"></project-box>-->
         <module-box :currentProject="currentProject" :module="editModule" @reload="" ref="moduleBox"></module-box>
         <!--<add-endpoint-box :currentProject="currentProject" :currentModule="currentModule" @reload="" ref="addEndpointBox"></add-endpoint-box>-->
-
     </div>
 </template>
 
@@ -119,6 +181,15 @@ export default {
   name: "Header",
   data() {
     return {
+      addIdcData: {
+        id: '',
+        name: '',
+        location: '',
+        principal: '',
+        tel: ''
+      },
+      idcUserData: '',
+      IDCOptionData: [],
       language: localStorage.getItem("language"),
       assetData: [],
       projectData: [], //顶部菜单project列表中的数据
@@ -168,6 +239,52 @@ export default {
     }
   },
   methods: {
+    getUserData() {
+      this.$get('sys/user/list').then(response => {
+        if (response.code === 200) {
+          this.idcUserData = response.data.list
+        }
+      })
+    },
+    getIDCOptionData(data) {
+      this.$get('idc?id=' + data).then(response => {
+        if (response.code === 200) {
+          this.addIdcData = response.data.list[0];
+          this.clickFlush(this.addIdcData)
+        }
+      })
+    },
+    editData(data, Id) {
+      let idcData = {
+        id: '',
+        name: '',
+        location: '',
+        principal: '',
+        tel: ''
+      }
+      if (data === 'idc') {
+        idcData.id = Id
+        idcData.name = this.addIdcData.name
+        idcData.location = this.addIdcData.location
+        idcData.principal = this.addIdcData.principal
+        idcData.tel = this.addIdcData.tel
+      }
+      this.$put(data, idcData).then(res => {
+        const h = this.$createElement;
+        if (res.code === 200) {
+          this.$notify({
+            message: h('i', {style: 'color: teal'}, '修改成功'),
+            duration: 2000
+          })
+          this.$store.state.flushDataSign = true
+        }else{
+          this.$notify({
+            message: h('i', {style: 'color: teal'}, res.msg),
+            duration: 2000
+          })
+        }
+      })
+    },
     jumpTo(data) {
       this.$router.push({
         path: "/" + data,
@@ -176,13 +293,43 @@ export default {
         }
       });
     },
+    clickFlush(itemData) {
+      for (let i = 0; i < this.assetData.length; i++) {
+        const element = this.assetData[i];
+        if (element.id === itemData.id) {
+          setTimeout(() => {
+            element[element.name] = true;
+          }, 100)
+        } else {
+          element[element.name] = false
+        }
+      }
+    },
+    getAssetData() {
+      this.$get('idc', this.pageObj).then(response => {
+        if (response.code == 200) {
+          this.assetData = response.data.list
+          this.assetData.forEach(item => {
+            this.$set(item, item.name, false)
+          })
+        }
+      })
+    },
     createBox(item) {
       if (item.type == 1) {
         this.$refs.projectBox.show(true);
         this.editProject = {id: '', name: '', remark: ''};
       } else if (item.type == 2) {
         this.$refs.moduleBox.show(true);
-        this.editModule = {id: '', name: '', project: this.$store.state.currentProject, port: '', path: '', param: '', paramObj: []};
+        this.editModule = {
+          id: '',
+          name: '',
+          project: this.$store.state.currentProject,
+          port: '',
+          path: '',
+          param: '',
+          paramObj: []
+        };
       } else if (item.type == 3) {
         this.$refs.addEndpointBox.show(true);
       }
@@ -200,13 +347,6 @@ export default {
       localStorage.setItem("language", lang);
       window.location.reload();
     },
-    getAssetData() {
-      this.$get('idc', this.pageObj).then(response => {
-        if (response.code == 200) {
-          this.assetData = response.data.list
-        }
-      })
-    },
     getProjectList() {
       this.$get('project', {}).then(response => {
         if (response.code == 200) {
@@ -223,15 +363,27 @@ export default {
     }
   },
   mounted() {
+    this.getUserData();
     this.getAssetData();
     this.getProjectList();
-  },
+  }
+  ,
   computed: {
     projectListReloadWatch() {
       return this.$store.state.projectListReload;
+    },
+    getIdcData() {
+      return this.$store.state.assetData.idcData
     }
-  },
+  }
+  ,
   watch: {
+    getIdcData:{
+      handler(newVal, oldVal) {
+        this.getAssetData()
+      },
+      deep: true,
+    },
     projectListReloadWatch(n, o) {
       if (n) {
         this.getProjectList();
@@ -243,17 +395,20 @@ export default {
 </script>
 
 <style>
-.el-menu.el-menu--horizontal{
-    border-bottom:0px
+.el-menu.el-menu--horizontal {
+    border-bottom: 0px
 }
+
 .el-submenu__title .el-submenu__icon-arrow {
     display: none;
 }
-.el-menu--horizontal>.el-menu-item.is-active{
-    border-bottom:0px
+
+.el-menu--horizontal > .el-menu-item.is-active {
+    border-bottom: 0px
 }
-.el-menu--horizontal>.el-submenu.is-active .el-submenu__title{
-    border-bottom:0px
+
+.el-menu--horizontal > .el-submenu.is-active .el-submenu__title {
+    border-bottom: 0px
 }
 </style>
 
@@ -342,22 +497,103 @@ export default {
 .header-name-jiantou {
     position: static !important;
 }
-.el-menu-demo>li:first-of-type {
-  position: fixed;
-  left: 40%;
-  top: 0;
+
+.el-menu-demo > li:first-of-type {
+    position: fixed;
+    left: 40%;
+    top: 0;
 }
+
 .menu-create {
-  line-height: 15px;
-  text-align: center;
-  padding-top: 15px;
+    line-height: 15px;
+    text-align: center;
+    padding-top: 15px;
 }
+
 .menu-create .el-icon-plus {
-  font-size: 12px;
-  line-height: 12px;
+    font-size: 12px;
+    line-height: 12px;
 }
+
 .menu-edit {
     line-height: 36px;
     float: right;
+}
+
+.pop-window-assetType-content {
+    padding: 1px 15px 15px 20px;
+}
+
+.pop-window {
+    height: 370px;
+    width: 400px;
+}
+
+.right-box-top-btns {
+    text-align: center;
+}
+
+.sidebar-pop-input {
+    position: absolute;
+    right: 50px;
+    width: 200px;
+    height: 26px;
+    border-radius: 4px;
+    border: 1px solid #DCDFE6;
+    color: #606266;
+    display: inline-block;
+    padding: 0px 15px;
+}
+
+.sidebar-pop-input-select {
+    position: absolute;
+    right: 83px;
+    width: 200px;
+    height: 26px;
+    border-radius: 4px;
+    border: 1px solid #DCDFE6;
+    color: #606266;
+    display: inline-block;
+    padding: 0px 15px;
+}
+
+.right-box-top-btn {
+    border-radius: 0 0 9px 9px;
+    float: right;
+    color: #656565;
+    height: 30px;
+    font-size: 12px;
+    padding: 3px 8px 1px 8px;
+    border: 1px solid #aaaaaa;
+    border-top: none;
+    cursor: pointer;
+    margin-left: 20px;
+}
+
+.right-box-bottom-btns {
+    position: absolute;
+    bottom: 0px;
+    width: 100%;
+    text-align: center;
+}
+
+.right-box-bottom-btn-cancel {
+    background-color: #DADADA;
+    color: #656565;
+    width: 50%;
+    border-bottom-left-radius: 8px;
+}
+
+.right-box-top-btn-full {
+    background-color: #656565;
+    border: 1px solid #656565;
+    border-top: none;
+    color: white;
+}
+
+.right-box-bottom-btn-50 {
+    width: 50%;
+    float: right;
+    border-bottom-right-radius: 8px;
 }
 </style>

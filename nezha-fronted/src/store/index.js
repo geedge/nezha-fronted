@@ -7,6 +7,7 @@ const store = new Vuex.Store({
     assetData:{
       selectedData:'',
       moduleData:'',
+      idcData:''
     },
     currentProject: {
       id: '',
@@ -18,6 +19,7 @@ const store = new Vuex.Store({
     createModule: false,
     createEndpoint: false,
     createAlertConfig: false,
+    flushDataSign:false
   },
   getters: {
   },

@@ -1,6 +1,6 @@
 <template>
     <transition name="right-box">
-        <div class="right-menu" v-if="editUnitShow">
+        <div class="right-menu" v-if="editUnitShow" @click="editQuit">
             <div class="right-box-top-btns">
                 <div class="right-box-top-btn right-box-top-btn-full" @click.stop="sendStateData('close')">
                     <div class="right-box-btn-icon">
@@ -64,7 +64,7 @@
                     <!------------------------------------------资产类型---------------------------------------------->
                     <el-form-item label="资产类型">
                         <div class="select-style">
-                            <el-select v-if="!tabView" v-model="assetType" clearable
+                            <el-select v-if="!tabView" v-model="assetType" clearable @visible-change="cancelEdit"
                                        @change="getAllModelOptionData()">
                                 <el-option
                                         v-for="item in assetTypeOptionData"
@@ -78,7 +78,7 @@
                     <el-input type="text" v-model="item.value" size="mini"/>
                   </span>
                                     <span class="config-dropdown-btn"
-                                          @click.stop="editOptionData(item)">
+                                          @click.stop="editOptionData(item,'type')">
                     <i class="el-icon-edit-outline" v-if="!item.isEdit"></i>
                     <i class="el-icon-check" v-if="item.isEdit"
                        @click="editData('sys/dict/update',item)"></i>
@@ -122,21 +122,15 @@
                                                         :key="index">
                                                         <div>
                                                             <span v-if="!item.isEdit">{{ item.value }}</span>
-                                                            <span class="config-dropdown-label-input"
-                                                                  v-if="item.isEdit"
-                                                                  @click.stop="editing">
-                                <input type="text" v-model="item.value" size="mini"/>
-                              </span>
-                                                            <span class="config-dropdown-btn"
-                                                                  @click.stop="editOptionData(item,index)">
-                                <i class="el-icon-edit-outline" v-if="!item.isEdit"></i>
-                                <i class="el-icon-check" v-if="item.isEdit"
-                                   @click="editData('sys/dict/update',item)"></i>
-                              </span>
-                                                            <span class="config-dropdown-btn config-dropdown-btn-delete"
-                                                                  @click.stop="deleteData('/sys/dict/delete',item.id)"><i
-                                                                    class="el-icon-delete"></i>
-                              </span>
+                                                            <span class="config-dropdown-label-input" v-if="item.isEdit" @click.stop="editing">
+                                                                <input type="text" v-model="item.value" size="mini"/>
+                                                            </span>
+                                                            <span class="config-dropdown-btn" @click.stop="editOptionData(item,'type',index)">
+                                                                <i class="el-icon-edit-outline" v-if="!item.isEdit"></i>
+                                                                <i class="el-icon-check" v-if="item.isEdit" @click="editData('sys/dict/update',item)"></i>
+                                                             </span>
+                                                            <span class="config-dropdown-btn config-dropdown-btn-delete" @click.stop="deleteData('/sys/dict/delete',item.id)"><i class="el-icon-delete"></i>
+                                                            </span>
                                                         </div>
                                                     </li>
                                                 </ul>
@@ -210,7 +204,7 @@
                                                             <input type="text" v-model="item.value" size="mini"/>
                                                         </span>
                                                                 <span class="config-dropdown-btn"
-                                                                      @click.stop="editOptionData(item)">
+                                                                      @click.stop="editVendorOptionData(item,'vendor',index)">
                                                             <i class="el-icon-edit-outline" v-if="!item.isEdit"></i>
                                                             <i class="el-icon-check" v-if="item.isEdit"
                                                                @click="editData('sys/dict/update',item)"></i>
@@ -243,7 +237,7 @@
                                   <input type="text" v-model="item.name" size="mini"/>
                                 </span>
                                                                 <span class="config-dropdown-btn"
-                                                                      @click.stop="editOptionData(item)">
+                                                                      @click.stop="editOptionData(item,'model',index)">
                                   <i class="el-icon-edit-outline" v-if="!item.isEdit"></i>
                                   <i class="el-icon-check" v-if="item.isEdit"
                                      @click="editData('model',item)"></i>
@@ -286,7 +280,7 @@
                         </div>
                         <span v-if="tabView">{{assetData.purchaseDate}}</span>
                     </el-form-item>
-                    <div style="font-size: 10px">IDC</div>
+                    <div style="font-size: 10px">DC</div>
                     <el-divider></el-divider>
                     <!------------------------------------------IDC---------------------------------------------->
                     <el-form-item label="DC Name">
@@ -302,6 +296,7 @@
                                     <el-popover
                                             placement="left"
                                             v-model="item[item.name]"
+                                            trigger="manual"
                                     >
                                         <div class="pop-window-assetType-content">
                                             <div class="right-box-top-btns">
@@ -348,7 +343,7 @@
                                             </div>
                                         </div>
                                         <span class="config-dropdown-btn" slot="reference"
-                                              @click.stop="getSingleIDCData(item.id,'edit')"><i
+                                              @click.stop="getSingleIDCData(item.id,'edit',item)"><i
                                                 class="el-icon-edit-outline"></i></span>
                                     </el-popover>
                                     <span class="config-dropdown-btn config-dropdown-btn-delete"
@@ -359,7 +354,6 @@
                             <div class="el-select-add-btn">
                                 <el-popover
                                         placement="left"
-                                        trigger="click"
                                         v-model="editPopIDCVisible"
                                 >
                                     <div class="pop-window-assetType-content">
@@ -428,10 +422,11 @@
                     <el-form-item label="机柜">
                         <div class="select-style" v-if="!tabView">
                             <el-select clearable v-model="assetData.cabinetId" clearable
+                                       :disabled="assetData.idcId==''?true:false"
                                        @change="getSingleCabinetData">
                                 <el-option
                                         v-for="item in cabinetOptionData"
-                                        :key="item.key"
+                                        :key="item.id"
                                         :label="item.name"
                                         :value="item.id"
                                 >
@@ -466,23 +461,23 @@
                                                               type="textarea"
                                                               :rows="2"/>
                                                 </el-form-item>
-                                                <el-form-item label="IDC">
+                                                <el-form-item label="DC">
                                                     <el-select v-model="popCabinetData.idcId" clearable>
                                                         <el-option
-                                                                v-for="item in IDCOptionData"
-                                                                :key="item.key"
-                                                                :label="item.name"
-                                                                :value="item.id"
+                                                                v-for="ite in item.children"
+                                                                :key="ite.id"
+                                                                :label="ite.name"
+                                                                :value="ite.id"
                                                         >
-                                                            <span>{{ item.name }}</span>
+                                                            <span>{{ ite.name }}</span>
                                                             <el-popover
-                                                                    placement="top"
-                                                                    v-model="item[item.name+item.id]"
+                                                                    placement="left"
+                                                                    v-model="ite[ite.name+ite.id]"
                                                             >
                                                                 <div class="pop-window-assetType-content">
                                                                     <div class="right-box-top-btns">
                                                                         <div class="right-box-top-btn right-box-top-btn-full"
-                                                                             @click="item[item.name+item.id] = false">
+                                                                             @click="ite[ite.name+ite.id] = false">
                                                                             <div class="right-box-btn-icon">
                                                                                 <i class="el-icon-close"></i>
                                                                             </div>
@@ -516,20 +511,20 @@
                                                                 </div>
                                                                 <div class="right-box-bottom-btns">
                                                                     <div class="right-box-bottom-btn right-box-bottom-btn-cancel"
-                                                                         @click.stop="item[item.name+item.id]= false">
+                                                                         @click="ite[ite.name+ite.id]= false">
                                                                         {{$t('overall.cancel')}}
                                                                     </div>
                                                                     <div class="right-box-bottom-btn right-box-bottom-btn-50"
-                                                                         @click="editData('idc',item,'CabIDC')">
+                                                                         @click="editData('idc',ite,'CabIDC')">
                                                                         {{$t('overall.save')}}
                                                                     </div>
                                                                 </div>
                                                                 <span class="config-dropdown-btn" slot="reference"
-                                                                      @click="getSingleIDCData(item.id,'edit')"><i
+                                                                      @click="getSingleIDCData(ite.id,'edit',ite)">11<i
                                                                         class="el-icon-edit-outline"></i></span>
                                                             </el-popover>
                                                             <span class="config-dropdown-btn config-dropdown-btn-delete"
-                                                                  @click.stop="deleteData('idc',item.id)"><i
+                                                                  @click.stop="deleteData('idc',ite.id)"><i
                                                                     class="el-icon-delete"></i></span>
                                                         </el-option>
                                                     </el-select>
@@ -547,8 +542,8 @@
                                             </div>
                                         </div>
                                         <span class="config-dropdown-btn" slot="reference"
-                                              @click.stop=" getSingleCabinetData(item.id,'edit',item)">
-                      <i class="el-icon-edit-outline"></i></span>
+                                              @click.stop="getSingleCabinetData(item.id,'edit',item)">
+                                         <i class="el-icon-edit-outline"></i></span>
                                     </el-popover>
 
                                     <span class="config-dropdown-btn config-dropdown-btn-delete"
@@ -646,7 +641,7 @@
                                                                 </div>
                                                             </div>
                                                             <span class="config-dropdown-btn" slot="reference"
-                                                                  @click="getSingleIDCData(item.id,'edit')"><i
+                                                                  @click="getSingleIDCData(item.id,'edit',item)"><i
                                                                     class="el-icon-edit-outline"></i></span>
                                                         </el-popover>
                                                         <span class="config-dropdown-btn config-dropdown-btn-delete"
@@ -690,11 +685,22 @@
                     <el-form-item label="Account">
                         <el-input v-model="assetData.accounts[0].user"/>
                     </el-form-item>
-                    <el-form-item label="Password">
-                        <el-input v-model="assetData.accounts[0].pwd"/>
+                    <el-form-item label="pwd" v-if="assetData.accounts[0].authType==1">
+                        <el-input type="password" v-model="assetData.accounts[0].pwd"/>
                     </el-form-item>
                     <el-form-item label="Port">
                         <el-input v-model="assetData.accounts[0].port"/>
+                    </el-form-item>
+                    <el-form-item label="ssh秘钥" v-if="assetData.accounts[0].authType==2">
+                        <el-upload
+                                class="upload-demo"
+                                ref="upload"
+                                action=""
+                                :on-change="handleChange"
+                                :auto-upload="false"
+                        >
+                            <el-button size="small" type="primary">点击上传</el-button>
+                        </el-upload>
                     </el-form-item>
                 </div>
             </el-form>
@@ -730,11 +736,13 @@ export default {
         cabinetId: '',
         modelId: '',
         accounts: [{
+          id: '',
           authType: '',
           user: '',
           pwd: '',
           cert: '',
           port: '',
+          file: ''
         }]
       },
       accountData: '',
@@ -887,6 +895,11 @@ export default {
     },
   },
   methods: {
+    cancelEdit(data){
+      if(data===false){
+        this.getAssetTypeOptionData()
+      }
+    },
     clickOutSide(data) {
       if (data) {
         this.editQuit()
@@ -935,14 +948,17 @@ export default {
             this.assetData.idcId = response.data.list[0].idc.id
             this.assetData.cabinetId = response.data.list[0].cabinet == null ? '' : response.data.list[0].cabinet.id
             this.assetData.purchaseDate = response.data.list[0].purchaseDate
+            this.assetData.accounts[0].id = response.data.list[0].accounts[0].id
+            this.assetData.accounts[0].authType = response.data.list[0].accounts[0].authType
+            this.assetData.accounts[0].user = response.data.list[0].accounts[0].user
+            this.assetData.accounts[0].pwd = response.data.list[0].accounts[0].pwd
+            this.assetData.accounts[0].port = response.data.list[0].accounts[0].port
             this.idcSelectedData.location = response.data.list[0].idc.location
             this.idcSelectedData.principal = response.data.list[0].idc.principal
             this.idcSelectedData.tel = response.data.list[0].idc.tel
             this.cabinetSelectedData.uSize = response.data.list[0].cabinet == null ? '' : response.data.list[0].cabinet.uSize
             this.cabinetSelectedData.remark = response.data.list[0].cabinet == null ? '' : response.data.list[0].cabinet.remark
             this.getAllModelOptionData(this.assetType)
-            console.log(this.pageObj.id)
-            this.getAccountData(this.pageObj.id)
           }
         })
       }
@@ -952,6 +968,7 @@ export default {
         if (response.code === 200) {
           this.checkListData = this.IDCOptionData = response.data.list;
           this.markOptionData(this.IDCOptionData)
+
         }
       })
     },
@@ -967,6 +984,10 @@ export default {
         if (response.code === 200) {
           this.cabinetOptionData = response.data.list;
           this.markOptionData(this.cabinetOptionData)
+          for (let i = 0; i < this.cabinetOptionData.length; i++) {
+            this.$set(this.cabinetOptionData[i], 'children', this.IDCOptionData)
+          }
+          console.log(this.cabinetOptionData)
         }
       })
     },
@@ -1001,14 +1022,6 @@ export default {
         }
       })
     },
-    getAccountData(data) {
-      this.$get('account?assetId=' + data).then(response => {
-        if (response.code === 200) {
-          this.accountData = response.data.list
-          console.log(this.accountData)
-        }
-      })
-    },
     editData(data, item, mark) {
       let obj = {
         id: '',
@@ -1034,19 +1047,26 @@ export default {
         form.append("idcId", this.assetData.idcId);
         form.append("cabinetId", this.assetData.cabinetId);
         form.append("modelId", this.assetData.modelId);
+        form.append("accounts[0].id", this.assetData.accounts[0].id);
         form.append("accounts[0].authType", this.assetData.accounts[0].authType);
         form.append("accounts[0].user", this.assetData.accounts[0].user);
         form.append("accounts[0].pwd", this.assetData.accounts[0].pwd);
         form.append("accounts[0].port", this.assetData.accounts[0].port);
+        form.append("cert", this.assetData.accounts[0].file);
         this.$put('asset', form).then(res => {
+          const h = this.$createElement;
           if (res.code === 200) {
-            const h = this.$createElement;
             this.$notify({
               message: h('i', {style: 'color: teal'}, '修改成功'),
               duration: 2000
             });
             this.pageObj.id = ''
             this.$emit('refreshData', 'true')
+          } else {
+            this.$notify({
+              message: h('i', {style: 'color: teal'}, res.msg),
+              duration: 2000
+            });
           }
         })
       } else {
@@ -1087,8 +1107,8 @@ export default {
           item = idcData
         }
         this.$put(data, item).then(res => {
+          const h = this.$createElement;
           if (res.code === 200) {
-            const h = this.$createElement;
             this.$notify({
               message: h('i', {style: 'color: teal'}, '修改成功'),
               duration: 2000
@@ -1097,13 +1117,18 @@ export default {
             this.getCabinetOptionData('')
             this.getAllModelOptionData();
             this.$emit('refreshData', 'true')
+          } else {
+            this.$notify({
+              message: h('i', {style: 'color: teal'}, res.msg),
+              duration: 2000
+            });
           }
         })
       }
     },
     addNewData(type) {
       if (type === 'IDC') {
-        console.log(this.addIdcData)
+        const h = this.$createElement;
         this.$post('idc', this.addIdcData).then(res => {
           if (res.code === 200) {
             const h = this.$createElement;
@@ -1113,30 +1138,45 @@ export default {
             });
             this.getIDCOptionData()
             this.getAssetData()
+          } else {
+            this.$notify({
+              message: h('i', {style: 'color: teal'}, res.msg),
+              duration: 2000
+            });
           }
         })
       }
       if (type === 'assetType') {
         this.$post('sys/dict/save', this.assetTypeData).then(res => {
+          const h = this.$createElement;
           if (res.code === 200) {
             this.getAssetTypeOptionData()
-            const h = this.$createElement;
             this.$notify({
               message: h('i', {style: 'color: teal'}, '添加成功'),
+              duration: 2000
+            });
+          } else {
+            this.$notify({
+              message: h('i', {style: 'color: teal'}, res.msg),
               duration: 2000
             });
           }
         })
       }
       if (type === 'vendor') {
+        const h = this.$createElement;
         this.$post('sys/dict/save', this.addVendorData).then(res => {
           if (res.code === 200) {
-            const h = this.$createElement;
             this.$notify({
               message: h('i', {style: 'color: teal'}, '添加成功'),
               duration: 2000
             });
             this.getVendorOptionData()
+          } else {
+            this.$notify({
+              message: h('i', {style: 'color: teal'}, res.msg),
+              duration: 2000
+            });
           }
         })
       }
@@ -1144,16 +1184,15 @@ export default {
         this.addNewModelData.typeCode = this.assetType
         this.addNewModelData.vendorCode = this.vendorCode
         this.$post('model', this.addNewModelData).then(res => {
+          const h = this.$createElement;
           if (res.code === 200) {
             this.getModelOptionData(this.assetType, this.vendorCode)
-            const h = this.$createElement;
             this.$notify({
               message: h('i', {style: 'color: teal'}, '添加成功'),
               duration: 2000
             });
             this.getAllModelOptionData(this.assetType)
           } else {
-            const h = this.$createElement;
             this.$notify({
               message: h('i', {style: 'color: teal'}, res.msg),
               duration: 2000
@@ -1171,7 +1210,6 @@ export default {
               duration: 2000
             });
             this.getCabinetOptionData(this.addCabinetData.idcId)
-            this.popoverClose('cabinet')
           } else {
             this.$notify({
               message: h('i', {style: 'color: teal'}, res.msg),
@@ -1207,6 +1245,7 @@ export default {
       data.forEach(item => {
         this.$set(item, 'isEdit', false);
         this.$set(item, 'oldName', item.value);
+        this.$set(item, 'modelOldName', item.name);
         this.$set(item, item.name, false)
         this.$set(item, item.id, false)
         this.$set(item, item.id + item.name, false)
@@ -1246,8 +1285,28 @@ export default {
       }
       this.vendorTypeOptionData = result
     },
-    editOptionData(item, index) {
-      console.log(index)
+    editVendorOptionData(item,data,index){
+      this.vendorCount = index
+      if (!item.isEdit) {
+        item.isEdit = true;
+      } else {
+        if (item.name !== item.oldName) {
+          item.isEdit = false;
+        } else {
+          item.isEdit = false;
+        }
+      }
+      if(data==='vendor') {
+        for (let i = 0; i < this.vendorUlData.length; i++) {
+          const element = this.vendorUlData[i];
+          if (item.id !== element.id) {
+            element.isEdit = false
+            element.value = element.oldName
+          }
+        }
+      }
+    },
+    editOptionData(item,data,index) {
       this.modelCount = index;
       if (!item.isEdit) {
         item.isEdit = true;
@@ -1256,6 +1315,24 @@ export default {
           item.isEdit = false;
         } else {
           item.isEdit = false;
+        }
+      }
+      if(data==='type') {
+        for (let i = 0; i < this.assetTypeOptionData.length; i++) {
+          let element = this.assetTypeOptionData[i];
+          if (item.id !== element.id) {
+            element.isEdit = false
+            element.value = element.oldName
+          }
+        }
+      }
+      if(data==='model') {
+        for (let i = 0; i < this.modelUlData.length; i++) {
+          let element = this.modelUlData[i];
+          if (item.id !== element.id) {
+            element.isEdit = false
+            element.value = element.modelOldName
+          }
         }
       }
     },
@@ -1268,7 +1345,7 @@ export default {
     },
     editing() {
     },
-    getSingleIDCData(data, item) {
+    getSingleIDCData(data, item, itemData) {
       if (item !== 'edit') {
         this.idcSelectedData = '';
         this.IDCOptionData.forEach(item => {
@@ -1281,6 +1358,7 @@ export default {
         this.cabinetSelectedData.uSize = ''
         this.cabinetSelectedData.remark = null
       } else {
+        this.clickFlush('idc', itemData)
         this.IDCOptionData.forEach(item => {
           if (item.id === data) {
             this.popIdcData.name = item.name
@@ -1306,14 +1384,17 @@ export default {
           }
         })
       } else {
+        this.clickFlush('cabinet', item)
         item[item.name] = !item[item.name]
         this.cabinetOptionData.forEach(items => {
           if (items.id === data) {
             this.popCabinetData.name = items.name
             this.popCabinetData.uSize = items.uSize
             this.popCabinetData.remark = items.remark
+
           }
         })
+        console.log(this.cabinetOptionData)
       }
     },
     getSingleAsset(data) {
@@ -1324,19 +1405,16 @@ export default {
       this.vendorCount = index;
       this.vendorCode = item.code;
       this.getModelOptionData(this.assetType, this.vendorCode)
-    }
-    ,
+    },
     pageNo(val) {
       this.pageObj.pageNo = val;
       this.getAssetData()
-    }
-    ,
+    },
     pageSize(val) {
       this.pageObj.pageSize = val;
       this.getAssetData()
     },
     clickState(index, item, data) {
-      console.log(index, item)
       if (data === 'type') {
         this.modelCount = index;
         this.tempData = item;
@@ -1358,22 +1436,8 @@ export default {
         this.tempData = ''
       }
     },
-    popoverClose(data) {
-      if (data === 'type') {
-        this.modelCount = ''
-        this.popTypeVisible = false
-      }
-      if (data === 'vendor') {
-        this.popCompVisible = false;
-        this.modelUlData = '';
-        this.vendorCount = ''
-      }
-      if (data === 'idc') {
-        this.popIDCVisible = false
-      }
-      if (data === 'cabinet') {
-        this.popCabinetVisible = false
-      }
+    handleChange(file) {
+      this.assetData.accounts[0].file = file.raw
     },
     editPopoverClose(data) {
       if (data === 'type') {
@@ -1414,9 +1478,34 @@ export default {
     flushData() {
       this.getAssetData();
     },
+    clickFlush(type, itemData) {
+      if (type === 'idc') {
+        for (let i = 0; i < this.IDCOptionData.length; i++) {
+          const element = this.IDCOptionData[i];
+          if (element.id === itemData.id) {
+            setTimeout(() => {
+              element[element.name] = true;
+            }, 100)
+          } else {
+            element[element.name] = false
+          }
+        }
+      }
+      if (type === 'cabinet') {
+        for (let i = 0; i < this.cabinetOptionData.length; i++) {
+          const element = this.cabinetOptionData[i];
+          if (element.id === itemData.id) {
+            setTimeout(() => {
+              element[element.name] = true;
+            }, 100)
+          } else {
+            element[element.name] = false
+          }
+        }
+      }
+    },
   },
   mounted() {
-    this.getCabinetOptionData('')
     this.getUserData()
     this.getIDCOptionData();
     this.getVendorOptionData();
