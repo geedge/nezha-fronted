@@ -62,7 +62,7 @@
                             <div class="el-select-add-btn">
                                 <el-popover
                                         placement="left"
-                                        trigger="click"
+                                        trigger="manual"
                                         v-model="popTypeVisible"
                                 >
                                     <div class="pop-window-assetType" @click="editQuit()">
@@ -1448,10 +1448,6 @@ export default {
 </script>
 
 <style>
-.el-table {
-    font-size: 10px;
-}
-
 .el-popover {
     padding: 0px;
     border-radius: 10px;

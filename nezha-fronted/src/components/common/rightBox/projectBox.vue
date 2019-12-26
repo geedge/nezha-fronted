@@ -28,28 +28,37 @@
       <div class="right-box-title">{{rightBox.title}}</div>
       <!-- end--标题-->
 
-      <!-- begin--表单-->
+      <el-form :model="project" label-position="top" class="right-box-form">
+        <el-form-item :label='$t("project.project.projectName")' prop="name">
+          <el-input maxlength="64" show-word-limit v-model="project.name"></el-input>
+        </el-form-item>
+        <el-form-item :label='$t("project.project.description")' prop="remark">
+          <el-input type="textarea" maxlength="1024" show-word-limit v-model="project.remark"></el-input>
+        </el-form-item>
+      </el-form>
+
+      <!--&lt;!&ndash; begin&#45;&#45;表单&ndash;&gt;
       <div class="right-box-form">
-        <!--name-->
+        &lt;!&ndash;name&ndash;&gt;
         <div class="right-box-form-row">
           <div class="right-box-form-label">{{$t("project.project.projectName")}}</div>
           <div class="right-box-form-content">
             <el-input placeholder="" maxlength="64" show-word-limit v-model="project.name" size="small"></el-input>
           </div>
         </div>
-        <!--description-->
+        &lt;!&ndash;description&ndash;&gt;
         <div class="right-box-form-row">
           <div class="right-box-form-label">{{$t("project.project.description")}}</div>
           <div class="right-box-form-content">
             <el-input type="textarea" placeholder="" maxlength="1024" show-word-limit v-model="project.remark" size="small"></el-input>
           </div>
         </div>
-      </div>
+      </div>-->
 
       <!-- begin--底部按钮-->
-      <div class="right-box-bottom-btns">
+      <!--<div class="right-box-bottom-btns">
         <div @click="esc" class="right-box-bottom-btn right-box-bottom-btn-cancel right-box-bottom-btn-50">{{$t('overall.cancel')}}</div><div @click="save" class="right-box-bottom-btn right-box-bottom-btn-50">{{project.id == '' ? $t('overall.create') : $t('overall.save')}}</div>
-      </div>
+      </div>-->
       <!-- end--底部按钮-->
     </div>
   </transition>
@@ -119,7 +128,7 @@
             } else {
               this.$message.error(response.msg);
             }
-          })
+          });
         });
       }
     },

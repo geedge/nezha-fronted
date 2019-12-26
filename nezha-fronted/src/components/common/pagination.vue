@@ -2,7 +2,6 @@
   <div class="pagination">
     <el-pagination
       ref="page"
-      background
       @size-change="size"
       @prev-click="prev"
       @next-click="next"
@@ -10,7 +9,7 @@
       :current-page="pageObj.pageNo"
       :page-sizes="[20, 50, 100, 300]"
       :page-size="20"
-      layout="prev, pager, next, jumper, sizes, total"
+      layout="prev, pager, next, jumper, total"
       :total="this.pageObj.total"
     ></el-pagination>
   </div>
@@ -57,4 +56,11 @@ export default {
 </script>
 
 <style>
+  .el-pager li.active {
+    color: #f90;
+    cursor: default;
+  }
+  .el-pager li:hover, .el-pagination .btn-next:hover, .el-pagination .btn-prev:hover {
+    color: #f90;
+  }
 </style>

@@ -1,22 +1,22 @@
 * {
-    margin: 0;
-    padding: 0;
+  margin: 0;
+  padding: 0;
 }
-
 [v-cloak] {
   display: none;
 }
-
 body {
-    height: 100%;
+  height: 100%;
 }
 html {
-    height: 100%;
+  height: 100%;
 }
 .content-box {
   height: 100%;
 }
-/*通用*/
+
+
+/* begin--通用*/
 .margin-l-5 {
   margin-left: 5px !important;
 }
@@ -41,6 +41,12 @@ html {
 .margin-b-10 {
   margin-bottom: 10px !important;
 }
+.float-left {
+  float: left;
+}
+.float-right {
+  float: right;
+}
 .line-100 {
   width: 100%;
   height: 1px;
@@ -51,128 +57,175 @@ html {
 }
 /*侧滑文字*/
 .el-form-item .el-form-item__label{
-    font-size: 10px;
-    text-align : left;
+  font-size: 10px;
+  text-align : left;
 }
 /*侧滑输入框高度*/
 .el-input .el-input__inner{
-    line-height: 26px;
-    height: 26px;
+  line-height: 26px;
+  height: 26px;
 }
 /*侧滑输入框宽度*/
-.el-form-item__content .el-input{
-    width: 90%;
+.right-menu .el-form-item__content .el-input{
+  width: 90%;
 }
+/* begin--按钮组件*/
+.nz-btn {
+  border-radius: 4px;
+  cursor: pointer;
+  line-height: 18px;
+  font-size: 14px;
+  font-weight: 700;
+  padding: 4px 14px;
+  text-align: center;
+  -webkit-appearance: none;
+  white-space: nowrap;
+}
+.nz-btn.nz-btn-size-normal {} /* size默认normal，是normal时这个class可不写*/
+.nz-btn.nz-btn-size-small {
+  font-size: 12px;
+  line-height: 18px;
+  padding: 2px 12px;
+}
+.nz-btn.nz-btn-style-normal {
+  background-color: #16b;
+  background-image: linear-gradient(#2d8cec, #16b);
+  border: 1px solid #0b4075;
+  border-top-color: #16b;
+  color: #fff;
+  text-shadow: 0 1px 1px rgba(0,0,0,.75);
+}
+.nz-btn.nz-btn-style-light {
+  background-color: #dedede;
+  background-image: linear-gradient(white,#dedede);
+  border: 1px solid #b8b8b8;
+  border-top-color: #dedede;
+  color: #444;
+  text-shadow: 0 1px 1px rgba(255,255,255,.75);
+}
+.nz-btn.nz-btn-style-light:hover:not(.nz-btn-disabled) {
+  background-image: linear-gradient(#dedede,#c5c5c5);
+}
+.nz-btn.nz-btn-style-normal:hover:not(.nz-btn-disabled) {
+  background-image: linear-gradient(#16b, #0d4d8c);
+}
+.nz-btn:focus {
+  outline: 0;
+}
+.nz-btn.nz-btn-disabled {
+  background-image: none;
+  background-color: #666;
+  color: white;
+  text-shadow: none;
+  border-color: #999;
+}
+.nz-btn-group .nz-btn:first-child:not(:last-child) {
+  border-bottom-right-radius: 0;
+  border-top-right-radius: 0;
+}
+.nz-btn-group .nz-btn:last-child:not(:first-child) {
+  border-bottom-left-radius: 0;
+  border-top-left-radius: 0;
+}
+/* end--按钮组件*/
+/* end--通用*/
 
 /* begin--左侧列表*/
 .content-left {
   float: left;
-  width: 322px;
+  width: 270px;
   height: 100%;
-  background-color: #eeeeee;
-  border-right: 1px solid #dadada;
-  padding: 0 12px 0 11px;
+  border-right: 1px solid #cccccc;
+  padding: 0 12px 0 30px;
   box-sizing: border-box;
-  font-size: 14px;
 }
 .sidebar-title {
-  padding: 20px 0 0 15px;
-  color: #5e5e5e;
+  padding-top: 20px;
+  color: #aaaaaa;
+  font-size: 16px;
 }
 .sidebar-info {
-  margin-top: 27px;
-  border: 1px solid #cacaca;
-  border-radius: 6px;
   height: calc(90vh - 55px);
   width: 100%;
-}
-.sidebar-info-item:first-of-type {
-  border-radius: 6px 6px 0 0;
+  padding-top: 10px;
 }
 .sidebar-info-item {
-  height: 39px;
-  line-height: 39px;
-  padding: 0 8px 0 32px;
-  border-bottom: 1px solid #cacaca;
+  line-height: 1.5rem;
+  padding: 0 10px 0 10px;
   cursor: pointer;
-  color: #5e5e5e;
+  color: #444444;
+  margin: 0 0 7px;
 }
 .side-bar-menu-edit {
-  line-height: 40px;
+  line-height: 1.5rem;
   float: right;
 }
 .sidebar-info-item-active {
-  background-color: #5e5e5e;
-  color: white;
-}
-.sidebar-info-foot {
-  border-radius: 6px 6px 0 0;
+  border-left: 3px solid #e07700;
+  font-weight: bold;
 }
 /* end--左侧列表*/
 
 /* begin--右侧内容*/
-  /* begin--顶部工具栏*/
+.content-right {
+  height: calc(100% - 131px);
+  margin-left: 270px;
+  padding: 0 15px 0 25px;
+}
+/* begin--顶部工具栏*/
 .top-tools {
   padding: 22px 0 13px 0;
-}
-.top-tools .el-button--mini {
-  padding-top: 6px;
-  padding-bottom: 6px;
-}
-.top-tools .top-tool {
-  float: left;
-}
-.top-tools .top-tool-right {
-  float: right;
 }
 .top-tools .top-tool-search {
   width: 320px;
 }
-.top-tools .el-button-group {
-  float: left;
-}
-.top-tools .top-tool-btn {
-  border-radius: 5px;
-  width: 100px;
-}
-.top-tools .top-tool-btn:focus, .top-tools .top-tool-btn:hover {
-  color: #606266;
-  background-color: white;
-}
-.top-tools .top-tool-btn-active {
-  color: white;
-  border: 1px solid #656565;
-  background-color: #656565;
-}
-.top-tools .top-tool-btn-active:focus, .top-tools .top-tool-btn-active:hover {
-  color: white;
-  background-color: #656565;
-  border: 1px solid #656565;
-}
-.top-tools .top-tool-btn-txt {
-  font-size: 14px;
-}
-  /* end--顶部工具栏*/
-  /* start--内容*/
+/* end--顶部工具栏*/
+/* start--内容*/
 .content-right>.el-table{
-  border-radius: 4px;
-  border: 1px solid #D7D7D7;
+  border: 1px solid #d4d4d4;
+  border-left: none;
+  border-right: none;
   margin-top: 30px;
+  border-bottom: none;
 }
-.content-right {
-  height: calc(100% - 131px);
-  margin-left: 322px;
-  padding: 0 15px 0 25px;
+.content-right .el-table::before {
+  height: 0;
 }
-  /* end--内容*/
-  /* start--分页*/
+.content-right .el-table--border::after, .el-table--group::after {
+  width: 0;
+}
+.content-right .el-table__header {
+  line-height: 40px;
+  text-shadow: 1px 1px white;
+}
+.content-right .el-table .el-table__header th {
+  background-image: linear-gradient(#eee,#e0e0e0);
+  color: #444444;
+  border-right: 1px solid #d4d4d4;
+  border-left: 1px solid white;
+  border-bottom: 1px solid #d4d4d4;;
+}
+.content-right .el-table .el-table__header th:first-of-type {
+  border-left: none;
+}
+.content-right .el-table .el-table__header th:nth-last-child(2) {
+  border-right: none;
+}
+.content-right .el-table--border td, .el-table--border th, .el-table__body-wrapper .el-table--border.is-scrolling-left~.el-table__fixed {
+  border-right: none;
+}
+.content-right .el-table td {
+  padding: 4px 0;
+}
+/* end--内容*/
+/* start--分页*/
 .pagination {
   padding-top: 18px;
   text-align: center;
 }
-  /* end--分页*/
+/* end--分页*/
 
-  /* begin--右弹框滑入滑出动画*/
+/* begin--右弹框滑入滑出动画*/
 @keyframes slide-in-from-right {
   from {right: -800px}
   to {right: 0}
@@ -187,9 +240,9 @@ html {
 .right-box-leave-active {
   animation: slide-out-to-right 0.4s;
 }
-  /* end--右弹框滑入滑出动画*/
+/* end--右弹框滑入滑出动画*/
 
-  /* begin--右子弹框动画*/
+/* begin--右子弹框动画*/
 @keyframes appear {
   from {opacity:0}
   to {opacity:1}
@@ -204,7 +257,7 @@ html {
 .right-sub-box-leave-active {
   animation: disappear 0.4s;
 }
-  /* end--右子弹框动画*/
+/* end--右子弹框动画*/
 /* end--右侧内容*/
 
 /* begin--右侧弹框*/
@@ -219,8 +272,8 @@ html {
   padding: 0 20px;
 }
 
-  /*此处自定义弹框尺寸，不同功能可能需要的尺寸不一样，需自行添加*/
-.right-box-account, .right-box-prom, .right-box-alert-config, .right-box-project, .right-box-module, .right-box-edit-endpoint {
+/*此处自定义弹框尺寸，不同功能可能需要的尺寸不一样，需自行添加*/
+.right-box-account, .right-box-prom, .right-box-alert-config, .right-box-project, .right-box-module, .right-box-edit-endpoint, .right-box-panel {
   width: 520px;
   height: calc(100% - 100px);
 }
@@ -228,7 +281,7 @@ html {
   width: 820px;
   height: calc(100% - 100px);
 }
-  /* begin--右侧弹框--顶部按钮*/
+/* begin--右侧弹框--顶部按钮*/
 .right-box-top-btns {
   text-align: center;
 }
@@ -251,9 +304,9 @@ html {
   border-top: none;
   color: white;
 }
-  /* end--右侧弹框--顶部按钮*/
+/* end--右侧弹框--顶部按钮*/
 
-  /* begin--右侧弹框--内容*/
+/* begin--右侧弹框--内容*/
 .right-box-title {
   height: 30px;
   line-height: 40px;
@@ -315,9 +368,9 @@ html {
 .right-box-row-btn-active:hover {
   border: 1px solid #656565;
 }
-  /* end--右侧弹框--内容*/
+/* end--右侧弹框--内容*/
 
-  /* begin--右侧弹框--底部按钮*/
+/* begin--右侧弹框--底部按钮*/
 .right-box-bottom-btns {
   position: absolute;
   bottom: 0;
@@ -352,7 +405,7 @@ html {
 .right-box-bottom-btn-50 {
   width: 50%;
 }
-  /* end--右侧弹框--底部按钮*/
+/* end--右侧弹框--底部按钮*/
 /* end--右侧弹框*/
 /* begin--endpoint->子弹框asset搜索框前缀和后缀*/
 .right-sub-box .el-input-group__append, .right-sub-box .el-input-group__prepend, .assets-box .el-input-group__append, .assets-box .el-input-group__prepend {

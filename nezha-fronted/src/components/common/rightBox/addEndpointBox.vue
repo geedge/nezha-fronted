@@ -1,6 +1,6 @@
 <template>
   <transition name="right-box">
-    <div class="right-box right-box-add-endpoint" v-if="rightBox.show">
+    <div class="right-box right-box-add-endpoint" v-if="rightBox.show" @mousedown="showEditParamBox(false)">
       <!-- begin--顶部按钮-->
       <div class="right-box-top-btns">
         <div class="right-box-top-btn right-box-top-btn-full" @click="esc">
@@ -28,7 +28,7 @@
         <div class="right-box-form-row">
           <div class="right-box-form-label">{{$t("project.project.project")}}</div>
           <div class="right-box-form-content">
-            <el-select @change="((val) => {})" value-key="id" popper-class="config-dropdown" v-model="currentProject" placeholder="" size="small">
+            <el-select @change="((val) => {changeProject(val)})" value-key="id" popper-class="config-dropdown" v-model="currentProject" placeholder="" size="small">
               <el-option v-for="item in projectList" :key="item.id" :label="item.name" :value="item"></el-option>
             </el-select>
           </div>
@@ -37,7 +37,7 @@
         <div class="right-box-form-row">
           <div class="right-box-form-label">{{$t("project.module.module")}}</div>
           <div class="right-box-form-content">
-            <el-select @change="((val) => {})" value-key="id" popper-class="config-dropdown" v-model="currentModule" placeholder="" size="small">
+            <el-select @change="((val) => {changeModule(val)})" value-key="id" popper-class="config-dropdown" v-model="currentModuleCopy" placeholder="" size="small">
               <el-option v-for="item in moduleList" :key="item.id" :label="item.name" :value="item"></el-option>
             </el-select>
           </div>
@@ -76,6 +76,7 @@
               </div>
               <div class="line-100"></div>
               <div class="endpoint-sub-table-body">
+                <div v-if="!currentModuleCopy.id" class="endpoint-sub-table-body-dialog"></div>
                 <div @click="selectAsset(item, index)" :data="item.id" v-for="item,index in assetList" class="endpoint-sub-table-row">
                   <div class="endpoint-sub-table-col">{{item.host}}</div>
                   <div class="endpoint-sub-table-col">{{item.sn}}</div>
@@ -84,26 +85,30 @@
             </div>
             <!-- end--table-->
           </div>
+          <!--右侧endpoint列表-->
           <div class="right-child-box endpoints-box">
+            <!--module-->
             <div class="endpoints-box-module-info">
               <div class="title">{{$t('project.endpoint.moduleParameter')}}:</div>
-              <el-input class="module-info module-info-port" size="mini" v-model="currentModule.port"></el-input>
+              <el-input class="module-info module-info-port" size="mini" v-model="currentModuleCopy.port"></el-input>
               <el-popover
-                placement="top"
+                placement="bottom"
                 width="200"
                 trigger="hover"
               >
                 <div class="endpoint-param-pop">
-                  <div v-for="item,index in currentModule.paramObj">{{item.key}}={{item.value}}</div>
+                  <div v-for="item,index in currentModuleCopy.paramObj">{{item.key}}={{item.value}}</div>
                 </div>
-                <el-input slot="reference" disabled class="module-info module-info-param" size="mini" v-model="currentModule.param"></el-input>
+                <el-input @click.native.stop="showEditParamBox(true, currentModuleCopy, 1, $event)" slot="reference" disabled class="module-info module-info-param" size="mini" v-model="currentModuleCopy.param"></el-input>
               </el-popover>
-              <el-input class="module-info module-info-path" size="mini" v-model="currentModule.path"></el-input>
-              <el-button class="module-info module-info-cover" size="mini">{{$t('overall.cover')}}</el-button>
+              <el-input class="module-info module-info-path" size="mini" v-model="currentModuleCopy.path"></el-input>
+              <el-button class="module-info module-info-cover" size="mini" @click="coverEndpoint">{{$t('overall.cover')}}</el-button>
             </div>
+            <!--endpoints-->
             <div class="endpoints-box-endpoints">
               <el-table
                 :data="endpointList"
+                ref="endpointTable"
                 style="width: 100%;border-radius: 4px;"
                 height="calc(100% - 40px)"
                 empty-text=" ">
@@ -114,49 +119,66 @@
                 </el-table-column>
                 <el-table-column
                   label-class-name="endpoints-box-endpoints-title"
-                  v-for="(item, index) in endpointTableTitle"
-                  v-if="item.show"
-                  :width="item.width"
+                  v-for="(title, index) in endpointTableTitle"
+                  v-if="title.show"
+                  :width="title.width"
                   :key="`col-${index}`"
-                  :label="item.label"
+                  :label="title.label"
                 >
-                  <template slot-scope="scope" :column="item">
-                    <span v-if="item.prop == 'asset' && scope.row[item.prop]">{{scope.row[item.prop].host}}</span>
-                    <span v-else-if="item.prop == 'param'">
+                  <template slot-scope="scope" :column="title">
+                    <span v-if="title.prop == 'asset' && scope.row[title.prop]">{{scope.row[title.prop].host}}</span>
+                    <span v-else-if="title.prop == 'param'">
                       <el-popover
-                        placement="top"
+                        placement="bottom"
                         width="200"
                         trigger="hover"
                       >
                         <div class="endpoint-param-pop">
                           <div v-for="p in scope.row.paramObj">{{p.key}}={{p.value}}</div>
                         </div>
-                        <span slot="reference">{{scope.row.param.length > 8 ? scope.row.param.substring(0, 8) + '...' : scope.row.param}}</span>
+                        <span slot="reference">
+                          <span @mousedown.stop v-if="!scope.row.isEdit">{{scope.row.param.length > 8 ? scope.row.param.substring(0, 8) + '...' : scope.row.param}}</span>
+                          <span @mousedown.stop v-else @click.stop="showEditParamBox(true, scope.row, 2, $event)"><el-input disabled class="endpoint-info endpoint-info-param" size="mini" v-model="scope.row.param"></el-input></span>
+                        </span>
                       </el-popover>
                     </span>
-                    <span v-else-if="item.prop == 'path'">
+                    <span v-else-if="title.prop == 'path'">
                       <el-popover
-                        placement="top"
+                        placement="bottom"
                         width="100"
                         trigger="hover"
-                        :content="scope.row[item.prop]"
+                        :content="scope.row[title.prop]"
                       >
-                        <span slot="reference">{{scope.row.path.length > 5 ? scope.row.path.substring(0, 5) + '...' : scope.row.path}}</span>
+                        <span slot="reference">
+                          <span v-if="!scope.row.isEdit">{{scope.row.path.length > 5 ? scope.row.path.substring(0, 5) + '...' : scope.row.path}}</span>
+                          <span @mousedown.stop v-else><el-input size="mini" class="endpoint-info" v-model="scope.row.path"></el-input></span>
+                        </span>
                       </el-popover>
                     </span>
-                    <span v-else>{{scope.row[item.prop]}}</span>
+                    <span v-else-if="title.prop == 'port'">
+                      <span v-if="!scope.row.isEdit">{{scope.row.port}}</span>
+                      <span @mousedown.stop v-else><el-input size="mini" class="endpoint-info" v-model="scope.row.port"></el-input></span>
+                    </span>
+                    <span v-else-if="title.prop == 'host'">
+                      <span v-if="!scope.row.isEdit">{{scope.row.host}}</span>
+                      <span @mousedown.stop v-else><el-input size="mini" class="endpoint-info" v-model="scope.row.host"></el-input></span>
+                    </span>
                   </template>
                 </el-table-column>
                 <el-table-column label="" width="56">
-                  <template slot-scope="scope" :column="item">
+                  <template slot-scope="scope" :column="title">
                     <div>
-                      <span class="param-box-row-symbol"><i class="el-icon-edit-outline"></i></span>
-                      <span class="param-box-row-symbol"><i class="el-icon-minus"></i></span>
+                      <span v-if="!scope.row.isEdit" class="endpoint-box-row-symbol" @click="toEditEndpoint(scope.row)"><i class="el-icon-edit-outline"></i></span>
+                      <span v-else class="endpoint-box-row-symbol" @click="editEndpoint(scope.row)"><i class="el-icon-check"></i></span>
+                      <span class="endpoint-box-row-symbol" @click="removeEndpoint(scope.row)"><i class="el-icon-minus"></i></span>
                     </div>
                   </template>
                 </el-table-column>
               </el-table>
-              <div><el-button class="endpoints-clear-btn" size="mini">{{$t('overall.clear')}}</el-button></div>
+              <div>
+                <el-button class="endpoints-clear-btn" size="mini" @click="clearSelection">{{$t('overall.clear')}}</el-button>
+                <span style="display: inline-block; float: right;line-height: 39px;padding-right: 15px;">All: {{this.endpointList.length}}</span>
+              </div>
             </div>
           </div>
         </div>
@@ -169,6 +191,23 @@
       </div>
       <!-- end--底部按钮-->
 
+      <!--start--param编辑框-->
+      <transition name="right-sub-box">
+        <div @mousedown.stop class="right-sub-box" v-if="editParamBox.show" :style="'top: ' + editParamBox.top + 'px; left: ' + editParamBox.left + 'px;'">
+          <div class="param-box">
+            <div class="param-box-row" v-for="(item, index) in tempParamObj">
+              <el-input placeholder="key" class="param-box-row-key" size="mini" v-model="item.key"></el-input>
+              <span class="param-box-row-eq">=</span>
+              <el-input placeholder="value" class="param-box-row-value" size="mini" v-model="item.value"></el-input>
+              <span class="param-box-row-symbol" @click="removeParam(index)"><i class="el-icon-minus"></i></span>
+            </div>
+          </div>
+          <div style="width: 100%; text-align: center; height: 25px;">
+            <el-button @click="addParam" style="height: 18px; line-height: 18px; padding-top: 0; padding-bottom: 0;" size="mini"><i class="el-icon-plus"></i></el-button>
+          </div>
+        </div>
+      </transition>
+      <!--end--param编辑框-->
     </div>
   </transition>
 </template>
@@ -177,15 +216,16 @@
   export default {
     name: "endpointBox",
     props: {
-      endpoint: Object,
       currentProject: Object,
       currentModule: Object
     },
     data() {
       return {
+        currentModuleCopy: {},
+        tempParamObj: [],
+        tempEndpoint: {},
         rightBox: {show: false, title: this.$t('project.endpoint.createEndpoint'),isEdit: false},
-        editParamBox: {show: false}, //param编辑弹框
-        viewParamBox: {show: false}, //param查看弹框
+        editParamBox: {show: false, top: 0, left: 0, type: 0}, //param编辑弹框
         moduleParamShow: false, //module默认参数param悬浮窗
         assetSearch: {host: '', sn: '', text: '', label: 'IP', dropdownShow: false}, //侧滑框中asset的搜索相关
         assetPageObj: {pageNo: 1, pageSize: 9999},
@@ -227,47 +267,85 @@
     methods: {
       show(show) {
         this.rightBox.show = show;
+        this.currentModuleCopy = JSON.parse(JSON.stringify(this.currentModule)); //打开弹框时将currentModule还原
       },
 
-      //子弹框控制
-      showEditParamBox(show) {
+      //子弹框控制  obj: module或endpoint对象  type:1module2endpoint
+      showEditParamBox(show, obj, type, e) {
+        if (show) {
+          let position = e.target.getBoundingClientRect();
+          this.editParamBox.type = type;
+          if (this.editParamBox.type == 2) {
+            this.tempEndpoint = obj;
+          }
+          this.editParamBox.top = position.top - 234;
+          this.editParamBox.left = position.left - 48;
+          if (!obj.param) {
+            this.$set(obj, 'paramObj', []);
+            this.tempParamObj = [];
+          } else {
+            this.tempParamObj = JSON.parse(JSON.stringify(obj.paramObj));
+          }
+        } else {
+          if (this.endpointList.length > 0) {
+            for (let i = 0; i < this.endpointList.length; i++) {
+              this.endpointList[i].isEdit = false;
+            }
+          }
+          if (!this.editParamBox.show) {
+            return;
+          }
+          if (this.editParamBox.type == 1) {
+            this.currentModuleCopy.paramObj = this.tempParamObj;
+            this.currentModuleCopy.param = this.paramToJson(this.tempParamObj);
+          } else if (this.editParamBox.type == 2) {
+            for (let i = 0; i < this.endpointList.length; i++) {
+              if (this.endpointList[i].asset.id == this.tempEndpoint.asset.id) {
+                this.endpointList[i].param = this.paramToJson(this.tempParamObj);
+                this.endpointList[i].paramObj = this.tempParamObj;
+                break;
+              }
+            }
+          }
+          this.tempParamObj = [];
+        }
         this.editParamBox.show = show;
-      },
-      showViewParamBox(show) {
-        this.viewParamBox.show = show;
       },
 
       /*关闭弹框*/
       esc() {
         this.rightBox.show = false;
         this.editParamBox.show = false;
-        this.viewParamBox.show = false;
       },
 
       // 新增param
       addParam() {
-        this.endpoint.paramObj.push({key: '', value: ''});
+        this.tempParamObj.push({key: '', value: ''});
       },
 
       // 移除单个param
       removeParam(index) {
-        this.endpoint.paramObj.splice(index, 1);
+        this.tempParamObj.splice(index, 1);
       },
 
-      //将param转为json字符串格式
-      paramToJson(param) {
-        let tempParam = {};
-        if (!param) {
-          param = [];
-        }
-        for (let i = 0; i < param.length; i++) {
-          eval('tempParam.' + param[i].key + '="' + param[i].value + '"');
-        }
-        let jsonString = JSON.stringify(tempParam);
-        if (jsonString == '{}') {
-          return "";
-        } else {
-          return jsonString;
+      //编辑endpoint
+      toEditEndpoint(endpoint) {
+        endpoint.isEdit = true;
+      },
+      editEndpoint(endpoint) {
+        endpoint.isEdit = false;
+      },
+
+      //移除endpoint
+      removeEndpoint(endpoint) {
+        endpoint.isEdit = false;
+        for (let i = 0; i < this.endpointList.length; i++) {
+          if (this.endpointList[i].assetId == endpoint.assetId) {
+            this.endpointList.splice(i, 1);
+            this.assetList.unshift(endpoint.asset);
+            i--;
+            break;
+          }
         }
       },
 
@@ -276,7 +354,11 @@
         this.$get('project', {pageSize: 999, pageNo: 1}).then(response => {
           if (response.code === 200) {
             this.projectList = response.data.list;
+            if (this.moduleList.length == 0) {
+              this.getModuleList(this.currentProject.id);
+            }
           }
+
         });
       },
 
@@ -284,6 +366,16 @@
       getAssetList() {
         this.$get('asset', this.assetPageObj).then(response => {
           if (response.code === 200) {
+            let respData = response.data.list;
+            for (let i = 0; i < respData.length; i++) {
+              for (let j = 0; j < this.endpointList.length; j++) {
+                if (respData[i].id == this.endpointList[j].assetId) {
+                  respData.splice(i, 1);
+                  i--;
+                  break;
+                }
+              }
+            }
             this.assetList = response.data.list;
           }
         });
@@ -302,17 +394,41 @@
         this.getAssetList();
       },
 
+      changeProject(project) {
+        this.currentModuleCopy = {};
+        this.editParamBox.show = false;
+        this.tempParamObj = [];
+        this.endpointList = [];
+        this.getAssetList();
+      },
+
+      changeModule(module) {
+        this.editParamBox.show = false;
+        this.tempParamObj = [];
+      },
+
+      //清空勾选的endpoint
+      clearSelection() {
+        let selections = this.$refs.endpointTable.selection;
+        if (selections && selections.length > 0) {
+          for (let i = 0; i < selections.length; i++) {
+            this.removeEndpoint(selections[i])
+          }
+        }
+      },
+
       // endpoint弹框中的asset子弹框里asset选择事件
       selectAsset(obj, index) {
         this.endpointList.push({
+          isEdit: false,
           assetId: obj.id,
           asset: obj,
           host: obj.host,
-          param: this.currentModule.param,
-          paramObj: this.currentModule.paramObj,
-          port: this.currentModule.port,
-          path: this.currentModule.path,
-          moduleId: this.currentModule.id
+          param: this.currentModuleCopy.param,
+          paramObj: this.currentModuleCopy.paramObj,
+          port: this.currentModuleCopy.port,
+          path: this.currentModuleCopy.path,
+          moduleId: this.currentModuleCopy.id
         });
         this.assetList.splice(index, 1);
       },
@@ -321,7 +437,7 @@
       paramToJson(param) {
         let tempParam = {};
         for (let i = 0; i < param.length; i++) {
-          eval('tempParam.' + param[i].key + '="' + param[i].value + '"');
+          eval('tempParam["' + param[i].key + '"]="' + param[i].value + '"');
         }
         let jsonString = JSON.stringify(tempParam);
         if (jsonString == '{}') {
@@ -353,10 +469,7 @@
 
       //保存endpoint
       save() {
-        this.endpoint.moduleId = this.currentModule.id;
-        this.endpoint.projectId = this.currentProject.id;
-        this.endpoint.param = this.paramToJson(this.endpoint.paramObj);
-        this.$put('endpoint', this.endpoint).then(response => {
+        this.$post('endpoint', this.endpointList).then(response => {
           if (response.code === 200) {
             this.$message({duration: 1000, type: 'success', message: this.$t("tip.saveSuccess")});
             this.esc();
@@ -367,8 +480,17 @@
         });
       },
 
-      //param展示悬浮框
-      viewParam(item, flag, event) {
+      //覆盖endpoint的port/path/param
+      coverEndpoint() {
+        if (this.endpointList.length > 0) {
+          for (let i = 0; i < this.endpointList.length; i++) {
+            this.endpointList[i].port = this.currentModuleCopy.port;
+            this.endpointList[i].param = this.currentModuleCopy.param;
+            this.endpointList[i].paramObj = this.currentModuleCopy.paramObj;
+            this.endpointList[i].path = this.currentModuleCopy.path;
+          }
+          this.$message({duration: 1000, type: 'success', message: this.$t("tip.coverSuccess")});
+        }
       },
 
       //删除endpoint
@@ -394,21 +516,22 @@
         this.assetSearch.label = label;
         this.assetSearch.dropdownShow = false;
       },
+
+      clearEndpoints() {
+        this.getAssetList();
+        this.endpointList = [];
+      }
     },
     created() {
       this.getProjectList();
       this.getAssetList();
     },
-    mounted() {
-      this.getModuleList(this.currentProject.id);
-    },
     watch: {
-      endpoint(n, o) {
-        if (n && n.id) {
-          this.rightBox.title = this.$t("project.endpoint.editEndpoint") + "  ID：" + n.id;
-        } else {
-          this.rightBox.title = this.$t("project.endpoint.createEndpoint");
-        }
+      currentProject(n, o) {
+        this.getModuleList(n.id);
+      },
+      currentModule(n, o) {
+        this.currentModuleCopy = JSON.parse(JSON.stringify(n));
       }
     }
   }
@@ -441,15 +564,8 @@
   }
 
   .param-box {
-    border: 1px solid #DCDFE6;
-    border-radius: 4px;
-    padding: 0 10px;
-  }
-  .param-box-endpoint {
-    height: 325px;
-  }
-  .param-box-module {
-    height: 227px;
+    height: 200px;
+    overflow: auto;
   }
   .param-box-row {
     padding: 7px 0 0 0;
@@ -460,14 +576,14 @@
   }
   .param-box-row-key, .param-box-row-value {
     display: inline-block;
-    width: 41.5%;
+    width: 50px;
   }
   .param-box-row-eq {
     display: inline-block;
-    width: 22px;
+    width: 18px;
     text-align: center;
-    height: 32px;
-    line-height: 32px;
+    height: 22px;
+    line-height: 22px;
     color: #c4c7cF;
   }
   .param-box-row-symbol:first-of-type {
@@ -476,7 +592,7 @@
     text-align: center;
     display: inline-block;
     position: absolute;
-    top: 6px;
+    top: 7px;
     right: 34px;
     cursor: pointer;
   }
@@ -489,8 +605,8 @@
     width: 14px;
     display: inline-block;
     position: absolute;
-    top: 9px;
-    right: 14px;
+    top: 12px;
+    left: 135px;
     cursor: pointer;
   }
   .param-box-row-symbol>i {
@@ -536,10 +652,10 @@
 
   .right-child-box .module-info {
     display: inline-block;
-    height: 33px;
+    height: 24px;
     vertical-align: middle;
     position: absolute;
-    top: 2px;
+    top: 5px;
   }
   .right-child-box-title {
     padding: 9px 0 0 4px;
@@ -569,9 +685,12 @@
     width: 60px;
     right: 52px;
   }
+  .endpoint-info-param {
+    width: 80px;
+  }
   .right-child-box .module-info-cover {
     right: 4px;
-    height: 28px;
+    height: 24px;
     padding: 5px 5px;
     background: #656565;
     color: white;
@@ -591,17 +710,11 @@
 
   /* begin--子弹框*/
   .right-sub-box {
-    width: 380px;
-    height: 520px;
-    position: absolute;
-    right: 80px;
+    width: 170px;
+    height: 225px;
+    position: fixed;
     z-index: 2;
-    padding: 0 10px;
-  }
-  .right-sub-box .el-input-group {
-    width: 227px;
-    float: right;
-    margin: 7px 0 0 0;
+    padding: 0 0 0 10px;
   }
   /* begin--搜索框*/
   .endpoint-asset-prepend {
@@ -652,7 +765,7 @@
     line-height: 28px;
     height: 30px;
   }
-  .endpoint-sub-table-row {
+  .endpoint-sub-table-row, .endpoint-sub-table-row-disabled {
     line-height: 28px;
     height: 30px;
     color: #656565;
@@ -681,8 +794,16 @@
   }
   .endpoint-sub-table-body {
     font-size: 15px;
+    position: relative;
     overflow: auto;
     height: calc(100% - 95px);
+  }
+  .endpoint-sub-table-body-dialog {
+    width: 100%;
+    height: 100%;
+    background-color: #e9ebec;
+    position: absolute;
+    opacity: 0.2;
   }
   .endpoints-clear-btn {
     margin: 6px 0 0 10px;
@@ -692,8 +813,12 @@
   /* end--子弹框*/
 </style>
 <style>
-  .module-info.el-input input {
+  .endpoints-box-module-info .el-input input,
+  .endpoints-box-endpoints .el-input input,
+  .right-sub-box .el-input input{
     padding: 0 5px;
+    height: 24px;
+    line-height: 24px;
   }
   .endpoints-box-endpoints-title {
     color: black;
@@ -708,14 +833,16 @@
   .endpoints-box-endpoints .el-table .el-table__row td{
     padding: 5px 0;
   }
-  .module-info-param.el-input.is-disabled .el-input__inner {
+  .module-info-param.el-input.is-disabled .el-input__inner, .endpoint-info-param.el-input.is-disabled .el-input__inner,
+  .endpoint-info-param.el-input.is-disabled .el-input__inner, .endpoint-info-param.el-input.is-disabled .el-input__inner {
     cursor: pointer;
     background-color: white;
     border-color: #DCDFE6;
     color: #606266;
     transition: border-color .2s cubic-bezier(.645,.045,.355,1);
   }
-  .module-info-param.el-input.is-disabled .el-input__inner:hover {
+  .module-info-param.el-input.is-disabled .el-input__inner:hover, .endpoint-info-param.el-input.is-disabled .el-input__inner:hover,
+  .endpoint-info-param.el-input.is-disabled .el-input__inner:hover, .endpoint-info-param.el-input.is-disabled .el-input__inner:hover {
     border-color: #c0c4cc;
   }
 </style>

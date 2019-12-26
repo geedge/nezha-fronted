@@ -18,17 +18,39 @@ const en = {
     clearAll: "Clear All",
     clear: "Clear",
     name: 'Name',
-    cover: 'Cover'
+    cover: 'Cover',
+    signOut: 'Sign Out'
   },
+  dashboard:{
+    title:'Dashboard',
+    panel:{
+      title:'Panel',
+      //侧滑框
+      createPanelTitle: "Create Panel",
+      createPanelTitleSec:"Create New Panel",
+      editPanelTitle: "Panel",
+      panelForm:{
+        panelName:"Panel Name",
+        panelId:"ID"
+      }
+    },
+    metricPreview:{
+      title:'MetricPreview',
+    }
+  },
+
   search: {
-    searchTip: 'Press Enter or click to search'
+    searchTip: 'Press Enter or click to search',
+    recentSearch: 'Recent Searches',
+    noRecentSearch: 'No Recent Searches'
   },
   tip: {
     confirmDelete: "Confirm Delete?",
     yes: "Yes",
     no: "No",
     deleteSuccess: "Successfully Deleted",
-    saveSuccess: "Successfully Saved"
+    saveSuccess: "Successfully Saved",
+    coverSuccess: 'Successfully Covered'
   },
   asset:{
     createAsset: "Create Asset",
@@ -141,7 +163,8 @@ const en = {
       accountId: "Accound ID",
       createAccount: "Create Account",
       editAccount: "Edit Account",
-      notCurrentlySupport: 'Not currently supported'
+      notCurrentlySupport: 'Not currently supported',
+      password: 'Password'
     },
     promServer: {
       promServerList: "Prometheus Server",

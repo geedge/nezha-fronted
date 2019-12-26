@@ -16,6 +16,23 @@ const cn = {
     add: '新增',
     option: "操作"
   },
+  dashboard:{
+    title:'仪表盘',
+    panel:{
+      title:'看板',
+      //侧滑框
+      createPanelTitle: "创建面板",
+      createPanelTitleSec:"创建新面板",
+      editPanelTitle: "编辑面板",
+      panelForm:{
+        panelName:"面板名称" ,
+        panelId:"ID"
+      }
+    },
+    metricPreview:{
+      title:'指标预览',
+    }
+  },
   asset: {
     tableTitle: {
       id: 'ID',

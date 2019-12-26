@@ -3,11 +3,6 @@
     height: 100%;
   }
 
-  .content-right {
-    height: calc(100% - 131px);
-    margin-left: 322px;
-    padding: 0 15px 0 25px;
-  }
   .content-right-option {
     cursor: pointer;
     display: inline-block;
@@ -54,11 +49,10 @@
         </div>
         <div class="content-right">
             <div class="top-tools">
-              <el-button @click="toAdd" class="top-tool-btn top-tool-btn-active top-tool margin-l-10 top-tool-right" size="mini">
-                <span><i class="el-icon-plus"></i></span>
+              <button @click="toAdd" class="nz-btn nz-btn-size-normal nz-btn-style-normal float-right">
                 <span class="top-tool-btn-txt">{{$t('overall.add')}}</span>
-              </el-button>
-              <div class="top-tool-search top-tool top-tool-right"><search-input :searchMsg="searchMsg" @search="search"></search-input></div>
+              </button>
+              <div class="top-tool-search float-right"><search-input :searchMsg="searchMsg" @search="search"></search-input></div>
             </div>
             <el-table
                   :data="tableData"
@@ -66,6 +60,7 @@
                   height="calc(100% - 65px)"
                   style="width: 100%;">
                 <el-table-column
+                  :resizable="false"
                   v-for="(item, index) in tableTitle"
                   v-if="item.show"
                   :width="item.width"
@@ -148,6 +143,19 @@
                             <div v-if="!rightBox.isEdit" class="right-box-form-content-txt">{{user.username}}</div>
                         </div>
                     </div>
+                    <div class="right-box-form-row" v-if="rightBox.isEdit && !user.userId">
+                        <div class="right-box-form-label">{{$t('config.account.password')}}</div>
+                        <div class="right-box-form-content">
+                            <el-input
+                              type="text"
+                              placeholder=""
+                              v-model="user.password"
+                              maxlength="16"
+                              show-word-limit
+                              size="small"
+                            ></el-input>
+                        </div>
+                    </div>
                     <div class="right-box-form-row">
                         <div class="right-box-form-label">E-mail</div>
                         <div class="right-box-form-content">
@@ -161,7 +169,7 @@
                           <div v-if="!rightBox.isEdit" class="right-box-form-content-txt">{{user.email}}</div>
                         </div>
                     </div>
-                    <div class="right-box-form-row">
+                    <!--<div class="right-box-form-row">
                         <div class="right-box-form-label">{{$t('config.account.receiver')}}</div>
                         <div class="right-box-form-content">
                             <el-select class="right-box-row-with-btn" value-key="id" popper-class="config-dropdown" multiple v-model="user.receiver" placeholder="" v-if="rightBox.isEdit" size="small">
@@ -194,13 +202,13 @@
                                 <template v-for="rec in user.receiver">{{rec.name}}</template>
                             </div>
                         </div>
-                    </div>
+                    </div>-->
                     <div class="right-box-form-row">
                         <div class="right-box-form-label">{{$t('config.account.language')}}</div>
                         <div class="right-box-form-content">
                             <el-radio v-model="user.lang" label="en" :disabled="!rightBox.isEdit && user.lang != 'en'">English</el-radio>
                             <el-radio v-model="user.lang" label="zh" :disabled="!rightBox.isEdit && user.lang != 'zh'">中文</el-radio>
-                            <el-radio v-model="user.lang" label="ru" disabled>русский（{{$t('config.account.notCurrentlySupport')}}）</el-radio>
+                            <!--<el-radio v-model="user.lang" label="ru" disabled>русский（{{$t('config.account.notCurrentlySupport')}}）</el-radio>-->
                         </div>
                     </div>
                     <div class="right-box-form-row">
@@ -282,7 +290,7 @@ export default {
         }, {
           label: this.$t('config.account.receiver'),
           prop: 'receiver',
-          show: true,
+          show: false,
           width: 240
         }, {
           label: this.$t('config.account.createTime'),
@@ -375,7 +383,7 @@ export default {
       this.$set(this.searchLabel, "pageSize", this.pageObj.pageSize);
       this.$get('sys/user/list', this.searchLabel).then(response => {
         if (response.code === 200) {
-          for (var i = 0; i < response.data.list.length; i++) {
+          for (let i = 0; i < response.data.list.length; i++) {
             response.data.list[i].status = response.data.list[i].status + "";
           }
           this.tableData = response.data.list;
@@ -452,7 +460,7 @@ export default {
       }
     },
     blurEditReceiver: function() {
-      for (var i = 0; i < this.receiverData.length; i++) {
+      for (let i = 0; i < this.receiverData.length; i++) {
         if (this.receiverData[i].isEdit) {
           this.receiverData[i].name = this.receiverData[i].oldName;
           this.receiverData[i].isEdit = false;
@@ -466,7 +474,7 @@ export default {
       //TODO 请求后台，删除用户组
     },
     initReceiverData: function() {
-      for (var i = 0; i < this.receiverData.length; i++) {
+      for (let i = 0; i < this.receiverData.length; i++) {
         this.$set(this.receiverData[i], 'oldName', this.receiverData[i].name);
         this.$set(this.receiverData[i], 'isEdit', false);
       }
@@ -476,7 +484,7 @@ export default {
     },
     updateReceiverName: function(item) {
       //TODO 请求接口改名
-      var code = 200;
+      let code = 200;
       //this.$set(item, 'errorMessage', 'err');
       item.errorMessage = '';
       item.oldName = item.name;
