@@ -308,16 +308,17 @@
           this.getAssetList();
         }
       },
-      del: function(u) {
+      del: function() {
         this.$confirm(this.$t("tip.confirmDelete"), {
           confirmButtonText: this.$t("tip.yes"),
           cancelButtonText: this.$t("tip.no"),
           type: 'warning'
         }).then(() => {
-          this.$delete("alert/rule?ids=" + u.id).then(response => {
+          this.$delete("alert/rule?ids=" + this.alertRule.id).then(response => {
             if (response.code === 200) {
               this.$message({type: 'success', message: this.$t("tip.deleteSuccess")});
               this.$emit('reload');
+              this.rightBox.show = false;
             } else {
               this.$message.error(response.msg);
             }
