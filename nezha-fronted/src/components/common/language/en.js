@@ -21,6 +21,24 @@ const en = {
     cover: 'Cover',
     signOut: 'Sign Out'
   },
+  dashboard:{
+    title:'Dashboard',
+    panel:{
+      title:'Panel',
+      //侧滑框
+      createPanelTitle: "Create Panel",
+      createPanelTitleSec:"Create New Panel",
+      editPanelTitle: "Panel",
+      panelForm:{
+        panelName:"Panel Name",
+        panelId:"ID"
+      }
+    },
+    metricPreview:{
+      title:'MetricPreview',
+    }
+  },
+
   search: {
     searchTip: 'Press Enter or click to search',
     recentSearch: 'Recent Searches',

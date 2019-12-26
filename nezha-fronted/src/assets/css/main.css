@@ -267,7 +267,7 @@ html {
 }
 
   /*此处自定义弹框尺寸，不同功能可能需要的尺寸不一样，需自行添加*/
-.right-box-account, .right-box-prom, .right-box-alert-config, .right-box-project, .right-box-module, .right-box-edit-endpoint {
+.right-box-account, .right-box-prom, .right-box-alert-config, .right-box-project, .right-box-module, .right-box-edit-endpoint ,.right-box-panel {
   width: 520px;
   height: calc(100% - 100px);
 }

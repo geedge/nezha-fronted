@@ -22,6 +22,14 @@ export default new Router({
           component: resolve => require(['../components/page/dashboard.vue'], resolve),
         },
         {
+          path: '/panel',
+          component: resolve => require(['../components/page/dashboard/panel.vue'], resolve),
+        },
+        {
+          path: '/metricPreview',
+          component: resolve => require(['../components/page/dashboard/metricPreview.vue'], resolve),
+        },
+        {
           path: '/project',
           component: resolve => require(['../components/page/project/project.vue'], resolve),
         },
