@@ -23,11 +23,18 @@
             </el-menu-item>
           </template>
         </el-submenu>
-        <el-menu-item index="1" @click="jumpTo('dashboard')">
-          <div>
-            {{$t('overall.dashboard')}}
-          </div>
-        </el-menu-item>
+        <el-submenu index="1"  popper-class="nz-submenu">
+          <template slot="title">
+            <div @click="jumpTo('dashboard')">{{$t('overall.dashboard')}}</div>
+          </template>
+          <el-menu-item index="1-0">
+            <div @click="jumpTo('panel')">{{$t('dashboard.panel.title')}}</div>
+          </el-menu-item>
+          <el-menu-item index="1-1">
+            <div @click="jumpTo('metricPreview')">{{$t('dashboard.metricPreview.title')}}</div>
+          </el-menu-item>
+        </el-submenu>
+
         <el-submenu index="2" popper-class="nz-submenu">
           <template slot="title">
             <div @click="jumpToProject(projectData[0])">{{$t('overall.project')}}</div>
