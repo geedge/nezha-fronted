@@ -95,7 +95,7 @@ router.beforeEach((to, from, next) => {
   if (to.path === '/login') {
     next()
   } else {
-    let token = sessionStorage.getItem('token');
+    let token = sessionStorage.getItem('nz-token');
     if (token) {
       next()
     } else {
