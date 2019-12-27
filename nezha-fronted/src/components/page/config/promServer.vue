@@ -65,7 +65,7 @@
         <div class="content-left">
             <div class="sidebar-title">{{$t('config.config')}}</div>
             <div class="sidebar-info">
-                <div class="sidebar-info-item sidebar-info-top" @click="jumpTo('account')">{{$t('config.account.accountList')}}</div>
+                <div class="sidebar-info-item sidebar-info-top" @click="jumpTo('account')">{{$t('config.account.account')}}</div>
                 <div class="sidebar-info-item sidebar-info-item-active">{{$t('config.promServer.promServerList')}}</div>
             </div>
         </div>

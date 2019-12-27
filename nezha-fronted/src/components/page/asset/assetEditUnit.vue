@@ -1500,46 +1500,6 @@ export default {
 }
 </script>
 
-<style>
-.el-popover {
-    padding: 0px;
-    border-radius: 10px;
-}
-
-.el-form-style .el-form-item {
-    margin-bottom: 0px;
-}
-
-.el-form-style .el-form-item .el-form-item__content {
-    height: 25px;
-    font-size: 10px;
-}
-
-.el-checkbox.is-bordered + .el-checkbox.is-bordered {
-    margin-left: 0px;
-    margin-top: 20px;
-}
-
-.el-divider--horizontal {
-    margin: 15px;
-}
-
-.el-checkbox-group {
-    padding-top: 10px;
-}
-
-.el-checkbox {
-    width: 270px;
-}
-
-.select-style .el-select .el-input .el-input__inner {
-    width: 400px
-}
-
-.el-scrollbar .el-input {
-    width: 200px
-}
-</style>
 <style scoped>
 
 .el-form-style {

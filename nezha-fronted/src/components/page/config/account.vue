@@ -43,13 +43,13 @@
         <div class="content-left">
             <div class="sidebar-title">Config</div>
             <div class="sidebar-info">
-                <div class="sidebar-info-item sidebar-info-top sidebar-info-item-active">Account List</div>
-                <div class="sidebar-info-item" @click="jumpTo('promServer')">Prometheus Server</div>
+                <div class="sidebar-info-item sidebar-info-top sidebar-info-item-active">{{$t('config.account.account')}}</div>
+                <div class="sidebar-info-item" @click="jumpTo('promServer')">{{$t('config.promServer.promServerList')}}</div>
             </div>
         </div>
         <div class="content-right">
             <div class="top-tools">
-              <button @click="toAdd" class="nz-btn nz-btn-size-normal nz-btn-style-normal float-right">
+              <button type="button" @click="toAdd" class="nz-btn nz-btn-size-normal nz-btn-style-normal float-right">
                 <span class="top-tool-btn-txt">{{$t('overall.add')}}</span>
               </button>
               <div class="top-tool-search float-right"><search-input :searchMsg="searchMsg" @search="search"></search-input></div>
@@ -203,14 +203,14 @@
                             </div>
                         </div>
                     </div>-->
-                    <div class="right-box-form-row">
-                        <div class="right-box-form-label">{{$t('config.account.language')}}</div>
-                        <div class="right-box-form-content">
-                            <el-radio v-model="user.lang" label="en" :disabled="!rightBox.isEdit && user.lang != 'en'">English</el-radio>
-                            <el-radio v-model="user.lang" label="zh" :disabled="!rightBox.isEdit && user.lang != 'zh'">中文</el-radio>
-                            <!--<el-radio v-model="user.lang" label="ru" disabled>русский（{{$t('config.account.notCurrentlySupport')}}）</el-radio>-->
+                  <!--<div class="right-box-form-row">
+                      <div class="right-box-form-label">{{$t('config.account.language')}}</div>
+                      <div class="right-box-form-content">
+                          <el-radio v-model="user.lang" label="en" :disabled="!rightBox.isEdit && user.lang != 'en'">English</el-radio>
+                          <el-radio v-model="user.lang" label="zh" :disabled="!rightBox.isEdit && user.lang != 'zh'">中文</el-radio>
+                          <el-radio v-model="user.lang" label="ru" disabled>русский（{{$t('config.account.notCurrentlySupport')}}）</el-radio>
                         </div>
-                    </div>
+                    </div>-->
                     <div class="right-box-form-row">
                         <div class="right-box-form-label">{{$t('config.account.enable')}}</div>
                         <div class="right-box-form-content">
@@ -276,22 +276,19 @@ export default {
           label: this.$t("config.account.account"),
           prop: 'username',
           show: true,
-          width: 240
         }, {
           label: 'E-mail',
           prop: 'email',
           show: true,
-          width: 240
-        }, {
+        }, /*{
           label: this.$t("config.account.language"),
           prop: 'lang',
           show: true,
           width: 200
-        }, {
+        },*/ {
           label: this.$t('config.account.receiver'),
           prop: 'receiver',
           show: false,
-          width: 240
         }, {
           label: this.$t('config.account.createTime'),
           prop: 'createTime',

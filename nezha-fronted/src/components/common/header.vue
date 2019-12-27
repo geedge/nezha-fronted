@@ -23,7 +23,7 @@
             </el-menu-item>
           </template>
         </el-submenu>
-        <el-submenu index="1"  popper-class="nz-submenu">
+        <el-submenu index="1" popper-class="nz-submenu">
           <template slot="title">
             <div @click="jumpTo('dashboard')">{{$t('overall.dashboard')}}</div>
           </template>
@@ -43,85 +43,86 @@
             <el-menu-item :index="'2-' + index">
               <div @click="jumpToProject(item)">
                 <span>{{item.name}}</span>
-                <div @click.stop="toEditProject(item)" class="menu-edit"><i style="color: inherit" class="el-icon-edit-outline"></i></div>
+                <div @click.stop="toEditProject(item)" class="menu-edit"><i style="color: inherit"
+                                                                            class="el-icon-edit-outline"></i></div>
               </div>
             </el-menu-item>
           </template>
         </el-submenu>
-          <el-submenu index="3">
-              <template slot="title">
-                  <div @click="jumpTo('asset')">{{$t('overall.asset')}}</div>
-              </template>
-              <template v-for="(item, index) in assetData">
-                  <el-menu-item :index="'3-' + index">
-                      <div @click="jumpToAsset('asset',item.id)">
-                          <span>{{item.name}}</span>
-                          <el-popover
-                                  placement="bottom"
-                                  v-model="item[item.name]"
-                                  trigger="click"
-                          >
-                              <div class="pop-window-assetType-content">
-                                  <div class="right-box-top-btns">
-                                      <div class="right-box-top-btn right-box-top-btn-full"
-                                           @click="item[item.name] = false">
-                                          <div class="right-box-btn-icon">
-                                              <i class="el-icon-close"></i>
-                                          </div>
-                                          <span>{{$t('overall.esc')}}</span>
-                                      </div>
-                                  </div>
-                                  <div class="pop-window">
-                                      <span style="display: block;padding-bottom: 20px">标题</span>
-                                      <div style="padding-top: 10px;padding-left: 20px">
-                                          <div>
-                                              <label style="font-size: 12px">DN name</label>
-                                              <input class='sidebar-pop-input' v-model="addIdcData.name"/>
-                                          </div>
-                                          <div style="padding-top: 40px">
-                                              <label style="font-size: 12px">Loaction</label>
-                                              <input class='sidebar-pop-input' v-model="addIdcData.location"/>
-                                          </div>
-                                          <div style="padding-top: 40px">
-                                              <label style="font-size: 12px;padding-right: 20px">负责人</label>
-                                              <select class='sidebar-pop-input-select'
-                                                      style="margin-left:-40px "
-                                                      v-model="addIdcData.principal"
-                                                      clearable>
-                                                  <option
-                                                          v-for="item in idcUserData"
-                                                          :key="item.key"
-                                                          :label="item.username"
-                                                          :value="item.userId"
-                                                  >
-                                                  </option>
-                                              </select>
-                                          </div>
-                                          <div style="padding-top: 40px">
-                                              <label style="font-size: 12px">Tel</label>
-                                              <input class='sidebar-pop-input' v-model="addIdcData.tel"/>
-                                          </div>
-                                      </div>
-                                  </div>
-                              </div>
-                              <div class="right-box-bottom-btns">
-                                  <div class="right-box-bottom-btn right-box-bottom-btn-cancel"
-                                       @click.stop="item[item.name]= false">
-                                      {{$t('overall.cancel')}}
-                                  </div>
-                                  <div class="right-box-bottom-btn right-box-bottom-btn-50"
-                                       @click="editData('idc',item.id)">
-                                      {{$t('overall.save')}}
-                                  </div>
-                              </div>
-                              <div @click.stop="getIDCOptionData(item.id)" slot="reference" class="menu-edit">
-                                  <i class="el-icon-edit-outline"></i>
-                              </div>
-                          </el-popover>
+        <el-submenu index="3" popper-class="nz-submenu">
+          <template slot="title">
+            <div @click="jumpTo('asset')">{{$t('overall.asset')}}</div>
+          </template>
+          <template v-for="(item, index) in assetData">
+            <el-menu-item :index="'3-' + index">
+              <div @click="jumpToAsset('asset',item.id)">
+                <span>{{item.name}}</span>
+                <el-popover
+                  placement="bottom"
+                  v-model="item[item.name]"
+                  trigger="click"
+                >
+                  <div class="pop-window-assetType-content">
+                    <div class="right-box-top-btns">
+                      <div class="right-box-top-btn right-box-top-btn-full"
+                           @click="item[item.name] = false">
+                        <div class="right-box-btn-icon">
+                          <i class="el-icon-close"></i>
+                        </div>
+                        <span>{{$t('overall.esc')}}</span>
                       </div>
-                  </el-menu-item>
-              </template>
-          </el-submenu>
+                    </div>
+                    <div class="pop-window">
+                      <span style="display: block;padding-bottom: 20px">标题</span>
+                      <div style="padding-top: 10px;padding-left: 20px">
+                        <div>
+                          <label style="font-size: 12px">DN name</label>
+                          <input class='sidebar-pop-input' v-model="addIdcData.name"/>
+                        </div>
+                        <div style="padding-top: 40px">
+                          <label style="font-size: 12px">Loaction</label>
+                          <input class='sidebar-pop-input' v-model="addIdcData.location"/>
+                        </div>
+                        <div style="padding-top: 40px">
+                          <label style="font-size: 12px;padding-right: 20px">负责人</label>
+                          <select class='sidebar-pop-input-select'
+                                  style="margin-left:-40px "
+                                  v-model="addIdcData.principal"
+                                  clearable>
+                            <option
+                              v-for="item in idcUserData"
+                              :key="item.key"
+                              :label="item.username"
+                              :value="item.userId"
+                            >
+                            </option>
+                          </select>
+                        </div>
+                        <div style="padding-top: 40px">
+                          <label style="font-size: 12px">Tel</label>
+                          <input class='sidebar-pop-input' v-model="addIdcData.tel"/>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="right-box-bottom-btns">
+                    <div class="right-box-bottom-btn right-box-bottom-btn-cancel"
+                         @click.stop="item[item.name]= false">
+                      {{$t('overall.cancel')}}
+                    </div>
+                    <div class="right-box-bottom-btn right-box-bottom-btn-50"
+                         @click="editData('idc',item.id)">
+                      {{$t('overall.save')}}
+                    </div>
+                  </div>
+                  <div @click.stop="getIDCOptionData(item.id)" slot="reference" class="menu-edit">
+                    <i style="color: inherit" class="el-icon-edit-outline"></i>
+                  </div>
+                </el-popover>
+              </div>
+            </el-menu-item>
+          </template>
+        </el-submenu>
         <el-submenu index="4-0" popper-class="nz-submenu">
           <template slot="title">
             <div @click="jumpTo('alertList')">{{$t('overall.alert')}}</div>
@@ -206,7 +207,8 @@
 
     <project-box :project="editProject" @reload="projectReload" ref="projectBox"></project-box>
     <module-box :currentProject="currentProject" :module="editModule" @reload="" ref="moduleBox"></module-box>
-    <add-endpoint-box :currentProject="currentProject" :currentModule="currentModule" @reload="" ref="addEndpointBox"></add-endpoint-box>
+    <add-endpoint-box :currentProject="currentProject" :currentModule="currentModule" @reload=""
+                      ref="addEndpointBox"></add-endpoint-box>
     <alert-config-box :parentAlertRule="alertRule" @reload="" ref="alertConfigBox"></alert-config-box>
   </div>
 </template>
@@ -303,7 +305,15 @@
           this.editProject = {id: '', name: '', remark: ''};
         } else if (item.type == 2) {
           this.$refs.moduleBox.show(true);
-          this.editModule = {id: '', name: '', project: this.$store.state.currentProject, port: '', path: '', param: '', paramObj: []};
+          this.editModule = {
+            id: '',
+            name: '',
+            project: this.$store.state.currentProject,
+            port: '',
+            path: '',
+            param: '',
+            paramObj: []
+          };
         } else if (item.type == 3) {
           this.$refs.addEndpointBox.show(true);
           this.$refs.addEndpointBox.clearEndpoints();
@@ -359,7 +369,7 @@
               duration: 2000
             })
             this.$store.state.flushDataSign = true
-          }else{
+          } else {
             this.$notify({
               message: h('i', {style: 'color: teal'}, res.msg),
               duration: 2000
@@ -446,7 +456,7 @@
       }
     },
     watch: {
-      getIdcData:{
+      getIdcData: {
         handler(newVal, oldVal) {
           this.getAssetData()
         },
@@ -463,48 +473,60 @@
 </script>
 
 <style>
-  .el-menu.el-menu--horizontal{
+  .el-menu.el-menu--horizontal {
     border-bottom: 0px;
   }
+
   .el-submenu__title .el-submenu__icon-arrow {
     display: none;
   }
-  .el-menu--horizontal>.el-menu-item.is-active{
+
+  .el-menu--horizontal > .el-menu-item.is-active {
     border-bottom: 0px;
   }
-  .el-menu--horizontal>.el-submenu.is-active .el-submenu__title,
-  .el-menu--horizontal>.el-menu-item.is-active,
+
+  .el-menu--horizontal > .el-submenu.is-active .el-submenu__title,
+  .el-menu--horizontal > .el-menu-item.is-active,
   .el-menu--horizontal .el-menu-item:not(.is-disabled):focus, .el-menu--horizontal .el-menu-item:not(.is-disabled):hover {
     border-bottom: 0px;
     color: white;
   }
+
   .el-menu--horizontal.nz-submenu {
     border: 1px solid #bbbbbb;
     border-top: none;
   }
+
   .nz-submenu .el-menu--popup {
     background-color: white !important;
   }
+
   .nz-submenu .el-menu--popup .el-menu-item {
     background-color: white !important;
   }
+
   .nz-submenu .el-menu--popup-bottom-start {
     margin-top: 0;
   }
+
   .nz-submenu.el-menu--horizontal .el-menu .el-menu-item {
     padding: 0 20px;
     color: #444444 !important;
     transition: none;
   }
+
   .nz-submenu.el-menu--horizontal .el-menu .el-menu-item:hover {
     color: #ff9900 !important;
   }
+
   .el-submenu__title .el-icon-plus {
     color: white;
   }
-  .el-menu-item>div, .el-menu-item>div>div {
+
+  .el-menu-item > div, .el-menu-item > div > div {
     font-size: 15px;
   }
+
   .nz-menu-line {
     cursor: default;
     display: flex;
@@ -594,93 +616,98 @@
     opacity: .8;
   }
 
-  .nz-menu>li:first-of-type {
+  .nz-menu > li:first-of-type {
     position: fixed;
     left: 40%;
     top: 0;
   }
+
   .menu-create {
     line-height: 15px;
     text-align: center;
     padding-top: 15px;
   }
+
   .menu-create .el-icon-plus {
     font-size: 12px;
     line-height: 12px;
   }
+
   .menu-edit {
     line-height: 36px;
     float: right;
   }
+
   .pop-window-assetType-content {
-      padding: 1px 15px 15px 20px;
+    padding: 1px 15px 15px 20px;
   }
 
   .pop-window {
-      height: 370px;
-      width: 400px;
+    height: 370px;
+    width: 400px;
   }
+
   .sidebar-pop-input {
-      position: absolute;
-      right: 50px;
-      width: 200px;
-      height: 26px;
-      border-radius: 4px;
-      border: 1px solid #DCDFE6;
-      color: #606266;
-      display: inline-block;
-      padding: 0px 15px;
+    position: absolute;
+    right: 50px;
+    width: 200px;
+    height: 26px;
+    border-radius: 4px;
+    border: 1px solid #DCDFE6;
+    color: #606266;
+    display: inline-block;
+    padding: 0px 15px;
   }
 
   .sidebar-pop-input-select {
-      position: absolute;
-      right: 83px;
-      width: 200px;
-      height: 26px;
-      border-radius: 4px;
-      border: 1px solid #DCDFE6;
-      color: #606266;
-      display: inline-block;
-      padding: 0px 15px;
+    position: absolute;
+    right: 83px;
+    width: 200px;
+    height: 26px;
+    border-radius: 4px;
+    border: 1px solid #DCDFE6;
+    color: #606266;
+    display: inline-block;
+    padding: 0px 15px;
   }
 
   .right-box-top-btn {
-      border-radius: 0 0 9px 9px;
-      float: right;
-      color: #656565;
-      height: 30px;
-      font-size: 12px;
-      padding: 3px 8px 1px 8px;
-      border: 1px solid #aaaaaa;
-      border-top: none;
-      cursor: pointer;
-      margin-left: 20px;
+    border-radius: 0 0 9px 9px;
+    float: right;
+    color: #656565;
+    height: 30px;
+    font-size: 12px;
+    padding: 3px 8px 1px 8px;
+    border: 1px solid #aaaaaa;
+    border-top: none;
+    cursor: pointer;
+    margin-left: 20px;
   }
 
   .right-box-bottom-btns {
-      position: absolute;
-      bottom: 0px;
-      width: 100%;
-      text-align: center;
+    position: absolute;
+    bottom: 0px;
+    width: 100%;
+    text-align: center;
   }
 
   .right-box-bottom-btn-cancel {
-      background-color: #DADADA;
-      color: #656565;
-      width: 50%;
-      border-bottom-left-radius: 8px;
+    background-color: #DADADA;
+    color: #656565;
+    width: 50%;
+    border-bottom-left-radius: 8px;
   }
 
   .right-box-top-btn-full {
-      background-color: #656565;
-      border: 1px solid #656565;
-      border-top: none;
-      color: white;
+    background-color: #656565;
+    border: 1px solid #656565;
+    border-top: none;
+    color: white;
   }
 
   .right-box-bottom-btn-50 {
-      width: 50%;
-      float: right;
-      border-bottom-right-radius: 8px;
+    width: 50%;
+    float: right;
+    border-bottom-right-radius: 8px;
   }
 </style>

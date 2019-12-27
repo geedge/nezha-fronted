@@ -55,20 +55,6 @@ html {
 .right-child-box .line-100 {
   background: #DCDFE6;
 }
-/*侧滑文字*/
-.el-form-item .el-form-item__label{
-  font-size: 10px;
-  text-align : left;
-}
-/*侧滑输入框高度*/
-.el-input .el-input__inner{
-  line-height: 26px;
-  height: 26px;
-}
-/*侧滑输入框宽度*/
-.right-menu .el-form-item__content .el-input{
-  width: 90%;
-}
 /* begin--按钮组件*/
 .nz-btn {
   border-radius: 4px;
@@ -87,7 +73,7 @@ html {
   line-height: 18px;
   padding: 2px 12px;
 }
-.nz-btn.nz-btn-style-normal {
+.nz-btn.nz-btn-style-normal { /* 蓝色按钮 */
   background-color: #16b;
   background-image: linear-gradient(#2d8cec, #16b);
   border: 1px solid #0b4075;
@@ -95,13 +81,19 @@ html {
   color: #fff;
   text-shadow: 0 1px 1px rgba(0,0,0,.75);
 }
-.nz-btn.nz-btn-style-light {
+.nz-btn.nz-btn-style-light { /* 浅色按钮 */
   background-color: #dedede;
   background-image: linear-gradient(white,#dedede);
   border: 1px solid #b8b8b8;
   border-top-color: #dedede;
   color: #444;
   text-shadow: 0 1px 1px rgba(255,255,255,.75);
+}
+.nz-btn.nz-btn-size-small.nz-btn-style-square { /* 单图标无文字的情况下使用*/
+  padding: 2px 5px;
+}
+.nz-btn.nz-btn-size-normal.nz-btn-style-square { /* 单图标无文字的情况下使用*/
+  padding: 4px 6px;
 }
 .nz-btn.nz-btn-style-light:hover:not(.nz-btn-disabled) {
   background-image: linear-gradient(#dedede,#c5c5c5);
@@ -269,7 +261,7 @@ html {
   border-radius: 8px;
   box-shadow: 0 0 15px #ccc;
   background-color: white;
-  padding: 0 20px;
+  padding: 0 0 0 20px;
 }
 
 /*此处自定义弹框尺寸，不同功能可能需要的尺寸不一样，需自行添加*/
@@ -284,45 +276,46 @@ html {
 /* begin--右侧弹框--顶部按钮*/
 .right-box-top-btns {
   text-align: center;
-}
-.right-box-top-btn {
-  text-align: center;
-  border-radius: 0 0 9px 9px;
   float: right;
-  color: #656565;
-  height: 30px;
-  font-size: 12px;
-  padding: 3px 8px 1px 8px;
-  border: 1px solid #aaaaaa;
-  border-top: none;
-  cursor: pointer;
-  margin-left: 20px;
-}
-.right-box-top-btn-full {
-  background-color: #656565;
-  border: 1px solid #656565;
-  border-top: none;
-  color: white;
+  padding-right: 20px;
+  padding-top: 5px;
 }
 /* end--右侧弹框--顶部按钮*/
 
 /* begin--右侧弹框--内容*/
 .right-box-title {
-  height: 30px;
+  height: 56px;
   line-height: 40px;
   text-align: left;
   display: inline-block;
+  font-weight: bold;
+}
+.right-box-form-box {
+  height: calc(100% - 63px);
+  width: 100%;
+}
+.right-box-form-box .el-scrollbar__wrap {
+  overflow-x: hidden !important;
 }
 .right-box-form {
-  margin-top: 30px;
-  height: 100%;
+  width: calc(100% - 20px);
+}
+.right-box-form .el-form-item {
+  margin-bottom: 15px;
+}
+.right-box-form .el-select {
+  width: 100%;
+}
+.right-box-form .el-form-item .el-form-item__label {
+  padding: 0;
+  font-size: 16px;
+  color: black;
+}
+.right-box-form .el-form-item__content {
+  line-height: 32px;
 }
 .right-box-form-row {
   margin-top: 16px;
-}
-.right-box-form-label {
-  margin-bottom: 8px;
-  text-align: left;
 }
 .right-box-form-content {
   line-height: 32px;
@@ -336,8 +329,56 @@ html {
   color: #d0d4dC;
   font-size: 14px;
   line-height: 20px;
-  min-height: 64px;
 }
+.right-box-form-param>label {
+  width: 100%;
+}
+.right-box-form-btns {
+  display: inline-block;
+  float: right;
+}
+/* start--param*/
+.param-box {
+  border: 1px solid #DCDFE6;
+  border-radius: 4px;
+  padding: 0 10px;
+}
+.param-box-endpoint {
+  height: 325px;
+}
+.param-box-module {
+  min-height: 225px;
+}
+.param-box-row {
+  padding: 7px 0 0 0;
+  position: relative;
+}
+.param-box-row:last-of-type {
+  padding-bottom: 7px;
+}
+.param-box-row>div {
+  display: inline-block;
+}
+.param-box-row-key, .param-box-row-value {
+  display: inline-block;
+  width: 43%;
+}
+.param-box-row-eq {
+  display: inline-block;
+  width: 22px;
+  text-align: center;
+  height: 32px;
+  line-height: 32px;
+  color: #c4c7cF;
+}
+.param-box-row-symbol {
+  display: inline-block;
+  padding-left: 3px;
+  font-size: 12px;
+  color: #DCDFE6;
+  cursor: pointer;
+}
+/* end--param*/
 .right-box-form-content .el-select {
   width: 100%;
 }
@@ -419,9 +460,10 @@ html {
   font-size: 13px;
 }
 /* end--endpoint->子弹框asset搜索框前缀和后缀*/
+
 /* begin--自定义可编辑的el-select下拉框样式*/
-.config-dropdown {
-  width: 520px;
+.config-dropdown { /* 若宽度不合适，自行增加新类覆盖宽度 */
+  width: 500px;
 }
 .config-dropdown-btn {
   display: inline-block;

@@ -231,10 +231,6 @@ export default {
           prop: 'alertName',
           show: true
         }, {
-          label: this.$t("alert.startAt"),
-          prop: 'startAt',
-          show: true,
-        }, {
           label: this.$t("alert.list.type"),
           prop: 'type',
           show: true,
@@ -257,6 +253,10 @@ export default {
         }, {
           label: this.$t('alert.list.state'),
           prop: 'state',
+          show: true,
+        }, {
+          label: this.$t("alert.startAt"),
+          prop: 'startAt',
           show: true,
         }, {
           label: this.$t('alert.endAt'),

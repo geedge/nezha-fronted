@@ -152,8 +152,8 @@
                 no_condition: '',
                 //历史记录列表
                 history_once: [],
-                profileName:"",
-                profileId:"",
+                name:"",
+                id:"",
                 schedata:{
                     name:'',
                     isValid:1,
@@ -219,6 +219,9 @@
                         this.input_list = !this.input_list
                 },*/
               //dc
+              clearSearch() {
+                this.select_list = [];
+              },
               selectObject(column, selectItem, e) {
                 this.stop_click(e);
                 this.select_list.forEach(val=>{
@@ -371,7 +374,7 @@
             select() {
                 let objectInfo = {};
                 this.change_sreach_show = true;
-                this.profileName = '', this.profileId = '';
+                this.name = '', this.id = '';
                 if (this.input_sreach != '') {
                   this.select_list[this.sreach_num].val = this.input_sreach;
                     this.input_sreach = '';
@@ -389,10 +392,10 @@
                       }else if(route=='/system_PolicyConfigurationLog' || route=='/system_LoginLog'){
                         no_condition_str='modifyBy';
                       }else {
-                        no_condition_str='profileName';
+                        no_condition_str='name';
                       }
-                      if(no_condition_str=='profileName'){
-                        this.select_list.push({name: this.select_title.name, id:2, type:'input',val:this.no_condition,label:'profileName'});
+                      if(no_condition_str=='name'){
+                        this.select_list.push({name: this.select_title.name, id:2, type:'input',val:this.no_condition,label:'name'});
                         this.searchLabelList.forEach((val,ind)=>{
                           if(val.id == 2){
                             this.searchLabelList.splice(ind,1);
@@ -412,8 +415,8 @@
                             this.searchLabelList.splice(ind,1);
                           }
                         })
-                      }else if(no_condition_str=='profileId'){
-                        this.select_list.push({name: this.select_title.Policy_ID, id:1, type:'input',val:this.no_condition,label:'profileId'});
+                      }else if(no_condition_str=='id'){
+                        this.select_list.push({name: this.select_title.Policy_ID, id:1, type:'input',val:this.no_condition,label:'id'});
                         this.searchLabelList.forEach((val,ind)=>{
                           if(val.id == 1){
                             this.searchLabelList.splice(ind,1);
@@ -431,13 +434,13 @@
                     }else {
                       let no_condition_bool = false,no_condition_str = '',route = this.$route.path,bool = true;
                       if(route == '/Log_SesssionRecords'||route == '/Log_EventLogs'){
-                        no_condition_str = 'profileId';
+                        no_condition_str = 'id';
                       }else if(route == '/Device_DeviceList'){
                         no_condition_str = 'sn';
                       }else if(route=='/system_PolicyConfigurationLog' || route=='/system_UserManagement' || route=='/system_LoginLog'){
                         no_condition_str='modifyBy';
                       }else {
-                        no_condition_str='profileName';
+                        no_condition_str='name';
                       }
                         this.select_list.forEach(val => {
                             if(val.label==no_condition_str){
@@ -823,7 +826,7 @@
                     if (this.no_condition != '') {
                       this.change_sreach_show = true
                       if(this.select_list.length==0){
-                        this.select_list.push({name: 'Name', id:2, type:'input',val:this.no_condition,label:'profileName'})
+                        this.select_list.push({name: 'Name', id:2, type:'input',val:this.no_condition,label:'name'})
                         this.searchLabelList.forEach((val,ind)=>{
                           if(val.id == 2){
                             this.searchLabelList.splice(ind,1)
@@ -839,7 +842,7 @@
                           }
                         })
                         if(bool){
-                          this.select_list.push({name: 'Name', id:2, type:'input',val:this.no_condition,label:'profileName'})
+                          this.select_list.push({name: 'Name', id:2, type:'input',val:this.no_condition,label:'name'})
                           this.searchLabelList.forEach((val,ind)=>{
                             if(val.id == 2){
                               this.searchLabelList.splice(ind,1)

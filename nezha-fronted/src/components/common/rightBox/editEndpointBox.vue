@@ -3,31 +3,18 @@
     <div class="right-box right-box-edit-endpoint" v-if="rightBox.show">
       <!-- begin--顶部按钮-->
       <div class="right-box-top-btns">
-        <div class="right-box-top-btn right-box-top-btn-full" @click="esc">
-          <div class="right-box-btn-icon">
-            <i class="el-icon-close"></i>
-          </div>
-          <span>{{$t('overall.esc')}}</span>
-        </div>
-        <div v-if="!rightBox.isEdit" class="right-box-top-btn right-box-top-btn-full" @click="toEdit(true)">
-          <div class="right-box-btn-icon">
-            <i class="el-icon-edit-outline"></i>
-          </div>
-          <span>{{$t('overall.edit')}}</span>
-        </div>
-        <div v-if="rightBox.isEdit" class="right-box-top-btn right-box-top-btn-full" @click="save">
-          <div class="right-box-btn-icon">
-            <i class="el-icon-edit-outline"></i>
-          </div>
-          <span v-if="rightBox.isEdit">{{$t('overall.save')}}</span>
-          <span v-else>{{$t('overall.edit')}}</span>
-        </div>
-        <div class="right-box-top-btn" v-if="rightBox.isEdit && endpoint.id != ''" @click="del">
-          <div class="right-box-btn-icon">
-            <i class="el-icon-delete"></i>
-          </div>
-          <span>{{$t('overall.delete')}}</span>
-        </div>
+        <button type="button" v-if="rightBox.isEdit && endpoint.id != ''" @click="del" class="nz-btn nz-btn-size-normal nz-btn-style-light">
+          <span class="top-tool-btn-txt">{{$t('overall.delete')}}</span>
+        </button>
+        <button v-if="!rightBox.isEdit" type="button" @click="toEdit(true)" class="nz-btn nz-btn-size-normal nz-btn-style-normal">
+          <span class="top-tool-btn-txt">{{$t('overall.edit')}}</span>
+        </button>
+        <button v-if="rightBox.isEdit" type="button" @click="save" class="nz-btn nz-btn-size-normal nz-btn-style-normal">
+          <span class="top-tool-btn-txt">{{$t('overall.save')}}</span>
+        </button>
+        <button type="button" @click="esc" class="nz-btn nz-btn-size-normal nz-btn-style-light nz-btn-style-square">
+          <span class="top-tool-btn-txt"><i class="el-icon-close"></i></span>
+        </button>
       </div>
       <!-- end--顶部按钮-->
 
@@ -36,6 +23,10 @@
       <!-- end--标题-->
 
       <!-- begin--表单-->
+      <!--<el-scrollbar class="right-box-form-box">
+        <el-form class="right-box-form" :model="module" label-position="top" :rules="rules" ref="moduleForm">
+        </el-form>
+      </el-scrollbar>-->
       <div class="right-box-form">
         <!--project-->
         <div class="right-box-form-row">
@@ -123,12 +114,6 @@
         </div>
       </div>
       <!-- end--表单-->
-
-      <!-- begin--底部按钮-->
-      <div class="right-box-bottom-btns">
-        <div @click="esc" :class="{'right-box-bottom-btn-50': rightBox.isEdit}" class="right-box-bottom-btn right-box-bottom-btn-cancel">{{$t('overall.cancel')}}</div><div @click="save" v-if="rightBox.isEdit" class="right-box-bottom-btn right-box-bottom-btn-50">{{$t('overall.save')}}</div>
-      </div>
-      <!-- end--底部按钮-->
 
       <!-- begin--子弹框-->
       <transition name="right-sub-box">

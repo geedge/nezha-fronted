@@ -63,7 +63,7 @@
         <button @click="toCreateEndpoint" class="nz-btn nz-btn-size-normal nz-btn-style-normal float-right">
           <span>{{$t('overall.add')}}</span>
         </button>
-        <div class="top-tool-search float-right"><search-input :searchMsg="endpointSearchMsg" @search="endpointSearch"></search-input></div>
+        <div class="top-tool-search float-right"><search-input :searchMsg="endpointSearchMsg" @search="endpointSearch" ref="projectSearch"></search-input></div>
       </div>
       <el-table
         :data="endpointTableData"
@@ -156,12 +156,6 @@
           total:0
         },
         metricsTableTitle: [
-          {
-            label: "ID",
-            prop: 'id',
-            show: true,
-            width: 100
-          },
           {
             label: this.$t("project.metrics.name"),
             prop: 'metric',
@@ -316,6 +310,9 @@
       //左侧module列表选中切换
       changeModule(module) {
         this.currentModule = module;
+        this.endpointSearchLabel = {moduleId: ''};
+        this.metricSearchLabel = {moduleId: ''};
+        this.$refs.projectSearch.clearSearch();
       },
 
       //弹出endpoint编辑页

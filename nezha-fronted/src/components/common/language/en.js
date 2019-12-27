@@ -38,7 +38,15 @@ const en = {
       title:'MetricPreview',
     }
   },
+  validate: { //校验规则
+    required: 'Required',
+    number: 'Must be a number',
+    config: {
+      account: {
 
+      }
+    }
+  },
   search: {
     searchTip: 'Press Enter or click to search',
     recentSearch: 'Recent Searches',
@@ -257,7 +265,7 @@ const en = {
     severity: "Severity",
     description: "Desc",
     summary: "Summary",
-    startAt: "Time",
+    startAt: "Start Time",
     endAt: "End Time",
     list: {
       //表头

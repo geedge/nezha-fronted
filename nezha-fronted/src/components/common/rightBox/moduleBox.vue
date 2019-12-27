@@ -3,11 +3,21 @@
     <div class="right-box right-box-module" v-if="rightBox.show">
       <!-- begin--顶部按钮-->
       <div class="right-box-top-btns">
-        <div class="right-box-top-btn right-box-top-btn-full" @click="esc">
+        <button type="button" v-if="module.id != ''" @click="del" class="nz-btn nz-btn-size-normal nz-btn-style-light">
+          <span class="top-tool-btn-txt">{{$t('overall.delete')}}</span>
+        </button>
+        <button type="button" @click="save" class="nz-btn nz-btn-size-normal nz-btn-style-normal">
+          <span class="top-tool-btn-txt">{{$t('overall.save')}}</span>
+        </button>
+
+        <button type="button" @click="esc" class="nz-btn nz-btn-size-normal nz-btn-style-light nz-btn-style-square">
+          <span class="top-tool-btn-txt"><i class="el-icon-close"></i></span>
+        </button>
+        <!--<div class="right-box-top-btn" v-if="module.id != ''" @click="del">
           <div class="right-box-btn-icon">
-            <i class="el-icon-close"></i>
+            <i class="el-icon-delete"></i>
           </div>
-          <span>{{$t('overall.esc')}}</span>
+          <span>{{$t('overall.delete')}}</span>
         </div>
         <div class="right-box-top-btn right-box-top-btn-full" @click="save">
           <div class="right-box-btn-icon">
@@ -15,12 +25,12 @@
           </div>
           <span>{{$t('overall.save')}}</span>
         </div>
-        <div class="right-box-top-btn" v-if="module.id != ''" @click="del">
+        <div class="right-box-top-btn right-box-top-btn-full" @click="esc">
           <div class="right-box-btn-icon">
-            <i class="el-icon-delete"></i>
+            <i class="el-icon-close"></i>
           </div>
-          <span>{{$t('overall.delete')}}</span>
-        </div>
+          <span>{{$t('overall.esc')}}</span>
+        </div>-->
       </div>
       <!-- end--顶部按钮-->
 
@@ -29,78 +39,131 @@
       <!-- end--标题-->
 
       <!-- begin--表单-->
-      <div class="right-box-form">
-        <!--project-->
-        <div class="right-box-form-row">
-          <div class="right-box-form-label">{{$t("project.project.project")}}</div>
-          <div class="right-box-form-content">
+      <el-scrollbar class="right-box-form-box">
+        <el-form class="right-box-form" :model="module" label-position="top" :rules="rules" ref="moduleForm">
+          <el-form-item :label='$t("project.project.project")' prop="project">
             <el-select value-key="id" popper-class="config-dropdown" v-model="module.project" placeholder="" size="small">
               <el-option v-for="item in projectList" :key="item.id" :label="item.name" :value="item"></el-option>
             </el-select>
-          </div>
-        </div>
-        <!--name-->
-        <div class="right-box-form-row">
-          <div class="right-box-form-label">{{$t("project.module.moduleName")}}</div>
-          <div class="right-box-form-content">
+          </el-form-item>
+          <el-form-item :label='$t("project.module.moduleName")' prop="name">
             <el-input placeholder="" maxlength="64" show-word-limit v-model="module.name" size="small"></el-input>
-          </div>
-        </div>
-        <!--description-->
-        <div class="right-box-form-row">
-          <div class="right-box-form-label">{{$t("project.module.description")}}</div>
-          <div class="right-box-form-content">
+          </el-form-item>
+          <el-form-item :label='$t("project.module.description")' prop="remark">
             <el-input type="textarea" placeholder="" maxlength="1024" show-word-limit v-model="module.remark" size="small"></el-input>
+          </el-form-item>
+          <div class="right-box-form-tip">
+            {{$t('project.module.tip.defaultEndpointSet')}}
+            <div class="line-100"></div>
+            {{$t('project.module.tip.relation')}}
           </div>
-        </div>
-        <!--tip-->
-        <div class="right-box-form-row">
-          <div class="right-box-form-content">
-            <div class="right-box-form-tip">
-              {{$t('project.module.tip.defaultEndpointSet')}}
-              <div class="line-100"></div>
-              {{$t('project.module.tip.relation')}}
-            </div>
-          </div>
-        </div>
-        <!--port-->
-        <div class="right-box-form-row">
-          <div class="right-box-form-label">{{$t("project.endpoint.port")}}</div>
-          <div class="right-box-form-content">
-            <el-input placeholder="" v-model="module.port" size="small"></el-input>
-          </div>
-        </div>
-        <!--path-->
-        <div class="right-box-form-row">
-          <div class="right-box-form-label">{{$t("project.endpoint.path")}}</div>
-          <div class="right-box-form-content">
+          <el-form-item :label='$t("project.endpoint.port")' prop="port">
+            <el-input placeholder="" v-model.number="module.port" size="small"></el-input>
+          </el-form-item>
+          <el-form-item :label='$t("project.endpoint.path")' prop="path">
             <el-input placeholder="" v-model="module.path" size="small"></el-input>
-          </div>
-        </div>
-        <!--param-->
-        <div class="right-box-form-row">
-          <div class="right-box-form-label">
-            {{$t("project.endpoint.param")}}
-            <el-button class="param-btn param-btn-active margin-l-10" size="mini" @click="addParam"><i class="el-icon-plus"></i>{{$t('overall.add')}}</el-button>
-            <el-button class="param-btn param-btn-clear" size="mini" @click="clearAllParam">{{$t('overall.clearAll')}}</el-button>
-          </div>
-          <div class="right-box-form-content">
+          </el-form-item>
+          <el-form-item class="right-box-form-param">
+            <template slot="label">
+              <span>Label</span>
+              <div class="right-box-form-btns">
+                <button style="display: none;">第一个button会出现意料之外的hover样式，找不到原因，只好加个不可见的button规避问题</button>
+                <button type="button" @click="clearAllParam" class="nz-btn nz-btn-size-small nz-btn-style-light">
+                  <span class="top-tool-btn-txt">{{$t('overall.clearAll')}}</span>
+                </button>
+                <button type="button" @click="addParam" class="nz-btn nz-btn-size-small nz-btn-style-normal">
+                  <span class="top-tool-btn-txt">{{$t('overall.add')}}</span>
+                </button>
+              </div>
+            </template>
             <div class="param-box param-box-module">
               <div class="param-box-row" v-for="(item, index) in module.paramObj">
-                <el-input placeholder="key" class="param-box-row-key" size="mini" v-model="item.key"></el-input>
+                <el-form-item class="param-box-row-key" :rules="{required: true, message: $t('validate.required'), trigger: 'blur'}" :prop="'paramObj.' + index + '.key'">
+                  <el-input placeholder="key" size="mini" v-model="item.key"></el-input>
+                </el-form-item>
                 <span class="param-box-row-eq">=</span>
-                <el-input placeholder="value" class="param-box-row-value" size="mini" v-model="item.value"></el-input>
-                <span class="param-box-row-symbol" @click="removeParam(index)"><i class="el-icon-minus"></i></span>
+                <el-form-item class="param-box-row-value" :rules="{required: true, message: $t('validate.required'), trigger: 'blur'}" :prop="'paramObj.' + index + '.value'">
+                  <el-input placeholder="value" size="mini" v-model="item.value"></el-input>
+                </el-form-item>
+                <span class="param-box-row-symbol" @click="removeParam(index)"><i class="nz-icon nz-icon-minus-square"></i></span>
               </div>
+            </div>
+          </el-form-item>
+
+        </el-form>
+      </el-scrollbar>
+      <!--<div class='right-box-form'>
+      &lt;!&ndash;project&ndash;&gt;
+      <div class="right-box-form-row">
+        <div class="right-box-form-label">{{$t("project.project.project")}}</div>
+        <div class="right-box-form-content">
+          <el-select value-key="id" popper-class="config-dropdown" v-model="module.project" placeholder="" size="small">
+            <el-option v-for="item in projectList" :key="item.id" :label="item.name" :value="item"></el-option>
+          </el-select>
+        </div>
+      </div>
+      &lt;!&ndash;name&ndash;&gt;
+      <div class="right-box-form-row">
+        <div class="right-box-form-label">{{$t("project.module.moduleName")}}</div>
+        <div class="right-box-form-content">
+          <el-input placeholder="" maxlength="64" show-word-limit v-model="module.name" size="small"></el-input>
+        </div>
+      </div>
+      &lt;!&ndash;description&ndash;&gt;
+      <div class="right-box-form-row">
+        <div class="right-box-form-label">{{$t("project.module.description")}}</div>
+        <div class="right-box-form-content">
+          <el-input type="textarea" placeholder="" maxlength="1024" show-word-limit v-model="module.remark" size="small"></el-input>
+        </div>
+      </div>
+      &lt;!&ndash;tip&ndash;&gt;
+      <div class="right-box-form-row">
+        <div class="right-box-form-content">
+          <div class="right-box-form-tip">
+            {{$t('project.module.tip.defaultEndpointSet')}}
+            <div class="line-100"></div>
+            {{$t('project.module.tip.relation')}}
+          </div>
+        </div>
+      </div>
+      &lt;!&ndash;port&ndash;&gt;
+      <div class="right-box-form-row">
+        <div class="right-box-form-label">{{$t("project.endpoint.port")}}</div>
+        <div class="right-box-form-content">
+          <el-input placeholder="" v-model="module.port" size="small"></el-input>
+        </div>
+      </div>
+      &lt;!&ndash;path&ndash;&gt;
+      <div class="right-box-form-row">
+        <div class="right-box-form-label">{{$t("project.endpoint.path")}}</div>
+        <div class="right-box-form-content">
+          <el-input placeholder="" v-model="module.path" size="small"></el-input>
+        </div>
+      </div>
+      &lt;!&ndash;param&ndash;&gt;
+      <div class="right-box-form-row">
+        <div class="right-box-form-label">
+          {{$t("project.endpoint.param")}}
+          <el-button class="param-btn param-btn-active margin-l-10" size="mini" @click="addParam"><i class="el-icon-plus"></i>{{$t('overall.add')}}</el-button>
+          <el-button class="param-btn param-btn-clear" size="mini" @click="clearAllParam">{{$t('overall.clearAll')}}</el-button>
+        </div>
+        <div class="right-box-form-content">
+          <div class="param-box param-box-module">
+            <div class="param-box-row" v-for="(item, index) in module.paramObj">
+              <el-input placeholder="key" class="param-box-row-key" size="mini" v-model="item.key"></el-input>
+              <span class="param-box-row-eq">=</span>
+              <el-input placeholder="value" class="param-box-row-value" size="mini" v-model="item.value"></el-input>
+              <span class="param-box-row-symbol" @click="removeParam(index)"><i class="el-icon-minus"></i></span>
             </div>
           </div>
         </div>
       </div>
+    </div>-->
 
       <!-- begin--底部按钮-->
-      <div class="right-box-bottom-btns">
+      <!--<div class="right-box-bottom-btns">
         <div @click="esc" class="right-box-bottom-btn right-box-bottom-btn-cancel right-box-bottom-btn-50">{{$t('overall.cancel')}}</div><div @click="save" class="right-box-bottom-btn right-box-bottom-btn-50">{{module.id == '' ? $t('overall.create') : $t('overall.save')}}</div>
-      </div>
+      </div>-->
       <!-- end--底部按钮-->
     </div>
   </transition>
@@ -119,6 +182,17 @@
           show: false,
           title: ''
         },
+        rules: {
+          name: [
+            {required: true, message: this.$t('validate.required'), trigger: 'blur'}
+          ],
+          project: [
+            {required: true, message: this.$t('validate.required'), trigger: 'blur'}
+          ],
+          port: [
+            {type: 'number', message: this.$t('validate.number'), trigger: 'blur'}
+          ],
+        },
         projectList: [],
       }
     },
@@ -135,28 +209,35 @@
       /*保存*/
       save() {
         this.module.param = this.paramToJson(this.module.paramObj);
-        if (this.module.id) {
-          this.$put('module', this.module).then(response => {
-            if (response.code === 200) {
-              this.$message({duration: 1000, type: 'success', message: this.$t("tip.saveSuccess")});
-              this.$emit("reload");
-              this.rightBox.show = false;
+        this.$refs.moduleForm.validate((valid) => {
+          if (valid) {
+            if (this.module.id) {
+              this.$put('module', this.module).then(response => {
+                if (response.code === 200) {
+                  this.$message({duration: 1000, type: 'success', message: this.$t("tip.saveSuccess")});
+                  this.$emit("reload");
+                  this.rightBox.show = false;
+                } else {
+                  this.$message.error(response.msg);
+                }
+              });
             } else {
-              this.$message.error(response.msg);
+              this.module.projectId = this.module.project.id;
+              this.$post('module', this.module).then(response => {
+                if (response.code === 200) {
+                  this.$message({duration: 1000, type: 'success', message: this.$t("tip.saveSuccess")});
+                  this.$emit("reload");
+                  this.rightBox.show = false;
+                } else {
+                  this.$message.error(response.msg);
+                }
+              });
             }
-          });
-        } else {
-          this.module.projectId = this.module.project.id;
-          this.$post('module', this.module).then(response => {
-            if (response.code === 200) {
-              this.$message({duration: 1000, type: 'success', message: this.$t("tip.saveSuccess")});
-              this.$emit("reload");
-              this.rightBox.show = false;
-            } else {
-              this.$message.error(response.msg);
-            }
-          });
-        }
+          } else {
+            console.log('error submit!!');
+            return false;
+          }
+        });
       },
 
       /*删除*/
@@ -216,7 +297,7 @@
       paramToJson: function(param) {
         let tempParam = {};
         for (let i = 0; i < param.length; i++) {
-          eval('tempParam.' + param[i].key + '="' + param[i].value + '"');
+          eval('tempParam["' + param[i].key + '"]="' + param[i].value + '"');
         }
         let jsonString = JSON.stringify(tempParam);
         if (jsonString == '{}') {
@@ -245,78 +326,4 @@
 </script>
 
 <style scoped>
-  /* start--param*/
-  .param-btn {
-    float: right;
-    height: 27px;
-    margin-top: -3px;
-  }
-  .param-btn-active {
-    background-color: #656565;
-    color: white;
-    border: 1px solid #656565;
-  }
-  .param-btn-active:hover, .param-btn-active:focus {
-    background-color: #656565;
-    color: white;
-  }
-  .param-btn-clear {
-    background-color: #D4D4D4;
-    border: 1px solid #D4D4D4;
-    color: white;
-  }
-  .param-btn-clear:hover, .param-btn-clear:focus {
-    background-color: #D4D4D4;
-    color: white;
-  }
-
-  .param-box {
-    border: 1px solid #DCDFE6;
-    border-radius: 4px;
-    padding: 0 10px;
-  }
-  .param-box-endpoint {
-    height: 325px;
-  }
-  .param-box-module {
-    height: 227px;
-  }
-  .param-box-row {
-    padding: 7px 0 0 0;
-    position: relative;
-  }
-  .param-box-row:last-of-type {
-    padding-bottom: 7px;
-  }
-  .param-box-row-key, .param-box-row-value {
-    display: inline-block;
-    width: 41.5%;
-  }
-  .param-box-row-eq {
-    display: inline-block;
-    width: 22px;
-    text-align: center;
-    height: 32px;
-    line-height: 32px;
-    color: #c4c7cF;
-  }
-  .param-box-row-symbol {
-    font-size: 12px;
-    color: #c4c7cF;
-    border: 1px solid #c4c7cF;
-    text-align: center;
-    height: 12px;
-    width: 14px;
-    display: inline-block;
-    position: absolute;
-    top: 17px;
-    right: 25px;
-    cursor: pointer;
-  }
-  .param-box-row-symbol>i {
-    position: absolute;
-    top: 1px;
-    right: 1px;
-  }
-  /* end--param*/
 </style>
