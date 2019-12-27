@@ -29,20 +29,20 @@
                     <span>{{$t('overall.delete')}}</span>
                 </div>
             </div>
-            <div class="right-box-title">{{this.tabView==true? 'Asset':'Edit Asset'}}</div>
+            <div class="right-box-title">{{this.tabView==true?this.$t('asset.asset'):this.$t('asset.EditAsset')}}</div>
             <el-form ref="form" :model="assetData" label-width="120px">
                 <div class="el-form-style">
-                    <el-form-item label="SN">
+                    <el-form-item :label="this.$t('asset.editAssetTab.sn')">
                         <el-input v-if="!tabView" v-model="assetData.sn"/>
                         <span v-if="tabView">{{assetData.sn}}</span>
                     </el-form-item>
-                    <el-form-item label="Host">
+                    <el-form-item :label="this.$t('asset.editAssetTab.host')" >
                         <el-input v-if="!tabView" v-model="assetData.host"/>
                         <span v-if="tabView">{{assetData.host}}</span>
                     </el-form-item>
-                    <el-form-item label="State">
+                    <el-form-item :label="this.$t('asset.editAssetTab.state')">
                         <div v-if="!tabView" class="select-style">
-                            <el-select v-model="assetData.state" placeholder="请选择">
+                            <el-select v-model="assetData.state" :placeholder="this.$t('asset.editAssetTab.selectTip')">
                                 <el-option
                                         v-for="item in assetStateOption"
                                         :key="item.value"
@@ -51,18 +51,18 @@
                                 </el-option>
                             </el-select>
                         </div>
-                        <span v-if="tabView">{{assetData.state==1?'在库':'出库'}}</span>
+                        <span v-if="tabView">{{assetData.state==1?this.$t('asset.editAssetTab.inStore'):this.$t('asset.editAssetTab.outStore')}}</span>
                     </el-form-item>
-                    <el-form-item label="ModelId" v-if="tabView">
+                    <el-form-item :label="this.$t('asset.editAssetTab.modelId')" v-if="tabView">
                         <div class="tab-input-square">{{assetViewData.moduleNum}}</div>
                     </el-form-item>
-                    <el-form-item label="IDC" v-if="tabView">
+                    <el-form-item :label="this.$t('asset.editAssetTab.alert')" v-if="tabView">
                         <div class="tab-input-square">{{assetViewData.alertNum}}</div>
                     </el-form-item>
-                    <div style="font-size: 10px">资产信息</div>
+                    <div style="font-size: 10px">{{$t('asset.editAssetTab.assetInfo')}}</div>
                     <el-divider></el-divider>
                     <!------------------------------------------资产类型---------------------------------------------->
-                    <el-form-item label="资产类型">
+                    <el-form-item :label="this.$t('asset.editAssetTab.assetType')">
                         <div class="select-style">
                             <el-select v-if="!tabView" v-model="assetType" clearable @visible-change="cancelEdit"
                                        @change="getAllModelOptionData()">
@@ -73,20 +73,16 @@
                                         :label="item.value"
                                 >
                                     <span v-if="!item.isEdit">{{ item.value }}</span>
-                                    <span class="config-dropdown-label-input" v-if="item.isEdit"
-                                          @click.stop="editing(item)">
-                    <el-input type="text" v-model="item.value" size="mini"/>
-                  </span>
-                                    <span class="config-dropdown-btn"
-                                          @click.stop="editOptionData(item,'type')">
-                    <i class="el-icon-edit-outline" v-if="!item.isEdit"></i>
-                    <i class="el-icon-check" v-if="item.isEdit"
-                       @click="editData('sys/dict/update',item)"></i>
-                  </span>
-                                    <span class="config-dropdown-btn config-dropdown-btn-delete"
-                                          @click.stop="delOptionData(item)"><i
-                                            class="el-icon-delete"></i>
-                  </span>
+                                    <span class="config-dropdown-label-input" v-if="item.isEdit" @click.stop="editing(item)">
+                                        <el-input type="text" v-model="item.value" size="mini"/>
+                                    </span>
+                                    <span class="config-dropdown-btn" @click.stop="editOptionData(item,'type')">
+                                        <i class="el-icon-edit-outline" v-if="!item.isEdit"></i>
+                                        <i class="el-icon-check" v-if="item.isEdit" @click="editData('sys/dict/update',item)"></i>
+                                     </span>
+                                    <span class="config-dropdown-btn config-dropdown-btn-delete" @click.stop="delOptionData(item)">
+                                        <i class="el-icon-delete"></i>
+                                    </span>
                                 </el-option>
                             </el-select>
                             <div class="el-select-add-btn" v-if="!tabView">
@@ -107,12 +103,12 @@
                                                     <span>{{$t('overall.esc')}}</span>
                                                 </div>
                                             </div>
-                                            <span style="display: block;padding-bottom: 20px">资产类型</span>
-                                            <span style="display: block;padding-bottom: 20px">新增资产类型</span>
+                                            <span style="display: block;padding-bottom: 20px">{{$t('asset.editAssetTab.assetTypeTab.assetType')}}</span>
+                                            <span style="display: block;padding-bottom: 20px">{{$t('asset.editAssetTab.assetTypeTab.addAssetType')}}</span>
                                             <input v-model="assetTypeData.value"/>
                                             <input type="button" value="+Add"
                                                    @click="addNewData('assetType')"></input>
-                                            <span style="display: block;padding-bottom: 20px">已有资产类型</span>
+                                            <span style="display: block;padding-bottom: 20px">{{$t('asset.editAssetTab.assetTypeTab.existAssetType')}}</span>
                                             <div class="li-list">
                                                 <ul style="list-style: none">
                                                     <li style="cursor: pointer;"
@@ -154,7 +150,7 @@
                         <span v-if="tabView">{{assetViewData.assetType}}</span>
                     </el-form-item>
                     <!------------------------------------------厂商/型号---------------------------------------------->
-                    <el-form-item label="厂商/型号">
+                    <el-form-item :label="this.$t('asset.editAssetTab.vendor')">
                         <div class="select-style" v-if="!tabView">
                             <el-cascader
                                     :options="vendorTypeOptionData"
@@ -183,12 +179,12 @@
                                                 </div>
                                             </div>
                                             <div class="pop-window-assetType">
-                                                <span style="display: block;padding-bottom: 15px">商场/型号</span>
-                                                <span style="display: block;padding-bottom: 20px">新厂商名称</span>
+                                                <span style="display: block;padding-bottom: 15px">{{$t('asset.editAssetTab.vendorTab.vendor')}}</span>
+                                                <span style="display: block;padding-bottom: 20px">{{$t('asset.editAssetTab.vendorTab.vendor')}}</span>
                                                 <input v-model="addVendorData.value"/>
                                                 <input type="button" value="+Add"
                                                        @click="addNewData('vendor')"></input>
-                                                <span style="display: block;padding-bottom: 20px">已有厂商</span>
+                                                <span style="display: block;padding-bottom: 20px">{{$t('asset.editAssetTab.vendorTab.vendor')}}</span>
                                                 <div class="li-list-part">
                                                     <ul style="list-style: none">
                                                         <li style="cursor: pointer;"
@@ -196,32 +192,25 @@
                                                             @click="getLidata(index,item)"
                                                             :class="{activeColor:vendorCount === index}"
                                                             :key="index">
-                                                            <div>
                                                                 <span v-if="!item.isEdit">{{ item.value }}</span>
-                                                                <span class="config-dropdown-label-input"
-                                                                      v-if="item.isEdit"
-                                                                      @click.stop="editing">
-                                                            <input type="text" v-model="item.value" size="mini"/>
-                                                        </span>
-                                                                <span class="config-dropdown-btn"
-                                                                      @click.stop="editVendorOptionData(item,'vendor',index)">
-                                                            <i class="el-icon-edit-outline" v-if="!item.isEdit"></i>
-                                                            <i class="el-icon-check" v-if="item.isEdit"
-                                                               @click="editData('sys/dict/update',item)"></i>
-                                                        </span>
-                                                                <span class="config-dropdown-btn config-dropdown-btn-delete"
-                                                                      @click.stop="deleteData('/sys/dict/delete',item.id)"><i
-                                                                        class="el-icon-delete"></i>
+                                                                <span class="config-dropdown-label-input" v-if="item.isEdit" @click.stop="editing">
+                                                                    <input type="text" v-model="item.value" size="mini"/>
+                                                               </span>
+                                                                <span class="config-dropdown-btn" @click.stop="editVendorOptionData(item,'vendor',index)">
+                                                                    <i class="el-icon-edit-outline" v-if="!item.isEdit"></i>
+                                                                    <i class="el-icon-check" v-if="item.isEdit" @click="editData('sys/dict/update',item)"></i>
+                                                                </span>
+                                                                <span class="config-dropdown-btn config-dropdown-btn-delete" @click.stop="deleteData('/sys/dict/delete',item.id)">
+                                                                    <i class="el-icon-delete"></i>
                                                             </span>
-                                                            </div>
                                                         </li>
                                                     </ul>
                                                 </div>
-                                                <span style="display: block;padding-bottom: 15px">新型号名称</span>
+                                                <span style="display: block;padding-bottom: 15px">{{$t('asset.editAssetTab.vendorTab.vendor')}}</span>
                                                 <input v-model="addNewModelData.name"/>
                                                 <input type="button" value="+Add"
                                                        @click="addNewData('model')"></input>
-                                                <span style="display: block;padding-bottom: 20px">已有型号</span>
+                                                <span style="display: block;padding-bottom: 20px">{{$t('asset.editAssetTab.vendorTab.existModel')}}</span>
                                                 <div class="li-list-part">
                                                     <ul style="list-style: none">
                                                         <li style="cursor: pointer;"
@@ -229,24 +218,17 @@
                                                             @click=" clickState(index,item,'model') "
                                                             :class="{activeColor:modelCount === index}"
                                                             :key="index">
-                                                            <div>
-                                                                <span v-if="!item.isEdit">{{ item.name }}</span>
-                                                                <span class="config-dropdown-label-input"
-                                                                      v-if="item.isEdit"
-                                                                      @click.stop="editing">
-                                  <input type="text" v-model="item.name" size="mini"/>
-                                </span>
-                                                                <span class="config-dropdown-btn"
-                                                                      @click.stop="editOptionData(item,'model',index)">
-                                  <i class="el-icon-edit-outline" v-if="!item.isEdit"></i>
-                                  <i class="el-icon-check" v-if="item.isEdit"
-                                     @click="editData('model',item)"></i>
-                                </span>
-                                                                <span class="config-dropdown-btn config-dropdown-btn-delete"
-                                                                      @click.stop="deleteData('model',item.id)"><i
-                                                                        class="el-icon-delete"></i>
+                                                            <span v-if="!item.isEdit">{{ item.name }}</span>
+                                                            <span class="config-dropdown-label-input" v-if="item.isEdit" @click.stop="editing">
+                                                                <input type="text" v-model="item.name" size="mini"/>
                                                             </span>
-                                                            </div>
+                                                            <span class="config-dropdown-btn" @click.stop="editOptionData(item,'model',index)">
+                                                                <i class="el-icon-edit-outline" v-if="!item.isEdit"></i>
+                                                                <i class="el-icon-check" v-if="item.isEdit" @click="editData('model',item)"></i>
+                                                            </span>
+                                                            <span class="config-dropdown-btn config-dropdown-btn-delete" @click.stop="deleteData('model',item.id)">
+                                                                <i class="el-icon-delete"></i>
+                                                            </span>
                                                         </li>
                                                     </ul>
                                                 </div>
@@ -269,21 +251,21 @@
                         </div>
                         <span v-if="tabView">{{assetViewData.vendor}}   {{assetViewData.model}}</span>
                     </el-form-item>
-                    <el-form-item label="购买日期">
+                    <el-form-item :label="this.$t('asset.editAssetTab.purchaseDate')">
                         <div class="select-style" v-if="!tabView">
                             <el-date-picker
                                     v-model="assetData.purchaseDate"
                                     value-format="yyyy-MM-dd"
                                     type="date"
-                                    placeholder="选择日期">
+                                    :placeholder="this.$t('asset.editAssetTab.dataSelectTip')">
                             </el-date-picker>
                         </div>
                         <span v-if="tabView">{{assetData.purchaseDate}}</span>
                     </el-form-item>
-                    <div style="font-size: 10px">DC</div>
+                    <div style="font-size: 10px">{{$t('asset.editAssetTab.dc')}}</div>
                     <el-divider></el-divider>
                     <!------------------------------------------IDC---------------------------------------------->
-                    <el-form-item label="DC Name">
+                    <el-form-item :label="this.$t('asset.editAssetTab.dcName')">
                         <div class="select-style" v-if="!tabView">
                             <el-select v-model="assetData.idcId" clearable @change="getSingleIDCData">
                                 <el-option
@@ -309,14 +291,14 @@
                                                 </div>
                                             </div>
                                             <div class="pop-window">
-                                                <span style="display: block;padding-bottom: 20px">标题</span>
-                                                <el-form-item label="DC Name">
+                                                <span style="display: block;padding-bottom: 20px">{{vm.$t('asset.editAssetTab.editIdcTab.title')}}</span>
+                                                <el-form-item :label="vm.$t('asset.editAssetTab.dcName')">
                                                     <el-input v-model="popIdcData.name"/>
                                                 </el-form-item>
-                                                <el-form-item label="Location">
+                                                <el-form-item :label="vm.$t('asset.editAssetTab.location')">
                                                     <el-input v-model="popIdcData.location"/>
                                                 </el-form-item>
-                                                <el-form-item label="负责人">
+                                                <el-form-item :label="vm.$t('asset.editAssetTab.principal')">
                                                     <el-select v-model="popIdcData.principal" clearable>
                                                         <el-option
                                                                 v-for="item in idcUserData"
@@ -327,7 +309,7 @@
                                                         </el-option>
                                                     </el-select>
                                                 </el-form-item>
-                                                <el-form-item label="Tel">
+                                                <el-form-item :label="vm.$t('asset.editAssetTab.editIdcTab.tel')">
                                                     <el-input v-model="popIdcData.tel"/>
                                                 </el-form-item>
                                             </div>
@@ -367,14 +349,14 @@
                                             </div>
                                         </div>
                                         <div class="pop-window">
-                                            <span style="display: block;padding-bottom: 20px">标题</span>
-                                            <el-form-item label="DC Name">
+                                            <span style="display: block;padding-bottom: 20px">{{$t('asset.editAssetTab.AddIdcTab.title')}}</span>
+                                            <el-form-item :label="this.$t('asset.editAssetTab.AddIdcTab.dcName')">
                                                 <el-input v-model="addIdcData.name"/>
                                             </el-form-item>
-                                            <el-form-item label="Location">
+                                            <el-form-item :label="this.$t('asset.editAssetTab.AddIdcTab.location')">
                                                 <el-input v-model="addIdcData.location"/>
                                             </el-form-item>
-                                            <el-form-item label="负责人">
+                                            <el-form-item :label="this.$t('asset.editAssetTab.AddIdcTab.principal')">
                                                 <el-select v-model="addIdcData.principal" clearable>
                                                     <el-option
                                                             v-for="item in idcUserData"
@@ -385,7 +367,7 @@
                                                     </el-option>
                                                 </el-select>
                                             </el-form-item>
-                                            <el-form-item label="Tel">
+                                            <el-form-item :label="this.$t('asset.editAssetTab.AddIdcTab.tel')">
                                                 <el-input v-model="addIdcData.tel"/>
                                             </el-form-item>
                                         </div>
@@ -406,20 +388,20 @@
                         </div>
                         <span v-if="tabView">{{assetViewData.idcName}}</span>
                     </el-form-item>
-                    <el-form-item label="Location">
+                    <el-form-item :label="this.$t('asset.editAssetTab.location')">
                         <span>{{idcSelectedData.location}}</span>
                     </el-form-item>
-                    <el-form-item label="负责人">
+                    <el-form-item :label="this.$t('asset.editAssetTab.principal')">
                         <span>{{this.getPrincipalName(idcSelectedData.principal)}}</span>
                     </el-form-item>
-                    <el-form-item label="Tel">
+                    <el-form-item :label="this.$t('asset.editAssetTab.tel')">
                         <span>{{idcSelectedData.tel}}</span>
                     </el-form-item>
                     <el-divider></el-divider>
 
 
                     <!------------------------------------------cabinet---------------------------------------------->
-                    <el-form-item label="机柜">
+                    <el-form-item :label="this.$t('asset.editAssetTab.cabinet')">
                         <div class="select-style" v-if="!tabView">
                             <el-select clearable v-model="assetData.cabinetId" clearable
                                        :disabled="assetData.idcId==''?true:false"
@@ -447,21 +429,20 @@
                                                 </div>
                                             </div>
                                             <div class="pop-window">
-                                                <span style="display: block;padding-bottom: 20px">标题</span>
-                                                <el-form-item label="Name">
+                                                <span style="display: block;padding-bottom: 20px">{{vm.$t('asset.editAssetTab.editCabinetTab.title')}}</span>
+                                                <el-form-item :label="vm.$t('asset.editAssetTab.editCabinetTab.title')">
                                                     <el-input v-model="popCabinetData.name"/>
                                                 </el-form-item>
-                                                <el-form-item label="U Size">
-                                                    <div>{{addCabinetData.uSize}}</div>
-                                                    <el-slider v-model="popCabinetData.uSize"
-                                                               :max="47"></el-slider>
+                                                <el-form-item :label="vm.$t('asset.editAssetTab.editCabinetTab.uSize')">
+                                                    <div>{{popCabinetData.uSize}}</div>
+                                                    <el-slider v-model="popCabinetData.uSize" :max="47"></el-slider>
                                                 </el-form-item>
-                                                <el-form-item label="Desc">
+                                                <el-form-item :label="vm.$t('asset.editAssetTab.editCabinetTab.remark')">
                                                     <el-input v-model="popCabinetData.remark"
                                                               type="textarea"
                                                               :rows="2"/>
                                                 </el-form-item>
-                                                <el-form-item label="DC">
+                                                <el-form-item :label="vm.$t('asset.editAssetTab.editCabinetTab.DC')">
                                                     <el-select v-model="popCabinetData.idcId" clearable>
                                                         <el-option
                                                                 v-for="ite in item.children"
@@ -569,20 +550,20 @@
                                             </div>
                                         </div>
                                         <div class="pop-window">
-                                            <span style="display: block;padding-bottom: 20px">标题</span>
-                                            <el-form-item label="Name">
+                                            <span style="display: block;padding-bottom: 20px">{{$t('asset.editAssetTab.AddCabinetTab.title')}}</span>
+                                            <el-form-item :label="this.$t('asset.editAssetTab.AddCabinetTab.name')">
                                                 <el-input v-model="addCabinetData.name"/>
                                             </el-form-item>
-                                            <el-form-item label="U Size">
+                                            <el-form-item :label="this.$t('asset.editAssetTab.AddCabinetTab.uSize')">
                                                 <div>{{addCabinetData.uSize}}</div>
                                                 <el-slider v-model="addCabinetData.uSize"></el-slider>
                                             </el-form-item>
-                                            <el-form-item label="Desc">
+                                            <el-form-item :label="this.$t('asset.editAssetTab.AddCabinetTab.remark')">
                                                 <el-input v-model="addCabinetData.remark"
                                                           type="textarea"
                                                           :rows="1"/>
                                             </el-form-item>
-                                            <el-form-item label="IDC">
+                                            <el-form-item :label="this.$t('asset.editAssetTab.AddCabinetTab.DC')">
                                                 <el-select v-model="addCabinetData.idcId" clearable>
                                                     <el-option
                                                             v-for="item in IDCOptionData"
@@ -606,14 +587,14 @@
                                                                     </div>
                                                                 </div>
                                                                 <div class="pop-window">
-                                                                    <span style="display: block;padding-bottom: 20px">标题</span>
-                                                                    <el-form-item label="DC Name">
+                                                                    <span style="display: block;padding-bottom: 20px">{{$t('asset.editAssetTab.editIdcTab.title')}}</span>
+                                                                    <el-form-item :label="vm.$t('asset.editAssetTab.editIdcTab.dcName')">
                                                                         <el-input v-model="addCabIDCData.name"/>
                                                                     </el-form-item>
-                                                                    <el-form-item label="Location">
+                                                                    <el-form-item :label="vm.$t('asset.editAssetTab.editIdcTab.location')">
                                                                         <el-input v-model="addCabIDCData.location"/>
                                                                     </el-form-item>
-                                                                    <el-form-item label="负责人">
+                                                                    <el-form-item :label="vm.$t('asset.editAssetTab.editIdcTab.principal')">
                                                                         <el-select v-model="addCabIDCData.principal"
                                                                                    clearable>
                                                                             <el-option
@@ -625,7 +606,7 @@
                                                                             </el-option>
                                                                         </el-select>
                                                                     </el-form-item>
-                                                                    <el-form-item label="Tel">
+                                                                    <el-form-item :label="vm.$t('asset.editAssetTab.editIdcTab.tel')">
                                                                         <el-input v-model="addCabIDCData.tel"/>
                                                                     </el-form-item>
                                                                 </div>
@@ -668,30 +649,30 @@
                         </div>
                         <span v-if="tabView">{{assetViewData.cabinetName}}</span>
                     </el-form-item>
-                    <el-form-item label="U Size">
+                    <el-form-item :label="this.$t('asset.editAssetTab.uSize')">
                         <span>{{cabinetSelectedData.uSize}}</span>
                     </el-form-item>
-                    <el-form-item label="Desc">
+                    <el-form-item :label="this.$t('asset.editAssetTab.remark')">
                         <span>{{cabinetSelectedData.remark}}</span>
                     </el-form-item>
-                    <div style="font-size: 10px">CLI Account</div>
+                    <div style="font-size: 10px">{{$t('asset.editAssetTab.cli')}}</div>
                     <el-divider></el-divider>
-                    <el-form-item label="登录方式">
+                    <el-form-item :label="this.$t('asset.editAssetTab.loginType')">
                         <el-radio-group size="mini" v-model="assetData.accounts[0].authType">
-                            <el-radio-button label='1'>Password</el-radio-button>
-                            <el-radio-button label='2'>SSH私钥</el-radio-button>
+                            <el-radio-button label='1'>{{$t('asset.editAssetTab.password')}}</el-radio-button>
+                            <el-radio-button label='2'>{{$t('asset.editAssetTab.ssh')}}</el-radio-button>
                         </el-radio-group>
                     </el-form-item>
-                    <el-form-item label="Account">
+                    <el-form-item :label="this.$t('asset.editAssetTab.account')">
                         <el-input v-model="assetData.accounts[0].user"/>
                     </el-form-item>
-                    <el-form-item label="pwd" v-if="assetData.accounts[0].authType==1">
+                    <el-form-item :label="this.$t('asset.editAssetTab.password')" v-if="assetData.accounts[0].authType==1">
                         <el-input type="password" v-model="assetData.accounts[0].pwd"/>
                     </el-form-item>
-                    <el-form-item label="Port">
+                    <el-form-item :label="this.$t('asset.editAssetTab.port')">
                         <el-input v-model="assetData.accounts[0].port"/>
                     </el-form-item>
-                    <el-form-item label="ssh秘钥" v-if="assetData.accounts[0].authType==2">
+                    <el-form-item :label="this.$t('asset.editAssetTab.ssh')" v-if="assetData.accounts[0].authType==2">
                         <el-upload
                                 class="upload-demo"
                                 ref="upload"
@@ -699,7 +680,7 @@
                                 :on-change="handleChange"
                                 :auto-upload="false"
                         >
-                            <el-button size="small" type="primary">点击上传</el-button>
+                            <el-button size="small" type="primary">{{$t('asset.editAssetTab.clickToUpload')}}</el-button>
                         </el-upload>
                     </el-form-item>
                 </div>
@@ -723,7 +704,9 @@ export default {
   name: "assetEditUnit",
   props: ["editUnitShow", "editUnitId"],
   data() {
+    const vm = window.vm;
     return {
+      vm:vm,
       visible: '',
       vendorModelData: '',
       assetData: {
@@ -765,7 +748,6 @@ export default {
         }],
       cabinetModelData: '',
       checkList: [],
-      checkListData: [],
       assetTypeOptionData: [],
       vendorTypeData: '',
       vendorTypeOptionData: [],
@@ -966,8 +948,9 @@ export default {
     getIDCOptionData() {
       this.$get('idc').then(response => {
         if (response.code === 200) {
-          this.checkListData = this.IDCOptionData = response.data.list;
+          this.IDCOptionData = response.data.list;
           this.markOptionData(this.IDCOptionData)
+          this.$store.state.assetData.idcData = this.IDCOptionData
 
         }
       })

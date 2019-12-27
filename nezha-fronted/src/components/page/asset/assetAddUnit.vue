@@ -18,13 +18,13 @@
             <div class="right-box-title">{{$t('asset.createAssetTab.title')}}</div>
             <el-form :model="assetData" label-width="120px">
                 <div class="el-form-style">
-                    <el-form-item :label="this.$t('asset.createAssetTab.title')" prop="sn">
+                    <el-form-item :label="this.$t('asset.createAssetTab.title')" >
                         <el-input v-model="assetData.sn"/>
                     </el-form-item>
-                    <el-form-item :label="this.$t('asset.createAssetTab.host')" prop="host">
+                    <el-form-item :label="this.$t('asset.createAssetTab.host')" >
                         <el-input v-model="assetData.host"/>
                     </el-form-item>
-                    <el-form-item :label="this.$t('asset.createAssetTab.state')" prop="state">
+                    <el-form-item :label="this.$t('asset.createAssetTab.state')" >
                         <div class="select-style">
                             <el-select v-model="assetData.state" :placeholder="this.$t('asset.createAssetTab.selectTip')">
                                 <el-option
@@ -62,7 +62,6 @@
                             <div class="el-select-add-btn">
                                 <el-popover
                                         placement="left"
-                                        trigger="manual"
                                         v-model="popTypeVisible"
                                 >
                                     <div class="pop-window-assetType" @click="editQuit()">
@@ -234,7 +233,7 @@
                     <div style="font-size: 10px">{{$t('asset.createAssetTab.dc')}}</div>
                     <el-divider></el-divider>
                     <!------------------------------------------IDC---------------------------------------------->
-                    <el-form-item :label="this.$t('asset.createAssetTab.dcName')" prop="idcSelect">
+                    <el-form-item :label="this.$t('asset.createAssetTab.dcName')">
                         <div class="select-style">
                             <el-select v-model="assetData.idcId" clearable @change="getSingleIDCData">
                                 <el-option
@@ -396,7 +395,7 @@
                                             </div>
                                             <div class="pop-window">
                                                 <span style="display: block;padding-bottom: 20px">{{vm.$t('asset.createAssetTab.editCabinetTab.title')}}</span>
-                                                <el-form-item :label="vm.$t('asset.createAssetTab.editCabinetTab.title')">
+                                                <el-form-item :label="vm.$t('asset.createAssetTab.editCabinetTab.name')">
                                                     <el-input v-model="popCabinetData.name"/>
                                                 </el-form-item>
                                                 <el-form-item :label="vm.$t('asset.createAssetTab.editCabinetTab.uSize')">
@@ -523,13 +522,10 @@
                                             </el-form-item>
                                             <el-form-item :label="this.$t('asset.createAssetTab.AddCabinetTab.uSize')">
                                                 <div>{{addCabinetData.uSize}}</div>
-                                                <el-slider v-model="addCabinetData.uSize"
-                                                           :max="47"></el-slider>
+                                                <el-slider v-model="addCabinetData.uSize" :max="47"></el-slider>
                                             </el-form-item>
                                             <el-form-item :label="this.$t('asset.createAssetTab.AddCabinetTab.remark')">
-                                                <el-input v-model="addCabinetData.remark"
-                                                          type="textarea"
-                                                          :rows="2"/>
+                                                <el-input v-model="addCabinetData.remark" type="textarea" :rows="2"/>
                                             </el-form-item>
                                             <el-form-item :label="this.$t('asset.createAssetTab.AddCabinetTab.DC')">
                                                 <el-select v-model="addCabinetData.idcId" clearable>
@@ -556,13 +552,13 @@
                                                                 </div>
                                                                 <div class="pop-window">
                                                                     <span style="display: block;padding-bottom: 20px">{{$t('asset.createAssetTab.editIdcTab.title')}}</span>
-                                                                    <el-form-item label="DC Name">
+                                                                    <el-form-item :label="vm.$t('asset.createAssetTab.editIdcTab.dcName')">
                                                                         <el-input v-model="addCabIDCData.name"/>
                                                                     </el-form-item>
-                                                                    <el-form-item label="Location">
+                                                                    <el-form-item :label="vm.$t('asset.createAssetTab.editIdcTab.location')">
                                                                         <el-input v-model="addCabIDCData.location"/>
                                                                     </el-form-item>
-                                                                    <el-form-item label="负责人">
+                                                                    <el-form-item :label="vm.$t('asset.createAssetTab.editIdcTab.principal')">
                                                                         <el-select v-model="addCabIDCData.principal"
                                                                                    clearable>
                                                                             <el-option
@@ -574,7 +570,7 @@
                                                                             </el-option>
                                                                         </el-select>
                                                                     </el-form-item>
-                                                                    <el-form-item label="Tel">
+                                                                    <el-form-item :label="vm.$t('asset.createAssetTab.editIdcTab.tel')">
                                                                         <el-input v-model="addCabIDCData.tel"/>
                                                                     </el-form-item>
                                                                 </div>

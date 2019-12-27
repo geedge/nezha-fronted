@@ -440,9 +440,18 @@
     computed: {
       projectListReloadWatch() {
         return this.$store.state.projectListReload;
+      },
+      getIdcData() {
+        return this.$store.state.assetData.idcData
       }
     },
     watch: {
+      getIdcData:{
+        handler(newVal, oldVal) {
+          this.getAssetData()
+        },
+        deep: true,
+      },
       projectListReloadWatch(n, o) {
         if (n) {
           this.getProjectList();

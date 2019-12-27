@@ -472,6 +472,7 @@ export default {
       if (data === 'close') {
         this.addUnitShow = false
         this.editUnitShow = false
+        this.$refs['assetEditUnit'].tabView = false
       }
     },
     tagShow(data, id, type) {
@@ -555,6 +556,9 @@ export default {
     this.getUserData();
     this.getAssetData();
     this.getIDCOptionData();
+    window.onresize = () => {
+      this.tableHeight = document.documentElement.clientHeight - 200;
+    }
   }
 }
 </script>
