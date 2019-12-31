@@ -438,7 +438,10 @@
     computed: {
       currentProjectChange() {
         return this.$store.state.currentProject;
-      }
+      },
+      moduleListReloadWatch() {
+        return this.$store.state.moduleListChange;
+      },
     },
     watch: {
       currentProjectChange(n, o) {
@@ -457,6 +460,9 @@
           this.endpointTableData = [];
           this.metricsTableData = [];
         }
+      },
+      moduleListReloadWatch(n, o) {
+        this.getModuleList(this.currentProject.id);
       }
     }
   }

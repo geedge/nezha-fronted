@@ -55,6 +55,19 @@ html {
 .right-child-box .line-100 {
   background: #DCDFE6;
 }
+.width-50 {
+  width: 50% !important;
+}
+.width-100 {
+  width: 100% !important;
+}
+.height-50 {
+  height: 50% !important;
+}
+.height-100 {
+  height: 100% !important;
+}
+
 /* begin--按钮组件*/
 .nz-btn {
   border-radius: 4px;
@@ -72,6 +85,7 @@ html {
   font-size: 12px;
   line-height: 18px;
   padding: 2px 12px;
+  font-weight: 500;
 }
 .nz-btn.nz-btn-style-normal { /* 蓝色按钮 */
   background-color: #16b;
@@ -89,10 +103,10 @@ html {
   color: #444;
   text-shadow: 0 1px 1px rgba(255,255,255,.75);
 }
-.nz-btn.nz-btn-size-small.nz-btn-style-square { /* 单图标无文字的情况下使用*/
+.nz-btn.nz-btn-size-small.nz-btn-style-square { /* 单图标时是个正方形*/
   padding: 2px 5px;
 }
-.nz-btn.nz-btn-size-normal.nz-btn-style-square { /* 单图标无文字的情况下使用*/
+.nz-btn.nz-btn-size-normal.nz-btn-style-square { /* 单图标时是个正方形*/
   padding: 4px 6px;
 }
 .nz-btn.nz-btn-style-light:hover:not(.nz-btn-disabled) {
@@ -120,6 +134,25 @@ html {
   border-top-left-radius: 0;
 }
 /* end--按钮组件*/
+
+/* begin--el-input扩展 */
+.input-x-mini .el-input__inner {
+  height: 24px;
+  line-height: 24px;
+  padding: 0 5px;
+  font-size: 12px;
+}
+
+.nz-input-group-prepend {
+  border-radius: 4px 0 0 4px;
+}
+.nz-input-group-middle, .nz-input-group-middle .el-input__inner {
+  border-radius: 0;
+}
+.nz-input-group-append {
+  border-radius: 0 4px 4px 0;
+}
+/* end--el-input扩展 */
 /* end--通用*/
 
 /* begin--左侧列表*/
@@ -270,15 +303,15 @@ html {
   height: calc(100% - 100px);
 }
 .right-box-add-endpoint {
-  width: 820px;
+  width: 840px;
   height: calc(100% - 100px);
 }
 /* begin--右侧弹框--顶部按钮*/
 .right-box-top-btns {
   text-align: center;
   float: right;
-  padding-right: 20px;
-  padding-top: 5px;
+  padding-right: 10px;
+  padding-top: 8px;
 }
 /* end--右侧弹框--顶部按钮*/
 
@@ -300,6 +333,9 @@ html {
 .right-box-form {
   width: calc(100% - 20px);
 }
+.right-box-add-endpoint .right-box-form {
+  height: 100%;
+}
 .right-box-form .el-form-item {
   margin-bottom: 15px;
 }
@@ -314,8 +350,11 @@ html {
 .right-box-form .el-form-item__content {
   line-height: 32px;
 }
+.right-box-form-box .el-scrollbar__view {
+  height: 100%;
+}
 .right-box-form-row {
-  margin-top: 16px;
+  margin-top: 22px;
 }
 .right-box-form-content {
   line-height: 32px;
@@ -448,16 +487,9 @@ html {
 }
 /* end--右侧弹框--底部按钮*/
 /* end--右侧弹框*/
+
 /* begin--endpoint->子弹框asset搜索框前缀和后缀*/
 .right-sub-box .el-input-group__append, .right-sub-box .el-input-group__prepend, .assets-box .el-input-group__append, .assets-box .el-input-group__prepend {
-  background-color: #656565;
-  color: white;
-  vertical-align: middle;
-  display: table-cell;
-  position: relative;
-  padding: 0 8px;
-  border: none;
-  font-size: 13px;
 }
 /* end--endpoint->子弹框asset搜索框前缀和后缀*/
 

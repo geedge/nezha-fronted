@@ -29,24 +29,6 @@
         </el-form>
       </el-scrollbar>
 
-      <!--&lt;!&ndash; begin&#45;&#45;表单&ndash;&gt;
-      <div class="right-box-form">
-        &lt;!&ndash;name&ndash;&gt;
-        <div class="right-box-form-row">
-          <div class="right-box-form-label">{{$t("project.project.projectName")}}</div>
-          <div class="right-box-form-content">
-            <el-input placeholder="" maxlength="64" show-word-limit v-model="project.name" size="small"></el-input>
-          </div>
-        </div>
-        &lt;!&ndash;description&ndash;&gt;
-        <div class="right-box-form-row">
-          <div class="right-box-form-label">{{$t("project.project.description")}}</div>
-          <div class="right-box-form-content">
-            <el-input type="textarea" placeholder="" maxlength="1024" show-word-limit v-model="project.remark" size="small"></el-input>
-          </div>
-        </div>
-      </div>-->
-
       <!-- begin--底部按钮-->
       <!--<div class="right-box-bottom-btns">
         <div @click="esc" class="right-box-bottom-btn right-box-bottom-btn-cancel right-box-bottom-btn-50">{{$t('overall.cancel')}}</div><div @click="save" class="right-box-bottom-btn right-box-bottom-btn-50">{{project.id == '' ? $t('overall.create') : $t('overall.save')}}</div>
@@ -93,8 +75,9 @@
               this.$put('project', this.project).then(response => {
                 if (response.code === 200) {
                   this.$message({duration: 1000, type: 'success', message: this.$t("tip.saveSuccess")});
-                  this.$emit("reload");
                   this.rightBox.show = false;
+                  this.$store.commit('projectListChange');
+                  this.$store.commit('setProject', this.project);
                 } else {
                   this.$message.error(response.msg);
                 }
@@ -103,7 +86,7 @@
               this.$post('project', this.project).then(response => {
                 if (response.code === 200) {
                   this.$message({duration: 1000, type: 'success', message: this.$t("tip.saveSuccess")});
-                  this.$emit("reload");
+                  this.$store.commit('projectListChange');
                   this.rightBox.show = false;
                 } else {
                   this.$message.error(response.msg);
@@ -128,7 +111,7 @@
             if (response.code === 200) {
               this.$message({duration: 1000, type: 'success', message: this.$t("tip.deleteSuccess")});
               this.rightBox.show = false;
-              this.$emit("reload");
+              this.$store.commit('projectListChange');
             } else {
               this.$message.error(response.msg);
             }

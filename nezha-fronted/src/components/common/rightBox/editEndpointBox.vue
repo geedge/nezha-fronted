@@ -386,6 +386,14 @@
       this.getProjectList();
       this.getAssetList();
     },
+    computed: {
+      projectListReloadWatch() {
+        return this.$store.state.projectListChange;
+      },
+      moduleListReloadWatch() {
+        return this.$store.state.moduleListChange;
+      },
+    },
     mounted() {
       setTimeout(()=>{this.getModuleList(this.currentProject.id);}, 100);
     },
@@ -396,6 +404,12 @@
         } else {
           this.rightBox.title = this.$t("project.endpoint.createEndpoint");
         }
+      },
+      projectListReloadWatch(n, o) {
+        this.getProjectList();
+      },
+      moduleListReloadWatch(n, o) {
+        this.getModuleList(this.currentProject.id);
       }
     }
   }

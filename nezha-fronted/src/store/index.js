@@ -14,12 +14,9 @@ const store = new Vuex.Store({
       name: '',
       remark: ''
     },
-    projectListReload: false,
-    createProject: false,
-    createModule: false,
-    createEndpoint: false,
-    createAlertConfig: false,
-    flushDataSign:false
+    projectListChange: 0,
+    moduleListChange: 0,
+    flushDataSign: false,
   },
   getters: {
   },
@@ -30,21 +27,12 @@ const store = new Vuex.Store({
     projectRightBoxShow(state, show) {
       state.projectBoxShow = show;
     },
-    projectListChange(state, reload) {
-      state.projectListReload = reload;
+    projectListChange(state) {
+      state.projectListChange = state.projectListChange + 1;
     },
-    toCreateProject(state, status) {
-      state.createProject = status;
-    },
-    toCreateModule(state, status) {
-      state.createModule = status;
-    },
-    toCreateEndpoint(state, status) {
-      state.createEndpoint = status;
-    },
-    toCreateAlertConfig(state, status) {
-      state.createAlertConfig = status;
-    },
+    moduleListChange(state) {
+      state.moduleListChange = state.moduleListChange + 1;
+    }
   },
   actions: {
   }

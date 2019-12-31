@@ -205,7 +205,7 @@
       </div>-->
     </div>
 
-    <project-box :project="editProject" @reload="projectReload" ref="projectBox"></project-box>
+    <project-box :project="editProject" ref="projectBox"></project-box>
     <module-box :currentProject="currentProject" :module="editModule" @reload="" ref="moduleBox"></module-box>
     <add-endpoint-box :currentProject="currentProject" :currentModule="currentModule" @reload=""
                       ref="addEndpointBox"></add-endpoint-box>
@@ -428,9 +428,6 @@
         this.$refs.projectBox.show(true);
         this.editProject = Object.assign({}, p);
       },
-      projectReload() {
-        this.getProjectList();
-      },
       logout() {
         this.$get('logout');
         this.jumpTo('login');
@@ -449,7 +446,7 @@
     },
     computed: {
       projectListReloadWatch() {
-        return this.$store.state.projectListReload;
+        return this.$store.state.projectListChange;
       },
       getIdcData() {
         return this.$store.state.assetData.idcData
@@ -463,10 +460,7 @@
         deep: true,
       },
       projectListReloadWatch(n, o) {
-        if (n) {
-          this.getProjectList();
-          this.$store.commit('projectListChange', false);
-        }
+        this.getProjectList();
       }
     }
   }

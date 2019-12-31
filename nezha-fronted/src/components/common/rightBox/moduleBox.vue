@@ -41,7 +41,7 @@
       <!-- begin--表单-->
       <el-scrollbar class="right-box-form-box">
         <el-form class="right-box-form" :model="module" label-position="top" :rules="rules" ref="moduleForm">
-          <el-form-item :label='$t("project.project.project")' prop="project">
+          <el-form-item :label='$t("project.project.project")' prop="project.id">
             <el-select value-key="id" popper-class="config-dropdown" v-model="module.project" placeholder="" size="small">
               <el-option v-for="item in projectList" :key="item.id" :label="item.name" :value="item"></el-option>
             </el-select>
@@ -65,7 +65,7 @@
           </el-form-item>
           <el-form-item class="right-box-form-param">
             <template slot="label">
-              <span>Label</span>
+              <span>{{$t('project.endpoint.param')}}</span>
               <div class="right-box-form-btns">
                 <button style="display: none;">第一个button会出现意料之外的hover样式，找不到原因，只好加个不可见的button规避问题</button>
                 <button type="button" @click="clearAllParam" class="nz-btn nz-btn-size-small nz-btn-style-light">
@@ -211,22 +211,22 @@
         this.module.param = this.paramToJson(this.module.paramObj);
         this.$refs.moduleForm.validate((valid) => {
           if (valid) {
+            this.module.projectId = this.module.project.id;
             if (this.module.id) {
               this.$put('module', this.module).then(response => {
                 if (response.code === 200) {
                   this.$message({duration: 1000, type: 'success', message: this.$t("tip.saveSuccess")});
-                  this.$emit("reload");
+                  this.$store.commit('moduleListChange');
                   this.rightBox.show = false;
                 } else {
                   this.$message.error(response.msg);
                 }
               });
             } else {
-              this.module.projectId = this.module.project.id;
               this.$post('module', this.module).then(response => {
                 if (response.code === 200) {
                   this.$message({duration: 1000, type: 'success', message: this.$t("tip.saveSuccess")});
-                  this.$emit("reload");
+                  this.$store.commit('moduleListChange');
                   this.rightBox.show = false;
                 } else {
                   this.$message.error(response.msg);
@@ -234,7 +234,6 @@
               });
             }
           } else {
-            console.log('error submit!!');
             return false;
           }
         });
@@ -251,7 +250,7 @@
             if (response.code === 200) {
               this.$message({duration: 1000, type: 'success', message: this.$t("tip.deleteSuccess")});
               this.rightBox.show = false;
-              this.$emit("reload");
+              this.$store.commit('moduleListChange');
             } else {
               this.$message.error(response.msg);
             }
@@ -310,6 +309,11 @@
     created() {
       this.getProjectList();
     },
+    computed: {
+      projectListReloadWatch() {
+        return this.$store.state.projectListChange;
+      },
+    },
     watch: {
       module: {
         immediate: true,
@@ -320,6 +324,9 @@
             this.rightBox.title = this.$t("project.module.createModule");
           }
         }
+      },
+      projectListReloadWatch(n, o) {
+        this.getProjectList();
       }
     }
   }
