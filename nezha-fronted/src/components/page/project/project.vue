@@ -468,9 +468,10 @@
   }
 </script>
 
-<style scoped>
+<style scoped  lang="scss">
   .project {
     height: 100%;
+    background: $color-red;
   }
   .content-right-option {
     cursor: pointer;

@@ -11,7 +11,7 @@ import store from './store/index';
 import App from './App'
 import router from './router'
 
-
+import './assets/stylus/index.scss'
 import axios from 'axios';
 import {post, get, put, del} from './http.js'
 
