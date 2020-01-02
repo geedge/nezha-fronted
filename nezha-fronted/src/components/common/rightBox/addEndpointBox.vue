@@ -95,12 +95,13 @@
                 <button type="button" @click="coverEndpoint" class="nz-btn nz-btn-size-small nz-btn-style-light nz-btn-style-square module-info module-info-cover">{{$t('overall.cover')}}</button>
               </div>
               <!--endpoints-->
-              <div class="endpoints-box-endpoints">
+              <div class="endpoints-box-endpoints" :style="{borderColor: endpointTouch ? paramBorderColor : '#dcdfe6'}">
                 <el-table
                   :data="endpointList"
                   ref="endpointTable"
                   style="width: 100%;border-radius: 4px;"
                   height="calc(100% - 36px)"
+                  :row-class-name="setRowIndex"
                   empty-text=" ">
                   <el-table-column
                     type="selection"
@@ -119,6 +120,7 @@
                       <span v-if="title.prop == 'asset' && scope.row[title.prop]">{{scope.row[title.prop].host}}</span>
                       <span v-else-if="title.prop == 'param'">
                         <el-popover
+                          v-if="!scope.row.isEdit"
                           placement="bottom"
                           width="200"
                           trigger="hover"
@@ -127,44 +129,62 @@
                             <div v-for="p in scope.row.paramObj">{{p.key}}={{p.value}}</div>
                           </div>
                           <span slot="reference">
-                            <span @mousedown.stop v-if="!scope.row.isEdit">{{scope.row.param.length > 8 ? scope.row.param.substring(0, 8) + '...' : scope.row.param}}</span>
-                            <span @mousedown.stop v-else @click.stop="showEditParamBox(true, scope.row, 2, $event)"><el-input disabled class="endpoint-info endpoint-info-param input-x-mini" v-model="scope.row.param"></el-input></span>
+                            <span @mousedown.stop>{{scope.row.param.length > 8 ? scope.row.param.substring(0, 8) + '...' : scope.row.param}}</span>
                           </span>
                         </el-popover>
+                        <span @mousedown.stop v-else @click.stop="showEditParamBox(true, scope.row, 2, $event)">
+                          <el-form-item :prop="'endpointList[' + scope.row.index + '].param'" :rules="{required: true, message: $t('validate.required'), trigger: 'blur'}">
+                            <el-input readonly class="endpoint-info endpoint-info-param input-x-mini" v-model="scope.row.param"></el-input>
+                          </el-form-item>
+                        </span>
                       </span>
                       <span v-else-if="title.prop == 'path'">
-                      <el-popover
-                        placement="bottom"
-                        width="100"
-                        trigger="hover"
-                        :content="scope.row[title.prop]"
-                      >
-                        <span slot="reference">
-                          <span v-if="!scope.row.isEdit">{{scope.row.path.length > 5 ? scope.row.path.substring(0, 5) + '...' : scope.row.path}}</span>
-                          <span @mousedown.stop v-else><el-input class="endpoint-info input-x-mini" v-model="scope.row.path"></el-input></span>
+                        <el-popover
+                          placement="bottom"
+                          width="100"
+                          trigger="hover"
+                          :content="scope.row[title.prop]"
+                          v-if="!scope.row.isEdit"
+                        >
+                          <span slot="reference">
+                            <span>{{scope.row.path.length > 5 ? scope.row.path.substring(0, 5) + '...' : scope.row.path}}</span>
+                          </span>
+                        </el-popover>
+                        <span @mousedown.stop v-else>
+                          <el-form-item :prop="'endpointList[' + scope.row.index + '].path'" :rules="{required: true, message: $t('validate.required'), trigger: 'blur'}">
+                            <el-input class="endpoint-info input-x-mini" v-model="scope.row.path"></el-input>
+                          </el-form-item>
                         </span>
-                      </el-popover>
-                    </span>
+                      </span>
                       <span v-else-if="title.prop == 'port'">
-                      <span v-if="!scope.row.isEdit">{{scope.row.port}}</span>
-                      <span @mousedown.stop v-else><el-input class="endpoint-info input-x-mini" v-model="scope.row.port"></el-input></span>
-                    </span>
+                        <span v-if="!scope.row.isEdit">{{scope.row.port}}</span>
+                        <span @mousedown.stop v-else>
+                          <el-form-item :prop="'endpointList[' + scope.row.index + '].port'" :rules="{required: true, message: $t('validate.required'), trigger: 'blur'}">
+                            <el-input class="endpoint-info input-x-mini" v-model="scope.row.port"></el-input>
+                          </el-form-item>
+                        </span>
+                      </span>
                       <span v-else-if="title.prop == 'host'">
-                      <span v-if="!scope.row.isEdit">{{scope.row.host}}</span>
-                      <span @mousedown.stop v-else><el-input class="endpoint-info input-x-mini" v-model="scope.row.host"></el-input></span>
-                    </span>
+                        <span v-if="!scope.row.isEdit">{{scope.row.host}}</span>
+                        <span @mousedown.stop v-else>
+                          <el-form-item :prop="'endpointList[' + scope.row.index + '].host'" :rules="{required: true, message: $t('validate.required'), trigger: 'blur'}">
+                            <el-input class="endpoint-info input-x-mini" v-model="scope.row.host"></el-input>
+                          </el-form-item>
+                        </span>
+                      </span>
                     </template>
                   </el-table-column>
                   <el-table-column label="" width="56">
                     <template slot-scope="scope" :column="title">
                       <div>
-                        <span v-if="!scope.row.isEdit" class="endpoint-box-row-symbol" @click="toEditEndpoint(scope.row)"><i class="el-icon-edit-outline"></i></span>
+                        <span v-if="!scope.row.isEdit" class="endpoint-box-row-symbol" @mousedown.stop @click="toEditEndpoint(scope.row)"><i class="el-icon-edit-outline"></i></span>
                         <span v-else class="endpoint-box-row-symbol" @mousedown.stop @click="editEndpoint(scope.row)"><i class="el-icon-check"></i></span>
                         <span class="endpoint-box-row-symbol" @click="removeEndpoint(scope.row)"><i class="nz-icon nz-icon-minus-square"></i></span>
                       </div>
                     </template>
                   </el-table-column>
                 </el-table>
+                <div class="el-form-item__error" :style="{opacity: endpointTouch && this.endpointList.length == 0 ? '1' : '0'}" style="left: unset; transition: all .2s">{{$t('validate.required')}}</div>
                 <div>
                   <button type="button" @click="clearSelection" class="nz-btn nz-btn-size-small nz-btn-style-light endpoints-clear-btn">{{$t('overall.clear')}}</button>
                   <span style="display: inline-block; font-size: 14px; float: right;line-height: 35px;padding-right: 15px;">All: {{this.endpointList.length}}</span>
@@ -214,10 +234,13 @@
             {required: true, message: this.$t('validate.required'), trigger: 'change'}
           ],
         },
-        endpointForm: {projectId: '', moduleId: '', endpointList:[]},
+        paramBorderColor: '#dcdfe6',
+        endpointTouch: false,
+        endpointForm: {projectId: '', moduleId: '', endpointList: []},
         currentModuleCopy: {},
         tempParamObj: [],
         tempEndpoint: {},
+        tempEndpoint2: {},
         rightBox: {show: false, title: this.$t('project.endpoint.createEndpoint'),isEdit: false},
         editParamBox: {show: false, top: 0, left: 0, type: 0}, //param编辑弹框
         moduleParamShow: false, //module默认参数param悬浮窗
@@ -247,12 +270,12 @@
           },{
             label: this.$t("project.endpoint.param"),
             prop: 'param',
-            width: 93,
+            width: 90,
             show: true,
           },{
             label: this.$t("project.endpoint.path"),
             prop: 'path',
-            width: 63,
+            width: 66,
             show: true,
           }
         ],
@@ -282,13 +305,14 @@
             this.tempParamObj = JSON.parse(JSON.stringify(obj.paramObj));
           }
         } else {
-          if (this.endpointList.length > 0) {
-            for (let i = 0; i < this.endpointList.length; i++) {
-              this.endpointList[i].isEdit = false;
-            }
-          }
           if (!this.editParamBox.show) {
             return;
+          }
+          for (let i = 0; i < this.tempParamObj.length; i++) {
+            if (!this.tempParamObj[i].key || !this.tempParamObj[i].value) {
+              this.tempParamObj.splice(i, 1);
+              i--;
+            }
           }
           if (this.editParamBox.type == 1) {
             this.currentModuleCopy.paramObj = this.tempParamObj;
@@ -311,6 +335,7 @@
       esc() {
         this.rightBox.show = false;
         this.editParamBox.show = false;
+        this.endpointTouch = false;
       },
 
       // 新增param
@@ -325,12 +350,26 @@
 
       //编辑endpoint
       toEditEndpoint(endpoint) {
-        console.info(1)
+        for (let i = 0; i < this.endpointList.length; i++) {
+          if (this.endpointList[i].isEdit) {
+            this.endpointList.splice(i, 1, JSON.parse(JSON.stringify(this.tempEndpoint2)));
+            this.endpointList[i].isEdit = false;
+            break;
+          }
+        }
         endpoint.isEdit = true;
+        this.tempEndpoint2 = JSON.parse(JSON.stringify(endpoint));
       },
       editEndpoint(endpoint) {
-        console.info(2)
-        endpoint.isEdit = false;
+        this.$refs.addEndpointForm.validate((valid) => {
+          if (valid) {
+            endpoint.isEdit = false;
+            this.tempEndpoint2 = {};
+          } else {
+            return false;
+          }
+        });
+
       },
 
       //移除endpoint
@@ -431,6 +470,9 @@
           moduleId: this.currentModuleCopy.id
         });
         this.assetList.splice(index, 1);
+        this.endpointTouch = true;
+        this.endpointForm.projectId = this.currentProject.id;
+        this.endpointForm.moduleId = this.currentModuleCopy.id;
       },
 
       //将param转为json字符串格式
@@ -471,6 +513,11 @@
       save() {
         this.endpointForm.projectId = this.currentProject.id;
         this.endpointForm.moduleId = this.currentModuleCopy.id;
+        if (this.endpointList.length == 0) {
+          this.endpointTouch = true;
+          this.$refs.addEndpointForm.validate();
+          return false;
+        }
         this.$refs.addEndpointForm.validate((valid) => {
           if (valid) {
             this.$post('endpoint', this.endpointList).then(response => {
@@ -528,6 +575,10 @@
       clearEndpoints() {
         this.getAssetList();
         this.endpointList = [];
+      },
+
+      setRowIndex({row, rowIndex}) {
+        row.index = rowIndex;
       }
     },
     computed: {
@@ -543,12 +594,23 @@
       this.getAssetList();
     },
     watch: {
+      endpointList(n, o) {
+        this.endpointForm.endpointList = n;
+        if (n.length > 0) {
+          this.paramBorderColor = '#dcdfe6';
+        } else {
+          this.paramBorderColor = '#F56C6C';
+        }
+
+      },
       currentProject(n, o) {
+        this.endpointForm.projectId = n.id;
         this.getModuleList(n.id);
       },
       currentModule: {
         immediate: true,
         handler(n, o) {
+          this.endpointForm.moduleId = n.id;
           this.currentModuleCopy = JSON.parse(JSON.stringify(n));
         }
       },
@@ -616,7 +678,7 @@
 
   /* begin--小盒子*/
   .right-child-boxes {
-    height: calc(100% - 196px);
+    height: calc(100% - 216px);
     position: relative;
   }
   .endpoint-to-right-symbol {
@@ -695,6 +757,7 @@
     border: 1px solid #dcdfe6;
     height: calc(100% - 39px);
     margin-top: 6px;
+    transition: border-color .2s cubic-bezier(.645,.045,.355,1);
   }
   .endpoint-param-pop{
     max-height: 200px;
@@ -839,5 +902,12 @@
   .module-info-param.el-input.is-disabled .el-input__inner:hover, .endpoint-info-param.el-input.is-disabled .el-input__inner:hover,
   .endpoint-info-param.el-input.is-disabled .el-input__inner:hover, .endpoint-info-param.el-input.is-disabled .el-input__inner:hover {
     border-color: #c0c4cc;
+  }
+
+  .endpoints-box-endpoints .el-form-item {
+    margin-bottom: 0;
+  }
+  .endpoints-box-endpoints .el-form-item.is-error {
+    margin-bottom: 22px;
   }
 </style>

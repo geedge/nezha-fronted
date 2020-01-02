@@ -41,7 +41,7 @@
       <!-- begin--表单-->
       <el-scrollbar class="right-box-form-box">
         <el-form class="right-box-form" :model="module" label-position="top" :rules="rules" ref="moduleForm">
-          <el-form-item :label='$t("project.project.project")' prop="project.id">
+          <el-form-item :label='$t("project.project.project")' prop="project">
             <el-select value-key="id" popper-class="config-dropdown" v-model="module.project" placeholder="" size="small">
               <el-option v-for="item in projectList" :key="item.id" :label="item.name" :value="item"></el-option>
             </el-select>
@@ -187,7 +187,7 @@
             {required: true, message: this.$t('validate.required'), trigger: 'blur'}
           ],
           project: [
-            {required: true, message: this.$t('validate.required'), trigger: 'blur'}
+            {required: true, message: this.$t('validate.required'), trigger: 'change'}
           ],
           port: [
             {type: 'number', message: this.$t('validate.number'), trigger: 'blur'}
