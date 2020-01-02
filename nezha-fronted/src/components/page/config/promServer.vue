@@ -114,27 +114,19 @@
         <transition name="right-box">
             <div class="right-box right-box-prom" v-if="rightBox.show">
                 <!-- begin--顶部按钮-->
-                <div class="right-box-top-btns">
-                    <div class="right-box-top-btn right-box-top-btn-full" @click="esc()">
-                        <div class="right-box-btn-icon">
-                            <i class="el-icon-close"></i>
-                        </div>
-                        <span>{{$t('overall.esc')}}</span>
-                    </div>
-                    <div class="right-box-top-btn right-box-top-btn-full" @click="saveOrToEdit">
-                        <div class="right-box-btn-icon">
-                            <i class="el-icon-edit-outline"></i>
-                        </div>
-                        <span v-if="rightBox.isEdit">{{$t('overall.save')}}</span>
-                        <span v-else>{{$t('overall.edit')}}</span>
-                    </div>
-                    <div @click="del(promServer)" class="right-box-top-btn" v-if="rightBox.isEdit && promServer.id != ''">
-                        <div class="right-box-btn-icon">
-                            <i class="el-icon-delete"></i>
-                        </div>
-                        <span>{{$t('overall.delete')}}</span>
-                    </div>
-                </div>
+              <div class="right-box-top-btns">
+                <button type="button" v-if="rightBox.isEdit && promServer.id != ''" @click="del(promServer)" class="nz-btn nz-btn-size-normal nz-btn-style-light">
+                  <span class="top-tool-btn-txt">{{$t('overall.delete')}}</span>
+                </button>
+                <button type="button" @click="saveOrToEdit" class="nz-btn nz-btn-size-normal nz-btn-style-normal">
+                  <span v-if="rightBox.isEdit" class="top-tool-btn-txt">{{$t('overall.save')}}</span>
+                  <span v-else class="top-tool-btn-txt">{{$t('overall.edit')}}</span>
+                </button>
+
+                <button type="button" @click="esc" class="nz-btn nz-btn-size-normal nz-btn-style-light nz-btn-style-square">
+                  <span class="top-tool-btn-txt"><i class="el-icon-close"></i></span>
+                </button>
+              </div>
                 <!-- end--顶部按钮-->
 
                 <!-- begin--标题-->
@@ -142,180 +134,105 @@
                 <!-- end--标题-->
 
                 <!-- begin--表单-->
-                <div class="right-box-form">
-                    <div class="right-box-form-row">
-                        <div class="right-box-form-label">DC</div>
-                        <div class="right-box-form-content">
-                            <el-select class="right-box-row-with-btn" value-key="id" popper-class="config-dropdown" v-model="promServer.idc" placeholder="" v-if="rightBox.isEdit" size="small">
-                                <el-option
-                                  @click.native="blurEditIdc()"
-                                  v-for="item in idcData"
-                                  :key="item.id"
-                                  :label="item.name"
-                                  :value="item">
-                                    <span class="config-dropdown-label-txt">{{item.name}}</span>
-                                  <el-popover
-                                    placement="left"
-                                    v-model="item[item.name]"
-                                  >
-                                    <div class="pop-window-assetType-content">
-                                      <div class="right-box-top-btns">
-                                        <div class="right-box-top-btn right-box-top-btn-full"
-                                             @click="item[item.name] = false">
-                                          <div class="right-box-btn-icon">
-                                            <i class="el-icon-close"></i>
-                                          </div>
-                                          <span>{{$t('overall.esc')}}</span>
-                                        </div>
-                                      </div>
-                                      <div class="pop-window">
-                                        <span style="display: block;padding-bottom: 20px">标题</span>
-                                          <el-input v-model="popIdcData.name"/>
-                                          <el-input v-model="popIdcData.location"/>
-                                          <el-select v-model="popIdcData.principal" clearable>
-                                            <el-option
-                                              v-for="item in idcUserData"
-                                              :key="item.key"
-                                              :label="item.username"
-                                              :value="item.userId"
-                                            >
-                                            </el-option>
-                                          </el-select>
-                                          <el-input v-model="popIdcData.tel"/>
-                                      </div>
-                                    </div>
-                                    <div class="right-box-bottom-btns">
-                                      <div class="right-box-bottom-btn right-box-bottom-btn-cancel"
-                                           @click.stop="item[item.name]= false">
-                                        {{$t('overall.cancel')}}
-                                      </div>
-                                      <div class="right-box-bottom-btn right-box-bottom-btn-50"
-                                           @click="editData('idc', item.id, popIdcData)">
-                                        {{$t('overall.save')}}
-                                      </div>
-                                    </div>
-                                    <span class="config-dropdown-btn" slot="reference"
-                                          @click.stop="getSingleIDCData(item.id,'edit')"><i
-                                      class="el-icon-edit-outline"></i></span>
-                                  </el-popover>
-                                    <span class="config-dropdown-btn config-dropdown-btn-delete" @click.stop="toDelIdc(item)"><i class="el-icon-delete"></i></span>
-                                </el-option>
-                            </el-select>
-                            <div class="right-box-row-btn" v-if="rightBox.isEdit">
-                              <el-popover
-                                placement="left"
-                                v-model="visible"
-                              >
-                                <div class="pop-window-assetType-content">
-                                  <div class="right-box-top-btns">
-                                    <div class="right-box-top-btn right-box-top-btn-full"
-                                         @click="visible = false">
-                                      <div class="right-box-btn-icon">
-                                        <i class="el-icon-close"></i>
-                                      </div>
-                                      <span>{{$t('overall.esc')}}</span>
-                                    </div>
-                                  </div>
-                                  <div class="pop-window">
-                                    <span style="display: block;padding-bottom: 20px">标题</span>
-                                    <div style="padding-top: 10px;padding-left: 20px">
-                                      <div>
-                                        <label style="font-size: 12px">DN name</label>
-                                        <input class='sidebar-pop-input' v-model="addIdcData.name"/>
-                                      </div>
-                                      <div style="padding-top: 40px">
-                                        <label style="font-size: 12px">Loaction</label>
-                                        <input class='sidebar-pop-input' v-model="addIdcData.location"/>
-                                      </div>
-                                      <div style="padding-top: 40px">
-                                        <label style="font-size: 12px;padding-right: 20px">负责人</label>
-                                        <select class='sidebar-pop-input-select'
-                                                style="margin-left:-40px "
-                                                v-model="addIdcData.principal"
-                                                clearable>
-                                          <option
-                                            v-for="item in idcUserData"
-                                            :key="item.key"
-                                            :label="item.username"
-                                            :value="item.userId"
-                                          >
-                                          </option>
-                                        </select>
-                                      </div>
-                                      <div style="padding-top: 40px">
-                                        <label style="font-size: 12px">Tel</label>
-                                        <input class='sidebar-pop-input' v-model="addIdcData.tel"/>
-                                      </div>
-                                    </div>
-                                  </div>
-                                </div>
-                                <div class="right-box-bottom-btns">
-                                  <div class="right-box-bottom-btn right-box-bottom-btn-cancel"
-                                       @click.stop="visible= false">
-                                    {{$t('overall.cancel')}}
-                                  </div>
-                                  <div class="right-box-bottom-btn right-box-bottom-btn-50"
-                                       @click="addNewData('IDC')">
-                                    {{$t('overall.save')}}
-                                  </div>
-                                </div>
-                                <span slot="reference"
-                                      @click.prevent=''><i
-                                  class="el-icon-plus"></i></span>
-                              </el-popover>
+              <el-scrollbar class="right-box-form-box">
+                <el-form class="right-box-form" :model="promServer" label-position="top" :rules="rules" ref="promServerForm">
+                  <!--DC start-->
+                  <el-form-item label="DC"  prop="idc.name">
+                    <div class="right-box-form-content">
+                    <el-select class="right-box-row-with-btn" value-key="id" popper-class="config-dropdown" v-model="promServer.idc" placeholder="" v-if="rightBox.isEdit" size="small">
+                      <el-option @click.native="blurEditIdc()" v-for="item in idcData" :key="item.id" :label="item.name" :value="item">
+                        <span class="config-dropdown-label-txt">{{item.name}}</span>
+                        <el-popover placement="left" v-model="item[item.name]">
+                          <div class="pop-window-assetType-content">
+                            <div class="right-box-top-btns">
+                              <div class="right-box-top-btn right-box-top-btn-full" @click="item[item.name] = false">
+                                <div class="right-box-btn-icon"><i class="el-icon-close"></i></div>
+                                <span>{{$t('overall.esc')}}</span>
+                              </div>
                             </div>
-                            <div class="right-box-form-content-txt" v-if="!rightBox.isEdit">{{promServer.idc.name}}</div>
+                            <div class="pop-window">
+                              <span style="display: block;padding-bottom: 20px">{{$t('asset.createAssetTab.editIdcTab.title')}}</span>
+                              <el-input v-model="popIdcData.name"/>
+                              <el-input v-model="popIdcData.location"/>
+                              <el-select v-model="popIdcData.principal" clearable>
+                                <el-option v-for="item in idcUserData" :key="item.key" :label="item.username" :value="item.userId"></el-option>
+                              </el-select>
+                              <el-input v-model="popIdcData.tel"/>
+                            </div>
+                          </div>
+                          <div class="right-box-bottom-btns">
+                            <div class="right-box-bottom-btn right-box-bottom-btn-cancel" @click.stop="item[item.name]= false">{{$t('overall.cancel')}}
+                            </div>
+                            <div class="right-box-bottom-btn right-box-bottom-btn-50" @click="editData('idc', item.id, popIdcData)">{{$t('overall.save')}}</div>
+                          </div>
+                          <span class="config-dropdown-btn" slot="reference" @click.stop="getSingleIDCData(item.id,'edit')"><i class="el-icon-edit-outline"></i></span>
+                        </el-popover>
+                        <span class="config-dropdown-btn config-dropdown-btn-delete" @click.stop="toDelIdc(item)"><i class="el-icon-delete"></i></span>
+                      </el-option>
+                    </el-select>
+
+
+                    <div class="right-box-row-btn" v-if="rightBox.isEdit">
+                      <el-popover placement="left" v-model="visible">
+                        <div class="pop-window-assetType-content">
+                          <div class="right-box-top-btns">
+                            <div class="right-box-top-btn right-box-top-btn-full" @click="visible = false">
+                              <div class="right-box-btn-icon"><i class="el-icon-close"></i></div>
+                              <span>{{$t('overall.esc')}}</span>
+                            </div>
+                          </div>
+                          <div class="pop-window">
+                            <span style="display: block;padding-bottom: 20px">{{$t('asset.createAssetTab.AddIdcTab.title')}}</span>
+                            <div style="padding-top: 10px;padding-left: 20px">
+                              <div>
+                                <label style="font-size: 12px">DN name</label>
+                                <input class='sidebar-pop-input' v-model="addIdcData.name"/>
+                              </div>
+                              <div style="padding-top: 40px">
+                                <label style="font-size: 12px">Loaction</label>
+                                <input class='sidebar-pop-input' v-model="addIdcData.location"/>
+                              </div>
+                              <div style="padding-top: 40px">
+                                <label style="font-size: 12px;padding-right: 20px">负责人</label>
+                                <select class='sidebar-pop-input-select' style="margin-left:-40px " v-model="addIdcData.principal" clearable>
+                                  <option v-for="item in idcUserData" :key="item.key" :label="item.username" :value="item.userId"></option>
+                                </select>
+                              </div>
+                              <div style="padding-top: 40px">
+                                <label style="font-size: 12px">Tel</label>
+                                <input class='sidebar-pop-input' v-model="addIdcData.tel"/>
+                              </div>
+                            </div>
+                          </div>
                         </div>
+                        <span slot="reference" @click.prevent=''><i class="el-icon-plus"></i></span>
+                      </el-popover>
                     </div>
-                    <div class="right-box-form-row">
-                        <div class="right-box-form-label">Host</div>
-                        <div class="right-box-form-content">
-                            <el-input
-                              type="text"
-                              v-if="rightBox.isEdit"
-                              placeholder=""
-                              v-model="promServer.host"
-                              size="small"
-                            ></el-input>
-                            <div v-if="!rightBox.isEdit" class="right-box-form-content-txt">{{promServer.host}}</div>
-                        </div>
+                    <div class="right-box-form-content-txt" v-if="!rightBox.isEdit">{{promServer.idc.name}}</div>
                     </div>
-                    <div class="right-box-form-row">
-                        <div class="right-box-form-label">Port</div>
-                        <div class="right-box-form-content">
-                            <el-input
-                              type="text"
-                              v-if="rightBox.isEdit"
-                              placeholder=""
-                              v-model="promServer.port"
-                              size="small"
-                            ></el-input>
-                            <div v-if="!rightBox.isEdit" class="right-box-form-content-txt">{{promServer.port}}</div>
-                        </div>
-                    </div>
-                    <div class="right-box-form-row">
-                        <div class="right-box-form-label">{{$t('config.promServer.type')}}</div>
-                        <div class="right-box-form-content">
-                            <el-select popper-class="config-dropdown" v-model="promServer.type" placeholder="" v-if="rightBox.isEdit" size="small">
-                                <el-option
-                                  v-for="item in typeData"
-                                  :key="item.key"
-                                  :label="item.value"
-                                  :value="item.key">
-                                </el-option>
-                            </el-select>
-                            <div v-for="item in typeData" v-if="!rightBox.isEdit && item.key == promServer.type" class="right-box-form-content-txt">{{item.value}}</div>
-                        </div>
-                    </div>
-                </div>
+                  </el-form-item>
+                  <!--DC end-->
+
+                  <!--host-->
+                  <el-form-item label="Host" prop="host">
+                    <el-input type="text" v-if="rightBox.isEdit" placeholder="" v-model="promServer.host" size="small"></el-input>
+                    <div v-if="!rightBox.isEdit" class="right-box-form-content-txt">{{promServer.host}}</div>
+                  </el-form-item>
+                  <!--Port-->
+                  <el-form-item label="Port" prop="port">
+                    <el-input type="text" v-if="rightBox.isEdit" placeholder="" v-model.number="promServer.port" size="small"></el-input>
+                    <div v-if="!rightBox.isEdit" class="right-box-form-content-txt">{{promServer.port}}</div>
+                  </el-form-item>
+                  <!--type-->
+                  <el-form-item :label="$t('config.promServer.type')" prop="type">
+                    <el-select popper-class="config-dropdown" v-model="promServer.type" placeholder="" v-if="rightBox.isEdit" size="small">
+                      <el-option v-for="item in typeData" :key="item.key" :label="item.value" :value="item.key"></el-option>
+                    </el-select>
+                    <div v-for="item in typeData" v-if="!rightBox.isEdit && item.key == promServer.type" class="right-box-form-content-txt">{{item.value}}</div>
+                  </el-form-item>
+                </el-form>
+              </el-scrollbar>
                 <!-- end--表单-->
-
-                <!-- begin--底部按钮-->
-                <div class="right-box-bottom-btns">
-                    <div @click="esc()" :class="{'right-box-bottom-btn-50': rightBox.isEdit}" class="right-box-bottom-btn right-box-bottom-btn-cancel">{{$t('overall.cancel')}}</div><div @click="save()" v-if="rightBox.isEdit" class="right-box-bottom-btn right-box-bottom-btn-50">{{promServer.id == '' ? $t('overall.create') : $t('overall.save')}}</div>
-                </div>
-                <!-- end--底部按钮-->
-
             </div>
         </transition>
     </div>
@@ -336,6 +253,21 @@ export default {
         id: '',
         host: '',
         idc: {id: '', name: '', location: ''}
+      },
+      rules:{
+        'idc.name':[
+          {required:true,message:this.$t('validate.required'),trigger:'change'}
+        ],
+        host:[
+          {required:true,message:this.$t('validate.required'),trigger:'blur'}
+        ],
+        port:[
+          {required:true,message:this.$t('validate.required'),trigger:'blur'},
+          {type:'number',message: this.$t('validate.number')}
+        ],
+        type:[
+          {required:true,message:this.$t('validate.required'),trigger:'change'},
+        ]
       },
       pageObj: {
         pageNo: 1,
@@ -473,29 +405,35 @@ export default {
       this.rightBox.show = true;
     },
     save: function() {
-      if (this.promServer.id) {
-        this.$put('promServer', this.promServer).then(response => {
-          if (response.code === 200) {
-            this.$message({duration: 1000, type: 'success', message: this.$t("tip.saveSuccess")});
-            this.getTableData();
-            this.rightBox.isEdit = false;
-            this.esc();
+      this.$refs.promServerForm.validate((valid => {
+        if(valid){
+          if (this.promServer.id) {
+            this.$put('promServer', this.promServer).then(response => {
+              if (response.code === 200) {
+                this.$message({duration: 1000, type: 'success', message: this.$t("tip.saveSuccess")});
+                this.getTableData();
+                this.rightBox.isEdit = false;
+                this.esc();
+              } else {
+                this.$message.error(response.msg);
+              }
+            });
           } else {
-            this.$message.error(response.msg);
+            this.$post('promServer', this.promServer).then(response => {
+              if (response.code === 200) {
+                this.$message({duration: 1000, type: 'success', message: this.$t("tip.saveSuccess")});
+                this.getTableData();
+                this.rightBox.isEdit = false;
+                this.esc();
+              } else {
+                this.$message.error(response.msg);
+              }
+            });
           }
-        });
-      } else {
-        this.$post('promServer', this.promServer).then(response => {
-          if (response.code === 200) {
-            this.$message({duration: 1000, type: 'success', message: this.$t("tip.saveSuccess")});
-            this.getTableData();
-            this.rightBox.isEdit = false;
-            this.esc();
-          } else {
-            this.$message.error(response.msg);
-          }
-        });
-      }
+        }else{
+          return false;
+        }
+      }))
     },
     saveOrToEdit: function() {
       if (!this.rightBox.isEdit) {

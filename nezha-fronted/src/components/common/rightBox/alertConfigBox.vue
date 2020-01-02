@@ -3,26 +3,19 @@
     <div class="right-box right-box-alert-config" v-if="rightBox.show">
       <!-- begin--顶部按钮-->
       <div class="right-box-top-btns">
-        <div class="right-box-top-btn right-box-top-btn-full" @click="esc">
-          <div class="right-box-btn-icon">
-            <i class="el-icon-close"></i>
-          </div>
-          <span>{{$t('overall.esc')}}</span>
-        </div>
-        <div class="right-box-top-btn right-box-top-btn-full" @click="saveOrToEdit">
-          <div class="right-box-btn-icon">
-            <i class="el-icon-edit-outline"></i>
-          </div>
-          <span v-if="rightBox.isEdit">{{$t('overall.save')}}</span>
-          <span v-else>{{$t('overall.edit')}}</span>
-        </div>
-        <div @click="del" class="right-box-top-btn" v-if="rightBox.isEdit && alertRule.id != ''">
-          <div class="right-box-btn-icon">
-            <i class="el-icon-delete"></i>
-          </div>
-          <span>{{$t('overall.delete')}}</span>
-        </div>
+        <button type="button" v-if="alertRule.id != ''" @click="del" class="nz-btn nz-btn-size-normal nz-btn-style-light">
+          <span class="top-tool-btn-txt">{{$t('overall.delete')}}</span>
+        </button>
+        <button type="button" @click="save" class="nz-btn nz-btn-size-normal nz-btn-style-normal">
+          <span v-if="rightBox.isEdit" class="top-tool-btn-txt">{{$t('overall.save')}}</span>
+          <span v-else class="top-tool-btn-txt">{{$t('overall.edit')}}</span>
+        </button>
+
+        <button type="button" @click="esc" class="nz-btn nz-btn-size-normal nz-btn-style-light nz-btn-style-square">
+          <span class="top-tool-btn-txt"><i class="el-icon-close"></i></span>
+        </button>
       </div>
+
       <!-- end--顶部按钮-->
 
       <!-- begin--标题-->
@@ -30,176 +23,82 @@
       <!-- end--标题-->
 
       <!-- begin--表单-->
-      <div class="right-box-form">
-        <!--name-->
-        <div class="right-box-form-row">
-          <div class="right-box-form-label">{{$t('alert.config.name')}}</div>
-          <div class="right-box-form-content">
-            <el-input
-              v-if="rightBox.isEdit"
-              type="text"
-              placeholder=""
-              v-model="alertRule.alertName"
-              maxlength="64"
-              show-word-limit
-              size="small"
-            ></el-input>
-            <div v-if="!rightBox.isEdit" class="right-box-form-content-txt">{{alertRule.alertName}}</div>
-          </div>
-        </div>
-        <!--type-->
-        <div class="right-box-form-row">
-          <div class="right-box-form-label">{{$t('alert.list.type')}}</div>
-          <div class="right-box-form-content">
-            <el-select @change="(val) => {changeType(val);}" popper-class="config-dropdown" v-model="alertRule.type" placeholder="" v-if="rightBox.isEdit" size="small" >
-              <el-option
-                v-for="item in typeData"
-                :key="item.key"
-                :label="item.value"
-                :value="item.key">
-              </el-option>
-            </el-select>
-            <div v-for="item in typeData" v-if="!rightBox.isEdit && item.key == alertRule.type" class="right-box-form-content-txt">{{item.value}}</div>
-          </div>
-        </div>
-        <!--linkedId-->
-        <div class="right-box-form-row">
-          <div class="right-box-form-label">{{$t('alert.config.link')}}</div>
-          <div class="right-box-form-content">
-            <div v-if="!rightBox.isEdit" class="right-box-form-content-txt">{{alertRule.linkObject ? alertRule.linkObject.name : ''}}</div>
-            <el-select v-model="alertRule.linkId" placeholder="" v-if="rightBox.isEdit" size="small">
-                <el-option
-                  v-for="item in linkObjList"
-                  :key="item.id"
-                  :label="alertRule.type == 3 ? item.host : item.name"
-                  :value="item.id">
+      <el-scrollbar class="right-box-form-box">
+          <el-form class="right-box-form" :model="alertRule" label-position="top" :rules="rules" ref="alertRuleForm">
+            <!--alertName-->
+            <el-form-item :label='$t("alert.config.name")' prop="alertName">
+              <el-input v-if="rightBox.isEdit" placeholder="" maxlength="64" show-word-limit v-model="alertRule.alertName" size="small"></el-input>
+              <div v-if="!rightBox.isEdit" class="right-box-form-content-txt">{{alertRule.alertName}}</div>
+            </el-form-item>
+            <!--type-->
+            <el-form-item :label="$t('alert.list.type')" prop="type">
+              <el-select v-if="rightBox.isEdit" @change="(val) => {changeType(val);}" popper-class="config-dropdown" v-model="alertRule.type" placeholder="" size="small" >
+                <el-option v-for="item in typeData" :key="item.key" :label="item.value" :value="item.key"></el-option>
+              </el-select>
+              <div v-for="item in typeData" v-if="!rightBox.isEdit && item.key == alertRule.type" class="right-box-form-content-txt">{{item.value}}</div>
+            </el-form-item>
+            <!--linkedId-->
+            <el-form-item :label="$t('alert.config.link')" prop="linkId">
+              <el-select v-if="rightBox.isEdit" v-model="alertRule.linkId" placeholder="" size="small">
+                <el-option v-for="item in linkObjList" :key="item.id" :label="alertRule.type == 3 ? item.host : item.name" :value="item.id"></el-option>
+              </el-select>
+              <div v-if="!rightBox.isEdit" class="right-box-form-content-txt">{{alertRule.linkObject ? alertRule.linkObject.name : ''}}</div>
+            </el-form-item>
+            <!--expr-->
+            <el-form-item :label="$t('alert.config.expr')" prop="expr">
+              <el-input v-if="rightBox.isEdit" type="textarea"  placeholder="" v-model="alertRule.expr" size="small"></el-input>
+              <div v-if="!rightBox.isEdit" class="right-box-form-content-txt">{{alertRule.expr}}</div>
+            </el-form-item>
+            <!--last-->
+            <el-form-item :label="$t('alert.config.for')" prop="last">
+              <el-input v-if="rightBox.isEdit" type="text" placeholder="" v-model.number="alertRule.last" size="small">
+                <template slot="append">second</template>
+              </el-input>
+              <div v-if="!rightBox.isEdit" class="right-box-form-content-txt">{{alertRule.last}}s</div>
+            </el-form-item>
+            <!--severity-->
+            <el-form-item :label="$t('alert.severity')" prop="severity">
+              <el-select v-if="rightBox.isEdit" popper-class="config-dropdown" v-model="alertRule.severity" placeholder=""  size="small">
+                <el-option v-for="item in severityData" :key="item.key" :label="item.value" :value="item.key">
+                  <span class="config-dropdown-label-txt" v-if="!item.isEdit">{{item.value}}</span>
+                  <span class="config-dropdown-label-input" v-if="item.isEdit" @click.stop>
+                    <el-input type="text" v-model="item.name" size="mini"></el-input>
+                  </span>
                 </el-option>
               </el-select>
-          </div>
-        </div>
-        <!--expr-->
-        <div class="right-box-form-row">
-          <div class="right-box-form-label">{{$t('alert.config.expr')}}</div>
-          <div class="right-box-form-content">
-            <el-input
-              type="textarea"
-              v-if="rightBox.isEdit"
-              placeholder=""
-              v-model="alertRule.expr"
-              size="small"
-            ></el-input>
-            <div v-if="!rightBox.isEdit" class="right-box-form-content-txt">{{alertRule.expr}}</div>
-          </div>
-        </div>
-        <!--for-->
-        <div class="right-box-form-row">
-          <div class="right-box-form-label">{{$t('alert.config.for')}}</div>
-          <div class="right-box-form-content">
-            <el-input
-              type="text"
-              v-if="rightBox.isEdit"
-              placeholder=""
-              v-model="alertRule.last"
-              size="small"
-            >
-              <template slot="append">second</template>
-            </el-input>
-            <div v-if="!rightBox.isEdit" class="right-box-form-content-txt">{{alertRule.last}}s</div>
-          </div>
-        </div>
-        <!--severity-->
-        <div class="right-box-form-row">
-          <div class="right-box-form-label">{{$t('alert.severity')}}</div>
-          <div class="right-box-form-content">
-            <el-select popper-class="config-dropdown" v-model="alertRule.severity" placeholder="" v-if="rightBox.isEdit" size="small">
-              <el-option
-                v-for="item in severityData"
-                :key="item.key"
-                :label="item.value"
-                :value="item.key">
-                <span class="config-dropdown-label-txt" v-if="!item.isEdit">{{item.value}}</span>
-                <span class="config-dropdown-label-input" v-if="item.isEdit" @click.stop>
-                                        <el-input
-                                          type="text"
-                                          v-model="item.name"
-                                          size="mini"
-                                        ></el-input>
-                                     </span>
-              </el-option>
-            </el-select>
-            <div v-if="!rightBox.isEdit" class="right-box-form-content-txt">{{alertRule.severity}}</div>
-          </div>
-        </div>
-        <!--summary-->
-        <div class="right-box-form-row">
-          <div class="right-box-form-label">{{$t('alert.summary')}}</div>
-          <div class="right-box-form-content">
-            <el-input
-              type="text"
-              v-if="rightBox.isEdit"
-              placeholder=""
-              v-model="alertRule.summary"
-              size="small"
-            ></el-input>
-            <div v-if="!rightBox.isEdit" class="right-box-form-content-txt">{{alertRule.summary}}</div>
-          </div>
-        </div>
-        <!--description-->
-        <div class="right-box-form-row">
-          <div class="right-box-form-label">{{$t('alert.description')}}</div>
-          <div class="right-box-form-content">
-            <el-input
-              type="textarea"
-              v-if="rightBox.isEdit"
-              placeholder=""
-              v-model="alertRule.description"
-              size="small"
-            ></el-input>
-            <div v-if="!rightBox.isEdit" class="right-box-form-content-txt">{{alertRule.description}}</div>
-          </div>
-        </div>
-        <!--receiver-->
-        <!--<div class="right-box-form-row">
-          <div class="right-box-form-label">{{$t('config.account.receiver')}}</div>
-          <div class="right-box-form-content">
-            <el-select class="right-box-row-with-btn" value-key="id" popper-class="config-dropdown" v-model="alertRule.receiver" placeholder="" v-if="rightBox.isEdit" size="small">
-              <el-option
-                @click.native="blurEditReceiver()"
-                v-for="item in receiverData"
-                :key="item.id"
-                :label="item.name"
-                :value="item">
-                <span class="config-dropdown-label-txt" v-if="!item.isEdit">{{item.name}}</span>
-                <span class="config-dropdown-label-input" v-if="item.isEdit" @click.stop>
-                                        <el-input
-                                          type="text"
-                                          v-model="item.name"
-                                          size="mini"
-                                        ></el-input>
-                                    </span>
-                <span class="config-dropdown-error-message">{{item.errorMessage}}</span>
-                <span class="config-dropdown-btn" @click.stop="toEditReceiver(item)">
-                                        <i class="el-icon-edit-outline" v-if="!item.isEdit"></i>
-                                        <i class="el-icon-check" v-if="item.isEdit"></i>
-                                    </span>
-                <span class="config-dropdown-btn config-dropdown-btn-delete" @click.stop="toDelReceiver(item)"><i class="el-icon-delete"></i></span>
-              </el-option>
-            </el-select>
-            <div class="right-box-row-btn" v-if="rightBox.isEdit">
-              <span class="el-icon-plus"></span>
-            </div>
-            <div class="right-box-form-content-txt" v-if="!rightBox.isEdit">{{alertRule.receiver}}</div>
-          </div>
-        </div>-->
-      </div>
+              <div v-if="!rightBox.isEdit" class="right-box-form-content-txt">{{alertRule.severity}}</div>
+            </el-form-item>
+            <!--summary-->
+            <el-form-item :label="$t('alert.summary')" prop="summary">
+              <el-input v-if="rightBox.isEdit" type="text"  placeholder="" v-model="alertRule.summary" size="small"></el-input>
+              <div v-if="!rightBox.isEdit" class="right-box-form-content-txt">{{alertRule.summary}}</div>
+            </el-form-item>
+            <!--description-->
+            <el-form-item :label="$t('alert.description')" prop="description">
+              <el-input v-if="rightBox.isEdit" type="textarea" placeholder="" v-model="alertRule.description" size="small"></el-input>
+              <div v-if="!rightBox.isEdit" class="right-box-form-content-txt">{{alertRule.description}}</div>
+            </el-form-item>
+            <!--receiver-->
+            <!--<el-form-item :label="$t('config.account.receiver')" prop="receiver">
+              <el-select class="right-box-row-with-btn" value-key="id" popper-class="config-dropdown" v-model="alertRule.receiver" placeholder="" v-if="rightBox.isEdit" size="small">
+                <el-option @click.native="blurEditReceiver()" v-for="item in receiverData" :key="item.id" :label="item.name" :value="item">
+                  <span class="config-dropdown-label-txt" v-if="!item.isEdit">{{item.name}}</span>
+                  <span class="config-dropdown-label-input" v-if="item.isEdit" @click.stop>
+                    <el-input type="text" v-model="item.name" size="mini"></el-input>
+                  </span>
+                  <span class="config-dropdown-error-message">{{item.errorMessage}}</span>
+                  <span class="config-dropdown-btn" @click.stop="toEditReceiver(item)">
+                    <i class="el-icon-edit-outline" v-if="!item.isEdit"></i>
+                    <i class="el-icon-check" v-if="item.isEdit"></i>
+                  </span>
+                  <span class="config-dropdown-btn config-dropdown-btn-delete" @click.stop="toDelReceiver(item)"><i class="el-icon-delete"></i></span>
+                </el-option>
+              </el-select>
+              <div class="right-box-form-content-txt" v-if="!rightBox.isEdit">{{alertRule.receiver}}</div>
+            </el-form-item>-->
+          </el-form>
+      </el-scrollbar>
       <!-- end--表单-->
-
-      <!-- begin--底部按钮-->
-      <div class="right-box-bottom-btns">
-        <div @click="esc()" :class="{'right-box-bottom-btn-50': rightBox.isEdit}" class="right-box-bottom-btn right-box-bottom-btn-cancel">{{$t('overall.cancel')}}</div><div @click="save" v-if="rightBox.isEdit" class="right-box-bottom-btn right-box-bottom-btn-50">{{alertRule.id == '' ? $t('overall.create') : $t('overall.save')}}</div>
-      </div>
-      <!-- end--底部按钮-->
-
     </div>
   </transition>
 </template>
@@ -214,6 +113,36 @@
       return {
         alertRule: {id: ''},
         rightBox: {show: false, isEdit: false, title: ''},
+        rules:{
+          alertName:[
+            {required:true,message:this.$t('validate.required'),trigger:'blur'}
+          ],
+          type:[
+            {required:true,message:this.$t('validate.required'),trigger:'change'}
+          ],
+          linkId:[
+            {required:true,message:this.$t('validate.required'),trigger:"change"}
+          ],
+          expr:[
+            {required:true,message:this.$t('validate.required'),trigger:'blur'}
+          ],
+          last:[
+            {required:true,message:this.$t('validate.required'),trigger:'blur'},
+            {type:'number',message:this.$t('validate.number')}
+          ],
+          severity:[
+            {required:true,message:this.$t('validate.required'),trigger:'change'},
+          ],
+          summary:[
+            {required:true,message:this.$t('validate.required'),trigger:'blur'},
+          ],
+          // description:[
+          //   {required:true,message:this.$t('validate.required'),trigger:'blur'},
+          // ],
+          // receiver:[
+          //   {required:true,message:this.$t('validate.required'),trigger:'change'},
+          // ]
+        },
         severityData: [
           {
             key: 'medium',
@@ -276,27 +205,33 @@
         this.rightBox.isEdit = isEdit;
       },
       save: function() {
-        if (this.alertRule.id) {
-          this.$put('alert/rule', this.alertRule).then(response => {
-            if (response.code === 200) {
-              this.$message({duration: 1000, type: 'success', message: this.$t("tip.saveSuccess")});
-              this.$emit('reload');
-              this.rightBox.show = false;
+        this.$refs.alertRuleForm.validate((valid) => {
+          if (valid) {
+            if (this.alertRule.id) {
+              this.$put('alert/rule', this.alertRule).then(response => {
+                if (response.code === 200) {
+                  this.$message({duration: 1000, type: 'success', message: this.$t("tip.saveSuccess")});
+                  this.$emit('reload');
+                  this.rightBox.show = false;
+                } else {
+                  this.$message.error(response.msg);
+                }
+              });
             } else {
-              this.$message.error(response.msg);
+              this.$post('alert/rule', this.alertRule).then(response => {
+                if (response.code === 200) {
+                  this.$message({duration: 1000, type: 'success', message: this.$t("tip.saveSuccess")});
+                  this.$emit('reload');
+                  this.rightBox.show = false;
+                } else {
+                  this.$message.error(response.msg);
+                }
+              });
             }
-          });
-        } else {
-          this.$post('alert/rule', this.alertRule).then(response => {
-            if (response.code === 200) {
-              this.$message({duration: 1000, type: 'success', message: this.$t("tip.saveSuccess")});
-              this.$emit('reload');
-              this.rightBox.show = false;
-            } else {
-              this.$message.error(response.msg);
-            }
-          });
-        }
+          } else {
+            return false;
+          }
+        })
       },
       changeType(type) {
         this.alertRule.linkId = '';

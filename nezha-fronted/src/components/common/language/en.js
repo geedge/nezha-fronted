@@ -41,6 +41,7 @@ const en = {
   validate: { //校验规则
     required: 'Required',
     number: 'Must be a number',
+    email:'E-mail is invalide',
     config: {
       account: {
 
