@@ -100,25 +100,17 @@
             <div class="right-box right-box-account" v-if="rightBox.show">
                 <!-- begin--顶部按钮-->
                 <div class="right-box-top-btns">
-                    <div class="right-box-top-btn right-box-top-btn-full" @click="esc()">
-                        <div class="right-box-btn-icon">
-                            <i class="el-icon-close"></i>
-                        </div>
-                        <span>{{$t('overall.esc')}}</span>
-                    </div>
-                    <div class="right-box-top-btn right-box-top-btn-full" @click="saveOrToEdit">
-                        <div class="right-box-btn-icon">
-                            <i class="el-icon-edit-outline"></i>
-                        </div>
-                        <span v-if="rightBox.isEdit">{{$t('overall.save')}}</span>
-                        <span v-else>{{$t('overall.edit')}}</span>
-                    </div>
-                    <div class="right-box-top-btn" v-if="rightBox.isEdit && user.userId != ''" @click="del(user)">
-                        <div class="right-box-btn-icon">
-                            <i class="el-icon-delete"></i>
-                        </div>
-                        <span>{{$t('overall.delete')}}</span>
-                    </div>
+                  <button type="button" v-if="user.userId != ''" @click="del(user)" class="nz-btn nz-btn-size-normal nz-btn-style-light">
+                    <span class="top-tool-btn-txt">{{$t('overall.delete')}}</span>
+                  </button>
+                  <button type="button" @click="saveOrToEdit" class="nz-btn nz-btn-size-normal nz-btn-style-normal">
+                    <span v-if="rightBox.isEdit" class="top-tool-btn-txt">{{$t('overall.save')}}</span>
+                    <span v-else class="top-tool-btn-txt">{{$t('overall.edit')}}</span>
+                  </button>
+
+                  <button type="button" @click="esc" class="nz-btn nz-btn-size-normal nz-btn-style-light nz-btn-style-square">
+                    <span class="top-tool-btn-txt"><i class="el-icon-close"></i></span>
+                  </button>
                 </div>
                 <!-- end--顶部按钮-->
 
@@ -127,116 +119,39 @@
                 <!-- end--标题-->
 
                 <!-- begin--表单-->
-                <div class="right-box-form">
-                    <div class="right-box-form-row">
-                        <div class="right-box-form-label">{{$t('config.account.account')}}</div>
-                        <div class="right-box-form-content">
-                            <el-input
-                              v-if="rightBox.isEdit"
-                              type="text"
-                              placeholder=""
-                              v-model="user.username"
-                              maxlength="64"
-                              show-word-limit
-                              size="small"
-                            ></el-input>
-                            <div v-if="!rightBox.isEdit" class="right-box-form-content-txt">{{user.username}}</div>
-                        </div>
-                    </div>
-                    <div class="right-box-form-row" v-if="rightBox.isEdit && !user.userId">
-                        <div class="right-box-form-label">{{$t('config.account.password')}}</div>
-                        <div class="right-box-form-content">
-                            <el-input
-                              type="text"
-                              placeholder=""
-                              v-model="user.password"
-                              maxlength="16"
-                              show-word-limit
-                              size="small"
-                            ></el-input>
-                        </div>
-                    </div>
-                    <div class="right-box-form-row">
-                        <div class="right-box-form-label">E-mail</div>
-                        <div class="right-box-form-content">
-                            <el-input
-                              type="text"
-                              v-if="rightBox.isEdit"
-                              placeholder=""
-                              v-model="user.email"
-                              size="small"
-                            ></el-input>
-                          <div v-if="!rightBox.isEdit" class="right-box-form-content-txt">{{user.email}}</div>
-                        </div>
-                    </div>
-                    <!--<div class="right-box-form-row">
-                        <div class="right-box-form-label">{{$t('config.account.receiver')}}</div>
-                        <div class="right-box-form-content">
-                            <el-select class="right-box-row-with-btn" value-key="id" popper-class="config-dropdown" multiple v-model="user.receiver" placeholder="" v-if="rightBox.isEdit" size="small">
-                                <el-option
-                                  @click.native="blurEditReceiver()"
-                                  v-for="item in receiverData"
-                                  :key="item.id"
-                                  :label="item.name"
-                                  :value="item">
-                                    <span class="config-dropdown-label-txt" v-if="!item.isEdit">{{item.name}}</span>
-                                    <span class="config-dropdown-label-input" v-if="item.isEdit" @click.stop>
-                                        <el-input
-                                          type="text"
-                                          v-model="item.name"
-                                          size="mini"
-                                        ></el-input>
-                                    </span>
-                                    <span class="config-dropdown-error-message">{{item.errorMessage}}</span>
-                                    <span class="config-dropdown-btn" @click.stop="toEditReceiver(item)">
-                                        <i class="el-icon-edit-outline" v-if="!item.isEdit"></i>
-                                        <i class="el-icon-check" v-if="item.isEdit"></i>
-                                    </span>
-                                    <span class="config-dropdown-btn config-dropdown-btn-delete" @click.stop="toDelReceiver(item)"><i class="el-icon-delete"></i></span>
-                                </el-option>
-                            </el-select>
-                            <div class="right-box-row-btn" v-if="rightBox.isEdit">
-                                <span class="el-icon-plus"></span>
-                            </div>
-                            <div class="right-box-form-content-txt" v-if="!rightBox.isEdit">
-                                <template v-for="rec in user.receiver">{{rec.name}}</template>
-                            </div>
-                        </div>
-                    </div>-->
-                  <!--<div class="right-box-form-row">
-                      <div class="right-box-form-label">{{$t('config.account.language')}}</div>
-                      <div class="right-box-form-content">
-                          <el-radio v-model="user.lang" label="en" :disabled="!rightBox.isEdit && user.lang != 'en'">English</el-radio>
-                          <el-radio v-model="user.lang" label="zh" :disabled="!rightBox.isEdit && user.lang != 'zh'">中文</el-radio>
-                          <el-radio v-model="user.lang" label="ru" disabled>русский（{{$t('config.account.notCurrentlySupport')}}）</el-radio>
-                        </div>
-                    </div>-->
-                    <div class="right-box-form-row">
-                        <div class="right-box-form-label">{{$t('config.account.enable')}}</div>
-                        <div class="right-box-form-content">
-                            <el-switch
-                              v-model="user.status"
-                              :disabled="!rightBox.isEdit"
-                              active-value="1"
-                              inactive-value="0">
-                            </el-switch>
-                        </div>
-                    </div>
-                    <div class="right-box-form-row" v-if="!rightBox.isEdit">
-                        <div class="right-box-form-label">{{$t('config.account.createTime')}}</div>
-                        <div class="right-box-form-content">
-                            <div class="right-box-form-content-txt">{{user.createTime}}</div>
-                        </div>
-                    </div>
-                </div>
+              <el-scrollbar class="right-box-form-box">
+                <el-form class="right-box-form" :model="user" label-position="top" :rules="rules" ref="accountForm">
+                  <!--username-->
+                  <el-form-item :label="$t('config.account.account')" prop="username">
+                    <el-input v-if="rightBox.isEdit" type="text" placeholder="" v-model="user.username" maxlength="64" show-word-limit size="small"></el-input>
+                    <div v-if="!rightBox.isEdit" class="right-box-form-content-txt">{{user.username}}</div>
+                  </el-form-item>
+                  <!--password-->
+                  <el-form-item :label="$t('config.account.password')" prop="password" v-if="rightBox.isEdit &&!user.userId">
+                    <el-input type="password" placeholder="" v-model="user.password" maxlength="16" show-word-limit size="small"></el-input>
+                  </el-form-item>
+                  <!--email-->
+                  <el-form-item label="E-mail" prop="email">
+                    <el-input v-if="rightBox.isEdit" type="text"  placeholder="" v-model="user.email" size="small"></el-input>
+                    <div v-if="!rightBox.isEdit" class="right-box-form-content-txt">{{user.email}}</div>
+                  </el-form-item>
+                  <!--language-->
+                  <!--<el-form-item :label="$t('config.account.language')" prop="language">
+                    <el-radio v-model="user.lang" label="en" :disabled="user.lang != 'en'">English</el-radio>
+                    <el-radio v-model="user.lang" label="zh" :disabled="user.lang != 'zh'">中文</el-radio>
+                    <el-radio v-model="user.lang" label="ru" disabled>русский（{{$t('config.account.notCurrentlySupport')}}）</el-radio>
+                  </el-form-item>-->
+                  <!--enable-->
+                  <el-form-item :label="$t('config.account.enable')">
+                    <el-switch v-model="user.status" :disabled="!rightBox.isEdit" active-value="1" inactive-value="0">
+                    </el-switch>
+                  </el-form-item>
+                  <el-form-item :label="$t('config.account.createTime')" v-if="!rightBox.isEdit">
+                    <div class="right-box-form-content-txt">{{user.createTime}}</div>
+                  </el-form-item>
+                </el-form>
+              </el-scrollbar>
                 <!-- end--表单-->
-
-                <!-- begin--底部按钮-->
-                <div class="right-box-bottom-btns">
-                    <div @click="esc()" :class="{'right-box-bottom-btn-50': rightBox.isEdit}" class="right-box-bottom-btn right-box-bottom-btn-cancel">{{$t('overall.cancel')}}</div><div @click="save" v-if="rightBox.isEdit" class="right-box-bottom-btn right-box-bottom-btn-50">{{user.userId == '' ? $t('overall.create') : $t('overall.save')}}</div>
-                </div>
-                <!-- end--底部按钮-->
-
             </div>
         </transition>
     </div>
@@ -305,6 +220,18 @@ export default {
           width: 100
         }
       ],
+      rules:{
+        username:[
+          {required:true,message:this.$t('validate.required'),trigger:'blur'}
+        ],
+        password:[
+          {required:true,message:this.$t('validate.required'),trigger:'blur'}
+        ],
+        email:[
+          {required:true,message:this.$t('validate.required'),trigger:'blur'},
+          {type:'email',message:this.$t('validate.email')}
+        ]
+      },
       tableData: [],
       receiverData: [{
         id: '1',
@@ -395,27 +322,33 @@ export default {
       this.rightBox.show = true;
     },
     save: function() {
-      if (this.user.userId) {
-        this.$put('sys/user/update', this.user).then(response => {
-          if (response.code === 200) {
-            this.rightBox.show = false;
-            this.$message({duration: 1000, type: 'success', message: this.$t("tip.saveSuccess")});
+      this.$refs.accountForm.validate((valid) => {
+        if(valid){
+          if (this.user.userId) {
+            this.$put('sys/user/update', this.user).then(response => {
+              if (response.code === 200) {
+                this.rightBox.show = false;
+                this.$message({duration: 1000, type: 'success', message: this.$t("tip.saveSuccess")});
+              } else {
+                this.$message.error(response.msg);
+              }
+              this.getTableData();
+            });
           } else {
-            this.$message.error(response.msg);
+            this.$post('sys/user/save', this.user).then(response => {
+              if (response.code === 200) {
+                this.rightBox.show = false;
+                this.$message({duration: 1000, type: 'success', message: this.$t("tip.saveSuccess")});
+                this.getTableData();
+              } else {
+                this.$message.error(response.msg);
+              }
+            });
           }
-          this.getTableData();
-        });
-      } else {
-        this.$post('sys/user/save', this.user).then(response => {
-          if (response.code === 200) {
-            this.rightBox.show = false;
-            this.$message({duration: 1000, type: 'success', message: this.$t("tip.saveSuccess")});
-            this.getTableData();
-          } else {
-            this.$message.error(response.msg);
-          }
-        });
-      }
+        }else{
+          return false;
+        }
+      })
     },
     saveOrToEdit: function() {
       if (!this.rightBox.isEdit) {

@@ -174,20 +174,25 @@ html {
   width: 100%;
   padding-top: 10px;
 }
-.sidebar-info-item {
+.content-left .sidebar-info-item {
   line-height: 1.5rem;
   padding: 0 10px 0 10px;
   cursor: pointer;
   color: #444444;
   margin: 0 0 7px;
+  display: block;
 }
 .side-bar-menu-edit {
   line-height: 1.5rem;
   float: right;
 }
-.sidebar-info-item-active {
+.content-left .sidebar-info-item-active {
   border-left: 3px solid #e07700;
   font-weight: bold;
+}
+.content-left .el-checkbox-group .sidebar-info-item-active {
+  font-weight: bold;
+  border-left: none;
 }
 /* end--左侧列表*/
 
@@ -336,7 +341,7 @@ html {
 .right-box-add-endpoint .right-box-form {
   height: 100%;
 }
-.right-box-form .el-form-item {
+.right-box-form>.el-form-item {
   margin-bottom: 15px;
 }
 .right-box-form .el-select {
@@ -416,6 +421,9 @@ html {
   font-size: 12px;
   color: #DCDFE6;
   cursor: pointer;
+}
+.param-box .param-box-row .is-error {
+  padding-bottom: 10px;
 }
 /* end--param*/
 .right-box-form-content .el-select {
