@@ -31,7 +31,7 @@
         <el-input type="text"  placeholder="" v-model="idc.tel" size="small"></el-input>
       </el-form-item>
     </el-form>
-    <span :class="buttonClass" @click.prevent="" slot="reference">
+    <span :class="buttonClass" @click.prevent.stop="" slot="reference">
       <slot name="optionZone"  >
         <i class="el-icon-plus"></i>
       </slot>
