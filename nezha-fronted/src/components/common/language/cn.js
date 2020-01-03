@@ -20,18 +20,53 @@ const cn = {
     title:'仪表盘',
     panel:{
       title:'看板',
-      //侧滑框
+      //面板-侧滑框
       createPanelTitle: "创建面板",
       createPanelTitleSec:"创建新面板",
       editPanelTitle: "编辑面板",
       panelForm:{
         panelName:"面板名称" ,
         panelId:"ID"
-      }
+      } ,
+      //图表-侧滑框
+      createChartTitle: "Create Chart",
+      editChartTitle: "Edit Chart",
+      chartForm:{
+        chartId:"ID",
+        chartName:"图表名称",
+        type:"类型",
+        typeVal:{
+          line:{
+            label:"曲线"
+          },
+          bar:{
+            label:"柱状图"
+          },
+          table:{
+            label:"表格",
+          }
+        },
+        width:"宽度",
+        high:"高度",
+        metric:"指标",
+        addMetric:"添加指标",
+      },
+    },
+    metric:{
+      name:"指标名称",
+      normal:"Normal",
+      expert:"Expert",
+      label:"指标标签",
+      addMetric:"添加指标",
+      expertTip:"请输入表达式"
     },
     metricPreview:{
       title:'指标预览',
-    }
+    },
+    refresh:'刷新',
+    edit:'编辑',
+    delete:'删除',
+    screen:'全屏'
   },
   asset: {
     tableTitle: {

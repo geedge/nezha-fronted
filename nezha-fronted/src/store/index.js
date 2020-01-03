@@ -17,6 +17,7 @@ const store = new Vuex.Store({
     projectListChange: 0,
     moduleListChange: 0,
     flushDataSign: false,
+    panelListReload:false
   },
   getters: {
   },
@@ -32,6 +33,9 @@ const store = new Vuex.Store({
     },
     moduleListChange(state) {
       state.moduleListChange = state.moduleListChange + 1;
+    },
+    panelListChange(state,status){
+      state.panelListReload = status;
     }
   },
   actions: {

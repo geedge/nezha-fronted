@@ -204,7 +204,7 @@
           </el-popover>
       </div>-->
     </div>
-
+    <panel-box :panel="editPanel" @reload="panelListReload" @reloadForDel="" ref="panelBox"></panel-box>
     <project-box :project="editProject" ref="projectBox"></project-box>
     <module-box :currentProject="currentProject" :module="editModule" @reload="" ref="moduleBox"></module-box>
     <add-endpoint-box :currentProject="currentProject" :currentModule="currentModule" @reload=""
@@ -221,6 +221,10 @@
         username: sessionStorage.getItem("nz-username"),
         language: localStorage.getItem("nz-language"),
         assetData: [],
+        editPanel:{//新增or编辑的panel
+          id:'',
+          name: ''
+        },
         projectData: [], //顶部菜单project列表中的数据
         editProject: {id: '', name: '', remark: ''}, //新增/编辑的project
         currentProject: {id: '', name: '', remark: ''}, //module/endpoint弹框用来回显project
@@ -252,6 +256,11 @@
           receiver: '',
         },
         createMenu: [ //新增按钮内容
+          {
+            label: this.$t('dashboard.panel.createPanelTitle'),
+            url: 'panel',
+            type: 0
+          },
           {
             label: this.$t('project.project.createProject'),
             url: 'project',
@@ -300,7 +309,10 @@
       },
 
       createBox(item) {
-        if (item.type == 1) {
+        if (item.type == 0) {
+          this.$refs.panelBox.show(true);
+          this.editPanel = {id: '', name: ''};
+        }else  if (item.type == 1) {
           this.$refs.projectBox.show(true);
           this.editProject = {id: '', name: '', remark: ''};
         } else if (item.type == 2) {
@@ -427,6 +439,11 @@
       toEditProject(p) {
         this.$refs.projectBox.show(true);
         this.editProject = Object.assign({}, p);
+      },
+      panelListReload(){
+        if(this.$route.path==='/panel'){
+          this.$store.commit('panelListChange',true);//新增panel之后,且当前页面为panel页面，则更新panel列表
+        }
       },
       logout() {
         this.$get('logout');

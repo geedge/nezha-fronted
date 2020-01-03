@@ -22,11 +22,15 @@
   .content-right-option .el-icon-view:hover {
     color: #409EFF;
   }
-
+/* begin-chart list*/
   .table-list {
-    margin-top: 100px;
-  }
+    margin-top: 10px;
 
+  }
+  .box-content {
+    position: relative;
+  }
+  /* end-chart list*/
   /* begin--Panel-自定义可编辑的el-select下拉框样式*/
   .panel-dropdown-btn {
     display: inline-block;
@@ -64,255 +68,277 @@
 
 </style>
 <template>
-    <div class="panel">
-        <div class="content-left">
-            <div class="sidebar-title">{{$t('dashboard.title')}}</div>
-            <div class="sidebar-info">
-                <div class="sidebar-info-item sidebar-info-top sidebar-info-item-active">{{$t('dashboard.panel.title')}}</div>
-                <div class="sidebar-info-item" @click="jumpTo('metricPreview')">{{$t('dashboard.metricPreview.title')}}</div>
-            </div>
-        </div>
-        <div class="content-right">
-            <div class="top-tools">
-              <button @click="toAdd" class="nz-btn nz-btn-size-normal nz-btn-style-normal float-right">
-                <span class="top-tool-btn-txt">{{$t('overall.add')}}</span>
-              </button>
-              <div class="top-tool-search float-right"><search-input :searchMsg="searchMsg" @search="search"></search-input></div>
-              <el-select class="right-box-row-with-btn" popper-class="" v-model="showPanel.id" placeholder=""  size="small">
-                <el-option  >
-                  <span class="panel-dropdown-btn-create" @click.stop="toAdd" >{{$t('dashboard.panel.createPanelTitleSec')}}</span>
-                </el-option>
-                <el-option
-                  @click.native=""
-                  v-for="item in panelData"
-                  :key="item.id"
-                  :label="item.name"
-                  :value="item.id">
-                  <span class="panel-dropdown-label-txt" >{{item.name}}</span>
-                  <span class="panel-dropdown-btn" @click.stop="toEdit(item)">
+  <div class="panel">
+    <div class="content-left">
+      <div class="sidebar-title">{{$t('dashboard.title')}}</div>
+      <div class="sidebar-info">
+        <div class="sidebar-info-item sidebar-info-top sidebar-info-item-active">{{$t('dashboard.panel.title')}}</div>
+        <div class="sidebar-info-item" @click="jumpTo('metricPreview')">{{$t('dashboard.metricPreview.title')}}</div>
+      </div>
+    </div>
+    <div class="content-right">
+      <div class="top-tools">
+        <button @click="toAddChart" class="nz-btn nz-btn-size-normal nz-btn-style-normal float-right">
+          <span class="top-tool-btn-txt">{{$t('overall.add')}}</span>
+        </button>
+        <div class="top-tool-search float-right"><search-input :searchMsg="searchMsg" @search="search"></search-input></div>
+        <el-select class="right-box-row-with-btn" popper-class="" v-model="showPanel.id" placeholder=""  size="small" @change="panelChange">
+          <el-option  >
+            <span class="panel-dropdown-btn-create" @click.stop="toAdd" >{{$t('dashboard.panel.createPanelTitleSec')}}</span>
+          </el-option>
+          <el-option
+            @click.native=""
+            v-for="item in panelData"
+            :key="item.id"
+            :label="item.name"
+            :value="item.id">
+            <span class="panel-dropdown-label-txt" >{{item.name}}</span>
+            <span class="panel-dropdown-btn" @click.stop="toEdit(item)">
                                         <i class="el-icon-edit-outline" ></i>
                                     </span>
-                  <span class="panel-dropdown-btn panel-dropdown-btn-delete" @click.stop="del(item)"><i class="el-icon-delete"></i></span>
-                </el-option>
-              </el-select>
-            </div>
-            <div class="table-list">
-              <!--<div class="box-content">
-                <chart-list
-                  @on-edit-chart="editData"
-                  @on-remove-chart="removeData" ref="chartList"></chart-list>
-              </div>
-              -->
-            </div>
+            <span class="panel-dropdown-btn panel-dropdown-btn-delete" @click.stop="del(item)"><i class="el-icon-delete"></i></span>
+          </el-option>
+        </el-select>
+      </div>
+      <div class="table-list"   style="overflow-y:auto;height: 100%;">
+        <div class="box-content">
+          <chart-list
+            @on-edit-chart="editData"
+            @on-remove-chart="removeData" ref="chartList"></chart-list>
         </div>
-
-        <transition name="right-box">
-            <div class="right-box right-box-panel" v-if="rightBox.show">
-                <!-- begin--顶部按钮-->
-                <div class="right-box-top-btns">
-                    <div class="right-box-top-btn right-box-top-btn-full" @click="esc">
-                        <div class="right-box-btn-icon">
-                            <i class="el-icon-close"></i>
-                        </div>
-                        <span>{{$t('overall.esc')}}</span>
-                    </div>
-                    <div class="right-box-top-btn right-box-top-btn-full" @click="save">
-                        <div class="right-box-btn-icon">
-                            <i class="el-icon-edit-outline"></i>
-                        </div>
-                        <span >{{$t('overall.save')}}</span>
-                    </div>
-                    <div @click="del(panel)" class="right-box-top-btn" v-if="panel.id != ''">
-                        <div class="right-box-btn-icon">
-                            <i class="el-icon-delete"></i>
-                        </div>
-                        <span>{{$t('overall.delete')}}</span>
-                    </div>
-                </div>
-                <!-- end--顶部按钮-->
-
-                <!-- begin--标题-->
-                <div class="right-box-title">{{rightBox.title}}</div>
-                <!-- end--标题-->
-
-                <!-- begin--表单-->
-                <div class="right-box-form">
-                    <div class="right-box-form-row">
-                        <div class="right-box-form-label">{{$t('dashboard.panel.panelForm.panelName')}}</div>
-                        <div class="right-box-form-content">
-                          <el-input placeholder="" maxlength="64" show-word-limit v-model="panel.name" size="small"></el-input>
-                        </div>
-                    </div>
-                </div>
-                <!-- end--表单-->
-
-                <!-- begin--底部按钮-->
-                <div class="right-box-bottom-btns">
-                    <div @click="esc()" :class="{'right-box-bottom-btn-50': true}" class="right-box-bottom-btn right-box-bottom-btn-cancel">{{$t('overall.cancel')}}</div><div @click="save()"  class="right-box-bottom-btn right-box-bottom-btn-50">{{panel.id == '' ? $t('overall.create') : $t('overall.save')}}</div>
-                </div>
-                <!-- end--底部按钮-->
-
-            </div>
-        </transition>
+      </div>
     </div>
+
+    <panel-box :panel="panel"  @reload="panelReload" @reloadForDel="panelReloadForDel" ref="panelBox"></panel-box>
+    <chart-box  ref="addChartModal" @on-create-success="createSuccess"></chart-box>
+  </div>
 
 </template>
 <script>
-export default {
-  name: "panel",
-  data() {
-    return {
-      rightBox: { //弹出框相关
-        show: false,
-        title: this.$t('dashboard.panel.createPanelTitle')
+  import ChartBox from "./chartBox";
+  import ChartList from '../../charts/chart-list';
+
+  export default {
+    name: "panel",
+    data() {
+      return {
+        rightBox: { //面板弹出框相关
+          show: false,
+          title: this.$t('dashboard.panel.createPanelTitle')
+        },
+        showPanel:{//panel下拉列表
+          id:'',
+          name:''
+        },
+        panel: {//新增panel
+          id:'',
+          name: ''
+        },
+        chart: {
+          id:'',
+          title: '',
+          type:'line',
+          span:12,
+          height:400,
+          elements:{
+            id: '',
+            expression: '',
+            type: ''
+          }
+        },
+        pageObj: {
+          pageNo: 1,
+          pageSize: 9999,//此处获取所有数据，所以设置一个较大的值
+          total:0
+        },
+        chartsData: [],//中间部分图表相关数据
+        panelData: [],
+        searchMsg: { //给搜索框子组件传递的信息
+          zheze_none: true,
+          searchLabelList: [{
+            id: 1,
+            name: this.$t("dashboard.panel.panelForm.panelId"),
+            type: 'input',
+            label: 'id',
+            disabled: false
+          },{
+            id: 2,
+            name: this.$t("dashboard.panel.panelForm.panelName"),
+            type: 'input',
+            label: 'name',
+            disabled: false
+          }],
+        },
+        searchLabel: {}, //搜索参数
+
+        //---图表相关参数--start
+        dataList: [], // 数据列表
+        searchName: '', //  搜索名称
+        filter: { // 过滤条件
+          //productId: 0,
+          panelId: 0,
+          start_time: '',
+          end_time: '',
+        },
+        panelId: 0,
+        removeModal: false, // 删除弹出
+        deleteObj: {}, // 删除对象
+        //---图表相关参数--end
+      }
+    },
+    components:{
+      'chart-box':ChartBox,
+      'chart-list':ChartList
+    },
+    methods: {
+      //面板相关操作
+      panelChange(){
+        this.filter.panelId = this.showPanel.id;
+        this.getData(this.filter);
       },
-      showPanel:{//panel下拉列表
-        id:'',
-        name:''
-      },
-      panel: {//新增panel
-        id:'',
-        name: ''
-      },
-      pageObj: {
-        pageNo: 1,
-        pageSize: 9999,//此处获取所有数据，所以设置一个较大的值
-        total:0
-      },
-      chartsData: [],//中间部分图表相关数据
-      panelData: [],
-      searchMsg: { //给搜索框子组件传递的信息
-        zheze_none: true,
-        searchLabelList: [{
-          id: 1,
-          name: this.$t("dashboard.panel.panelForm.panelId"),
-          type: 'input',
-          label: 'id',
-          disabled: false
-        },{
-          id: 2,
-          name: this.$t("dashboard.panel.panelForm.panelName"),
-          type: 'input',
-          label: 'name',
-          disabled: false
-        }],
-      },
-      searchLabel: {}, //搜索参数
-    }
-  },
-  methods: {
-    del: function(u) {
-      this.$confirm(this.$t("tip.confirmDelete"), {
-        confirmButtonText: this.$t("tip.yes"),
-        cancelButtonText: this.$t("tip.no"),
-        type: 'warning'
-      }).then(() => {
-        this.$delete("panel?ids=" + u.id).then(response => {
-          if (response.code === 200) {
-            this.$message({duration: 1000, type: 'success', message: this.$t("tip.deleteSuccess")});
-            if(this.showPanel.id===u.id){
-              this.showPanel.id ='';
+      del: function(u) {
+        this.$confirm(this.$t("tip.confirmDelete"), {
+          confirmButtonText: this.$t("tip.yes"),
+          cancelButtonText: this.$t("tip.no"),
+          type: 'warning'
+        }).then(() => {
+          this.$delete("panel?ids=" + u.id).then(response => {
+            if (response.code === 200) {
+              this.$message({duration: 1000, type: 'success', message: this.$t("tip.deleteSuccess")});
+              if(this.showPanel.id===u.id){
+                this.showPanel.id ='';
+              }
+              this.getTableData();
+              this.rightBox.show = false;
+            } else {
+              this.$message.error(response.msg);
             }
-            this.getTableData();
-            this.rightBox.show = false;
-          } else {
-            this.$message.error(response.msg);
+          })
+        });
+      },
+      toEdit: function(u) {
+        this.panel = Object.assign({}, u);
+        this.$refs.panelBox.setTitle(this.$t("dashboard.panel.editPanelTitle"));
+        this.$refs.panelBox.show(true);
+      },
+      toAdd: function() {
+        this.$refs.panelBox.show(true);
+        this.panel = {id: '', name: ''};
+        this.$refs.panelBox.setTitle(this.$t("dashboard.panel.createPanelTitle"));
+      },
+      panelReload(){
+        this.getTableData();
+      },
+      panelReloadForDel:function(){
+        if(this.showPanel.id===this.panel.id){
+          this.showPanel.id ='';
+        }
+        this.getTableData();
+      },
+      /*图表相关操作--start*/
+      toAddChart:function(){
+        this.$refs.addChartModal.show(true);
+        this.$refs.addChartModal.createData(this.showPanel.id);//初始化创建图表需要的初始数据
+      },
+
+      // 编辑图表信息,打开编辑弹窗
+      editData(data) {
+        this.$refs.addChartModal.editData(data, this.panelId, this.filter.productId);
+      },
+      // 移除图表
+      removeData(data) {
+        this.deleteObj = data;
+        this.removeModal = true;
+      },
+      // 图表创建成功，回调panel页面，进行图表的刷新
+      createSuccess(msg, data,params) {
+        /*
+       if (data && data.code === 200) {
+
+         if (msg === 'create') {
+           //this.$message.success('添加成功');
+         } else {
+           //this.$message.success('编辑成功');
+         }
+        }
+         */
+        this.filter.panelId = this.showPanel.id;
+        this.getData(this.filter);
+      },
+      // 获取数据,用在子页面
+      getData(params) {
+        this.$refs.chartList.initData(params);
+      },
+
+      /*图表相关操作--end*/
+
+      //公用操作
+      jumpTo(data,id) {
+        this.$store.state.assetData.moduleData = data
+        this.$store.state.assetData.selectedData = id
+        this.$router.push({
+          path: "/" + data,
+          query: {
+            t: +new Date()
+          }
+        });
+      },
+      getTableData: function() {
+        this.$set(this.searchLabel, "pageNo", this.pageObj.pageNo);
+        this.$set(this.searchLabel, "pageSize", this.pageObj.pageSize);
+        this.$get('panel', this.searchLabel).then(response => {
+          if (response.code === 200) {
+            this.panelData = response.data.list;
+            if(this.panelData.length>0 ){
+              this.filter.panelId = this.panelData[0].id;
+            }
+            if( response.data.list.length>0 && this.showPanel.id===''){
+              this.showPanel.id = response.data.list[0].id;
+              this.filter.panelId = this.showPanel.id;
+            }
+            this.pageObj.total = response.data.total
+
+            this.getData(this.filter);
           }
         })
-      });
-    },
-    toEdit: function(u) {
-      this.panel = Object.assign({}, u);
-      this.rightBox.title = this.$t("dashboard.panel.editPanelTitle") ;
-      this.rightBox.show = true;
-    },
-    toAdd: function() {
-      this.cleanPanel();
-      this.rightBox.title = this.$t("dashboard.panel.createPanelTitle");
-      this.rightBox.show = true;
-    },
-    save: function() {
-      if (this.panel.id) {
-        this.$put('panel', this.panel).then(response => {
-          if (response.code === 200) {
-            this.$message({duration: 1000, type: 'success', message: this.$t("tip.saveSuccess")});
-            this.getTableData();
-            this.esc();
-          } else {
-            this.$message.error(response.msg);
+
+      },
+      pageNo(val) {
+        this.pageObj.pageNo = val;
+        this.getTableData();
+      },
+      pageSize(val) {
+        this.pageObj.pageSize = val;
+        this.getTableData();
+      },
+      search: function(searchObj) {
+        console.info(searchObj);
+        this.searchLabel = {};
+        for (let item in searchObj) {
+          if (searchObj[item]) {
+            this.$set(this.searchLabel, item, searchObj[item]);
           }
-        });
-      } else {
-        this.$post('panel', this.panel).then(response => {
-          if (response.code === 200) {
-            this.$message({duration: 1000, type: 'success', message: this.$t("tip.saveSuccess")});
-            this.getTableData();
-            this.esc();
-          } else {
-            this.$message.error(response.msg);
-          }
-        });
+        }
+        this.getTableData();
       }
     },
-    esc: function() {
-      this.rightBox.show = false;
+    created() {
+      this.getTableData();
     },
-    jumpTo(data,id) {
-      this.$store.state.assetData.moduleData = data
-      this.$store.state.assetData.selectedData = id
-      this.$router.push({
-        path: "/" + data,
-        query: {
-          t: +new Date()
-        }
-      });
+    mounted: function() {
     },
-    getTableData: function() {
-      this.$set(this.searchLabel, "pageNo", this.pageObj.pageNo);
-      this.$set(this.searchLabel, "pageSize", this.pageObj.pageSize);
-      this.$get('panel', this.searchLabel).then(response => {
-        if (response.code === 200) {
-          this.panelData = response.data.list;
-          if( response.data.list.length>0 && this.showPanel.id===''){
-            this.showPanel.id = response.data.list[0].id;
-          }
-          this.pageObj.total = response.data.total
-        }
-      })
-    },
-    cleanPanel: function() {
-      this.panel = {
-        id: '',
-        name: ''
+    computed: {
+      refreshPanel() {
+        return this.$store.state.panelListReload;
       }
     },
-    pageNo(val) {
-      this.pageObj.pageNo = val;
-      this.getTableData();
-    },
-    pageSize(val) {
-      this.pageObj.pageSize = val;
-      this.getTableData();
-    },
-    search: function(searchObj) {
-      console.info(searchObj);
-      this.searchLabel = {};
-      for (let item in searchObj) {
-        if (searchObj[item]) {
-          this.$set(this.searchLabel, item, searchObj[item]);
+    watch: {
+      refreshPanel(n, o) {
+        if (n) {
+          this.getTableData();
+          this.$store.commit('panelListChange', false);
         }
       }
-      this.getTableData();
     }
-  },
-  created() {
-    this.getTableData();
-  },
-  mounted: function() {
-
-  },
-  watch: {
-
   }
-}
 </script>

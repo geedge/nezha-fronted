@@ -25,6 +25,7 @@ import assetAddUnit from "./components/page/asset/assetAddUnit"; //资产添加�
 import assetEditUnit from "./components/page/asset/assetEditUnit"; //资产添加组件
 import alertConfigBox from "./components/common/rightBox/alertConfigBox"; //告警规则弹框组件
 import dcConfigBox from "./components/common/dcConfig"; //idc配置弹框组件
+import panelBox from "./components/common/rightBox/panelBox"; //面板弹框组件
 
 Vue.component("Pagination", Pagination);
 Vue.component("searchInput", searchInput);
@@ -36,6 +37,7 @@ Vue.component("assetAddUnit", assetAddUnit);
 Vue.component("assetEditUnit", assetEditUnit);
 Vue.component("alert-config-box", alertConfigBox);
 Vue.component("idc-config-box", dcConfigBox);
+Vue.component("panel-box", panelBox);
 
 Vue.prototype.$axios = axios;
 Vue.prototype.$post = post;

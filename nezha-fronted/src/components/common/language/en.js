@@ -25,24 +25,57 @@ const en = {
     title:'Dashboard',
     panel:{
       title:'Panel',
-      //侧滑框
+      //面板-侧滑框
       createPanelTitle: "Create Panel",
       createPanelTitleSec:"Create New Panel",
       editPanelTitle: "Panel",
       panelForm:{
         panelName:"Panel Name",
         panelId:"ID"
-      }
+      },
+      //图表-侧滑框
+      createChartTitle: "Create Chart",
+      editChartTitle: "Edit Chart",
+      chartForm:{
+        chartId:"ID",
+        chartName:"Chart Name",
+        type:"Type",
+        typeVal:{
+          line:{
+            label:"Line"
+          },
+          bar:{
+            label:"Bar"
+          },
+          table:{
+            label:"Table"
+          }
+        },
+        width:"Width",
+        high:"High",
+        metric:"Metric",
+        addMetric:"Add Metric",
+      },
+    },
+    metric:{
+      name:"Metric",
+      normal:"Normal",
+      expert:"Expert",
+      label:"MetricLabel",
+      addMetric:"Create Metric",
+      expertTip:"Please enter an expression"
     },
     metricPreview:{
       title:'MetricPreview',
-    }
+    },
+    refresh:'refresh',
+    edit:'edit',
+    delete:'delete',
+    screen:'fullScreen'
   },
   validate: { //校验规则
     required: 'Required',
     number: 'Must be a number',
-    email:'E-mail is invalide',
-    tel:'Phone number is invalide',
     config: {
       account: {
 
@@ -60,7 +93,8 @@ const en = {
     no: "No",
     deleteSuccess: "Successfully Deleted",
     saveSuccess: "Successfully Saved",
-    coverSuccess: 'Successfully Covered'
+    coverSuccess: 'Successfully Covered',
+    refreshLater:'Please refresh later'
   },
   asset:{
     asset: 'Asset',

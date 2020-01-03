@@ -529,3 +529,7 @@ html {
   color: #F98D9A;
 }
 /* end--自定义可编辑的el-select下拉框样式*/
+.right-box-add-chart {
+  width: 520px;
+  height: calc(100% - 100px);
+}
