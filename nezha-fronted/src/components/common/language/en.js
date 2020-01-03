@@ -76,6 +76,9 @@ const en = {
   validate: { //校验规则
     required: 'Required',
     number: 'Must be a number',
+    email:'E-mail is invalide',
+    tel:'Phone number is invalide',
+    host:'IP Address is invalide',
     config: {
       account: {
 

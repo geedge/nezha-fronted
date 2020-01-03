@@ -178,6 +178,20 @@
 export default {
   name: "prom",
   data() {
+    let checkHost=(rule, value, callback) => {
+      if(!value || value == ''){
+        callback(new Error(this.$t('validate.required')))
+      }
+      const hostReg = /^(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])$/
+        setTimeout(() => {
+          if (hostReg.test(value)) {
+            callback()
+          } else {
+            callback(new Error(this.$t('validate.host')))
+          }
+
+      }, 100)
+    }
     return {
       rightBox: { //弹出框相关
         show: false,
@@ -187,6 +201,7 @@ export default {
       promServer: {
         id: '',
         host: '',
+        port:9090,
         idc: {id: '', name: '', location: ''}
       },
       rules:{
@@ -194,7 +209,7 @@ export default {
           {required:true,message:this.$t('validate.required'),trigger:'change'}
         ],
         host:[
-          {required:true,message:this.$t('validate.required'),trigger:'blur'}
+          { validator: checkHost, trigger: 'blur'}
         ],
         port:[
           {required:true,message:this.$t('validate.required'),trigger:'blur'},
@@ -479,6 +494,7 @@ export default {
       this.promServer = {
         id: '',
         host: '',
+        port:9090,
         idcId: '',
         idc: {id: '', name: '', location: ''}
       }
