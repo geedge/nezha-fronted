@@ -58,6 +58,9 @@ html {
 .width-50 {
   width: 50% !important;
 }
+.width-70 {
+  width: 70% !important;
+}
 .width-100 {
   width: 100% !important;
 }
@@ -256,19 +259,47 @@ html {
 /* end--分页*/
 
 /* begin--右弹框滑入滑出动画*/
+@keyframes slide-in-from-right-580 {
+  from {right: -615px}
+  to {right: 15px}
+}
+@keyframes slide-out-to-right-580 {
+  from {right: 15px}
+  to {right: -615px}
+}
+@keyframes slide-in-from-right-840 {
+  from {right: -855px}
+  to {right: 15px}
+}
+@keyframes slide-out-to-right-840 {
+  from {right: 15px}
+  to {right: -855px}
+}
 @keyframes slide-in-from-right {
-  from {right: -800px}
-  to {right: 0}
+  from {right: -535px}
+  to {right: 15px}
 }
 @keyframes slide-out-to-right {
-  from {right: 0}
-  to {right: -800px}
+  from {right: 15px}
+  to {right: -535px}
 }
 .right-box-enter-active {
   animation: slide-in-from-right 0.4s;
 }
 .right-box-leave-active {
   animation: slide-out-to-right 0.4s;
+}
+.right-box-580-enter-active {
+  animation: slide-in-from-right-580 0.4s;
+}
+.right-box-580-leave-active {
+  animation: slide-out-to-right-580 0.4s;
+}
+.right-box-840-enter-active {
+  animation: slide-in-from-right-840 0.4s;
+}
+.right-box-840-leave-active {
+  animation: slide-out-to-right-840 0.4s;
 }
 /* end--右弹框滑入滑出动画*/
 
@@ -300,16 +331,18 @@ html {
   box-shadow: 0 0 15px #ccc;
   background-color: white;
   padding: 0 0 0 20px;
+  height: calc(100% - 100px);
 }
 
 /*此处自定义弹框尺寸，不同功能可能需要的尺寸不一样，需自行添加*/
 .right-box-account, .right-box-prom, .right-box-alert-config, .right-box-project, .right-box-module, .right-box-edit-endpoint, .right-box-panel {
   width: 520px;
-  height: calc(100% - 100px);
+}
+.right-box-add-asset {
+  width: 580px;
 }
 .right-box-add-endpoint {
   width: 840px;
-  height: calc(100% - 100px);
 }
 /* begin--右侧弹框--顶部按钮*/
 .right-box-top-btns {
@@ -317,6 +350,10 @@ html {
   float: right;
   padding-right: 10px;
   padding-top: 8px;
+}
+.pop-top-btns {
+  text-align: center;
+  float: right;
 }
 /* end--右侧弹框--顶部按钮*/
 
@@ -328,11 +365,49 @@ html {
   display: inline-block;
   font-weight: bold;
 }
+.pop-title {
+  line-height: 25px;
+  text-align: left;
+  display: inline-block;
+  font-weight: bold;
+}
+.pop-item, .pop-item-wider {
+  padding-top: 15px;
+}
+.pop-item-wider .el-form-item__label {
+  width: 80px !important;
+}
+.pop-item-wider .el-form-item__content {
+  margin-left: 80px !important;
+}
+.pop-label {
+  padding-bottom: 5px;
+}
+.pop-item .el-input {
+  width: 200px;
+}
+.pop-item .nz-btn {
+  width: 50px;
+}
+.pop-box {
+  border: 1px solid #DCDFE6;
+  border-radius: 4px;
+  padding: 2px 0 2px 5px;
+}
+.pop-box-asset {
+  height: 160px;
+}
+.pop-box-active {
+  background-color: #d8d8d8;
+}
 .right-box-form-box {
   height: calc(100% - 63px);
   width: 100%;
 }
 .right-box-form-box .el-scrollbar__wrap {
+  overflow-x: hidden !important;
+}
+.pop-box .el-scrollbar__wrap {
   overflow-x: hidden !important;
 }
 .right-box-form {
@@ -352,11 +427,20 @@ html {
   font-size: 16px;
   color: black;
 }
+.right-box-form-left.right-box-form .el-form-item .el-form-item__label {
+  padding: 0 20px 0 0;
+  font-size: 14px;
+  color: black;
+  line-height: 34px;
+}
 .right-box-form .el-form-item__content {
   line-height: 32px;
 }
 .right-box-form-box .el-scrollbar__view {
   height: 100%;
+}
+.pop-box .el-scrollbar__view {
+  padding-right: 10px;
 }
 .right-box-form-row {
   margin-top: 22px;
@@ -430,12 +514,14 @@ html {
   width: 100%;
 }
 .right-box-form-content .right-box-row-with-btn {
-  width: calc(100% - 38px);
-  vertical-align: top;
+  width: calc(100% - 37px);
+}
+.right-box-form-content .right-box-row-with-btn.el-select--mini, .right-box-form-content .right-box-row-with-btn.el-cascader--mini {
+  width: calc(100% - 33px);
 }
 .right-box-row-btn {
-  width: 33px;
-  height: 33px;
+  width: 32px;
+  height: 32px;
   display: inline-block;
   text-align: center;
   border-radius: 5px;
@@ -444,6 +530,12 @@ html {
   color: #C7C9CE;
   transition: border-color .2s cubic-bezier(.645,.045,.355,1);
   cursor: pointer;
+  vertical-align: middle;
+}
+.right-box-row-btn.right-box-row-btn-small {
+  width: 28px;
+  height: 28px;
+  line-height: 28px;
 }
 .right-box-row-btn-active {
   color: white;
@@ -505,6 +597,9 @@ html {
 .config-dropdown { /* 若宽度不合适，自行增加新类覆盖宽度 */
   width: 500px;
 }
+.asset-dropdown {
+  width: 440px;
+}
 .config-dropdown-btn {
   display: inline-block;
   margin-left: 7px;
@@ -529,7 +624,9 @@ html {
   color: #F98D9A;
 }
 /* end--自定义可编辑的el-select下拉框样式*/
+
 .right-box-add-chart {
   width: 520px;
   height: calc(100% - 100px);
 }
+

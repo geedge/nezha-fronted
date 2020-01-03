@@ -1,5 +1,5 @@
 <template>
-  <transition name="right-box">
+  <transition name="right-box-840">
     <div class="right-box right-box-add-endpoint" v-if="rightBox.show" @mousedown="showEditParamBox(false)">
       <!-- begin--顶部按钮-->
       <div class="right-box-top-btns">

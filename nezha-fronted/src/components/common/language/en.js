@@ -64,6 +64,7 @@ const en = {
       label:"MetricLabel",
       addMetric:"Create Metric",
       expertTip:"Please enter an expression"
+
     },
     metricPreview:{
       title:'MetricPreview',
@@ -72,6 +73,7 @@ const en = {
     edit:'edit',
     delete:'delete',
     screen:'fullScreen'
+
   },
   validate: { //校验规则
     required: 'Required',
@@ -106,55 +108,57 @@ const en = {
     createAssetTab:{
       title:'Create Asset',
       sn:'SN',
-      host:'host',
-      state:'state',
+      host:'Host',
+      state:'State',
       selectTip:'please select',
-      assetInfo:'资产信息',
-      assetType:'资产类型',
+      inStock: 'In Stock',
+      notInStock: 'Not In Stock',
+      assetInfo:'Asset Info',
+      assetType:'Asset Type',
       assetTypeTab:{
-        assetType:'资产类型',
-        addAssetType:'新增资产类型',
-        existAssetType:'已有资产类型'
+        assetType:'Asset Type',
+        addAssetType:'Add Asset Type',
+        existAssetType:'Exist Asset Type'
       },
-      vendor:'厂商/型号',
+      vendor:'Vendor/Model',
       vendorTab:{
-        vendor:'厂商/型号',
-        vendorName:'新厂商名称',
-        existVendor:'已有厂商',
-        modelName:'新型号名称',
-        existModel:'已有型号'
+        vendor:'Vendor/Model',
+        vendorName:'New Vendor',
+        existVendor:'Exist Vendor',
+        modelName:'New Model',
+        existModel:'Exist Model'
       },
-      purchaseDate:'购买日期',
+      purchaseDate:'Purchase Date',
       dataSelectTip:'please select data',
       dc:'DC',
       dcName:'DC Name',
       AddIdcTab:{
-        title:'+Add IDC',
+        title:'Add DC',
         dcName:'DC Name',
         location:'Location',
-        principal:'负责人',
+        principal:'Principal',
         tel:'Tel'
       },
       editIdcTab:{
         title:'Edit IDC',
         dcName:'DC Name',
         location:'Location',
-        principal:'负责人',
+        principal:'Principal',
         tel:'Tel'
       },
       location:'Location',
-      principal:'负责人',
+      principal:'Principal',
       tel:'Tel',
-      cabinet: '机柜',
+      cabinet: 'Cabinet',
       AddCabinetTab:{
-        title:'+Add机柜',
+        title:'Add Cabinet',
         name:'Name',
         uSize:'U Size',
         remark:'Desc',
         DC:'DC',
       },
       editCabinetTab:{
-        title:'Edit 机柜',
+        title:'Edit Cabinet',
         name:'Name',
         uSize:'U Size',
         remark:'Desc',
@@ -163,13 +167,13 @@ const en = {
       uSize:'U Size',
       remark:'Desc',
       cli:'CLI Account',
-      loginType:'登录方式',
-      password:'password',
-      ssh:'SSH私钥',
+      loginType:'Login Type',
+      password:'Password',
+      ssh:'SSH-Key',
       account:'Account',
       port:'Port',
       upload:'Upload',
-      clickToUpload:'点击上传'
+      clickToUpload:'Upload'
     },
     editAssetTab:{
       title:'Create Asset',
@@ -177,17 +181,10 @@ const en = {
       host:'host',
       state:'state',
       selectTip:'please select',
-      inStore:'在库',
-      outStore:'出库',
       modelId:'ModelId',
       alert:'Alert',
       assetInfo:'资产信息',
       assetType:'资产类型',
-      assetTypeTab:{
-        assetType:'资产类型',
-        addAssetType:'新增资产类型',
-        existAssetType:'已有资产类型'
-      },
       vendor:'厂商/型号',
       vendorTab:{
         vendor:'厂商/型号',
@@ -226,7 +223,7 @@ const en = {
         DC:'DC',
       },
       editCabinetTab:{
-        title:'Edit 机柜',
+        title:'Edit Cabinet',
         name:'Name',
         uSize:'U Size',
         remark:'Desc',
@@ -298,8 +295,8 @@ const en = {
   },
   alert: {
     alert: "Alert",
-    alertList: "Alert List",
-    alertConfig: "Alert Config",
+    alertList: "Alert Message",
+    alertConfig: "Alert Rule",
     alertName: "Alert Name",
     severity: "Severity",
     description: "Desc",
@@ -327,9 +324,9 @@ const en = {
       for: "For (s)",
       link: 'Link',
       option: "Option",
-      alertConfig: "Alert Config",
-      createAlertConfig: "Create Alert Config",
-      editAlertConfig: "Edit Alert Config",
+      alertConfig: "Alert Rule",
+      createAlertConfig: "Create Alert Rule",
+      editAlertConfig: "Edit Alert Rule",
       medium: "Medium",
       high: "High",
       low: "Low",

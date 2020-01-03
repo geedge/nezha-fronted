@@ -73,6 +73,7 @@
         </el-checkbox-group>
       </div>
     </div>
+
     <div class="content-right">
       <div class="top-tools">
         <button @click.stop="tagShow('showAdd')" class="nz-btn nz-btn-size-normal nz-btn-style-normal float-right">
@@ -80,6 +81,7 @@
         </button>
         <div class="top-tool-search float-right"><search-input :searchMsg="searchMsg" @search="search"></search-input></div>
       </div>
+
       <el-table
         height="calc(100% - 65px)"
         style="width: 100%;"
@@ -96,78 +98,46 @@
           {{item}}
           <template slot-scope="scope" :column="item">
             <div v-if="item.prop=='ID'">
-              <p>
-                <span>{{scope.row.id}}</span>
-              </p>
+              <span>{{scope.row.id}}</span>
             </div>
             <div v-if="item.prop=='资产类型'">
-              <p>
-                <span>{{scope.row.model.type.value}}</span>
-              </p>
+              <span>{{scope.row.model.type.value}}</span>
             </div>
             <div v-if="item.prop=='SN'">
-              <p>
-                <span>{{scope.row.sn}}</span>
-              </p>
+              <span>{{scope.row.sn}}</span>
             </div>
             <div v-if="item.prop=='HOST'">
-              <p>
-                <span>{{scope.row.host}}</span>
-              </p>
+              <span>{{scope.row.host}}</span>
             </div>
             <div v-if="item.prop=='资产状态'">
-              <p>
-                <span>{{scope.row.state==1?'在库':'出库'}}</span>
-              </p>
+              <span>{{scope.row.state==1?'在库':'出库'}}</span>
             </div>
             <div v-if="item.prop=='Module'">
-              <p>
-                                 <span>
-                                    <div class="tab-input-square">{{scope.row.moduleNum}}</div>
-                                 </span>
-              </p>
+              <div class="tab-input-square">{{scope.row.moduleNum}}</div>
             </div>
             <div v-if="item.prop=='Alert'">
-              <p>
-                                 <span>
-                                   <div class="tab-input-square">{{scope.row.alertNum}}</div>
-                                 </span>
-              </p>
+              <div class="tab-input-square">{{scope.row.alertNum}}</div>
             </div>
             <div v-if="item.prop=='数据中心'">
-              <p>
-                <span>{{scope.row.idc.name}}</span>
-              </p>
+              <span>{{scope.row.idc.name}}</span>
             </div>
             <div v-if="item.prop=='机柜'">
-              <p>
-                <span>{{returnData(scope.row.cabinet)}}</span>
-              </p>
+              <span>{{returnData(scope.row.cabinet)}}</span>
             </div>
             <div v-if="item.prop=='型号'">
-              <p>
-                <span>{{scope.row.model.name}}</span>
-              </p>
+              <span>{{scope.row.model.name}}</span>
             </div>
             <div v-if="item.prop=='厂商'">
-              <p>
-                <span>{{scope.row.model.vendor.value}}</span>
-              </p>
+              <span>{{scope.row.model.vendor.value}}</span>
             </div>
             <div v-if="item.prop=='购买日期'">
-              <p>
-                <span>{{scope.row.purchaseDate}}</span>
-              </p>
+              <span>{{scope.row.purchaseDate}}</span>
             </div>
             <div v-if="item.prop=='责任人'">
-              <p>
-                <span>{{getPrincipalName(scope.row.idc.principal)}}</span>
-              </p>
+              <span>{{getPrincipalName(scope.row.idc.principal)}}</span>
             </div>
             <div v-if="item.prop=='责任人电话'">
-              <p>
-                <span>{{scope.row.idc.tel}}</span>
-              </p>
+              <span>{{scope.row.idc.tel}}</span>
             </div>
             <div v-if="item.prop == 'option'">
                               <span @click="ssss(scope.row.id ,scope.row.host)" class="account-list-option"><i
@@ -196,6 +166,29 @@
     name: "asset",
     data() {
       return {
+        searchMsg: { //给搜索框子组件传递的信息
+          zheze_none: true,
+          searchLabelList: [{
+            id: 1,
+            name: 'ID',
+            type: 'input',
+            label: 'id',
+            disabled: false
+          },{
+            id: 20,
+            name: 'SN',
+            type: 'input',
+            label: 'sn',
+            disabled: false
+          },{
+            id: 21,
+            name: 'Host',
+            type: 'input',
+            label: 'host',
+            disabled: false
+          }],
+        },
+        searchLabel: {}, //搜索参数
         checkList: [],
         tableTitle: [
           {
@@ -542,6 +535,9 @@
         this.getAssetData();
         this.getIDCOptionData();
       },
+      search() {
+
+      }
     },
     mounted() {
       this.getUserData();
@@ -555,6 +551,9 @@
 </script>
 
 <style scoped>
+  .asset {
+    height: 100%;
+  }
   .sidebar-pop-input {
     position: absolute;
     right: 50px;

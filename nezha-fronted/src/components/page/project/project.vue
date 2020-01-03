@@ -53,10 +53,10 @@
     <div class="content-right" v-show="tableShow == 1">
       <div class="top-tools">
         <div class="nz-btn-group float-left">
-          <button @click="" class="nz-btn nz-btn-size-small nz-btn-disabled nz-btn-style-normal float-left">
+          <button @click="" type="button" class="nz-btn nz-btn-size-small nz-btn-disabled nz-btn-style-normal float-left">
             <span>{{$t('project.endpoint.endpoint')}}</span>
           </button>
-          <button @click="tableShow = 2" class="nz-btn nz-btn-size-small nz-btn-style-light float-left">
+          <button type="button" @click="tableShow = 2" class="nz-btn nz-btn-size-small nz-btn-style-light float-left">
             <span>{{$t('project.metrics.metrics')}}</span>
           </button>
         </div>
