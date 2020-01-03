@@ -76,19 +76,8 @@
               </button>
               <div class="top-tool-search float-right"><search-input :searchMsg="searchMsg" @search="search"></search-input></div>
             </div>
-            <el-table
-                  :data="tableData"
-                  border
-                  height="calc(100% - 65px)"
-                  style="width: 100%;">
-                <el-table-column
-                  :resizable="false"
-                  v-for="(item, index) in tableTitle"
-                  v-if="item.show"
-                  :width="item.width"
-                  :key="`col-${index}`"
-                  :label="item.label"
-                >
+            <el-table :data="tableData" border height="calc(100% - 65px)" style="width: 100%;">
+                <el-table-column :resizable="false" v-for="(item, index) in tableTitle" v-if="item.show" :width="item.width" :key="`col-${index}`" :label="item.label">
                     <template slot-scope="scope" :column="item">
                         <span v-if="item.prop == 'idc'">{{scope.row[item.prop].name}}</span>
                         <span v-else-if="item.prop == 'type'">
@@ -135,78 +124,25 @@
 
                 <!-- begin--表单-->
               <el-scrollbar class="right-box-form-box">
-                <el-form class="right-box-form" :model="promServer" label-position="top" :rules="rules" ref="promServerForm">
+                <el-form class="right-box-form" :model="promServer" label-position="top" label-width="80px" :rules="rules" ref="promServerForm">
                   <!--DC start-->
                   <el-form-item label="DC"  prop="idc.name">
                     <div class="right-box-form-content">
                     <el-select class="right-box-row-with-btn" value-key="id" popper-class="config-dropdown" v-model="promServer.idc" placeholder="" v-if="rightBox.isEdit" size="small">
                       <el-option @click.native="blurEditIdc()" v-for="item in idcData" :key="item.id" :label="item.name" :value="item">
                         <span class="config-dropdown-label-txt">{{item.name}}</span>
-                        <el-popover placement="left" v-model="item[item.name]">
-                          <div class="pop-window-assetType-content">
-                            <div class="right-box-top-btns">
-                              <div class="right-box-top-btn right-box-top-btn-full" @click="item[item.name] = false">
-                                <div class="right-box-btn-icon"><i class="el-icon-close"></i></div>
-                                <span>{{$t('overall.esc')}}</span>
-                              </div>
-                            </div>
-                            <div class="pop-window">
-                              <span style="display: block;padding-bottom: 20px">{{$t('asset.createAssetTab.editIdcTab.title')}}</span>
-                              <el-input v-model="popIdcData.name"/>
-                              <el-input v-model="popIdcData.location"/>
-                              <el-select v-model="popIdcData.principal" clearable>
-                                <el-option v-for="item in idcUserData" :key="item.key" :label="item.username" :value="item.userId"></el-option>
-                              </el-select>
-                              <el-input v-model="popIdcData.tel"/>
-                            </div>
-                          </div>
-                          <div class="right-box-bottom-btns">
-                            <div class="right-box-bottom-btn right-box-bottom-btn-cancel" @click.stop="item[item.name]= false">{{$t('overall.cancel')}}
-                            </div>
-                            <div class="right-box-bottom-btn right-box-bottom-btn-50" @click="editData('idc', item.id, popIdcData)">{{$t('overall.save')}}</div>
-                          </div>
-                          <span class="config-dropdown-btn" slot="reference" @click.stop="getSingleIDCData(item.id,'edit')"><i class="el-icon-edit-outline"></i></span>
-                        </el-popover>
+                        <idc-config-box :post-idc="item" placement="left" @after="getIdcData" :button-class="'config-dropdown-btn'">
+                          <template v-slot:optionZone>
+                            <i class="el-icon-edit-outline"></i>
+                          </template>
+                        </idc-config-box>
                         <span class="config-dropdown-btn config-dropdown-btn-delete" @click.stop="toDelIdc(item)"><i class="el-icon-delete"></i></span>
                       </el-option>
                     </el-select>
 
 
                     <div class="right-box-row-btn" v-if="rightBox.isEdit">
-                      <el-popover placement="left" v-model="visible">
-                        <div class="pop-window-assetType-content">
-                          <div class="right-box-top-btns">
-                            <div class="right-box-top-btn right-box-top-btn-full" @click="visible = false">
-                              <div class="right-box-btn-icon"><i class="el-icon-close"></i></div>
-                              <span>{{$t('overall.esc')}}</span>
-                            </div>
-                          </div>
-                          <div class="pop-window">
-                            <span style="display: block;padding-bottom: 20px">{{$t('asset.createAssetTab.AddIdcTab.title')}}</span>
-                            <div style="padding-top: 10px;padding-left: 20px">
-                              <div>
-                                <label style="font-size: 12px">DN name</label>
-                                <input class='sidebar-pop-input' v-model="addIdcData.name"/>
-                              </div>
-                              <div style="padding-top: 40px">
-                                <label style="font-size: 12px">Loaction</label>
-                                <input class='sidebar-pop-input' v-model="addIdcData.location"/>
-                              </div>
-                              <div style="padding-top: 40px">
-                                <label style="font-size: 12px;padding-right: 20px">负责人</label>
-                                <select class='sidebar-pop-input-select' style="margin-left:-40px " v-model="addIdcData.principal" clearable>
-                                  <option v-for="item in idcUserData" :key="item.key" :label="item.username" :value="item.userId"></option>
-                                </select>
-                              </div>
-                              <div style="padding-top: 40px">
-                                <label style="font-size: 12px">Tel</label>
-                                <input class='sidebar-pop-input' v-model="addIdcData.tel"/>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                        <span slot="reference" @click.prevent=''><i class="el-icon-plus"></i></span>
-                      </el-popover>
+                      <idc-config-box placement="left" @after="getIdcData"></idc-config-box>
                     </div>
                     <div class="right-box-form-content-txt" v-if="!rightBox.isEdit">{{promServer.idc.name}}</div>
                     </div>
@@ -243,7 +179,6 @@ export default {
   name: "prom",
   data() {
     return {
-      visible:false,
       rightBox: { //弹出框相关
         show: false,
         isEdit: false, //false查看，true编辑

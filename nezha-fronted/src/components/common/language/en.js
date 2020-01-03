@@ -42,6 +42,7 @@ const en = {
     required: 'Required',
     number: 'Must be a number',
     email:'E-mail is invalide',
+    tel:'Phone number is invalide',
     config: {
       account: {
 

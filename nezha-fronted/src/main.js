@@ -24,6 +24,7 @@ import addEndpointBox from './components/common/rightBox/addEndpointBox'; //endp
 import assetAddUnit from "./components/page/asset/assetAddUnit"; //资产添加组件
 import assetEditUnit from "./components/page/asset/assetEditUnit"; //资产添加组件
 import alertConfigBox from "./components/common/rightBox/alertConfigBox"; //告警规则弹框组件
+import dcConfigBox from "./components/common/dcConfig"; //idc配置弹框组件
 
 Vue.component("Pagination", Pagination);
 Vue.component("searchInput", searchInput);
@@ -34,6 +35,7 @@ Vue.component("add-endpoint-box", addEndpointBox);
 Vue.component("assetAddUnit", assetAddUnit);
 Vue.component("assetEditUnit", assetEditUnit);
 Vue.component("alert-config-box", alertConfigBox);
+Vue.component("idc-config-box", dcConfigBox);
 
 Vue.prototype.$axios = axios;
 Vue.prototype.$post = post;
