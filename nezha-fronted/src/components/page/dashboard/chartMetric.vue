@@ -290,12 +290,105 @@ export default {
 
     // 编辑已有图表状态时，先填充数据
     setMdata(data) {
+      //alert('metricSetData'+JSON.stringify(data));
       this.setDataFlag = true;
       this.target = Object.assign({}, data);
-      this.elementInfo.metric = data.metric;
-      this.selectMetric(); // 获取tag
-      // this.proTags(data.tags);
+      if(this.target.type==='expert'){
+        this.tableShow = 2;
+        this.elementInfo.type = this.target.type;
+        this.elementInfo.expression = this.target.expression;
+      }else {
+        this.tableShow = 1;
+        this.elementInfo.type = this.target.type;
+        //解析expression，=>标签列表，值列表（index对应），设置selectedTagList及tagList里的isSelect为true
+        var expression = this.target.expression;
+        //alert('expression=='+expression);
+        this.elementInfo.metric = expression.substring(0,expression.indexOf('{'));
+        //alert(this.elementInfo.metric);
+        //this.selectMetric(); // 获取tag
+        this.$get('metric/labelName?metric='+this.elementInfo.metric).then(response => {
+          this.elementInfo.selectedTagList = [];
+          this.elementInfo.tagList = [];
+          if (response.code === 200) {
+              //this.elementInfo.tagList = response.data.list;
+              if(response.data.list){
+                response.data.list.forEach((item) => {
+                  const tagObj = {
+                    name: item.name,
+                    isSelect:false//当前元素是否被选中，默认都未选中
+                  };
+                  this.elementInfo.tagList.push(tagObj);
+                });
+              }else {
+                response.data.forEach((item) => {
+                  const tagObj = {
+                    name: item.name,
+                    isSelect:false//当前元素是否被选中，默认都未选中
+                  };
+                  this.elementInfo.tagList.push(tagObj);
+                });
+              }
+
+            let labValArrStr = expression.substring(expression.indexOf('{')+1,expression.indexOf('}'));
+            this.stringToTags(labValArrStr);
+          }else {
+            this.elementInfo.tagList = [];
+          }
+        });
+      }
     },
+    //字符串格式化为对象metric{a='1',b=~'2|3|4'}===>a='1',b=~'2|3|4'
+    stringToTags(str) {
+      //alert("str=="+str);
+      let labArr = str.split(',');
+      labArr.forEach((item, index) => {//b=~'1|2|3'
+        let labName = item.substring(0,item.indexOf('='));
+        this.elementInfo.tagList.every((tagItem,index) => {
+          if(tagItem.name===labName){
+            tagItem.isSelect = true;
+            return false;
+          }else {
+            return true;
+          }
+        });
+
+        //查询metricLabel名称对应的LabelValue
+        this.$get('metric/labelVal?metric='+this.elementInfo.metric+"&name="+labName).then(response => {
+          const tagObj = {
+            name:labName,//选中的metricLabel名称
+            list:[],//metricLabel名称对应的LabelValue
+            value:[]//最终选择的值
+          };
+          let labVal = item.substring(item.indexOf('=')+1,item.length);
+          if(labVal.indexOf('~')!=-1){
+            labVal = labVal.substring(2,labVal.length-1);
+            let valArr = labVal.split('|');
+            valArr.forEach((labItem, labIndex) => {
+              tagObj.value.push(labItem);
+            });
+          }else {
+            labVal = labVal.substring(1,labVal.length-1);
+            tagObj.value.push(labVal);
+          }
+          if (response.code === 200) {
+            if(response.data.list){
+              response.data.list.forEach((resItem) => {
+                tagObj.list.push(resItem.value)
+              });
+              this.elementInfo.selectedTagList.push(tagObj);
+            }else{
+              response.data.forEach((resItem) => {
+                tagObj.list.push(resItem.value)
+              });
+              this.elementInfo.selectedTagList.push(tagObj);
+            }
+          }else {
+            this.elementInfo.selectedTagList.push(tagObj);
+          }
+        });
+      });
+    },
+
     clearHistory() {
       this.elementInfo.metric = '';
       this.setDataFlag = false;

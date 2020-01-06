@@ -46,10 +46,13 @@
   .label-center{
     margin-top:6px;
   }
+  .z-top{
+    z-index: 50;
+  }
 </style>
 <template key="chartBox">
   <transition name="right-box">
-    <div class="right-box right-box-add-chart" v-if="rightBox.show" >
+    <div class="right-box right-box-add-chart z-top" v-if="rightBox.show" >
       <!-- begin--顶部按钮-->
       <div class="right-box-top-btns">
         <button type="button" v-if="chart.id != ''" @click="del(chart)" class="nz-btn nz-btn-size-normal nz-btn-style-light">
@@ -110,7 +113,7 @@
             <el-col :span="8">
               <div class="grid-content ">
                 <el-form-item  prop="heigh">
-                  <el-input-number :min="10" label=""   v-model="chart.height" placeholder="" size="small"></el-input-number>px
+                  <el-input-number :min="400" label=""   v-model="chart.height" placeholder="" size="small"></el-input-number>px
                 </el-form-item>
               </div>
             </el-col>
@@ -198,6 +201,7 @@
           show: false,
           title: this.$t('dashboard.panel.createChartTitle'),
         },
+        editInfo: {},
         chart: {
           id:'',
           title: '',
@@ -239,7 +243,7 @@
         spanList: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
         // 是否为编辑已有信息
         isedit: false,
-        productId: 0,//不需要这个参数，可以删除
+        //productId: 0,//不需要这个参数，可以删除
         panelId: 0,
         metricList: [], // metric列表
         deleteIndex: '', // 要删除的指标模块
@@ -252,6 +256,9 @@
     methods: {
       show(show) {
         this.rightBox.show = show;
+      },
+      setTitle(title) {
+        this.rightBox.title = title;
       },
       save() {
         this.$refs['chartForm'].validate((valid) => {
@@ -287,10 +294,14 @@
           cancelButtonText: this.$t("tip.no"),
           type: 'warning'
         }).then(() => {
-          this.$delete("panel/"+u.id+"/charts").then(response => {
+          this.$delete("panel/"+this.panelId+"/charts?ids="+u.id).then(response => {
             if (response.code === 200) {
               this.esc();
               this.$message({duration: 1000, type: 'success', message: this.$t("tip.deleteSuccess")});
+              //this.getTableData();//删除相关图表后，刷新面板数据---调用panel的方法刷新
+              this.$refs.chartForm.resetFields();//清空表单
+              this.chart.id='';//不清除，再次打开创建图表，会显示删除按钮
+              this.$emit('on-delete-success');
             } else {
               this.$message.error(response.msg);
             }
@@ -303,6 +314,8 @@
       esc() {
         this.rightBox.show = false;
         //this.editParamBox.show = false;
+        this.$refs.chartForm.resetFields();//清空表单
+        this.chart.id='';//不清除，再次打开创建图表，会显示删除按钮
       },
 
       /*metric部分相关方法--begin*/
@@ -373,18 +386,16 @@
       },
       // 更新图表
       updateCharts(params) {
-        /*
-        const obj = params;
-        obj.id = this.chartId;
-        updateCharts(obj).then((res) => {
-          if (res.status === 200) {
-            this.chartModal = false;
-            this.initInfo();
-            this.$refs.chartInfo.resetFields();
-            this.$emit('on-create-success', 'update', res.data);
+        this.$put('panel/'+this.panelId+'/charts', params).then(response => {
+          if (response.code === 200) {
+            this.esc();
+            this.$message({duration: 1000, type: 'success', message: this.$t("tip.saveSuccess")});
+            this.$refs.chartForm.resetFields();//清空表单
+            this.$emit('on-create-success', 'update', response.data,params);
+          } else {
+            this.$message.error(response.msg);
           }
         });
-        */
       },
       // 获取每个tag组件内部校验后数据,点击生成图表时触发
       getTarget(target) {
@@ -423,7 +434,7 @@
             params.elements = elements;
             if (valid) {
               if (this.isedit) {
-                params.id = this.chartId;
+                params.id = this.chart.id;
                 this.updateCharts(params);
               } else {
                 this.addCharts(params);
@@ -459,6 +470,34 @@
         this.initInfo(); // 初始化图表信息
         //this.chartModal = true;//????控制弹出框显示和隐藏的，不需要了
         this.initOpen(); // 获取metric, productId数据
+      },
+      // 编辑chart时使用, set_tdata
+      editData(data, panelId) {
+        //alert('data='+JSON.stringify(data)+"=="+panelId);
+        this.panelId = panelId;
+        this.isedit = true;
+        //this.chartModal = true;
+        this.editInfo = data;
+        // 图表信息获取
+        this.chart.id = data.id;
+        this.chart.title = data.title;
+        this.chart.span = data.span;
+        this.chart.height = data.height;
+        this.chart.type = data.type;
+        this.getSuggestMetric();//获得指标列表
+        // 指标
+        this.elements = [];
+        bus.chartAddInfo.metricTarget = [];
+        data.elements.forEach((item, index) => {
+          this.elements.push(index);
+        });
+        this.$nextTick(() => {
+          const cSet = this.$refs.chartTag;
+          // 派发charttag数据
+          cSet.forEach((item, index) => {
+            item.setMdata(data.elements[index]);
+          });
+        });
       },
 
       // 初始化信息

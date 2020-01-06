@@ -21,7 +21,7 @@
       </div>
     </div>
 
-    <div class="line-area" ref="lineChartArea" style=""></div>
+    <div class="line-area" ref="lineChartArea"  ></div>
     <!--
     <Modal title="查看" v-model="screenModal" width="96%" class="line-chart-block-modal">-
     <el-dialog class="line-chart-block-modal"
@@ -126,9 +126,15 @@ export default {
       if ( chartInfo.type === 4) {//line,bar
         this.chartType = 'line';
       }
+      //alert(ele.style.height);
+     // ele.style.height= chartInfo.height;
 
+      //alert(chartInfo.height);
+
+      //alert(ele.style.height);
       //var myEchart = echarts.init(document.getElementById('lineChartArea'));
       this.echartStore = echarts.init(ele);
+      var chartWidth = ele.clientWidth;
       var option = {
         title: {
           text: chartInfo.title || null,
@@ -152,34 +158,67 @@ export default {
           confine:true
         },
         legend: {
+          type:'scroll',
+          height:80,
           show:true,
+          icon:"roundRect",
+          itemHeight:5,
+          itemWidth:15,
           formatter:function(name){
             if(!name){
               return '';
             }
-            if(name.length>5){
-              return name.slice(0,5)+'...';
+            //计算宽度
+            var span = document.createElement("span");
+            var result = {};
+            result.width = span.offsetWidth;
+            result.height = span.offsetHeight;
+            span.style.visibility = "hidden";
+            span.style.fontSize = 14;
+            span.style.fontFamily = "Arial";
+            span.style.display = "inline-block";
+            document.body.appendChild(span);
+            if(typeof span.textContent != "undefined"){
+              span.textContent = name;
+            }else{
+              span.innerText = name;
+            }
+            var txtWidth = parseFloat(window.getComputedStyle(span).width) - result.width;
+            document.body.removeChild(span);
+
+            if(txtWidth < chartWidth){
+              return name;
+            }else {
+              var charNum = `${(chartWidth-100)/(txtWidth/name.length)}`;
+              return name.slice(0,charNum)+'...';
+              //return name;
             }
           },
           tooltip:{show:true},
           data: legend,
-          //orient:'vertical',
+          orient:'vertical',
           x:'center',
-          y:'top',
-          top:'5%',
+          y:'bottom',
+          //top:'5%',
           //bottom:0
         },
         grid: {
-
-          bottom: '10%',
-          containLabel: true
+          //height:"50%",
+          //top: '13%',
+          containLabel: false,
+          bottom:156
         },
         dataZoom: [{
-          type: 'inside',
+          type: 'slider',
+          show:true,
+          xAxisIndex: [0],
           start: 0,
           end: 100,
-          height:15
-        }, {
+          height:25,
+          bottom:96
+        }
+        /*
+        , {
           start: 0,
           end: 100,
           handleIcon: 'M10.7,11.9v-1.3H9.3v1.3c-4.9,0.3-8.8,4.4-8.8,9.4c0,5,3.9,9.1,8.8,9.4v1.3h1.3v-1.3c4.9-0.3,8.8-4.4,8.8-9.4C19.5,16.3,15.6,12.2,10.7,11.9z M13.3,24.4H6.7V23h6.6V24.4z M13.3,19.6H6.7v-1.4h6.6V19.6z',
@@ -191,7 +230,10 @@ export default {
             shadowOffsetX: 2,
             shadowOffsetY: 2
           }
-        }],
+
+
+        }
+        */],
 
         xAxis: {
           type: 'time',
@@ -217,7 +259,8 @@ export default {
           type: 'value',
           splitLine:{
             show:true
-          }
+          },
+          //boundaryGap:[0,0.2]
         },
         useUTC: false,//使用本地时间
         series: dataArg
@@ -328,6 +371,7 @@ export default {
         // eslint-disable-next-line
         this.echartStore.setOption(option);//显示全屏界面
       }
+      this.echartStore.resize({height:chartInfo.height});//,width:`${ele.clientWidth-100}`}
     },
     // 设置数据, filter区分
     setData(chartItem, seriesItem, panelId, filter,legend) {
@@ -338,14 +382,22 @@ export default {
       this.data = chartItem;
       this.seriesItem = seriesItem;
       this.initChart(chartItem, seriesItem, this.$refs.lineChartArea, 'local',legend);
+      /*
       if (chartItem.type === 'line' || chartItem.type === 'bar' || chartItem.type === 4) {
         this.initChart(chartItem, seriesItem, this.$refs.lineChartArea, 'local',legend);
       }
+      */
     },
+
     // 删除该图表
     removeChart() {
       this.$emit('on-remove-chart-block', this.data.id);
-    }
+    },
+    // 编辑图表
+    editChart() {
+      this.$emit('on-edit-chart-block', this.data.id);
+    },
+
     /*
     handleClose(done) {
       /*
@@ -374,11 +426,6 @@ export default {
     refreshChart() {
       this.highchartStore.showLoading();
       this.$emit('on-refresh-data', this.data.id);
-    },
-    // 编辑图表
-    editChart() {
-      this.$emit('on-edit-chart-block', this.data.id);
-    },
     },
     // 全屏查看
     showAllScreen() {

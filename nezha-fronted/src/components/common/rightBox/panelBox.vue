@@ -1,6 +1,6 @@
 <template key="panelBox">
   <transition name="right-box">
-    <div class="right-box right-box-panel" v-if="rightBox.show">
+    <div class="right-box right-box-panel z-top" v-if="rightBox.show">
       <!-- begin--顶部按钮-->
       <div class="right-box-top-btns">
         <button type="button" v-if="panel.id != ''" @click="del(panel)" class="nz-btn nz-btn-size-normal nz-btn-style-light">
@@ -141,5 +141,7 @@
 
 
 <style scoped>
-
+  .z-top{
+    z-index: 50;
+  }
 </style>

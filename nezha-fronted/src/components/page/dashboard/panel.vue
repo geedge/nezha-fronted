@@ -25,7 +25,8 @@
 /* begin-chart list*/
   .table-list {
     margin-top: 10px;
-
+    overflow-y:auto;
+    height: 100%;
   }
   .box-content {
     position: relative;
@@ -100,7 +101,7 @@
           </el-option>
         </el-select>
       </div>
-      <div class="table-list"   style="overflow-y:auto;height: 100%;">
+      <div class="table-list"  >
         <div class="box-content">
           <chart-list
             @on-edit-chart="editData"
@@ -110,7 +111,7 @@
     </div>
 
     <panel-box :panel="panel"  @reload="panelReload" @reloadForDel="panelReloadForDel" ref="panelBox"></panel-box>
-    <chart-box  ref="addChartModal" @on-create-success="createSuccess"></chart-box>
+    <chart-box  ref="addChartModal" @on-create-success="createSuccess" @on-delete-success="delChartOk"></chart-box>
   </div>
 
 </template>
@@ -181,8 +182,8 @@
           end_time: '',
         },
         panelId: 0,
-        removeModal: false, // 删除弹出
-        deleteObj: {}, // 删除对象
+        //removeModal: false, // 删除弹出
+        //deleteObj: {}, // 删除对象
         //---图表相关参数--end
       }
     },
@@ -243,12 +244,30 @@
 
       // 编辑图表信息,打开编辑弹窗
       editData(data) {
-        this.$refs.addChartModal.editData(data, this.panelId, this.filter.productId);
+        this.$refs.addChartModal.setTitle(this.$t("dashboard.panel.editChartTitle"));
+        this.$refs.addChartModal.show(true);
+        this.$refs.addChartModal.editData(data, this.showPanel.id);
       },
-      // 移除图表
+      // 移除图表:弹出确认框询问
       removeData(data) {
-        this.deleteObj = data;
-        this.removeModal = true;
+        this.$confirm(this.$t("tip.confirmDelete"), {
+          confirmButtonText: this.$t("tip.yes"),
+          cancelButtonText: this.$t("tip.no"),
+          type: 'warning'
+        }).then(() => {
+          this.$delete("panel/"+data.panelId+"/charts?ids=" + data.id).then(response => {
+            if (response.code === 200) {
+              this.$message({duration: 1000, type: 'success', message: this.$t("tip.deleteSuccess")});
+              this.getTableData();//删除相关图表后，刷新面板数据
+            } else {
+              this.$message.error(response.msg);
+            }
+          })
+        });
+      },
+      delChartOk(){
+        this.filter.panelId = this.showPanel.id;
+        this.getData(this.filter);
       },
       // 图表创建成功，回调panel页面，进行图表的刷新
       createSuccess(msg, data,params) {
@@ -289,16 +308,21 @@
         this.$get('panel', this.searchLabel).then(response => {
           if (response.code === 200) {
             this.panelData = response.data.list;
-            if(this.panelData.length>0 ){
-              this.filter.panelId = this.panelData[0].id;
-            }
-            if( response.data.list.length>0 && this.showPanel.id===''){
-              this.showPanel.id = response.data.list[0].id;
+            if( response.data.list.length>0 ){
+              if(this.showPanel.id===''){
+                this.showPanel.id = response.data.list[0].id;
+                this.filter.panelId = this.showPanel.id;
+                this.getData(this.filter);
+              }
               this.filter.panelId = this.showPanel.id;
+            }else {
+              this.showPanel.id ='';
+              this.filter.panelId='';
             }
             this.pageObj.total = response.data.total
-
-            this.getData(this.filter);
+            if(this.panel.id===''||this.panel.id===this.showPanel.id){
+              this.getData(this.filter);
+            }
           }
         })
 
@@ -324,6 +348,7 @@
     },
     created() {
       this.getTableData();
+      this.getData(this.filter);
     },
     mounted: function() {
     },

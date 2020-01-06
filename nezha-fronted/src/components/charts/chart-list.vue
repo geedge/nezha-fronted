@@ -17,7 +17,7 @@
       ref="editChart" 
       @on-refresh-data=""
       @on-remove-chart-block="removeChart"
-      @on-edit-chart-block=""
+      @on-edit-chart-block="editData"
       :panel-id="filter.panelId" 
       :editChartId="'editChartId' + item.id"></line-chart-block>
 <!--
@@ -88,6 +88,7 @@ export default {
           }else {
             this.dataList = response.data;
           }
+          //alert(JSON.stringify(response)); 查着，返回的内容就没有图表表达式了？？
           this.dataSetFirst(this.dataList);
         }
       });
@@ -103,11 +104,11 @@ export default {
 
     // 获取一个图表具体数据,图表信息，图表位置index
     getChartData(chartInfo, pos, filterType) {
+      //alert(JSON.stringify(chartInfo));
       const chartItem = chartInfo;
       const index = pos; // 指标
       const len = chartItem.elements.length;
-      //this.setSize(chartItem.span, index); // 设置该图表宽度
-      this.setSize(chartItem.span,chartItem.height, index); // 设置该图表宽度,高度
+      this.setSize(chartItem.span, index); // 设置该图表宽度
       // 没有数据的设置提示信息暂无数据-针对每一个图
       if (len === 0) {
         this.$nextTick(() => {
@@ -170,7 +171,7 @@ export default {
                         metric_name: '',
                       };
                       // 图表中每条线的名字,后半部分
-                      let host = `${queryItem.metric.__name__}, `;//up,
+                      let host = `${queryItem.metric.__name__}{`;//up,
                       const tagsArr = Object.keys(queryItem.metric);//["__name__","asset","idc","instance","job","module","project"]
                       // 设置时间-数据格式对
                       const dpsArr = Object.entries(queryItem.values);//[ ["0",[1577959830.781,"0"]], ["1",[1577959845.781,"0"]] ]
@@ -178,10 +179,11 @@ export default {
                       if (dpsArr.length > 0 && tagsArr.length > 0) {
                         tagsArr.forEach((tag, i) => {
                           if (tag !== '__name__') {
-                            host += i === 0 ? `${tag}=${queryItem.metric[tag]}` : ` ${tag}=${queryItem.metric[tag]},`;
+                            host += i === 0 ? `${tag}="${queryItem.metric[tag]}"` : `${tag}="${queryItem.metric[tag]}",`;
                           }
                         });
                         if(host.endsWith(',')){host = host.substr(0,host.length-1);}
+                        host +="}";
                         legend.push(host);
                         // 图表中每条线的名字,去掉最后的逗号与空格:metric名称,  标签1=a,标签2=c
                         seriesItem.theData.name = host;
@@ -254,11 +256,11 @@ export default {
       }
     },
     // 设置图表的宽度
-    setSize(size,height, index) {
+    setSize(size, index) {
       this.$nextTick(() => {
         const chartBox = document.getElementsByClassName('chartBox');
         chartBox[index].style.width = `${(size / 12) * 100}%`;
-        chartBox[index].style.height = height;
+        //chartBox[index].style.height = height;
       });
     },
 
@@ -269,29 +271,18 @@ export default {
     },
     // 删除图表
     removeChart(chartId) {
-      /*
       const chart = this.dataList.find(item => item.id === chartId);
       if (chart) {
-        this.$confirm(this.$t("tip.confirmDelete"), {
-          confirmButtonText: this.$t("tip.yes"),
-          cancelButtonText: this.$t("tip.no"),
-          type: 'warning'
-        }).then(() => {
-          this.$delete("panel?ids=" + u.id).then(response => {
-            if (response.code === 200) {
-              this.$message({duration: 1000, type: 'success', message: this.$t("tip.deleteSuccess")});
-              if(this.showPanel.id===u.id){
-                this.showPanel.id ='';
-              }
-              this.getTableData();
-              this.rightBox.show = false;
-            } else {
-              this.$message.error(response.msg);
-            }
-          })
-        });
-        //this.$emit('on-remove-chart', chart);
-      }*/
+        this.$emit('on-remove-chart', chart);
+      }
+    },
+    // 编辑图表
+    editData(chartId) {
+      // 获取该id下chart的相关信息
+      const chart = this.dataList.find(item => item.id === chartId);
+      if (chart) {
+        this.$emit('on-edit-chart', chart);
+      }
     },
     /*
     // 刷新列表中的一个图表
@@ -306,16 +297,6 @@ export default {
     refreshData() {
       this.getData(this.filter);
     },
-
-    // 编辑图表
-    editData(chartId) {
-      // 获取该id下chart的相关信息
-      const chart = this.dataList.find(item => item.id === chartId);
-      if (chart) {
-        this.$emit('on-edit-chart', chart);
-      }
-    },
-
      */
   },
 
