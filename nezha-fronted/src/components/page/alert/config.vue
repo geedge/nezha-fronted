@@ -2,40 +2,6 @@
   .account {
     height: 100%;
   }
-  .right-box::-webkit-scrollbar-track {
-    -webkit-box-shadow: inset 0 0 5px rgba(0,0,0,0.2);
-    border-radius: 0;
-    background: rgba(0,0,0,0.1);
-  }
-  .right-box::-webkit-scrollbar-thumb {
-    border-radius: 5px;
-    -webkit-box-shadow: inset 0 0 5px rgba(0,0,0,0.2);
-    background: rgba(0,0,0,0.2);
-  }
-  .right-box::-webkit-scrollbar {
-    width: 4px;
-    height: 4px;
-  }
-  .right-box {
-    overflow: auto;
-  }
-  .account-list-option {
-    cursor: pointer;
-    display: inline-block;
-    margin-right: 6px;
-  }
-  .account-list-option .el-icon-delete {
-    color: #F98D9A;
-  }
-  .account-list-option .el-icon-delete:hover {
-    color: #D96D7A;
-  }
-  .account-list-option .el-icon-view {
-    color: #60BEFF;
-  }
-  .account-list-option .el-icon-view:hover {
-    color: #409EFF;
-  }
 </style>
 <template>
     <div class="account">
@@ -69,9 +35,9 @@
                 >
                     <template slot-scope="scope" :column="item">
                         <div v-if="item.prop == 'option'" class="account-list-options">
-                            <span @click="del(scope.row)" class="account-list-option"><i class="el-icon-delete"></i></span>
-                            <span @click="detail(scope.row)" class="account-list-option"><i class="el-icon-view"></i></span>
-                            <span @click="toEdit(scope.row)" class="account-list-option"><i class="el-icon-edit-outline"></i></span>
+                          <span @click="del(scope.row)" class="content-right-option"><i class="el-icon-delete"></i></span>
+                          <span @click="detail(scope.row)" class="content-right-option"><i class="el-icon-view"></i></span>
+                          <span @click="toEdit(scope.row)" class="content-right-option"><i class="el-icon-edit-outline"></i></span>
                         </div>
                         <span v-else-if="item.prop == 'severity'">
                           <span v-if="scope.row[item.prop] == 'high'"><i class="el-icon-arrow-up"></i>&nbsp;{{severityData[1].value}}</span>
@@ -93,8 +59,8 @@
             <Pagination :pageObj="pageObj" @pageNo='pageNo' @pageSize='pageSize' ref="Pagination"></Pagination>
         </div>
         <alert-config-box :parentAlertRule="alertRule" @reload="getTableData" ref="alertConfigBox"></alert-config-box>
-        <project-box :project="viewProjectData" ref="projectBox"></project-box>
-        <module-box  :module="viewModuleData" @reload="" ref="moduleBox"></module-box>
+        <project-box :project="viewProjectData" ref="projectBox" @reload="getTableData"></project-box>
+        <module-box  :module="viewModuleData" @reload="getTableData" ref="moduleBox"></module-box>
         <asset-edit-unit :edit-unit-show='viewAsset' @refreshData="" @sendStateData="" ref="assetEditUnit"></asset-edit-unit>
     </div>
 
@@ -227,9 +193,9 @@ export default {
         }
       ],
       tableData: [],
-      viewProjectData:null,
-      viewModuleData:null,
-      viewAsset:false,
+      viewProjectData: {},
+      viewModuleData: {},
+      viewAsset: false,
     }
   },
   methods: {
@@ -320,29 +286,28 @@ export default {
       }
       this.getTableData();
     },
-    viewAlertType:function(type,typeObj){
-      console.log(typeObj)
+    viewAlertType: function(type, typeObj){
       this.closeViews();
       switch (type) {
         case 1:
-          this.viewProjectData=typeObj;
+          this.viewProjectData = JSON.parse(JSON.stringify(typeObj));
           this.$refs.projectBox.show(true);
           break;
         case 2:
           this.fillProject(typeObj);
-          let tempObj=JSON.parse(typeObj.param)
+          let tempObj = JSON.parse(typeObj.param)
           this.$set(typeObj, 'paramObj', []);
           for (let k in tempObj) {
             typeObj.paramObj.push({key: k, value: tempObj[k]});
           }
-          this.viewModuleData=typeObj;
+          this.viewModuleData = JSON.parse(JSON.stringify(typeObj));
 
           this.$refs.moduleBox.show(true);
           break;
         case 3:
-          this.viewAsset=true;
+          this.viewAsset = true;
           this.$refs.assetEditUnit.getAssetData(typeObj);
-          this.$refs.assetEditUnit.tabView=true;
+          this.$refs.assetEditUnit.tabView = true;
           break;
       }
     },

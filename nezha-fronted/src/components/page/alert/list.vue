@@ -214,10 +214,10 @@
             </el-table>
             <Pagination :pageObj="pageObj" @pageNo='pageNo' @pageSize='pageSize' ref="Pagination"></Pagination>
         </div>
-      <alert-config-box :parentAlertRule="viewRuleData" @reload="" ref="alertConfigBox"></alert-config-box>
-      <project-box :project="viewProjectData" ref="projectBox"></project-box>
-      <module-box  :module="viewModuleData" @reload="" ref="moduleBox"></module-box>
-      <asset-edit-unit :edit-unit-show='viewAssetState' @refreshData="" @sendStateData="" ref="assetEditUnit"></asset-edit-unit>
+      <alert-config-box :parentAlertRule="viewRuleData" @reload="getAlertList" ref="alertConfigBox"></alert-config-box>
+      <project-box :project="viewProjectData" ref="projectBox" @reload="getAlertList"></project-box>
+      <module-box  :module="viewModuleData" @reload="getAlertList" ref="moduleBox"></module-box>
+      <asset-edit-unit :edit-unit-show='viewAssetState' @refreshData="getAlertList" @sendStateData="" ref="assetEditUnit"></asset-edit-unit>
     </div>
 
 </template>
@@ -315,9 +315,21 @@ export default {
         }
       ],
       tableData: [],
-      viewRuleData:null,
-      viewProjectData:null,
-      viewModuleData:null,
+      viewRuleData: {
+      id: '',
+        alertName: '',
+        type: '',
+        linkObject: {id: '', name: ''},
+      linkId: '',
+        expr: '',
+        last: '',
+        severity: '',
+        summary: '',
+        description: '',
+        receiver: '',
+      },
+      viewProjectData: {id: '', name: '', remark: ''},
+      viewModuleData: {id: '', name: '', project: {}, port: '', path: '', param: '', paramObj: []},
       viewAssetState:false,
     }
   },
@@ -373,7 +385,7 @@ export default {
       this.closeViews();
       switch (type) {
         case 1:
-          this.viewProjectData=typeObj;
+          this.viewProjectData = JSON.parse(JSON.stringify(typeObj));
           this.$refs.projectBox.show(true);
           break;
         case 2:
@@ -383,7 +395,7 @@ export default {
           for (let k in tempObj) {
             typeObj.paramObj.push({key: k, value: tempObj[k]});
           }
-          this.viewModuleData=typeObj;
+          this.viewModuleData = JSON.parse(JSON.stringify(typeObj));
 
           this.$refs.moduleBox.show(true);
           break;

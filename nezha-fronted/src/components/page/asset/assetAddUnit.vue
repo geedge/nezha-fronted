@@ -14,14 +14,14 @@
       <div class="right-box-title">{{$t('asset.createAssetTab.title')}}</div>
 
       <el-scrollbar class="right-box-form-box">
-        <el-form :model="assetData" label-width="120px" class="right-box-form right-box-form-left">
-          <el-form-item :label="this.$t('asset.createAssetTab.sn')">
+        <el-form :model="assetData" label-width="120px" class="right-box-form right-box-form-left" :rules="rules" ref="addAssetForm">
+          <el-form-item :label="this.$t('asset.createAssetTab.sn')" prop="sn">
             <el-input size="mini" v-model="assetData.sn" maxlength="64" show-word-limit/>
           </el-form-item>
-          <el-form-item :label="this.$t('asset.createAssetTab.host')">
+          <el-form-item :label="this.$t('asset.createAssetTab.host')" prop="host">
             <el-input size="mini" v-model="assetData.host"/>
           </el-form-item>
-          <el-form-item :label="this.$t('asset.createAssetTab.state')">
+          <el-form-item :label="this.$t('asset.createAssetTab.state')" prop="state">
             <el-select size="mini" v-model="assetData.state" placeholder="">
               <el-option
                 v-for="item in assetStateOption"
@@ -34,7 +34,7 @@
           <div class="asset-sub-title">{{$t('asset.createAssetTab.assetInfo')}}</div>
           <div class="line-100 asset-line"></div>
           <!------------------------------------------资产类型---------------------------------------------->
-          <el-form-item :label="this.$t('asset.createAssetTab.assetType')" prop="assetType" class="right-box-form-content">
+          <el-form-item :label="this.$t('asset.createAssetTab.assetType')" class="right-box-form-content" prop="assetType">
             <el-select popper-class="asset-dropdown" size="mini" v-model="assetType" clearable @change="getAllModelOptionData" placeholder=""
                        @visible-change="cancelEdit" class="right-box-row-with-btn">
               <el-option
@@ -114,7 +114,7 @@
             </div>
           </el-form-item>
           <!------------------------------------------厂商/型号---------------------------------------------->
-          <el-form-item :label="this.$t('asset.createAssetTab.vendor')" class="right-box-form-content">
+          <el-form-item :label="this.$t('asset.createAssetTab.vendor')" class="right-box-form-content" prop="modelId">
             <el-cascader
               :options="vendorTypeOptionData"
               :key="isResourceShow"
@@ -225,7 +225,7 @@
               </el-popover>
             </div>
           </el-form-item>
-          <el-form-item :label="this.$t('asset.createAssetTab.purchaseDate')" prop="purchaseDate" class="right-box-form-content">
+          <el-form-item :label="this.$t('asset.createAssetTab.purchaseDate')" class="right-box-form-content">
             <el-date-picker
               size="mini"
               v-model="assetData.purchaseDate"
@@ -238,7 +238,7 @@
           <div class="asset-sub-title">{{$t('asset.createAssetTab.dc')}}</div>
           <div class="line-100 asset-line"></div>
           <!------------------------------------------IDC---------------------------------------------->
-          <el-form-item :label="this.$t('asset.createAssetTab.dcName')" class="right-box-form-content">
+          <el-form-item :label="this.$t('asset.createAssetTab.dcName')" class="right-box-form-content" prop="idcId">
             <el-select popper-class="asset-dropdown" size="mini" v-model="assetData.idcId" clearable @change="getSingleIDCData" class="right-box-row-with-btn" placeholder="">
               <el-option
                 v-for="item in IDCOptionData"
@@ -663,7 +663,8 @@
           id: '',
           sn: '',
           host: '',
-          state: '',
+          assetType: '',
+          state: 1,
           purchaseDate: '',
           idcId: '',
           cabinetId: '',
@@ -785,6 +786,23 @@
         isResourceShow: 0,
         modelClickData: '',
         popState: true,
+        rules: {
+          sn: [
+            {required: true, message: this.$t('validate.required'), trigger: 'blur'}
+          ],
+          host: [
+            {required: true, message: this.$t('validate.required'), trigger: 'blur'}
+          ],
+          modelId: [
+            {required: true, message: this.$t('validate.required'), trigger: 'change'}
+          ],
+          assetType: [
+            {required: true, message: this.$t('validate.required'), trigger: 'change'}
+          ],
+          idcId: [
+            {required: true, message: this.$t('validate.required'), trigger: 'change'}
+          ],
+        }
       }
     },
     computed: {
@@ -799,12 +817,16 @@
         }
       },
       assetType(newVal) {
+        this.assetData.assetType = newVal;
         if (newVal == '') {
           this.popState = true
         } else {
           this.popState = false
         }
       },
+      'assetData.idcId': function(n, o) {
+        this.addCabinetData.idcId = n;
+      }
     },
     methods: {
       cancelEdit(data) {
@@ -892,6 +914,7 @@
         })
       },
       getAllModelOptionData(data) {
+        this.assetData.assetType = this.assetType;
         this.$get('model?typeCode=' + this.assetType).then(response => {
           if (response.code === 200) {
             this.allModelUlData = response.data.list
@@ -949,19 +972,16 @@
         this.$put(data, item).then(res => {
           const h = this.$createElement;
           if (res.code === 200) {
-            this.$notify({
-              message: h('i', {style: 'color: teal'}, '修改成功'),
-              duration: 2000
-            })
-            this.getIDCOptionData()
+            this.$message({duration: 2000, type: 'success', message: this.$t("tip.saveSuccess")});
+            this.getAssetTypeOptionData();
+            this.getIDCOptionData();
             this.getAllModelOptionData();
-            this.getCabinetOptionData('')
-            this.$emit('refreshData', 'true')
+            if (data === 'cabinet') {
+              this.getCabinetOptionData(item.idcId);
+            }
+            this.$emit('refreshData', 'true');
           } else {
-            this.$notify({
-              message: h('i', {style: 'color: teal'}, res.msg),
-              duration: 2000
-            });
+            this.$message.error(res.msg);
           }
         })
       },
@@ -970,17 +990,11 @@
           this.$post('idc', this.addIdcData).then(res => {
             const h = this.$createElement;
             if (res.code === 200) {
-              this.$notify({
-                message: h('i', {style: 'color: teal'}, '添加成功'),
-                duration: 2000
-              });
+              this.$message({duration: 2000, type: 'success', message: this.$t("tip.saveSuccess")});
               this.getIDCOptionData()
               this.getAssetData()
             } else {
-              this.$notify({
-                message: h('i', {style: 'color: teal'}, res.msg),
-                duration: 2000
-              });
+              this.$message.error(res.msg);
             }
           })
         }
@@ -998,7 +1012,6 @@
         if (type === 'asset') {
           let modelId = ''
           let authType = ''
-          console.log(this.assetData.modelId)
           if (this.assetData.modelId !== '') {
             modelId = this.assetData.modelId.join(',').split(',')[1]
           } else {
@@ -1024,16 +1037,10 @@
           this.$post('asset', form).then(res => {
             const h = this.$createElement;
             if (res.code === 200) {
-              this.$notify({
-                message: h('i', {style: 'color: teal'}, '添加成功'),
-                duration: 2000
-              });
-              this.sendStateData('close')
+              this.$message({duration: 2000, type: 'success', message: this.$t("tip.saveSuccess")});
+              this.sendStateData('close');
             } else {
-              this.$notify({
-                message: h('i', {style: 'color: teal'}, res.msg),
-                duration: 2000
-              });
+              this.$message.error(res.msg);
             }
           })
           this.$emit('refreshData', 'true')
@@ -1042,16 +1049,10 @@
           const h = this.$createElement;
           this.$post('sys/dict/save', this.addVendorData).then(res => {
             if (res.code === 200) {
-              this.$notify({
-                message: h('i', {style: 'color: teal'}, '添加成功'),
-                duration: 2000
-              });
+              this.$message({duration: 2000, type: 'success', message: this.$t("tip.saveSuccess")});
               this.getVendorOptionData()
             } else {
-              this.$notify({
-                message: h('i', {style: 'color: teal'}, res.msg),
-                duration: 2000
-              });
+              this.$message.error(res.msg);
             }
           })
         }
@@ -1062,17 +1063,11 @@
             if (res.code === 200) {
               this.getModelOptionData(this.assetType, this.vendorCode)
               const h = this.$createElement;
-              this.$notify({
-                message: h('i', {style: 'color: teal'}, '添加成功'),
-                duration: 2000
-              });
+              this.$message({duration: 2000, type: 'success', message: this.$t("tip.saveSuccess")});
               this.getAllModelOptionData(this.assetType)
             } else {
               const h = this.$createElement;
-              this.$notify({
-                message: h('i', {style: 'color: teal'}, res.msg),
-                duration: 2000
-              });
+              this.$message.error(res.msg);
             }
           })
         }
@@ -1083,17 +1078,12 @@
           this.$post('cabinet', this.addCabinetData).then(res => {
             const h = this.$createElement;
             if (res.code === 200) {
-              this.$notify({
-                message: h('i', {style: 'color: teal'}, '添加成功'),
-                duration: 2000
-              });
+              this.$message({duration: 2000, type: 'success', message: this.$t("tip.saveSuccess")});
               this.getCabinetOptionData(this.addCabinetData.idcId)
-              this.popoverClose('cabinet')
+              this.popoverClose('cabinet');
+              this.editPopoverClose('cabinet');
             } else {
-              this.$notify({
-                message: h('i', {style: 'color: teal'}, res.msg),
-                duration: 2000
-              });
+              this.$message.error(res.msg);
             }
           })
         }
@@ -1136,6 +1126,9 @@
         let resultData = []
         let modelData = this.allModelUlData
         for (let i = 0; i < modelData.length; i++) {
+          if (!modelData[i].vendor) {
+            continue;
+          }
           let obj = {}
           obj.id = modelData[i].vendor.id
           obj.code = modelData[i].vendor.code
@@ -1154,11 +1147,14 @@
         }
         for (let x = 0; x < result.length; x++) {
           for (let y = 0; y < modelData.length; y++) {
+            if (!modelData[y].vendor) {
+              continue;
+            }
             if (result[x].code === modelData[y].vendor.code) {
-              let obj2 = {}
-              obj2.value = modelData[y].id
-              obj2.label = modelData[y].name
-              result[x].children.push(obj2)
+              let obj2 = {};
+              obj2.value = modelData[y].id;
+              obj2.label = modelData[y].name;
+              result[x].children.push(obj2);
             }
           }
         }
@@ -1290,7 +1286,6 @@
           item[item.name] = !item[item.name]
           this.cabinetOptionData.forEach(items => {
             if (items.id === data) {
-              console.log(items)
               this.popCabinetData.name = items.name
               this.popCabinetData.uSize = items.uSize
               this.popCabinetData.remark = items.remark

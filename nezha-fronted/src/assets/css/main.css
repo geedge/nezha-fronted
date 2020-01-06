@@ -205,6 +205,35 @@ html {
   margin-left: 270px;
   padding: 0 15px 0 25px;
 }
+.content-right-option {
+  cursor: pointer;
+  display: inline-block;
+  margin-right: 6px;
+}
+.content-right-option i {
+  color: #6E7274;
+}
+.content-right-option i:hover {
+  color: #3E4244;
+}
+.content-right-option .el-icon-delete {
+  color: #F98D9A;
+}
+.content-right-option .el-icon-delete:hover {
+  color: #D96D7A;
+}
+.content-right-option .el-icon-view {
+  color: #60BEFF;
+}
+.content-right-option .el-icon-view:hover {
+  color: #409EFF;
+}
+.content-right-option .el-icon-edit-outline {
+  color: #6E7274;
+}
+.content-right-option .el-icon-edit-outline:hover {
+  color: #3E4244;
+}
 /* begin--顶部工具栏*/
 .top-tools {
   padding: 22px 0 13px 0;
@@ -392,10 +421,20 @@ html {
 .pop-box {
   border: 1px solid #DCDFE6;
   border-radius: 4px;
-  padding: 2px 0 2px 5px;
+  padding: 2px 0;
 }
 .pop-box-asset {
   height: 160px;
+  width: 247px;
+}
+.pop-box-asset li {
+  height: 24px;
+  line-height: 24px;
+  padding: 0 5px;
+}
+.pop-box-asset input {
+  vertical-align: top;
+  width: 90%;
 }
 .pop-box-active {
   background-color: #d8d8d8;
@@ -417,7 +456,7 @@ html {
   height: 100%;
 }
 .right-box-form>.el-form-item {
-  margin-bottom: 15px;
+  margin-bottom: 18px;
 }
 .right-box-form .el-select {
   width: 100%;

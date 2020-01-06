@@ -83,6 +83,7 @@
                   this.rightBox.show = false;
                   this.$store.commit('projectListChange');
                   this.$store.commit('setProject', this.project);
+                  this.$emit('reload');
                 } else {
                   this.$message.error(response.msg);
                 }
@@ -107,7 +108,7 @@
       saveOrToEdit: function() {
         if (!this.rightBox.isEdit) {
           this.rightBox.isEdit = true;
-          this.rightBox.title = this.$t("project.module.editProject") + "  ID：" + this.project.id;
+          this.rightBox.title = this.$t("project.project.editProject") + "  ID：" + this.project.id;
         } else {
           this.save();
         }

@@ -208,9 +208,9 @@
       }
     },
     methods: {
-      show(show,isEdit) {
+      show(show, isEdit) {
         this.rightBox.show = show;
-        this.rightBox.isEdit=isEdit
+        this.rightBox.isEdit = isEdit;
       },
 
       /*关闭弹框*/
@@ -230,6 +230,7 @@
                   this.$message({duration: 1000, type: 'success', message: this.$t("tip.saveSuccess")});
                   this.$store.commit('moduleListChange');
                   this.rightBox.show = false;
+                  this.$emit('reload');
                 } else {
                   this.$message.error(response.msg);
                 }

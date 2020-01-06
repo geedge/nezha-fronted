@@ -3,7 +3,7 @@
     <div class="right-box right-box-add-asset" v-if="editUnitShow" @click="editQuit">
       <!--顶部按钮-->
       <div class="right-box-top-btns">
-        <button v-if="!tabView" type="button" @click="" class="nz-btn nz-btn-size-normal nz-btn-style-light">
+        <button v-if="!tabView" type="button" @click="deleteData('asset', pageObj.id)" class="nz-btn nz-btn-size-normal nz-btn-style-light">
           <span class="top-tool-btn-txt">{{$t('overall.delete')}}</span>
         </button>
         <button v-if="tabView" type="button" @click="tabView=false" class="nz-btn nz-btn-size-normal nz-btn-style-normal">
@@ -21,12 +21,12 @@
       <div class="right-box-title">{{this.tabView == true ? $t('asset.asset') : $t('asset.EditAsset')}}</div>
 
       <el-scrollbar class="right-box-form-box">
-        <el-form ref="form" :model="assetData" label-width="120px" class="right-box-form right-box-form-left">
-          <el-form-item :label="$t('asset.createAssetTab.sn')">
+        <el-form ref="form" :model="assetData" label-width="120px" class="right-box-form right-box-form-left" :rules="rules">
+          <el-form-item :label="$t('asset.createAssetTab.sn')" prop="sn">
             <el-input size="mini" v-if="!tabView" v-model="assetData.sn"/>
             <span v-if="tabView">{{assetData.sn}}</span>
           </el-form-item>
-          <el-form-item :label="this.$t('asset.createAssetTab.host')">
+          <el-form-item :label="this.$t('asset.createAssetTab.host')" prop="host">
             <el-input size="mini" v-if="!tabView" v-model="assetData.host"/>
             <span v-if="tabView">{{assetData.host}}</span>
           </el-form-item>
@@ -52,7 +52,7 @@
           <div class="asset-sub-title">{{$t('asset.createAssetTab.assetInfo')}}</div>
           <div class="line-100 asset-line"></div>
           <!------------------------------------------资产类型---------------------------------------------->
-          <el-form-item :label="$t('asset.createAssetTab.assetType')" class="right-box-form-content">
+          <el-form-item :label="$t('asset.createAssetTab.assetType')" class="right-box-form-content" prop="assetType">
             <el-select popper-class="asset-dropdown" size="mini" v-if="!tabView" v-model="assetType" clearable @visible-change="cancelEdit"
                        @change="getAllModelOptionData()" class="right-box-row-with-btn">
               <el-option
@@ -115,9 +115,11 @@
                                 <span class="config-dropdown-label-input" v-if="item.isEdit" @click.stop="editing">
                                   <el-input class="input-x-mini" v-model="item.value"/>
                                 </span>
-                                <span class="config-dropdown-btn" @click.stop="editOptionData(item,'type',index)">
-                                  <i class="el-icon-edit-outline" v-if="!item.isEdit"></i>
-                                  <i class="el-icon-check" v-if="item.isEdit" @click="editData('sys/dict/update',item)"></i>
+                                <span v-if="!item.isEdit" class="config-dropdown-btn" @click.stop="editOptionData(item,'type',index)">
+                                  <i class="el-icon-edit-outline"></i>
+                                </span>
+                                <span v-if="item.isEdit"  class="config-dropdown-btn" @click.stop="editData('sys/dict/update',item, 'assetType')">
+                                  <i class="el-icon-check"></i>
                                 </span>
                                 <span class="config-dropdown-btn config-dropdown-btn-delete"
                                       @click.stop="deleteData('/sys/dict/delete',item.id)"><i class="el-icon-delete"></i>
@@ -136,7 +138,7 @@
             <span v-if="tabView">{{assetViewData.assetType}}</span>
           </el-form-item>
           <!------------------------------------------厂商/型号---------------------------------------------->
-          <el-form-item :label="this.$t('asset.createAssetTab.vendor')" class="right-box-form-content">
+          <el-form-item :label="this.$t('asset.createAssetTab.vendor')" class="right-box-form-content" prop="modelId">
             <template v-if="!tabView">
               <el-cascader
                 :options="vendorTypeOptionData"
@@ -259,7 +261,7 @@
           <div class="asset-sub-title">{{$t('asset.createAssetTab.dc')}}</div>
           <div class="line-100 asset-line"></div>
           <!------------------------------------------IDC---------------------------------------------->
-          <el-form-item :label="this.$t('asset.createAssetTab.dcName')" class="right-box-form-content">
+          <el-form-item :label="this.$t('asset.createAssetTab.dcName')" class="right-box-form-content" prop="idcId">
             <template v-if="!tabView">
               <el-select popper-class="asset-dropdown" size="mini" v-model="assetData.idcId" clearable @change="getSingleIDCData" class="right-box-row-with-btn" placeholder="">
                 <el-option
@@ -427,10 +429,10 @@
                       <div class="pop-title">{{$t('asset.createAssetTab.editCabinetTab.title')}}</div>
                       <!--表单内容-->
                       <div class="pop-item-wider">
-                        <el-form-item :label="$t('asset.editAssetTab.editCabinetTab.name')">
+                        <el-form-item :label="$t('asset.editAssetTab.editCabinetTab.name')" prop="cabinet.name">
                           <el-input size="mini" v-model="popCabinetData.name"/>
                         </el-form-item>
-                        <el-form-item :label="$t('asset.editAssetTab.editCabinetTab.uSize')">
+                        <el-form-item :label="$t('asset.editAssetTab.editCabinetTab.uSize')" prop="cabinet.uSize">
                           <div>{{popCabinetData.uSize}}</div>
                           <el-slider v-model="popCabinetData.uSize" :max="47"></el-slider>
                         </el-form-item>
@@ -439,7 +441,7 @@
                                     type="textarea"
                                     :rows="2"/>
                         </el-form-item>
-                        <el-form-item :label="$t('asset.editAssetTab.editCabinetTab.DC')">
+                        <el-form-item :label="$t('asset.editAssetTab.editCabinetTab.DC')" prop="cabinet.idcId">
                           <el-select v-model="popCabinetData.idcId" clearable placeholder="" size="mini" style="width: 100%;">
                             <el-option
                               v-for="ite in item.children"
@@ -531,7 +533,7 @@
                 >
                   <div class="pop-window-assetType-content">
                     <div class="pop-top-btns">
-                      <button type="button" @click="editData('idc',item,'CabIDC')" class="nz-btn nz-btn-size-small nz-btn-style-normal">
+                      <button type="button" @click="addNewData('cabinet')" class="nz-btn nz-btn-size-small nz-btn-style-normal">
                         <span class="top-tool-btn-txt">{{$t('overall.save')}}</span>
                       </button>
                       <button type="button" @click="editPopoverClose('cabinet')" class="nz-btn nz-btn-size-small nz-btn-style-light nz-btn-style-square">
@@ -688,6 +690,8 @@
           idcId: '',
           cabinetId: '',
           modelId: '',
+          assetType: '',
+          cabinet: {},
           accounts: [{
             id: '',
             authType: '',
@@ -822,6 +826,23 @@
         popState: true,
         obj: null,
         addUnitShow: false,
+        rules: {
+          sn: [
+            {required: true, message: this.$t('validate.required'), trigger: 'blur'}
+          ],
+          host: [
+            {required: true, message: this.$t('validate.required'), trigger: 'blur'}
+          ],
+          modelId: [
+            {required: true, message: this.$t('validate.required'), trigger: 'change'}
+          ],
+          assetType: [
+            {required: true, message: this.$t('validate.required'), trigger: 'change'}
+          ],
+          idcId: [
+            {required: true, message: this.$t('validate.required'), trigger: 'change'}
+          ],
+        }
       }
     },
     computed: {
@@ -832,55 +853,59 @@
     watch: {
       allModelUlData(newVal) {
         if (newVal) {
-          this.getConnectData()
+          this.getConnectData();
           if (this.pageObj.id != '') {
             this.assetData.modelId = [this.obj.model.vendor.code, this.obj.model.id]
           }
         }
       },
       assetType(newVal) {
+        this.assetData.assetType = newVal;
         if (newVal == '') {
           this.popState = true
         } else {
           this.popState = false
         }
       },
+      'assetData.idcId': function(n, o) {
+        this.addCabinetData.idcId = n;
+      }
     },
     methods: {
       cancelEdit(data) {
         if (data === false) {
-          this.getAssetTypeOptionData()
+          this.getAssetTypeOptionData();
         }
       },
       clickOutSide(data) {
         if (data) {
-          this.editQuit()
-          this.modelCount = ''
+          this.editQuit();
+          this.modelCount = '';
         }
       },
       editQuit() {
         for (let i of this.assetTypeOptionData) {
           if (i.isEdit === true) {
-            i.isEdit = false
-            this.getAssetTypeOptionData()
+            i.isEdit = false;
+            this.getAssetTypeOptionData();
           }
         }
         for (let i of this.vendorUlData) {
           if (i.isEdit === true) {
-            i.isEdit = false
-            this.getVendorOptionData()
+            i.isEdit = false;
+            this.getVendorOptionData();
           }
         }
         for (let i of this.modelUlData) {
           if (i.isEdit === true) {
-            i.isEdit = false
-            this.getModelOptionData(this.assetType, this.vendorCode)
+            i.isEdit = false;
+            this.getModelOptionData(this.assetType, this.vendorCode);
           }
         }
       },
       getAssetData(data) {
         if (data !== undefined) {
-          this.pageObj.id = data
+          this.pageObj.id = data;
           this.$get('asset', this.pageObj).then(response => {
             if (response.code === 200) {
               this.obj = response.data.list[0];
@@ -940,7 +965,6 @@
             for (let i = 0; i < this.cabinetOptionData.length; i++) {
               this.$set(this.cabinetOptionData[i], 'children', this.IDCOptionData)
             }
-            console.log(this.cabinetOptionData)
           }
         })
       },
@@ -969,7 +993,8 @@
         })
       },
       getAllModelOptionData(data) {
-        this.$get('model?typeCode=' + this.assetType).then(response => {
+        this.assetData.assetType = this.assetType;
+        this.$get('model?typeCode=' + this.assetType + '&pageNo=1&pageSize=999').then(response => {
           if (response.code === 200) {
             this.allModelUlData = response.data.list
           }
@@ -1009,17 +1034,12 @@
           this.$put('asset', form).then(res => {
             const h = this.$createElement;
             if (res.code === 200) {
-              this.$notify({
-                message: h('i', {style: 'color: teal'}, '修改成功'),
-                duration: 2000
-              });
-              this.pageObj.id = ''
-              this.$emit('refreshData', 'true')
+              this.$message({duration: 2000, type: 'success', message: this.$t("tip.saveSuccess")});
+              this.pageObj.id = '';
+              this.$emit('refreshData', 'true');
+              this.sendStateData('close');
             } else {
-              this.$notify({
-                message: h('i', {style: 'color: teal'}, res.msg),
-                duration: 2000
-              });
+              this.$message.error(res.msg);
             }
           })
         } else {
@@ -1036,12 +1056,10 @@
             item = obj
           }
           if (data === 'cabinet') {
-            item.name = this.popCabinetData.name
-            item.uSize = this.popCabinetData.uSize
-            item.remark = this.popCabinetData.remark
-            console.log(this.popCabinetData.idcId)
-            item.idcId = this.popCabinetData.idcId
-            console.log(item)
+            item.name = this.popCabinetData.name;
+            item.uSize = this.popCabinetData.uSize;
+            item.remark = this.popCabinetData.remark;
+            item.idcId = this.popCabinetData.idcId;
           }
           if (data === 'idc') {
             idcData.id = item.id
@@ -1052,29 +1070,25 @@
             item = idcData
           }
           if (mark === 'CabIDC') {
-            idcData.id = item.id
-            idcData.name = this.addCabIDCData.name
-            idcData.location = this.addCabIDCData.location
-            idcData.principal = this.addCabIDCData.principal
-            idcData.tel = this.addCabIDCData.tel
-            item = idcData
+            idcData.id = item.id;
+            idcData.name = this.addCabIDCData.name;
+            idcData.location = this.addCabIDCData.location;
+            idcData.principal = this.addCabIDCData.principal;
+            idcData.tel = this.addCabIDCData.tel;
+            item = idcData;
           }
           this.$put(data, item).then(res => {
-            const h = this.$createElement;
             if (res.code === 200) {
-              this.$notify({
-                message: h('i', {style: 'color: teal'}, '修改成功'),
-                duration: 2000
-              })
+              this.$message({duration: 2000, type: 'success', message: this.$t("tip.saveSuccess")});
               this.getIDCOptionData();
-              this.getCabinetOptionData('')
+              if (data === 'cabinet') {
+                this.getCabinetOptionData(item.idcId);
+              }
               this.getAllModelOptionData();
+              this.getAssetTypeOptionData();
               this.$emit('refreshData', 'true')
             } else {
-              this.$notify({
-                message: h('i', {style: 'color: teal'}, res.msg),
-                duration: 2000
-              });
+              this.$message.error(res.msg);
             }
           })
         }
@@ -1085,17 +1099,11 @@
           this.$post('idc', this.addIdcData).then(res => {
             if (res.code === 200) {
               const h = this.$createElement;
-              this.$notify({
-                message: h('i', {style: 'color: teal'}, '添加成功'),
-                duration: 2000
-              });
+              this.$message({duration: 2000, type: 'success', message: this.$t("tip.saveSuccess")});
               this.getIDCOptionData()
               this.getAssetData()
             } else {
-              this.$notify({
-                message: h('i', {style: 'color: teal'}, res.msg),
-                duration: 2000
-              });
+              this.$message.error(res.msg);
             }
           })
         }
@@ -1104,15 +1112,9 @@
             const h = this.$createElement;
             if (res.code === 200) {
               this.getAssetTypeOptionData()
-              this.$notify({
-                message: h('i', {style: 'color: teal'}, '添加成功'),
-                duration: 2000
-              });
+              this.$message({duration: 2000, type: 'success', message: this.$t("tip.saveSuccess")});
             } else {
-              this.$notify({
-                message: h('i', {style: 'color: teal'}, res.msg),
-                duration: 2000
-              });
+              this.$message.error(res.msg);
             }
           })
         }
@@ -1120,16 +1122,10 @@
           const h = this.$createElement;
           this.$post('sys/dict/save', this.addVendorData).then(res => {
             if (res.code === 200) {
-              this.$notify({
-                message: h('i', {style: 'color: teal'}, '添加成功'),
-                duration: 2000
-              });
+              this.$message({duration: 2000, type: 'success', message: this.$t("tip.saveSuccess")});
               this.getVendorOptionData()
             } else {
-              this.$notify({
-                message: h('i', {style: 'color: teal'}, res.msg),
-                duration: 2000
-              });
+              this.$message.error(res.msg);
             }
           })
         }
@@ -1140,16 +1136,10 @@
             const h = this.$createElement;
             if (res.code === 200) {
               this.getModelOptionData(this.assetType, this.vendorCode)
-              this.$notify({
-                message: h('i', {style: 'color: teal'}, '添加成功'),
-                duration: 2000
-              });
+              this.$message({duration: 2000, type: 'success', message: this.$t("tip.saveSuccess")});
               this.getAllModelOptionData(this.assetType)
             } else {
-              this.$notify({
-                message: h('i', {style: 'color: teal'}, res.msg),
-                duration: 2000
-              });
+              this.$message.error(res.msg);
             }
           })
         }
@@ -1158,68 +1148,70 @@
           this.$post('cabinet', this.addCabinetData).then(res => {
             const h = this.$createElement;
             if (res.code === 200) {
-              this.$notify({
-                message: h('i', {style: 'color: teal'}, '添加成功'),
-                duration: 2000
-              });
-              this.getCabinetOptionData(this.addCabinetData.idcId)
+              this.$message({duration: 2000, type: 'success', message: this.$t("tip.saveSuccess")});
+              this.getCabinetOptionData(this.addCabinetData.idcId);
+              this.editPopoverClose('cabinet');
             } else {
-              this.$notify({
-                message: h('i', {style: 'color: teal'}, res.msg),
-                duration: 2000
-              });
+              this.$message.error(res.msg);
             }
           })
         }
       },
       deleteData(data, item) {
-        this.$delete(data + "?ids=" + item).then(response => {
-          const h = this.$createElement;
-          if (response.code === 200) {
-            this.$notify({
-              message: h('i', {style: 'color: teal'}, '删除成功'),
-              duration: 2000
-            });
-            this.getAssetData()
-            this.getIDCOptionData()
-            this.getVendorOptionData()
-            this.getCabinetOptionData(this.assetData.idcId)
-            this.getAllModelOptionData(this.assetType)
-            this.getModelOptionData(this.assetType, this.vendorCode)
-          } else {
-            this.$notify({
-              message: h('i', {style: 'color: teal'}, response.msg),
-              duration: 2000
-            });
-          }
-        })
+        this.$confirm(this.$t("tip.confirmDelete"), {
+          confirmButtonText: this.$t("tip.yes"),
+          cancelButtonText: this.$t("tip.no"),
+          type: 'warning'
+        }).then(() => {
+          this.$delete(data + "?ids=" + item).then(response => {
+            const h = this.$createElement;
+            if (response.code === 200) {
+              this.$message({duration: 2000, type: 'success', message: this.$t("tip.deleteSuccess")});
+              this.getAssetData();
+              this.getIDCOptionData();
+              this.getVendorOptionData();
+              this.getCabinetOptionData(this.assetData.idcId);
+              this.getAllModelOptionData(this.assetType);
+              this.getModelOptionData(this.assetType, this.vendorCode);
+              if (data == 'asset') {
+                this.sendStateData('close');
+              }
+            } else {
+              this.$message.error(response.msg);
+            }
+          })
+        });
       },
       markOptionData(data) {
         data.forEach(item => {
           this.$set(item, 'isEdit', false);
           this.$set(item, 'oldName', item.value);
           this.$set(item, 'modelOldName', item.name);
-          this.$set(item, item.name, false)
-          this.$set(item, item.id, false)
-          this.$set(item, item.id + item.name, false)
-          this.$set(item, item.name + item.id, false)
+          this.$set(item, item.name, false);
+          this.$set(item, item.id, false);
+          this.$set(item, item.id + item.name, false);
+          this.$set(item, item.name + item.id, false);
         })
       },
       getConnectData() {
-        this.isResourceShow += 1
-        let resultData = []
-        let modelData = this.allModelUlData
+        this.isResourceShow += 1;
+        let resultData = [];
+        let modelData = this.allModelUlData;
         for (let i = 0; i < modelData.length; i++) {
-          let obj = {}
-          obj.id = modelData[i].vendor.id
-          obj.code = modelData[i].vendor.code
-          obj.value = modelData[i].vendor.code
-          obj.label = modelData[i].vendor.value
-          obj.children = []
-          resultData.push(obj)
+
+          if (!modelData[i].vendor) {
+            continue;
+          }
+          let obj = {};
+          obj.id = modelData[i].vendor.id;
+          obj.code = modelData[i].vendor.code;
+          obj.value = modelData[i].vendor.code;
+          obj.label = modelData[i].vendor.value;
+          obj.children = [];
+          resultData.push(obj);
         }
-        var result = [];
-        var obj1 = {};
+        let result = [];
+        let obj1 = {};
         for (let i = 0; i < resultData.length; i++) {
           if (!obj1[resultData[i].id]) {
             result.push(resultData[i]);
@@ -1228,6 +1220,9 @@
         }
         for (let x = 0; x < result.length; x++) {
           for (let y = 0; y < modelData.length; y++) {
+            if (!modelData[y].vendor) {
+              continue;
+            }
             if (result[x].code === modelData[y].vendor.code) {
               let obj2 = {}
               obj2.value = modelData[y].id
@@ -1341,13 +1336,12 @@
           item[item.name] = !item[item.name]
           this.cabinetOptionData.forEach(items => {
             if (items.id === data) {
-              this.popCabinetData.name = items.name
-              this.popCabinetData.uSize = items.uSize
-              this.popCabinetData.remark = items.remark
-
+              this.popCabinetData.name = items.name;
+              this.popCabinetData.uSize = items.uSize;
+              this.popCabinetData.remark = items.remark;
+              this.popCabinetData.idcId = items.idcId;
             }
           })
-          console.log(this.cabinetOptionData)
         }
       },
       getSingleAsset(data) {

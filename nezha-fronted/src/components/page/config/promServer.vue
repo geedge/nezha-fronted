@@ -2,63 +2,6 @@
   .prom {
     height: 100%;
   }
-  .prom .el-table {
-    border-radius: 5px;
-  }
-
-  .content-right-option {
-    cursor: pointer;
-    display: inline-block;
-    margin-right: 6px;
-  }
-  .content-right-option .el-icon-delete {
-    color: #F98D9A;
-  }
-  .content-right-option .el-icon-delete:hover {
-    color: #D96D7A;
-  }
-  .content-right-option .el-icon-view {
-    color: #60BEFF;
-  }
-  .content-right-option .el-icon-view:hover {
-    color: #409EFF;
-  }
-  .pop-window {
-    height: 370px;
-    width: 400px;
-  }
-
-  .pop-window-assetType {
-    height: 550px;
-    width: 400px;
-  }
-
-  .pop-window-assetType-content {
-    padding: 1px 15px 15px 20px;
-  }
-  .sidebar-pop-input {
-    position: absolute;
-    right: 50px;
-    width: 200px;
-    height: 26px;
-    border-radius: 4px;
-    border: 1px solid #DCDFE6;
-    color: #606266;
-    display: inline-block;
-    padding: 0px 15px;
-  }
-
-  .sidebar-pop-input-select {
-    position: absolute;
-    right: 83px;
-    width: 200px;
-    height: 26px;
-    border-radius: 4px;
-    border: 1px solid #DCDFE6;
-    color: #606266;
-    display: inline-block;
-    padding: 0px 15px;
-  }
 </style>
 <template>
     <div class="prom">

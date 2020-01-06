@@ -92,6 +92,7 @@
           v-for="(item, index) in tableTitle"
           v-if="item.show"
           min-width="110"
+          :width="item.width"
           :key="`col_${index}`"
           :label="item.label"
         >
@@ -110,7 +111,7 @@
               <span>{{scope.row.host}}</span>
             </div>
             <div v-if="item.prop=='资产状态'">
-              <span>{{scope.row.state==1?'在库':'出库'}}</span>
+              <span>{{scope.row.state==1 ? $t('asset.createAssetTab.inStock') : $t('asset.createAssetTab.notInStock')}}</span>
             </div>
             <div v-if="item.prop=='Module'">
               <div class="tab-input-square">{{scope.row.moduleNum}}</div>
@@ -139,25 +140,30 @@
             <div v-if="item.prop=='责任人电话'">
               <span>{{scope.row.idc.tel}}</span>
             </div>
-            <div v-if="item.prop == 'option'">
-                              <span @click="ssss(scope.row.id ,scope.row.host)" class="account-list-option"><i
-                                class="el-icon-monitor"></i></span>
-              <span @click.stop="deleteData('asset',scope.row.id)" class="account-list-option"><i
-                class="el-icon-delete"></i></span>
-              <span @click.stop="tagShow('showEdit',scope.row.id)" class="account-list-option"><i
-                class="el-icon-edit-outline"></i></span>
-              <span @click.stop="tagShow('showView',scope.row.id)" class="account-list-option"><i
-                class="el-icon-view"></i></span>
+            <div v-if="item.prop == 'option'" class="content-right-options">
+              <span @click.stop="deleteData('asset',scope.row.id)" class="content-right-option"><i
+                class="el-icon-delete"></i>
+              </span>
+              <span @click.stop="tagShow('showView',scope.row.id)" class="content-right-option"><i
+                class="el-icon-view"></i>
+              </span>
+              <span @click.stop="tagShow('showEdit',scope.row.id)" class="content-right-option"><i
+                class="el-icon-edit-outline"></i>
+              </span>
+              <span @click="ssss(scope.row.id ,scope.row.host)" class="content-right-option"><i
+                class="el-icon-monitor"></i>
+              </span>
             </div>
           </template>
         </el-table-column>
       </el-table>
       <Pagination :pageObj="pageObj" @pageNo='pageNo' @pageSize='pageSize' ref="Pagination"></Pagination>
-      <asset-add-unit :add-unit-show='addUnitShow' @refreshData="flushData"
-                      @sendStateData="tabControl"></asset-add-unit>
-      <asset-edit-unit :edit-unit-show='editUnitShow' @refreshData="flushData" @sendStateData="tabControl"
-                       ref="assetEditUnit"></asset-edit-unit>
     </div>
+
+    <asset-add-unit :add-unit-show='addUnitShow' @refreshData="flushData"
+                    @sendStateData="tabControl"></asset-add-unit>
+    <asset-edit-unit :edit-unit-show='editUnitShow' @refreshData="flushData" @sendStateData="tabControl"
+                     ref="assetEditUnit"></asset-edit-unit>
   </div>
 </template>
 
@@ -207,6 +213,7 @@
             label: this.$t("asset.tableTitle.host"),
             prop: 'HOST',
             show: true,
+            width: 130
           }, {
             label: this.$t("asset.tableTitle.assetState"),
             prop: '资产状态',
@@ -591,7 +598,6 @@
     width: 65px;
     border-radius: 3px;
     text-align: center;
-    margin-top: 6px;
     line-height: 23px;
     color: #aaaaaa;
   }

@@ -2,41 +2,6 @@
   .account {
     height: 100%;
   }
-
-  .content-right-option {
-    cursor: pointer;
-    display: inline-block;
-    margin-right: 6px;
-  }
-  .content-right-option .el-icon-delete {
-    color: #F98D9A;
-  }
-  .content-right-option .el-icon-delete:hover {
-    color: #D96D7A;
-  }
-  .content-right-option .el-icon-view {
-    color: #60BEFF;
-  }
-  .content-right-option .el-icon-view:hover {
-    color: #409EFF;
-  }
-
-  /* begin--右弹框滑入滑出动画*/
-  @keyframes slide-in-from-right {
-    from {right: -800px}
-    to {right: 0}
-  }
-  @keyframes slide-out-to-right {
-    from {right: 0}
-    to {right: -800px}
-  }
-  .right-box-enter-active {
-    animation: slide-in-from-right 0.4s;
-  }
-  .right-box-leave-active {
-    animation: slide-out-to-right 0.4s;
-  }
-  /* end--右弹框滑入滑出动画*/
 </style>
 <template>
     <div class="account">
