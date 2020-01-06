@@ -389,7 +389,7 @@
           }
           //this.$refs.addEndpointBox.show(false);
         } else if (type == 2) {
-          this.$refs.moduleBox.show(true);
+          this.$refs.moduleBox.show(true,true);
 
           if (this.$refs.projectBox) {
             this.$refs.projectBox.show(false);
