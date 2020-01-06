@@ -6,8 +6,9 @@
         <button type="button" v-if="module.id != ''" @click="del" class="nz-btn nz-btn-size-normal nz-btn-style-light">
           <span class="top-tool-btn-txt">{{$t('overall.delete')}}</span>
         </button>
-        <button type="button" @click="save" class="nz-btn nz-btn-size-normal nz-btn-style-normal">
-          <span class="top-tool-btn-txt">{{$t('overall.save')}}</span>
+        <button type="button" @click="saveOrToEdit" class="nz-btn nz-btn-size-normal nz-btn-style-normal">
+          <span v-if="rightBox.isEdit" class="top-tool-btn-txt">{{$t('overall.save')}}</span>
+          <span v-else class="top-tool-btn-txt">{{$t('overall.edit')}}</span>
         </button>
 
         <button type="button" @click="esc" class="nz-btn nz-btn-size-normal nz-btn-style-light nz-btn-style-square">
@@ -42,31 +43,36 @@
       <el-scrollbar class="right-box-form-box">
         <el-form class="right-box-form" :model="module" label-position="top" :rules="rules" ref="moduleForm">
           <el-form-item :label='$t("project.project.project")' prop="project">
-            <el-select value-key="id" popper-class="config-dropdown" v-model="module.project" placeholder="" size="small">
+            <el-select v-if="rightBox.isEdit" value-key="id" popper-class="config-dropdown" v-model="module.project" placeholder="" size="small">
               <el-option v-for="item in projectList" :key="item.id" :label="item.name" :value="item"></el-option>
             </el-select>
+            <div v-if="!rightBox.isEdit" class="right-box-form-content-txt">{{module.project.name}}</div>
           </el-form-item>
           <el-form-item :label='$t("project.module.moduleName")' prop="name">
-            <el-input placeholder="" maxlength="64" show-word-limit v-model="module.name" size="small"></el-input>
+            <el-input v-if="rightBox.isEdit" placeholder="" maxlength="64" show-word-limit v-model="module.name" size="small"></el-input>
+            <div v-if="!rightBox.isEdit" class="right-box-form-content-txt">{{module.name}}</div>
           </el-form-item>
           <el-form-item :label='$t("project.module.description")' prop="remark">
-            <el-input type="textarea" placeholder="" maxlength="1024" show-word-limit v-model="module.remark" size="small"></el-input>
+            <el-input v-if="rightBox.isEdit" type="textarea" placeholder="" maxlength="1024" show-word-limit v-model="module.remark" size="small"></el-input>
+            <div v-if="!rightBox.isEdit" class="right-box-form-content-txt">{{module.remark}}</div>
           </el-form-item>
-          <div class="right-box-form-tip">
+          <div class="right-box-form-tip" v-if="rightBox.isEdit">
             {{$t('project.module.tip.defaultEndpointSet')}}
             <div class="line-100"></div>
             {{$t('project.module.tip.relation')}}
           </div>
           <el-form-item :label='$t("project.endpoint.port")' prop="port">
-            <el-input placeholder="" v-model.number="module.port" size="small"></el-input>
+            <el-input v-if="rightBox.isEdit" placeholder="" v-model.number="module.port" size="small"></el-input>
+            <div v-if="!rightBox.isEdit" class="right-box-form-content-txt">{{module.port}}</div>
           </el-form-item>
           <el-form-item :label='$t("project.endpoint.path")' prop="path">
-            <el-input placeholder="" v-model="module.path" size="small"></el-input>
+            <el-input  v-if="rightBox.isEdit" placeholder="" v-model="module.path" size="small"></el-input>
+            <div v-if="!rightBox.isEdit" class="right-box-form-content-txt">{{module.path}}</div>
           </el-form-item>
           <el-form-item class="right-box-form-param">
             <template slot="label">
               <span>{{$t('project.endpoint.param')}}</span>
-              <div class="right-box-form-btns">
+              <div class="right-box-form-btns" v-if="rightBox.isEdit">
                 <button style="display: none;">第一个button会出现意料之外的hover样式，找不到原因，只好加个不可见的button规避问题</button>
                 <button type="button" @click="clearAllParam" class="nz-btn nz-btn-size-small nz-btn-style-light">
                   <span class="top-tool-btn-txt">{{$t('overall.clearAll')}}</span>
@@ -77,7 +83,7 @@
               </div>
             </template>
             <div class="param-box param-box-module">
-              <div class="param-box-row" v-for="(item, index) in module.paramObj">
+              <div class="param-box-row" v-for="(item, index) in module.paramObj" v-if="rightBox.isEdit">
                 <el-form-item class="param-box-row-key" :rules="{required: true, message: $t('validate.required'), trigger: 'blur'}" :prop="'paramObj.' + index + '.key'">
                   <el-input placeholder="key" size="mini" v-model="item.key"></el-input>
                 </el-form-item>
@@ -87,7 +93,11 @@
                 </el-form-item>
                 <span class="param-box-row-symbol" @click="removeParam(index)"><i class="nz-icon nz-icon-minus-square"></i></span>
               </div>
+              <div class="param-box-row" v-for="(item, index) in module.paramObj" v-if="!rightBox.isEdit">
+                <div  class="right-box-form-content-txt">{{item.key}}={{item.value}}</div>
+              </div>
             </div>
+
           </el-form-item>
 
         </el-form>
@@ -180,7 +190,8 @@
       return {
         rightBox: {
           show: false,
-          title: ''
+          title: '',
+          isEdit:false
         },
         rules: {
           name: [
@@ -197,8 +208,9 @@
       }
     },
     methods: {
-      show(show) {
+      show(show,isEdit) {
         this.rightBox.show = show;
+        this.rightBox.isEdit=isEdit
       },
 
       /*关闭弹框*/
@@ -238,7 +250,14 @@
           }
         });
       },
-
+      saveOrToEdit: function() {
+        if (!this.rightBox.isEdit) {
+          this.rightBox.isEdit = true;
+          this.rightBox.title = this.$t("project.module.editModule") + "  ID：" + this.module.id;
+        } else {
+          this.save();
+        }
+      },
       /*删除*/
       del() {
         this.$confirm(this.$t("tip.confirmDelete"), {
@@ -317,9 +336,10 @@
     watch: {
       module: {
         immediate: true,
+        deep:true,
         handler(n, o) {
           if (n && n.id) {
-            this.rightBox.title = this.$t("project.module.editModule") + "  ID：" + n.id;
+            this.rightBox.title =this.rightBox.isEdit? this.$t("project.module.editModule") + "  ID：" + n.id : this.$t("project.module.module") + "  ID：" + n.id ;
           } else {
             this.rightBox.title = this.$t("project.module.createModule");
           }

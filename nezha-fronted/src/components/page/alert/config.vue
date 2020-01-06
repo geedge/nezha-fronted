@@ -81,7 +81,11 @@
                         <span v-else-if="item.prop == 'type'">
                             <template v-for="type in typeData" v-if="type.key == scope.row[item.prop]">{{type.value}}</template>
                         </span>
-                        <span v-else-if="item.prop == 'linkObject' && scope.row[item.prop]">{{scope.row.type != 3 && scope.row.linkObject ? scope.row[item.prop].name : scope.row[item.prop].host}}</span>
+<!--                        <span v-else-if="item.prop == 'linkObject' && scope.row[item.prop]">{{scope.row.type != 3 && scope.row.linkObject ? scope.row[item.prop].name : scope.row[item.prop].host}}</span>-->
+                      <div v-else-if="item.prop == 'linkObject'">
+                        <span v-if="(scope.row['type'] == 1 || scope.row['type'] == 2) && scope.row[item.prop]" class="account-list-option" @click="viewAlertType(scope.row['type'],scope.row[item.prop])">{{scope.row[item.prop].name}}</span>
+                        <span v-if="scope.row['type'] == 3 && scope.row[item.prop]" class="account-list-option" @click="viewAlertType(scope.row['type'],scope.row[item.prop].id)">{{scope.row[item.prop].host}}</span>
+                      </div>
                         <span v-else>{{scope.row[item.prop]}}</span>
                     </template>
                 </el-table-column>
@@ -89,6 +93,9 @@
             <Pagination :pageObj="pageObj" @pageNo='pageNo' @pageSize='pageSize' ref="Pagination"></Pagination>
         </div>
         <alert-config-box :parentAlertRule="alertRule" @reload="getTableData" ref="alertConfigBox"></alert-config-box>
+        <project-box :project="viewProjectData" ref="projectBox"></project-box>
+        <module-box  :module="viewModuleData" @reload="" ref="moduleBox"></module-box>
+        <asset-edit-unit :edit-unit-show='viewAsset' @refreshData="" @sendStateData="" ref="assetEditUnit"></asset-edit-unit>
     </div>
 
 </template>
@@ -219,7 +226,10 @@ export default {
           show: true,
         }
       ],
-      tableData: []
+      tableData: [],
+      viewProjectData:null,
+      viewModuleData:null,
+      viewAsset:false,
     }
   },
   methods: {
@@ -309,6 +319,45 @@ export default {
         }
       }
       this.getTableData();
+    },
+    viewAlertType:function(type,typeObj){
+      console.log(typeObj)
+      this.closeViews();
+      switch (type) {
+        case 1:
+          this.viewProjectData=typeObj;
+          this.$refs.projectBox.show(true);
+          break;
+        case 2:
+          this.fillProject(typeObj);
+          let tempObj=JSON.parse(typeObj.param)
+          this.$set(typeObj, 'paramObj', []);
+          for (let k in tempObj) {
+            typeObj.paramObj.push({key: k, value: tempObj[k]});
+          }
+          this.viewModuleData=typeObj;
+
+          this.$refs.moduleBox.show(true);
+          break;
+        case 3:
+          this.viewAsset=true;
+          this.$refs.assetEditUnit.getAssetData(typeObj);
+          this.$refs.assetEditUnit.tabView=true;
+          break;
+      }
+    },
+    fillProject:function(module){
+      this.$get('project', {"id":module.projectId}).then(response => {
+        if (response.code == 200) {
+          module.project = response.data.list[0];
+        }
+      })
+    },
+    closeViews:function(){
+      this.$refs.alertConfigBox.show(false,false);
+      this.$refs.projectBox.show(false,false);
+      this.$refs.moduleBox.show(false,false);
+      this.viewAsset=false;
     }
   },
   mounted() {

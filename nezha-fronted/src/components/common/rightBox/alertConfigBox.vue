@@ -6,7 +6,7 @@
         <button type="button" v-if="alertRule.id != ''" @click="del" class="nz-btn nz-btn-size-normal nz-btn-style-light">
           <span class="top-tool-btn-txt">{{$t('overall.delete')}}</span>
         </button>
-        <button type="button" @click="save" class="nz-btn nz-btn-size-normal nz-btn-style-normal">
+        <button type="button" @click="saveOrToEdit" class="nz-btn nz-btn-size-normal nz-btn-style-normal">
           <span v-if="rightBox.isEdit" class="top-tool-btn-txt">{{$t('overall.save')}}</span>
           <span v-else class="top-tool-btn-txt">{{$t('overall.edit')}}</span>
         </button>

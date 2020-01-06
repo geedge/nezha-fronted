@@ -79,7 +79,7 @@
           :label="item.label"
         >
           <template slot-scope="scope" :column="item">
-            <span v-if="item.prop == 'asset' && scope.row[item.prop]">{{scope.row[item.prop].host}}</span>
+            <span  v-if="item.prop == 'asset' && scope.row[item.prop]"  @click="viewAsset(scope.row[item.prop].id)">{{scope.row[item.prop].host}}</span>
             <span v-else-if="item.prop == 'param'">
               <span v-for="p in scope.row.paramObj">{{p.key}}={{p.value}}，</span>
             </span>
@@ -103,6 +103,7 @@
     <module-box :currentProject="currentProject" :module="editModule" @reload="getModuleList" ref="moduleBox"></module-box>
     <edit-endpoint-box :currentProject="currentProject" :currentModule="currentModule" :endpoint="editEndpoint" @reload="getEndpointTableData" ref="editEndpointBox"></edit-endpoint-box>
     <add-endpoint-box :currentProject="currentProject" :currentModule="currentModule" @reload="getEndpointTableData" ref="addEndpointBox"></add-endpoint-box>
+    <asset-edit-unit :edit-unit-show='viewAssetState' @refreshData="" @sendStateData="" ref="assetEditUnit"></asset-edit-unit>
   </div>
 </template>
 
@@ -211,6 +212,7 @@
             disabled: false
           }],
         },
+        viewAssetState:false,
       }
     },
     methods: {
@@ -413,7 +415,7 @@
         if (!time) {
           return;
         }
-        let date = new Date(time*1000);
+        let date = new Date(time * 1000);
         let year = date.getFullYear();
         let month = date.getMonth() + 1 < 10 ? "0" + (date.getMonth() + 1) : date.getMonth() + 1;
         let day = date.getDate() < 10 ? "0" + date.getDate() : date.getDate();
@@ -422,8 +424,12 @@
         let seconds = date.getSeconds() < 10 ? "0" + date.getSeconds() : date.getSeconds();
 
         return year + "-" + month + "-" + day + " " + hours + ":" + minutes + ":" + seconds;
+      },
+      viewAsset:function(id){
+        this.viewAssetState=true;
+        this.$refs.assetEditUnit.getAssetData(id);
+        this.$refs.assetEditUnit.tabView=true;
       }
-
     },
     created() {
       this.currentProject = this.$store.state.currentProject;

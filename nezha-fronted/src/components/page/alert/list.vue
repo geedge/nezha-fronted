@@ -185,10 +185,13 @@
                   :label="item.label"
                 >
                     <template slot-scope="scope" :column="item">
-                        <div v-if="item.prop == 'type'" class="account-list-options">
-                            <span v-if="scope.row[item.prop] == 1" class="account-list-option">Project</span>
-                            <span v-if="scope.row[item.prop] == 2" class="account-list-option">Module</span>
-                            <span v-if="scope.row[item.prop] == 3" class="account-list-option">Device</span>
+                      <span v-if="item.prop == 'alertRule'" class="account-list-option" @click="viewRule(scope.row[item.prop].id)">
+                          {{scope.row[item.prop].alertName}}
+                        </span>
+                        <div v-else-if="item.prop == 'type'" class="account-list-options">
+                            <span v-if="scope.row[item.prop] == 1" >Project</span>
+                            <span v-if="scope.row[item.prop] == 2" >Module</span>
+                            <span v-if="scope.row[item.prop] == 3" >Device</span>
                         </div>
                         <span v-else-if="item.prop == 'severity'">
                             <span v-if="scope.row[item.prop] == 'high'"><i class="el-icon-arrow-up"></i>&nbsp;{{severityData[1].value}}</span>
@@ -196,8 +199,8 @@
                             <span v-if="scope.row[item.prop] == 'low'"><i class="el-icon-arrow-down"></i>&nbsp;{{severityData[2].value}}</span>
                         </span>
                         <div v-else-if="item.prop == 'linkObject'">
-                            <span v-if="(scope.row['type'] == 1 || scope.row['type'] == 2) && scope.row[item.prop]" class="account-list-option">{{scope.row[item.prop].name}}</span>
-                            <span v-if="scope.row['type'] == 3 && scope.row[item.prop]" class="account-list-option">{{scope.row[item.prop].host}}</span>
+                            <span v-if="(scope.row['type'] == 1 || scope.row['type'] == 2) && scope.row[item.prop]" class="account-list-option" @click="viewAlertType(scope.row['type'],scope.row[item.prop])">{{scope.row[item.prop].name}}</span>
+                            <span v-if="scope.row['type'] == 3 && scope.row[item.prop]" class="account-list-option" @click="viewAlertType(scope.row['type'],scope.row[item.prop].id)">{{scope.row[item.prop].host}}</span>
                         </div>
                         <div v-else-if="item.prop == 'state'">
                             <span class="account-list-option">
@@ -211,7 +214,10 @@
             </el-table>
             <Pagination :pageObj="pageObj" @pageNo='pageNo' @pageSize='pageSize' ref="Pagination"></Pagination>
         </div>
-
+      <alert-config-box :parentAlertRule="viewRuleData" @reload="" ref="alertConfigBox"></alert-config-box>
+      <project-box :project="viewProjectData" ref="projectBox"></project-box>
+      <module-box  :module="viewModuleData" @reload="" ref="moduleBox"></module-box>
+      <asset-edit-unit :edit-unit-show='viewAssetState' @refreshData="" @sendStateData="" ref="assetEditUnit"></asset-edit-unit>
     </div>
 
 </template>
@@ -227,8 +233,13 @@ export default {
       },
       tableTitle: [
         {
+          label:'ID',
+          prop:'id',
+          show:false
+        },
+        {
           label: this.$t("alert.alertName"),
-          prop: 'alertName',
+          prop: 'alertRule',
           show: true
         }, {
           label: this.$t("alert.list.type"),
@@ -303,7 +314,11 @@ export default {
           value: this.$t("alert.config.low")
         }
       ],
-      tableData: []
+      tableData: [],
+      viewRuleData:null,
+      viewProjectData:null,
+      viewModuleData:null,
+      viewAssetState:false,
     }
   },
   methods: {
@@ -343,6 +358,54 @@ export default {
         }
       }
       this.getAlertList();
+    },
+    viewRule:function(id){
+      this.closeViews();
+      this.$get('alert/rule', {"id":id}).then(response => {
+        if (response.code == 200) {
+          this.viewRuleData = response.data.list[0];
+          this.$refs.alertConfigBox.show(true);
+        }
+      })
+    },
+    viewAlertType:function(type,typeObj){
+      console.log(typeObj)
+      this.closeViews();
+      switch (type) {
+        case 1:
+          this.viewProjectData=typeObj;
+          this.$refs.projectBox.show(true);
+          break;
+        case 2:
+          this.fillProject(typeObj);
+          let tempObj=JSON.parse(typeObj.param)
+          this.$set(typeObj, 'paramObj', []);
+          for (let k in tempObj) {
+            typeObj.paramObj.push({key: k, value: tempObj[k]});
+          }
+          this.viewModuleData=typeObj;
+
+          this.$refs.moduleBox.show(true);
+          break;
+        case 3:
+          this.viewAssetState=true;
+          this.$refs.assetEditUnit.getAssetData(typeObj);
+          this.$refs.assetEditUnit.tabView=true;
+          break;
+      }
+    },
+    fillProject:function(module){
+      this.$get('project', {"id":module.projectId}).then(response => {
+        if (response.code == 200) {
+          module.project = response.data.list[0];
+        }
+      })
+    },
+    closeViews:function(){
+      this.$refs.alertConfigBox.show(false,false);
+      this.$refs.projectBox.show(false,false);
+      this.$refs.moduleBox.show(false,false);
+      this.viewAssetState=false;
     }
   },
   mounted() {

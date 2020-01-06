@@ -6,8 +6,9 @@
         <button type="button" v-if="project.id != ''" @click="del" class="nz-btn nz-btn-size-normal nz-btn-style-light">
           <span class="top-tool-btn-txt">{{$t('overall.delete')}}</span>
         </button>
-        <button type="button" @click="save" class="nz-btn nz-btn-size-normal nz-btn-style-normal">
-          <span class="top-tool-btn-txt">{{$t('overall.save')}}</span>
+        <button type="button" @click="saveOrToEdit" class="nz-btn nz-btn-size-normal nz-btn-style-normal">
+          <span v-if="rightBox.isEdit" class="top-tool-btn-txt">{{$t('overall.save')}}</span>
+          <span v-else class="top-tool-btn-txt">{{$t('overall.edit')}}</span>
         </button>
         <button type="button" @click="esc" class="nz-btn nz-btn-size-normal nz-btn-style-light nz-btn-style-square">
           <span class="top-tool-btn-txt"><i class="el-icon-close"></i></span>
@@ -21,10 +22,12 @@
       <el-scrollbar class="right-box-form-box">
         <el-form class="right-box-form" :model="project" label-position="top" :rules="rules" ref="projectForm">
           <el-form-item :label='$t("project.project.projectName")' prop="name">
-            <el-input size="mini" maxlength="64" show-word-limit v-model="project.name"></el-input>
+            <el-input v-if="rightBox.isEdit" size="mini" maxlength="64" show-word-limit v-model="project.name"></el-input>
+            <div v-if="!rightBox.isEdit" class="right-box-form-content-txt">{{project.name}}</div>
           </el-form-item>
           <el-form-item :label='$t("project.project.description")'>
-            <el-input size="mini" type="textarea" maxlength="1024" show-word-limit v-model="project.remark"></el-input>
+            <el-input v-if="rightBox.isEdit" size="mini" type="textarea" maxlength="1024" show-word-limit v-model="project.remark"></el-input>
+            <div v-if="!rightBox.isEdit" class="right-box-form-content-txt">{{project.remark}}</div>
           </el-form-item>
         </el-form>
       </el-scrollbar>
@@ -48,7 +51,8 @@
         rightBox: {
           show: false,
           title: '',
-          isCreate: false
+          isCreate: false,
+          isEdit:false
         },
         rules: {
           name: [
@@ -58,8 +62,9 @@
       }
     },
     methods: {
-      show(show) {
+      show(show,isEdit) {
         this.rightBox.show = show;
+        this.rightBox.isEdit=isEdit;
       },
 
       /*关闭弹框*/
@@ -99,7 +104,14 @@
           }
         });
       },
-
+      saveOrToEdit: function() {
+        if (!this.rightBox.isEdit) {
+          this.rightBox.isEdit = true;
+          this.rightBox.title = this.$t("project.module.editProject") + "  ID：" + this.project.id;
+        } else {
+          this.save();
+        }
+      },
       /*删除*/
       del() {
         this.$confirm(this.$t("tip.confirmDelete"), {
@@ -124,7 +136,7 @@
         immediate: true,
         handler(n, o) {
           if (n && n.id) {
-            this.rightBox.title = this.$t("project.project.editProject") + "  ID：" + n.id;
+            this.rightBox.title =this.rightBox.isEdit? this.$t("project.project.editProject") + "  ID：" + n.id : this.$t("project.project.project") + "  ID：" + n.id;
           } else {
             this.rightBox.title = this.$t("project.project.createProject");
           }
