@@ -294,7 +294,7 @@ export default {
           this.$refs.projectBox.show(true);
           break;
         case 2:
-          this.fillProject(typeObj);
+          // this.fillProject(typeObj);
           let tempObj = JSON.parse(typeObj.param)
           this.$set(typeObj, 'paramObj', []);
           for (let k in tempObj) {

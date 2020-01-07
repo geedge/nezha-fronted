@@ -23,111 +23,153 @@
       <!-- end--标题-->
 
       <!-- begin--表单-->
-      <!--<el-scrollbar class="right-box-form-box">
-        <el-form class="right-box-form" :model="module" label-position="top" :rules="rules" ref="moduleForm">
-        </el-form>
-      </el-scrollbar>-->
-      <div class="right-box-form">
-        <!--project-->
-        <div class="right-box-form-row">
-          <div class="right-box-form-label">{{$t("project.project.project")}}</div>
-          <div class="right-box-form-content">
+      <el-scrollbar class="right-box-form-box">
+        <el-form class="right-box-form" :model="endpoint" label-position="top" :rules="rules" ref="endPointForm">
+          <!--project-->
+          <el-form-item :label="$t('project.project.project')" prop="project.id">
             <el-select @change="((val) => {changeProject(val);})" value-key="id" popper-class="config-dropdown" v-model="currentProject" placeholder="" v-if="rightBox.isEdit" size="small">
               <el-option v-for="item in projectList" :key="item.id" :label="item.name" :value="item"></el-option>
             </el-select>
             <div v-if="!rightBox.isEdit" class="right-box-form-content-txt">{{endpoint.project.name}}</div>
-          </div>
-        </div>
-        <!--module-->
-        <div class="right-box-form-row">
-          <div class="right-box-form-label">{{$t("project.module.module")}}</div>
-          <div class="right-box-form-content">
+          </el-form-item>
+          <!--module-->
+          <el-form-item :label="$t('project.module.module')" prop="module.id">
             <el-select @change="((val) => {changeModule(val);})" value-key="id" popper-class="config-dropdown" v-model="currentModule" placeholder="" v-if="rightBox.isEdit" size="small">
               <el-option v-for="item in moduleList" :key="item.id" :label="item.name" :value="item"></el-option>
             </el-select>
             <div v-if="!rightBox.isEdit" class="right-box-form-content-txt">{{endpoint.module.name}}</div>
-          </div>
-        </div>
-        <!--host-->
-        <div class="right-box-form-row">
-          <div class="right-box-form-label">{{$t("project.endpoint.host")}}</div>
-          <div class="right-box-form-content">
-            <el-input
-              class="right-box-row-with-btn"
-              v-if="rightBox.isEdit"
-              placeholder=""
-              v-model="endpoint.host"
-              size="small"
-            ></el-input>
-            <div @click="showSubBox(true)" class="right-box-row-btn right-box-row-btn-active" v-if="rightBox.isEdit">
-              <span class="el-icon-more"></span>
+          </el-form-item>
+          <!--host-->
+          <el-form-item :label="$t('project.endpoint.host')" prop="host">
+            <div class="right-box-form-content">
+              <el-input class="right-box-row-with-btn" v-if="rightBox.isEdit" placeholder="" v-model="endpoint.host" size="small"></el-input>
+              <el-popover placement="left"width="400" v-model="subBox.show">
+                <div class="pop-window-assetType-content">
+                  <!-- begin--顶部按钮-->
+                  <div class="pop-top-btns">
+                    <button type="button" @click="subEsc" class="nz-btn nz-btn-size-normal nz-btn-style-light nz-btn-style-square">
+                      <span class="top-tool-btn-txt"><i class="el-icon-close"></i></span>
+                    </button>
+                  </div>
+                  <!-- end--顶部按钮-->
+                  <!--begin--标题-->
+                  <div class="pop-title">{{subBox.title}}</div>
+                  <!--end--标题-->
+                  <!---->
+                  <div class="pop-item-wider " >
+                    <!-- begin--搜索框-->
+                    <div class="endpoint-asset-search">
+                      <button type="button" class="nz-btn nz-btn-size-small nz-btn-style-light nz-btn-style-square nz-input-group-prepend" @click="assetSearch.dropdownShow = !assetSearch.dropdownShow">
+                        <span class="endpoint-asset-label-txt">{{assetSearch.label}}</span>
+                        <span>
+                          <i v-if="assetSearch.dropdownShow" class="el-icon-caret-top"></i>
+                          <i v-if="!assetSearch.dropdownShow" class="el-icon-caret-bottom"></i>
+                        </span>
+                      </button>
+                      <div class="endpoint-asset-search-input">
+                        <el-input class="input-x-mini nz-input-group-middle" placeholder="" v-model="assetSearch.text"></el-input>
+                      </div>
+                      <button type="button" class="nz-btn nz-btn-size-small nz-btn-style-light nz-btn-style-square nz-input-group-append">
+                        <i @click="searchAsset" class="el-icon-search"></i>
+                      </button>
+
+                      <div class="endpoint-asset-search-dropdown" v-if="assetSearch.dropdownShow">
+                        <div @click="dropdownSelect('IP')" class="endpoint-asset-search-dropdown-item">IP</div>
+                        <div @click="dropdownSelect('SN')" class="endpoint-asset-search-dropdown-item">SN</div>
+                      </div>
+                    </div>
+                    <!-- end--搜索框-->
+                    <!-- begin--table-->
+                    <div class="endpoint-sub-table">
+                      <div class="endpoint-sub-table-head">
+                        <div class="endpoint-sub-table-col">IP</div>
+                        <div class="endpoint-sub-table-col">SN</div>
+                      </div>
+                      <div class="line-100"></div>
+                      <div class="endpoint-sub-table-body">
+                        <div v-if="selectedAsset.id != ''" :data="selectedAsset.id" class="endpoint-sub-table-row endpoint-sub-table-row-selected">
+                          <div class="endpoint-sub-table-col">{{selectedAsset.host}}</div>
+                          <div class="endpoint-sub-table-col">{{selectedAsset.sn}}</div>
+                        </div>
+                        <div v-else class="endpoint-sub-table-row"></div>
+                        <div @click="selectAsset(item)" :data="item.id" v-for="item in assetList" class="endpoint-sub-table-row" :class="{'endpoint-sub-table-row-active': item.id == selectedAsset.id}">
+                          <div class="endpoint-sub-table-col">{{item.host}}</div>
+                          <div class="endpoint-sub-table-col">{{item.sn}}</div>
+                        </div>
+                      </div>
+                      <div class="endpoint-sub-table-paginate">
+                        <div class="endpoint-sub-table-paginate-all">All:&nbsp;{{assetPageObj.total}}</div>
+                        <el-pagination background :pager-count="5" layout="prev, pager, next" @current-change="(currentPage) => {getAssetList(currentPage)}" :total="assetPageObj.total"></el-pagination>
+                      </div>
+                    </div>
+                    <!-- end--table-->
+                  </div>
+                </div>
+                <div slot="reference" @click.prevent="" class="right-box-row-btn" v-if="rightBox.isEdit">
+                  <span class="el-icon-more"></span>
+                </div>
+              </el-popover>
+              <div v-if="!rightBox.isEdit" class="right-box-form-content-txt">{{endpoint.host}}</div>
             </div>
-            <div v-if="!rightBox.isEdit" class="right-box-form-content-txt">{{endpoint.host}}</div>
-          </div>
-        </div>
-        <!--port-->
-        <div class="right-box-form-row">
-          <div class="right-box-form-label">{{$t("project.endpoint.port")}}</div>
-          <div class="right-box-form-content">
-            <el-input
-              v-if="rightBox.isEdit"
-              placeholder=""
-              v-model="endpoint.port"
-              size="small"
-            ></el-input>
+          </el-form-item>
+          <!--port-->
+          <el-form-item :label="$t('project.endpoint.port')" prop="port">
+            <el-input v-if="rightBox.isEdit" placeholder="" v-model="endpoint.port" size="small"></el-input>
             <div v-if="!rightBox.isEdit" class="right-box-form-content-txt">{{endpoint.port}}</div>
-          </div>
-        </div>
-        <!--path-->
-        <div class="right-box-form-row">
-          <div class="right-box-form-label">{{$t("project.endpoint.path")}}</div>
-          <div class="right-box-form-content">
-            <el-input
-              v-if="rightBox.isEdit"
-              placeholder=""
-              v-model="endpoint.path"
-              size="small"
-            ></el-input>
+          </el-form-item>
+          <!--path-->
+          <el-form-item :label="$t('project.endpoint.port')" prop="path">
+            <el-input v-if="rightBox.isEdit" placeholder="" v-model="endpoint.path" size="small"></el-input>
             <div v-if="!rightBox.isEdit" class="right-box-form-content-txt">{{endpoint.path}}</div>
-          </div>
-        </div>
-        <!--param-->
-        <div class="right-box-form-row">
-          <div class="right-box-form-label">
-            {{$t("project.endpoint.param")}}
-            <el-button v-if="rightBox.isEdit" class="param-btn param-btn-active margin-l-10" size="mini" @click="addParam"><i class="el-icon-plus"></i>{{$t('overall.add')}}</el-button>
-            <el-button v-if="rightBox.isEdit" class="param-btn param-btn-clear" size="mini" @click="clearAllParam">{{$t('overall.clearAll')}}</el-button>
-          </div>
-          <div class="right-box-form-content">
-            <div class="param-box param-box-endpoint" v-if="rightBox.isEdit">
-              <div class="param-box-row" v-for="(item, index) in endpoint.paramObj">
-                <el-input :disabled="!rightBox.isEdit" placeholder="key" class="param-box-row-key" size="mini" v-model="item.key"></el-input>
+          </el-form-item>
+          <!--param-->
+          <el-form-item class="right-box-form-param">
+            <template slot="label">
+              <span>{{$t('project.endpoint.param')}}</span>
+              <div class="right-box-form-btns" v-if="rightBox.isEdit">
+                <button style="display: none;">第一个button会出现意料之外的hover样式，找不到原因，只好加个不可见的button规避问题</button>
+                <button type="button" @click="clearAllParam" class="nz-btn nz-btn-size-small nz-btn-style-light">
+                  <span class="top-tool-btn-txt">{{$t('overall.clearAll')}}</span>
+                </button>
+                <button type="button" @click="addParam" class="nz-btn nz-btn-size-small nz-btn-style-normal">
+                  <span class="top-tool-btn-txt">{{$t('overall.add')}}</span>
+                </button>
+              </div>
+            </template>
+            <div class="param-box param-box-module">
+              <div class="param-box-row" v-for="(item, index) in endpoint.paramObj" v-if="rightBox.isEdit">
+                <el-form-item class="param-box-row-key" :rules="{required: true, message: $t('validate.required'), trigger: 'blur'}" :prop="'paramObj.' + index + '.key'">
+                  <el-input placeholder="key" size="mini" v-model="item.key"></el-input>
+                </el-form-item>
                 <span class="param-box-row-eq">=</span>
-                <el-input :disabled="!rightBox.isEdit" placeholder="value" class="param-box-row-value" size="mini" v-model="item.value"></el-input>
-                <span v-if="rightBox.isEdit" class="param-box-row-symbol" @click="removeParam(index)"><i class="el-icon-minus"></i></span>
+                <el-form-item class="param-box-row-value" :rules="{required: true, message: $t('validate.required'), trigger: 'blur'}" :prop="'paramObj.' + index + '.value'">
+                  <el-input placeholder="value" size="mini" v-model="item.value"></el-input>
+                </el-form-item>
+                <span class="endpoint-box-row-symbol" @click="removeParam(index)"><i class="nz-icon nz-icon-minus-square"></i></span>
+              </div>
+              <div class="param-box-row" v-for="(item, index) in endpoint.paramObj" v-if="!rightBox.isEdit">
+                <div  class="right-box-form-content-txt">{{item.key}}={{item.value}}</div>
               </div>
             </div>
-            <div v-else class="right-box-form-content-txt">
-              <div v-for="(item, index) in endpoint.paramObj">{{item.key}}={{item.value}}</div>
-            </div>
-          </div>
-        </div>
-      </div>
+
+          </el-form-item>
+        </el-form>
+      </el-scrollbar>
       <!-- end--表单-->
 
       <!-- begin--子弹框-->
-      <transition name="right-sub-box">
+      <!--<transition name="right-sub-box">
         <div class="right-sub-box" @click.stop v-if="subBox.show">
-          <!-- begin--标题-->
+          &lt;!&ndash; begin&#45;&#45;标题&ndash;&gt;
           <div class="right-box-title">{{subBox.title}}</div>
-          <!-- end--标题-->
+          &lt;!&ndash; end&#45;&#45;标题&ndash;&gt;
           <div class="right-box-top-btn right-box-top-btn-full" @click="subEsc">
             <div class="right-box-btn-icon">
               <i class="el-icon-close"></i>
             </div>
             <span>{{$t('overall.esc')}}</span>
           </div>
-          <!-- begin--搜索框-->
+          &lt;!&ndash; begin&#45;&#45;搜索框&ndash;&gt;
           <el-input placeholder="" v-model="assetSearch.text">
             <template slot="prepend">
               <div class="endpoint-asset-prepend">
@@ -146,9 +188,9 @@
             </template>
             <template slot="append"><i @click="searchAsset" class="el-icon-search"></i></template>
           </el-input>
-          <!-- end--搜索框-->
+          &lt;!&ndash; end&#45;&#45;搜索框&ndash;&gt;
 
-          <!-- begin--table-->
+          &lt;!&ndash; begin&#45;&#45;table&ndash;&gt;
           <div class="endpoint-sub-table">
             <div class="endpoint-sub-table-head">
               <div class="endpoint-sub-table-col">IP</div>
@@ -168,18 +210,12 @@
             </div>
             <div class="endpoint-sub-table-paginate">
               <div class="endpoint-sub-table-paginate-all">All:&nbsp;{{assetPageObj.total}}</div>
-              <el-pagination
-                background
-                :pager-count="5"
-                layout="prev, pager, next"
-                @current-change="(currentPage) => {getAssetList(currentPage)}"
-                :total="assetPageObj.total">
-              </el-pagination>
+              <el-pagination background :pager-count="5" layout="prev, pager, next" @current-change="(currentPage) => {getAssetList(currentPage)}" :total="assetPageObj.total"></el-pagination>
             </div>
           </div>
-          <!-- end--table-->
+          &lt;!&ndash; end&#45;&#45;table&ndash;&gt;
         </div>
-      </transition>
+      </transition>-->
       <!-- end--子弹框-->
     </div>
   </transition>
@@ -202,7 +238,21 @@
         selectedAsset: {id: '', host: '', sn: ''}, //endpoint侧滑框中选中的asset
         projectList: [],
         moduleList: [],
-        assetList: []
+        assetList: [],
+        rules:{
+          'project.id':[
+            {required:true,message:this.$t('validate.required'),trigger:'change'}
+          ],
+          'module.id':[
+            {required:true,message:this.$t('validate.required'),trigger:'change'}
+          ],
+          port:[
+            {required:true,message:this.$t('validate.required'),trigger:'blur'}
+          ],
+          path:[
+            {required:true,message:this.$t('validate.required'),trigger:'blur'}
+          ]
+        }
       }
     },
     methods: {
@@ -342,20 +392,27 @@
 
       //保存endpoint
       save() {
-        this.endpoint.moduleId = this.currentModule.id;
-        this.endpoint.projectId = this.currentProject.id;
-        this.endpoint.param = this.paramToJson(this.endpoint.paramObj);
-        let requestData = [];
-        requestData.push(this.endpoint);
-        this.$put('endpoint', requestData).then(response => {
-          if (response.code === 200) {
-            this.$message({duration: 1000, type: 'success', message: this.$t("tip.saveSuccess")});
-            this.esc();
-            this.$emit("reload");
-          } else {
-            this.$message.error(response.msg);
+        this.$refs.endPointForm.validate((valide=>{
+          if(valide){
+            this.endpoint.moduleId = this.currentModule.id;
+            this.endpoint.projectId = this.currentProject.id;
+            this.endpoint.param = this.paramToJson(this.endpoint.paramObj);
+            let requestData = [];
+            requestData.push(this.endpoint);
+            this.$put('endpoint', requestData).then(response => {
+              if (response.code === 200) {
+                this.$message({duration: 1000, type: 'success', message: this.$t("tip.saveSuccess")});
+                this.esc();
+                this.$emit("reload");
+              } else {
+                this.$message.error(response.msg);
+              }
+            });
+          }else{
+            return false;
           }
-        });
+        }))
+
       },
 
       //删除endpoint
@@ -504,46 +561,60 @@
     float: right;
     margin: 7px 0 0 0;
   }
+  .pop-item-wider{
+    padding-top:5px;
+    height: 400px;
+  }
   /* begin--搜索框*/
-  .endpoint-asset-prepend {
-    border-radius: 4px 0 0 4px;
+  .endpoint-asset-search {
+    display: inline-block;
+    float: left;
+    padding: 7px 8px 0 0;
+    position: relative;
   }
-  .endpoint-asset-label {
-    line-height: 26px;
-    height: 26px;
-  }
-  .endpoint-asset-dropdown {
+  .endpoint-asset-search-dropdown {
     position: absolute;
-    top: 27px;
-    background-color: #656565;
+    top: 34px;
+    background-color: #444;
     border-radius: 4px;
-    width: 52px;
+    width: 44px;
     left: 0;
+    z-index: 1;
   }
-  .endpoint-asset-dropdown-item {
+  .endpoint-asset-search-dropdown-item {
     text-align: center;
     line-height: 22px;
     height: 22px;
     cursor: default;
+    color: white;
+    font-size: 12px;
   }
   .endpoint-asset-label-txt {
     display: inline-block;
     width: 19px;
     text-align: center;
   }
-  .endpoint-asset-dropdown-item:first-of-type {
+  .endpoint-asset-search-dropdown-item:first-of-type {
     border-radius: 4px 4px 0 0;
   }
-  .endpoint-asset-dropdown-item:last-of-type {
+  .endpoint-asset-search-dropdown-item:last-of-type {
     border-radius: 0 0 4px 4px;
   }
-  .endpoint-asset-dropdown-item:hover {
-    background-color: #3a8ee6;
+  .endpoint-asset-search-dropdown-item:hover {
+    background-color: #222;
+    color: #ff9900;
+  }
+  .endpoint-asset-search-input {
+    display: inline-block;
+    width: 100px;
+    vertical-align: middle;
   }
   /* end--搜索框*/
   /* begin--table*/
   .endpoint-sub-table {
-    padding-top: 25px;
+    margin-top:20px;
+    padding-top: 15px;
+    height: calc(100% - 45px);
   }
   .line-100 {
     margin-bottom: 3px;
@@ -552,10 +623,16 @@
     line-height: 28px;
     height: 30px;
   }
-  .endpoint-sub-table-row {
+  .endpoint-sub-table-row, .endpoint-sub-table-row-disabled {
     line-height: 28px;
     height: 30px;
     color: #656565;
+    margin-bottom: 5px;
+  }
+  .endpoint-sub-table-row:hover {
+    background-color: #dadada;
+    cursor: default;
+
   }
   .endpoint-sub-table-row-active {
     background-color: #dadada;
@@ -566,7 +643,7 @@
   }
   .endpoint-sub-table-col {
     display: inline-block;
-    width: 45%;
+    width: calc(50% - 15px);
     padding-left: 10px;
   }
   .endpoint-sub-table-paginate-all {
@@ -577,6 +654,19 @@
   }
   .endpoint-sub-table-body {
     font-size: 15px;
+    position: relative;
+    overflow: auto;
+    height: calc(100% - 54px);
+  }
+  .endpoint-sub-table-body-dialog {
+    width: 100%;
+    height: 100%;
+    background-color: #e9ebec;
+    position: absolute;
+    opacity: 0.2;
+  }
+  .endpoints-clear-btn {
+    margin: 6px 0 0 7px;
   }
   /* end--table*/
 

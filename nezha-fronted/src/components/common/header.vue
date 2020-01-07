@@ -313,10 +313,10 @@
           this.$refs.panelBox.show(true);
           this.editPanel = {id: '', name: ''};
         }else  if (item.type == 1) {
-          this.$refs.projectBox.show(true);
+          this.$refs.projectBox.show(true,true);
           this.editProject = {id: '', name: '', remark: ''};
         } else if (item.type == 2) {
-          this.$refs.moduleBox.show(true);
+          this.$refs.moduleBox.show(true,true);
           this.editModule = {
             id: '',
             name: '',

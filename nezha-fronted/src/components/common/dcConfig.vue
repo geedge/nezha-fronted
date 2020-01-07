@@ -1,36 +1,42 @@
 <template>
-  <el-popover :placement="placement" :title="title"   width="400" @hide="hidePop"  ref="popBox" v-model="popBox.show">
-    <!-- begin--顶部按钮-->
-    <div class="">
-      <button type="button" v-if="popBox.isEdit && idc.id != ''" @click="del" class="nz-btn nz-btn-size-normal nz-btn-style-light">
-        <span class="top-tool-btn-txt">{{$t('overall.delete')}}</span>
-      </button>
-      <button type="button" @click="save" class="nz-btn nz-btn-size-normal nz-btn-style-normal">
-        <span v-if="!popBox.isEdit" class="top-tool-btn-txt">{{$t('overall.save')}}</span>
-        <span v-else class="top-tool-btn-txt">{{$t('overall.edit')}}</span>
-      </button>
+  <el-popover :placement="placement"    width="400" @hide="hidePop"  ref="popBox" v-model="popBox.show">
+    <div class="pop-window-assetType-content">
+      <!-- begin--顶部按钮-->
+      <div class="pop-top-btns">
+        <button type="button" v-if="popBox.isEdit && idc.id != ''" @click="del" class="nz-btn nz-btn-size-normal nz-btn-style-light">
+          <span class="top-tool-btn-txt">{{$t('overall.delete')}}</span>
+        </button>
+        <button type="button" @click="save" class="nz-btn nz-btn-size-normal nz-btn-style-normal">
+          <span v-if="!popBox.isEdit" class="top-tool-btn-txt">{{$t('overall.save')}}</span>
+          <span v-else class="top-tool-btn-txt">{{$t('overall.edit')}}</span>
+        </button>
 
-      <button type="button" @click="esc" class="nz-btn nz-btn-size-normal nz-btn-style-light nz-btn-style-square">
-        <span class="top-tool-btn-txt"><i class="el-icon-close"></i></span>
-      </button>
+        <button type="button" @click="esc" class="nz-btn nz-btn-size-normal nz-btn-style-light nz-btn-style-square">
+          <span class="top-tool-btn-txt"><i class="el-icon-close"></i></span>
+        </button>
+      </div>
+      <!-- end--顶部按钮-->
+      <div class="pop-title">{{title}}</div>
+
+      <div class="pop-item-wider">
+        <el-form class="right-box-form" :model="idc" label-position="left" label-width="150px"  :rules="rules" ref="idcForm">
+          <el-form-item :label="$t('asset.createAssetTab.dcName')" prop="name">
+            <el-input type="text"  placeholder="" v-model="idc.name" size="small" maxlength="64"></el-input>
+          </el-form-item>
+          <el-form-item :label="$t('asset.createAssetTab.location')" prop="location">
+            <el-input type="text"  placeholder="" v-model="idc.location" size="small"></el-input>
+          </el-form-item>
+          <el-form-item :label="$t('asset.createAssetTab.principal')" prop="principal">
+            <el-select v-model="idc.principal" clearable >
+              <el-option v-for="item in principals" :key="item.id" :label="item.username" :value="item.userId"></el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item :label="$t('asset.createAssetTab.tel')" prop="tel">
+            <el-input type="text"  placeholder="" v-model="idc.tel" size="small"></el-input>
+          </el-form-item>
+        </el-form>
+      </div>
     </div>
-    <!-- end--顶部按钮-->
-    <el-form class="right-box-form" :model="idc" label-position="left" label-width="120px"  :rules="rules" ref="idcForm">
-      <el-form-item :label="$t('asset.createAssetTab.dcName')" prop="name">
-        <el-input type="text"  placeholder="" v-model="idc.name" size="small" maxlength="64"></el-input>
-      </el-form-item>
-      <el-form-item :label="$t('asset.createAssetTab.location')" prop="location">
-        <el-input type="text"  placeholder="" v-model="idc.location" size="small"></el-input>
-      </el-form-item>
-      <el-form-item :label="$t('asset.createAssetTab.principal')" prop="principal">
-        <el-select v-model="idc.principal" clearable >
-          <el-option v-for="item in principals" :key="item.id" :label="item.username" :value="item.userId"></el-option>
-        </el-select>
-      </el-form-item>
-      <el-form-item :label="$t('asset.createAssetTab.tel')" prop="tel">
-        <el-input type="text"  placeholder="" v-model="idc.tel" size="small"></el-input>
-      </el-form-item>
-    </el-form>
     <span :class="buttonClass" @click.prevent.stop="" slot="reference">
       <slot name="optionZone"  >
         <i class="el-icon-plus"></i>
