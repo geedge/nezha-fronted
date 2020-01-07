@@ -21,7 +21,7 @@
       <div class="right-box-title">{{this.tabView == true ? $t('asset.asset') : $t('asset.EditAsset')}}</div>
 
       <el-scrollbar class="right-box-form-box">
-        <el-form ref="form" :model="assetData" label-width="120px" class="right-box-form right-box-form-left" :rules="rules">
+        <el-form ref="assetEditForm" :model="assetData" label-width="120px" class="right-box-form right-box-form-left" :rules="rules">
           <el-form-item :label="$t('asset.createAssetTab.sn')" prop="sn">
             <el-input size="mini" v-if="!tabView" v-model="assetData.sn"/>
             <span v-if="tabView">{{assetData.sn}}</span>
@@ -271,7 +271,12 @@
                   :value="item.id"
                 >
                   <span>{{ item.name }}</span>
-                  <el-popover
+                  <idc-config-box :post-idc="popIdcData" placement="left" @after="getIDCOptionData" :button-class="'config-dropdown-btn'">
+                    <template v-slot:optionZone>
+                      <i class="el-icon-edit-outline" @click="getSingleIDCData(item.id,'edit', item)"></i>
+                    </template>
+                  </idc-config-box>
+                  <!--<el-popover
                     placement="left"
                     v-model="item[item.name]"
                     trigger="manual"
@@ -323,14 +328,15 @@
                     <span class="config-dropdown-btn" slot="reference"
                           @click.stop="getSingleIDCData(item.id,'edit',item)"><i
                       class="el-icon-edit-outline"></i></span>
-                  </el-popover>
+                  </el-popover>-->
                   <span class="config-dropdown-btn config-dropdown-btn-delete"
                         @click.stop="deleteData('idc',item.id)"><i
                     class="el-icon-delete"></i></span>
                 </el-option>
               </el-select>
               <div class="right-box-row-btn right-box-row-btn-small">
-                <el-popover
+                <idc-config-box placement="left" @after="getIDCOptionData"></idc-config-box>
+                <!--<el-popover
                   placement="left"
                   v-model="editPopIDCVisible"
                 >
@@ -380,7 +386,7 @@
                     </div>
                   </div>
                   <div slot="reference"><i class="el-icon-plus"></i></div>
-                </el-popover>
+                </el-popover>-->
               </div>
             </template>
             <span v-if="tabView">{{assetViewData.idcName}}</span>
@@ -428,20 +434,20 @@
                       <!--标题-->
                       <div class="pop-title">{{$t('asset.createAssetTab.editCabinetTab.title')}}</div>
                       <!--表单内容-->
-                      <div class="pop-item-wider">
-                        <el-form-item :label="$t('asset.editAssetTab.editCabinetTab.name')" prop="cabinet.name">
+                      <el-form class="pop-item-wider" :model="popCabinetData" ref="cabEditForm" :rules="cabRules">
+                        <el-form-item :label="$t('asset.editAssetTab.editCabinetTab.name')" prop="name">
                           <el-input size="mini" v-model="popCabinetData.name"/>
                         </el-form-item>
-                        <el-form-item :label="$t('asset.editAssetTab.editCabinetTab.uSize')" prop="cabinet.uSize">
+                        <el-form-item :label="$t('asset.editAssetTab.editCabinetTab.uSize')" prop="uSize">
                           <div>{{popCabinetData.uSize}}</div>
-                          <el-slider v-model="popCabinetData.uSize" :max="47"></el-slider>
+                          <el-slider v-model.number="popCabinetData.uSize" :max="47"></el-slider>
                         </el-form-item>
                         <el-form-item :label="$t('asset.editAssetTab.editCabinetTab.remark')">
                           <el-input v-model="popCabinetData.remark"
                                     type="textarea"
                                     :rows="2"/>
                         </el-form-item>
-                        <el-form-item :label="$t('asset.editAssetTab.editCabinetTab.DC')" prop="cabinet.idcId">
+                        <el-form-item :label="$t('asset.editAssetTab.editCabinetTab.DC')" prop="idcId">
                           <el-select v-model="popCabinetData.idcId" clearable placeholder="" size="mini" style="width: 100%;">
                             <el-option
                               v-for="ite in item.children"
@@ -509,7 +515,7 @@
                             </el-option>
                           </el-select>
                         </el-form-item>
-                      </div>
+                      </el-form>
                     </div>
                     <span class="config-dropdown-btn" slot="reference"
                           @click.stop="getSingleCabinetData(item.id,'edit',item)">
@@ -543,20 +549,20 @@
                     <!--标题-->
                     <div class="pop-title">{{$t('asset.createAssetTab.AddCabinetTab.title')}}</div>
                     <!--表单内容-->
-                    <div class="pop-item-wider">
-                      <el-form-item :label="this.$t('asset.editAssetTab.AddCabinetTab.name')">
+                    <el-form class="pop-item-wider" :model="addCabinetData" ref="cabAddForm" :rules="cabRules">
+                      <el-form-item :label="this.$t('asset.editAssetTab.AddCabinetTab.name')" prop="name">
                         <el-input size="mini" v-model="addCabinetData.name"/>
                       </el-form-item>
-                      <el-form-item :label="this.$t('asset.editAssetTab.AddCabinetTab.uSize')">
+                      <el-form-item :label="this.$t('asset.editAssetTab.AddCabinetTab.uSize')" prop="uSize">
                         <div>{{addCabinetData.uSize}}</div>
-                        <el-slider v-model="addCabinetData.uSize"></el-slider>
+                        <el-slider v-model.number="addCabinetData.uSize"></el-slider>
                       </el-form-item>
                       <el-form-item :label="this.$t('asset.editAssetTab.AddCabinetTab.remark')">
                         <el-input v-model="addCabinetData.remark"
                                   type="textarea" size='mini'
                                   :rows="1"/>
                       </el-form-item>
-                      <el-form-item :label="this.$t('asset.editAssetTab.AddCabinetTab.DC')">
+                      <el-form-item :label="this.$t('asset.editAssetTab.AddCabinetTab.DC')" prop="idcId">
                         <el-select size='mini' v-model="addCabinetData.idcId" clearable style="width: 100%;" placeholder="">
                           <el-option
                             v-for="item in IDCOptionData"
@@ -614,7 +620,7 @@
                           </el-option>
                         </el-select>
                       </el-form-item>
-                    </div>
+                    </el-form>
                   </div>
                   <div slot="reference"><i class="el-icon-plus"></i></div>
                 </el-popover>
@@ -691,7 +697,6 @@
           cabinetId: '',
           modelId: '',
           assetType: '',
-          cabinet: {},
           accounts: [{
             id: '',
             authType: '',
@@ -842,6 +847,17 @@
           idcId: [
             {required: true, message: this.$t('validate.required'), trigger: 'change'}
           ],
+        },
+        cabRules: {
+          name: [
+            {required: true, message: this.$t('validate.required'), trigger: 'blur'}
+          ],
+          uSize: [
+            {required: true, type: 'number', min: 1, max: 47, message: this.$t('validate.required'), trigger: 'blur'}
+          ],
+          idcId: [
+            {required: true, message: this.$t('validate.required'), trigger: 'blur'}
+          ]
         }
       }
     },
@@ -946,7 +962,7 @@
             this.IDCOptionData = response.data.list;
             this.markOptionData(this.IDCOptionData)
             this.$store.state.assetData.idcData = this.IDCOptionData
-
+            this.$emit('refreshData');
           }
         })
       },
@@ -1015,7 +1031,8 @@
           tel: ''
         }
         if (data === 'asset') {
-          this.assetData.modelId = this.assetData.modelId.join(',').split(',')[1]
+          //this.assetData.modelId = this.assetData.modelId.join(',').split(',')[1];
+          let modelId = this.assetData.modelId.join(',').split(',')[1];
           let form = new FormData();
           form.append("id", this.pageObj.id);
           form.append("sn", this.assetData.sn);
@@ -1024,24 +1041,31 @@
           form.append("purchaseDate", this.assetData.purchaseDate);
           form.append("idcId", this.assetData.idcId);
           form.append("cabinetId", this.assetData.cabinetId);
-          form.append("modelId", this.assetData.modelId);
+          form.append("modelId", modelId);
           form.append("accounts[0].id", this.assetData.accounts[0].id);
           form.append("accounts[0].authType", this.assetData.accounts[0].authType);
           form.append("accounts[0].user", this.assetData.accounts[0].user);
           form.append("accounts[0].pwd", this.assetData.accounts[0].pwd);
           form.append("accounts[0].port", this.assetData.accounts[0].port);
           form.append("cert", this.assetData.accounts[0].file);
-          this.$put('asset', form).then(res => {
-            const h = this.$createElement;
-            if (res.code === 200) {
-              this.$message({duration: 2000, type: 'success', message: this.$t("tip.saveSuccess")});
-              this.pageObj.id = '';
-              this.$emit('refreshData', 'true');
-              this.sendStateData('close');
+
+          this.$refs.assetEditForm.validate((valid) => {
+            if (valid) {
+              this.$put('asset', form).then(res => {
+                const h = this.$createElement;
+                if (res.code === 200) {
+                  this.$message({duration: 2000, type: 'success', message: this.$t("tip.saveSuccess")});
+                  this.pageObj.id = '';
+                  this.$emit('refreshData', 'true');
+                  this.sendStateData('close');
+                } else {
+                  this.$message.error(res.msg);
+                }
+              });
             } else {
-              this.$message.error(res.msg);
+              return false;
             }
-          })
+          });
         } else {
           if (data === 'model') {
             item.vendorCode = this.vendorCode
@@ -1056,10 +1080,20 @@
             item = obj
           }
           if (data === 'cabinet') {
-            item.name = this.popCabinetData.name;
-            item.uSize = this.popCabinetData.uSize;
-            item.remark = this.popCabinetData.remark;
-            item.idcId = this.popCabinetData.idcId;
+            let v = true;
+            this.$refs.cabEditForm[0].validate((valid) => {
+              if (valid) {
+                item.name = this.popCabinetData.name;
+                item.uSize = this.popCabinetData.uSize;
+                item.remark = this.popCabinetData.remark;
+                item.idcId = this.popCabinetData.idcId;
+              } else {
+                v = false;
+              }
+            });
+            if (!v) {
+              return false;
+            }
           }
           if (data === 'idc') {
             idcData.id = item.id
@@ -1144,17 +1178,24 @@
           })
         }
         if (type === 'cabinet') {
-          this.addCabinetData.idcId = this.assetData.idcId
-          this.$post('cabinet', this.addCabinetData).then(res => {
-            const h = this.$createElement;
-            if (res.code === 200) {
-              this.$message({duration: 2000, type: 'success', message: this.$t("tip.saveSuccess")});
-              this.getCabinetOptionData(this.addCabinetData.idcId);
-              this.editPopoverClose('cabinet');
+          this.$refs.cabAddForm.validate((valid) => {
+            if (valid) {
+              this.addCabinetData.idcId = this.assetData.idcId
+              this.$post('cabinet', this.addCabinetData).then(res => {
+                const h = this.$createElement;
+                if (res.code === 200) {
+                  this.$message({duration: 2000, type: 'success', message: this.$t("tip.saveSuccess")});
+                  this.getCabinetOptionData(this.addCabinetData.idcId);
+                  this.editPopoverClose('cabinet');
+                } else {
+                  this.$message.error(res.msg);
+                }
+              });
             } else {
-              this.$message.error(res.msg);
+              return false;
             }
-          })
+          });
+
         }
       },
       deleteData(data, item) {
@@ -1298,25 +1339,26 @@
           this.idcSelectedData = '';
           this.IDCOptionData.forEach(item => {
             if (item.id === data) {
-              this.idcSelectedData = item
+              this.idcSelectedData = item;
             }
           });
           this.getCabinetOptionData(this.assetData.idcId);
-          this.assetData.cabinetId = ''
-          this.cabinetSelectedData.uSize = ''
+          this.assetData.cabinetId = '';
+          this.cabinetSelectedData.uSize = '';
           this.cabinetSelectedData.remark = null
         } else {
-          this.clickFlush('idc', itemData)
+          this.clickFlush('idc', itemData);
           this.IDCOptionData.forEach(item => {
             if (item.id === data) {
-              this.popIdcData.name = item.name
-              this.popIdcData.location = item.location
-              this.popIdcData.principal = item.principal
-              this.popIdcData.tel = item.tel
-              this.addCabIDCData.name = item.name
-              this.addCabIDCData.location = item.location
-              this.addCabIDCData.principal = item.principal
-              this.addCabIDCData.tel = item.tel
+              this.popIdcData.id = item.id;
+              this.popIdcData.name = item.name;
+              this.popIdcData.location = item.location;
+              this.popIdcData.principal = item.principal;
+              this.popIdcData.tel = item.tel;
+              this.addCabIDCData.name = item.name;
+              this.addCabIDCData.location = item.location;
+              this.addCabIDCData.principal = item.principal;
+              this.addCabIDCData.tel = item.tel;
             }
           });
         }

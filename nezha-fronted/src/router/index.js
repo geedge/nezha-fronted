@@ -34,7 +34,7 @@ export default new Router({
       children: [
         {
           path: '/dashboard',
-          component: resolve => require(['../components/page/dashboard.vue'], resolve),
+          component: resolve => require(['../components/page/dashboard/panel.vue'], resolve),
         },
         {
           path: '/panel',

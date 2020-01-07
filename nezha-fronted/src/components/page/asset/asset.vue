@@ -7,8 +7,13 @@
         <el-checkbox-group v-model="checkList" size="small" @change="getSingleAsset(checkList)">
           <el-checkbox class="sidebar-info-item" :class="{'sidebar-info-item-active': checkList.indexOf(item.id) != -1}"
                        v-for="(item,key) in checkListData" :key="key" :label=item.id>
-            {{item.name}}
-            <el-popover
+            <span>{{item.name}}</span>
+            <idc-config-box :post-idc="addIdcData" placement="left" @after="getIDCOptionData" :button-class="'checkbox-edit'">
+              <template v-slot:optionZone>
+                <i class="el-icon-edit-outline" @click="getSingleIDCData(item.id,'edit')"></i>
+              </template>
+            </idc-config-box>
+            <!--<el-popover
               placement="left"
               v-model="item[item.id]"
             >
@@ -68,7 +73,7 @@
               <span class="checkbox-edit" slot="reference"
                     @click.prevent="getSingleIDCData(item.id,'edit')"><i
                 class="el-icon-edit-outline"></i></span>
-            </el-popover>
+            </el-popover>-->
           </el-checkbox>
         </el-checkbox-group>
       </div>
@@ -491,13 +496,16 @@
               this.idcSelectedData = item
             }
           });
+          return
         } else {
           this.IDCOptionData.forEach(item => {
             if (item.id === data) {
-              this.addIdcData.popName = item.name
-              this.addIdcData.location = item.location
-              this.addIdcData.principal = item.principal
-              this.addIdcData.tel = item.tel
+              this.addIdcData.id = item.id;
+              this.addIdcData.name = item.name;
+              this.addIdcData.popName = item.name;
+              this.addIdcData.location = item.location;
+              this.addIdcData.principal = item.principal;
+              this.addIdcData.tel = item.tel;
             }
           });
         }
@@ -583,13 +591,6 @@
     color: #606266;
     display: inline-block;
     padding: 0 15px;
-  }
-
-
-  .checkbox-edit {
-    position: absolute;
-    right: 10px;
-    font-size: 16px;
   }
 
   .tab-input-square {
@@ -720,5 +721,12 @@
 
   .asset .content-left .el-checkbox__input.is-checked .el-checkbox__inner, .asset .content-left .el-checkbox__input.is-indeterminate .el-checkbox__inner {
     background-color: #e07700;
+  }
+
+
+  .checkbox-edit {
+    position: absolute;
+    right: 10px;
+    font-size: 16px;
   }
 </style>

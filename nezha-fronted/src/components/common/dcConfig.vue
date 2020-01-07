@@ -7,8 +7,7 @@
           <span class="top-tool-btn-txt">{{$t('overall.delete')}}</span>
         </button>
         <button type="button" @click="save" class="nz-btn nz-btn-size-normal nz-btn-style-normal">
-          <span v-if="!popBox.isEdit" class="top-tool-btn-txt">{{$t('overall.save')}}</span>
-          <span v-else class="top-tool-btn-txt">{{$t('overall.edit')}}</span>
+          <span class="top-tool-btn-txt">{{$t('overall.save')}}</span>
         </button>
 
         <button type="button" @click="esc" class="nz-btn nz-btn-size-normal nz-btn-style-light nz-btn-style-square">
@@ -21,18 +20,18 @@
       <div class="pop-item-wider">
         <el-form class="right-box-form" :model="idc" label-position="left" label-width="150px"  :rules="rules" ref="idcForm">
           <el-form-item :label="$t('asset.createAssetTab.dcName')" prop="name">
-            <el-input type="text"  placeholder="" v-model="idc.name" size="small" maxlength="64"></el-input>
+            <el-input type="text"  placeholder="" v-model="idc.name" size="mini" maxlength="64"></el-input>
           </el-form-item>
           <el-form-item :label="$t('asset.createAssetTab.location')" prop="location">
-            <el-input type="text"  placeholder="" v-model="idc.location" size="small"></el-input>
+            <el-input type="text"  placeholder="" v-model="idc.location" size="mini"></el-input>
           </el-form-item>
           <el-form-item :label="$t('asset.createAssetTab.principal')" prop="principal">
-            <el-select v-model="idc.principal" clearable >
+            <el-select v-model="idc.principal" clearable size="mini">
               <el-option v-for="item in principals" :key="item.id" :label="item.username" :value="item.userId"></el-option>
             </el-select>
           </el-form-item>
           <el-form-item :label="$t('asset.createAssetTab.tel')" prop="tel">
-            <el-input type="text"  placeholder="" v-model="idc.tel" size="small"></el-input>
+            <el-input type="text"  placeholder="" v-model="idc.tel" size="mini"></el-input>
           </el-form-item>
         </el-form>
       </div>
@@ -129,34 +128,22 @@
                 console.log("save")
                 temp.$post('idc', temp.idc).then(response => {
                   if (response.code === 200) {
-                    temp.$notify({
-                      message: h('i', {style: 'color: teal'}, temp.$t("tip.saveSuccess")),
-                      duration: 2000
-                    });
+                    temp.$message({duration: 1000, type: 'success', message: temp.$t("tip.deleteSuccess")});
                     temp.$emit("after");
                     temp.esc();
                   } else {
-                    temp.$notify({
-                      message: h('i', {style: 'color: teal'}, response.msg),
-                      duration: 2000
-                    });
+                    this.$message.error(response.msg);
                   }
                 })
               }else{
                 console.log("edit")
                 this.$put('idc', temp.idc).then(response => {
                   if (response.code === 200) {
-                    temp.$notify({
-                      message: h('i', {style: 'color: teal'}, temp.$t("tip.saveSuccess")),
-                      duration: 2000
-                    });
+                    temp.$message({duration: 1000, type: 'success', message: temp.$t("tip.deleteSuccess")});
                     temp.$emit("after");
                     temp.esc();
                   } else {
-                    temp.$notify({
-                      message: h('i', {style: 'color: teal'}, response.msg),
-                      duration: 2000
-                    });
+                    this.$message.error(response.msg);
                   }
                 })
               }
@@ -203,6 +190,7 @@
       watch:{
         postIdc: {
           immediate: true,
+          deep: true,
           handler(n, o) {
             if (n && n.id) {
               this.title = this.$t('asset.createAssetTab.editIdcTab.title') + "  ID：" + n.id;
