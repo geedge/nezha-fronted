@@ -437,7 +437,7 @@
         })
       },
       toEditProject(p) {
-        this.$refs.projectBox.show(true);
+        this.$refs.projectBox.show(true,true);
         this.editProject = Object.assign({}, p);
       },
       panelListReload(){
