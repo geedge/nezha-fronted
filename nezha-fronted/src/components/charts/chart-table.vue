@@ -11,26 +11,34 @@
         <div class="edit">
           <!-- v-if="firstShow" -->
           <div class="list-icon">
-            <span @click="refreshChart" title="刷新" class="set-icon" v-if="showSetting">
-              <Icon type="refresh"></Icon>
+            <span @click="refreshChart" :title="$t('dashboard.refresh')" class="set-icon" v-if="showSetting">
+              <i class="el-icon-refresh-right"></i>
             </span>
-            <span @click="editChart" title="编辑" class="set-icon" v-if="showSetting">
-              <Icon type="compose"></Icon>
+                <span @click="editChart" :title="$t('dashboard.edit')" class="set-icon" v-if="showSetting">
+              <i class="el-icon-edit-outline"></i>
             </span>
-            <span @click="removeChart" title="删除" class="set-icon" v-if="showSetting">
-              <Icon type="trash-a"></Icon>
+                <span @click="removeChart" :title="$t('dashboard.delete')" class="set-icon" v-if="showSetting">
+              <i class="el-icon-delete"></i>
             </span>
-            <span @click="showAllScreen" title="全屏" class="set-icon">
-              <Icon type="arrow-expand"></Icon>
+                <span @click="showAllScreen" :title="$t('dashboard.screen')" class="set-icon">
+              <i class="el-icon-full-screen"></i>
             </span>
           </div>
         </div>
       </div>
     </div>
     <div class="mt-10">
-      <Table border size="small" :height="350" :data="seriesItem" :columns="columns" :loading="tableLoading"></Table>
+      <!--
+      <el-table  size="small"   :loading="tableLoading">-->
+      <el-table :data="seriesItem"  height="350" border style="width: 100%">
+        <el-table-column prop="metric" :label="$t('dashboard.panel.chartTableColumn.metric')"  sortable></el-table-column>
+        <el-table-column  prop="label" :label="$t('dashboard.panel.chartTableColumn.label')"  sortable></el-table-column>
+        <el-table-column  prop="time" :label="$t('dashboard.panel.chartTableColumn.time')" width="125" sortable></el-table-column>
+        <el-table-column prop="value" :label="$t('dashboard.panel.chartTableColumn.value')" sortable></el-table-column>
+      </el-table>
     </div>
-    <Modal title="查看" v-model="screenModal" width="96%">
+    <!--全屏
+    <el-dialog title="查看" v-model="screenModal" width="96%">
       <div class="clearfix">
         <div class="float-left table-title">
           {{data.title}}
@@ -42,13 +50,12 @@
       <div class="mt-10">
         <Table border size="small" :height="350" :data="seriesItem" :columns="columns" :loading="tableLoading"></Table>
       </div>
-    </Modal>
+    </el-dialog>
+    -->
   </div>
 </template>
 <script>
-// import axios from 'axios';
 import bus from '../../libs/bus';
-// import { getQueryChart } from '../../models/service';
 
 export default {
   name: 'chartTable',
@@ -95,7 +102,7 @@ export default {
         width: 200,
         sortable: true,
       }, {
-        title: 'tag',
+        title: 'Label',//tag
         key: 'name',
         minWidth: 200,
         sortable: true,

@@ -83,7 +83,7 @@
     <el-row  v-show="tableShow == 2">
       <el-col span="22">
         <el-form-item prop="expression" ><!--expression和metric的验证只能有一个，不能同时存在？？:rules="{ required: true, type: 'string', message: '', trigger: 'change' }"-->
-          <el-input size="mini" type="textarea" maxlength="1024" show-word-limit v-model="elementInfo.expression" :placeholder="this.$t('dashboard.metric.expertTip')" ></el-input>
+          <el-input size="mini" ref="metricExpression" type="textarea" maxlength="1024" show-word-limit v-model="elementInfo.expression" :placeholder="this.$t('dashboard.metric.expertTip')" ></el-input>
         </el-form-item>
       </el-col>
       <el-col  span="2">
@@ -193,22 +193,37 @@ export default {
   methods: {
     // 删除该选项,第一步,传递要删除的参数
     deleteTarget() {
+      //alert('metric第一步，删除的指针，之后回调box的第一个步'+this.pointer);
       this.$emit('on-delete-target', this.pointer);
     },
     // 第二步,on-delete-target回调，保存数据
     subSave() {
+      //alert('metric第二步，bus.chartAddInfo.metricTarget,指针'+JSON.stringify(bus.chartAddInfo.metricTarget)+'==pointer'+this.pointer);
       bus.chartAddInfo.metricTarget[this.pointer] = this.elementInfo;
+      //alert('metric第二步，保存信息到bus'+JSON.stringify(this.elementInfo))
       this.$emit('sub-save-ok');
     },
     // 第三步,将数据重新赋值,sub-save-ok回调
     setSubdata(index) {
-      if (index === this.pointer) {
-        this.elementInfo.metric = bus.chartAddInfo.metricTarget[this.pointer].metric;
+      //alert('metric第三步，bus='+JSON.stringify(bus.chartAddInfo.metricTarget));
+      //alert('metric第三步，bus('+this.pointer+')='+JSON.stringify(bus.chartAddInfo.metricTarget[this.pointer]));
+      this.elementInfo = bus.chartAddInfo.metricTarget[this.pointer];
+      //alert('metric第三步，index'+index+',如果index是当前pointer('+this.pointer+')，则继续，把bus中的值赋值给当前metric')
+      //alert('metric第三步，elementInfo='+JSON.stringify(this.elementInfo));
+      if(this.elementInfo.type==='expert'){
+        //alert('metric第三步，expert');
+        // 当该项expression为空时，重置一下
+        if (!this.elementInfo.expression && this.$refs.metricExpression) {
+          this.$refs.metricExpression.reset();
+        }
+        this.clickTabelShow(2,'expert');
+      }else {
+       // alert('metric第三步，normal');
         // 当该项metric为空时，重置一下
         if (!this.elementInfo.metric && this.$refs.metricSelect) {
           this.$refs.metricSelect.reset();
         }
-        this.elementInfo.tagList = bus.chartAddInfo.metricTarget[this.pointer].tagList;
+        this.clickTabelShow(1,'normal');
       }
     },
 
@@ -293,6 +308,7 @@ export default {
       //alert('metricSetData'+JSON.stringify(data));
       this.setDataFlag = true;
       this.target = Object.assign({}, data);
+      //this.pointer =
       if(this.target.type==='expert'){
         this.tableShow = 2;
         this.elementInfo.type = this.target.type;

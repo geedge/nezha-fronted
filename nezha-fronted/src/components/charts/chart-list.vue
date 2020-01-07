@@ -20,14 +20,14 @@
       @on-edit-chart-block="editData"
       :panel-id="filter.panelId" 
       :editChartId="'editChartId' + item.id"></line-chart-block>
-<!--
+
       <chart-table v-if="item.type === 'table'" ref="editChart" :key="'inner' + item.id"
-      @on-refresh-data="refreshChart"
+      @on-refresh-data=""
       @on-remove-chart-block="removeChart" 
       @on-edit-chart-block="editData"
       :panel-id="filter.panelId" 
       :editChartId="'editChartId' + item.id"></chart-table>
-      -->
+
     </div>
     <el-row v-if="dataList.length === 0"  class="noData"></el-row>
   </div>
@@ -36,7 +36,7 @@
 import axios from 'axios';
 //import bus from '../../libs/bus';
 import lineChartBlock from './line-chart-block';
-//import chartTable from './chart-table';
+import chartTable from './chart-table';
 
 export default {
   name: 'chartList',
@@ -44,7 +44,7 @@ export default {
   },
   components: {
     lineChartBlock,
-    //chartTable,
+    chartTable,
   },
   data() {
     return {
@@ -189,6 +189,7 @@ export default {
                         seriesItem.theData.name = host;
                         seriesItem.metric_name = seriesItem.theData.name;
                         // 将秒改为毫秒
+                        //alert('table=='+JSON.stringify(queryItem))
                         seriesItem.theData.data = queryItem.values.map((dpsItem, dpsIndex) => {
                           /*曲线汇总暂不需要
                           if (sumData.data[dpsIndex]) {
@@ -198,15 +199,19 @@ export default {
                             sumData.data[dpsIndex] = [dpsItem[0] * 1000, dpsItem[1]];
                           }
                           */
+                          let t_date = new Date(dpsItem[0] * 1000);
+                          let timeTmp = [t_date.getFullYear(), t_date.getMonth() + 1, t_date.getDate()].join('-') + "\n"
+                            + [t_date.getHours(), t_date.getMinutes()].join(':');
+                          tableData.push({//表格数据
+                            label: host.slice(host.indexOf('{') + 1,host.indexOf('}')),//label
+                            metric: queryItem.metric.__name__,//metric列
+                            time: timeTmp,//采集时间
+                            value: dpsItem[1],//数值
+                          });
                           return [dpsItem[0] * 1000, dpsItem[1]];
                         });
-                        tableData.push({//表格数据
-                          name: host.slice(host.indexOf(', ') + 1),
-                          metric: queryItem.metric.__name__,
-                          time: (dpsArr[dpsArr.length - 1][0]) * 1000,
-                          value: dpsArr[dpsArr.length - 1][1],
-                        });
                         series.push(seriesItem.theData);
+
                       } else if (chartItem.elements && chartItem.elements[innerPos]) {
                         // 无数据提示
                         /*
@@ -229,7 +234,7 @@ export default {
                   this.filter.panelId, this.filter);
               } else if (chartItem.type === 'line' || chartItem.type === 'bar' || chartItem.type === 4) {
                 if (series.length && chartItem.type === 4) {//曲线汇总
-                  series.push(sumData);
+                  //series.push(sumData);//后续需要
                 }
                 this.$refs.editChart[index].setData(chartItem, series,
                   this.filter.panelId, this.filter,legend);

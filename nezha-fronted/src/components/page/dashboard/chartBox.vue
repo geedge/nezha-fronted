@@ -125,7 +125,6 @@
 
           <el-row  class="element-item" v-for="(elem, index) in elements" :key="'ele' + index">
             <chart-metric ref="chartTag"
-                           :product-id="productId"
                            :pointer="index"
                            :metric-list="metricList"
                            :count-total="elements.length"
@@ -325,7 +324,9 @@
       },
       // 删除指标,第一步, 新方法
       deleteTarget(index) {
+        //alert('box第一步，循环所有的metric，为什么要循环？？');
         this.deleteIndex = index;
+       // alert('box第一步，循环所有的metric，循环前metric,循环次数='+this.$refs.chartTag.length);
         this.$refs.chartTag.forEach((item) => {
           // 子组件保存内容到bus
           item.subSave();
@@ -334,13 +335,18 @@
       // subSave保存成功后回调,第二步
       subOk() {
         // 每个模块均有返回,当全部模块返回完成时,将sub计数器重置
+        //alert('box第二步，subCount和元素个数一样了，就从deleteIndex开始删除一个元素，this.subCount='+this.subCount);
         this.subCount += 1;
+        //alert(this.elements.length);
         if (this.subCount === this.elements.length) {
           this.subCount = 0;
           // 保存完成,进行删除操作
+          //alert('box第二步，deleteIndex='+this.deleteIndex+'=开始删除一个元素')
+          //alert('box第二步，删除之前，elements='+JSON.stringify(this.elements)+'  elementTarget='+JSON.stringify(this.elementTarget)+'  bus='+JSON.stringify(bus.chartAddInfo.metricTarget));
           this.elements.splice(this.deleteIndex, 1);
-          this.elementTarget.splice(this.deleteIndex, 1);
+          this.elementTarget.splice(this.deleteIndex, 1);//没有作用，此处是[]
           bus.chartAddInfo.metricTarget.splice(this.deleteIndex, 1);
+          //alert('box第二步，删除完毕，elements='+JSON.stringify(this.elements)+'  elementTarget='+JSON.stringify(this.elementTarget)+'  bus='+JSON.stringify(bus.chartAddInfo.metricTarget));
           this.$nextTick(() => {
             this.$refs.chartTag.forEach((item, index) => {
               item.setSubdata(index); // 将数据从bus重新赋值

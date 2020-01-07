@@ -51,6 +51,23 @@ const cn = {
         metric:"指标",
         addMetric:"添加指标",
       },
+      chartTableColumn:{
+        metric:'指标',
+        label:'标签',
+        time:'时间',
+        value:'值',
+      },
+      startTime:'开始时间',
+      endTime:'结束时间',
+      to:'至',
+      recOne:'近1小时',
+      recFour:'近4小时',
+      recOneDay:'近1日',
+      yesterday:'昨日',
+      recSevenDay:'近7日',
+      recOneMonth:'近一个月',
+      curMonth:'本月',
+      lastMonth:'上月'
     },
     metric:{
       name:"指标名称",

@@ -56,6 +56,23 @@ const en = {
         metric:"Metric",
         addMetric:"Add Metric",
       },
+      chartTableColumn:{
+        metric:'metric',
+        label:'label',
+        time:'time',
+        value:'value',
+      },
+      startTime:'startTime',
+      endTime:'endTime',
+      to:'To',
+      recOne:'recent hour',
+      recFour:'recent 4 hours',
+      recOneDay:'recent day',
+      yesterday:'yesterday',
+      recSevenDay:'recent week',
+      recOneMonth:'recent month',
+      curMonth:'this month',
+      lastMonth:'last month'
     },
     metric:{
       name:"Metric",

@@ -66,7 +66,6 @@
   }
   /* end--Panel-自定义可编辑的el-select下拉框样式*/
 
-
 </style>
 <template>
   <div class="panel">
@@ -100,6 +99,21 @@
             <span class="panel-dropdown-btn panel-dropdown-btn-delete" @click.stop="del(item)"><i class="el-icon-delete"></i></span>
           </el-option>
         </el-select>
+        <div class="float-right" style="margin-right: 10px;">
+          <div class="block">
+            <el-date-picker size="small" ref="calendar"
+                            format="yyyy/MM/dd HH:mm"
+              @change="dateChange"
+              v-model="value2"
+              type="datetimerange"
+              :picker-options="pickerOptions"
+              :range-separator="$t('dashboard.panel.to')"
+              :start-placeholder="$t('dashboard.panel.startTime')"
+              :end-placeholder="$t('dashboard.panel.endTime')"
+              align="right">
+            </el-date-picker>
+          </div>
+        </div>
       </div>
       <div class="table-list"  >
         <div class="box-content">
@@ -127,6 +141,88 @@
           show: false,
           title: this.$t('dashboard.panel.createPanelTitle')
         },
+        pickerOptions: {
+          shortcuts: [
+            {
+              text:  this.$t("dashboard.panel.recOne"),
+              onClick(picker) {
+                const end = new Date();
+                const start = new Date();
+                start.setHours(start.getHours() - 1);
+                picker.$emit('pick', [start, end]);
+              }
+            },{
+              text: this.$t("dashboard.panel.recFour"),
+              onClick(picker) {
+                const end = new Date();
+                const start = new Date();
+                start.setHours(start.getHours() - 4);
+                picker.$emit('pick', [start, end]);
+              }
+            }, {
+              text: this.$t("dashboard.panel.recOneDay"),
+              onClick(picker) {
+                const end = new Date();
+                const start = new Date();
+                start.setDate(start.getDate() - 1);
+                picker.$emit('pick', [start, end]);
+              }
+            },  {
+              text: this.$t("dashboard.panel.yesterday"),
+              onClick(picker) {
+                const start = new Date();
+                const end = new Date();
+                start.setDate(start.getDate() - 1);
+                start.setHours(0);
+                start.setMinutes(0);
+                start.setSeconds(0);
+                end.setDate(end.getDate() - 1);
+                end.setHours(23);
+                end.setMinutes(59);
+                end.setSeconds(59);
+                picker.$emit('pick', [start, end]);
+              }
+            },{
+            text: this.$t("dashboard.panel.recSevenDay"),
+            onClick(picker) {
+              const end = new Date();
+              const start = new Date();
+              start.setDate(start.getDate() - 7);
+              picker.$emit('pick', [start, end]);
+            }
+          }, {
+            text: this.$t("dashboard.panel.recOneMonth"),
+            onClick(picker) {
+              const end = new Date();
+              const start = new Date();
+              start.setDate(start.getDate() - 30);
+              picker.$emit('pick', [start, end]);
+            }
+          }, {
+            text: this.$t("dashboard.panel.curMonth"),
+            onClick(picker) {
+              const end = new Date();
+              const start = new Date();
+              start.setDate(1);
+              start.setHours(0);
+              start.setMinutes(0);
+              picker.$emit('pick', [start, end]);
+            }
+          },{
+              text: this.$t("dashboard.panel.lastMonth"),
+              onClick(picker) {
+                const end = new Date();
+                const start = new Date();
+                start.setDate(1);
+                start.setMonth(start.getMonth() - 1);
+                end.setDate(0);
+                start.setStart();
+                end.setEnd();
+                picker.$emit('pick', [start, end]);
+              }
+            }]
+        },
+        value2: [new Date(), new Date()],
         showPanel:{//panel下拉列表
           id:'',
           name:''
@@ -238,6 +334,7 @@
       },
       /*图表相关操作--start*/
       toAddChart:function(){
+        this.$refs.addChartModal.setTitle(this.$t("dashboard.panel.createChartTitle"));
         this.$refs.addChartModal.show(true);
         this.$refs.addChartModal.createData(this.showPanel.id);//初始化创建图表需要的初始数据
       },
