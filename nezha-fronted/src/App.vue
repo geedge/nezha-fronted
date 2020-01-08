@@ -6,7 +6,13 @@
 
 <script>
 export default {
-  name: 'App'
+  name: 'App',
+  mounted() {
+    /*this.$http.get("serverconfig.json").then((result)=>{
+      this.$axios.defaults.baseURL = result.body.ApiUrl;
+    });*/
+    this.$axios.defaults.baseURL = 'http://192.168.40.247:8080/nz-admin';
+  }
 }
 </script>
 

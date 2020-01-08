@@ -10,13 +10,15 @@ import Vuex from 'vuex'
 import store from './store/index';
 import App from './App'
 import router from './router'
-
+import VueResource from 'vue-resource'
 import './assets/stylus/index.scss'
 import axios from 'axios';
 import {post, get, put, del} from './http.js'
 
 import Pagination from "./components/common/pagination"; //引入全局分页组件
 import searchInput from "./components/common/searchInput"; //搜索框组件
+import elementSet from "./components/common/elementSet"; //自定义表头组件
+
 import projectBox from './components/common/rightBox/projectBox'; //project弹框组件
 import moduleBox from './components/common/rightBox/moduleBox'; //module弹框组件
 import editEndpointBox from './components/common/rightBox/editEndpointBox'; //endpoint弹框组件
@@ -29,6 +31,7 @@ import panelBox from "./components/common/rightBox/panelBox"; //面板弹框组�
 
 Vue.component("Pagination", Pagination);
 Vue.component("searchInput", searchInput);
+Vue.component("element-set", elementSet);
 Vue.component("project-box", projectBox);
 Vue.component("module-box", moduleBox);
 Vue.component("edit-endpoint-box", editEndpointBox);
@@ -48,7 +51,7 @@ Vue.prototype.$delete = del;
 Vue.config.productionTip = false;
 Vue.use(ElementUI);
 Vue.use(Vuex);
-
+Vue.use(VueResource);
 
 const clickoutside = {
   // 初始化指令

@@ -17,7 +17,16 @@ const store = new Vuex.Store({
     projectListChange: 0,
     moduleListChange: 0,
     flushDataSign: false,
-    panelListReload:false
+    panelListReload:false,
+    eventfixed: {
+      shezhi: 0,
+      screen: 0
+    },
+    tablelable: [], //获取头部信息
+    position: {
+      event_positiony: 0,
+      event_positionx: -200
+    },
   },
   getters: {
   },
@@ -39,7 +48,16 @@ const store = new Vuex.Store({
     },
     assetDcListChange(state) {
       state.assetDcList++;
-    }
+    },
+    setHeaderTable(state, data) { //设置table头部
+      state.tablelable = data;
+    },
+    setEventfixed(state, data) { //设置坐标
+      state.eventfixed = data;
+    },
+    setPosition(state, data) { //设置坐标
+      state.position = data;
+    },
   },
   actions: {
   }

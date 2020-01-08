@@ -23,12 +23,23 @@
                   style="width: 100%;">
                 <el-table-column
                   :resizable="false"
-                  v-for="(item, index) in tableTitle"
+                  v-for="(item, index) in tablelable"
                   v-if="item.show"
                   :width="item.width"
                   :key="`col-${index}`"
                   :label="item.label"
                 >
+                    <template slot="header" slot-scope="scope">
+                        <span v-if="index==0">
+                            <span @click.stop="elementsetShow('shezhi',$event)">
+                                <i class="el-icon-setting"></i>
+                            </span>
+                            <span>{{item.label}}</span>
+                        </span>
+                        <div v-else>
+                           <span>{{item.label}}</span>
+                        </div>
+                    </template>
                     <template slot-scope="scope" :column="item">
                       <span v-if="item.prop == 'alertRule'" class="content-right-option" @click="viewRule(scope.row[item.prop].id)">
                           {{scope.row[item.prop].alertName}}
@@ -63,6 +74,12 @@
       <project-box :project="viewProjectData" ref="projectBox" @reload="getAlertList"></project-box>
       <module-box  :module="viewModuleData" @reload="getAlertList" ref="moduleBox"></module-box>
       <asset-edit-unit :edit-unit-show='viewAssetState' @refreshData="getAlertList" @sendStateData="tabControl" ref="assetEditUnit"></asset-edit-unit>
+      <element-set
+        v-clickoutside="elementsetHide"
+        :dropCol="dropCol"
+        @tablelable="tablelabelEmit"
+        ref="elementset"
+      ></element-set>
     </div>
 
 </template>
@@ -77,11 +94,6 @@ export default {
         total:13
       },
       tableTitle: [
-        {
-          label:'ID',
-          prop:'id',
-          show:false
-        },
         {
           label: this.$t("alert.alertName"),
           prop: 'alertRule',
@@ -145,6 +157,8 @@ export default {
       searchLabel: { //搜索参数
 
       },
+      tablelable: [],
+      dropCol: [],
       severityData: [
         {
           key: 'medium',
@@ -179,6 +193,36 @@ export default {
     }
   },
   methods: {
+    elementsetShow(s, e) {
+      var eventfixed = {
+        shezhi: 0,
+        screen: 0
+      };
+      eventfixed[s] = 1;
+      e.preventDefault();
+      this.$store.commit('setHeaderTable', this.tablelable);
+      this.$store.commit('setEventfixed', eventfixed);
+      const h = document.documentElement.clientHeight;
+      const w = document.documentElement.clientWidth;
+      const dw = this.$refs.elementset.$el.offsetWidth;
+      const dh = this.$refs.elementset.$el.offsetHeight;
+      let positionx =
+        e.clientX + dw <= w - 10 ? e.clientX - 250 : e.clientX - 250 - dw;
+      let positiony =
+        e.clientY + dh <= h - 10
+          ? e.clientY - 70
+          : e.clientY - 70 - (e.clientY + dh - h);
+      this.$store.commit('setPosition', { positionx, positiony });
+    },
+    elementsetHide() {
+      //悬浮点击空白隐藏
+      this.$refs.elementset.elementsetHide();
+    },
+    tablelabelEmit(data) {
+      //获取子组件传过来的参数
+      this.$store.commit('setHeaderTable', data);
+      this.tablelable = data;
+    },
     getAlertList: function() {
       this.$set(this.searchLabel, "pageNo", this.pageObj.pageNo);
       this.$set(this.searchLabel, "pageSize", this.pageObj.pageSize);
@@ -274,6 +318,12 @@ export default {
   },
   mounted() {
     this.getAlertList();
+    this.tablelable = localStorage.getItem("nz-tableTitle-" + localStorage.getItem("nz-username") + "-" + this.$route.path)
+      ? JSON.parse(localStorage.getItem("nz-tableTitle-" + localStorage.getItem("nz-username") + "-" + this.$route.path))
+      : this.tableTitle;
+    this.dropCol = localStorage.getItem("nz-tableTitle-" + localStorage.getItem("nz-username") + "-" + this.$route.path)
+      ? JSON.parse(localStorage.getItem("nz-tableTitle-" + localStorage.getItem("nz-username") + "-" + this.$route.path))
+      : this.tableTitle;
   }
 }
 </script>

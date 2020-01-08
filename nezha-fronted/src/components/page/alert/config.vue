@@ -26,13 +26,24 @@
                   style="width: 100%;">
                 <el-table-column
                   :resizable="false"
-                  v-for="(item, index) in tableTitle"
+                  v-for="(item, index) in tablelable"
                   v-if="item.show"
                   :width="item.width"
                   :key="`col-${index}`"
                   :label="item.label"
                   show-overflow-tooltip
                 >
+                    <template slot="header" slot-scope="scope">
+                        <span v-if="index==0">
+                            <span @click.stop="elementsetShow('shezhi',$event)">
+                                <i class="el-icon-setting"></i>
+                            </span>
+                            <span>{{item.label}}</span>
+                        </span>
+                        <div v-else>
+                            <span>{{item.label}}</span>
+                        </div>
+                    </template>
                     <template slot-scope="scope" :column="item">
                         <div v-if="item.prop == 'option'" class="content-right-options">
                           <span @click="del(scope.row)" class="content-right-option"><i class="el-icon-delete"></i></span>
@@ -62,6 +73,12 @@
         <project-box :project="viewProjectData" ref="projectBox" @reload="getTableData"></project-box>
         <module-box  :module="viewModuleData" @reload="getTableData" ref="moduleBox"></module-box>
         <asset-edit-unit :edit-unit-show='viewAsset' @refreshData="getTableData" @sendStateData="tabControl" ref="assetEditUnit"></asset-edit-unit>
+        <element-set
+          v-clickoutside="elementsetHide"
+          :dropCol="dropCol"
+          @tablelable="tablelabelEmit"
+          ref="elementset"
+        ></element-set>
     </div>
 
 </template>
@@ -115,6 +132,8 @@ export default {
         description: '',
         receiver: '',
       },
+      tablelable: [],
+      dropCol: [],
       pageObj: {
         pageNo: 1,
         pageSize: 20,
@@ -199,6 +218,36 @@ export default {
     }
   },
   methods: {
+    elementsetShow(s, e) {
+      var eventfixed = {
+        shezhi: 0,
+        screen: 0
+      };
+      eventfixed[s] = 1;
+      e.preventDefault();
+      this.$store.commit('setHeaderTable', this.tablelable);
+      this.$store.commit('setEventfixed', eventfixed);
+      const h = document.documentElement.clientHeight;
+      const w = document.documentElement.clientWidth;
+      const dw = this.$refs.elementset.$el.offsetWidth;
+      const dh = this.$refs.elementset.$el.offsetHeight;
+      let positionx =
+        e.clientX + dw <= w - 10 ? e.clientX - 250 : e.clientX - 250 - dw;
+      let positiony =
+        e.clientY + dh <= h - 10
+          ? e.clientY - 70
+          : e.clientY - 70 - (e.clientY + dh - h);
+      this.$store.commit('setPosition', { positionx, positiony });
+    },
+    elementsetHide() {
+      //悬浮点击空白隐藏
+      this.$refs.elementset.elementsetHide();
+    },
+    tablelabelEmit(data) {
+      //获取子组件传过来的参数
+      this.$store.commit('setHeaderTable', data);
+      this.tablelable = data;
+    },
     toEdit: function(u) {
       this.alertRule = Object.assign({}, u);
       this.$refs.alertConfigBox.show(true, true);
@@ -334,6 +383,12 @@ export default {
   },
   mounted() {
     this.getTableData();
+    this.tablelable = localStorage.getItem("nz-tableTitle-" + localStorage.getItem("nz-username") + "-" + this.$route.path)
+      ? JSON.parse(localStorage.getItem("nz-tableTitle-" + localStorage.getItem("nz-username") + "-" + this.$route.path))
+      : this.tableTitle;
+    this.dropCol = localStorage.getItem("nz-tableTitle-" + localStorage.getItem("nz-username") + "-" + this.$route.path)
+      ? JSON.parse(localStorage.getItem("nz-tableTitle-" + localStorage.getItem("nz-username") + "-" + this.$route.path))
+      : this.tableTitle;
   }
 }
 </script>

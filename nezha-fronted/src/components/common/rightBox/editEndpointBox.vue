@@ -39,10 +39,11 @@
             </el-select>
             <div v-if="!rightBox.isEdit" class="right-box-form-content-txt">{{endpoint.module.name}}</div>
           </el-form-item>
-          <!--host-->
-          <el-form-item :label="$t('project.endpoint.host')" prop="host">
+          <!--asset-->
+          <el-form-item :label="$t('asset.asset')" prop="assetId">
             <div class="right-box-form-content">
-              <el-input class="right-box-row-with-btn" v-if="rightBox.isEdit" placeholder="" v-model="endpoint.host" size="small"></el-input>
+              <el-input class="right-box-row-with-btn" readonly v-if="rightBox.isEdit && endpoint.asset" placeholder="" :value="endpoint.asset.host" size="small"></el-input>
+              <el-input class="right-box-row-with-btn" readonly v-if="rightBox.isEdit && !endpoint.asset" placeholder="" value="" size="small"></el-input>
               <el-popover placement="left"width="400" v-model="subBox.show">
                 <div class="pop-window-assetType-content">
                   <!-- begin--顶部按钮-->
@@ -65,11 +66,9 @@
                           <i v-if="assetSearch.dropdownShow" class="el-icon-caret-top"></i>
                           <i v-if="!assetSearch.dropdownShow" class="el-icon-caret-bottom"></i>
                         </span>
-                      </button>
-                      <div class="endpoint-asset-search-input">
+                      </button><div class="endpoint-asset-search-input">
                         <el-input class="input-x-mini nz-input-group-middle" placeholder="" v-model="assetSearch.text"></el-input>
-                      </div>
-                      <button type="button" class="nz-btn nz-btn-size-small nz-btn-style-light nz-btn-style-square nz-input-group-append">
+                      </div><button type="button" class="nz-btn nz-btn-size-small nz-btn-style-light nz-btn-style-square nz-input-group-append">
                         <i @click="searchAsset" class="el-icon-search"></i>
                       </button>
 
@@ -112,6 +111,11 @@
               <div v-if="!rightBox.isEdit" class="right-box-form-content-txt">{{endpoint.host}}</div>
             </div>
           </el-form-item>
+          <!--host-->
+          <el-form-item :label="$t('project.endpoint.host')" prop="host">
+            <el-input v-if="rightBox.isEdit" placeholder="" v-model="endpoint.host" size="small"></el-input>
+            <div v-if="!rightBox.isEdit" class="right-box-form-content-txt">{{endpoint.host}}</div>
+          </el-form-item>
           <!--port-->
           <el-form-item :label="$t('project.endpoint.port')" prop="port">
             <el-input v-if="rightBox.isEdit" placeholder="" v-model="endpoint.port" size="small"></el-input>
@@ -145,7 +149,7 @@
                 <el-form-item class="param-box-row-value" :rules="{required: true, message: $t('validate.required'), trigger: 'blur'}" :prop="'paramObj.' + index + '.value'">
                   <el-input placeholder="value" size="mini" v-model="item.value"></el-input>
                 </el-form-item>
-                <span class="endpoint-box-row-symbol" @click="removeParam(index)"><i class="nz-icon nz-icon-minus-square"></i></span>
+                <span class="param-box-row-symbol" @click="removeParam(index)"><i class="nz-icon nz-icon-minus-square"></i></span>
               </div>
               <div class="param-box-row" v-for="(item, index) in endpoint.paramObj" v-if="!rightBox.isEdit">
                 <div  class="right-box-form-content-txt">{{item.key}}={{item.value}}</div>
@@ -245,6 +249,9 @@
           ],
           'module.id':[
             {required:true,message:this.$t('validate.required'),trigger:'change'}
+          ],
+          assetId: [
+            {required:true,message:this.$t('validate.required'),trigger:'blur'}
           ],
           port:[
             {required:true,message:this.$t('validate.required'),trigger:'blur'}
@@ -473,202 +480,4 @@
 </script>
 
 <style scoped>
-  /* start--param*/
-  .param-btn {
-    float: right;
-    height: 27px;
-    margin-top: -3px;
-  }
-  .param-btn-active {
-    background-color: #656565;
-    color: white;
-    border: 1px solid #656565;
-  }
-  .param-btn-active:hover, .param-btn-active:focus {
-    background-color: #656565;
-    color: white;
-  }
-  .param-btn-clear {
-    background-color: #D4D4D4;
-    border: 1px solid #D4D4D4;
-    color: white;
-  }
-  .param-btn-clear:hover, .param-btn-clear:focus {
-    background-color: #D4D4D4;
-    color: white;
-  }
-
-  .param-box {
-    border: 1px solid #DCDFE6;
-    border-radius: 4px;
-    padding: 0 10px;
-  }
-  .param-box-endpoint {
-    height: 325px;
-  }
-  .param-box-module {
-    height: 227px;
-  }
-  .param-box-row {
-    padding: 7px 0 0 0;
-    position: relative;
-  }
-  .param-box-row:last-of-type {
-    padding-bottom: 7px;
-  }
-  .param-box-row-key, .param-box-row-value {
-    display: inline-block;
-    width: 41.5%;
-  }
-  .param-box-row-eq {
-    display: inline-block;
-    width: 22px;
-    text-align: center;
-    height: 32px;
-    line-height: 32px;
-    color: #c4c7cF;
-  }
-  .param-box-row-symbol {
-    font-size: 12px;
-    color: #c4c7cF;
-    border: 1px solid #c4c7cF;
-    text-align: center;
-    height: 12px;
-    width: 14px;
-    display: inline-block;
-    position: absolute;
-    top: 17px;
-    right: 25px;
-    cursor: pointer;
-  }
-  .param-box-row-symbol>i {
-    position: absolute;
-    top: 1px;
-    right: 1px;
-  }
-  /* end--param*/
-  /* begin--子弹框*/
-  .right-sub-box {
-    width: 380px;
-    height: 520px;
-    position: absolute;
-    right: 80px;
-    z-index: 2;
-    padding: 0 10px;
-  }
-  .right-sub-box .el-input-group {
-    width: 227px;
-    float: right;
-    margin: 7px 0 0 0;
-  }
-  .pop-item-wider{
-    padding-top:5px;
-    height: 400px;
-  }
-  /* begin--搜索框*/
-  .endpoint-asset-search {
-    display: inline-block;
-    float: left;
-    padding: 7px 8px 0 0;
-    position: relative;
-  }
-  .endpoint-asset-search-dropdown {
-    position: absolute;
-    top: 34px;
-    background-color: #444;
-    border-radius: 4px;
-    width: 44px;
-    left: 0;
-    z-index: 1;
-  }
-  .endpoint-asset-search-dropdown-item {
-    text-align: center;
-    line-height: 22px;
-    height: 22px;
-    cursor: default;
-    color: white;
-    font-size: 12px;
-  }
-  .endpoint-asset-label-txt {
-    display: inline-block;
-    width: 19px;
-    text-align: center;
-  }
-  .endpoint-asset-search-dropdown-item:first-of-type {
-    border-radius: 4px 4px 0 0;
-  }
-  .endpoint-asset-search-dropdown-item:last-of-type {
-    border-radius: 0 0 4px 4px;
-  }
-  .endpoint-asset-search-dropdown-item:hover {
-    background-color: #222;
-    color: #ff9900;
-  }
-  .endpoint-asset-search-input {
-    display: inline-block;
-    width: 100px;
-    vertical-align: middle;
-  }
-  /* end--搜索框*/
-  /* begin--table*/
-  .endpoint-sub-table {
-    margin-top:20px;
-    padding-top: 15px;
-    height: calc(100% - 45px);
-  }
-  .line-100 {
-    margin-bottom: 3px;
-  }
-  .endpoint-sub-table-head {
-    line-height: 28px;
-    height: 30px;
-  }
-  .endpoint-sub-table-row, .endpoint-sub-table-row-disabled {
-    line-height: 28px;
-    height: 30px;
-    color: #656565;
-    margin-bottom: 5px;
-  }
-  .endpoint-sub-table-row:hover {
-    background-color: #dadada;
-    cursor: default;
-
-  }
-  .endpoint-sub-table-row-active {
-    background-color: #dadada;
-  }
-  .endpoint-sub-table-row-selected {
-    background-color: #656565;
-    color: white;
-  }
-  .endpoint-sub-table-col {
-    display: inline-block;
-    width: calc(50% - 15px);
-    padding-left: 10px;
-  }
-  .endpoint-sub-table-paginate-all {
-    position: absolute;
-    left: 10px;
-    bottom: 17px;
-    color: #5a5a5a;
-  }
-  .endpoint-sub-table-body {
-    font-size: 15px;
-    position: relative;
-    overflow: auto;
-    height: calc(100% - 54px);
-  }
-  .endpoint-sub-table-body-dialog {
-    width: 100%;
-    height: 100%;
-    background-color: #e9ebec;
-    position: absolute;
-    opacity: 0.2;
-  }
-  .endpoints-clear-btn {
-    margin: 6px 0 0 7px;
-  }
-  /* end--table*/
-
-  /* end--子弹框*/
 </style>

@@ -58,6 +58,7 @@ export default {
         if (res.code == 200) {
           sessionStorage.setItem("nz-token", res.data.token);
           sessionStorage.setItem("nz-username", this.loginData.username);
+          localStorage.setItem("nz-username", this.loginData.username);
           this.$router.push({
             path: "/dashboard",
             query: {

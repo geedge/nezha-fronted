@@ -12,7 +12,11 @@ const OptimizeCSSPlugin = require('optimize-css-assets-webpack-plugin')
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
 
 const env = require('../config/prod.env')
-
+const GenerateAssetPlugin = require('generate-asset-webpack-plugin');
+const createServerConfig = function(compilation){
+  let cfgJson={ApiUrl:"http://192.168.40.247:8080/nz-admin"};
+  return JSON.stringify(cfgJson);
+}
 const webpackConfig = merge(baseWebpackConfig, {
   module: {
     rules: utils.styleLoaders({
@@ -28,6 +32,13 @@ const webpackConfig = merge(baseWebpackConfig, {
     chunkFilename: utils.assetsPath('js/[id].[chunkhash].js')
   },
   plugins: [
+    new GenerateAssetPlugin({
+      filename: 'serverconfig.json',
+      fn: (compilation, cb) => {
+        cb(null, createServerConfig(compilation));
+      },
+      extraFiles: []
+    }),
     // http://vuejs.github.io/vue-loader/en/workflow/production.html
     new webpack.DefinePlugin({
       'process.env': env

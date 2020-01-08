@@ -72,28 +72,35 @@
         style="width: 100%;">
         <el-table-column
           :resizable="false"
-          v-for="(item, index) in endpointTableTitle"
+          v-for="(item, index) in tablelable"
           v-if="item.show"
           :width="item.width"
           :key="`col-${index}`"
           :label="item.label"
         >
+          <template slot="header" slot-scope="scope">
+              <span v-if="index==0">
+                <span @click.stop="elementsetShow('shezhi',$event)">
+                    <i class="el-icon-setting"></i>
+                </span>
+                <span>{{item.label}}</span>
+              </span>
+            <div v-else>
+              <span>{{item.label}}</span>
+            </div>
+          </template>
           <template slot-scope="scope" :column="item">
             <span v-if="item.prop == 'asset' && scope.row[item.prop]" class="content-right-option" @click="viewAsset(scope.row[item.prop].id)">{{scope.row[item.prop].host}}</span>
             <span v-else-if="item.prop == 'param'">
               <span v-for="p in scope.row.paramObj">{{p.key}}={{p.value}}，</span>
             </span>
-            <span v-else-if="item.prop == 'lastUpdate'">{{dateFormat(scope.row.lastUpdate)}}</span>
-            <span v-else-if="item.prop == 'state'" :style="{color: scope.row.state == 0 ? 'red' : (scope.row.state == 0 ? 'green' : '')}">{{scope.row.state == 1 ? 'up' : ''}}{{scope.row.state == 0 ? 'down' : ''}}</span>
-            <span v-else>{{scope.row[item.prop]}}</span>
-          </template>
-        </el-table-column>
-        <el-table-column :resizable="false" :label="$t('overall.option')" width="100">
-          <template slot-scope="scope" :column="item">
-            <div class="content-right-options">
+            <div v-else-if="item.prop == 'option'" class="content-right-options">
               <span @click.stop="endpointDetail(scope.row)" class="content-right-option"><i class="el-icon-view"></i></span>
               <span @click.stop="toEditEndpoint(scope.row)" class="content-right-option"><i class="el-icon-edit-outline"></i></span>
             </div>
+            <span v-else-if="item.prop == 'lastUpdate'">{{dateFormat(scope.row.lastUpdate)}}</span>
+            <span v-else-if="item.prop == 'state'" :style="{color: scope.row.state == 0 ? 'red' : (scope.row.state == 0 ? 'green' : '')}">{{scope.row.state == 1 ? 'up' : ''}}{{scope.row.state == 0 ? 'down' : ''}}</span>
+            <span v-else>{{scope.row[item.prop]}}</span>
           </template>
         </el-table-column>
       </el-table>
@@ -104,6 +111,12 @@
     <edit-endpoint-box :currentProject="currentProject" :currentModule="currentModule" :endpoint="editEndpoint" @reload="getEndpointTableData" ref="editEndpointBox"></edit-endpoint-box>
     <add-endpoint-box :currentProject="currentProject" :currentModule="currentModule" @reload="getEndpointTableData" ref="addEndpointBox"></add-endpoint-box>
     <asset-edit-unit :edit-unit-show='viewAssetState' @refreshData="getEndpointTableData" @sendStateData="tabControl" ref="assetEditUnit"></asset-edit-unit>
+    <element-set
+      v-clickoutside="elementsetHide"
+      :dropCol="dropCol"
+      @tablelable="tablelabelEmit"
+      ref="elementset"
+    ></element-set>
   </div>
 </template>
 
@@ -118,8 +131,11 @@
           {
             label: this.$t("project.endpoint.endpointId"),
             prop: 'id',
+            show: true
+          },{
+            label: this.$t("project.endpoint.asset"),
+            prop: 'asset',
             show: true,
-            width: 110
           },{
             label: this.$t("project.endpoint.host"),
             prop: 'host',
@@ -144,10 +160,10 @@
             label: this.$t("project.endpoint.lastUpdate"),
             prop: 'lastUpdate',
             show: true,
-          },{
-            label: this.$t("project.endpoint.asset"),
-            prop: 'asset',
-            show: true,
+          }, {
+            label: this.$t('config.account.option'),
+            prop: 'option',
+            show: true
           }
         ],
         endpointTableData: [],
@@ -179,6 +195,8 @@
           pageSize: 20,
           total: 0
         },
+        tablelable: [],
+        dropCol: [],
         moduleList: [],
         projectList: [],
         currentProject: {id: '', name: '', remark: ''}, //endpoint弹框、module列表用来回显project
@@ -216,6 +234,36 @@
       }
     },
     methods: {
+      elementsetShow(s, e) {
+        var eventfixed = {
+          shezhi: 0,
+          screen: 0
+        };
+        eventfixed[s] = 1;
+        e.preventDefault();
+        this.$store.commit('setHeaderTable', this.tablelable);
+        this.$store.commit('setEventfixed', eventfixed);
+        const h = document.documentElement.clientHeight;
+        const w = document.documentElement.clientWidth;
+        const dw = this.$refs.elementset.$el.offsetWidth;
+        const dh = this.$refs.elementset.$el.offsetHeight;
+        let positionx =
+          e.clientX + dw <= w - 10 ? e.clientX - 250 : e.clientX - 250 - dw;
+        let positiony =
+          e.clientY + dh <= h - 10
+            ? e.clientY - 70
+            : e.clientY - 70 - (e.clientY + dh - h);
+        this.$store.commit('setPosition', { positionx, positiony });
+      },
+      elementsetHide() {
+        //悬浮点击空白隐藏
+        this.$refs.elementset.elementsetHide();
+      },
+      tablelabelEmit(data) {
+        //获取子组件传过来的参数
+        this.$store.commit('setHeaderTable', data);
+        this.tablelable = data;
+      },
       getEndpointTableData() {
         this.endpointSearchLabel.moduleId = this.currentModule.id;
         this.$set(this.endpointSearchLabel, 'pageNo', this.endpointPageObj.pageNo);
@@ -319,9 +367,9 @@
 
       //弹出endpoint编辑页
       toEditEndpoint(endpoint) {
+        this.editEndpoint = JSON.parse(JSON.stringify(endpoint));
         this.rightBoxHandler(3);
         this.$refs.editEndpointBox.toEdit(true);
-        this.editEndpoint = JSON.parse(JSON.stringify(endpoint));
         if (!this.editEndpoint.paramObj) {
           this.$set(this.editEndpoint, 'paramObj', []);
         }
@@ -448,6 +496,12 @@
       setTimeout(()=>{
         this.getEndpointTableData();
       }, 200);
+      this.tablelable = localStorage.getItem("nz-tableTitle-" + localStorage.getItem("nz-username") + "-" + this.$route.path)
+        ? JSON.parse(localStorage.getItem("nz-tableTitle-" + localStorage.getItem("nz-username") + "-" + this.$route.path))
+        : this.endpointTableTitle;
+      this.dropCol = localStorage.getItem("nz-tableTitle-" + localStorage.getItem("nz-username") + "-" + this.$route.path)
+        ? JSON.parse(localStorage.getItem("nz-tableTitle-" + localStorage.getItem("nz-username") + "-" + this.$route.path))
+        : this.endpointTableTitle;
     },
     computed: {
       currentProjectChange() {

@@ -20,24 +20,31 @@
               <div class="top-tool-search float-right"><search-input :searchMsg="searchMsg" @search="search"></search-input></div>
             </div>
             <el-table :data="tableData" border height="calc(100% - 65px)" style="width: 100%;">
-                <el-table-column :resizable="false" v-for="(item, index) in tableTitle" v-if="item.show" :width="item.width" :key="`col-${index}`" :label="item.label">
+                <el-table-column :resizable="false" v-for="(item, index) in tablelable" v-if="item.show" :width="item.width" :key="`col-${index}`" :label="item.label">
+                    <template slot="header" slot-scope="scope">
+                        <span v-if="index==0">
+                            <span @click.stop="elementsetShow('shezhi',$event)">
+                                <i class="el-icon-setting"></i>
+                            </span>
+                            <span>{{item.label}}</span>
+                        </span>
+                        <div v-else>
+                            <span>{{item.label}}</span>
+                        </div>
+                    </template>
                     <template slot-scope="scope" :column="item">
                         <span v-if="item.prop == 'idc'">{{scope.row[item.prop].name}}</span>
                         <span v-else-if="item.prop == 'type'">
                             {{scope.row[item.prop] == '1' ? 'Global' : ''}}
                             {{scope.row[item.prop] == '2' ? 'Per-Datacenter' : ''}}
                         </span>
+                        <div v-else-if="item.prop == 'option'" class="content-right-options">
+                            <span @click="del(scope.row)" class="content-right-option"><i class="el-icon-delete"></i></span>
+                            <span @click="detail(scope.row)" class="content-right-option"><i class="el-icon-view"></i></span>
+                            <span @click="toEdit(scope.row)" class="content-right-option"><i class="el-icon-edit-outline"></i></span>
+                        </div>
                         <span v-else>{{scope.row[item.prop]}}</span>
                     </template>
-                </el-table-column>
-                <el-table-column :resizable="false" :label="$t('config.account.option')" width="100">
-                  <template slot-scope="scope" :column="item">
-                    <div class="content-right-options">
-                        <span @click="del(scope.row)" class="content-right-option"><i class="el-icon-delete"></i></span>
-                        <span @click="detail(scope.row)" class="content-right-option"><i class="el-icon-view"></i></span>
-                        <span @click="toEdit(scope.row)" class="content-right-option"><i class="el-icon-edit-outline"></i></span>
-                    </div>
-                  </template>
                 </el-table-column>
             </el-table>
             <Pagination :pageObj="pageObj" @pageNo='pageNo' @pageSize='pageSize' ref="Pagination"></Pagination>
@@ -114,6 +121,12 @@
                 <!-- end--表单-->
             </div>
         </transition>
+        <element-set
+          v-clickoutside="elementsetHide"
+          :dropCol="dropCol"
+          @tablelable="tablelabelEmit"
+          ref="elementset"
+        ></element-set>
     </div>
 
 </template>
@@ -189,8 +202,15 @@ export default {
           label: this.$t("config.promServer.type"),
           prop: 'type',
           show: true,
+        }, {
+          label: this.$t('config.account.option'),
+          prop: 'option',
+          show: true,
+          width: 100
         }
       ],
+      tablelable: [],
+      dropCol: [],
       tableData: [],
       idcData: [],
       typeData: [
@@ -262,6 +282,36 @@ export default {
     }
   },
   methods: {
+    elementsetShow(s, e) {
+      var eventfixed = {
+        shezhi: 0,
+        screen: 0
+      };
+      eventfixed[s] = 1;
+      e.preventDefault();
+      this.$store.commit('setHeaderTable', this.tablelable);
+      this.$store.commit('setEventfixed', eventfixed);
+      const h = document.documentElement.clientHeight;
+      const w = document.documentElement.clientWidth;
+      const dw = this.$refs.elementset.$el.offsetWidth;
+      const dh = this.$refs.elementset.$el.offsetHeight;
+      let positionx =
+        e.clientX + dw <= w - 10 ? e.clientX - 250 : e.clientX - 250 - dw;
+      let positiony =
+        e.clientY + dh <= h - 10
+          ? e.clientY - 70
+          : e.clientY - 70 - (e.clientY + dh - h);
+      this.$store.commit('setPosition', { positionx, positiony });
+    },
+    elementsetHide() {
+      //悬浮点击空白隐藏
+      this.$refs.elementset.elementsetHide();
+    },
+    tablelabelEmit(data) {
+      //获取子组件传过来的参数
+      this.$store.commit('setHeaderTable', data);
+      this.tablelable = data;
+    },
     toEdit: function(u) {
       this.promServer = Object.assign({}, u);
       this.rightBox.isEdit = true;
@@ -529,6 +579,12 @@ export default {
   mounted: function() {
     this.getIdcData();
     this.getUserData();
+    this.tablelable = localStorage.getItem("nz-tableTitle-" + localStorage.getItem("nz-username") + "-" + this.$route.path)
+      ? JSON.parse(localStorage.getItem("nz-tableTitle-" + localStorage.getItem("nz-username") + "-" + this.$route.path))
+      : this.tableTitle;
+    this.dropCol = localStorage.getItem("nz-tableTitle-" + localStorage.getItem("nz-username") + "-" + this.$route.path)
+      ? JSON.parse(localStorage.getItem("nz-tableTitle-" + localStorage.getItem("nz-username") + "-" + this.$route.path))
+      : this.tableTitle;
   },
   watch: {
     'promServer.idc': function(n, o) {

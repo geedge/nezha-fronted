@@ -19,7 +19,10 @@ const en = {
     clear: "Clear",
     name: 'Name',
     cover: 'Cover',
-    signOut: 'Sign Out'
+    signOut: 'Sign Out',
+    select: 'Select',
+    ok: 'Ok',
+    all: 'All'
   },
   dashboard:{
     title:'Dashboard',

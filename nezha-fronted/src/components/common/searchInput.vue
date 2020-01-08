@@ -300,6 +300,13 @@
                 }
               });
             },
+            getModelData() {
+              this.$get('asset', {pageNo: 1, pageSize: 999}).then(response => {
+                if (response.code === 200) {
+                  this.assetSelect = response.data.list;
+                }
+              });
+            },
             //点击确认选择下拉内容
             tr_selectInfo(selectLabel,value,label,e){
                 this.stop_click(e);
@@ -497,16 +504,16 @@
                 this.getHeight()
                 //搜索完成后存储在本地历史记录中
                 if(this.select_list.length!=0){
-                    if (JSON.parse(localStorage.getItem('NZ_history_'+this.$route.path)) == undefined || JSON.parse(localStorage.getItem('NZ_history_'+this.$route.path)) == []) {
+                    if (JSON.parse(localStorage.getItem('nz-history-'+this.$route.path)) == undefined || JSON.parse(localStorage.getItem('nz-history-'+this.$route.path)) == []) {
                         this.historyList.unshift(this.select_list);
-                        localStorage.setItem('NZ_history_'+this.$route.path, JSON.stringify(this.historyList));
+                        localStorage.setItem('nz-history-'+this.$route.path, JSON.stringify(this.historyList));
                     } else {
-                        this.historyList = JSON.parse(localStorage.getItem('NZ_history_'+this.$route.path));
+                        this.historyList = JSON.parse(localStorage.getItem('nz-history-'+this.$route.path));
                         this.historyList.unshift(this.select_list);
                         if (this.historyList.length > 10) {
                             this.historyList.length = 10;
                         }
-                        localStorage.setItem('NZ_history_'+this.$route.path, JSON.stringify(this.historyList));
+                        localStorage.setItem('nz-history-'+this.$route.path, JSON.stringify(this.historyList));
                     }
                 }
                 this.input_list = true;
@@ -517,7 +524,7 @@
             clear_history() {
                 this.historyList = [];
                 this.history_once = [];
-                localStorage.setItem('NZ_history_'+this.$route.path, JSON.stringify(this.historyList));
+                localStorage.setItem('nz-history-'+this.$route.path, JSON.stringify(this.historyList));
             },
             //再次点击之前的历史记录
             select_history(ind,e) {
@@ -526,7 +533,7 @@
                 this.change_sreach_show = true;
                 this.localStorage_display = !this.localStorage_display;
                 this.select_list = [];
-                JSON.parse(localStorage.getItem('NZ_history_'+this.$route.path)).splice(ind,1);
+                JSON.parse(localStorage.getItem('nz-history-'+this.$route.path)).splice(ind,1);
                 this.select_list = JSON.parse(JSON.stringify(this.history_once[ind]));
                 this.sreach_num = this.select_list.length;
                 this.select_list.forEach(val => {
@@ -540,8 +547,8 @@
             },
             // 获取历史记录  数据进行处理以便循环展示
             restructure_historyDate() {
-                if (localStorage.getItem('NZ_history_'+this.$route.path) !== undefined && localStorage.getItem('NZ_history_'+this.$route.path) !== null) {
-                    this.history_once = JSON.parse(localStorage.getItem('NZ_history_'+this.$route.path));
+                if (localStorage.getItem('nz-history-'+this.$route.path) !== undefined && localStorage.getItem('nz-history-'+this.$route.path) !== null) {
+                    this.history_once = JSON.parse(localStorage.getItem('nz-history-'+this.$route.path));
                 }
             },
             clear_search_list(e){
@@ -992,6 +999,9 @@
             }
             if (this.$route.path == '/project') {
               this.getAssetData();
+            }
+            if (this.$route.path == '/asset') {
+              this.getModelData();
             }
             JSON.parse(JSON.stringify(this.searchMsg.searchLabelList)).forEach(val => {
               if(val.name=='Protocol'){
