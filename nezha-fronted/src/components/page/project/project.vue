@@ -84,7 +84,7 @@
               <span v-for="p in scope.row.paramObj">{{p.key}}={{p.value}}，</span>
             </span>
             <span v-else-if="item.prop == 'lastUpdate'">{{dateFormat(scope.row.lastUpdate)}}</span>
-            <span v-else-if="item.prop == 'state'">{{scope.row.state == 1 ? 'up' : ''}}{{scope.row.state == 0 ? 'down' : ''}}</span>
+            <span v-else-if="item.prop == 'state'" :style="{color: scope.row.state == 0 ? 'red' : (scope.row.state == 0 ? 'green' : '')}">{{scope.row.state == 1 ? 'up' : ''}}{{scope.row.state == 0 ? 'down' : ''}}</span>
             <span v-else>{{scope.row[item.prop]}}</span>
           </template>
         </el-table-column>

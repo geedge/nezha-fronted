@@ -63,16 +63,16 @@
               >
                 <span v-if="!item.isEdit">{{ item.value }}</span>
                 <span class="config-dropdown-label-input" v-if="item.isEdit" @click.stop="editing(item)">
-                                      <el-input type="text" v-model="item.value" size="mini"/>
-                                  </span>
+                  <el-input type="text" v-model="item.value" size="mini"/>
+                </span>
                 <span class="config-dropdown-btn" @click.stop="editOptionData(item,'type')">
-                                      <i class="el-icon-edit-outline" v-if="!item.isEdit"></i>
-                                      <i class="el-icon-check" v-if="item.isEdit"
-                                         @click="editData('sys/dict/update',item)"></i>
-                                   </span>
+                  <i class="el-icon-edit-outline" v-if="!item.isEdit"></i>
+                  <i class="el-icon-check" v-if="item.isEdit"
+                     @click="editData('sys/dict/update',item)"></i>
+                </span>
                 <span class="config-dropdown-btn config-dropdown-btn-delete" @click.stop="delOptionData(item)">
-                                      <i class="el-icon-delete"></i>
-                                  </span>
+                  <i class="el-icon-delete"></i>
+                </span>
               </el-option>
             </el-select>
             <div class="right-box-row-btn right-box-row-btn-small" v-if="!tabView">
@@ -861,11 +861,11 @@
         }
       }
     },
-    computed: {
+    /*computed: {
       getData() {
         return this.$store.state.assetData
       }
-    },
+    },*/
     watch: {
       allModelUlData(newVal) {
         if (newVal) {
@@ -961,7 +961,7 @@
           if (response.code === 200) {
             this.IDCOptionData = response.data.list;
             this.markOptionData(this.IDCOptionData)
-            this.$store.state.assetData.idcData = this.IDCOptionData
+            //this.$store.state.assetData.idcData = this.IDCOptionData
             this.$emit('refreshData');
           }
         })
@@ -1205,7 +1205,6 @@
           type: 'warning'
         }).then(() => {
           this.$delete(data + "?ids=" + item).then(response => {
-            const h = this.$createElement;
             if (response.code === 200) {
               this.$message({duration: 2000, type: 'success', message: this.$t("tip.deleteSuccess")});
               this.getAssetData();
@@ -1326,6 +1325,24 @@
         }
       },
       delOptionData(data) {
+        this.$confirm(this.$t("tip.confirmDelete"), {
+          confirmButtonText: this.$t("tip.yes"),
+          cancelButtonText: this.$t("tip.no"),
+          type: 'warning'
+        }).then(() => {
+          this.$delete("/sys/dict/delete?ids=" + data.id).then(response => {
+            if (response.code === 200) {
+              this.$message({duration: 2000, type: 'success', message: this.$t("tip.deleteSuccess")});
+              this.getAssetData();
+              this.getAssetTypeOptionData();
+              this.getVendorOptionData();
+              this.getAllModelOptionData(this.assetType);
+              this.getModelOptionData(this.assetType, this.vendorCode);
+            } else {
+              this.$message.error(response.msg);
+            }
+          })
+        });
       },
       tabControl(data) {
         if (data === 'close') {

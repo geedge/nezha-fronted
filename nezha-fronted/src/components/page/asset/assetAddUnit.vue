@@ -822,11 +822,11 @@
         }
       }
     },
-    computed: {
+    /*computed: {
       getData() {
         return this.$store.state.assetData
       }
-    },
+    },*/
     watch: {
       allModelUlData(newVal) {
         if (newVal) {
@@ -887,7 +887,7 @@
           if (response.code === 200) {
             this.IDCOptionData = response.data.list;
             this.markOptionData(this.IDCOptionData)
-            this.$store.state.assetData.idcData = this.IDCOptionData;
+            //this.$store.state.assetData.idcData = this.IDCOptionData;
             this.$emit('refreshData');
           }
         })
@@ -1263,7 +1263,7 @@
         this.cabinetSelectedData.remark = ''
       },
       editing(item) {
-        console.log(item)
+        //console.log(item)
       },
       getSingleIDCData(data, item, itemData) {
         if (item !== 'edit') {

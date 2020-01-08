@@ -4,7 +4,7 @@
       <div class="sidebar-title">Asset</div>
       <div class="sidebar-info">
         <!--<div class="sidebar-info-header">ALL</div>-->
-        <el-checkbox-group v-model="checkList" size="small" @change="getSingleAsset(checkList)">
+        <el-checkbox-group v-model="checkList" size="small" @change="getSingleAsset()">
           <el-checkbox class="sidebar-info-item" :class="{'sidebar-info-item-active': checkList.indexOf(item.id) != -1}"
                        v-for="(item,key) in checkListData" :key="key" :label=item.id>
             <span>{{item.name}}</span>
@@ -205,7 +205,8 @@
           {
             label: this.$t("asset.tableTitle.id"),
             prop: 'ID',
-            show: false,
+            show: true,
+            width: 60
           }, {
             label: this.$t("asset.tableTitle.assetType"),
             prop: '资产类型',
@@ -328,10 +329,14 @@
     },
     watch: {
       getData: {
-        handler(oldVal, newVal) {
-          this.checkList.splice(0, 1, newVal.selectedData);
-          this.pageObj.idcIds = newVal.selectedData;
-          this.getAssetData()
+        handler(newVal) {
+          if (this.checkList.indexOf(newVal.selectedData) >= 0) {
+            this.checkList.splice(this.checkList.indexOf(newVal.selectedData), 1);
+          } else {
+            this.checkList.push(newVal.selectedData);
+          }
+          this.getSingleAsset();
+          this.getAssetData();
         },
         deep: true,
       },
@@ -346,7 +351,7 @@
     },
     created() {
       this.checkList.push(this.$store.state.assetData.selectedData)
-      this.getSingleAsset(this.checkList)
+      this.getSingleAsset()
 
     },
     methods: {
@@ -361,7 +366,8 @@
         window.open(routeData.href);
       },
       getAssetData(data) {
-        this.$get('asset', this.pageObj).then(response => {
+        this.searchLabel = Object.assign(this.pageObj, this.searchLabel);
+        this.$get('asset', this.searchLabel).then(response => {
           if (response.code === 200) {
             this.tableData = response.data.list;
             this.pageObj.total = response.data.total
@@ -388,59 +394,44 @@
           item.name = this.addIdcData.popName
         }
         this.$put(data, item).then(res => {
-          const h = this.$createElement;
           if (res.code === 200) {
-            this.$notify({
-              message: h('i', {style: 'color: teal'}, '修改成功'),
-              duration: 2000
-            });
+            this.$message({duration: 2000, type: 'success', message: this.$t("tip.saveSuccess")});
             this.getAssetData();
           } else {
-            this.$notify({
-              message: h('i', {style: 'color: teal'}, res.msg),
-              duration: 2000
-            })
+            this.$message.error(res.msg);
           }
         })
       },
       addNewData(type) {
         if (type === 'IDC') {
           this.$post('idc', this.addIdcData).then(res => {
-            const h = this.$createElement;
             if (res.code === 200) {
               const h = this.$createElement;
-              this.$notify({
-                message: h('i', {style: 'color: teal'}, '添加成功'),
-                duration: 2000
-              });
+              this.$message({duration: 2000, type: 'success', message: this.$t("tip.saveSuccess")});
               this.getIDCOptionData()
               this.getAssetData()
             } else {
-              this.$notify({
-                message: h('i', {style: 'color: teal'}, '添加成功'),
-                duration: 2000
-              });
+              this.$message.error(res.msg);
             }
           })
         }
       },
       deleteData(data, item) {
-        this.$delete(data + "?ids=" + item).then(response => {
-          const h = this.$createElement;
-          if (response.code === 200) {
-            this.$notify({
-              message: h('i', {style: 'color: teal'}, '删除成功'),
-              duration: 2000
-            });
-            this.getAssetData()
-            this.getIDCOptionData()
-          } else {
-            this.$notify({
-              message: h('i', {style: 'color: teal'}, response.msg),
-              duration: 2000
-            });
-          }
-        })
+        this.$confirm(this.$t("tip.assetConfirmDelete"), {
+          confirmButtonText: this.$t("tip.yes"),
+          cancelButtonText: this.$t("tip.no"),
+          type: 'warning'
+        }).then(() => {
+          this.$delete(data + "?ids=" + item).then(response => {
+            if (response.code === 200) {
+              this.$message({duration: 2000, type: 'success', message: this.$t("tip.deleteSuccess")});
+              this.getAssetData();
+              this.getIDCOptionData();
+            } else {
+              this.$message.error(response.msg);
+            }
+          })
+        });
       },
       markOptionData(data) {
         data.forEach(item => {
@@ -511,15 +502,16 @@
         }
       }
       ,
-      getSingleAsset(data) {
-        let result = []
-        if (data[0] === '') {
-          result = data.slice(1);
-          this.pageObj.idcIds = result.join(',')
-        } else {
-          this.pageObj.idcIds = data.join(',')
+      getSingleAsset() {
+        if (this.checkList.length > 0 ) {
+          if (this.checkList[0] === '') {
+            this.checkList.splice(0, 1);
+            this.getSingleAsset();
+          } else {
+            this.pageObj.idcIds = this.checkList.join(',');
+          }
+          this.getAssetData();
         }
-        this.getAssetData()
       },
       pageNo(val) {
         this.pageObj.pageNo = val;
@@ -547,11 +539,18 @@
         }
       },
       flushData() {
+        this.getSingleAsset();
         this.getAssetData();
         this.getIDCOptionData();
       },
-      search() {
-
+      search(searchObj) {
+        this.searchLabel = {};
+        for (let item in searchObj) {
+          if (searchObj[item]) {
+            this.$set(this.searchLabel, item, searchObj[item]);
+          }
+        }
+        this.getAssetData();
       }
     },
     mounted() {

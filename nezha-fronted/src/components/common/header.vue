@@ -57,7 +57,12 @@
             <el-menu-item :index="'3-' + index">
               <div @click="jumpToAsset('asset',item.id)">
                 <span>{{item.name}}</span>
-                <el-popover
+                <idc-config-box :post-idc="item" placement="left" @after="getIDCOptionData" :button-class="'menu-edit'">
+                  <template v-slot:optionZone>
+                    <i class="el-icon-edit-outline" @click="getIDCOptionData(item.id)" style="color: inherit"></i>
+                  </template>
+                </idc-config-box>
+                <!--<el-popover
                   placement="bottom"
                   v-model="item[item.name]"
                   trigger="click"
@@ -118,7 +123,7 @@
                   <div @click.stop="getIDCOptionData(item.id)" slot="reference" class="menu-edit">
                     <i style="color: inherit" class="el-icon-edit-outline"></i>
                   </div>
-                </el-popover>
+                </el-popover>-->
               </div>
             </el-menu-item>
           </template>
@@ -334,8 +339,11 @@
         }
       },
       jumpToAsset(data, id) {
-        this.$store.state.assetData.moduleData = data;
-        this.$store.state.assetData.selectedData = id;
+        if (id != this.$store.state.assetData.selectedData) {
+          this.$store.state.assetData = {selectedData: id, step: this.$store.state.assetData.step+1};
+        } else {
+          this.$store.state.assetData.step = this.$store.state.assetData.step+1;
+        }
         this.jumpTo(data);
       },
       jumpToProject(p) {
@@ -721,5 +729,11 @@
     width: 50%;
     float: right;
     border-bottom-right-radius: 8px;
+  }
+</style>
+<style>
+  .menu-edit {
+    line-height: 36px;
+    float: right;
   }
 </style>

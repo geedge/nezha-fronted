@@ -26,7 +26,7 @@
             <el-input type="text"  placeholder="" v-model="idc.location" size="mini"></el-input>
           </el-form-item>
           <el-form-item :label="$t('asset.createAssetTab.principal')" prop="principal">
-            <el-select v-model="idc.principal" clearable size="mini">
+            <el-select v-model="idc.principal" clearable size="mini" placeholder="">
               <el-option v-for="item in principals" :key="item.id" :label="item.username" :value="item.userId"></el-option>
             </el-select>
           </el-form-item>
@@ -108,7 +108,6 @@
           }
         },
         openBox:function(){
-          console.log("show")
           this.popBox.show=true;
         },
         getUserData() {
@@ -125,7 +124,6 @@
             if(valide){
               const h = temp.$createElement;
               if(!temp.idc.id){
-                console.log("save")
                 temp.$post('idc', temp.idc).then(response => {
                   if (response.code === 200) {
                     temp.$message({duration: 1000, type: 'success', message: temp.$t("tip.deleteSuccess")});
@@ -136,7 +134,6 @@
                   }
                 })
               }else{
-                console.log("edit")
                 this.$put('idc', temp.idc).then(response => {
                   if (response.code === 200) {
                     temp.$message({duration: 1000, type: 'success', message: temp.$t("tip.deleteSuccess")});
@@ -201,7 +198,6 @@
               this.title = this.$t('asset.createAssetTab.AddIdcTab.title');
               this.popBox.isEdit=false;
               this.resetData();
-              console.log("reset")
             }
           }
         },

@@ -6,8 +6,7 @@ const store = new Vuex.Store({
   state: {
     assetData:{
       selectedData:'',
-      moduleData:'',
-      idcData:''
+      step: 0
     },
     currentProject: {
       id: '',

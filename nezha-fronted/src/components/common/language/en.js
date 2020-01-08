@@ -111,6 +111,7 @@ const en = {
   },
   tip: {
     confirmDelete: "Confirm Delete?",
+    assetConfirmDelete: 'Its associated Endpoints and Alert Rules will also be deleted, confirm delete?',
     yes: "Yes",
     no: "No",
     deleteSuccess: "Successfully Deleted",
