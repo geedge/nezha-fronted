@@ -474,7 +474,7 @@
         return this.$store.state.projectListChange;
       },
       getIdcData() {
-        return this.$store.state.assetData.idcData
+        return this.$store.state.assetDcList;
       }
     },
     watch: {

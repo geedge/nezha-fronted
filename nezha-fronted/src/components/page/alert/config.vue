@@ -1,10 +1,10 @@
 <style scoped>
-  .account {
+  .config {
     height: 100%;
   }
 </style>
 <template>
-    <div class="account">
+    <div class="config">
         <div class="content-left">
             <div class="sidebar-title">{{$t('alert.alert')}}</div>
             <div class="sidebar-info">
@@ -34,7 +34,7 @@
                   show-overflow-tooltip
                 >
                     <template slot-scope="scope" :column="item">
-                        <div v-if="item.prop == 'option'" class="account-list-options">
+                        <div v-if="item.prop == 'option'" class="content-right-options">
                           <span @click="del(scope.row)" class="content-right-option"><i class="el-icon-delete"></i></span>
                           <span @click="detail(scope.row)" class="content-right-option"><i class="el-icon-view"></i></span>
                           <span @click="toEdit(scope.row)" class="content-right-option"><i class="el-icon-edit-outline"></i></span>
@@ -49,8 +49,8 @@
                         </span>
 <!--                        <span v-else-if="item.prop == 'linkObject' && scope.row[item.prop]">{{scope.row.type != 3 && scope.row.linkObject ? scope.row[item.prop].name : scope.row[item.prop].host}}</span>-->
                       <div v-else-if="item.prop == 'linkObject'">
-                        <span v-if="(scope.row['type'] == 1 || scope.row['type'] == 2) && scope.row[item.prop]" class="account-list-option" @click="viewAlertType(scope.row['type'],scope.row[item.prop])">{{scope.row[item.prop].name}}</span>
-                        <span v-if="scope.row['type'] == 3 && scope.row[item.prop]" class="account-list-option" @click="viewAlertType(scope.row['type'],scope.row[item.prop].id)">{{scope.row[item.prop].host}}</span>
+                        <span v-if="(scope.row['type'] == 1 || scope.row['type'] == 2) && scope.row[item.prop]" class="content-right-option" @click="viewAlertType(scope.row['type'],scope.row[item.prop])">{{scope.row[item.prop].name}}</span>
+                        <span v-if="scope.row['type'] == 3 && scope.row[item.prop]" class="content-right-option" @click="viewAlertType(scope.row['type'],scope.row[item.prop].id)">{{scope.row[item.prop].host}}</span>
                       </div>
                         <span v-else>{{scope.row[item.prop]}}</span>
                     </template>
@@ -61,7 +61,7 @@
         <alert-config-box :parentAlertRule="alertRule" @reload="getTableData" ref="alertConfigBox"></alert-config-box>
         <project-box :project="viewProjectData" ref="projectBox" @reload="getTableData"></project-box>
         <module-box  :module="viewModuleData" @reload="getTableData" ref="moduleBox"></module-box>
-        <asset-edit-unit :edit-unit-show='viewAsset' @refreshData="" @sendStateData="" ref="assetEditUnit"></asset-edit-unit>
+        <asset-edit-unit :edit-unit-show='viewAsset' @refreshData="getTableData" @sendStateData="tabControl" ref="assetEditUnit"></asset-edit-unit>
     </div>
 
 </template>
@@ -218,6 +218,13 @@ export default {
           }
         })
       });
+    },
+    //asset弹框控制
+    tabControl(data) {
+      if (data === 'close') {
+        this.viewAsset = false
+        this.$refs['assetEditUnit'].tabView = false
+      }
     },
     toAdd: function() {
       this.cleanAlertRule();

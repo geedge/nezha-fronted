@@ -8,6 +8,7 @@ const store = new Vuex.Store({
       selectedData:'',
       step: 0
     },
+    assetDcList: 0,
     currentProject: {
       id: '',
       name: '',
@@ -35,6 +36,9 @@ const store = new Vuex.Store({
     },
     panelListChange(state,status){
       state.panelListReload = status;
+    },
+    assetDcListChange(state) {
+      state.assetDcList++;
     }
   },
   actions: {

@@ -960,8 +960,8 @@
         this.$get('idc').then(response => {
           if (response.code === 200) {
             this.IDCOptionData = response.data.list;
-            this.markOptionData(this.IDCOptionData)
-            //this.$store.state.assetData.idcData = this.IDCOptionData
+            this.markOptionData(this.IDCOptionData);
+            this.$store.commit('assetDcListChange');
             this.$emit('refreshData');
           }
         })

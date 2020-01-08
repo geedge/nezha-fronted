@@ -79,7 +79,7 @@
           :label="item.label"
         >
           <template slot-scope="scope" :column="item">
-            <span  v-if="item.prop == 'asset' && scope.row[item.prop]"  @click="viewAsset(scope.row[item.prop].id)">{{scope.row[item.prop].host}}</span>
+            <span v-if="item.prop == 'asset' && scope.row[item.prop]" class="content-right-option" @click="viewAsset(scope.row[item.prop].id)">{{scope.row[item.prop].host}}</span>
             <span v-else-if="item.prop == 'param'">
               <span v-for="p in scope.row.paramObj">{{p.key}}={{p.value}}，</span>
             </span>
@@ -103,7 +103,7 @@
     <module-box :currentProject="currentProject" :module="editModule" @reload="getModuleList" ref="moduleBox"></module-box>
     <edit-endpoint-box :currentProject="currentProject" :currentModule="currentModule" :endpoint="editEndpoint" @reload="getEndpointTableData" ref="editEndpointBox"></edit-endpoint-box>
     <add-endpoint-box :currentProject="currentProject" :currentModule="currentModule" @reload="getEndpointTableData" ref="addEndpointBox"></add-endpoint-box>
-    <asset-edit-unit :edit-unit-show='viewAssetState' @refreshData="" @sendStateData="" ref="assetEditUnit"></asset-edit-unit>
+    <asset-edit-unit :edit-unit-show='viewAssetState' @refreshData="getEndpointTableData" @sendStateData="tabControl" ref="assetEditUnit"></asset-edit-unit>
   </div>
 </template>
 
@@ -353,6 +353,14 @@
           this.$set(this.editModule, 'paramObj', []);
         }
         this.rightBoxHandler(2);
+      },
+
+      //asset弹框控制
+      tabControl(data) {
+        if (data === 'close') {
+          this.viewAssetState = false
+          this.$refs['assetEditUnit'].tabView = false
+        }
       },
 
       //搜索
