@@ -191,7 +191,9 @@ const en = {
       account:'Account',
       port:'Port',
       upload:'Upload',
-      clickToUpload:'Upload'
+      clickToUpload:'Upload',
+      clickToCover:'Cover',
+      sshKeyWasConfig:'SSH-KEY has been configured'
     },
     editAssetTab:{
       title:'Create Asset',

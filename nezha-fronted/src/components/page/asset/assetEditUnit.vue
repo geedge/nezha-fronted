@@ -41,7 +41,7 @@
                 </el-option>
               </el-select>
             </div>
-            <span v-if="tabView">{{assetData.state==1 ? $t('asset.createAssetTab.inStore'): $t('asset.createAssetTab.outStore')}}</span>
+            <span v-if="tabView">{{assetData.state==1 ? $t('asset.createAssetTab.inStock'): $t('asset.createAssetTab.notInStock')}}</span>
           </el-form-item>
           <el-form-item :label="$t('asset.editAssetTab.modelId')" v-if="tabView">
             <div class="tab-input-square">{{assetViewData.moduleNum}}</div>
@@ -639,12 +639,12 @@
           <div class="line-100 asset-line"></div>
           <el-form-item :label="$t('asset.createAssetTab.loginType')">
             <div class="nz-btn-group float-left" style="padding-top: 4px;">
-              <button type="button" @click="assetData.accounts[0].authType = 1"
+              <button type="button" @click="changeLoginType(1)"
                       class="nz-btn nz-btn-size-small float-left"
                       :class="{'nz-btn-disabled nz-btn-style-normal' : assetData.accounts[0].authType == 1, 'nz-btn-style-light' : assetData.accounts[0].authType == 2}">
                 <span>{{$t('asset.createAssetTab.password')}}</span>
               </button>
-              <button type="button" @click="assetData.accounts[0].authType = 2"
+              <button type="button" @click="changeLoginType(2)"
                       class="nz-btn nz-btn-size-small float-left"
                       :class="{'nz-btn-disabled nz-btn-style-normal' : assetData.accounts[0].authType == 2, 'nz-btn-style-light' : assetData.accounts[0].authType == 1}">
                 <span>{{$t('asset.createAssetTab.ssh')}}</span>
@@ -665,11 +665,15 @@
               class="upload-demo"
               ref="upload"
               action=""
+              :http-request="uploadFile"
+              :file-list="uploadFileList"
               :on-change="handleChange"
               :auto-upload="false"
             >
+              <div slot="tip" class="el-upload__tip" v-if="assetData.accounts[0].cert" >{{$t('asset.createAssetTab.sshKeyWasConfig')}}</div>
               <button type="button" class="nz-btn nz-btn-size-small nz-btn-style-normal">
-                <span class="top-tool-btn-txt">{{$t('asset.createAssetTab.clickToUpload')}}</span>
+                <span class="top-tool-btn-txt" v-if="assetData.accounts[0].cert">{{$t('asset.createAssetTab.clickToCover')}}</span>
+                <span class="top-tool-btn-txt" v-else>{{$t('asset.createAssetTab.clickToUpload')}}</span>
               </button>
             </el-upload>
           </el-form-item>
@@ -858,7 +862,9 @@
           idcId: [
             {required: true, message: this.$t('validate.required'), trigger: 'blur'}
           ]
-        }
+        },
+        uploadFileList:[],
+        formData:null
       }
     },
     /*computed: {
@@ -946,6 +952,7 @@
               this.assetData.accounts[0].user = response.data.list[0].accounts[0].user
               this.assetData.accounts[0].pwd = response.data.list[0].accounts[0].pwd
               this.assetData.accounts[0].port = response.data.list[0].accounts[0].port
+              this.assetData.accounts[0].cert = response.data.list[0].accounts[0].privateKey
               this.idcSelectedData.location = response.data.list[0].idc.location
               this.idcSelectedData.principal = response.data.list[0].idc.principal
               this.idcSelectedData.tel = response.data.list[0].idc.tel
@@ -1016,6 +1023,15 @@
           }
         })
       },
+      changeLoginType:function(loginType){
+        this.assetData.accounts[0].authType = loginType;
+        if(loginType == 1){//密码登录
+          this.clearFile();
+        }
+        if(loginType == 2){//公钥登录
+          this.assetData.accounts[0].pwd='';
+        }
+      },
       editData(data, item, mark) {
         let obj = {
           id: '',
@@ -1038,23 +1054,27 @@
           form.append("sn", this.assetData.sn);
           form.append("host", this.assetData.host);
           form.append("state", this.assetData.state);
-          form.append("purchaseDate", this.assetData.purchaseDate);
+          form.append("purchaseDate", !this.assetData.purchaseDate?'':this.assetData.purchaseDate);
           form.append("idcId", this.assetData.idcId);
           form.append("cabinetId", this.assetData.cabinetId);
           form.append("modelId", modelId);
           form.append("accounts[0].id", this.assetData.accounts[0].id);
           form.append("accounts[0].authType", this.assetData.accounts[0].authType);
           form.append("accounts[0].user", this.assetData.accounts[0].user);
-          form.append("accounts[0].pwd", this.assetData.accounts[0].pwd);
           form.append("accounts[0].port", this.assetData.accounts[0].port);
-          form.append("cert", this.assetData.accounts[0].file);
+          form.append("accounts[0].pwd", this.assetData.accounts[0].pwd);
+          if(this.assetData.accounts[0].authType==2&&this.uploadFileList.length>0){
+
+            form.append('cert',this.uploadFileList[0].raw);
+          }
 
           this.$refs.assetEditForm.validate((valid) => {
             if (valid) {
-              this.$put('asset', form).then(res => {
+              this.$put('asset', form,{'Content-Type': 'multipart/form-data'}).then(res => {
                 const h = this.$createElement;
                 if (res.code === 200) {
                   this.$message({duration: 2000, type: 'success', message: this.$t("tip.saveSuccess")});
+                  this.clearFile();
                   this.pageObj.id = '';
                   this.$emit('refreshData', 'true');
                   this.sendStateData('close');
@@ -1066,6 +1086,7 @@
               return false;
             }
           });
+
         } else {
           if (data === 'model') {
             item.vendorCode = this.vendorCode
@@ -1126,6 +1147,16 @@
             }
           })
         }
+      },
+      uploadFile:function(file){
+
+      },
+      clearFile:function(){
+        if(this.$refs.upload){
+          this.$refs.upload.clearFiles();
+        }
+        this.uploadFileList=[];
+        this.assetData.accounts[0].privateKey='';
       },
       addNewData(type) {
         if (type === 'IDC') {
@@ -1442,8 +1473,11 @@
           this.tempData = ''
         }
       },
-      handleChange(file) {
-        this.assetData.accounts[0].file = file.raw
+      handleChange(file,fileList) {
+        if (fileList.length > 0) {
+          this.uploadFileList = [fileList[fileList.length - 1]]
+        }
+        this.assetData.accounts[0].file = this.uploadFileList[0];
       },
       editPopoverClose(data) {
         if (data === 'type') {
@@ -1531,4 +1565,21 @@
   margin-bottom: 18px;
   background-color: #DCDFE6;
 }
+/*去除上传文件动画start*/
+/*.upload-demo {*/
+/*  display: flex;*/
+/*}*/
+/deep/ .el-list-enter-active,
+/deep/ .el-list-leave-active {
+  transition: none;
+}
+
+/deep/ .el-list-enter,
+/deep/ .el-list-leave-active {
+  opacity: 0;
+}
+/deep/ .el-upload-list {
+  height: 40px;
+}
+/*去除上传文件动画end*/
 </style>

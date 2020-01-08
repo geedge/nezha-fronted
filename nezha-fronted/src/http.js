@@ -1,9 +1,10 @@
 import axios from 'axios'
 import router from './router'
 
-import qs from 'qs' //引入数据格式化
+import qs from 'qs'
+import he from "element-ui/src/locale/lang/he"; //引入数据格式化
 //axios.defaults.baseURL = 'http://localhost:8088/nz-admin';
-//axios.defaults.baseURL = 'http://192.168.41.69:8080/nz-admin';
+// axios.defaults.baseURL = 'http://192.168.41.101:8088/nz-admin';
 axios.defaults.baseURL = 'http://192.168.40.247:8080/nz-admin';
 
 axios.interceptors.request.use(config => {
@@ -46,9 +47,9 @@ export function get(url, params) {
   })
 }
 
-export function post(url, params) {
+export function post(url, params,headers) {
   return new Promise((resolve, reject) => {
-    axios.post(url, params).then(response => {
+    axios.post(url, params,{headers:headers}).then(response => {
       resolve(response.data)
     }).catch(err => {
       resolve(err.response.data);
@@ -56,9 +57,9 @@ export function post(url, params) {
   })
 }
 
-export function put(url, params) {
+export function put(url, params,headers) {
   return new Promise((resolve, reject) => {
-    axios.put(url, params).then(response => {
+    axios.put(url, params,{headers:headers}).then(response => {
       resolve(response.data)
     }).catch(err => {
       console.info(err)

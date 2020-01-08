@@ -617,12 +617,12 @@
           <div class="line-100 asset-line"></div>
           <el-form-item :label="this.$t('asset.createAssetTab.loginType')">
             <div class="nz-btn-group float-left" style="padding-top: 4px;">
-              <button type="button" @click="assetData.accounts[0].authType = 1"
+              <button type="button" @click="changeLoginType(1)"
                       class="nz-btn nz-btn-size-small float-left"
                       :class="{'nz-btn-disabled nz-btn-style-normal' : assetData.accounts[0].authType == 1, 'nz-btn-style-light' : assetData.accounts[0].authType == 2}">
                 <span>{{$t('asset.createAssetTab.password')}}</span>
               </button>
-              <button type="button" @click="assetData.accounts[0].authType = 2"
+              <button type="button" @click="changeLoginType(2)"
                       class="nz-btn nz-btn-size-small float-left"
                       :class="{'nz-btn-disabled nz-btn-style-normal' : assetData.accounts[0].authType == 2, 'nz-btn-style-light' : assetData.accounts[0].authType == 1}">
                 <span>{{$t('asset.createAssetTab.ssh')}}</span>
@@ -643,6 +643,7 @@
               class="upload-demo"
               ref="upload"
               action=""
+              :file-list="uploadFileList"
               :on-change="handleChange"
               :auto-upload="false"
             >
@@ -819,7 +820,8 @@
           idcId: [
             {required: true, message: this.$t('validate.required'), trigger: 'blur'}
           ]
-        }
+        },
+        uploadFileList:[]
       }
     },
     /*computed: {
@@ -1003,6 +1005,15 @@
           }
         })
       },
+      changeLoginType:function(loginType){
+        this.assetData.accounts[0].authType = loginType;
+        if(loginType == 1){//密码登录
+          this.clearFile();
+        }
+        if(loginType == 2){//公钥登录
+          this.assetData.accounts[0].pwd='';
+        }
+      },
       addNewData(type) {
         if (type === 'IDC') {
           this.$post('idc', this.addIdcData).then(res => {
@@ -1046,7 +1057,7 @@
               form.append("sn", this.assetData.sn);
               form.append("host", this.assetData.host);
               form.append("state", this.assetData.state);
-              form.append("purchaseDate", this.assetData.purchaseDate);
+              form.append("purchaseDate", !this.assetData.purchaseDate?'':this.assetData.purchaseDate);
               form.append("idcId", this.assetData.idcId);
               form.append("cabinetId", this.assetData.cabinetId);
               form.append("modelId", modelId);
@@ -1054,16 +1065,21 @@
               form.append("accounts[0].user", this.assetData.accounts[0].user);
               form.append("accounts[0].pwd", this.assetData.accounts[0].pwd);
               form.append("accounts[0].port", this.assetData.accounts[0].port);
-              this.$post('asset', form).then(res => {
+              if(this.assetData.accounts[0].authType==2){
+                form.append('cert',this.uploadFileList[0].raw);
+              }
+              this.$post('asset', form,{'Content-Type': 'multipart/form-data'}).then(res => {
                 const h = this.$createElement;
                 if (res.code === 200) {
                   this.$message({duration: 2000, type: 'success', message: this.$t("tip.saveSuccess")});
+                  this.clearFile();
+                  this.$emit('refreshData', 'true');
                   this.sendStateData('close');
                 } else {
                   this.$message.error(res.msg);
                 }
               });
-              this.$emit('refreshData', 'true');
+
             }
           });
         }
@@ -1109,6 +1125,17 @@
             }
           })
         }
+      },
+      uploadFile:function(file){
+        console.log(file)
+        this.assetData.accounts[0].file=file.file;
+      },
+      clearFile:function(){
+        if(this.$refs.upload){
+          this.$refs.upload.clearFiles();
+        }
+        this.uploadFileList=[];
+        this.assetData.accounts[0].privateKey='';
       },
       deleteData(data, item) {
         this.$confirm(this.$t("tip.confirmDelete"), {
@@ -1233,8 +1260,11 @@
           }
         }
       },
-      handleChange(file) {
-        this.assetData.accounts[0].file = file.raw
+      handleChange(file,fileList) {
+        if (fileList.length > 0) {
+          this.uploadFileList = [fileList[fileList.length - 1]]
+        }
+        this.assetData.accounts[0].file = this.uploadFileList[0];
       },
       delOptionData(data) {
       },
@@ -1450,4 +1480,22 @@
   margin-bottom: 18px;
   background-color: #DCDFE6;
 }
+/*去除上传文件动画start*/
+/*.upload-demo {*/
+/*  display: flex;*/
+/*}*/
+/deep/ .el-list-enter-active,
+/deep/ .el-list-leave-active {
+  transition: none;
+}
+
+/deep/ .el-list-enter,
+/deep/ .el-list-leave-active {
+  opacity: 0;
+}
+/deep/ .el-upload-list {
+  height: 40px;
+}
+/*去除上传文件动画end*/
+
 </style>
