@@ -1,165 +1,10 @@
 <style scoped>
-  .account {
+  .list {
     height: 100%;
   }
-  .account-list-option {
-    cursor: pointer;
-    display: inline-block;
-    margin-right: 6px;
-  }
-  .account-list-option .el-icon-delete {
-    color: #F98D9A;
-  }
-  .account-list-option .el-icon-delete:hover {
-    color: #D96D7A;
-  }
-  .account-list-option .el-icon-view {
-    color: #60BEFF;
-  }
-  .account-list-option .el-icon-view:hover {
-    color: #409EFF;
-  }
-  /* begin--右侧弹框*/
-  .right-box {
-    position: fixed;
-    top: 80px;
-    right: 15px;
-    z-index: 1;
-    border-radius: 8px;
-    box-shadow: 0 0 15px #ccc;
-    background-color: white;
-    padding: 0 20px;
-  }
-  .right-box-account {
-    width: 550px;
-    height: calc(100% - 100px);
-  }
-  /* begin--右侧弹框--顶部按钮*/
-  .right-box-top-btns {
-    text-align: center;
-  }
-  .right-box-top-btn {
-    border-radius: 0 0 9px 9px;
-    float: right;
-    color: #656565;
-    height: 30px;
-    font-size: 12px;
-    padding: 3px 8px 1px 8px;
-    border: 1px solid #aaaaaa;
-    border-top: none;
-    cursor: pointer;
-    margin-left: 20px;
-  }
-  .right-box-top-btn-full {
-    background-color: #656565;
-    border: 1px solid #656565;
-    border-top: none;
-    color: white;
-   }
-  /* end--右侧弹框--顶部按钮*/
-
-  /* begin--右侧弹框--内容*/
-  .right-box-title {
-    height: 30px;
-    line-height: 40px;
-    text-align: left;
-  }
-  .right-box-form {
-    margin-top: 35px;
-  }
-  .right-box-form-row {
-    margin-top: 25px;
-  }
-  .right-box-form-label {
-    margin-bottom: 8px;
-    text-align: left;
-  }
-  .right-box-form-content {
-    line-height: 32px;
-    text-align: left;
-    width: 100%;
-  }
-  .right-box-form-content-txt {
-    padding-left: 11px;
-  }
-  .right-box-form-content .el-select {
-    width: calc(100% - 38px);
-    vertical-align: top;
-  }
-  .el-select-add-btn {
-    width: 33px;
-    height: 33px;
-    display: inline-block;
-    text-align: center;
-    border-radius: 5px;
-    border: 1px solid #DCDFE6;
-    box-sizing: border-box;
-    color: #C7C9CE;
-    transition: border-color .2s cubic-bezier(.645,.045,.355,1);
-  }
-  .el-select-add-btn:hover {
-    border: 1px solid #C0C4CC;
-    cursor: pointer;
-  }
-  /* end--右侧弹框--内容*/
-
-  /* begin--右侧弹框--底部按钮*/
-  .right-box-bottom-btns {
-    position: absolute;
-    bottom: 0;
-    width: 100%;
-    height: 40px;
-    left: 0;
-    text-align: center;
-  }
-  .right-box-bottom-btn:first-of-type {
-    border-bottom-left-radius: 8px;
-  }
-  .right-box-bottom-btn:last-of-type{
-    border-bottom-right-radius: 8px;
-  }
-  .right-box-bottom-btn {
-    display: inline-block;
-    background-color: #656565;
-    color: white;
-    height: 100%;
-    line-height: 40px;
-    cursor: pointer;
-    width: 100%;
-  }
-  .config-dropdown-label-input {
-    width: 50%;
-    display: inline-block;
-  }
-  .right-box-bottom-btn-cancel {
-    background-color: #DADADA;
-    color: #656565;
-  }
-  .right-box-bottom-btn-50 {
-    width: 50%;
-  }
-  /* end--右侧弹框--底部按钮*/
-  /* end--右侧弹框*/
-
-  /* begin--右弹框滑入滑出动画*/
-  @keyframes slide-in-from-right {
-    from {right: -800px}
-    to {right: 0}
-  }
-  @keyframes slide-out-to-right {
-    from {right: 0}
-    to {right: -800px}
-  }
-  .right-box-enter-active {
-    animation: slide-in-from-right 0.4s;
-  }
-  .right-box-leave-active {
-    animation: slide-out-to-right 0.4s;
-  }
-  /* end--右弹框滑入滑出动画*/
 </style>
 <template>
-    <div class="account">
+    <div class="list">
         <div class="content-left">
             <div class="sidebar-title">{{$t('alert.alert')}}</div>
             <div class="sidebar-info">
@@ -185,10 +30,10 @@
                   :label="item.label"
                 >
                     <template slot-scope="scope" :column="item">
-                      <span v-if="item.prop == 'alertRule'" class="account-list-option" @click="viewRule(scope.row[item.prop].id)">
+                      <span v-if="item.prop == 'alertRule'" class="content-right-option" @click="viewRule(scope.row[item.prop].id)">
                           {{scope.row[item.prop].alertName}}
                         </span>
-                        <div v-else-if="item.prop == 'type'" class="account-list-options">
+                        <div v-else-if="item.prop == 'type'" class="content-right-options">
                             <span v-if="scope.row[item.prop] == 1" >Project</span>
                             <span v-if="scope.row[item.prop] == 2" >Module</span>
                             <span v-if="scope.row[item.prop] == 3" >Device</span>
@@ -199,11 +44,11 @@
                             <span v-if="scope.row[item.prop] == 'low'"><i class="el-icon-arrow-down"></i>&nbsp;{{severityData[2].value}}</span>
                         </span>
                         <div v-else-if="item.prop == 'linkObject'">
-                            <span v-if="(scope.row['type'] == 1 || scope.row['type'] == 2) && scope.row[item.prop]" class="account-list-option" @click="viewAlertType(scope.row['type'],scope.row[item.prop])">{{scope.row[item.prop].name}}</span>
-                            <span v-if="scope.row['type'] == 3 && scope.row[item.prop]" class="account-list-option" @click="viewAlertType(scope.row['type'],scope.row[item.prop].id)">{{scope.row[item.prop].host}}</span>
+                            <span v-if="(scope.row['type'] == 1 || scope.row['type'] == 2) && scope.row[item.prop]" class="content-right-option" @click="viewAlertType(scope.row['type'],scope.row[item.prop])">{{scope.row[item.prop].name}}</span>
+                            <span v-if="scope.row['type'] == 3 && scope.row[item.prop]" class="content-right-option" @click="viewAlertType(scope.row['type'],scope.row[item.prop].id)">{{scope.row[item.prop].host}}</span>
                         </div>
                         <div v-else-if="item.prop == 'state'">
-                            <span class="account-list-option">
+                            <span class="">
                                 {{scope.row['state'] == 1 ? "Pending" : ""}}
                                 {{scope.row['state'] == 2 ? "Expired" : ""}}
                             </span>
@@ -217,7 +62,7 @@
       <alert-config-box :parentAlertRule="viewRuleData" @reload="getAlertList" ref="alertConfigBox"></alert-config-box>
       <project-box :project="viewProjectData" ref="projectBox" @reload="getAlertList"></project-box>
       <module-box  :module="viewModuleData" @reload="getAlertList" ref="moduleBox"></module-box>
-      <asset-edit-unit :edit-unit-show='viewAssetState' @refreshData="getAlertList" @sendStateData="" ref="assetEditUnit"></asset-edit-unit>
+      <asset-edit-unit :edit-unit-show='viewAssetState' @refreshData="getAlertList" @sendStateData="tabControl" ref="assetEditUnit"></asset-edit-unit>
     </div>
 
 </template>
@@ -343,6 +188,13 @@ export default {
           this.pageObj.total = response.data.total
         }
       })
+    },
+    //asset弹框控制
+    tabControl(data) {
+      if (data === 'close') {
+        this.viewAssetState = false
+        this.$refs['assetEditUnit'].tabView = false
+      }
     },
     jumpTo(data,id) {
       this.$store.state.assetData.moduleData = data

@@ -25,6 +25,9 @@ const en = {
     title:'Dashboard',
     panel:{
       title:'Panel',
+      searchItem:{
+        name:'Title'
+      },
       //面板-侧滑框
       createPanelTitle: "Create Panel",
       createPanelTitleSec:"Create New Panel",
@@ -72,7 +75,14 @@ const en = {
       recSevenDay:'recent week',
       recOneMonth:'recent month',
       curMonth:'this month',
-      lastMonth:'last month'
+      lastMonth:'last month',
+      refreshInterval:{
+        never:'never',
+        oneMinute:'1 min',
+        threeMinutes:'3 mins',
+        fiveMinutes:'5 mins',
+        tenMinutes:'10 mins',
+      }
     },
     metric:{
       name:"Metric",
@@ -111,7 +121,6 @@ const en = {
   },
   tip: {
     confirmDelete: "Confirm Delete?",
-    assetConfirmDelete: 'Its associated Endpoints and Alert Rules will also be deleted, confirm delete?',
     yes: "Yes",
     no: "No",
     deleteSuccess: "Successfully Deleted",

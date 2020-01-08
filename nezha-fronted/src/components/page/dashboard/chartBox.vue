@@ -337,7 +337,6 @@
         // 每个模块均有返回,当全部模块返回完成时,将sub计数器重置
         //alert('box第二步，subCount和元素个数一样了，就从deleteIndex开始删除一个元素，this.subCount='+this.subCount);
         this.subCount += 1;
-        //alert(this.elements.length);
         if (this.subCount === this.elements.length) {
           this.subCount = 0;
           // 保存完成,进行删除操作

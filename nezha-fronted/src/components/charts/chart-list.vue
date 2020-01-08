@@ -15,14 +15,14 @@
 
       <line-chart-block v-if="item.type === 'line' || item.type === 'bar' || item.type === 4" :key="'inner' + item.id"
       ref="editChart" 
-      @on-refresh-data=""
+      @on-refresh-data="refreshChart"
       @on-remove-chart-block="removeChart"
       @on-edit-chart-block="editData"
       :panel-id="filter.panelId" 
       :editChartId="'editChartId' + item.id"></line-chart-block>
 
       <chart-table v-if="item.type === 'table'" ref="editChart" :key="'inner' + item.id"
-      @on-refresh-data=""
+      @on-refresh-data="refreshChart"
       @on-remove-chart-block="removeChart" 
       @on-edit-chart-block="editData"
       :panel-id="filter.panelId" 
@@ -34,7 +34,7 @@
 </template>
 <script>
 import axios from 'axios';
-//import bus from '../../libs/bus';
+import bus from '../../libs/bus';
 import lineChartBlock from './line-chart-block';
 import chartTable from './chart-table';
 
@@ -81,7 +81,11 @@ export default {
       };
       if (!param.query) delete param.query;
       //根据panelId获得panel下的所有图表
-      this.$get('panel/'+ params.panelId+'/charts').then(response => {
+      let searchTitleStr = '';
+      if(this.filter.searchName&&this.filter.searchName!=''){
+        searchTitleStr = '?title='+this.filter.searchName;
+      }
+      this.$get('panel/'+ params.panelId+'/charts'+searchTitleStr).then(response => {
         if (response.code === 200) {
           if(response.data.list){
             this.dataList = response.data.list;
@@ -117,30 +121,25 @@ export default {
       } else {
         let startTime = '';
         let endTime = '';
-        if (filterType === 'refresh') {//刷新：需要根据刷新周期来？？？
+        if (filterType === 'refresh') {//刷新
           const now = new Date();
           const origin = new Date(this.filter.end_time);
           const numInterval = now.getTime() - origin.getTime();
-          if (numInterval >= 6000) {
+          if (numInterval >= 60000) {//大于1分钟，则start、end均往后移numInterval，否则时间不变
             startTime = this.getNewTime(this.filter.start_time, numInterval);
-            endTime = bus.timeFormate(now, 'yyyy/MM/dd-hh:mm:ss');
+            endTime = bus.timeFormate(now, 'yyyy-MM-dd hh:mm:ss');
           } else {
             startTime = this.filter.start_time;
             endTime = this.filter.end_time;
           }
         } else {
-          startTime = this.filter.start_time;
-          endTime = this.filter.end_time;
+           startTime = this.filter.start_time;
+           endTime = this.filter.end_time;
         }
-        //测试数据----之后会要去掉
-        startTime='2020-01-02T10:10:30.781Z';
-        endTime = '2020-01-02T20:10:30.781Z';
-
-
         this.$nextTick(() => {
           const axiosArr = chartItem.elements.map((ele) => {
             const filterItem = ele;
-            return  this.$get('http://192.168.40.247:9090/api/v1/query_range?query='+filterItem.expression+"&start="+startTime+"&end="+endTime+'&step=3600s');
+            return  this.$get('/prom/api/v1/query_range?query='+filterItem.expression+"&start="+startTime+"&end="+endTime+'&step=3600s');
           });
           // 一个图表的所有element单独获取数据
           axios.all(axiosArr).then((res) => {
@@ -200,8 +199,7 @@ export default {
                           }
                           */
                           let t_date = new Date(dpsItem[0] * 1000);
-                          let timeTmp = [t_date.getFullYear(), t_date.getMonth() + 1, t_date.getDate()].join('-') + "\n"
-                            + [t_date.getHours(), t_date.getMinutes()].join(':');
+                          let timeTmp = bus.timeFormate(t_date, 'yyyy-MM-dd hh:mm');
                           tableData.push({//表格数据
                             label: host.slice(host.indexOf('{') + 1,host.indexOf('}')),//label
                             metric: queryItem.metric.__name__,//metric列
@@ -272,7 +270,7 @@ export default {
     getNewTime(time, num) {
       const date = new Date(time);
       const newDate = new Date(parseInt(date.getTime(), 10) + num);
-      return bus.timeFormate(newDate, 'yyyy/MM/dd-hh:mm:ss');
+      return bus.timeFormate(newDate, 'yyyy-MM-dd hh:mm:ss');
     },
     // 删除图表
     removeChart(chartId) {
@@ -289,7 +287,6 @@ export default {
         this.$emit('on-edit-chart', chart);
       }
     },
-    /*
     // 刷新列表中的一个图表
     refreshChart(chartId) {
       this.dataList.forEach((item, index) => {
@@ -298,6 +295,7 @@ export default {
         }
       });
     },
+    /*
     // 刷新数据
     refreshData() {
       this.getData(this.filter);

@@ -20,6 +20,9 @@ const cn = {
     title:'仪表盘',
     panel:{
       title:'看板',
+      searchItem:{
+        name:'标题'
+      },
       //面板-侧滑框
       createPanelTitle: "创建面板",
       createPanelTitleSec:"创建新面板",
@@ -67,7 +70,14 @@ const cn = {
       recSevenDay:'近7日',
       recOneMonth:'近一个月',
       curMonth:'本月',
-      lastMonth:'上月'
+      lastMonth:'上月',
+      refreshInterval:{
+        never:'从不',
+        oneMinute:'1分钟',
+        threeMinutes:'3分钟',
+        fiveMinutes:'5分钟',
+        tenMinutes:'10分钟',
+      }
     },
     metric:{
       name:"指标名称",
