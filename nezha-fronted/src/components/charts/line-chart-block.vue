@@ -5,7 +5,7 @@
   <div class="line-chart-block" >
 
     <div class="edit">
-      <div class="list-icon" v-if="firstShow">
+      <div class="list-icon" >
         <span @click="refreshChart" :title="$t('dashboard.refresh')" class="set-icon" v-if="showSetting">
           <i class="el-icon-refresh-right"></i>
         </span>
@@ -103,7 +103,7 @@ export default {
         end_time: '',
       },
       stableFilter: {}, // 保存数据使用,初始化起止时间,单图or多图等
-      firstShow: false, // 默认不显示操作按钮,
+     // firstShow: false, // 默认不显示操作按钮,
     };
   },
   computed: {
@@ -120,19 +120,12 @@ export default {
   methods: {
     // chartSite用于区分是全屏显示还是局部显示
     initChart(chartInfo, dataArg, ele, chartSite,legend) {
-      this.firstShow = true; // 展示操作按键
+      //this.firstShow = true; // 展示操作按键
       const self = this;
       this.chartType = ''; // 图表类型
       if ( chartInfo.type === 4) {//line,bar
         this.chartType = 'line';
       }
-      //alert(ele.style.height);
-     // ele.style.height= chartInfo.height;
-
-      //alert(chartInfo.height);
-
-      //alert(ele.style.height);
-      //var myEchart = echarts.init(document.getElementById('lineChartArea'));
       this.echartStore = echarts.init(ele);
       var chartWidth = ele.clientWidth;
       var option = {
@@ -324,6 +317,7 @@ export default {
         });
         */
         this.echartStore.setOption(option);//创建图表
+        this.echartStore.hideLoading();
       } else if (chartSite === 'screen') { // 全屏显示
         option.series = dataArg.map((item) => {// params.series = dataArg.map((item) => {
           const obj = Object.assign(item);
@@ -370,6 +364,7 @@ export default {
         });
         // eslint-disable-next-line
         this.echartStore.setOption(option);//显示全屏界面
+        this.echartStore.hideLoading();
       }
       this.echartStore.resize({height:chartInfo.height});//,width:`${ele.clientWidth-100}`}
     },
@@ -397,7 +392,11 @@ export default {
     editChart() {
       this.$emit('on-edit-chart-block', this.data.id);
     },
-
+    // 重新请求数据 刷新操作
+    refreshChart() {
+      this.echartStore.showLoading();
+      this.$emit('on-refresh-data', this.data.id);
+    },
     /*
     handleClose(done) {
       /*
@@ -422,11 +421,7 @@ export default {
         },
       });
     },
-    // 重新请求数据 刷新操作-> console, create-board
-    refreshChart() {
-      this.highchartStore.showLoading();
-      this.$emit('on-refresh-data', this.data.id);
-    },
+
     // 全屏查看
     showAllScreen() {
       // 初始化同步时间

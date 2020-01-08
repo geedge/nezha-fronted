@@ -11,13 +11,13 @@
         <div class="edit">
           <!-- v-if="firstShow" -->
           <div class="list-icon">
-            <span @click="refreshChart" :title="$t('dashboard.refresh')" class="set-icon" v-if="showSetting">
+            <span @click="refreshChart" :title="$t('dashboard.refresh')" class="set-icon" >
               <i class="el-icon-refresh-right"></i>
             </span>
-                <span @click="editChart" :title="$t('dashboard.edit')" class="set-icon" v-if="showSetting">
+                <span @click="editChart" :title="$t('dashboard.edit')" class="set-icon">
               <i class="el-icon-edit-outline"></i>
             </span>
-                <span @click="removeChart" :title="$t('dashboard.delete')" class="set-icon" v-if="showSetting">
+                <span @click="removeChart" :title="$t('dashboard.delete')" class="set-icon" >
               <i class="el-icon-delete"></i>
             </span>
                 <span @click="showAllScreen" :title="$t('dashboard.screen')" class="set-icon">
@@ -30,10 +30,10 @@
     <div class="mt-10">
       <!--
       <el-table  size="small"   :loading="tableLoading">-->
-      <el-table :data="seriesItem"  height="350" border style="width: 100%">
+      <el-table :data="seriesItem"  height="350" border class="chart-table-col" v-loading="tableLoading">
         <el-table-column prop="metric" :label="$t('dashboard.panel.chartTableColumn.metric')"  sortable></el-table-column>
         <el-table-column  prop="label" :label="$t('dashboard.panel.chartTableColumn.label')"  sortable></el-table-column>
-        <el-table-column  prop="time" :label="$t('dashboard.panel.chartTableColumn.time')" width="125" sortable></el-table-column>
+        <el-table-column  prop="time" :label="$t('dashboard.panel.chartTableColumn.time')" width="145" sortable></el-table-column>
         <el-table-column prop="value" :label="$t('dashboard.panel.chartTableColumn.value')" sortable></el-table-column>
       </el-table>
     </div>
@@ -66,11 +66,6 @@ export default {
     panelId: {
       type: Number,
       default: 0,
-    },
-    // 展示设置内容
-    showSetting: {
-      type: Boolean,
-      default: true,
     },
   },
   data() {

@@ -65,6 +65,20 @@
     color: #F98D9A;
   }
   /* end--Panel-自定义可编辑的el-select下拉框样式*/
+  .panel-select-width{
+    width: 150px;
+  }
+  .panel-refresh-interval{
+    margin-right: 5px;
+    float: right;
+  }
+  .panel-refresh-interval-select{
+    width: 95px;
+  }
+  .panel-calendar{
+    float: right;
+    margin-right: 1px;
+  }
 
 </style>
 <template>
@@ -81,8 +95,8 @@
         <button @click="toAddChart" class="nz-btn nz-btn-size-normal nz-btn-style-normal float-right">
           <span class="top-tool-btn-txt">{{$t('overall.add')}}</span>
         </button>
-        <div class="top-tool-search float-right"><search-input :searchMsg="searchMsg" @search="search"></search-input></div>
-        <el-select class="right-box-row-with-btn" popper-class="" v-model="showPanel.id" placeholder=""  size="small" @change="panelChange">
+        <div class="top-tool-search float-right"><search-input  ref="searchInput" :searchMsg="searchMsg" @search="search" ></search-input></div>
+        <el-select class="panel-select-width" popper-class="" v-model="showPanel.id" placeholder=""  size="small" @change="panelChange">
           <el-option  >
             <span class="panel-dropdown-btn-create" @click.stop="toAdd" >{{$t('dashboard.panel.createPanelTitleSec')}}</span>
           </el-option>
@@ -99,12 +113,27 @@
             <span class="panel-dropdown-btn panel-dropdown-btn-delete" @click.stop="del(item)"><i class="el-icon-delete"></i></span>
           </el-option>
         </el-select>
-        <div class="float-right" style="margin-right: 10px;">
+        <div class="panel-refresh-interval" >
+          <div class="block">
+            <!--
+              <button type="button"  class="nz-btn nz-btn-size-normal nz-btn-style-light nz-btn-style-square">
+                <span class="top-tool-btn-txt"><i class="el-icon-refresh-right"></i></span>
+              </button>
+            -->
+            <el-select  class="panel-refresh-interval-select" placeholder="" v-model="interval" @change="selectInterval" size="small">
+              <el-option v-for="item in intervalList"
+                         :value="item.value"
+                         :label="item.name"
+                         :key="item.value">{{item.name}}</el-option>
+            </el-select>
+          </div>
+        </div>
+        <div class="panel-calendar" >
           <div class="block">
             <el-date-picker size="small" ref="calendar"
                             format="yyyy/MM/dd HH:mm"
               @change="dateChange"
-              v-model="value2"
+              v-model="searchTime"
               type="datetimerange"
               :picker-options="pickerOptions"
               :range-separator="$t('dashboard.panel.to')"
@@ -132,6 +161,7 @@
 <script>
   import ChartBox from "./chartBox";
   import ChartList from '../../charts/chart-list';
+  import bus from '../../../libs/bus';
 
   export default {
     name: "panel",
@@ -222,7 +252,24 @@
               }
             }]
         },
-        value2: [new Date(), new Date()],
+        searchTime: [new Date().setHours(new Date().getHours()-1),new Date()],
+        intervalList: [{
+          value: 0,
+          name: this.$t("dashboard.panel.refreshInterval.never"),
+        }, {
+          value: 60,
+          name: this.$t("dashboard.panel.refreshInterval.oneMinute"),
+        }, {
+          value: 180,
+          name: this.$t("dashboard.panel.refreshInterval.threeMinutes"),
+        }, {
+          value: 300,
+          name: this.$t("dashboard.panel.refreshInterval.fiveMinutes"),
+        }, {
+          value: 600,
+          name: this.$t("dashboard.panel.refreshInterval.tenMinutes"),
+        }],
+        interval: 0,
         showPanel:{//panel下拉列表
           id:'',
           name:''
@@ -252,30 +299,27 @@
         panelData: [],
         searchMsg: { //给搜索框子组件传递的信息
           zheze_none: true,
-          searchLabelList: [{
+          searchLabelList: [
+            /*
+            {
             id: 1,
-            name: this.$t("dashboard.panel.panelForm.panelId"),
-            type: 'input',
-            label: 'id',
-            disabled: false
-          },{
-            id: 2,
-            name: this.$t("dashboard.panel.panelForm.panelName"),
+            name: this.$t("dashboard.panel.searchItem.name"),
             type: 'input',
             label: 'name',
             disabled: false
-          }],
+          }
+          */],
         },
         searchLabel: {}, //搜索参数
-
         //---图表相关参数--start
         dataList: [], // 数据列表
-        searchName: '', //  搜索名称
+        //searchName: '', //  搜索名称
         filter: { // 过滤条件
           //productId: 0,
           panelId: 0,
           start_time: '',
           end_time: '',
+          searchName:''
         },
         panelId: 0,
         //removeModal: false, // 删除弹出
@@ -290,6 +334,7 @@
     methods: {
       //面板相关操作
       panelChange(){
+        this.$refs.searchInput.select();
         this.filter.panelId = this.showPanel.id;
         this.getData(this.filter);
       },
@@ -383,11 +428,27 @@
       },
       // 获取数据,用在子页面
       getData(params) {
+        if( params.start_time===''||params.end_time===''){
+          let now = new Date();
+          let endTimeTmp = bus.timeFormate(now, 'yyyy-MM-dd hh:mm:ss');
+          let startTimeTmp = bus.timeFormate(now.setHours(now.getHours()-1), 'yyyy-MM-dd hh:mm:ss');
+          params.start_time = startTimeTmp;
+          params.end_time = endTimeTmp;
+        }
         this.$refs.chartList.initData(params);
       },
 
       /*图表相关操作--end*/
-
+      /*时间条件查询--start*/
+      // 选择日期变化
+      dateChange() {
+        this.$refs.searchInput.select();
+        this.filter.start_time = bus.timeFormate(this.searchTime[0], 'yyyy-MM-dd hh:mm:ss');
+        this.filter.end_time = bus.timeFormate(this.searchTime[1], 'yyyy-MM-dd hh:mm:ss');
+        this.filter.panelId = this.showPanel.id;
+        this.getData(this.filter);
+      },
+      /*时间条件查询--end*/
       //公用操作
       jumpTo(data,id) {
         this.$store.state.assetData.moduleData = data
@@ -400,9 +461,7 @@
         });
       },
       getTableData: function() {
-        this.$set(this.searchLabel, "pageNo", this.pageObj.pageNo);
-        this.$set(this.searchLabel, "pageSize", this.pageObj.pageSize);
-        this.$get('panel', this.searchLabel).then(response => {
+        this.$get('panel').then(response => {
           if (response.code === 200) {
             this.panelData = response.data.list;
             if( response.data.list.length>0 ){
@@ -433,19 +492,26 @@
         this.getTableData();
       },
       search: function(searchObj) {
-        console.info(searchObj);
         this.searchLabel = {};
+        let containTitle = false;
         for (let item in searchObj) {
           if (searchObj[item]) {
             this.$set(this.searchLabel, item, searchObj[item]);
+            if(item==='name'){
+              this.filter.searchName = searchObj[item];//此处就一个条件
+              containTitle= true;
+            }
           }
         }
-        this.getTableData();
+        if(!containTitle){
+          this.filter.searchName =  '';
+        }
+        this.filter.panelId = this.showPanel.id;
+        this.getData(this.filter);
       }
     },
     created() {
       this.getTableData();
-      this.getData(this.filter);
     },
     mounted: function() {
     },
