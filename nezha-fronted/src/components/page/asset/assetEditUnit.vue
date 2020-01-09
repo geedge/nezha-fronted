@@ -637,46 +637,7 @@
           <!--cli-->
           <div class="asset-sub-title">{{$t('asset.createAssetTab.cli')}}</div>
           <div class="line-100 asset-line"></div>
-          <el-form-item :label="$t('asset.createAssetTab.loginType')">
-            <div class="nz-btn-group float-left" style="padding-top: 4px;">
-              <button type="button" @click="changeLoginType(1)"
-                      class="nz-btn nz-btn-size-small float-left"
-                      :class="{'nz-btn-disabled nz-btn-style-normal' : assetData.accounts[0].authType == 1, 'nz-btn-style-light' : assetData.accounts[0].authType == 2}">
-                <span>{{$t('asset.createAssetTab.password')}}</span>
-              </button>
-              <button type="button" @click="changeLoginType(2)"
-                      class="nz-btn nz-btn-size-small float-left"
-                      :class="{'nz-btn-disabled nz-btn-style-normal' : assetData.accounts[0].authType == 2, 'nz-btn-style-light' : assetData.accounts[0].authType == 1}">
-                <span>{{$t('asset.createAssetTab.ssh')}}</span>
-              </button>
-            </div>
-          </el-form-item>
-          <el-form-item :label="$t('asset.createAssetTab.account')">
-            <el-input size="mini" v-model="assetData.accounts[0].user"/>
-          </el-form-item>
-          <el-form-item :label="$t('asset.createAssetTab.password')" v-if="assetData.accounts[0].authType==1">
-            <el-input size="mini" type="password" v-model="assetData.accounts[0].pwd"/>
-          </el-form-item>
-          <el-form-item :label="$t('asset.createAssetTab.port')">
-            <el-input size="mini" v-model="assetData.accounts[0].port"/>
-          </el-form-item>
-          <el-form-item :label="this.$t('asset.createAssetTab.ssh')" v-if="assetData.accounts[0].authType==2">
-            <el-upload
-              class="upload-demo"
-              ref="upload"
-              action=""
-              :http-request="uploadFile"
-              :file-list="uploadFileList"
-              :on-change="handleChange"
-              :auto-upload="false"
-            >
-              <div slot="tip" class="el-upload__tip" v-if="assetData.accounts[0].cert" >{{$t('asset.createAssetTab.sshKeyWasConfig')}}</div>
-              <button type="button" class="nz-btn nz-btn-size-small nz-btn-style-normal">
-                <span class="top-tool-btn-txt" v-if="assetData.accounts[0].cert">{{$t('asset.createAssetTab.clickToCover')}}</span>
-                <span class="top-tool-btn-txt" v-else>{{$t('asset.createAssetTab.clickToUpload')}}</span>
-              </button>
-            </el-upload>
-          </el-form-item>
+          <account-config-box v-for="(item,index) in assetData.accounts" :account="item" :key="index" ref="accountConfigBox"></account-config-box>
         </el-form>
       </el-scrollbar>
     </div>
@@ -684,9 +645,13 @@
 </template>
 
 <script>
+  import accountConfig from './accountConfig';
   export default {
     name: "assetEditUnit",
     props: ["editUnitShow", "editUnitId"],
+    components:{
+      'account-config-box': accountConfig,
+    },
     data() {
       return {
         visible: '',
@@ -703,12 +668,11 @@
           assetType: '',
           accounts: [{
             id: '',
-            authType: '',
+            authType: 1,
             user: '',
             pwd: '',
-            cert: '',
             port: '',
-            file: ''
+            uploadFile: null
           }]
         },
         accountData: '',
@@ -947,12 +911,13 @@
               this.assetData.idcId = response.data.list[0].idc.id
               this.assetData.cabinetId = response.data.list[0].cabinet == null ? '' : response.data.list[0].cabinet.id
               this.assetData.purchaseDate = response.data.list[0].purchaseDate
-              this.assetData.accounts[0].id = response.data.list[0].accounts[0].id
-              this.assetData.accounts[0].authType = response.data.list[0].accounts[0].authType
-              this.assetData.accounts[0].user = response.data.list[0].accounts[0].user
-              this.assetData.accounts[0].pwd = response.data.list[0].accounts[0].pwd
-              this.assetData.accounts[0].port = response.data.list[0].accounts[0].port
-              this.assetData.accounts[0].cert = response.data.list[0].accounts[0].privateKey
+              // this.assetData.accounts[0].id = response.data.list[0].accounts[0].id
+              // this.assetData.accounts[0].authType = response.data.list[0].accounts[0].authType
+              // this.assetData.accounts[0].user = response.data.list[0].accounts[0].user
+              // this.assetData.accounts[0].pwd = response.data.list[0].accounts[0].pwd
+              // this.assetData.accounts[0].port = response.data.list[0].accounts[0].port
+              // this.assetData.accounts[0].cert = response.data.list[0].accounts[0].privateKey
+              this.assetData.accounts[0]=response.data.list[0].accounts[0]?response.data.list[0].accounts[0]:this.assetData.accounts[0];
               this.idcSelectedData.location = response.data.list[0].idc.location
               this.idcSelectedData.principal = response.data.list[0].idc.principal
               this.idcSelectedData.tel = response.data.list[0].idc.tel
@@ -1058,18 +1023,23 @@
           form.append("idcId", this.assetData.idcId);
           form.append("cabinetId", this.assetData.cabinetId);
           form.append("modelId", modelId);
-          form.append("accounts[0].id", this.assetData.accounts[0].id);
-          form.append("accounts[0].authType", this.assetData.accounts[0].authType);
-          form.append("accounts[0].user", this.assetData.accounts[0].user);
-          form.append("accounts[0].port", this.assetData.accounts[0].port);
-          form.append("accounts[0].pwd", this.assetData.accounts[0].pwd);
-          if(this.assetData.accounts[0].authType==2&&this.uploadFileList.length>0){
-
-            form.append('cert',this.uploadFileList[0].raw);
+          for(let i in this.assetData.accounts){
+            let account=this.assetData.accounts[i];
+            if(account.user){
+              form.append("accounts["+i+"].id", account.id);
+              form.append("accounts["+i+"].authType",account.authType);
+              form.append("accounts["+i+"].user", account.user);
+              form.append("accounts["+i+"].port", account.port);
+              form.append("accounts["+i+"].pwd", account.pwd);
+              if(account.authType==2){
+                form.append('cert',account.uploadFile?account.uploadFile.raw:null);
+              }
+            }
           }
-
+          this.$refs.accountConfigBox[0].validateAccount();
+          let accountValideResult=this.$refs.accountConfigBox[0].validateResult;
           this.$refs.assetEditForm.validate((valid) => {
-            if (valid) {
+            if (valid&&accountValideResult) {
               this.$put('asset', form,{'Content-Type': 'multipart/form-data'}).then(res => {
                 const h = this.$createElement;
                 if (res.code === 200) {

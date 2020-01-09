@@ -615,43 +615,7 @@
           <!--CLI-->
           <div class="asset-sub-title">{{$t('asset.createAssetTab.cli')}}</div>
           <div class="line-100 asset-line"></div>
-          <el-form-item :label="this.$t('asset.createAssetTab.loginType')">
-            <div class="nz-btn-group float-left" style="padding-top: 4px;">
-              <button type="button" @click="changeLoginType(1)"
-                      class="nz-btn nz-btn-size-small float-left"
-                      :class="{'nz-btn-disabled nz-btn-style-normal' : assetData.accounts[0].authType == 1, 'nz-btn-style-light' : assetData.accounts[0].authType == 2}">
-                <span>{{$t('asset.createAssetTab.password')}}</span>
-              </button>
-              <button type="button" @click="changeLoginType(2)"
-                      class="nz-btn nz-btn-size-small float-left"
-                      :class="{'nz-btn-disabled nz-btn-style-normal' : assetData.accounts[0].authType == 2, 'nz-btn-style-light' : assetData.accounts[0].authType == 1}">
-                <span>{{$t('asset.createAssetTab.ssh')}}</span>
-              </button>
-            </div>
-          </el-form-item>
-          <el-form-item :label="this.$t('asset.createAssetTab.account')" label-position="top">
-            <el-input size="mini" v-model="assetData.accounts[0].user"/>
-          </el-form-item>
-          <el-form-item :label="this.$t('asset.createAssetTab.password')" v-if="assetData.accounts[0].authType==1">
-            <el-input size="mini" type="password" v-model="assetData.accounts[0].pwd"/>
-          </el-form-item>
-          <el-form-item :label="this.$t('asset.createAssetTab.port')">
-            <el-input size="mini" v-model="assetData.accounts[0].port"/>
-          </el-form-item>
-          <el-form-item :label="this.$t('asset.createAssetTab.ssh')" v-if="assetData.accounts[0].authType==2">
-            <el-upload
-              class="upload-demo"
-              ref="upload"
-              action=""
-              :file-list="uploadFileList"
-              :on-change="handleChange"
-              :auto-upload="false"
-            >
-              <button type="button" class="nz-btn nz-btn-size-small nz-btn-style-normal">
-                <span class="top-tool-btn-txt">{{$t('asset.createAssetTab.clickToUpload')}}</span>
-              </button>
-            </el-upload>
-          </el-form-item>
+          <account-config-box v-for="(item,index) in assetData.accounts" :account="item" :key="index" ref="accountConfigBox"></account-config-box>
         </el-form>
       </el-scrollbar>
     </div>
@@ -659,10 +623,15 @@
 </template>
 
 <script>
+  import accountConfig from './accountConfig';
   export default {
+
     name: "assetAddUnit",
     props: {
       addUnitShow: Boolean
+    },
+    components:{
+      'account-config-box': accountConfig,
     },
     data() {
       return {
@@ -680,8 +649,8 @@
             authType: 1,
             user: '',
             pwd: '',
-            cert: '',
             port: '',
+            uploadFile:null
           }]
         },
         assetStateOption: [
@@ -1039,8 +1008,10 @@
           })
         }
         if (type === 'asset') {
+          this.$refs.accountConfigBox[0].validateAccount();
+          let accountValideResult=this.$refs.accountConfigBox[0].validateResult;
           this.$refs.addAssetForm.validate((valid) => {
-            if (valid) {
+            if (valid&&accountValideResult) {
               let modelId = ''
               let authType = ''
               if (this.assetData.modelId !== '') {
@@ -1061,12 +1032,19 @@
               form.append("idcId", this.assetData.idcId);
               form.append("cabinetId", this.assetData.cabinetId);
               form.append("modelId", modelId);
-              form.append("accounts[0].authType", authType);
-              form.append("accounts[0].user", this.assetData.accounts[0].user);
-              form.append("accounts[0].pwd", this.assetData.accounts[0].pwd);
-              form.append("accounts[0].port", this.assetData.accounts[0].port);
-              if(this.assetData.accounts[0].authType==2){
-                form.append('cert',this.uploadFileList[0].raw);
+              debugger
+              console.log(this.assetData.accounts)
+              for(let i in this.assetData.accounts){
+                let account=this.assetData.accounts[i];
+                if(account.user){
+                  form.append("accounts["+i+"].authType",account.authType);
+                  form.append("accounts["+i+"].user", account.user);
+                  form.append("accounts["+i+"].port", account.port);
+                  form.append("accounts["+i+"].pwd", account.pwd);
+                  if(account.authType==2){
+                    form.append('cert',account.uploadFile?account.uploadFile.raw:null);
+                  }
+                }
               }
               this.$post('asset', form,{'Content-Type': 'multipart/form-data'}).then(res => {
                 const h = this.$createElement;

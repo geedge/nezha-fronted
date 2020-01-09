@@ -112,6 +112,7 @@ const en = {
     email:'E-mail is invalide',
     tel:'Phone number is invalide',
     host:'IP Address is invalide',
+    fileSize:'upload file is too large',
     config: {
       account: {
 

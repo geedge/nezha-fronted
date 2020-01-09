@@ -1,0 +1,186 @@
+<template>
+    <div>
+      <el-form class="pop-item-wider" :model="account" :rules="rules" ref="accountForm">
+        <el-form-item :label="$t('asset.createAssetTab.loginType')" size="mini">
+          <div class="nz-btn-group float-left" style="padding-top: 4px;">
+            <button type="button" @click="changeLoginType(1)"
+                    class="nz-btn nz-btn-size-small float-left"
+                    :class="{'nz-btn-disabled nz-btn-style-normal' : account.authType == 1, 'nz-btn-style-light' : account.authType == 2}">
+              <span>{{$t('asset.createAssetTab.password')}}</span>
+            </button>
+            <button type="button" @click="changeLoginType(2)"
+                    class="nz-btn nz-btn-size-small float-left"
+                    :class="{'nz-btn-disabled nz-btn-style-normal' : account.authType == 2, 'nz-btn-style-light' : account.authType == 1}">
+              <span>{{$t('asset.createAssetTab.ssh')}}</span>
+            </button>
+          </div>
+        </el-form-item>
+        <el-form-item :label="$t('asset.createAssetTab.account')" prop="user">
+          <el-input size="mini" v-model="account.user"/>
+        </el-form-item>
+        <el-form-item :label="$t('asset.createAssetTab.password')" v-show="account.authType==1" >
+          <el-input size="mini" type="password" v-model="account.pwd"/>
+        </el-form-item>
+        <el-form-item :label="$t('asset.createAssetTab.port')" prop="port">
+          <el-input size="mini" v-model="account.port"/>
+        </el-form-item>
+        <el-form-item :label="this.$t('asset.createAssetTab.ssh')" v-show="account.authType==2" prop="file">
+          <el-upload class="upload-demo" ref="upload" action="" :file-list="uploadFileList" :on-change="handleChange"  :auto-upload="false">
+            <div slot="tip" class="el-upload__tip" v-if="account.privateKey" >{{$t('asset.createAssetTab.sshKeyWasConfig')}}</div>
+            <button type="button" class="nz-btn nz-btn-size-small nz-btn-style-normal">
+              <span class="top-tool-btn-txt" v-if="account.privateKey">{{$t('asset.createAssetTab.clickToCover')}}</span>
+              <span class="top-tool-btn-txt" v-else>{{$t('asset.createAssetTab.clickToUpload')}}</span>
+            </button>
+          </el-upload>
+        </el-form-item>
+      </el-form>
+    </div>
+</template>
+
+<script>
+export default {
+    name: "accountConfig",
+    props:{
+      account:{type:Object},
+      asComponent:{type:Boolean,default:false}
+    },
+    created() {
+    },
+  data(){
+      let validataUser=(rule, value, callback) => {
+        if(this.asComponent){//作为组件使用，正常验证
+          if(!value || value == ''){
+            callback(new Error(this.$t('validate.required')))
+          }
+        }else{
+          if(!value || value == ''){
+            callback()
+          }
+        }
+        callback();
+      }
+
+      let validatePort=(rule,value,callback) => {
+        if(this.asComponent){//作为组件使用，正常验证
+          if(!value || value == ''){
+            callback(new Error(this.$t('validate.required')))
+          }
+        }else{
+          if(this.account.user){
+            if(!value || value == ''){
+              callback(new Error(this.$t('validate.required')))
+            }
+          }
+        }
+        callback();
+      }
+
+      let validateFile=(rule,value,callback) => {
+        if(!this.validateFile()){
+          callback(new Error(this.uploadTip))
+        }
+        callback();
+      }
+      return {
+        uploadFileList:[],
+        rules:{
+          user:[
+            { validator: validataUser, trigger: 'blur'}
+          ],
+          port:[
+            { validator: validatePort, trigger: 'blur'}
+          ],
+          file:[
+            { validator: validateFile, trigger: 'change'}
+          ]
+        },
+        validateResult:false,
+        uploadTip:''
+      }
+    },
+    methods:{
+      resetData:function(){
+        this.account={
+          id:null,
+          user:"",
+          authType:1,
+          pwd:"",
+          port:null,
+          privateKey:null,
+          uploadFile:null
+        }
+      },
+      changeLoginType:function(loginType){
+        this.account.authType=loginType;
+        if(loginType == 1){//密码登录
+          this.clearFile();
+        }
+        if(loginType == 2){//公钥登录
+          this.account.pwd='';
+        }
+      },
+      handleChange(file,fileList) {
+        if (fileList.length > 0) {
+          this.uploadFileList = [fileList[fileList.length - 1]]
+        }
+        this.account.uploadFile = this.uploadFileList[0];
+        this.validateFile();
+      },
+      clearFile:function() {
+        if (this.$refs.upload) {
+          this.$refs.upload.clearFiles();
+        }
+        this.uploadFileList = [];
+      },
+      validateAccount:function(){
+        this.validateResult=false;
+        this.$refs.accountForm.validate((valid) => {
+          this.validateResult=valid;
+        });
+      },
+      validateFile:function(){
+          let file=this.uploadFileList[0];
+          if(file&&file.size>500){
+            this.uploadTip=this.$t('validate.fileSize')
+            return false;
+          }else{
+            return true;
+          }
+      },
+
+    },
+    watch:{
+      account:{
+        immediate:true,
+        deep:true,
+        handler(n,o){
+          // if (n && n.id) {
+          //   this.account=n;
+          // } else {
+          //   this.resetData();
+          // }
+        }
+      }
+    }
+}
+</script>
+
+<style scoped>
+  /*去除上传文件动画start*/
+  /*.upload-demo {*/
+  /*  display: flex;*/
+  /*}*/
+  /deep/ .el-list-enter-active,
+  /deep/ .el-list-leave-active {
+    transition: none;
+  }
+
+  /deep/ .el-list-enter,
+  /deep/ .el-list-leave-active {
+    opacity: 0;
+  }
+  /deep/ .el-upload-list {
+    height: 40px;
+  }
+  /*去除上传文件动画end*/
+</style>
