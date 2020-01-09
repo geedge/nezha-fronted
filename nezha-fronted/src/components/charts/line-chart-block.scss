@@ -83,4 +83,14 @@
       white-space: pre-wrap !important;
     }
   }
+  .element-top-border {
+    padding-bottom: 5px;
+    border-top: 1px solid #dfe7f2;
+    margin-top:-25px;
+  }
+
+  .element-bottom-border {
+    border-bottom: 1px solid #dfe7f2;
+    margin-bottom:-20px;
+  }
 }

@@ -215,7 +215,7 @@
         },
         rules: {
           title: [
-            {required: true,  trigger: 'blur'}
+            {required: true,  message: this.$t('validate.required'),  trigger: 'blur'}
           ],
          /*
           heigh: [
@@ -263,7 +263,7 @@
         this.$refs['chartForm'].validate((valid) => {
           if (valid) {
             if (this.chart.id) {//修改
-              this.$put('panel/'+this.chart.id+'/charts', this.project).then(response => {
+              this.$put('panel/'+this.chart.id+'/charts').then(response => {
                 if (response.code === 200) {
                   this.esc();
                   this.$message({duration: 1000, type: 'success', message: this.$t("tip.saveSuccess")});
@@ -356,24 +356,33 @@
       // 格式化tag为字符串表达式
       tagsToString(metric,arr) {
         let str = metric;
+        let sepStr = '';
         arr.forEach((item, index) => {
           if (index === 0) {
             str +="{"
             if(item.value.length===1){
               str +=  `${item.name}='${item.value.join('|')}'`;
+              sepStr = ',';
             }else if(item.value.length>1){
               str +=  `${item.name}=~'${item.value.join('|')}'`;
+              sepStr = ',';
             }
           } else {
             if(item.value.length===1){
-              str += `,${item.name}='${item.value.join('|')}'`;
+              str += sepStr+`${item.name}='${item.value.join('|')}'`;
+              sepStr = ',';
             }else if(item.value.length>1){
-              str += `,${item.name}=~'${item.value.join('|')}'`;
+              str += sepStr+`${item.name}=~'${item.value.join('|')}'`;
+              sepStr = ',';
             }
-
           }
         });
-        str +="}";
+        if(str.indexOf('{')>-1){
+          str +="}";
+        }
+        if(str.endsWith('{}')){
+          str = str.substring(0,str.indexOf('{'));
+        }
         return str;
       },
       // 新建图表

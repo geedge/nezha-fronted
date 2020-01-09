@@ -54,12 +54,15 @@
   .metric-title-row-position{
     margin-top:-10px;
   }
+  .star-red{
+    color:#ff1818;
+  }
 </style>
 <template>
-  <el-form :model="elementInfo" ref="elementInfo">
+  <el-form :model="elementInfo" ref="elementInfo"   >
     <el-row>
       <el-col span="16">
-        {{$t('dashboard.panel.chartForm.metric')}}
+        <span  class="star-red">*</span>&nbsp;{{$t('dashboard.panel.chartForm.metric')}}
       </el-col>
       <el-col span="8">
         <div class="nz-btn-group float-left"  v-show="tableShow == 2">
@@ -80,9 +83,9 @@
         </div>
       </el-col>
     </el-row>
-    <el-row  v-show="tableShow == 2">
+    <el-row  v-if="tableShow == 2">
       <el-col span="22">
-        <el-form-item prop="expression" ><!--expression和metric的验证只能有一个，不能同时存在？？:rules="{ required: true, type: 'string', message: '', trigger: 'change' }"-->
+        <el-form-item prop="expression" :rules="{ required: true,  message:$t('validate.required'), trigger: 'blur' }"><!--expression和metric的验证只能有一个，不能同时存在？？:rules="{ required: true, type: 'string', message: '', trigger: 'change' }"-->
           <el-input size="mini" ref="metricExpression" type="textarea" maxlength="1024" show-word-limit v-model="elementInfo.expression" :placeholder="this.$t('dashboard.metric.expertTip')" ></el-input>
         </el-form-item>
       </el-col>
@@ -90,9 +93,9 @@
         &nbsp;&nbsp;<button type="button" v-if="countTotal > 1" @click="deleteTarget"  class="nz-btn nz-btn-size-normal nz-btn-style-light nz-btn-style-square nz-btn-style-higher"><span class="top-tool-btn-txt"><i class="el-icon-close"></i></span></button>
       </el-col>
     </el-row>
-    <el-row  v-show="tableShow == 1">
+    <el-row  v-if="tableShow == 1">
       <el-col span="22">
-        <el-form-item :label-width="80"  prop="metric" ><!--:rules="{ required: true, type: 'string', message: '', trigger: 'change' }"-->
+        <el-form-item :label-width="80"  prop="metric" :rules="{ required: true,  message: $t('validate.required'), trigger: 'blur' }"><!--:rules="{ required: true, type: 'string', message: '', trigger: 'change' }"-->
               <el-select ref="metricSelect" placeholder="" popper-class="" size="small" v-model="elementInfo.metric"  @change="selectMetric">
                 <el-option v-for="(item, index) in metricShowList.arr" :key="item.metric + index"
                 :value="item.metric">{{item.metric}}</el-option>
@@ -105,7 +108,7 @@
       </el-col>
     </el-row>
 
-    <el-row v-if="elementInfo.metric"  v-show="tableShow == 1"><!--v-if="elementInfo.tagList.length > 0"-->
+    <el-row v-if="elementInfo.metric && tableShow == 1"><!--v-if="elementInfo.tagList.length > 0"-->
       <el-col span="12">
         <div class="metric-title-label">{{elementInfo.metric}}</div>
         <div class="li-list-part">
@@ -123,7 +126,7 @@
       </el-col>
       <el-col span="12">
         <div class="li-list-part-label-val-list" >
-          <el-form-item class="metric-title-position"  v-for="(item, index) in elementInfo.selectedTagList" :key="index" :label="item.name" :label-width="100" :ref="'tagItem' + index" :prop="'tagList.' + index + '.value'" >
+          <el-form-item class="metric-title-position"   v-for="(item, index) in elementInfo.selectedTagList" :key="index" :label="item.name" :label-width="100" :ref="'tagItem' + index" :prop="'tagList.' + index + '.value'" >
             <el-row class="metric-title-row-position" >
             <!--多选列表 -->
               <el-col span="20" >
@@ -319,7 +322,12 @@ export default {
         //解析expression，=>标签列表，值列表（index对应），设置selectedTagList及tagList里的isSelect为true
         var expression = this.target.expression;
         //alert('expression=='+expression);
-        this.elementInfo.metric = expression.substring(0,expression.indexOf('{'));
+        if(expression.indexOf('{')>-1){
+          this.elementInfo.metric = expression.substring(0,expression.indexOf('{'));
+        }else {
+          this.elementInfo.metric = expression;
+        }
+
         //alert(this.elementInfo.metric);
         //this.selectMetric(); // 获取tag
         this.$get('metric/labelName?metric='+this.elementInfo.metric).then(response => {
@@ -344,9 +352,10 @@ export default {
                   this.elementInfo.tagList.push(tagObj);
                 });
               }
-
-            let labValArrStr = expression.substring(expression.indexOf('{')+1,expression.indexOf('}'));
-            this.stringToTags(labValArrStr);
+            if(expression.indexOf('{')>-1){
+              let labValArrStr = expression.substring(expression.indexOf('{')+1,expression.indexOf('}'));
+              this.stringToTags(labValArrStr);
+            }
           }else {
             this.elementInfo.tagList = [];
           }
@@ -355,7 +364,6 @@ export default {
     },
     //字符串格式化为对象metric{a='1',b=~'2|3|4'}===>a='1',b=~'2|3|4'
     stringToTags(str) {
-      //alert("str=="+str);
       let labArr = str.split(',');
       labArr.forEach((item, index) => {//b=~'1|2|3'
         let labName = item.substring(0,item.indexOf('='));

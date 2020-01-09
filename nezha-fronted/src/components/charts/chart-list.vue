@@ -178,7 +178,7 @@ export default {
                       if (dpsArr.length > 0 && tagsArr.length > 0) {
                         tagsArr.forEach((tag, i) => {
                           if (tag !== '__name__') {
-                            host += i === 0 ? `${tag}="${queryItem.metric[tag]}"` : `${tag}="${queryItem.metric[tag]}",`;
+                            host += `${tag}="${queryItem.metric[tag]}",`;
                           }
                         });
                         if(host.endsWith(',')){host = host.substr(0,host.length-1);}

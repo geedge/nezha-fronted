@@ -64,5 +64,13 @@
   .chart-table-col{
     width: 100%;
   }
-
+  .element-bottom-border {
+    border-bottom: 1px solid #dfe7f2;
+    margin-bottom:-20px;
+  }
+  .element-top-border {
+    padding-top: 10px;
+    border-top: 1px solid #dfe7f2;
+    margin-top:-25px;
+  }
 }

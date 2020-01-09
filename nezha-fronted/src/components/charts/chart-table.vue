@@ -37,21 +37,32 @@
         <el-table-column prop="value" :label="$t('dashboard.panel.chartTableColumn.value')" sortable></el-table-column>
       </el-table>
     </div>
-    <!--全屏
-    <el-dialog title="查看" v-model="screenModal" width="96%">
-      <div class="clearfix">
+    <!--全屏-->
+    <el-dialog title="查看" :visible.sync="screenModal" width="96%"  :before-close="handleClose">
+      <div class="clearfix element-top-border">
         <div class="float-left table-title">
           {{data.title}}
         </div>
-        <div class="float-right">
-          <Icon style="cursor:pointer;" type="refresh" size="16" color="#5aacff" @click.native="refreshChart"></Icon>
+        <div class="float-right edit">
+          <span @click="refreshChart" :title="$t('dashboard.refresh')" class="set-icon" @click.native="refreshChart">
+              <i class="el-icon-refresh-right"></i>
+            </span>
         </div>
       </div>
       <div class="mt-10">
-        <Table border size="small" :height="350" :data="seriesItem" :columns="columns" :loading="tableLoading"></Table>
+        <el-table :data="seriesItem"  height="350" border class="chart-table-col" v-loading="tableLoading">
+          <el-table-column prop="metric" :label="$t('dashboard.panel.chartTableColumn.metric')"  sortable></el-table-column>
+          <el-table-column  prop="label" :label="$t('dashboard.panel.chartTableColumn.label')"  sortable></el-table-column>
+          <el-table-column  prop="time" :label="$t('dashboard.panel.chartTableColumn.time')" width="145" sortable></el-table-column>
+          <el-table-column prop="value" :label="$t('dashboard.panel.chartTableColumn.value')" sortable></el-table-column>
+        </el-table>
       </div>
+      <div class=" element-bottom-border" ></div>
+      <span slot="footer" class="dialog-footer" >
+        <el-button @click="screenModal = false">取 消</el-button>
+        <el-button type="primary" @click="screenModal = false">确 定</el-button>
+      </span>
     </el-dialog>
-    -->
   </div>
 </template>
 <script>

@@ -334,6 +334,7 @@
     methods: {
       //面板相关操作
       panelChange(){
+        //alert(JSON.stringify(this.$refs.searchInput.select_list));
         this.$refs.searchInput.select();
         this.filter.panelId = this.showPanel.id;
         this.getData(this.filter);

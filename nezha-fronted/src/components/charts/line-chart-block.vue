@@ -23,27 +23,40 @@
 
     <div class="line-area" ref="lineChartArea"  ></div>
     <!--
-    <Modal title="查看" v-model="screenModal" width="96%" class="line-chart-block-modal">-
+    <Modal title="查看" v-model="screenModal" width="96%" class="line-chart-block-modal">-->
     <el-dialog class="line-chart-block-modal"
       title="查看"
       :visible.sync="screenModal"
       width="90%"
-      :before-close="handleClose">
-     <el-row>
+      :before-close="handleClose"
+       @opened="initDialog">
+     <el-row class="element-top-border" >
         <div class="float-right">
-          全屏，日期选择组件
-          <calendar-select placement="bottom-end" ref="dateSelect" @on-date-change="dateChange"></calendar-select>
-
+          <div class="block">
+            <!--
+            <el-date-picker size="small" ref="calendar"
+                            format="yyyy/MM/dd HH:mm"
+                            @change="dateChange"
+                            v-model="searchTime"
+                            type="datetimerange"
+                            :picker-options="pickerOptions"
+                            :range-separator="$t('dashboard.panel.to')"
+                            :start-placeholder="$t('dashboard.panel.startTime')"
+                            :end-placeholder="$t('dashboard.panel.endTime')"
+                            align="right">
+            </el-date-picker>
+            -->
+          </div>
         </div>
-      </el-row>>
-      <div class="line-area" ref="screenShowArea" id="lineChartArea"></div>
-
-      <span slot="footer" class="dialog-footer">
-        <el-button @click="dialogVisible = false">取 消</el-button>
-        <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
+      </el-row>
+      <div class="line-area " ref="screenShowArea" ></div>
+      <div class=" element-bottom-border" ></div>
+      <span slot="footer" class="dialog-footer" >
+        <el-button @click="screenModal = false">取 消</el-button>
+        <el-button type="primary" @click="screenModal = false">确 定</el-button>
       </span>
+
     </el-dialog>
-  -->
     <!--</Modal>-->
   </div>
 </template>
@@ -103,6 +116,7 @@ export default {
         end_time: '',
       },
       stableFilter: {}, // 保存数据使用,初始化起止时间,单图or多图等
+      legend:[]
      // firstShow: false, // 默认不显示操作按钮,
     };
   },
@@ -258,7 +272,6 @@ export default {
         useUTC: false,//使用本地时间
         series: dataArg
       };
-
       // params.series = dataArg;
       if (chartSite === 'local') { // 本地显示
         /*
@@ -319,6 +332,7 @@ export default {
         this.echartStore.setOption(option);//创建图表
         this.echartStore.hideLoading();
       } else if (chartSite === 'screen') { // 全屏显示
+        /*
         option.series = dataArg.map((item) => {// params.series = dataArg.map((item) => {
           const obj = Object.assign(item);
           obj.events = {
@@ -362,6 +376,7 @@ export default {
           };
           return obj;
         });
+        */
         // eslint-disable-next-line
         this.echartStore.setOption(option);//显示全屏界面
         this.echartStore.hideLoading();
@@ -373,6 +388,7 @@ export default {
       if (filter) { // 保存数据,用于同步时间
         this.stableFilter = filter;
       }
+      this.legend = legend;
       this.panelIdInner = panelId;
       this.data = chartItem;
       this.seriesItem = seriesItem;
@@ -396,6 +412,35 @@ export default {
     refreshChart() {
       this.echartStore.showLoading();
       this.$emit('on-refresh-data', this.data.id);
+    },
+    initDialog(){
+      //此时初始化，才能获得screenShowArea对象，否则此对象为undefined，无法初始化图表
+      this.initChart(this.data, this.seriesItem, this.$refs.screenShowArea, 'screen',this.legend);
+      // 日期组件同步时间
+      /*
+      this.$refs.calendar.initTime({
+        start: this.stableFilter.start_time,
+        end: this.stableFilter.end_time,
+      });
+      */
+    },
+    // 全屏查看
+    showAllScreen() {
+      // 初始化同步时间
+      this.filter.start_time = this.stableFilter.start_time;
+      this.filter.end_time = this.stableFilter.end_time;
+      this.screenModal = true;
+    },
+    dateChange(time) {
+      /*
+      this.filter.start_time = `${time[0]}:00`;
+      this.filter.end_time = `${time[1]}:59`;
+      if (this.showSetting) {
+        this.getQueryChart('list');
+      } else {
+        this.getQueryChart('dashboard');
+      }
+      */
     },
     /*
     handleClose(done) {
@@ -422,20 +467,6 @@ export default {
       });
     },
 
-    // 全屏查看
-    showAllScreen() {
-      // 初始化同步时间
-      this.filter.start_time = this.stableFilter.start_time;
-      this.filter.end_time = this.stableFilter.end_time;
-      this.screenModal = true;
-      // 全屏绘图
-      this.initChart(this.data, this.seriesItem, this.$refs.screenShowArea, 'screen');
-      // 日期组件同步时间
-      this.$refs.dateSelect.initTime({
-        start: this.stableFilter.start_time,
-        end: this.stableFilter.end_time,
-      });
-    },
     dateChange(time) {
       this.filter.start_time = `${time[0]}:00`;
       this.filter.end_time = `${time[1]}:59`;
