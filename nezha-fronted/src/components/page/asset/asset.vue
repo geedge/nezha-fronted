@@ -125,34 +125,39 @@
             <div v-if="item.prop=='HOST'">
               <span>{{scope.row.host}}</span>
             </div>
-            <div v-if="item.prop=='资产状态'">
+            <div v-if="item.prop=='state'">
               <span>{{scope.row.state==1 ? $t('asset.createAssetTab.inStock') : $t('asset.createAssetTab.notInStock')}}</span>
             </div>
             <div v-if="item.prop=='Module'">
-              <div class="tab-input-square">{{scope.row.moduleNum}}</div>
+              <div class="tab-input-square link">{{scope.row.moduleNum}}</div>
             </div>
             <div v-if="item.prop=='Alert'">
-              <div class="tab-input-square">{{scope.row.alertNum}}</div>
+              <div class="tab-input-square link">{{scope.row.alertNum}}</div>
             </div>
-            <div v-if="item.prop=='数据中心'">
-              <span>{{scope.row.idc.name}}</span>
+            <div v-if="item.prop=='dataCenter'">
+              <idc-config-box :post-idc="JSON.parse(JSON.stringify(scope.row.idc))" placement="left" @after="getAssetData(null, true)" :button-class="'checkbox-edit'">
+                <template v-slot:optionZone>
+                  <span class="link">{{scope.row.idc.name}}</span>
+                </template>
+              </idc-config-box>
+              <!--<span class="link">{{scope.row.idc.name}}</span>-->
             </div>
-            <div v-if="item.prop=='机柜'">
-              <span>{{returnData(scope.row.cabinet)}}</span>
+            <div v-if="item.prop=='cabinet'">
+              <span class="link">{{returnData(scope.row.cabinet)}}</span>
             </div>
-            <div v-if="item.prop=='型号'">
+            <div v-if="item.prop=='model'">
               <span>{{scope.row.model.name}}</span>
             </div>
-            <div v-if="item.prop=='厂商'">
+            <div v-if="item.prop=='vendor'">
               <span>{{scope.row.model.vendor.value}}</span>
             </div>
             <div v-if="item.prop=='购买日期'">
               <span>{{scope.row.purchaseDate}}</span>
             </div>
-            <div v-if="item.prop=='责任人'">
+            <div v-if="item.prop=='principal'">
               <span>{{getPrincipalName(scope.row.idc.principal)}}</span>
             </div>
-            <div v-if="item.prop=='责任人电话'">
+            <div v-if="item.prop=='tel'">
               <span>{{scope.row.idc.tel}}</span>
             </div>
             <div v-if="item.prop == 'option'" class="content-right-options">
@@ -175,7 +180,7 @@
       <Pagination :pageObj="pageObj" @pageNo='pageNo' @pageSize='pageSize' ref="Pagination"></Pagination>
     </div>
 
-    <asset-add-unit :add-unit-show='addUnitShow' @refreshData="flushData"
+    <asset-add-unit :add-unit-show='addUnitShow' @refreshData="flushData" ref="assetAddUnit"
                     @sendStateData="tabControl"></asset-add-unit>
     <asset-edit-unit :edit-unit-show='editUnitShow' @refreshData="flushData" @sendStateData="tabControl"
                      ref="assetEditUnit"></asset-edit-unit>
@@ -213,6 +218,12 @@
             type: 'input',
             label: 'host',
             disabled: false
+          },{
+            id: 22,
+            name: this.$t("asset.createAssetTab.state"),
+            type: 'select',
+            label: 'assetState',
+            disabled: false
           }],
         },
         searchLabel: {}, //搜索参数
@@ -240,31 +251,31 @@
             width: 130
           }, {
             label: this.$t("asset.tableTitle.assetState"),
-            prop: '资产状态',
+            prop: 'state',
             show: true,
           }, {
-            label: this.$t("asset.tableTitle.module"),
+            label: this.$t("asset.tableTitle.endpoints"),
             prop: 'Module',
             show: true,
           }, {
-            label: this.$t("asset.tableTitle.alert"),
+            label: this.$t("asset.tableTitle.alerts"),
             prop: 'Alert',
             show: true,
           }, {
             label: this.$t("asset.tableTitle.dataCenter"),
-            prop: '数据中心',
+            prop: 'dataCenter',
             show: true,
           }, {
             label: this.$t("asset.tableTitle.cabinet"),
-            prop: '机柜',
+            prop: 'cabinet',
             show: true,
           }, {
             label: this.$t("asset.tableTitle.model"),
-            prop: '型号',
+            prop: 'model',
             show: true,
           }, {
             label: this.$t("asset.tableTitle.manufacturer"),
-            prop: '厂商',
+            prop: 'vendor',
             show: true,
           }, {
             label: this.$t("asset.tableTitle.procurementDate"),
@@ -272,11 +283,11 @@
             show: true,
           }, {
             label: this.$t("asset.tableTitle.principal"),
-            prop: '责任人',
+            prop: 'principal',
             show: true,
           }, {
             label: this.$t("asset.tableTitle.principalTel"),
-            prop: '责任人电话',
+            prop: 'tel',
             show: true,
           }, {
             label: this.$t('config.account.option'),
@@ -413,14 +424,18 @@
         });
         window.open(routeData.href);
       },
-      getAssetData(data) {
-        this.searchLabel = Object.assign(this.pageObj, this.searchLabel);
+      getAssetData(data, flushRightBoxDc) {
+        this.searchLabel = Object.assign(this.searchLabel, this.pageObj);
         this.$get('asset', this.searchLabel).then(response => {
           if (response.code === 200) {
             this.tableData = response.data.list;
             this.pageObj.total = response.data.total
           }
-        })
+        });
+        if (flushRightBoxDc) {
+          this.$refs.assetAddUnit.getIDCOptionData();
+          this.$refs.assetEditUnit.getIDCOptionData();
+        }
       },
       getIDCOptionData() {
         this.$get('idc').then(response => {
@@ -558,8 +573,10 @@
           } else {
             this.pageObj.idcIds = this.checkList.join(',');
           }
-          this.getAssetData();
+        } else {
+          this.pageObj.idcIds = '';
         }
+        this.getAssetData();
       },
       pageNo(val) {
         this.pageObj.pageNo = val;
@@ -595,6 +612,7 @@
       },
       search(searchObj) {
         this.searchLabel = {};
+        this.pageObj.pageNo = 1;
         for (let item in searchObj) {
           if (searchObj[item]) {
             this.$set(this.searchLabel, item, searchObj[item]);
@@ -646,13 +664,12 @@
   }
 
   .tab-input-square {
-    border: 1px solid #aaaaaa;
+    border: 1px solid #1166bb;
     height: 25px;
     width: 65px;
     border-radius: 3px;
     text-align: center;
     line-height: 23px;
-    color: #aaaaaa;
   }
 
   .account-list-option {
@@ -780,5 +797,9 @@
     position: absolute;
     right: 10px;
     font-size: 16px;
+  }
+  .cell .checkbox-edit {
+    position: static;
+    font-size: 14px;
   }
 </style>

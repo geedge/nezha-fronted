@@ -38,6 +38,15 @@
         value: 3,
         label: i18n.t('alert.config.typeOption.asset')
       }
+    ],
+    assetState: [ //资产入库/出库状态
+      {
+        value: 1,
+        label: i18n.t('asset.createAssetTab.inStock')
+      }, {
+        value: 2,
+        label: i18n.t('asset.createAssetTab.notInStock')
+      }
     ]
   };
   export default searchSelectInfo;

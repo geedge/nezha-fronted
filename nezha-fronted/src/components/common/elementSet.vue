@@ -47,7 +47,7 @@ export default {
   props: ["dropCol"],
   data() {
     return {
-      other: this.$t("i18n.overall.other"),
+      other: this.$t("overall.other"),
       event_positiony: 0,
       event_positionx: 0,
       eventfixedVal: {},

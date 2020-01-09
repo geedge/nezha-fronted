@@ -41,8 +41,9 @@
                         </div>
                     </template>
                     <template slot-scope="scope" :column="item">
-                      <span v-if="item.prop == 'alertRule'" class="content-right-option" @click="viewRule(scope.row[item.prop].id)">
-                          {{scope.row[item.prop].alertName}}
+                        <span v-if="item.prop == 'alertRule'">
+                            <span class="link" @click="viewRule(scope.row[item.prop].id)" v-if="scope.row[item.prop].alertName">{{scope.row[item.prop].alertName}}</span>
+                            <span v-else>-</span>
                         </span>
                         <div v-else-if="item.prop == 'type'" class="content-right-options">
                             <span v-if="scope.row[item.prop] == 1" >Project</span>
@@ -55,8 +56,9 @@
                             <span v-if="scope.row[item.prop] == 'low'"><i class="el-icon-arrow-down"></i>&nbsp;{{severityData[2].value}}</span>
                         </span>
                         <div v-else-if="item.prop == 'linkObject'">
-                            <span v-if="(scope.row['type'] == 1 || scope.row['type'] == 2) && scope.row[item.prop]" class="content-right-option" @click="viewAlertType(scope.row['type'],scope.row[item.prop])">{{scope.row[item.prop].name}}</span>
-                            <span v-if="scope.row['type'] == 3 && scope.row[item.prop]" class="content-right-option" @click="viewAlertType(scope.row['type'],scope.row[item.prop].id)">{{scope.row[item.prop].host}}</span>
+                            <span v-if="(scope.row['type'] == 1 || scope.row['type'] == 2) && scope.row[item.prop]" class="link" @click="viewAlertType(scope.row['type'],scope.row[item.prop])">{{scope.row[item.prop].name}}</span>
+                            <span v-else-if="scope.row['type'] == 3 && scope.row[item.prop]" class="link" @click="viewAlertType(scope.row['type'],scope.row[item.prop].id)">{{scope.row[item.prop].host}}</span>
+                            <span v-else>-</span>
                         </div>
                         <div v-else-if="item.prop == 'state'">
                             <span class="">
@@ -103,7 +105,7 @@ export default {
           prop: 'type',
           show: true,
         }, {
-          label: this.$t("alert.list.linkedId"),
+          label: this.$t("alert.list.linked"),
           prop: 'linkObject',
           show: true,
         }, {
@@ -260,6 +262,7 @@ export default {
     },
     search: function(searchObj) {
       this.searchLabel = {};
+      this.pageObj.pageNo = 1;
       for (let item in searchObj) {
         if (searchObj[item]) {
           this.$set(this.searchLabel, item, searchObj[item]);
@@ -277,7 +280,6 @@ export default {
       })
     },
     viewAlertType:function(type,typeObj){
-      console.log(typeObj)
       this.closeViews();
       switch (type) {
         case 1:

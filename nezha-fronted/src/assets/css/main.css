@@ -233,6 +233,10 @@ html {
 .content-right-option .el-icon-view {
   color: #60BEFF;
 }
+.link { /*有外联的字段*/
+  color: #1166bb;
+  cursor: pointer;
+}
 .content-right-option .el-icon-view:hover {
   color: #409EFF;
 }

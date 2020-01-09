@@ -22,7 +22,8 @@ const en = {
     signOut: 'Sign Out',
     select: 'Select',
     ok: 'Ok',
-    all: 'All'
+    all: 'All',
+    other: "Other"
   },
   dashboard:{
     title:'Dashboard',
@@ -278,8 +279,8 @@ const en = {
       device: 'SN',
       host: 'Host',
       assetState: 'State',
-      module: 'Module',
-      alert: 'Alert',
+      endpoints: 'Endpoints',
+      alerts: 'Alerts',
       dataCenter: 'Data Center',
       cabinet: 'Cabinet',
       model: 'Model',
@@ -337,7 +338,7 @@ const en = {
     endAt: "End Time",
     list: {
       //表头
-      linkedId: "Linked ID",
+      linked: "Linked",
       type: "Type",
       state: "Status",
       charts: "Charts",

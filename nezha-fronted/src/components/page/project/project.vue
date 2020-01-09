@@ -90,7 +90,7 @@
             </div>
           </template>
           <template slot-scope="scope" :column="item">
-            <span v-if="item.prop == 'asset' && scope.row[item.prop]" class="content-right-option" @click="viewAsset(scope.row[item.prop].id)">{{scope.row[item.prop].host}}</span>
+            <span v-if="item.prop == 'asset' && scope.row[item.prop]" class="link" @click="viewAsset(scope.row[item.prop].id)">{{scope.row[item.prop].host}}</span>
             <span v-else-if="item.prop == 'param'">
               <span v-for="p in scope.row.paramObj">{{p.key}}={{p.value}}，</span>
             </span>
@@ -414,6 +414,7 @@
       //搜索
       endpointSearch: function(searchObj) {
         this.endpointSearchLabel = {};
+        this.endpointPageObj.pageNo = 1;
         for (let item in searchObj) {
           if (searchObj[item]) {
             this.$set(this.endpointSearchLabel, item, searchObj[item]);
@@ -424,6 +425,7 @@
       //搜索
       metricSearch: function(searchObj) {
         this.metricSearchLabel = {};
+        this.metricPageObj.pageNo = 1;
         for (let item in searchObj) {
           if (searchObj[item]) {
             this.$set(this.metricSearchLabel, item, searchObj[item]);

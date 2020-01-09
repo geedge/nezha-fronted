@@ -3,14 +3,14 @@
     <div class="pop-window-assetType-content">
       <!-- begin--顶部按钮-->
       <div class="pop-top-btns">
-        <button type="button" v-if="popBox.isEdit && idc.id != ''" @click="del" class="nz-btn nz-btn-size-normal nz-btn-style-light">
+        <button type="button" v-if="popBox.isEdit && idc.id != ''" @click="del" class="nz-btn nz-btn-size-small nz-btn-style-light">
           <span class="top-tool-btn-txt">{{$t('overall.delete')}}</span>
         </button>
-        <button type="button" @click="save" class="nz-btn nz-btn-size-normal nz-btn-style-normal">
+        <button type="button" @click="save" class="nz-btn nz-btn-size-small nz-btn-style-normal">
           <span class="top-tool-btn-txt">{{$t('overall.save')}}</span>
         </button>
 
-        <button type="button" @click="esc" class="nz-btn nz-btn-size-normal nz-btn-style-light nz-btn-style-square">
+        <button type="button" @click="esc" class="nz-btn nz-btn-size-small nz-btn-style-light nz-btn-style-square">
           <span class="top-tool-btn-txt"><i class="el-icon-close"></i></span>
         </button>
       </div>

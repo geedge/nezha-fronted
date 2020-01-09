@@ -474,6 +474,8 @@
                         if(val.type == 'select'){
                             if (val.label == 'alertType' || val.label == 'promType') {
                                 objectInfo.type = val.valnum;
+                            } else if (val.label == 'assetState') {
+                                objectInfo.state = val.valnum;
                             } else if(typeof(val.valnum) == "undefined"||val.valnum == ''){
                                 this.selectInfoList[val.label].forEach(item=>{
                                     if(item.label == val.val){
@@ -487,7 +489,6 @@
                             }else {
                                 objectInfo[val.label] = val.valnum;
                             }
-                            console.info(val)
                         } else if(val.type == 'selectSelf'){
                           objectInfo[val.label] = val.valnum;
                         } else if(val.type == 'selectAction'){ //新增日志判断

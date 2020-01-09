@@ -33,7 +33,7 @@
                         </div>
                     </template>
                     <template slot-scope="scope" :column="item">
-                        <span v-if="item.prop == 'idc'">{{scope.row[item.prop].name}}</span>
+                        <span v-if="item.prop == 'idc'" class="link">{{scope.row[item.prop].name}}</span>
                         <span v-else-if="item.prop == 'type'">
                             {{scope.row[item.prop] == '1' ? 'Global' : ''}}
                             {{scope.row[item.prop] == '2' ? 'Per-Datacenter' : ''}}
@@ -501,6 +501,7 @@ export default {
       this.getTableData();
     },
     search: function(searchObj) {
+      this.pageObj.pageNo = 1;
       this.searchLabel = {};
       for (let item in searchObj) {
         if (searchObj[item]) {

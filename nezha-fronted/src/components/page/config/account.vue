@@ -62,6 +62,7 @@
                               v-model="scope.row.status"
                               active-value="1"
                               inactive-value="0"
+                              active-color="#1166bb"
                               @change="(val)=>{statusChange(scope.row)}">
                             </el-switch>
                         </span>
@@ -119,7 +120,7 @@
                   </el-form-item>-->
                   <!--enable-->
                   <el-form-item :label="$t('config.account.enable')">
-                    <el-switch v-model="user.status" :disabled="!rightBox.isEdit" active-value="1" inactive-value="0">
+                    <el-switch v-model="user.status" active-color="#1166bb" :disabled="!rightBox.isEdit" active-value="1" inactive-value="0">
                     </el-switch>
                   </el-form-item>
                   <el-form-item :label="$t('config.account.createTime')" v-if="!rightBox.isEdit">
@@ -449,6 +450,7 @@ export default {
     },
     search: function(searchObj) {
       this.searchLabel = {};
+      this.pageObj.pageNo = 1;
       for (let item in searchObj) {
         if (searchObj[item]) {
           this.$set(this.searchLabel, item, searchObj[item]);
