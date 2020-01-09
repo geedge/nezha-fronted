@@ -82,7 +82,6 @@ export default {
   methods: {
     //悬浮点击空白隐藏
     elementsetHide() {
-      console.info(this.tablelable)
       this.eventfixedVal.shezhi = 0;
     },
     //点击全选all或者cancel按钮

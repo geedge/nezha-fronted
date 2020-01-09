@@ -1,6 +1,6 @@
 <template>
   <el-popover :placement="placement"    width="400" @hide="hidePop"  ref="popBox" v-model="popBox.show">
-    <div class="pop-window-assetType-content">
+    <div class="">
       <!-- begin--顶部按钮-->
       <div class="pop-top-btns">
         <button type="button" v-if="popBox.isEdit && idc.id != ''" @click="del" class="nz-btn nz-btn-size-small nz-btn-style-light">
@@ -37,7 +37,7 @@
       </div>
     </div>
     <span :class="buttonClass" @click.prevent.stop="" slot="reference">
-      <slot name="optionZone"  >
+      <slot name="optionZone">
         <i class="el-icon-plus"></i>
       </slot>
     </span>

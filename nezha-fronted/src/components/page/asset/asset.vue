@@ -128,8 +128,12 @@
             <div v-if="item.prop=='state'">
               <span>{{scope.row.state==1 ? $t('asset.createAssetTab.inStock') : $t('asset.createAssetTab.notInStock')}}</span>
             </div>
-            <div v-if="item.prop=='Module'">
-              <div class="tab-input-square link">{{scope.row.moduleNum}}</div>
+            <div v-if="item.prop=='Module'" @click="getAssetModuleList(scope.row.id)">
+              <module-list-pop :assetId="scope.row.id + ''" @openModuleBox="openModuleBox" placement="left" :ref="'moduleListPop' + scope.row.id">
+                <template v-slot:optionZone>
+                  <div class="tab-input-square link">{{scope.row.moduleNum}}</div>
+                </template>
+              </module-list-pop>
             </div>
             <div v-if="item.prop=='Alert'">
               <div class="tab-input-square link">{{scope.row.alertNum}}</div>
@@ -190,6 +194,7 @@
       @tablelable="tablelabelEmit"
       ref="elementset"
     ></element-set>
+    <module-box :module="module" @reload="getAssetData" ref="moduleBox"></module-box>
   </div>
 </template>
 
@@ -313,6 +318,7 @@
         tabShow: false,
         tabView: true,
         tagType: 'add',
+        module: {},
         form: {
           name: ''
         },
@@ -384,6 +390,13 @@
 
     },
     methods: {
+      openModuleBox(module) {
+        this.module = module;
+        this.$refs.moduleBox.show(true);
+      },
+      getAssetModuleList(id) {
+        this.$refs['moduleListPop' + id][0].getModuleList();
+      },
       elementsetShow(s, e) {
         var eventfixed = {
           shezhi: 0,
@@ -665,11 +678,11 @@
 
   .tab-input-square {
     border: 1px solid #1166bb;
-    height: 25px;
-    width: 65px;
+    height: 22px;
+    width: 50px;
     border-radius: 3px;
     text-align: center;
-    line-height: 23px;
+    line-height: 20px;
   }
 
   .account-list-option {
