@@ -57,9 +57,11 @@
             <el-menu-item :index="'3-' + index">
               <div @click="jumpToAsset('asset',item.id)">
                 <span>{{item.name}}</span>
-                <idc-config-box :post-idc="item" placement="left" @after="getIDCOptionData" :button-class="'menu-edit'">
+                <idc-config-box :post-idc="item" ref="idcConfigBox" placement="left" @after="getIDCOptionData" :button-class="'menu-edit'">
                   <template v-slot:optionZone>
-                    <i class="el-icon-edit-outline" @click="getIDCOptionData(item.id)" style="color: inherit"></i>
+                    <div @click="closeAllPop">
+                      <i class="el-icon-edit-outline" @click="getIDCOptionData(item.id)" style="color: inherit"></i>
+                    </div>
                   </template>
                 </idc-config-box>
                 <!--<el-popover
@@ -424,6 +426,11 @@
           localStorage.setItem("nz-language", lang);
           window.location.reload();
         }
+      },
+      closeAllPop:function(){
+        this.$refs.idcConfigBox.forEach((item)=>{
+          item.show(false)
+        })
       },
       getProjectList() {
         this.$get('project', {}).then(response => {

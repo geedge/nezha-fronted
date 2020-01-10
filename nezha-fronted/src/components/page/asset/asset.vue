@@ -8,9 +8,12 @@
           <el-checkbox class="sidebar-info-item" :class="{'sidebar-info-item-active': checkList.indexOf(item.id) != -1}"
                        v-for="(item,key) in checkListData" :key="key" :label=item.id>
             <span>{{item.name}}</span>
-            <idc-config-box :post-idc="addIdcData" placement="left" @after="getIDCOptionData" :button-class="'checkbox-edit'">
+            <idc-config-box ref="idcConfigBox" :post-idc="item" placement="left" @after="getIDCOptionData" :button-class="'checkbox-edit'">
               <template v-slot:optionZone>
-                <i class="el-icon-edit-outline" @click="getSingleIDCData(item.id,'edit')"></i>
+                <span @click="closeAllPop">
+                  <i class="el-icon-edit-outline" @click="getSingleIDCData(item.id,'edit')"></i>
+                </span>
+
               </template>
             </idc-config-box>
             <!--<el-popover
@@ -139,15 +142,19 @@
               <div class="tab-input-square link">{{scope.row.alertNum}}</div>
             </div>
             <div v-if="item.prop=='dataCenter'">
-              <idc-config-box :post-idc="JSON.parse(JSON.stringify(scope.row.idc))" placement="left" @after="getAssetData(null, true)" :button-class="'checkbox-edit'">
+              <idc-config-box :post-idc="JSON.parse(JSON.stringify(scope.row.idc))" ref="idcConfigBox" :is-edit="false" placement="left"  @after="getAssetData(null, true)" :button-class="'checkbox-edit'">
                 <template v-slot:optionZone>
-                  <span class="link">{{scope.row.idc.name}}</span>
+                  <span class="link" @click="closeAllPop">{{scope.row.idc.name}}</span>
                 </template>
               </idc-config-box>
               <!--<span class="link">{{scope.row.idc.name}}</span>-->
             </div>
             <div v-if="item.prop=='cabinet'">
-              <span class="link">{{returnData(scope.row.cabinet)}}</span>
+              <cabinet-config-box v-if="scope.row.cabinet&&scope.row.cabinet!='--'" ref="cabinetConfigBox"  placement="left" :is-edit="false" :post-cabinet="JSON.parse(JSON.stringify(scope.row.cabinet))"  @after="getAssetData(null, true)">
+                <span slot="optionZone" @click="closeAllPop" class="link">{{returnData(scope.row.cabinet)}}</span>
+              </cabinet-config-box>
+              <span v-else>{{returnData(scope.row.cabinet)}}</span>
+
             </div>
             <div v-if="item.prop=='model'">
               <span>{{scope.row.model.name}}</span>
@@ -622,6 +629,14 @@
         this.getSingleAsset();
         this.getAssetData();
         this.getIDCOptionData();
+      },
+      closeAllPop:function(){
+        this.$refs.idcConfigBox.forEach((item)=>{
+          item.show(false)
+        })
+        this.$refs.cabinetConfigBox.forEach((item)=>{
+          item.show(false)
+        })
       },
       search(searchObj) {
         this.searchLabel = {};

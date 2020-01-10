@@ -1,13 +1,14 @@
 <template>
-  <el-popover :placement="placement"    width="400" @hide="hidePop"  ref="popBox" v-model="popBox.show">
+  <el-popover :placement="placement"   width="400" @hide="hidePop"  ref="popBox" v-model="popBox.show">
     <div class="">
       <!-- begin--顶部按钮-->
       <div class="pop-top-btns">
-        <button type="button" v-if="popBox.isEdit && idc.id != ''" @click="del" class="nz-btn nz-btn-size-small nz-btn-style-light">
+        <button type="button" v-if="idc.id != ''" @click="del" class="nz-btn nz-btn-size-small nz-btn-style-light">
           <span class="top-tool-btn-txt">{{$t('overall.delete')}}</span>
         </button>
-        <button type="button" @click="save" class="nz-btn nz-btn-size-small nz-btn-style-normal">
-          <span class="top-tool-btn-txt">{{$t('overall.save')}}</span>
+        <button type="button" @click="saveOrToEdit" class="nz-btn nz-btn-size-small nz-btn-style-normal">
+          <span class="top-tool-btn-txt" v-if="popBox.isEdit">{{$t('overall.save')}}</span>
+          <span class="top-tool-btn-txt" v-else>{{$t('overall.edit')}}</span>
         </button>
 
         <button type="button" @click="esc" class="nz-btn nz-btn-size-small nz-btn-style-light nz-btn-style-square">
@@ -20,18 +21,22 @@
       <div class="pop-item-wider">
         <el-form class="right-box-form" :model="idc" label-position="left" label-width="150px"  :rules="rules" ref="idcForm">
           <el-form-item :label="$t('asset.createAssetTab.dcName')" prop="name">
-            <el-input type="text"  placeholder="" v-model="idc.name" size="mini" maxlength="64"></el-input>
+            <el-input type="text"  placeholder="" v-model="idc.name" size="mini" maxlength="64" v-if="popBox.isEdit"></el-input>
+            <div class="right-box-form-content-txt" v-if="!popBox.isEdit">{{idc.name}}</div>
           </el-form-item>
           <el-form-item :label="$t('asset.createAssetTab.location')" prop="location">
-            <el-input type="text"  placeholder="" v-model="idc.location" size="mini"></el-input>
+            <el-input type="text"  placeholder="" v-model="idc.location" size="mini" v-if="popBox.isEdit"></el-input>
+            <div class="right-box-form-content-txt" v-if="!popBox.isEdit">{{idc.location}}</div>
           </el-form-item>
           <el-form-item :label="$t('asset.createAssetTab.principal')" prop="principal">
-            <el-select v-model="idc.principal" clearable size="mini" placeholder="">
+            <el-select v-model="idc.principal" clearable size="mini" placeholder="" v-if="popBox.isEdit">
               <el-option v-for="item in principals" :key="item.id" :label="item.username" :value="item.userId"></el-option>
             </el-select>
+            <div class="right-box-form-content-txt" v-if="!popBox.isEdit">{{idc.principal}}</div>
           </el-form-item>
-          <el-form-item :label="$t('asset.createAssetTab.tel')" prop="tel">
-            <el-input type="text"  placeholder="" v-model="idc.tel" size="mini"></el-input>
+          <el-form-item :label="$t('asset.createAssetTab.tel')" prop="tel" >
+            <el-input type="text"  placeholder="" v-model="idc.tel" size="mini" v-if="popBox.isEdit"></el-input>
+            <div class="right-box-form-content-txt" v-if="!popBox.isEdit">{{idc.tel}}</div>
           </el-form-item>
         </el-form>
       </div>
@@ -50,7 +55,8 @@
       props:{
         postIdc:{type:Object},
         placement:{type:String},
-        buttonClass:{type:String}
+        buttonClass:{type:String},
+        isEdit:{type:Boolean,default:true}
       },
       created() {
         this.init();
@@ -90,7 +96,7 @@
           },
           idc:{},
           principals:[],
-          popBox:{isEdit:false,show:false}
+          popBox:{isEdit:true,show:false}
         }
       },
       methods:{
@@ -118,6 +124,13 @@
             }
           })
         },
+        saveOrToEdit:function(){
+          if (!this.popBox.isEdit) {
+            this.toEdit(this.idc);
+          } else {
+            this.save();
+          }
+        },
         save:function(){
           let temp=this;
           temp.$refs.idcForm.validate((valide)=>{
@@ -126,8 +139,9 @@
               if(!temp.idc.id){
                 temp.$post('idc', temp.idc).then(response => {
                   if (response.code === 200) {
-                    temp.$message({duration: 1000, type: 'success', message: temp.$t("tip.deleteSuccess")});
+                    temp.$message({duration: 1000, type: 'success', message: temp.$t("tip.saveSuccess")});
                     temp.$emit("after");
+                    temp.$store.commit('assetDcListChange');
                     temp.esc();
                   } else {
                     this.$message.error(response.msg);
@@ -136,8 +150,9 @@
               }else{
                 this.$put('idc', temp.idc).then(response => {
                   if (response.code === 200) {
-                    temp.$message({duration: 1000, type: 'success', message: temp.$t("tip.deleteSuccess")});
+                    temp.$message({duration: 1000, type: 'success', message: temp.$t("tip.saveSuccess")});
                     temp.$emit("after");
+                    temp.$store.commit('assetDcListChange');
                     temp.esc();
                   } else {
                     this.$message.error(response.msg);
@@ -149,6 +164,16 @@
               return false;
             }
           });
+        },
+        toEdit:function(u){
+          this.idc = Object.assign({}, u);
+          this.popBox.isEdit = true;
+          this.title = this.$t('asset.createAssetTab.editIdcTab.title') + "  ID：" + this.idc.id
+          this.popBox.show = true;
+        },
+        show:function(isShow,isEdit){
+          this.popBox.show=isShow;
+          this.popBox.isEdit=isEdit;
         },
         esc:function(){
           this.popBox.show=false;
@@ -191,16 +216,20 @@
           handler(n, o) {
             if (n && n.id) {
               this.title = this.$t('asset.createAssetTab.editIdcTab.title') + "  ID：" + n.id;
-              this.popBox.isEdit=true;
               this.idc=n;
 
             } else {
               this.title = this.$t('asset.createAssetTab.AddIdcTab.title');
-              this.popBox.isEdit=false;
               this.resetData();
             }
           }
         },
+        isEdit:{
+          immediate: true,
+          handler(n, o) {
+            this.popBox.isEdit=n;
+          }
+        }
       }
     }
 </script>

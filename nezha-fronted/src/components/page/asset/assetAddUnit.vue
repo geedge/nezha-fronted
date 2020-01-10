@@ -94,7 +94,7 @@
                                   <el-input class="input-x-mini" v-model="item.value"/>
                                 </span>
                                 <span class="config-dropdown-btn" @click.stop="editOptionData(item,'type',index)">
-                                  <i class="el-icon-edit-outline"v-if="!item.isEdit"></i>
+                                  <i class="el-icon-edit-outline" v-if="!item.isEdit"></i>
                                   <i class="el-icon-check" v-if="item.isEdit" @click="editData('sys/dict/update',item)"></i>
                                 </span>
                                 <span class="config-dropdown-btn config-dropdown-btn-delete"
@@ -387,113 +387,9 @@
                 :value="item.id"
               >
                 <span>{{ item.name }}</span>
-                <el-popover
-                  placement="left"
-                  trigger="manual"
-                  v-model="item[item.name]"
-                  width="400"
-                >
-                  <div class="pop-window-assetType-content">
-                    <div class="pop-top-btns">
-                      <button type="button" @click="editData('cabinet',item)" class="nz-btn nz-btn-size-small nz-btn-style-normal">
-                        <span class="top-tool-btn-txt">{{$t('overall.save')}}</span>
-                      </button>
-                      <button type="button" @click="item[item.name] = false" class="nz-btn nz-btn-size-small nz-btn-style-light nz-btn-style-square">
-                        <span class="top-tool-btn-txt"><i class="el-icon-close"></i></span>
-                      </button>
-                    </div>
-                    <!--标题-->
-                    <div class="pop-title">{{$t('asset.createAssetTab.editCabinetTab.title')}}</div>
-                    <!--表单内容-->
-                    <el-form class="pop-item-wider" :model="popCabinetData" ref="cabEditForm" :rules="cabRules">
-                      <el-form-item :label="$t('asset.createAssetTab.editCabinetTab.name')" prop="name">
-                        <el-input size="mini" v-model="popCabinetData.name"/>
-                      </el-form-item>
-                      <el-form-item :label="$t('asset.createAssetTab.editCabinetTab.uSize')" prop="uSize">
-                        <div>{{popCabinetData.uSize}}</div>
-                        <el-slider v-model.number="popCabinetData.uSize" :max="47"></el-slider>
-                      </el-form-item>
-                      <el-form-item :label="$t('asset.createAssetTab.editCabinetTab.remark')">
-                        <el-input v-model="popCabinetData.remark"
-                                  type="textarea"
-                                  size="mini"
-                                  :rows="2"/>
-                      </el-form-item>
-                      <el-form-item :label="$t('asset.createAssetTab.editCabinetTab.DC')">
-                        <el-select v-model="popCabinetData.idcId" clearable placeholder="" size="mini" style="width: 100%;" prop="idcId">
-                          <el-option
-                            v-for="item in IDCOptionData"
-                            :key="item.key"
-                            :label="item.name"
-                            :value="item.id"
-                          >
-                            <span>{{ item.name }}</span>
-                            <!--                                                            <el-popover-->
-                            <!--                                                                    placement="top"-->
-                            <!--                                                                    v-model="item[item.name+item.id]"-->
-                            <!--                                                            >-->
-                            <!--                                                                <div class="pop-window-assetType-content">-->
-                            <!--                                                                    <div class="right-box-top-btns">-->
-                            <!--                                                                        <div class="right-box-top-btn right-box-top-btn-full"-->
-                            <!--                                                                             @click="item[item.name+item.id] = false">-->
-                            <!--                                                                            <div class="right-box-btn-icon">-->
-                            <!--                                                                                <i class="el-icon-close"></i>-->
-                            <!--                                                                            </div>-->
-                            <!--                                                                            <span>{{$t('overall.esc')}}</span>-->
-                            <!--                                                                        </div>-->
-                            <!--                                                                    </div>-->
-                            <!--                                                                    <div class="pop-window">-->
-                            <!--                                                                        <span style="display: block;padding-bottom: 20px">标题</span>-->
-                            <!--                                                                        <el-form-item label="DC Name">-->
-                            <!--                                                                            <el-input v-model="addCabIDCData.name"/>-->
-                            <!--                                                                        </el-form-item>-->
-                            <!--                                                                        <el-form-item label="Location">-->
-                            <!--                                                                            <el-input v-model="addCabIDCData.location"/>-->
-                            <!--                                                                        </el-form-item>-->
-                            <!--                                                                        <el-form-item label="负责人">-->
-                            <!--                                                                            <el-select v-model="addCabIDCData.principal"-->
-                            <!--                                                                                       clearable>-->
-                            <!--                                                                                <el-option-->
-                            <!--                                                                                        v-for="item in idcUserData"-->
-                            <!--                                                                                        :key="item.key"-->
-                            <!--                                                                                        :label="item.username"-->
-                            <!--                                                                                        :value="item.userId"-->
-                            <!--                                                                                >-->
-                            <!--                                                                                </el-option>-->
-                            <!--                                                                            </el-select>-->
-                            <!--                                                                        </el-form-item>-->
-                            <!--                                                                        <el-form-item label="Tel">-->
-                            <!--                                                                            <el-input v-model="addCabIDCData.tel"/>-->
-                            <!--                                                                        </el-form-item>-->
-                            <!--                                                                    </div>-->
-                            <!--                                                                </div>-->
-                            <!--                                                                <div class="right-box-bottom-btns">-->
-                            <!--                                                                    <div class="right-box-bottom-btn right-box-bottom-btn-cancel"-->
-                            <!--                                                                         @click.stop="item[item.name+item.id]= false">-->
-                            <!--                                                                        {{$t('overall.cancel')}}-->
-                            <!--                                                                    </div>-->
-                            <!--                                                                    <div class="right-box-bottom-btn right-box-bottom-btn-50"-->
-                            <!--                                                                         @click="editData('idc',item,'CabIDC')">-->
-                            <!--                                                                        {{$t('overall.save')}}-->
-                            <!--                                                                    </div>-->
-                            <!--                                                                </div>-->
-                            <!--                                                                <span class="config-dropdown-btn" slot="reference"-->
-                            <!--                                                                      @click="getSingleIDCData(item.id,'edit')"><i-->
-                            <!--                                                                        class="el-icon-edit-outline"></i></span>-->
-                            <!--                                                            </el-popover>-->
-                            <!--                                                            <span class="config-dropdown-btn config-dropdown-btn-delete"-->
-                            <!--                                                                  @click.stop="deleteData('idc',item.id)"><i-->
-                            <!--                                                                    class="el-icon-delete"></i></span>-->
-                          </el-option>
-                        </el-select>
-                      </el-form-item>
-                    </el-form>
-                  </div>
-                  <span class="config-dropdown-btn" slot="reference"
-                      @click.stop="getSingleCabinetData(item.id,'edit',item)">
-                    <i class="el-icon-edit-outline"></i>
-                  </span>
-                </el-popover>
+                <cabinet-config-box placement="left" :post-cabinet="item" button-class="config-dropdown-btn" @after="getCabinetOptionData">
+                  <i slot="optionZone" class="el-icon-edit-outline"></i>
+                </cabinet-config-box>
 
                 <span class="config-dropdown-btn config-dropdown-btn-delete"
                       @click.stop="deleteData('cabinet',item.id)">
@@ -503,107 +399,7 @@
             </el-select>
 
             <div class="right-box-row-btn right-box-row-btn-small">
-              <el-popover
-                placement="left"
-                trigger="click"
-                v-model="popCabinetVisible"
-                width="400"
-              >
-                <div class="pop-window-assetType-content">
-                  <div class="pop-top-btns">
-                    <button type="button" @click="addNewData('cabinet')" class="nz-btn nz-btn-size-small nz-btn-style-normal">
-                      <span class="top-tool-btn-txt">{{$t('overall.save')}}</span>
-                    </button>
-                    <button type="button" @click="popoverClose('cabinet')" class="nz-btn nz-btn-size-small nz-btn-style-light nz-btn-style-square">
-                      <span class="top-tool-btn-txt"><i class="el-icon-close"></i></span>
-                    </button>
-                  </div>
-                  <!--标题-->
-                  <div class="pop-title">{{$t('asset.createAssetTab.AddCabinetTab.title')}}</div>
-                  <!--表单内容-->
-                  <el-form class="pop-item-wider" :model="addCabinetData" ref="cabAddForm" :rules="cabRules">
-                    <el-form-item :label="this.$t('asset.createAssetTab.AddCabinetTab.name')" prop="name">
-                      <el-input size='mini' v-model="addCabinetData.name"/>
-                    </el-form-item>
-                    <el-form-item :label="this.$t('asset.createAssetTab.AddCabinetTab.uSize')" prop="uSize">
-                      <div>{{addCabinetData.uSize}}</div>
-                      <el-slider v-model.number="addCabinetData.uSize" :max="47"></el-slider>
-                    </el-form-item>
-                    <el-form-item :label="this.$t('asset.createAssetTab.AddCabinetTab.remark')">
-                      <el-input size='mini' v-model="addCabinetData.remark" type="textarea" :rows="2"/>
-                    </el-form-item>
-                    <el-form-item :label="this.$t('asset.createAssetTab.AddCabinetTab.DC')" prop="idcId">
-                      <el-select size='mini' v-model="addCabinetData.idcId" clearable style="width: 100%;" placeholder="">
-                        <el-option
-                          v-for="item in IDCOptionData"
-                          :key="item.key"
-                          :label="item.name"
-                          :value="item.id"
-                        >
-                          <span>{{ item.name }}</span>
-                          <!--<el-popover
-                            placement="left"
-                            v-model="item[item.id+item.name]"
-                          >
-                            <div class="pop-window-assetType-content">
-                              <div class="right-box-top-btns">
-                                <div class="right-box-top-btn right-box-top-btn-full"
-                                     @click="item[item.id+item.name] = false">
-                                  <div class="right-box-btn-icon">
-                                    <i class="el-icon-close"></i>
-                                  </div>
-                                  <span>{{$t('overall.esc')}}</span>
-                                </div>
-                              </div>
-                              <div class="pop-window">
-                                <span style="display: block;padding-bottom: 20px">{{$t('asset.createAssetTab.editIdcTab.title')}}</span>
-                                <el-form-item :label="$t('asset.createAssetTab.editIdcTab.dcName')">
-                                  <el-input v-model="addCabIDCData.name"/>
-                                </el-form-item>
-                                <el-form-item :label="$t('asset.createAssetTab.editIdcTab.location')">
-                                  <el-input v-model="addCabIDCData.location"/>
-                                </el-form-item>
-                                <el-form-item :label="$t('asset.createAssetTab.editIdcTab.principal')">
-                                  <el-select v-model="addCabIDCData.principal"
-                                             clearable>
-                                    <el-option
-                                      v-for="item in idcUserData"
-                                      :key="item.key"
-                                      :label="item.username"
-                                      :value="item.userId"
-                                    >
-                                    </el-option>
-                                  </el-select>
-                                </el-form-item>
-                                <el-form-item :label="$t('asset.createAssetTab.editIdcTab.tel')">
-                                  <el-input v-model="addCabIDCData.tel"/>
-                                </el-form-item>
-                              </div>
-                            </div>
-                            <div class="right-box-bottom-btns">
-                              <div class="right-box-bottom-btn right-box-bottom-btn-cancel"
-                                   @click.stop="item[item.id+item.name]= false">
-                                {{$t('overall.cancel')}}
-                              </div>
-                              <div class="right-box-bottom-btn right-box-bottom-btn-50"
-                                   @click="editData('idc',item,'CabIDC')">
-                                {{$t('overall.save')}}
-                              </div>
-                            </div>
-                            <span class="config-dropdown-btn" slot="reference"
-                                  @click="getSingleIDCData(item.id,'edit',item)"><i
-                              class="el-icon-edit-outline"></i></span>
-                          </el-popover>
-                          <span class="config-dropdown-btn config-dropdown-btn-delete"
-                                @click.stop="deleteData('idc',item.id)"><i
-                            class="el-icon-delete"></i></span>-->
-                        </el-option>
-                      </el-select>
-                    </el-form-item>
-                  </el-form>
-                </div>
-                <div slot="reference"><i class="el-icon-plus"></i></div>
-              </el-popover>
+              <cabinet-config-box placement="left"  :post-cabinet="addCabinetData" @after="getCabinetOptionData"></cabinet-config-box>
             </div>
           </el-form-item>
           <el-form-item :label="this.$t('asset.createAssetTab.uSize')">
@@ -1032,8 +828,6 @@
               form.append("idcId", this.assetData.idcId);
               form.append("cabinetId", this.assetData.cabinetId);
               form.append("modelId", modelId);
-              debugger
-              console.log(this.assetData.accounts)
               for(let i in this.assetData.accounts){
                 let account=this.assetData.accounts[i];
                 if(account.user){
@@ -1105,7 +899,6 @@
         }
       },
       uploadFile:function(file){
-        console.log(file)
         this.assetData.accounts[0].file=file.file;
       },
       clearFile:function(){
