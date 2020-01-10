@@ -7,10 +7,13 @@
   .noData{
     text-align: center
   }
+  .list-width{
+    width:98%;
+  }
 </style>
 <template>
 
-  <div>
+  <div class="list-width">
     <div class="chartBox" v-for="(item, index) in dataList" :key="item.id">
 
       <line-chart-block v-if="item.type === 'line' || item.type === 'bar' || item.type === 4" :key="'inner' + item.id"
@@ -69,11 +72,6 @@ export default {
     },
     // 获取panel详情数据,获取panel下所有chart列表
     getData(params) {
-      if (this.dataList.length > 0) {
-        this.$refs.editChart.forEach((item) => {
-          //item.showLoad();//之后要实现
-        });
-      }
       //param   目前没有用
       const param = {
         panelId: params.panelId,
@@ -91,6 +89,11 @@ export default {
             this.dataList = response.data.list;
           }else {
             this.dataList = response.data;
+          }
+          if (this.dataList.length > 0) {
+            this.$refs.editChart.forEach((item) => {
+              item.showLoad();//之后要实现
+            });
           }
           //alert(JSON.stringify(response)); 查着，返回的内容就没有图表表达式了？？
           this.dataSetFirst(this.dataList);
@@ -136,10 +139,11 @@ export default {
            startTime = this.filter.start_time;
            endTime = this.filter.end_time;
         }
+        let step = bus.getStep(startTime,endTime);
         this.$nextTick(() => {
           const axiosArr = chartItem.elements.map((ele) => {
             const filterItem = ele;
-            return  this.$get('/prom/api/v1/query_range?query='+filterItem.expression+"&start="+startTime+"&end="+endTime+'&step=3600s');
+            return  this.$get('/prom/api/v1/query_range?query='+filterItem.expression+"&start="+startTime+"&end="+endTime+'&step='+step);
           });
           // 一个图表的所有element单独获取数据
           axios.all(axiosArr).then((res) => {

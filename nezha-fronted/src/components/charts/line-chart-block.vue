@@ -25,15 +25,13 @@
     <!--
     <Modal title="查看" v-model="screenModal" width="96%" class="line-chart-block-modal">-->
     <el-dialog class="line-chart-block-modal"
-      title="查看"
+      :title="$t('dashboard.panel.view')"
       :visible.sync="screenModal"
       width="90%"
       :before-close="handleClose"
        @opened="initDialog">
      <el-row class="element-top-border" >
-        <div class="float-right">
-          <div class="block">
-            <!--
+        <div class="float-right" style="padding-top:10px;">
             <el-date-picker size="small" ref="calendar"
                             format="yyyy/MM/dd HH:mm"
                             @change="dateChange"
@@ -45,15 +43,13 @@
                             :end-placeholder="$t('dashboard.panel.endTime')"
                             align="right">
             </el-date-picker>
-            -->
-          </div>
         </div>
       </el-row>
       <div class="line-area " ref="screenShowArea" ></div>
       <div class=" element-bottom-border" ></div>
       <span slot="footer" class="dialog-footer" >
-        <el-button @click="screenModal = false">取 消</el-button>
-        <el-button type="primary" @click="screenModal = false">确 定</el-button>
+        <el-button @click="screenModal = false">{{$t('dashboard.panel.cancel')}}</el-button>
+        <el-button type="primary" @click="screenModal = false">{{$t('dashboard.panel.confirm')}}</el-button>
       </span>
 
     </el-dialog>
@@ -62,13 +58,8 @@
 </template>
 <script>
 import axios from 'axios';
-//import highstock from 'highcharts/highstock';
 import echarts from 'echarts';
 import bus from '../../libs/bus';
-//import calendarSelect from '../page/calendar-select';
-//import { getQueryChart } from '../../models/service';
-
-//require('highcharts/modules/no-data-to-display')(highstock);
 
 export default {
   name: 'lineChartBlock',
@@ -107,7 +98,7 @@ export default {
       firstLoad: false, // 是否第一次加载
       highchartStore: null, // 保存图表数据
       echartStore:null,// 保存图表数据
-      highchartModalStore: null, // 全屏查看时数据
+      echartModalStore: null, // 全屏查看时数据
       chartType: 'line', // 图表类型
       screenModal: false,
       // 查询数据使用
@@ -116,8 +107,90 @@ export default {
         end_time: '',
       },
       stableFilter: {}, // 保存数据使用,初始化起止时间,单图or多图等
-      legend:[]
+      legend:[],
      // firstShow: false, // 默认不显示操作按钮,
+      searchTime:[new Date().setHours(new Date().getHours()-1),new Date()],
+      pickerOptions: {
+        shortcuts: [
+          {
+            text:  this.$t("dashboard.panel.recOne"),
+            onClick(picker) {
+              const end = new Date();
+              const start = new Date();
+              start.setHours(start.getHours() - 1);
+              picker.$emit('pick', [start, end]);
+            }
+          },{
+            text: this.$t("dashboard.panel.recFour"),
+            onClick(picker) {
+              const end = new Date();
+              const start = new Date();
+              start.setHours(start.getHours() - 4);
+              picker.$emit('pick', [start, end]);
+            }
+          }, {
+            text: this.$t("dashboard.panel.recOneDay"),
+            onClick(picker) {
+              const end = new Date();
+              const start = new Date();
+              start.setDate(start.getDate() - 1);
+              picker.$emit('pick', [start, end]);
+            }
+          },  {
+            text: this.$t("dashboard.panel.yesterday"),
+            onClick(picker) {
+              const start = new Date();
+              const end = new Date();
+              start.setDate(start.getDate() - 1);
+              start.setHours(0);
+              start.setMinutes(0);
+              start.setSeconds(0);
+              end.setDate(end.getDate() - 1);
+              end.setHours(23);
+              end.setMinutes(59);
+              end.setSeconds(59);
+              picker.$emit('pick', [start, end]);
+            }
+          },{
+            text: this.$t("dashboard.panel.recSevenDay"),
+            onClick(picker) {
+              const end = new Date();
+              const start = new Date();
+              start.setDate(start.getDate() - 7);
+              picker.$emit('pick', [start, end]);
+            }
+          }, {
+            text: this.$t("dashboard.panel.recOneMonth"),
+            onClick(picker) {
+              const end = new Date();
+              const start = new Date();
+              start.setDate(start.getDate() - 30);
+              picker.$emit('pick', [start, end]);
+            }
+          }, {
+            text: this.$t("dashboard.panel.curMonth"),
+            onClick(picker) {
+              const end = new Date();
+              const start = new Date();
+              start.setDate(1);
+              start.setHours(0);
+              start.setMinutes(0);
+              picker.$emit('pick', [start, end]);
+            }
+          },{
+            text: this.$t("dashboard.panel.lastMonth"),
+            onClick(picker) {
+              const end = new Date();
+              const start = new Date();
+              start.setDate(1);
+              start.setMonth(start.getMonth() - 1);
+              end.setDate(0);
+              start.setStart();
+              end.setEnd();
+              picker.$emit('pick', [start, end]);
+            }
+          }]
+      },
     };
   },
   computed: {
@@ -140,7 +213,11 @@ export default {
       if ( chartInfo.type === 4) {//line,bar
         this.chartType = 'line';
       }
-      this.echartStore = echarts.init(ele);
+      if (chartSite === 'local') {
+        this.echartStore = echarts.init(ele);
+      }else if (chartSite === 'screen') {
+        this.echartModalStore = echarts.init(ele);
+      }
       var chartWidth = ele.clientWidth;
       var option = {
         title: {
@@ -331,6 +408,7 @@ export default {
         */
         this.echartStore.setOption(option);//创建图表
         this.echartStore.hideLoading();
+        this.echartStore.resize({height:chartInfo.height});//,width:`${ele.clientWidth-100}`}
       } else if (chartSite === 'screen') { // 全屏显示
         /*
         option.series = dataArg.map((item) => {// params.series = dataArg.map((item) => {
@@ -378,10 +456,11 @@ export default {
         });
         */
         // eslint-disable-next-line
-        this.echartStore.setOption(option);//显示全屏界面
-        this.echartStore.hideLoading();
+        this.echartModalStore.clear();
+        this.echartModalStore.setOption(option);//显示全屏界面
+        this.echartModalStore.hideLoading();
+        this.echartModalStore.resize({height:chartInfo.height});//,width:`${ele.clientWidth-100}`}
       }
-      this.echartStore.resize({height:chartInfo.height});//,width:`${ele.clientWidth-100}`}
     },
     // 设置数据, filter区分
     setData(chartItem, seriesItem, panelId, filter,legend) {
@@ -392,6 +471,8 @@ export default {
       this.panelIdInner = panelId;
       this.data = chartItem;
       this.seriesItem = seriesItem;
+      this.searchTime[0] = filter.start_time;
+      this.searchTime[1] = filter.end_time;
       this.initChart(chartItem, seriesItem, this.$refs.lineChartArea, 'local',legend);
       /*
       if (chartItem.type === 'line' || chartItem.type === 'bar' || chartItem.type === 4) {
@@ -432,15 +513,161 @@ export default {
       this.screenModal = true;
     },
     dateChange(time) {
-      /*
-      this.filter.start_time = `${time[0]}:00`;
-      this.filter.end_time = `${time[1]}:59`;
+      this.filter.start_time = bus.timeFormate(this.searchTime[0], 'yyyy-MM-dd hh:mm:ss');
+      this.filter.end_time = bus.timeFormate(this.searchTime[1], 'yyyy-MM-dd hh:mm:ss');
       if (this.showSetting) {
         this.getQueryChart('list');
       } else {
         this.getQueryChart('dashboard');
       }
-      */
+    },
+    // 查询数据,修改日期查询全屏数据
+    getQueryChart(type) {
+      if (this.echartModalStore) {
+        this.echartModalStore.showLoading();
+      }
+      let axiosArr = [];
+      this.$nextTick(() => {
+        if (type === 'list') { // 普通模式,主控台使用
+          let startTime = bus.timeFormate(this.searchTime[0], 'yyyy-MM-dd hh:mm:ss');
+          let endTime = bus.timeFormate(this.searchTime[1], 'yyyy-MM-dd hh:mm:ss');
+          if(!startTime || !endTime){//如果时间为空，则默认取最近1小时
+            let now = new Date();
+            startTime = bus.timeFormate(now, 'yyyy-MM-dd hh:mm:ss');
+            endTime = bus.timeFormate(now.setHours(now.getHours()-1), 'yyyy-MM-dd hh:mm:ss');
+            this.searchTime[0] = startTime;
+            this.searchTime[1] = endTime;
+          }
+          let step = bus.getStep(startTime,endTime);
+          axiosArr = this.data.elements.map((ele) => {
+            const filterItem = ele;
+            return  this.$get('/prom/api/v1/query_range?query='+filterItem.expression+"&start="+startTime+"&end="+endTime+'&step='+step);
+          });
+        } else if (type === 'dashboard') { // 概览模式,指标概览中使用
+          /*
+          // 概览模式,需要区分单独一个和多个
+          if (this.stableFilter.chartCount === 'multiple') {
+            // 所有tag标签
+            const tagAllArr = this.proTags(this.data.tags);
+            // 根据title格式化的标签
+            const titles = this.data.title.split(',');
+            const titleArr = titles.map(item => item.trim());
+            // 获取所需标签
+            const tagArr = this.getCompilation(tagAllArr, titleArr);
+            axiosArr = [getQueryChart({
+              product_id: this.productId,
+              metric: this.data.metric,
+              tags: tagArr.toString(),
+              start: this.filter.start_time,
+              end: this.filter.end_time,
+            })];
+          } else {
+            axiosArr = [getQueryChart({
+              product_id: this.productId,
+              metric: this.data.metric,
+              tags: this.data.tags,
+              start: this.filter.start_time,
+              end: this.filter.end_time,
+            })];
+          }
+          */
+        }
+        // 一个图表
+        axios.all(axiosArr).then((res) => {
+          if (res.length > 0) {
+            const series = [];
+            const legend = [];
+            const sumData = {
+              name: 'sum',
+              data: [],
+              visible: true,
+              threshold: null,
+            };
+            res.forEach((response) => {
+              if (response.status === 'success') {
+                if (response.data.result) {
+                  // 循环处理每个elements下获取的数据列
+                  response.data.result.forEach((queryItem,innerPos) => {
+                    const seriesItem = {
+                      theData: {
+                        name: '',
+                        data: [],
+                        type:this.data.type,
+                        //visible: true,
+                        //threshold: null,
+                      },
+                      metric_name: '',
+                    };
+                    // 图表中每条线的名字,后半部分
+                    let host = `${queryItem.metric.__name__}{`;//up,
+                    const tagsArr = Object.keys(queryItem.metric);//["__name__","asset","idc","instance","job","module","project"]
+                    // 设置时间-数据格式对
+                    const dpsArr = Object.entries(queryItem.values);//[ ["0",[1577959830.781,"0"]], ["1",[1577959845.781,"0"]] ]
+                    // 判断是否有数据
+                    if (dpsArr.length > 0 && tagsArr.length > 0) {
+                      tagsArr.forEach((tag, i) => {
+                        if (tag !== '__name__') {
+                          host += `${tag}="${queryItem.metric[tag]}",`;
+                        }
+                      });
+                      if(host.endsWith(',')){host = host.substr(0,host.length-1);}
+                      host +="}";
+                      legend.push(host);
+                      // 图表中每条线的名字,去掉最后的逗号与空格:metric名称,  标签1=a,标签2=c
+                      seriesItem.theData.name = host;
+                      seriesItem.metric_name = seriesItem.theData.name;
+                      // 将秒改为毫秒
+                      //alert('table=='+JSON.stringify(queryItem))
+                      seriesItem.theData.data = queryItem.values.map((dpsItem, dpsIndex) => {
+                        /*曲线汇总暂不需要
+                        if (sumData.data[dpsIndex]) {
+                          const sumNum = sumData.data[dpsIndex][1] || 0;
+                          sumData.data[dpsIndex][1] = sumNum + dpsItem[1];
+                        } else {
+                          sumData.data[dpsIndex] = [dpsItem[0] * 1000, dpsItem[1]];
+                        }
+                        */
+                        return [dpsItem[0] * 1000, dpsItem[1]];
+                      });
+                      series.push(seriesItem.theData);
+
+                    } else if (this.data.elements && this.data.elements[innerPos]) {
+                      // 无数据提示
+                      /*
+                      const currentInfo = chartItem.elements[innerPos];
+                      const errorMsg = `图表 ${chartItem.title} 中 ${currentInfo.metric},${currentInfo.tags} 无数据`;
+                      this.$message.warning({
+                        duration: 15,
+                        content: errorMsg,
+                        closable: true,
+                      });
+                      */
+                    }
+                  });
+                }
+              }
+            });
+            /*
+            if (series.length && this.data.type === 4) {
+              series.push(sumData);
+            }
+            */
+            this.initChart(this.data, series, this.$refs.screenShowArea, 'screen',legend);
+          }
+        }).catch((error) => {
+          if (error) {
+            this.$message.warning({
+              content: this.$t("tip.refreshLater"),//'Please refesh later',//请稍后刷新
+              duration: 3,
+            });
+          }
+        });
+      });
+    },
+    showLoad() {
+      if (this.echartStore) {
+        this.echartStore.showLoading();
+      }
     },
     /*
     handleClose(done) {
@@ -589,11 +816,6 @@ export default {
       });
     },
 
-    showLoad() {
-      if (this.highchartStore) {
-        this.highchartStore.showLoading();
-      }
-    },
     // 获取格式
     getNumStr(num) {
       if (num >= 1000) {

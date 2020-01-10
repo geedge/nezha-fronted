@@ -38,7 +38,7 @@
       </el-table>
     </div>
     <!--全屏-->
-    <el-dialog title="查看" :visible.sync="screenModal" width="96%"  :before-close="handleClose">
+    <el-dialog :title="$t('dashboard.panel.view')" :visible.sync="screenModal" width="96%"  :before-close="handleClose">
       <div class="clearfix element-top-border">
         <div class="float-left table-title">
           {{data.title}}
@@ -59,8 +59,8 @@
       </div>
       <div class=" element-bottom-border" ></div>
       <span slot="footer" class="dialog-footer" >
-        <el-button @click="screenModal = false">取 消</el-button>
-        <el-button type="primary" @click="screenModal = false">确 定</el-button>
+        <el-button @click="screenModal = false">{{$t('dashboard.panel.cancel')}}</el-button>
+        <el-button type="primary" @click="screenModal = false">{{$t('dashboard.panel.confirm')}}</el-button>
       </span>
     </el-dialog>
   </div>
@@ -130,7 +130,9 @@ export default {
   },
   watch: {},
   methods: {
-    showLoad() {},
+    showLoad() {
+      this.tableLoading = true;
+    },
     // 展示图表编辑区
     showTool() {
       this.toolbox = !this.toolbox;
