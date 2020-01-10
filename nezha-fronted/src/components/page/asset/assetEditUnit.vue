@@ -158,6 +158,7 @@
                   width="255"
                   v-model="editPopVendorVisible"
                   v-clickoutside="clickOutSide"
+                  @hide="resetVendor"
                 >
                   <div class="pop-window-assetType" @click="editQuit()">
                     <div class="pop-window-assetType-content">
@@ -923,7 +924,18 @@
           })
         }
       },
-
+      //新增型号弹框关闭后重置弹框内容
+      resetVendor() {
+        this.addVendorData.value = '';
+        this.vendorCode = '';
+        this.vendorCount = '';
+        this.modelUlData = [];
+        this.addNewModelData = {
+          name: '',
+          vendorCode: '',
+          typeCode: ''
+        }
+      },
       addNewData(type) {
         if (type === 'IDC') {
           const h = this.$createElement;

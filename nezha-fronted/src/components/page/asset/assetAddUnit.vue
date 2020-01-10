@@ -134,6 +134,7 @@
                 v-model="popCompVisible"
                 :disabled=popState
                 v-clickoutside="clickOutSide"
+                @hide="resetVendor"
               >
                 <div class="pop-window-assetType" @click="editQuit()">
                   <div class="pop-window-assetType-content">
@@ -777,6 +778,18 @@
         }
         if(loginType == 2){//公钥登录
           this.assetData.accounts[0].pwd='';
+        }
+      },
+      //新增型号弹框关闭后重置弹框内容
+      resetVendor() {
+        this.addVendorData.value = '';
+        this.vendorCode = '';
+        this.vendorCount = '';
+        this.modelUlData = [];
+        this.addNewModelData = {
+          name: '',
+            vendorCode: '',
+            typeCode: ''
         }
       },
       addNewData(type) {
