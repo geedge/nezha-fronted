@@ -33,7 +33,13 @@
                         </div>
                     </template>
                     <template slot-scope="scope" :column="item">
-                        <span v-if="item.prop == 'idc'" class="link">{{scope.row[item.prop].name}}</span>
+                      <idc-config-box v-if="item.prop == 'idc'" ref="idcConfigBox" :post-idc="JSON.parse(JSON.stringify(scope.row[item.prop]))" :is-edit="false" placement="left" @after="getIdcData" :button-class="'checkbox-edit'">
+                        <template v-slot:optionZone>
+                          <span  class="link" @click="closeAllPop">{{scope.row[item.prop].name}}</span>
+                        </template>
+                      </idc-config-box>
+
+
                         <span v-else-if="item.prop == 'type'">
                             {{scope.row[item.prop] == '1' ? 'Global' : ''}}
                             {{scope.row[item.prop] == '2' ? 'Per-Datacenter' : ''}}
@@ -466,6 +472,7 @@ export default {
       });
     },
     getTableData: function() {
+      this.tableData=[];
       this.$set(this.searchLabel, "pageNo", this.pageObj.pageNo);
       this.$set(this.searchLabel, "pageSize", this.pageObj.pageSize);
       this.$get('promServer', this.searchLabel).then(response => {
@@ -541,7 +548,6 @@ export default {
       } else {
         this.idcData.forEach(item => {
           if (item.id === data) {
-            console.log(item)
             this.popIdcData.name = item.name
             this.popIdcData.location = item.location
             this.popIdcData.principal = item.principal
@@ -575,6 +581,11 @@ export default {
             })
           }
         })
+    },
+    closeAllPop:function(){
+      this.$refs.idcConfigBox.forEach((item)=>{
+        item.show(false)
+      })
     },
   },
   mounted: function() {

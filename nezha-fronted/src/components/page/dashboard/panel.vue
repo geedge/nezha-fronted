@@ -253,6 +253,7 @@
             }]
         },
         searchTime: [new Date().setHours(new Date().getHours()-1),new Date()],
+        intervalTimer: null,
         intervalList: [{
           value: 0,
           name: this.$t("dashboard.panel.refreshInterval.never"),
@@ -299,16 +300,15 @@
         panelData: [],
         searchMsg: { //给搜索框子组件传递的信息
           zheze_none: true,
-          searchLabelList: [
-            /*
+          searchLabelList: [/*
             {
             id: 1,
             name: this.$t("dashboard.panel.searchItem.name"),
             type: 'input',
             label: 'name',
             disabled: false
-          }
-          */],
+          }*/
+          ],
         },
         searchLabel: {}, //搜索参数
         //---图表相关参数--start
@@ -334,8 +334,7 @@
     methods: {
       //面板相关操作
       panelChange(){
-        //alert(JSON.stringify(this.$refs.searchInput.select_list));
-        this.$refs.searchInput.select();
+        //this.$refs.searchInput.select();
         this.filter.panelId = this.showPanel.id;
         this.getData(this.filter);
       },
@@ -443,7 +442,7 @@
       /*时间条件查询--start*/
       // 选择日期变化
       dateChange() {
-        this.$refs.searchInput.select();
+        //this.$refs.searchInput.select();
         this.filter.start_time = bus.timeFormate(this.searchTime[0], 'yyyy-MM-dd hh:mm:ss');
         this.filter.end_time = bus.timeFormate(this.searchTime[1], 'yyyy-MM-dd hh:mm:ss');
         this.filter.panelId = this.showPanel.id;
@@ -482,7 +481,32 @@
             }
           }
         })
-
+      },
+      //定期刷新
+      selectInterval(val) {
+        clearInterval(this.intervalTimer);
+        if (val) {
+          const start = new Date(this.searchTime[1]);
+          const now = new Date();
+          const interval = Math.floor((now.getTime() - start.getTime()) / 1000);//计算当前结束时间到现在的间隔（秒）
+          if (interval >= 60) {//如果结束时间到现在超过1分钟，则
+            this.getIntervalData(interval);
+          }
+          this.intervalTimer = setInterval(() => {
+            this.getIntervalData(this.interval);
+          }, val * 1000);
+        }
+      },
+      getIntervalData(interval) {//interval:结束时间到现在的秒数
+        const start = new Date(this.searchTime[0]);
+        const end = new Date(this.searchTime[1]);
+        start.setSeconds(start.getSeconds() + interval);
+        end.setSeconds(end.getSeconds() + interval);
+        const startTime = bus.timeFormate(start, 'yyyy-MM-dd hh:mm');
+        const endTime = bus.timeFormate(end, 'yyyy-MM-dd hh:mm');
+        this.searchTime = [startTime, endTime];
+        //刷新数据
+        this.dateChange();
       },
       pageNo(val) {
         this.pageObj.pageNo = val;

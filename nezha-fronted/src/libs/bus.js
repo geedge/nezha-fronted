@@ -1,6 +1,4 @@
 import Vue from 'vue';
-//import Cookies from 'js-cookie';
-//import md5 from 'md5';
 
 Date.prototype.setStart = function() {
   this.setHours(0);
@@ -119,6 +117,25 @@ export default new Vue({
         }
       });
       return fm;
+    },
+    getStep(startTime,endTime){
+      const start = new Date(startTime);
+      const end = new Date(endTime);
+      let step='15s';
+      const numInterval = end.getTime()-start.getTime();
+      let oneDay = 86400000;
+      let sevenDay = 604800000;
+      let thirtyDay = 2592000000;
+      if (numInterval < oneDay) {//小于1天，step为15s
+        step='15s';
+      }else if(numInterval<sevenDay){
+        step='5m';
+      }else if(numInterval<thirtyDay){
+        step='10m';
+      }else {
+        step='30m';
+      }
+      return step;
     },
     isEmptyObject(obj) {
       if (obj) {

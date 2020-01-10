@@ -30,7 +30,7 @@ const en = {
     panel:{
       title:'Panel',
       searchItem:{
-        name:'Title'
+        name:'name'
       },
       //面板-侧滑框
       createPanelTitle: "Create Panel",
@@ -86,7 +86,10 @@ const en = {
         threeMinutes:'3 mins',
         fiveMinutes:'5 mins',
         tenMinutes:'10 mins',
-      }
+      },
+      view:'View',
+      confirm:'Ok',
+      cancel:'Cancel'
     },
     metric:{
       name:"Metric",

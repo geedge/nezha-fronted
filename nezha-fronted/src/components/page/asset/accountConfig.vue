@@ -2,7 +2,7 @@
     <div>
       <el-form class="pop-item-wider" :model="account" :rules="rules" ref="accountForm">
         <el-form-item :label="$t('asset.createAssetTab.loginType')" size="mini">
-          <div class="nz-btn-group float-left" style="padding-top: 4px;">
+          <div class="nz-btn-group float-left" style="padding-top: 4px;" v-if="isEdit">
             <button type="button" @click="changeLoginType(1)"
                     class="nz-btn nz-btn-size-small float-left"
                     :class="{'nz-btn-disabled nz-btn-style-normal' : account.authType == 1, 'nz-btn-style-light' : account.authType == 2}">
@@ -14,17 +14,20 @@
               <span>{{$t('asset.createAssetTab.ssh')}}</span>
             </button>
           </div>
+          <div class="right-box-form-content-txt" v-if="!isEdit">{{account.authType}}</div>
         </el-form-item>
         <el-form-item :label="$t('asset.createAssetTab.account')" prop="user">
-          <el-input size="mini" v-model="account.user"/>
+          <el-input size="mini" v-model="account.user" v-if="isEdit"/>
+          <div class="right-box-form-content-txt" v-if="!isEdit">{{account.user}}</div>
         </el-form-item>
-        <el-form-item :label="$t('asset.createAssetTab.password')" v-show="account.authType==1" >
+        <el-form-item :label="$t('asset.createAssetTab.password')" v-show="account.authType==1" v-if="isEdit">
           <el-input size="mini" type="password" v-model="account.pwd"/>
         </el-form-item>
-        <el-form-item :label="$t('asset.createAssetTab.port')" prop="port">
-          <el-input size="mini" v-model="account.port"/>
+        <el-form-item :label="$t('asset.createAssetTab.port')" prop="port" >
+          <el-input size="mini" v-model="account.port" v-if="isEdit"/>
+          <div class="right-box-form-content-txt" v-if="!isEdit">{{account.port}}</div>
         </el-form-item>
-        <el-form-item :label="this.$t('asset.createAssetTab.ssh')" v-show="account.authType==2" prop="file">
+        <el-form-item :label="this.$t('asset.createAssetTab.ssh')" v-show="account.authType==2" prop="file" v-if="isEdit">
           <el-upload class="upload-demo" ref="upload" action="" :file-list="uploadFileList" :on-change="handleChange"  :auto-upload="false">
             <div slot="tip" class="el-upload__tip" v-if="account.privateKey" >{{$t('asset.createAssetTab.sshKeyWasConfig')}}</div>
             <button type="button" class="nz-btn nz-btn-size-small nz-btn-style-normal">
@@ -42,7 +45,8 @@ export default {
     name: "accountConfig",
     props:{
       account:{type:Object},
-      asComponent:{type:Boolean,default:false}
+      asComponent:{type:Boolean,default:false},
+      isEdit:{type:Boolean,default:true}
     },
     created() {
     },

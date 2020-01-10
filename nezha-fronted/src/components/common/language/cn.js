@@ -77,7 +77,10 @@ const cn = {
         threeMinutes:'3分钟',
         fiveMinutes:'5分钟',
         tenMinutes:'10分钟',
-      }
+      },
+      view:'查看',
+      confirm:'确 定',
+      cancel:'取 消'
     },
     metric:{
       name:"指标名称",
