@@ -154,6 +154,12 @@ export default {
           type: 'selectString',
           label: 'severity',
           disabled: false
+        }, {
+          id: 11,
+          name: this.$t('asset.asset'),
+          type: 'asset',
+          label: 'asset',
+          disabled: true
         }],
       },
       searchLabel: { //搜索参数

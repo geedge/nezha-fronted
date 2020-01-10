@@ -37,7 +37,7 @@
                             <i class="el-icon-close" @click="close_selcet_list(ind,$event)"></i>
                         </div>
                         <div v-else-if="!change_sreach_show && ind==sreach_num && val.id!==7 " class="select_input">
-                            <input type="text" id="sreach_input" v-model="input_sreach" @keyup="enter(val.name, $event)" @click="stop_click">
+                            <input type="text" autocomplete="off" id="sreach_input" v-model="input_sreach" @keyup="enter(val.name, $event)" @click="stop_click">
                             <div class="select_info_list" v-if="val.type == 'select'">
                                 <ul>
                                     <li v-for="(item,key) in selectInfoList[val.label]" :key="key" @click="tr_selectInfo(val.label,item.value,item.label,$event)" :class="search_select_style_num==key?'search-style-ind':''">{{item.label}}</li>
@@ -175,22 +175,118 @@
                 downBool:false
             }
         },
-        watch: {
-            select_list: {
-              //监听下拉列表
-                handler(newDate, oldDate) {
-                    if (newDate.length == 0) {
-                        this.change_sreach_show = true
-                    }
-                }
-            },
-            no_condition: {
-                handler(newDate, oldDate) {
-                    if (newDate != '') {
-                        this.input_list = true
-                    }
-                }
+        computed: {
+            alertListAssetId() {
+              return this.$store.state.assetForAlertList;
             }
+        },
+        watch: {
+          select_list: {
+            //监听下拉列表
+            handler(newData, oldData) {
+              if (newData.length == 0) {
+                this.change_sreach_show = true;
+              }
+            }
+          },
+          no_condition: {
+              handler(newData, oldData) {
+                  if (newData != '') {
+                      this.input_list = true
+                  }
+              }
+          },
+          alertListAssetId: {
+            immediate: true,
+            handler(newData, oldData) {
+              if (newData && this.$route.path == '/alertList') {
+                setTimeout(()=>{
+                  //
+                  //1.条件名alertType
+                  //
+                  this.searchLabelList.splice(1, 1);
+                  this.select_list.push({
+                    name: this.$t('alert.list.type'),
+                    id: 3,
+                    type: 'select',
+                    label: 'alertType',
+                    disabled: false
+                  });
+                  //
+                  //2.条件值asset
+                  //
+                  this.select_list.forEach(val => {
+                    if (val.label == 'alertType') {
+                      val.val = this.$t('alert.config.typeOption.asset');
+                      val.valnum = 3;
+                      //alertList页type选择asset时，可以搜索asset
+                      if (this.$route.path == '/alertList' && val.label == 'alertType' && val.valnum == 3) {
+                        for (let i = 0; i < this.searchLabelList.length; i++) {
+                          if (this.searchLabelList[i].label == 'asset') {
+                            this.searchLabelList[i].disabled = false;
+                            break;
+                          }
+                        }
+                      } else if (this.$route.path == '/alertList' && val.label == 'alertType' && val.valnum != 3) {
+                        let ind = -1;
+                        for (let i = 0; i < this.searchLabelList.length; i++) {
+                          if (this.searchLabelList[i].label == 'asset') {
+                            this.searchLabelList[i].disabled = true;
+                            break;
+                          }
+                        }
+                        for (let i = 0; i < this.select_list.length; i++) {
+                          if (this.select_list[i].label == 'asset') {
+                            ind = i;
+                            break;
+                          }
+                        }
+                        if (ind >= 0) {
+                          this.close_selcet_list(ind);
+                        }
+                      }
+                    }
+                  });
+                  //
+                  //3.条件名asset
+                  //
+                  this.input_list = false;
+                  this.searchLabelList.splice(2, 1);
+                  this.select_list.push({
+                    name: this.$t('asset.asset'),
+                    id: 11,
+                    type: 'asset',
+                    label: 'asset',
+                    disabled: false
+                  });
+                  //
+                  //4.条件值：指定的asset
+                  //
+                  let assetHost = '';
+                  for (let i = 0; i < this.assetSelect.length; i++) {
+                    if (this.assetSelect[i].id == newData) {
+                      assetHost = this.assetSelect[i].host;
+                    }
+                  }
+                  this.select_list.forEach(val => {
+                    if (val.label == 'asset') {
+                      val.val = assetHost;
+                      val.valnum = newData;
+                    }
+                  });
+                  this.input_sreach = '';
+                  this.sreach_num = this.select_list.length;
+                  this.change_sreach_show = false;
+                  this.input_list = true;
+                  //
+                  //5.点击搜索
+                  //
+                  this.select();
+                }, 100);
+                this.$store.commit('assetForAlertListChange', '');
+              }
+            }
+          }
         },
         props:['searchMsg','defaultItem','defaultValue'],
         methods: {
@@ -314,13 +410,39 @@
                     if(val.label == selectLabel){
                         val.val = label;
                         val.valnum = value;
+                        //alertList页type选择asset时，可以搜索asset
+                        if (this.$route.path == '/alertList' && val.label == 'alertType' && val.valnum == 3) {
+                          for (let i = 0; i < this.searchLabelList.length; i++) {
+                            if (this.searchLabelList[i].label == 'asset') {
+                              this.searchLabelList[i].disabled = false;
+                              break;
+                            }
+                          }
+                        } else if (this.$route.path == '/alertList' && val.label == 'alertType' && val.valnum != 3) {
+                          let ind = -1;
+                          for (let i = 0; i < this.searchLabelList.length; i++) {
+                            if (this.searchLabelList[i].label == 'asset') {
+                              this.searchLabelList[i].disabled = true;
+                              break;
+                            }
+                          }
+                          for (let i = 0; i < this.select_list.length; i++) {
+                            if (this.select_list[i].label == 'asset') {
+                              ind = i;
+                              break;
+                            }
+                          }
+                          if (ind >= 0) {
+                            this.close_selcet_list(ind);
+                          }
+                        }
                     }
                 });
                 this.input_sreach = '';
                 this.sreach_num = this.select_list.length;
                 this.change_sreach_show = true;
                 this.input_list = false;
-                 var _this = this;
+                var _this = this;
                 setTimeout("document.getElementById(\"one-input\").focus()", 500);
                 setTimeout(function () {
                   _this.getHeight();
@@ -495,8 +617,10 @@
                           objectInfo[val.label] = val.valnum;
                         } else if (val.type == 'dc') {
                           objectInfo.idcId = val.valnum;
-                        } else if (val.type == 'asset') {
+                        } else if (val.type == 'asset' && this.$route.path == "/project") {
                           objectInfo.assetId = val.valnum;
+                        } else if (val.type == 'asset' && this.$route.path == "/alertList") {
+                          objectInfo.linkId = val.valnum;
                         } else {
                             objectInfo[val.label] = val.val;
                         }
@@ -759,7 +883,24 @@
             },
             //删除要搜索的条件
             close_selcet_list(ind, e){
-                this.stop_click(e)
+                if (e) {
+                  this.stop_click(e)
+                }
+                // 处理alertType--asset联动问题
+                if (this.select_list[ind].label == 'alertType') {
+                  for (let i = 0; i < this.select_list.length; i++) {
+                    if (this.select_list[i].label == 'asset') {
+                      this.close_selcet_list(i);
+                      for (let j = 0; j < this.searchLabelList.length; j++) {
+                        if (this.searchLabelList[j].label == 'asset') {
+                          this.searchLabelList[j].disabled = true;
+                          break;
+                        }
+                      }
+                      break;
+                    }
+                  }
+                }
                 this.searchMsg.searchLabelList.forEach((val, key) => {
                     if (this.select_list[ind].id == val.id) {
                         this.searchLabelList.splice(key + 1, 0, val)
@@ -998,7 +1139,7 @@
             if (this.$route.path == '/promServer') {
               this.getDcData();
             }
-            if (this.$route.path == '/project') {
+            if (this.$route.path == '/project' || this.$route.path == '/alertList') {
               this.getAssetData();
             }
             if (this.$route.path == '/asset') {

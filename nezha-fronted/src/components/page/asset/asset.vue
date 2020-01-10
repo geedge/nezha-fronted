@@ -4,6 +4,9 @@
       <div class="sidebar-title">Asset</div>
       <div class="sidebar-info">
         <!--<div class="sidebar-info-header">ALL</div>-->
+        <el-checkbox class="sidebar-info-item" :checked="(checkList.length == checkListData.length) && checkListData.length > 0" @change="dcSelectAll">
+          <span style="font-weight: bold;">All</span>
+        </el-checkbox>
         <el-checkbox-group v-model="checkList" size="small" @change="getSingleAsset()">
           <el-checkbox class="sidebar-info-item" :class="{'sidebar-info-item-active': checkList.indexOf(item.id) != -1}"
                        v-for="(item,key) in checkListData" :key="key" :label=item.id>
@@ -13,67 +16,6 @@
                 <i class="el-icon-edit-outline" @click="getSingleIDCData(item.id,'edit')"></i>
               </template>
             </idc-config-box>
-            <!--<el-popover
-              placement="left"
-              v-model="item[item.id]"
-            >
-              <div class="pop-window-assetType-content">
-                <div class="right-box-top-btns">
-                  <div class="right-box-top-btn right-box-top-btn-full"
-                       @click="item[item.id] = false">
-                    <div class="right-box-btn-icon">
-                      <i class="el-icon-close"></i>
-                    </div>
-                    <span>{{$t('overall.esc')}}</span>
-                  </div>
-                </div>
-                <div class="pop-window">
-                  <span style="display: block;padding-bottom: 20px">标题</span>
-                  <div style="padding-top: 10px;padding-left: 20px">
-                    <div>
-                      <label style="font-size: 12px">DN name</label>
-                      <input class='sidebar-pop-input' v-model="addIdcData.popName"/>
-                    </div>
-                    <div style="padding-top: 40px">
-                      <label style="font-size: 12px">Loaction</label>
-                      <input class='sidebar-pop-input' v-model="addIdcData.location"/>
-                    </div>
-                    <div style="padding-top: 40px">
-                      <label style="font-size: 12px;padding-right: 20px">负责人</label>
-                      <select class='sidebar-pop-input-select'
-                              style="margin-left:-40px "
-                              v-model="addIdcData.principal"
-                              clearable>
-                        <option
-                          v-for="item in idcUserData"
-                          :key="item.key"
-                          :label="item.username"
-                          :value="item.userId"
-                        >
-                        </option>
-                      </select>
-                    </div>
-                    <div style="padding-top: 40px">
-                      <label style="font-size: 12px">Tel</label>
-                      <input class='sidebar-pop-input' v-model="addIdcData.tel"/>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div class="right-box-bottom-btns">
-                <div class="right-box-bottom-btn right-box-bottom-btn-cancel"
-                     @click.stop="item[item.id]= false">
-                  {{$t('overall.cancel')}}
-                </div>
-                <div class="right-box-bottom-btn right-box-bottom-btn-50"
-                     @click="editData('idc',item)">
-                  {{$t('overall.save')}}
-                </div>
-              </div>
-              <span class="checkbox-edit" slot="reference"
-                    @click.prevent="getSingleIDCData(item.id,'edit')"><i
-                class="el-icon-edit-outline"></i></span>
-            </el-popover>-->
           </el-checkbox>
         </el-checkbox-group>
       </div>
@@ -128,15 +70,19 @@
             <div v-if="item.prop=='state'">
               <span>{{scope.row.state==1 ? $t('asset.createAssetTab.inStock') : $t('asset.createAssetTab.notInStock')}}</span>
             </div>
-            <div v-if="item.prop=='Module'" @click="getAssetModuleList(scope.row.id)">
-              <module-list-pop :assetId="scope.row.id + ''" @openModuleBox="openModuleBox" placement="left" :ref="'moduleListPop' + scope.row.id">
-                <template v-slot:optionZone>
-                  <div class="tab-input-square link">{{scope.row.moduleNum}}</div>
-                </template>
-              </module-list-pop>
+            <div v-if="item.prop=='Module'">
+              <div v-if="scope.row.moduleNum > 0" @click="getAssetModuleList(scope.row.id)">
+                <module-list-pop :assetId="scope.row.id + ''" @openModuleBox="openModuleBox" placement="left" :ref="'moduleListPop' + scope.row.id">
+                  <template v-slot:optionZone>
+                    <div class="tab-input-square tab-input-square-high link">{{scope.row.moduleNum}}</div>
+                  </template>
+                </module-list-pop>
+              </div>
+              <div v-else class="tab-input-square">{{scope.row.moduleNum}}</div>
             </div>
             <div v-if="item.prop=='Alert'">
-              <div class="tab-input-square link">{{scope.row.alertNum}}</div>
+              <div v-if="scope.row.alertNum > 0" class="tab-input-square tab-input-square-high link" @click="jumpToAlertMsg(scope.row.id)">{{scope.row.alertNum}}</div>
+              <div class="tab-input-square" v-else>{{scope.row.alertNum}}</div>
             </div>
             <div v-if="item.prop=='dataCenter'">
               <idc-config-box :post-idc="JSON.parse(JSON.stringify(scope.row.idc))" placement="left" @after="getAssetData(null, true)" :button-class="'checkbox-edit'">
@@ -259,7 +205,7 @@
             prop: 'state',
             show: true,
           }, {
-            label: this.$t("asset.tableTitle.endpoints"),
+            label: this.$t("asset.tableTitle.modules"),
             prop: 'Module',
             show: true,
           }, {
@@ -294,10 +240,12 @@
             label: this.$t("asset.tableTitle.principalTel"),
             prop: 'tel',
             show: true,
+            width: 115
           }, {
             label: this.$t('config.account.option'),
             prop: 'option',
             show: true,
+            width: 115
           }],
         tableData: [],
         checkListData: [],
@@ -387,9 +335,20 @@
     created() {
       this.checkList.push(this.$store.state.assetData.selectedData)
       this.getSingleAsset()
-
     },
     methods: {
+      dcSelectAll() { //DC全选
+        if (this.checkListData.length > 0) {
+          if (this.checkList.length != this.checkListData.length) {
+            this.checkList = [];
+            for (let i = 0; i < this.checkListData.length; i++) {
+              this.checkList.push(this.checkListData[i].id);
+            }
+          } else {
+            this.checkList = [];
+          }
+        }
+      },
       openModuleBox(module) {
         this.module = module;
         this.$refs.moduleBox.show(true);
@@ -436,6 +395,15 @@
           }
         });
         window.open(routeData.href);
+      },
+      jumpToAlertMsg(assetId) {
+        this.$store.commit('assetForAlertListChange', assetId);
+        this.$router.push({
+          path: "/alertList",
+          query: {
+            t: +new Date()
+          }
+        });
       },
       getAssetData(data, flushRightBoxDc) {
         this.searchLabel = Object.assign(this.searchLabel, this.pageObj);
@@ -677,12 +645,15 @@
   }
 
   .tab-input-square {
-    border: 1px solid #1166bb;
+    border: 1px solid #606266;
     height: 22px;
     width: 50px;
     border-radius: 3px;
     text-align: center;
     line-height: 20px;
+  }
+  .tab-input-square-high {
+    border: 1px solid #1166bb;
   }
 
   .account-list-option {

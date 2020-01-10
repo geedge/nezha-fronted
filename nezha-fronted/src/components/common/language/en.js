@@ -126,6 +126,7 @@ const en = {
   },
   tip: {
     confirmDelete: "Confirm Delete?",
+    assetConfirmDelete: 'The associated Endpoints and Alerts will also be deleted, confirm delete?',
     yes: "Yes",
     no: "No",
     deleteSuccess: "Successfully Deleted",
@@ -280,7 +281,7 @@ const en = {
       device: 'SN',
       host: 'Host',
       assetState: 'State',
-      endpoints: 'Endpoints',
+      modules: 'Modules',
       alerts: 'Alerts',
       dataCenter: 'Data Center',
       cabinet: 'Cabinet',
@@ -405,7 +406,7 @@ const en = {
     },
     metrics: {
       metrics: "Metrics",
-      name: 'name',
+      name: 'Name',
       type: 'Type',
       description: 'Desc'
     }

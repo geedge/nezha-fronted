@@ -8,7 +8,8 @@ const store = new Vuex.Store({
       selectedData:'',
       step: 0
     },
-    assetDcList: 0,
+    assetDcList: 0, //监听此值，改变则刷新dc列表
+    assetForAlertList: '', //asset页跳转alertList时传递的assetId
     currentProject: {
       id: '',
       name: '',
@@ -58,6 +59,9 @@ const store = new Vuex.Store({
     setPosition(state, data) { //设置坐标
       state.position = data;
     },
+    assetForAlertListChange(state, data) { //asset跳转alertmsg时
+      state.assetForAlertList = data;
+    }
   },
   actions: {
   }

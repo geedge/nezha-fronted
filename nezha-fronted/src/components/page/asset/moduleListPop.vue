@@ -58,7 +58,6 @@ export default {
     },
     hidePop() {
       this.pageObj.name = '';
-      this.pageObj.assetId = '';
       this.moduleList = [];
     },
     show(show) {
