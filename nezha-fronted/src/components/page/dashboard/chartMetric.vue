@@ -96,7 +96,7 @@
     <el-row  v-if="tableShow == 1">
       <el-col span="22">
         <el-form-item :label-width="80"  prop="metric" :rules="{ required: true,  message: $t('validate.required'), trigger: 'blur' }"><!--:rules="{ required: true, type: 'string', message: '', trigger: 'change' }"-->
-              <el-select ref="metricSelect" placeholder="" popper-class="" size="small" v-model="elementInfo.metric"  @change="selectMetric">
+              <el-select ref="metricSelect"  filterable placeholder="" popper-class="" size="small" v-model="elementInfo.metric"  @change="selectMetric">
                 <el-option v-for="(item, index) in metricShowList.arr" :key="item.metric + index"
                 :value="item.metric">{{item.metric}}</el-option>
               </el-select>
@@ -133,6 +133,7 @@
                 <el-select  v-model="item.value" ref="tagSelect" size="small"
                             placeholder=""
                             collapse-tags
+                            filterable
                             multiple>
                   <el-option v-for="(op, j) in elementInfo.selectedTagList[index].list" :key="op + j"  :value="op">{{op}}</el-option>
                 </el-select>

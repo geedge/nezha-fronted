@@ -228,6 +228,12 @@ export default {
                       }
                     });
                   }
+                }else{
+                  if(response.msg){
+                    this.$message.error(response.msg);
+                  }else {
+                    this.$message.error(response);
+                  }
                 }
               });
               // chartData, seriesItem, panelsId, filter
@@ -253,7 +259,7 @@ export default {
             }
           }).catch((error) => {
             if (error) {
-              this.$message.warning({
+              this.$message.error({
                 content: this.$t("tip.refreshLater"),//'Please refesh later',//请稍后刷新
                 duration: 3,
               });

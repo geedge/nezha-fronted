@@ -42,7 +42,11 @@ export function get(url, params) {
     }).then(response => {
       resolve(response.data)
     }).catch(err => {
-      //resolve(err.response.data)
+      if(err.response){
+        resolve(err.response.data);
+      }else if(err.message){
+        resolve(err.message);
+      }
     })
   })
 }
