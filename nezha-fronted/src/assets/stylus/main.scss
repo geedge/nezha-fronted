@@ -169,40 +169,52 @@ html {
 /* begin--左侧列表*/
 .content-left {
   float: left;
-  width: 270px;
+  width: 256px;
   height: 100%;
   border-right: 1px solid #cccccc;
-  padding: 0 12px 0 30px;
+  padding: 0 25px 0 15px;
   box-sizing: border-box;
 }
 .sidebar-title {
-  padding-top: 20px;
-  color: #aaaaaa;
-  font-size: 16px;
+  padding-top: 22px;
+  color: #333333;
+  font-size: 14px;
 }
 .sidebar-info {
   height: calc(90vh - 55px);
   width: 100%;
-  padding-top: 10px;
+  padding-top: 24px;
 }
 .content-left .sidebar-info-item {
-  line-height: 1.5rem;
-  padding: 0 10px 0 10px;
+  line-height: 20px;
+  padding: 0 0 0 10px;
   cursor: pointer;
-  color: #444444;
-  margin: 0 0 7px;
+  color: $content-left-text-color;
+  margin: 0 0 30px;
   display: block;
 }
+.content-left .sidebar-info-item.el-checkbox {
+  padding: 0;
+}
 .side-bar-menu-edit {
-  line-height: 1.5rem;
+  line-height: 20px;
+  float: right;
+}
+.side-bar-menu-edit>i, .sidebar-info-item .el-checkbox__label .checkbox-edit i {
+  font-size: 12px;
+  color: #999;
+}
+.sidebar-info-item .el-checkbox__label {
+  width: calc(100% - 25px);
+}
+.sidebar-info-item .el-checkbox__label>span:nth-child(2) {
   float: right;
 }
 .content-left .sidebar-info-item-active {
-  border-left: 3px solid #e07700;
-  font-weight: bold;
+  border-left: 2px solid $global-text-color-active;
+  color: $global-text-color-active;
 }
 .content-left .el-checkbox-group .sidebar-info-item-active {
-  font-weight: bold;
   border-left: none;
 }
 /* end--左侧列表*/

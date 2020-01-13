@@ -1,5 +1,8 @@
 $global-text-color-active: #ee9d3f; // 全局文字active字色
+
 $header-text-color: #fff; // header默认字色
 $header-text-color-hover: #444; //header hover字色
+
+$content-left-text-color: #666; //左侧菜单默认字色
 
 @import './main.scss';

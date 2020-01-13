@@ -4,7 +4,7 @@
       <div class="sidebar-title">Asset</div>
       <div class="sidebar-info">
         <!--<div class="sidebar-info-header">ALL</div>-->
-        <el-checkbox class="sidebar-info-item" :checked="(checkList.length == checkListData.length) && checkListData.length > 0" @change="dcSelectAll">
+        <el-checkbox :indeterminate="checkAllHandler" class="sidebar-info-item" :model="checkAllFlag" @change="dcSelectAll" :true-label="1" :false-label="0">
           <span style="font-weight: bold;">All</span>
         </el-checkbox>
         <el-checkbox-group v-model="checkList" size="small" @change="getSingleAsset()">
@@ -16,7 +16,6 @@
                 <span @click="closeAllPop">
                   <i class="el-icon-edit-outline" @click="getSingleIDCData(item.id,'edit')"></i>
                 </span>
-
               </template>
             </idc-config-box>
           </el-checkbox>
@@ -306,7 +305,9 @@
         obj: null,
         addUnitShow: false,
         editUnitShow: false,
-        flag: false
+        flag: false,
+        checkAllFlag: false,
+        checkAllHandler: false
       }
     },
     computed: {
@@ -338,22 +339,29 @@
           }
         }
       },
+      checkList(n) {
+        if (n.length > 0 ) {
+          this.pageObj.idcIds = n.join(',');
+        } else {
+          this.pageObj.idcIds = '';
+        }
+        this.getAssetData();
+      }
     },
     created() {
       this.checkList.push(this.$store.state.assetData.selectedData)
       this.getSingleAsset()
     },
     methods: {
-      dcSelectAll() { //DC全选
+      dcSelectAll(val) { //DC全选
         if (this.checkListData.length > 0) {
-          if (this.checkList.length != this.checkListData.length) {
-            this.checkList = [];
+          this.checkList = [];
+          if (val) {
             for (let i = 0; i < this.checkListData.length; i++) {
               this.checkList.push(this.checkListData[i].id);
             }
-          } else {
-            this.checkList = [];
           }
+          this.checkAllHandler = false;
         }
       },
       openModuleBox(module) {
@@ -554,17 +562,16 @@
       }
       ,
       getSingleAsset() {
-        if (this.checkList.length > 0 ) {
-          if (this.checkList[0] === '') {
-            this.checkList.splice(0, 1);
-            this.getSingleAsset();
-          } else {
-            this.pageObj.idcIds = this.checkList.join(',');
-          }
+        let checkedCount = this.checkList.length;
+        this.checkAllFlag = checkedCount === this.checkListData.length;
+        this.checkAllHandler = checkedCount > 0 && checkedCount < this.checkListData.length;
+
+        /*if (this.checkList.length > 0 ) {
+          this.pageObj.idcIds = this.checkList.join(',');
         } else {
           this.pageObj.idcIds = '';
         }
-        this.getAssetData();
+        this.getAssetData();*/
       },
       pageNo(val) {
         this.pageObj.pageNo = val;
@@ -631,34 +638,10 @@
   }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
   .asset {
     height: 100%;
   }
-  .sidebar-pop-input {
-    position: absolute;
-    right: 50px;
-    width: 200px;
-    height: 26px;
-    border-radius: 4px;
-    border: 1px solid #DCDFE6;
-    color: #606266;
-    display: inline-block;
-    padding: 0px 15px;
-  }
-
-  .sidebar-pop-input-select {
-    position: absolute;
-    right: 83px;
-    width: 200px;
-    height: 26px;
-    border-radius: 4px;
-    border: 1px solid #DCDFE6;
-    color: #606266;
-    display: inline-block;
-    padding: 0 15px;
-  }
-
   .tab-input-square {
     border: 1px solid #606266;
     height: 22px;
@@ -670,135 +653,21 @@
   .tab-input-square-high {
     border: 1px solid #1166bb;
   }
-
-  .account-list-option {
-    cursor: pointer;
-    display: inline-block;
-    margin-right: 6px;
-  }
-
-  .right-box-top-btns {
-    text-align: center;
-  }
-
-  .right-box-top-btn {
-    border-radius: 0 0 9px 9px;
-    float: right;
-    color: #656565;
-    height: 30px;
-    font-size: 12px;
-    padding: 3px 8px 1px 8px;
-    border: 1px solid #aaaaaa;
-    border-top: none;
-    cursor: pointer;
-    margin-left: 20px;
-  }
-
-  .right-box-top-btn-full {
-    background-color: #656565;
-    border: 1px solid #656565;
-    border-top: none;
-    color: white;
-  }
-
-
-  .pop-window {
-    height: 370px;
-    width: 400px;
-  }
-
-  .pop-window-assetType-content {
-    padding: 1px 15px 15px 20px;
-  }
-
-  .rm-c-list span:hover {
-    background-color: #888;
-    color: #fff;
-  }
-
-  .right-box-bottom-btn {
-    display: inline-block;
-    background-color: #656565;
-    color: white;
-    line-height: 35px;
-    cursor: pointer;
-    text-align: center;
-  }
-
-  .right-box-bottom-btns {
-    position: absolute;
-    bottom: 0px;
-    width: 100%;
-    text-align: center;
-  }
-
-  .right-box-bottom-btn-cancel {
-    background-color: #DADADA;
-    color: #656565;
-    width: 50%;
-    border-bottom-left-radius: 8px;
-  }
-
-  .right-box-bottom-btn-50 {
-    width: 50%;
-    float: right;
-    border-bottom-right-radius: 8px;
-  }
-
-  .activeColor {
-    background-color: #409EFF;
-  }
-
-  @keyframes slide-in-from-right {
-    from {
-      right: -800px
-    }
-    to {
-      right: 0
-    }
-  }
-
-  @keyframes slide-out-to-right {
-    from {
-      right: 0
-    }
-    to {
-      right: -800px
-    }
-  }
-
-  .right-box-enter-active {
-    animation: slide-in-from-right 0.4s;
-  }
-
-  .right-box-leave-active {
-    animation: slide-out-to-right 0.4s;
-  }
 </style>
-<style>
+<style lang="scss">
   .asset .content-left .el-checkbox__input.is-focus .el-checkbox__inner,
   .asset .content-left .el-checkbox__input .el-checkbox__inner:hover,
   .asset .content-left .el-checkbox__input.is-checked .el-checkbox__inner,
   .asset .content-left .el-checkbox__input.is-indeterminate .el-checkbox__inner {
-    border-color: #e07700;
+    border-color: $global-text-color-active;
   }
 
   .asset .content-left .el-checkbox__input.is-checked + .el-checkbox__label {
-    color: #444;
+    color: $global-text-color-active;
   }
 
   .asset .content-left .el-checkbox__input.is-checked .el-checkbox__inner, .asset .content-left .el-checkbox__input.is-indeterminate .el-checkbox__inner {
-    background-color: #e07700;
+    background-color: $global-text-color-active;
   }
 
-
-  .checkbox-edit {
-    position: absolute;
-    right: 10px;
-    font-size: 16px;
-  }
-  .cell .checkbox-edit {
-    position: static;
-    font-size: 14px;
-  }
 </style>

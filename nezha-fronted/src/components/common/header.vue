@@ -465,7 +465,7 @@
   }
 
   .nz-submenu.el-menu--horizontal .el-menu .el-menu-item:hover {
-    color: #ff9900 !important;
+    color: $global-text-color-active !important;
   }
 
   .el-menu-item > div, .el-menu-item > div > div {
