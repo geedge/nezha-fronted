@@ -1,4 +1,4 @@
-import "./assets/css/main.css";
+//import "./assets/css/main.css";
 import "./assets/css/nzIcon.css";
 import 'element-ui/lib/theme-chalk/index.css';
 import ElementUI from 'element-ui';

@@ -1,216 +1,111 @@
 <template>
   <div class="header">
-    <div class="submenu">
-      <el-menu
-        class="nz-menu"
-        mode="horizontal"
-        background-color="#232f3e"
-        text-color="#ffffff"
-        unique-opened
-      >
-        <el-submenu index="0" popper-class="nz-submenu">
-          <template slot="title">
-            <div class="menu-create">
-              &nbsp;&nbsp;<i class="el-icon-plus"></i>
-              <div>{{$t('overall.create')}}</div>
-            </div>
-          </template>
-          <template v-for="(item, index) in createMenu">
-            <el-menu-item :index="'0-' + index">
-              <div @click="createBox(item)">
-                <span>{{item.label}}</span>
-              </div>
-            </el-menu-item>
-          </template>
-        </el-submenu>
-        <el-submenu index="1" popper-class="nz-submenu">
-          <template slot="title">
-            <div @click="jumpTo('dashboard')">{{$t('overall.dashboard')}}</div>
-          </template>
-          <el-menu-item index="1-0">
-            <div @click="jumpTo('panel')">{{$t('dashboard.panel.title')}}</div>
-          </el-menu-item>
-          <el-menu-item index="1-1">
-            <div @click="jumpTo('metricPreview')">{{$t('dashboard.metricPreview.title')}}</div>
-          </el-menu-item>
-        </el-submenu>
-
-        <el-submenu index="2" popper-class="nz-submenu">
-          <template slot="title">
-            <div @click="jumpToProject(projectData[0])">{{$t('overall.project')}}</div>
-          </template>
-          <template v-for="(item, index) in projectData">
-            <el-menu-item :index="'2-' + index">
-              <div @click="jumpToProject(item)">
-                <span>{{item.name}}</span>
-                <div @click.stop="toEditProject(item)" class="menu-edit"><i style="color: inherit"
-                                                                            class="el-icon-edit-outline"></i></div>
-              </div>
-            </el-menu-item>
-          </template>
-        </el-submenu>
-        <el-submenu index="3" popper-class="nz-submenu">
-          <template slot="title">
-            <div @click="jumpTo('asset')">{{$t('overall.asset')}}</div>
-          </template>
-          <template v-for="(item, index) in assetData">
-            <el-menu-item :index="'3-' + index">
-              <div @click="jumpToAsset('asset',item.id)">
-                <span>{{item.name}}</span>
-                <idc-config-box :post-idc="item" ref="idcConfigBox" placement="left" @after="getIDCOptionData" :button-class="'menu-edit'">
-                  <template v-slot:optionZone>
-                    <div @click="closeAllPop">
-                      <i class="el-icon-edit-outline" @click="getIDCOptionData(item.id)" style="color: inherit"></i>
-                    </div>
-                  </template>
-                </idc-config-box>
-                <!--<el-popover
-                  placement="bottom"
-                  v-model="item[item.name]"
-                  trigger="click"
-                >
-                  <div class="pop-window-assetType-content">
-                    <div class="right-box-top-btns">
-                      <div class="right-box-top-btn right-box-top-btn-full"
-                           @click="item[item.name] = false">
-                        <div class="right-box-btn-icon">
-                          <i class="el-icon-close"></i>
-                        </div>
-                        <span>{{$t('overall.esc')}}</span>
-                      </div>
-                    </div>
-                    <div class="pop-window">
-                      <span style="display: block;padding-bottom: 20px">标题</span>
-                      <div style="padding-top: 10px;padding-left: 20px">
-                        <div>
-                          <label style="font-size: 12px">DN name</label>
-                          <input class='sidebar-pop-input' v-model="addIdcData.name"/>
-                        </div>
-                        <div style="padding-top: 40px">
-                          <label style="font-size: 12px">Loaction</label>
-                          <input class='sidebar-pop-input' v-model="addIdcData.location"/>
-                        </div>
-                        <div style="padding-top: 40px">
-                          <label style="font-size: 12px;padding-right: 20px">负责人</label>
-                          <select class='sidebar-pop-input-select'
-                                  style="margin-left:-40px "
-                                  v-model="addIdcData.principal"
-                                  clearable>
-                            <option
-                              v-for="item in idcUserData"
-                              :key="item.key"
-                              :label="item.username"
-                              :value="item.userId"
-                            >
-                            </option>
-                          </select>
-                        </div>
-                        <div style="padding-top: 40px">
-                          <label style="font-size: 12px">Tel</label>
-                          <input class='sidebar-pop-input' v-model="addIdcData.tel"/>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="right-box-bottom-btns">
-                    <div class="right-box-bottom-btn right-box-bottom-btn-cancel"
-                         @click.stop="item[item.name]= false">
-                      {{$t('overall.cancel')}}
-                    </div>
-                    <div class="right-box-bottom-btn right-box-bottom-btn-50"
-                         @click="editData('idc',item.id)">
-                      {{$t('overall.save')}}
-                    </div>
-                  </div>
-                  <div @click.stop="getIDCOptionData(item.id)" slot="reference" class="menu-edit">
-                    <i style="color: inherit" class="el-icon-edit-outline"></i>
-                  </div>
-                </el-popover>-->
-              </div>
-            </el-menu-item>
-          </template>
-        </el-submenu>
-        <el-submenu index="4-0" popper-class="nz-submenu">
-          <template slot="title">
-            <div @click="jumpTo('alertList')">{{$t('overall.alert')}}</div>
-          </template>
-          <el-menu-item index="4-1">
-            <div @click="jumpTo('alertList')">{{$t('alert.alertList')}}</div>
-          </el-menu-item>
-          <el-menu-item index="4-2">
-            <div @click="jumpTo('alertConfig')">{{$t('alert.alertConfig')}}</div>
-          </el-menu-item>
-        </el-submenu>
-        <el-submenu index="5" popper-class="nz-submenu">
-          <template slot="title">
-            <div @click="jumpTo('account')">{{$t('overall.config')}}</div>
-          </template>
-          <el-menu-item index="5-0">
-            <div @click="jumpTo('account')">{{$t('config.account.account')}}</div>
-          </el-menu-item>
-          <el-menu-item index="5-1">
-            <div @click="jumpTo('promServer')">{{$t('config.promServer.promServerList')}}</div>
-          </el-menu-item>
-        </el-submenu>
-      </el-menu>
-
-    </div>
-    <div class="header-right">
-      <el-menu
-        class=""
-        mode="horizontal"
-        background-color="#232f3e"
-        text-color="#ffffff"
-        unique-opened
-      >
-        <el-submenu index="6" popper-class="nz-submenu">
-          <template slot="title">
-            <div>{{username}}</div>
-          </template>
-          <el-menu-item index="6-0">
-            <div :style="language=='en'?'color:#f90':''" @click="changeLocal('en')">English</div>
-          </el-menu-item>
-          <el-menu-item index="6-1">
-            <div :style="language=='cn'?'color:#f90':''" @click="changeLocal('cn')">中文</div>
-          </el-menu-item>
-          <el-menu-item class="nz-menu-line" @click.stop index="6-2">
-            <div style="height: 1px; width: 100%; background-color: #cccccc;"></div>
-          </el-menu-item>
-          <el-menu-item index="6-3">
-            <div @click="logout">{{$t('overall.signOut')}}</div>
-          </el-menu-item>
-        </el-submenu>
-      </el-menu>
-      <!--<div class="header-user-con">
-          <div class="flagselect">
+    <el-menu
+      class="nz-menu float-right"
+      mode="horizontal"
+      unique-opened
+    >
+      <el-submenu index="0" popper-class="nz-submenu">
+        <template slot="title">
+          <div class="menu-create">
+            &nbsp;&nbsp;<i class="el-icon-plus"></i>
+            <div>{{$t('overall.create')}}</div>
           </div>
-          <el-popover
-                  placement="bottom"
-                  title=""
-                  width="200"
-                  trigger="hover"
-          >
-              <div class="userout">
-                  <div :style="language!='en'?'color:#a6a6a6':''" @click="changeLocal('en')">
-                      <p>English</p>
+        </template>
+        <template v-for="(item, index) in createMenu">
+          <el-menu-item :index="'0-' + index">
+            <div @click="createBox(item)">
+              <span>{{item.label}}</span>
+            </div>
+          </el-menu-item>
+        </template>
+      </el-submenu>
+      <el-submenu index="1" popper-class="nz-submenu">
+        <template slot="title">
+          <div @click="jumpTo('dashboard')">{{$t('overall.dashboard')}}</div>
+        </template>
+        <el-menu-item index="1-0">
+          <div @click="jumpTo('panel')">{{$t('dashboard.panel.title')}}</div>
+        </el-menu-item>
+        <el-menu-item index="1-1">
+          <div @click="jumpTo('metricPreview')">{{$t('dashboard.metricPreview.title')}}</div>
+        </el-menu-item>
+      </el-submenu>
+
+      <el-submenu index="2" popper-class="nz-submenu">
+        <template slot="title">
+          <div @click="jumpToProject(projectData[0])">{{$t('overall.project')}}</div>
+        </template>
+        <template v-for="(item, index) in projectData">
+          <el-menu-item :index="'2-' + index">
+            <div @click="jumpToProject(item)">
+              <span>{{item.name}}</span>
+              <div @click.stop="toEditProject(item)" class="menu-edit"><i style="color: inherit"
+                                                                          class="el-icon-edit-outline"></i></div>
+            </div>
+          </el-menu-item>
+        </template>
+      </el-submenu>
+      <el-submenu index="3" popper-class="nz-submenu">
+        <template slot="title">
+          <div @click="jumpTo('asset')">{{$t('overall.asset')}}</div>
+        </template>
+        <template v-for="(item, index) in assetData">
+          <el-menu-item :index="'3-' + index">
+            <div @click="jumpToAsset('asset',item.id)">
+              <span>{{item.name}}</span>
+              <idc-config-box :post-idc="item" ref="idcConfigBox" placement="left" @after="getIDCOptionData" :button-class="'menu-edit'">
+                <template v-slot:optionZone>
+                  <div @click="closeAllPop">
+                    <i class="el-icon-edit-outline" @click="getIDCOptionData(item.id)" style="color: inherit"></i>
                   </div>
-                  <div :style="language=='cn'?'':'color:#a6a6a6'" @click="changeLocal('cn')">
-                      <p>简体</p>
-                  </div>
-                  <div style="cursor:no-drop;color:#a6a6a6">
-                      <p>русский</p>
-                  </div>
-              </div>
-              <div class="sign-out" @click="jumpTo('')">
-                  退出登录
-              </div>
-              <div slot="reference" class="user-avator">
-                  <span>用户名</span>
-                  <i class="el-submenu__icon-arrow el-icon-arrow-down header-name-jiantou"></i>
-              </div>
-          </el-popover>
-      </div>-->
-    </div>
+                </template>
+              </idc-config-box>
+            </div>
+          </el-menu-item>
+        </template>
+      </el-submenu>
+      <el-submenu index="4-0" popper-class="nz-submenu">
+        <template slot="title">
+          <div @click="jumpTo('alertList')">{{$t('overall.alert')}}</div>
+        </template>
+        <el-menu-item index="4-1">
+          <div @click="jumpTo('alertList')">{{$t('alert.alertList')}}</div>
+        </el-menu-item>
+        <el-menu-item index="4-2">
+          <div @click="jumpTo('alertConfig')">{{$t('alert.alertConfig')}}</div>
+        </el-menu-item>
+      </el-submenu>
+      <el-submenu index="5" popper-class="nz-submenu">
+        <template slot="title">
+          <div @click="jumpTo('account')">{{$t('overall.config')}}</div>
+        </template>
+        <el-menu-item index="5-0">
+          <div @click="jumpTo('account')">{{$t('config.account.account')}}</div>
+        </el-menu-item>
+        <el-menu-item index="5-1">
+          <div @click="jumpTo('promServer')">{{$t('config.promServer.promServerList')}}</div>
+        </el-menu-item>
+      </el-submenu>
+      <el-submenu index="6" popper-class="nz-submenu">
+        <template slot="title">
+          <div>{{username}}<i class="el-icon-arrow-down"></i></div>
+        </template>
+        <el-menu-item index="6-0">
+          <div :style="language=='en'?'color:#f90':''" @click="changeLocal('en')">English</div>
+        </el-menu-item>
+        <el-menu-item index="6-1">
+          <div :style="language=='cn'?'color:#f90':''" @click="changeLocal('cn')">中文</div>
+        </el-menu-item>
+        <el-menu-item class="nz-menu-line" @click.stop index="6-2">
+          <div style="height: 1px; width: 100%; background-color: #cccccc;"></div>
+        </el-menu-item>
+        <el-menu-item index="6-3">
+          <div @click="logout">{{$t('overall.signOut')}}</div>
+        </el-menu-item>
+      </el-submenu>
+    </el-menu>
+
     <panel-box :panel="editPanel" @reload="panelListReload" @reloadForDel="" ref="panelBox"></panel-box>
     <project-box :project="editProject" ref="projectBox"></project-box>
     <module-box :currentProject="currentProject" :module="editModule" @reload="" ref="moduleBox"></module-box>
@@ -498,7 +393,34 @@
   }
 </script>
 
-<style>
+<style lang="scss">
+  .header {
+    background-image: linear-gradient(180deg, #565656 0%, #3C3C3C 100%);
+    box-shadow: 0 2px 4px 0
+  }
+  .header .el-menu {
+    background-color: transparent;
+  }
+
+  .header .el-menu--horizontal>.el-submenu .el-submenu__title i {
+    color: inherit;
+  }
+  .el-submenu__title .el-icon-arrow-down {
+    font-size: 14px;
+  }
+  .nz-submenu .el-menu--popup {
+    border-radius: 0 0 2px 2px;
+  }
+  .header .el-menu--horizontal>.el-submenu .el-submenu__title {
+    min-width: 120px;
+    text-align: center;
+    color: $header-text-color;
+    padding: 0;
+  }
+  .header .el-menu--horizontal>.el-submenu .el-submenu__title:hover {
+    color: #444;
+  }
+
   .el-menu.el-menu--horizontal {
     border-bottom: 0px;
   }
@@ -511,12 +433,12 @@
     border-bottom: 0px;
   }
 
-  .el-menu--horizontal > .el-submenu.is-active .el-submenu__title,
+/*  .el-menu--horizontal > .el-submenu.is-active .el-submenu__title,
   .el-menu--horizontal > .el-menu-item.is-active,
   .el-menu--horizontal .el-menu-item:not(.is-disabled):focus, .el-menu--horizontal .el-menu-item:not(.is-disabled):hover {
     border-bottom: 0px;
     color: white;
-  }
+  }*/
 
   .el-menu--horizontal.nz-submenu {
     border: 1px solid #bbbbbb;
@@ -546,10 +468,6 @@
     color: #ff9900 !important;
   }
 
-  .el-submenu__title .el-icon-plus {
-    color: white;
-  }
-
   .el-menu-item > div, .el-menu-item > div > div {
     font-size: 15px;
   }
@@ -563,12 +481,6 @@
 </style>
 
 <style scoped>
-  .submenu {
-    padding-left: 50%;
-    width: 500px;
-    float: left;
-  }
-
   .header {
     position: relative;
     box-sizing: border-box;
@@ -576,77 +488,6 @@
     height: 60px;
     background-color: #232f3e;
     z-index: 510;
-  }
-
-  .header-right {
-    float: right;
-    padding-right: 5px;
-  }
-
-  .header-user-con {
-    display: flex;
-    height: 50px;
-    align-items: center;
-  }
-
-  .user-avator {
-    padding: 0 5px 3px 0;
-    margin-left: 20px;
-    line-height: 30px;
-    cursor: pointer;
-  }
-
-  .user-avator:hover {
-    border-radius: 2px;
-    background: rgba(255, 255, 255, .3);
-  }
-
-  .user-avator span {
-    font-size: 16px;
-    margin: 0 5px;
-    color: white;
-  }
-
-  .user-avator i.iconfont {
-    color: #fff;
-    font-size: 25px;
-    transform: translateY(2.5px);
-    display: inline-block;
-    line-height: 30px;
-  }
-
-  .userout {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-  }
-
-  .userout > div {
-    width: 33.3%;
-    color: rgba(51, 137, 185, 1);
-    cursor: pointer;
-    text-align: center;
-  }
-
-  .sign-out {
-    width: 100%;
-    height: 30px;
-    color: #fff;
-    text-align: center;
-    line-height: 30px;
-    background: rgba(51, 137, 185, 1);
-    margin-top: 20px;
-    cursor: pointer;
-  }
-
-  .sign-out:hover {
-    opacity: .8;
-  }
-
-  .nz-menu > li:first-of-type {
-    position: fixed;
-    left: 40%;
-    top: 0;
   }
 
   .menu-create {
