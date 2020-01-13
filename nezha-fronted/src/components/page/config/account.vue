@@ -9,12 +9,12 @@
             <div class="sidebar-title">Config</div>
             <div class="sidebar-info">
                 <div class="sidebar-info-item sidebar-info-top sidebar-info-item-active">{{$t('config.account.account')}}</div>
-                <div class="sidebar-info-item" @click="jumpTo('promServer')">{{$t('config.promServer.promServerList')}}</div>
+                <div class="sidebar-info-item" @click="jumpTo('promServer')" id="account-jump-promserver">{{$t('config.promServer.promServerList')}}</div>
             </div>
         </div>
         <div class="content-right">
             <div class="top-tools">
-              <button type="button" @click="toAdd" class="nz-btn nz-btn-size-normal nz-btn-style-normal float-right">
+              <button type="button" @click="toAdd" class="nz-btn nz-btn-size-normal nz-btn-style-normal float-right" id="account-add">
                 <span class="top-tool-btn-txt">{{$t('overall.add')}}</span>
               </button>
               <div class="top-tool-search float-right"><search-input :searchMsg="searchMsg" @search="search"></search-input></div>
@@ -34,7 +34,7 @@
                 >
                     <template slot="header" slot-scope="scope">
                         <span v-if="index==0">
-                            <span @click.stop="elementsetShow('shezhi',$event)">
+                            <span @click.stop="elementsetShow('shezhi',$event)" id="account-tab-set">
                                 <i class="el-icon-setting"></i>
                             </span>
                             <span>{{item.label}}</span>
@@ -45,9 +45,9 @@
                     </template>
                     <template slot-scope="scope" :column="item">
                         <div v-if="item.prop == 'option'" class="content-right-options">
-                            <span @click="del(scope.row)" class="content-right-option"><i class="el-icon-delete"></i></span>
-                            <span @click="detail(scope.row)" class="content-right-option"><i class="el-icon-view"></i></span>
-                            <span @click="edit(scope.row)" class="content-right-option"><i class="el-icon-edit-outline"></i></span>
+                            <span @click="del(scope.row)" class="content-right-option" :id="'account-del-'+scope.row.id"><i class="el-icon-delete"></i></span>
+                            <span @click="detail(scope.row)" class="content-right-option" :id="'account-detail-'+scope.row.id"><i class="el-icon-view"></i></span>
+                            <span @click="edit(scope.row)" class="content-right-option" :id="'account-edit-'+scope.row.id"><i class="el-icon-edit-outline"></i></span>
                         </div>
                         <span v-else-if="item.prop == 'lang'">
                             {{scope.row[item.prop] == 'en' ? 'English' : ''}}
@@ -77,15 +77,15 @@
             <div class="right-box right-box-account" v-if="rightBox.show">
                 <!-- begin--顶部按钮-->
                 <div class="right-box-top-btns">
-                  <button type="button" v-if="user.userId != ''" @click="del(user)" class="nz-btn nz-btn-size-normal nz-btn-style-light">
+                  <button type="button" v-if="user.userId != ''" @click="del(user)" class="nz-btn nz-btn-size-normal nz-btn-style-light" id="account-edit-del">
                     <span class="top-tool-btn-txt">{{$t('overall.delete')}}</span>
                   </button>
-                  <button type="button" @click="saveOrToEdit" class="nz-btn nz-btn-size-normal nz-btn-style-normal">
+                  <button type="button" @click="saveOrToEdit" class="nz-btn nz-btn-size-normal nz-btn-style-normal" id="account-edit-save">
                     <span v-if="rightBox.isEdit" class="top-tool-btn-txt">{{$t('overall.save')}}</span>
                     <span v-else class="top-tool-btn-txt">{{$t('overall.edit')}}</span>
                   </button>
 
-                  <button type="button" @click="esc" class="nz-btn nz-btn-size-normal nz-btn-style-light nz-btn-style-square">
+                  <button type="button" @click="esc" class="nz-btn nz-btn-size-normal nz-btn-style-light nz-btn-style-square" id="account-edit-esc">
                     <span class="top-tool-btn-txt"><i class="el-icon-close"></i></span>
                   </button>
                 </div>

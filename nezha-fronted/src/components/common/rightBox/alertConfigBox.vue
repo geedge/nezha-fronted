@@ -3,15 +3,15 @@
     <div class="right-box right-box-alert-config" v-if="rightBox.show">
       <!-- begin--顶部按钮-->
       <div class="right-box-top-btns">
-        <button type="button" v-if="alertRule.id != ''" @click="del" class="nz-btn nz-btn-size-normal nz-btn-style-light">
+        <button type="button" v-if="alertRule.id != ''" id="alert-box-del" @click="del" class="nz-btn nz-btn-size-normal nz-btn-style-light">
           <span class="top-tool-btn-txt">{{$t('overall.delete')}}</span>
         </button>
-        <button type="button" @click="saveOrToEdit" class="nz-btn nz-btn-size-normal nz-btn-style-normal">
+        <button type="button" @click="saveOrToEdit" class="nz-btn nz-btn-size-normal nz-btn-style-normal" id="alert-box-save">
           <span v-if="rightBox.isEdit" class="top-tool-btn-txt">{{$t('overall.save')}}</span>
           <span v-else class="top-tool-btn-txt">{{$t('overall.edit')}}</span>
         </button>
 
-        <button type="button" @click="esc" class="nz-btn nz-btn-size-normal nz-btn-style-light nz-btn-style-square">
+        <button type="button" @click="esc" class="nz-btn nz-btn-size-normal nz-btn-style-light nz-btn-style-square" id="alert-box-esc">
           <span class="top-tool-btn-txt"><i class="el-icon-close"></i></span>
         </button>
       </div>
@@ -33,14 +33,14 @@
             <!--type-->
             <el-form-item :label="$t('alert.list.type')" prop="type">
               <el-select v-if="rightBox.isEdit" @change="(val) => {changeType(val);}" popper-class="config-dropdown" v-model="alertRule.type" placeholder="" size="small" >
-                <el-option v-for="item in typeData" :key="item.key" :label="item.value" :value="item.key"></el-option>
+                <el-option :id="'alert-type-'+item.value" v-for="item in typeData" :key="item.key" :label="item.value" :value="item.key"></el-option>
               </el-select>
               <div v-for="item in typeData" v-if="!rightBox.isEdit && item.key == alertRule.type" class="right-box-form-content-txt">{{item.value}}</div>
             </el-form-item>
             <!--linkedId-->
             <el-form-item :label="$t('alert.config.link')" prop="linkId">
               <el-select v-if="rightBox.isEdit" v-model="alertRule.linkId" placeholder="" size="small">
-                <el-option v-for="item in linkObjList" :key="item.id" :label="alertRule.type == 3 ? item.host : item.name" :value="item.id"></el-option>
+                <el-option :id="'alert-linke-'+item.id" v-for="item in linkObjList" :key="item.id" :label="alertRule.type == 3 ? item.host : item.name" :value="item.id"></el-option>
               </el-select>
               <div v-if="!rightBox.isEdit" class="right-box-form-content-txt">{{alertRule.linkObject ? alertRule.linkObject.name : ''}}</div>
             </el-form-item>
@@ -59,7 +59,7 @@
             <!--severity-->
             <el-form-item :label="$t('alert.severity')" prop="severity">
               <el-select v-if="rightBox.isEdit" popper-class="config-dropdown" v-model="alertRule.severity" placeholder=""  size="small">
-                <el-option v-for="item in severityData" :key="item.key" :label="item.value" :value="item.key">
+                <el-option :id="'alert-severity-'+item.key" v-for="item in severityData" :key="item.key" :label="item.value" :value="item.key">
                   <span class="config-dropdown-label-txt" v-if="!item.isEdit">{{item.value}}</span>
                   <span class="config-dropdown-label-input" v-if="item.isEdit" @click.stop>
                     <el-input type="text" v-model="item.name" size="mini"></el-input>

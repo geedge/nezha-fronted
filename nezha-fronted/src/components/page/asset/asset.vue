@@ -26,7 +26,7 @@
 
     <div class="content-right">
       <div class="top-tools">
-        <button @click.stop="tagShow('showAdd')" class="nz-btn nz-btn-size-normal nz-btn-style-normal float-right">
+        <button @click.stop="tagShow('showAdd')" class="nz-btn nz-btn-size-normal nz-btn-style-normal float-right" id="asset-add">
           <span class="top-tool-btn-txt">{{$t('overall.add')}}</span>
         </button>
         <div class="top-tool-search float-right"><search-input :searchMsg="searchMsg" @search="search"></search-input></div>
@@ -48,7 +48,7 @@
         >
           <template slot="header" slot-scope="scope">
             <span v-if="index==0">
-                <span @click.stop="elementsetShow('shezhi',$event)">
+                <span @click.stop="elementsetShow('shezhi',$event)" id="asset-tab-set">
                     <i class="el-icon-setting"></i>
                 </span>
                 <span>{{item.label}}</span>
@@ -74,17 +74,17 @@
               <span>{{scope.row.state==1 ? $t('asset.createAssetTab.inStock') : $t('asset.createAssetTab.notInStock')}}</span>
             </div>
             <div v-if="item.prop=='Module'">
-              <div v-if="scope.row.moduleNum > 0" @click="getAssetModuleList(scope.row.id)">
+              <div v-if="scope.row.moduleNum > 0" @click="getAssetModuleList(scope.row.id)" :id="'asset-module-'+scope.row.id">
                 <module-list-pop :assetId="scope.row.id + ''" @openModuleBox="openModuleBox" placement="left" :ref="'moduleListPop' + scope.row.id">
                   <template v-slot:optionZone>
-                    <div class="tab-input-square tab-input-square-high link">{{scope.row.moduleNum}}</div>
+                    <div class="tab-input-square tab-input-square-high link" >{{scope.row.moduleNum}}</div>
                   </template>
                 </module-list-pop>
               </div>
               <div v-else class="tab-input-square">{{scope.row.moduleNum}}</div>
             </div>
             <div v-if="item.prop=='Alert'">
-              <div v-if="scope.row.alertNum > 0" class="tab-input-square tab-input-square-high link" @click="jumpToAlertMsg(scope.row.id)">{{scope.row.alertNum}}</div>
+              <div v-if="scope.row.alertNum > 0" class="tab-input-square tab-input-square-high link" @click="jumpToAlertMsg(scope.row.id)" :id="'asset-alerts-'+scope.row.id">{{scope.row.alertNum}}</div>
               <div class="tab-input-square" v-else>{{scope.row.alertNum}}</div>
             </div>
             <div v-if="item.prop=='dataCenter'">
@@ -118,16 +118,16 @@
               <span>{{scope.row.idc.tel}}</span>
             </div>
             <div v-if="item.prop == 'option'" class="content-right-options">
-              <span @click.stop="deleteData('asset',scope.row.id)" class="content-right-option"><i
+              <span @click.stop="deleteData('asset',scope.row.id)" class="content-right-option" :id="'asset-del-'+scope.row.id"><i
                 class="el-icon-delete"></i>
               </span>
-              <span @click.stop="tagShow('showView',scope.row.id)" class="content-right-option"><i
+              <span @click.stop="tagShow('showView',scope.row.id)" class="content-right-option" :id="'asset-detail-'+scope.row.id"><i
                 class="el-icon-view"></i>
               </span>
-              <span @click.stop="tagShow('showEdit',scope.row.id)" class="content-right-option"><i
+              <span @click.stop="tagShow('showEdit',scope.row.id)" class="content-right-option" :id="'asset-edit-'+scope.row.id"><i
                 class="el-icon-edit-outline"></i>
               </span>
-              <span @click="ssss(scope.row.id ,scope.row.host)" class="content-right-option"><i
+              <span @click="ssss(scope.row.id ,scope.row.host)" class="content-right-option" :id="'asset-ssh-'+scope.row.id"><i
                 class="el-icon-monitor"></i>
               </span>
             </div>

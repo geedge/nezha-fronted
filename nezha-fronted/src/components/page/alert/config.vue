@@ -8,13 +8,13 @@
         <div class="content-left">
             <div class="sidebar-title">{{$t('alert.alert')}}</div>
             <div class="sidebar-info">
-                <div class="sidebar-info-item sidebar-info-top" @click="jumpTo('alertList')">{{$t('alert.alertList')}}</div>
+                <div class="sidebar-info-item sidebar-info-top" @click="jumpTo('alertList')" id="alert-jump-alertlist">{{$t('alert.alertList')}}</div>
                 <div class="sidebar-info-item sidebar-info-item-active">{{$t('alert.alertConfig')}}</div>
             </div>
         </div>
         <div class="content-right">
             <div class="top-tools">
-                <button @click="toAdd" class="nz-btn nz-btn-size-normal nz-btn-style-normal float-right">
+                <button id="alert-add" @click="toAdd" class="nz-btn nz-btn-size-normal nz-btn-style-normal float-right">
                     <span class="top-tool-btn-txt">{{$t('overall.add')}}</span>
                 </button>
                 <div class="top-tool-search float-right"><search-input :searchMsg="searchMsg" @search="search"></search-input></div>
@@ -35,7 +35,7 @@
                 >
                     <template slot="header" slot-scope="scope">
                         <span v-if="index==0">
-                            <span @click.stop="elementsetShow('shezhi',$event)">
+                            <span @click.stop="elementsetShow('shezhi',$event)" id="alert-tab-set">
                                 <i class="el-icon-setting"></i>
                             </span>
                             <span>{{item.label}}</span>
@@ -46,9 +46,9 @@
                     </template>
                     <template slot-scope="scope" :column="item">
                         <div v-if="item.prop == 'option'" class="content-right-options">
-                          <span @click="del(scope.row)" class="content-right-option"><i class="el-icon-delete"></i></span>
-                          <span @click="detail(scope.row)" class="content-right-option"><i class="el-icon-view"></i></span>
-                          <span @click="toEdit(scope.row)" class="content-right-option"><i class="el-icon-edit-outline"></i></span>
+                          <span @click="del(scope.row)" class="content-right-option" :id="'alert-del-'+scope.row.id"><i class="el-icon-delete"></i></span>
+                          <span @click="detail(scope.row)" class="content-right-option" :id="'alert-detail-'+scope.row.id"><i class="el-icon-view"></i></span>
+                          <span @click="toEdit(scope.row)" class="content-right-option" :id="'alert-edit-'+scope.row.id"><i class="el-icon-edit-outline"></i></span>
                         </div>
                         <span v-else-if="item.prop == 'severity'">
                           <span v-if="scope.row[item.prop] == 'high'"><i class="el-icon-arrow-up"></i>&nbsp;{{severityData[1].value}}</span>

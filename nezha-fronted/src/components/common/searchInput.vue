@@ -3,15 +3,15 @@
         <div class="search-input-all input-position" @click="stop_click">
 <!--            历史记录-->
             <div class="search-history">
-                <i class="el-icon-time" @click="look_history"></i>
+                <i class="el-icon-time" @click="look_history" id="search-view-history"></i>
                 <div :class="localStorage_display?'localStorage_list_box none':'localStorage_list_box'">
                     <div class="list_box_title">
                         <span>{{$t('search.recentSearch')}}</span>
-                        <i class="el-icon-close" @click="localStorage_display=!localStorage_display"></i>
+                        <i class="el-icon-close" @click="localStorage_display=!localStorage_display" id="search-close-history"></i>
                     </div>
                     <div class="list_box_content" v-if="history_once.length>0">
                         <ul>
-                            <li v-for="(val,ind) in history_once" @click="select_history(ind,$event)" :key="ind">
+                            <li v-for="(val,ind) in history_once" @click="select_history(ind,$event)" :key="ind" :id="'search-history-pick-'+ind">
                                 <span v-for="(item,key) in val" :key="key">
                                     <span class="name">{{item.name}}: </span>
                                     <span class="value">{{item.val+' '}}</span>
@@ -20,7 +20,7 @@
                         </ul>
                     </div>
                     <div class="list_box_clear">
-                        <span v-if="history_once.length>0" @click="clear_history">{{other.clearReSearch}}</span>
+                        <span v-if="history_once.length>0" @click="clear_history" id="search-clear-history">{{other.clearReSearch}}</span>
                         <span v-else class="no_historyList">{{$t('search.noRecentSearch')}}</span>
                     </div>
                 </div>
@@ -99,7 +99,7 @@
                     <li class="select_input" v-if="change_sreach_show">
                         <input type="text" @click="read_input" v-model="no_condition" @keyup="enter_one" id="one-input" @keydown="clear_search_list" >
                     </li>
-                   
+
                 </ul>
             </div>
             <div class="clear-search" @click="clear_input">

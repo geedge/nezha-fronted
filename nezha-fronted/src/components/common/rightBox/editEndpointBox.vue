@@ -3,16 +3,16 @@
     <div class="right-box right-box-edit-endpoint" v-if="rightBox.show">
       <!-- begin--顶部按钮-->
       <div class="right-box-top-btns">
-        <button type="button" v-if="rightBox.isEdit && endpoint.id != ''" @click="del" class="nz-btn nz-btn-size-normal nz-btn-style-light">
+        <button id="edit-ep-del" type="button" v-if="rightBox.isEdit && endpoint.id != ''" @click="del" class="nz-btn nz-btn-size-normal nz-btn-style-light">
           <span class="top-tool-btn-txt">{{$t('overall.delete')}}</span>
         </button>
-        <button v-if="!rightBox.isEdit" type="button" @click="toEdit(true)" class="nz-btn nz-btn-size-normal nz-btn-style-normal">
+        <button id="edit-ep-edit" v-if="!rightBox.isEdit" type="button" @click="toEdit(true)" class="nz-btn nz-btn-size-normal nz-btn-style-normal">
           <span class="top-tool-btn-txt">{{$t('overall.edit')}}</span>
         </button>
-        <button v-if="rightBox.isEdit" type="button" @click="save" class="nz-btn nz-btn-size-normal nz-btn-style-normal">
+        <button id="edit-ep-save" v-if="rightBox.isEdit" type="button" @click="save" class="nz-btn nz-btn-size-normal nz-btn-style-normal">
           <span class="top-tool-btn-txt">{{$t('overall.save')}}</span>
         </button>
-        <button type="button" @click="esc" class="nz-btn nz-btn-size-normal nz-btn-style-light nz-btn-style-square">
+        <button id="edit-ep-esc" type="button" @click="esc" class="nz-btn nz-btn-size-normal nz-btn-style-light nz-btn-style-square">
           <span class="top-tool-btn-txt"><i class="el-icon-close"></i></span>
         </button>
       </div>
@@ -28,14 +28,14 @@
           <!--project-->
           <el-form-item :label="$t('project.project.project')" prop="project.id">
             <el-select @change="((val) => {changeProject(val);})" value-key="id" popper-class="config-dropdown" v-model="currentProject" placeholder="" v-if="rightBox.isEdit" size="small">
-              <el-option v-for="item in projectList" :key="item.id" :label="item.name" :value="item"></el-option>
+              <el-option :id="'edit-project-'+item.id" v-for="item in projectList" :key="item.id" :label="item.name" :value="item"></el-option>
             </el-select>
             <div v-if="!rightBox.isEdit" class="right-box-form-content-txt">{{endpoint.project.name}}</div>
           </el-form-item>
           <!--module-->
           <el-form-item :label="$t('project.module.module')" prop="module.id">
             <el-select @change="((val) => {changeModule(val);})" value-key="id" popper-class="config-dropdown" v-model="currentModule" placeholder="" v-if="rightBox.isEdit" size="small">
-              <el-option v-for="item in moduleList" :key="item.id" :label="item.name" :value="item"></el-option>
+              <el-option :id="'edit-module-'+item.id" v-for="item in moduleList" :key="item.id" :label="item.name" :value="item"></el-option>
             </el-select>
             <div v-if="!rightBox.isEdit" class="right-box-form-content-txt">{{endpoint.module.name}}</div>
           </el-form-item>
@@ -48,7 +48,7 @@
                 <div class="pop-window-assetType-content">
                   <!-- begin--顶部按钮-->
                   <div class="pop-top-btns">
-                    <button type="button" @click="subEsc" class="nz-btn nz-btn-size-normal nz-btn-style-light nz-btn-style-square">
+                    <button type="button" id="edit-ep-subesc" @click="subEsc" class="nz-btn nz-btn-size-normal nz-btn-style-light nz-btn-style-square">
                       <span class="top-tool-btn-txt"><i class="el-icon-close"></i></span>
                     </button>
                   </div>
@@ -68,13 +68,13 @@
                         </span>
                       </button><div class="endpoint-asset-search-input">
                         <el-input class="input-x-mini nz-input-group-middle" placeholder="" v-model="assetSearch.text"></el-input>
-                      </div><button type="button" class="nz-btn nz-btn-size-small nz-btn-style-light nz-btn-style-square nz-input-group-append">
-                        <i @click="searchAsset" class="el-icon-search"></i>
+                      </div><button type="button" class="nz-btn nz-btn-size-small nz-btn-style-light nz-btn-style-square nz-input-group-append" >
+                        <i @click="searchAsset" class="el-icon-search" id="edit-ep-search-asset"></i>
                       </button>
 
                       <div class="endpoint-asset-search-dropdown" v-if="assetSearch.dropdownShow">
-                        <div @click="dropdownSelect('IP')" class="endpoint-asset-search-dropdown-item">IP</div>
-                        <div @click="dropdownSelect('SN')" class="endpoint-asset-search-dropdown-item">SN</div>
+                        <div @click="dropdownSelect('IP')" class="endpoint-asset-search-dropdown-item" id="edit-ep-search-ip">IP</div>
+                        <div @click="dropdownSelect('SN')" class="endpoint-asset-search-dropdown-item" id="edit-ep-search-sn">SN</div>
                       </div>
                     </div>
                     <!-- end--搜索框-->
@@ -91,7 +91,7 @@
                           <div class="endpoint-sub-table-col">{{selectedAsset.sn}}</div>
                         </div>
                         <div v-else class="endpoint-sub-table-row"></div>
-                        <div @click="selectAsset(item)" :data="item.id" v-for="item in assetList" class="endpoint-sub-table-row" :class="{'endpoint-sub-table-row-active': item.id == selectedAsset.id}">
+                        <div id="edit-select-asset" @click="selectAsset(item)" :data="item.id" v-for="item in assetList" class="endpoint-sub-table-row" :class="{'endpoint-sub-table-row-active': item.id == selectedAsset.id}">
                           <div class="endpoint-sub-table-col">{{item.host}}</div>
                           <div class="endpoint-sub-table-col">{{item.sn}}</div>
                         </div>
@@ -132,10 +132,10 @@
               <span>{{$t('project.endpoint.param')}}</span>
               <div class="right-box-form-btns" v-if="rightBox.isEdit">
                 <button style="display: none;">第一个button会出现意料之外的hover样式，找不到原因，只好加个不可见的button规避问题</button>
-                <button type="button" @click="clearAllParam" class="nz-btn nz-btn-size-small nz-btn-style-light">
+                <button type="button" id="edit-clear-all" @click="clearAllParam" class="nz-btn nz-btn-size-small nz-btn-style-light">
                   <span class="top-tool-btn-txt">{{$t('overall.clearAll')}}</span>
                 </button>
-                <button type="button" @click="addParam" class="nz-btn nz-btn-size-small nz-btn-style-normal">
+                <button type="button" id="edit-add-param" @click="addParam" class="nz-btn nz-btn-size-small nz-btn-style-normal">
                   <span class="top-tool-btn-txt">{{$t('overall.add')}}</span>
                 </button>
               </div>

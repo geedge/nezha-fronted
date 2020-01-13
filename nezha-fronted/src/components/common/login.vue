@@ -13,7 +13,7 @@
             <input v-model="loginData.password" type="password" class="inputL" @keyup.enter="login"></input>
           </div>
           <div class="login-button">
-            <button @click="login">Login</button>
+            <button @click="login" id="login">Login</button>
           </div>
           <div class="login-foot">
             <div class="login-foot-remember"></div>
@@ -21,13 +21,13 @@
               <div @click="changeLang('en')" class="login-foot-lang" :class="{'login-foot-lang-active': lang == 'en'}">
                 <img v-if="lang == 'en'" src="../../assets/img/lang-box-active.svg"/>
                 <img v-if="lang != 'en'" src="../../assets/img/lang-box.svg"/>
-                <span class="lang-name lang-name-en">EN</span>
+                <span class="lang-name lang-name-en" id="lang-en">EN</span>
                 <div v-if="lang == 'en'" class="lang-active-model"></div>
               </div>
               <div @click="changeLang('cn')" class="login-foot-lang" :class="{'login-foot-lang-active': lang == 'cn'}">
                 <img v-if="lang == 'cn'" src="../../assets/img/lang-box-active.svg"/>
                 <img v-if="lang != 'cn'" src="../../assets/img/lang-box.svg"/>
-                <span class="lang-name">中</span>
+                <span class="lang-name" id="lang-ch">中</span>
                 <div v-if="lang == 'cn'" class="lang-active-model"></div>
               </div>
             </div>

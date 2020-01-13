@@ -3,15 +3,15 @@
     <div class="right-box right-box-module" v-if="rightBox.show">
       <!-- begin--顶部按钮-->
       <div class="right-box-top-btns">
-        <button type="button" v-if="module.id != ''" @click="del" class="nz-btn nz-btn-size-normal nz-btn-style-light">
+        <button id="module-del" type="button" v-if="module.id != ''" @click="del" class="nz-btn nz-btn-size-normal nz-btn-style-light">
           <span class="top-tool-btn-txt">{{$t('overall.delete')}}</span>
         </button>
-        <button type="button" @click="saveOrToEdit" class="nz-btn nz-btn-size-normal nz-btn-style-normal">
+        <button id="module-save" type="button" @click="saveOrToEdit" class="nz-btn nz-btn-size-normal nz-btn-style-normal">
           <span v-if="rightBox.isEdit" class="top-tool-btn-txt">{{$t('overall.save')}}</span>
           <span v-else class="top-tool-btn-txt">{{$t('overall.edit')}}</span>
         </button>
 
-        <button type="button" @click="esc" class="nz-btn nz-btn-size-normal nz-btn-style-light nz-btn-style-square">
+        <button id="module-esc" type="button" @click="esc" class="nz-btn nz-btn-size-normal nz-btn-style-light nz-btn-style-square">
           <span class="top-tool-btn-txt"><i class="el-icon-close"></i></span>
         </button>
         <!--<div class="right-box-top-btn" v-if="module.id != ''" @click="del">
@@ -44,7 +44,7 @@
         <el-form class="right-box-form" :model="module" label-position="top" :rules="rules" ref="moduleForm">
           <el-form-item :label='$t("project.project.project")' prop="project">
             <el-select v-if="rightBox.isEdit" value-key="id" popper-class="config-dropdown" v-model="module.project" placeholder="" size="small">
-              <el-option v-for="item in projectList" :key="item.id" :label="item.name" :value="item"></el-option>
+              <el-option :id="'module-project-'+item.id" v-for="item in projectList" :key="item.id" :label="item.name" :value="item"></el-option>
             </el-select>
             <div v-if="!rightBox.isEdit" class="right-box-form-content-txt">{{module.project.name}}</div>
           </el-form-item>
@@ -74,10 +74,10 @@
               <span>{{$t('project.endpoint.param')}}</span>
               <div class="right-box-form-btns" v-if="rightBox.isEdit">
                 <button style="display: none;">第一个button会出现意料之外的hover样式，找不到原因，只好加个不可见的button规避问题</button>
-                <button type="button" @click="clearAllParam" class="nz-btn nz-btn-size-small nz-btn-style-light">
+                <button id="module-clear-all" type="button" @click="clearAllParam" class="nz-btn nz-btn-size-small nz-btn-style-light">
                   <span class="top-tool-btn-txt">{{$t('overall.clearAll')}}</span>
                 </button>
-                <button type="button" @click="addParam" class="nz-btn nz-btn-size-small nz-btn-style-normal">
+                <button id="module-add-param" type="button" @click="addParam" class="nz-btn nz-btn-size-small nz-btn-style-normal">
                   <span class="top-tool-btn-txt">{{$t('overall.add')}}</span>
                 </button>
               </div>
@@ -91,7 +91,7 @@
                 <el-form-item class="param-box-row-value" :rules="{required: true, message: $t('validate.required'), trigger: 'blur'}" :prop="'paramObj.' + index + '.value'">
                   <el-input placeholder="value" size="mini" v-model="item.value"></el-input>
                 </el-form-item>
-                <span class="param-box-row-symbol" @click="removeParam(index)"><i class="nz-icon nz-icon-minus-square"></i></span>
+                <span class="param-box-row-symbol" :id="'moduel-remove-param-'+index" @click="removeParam(index)"><i class="nz-icon nz-icon-minus-square"></i></span>
               </div>
               <div class="param-box-row" v-for="(item, index) in module.paramObj" v-if="!rightBox.isEdit">
                 <div  class="right-box-form-content-txt">{{item.key}}={{item.value}}</div>

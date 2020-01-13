@@ -17,7 +17,7 @@
           </template>
           <template v-for="(item, index) in createMenu">
             <el-menu-item :index="'0-' + index">
-              <div @click="createBox(item)">
+              <div @click="createBox(item)" :id="'head-create-'+item.type">
                 <span>{{item.label}}</span>
               </div>
             </el-menu-item>
@@ -25,25 +25,25 @@
         </el-submenu>
         <el-submenu index="1" popper-class="nz-submenu">
           <template slot="title">
-            <div @click="jumpTo('dashboard')">{{$t('overall.dashboard')}}</div>
+            <div @click="jumpTo('dashboard')" id="head-jump-dashboard">{{$t('overall.dashboard')}}</div>
           </template>
           <el-menu-item index="1-0">
-            <div @click="jumpTo('panel')">{{$t('dashboard.panel.title')}}</div>
+            <div @click="jumpTo('panel')" id="head-jump-panel">{{$t('dashboard.panel.title')}}</div>
           </el-menu-item>
           <el-menu-item index="1-1">
-            <div @click="jumpTo('metricPreview')">{{$t('dashboard.metricPreview.title')}}</div>
+            <div @click="jumpTo('metricPreview')" id="head-jump-metricPreview">{{$t('dashboard.metricPreview.title')}}</div>
           </el-menu-item>
         </el-submenu>
 
         <el-submenu index="2" popper-class="nz-submenu">
           <template slot="title">
-            <div @click="jumpToProject(projectData[0])">{{$t('overall.project')}}</div>
+            <div @click="jumpToProject(projectData[0])" id="head-jump-project" >{{$t('overall.project')}}</div>
           </template>
           <template v-for="(item, index) in projectData">
             <el-menu-item :index="'2-' + index">
-              <div @click="jumpToProject(item)">
+              <div @click="jumpToProject(item)" :id="'head-jump-project-'+item.id">
                 <span>{{item.name}}</span>
-                <div @click.stop="toEditProject(item)" class="menu-edit"><i style="color: inherit"
+                <div @click.stop="toEditProject(item)" class="menu-edit" :id="'head-edit-project-'+item.id"><i style="color: inherit"
                                                                             class="el-icon-edit-outline"></i></div>
               </div>
             </el-menu-item>
@@ -51,16 +51,16 @@
         </el-submenu>
         <el-submenu index="3" popper-class="nz-submenu">
           <template slot="title">
-            <div @click="jumpTo('asset')">{{$t('overall.asset')}}</div>
+            <div @click="jumpTo('asset')" id="head-jump-asset">{{$t('overall.asset')}}</div>
           </template>
           <template v-for="(item, index) in assetData">
             <el-menu-item :index="'3-' + index">
-              <div @click="jumpToAsset('asset',item.id)">
+              <div @click="jumpToAsset('asset',item.id)" :id="'head-jump-asset-'+item.id">
                 <span>{{item.name}}</span>
                 <idc-config-box :post-idc="item" ref="idcConfigBox" placement="left" @after="getIDCOptionData" :button-class="'menu-edit'">
                   <template v-slot:optionZone>
                     <div @click="closeAllPop">
-                      <i class="el-icon-edit-outline" @click="getIDCOptionData(item.id)" style="color: inherit"></i>
+                      <i class="el-icon-edit-outline" @click="getIDCOptionData(item.id)" style="color: inherit" :id="'head-edit-asset-'+item.id"></i>
                     </div>
                   </template>
                 </idc-config-box>
@@ -132,24 +132,24 @@
         </el-submenu>
         <el-submenu index="4-0" popper-class="nz-submenu">
           <template slot="title">
-            <div @click="jumpTo('alertList')">{{$t('overall.alert')}}</div>
+            <div @click="jumpTo('alertList')" id="head-jump-alertlist-all">{{$t('overall.alert')}}</div>
           </template>
           <el-menu-item index="4-1">
-            <div @click="jumpTo('alertList')">{{$t('alert.alertList')}}</div>
+            <div @click="jumpTo('alertList')" id="head-jump-alertlist">{{$t('alert.alertList')}}</div>
           </el-menu-item>
           <el-menu-item index="4-2">
-            <div @click="jumpTo('alertConfig')">{{$t('alert.alertConfig')}}</div>
+            <div @click="jumpTo('alertConfig')" id="head-jump-alertconfig">{{$t('alert.alertConfig')}}</div>
           </el-menu-item>
         </el-submenu>
         <el-submenu index="5" popper-class="nz-submenu">
           <template slot="title">
-            <div @click="jumpTo('account')">{{$t('overall.config')}}</div>
+            <div @click="jumpTo('account')" id="head-jump-account">{{$t('overall.config')}}</div>
           </template>
           <el-menu-item index="5-0">
-            <div @click="jumpTo('account')">{{$t('config.account.account')}}</div>
+            <div @click="jumpTo('account')" id="head-jump-sub-account">{{$t('config.account.account')}}</div>
           </el-menu-item>
           <el-menu-item index="5-1">
-            <div @click="jumpTo('promServer')">{{$t('config.promServer.promServerList')}}</div>
+            <div @click="jumpTo('promServer')" id="head-jump-promserver">{{$t('config.promServer.promServerList')}}</div>
           </el-menu-item>
         </el-submenu>
       </el-menu>
@@ -168,16 +168,16 @@
             <div>{{username}}</div>
           </template>
           <el-menu-item index="6-0">
-            <div :style="language=='en'?'color:#f90':''" @click="changeLocal('en')">English</div>
+            <div :style="language=='en'?'color:#f90':''" @click="changeLocal('en')" id="head-lang-en">English</div>
           </el-menu-item>
           <el-menu-item index="6-1">
-            <div :style="language=='cn'?'color:#f90':''" @click="changeLocal('cn')">中文</div>
+            <div :style="language=='cn'?'color:#f90':''" @click="changeLocal('cn')" id="head-lang-ch">中文</div>
           </el-menu-item>
           <el-menu-item class="nz-menu-line" @click.stop index="6-2">
             <div style="height: 1px; width: 100%; background-color: #cccccc;"></div>
           </el-menu-item>
           <el-menu-item index="6-3">
-            <div @click="logout">{{$t('overall.signOut')}}</div>
+            <div @click="logout" id="head-logout">{{$t('overall.signOut')}}</div>
           </el-menu-item>
         </el-submenu>
       </el-menu>

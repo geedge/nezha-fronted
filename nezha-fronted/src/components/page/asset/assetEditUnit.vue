@@ -1,18 +1,18 @@
 <template>
   <transition name="right-box-580">
-    <div class="right-box right-box-add-asset" v-if="editUnitShow" @click="editQuit">
+    <div class="right-box right-box-add-asset" v-if="editUnitShow" @click="editQuit" id="asset-edit-quit">
       <!--顶部按钮-->
       <div class="right-box-top-btns">
-        <button v-if="!tabView" type="button" @click="deleteData('asset', pageObj.id)" class="nz-btn nz-btn-size-normal nz-btn-style-light">
-          <span class="top-tool-btn-txt">{{$t('overall.delete')}}</span>
+        <button v-if="!tabView" type="button" @click="deleteData('asset', pageObj.id)" id="asset-edit-del" class="nz-btn nz-btn-size-normal nz-btn-style-light">
+          <span class="top-tool-btn-txt" >{{$t('overall.delete')}}</span>
         </button>
-        <button v-if="tabView" type="button" @click="tabView=false" class="nz-btn nz-btn-size-normal nz-btn-style-normal">
-          <span class="top-tool-btn-txt">{{$t('overall.edit')}}</span>
+        <button v-if="tabView" id="asset-edit-edit" type="button" @click="tabView=false" class="nz-btn nz-btn-size-normal nz-btn-style-normal">
+          <span class="top-tool-btn-txt" >{{$t('overall.edit')}}</span>
         </button>
-        <button v-if="!tabView" type="button" @click.stop="editData('asset')" class="nz-btn nz-btn-size-normal nz-btn-style-normal">
+        <button v-if="!tabView" id="asset-edit-save" type="button" @click.stop="editData('asset')" class="nz-btn nz-btn-size-normal nz-btn-style-normal">
           <span class="top-tool-btn-txt">{{$t('overall.save')}}</span>
         </button>
-        <button type="button" @click.stop="sendStateData('close')"
+        <button type="button" id="asset-edit-esc" @click.stop="sendStateData('close')"
                 class="nz-btn nz-btn-size-normal nz-btn-style-light nz-btn-style-square">
           <span class="top-tool-btn-txt"><i class="el-icon-close"></i></span>
         </button>
@@ -34,6 +34,7 @@
             <div v-if="!tabView" class="select-style">
               <el-select size="mini" v-model="assetData.state" placeholder="">
                 <el-option
+                  :id="'asset-edit-state-op-'+item.value"
                   v-for="item in assetStateOption"
                   :key="item.value"
                   :label="item.label"
@@ -56,6 +57,7 @@
             <el-select popper-class="asset-dropdown" size="mini" v-if="!tabView" v-model="assetType" clearable @visible-change="cancelEdit"
                        @change="getAllModelOptionData()" class="right-box-row-with-btn">
               <el-option
+                :id="'asset-edit-type-op-'+item.id"
                 v-for="item in assetTypeOptionData"
                 :key="item.id"
                 :value="item.code"
@@ -65,12 +67,12 @@
                 <span class="config-dropdown-label-input" v-if="item.isEdit" @click.stop="editing(item)">
                   <el-input type="text" v-model="item.value" size="mini"/>
                 </span>
-                <span class="config-dropdown-btn" @click.stop="editOptionData(item,'type')">
+                <span class="config-dropdown-btn" @click.stop="editOptionData(item,'type')" :id="'asset-edit-type-op-edit-'+item.id">
                   <i class="el-icon-edit-outline" v-if="!item.isEdit"></i>
                   <i class="el-icon-check" v-if="item.isEdit"
                      @click="editData('sys/dict/update',item)"></i>
                 </span>
-                <span class="config-dropdown-btn config-dropdown-btn-delete" @click.stop="delOptionData(item)">
+                <span class="config-dropdown-btn config-dropdown-btn-delete" @click.stop="delOptionData(item)" :id="'asset-edit-type-op-del-'+item.id">
                   <i class="el-icon-delete"></i>
                 </span>
               </el-option>
@@ -82,11 +84,11 @@
                 v-model="editPopTypeVisible"
                 v-clickoutside="clickOutSide"
               >
-                <div class="pop-window-assetType" @click="editQuit()">
+                <div class="pop-window-assetType" @click="editQuit()" id="asset-edit-sub-type-quit">
                   <div class="pop-window-assetType-content">
                     <!--右上角按钮-->
                     <div class="pop-top-btns">
-                      <button type="button" @click="editPopoverClose('type')" class="nz-btn nz-btn-size-small nz-btn-style-light nz-btn-style-square">
+                      <button type="button" @click="editPopoverClose('type')" id="asset-edit-sub-type-esc"  class="nz-btn nz-btn-size-small nz-btn-style-light nz-btn-style-square">
                         <span class="top-tool-btn-txt"><i class="el-icon-close"></i></span>
                       </button>
                     </div>
@@ -96,7 +98,7 @@
                     <div class="pop-item">
                       <div class="pop-label">{{$t('asset.createAssetTab.assetTypeTab.addAssetType')}}</div>
                       <el-input class="input-x-mini" v-model="assetTypeData.value"/>
-                      <button type="button" @click="addNewData('assetType')" class="nz-btn nz-btn-size-small nz-btn-style-normal">
+                      <button type="button" @click="addNewData('assetType')" class="nz-btn nz-btn-size-small nz-btn-style-normal" id="asset-edit-sub-type-add">
                         <span class="top-tool-btn-txt">{{$t('overall.add')}}</span>
                       </button>
                     </div>
@@ -106,6 +108,7 @@
                         <el-scrollbar style="height: 100%;">
                           <ul style="list-style: none">
                             <li style="cursor: pointer;"
+                                :id="'asset-edit-sub-type-op-'+index"
                                 v-for="(item,index) in assetTypeOptionData"
                                 @click="clickState(index,item,'type')"
                                 :class="{'pop-box-active': modelCount === index}"
@@ -115,13 +118,13 @@
                                 <span class="config-dropdown-label-input" v-if="item.isEdit" @click.stop="editing">
                                   <el-input class="input-x-mini" v-model="item.value"/>
                                 </span>
-                                <span v-if="!item.isEdit" class="config-dropdown-btn" @click.stop="editOptionData(item,'type',index)">
+                                <span v-if="!item.isEdit" class="config-dropdown-btn" @click.stop="editOptionData(item,'type',index)" :id="'asset-edit-sub-type-op-edit-'+index">
                                   <i class="el-icon-edit-outline"></i>
                                 </span>
-                                <span v-if="item.isEdit"  class="config-dropdown-btn" @click.stop="editData('sys/dict/update',item, 'assetType')">
+                                <span v-if="item.isEdit"  class="config-dropdown-btn" @click.stop="editData('sys/dict/update',item, 'assetType')" :id="'asset-edit-sub-type-op-save-'+index">
                                   <i class="el-icon-check"></i>
                                 </span>
-                                <span class="config-dropdown-btn config-dropdown-btn-delete"
+                                <span class="config-dropdown-btn config-dropdown-btn-delete" :id="'asset-edit-sub-type-op-del-'+index"
                                       @click.stop="deleteData('/sys/dict/delete',item.id)"><i class="el-icon-delete"></i>
                                                           </span>
                               </div>
@@ -160,10 +163,10 @@
                   v-clickoutside="clickOutSide"
                   @hide="resetVendor"
                 >
-                  <div class="pop-window-assetType" @click="editQuit()">
+                  <div class="pop-window-assetType" @click="editQuit()" id="asset-edit-sub-vendor-quit">
                     <div class="pop-window-assetType-content">
                       <div class="pop-top-btns">
-                        <button type="button" @click="editPopoverClose('vendor')" class="nz-btn nz-btn-size-small nz-btn-style-light nz-btn-style-square">
+                        <button type="button" @click="editPopoverClose('vendor')" id="asset-edit-sub-vendor-close"> class="nz-btn nz-btn-size-small nz-btn-style-light nz-btn-style-square">
                           <span class="top-tool-btn-txt"><i class="el-icon-close"></i></span>
                         </button>
                       </div>
@@ -173,7 +176,7 @@
                       <div class="pop-item">
                         <div class="pop-label">{{$t('asset.createAssetTab.vendorTab.vendorName')}}</div>
                         <el-input class="input-x-mini" v-model="addVendorData.value"/>
-                        <button type="button" @click="addNewData('vendor')" class="nz-btn nz-btn-size-small nz-btn-style-normal">
+                        <button type="button" @click="addNewData('vendor')" class="nz-btn nz-btn-size-small nz-btn-style-normal" id="asset-edit-sub-vendor-add">>
                           <span class="top-tool-btn-txt">{{$t('overall.add')}}</span>
                         </button>
                       </div>
@@ -183,6 +186,7 @@
                           <el-scrollbar style="height: 100%;">
                             <ul style="list-style: none">
                               <li style="cursor: pointer;"
+                                  :id="'asset-edit-sub-vendor-op-'+index"
                                   v-for="(item,index) in vendorUlData"
                                   @click="getLidata(index,item)"
                                   :class="{'pop-box-active': vendorCount === index}"
@@ -191,11 +195,11 @@
                                 <span class="config-dropdown-label-input" v-if="item.isEdit" @click.stop="editing">
                                   <el-input class="input-x-mini" v-model="item.value"/>
                                 </span>
-                                <span class="config-dropdown-btn" @click.stop="editVendorOptionData(item,'vendor',index)">
+                                <span class="config-dropdown-btn" @click.stop="editVendorOptionData(item,'vendor',index)" :id="'asset-edit-sub-vendor-op-edit-'+index">
                                   <i class="el-icon-edit-outline" v-if="!item.isEdit"></i>
-                                  <i class="el-icon-check" v-if="item.isEdit" @click="editData('sys/dict/update',item)"></i>
+                                  <i class="el-icon-check" v-if="item.isEdit" @click="editData('sys/dict/update',item)" :id="'asset-edit-sub-vendor-op-save-'+index"></i>
                                 </span>
-                                <span class="config-dropdown-btn config-dropdown-btn-delete" @click.stop="deleteData('/sys/dict/delete',item.id)">
+                                <span class="config-dropdown-btn config-dropdown-btn-delete" @click.stop="deleteData('/sys/dict/delete',item.id)" :id="'asset-edit-sub-vendor-op-del-'+index">
                                   <i class="el-icon-delete"></i>
                                 </span>
                               </li>
@@ -206,7 +210,7 @@
                       <div class="pop-item">
                         <div class="pop-label">{{$t('asset.createAssetTab.vendorTab.modelName')}}</div>
                         <el-input class="input-x-mini" v-model="addNewModelData.name"/>
-                        <button type="button" @click="addNewData('model')" class="nz-btn nz-btn-size-small nz-btn-style-normal">
+                        <button type="button" @click="addNewData('model')" id="asset-edit-sub-model-add" class="nz-btn nz-btn-size-small nz-btn-style-normal">
                           <span class="top-tool-btn-txt">{{$t('overall.add')}}</span>
                         </button>
                       </div>
@@ -216,6 +220,7 @@
                           <el-scrollbar style="height: 100%;">
                             <ul style="list-style: none">
                               <li style="cursor: pointer;"
+                                  :id="'asset-edit-sub-model-op-'+index"
                                   v-for="(item,index) in modelUlData"
                                   @click=" clickState(index,item,'model') "
                                   :class="{'pop-box-active': modelCount === index}"
@@ -224,13 +229,13 @@
                                 <span class="config-dropdown-label-input" v-if="item.isEdit" @click.stop="editing">
                                   <el-input class="input-x-mini" v-model="item.name"/>
                                 </span>
-                                <span class="config-dropdown-btn" @click.stop="editOptionData(item,'model',index)">
+                                <span class="config-dropdown-btn" @click.stop="editOptionData(item,'model',index)" :id="'asset-edit-sub-model-op-edit-'+index">
                                   <i class="el-icon-edit-outline" v-if="!item.isEdit"></i>
                                   <i class="el-icon-check" v-if="item.isEdit"
-                                       @click="editData('model',item)"></i>
+                                       @click="editData('model',item)" :id="'asset-edit-sub-model-op-save-'+index"></i>
                                 </span>
                                 <span class="config-dropdown-btn config-dropdown-btn-delete"
-                                    @click.stop="deleteData('model',item.id)">
+                                    @click.stop="deleteData('model',item.id)" :id="'asset-edit-sub-model-op-del-'+index">
                                   <i class="el-icon-delete"></i>
                                 </span>
                               </li>
@@ -266,6 +271,7 @@
             <template v-if="!tabView">
               <el-select popper-class="asset-dropdown" size="mini" v-model="assetData.idcId" clearable @change="getSingleIDCData" class="right-box-row-with-btn" placeholder="">
                 <el-option
+                  :id="'asset-edit-idc-op-'+item.id"
                   v-for="item in IDCOptionData"
                   :key="item.key"
                   :label="item.name"
@@ -331,7 +337,7 @@
                       class="el-icon-edit-outline"></i></span>
                   </el-popover>-->
                   <span class="config-dropdown-btn config-dropdown-btn-delete"
-                        @click.stop="deleteData('idc',item.id)"><i
+                        @click.stop="deleteData('idc',item.id)" :id="'asset-edit-idc-op-del-'+item.id"><i
                     class="el-icon-delete"></i></span>
                 </el-option>
               </el-select>
@@ -411,6 +417,7 @@
                          :disabled="assetData.idcId==''?true:false" size="mini" placeholder=""
                          @change="getSingleCabinetData">
                 <el-option
+                  :id="'asset-edit-cabinet-op-'+item.id"
                   v-for="item in cabinetOptionData"
                   :key="item.id"
                   :label="item.name"
@@ -422,7 +429,7 @@
                   </cabinet-config-box>
 
                   <span class="config-dropdown-btn config-dropdown-btn-delete"
-                        @click.stop="deleteData('cabinet',item.id)">
+                        @click.stop="deleteData('cabinet',item.id)" :id="'asset-edit-cabinet-op-del-'+item.id">
                     <i class="el-icon-delete"></i>
                   </span>
                 </el-option>
