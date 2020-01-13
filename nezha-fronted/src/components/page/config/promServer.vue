@@ -8,13 +8,13 @@
         <div class="content-left">
             <div class="sidebar-title">{{$t('config.config')}}</div>
             <div class="sidebar-info">
-                <div class="sidebar-info-item sidebar-info-top" @click="jumpTo('account')">{{$t('config.account.account')}}</div>
+                <div class="sidebar-info-item sidebar-info-top" @click="jumpTo('account')" id="prom-jump-account">{{$t('config.account.account')}}</div>
                 <div class="sidebar-info-item sidebar-info-item-active">{{$t('config.promServer.promServerList')}}</div>
             </div>
         </div>
         <div class="content-right">
             <div class="top-tools">
-              <button @click="toAdd" class="nz-btn nz-btn-size-normal nz-btn-style-normal float-right">
+              <button @click="toAdd" class="nz-btn nz-btn-size-normal nz-btn-style-normal float-right" id="prom-add">
                 <span class="top-tool-btn-txt">{{$t('overall.add')}}</span>
               </button>
               <div class="top-tool-search float-right"><search-input :searchMsg="searchMsg" @search="search"></search-input></div>
@@ -23,7 +23,7 @@
                 <el-table-column :resizable="false" v-for="(item, index) in tablelable" v-if="item.show" :width="item.width" :key="`col-${index}`" :label="item.label">
                     <template slot="header" slot-scope="scope">
                         <span v-if="index==0">
-                            <span @click.stop="elementsetShow('shezhi',$event)">
+                            <span @click.stop="elementsetShow('shezhi',$event)" id="prom-tab-set">
                                 <i class="el-icon-setting"></i>
                             </span>
                             <span>{{item.label}}</span>
@@ -45,9 +45,9 @@
                             {{scope.row[item.prop] == '2' ? 'Per-Datacenter' : ''}}
                         </span>
                         <div v-else-if="item.prop == 'option'" class="content-right-options">
-                            <span @click="del(scope.row)" class="content-right-option"><i class="el-icon-delete"></i></span>
-                            <span @click="detail(scope.row)" class="content-right-option"><i class="el-icon-view"></i></span>
-                            <span @click="toEdit(scope.row)" class="content-right-option"><i class="el-icon-edit-outline"></i></span>
+                            <span @click="del(scope.row)" class="content-right-option" :id="'prom-tab-del-'+scope.row.id"><i class="el-icon-delete"></i></span>
+                            <span @click="detail(scope.row)" class="content-right-option" :id="'prom-tab-detail-'+scope.row.id"><i class="el-icon-view"></i></span>
+                            <span @click="toEdit(scope.row)" class="content-right-option" :id="'prom-tab-edit-'+scope.row.id"><i class="el-icon-edit-outline"></i></span>
                         </div>
                         <span v-else>{{scope.row[item.prop]}}</span>
                     </template>
@@ -60,15 +60,15 @@
             <div class="right-box right-box-prom" v-if="rightBox.show">
                 <!-- begin--顶部按钮-->
               <div class="right-box-top-btns">
-                <button type="button" v-if="rightBox.isEdit && promServer.id != ''" @click="del(promServer)" class="nz-btn nz-btn-size-normal nz-btn-style-light">
+                <button type="button" v-if="rightBox.isEdit && promServer.id != ''" @click="del(promServer)" id="prom-edit-del" class="nz-btn nz-btn-size-normal nz-btn-style-light">
                   <span class="top-tool-btn-txt">{{$t('overall.delete')}}</span>
                 </button>
-                <button type="button" @click="saveOrToEdit" class="nz-btn nz-btn-size-normal nz-btn-style-normal">
+                <button type="button" @click="saveOrToEdit" class="nz-btn nz-btn-size-normal nz-btn-style-normal" id="prom-edit-save">
                   <span v-if="rightBox.isEdit" class="top-tool-btn-txt">{{$t('overall.save')}}</span>
                   <span v-else class="top-tool-btn-txt">{{$t('overall.edit')}}</span>
                 </button>
 
-                <button type="button" @click="esc" class="nz-btn nz-btn-size-normal nz-btn-style-light nz-btn-style-square">
+                <button type="button" @click="esc" class="nz-btn nz-btn-size-normal nz-btn-style-light nz-btn-style-square" id="prom-edit-esc">
                   <span class="top-tool-btn-txt"><i class="el-icon-close"></i></span>
                 </button>
               </div>
@@ -85,14 +85,14 @@
                   <el-form-item label="DC"  prop="idc.name">
                     <div class="right-box-form-content">
                     <el-select class="right-box-row-with-btn" value-key="id" popper-class="config-dropdown" v-model="promServer.idc" placeholder="" v-if="rightBox.isEdit" size="small">
-                      <el-option @click.native="blurEditIdc()" v-for="item in idcData" :key="item.id" :label="item.name" :value="item">
+                      <el-option @click.native="blurEditIdc()" v-for="item in idcData" :key="item.id" :label="item.name" :value="item" :id="'prom-edit-idc-op-'+item.id">
                         <span class="config-dropdown-label-txt">{{item.name}}</span>
                         <idc-config-box :post-idc="item" placement="left" @after="getIdcData" :button-class="'config-dropdown-btn'">
                           <template v-slot:optionZone>
                             <i class="el-icon-edit-outline"></i>
                           </template>
                         </idc-config-box>
-                        <span class="config-dropdown-btn config-dropdown-btn-delete" @click.stop="toDelIdc(item)"><i class="el-icon-delete"></i></span>
+                        <span class="config-dropdown-btn config-dropdown-btn-delete" @click.stop="toDelIdc(item)" :id="'prom-edit-idc-op-del-'+item.id"><i class="el-icon-delete"></i></span>
                       </el-option>
                     </el-select>
 
@@ -118,9 +118,9 @@
                   <!--type-->
                   <el-form-item :label="$t('config.promServer.type')" prop="type">
                     <el-select popper-class="config-dropdown" v-model="promServer.type" placeholder="" v-if="rightBox.isEdit" size="small">
-                      <el-option v-for="item in typeData" :key="item.key" :label="item.value" :value="item.key"></el-option>
+                      <el-option v-for="item in typeData" :key="item.key" :label="item.value" :value="item.key" :id="'prom-edit-type-op-'+item.key"></el-option>
                     </el-select>
-                    <div v-for="item in typeData" v-if="!rightBox.isEdit && item.key == promServer.type" class="right-box-form-content-txt">{{item.value}}</div>
+                    <div v-for="item in typeData" v-if="!rightBox.isEdit && item.key == promServer.type" :id="'prom-edit-type-op-del-'+item.key" class="right-box-form-content-txt">{{item.value}}</div>
                   </el-form-item>
                 </el-form>
               </el-scrollbar>

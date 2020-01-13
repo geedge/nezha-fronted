@@ -5,10 +5,10 @@
     :style="{opacity:(eventfixedVal.shezhi==1),left:(eventfixedVal.shezhi==1 ? event_positionx : -2000)+'px',top:(event_positiony)+'px'}"
   >
     <div class="pop-top-btns">
-      <button type="button" @click="shezhiControl('ok')" class="nz-btn nz-btn-size-small nz-btn-style-normal">
+      <button type="button" @click="shezhiControl('ok')" class="nz-btn nz-btn-size-small nz-btn-style-normal" id="element-set-ok">
         <span class="top-tool-btn-txt">{{$t('overall.save')}}</span>
       </button>
-      <button type="button" @click="shezhiControl('cancel')" class="nz-btn nz-btn-size-small nz-btn-style-light nz-btn-style-square">
+      <button type="button" @click="shezhiControl('cancel')" class="nz-btn nz-btn-size-small nz-btn-style-light nz-btn-style-square" id="element-set-esc">
         <span class="top-tool-btn-txt"><i class="el-icon-close"></i></span>
       </button>
     </div>
@@ -24,6 +24,7 @@
           :class="index==0 || index == 1 ? 'elementset-label-disabled' : ''"
           :title="item.visibility == 'disabled' ? other.inDevelopment : ''"
           @click="addcol(item,index)"
+          :id="'element-set-el-'+index"
         >
           <i class="el-icon-check" v-if="index==0||index==1||item.visibility=='disabled'"></i>
           <i v-else class="el-icon-check" v-show="item.show"></i>

@@ -3,10 +3,10 @@
     <div class="right-box right-box-add-endpoint" v-if="rightBox.show" @mousedown="showEditParamBox(false)">
       <!-- begin--顶部按钮-->
       <div class="right-box-top-btns">
-        <button type="button" @click="save" class="nz-btn nz-btn-size-normal nz-btn-style-normal">
+        <button type="button" @click="save" class="nz-btn nz-btn-size-normal nz-btn-style-normal" id="ep-add">
           <span class="top-tool-btn-txt">{{$t('overall.save')}}</span>
         </button>
-        <button type="button" @click="esc" class="nz-btn nz-btn-size-normal nz-btn-style-light nz-btn-style-square">
+        <button type="button" @click="esc" class="nz-btn nz-btn-size-normal nz-btn-style-light nz-btn-style-square" id="ep-esc">
           <span class="top-tool-btn-txt"><i class="el-icon-close"></i></span>
         </button>
       </div>
@@ -22,13 +22,13 @@
           <!--project-->
           <el-form-item :label='$t("project.project.project")' prop="projectId">
             <el-select @change="((val) => {changeProject(val)})" value-key="id" popper-class="config-dropdown" v-model="currentProject" placeholder="" size="small">
-              <el-option v-for="item in projectList" :key="item.id" :label="item.name" :value="item"></el-option>
+              <el-option v-for="item in projectList" :key="item.id" :label="item.name" :value="item" :id="'project-'+item.id"></el-option>
             </el-select>
           </el-form-item>
           <!--module-->
           <el-form-item :label='$t("project.module.module")' prop="moduleId">
             <el-select @change="((val) => {changeModule(val)})" value-key="id" popper-class="config-dropdown" v-model="currentModuleCopy" placeholder="" size="small">
-              <el-option v-for="item in moduleList" :key="item.id" :label="item.name" :value="item"></el-option>
+              <el-option v-for="item in moduleList" :key="item.id" :label="item.name" :value="item" :id="'module-'+item.id"></el-option>
             </el-select>
           </el-form-item>
           <!--asset和endpoint-->
@@ -39,7 +39,7 @@
               <!--end--标题-->
               <!--begin--搜索框-->
               <div class="endpoint-asset-search">
-                <button type="button" class="nz-btn nz-btn-size-small nz-btn-style-light nz-btn-style-square nz-input-group-prepend" @click="assetSearch.dropdownShow = !assetSearch.dropdownShow">
+                <button id="search-asset-drop" type="button" class="nz-btn nz-btn-size-small nz-btn-style-light nz-btn-style-square nz-input-group-prepend" @click="assetSearch.dropdownShow = !assetSearch.dropdownShow">
                   <span class="endpoint-asset-label-txt">{{assetSearch.label}}</span>
                   <span>
                     <i v-if="assetSearch.dropdownShow" class="el-icon-caret-top"></i>
@@ -49,11 +49,11 @@
                 class="endpoint-asset-search-input">
                   <el-input class="input-x-mini nz-input-group-middle" placeholder="" v-model="assetSearch.text"></el-input>
                 </div><button
-                type="button" class="nz-btn nz-btn-size-small nz-btn-style-light nz-btn-style-square nz-input-group-append"><i @click="searchAsset" class="el-icon-search"></i></button>
+                type="button" class="nz-btn nz-btn-size-small nz-btn-style-light nz-btn-style-square nz-input-group-append" id="search-asset"><i @click="searchAsset" class="el-icon-search"></i></button>
 
                 <div class="endpoint-asset-search-dropdown" v-if="assetSearch.dropdownShow">
-                  <div @click="dropdownSelect('IP')" class="endpoint-asset-search-dropdown-item">IP</div>
-                  <div @click="dropdownSelect('SN')" class="endpoint-asset-search-dropdown-item">SN</div>
+                  <div @click="dropdownSelect('IP')" class="endpoint-asset-search-dropdown-item" id="search-asset-ip">IP</div>
+                  <div @click="dropdownSelect('SN')" class="endpoint-asset-search-dropdown-item" id="search-asset-sn">SN</div>
                 </div>
               </div>
 
@@ -67,7 +67,7 @@
                 <div class="line-100"></div>
                 <div class="endpoint-sub-table-body">
                   <div v-if="!currentModuleCopy.id" class="endpoint-sub-table-body-dialog"></div>
-                  <div @click="selectAsset(item, index)" :data="item.id" v-for="item,index in assetList" class="endpoint-sub-table-row">
+                  <div @click="selectAsset(item, index)" :data="item.id" v-for="item,index in assetList" class="endpoint-sub-table-row" :id="'select-asset-'+item.id">
                     <div class="endpoint-sub-table-col">{{item.host}}</div>
                     <div class="endpoint-sub-table-col">{{item.sn}}</div>
                   </div>
@@ -89,10 +89,10 @@
                   <div class="endpoint-param-pop">
                     <div v-for="item,index in currentModuleCopy.paramObj">{{item.key}}={{item.value}}</div>
                   </div>
-                  <el-input @click.native.stop="showEditParamBox(true, currentModuleCopy, 1, $event)" slot="reference" disabled class="module-info module-info-param input-x-mini" v-model="currentModuleCopy.param"></el-input>
+                  <el-input id="edit-param" @click.native.stop="showEditParamBox(true, currentModuleCopy, 1, $event)" slot="reference" disabled class="module-info module-info-param input-x-mini" v-model="currentModuleCopy.param"></el-input>
                 </el-popover>
                 <el-input class="module-info module-info-path input-x-mini" v-model="currentModuleCopy.path"></el-input>
-                <button type="button" @click="coverEndpoint" class="nz-btn nz-btn-size-small nz-btn-style-light nz-btn-style-square module-info module-info-cover">{{$t('overall.cover')}}</button>
+                <button type="button" id="cover-param" @click="coverEndpoint" class="nz-btn nz-btn-size-small nz-btn-style-light nz-btn-style-square module-info module-info-cover">{{$t('overall.cover')}}</button>
               </div>
               <!--endpoints-->
               <div class="endpoints-box-endpoints" :style="{borderColor: endpointTouch ? paramBorderColor : '#dcdfe6'}">
@@ -146,7 +146,7 @@
                           :content="scope.row[title.prop]"
                           v-if="!scope.row.isEdit"
                         >
-                          <span slot="reference">
+                          <span slot="reference" >
                             <span>{{scope.row.path.length > 5 ? scope.row.path.substring(0, 5) + '...' : scope.row.path}}</span>
                           </span>
                         </el-popover>
@@ -177,16 +177,16 @@
                   <el-table-column label="" width="56">
                     <template slot-scope="scope" :column="title">
                       <div>
-                        <span v-if="!scope.row.isEdit" class="endpoint-box-row-symbol" @mousedown.stop @click="toEditEndpoint(scope.row)"><i class="el-icon-edit-outline"></i></span>
-                        <span v-else class="endpoint-box-row-symbol" @mousedown.stop @click="editEndpoint(scope.row)"><i class="el-icon-check"></i></span>
-                        <span class="endpoint-box-row-symbol" @click="removeEndpoint(scope.row)"><i class="nz-icon nz-icon-minus-square"></i></span>
+                        <span :id="'ep-asset-toedit-'+scope.row.assetId" v-if="!scope.row.isEdit" class="endpoint-box-row-symbol" @mousedown.stop @click="toEditEndpoint(scope.row)"><i class="el-icon-edit-outline"></i></span>
+                        <span :id="'ep-asset-edit-'+scope.row.assetId" v-else class="endpoint-box-row-symbol" @mousedown.stop @click="editEndpoint(scope.row)"><i class="el-icon-check"></i></span>
+                        <span :id="'ep-asset-remove-'+scope.row.assetId" class="endpoint-box-row-symbol" @click="removeEndpoint(scope.row)"><i class="nz-icon nz-icon-minus-square"></i></span>
                       </div>
                     </template>
                   </el-table-column>
                 </el-table>
                 <div class="el-form-item__error" :style="{opacity: endpointTouch && this.endpointList.length == 0 ? '1' : '0'}" style="left: unset; transition: all .2s">{{$t('validate.required')}}</div>
                 <div>
-                  <button type="button" @click="clearSelection" class="nz-btn nz-btn-size-small nz-btn-style-light endpoints-clear-btn">{{$t('overall.clear')}}</button>
+                  <button id="clear-select-asset" type="button" @click="clearSelection" class="nz-btn nz-btn-size-small nz-btn-style-light endpoints-clear-btn">{{$t('overall.clear')}}</button>
                   <span style="display: inline-block; font-size: 14px; float: right;line-height: 35px;padding-right: 15px;">All: {{this.endpointList.length}}</span>
                 </div>
               </div>
@@ -204,11 +204,11 @@
               <el-input placeholder="key" class="param-box-row-key input-x-mini" v-model="item.key"></el-input>
               <span class="param-box-row-eq">=</span>
               <el-input placeholder="value" class="param-box-row-value input-x-mini" v-model="item.value"></el-input>
-              <span class="param-box-row-symbol" @click="removeParam(index)"><i class="nz-icon nz-icon-minus-square"></i></span>
+              <span class="param-box-row-symbol" :id="'remove-param-'+index" @click="removeParam(index)"><i class="nz-icon nz-icon-minus-square"></i></span>
             </div>
           </div>
           <div style="width: 100%; text-align: center; height: 25px;">
-            <el-button @click="addParam" style="height: 18px; line-height: 18px; padding-top: 0; padding-bottom: 0;" size="mini"><i class="el-icon-plus"></i></el-button>
+            <el-button @click="addParam" id="add-param" style="height: 18px; line-height: 18px; padding-top: 0; padding-bottom: 0;" size="mini"><i class="el-icon-plus"></i></el-button>
           </div>
         </div>
       </transition>

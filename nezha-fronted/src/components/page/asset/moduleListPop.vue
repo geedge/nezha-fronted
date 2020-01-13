@@ -1,14 +1,14 @@
 <template>
   <el-popover :placement="placement" width="300" @hide="hidePop" ref="moduleListPop" v-model="popBox.show">
     <div class="pop-top-btns">
-      <button type="button" @click="show(false)" class="nz-btn nz-btn-size-small nz-btn-style-light nz-btn-style-square">
+      <button type="button" @click="show(false)" id="module-show" class="nz-btn nz-btn-size-small nz-btn-style-light nz-btn-style-square">
         <span class="top-tool-btn-txt"><i class="el-icon-close"></i></span>
       </button>
     </div>
     <div class="pop-title">{{$t('project.module.module')}}</div>
     <div class="pop-item-wider">
       <el-input size="mini" v-model="pageObj.name" style="margin-bottom: 10px; width: calc(100% - 30px);"></el-input>
-      <button @click="getModuleList" class="nz-btn nz-btn-size-small nz-btn-style-light nz-btn-style-square"><i class="el-icon-search"></i></button>
+      <button @click="getModuleList" class="nz-btn nz-btn-size-small nz-btn-style-light nz-btn-style-square" id="module-search"><i class="el-icon-search" ></i></button>
       <el-table
         :data="moduleList"
         border
@@ -18,7 +18,7 @@
       >
         <el-table-column>
           <template slot-scope="scope" :column="item">
-            <span class="link" @click="$emit('openModuleBox', scope.row)">{{scope.row.name}}</span>
+            <span class="link" @click="$emit('openModuleBox', scope.row)" :id="'module-openbox-'+scope.row.id">{{scope.row.name}}</span>
           </template>
         </el-table-column>
       </el-table>

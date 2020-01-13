@@ -8,9 +8,10 @@
           class="sidebar-info-item"
           :class="{'sidebar-info-item-active': item.id == currentModule.id}"
           @click="changeModule(item)"
+          :id="'project-module-'+item.id"
         >
           {{item.name}}
-          <div class="side-bar-menu-edit" @click.stop="toEditModule(item)"><i class="el-icon-edit-outline"></i></div>
+          <div class="side-bar-menu-edit" @click.stop="toEditModule(item)" :id="'project-module-edit-'+item.id"><i class="el-icon-edit-outline"></i></div>
         </div>
       </div>
     </div>
@@ -60,7 +61,7 @@
             <span>{{$t('project.metrics.metrics')}}</span>
           </button>
         </div>
-        <button @click="toCreateEndpoint" class="nz-btn nz-btn-size-normal nz-btn-style-normal float-right">
+        <button @click="toCreateEndpoint" class="nz-btn nz-btn-size-normal nz-btn-style-normal float-right" id="project-add-ep">
           <span>{{$t('overall.add')}}</span>
         </button>
         <div class="top-tool-search float-right"><search-input :searchMsg="endpointSearchMsg" @search="endpointSearch" ref="projectSearch"></search-input></div>
@@ -80,7 +81,7 @@
         >
           <template slot="header" slot-scope="scope">
               <span v-if="index==0">
-                <span @click.stop="elementsetShow('shezhi',$event)">
+                <span @click.stop="elementsetShow('shezhi',$event)" id="project-ep-tab-set">
                     <i class="el-icon-setting"></i>
                 </span>
                 <span>{{item.label}}</span>
@@ -94,9 +95,9 @@
             <span v-else-if="item.prop == 'param'">
               <span v-for="p in scope.row.paramObj">{{p.key}}={{p.value}}，</span>
             </span>
-            <div v-else-if="item.prop == 'option'" class="content-right-options">
-              <span @click.stop="endpointDetail(scope.row)" class="content-right-option"><i class="el-icon-view"></i></span>
-              <span @click.stop="toEditEndpoint(scope.row)" class="content-right-option"><i class="el-icon-edit-outline"></i></span>
+            <div v-else-if="item.prop == 'option'" class="content-right-options" :id="'project-ep-op-'+scope.row.id">
+              <span @click.stop="endpointDetail(scope.row)" class="content-right-option" ><i class="el-icon-view"></i></span>
+              <span @click.stop="toEditEndpoint(scope.row)" class="content-right-option" ><i class="el-icon-edit-outline"></i></span>
             </div>
             <span v-else-if="item.prop == 'lastUpdate'">{{dateFormat(scope.row.lastUpdate)}}</span>
             <span v-else-if="item.prop == 'state'" :style="{color: scope.row.state == 0 ? 'red' : (scope.row.state == 0 ? 'green' : '')}">{{scope.row.state == 1 ? 'up' : ''}}{{scope.row.state == 0 ? 'down' : ''}}</span>

@@ -3,15 +3,15 @@
     <div class="">
       <!-- begin--顶部按钮-->
       <div class="pop-top-btns">
-        <button type="button" v-if="idc.id != ''" @click="del" class="nz-btn nz-btn-size-small nz-btn-style-light">
+        <button type="button" v-if="idc.id != ''" @click="del" class="nz-btn nz-btn-size-small nz-btn-style-light" id="dc-del">
           <span class="top-tool-btn-txt">{{$t('overall.delete')}}</span>
         </button>
-        <button type="button" @click="saveOrToEdit" class="nz-btn nz-btn-size-small nz-btn-style-normal">
+        <button type="button" @click="saveOrToEdit" class="nz-btn nz-btn-size-small nz-btn-style-normal" id="dc-save">
           <span class="top-tool-btn-txt" v-if="popBox.isEdit">{{$t('overall.save')}}</span>
           <span class="top-tool-btn-txt" v-else>{{$t('overall.edit')}}</span>
         </button>
 
-        <button type="button" @click="esc" class="nz-btn nz-btn-size-small nz-btn-style-light nz-btn-style-square">
+        <button type="button" @click="esc" class="nz-btn nz-btn-size-small nz-btn-style-light nz-btn-style-square" id="dc-esc">
           <span class="top-tool-btn-txt"><i class="el-icon-close"></i></span>
         </button>
       </div>
@@ -41,9 +41,9 @@
         </el-form>
       </div>
     </div>
-    <span :class="buttonClass" @click.prevent.stop="" slot="reference">
+    <span :class="buttonClass" @click.prevent.stop="" slot="reference" :id="'edit-idc-'+Math.random().toString(36).slice(-8)">
       <slot name="optionZone">
-        <i class="el-icon-plus"></i>
+        <i class="el-icon-plus" id="dc-plus"></i>
       </slot>
     </span>
   </el-popover>

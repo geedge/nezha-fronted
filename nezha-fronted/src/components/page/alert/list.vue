@@ -9,7 +9,7 @@
             <div class="sidebar-title">{{$t('alert.alert')}}</div>
             <div class="sidebar-info">
                 <div class="sidebar-info-item sidebar-info-top sidebar-info-item-active">{{$t('alert.alertList')}}</div>
-                <div class="sidebar-info-item" @click="jumpTo('alertConfig')">{{$t('alert.alertConfig')}}</div>
+                <div class="sidebar-info-item" @click="jumpTo('alertConfig')" id="alert-jump-config">{{$t('alert.alertConfig')}}</div>
             </div>
         </div>
         <div class="content-right">
@@ -42,7 +42,7 @@
                     </template>
                     <template slot-scope="scope" :column="item">
                         <span v-if="item.prop == 'alertRule'">
-                            <span class="link" @click="viewRule(scope.row[item.prop].id)" v-if="scope.row[item.prop].alertName">{{scope.row[item.prop].alertName}}</span>
+                            <span class="link" @click="viewRule(scope.row[item.prop].id)" :id="'view-rule-'+scope.row[item.prop].id" v-if="scope.row[item.prop].alertName">{{scope.row[item.prop].alertName}}</span>
                             <span v-else>-</span>
                         </span>
                         <div v-else-if="item.prop == 'type'" class="content-right-options">
@@ -56,8 +56,8 @@
                             <span v-if="scope.row[item.prop] == 'low'"><i class="el-icon-arrow-down"></i>&nbsp;{{severityData[2].value}}</span>
                         </span>
                         <div v-else-if="item.prop == 'linkObject'">
-                            <span v-if="(scope.row['type'] == 1 || scope.row['type'] == 2) && scope.row[item.prop]" class="link" @click="viewAlertType(scope.row['type'],scope.row[item.prop])">{{scope.row[item.prop].name}}</span>
-                            <span v-else-if="scope.row['type'] == 3 && scope.row[item.prop]" class="link" @click="viewAlertType(scope.row['type'],scope.row[item.prop].id)">{{scope.row[item.prop].host}}</span>
+                            <span v-if="(scope.row['type'] == 1 || scope.row['type'] == 2) && scope.row[item.prop]" class="link" @click="viewAlertType(scope.row['type'],scope.row[item.prop])" :id="'link-obj-'+scope.row['type']+'-'+scope.row[item.prop].id">{{scope.row[item.prop].name}}</span>
+                            <span v-else-if="scope.row['type'] == 3 && scope.row[item.prop]" class="link" @click="viewAlertType(scope.row['type'],scope.row[item.prop].id)" :id="'link-obj-'+scope.row['type']+'-'+scope.row[item.prop].id">{{scope.row[item.prop].host}}</span>
                             <span v-else>-</span>
                         </div>
                         <div v-else-if="item.prop == 'state'">

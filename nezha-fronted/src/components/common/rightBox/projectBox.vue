@@ -3,14 +3,14 @@
     <div class="right-box right-box-project" v-if="rightBox.show">
       <!-- begin--顶部按钮-->
       <div class="right-box-top-btns">
-        <button type="button" v-if="project.id != ''" @click="del" class="nz-btn nz-btn-size-normal nz-btn-style-light">
+        <button id="project-del" type="button" v-if="project.id != ''" @click="del" class="nz-btn nz-btn-size-normal nz-btn-style-light">
           <span class="top-tool-btn-txt">{{$t('overall.delete')}}</span>
         </button>
-        <button type="button" @click="saveOrToEdit" class="nz-btn nz-btn-size-normal nz-btn-style-normal">
+        <button id="project-save" type="button" @click="saveOrToEdit" class="nz-btn nz-btn-size-normal nz-btn-style-normal">
           <span v-if="rightBox.isEdit" class="top-tool-btn-txt">{{$t('overall.save')}}</span>
           <span v-else class="top-tool-btn-txt">{{$t('overall.edit')}}</span>
         </button>
-        <button type="button" @click="esc" class="nz-btn nz-btn-size-normal nz-btn-style-light nz-btn-style-square">
+        <button id="project-esc" type="button" @click="esc" class="nz-btn nz-btn-size-normal nz-btn-style-light nz-btn-style-square">
           <span class="top-tool-btn-txt"><i class="el-icon-close"></i></span>
         </button>
       </div>

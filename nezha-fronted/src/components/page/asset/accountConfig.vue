@@ -3,12 +3,12 @@
       <el-form class="pop-item-wider" :model="account" :rules="rules" ref="accountForm">
         <el-form-item :label="$t('asset.createAssetTab.loginType')" size="mini">
           <div class="nz-btn-group float-left" style="padding-top: 4px;" v-if="isEdit">
-            <button type="button" @click="changeLoginType(1)"
+            <button type="button" @click="changeLoginType(1)" id="account-logintype-1"
                     class="nz-btn nz-btn-size-small float-left"
                     :class="{'nz-btn-disabled nz-btn-style-normal' : account.authType == 1, 'nz-btn-style-light' : account.authType == 2}">
               <span>{{$t('asset.createAssetTab.password')}}</span>
             </button>
-            <button type="button" @click="changeLoginType(2)"
+            <button type="button" @click="changeLoginType(2)" id="account-logintype-2"
                     class="nz-btn nz-btn-size-small float-left"
                     :class="{'nz-btn-disabled nz-btn-style-normal' : account.authType == 2, 'nz-btn-style-light' : account.authType == 1}">
               <span>{{$t('asset.createAssetTab.ssh')}}</span>
