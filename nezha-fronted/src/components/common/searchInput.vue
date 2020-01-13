@@ -135,7 +135,7 @@
                 localStorage_display: true,
                 input_list: true,
                 change_sreach_show: true,
-                select_list: [], //下拉列表
+                select_list: [], //当前的搜索条件和值
                 historyList: [],
                 actionSelect:[],
                 dcSelect: [], //数据中心
@@ -145,7 +145,7 @@
                 secondShow:'',//二层显示控制
                 input_sreach: '',
                 sreach_num: 0,
-                searchLabelList: [
+                searchLabelList: [ //下拉列表里的选项
                     {id: 0, name: this.$t('search.searchTip'), icon: 'el-icon-search'},
                 ],
                 bool: false,
@@ -187,6 +187,49 @@
               if (newData.length == 0) {
                 this.change_sreach_show = true;
               }
+              if (this.$route.path == "/alertList") {
+                // 处理alertType--asset联动问题：
+                // 当已选alertType为asset时，将可选列表中的asset的disabled恢复为false；
+                // 当已选alertType不为asset时，将可选列表中的asset的disabled设为true，若有已选的asset，则删除；
+                let hasType = false;
+                for (let i = 0; i < newData.length; i++) {
+                  if (newData[i].label == "alertType" && newData[i].valnum) { //若存在alertType，判断可选列表中是否有asset，有的话disabled置为false
+                    hasType = true;
+                    if (newData[i].valnum == 3) {
+                      for (let j = 0; j < this.searchLabelList.length; j++) {
+                        if (this.searchLabelList[j].label == 'asset') {
+                          this.searchLabelList[j].disabled = false;
+                          break;
+                        }
+                      }
+                      break;
+                    } else {
+                      for (let j = 0; j < newData.length; j++) {
+                        if (newData[j].label == "asset") {
+                          this.close_selcet_list(j);
+                          break;
+                        }
+                      }
+                      for (let j = 0; j < this.searchLabelList.length; j++) {
+                        if (this.searchLabelList[j].label == 'asset') {
+                          this.searchLabelList[j].disabled = true;
+                          break;
+                        }
+                      }
+
+                      break;
+                    }
+                  }
+                }
+                if (!hasType) {
+                  for (let j = 0; j < this.searchLabelList.length; j++) {
+                    if (this.searchLabelList[j].label == 'asset') {
+                      this.searchLabelList[j].disabled = true;
+                      break;
+                    }
+                  }
+                }
+              }
             }
           },
           no_condition: {
@@ -204,7 +247,7 @@
                   //
                   //1.条件名alertType
                   //
-                  this.searchLabelList.splice(1, 1);
+                  this.searchLabelList.splice(2, 1);
                   this.select_list.push({
                     name: this.$t('alert.list.type'),
                     id: 3,
@@ -250,8 +293,8 @@
                   //
                   //3.条件名asset
                   //
-                  this.input_list = false;
-                  this.searchLabelList.splice(2, 1);
+                  //this.input_list = false;
+                  this.searchLabelList.splice(3, 1);
                   this.select_list.push({
                     name: this.$t('asset.asset'),
                     id: 11,
@@ -259,29 +302,32 @@
                     label: 'asset',
                     disabled: false
                   });
+
                   //
                   //4.条件值：指定的asset
-                  //
-                  let assetHost = '';
-                  for (let i = 0; i < this.assetSelect.length; i++) {
-                    if (this.assetSelect[i].id == newData) {
-                      assetHost = this.assetSelect[i].host;
+                  setTimeout(()=>{
+                    let assetHost = '';
+                    for (let i = 0; i < this.assetSelect.length; i++) {
+                      if (this.assetSelect[i].id == newData) {
+                        assetHost = this.assetSelect[i].host;
+                      }
                     }
-                  }
-                  this.select_list.forEach(val => {
-                    if (val.label == 'asset') {
-                      val.val = assetHost;
-                      val.valnum = newData;
-                    }
-                  });
-                  this.input_sreach = '';
-                  this.sreach_num = this.select_list.length;
-                  this.change_sreach_show = false;
-                  this.input_list = true;
-                  //
-                  //5.点击搜索
-                  //
-                  this.select();
+                    this.select_list.forEach(val => {
+                      if (val.label == 'asset') {
+                        val.val = assetHost;
+                        val.valnum = newData;
+                      }
+                    });
+                    this.input_sreach = '';
+                    this.sreach_num = this.select_list.length;
+                    this.change_sreach_show = false;
+                    this.input_list = true;
+                    //
+                    //5.点击搜索
+                    //
+                    this.select();
+                  }, 50);
+
                 }, 100);
                 this.$store.commit('assetForAlertListChange', '');
               }
@@ -410,34 +456,15 @@
                     if(val.label == selectLabel){
                         val.val = label;
                         val.valnum = value;
-                        //alertList页type选择asset时，可以搜索asset
-                        if (this.$route.path == '/alertList' && val.label == 'alertType' && val.valnum == 3) {
-                          for (let i = 0; i < this.searchLabelList.length; i++) {
-                            if (this.searchLabelList[i].label == 'asset') {
-                              this.searchLabelList[i].disabled = false;
-                              break;
-                            }
-                          }
-                        } else if (this.$route.path == '/alertList' && val.label == 'alertType' && val.valnum != 3) {
-                          let ind = -1;
-                          for (let i = 0; i < this.searchLabelList.length; i++) {
-                            if (this.searchLabelList[i].label == 'asset') {
-                              this.searchLabelList[i].disabled = true;
-                              break;
-                            }
-                          }
-                          for (let i = 0; i < this.select_list.length; i++) {
-                            if (this.select_list[i].label == 'asset') {
-                              ind = i;
-                              break;
-                            }
-                          }
-                          if (ind >= 0) {
-                            this.close_selcet_list(ind);
-                          }
-                        }
                     }
                 });
+                for (let i = 0; i < this.select_list.length; i++) {
+                  if (this.select_list[i].label == selectLabel) {
+                    this.select_list.splice(i, 1, Object.assign({}, this.select_list[i], {val: label, valnum: value}));
+                    /*this.select_list[i].val = label;
+                    this.select_list[i].valnum = value;*/
+                  }
+                }
                 this.input_sreach = '';
                 this.sreach_num = this.select_list.length;
                 this.change_sreach_show = true;
@@ -886,7 +913,7 @@
                 if (e) {
                   this.stop_click(e)
                 }
-                // 处理alertType--asset联动问题
+                // 处理alertType--asset联动问题：删除alertType时，将asset也删除
                 if (this.select_list[ind].label == 'alertType') {
                   for (let i = 0; i < this.select_list.length; i++) {
                     if (this.select_list[i].label == 'asset') {
@@ -903,12 +930,13 @@
                 }
                 this.searchMsg.searchLabelList.forEach((val, key) => {
                     if (this.select_list[ind].id == val.id) {
-                        this.searchLabelList.splice(key + 1, 0, val)
+                        this.searchLabelList.splice(key + 1, 0, val);
+
                         this.Iskeywords(ind)
                     }
-                })
-                this.select_list.splice(ind, 1)
-                this.sreach_num--
+                });
+                this.select_list.splice(ind, 1);
+                this.sreach_num--;
             },
             //阻止冒泡事件
             stop_click(e) {
