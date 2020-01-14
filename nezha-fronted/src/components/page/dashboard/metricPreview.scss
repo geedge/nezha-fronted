@@ -1,0 +1,51 @@
+.metric-dashboard {
+  width: 100%;
+  height:100%;
+  // padding: 6px 10px 6px;
+  .box-content {
+    //position: relative;
+   width:calc(100% - 13px);
+  }
+  .table-list {
+    margin-top:30px;
+    overflow-y:auto;
+    height: 100%;
+  }
+  .row-width{
+    //width:calc(100% - 0px);
+  }
+  .chartBox {
+    width: 100%;
+    float: left;
+  }
+  .chartBoxMul {
+    width: 100%;
+    float: left;
+  }
+  .common-detail-top-title {
+    font-size: 16px;
+    color: #5697f1;
+    cursor: pointer;
+  }
+  .chart-das {
+    height: 98%;
+    .border-area {
+      // border: 1px solid #d6d6d6;
+    }
+  }
+  .metric-title{
+    border-left: 3px solid #e07700;
+    font-weight: bold;
+    padding-left:5px;
+  }
+
+}
+
+/*
+<style scoped>
+  .metricPreview {
+    height: 100%;
+    width:100%;
+  }
+</style>
+ */

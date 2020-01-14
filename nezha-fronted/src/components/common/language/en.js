@@ -34,6 +34,7 @@ const en = {
       },
       //面板-侧滑框
       createPanelTitle: "Create Panel",
+      selectPanelTitle:"Select Panel",
       createPanelTitleSec:"Create New Panel",
       editPanelTitle: "Panel",
       panelForm:{

@@ -25,6 +25,7 @@ const cn = {
       },
       //面板-侧滑框
       createPanelTitle: "创建面板",
+      selectPanelTitle:"选择面板",
       createPanelTitleSec:"创建新面板",
       editPanelTitle: "编辑面板",
       panelForm:{

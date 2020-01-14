@@ -166,6 +166,8 @@ export default {
                       const seriesItem = {
                         theData: {
                           name: '',
+                          symbol:'none',  //去掉点
+                          smooth:true,  //曲线变平滑
                           data: [],
                           type:chartInfo.type,
                           //visible: true,

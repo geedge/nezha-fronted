@@ -57,10 +57,16 @@
   .star-red{
     color:#ff1818;
   }
+  .full-width{
+    width:100%;
+  }
+  .mt1{
+    margin-top:1px;
+  }
 </style>
 <template>
   <el-form :model="elementInfo" ref="elementInfo"   >
-    <el-row>
+    <el-row >
       <el-col span="16">
         <span  class="star-red">*</span>&nbsp;{{$t('dashboard.panel.chartForm.metric')}}
       </el-col>
@@ -84,9 +90,9 @@
       </el-col>
     </el-row>
     <el-row  v-if="tableShow == 2">
-      <el-col span="22">
+      <el-col span="22" class="mt1">
         <el-form-item prop="expression" :rules="{ required: true,  message:$t('validate.required'), trigger: 'blur' }"><!--expression和metric的验证只能有一个，不能同时存在？？:rules="{ required: true, type: 'string', message: '', trigger: 'change' }"-->
-          <el-input size="mini" ref="metricExpression" type="textarea" maxlength="1024" show-word-limit v-model="elementInfo.expression" :placeholder="this.$t('dashboard.metric.expertTip')" ></el-input>
+          <el-input size="mini" class="full-width" ref="metricExpression" type="textarea" maxlength="1024" show-word-limit v-model="elementInfo.expression" :placeholder="this.$t('dashboard.metric.expertTip')" ></el-input>
         </el-form-item>
       </el-col>
       <el-col  span="2">
@@ -94,9 +100,9 @@
       </el-col>
     </el-row>
     <el-row  v-if="tableShow == 1">
-      <el-col span="22">
+      <el-col span="22" >
         <el-form-item :label-width="80"  prop="metric" :rules="{ required: true,  message: $t('validate.required'), trigger: 'blur' }"><!--:rules="{ required: true, type: 'string', message: '', trigger: 'change' }"-->
-              <el-select ref="metricSelect"  filterable placeholder="" popper-class="" size="small" v-model="elementInfo.metric"  @change="selectMetric">
+              <el-select  ref="metricSelect" class="full-width"  filterable placeholder="" popper-class="" size="small" v-model="elementInfo.metric"  @change="selectMetric">
                 <el-option v-for="(item, index) in metricShowList.arr" :key="item.metric + index"
                 :value="item.metric">{{item.metric}}</el-option>
               </el-select>
@@ -242,7 +248,6 @@ export default {
         });
       }
     },
-
 
     // 选择metric
     selectMetric() {

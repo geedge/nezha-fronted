@@ -118,6 +118,38 @@ export default new Vue({
       });
       return fm;
     },
+    // 格式化tag为字符串表达式
+    tagsToString(metric,arr) {
+      let str = metric;
+      let sepStr = '';
+      arr.forEach((item, index) => {
+        if (index === 0) {
+          str +="{"
+          if(item.value.length===1){
+            str +=  `${item.name}='${item.value.join('|')}'`;
+            sepStr = ',';
+          }else if(item.value.length>1){
+            str +=  `${item.name}=~'${item.value.join('|')}'`;
+            sepStr = ',';
+          }
+        } else {
+          if(item.value.length===1){
+            str += sepStr+`${item.name}='${item.value.join('|')}'`;
+            sepStr = ',';
+          }else if(item.value.length>1){
+            str += sepStr+`${item.name}=~'${item.value.join('|')}'`;
+            sepStr = ',';
+          }
+        }
+      });
+      if(str.indexOf('{')>-1){
+        str +="}";
+      }
+      if(str.endsWith('{}')){
+        str = str.substring(0,str.indexOf('{'));
+      }
+      return str;
+    },
     getStep(startTime,endTime){
       const start = new Date(startTime);
       const end = new Date(endTime);

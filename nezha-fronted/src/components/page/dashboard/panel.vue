@@ -293,7 +293,7 @@
         },
         pageObj: {
           pageNo: 1,
-          pageSize: 9999,//此处获取所有数据，所以设置一个较大的值
+          pageSize: -1,//此处获取所有数据，所以设置一个较大的值
           total:0
         },
         chartsData: [],//中间部分图表相关数据
@@ -461,7 +461,7 @@
         });
       },
       getTableData: function() {
-        this.$get('panel').then(response => {
+        this.$get('panel?pageNo=1&pageSize=-1').then(response => {
           if (response.code === 200) {
             this.panelData = response.data.list;
             if( response.data.list.length>0 ){

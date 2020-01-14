@@ -354,6 +354,7 @@
         }
       },
       // 格式化tag为字符串表达式
+      /*
       tagsToString(metric,arr) {
         let str = metric;
         let sepStr = '';
@@ -385,6 +386,7 @@
         }
         return str;
       },
+       */
       // 新建图表
       addCharts(params) {
         this.$post('panel/'+this.panelId+'/charts', params).then(response => {
@@ -429,7 +431,7 @@
             const elements = [];
             this.elementTarget.forEach((elem,index) => {
               if(elem.type==='normal'){
-                const metricStr = this.tagsToString(elem.metric,elem.selectedTagList);
+                const metricStr = bus.tagsToString(elem.metric,elem.selectedTagList);
                 elements.push({
                   //id:index+1,
                   //metric: elem.metric,//指标名称
@@ -469,7 +471,7 @@
 
       // 获取metric列表
       getSuggestMetric() {
-        this.$get('metric', {pageNo: 1, pageSize: 9999}).then(response => {
+        this.$get('metric', {pageNo: 1, pageSize: -1}).then(response => {
           if (response.code === 200) {
             this.metricList = response.data.list;
           }else {

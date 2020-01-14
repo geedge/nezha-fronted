@@ -5,7 +5,7 @@
   <div class="line-chart-block" >
 
     <div class="edit">
-      <div class="list-icon" >
+      <div class="list-icon" v-if="firstShow">
         <span @click="refreshChart" :title="$t('dashboard.refresh')" class="set-icon" v-if="showSetting">
           <i class="el-icon-refresh-right"></i>
         </span>
@@ -108,8 +108,9 @@ export default {
       },
       stableFilter: {}, // 保存数据使用,初始化起止时间,单图or多图等
       legend:[],
-     // firstShow: false, // 默认不显示操作按钮,
+      firstShow: false, // 默认不显示操作按钮,
       searchTime:[new Date().setHours(new Date().getHours()-1),new Date()],
+      oldSearchTime:[],
       pickerOptions: {
         shortcuts: [
           {
@@ -207,7 +208,7 @@ export default {
   methods: {
     // chartSite用于区分是全屏显示还是局部显示
     initChart(chartInfo, dataArg, ele, chartSite,legend) {
-      //this.firstShow = true; // 展示操作按键
+      this.firstShow = true; // 展示操作按键
       const self = this;
       this.chartType = ''; // 图表类型
       if ( chartInfo.type === 4) {//line,bar
@@ -227,6 +228,8 @@ export default {
           textStyle: {
             //display: 'inline-block',//无此属性
             width: '300px',
+            fontStyle:'normal',
+            fontWeight:'normal'
           }
         },
         color: ['#7bbfea', '#b3424a', '#f05b72', '#596032', '#bd6758',
@@ -344,6 +347,35 @@ export default {
           splitLine:{
             show:true
           },
+          axisLabel: {
+            formatter: function(num,index) {
+              if (num >= 1000) {
+                const kbNum = num / 1000;
+                if (kbNum >= 1000) {
+                  const mbNum = kbNum / 1000;
+                  if (mbNum > 1000) {
+                    const gbNum = mbNum / 1000;
+                    /*
+                    if (gbNum > 1000) {
+                      const tbNum = gbNum / 1000;
+                      if (tbNum > 1000) {
+                        const pbNum = tbNum / 1000;
+                        return `${pbNum.toFixed(2)}PB`;
+                      }
+                      return `${tbNum.toFixed(2)}TB`;
+                    }*/
+                    return `${parseFloat(gbNum.toFixed(2))}B`;
+                  }
+                  return `${parseFloat(mbNum.toFixed(2))}M`;
+                }
+                return `${parseFloat(kbNum.toFixed(2))}K`;
+              }
+              return parseFloat(num.toFixed(2));
+              //alert(1);
+              //return value;
+              //return this.getNumStr(value);
+            },
+          },
           //boundaryGap:[0,0.2]
         },
         useUTC: false,//使用本地时间
@@ -406,6 +438,7 @@ export default {
           return obj;
         });
         */
+        this.echartStore.clear();
         this.echartStore.setOption(option);//创建图表
         this.echartStore.hideLoading();
         this.echartStore.resize({height:chartInfo.height});//,width:`${ele.clientWidth-100}`}
@@ -473,6 +506,7 @@ export default {
       this.seriesItem = seriesItem;
       this.searchTime[0] = filter.start_time;
       this.searchTime[1] = filter.end_time;
+      this.oldSearchTime = this.searchTime;
       this.initChart(chartItem, seriesItem, this.$refs.lineChartArea, 'local',legend);
       /*
       if (chartItem.type === 'line' || chartItem.type === 'bar' || chartItem.type === 4) {
@@ -505,12 +539,20 @@ export default {
       });
       */
     },
+    changeDate(st){
+      this.oldSearchTime=st;
+      this.searchTime = st;
+      this.filter.start_time = st[0];
+      this.filter.end_time = st[1];
+    },
     // 全屏查看
     showAllScreen() {
       // 初始化同步时间
       this.filter.start_time = this.stableFilter.start_time;
       this.filter.end_time = this.stableFilter.end_time;
+      this.searchTime = this.oldSearchTime;
       this.screenModal = true;
+      this.dateChange();
     },
     dateChange(time) {
       this.filter.start_time = bus.timeFormate(this.searchTime[0], 'yyyy-MM-dd hh:mm:ss');
@@ -528,49 +570,28 @@ export default {
       }
       let axiosArr = [];
       this.$nextTick(() => {
+        let startTime = bus.timeFormate(this.searchTime[0], 'yyyy-MM-dd hh:mm:ss');
+        let endTime = bus.timeFormate(this.searchTime[1], 'yyyy-MM-dd hh:mm:ss');
+        if(!startTime || !endTime){//如果时间为空，则默认取最近1小时
+          let now = new Date();
+          startTime = bus.timeFormate(now, 'yyyy-MM-dd hh:mm:ss');
+          endTime = bus.timeFormate(now.setHours(now.getHours()-1), 'yyyy-MM-dd hh:mm:ss');
+          this.searchTime[0] = startTime;
+          this.searchTime[1] = endTime;
+        }
+        let step = bus.getStep(startTime,endTime);
         if (type === 'list') { // 普通模式,主控台使用
-          let startTime = bus.timeFormate(this.searchTime[0], 'yyyy-MM-dd hh:mm:ss');
-          let endTime = bus.timeFormate(this.searchTime[1], 'yyyy-MM-dd hh:mm:ss');
-          if(!startTime || !endTime){//如果时间为空，则默认取最近1小时
-            let now = new Date();
-            startTime = bus.timeFormate(now, 'yyyy-MM-dd hh:mm:ss');
-            endTime = bus.timeFormate(now.setHours(now.getHours()-1), 'yyyy-MM-dd hh:mm:ss');
-            this.searchTime[0] = startTime;
-            this.searchTime[1] = endTime;
-          }
-          let step = bus.getStep(startTime,endTime);
           axiosArr = this.data.elements.map((ele) => {
             const filterItem = ele;
             return  this.$get('/prom/api/v1/query_range?query='+filterItem.expression+"&start="+startTime+"&end="+endTime+'&step='+step);
           });
         } else if (type === 'dashboard') { // 概览模式,指标概览中使用
-          /*
           // 概览模式,需要区分单独一个和多个
           if (this.stableFilter.chartCount === 'multiple') {
-            // 所有tag标签
-            const tagAllArr = this.proTags(this.data.tags);
-            // 根据title格式化的标签
-            const titles = this.data.title.split(',');
-            const titleArr = titles.map(item => item.trim());
-            // 获取所需标签
-            const tagArr = this.getCompilation(tagAllArr, titleArr);
-            axiosArr = [getQueryChart({
-              product_id: this.productId,
-              metric: this.data.metric,
-              tags: tagArr.toString(),
-              start: this.filter.start_time,
-              end: this.filter.end_time,
-            })];
+            axiosArr = [this.$get('/prom/api/v1/query_range?query='+this.data.title+"&start="+startTime+"&end="+endTime+'&step='+step)];
           } else {
-            axiosArr = [getQueryChart({
-              product_id: this.productId,
-              metric: this.data.metric,
-              tags: this.data.tags,
-              start: this.filter.start_time,
-              end: this.filter.end_time,
-            })];
+            axiosArr = [this.$get('/prom/api/v1/query_range?query='+this.data.elements[0].expression+"&start="+startTime+"&end="+endTime+'&step='+step)];
           }
-          */
         }
         // 一个图表
         axios.all(axiosArr).then((res) => {
@@ -591,6 +612,8 @@ export default {
                     const seriesItem = {
                       theData: {
                         name: '',
+                        symbol:'none',  //去掉点
+                        smooth:true,  //曲线变平滑
                         data: [],
                         type:this.data.type,
                         //visible: true,
@@ -668,6 +691,31 @@ export default {
       if (this.echartStore) {
         this.echartStore.showLoading();
       }
+    },
+    // 获取格式
+    getNumStr(num) {
+      if (num >= 1000) {
+        const kbNum = num / 1000;
+        if (kbNum >= 1000) {
+          const mbNum = kbNum / 1000;
+          if (mbNum > 1000) {
+            const gbNum = mbNum / 1000;
+            /*
+            if (gbNum > 1000) {
+              const tbNum = gbNum / 1000;
+              if (tbNum > 1000) {
+                const pbNum = tbNum / 1000;
+                return `${pbNum.toFixed(2)}PB`;
+              }
+              return `${tbNum.toFixed(2)}TB`;
+            }*/
+            return `${gbNum.toFixed(2)}B`;
+          }
+          return `${mbNum.toFixed(2)}M`;
+        }
+        return `${kbNum.toFixed(2)}K`;
+      }
+      return num.toFixed(2);
     },
     /*
     handleClose(done) {
@@ -816,30 +864,7 @@ export default {
       });
     },
 
-    // 获取格式
-    getNumStr(num) {
-      if (num >= 1000) {
-        const kbNum = num / 1000;
-        if (kbNum >= 1000) {
-          const mbNum = kbNum / 1000;
-          if (mbNum > 1000) {
-            const gbNum = mbNum / 1000;
-            if (gbNum > 1000) {
-              const tbNum = gbNum / 1000;
-              if (tbNum > 1000) {
-                const pbNum = tbNum / 1000;
-                return `${pbNum.toFixed(2)}PB`;
-              }
-              return `${tbNum.toFixed(2)}TB`;
-            }
-            return `${gbNum.toFixed(2)}GB`;
-          }
-          return `${mbNum.toFixed(2)}MB`;
-        }
-        return `${kbNum.toFixed(2)}KB`;
-      }
-      return num.toFixed(2);
-    },
+
     // 获取tag数组
     proTags(data) {
       const dou = data.indexOf(',');
