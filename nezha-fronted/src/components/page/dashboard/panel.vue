@@ -451,8 +451,8 @@
       /*时间条件查询--end*/
       //公用操作
       jumpTo(data,id) {
-        this.$store.state.assetData.moduleData = data
-        this.$store.state.assetData.selectedData = id
+        //this.$store.state.assetData.moduleData = data
+        //this.$store.state.assetData.selectedData = id
         this.$router.push({
           path: "/" + data,
           query: {
@@ -465,6 +465,10 @@
           if (response.code === 200) {
             this.panelData = response.data.list;
             if( response.data.list.length>0 ){
+              if(this.$store.state.showPanel.id!==0&&this.$store.state.showPanel.name!==''){
+                this.showPanel.name = this.$store.state.showPanel.name;
+                this.showPanel.id = this.$store.state.showPanel.id;
+              }
               if(this.showPanel.id===''){
                 this.showPanel.id = response.data.list[0].id;
                 this.filter.panelId = this.showPanel.id;
@@ -475,10 +479,12 @@
               this.showPanel.id ='';
               this.filter.panelId='';
             }
-            this.pageObj.total = response.data.total
+            this.pageObj.total = response.data.total;
             if(this.panel.id===''||this.panel.id===this.showPanel.id){
               this.getData(this.filter);
             }
+            this.$store.state.showPanel.id = 0;
+            this.$store.state.showPanel.name = '';
           }
         })
       },

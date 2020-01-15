@@ -14,7 +14,7 @@
 
 
           <div class="top-tools" >
-              <div class="float-left metric-title"  >指标预览
+              <div class="float-left metric-title"  >{{$t('dashboard.metricPreview.title')}}
               </div>
               <div class="float-right mr-10">
                 <el-date-picker size="small" ref="calendar"
@@ -179,8 +179,10 @@ export default {
   },
   methods: {
     jumpTo(data,id) {
-      this.$store.state.assetData.moduleData = data;
-      this.$store.state.assetData.selectedData = id;
+      //this.$store.state.assetData.moduleData = data;
+      //this.$store.state.assetData.selectedData = id;
+      this.$store.state.showPanel.id = 0;
+      this.$store.state.showPanel.name = '';
       this.$router.push({
         path: "/" + data,
         query: {
@@ -280,13 +282,14 @@ export default {
           metric_name: '',
         };
         // 图表中每条线的名字,后半部分
-        let host = `${queryItem.metric.__name__}{`;//up,
+        let host = `${queryItem.metric.__name__}`;//up,
         const tagsArr = Object.keys(queryItem.metric);//["__name__","asset","idc","instance","job","module","project"]
         // 设置时间-数据格式对
         const dpsArr = Object.entries(queryItem.values);//[ ["0",[1577959830.781,"0"]], ["1",[1577959845.781,"0"]] ]
         // 判断是否有数据
         if (dpsArr.length > 0 && tagsArr.length > 0) {
-          tagsArr.forEach((tag, i) => {
+            host +="{";
+            tagsArr.forEach((tag, i) => {
             if (tag !== '__name__') {
               host += `${tag}="${queryItem.metric[tag]}",`;
             }
@@ -312,7 +315,7 @@ export default {
         }
       });
       // 将获取的数据运用于创建多个图表备用
-      this.$refs.metricSet.setSeries(response.data.result.values);//???
+      this.$refs.metricSet.setSeries(response.data.result,series);
       if (this.chartCount === 'single') {
         this.setSize(chartItem.span, 0);
         const filterParams = Object.assign({}, this.filter);

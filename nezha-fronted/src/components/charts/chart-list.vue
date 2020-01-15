@@ -90,7 +90,7 @@ export default {
           }else {
             this.dataList = response.data;
           }
-          if (this.dataList.length > 0) {
+          if (this.dataList.length > 0 && this.$refs.editChart) {
             this.$refs.editChart.forEach((item) => {
               item.showLoad();//之后要实现
             });

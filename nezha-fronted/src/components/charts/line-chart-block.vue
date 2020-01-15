@@ -31,7 +31,7 @@
       :before-close="handleClose"
        @opened="initDialog">
      <el-row class="element-top-border" >
-        <div class="float-right" style="padding-top:10px;">
+        <div class="float-right pt10" >
             <el-date-picker size="small" ref="calendar"
                             format="yyyy/MM/dd HH:mm"
                             @change="dateChange"
@@ -242,7 +242,8 @@ export default {
         ],
         tooltip: {
           trigger: 'axis',
-          confine:true
+          confine:true,
+          //formatter:"{a}<br/>"+"<div style='display:block;word-break:break-all;word-wrap:break-word;white-space:pre-wrap'>"+"{b}"+"</div>"+"<br/>{c}",
         },
         legend: {
           type:'scroll',
@@ -371,9 +372,6 @@ export default {
                 return `${parseFloat(kbNum.toFixed(2))}K`;
               }
               return parseFloat(num.toFixed(2));
-              //alert(1);
-              //return value;
-              //return this.getNumStr(value);
             },
           },
           //boundaryGap:[0,0.2]

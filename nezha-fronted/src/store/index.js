@@ -30,6 +30,10 @@ const store = new Vuex.Store({
       event_positiony: 0,
       event_positionx: -200
     },
+    showPanel:{
+      id:0,
+      name:''
+    }
   },
   getters: {
   },
