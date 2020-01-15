@@ -73,15 +73,18 @@ html {
 
 /* begin--按钮组件*/
 .nz-btn {
+  width: 82px;
   border-radius: 4px;
   cursor: pointer;
   line-height: 18px;
   font-size: 14px;
-  font-weight: 700;
-  padding: 4px 14px;
+  font-weight: 600;
+  padding: 4px 6px;
   text-align: center;
+  box-sizing: border-box;
   -webkit-appearance: none;
   white-space: nowrap;
+  margin-left: 20px;
 }
 .nz-btn.nz-btn-size-normal {} /* size默认normal，是normal时这个class可不写*/
 .nz-btn.nz-btn-size-small {
@@ -91,20 +94,18 @@ html {
   font-weight: 500;
 }
 .nz-btn.nz-btn-style-normal { /* 蓝色按钮 */
-  background-color: #16b;
-  background-image: linear-gradient(#2d8cec, #16b);
-  border: 1px solid #0b4075;
-  border-top-color: #16b;
+  background-color: $global-text-color-active;
+  // background-image: linear-gradient(#2d8cec, #16b);
+  border: 1px solid $global-text-color-active;
+  border-top-color: $global-text-color-active;
   color: #fff;
-  text-shadow: 0 1px 1px rgba(0,0,0,.75);
+  // text-shadow: 0 1px 1px rgba(0,0,0,.75);
 }
 .nz-btn.nz-btn-style-light { /* 浅色按钮 */
-  background-color: #dedede;
-  background-image: linear-gradient(white,#dedede);
-  border: 1px solid #b8b8b8;
-  border-top-color: #dedede;
-  color: #444;
-  text-shadow: 0 1px 1px rgba(255,255,255,.75);
+  background-color: transparent;
+  border: 1px solid #999999;
+  color: #999999;
+  letter-spacing: 0;
 }
 .nz-btn.nz-btn-style-pure-white { /*纯白色按钮*/
   background-color: white;
@@ -115,13 +116,13 @@ html {
   padding: 2px 5px;
 }
 .nz-btn.nz-btn-size-normal.nz-btn-style-square { /* 单图标时是个正方形*/
-  padding: 4px 6px;
+  // padding: 4px 6px;
 }
 .nz-btn.nz-btn-style-light:hover:not(.nz-btn-disabled) {
-  background-image: linear-gradient(#dedede,#c5c5c5);
+  // background-image: linear-gradient(#dedede,#c5c5c5);
 }
 .nz-btn.nz-btn-style-normal:hover:not(.nz-btn-disabled) {
-  background-image: linear-gradient(#16b, #0d4d8c);
+  // background-image: linear-gradient(#16b, #0d4d8c);
 }
 .nz-btn.nz-btn-style-pure-white:hover:not(.nz-btn-disabled) {
   background-color: #dedede;
@@ -274,6 +275,7 @@ html {
   width: 320px;
 }
 /* end--顶部工具栏*/
+
 /* start--内容*/
 .content-right>.el-table{
   margin-top: 30px;
@@ -295,6 +297,7 @@ html {
   font-size: 14px;
   border-left: 1px solid white;
   border-bottom: 1px solid #d4d4d4;
+
 }
 .content-right .el-table .el-table__header th:first-of-type {
   border-left: none;
@@ -311,16 +314,48 @@ html {
 .content-right>.el-table th {
   padding: 0;
 }
+
+//小信息栏边框
 .content-right>.el-table th .cell{
   height: 36px;
   line-height: 36px;
+  display:flex;
   background-image: linear-gradient(#f8f8f8, #e6e6e6);
   border-right: 1px solid #d4d4d4;
+  box-shadow: inset -1px -2px 1px 0 rgba(0,0,0,0.11), inset 2px 2px 1px 0 rgba(255,255,255,0.50);
 }
 .content-right>.el-table td .cell{
   height: 44px;
   line-height: 44px;
+  display:flex;
 }
+.nav-tabel-header{
+  display: flex;
+  height: 36px;
+  min-width: 100px;
+
+}
+.nz-table-gear
+{
+  display: block;
+  width: 38px;
+  margin-left:-10px;
+  padding-left:10px;
+  padding-right:10px;
+  text-align: center;
+  border-right:2px solid #d4d4d4;
+  box-sizing: border-box;
+}
+.nz-table-txt{
+  padding-left:10px;
+  display: flex;
+  height: 100%;
+  border-left:1px solid #fff;
+  min-width: 60px;
+  box-sizing: border-box;
+  padding-right:20px;
+}
+
 /* end--内容*/
 /* start--分页*/
 .pagination {

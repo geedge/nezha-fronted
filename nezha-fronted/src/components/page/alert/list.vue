@@ -30,11 +30,11 @@
                   :label="item.label"
                 >
                     <template slot="header" slot-scope="scope">
-                        <span v-if="index==0">
-                            <span @click.stop="elementsetShow('shezhi',$event)">
-                                <i class="el-icon-setting"></i>
+                        <span v-if="index==0"  class='nav-tabel-header'> 
+                            <span @click.stop="elementsetShow('shezhi',$event)" class="nz-table-gear">
+                                <i class="nz-icon nz-icon-gear"></i>
                             </span>
-                            <span>{{item.label}}</span>
+                            <span class="nz-table-txt">{{item.label}}</span>
                         </span>
                         <div v-else>
                            <span>{{item.label}}</span>

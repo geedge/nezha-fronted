@@ -62,7 +62,9 @@
           </button>
         </div>
         <button @click="toCreateEndpoint" class="nz-btn nz-btn-size-normal nz-btn-style-normal float-right" id="project-add-ep">
-          <span>{{$t('overall.add')}}</span>
+          <span class='top-tool-btn-txt'>
+            <i class="nz-icon-create-square nz-icon"></i>
+            {{$t('overall.add')}}</span>
         </button>
         <div class="top-tool-search float-right"><search-input :searchMsg="endpointSearchMsg" @search="endpointSearch" ref="projectSearch"></search-input></div>
       </div>
@@ -80,11 +82,11 @@
           :label="item.label"
         >
           <template slot="header" slot-scope="scope">
-              <span v-if="index==0">
-                <span @click.stop="elementsetShow('shezhi',$event)" id="project-ep-tab-set">
-                    <i class="el-icon-setting"></i>
+              <span v-if="index==0" class='nav-tabel-header'>
+                <span @click.stop="elementsetShow('shezhi',$event)" class="nz-table-gear">
+                    <i class="nz-icon nz-icon-gear"></i>
                 </span>
-                <span>{{item.label}}</span>
+                <span class="nz-table-txt">{{item.label}}</span>
               </span>
             <div v-else>
               <span>{{item.label}}</span>
@@ -560,7 +562,11 @@
   .content-right-option .el-icon-view:hover {
     color: #409EFF;
   }
-
+  .top-tools .top-tool-btn-txt .nz-icon{
+    display: inline-block;
+    font-size: 12px;
+    margin-right:6px;
+  } 
   /* start--param*/
   .param-btn {
     float: right;

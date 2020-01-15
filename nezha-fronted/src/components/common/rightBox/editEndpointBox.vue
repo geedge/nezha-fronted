@@ -138,6 +138,12 @@
                 <button type="button" id="edit-add-param" @click="addParam" class="nz-btn nz-btn-size-small nz-btn-style-normal">
                   <span class="top-tool-btn-txt">{{$t('overall.add')}}</span>
                 </button>
+                <!-- <button type="button" @click="save" class="nz-btn nz-btn-size-normal nz-btn-style-normal nz-btn-edit-ok">
+                  <span class="top-tool-btn-txt">Ok</span>
+                </button>
+                <button type="button" @click="esc" class="nz-btn nz-btn-size-normal nz-btn-style-light nz-btn-style-square nz-btn-edit-esc">
+                  <span class="top-tool-btn-txt">Cancel</i></span>
+                </button> -->
               </div>
             </template>
             <div class="param-box param-box-module">
@@ -159,6 +165,7 @@
           </el-form-item>
         </el-form>
       </el-scrollbar>
+       
       <!-- end--表单-->
 
       <!-- begin--子弹框-->
@@ -480,4 +487,15 @@
 </script>
 
 <style scoped>
+.nz-btn-edit-ok{
+  position: absolute;
+  bottom: 0;
+  right:0;
+}
+.nz-btn-edit-esc{
+  position: absolute;
+  bottom: 0;
+  left:0;
+}
+
 </style>

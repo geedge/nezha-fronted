@@ -79,7 +79,11 @@
     float: right;
     margin-right: 1px;
   }
-
+  .top-tools .top-tool-btn-txt .nz-icon{
+    display: inline-block;
+    font-size: 12px;
+    margin-right:6px;
+  } 
 </style>
 <template>
   <div class="panel">
@@ -93,7 +97,9 @@
     <div class="content-right">
       <div class="top-tools">
         <button @click="toAddChart" class="nz-btn nz-btn-size-normal nz-btn-style-normal float-right">
-          <span class="top-tool-btn-txt">{{$t('overall.add')}}</span>
+          <span class="top-tool-btn-txt">
+            <i class="nz-icon-create-square nz-icon"></i>
+            {{$t('overall.add')}}</span>
         </button>
         <div class="top-tool-search float-right"><search-input  ref="searchInput" :searchMsg="searchMsg" @search="search" ></search-input></div>
         <el-select class="panel-select-width" popper-class="" v-model="showPanel.id" placeholder=""  size="small" @change="panelChange">

@@ -2,6 +2,11 @@
   .prom {
     height: 100%;
   }
+  .top-tools .top-tool-btn-txt .nz-icon{
+    display: inline-block;
+    font-size: 12px;
+    margin-right:6px;
+  } 
 </style>
 <template>
     <div class="prom">
@@ -15,18 +20,20 @@
         <div class="content-right">
             <div class="top-tools">
               <button @click="toAdd" class="nz-btn nz-btn-size-normal nz-btn-style-normal float-right" id="prom-add">
-                <span class="top-tool-btn-txt">{{$t('overall.add')}}</span>
+                <span class="top-tool-btn-txt">
+                  <i class="nz-icon-create-square nz-icon"></i>
+                  {{$t('overall.add')}}</span>
               </button>
               <div class="top-tool-search float-right"><search-input :searchMsg="searchMsg" @search="search"></search-input></div>
             </div>
             <el-table :data="tableData" border height="calc(100% - 65px)" style="width: 100%;">
                 <el-table-column :resizable="false" v-for="(item, index) in tablelable" v-if="item.show" :width="item.width" :key="`col-${index}`" :label="item.label">
                     <template slot="header" slot-scope="scope">
-                        <span v-if="index==0">
-                            <span @click.stop="elementsetShow('shezhi',$event)" id="prom-tab-set">
-                                <i class="el-icon-setting"></i>
+                        <span v-if="index==0" class='nav-tabel-header' >
+                            <span @click.stop="elementsetShow('shezhi',$event)" id="prom-tab-set" class="nz-table-gear">
+                                <i class="nz-icon nz-icon-gear"></i>
                             </span>
-                            <span>{{item.label}}</span>
+                            <span class="nz-table-txt">{{item.label}}</span>
                         </span>
                         <div v-else>
                             <span>{{item.label}}</span>
