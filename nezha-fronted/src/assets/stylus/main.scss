@@ -696,4 +696,7 @@ html {
   width: 520px;
   height: calc(100% - 100px);
 }
-
+/*子菜单选中样式*/
+.nz-submenu .el-menu--popup .el-menu-item .menu-item-active{
+  color:$global-text-color-active !important;
+}

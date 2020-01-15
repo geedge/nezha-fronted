@@ -15,6 +15,8 @@ const store = new Vuex.Store({
       name: '',
       remark: ''
     },
+    assetItemId:''  ,   //复选框ID
+    assetAllId:[]  ,   //复选框allID
     projectListChange: 0,
     moduleListChange: 0,
     flushDataSign: false,
@@ -52,6 +54,12 @@ const store = new Vuex.Store({
     },
     setHeaderTable(state, data) { //设置table头部
       state.tablelable = data;
+    },
+    assetItemIdChange(state,data){ //修改复选框
+      state.assetItemId = data
+    },
+    assetAllIdChange(state,data){ //修改复选框
+			state.assetAllId = data
     },
     setEventfixed(state, data) { //设置坐标
       state.eventfixed = data;
