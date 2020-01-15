@@ -78,7 +78,6 @@ html {
   cursor: pointer;
   line-height: 18px;
   font-size: 14px;
-  font-weight: 600;
   padding: 4px 6px;
   text-align: center;
   box-sizing: border-box;
@@ -333,10 +332,11 @@ html {
   display: flex;
   height: 36px;
   min-width: 100px;
-
 }
-.nz-table-gear
-{
+.content-right .el-table__row td:first-of-type {
+  padding-left: 33px;
+}
+.nz-table-gear {
   display: block;
   width: 38px;
   margin-left:-10px;
@@ -345,6 +345,9 @@ html {
   text-align: center;
   border-right:2px solid #d4d4d4;
   box-sizing: border-box;
+}
+.nz-table-gear>i {
+  cursor: pointer;
 }
 .nz-table-txt{
   padding-left:10px;

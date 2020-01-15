@@ -4,11 +4,11 @@
       <div class="sidebar-title">Asset</div>
       <div class="sidebar-info">
         <!--<div class="sidebar-info-header">ALL</div>-->
-        <el-checkbox :indeterminate="checkAllHandler" class="sidebar-info-item" :model="checkAllFlag" @change="dcSelectAll" :true-label="1" :false-label="0">
+        <el-checkbox :indeterminate="checkAllHandler" class="sidebar-info-item" v-model="checkAllFlag" @change="dcSelectAll" :true-label="1" :false-label="0">
           <div class="sidebar-info-item-txt" style="font-weight: bold;">All</div>
         </el-checkbox>
-        <el-checkbox-group v-model="checkList" size="small" @change="getSingleAsset()">
-          <el-checkbox class="sidebar-info-item" :class="{'sidebar-info-item-active': checkList.indexOf(item.id) != -1}"
+        <el-checkbox-group v-model="checkList" size="small" @change="changeCheckBox">
+          <el-checkbox class="sidebar-info-item" :class="{'sidebar-info-item-active': indOf(checkList, item.id)}"
                        v-for="(item,key) in checkListData" :key="key" :label=item.id>
             <div class="sidebar-info-item-txt">{{item.name}}</div>
             <idc-config-box ref="idcConfigBox" :post-idc="item" placement="left" @after="getIDCOptionData" :button-class="'checkbox-edit'">
@@ -28,7 +28,7 @@
         <button @click.stop="tagShow('showAdd')" class="nz-btn nz-btn-size-normal nz-btn-style-normal float-right" id="asset-add">
           <span class="top-tool-btn-txt">
              <i class="nz-icon-create-square nz-icon"></i>
-            {{$t('overall.add')}}</span>  
+            {{$t('overall.add')}}</span>
           <!-- ADD按钮 -->
         </button>
         <div class="top-tool-search float-right"><search-input :searchMsg="searchMsg" @search="search"></search-input></div>
@@ -48,9 +48,9 @@
           :key="`col_${index}`"
           :label="item.label"
         >
-          <template slot="header" slot-scope="scope" class='nav-table-column-header'>
+          <template slot="header" slot-scope="scope">
             <span v-if="index==0" class='nav-tabel-header'>
-                <span @click.stop="elementsetShow('shezhi',$event)" class="nz-table-gear">
+                <span @click.stop="elementsetShow('shezhi',$event)" id="asset-tab-set" class="nz-table-gear">
                     <i class="nz-icon nz-icon-gear"></i>
                 </span>
                 <span class="nz-table-txt">{{item.label}}</span>
@@ -195,7 +195,7 @@
             label: this.$t("asset.tableTitle.id"),
             prop: 'ID',
             show: true,
-            width: 60
+            width: 90
           }, {
             label: this.$t("asset.tableTitle.assetType"),
             prop: '资产类型',
@@ -310,7 +310,8 @@
         editUnitShow: false,
         flag: false,
         checkAllFlag: false,
-        checkAllHandler: false
+        checkAllHandler: false,
+        assetClick: false,
       }
     },
     computed: {
@@ -324,14 +325,12 @@
     watch: {
       getData: {
         handler(newVal) {
-          if (this.checkList.indexOf(newVal.selectedData) >= 0) {
-            this.checkList.splice(this.checkList.indexOf(newVal.selectedData), 1);
-          } else {
-            this.checkList.push(newVal.selectedData);
+          if (newVal.type == 1) {
+            this.checkList = newVal.selectedData;
+            this.assetClick = false;
           }
-          this.getSingleAsset();
-          this.getAssetData();
         },
+        immediate: true,
         deep: true,
       },
       getFlushData: {
@@ -342,18 +341,21 @@
           }
         }
       },
-      checkList(n) {
-        if (n.length > 0 ) {
-          this.pageObj.idcIds = n.join(',');
-        } else {
-          this.pageObj.idcIds = '';
-        }
-        this.getAssetData();
+      checkList(n, o) {
+        setTimeout(()=>{
+          if (n.length > 0 ) {
+            this.pageObj.idcIds = n.join(',');
+          } else {
+            this.pageObj.idcIds = '';
+          }
+          if (this.assetClick) {
+            this.$store.state.assetData = {selectedData: n, step: this.$store.state.assetData.step+1, type: 0};
+          } else {
+            this.getSingleAsset();
+          }
+          this.getAssetData();
+        }, 50);
       }
-    },
-    created() {
-      this.checkList.push(this.$store.state.assetData.selectedData)
-      this.getSingleAsset()
     },
     methods: {
       dcSelectAll(val) { //DC全选
@@ -526,6 +528,17 @@
           this.$refs['assetEditUnit'].tabView = false
         }
       },
+      indOf(a, b) {
+        let c = [];
+        for (let i = 0; i < a.length; i++) {
+          c.push(a[i]);
+        }
+        if (c.indexOf(b) > -1) {
+          return true;
+        } else {
+          return false;
+        }
+      },
       tagShow(data, id, type) {
         if (data === 'showAdd') {
           this.addUnitShow = true
@@ -564,19 +577,17 @@
             }
           });
         }
-      }
-      ,
+      },
+
+      changeCheckBox() {
+        this.assetClick = true;
+        this.getSingleAsset();
+      },
       getSingleAsset() {
         let checkedCount = this.checkList.length;
-        this.checkAllFlag = checkedCount === this.checkListData.length;
-        this.checkAllHandler = checkedCount > 0 && checkedCount < this.checkListData.length;
-
-        /*if (this.checkList.length > 0 ) {
-          this.pageObj.idcIds = this.checkList.join(',');
-        } else {
-          this.pageObj.idcIds = '';
-        }
-        this.getAssetData();*/
+        let allCount = this.checkListData.length;
+        this.checkAllFlag = ((checkedCount == allCount) && allCount > 0);
+        this.checkAllHandler = checkedCount > 0 && checkedCount < allCount;
       },
       pageNo(val) {
         this.pageObj.pageNo = val;
@@ -604,8 +615,6 @@
         }
       },
       flushData() {
-        // this.addUnitShow=false;
-        // this.editUnitShow=false;
         this.getSingleAsset();
         this.getAssetData();
         this.getIDCOptionData();
@@ -630,8 +639,14 @@
       }
     },
     mounted() {
+      setTimeout(()=>{
+        if (this.$store.state.assetData.selectedData.length > 0) {
+          this.checkList = [];
+          this.checkList = this.$store.state.assetData.selectedData;
+        }
+      }, 50);
+
       this.getUserData();
-      this.getAssetData();
       this.getIDCOptionData();
       this.tablelable = localStorage.getItem("nz-tableTitle-" + localStorage.getItem("nz-username") + "-" + this.$route.path)
         ? JSON.parse(localStorage.getItem("nz-tableTitle-" + localStorage.getItem("nz-username") + "-" + this.$route.path))
@@ -662,7 +677,7 @@
     display: inline-block;
     font-size: 12px;
     margin-right:6px;
-  } 
+  }
 </style>
 <style lang="scss">
   .asset .content-left .el-checkbox__input.is-focus .el-checkbox__inner,

@@ -5,8 +5,9 @@ Vue.use(Vuex)
 const store = new Vuex.Store({
   state: {
     assetData:{
-      selectedData:'',
-      step: 0
+      selectedData: [],
+      step: 0,
+      type: -1  //0: asset  1: header
     },
     assetDcList: 0, //监听此值，改变则刷新dc列表
     assetForAlertList: '', //asset页跳转alertList时传递的assetId

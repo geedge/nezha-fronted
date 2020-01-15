@@ -38,11 +38,11 @@
 
       <el-submenu index="2" popper-class="nz-submenu">
         <template slot="title">
-          <div @click="jumpToProject(projectData[0])" :class ="activeIndex == 'project' ? 'menu-active' :''" >{{$t('overall.project')}}</div>
+          <div @click="jumpToProject(projectData[0], 0)" :class ="activeIndex == 'project' ? 'menu-active' :''" >{{$t('overall.project')}}</div>
         </template>
         <template v-for="(item, index) in projectData">
           <el-menu-item :index="'2-' + index">
-            <div @click="jumpToProject(item)" :class="{'menu-item-active' :(activeIndex == 'project' && activeItemIndex == item )}">
+            <div @click="jumpToProject(item)" :class="{'menu-item-active' :(activeIndex == 'project' && activeItemIndex == item.id)}">
               <span>{{item.name}}</span>
               <div @click.stop="toEditProject(item)" class="menu-edit"><i style="color: inherit"
                                                                           class="el-icon-edit-outline"></i></div>
@@ -56,7 +56,7 @@
         </template>
         <template v-for="(item, index) in assetData">
           <el-menu-item :index="'3-' + index">
-            <div @click="jumpToAsset('asset',item.id)" :class="{'menu-item-active' : (activeIndex == 'asset' && activeItemIndex == item.id ) }">
+            <div @click="jumpToAsset(item.id)" :class="{'menu-item-active' : (activeIndex == 'asset' && indOf(activeItemIndexes, item.id) > -1) }">
               <span>{{item.name}}</span>
               <idc-config-box :post-idc="item" ref="idcConfigBox" placement="left" @after="getIDCOptionData" :button-class="'menu-edit'">
                 <template v-slot:optionZone>
@@ -71,18 +71,18 @@
       </el-submenu>
       <el-submenu index="4-0" popper-class="nz-submenu">
         <template slot="title">
-          <div @click="jumpTo('alertList')" :class ="activeIndex == 'alertList' ? 'menu-active' :''">{{$t('overall.alert')}}</div>
+          <div @click="jumpTo('alertList')" :class ="activeIndex == 'alertList' || activeIndex == 'alertConfig' ? 'menu-active' :''">{{$t('overall.alert')}}</div>
         </template>
         <el-menu-item index="4-1">
-          <div @click="jumpTo('alertList')" :class ="activeIndex == 'alertList' ? 'menu-item-active' :''">{{$t('alert.alertList')}}</div>
+          <div @click="jumpTo('alertList')" :class ="activeIndex == 'alertList' ? 'menu-item-active' :''">{{$t('alert.message')}}</div>
         </el-menu-item>
         <el-menu-item index="4-2">
-          <div @click="jumpTo('alertConfig')" :class ="activeIndex == 'alertConfig' ? 'menu-item-active' :''">{{$t('alert.alertConfig')}}</div>
+          <div @click="jumpTo('alertConfig')" :class ="activeIndex == 'alertConfig' ? 'menu-item-active' :''">{{$t('alert.rule')}}</div>
         </el-menu-item>
       </el-submenu>
       <el-submenu index="5" popper-class="nz-submenu">
         <template slot="title">
-          <div @click="jumpTo('account')" :class ="activeIndex == 'account' ? 'menu-active' :''">{{$t('overall.config')}}</div>
+          <div @click="jumpTo('account')" :class ="activeIndex == 'account' || activeIndex == 'promServer' ? 'menu-active' :''">{{$t('overall.config')}}</div>
         </template>
         <el-menu-item index="5-0">
           <div @click="jumpTo('account')" :class="{'menu-item-active' :(activeIndex == 'account' )}">{{$t('config.account.account')}}</div>
@@ -129,6 +129,7 @@
         assetData: [],
         activeIndex:'',
         activeItemIndex:'',
+        activeItemIndexes: [],
         editPanel:{//新增or编辑的panel
           id:'',
           name: ''
@@ -165,32 +166,32 @@
         },
         createMenu: [ //新增按钮内容
           {
-            label: this.$t('dashboard.panel.createPanelTitle'),
+            label: this.$t('dashboard.panel.title'),
             url: 'panel',
             type: 0
           },
           {
-            label: this.$t('project.project.createProject'),
+            label: this.$t('project.project.project'),
             url: 'project',
             type: 1
           },
           {
-            label: this.$t('project.module.createModule'),
+            label: this.$t('project.module.module'),
             url: 'project',
             type: 2
           },
           {
-            label: this.$t('project.endpoint.createEndpoint'),
+            label: this.$t('project.endpoint.endpoint'),
             url: 'project',
             type: 3
           },
           {
-            label: this.$t('asset.createAsset'),
+            label: this.$t('asset.asset'),
             url: 'asset',
             type: 4
           },
           {
-            label: this.$t('alert.config.createAlertConfig'),
+            label: this.$t('alert.config.alertConfig'),
             url: 'alertConfig',
             type: 5
           }
@@ -208,7 +209,10 @@
     },
     methods: {
       jumpTo(data) {
-         
+        if (data != "asset") {
+          this.activeItemIndexes = [];
+          this.$store.state.assetData = {selectedData: [], step: 0, type: -1};
+        }
         this.$router.push({
           path: "/" + data,
           query: {
@@ -244,19 +248,20 @@
           this.$refs.alertConfigBox.show(true, true);
         }
       },
-      jumpToAsset(data, id) {
-        if (id != this.$store.state.assetData.selectedData) {
-          this.$store.state.assetData = {selectedData: id, step: this.$store.state.assetData.step+1};
+      jumpToAsset(id) {
+        let index = this.indOf(this.activeItemIndexes, id);
+        if (index > -1) {
+          this.activeItemIndexes.splice(index, 1);
         } else {
-          this.$store.state.assetData.step = this.$store.state.assetData.step+1;
+          this.activeItemIndexes.push(id);
         }
-        this.activeItemIndex = id
-        this.jumpTo(data);
+        this.$store.state.assetData = {selectedData: this.activeItemIndexes, step: this.$store.state.assetData.step+1, type: 1};
+        this.jumpTo('asset');
       },
       jumpToProject(p) {
         this.currentProject = p;
         this.$store.commit('setProject', p);
-        this.activeItemIndex = p
+        this.activeItemIndex = p.id;
         this.jumpTo('project');
       },
       getUserData() {
@@ -352,6 +357,7 @@
             }
             if (!flag && this.projectData.length > 0) {
               this.currentProject = this.projectData[0];
+              this.activeItemIndex = this.currentProject.id;
               this.$store.commit('setProject', this.currentProject);
             }
           }
@@ -360,6 +366,18 @@
       toEditProject(p) {
         this.$refs.projectBox.show(true,true);
         this.editProject = Object.assign({}, p);
+      },
+      indOf(a, b) {
+        let c = [];
+        for (let i = 0; i < a.length; i++) {
+          c.push(a[i]);
+        }
+        return c.indexOf(b);
+        /*if (c.indexOf(b) > -1) {
+          return true;
+        } else {
+          return false;
+        }*/
       },
       panelListReload(){
         if(this.$route.path==='/panel'){
@@ -382,9 +400,8 @@
       this.getAssetData();
       this.getProjectList();
       // 刷新后有高亮
-      let activePath = this.$route.path.slice(1)
-      this.activeIndex = activePath
-      // console.log(activePath,this.activeIndex)
+      let activePath = this.$route.path.slice(1);
+      this.activeIndex = activePath;
     },
     computed: {
       projectListReloadWatch() {
@@ -393,9 +410,20 @@
       getIdcData() {
         return this.$store.state.assetDcList;
       },
-
+      getAssetDcData() {
+        return this.$store.state.assetData
+      },
     },
     watch: {
+      getAssetDcData: {
+        handler(newVal) {
+          if (newVal.type == 0) {
+            this.activeItemIndexes = newVal.selectedData;
+          }
+        },
+        deep: true,
+        immediate: true
+      },
       getIdcData: {
         handler(newVal, oldVal) {
           this.getAssetData()
@@ -418,7 +446,7 @@
     background-color: transparent;
   }
   .header .el-menu--horizontal>.el-submenu .el-submenu__title .menu-active{
-    border-bottom:$global-text-color-active solid 2px;
+    border-bottom: $global-text-color-active solid 2px;
     border-radius: 2px;
     height: 26px;
     line-height: 16px;
@@ -426,7 +454,10 @@
     font-size: 16px;
     margin: 0 auto -8px;
     font-weight: 500;
-    
+    color: $header-text-color-active;
+  }
+  .header .el-menu--horizontal>.el-submenu .el-submenu__title .menu-active:hover {
+    color: $header-text-color-hover;
   }
   .header .el-menu--horizontal>.el-submenu .el-submenu__title i {
     color: inherit;
@@ -447,7 +478,7 @@
     padding: 0;
   }
   .header .el-menu--horizontal>.el-submenu .el-submenu__title:hover {
-    color: #444 !important;
+    color: $header-text-color-hover !important;
   }
 
   .el-menu.el-menu--horizontal {
@@ -522,6 +553,9 @@
 </style>
 
 <style scoped>
+  .menu-create-title {
+    font-size: 14px;
+  }
   .header {
     position: relative;
     box-sizing: border-box;

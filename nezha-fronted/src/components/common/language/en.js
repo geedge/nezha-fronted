@@ -119,9 +119,9 @@ const en = {
   validate: { //校验规则
     required: 'Required',
     number: 'Must be a number',
-    email:'E-mail is invalide',
-    tel:'Phone number is invalide',
-    host:'IP Address is invalide',
+    email:'E-mail is invalid',
+    tel:'Phone number is invalid',
+    host:'IP Address is invalid',
     fileSize:'upload file is too large',
     config: {
       account: {
@@ -146,7 +146,6 @@ const en = {
   },
   asset:{
     asset: 'Asset',
-    createAsset: "Create Asset",
     EditAsset:'Edit Asset',
     createAssetTab:{
       title:'Create Asset',
@@ -223,9 +222,8 @@ const en = {
     editAssetTab:{
       title:'Create Asset',
       sn:'SN',
-      host:'host',
-      state:'state',
-      selectTip:'please select',
+      host:'Host',
+      state:'State',
       modelId:'ModelId',
       alert:'Alert',
       assetInfo:'资产信息',
@@ -340,6 +338,8 @@ const en = {
   },
   alert: {
     alert: "Alert",
+    message: 'Message',
+    rule: 'Rule',
     alertList: "Alert Message",
     alertConfig: "Alert Rule",
     alertName: "Alert Name",
@@ -398,7 +398,7 @@ const en = {
       createModule: "Create Module",
       tip: {
         defaultEndpointSet: "Default Endpoint Set",
-        relation: "Endpoints associated with Module will reference Port/Path/Param/Params by default"
+        relation: "Endpoints associated with Module will reference Port/Path/Param by default"
       }
     },
     endpoint: {
