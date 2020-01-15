@@ -1,5 +1,5 @@
 <template>
-  <el-popover :placement="placement"   width="400" @hide="hidePop"  ref="popBox" v-model="popBox.show">
+  <el-popover :placement="placement"  @show="afterShow"  width="400" @hide="hidePop"  ref="popBox" v-model="popBox.show">
     <div class="">
       <!-- begin--顶部按钮-->
       <div class="pop-top-btns">
@@ -116,6 +116,11 @@
         openBox:function(){
           this.popBox.show=true;
         },
+        afterShow:function(){
+          if(!this.popBox.isEdit){
+            this.popBox.isEdit=this.isEdit;
+          }
+        },
         getUserData() {
           let temp=this;
           temp.$get('sys/user/list').then(response => {
@@ -216,7 +221,7 @@
           deep: true,
           handler(n, o) {
             if (n && n.id) {
-              this.title = this.$t('asset.createAssetTab.editIdcTab.title') + "  ID：" + n.id;
+              this.title = this.popBox.isEdit?this.$t('asset.createAssetTab.editIdcTab.title') + "  ID：" + n.id:this.$t('asset.createAssetTab.dc') + "  ID：" + n.id;
               this.idc=n;
 
             } else {
