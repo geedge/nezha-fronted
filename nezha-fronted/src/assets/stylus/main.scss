@@ -276,11 +276,9 @@ html {
 /* end--顶部工具栏*/
 /* start--内容*/
 .content-right>.el-table{
-  border: 1px solid #d4d4d4;
-  border-left: none;
-  border-right: none;
   margin-top: 30px;
-  border-bottom: none;
+  border: none;
+  font-size: 12px;
 }
 .content-right .el-table::before {
   height: 0;
@@ -289,15 +287,14 @@ html {
   width: 0;
 }
 .content-right .el-table__header {
-  line-height: 40px;
-  text-shadow: 1px 1px white;
+  line-height: 36px;
 }
 .content-right .el-table .el-table__header th {
-  background-image: linear-gradient(#eee,#e0e0e0);
-  color: #444444;
-  border-right: 1px solid #d4d4d4;
+  color: #666666;
+  font-weight: normal;
+  font-size: 14px;
   border-left: 1px solid white;
-  border-bottom: 1px solid #d4d4d4;;
+  border-bottom: 1px solid #d4d4d4;
 }
 .content-right .el-table .el-table__header th:first-of-type {
   border-left: none;
@@ -310,6 +307,19 @@ html {
 }
 .content-right .el-table td {
   padding: 4px 0;
+}
+.content-right>.el-table th {
+  padding: 0;
+}
+.content-right>.el-table th .cell{
+  height: 36px;
+  line-height: 36px;
+  background-image: linear-gradient(#f8f8f8, #e6e6e6);
+  border-right: 1px solid #d4d4d4;
+}
+.content-right>.el-table td .cell{
+  height: 44px;
+  line-height: 44px;
 }
 /* end--内容*/
 /* start--分页*/

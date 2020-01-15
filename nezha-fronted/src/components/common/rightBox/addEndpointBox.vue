@@ -882,7 +882,7 @@
     color: black;
     font-weight: 400;
   }
-  .endpoints-box-endpoints .el-table td, .el-table th {
+  .endpoints-box-endpoints .el-table td, .endpoints-box-endpoints .el-table th {
     padding: 5px 0 !important;
   }
   .endpoints-box-endpoints .cell {
