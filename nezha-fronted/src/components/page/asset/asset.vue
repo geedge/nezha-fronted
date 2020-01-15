@@ -359,7 +359,9 @@
           if (val) {
             for (let i = 0; i < this.checkListData.length; i++) {
               this.checkList.push(this.checkListData[i].id);
+              this.$store.commit('assetItemIdChange',this.checkListData[i].id)
             }
+            this.$store.commit('assetAllIdChange',this.checkListData)
           }
           this.checkAllHandler = false;
         }
