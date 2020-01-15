@@ -5,12 +5,12 @@
       <div class="sidebar-info">
         <!--<div class="sidebar-info-header">ALL</div>-->
         <el-checkbox :indeterminate="checkAllHandler" class="sidebar-info-item" :model="checkAllFlag" @change="dcSelectAll" :true-label="1" :false-label="0">
-          <span style="font-weight: bold;">All</span>
+          <div class="sidebar-info-item-txt" style="font-weight: bold;">All</div>
         </el-checkbox>
         <el-checkbox-group v-model="checkList" size="small" @change="getSingleAsset()">
           <el-checkbox class="sidebar-info-item" :class="{'sidebar-info-item-active': checkList.indexOf(item.id) != -1}"
                        v-for="(item,key) in checkListData" :key="key" :label=item.id>
-            <span>{{item.name}}</span>
+            <div class="sidebar-info-item-txt">{{item.name}}</div>
             <idc-config-box ref="idcConfigBox" :post-idc="item" placement="left" @after="getIDCOptionData" :button-class="'checkbox-edit'">
               <template v-slot:optionZone>
                 <span @click="closeAllPop">

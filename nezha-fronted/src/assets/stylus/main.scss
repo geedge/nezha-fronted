@@ -196,6 +196,13 @@ html {
 .content-left .sidebar-info-item.el-checkbox {
   padding: 0;
 }
+.sidebar-info-item-txt {
+  display: inline-block;
+  width: 170px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
 .side-bar-menu-edit {
   line-height: 20px;
   float: right;
@@ -206,6 +213,7 @@ html {
 }
 .sidebar-info-item .el-checkbox__label {
   width: calc(100% - 25px);
+  vertical-align: middle;
 }
 .sidebar-info-item .el-checkbox__label>span:nth-child(2) {
   float: right;

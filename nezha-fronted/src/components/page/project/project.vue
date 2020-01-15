@@ -10,7 +10,7 @@
           @click="changeModule(item)"
           :id="'project-module-'+item.id"
         >
-          {{item.name}}
+          <div class="sidebar-info-item-txt">{{item.name}}</div>
           <div class="side-bar-menu-edit" @click.stop="toEditModule(item)" :id="'project-module-edit-'+item.id"><i class="el-icon-edit-outline"></i></div>
         </div>
       </div>
