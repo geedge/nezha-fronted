@@ -89,7 +89,14 @@ const cn = {
       expert:"Expert",
       label:"指标标签",
       addMetric:"添加指标",
-      expertTip:"请输入表达式"
+      expertTip:"请输入表达式",
+      goPanelTip:"是否前去看板,查看创建的图表？",
+      previewChart:"预览图表",
+      singleChartShow:"单图展示",
+      multiChartsShow:"多图展示",
+      createPanel:"创建面板",
+      selectPanel:"选择已有面板",
+      saveChartToPanel:"保存图表到看板"
     },
     metricPreview:{
       title:'指标预览',

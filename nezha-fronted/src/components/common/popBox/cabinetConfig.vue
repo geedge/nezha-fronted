@@ -1,5 +1,5 @@
 <template>
-  <el-popover :placement="placement"  width="400" @hide="hidePop"  ref="popBox" v-model="popBox.show">
+  <el-popover :placement="placement" @show="afterShow" width="400" @hide="hidePop"  ref="popBox" v-model="popBox.show">
     <div class="">
       <div class="pop-window-assetType-content">
         <div class="pop-top-btns">
@@ -133,6 +133,11 @@ export default {
     show:function(isShow,isEdit){
       this.popBox.show=isShow;
       this.popBox.isEdit=isEdit;
+    },
+    afterShow:function(){
+      if(!this.popBox.isEdit){
+        this.popBox.isEdit=this.isEdit;
+      }
     },
     toEdit:function(u){
       this.cabinet = Object.assign({}, u);

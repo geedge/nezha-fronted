@@ -12,20 +12,20 @@
           ></chart-metric>
       </el-row>
       <el-row class="pt-5 pb-5">
-        <button type="primary" @click="preview" :disabled="loading" class="nz-btn nz-btn-size-normal nz-btn-style-normal ">预览图表</button>
+        <button type="primary" @click="preview" :disabled="loading" class="nz-btn nz-btn-size-normal nz-btn-style-normal ">{{$t('dashboard.metric.previewChart')}}</button>
         <button :disabled="saveDisabled || loading" type="primary" @click="preview('change')"
                 :class="{'nz-btn nx-btn-disabled' : (saveDisabled || loading), 'nz-btn nz-btn-size-normal nz-btn-style-normal' : !(saveDisabled || loading)}"
         >{{chartSwitchWord}}</button>
         <!-- <Button type="primary" @click="addTarget">添加指标</Button> -->
       </el-row>
       <el-row class="operate-area">
-        <div class="operate-area-title">保存图表到看板:</div>
+        <div class="operate-area-title">{{$t('dashboard.metric.saveChartToPanel')}}:</div>
         <button :disabled="saveDisabled" type="primary" @click="createNew"
                 :class="{'nz-btn nx-btn-disabled' : saveDisabled , 'nz-btn nz-btn-size-normal nz-btn-style-normal' : !saveDisabled}"
-        >创建看板</button>
+        >{{$t('dashboard.metric.createPanel')}}</button>
         <button :disabled="saveDisabled" type="primary" @click="selectPanel"
                 :class="{'nz-btn nx-btn-disabled' : saveDisabled , 'nz-btn nz-btn-size-normal nz-btn-style-normal' : !saveDisabled}"
-        >选择已有看板</button>
+        >{{$t('dashboard.metric.selectPanel')}}</button>
       </el-row>
       <el-row class="mt-10">
         <el-checkbox :disabled="saveDisabled" v-model="isSave">options</el-checkbox>
@@ -33,9 +33,9 @@
       <el-form :model="chartInfo" ref="chartInfo" v-show="isSave">
         <el-row>
           <div class="common-float-left">
-            <el-form-item :label-width="80" label="图宽" prop="span"
-            :rules="{ required: true, type: 'number', message: '请选择图表宽度', trigger: 'change' }">
-              <el-select style="width:130px;" size="small" v-model="chartInfo.span" transfer>
+            <el-form-item :label-width="80" :label="$t('dashboard.panel.chartForm.width')" prop="span"
+            :rules="{ required: true, type: 'number', trigger: 'change' }">
+              <el-select class="w-select" size="small" v-model="chartInfo.span" transfer>
                 <el-option v-for="item in spanList" :key="item" :label="'span-' + item" :value="item">
                   span-{{item}}
                 </el-option>
@@ -43,17 +43,17 @@
             </el-form-item>
           </div>
           <div class="common-float-left">
-            <el-form-item :label-width="80" label="图高" prop="height"
-            :rules="{ required: true, type: 'number', message: '请输入图表高度', trigger: 'change' }">
-              <el-input-number :min="400" size="small" v-model="chartInfo.height" style="width: 130px" placeholder="请输入图表高度"></el-input-number>px
+            <el-form-item :label-width="80" :label="$t('dashboard.panel.chartForm.high')" prop="height"
+            :rules="{ required: true, type: 'number', trigger: 'change' }">
+              <el-input-number :min="400" size="small" v-model="chartInfo.height" class="w-select" placeholder=""></el-input-number>px
             </el-form-item>
           </div>
         </el-row>
         <el-row>
           <div class="common-float-left">
-            <el-form-item :label-width="80" label="类型" prop="type"
-              :rules="{ required: true,  message: '请选择图表类型', trigger: 'change' }">
-              <el-select transfer style="width:130px;" v-model="chartInfo.type" size="small">
+            <el-form-item :label-width="80" :label="$t('dashboard.panel.chartForm.type')" prop="type"
+              :rules="{ required: true,   trigger: 'change' }">
+              <el-select transfer class="w-select" v-model="chartInfo.type" size="small">
                 <el-option v-for="item in typeList"
                   :key="item.id" 
                   :label="item.name" 
@@ -66,7 +66,7 @@
         </el-row>
       </el-form>
     </div>
-    <metric-pre-panel-box :chartInfo="chartInfo"  :elementTarget="elementTarget" :seriesData="seriesData" :chartCount="chartCount" @reload="reload"  ref="panelBox"></metric-pre-panel-box>
+    <metric-pre-panel-box :chartInfo="chartInfo"  :elementTarget="elementTarget" :seriesData="seriesData" :series="series" :chartCount="chartCount" @reload="reload"  ref="panelBox"></metric-pre-panel-box>
 
   </div>
 </template>
@@ -130,20 +130,22 @@ export default {
       metricInfo: {}, // 保存从chartTag中获取的seriesData
       createChartList: [], // 创建多个图表的图表信息
       seriesData: [], // 查询图表后生成的series信息,用于生成多个图表时提供图表title
+      series:[],//组织好的数据
       panelItem: {}, // 保存看板信息
     };
   },
   computed: {
     chartSwitchWord() {
-      const word = this.chartCount === 'single' ? '多图展示' : '单图展示';
+      const word = this.chartCount === 'single' ? this.$t('dashboard.metric.multiChartsShow'): this.$t('dashboard.metric.singleChartShow');
       return word;
     },
   },
   watch: {},
   methods: {
     // 父级调用保存series,作为多个图表生成title
-    setSeries(data) {
+    setSeries(data,series) {
       this.seriesData = data;
+      this.series = series;
     },
     // 默认打开
     initOpen() {
@@ -156,6 +158,8 @@ export default {
     reload(){
       this.saveDisabled = true;
       this.elementTarget = {};
+
+
     },
     // 创建看板
     createNew() {

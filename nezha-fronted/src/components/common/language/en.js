@@ -98,11 +98,17 @@ const en = {
       expert:"Expert",
       label:"MetricLabel",
       addMetric:"Create Metric",
-      expertTip:"Please enter an expression"
-
+      expertTip:"Please enter an expression",
+      goPanelTip:"Go to the panel to view the created chart ?",
+      previewChart:"Preview Chart",
+      singleChartShow:"Single Graph Display",
+      multiChartsShow:"Multi Graph Display",
+      createPanel:"Create Panel",
+      selectPanel:"Select Panel",
+      saveChartToPanel:"Save Chart To Panel"
     },
     metricPreview:{
-      title:'MetricPreview',
+      title:'Metric Preview',
     },
     refresh:'refresh',
     edit:'edit',

@@ -54,13 +54,16 @@
 </template>
 <script>
   import bus from '../../../libs/bus';
+  import axios from 'axios';
+
   export default {
     name: "metricPrePanelBox",
     props: {
       chartInfo: Object,
       elementTarget:Object,
       seriesData:Object,
-      chartCount:Object
+      chartCount:Object,
+      series:Object
     },
     data() {
       return {
@@ -116,37 +119,30 @@
           // 多图模式
           if (this.chartCount === 'multiple') {
             this.createChartList = [];
-            //alert(JSON.stringify(this.seriesData));
             this.seriesData.forEach((queryItem) => {
               const soleParam = Object.assign({}, params);
               const elements = [];
-
-              let tagStr = ''; // tag字符串
-              let host = `${queryItem.metric}, `; // 名称
-              const tagsArr = Object.keys(queryItem.tags);
-              // 根据图表展示时获取的tag进行组装名称以及tag字符串
-              tagsArr.forEach((tag) => {
-                if (tag !== 'uuid') {
-                  host += `${tag}=${queryItem.tags[tag]}, `;
-                  if (tagStr) {
-                    tagStr += `,${tag}=${queryItem.tags[tag]}`;
-                  } else {
-                    tagStr += `${tag}=${queryItem.tags[tag]}`;
+              // 图表中每条线的名字,后半部分
+              let host = `${queryItem.metric.__name__}`;//up,
+              const tagsArr = Object.keys(queryItem.metric);//["__name__","asset","idc","instance","job","module","project"]
+              // 判断是否有数据
+              if (queryItem.values.length > 0 && tagsArr.length > 0) {
+                host +="{";
+                tagsArr.forEach((tag, i) => {
+                  if (tag !== '__name__') {
+                    host += `${tag}="${queryItem.metric[tag]}",`;
                   }
-                }
-              });
-              // 图表中每条线的名字,去掉最后的逗号与空格
-              host = host.substring(0, host.length - 2);
+                });
+                if(host.endsWith(',')){host = host.substr(0,host.length-1);}
+                host +="}";
+              }
               soleParam.title = host;
-
               elements.push({
-                expression: this.elementTarget.metric,
+                expression: host,
                 type: this.elementTarget.type,
               });
               soleParam.elements = elements;
-              //if (valid) {
-                this.addMultipleChart(soleParam);
-              //}
+              this.addMultipleChart(soleParam);
             });
           } else if (this.chartCount === 'single') {
             params.title = this.chartSaveInfo.title;
@@ -174,42 +170,94 @@
       addCharts(params) {
         this.$post('panel/'+this.panelId+'/charts', params).then(response => {
           if (response.code === 200) {
-            this.elementTarget = {};
-            //this.saveDisabled = true; // 创建成功后,不能再次创建??
-            this.$emit('reload');
+            let panelId= this.panelId;
             this.esc();
             this.$message({duration: 1000, type: 'success', message: this.$t("tip.saveSuccess")});
-            /*
-            this.$confirm(this.$t("tip.confirmDelete"), {
+            this.$confirm(this.$t("dashboard.metric.goPanelTip"),this.$t("tip.saveSuccess"), {
               confirmButtonText: this.$t("tip.yes"),
               cancelButtonText: this.$t("tip.no"),
-              type: 'warning'
+              type: 'success'
             }).then(() => {
-
+              //this.$store.state.assetData.moduleData = 'panel';
+              this.$store.state.showPanel.id = panelId;
+              this.$store.state.showPanel.name = this.panelItem.name;
+              this.$router.push({
+                path: "/panel",
+                query: {
+                  t: +new Date()
+                }
+              });
             });
-            */
-            /*
-            this.$Modal.confirm({
-              title: '创建成功',
-              content: `是否前去看板：${this.panelItem.name}，查看创建的图表`,
-              onOk: () => {
-                this.$router.push({
-                  path: `/console/panel/detail/${this.panelId}/${this.productId}`,
-                  query: {
-                    product: this.$route.query.product,
-                    panel: this.panelItem.name,
-                  },
-                });
-              },
-              onCancel: () => {
-                this.cancel();
-              },
-            });
-            */
+            this.$emit('reload');
           } else {
             this.$message.error(response.msg);
           }
         });
+      },
+
+      // 创建多个图表
+      addMultipleChart(params) {
+        this.createChartList.push(params);
+        if (this.seriesData.length === this.createChartList.length) {
+          this.$nextTick(() => {
+            const api = [];
+            this.createChartList.forEach((item) => {
+              api.push(this.$post('panel/'+this.panelId+'/charts', item));
+            });
+            axios.all(api).then((res) => {
+              let successFlag = true;
+              res.forEach((item) => {
+                if (item.code !== 200) {
+                  successFlag = false;
+                }
+              });
+              if (successFlag) {
+                //this.saveDisabled = true; // 创建成功后,不能再次创建
+                let panelId=this.panelId;
+                this.createChartList = [];
+                this.esc();
+
+                this.$message({duration: 1000, type: 'success', message: this.$t("tip.saveSuccess")});
+                this.$confirm(this.$t("dashboard.metric.goPanelTip"),this.$t("tip.saveSuccess"), {
+                  confirmButtonText: this.$t("tip.yes"),
+                  cancelButtonText: this.$t("tip.no"),
+                  type: 'success'
+                }).then(() => {
+                  //this.$store.state.assetData.moduleData = 'panel';
+                  this.$store.state.showPanel.id = panelId;
+                  this.$store.state.showPanel.name = this.panelItem.name;
+                  this.$router.push({
+                    path: "/panel",
+                    query: {
+                      t: +new Date()
+                    }
+                  });
+                });
+                //this.$message({duration: 1000, type: 'success', message: this.$t("tip.saveSuccess")});
+                //this.elementTarget = {};
+               /*
+                this.$confirm(this.$t("dashboard.metric.goPanelTip"), this.$t("tip.saveSuccess"), {
+                  confirmButtonText: this.$t("tip.yes"),
+                  cancelButtonText: this.$t("tip.no"),
+                  type: 'info'
+                }).then(() => {
+                  alert('multi-ok');
+                  /*
+                  this.$router.push({
+                      path: `/console/panel/detail/${this.panelId}/${this.productId}`,
+                      query: {
+                        panel: this.panelItem.name,
+                      },
+                  });
+    */
+                //});
+                this.$emit('reload');
+              } else {
+                this.$message.error(response.msg);
+              }
+            });
+        });
+        }
       },
 
       save: function() {
@@ -222,9 +270,6 @@
                   this.panelId = response.data.panel.id;
                   this.panelItem = response.data.panel;
                   this.getOptions();
-                  //this.esc();
-                  //this.$message({duration: 1000, type: 'success', message: this.$t("tip.saveSuccess")});
-                  //this.$emit("reload");----询问是否去查看
                 } else {
                   this.$message.error(response.msg);
                 }
@@ -246,7 +291,9 @@
           this.$refs.chartSaveInfo.resetFields();
         }
         if (this.$refs.panelSelect) {
-          this.$refs.panelSelect.reset();
+          this.chartSaveInfo.panelId='';
+          this.panelId=0;
+         // this.$refs.panelSelect..reset();
         }
       },
       getTableData: function() {
