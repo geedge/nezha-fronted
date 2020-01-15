@@ -189,6 +189,7 @@
               if (response.code === 200) {
                 temp.$message({duration: 1000, type: 'success', message: temp.$t("tip.deleteSuccess")});
                 temp.$emit("after");
+                temp.$store.commit('assetDcListChange');
                 temp.esc();
               } else {
                 this.$message.error(response.msg);
