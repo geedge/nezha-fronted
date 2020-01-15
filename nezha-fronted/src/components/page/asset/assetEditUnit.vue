@@ -1014,6 +1014,13 @@
 
         }
       },
+      clearFile:function(){
+        if(this.$refs.upload){
+          this.$refs.upload.clearFiles();
+        }
+        this.uploadFileList=[];
+        this.assetData.accounts[0].privateKey='';
+      },
       deleteData(data, item) {
         this.$confirm(this.$t("tip.confirmDelete"), {
           confirmButtonText: this.$t("tip.yes"),

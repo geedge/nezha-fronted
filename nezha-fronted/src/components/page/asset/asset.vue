@@ -602,8 +602,8 @@
         }
       },
       flushData() {
-        this.addUnitShow=false;
-        this.editUnitShow=false;
+        // this.addUnitShow=false;
+        // this.editUnitShow=false;
         this.getSingleAsset();
         this.getAssetData();
         this.getIDCOptionData();
