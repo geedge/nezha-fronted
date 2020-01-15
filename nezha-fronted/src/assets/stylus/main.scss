@@ -718,3 +718,7 @@ html {
 .nz-submenu .el-menu--popup .el-menu-item .menu-item-active{
   color:$global-text-color-active !important;
 }
+.el-icon-setting:before {
+  content: "\E6CA";
+  color: #BA3939;
+}

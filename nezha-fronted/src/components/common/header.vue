@@ -8,8 +8,10 @@
       <el-submenu index="0" popper-class="nz-submenu">
         <template slot="title">
           <div class="menu-create">
-            &nbsp;&nbsp;<i class="el-icon-plus"></i>
-            <div>{{$t('overall.create')}}</div>
+            <div class="menu-icon-create">
+             <i class="nz-icon-create-square nz-icon"></i>
+            </div>
+            <div class='menu-create-title'>{{$t('overall.create')}}</div>
           </div>
         </template>
         <template v-for="(item, index) in createMenu">
@@ -91,7 +93,7 @@
       </el-submenu>
       <el-submenu index="6" popper-class="nz-submenu">
         <template slot="title">
-          <div>{{username}}<i class="el-icon-arrow-down"></i></div>
+          <div class='nz-user'>{{username}}<i class="el-icon-arrow-down"></i></div>
         </template>
         <el-menu-item index="6-0">
           <div :style="language=='en'?'color:#f90':''" @click="changeLocal('en')">English</div>
@@ -379,6 +381,10 @@
       this.getUserData();
       this.getAssetData();
       this.getProjectList();
+      // 刷新后有高亮
+      let activePath = this.$route.path.slice(1)
+      this.activeIndex = activePath
+      // console.log(activePath,this.activeIndex)
     },
     computed: {
       projectListReloadWatch() {
@@ -386,7 +392,8 @@
       },
       getIdcData() {
         return this.$store.state.assetDcList;
-      }
+      },
+
     },
     watch: {
       getIdcData: {
@@ -413,16 +420,21 @@
   .header .el-menu--horizontal>.el-submenu .el-submenu__title .menu-active{
     border-bottom:$global-text-color-active solid 2px;
     border-radius: 2px;
-    height: 22px;
+    height: 26px;
     line-height: 16px;
     display: inline-block;
     font-size: 16px;
-    margin: 0 auto ;
+    margin: 0 auto -8px;
+    font-weight: 500;
+    
   }
   .header .el-menu--horizontal>.el-submenu .el-submenu__title i {
     color: inherit;
   }
-  .el-submenu__title .el-icon-arrow-down {
+  .el-submenu__title{
+    font-size: 16px;
+  }
+  .el-submenu__title .el-icon-arrow-down ,.el-submenu__title>.nz-user{
     font-size: 14px;
   }
   .nz-submenu .el-menu--popup {
@@ -431,11 +443,11 @@
   .header .el-menu--horizontal>.el-submenu .el-submenu__title {
     min-width: 120px;
     text-align: center; 
-    color: $header-text-color;
+    color:$header-text-color;
     padding: 0;
   }
   .header .el-menu--horizontal>.el-submenu .el-submenu__title:hover {
-    color: #444;
+    color: #444 !important;
   }
 
   .el-menu.el-menu--horizontal {
@@ -458,6 +470,17 @@
   }*/
   .el-submenu.is-active .el-submenu__title{
     border-bottom-color: transparent !important;
+  } 
+  .menu-create .menu-icon-create .nz-icon:before{
+    height: 20px;
+    line-height: 20px;
+    display: inline-block;
+    font-size: 20px;
+    margin-top:-4px;
+    margin-bottom:6px;
+  } 
+  .el-submenu__icon-arrow .el-icon-arrow-down{
+    display: none;
   }
   .el-menu--horizontal.nz-submenu {
     border: 1px solid #bbbbbb;

@@ -26,7 +26,8 @@
     <div class="content-right">
       <div class="top-tools">
         <button @click.stop="tagShow('showAdd')" class="nz-btn nz-btn-size-normal nz-btn-style-normal float-right" id="asset-add">
-          <span class="top-tool-btn-txt">{{$t('overall.add')}}</span>
+          <span class="top-tool-btn-txt">{{$t('overall.add')}}</span>  
+          <!-- ADD按钮 -->
         </button>
         <div class="top-tool-search float-right"><search-input :searchMsg="searchMsg" @search="search"></search-input></div>
       </div>
@@ -48,7 +49,7 @@
           <template slot="header" slot-scope="scope">
             <span v-if="index==0">
                 <span @click.stop="elementsetShow('shezhi',$event)" id="asset-tab-set">
-                    <i class="el-icon-setting"></i>
+                    <i class="nz-icon nz-icon-gear"></i>
                 </span>
                 <span>{{item.label}}</span>
             </span>
@@ -654,6 +655,9 @@
   }
   .tab-input-square-high {
     border: 1px solid #1166bb;
+  }
+  #asset-tab-set{
+    
   }
 </style>
 <style lang="scss">

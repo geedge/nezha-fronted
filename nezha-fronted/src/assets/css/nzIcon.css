@@ -13,6 +13,7 @@
   font-style: normal;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  
 }
 
 .nz-icon-lang-en:before {
@@ -50,7 +51,7 @@
 .nz-icon-equal:before {
   content: "\e61a";
 }
-
+                               
 .nz-icon-delete:before {
   content: "\e61b";
 }
@@ -65,6 +66,7 @@
 
 .nz-icon-create-square:before {
   content: "\e61f";
+  
 }
 
 .nz-icon-zoomin:before {
@@ -73,6 +75,8 @@
 
 .nz-icon-gear:before {
   content: "\e61d";
+  color: #BA3939;
+  font-size:12px;
 }
 
 .nz-icon-view:before {
