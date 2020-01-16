@@ -63,6 +63,14 @@ export default {
     show(show) {
       this.popBox.show = show;
     }
+  },
+  watch:{
+    assetId:{
+      immediate:true,
+      handler(n,o){
+        this.pageObj.assetId=n;
+      }
+    }
   }
 }
 </script>

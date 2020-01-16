@@ -77,7 +77,7 @@
             </div>
             <div v-if="item.prop=='Module'">
               <div v-if="scope.row.moduleNum > 0" @click="getAssetModuleList(scope.row.id)" :id="'asset-module-'+scope.row.id">
-                <module-list-pop :assetId="scope.row.id + ''" @openModuleBox="openModuleBox" placement="left" :ref="'moduleListPop' + scope.row.id">
+                <module-list-pop :asset-id="scope.row.id + ''" @openModuleBox="openModuleBox" placement="left" :ref="'moduleListPop' + scope.row.id">
                   <template v-slot:optionZone>
                     <div class="tab-input-square tab-input-square-high link" >{{scope.row.moduleNum}}</div>
                   </template>
