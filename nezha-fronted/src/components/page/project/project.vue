@@ -116,6 +116,7 @@
     <asset-edit-unit :edit-unit-show='viewAssetState' @refreshData="getEndpointTableData" @sendStateData="tabControl" ref="assetEditUnit"></asset-edit-unit>
     <element-set
       v-clickoutside="elementsetHide"
+      :table-title="endpointTableTitle"
       :dropCol="dropCol"
       @tablelable="tablelabelEmit"
       ref="elementset"
@@ -566,7 +567,7 @@
     display: inline-block;
     font-size: 12px;
     margin-right:6px;
-  } 
+  }
   /* start--param*/
   .param-btn {
     float: right;

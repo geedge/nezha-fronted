@@ -45,17 +45,32 @@
 
 <script>
 export default {
-  props: ["dropCol"],
+  props: ["dropCol","tableTitle"],
   data() {
     return {
       other: this.$t("overall.other"),
       event_positiony: 0,
       event_positionx: 0,
       eventfixedVal: {},
-      dropColRes: JSON.parse(JSON.stringify(this.dropCol))
+      dropColRes: JSON.parse(JSON.stringify(this.dropCol)),
+      titles: JSON.parse(JSON.stringify(this.tableTitle))
     };
   },
   mounted() {},
+  created() {
+    let localStorageTitle=JSON.parse(localStorage.getItem("nz-tableTitle-" + localStorage.getItem("nz-username") + "-" + this.$route.path));
+    if(localStorageTitle){
+      for(let title of this.titles){
+        for(let lsTitle of localStorageTitle){
+          if(lsTitle.prop === title.prop){
+            lsTitle.label=title.label;
+          }
+        }
+      }
+      localStorage.setItem("nz-tableTitle-" + localStorage.getItem("nz-username") + "-" + this.$route.path,JSON.stringify(localStorageTitle))
+    }
+
+  },
   watch: {
     dropCol: {
       immediate: true,

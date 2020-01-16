@@ -6,7 +6,7 @@
     display: inline-block;
     font-size: 12px;
     margin-right:6px;
-  } 
+  }
 </style>
 <template>
     <div class="account">
@@ -141,6 +141,7 @@
         <element-set
             v-clickoutside="elementsetHide"
             :dropCol="dropCol"
+            :table-title="tableTitle"
             @tablelable="tablelabelEmit"
             ref="elementset"
         ></element-set>
@@ -337,6 +338,17 @@ export default {
       this.rightBox.title = this.$t("config.account.createAccount");
       this.rightBox.show = true;
     },
+    tabSave:function(){
+      this.$put('sys/user/update', this.user).then(response => {
+        if (response.code === 200) {
+          this.rightBox.show = false;
+          this.$message({duration: 1000, type: 'success', message: this.$t("tip.saveSuccess")});
+        } else {
+          this.$message.error(response.msg);
+        }
+        this.getTableData();
+      });
+    },
     save: function() {
       this.$refs.accountForm.validate((valid) => {
         if(valid){
@@ -376,7 +388,7 @@ export default {
     },
     statusChange: function(user) {
       this.user = user;
-      this.save();
+      this.tabSave();
     },
     jumpTo(data,id) {
       this.$store.state.assetData.moduleData = data;

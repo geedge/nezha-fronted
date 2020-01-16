@@ -30,7 +30,7 @@
                   :label="item.label"
                 >
                     <template slot="header" slot-scope="scope">
-                        <span v-if="index==0"  class='nav-tabel-header'> 
+                        <span v-if="index==0"  class='nav-tabel-header'>
                             <span @click.stop="elementsetShow('shezhi',$event)" class="nz-table-gear">
                                 <i class="nz-icon nz-icon-gear"></i>
                             </span>
@@ -78,6 +78,7 @@
       <asset-edit-unit :edit-unit-show='viewAssetState' @refreshData="getAlertList" @sendStateData="tabControl" ref="assetEditUnit"></asset-edit-unit>
       <element-set
         v-clickoutside="elementsetHide"
+        :table-title="tableTitle"
         :dropCol="dropCol"
         @tablelable="tablelabelEmit"
         ref="elementset"

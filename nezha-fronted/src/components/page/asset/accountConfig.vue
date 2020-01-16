@@ -104,7 +104,7 @@ export default {
             { validator: validataUser, trigger: 'blur'}
           ],
           port:[
-            { validator: validatePort, trigger: 'change'}
+            { validator: validatePort, trigger: 'change',required:true}
           ],
           file:[
             { validator: validateFile, trigger: 'change'}

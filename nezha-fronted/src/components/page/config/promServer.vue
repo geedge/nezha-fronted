@@ -6,7 +6,7 @@
     display: inline-block;
     font-size: 12px;
     margin-right:6px;
-  } 
+  }
 </style>
 <template>
     <div class="prom">
@@ -136,6 +136,7 @@
         </transition>
         <element-set
           v-clickoutside="elementsetHide"
+          :table-title="tableTitle"
           :dropCol="dropCol"
           @tablelable="tablelabelEmit"
           ref="elementset"
@@ -178,7 +179,7 @@ export default {
           {required:true,message:this.$t('validate.required'),trigger:'change'}
         ],
         host:[
-          { validator: checkHost, trigger: 'blur'}
+          { validator: checkHost, trigger: 'blur',required:true}
         ],
         port:[
           {required:true,message:this.$t('validate.required'),trigger:'blur'},

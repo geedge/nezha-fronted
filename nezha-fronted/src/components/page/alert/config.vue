@@ -6,7 +6,7 @@
     display: inline-block;
     font-size: 12px;
     margin-right:6px;
-  } 
+  }
 </style>
 <template>
     <div class="config">
@@ -83,6 +83,7 @@
         <asset-edit-unit :edit-unit-show='viewAsset' @refreshData="getTableData" @sendStateData="tabControl" ref="assetEditUnit"></asset-edit-unit>
         <element-set
           v-clickoutside="elementsetHide"
+          :table-title="tableTitle"
           :dropCol="dropCol"
           @tablelable="tablelabelEmit"
           ref="elementset"

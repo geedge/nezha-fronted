@@ -63,7 +63,7 @@
             <div v-if="item.prop=='ID'">
               <span>{{scope.row.id}}</span>
             </div>
-            <div v-if="item.prop=='资产类型'">
+            <div v-if="item.prop=='assetType'">
               <span>{{scope.row.model.type.value}}</span>
             </div>
             <div v-if="item.prop=='SN'">
@@ -110,7 +110,7 @@
             <div v-if="item.prop=='vendor'">
               <span>{{scope.row.model.vendor.value}}</span>
             </div>
-            <div v-if="item.prop=='购买日期'">
+            <div v-if="item.prop=='purchaseDate'">
               <span>{{scope.row.purchaseDate}}</span>
             </div>
             <div v-if="item.prop=='principal'">
@@ -145,7 +145,8 @@
                      ref="assetEditUnit"></asset-edit-unit>
     <element-set
       v-clickoutside="elementsetHide"
-      :dropCol="dropCol"
+      :drop-col="dropCol"
+      :table-title="tableTitle"
       @tablelable="tablelabelEmit"
       ref="elementset"
     ></element-set>
@@ -198,7 +199,7 @@
             width: 90
           }, {
             label: this.$t("asset.tableTitle.assetType"),
-            prop: '资产类型',
+            prop: 'assetType',
             show: true,
           }, {
             label: this.$t("asset.tableTitle.device"),
@@ -239,7 +240,7 @@
             show: true,
           }, {
             label: this.$t("asset.tableTitle.procurementDate"),
-            prop: '购买日期',
+            prop: 'purchaseDate',
             show: true,
           }, {
             label: this.$t("asset.tableTitle.principal"),
@@ -648,12 +649,9 @@
 
       this.getUserData();
       this.getIDCOptionData();
-      this.tablelable = localStorage.getItem("nz-tableTitle-" + localStorage.getItem("nz-username") + "-" + this.$route.path)
-        ? JSON.parse(localStorage.getItem("nz-tableTitle-" + localStorage.getItem("nz-username") + "-" + this.$route.path))
-        : this.tableTitle;
-      this.dropCol = localStorage.getItem("nz-tableTitle-" + localStorage.getItem("nz-username") + "-" + this.$route.path)
-        ? JSON.parse(localStorage.getItem("nz-tableTitle-" + localStorage.getItem("nz-username") + "-" + this.$route.path))
-        : this.tableTitle;
+      let localStorageTitle=localStorage.getItem("nz-tableTitle-" + localStorage.getItem("nz-username") + "-" + this.$route.path);
+      this.tablelable = localStorageTitle ? JSON.parse(localStorageTitle) : this.tableTitle;
+      this.dropCol = localStorageTitle ? JSON.parse(localStorageTitle) : this.tableTitle;
     }
   }
 </script>
