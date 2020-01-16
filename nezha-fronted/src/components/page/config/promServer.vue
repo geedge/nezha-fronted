@@ -19,7 +19,7 @@
         </div>
         <div class="content-right">
             <div class="top-tools">
-              <button @click="toAdd" class="nz-btn nz-btn-size-normal nz-btn-style-normal float-right" id="prom-add">
+              <button @click="toAdd" class="nz-btn nz-btn-size-normal nz-btn-style-light float-right nz-btn-min-width-82" id="prom-add">
                 <span class="top-tool-btn-txt">
                   <i class="nz-icon-create-square nz-icon"></i>
                   {{$t('overall.add')}}</span>
@@ -52,9 +52,14 @@
                             {{scope.row[item.prop] == '2' ? 'Per-Datacenter' : ''}}
                         </span>
                         <div v-else-if="item.prop == 'option'" class="content-right-options">
-                            <span @click="del(scope.row)" class="content-right-option" :id="'prom-tab-del-'+scope.row.id"><i class="el-icon-delete"></i></span>
-                            <span @click="detail(scope.row)" class="content-right-option" :id="'prom-tab-detail-'+scope.row.id"><i class="el-icon-view"></i></span>
-                            <span @click="toEdit(scope.row)" class="content-right-option" :id="'prom-tab-edit-'+scope.row.id"><i class="el-icon-edit-outline"></i></span>
+                          <span @click="del(scope.row)" class="content-right-option" :id="'prom-del-'+scope.row.id"><i
+                            class="el-icon-delete"></i>&nbsp;&nbsp;<span>{{$t('overall.delete')}}</span></span>
+                          &nbsp;&nbsp;&nbsp;
+                          <span @click="toEdit(scope.row)" class="content-right-option" :id="'prom-edit-'+scope.row.id"><i
+                            class="nz-icon nz-icon-edit"></i>&nbsp;&nbsp;<span>{{$t('overall.edit')}}</span></span>
+                          &nbsp;&nbsp;&nbsp;
+                          <span @click="detail(scope.row)" class="content-right-option" :id="'prom-detail-'+scope.row.id"><i
+                            class="nz-icon nz-icon-view"></i>&nbsp;&nbsp;<span>{{$t('overall.view')}}</span></span>
                         </div>
                         <span v-else>{{scope.row[item.prop]}}</span>
                     </template>
@@ -67,17 +72,16 @@
             <div class="right-box right-box-prom" v-if="rightBox.show">
                 <!-- begin--顶部按钮-->
               <div class="right-box-top-btns">
-                <button type="button" v-if="rightBox.isEdit && promServer.id != ''" @click="del(promServer)" id="prom-edit-del" class="nz-btn nz-btn-size-normal nz-btn-style-light">
+                <button type="button" v-if="rightBox.isEdit && promServer.id != ''" @click="del(promServer)" id="prom-edit-del" class="nz-btn nz-btn-size-alien nz-btn-style-light nz-btn-min-width-82">
                   <span class="top-tool-btn-txt">{{$t('overall.delete')}}</span>
                 </button>
-                <button type="button" @click="saveOrToEdit" class="nz-btn nz-btn-size-normal nz-btn-style-normal" id="prom-edit-save">
-                  <span v-if="rightBox.isEdit" class="top-tool-btn-txt">{{$t('overall.save')}}</span>
-                  <span v-else class="top-tool-btn-txt">{{$t('overall.edit')}}</span>
+                <button v-if="!rightBox.isEdit" type="button" @click="saveOrToEdit" class="nz-btn nz-btn-size-alien nz-btn-style-light nz-btn-min-width-82" id="prom-edit-save">
+                  <span class="top-tool-btn-txt">{{$t('overall.edit')}}</span>
                 </button>
 
-                <button type="button" @click="esc" class="nz-btn nz-btn-size-normal nz-btn-style-light nz-btn-style-square" id="prom-edit-esc">
+                <!--<button type="button" @click="esc" class="nz-btn nz-btn-size-normal nz-btn-style-light nz-btn-style-square" id="prom-edit-esc">
                   <span class="top-tool-btn-txt"><i class="el-icon-close"></i></span>
-                </button>
+                </button>-->
               </div>
                 <!-- end--顶部按钮-->
 
@@ -131,7 +135,17 @@
                   </el-form-item>
                 </el-form>
               </el-scrollbar>
-                <!-- end--表单-->
+              <!-- end--表单-->
+
+              <!--底部按钮-->
+              <div class="right-box-bottom-btns">
+                <button @click="esc" id="prom-esc" class="nz-btn nz-btn-size-large nz-btn-style-light nz-btn-min-width-120">
+                  <span>{{$t('overall.cancel')}}</span>
+                </button>
+                <button v-if="rightBox.isEdit" @click="saveOrToEdit" id="prom-save" class="nz-btn nz-btn-size-large nz-btn-style-normal nz-btn-min-width-120">
+                  <span>{{$t('overall.save')}}</span>
+                </button>
+              </div>
             </div>
         </transition>
         <element-set
@@ -208,7 +222,7 @@ export default {
           label: this.$t('config.account.option'),
           prop: 'option',
           show: true,
-          width: 100
+          width: 220
         }
       ],
       tablelable: [],

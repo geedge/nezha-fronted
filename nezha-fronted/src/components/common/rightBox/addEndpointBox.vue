@@ -3,12 +3,12 @@
     <div class="right-box right-box-add-endpoint" v-if="rightBox.show" @mousedown="showEditParamBox(false)">
       <!-- begin--顶部按钮-->
       <div class="right-box-top-btns">
-        <button type="button" @click="save" class="nz-btn nz-btn-size-normal nz-btn-style-normal" id="ep-add">
+        <!--<button type="button" @click="save" class="nz-btn nz-btn-size-normal nz-btn-style-normal" id="ep-add">
           <span class="top-tool-btn-txt">{{$t('overall.save')}}</span>
         </button>
         <button type="button" @click="esc" class="nz-btn nz-btn-size-normal nz-btn-style-light nz-btn-style-square" id="ep-esc">
           <span class="top-tool-btn-txt"><i class="el-icon-close"></i></span>
-        </button>
+        </button>-->
       </div>
       <!-- end--顶部按钮-->
 
@@ -94,7 +94,7 @@
                   <el-input id="edit-param" @click.native.stop="showEditParamBox(true, currentModuleCopy, 1, $event)" slot="reference" disabled class="module-info module-info-param input-x-mini" v-model="currentModuleCopy.param"></el-input>
                 </el-popover>
                 <el-input class="module-info module-info-path input-x-mini" v-model="currentModuleCopy.path"></el-input>
-                <button type="button" id="cover-param" @click="coverEndpoint" class="nz-btn nz-btn-size-small nz-btn-style-light nz-btn-style-square module-info module-info-cover">{{$t('overall.cover')}}</button>
+                <button type="button" id="cover-param" @click="coverEndpoint" class="nz-btn nz-btn-size-small nz-btn-style-light module-info module-info-cover">{{$t('overall.cover')}}</button>
               </div>
               <!--endpoints-->
               <div class="endpoints-box-endpoints" :style="{borderColor: endpointTouch ? paramBorderColor : '#dcdfe6'}">
@@ -188,7 +188,7 @@
                 </el-table>
                 <div class="el-form-item__error" :style="{opacity: endpointTouch && this.endpointList.length == 0 ? '1' : '0'}" style="left: unset; transition: all .2s">{{$t('validate.required')}}</div>
                 <div>
-                  <button id="clear-select-asset" type="button" @click="clearSelection" class="nz-btn nz-btn-size-small nz-btn-style-light endpoints-clear-btn">{{$t('overall.clear')}}</button>
+                  <button id="clear-select-asset" type="button" @click="clearSelection" class="nz-btn nz-btn-size-normal nz-btn-style-light endpoints-clear-btn">{{$t('overall.clear')}}</button>
                   <span style="display: inline-block; font-size: 14px; float: right;line-height: 35px;padding-right: 15px;">All: {{this.endpointList.length}}</span>
                 </div>
               </div>
@@ -197,6 +197,16 @@
         </el-form>
 
       </el-scrollbar>
+
+      <!--底部按钮-->
+      <div class="right-box-bottom-btns">
+        <button @click="esc" id="ep-esc" class="nz-btn nz-btn-size-large nz-btn-style-light nz-btn-min-width-120">
+          <span>{{$t('overall.cancel')}}</span>
+        </button>
+        <button @click="save" id="ep-add" class="nz-btn nz-btn-size-large nz-btn-style-normal nz-btn-min-width-120">
+          <span>{{$t('overall.save')}}</span>
+        </button>
+      </div>
 
       <!--start--param编辑框-->
       <transition name="right-sub-box">
@@ -816,7 +826,7 @@
   .endpoint-asset-search-input {
     display: inline-block;
     width: 100px;
-    vertical-align: middle;
+    vertical-align: top;
   }
   /* end--搜索框*/
 

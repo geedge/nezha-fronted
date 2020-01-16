@@ -47,13 +47,13 @@ const cn = {
       chartForm:{
         chartId:"ID",
         chartName:"图表名称",
-        type:"类别",
+        type:"类型",
         typeVal:{
           line:{
-            label:"线"
+            label:"曲线图"
           },
           bar:{
-            label:"柱"
+            label:"柱状图"
           },
           table:{
             label:"表格"
@@ -61,11 +61,11 @@ const cn = {
         },
         width:"宽",
         high:"高",
-        metric:"Metric",
-        addMetric:"新增Metric",
+        metric:"指标",
+        addMetric:"添加指标",
       },
       chartTableColumn:{
-        metric:'metric',
+        metric:'指标',
         label:'标签',
         time:'时间',
         value:'值',
@@ -75,46 +75,45 @@ const cn = {
       to:'至',
       recOne:'最近1小时',
       recFour:'最近4小时',
-      recOneDay:'最近1天',
-      yesterday:'昨天',
-      recSevenDay:'最近1星期',
+      recOneDay:'最近1日',
+      yesterday:'昨日',
+      recSevenDay:'最近7日',
       recOneMonth:'最近1月',
       curMonth:'本月',
       lastMonth:'上月',
       refreshInterval:{
         never:'从不',
-        oneMinute:'1 分',
-        threeMinutes:'3 分',
-        fiveMinutes:'5 分',
-        tenMinutes:'10 分',
+        oneMinute:'1分钟',
+        threeMinutes:'3分钟',
+        fiveMinutes:'5分钟',
+        tenMinutes:'10分钟',
       },
       view:'查看',
       confirm:'Ok',
       cancel:'取消'
     },
     metric:{
-      name:"Metric",
-      normal:"Normal",
-      expert:"Expert",
-      label:"MetricLabel",
-      addMetric:"Create Metric",
-      expertTip:"Please enter an expression",
-      goPanelTip:"Go to the panel to view the created chart ?",
-      previewChart:"Preview Chart",
-      singleChartShow:"Single Graph Display",
-      multiChartsShow:"Multi Graph Display",
-      createPanel:"Create Panel",
-      selectPanel:"Select Panel",
-      saveChartToPanel:"Save Chart To Panel"
+      name:"指标名称",
+      normal:"普通",
+      expert:"专家",
+      label:"指标标签",
+      addMetric:"添加指标",
+      expertTip:"请输入表达式",
+      goPanelTip:"是否前去看板,查看创建的图表？",
+      previewChart:"预览图表",
+      singleChartShow:"单图展示",
+      multiChartsShow:"多图展示",
+      createPanel:"创建面板",
+      selectPanel:"选择已有面板",
+      saveChartToPanel:"保存图表到看板"
     },
     metricPreview:{
-      title:'Metric Preview',
+      title:'指标预览',
     },
-    refresh:'refresh',
-    edit:'edit',
-    delete:'delete',
-    screen:'fullScreen'
-
+    refresh:'刷新',
+    edit:'编辑',
+    delete:'删除',
+    screen:'全屏'
   },
   validate: { //校验规则
     required: '必填项',
@@ -146,7 +145,7 @@ const cn = {
   },
   asset:{
     asset: '资产',
-    EditAsset:'Edit Asset',
+    EditAsset:'编辑资产',
     createAssetTab:{
       title:'新增资产',
       sn:'SN',
@@ -415,7 +414,7 @@ const cn = {
       moduleParameter: "组件参数"
     },
     metrics: {
-      metrics: "Metrics",
+      metrics: "指标",
       name: '名称',
       type: '类型',
       description: '描述'

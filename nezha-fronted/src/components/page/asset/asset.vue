@@ -17,7 +17,7 @@
             <idc-config-box ref="idcConfigBox" :post-idc="item" placement="left" @after="getIDCOptionData" :button-class="'checkbox-edit'">
               <template v-slot:optionZone>
                 <span @click="closeAllPop">
-                  <i class="el-icon-edit-outline" @click="getSingleIDCData(item.id,'edit')"></i>
+                  <i class="nz-icon nz-icon-edit" @click="getSingleIDCData(item.id,'edit')"></i>
                 </span>
               </template>
             </idc-config-box>
@@ -28,7 +28,7 @@
 
     <div class="content-right">
       <div class="top-tools">
-        <button @click.stop="tagShow('showAdd')" class="nz-btn nz-btn-size-normal nz-btn-style-normal float-right" id="asset-add">
+        <button @click.stop="tagShow('showAdd')" class="nz-btn nz-btn-size-normal nz-btn-style-light float-right nz-btn-min-width-82" id="asset-add">
           <span class="top-tool-btn-txt">
              <i class="nz-icon-create-square nz-icon"></i>
             {{$t('overall.add')}}</span>
@@ -84,15 +84,15 @@
               <div v-if="scope.row.moduleNum > 0" @click="getAssetModuleList(scope.row.id)" :id="'asset-module-'+scope.row.id">
                 <module-list-pop :asset-id="scope.row.id + ''" @openModuleBox="openModuleBox" placement="left" :ref="'moduleListPop' + scope.row.id">
                   <template v-slot:optionZone>
-                    <div class="tab-input-square tab-input-square-high link" >{{scope.row.moduleNum}}</div>
+                    <button class="nz-btn nz-btn-size-normal nz-btn-style-light nz-btn-min-width-75">{{scope.row.moduleNum}}</button>
                   </template>
                 </module-list-pop>
               </div>
-              <div v-else class="tab-input-square">{{scope.row.moduleNum}}</div>
+              <button type="button" v-else class="nz-btn nz-btn-size-normal nz-btn-style-light nz-btn-min-width-75">{{scope.row.moduleNum}}</button>
             </div>
             <div v-if="item.prop=='Alert'">
-              <div v-if="scope.row.alertNum > 0" class="tab-input-square tab-input-square-high link" @click="jumpToAlertMsg(scope.row.id)" :id="'asset-alerts-'+scope.row.id">{{scope.row.alertNum}}</div>
-              <div class="tab-input-square" v-else>{{scope.row.alertNum}}</div>
+              <button type="button" v-if="scope.row.alertNum > 0" id="'asset-alerts-'+scope.row.id" @click="jumpToAlertMsg(scope.row.id)" class="nz-btn nz-btn-size-normal nz-btn-style-light nz-btn-min-width-75">{{scope.row.alertNum}}</button>
+              <button type="button" v-else class="nz-btn nz-btn-size-normal nz-btn-style-light nz-btn-min-width-75">{{scope.row.alertNum}}</button>
             </div>
             <div v-if="item.prop=='dataCenter'">
               <idc-config-box :post-idc="JSON.parse(JSON.stringify(scope.row.idc))" ref="idcConfigBox" :is-edit="false" placement="left"  @after="getAssetData(null, true)" :button-class="'checkbox-edit'">
@@ -126,16 +126,16 @@
             </div>
             <div v-if="item.prop == 'option'" class="content-right-options">
               <span @click.stop="deleteData('asset',scope.row.id)" class="content-right-option" :id="'asset-del-'+scope.row.id"><i
-                class="el-icon-delete"></i>
-              </span>
-              <span @click.stop="tagShow('showView',scope.row.id)" class="content-right-option" :id="'asset-detail-'+scope.row.id"><i
-                class="el-icon-view"></i>
-              </span>
+                class="el-icon-delete"></i>&nbsp;&nbsp;<span>{{$t('overall.delete')}}</span>
+              </span>&nbsp;&nbsp;&nbsp;
               <span @click.stop="tagShow('showEdit',scope.row.id)" class="content-right-option" :id="'asset-edit-'+scope.row.id"><i
-                class="el-icon-edit-outline"></i>
-              </span>
+                class="nz-icon nz-icon-edit"></i>&nbsp;&nbsp;<span>{{$t('overall.edit')}}</span>
+              </span>&nbsp;&nbsp;&nbsp;
+              <span @click.stop="tagShow('showView',scope.row.id)" class="content-right-option" :id="'asset-detail-'+scope.row.id"><i
+                class="el-icon-view"></i>&nbsp;&nbsp;<span>{{$t('overall.view')}}</span>
+              </span>&nbsp;&nbsp;&nbsp;
               <span @click="ssss(scope.row.id ,scope.row.host)" class="content-right-option" :id="'asset-ssh-'+scope.row.id"><i
-                class="el-icon-monitor"></i>
+                class="nz-icon nz-icon-cli"></i>&nbsp;&nbsp;<span>CLI</span>
               </span>
             </div>
           </template>
@@ -260,7 +260,7 @@
             label: this.$t('config.account.option'),
             prop: 'option',
             show: true,
-            width: 115
+            width: 280
           }],
         tableData: [],
         checkListData: [],

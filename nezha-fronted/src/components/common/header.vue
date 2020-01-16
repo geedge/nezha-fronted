@@ -45,7 +45,7 @@
             <div @click="jumpToProject(item)" :class="{'menu-item-active' :(activeIndex == 'project' && activeItemIndex == item.id)}">
               <span>{{item.name}}</span>
               <div @click.stop="toEditProject(item)" class="menu-edit"><i style="color: inherit"
-                                                                          class="el-icon-edit-outline"></i></div>
+                                                                          class="nz-icon nz-icon-edit"></i></div>
             </div>
           </el-menu-item>
         </template>
@@ -61,7 +61,7 @@
               <idc-config-box :post-idc="item" ref="idcConfigBox" placement="left" @after="getIDCOptionData" :button-class="'menu-edit'">
                 <template v-slot:optionZone>
                   <div @click="closeAllPop">
-                    <i class="el-icon-edit-outline" @click="getIDCOptionData(item.id)" style="color: inherit"></i>
+                    <i class="nz-icon nz-icon-edit" @click="getIDCOptionData(item.id)" style="color: inherit"></i>
                   </div>
                 </template>
               </idc-config-box>

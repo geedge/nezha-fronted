@@ -3,17 +3,16 @@
     <div class="right-box right-box-alert-config" v-if="rightBox.show">
       <!-- begin--顶部按钮-->
       <div class="right-box-top-btns">
-        <button type="button" v-if="alertRule.id != ''" id="alert-box-del" @click="del" class="nz-btn nz-btn-size-normal nz-btn-style-light">
+        <button type="button" v-if="alertRule.id != '' && rightBox.isEdit" id="alert-box-del" @click="del" class="nz-btn nz-btn-size-alien nz-btn-style-light nz-btn-min-width-82">
           <span class="top-tool-btn-txt">{{$t('overall.delete')}}</span>
         </button>
-        <button type="button" @click="saveOrToEdit" class="nz-btn nz-btn-size-normal nz-btn-style-normal" id="alert-box-save">
-          <span v-if="rightBox.isEdit" class="top-tool-btn-txt">{{$t('overall.save')}}</span>
-          <span v-else class="top-tool-btn-txt">{{$t('overall.edit')}}</span>
+        <button v-if="!rightBox.isEdit" type="button" @click="saveOrToEdit" class="nz-btn nz-btn-size-alien nz-btn-style-light nz-btn-min-width-82" id="alert-box-edit">
+          <span class="top-tool-btn-txt">{{$t('overall.edit')}}</span>
         </button>
 
-        <button type="button" @click="esc" class="nz-btn nz-btn-size-normal nz-btn-style-light nz-btn-style-square" id="alert-box-esc">
+        <!--<button type="button" @click="esc" class="nz-btn nz-btn-size-normal nz-btn-style-light nz-btn-style-square" id="alert-box-esc">
           <span class="top-tool-btn-txt"><i class="el-icon-close"></i></span>
-        </button>
+        </button>-->
       </div>
 
       <!-- end--顶部按钮-->
@@ -99,6 +98,16 @@
           </el-form>
       </el-scrollbar>
       <!-- end--表单-->
+
+      <!--底部按钮-->
+      <div class="right-box-bottom-btns">
+        <button @click="esc" id="alert-box-esc" class="nz-btn nz-btn-size-large nz-btn-style-light nz-btn-min-width-120">
+          <span>{{$t('overall.cancel')}}</span>
+        </button>
+        <button v-if="rightBox.isEdit" @click="saveOrToEdit" id="alert-box-save" class="nz-btn nz-btn-size-large nz-btn-style-normal nz-btn-min-width-120">
+          <span>{{$t('overall.save')}}</span>
+        </button>
+      </div>
     </div>
   </transition>
 </template>

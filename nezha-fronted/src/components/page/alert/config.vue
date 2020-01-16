@@ -19,7 +19,7 @@
         </div>
         <div class="content-right">
             <div class="top-tools">
-                <button id="alert-add" @click="toAdd" class="nz-btn nz-btn-size-normal nz-btn-style-normal float-right">
+                <button id="alert-add" @click="toAdd" class="nz-btn nz-btn-size-normal nz-btn-style-light float-right nz-btn-min-width-82">
                     <span class="top-tool-btn-txt">
                       <i class="nz-icon-create-square nz-icon"></i>
                       {{$t('overall.add')}}</span>
@@ -53,9 +53,14 @@
                     </template>
                     <template slot-scope="scope" :column="item">
                         <div v-if="item.prop == 'option'" class="content-right-options">
-                          <span @click="del(scope.row)" class="content-right-option" :id="'alert-del-'+scope.row.id"><i class="el-icon-delete"></i></span>
-                          <span @click="detail(scope.row)" class="content-right-option" :id="'alert-detail-'+scope.row.id"><i class="el-icon-view"></i></span>
-                          <span @click="toEdit(scope.row)" class="content-right-option" :id="'alert-edit-'+scope.row.id"><i class="el-icon-edit-outline"></i></span>
+                          <span @click="del(scope.row)" class="content-right-option" :id="'alert-del-'+scope.row.id"><i
+                            class="el-icon-delete"></i>&nbsp;&nbsp;<span>{{$t('overall.delete')}}</span></span>
+                          &nbsp;&nbsp;&nbsp;
+                          <span @click="toEdit(scope.row)" class="content-right-option" :id="'alert-edit-'+scope.row.id"><i
+                            class="nz-icon nz-icon-edit"></i>&nbsp;&nbsp;<span>{{$t('overall.edit')}}</span></span>
+                          &nbsp;&nbsp;&nbsp;
+                          <span @click="detail(scope.row)" class="content-right-option" :id="'alert-detail-'+scope.row.id"><i
+                            class="nz-icon nz-icon-view"></i>&nbsp;&nbsp;<span>{{$t('overall.view')}}</span></span>
                         </div>
                         <span v-else-if="item.prop == 'severity'">
                           <span v-if="scope.row[item.prop] == 'high'"><i class="el-icon-arrow-up"></i>&nbsp;{{severityData[1].value}}</span>
@@ -218,6 +223,7 @@ export default {
           label: this.$t('alert.config.option'),
           prop: 'option',
           show: true,
+          width: 220
         }
       ],
       tableData: [],

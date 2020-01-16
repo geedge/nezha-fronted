@@ -72,38 +72,50 @@ html {
 }
 
 /* begin--按钮组件*/
+.nz-btn-min-width-75 {
+  min-width: 75px;
+}
+.nz-btn-min-width-82 {
+  min-width: 82px;
+}
+.nz-btn-min-width-120 {
+  min-width: 120px;
+}
 .nz-btn {
-  width: 82px;
   border-radius: 4px;
   cursor: pointer;
-  line-height: 18px;
-  font-size: 14px;
-  padding: 4px 6px;
   text-align: center;
   box-sizing: border-box;
   -webkit-appearance: none;
   white-space: nowrap;
-  margin-left: 20px;
+  font-size: 14px;
+  line-height: 16px;
 }
-.nz-btn.nz-btn-size-normal {} /* size默认normal，是normal时这个class可不写*/
+.nz-btn.nz-btn-size-normal {
+  padding: 4px 8px;
+}
 .nz-btn.nz-btn-size-small {
   font-size: 12px;
-  line-height: 18px;
-  padding: 2px 12px;
-  font-weight: 500;
+  padding: 2px 5px;
 }
-.nz-btn.nz-btn-style-normal { /* 蓝色按钮 */
-  background-color: $global-text-color-active;
-  // background-image: linear-gradient(#2d8cec, #16b);
-  border: 1px solid $global-text-color-active;
-  border-top-color: $global-text-color-active;
-  color: #fff;
-  // text-shadow: 0 1px 1px rgba(0,0,0,.75);
+.nz-btn-size-large {
+  padding: 7px 15px;
+}
+.nz-btn.nz-btn-size-alien { //弹框顶部异形按钮
+  height: 40px;
+  border-radius: 0 0 10px 10px;
+}
+.nz-btn.nz-btn-style-normal { /* 橙色按钮 */
+  background-image: $btn-normal-background-color;
+  color: $btn-normal-txt-color;
+  box-shadow: $btn-normal-shadow;
+  border: 0px;
 }
 .nz-btn.nz-btn-style-light { /* 浅色按钮 */
-  background-color: transparent;
-  border: 1px solid #999999;
-  color: #999999;
+  background-image: $btn-light-background-color;
+  border: 0px;
+  color: $btn-light-txt-color;
+  box-shadow: $btn-light-shadow;
   letter-spacing: 0;
 }
 .nz-btn.nz-btn-style-pure-white { /*纯白色按钮*/
@@ -115,13 +127,14 @@ html {
   padding: 2px 5px;
 }
 .nz-btn.nz-btn-size-normal.nz-btn-style-square { /* 单图标时是个正方形*/
-  // padding: 4px 6px;
+  padding: 4px 6px;
 }
 .nz-btn.nz-btn-style-light:hover:not(.nz-btn-disabled) {
-  // background-image: linear-gradient(#dedede,#c5c5c5);
+  background-image: $btn-light-background-color-hover;
 }
 .nz-btn.nz-btn-style-normal:hover:not(.nz-btn-disabled) {
-  // background-image: linear-gradient(#16b, #0d4d8c);
+  background-image: none;
+  background-color: $btn-normal-background-color-hover;
 }
 .nz-btn.nz-btn-style-pure-white:hover:not(.nz-btn-disabled) {
   background-color: #dedede;
@@ -148,8 +161,8 @@ html {
 
 /* begin--el-input扩展 */
 .input-x-mini .el-input__inner {
-  height: 24px;
-  line-height: 24px;
+  height: 22px;
+  line-height: 22px;
   padding: 0 5px;
   font-size: 12px;
 }
@@ -230,8 +243,8 @@ html {
 /* begin--右侧内容*/
 .content-right {
   height: calc(100% - 131px);
-  margin-left: 270px;
-  padding: 0 15px 0 25px;
+  margin-left: 256px;
+  padding: 0 20px 0 20px;
 }
 .content-right-option {
   cursor: pointer;
@@ -239,39 +252,25 @@ html {
   margin-right: 6px;
 }
 .content-right-option i {
-  color: #6E7274;
-}
-.content-right-option i:hover {
-  color: #3E4244;
+  font-size: 12px;
 }
 .content-right-option .el-icon-delete {
-  color: #F98D9A;
+  color: #ee6723;
 }
-.content-right-option .el-icon-delete:hover {
-  color: #D96D7A;
-}
-.content-right-option .el-icon-view {
-  color: #60BEFF;
+.content-right-option .nz-icon-view {
+  color: #898989;
 }
 .link { /*有外联的字段*/
-  color: #1166bb;
+  color: #3971BA;
   cursor: pointer;
-}
-.content-right-option .el-icon-view:hover {
-  color: #409EFF;
-}
-.content-right-option .el-icon-edit-outline {
-  color: #6E7274;
-}
-.content-right-option .el-icon-edit-outline:hover {
-  color: #3E4244;
 }
 /* begin--顶部工具栏*/
 .top-tools {
   padding: 22px 0 13px 0;
 }
 .top-tools .top-tool-search {
-  width: 320px;
+  width: 260px;
+  margin: -1px 20px 0 0;
 }
 /* end--顶部工具栏*/
 
@@ -334,7 +333,7 @@ html {
   min-width: 100px;
 }
 .content-right .el-table__row td:first-of-type {
-  padding-left: 33px;
+  padding-left: 38px;
 }
 .nz-table-gear {
   display: block;
@@ -369,28 +368,28 @@ html {
 
 /* begin--右弹框滑入滑出动画*/
 @keyframes slide-in-from-right-580 {
-  from {right: -615px}
-  to {right: 15px}
+  from {right: -630px}
+  to {right: 0px}
 }
 @keyframes slide-out-to-right-580 {
-  from {right: 15px}
-  to {right: -615px}
+  from {right: 0px}
+  to {right: -630px}
 }
 @keyframes slide-in-from-right-840 {
-  from {right: -855px}
-  to {right: 15px}
+  from {right: -870px}
+  to {right: 0px}
 }
 @keyframes slide-out-to-right-840 {
-  from {right: 15px}
-  to {right: -855px}
+  from {right: 0px}
+  to {right: -870px}
 }
 @keyframes slide-in-from-right {
-  from {right: -535px}
-  to {right: 15px}
+  from {right: -550px}
+  to {right: 0px}
 }
 @keyframes slide-out-to-right {
-  from {right: 15px}
-  to {right: -535px}
+  from {right: 0px}
+  to {right: -550px}
 }
 .right-box-enter-active {
   animation: slide-in-from-right 0.4s;
@@ -433,14 +432,13 @@ html {
 /* begin--右侧弹框*/
 .right-box, .right-sub-box {
   position: fixed;
-  top: 80px;
-  right: 15px;
+  top: 60px;
+  right: 0;
   z-index: 1;
-  border-radius: 8px;
   box-shadow: 0 0 15px #ccc;
   background-color: white;
-  padding: 0 0 0 20px;
-  height: calc(100% - 100px);
+  padding: 0 0 0 30px;
+  height: calc(100% - 60px);
 }
 
 /*此处自定义弹框尺寸，不同功能可能需要的尺寸不一样，需自行添加*/
@@ -448,7 +446,7 @@ html {
   width: 520px;
 }
 .right-box-add-asset {
-  width: 580px;
+  width: 550px;
 }
 .right-box-add-endpoint {
   width: 840px;
@@ -457,8 +455,10 @@ html {
 .right-box-top-btns {
   text-align: center;
   float: right;
-  padding-right: 10px;
-  padding-top: 8px;
+  padding-right: 42px;
+}
+.right-box-top-btns button {
+  margin-left: 20px;
 }
 .pop-top-btns {
   text-align: center;
@@ -468,11 +468,12 @@ html {
 
 /* begin--右侧弹框--内容*/
 .right-box-title {
-  height: 56px;
-  line-height: 40px;
+  height: 36px;
   text-align: left;
   display: inline-block;
-  font-weight: bold;
+  padding-top: 20px;
+  font-size: 14px;
+  color: $box-title-color;
 }
 .pop-title {
   line-height: 25px;
@@ -520,7 +521,7 @@ html {
   background-color: #d8d8d8;
 }
 .right-box-form-box {
-  height: calc(100% - 63px);
+  height: calc(100% - 132px);
   width: 100%;
 }
 .right-box-form-box .el-scrollbar__wrap {
@@ -530,7 +531,7 @@ html {
   overflow-x: hidden !important;
 }
 .right-box-form {
-  width: calc(100% - 20px);
+  width: calc(100% - 30px);
 }
 .right-box-add-endpoint .right-box-form {
   height: 100%;
@@ -587,6 +588,9 @@ html {
 .right-box-form-btns {
   display: inline-block;
   float: right;
+}
+.right-box-form-btns button {
+  margin-left: 10px;
 }
 /* start--param*/
 .param-box {
@@ -675,38 +679,17 @@ html {
 
 /* begin--右侧弹框--底部按钮*/
 .right-box-bottom-btns {
+  width: 100%;
+  height: 53px;
   position: absolute;
   bottom: 0;
-  width: 100%;
-  height: 40px;
   left: 0;
+  padding-top: 20px;
+  border-top: 1px solid #ccc;
   text-align: center;
 }
-.right-box-bottom-btn:first-of-type {
-  border-bottom-left-radius: 8px;
-}
-.right-box-bottom-btn:last-of-type{
-  border-bottom-right-radius: 8px;
-}
-.right-box-bottom-btn {
-  display: inline-block;
-  background-color: #656565;
-  color: white;
-  height: 100%;
-  line-height: 40px;
-  cursor: pointer;
-  width: 100%;
-}
-.config-dropdown-label-input {
-  width: 50%;
-  display: inline-block;
-}
-.right-box-bottom-btn-cancel {
-  background-color: #DADADA;
-  color: #656565;
-}
-.right-box-bottom-btn-50 {
-  width: 50%;
+.right-box-bottom-btns :nth-child(2) {
+  margin-left: 40px;
 }
 /* end--右侧弹框--底部按钮*/
 /* end--右侧弹框*/

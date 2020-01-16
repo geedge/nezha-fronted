@@ -3,18 +3,18 @@
     <div class="right-box right-box-edit-endpoint" v-if="rightBox.show">
       <!-- begin--顶部按钮-->
       <div class="right-box-top-btns">
-        <button id="edit-ep-del" type="button" v-if="rightBox.isEdit && endpoint.id != ''" @click="del" class="nz-btn nz-btn-size-normal nz-btn-style-light">
+        <button id="edit-ep-del" type="button" v-if="rightBox.isEdit && endpoint.id != ''" @click="del" class="nz-btn nz-btn-size-alien nz-btn-style-light nz-btn-min-width-82">
           <span class="top-tool-btn-txt">{{$t('overall.delete')}}</span>
         </button>
-        <button id="edit-ep-edit" v-if="!rightBox.isEdit" type="button" @click="toEdit(true)" class="nz-btn nz-btn-size-normal nz-btn-style-normal">
+        <button id="edit-ep-edit" v-if="!rightBox.isEdit" type="button" @click="toEdit(true)" class="nz-btn nz-btn-size-alien nz-btn-style-light nz-btn-min-width-82">
           <span class="top-tool-btn-txt">{{$t('overall.edit')}}</span>
         </button>
-        <button id="edit-ep-save" v-if="rightBox.isEdit" type="button" @click="save" class="nz-btn nz-btn-size-normal nz-btn-style-normal">
+        <!--<button id="edit-ep-save" v-if="rightBox.isEdit" type="button" @click="save" class="nz-btn nz-btn-size-normal nz-btn-style-normal">
           <span class="top-tool-btn-txt">{{$t('overall.save')}}</span>
         </button>
         <button id="edit-ep-esc" type="button" @click="esc" class="nz-btn nz-btn-size-normal nz-btn-style-light nz-btn-style-square">
           <span class="top-tool-btn-txt"><i class="el-icon-close"></i></span>
-        </button>
+        </button>-->
       </div>
       <!-- end--顶部按钮-->
 
@@ -132,10 +132,10 @@
               <span>{{$t('project.endpoint.param')}}</span>
               <div class="right-box-form-btns" v-if="rightBox.isEdit">
                 <button style="display: none;">第一个button会出现意料之外的hover样式，找不到原因，只好加个不可见的button规避问题</button>
-                <button type="button" id="edit-clear-all" @click="clearAllParam" class="nz-btn nz-btn-size-small nz-btn-style-light">
+                <button type="button" id="edit-clear-all" @click="clearAllParam" class="nz-btn nz-btn-size-normal nz-btn-style-light">
                   <span class="top-tool-btn-txt">{{$t('overall.clearAll')}}</span>
                 </button>
-                <button type="button" id="edit-add-param" @click="addParam" class="nz-btn nz-btn-size-small nz-btn-style-normal">
+                <button type="button" id="edit-add-param" @click="addParam" class="nz-btn nz-btn-size-normal nz-btn-style-normal">
                   <span class="top-tool-btn-txt">{{$t('overall.add')}}</span>
                 </button>
                 <!-- <button type="button" @click="save" class="nz-btn nz-btn-size-normal nz-btn-style-normal nz-btn-edit-ok">
@@ -167,6 +167,16 @@
       </el-scrollbar>
        
       <!-- end--表单-->
+
+      <!--底部按钮-->
+      <div class="right-box-bottom-btns">
+        <button @click="esc" id="ep-edit-esc" class="nz-btn nz-btn-size-large nz-btn-style-light nz-btn-min-width-120">
+          <span>{{$t('overall.cancel')}}</span>
+        </button>
+        <button v-if="rightBox.isEdit" @click="save" id="ep-edit-save" class="nz-btn nz-btn-size-large nz-btn-style-normal nz-btn-min-width-120">
+          <span>{{$t('overall.save')}}</span>
+        </button>
+      </div>
 
       <!-- begin--子弹框-->
       <!--<transition name="right-sub-box">

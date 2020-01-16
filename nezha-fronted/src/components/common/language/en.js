@@ -9,6 +9,7 @@ const en = {
     create: 'Create',
     edit: 'Edit',
     delete: 'Delete',
+    view: 'View',
     esc: 'Esc',
     cancel: 'Cancel',
     save: 'Save',

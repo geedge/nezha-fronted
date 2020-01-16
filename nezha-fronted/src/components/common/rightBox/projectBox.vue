@@ -3,16 +3,15 @@
     <div class="right-box right-box-project" v-if="rightBox.show">
       <!-- begin--顶部按钮-->
       <div class="right-box-top-btns">
-        <button id="project-del" type="button" v-if="project.id != ''" @click="del" class="nz-btn nz-btn-size-normal nz-btn-style-light">
+        <button id="project-del" type="button" v-if="project.id != '' && rightBox.isEdit" @click="del" class="nz-btn nz-btn-size-alien nz-btn-style-light nz-btn-min-width-82">
           <span class="top-tool-btn-txt">{{$t('overall.delete')}}</span>
         </button>
-        <button id="project-save" type="button" @click="saveOrToEdit" class="nz-btn nz-btn-size-normal nz-btn-style-normal">
-          <span v-if="rightBox.isEdit" class="top-tool-btn-txt">{{$t('overall.save')}}</span>
-          <span v-else class="top-tool-btn-txt">{{$t('overall.edit')}}</span>
+        <button v-if="!rightBox.isEdit" id="project-edit" type="button" @click="saveOrToEdit" class="nz-btn nz-btn-size-alien nz-btn-style-light nz-btn-min-width-82">
+          <span class="top-tool-btn-txt">{{$t('overall.edit')}}</span>
         </button>
-        <button id="project-esc" type="button" @click="esc" class="nz-btn nz-btn-size-normal nz-btn-style-light nz-btn-style-square">
+        <!--<button id="project-esc" type="button" @click="esc" class="nz-btn nz-btn-size-normal nz-btn-style-light nz-btn-style-square">
           <span class="top-tool-btn-txt"><i class="el-icon-close"></i></span>
-        </button>
+        </button>-->
       </div>
       <!-- end--顶部按钮-->
 
@@ -32,11 +31,15 @@
         </el-form>
       </el-scrollbar>
 
-      <!-- begin--底部按钮-->
-      <!--<div class="right-box-bottom-btns">
-        <div @click="esc" class="right-box-bottom-btn right-box-bottom-btn-cancel right-box-bottom-btn-50">{{$t('overall.cancel')}}</div><div @click="save" class="right-box-bottom-btn right-box-bottom-btn-50">{{project.id == '' ? $t('overall.create') : $t('overall.save')}}</div>
-      </div>-->
-      <!-- end--底部按钮-->
+      <!--底部按钮-->
+      <div class="right-box-bottom-btns">
+        <button @click="esc" id="project-esc" class="nz-btn nz-btn-size-large nz-btn-style-light nz-btn-min-width-120">
+          <span>{{$t('overall.cancel')}}</span>
+        </button>
+        <button v-if="rightBox.isEdit" @click="saveOrToEdit" id="project-save" class="nz-btn nz-btn-size-large nz-btn-style-normal nz-btn-min-width-120">
+          <span>{{$t('overall.save')}}</span>
+        </button>
+      </div>
     </div>
   </transition>
 </template>

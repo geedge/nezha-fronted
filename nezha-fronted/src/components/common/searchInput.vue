@@ -116,9 +116,10 @@
                 </ul>
             </div>
         </div>
-        <div class="new-search-btn" @click="select">
+        <button @click="select" type="button" class="nz-btn nz-btn-size-normal nz-btn-style-light float-right" id="search-input-search"><i class="el-icon-search"></i></button>
+        <!--<div class="new-search-btn" @click="select">
             <i class="el-icon-search"></i>
-        </div>
+        </div>-->
     </div>
 </template>
 
@@ -1138,8 +1139,8 @@
             // 判断输入框的高度
             getHeight(){
                 if(document.getElementById('search-ul').clientHeight<24||document.getElementById('input-center-box').clientHeight<24){
-                  document.getElementById('input-center-box').style.height = 30+'px'
-                  document.getElementById('search-ul').style.height = 24+"px"
+                  document.getElementById('input-center-box').style.height = 27+'px'
+                  document.getElementById('search-ul').style.height = 21+"px"
                 }
           },
             chlick_sreach(e) {
@@ -1204,29 +1205,35 @@
     .new-search{
         display: flex;
         position: relative;
-        box-shadow: 0px 0px 20px 0px rgba(0,0,0,.08);
-        line-height: 28px;
+        line-height: 25px;
+      border-radius: 4px;
+      border: 1px solid #D8D8D8;
+      /*box-shadow: inset 0 0 5px 0 rgba(184,184,184,0.80);*/
+    }
+    .new-search .nz-btn {
+      box-shadow: 0 0 1px 1px #d8d8d8;
+      border-radius: 0 4px 4px 0;
     }
     .new-search .search-input-all{
-        width: 300px;
+        width: 240px;
         background: #fff;
         color: rgba(0,0,0,.55);
-        height: 28px;
-        line-height: 28px;
+        height: 25px;
+        line-height: 25px;
         border-bottom-left-radius: 5px;
         border-top-left-radius: 5px;
         display: flex;
         position: relative;
-        box-shadow: 0px 0px 20px 0px rgba(0,0,0,.08);
+
     }
     .search-input-all .btn-retract{
         padding: 0px 4px;
         text-align: center;
     }
     .search-input-all .search-history{
-        padding: 0px 10px;
-        height: 20px;
-        line-height: 20px;
+        padding: 0px 7px;
+        height: 17px;
+        line-height: 17px;
         text-align: center;
         border-right: 1px solid #e5e5e5;
         margin-top: 4px;
@@ -1274,16 +1281,16 @@
     .sreach_box{
         position: relative;
         width: 80%;
-        height: 28px;
+        height: 25px;
         padding: 20px;
         background: #fff;
         margin: 200px auto;
     }
     .keyring_sreach_right_btn{
         width: 18%;
-        height: 28px;
+        height: 25px;
         float: right;
-        line-height: 28px;
+        line-height: 25px;
         text-align: center;
         border: 1px solid #dfdfdf;
     }
@@ -1302,7 +1309,7 @@
         right: 0;
         top: -50px;
         width: 24px;
-        height: 28px;
+        height: 25px;
         border-radius: 50%;
         background: #fff;
         text-align: center;
@@ -1392,16 +1399,16 @@
     }
     .selectinfo_box .select_condition{
         float:left;
-        height: 16px;
+        height: 13px;
         padding: 3px;
         background:#f8f8f8;
-        line-height: 16px;
+        line-height: 13px;
         color: rgba(0,0,0,.55);
     }
     .selectinfo_box .select_content{
         float: left;
-        line-height: 16px;
-        height: 16px;
+        line-height: 13px;
+        height: 13px;
         padding: 3px;
         background: #f0f0f0;
         color: rgba(0,0,0,0.85);

@@ -17,11 +17,11 @@
           <div class="right-box-form-content-txt" v-if="!isEdit">{{account.authType}}</div>
         </el-form-item>
         <el-form-item :label="$t('asset.createAssetTab.account')" prop="user">
-          <el-input size="mini" v-model="account.user" v-if="isEdit"/>
+          <el-input autocomplete="new-password" size="mini" v-model="account.user" v-if="isEdit"/>
           <div class="right-box-form-content-txt" v-if="!isEdit">{{account.user}}</div>
         </el-form-item>
-        <el-form-item :label="$t('asset.createAssetTab.password')" v-show="account.authType==1" v-if="isEdit" style="display: inline-block">
-          <el-input size="mini" type="password" v-model="account.pwd"/>
+        <el-form-item :label="$t('asset.createAssetTab.password')" v-show="account.authType==1" v-if="isEdit">
+          <el-input autocomplete="new-password" size="mini" type="password" v-model="account.pwd"/>
         </el-form-item>
         <el-form-item :label="$t('asset.createAssetTab.port')" prop="port" style="display: inline-block">
           <el-input size="mini" v-model.number="account.port" v-if="isEdit"/>

@@ -2,13 +2,13 @@
   <transition name="right-box-580">
     <div class="right-box right-box-add-asset" v-if="addUnitShow" @click="editQuit">
       <div class="right-box-top-btns">
-        <button type="button" @click.stop="addNewData('asset')" id="add-asset-new" class="nz-btn nz-btn-size-normal nz-btn-style-normal">
+        <!--<button type="button" @click.stop="addNewData('asset')" id="add-asset-new" class="nz-btn nz-btn-size-normal nz-btn-style-normal">
           <span class="top-tool-btn-txt">{{$t('overall.save')}}</span>
         </button>
         <button type="button" @click.stop="sendStateData('close')" id="add-asset-esc"
                 class="nz-btn nz-btn-size-normal nz-btn-style-light nz-btn-style-square">
           <span class="top-tool-btn-txt"><i class="el-icon-close"></i></span>
-        </button>
+        </button>-->
       </div>
 
       <div class="right-box-title">{{$t('asset.createAssetTab.title')}}</div>
@@ -327,6 +327,16 @@
           </el-form-item>
         </el-form>
       </el-scrollbar>
+
+      <!--底部按钮-->
+      <div class="right-box-bottom-btns">
+        <button @click.stop="sendStateData('close')" id="add-asset-esc" class="nz-btn nz-btn-size-large nz-btn-style-light nz-btn-min-width-120">
+          <span>{{$t('overall.cancel')}}</span>
+        </button>
+        <button @click.stop="addNewData('asset')" id="add-asset-new" class="nz-btn nz-btn-size-large nz-btn-style-normal nz-btn-min-width-120">
+          <span>{{$t('overall.ok')}}</span>
+        </button>
+      </div>
     </div>
   </transition>
 </template>

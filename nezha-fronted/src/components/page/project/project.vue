@@ -13,7 +13,7 @@
           <el-popover trigger="hover" placement="right-end" :content="item.name" >
             <div slot="reference" class="sidebar-info-item-txt">{{item.name}}</div>
           </el-popover>
-          <div class="side-bar-menu-edit" @click.stop="toEditModule(item)" :id="'project-module-edit-'+item.id"><i class="el-icon-edit-outline"></i></div>
+          <div class="side-bar-menu-edit" @click.stop="toEditModule(item)" :id="'project-module-edit-'+item.id"><i class="nz-icon nz-icon-edit"></i></div>
         </div>
       </div>
     </div>
@@ -63,7 +63,7 @@
             <span>{{$t('project.metrics.metrics')}}</span>
           </button>
         </div>
-        <button @click="toCreateEndpoint" class="nz-btn nz-btn-size-normal nz-btn-style-normal float-right" id="project-add-ep">
+        <button @click="toCreateEndpoint" class="nz-btn nz-btn-size-normal nz-btn-style-light float-right nz-btn-min-width-82" id="project-add-ep">
           <span class='top-tool-btn-txt'>
             <i class="nz-icon-create-square nz-icon"></i>
             {{$t('overall.add')}}</span>
@@ -99,9 +99,12 @@
             <span v-else-if="item.prop == 'param'">
               <span v-for="p in scope.row.paramObj">{{p.key}}={{p.value}}，</span>
             </span>
-            <div v-else-if="item.prop == 'option'" class="content-right-options" :id="'project-ep-op-'+scope.row.id">
-              <span @click.stop="endpointDetail(scope.row)" class="content-right-option" ><i class="el-icon-view"></i></span>
-              <span @click.stop="toEditEndpoint(scope.row)" class="content-right-option" ><i class="el-icon-edit-outline"></i></span>
+            <div v-else-if="item.prop == 'option'" class="content-right-options">
+              <span @click="toEditEndpoint(scope.row)" class="content-right-option" :id="'edp-edit-'+scope.row.id"><i
+                class="nz-icon nz-icon-edit"></i>&nbsp;&nbsp;<span>{{$t('overall.edit')}}</span>
+              </span>&nbsp;&nbsp;
+              <span @click="endpointDetail(scope.row)" class="content-right-option" :id="'edp-detail-'+scope.row.id"><i
+                class="nz-icon nz-icon-view"></i>&nbsp;&nbsp;<span>{{$t('overall.view')}}</span></span>
             </div>
             <span v-else-if="item.prop == 'lastUpdate'">{{dateFormat(scope.row.lastUpdate)}}</span>
             <span v-else-if="item.prop == 'state'" :style="{color: scope.row.state == 0 ? 'red' : (scope.row.state == 0 ? 'green' : '')}">{{scope.row.state == 1 ? 'up' : ''}}{{scope.row.state == 0 ? 'down' : ''}}</span>

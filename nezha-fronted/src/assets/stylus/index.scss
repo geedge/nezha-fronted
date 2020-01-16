@@ -4,6 +4,17 @@ $header-text-color: #e5e5e5; // header默认字色
 $header-text-color-active: #fff; // header高亮字色
 $header-text-color-hover: #444; //header hover字色
 
+$btn-normal-background-color: linear-gradient(180deg, #F5B93E 0%, #EE9D3F 100%); //橙色按钮颜色
+$btn-normal-background-color-hover: #EE9D3F ; //橙色按钮hover颜色
+$btn-normal-txt-color: #fff; //橙色按钮颜色
+$btn-normal-shadow: 0 0 1px 1px rgba(162,162,162,0.50); //橙色按钮边框阴影
+$btn-light-background-color: linear-gradient(180deg, #FFFFFF 0%, #E0E0E0 100%); //灰色按钮颜色
+$btn-light-background-color-hover: linear-gradient(180deg, #F0F0F0 0%, #D8D8D8 99%); //橙色按钮hover颜色
+$btn-light-txt-color: #666; //灰色按钮颜色
+$btn-light-shadow: 0 0 1px 1px rgba(162,162,162,0.50); //灰色按钮边框阴影
+
+$box-title-color: #333; //弹框标题字体颜色
+
 $content-left-text-color: #666; //左侧菜单默认字色
 
 @import './main.scss';

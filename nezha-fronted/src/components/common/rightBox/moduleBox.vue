@@ -3,35 +3,16 @@
     <div class="right-box right-box-module" v-if="rightBox.show">
       <!-- begin--顶部按钮-->
       <div class="right-box-top-btns">
-        <button id="module-del" type="button" v-if="module.id != ''" @click="del" class="nz-btn nz-btn-size-normal nz-btn-style-light">
+        <button id="module-del" type="button" v-if="module.id != '' && rightBox.isEdit" @click="del" class="nz-btn nz-btn-size-alien nz-btn-style-light nz-btn-min-width-82">
           <span class="top-tool-btn-txt">{{$t('overall.delete')}}</span>
         </button>
-        <button id="module-save" type="button" @click="saveOrToEdit" class="nz-btn nz-btn-size-normal nz-btn-style-normal">
-          <span v-if="rightBox.isEdit" class="top-tool-btn-txt">{{$t('overall.save')}}</span>
-          <span v-else class="top-tool-btn-txt">{{$t('overall.edit')}}</span>
+        <button v-if="!rightBox.isEdit" id="module-save" type="button" @click="saveOrToEdit" class="nz-btn nz-btn-size-alien nz-btn-style-light nz-btn-min-width-82">
+          <span class="top-tool-btn-txt">{{$t('overall.edit')}}</span>
         </button>
 
-        <button id="module-esc" type="button" @click="esc" class="nz-btn nz-btn-size-normal nz-btn-style-light nz-btn-style-square">
+        <!--<button id="module-esc" type="button" @click="esc" class="nz-btn nz-btn-size-normal nz-btn-style-light nz-btn-style-square">
           <span class="top-tool-btn-txt"><i class="el-icon-close"></i></span>
-        </button>
-        <!--<div class="right-box-top-btn" v-if="module.id != ''" @click="del">
-          <div class="right-box-btn-icon">
-            <i class="el-icon-delete"></i>
-          </div>
-          <span>{{$t('overall.delete')}}</span>
-        </div>
-        <div class="right-box-top-btn right-box-top-btn-full" @click="save">
-          <div class="right-box-btn-icon">
-            <i class="el-icon-edit-outline"></i>
-          </div>
-          <span>{{$t('overall.save')}}</span>
-        </div>
-        <div class="right-box-top-btn right-box-top-btn-full" @click="esc">
-          <div class="right-box-btn-icon">
-            <i class="el-icon-close"></i>
-          </div>
-          <span>{{$t('overall.esc')}}</span>
-        </div>-->
+        </button>-->
       </div>
       <!-- end--顶部按钮-->
 
@@ -74,10 +55,10 @@
               <span>{{$t('project.endpoint.param')}}</span>
               <div class="right-box-form-btns" v-if="rightBox.isEdit">
                 <button style="display: none;">第一个button会出现意料之外的hover样式，找不到原因，只好加个不可见的button规避问题</button>
-                <button id="module-clear-all" type="button" @click="clearAllParam" class="nz-btn nz-btn-size-small nz-btn-style-light">
+                <button id="module-clear-all" type="button" @click="clearAllParam" class="nz-btn nz-btn-size-normal nz-btn-style-light">
                   <span class="top-tool-btn-txt">{{$t('overall.clearAll')}}</span>
                 </button>
-                <button id="module-add-param" type="button" @click="addParam" class="nz-btn nz-btn-size-small nz-btn-style-normal">
+                <button id="module-add-param" type="button" @click="addParam" class="nz-btn nz-btn-size-normal nz-btn-style-normal">
                   <span class="top-tool-btn-txt">{{$t('overall.add')}}</span>
                 </button>
               </div>
@@ -102,6 +83,16 @@
 
         </el-form>
       </el-scrollbar>
+
+      <!--底部按钮-->
+      <div class="right-box-bottom-btns">
+        <button @click="esc" id="module-box-esc" class="nz-btn nz-btn-size-large nz-btn-style-light nz-btn-min-width-120">
+          <span>{{$t('overall.cancel')}}</span>
+        </button>
+        <button v-if="rightBox.isEdit" @click="saveOrToEdit" id="module-box-save" class="nz-btn nz-btn-size-large nz-btn-style-normal nz-btn-min-width-120">
+          <span>{{$t('overall.save')}}</span>
+        </button>
+      </div>
       <!--<div class='right-box-form'>
       &lt;!&ndash;project&ndash;&gt;
       <div class="right-box-form-row">
@@ -170,11 +161,6 @@
       </div>
     </div>-->
 
-      <!-- begin--底部按钮-->
-      <!--<div class="right-box-bottom-btns">
-        <div @click="esc" class="right-box-bottom-btn right-box-bottom-btn-cancel right-box-bottom-btn-50">{{$t('overall.cancel')}}</div><div @click="save" class="right-box-bottom-btn right-box-bottom-btn-50">{{module.id == '' ? $t('overall.create') : $t('overall.save')}}</div>
-      </div>-->
-      <!-- end--底部按钮-->
     </div>
   </transition>
 </template>
