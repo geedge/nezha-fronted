@@ -44,9 +44,20 @@
           {{data.title}}
         </div>
         <div class="float-right edit">
+          <el-date-picker size="small" ref="calendar"
+                          format="yyyy/MM/dd HH:mm"
+                          @change="dateChange"
+                          v-model="searchTime"
+                          type="datetimerange"
+                          :picker-options="pickerOptions"
+                          :range-separator="$t('dashboard.panel.to')"
+                          :start-placeholder="$t('dashboard.panel.startTime')"
+                          :end-placeholder="$t('dashboard.panel.endTime')"
+                          align="right">
+          </el-date-picker>
           <span @click="refreshChart" :title="$t('dashboard.refresh')" class="set-icon" @click.native="refreshChart">
               <i class="el-icon-refresh-right"></i>
-            </span>
+          </span>
         </div>
       </div>
       <div class="mt-10">
@@ -124,6 +135,89 @@ export default {
         sortable: true,
         render: (h, params) => h('span', this.getNumStr(params.row.value)),
       }],
+      searchTime:[new Date().setHours(new Date().getHours()-1),new Date()],
+      oldSearchTime:[],
+      pickerOptions: {
+        shortcuts: [
+          {
+            text:  this.$t("dashboard.panel.recOne"),
+            onClick(picker) {
+              const end = new Date();
+              const start = new Date();
+              start.setHours(start.getHours() - 1);
+              picker.$emit('pick', [start, end]);
+            }
+          },{
+            text: this.$t("dashboard.panel.recFour"),
+            onClick(picker) {
+              const end = new Date();
+              const start = new Date();
+              start.setHours(start.getHours() - 4);
+              picker.$emit('pick', [start, end]);
+            }
+          }, {
+            text: this.$t("dashboard.panel.recOneDay"),
+            onClick(picker) {
+              const end = new Date();
+              const start = new Date();
+              start.setDate(start.getDate() - 1);
+              picker.$emit('pick', [start, end]);
+            }
+          },  {
+            text: this.$t("dashboard.panel.yesterday"),
+            onClick(picker) {
+              const start = new Date();
+              const end = new Date();
+              start.setDate(start.getDate() - 1);
+              start.setHours(0);
+              start.setMinutes(0);
+              start.setSeconds(0);
+              end.setDate(end.getDate() - 1);
+              end.setHours(23);
+              end.setMinutes(59);
+              end.setSeconds(59);
+              picker.$emit('pick', [start, end]);
+            }
+          },{
+            text: this.$t("dashboard.panel.recSevenDay"),
+            onClick(picker) {
+              const end = new Date();
+              const start = new Date();
+              start.setDate(start.getDate() - 7);
+              picker.$emit('pick', [start, end]);
+            }
+          }, {
+            text: this.$t("dashboard.panel.recOneMonth"),
+            onClick(picker) {
+              const end = new Date();
+              const start = new Date();
+              start.setDate(start.getDate() - 30);
+              picker.$emit('pick', [start, end]);
+            }
+          }, {
+            text: this.$t("dashboard.panel.curMonth"),
+            onClick(picker) {
+              const end = new Date();
+              const start = new Date();
+              start.setDate(1);
+              start.setHours(0);
+              start.setMinutes(0);
+              picker.$emit('pick', [start, end]);
+            }
+          },{
+            text: this.$t("dashboard.panel.lastMonth"),
+            onClick(picker) {
+              const end = new Date();
+              const start = new Date();
+              start.setDate(1);
+              start.setMonth(start.getMonth() - 1);
+              end.setDate(0);
+              start.setStart();
+              end.setEnd();
+              picker.$emit('pick', [start, end]);
+            }
+          }]
+      },
     };
   },
   computed: {
@@ -150,8 +244,16 @@ export default {
     removeChart() {
       this.$emit('on-remove-chart-block', this.data.id);
     },
+    dateChange(time) {
+      this.filter.start_time = bus.timeFormate(this.searchTime[0], 'yyyy-MM-dd hh:mm:ss');
+      this.filter.end_time = bus.timeFormate(this.searchTime[1], 'yyyy-MM-dd hh:mm:ss');
+      this.tableLoading = true;
+      this.$emit('on-search-data', this.data.id,this.searchTime);
+    },
     // 全屏查看
     showAllScreen() {
+      // 初始化同步时间
+      this.searchTime = this.oldSearchTime;
       this.screenModal = true;
     },
     // 设置数据, filter区分
@@ -164,6 +266,9 @@ export default {
       this.panelIdInner = panelId;
       this.data = chartItem;
       this.seriesItem = seriesItem;
+      this.searchTime[0] = filter.start_time;
+      this.searchTime[1] = filter.end_time;
+      this.oldSearchTime = this.searchTime;
     },
     // 获取格式
     getNumStr(num) {

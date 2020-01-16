@@ -26,6 +26,7 @@
 
       <chart-table v-if="item.type === 'table'" ref="editChart" :key="'inner' + item.id"
       @on-refresh-data="refreshChart"
+      @on-search-data="searchData"
       @on-remove-chart-block="removeChart" 
       @on-edit-chart-block="editData"
       :panel-id="filter.panelId" 
@@ -135,7 +136,13 @@ export default {
             startTime = this.filter.start_time;
             endTime = this.filter.end_time;
           }
-        } else {
+          //this.$emit('@on-refresh-time', startTime,endTime);
+        } else if(filterType==='searchTime'){
+          startTime = this.filter.start_time;
+          endTime = this.filter.end_time;
+          //this.$emit('@on-refresh-time', startTime,endTime);
+          this.$parent.refreshTime(startTime,endTime);
+        }else {
            startTime = this.filter.start_time;
            endTime = this.filter.end_time;
         }
@@ -300,13 +307,24 @@ export default {
       }
     },
     // 刷新列表中的一个图表
-    refreshChart(chartId) {
+    refreshChart(chartId,searchTime) {
       this.dataList.forEach((item, index) => {
         if (item.id === chartId) {
           this.getChartData(item, index, 'refresh');
         }
       });
     },
+    searchData(chartId,searchTime){
+      if(searchTime){//全屏时间查询
+        this.filter.start_time=bus.timeFormate(searchTime[0], 'yyyy-MM-dd hh:mm:ss');
+        this.filter.end_time=bus.timeFormate(searchTime[1], 'yyyy-MM-dd hh:mm:ss');
+      }
+      this.dataList.forEach((item, index) => {
+        if (item.id === chartId) {
+          this.getChartData(item, index, 'searchTime');
+        }
+      });
+    }
     /*
     // 刷新数据
     refreshData() {

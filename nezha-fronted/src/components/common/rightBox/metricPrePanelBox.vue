@@ -124,6 +124,7 @@
               const elements = [];
               // 图表中每条线的名字,后半部分
               let host = `${queryItem.metric.__name__}`;//up,
+              let charTitle=`${queryItem.metric.__name__}`;//up,
               const tagsArr = Object.keys(queryItem.metric);//["__name__","asset","idc","instance","job","module","project"]
               // 判断是否有数据
               if (queryItem.values.length > 0 && tagsArr.length > 0) {
@@ -132,11 +133,17 @@
                   if (tag !== '__name__') {
                     host += `${tag}="${queryItem.metric[tag]}",`;
                   }
+                  if (tag === 'asset') {
+                    let labVal= `${queryItem.metric[tag]}`;
+                    if(labVal!==''){
+                      charTitle += `(${queryItem.metric[tag]})`;
+                    }
+                  }
                 });
                 if(host.endsWith(',')){host = host.substr(0,host.length-1);}
                 host +="}";
               }
-              soleParam.title = host;
+              soleParam.title = charTitle;
               elements.push({
                 expression: host,
                 type: this.elementTarget.type,

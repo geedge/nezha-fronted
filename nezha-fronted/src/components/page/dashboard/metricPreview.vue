@@ -264,7 +264,7 @@ export default {
     // 获取一个图表具体数据
     getChartData(response, params) {
       const chartItem = Object.assign({}, params);
-      chartItem.title = params.metric || '预览图';
+      chartItem.title = params.metric;
       const series = [];
       const legend = [];
       // 一个图表
@@ -278,11 +278,13 @@ export default {
             type:chartItem.type,
             //visible: true,
             //threshold: null,
+            chartTitle:''
           },
           metric_name: '',
         };
         // 图表中每条线的名字,后半部分
         let host = `${queryItem.metric.__name__}`;//up,
+        let charName = `${queryItem.metric.__name__}`;
         const tagsArr = Object.keys(queryItem.metric);//["__name__","asset","idc","instance","job","module","project"]
         // 设置时间-数据格式对
         const dpsArr = Object.entries(queryItem.values);//[ ["0",[1577959830.781,"0"]], ["1",[1577959845.781,"0"]] ]
@@ -290,15 +292,24 @@ export default {
         if (dpsArr.length > 0 && tagsArr.length > 0) {
             host +="{";
             tagsArr.forEach((tag, i) => {
-            if (tag !== '__name__') {
-              host += `${tag}="${queryItem.metric[tag]}",`;
-            }
-          });
+              if (tag !== '__name__') {
+                host += `${tag}="${queryItem.metric[tag]}",`;
+              }
+
+              if (tag === 'asset') {
+                let labVal= `${queryItem.metric[tag]}`;
+                if(labVal!==''){
+                  charName += `(${queryItem.metric[tag]})`;
+                }
+              }
+            });
           if(host.endsWith(',')){host = host.substr(0,host.length-1);}
           host +="}";
           legend.push(host);
+
           // 图表中每条线的名字,去掉最后的逗号与空格
           seriesItem.theData.name = host;
+          seriesItem.theData.chartTitle =charName;
           seriesItem.metric_name = seriesItem.theData.name;
           // 将秒改为毫秒
           seriesItem.theData.data = queryItem.values.map(dpsItem =>
@@ -331,7 +342,7 @@ export default {
           series.forEach((serieData, index) => {
             // 设置每个图表名称
             const chartInfoParams = Object.assign({}, chartItem);
-            chartInfoParams.title = serieData.name;
+            chartInfoParams.title = serieData.chartTitle;
             this.$refs.editChartMultiple[index]
               .setData(chartInfoParams, [serieData], 0, filterParams,[legend[index]]);
           });

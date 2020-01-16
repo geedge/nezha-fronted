@@ -21,7 +21,7 @@
       </div>
     </div>
 
-    <div class="line-area" ref="lineChartArea"  ></div>
+    <div class="line-area" ref="lineChartArea"  id="lineChartArea"></div>
     <!--
     <Modal title="查看" v-model="screenModal" width="96%" class="line-chart-block-modal">-->
     <el-dialog class="line-chart-block-modal"
@@ -45,7 +45,7 @@
             </el-date-picker>
         </div>
       </el-row>
-      <div class="line-area " ref="screenShowArea" ></div>
+      <div class="line-area " ref="screenShowArea"  id="screenShowArea"></div>
       <div class=" element-bottom-border" ></div>
       <span slot="footer" class="dialog-footer" >
         <el-button @click="screenModal = false">{{$t('dashboard.panel.cancel')}}</el-button>
@@ -214,12 +214,16 @@ export default {
       if ( chartInfo.type === 4) {//line,bar
         this.chartType = 'line';
       }
+      let chartId = '';
       if (chartSite === 'local') {
         this.echartStore = echarts.init(ele);
+        chartId='lineChartArea';
       }else if (chartSite === 'screen') {
         this.echartModalStore = echarts.init(ele);
+        chartId='screenShowArea';
       }
       var chartWidth = ele.clientWidth;
+      //let chartTitle = this.handleLineFeed(chartInfo.title,chartWidth);
       var option = {
         title: {
           text: chartInfo.title || null,
@@ -227,7 +231,7 @@ export default {
           useHTML: true,
           textStyle: {
             //display: 'inline-block',//无此属性
-            width: '300px',
+            width: '60%',
             fontStyle:'normal',
             fontWeight:'normal'
           }
@@ -243,7 +247,18 @@ export default {
         tooltip: {
           trigger: 'axis',
           confine:true,
-          //formatter:"{a}<br/>"+"<div style='display:block;word-break:break-all;word-wrap:break-word;white-space:pre-wrap'>"+"{b}"+"</div>"+"<br/>{c}",
+          formatter:function(params){
+            let str = `<div  style='width:100%;display:block;word-break:break-all;word-wrap:break-word;white-space:normal'>`;
+            params.forEach((item, i) => {
+                if(i!==0){
+                  str +=`<br/>`;
+                }
+                str +=`<span style='display:inline-block;margin-right:5px;border-radius:10px;width:15px;height:5px;background-color: ${item.color};}'></span> ${item.seriesName}:${item.data[1]}`;
+            });
+            str +=`</div>`;
+            return str;
+           // return `<div  style='width:100%;display:block;word-break:break-all;word-wrap:break-word;white-space:normal'><span style='display:inline-block;margin-right:5px;border-radius:10px;width:15px;height:5px;background-color: ${params[0].color};}'></span> ${params[0].seriesName}:${params[0].data[1]}</div>`;
+          },
         },
         legend: {
           type:'scroll',
@@ -279,10 +294,17 @@ export default {
             }else {
               var charNum = `${(chartWidth-100)/(txtWidth/name.length)}`;
               return name.slice(0,charNum)+'...';
-              //return name;
             }
           },
-          tooltip:{show:true},
+          tooltip:{
+            show:true,
+            formatter:function(params){
+              //alert(params.length);
+              //alert(JSON.stringify(params));
+
+              return `<div  style='width:100%;display:block;word-break:break-all;word-wrap:break-word;white-space:normal'> ${params.name}</div>`;
+            },
+          },
           data: legend,
           orient:'vertical',
           x:'center',
@@ -492,6 +514,54 @@ export default {
         this.echartModalStore.hideLoading();
         this.echartModalStore.resize({height:chartInfo.height});//,width:`${ele.clientWidth-100}`}
       }
+    },
+    handleLineFeed(str,chartWidth){
+      let rlt='';
+      if(!str){
+        return '';
+      }
+      //计算宽度
+      var span = document.createElement("span");
+      var result = {};
+      result.width = span.offsetWidth;
+      result.height = span.offsetHeight;
+      span.style.visibility = "hidden";
+      span.style.fontSize = 14;
+      span.style.fontFamily = "Arial";
+      span.style.display = "inline-block";
+      document.body.appendChild(span);
+      if(typeof span.textContent != "undefined"){
+        span.textContent = str;
+      }else{
+        span.innerText = str;
+      }
+      var txtWidth = parseFloat(window.getComputedStyle(span).width) - result.width;
+      document.body.removeChild(span);
+
+      if(txtWidth < chartWidth){
+        return str;
+      }else {
+        var charNum = `${(chartWidth-100)/(txtWidth/str.length)}`;
+        return str.slice(0,charNum)+'...';
+      }
+      /*
+      if(txtWidth < (chartWidth-30)){
+        return str;
+      }else {
+        var charNum = `${(chartWidth-200)/(txtWidth/str.length)}`;//一行的字符数
+        charNum = parseInt(charNum);
+        if(str.length>charNum){
+          let num = `${str.length/charNum}`;
+          num = parseInt(num)+1;
+          for(let i=0;i<num;i++){
+            rlt += str.substring(charNum*i,charNum*(i+1))+'\n';
+          }
+        }else {
+          return str;
+        }
+      }
+      */
+      //return rlt;
     },
     // 设置数据, filter区分
     setData(chartItem, seriesItem, panelId, filter,legend) {

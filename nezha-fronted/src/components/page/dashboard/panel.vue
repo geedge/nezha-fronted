@@ -154,6 +154,7 @@
         <div class="box-content">
           <chart-list
             @on-edit-chart="editData"
+            @on-refresh-time="refreshTime"
             @on-remove-chart="removeData" ref="chartList"></chart-list>
         </div>
       </div>
@@ -376,6 +377,11 @@
       },
       panelReload(){
         this.getTableData();
+      },
+      refreshTime(st,et){
+        const startTime = bus.timeFormate(st, 'yyyy-MM-dd hh:mm');
+        const endTime = bus.timeFormate(et, 'yyyy-MM-dd hh:mm');
+        this.searchTime = [startTime, endTime];
       },
       panelReloadForDel:function(){
         if(this.showPanel.id===this.panel.id){
