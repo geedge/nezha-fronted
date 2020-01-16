@@ -50,6 +50,7 @@
 </template>
 
 <script>
+    import {phone} from '../../common/js/validate'
     export default {
       name: "dcConfig",
       props:{
@@ -62,24 +63,6 @@
         this.init();
       },
       data(){
-        let checkPhone=(rule, value, callback) => {
-          if(!value || value == ''){
-            callback()
-          }
-          const phoneReg = /^1[3|4|5|7|8][0-9]{9}$/
-          setTimeout(() => {
-            if (!Number.isInteger(+value)) {
-              callback(new Error(this.$t('validate.tel')))
-            } else {
-              if (phoneReg.test(value)) {
-                callback()
-              } else {
-                callback(new Error(this.$t('validate.tel')))
-              }
-            }
-          }, 100)
-        }
-
         return {
           title:"",
           rules:{
@@ -91,7 +74,7 @@
             principal:[
             ],
             tel:[
-              { validator: checkPhone, trigger: 'blur'}
+              { validator: phone, trigger: 'blur'}
             ]
           },
           idc:{},

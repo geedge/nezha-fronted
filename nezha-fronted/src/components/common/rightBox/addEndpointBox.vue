@@ -69,7 +69,9 @@
                   <div v-if="!currentModuleCopy.id" class="endpoint-sub-table-body-dialog"></div>
                   <div @click="selectAsset(item, index)" :data="item.id" v-for="item,index in assetList" class="endpoint-sub-table-row" :id="'select-asset-'+item.id">
                     <div class="endpoint-sub-table-col">{{item.host}}</div>
-                    <div class="endpoint-sub-table-col">{{item.sn}}</div>
+                    <el-popover trigger="hover" placement="right-start" :content="item.sn" >
+                      <div slot="reference" class="endpoint-sub-table-col">{{item.sn}}</div>
+                    </el-popover>
                   </div>
                 </div>
               </div>
@@ -850,6 +852,7 @@
     display: inline-block;
     width: calc(50% - 15px);
     padding-left: 10px;
+    text-overflow: ellipsis;
   }
   .endpoint-sub-table-paginate-all {
     position: absolute;

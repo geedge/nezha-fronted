@@ -41,6 +41,7 @@
 </template>
 
 <script>
+  import {port} from '../../common/js/validate'
 export default {
     name: "accountConfig",
     props:{
@@ -66,15 +67,7 @@ export default {
 
       let validatePort=(rule,value,callback) => {
         if(this.asComponent){//作为组件使用，正常验证
-          if(!value || value == ''){
-            callback(new Error(this.$t('validate.required')))
-          }
-          if(typeof value != 'number'){
-            callback(new Error(this.$t('validate.number')))
-          }
-          if(value < 1 ||value > 65535){
-            callback(new Error(this.$t('validate.port')))
-          }
+          port(rule,value,callback);
         }else{
           if(this.account.user){
             if(!value || value == ''){

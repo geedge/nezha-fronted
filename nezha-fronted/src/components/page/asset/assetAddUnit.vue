@@ -333,6 +333,7 @@
 
 <script>
   import accountConfig from './accountConfig';
+  import {host} from '../../common/js/validate';
   export default {
 
     name: "assetAddUnit",
@@ -478,7 +479,8 @@
             {required: true, message: this.$t('validate.required'), trigger: 'blur'}
           ],
           host: [
-            {required: true, message: this.$t('validate.required'), trigger: 'blur'}
+            {required: true,validator:host, trigger: 'blur'}
+
           ],
           modelId: [
             {required: true, message: this.$t('validate.required'), trigger: 'change'}

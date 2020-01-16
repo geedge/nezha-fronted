@@ -10,7 +10,9 @@
           @click="changeModule(item)"
           :id="'project-module-'+item.id"
         >
-          <div class="sidebar-info-item-txt">{{item.name}}</div>
+          <el-popover trigger="hover" placement="right-end" :content="item.name" >
+            <div slot="reference" class="sidebar-info-item-txt">{{item.name}}</div>
+          </el-popover>
           <div class="side-bar-menu-edit" @click.stop="toEditModule(item)" :id="'project-module-edit-'+item.id"><i class="el-icon-edit-outline"></i></div>
         </div>
       </div>

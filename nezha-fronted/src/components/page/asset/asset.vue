@@ -10,7 +10,10 @@
         <el-checkbox-group v-model="checkList" size="small" @change="changeCheckBox">
           <el-checkbox class="sidebar-info-item" :class="{'sidebar-info-item-active': indOf(checkList, item.id)}"
                        v-for="(item,key) in checkListData" :key="key" :label=item.id>
-            <div class="sidebar-info-item-txt">{{item.name}}</div>
+            <el-popover trigger="hover" placement="right-end" :content="item.name" >
+              <div slot="reference" class="sidebar-info-item-txt">{{item.name}}</div>
+            </el-popover>
+
             <idc-config-box ref="idcConfigBox" :post-idc="item" placement="left" @after="getIDCOptionData" :button-class="'checkbox-edit'">
               <template v-slot:optionZone>
                 <span @click="closeAllPop">
@@ -67,7 +70,9 @@
               <span>{{scope.row.model.type.value}}</span>
             </div>
             <div v-if="item.prop=='SN'">
-              <span>{{scope.row.sn}}</span>
+              <el-popover trigger="hover" placement="bottom-start"  :content="scope.row.sn" >
+                <span slot="reference" class="sidebar-info-item-txt">{{scope.row.sn}}</span>
+              </el-popover>
             </div>
             <div v-if="item.prop=='HOST'">
               <span>{{scope.row.host}}</span>

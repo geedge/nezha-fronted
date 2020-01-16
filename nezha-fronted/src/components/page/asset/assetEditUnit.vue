@@ -24,7 +24,9 @@
         <el-form ref="assetEditForm" :model="assetData" label-width="120px" class="right-box-form right-box-form-left" :rules="rules">
           <el-form-item :label="$t('asset.createAssetTab.sn')" prop="sn">
             <el-input size="mini" v-if="!tabView" v-model="assetData.sn"/>
-            <span v-if="tabView">{{assetData.sn}}</span>
+            <el-popover trigger="hover" placement="bottom-start" :content="assetData.sn" >
+              <span slot="reference" class="sidebar-info-item-txt" v-if="tabView">{{assetData.sn}}</span>
+            </el-popover>
           </el-form-item>
           <el-form-item :label="this.$t('asset.createAssetTab.host')" prop="host">
             <el-input size="mini" v-if="!tabView" v-model="assetData.host"/>
@@ -459,6 +461,7 @@
 
 <script>
   import accountConfig from './accountConfig';
+  import {host} from '../../common/js/validate';
   export default {
     name: "assetEditUnit",
     props: ["editUnitShow", "editUnitId"],
@@ -617,7 +620,7 @@
             {required: true, message: this.$t('validate.required'), trigger: 'blur'}
           ],
           host: [
-            {required: true, message: this.$t('validate.required'), trigger: 'blur'}
+            {required: true, validator:host, trigger: 'blur'}
           ],
           modelId: [
             {required: true, message: this.$t('validate.required'), trigger: 'change'}

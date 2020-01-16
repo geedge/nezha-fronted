@@ -145,23 +145,12 @@
 
 </template>
 <script>
+  import {host} from '../../common/js/validate';
+  import {port} from '../../common/js/validate';
 export default {
+
   name: "prom",
   data() {
-    let checkHost=(rule, value, callback) => {
-      if(!value || value == ''){
-        callback(new Error(this.$t('validate.required')))
-      }
-      const hostReg = /^(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])$/
-        setTimeout(() => {
-          if (hostReg.test(value)) {
-            callback()
-          } else {
-            callback(new Error(this.$t('validate.host')))
-          }
-
-      }, 100)
-    }
     return {
       rightBox: { //弹出框相关
         show: false,
@@ -179,11 +168,10 @@ export default {
           {required:true,message:this.$t('validate.required'),trigger:'change'}
         ],
         host:[
-          { validator: checkHost, trigger: 'blur',required:true}
+          { validator: host, trigger: 'blur',required:true}
         ],
         port:[
-          {required:true,message:this.$t('validate.required'),trigger:'blur'},
-          {type:'number',message: this.$t('validate.number')}
+          { validator: port, trigger: 'blur',required:true}
         ],
         type:[
           {required:true,message:this.$t('validate.required'),trigger:'change'},
