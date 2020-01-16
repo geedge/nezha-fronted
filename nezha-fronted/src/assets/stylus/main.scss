@@ -144,10 +144,10 @@ html {
 }
 .nz-btn.nz-btn-disabled {
   background-image: none;
-  background-color: #666;
-  color: white;
-  text-shadow: none;
-  border-color: #999;
+  color: #e5e5e5;
+  background-color: #ffffff;
+  border-color: #e5e5e5 ;
+  cursor: default;
 }
 .nz-btn-group .nz-btn:first-child:not(:last-child) {
   border-bottom-right-radius: 0;
