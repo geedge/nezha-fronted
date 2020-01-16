@@ -20,11 +20,11 @@
           <el-input size="mini" v-model="account.user" v-if="isEdit"/>
           <div class="right-box-form-content-txt" v-if="!isEdit">{{account.user}}</div>
         </el-form-item>
-        <el-form-item :label="$t('asset.createAssetTab.password')" v-show="account.authType==1" v-if="isEdit">
+        <el-form-item :label="$t('asset.createAssetTab.password')" v-show="account.authType==1" v-if="isEdit" style="display: inline-block">
           <el-input size="mini" type="password" v-model="account.pwd"/>
         </el-form-item>
-        <el-form-item :label="$t('asset.createAssetTab.port')" prop="port" >
-          <el-input size="mini" v-model="account.port" v-if="isEdit"/>
+        <el-form-item :label="$t('asset.createAssetTab.port')" prop="port" style="display: inline-block">
+          <el-input size="mini" v-model.number="account.port" v-if="isEdit"/>
           <div class="right-box-form-content-txt" v-if="!isEdit">{{account.port}}</div>
         </el-form-item>
         <el-form-item :label="this.$t('asset.createAssetTab.ssh')" v-show="account.authType==2" prop="file" v-if="isEdit">
@@ -45,7 +45,7 @@ export default {
     name: "accountConfig",
     props:{
       account:{type:Object},
-      asComponent:{type:Boolean,default:false},
+      asComponent:{type:Boolean,default:true},//历史原因增加的逻辑，可删除
       isEdit:{type:Boolean,default:true}
     },
     created() {
@@ -69,10 +69,22 @@ export default {
           if(!value || value == ''){
             callback(new Error(this.$t('validate.required')))
           }
+          if(typeof value != 'number'){
+            callback(new Error(this.$t('validate.number')))
+          }
+          if(value < 1 ||value > 65535){
+            callback(new Error(this.$t('validate.port')))
+          }
         }else{
           if(this.account.user){
             if(!value || value == ''){
               callback(new Error(this.$t('validate.required')))
+            }
+            if(typeof value != 'number'){
+              callback(new Error(this.$t('validate.number')))
+            }
+            if(value < 1 ||value > 65535){
+              callback(new Error(this.$t('validate.port')))
             }
           }
         }
@@ -92,7 +104,7 @@ export default {
             { validator: validataUser, trigger: 'blur'}
           ],
           port:[
-            { validator: validatePort, trigger: 'blur'}
+            { validator: validatePort, trigger: 'change'}
           ],
           file:[
             { validator: validateFile, trigger: 'change'}

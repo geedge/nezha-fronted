@@ -259,58 +259,7 @@
                     <i class="el-icon-edit-outline" @click="getSingleIDCData(item.id,'edit', item)"></i>
                   </template>
                 </idc-config-box>
-                <!--<el-popover
-                  placement="left"
-                  v-model="item[item.name]"
-                >
-                  <div class="pop-window-assetType-content">
-                    <div class="right-box-top-btns">
-                      <div class="right-box-top-btn right-box-top-btn-full"
-                           @click="item[item.name] = false">
-                        <div class="right-box-btn-icon">
-                          <i class="el-icon-close"></i>
-                        </div>
-                        <span>{{$t('overall.esc')}}</span>
-                      </div>
-                    </div>
-                    <div class="pop-window">
-                      <span style="display: block;padding-bottom: 20px">{{$t('asset.createAssetTab.editIdcTab.title')}}</span>
-                      <el-form-item :label="$t('asset.createAssetTab.dcName')">
-                        <el-input v-model="popIdcData.name"/>
-                      </el-form-item>
-                      <el-form-item :label="$t('asset.createAssetTab.location')">
-                        <el-input v-model="popIdcData.location"/>
-                      </el-form-item>
-                      <el-form-item :label="$t('asset.createAssetTab.principal')">
-                        <el-select v-model="popIdcData.principal" clearable size="mini">
-                          <el-option
-                            v-for="item in idcUserData"
-                            :key="item.key"
-                            :label="item.username"
-                            :value="item.userId"
-                          >
-                          </el-option>
-                        </el-select>
-                      </el-form-item>
-                      <el-form-item :label="$t('asset.createAssetTab.editIdcTab.tel')">
-                        <el-input size="mini" v-model="popIdcData.tel"/>
-                      </el-form-item>
-                    </div>
-                  </div>
-                  <div class="right-box-bottom-btns">
-                    <div class="right-box-bottom-btn right-box-bottom-btn-cancel"
-                         @click.stop="item[item.name]= false">
-                      {{$t('overall.cancel')}}
-                    </div>
-                    <div class="right-box-bottom-btn right-box-bottom-btn-50"
-                         @click="editData('idc',item)">
-                      {{$t('overall.save')}}
-                    </div>
-                  </div>
-                  <span class="config-dropdown-btn" slot="reference"
-                        @click.stop="getSingleIDCData(item.id,'edit',item)"><i
-                    class="el-icon-edit-outline"></i></span>
-                </el-popover>-->
+
                 <span class="config-dropdown-btn config-dropdown-btn-delete"
                       @click.stop="deleteData('idc',item.id)" :id="'asset-add-idc-op-del-'+item.id"><i
                   class="el-icon-delete"></i></span>
@@ -318,58 +267,7 @@
             </el-select>
             <div class="right-box-row-btn right-box-row-btn-small">
               <idc-config-box placement="left" @after="getIDCOptionData"></idc-config-box>
-              <!--<el-popover
-                placement="left"
-                trigger="click"
-                v-model="popIDCVisible"
-              >
-                <div class="pop-window-assetType-content">
-                  <div class="right-box-top-btns">
-                    <div class="right-box-top-btn right-box-top-btn-full"
-                         @click="popoverClose('idc')">
-                      <div class="right-box-btn-icon">
-                        <i class="el-icon-close"></i>
-                      </div>
-                      <span>{{$t('overall.esc')}}</span>
-                    </div>
-                  </div>
-                  <div class="pop-window">
-                      <span
-                        style="display: block;padding-bottom: 20px">{{$t('asset.createAssetTab.AddIdcTab.title')}}</span>
-                    <el-form-item :label="this.$t('asset.createAssetTab.AddIdcTab.dcName')">
-                      <el-input v-model="addIdcData.name"/>
-                    </el-form-item>
-                    <el-form-item :label="this.$t('asset.createAssetTab.AddIdcTab.location')">
-                      <el-input v-model="addIdcData.location"/>
-                    </el-form-item>
-                    <el-form-item :label="this.$t('asset.createAssetTab.AddIdcTab.principal')">
-                      <el-select size="mini" v-model="addIdcData.principal" clearable>
-                        <el-option
-                          v-for="item in idcUserData"
-                          :key="item.key"
-                          :label="item.username"
-                          :value="item.userId"
-                        >
-                        </el-option>
-                      </el-select>
-                    </el-form-item>
-                    <el-form-item :label="this.$t('asset.createAssetTab.AddIdcTab.tel')">
-                      <el-input v-model="addIdcData.tel"/>
-                    </el-form-item>
-                  </div>
-                </div>
-                <div class="right-box-bottom-btns">
-                  <div class="right-box-bottom-btn right-box-bottom-btn-cancel"
-                       @click="popoverClose('idc')">
-                    {{$t('overall.cancel')}}
-                  </div>
-                  <div class="right-box-bottom-btn right-box-bottom-btn-50"
-                       @click="addNewData('IDC')">
-                    {{$t('overall.save')}}
-                  </div>
-                </div>
-                <div slot="reference"><i class="el-icon-plus"></i></div>
-              </el-popover>-->
+
             </div>
           </el-form-item>
           <el-form-item :label="this.$t('asset.createAssetTab.location')">
@@ -417,9 +315,16 @@
             <span>{{cabinetSelectedData.remark}}</span>
           </el-form-item>
           <!--CLI-->
-          <div class="asset-sub-title">{{$t('asset.createAssetTab.cli')}}</div>
+          <div class="asset-sub-title" >{{$t('asset.createAssetTab.cli')}}</div>
+          <el-switch v-model="accountSwitch" active-color="#1166bb" :disabled="parseInt(assetData.exporter)===1"></el-switch>
           <div class="line-100 asset-line"></div>
-          <account-config-box v-for="(item,index) in assetData.accounts" :account="item" :key="index" ref="accountConfigBox"></account-config-box>
+          <template v-if="accountSwitch">
+            <account-config-box v-for="(item,index) in assetData.accounts" :account="item" :key="index" ref="accountConfigBox"></account-config-box>
+          </template>
+
+          <el-form-item :label="this.$t('asset.createAssetTab.exporter')">
+            <el-switch v-model="assetData.exporter" active-color="#1166bb" active-value="1" inactive-value="0"></el-switch>
+          </el-form-item>
         </el-form>
       </el-scrollbar>
     </div>
@@ -455,8 +360,10 @@
             pwd: '',
             port: '',
             uploadFile:null
-          }]
+          }],
+          exporter:0
         },
+        accountSwitch:false,//true 开启，false 关闭
         assetStateOption: [
           {
             value: 1,
@@ -594,7 +501,8 @@
             {required: true, message: this.$t('validate.required'), trigger: 'blur'}
           ]
         },
-        uploadFileList:[]
+        uploadFileList:[],
+
       }
     },
     /*computed: {
@@ -618,6 +526,11 @@
       },
       'assetData.idcId': function(n, o) {
         this.addCabinetData.idcId = n;
+      },
+      'assetData.exporter':function(n,o){
+        if(parseInt(n) === 1){
+          this.accountSwitch=true;
+        }
       }
     },
     methods: {
@@ -824,8 +737,11 @@
           })
         }
         if (type === 'asset') {
-          this.$refs.accountConfigBox[0].validateAccount();
-          let accountValideResult=this.$refs.accountConfigBox[0].validateResult;
+          let accountValideResult=true;
+          if(this.$refs.accountConfigBox&&this.$refs.accountConfigBox.length>0){
+            this.$refs.accountConfigBox[0].validateAccount();
+            accountValideResult=this.$refs.accountConfigBox[0].validateResult;
+          }
           this.$refs.addAssetForm.validate((valid) => {
             if (valid&&accountValideResult) {
               let modelId = ''
@@ -848,18 +764,21 @@
               form.append("idcId", this.assetData.idcId);
               form.append("cabinetId", this.assetData.cabinetId);
               form.append("modelId", modelId);
-              for(let i in this.assetData.accounts){
-                let account=this.assetData.accounts[i];
-                if(account.user){
-                  form.append("accounts["+i+"].authType",account.authType);
-                  form.append("accounts["+i+"].user", account.user);
-                  form.append("accounts["+i+"].port", account.port);
-                  form.append("accounts["+i+"].pwd", account.pwd);
-                  if(account.authType==2){
-                    form.append('cert',account.uploadFile?account.uploadFile.raw:null);
+              if(this.accountSwitch){
+                for(let i in this.assetData.accounts){
+                  let account=this.assetData.accounts[i];
+                  if(account.user){
+                    form.append("accounts["+i+"].authType",account.authType);
+                    form.append("accounts["+i+"].user", account.user);
+                    form.append("accounts["+i+"].port", account.port);
+                    form.append("accounts["+i+"].pwd", account.pwd);
+                    if(account.authType==2){
+                      form.append('cert',account.uploadFile?account.uploadFile.raw:null);
+                    }
                   }
                 }
               }
+              form.append("exporter",parseInt(this.assetData.exporter));
               this.$post('asset', form,{'Content-Type': 'multipart/form-data'}).then(res => {
                 const h = this.$createElement;
                 if (res.code === 200) {

@@ -123,6 +123,7 @@ const en = {
     tel:'Phone number is invalid',
     host:'IP Address is invalid',
     fileSize:'upload file is too large',
+    port:'Port is invalide',
     config: {
       account: {
 
@@ -217,7 +218,8 @@ const en = {
       upload:'Upload',
       clickToUpload:'Upload',
       clickToCover:'Cover',
-      sshKeyWasConfig:'SSH-KEY has been configured'
+      sshKeyWasConfig:'SSH-KEY has been configured',
+      exporter:'Exporter'
     },
     editAssetTab:{
       title:'Create Asset',
