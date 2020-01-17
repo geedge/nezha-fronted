@@ -1,5 +1,4 @@
 import vm from '../../../main'
-import ca from "element-ui/src/locale/lang/ca";
 
 export function host(rule, value, callback) {
   const hostReg = /^(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])$/

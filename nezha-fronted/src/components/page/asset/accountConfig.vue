@@ -15,15 +15,15 @@
           </div>-->
         <div class="nz-tab" v-if="isEdit">
           <div class="nz-tab-item-box" @click="changeLoginType(1)" id="account-logintype-1">
-            <div class="nz-tab-item" :class="{'nz-tab-item-active' : account.authType == 1}">{{$t('project.endpoint.endpoint')}}</div>
+            <div class="nz-tab-item" :class="{'nz-tab-item-active' : account.authType == 1}">{{$t('asset.createAssetTab.password')}}</div>
           </div>
           <div @click="changeLoginType(2)" class="nz-tab-item-box">
-            <div class="nz-tab-item" :class="{'nz-tab-item-active' : account.authType == 2}">{{$t('project.metrics.metrics')}}</div>
+            <div class="nz-tab-item" :class="{'nz-tab-item-active' : account.authType == 2}">{{$t('asset.createAssetTab.ssh')}}</div>
           </div>
         </div>
-
-        <div class="right-box-form-content-txt" v-if="!isEdit">{{account.authType}}</div>
-
+        <el-form-item :label="$t('asset.createAssetTab.loginType')" size="mini" v-if="!isEdit">
+          <div class="right-box-form-content-txt" >{{account.authType==1?$t('asset.createAssetTab.password'):$t('asset.createAssetTab.ssh')}}</div>
+        </el-form-item>
         <el-form-item :label="$t('asset.createAssetTab.account')" prop="user">
           <el-input autocomplete="new-password" size="mini" v-model="account.user" v-if="isEdit"/>
           <div class="right-box-form-content-txt" v-if="!isEdit">{{account.user}}</div>
@@ -79,7 +79,6 @@ export default {
             { validator: validateFile, trigger: 'change'}
           ]
         },
-        validateResult:false,
         uploadTip:''
       }
     },
@@ -120,7 +119,8 @@ export default {
       validateAccount:function(){
         this.validateResult=false;
         this.$refs.accountForm.validate((valid) => {
-          this.validateResult=valid;
+          this.$emit("setValidateResult",valid);
+          console.log(valid)
         });
       },
       validateFile:function(){

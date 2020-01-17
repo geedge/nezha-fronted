@@ -334,7 +334,7 @@
           </div>
           <div class="line-100 asset-line"></div>
           <template v-if="accountSwitch">
-            <account-config-box v-for="(item,index) in assetData.accounts" :account="item" :key="index" ref="accountConfigBox"></account-config-box>
+            <account-config-box v-for="(item,index) in assetData.accounts" :account="item" :key="index" ref="accountConfigBox" @setValidateResult="setAccountValideResult"></account-config-box>
           </template>
 
           <el-form-item :label="this.$t('asset.createAssetTab.exporter')" class="exporter-label">
@@ -530,6 +530,7 @@
           ]
         },
         uploadFileList:[],
+        accountValideResult:true
 
       }
     },
@@ -765,13 +766,12 @@
           })
         }
         if (type === 'asset') {
-          let accountValideResult=true;
           if(this.$refs.accountConfigBox&&this.$refs.accountConfigBox.length>0){
             this.$refs.accountConfigBox[0].validateAccount();
-            accountValideResult=this.$refs.accountConfigBox[0].validateResult;
+            console.log("accountValideResult-->"+this.accountValideResult)
           }
           this.$refs.addAssetForm.validate((valid) => {
-            if (valid&&accountValideResult) {
+            if (valid&&this.accountValideResult) {
               let modelId = ''
               let authType = ''
               if (this.assetData.modelId !== '') {
@@ -866,6 +866,9 @@
             }
           })
         }
+      },
+      setAccountValideResult:function(result){
+        this.accountValideResult=result;
       },
       uploadFile:function(file){
         this.assetData.accounts[0].file=file.file;

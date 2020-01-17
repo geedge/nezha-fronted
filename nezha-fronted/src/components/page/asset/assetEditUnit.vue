@@ -43,11 +43,19 @@
             </div>
             <span v-if="tabView">{{assetData.state==1 ? $t('asset.createAssetTab.inStock'): $t('asset.createAssetTab.notInStock')}}</span>
           </el-form-item>
-          <el-form-item :label="$t('asset.editAssetTab.modelId')" v-if="tabView">
-            <div class="tab-input-square">{{assetViewData.moduleNum}}</div>
+          <el-form-item :label="$t('asset.tableTitle.modules')" v-if="tabView">
+            <div v-if="assetViewData.moduleNum > 0" >
+              <module-list-pop :asset-id="obj.id + ''" @openModuleBox="openModuleBox" placement="left" :ref="'moduleListPop' + obj.id">
+                <template v-slot:optionZone>
+                  <button class="nz-btn nz-btn-size-normal nz-btn-style-light nz-btn-min-width-75">{{assetViewData.moduleNum}}</button>
+                </template>
+              </module-list-pop>
+            </div>
+            <button type="button" v-else class="nz-btn nz-btn-size-normal nz-btn-style-light nz-btn-min-width-75 nz-btn-disabled">{{assetViewData.moduleNum}}</button>
           </el-form-item>
-          <el-form-item :label="$t('asset.editAssetTab.alert')" v-if="tabView">
-            <div class="tab-input-square">{{assetViewData.alertNum}}</div>
+          <el-form-item :label="$t('asset.tableTitle.alerts')" v-if="tabView">
+            <button type="button" v-if="assetViewData.alertNum > 0" id="'asset-alerts-'+scope.row.id" @click="jumpToAlertMsg(obj.id)" class="nz-btn nz-btn-size-normal nz-btn-style-light nz-btn-min-width-75">{{assetViewData.alertNum}}</button>
+            <button type="button" v-else class="nz-btn nz-btn-size-normal nz-btn-style-light nz-btn-min-width-75 nz-btn-disabled">{{assetViewData.alertNum}}</button>
           </el-form-item>
           <div class="asset-sub-title">{{$t('asset.createAssetTab.assetInfo')}}</div>
           <div class="line-100 asset-line"></div>
@@ -308,114 +316,10 @@
                       </template>
                     </idc-config-box>
                   </div>
-                  <!--<el-popover
-                    placement="left"
-                    v-model="item[item.name]"
-                    trigger="manual"
-                  >
-                    <div class="pop-window-assetType-content">
-                      <div class="right-box-top-btns">
-                        <div class="right-box-top-btn right-box-top-btn-full"
-                             @click="item[item.name] = false">
-                          <div class="right-box-btn-icon">
-                            <i class="el-icon-close"></i>
-                          </div>
-                          <span>{{$t('overall.esc')}}</span>
-                        </div>
-                      </div>
-                      <div class="pop-window">
-                        <span style="display: block;padding-bottom: 20px">{{$t('asset.editAssetTab.editIdcTab.title')}}</span>
-                        <el-form-item :label="$t('asset.editAssetTab.dcName')">
-                          <el-input v-model="popIdcData.name"/>
-                        </el-form-item>
-                        <el-form-item :label="$t('asset.editAssetTab.location')">
-                          <el-input v-model="popIdcData.location"/>
-                        </el-form-item>
-                        <el-form-item :label="$t('asset.editAssetTab.principal')">
-                          <el-select v-model="popIdcData.principal" clearable>
-                            <el-option
-                              v-for="item in idcUserData"
-                              :key="item.key"
-                              :label="item.username"
-                              :value="item.userId"
-                            >
-                            </el-option>
-                          </el-select>
-                        </el-form-item>
-                        <el-form-item :label="$t('asset.editAssetTab.editIdcTab.tel')">
-                          <el-input v-model="popIdcData.tel"/>
-                        </el-form-item>
-                      </div>
-                    </div>
-                    <div class="right-box-bottom-btns">
-                      <div class="right-box-bottom-btn right-box-bottom-btn-cancel"
-                           @click.stop="item[item.name]= false">
-                        {{$t('overall.cancel')}}
-                      </div>
-                      <div class="right-box-bottom-btn right-box-bottom-btn-50"
-                           @click="editData('idc',item)">
-                        {{$t('overall.save')}}
-                      </div>
-                    </div>
-                    <span class="config-dropdown-btn" slot="reference"
-                          @click.stop="getSingleIDCData(item.id,'edit',item)"><i
-                      class="el-icon-edit-outline"></i></span>
-                  </el-popover>-->
                 </el-option>
               </el-select>
               <div class="right-box-row-btn right-box-row-btn-small">
                 <idc-config-box placement="left" @after="getIDCOptionData"></idc-config-box>
-                <!--<el-popover
-                  placement="left"
-                  v-model="editPopIDCVisible"
-                >
-                  <div class="pop-window-assetType-content">
-                    <div class="right-box-top-btns">
-                      <div class="right-box-top-btn right-box-top-btn-full"
-                           @click="editPopoverClose('idc')">
-                        <div class="right-box-btn-icon">
-                          <i class="el-icon-close"></i>
-                        </div>
-                        <span>{{$t('overall.esc')}}</span>
-                      </div>
-                    </div>
-                    <div class="pop-window">
-                      <span
-                        style="display: block;padding-bottom: 20px">{{$t('asset.editAssetTab.AddIdcTab.title')}}</span>
-                      <el-form-item :label="this.$t('asset.editAssetTab.AddIdcTab.dcName')">
-                        <el-input v-model="addIdcData.name"/>
-                      </el-form-item>
-                      <el-form-item :label="this.$t('asset.editAssetTab.AddIdcTab.location')">
-                        <el-input v-model="addIdcData.location"/>
-                      </el-form-item>
-                      <el-form-item :label="$t('asset.editAssetTab.AddIdcTab.principal')">
-                        <el-select v-model="addIdcData.principal" clearable>
-                          <el-option
-                            v-for="item in idcUserData"
-                            :key="item.key"
-                            :label="item.username"
-                            :value="item.userId"
-                          >
-                          </el-option>
-                        </el-select>
-                      </el-form-item>
-                      <el-form-item :label="this.$t('asset.editAssetTab.AddIdcTab.tel')">
-                        <el-input v-model="addIdcData.tel"/>
-                      </el-form-item>
-                    </div>
-                  </div>
-                  <div class="right-box-bottom-btns">
-                    <div class="right-box-bottom-btn right-box-bottom-btn-cancel"
-                         @click="editPopoverClose('idc')">
-                      {{$t('overall.cancel')}}
-                    </div>
-                    <div class="right-box-bottom-btn right-box-bottom-btn-50"
-                         @click="addNewData('IDC')">
-                      {{$t('overall.save')}}
-                    </div>
-                  </div>
-                  <div slot="reference"><i class="el-icon-plus"></i></div>
-                </el-popover>-->
               </div>
             </template>
             <span v-if="tabView">{{assetViewData.idcName}}</span>
@@ -471,9 +375,13 @@
             <span>{{cabinetSelectedData.remark}}</span>
           </el-form-item>
           <!--cli-->
-          <div class="asset-sub-title">{{$t('asset.createAssetTab.cli')}}</div>
+          <div class="asset-sub-title">{{$t('asset.createAssetTab.cli')}}
+            <el-switch style="float: right;" v-model="accountSwitch" active-color="#ee9d3f" :disabled="parseInt(assetData.exporter)===1"></el-switch>
+          </div>
           <div class="line-100 asset-line"></div>
-          <account-config-box v-for="(item,index) in assetData.accounts" :is-edit="!tabView" :account="item" :key="index" ref="accountConfigBox"></account-config-box>
+          <template v-if="accountSwitch">
+          <account-config-box v-for="(item,index) in assetData.accounts" :is-edit="!tabView" :account="item" :key="index" ref="accountConfigBox" @setValidateResult="setAccountValideResult"></account-config-box>
+          </template>
         </el-form>
       </el-scrollbar>
 
@@ -486,6 +394,7 @@
           <span>{{$t('overall.ok')}}</span>
         </button>
       </div>
+      <module-box :module="module" @reload="refreshTabData" ref="moduleBox"></module-box>
     </div>
   </transition>
 </template>
@@ -522,6 +431,7 @@
             uploadFile: null
           }]
         },
+        accountSwitch:false,//true 开启，false 关闭
         accountData: '',
         assetViewData: {
           assetType: '',
@@ -676,7 +586,9 @@
           ]
         },
         uploadFileList:[],
-        formData:null
+        formData:null,
+        module:{},
+        accountValideResult:true
       }
     },
     /*computed: {
@@ -765,7 +677,8 @@
               // this.assetData.accounts[0].pwd = response.data.list[0].accounts[0].pwd
               // this.assetData.accounts[0].port = response.data.list[0].accounts[0].port
               // this.assetData.accounts[0].cert = response.data.list[0].accounts[0].privateKey
-              this.assetData.accounts[0]=response.data.list[0].accounts[0]?response.data.list[0].accounts[0]:this.assetData.accounts[0];
+              this.assetData.accounts=response.data.list[0].accounts[0]?response.data.list[0].accounts:[];
+              this.accountSwitch=this.assetData.accounts.length>0;
               this.idcSelectedData.location = response.data.list[0].idc.location
               this.idcSelectedData.principal = response.data.list[0].idc.principal
               this.idcSelectedData.tel = response.data.list[0].idc.tel
@@ -775,6 +688,23 @@
             }
           })
         }
+      },
+      openModuleBox(module) {
+        this.module = module;
+        this.$refs.moduleBox.show(true);
+        this.$refs['moduleListPop' + this.obj.id].show(false);
+      },
+      refreshTabData:function(){
+        this.$emit('refreshData', 'true');
+      },
+      jumpToAlertMsg(assetId) {
+        this.$store.commit('assetForAlertListChange', assetId);
+        this.$router.push({
+          path: "/alertList",
+          query: {
+            t: +new Date()
+          }
+        });
       },
       getIDCOptionData() {
         this.$get('idc').then(response => {
@@ -884,10 +814,12 @@
               }
             }
           }
-          this.$refs.accountConfigBox[0].validateAccount();
-          let accountValideResult=this.$refs.accountConfigBox[0].validateResult;
+
+          if(this.$refs.accountConfigBox&&this.$refs.accountConfigBox.length>0){
+            this.$refs.accountConfigBox[0].validateAccount();
+          }
           this.$refs.assetEditForm.validate((valid) => {
-            if (valid&&accountValideResult) {
+            if (valid&&this.accountValideResult) {
               this.$put('asset', form,{'Content-Type': 'multipart/form-data'}).then(res => {
                 const h = this.$createElement;
                 if (res.code === 200) {
@@ -965,6 +897,9 @@
             }
           })
         }
+      },
+      setAccountValideResult:function(result){
+        this.accountValideResult=result;
       },
       //新增型号弹框关闭后重置弹框内容
       resetVendor() {

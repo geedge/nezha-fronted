@@ -82,7 +82,7 @@
               <span>{{scope.row.state==1 ? $t('asset.createAssetTab.inStock') : $t('asset.createAssetTab.notInStock')}}</span>
             </div>
             <div v-if="item.prop=='Module'">
-              <div v-if="scope.row.moduleNum > 0" @click="getAssetModuleList(scope.row.id)" :id="'asset-module-'+scope.row.id">
+              <div v-if="scope.row.moduleNum > 0" >
                 <module-list-pop :asset-id="scope.row.id + ''" @openModuleBox="openModuleBox" placement="left" :ref="'moduleListPop' + scope.row.id">
                   <template v-slot:optionZone>
                     <button class="nz-btn nz-btn-size-normal nz-btn-style-light nz-btn-min-width-75">{{scope.row.moduleNum}}</button>

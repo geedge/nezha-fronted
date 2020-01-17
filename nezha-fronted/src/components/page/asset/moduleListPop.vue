@@ -24,7 +24,9 @@
       </el-table>
     </div>
     <template slot="reference">
-      <slot name="optionZone"><div class="tab-input-square link">0</div></slot>
+      <div @click="getModuleList">
+        <slot name="optionZone"><div class="tab-input-square link">0</div></slot>
+      </div>
     </template>
   </el-popover>
 </template>
