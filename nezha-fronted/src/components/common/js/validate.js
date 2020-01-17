@@ -2,9 +2,6 @@ import vm from '../../../main'
 import ca from "element-ui/src/locale/lang/ca";
 
 export function host(rule, value, callback) {
-  if(!value || value == ''){
-    callback()
-  }
   const hostReg = /^(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])$/
   setTimeout(() => {
     if (hostReg.test(value)) {
@@ -12,15 +9,10 @@ export function host(rule, value, callback) {
     } else {
       callback(new Error(vm.$t('validate.host')))
     }
-
   }, 100)
-  callback();
 }
 
 export function phone(rule, value, callback) {
-  if(!value || value == ''){
-    callback()
-  }
   const phoneReg = /^1[3|4|5|7|8][0-9]{9}$/
   setTimeout(() => {
     if (!Number.isInteger(+value)) {
@@ -33,22 +25,20 @@ export function phone(rule, value, callback) {
       }
     }
   }, 100)
-  callback();
 }
 
 export function port(rule, value, callback) {
-  if(!value || value == ''){
-    callback()
-  }
   setTimeout(() => {
     if(typeof value != 'number'){
       callback(new Error(vm.$t('validate.number')))
-    }
-    if(value < 1 ||value > 65535){
-      callback(new Error(vm.$t('validate.port')))
+    }else{
+      if(value < 1 ||value > 65535){
+        callback(new Error(vm.$t('validate.port')))
+      }else{
+        callback();
+      }
     }
   }, 100)
-  callback();
 }
 
 export function noSpecialChar(rule, value, callback){
@@ -60,5 +50,4 @@ export function noSpecialChar(rule, value, callback){
       callback(new Error(vm.$t('validate.special')))
     }
   }, 100)
-  callback();
 }

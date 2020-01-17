@@ -505,8 +505,8 @@
             {required: true, message: this.$t('validate.required'), trigger: 'blur'}
           ],
           host: [
-            {required: true,validator:host, trigger: 'blur'}
-
+            {required:true,message:this.$t('validate.required'),trigger: 'blur'},
+            {validator:host, trigger: 'blur'}
           ],
           modelId: [
             {required: true, message: this.$t('validate.required'), trigger: 'change'}
