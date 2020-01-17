@@ -33,7 +33,7 @@
       <el-form :model="chartInfo" ref="chartInfo" v-show="isSave">
         <el-row>
           <div class="common-float-left">
-            <el-form-item  :label-width="80" :label="$t('dashboard.panel.chartForm.width')" prop="span"
+            <el-form-item  label-width="80px" :label="$t('dashboard.panel.chartForm.width')" prop="span"
             :rules="{ required: true, type: 'number', trigger: 'change' }">
               <el-select class="w-select" size="small" v-model="chartInfo.span" transfer>
                 <el-option v-for="item in spanList" :key="item" :label="'span-' + item" :value="item">
@@ -42,8 +42,10 @@
               </el-select>
             </el-form-item>
           </div>
+        </el-row>
+        <el-row>
           <div class="common-float-left">
-            <el-form-item :label-width="80" :label="$t('dashboard.panel.chartForm.high')" prop="height"
+            <el-form-item label-width="80px" :label="$t('dashboard.panel.chartForm.high')" prop="height"
             :rules="{ required: true, type: 'number', trigger: 'change' }">
               <el-input-number :min="400" size="small" v-model="chartInfo.height" class="w-select" placeholder=""></el-input-number>px
             </el-form-item>
@@ -51,7 +53,7 @@
         </el-row>
         <el-row>
           <div class="common-float-left">
-            <el-form-item :label-width="80" :label="$t('dashboard.panel.chartForm.type')" prop="type"
+            <el-form-item  label-width="80px" :label="$t('dashboard.panel.chartForm.type')" prop="type"
               :rules="{ required: true,   trigger: 'change' }">
               <el-select transfer class="w-select" v-model="chartInfo.type" size="small">
                 <el-option v-for="item in typeList"
