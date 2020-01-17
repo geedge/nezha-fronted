@@ -44,8 +44,7 @@
           <el-menu-item :index="'2-' + index">
             <div @click="jumpToProject(item)" :class="{'menu-item-active' :(activeIndex == 'project' && activeItemIndex == item.id)}">
               <span>{{item.name}}</span>
-              <div @click.stop="toEditProject(item)" class="menu-edit"><i style="color: inherit"
-                                                                          class="nz-icon nz-icon-edit"></i></div>
+              <div @click.stop="toEditProject(item)" class="menu-edit"><i style="color: inherit" class="nz-icon nz-icon-edit"></i></div>
             </div>
           </el-menu-item>
         </template>
@@ -60,7 +59,7 @@
               <span>{{item.name}}</span>
               <idc-config-box :post-idc="item" ref="idcConfigBox" placement="left" @after="getIDCOptionData" :button-class="'menu-edit'">
                 <template v-slot:optionZone>
-                  <div @click="closeAllPop">
+                  <div @click="closeAllPop" class="menu-edit">
                     <i class="nz-icon nz-icon-edit" @click="getIDCOptionData(item.id)" style="color: inherit"></i>
                   </div>
                 </template>
@@ -440,7 +439,7 @@
 <style lang="scss">
   .header {
     background-image: linear-gradient(180deg, #565656 0%, #3C3C3C 100%);
-    box-shadow: 0 2px 4px 0
+    box-shadow: 0 2px 4px 0 rgba(0,0,0,0.30);
   }
   .header .el-menu {
     background-color: transparent;
@@ -456,11 +455,11 @@
     font-weight: 500;
     color: $header-text-color-active;
   }
-  .header .el-menu--horizontal>.el-submenu .el-submenu__title .menu-active:hover {
-    color: $header-text-color-hover;
-  }
   .header .el-menu--horizontal>.el-submenu .el-submenu__title i {
     color: inherit;
+  }
+  .el-submenu__title:hover {
+    background-color: $header-background-color-hover !important;
   }
   .el-submenu__title{
     font-size: 16px;
@@ -469,16 +468,13 @@
     font-size: 14px;
   }
   .nz-submenu .el-menu--popup {
-    border-radius: 0 0 2px 2px;
+    border-radius: 4px;
   }
   .header .el-menu--horizontal>.el-submenu .el-submenu__title {
     min-width: 120px;
     text-align: center; 
     color:$header-text-color;
     padding: 0;
-  }
-  .header .el-menu--horizontal>.el-submenu .el-submenu__title:hover {
-    color: $header-text-color-hover !important;
   }
 
   .el-menu.el-menu--horizontal {
@@ -514,8 +510,9 @@
     display: none;
   }
   .el-menu--horizontal.nz-submenu {
-    border: 1px solid #bbbbbb;
     border-top: none;
+    top: 62px !important;
+
   }
 
   .nz-submenu .el-menu--popup {
@@ -574,11 +571,6 @@
   .menu-create .el-icon-plus {
     font-size: 12px;
     line-height: 12px;
-  }
-
-  .menu-edit {
-    line-height: 36px;
-    float: right;
   }
 
   .pop-window-assetType-content {
@@ -655,8 +647,10 @@
   }
 </style>
 <style>
-  .menu-edit {
+  .nz-submenu .menu-edit {
     line-height: 36px;
-    float: right;
+    position: absolute;
+    right: 15px;
+    top: 0;
   }
 </style>
