@@ -46,7 +46,13 @@
       display: inline-block;
       cursor: pointer;
       padding: 5px 15px;
+      margin-right: -3px;
       border-right: 1px solid #ccc;
+    }
+    .set-icon:hover{
+      background: $btn-light-background-color-hover;
+    }
+    .set-icon:last-child:hover{
     }
     .set-icon:last-child{
       border-right: none !important;
@@ -60,7 +66,6 @@
     }
     .list-icon {
       float: left;
-      margin-right: 10px;
     }
     .show-icon {
       cursor: pointer;

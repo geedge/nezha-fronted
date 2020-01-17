@@ -19,7 +19,6 @@
   .table-title {
     font-family:  Arial;
     font-size: 18px;
-    font-weight:bold;
     line-height: 30px;
   }
   .edit:after{
@@ -41,6 +40,9 @@
       padding: 5px 15px;
       border-right: 1px solid #ccc;
       
+    }
+    .set-icon:hover{
+      background: $btn-light-background-color-hover;
     }
     .set-icon:last-child{
       border-right: none !important;

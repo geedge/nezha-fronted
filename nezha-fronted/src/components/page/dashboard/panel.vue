@@ -627,11 +627,15 @@ export default {
     font-size: 12px;
     margin-right: 6px;
 }
+
 .top-tools{
   button{
     background:  $btn-light-background-color;
     outline: none;
     border: 1px solid #ccc;
+  }
+  button:hover{
+      background: $btn-light-background-color-hover;
   }
 }
 .nz-dashboard-dropdown {
@@ -656,13 +660,13 @@ export default {
     background: #fff;
     border-radius: 4px;
     align-items: center;
-    justify-content: space-around;
+    justify-content: center;
     margin: 0 10px;
     border: 1px solid #ccc;
     background: $btn-light-background-color;
     span{
       display: inline-block;
-      padding: 2px 8px;
+      padding: 1px 8px;
     }
 }
 .popover_ul li{
@@ -677,5 +681,8 @@ export default {
   color: #F0BF84;
 }
 .nz-dashboard-picker {}
+.panel-calendar .el-range-editor--mini.el-input__inner{
+  height: 26px !important;
+}
 </style>
 
