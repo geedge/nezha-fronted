@@ -1,4 +1,5 @@
 import vm from '../../../main'
+import ca from "element-ui/src/locale/lang/ca";
 
 export function host(rule, value, callback) {
   if(!value || value == ''){
@@ -13,6 +14,7 @@ export function host(rule, value, callback) {
     }
 
   }, 100)
+  callback();
 }
 
 export function phone(rule, value, callback) {
@@ -31,6 +33,7 @@ export function phone(rule, value, callback) {
       }
     }
   }, 100)
+  callback();
 }
 
 export function port(rule, value, callback) {
@@ -45,6 +48,7 @@ export function port(rule, value, callback) {
       callback(new Error(vm.$t('validate.port')))
     }
   }, 100)
+  callback();
 }
 
 export function noSpecialChar(rule, value, callback){
@@ -56,4 +60,5 @@ export function noSpecialChar(rule, value, callback){
       callback(new Error(vm.$t('validate.special')))
     }
   }, 100)
+  callback();
 }

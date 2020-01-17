@@ -46,44 +46,11 @@ export default {
     name: "accountConfig",
     props:{
       account:{type:Object},
-      asComponent:{type:Boolean,default:true},//历史原因增加的逻辑，可删除
       isEdit:{type:Boolean,default:true}
     },
     created() {
     },
   data(){
-      let validataUser=(rule, value, callback) => {
-        if(this.asComponent){//作为组件使用，正常验证
-          if(!value || value == ''){
-            callback(new Error(this.$t('validate.required')))
-          }
-        }else{
-          if(!value || value == ''){
-            callback()
-          }
-        }
-        callback();
-      }
-
-      let validatePort=(rule,value,callback) => {
-        if(this.asComponent){//作为组件使用，正常验证
-          return port(rule,value,callback);
-        }else{
-          if(this.account.user){
-            if(!value || value == ''){
-              callback(new Error(this.$t('validate.required')))
-            }
-            if(typeof value != 'number'){
-              callback(new Error(this.$t('validate.number')))
-            }
-            if(value < 1 ||value > 65535){
-              callback(new Error(this.$t('validate.port')))
-            }
-          }
-        }
-        callback();
-      }
-
       let validateFile=(rule,value,callback) => {
         if(!this.validateFile()){
           callback(new Error(this.uploadTip))
@@ -94,11 +61,11 @@ export default {
         uploadFileList:[],
         rules:{
           user:[
-            { validator: validataUser, trigger: 'blur'}
+            { required: true, message:this.$t('validate.required'),trigger: 'blur'}
           ],
           port:[
-            { validator: validatePort, trigger: 'change'},
-            {required:true,message:this.$t('validate.required')}
+            {required:true,message:this.$t('validate.required'),trigger: 'blur'},
+            { validator: port, trigger: 'blur'}
           ],
           file:[
             { validator: validateFile, trigger: 'change'}

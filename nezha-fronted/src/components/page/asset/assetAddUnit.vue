@@ -801,6 +801,8 @@
                 }
               });
 
+            }else{
+              return false;
             }
           });
         }
