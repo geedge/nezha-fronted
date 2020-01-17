@@ -3,12 +3,6 @@
     <div class="right-box right-box-add-endpoint" v-if="rightBox.show" @mousedown="showEditParamBox(false)">
       <!-- begin--顶部按钮-->
       <div class="right-box-top-btns">
-        <!--<button type="button" @click="save" class="nz-btn nz-btn-size-normal nz-btn-style-normal" id="ep-add">
-          <span class="top-tool-btn-txt">{{$t('overall.save')}}</span>
-        </button>
-        <button type="button" @click="esc" class="nz-btn nz-btn-size-normal nz-btn-style-light nz-btn-style-square" id="ep-esc">
-          <span class="top-tool-btn-txt"><i class="el-icon-close"></i></span>
-        </button>-->
       </div>
       <!-- end--顶部按钮-->
 

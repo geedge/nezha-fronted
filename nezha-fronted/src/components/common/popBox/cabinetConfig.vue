@@ -1,14 +1,16 @@
 <template>
-  <el-popover :placement="placement" @show="afterShow" width="400" @hide="hidePop"  ref="popBox" v-model="popBox.show">
+  <el-popover :placement="placement" @show="afterShow" width="400" @hide="hidePop"  ref="popBox" v-model="popBox.show" popper-class="nz-pop">
     <div class="">
       <div class="pop-window-assetType-content">
         <div class="pop-top-btns">
-          <button type="button" @click="saveOrToEdit" class="nz-btn nz-btn-size-small nz-btn-style-normal" id="cabinet-save">
-            <span class="top-tool-btn-txt" v-if="popBox.isEdit">{{$t('overall.save')}}</span>
-            <span class="top-tool-btn-txt" v-else>{{$t('overall.edit')}}</span>
+          <button type="button" @click="saveOrToEdit" class="nz-btn nz-btn-size-alien nz-btn-size-small nz-btn-style-light nz-btn-min-width-60" id="cabinet-save">
+            <span class="pop-top-btn-icon"><i class="nz-icon nz-icon-edit"></i></span>
+            <span class="pop-top-btn-txt" v-if="popBox.isEdit">{{$t('overall.save')}}</span>
+            <span class="pop-top-btn-txt" v-else>{{$t('overall.edit')}}</span>
           </button>
-          <button type="button" @click="esc" class="nz-btn nz-btn-size-small nz-btn-style-light nz-btn-style-square" id="cabinet-esc" >
-            <span class="top-tool-btn-txt"><i class="el-icon-close"></i></span>
+          <button type="button" @click="esc" class="nz-btn nz-btn-size-alien nz-btn-size-small nz-btn-style-light nz-btn-min-width-35" id="cabinet-esc" >
+            <span class="pop-top-btn-icon"><i class="el-icon-close"></i></span>
+            <span class="pop-top-btn-txt">{{$t('overall.esc')}}</span>
           </button>
         </div>
         <!--标题-->

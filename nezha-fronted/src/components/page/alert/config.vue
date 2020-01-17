@@ -223,7 +223,7 @@ export default {
           label: this.$t('alert.config.option'),
           prop: 'option',
           show: true,
-          width: 220
+          width: 230
         }
       ],
       tableData: [],

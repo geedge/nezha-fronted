@@ -3,15 +3,14 @@
     <div class="right-box right-box-project" v-if="rightBox.show">
       <!-- begin--顶部按钮-->
       <div class="right-box-top-btns">
-        <button id="project-del" type="button" v-if="project.id != '' && rightBox.isEdit" @click="del" class="nz-btn nz-btn-size-alien nz-btn-style-light nz-btn-min-width-82">
-          <span class="top-tool-btn-txt">{{$t('overall.delete')}}</span>
+        <button id="project-del" type="button" v-if="project.id != '' && rightBox.isEdit" @click="del" class="nz-btn nz-btn-size-normal nz-btn-size-alien nz-btn-style-light nz-btn-min-width-82">
+          <span class="right-box-top-btn-icon"><i class="el-icon-delete"></i></span>
+          <span class="right-box-top-btn-txt">{{$t('overall.delete')}}</span>
         </button>
-        <button v-if="!rightBox.isEdit" id="project-edit" type="button" @click="saveOrToEdit" class="nz-btn nz-btn-size-alien nz-btn-style-light nz-btn-min-width-82">
-          <span class="top-tool-btn-txt">{{$t('overall.edit')}}</span>
+        <button v-if="!rightBox.isEdit" id="project-edit" type="button" @click="saveOrToEdit" class="nz-btn nz-btn-size-normal nz-btn-size-alien nz-btn-style-light nz-btn-min-width-82">
+          <span class="right-box-top-btn-icon"><i class="nz-icon nz-icon-edit"></i></span>
+          <span class="right-box-top-btn-txt">{{$t('overall.edit')}}</span>
         </button>
-        <!--<button id="project-esc" type="button" @click="esc" class="nz-btn nz-btn-size-normal nz-btn-style-light nz-btn-style-square">
-          <span class="top-tool-btn-txt"><i class="el-icon-close"></i></span>
-        </button>-->
       </div>
       <!-- end--顶部按钮-->
 

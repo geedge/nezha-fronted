@@ -72,16 +72,16 @@
             <div class="right-box right-box-prom" v-if="rightBox.show">
                 <!-- begin--顶部按钮-->
               <div class="right-box-top-btns">
-                <button type="button" v-if="rightBox.isEdit && promServer.id != ''" @click="del(promServer)" id="prom-edit-del" class="nz-btn nz-btn-size-alien nz-btn-style-light nz-btn-min-width-82">
-                  <span class="top-tool-btn-txt">{{$t('overall.delete')}}</span>
+                <button type="button" v-if="rightBox.isEdit && promServer.id != ''" @click="del(promServer)" id="prom-edit-del"
+                        class="nz-btn nz-btn-size-normal nz-btn-size-alien nz-btn-style-light nz-btn-min-width-82">
+                  <span class="right-box-top-btn-icon"><i class="el-icon-delete"></i></span>
+                  <span class="right-box-top-btn-txt">{{$t('overall.delete')}}</span>
                 </button>
-                <button v-if="!rightBox.isEdit" type="button" @click="saveOrToEdit" class="nz-btn nz-btn-size-alien nz-btn-style-light nz-btn-min-width-82" id="prom-edit-save">
-                  <span class="top-tool-btn-txt">{{$t('overall.edit')}}</span>
+                <button v-if="!rightBox.isEdit" type="button" @click="saveOrToEdit"
+                        class="nz-btn nz-btn-size-normal nz-btn-size-alien nz-btn-style-light nz-btn-min-width-82" id="prom-edit-save">
+                  <span class="right-box-top-btn-icon"><i class="nz-icon nz-icon-edit"></i></span>
+                  <span class="right-box-top-btn-txt">{{$t('overall.edit')}}</span>
                 </button>
-
-                <!--<button type="button" @click="esc" class="nz-btn nz-btn-size-normal nz-btn-style-light nz-btn-style-square" id="prom-edit-esc">
-                  <span class="top-tool-btn-txt"><i class="el-icon-close"></i></span>
-                </button>-->
               </div>
                 <!-- end--顶部按钮-->
 
@@ -222,7 +222,7 @@ export default {
           label: this.$t('config.account.option'),
           prop: 'option',
           show: true,
-          width: 220
+          width: 230
         }
       ],
       tablelable: [],

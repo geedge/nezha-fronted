@@ -9,6 +9,7 @@ const cn = {
     create: '新增',
     edit: '编辑',
     delete: '删除',
+    view: '查看',
     esc: '取消',
     cancel: '取消',
     save: '保存',

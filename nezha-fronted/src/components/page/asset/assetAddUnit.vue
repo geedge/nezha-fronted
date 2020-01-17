@@ -2,13 +2,6 @@
   <transition name="right-box-580">
     <div class="right-box right-box-add-asset" v-if="addUnitShow" @click="editQuit">
       <div class="right-box-top-btns">
-        <!--<button type="button" @click.stop="addNewData('asset')" id="add-asset-new" class="nz-btn nz-btn-size-normal nz-btn-style-normal">
-          <span class="top-tool-btn-txt">{{$t('overall.save')}}</span>
-        </button>
-        <button type="button" @click.stop="sendStateData('close')" id="add-asset-esc"
-                class="nz-btn nz-btn-size-normal nz-btn-style-light nz-btn-style-square">
-          <span class="top-tool-btn-txt"><i class="el-icon-close"></i></span>
-        </button>-->
       </div>
 
       <div class="right-box-title">{{$t('asset.createAssetTab.title')}}</div>
@@ -61,13 +54,16 @@
               <el-popover
                 placement="left"
                 v-model="popTypeVisible"
+                popper-class="nz-pop2"
+                width="370"
               >
                 <div class="pop-window-assetType" @click="editQuit()" id="asset-sub-assettype-edit">
                   <div class="pop-window-assetType-content">
                     <!--右上角按钮-->
                     <div class="pop-top-btns">
-                      <button type="button" @click="popoverClose('type')" class="nz-btn nz-btn-size-small nz-btn-style-light nz-btn-style-square" id="asset-sub-assettype-esc">
-                        <span class="top-tool-btn-txt"><i class="el-icon-close"></i></span>
+                      <button type="button" @click="popoverClose('type')" class="nz-btn nz-btn-size-alien nz-btn-size-small nz-btn-style-light nz-btn-min-width-35" id="asset-sub-assettype-esc" >
+                        <span class="pop-top-btn-icon"><i class="el-icon-close"></i></span>
+                        <span class="pop-top-btn-txt">{{$t('overall.esc')}}</span>
                       </button>
                     </div>
                     <!--标题-->
@@ -76,8 +72,10 @@
                     <div class="pop-item">
                       <div class="pop-label">{{$t('asset.createAssetTab.assetTypeTab.addAssetType')}}</div>
                       <el-input class="input-x-mini" v-model="assetTypeData.value"/>
-                      <button type="button" @click="addNewData('assetType')" class="nz-btn nz-btn-size-small nz-btn-style-normal" id="asset-sub-assettype-add">
-                        <span class="top-tool-btn-txt">{{$t('overall.add')}}</span>
+                      <button type="button" @click.stop="addNewData('assetType')" class="nz-btn nz-btn-size-normal nz-btn-style-light float-right nz-btn-min-width-82" id="asset-sub-assettype-add">
+                        <span class="top-tool-btn-txt">
+                           <i class="nz-icon-create-square nz-icon"></i>
+                          {{$t('overall.add')}}</span>
                       </button>
                     </div>
                     <div class="pop-item">
@@ -97,7 +95,7 @@
                                   <el-input class="input-x-mini" v-model="item.value"/>
                                 </span>
                                 <span class="config-dropdown-btn" @click.stop="editOptionData(item,'type',index)" :id="'asset-sub-assettype-edit-'+index">
-                                  <i class="el-icon-edit-outline" v-if="!item.isEdit"></i>
+                                  <i class="nz-icon nz-icon-edit" v-if="!item.isEdit"></i>
                                   <i class="el-icon-check" v-if="item.isEdit" @click="editData('sys/dict/update',item)"></i>
                                 </span>
                                 <span class="config-dropdown-btn config-dropdown-btn-delete"

@@ -72,6 +72,12 @@ html {
 }
 
 /* begin--按钮组件*/
+.nz-btn-min-width-35 {
+  min-width: 35px;
+}
+.nz-btn-min-width-60 {
+  min-width: 60px;
+}
 .nz-btn-min-width-75 {
   min-width: 75px;
 }
@@ -90,20 +96,29 @@ html {
   white-space: nowrap;
   font-size: 14px;
   line-height: 16px;
+  position: relative;
 }
 .nz-btn.nz-btn-size-normal {
+  font-size: 12px;
   padding: 4px 8px;
 }
 .nz-btn.nz-btn-size-small {
   font-size: 12px;
   padding: 2px 5px;
 }
+.nz-btn.nz-btn-size-small i {
+  font-size: 12px;
+}
 .nz-btn-size-large {
   padding: 7px 15px;
 }
-.nz-btn.nz-btn-size-alien { //弹框顶部异形按钮
+.nz-btn.nz-btn-size-normal.nz-btn-size-alien { //弹框顶部异形按钮
   height: 40px;
   border-radius: 0 0 10px 10px;
+}
+.nz-btn.nz-btn-size-small.nz-btn-size-alien { //弹框顶部异形按钮
+  height: 32px;
+  border-radius: 0 0 8px 8px;
 }
 .nz-btn.nz-btn-style-normal { /* 橙色按钮 */
   background-image: $btn-normal-background-color;
@@ -116,6 +131,7 @@ html {
   border: 0px;
   color: $btn-light-txt-color;
   box-shadow: $btn-light-shadow;
+
   letter-spacing: 0;
 }
 .nz-btn.nz-btn-style-pure-white { /*纯白色按钮*/
@@ -161,8 +177,8 @@ html {
 
 /* begin--el-input扩展 */
 .input-x-mini .el-input__inner {
-  height: 22px;
-  line-height: 22px;
+  height: 26px;
+  line-height: 26px;
   padding: 0 5px;
   font-size: 12px;
 }
@@ -307,7 +323,7 @@ html {
   border-right: none;
 }
 .content-right .el-table td {
-  padding: 4px 0;
+  padding: 0;
 }
 .content-right>.el-table th {
   padding: 0;
@@ -365,6 +381,8 @@ html {
   text-align: center;
 }
 /* end--分页*/
+
+
 
 /* begin--右弹框滑入滑出动画*/
 @keyframes slide-in-from-right-580 {
@@ -460,13 +478,48 @@ html {
 .right-box-top-btns button {
   margin-left: 20px;
 }
+.right-box-top-btn-icon {
+  position: absolute;
+  top: 5px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+.right-box-top-btn-txt {
+  position: absolute;
+  left: 50%;
+  top: 21px;
+  transform: translateX(-50%);
+}
 .pop-top-btns {
   text-align: center;
   float: right;
+  padding-right: 16px;
+}
+.pop-top-btns button {
+  margin-left: 15px;
+}
+.pop-top-btn-icon {
+  position: absolute;
+  top: 2px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+.pop-top-btn-txt {
+  position: absolute;
+  left: 50%;
+  top: 16px;
+  transform: translateX(-50%);
 }
 /* end--右侧弹框--顶部按钮*/
 
 /* begin--右侧弹框--内容*/
+.nz-pop { /*小弹框*/
+  padding-top: 0;
+  box-shadow: 0 0 12px 0 rgba(0,0,0,0.20);
+}
+.nz-pop2 {
+  padding: 0 20px 20px 20px;
+}
 .right-box-title {
   height: 36px;
   text-align: left;
@@ -479,7 +532,8 @@ html {
   line-height: 25px;
   text-align: left;
   display: inline-block;
-  font-weight: bold;
+  padding-top: 14px;
+  color: $box-title-color;
 }
 .pop-item, .pop-item-wider {
   padding-top: 25px;
@@ -494,7 +548,7 @@ html {
   padding-bottom: 5px;
 }
 .pop-item .el-input {
-  width: 200px;
+  width: calc(100% - 92px);
 }
 .pop-item .nz-btn {
   width: 50px;
@@ -505,8 +559,8 @@ html {
   padding: 2px 0;
 }
 .pop-box-asset {
-  height: 160px;
-  width: 247px;
+  height: 360px;
+  width: 100%;
 }
 .pop-box-asset li {
   height: 24px;
@@ -517,8 +571,15 @@ html {
   vertical-align: top;
   width: 90%;
 }
+.config-dropdown-btn i {
+  font-size: 12px;
+}
 .pop-box-active {
-  background-color: #d8d8d8;
+  background-color: $global-text-color-active;
+  color: white;
+}
+.pop-box-active i {
+  color: white;
 }
 .right-box-form-box {
   height: calc(100% - 132px);
@@ -698,6 +759,7 @@ html {
 .right-sub-box .el-input-group__append, .right-sub-box .el-input-group__prepend, .assets-box .el-input-group__append, .assets-box .el-input-group__prepend {
 }
 /* end--endpoint->子弹框asset搜索框前缀和后缀*/
+
 
 /* begin--自定义可编辑的el-select下拉框样式*/
 .config-dropdown { /* 若宽度不合适，自行增加新类覆盖宽度 */

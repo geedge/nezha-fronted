@@ -3,18 +3,14 @@
     <div class="right-box right-box-edit-endpoint" v-if="rightBox.show">
       <!-- begin--顶部按钮-->
       <div class="right-box-top-btns">
-        <button id="edit-ep-del" type="button" v-if="rightBox.isEdit && endpoint.id != ''" @click="del" class="nz-btn nz-btn-size-alien nz-btn-style-light nz-btn-min-width-82">
-          <span class="top-tool-btn-txt">{{$t('overall.delete')}}</span>
+        <button id="edit-ep-del" type="button" v-if="rightBox.isEdit && endpoint.id != ''" @click="del" class="nz-btn nz-btn-size-normal nz-btn-size-alien nz-btn-style-light nz-btn-min-width-82">
+          <span class="right-box-top-btn-icon"><i class="el-icon-delete"></i></span>
+          <span class="right-box-top-btn-txt">{{$t('overall.delete')}}</span>
         </button>
-        <button id="edit-ep-edit" v-if="!rightBox.isEdit" type="button" @click="toEdit(true)" class="nz-btn nz-btn-size-alien nz-btn-style-light nz-btn-min-width-82">
-          <span class="top-tool-btn-txt">{{$t('overall.edit')}}</span>
+        <button id="edit-ep-edit" v-if="!rightBox.isEdit" type="button" @click="toEdit(true)" class="nz-btn nz-btn-size-normal nz-btn-size-alien nz-btn-style-light nz-btn-min-width-82">
+          <span class="right-box-top-btn-icon"><i class="nz-icon nz-icon-edit"></i></span>
+          <span class="right-box-top-btn-txt">{{$t('overall.edit')}}</span>
         </button>
-        <!--<button id="edit-ep-save" v-if="rightBox.isEdit" type="button" @click="save" class="nz-btn nz-btn-size-normal nz-btn-style-normal">
-          <span class="top-tool-btn-txt">{{$t('overall.save')}}</span>
-        </button>
-        <button id="edit-ep-esc" type="button" @click="esc" class="nz-btn nz-btn-size-normal nz-btn-style-light nz-btn-style-square">
-          <span class="top-tool-btn-txt"><i class="el-icon-close"></i></span>
-        </button>-->
       </div>
       <!-- end--顶部按钮-->
 
@@ -138,12 +134,6 @@
                 <button type="button" id="edit-add-param" @click="addParam" class="nz-btn nz-btn-size-normal nz-btn-style-normal">
                   <span class="top-tool-btn-txt">{{$t('overall.add')}}</span>
                 </button>
-                <!-- <button type="button" @click="save" class="nz-btn nz-btn-size-normal nz-btn-style-normal nz-btn-edit-ok">
-                  <span class="top-tool-btn-txt">Ok</span>
-                </button>
-                <button type="button" @click="esc" class="nz-btn nz-btn-size-normal nz-btn-style-light nz-btn-style-square nz-btn-edit-esc">
-                  <span class="top-tool-btn-txt">Cancel</i></span>
-                </button> -->
               </div>
             </template>
             <div class="param-box param-box-module">

@@ -97,12 +97,14 @@
         <!-- begin--顶部按钮-->
         <div class="right-box-top-btns">
           <button type="button" v-if="user.userId != '' && rightBox.isEdit" @click="del(user)"
-                  class="nz-btn nz-btn-size-alien nz-btn-style-light nz-btn-min-width-82" id="account-edit-del">
-            <span class="top-tool-btn-txt">{{$t('overall.delete')}}</span>
+                  class="nz-btn nz-btn-size-normal nz-btn-size-alien nz-btn-style-light nz-btn-min-width-82" id="account-edit-del">
+            <span class="right-box-top-btn-icon"><i class="el-icon-delete"></i></span>
+            <span class="right-box-top-btn-txt">{{$t('overall.delete')}}</span>
           </button>
           <button v-if="!rightBox.isEdit" type="button" @click="saveOrToEdit"
-                  class="nz-btn nz-btn-size-alien nz-btn-style-light nz-btn-min-width-82" id="account-edit-edit">
-            <span class="top-tool-btn-txt">{{$t('overall.edit')}}</span>
+                  class="nz-btn nz-btn-size-normal nz-btn-size-alien nz-btn-style-light nz-btn-min-width-82" id="account-edit-edit">
+            <span class="right-box-top-btn-icon"><i class="nz-icon nz-icon-edit"></i></span>
+            <span class="right-box-top-btn-txt">{{$t('overall.edit')}}</span>
           </button>
         </div>
         <!-- end--顶部按钮-->
@@ -220,7 +222,7 @@
             label: this.$t('config.account.option'),
             prop: 'option',
             show: true,
-            width: 220
+            width: 230
           }
         ],
         tablelable: [],
