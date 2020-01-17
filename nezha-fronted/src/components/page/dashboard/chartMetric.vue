@@ -30,10 +30,10 @@
    }
     .li-list-part-label-val-list {
       width: 100%;
-      height: 165px;
+      height: 145px;
       border: 1px solid #cfcfcf;
       overflow-y: auto;
-      margin-top: -10px;/*21*/
+      margin-top: 20px;/*21*/
       border: 0px;
     }
   .no-list-style{
@@ -75,12 +75,12 @@
           <button @click="clickTabelShow(1,'normal')" class="nz-btn nz-btn-size-small nz-btn-style-light float-left">
             <span>{{$t('dashboard.metric.normal')}}</span>
           </button>
-          <button @click="" class="nz-btn nz-btn-size-small nz-btn-disabled nz-btn-style-normal float-left">
+          <button @click="" class="nz-btn nz-btn-size-small  nz-btn-style-normal float-left">
             <span>{{$t('dashboard.metric.expert')}}</span>
           </button>
         </div>
         <div class="nz-btn-group float-left"  v-show="tableShow == 1">
-          <button @click="" class="nz-btn nz-btn-size-small nz-btn-disabled nz-btn-style-normal float-left">
+          <button @click="" class="nz-btn nz-btn-size-small  nz-btn-style-normal float-left">
             <span>{{$t('dashboard.metric.normal')}}</span>
           </button>
           <button @click="clickTabelShow(2,'expert')" class="nz-btn nz-btn-size-small nz-btn-style-light float-left">

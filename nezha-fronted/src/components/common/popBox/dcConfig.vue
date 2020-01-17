@@ -3,7 +3,7 @@
     <div class="">
       <!-- begin--顶部按钮-->
       <div class="pop-top-btns">
-        <button type="button" v-if="idc.id != '' && popBox.isEdit" @click="del" class="nz-btn nz-btn-size-small nz-btn-size-alien nz-btn-style-light nz-btn-min-width-60" id="dc-del">
+        <button type="button" v-if="idc.id && idc.id != ''&& popBox.isEdit" @click="del" class="nz-btn nz-btn-size-small nz-btn-size-alien nz-btn-style-light nz-btn-min-width-60" id="dc-del">
           <span class="pop-top-btn-icon"><i class="el-icon-delete"></i></span>
           <span class="pop-top-btn-txt">{{$t('overall.delete')}}</span>
         </button>

@@ -1218,8 +1218,8 @@
         width: 240px;
         background: #fff;
         color: rgba(0,0,0,.55);
-        height: 25px;
-        line-height: 25px;
+        height: 24px;
+        line-height: 24px;
         border-bottom-left-radius: 5px;
         border-top-left-radius: 5px;
         display: flex;

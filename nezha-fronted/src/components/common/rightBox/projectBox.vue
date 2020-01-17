@@ -43,6 +43,7 @@
   </transition>
 </template>
 <script>
+  import {noSpecialChar} from '../../common/js/validate';
   export default {
     name: "projectBox",
     props: {
@@ -58,7 +59,8 @@
         },
         rules: {
           name: [
-            {required: true, message: this.$t('validate.required'), trigger: 'blur'}
+            {required: true, message: this.$t('validate.required'), trigger: 'blur'},
+            {validator:noSpecialChar,trigger: "change"}
           ]
         }
       }

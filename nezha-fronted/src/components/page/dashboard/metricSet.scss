@@ -21,6 +21,7 @@
     border-top: 1px solid #dfe7f2;
     border-bottom: 1px solid #dfe7f2;
     padding: 5px 0;
+    margin-left:3px;
     .operate-area-title {
       padding: 5px 0;
       font-size: 14px;
@@ -48,11 +49,18 @@
   .mt-10{
     margin-top:10px;
   }
-  .nx-btn-disabled{
-    cursor:not-allowed;
+  .ml-3{
+    margin-left:3px;
+  }
+  .btn-disabled-cursor-not-allowed{
+    cursor:not-allowed !important;
   }
   .w-select{
     width:130px;
+  }
+  .common-float-left {
+    float: left;
+    display:inline-block;
   }
 }
 

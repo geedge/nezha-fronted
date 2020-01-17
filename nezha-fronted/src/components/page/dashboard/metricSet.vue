@@ -11,20 +11,20 @@
           @on-change-condition="getCondition"
           ></chart-metric>
       </el-row>
-      <el-row class="pt-5 pb-5">
+      <el-row class="pt-5 pb-5 ml-3">
         <button type="primary" @click="preview" :disabled="loading" class="nz-btn nz-btn-size-normal nz-btn-style-normal ">{{$t('dashboard.metric.previewChart')}}</button>
         <button :disabled="saveDisabled || loading" type="primary" @click="preview('change')"
-                :class="{'nz-btn nx-btn-disabled' : (saveDisabled || loading), 'nz-btn nz-btn-size-normal nz-btn-style-normal' : !(saveDisabled || loading)}"
+                :class="{'nz-btn nz-btn-disabled nz-btn-size-normal nz-btn-style-light nz-btn-min-width-75 btn-disabled-cursor-not-allowed' : (saveDisabled || loading), 'nz-btn nz-btn-size-normal nz-btn-style-normal' : !(saveDisabled || loading)}"
         >{{chartSwitchWord}}</button>
         <!-- <Button type="primary" @click="addTarget">添加指标</Button> -->
       </el-row>
       <el-row class="operate-area">
         <div class="operate-area-title">{{$t('dashboard.metric.saveChartToPanel')}}:</div>
         <button :disabled="saveDisabled" type="primary" @click="createNew"
-                :class="{'nz-btn nx-btn-disabled' : saveDisabled , 'nz-btn nz-btn-size-normal nz-btn-style-normal' : !saveDisabled}"
+                :class="{'nz-btn nz-btn-disabled nz-btn-size-normal nz-btn-style-light  btn-disabled-cursor-not-allowed' : saveDisabled , 'nz-btn nz-btn-size-normal nz-btn-style-normal' : !saveDisabled}"
         >{{$t('dashboard.metric.createPanel')}}</button>
         <button :disabled="saveDisabled" type="primary" @click="selectPanel"
-                :class="{'nz-btn nx-btn-disabled' : saveDisabled , 'nz-btn nz-btn-size-normal nz-btn-style-normal' : !saveDisabled}"
+                :class="{'nz-btn nz-btn-disabled nz-btn-size-normal nz-btn-style-light nz-btn-min-width-75 btn-disabled-cursor-not-allowed' : saveDisabled , 'nz-btn nz-btn-size-normal nz-btn-style-normal' : !saveDisabled}"
         >{{$t('dashboard.metric.selectPanel')}}</button>
       </el-row>
       <el-row class="mt-10">
@@ -33,7 +33,7 @@
       <el-form :model="chartInfo" ref="chartInfo" v-show="isSave">
         <el-row>
           <div class="common-float-left">
-            <el-form-item :label-width="80" :label="$t('dashboard.panel.chartForm.width')" prop="span"
+            <el-form-item  label-width="80px" :label="$t('dashboard.panel.chartForm.width')" prop="span"
             :rules="{ required: true, type: 'number', trigger: 'change' }">
               <el-select class="w-select" size="small" v-model="chartInfo.span" transfer>
                 <el-option v-for="item in spanList" :key="item" :label="'span-' + item" :value="item">
@@ -42,8 +42,10 @@
               </el-select>
             </el-form-item>
           </div>
+        </el-row>
+        <el-row>
           <div class="common-float-left">
-            <el-form-item :label-width="80" :label="$t('dashboard.panel.chartForm.high')" prop="height"
+            <el-form-item label-width="80px" :label="$t('dashboard.panel.chartForm.high')" prop="height"
             :rules="{ required: true, type: 'number', trigger: 'change' }">
               <el-input-number :min="400" size="small" v-model="chartInfo.height" class="w-select" placeholder=""></el-input-number>px
             </el-form-item>
@@ -51,7 +53,7 @@
         </el-row>
         <el-row>
           <div class="common-float-left">
-            <el-form-item :label-width="80" :label="$t('dashboard.panel.chartForm.type')" prop="type"
+            <el-form-item  label-width="80px" :label="$t('dashboard.panel.chartForm.type')" prop="type"
               :rules="{ required: true,   trigger: 'change' }">
               <el-select transfer class="w-select" v-model="chartInfo.type" size="small">
                 <el-option v-for="item in typeList"
@@ -71,7 +73,7 @@
   </div>
 </template>
 <script>
-import axios from 'axios';
+//import axios from 'axios';
 import bus from '../../../libs/bus';
 import chartMetric from "./chartMetricForPreview";
 import metricPrePanelBox from "../../common/rightBox/metricPrePanelBox";
@@ -158,8 +160,6 @@ export default {
     reload(){
       this.saveDisabled = true;
       this.elementTarget = {};
-
-
     },
     // 创建看板
     createNew() {
@@ -177,6 +177,7 @@ export default {
       this.$refs.panelBox.setChartTitle(this.metricInfo.metric);
       this.$refs.panelBox.getTableData();
     },
+    /*
     // 取消创建modal
     cancel() {
       this.panelList = [];
@@ -190,16 +191,20 @@ export default {
       }
       this.createModal = false;
     },
+    */
+    /*
     // 重置已选择的看板
     initSaveInfo() {
       this.chartSaveInfo.name = ''; // panel名称创建
       this.chartSaveInfo.panelId = ''; // 选择panel
     },
+
     close() {
       this.elementTarget = {}; // 初始化清空参数
       this.initInfo();
       this.chartModal = false;
     },
+    */
     // 初始化信息
     initInfo() {
       this.chartInfo.title = '';
@@ -260,6 +265,7 @@ export default {
         }
       });
     },
+    /*
     // 确认创建图表
     createConfirm() {
       this.$refs.chartInfo.validate((valid) => {
@@ -292,6 +298,7 @@ export default {
         }
       });
     },
+
     // 选择看板
     panelSelect(id) {
       if (id) {
@@ -301,6 +308,8 @@ export default {
         }
       }
     },
+    */
+    /*
     // 生成图表的时候,使用该函数,汇总创建图表参数
     getOptions() {
       this.$refs.chartInfo.validate((valid) => {
@@ -431,10 +440,12 @@ export default {
         });
       }
     },
+
     // 增加指标,tarNum
     addTarget() {
       this.elements.push(1);
     },
+    */
     // 获取metric列表
     getSuggestMetric(id) {
       this.$get('metric', {pageNo: 1, pageSize: -1}).then(response => {

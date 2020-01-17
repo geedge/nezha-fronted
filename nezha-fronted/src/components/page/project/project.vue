@@ -21,13 +21,13 @@
     <!--metrics-->
     <div class="content-right" v-show="tableShow == 2">
       <div class="top-tools">
-        <div class="nz-btn-group float-left">
-          <button @click="tableShow = 1" class="nz-btn nz-btn-size-small nz-btn-style-light float-left">
-            <span>{{$t('project.endpoint.endpoint')}}</span>
-          </button>
-          <button @click="" class="nz-btn nz-btn-size-small nz-btn-disabled nz-btn-style-normal float-left">
-            <span>{{$t('project.metrics.metrics')}}</span>
-          </button>
+        <div class="nz-tab float-left">
+          <div @click="tableShow = 1" class="nz-tab-item-box">
+            <div class="nz-tab-item">{{$t('project.endpoint.endpoint')}}</div>
+          </div>
+          <div class="nz-tab-item-box">
+            <div class="nz-tab-item nz-tab-item-active">{{$t('project.metrics.metrics')}}</div>
+          </div>
         </div>
         <div class="top-tool-search float-right"><search-input :searchMsg="metricSearchMsg" @search="metricSearch"></search-input></div>
       </div>
@@ -55,13 +55,13 @@
     <!--endpoint-->
     <div class="content-right" v-show="tableShow == 1">
       <div class="top-tools">
-        <div class="nz-btn-group float-left">
-          <button @click="" type="button" class="nz-btn nz-btn-size-small nz-btn-disabled nz-btn-style-normal float-left">
-            <span>{{$t('project.endpoint.endpoint')}}</span>
-          </button>
-          <button type="button" @click="tableShow = 2" class="nz-btn nz-btn-size-small nz-btn-style-light float-left">
-            <span>{{$t('project.metrics.metrics')}}</span>
-          </button>
+        <div class="nz-tab float-left">
+          <div class="nz-tab-item-box">
+            <div class="nz-tab-item nz-tab-item-active">{{$t('project.endpoint.endpoint')}}</div>
+          </div>
+          <div class="nz-tab-item-box" @click="tableShow = 2">
+            <div class="nz-tab-item">{{$t('project.metrics.metrics')}}</div>
+          </div>
         </div>
         <button @click="toCreateEndpoint" class="nz-btn nz-btn-size-normal nz-btn-style-light float-right nz-btn-min-width-82" id="project-add-ep">
           <span class='top-tool-btn-txt'>

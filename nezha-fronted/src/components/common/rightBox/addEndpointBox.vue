@@ -41,7 +41,7 @@
                   </span>
                 </button><div
                 class="endpoint-asset-search-input">
-                  <el-input class="input-x-mini nz-input-group-middle" placeholder="" v-model="assetSearch.text"></el-input>
+                  <el-input class="input-x-mini-22 nz-input-group-middle" placeholder="" v-model="assetSearch.text"></el-input>
                 </div><button
                 type="button" class="nz-btn nz-btn-size-small nz-btn-style-light nz-btn-style-square nz-input-group-append" id="search-asset"><i @click="searchAsset" class="el-icon-search"></i></button>
 
@@ -50,8 +50,8 @@
                   <div @click="dropdownSelect('SN')" class="endpoint-asset-search-dropdown-item" id="search-asset-sn">SN</div>
                 </div>
               </div>
-
               <!--end--搜索框-->
+
               <!-- begin--table-->
               <div class="endpoint-sub-table">
                 <div class="endpoint-sub-table-head">
@@ -76,7 +76,7 @@
               <!--module-->
               <div class="endpoints-box-module-info">
                 <div class="title">{{$t('project.endpoint.moduleParameter')}}:</div>
-                <el-input class="module-info module-info-port input-x-mini" v-model="currentModuleCopy.port"></el-input>
+                <el-input class="module-info module-info-port input-x-mini-22" v-model="currentModuleCopy.port"></el-input>
                 <el-popover
                   placement="bottom"
                   width="200"
@@ -85,9 +85,9 @@
                   <div class="endpoint-param-pop">
                     <div v-for="item,index in currentModuleCopy.paramObj">{{item.key}}={{item.value}}</div>
                   </div>
-                  <el-input id="edit-param" @click.native.stop="showEditParamBox(true, currentModuleCopy, 1, $event)" slot="reference" disabled class="module-info module-info-param input-x-mini" v-model="currentModuleCopy.param"></el-input>
+                  <el-input id="edit-param" @click.native.stop="showEditParamBox(true, currentModuleCopy, 1, $event)" slot="reference" disabled class="module-info module-info-param input-x-mini-22" v-model="currentModuleCopy.param"></el-input>
                 </el-popover>
-                <el-input class="module-info module-info-path input-x-mini" v-model="currentModuleCopy.path"></el-input>
+                <el-input class="module-info module-info-path input-x-mini-22" v-model="currentModuleCopy.path"></el-input>
                 <button type="button" id="cover-param" @click="coverEndpoint" class="nz-btn nz-btn-size-small nz-btn-style-light module-info module-info-cover">{{$t('overall.cover')}}</button>
               </div>
               <!--endpoints-->
@@ -130,7 +130,7 @@
                         </el-popover>
                         <span @mousedown.stop v-else @click.stop="showEditParamBox(true, scope.row, 2, $event)">
                           <el-form-item :prop="'endpointList[' + scope.row.index + '].param'" :rules="{required: true, message: $t('validate.required'), trigger: 'blur'}">
-                            <el-input readonly class="endpoint-info endpoint-info-param input-x-mini" v-model="scope.row.param"></el-input>
+                            <el-input readonly class="endpoint-info endpoint-info-param input-x-mini-22" v-model="scope.row.param"></el-input>
                           </el-form-item>
                         </span>
                       </span>
@@ -148,7 +148,7 @@
                         </el-popover>
                         <span @mousedown.stop v-else>
                           <el-form-item :prop="'endpointList[' + scope.row.index + '].path'" :rules="{required: true, message: $t('validate.required'), trigger: 'blur'}">
-                            <el-input class="endpoint-info input-x-mini" v-model="scope.row.path"></el-input>
+                            <el-input class="endpoint-info input-x-mini-22" v-model="scope.row.path"></el-input>
                           </el-form-item>
                         </span>
                       </span>
@@ -156,7 +156,7 @@
                         <span v-if="!scope.row.isEdit">{{scope.row.port}}</span>
                         <span @mousedown.stop v-else>
                           <el-form-item :prop="'endpointList[' + scope.row.index + '].port'" :rules="{required: true, message: $t('validate.required'), trigger: 'blur'}">
-                            <el-input class="endpoint-info input-x-mini" v-model="scope.row.port"></el-input>
+                            <el-input class="endpoint-info input-x-mini-22" v-model="scope.row.port"></el-input>
                           </el-form-item>
                         </span>
                       </span>
@@ -164,7 +164,7 @@
                         <span v-if="!scope.row.isEdit">{{scope.row.host}}</span>
                         <span @mousedown.stop v-else>
                           <el-form-item :prop="'endpointList[' + scope.row.index + '].host'" :rules="{required: true, message: $t('validate.required'), trigger: 'blur'}">
-                            <el-input class="endpoint-info input-x-mini" v-model="scope.row.host"></el-input>
+                            <el-input class="endpoint-info input-x-mini-22" v-model="scope.row.host"></el-input>
                           </el-form-item>
                         </span>
                       </span>
@@ -207,9 +207,9 @@
         <div @mousedown.stop class="right-sub-box" v-if="editParamBox.show" :style="'top: ' + editParamBox.top + 'px; left: ' + editParamBox.left + 'px;'">
           <div class="param-box">
             <div class="param-box-row" v-for="(item, index) in tempParamObj">
-              <el-input placeholder="key" class="param-box-row-key input-x-mini" v-model="item.key"></el-input>
+              <el-input placeholder="key" class="param-box-row-key input-x-mini-22" v-model="item.key"></el-input>
               <span class="param-box-row-eq">=</span>
-              <el-input placeholder="value" class="param-box-row-value input-x-mini" v-model="item.value"></el-input>
+              <el-input placeholder="value" class="param-box-row-value input-x-mini-22" v-model="item.value"></el-input>
               <span class="param-box-row-symbol" :id="'remove-param-'+index" @click="removeParam(index)"><i class="nz-icon nz-icon-minus-square"></i></span>
             </div>
           </div>
@@ -718,7 +718,7 @@
 
   .right-child-box .module-info {
     display: inline-block;
-    height: 24px;
+    height: 22px;
     vertical-align: middle;
     position: absolute;
     top: 5px;
@@ -857,6 +857,8 @@
     width: calc(50% - 15px);
     padding-left: 10px;
     text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
   }
   .endpoint-sub-table-paginate-all {
     position: absolute;
