@@ -164,6 +164,9 @@
 </template>
 
 <script>
+  import {noSpecialChar} from "../js/validate";
+  import {port} from "../js/validate";
+
   export default {
     name: "moduleBox",
     props: {
@@ -179,13 +182,14 @@
         },
         rules: {
           name: [
-            {required: true, message: this.$t('validate.required'), trigger: 'blur'}
+            {required: true, message: this.$t('validate.required'), trigger: 'blur'},
+            {validator:noSpecialChar,trigger: "change"}
           ],
           project: [
             {required: true, message: this.$t('validate.required'), trigger: 'change'}
           ],
           port: [
-            {type: 'number', message: this.$t('validate.number'), trigger: 'blur'}
+            {validator:port, trigger: 'blur'}
           ],
         },
         projectList: [],

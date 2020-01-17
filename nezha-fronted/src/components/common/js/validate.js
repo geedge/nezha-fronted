@@ -1,12 +1,8 @@
 import vm from '../../../main'
 
 export function host(rule, value, callback) {
-  console.log("callback:")
-  console.log(callback)
-  console.log(typeof callback)
-
   if(!value || value == ''){
-    callback(new Error(vm.$t('validate.required')))
+    callback()
   }
   const hostReg = /^(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])$/
   setTimeout(() => {
@@ -39,7 +35,7 @@ export function phone(rule, value, callback) {
 
 export function port(rule, value, callback) {
   if(!value || value == ''){
-    callback(new Error(vm.$t('validate.required')))
+    callback()
   }
   setTimeout(() => {
     if(typeof value != 'number'){
@@ -47,6 +43,17 @@ export function port(rule, value, callback) {
     }
     if(value < 1 ||value > 65535){
       callback(new Error(vm.$t('validate.port')))
+    }
+  }, 100)
+}
+
+export function noSpecialChar(rule, value, callback){
+  const charReg = /\w+/;
+  setTimeout(() => {
+    if (charReg.test(value)) {
+      callback()
+    } else {
+      callback(new Error(vm.$t('validate.special')))
     }
   }, 100)
 }

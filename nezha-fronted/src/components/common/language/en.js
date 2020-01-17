@@ -125,6 +125,7 @@ const en = {
     host:'IP Address is invalid',
     fileSize:'upload file is too large',
     port:'Port is invalide',
+    special:'Has special characters',
     config: {
       account: {
 

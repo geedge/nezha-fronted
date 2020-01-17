@@ -123,6 +123,8 @@ const cn = {
     tel:'不合法的电话号码',
     host:'不合法的IP',
     fileSize:'文件过大',
+    port:'不合法的端口',
+    special:'不能包含特殊字符',
     config: {
       account: {
 

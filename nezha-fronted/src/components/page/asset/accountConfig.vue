@@ -67,7 +67,7 @@ export default {
 
       let validatePort=(rule,value,callback) => {
         if(this.asComponent){//作为组件使用，正常验证
-          port(rule,value,callback);
+          return port(rule,value,callback);
         }else{
           if(this.account.user){
             if(!value || value == ''){
@@ -97,7 +97,8 @@ export default {
             { validator: validataUser, trigger: 'blur'}
           ],
           port:[
-            { validator: validatePort, trigger: 'change',required:true}
+            { validator: validatePort, trigger: 'change'},
+            {required:true,message:this.$t('validate.required')}
           ],
           file:[
             { validator: validateFile, trigger: 'change'}
