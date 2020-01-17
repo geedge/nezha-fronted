@@ -1,5 +1,5 @@
 <template>
-  <el-popover :placement="placement"  @show="afterShow"  width="400" @hide="hidePop"  ref="popBox" v-model="popBox.show">
+  <el-popover :placement="placement"  @show="afterShow"  width="400" @hide="hidePop"  ref="popBox" v-model="popBox.show" popper-class="nz-pop">
     <div class="">
       <!-- begin--顶部按钮-->
       <div class="pop-top-btns">
