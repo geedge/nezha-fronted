@@ -1,4 +1,5 @@
 //import "./assets/css/main.css";
+import './assets/stylus/index.scss'
 import "./assets/css/nzIcon.css";
 import 'element-ui/lib/theme-chalk/index.css';
 import ElementUI from 'element-ui';
@@ -11,7 +12,6 @@ import store from './store/index';
 import App from './App'
 import router from './router'
 import VueResource from 'vue-resource'
-import './assets/stylus/index.scss'
 import axios from 'axios';
 import {post, get, put, del} from './http.js'
 

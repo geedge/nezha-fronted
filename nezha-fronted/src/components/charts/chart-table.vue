@@ -1,307 +1,295 @@
-<style lang="scss">
-  @import './chart-table.scss';
+<style lang="scss" scoped>
+@import './chart-table.scss';
 </style>
 <template>
-  <div class="chart-table">
+<div class="chart-table">
     <div class="clearfix">
-      <div class="float-left table-title">
-        {{data.title}}
-      </div>
-      <div class="float-right">
-        <div class="edit">
-          <!-- v-if="firstShow" -->
-          <div class="list-icon">
-            <span @click="refreshChart" :title="$t('dashboard.refresh')" class="set-icon" >
-              <i class="el-icon-refresh-right"></i>
-            </span>
-                <span @click="editChart" :title="$t('dashboard.edit')" class="set-icon">
-              <i class="el-icon-edit-outline"></i>
-            </span>
-                <span @click="removeChart" :title="$t('dashboard.delete')" class="set-icon" >
-              <i class="el-icon-delete"></i>
-            </span>
-                <span @click="showAllScreen" :title="$t('dashboard.screen')" class="set-icon">
-              <i class="el-icon-full-screen"></i>
-            </span>
-          </div>
+        <div class="float-left table-title">
+            {{data.title}}
         </div>
-      </div>
+        <div class="float-right">
+            <div class="edit">
+                <!-- v-if="firstShow" -->
+                <div class="list-icon">
+                    <span @click="refreshChart" :title="$t('dashboard.refresh')" class="set-icon">
+                        <i class="el-icon-refresh-right"></i>
+                    </span>
+                    <span @click="editChart" :title="$t('dashboard.edit')" class="set-icon">
+                        <i class="el-icon-edit-outline"></i>
+                    </span>
+                    <span @click="removeChart" :title="$t('dashboard.delete')" class="set-icon">
+                        <i class="el-icon-delete"></i>
+                    </span>
+                    <span @click="showAllScreen" :title="$t('dashboard.screen')" class="set-icon">
+                        <i class="el-icon-full-screen"></i>
+                    </span>
+                </div>
+            </div>
+        </div>
     </div>
     <div class="mt-10">
-      <!--
+        <!--
       <el-table  size="small"   :loading="tableLoading">-->
-      <el-table :data="seriesItem"  height="350" border class="chart-table-col" v-loading="tableLoading">
-        <el-table-column prop="metric" :label="$t('dashboard.panel.chartTableColumn.metric')"  sortable></el-table-column>
-        <el-table-column  prop="label" :label="$t('dashboard.panel.chartTableColumn.label')"  sortable></el-table-column>
-        <el-table-column  prop="time" :label="$t('dashboard.panel.chartTableColumn.time')" width="145" sortable></el-table-column>
-        <el-table-column prop="value" :label="$t('dashboard.panel.chartTableColumn.value')" sortable></el-table-column>
-      </el-table>
+        <el-table :data="seriesItem" height="350" border class="chart-table-col" v-loading="tableLoading">
+            <el-table-column prop="metric" :label="$t('dashboard.panel.chartTableColumn.metric')" ></el-table-column>
+            <el-table-column prop="label" :label="$t('dashboard.panel.chartTableColumn.label')" ></el-table-column>
+            <el-table-column prop="time" :label="$t('dashboard.panel.chartTableColumn.time')" width="145" ></el-table-column>
+            <el-table-column prop="value" :label="$t('dashboard.panel.chartTableColumn.value')" ></el-table-column>
+        </el-table>
     </div>
     <!--全屏-->
-    <el-dialog :title="$t('dashboard.panel.view')" :visible.sync="screenModal" width="96%"  :before-close="handleClose">
-      <div class="clearfix element-top-border">
-        <div class="float-left table-title">
-          {{data.title}}
+    <el-dialog :title="$t('dashboard.panel.view')" :visible.sync="screenModal" width="96%" >
+        <div class="clearfix element-top-border">
+            <div class="float-left table-title">
+                {{data.title}}
+            </div>
+            <div class="float-right edit">
+                <el-date-picker size="small" ref="calendar" format="yyyy/MM/dd HH:mm" @change="dateChange" v-model="searchTime" type="datetimerange" :picker-options="pickerOptions" :range-separator="$t('dashboard.panel.to')" :start-placeholder="$t('dashboard.panel.startTime')" :end-placeholder="$t('dashboard.panel.endTime')" align="right">
+                </el-date-picker>
+                <span @click="refreshChart" :title="$t('dashboard.refresh')" class="set-icon" @click.native="refreshChart">
+                    <i class="el-icon-refresh-right"></i>
+                </span>
+            </div>
         </div>
-        <div class="float-right edit">
-          <el-date-picker size="small" ref="calendar"
-                          format="yyyy/MM/dd HH:mm"
-                          @change="dateChange"
-                          v-model="searchTime"
-                          type="datetimerange"
-                          :picker-options="pickerOptions"
-                          :range-separator="$t('dashboard.panel.to')"
-                          :start-placeholder="$t('dashboard.panel.startTime')"
-                          :end-placeholder="$t('dashboard.panel.endTime')"
-                          align="right">
-          </el-date-picker>
-          <span @click="refreshChart" :title="$t('dashboard.refresh')" class="set-icon" @click.native="refreshChart">
-              <i class="el-icon-refresh-right"></i>
-          </span>
+        <div class="mt-10">
+            <el-table :data="seriesItem" height="350" border class="chart-table-col" v-loading="tableLoading">
+                <el-table-column prop="metric" :label="$t('dashboard.panel.chartTableColumn.metric')" ></el-table-column>
+                <el-table-column prop="label" :label="$t('dashboard.panel.chartTableColumn.label')" ></el-table-column>
+                <el-table-column prop="time" :label="$t('dashboard.panel.chartTableColumn.time')" width="145" ></el-table-column>
+                <el-table-column prop="value" :label="$t('dashboard.panel.chartTableColumn.value')" ></el-table-column>
+            </el-table>
         </div>
-      </div>
-      <div class="mt-10">
-        <el-table :data="seriesItem"  height="350" border class="chart-table-col" v-loading="tableLoading">
-          <el-table-column prop="metric" :label="$t('dashboard.panel.chartTableColumn.metric')"  sortable></el-table-column>
-          <el-table-column  prop="label" :label="$t('dashboard.panel.chartTableColumn.label')"  sortable></el-table-column>
-          <el-table-column  prop="time" :label="$t('dashboard.panel.chartTableColumn.time')" width="145" sortable></el-table-column>
-          <el-table-column prop="value" :label="$t('dashboard.panel.chartTableColumn.value')" sortable></el-table-column>
-        </el-table>
-      </div>
-      <div class=" element-bottom-border" ></div>
-      <span slot="footer" class="dialog-footer" >
-        <el-button @click="screenModal = false">{{$t('dashboard.panel.cancel')}}</el-button>
-        <el-button type="primary" @click="screenModal = false">{{$t('dashboard.panel.confirm')}}</el-button>
-      </span>
+        <div class=" element-bottom-border"></div>
+        <span slot="footer" class="dialog-footer">
+            <el-button @click="screenModal = false">{{$t('dashboard.panel.cancel')}}</el-button>
+            <el-button type="primary" @click="screenModal = false">{{$t('dashboard.panel.confirm')}}</el-button>
+        </span>
     </el-dialog>
-  </div>
+</div>
 </template>
+
 <script>
 import bus from '../../libs/bus';
 
 export default {
-  name: 'chartTable',
-  components: {
-  },
-  props: {
-    // 看板id
-    panelId: {
-      type: Number,
-      default: 0,
+    name: 'chartTable',
+    components: {},
+    props: {
+        // 看板id
+        panelId: {
+            type: Number,
+            default: 0,
+        },
     },
-  },
-  data() {
-    return {
-      data: {}, // 该图表信息,chartItem
-      seriesItem: [], // 保存信息
-      images: '',
-      toolbox: false,
-      items: {
-        metric_name: [], // 每条数据列名称
-        xAxis: [],
-        theData: [], // series数据组
-      },
-      panelIdInner: '', // 看板id=panelId,原写作chart,由set_data获取
-      firstLoad: false, // 是否第一次加载
-      chartType: 'table', // 图表类型
-      screenModal: false,
-      // 查询数据使用
-      filter: {
-        start_time: '',
-        end_time: '',
-      },
-      stableFilter: {}, // 保存数据使用,初始化起止时间,单图or多图等
-      firstShow: false, // 默认不显示操作按钮,
-      tableLoading: false,
-      columns: [{
-        title: 'metric',
-        key: 'metric',
-        width: 200,
-        sortable: true,
-      }, {
-        title: 'Label',//tag
-        key: 'name',
-        minWidth: 200,
-        sortable: true,
-      }, {
-        title: '采集时间',
-        key: 'time',
-        width: 160,
-        render: (h, params) => h('span', bus.timeFormate(params.row.time, 'yyyy-MM-dd hh:mm:ss')),
-      }, {
-        title: '数值',
-        key: 'value',
-        width: 160,
-        sortable: true,
-        render: (h, params) => h('span', this.getNumStr(params.row.value)),
-      }],
-      searchTime:[new Date().setHours(new Date().getHours()-1),new Date()],
-      oldSearchTime:[],
-      pickerOptions: {
-        shortcuts: [
-          {
-            text:  this.$t("dashboard.panel.recOne"),
-            onClick(picker) {
-              const end = new Date();
-              const start = new Date();
-              start.setHours(start.getHours() - 1);
-              picker.$emit('pick', [start, end]);
+    data() {
+        return {
+            data: {}, // 该图表信息,chartItem
+            seriesItem: [], // 保存信息
+            images: '',
+            toolbox: false,
+            items: {
+                metric_name: [], // 每条数据列名称
+                xAxis: [],
+                theData: [], // series数据组
+            },
+            panelIdInner: '', // 看板id=panelId,原写作chart,由set_data获取
+            firstLoad: false, // 是否第一次加载
+            chartType: 'table', // 图表类型
+            screenModal: false,
+            // 查询数据使用
+            filter: {
+                start_time: '',
+                end_time: '',
+            },
+            stableFilter: {}, // 保存数据使用,初始化起止时间,单图or多图等
+            firstShow: false, // 默认不显示操作按钮,
+            tableLoading: false,
+            columns: [{
+                title: 'metric',
+                key: 'metric',
+                width: 200,
+                sortable: true,
+            }, {
+                title: 'Label', //tag
+                key: 'name',
+                minWidth: 200,
+                sortable: true,
+            }, {
+                title: '采集时间',
+                key: 'time',
+                width: 160,
+                render: (h, params) => h('span', bus.timeFormate(params.row.time, 'yyyy-MM-dd hh:mm:ss')),
+            }, {
+                title: '数值',
+                key: 'value',
+                width: 160,
+                sortable: true,
+                render: (h, params) => h('span', this.getNumStr(params.row.value)),
+            }],
+            searchTime: [new Date().setHours(new Date().getHours() - 1), new Date()],
+            oldSearchTime: [],
+            pickerOptions: {
+                shortcuts: [{
+                    text: this.$t("dashboard.panel.recOne"),
+                    onClick(picker) {
+                        const end = new Date();
+                        const start = new Date();
+                        start.setHours(start.getHours() - 1);
+                        picker.$emit('pick', [start, end]);
+                    }
+                }, {
+                    text: this.$t("dashboard.panel.recFour"),
+                    onClick(picker) {
+                        const end = new Date();
+                        const start = new Date();
+                        start.setHours(start.getHours() - 4);
+                        picker.$emit('pick', [start, end]);
+                    }
+                }, {
+                    text: this.$t("dashboard.panel.recOneDay"),
+                    onClick(picker) {
+                        const end = new Date();
+                        const start = new Date();
+                        start.setDate(start.getDate() - 1);
+                        picker.$emit('pick', [start, end]);
+                    }
+                }, {
+                    text: this.$t("dashboard.panel.yesterday"),
+                    onClick(picker) {
+                        const start = new Date();
+                        const end = new Date();
+                        start.setDate(start.getDate() - 1);
+                        start.setHours(0);
+                        start.setMinutes(0);
+                        start.setSeconds(0);
+                        end.setDate(end.getDate() - 1);
+                        end.setHours(23);
+                        end.setMinutes(59);
+                        end.setSeconds(59);
+                        picker.$emit('pick', [start, end]);
+                    }
+                }, {
+                    text: this.$t("dashboard.panel.recSevenDay"),
+                    onClick(picker) {
+                        const end = new Date();
+                        const start = new Date();
+                        start.setDate(start.getDate() - 7);
+                        picker.$emit('pick', [start, end]);
+                    }
+                }, {
+                    text: this.$t("dashboard.panel.recOneMonth"),
+                    onClick(picker) {
+                        const end = new Date();
+                        const start = new Date();
+                        start.setDate(start.getDate() - 30);
+                        picker.$emit('pick', [start, end]);
+                    }
+                }, {
+                    text: this.$t("dashboard.panel.curMonth"),
+                    onClick(picker) {
+                        const end = new Date();
+                        const start = new Date();
+                        start.setDate(1);
+                        start.setHours(0);
+                        start.setMinutes(0);
+                        picker.$emit('pick', [start, end]);
+                    }
+                }, {
+                    text: this.$t("dashboard.panel.lastMonth"),
+                    onClick(picker) {
+                        const end = new Date();
+                        const start = new Date();
+                        start.setDate(1);
+                        start.setMonth(start.getMonth() - 1);
+                        end.setDate(0);
+                        start.setStart();
+                        end.setEnd();
+                        picker.$emit('pick', [start, end]);
+                    }
+                }]
+            },
+        };
+    },
+    computed: {},
+    watch: {},
+    methods: {
+        showLoad() {
+            this.tableLoading = true;
+        },
+        // 展示图表编辑区
+        showTool() {
+            this.toolbox = !this.toolbox;
+        },
+        // 重新请求数据 刷新操作
+        refreshChart() {
+            this.tableLoading = true;
+            this.$emit('on-refresh-data', this.data.id);
+        },
+        // 编辑图表
+        editChart() {
+            this.$emit('on-edit-chart-block', this.data.id);
+        },
+        // 删除该图表
+        removeChart() {
+            this.$emit('on-remove-chart-block', this.data.id);
+        },
+        dateChange(time) {
+            this.filter.start_time = bus.timeFormate(this.searchTime[0], 'yyyy-MM-dd hh:mm:ss');
+            this.filter.end_time = bus.timeFormate(this.searchTime[1], 'yyyy-MM-dd hh:mm:ss');
+            this.tableLoading = true;
+            this.$emit('on-search-data', this.data.id, this.searchTime);
+        },
+        // 全屏查看
+        showAllScreen() {
+            // 初始化同步时间
+            this.searchTime = this.oldSearchTime;
+            this.screenModal = true;
+        },
+        // 设置数据, filter区分
+        setData(chartItem, seriesItem, panelId, filter) {
+            this.firstShow = true; // 展示操作按键
+            this.tableLoading = false;
+            if (filter) { // 保存数据,用于同步时间
+                this.stableFilter = filter;
             }
-          },{
-            text: this.$t("dashboard.panel.recFour"),
-            onClick(picker) {
-              const end = new Date();
-              const start = new Date();
-              start.setHours(start.getHours() - 4);
-              picker.$emit('pick', [start, end]);
-            }
-          }, {
-            text: this.$t("dashboard.panel.recOneDay"),
-            onClick(picker) {
-              const end = new Date();
-              const start = new Date();
-              start.setDate(start.getDate() - 1);
-              picker.$emit('pick', [start, end]);
-            }
-          },  {
-            text: this.$t("dashboard.panel.yesterday"),
-            onClick(picker) {
-              const start = new Date();
-              const end = new Date();
-              start.setDate(start.getDate() - 1);
-              start.setHours(0);
-              start.setMinutes(0);
-              start.setSeconds(0);
-              end.setDate(end.getDate() - 1);
-              end.setHours(23);
-              end.setMinutes(59);
-              end.setSeconds(59);
-              picker.$emit('pick', [start, end]);
-            }
-          },{
-            text: this.$t("dashboard.panel.recSevenDay"),
-            onClick(picker) {
-              const end = new Date();
-              const start = new Date();
-              start.setDate(start.getDate() - 7);
-              picker.$emit('pick', [start, end]);
-            }
-          }, {
-            text: this.$t("dashboard.panel.recOneMonth"),
-            onClick(picker) {
-              const end = new Date();
-              const start = new Date();
-              start.setDate(start.getDate() - 30);
-              picker.$emit('pick', [start, end]);
-            }
-          }, {
-            text: this.$t("dashboard.panel.curMonth"),
-            onClick(picker) {
-              const end = new Date();
-              const start = new Date();
-              start.setDate(1);
-              start.setHours(0);
-              start.setMinutes(0);
-              picker.$emit('pick', [start, end]);
-            }
-          },{
-            text: this.$t("dashboard.panel.lastMonth"),
-            onClick(picker) {
-              const end = new Date();
-              const start = new Date();
-              start.setDate(1);
-              start.setMonth(start.getMonth() - 1);
-              end.setDate(0);
-              start.setStart();
-              end.setEnd();
-              picker.$emit('pick', [start, end]);
-            }
-          }]
-      },
-    };
-  },
-  computed: {
-  },
-  watch: {},
-  methods: {
-    showLoad() {
-      this.tableLoading = true;
-    },
-    // 展示图表编辑区
-    showTool() {
-      this.toolbox = !this.toolbox;
-    },
-    // 重新请求数据 刷新操作
-    refreshChart() {
-      this.tableLoading = true;
-      this.$emit('on-refresh-data', this.data.id);
-    },
-    // 编辑图表
-    editChart() {
-      this.$emit('on-edit-chart-block', this.data.id);
-    },
-    // 删除该图表
-    removeChart() {
-      this.$emit('on-remove-chart-block', this.data.id);
-    },
-    dateChange(time) {
-      this.filter.start_time = bus.timeFormate(this.searchTime[0], 'yyyy-MM-dd hh:mm:ss');
-      this.filter.end_time = bus.timeFormate(this.searchTime[1], 'yyyy-MM-dd hh:mm:ss');
-      this.tableLoading = true;
-      this.$emit('on-search-data', this.data.id,this.searchTime);
-    },
-    // 全屏查看
-    showAllScreen() {
-      // 初始化同步时间
-      this.searchTime = this.oldSearchTime;
-      this.screenModal = true;
-    },
-    // 设置数据, filter区分
-    setData(chartItem, seriesItem, panelId, filter) {
-      this.firstShow = true; // 展示操作按键
-      this.tableLoading = false;
-      if (filter) { // 保存数据,用于同步时间
-        this.stableFilter = filter;
-      }
-      this.panelIdInner = panelId;
-      this.data = chartItem;
-      this.seriesItem = seriesItem;
-      this.searchTime[0] = filter.start_time;
-      this.searchTime[1] = filter.end_time;
-      this.oldSearchTime = this.searchTime;
-    },
-    // 获取格式
-    getNumStr(num) {
-      if (num) {
-        if (num >= 1000) {
-          const kbNum = num / 1000;
-          if (kbNum >= 1000) {
-            const mbNum = kbNum / 1000;
-            if (mbNum > 1000) {
-              const gbNum = mbNum / 1000;
-              if (gbNum > 1000) {
-                const tbNum = gbNum / 1000;
-                if (tbNum > 1000) {
-                  const pbNum = tbNum / 1000;
-                  return `${pbNum.toFixed(2)}PB`;
+            this.panelIdInner = panelId;
+            this.data = chartItem;
+            this.seriesItem = seriesItem;
+            this.searchTime[0] = filter.start_time;
+            this.searchTime[1] = filter.end_time;
+            this.oldSearchTime = this.searchTime;
+        },
+        // 获取格式
+        getNumStr(num) {
+            if (num) {
+                if (num >= 1000) {
+                    const kbNum = num / 1000;
+                    if (kbNum >= 1000) {
+                        const mbNum = kbNum / 1000;
+                        if (mbNum > 1000) {
+                            const gbNum = mbNum / 1000;
+                            if (gbNum > 1000) {
+                                const tbNum = gbNum / 1000;
+                                if (tbNum > 1000) {
+                                    const pbNum = tbNum / 1000;
+                                    return `${pbNum.toFixed(2)}PB`;
+                                }
+                                return `${tbNum.toFixed(2)}TB`;
+                            }
+                            return `${gbNum.toFixed(2)}GB`;
+                        }
+                        return `${mbNum.toFixed(2)}MB`;
+                    }
+                    return `${kbNum.toFixed(2)}KB`;
                 }
-                return `${tbNum.toFixed(2)}TB`;
-              }
-              return `${gbNum.toFixed(2)}GB`;
+                return num.toFixed(2);
             }
-            return `${mbNum.toFixed(2)}MB`;
-          }
-          return `${kbNum.toFixed(2)}KB`;
-        }
-        return num.toFixed(2);
-      }
-      return num;
+            return num;
+        },
     },
-  },
-  mounted() {
-    this.firstLoad = false;
-  },
-  beforeDestroy() {},
+    mounted() {
+        this.firstLoad = false;
+    },
+    beforeDestroy() {},
 };
-
 </script>
