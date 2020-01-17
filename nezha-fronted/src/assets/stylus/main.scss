@@ -180,6 +180,13 @@ li{
 }
 /* end--按钮组件*/
 
+/*table提示样式*/
+.el-tooltip__popper.is-light {
+  border: 1px solid #EBEEF5;
+  color: #606266;
+  box-shadow: 0 2px 12px 0 rgba(0,0,0,.1);
+}
+
 /* begin--el-input扩展 */
 .input-x-mini-22 .el-input__inner {
   height: 22px;
