@@ -785,6 +785,7 @@ export default {
       }
       return num.toFixed(2);
     },
+    handleClose(){},
     /*
     handleClose(done) {
       /*
@@ -980,6 +981,13 @@ export default {
   },
   mounted() {
     this.firstLoad = false;
+    let Myecharts2 = echarts.init(document.getElementById('lineChartArea'));
+    console.log(Myecharts2);
+    
+            setTimeout(function () {
+                Myecharts2.resize()
+            }, 500)
+    
   },
   beforeDestroy() {},
 };

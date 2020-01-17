@@ -1,7 +1,4 @@
-* {
-  margin: 0;
-  padding: 0;
-}
+
 [v-cloak] {
   display: none;
 }
@@ -10,6 +7,9 @@ body {
 }
 html {
   height: 100%;
+}
+li{
+  list-style-type:none ;
 }
 .content-box {
   height: 100%;

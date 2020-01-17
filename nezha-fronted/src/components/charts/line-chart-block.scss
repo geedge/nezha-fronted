@@ -1,11 +1,19 @@
 /* ---------edit-chart-move--------- */
+.clearfix:after{
+  display: block;
+  content: "";
+  clear: both;
+}
+.clearfix{
+  margin-bottom: 20px;
+}
 .line-chart-block {
-  width: 100%;
   height: 100%;
   // min-height: 500px;
   position: relative;
   background: #FFF;
   border: 1px solid #d8dce1;
+  padding: 20px 30px;
   margin-bottom: 10px;
   padding-bottom: 3px;
   .line-area {
@@ -21,19 +29,34 @@
       white-space: pre-wrap !important;
     }
   }
+  .edit:after{
+    display: block;
+    content: "";
+    clear: both;
+  }
   .edit {
     position: absolute;
     right: 40px;
     top: 15px;
     z-index: 10;
+    background: $btn-light-background-color;
+    border-radius: 6px;;
+    border: 1px solid #ccc;
     .set-icon {
       display: inline-block;
       cursor: pointer;
-      font-size: 14px;
-      margin-left: 15px;
-      color: #5aacff;
-      border: 0 none;
-      background: transparent;
+      padding: 5px 15px;
+      border-right: 1px solid #ccc;
+    }
+    .set-icon:last-child{
+      border-right: none !important;
+    }
+    .el-icon-refresh-right{
+      color: #F0BF84;
+    }
+    i{
+      font-size: 16px;
+      color: #000;
     }
     .list-icon {
       float: left;
