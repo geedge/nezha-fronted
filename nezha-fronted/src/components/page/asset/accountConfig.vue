@@ -1,8 +1,7 @@
 <template>
     <div>
-      <el-form class="pop-item-wider" :model="account" :rules="rules" ref="accountForm">
-        <el-form-item :label="$t('asset.createAssetTab.loginType')" size="mini">
-          <div class="nz-btn-group float-left" style="padding-top: 4px;" v-if="isEdit">
+      <el-form label-width="120px" class="" :model="account" :rules="rules" ref="accountForm">
+          <!--<div class="nz-btn-group float-left" style="padding-top: 4px;" v-if="isEdit">
             <button type="button" @click="changeLoginType(1)" id="account-logintype-1"
                     class="nz-btn nz-btn-size-small float-left"
                     :class="{'nz-btn-disabled nz-btn-style-normal' : account.authType == 1, 'nz-btn-style-light' : account.authType == 2}">
@@ -13,9 +12,18 @@
                     :class="{'nz-btn-disabled nz-btn-style-normal' : account.authType == 2, 'nz-btn-style-light' : account.authType == 1}">
               <span>{{$t('asset.createAssetTab.ssh')}}</span>
             </button>
+          </div>-->
+        <div class="nz-tab" v-if="isEdit">
+          <div class="nz-tab-item-box" @click="changeLoginType(1)" id="account-logintype-1">
+            <div class="nz-tab-item" :class="{'nz-tab-item-active' : account.authType == 1}">{{$t('project.endpoint.endpoint')}}</div>
           </div>
-          <div class="right-box-form-content-txt" v-if="!isEdit">{{account.authType}}</div>
-        </el-form-item>
+          <div @click="changeLoginType(2)" class="nz-tab-item-box">
+            <div class="nz-tab-item" :class="{'nz-tab-item-active' : account.authType == 2}">{{$t('project.metrics.metrics')}}</div>
+          </div>
+        </div>
+
+        <div class="right-box-form-content-txt" v-if="!isEdit">{{account.authType}}</div>
+
         <el-form-item :label="$t('asset.createAssetTab.account')" prop="user">
           <el-input autocomplete="new-password" size="mini" v-model="account.user" v-if="isEdit"/>
           <div class="right-box-form-content-txt" v-if="!isEdit">{{account.user}}</div>
@@ -30,7 +38,7 @@
         <el-form-item :label="this.$t('asset.createAssetTab.ssh')" v-show="account.authType==2" prop="file" v-if="isEdit">
           <el-upload class="upload-demo" ref="upload" action="" :file-list="uploadFileList" :on-change="handleChange"  :auto-upload="false">
             <div slot="tip" class="el-upload__tip" v-if="account.privateKey" >{{$t('asset.createAssetTab.sshKeyWasConfig')}}</div>
-            <button type="button" class="nz-btn nz-btn-size-small nz-btn-style-normal">
+            <button type="button" class="nz-btn nz-btn-size-normal nz-btn-style-normal">
               <span class="top-tool-btn-txt" v-if="account.privateKey">{{$t('asset.createAssetTab.clickToCover')}}</span>
               <span class="top-tool-btn-txt" v-else>{{$t('asset.createAssetTab.clickToUpload')}}</span>
             </button>
@@ -151,7 +159,10 @@ export default {
   /deep/ .el-list-leave-active {
     transition: none;
   }
-
+.nz-tab {
+  margin-bottom: 22px;
+  margin-left: 13px;
+}
   /deep/ .el-list-enter,
   /deep/ .el-list-leave-active {
     opacity: 0;

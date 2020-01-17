@@ -9,7 +9,7 @@
       :current-page="pageObj.pageNo"
       :page-sizes="[20, 50, 100, 300]"
       :page-size="20"
-      layout="prev, pager, next,sizes,jumper,->,total"
+      layout="total, prev, pager, next,sizes,jumper"
       :total="this.pageObj.total"
     ></el-pagination>
   </div>
@@ -56,13 +56,16 @@ export default {
 </script>
 
 <style>
+  .el-pagination__total {
+    float: left;
+  }
   .pagination {
-    padding-top: 18px;
+    padding-top: 12px;
     text-align: center;
   }
 
   .el-pager li, .el-pagination .btn-next, .el-pagination .btn-prev {
-    margin:0px 10px 0px 10px;
+    margin:5px 10px 0px 10px;
     padding: 0 4px;
     font-size: 13px;
     min-width: 20px;

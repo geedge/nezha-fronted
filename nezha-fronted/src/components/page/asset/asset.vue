@@ -10,9 +10,11 @@
         <el-checkbox-group v-model="checkList" size="small" @change="changeCheckBox">
           <el-checkbox class="sidebar-info-item" :class="{'sidebar-info-item-active': indOf(checkList, item.id)}"
                        v-for="(item,key) in checkListData" :key="key" :label=item.id>
-            <el-popover trigger="hover" placement="right-end" :content="item.name" >
-              <div slot="reference" class="sidebar-info-item-txt">{{item.name}}</div>
-            </el-popover>
+            <div class="sidebar-info-item-txt">
+              <el-popover trigger="hover" placement="right-end" :content="item.name" >
+                <span slot="reference">{{item.name}}</span>
+              </el-popover>
+            </div>
 
             <idc-config-box ref="idcConfigBox" :post-idc="item" placement="left" @after="getIDCOptionData" :button-class="'checkbox-edit'">
               <template v-slot:optionZone>
@@ -46,7 +48,6 @@
         <el-table-column
           v-for="(item, index) in tablelable"
           v-if="item.show"
-          min-width="110"
           :width="item.width"
           :key="`col_${index}`"
           :label="item.label"
@@ -71,7 +72,7 @@
             </div>
             <div v-if="item.prop=='SN'">
               <el-popover trigger="hover" placement="bottom-start"  :content="scope.row.sn" >
-                <span slot="reference" class="sidebar-info-item-txt">{{scope.row.sn}}</span>
+                <div slot="reference" class="too-long-split" style="max-width: 110px;">{{scope.row.sn}}</div>
               </el-popover>
             </div>
             <div v-if="item.prop=='HOST'">
@@ -210,6 +211,7 @@
             label: this.$t("asset.tableTitle.device"),
             prop: 'SN',
             show: true,
+            width: 130
           }, {
             label: this.$t("asset.tableTitle.host"),
             prop: 'HOST',

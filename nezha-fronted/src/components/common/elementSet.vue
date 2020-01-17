@@ -5,16 +5,16 @@
     :style="{opacity:(eventfixedVal.shezhi==1),left:(eventfixedVal.shezhi==1 ? event_positionx : -2000)+'px',top:(event_positiony)+'px'}"
   >
     <div class="pop-top-btns">
-      <button type="button" @click="shezhiControl('ok')" class="nz-btn nz-btn-size-small nz-btn-style-normal" id="element-set-ok">
-        <span class="top-tool-btn-txt">{{$t('overall.save')}}</span>
+      <button type="button" @click="shezhiControl('ok')" class="nz-btn nz-btn-size-alien nz-btn-size-small nz-btn-style-light nz-btn-min-width-35" id="element-set-ok">
+        <span class="pop-top-btn-icon"><i class="nz-icon nz-icon-edit"></i></span>
+        <span class="pop-top-btn-txt">{{$t('overall.save')}}</span>
       </button>
-      <button type="button" @click="shezhiControl('cancel')" class="nz-btn nz-btn-size-small nz-btn-style-light nz-btn-style-square" id="element-set-esc">
-        <span class="top-tool-btn-txt"><i class="el-icon-close"></i></span>
+      <button type="button" @click="shezhiControl('cancel')" class="nz-btn nz-btn-size-alien nz-btn-size-small nz-btn-style-light nz-btn-min-width-35" id="element-set-esc">
+        <span class="pop-top-btn-icon"><i class="el-icon-close"></i></span>
+        <span class="pop-top-btn-txt">{{$t('overall.esc')}}</span>
       </button>
     </div>
-    <div class="pop-title">
-      <p>{{$t('overall.select')}}</p>
-    </div>
+    <div class="pop-title">{{$t('overall.select')}}</div>
     <div class="pop-box elementset-labels">
       <el-scrollbar style="height: 100%;">
         <div
@@ -33,10 +33,10 @@
       </el-scrollbar>
     </div>
     <div class="elementset-bottom-btns">
-      <button type="button" @click="dropAll(true)" class="nz-btn nz-btn-size-small nz-btn-style-pure-white ">
+      <button type="button" @click="dropAll(true)" class="nz-btn nz-btn-size-normal nz-btn-style-light">
         <span class="top-tool-btn-txt">{{$t('overall.all')}}</span>
       </button>
-      <button type="button" @click="dropAll(false)" class="nz-btn nz-btn-size-small nz-btn-style-pure-white">
+      <button type="button" @click="dropAll(false)" class="nz-btn nz-btn-size-normal nz-btn-style-light">
         <span class="top-tool-btn-txt">{{$t('overall.cancel')}}</span>
       </button>
     </div>
@@ -149,9 +149,9 @@ export default {
 
 <style lang="scss" scoped>
 .pop-elementset {
-  padding: 12px;
+  padding: 0 12px 12px 12px;
   border: 1px solid #EBEEF5;
-  box-shadow: 0 2px 12px 0 rgba(0,0,0,.1);
+  box-shadow: $pop-box-shadow;
   position: fixed;
   top: 0;
   left: 10px;

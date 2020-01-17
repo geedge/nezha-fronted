@@ -70,7 +70,12 @@ html {
 .height-100 {
   height: 100% !important;
 }
-
+.too-long-split {
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+  display: inline-block;
+}
 /* begin--按钮组件*/
 .nz-btn-min-width-35 {
   min-width: 35px;
@@ -176,7 +181,19 @@ html {
 /* end--按钮组件*/
 
 /* begin--el-input扩展 */
-.input-x-mini .el-input__inner {
+.input-x-mini-22 .el-input__inner {
+  height: 22px;
+  line-height: 22px;
+  padding: 0 5px;
+  font-size: 12px;
+}
+.input-x-mini-24 .el-input__inner {
+  height: 24px;
+  line-height: 24px;
+  padding: 0 5px;
+  font-size: 12px;
+}
+.input-x-mini-26 .el-input__inner {
   height: 26px;
   line-height: 26px;
   padding: 0 5px;
@@ -193,6 +210,31 @@ html {
   border-radius: 0 4px 4px 0;
 }
 /* end--el-input扩展 */
+
+/* begin--nz-tab组件*/
+.nz-tab {
+  font-size: 14px;
+}
+.project .nz-tab {
+  margin-top: -6px;
+}
+.nz-tab-item-box {
+  padding: 0 15px;
+  display: inline-block;
+}
+.nz-tab-item {
+  line-height: 14px;
+  padding-bottom: 10px;
+  color: #999;
+  cursor: pointer;
+}
+.nz-tab-item-active {
+  border-bottom: 3px solid $global-text-color-active;
+  color: #333;
+  cursor: default;
+}
+/* end--nz-tab组件*/
+
 /* end--通用*/
 
 /* begin--左侧列表*/
@@ -282,7 +324,8 @@ html {
 }
 /* begin--顶部工具栏*/
 .top-tools {
-  padding: 22px 0 13px 0;
+  margin: 26px 0 41px 0;
+  height: 1px;
 }
 .top-tools .top-tool-search {
   width: 260px;
@@ -292,7 +335,6 @@ html {
 
 /* start--内容*/
 .content-right>.el-table{
-  margin-top: 30px;
   border: none;
   font-size: 12px;
 }
@@ -507,7 +549,7 @@ html {
 /* begin--右侧弹框--内容*/
 .nz-pop { /*小弹框*/
   padding-top: 0;
-  box-shadow: 0 0 12px 0 rgba(0,0,0,0.20);
+  box-shadow: $pop-box-shadow;
 }
 .nz-pop2 {
   padding: 0 20px 20px 20px;
@@ -554,6 +596,9 @@ html {
   height: 360px;
   width: 100%;
 }
+.pop-box-asset2 {
+  height: 250px;
+}
 .pop-box-asset li {
   height: 24px;
   line-height: 24px;
@@ -562,6 +607,14 @@ html {
 .pop-box-asset input {
   vertical-align: top;
   width: 90%;
+}
+.pop-item-contain {
+  position: relative;
+}
+.pop-item-icons {
+  display: inline-block;
+  position: absolute;
+  right: 0;
 }
 .config-dropdown-btn i {
   font-size: 12px;
@@ -758,12 +811,14 @@ html {
   width: 500px;
 }
 .asset-dropdown {
-  width: 440px;
+  width: 400px;
+}
+.asset-dropdown .el-select-dropdown__item {
+  position: relative;
 }
 .config-dropdown-btn {
   display: inline-block;
   margin-left: 7px;
-  float: right;
   color: #60BEFF;
   font-size: 13px
 }
@@ -776,6 +831,15 @@ html {
 }
 .config-dropdown-btn-delete:hover {
   color: #D96D7A;
+}
+.config-dropdown-label-input {
+  display: inline-block;
+  width: calc(100% - 50px);
+}
+.config-dropdown-label-icons {
+  display: inline-block;
+  position: absolute;
+  right: 22px;
 }
 .config-dropdown.is-multiple .el-select-dropdown__item.selected::after {
   content: "" !important;
