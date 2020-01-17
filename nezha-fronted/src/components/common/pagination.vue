@@ -9,7 +9,7 @@
       :current-page="pageObj.pageNo"
       :page-sizes="[20, 50, 100, 300]"
       :page-size="20"
-      layout="prev, pager, next, jumper, total"
+      layout="prev, pager, next,sizes,jumper,->,total"
       :total="this.pageObj.total"
     ></el-pagination>
   </div>
@@ -56,11 +56,53 @@ export default {
 </script>
 
 <style>
+  .pagination {
+    padding-top: 18px;
+    text-align: center;
+  }
+
+  .el-pager li, .el-pagination .btn-next, .el-pagination .btn-prev {
+    margin:0px 10px 0px 10px;
+    padding: 0 4px;
+    font-size: 13px;
+    min-width: 20px;
+    height: 20px;
+    line-height: 20px;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    text-align: center;
+    border: 1px solid rgba(154,154,154,0.20);
+    border-radius: 2px;
+    border-radius: 2px;
+  }
+  .el-pager li.number{
+    font-family: NotoSansSC-Regular;
+    color: #666666;
+    letter-spacing: 0;
+    font-weight:normal;
+  }
+  .el-pager li.number.active{
+    font-family: NotoSansSC-Regular;
+    color: #FFFFFF;
+    letter-spacing: 0;
+  }
+
   .el-pager li.active {
-    color: #f90;
-    cursor: default;
+    background: #EE9D3F;
+    border-radius: 2px;
+    border-radius: 2px;
   }
   .el-pager li:hover, .el-pagination .btn-next:hover, .el-pagination .btn-prev:hover {
-    color: #f90;
+    font-family: NotoSansSC-Regular;
+    color: #666666;
+    letter-spacing: 0;
+    font-weight:normal;
+  }
+  .el-pagination__sizes .el-input .el-input__inner,.el-pagination__editor.el-input .el-input__inner{
+    height: 20px;
+    border-color: rgba(154,154,154,0.20);
+  }
+  .el-pagination__sizes .el-input .el-input__inner:hover{
+    border-color: rgba(154,154,154,0.20);
   }
 </style>
