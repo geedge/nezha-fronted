@@ -528,12 +528,11 @@
   }
 
   .nz-submenu.el-menu--horizontal .el-menu .el-menu-item {
-    padding: 0 20px;
     color: #444444 !important;
     transition: none;
   }
 
-  .nz-submenu.el-menu--horizontal .el-menu .el-menu-item:hover,.nz-submenu.el-menu--horizontal   {
+  .nz-submenu.el-menu--horizontal   {
     color: $global-text-color-active !important;
   }
 
@@ -652,5 +651,20 @@
     position: absolute;
     right: 15px;
     top: 0;
+  }
+  .nz-submenu .menu-edit i {
+    font-size: 12px;
+  }
+  .el-menu-item {
+    padding: 0;
+  }
+  .el-menu-item>div {
+    padding-left: 30px;
+  }
+  .el-menu-item>div:hover {
+    background-color: #eee;
+  }
+  .el-menu--horizontal .el-menu .el-menu-item, .el-menu--horizontal .el-menu .el-submenu__title {
+    padding: 0;
   }
 </style>
