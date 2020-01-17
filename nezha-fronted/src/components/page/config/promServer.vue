@@ -182,8 +182,8 @@ export default {
           {required:true,message:this.$t('validate.required'),trigger:'change'}
         ],
         host:[
-          { validator: host, trigger: 'blur',required:true},
-          {required:true,message:this.$t('validate.required')}
+          {required:true,message:this.$t('validate.required'),trigger: 'blur'},
+          { validator: host, trigger: 'blur'}
         ],
         port:[
           { validator: port, trigger: 'blur'},
