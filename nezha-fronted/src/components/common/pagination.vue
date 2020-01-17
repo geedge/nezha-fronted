@@ -7,7 +7,7 @@
       @next-click="next"
       @current-change="current"
       :current-page="pageObj.pageNo"
-      :page-sizes="[20, 50, 100, 300]"
+      :page-sizes="[20, 50, 100]"
       :page-size="20"
       layout="total, prev, pager, next,sizes,jumper"
       :total="this.pageObj.total"
@@ -65,7 +65,7 @@ export default {
   }
 
   .el-pager li, .el-pagination .btn-next, .el-pagination .btn-prev {
-    margin:5px 10px 0px 10px;
+    margin:5px 5px 0px 5px;
     padding: 0 4px;
     font-size: 13px;
     min-width: 20px;
@@ -77,6 +77,12 @@ export default {
     border: 1px solid rgba(154,154,154,0.20);
     border-radius: 2px;
     border-radius: 2px;
+  }
+  .el-pagination .el-pager li.btn-quicknext, .el-pager li.btn-quickprev {
+    line-height: 20px;
+  }
+  .el-pagination .el-pager .more::before {
+    line-height: 20px;
   }
   .el-pager li.number{
     font-family: NotoSansSC-Regular;
