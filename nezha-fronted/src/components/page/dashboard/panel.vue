@@ -37,11 +37,11 @@
         </el-select> -->
             <el-dropdown @command="panelChange" trigger="click">
                 <span class="el-dropdown-link">
-                    Endpoint<i class="el-icon-arrow-down el-icon--right"></i>
+                    {{showPanel.name}}<i class="el-icon-arrow-down el-icon--right"></i>
                 </span>
                 <el-dropdown-menu class="nz-dashboard-dropdown" slot="dropdown">
-                    <el-dropdown-item>{{$t('dashboard.panel.createPanelTitleSec')}}</el-dropdown-item>
-                    <el-dropdown-item v-for="item in panelData" :key="item.id+1" :class="showPanel.id==item.id?'nz-dashboard-dropdown-bg':''" :command="item.id">{{item.name}}</el-dropdown-item>
+                    <el-dropdown-item >{{$t('dashboard.panel.createPanelTitleSec')}}</el-dropdown-item>
+                    <el-dropdown-item v-for="item in panelData" :key="item.id+1" :class="showPanel.id==item.id?'nz-dashboard-dropdown-bg':''" :command="item">{{item.name}}</el-dropdown-item>
                 </el-dropdown-menu>
             </el-dropdown>
             <div class="panel-refresh-interval">
@@ -51,9 +51,9 @@
                 <span class="top-tool-btn-txt"><i class="el-icon-refresh-right"></i></span>
               </button>
             -->
-                    <!-- <el-select class="panel-refresh-interval-select" placeholder="" v-model="interval" @change="selectInterval" size="small">
+                    <!--<el-select class="panel-refresh-interval-select" placeholder="" v-model="interval" @change="selectInterval" size="small">
                         <el-option v-for="item in intervalList" :value="item.value" :label="item.name" :key="item.value">{{item.name}}</el-option>
-                    </el-select> -->
+                    </el-select>
                     <!-- 刷新 -->
                     <div class="refresh">
                         <span style="cursor:pointer;" class="nz-dashboard-refresh">
@@ -62,7 +62,7 @@
                         <el-popover v-model="visible" placement="bottom-start" width="200" trigger="click">
                             <ul class="popover_ul">
                                 <li v-for="i in intervalList"  :style="{color:interval==i.value?'#31749C':''}" :key="i.value+i.name" @click="selectInterval(i.value)">
-                                    {{i.value}}{{i.name}}
+                                    {{i.name}}
                                 </li>
                             </ul>
                             <div style="cursor:pointer" slot="reference">
@@ -274,10 +274,15 @@ export default {
       },
         //面板相关操作
         panelChange(val) {
-
+            if(!val){
+                this.toAdd();
+                return false;
+            }
             //this.$refs.searchInput.select();
-            this.filter.panelId = this.showPanel.id = val;
+            this.showPanel = val
+            this.filter.panelId = this.showPanel.id;
             this.getData(this.filter);
+            
         },
         del: function (u) {
             this.$confirm(this.$t("tip.confirmDelete"), {
@@ -426,8 +431,10 @@ export default {
                             this.showPanel.name = this.$store.state.showPanel.name;
                             this.showPanel.id = this.$store.state.showPanel.id;
                         }
+                        
                         if (this.showPanel.id === '') {
                             this.showPanel.id = response.data.list[0].id;
+                            this.showPanel.name = response.data.list[0].name;
                             this.filter.panelId = this.showPanel.id;
                             this.getData(this.filter);
                         }
