@@ -127,6 +127,7 @@
             <chart-metric ref="chartTag"
                            :pointer="index"
                            :metric-list="metricList"
+                          :metricCascaderList="metricCascaderList"
                            :count-total="elements.length"
                            @on-delete-target="deleteTarget"
                            @sub-save-ok="subOk"
@@ -245,6 +246,7 @@
         //productId: 0,//不需要这个参数，可以删除
         panelId: 0,
         metricList: [], // metric列表
+        metricCascaderList:[],//metric级联列表
         deleteIndex: '', // 要删除的指标模块
         subCount: 0, // subSave保存data到bus计数器
       }
@@ -474,8 +476,40 @@
         this.$get('metric', {pageNo: 1, pageSize: -1}).then(response => {
           if (response.code === 200) {
             this.metricList = response.data.list;
+            const cascaderMap = new Map();
+            this.metricList.forEach((item,index) => {
+              let arr = [];
+              let par = '';//父value
+              let metricTmp = item.metric;//子value
+              if(metricTmp){
+                arr  = metricTmp.split('_');
+                par = arr[0];
+              }
+              const childOption = {
+                value: metricTmp,
+                label: metricTmp,
+              };
+              if(cascaderMap.has(par)){
+                cascaderMap.get(par).push(childOption);
+              }else {
+                let childArr = [];
+                childArr.push(childOption);
+                cascaderMap.set(par,childArr);
+              }
+            });
+            let metricCascaderArr = [];
+            cascaderMap.forEach(function(value,index){
+              const option = {
+                value: index,
+                label: index,
+                children:value,
+              };
+              metricCascaderArr.push(option);
+            });
+            this.metricCascaderList = metricCascaderArr;
           }else {
             this.metricList = [];
+            this.metricCascaderList = [];
           }
         })
       },

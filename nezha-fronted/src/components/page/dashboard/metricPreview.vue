@@ -283,8 +283,14 @@ export default {
           metric_name: '',
         };
         // 图表中每条线的名字,后半部分
-        let host = `${queryItem.metric.__name__}`;//up,
-        let charName = `${queryItem.metric.__name__}`;
+        //let host = `${queryItem.metric.__name__}`;//up,
+        let host = '';//up,
+        let charName='';
+        if(queryItem.metric.__name__){
+          host = `${queryItem.metric.__name__}{`;//up,
+          charName = `${queryItem.metric.__name__}`;
+        }
+        //let charName = `${queryItem.metric.__name__}`;
         const tagsArr = Object.keys(queryItem.metric);//["__name__","asset","idc","instance","job","module","project"]
         // 设置时间-数据格式对
         const dpsArr = Object.entries(queryItem.values);//[ ["0",[1577959830.781,"0"]], ["1",[1577959845.781,"0"]] ]

@@ -250,10 +250,15 @@ export default {
           formatter:function(params){
             let str = `<div  style='width:100%;display:block;word-break:break-all;word-wrap:break-word;white-space:normal'>`;
             params.forEach((item, i) => {
-                if(i!==0){
-                  str +=`<br/>`;
-                }
-                str +=`<span style='display:inline-block;margin-right:5px;border-radius:10px;width:15px;height:5px;background-color: ${item.color};}'></span> ${item.seriesName}:${item.data[1]}`;
+              if(i===0){
+                let t_date = new Date(item.data[0]);
+                str += [t_date.getFullYear(), t_date.getMonth() + 1, t_date.getDate()].join('-') + " "
+                  + [t_date.getHours(), t_date.getMinutes(),t_date.getSeconds()].join(':');
+              }
+              str +=`<br/>`;
+              let val = parseFloat(Number(item.data[1]).toFixed(2));
+              str +=`<span style='display:inline-block;margin-right:5px;border-radius:10px;width:15px;height:5px;background-color: ${item.color};}'></span> ${item.seriesName}:`;
+              str +=val;
             });
             str +=`</div>`;
             return str;
@@ -690,7 +695,11 @@ export default {
                       metric_name: '',
                     };
                     // 图表中每条线的名字,后半部分
-                    let host = `${queryItem.metric.__name__}{`;//up,
+                   // let host = `${queryItem.metric.__name__}{`;//up,
+                    let host = '';//up,
+                    if(queryItem.metric.__name__){
+                      host = `${queryItem.metric.__name__}{`;//up,
+                    }
                     const tagsArr = Object.keys(queryItem.metric);//["__name__","asset","idc","instance","job","module","project"]
                     // 设置时间-数据格式对
                     const dpsArr = Object.entries(queryItem.values);//[ ["0",[1577959830.781,"0"]], ["1",[1577959845.781,"0"]] ]
