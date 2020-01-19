@@ -11,7 +11,7 @@
           :id="'project-module-'+item.id"
         >
           <div class="sidebar-info-item-txt">
-            <el-popover v-if="item.name.length > 12" trigger="hover" placement="top-start" :content="item.name" >
+            <el-popover v-if="item.name.length > 16" trigger="hover" placement="top-start" :content="item.name" >
               <span slot="reference">{{item.name}}</span>
             </el-popover>
             <span v-else>{{item.name}}</span>

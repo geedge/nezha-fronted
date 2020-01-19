@@ -137,8 +137,8 @@
                 </button>
               </div>
             </template>
-            <div class="param-box param-box-module">
-              <div class="param-box-row" v-for="(item, index) in endpoint.paramObj" v-if="rightBox.isEdit">
+            <div v-if="rightBox.isEdit" class="param-box param-box-module">
+              <div class="param-box-row" v-for="(item, index) in endpoint.paramObj">
                 <el-form-item class="param-box-row-key" :rules="{required: true, message: $t('validate.required'), trigger: 'blur'}" :prop="'paramObj.' + index + '.key'">
                   <el-input placeholder="key" size="mini" v-model="item.key"></el-input>
                 </el-form-item>
@@ -148,9 +148,9 @@
                 </el-form-item>
                 <span class="param-box-row-symbol" @click="removeParam(index)"><i class="nz-icon nz-icon-minus-square"></i></span>
               </div>
-              <div class="param-box-row" v-for="(item, index) in endpoint.paramObj" v-if="!rightBox.isEdit">
-                <div  class="right-box-form-content-txt">{{item.key}}={{item.value}}</div>
-              </div>
+            </div>
+            <div v-else v-for="(item, index) in endpoint.paramObj" v-if="!rightBox.isEdit">
+              <div  class="right-box-form-content-txt">{{item.key}}={{item.value}}</div>
             </div>
 
           </el-form-item>

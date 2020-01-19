@@ -121,8 +121,12 @@
             {required: true, message: this.$t('validate.required'), trigger: 'change'}
           ],
           port: [
-            {validator:port, trigger: 'blur'}
+            {validator:port, trigger: 'blur'},
+            {required: true, message: this.$t('validate.required'), trigger: 'blur'},
           ],
+          path: [
+            {required: true, message: this.$t('validate.required'), trigger: 'blur'},
+          ]
         },
         projectList: [],
       }

@@ -206,7 +206,12 @@ li{
   padding: 0 5px;
   font-size: 12px;
 }
-
+.el-textarea .el-input__count { /*防止字数限制提示信息遮挡内容和滚动条*/
+  right: 20px;
+}
+.el-textarea__inner {
+  padding: 5px 60px 5px 15px;
+}
 .nz-input-group-prepend {
   border-radius: 4px 0 0 4px;
 }
