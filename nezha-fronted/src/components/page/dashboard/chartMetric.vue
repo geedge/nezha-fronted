@@ -102,10 +102,17 @@
     <el-row  v-if="tableShow == 1">
       <el-col span="22" >
         <el-form-item :label-width="80"  prop="metric" :rules="{ required: true,  message: $t('validate.required'), trigger: 'blur' }"><!--:rules="{ required: true, type: 'string', message: '', trigger: 'change' }"-->
+              <!--
               <el-select  ref="metricSelect" class="full-width"  filterable placeholder="" popper-class="" size="small" v-model="elementInfo.metric"  @change="selectMetric">
                 <el-option v-for="(item, index) in metricShowList.arr" :key="item.metric + index"
                 :value="item.metric">{{item.metric}}</el-option>
               </el-select>
+              -->
+              <el-cascader ref="metricSelect" class="full-width"  filterable placeholder="" popper-class="" size="small"
+                       v-model="elementInfo.metric"
+                       :options="metricCascaderList"
+                       :props="{ expandTrigger: 'hover' }"
+                       @change="selectMetric"></el-cascader>
               <span v-if="metricShowList.text" class="error-info-text">{{metricShowList.text}}</span>
         </el-form-item>
       </el-col>
@@ -170,6 +177,7 @@ export default {
       type: Array,
       default: () => [],
     },
+    metricCascaderList:[],
     countTotal: {
       type: Number,
       default: 1,
@@ -252,6 +260,7 @@ export default {
     // 选择metric
     selectMetric() {
       if (this.elementInfo.metric) {//选择了metric，则设置tagList，否则设置为空
+        this.elementInfo.metric = this.elementInfo.metric[1];
         this.getSuggestTags(this.elementInfo.metric);
       } else {
         this.elementInfo.tagList = [];

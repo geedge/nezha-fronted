@@ -123,8 +123,14 @@
               const soleParam = Object.assign({}, params);
               const elements = [];
               // 图表中每条线的名字,后半部分
-              let host = `${queryItem.metric.__name__}`;//up,
-              let charTitle=`${queryItem.metric.__name__}`;//up,
+              //let host = `${queryItem.metric.__name__}`;//up,
+              //let charTitle=`${queryItem.metric.__name__}`;//up,
+              let host = '';//up,
+              let charTitle='';
+              if(queryItem.metric.__name__){
+                host = `${queryItem.metric.__name__}`;//up,
+                charTitle=`${queryItem.metric.__name__}`;//up,
+              }
               const tagsArr = Object.keys(queryItem.metric);//["__name__","asset","idc","instance","job","module","project"]
               // 判断是否有数据
               if (queryItem.values.length > 0 && tagsArr.length > 0) {

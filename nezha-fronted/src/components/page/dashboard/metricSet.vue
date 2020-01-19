@@ -7,6 +7,7 @@
       <el-row class="element-item" >
           <chart-metric ref="chartTag"
           :metric-list="metricList"
+          :metricCascaderList="metricCascaderList"
           @on-add-target-success="getTarget"
           @on-change-condition="getCondition"
           ></chart-metric>
@@ -116,6 +117,7 @@ export default {
       //productId: 0,
       panelId: 0,
       metricList: [], // metric列表
+      metricCascaderList:[],//metric级联列表
       isSave: false, // 是否要保存
       saveDisabled: true, // 不可保存
       createModal: false, // 创建看板panel
@@ -451,8 +453,40 @@ export default {
       this.$get('metric', {pageNo: 1, pageSize: -1}).then(response => {
         if (response.code === 200) {
           this.metricList = response.data.list;
+          const cascaderMap = new Map();
+          this.metricList.forEach((item,index) => {
+            let arr = [];
+            let par = '';//父value
+            let metricTmp = item.metric;//子value
+            if(metricTmp){
+              arr  = metricTmp.split('_');
+              par = arr[0];
+            }
+            const childOption = {
+              value: metricTmp,
+              label: metricTmp,
+            };
+            if(cascaderMap.has(par)){
+              cascaderMap.get(par).push(childOption);
+            }else {
+              let childArr = [];
+              childArr.push(childOption);
+              cascaderMap.set(par,childArr);
+            }
+          });
+          let metricCascaderArr = [];
+          cascaderMap.forEach(function(value,index){
+            const option = {
+              value: index,
+              label: index,
+              children:value,
+            };
+            metricCascaderArr.push(option);
+          });
+          this.metricCascaderList = metricCascaderArr;
         }else {
           this.metricList = [];
+          this.metricCascaderList = [];
         }
       })
     },
@@ -471,15 +505,17 @@ export default {
       document.body.removeChild(sensor);
       return width;
     },
+    /*
     // 创建打开
     createData(panelId) {
       this.panelId = panelId;
       this.elementTarget = {}; // 初始化清空参数
       this.initInfo(); // 初始化图表信息
       this.chartModal = true;
-      this.initOpen(); // 获取metric, productId数据
+      this.initOpen(); // 获取metric
       this.elements = [1];
     },
+    */
     /*
     tagsToString(arr) {
       let str = '';

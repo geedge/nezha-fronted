@@ -183,7 +183,10 @@ export default {
                         metric_name: '',
                       };
                       // 图表中每条线的名字,后半部分
-                      let host = `${queryItem.metric.__name__}{`;//up,
+                      let host = '';//up,
+                      if(queryItem.metric.__name__){
+                        host = `${queryItem.metric.__name__}{`;//up,
+                      }
                       const tagsArr = Object.keys(queryItem.metric);//["__name__","asset","idc","instance","job","module","project"]
                       // 设置时间-数据格式对
                       const dpsArr = Object.entries(queryItem.values);//[ ["0",[1577959830.781,"0"]], ["1",[1577959845.781,"0"]] ]
@@ -215,7 +218,7 @@ export default {
                           let timeTmp = bus.timeFormate(t_date, 'yyyy-MM-dd hh:mm');
                           tableData.push({//表格数据
                             label: host.slice(host.indexOf('{') + 1,host.indexOf('}')),//label
-                            metric: queryItem.metric.__name__,//metric列
+                            metric: queryItem.metric.__name__?queryItem.metric.__name__:'',//metric列
                             time: timeTmp,//采集时间
                             value: dpsItem[1],//数值
                           });
