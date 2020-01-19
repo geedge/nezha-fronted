@@ -46,14 +46,15 @@
           :key="`col-${index}`"
           :label="item.label"
           show-overflow-tooltip
+          min-width="110px"
         >
           <template slot="header" slot-scope="scope">
-            <span v-if="index==0" class='nav-tabel-header'>
+            <template v-if="index==0">
               <span @click.stop="elementsetShow('shezhi',$event)" class="nz-table-gear">
                 <i class="nz-icon nz-icon-gear"></i>
               </span>
               <span class="nz-table-txt">{{item.label}}</span>
-            </span>
+            </template>
             <div v-else>
               <span>{{item.label}}</span>
             </div>
@@ -78,16 +79,14 @@
               <template v-for="type in typeData" v-if="type.key == scope.row[item.prop]">{{type.value}}</template>
             </span>
             <!--                        <span v-else-if="item.prop == 'linkObject' && scope.row[item.prop]">{{scope.row.type != 3 && scope.row.linkObject ? scope.row[item.prop].name : scope.row[item.prop].host}}</span>-->
-            <div v-else-if="item.prop == 'linkObject'">
-              <span v-if="(scope.row['type'] == 1 || scope.row['type'] == 2) && scope.row[item.prop]" class="link"
-                    @click="viewAlertType(scope.row['type'],scope.row[item.prop])">{{scope.row[item.prop].name}}</span>
+            <template v-else-if="item.prop == 'linkObject'">
+              <span v-if="(scope.row['type'] == 1 || scope.row['type'] == 2) && scope.row[item.prop]" class="link too-long-split"
+                    @click="viewAlertType(scope.row['type'],scope.row[item.prop])" style="max-width: 125px;">{{scope.row[item.prop].name}}</span>
               <span v-else-if="scope.row['type'] == 3 && scope.row[item.prop]" class="link"
                     @click="viewAlertType(scope.row['type'],scope.row[item.prop].id)">{{scope.row[item.prop].host}}</span>
               <span v-else>-</span>
-            </div>
-            <div v-else-if="item.prop == 'alertName'">
-                <div class="too-long-split" style="max-width: 100px;">{{scope.row.alertName}}</div>
-            </div>
+            </template>
+            <template v-else-if="item.prop == 'alertName'">{{scope.row.alertName}}</template>
             <span v-else>{{scope.row[item.prop]}}</span>
           </template>
         </el-table-column>
@@ -217,6 +216,7 @@
             label: this.$t("alert.config.link"),
             prop: 'linkObject',
             show: true,
+            width: 140
           }, {
             label: this.$t("alert.config.for"),
             prop: 'last',
@@ -229,11 +229,11 @@
             label: this.$t('alert.description'),
             prop: 'description',
             show: true,
-          }, {
+          }, /*{
             label: this.$t('alert.config.receiver'),
             prop: 'receiver',
             show: true,
-          }, {
+          }, */{
             label: this.$t('alert.config.option'),
             prop: 'option',
             show: true,

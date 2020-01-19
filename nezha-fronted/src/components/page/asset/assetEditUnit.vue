@@ -376,7 +376,7 @@
           </el-form-item>
           <!--cli-->
           <div class="asset-sub-title">{{$t('asset.createAssetTab.cli')}}
-            <el-switch style="float: right;" v-model="accountSwitch" active-color="#ee9d3f" :disabled="parseInt(assetData.exporter)===1"></el-switch>
+            <el-switch v-if="!tabView" style="float: right;" v-model="accountSwitch" active-color="#ee9d3f" :disabled="parseInt(assetData.exporter)===1"></el-switch>
           </div>
           <div class="line-100 asset-line"></div>
           <template v-if="accountSwitch">
@@ -390,7 +390,7 @@
         <button @click.stop="sendStateData('close')" class="nz-btn nz-btn-size-large nz-btn-style-light nz-btn-min-width-120" id="asset-edit-cancel">
           <span>{{$t('overall.cancel')}}</span>
         </button>
-        <button @click.stop="editData('asset')" class="nz-btn nz-btn-size-large nz-btn-style-normal nz-btn-min-width-120" id="asset-edit-save">
+        <button v-if="!tabView" @click.stop="editData('asset')" class="nz-btn nz-btn-size-large nz-btn-style-normal nz-btn-min-width-120" id="asset-edit-save">
           <span>{{$t('overall.ok')}}</span>
         </button>
       </div>
@@ -615,6 +615,21 @@
       },
       'assetData.idcId': function(n, o) {
         this.addCabinetData.idcId = n;
+      },
+      accountSwitch(n) {
+        if (n) {
+          if (!this.assetData.accounts[0]) {
+            !this.assetData.accounts.push({
+              id: '',
+              user:"",
+              authType:1,
+              pwd:"",
+              port:'',
+              privateKey:'',
+              uploadFile:''
+            });
+          }
+        }
       }
     },
     methods: {
@@ -801,10 +816,15 @@
           form.append("idcId", this.assetData.idcId);
           form.append("cabinetId", this.assetData.cabinetId);
           form.append("modelId", modelId);
+          if (!this.accountSwitch) {
+            this.assetData.accounts = [];
+          }
           for(let i in this.assetData.accounts){
             let account=this.assetData.accounts[i];
             if(account.user){
-              form.append("accounts["+i+"].id", account.id);
+              if (account.id) {
+                form.append("accounts["+i+"].id", account.id);
+              }
               form.append("accounts["+i+"].authType",account.authType);
               form.append("accounts["+i+"].user", account.user);
               form.append("accounts["+i+"].port", account.port);

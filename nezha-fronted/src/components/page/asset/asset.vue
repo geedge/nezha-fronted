@@ -1,5 +1,5 @@
 <template>
-  <div class="asset">
+  <div class="asset" ref="asset">
     <div class="content-left">
       <div class="sidebar-title">Asset</div>
       <div class="sidebar-info">
@@ -44,21 +44,25 @@
         style="width: 100%;"
         :data="tableData"
         border
+        tooltip-effect="light"
       >
         <el-table-column
+          :resizable="false"
           v-for="(item, index) in tablelable"
           v-if="item.show"
           :width="item.width"
           :key="`col_${index}`"
           :label="item.label"
+          :show-overflow-tooltip="item.prop != 'Alert' || item.prop != 'Module'"
+          min-width="110px"
         >
           <template slot="header" slot-scope="scope">
-            <span v-if="index==0" class='nav-tabel-header'>
+            <template v-if="index==0">
                 <span @click.stop="elementsetShow('shezhi',$event)" id="asset-tab-set" class="nz-table-gear">
                     <i class="nz-icon nz-icon-gear"></i>
                 </span>
                 <span class="nz-table-txt">{{item.label}}</span>
-            </span>
+            </template>
             <div v-else>
               <span>{{item.label}}</span>
             </div>
@@ -70,31 +74,27 @@
             <div v-if="item.prop=='assetType'">
               <span>{{scope.row.model.type.value}}</span>
             </div>
-            <div v-if="item.prop=='SN'">
-              <el-popover trigger="hover" placement="bottom-start"  :content="scope.row.sn" >
-                <div slot="reference" class="too-long-split" style="max-width: 110px;">{{scope.row.sn}}</div>
-              </el-popover>
-            </div>
+            <template v-if="item.prop=='SN'">{{scope.row.sn}}</template>
             <div v-if="item.prop=='HOST'">
               <span>{{scope.row.host}}</span>
             </div>
             <div v-if="item.prop=='state'">
               <span>{{scope.row.state==1 ? $t('asset.createAssetTab.inStock') : $t('asset.createAssetTab.notInStock')}}</span>
             </div>
-            <div v-if="item.prop=='Module'">
-              <div v-if="scope.row.moduleNum > 0" >
+            <template v-if="item.prop=='Module'">
+              <template v-if="scope.row.moduleNum > 0" >
                 <module-list-pop :asset-id="scope.row.id + ''" @openModuleBox="openModuleBox" placement="left" :ref="'moduleListPop' + scope.row.id">
                   <template v-slot:optionZone>
                     <button class="nz-btn nz-btn-size-normal nz-btn-style-light nz-btn-min-width-75">{{scope.row.moduleNum}}</button>
                   </template>
                 </module-list-pop>
-              </div>
+              </template>
               <button type="button" v-else class="nz-btn nz-btn-size-normal nz-btn-style-light nz-btn-min-width-75 nz-btn-disabled">{{scope.row.moduleNum}}</button>
-            </div>
-            <div v-if="item.prop=='Alert'">
+            </template>
+            <template v-if="item.prop=='Alert'">
               <button type="button" v-if="scope.row.alertNum > 0" id="'asset-alerts-'+scope.row.id" @click="jumpToAlertMsg(scope.row.id)" class="nz-btn nz-btn-size-normal nz-btn-style-light nz-btn-min-width-75">{{scope.row.alertNum}}</button>
               <button type="button" v-else class="nz-btn nz-btn-size-normal nz-btn-style-light nz-btn-min-width-75 nz-btn-disabled">{{scope.row.alertNum}}</button>
-            </div>
+            </template>
             <div v-if="item.prop=='dataCenter'">
               <idc-config-box :post-idc="JSON.parse(JSON.stringify(scope.row.idc))" ref="idcConfigBox" :is-edit="false" placement="left"  @after="getAssetData(null, true)" :button-class="'checkbox-edit'">
                 <template v-slot:optionZone>
@@ -103,13 +103,13 @@
               </idc-config-box>
               <!--<span class="link">{{scope.row.idc.name}}</span>-->
             </div>
-            <div v-if="item.prop=='cabinet'">
+            <template v-if="item.prop=='cabinet'">
               <cabinet-config-box v-if="scope.row.cabinet&&scope.row.cabinet!='--'" ref="cabinetConfigBox"  placement="left" :is-edit="false" :post-cabinet="JSON.parse(JSON.stringify(scope.row.cabinet))"  @after="getAssetData(null, true)">
                 <span slot="optionZone" @click="closeAllPop" class="link">{{returnData(scope.row.cabinet)}}</span>
               </cabinet-config-box>
               <span v-else>{{returnData(scope.row.cabinet)}}</span>
 
-            </div>
+            </template>
             <div v-if="item.prop=='model'">
               <span>{{scope.row.model.name}}</span>
             </div>
@@ -202,7 +202,7 @@
             label: this.$t("asset.tableTitle.id"),
             prop: 'ID',
             show: true,
-            width: 90
+            width: 110
           }, {
             label: this.$t("asset.tableTitle.assetType"),
             prop: 'assetType',
@@ -225,10 +225,12 @@
             label: this.$t("asset.tableTitle.modules"),
             prop: 'Module',
             show: true,
+            width: 105
           }, {
             label: this.$t("asset.tableTitle.alerts"),
             prop: 'Alert',
             show: true,
+            width: 105
           }, {
             label: this.$t("asset.tableTitle.dataCenter"),
             prop: 'dataCenter',
@@ -380,7 +382,19 @@
         }
       },
       openModuleBox(module) {
+        if (module.param) {
+          try {
+            let tempObj = JSON.parse(module.param);
+            this.$set(module, 'paramObj', []);
+            for (let k in tempObj) {
+              module.paramObj.push({key: k, value: tempObj[k]});
+            }
+          } catch (err) {
+            console.info(module, err);
+          }
+        }
         this.module = module;
+        console.info(this.module);
         this.$refs.moduleBox.show(true);
       },
       getAssetModuleList(id) {

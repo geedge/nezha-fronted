@@ -29,12 +29,12 @@
             <el-table :data="tableData" border height="calc(100% - 65px)" style="width: 100%;">
                 <el-table-column :resizable="false" v-for="(item, index) in tablelable" v-if="item.show" :width="item.width" :key="`col-${index}`" :label="item.label">
                     <template slot="header" slot-scope="scope">
-                        <span v-if="index==0" class='nav-tabel-header' >
+                        <template v-if="index==0">
                             <span @click.stop="elementsetShow('shezhi',$event)" id="prom-tab-set" class="nz-table-gear">
                                 <i class="nz-icon nz-icon-gear"></i>
                             </span>
                             <span class="nz-table-txt">{{item.label}}</span>
-                        </span>
+                        </template>
                         <div v-else>
                             <span>{{item.label}}</span>
                         </div>

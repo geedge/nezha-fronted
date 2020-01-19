@@ -10,9 +10,11 @@
           @click="changeModule(item)"
           :id="'project-module-'+item.id"
         >
-          <el-popover trigger="hover" placement="right-end" :content="item.name" >
-            <div slot="reference" class="sidebar-info-item-txt">{{item.name}}</div>
-          </el-popover>
+          <div class="sidebar-info-item-txt">
+            <el-popover trigger="hover" placement="right-end" :content="item.name" >
+              <span slot="reference">{{item.name}}</span>
+            </el-popover>
+          </div>
           <div class="side-bar-menu-edit" @click.stop="toEditModule(item)" :id="'project-module-edit-'+item.id"><i class="nz-icon nz-icon-edit"></i></div>
         </div>
       </div>
@@ -43,6 +45,7 @@
           :width="item.width"
           :key="`col-${index}`"
           :label="item.label"
+          min-width="110px"
         >
           <template slot-scope="scope" :column="item">
             <span>{{scope.row[item.prop]}}</span>
@@ -82,9 +85,10 @@
           :width="item.width"
           :key="`col-${index}`"
           :label="item.label"
+          min-width="110px"
         >
           <template slot="header" slot-scope="scope">
-              <span v-if="index==0" class='nav-tabel-header'>
+              <span v-if="index==0">
                 <span @click.stop="elementsetShow('shezhi',$event)" class="nz-table-gear">
                     <i class="nz-icon nz-icon-gear"></i>
                 </span>
@@ -140,7 +144,8 @@
           {
             label: this.$t("project.endpoint.endpointId"),
             prop: 'id',
-            show: true
+            show: true,
+            width: 150
           },{
             label: this.$t("project.endpoint.asset"),
             prop: 'asset',
@@ -172,7 +177,8 @@
           }, {
             label: this.$t('config.account.option'),
             prop: 'option',
-            show: true
+            show: true,
+            width: 140
           }
         ],
         endpointTableData: [],

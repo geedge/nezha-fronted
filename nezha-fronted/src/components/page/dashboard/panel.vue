@@ -10,7 +10,7 @@
     </div>
     <div class="content-right">
         <div class="top-tools">
-            <button @click="toAddChart" class="nz-btn nz-btn-size-normal  float-right">
+            <button @click="toAddChart" class="nz-btn nz-btn-size-normal nz-btn-style-light float-right nz-btn-min-width-82">
                 <span class="top-tool-btn-txt">
                     <i class="nz-icon-create-square nz-icon"></i>
                     {{$t('overall.add')}}</span>

@@ -72,9 +72,9 @@ li{
 }
 .too-long-split {
   text-overflow: ellipsis;
-  white-space: nowrap;
   overflow: hidden;
   display: inline-block;
+  width: 100%;
 }
 /* begin--按钮组件*/
 .nz-btn-min-width-35 {
@@ -387,40 +387,37 @@ li{
   border-right: 1px solid #d4d4d4;
   box-shadow: inset -1px -2px 1px 0 rgba(0,0,0,0.11), inset 2px 2px 1px 0 rgba(255,255,255,0.50);
 }
+.content-right>.el-table th:first-of-type .cell{
+  padding-left: 0;
+}
 .content-right>.el-table td .cell{
   height: 44px;
   line-height: 44px;
-  display:flex;
-}
-.nav-tabel-header{
-  display: flex;
-  height: 36px;
-  min-width: 100px;
 }
 .content-right .el-table__row td:first-of-type {
   padding-left: 38px;
 }
+.el-tooltip__popper.is-light[x-placement^=top] .popper__arrow { /*覆盖tooltip小三角颜色*/
+  border-top-color: #ebeef5;
+}
 .nz-table-gear {
-  display: block;
+  display: inline-block;
   width: 38px;
-  margin-left:-10px;
-  padding-left:10px;
-  padding-right:10px;
   text-align: center;
-  border-right:2px solid #d4d4d4;
+  border-right: 1px solid #d4d4d4;
   box-sizing: border-box;
+  box-shadow: inset -1px -2px 1px 0 rgba(0,0,0,0.11), inset 2px 2px 1px 0 rgba(255,255,255,0.5);
+  float: left;
 }
 .nz-table-gear>i {
   cursor: pointer;
 }
-.nz-table-txt{
-  padding-left:10px;
-  display: flex;
-  height: 100%;
+.nz-table-txt {
+  display: inline-block;
   border-left:1px solid #fff;
-  min-width: 60px;
   box-sizing: border-box;
-  padding-right:20px;
+  float: left;
+  padding-left: 10px;
 }
 
 /* end--内容*/
@@ -584,6 +581,9 @@ li{
 }
 .pop-item-wider .el-form-item__content {
   margin-left: 80px !important;
+}
+.pop-item-wider .module-box-table td {
+  padding: 4px 0;
 }
 .pop-label {
   padding-bottom: 5px;

@@ -46,12 +46,12 @@
           :label="item.label"
         >
           <template slot="header" slot-scope="scope">
-            <span v-if="index==0" class='nav-tabel-header'>
+            <template v-if="index==0">
               <span @click.stop="elementsetShow('shezhi',$event)" class="nz-table-gear">
                 <i class="nz-icon nz-icon-gear"></i>
               </span>
               <span class="nz-table-txt">{{item.label}}</span>
-            </span>
+            </template>
             <div v-else>
               <span>{{item.label}}</span>
             </div>
