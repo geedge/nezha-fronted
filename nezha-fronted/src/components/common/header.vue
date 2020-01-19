@@ -43,7 +43,7 @@
         <template v-for="(item, index) in projectData">
           <el-menu-item :index="'2-' + index">
             <div @click="jumpToProject(item)" :class="{'menu-item-active' :(activeIndex == 'project' && activeItemIndex == item.id)}">
-              <span>{{item.name}}</span>
+              <span class="too-long-split" style="width: 135px;">{{item.name}}</span>
               <div @click.stop="toEditProject(item)" class="menu-edit"><i style="color: inherit" class="nz-icon nz-icon-edit"></i></div>
             </div>
           </el-menu-item>
@@ -56,7 +56,7 @@
         <template v-for="(item, index) in assetData">
           <el-menu-item :index="'3-' + index">
             <div @click="jumpToAsset(item.id)" :class="{'menu-item-active' : (activeIndex == 'asset' && indOf(activeItemIndexes, item.id) > -1) }">
-              <span>{{item.name}}</span>
+              <span class="too-long-split" style="width: 130px;">{{item.name}}</span>
               <idc-config-box :post-idc="item" ref="idcConfigBox" placement="left" @after="getIDCOptionData" :button-class="'menu-edit'">
                 <template v-slot:optionZone>
                   <div @click="closeAllPop" class="menu-edit">

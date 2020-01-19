@@ -14,7 +14,9 @@ export function host(rule, value, callback) {
 export function phone(rule, value, callback) {
   const phoneReg = /^1[3|4|5|7|8][0-9]{9}$/
   setTimeout(() => {
-    if (!Number.isInteger(+value)) {
+    if (!value) {
+      callback()
+    } else if (!Number.isInteger(+value)) {
       callback(new Error(vm.$t('validate.tel')))
     } else {
       if (phoneReg.test(value)) {

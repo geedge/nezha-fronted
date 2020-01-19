@@ -137,7 +137,6 @@
                 trigger="click"
                 width="370"
                 v-model="popCompVisible"
-                :disabled=popState
                 v-clickoutside="clickOutSide"
                 @hide="resetVendor"
                 popper-class="nz-pop2"
@@ -243,7 +242,7 @@
               </el-popover>
             </div>
           </el-form-item>
-          <el-form-item :label="this.$t('asset.createAssetTab.purchaseDate')" class="right-box-form-content">
+          <el-form-item :label="$t('asset.createAssetTab.purchaseDate')" class="right-box-form-content">
             <el-date-picker
               size="mini"
               v-model="assetData.purchaseDate"
@@ -256,7 +255,7 @@
           <div class="asset-sub-title">{{$t('asset.createAssetTab.dc')}}</div>
           <div class="line-100 asset-line"></div>
           <!------------------------------------------IDC---------------------------------------------->
-          <el-form-item :label="this.$t('asset.createAssetTab.dcName')" class="right-box-form-content" prop="idcId">
+          <el-form-item :label="$t('asset.createAssetTab.dcName')" class="right-box-form-content" prop="idcId">
             <el-select popper-class="asset-dropdown" size="mini" v-model="assetData.idcId" clearable @change="getSingleIDCData" class="right-box-row-with-btn" placeholder="">
               <el-option
                 :id="'asset-add-idc-op'+item.key"

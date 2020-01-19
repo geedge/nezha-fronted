@@ -11,10 +11,6 @@
           <span class="right-box-top-btn-icon"><i class="nz-icon nz-icon-edit"></i></span>
           <span class="right-box-top-btn-txt">{{$t('overall.edit')}}</span>
         </button>
-
-        <!--<button type="button" @click="esc" class="nz-btn nz-btn-size-normal nz-btn-style-light nz-btn-style-square" id="alert-box-esc">
-          <span class="top-tool-btn-txt"><i class="el-icon-close"></i></span>
-        </button>-->
       </div>
 
       <!-- end--顶部按钮-->
@@ -47,7 +43,7 @@
             </el-form-item>
             <!--expr-->
             <el-form-item :label="$t('alert.config.expr')" prop="expr">
-              <el-input v-if="rightBox.isEdit" type="textarea"  placeholder="" v-model="alertRule.expr" size="small"></el-input>
+              <el-input maxlength="512" rows="4" show-word-limit v-if="rightBox.isEdit" type="textarea"  placeholder="" v-model="alertRule.expr" size="small"></el-input>
               <div v-if="!rightBox.isEdit" class="right-box-form-content-txt">{{alertRule.expr}}</div>
             </el-form-item>
             <!--last-->
@@ -71,12 +67,12 @@
             </el-form-item>
             <!--summary-->
             <el-form-item :label="$t('alert.summary')" prop="summary">
-              <el-input v-if="rightBox.isEdit" type="text"  placeholder="" v-model="alertRule.summary" size="small"></el-input>
+              <el-input maxlength="512" rows="3" type="textarea" show-word-limit v-if="rightBox.isEdit" placeholder="" v-model="alertRule.summary" size="small"></el-input>
               <div v-if="!rightBox.isEdit" class="right-box-form-content-txt">{{alertRule.summary}}</div>
             </el-form-item>
             <!--description-->
             <el-form-item :label="$t('alert.description')" prop="description">
-              <el-input v-if="rightBox.isEdit" type="textarea" placeholder="" v-model="alertRule.description" size="small"></el-input>
+              <el-input maxlength="512" rows="4" show-word-limit v-if="rightBox.isEdit" type="textarea" placeholder="" v-model="alertRule.description" size="small"></el-input>
               <div v-if="!rightBox.isEdit" class="right-box-form-content-txt">{{alertRule.description}}</div>
             </el-form-item>
             <!--receiver-->
