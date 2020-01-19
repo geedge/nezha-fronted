@@ -114,6 +114,8 @@
     <module-box :currentProject="currentProject" :module="editModule" @reload="" ref="moduleBox"></module-box>
     <add-endpoint-box :currentProject="currentProject" :currentModule="currentModule" @reload=""
                       ref="addEndpointBox"></add-endpoint-box>
+    <asset-add-unit :add-unit-show='addUnitShow' @refreshData="refreshAsset" ref="assetAddUnit"
+                    @sendStateData="closeAsset"></asset-add-unit>
     <alert-config-box :parentAlertRule="alertRule" @reload="" ref="alertConfigBox"></alert-config-box>
   </div>
 </template>
@@ -204,9 +206,18 @@
         },
         idcUserData: '',
         IDCOptionData: [],
+        addUnitShow: false,
       }
     },
     methods: {
+      closeAsset() {
+        this.addUnitShow = false;
+      },
+      refreshAsset(flag) {
+        if (flag && this.$route.path == "/asset") {
+          window.location.reload();
+        }
+      },
       jumpTo(data) {
         if (data != "asset") {
           this.activeItemIndexes = [];
@@ -245,6 +256,8 @@
           this.$refs.addEndpointBox.clearEndpoints();
         } else if (item.type == 5) {
           this.$refs.alertConfigBox.show(true, true);
+        } else if (item.type == 4) {
+          this.addUnitShow = true
         }
       },
       jumpToAsset(id) {
