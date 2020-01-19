@@ -40,12 +40,13 @@
             <div class="right-box-form-content">
               <el-input class="right-box-row-with-btn" readonly v-if="rightBox.isEdit && endpoint.asset" placeholder="" :value="endpoint.asset.host" size="small"></el-input>
               <el-input class="right-box-row-with-btn" readonly v-if="rightBox.isEdit && !endpoint.asset" placeholder="" value="" size="small"></el-input>
-              <el-popover placement="left"width="400" v-model="subBox.show">
+              <el-popover placement="left" width="400" v-model="subBox.show" popper-class="nz-pop">
                 <div class="pop-window-assetType-content">
                   <!-- begin--顶部按钮-->
                   <div class="pop-top-btns">
-                    <button type="button" id="edit-ep-subesc" @click="subEsc" class="nz-btn nz-btn-size-normal nz-btn-style-light nz-btn-style-square">
-                      <span class="top-tool-btn-txt"><i class="el-icon-close"></i></span>
+                    <button type="button" @click="subEsc" class="nz-btn nz-btn-size-alien nz-btn-size-small nz-btn-style-light nz-btn-min-width-35" id="edit-ep-subesc">
+                      <span class="pop-top-btn-icon"><i class="el-icon-close"></i></span>
+                      <span class="pop-top-btn-txt">{{$t('overall.esc')}}</span>
                     </button>
                   </div>
                   <!-- end--顶部按钮-->
@@ -63,7 +64,7 @@
                           <i v-if="!assetSearch.dropdownShow" class="el-icon-caret-bottom"></i>
                         </span>
                       </button><div class="endpoint-asset-search-input">
-                        <el-input class="input-x-mini nz-input-group-middle" placeholder="" v-model="assetSearch.text"></el-input>
+                        <el-input class="input-x-mini-22 nz-input-group-middle" placeholder="" v-model="assetSearch.text"></el-input>
                       </div><button type="button" class="nz-btn nz-btn-size-small nz-btn-style-light nz-btn-style-square nz-input-group-append" >
                         <i @click="searchAsset" class="el-icon-search" id="edit-ep-search-asset"></i>
                       </button>
@@ -118,7 +119,7 @@
             <div v-if="!rightBox.isEdit" class="right-box-form-content-txt">{{endpoint.port}}</div>
           </el-form-item>
           <!--path-->
-          <el-form-item :label="$t('project.endpoint.port')" prop="path">
+          <el-form-item :label="$t('project.endpoint.path')" prop="path">
             <el-input v-if="rightBox.isEdit" placeholder="" v-model="endpoint.path" size="small"></el-input>
             <div v-if="!rightBox.isEdit" class="right-box-form-content-txt">{{endpoint.path}}</div>
           </el-form-item>
@@ -168,66 +169,6 @@
         </button>
       </div>
 
-      <!-- begin--子弹框-->
-      <!--<transition name="right-sub-box">
-        <div class="right-sub-box" @click.stop v-if="subBox.show">
-          &lt;!&ndash; begin&#45;&#45;标题&ndash;&gt;
-          <div class="right-box-title">{{subBox.title}}</div>
-          &lt;!&ndash; end&#45;&#45;标题&ndash;&gt;
-          <div class="right-box-top-btn right-box-top-btn-full" @click="subEsc">
-            <div class="right-box-btn-icon">
-              <i class="el-icon-close"></i>
-            </div>
-            <span>{{$t('overall.esc')}}</span>
-          </div>
-          &lt;!&ndash; begin&#45;&#45;搜索框&ndash;&gt;
-          <el-input placeholder="" v-model="assetSearch.text">
-            <template slot="prepend">
-              <div class="endpoint-asset-prepend">
-                <div class="endpoint-asset-label">
-                  <span class="endpoint-asset-label-txt">{{assetSearch.label}}</span>
-                  <span @click="assetSearch.dropdownShow = !assetSearch.dropdownShow">
-                  <i v-if="assetSearch.dropdownShow" class="el-icon-arrow-up"></i>
-                  <i v-if="!assetSearch.dropdownShow" class="el-icon-arrow-down"></i>
-                </span>
-                </div>
-                <div class="endpoint-asset-dropdown" v-if="assetSearch.dropdownShow">
-                  <div @click="dropdownSelect('IP')" class="endpoint-asset-dropdown-item">IP</div>
-                  <div @click="dropdownSelect('SN')" class="endpoint-asset-dropdown-item">SN</div>
-                </div>
-              </div>
-            </template>
-            <template slot="append"><i @click="searchAsset" class="el-icon-search"></i></template>
-          </el-input>
-          &lt;!&ndash; end&#45;&#45;搜索框&ndash;&gt;
-
-          &lt;!&ndash; begin&#45;&#45;table&ndash;&gt;
-          <div class="endpoint-sub-table">
-            <div class="endpoint-sub-table-head">
-              <div class="endpoint-sub-table-col">IP</div>
-              <div class="endpoint-sub-table-col">SN</div>
-            </div>
-            <div class="line-100"></div>
-            <div class="endpoint-sub-table-body">
-              <div v-if="selectedAsset.id != ''" :data="selectedAsset.id" class="endpoint-sub-table-row endpoint-sub-table-row-selected">
-                <div class="endpoint-sub-table-col">{{selectedAsset.host}}</div>
-                <div class="endpoint-sub-table-col">{{selectedAsset.sn}}</div>
-              </div>
-              <div v-else class="endpoint-sub-table-row"></div>
-              <div @click="selectAsset(item)" :data="item.id" v-for="item in assetList" class="endpoint-sub-table-row" :class="{'endpoint-sub-table-row-active': item.id == selectedAsset.id}">
-                <div class="endpoint-sub-table-col">{{item.host}}</div>
-                <div class="endpoint-sub-table-col">{{item.sn}}</div>
-              </div>
-            </div>
-            <div class="endpoint-sub-table-paginate">
-              <div class="endpoint-sub-table-paginate-all">All:&nbsp;{{assetPageObj.total}}</div>
-              <el-pagination background :pager-count="5" layout="prev, pager, next" @current-change="(currentPage) => {getAssetList(currentPage)}" :total="assetPageObj.total"></el-pagination>
-            </div>
-          </div>
-          &lt;!&ndash; end&#45;&#45;table&ndash;&gt;
-        </div>
-      </transition>-->
-      <!-- end--子弹框-->
     </div>
   </transition>
 </template>
@@ -382,6 +323,7 @@
         this.selectedAsset = obj;
         this.endpoint.host = obj.host;
         this.endpoint.assetId = obj.id;
+        this.endpoint.asset = obj;
       },
 
       // 获取endpoint弹框中module下拉框数据
@@ -498,4 +440,166 @@
   left:0;
 }
 
+/* begin--搜索框*/
+.endpoint-asset-search {
+  display: inline-block;
+  float: right;
+  padding: 7px 8px 0 0;
+  position: relative;
+  margin-top: -16px;
+}
+.endpoint-asset-search-dropdown {
+  position: absolute;
+  top: 34px;
+  background-color: #444;
+  border-radius: 4px;
+  width: 44px;
+  left: 0;
+}
+.endpoint-asset-search-dropdown-item {
+  text-align: center;
+  line-height: 22px;
+  height: 22px;
+  cursor: default;
+  color: white;
+  font-size: 12px;
+}
+.endpoint-asset-label-txt {
+  display: inline-block;
+  width: 19px;
+  text-align: center;
+}
+.endpoint-asset-search-dropdown-item:first-of-type {
+  border-radius: 4px 4px 0 0;
+}
+.endpoint-asset-search-dropdown-item:last-of-type {
+  border-radius: 0 0 4px 4px;
+}
+.endpoint-asset-search-dropdown-item:hover {
+  background-color: #222;
+  color: #ff9900;
+}
+.endpoint-asset-search-input {
+  display: inline-block;
+  width: 150px;
+  vertical-align: top;
+}
+/* end--搜索框*/
+
+/* begin--table*/
+.endpoint-sub-table {
+  padding-top: 30px;
+  height: 440px;
+}
+.line-100 {
+  margin-bottom: 3px;
+}
+.endpoint-sub-table-head {
+  line-height: 28px;
+  height: 30px;
+}
+.endpoint-sub-table-row, .endpoint-sub-table-row-disabled {
+  line-height: 28px;
+  height: 30px;
+  color: #656565;
+}
+.endpoint-sub-table-row:hover {
+  background-color: #dadada;
+  cursor: default;
+}
+.endpoint-sub-table-row-active {
+  background-color: #dadada;
+}
+.endpoint-sub-table-row-selected {
+  background-color: #656565;
+  color: white;
+}
+.endpoint-sub-table-col {
+  display: inline-block;
+  width: calc(50% - 15px);
+  padding-left: 10px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+}
+.endpoint-sub-table-paginate-all {
+  position: absolute;
+  left: 10px;
+  bottom: 17px;
+  color: #5a5a5a;
+}
+.endpoint-sub-table-body {
+  font-size: 15px;
+  position: relative;
+  overflow: auto;
+  height: calc(100% - 34px);
+}
+.endpoint-sub-table-body-dialog {
+  width: 100%;
+  height: 100%;
+  background-color: #e9ebec;
+  position: absolute;
+  opacity: 0.2;
+}
+.endpoints-clear-btn {
+  margin: 6px 0 0 7px;
+}
+/* end--table*/
+</style>
+
+<style lang="scss">
+  .el-pagination__total {
+    float: left;
+  }
+  .pagination {
+    padding-top: 12px;
+    text-align: center;
+  }
+
+  .endpoint-sub-table-paginate .el-pager li, .endpoint-sub-table-paginate .el-pagination .btn-next, .endpoint-sub-table-paginate .el-pagination .btn-prev {
+    font-size: 13px;
+    min-width: 20px;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    text-align: center;
+    border: 1px solid rgba(154,154,154,0.20);
+    border-radius: 2px;
+    border-radius: 2px;
+  }
+  .el-pagination .el-pager li.btn-quicknext, .el-pager li.btn-quickprev {
+    line-height: 20px;
+  }
+  .el-pagination .el-pager .more::before {
+    line-height: 20px;
+  }
+  .el-pager li.number{
+    font-family: NotoSansSC-Regular;
+    color: #666666;
+    letter-spacing: 0;
+    font-weight:normal;
+  }
+  .el-pager li.number.active{
+    font-family: NotoSansSC-Regular;
+    color: #FFFFFF;
+    letter-spacing: 0;
+  }
+
+  .endpoint-sub-table-paginate .el-pagination.is-background .el-pager li:not(.disabled).active {
+    background-color: $global-text-color-active;
+    border-radius: 2px;
+    border-radius: 2px;
+  }
+  .el-pager li:hover, .el-pagination .btn-next:hover, .el-pagination .btn-prev:hover {
+    font-family: NotoSansSC-Regular;
+    color: #666666;
+    letter-spacing: 0;
+    font-weight:normal;
+  }
+  .el-pagination__sizes .el-input .el-input__inner,.el-pagination__editor.el-input .el-input__inner{
+    height: 20px;
+    border-color: rgba(154,154,154,0.20);
+  }
+  .el-pagination__sizes .el-input .el-input__inner:hover{
+    border-color: rgba(154,154,154,0.20);
+  }
 </style>

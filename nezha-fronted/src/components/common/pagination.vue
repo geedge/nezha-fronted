@@ -55,7 +55,7 @@ export default {
 };
 </script>
 
-<style>
+<style lang="scss">
   .el-pagination__total {
     float: left;
   }
@@ -96,8 +96,8 @@ export default {
     letter-spacing: 0;
   }
 
-  .el-pager li.active {
-    background: #EE9D3F;
+  .el-pagination .el-pager li.active {
+    background-color: $global-text-color-active;
     border-radius: 2px;
     border-radius: 2px;
   }
