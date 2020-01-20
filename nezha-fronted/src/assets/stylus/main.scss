@@ -118,6 +118,12 @@ li{
   line-height: 16px;
   position: relative;
 }
+.nz-btn-metric-bottom{
+  position: absolute;
+  left:50%;
+  bottom: -70%;
+  
+}
 .nz-btn.nz-btn-size-normal {
   font-size: 12px;
   padding: 4px 8px;
@@ -151,7 +157,6 @@ li{
   border: 0px;
   color: $btn-light-txt-color;
   box-shadow: $btn-light-shadow;
-
   letter-spacing: 0;
 }
 .nz-btn.nz-btn-style-pure-white { /*纯白色按钮*/
@@ -251,6 +256,28 @@ li{
 }
 /* end--el-input扩展 */
 
+// metric组件
+.nz-tab-style {
+  line-height: 14px;
+  padding-bottom:6px;
+  color: #999;
+  cursor: pointer;
+  display: inline-block;
+  margin-bottom:10px;
+  font-size: 14px;
+}
+ .nz-tab-style-light {  
+  border-bottom: 3px solid $global-text-color-active;
+  color: #333;
+  cursor: default;
+  box-sizing: border-box;
+  font-weight: 600;
+  letter-spacing: 0;
+}
+ .nz-tab-style-light-right{
+  margin-left:30px;
+ }
+  
 /* begin--nz-tab组件*/
 .nz-tab {
   font-size: 14px;
@@ -273,6 +300,7 @@ li{
   color: #333;
   cursor: default;
 }
+ 
 /* end--nz-tab组件*/
 
 /* end--通用*/
