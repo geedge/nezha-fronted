@@ -349,7 +349,7 @@
           <span>{{$t('overall.cancel')}}</span>
         </button>
         <button @click.stop="addNewData('asset')" id="add-asset-new" class="nz-btn nz-btn-size-large nz-btn-style-normal nz-btn-min-width-120">
-          <span>{{$t('overall.ok')}}</span>
+          <span>{{$t('overall.save')}}</span>
         </button>
       </div>
     </div>

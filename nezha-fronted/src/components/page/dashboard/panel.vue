@@ -45,7 +45,9 @@
                 </el-dropdown-menu>
             </el-dropdown>
           <div class="nz-btn-group nz-btn-group-light float-right margin-r-20">
-            <button style="border-right: 1px solid rgba(162,162,162,0.50);" type="button" class="nz-btn nz-btn-size-normal nz-btn-style-light" @click="Refresh()"><i style="font-size: 12px" class="global-active-color nz-icon nz-icon-refresh"></i></button><el-popover v-model="visible" placement="bottom-start" width="200" trigger="click">
+            <button style="border-right: 1px solid rgba(162,162,162,0.50);" type="button" class="nz-btn nz-btn-size-normal nz-btn-style-light" @click="Refresh()">
+              <i style="font-size: 12px" class="global-active-color nz-icon nz-icon-refresh"></i>
+            </button><el-popover v-model="visible" placement="bottom-start" width="200" trigger="click">
               <ul class="popover_ul">
                 <li v-for="i in intervalList"  :style="{color:interval==i.value?'#31749C':''}" :key="i.value+i.name" @click="selectInterval(i.value)">
                   {{i.name}}

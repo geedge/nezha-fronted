@@ -3,35 +3,10 @@
     <div class="right-box right-box-panel z-top" v-if="rightBox.show">
       <!-- begin--顶部按钮-->
       <div class="right-box-top-btns">
-        <button type="button" v-if="panel.id != ''" @click="del(panel)" class="nz-btn nz-btn-size-normal nz-btn-style-light">
-          <span class="top-tool-btn-txt">{{$t('overall.delete')}}</span>
+        <button type="button" v-if="panel.id != ''" @click="del(panel)" class="nz-btn nz-btn-size-normal nz-btn-size-alien nz-btn-style-light nz-btn-min-width-82">
+          <span class="right-box-top-btn-icon"><i class="el-icon-delete"></i></span>
+          <span class="right-box-top-btn-txt">{{$t('overall.delete')}}</span>
         </button>
-        <button type="button" @click="save" class="nz-btn nz-btn-size-normal nz-btn-style-normal">
-          <span class="top-tool-btn-txt">{{$t('overall.save')}}</span>
-        </button>
-        <button type="button" @click="esc" class="nz-btn nz-btn-size-normal nz-btn-style-light nz-btn-style-square">
-          <span class="top-tool-btn-txt"><i class="el-icon-close"></i></span>
-        </button>
-        <!--
-        <div class="right-box-top-btn right-box-top-btn-full" @click="esc">
-          <div class="right-box-btn-icon">
-            <i class="el-icon-close"></i>
-          </div>
-          <span>{{$t('overall.esc')}}</span>
-        </div>
-        <div class="right-box-top-btn right-box-top-btn-full" @click="save">
-          <div class="right-box-btn-icon">
-            <i class="el-icon-edit-outline"></i>
-          </div>
-          <span >{{$t('overall.save')}}</span>
-        </div>
-        <div @click="del(panel)" class="right-box-top-btn" v-if="panel.id != ''">
-          <div class="right-box-btn-icon">
-            <i class="el-icon-delete"></i>
-          </div>
-          <span>{{$t('overall.delete')}}</span>
-        </div>
-        -->
       </div>
       <!-- end--顶部按钮-->
 
@@ -40,22 +15,24 @@
       <!-- end--标题-->
 
       <!-- begin--表单-->
-      <div class="right-box-form">
-        <div class="right-box-form-row">
-          <div class="right-box-form-label">{{$t('dashboard.panel.panelForm.panelName')}}</div>
-          <div class="right-box-form-content">
-            <el-input placeholder="" maxlength="64" show-word-limit v-model="panel.name" size="small"></el-input>
-          </div>
-        </div>
-      </div>
+      <el-scrollbar class="right-box-form-box">
+        <el-form class="right-box-form" :model="panel" label-position="top" ref="panelForm">
+          <el-form-item :label='$t("project.project.project")' prop="name" :rules="{required: true, message: $t('validate.required'), trigger: 'blur'}">
+            <el-input placeholder="" maxlength="64" show-word-limit v-model="panel.name" size="small" ></el-input>
+          </el-form-item>
+        </el-form>
+      </el-scrollbar>
       <!-- end--表单-->
 
       <!-- begin--底部按钮-->
-      <!--
       <div class="right-box-bottom-btns">
-        <div @click="esc()" :class="{'right-box-bottom-btn-50': true}" class="right-box-bottom-btn right-box-bottom-btn-cancel">{{$t('overall.cancel')}}</div><div @click="save()"  class="right-box-bottom-btn right-box-bottom-btn-50">{{panel.id == '' ? $t('overall.create') : $t('overall.save')}}</div>
+        <button @click="esc" id="module-box-esc" class="nz-btn nz-btn-size-large nz-btn-style-light nz-btn-min-width-120">
+          <span>{{$t('overall.cancel')}}</span>
+        </button>
+        <button @click="save" id="module-box-save" class="nz-btn nz-btn-size-large nz-btn-style-normal nz-btn-min-width-120">
+          <span>{{$t('overall.save')}}</span>
+        </button>
       </div>
-      -->
       <!-- end--底部按钮-->
 
     </div>
@@ -101,27 +78,33 @@
         });
       },
       save: function() {
-        if (this.panel.id) {
-          this.$put('panel', this.panel).then(response => {
-            if (response.code === 200) {
-              this.esc();
-              this.$message({duration: 1000, type: 'success', message: this.$t("tip.saveSuccess")});
-              this.$emit("reload");
+        this.$refs.panelForm.validate((valid) => {
+          if (valid) {
+            if (this.panel.id) {
+              this.$put('panel', this.panel).then(response => {
+                if (response.code === 200) {
+                  this.esc();
+                  this.$message({duration: 1000, type: 'success', message: this.$t("tip.saveSuccess")});
+                  this.$emit("reload");
+                } else {
+                  this.$message.error(response.msg);
+                }
+              });
             } else {
-              this.$message.error(response.msg);
+              this.$post('panel', this.panel).then(response => {
+                if (response.code === 200) {
+                  this.esc();
+                  this.$message({duration: 1000, type: 'success', message: this.$t("tip.saveSuccess")});
+                  this.$emit("reload");
+                } else {
+                  this.$message.error(response.msg);
+                }
+              });
             }
-          });
-        } else {
-          this.$post('panel', this.panel).then(response => {
-            if (response.code === 200) {
-              this.esc();
-              this.$message({duration: 1000, type: 'success', message: this.$t("tip.saveSuccess")});
-              this.$emit("reload");
-            } else {
-              this.$message.error(response.msg);
-            }
-          });
-        }
+          } else {
+            return false;
+          }
+        });
       },
       esc: function() {
         this.rightBox.show = false;

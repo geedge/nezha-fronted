@@ -391,7 +391,7 @@
           <span>{{$t('overall.cancel')}}</span>
         </button>
         <button v-if="!tabView" @click.stop="editData('asset')" class="nz-btn nz-btn-size-large nz-btn-style-normal nz-btn-min-width-120" id="asset-edit-save">
-          <span>{{$t('overall.ok')}}</span>
+          <span>{{$t('overall.save')}}</span>
         </button>
       </div>
       <module-box :module="module" @reload="refreshTabData" ref="moduleBox"></module-box>

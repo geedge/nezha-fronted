@@ -61,7 +61,7 @@ const en = {
           }
         },
         width:"Width",
-        high:"High",
+        high:"Height",
         metric:"Metric",
         addMetric:"Add Metric",
       },

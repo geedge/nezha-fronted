@@ -55,14 +55,9 @@
     <div class="right-box right-box-add-chart z-top" v-if="rightBox.show" >
       <!-- begin--顶部按钮-->
       <div class="right-box-top-btns">
-        <button type="button" v-if="chart.id != ''" @click="del(chart)" class="nz-btn nz-btn-size-normal nz-btn-style-light">
-          <span class="top-tool-btn-txt">{{$t('overall.delete')}}</span>
-        </button>
-        <button type="button" @click="confirmAdd" class="nz-btn nz-btn-size-normal nz-btn-style-normal">
-          <span class="top-tool-btn-txt">{{$t('overall.save')}}</span>
-        </button>
-        <button type="button" @click="esc" class="nz-btn nz-btn-size-normal nz-btn-style-light nz-btn-style-square">
-          <span class="top-tool-btn-txt"><i class="el-icon-close"></i></span>
+        <button id="chart-box-delete" type="button" v-if="chart.id != ''" @click="del(chart)" class="nz-btn nz-btn-size-normal nz-btn-size-alien nz-btn-style-light nz-btn-min-width-82">
+          <span class="right-box-top-btn-icon"><i class="el-icon-delete"></i></span>
+          <span class="right-box-top-btn-txt">{{$t('overall.delete')}}</span>
         </button>
       </div>
       <!-- end--顶部按钮-->
@@ -79,13 +74,13 @@
           </el-form-item>
 
           <el-row :gutter="10">
-            <el-col :span="2" >
+            <el-col :span="3" >
               <div class="label-center" >{{$t('dashboard.panel.chartForm.type')}}</div>
             </el-col>
-            <el-col :span="4">
+            <el-col :span="5">
               <div class="grid-content ">
                   <el-form-item prop="type">
-                    <el-select class="right-box-row-with-btn" value-key="chartType" popper-class="" v-model="chart.type" placeholder="" size="small">
+                    <el-select class="right-box-row-with-btn" value-key="chartType" popper-class="" v-model="chart.type" placeholder="" size="mini">
                       <el-option v-for="item in chartTypeList" :key="item.id" :label="item.name" :value="item.id">
                         <span class="panel-dropdown-label-txt" >{{item.name}}</span>
                       </el-option>
@@ -93,13 +88,13 @@
                   </el-form-item>
               </div>
             </el-col>
-            <el-col :span="2.1">
+            <el-col :span="3">
               <div class="label-center" >{{$t('dashboard.panel.chartForm.width')}}</div>
             </el-col>
             <el-col :span="5">
               <div class="grid-content ">
                 <el-form-item prop="span">
-                  <el-select class="right-box-row-with-btn" value-key="chartSpan" popper-class="" v-model="chart.span" placeholder="" size="small">
+                  <el-select class="right-box-row-with-btn" value-key="chartSpan" popper-class="" v-model="chart.span" placeholder="" size="mini">
                     <el-option v-for="item in spanList" :key="item" :label="'span-' + item" :value="item">
                       <span class="panel-dropdown-label-txt" > span-{{item}}</span>
                     </el-option>
@@ -107,13 +102,13 @@
                 </el-form-item>
               </div>
             </el-col>
-            <el-col :span="2">
+            <el-col :span="3">
               <div class="label-center" >{{$t('dashboard.panel.chartForm.high')}}</div>
-            </el-col>
-            <el-col :span="8">
+            </el-col><el-col :span="5">
               <div class="grid-content ">
-                <el-form-item  prop="heigh">
-                  <el-input-number :min="400" label=""   v-model="chart.height" placeholder="" size="small"></el-input-number>px
+                <el-form-item prop="heigh">
+                  <el-input label="" v-model="chart.height" placeholder="" size="mini"></el-input>
+                  <span class="nz-input-append">px</span>
                 </el-form-item>
               </div>
             </el-col>
@@ -152,36 +147,15 @@
         </el-form>
       </el-scrollbar>
 
-      <!--
-      <div class="right-box-form">
-
-        <div class="right-box-form-row">
-          <div class="right-box-form-label">{{$t('dashboard.panel.chartForm.chartName')}}</div>
-          <div class="right-box-form-content">
-            <el-input placeholder="" maxlength="64" show-word-limit v-model="chart.title" size="small"></el-input>
-          </div>
-        </div>
-
-        <div class="right-box-form-row">
-          <el-row :gutter="20">
-            <el-col :span="8"><div class="grid-content bg-purple">1</div></el-col>
-            <el-col :span="8"><div class="grid-content bg-purple">2</div></el-col>
-            <el-col :span="8"><div class="grid-content bg-purple">3</div></el-col>
-          </el-row>
-        </div>
-
-      </div>
-      -->
-      <!-- end--表单-->
-
-      <!-- begin--底部按钮-->
-      <!--
+      <!--底部按钮-->
       <div class="right-box-bottom-btns">
-        <div @click="esc" class="right-box-bottom-btn right-box-bottom-btn-cancel right-box-bottom-btn-50">{{$t('overall.cancel')}}</div><div @click="save" class="right-box-bottom-btn right-box-bottom-btn-50">{{$t('overall.create')}}</div>
+        <button @click="esc" id="chart-box-esc" class="nz-btn nz-btn-size-large nz-btn-style-light nz-btn-min-width-120">
+          <span>{{$t('overall.cancel')}}</span>
+        </button>
+        <button @click="confirmAdd" id="chart-box-save" class="nz-btn nz-btn-size-large nz-btn-style-normal nz-btn-min-width-120">
+          <span>{{$t('overall.save')}}</span>
+        </button>
       </div>
-      -->
-      <!-- end--底部按钮-->
-
     </div>
   </transition>
 </template>

@@ -244,14 +244,10 @@ li{
 .el-textarea__inner {
   padding: 5px 60px 5px 15px;
 }
-.nz-input-group-prepend {
-  border-radius: 4px 0 0 4px;
-}
-.nz-input-group-middle, .nz-input-group-middle .el-input__inner {
-  border-radius: 0;
-}
-.nz-input-group-append {
-  border-radius: 0 4px 4px 0;
+.nz-input-append {
+  position: absolute;
+  right: 5px;
+  color: #666;
 }
 /* end--el-input扩展 */
 
@@ -538,7 +534,7 @@ li{
 .right-box-account, .right-box-prom, .right-box-alert-config, .right-box-project, .right-box-module, .right-box-edit-endpoint, .right-box-panel {
   width: 520px;
 }
-.right-box-add-asset {
+.right-box-add-asset, .right-box-add-chart {
   width: 550px;
 }
 .right-box-add-endpoint {
@@ -893,10 +889,6 @@ li{
 }
 /* end--自定义可编辑的el-select下拉框样式*/
 
-.right-box-add-chart {
-  width: 520px;
-  height: calc(100% - 100px);
-}
 /*子菜单选中样式*/
 .nz-submenu .el-menu--popup .el-menu-item .menu-item-active{
   color:$global-text-color-active !important;
@@ -905,3 +897,4 @@ li{
   content: "\E6CA";
   color: #BA3939;
 }
+
