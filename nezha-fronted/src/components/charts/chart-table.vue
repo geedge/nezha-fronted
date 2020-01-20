@@ -4,12 +4,17 @@
 <template>
 <div class="chart-table">
     <div class="clearfix">
-        <div class="float-left table-title">
+        <div class="table-title">
             {{data.title}}
         </div>
-        <div class="float-right">
+        <div class="nz-btn-group nz-btn-group-light edit">
+          <button type="button" @click="refreshChart" style="padding: 6px 14px 5px 14px;" class="nz-btn nz-btn-size-large nz-btn-style-light"><i style="font-size: 16px;" class="global-active-color el-icon-refresh-right"></i></button><button
+          @click="editChart" type="button" class="nz-btn nz-btn-size-large nz-btn-style-light"><i class="nz-icon nz-icon-edit"></i></button><button
+          @click="removeChart" type="button" class="nz-btn nz-btn-size-large nz-btn-style-light"><i class="el-icon-delete"></i></button><button
+          @click="showAllScreen" type="button" class="nz-btn nz-btn-size-large nz-btn-style-light"><i class="el-icon-full-screen"></i></button>
+        </div>
+        <!--<div class="float-right">
             <div class="edit">
-                <!-- v-if="firstShow" -->
                 <div class="list-icon">
                     <span @click="refreshChart" :title="$t('dashboard.refresh')" class="set-icon">
                         <i class="el-icon-refresh-right"></i>
@@ -25,7 +30,7 @@
                     </span>
                 </div>
             </div>
-        </div>
+        </div>-->
     </div>
     <div class="mt-10">
         <!--

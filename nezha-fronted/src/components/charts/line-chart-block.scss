@@ -29,17 +29,17 @@
       white-space: pre-wrap !important;
     }
   }
-  .edit:after{
+  /*.edit:after{
     display: block;
     content: "";
     clear: both;
-  }
+  }*/
   .edit {
     position: absolute;
-    right: 40px;
-    top: 15px;
+    right: 20px;
+    top: 17px;
     z-index: 10;
-    background: $btn-light-background-color;
+    /*background: $btn-light-background-color;
     border-radius: 6px;;
     border: 1px solid #ccc;
     .set-icon {
@@ -71,7 +71,7 @@
       cursor: pointer;
       float: right;
       font-size: 14px;
-    }
+    }*/
   }
   .chart-select {
     position: absolute;

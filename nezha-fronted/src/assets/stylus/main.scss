@@ -130,7 +130,7 @@ li{
   font-size: 12px;
 }
 .nz-btn-size-large {
-  padding: 7px 15px;
+  padding: 6px 15px;
 }
 .nz-btn.nz-btn-size-normal.nz-btn-size-alien { //弹框顶部异形按钮
   height: 40px;
@@ -185,6 +185,10 @@ li{
   border-color: #e5e5e5 ;
   cursor: default;
 }
+.nz-btn-group {
+  border-radius: 4px;
+  display: inline-block;
+}
 .nz-btn-group .nz-btn:first-child:not(:last-child) {
   border-bottom-right-radius: 0;
   border-top-right-radius: 0;
@@ -192,6 +196,19 @@ li{
 .nz-btn-group .nz-btn:last-child:not(:first-child) {
   border-bottom-left-radius: 0;
   border-top-left-radius: 0;
+}
+.nz-btn-group .nz-btn:not(:first-child):not(:last-child) {
+  border-radius: 0;
+}
+.nz-btn-group .nz-btn {
+  box-shadow: none;
+  vertical-align: top;
+}
+.nz-btn-group .nz-btn:not(:last-of-type) {
+  border-right: 1px solid rgba(162,162,162,0.50);
+}
+.nz-btn-group.nz-btn-group-light {
+  box-shadow: $btn-normal-shadow;
 }
 /* end--按钮组件*/
 

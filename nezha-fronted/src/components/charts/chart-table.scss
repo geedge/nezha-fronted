@@ -27,11 +27,11 @@
     clear: both;
   }
   .edit {
-    // position: absolute;
-    // right: 40px;
-    // top: 5px;
-    // z-index: 10;
-      background: $btn-light-background-color;
+    position: absolute;
+    right: 20px;
+    top: 17px;
+    z-index: 10;
+      /*background: $btn-light-background-color;
       border-radius: 6px;;
       border: 1px solid #ccc;
     .set-icon {
@@ -61,7 +61,7 @@
       cursor: pointer;
       float: right;
       font-size: 14px;
-    }
+    }*/
   }
   .chart-select {
     position: absolute;

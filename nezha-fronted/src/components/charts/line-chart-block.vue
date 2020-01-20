@@ -4,7 +4,7 @@
 <template>
   <div class="line-chart-block" >
 
-    <div class="edit">
+    <!--<div class="edit">
       <div class="list-icon" v-if="firstShow">
         <span @click="refreshChart" :title="$t('dashboard.refresh')" class="set-icon" v-if="showSetting">
           <i class="el-icon-refresh-right"></i>
@@ -19,6 +19,12 @@
           <i class="el-icon-full-screen"></i>
         </span>
       </div>
+    </div>-->
+    <div class="nz-btn-group nz-btn-group-light edit" v-if="firstShow">
+      <button type="button" @click="refreshChart" style="padding: 6px 14px 5px 14px;" class="nz-btn nz-btn-size-large nz-btn-style-light" v-if="showSetting"><i style="font-size: 16px;" class="global-active-color el-icon-refresh-right"></i></button><button
+      @click="editChart" type="button" class="nz-btn nz-btn-size-large nz-btn-style-light" v-if="showSetting"><i class="nz-icon nz-icon-edit"></i></button><button
+      @click="removeChart" type="button" class="nz-btn nz-btn-size-large nz-btn-style-light" v-if="showSetting"><i class="el-icon-delete"></i></button><button
+      @click="showAllScreen" type="button" class="nz-btn nz-btn-size-large nz-btn-style-light"><i class="el-icon-full-screen"></i></button>
     </div>
 
     <div class="line-area" ref="lineChartArea"  id="lineChartArea"></div>
