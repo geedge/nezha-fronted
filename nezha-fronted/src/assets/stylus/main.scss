@@ -107,6 +107,9 @@ li{
 .nz-btn-min-width-120 {
   min-width: 120px;
 }
+.nz-btn-min-width-140 {
+  min-width: 120px;
+}
 .nz-btn {
   border-radius: 4px;
   cursor: pointer;
@@ -118,11 +121,24 @@ li{
   line-height: 16px;
   position: relative;
 }
+.nz-btn-metricbtn{
+  height: 32px;
+}
 .nz-btn-metric-bottom{
-  position: absolute;
-  left:50%;
-  bottom: -70%;
-  
+  position: fixed;
+  left:52%;
+  bottom:30px;
+}
+.nz-btn-metricset-left{
+  margin: 0 20px 30px 515px;
+}
+.nz-btn-metric-bottom-left{
+  margin-right:30px;
+  font-size: 14px;
+  color: #999999;
+  letter-spacing: 0;
+  text-align: center;
+  line-height: 14px;
 }
 .nz-btn.nz-btn-size-normal {
   font-size: 12px;
@@ -251,7 +267,8 @@ li{
 }
 .nz-input-append {
   position: absolute;
-  right: 5px;
+  right: 8px;
+  line-height: 38px;
   color: #666;
 }
 /* end--el-input扩展 */

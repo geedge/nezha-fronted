@@ -1,5 +1,21 @@
 <style lang="scss">
   @import 'metricSet';
+  // .el-checkbox__input.is-checked+.el-checkbox__label{
+  //   color:$global-text-color-active;
+  // }
+  .el-checkbox-button.is-disabled:first-child .el-checkbox-button__inner,.el-checkbox-button.is-checked .el-checkbox-button__inner{
+    border: 1px solid $header-text-color-active;
+    color:#666;
+    font-size: 14px;
+    margin-left:-15px;
+    background-color: transparent;
+  }
+  .el-checkbox-button.is-checked:first-child .el-checkbox-button__inner{
+    border-left-color: $header-text-color-active;
+  }
+  .common-middle{
+    margin:-20px auto;
+  }
 </style>
 <template>
   <div class="metric-set"  >
@@ -13,24 +29,24 @@
           ></chart-metric>
       </el-row>
       
-      <el-row class="pt-5 pb-5 ml-3">
+      <el-row class="pt-5 pb-5 ml-3 operate-area">
 
-        <button type="primary" @click="preview" :disabled="loading" class="nz-btn nz-btn-size-normal nz-btn-style-normal ">{{$t('dashboard.metric.previewChart')}}</button>
+        <button type="primary" @click="preview" :disabled="loading" class="nz-btn nz-btn-size-normal nz-btn-style-normal nz-btn-metricset-left nz-btn-metricbtn">{{$t('dashboard.metric.previewChart')}}</button>
         <button :disabled="saveDisabled || loading" type="primary" @click="preview('change')"
-                :class="{'nz-btn nz-btn-disabled nz-btn-size-normal nz-btn-style-light nz-btn-min-width-75 btn-disabled-cursor-not-allowed' : (saveDisabled || loading), 'nz-btn nz-btn-size-normal nz-btn-style-normal' : !(saveDisabled || loading)}"
+                :class="{'nz-btn nz-btn-disabled nz-btn-size-normal nz-btn-style-light nz-btn-min-width-75 btn-disabled-cursor-not-allowed nz-btn-metricbtn' : (saveDisabled || loading), 'nz-btn nz-btn-size-normal nz-btn-metricbtn nz-btn-style-normal' : !(saveDisabled || loading)}"
         >{{chartSwitchWord}}</button>
         
         <!-- <Button type="primary" @click="addTarget">添加指标</Button> -->
       </el-row>
 
-      <el-row class="operate-area nz-btn-metric-bottom">
+      <el-row class=" nz-btn-metric-bottom">
         <!-- <div class="operate-area-title">{{$t('dashboard.metric.saveChartToPanel')}}:</div> -->
         <button :disabled="saveDisabled" type="primary" @click="createNew"
-                :class="{'nz-btn nz-btn-disabled nz-btn-size-large nz-btn-min-width-120 nz-btn-size-normal nz-btn-style-light  btn-disabled-cursor-not-allowed' : saveDisabled , 'nz-btn nz-btn-size-normal nz-btn-style-light' : !saveDisabled}"
+                :class="{'nz-btn-metric-bottom-left nz-btn nz-btn-disabled nz-btn-size-large nz-btn-min-width-140 nz-btn-size-normal nz-btn-style-light nz-btn-metricbtn btn-disabled-cursor-not-allowed' : saveDisabled , 'nz-btn nz-btn-size-normal  nz-btn-metricbtn nz-btn-metric-bottom-left nz-btn-min-width-140 nz-btn-style-light' : !saveDisabled}"
         >{{$t('dashboard.metric.createPanel')}}</button>
 
         <button :disabled="saveDisabled" type="primary" @click="selectPanel"
-                :class="{'nz-btn nz-btn-disabled nz-btn-size-normal nz-btn-size-large nz-btn-min-width-120 nz-btn-style-light  btn-disabled-cursor-not-allowed' : saveDisabled , 'nz-btn nz-btn-size-normal nz-btn-style-normal' : !saveDisabled}"
+                :class="{'nz-btn nz-btn-disabled nz-btn-size-normal nz-btn-size-large nz-btn-min-width-120 nz-btn-style-light nz-btn-metricbtn  btn-disabled-cursor-not-allowed' : saveDisabled , 'nz-btn nz-btn-size-normal nz-btn-metricbtn nz-btn-style-normal nz-btn-min-width-120' : !saveDisabled}"
         >{{$t('dashboard.metric.selectPanel')}}</button>
         <!-- <button :disabled="saveDisabled" type="primary" @click="createNew"
                 :class="{'nz-btn nz-btn-disabled nz-btn-size-normal nz-btn-style-light  btn-disabled-cursor-not-allowed' : saveDisabled , 'nz-btn nz-btn-size-normal nz-btn-style-normal' : !saveDisabled}"
@@ -42,7 +58,8 @@
       </el-row>
 <!-- options -->
       <el-row class="mt-10">
-        <el-checkbox :disabled="saveDisabled" v-model="isSave">options</el-checkbox>
+        <el-checkbox-button :disabled="saveDisabled" v-model="isSave" checked >Options</el-checkbox-button>
+        <!-- <el-checkbox :disabled="saveDisabled" v-model="isSave" checked >options</el-checkbox> -->
       </el-row>
       <el-form :model="chartInfo" ref="chartInfo" v-show="isSave">
         <el-row>
@@ -59,7 +76,7 @@
         </el-row>
 
         <el-row>
-          <div class="common-float-left">
+          <div class="common-float-left common-middle">
             <el-form-item label-width="80px" :label="$t('dashboard.panel.chartForm.high')" prop="height"
             :rules="{ required: true, type: 'number', trigger: 'change' }">
               <el-input v-model="chartInfo.height" :min="400" size="small" class="w-select" placeholder=""></el-input>
