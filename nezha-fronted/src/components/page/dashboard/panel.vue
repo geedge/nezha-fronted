@@ -44,17 +44,21 @@
                     <el-dropdown-item v-for="item in panelData" :key="item.id+1" :class="showPanel.id==item.id?'nz-dashboard-dropdown-bg':''" :command="item">{{item.name}}</el-dropdown-item>
                 </el-dropdown-menu>
             </el-dropdown>
-            <div class="panel-refresh-interval">
-                <div class="block">
-                    <!--
-              <button type="button"  class="nz-btn nz-btn-size-normal nz-btn-style-light nz-btn-style-square">
-                <span class="top-tool-btn-txt"><i class="el-icon-refresh-right"></i></span>
+          <div class="nz-btn-group float-right margin-r-20">
+            <button type="button" class="nz-btn nz-btn-size-normal nz-btn-style-light" @click="Refresh()"><i style="font-size: 13px" class="global-active-color nz-icon nz-icon-refresh"></i></button><el-popover v-model="visible" placement="bottom-start" width="200" trigger="click">
+              <ul class="popover_ul">
+                <li v-for="i in intervalList"  :style="{color:interval==i.value?'#31749C':''}" :key="i.value+i.name" @click="selectInterval(i.value)">
+                  {{i.name}}
+                </li>
+              </ul>
+              <button type="button" class="nz-btn nz-btn-size-normal nz-btn-style-light" slot="reference">
+                <i style="font-size: 13px" class="nz-icon nz-icon-arrow-down" ></i>
               </button>
-            -->
-                    <!--<el-select class="panel-refresh-interval-select" placeholder="" v-model="interval" @change="selectInterval" size="small">
-                        <el-option v-for="item in intervalList" :value="item.value" :label="item.name" :key="item.value">{{item.name}}</el-option>
-                    </el-select>
-                    <!-- 刷新 -->
+            </el-popover>
+          </div>
+            <!--<div class="panel-refresh-interval">
+                <div class="block">
+                    &lt;!&ndash; 刷新 &ndash;&gt;
                     <div class="refresh">
                         <span style="cursor:pointer;" class="nz-dashboard-refresh">
                             <i class="nz-icon nz-icon-refresh" @click="Refresh()"></i>
@@ -66,15 +70,15 @@
                                 </li>
                             </ul>
                             <div style="cursor:pointer" slot="reference">
-                                <!-- {{interval}} -->
+                                &lt;!&ndash; {{interval}} &ndash;&gt;
                                 <i class="nz-icon nz-icon-arrow-down" ></i>
                             </div>
                         </el-popover>
                         
                     </div>
                 </div>
-            </div>
-            <div class="panel-calendar">
+            </div>-->
+            <div class="panel-calendar margin-r-20">
                 <div class="block">
                     <el-date-picker class="nz-dashboard-picker" size="mini" ref="calendar" format="yyyy/MM/dd HH:mm" @change="dateChange" v-model="searchTime" type="datetimerange" :picker-options="pickerOptions" :range-separator="$t('dashboard.panel.to')" :start-placeholder="$t('dashboard.panel.startTime')" :end-placeholder="$t('dashboard.panel.endTime')" align="right">
                     </el-date-picker>

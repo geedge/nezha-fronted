@@ -41,6 +41,18 @@ li{
 .margin-b-10 {
   margin-bottom: 10px !important;
 }
+.margin-l-20 {
+  margin-left: 20px !important;
+}
+.margin-r-20 {
+  margin-right: 20px !important;
+}
+.margin-t-20 {
+  margin-top: 20px !important;
+}
+.margin-b-20 {
+  margin-bottom: 20px !important;
+}
 .float-left {
   float: left;
 }
@@ -75,6 +87,9 @@ li{
   overflow: hidden;
   display: inline-block;
   width: 100%;
+}
+.global-active-color {
+  color: $global-text-color-active;
 }
 /* begin--按钮组件*/
 .nz-btn-min-width-35 {
