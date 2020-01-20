@@ -1,5 +1,5 @@
 <template key="panelBox">
-  <transition name="right-box">
+  <transition name="right-box-580">
     <div class="right-box right-box-panel z-top" v-if="rightBox.show">
       <!-- begin--顶部按钮-->
       <div class="right-box-top-btns">

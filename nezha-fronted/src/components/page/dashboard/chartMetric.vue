@@ -22,25 +22,42 @@
   .nz-btn-style-higher{
     line-height: 22px;
   }
-  .li-list-part {
-     width: 90%;
-     height: 130px;
-     border: 1px solid #cfcfcf;
-     overflow-y: auto;
+  .symbol-area {
+    position: relative;
+    height: 135px;
+  }
+  .symbol-equal {
+    position: absolute;
+    bottom: 0;
+    left: 13px;
+    color: #c0c4cc;
+    font-size: 24px;
+  }
+  .symbol-delete {
+    padding-left: 8px;
+    cursor: pointer;
+  }
+   .symbol-delete i {
+     color: #c0c4cc;
    }
-    .li-list-part-label-val-list {
-      width: 100%;
-      height: 145px;
-      border: 1px solid #cfcfcf;
-      overflow-y: auto;
-      margin-top: 20px;/*21*/
-      border: 0px;
-    }
-  .no-list-style{
-   list-style: none;
+  .li-list-part {
+     height: 170px;
+     border: 1px solid #dcdfe6;
+    border-radius: 4px;
+    padding: 8px 12px;
+    color: #666;
+   }
+  .li-list-part-label-val-list {
+    height: 170px;
+    border: 1px solid #dcdfe6;
+    margin-top: 33px;
+    border-radius: 4px;
+    padding: 0px 0 10px 15px;
   }
   .li-cursor{
     cursor: pointer;
+    padding: 3px 0;
+    font-size: 14px;
   }
   .activeColor {
     background-color: #409EFF;
@@ -48,20 +65,32 @@
   .metric-title-label{
     margin-bottom:8px;
   }
+
   .metric-title-position{
-    margin-bottom:-5px;
+    margin-bottom: 2px;
   }
   .metric-title-row-position{
     margin-top:-10px;
   }
   .star-red{
-    color:#ff1818;
+    color:#f56c6c;
   }
   .full-width{
     width:100%;
   }
   .mt1{
     margin-top:1px;
+  }
+</style>
+<style>
+  .li-list-part-label-val-list .metric-title-position .el-form-item__label {
+    font-size: 14px;
+    height: 10px;
+    color: #666;
+    line-height: 14px;
+  }
+  .li-list-part-label-val-list .el-select--mini {
+    width: calc(100% - 45px);
   }
 </style>
 <template>
@@ -72,108 +101,68 @@
       </el-col>
 
       <el-col span="8">
-
-        <!-- <div class="nz-btn-group float-left"  v-show="tableShow == 2"> -->
-        <div class="nz-tab-item-box"  v-show="tableShow == 1">
-          <div @click="clickTabelShow(2,'normal')" class="nz-tab-style nz-tab-style-light">
+        <div class="nz-tab-item-box">
+          <div @click="clickTabelShow(1,'normal')" class="nz-tab-style" :class="{'nz-tab-style-light' : tableShow == 1}">
             <span>{{$t('dashboard.metric.normal')}}</span>
           </div>
-          <!-- <button @click="clickTabelShow(1,'normal')" class="nz-btn nz-btn-size-small nz-btn-style-light float-left">
-            <span>{{$t('dashboard.metric.normal')}}</span>
-          </button> -->
-          <div @click="" class="nz-tab-style nz-tab-style-light-right">
+          <div @click="clickTabelShow(2,'expert')" class="nz-tab-style nz-tab-style-light-right"  :class="{'nz-tab-style-light' : tableShow == 2}">
             <span>{{$t('dashboard.metric.expert')}}</span>
           </div>
-          <!-- <button @click="" class="nz-btn nz-btn-size-small  nz-btn-style-normal float-left">
-            <span>{{$t('dashboard.metric.expert')}}</span>
-          </button> -->
-        </div>
-        <div class="nz-tab-item-box "  v-show="tableShow == 2">
-        <!-- <div class="nz-btn-group float-left"  v-show="tableShow == 1"> -->
-          <div @click="" class="nz-tab-style">
-            <span>{{$t('dashboard.metric.normal')}}</span>
-          </div>
-
-          <div @click="clickTabelShow(1,'expert')" class="nz-tab-style nz-tab-style-light nz-tab-style-light-right">
-            <span>{{$t('dashboard.metric.expert')}}</span>
-          </div>
-          <!-- <button @click="" class="nz-btn nz-btn-size-small  nz-btn-style-normal float-left">
-            <span>{{$t('dashboard.metric.normal')}}</span>
-          </button>
-          <button @click="clickTabelShow(2,'expert')" class="nz-btn nz-btn-size-small nz-btn-style-light float-left">
-            <span>{{$t('dashboard.metric.expert')}}</span>
-          </button> -->
         </div>
       </el-col>
     </el-row>
 
-    <el-row  v-if="tableShow == 2">
-      <el-col span="22" class="mt1">
-        <el-form-item prop="expression" :rules="{ required: true,  message:$t('validate.required'), trigger: 'blur' }"><!--expression和metric的验证只能有一个，不能同时存在？？:rules="{ required: true, type: 'string', message: '', trigger: 'change' }"-->
-          <el-input size="mini" class="full-width" ref="metricExpression" type="textarea" maxlength="1024" show-word-limit v-model="elementInfo.expression" :placeholder="this.$t('dashboard.metric.expertTip')" ></el-input>
-        </el-form-item>
-      </el-col>
-      <el-col  span="2">
-        &nbsp;&nbsp;<button type="button" v-if="countTotal > 1" @click="deleteTarget"  class="nz-btn nz-btn-size-normal nz-btn-style-light nz-btn-style-square nz-btn-style-higher"><span class="top-tool-btn-txt"><i class="el-icon-close"></i></span></button>
-      </el-col>
-    </el-row>
-    <el-row  v-if="tableShow == 1">
-      <el-col span="22" >
-        <el-form-item :label-width="80"  prop="metric" :rules="{ required: true,  message: $t('validate.required'), trigger: 'blur' }"><!--:rules="{ required: true, type: 'string', message: '', trigger: 'change' }"-->
-              <!--
-              <el-select  ref="metricSelect" class="full-width"  filterable placeholder="" popper-class="" size="small" v-model="elementInfo.metric"  @change="selectMetric">
-                <el-option v-for="(item, index) in metricShowList.arr" :key="item.metric + index"
-                :value="item.metric">{{item.metric}}</el-option>
-              </el-select>
-              -->
-              <el-cascader ref="metricSelect" class="full-width"  filterable placeholder="" popper-class="" size="small"
-                       v-model="elementInfo.metric"
-                       :options="metricCascaderList"
-                       :props="{ expandTrigger: 'hover' }"
-                       @change="selectMetric"></el-cascader>
-              <span v-if="metricShowList.text" class="error-info-text">{{metricShowList.text}}</span>
-        </el-form-item>
-      </el-col>
-      <el-col  span="2">
-        &nbsp;&nbsp;<button type="button" v-if="countTotal > 1" @click="deleteTarget"  class="nz-btn nz-btn-size-normal nz-btn-style-light nz-btn-style-square nz-btn-style-higher"><span class="top-tool-btn-txt"><i class="el-icon-close"></i></span></button>
-      </el-col>
-    </el-row>
+    <template  v-if="tableShow == 2">
+      <el-form-item class="right-box-form-content" prop="expression" :rules="{ required: true,  message:$t('validate.required'), trigger: 'blur' }"><!--expression和metric的验证只能有一个，不能同时存在？？:rules="{ required: true, type: 'string', message: '', trigger: 'change' }"-->
+        <el-input size="mini" :class="{'right-box-row-with-btn': countTotal > 1, 'full-width': countTotal <= 1}" ref="metricExpression" type="textarea" rows="3" maxlength="512" show-word-limit v-model="elementInfo.expression" :placeholder="this.$t('dashboard.metric.expertTip')" ></el-input>
+        <div @click="deleteTarget" class="right-box-row-btn" v-if="countTotal > 1" style="vertical-align: top">
+          <i class="el-icon-minus"></i>
+        </div>
+      </el-form-item>
+    </template>
+    <template v-if="tableShow == 1">
+      <el-form-item class="right-box-form-content" :label-width="80"  prop="metric" :rules="{ required: true,  message: $t('validate.required'), trigger: 'blur' }"><!--:rules="{ required: true, type: 'string', message: '', trigger: 'change' }"-->
+        <el-cascader ref="metricSelect" :class="{'right-box-row-with-btn': countTotal > 1, 'full-width': countTotal <= 1}" filterable placeholder="" popper-class="" size="small"
+                 v-model="elementInfo.metric"
+                 :options="metricCascaderList"
+                 :props="{ expandTrigger: 'hover' }"
+                 @change="selectMetric"></el-cascader>
+        <span v-if="metricShowList.text" class="error-info-text">{{metricShowList.text}}</span>
+        <div @click="deleteTarget" class="right-box-row-btn" v-if="countTotal > 1">
+          <i class="el-icon-minus"></i>
+        </div>
+      </el-form-item>
+    </template>
 
     <el-row v-if="elementInfo.metric && tableShow == 1"><!--v-if="elementInfo.tagList.length > 0"-->
-      <el-col span="12">
-        <div class="metric-title-label">{{elementInfo.metric}}</div>
+      <el-col span="8">
+        <div class="metric-title-label too-long-split">{{elementInfo.metric}}</div>
         <div class="li-list-part">
-          <ul class="no-list-style">
-            <li class="li-cursor" v-if="!item.isSelect"
-                v-for="(item,index) in elementInfo.tagList"
-                @click="getLidata(index,item)"
-                :key="index">
-              <div>
-                <span >{{ item.name }}</span>
+          <el-scrollbar style="height: 100%">
+              <div class="li-cursor" v-if="!item.isSelect"
+                  v-for="(item,index) in elementInfo.tagList"
+                  @click="getLidata(index,item)"
+                  :key="index">
+                {{item.name}}
               </div>
-            </li>
-          </ul>
+          </el-scrollbar>
         </div>
       </el-col>
-      <el-col span="12">
+      <el-col span="2" class="symbol-area"><span class="symbol-equal">=</span></el-col>
+      <el-col span="14">
         <div class="li-list-part-label-val-list" >
-          <el-form-item class="metric-title-position"   v-for="(item, index) in elementInfo.selectedTagList" :key="index" :label="item.name" :label-width="100" :ref="'tagItem' + index" :prop="'tagList.' + index + '.value'" >
-            <el-row class="metric-title-row-position" >
-            <!--多选列表 -->
-              <el-col span="20" >
-                <el-select  v-model="item.value" ref="tagSelect" size="small"
-                            placeholder=""
-                            collapse-tags
-                            filterable
-                            multiple>
-                  <el-option v-for="(op, j) in elementInfo.selectedTagList[index].list" :key="op + j"  :value="op">{{op}}</el-option>
-                </el-select>
-              </el-col>
-              <el-col span="4" >
-                &nbsp;&nbsp;<button type="button"  @click="deleteMetricLabel(item,index)"  class="nz-btn nz-btn-size-normal nz-btn-style-light nz-btn-style-square nz-btn-style-higher"><span class="top-tool-btn-txt"><i class="el-icon-close"></i></span></button>
-              </el-col>
-            </el-row>
-          </el-form-item>
+          <el-scrollbar style="height: 100%">
+            <el-form-item class="metric-title-position right-box-form-content" v-for="(item, index) in elementInfo.selectedTagList" :key="index" :label="item.name" :label-width="100" :ref="'tagItem' + index" :prop="'tagList.' + index + '.value'" >
+              <el-select  v-model="item.value" ref="tagSelect" size="mini"
+                          placeholder=""
+                          collapse-tags
+                          filterable
+                          multiple>
+                <el-option v-for="(op, j) in elementInfo.selectedTagList[index].list" :key="op + j"  :value="op">{{op}}</el-option>
+              </el-select>
+              <span class="symbol-delete" @click="deleteMetricLabel(item,index)"><i class="nz-icon nz-icon-minus-square"></i></span>
+            </el-form-item>
+          </el-scrollbar>
         </div>
       </el-col>
     </el-row>

@@ -502,12 +502,12 @@ li{
 
 /* begin--右弹框滑入滑出动画*/
 @keyframes slide-in-from-right-580 {
-  from {right: -630px}
+  from {right: -580px}
   to {right: 0px}
 }
 @keyframes slide-out-to-right-580 {
   from {right: 0px}
-  to {right: -630px}
+  to {right: -580px}
 }
 @keyframes slide-in-from-right-840 {
   from {right: -870px}
@@ -643,6 +643,11 @@ li{
   padding-top: 20px;
   font-size: 14px;
   color: $box-title-color;
+}
+.right-box-sub-title {
+  font-size: 14px;
+  color: $box-title-color;
+  padding-bottom: 5px;
 }
 .pop-title {
   line-height: 25px;

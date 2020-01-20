@@ -35,11 +35,11 @@
   .element-bottom-border {
     padding-bottom: 5px;
     border-bottom: 1px solid #dfe7f2;
-    margin-top:-25px;
+    margin-top: 15px;
   }
   /*metric样式--begin*/
   .element-item {
-    padding-bottom: 20px;
+    padding: 20px 0;
     border-bottom: 1px dashed #dfe7f2;
   }
   /*metric样式--end*/
@@ -114,9 +114,8 @@
             </el-col>
           </el-row>
 
-          <el-row class="element-bottom-border" >
-            <div >{{$t('dashboard.panel.chartForm.metric')}}</div>
-          </el-row>
+          <div class="right-box-sub-title">{{$t('dashboard.panel.chartForm.metric')}}</div>
+          <div class="line-100"></div>
 
           <el-row  class="element-item" v-for="(elem, index) in elements" :key="'ele' + index">
             <chart-metric ref="chartTag"
@@ -131,18 +130,9 @@
 
           </el-row>
 
-          <el-row :gutter="20">
-            <el-col :span="20">
-              <button type="button" @click="addTarget" class="nz-btn nz-btn-size-normal nz-btn-style-normal">
-                <span class="top-tool-btn-txt">{{$t('dashboard.panel.chartForm.addMetric')}}</span>
-              </button>
-            </el-col>
-          </el-row>
-          <el-row :gutter="20">
-            <el-col :span="20">
-             &nbsp;
-            </el-col>
-          </el-row>
+          <button type="button" @click="addTarget" class="nz-btn nz-btn-size-normal nz-btn-style-light" style="margin-left: 1px;">
+            <span class="top-tool-btn-txt">{{$t('dashboard.panel.chartForm.addMetric')}}</span>
+          </button>
 
         </el-form>
       </el-scrollbar>
