@@ -1232,8 +1232,8 @@
     }
     .search-input-all .search-history{
         padding: 0px 7px;
-        height: 17px;
-        line-height: 17px;
+        height: 16px;
+        line-height: 16px;
         text-align: center;
         border-right: 1px solid #e5e5e5;
         margin-top: 4px;

@@ -45,14 +45,14 @@
                 </el-dropdown-menu>
             </el-dropdown>
           <div class="nz-btn-group nz-btn-group-light float-right margin-r-20">
-            <button style="border-right: 1px solid rgba(162,162,162,0.50);" type="button" class="nz-btn nz-btn-size-normal nz-btn-style-light" @click="Refresh()"><i style="font-size: 13px" class="global-active-color nz-icon nz-icon-refresh"></i></button><el-popover v-model="visible" placement="bottom-start" width="200" trigger="click">
+            <button style="border-right: 1px solid rgba(162,162,162,0.50);" type="button" class="nz-btn nz-btn-size-normal nz-btn-style-light" @click="Refresh()"><i style="font-size: 12px" class="global-active-color nz-icon nz-icon-refresh"></i></button><el-popover v-model="visible" placement="bottom-start" width="200" trigger="click">
               <ul class="popover_ul">
                 <li v-for="i in intervalList"  :style="{color:interval==i.value?'#31749C':''}" :key="i.value+i.name" @click="selectInterval(i.value)">
                   {{i.name}}
                 </li>
               </ul>
               <button type="button" class="nz-btn nz-btn-size-normal nz-btn-style-light" slot="reference">
-                <i style="font-size: 13px" class="nz-icon nz-icon-arrow-down" ></i>
+                <i style="font-size: 12px" class="nz-icon nz-icon-arrow-down" ></i>
               </button>
             </el-popover>
           </div>
@@ -80,7 +80,7 @@
             </div>-->
             <div class="panel-calendar margin-r-20">
                 <div class="block">
-                    <el-date-picker class="nz-dashboard-picker" size="mini" ref="calendar" format="yyyy/MM/dd HH:mm" @change="dateChange" v-model="searchTime" type="datetimerange" :picker-options="pickerOptions" :range-separator="$t('dashboard.panel.to')" :start-placeholder="$t('dashboard.panel.startTime')" :end-placeholder="$t('dashboard.panel.endTime')" align="right">
+                    <el-date-picker prefix-icon=" " class="nz-dashboard-picker" size="mini" ref="calendar" format="yyyy/MM/dd HH:mm" @change="dateChange" v-model="searchTime" type="datetimerange" :picker-options="pickerOptions" :range-separator="$t('dashboard.panel.to')" :start-placeholder="$t('dashboard.panel.startTime')" :end-placeholder="$t('dashboard.panel.endTime')" align="right">
                     </el-date-picker>
                 </div>
             </div>
@@ -693,7 +693,25 @@ export default {
 }
 .nz-dashboard-picker {}
 .panel-calendar .el-range-editor--mini.el-input__inner{
-  height: 26px !important;
+  height: 25px !important;
+  border-color: #d8d8d8;
 }
+
+</style>
+<style lang="scss">
+  .panel-calendar .el-range-editor--mini .el-range__close-icon {
+    line-height: 18px;
+  }
+  .panel-calendar .el-range-editor--mini .el-range__icon {
+    display: none;
+  }
+  .panel-calendar .el-range-editor--mini .el-range-separator {
+    line-height: 17px;
+  }
+  .panel-calendar .el-date-editor--datetimerange.el-input, .el-date-editor--datetimerange.el-input__inner {
+    width: 300px;
+    padding-right: 0;
+    vertical-align: top;
+  }
 </style>
 
