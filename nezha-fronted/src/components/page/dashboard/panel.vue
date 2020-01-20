@@ -51,7 +51,7 @@
                   {{i.name}}
                 </li>
               </ul>
-              <button type="button" class="nz-btn nz-btn-size-normal nz-btn-style-light" slot="reference">
+              <button type="button" style="border-radius: 0 4px 4px 0" class="nz-btn nz-btn-size-normal nz-btn-style-light" slot="reference">
                 <i style="font-size: 12px" class="nz-icon nz-icon-arrow-down" ></i>
               </button>
             </el-popover>
