@@ -70,8 +70,11 @@
       <el-col span="16">
         <span  class="star-red">*</span>&nbsp;{{$t('dashboard.panel.chartForm.metric')}}
       </el-col>
+
       <el-col span="8">
+        
         <div class="nz-btn-group float-left"  v-show="tableShow == 2">
+          <!-- <button @click="clickTabelShow(1,'normal')" class="nz-tab-item nz-tab-item-active"> -->
           <button @click="clickTabelShow(1,'normal')" class="nz-btn nz-btn-size-small nz-btn-style-light float-left">
             <span>{{$t('dashboard.metric.normal')}}</span>
           </button>
@@ -89,6 +92,7 @@
         </div>
       </el-col>
     </el-row>
+
     <el-row  v-if="tableShow == 2">
       <el-col span="22" class="mt1">
         <el-form-item prop="expression" :rules="{ required: true,  message:$t('validate.required'), trigger: 'blur' }"><!--expression和metric的验证只能有一个，不能同时存在？？:rules="{ required: true, type: 'string', message: '', trigger: 'change' }"-->
