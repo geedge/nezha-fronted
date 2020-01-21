@@ -33,12 +33,13 @@
     <el-dialog class="line-chart-block-modal"
       :title="$t('dashboard.panel.view')"
       :visible.sync="screenModal"
-      width="90%"
-      :before-close="handleClose"
+       width="90%"
+       @close="screenModal = false"
        @opened="initDialog">
-     <el-row class="element-top-border" >
-        <div class="float-right pt10" >
-            <el-date-picker size="small" ref="calendar"
+      <div slot="title">
+        {{data.title}}
+        <div class="float-right panel-calendar dialog-tool">
+            <el-date-picker ref="calendar" prefix-icon=" " size="mini" class="nz-dashboard-picker"
                             format="yyyy/MM/dd HH:mm"
                             @change="dateChange"
                             v-model="searchTime"
@@ -49,15 +50,10 @@
                             :end-placeholder="$t('dashboard.panel.endTime')"
                             align="right">
             </el-date-picker>
+          <!--<button @click="refreshChart" type="button" class="nz-btn nz-btn-size-normal nz-btn-style-light"><i style="font-size: 14px;" class="el-icon-refresh-right"></i></button>-->
         </div>
-      </el-row>
+      </div>
       <div class="line-area " ref="screenShowArea"  id="screenShowArea"></div>
-      <div class=" element-bottom-border" ></div>
-      <span slot="footer" class="dialog-footer" >
-        <el-button @click="screenModal = false">{{$t('dashboard.panel.cancel')}}</el-button>
-        <el-button type="primary" @click="screenModal = false">{{$t('dashboard.panel.confirm')}}</el-button>
-      </span>
-
     </el-dialog>
     <!--</Modal>-->
   </div>
@@ -212,6 +208,11 @@ export default {
   },
   watch: {},
   methods: {
+    clearData(){
+      if(this.echartStore){
+        this.echartStore.clear();
+      }
+    },
     // chartSite用于区分是全屏显示还是局部显示
     initChart(chartInfo, dataArg, ele, chartSite,legend) {
       this.firstShow = true; // 展示操作按键
@@ -229,19 +230,18 @@ export default {
         chartId='screenShowArea';
       }
       var chartWidth = ele.clientWidth;
-      //let chartTitle = this.handleLineFeed(chartInfo.title,chartWidth);
+      var title = {
+        text: chartInfo.title || null,
+        textAlign: 'left',
+        useHTML: true,
+        textStyle: {
+          //display: 'inline-block',//无此属性
+          width: '60%',
+          fontStyle:'normal',
+          fontWeight:'normal'
+        }
+      };
       var option = {
-        title: {
-          text: chartInfo.title || null,
-          textAlign: 'left',
-          useHTML: true,
-          textStyle: {
-            //display: 'inline-block',//无此属性
-            width: '60%',
-            fontStyle:'normal',
-            fontWeight:'normal'
-          }
-        },
         color: ['#7bbfea', '#b3424a', '#f05b72', '#596032', '#bd6758',
           '#cd9a5b', '#918597', '#70a19f', '#005344', '#FF00FF',
           '#f7acbc', '#5f5d46', '#66ffff', '#ccFF66', '#f47920',
@@ -470,6 +470,7 @@ export default {
         });
         */
         this.echartStore.clear();
+        option.title = title;
         this.echartStore.setOption(option);//创建图表
         this.echartStore.hideLoading();
         this.echartStore.resize({height:chartInfo.height});//,width:`${ele.clientWidth-100}`}
@@ -521,6 +522,7 @@ export default {
         */
         // eslint-disable-next-line
         this.echartModalStore.clear();
+        option.title = {};
         this.echartModalStore.setOption(option);//显示全屏界面
         this.echartModalStore.hideLoading();
         this.echartModalStore.resize({height:chartInfo.height});//,width:`${ele.clientWidth-100}`}

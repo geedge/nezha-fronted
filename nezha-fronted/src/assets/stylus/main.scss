@@ -419,20 +419,20 @@ li{
 /* end--顶部工具栏*/
 
 /* start--内容*/
-.content-right>.el-table{
+.nz-table.el-table{
   border: none;
   font-size: 12px;
 }
-.content-right .el-table::before {
+.nz-table.el-table::before {
   height: 0;
 }
-.content-right .el-table--border::after, .el-table--group::after {
+.nz-table .el-table--border::after, .el-table--group::after {
   width: 0;
 }
-.content-right .el-table__header {
+.nz-table .el-table__header {
   line-height: 36px;
 }
-.content-right .el-table .el-table__header th {
+.nz-table.el-table .el-table__header th {
   color: #666666;
   font-weight: normal;
   font-size: 14px;
@@ -440,24 +440,24 @@ li{
   border-bottom: 1px solid #d4d4d4;
 
 }
-.content-right .el-table .el-table__header th:first-of-type {
+.nz-table.el-table .el-table__header th:first-of-type {
   border-left: none;
 }
-.content-right .el-table .el-table__header th:nth-last-child(2) {
+.nz-table.el-table .el-table__header th:nth-last-child(2) {
   border-right: none;
 }
-.content-right .el-table--border td, .el-table--border th, .el-table__body-wrapper .el-table--border.is-scrolling-left~.el-table__fixed {
+.nz-table.el-table--border td, .el-table--border th, .nz-table .el-table__body-wrapper .el-table--border.is-scrolling-left~.el-table__fixed {
   border-right: none;
 }
-.content-right .el-table td {
+.nz-table.el-table td {
   padding: 0;
 }
-.content-right>.el-table th {
+.nz-table.el-table th {
   padding: 0;
 }
 
 //小信息栏边框
-.content-right>.el-table th .cell{
+.nz-table.el-table th .cell{
   height: 36px;
   line-height: 36px;
   display:flex;
@@ -465,14 +465,11 @@ li{
   border-right: 1px solid #d4d4d4;
   box-shadow: inset -1px -2px 1px 0 rgba(0,0,0,0.11), inset 2px 2px 1px 0 rgba(255,255,255,0.50);
 }
-.content-right>.el-table th:first-of-type .cell{
-  padding-left: 0;
-}
-.content-right>.el-table td .cell{
+.nz-table.el-table td .cell{
   height: 44px;
   line-height: 44px;
 }
-.content-right .el-table__row td:first-of-type {
+.nz-table .el-table__row td:first-of-type {
   padding-left: 38px;
 }
 .el-tooltip__popper.is-light[x-placement^=top] .popper__arrow { /*覆盖tooltip小三角颜色*/
@@ -482,10 +479,10 @@ li{
   display: inline-block;
   width: 38px;
   text-align: center;
-  border-right: 1px solid #d4d4d4;
+  border-right: 2px solid #d4d4d4;
   box-sizing: border-box;
-  box-shadow: inset -1px -2px 1px 0 rgba(0,0,0,0.11), inset 2px 2px 1px 0 rgba(255,255,255,0.5);
   float: left;
+  margin-left: -10px;
 }
 .nz-table-gear>i {
   cursor: pointer;

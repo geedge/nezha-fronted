@@ -21,6 +21,7 @@
         </div>
       </div>
       <el-table
+        class="nz-table"
         :data="tableData"
         border
         tooltip-effect="light"

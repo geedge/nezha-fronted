@@ -60,16 +60,82 @@ export default {
       },
       panelId: '',
       timer: null,
+      dataTotalList:[],//懒加载：总记录数
+      isPage:true,//是否分页懒加载
+      currentRecordNum:0,//懒加载：本次取记录的index，第一次从0开始取，每次取3行
+      lineNum:3,//每页加载的行数
+      pagePanelId:''//当前分页的panelId
     };
   },
   computed: {},
   watch: {},
   methods: {
+    initCurrentRecordNum(){
+      this.currentRecordNum = 0;
+    },
+    cleanData(){
+      if (this.dataList.length > 0 && this.$refs.editChart) {
+        this.$refs.editChart.forEach((item) => {
+          item.clearData();
+        });
+      }
+      this.dataList = [];
+    },
     initData(filter) {
       this.dataList = [];
       // 内含 panelId,开始时间,结束时间
       this.filter = filter;
+      this.pagePanelId = this.filter.panelId;
       this.getData(this.filter);
+    },
+    pageDataList(isAdd,panelId){
+      if(panelId!==this.pagePanelId){
+        this.currentRecordNum = 0;
+      }
+      if(this.dataTotalList && this.dataTotalList.length>0){
+        if(this.currentRecordNum>=this.dataTotalList.length){
+          //alert('数据加载完毕！');
+        }else {
+          let dataTmpList = [];
+          let spanSum = 0;
+          let line = 0;//行数
+          let isDataFull=false;
+          let curRecNum = this.currentRecordNum;
+          let len = this.dataTotalList.length;
+          for(let i=curRecNum;!isDataFull && i<len;i++){
+            if(line<this.lineNum){
+              let item = this.dataTotalList[i];
+              let span = item.span;
+              let sumTmp = spanSum+span;
+              if(sumTmp<=12){
+                spanSum =sumTmp;
+              }else{//大于12表示够1行了，
+                line = line +1;
+                spanSum = span;
+              }
+              if(line<this.lineNum){
+                dataTmpList.push(item);
+                this.currentRecordNum = i+1;
+              }else{
+                this.currentRecordNum = i
+                break;
+              }
+            }else {//数据加载够了
+              isDataFull=true;
+              this.currentRecordNum = i;
+              break;
+            }
+          }
+          if(isAdd){
+            let oldDataListLen = this.dataList.length;
+            let dataListTmp = this.dataList;
+            this.dataList =  dataListTmp.concat(dataTmpList);
+            this.dataSetFirst(dataTmpList,oldDataListLen);
+          }else {
+            this.dataList = dataTmpList;
+          }
+        }
+      }
     },
     // 获取panel详情数据,获取panel下所有chart列表
     getData(params) {
@@ -87,25 +153,33 @@ export default {
       this.$get('panel/'+ params.panelId+'/charts'+searchTitleStr).then(response => {
         if (response.code === 200) {
           if(response.data.list){
-            this.dataList = response.data.list;
+            this.dataTotalList =  response.data.list;
           }else {
-            this.dataList = response.data;
+            this.dataTotalList = response.data;
+          }
+          if(this.isPage){
+            this.pageDataList();
+          }else {
+            this.dataList = this.dataTotalList;
           }
           if (this.dataList.length > 0 && this.$refs.editChart) {
             this.$refs.editChart.forEach((item) => {
               item.showLoad();//之后要实现
             });
           }
-          //alert(JSON.stringify(response)); 查着，返回的内容就没有图表表达式了？？
           this.dataSetFirst(this.dataList);
         }
       });
     },
     // arr: 该panel下图表list,生成该看板下所有图表
-    dataSetFirst(arr) {
+    dataSetFirst(arr,oldDataListLen) {
       if (arr.length) {
         arr.forEach((item, index) => {
-          this.getChartData(item, index);
+          let realIndex = index;
+          if(oldDataListLen){
+            realIndex += oldDataListLen;
+          }
+          this.getChartData(item, realIndex);
         });
       }
     },
@@ -136,11 +210,9 @@ export default {
             startTime = this.filter.start_time;
             endTime = this.filter.end_time;
           }
-          //this.$emit('@on-refresh-time', startTime,endTime);
         } else if(filterType==='searchTime'){
           startTime = this.filter.start_time;
           endTime = this.filter.end_time;
-          //this.$emit('@on-refresh-time', startTime,endTime);
           this.$parent.refreshTime(startTime,endTime);
         }else {
            startTime = this.filter.start_time;
@@ -248,7 +320,6 @@ export default {
                   }
                 }
               });
-              // chartData, seriesItem, panelsId, filter
               if (chartItem.type === 'table') {//表格
                 this.$refs.editChart[index].setData(chartItem, tableData,
                   this.filter.panelId, this.filter);
@@ -285,7 +356,6 @@ export default {
       this.$nextTick(() => {
         const chartBox = document.getElementsByClassName('chartBox');
         chartBox[index].style.width = `${(size / 12) * 100}%`;
-        //chartBox[index].style.height = height;
       });
     },
 

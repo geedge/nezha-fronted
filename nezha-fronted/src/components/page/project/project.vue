@@ -1,7 +1,7 @@
 <template>
   <div class="project">
     <div class="content-left">
-      <div class="sidebar-title">{{$t('project.project.project')}}：{{currentProject.name}}</div>
+      <div class="sidebar-title too-long-split">{{$t('project.project.project')}}：{{currentProject.name}}</div>
       <div class="sidebar-info">
         <div
           v-for="item in moduleList"
@@ -36,6 +36,7 @@
       </div>
       <el-table
         :data="metricsTableData"
+        class="nz-table"
         border
         height="calc(100% - 65px)"
         style="width: 100%;">
@@ -77,6 +78,7 @@
       <el-table
         :data="endpointTableData"
         border
+        class="nz-table"
         height="calc(100% - 65px)"
         style="width: 100%;">
         <el-table-column
