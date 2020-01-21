@@ -17,7 +17,7 @@
               <!-- <div class="float-left metric-title"  >{{$t('dashboard.metricPreview.title')}}
               </div> -->
               <div class="float-right mr-10">
-                <el-date-picker size="small" ref="calendar"
+                <el-date-picker size="mini" ref="calendar"
                                 format="yyyy/MM/dd HH:mm"
                                 @change="dateChange"
                                 v-model="searchTime"
@@ -32,12 +32,11 @@
             </div>
             <div class="table-list" >
               <div class="box-content" >
-                <el-row  :gutter="20"  class="row-width" >
+                <el-row :gutter="20"  class="row-width" style="height: calc(100% - 65px);">
                   <el-col :span="12" >
-                    <div >{{$t('dashboard.panel.chartForm.metric')}}</div>
                       <metric-set ref="metricSet" @on-view-chart="getChartParam"></metric-set>
                   </el-col>
-                  <el-col :span="12" >
+                  <el-col :span="12" style="height: calc(100% - 10px);overflow-y: auto;overflow-x: hidden;">
                     <el-row class="border-area" v-show="chartCount === 'single'">
                       <div class="chartBox">
                         <line-chart-block
@@ -49,17 +48,21 @@
                         ></line-chart-block>
                       </div>
                     </el-row>
+
                     <el-row class="border-area" v-show="chartCount === 'multiple'">
-                      <div class="chartBoxMul" v-for="(item, index) in lineList">
-                        <line-chart-block
-                          :show-setting="false"
-                          ref="editChartMultiple"
-                          @on-refresh-data="refreshChart"
-                          @on-remove-chart-block="removeChart"
-                          @on-edit-chart-block="editData"
-                        ></line-chart-block>
-                      </div>
+                      <el-scrollbar style="height: 100%">
+                        <div class="chartBoxMul" v-for="(item, index) in lineList">
+                          <line-chart-block
+                            :show-setting="false"
+                            ref="editChartMultiple"
+                            @on-refresh-data="refreshChart"
+                            @on-remove-chart-block="removeChart"
+                            @on-edit-chart-block="editData"
+                          ></line-chart-block>
+                        </div>
+                      </el-scrollbar>
                     </el-row>
+
                   </el-col>
                 </el-row>
               </div>

@@ -126,12 +126,9 @@ li{
 }
 .nz-btn-metric-bottom{
   position: fixed;
-  right:37%;
-  top:95%;
-  margin-bottom:30px;
-}
-.nz-btn-metricset-left{
-  margin: 0 20px 30px 780px;
+  left:calc(50% + 128px);
+  bottom: 22px;
+  transform: translateX(-50%);
 }
 .nz-btn-metric-bottom-left{
   margin-right:30px;
@@ -717,10 +714,7 @@ li{
   height: calc(100% - 132px);
   width: 100%;
 }
-.right-box-form-box .el-scrollbar__wrap {
-  overflow-x: hidden !important;
-}
-.pop-box .el-scrollbar__wrap {
+.el-scrollbar__wrap {
   overflow-x: hidden !important;
 }
 .right-box-form {

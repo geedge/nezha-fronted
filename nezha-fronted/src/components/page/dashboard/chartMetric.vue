@@ -88,6 +88,8 @@
     height: 10px;
     color: #666;
     line-height: 14px;
+    text-align: left;
+    width: 100px;
   }
   .li-list-part-label-val-list .el-select--mini {
     width: calc(100% - 45px);
@@ -135,6 +137,7 @@
                  v-model="elementInfo.metric"
                  :options="metricCascaderList"
                  :props="{ expandTrigger: 'hover' }"
+                 :show-all-levels="false"
                  @change="selectMetric"></el-cascader>
         <span v-if="metricShowList.text" class="error-info-text">{{metricShowList.text}}</span>
         <div @click="deleteTarget" class="right-box-row-btn" v-if="countTotal > 1">

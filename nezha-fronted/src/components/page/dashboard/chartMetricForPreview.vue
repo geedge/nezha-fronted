@@ -45,15 +45,12 @@
     width:90%;
    }
   .li-list-part-label-val-list {
-    height: 250px;
+    height: 218px;
     border: 1px solid #dcdfe6;
-    margin-top: 33px;
+    margin-top: 44px;
     border-radius: 4px;
-    padding: 0px 5px 10px 5px;
     box-sizing:border-box;
-    width:90%;
-    margin-left:-20px;
-  
+    padding: 15px 0 10px 15px;
   }
 
   .no-list-style{
@@ -61,12 +58,14 @@
   }
   .li-cursor{
     cursor: pointer;
+    padding: 3px 0;
+    font-size: 14px;
   }
   .activeColor {
     background-color: #409EFF;
   }
   .metric-title-label{
-    margin-bottom:8px;
+    margin-bottom: 20px;
   }
   .metric-title-position{
     margin-bottom:-5px;
@@ -85,12 +84,12 @@
   }
   .symbol-area {
     position: relative;
-    height: 135px;
+    height: 166px;
   }
   .symbol-equal {
     position: absolute;
     bottom: 0;
-    left: 18px;
+    left: 5px;
     color: #c0c4cc;
     font-size: 24px;
   }
@@ -139,10 +138,27 @@
     margin:0 auto;
 
   } 
-  .nz-tab-style-left{
-    margin-left:130px;
+
+</style>
+<style>
+  .li-list-part-label-val-list .metric-title-position .el-form-item__label {
+    font-size: 14px;
+    height: 10px;
+    color: #666;
+    line-height: 14px;
+    text-align: left;
+    width: 100px;
   }
-   
+  .li-list-part-label-val-list .el-select--mini {
+    width: calc(100% - 45px);
+  }
+  .nz-tab-chart-item-box{
+    padding:0;
+    display: inline-block;
+  }
+  .nz-tab-chart-style-left{
+    margin-left:40px;
+  }
 </style>
 <template>
   <el-form :model="elementInfo" ref="elementInfo"   >
@@ -151,10 +167,10 @@
         <!-- <span  class="star-red">*</span>&nbsp; -->
         {{$t('dashboard.panel.chartForm.metric')}}
       </el-col>
-      <el-col span="8">
+      <el-col span="8" style="text-align: right;">
         <div class="nz-tab-item-box"  v-show="tableShow == 1">
         <!-- <div class="nz-btn-group float-left"  v-show="tableShow == 2"> -->
-          <div @click="" class="nz-tab-style nz-tab-style-light nz-tab-style-left">
+          <div @click="" class="nz-tab-style nz-tab-style-light">
             <span>{{$t('dashboard.metric.normal')}}</span>
           </div>
           <div  @click="clickTabelShow(2,'normal')" class="nz-tab-style nz-tab-style-light-right ">
@@ -169,7 +185,7 @@
         </div>
         <div @click="clickTabelShow(1,'expert')" class="nz-tab-item-box"  v-show="tableShow == 2">
         <!-- <div class="nz-btn-group float-left"  v-show="tableShow == 1"> -->
-           <div  class="nz-tab-style nz-tab-style-left">
+           <div  class="nz-tab-style">
             <span>{{$t('dashboard.metric.normal')}}</span>
           </div>
 
@@ -186,17 +202,14 @@
       </el-col>
     </el-row>
     <el-row  v-if="tableShow == 2">
-      <el-col span="22" class="mt1">
+      <el-col span="24" class="mt1">
         <el-form-item prop="expression" :rules="{ required: true,  message:$t('validate.required'), trigger: 'blur' }"><!--expression和metric的验证只能有一个，不能同时存在？？:rules="{ required: true, type: 'string', message: '', trigger: 'change' }"-->
           <el-input size="mini" @input="changeExpression" class="full-width" ref="metricExpression" type="textarea" maxlength="1024" show-word-limit v-model="elementInfo.expression" :placeholder="this.$t('dashboard.metric.expertTip')" ></el-input>
         </el-form-item>
       </el-col>
-      <el-col  span="2">
-        &nbsp;&nbsp;<button type="button" v-if="countTotal > 1" @click="deleteTarget"  class="nz-btn nz-btn-size-normal nz-btn-style-light nz-btn-style-square nz-btn-style-higher"><span class="top-tool-btn-txt"><i class="el-icon-close"></i></span></button>
-      </el-col>
     </el-row>
     <el-row  v-if="tableShow == 1">
-      <el-col span="22" >
+      <el-col span="24" >
         <el-form-item :label-width="80"  prop="metric" :rules="{ required: true,  message: $t('validate.required'), trigger: 'blur' }"><!--:rules="{ required: true, type: 'string', message: '', trigger: 'change' }"-->
               <!--
               <el-select  ref="metricSelect" class="full-width"  filterable placeholder="" popper-class="" size="small" v-model="elementInfo.metric"  @change="selectMetric">
@@ -208,17 +221,15 @@
                 v-model="elementInfo.metric"
                 :options="metricCascaderList"
                 :props="{ expandTrigger: 'hover' }"
+                :show-all-levels="false"
                 @change="selectMetric"></el-cascader>
               <span v-if="metricShowList.text" class="error-info-text">{{metricShowList.text}}</span>
         </el-form-item>
       </el-col>
-      <el-col  span="2">
-        &nbsp;&nbsp;<button type="button" v-if="countTotal > 1" @click="deleteTarget"  class="nz-btn nz-btn-size-normal nz-btn-style-light nz-btn-style-square nz-btn-style-higher"><span class="top-tool-btn-txt"><i class="el-icon-close"></i></span></button>
-      </el-col>
     </el-row>
-<!--create chart组件显示框  -->
-<el-row v-if="elementInfo.metric && tableShow == 1"><!--v-if="elementInfo.tagList.length > 0"-->
-      <el-col span="8">
+    <!--create chart组件显示框  -->
+    <el-row v-if="elementInfo.metric && tableShow == 1"><!--v-if="elementInfo.tagList.length > 0"-->
+      <el-col span="9" style="margin-bottom: 20px;">
         <div class="metric-title-label too-long-split">{{elementInfo.metric}}</div>
         <div class="li-list-part">
           <el-scrollbar style="height: 100%">
@@ -232,7 +243,7 @@
         </div>
       </el-col>
 
-      <el-col span="2" class="symbol-area"><span class="symbol-equal">=</span></el-col>
+      <el-col span="1" class="symbol-area"><span class="symbol-equal">=</span></el-col>
 
       <el-col span="14">
         <div class="li-list-part-label-val-list" >

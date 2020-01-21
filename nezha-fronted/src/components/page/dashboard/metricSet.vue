@@ -16,9 +16,6 @@
   .common-middle{
     margin:-20px auto;
   }
-  .element-item {
-    padding: 20px 0;
-  }
 </style>
 <template>
   <div class="metric-set"  >
@@ -45,11 +42,11 @@
 
           </el-row> -->
 
-      <el-row class="pt-5 pb-5 ml-3 operate-area">
+      <el-row class="operate-area">
 
-        <button type="primary" @click="preview" :disabled="loading" class="nz-btn nz-btn-size-normal nz-btn-style-normal nz-btn-metricset-left nz-btn-metricbtn">{{$t('dashboard.metric.previewChart')}}</button>
+        <button type="primary" @click="preview" :disabled="loading" class="nz-btn nz-btn-size-normal nz-btn-style-normal">{{$t('dashboard.metric.previewChart')}}</button>
         <button :disabled="saveDisabled || loading" type="primary" @click="preview('change')"
-                :class="{'nz-btn nz-btn-disabled nz-btn-size-normal nz-btn-style-light nz-btn-min-width-75 btn-disabled-cursor-not-allowed nz-btn-metricbtn' : (saveDisabled || loading), 'nz-btn nz-btn-size-normal nz-btn-metricbtn nz-btn-style-light' : !(saveDisabled || loading)}"
+                :class="{'nz-btn nz-btn-disabled nz-btn-size-normal nz-btn-style-light nz-btn-min-width-75 btn-disabled-cursor-not-allowed' : (saveDisabled || loading), 'nz-btn nz-btn-size-normal nz-btn-style-light' : !(saveDisabled || loading)}"
         >{{chartSwitchWord}}</button>
         
         <!-- <Button type="primary" @click="addTarget">添加指标</Button> -->
@@ -82,7 +79,7 @@
           <div class="common-float-left">
             <el-form-item  label-width="80px" :label="$t('dashboard.panel.chartForm.width')" prop="span"
             :rules="{ required: true, type: 'number', trigger: 'change' }">
-              <el-select class="w-select" size="small" v-model="chartInfo.span" transfer>
+              <el-select class="w-select" size="mini" v-model="chartInfo.span" transfer>
                 <el-option v-for="item in spanList" :key="item" :label="'span-' + item" :value="item">
                   span-{{item}}
                 </el-option>
@@ -95,7 +92,7 @@
           <div class="common-float-left common-middle">
             <el-form-item label-width="80px" :label="$t('dashboard.panel.chartForm.high')" prop="height"
             :rules="{ required: true, type: 'number', trigger: 'change' }">
-              <el-input v-model="chartInfo.height" :min="400" size="small" class="w-select" placeholder=""></el-input>
+              <el-input v-model="chartInfo.height" :min="400" size="mini" class="w-select" placeholder=""></el-input>
               <span class='nz-input-append'>px</span>
               <!-- <el-input-number :min="400" size="small" v-model="chartInfo.height" class="w-select" placeholder=""></el-input-number>px -->
             </el-form-item>
@@ -106,7 +103,7 @@
           <div class="common-float-left">
             <el-form-item  label-width="80px" :label="$t('dashboard.panel.chartForm.type')" prop="type"
               :rules="{ required: true,   trigger: 'change' }">
-              <el-select transfer class="w-select" v-model="chartInfo.type" size="small">
+              <el-select transfer class="w-select" v-model="chartInfo.type" size="mini">
                 <el-option v-for="item in typeList"
                   :key="item.id" 
                   :label="item.name" 
