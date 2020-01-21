@@ -16,6 +16,9 @@
   .common-middle{
     margin:-20px auto;
   }
+  .element-item {
+    padding: 20px 0;
+  }
 </style>
 <template>
   <div class="metric-set"  >
@@ -28,18 +31,31 @@
           @on-change-condition="getCondition"
           ></chart-metric>
       </el-row>
-      
+       <!-- <el-row  class="element-item" v-for="(elem, index) in elements" :key="'ele' + index">
+            <chart-metric ref="chartTag"
+                           :pointer="index"
+                           :metric-list="metricList"
+                           :metricCascaderList="metricCascaderList"
+                           :count-total="elements.length"
+                           @on-delete-target="deleteTarget"
+                           @sub-save-ok="subOk"
+                           @on-add-target-success="getTarget"
+                           @on-change-condition="getCondition"
+                ></chart-metric>
+
+          </el-row> -->
+
       <el-row class="pt-5 pb-5 ml-3 operate-area">
 
         <button type="primary" @click="preview" :disabled="loading" class="nz-btn nz-btn-size-normal nz-btn-style-normal nz-btn-metricset-left nz-btn-metricbtn">{{$t('dashboard.metric.previewChart')}}</button>
         <button :disabled="saveDisabled || loading" type="primary" @click="preview('change')"
-                :class="{'nz-btn nz-btn-disabled nz-btn-size-normal nz-btn-style-light nz-btn-min-width-75 btn-disabled-cursor-not-allowed nz-btn-metricbtn' : (saveDisabled || loading), 'nz-btn nz-btn-size-normal nz-btn-metricbtn nz-btn-style-normal' : !(saveDisabled || loading)}"
+                :class="{'nz-btn nz-btn-disabled nz-btn-size-normal nz-btn-style-light nz-btn-min-width-75 btn-disabled-cursor-not-allowed nz-btn-metricbtn' : (saveDisabled || loading), 'nz-btn nz-btn-size-normal nz-btn-metricbtn nz-btn-style-light' : !(saveDisabled || loading)}"
         >{{chartSwitchWord}}</button>
         
         <!-- <Button type="primary" @click="addTarget">添加指标</Button> -->
       </el-row>
 
-      <el-row class=" nz-btn-metric-bottom">
+      <el-row class="nz-btn-metric-bottom">
         <!-- <div class="operate-area-title">{{$t('dashboard.metric.saveChartToPanel')}}:</div> -->
         <button :disabled="saveDisabled" type="primary" @click="createNew"
                 :class="{'nz-btn-metric-bottom-left nz-btn nz-btn-disabled nz-btn-size-large nz-btn-min-width-140 nz-btn-size-normal nz-btn-style-light nz-btn-metricbtn btn-disabled-cursor-not-allowed' : saveDisabled , 'nz-btn nz-btn-size-normal  nz-btn-metricbtn nz-btn-metric-bottom-left nz-btn-min-width-140 nz-btn-style-light' : !saveDisabled}"
@@ -126,6 +142,7 @@ export default {
       total: 0,
       loading: false, // 加载中
       chartModal: false, // 展示弹出框
+      elements: [1], // 指标部分 tarNum
       // 新建信息
       chartInfo: {
         title: '', // 名称
@@ -213,6 +230,38 @@ export default {
       this.$refs.panelBox.setChartTitle(this.metricInfo.metric);
       this.$refs.panelBox.getTableData();
     },
+     // 删除指标,第一步, 新方法
+      deleteTarget(index) {
+        //alert('box第一步，循环所有的metric，为什么要循环？？');
+        this.deleteIndex = index;
+       // alert('box第一步，循环所有的metric，循环前metric,循环次数='+this.$refs.chartTag.length);
+        this.$refs.chartTag.forEach((item) => {
+          // 子组件保存内容到bus
+          item.subSave();
+        });
+      },
+       // subSave保存成功后回调,第二步
+      subOk() {
+        // 每个模块均有返回,当全部模块返回完成时,将sub计数器重置
+        //alert('box第二步，subCount和元素个数一样了，就从deleteIndex开始删除一个元素，this.subCount='+this.subCount);
+        this.subCount += 1;
+        if (this.subCount === this.elements.length) {
+          this.subCount = 0;
+          // 保存完成,进行删除操作
+          //alert('box第二步，deleteIndex='+this.deleteIndex+'=开始删除一个元素')
+          //alert('box第二步，删除之前，elements='+JSON.stringify(this.elements)+'  elementTarget='+JSON.stringify(this.elementTarget)+'  bus='+JSON.stringify(bus.chartAddInfo.metricTarget));
+          this.elements.splice(this.deleteIndex, 1);
+          this.elementTarget.splice(this.deleteIndex, 1);//没有作用，此处是[]
+          bus.chartAddInfo.metricTarget.splice(this.deleteIndex, 1);
+          //alert('box第二步，删除完毕，elements='+JSON.stringify(this.elements)+'  elementTarget='+JSON.stringify(this.elementTarget)+'  bus='+JSON.stringify(bus.chartAddInfo.metricTarget));
+          this.$nextTick(() => {
+            this.$refs.chartTag.forEach((item, index) => {
+              item.setSubdata(index); // 将数据从bus重新赋值
+            });
+          });
+        }
+      },
+      
     /*
     // 取消创建modal
     cancel() {

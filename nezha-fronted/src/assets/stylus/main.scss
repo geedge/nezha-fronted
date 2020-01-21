@@ -126,11 +126,12 @@ li{
 }
 .nz-btn-metric-bottom{
   position: fixed;
-  left:52%;
-  bottom:30px;
+  right:37%;
+  top:95%;
+  margin-bottom:30px;
 }
 .nz-btn-metricset-left{
-  margin: 0 20px 30px 515px;
+  margin: 0 20px 30px 780px;
 }
 .nz-btn-metric-bottom-left{
   margin-right:30px;
@@ -268,7 +269,6 @@ li{
 .nz-input-append {
   position: absolute;
   right: 8px;
-  line-height: 38px;
   color: #666;
 }
 /* end--el-input扩展 */

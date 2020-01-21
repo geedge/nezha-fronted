@@ -1,28 +1,28 @@
 <style scoped>
-    .without-bottom {
-      margin-bottom: 0;
-    }
-    .ivu-select-dropdown {
-      max-height: 100px;
-    }
-    .error-info-text {
-      position: absolute;
-      top: 100%;
-      left: 0;
-      line-height: 1;
-      padding-top: 6px;
-      color: #ed3f14;
-      white-space: nowrap;
-      word-wrap: normal;
-    }
-    .error-text {
-      color: #ed3f14;
-      line-height: 1.5;
-    }
+  .without-bottom {
+    margin-bottom: 0;
+  }
+  .ivu-select-dropdown {
+    max-height: 100px;
+  }
+  .error-info-text {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    line-height: 1;
+    padding-top: 6px;
+    color: #ed3f14;
+    white-space: nowrap;
+    word-wrap: normal;
+  }
+  .error-text {
+    color: #ed3f14;
+    line-height: 1.5;
+  }
   .nz-btn-style-higher{
     line-height: 22px;
   }
-  .li-list-part {
+  /* .li-list-part {
      width: 90%;
      height: 130px;
      border: 1px solid #cfcfcf;
@@ -34,8 +34,28 @@
       border: 1px solid #cfcfcf;
       overflow-y: auto;
       margin-top: 20px;/*21*/
-      border: 0px;
-    }
+      /* border: 0px;
+     } */
+  .li-list-part {
+    height: 200px;
+    border: 1px solid #dcdfe6;
+    border-radius: 4px;
+    padding: 8px 12px;
+    color: #666;
+    width:90%;
+   }
+  .li-list-part-label-val-list {
+    height: 250px;
+    border: 1px solid #dcdfe6;
+    margin-top: 33px;
+    border-radius: 4px;
+    padding: 0px 5px 10px 5px;
+    box-sizing:border-box;
+    width:90%;
+    margin-left:-20px;
+  
+  }
+
   .no-list-style{
    list-style: none;
   }
@@ -54,29 +74,90 @@
   .metric-title-row-position{
     margin-top:-10px;
   }
-  .star-red{
-    color:#ff1818;
-  }
+  /* .star-red{
+    /* color:#ff1818; */
+  /* }  */
   .full-width{
     width:100%;
   }
   .mt1{
     margin-top:1px;
   }
+  .symbol-area {
+    position: relative;
+    height: 135px;
+  }
+  .symbol-equal {
+    position: absolute;
+    bottom: 0;
+    left: 18px;
+    color: #c0c4cc;
+    font-size: 24px;
+  }
+  .symbol-delete {
+    padding-left: 8px;
+    cursor: pointer;
+  }
+  .symbol-delete i {
+    color: #c0c4cc;
+   }
+  .el-scrollbar__wrap{
+    /* overflow: auto !important; */
+    box-sizing:border-box;
+    margin:0 auto;
+   }
+  .el-input .el-input__inner{
+    /* width:80%; */
+    /* display:flex; */
+   }
+  .metric-title-position{
+    margin-bottom:2px;
+
+  }
+   /* .right-box-form-content-left{
+     line-height: 32px;
+     text-align: left;
+     width: 100%;
+     padding:0 10px;
+   } */
+   
+  .el-form-item__content{
+    padding-left:15px;
+    margin:0 auto;
+
+  }
+  .li-list-part-label-val-list .metric-title-position .el-form-item__label {
+    font-size: 14px;
+    height: 10px;
+    color: #666;
+    line-height: 14px;
+    margin:0 auto;
+
+}
+  .li-list-part-label-val-list .el-select--mini {
+    width: calc(100% - 45px);
+    margin:0 auto;
+
+  } 
+  .nz-tab-style-left{
+    margin-left:130px;
+  }
+   
 </style>
 <template>
   <el-form :model="elementInfo" ref="elementInfo"   >
     <el-row >
       <el-col span="16">
-        <span  class="star-red">*</span>&nbsp;{{$t('dashboard.panel.chartForm.metric')}}
+        <!-- <span  class="star-red">*</span>&nbsp; -->
+        {{$t('dashboard.panel.chartForm.metric')}}
       </el-col>
       <el-col span="8">
         <div class="nz-tab-item-box"  v-show="tableShow == 1">
         <!-- <div class="nz-btn-group float-left"  v-show="tableShow == 2"> -->
-          <div @click="clickTabelShow(2,'normal')" class="nz-tab-style nz-tab-style-light">
+          <div @click="" class="nz-tab-style nz-tab-style-light nz-tab-style-left">
             <span>{{$t('dashboard.metric.normal')}}</span>
           </div>
-          <div @click="" class="nz-tab-style nz-tab-style-light-right">
+          <div  @click="clickTabelShow(2,'normal')" class="nz-tab-style nz-tab-style-light-right ">
             <span>{{$t('dashboard.metric.expert')}}</span>
           </div>
           <!-- <button @click="clickTabelShow(1,'normal')" class="nz-btn nz-btn-size-small nz-btn-style-light float-left">
@@ -86,13 +167,13 @@
             <span>{{$t('dashboard.metric.expert')}}</span>
           </button> -->
         </div>
-        <div class="nz-tab-item-box"  v-show="tableShow == 2">
+        <div @click="clickTabelShow(1,'expert')" class="nz-tab-item-box"  v-show="tableShow == 2">
         <!-- <div class="nz-btn-group float-left"  v-show="tableShow == 1"> -->
-           <div @click="" class="nz-tab-style">
+           <div  class="nz-tab-style nz-tab-style-left">
             <span>{{$t('dashboard.metric.normal')}}</span>
           </div>
 
-          <div @click="clickTabelShow(1,'expert')" class="nz-tab-style nz-tab-style-light nz-tab-style-light-right">
+          <div @click="" class="nz-tab-style nz-tab-style-light nz-tab-style-light-right  ">
             <span>{{$t('dashboard.metric.expert')}}</span>
           </div>
           <!-- <button @click="" class="nz-btn nz-btn-size-small  nz-btn-style-normal float-left">
@@ -135,9 +216,46 @@
         &nbsp;&nbsp;<button type="button" v-if="countTotal > 1" @click="deleteTarget"  class="nz-btn nz-btn-size-normal nz-btn-style-light nz-btn-style-square nz-btn-style-higher"><span class="top-tool-btn-txt"><i class="el-icon-close"></i></span></button>
       </el-col>
     </el-row>
+<!--create chart组件显示框  -->
+<el-row v-if="elementInfo.metric && tableShow == 1"><!--v-if="elementInfo.tagList.length > 0"-->
+      <el-col span="8">
+        <div class="metric-title-label too-long-split">{{elementInfo.metric}}</div>
+        <div class="li-list-part">
+          <el-scrollbar style="height: 100%">
+              <div class="li-cursor" v-if="!item.isSelect"
+                  v-for="(item,index) in elementInfo.tagList"
+                  @click="getLidata(index,item)"
+                  :key="index">
+                {{item.name}}
+              </div>
+          </el-scrollbar>
+        </div>
+      </el-col>
 
-    <el-row v-if="elementInfo.metric && tableShow == 1"><!--v-if="elementInfo.tagList.length > 0"-->
-      <el-col span="12">
+      <el-col span="2" class="symbol-area"><span class="symbol-equal">=</span></el-col>
+
+      <el-col span="14">
+        <div class="li-list-part-label-val-list" >
+          <el-scrollbar style="height: 100%">
+            <el-form-item class="metric-title-position right-box-form-content" v-for="(item, index) in elementInfo.selectedTagList" :key="index" :label="item.name" :label-width="100" :ref="'tagItem' + index" :prop="'tagList.' + index + '.value'" >
+              <el-select  v-model="item.value" ref="tagSelect" size="mini"
+                          placeholder=""
+                          collapse-tags
+                          filterable
+                          @change="changeTag"
+                          multiple>
+                <el-option v-for="(op, j) in elementInfo.selectedTagList[index].list" :key="op + j"  :value="op">{{op}}</el-option>
+              </el-select>
+              <span class="symbol-delete" @click="deleteMetricLabel(item,index)"><i class="nz-icon nz-icon-minus-square"></i></span>
+            </el-form-item>
+          </el-scrollbar>
+        </div>
+      </el-col>
+
+    </el-row>
+<!-- create chart组件显示框 -->
+    <!-- <el-row v-if="elementInfo.metric && tableShow == 1"><!--v-if="elementInfo.tagList.length > 0"-->
+      <!-- <el-col span="12">
         <div class="metric-title-label">{{elementInfo.metric}}</div>
         <div class="li-list-part">
           <ul class="no-list-style">
@@ -156,9 +274,10 @@
         <div class="li-list-part-label-val-list" >
           <el-form-item class="metric-title-position"   v-for="(item, index) in elementInfo.selectedTagList" :key="index"  :label-width="100" :ref="'tagItem' + index" :prop="'tagList.' + index + '.value'" >
             <el-row >{{item.name}}</el-row>
-            <el-row class="metric-title-row-position" >
+            <el-row class="metric-title-row-position" > -->
+              
             <!--多选列表 -->
-              <el-col span="20" >
+              <!-- <el-col span="20" >
                 <el-select  v-model="item.value" ref="tagSelect" size="small"
                             placeholder=""
                             collapse-tags
@@ -174,8 +293,8 @@
             </el-row>
           </el-form-item>
         </div>
-      </el-col>
-    </el-row>
+      </el-col> -->
+    <!-- </el-row>  -->
   </el-form>
 </template>
 <script>

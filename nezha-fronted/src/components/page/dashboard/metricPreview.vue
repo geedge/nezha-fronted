@@ -14,8 +14,8 @@
 
 
           <div class="top-tools" >
-              <div class="float-left metric-title"  >{{$t('dashboard.metricPreview.title')}}
-              </div>
+              <!-- <div class="float-left metric-title"  >{{$t('dashboard.metricPreview.title')}}
+              </div> -->
               <div class="float-right mr-10">
                 <el-date-picker size="small" ref="calendar"
                                 format="yyyy/MM/dd HH:mm"

@@ -92,20 +92,29 @@
   .li-list-part-label-val-list .el-select--mini {
     width: calc(100% - 45px);
   }
+  .nz-tab-chart-item-box{
+    padding:0;
+    display: inline-block;
+  }
+  .nz-tab-chart-style-left{
+    margin-left:40px;
+  }
+  
 </style>
 <template>
   <el-form :model="elementInfo" ref="elementInfo"   >
     <el-row >
       <el-col span="16">
-        <span  class="star-red">*</span>&nbsp;{{$t('dashboard.panel.chartForm.metric')}}
+        <!-- <span  class="star-red">*</span>&nbsp; -->
+        {{$t('dashboard.panel.chartForm.metric')}}
       </el-col>
 
       <el-col span="8">
-        <div class="nz-tab-item-box">
-          <div @click="clickTabelShow(1,'normal')" class="nz-tab-style" :class="{'nz-tab-style-light' : tableShow == 1}">
+        <div class="nz-tab-chart-item-box">
+          <div @click="clickTabelShow(1,'normal')" class="nz-tab-style nz-tab-chart-style-left" :class="{'nz-tab-style-light' : tableShow == 1}">
             <span>{{$t('dashboard.metric.normal')}}</span>
           </div>
-          <div @click="clickTabelShow(2,'expert')" class="nz-tab-style nz-tab-style-light-right"  :class="{'nz-tab-style-light' : tableShow == 2}">
+          <div @click="clickTabelShow(2,'expert')" class="nz-tab-style nz-tab-style-light-right "  :class="{'nz-tab-style-light' : tableShow == 2}">
             <span>{{$t('dashboard.metric.expert')}}</span>
           </div>
         </div>
@@ -134,7 +143,9 @@
       </el-form-item>
     </template>
 
+<!-- create chart组件显示框 -->
     <el-row v-if="elementInfo.metric && tableShow == 1"><!--v-if="elementInfo.tagList.length > 0"-->
+
       <el-col span="8">
         <div class="metric-title-label too-long-split">{{elementInfo.metric}}</div>
         <div class="li-list-part">
@@ -148,7 +159,9 @@
           </el-scrollbar>
         </div>
       </el-col>
+
       <el-col span="2" class="symbol-area"><span class="symbol-equal">=</span></el-col>
+
       <el-col span="14">
         <div class="li-list-part-label-val-list" >
           <el-scrollbar style="height: 100%">
@@ -165,6 +178,7 @@
           </el-scrollbar>
         </div>
       </el-col>
+
     </el-row>
   </el-form>
 </template>
