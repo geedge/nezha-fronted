@@ -1,5 +1,6 @@
 <template>
   <div class="header">
+    <div class="logo"><img height="48" src="../../assets/img/logo.png"/></div>
     <el-menu
       class="nz-menu float-right"
       mode="horizontal"
@@ -450,6 +451,11 @@
 </script>
 
 <style lang="scss">
+  .logo {
+    position: absolute;
+    top: 8px;
+    left: 18px;
+  }
   .header {
     background-image: linear-gradient(180deg, #565656 0%, #3C3C3C 100%);
     box-shadow: 0 2px 4px 0 rgba(0,0,0,0.30);
