@@ -35,7 +35,7 @@
     <div class="mt-10">
         <!--
       <el-table  size="small"   :loading="tableLoading">-->
-        <el-table :data="seriesItem" height="350" border class="chart-table-col" v-loading="tableLoading">
+        <el-table class="nz-table" :data="seriesItem" height="350" border v-loading="tableLoading">
             <el-table-column prop="metric" :label="$t('dashboard.panel.chartTableColumn.metric')" ></el-table-column>
             <el-table-column prop="label" :label="$t('dashboard.panel.chartTableColumn.label')" ></el-table-column>
             <el-table-column prop="time" :label="$t('dashboard.panel.chartTableColumn.time')" width="145" ></el-table-column>
@@ -44,28 +44,20 @@
     </div>
     <!--全屏-->
       <el-dialog :title="$t('dashboard.panel.view')" :visible.sync="screenModal" width="96%"  @close="screenModal = false" >
-        <div class="clearfix element-top-border">
-            <div class="float-left table-title">
-                {{data.title}}
-            </div>
-            <div class="float-right edit">
-                <el-date-picker size="small" ref="calendar" format="yyyy/MM/dd HH:mm" @change="dateChange" v-model="searchTime" type="datetimerange" :picker-options="pickerOptions" :range-separator="$t('dashboard.panel.to')" :start-placeholder="$t('dashboard.panel.startTime')" :end-placeholder="$t('dashboard.panel.endTime')" align="right">
-                </el-date-picker>
-                <span @click="refreshChart" :title="$t('dashboard.refresh')" class="set-icon" @click.native="refreshChart">
-                    <i class="el-icon-refresh-right"></i>
-                </span>
-            </div>
+        <div slot="title">
+          {{data.title}}
+          <div class="float-right panel-calendar dialog-tool">
+            <el-date-picker prefix-icon=" " size="mini" class="nz-dashboard-picker" ref="calendar" format="yyyy/MM/dd HH:mm" @change="dateChange" v-model="searchTime" type="datetimerange" :picker-options="pickerOptions" :range-separator="$t('dashboard.panel.to')" :start-placeholder="$t('dashboard.panel.startTime')" :end-placeholder="$t('dashboard.panel.endTime')" align="right">
+            </el-date-picker>
+            <!--<button @click="refreshChart" type="button" class="nz-btn nz-btn-size-normal nz-btn-style-light"><i style="font-size: 14px;" class="el-icon-refresh-right"></i></button>-->
+          </div>
         </div>
-        <div class="mt-10">
-            <el-table :data="seriesItem" height="350" border class="chart-table-col" v-loading="tableLoading">
+            <el-table class="nz-table" :data="seriesItem" height="350" border v-loading="tableLoading">
                 <el-table-column prop="metric" :label="$t('dashboard.panel.chartTableColumn.metric')" ></el-table-column>
                 <el-table-column prop="label" :label="$t('dashboard.panel.chartTableColumn.label')" ></el-table-column>
                 <el-table-column prop="time" :label="$t('dashboard.panel.chartTableColumn.time')" width="145" ></el-table-column>
                 <el-table-column prop="value" :label="$t('dashboard.panel.chartTableColumn.value')" ></el-table-column>
             </el-table>
-        </div>
-        <div class=" element-bottom-border"></div>
-        <span slot="footer" class="dialog-footer"></span>
     </el-dialog>
 </div>
 </template>

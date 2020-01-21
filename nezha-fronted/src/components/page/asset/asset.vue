@@ -41,6 +41,7 @@
       </div>
 
       <el-table
+        class="nz-table"
         height="calc(100% - 65px)"
         style="width: 100%;"
         :data="tableData"

@@ -33,6 +33,7 @@
         </div>
       </div>
       <el-table
+        class="nz-table"
         :data="tableData"
         border
         height="calc(100% - 65px)"

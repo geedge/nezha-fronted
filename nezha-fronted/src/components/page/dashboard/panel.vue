@@ -706,13 +706,14 @@ export default {
   color: #F0BF84;
 }
 .nz-dashboard-picker {}
-.panel-calendar .el-range-editor--mini.el-input__inner{
-  height: 25px !important;
-  border-color: #d8d8d8;
-}
+
 
 </style>
 <style lang="scss">
+  .panel-calendar .el-range-editor--mini.el-input__inner{
+    height: 25px !important;
+    border-color: #d8d8d8;
+  }
   .panel-calendar .el-range-editor--mini .el-range__close-icon {
     line-height: 18px;
   }
@@ -723,7 +724,7 @@ export default {
     line-height: 17px;
   }
   .panel-calendar .el-date-editor--datetimerange.el-input, .el-date-editor--datetimerange.el-input__inner {
-    width: 300px;
+    width: 310px;
     padding-right: 0;
     vertical-align: top;
   }

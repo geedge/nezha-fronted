@@ -36,6 +36,7 @@
       </div>
       <el-table
         :data="metricsTableData"
+        class="nz-table"
         border
         height="calc(100% - 65px)"
         style="width: 100%;">
