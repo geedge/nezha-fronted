@@ -87,7 +87,7 @@
                 </div>
             </div>
         </div>
-        <div class="table-list">
+      <div class="table-list" @scroll="onScroll"  id="tableList">
             <div class="box-content">
                 <chart-list @on-edit-chart="editData" @on-refresh-time="refreshTime" @on-remove-chart="removeData" ref="chartList"></chart-list>
             </div>
@@ -287,6 +287,8 @@ export default {
             //this.$refs.searchInput.select();
             this.showPanel = val
             this.filter.panelId = this.showPanel.id;
+            this.$refs.chartList.initCurrentRecordNum();
+            this.$refs.chartList.cleanData();
             this.getData(this.filter);
             
         },
@@ -513,7 +515,17 @@ export default {
             }
             this.filter.panelId = this.showPanel.id;
             this.getData(this.filter);
-        }
+        },
+        // 滚动事件触发下拉加载
+        onScroll () {
+          let dom = document.getElementById('tableList');
+          let scrollHeight = dom.scrollHeight;//整个可滑动区域高度
+          let clientHeight = dom.clientHeight;//可视高度
+          let scrollTop = dom.scrollTop;//滚动条顶部与整个scrollHeight顶部的距离
+          if (scrollHeight - clientHeight - scrollTop <= 20) {//滚动到底部，才加载新数据
+            this.$refs.chartList.pageDataList(true,this.showPanel.id);
+          }
+        },
     },
     created() {
         this.getTableData();

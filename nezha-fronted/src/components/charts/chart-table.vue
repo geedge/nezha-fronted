@@ -43,7 +43,7 @@
         </el-table>
     </div>
     <!--全屏-->
-    <el-dialog :title="$t('dashboard.panel.view')" :visible.sync="screenModal" width="96%" >
+      <el-dialog :title="$t('dashboard.panel.view')" :visible.sync="screenModal" width="96%"  @close="screenModal = false" >
         <div class="clearfix element-top-border">
             <div class="float-left table-title">
                 {{data.title}}
@@ -65,10 +65,7 @@
             </el-table>
         </div>
         <div class=" element-bottom-border"></div>
-        <span slot="footer" class="dialog-footer">
-            <el-button @click="screenModal = false">{{$t('dashboard.panel.cancel')}}</el-button>
-            <el-button type="primary" @click="screenModal = false">{{$t('dashboard.panel.confirm')}}</el-button>
-        </span>
+        <span slot="footer" class="dialog-footer"></span>
     </el-dialog>
 </div>
 </template>
@@ -218,6 +215,8 @@ export default {
     computed: {},
     watch: {},
     methods: {
+        clearData(){
+        },
         showLoad() {
             this.tableLoading = true;
         },

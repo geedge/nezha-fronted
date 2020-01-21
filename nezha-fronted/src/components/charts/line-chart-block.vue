@@ -33,8 +33,8 @@
     <el-dialog class="line-chart-block-modal"
       :title="$t('dashboard.panel.view')"
       :visible.sync="screenModal"
-      width="90%"
-      :before-close="handleClose"
+       width="90%"
+       @close="screenModal = false"
        @opened="initDialog">
      <el-row class="element-top-border" >
         <div class="float-right pt10" >
@@ -53,10 +53,7 @@
       </el-row>
       <div class="line-area " ref="screenShowArea"  id="screenShowArea"></div>
       <div class=" element-bottom-border" ></div>
-      <span slot="footer" class="dialog-footer" >
-        <el-button @click="screenModal = false">{{$t('dashboard.panel.cancel')}}</el-button>
-        <el-button type="primary" @click="screenModal = false">{{$t('dashboard.panel.confirm')}}</el-button>
-      </span>
+      <span slot="footer" class="dialog-footer" ></span>
 
     </el-dialog>
     <!--</Modal>-->
@@ -212,6 +209,11 @@ export default {
   },
   watch: {},
   methods: {
+    clearData(){
+      if(this.echartStore){
+        this.echartStore.clear();
+      }
+    },
     // chartSite用于区分是全屏显示还是局部显示
     initChart(chartInfo, dataArg, ele, chartSite,legend) {
       this.firstShow = true; // 展示操作按键
