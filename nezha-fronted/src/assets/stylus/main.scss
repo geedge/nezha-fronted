@@ -93,7 +93,7 @@ li{
 }
 /* begin--按钮组件*/
 .nz-btn-min-width-35 {
-  min-width: 35px;
+  min-width: 45px;
 }
 .nz-btn-min-width-60 {
   min-width: 60px;
@@ -267,6 +267,7 @@ li{
   position: absolute;
   right: 8px;
   color: #666;
+  top: 0;
 }
 /* end--el-input扩展 */
 
@@ -324,7 +325,7 @@ li{
   float: left;
   width: 256px;
   height: 100%;
-  border-right: 1px solid #cccccc;
+  border-right: 1px solid #eeeeee;
   padding: 0 25px 0 15px;
   box-sizing: border-box;
 }
@@ -382,9 +383,10 @@ li{
 
 /* begin--右侧内容*/
 .content-right {
-  height: calc(100% - 131px);
+  height: 100%;
   margin-left: 256px;
   padding: 0 20px 0 20px;
+  background-color: $content-right-background-color;
 }
 .content-right-option {
   cursor: pointer;
@@ -406,8 +408,10 @@ li{
 }
 /* begin--顶部工具栏*/
 .top-tools {
-  margin: 26px 0 41px 0;
-  height: 1px;
+  display: flex;
+  height: 68px;
+  align-items : center;
+  justify-content: space-between
 }
 .top-tools .top-tool-search {
   width: 260px;
@@ -435,7 +439,6 @@ li{
   font-size: 14px;
   border-left: 1px solid white;
   border-bottom: 1px solid #d4d4d4;
-
 }
 .nz-table.el-table .el-table__header th:first-of-type {
   border-left: none;
@@ -446,13 +449,28 @@ li{
 .nz-table.el-table--border td, .el-table--border th, .nz-table .el-table__body-wrapper .el-table--border.is-scrolling-left~.el-table__fixed {
   border-right: none;
 }
+.chart-table .nz-table.el-table td {
+  background-color: white;
+}
 .nz-table.el-table td {
   padding: 0;
+  background-color: $content-right-background-color;
 }
 .nz-table.el-table th {
   padding: 0;
 }
-
+.nz-table.el-table th:last-of-type {
+  background-color: $content-right-background-color;
+}
+.nz-table .el-table__body-wrapper {
+  background-color: $content-right-background-color;
+}
+.chart-table .nz-table.el-table th:last-of-type {
+  background-color: white;
+}
+.chart-table .nz-table .el-table__body-wrapper {
+  background-color: white;
+}
 //小信息栏边框
 .nz-table.el-table th .cell{
   height: 36px;
@@ -734,6 +752,11 @@ li{
   font-size: 16px;
   color: black;
 }
+.right-box-form .el-form-item.metric-title-position .el-form-item__label {
+  padding: 0;
+  font-size: 14px;
+  color: #666;
+}
 .pop-item-wider .right-box-form .el-form-item .el-form-item__label {
   font-size: 14px;
   line-height: 32px;
@@ -888,8 +911,11 @@ li{
 
 
 /* begin--自定义可编辑的el-select下拉框样式*/
+.el-select-dropdown__wrap.el-scrollbar__wrap {
+  margin-bottom: 0 !important;
+}
 .config-dropdown { /* 若宽度不合适，自行增加新类覆盖宽度 */
-  width: 500px;
+  width: 490px;
 }
 .asset-dropdown {
   width: 400px;
@@ -939,3 +965,24 @@ li{
   color: #BA3939;
 }
 
+.el-dropdown-menu__item:focus,
+.el-dropdown-menu__item:not(.is-disabled):hover,
+.el-select-dropdown.is-multiple .el-select-dropdown__item.selected.hover,
+.el-select-dropdown__item.hover, .el-select-dropdown__item:hover {
+  color:$global-text-color-active !important;
+  background-color: $dropdown-hover-background-color !important;
+}
+
+.el-button--text,
+.el-button--text:focus,
+.el-button--text:hover,
+.el-cascader-node.in-active-path, .el-cascader-node.is-active, .el-cascader-node.is-selectable.in-checked-path,
+.el-select-dropdown.is-multiple .el-select-dropdown__item.selected,
+.el-select-dropdown__item.selected,
+.el-date-table td.today span {
+  color: $global-text-color-active !important;
+}
+
+.el-date-table td.end-date span, .el-date-table td.start-date span {
+  background-color: $global-text-color-active !important;
+}

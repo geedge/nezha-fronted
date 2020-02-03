@@ -37,7 +37,12 @@
     font-weight: bold;
     padding-left:5px;
   }
-
+  input {
+    background-color: $content-right-background-color;
+  }
+  .el-input__inner {
+    background-color: $content-right-background-color;
+  }
 }
 
 /*

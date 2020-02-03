@@ -61,9 +61,9 @@
     props: {
       chartInfo: Object,
       elementTarget:Object,
-      seriesData:Object,
-      chartCount:Object,
-      series:Object
+      seriesData:Array,
+      chartCount:String,
+      series:Array
     },
     data() {
       return {

@@ -1,8 +1,8 @@
 <style scoped>
   .chartBox {
     box-sizing: border-box;
-    padding-bottom: 10px;
     float:left;
+    padding: 0 10px 10px 10px;
   }
   .noData{
     text-align: center

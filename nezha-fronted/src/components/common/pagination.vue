@@ -60,7 +60,7 @@ export default {
     float: left;
   }
   .pagination {
-    padding-top: 12px;
+    padding-top: 16px;
     text-align: center;
   }
 
@@ -84,11 +84,21 @@ export default {
   .el-pagination .el-pager .more::before {
     line-height: 20px;
   }
+  .el-pagination .el-pager .more {
+    background-color: $content-right-background-color;
+  }
+  .btn-next, .btn-prev {
+    background-color: $content-right-background-color !important;
+  }
+  .pagination input {
+    background-color: $content-right-background-color !important;
+  }
   .el-pager li.number{
     font-family: NotoSansSC-Regular;
     color: #666666;
     letter-spacing: 0;
     font-weight:normal;
+    background-color: $content-right-background-color;
   }
   .el-pager li.number.active{
     font-family: NotoSansSC-Regular;

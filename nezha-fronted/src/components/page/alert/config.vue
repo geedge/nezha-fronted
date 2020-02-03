@@ -22,14 +22,19 @@
     </div>
     <div class="content-right">
       <div class="top-tools">
-        <button id="alert-add" @click="toAdd"
-                class="nz-btn nz-btn-size-normal nz-btn-style-light float-right nz-btn-min-width-82">
+        <div>
+
+        </div>
+        <div>
+          <button id="alert-add" @click="toAdd"
+                  class="nz-btn nz-btn-size-normal nz-btn-style-light float-right nz-btn-min-width-82">
                     <span class="top-tool-btn-txt">
                       <i class="nz-icon-create-square nz-icon"></i>
                       {{$t('overall.add')}}</span>
-        </button>
-        <div class="top-tool-search float-right">
-          <search-input :searchMsg="searchMsg" @search="search"></search-input>
+          </button>
+          <div class="top-tool-search float-right">
+            <search-input :searchMsg="searchMsg" @search="search"></search-input>
+          </div>
         </div>
       </div>
       <el-table
@@ -37,7 +42,7 @@
         :data="tableData"
         border
         tooltip-effect="light"
-        height="calc(100% - 65px)"
+        height="calc(100% - 195px)"
         style="width: 100%;">
         <el-table-column
           :resizable="false"

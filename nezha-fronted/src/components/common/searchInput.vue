@@ -1200,7 +1200,7 @@
     }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 
     .new-search{
         display: flex;
@@ -1216,7 +1216,7 @@
     }
     .new-search .search-input-all{
         width: 240px;
-        background: #fff;
+        background-color: $content-right-background-color;
         color: rgba(0,0,0,.55);
         height: 24px;
         line-height: 24px;
@@ -1225,6 +1225,9 @@
         display: flex;
         position: relative;
 
+    }
+    input {
+        background-color: $content-right-background-color;
     }
     .search-input-all .btn-retract{
         padding: 0px 4px;

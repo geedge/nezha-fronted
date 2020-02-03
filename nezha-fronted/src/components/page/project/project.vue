@@ -24,7 +24,7 @@
     <!--metrics-->
     <div class="content-right" v-show="tableShow == 2">
       <div class="top-tools">
-        <div class="nz-tab float-left">
+        <div class="nz-tab">
           <div @click="tableShow = 1" class="nz-tab-item-box">
             <div class="nz-tab-item">{{$t('project.endpoint.endpoint')}}</div>
           </div>
@@ -32,13 +32,13 @@
             <div class="nz-tab-item nz-tab-item-active">{{$t('project.metrics.metrics')}}</div>
           </div>
         </div>
-        <div class="top-tool-search float-right"><search-input :searchMsg="metricSearchMsg" @search="metricSearch"></search-input></div>
+        <div class="top-tool-search"><search-input :searchMsg="metricSearchMsg" @search="metricSearch"></search-input></div>
       </div>
       <el-table
         :data="metricsTableData"
         class="nz-table"
         border
-        height="calc(100% - 65px)"
+        height="calc(100% - 195px)"
         style="width: 100%;">
         <el-table-column
           :resizable="false"
@@ -60,7 +60,7 @@
     <!--endpoint-->
     <div class="content-right" v-show="tableShow == 1">
       <div class="top-tools">
-        <div class="nz-tab float-left">
+        <div class="nz-tab">
           <div class="nz-tab-item-box">
             <div class="nz-tab-item nz-tab-item-active">{{$t('project.endpoint.endpoint')}}</div>
           </div>
@@ -68,18 +68,20 @@
             <div class="nz-tab-item">{{$t('project.metrics.metrics')}}</div>
           </div>
         </div>
-        <button @click="toCreateEndpoint" class="nz-btn nz-btn-size-normal nz-btn-style-light float-right nz-btn-min-width-82" id="project-add-ep">
-          <span class='top-tool-btn-txt'>
-            <i class="nz-icon-create-square nz-icon"></i>
-            {{$t('overall.add')}}</span>
-        </button>
-        <div class="top-tool-search float-right"><search-input :searchMsg="endpointSearchMsg" @search="endpointSearch" ref="projectSearch"></search-input></div>
+        <div>
+          <button @click="toCreateEndpoint" class="nz-btn nz-btn-size-normal nz-btn-style-light float-right nz-btn-min-width-82" id="project-add-ep">
+            <span class='top-tool-btn-txt'>
+              <i class="nz-icon-create-square nz-icon"></i>
+              {{$t('overall.add')}}</span>
+          </button>
+          <div class="top-tool-search float-right"><search-input :searchMsg="endpointSearchMsg" @search="endpointSearch" ref="projectSearch"></search-input></div>
+        </div>
       </div>
       <el-table
         :data="endpointTableData"
         border
         class="nz-table"
-        height="calc(100% - 65px)"
+        height="calc(100% - 195px)"
         style="width: 100%;">
         <el-table-column
           :resizable="false"

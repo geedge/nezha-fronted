@@ -92,7 +92,7 @@
     width: 100px;
   }
   .li-list-part-label-val-list .el-select--mini {
-    width: calc(100% - 45px);
+    width: calc(100% - 45px) !important;
   }
   .nz-tab-chart-item-box{
     padding:0;

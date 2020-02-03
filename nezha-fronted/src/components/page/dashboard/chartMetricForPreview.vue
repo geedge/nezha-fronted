@@ -143,7 +143,7 @@
 <style>
   .li-list-part-label-val-list .metric-title-position .el-form-item__label {
     font-size: 14px;
-    height: 10px;
+    height: 15px;
     color: #666;
     line-height: 14px;
     text-align: left;
@@ -163,11 +163,11 @@
 <template>
   <el-form :model="elementInfo" ref="elementInfo"   >
     <el-row >
-      <el-col span="16">
+      <el-col :span="16">
         <!-- <span  class="star-red">*</span>&nbsp; -->
         {{$t('dashboard.panel.chartForm.metric')}}
       </el-col>
-      <el-col span="8" style="text-align: right;">
+      <el-col :span="8" style="text-align: right;">
         <div class="nz-tab-item-box"  v-show="tableShow == 1">
         <!-- <div class="nz-btn-group float-left"  v-show="tableShow == 2"> -->
           <div @click="" class="nz-tab-style nz-tab-style-light">
@@ -202,15 +202,15 @@
       </el-col>
     </el-row>
     <el-row  v-if="tableShow == 2">
-      <el-col span="24" class="mt1">
+      <el-col :span="24" class="mt1">
         <el-form-item prop="expression" :rules="{ required: true,  message:$t('validate.required'), trigger: 'blur' }"><!--expression和metric的验证只能有一个，不能同时存在？？:rules="{ required: true, type: 'string', message: '', trigger: 'change' }"-->
           <el-input size="mini" @input="changeExpression" class="full-width" ref="metricExpression" type="textarea" maxlength="1024" show-word-limit v-model="elementInfo.expression" :placeholder="this.$t('dashboard.metric.expertTip')" ></el-input>
         </el-form-item>
       </el-col>
     </el-row>
     <el-row  v-if="tableShow == 1">
-      <el-col span="24" >
-        <el-form-item :label-width="80"  prop="metric" :rules="{ required: true,  message: $t('validate.required'), trigger: 'blur' }"><!--:rules="{ required: true, type: 'string', message: '', trigger: 'change' }"-->
+      <el-col :span="24" >
+        <el-form-item label-width="80"  prop="metric" :rules="{ required: true,  message: $t('validate.required'), trigger: 'blur' }"><!--:rules="{ required: true, type: 'string', message: '', trigger: 'change' }"-->
               <!--
               <el-select  ref="metricSelect" class="full-width"  filterable placeholder="" popper-class="" size="small" v-model="elementInfo.metric"  @change="selectMetric">
                 <el-option v-for="(item, index) in metricShowList.arr" :key="item.metric + index"
@@ -229,7 +229,7 @@
     </el-row>
     <!--create chart组件显示框  -->
     <el-row v-if="elementInfo.metric && tableShow == 1"><!--v-if="elementInfo.tagList.length > 0"-->
-      <el-col span="9" style="margin-bottom: 20px;">
+      <el-col :span="9" style="margin-bottom: 20px;">
         <div class="metric-title-label too-long-split">{{elementInfo.metric}}</div>
         <div class="li-list-part">
           <el-scrollbar style="height: 100%">
@@ -243,12 +243,12 @@
         </div>
       </el-col>
 
-      <el-col span="1" class="symbol-area"><span class="symbol-equal">=</span></el-col>
+      <el-col :span="1" class="symbol-area"><span class="symbol-equal">=</span></el-col>
 
-      <el-col span="14">
+      <el-col :span="14">
         <div class="li-list-part-label-val-list" >
           <el-scrollbar style="height: 100%">
-            <el-form-item class="metric-title-position right-box-form-content" v-for="(item, index) in elementInfo.selectedTagList" :key="index" :label="item.name" :label-width="100" :ref="'tagItem' + index" :prop="'tagList.' + index + '.value'" >
+            <el-form-item class="metric-title-position right-box-form-content" v-for="(item, index) in elementInfo.selectedTagList" :key="index" :label="item.name" label-width="100" :ref="'tagItem' + index" :prop="'tagList.' + index + '.value'" >
               <el-select  v-model="item.value" ref="tagSelect" size="mini"
                           placeholder=""
                           collapse-tags
@@ -264,48 +264,6 @@
       </el-col>
 
     </el-row>
-<!-- create chart组件显示框 -->
-    <!-- <el-row v-if="elementInfo.metric && tableShow == 1"><!--v-if="elementInfo.tagList.length > 0"-->
-      <!-- <el-col span="12">
-        <div class="metric-title-label">{{elementInfo.metric}}</div>
-        <div class="li-list-part">
-          <ul class="no-list-style">
-            <li class="li-cursor" v-if="!item.isSelect"
-                v-for="(item,index) in elementInfo.tagList"
-                @click="getLidata(index,item)"
-                :key="index">
-              <div>
-                <span >{{ item.name }}</span>
-              </div>
-            </li>
-          </ul>
-        </div>
-      </el-col>
-      <el-col span="12">
-        <div class="li-list-part-label-val-list" >
-          <el-form-item class="metric-title-position"   v-for="(item, index) in elementInfo.selectedTagList" :key="index"  :label-width="100" :ref="'tagItem' + index" :prop="'tagList.' + index + '.value'" >
-            <el-row >{{item.name}}</el-row>
-            <el-row class="metric-title-row-position" > -->
-              
-            <!--多选列表 -->
-              <!-- <el-col span="20" >
-                <el-select  v-model="item.value" ref="tagSelect" size="small"
-                            placeholder=""
-                            collapse-tags
-                            filterable
-                            @change="changeTag"
-                            multiple>
-                  <el-option v-for="(op, j) in elementInfo.selectedTagList[index].list" :key="op + j"  :value="op">{{op}}</el-option>
-                </el-select>
-              </el-col>
-              <el-col span="4" >
-                &nbsp;&nbsp;<button type="button"  @click="deleteMetricLabel(item,index)"  class="nz-btn nz-btn-size-normal nz-btn-style-light nz-btn-style-square nz-btn-style-higher"><span class="top-tool-btn-txt"><i class="el-icon-close"></i></span></button>
-              </el-col>
-            </el-row>
-          </el-form-item>
-        </div>
-      </el-col> -->
-    <!-- </el-row>  -->
   </el-form>
 </template>
 <script>
@@ -324,7 +282,7 @@ export default {
       type: Array,
       default: () => [],
     },
-    metricCascaderList:[],
+    metricCascaderList:Array,
     countTotal: {
       type: Number,
       default: 1,

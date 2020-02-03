@@ -16,6 +16,7 @@
     </div>
     <div class="content-right">
       <div class="top-tools">
+        <div></div>
         <div class="top-tool-search float-right">
           <search-input :searchMsg="searchMsg" @search="search"></search-input>
         </div>
@@ -25,7 +26,7 @@
         :data="tableData"
         border
         tooltip-effect="light"
-        height="calc(100% - 65px)"
+        height="calc(100% - 195px)"
         style="width: 100%;">
         <el-table-column
           :resizable="false"

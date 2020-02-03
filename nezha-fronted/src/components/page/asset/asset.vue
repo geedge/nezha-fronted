@@ -31,18 +31,21 @@
 
     <div class="content-right">
       <div class="top-tools">
-        <button @click.stop="tagShow('showAdd')" class="nz-btn nz-btn-size-normal nz-btn-style-light float-right nz-btn-min-width-82" id="asset-add">
-          <span class="top-tool-btn-txt">
-             <i class="nz-icon-create-square nz-icon"></i>
-            {{$t('overall.add')}}</span>
-          <!-- ADD按钮 -->
-        </button>
-        <div class="top-tool-search float-right"><search-input :searchMsg="searchMsg" @search="search"></search-input></div>
+        <div></div>
+        <div>
+          <button @click.stop="tagShow('showAdd')" class="nz-btn nz-btn-size-normal nz-btn-style-light float-right nz-btn-min-width-82" id="asset-add">
+            <span class="top-tool-btn-txt">
+               <i class="nz-icon-create-square nz-icon"></i>
+              {{$t('overall.add')}}</span>
+            <!-- ADD按钮 -->
+          </button>
+          <div class="top-tool-search float-right"><search-input :searchMsg="searchMsg" @search="search"></search-input></div>
+        </div>
       </div>
 
       <el-table
         class="nz-table"
-        height="calc(100% - 65px)"
+        height="calc(100% - 195px)"
         style="width: 100%;"
         :data="tableData"
         border

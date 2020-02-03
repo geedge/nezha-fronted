@@ -1,5 +1,7 @@
 $global-text-color-active: #ee9d3f; // 全局文字active字色
 
+$content-right-background-color: #fcfcfc; //右侧背景色
+
 $header-text-color: #e5e5e5; // header默认字色
 $header-text-color-active: #fff; // header高亮字色
 $header-text-color-hover: #444; //header hover字色
@@ -19,5 +21,7 @@ $pop-box-shadow: 0 0 12px 0 rgba(0,0,0,0.2);
 $box-title-color: #333; //弹框标题字体颜色
 
 $content-left-text-color: #666; //左侧菜单默认字色
+
+$dropdown-hover-background-color: #fafafa; //下拉鼠标悬停背景色
 
 @import './main.scss';

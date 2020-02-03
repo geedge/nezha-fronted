@@ -44,9 +44,9 @@
 
       <el-row class="operate-area">
 
-        <button type="primary" @click="preview" :disabled="loading" class="nz-btn nz-btn-size-normal nz-btn-style-normal">{{$t('dashboard.metric.previewChart')}}</button>
-        <button :disabled="saveDisabled || loading" type="primary" @click="preview('change')"
-                :class="{'nz-btn nz-btn-disabled nz-btn-size-normal nz-btn-style-light nz-btn-min-width-75 btn-disabled-cursor-not-allowed' : (saveDisabled || loading), 'nz-btn nz-btn-size-normal nz-btn-style-light' : !(saveDisabled || loading)}"
+        <button type="primary" @click="preview" :disabled="loading" class="nz-btn nz-btn-size-large nz-btn-style-normal">{{$t('dashboard.metric.previewChart')}}</button>
+        <button :disabled="saveDisabled || loading" type="primary" @click="preview('change')" class="margin-l-10"
+                :class="{'nz-btn nz-btn-disabled nz-btn-size-large nz-btn-style-light nz-btn-min-width-75 btn-disabled-cursor-not-allowed' : (saveDisabled || loading), 'nz-btn nz-btn-size-large nz-btn-style-light' : !(saveDisabled || loading)}"
         >{{chartSwitchWord}}</button>
         
         <!-- <Button type="primary" @click="addTarget">添加指标</Button> -->
@@ -70,11 +70,11 @@
 
       </el-row>
 <!-- options -->
-      <el-row class="mt-10">
-        <el-checkbox-button :disabled="saveDisabled" v-model="isSave" checked >Options</el-checkbox-button>
+      <el-row class="mt-10 margin-b-10">
+        <div>Options</div>
         <!-- <el-checkbox :disabled="saveDisabled" v-model="isSave" checked >options</el-checkbox> -->
       </el-row>
-      <el-form :model="chartInfo" ref="chartInfo" v-show="isSave">
+      <el-form :model="chartInfo" ref="chartInfo">
         <el-row>
           <div class="common-float-left">
             <el-form-item  label-width="80px" :label="$t('dashboard.panel.chartForm.width')" prop="span"

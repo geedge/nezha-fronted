@@ -22,21 +22,24 @@
     </div>
     <div class="content-right">
       <div class="top-tools">
-        <button type="button" @click="toAdd"
-                class="nz-btn nz-btn-size-normal nz-btn-style-light float-right nz-btn-min-width-82" id="account-add">
+        <div></div>
+        <div>
+          <button type="button" @click="toAdd"
+                  class="nz-btn nz-btn-size-normal nz-btn-style-light float-right nz-btn-min-width-82" id="account-add">
                 <span class="top-tool-btn-txt">
                   <i class="nz-icon-create-square nz-icon"></i>
                   {{$t('overall.add')}}</span>
-        </button>
-        <div class="top-tool-search float-right">
-          <search-input :searchMsg="searchMsg" @search="search"></search-input>
+          </button>
+          <div class="top-tool-search float-right">
+            <search-input :searchMsg="searchMsg" @search="search"></search-input>
+          </div>
         </div>
       </div>
       <el-table
         class="nz-table"
         :data="tableData"
         border
-        height="calc(100% - 65px)"
+        height="calc(100% - 195px)"
         style="width: 100%;">
         <el-table-column
           :resizable="false"

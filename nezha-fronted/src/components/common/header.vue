@@ -58,7 +58,7 @@
           <el-menu-item :index="'3-' + index">
             <div @click="jumpToAsset(item.id)" :class="{'menu-item-active' : (activeIndex == 'asset' && indOf(activeItemIndexes, item.id) > -1) }">
               <span class="too-long-split" style="width: 130px;">{{item.name}}</span>
-              <idc-config-box :post-idc="item" ref="idcConfigBox" placement="left" @after="getIDCOptionData" :button-class="'menu-edit'">
+              <idc-config-box :post-idc="item" ref="idcConfigBox" placement="left" @after="getIDCOptionData">
                 <template v-slot:optionZone>
                   <div @click="closeAllPop" class="menu-edit">
                     <i class="nz-icon nz-icon-edit" @click="getIDCOptionData(item.id)" style="color: inherit"></i>

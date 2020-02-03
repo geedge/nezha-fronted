@@ -33,10 +33,11 @@
             <div class="table-list" >
               <div class="box-content" >
                 <el-row :gutter="20"  class="row-width" style="height: calc(100% - 65px);">
-                  <el-col :span="12" >
+                  <el-col :span="10" >
                       <metric-set ref="metricSet" @on-view-chart="getChartParam"></metric-set>
                   </el-col>
-                  <el-col :span="12" style="height: calc(100% - 10px);overflow-y: auto;overflow-x: hidden;">
+                  <el-col :span="0.5"><div>&nbsp;</div></el-col>
+                  <el-col :span="13" style="height: calc(100% - 180px);overflow-y: auto;overflow-x: hidden;">
                     <el-row class="border-area" v-show="chartCount === 'single'">
                       <div class="chartBox">
                         <line-chart-block
