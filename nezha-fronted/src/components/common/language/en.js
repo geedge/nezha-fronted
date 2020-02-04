@@ -30,7 +30,9 @@ const en = {
     select: 'Select',//'选择'
     ok: 'Ok',//OK
     all: 'All',//'全选'
-    other: 'Others'//"其他"
+    other: 'Others',//"其他"
+    query: 'Query', //查询
+    back: 'Back' //返回
   },
   dashboard:{
     title:'Dashboard',
@@ -418,7 +420,11 @@ const en = {
       path: 'Path',//"路径"
       asset: 'Device',//"设备"
       lastUpdate: 'Last update time',//"最后更新时间"
-      moduleParameter: 'Module parameter'//"组件参数"
+      moduleParameter: 'Module parameter',//"组件参数"
+      addGraph: 'Add Graph', //添加图标
+      element: 'Element',
+      value: 'Value',
+      promExpr: 'Please input expression'
     },
     metrics: {
       metrics: 'Metrics',//"指标"

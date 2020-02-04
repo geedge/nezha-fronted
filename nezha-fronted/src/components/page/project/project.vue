@@ -112,8 +112,14 @@
               <span @click="toEditEndpoint(scope.row)" class="content-right-option" :id="'edp-edit-'+scope.row.id"><i
                 class="nz-icon nz-icon-edit"></i>&nbsp;&nbsp;<span>{{$t('overall.edit')}}</span>
               </span>&nbsp;&nbsp;
+
               <span @click="endpointDetail(scope.row)" class="content-right-option" :id="'edp-detail-'+scope.row.id"><i
-                class="nz-icon nz-icon-view"></i>&nbsp;&nbsp;<span>{{$t('overall.view')}}</span></span>
+                class="nz-icon nz-icon-view"></i>&nbsp;&nbsp;<span>{{$t('overall.view')}}</span>
+              </span>
+
+              <span @click="showEndpoint(scope.row)" class="content-right-option" :id="'edp-query-'+scope.row.id">
+                <i class="el-icon-search"></i>&nbsp;<span>{{$t('overall.query')}}</span>
+              </span>
             </div>
             <span v-else-if="item.prop == 'lastUpdate'">{{dateFormat(scope.row.lastUpdate)}}</span>
             <span v-else-if="item.prop == 'state'" :style="{color: scope.row.state == 0 ? 'red' : (scope.row.state == 0 ? 'green' : '')}">{{scope.row.state == 1 ? 'up' : ''}}{{scope.row.state == 0 ? 'down' : ''}}</span>
@@ -123,6 +129,65 @@
       </el-table>
       <Pagination v-cloak :pageObj="endpointPageObj" @pageNo='endpointPageNo' @pageSize='endpointPageSize' ref="endpointPagination"></Pagination>
     </div>
+
+    <!--endpoint query-->
+    <div class="content-right" v-show="tableShow == 3">
+      <div class="top-tools">
+        <div class="top-tool-search float-left">
+          <div @click="tableShow = 1" class="nz-tab-item-box">
+            <button  class="nz-btn nz-btn-size-normal nz-btn-style-light float-right nz-btn-min-width-82">
+          <span class='top-tool-btn-txt'>
+            {{$t('overall.back')}}</span>
+            </button>
+          </div>
+        </div>
+        <!--时间选择器-->
+        <div class="float-right" style="position: relative;left: 450px">
+          <button @click="changeTime(-10)" class="nz-btn nz-btn-size-small nz-btn-style-light"><i class="el-icon-d-arrow-left"></i></button>
+          <el-date-picker
+            v-model="formatTime"
+            type="datetime"
+            size="mini"
+            clearable
+            :time-arrow-control="true"
+            placeholder="Moment"
+            value-format="yyyy-MM-dd HH:mm:ss"
+            @change="pickTime"
+            >
+          </el-date-picker>
+          <button @click="changeTime(10)" class="nz-btn nz-btn-size-small nz-btn-style-light"><i class="el-icon-d-arrow-right"></i></button>
+        </div>
+        <div class="nz-btn-group nz-btn-group-light float-right margin-r-20">
+          <button slot="reference" class="nz-btn nz-btn-size-large nz-btn-style-normal nz-btn-min-width-120">
+            <span class='top-tool-btn-txt'>{{$t('project.endpoint.addGraph')}}</span>
+          </button>
+        </div>
+      </div>
+      <el-table
+        :data="endpointQueryTabData"
+        border
+        class="nz-table"
+        height="calc(100% - 65px)"
+        style="width: 100%;">
+        <el-table-column
+          type="selection"
+          width="55"
+          align="center"
+        >
+        </el-table-column>
+
+        <el-table-column
+          prop="element"
+          :label="$t('project.endpoint.element')">
+        </el-table-column>
+        <el-table-column
+          prop="value"
+          :label="$t('project.endpoint.value')"
+          width="180">
+        </el-table-column>
+      </el-table>
+    </div>
+
 
     <module-box :currentProject="currentProject" :module="editModule" @reload="getModuleList" ref="moduleBox"></module-box>
     <edit-endpoint-box :currentProject="currentProject" :currentModule="currentModule" :endpoint="editEndpoint" @reload="getEndpointTableData" ref="editEndpointBox"></edit-endpoint-box>
@@ -183,7 +248,7 @@
             label: this.$t('config.account.option'),
             prop: 'option',
             show: true,
-            width: 140
+            width: 200
           }
         ],
         endpointTableData: [],
@@ -251,6 +316,11 @@
           }],
         },
         viewAssetState:false,
+        curEndpoint:null,
+        endpointQueryTabData:[],//endpoint 查询列表数据
+        queryExpression:'',
+        metricList: [], // metric列表
+        formatTime:'',//查询endpoint的时间
       }
     },
     methods: {
@@ -383,6 +453,7 @@
         this.endpointSearchLabel = {moduleId: ''};
         this.metricSearchLabel = {moduleId: ''};
         this.$refs.projectSearch.clearSearch();
+        this.tableShow=1;
       },
 
       //弹出endpoint编辑页
@@ -430,7 +501,6 @@
           this.$refs['assetEditUnit'].tabView = false
         }
       },
-
       //搜索
       endpointSearch: function(searchObj) {
         this.endpointSearchLabel = {};
@@ -507,12 +577,109 @@
         this.viewAssetState=true;
         this.$refs.assetEditUnit.getAssetData(id);
         this.$refs.assetEditUnit.tabView=true;
-      }
+      },
+      showEndpoint:function(endpoint){
+        if(endpoint){
+          this.curEndpoint=endpoint;
+          this.formatTime='';
+        }
+        this.endpointQueryTabData=[];
+        this.$get("/prom/api/v1/query?query={job='ed_"+this.curEndpoint.id+"'}&time="+this.formatTime).then(response=>{
+            if(response.status==="success"){
+              let results=response.data.result;
+              for (let result of results){
+                // {"metric":{"instance":"192.168.40.126:9100","__name__":"scrape_duration_seconds","module":"node_exporter","project":"kafka","asset":"192.168.40.126","job":"ed_1","dc":"dc5"},"value":[1580782176.522,"0.000560761"]}
+                let temp=result.metric.__name__;
+                delete result.metric.__name__;
+                temp+=JSON.stringify(result.metric);
+                let edpQueryData={element:temp,value:result.value[1]}
+                this.endpointQueryTabData.push(edpQueryData);
+              }
+              this.tableShow=3;
+            }
+        })
+      },
+      changeTime:function(size,unit){
+        let time=this.getTime(size,unit);
+        this.formatTime=time;
+        this.showEndpoint();
+      },
+      pickTime:function(){
+        console.log(this.formatTime)
+        this.showEndpoint();
+      },
+      getTime:function(size,unit){//计算时间
+        let now=!this.formatTime? new Date():new Date(this.formatTime);
+        if(unit){
+          switch (unit) {
+            case 'y':
+              now.setFullYear(now.getFullYear()+size);
+              break;
+            case 'M':
+              now.setMonth(now.getMonth()+size);
+              break;
+            case 'd':
+              now.setDate(now.getDate()+size);
+              break;
+            case 'h':
+              now.setHours(now.getHours()+size);
+              break;
+            case 'm':
+              now.setMinutes(now.getMinutes()+size);
+              break;
+            case 's':
+              now.setSeconds(now.getSeconds()+size);
+              break;
+            default:
+              console.error('unit error');
+          }
+        }else{
+          now.setSeconds(now.getSeconds()+size);
+        }
+        let year=now.getFullYear();
+        let month=now.getMonth()+1;
+        month=month<10?"0"+month:month;
+        let day=now.getDate();
+        day=day<10?"0"+day:day;
+        let hour=now.getHours();
+        hour=hour<10?"0"+hour:hour;
+        let minute=now.getMinutes();
+        minute=minute<10?"0"+minute:minute;
+        let second=now.getSeconds();
+        second=second<10?"0"+second:second;
+        let current=year+"-"+month+"-"+day+" "+hour+":"+minute+":"+second;
+        return current;
+      },
+      querySearch(queryString, cb) {
+        let metricList=this.metricList;
+        // 调用 callback 返回建议列表的数据
+        let results=queryString?metricList.filter(this.createFilter(queryString)):metricList;
+        cb(results)
+      },
+      createFilter(queryString) {
+        return (metric) => {
+          return (metric.metric.toLowerCase().indexOf(queryString.toLowerCase()) != -1);
+        };
+      },
+      handleSelect(item) {
+        console.log(item);
+      },
+      // 获取metric列表
+      getSuggestMetric() {
+        this.$get('metric', {pageNo: 1, pageSize: -1}).then(response => {
+          if (response.code === 200) {
+            this.metricList = response.data.list;
+          }else {
+            this.metricList = [];
+          }
+        })
+      },
     },
     created() {
       this.currentProject = this.$store.state.currentProject;
       this.getModuleList();
       this.getMetricsTableData();
+      this.getSuggestMetric();
     },
     mounted() {
       setTimeout(()=>{
