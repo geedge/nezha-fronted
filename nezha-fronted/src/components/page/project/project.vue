@@ -632,6 +632,7 @@
         this.metricSearchLabel = {moduleId: ''};
         this.$refs.projectSearch.clearSearch();
         this.tableShow=1;
+        this.selectedEndpoints=[];
       },
 
       //弹出endpoint编辑页
