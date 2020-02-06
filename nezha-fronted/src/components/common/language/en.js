@@ -421,10 +421,11 @@ const en = {
       asset: 'Device',//"设备"
       lastUpdate: 'Last update time',//"最后更新时间"
       moduleParameter: 'Module parameter',//"组件参数"
-      addGraph: 'Add Graph', //添加图标
+      addGraph: 'View Graph', //添加图标
       element: 'Element',
       value: 'Value',
-      promExpr: 'Please input expression'
+      promExpr: 'Please input expression',
+      dialogTitle:'View', //endpoint 弹出dialog 标题
     },
     metrics: {
       metrics: 'Metrics',//"指标"

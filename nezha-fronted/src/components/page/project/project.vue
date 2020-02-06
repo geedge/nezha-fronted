@@ -1,3 +1,6 @@
+<style lang="scss">
+  @import '../../charts/line-chart-block';
+</style>
 <template>
   <div class="project">
     <div class="content-left">
@@ -134,7 +137,7 @@
     <div class="content-right" v-show="tableShow == 3">
       <div class="top-tools">
         <div class="top-tool-search float-left">
-          <div @click="tableShow = 1" class="nz-tab-item-box">
+          <div @click="backToEdpTab" class="nz-tab-item-box">
             <button  class="nz-btn nz-btn-size-normal nz-btn-style-light float-right nz-btn-min-width-82">
           <span class='top-tool-btn-txt'>
             {{$t('overall.back')}}</span>
@@ -158,7 +161,7 @@
           <button @click="changeTime(10)" class="nz-btn nz-btn-size-small nz-btn-style-light"><i class="el-icon-d-arrow-right"></i></button>
         </div>
         <div class="nz-btn-group nz-btn-group-light float-right margin-r-20">
-          <button slot="reference" class="nz-btn nz-btn-size-large nz-btn-style-normal nz-btn-min-width-120">
+          <button @click="viewGraph" slot="reference" class="nz-btn nz-btn-size-large nz-btn-style-normal nz-btn-min-width-120">
             <span class='top-tool-btn-txt'>{{$t('project.endpoint.addGraph')}}</span>
           </button>
         </div>
@@ -167,12 +170,15 @@
         :data="endpointQueryTabData"
         border
         class="nz-table"
+        :header-cell-class-name="cellClass"
         height="calc(100% - 65px)"
+        @select="selectRow"
         style="width: 100%;">
         <el-table-column
           type="selection"
           width="55"
           align="center"
+          :selectable="selectable"
         >
         </el-table-column>
 
@@ -200,10 +206,37 @@
       @tablelable="tablelabelEmit"
       ref="elementset"
     ></element-set>
+
+    <el-dialog class="line-chart-block-modal"
+      :title="$t('project.endpoint.dialogTitle')"
+      :visible.sync="graphShow"
+      width="90%"
+      @close="dialogClose"
+      @opened="initDialog">
+      <div slot="title">
+        {{$t("project.endpoint.dialogTitle")}}
+        <div class="float-right panel-calendar dialog-tool">
+          <el-date-picker ref="calendar" prefix-icon=" " size="mini" class="nz-dashboard-picker"
+                          @change="dateChange"
+                          v-model="searchTime"
+                          type="datetimerange"
+                          :picker-options="pickerOptions"
+                          :range-separator="$t('dashboard.panel.to')"
+                          :start-placeholder="$t('dashboard.panel.startTime')"
+                          :end-placeholder="$t('dashboard.panel.endTime')"
+                          value-format="yyyy-MM-dd hh:mm:ss"
+                          align="right">
+          </el-date-picker>
+          <!--<button @click="refreshChart" type="button" class="nz-btn nz-btn-size-normal nz-btn-style-light"><i style="font-size: 14px;" class="el-icon-refresh-right"></i></button>-->
+        </div>
+      </div>
+      <div class="line-area " ref="viewGraphChart"  id="viewGraphChart"></div>
+    </el-dialog>
   </div>
 </template>
 
 <script>
+  import echarts from 'echarts';
   export default {
     name: "project2",
     data() {
@@ -320,7 +353,152 @@
         endpointQueryTabData:[],//endpoint 查询列表数据
         queryExpression:'',
         metricList: [], // metric列表
-        formatTime:'',//查询endpoint的时间
+        formatTime:'',//查询endpoint的时间，
+        selectedEndpoints:[],//选中的metric{label='value'}
+        chartDatas:[],//从query_range查询到的数据
+        lenged:[],//echart lenged
+        graphChart:null,//图标对象
+        graphShow:false,
+        searchTime:[],
+        pickerOptions: {
+          shortcuts: [
+            {
+              text:  this.$t("dashboard.panel.recOne"),
+              onClick(picker) {
+                const end = new Date();
+                const start = new Date();
+                start.setHours(start.getHours() - 1);
+                picker.$emit('pick', [start, end]);
+              }
+            },{
+              text: this.$t("dashboard.panel.recFour"),
+              onClick(picker) {
+                const end = new Date();
+                const start = new Date();
+                start.setHours(start.getHours() - 4);
+                picker.$emit('pick', [start, end]);
+              }
+            }, {
+              text: this.$t("dashboard.panel.recOneDay"),
+              onClick(picker) {
+                const end = new Date();
+                const start = new Date();
+                start.setDate(start.getDate() - 1);
+                picker.$emit('pick', [start, end]);
+              }
+            },  {
+              text: this.$t("dashboard.panel.yesterday"),
+              onClick(picker) {
+                const start = new Date();
+                const end = new Date();
+                start.setDate(start.getDate() - 1);
+                start.setHours(0);
+                start.setMinutes(0);
+                start.setSeconds(0);
+                end.setDate(end.getDate() - 1);
+                end.setHours(23);
+                end.setMinutes(59);
+                end.setSeconds(59);
+                picker.$emit('pick', [start, end]);
+              }
+            },{
+              text: this.$t("dashboard.panel.recSevenDay"),
+              onClick(picker) {
+                const end = new Date();
+                const start = new Date();
+                start.setDate(start.getDate() - 7);
+                picker.$emit('pick', [start, end]);
+              }
+            }, {
+              text: this.$t("dashboard.panel.recOneMonth"),
+              onClick(picker) {
+                const end = new Date();
+                const start = new Date();
+                start.setDate(start.getDate() - 30);
+                picker.$emit('pick', [start, end]);
+              }
+            }, {
+              text: this.$t("dashboard.panel.curMonth"),
+              onClick(picker) {
+                const end = new Date();
+                const start = new Date();
+                start.setDate(1);
+                start.setHours(0);
+                start.setMinutes(0);
+                picker.$emit('pick', [start, end]);
+              }
+            },{
+              text: this.$t("dashboard.panel.lastMonth"),
+              onClick(picker) {
+                const end = new Date();
+                const start = new Date();
+                start.setDate(1);
+                start.setMonth(start.getMonth() - 1);
+                end.setDate(0);
+                start.setStart();
+                end.setEnd();
+                picker.$emit('pick', [start, end]);
+              }
+            }]
+        },
+        chartOptions:{
+          title: {
+            text: ""
+          },
+          tooltip: {
+            trigger: 'axis',
+          },
+          legend: {
+            type:'scroll',
+            height:80,
+            show:true,
+            icon:"roundRect",
+            itemHeight:5,
+            itemWidth:15,
+            data:[],
+            orient:'vertical',
+          },
+          grid: {
+            //height:"50%",
+            //top: '13%',
+            containLabel: false,
+            bottom:156
+          },
+          dataZoom: [{
+            type: 'slider',
+            show:true,
+            xAxisIndex: [0],
+            start: 0,
+            end: 100,
+            height:25,
+            bottom:96
+          }],
+          xAxis: {
+            type: 'time',
+            axisLabel: {
+              intervale: 0,
+              rotate: 0,
+              formatter: function (value) {
+                var t_date = new Date(value);
+                return [t_date.getFullYear(), t_date.getMonth() + 1, t_date.getDate()].join('-') + "\n"
+                  + [t_date.getHours(), t_date.getMinutes()].join(':');
+              }
+            },
+            axisPointer: {//y轴上显示指针对应的值
+              show: true,
+            },
+            splitLine:{
+              show:false
+            }
+          },
+          yAxis: {
+            type: 'value',
+            splitLine:{
+              show:true
+            },
+          },
+          series: []
+        }
       }
     },
     methods: {
@@ -579,6 +757,7 @@
         this.$refs.assetEditUnit.tabView=true;
       },
       showEndpoint:function(endpoint){
+        console.log(endpoint);
         if(endpoint){
           this.curEndpoint=endpoint;
           this.formatTime='';
@@ -591,13 +770,22 @@
                 // {"metric":{"instance":"192.168.40.126:9100","__name__":"scrape_duration_seconds","module":"node_exporter","project":"kafka","asset":"192.168.40.126","job":"ed_1","dc":"dc5"},"value":[1580782176.522,"0.000560761"]}
                 let temp=result.metric.__name__;
                 delete result.metric.__name__;
-                temp+=JSON.stringify(result.metric);
+                temp+="{";
+                for (let key in result.metric){
+                  temp+=key +"='"+result.metric[key]+"',";
+                }
+                temp=temp.charAt(temp.length-1) == ","?temp.substr(0,temp.length-1):temp;
+                temp+="}";
                 let edpQueryData={element:temp,value:result.value[1]}
                 this.endpointQueryTabData.push(edpQueryData);
               }
               this.tableShow=3;
             }
         })
+      },
+      backToEdpTab:function(){
+        this.tableShow=1;
+        this.selectedEndpoints=[];
       },
       changeTime:function(size,unit){
         let time=this.getTime(size,unit);
@@ -650,36 +838,98 @@
         let current=year+"-"+month+"-"+day+" "+hour+":"+minute+":"+second;
         return current;
       },
-      querySearch(queryString, cb) {
-        let metricList=this.metricList;
-        // 调用 callback 返回建议列表的数据
-        let results=queryString?metricList.filter(this.createFilter(queryString)):metricList;
-        cb(results)
+      selectRow:function(selection, row){//selection 选中的row的数组  row 选中的当前行
+        this.selectedEndpoints=selection;
       },
-      createFilter(queryString) {
-        return (metric) => {
-          return (metric.metric.toLowerCase().indexOf(queryString.toLowerCase()) != -1);
-        };
+      selectable:function(row,index){
+        if(this.selectedEndpoints.length>=20 && !this.selectedEndpoints.includes(row)){
+          return false;
+        }else{
+          return true;
+        }
       },
-      handleSelect(item) {
-        console.log(item);
+      viewGraph:function(){
+        if(this.graphChart){
+          this.graphChart.clear();
+        }
+
+        this.chartDatas=[];
+        this.lenged=[];
+        this.queryChartDate();
+        this.graphShow=true;
+
       },
-      // 获取metric列表
-      getSuggestMetric() {
-        this.$get('metric', {pageNo: 1, pageSize: -1}).then(response => {
-          if (response.code === 200) {
-            this.metricList = response.data.list;
-          }else {
-            this.metricList = [];
-          }
-        })
+      dialogClose:function(){
+        this.graphShow=false;
+        this.graphChart.clear();
+      },
+      queryChartDate:function(){
+        let start=this.searchTime[0]?this.searchTime[0]:this.getTime(-1,'h');
+        let end=this.searchTime[1]?this.searchTime[1]:this.getTime(0,'h')
+        this.searchTime=[start,end];
+        let timeDiff=(new Date(end).getTime()-new Date(start).getTime())/1000/(24*60*60);
+        // end - start < 1 day : 15s
+        // end - start < 7 day : 5m
+        // end - start < 30 day : 10m
+        // end - start > 30 day : 30m
+        let step='15s';
+        if(timeDiff< 1){
+          step='15s';
+        }else if(timeDiff < 7){
+          step='5m';
+        }else if(timeDiff<30){
+          step='10m';
+        }else{
+          step='30m';
+        }
+        for(let endpoint of this.selectedEndpoints){
+          this.$get("/prom/api/v1/query_range?query="+endpoint.element+"&start="+start+"&end="+end+"&step="+step).then(response=> {
+            if (response.status === "success") {
+              let queryData=response.data.result[0];
+              if(queryData){
+                let chartData={
+                  type:"line",
+                  symbol:'none',  //去掉点
+                  smooth:true,  //曲线变平滑
+                };
+                chartData.name=queryData.metric.__name__;
+                this.lenged.push(chartData.name);
+                chartData.data=queryData.values.map((dpsItem, dpsIndex) => {
+                  console.log(typeof Number(dpsItem[1]))
+                  return [dpsItem[0] * 1000, Number(dpsItem[1])];
+                });
+                this.chartDatas.push(chartData);
+              }
+            }
+          })
+        }      },
+      dateChange:function(){
+        if(this.graphChart){
+          this.graphChart.clear();
+        }
+        this.queryChartDate();
+        this.chartOptions.legend.data=this.lenged;
+        this.chartOptions.series=this.chartDatas;
+        this.graphChart.setOption(this.chartOptions);//创建图表
+      },
+      initDialog:function(){
+        this.graphChart = echarts.init(document.getElementById('viewGraphChart'));
+        this.chartOptions.legend.data=this.lenged;
+        this.chartOptions.series=this.chartDatas;
+        console.log("chartOptions")
+        console.log(this.chartOptions)
+        this.graphChart.setOption(this.chartOptions);//创建图表
+      },
+      cellClass(row){ //给复选框那一列添加 类名为 ‘disabledCheck’
+        if (row.columnIndex === 0) {
+          return 'disabledCheck'
+        }
       },
     },
     created() {
       this.currentProject = this.$store.state.currentProject;
       this.getModuleList();
       this.getMetricsTableData();
-      this.getSuggestMetric();
     },
     mounted() {
       setTimeout(()=>{
@@ -720,6 +970,9 @@
       },
       moduleListReloadWatch(n, o) {
         this.getModuleList(this.currentProject.id);
+      },
+      curEndpoint:function(n,o){
+        this.chartOptions.title.text=n.host+ " tsg disk"
       }
     }
   }
@@ -957,6 +1210,14 @@
   .el-input-group__append>i {
     cursor: pointer;
   }
+  .el-table .disabledCheck .cell .el-checkbox__inner{
+    display: none !important;
+  }
 
+  .el-table .disabledCheck .cell::before{
+    content: '';
+    text-align: center;
+    line-height: 37px;
+  }
   /* end--覆盖分页组件样式*/
 </style>
