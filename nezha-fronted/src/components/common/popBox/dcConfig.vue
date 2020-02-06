@@ -60,7 +60,8 @@
         postIdc:{type:Object},
         placement:{type:String},
         buttonClass:{type:String},
-        isEdit:{type:Boolean,default:true}
+        isEdit:{type:Boolean,default:true},
+        userData:{type:Array}
       },
       created() {
         this.init();
@@ -109,11 +110,14 @@
         },
         getUserData() {
           let temp=this;
-          temp.$get('sys/user/list').then(response => {
-            if (response.code === 200) {
-              temp.principals = response.data.list
-            }
-          })
+          if(!temp.userData||temp.userData.length<1){
+            temp.$get('sys/user/list').then(response => {
+              if (response.code === 200) {
+                temp.principals = response.data.list
+                console.log("queryUserData")
+              }
+            })
+          }
         },
         saveOrToEdit:function(){
           if (!this.popBox.isEdit) {

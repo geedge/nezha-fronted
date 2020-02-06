@@ -17,7 +17,7 @@
               <span v-else>{{item.name}}</span>
             </div>
 
-            <idc-config-box ref="idcConfigBox" :post-idc="item" placement="left" @after="getIDCOptionData" :button-class="'checkbox-edit'">
+            <idc-config-box ref="idcConfigBox" :post-idc="item" placement="left" @after="getIDCOptionData" :button-class="'checkbox-edit'" :user-data="idcUserData">
               <template v-slot:optionZone>
                 <span @click="closeAllPop">
                   <i class="nz-icon nz-icon-edit" @click="getSingleIDCData(item.id,'edit')"></i>
@@ -101,7 +101,7 @@
               <button type="button" v-else class="nz-btn nz-btn-size-normal nz-btn-style-light nz-btn-min-width-75 nz-btn-disabled">{{scope.row.alertNum}}</button>
             </template>
             <div v-if="item.prop=='dataCenter'">
-              <idc-config-box :post-idc="JSON.parse(JSON.stringify(scope.row.idc))" ref="idcConfigBox" :is-edit="false" placement="left"  @after="getAssetData(null, true)" :button-class="'checkbox-edit'">
+              <idc-config-box :post-idc="JSON.parse(JSON.stringify(scope.row.idc))" ref="idcConfigBox" :is-edit="false" placement="left"  @after="getAssetData(null, true)" :button-class="'checkbox-edit'" :user-data="idcUserData">
                 <template v-slot:optionZone>
                   <span class="link" @click="closeAllPop">{{scope.row.idc.name}}</span>
                 </template>
@@ -315,7 +315,7 @@
           principal: '',
           tel: ''
         },
-        idcUserData: '',
+        idcUserData: [],
         modelCount: '',
         isResourceShow: 0,
         unitDisable: '',
