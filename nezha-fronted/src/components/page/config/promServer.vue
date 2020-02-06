@@ -60,9 +60,13 @@
 
 
             <span v-else-if="item.prop == 'type'">
-                            {{scope.row[item.prop] == '1' ? 'Global' : ''}}
-                            {{scope.row[item.prop] == '2' ? 'Per-Datacenter' : ''}}
-                        </span>
+                {{scope.row[item.prop] == '1' ? 'Global' : ''}}
+                {{scope.row[item.prop] == '2' ? 'Per-Datacenter' : ''}}
+            </span>
+            <span v-else-if="item.prop == 'status'">
+                {{scope.row[item.prop] == '1' ? $t('overall.available') : ''}}
+                {{scope.row[item.prop] == '0' ? $t('overall.unavailable') : ''}}
+            </span>
             <div v-else-if="item.prop == 'option'" class="content-right-options">
                           <span @click="del(scope.row)" class="content-right-option" :id="'prom-del-'+scope.row.id"><i
                             class="el-icon-delete"></i>&nbsp;&nbsp;<span>{{$t('overall.delete')}}</span></span>
@@ -115,14 +119,16 @@
                   <el-option @click.native="blurEditIdc()" v-for="item in idcData" :key="item.id" :label="item.name"
                              :value="item" :id="'prom-edit-idc-op-'+item.id">
                     <span class="config-dropdown-label-txt">{{item.name}}</span>
-                    <idc-config-box :post-idc="item" placement="left" @after="getIdcData"
-                                    :button-class="'config-dropdown-btn'">
-                      <template v-slot:optionZone>
-                        <i class="el-icon-edit-outline"></i>
-                      </template>
-                    </idc-config-box>
-                    <span class="config-dropdown-btn config-dropdown-btn-delete" @click.stop="toDelIdc(item)"
-                          :id="'prom-edit-idc-op-del-'+item.id"><i class="el-icon-delete"></i></span>
+                    <div class="config-dropdown-label-icons">
+                       <span class="config-dropdown-btn config-dropdown-btn-delete" @click.stop="toDelIdc(item)"
+                             :id="'prom-edit-idc-op-del-'+item.id"><i class="el-icon-delete"></i></span>
+                      <idc-config-box :post-idc="item" placement="left" @after="getIdcData"
+                                      :button-class="'config-dropdown-btn'">
+                        <template v-slot:optionZone>
+                          <i class="nz-icon nz-icon-edit"></i>
+                        </template>
+                      </idc-config-box>
+                    </div>
                   </el-option>
                 </el-select>
 
@@ -247,6 +253,14 @@
             label: this.$t("config.promServer.type"),
             prop: 'type',
             show: true,
+          }, {
+            label: this.$t('asset.createAssetTab.state'),
+            prop: 'status',
+            show: true
+          }, {
+            label: this.$t('config.promServer.checkTime'),
+            prop: 'checkTime',
+            show: true
           }, {
             label: this.$t('config.account.option'),
             prop: 'option',

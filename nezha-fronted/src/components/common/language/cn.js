@@ -24,7 +24,11 @@ const cn = {
     select: '选择',
     ok: 'Ok',
     all: '全选',
-    other: "其他"
+    other: "其他",
+    query: '查询',
+    back: '返回',
+    unavailable: '不可用',
+    available: '可用'
   },
   dashboard:{
     title:'仪表盘',
@@ -335,7 +339,8 @@ const cn = {
       promId: "Prometheus Server ID",
       createProm: "新增Prometheus Server",
       editProm: "修改Prometheus Server",
-      type: "类别"
+      type: "类别",
+      checkTime: '检查时间'
     },
   },
   alert: {

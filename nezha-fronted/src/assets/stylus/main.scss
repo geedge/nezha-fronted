@@ -53,6 +53,18 @@ li{
 .margin-b-20 {
   margin-bottom: 20px !important;
 }
+.margin-l-30 {
+  margin-left: 30px !important;
+}
+.margin-r-30 {
+  margin-right: 30px !important;
+}
+.margin-t-30 {
+  margin-top: 30px !important;
+}
+.margin-b-30 {
+  margin-bottom: 30px !important;
+}
 .float-left {
   float: left;
 }
@@ -986,3 +998,20 @@ li{
 .el-date-table td.end-date span, .el-date-table td.start-date span {
   background-color: $global-text-color-active !important;
 }
+
+/* --begin--复选框自定义颜色 */
+.el-checkbox__input.is-focus .el-checkbox__inner,
+.el-checkbox__input .el-checkbox__inner:hover,
+.el-checkbox__input.is-checked .el-checkbox__inner,
+.el-checkbox__input.is-indeterminate .el-checkbox__inner {
+  border-color: $global-text-color-active;
+}
+
+.el-checkbox__input.is-checked + .el-checkbox__label {
+  color: $global-text-color-active;
+}
+
+.el-checkbox__input.is-checked .el-checkbox__inner, .asset .content-left .el-checkbox__input.is-indeterminate .el-checkbox__inner {
+  background-color: $global-text-color-active;
+}
+/* --end--复选框自定义颜色 */

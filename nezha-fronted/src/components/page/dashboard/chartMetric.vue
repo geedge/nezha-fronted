@@ -106,12 +106,12 @@
 <template>
   <el-form :model="elementInfo" ref="elementInfo"   >
     <el-row >
-      <el-col span="16">
+      <el-col :span="16">
         <!-- <span  class="star-red">*</span>&nbsp; -->
         {{$t('dashboard.panel.chartForm.metric')}}
       </el-col>
 
-      <el-col span="8">
+      <el-col :span="8">
         <div class="nz-tab-chart-item-box">
           <div @click="clickTabelShow(1,'normal')" class="nz-tab-style nz-tab-chart-style-left" :class="{'nz-tab-style-light' : tableShow == 1}">
             <span>{{$t('dashboard.metric.normal')}}</span>
@@ -132,7 +132,7 @@
       </el-form-item>
     </template>
     <template v-if="tableShow == 1">
-      <el-form-item class="right-box-form-content" :label-width="80"  prop="metric" :rules="{ required: true,  message: $t('validate.required'), trigger: 'blur' }"><!--:rules="{ required: true, type: 'string', message: '', trigger: 'change' }"-->
+      <el-form-item class="right-box-form-content" label-width="80"  prop="metric" :rules="{ required: true,  message: $t('validate.required'), trigger: 'blur' }"><!--:rules="{ required: true, type: 'string', message: '', trigger: 'change' }"-->
         <el-cascader ref="metricSelect" :class="{'right-box-row-with-btn': countTotal > 1, 'full-width': countTotal <= 1}" filterable placeholder="" popper-class="" size="small"
                  v-model="elementInfo.metric"
                  :options="metricCascaderList"
@@ -149,7 +149,7 @@
 <!-- create chart组件显示框 -->
     <el-row v-if="elementInfo.metric && tableShow == 1"><!--v-if="elementInfo.tagList.length > 0"-->
 
-      <el-col span="8">
+      <el-col :span="8">
         <div class="metric-title-label too-long-split">{{elementInfo.metric}}</div>
         <div class="li-list-part">
           <el-scrollbar style="height: 100%">
@@ -163,12 +163,12 @@
         </div>
       </el-col>
 
-      <el-col span="2" class="symbol-area"><span class="symbol-equal">=</span></el-col>
+      <el-col :span="2" class="symbol-area"><span class="symbol-equal">=</span></el-col>
 
-      <el-col span="14">
+      <el-col :span="14">
         <div class="li-list-part-label-val-list" >
           <el-scrollbar style="height: 100%">
-            <el-form-item class="metric-title-position right-box-form-content" v-for="(item, index) in elementInfo.selectedTagList" :key="index" :label="item.name" :label-width="100" :ref="'tagItem' + index" :prop="'tagList.' + index + '.value'" >
+            <el-form-item class="metric-title-position right-box-form-content" v-for="(item, index) in elementInfo.selectedTagList" :key="index" :label="item.name" label-width="100" :ref="'tagItem' + index" :prop="'tagList.' + index + '.value'" >
               <el-select  v-model="item.value" ref="tagSelect" size="mini"
                           placeholder=""
                           collapse-tags
@@ -201,7 +201,7 @@ export default {
       type: Array,
       default: () => [],
     },
-    metricCascaderList:[],
+    metricCascaderList:Array,
     countTotal: {
       type: Number,
       default: 1,

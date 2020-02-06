@@ -703,20 +703,3 @@
     margin-right:6px;
   }
 </style>
-<style lang="scss">
-  .asset .content-left .el-checkbox__input.is-focus .el-checkbox__inner,
-  .asset .content-left .el-checkbox__input .el-checkbox__inner:hover,
-  .asset .content-left .el-checkbox__input.is-checked .el-checkbox__inner,
-  .asset .content-left .el-checkbox__input.is-indeterminate .el-checkbox__inner {
-    border-color: $global-text-color-active;
-  }
-
-  .asset .content-left .el-checkbox__input.is-checked + .el-checkbox__label {
-    color: $global-text-color-active;
-  }
-
-  .asset .content-left .el-checkbox__input.is-checked .el-checkbox__inner, .asset .content-left .el-checkbox__input.is-indeterminate .el-checkbox__inner {
-    background-color: $global-text-color-active;
-  }
-
-</style>

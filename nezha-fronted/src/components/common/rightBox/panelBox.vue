@@ -95,7 +95,7 @@
                 if (response.code === 200) {
                   this.esc();
                   this.$message({duration: 1000, type: 'success', message: this.$t("tip.saveSuccess")});
-                  this.$emit("reload");
+                  this.$emit("reload", this.panel.name);
                 } else {
                   this.$message.error(response.msg);
                 }
@@ -125,6 +125,6 @@
 
 <style scoped>
   .z-top{
-    z-index: 50;
+    z-index: 51 !important;
   }
 </style>

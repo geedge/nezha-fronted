@@ -46,11 +46,15 @@
   .label-center{
     margin-top:6px;
   }
-  .z-top{
-    z-index: 50;
+
+  .z-top {
+    z-index: 49;
   }
 </style>
 <template key="chartBox">
+<div>
+  <panel-box :panel="panel" @reload="panelReload" ref="panelBox2"></panel-box>
+
   <transition name="right-box">
     <div class="right-box right-box-add-chart z-top" v-if="rightBox.show" >
       <!-- begin--顶部按钮-->
@@ -69,6 +73,27 @@
       <!-- begin--表单-->
       <el-scrollbar class="right-box-form-box">
         <el-form class="right-box-form" :model="chart" label-position="top" :rules="rules" ref="chartForm">
+          <el-form-item :label="$t('dashboard.panel.title')">
+            <div class="right-box-form-content">
+              <el-select class="right-box-row-with-btn" popper-class="config-dropdown"
+                         v-model="panelId" placeholder="" v-if="rightBox.show" size="small">
+                <el-option v-for="item in panelData" :key="item.id" :label="item.name"
+                           :value="item.id" :id="'chart-box-panel-'+item.id">
+                  <span class="config-dropdown-label-txt">{{item.name}}</span>
+                  <div class="config-dropdown-label-icons">
+                    <span class="config-dropdown-btn config-dropdown-btn-delete" @click.stop=""
+                          :id="'chart-box-panel-op-del-'+item.id"><i class="el-icon-delete"></i></span>
+                    <span class="config-dropdown-btn" @click.stop=""
+                    :id="'chart-box-panel-op-edit-'+item.id"><i class="nz-icon nz-icon-edit"></i></span>
+                  </div>
+                </el-option>
+              </el-select>
+
+              <div class="right-box-row-btn" v-if="rightBox.show" @click="toAddPanel">
+                <i class="el-icon-plus" id="chart-box-panel-plus"></i>
+              </div>
+            </div>
+          </el-form-item>
           <el-form-item :label='$t("dashboard.panel.chartForm.chartName")' prop="title">
             <el-input size="mini" maxlength="64" show-word-limit v-model="chart.title"></el-input>
           </el-form-item>
@@ -148,6 +173,8 @@
       </div>
     </div>
   </transition>
+
+</div>
 </template>
 
 <script>
@@ -157,7 +184,7 @@
   export default {
     name: "chartBox",
     props: {
-
+      panelData: Array
     },
     data() {
       return {
@@ -176,12 +203,13 @@
             id: '',
             expression: '',
             type: ''
-          }
+          },
+          panel: ''
         },
         rules: {
           title: [
             {required: true,  message: this.$t('validate.required'),  trigger: 'blur'}
-          ],
+          ]
          /*
           heigh: [
             {required: true, message: this.$t('validate.required'), trigger: 'blur'}
@@ -209,18 +237,35 @@
         isedit: false,
         //productId: 0,//不需要这个参数，可以删除
         panelId: 0,
+        panelName: '',
         metricList: [], // metric列表
         metricCascaderList:[],//metric级联列表
         deleteIndex: '', // 要删除的指标模块
         subCount: 0, // subSave保存data到bus计数器
+        panel: {
+          id: '',
+          name: ''
+        },
       }
     },
     components:{
-      'chart-metric':ChartMetric
+      'chart-metric':ChartMetric,
     },
     methods: {
       show(show) {
         this.rightBox.show = show;
+      },
+      toAddPanel() {
+        this.$refs.panelBox2.show(true);
+        this.panel = {
+          id: '',
+          name: ''
+        };
+        this.$refs.panelBox2.setTitle(this.$t("dashboard.panel.createPanelTitle"));
+      },
+      panelReload(panelName) {
+        this.panelName = panelName;
+        this.$emit("reloadOnlyPanel");
       },
       setTitle(title) {
         this.rightBox.title = title;
@@ -542,7 +587,19 @@
 
     },
     watch: {
-
+      panelData: {
+        deep: true,
+        immediate: true,
+        handler(n, o) {
+          if (this.panelName) {
+            for (let i = 0; i < n.length; i++) {
+              if (n[i].name == this.panelName) {
+                this.panelId = n[i].id;
+              }
+            }
+          }
+        }
+      }
     }
   }
 </script>

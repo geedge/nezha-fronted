@@ -23,44 +23,44 @@
           </el-dropdown>
         </div>
         <div>
-        <button @click="toAddChart"
-                class="nz-btn nz-btn-size-normal nz-btn-style-light float-right nz-btn-min-width-82">
-                    <span class="top-tool-btn-txt">
-                        <i class="nz-icon-create-square nz-icon"></i>
-                        {{$t('overall.add')}}</span>
-        </button>
-        <div class="top-tool-search float-right">
-          <search-input ref="searchInput" :searchMsg="searchMsg" @search="search"></search-input>
-        </div>
-
-        <div class="nz-btn-group nz-btn-group-light float-right margin-r-20">
-          <button style="border-right: 1px solid rgba(162,162,162,0.50);" type="button"
-                  class="nz-btn nz-btn-size-normal nz-btn-style-light" @click="Refresh()">
-            <i style="font-size: 12px" class="global-active-color nz-icon nz-icon-refresh"></i>
-          </button><el-popover
-          v-model="visible" placement="bottom-start" width="200" trigger="click">
-            <ul class="popover_ul">
-              <li v-for="i in intervalList" :style="{color:interval==i.value?'#31749C':''}" :key="i.value+i.name"
-                  @click="selectInterval(i.value)">
-                {{i.name}}
-              </li>
-            </ul>
-            <button type="button" style="border-radius: 0 4px 4px 0"
-                    class="nz-btn nz-btn-size-normal nz-btn-style-light" slot="reference">
-              <i style="font-size: 12px" class="nz-icon nz-icon-arrow-down"></i>
-            </button>
-          </el-popover>
-        </div>
-        <div class="panel-calendar margin-r-20">
-          <div class="block">
-            <el-date-picker prefix-icon=" " class="nz-dashboard-picker" size="mini" ref="calendar"
-                            format="yyyy/MM/dd HH:mm" @change="dateChange" v-model="searchTime" type="datetimerange"
-                            :picker-options="pickerOptions" :range-separator="$t('dashboard.panel.to')"
-                            :start-placeholder="$t('dashboard.panel.startTime')"
-                            :end-placeholder="$t('dashboard.panel.endTime')" align="right">
-            </el-date-picker>
+          <button @click="toAddChart"
+                  class="nz-btn nz-btn-size-normal nz-btn-style-light float-right nz-btn-min-width-82">
+                      <span class="top-tool-btn-txt">
+                          <i class="nz-icon-create-square nz-icon"></i>
+                          {{$t('overall.add')}}</span>
+          </button>
+          <div class="top-tool-search float-right">
+            <search-input ref="searchInput" :searchMsg="searchMsg" @search="search"></search-input>
           </div>
-        </div>
+
+          <div class="nz-btn-group nz-btn-group-light float-right margin-r-20">
+            <button style="border-right: 1px solid rgba(162,162,162,0.50);" type="button"
+                    class="nz-btn nz-btn-size-normal nz-btn-style-light" @click="Refresh()">
+              <i style="font-size: 12px" class="global-active-color nz-icon nz-icon-refresh"></i>
+            </button><el-popover
+            v-model="visible" placement="bottom-start" width="200" trigger="click">
+              <ul class="popover_ul">
+                <li v-for="i in intervalList" :style="{color:interval==i.value?'#31749C':''}" :key="i.value+i.name"
+                    @click="selectInterval(i.value)">
+                  {{i.name}}
+                </li>
+              </ul>
+              <button type="button" style="border-radius: 0 4px 4px 0"
+                      class="nz-btn nz-btn-size-normal nz-btn-style-light" slot="reference">
+                <i style="font-size: 12px" class="nz-icon nz-icon-arrow-down"></i>
+              </button>
+            </el-popover>
+          </div>
+          <div class="panel-calendar margin-r-20">
+            <div class="block">
+              <el-date-picker prefix-icon=" " class="nz-dashboard-picker" size="mini" ref="calendar"
+                              format="yyyy/MM/dd HH:mm" @change="dateChange" v-model="searchTime" type="datetimerange"
+                              :picker-options="pickerOptions" :range-separator="$t('dashboard.panel.to')"
+                              :start-placeholder="$t('dashboard.panel.startTime')"
+                              :end-placeholder="$t('dashboard.panel.endTime')" align="right">
+              </el-date-picker>
+            </div>
+          </div>
         </div>
       </div>
       <div class="table-list" @scroll="onScroll" id="tableList">
@@ -72,7 +72,7 @@
     </div>
 
     <panel-box :panel="panel" @reload="panelReload" @reloadForDel="panelReloadForDel" ref="panelBox"></panel-box>
-    <chart-box ref="addChartModal" @on-create-success="createSuccess" @on-delete-success="delChartOk"></chart-box>
+    <chart-box ref="addChartModal" :panel-data="panelData" @reload="panelReload" @on-create-success="createSuccess" @on-delete-success="delChartOk" @reloadOnlyPanel="panelReloadOnlyPanel"></chart-box>
   </div>
 </template>
 
@@ -404,6 +404,13 @@
           path: "/" + data,
           query: {
             t: +new Date()
+          }
+        });
+      },
+      panelReloadOnlyPanel() { //仅刷新panel数据
+        this.$get('panel?pageNo=1&pageSize=-1').then(response => {
+          if (response.code === 200) {
+            this.panelData = response.data.list;
           }
         });
       },

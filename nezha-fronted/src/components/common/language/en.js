@@ -32,7 +32,9 @@ const en = {
     all: 'All',//'全选'
     other: 'Others',//"其他"
     query: 'Query', //查询
-    back: 'Back' //返回
+    back: 'Back', //返回
+    unavailable: 'Unavailable',
+    available: 'Available'
   },
   dashboard:{
     title:'Dashboard',
@@ -342,7 +344,8 @@ const en = {
       promId: 'Prometheus server ID',//"Prometheus Server ID"
       createProm: 'New prometheus server',//"新增Prometheus Server"
       editProm: 'Edit prometheus server',//"修改Prometheus Server"
-      type: 'Type'//"类别"
+      type: 'Type',//"类别"
+      checkTime: 'Check time'
     },
   },
   alert: {

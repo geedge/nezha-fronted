@@ -1,5 +1,11 @@
 <style lang="scss">
-  @import '../../charts/line-chart-block';
+  .project-calendar .el-input__inner {
+    height: 26px !important;
+    border-color: #d8d8d8;
+  }
+  .project .nz-table .el-table__row td:first-of-type {
+    padding-left: 0;
+  }
 </style>
 <template>
   <div class="project">
@@ -136,8 +142,8 @@
     <!--endpoint query-->
     <div class="content-right" v-show="tableShow == 3">
       <div class="top-tools">
-        <div class="top-tool-search float-left">
-          <div @click="backToEdpTab" class="nz-tab-item-box">
+        <div>
+          <div @click="backToEdpTab">
             <button  class="nz-btn nz-btn-size-normal nz-btn-style-light float-right nz-btn-min-width-82">
           <span class='top-tool-btn-txt'>
             {{$t('overall.back')}}</span>
@@ -145,12 +151,13 @@
           </div>
         </div>
         <!--时间选择器-->
-        <div class="float-right" style="position: relative;left: 450px">
-          <button @click="changeTime(-10)" class="nz-btn nz-btn-size-small nz-btn-style-light"><i class="el-icon-d-arrow-left"></i></button>
+        <div>
+          <button @click="changeTime(-10)" class="nz-btn nz-btn-size-normal nz-btn-style-light"><i class="el-icon-d-arrow-left"></i></button>
           <el-date-picker
             v-model="formatTime"
             type="datetime"
             size="mini"
+            class="project-calendar"
             clearable
             :time-arrow-control="true"
             placeholder="Moment"
@@ -158,10 +165,8 @@
             @change="pickTime"
             >
           </el-date-picker>
-          <button @click="changeTime(10)" class="nz-btn nz-btn-size-small nz-btn-style-light"><i class="el-icon-d-arrow-right"></i></button>
-        </div>
-        <div class="nz-btn-group nz-btn-group-light float-right margin-r-20">
-          <button @click="viewGraph" slot="reference" class="nz-btn nz-btn-size-large nz-btn-style-normal nz-btn-min-width-120">
+          <button @click="changeTime(10)" class="nz-btn nz-btn-size-normal nz-btn-style-light margin-r-20"><i class="el-icon-d-arrow-right"></i></button>
+          <button @click="viewGraph" slot="reference" class="nz-btn nz-btn-size-normal nz-btn-style-normal nz-btn-min-width-120">
             <span class='top-tool-btn-txt'>{{$t('project.endpoint.addGraph')}}</span>
           </button>
         </div>
@@ -176,7 +181,7 @@
         style="width: 100%;">
         <el-table-column
           type="selection"
-          width="55"
+          width="38"
           align="center"
           :selectable="selectable"
         >
