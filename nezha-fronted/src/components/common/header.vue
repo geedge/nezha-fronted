@@ -26,7 +26,7 @@
       <el-submenu index="1" popper-class="nz-submenu">
         <template slot="title">
           <div @click="jumpTo('dashboard')" :class ="(activeIndex == 'dashboard' || activeIndex == 'panel' || activeIndex == 'metricPreview') ? 'menu-active' :'' " >
-            {{$t('overall.dashboard')}} 
+            {{$t('overall.dashboard')}}
           </div>
         </template>
         <el-menu-item index="1-0">
@@ -58,13 +58,13 @@
           <el-menu-item :index="'3-' + index">
             <div @click="jumpToAsset(item.id)" :class="{'menu-item-active' : (activeIndex == 'asset' && indOf(activeItemIndexes, item.id) > -1) }">
               <span class="too-long-split" style="width: 130px;">{{item.name}}</span>
-              <idc-config-box :post-idc="item" ref="idcConfigBox" placement="left" @after="getIDCOptionData">
-                <template v-slot:optionZone>
-                  <div @click="closeAllPop" class="menu-edit">
-                    <i class="nz-icon nz-icon-edit" @click="getIDCOptionData(item.id)" style="color: inherit"></i>
-                  </div>
-                </template>
-              </idc-config-box>
+<!--              <idc-config-box :post-idc="item" ref="idcConfigBox" placement="left" @after="getIDCOptionData" :user-data="userDatas">-->
+<!--                <template v-slot:optionZone>-->
+<!--                  <div @click="closeAllPop" class="menu-edit">-->
+<!--                    <i class="nz-icon nz-icon-edit" @click="getIDCOptionData(item.id)" style="color: inherit"></i>-->
+<!--                  </div>-->
+<!--                </template>-->
+<!--              </idc-config-box>-->
             </div>
           </el-menu-item>
         </template>
@@ -208,6 +208,7 @@
         idcUserData: '',
         IDCOptionData: [],
         addUnitShow: false,
+        userDatas:[]
       }
     },
     methods: {
@@ -231,9 +232,9 @@
           }
         });
         this.activeIndex = data
-        
+
       },
-  
+
       createBox(item) {
         if (item.type == 0) {
           this.$refs.panelBox.show(true);
@@ -400,13 +401,21 @@
       logout() {
         this.$get('logout');
         this.jumpTo('login');
-      }
+      },
+      getUserData() {
+        this.$get('sys/user/list').then(response => {
+          if (response.code === 200) {
+            this.userDatas = response.data.list
+          }
+        })
+      },
     },
     created() {
       if (!localStorage.getItem("nz-language")) {
         localStorage.setItem("nz-language", "en");
       }
       this.language = localStorage.getItem("nz-language");
+      this.getUserData();
     },
     mounted() {
       this.getUserData();
@@ -491,7 +500,7 @@
   }
   .header .el-menu--horizontal>.el-submenu .el-submenu__title {
     min-width: 120px;
-    text-align: center; 
+    text-align: center;
     color:$header-text-color;
     padding: 0;
   }
@@ -516,7 +525,7 @@
   }*/
   .el-submenu.is-active .el-submenu__title{
     border-bottom-color: transparent !important;
-  } 
+  }
   .menu-create .menu-icon-create .nz-icon:before{
     height: 20px;
     line-height: 20px;
@@ -524,7 +533,7 @@
     font-size: 20px;
     margin-top:-4px;
     margin-bottom:6px;
-  } 
+  }
   .el-submenu__icon-arrow .el-icon-arrow-down{
     display: none;
   }
