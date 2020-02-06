@@ -110,14 +110,15 @@
         },
         getUserData() {
           let temp=this;
-          if(!temp.userData||temp.userData.length<1){
-            temp.$get('sys/user/list').then(response => {
-              if (response.code === 200) {
-                temp.principals = response.data.list
-                console.log("queryUserData")
-              }
-            })
+          if(temp.userData&&temp.userData.length>0){
+            temp.principals=temp.userData;
+            return;
           }
+          temp.$get('sys/user/list').then(response => {
+            if (response.code === 200) {
+              temp.principals = response.data.list
+            }
+          })
         },
         saveOrToEdit:function(){
           if (!this.popBox.isEdit) {

@@ -86,6 +86,17 @@
             <div v-if="item.prop=='state'">
               <span>{{scope.row.state==1 ? $t('asset.createAssetTab.inStock') : $t('asset.createAssetTab.notInStock')}}</span>
             </div>
+            <div v-if="item.prop == 'ping'">
+              <el-popover
+                placement="right"
+                width="200"
+                trigger="hover"
+                :content="scope.row.pingLastUpdate+'['+scope.row.pingRtt+']'">
+                <span slot="reference">
+                  <i :class="{'active-icon green':scope.row.pingState==1,'active-icon red':scope.row.pingState != 1}"></i>
+                </span>
+              </el-popover>
+            </div>
             <template v-if="item.prop=='Module'">
               <template v-if="scope.row.moduleNum > 0" >
                 <module-list-pop :asset-id="scope.row.id + ''" @openModuleBox="openModuleBox" placement="left" :ref="'moduleListPop' + scope.row.id">
@@ -106,10 +117,9 @@
                   <span class="link" @click="closeAllPop">{{scope.row.idc.name}}</span>
                 </template>
               </idc-config-box>
-              <!--<span class="link">{{scope.row.idc.name}}</span>-->
             </div>
             <template v-if="item.prop=='cabinet'">
-              <cabinet-config-box v-if="scope.row.cabinet&&scope.row.cabinet!='--'" ref="cabinetConfigBox"  placement="left" :is-edit="false" :post-cabinet="JSON.parse(JSON.stringify(scope.row.cabinet))"  @after="getAssetData(null, true)">
+              <cabinet-config-box v-if="scope.row.cabinet&&scope.row.cabinet!='--'" ref="cabinetConfigBox"  placement="left" :is-edit="false" :post-cabinet="JSON.parse(JSON.stringify(scope.row.cabinet))"  @after="getAssetData(null, true)" :post-idc-datas="IDCOptionData">
                 <span slot="optionZone" @click="closeAllPop" class="link">{{returnData(scope.row.cabinet)}}</span>
               </cabinet-config-box>
               <span v-else>{{returnData(scope.row.cabinet)}}</span>
@@ -196,6 +206,12 @@
             type: 'select',
             label: 'assetState',
             disabled: false
+          },{
+            id: 22,
+            name: "pingStatus",
+            type: 'select',
+            label: 'pingStatus',
+            disabled: false
           }],
         },
         searchLabel: {}, //搜索参数
@@ -227,6 +243,10 @@
             prop: 'state',
             show: true,
           }, {
+            label:this.$t('asset.tableTitle.assetPing'),
+            prop:'ping',
+            show:true,
+          },{
             label: this.$t("asset.tableTitle.modules"),
             prop: 'Module',
             show: true,
@@ -665,6 +685,10 @@
         this.getAssetData();
       }
     },
+    created() {
+      this.getUserData();
+      this.getIDCOptionData();
+    },
     mounted() {
       setTimeout(()=>{
         if (this.$store.state.assetData.selectedData.length > 0) {
@@ -672,9 +696,6 @@
           this.checkList = this.$store.state.assetData.selectedData;
         }
       }, 50);
-
-      this.getUserData();
-      this.getIDCOptionData();
       let localStorageTitle=localStorage.getItem("nz-tableTitle-" + localStorage.getItem("nz-username") + "-" + this.$route.path);
       this.tablelable = localStorageTitle ? JSON.parse(localStorageTitle) : this.tableTitle;
       this.dropCol = localStorageTitle ? JSON.parse(localStorageTitle) : this.tableTitle;
@@ -702,4 +723,18 @@
     font-size: 12px;
     margin-right:6px;
   }
+</style>
+<style lang="scss">
+  .active-icon{
+    width:20px;
+    height:20px;
+    border-radius:50%;
+  }
+  .active-icon .red{
+    background-color:red;
+  }
+  .active-icon .green{
+    background-color:lightGreen;
+  }
+
 </style>

@@ -55,7 +55,8 @@ export default {
     postCabinet:{type:Object},
     placement:{type:String},
     buttonClass:{type:String},
-    isEdit:{type:Boolean,default:true}
+    isEdit:{type:Boolean,default:true},
+    postIdcDatas:{type:Array}
   },
   created() {
     this.init();
@@ -149,6 +150,17 @@ export default {
     },
     getIdcDatas:function(){
       let temp=this;
+      if(temp.postIdcDatas&&temp.postIdcDatas.length>0){
+        temp.idcDatas=temp.postIdcDatas;
+        for (let i in temp.idcDatas){
+          let item=temp.idcDatas[i];
+          if(item.id==temp.cabinet.idcId){
+            temp.idc=item;
+            break;
+          }
+        }
+        return;
+      }
       temp.$get('idc').then(response => {
         if (response.code === 200) {
           temp.idcDatas = response.data.list;
