@@ -47,6 +47,16 @@
         value: 2,
         label: i18n.t('asset.createAssetTab.notInStock')
       }
+    ],
+    pingStatus:[
+      {
+        value: '0',
+        label:i18n.t('asset.pingInactive')
+      },
+      {
+        value: '1',
+        label:i18n.t('asset.pingActive')
+      }
     ]
   };
   export default searchSelectInfo;

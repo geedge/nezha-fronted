@@ -86,15 +86,15 @@
             <div v-if="item.prop=='state'">
               <span>{{scope.row.state==1 ? $t('asset.createAssetTab.inStock') : $t('asset.createAssetTab.notInStock')}}</span>
             </div>
-            <div v-if="item.prop == 'ping'">
+            <div v-if="item.prop == 'pingStatus'">
               <el-popover
                 placement="right"
                 width="200"
                 trigger="hover"
                 :content="scope.row.pingLastUpdate+'['+scope.row.pingRtt+']'">
-                <span slot="reference">
-                  <i :class="{'active-icon green':scope.row.pingState==1,'active-icon red':scope.row.pingState != 1}"></i>
-                </span>
+                <div slot="reference" style="width: 20px">
+                  <div :class="{'active-icon green':scope.row.pingState == 1,'active-icon red':scope.row.pingState == 0}"></div>
+                </div>
               </el-popover>
             </div>
             <template v-if="item.prop=='Module'">
@@ -244,7 +244,7 @@
             show: true,
           }, {
             label:this.$t('asset.tableTitle.assetPing'),
-            prop:'ping',
+            prop:'pingStatus',
             show:true,
           },{
             label: this.$t("asset.tableTitle.modules"),
@@ -726,14 +726,15 @@
 </style>
 <style lang="scss">
   .active-icon{
-    width:20px;
-    height:20px;
+    margin-top:20px;
+    width:10px;
+    height:10px;
     border-radius:50%;
   }
-  .active-icon .red{
+   .red {
     background-color:red;
   }
-  .active-icon .green{
+   .green {
     background-color:lightGreen;
   }
 

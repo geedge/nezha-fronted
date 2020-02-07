@@ -158,6 +158,8 @@ const en = {
   asset:{
     asset: 'Asset',//'资产'
     EditAsset:'Edit asset',//'编辑资产'
+    pingActive: 'active',//可ping通
+    pingInactive:'inactive',
     createAssetTab:{
       title:'New asset',//'新增资产'
       sn:'SN',//SN
@@ -301,6 +303,7 @@ const en = {
       device: 'SN',//SN
       host: 'Host',//'Host'
       assetState: 'State',//'状态'
+      assetPing: 'PingStatus',
       modules: 'Module',//'组件'
       alerts: 'Alert information',//'告警信息'
       dataCenter: 'DC',//DC
