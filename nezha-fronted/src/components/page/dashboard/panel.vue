@@ -306,8 +306,8 @@
         };
         this.$refs.panelBox.setTitle(this.$t("dashboard.panel.createPanelTitle"));
       },
-      panelReload() {
-        this.getTableData();
+      panelReload(clearShowPanel) {
+        this.getTableData(clearShowPanel);
       },
       refreshTime(st, et) {
         const startTime = bus.timeFormate(st, 'yyyy-MM-dd hh:mm');
@@ -411,10 +411,16 @@
         this.$get('panel?pageNo=1&pageSize=-1').then(response => {
           if (response.code === 200) {
             this.panelData = response.data.list;
+            for (let i = 0; i < this.panelData.length; i++) {
+              if (this.panelData[i].id == this.showPanel.id) {
+                this.showPanel.name = this.panelData[i].name;
+                break;
+              }
+            }
           }
         });
       },
-      getTableData: function () {
+      getTableData: function (clearShowPanel) {
         this.$get('panel?pageNo=1&pageSize=-1').then(response => {
           if (response.code === 200) {
             this.panelData = response.data.list;
@@ -423,7 +429,9 @@
                 this.showPanel.name = this.$store.state.showPanel.name;
                 this.showPanel.id = this.$store.state.showPanel.id;
               }
-
+              if (clearShowPanel) {
+                this.showPanel.id = '';
+              }
               if (this.showPanel.id === '') {
                 this.showPanel.id = response.data.list[0].id;
                 this.showPanel.name = response.data.list[0].name;
@@ -441,8 +449,8 @@
             }
             this.$store.state.showPanel.id = 0;
             this.$store.state.showPanel.name = '';
-          }
 
+          }
         })
       },
       //定期刷新

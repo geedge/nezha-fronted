@@ -81,9 +81,9 @@
                            :value="item.id" :id="'chart-box-panel-'+item.id">
                   <span class="config-dropdown-label-txt">{{item.name}}</span>
                   <div class="config-dropdown-label-icons">
-                    <span class="config-dropdown-btn config-dropdown-btn-delete" @click.stop=""
+                    <span class="config-dropdown-btn config-dropdown-btn-delete" @click.stop="deletePanel(item)"
                           :id="'chart-box-panel-op-del-'+item.id"><i class="el-icon-delete"></i></span>
-                    <span class="config-dropdown-btn" @click.stop=""
+                    <span class="config-dropdown-btn" @click.stop="editPanel(item)"
                     :id="'chart-box-panel-op-edit-'+item.id"><i class="nz-icon nz-icon-edit"></i></span>
                   </div>
                 </el-option>
@@ -238,6 +238,7 @@
         //productId: 0,//不需要这个参数，可以删除
         panelId: 0,
         panelName: '',
+        selectFirstPanel: false,
         metricList: [], // metric列表
         metricCascaderList:[],//metric级联列表
         deleteIndex: '', // 要删除的指标模块
@@ -264,8 +265,36 @@
         this.$refs.panelBox2.setTitle(this.$t("dashboard.panel.createPanelTitle"));
       },
       panelReload(panelName) {
-        this.panelName = panelName;
+        if (panelName) {
+          this.panelName = panelName;
+        }
         this.$emit("reloadOnlyPanel");
+      },
+      deletePanel(panel) {
+        this.$confirm(this.$t("tip.confirmDelete"), {
+          confirmButtonText: this.$t("tip.yes"),
+          cancelButtonText: this.$t("tip.no"),
+          type: 'warning'
+        }).then(() => {
+          this.$delete("panel?ids=" + panel.id).then(response => {
+            if (response.code === 200) {
+              this.$message({duration: 2000, type: 'success', message: this.$t("tip.deleteSuccess")});
+              if (this.panelId == panel.id) {
+                this.selectFirstPanel = true;
+                this.$emit('reload', true);
+              } else {
+                this.$emit('reload');
+              }
+            } else {
+              this.$message.error(response.msg);
+            }
+          })
+        });
+      },
+      editPanel(panel) {
+        this.$refs.panelBox2.show(true);
+        this.panel = Object.assign({}, panel);
+        this.$refs.panelBox2.setTitle(this.$t("dashboard.panel.editPanelTitle"));
       },
       setTitle(title) {
         this.rightBox.title = title;
@@ -405,7 +434,9 @@
             this.esc();
             this.$message({duration: 1000, type: 'success', message: this.$t("tip.saveSuccess")});
             this.$refs.chartForm.resetFields();//清空表单
-            this.$emit('on-create-success', 'create', response.data,params);
+            let panel = this.panelData.find(p => p.id === this.panelId);
+            console.info("panel", panel)
+            this.$emit('on-create-success', 'create', response.data,params, panel);
           } else {
             this.$message.error(response.msg);
           }
@@ -523,8 +554,17 @@
         })
       },
       // 创建打开
-      createData(panelId) {
-        this.panelId = panelId;
+      createData(panelId, elementInfo) {
+        if (panelId == -1) {
+          this.panelId = this.panelData[0].id;
+        } else {
+          this.panelId = panelId;
+        }
+        if (elementInfo) {
+          this.$nextTick(() => {
+            this.$refs.chartTag[0].setMdata(elementInfo.elements[0]);
+          });
+        }
         this.isedit = false;
         this.initInfo(); // 初始化图表信息
         //this.chartModal = true;//????控制弹出框显示和隐藏的，不需要了
@@ -571,7 +611,7 @@
       },
       // 创建时打开,用于清空chart-tag数据
       initOpen() {
-        bus.$emit('clear_history');
+        //bus.$emit('clear_history');
         /*  项目不需要produce
         if (this.$route.params.productId) {
           this.productId = parseInt(this.$route.params.productId, 10);
@@ -591,7 +631,10 @@
         deep: true,
         immediate: true,
         handler(n, o) {
-          if (this.panelName) {
+          if (this.selectFirstPanel) {
+            this.selectFirstPanel = false;
+            this.panelId = n[0].id;
+          } else if (this.panelName) {
             for (let i = 0; i < n.length; i++) {
               if (n[i].name == this.panelName) {
                 this.panelId = n[i].id;

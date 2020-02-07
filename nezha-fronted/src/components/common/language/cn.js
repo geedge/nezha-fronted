@@ -110,6 +110,7 @@ const cn = {
       multiChartsShow:"多图展示",
       createPanel:"创建面板",
       selectPanel:"选择已有面板",
+      saveChart:'保存图表',
       saveChartToPanel:"保存图表到看板"
     },
     metricPreview:{

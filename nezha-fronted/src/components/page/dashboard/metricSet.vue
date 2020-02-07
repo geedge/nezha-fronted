@@ -45,22 +45,22 @@
       <el-row class="operate-area">
 
         <button type="primary" @click="preview" :disabled="loading" class="nz-btn nz-btn-size-large nz-btn-style-normal">{{$t('dashboard.metric.previewChart')}}</button>
-        <button :disabled="saveDisabled || loading" type="primary" @click="preview('change')" class="margin-l-10"
+        <!--<button :disabled="saveDisabled || loading" type="primary" @click="preview('change')" class="margin-l-10"
                 :class="{'nz-btn nz-btn-disabled nz-btn-size-large nz-btn-style-light nz-btn-min-width-75 btn-disabled-cursor-not-allowed' : (saveDisabled || loading), 'nz-btn nz-btn-size-large nz-btn-style-light' : !(saveDisabled || loading)}"
-        >{{chartSwitchWord}}</button>
+        >{{chartSwitchWord}}</button>-->
         
         <!-- <Button type="primary" @click="addTarget">添加指标</Button> -->
       </el-row>
 
       <el-row class="nz-btn-metric-bottom">
         <!-- <div class="operate-area-title">{{$t('dashboard.metric.saveChartToPanel')}}:</div> -->
-        <button :disabled="saveDisabled" type="primary" @click="createNew"
+        <!--<button :disabled="saveDisabled" type="button" @click="createNew" v-show="false"
                 :class="{'nz-btn-metric-bottom-left nz-btn nz-btn-disabled nz-btn-size-large nz-btn-min-width-140 nz-btn-size-normal nz-btn-style-light nz-btn-metricbtn btn-disabled-cursor-not-allowed' : saveDisabled , 'nz-btn nz-btn-size-normal  nz-btn-metricbtn nz-btn-metric-bottom-left nz-btn-min-width-140 nz-btn-style-light' : !saveDisabled}"
-        >{{$t('dashboard.metric.createPanel')}}</button>
+        >{{$t('dashboard.metric.createPanel')}}</button>-->
 
-        <button :disabled="saveDisabled" type="primary" @click="selectPanel"
+        <button :disabled="saveDisabled" type="button" @click="saveChart"
                 :class="{'nz-btn nz-btn-disabled nz-btn-size-normal nz-btn-size-large nz-btn-min-width-120 nz-btn-style-light nz-btn-metricbtn  btn-disabled-cursor-not-allowed' : saveDisabled , 'nz-btn nz-btn-size-normal nz-btn-metricbtn nz-btn-style-normal nz-btn-min-width-120' : !saveDisabled}"
-        >{{$t('dashboard.metric.selectPanel')}}</button>
+        >{{$t('dashboard.metric.saveChart')}}</button>
         <!-- <button :disabled="saveDisabled" type="primary" @click="createNew"
                 :class="{'nz-btn nz-btn-disabled nz-btn-size-normal nz-btn-style-light  btn-disabled-cursor-not-allowed' : saveDisabled , 'nz-btn nz-btn-size-normal nz-btn-style-normal' : !saveDisabled}"
         >{{$t('dashboard.metric.createPanel')}}</button>
@@ -70,9 +70,8 @@
 
       </el-row>
 <!-- options -->
-      <el-row class="mt-10 margin-b-10">
+      <!--<el-row class="mt-10 margin-b-10">
         <div>Options</div>
-        <!-- <el-checkbox :disabled="saveDisabled" v-model="isSave" checked >options</el-checkbox> -->
       </el-row>
       <el-form :model="chartInfo" ref="chartInfo">
         <el-row>
@@ -94,7 +93,6 @@
             :rules="{ required: true, type: 'number', trigger: 'change' }">
               <el-input v-model="chartInfo.height" :min="400" size="mini" class="w-select" placeholder=""></el-input>
               <span class='nz-input-append'>px</span>
-              <!-- <el-input-number :min="400" size="small" v-model="chartInfo.height" class="w-select" placeholder=""></el-input-number>px -->
             </el-form-item>
           </div>
         </el-row>
@@ -114,25 +112,28 @@
             </el-form-item>
           </div>
         </el-row>
-      </el-form>
+      </el-form>-->
     </div>
-    <metric-pre-panel-box :chartInfo="chartInfo"  :elementTarget="elementTarget" :seriesData="seriesData" :series="series" :chartCount="chartCount" @reload="reload"  ref="panelBox"></metric-pre-panel-box>
-
+    <!--<metric-pre-panel-box :chartInfo="chartInfo"  :elementTarget="elementTarget" :seriesData="seriesData" :series="series" :chartCount="chartCount" @reload="reload"  ref="panelBox"></metric-pre-panel-box>-->
+    <chart-box ref="addChartModal" :panel-data="panelData" @on-create-success="createSuccess"></chart-box>
   </div>
 </template>
 <script>
 //import axios from 'axios';
 import bus from '../../../libs/bus';
 import chartMetric from "./chartMetricForPreview";
-import metricPrePanelBox from "../../common/rightBox/metricPrePanelBox";
+import chartBox from "./chartBox";
+//import metricPrePanelBox from "../../common/rightBox/metricPrePanelBox";
 
 export default {
   name: 'metricSet',
   props: {
+    panelData: Array
   },
   components: {
     'chart-metric':chartMetric,
-    'metric-pre-panel-box':metricPrePanelBox
+    'chart-box':chartBox,
+    //'metric-pre-panel-box':metricPrePanelBox
   },
   data() {
     return {
@@ -141,12 +142,12 @@ export default {
       chartModal: false, // 展示弹出框
       elements: [1], // 指标部分 tarNum
       // 新建信息
-      chartInfo: {
+      /*chartInfo: {
         title: '', // 名称
         span: 12, // 宽度
         height: 400, // 高度
         type: 'line', // 类型
-      },
+      },*/
       chartId: 0,
       elements: [1], // 指标部分 tarNum
       elementTarget: {}, // 获取chartTag数据后保存
@@ -199,6 +200,23 @@ export default {
       this.seriesData = data;
       this.series = series;
     },
+    createSuccess(type, response, param, panel) { //添加chart成功
+      this.$confirm(this.$t("dashboard.metric.goPanelTip"),this.$t("tip.saveSuccess"), {
+        confirmButtonText: this.$t("tip.yes"),
+        cancelButtonText: this.$t("tip.no"),
+        type: 'success'
+      }).then(() => {
+        //this.$store.state.assetData.moduleData = 'panel';
+        this.$store.state.showPanel.id = panel.id;
+        this.$store.state.showPanel.name = panel.name;
+        this.$router.push({
+          path: "/panel",
+          query: {
+            t: +new Date()
+          }
+        });
+      });
+    },
     // 默认打开
     initOpen() {
       this.getSuggestMetric();
@@ -213,19 +231,24 @@ export default {
     },
     // 创建看板
     createNew() {
-      this.$refs.panelBox.show(true);
+      /*this.$refs.panelBox.show(true);
       //this.panel = {id: '', name: ''};
       this.$refs.panelBox.setTitle(this.$t("dashboard.panel.createPanelTitle"));
       this.$refs.panelBox.setIsCreatePanel(true);
-      this.$refs.panelBox.setChartTitle(this.metricInfo.metric);
+      this.$refs.panelBox.setChartTitle(this.metricInfo.metric);*/
     },
     // 选择看板
     selectPanel() {
-      this.$refs.panelBox.show(true);
+      /*this.$refs.panelBox.show(true);
       this.$refs.panelBox.setTitle(this.$t("dashboard.panel.selectPanelTitle"));
       this.$refs.panelBox.setIsCreatePanel(false);
       this.$refs.panelBox.setChartTitle(this.metricInfo.metric);
-      this.$refs.panelBox.getTableData();
+      this.$refs.panelBox.getTableData();*/
+    },
+    saveChart() { //新增chart
+      this.$refs.addChartModal.setTitle(this.$t("dashboard.panel.createChartTitle"));
+      this.$refs.addChartModal.show(true);
+      this.$refs.addChartModal.createData(-1, this.metricInfo);
     },
      // 删除指标,第一步, 新方法
       deleteTarget(index) {
@@ -288,14 +311,14 @@ export default {
     },
     */
     // 初始化信息
-    initInfo() {
+    /*initInfo() {
       this.chartInfo.title = '';
       this.chartInfo.type = 1;
       this.chartInfo.span = 12;
       this.chartInfo.height = 400;
       this.elements = [1];
       this.elementTarget = {};
-    },
+    },*/
     // 生成预览图表
     preview(params) {
       if (params === 'change') {
@@ -305,19 +328,20 @@ export default {
       // 触发每个tag组件内部进行校验
       this.$refs.chartTag.saveTarget(); // => getTartget
       // 保存图表时进行参数认证
-      if (this.isSave) {
+      /*if (this.isSave) {
         this.$refs.chartInfo.validate();
-      }
+      }*/
     },
     // 获取每个tag组件内部校验后数据,点击生成图表时触发
     getTarget(target) {
       // 由于条件限制，每次其实只有一个target
       this.elementTarget = JSON.parse(JSON.stringify(target));
-      this.$refs.chartInfo.validate((valid) => {
-        if (valid) {
+      /*this.$refs.chartInfo.validate((valid) => {
+        if (valid) {*/
           this.loading = true;
           // 保存图表到看板
-          const params = Object.assign({}, this.chartInfo);
+          const params = {};
+          //const params = Object.assign({}, this.chartInfo);
 
           //params.tags = this.tagsToString(this.elementTarget.tagList);
           const elements = [];
@@ -344,8 +368,8 @@ export default {
           this.saveDisabled = false; // 查询成功以后,可以进行保存操作
           // 将参数返回,进行查询
           this.$emit('on-view-chart', params, this.chartCount);
-        }
-      });
+        /*}
+      });*/
     },
     /*
     // 确认创建图表

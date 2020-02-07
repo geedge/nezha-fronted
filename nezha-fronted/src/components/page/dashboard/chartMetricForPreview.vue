@@ -356,7 +356,7 @@ export default {
        // alert('metric第三步，normal');
         // 当该项metric为空时，重置一下
         if (!this.elementInfo.metric && this.$refs.metricSelect) {
-          this.$refs.metricSelect.reset();
+          //this.$refs.metricSelect.reset();
         }
         this.clickTabelShow(1,'normal');
       }
@@ -529,7 +529,7 @@ export default {
         this.$refs.elementInfo.resetFields();//???
       }
       if (this.$refs.metricSelect) {
-        this.$refs.metricSelect.reset();
+        //this.$refs.metricSelect.reset();
       }
       this.elementInfo.tagList = [];
     },

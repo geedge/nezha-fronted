@@ -886,7 +886,6 @@
           type: 'warning'
         }).then(() => {
           this.$delete(data + "?ids=" + item).then(response => {
-            const h = this.$createElement;
             if (response.code === 200) {
               this.$message({duration: 2000, type: 'success', message: this.$t("tip.deleteSuccess")});
               this.$emit('refreshData', 'true')

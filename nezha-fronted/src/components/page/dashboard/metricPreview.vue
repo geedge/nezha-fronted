@@ -13,9 +13,7 @@
         <div class="content-right">
 
 
-          <div class="top-tools" >
-              <!-- <div class="float-left metric-title"  >{{$t('dashboard.metricPreview.title')}}
-              </div> -->
+          <!--<div class="top-tools">
               <div class="float-right mr-10">
                 <el-date-picker size="mini" ref="calendar"
                                 format="yyyy/MM/dd HH:mm"
@@ -29,16 +27,28 @@
                                 align="right">
                 </el-date-picker>
               </div>
-            </div>
+            </div>-->
             <div class="table-list" >
               <div class="box-content" >
                 <el-row :gutter="20"  class="row-width" style="height: calc(100% - 65px);">
                   <el-col :span="10" >
-                      <metric-set ref="metricSet" @on-view-chart="getChartParam"></metric-set>
+                      <metric-set :panelData="panelData" ref="metricSet" @on-view-chart="getChartParam"></metric-set>
                   </el-col>
                   <el-col :span="0.5"><div>&nbsp;</div></el-col>
-                  <el-col :span="13" style="height: calc(100% - 180px);overflow-y: auto;overflow-x: hidden;">
-                    <el-row class="border-area" v-show="chartCount === 'single'">
+                  <el-col :span="13" class="chart-preview-area">
+                    <el-date-picker size="mini" ref="calendar"
+                                    format="yyyy/MM/dd HH:mm"
+                                    @change="dateChange"
+                                    v-model="searchTime"
+                                    type="datetimerange"
+                                    :picker-options="pickerOptions"
+                                    :range-separator="$t('dashboard.panel.to')"
+                                    :start-placeholder="$t('dashboard.panel.startTime')"
+                                    :end-placeholder="$t('dashboard.panel.endTime')"
+                                    style="position:absolute; right: 10px"
+                                    align="right">
+                    </el-date-picker>
+                    <el-row class="border-area" v-show="chartCount === 'single'" style="margin-top: 42px;">
                       <div class="chartBox">
                         <line-chart-block
                           :show-setting="false"
@@ -96,6 +106,7 @@ export default {
       metricInfo: {}, // 保存参数信息
       chartCount: 'single', // multiple
       lineList: [], // 线列表
+      panelData: [], //panel列表
       searchTime:[new Date().setHours(new Date().getHours()-1),new Date()],
       //searchTime:[new Date().setMinutes(new Date().getMinutes()-1),new Date()],
       pickerOptions: {
@@ -217,6 +228,13 @@ export default {
           });
         }
       }
+    },
+    getPanelData() { //获取panel数据
+      this.$get('panel?pageNo=1&pageSize=-1').then(response => {
+        if (response.code === 200) {
+          this.panelData = response.data.list;
+        }
+      });
     },
     // 获取图表信息
     getChartParam(params, chartCount) {
@@ -409,6 +427,7 @@ refresh_scroll() {
   },
   mounted: function() {
     this.getInit();
+    this.getPanelData();
   },
   watch: {
 

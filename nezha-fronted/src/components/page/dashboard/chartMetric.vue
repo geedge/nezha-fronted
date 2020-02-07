@@ -347,7 +347,7 @@ export default {
 
     // 编辑已有图表状态时，先填充数据
     setMdata(data) {
-      //alert('metricSetData'+JSON.stringify(data));
+      //console.info('metricSetData', JSON.stringify(data));
       this.setDataFlag = true;
       this.target = Object.assign({}, data);
       //this.pointer =

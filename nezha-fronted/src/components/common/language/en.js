@@ -116,6 +116,7 @@ const en = {
       multiChartsShow:'Multiple charts',//"多图展示"
       createPanel:'New panel', //"创建面板"
       selectPanel:'Exist panel',//"选择已有面板"
+      saveChart: 'Save chart',
       saveChartToPanel:"Save chart to panel"//Save chart to panel.
     },
     metricPreview:{

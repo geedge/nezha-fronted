@@ -17,7 +17,7 @@
       <!-- begin--表单-->
       <el-scrollbar class="right-box-form-box">
         <el-form class="right-box-form" :model="panel" label-position="top" ref="panelForm">
-          <el-form-item :label='$t("project.project.project")' prop="name" :rules="{required: true, message: $t('validate.required'), trigger: 'blur'}">
+          <el-form-item :label='$t("overall.name")' prop="name" :rules="{required: true, message: $t('validate.required'), trigger: 'blur'}">
             <el-input placeholder="" maxlength="64" show-word-limit v-model="panel.name" size="small" ></el-input>
           </el-form-item>
         </el-form>
@@ -125,6 +125,6 @@
 
 <style scoped>
   .z-top{
-    z-index: 51 !important;
+    z-index: 3000 !important;
   }
 </style>

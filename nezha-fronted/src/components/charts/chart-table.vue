@@ -35,11 +35,11 @@
     <div class="mt-10">
         <!--
       <el-table  size="small"   :loading="tableLoading">-->
-        <el-table class="nz-table" :data="seriesItem" height="350" border v-loading="tableLoading">
-            <el-table-column prop="metric" :label="$t('dashboard.panel.chartTableColumn.metric')" ></el-table-column>
-            <el-table-column prop="label" :label="$t('dashboard.panel.chartTableColumn.label')" ></el-table-column>
-            <el-table-column prop="time" :label="$t('dashboard.panel.chartTableColumn.time')" width="145" ></el-table-column>
-            <el-table-column prop="value" :label="$t('dashboard.panel.chartTableColumn.value')" ></el-table-column>
+        <el-table class="nz-table" :data="seriesItem" height="350" border v-loading="tableLoading" tooltip-effect="light">
+            <el-table-column sortable :show-overflow-tooltip="true" prop="metric" :label="$t('dashboard.panel.chartTableColumn.metric')" ></el-table-column>
+            <el-table-column sortable :show-overflow-tooltip="true" prop="label" :label="$t('dashboard.panel.chartTableColumn.label')" ></el-table-column>
+            <el-table-column sortable prop="time" :label="$t('dashboard.panel.chartTableColumn.time')" width="145" ></el-table-column>
+            <el-table-column sortable prop="value" :label="$t('dashboard.panel.chartTableColumn.value')" ></el-table-column>
         </el-table>
     </div>
     <!--全屏-->
@@ -52,11 +52,11 @@
             <!--<button @click="refreshChart" type="button" class="nz-btn nz-btn-size-normal nz-btn-style-light"><i style="font-size: 14px;" class="el-icon-refresh-right"></i></button>-->
           </div>
         </div>
-            <el-table class="nz-table" :data="seriesItem" height="350" border v-loading="tableLoading">
-                <el-table-column prop="metric" :label="$t('dashboard.panel.chartTableColumn.metric')" ></el-table-column>
-                <el-table-column prop="label" :label="$t('dashboard.panel.chartTableColumn.label')" ></el-table-column>
-                <el-table-column prop="time" :label="$t('dashboard.panel.chartTableColumn.time')" width="145" ></el-table-column>
-                <el-table-column prop="value" :label="$t('dashboard.panel.chartTableColumn.value')" ></el-table-column>
+            <el-table class="nz-table" :data="seriesItem" height="350" border v-loading="tableLoading" tooltip-effect="light">
+                <el-table-column sortable :show-overflow-tooltip="true" prop="metric" :label="$t('dashboard.panel.chartTableColumn.metric')" ></el-table-column>
+                <el-table-column sortable :show-overflow-tooltip="true" prop="label" :label="$t('dashboard.panel.chartTableColumn.label')" ></el-table-column>
+                <el-table-column sortable prop="time" :label="$t('dashboard.panel.chartTableColumn.time')" width="145" ></el-table-column>
+                <el-table-column sortable prop="value" :label="$t('dashboard.panel.chartTableColumn.value')" ></el-table-column>
             </el-table>
     </el-dialog>
 </div>

@@ -8,7 +8,7 @@
     height: 100%;
   }
   .table-list {
-    margin-top:40px;
+    padding-top: 20px;
     overflow-y:auto;
     height: 100%;
   }
@@ -20,6 +20,12 @@
   }
   .chartBoxMul {
     width: 100%;
+  }
+  .chart-preview-area {
+    height: calc(100% - 180px);
+    overflow-y: auto;
+    overflow-x: hidden;
+    position: relative
   }
   .common-detail-top-title {
     font-size: 16px;
