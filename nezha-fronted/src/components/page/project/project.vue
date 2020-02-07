@@ -1,11 +1,13 @@
 <style lang="scss">
+  @import '../../charts/line-chart-block';
   .project-calendar .el-input__inner {
-    height: 26px !important;
-    border-color: #d8d8d8;
-  }
+       height: 26px !important;
+       border-color: #d8d8d8;
+     }
   .project .nz-table .el-table__row td:first-of-type {
     padding-left: 0;
   }
+
 </style>
 <template>
   <div class="project">
@@ -172,6 +174,7 @@
         </div>
       </div>
       <el-table
+        v-loading="queryEdpLoading"
         :data="endpointQueryTabData"
         border
         class="nz-table"
@@ -245,6 +248,7 @@
   export default {
     name: "project2",
     data() {
+      let temp=this;
       return {
         tableShow: 1, // 1.endpoint; 2.metrics
         editEndpoint: {id: '', host: '', port: '', param: '', path: '', asset: {}, project: {}, module: {}, moduleId: '', assetId: '', paramObj: []},
@@ -365,6 +369,7 @@
         graphChart:null,//图标对象
         graphShow:false,
         searchTime:[],
+        queryEdpLoading:false,
         pickerOptions: {
           shortcuts: [
             {
@@ -462,6 +467,47 @@
             itemWidth:15,
             data:[],
             orient:'vertical',
+            formatter:function(name){
+              if(!name){
+                return '';
+              }
+              //计算宽度
+              let chartWidth=temp.$refs.viewGraphChart.clientWidth;
+              var span = document.createElement("span");
+              var result = {};
+              result.width = span.offsetWidth;
+              result.height = span.offsetHeight;
+              span.style.visibility = "hidden";
+              span.style.fontSize = 14;
+              span.style.fontFamily = "Arial";
+              span.style.display = "inline-block";
+              document.body.appendChild(span);
+              if(typeof span.textContent != "undefined"){
+                span.textContent = name;
+              }else{
+                span.innerText = name;
+              }
+              var txtWidth = parseFloat(window.getComputedStyle(span).width) - result.width;
+              document.body.removeChild(span);
+
+              if(txtWidth < chartWidth){
+                return name;
+              }else {
+                var charNum = `${(chartWidth-100)/(txtWidth/name.length)}`;
+                return name.slice(0,charNum)+'...';
+              }
+            },
+            tooltip:{
+              show:true,
+              formatter:function(params){
+                console.log("params")
+                console.log(params);
+                return `<div  style='width:100%;display:block;word-break:break-all;word-wrap:break-word;white-space:normal'> ${params.name}</div>`;
+              },
+            },
+            orient:'vertical',
+            x:'center',
+            y:'bottom',
           },
           grid: {
             //height:"50%",
@@ -478,6 +524,7 @@
             height:25,
             bottom:96
           }],
+
           xAxis: {
             type: 'time',
             axisLabel: {
@@ -501,7 +548,35 @@
             splitLine:{
               show:true
             },
+            axisLabel: {
+              formatter: function(num,index) {
+                if (num >= 1000) {
+                  const kbNum = num / 1000;
+                  if (kbNum >= 1000) {
+                    const mbNum = kbNum / 1000;
+                    if (mbNum > 1000) {
+                      const gbNum = mbNum / 1000;
+                      /*
+                      if (gbNum > 1000) {
+                        const tbNum = gbNum / 1000;
+                        if (tbNum > 1000) {
+                          const pbNum = tbNum / 1000;
+                          return `${pbNum.toFixed(2)}PB`;
+                        }
+                        return `${tbNum.toFixed(2)}TB`;
+                      }*/
+                      return `${parseFloat(gbNum.toFixed(2))}B`;
+                    }
+                    return `${parseFloat(mbNum.toFixed(2))}M`;
+                  }
+                  return `${parseFloat(kbNum.toFixed(2))}K`;
+                }
+                // return parseFloat(num.toFixed(2));
+                return num;
+              },
+            },
           },
+          useUTC: false,//使用本地时间
           series: []
         }
       }
@@ -763,7 +838,7 @@
         this.$refs.assetEditUnit.tabView=true;
       },
       showEndpoint:function(endpoint){
-        console.log(endpoint);
+        this.queryEdpLoading=true;
         if(endpoint){
           this.curEndpoint=endpoint;
           this.formatTime='';
@@ -786,6 +861,7 @@
                 this.endpointQueryTabData.push(edpQueryData);
               }
               this.tableShow=3;
+              this.queryEdpLoading=false;
             }
         })
       },
@@ -899,9 +975,17 @@
                   smooth:true,  //曲线变平滑
                 };
                 chartData.name=queryData.metric.__name__;
+                delete queryData.metric.__name__;
+                chartData.name+="{";
+                Object.keys(queryData.metric).forEach((item,index)=>{
+                  let label=item;
+                  let value=queryData.metric[label];
+                  chartData.name+=label +"='"+value+"',";
+                })
+                chartData.name=chartData.name.charAt(chartData.name.length-1) == ","?chartData.name.substr(0,chartData.name.length-1):chartData.name;
+                chartData.name+="}";
                 this.lenged.push(chartData.name);
                 chartData.data=queryData.values.map((dpsItem, dpsIndex) => {
-                  console.log(typeof Number(dpsItem[1]))
                   return [dpsItem[0] * 1000, Number(dpsItem[1])];
                 });
                 this.chartDatas.push(chartData);
@@ -978,7 +1062,7 @@
         this.getModuleList(this.currentProject.id);
       },
       curEndpoint:function(n,o){
-        this.chartOptions.title.text=n.host+ " tsg disk"
+        // this.chartOptions.title.text=n.host+ " tsg disk"
       }
     }
   }

@@ -91,7 +91,7 @@
                 placement="right"
                 width="200"
                 trigger="hover"
-                :content="scope.row.pingLastUpdate+'['+scope.row.pingRtt+']'">
+                :content="scope.row.pingLastUpdate+'['+(scope.row.pingRtt ? scope.row.pingRtt:'unreachable')+']'">
                 <div slot="reference" style="width: 20px">
                   <div :class="{'active-icon green':scope.row.pingState == 1,'active-icon red':scope.row.pingState == 0}"></div>
                 </div>
