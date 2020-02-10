@@ -375,7 +375,6 @@ export default {
     editData(chartId) {
       // 获取该id下chart的相关信息
       const chart = this.dataList.find(item => item.id === chartId);
-      console.info("aaa",chart)
       if (chart) {
         this.$emit('on-edit-chart', chart);
       }

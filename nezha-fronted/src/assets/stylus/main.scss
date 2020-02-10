@@ -730,6 +730,9 @@ li{
   position: absolute;
   right: 0;
 }
+.config-dropdown, .chart-box-dropdown {
+  z-index: 2950 !important;
+}
 .config-dropdown-btn i {
   font-size: 12px;
 }

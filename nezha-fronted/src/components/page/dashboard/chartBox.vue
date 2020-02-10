@@ -48,7 +48,7 @@
   }
 
   .z-top {
-    z-index: 49;
+    z-index: 2900;
   }
 </style>
 <template key="chartBox">
@@ -105,7 +105,7 @@
             <el-col :span="5">
               <div class="grid-content ">
                   <el-form-item prop="type">
-                    <el-select class="right-box-row-with-btn" value-key="chartType" popper-class="" v-model="chart.type" placeholder="" size="mini">
+                    <el-select class="right-box-row-with-btn" value-key="chartType" popper-class="chart-box-dropdown" v-model="chart.type" placeholder="" size="mini">
                       <el-option v-for="item in chartTypeList" :key="item.id" :label="item.name" :value="item.id">
                         <span class="panel-dropdown-label-txt" >{{item.name}}</span>
                       </el-option>
@@ -119,7 +119,7 @@
             <el-col :span="5">
               <div class="grid-content ">
                 <el-form-item prop="span">
-                  <el-select class="right-box-row-with-btn" value-key="chartSpan" popper-class="" v-model="chart.span" placeholder="" size="mini">
+                  <el-select class="right-box-row-with-btn" value-key="chartSpan" popper-class="chart-box-dropdown" v-model="chart.span" placeholder="" size="mini">
                     <el-option v-for="item in spanList" :key="item" :label="'span-' + item" :value="item">
                       <span class="panel-dropdown-label-txt" > span-{{item}}</span>
                     </el-option>
@@ -555,15 +555,34 @@
       },
       // 创建打开
       createData(panelId, elementInfo) {
+        //console.info('bbb', elementInfo)
         if (panelId == -1) {
           this.panelId = this.panelData[0].id;
         } else {
           this.panelId = panelId;
         }
         if (elementInfo) {
-          this.$nextTick(() => {
-            this.$refs.chartTag[0].setMdata(elementInfo.elements[0]);
-          });
+          if (elementInfo.elements.length > 1) {
+
+            this.$nextTick(() => {
+              this.elements = [];
+              elementInfo.elements.forEach((item, index) => {
+                this.elements.push(index);
+              });
+              let dSet = this.$refs.chartTag;
+              this.$nextTick(() => {
+                dSet.forEach((item, index) => {
+                  console.info('bbb', elementInfo.elements[index])
+                  item.setMdata(elementInfo.elements[index]);
+                });
+              });
+            });
+
+          } else {
+            this.$nextTick(() => {
+              this.$refs.chartTag[0].setMdata(elementInfo.elements[0]);
+            });
+          }
         }
         this.isedit = false;
         this.initInfo(); // 初始化图表信息

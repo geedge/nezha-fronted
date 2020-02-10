@@ -7,7 +7,11 @@
   .project .nz-table .el-table__row td:first-of-type {
     padding-left: 0;
   }
-
+</style>
+<style scope>
+  .chart-bottom {
+    text-align: center;
+  }
 </style>
 <template>
   <div class="project">
@@ -202,11 +206,6 @@
       </el-table>
     </div>
 
-
-    <module-box :currentProject="currentProject" :module="editModule" @reload="getModuleList" ref="moduleBox"></module-box>
-    <edit-endpoint-box :currentProject="currentProject" :currentModule="currentModule" :endpoint="editEndpoint" @reload="getEndpointTableData" ref="editEndpointBox"></edit-endpoint-box>
-    <add-endpoint-box :currentProject="currentProject" :currentModule="currentModule" @reload="getEndpointTableData" ref="addEndpointBox"></add-endpoint-box>
-    <asset-edit-unit :edit-unit-show='viewAssetState' @refreshData="getEndpointTableData" @sendStateData="tabControl" ref="assetEditUnit"></asset-edit-unit>
     <element-set
       v-clickoutside="elementsetHide"
       :table-title="endpointTableTitle"
@@ -239,14 +238,28 @@
         </div>
       </div>
       <div class="line-area " ref="viewGraphChart"  id="viewGraphChart"></div>
+      <div class="line-100 margin-t-20 margin-b-30"></div>
+      <div class="chart-bottom">
+        <button class="nz-btn nz-btn-size-large nz-btn-style-normal nz-btn-min-width-82" @click="saveChart">{{$t('dashboard.metric.saveChart')}}</button>
+      </div>
     </el-dialog>
+
+    <module-box :currentProject="currentProject" :module="editModule" @reload="getModuleList" ref="moduleBox"></module-box>
+    <edit-endpoint-box :currentProject="currentProject" :currentModule="currentModule" :endpoint="editEndpoint" @reload="getEndpointTableData" ref="editEndpointBox"></edit-endpoint-box>
+    <add-endpoint-box :currentProject="currentProject" :currentModule="currentModule" @reload="getEndpointTableData" ref="addEndpointBox"></add-endpoint-box>
+    <asset-edit-unit :edit-unit-show='viewAssetState' @refreshData="getEndpointTableData" @sendStateData="tabControl" ref="assetEditUnit"></asset-edit-unit>
+    <chart-box ref="addChartModal" :panel-data="panelData" @on-create-success="createSuccess"></chart-box>
   </div>
 </template>
 
 <script>
   import echarts from 'echarts';
+  import chartBox from "../dashboard/chartBox";
   export default {
     name: "project2",
+    components: {
+      'chart-box': chartBox
+    },
     data() {
       let temp=this;
       return {
@@ -578,10 +591,45 @@
           },
           useUTC: false,//使用本地时间
           series: []
-        }
+        },
+        panelData: [], //chart-box的panel下拉框数据
       }
     },
     methods: {
+      saveChart() { //新增chart
+        this.$refs.addChartModal.setTitle(this.$t("dashboard.panel.createChartTitle"));
+        this.$refs.addChartModal.show(true);
+        let metricInfo = {};
+        metricInfo.elements = [];
+        console.info("aaa", this.selectedEndpoints)
+        for(let i = 0; i < this.selectedEndpoints.length; i++) {
+          let type = '';
+          if (this.selectedEndpoints[i].type == '1') {
+            type = 'expert';
+          } else if (this.selectedEndpoints[i].type == '2') {
+            type = 'normal';
+          }
+          metricInfo.elements.push({expression: this.selectedEndpoints[i].element, type: type});
+        }
+        this.$refs.addChartModal.createData(-1, metricInfo);
+      },
+      createSuccess(type, response, param, panel) {
+        this.$confirm(this.$t("dashboard.metric.goPanelTip"),this.$t("tip.saveSuccess"), {
+          confirmButtonText: this.$t("tip.yes"),
+          cancelButtonText: this.$t("tip.no"),
+          type: 'success'
+        }).then(() => {
+          //this.$store.state.assetData.moduleData = 'panel';
+          this.$store.state.showPanel.id = panel.id;
+          this.$store.state.showPanel.name = panel.name;
+          this.$router.push({
+            path: "/panel",
+            query: {
+              t: +new Date()
+            }
+          });
+        });
+      },
       elementsetShow(s, e) {
         var eventfixed = {
           shezhi: 0,
@@ -857,7 +905,7 @@
                 }
                 temp=temp.charAt(temp.length-1) == ","?temp.substr(0,temp.length-1):temp;
                 temp+="}";
-                let edpQueryData={element:temp,value:result.value[1]}
+                let edpQueryData={element:temp,value:result.value[1],type:(result.metric.type?result.metric.type:'2')};
                 this.endpointQueryTabData.push(edpQueryData);
               }
               this.tableShow=3;
@@ -1015,6 +1063,13 @@
           return 'disabledCheck'
         }
       },
+      getPanelData() { //获取panel数据
+        this.$get('panel?pageNo=1&pageSize=-1').then(response => {
+          if (response.code === 200) {
+            this.panelData = response.data.list;
+          }
+        });
+      },
     },
     created() {
       this.currentProject = this.$store.state.currentProject;
@@ -1022,6 +1077,7 @@
       this.getMetricsTableData();
     },
     mounted() {
+      this.getPanelData();
       setTimeout(()=>{
         this.getEndpointTableData();
       }, 200);
