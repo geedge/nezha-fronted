@@ -56,23 +56,13 @@
         <!-- <Button type="primary" @click="addTarget">添加指标</Button> -->
       </el-row>
 
-      <el-row class="nz-btn-metric-bottom">
-        <!-- <div class="operate-area-title">{{$t('dashboard.metric.saveChartToPanel')}}:</div> -->
-        <!--<button :disabled="saveDisabled" type="button" @click="createNew" v-show="false"
-                :class="{'nz-btn-metric-bottom-left nz-btn nz-btn-disabled nz-btn-size-large nz-btn-min-width-140 nz-btn-size-normal nz-btn-style-light nz-btn-metricbtn btn-disabled-cursor-not-allowed' : saveDisabled , 'nz-btn nz-btn-size-normal  nz-btn-metricbtn nz-btn-metric-bottom-left nz-btn-min-width-140 nz-btn-style-light' : !saveDisabled}"
-        >{{$t('dashboard.metric.createPanel')}}</button>-->
+      <!--<el-row class="nz-btn-metric-bottom">
 
         <button :disabled="saveDisabled" type="button" @click="saveChart"
                 :class="{'nz-btn nz-btn-disabled nz-btn-size-normal nz-btn-size-large nz-btn-min-width-120 nz-btn-style-light nz-btn-metricbtn  btn-disabled-cursor-not-allowed' : saveDisabled , 'nz-btn nz-btn-size-normal nz-btn-metricbtn nz-btn-style-normal nz-btn-min-width-120' : !saveDisabled}"
         >{{$t('dashboard.metric.saveChart')}}</button>
-        <!-- <button :disabled="saveDisabled" type="primary" @click="createNew"
-                :class="{'nz-btn nz-btn-disabled nz-btn-size-normal nz-btn-style-light  btn-disabled-cursor-not-allowed' : saveDisabled , 'nz-btn nz-btn-size-normal nz-btn-style-normal' : !saveDisabled}"
-        >{{$t('dashboard.metric.createPanel')}}</button>
-        <button :disabled="saveDisabled" type="primary" @click="selectPanel"
-                :class="{'nz-btn nz-btn-disabled nz-btn-size-normal nz-btn-style-light nz-btn-min-width-75 btn-disabled-cursor-not-allowed' : saveDisabled , 'nz-btn nz-btn-size-normal nz-btn-style-normal' : !saveDisabled}"
-        >{{$t('dashboard.metric.selectPanel')}}</button> -->
 
-      </el-row>
+      </el-row>-->
 <!-- options -->
       <!--<el-row class="mt-10 margin-b-10">
         <div>Options</div>
