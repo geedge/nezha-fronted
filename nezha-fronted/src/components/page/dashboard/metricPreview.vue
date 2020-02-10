@@ -297,7 +297,7 @@ export default {
             symbol:'none',  //去掉点
             smooth:true,  //曲线变平滑
             data: [],
-            type:chartItem.type,
+            type:chartItem.type ? chartItem.type : 'line',
             //visible: true,
             //threshold: null,
             chartTitle:''

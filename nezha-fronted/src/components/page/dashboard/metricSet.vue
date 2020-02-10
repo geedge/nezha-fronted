@@ -44,7 +44,11 @@
 
       <el-row class="operate-area">
 
-        <button type="primary" @click="preview" :disabled="loading" class="nz-btn nz-btn-size-large nz-btn-style-normal">{{$t('dashboard.metric.previewChart')}}</button>
+        <button type="primary" @click="preview" :disabled="loading" class="nz-btn nz-btn-size-large nz-btn-style-light margin-r-10">{{$t('dashboard.metric.previewChart')}}</button>
+        <button :disabled="saveDisabled" type="button" @click="saveChart"
+                class="nz-btn nz-btn-size-large nz-btn-style-normal nz-btn-min-width-120"
+                :class="{'nz-btn-disabled btn-disabled-cursor-not-allowed' : saveDisabled}"
+        >{{$t('dashboard.metric.saveChart')}}</button>
         <!--<button :disabled="saveDisabled || loading" type="primary" @click="preview('change')" class="margin-l-10"
                 :class="{'nz-btn nz-btn-disabled nz-btn-size-large nz-btn-style-light nz-btn-min-width-75 btn-disabled-cursor-not-allowed' : (saveDisabled || loading), 'nz-btn nz-btn-size-large nz-btn-style-light' : !(saveDisabled || loading)}"
         >{{chartSwitchWord}}</button>-->
