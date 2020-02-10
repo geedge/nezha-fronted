@@ -107,8 +107,7 @@
   <el-form :model="elementInfo" ref="elementInfo"   >
     <el-row >
       <el-col :span="16">
-        <!-- <span  class="star-red">*</span>&nbsp; -->
-        {{$t('dashboard.panel.chartForm.metric')}}
+        <span class="label-center">{{$t('dashboard.panel.chartForm.metric')}}</span>
       </el-col>
 
       <el-col :span="8">
@@ -133,7 +132,7 @@
     </template>
     <template v-if="tableShow == 1">
       <el-form-item class="right-box-form-content" label-width="80"  prop="metric" :rules="{ required: true,  message: $t('validate.required'), trigger: 'blur' }"><!--:rules="{ required: true, type: 'string', message: '', trigger: 'change' }"-->
-        <el-cascader ref="metricSelect" :class="{'right-box-row-with-btn': countTotal > 1, 'full-width': countTotal <= 1}" filterable placeholder="" popper-class="" size="small"
+        <el-cascader ref="metricSelect" :class="{'right-box-row-with-btn': countTotal > 1, 'full-width': countTotal <= 1}" filterable placeholder="" popper-class="chart-box-dropdown" size="small"
                  v-model="elementInfo.metric"
                  :options="metricCascaderList"
                  :props="{ expandTrigger: 'hover' }"
@@ -172,6 +171,7 @@
               <el-select  v-model="item.value" ref="tagSelect" size="mini"
                           placeholder=""
                           collapse-tags
+                          popper-class="metric-dropdown"
                           filterable
                           multiple>
                 <el-option v-for="(op, j) in elementInfo.selectedTagList[index].list" :key="op + j"  :value="op">{{op}}</el-option>

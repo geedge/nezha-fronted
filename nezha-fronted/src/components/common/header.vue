@@ -25,7 +25,7 @@
       </el-submenu>
       <el-submenu index="1" popper-class="nz-submenu">
         <template slot="title">
-          <div @click="jumpTo('dashboard')" :class ="(activeIndex == 'dashboard' || activeIndex == 'panel' || activeIndex == 'metricPreview') ? 'menu-active' :'' " >
+          <div @click="jumpTo('panel')" :class ="(activeIndex == 'panel' || activeIndex == 'metricPreview') ? 'menu-active' :'' " >
             {{$t('overall.dashboard')}}
           </div>
         </template>

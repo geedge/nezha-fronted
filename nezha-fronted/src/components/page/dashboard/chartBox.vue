@@ -56,7 +56,7 @@
   <panel-box :panel="panel" @reload="panelReload" ref="panelBox2"></panel-box>
 
   <transition name="right-box">
-    <div class="right-box right-box-add-chart z-top" v-if="rightBox.show" >
+    <div class="right-box right-box-add-chart z-top right-box-chart" v-if="rightBox.show" >
       <!-- begin--顶部按钮-->
       <div class="right-box-top-btns">
         <button id="chart-box-delete" type="button" v-if="chart.id != ''" @click="del(chart)" class="nz-btn nz-btn-size-normal nz-btn-size-alien nz-btn-style-light nz-btn-min-width-82">
@@ -75,7 +75,7 @@
         <el-form class="right-box-form" :model="chart" label-position="top" :rules="rules" ref="chartForm">
           <el-form-item :label="$t('dashboard.panel.title')">
             <div class="right-box-form-content">
-              <el-select class="right-box-row-with-btn" popper-class="config-dropdown"
+              <el-select class="right-box-row-with-btn" popper-class="chart-box-dropdown"
                          v-model="panelId" placeholder="" v-if="rightBox.show" size="small">
                 <el-option v-for="item in panelData" :key="item.id" :label="item.name"
                            :value="item.id" :id="'chart-box-panel-'+item.id">

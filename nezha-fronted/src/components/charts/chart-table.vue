@@ -32,10 +32,10 @@
             </div>
         </div>-->
     </div>
-    <div class="mt-10">
+    <div class="mt-10" v-cloak>
         <!--
       <el-table  size="small"   :loading="tableLoading">-->
-        <el-table class="nz-table" :data="seriesItem" height="350" border v-loading="tableLoading" tooltip-effect="light">
+        <el-table class="nz-table" :data="seriesItem" height="350" border v-loading="tableLoading" tooltip-effect="light" v-cloak>
             <el-table-column sortable :show-overflow-tooltip="true" prop="metric" :label="$t('dashboard.panel.chartTableColumn.metric')" ></el-table-column>
             <el-table-column sortable :show-overflow-tooltip="true" prop="label" :label="$t('dashboard.panel.chartTableColumn.label')" ></el-table-column>
             <el-table-column sortable prop="time" :label="$t('dashboard.panel.chartTableColumn.time')" width="145" ></el-table-column>

@@ -1,6 +1,6 @@
 
 [v-cloak] {
-  display: none;
+  display: none !important;
 }
 body {
   height: 100%;
@@ -606,6 +606,9 @@ li{
 .right-box-add-asset, .right-box-add-chart {
   width: 550px;
 }
+.right-box-chart .el-input__inner, .right-box-chart input {
+  background-color: white;
+}
 .right-box-add-endpoint {
   width: 840px;
 }
@@ -730,8 +733,11 @@ li{
   position: absolute;
   right: 0;
 }
-.config-dropdown, .chart-box-dropdown {
+.config-dropdown, .chart-box-dropdown, .metric-dropdown {
   z-index: 2950 !important;
+}
+.chart-box-dropdown {
+  width: 519px;
 }
 .config-dropdown-btn i {
   font-size: 12px;
@@ -764,13 +770,13 @@ li{
 }
 .right-box-form .el-form-item .el-form-item__label {
   padding: 0;
-  font-size: 16px;
-  color: black;
+  font-size: 14px;
+  color: #666;
 }
 .right-box-form .el-form-item.metric-title-position .el-form-item__label {
   padding: 0;
   font-size: 14px;
-  color: #666;
+  color: $box-label-color;
 }
 .pop-item-wider .right-box-form .el-form-item .el-form-item__label {
   font-size: 14px;
@@ -779,8 +785,12 @@ li{
 .right-box-form-left.right-box-form .el-form-item .el-form-item__label {
   padding: 0 20px 0 0;
   font-size: 14px;
-  color: black;
+  color: $box-label-color;
   line-height: 34px;
+}
+.right-child-box-title, .asset-sub-title, .label-center, .metric-title-label {
+  font-size: 14px;
+  color: $box-label-color;
 }
 .right-box-form .el-form-item__content {
   line-height: 32px;
@@ -867,6 +877,7 @@ li{
 }
 .right-box-form-content .right-box-row-with-btn {
   width: calc(100% - 37px);
+  vertical-align: middle;
 }
 .right-box-form-content .right-box-row-with-btn.el-select--mini, .right-box-form-content .right-box-row-with-btn.el-cascader--mini {
   width: calc(100% - 33px);
