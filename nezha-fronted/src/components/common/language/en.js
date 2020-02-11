@@ -304,7 +304,7 @@ const en = {
       device: 'SN',//SN
       host: 'Host',//'Host'
       assetState: 'State',//'状态'
-      assetPing: 'PingStatus',
+      assetPing: 'Ping',
       modules: 'Module',//'组件'
       alerts: 'Alert information',//'告警信息'
       dataCenter: 'DC',//DC

@@ -90,9 +90,9 @@
             <div v-if="item.prop == 'pingStatus'">
               <el-popover
                 placement="right"
-                width="200"
+                width="50"
                 trigger="hover"
-                :content="scope.row.pingLastUpdate+'['+(scope.row.pingRtt ? scope.row.pingRtt:'unreachable')+']'">
+                :content="scope.row.pingRtt ? scope.row.pingRtt+'ms':'unreachable'">
                 <div slot="reference" style="width: 20px">
                   <div :class="{'active-icon green':scope.row.pingState == 1,'active-icon red':scope.row.pingState == 0}"></div>
                 </div>

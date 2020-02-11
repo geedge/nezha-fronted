@@ -4,6 +4,9 @@
        height: 26px !important;
        border-color: #d8d8d8;
      }
+  .project .nz-table .el-table__row td:first-of-type {
+    padding-left: 0;
+  }
 </style>
 <style scope>
   .chart-bottom {
@@ -169,6 +172,7 @@
             >
           </el-date-picker>
           <button @click="changeTime(10)" class="nz-btn nz-btn-size-normal nz-btn-style-light margin-r-20"><i class="el-icon-d-arrow-right"></i></button>
+          <metric-search :metrics="metricList" :labels="labelList"  v-if="tableShow == 3" @expression-change="tableFilter"></metric-search>
           <button @click="viewGraph" slot="reference" class="nz-btn nz-btn-size-normal nz-btn-style-normal nz-btn-min-width-120">
             <span class='top-tool-btn-txt'>{{$t('project.endpoint.addGraph')}}</span>
           </button>
@@ -176,7 +180,7 @@
       </div>
       <el-table
         v-loading="queryEdpLoading"
-        :data="endpointQueryTabData"
+        :data="showTableData"
         border
         class="nz-table"
         :header-cell-class-name="cellClass"
@@ -253,11 +257,12 @@
   import echarts from 'echarts';
   import chartBox from "../dashboard/chartBox";
   import bus from "../../../libs/bus";
-
+  import metricSearch from "./metricSearch";
   export default {
     name: "project2",
     components: {
-      'chart-box': chartBox
+      'chart-box': chartBox,
+      'metric-search':metricSearch
     },
     data() {
       let temp=this;
@@ -372,8 +377,11 @@
         viewAssetState:false,
         curEndpoint:null,
         endpointQueryTabData:[],//endpoint 查询列表数据
+        showTableData:[],
         queryExpression:'',
         metricList: [], // metric列表
+        labelSet:new Set(),
+        labelList:[],
         formatTime:'',//查询endpoint的时间，
         selectedEndpoints:[],//选中的metric{label='value'}
         chartDatas:[],//从query_range查询到的数据
@@ -891,9 +899,11 @@
           this.formatTime='';
         }
         this.endpointQueryTabData=[];
+        this.showTableData=[];
         this.$get("/prom/api/v1/query?query={job='ed_"+this.curEndpoint.id+"'}&time="+this.formatTime).then(response=>{
             if(response.status==="success"){
               let results=response.data.result;
+              this.endpointQueryTabData=JSON.parse(JSON.stringify(results));
               for (let result of results){
                 // {"metric":{"instance":"192.168.40.126:9100","__name__":"scrape_duration_seconds","module":"node_exporter","project":"kafka","asset":"192.168.40.126","job":"ed_1","dc":"dc5"},"value":[1580782176.522,"0.000560761"]}
                 let temp=result.metric.__name__;
@@ -901,12 +911,17 @@
                 temp+="{";
                 for (let key in result.metric){
                   temp+=key +"='"+result.metric[key]+"',";
+                  this.labelSet.add(key);
                 }
                 temp=temp.charAt(temp.length-1) == ","?temp.substr(0,temp.length-1):temp;
                 temp+="}";
                 let edpQueryData={element:temp,value:result.value[1],type:(result.metric.type?result.metric.type:'2')};
-                this.endpointQueryTabData.push(edpQueryData);
+                this.showTableData.push(edpQueryData);
+                this.labelList=Array.from(this.labelSet).map((item,index)=>{
+                  return {key:item,type:'label'}
+                })
               }
+
               this.tableShow=3;
               this.queryEdpLoading=false;
             }
@@ -1062,6 +1077,20 @@
           return 'disabledCheck'
         }
       },
+      // 获取metric列表
+      getSuggestMetric() {
+        this.$get('metric', {pageNo: 1, pageSize: -1}).then(response => {
+          if (response.code === 200) {
+            this.metricList = response.data.list.map((item,index)=>{
+              item.__label__='metric';
+              return {key:item.metric,type:'metric'};
+            });
+          }else {
+            this.metricList = [];
+          }
+        })
+
+      },
       getPanelData() { //获取panel数据
         this.$get('panel?pageNo=1&pageSize=-1').then(response => {
           if (response.code === 200) {
@@ -1069,11 +1098,66 @@
           }
         });
       },
+      tableFilter:function(expression){
+        let metric='';
+        let labels=[];
+        if(/\w*\{.*\}.*/i.test(expression)){
+          metric=expression.substr(0,expression.indexOf('{'));
+          let labelStr=expression.substr(expression.indexOf('{')+1,expression.indexOf('}')-expression.indexOf('{')-1);
+          let labelArr=labelStr.split(',');
+          labels=labelArr.map((item,index)=>{
+            let temp=item.split('=');
+            let label=temp[0]&&temp[0]!=''?temp[0]:null;
+            let value=temp[1]&&temp[1]!=''?temp[1]:null;
+            return label?{label:label,value:value}:null;
+          })
+        }else{
+            metric=expression;
+        }
+        this.showTableData=[];
+        let sourceData=JSON.parse(JSON.stringify(this.endpointQueryTabData))
+        sourceData=sourceData.filter((item)=>{
+          let metricName=item.metric.__name__;
+          if(metricName.indexOf(metric)==-1){
+            return false;
+          }
+          for(let i in labels){
+            let label=labels[i];
+            let value=item.metric[label.label];
+            if(!value || value != label.value){
+              return false;
+            }
+          }
+          return true;
+        })
+        for(let i in sourceData){
+            let item=sourceData[i];
+            // {"metric":{"instance":"192.168.40.126:9100","__name__":"scrape_duration_seconds","module":"node_exporter","project":"kafka","asset":"192.168.40.126","job":"ed_1","dc":"dc5"},"value":[1580782176.522,"0.000560761"]}
+            let metricName=item.metric.__name__;
+            let temp=metricName;
+            delete item.metric.__name__;
+            temp+="{";
+            let hasLabel=true;
+            for (let key in item.metric){
+              let label=key;
+              let value=item.metric[label];
+              temp+=label +"='"+value+"',";
+            }
+            temp=temp.charAt(temp.length-1) == ","?temp.substr(0,temp.length-1):temp;
+            temp+="}";
+            if(hasLabel){
+              let edpQueryData={element:temp,value:item.value[1],type:(item.metric.type?item.metric.type:'2')};
+              this.showTableData.push(edpQueryData);
+            }
+
+        }
+      }
     },
     created() {
       this.currentProject = this.$store.state.currentProject;
       this.getModuleList();
       this.getMetricsTableData();
+      this.getSuggestMetric()
     },
     mounted() {
       this.getPanelData();
