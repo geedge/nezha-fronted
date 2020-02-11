@@ -4,9 +4,6 @@
        height: 26px !important;
        border-color: #d8d8d8;
      }
-  .project .nz-table .el-table__row td:first-of-type {
-    padding-left: 0;
-  }
 </style>
 <style scope>
   .chart-bottom {

@@ -400,6 +400,9 @@ li{
   padding: 0 20px 0 20px;
   background-color: $content-right-background-color;
 }
+.asset td.content-right-options .cell {
+  width: 280px !important;
+}
 .content-right-option {
   cursor: pointer;
   display: inline-block;
@@ -659,6 +662,7 @@ li{
 .nz-pop { /*小弹框*/
   padding-top: 0;
   box-shadow: $pop-box-shadow;
+  z-index: 2951 !important;
 }
 .nz-pop2 {
   padding: 0 20px 20px 20px;
@@ -736,6 +740,9 @@ li{
 .config-dropdown, .chart-box-dropdown, .metric-dropdown {
   z-index: 2950 !important;
 }
+.dc-dropdown {
+  z-index: 2952 !important;
+}
 .chart-box-dropdown {
   width: 519px;
 }
@@ -811,6 +818,8 @@ li{
 }
 .right-box-form-content-txt {
   padding-left: 11px;
+  color: $box-title-color;
+  font-size: 14px;
 }
 .right-box-form-tip {
   color: #d0d4dC;

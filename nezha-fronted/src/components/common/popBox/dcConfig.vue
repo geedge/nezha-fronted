@@ -32,7 +32,7 @@
             <div class="right-box-form-content-txt" v-if="!popBox.isEdit">{{idc.location}}</div>
           </el-form-item>
           <el-form-item :label="$t('asset.createAssetTab.principal')" prop="principal">
-            <el-select v-model="idc.principal" clearable size="mini" placeholder="" v-if="popBox.isEdit">
+            <el-select v-model="idc.principal" clearable size="mini" placeholder="" v-if="popBox.isEdit" popper-class="dc-dropdown">
               <el-option v-for="item in principals" :key="item.id" :label="item.username" :value="item.userId"></el-option>
             </el-select>
             <div class="right-box-form-content-txt" v-if="!popBox.isEdit">{{idc.principal}}</div>

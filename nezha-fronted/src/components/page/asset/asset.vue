@@ -60,6 +60,7 @@
           :label="item.label"
           :show-overflow-tooltip="item.prop != 'Alert' || item.prop != 'Module'"
           min-width="110px"
+          :class-name="item.prop == 'option' ? 'content-right-options' : ''"
         >
           <template slot="header" slot-scope="scope">
             <template v-if="index==0">
@@ -140,7 +141,7 @@
             <div v-if="item.prop=='tel'">
               <span>{{scope.row.idc.tel}}</span>
             </div>
-            <div v-if="item.prop == 'option'" class="content-right-options">
+            <template v-if="item.prop == 'option'">
               <span @click.stop="deleteData('asset',scope.row.id)" class="content-right-option" :id="'asset-del-'+scope.row.id"><i
                 class="el-icon-delete"></i>&nbsp;&nbsp;<span>{{$t('overall.delete')}}</span>
               </span>&nbsp;&nbsp;&nbsp;
@@ -153,7 +154,7 @@
               <span @click="ssss(scope.row.id ,scope.row.host)" class="content-right-option" :id="'asset-ssh-'+scope.row.id"><i
                 class="nz-icon nz-icon-cli"></i>&nbsp;&nbsp;<span>CLI</span>
               </span>
-            </div>
+            </template>
           </template>
         </el-table-column>
       </el-table>
@@ -734,7 +735,7 @@
     border-radius:50%;
   }
    .red {
-    background-color:red;
+    background-color:#ff6347;
   }
    .green {
     background-color:lightGreen;
