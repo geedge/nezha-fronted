@@ -86,6 +86,7 @@
                               active-value="1"
                               inactive-value="0"
                               active-color="#ee9d3f"
+                              :disabled="isCurrentUser(scope.row.username)"
                               @change="(val)=>{statusChange(scope.row)}">
                             </el-switch>
                         </span>
@@ -146,7 +147,7 @@
             </el-form-item>-->
             <!--enable-->
             <el-form-item :label="$t('config.account.enable')">
-              <el-switch v-model="user.status" active-color="#ee9d3f" :disabled="!rightBox.isEdit" active-value="1"
+              <el-switch v-model="user.status" active-color="#ee9d3f" :disabled="!rightBox.isEdit || isCurrentUser(user.username)" active-value="1"
                          inactive-value="0">
               </el-switch>
             </el-form-item>
@@ -507,6 +508,13 @@
           }
         }
         this.getTableData();
+      }
+    },
+    computed: {
+      isCurrentUser() {
+        return function(username) {
+          return localStorage.getItem('nz-username') == username;
+        }
       }
     },
     mounted() {
