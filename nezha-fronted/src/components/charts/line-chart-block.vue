@@ -37,14 +37,14 @@
     </div>
     <!--
     <Modal title="查看" v-model="screenModal" width="96%" class="line-chart-block-modal">-->
-    <el-dialog class="line-chart-block-modal"
+    <el-dialog class="line-chart-block-modal nz-dialog"
       :title="$t('dashboard.panel.view')"
       :visible.sync="screenModal"
        width="90%"
        @close="screenModal = false"
        @opened="initDialog">
       <div slot="title">
-        {{data.title}}
+        <span class="nz-dialog-title">{{data.title}}</span>
         <div class="float-right panel-calendar dialog-tool">
             <el-date-picker ref="calendar" prefix-icon=" " size="mini" class="nz-dashboard-picker"
                             format="yyyy/MM/dd HH:mm"
@@ -312,7 +312,9 @@ export default {
           //display: 'inline-block',//无此属性
           width: '60%',
           fontStyle:'normal',
-          fontWeight:'normal'
+          fontWeight:'bold',
+          color: "#333",
+
         }
       };
       var option = {

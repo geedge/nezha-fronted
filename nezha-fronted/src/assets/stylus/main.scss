@@ -326,6 +326,7 @@ li{
   border-bottom: 3px solid $global-text-color-active;
   color: #333;
   cursor: default;
+  font-weight: bold;
 }
  
 /* end--nz-tab组件*/
@@ -386,7 +387,8 @@ li{
 }
 .content-left .sidebar-info-item-active {
   border-left: 2px solid $global-text-color-active;
-  color: $global-text-color-active;
+  color: $box-title-color;
+  font-weight: bold;
 }
 .content-left .el-checkbox-group .sidebar-info-item-active {
   border-left: none;
@@ -1031,10 +1033,20 @@ li{
 }
 
 .el-checkbox__input.is-checked + .el-checkbox__label {
-  color: $global-text-color-active;
+  color: $box-title-color;
 }
 
 .el-checkbox__input.is-checked .el-checkbox__inner, .asset .content-left .el-checkbox__input.is-indeterminate .el-checkbox__inner {
   background-color: $global-text-color-active;
 }
 /* --end--复选框自定义颜色 */
+
+/* dashboard-dialog */
+.nz-dialog .el-dialog {
+  border-radius: 10px;
+}
+.nz-dialog-title {
+  font-size: 18px;
+  color: $box-title-color;
+  font-weight: bold;
+}

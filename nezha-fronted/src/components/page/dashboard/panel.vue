@@ -674,6 +674,7 @@
 
   .el-dropdown-link {
     cursor: pointer;
+    font-weight: bold;
   }
 
   .refresh {

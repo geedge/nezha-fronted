@@ -43,9 +43,9 @@
         </el-table>
     </div>
     <!--全屏-->
-      <el-dialog :title="$t('dashboard.panel.view')" :visible.sync="screenModal" width="96%"  @close="screenModal = false" >
+      <el-dialog class="nz-dialog" :title="$t('dashboard.panel.view')" :visible.sync="screenModal" width="96%"  @close="screenModal = false" >
         <div slot="title">
-          {{data.title}}
+          <span class="nz-dialog-title">{{data.title}}</span>
           <div class="float-right panel-calendar dialog-tool">
             <el-date-picker prefix-icon=" " size="mini" class="nz-dashboard-picker" ref="calendar" format="yyyy/MM/dd HH:mm" @change="dateChange" v-model="searchTime" type="datetimerange" :picker-options="pickerOptions" :range-separator="$t('dashboard.panel.to')" :start-placeholder="$t('dashboard.panel.startTime')" :end-placeholder="$t('dashboard.panel.endTime')" align="right">
             </el-date-picker>
