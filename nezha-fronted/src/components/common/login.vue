@@ -60,7 +60,7 @@ export default {
           sessionStorage.setItem("nz-username", this.loginData.username);
           localStorage.setItem("nz-username", this.loginData.username);
           this.$router.push({
-            path: "/dashboard",
+            path: "/panel",
             query: {
               t: +new Date()
             }
