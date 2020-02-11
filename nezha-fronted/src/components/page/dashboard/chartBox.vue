@@ -435,7 +435,7 @@
             this.$message({duration: 1000, type: 'success', message: this.$t("tip.saveSuccess")});
             this.$refs.chartForm.resetFields();//清空表单
             let panel = this.panelData.find(p => p.id === this.panelId);
-            console.info("panel", panel)
+            //console.info("panel", panel)
             this.$emit('on-create-success', 'create', response.data,params, panel);
           } else {
             this.$message.error(response.msg);
@@ -572,7 +572,7 @@
               let dSet = this.$refs.chartTag;
               this.$nextTick(() => {
                 dSet.forEach((item, index) => {
-                  console.info('bbb', elementInfo.elements[index])
+                  //console.info('bbb', elementInfo.elements[index])
                   item.setMdata(elementInfo.elements[index]);
                 });
               });

@@ -255,6 +255,8 @@
 <script>
   import echarts from 'echarts';
   import chartBox from "../dashboard/chartBox";
+  import bus from "../../../libs/bus";
+
   export default {
     name: "project2",
     components: {
@@ -513,8 +515,8 @@
             tooltip:{
               show:true,
               formatter:function(params){
-                console.log("params")
-                console.log(params);
+                //console.log("params")
+                //console.log(params);
                 return `<div  style='width:100%;display:block;word-break:break-all;word-wrap:break-word;white-space:normal'> ${params.name}</div>`;
               },
             },
@@ -601,7 +603,7 @@
         this.$refs.addChartModal.show(true);
         let metricInfo = {};
         metricInfo.elements = [];
-        console.info("aaa", this.selectedEndpoints)
+        //console.info("aaa", this.selectedEndpoints)
         for(let i = 0; i < this.selectedEndpoints.length; i++) {
           let type = '';
           if (this.selectedEndpoints[i].type == '1') {
@@ -619,7 +621,7 @@
           cancelButtonText: this.$t("tip.no"),
           type: 'success'
         }).then(() => {
-          //this.$store.state.assetData.moduleData = 'panel';
+          bus.$emit("menu-change", 'panel');
           this.$store.state.showPanel.id = panel.id;
           this.$store.state.showPanel.name = panel.name;
           this.$router.push({
@@ -674,7 +676,7 @@
                   response.data.list[i].paramObj.push({key: k, value: tempObj[k]})
                 }
               } catch (err) {
-                console.info(response.data.list[i], err);
+                console.error(response.data.list[i], err);
               }
             }
             this.endpointTableData = response.data.list;
@@ -923,7 +925,7 @@
         this.showEndpoint();
       },
       pickTime:function(){
-        console.log(this.formatTime)
+        //console.log(this.formatTime)
         this.showEndpoint();
       },
       getTime:function(size,unit){//计算时间

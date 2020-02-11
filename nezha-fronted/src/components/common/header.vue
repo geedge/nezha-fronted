@@ -122,6 +122,7 @@
 </template>
 
 <script>
+  import bus from '../../libs/bus';
   export default {
     name: "Header",
     data() {
@@ -424,6 +425,10 @@
       // 刷新后有高亮
       let activePath = this.$route.path.slice(1);
       this.activeIndex = activePath;
+      bus.$on("menu-change", (menu) => {
+        console.info(menu);
+        this.activeIndex = menu;
+      });
     },
     computed: {
       projectListReloadWatch() {
@@ -433,8 +438,8 @@
         return this.$store.state.assetDcList;
       },
       getAssetDcData() {
-        return this.$store.state.assetData
-      },
+        return this.$store.state.assetData;
+      }
     },
     watch: {
       getAssetDcData: {

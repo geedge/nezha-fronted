@@ -200,7 +200,7 @@ export default {
         cancelButtonText: this.$t("tip.no"),
         type: 'success'
       }).then(() => {
-        //this.$store.state.assetData.moduleData = 'panel';
+        bus.$emit("menu-change", 'panel');
         this.$store.state.showPanel.id = panel.id;
         this.$store.state.showPanel.name = panel.name;
         this.$router.push({

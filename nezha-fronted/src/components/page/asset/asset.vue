@@ -176,6 +176,7 @@
 </template>
 
 <script>
+  import bus from "../../../libs/bus";
   export default {
     name: "asset",
     data() {
@@ -467,6 +468,7 @@
       },
       jumpToAlertMsg(assetId) {
         this.$store.commit('assetForAlertListChange', assetId);
+        bus.$emit("menu-change", 'alertList');
         this.$router.push({
           path: "/alertList",
           query: {
