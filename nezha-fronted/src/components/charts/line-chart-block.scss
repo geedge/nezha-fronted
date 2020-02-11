@@ -7,6 +7,36 @@
 .clearfix{
   margin-bottom: 20px;
 }
+.legend-shape{
+  display:inline-block;
+  margin-right:5px;
+  border-radius:10px;
+  width:15px;
+  height:5px;
+  vertical-align: middle;
+}
+.ft-gr{
+  color:lightgray;
+}
+.legend-container{
+  width:80%;
+  max-height:80px;
+  min-height:40px;
+  overflow-y: auto;
+  font-size:12px;
+  text-align:left;
+  margin:0 auto;
+}
+.legend-item{
+  text-overflow:ellipsis;
+  white-space:nowrap;
+  width:100%;
+  overflow-x:hidden;
+  cursor:pointer;
+  display:inline-block;
+  float:left;
+  line-height: 20px;
+}
 .line-chart-block {
   height: 100%;
   // min-height: 500px;

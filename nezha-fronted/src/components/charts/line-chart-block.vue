@@ -2,7 +2,7 @@
   @import './line-chart-block.scss';
 </style>
 <template>
-  <div class="line-chart-block" >
+  <div class="line-chart-block">
 
     <!--<div class="edit">
       <div class="list-icon" v-if="firstShow">
@@ -28,6 +28,13 @@
     </div>
 
     <div class="line-area" ref="lineChartArea"  id="lineChartArea"></div>
+
+    <div class="legend-container"   id="legendArea" >
+      <div v-for="(item, index) in legendList" :title="item.name"  @click="clickLegend(item.name,index)" class="legend-item" :class="{'ft-gr':isGrey[index]}" :key="'legend_' + item.name+'_'+index">
+        <span class="legend-shape" :style="{background:(isGrey[index]?'#D3D3D3':bgColorList[index])}"></span>{{item.name}}
+        <br/><!--bgColorList[index]-->
+      </div>
+    </div>
     <!--
     <Modal title="查看" v-model="screenModal" width="96%" class="line-chart-block-modal">-->
     <el-dialog class="line-chart-block-modal"
@@ -54,6 +61,12 @@
         </div>
       </div>
       <div class="line-area " ref="screenShowArea"  id="screenShowArea"></div>
+      <div class="legend-container"   id="screenLegendArea" >
+        <div v-for="(item, index) in screenLegendList" :title="item.name"  @click="clickScreenLegend(item.name,index)" class="legend-item" :class="{'ft-gr':isGreyScreen[index]}"  :key="'legend_' + item.name+'_'+index">
+          <span class="legend-shape" :style="{background:(isGreyScreen[index]?'#D3D3D3':bgColorList[index])}"></span>{{item.name}}
+          <br/><!--bgColorList[index]-->
+        </div>
+      </div>
     </el-dialog>
     <!--</Modal>-->
   </div>
@@ -110,6 +123,18 @@ export default {
       },
       stableFilter: {}, // 保存数据使用,初始化起止时间,单图or多图等
       legend:[],
+      legendList:[],
+      screenLegendList:[],
+      isGrey:[],
+      isGreyScreen:[],
+      bgColorList: ['#7bbfea', '#b3424a', '#f05b72', '#596032', '#bd6758',
+        '#cd9a5b', '#918597', '#70a19f', '#005344', '#FF00FF',
+        '#f7acbc', '#5f5d46', '#66ffff', '#ccFF66', '#f47920',
+        '#769149', '#1d953f', '#abc88b', '#7f7522', '#9b95c9',
+        '#f3715c', '#ea66a6', '#d1c7b7', '#9d9087', '#77787b',
+        '#f58220', '#c37e00', '#00ae9d', '#f26522', '#76becc',
+        '#76624c', '#d71345', '#2468a2', '#ca8687', '#1b315e',
+      ],
       firstShow: false, // 默认不显示操作按钮,
       searchTime:[new Date().setHours(new Date().getHours()-1),new Date()],
       oldSearchTime:[],
@@ -208,9 +233,58 @@ export default {
   },
   watch: {},
   methods: {
+    clickLegend(legendName,index){
+        if (this.echartStore) {
+          this.echartStore.dispatchAction({
+            type: 'legendToggleSelect',
+            name: legendName
+          });
+          let isGreyTmp = this.isGrey[index];
+          this.$set(this.isGrey, index, !isGreyTmp);
+        }
+    },
+    clickScreenLegend(legendName,index){
+        if (this.echartModalStore) {
+          this.echartModalStore.dispatchAction({
+            type: 'legendToggleSelect',
+            name: legendName
+          });
+          let isGreyTmp = this.isGreyScreen[index];
+          this.$set(this.isGreyScreen, index, !isGreyTmp);
+        }
+    },
     clearData(){
       if(this.echartStore){
         this.echartStore.clear();
+      }
+    },
+    formatLegend(chartWidth,name){
+      if(!name){
+        return '';
+      }
+      //计算宽度
+      var span = document.createElement("span");
+      var result = {};
+      result.width = span.offsetWidth;
+      result.height = span.offsetHeight;
+      span.style.visibility = "hidden";
+      span.style.fontSize = 14;
+      span.style.fontFamily = "Arial";
+      span.style.display = "inline-block";
+      document.body.appendChild(span);
+      if(typeof span.textContent != "undefined"){
+        span.textContent = name;
+      }else{
+        span.innerText = name;
+      }
+      var txtWidth = parseFloat(window.getComputedStyle(span).width) - result.width;
+      document.body.removeChild(span);
+
+      if(txtWidth < chartWidth){
+        return name;
+      }else {
+        var charNum = `${(chartWidth-100)/(txtWidth/name.length)}`;
+        return name.slice(0,charNum)+'...';
       }
     },
     // chartSite用于区分是全屏显示还是局部显示
@@ -242,14 +316,7 @@ export default {
         }
       };
       var option = {
-        color: ['#7bbfea', '#b3424a', '#f05b72', '#596032', '#bd6758',
-          '#cd9a5b', '#918597', '#70a19f', '#005344', '#FF00FF',
-          '#f7acbc', '#5f5d46', '#66ffff', '#ccFF66', '#f47920',
-          '#769149', '#1d953f', '#abc88b', '#7f7522', '#9b95c9',
-          '#f3715c', '#ea66a6', '#d1c7b7', '#9d9087', '#77787b',
-          '#f58220', '#c37e00', '#00ae9d', '#f26522', '#76becc',
-          '#76624c', '#d71345', '#2468a2', '#ca8687', '#1b315e',
-        ],
+        color: this.bgColorList,
         tooltip: {
           trigger: 'axis',
           confine:true,
@@ -274,11 +341,12 @@ export default {
         legend: {
           type:'scroll',
           height:80,
-          show:true,
+          show:false,
           icon:"roundRect",
           itemHeight:5,
           itemWidth:15,
           formatter:function(name){
+            //console.log('==========='+name);
             if(!name){
               return '';
             }
@@ -327,7 +395,7 @@ export default {
           //height:"50%",
           //top: '13%',
           containLabel: false,
-          bottom:156
+          bottom:70//156
         },
         dataZoom: [{
           type: 'slider',
@@ -336,7 +404,7 @@ export default {
           start: 0,
           end: 100,
           height:25,
-          bottom:96
+          bottom:10//96
         }
         /*
         , {
@@ -474,6 +542,17 @@ export default {
         this.echartStore.setOption(option);//创建图表
         this.echartStore.hideLoading();
         this.echartStore.resize({height:chartInfo.height});//,width:`${ele.clientWidth-100}`}
+        if(legend && legend.length>0){
+          this.legendList = [];
+          legend.forEach((item, i) => {
+            const legend = {
+              name:item,
+              showText:this.formatLegend(chartWidth,item)
+            };
+            this.legendList.push(legend);
+            this.isGrey.push(false);
+          });
+        }
       } else if (chartSite === 'screen') { // 全屏显示
         /*
         option.series = dataArg.map((item) => {// params.series = dataArg.map((item) => {
@@ -526,6 +605,17 @@ export default {
         this.echartModalStore.setOption(option);//显示全屏界面
         this.echartModalStore.hideLoading();
         this.echartModalStore.resize({height:chartInfo.height});//,width:`${ele.clientWidth-100}`}
+        if(legend && legend.length>0){
+          this.screenLegendList = [];
+          legend.forEach((item, i) => {
+            const legend = {
+              name:item,
+              showText:this.formatLegend(chartWidth,item)
+            };
+            this.screenLegendList.push(legend);
+            this.isGreyScreen.push(false);
+          });
+        }
       }
     },
     handleLineFeed(str,chartWidth){
@@ -633,6 +723,7 @@ export default {
       this.filter.end_time = this.stableFilter.end_time;
       this.searchTime = this.oldSearchTime;
       this.screenModal = true;
+      this.isGreyScreen=[];
       this.dateChange();
     },
     dateChange(time) {
