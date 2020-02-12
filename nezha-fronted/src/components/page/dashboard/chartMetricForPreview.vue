@@ -169,22 +169,14 @@
       </el-col>
       <el-col :span="8" style="text-align: right;">
         <div class="nz-tab-item-box"  v-show="tableShow == 1">
-        <!-- <div class="nz-btn-group float-left"  v-show="tableShow == 2"> -->
           <div @click="" class="nz-tab-style nz-tab-style-light">
             <span>{{$t('dashboard.metric.normal')}}</span>
           </div>
-          <div  @click="clickTabelShow(2,'normal')" class="nz-tab-style nz-tab-style-light-right ">
+          <div  @click="clickTabelShow(2,'expert')" class="nz-tab-style nz-tab-style-light-right ">
             <span>{{$t('dashboard.metric.expert')}}</span>
           </div>
-          <!-- <button @click="clickTabelShow(1,'normal')" class="nz-btn nz-btn-size-small nz-btn-style-light float-left">
-            <span>{{$t('dashboard.metric.normal')}}</span>
-          </button>
-          <button @click="" class="nz-btn nz-btn-size-small nz-btn-style-normal float-left">
-            <span>{{$t('dashboard.metric.expert')}}</span>
-          </button> -->
         </div>
-        <div @click="clickTabelShow(1,'expert')" class="nz-tab-item-box"  v-show="tableShow == 2">
-        <!-- <div class="nz-btn-group float-left"  v-show="tableShow == 1"> -->
+        <div @click="clickTabelShow(1,'normal')" class="nz-tab-item-box"  v-show="tableShow == 2">
            <div  class="nz-tab-style">
             <span>{{$t('dashboard.metric.normal')}}</span>
           </div>
@@ -192,12 +184,6 @@
           <div @click="" class="nz-tab-style nz-tab-style-light nz-tab-style-light-right  ">
             <span>{{$t('dashboard.metric.expert')}}</span>
           </div>
-          <!-- <button @click="" class="nz-btn nz-btn-size-small  nz-btn-style-normal float-left">
-            <span>{{$t('dashboard.metric.normal')}}</span>
-          </button>
-          <button @click="clickTabelShow(2,'expert')" class="nz-btn nz-btn-size-small nz-btn-style-light float-left">
-            <span>{{$t('dashboard.metric.expert')}}</span>
-          </button> -->
         </div>
       </el-col>
     </el-row>
