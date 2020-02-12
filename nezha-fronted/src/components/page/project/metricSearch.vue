@@ -3,17 +3,46 @@
     <div class="search-input-all input-position" @click="">
       <!--            历史记录-->
       <div class="search-history">
-        <i class="el-icon-time" @click="look_history" id="search-view-history"></i>
+        <el-popover placement="bottom"
+                    v-model="historyShow"
+        >
+          <div>
+            <div class="history-title">
+              <span >{{$t('search.recentSearch')}}</span>
+            </div>
+
+            <ul>
+              <li v-for="(item,index) in queryHistory" class="history-li"  @click="pickHistory(item)">{{item}}</li>
+            </ul>
+          </div>
+
+          <div slot="reference" @click.prevent.stop=""  class="search-input-history" ><i class="el-icon-time"  id="search-view-history"></i></div>
+        </el-popover>
+
       </div>
       <!--            搜索框-->
       <div class="input-center-box" id="input-center-box">
+        <el-autocomplete
+          id="query-expression"
+          class="inline-input"
+          v-model="queryExpression"
+          size="mini"
+          :fetch-suggestions="querySearch"
+          :placeholder="$t('project.endpoint.promExpr')"
+          @select="handleSelect"
+          ref="queryExpression"
+        >
+          <template slot-scope="{ item }">
+            <span>{{ item.key }}<!--:{{item.type}}--></span>
+          </template>
+        </el-autocomplete>
       </div>
       <!--            清空内容-->
-      <div class="clear-search" @click="">
+      <div class="clear-search" @click="clearInput">
         <i class="el-icon-close"></i>
       </div>
     </div>
-    <button @click="" type="button" class="nz-btn nz-btn-size-normal nz-btn-style-light float-right" id="search-input-search"><i class="el-icon-search"></i></button>
+    <button @click="filterTabelData" type="button" class="nz-btn nz-btn-size-normal nz-btn-style-light float-right" id="search-input-search"><i class="el-icon-search"></i></button>
   </div>
   <!--<div class="metric-search-box margin-r-20" :class="componetStyle">
     <el-popover placement="bottom"
@@ -131,12 +160,18 @@
         filterTabelData:function(){
           this.$emit('expression-change',this.queryExpression);
           this.queryHistory.unshift(this.queryExpression);
+          if(this.queryHistory.length>10){
+            this.queryHistory.splice(10,this.queryHistory.length-10);
+          }
           localStorage.setItem(this.localStorageHistoryKey,JSON.stringify(this.queryHistory));
         },
         pickHistory:function(expression){
           this.queryExpression=expression;
           this.filterTabelData();
           this.historyShow=false;
+        },
+        clearInput:function(){
+          this.queryExpression=this.saveExpression='';
         }
       },
       mounted() {
@@ -164,6 +199,8 @@
             if(n.length==0){
               this.filter=this.initFilter;
               this.suggestionArray=this.labels.concat(this.metrics);
+              this.metricSet=false;
+              this.labelSet=false;
             }
             if(n.length>0 && n.indexOf('{')==-1){
               this.filter=this.initFilter;
@@ -185,14 +222,27 @@
   .search-input{
     display: inline-block;
   }
-  .history-li:hover{
-    background-color: #e5e5e5;
-  }
-
   .metric-search-box {
     display: inline-block;
   }*/
-
+  .history-title{
+    width: 100%;
+    height: 40px;
+    line-height: 40px;
+    line-height: 40px;
+    text-align: center;
+    position: relative;
+    border-bottom: 1px solid #dfdfdf;
+    color: #2e2e2e;
+  }
+  .history-li{
+    padding: 5px 10px;
+    line-height: 20px;
+  }
+  .history-li:hover{
+    background: #f0f0f0;
+    cursor:pointer;
+  }
  .new-search{
    display: flex;
    position: relative;
