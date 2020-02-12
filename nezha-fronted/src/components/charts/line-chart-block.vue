@@ -29,7 +29,7 @@
 
     <div class="line-area" ref="lineChartArea"  id="lineChartArea"></div>
 
-    <div class="legend-container"   id="legendArea" >
+    <div class="legend-container"   id="legendArea" ref="legendArea">
       <div v-for="(item, index) in legendList" :title="item.name"  @click="clickLegend(item.name,index)" class="legend-item" :class="{'ft-gr':isGrey[index]}" :key="'legend_' + item.name+'_'+index">
         <span class="legend-shape" :style="{background:(isGrey[index]?'#D3D3D3':bgColorList[index])}"></span>{{item.name}}
         <br/><!--bgColorList[index]-->
@@ -61,7 +61,7 @@
         </div>
       </div>
       <div class="line-area " ref="screenShowArea"  id="screenShowArea"></div>
-      <div class="legend-container"   id="screenLegendArea" >
+      <div class="legend-container"   id="screenLegendArea" ref="screenLegendArea">
         <div v-for="(item, index) in screenLegendList" :title="item.name"  @click="clickScreenLegend(item.name,index)" class="legend-item" :class="{'ft-gr':isGreyScreen[index]}"  :key="'legend_' + item.name+'_'+index">
           <span class="legend-shape" :style="{background:(isGreyScreen[index]?'#D3D3D3':bgColorList[index])}"></span>{{item.name}}
           <br/><!--bgColorList[index]-->
@@ -543,7 +543,6 @@ export default {
         option.title = title;
         this.echartStore.setOption(option);//创建图表
         this.echartStore.hideLoading();
-        this.echartStore.resize({height:chartInfo.height});//,width:`${ele.clientWidth-100}`}
         if(legend && legend.length>0){
           this.legendList = [];
           legend.forEach((item, i) => {
@@ -555,6 +554,12 @@ export default {
             this.isGrey.push(false);
           });
         }
+        this.$nextTick(() => {
+          let divHeight = this.$refs.legendArea.offsetHeight;
+          let chartHeight = (chartInfo.height-divHeight);
+          //alert(chartInfo.title+"--"+chartHeight);
+          this.echartStore.resize({height:chartHeight});//,width:`${ele.clientWidth-100}`}
+        });
       } else if (chartSite === 'screen') { // 全屏显示
         /*
         option.series = dataArg.map((item) => {// params.series = dataArg.map((item) => {
@@ -606,7 +611,6 @@ export default {
         option.title = {};
         this.echartModalStore.setOption(option);//显示全屏界面
         this.echartModalStore.hideLoading();
-        this.echartModalStore.resize({height:chartInfo.height});//,width:`${ele.clientWidth-100}`}
         if(legend && legend.length>0){
           this.screenLegendList = [];
           legend.forEach((item, i) => {
@@ -618,6 +622,11 @@ export default {
             this.isGreyScreen.push(false);
           });
         }
+        this.$nextTick(() => {
+          let divHeight = this.$refs.screenLegendArea.offsetHeight;
+          let chartHeight = (chartInfo.height-divHeight);
+          this.echartModalStore.resize({height:chartHeight});
+        });
       }
     },
     handleLineFeed(str,chartWidth){
