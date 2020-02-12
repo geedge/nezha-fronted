@@ -309,7 +309,7 @@ export default {
         let host = '';//up,
         let charName='';
         if(queryItem.metric.__name__){
-          host = `${queryItem.metric.__name__}{`;//up,
+          host = `${queryItem.metric.__name__}`;//up,
           charName = `${queryItem.metric.__name__}`;
         }
         //let charName = `${queryItem.metric.__name__}`;

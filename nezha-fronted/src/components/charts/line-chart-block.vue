@@ -586,6 +586,7 @@ export default {
         option.title = title;
         this.echartStore.setOption(option);//创建图表
         this.echartStore.hideLoading();
+        this.echartStore.resize({height:chartInfo.height});//,width:`${ele.clientWidth-100}`}
         if(legend && legend.length>0){
           this.legendList = [];
           legend.forEach((item, i) => {
@@ -597,12 +598,13 @@ export default {
             this.isGrey.push(false);
           });
         }
+        /*
         this.$nextTick(() => {
           let divHeight = this.$refs.legendArea.offsetHeight;
           let chartHeight = (chartInfo.height-divHeight);
-          //alert(chartInfo.title+"--"+chartHeight);
           this.echartStore.resize({height:chartHeight});//,width:`${ele.clientWidth-100}`}
         });
+        */
       } else if (chartSite === 'screen') { // 全屏显示
         /*
         option.series = dataArg.map((item) => {// params.series = dataArg.map((item) => {
@@ -654,6 +656,7 @@ export default {
         option.title = {};
         this.echartModalStore.setOption(option);//显示全屏界面
         this.echartModalStore.hideLoading();
+        this.echartModalStore.resize({height:chartInfo.height});
         if(legend && legend.length>0){
           this.screenLegendList = [];
           legend.forEach((item, i) => {
@@ -665,11 +668,13 @@ export default {
             this.isGreyScreen.push(false);
           });
         }
+        /*
         this.$nextTick(() => {
           let divHeight = this.$refs.screenLegendArea.offsetHeight;
           let chartHeight = (chartInfo.height-divHeight);
           this.echartModalStore.resize({height:chartHeight});
         });
+        */
       }
     },
     handleLineFeed(str,chartWidth){
