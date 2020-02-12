@@ -323,7 +323,7 @@ export default {
           trigger: 'axis',
           confine:true,
           formatter:function(params){
-            let str = `<div  style='width:100%;display:block;word-break:break-all;word-wrap:break-word;white-space:normal'>`;
+            let str = `<div  style='width:100%;display:block;word-break:break-all;word-wrap:break-word;white-space:normal;line-height: 18px;font-size:12px;font-family: Roboto,Helvetica Neue,Arial,sans-serif;'>`;
             params.forEach((item, i) => {
               if(i===0){
                 let t_date = new Date(item.data[0]);
@@ -332,8 +332,45 @@ export default {
               }
               str +=`<br/>`;
               let val = parseFloat(Number(item.data[1]).toFixed(2));
-              str +=`<span style='display:inline-block;margin-right:5px;border-radius:10px;width:15px;height:5px;background-color: ${item.color};}'></span> ${item.seriesName}:`;
-              str +=val;
+              if(val===0){
+                val = Number(item.data[1]);
+              }
+              let itemNameList = ["instance","module","project","job","dc","asset"];
+              //let seriesNameTmp = this.filterItem(item.seriesName,itemNameList);
+              let seriesNameTmp = item.seriesName;
+              itemNameList.forEach((itemName, i) => {
+                let insIndex = seriesNameTmp.indexOf(itemName+"=");
+                if(insIndex>-1){//{dd=""22,instance="aa",job="nn"},如果最后只有{},则去掉{}
+                  let start = seriesNameTmp.substring(0,insIndex);
+                  let endTmp = seriesNameTmp.substring(insIndex+itemName.length+1,seriesNameTmp.length);
+                  let sepInd = endTmp.indexOf(',');
+                  let end = "";
+                  if(sepInd>-1){
+                    end = endTmp.substring(sepInd+1,endTmp.length);
+                  }else {
+                    sepInd = endTmp.indexOf('"',1);
+                    end = endTmp.substring(sepInd+1,endTmp.length);
+                  }
+                  seriesNameTmp = start+end;
+                }
+              });
+              if(seriesNameTmp.indexOf(",}")>-1){
+                seriesNameTmp = seriesNameTmp.replace(",}","}");
+              }
+              if(seriesNameTmp.indexOf("{}")>-1){
+                seriesNameTmp = seriesNameTmp.replace("{}","");
+              }
+              /*
+              if(chartInfo.elements[serIndex].type==='normal'){
+                str +=`<span style='display:inline-block;margin-right:5px;border-radius:10px;width:15px;height:5px;background-color: ${item.color};}'></span> `;
+                str +=seriesNameTmp+":"+val;
+              }else if(chartInfo.elements[serIndex].type==='expert'){
+                str +=`<span style='display:inline-block;margin-right:5px;border-radius:10px;width:15px;height:5px;background-color: ${item.color};}'></span>${item.seriesName} `;
+                str +=val;
+              }
+               */
+              str +=`<span style='display:inline-block;margin-right:5px;border-radius:10px;width:15px;height:5px;background-color: ${item.color};}'></span> `;
+              str +=seriesNameTmp+":"+val;
             });
             str +=`</div>`;
             return str;
@@ -473,8 +510,14 @@ export default {
                   return `${parseFloat(mbNum.toFixed(2))}M`;
                 }
                 return `${parseFloat(kbNum.toFixed(2))}K`;
+              }else {
+                let rlt = parseFloat(num.toFixed(2));
+                if(rlt===0){
+                  return num;
+                }else {
+                  return rlt;
+                }
               }
-              return parseFloat(num.toFixed(2));
             },
           },
           //boundaryGap:[0,0.2]
