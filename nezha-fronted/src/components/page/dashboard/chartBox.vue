@@ -264,7 +264,7 @@
         };
         this.$refs.panelBox2.setTitle(this.$t("dashboard.panel.createPanelTitle"));
       },
-      panelReload(panelName) {
+      panelReload(panelName) { //刷新panel下拉框
         if (panelName) {
           this.panelName = panelName;
         }

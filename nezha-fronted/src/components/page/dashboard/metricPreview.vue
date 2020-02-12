@@ -32,7 +32,7 @@
               <div class="box-content" >
                 <el-row :gutter="20"  class="row-width" style="height: calc(100% - 65px);">
                   <el-col :span="10" >
-                      <metric-set :panelData="panelData" ref="metricSet" @on-view-chart="getChartParam"></metric-set>
+                      <metric-set :panelData="panelData" ref="metricSet" @on-view-chart="getChartParam"  @reloadPanel="getPanelData"></metric-set>
                   </el-col>
                   <el-col :span="0.5"><div>&nbsp;</div></el-col>
                   <el-col :span="13" class="chart-preview-area">
@@ -48,7 +48,7 @@
                                     style="position:absolute; right: 10px"
                                     align="right">
                     </el-date-picker>
-                    <el-row class="border-area" v-show="chartCount === 'single'" style="margin-top: 42px;">
+                    <el-row class="border-area" v-show="chartCount === 'single'" style="margin-top: 39px;">
                       <div class="chartBox">
                         <line-chart-block
                           :show-setting="false"

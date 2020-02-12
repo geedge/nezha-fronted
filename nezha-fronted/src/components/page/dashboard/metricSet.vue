@@ -109,7 +109,7 @@
       </el-form>-->
     </div>
     <!--<metric-pre-panel-box :chartInfo="chartInfo"  :elementTarget="elementTarget" :seriesData="seriesData" :series="series" :chartCount="chartCount" @reload="reload"  ref="panelBox"></metric-pre-panel-box>-->
-    <chart-box ref="addChartModal" :panel-data="panelData" @on-create-success="createSuccess"></chart-box>
+    <chart-box ref="addChartModal" :panel-data="panelData" @on-create-success="createSuccess" @reloadOnlyPanel="reloadPanelData" @reload="reloadPanelData"></chart-box>
   </div>
 </template>
 <script>
@@ -193,6 +193,9 @@ export default {
     setSeries(data,series) {
       this.seriesData = data;
       this.series = series;
+    },
+    reloadPanelData() { //刷新panelData
+      this.$emit("reloadPanel");
     },
     createSuccess(type, response, param, panel) { //添加chart成功
       this.$confirm(this.$t("dashboard.metric.goPanelTip"),this.$t("tip.saveSuccess"), {
