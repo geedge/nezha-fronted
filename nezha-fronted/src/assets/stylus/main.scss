@@ -152,7 +152,7 @@ li{
   text-align: center;
   line-height: 14px;
 }
-.nz-btn.nz-btn-size-normal {
+.nz-btn.nz-btn-size-normal:not(.nz-btn-size-alien) {
   font-size: 12px;
   padding: 4px 8px;
   max-height: 24px;
@@ -169,6 +169,8 @@ li{
 }
 .nz-btn.nz-btn-size-normal.nz-btn-size-alien { //弹框顶部异形按钮
   height: 40px;
+  font-size: 12px;
+  padding: 4px 8px;
   border-radius: 0 0 10px 10px;
 }
 .nz-btn.nz-btn-size-small.nz-btn-size-alien { //弹框顶部异形按钮
