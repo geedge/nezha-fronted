@@ -22,35 +22,7 @@
             </el-dropdown-menu>
           </el-dropdown>
         </div>
-        <div>
-          <button @click="toAddChart"
-                  class="nz-btn nz-btn-size-normal nz-btn-style-light float-right nz-btn-min-width-82">
-                      <span class="top-tool-btn-txt">
-                          <i class="nz-icon-create-square nz-icon"></i>
-                          {{$t('overall.add')}}</span>
-          </button>
-          <div class="top-tool-search float-right">
-            <search-input ref="searchInput" :searchMsg="searchMsg" @search="search"></search-input>
-          </div>
-
-          <div class="nz-btn-group nz-btn-group-light float-right margin-r-20">
-            <button style="border-right: 1px solid rgba(162,162,162,0.50);" type="button"
-                    class="nz-btn nz-btn-size-normal nz-btn-style-light" @click="Refresh()">
-              <i style="font-size: 12px" class="global-active-color nz-icon nz-icon-refresh"></i>
-            </button><el-popover
-            v-model="visible" placement="bottom-start" width="200" trigger="click">
-              <ul class="popover_ul">
-                <li v-for="i in intervalList" :style="{color:interval==i.value?'#31749C':''}" :key="i.value+i.name"
-                    @click="selectInterval(i.value)">
-                  {{i.name}}
-                </li>
-              </ul>
-              <button type="button" style="border-radius: 0 4px 4px 0"
-                      class="nz-btn nz-btn-size-normal nz-btn-style-light" slot="reference">
-                <i style="font-size: 12px" class="nz-icon nz-icon-arrow-down"></i>
-              </button>
-            </el-popover>
-          </div>
+        <div class="top-tool-right">
           <div class="panel-calendar margin-r-20">
             <div class="block">
               <el-date-picker prefix-icon=" " class="nz-dashboard-picker" size="mini" ref="calendar"
@@ -61,6 +33,36 @@
               </el-date-picker>
             </div>
           </div>
+
+          <div class="nz-btn-group nz-btn-group-size-normal nz-btn-group-light margin-r-20">
+            <button style="border-right: 1px solid rgba(162,162,162,0.50);" type="button"
+                    class="nz-btn nz-btn-size-normal nz-btn-style-light" @click="Refresh()">
+              <i style="font-size: 12px" class="global-active-color nz-icon nz-icon-refresh"></i>
+            </button><el-popover
+            v-model="visible" placement="bottom-start" width="200" trigger="click">
+            <ul class="popover_ul">
+              <li v-for="i in intervalList" :style="{color:interval==i.value?'#31749C':''}" :key="i.value+i.name"
+                  @click="selectInterval(i.value)">
+                {{i.name}}
+              </li>
+            </ul>
+            <button type="button" style="border-radius: 0 4px 4px 0"
+                    class="nz-btn nz-btn-size-normal nz-btn-style-light" slot="reference">
+              <i style="font-size: 12px" class="nz-icon nz-icon-arrow-down"></i>
+            </button>
+          </el-popover>
+          </div>
+
+          <div class="top-tool-search">
+            <search-input ref="searchInput" :searchMsg="searchMsg" @search="search"></search-input>
+          </div>
+
+          <button @click="toAddChart"
+                  class="nz-btn nz-btn-size-normal nz-btn-style-light nz-btn-min-width-82">
+                      <span class="top-tool-btn-txt">
+                          <i class="nz-icon-create-square nz-icon"></i>
+                          {{$t('overall.add')}}</span>
+          </button>
         </div>
       </div>
       <div class="table-list" @scroll="onScroll" id="tableList">

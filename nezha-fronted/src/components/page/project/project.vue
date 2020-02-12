@@ -157,22 +157,26 @@
           </div>
         </div>
         <!--时间选择器-->
-        <div>
-          <button @click="changeTime(-10)" class="nz-btn nz-btn-size-normal nz-btn-style-light"><i class="el-icon-d-arrow-left"></i></button>
-          <el-date-picker
-            v-model="formatTime"
-            type="datetime"
-            size="mini"
-            class="project-calendar"
-            clearable
-            :time-arrow-control="true"
-            placeholder="Moment"
-            value-format="yyyy-MM-dd HH:mm:ss"
-            @change="pickTime"
-            >
-          </el-date-picker>
-          <button @click="changeTime(10)" class="nz-btn nz-btn-size-normal nz-btn-style-light margin-r-20"><i class="el-icon-d-arrow-right"></i></button>
-          <metric-search :metrics="metricList" :labels="labelList"  v-if="tableShow == 3" @expression-change="tableFilter"></metric-search>
+        <div class="top-tool-right">
+          <div class="margin-r-20 margin-t-m1">
+            <button @click="changeTime(-10)" class="nz-btn nz-btn-size-normal nz-btn-style-light"><i class="el-icon-d-arrow-left"></i></button>
+            <el-date-picker
+              v-model="formatTime"
+              type="datetime"
+              size="mini"
+              class="project-calendar"
+              clearable
+              :time-arrow-control="true"
+              placeholder="Moment"
+              value-format="yyyy-MM-dd HH:mm:ss"
+              @change="pickTime"
+              >
+            </el-date-picker>
+            <button @click="changeTime(10)" class="nz-btn nz-btn-size-normal nz-btn-style-light"><i class="el-icon-d-arrow-right"></i></button>
+          </div>
+          <div class="top-tool-search">
+            <metric-search :metrics="metricList" :labels="labelList"  v-if="tableShow == 3" @expression-change="tableFilter"></metric-search>
+          </div>
           <button @click="viewGraph" slot="reference" class="nz-btn nz-btn-size-normal nz-btn-style-normal nz-btn-min-width-120">
             <span class='top-tool-btn-txt'>{{$t('project.endpoint.addGraph')}}</span>
           </button>
