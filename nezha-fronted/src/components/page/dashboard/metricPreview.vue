@@ -48,7 +48,7 @@
                                     style="position:absolute; right: 10px"
                                     align="right">
                     </el-date-picker>
-                    <el-row class="border-area" v-show="chartCount === 'single'" style="margin-top: 39px;">
+                    <el-row class="border-area" v-show="chartCount === 'single'" style="margin-top: 40px;">
                       <div class="chartBox">
                         <line-chart-block
                           :show-setting="false"

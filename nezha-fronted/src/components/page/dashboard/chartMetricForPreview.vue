@@ -47,7 +47,7 @@
   .li-list-part-label-val-list {
     height: 218px;
     border: 1px solid #dcdfe6;
-    margin-top: 44px;
+    margin-top: 39px;
     border-radius: 4px;
     box-sizing:border-box;
     padding: 15px 0 10px 15px;

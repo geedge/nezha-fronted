@@ -43,11 +43,14 @@
     font-weight: bold;
     padding-left:5px;
   }
-  input {
+  input, textarea {
     background-color: $content-right-background-color;
   }
-  .el-input__inner {
+  .el-input__inner, .el-textarea__inner, .el-input__count {
     background-color: $content-right-background-color;
+  }
+  .el-textarea {
+    margin-top: 4px;
   }
 }
 
