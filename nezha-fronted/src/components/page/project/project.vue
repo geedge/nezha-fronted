@@ -1109,12 +1109,16 @@
           metric=expression.substr(0,expression.indexOf('{'));
           let labelStr=expression.substr(expression.indexOf('{')+1,expression.indexOf('}')-expression.indexOf('{')-1);
           let labelArr=labelStr.split(',');
-          labels=labelArr.map((item,index)=>{
-            let temp=item.split('=');
-            let label=temp[0]&&temp[0]!=''?temp[0]:null;
-            let value=temp[1]&&temp[1]!=''?temp[1]:null;
-            return label?{label:label,value:value}:null;
-          })
+
+          if(labelArr.length>0){
+            labels=labelArr.map((item,index)=>{
+              let temp=item.split('=');
+              let label=temp[0]&&temp[0]!=''?temp[0]:null;
+              let value=temp[1]&&temp[1]!=''?temp[1]:null;
+              return label?{label:label,value:value}:null;
+            })
+          }
+
         }else{
             metric=expression;
         }
@@ -1125,13 +1129,26 @@
           if(metricName.indexOf(metric)==-1){
             return false;
           }
-          for(let i in labels){
-            let label=labels[i];
-            let value=item.metric[label.label];
-            if(!value || value != label.value){
-              return false;
+
+          if(labels.length>0){
+            for(let i in labels){
+              let label=labels[i];
+              if(label&&label.label){
+                let value=item.metric[label.label];
+                let queryVal=label.value;
+                debugger
+                if(/^'.+'$/.test(queryVal)){
+                  queryVal=queryVal.substr(1,queryVal.length-2);
+                }
+                if(!value || value != queryVal){
+                  return false;
+                }
+              }else{
+                return true;
+              }
             }
           }
+
           return true;
         })
         for(let i in sourceData){

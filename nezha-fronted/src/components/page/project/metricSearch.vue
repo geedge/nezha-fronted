@@ -33,7 +33,14 @@
           ref="queryExpression"
         >
           <template slot-scope="{ item }">
-            <span>{{ item.key }}<!--:{{item.type}}--></span>
+            <el-popover
+              trigger="hover"
+              placement="left"
+            >
+              <span><span class="tip-line-font">[{{item.type}}]&nbsp;</span>{{ item.key }}</span>
+              <span slot="reference">{{ item.key }}<!--:{{item.type}}--></span>
+            </el-popover>
+
           </template>
         </el-autocomplete>
       </div>
@@ -214,6 +221,7 @@
 </script>
 
 <style scoped lang="scss">
+  @import '../../../assets/stylus/index';
   /*  .search-input-history{
     display: inline-block;
     border:1px solid  #e5e5e5;
@@ -242,6 +250,9 @@
   .history-li:hover{
     background: #f0f0f0;
     cursor:pointer;
+  }
+  .tip-line-font{
+    color:$header-text-color;
   }
  .new-search{
    display: flex;
