@@ -432,7 +432,8 @@ export default {
         },
         grid: {
           //height:"50%",
-          //top: '13%',
+          left: 65,
+          right: 65,
           containLabel: false,
           bottom:70//156
         },

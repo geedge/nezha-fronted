@@ -30,7 +30,9 @@ export function phone(rule, value, callback) {
 
 export function port(rule, value, callback) {
   setTimeout(() => {
-    if(typeof value != 'number'){
+    if (!value) {
+      callback();
+    } else if(typeof value != 'number'){
       callback(new Error(vm.$t('validate.number')))
     }else{
       if(value < 1 ||value > 65535){

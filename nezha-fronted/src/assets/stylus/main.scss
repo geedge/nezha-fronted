@@ -1060,6 +1060,9 @@ li{
 .nz-dialog .el-dialog {
   border-radius: 10px;
 }
+.nz-dialog .el-dialog__body {
+  padding: 0 20px 30px 20px;
+}
 .nz-dialog-title {
   font-size: 18px;
   color: $box-title-color;
