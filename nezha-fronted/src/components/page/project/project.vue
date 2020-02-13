@@ -158,9 +158,9 @@
         </div>
         <!--时间选择器-->
         <div class="top-tool-right">
-          <div class="top-tool-search">
+          <div class="top-tool-search" >
 <!--            <metric-search :metrics="metricList" :labels="labelList"  v-if="tableShow == 3" @expression-change="tableFilter"></metric-search>-->
-            <el-input id="elementQuery" v-model="queryExpression" suffix-icon="el-icon-search" size="mini" clearable  :placeholder="$t('project.endpoint.promExpr')" ></el-input>
+            <el-input ref="elementQuery" @clear="clearInput" id="elementQuery" @focus="focusInput"  @blur="blurInput" v-model="queryExpression" suffix-icon="el-icon-search" size="mini" clearable  :placeholder="$t('project.endpoint.promExpr')" ></el-input>
           </div>
           <div class="margin-r-20 margin-t-m1">
             <button @click="changeTime(-10)" class="nz-btn nz-btn-size-normal nz-btn-style-light"><i class="el-icon-d-arrow-left"></i></button>
@@ -1184,6 +1184,21 @@
             }
 
         }
+      },
+      queryInputInitStyle:function(){
+        document.getElementById('elementQuery').parentElement.style.width='40px';
+        document.getElementById('elementQuery').parentElement.style.float='right';
+      },
+      focusInput:function(){
+        document.getElementById('elementQuery').parentElement.style='';
+      },
+      blurInput:function(){
+        if(!this.queryExpression || this.queryExpression == ''){
+          setTimeout(this.queryInputInitStyle(),100)
+        }
+      },
+      clearInput:function(){
+        this.blurInput();
       }
     },
     created() {
@@ -1203,6 +1218,7 @@
       this.dropCol = localStorage.getItem("nz-tableTitle-" + localStorage.getItem("nz-username") + "-" + this.$route.path)
         ? JSON.parse(localStorage.getItem("nz-tableTitle-" + localStorage.getItem("nz-username") + "-" + this.$route.path))
         : this.endpointTableTitle;
+      this.queryInputInitStyle();
     },
     computed: {
       currentProjectChange() {
@@ -1488,12 +1504,4 @@
     line-height: 37px;
   }
   /* end--覆盖分页组件样式*/
-  .query-inactive{
-    border: 1px solid #dfdfdf;
-    background-color: #dfdfdf;
-    border-radius:20%;
-    width: 40px;
-    height: 26px;
-    padding: 2px 10px 2px 10px;
-  }
 </style>
