@@ -158,6 +158,10 @@
         </div>
         <!--时间选择器-->
         <div class="top-tool-right">
+          <div class="top-tool-search">
+<!--            <metric-search :metrics="metricList" :labels="labelList"  v-if="tableShow == 3" @expression-change="tableFilter"></metric-search>-->
+            <el-input id="elementQuery" v-model="queryExpression" suffix-icon="el-icon-search" size="mini" clearable  :placeholder="$t('project.endpoint.promExpr')" ></el-input>
+          </div>
           <div class="margin-r-20 margin-t-m1">
             <button @click="changeTime(-10)" class="nz-btn nz-btn-size-normal nz-btn-style-light"><i class="el-icon-d-arrow-left"></i></button>
             <el-date-picker
@@ -174,9 +178,7 @@
             </el-date-picker>
             <button @click="changeTime(10)" class="nz-btn nz-btn-size-normal nz-btn-style-light"><i class="el-icon-d-arrow-right"></i></button>
           </div>
-          <div class="top-tool-search">
-            <metric-search :metrics="metricList" :labels="labelList"  v-if="tableShow == 3" @expression-change="tableFilter"></metric-search>
-          </div>
+
           <button @click="viewGraph" slot="reference" class="nz-btn nz-btn-size-normal nz-btn-style-normal nz-btn-min-width-120">
             <span class='top-tool-btn-txt'>{{$t('project.endpoint.addGraph')}}</span>
           </button>
@@ -382,6 +384,7 @@
         curEndpoint:null,
         endpointQueryTabData:[],//endpoint 查询列表数据
         showTableData:[],
+        showTableDataCopy:'',
         queryExpression:'',
         metricList: [], // metric列表
         labelSet:new Set(),
@@ -904,6 +907,7 @@
         }
         this.endpointQueryTabData=[];
         this.showTableData=[];
+        this.showTableDataCopy='';
         this.$get("/prom/api/v1/query?query={job='ed_"+this.curEndpoint.id+"'}&time="+this.formatTime).then(response=>{
             if(response.status==="success"){
               let results=response.data.result;
@@ -925,7 +929,7 @@
                   return {key:item,type:'label'}
                 })
               }
-
+              this.showTableDataCopy=JSON.stringify(this.showTableData);
               this.tableShow=3;
               this.queryEdpLoading=false;
             }
@@ -1102,7 +1106,15 @@
           }
         });
       },
-      tableFilter:function(expression){
+      tableFilter:function(){
+        let tableDatas=JSON.parse(this.showTableDataCopy);
+        this.showTableData=tableDatas.filter((item)=>{
+          let element=item.element;
+
+          return element.indexOf(this.queryExpression) != -1;
+        })
+      },
+      tableFilterHistory:function(expression){
         let metric='';
         let labels=[];
         if(/\w*\{.*\}.*/i.test(expression)){
@@ -1223,7 +1235,13 @@
       },
       curEndpoint:function(n,o){
         // this.chartOptions.title.text=n.host+ " tsg disk"
-      }
+      },
+      queryExpression:function(n,o){
+        let temp=this;
+        setTimeout(function(){
+          temp.tableFilter();
+        },100)
+      },
     }
   }
 </script>
@@ -1470,4 +1488,12 @@
     line-height: 37px;
   }
   /* end--覆盖分页组件样式*/
+  .query-inactive{
+    border: 1px solid #dfdfdf;
+    background-color: #dfdfdf;
+    border-radius:20%;
+    width: 40px;
+    height: 26px;
+    padding: 2px 10px 2px 10px;
+  }
 </style>
