@@ -88,7 +88,7 @@
                   <el-input id="edit-param" @click.native.stop="showEditParamBox(true, currentModuleCopy, 1, $event)" slot="reference" disabled class="module-info module-info-param input-x-mini-22" v-model="currentModuleCopy.param"></el-input>
                 </el-popover>
                 <el-input class="module-info module-info-path input-x-mini-22" v-model="currentModuleCopy.path"></el-input>
-                <button type="button" id="cover-param" @click="coverEndpoint" class="nz-btn nz-btn-size-small nz-btn-style-light module-info module-info-cover">{{$t('overall.cover')}}</button>
+                <button type="button" id="cover-param" @click="coverEndpoint" class="nz-btn nz-btn-size-small nz-btn-style-light module-info module-info-cover"><i class="nz-icon nz-icon-override"></i></button>
               </div>
               <!--endpoints-->
               <div class="endpoints-box-endpoints" :style="{borderColor: endpointTouch ? paramBorderColor : '#dcdfe6'}">
@@ -684,7 +684,7 @@
 
   /* begin--小盒子*/
   .right-child-boxes {
-    height: calc(100% - 216px);
+    height: calc(100% - 180px);
     position: relative;
   }
   .endpoint-to-right-symbol {
@@ -748,15 +748,16 @@
     right: 116px;
   }
   .module-info-path {
-    width: 60px;
-    right: 52px;
+    width: 70px;
+    right: 42px;
   }
   .endpoint-info-param {
     width: 80px;
   }
   .right-child-box .module-info-cover {
     right: 4px;
-    padding: 2px 4px;
+    padding: 0px 6px;
+    margin-right: 5px;
   }
   .endpoints-box-endpoints {
     border-radius: 4px;

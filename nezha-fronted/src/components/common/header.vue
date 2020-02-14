@@ -1,6 +1,6 @@
 <template>
   <div class="header">
-    <div class="logo"><img height="48" src="../../assets/img/logo.png"/></div>
+    <div class="logo"><img height="45" src="../../assets/img/logo.png"/></div>
     <el-menu
       class="nz-menu float-right"
       mode="horizontal"
@@ -467,7 +467,7 @@
 <style lang="scss">
   .logo {
     position: absolute;
-    top: 8px;
+    top: 5px;
     left: 18px;
   }
   .header {
@@ -508,6 +508,8 @@
     text-align: center;
     color:$header-text-color;
     padding: 0;
+    height: 50px;
+    line-height: 50px;
   }
 
   .el-menu.el-menu--horizontal {
@@ -544,7 +546,7 @@
   }
   .el-menu--horizontal.nz-submenu {
     border-top: none;
-    top: 62px !important;
+    top: 52px !important;
 
   }
 
@@ -572,7 +574,6 @@
   .el-menu-item > div, .el-menu-item > div > div {
     font-size: 15px;
   }
-
   .nz-menu-line {
     cursor: default;
     display: flex;
@@ -589,15 +590,15 @@
     position: relative;
     box-sizing: border-box;
     width: 100%;
-    height: 60px;
+    height: 50px;
     background-color: #232f3e;
     z-index: 510;
   }
 
   .menu-create {
-    line-height: 15px;
+    line-height: 11px;
     text-align: center;
-    padding-top: 15px;
+    padding-top: 12px;
   }
 
   .menu-create .el-icon-plus {

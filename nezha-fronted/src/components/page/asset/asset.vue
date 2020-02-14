@@ -45,7 +45,7 @@
 
       <el-table
         class="nz-table"
-        height="calc(100% - 195px)"
+        height="calc(100% - 160px)"
         style="width: 100%;"
         :data="tableData"
         border

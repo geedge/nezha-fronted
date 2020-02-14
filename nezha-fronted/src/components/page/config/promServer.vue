@@ -35,7 +35,7 @@
           </div>
         </div>
       </div>
-      <el-table :data="tableData" border height="calc(100% - 195px)" style="width: 100%;" class="nz-table">
+      <el-table :data="tableData" border height="calc(100% - 160px)" style="width: 100%;" class="nz-table">
         <el-table-column :resizable="false" v-for="(item, index) in tablelable" v-if="item.show" :width="item.width"
                          :key="`col-${index}`" :label="item.label">
           <template slot="header" slot-scope="scope">

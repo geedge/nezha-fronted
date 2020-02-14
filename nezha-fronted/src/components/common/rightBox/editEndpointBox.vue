@@ -558,13 +558,19 @@
 
   .endpoint-sub-table-paginate .el-pager li, .endpoint-sub-table-paginate .el-pagination .btn-next, .endpoint-sub-table-paginate .el-pagination .btn-prev {
     font-size: 13px;
-    min-width: 20px;
+    min-width: 20px !important;
     -webkit-box-sizing: border-box;
     box-sizing: border-box;
     text-align: center;
     border: 1px solid rgba(154,154,154,0.20);
     border-radius: 2px;
     border-radius: 2px;
+  }
+  .endpoint-sub-table-paginate  .el-pagination.is-background .el-pager li:not(.disabled).active {
+    color: white !important;
+  }
+  .endpoint-sub-table-paginate .el-pagination.is-background .el-pager li:not(.disabled):hover {
+    color: #666;
   }
   .el-pagination .el-pager li.btn-quicknext, .el-pager li.btn-quickprev {
     line-height: 20px;

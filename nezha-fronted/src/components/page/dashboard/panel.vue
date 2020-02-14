@@ -574,7 +574,7 @@
 
   /* begin-chart list*/
   .table-list {
-    margin-top: 10px;
+    margin-top: 6px;
     overflow-y: auto;
     height: calc(100% - 150px);
   }

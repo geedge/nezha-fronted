@@ -39,7 +39,7 @@
         class="nz-table"
         :data="tableData"
         border
-        height="calc(100% - 195px)"
+        height="calc(100% - 160px)"
         style="width: 100%;">
         <el-table-column
           :resizable="false"

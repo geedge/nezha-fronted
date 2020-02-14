@@ -53,7 +53,7 @@
         :data="metricsTableData"
         class="nz-table"
         border
-        height="calc(100% - 195px)"
+        height="calc(100% - 160px)"
         style="width: 100%;">
         <el-table-column
           :resizable="false"
@@ -96,7 +96,7 @@
         :data="endpointTableData"
         border
         class="nz-table"
-        height="calc(100% - 195px)"
+        height="calc(100% - 160px)"
         style="width: 100%;">
         <el-table-column
           :resizable="false"
@@ -190,7 +190,7 @@
         border
         class="nz-table"
         :header-cell-class-name="cellClass"
-        height="calc(100% - 65px)"
+        height="calc(100% - 110px)"
         @select="selectRow"
         style="width: 100%;">
         <el-table-column

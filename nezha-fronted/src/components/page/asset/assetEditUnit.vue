@@ -70,7 +70,7 @@
                 :value="item.code"
                 :label="item.value"
               >
-                <span v-if="!item.isEdit">{{ item.value }}</span>
+                <span class="config-dropdown-label-txt" v-if="!item.isEdit">{{ item.value }}</span>
                 <span class="config-dropdown-label-input" v-if="item.isEdit" @click.stop="editing(item)">
                   <el-input type="text" v-model="item.value" size="mini"/>
                 </span>
@@ -305,7 +305,7 @@
                   :label="item.name"
                   :value="item.id"
                 >
-                  <span>{{ item.name }}</span>
+                  <span class="config-dropdown-label-txt">{{ item.name }}</span>
                   <div class="config-dropdown-label-icons">
                     <span class="config-dropdown-btn config-dropdown-btn-delete"
                           @click.stop="deleteData('idc',item.id)" :id="'asset-edit-idc-op-del-'+item.id"><i
@@ -349,7 +349,7 @@
                   :label="item.name"
                   :value="item.id"
                 >
-                  <span>{{ item.name }}</span>
+                  <span class="config-dropdown-label-txt">{{ item.name }}</span>
                   <div class="config-dropdown-label-icons">
                     <span class="config-dropdown-btn config-dropdown-btn-delete"
                           @click.stop="deleteData('cabinet',item.id)" :id="'asset-edit-cabinet-op-del-'+item.id">
