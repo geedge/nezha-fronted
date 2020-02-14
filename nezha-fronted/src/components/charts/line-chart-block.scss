@@ -2,10 +2,12 @@
 .clearfix:after{
   display: block;
   content: "";
+  height:0;
+  visibility:hidden;
   clear: both;
 }
 .clearfix{
-  margin-bottom: 20px;
+  //margin-bottom: 20px;
 }
 .legend-shape{
   display:inline-block;

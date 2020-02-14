@@ -304,6 +304,9 @@ export default {
     saveTarget() {
       this.$refs.elementInfo.validate((valid) => {
         if (valid) {
+          if(this.elementInfo.expression){
+            this.elementInfo.expression = this.elementInfo.expression.replace(/\s+|&nbsp;/ig,'');
+          }
           this.$emit('on-add-target-success', this.elementInfo);
         }
       });
