@@ -728,17 +728,5 @@
   }
 </style>
 <style lang="scss">
-  .active-icon{
-    margin-top:20px;
-    width:10px;
-    height:10px;
-    border-radius:50%;
-  }
-   .red {
-    background-color:#ff6347;
-  }
-   .green {
-    background-color:lightGreen;
-  }
 
 </style>

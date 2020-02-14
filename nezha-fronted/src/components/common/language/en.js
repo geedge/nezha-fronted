@@ -165,7 +165,7 @@ const en = {
       title:'New asset',//'新增资产'
       sn:'SN',//SN
       host:'Host',//'Host'
-      state:'Status',//'状态'
+      state:'State',//'状态'
       selectTip:'Please select',//'请选择'
       inStock: 'In stock',//'在库'
       notInStock: 'Not in stock',//'出库'

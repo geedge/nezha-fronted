@@ -62,15 +62,11 @@
           </template>
           <template slot-scope="scope" :column="item">
             <div v-if="item.prop == 'option'" class="content-right-options">
-              <span @click="del(scope.row)" class="content-right-option" :id="'account-del-'+scope.row.id"><i
-                class="el-icon-delete"></i>&nbsp;&nbsp;<span>{{$t('overall.delete')}}</span></span>
-              &nbsp;&nbsp;&nbsp;
-              <span @click="edit(scope.row)" class="content-right-option" :id="'account-edit-'+scope.row.id"><i
-                class="nz-icon nz-icon-edit"></i>&nbsp;&nbsp;<span>{{$t('overall.edit')}}</span></span>
-              &nbsp;&nbsp;&nbsp;
-              <span @click="detail(scope.row)" class="content-right-option" :id="'account-detail-'+scope.row.id"><i
-                class="nz-icon nz-icon-view"></i>&nbsp;&nbsp;<span>{{$t('overall.view')}}</span></span>
-
+              <span :title="$t('overall.view')" @click="detail(scope.row)" class="content-right-option" :id="'account-detail-'+scope.row.id"><i class="nz-icon nz-icon-view"></i></span>
+              &nbsp;
+              <span :title="$t('overall.edit')" @click="edit(scope.row)" class="content-right-option" :id="'account-edit-'+scope.row.id"><i class="nz-icon nz-icon-edit"></i></span>
+              &nbsp;
+              <span :title="$t('overall.delete')" @click="del(scope.row)" class="content-right-option" :id="'account-del-'+scope.row.id"><i class="el-icon-delete"></i></span>
             </div>
             <span v-else-if="item.prop == 'lang'">
                             {{scope.row[item.prop] == 'en' ? 'English' : ''}}

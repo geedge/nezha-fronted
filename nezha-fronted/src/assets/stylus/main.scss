@@ -301,7 +301,7 @@ li{
   margin-bottom:10px;
   font-size: 14px;
 }
- .nz-tab-style-light {  
+ .nz-tab-style-light {
   border-bottom: 3px solid $global-text-color-active;
   color: #333;
   cursor: default;
@@ -312,7 +312,7 @@ li{
  .nz-tab-style-light-right{
   margin-left:30px;
  }
-  
+
 /* begin--nz-tab组件*/
 .nz-tab {
   font-size: 14px;
@@ -336,7 +336,7 @@ li{
   cursor: default;
   font-weight: bold;
 }
- 
+
 /* end--nz-tab组件*/
 
 /* end--通用*/
@@ -1083,4 +1083,17 @@ li{
   font-size: 18px;
   color: $box-title-color;
   font-weight: bold;
+}
+/*列表中状态字段 的小圆点*/
+.active-icon{
+  margin-top:20px;
+  width:10px;
+  height:10px;
+  border-radius:50%;
+}
+.red {
+  background-color:#ff6347;
+}
+.green {
+  background-color:lightGreen;
 }

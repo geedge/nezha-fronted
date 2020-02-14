@@ -158,9 +158,11 @@
         </div>
         <!--时间选择器-->
         <div class="top-tool-right">
-          <div class="top-tool-search" >
+          <div class="top-tool-search relative-position" >
 <!--            <metric-search :metrics="metricList" :labels="labelList"  v-if="tableShow == 3" @expression-change="tableFilter"></metric-search>-->
-            <el-input ref="elementQuery" @clear="clearInput" id="elementQuery" @focus="focusInput"  @blur="blurInput" v-model="queryExpression" suffix-icon="el-icon-search" size="mini" clearable  :placeholder="$t('project.endpoint.promExpr')" ></el-input>
+            <el-input ref="elementQuery" @clear="clearInput" id="elementQuery" @focus="focusInput"  @blur="blurInput" v-model="queryExpression" class="query-input-inactive" size="mini" clearable  :placeholder="$t('project.endpoint.promExpr')" >
+              <i slot="suffix" class="el-input__icon el-icon-search" @click="focusInput"></i>
+            </el-input>
           </div>
           <div class="margin-r-20 margin-t-m1">
             <button @click="changeTime(-10)" class="nz-btn nz-btn-size-normal nz-btn-style-light"><i class="el-icon-d-arrow-left"></i></button>
@@ -1185,27 +1187,29 @@
 
         }
       },
-      queryInputInitStyle:function(){
-        document.getElementById('elementQuery').parentElement.style.width='40px';
-        document.getElementById('elementQuery').parentElement.style.float='right';
-      },
       focusInput:function(){
-        document.getElementById('elementQuery').parentElement.style='';
+        let classVal=document.getElementById('elementQuery').parentElement.getAttribute("class");
+        classVal=classVal.replace('query-input-inactive','');
+        document.getElementById('elementQuery').parentElement.setAttribute("class",classVal );
+        this.$refs.elementQuery.focus();
       },
       blurInput:function(){
         if(!this.queryExpression || this.queryExpression == ''){
-          setTimeout(this.queryInputInitStyle(),100)
+          setTimeout(function(){
+            let classVal=document.getElementById('elementQuery').parentElement.getAttribute("class");
+            classVal='query-input-inactive '+classVal;
+            document.getElementById('elementQuery').parentElement.setAttribute("class",classVal );
+          },100)
         }
       },
       clearInput:function(){
-        this.blurInput();
+        this.$refs.elementQuery.foucs();
       }
     },
     created() {
       this.currentProject = this.$store.state.currentProject;
       this.getModuleList();
       this.getMetricsTableData();
-      this.getSuggestMetric()
     },
     mounted() {
       this.getPanelData();
@@ -1504,4 +1508,19 @@
     line-height: 37px;
   }
   /* end--覆盖分页组件样式*/
+
+  /* 列表搜索框 样式重写*/
+  .relative-position{
+    position: relative;
+  }
+  .query-input-inactive{
+    left:213px;
+    width: 18%;
+  }
+  .query-input-inactive .el-input__inner{
+    height: 26px;
+    line-height: 26px;
+  }
+
+
 </style>

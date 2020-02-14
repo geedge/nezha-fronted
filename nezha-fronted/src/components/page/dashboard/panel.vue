@@ -23,6 +23,12 @@
           </el-dropdown>
         </div>
         <div class="top-tool-right">
+          <div class="top-tool-search relative-position" >
+            <el-input ref="queryPanel" @clear="clearInput" id="queryPanel" @focus="focusInput"  @blur="blurInput" v-model="filter.searchName" class="query-input-inactive" size="mini" clearable   >
+              <i slot="suffix" class="el-input__icon el-icon-search" @click="(queryFocus ?search():focusInput())"></i>
+            </el-input>
+          </div>
+
           <div class="panel-calendar margin-r-20">
             <div class="block">
               <el-date-picker prefix-icon=" " class="nz-dashboard-picker" size="mini" ref="calendar"
@@ -52,10 +58,10 @@
             </button>
           </el-popover>
           </div>
-
-          <div class="top-tool-search">
-            <search-input ref="searchInput" :searchMsg="searchMsg" @search="search"></search-input>
-          </div>
+              <!-- 2020-02-14 使用普通搜索框-->
+<!--          <div class="top-tool-search">-->
+<!--            <search-input ref="searchInput" :searchMsg="searchMsg" @search="search"></search-input>-->
+<!--          </div>-->
 
           <button @click="toAddChart"
                   class="nz-btn nz-btn-size-normal nz-btn-style-light nz-btn-min-width-82">
@@ -246,6 +252,7 @@
         //removeModal: false, // 删除弹出
         //deleteObj: {}, // 删除对象
         //---图表相关参数--end
+        queryFocus:false, //搜索框是否获得焦点
       }
     },
     components: {
@@ -492,22 +499,26 @@
         this.pageObj.pageSize = val;
         this.getTableData();
       },
-      search: function (searchObj) {
-        this.searchLabel = {};
-        let containTitle = false;
-        for (let item in searchObj) {
-          if (searchObj[item]) {
-            this.$set(this.searchLabel, item, searchObj[item]);
-            if (item === 'name') {
-              this.filter.searchName = searchObj[item]; //此处就一个条件
-              containTitle = true;
-            }
-          }
-        }
-        if (!containTitle) {
-          this.filter.searchName = '';
-        }
-        this.filter.panelId = this.showPanel.id;
+      // search: function (searchObj) {
+      //   this.searchLabel = {};
+      //   let containTitle = false;
+      //   for (let item in searchObj) {
+      //     if (searchObj[item]) {
+      //       this.$set(this.searchLabel, item, searchObj[item]);
+      //       if (item === 'name') {
+      //         this.filter.searchName = searchObj[item]; //此处就一个条件
+      //         containTitle = true;
+      //       }
+      //     }
+      //   }
+      //   if (!containTitle) {
+      //     this.filter.searchName = '';
+      //   }
+      //   this.filter.panelId = this.showPanel.id;
+      //   this.getData(this.filter);
+      // },
+      search:function(){
+        this.filter.panelId=this.showPanel.id;
         this.getData(this.filter);
       },
       // 滚动事件触发下拉加载
@@ -520,6 +531,26 @@
           this.$refs.chartList.pageDataList(true, this.showPanel.id);
         }
       },
+      focusInput:function(){
+        let classVal=document.getElementById('queryPanel').parentElement.getAttribute("class");
+        classVal=classVal.replace('query-input-inactive','');
+        document.getElementById('queryPanel').parentElement.setAttribute("class",classVal );
+        this.$refs.queryPanel.focus();
+        this.queryFocus=true;
+      },
+      blurInput:function(){
+        if(!this.filter.searchName || this.filter.searchName == ''){
+          setTimeout(function(){
+            let classVal=document.getElementById('queryPanel').parentElement.getAttribute("class");
+            classVal='query-input-inactive '+classVal;
+            document.getElementById('queryPanel').parentElement.setAttribute("class",classVal );
+            this.queryFocus=true;
+          },100)
+        }
+      },
+      clearInput:function(){
+        this.$refs.queryPanel.focus();
+      }
     },
     created() {
       this.getTableData();
@@ -743,6 +774,19 @@
     width: 310px;
     padding-right: 0;
     vertical-align: top;
+  }
+  /* 列表搜索框 样式重写*/
+  .relative-position{
+    position: relative;
+  }
+  .query-input-inactive{
+    left:213px;
+    width: 18%;
+    margin-top: 1px;
+  }
+  .query-input-inactive .el-input__inner{
+    height: 25px;
+    line-height: 25px;
   }
 </style>
 
