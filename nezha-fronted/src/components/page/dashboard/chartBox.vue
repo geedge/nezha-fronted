@@ -95,7 +95,7 @@
             </div>
           </el-form-item>
           <el-form-item :label='$t("dashboard.panel.chartForm.chartName")' prop="title">
-            <el-input size="mini" maxlength="64" show-word-limit v-model="chart.title"></el-input>
+            <el-input size="small" maxlength="64" show-word-limit v-model="chart.title"></el-input>
           </el-form-item>
 
           <el-row :gutter="10">

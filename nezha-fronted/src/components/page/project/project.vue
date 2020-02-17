@@ -1,11 +1,29 @@
 <style lang="scss">
   @import '../../charts/line-chart-block';
-  .project-calendar .el-input__inner {
-       height: 26px !important;
+/*  .project-calendar .el-input__inner {
+       height: 25px !important;
        border-color: #d8d8d8;
-     }
+     }*/
+  .top-tools .el-input__inner {
+    height: 25px !important;
+    border-color: #d8d8d8;
+  }
   .project .nz-table .el-table__row td:first-of-type {
     padding-left: 0;
+  }
+  .change-time-height {
+    height: 23px;
+  }
+  .date-pick-group {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .date-pick-group button:first-of-type {
+    margin-right: 4px;
+  }
+  .date-pick-group button:last-of-type {
+    margin-left: 4px;
   }
 </style>
 <style scope>
@@ -164,8 +182,8 @@
               <i slot="suffix" class="el-input__icon el-icon-search" @click="focusInput"></i>
             </el-input>
           </div>
-          <div class="margin-r-20 margin-t-m1">
-            <button @click="changeTime(-10)" class="nz-btn nz-btn-size-normal nz-btn-style-light"><i class="el-icon-d-arrow-left"></i></button>
+          <div class="margin-r-20 date-pick-group">
+            <button @click="changeTime(-10)" class="nz-btn nz-btn-size-normal nz-btn-style-light change-time-height"><i class="el-icon-d-arrow-left"></i></button>
             <el-date-picker
               v-model="formatTime"
               type="datetime"
@@ -178,7 +196,7 @@
               @change="pickTime"
               >
             </el-date-picker>
-            <button @click="changeTime(10)" class="nz-btn nz-btn-size-normal nz-btn-style-light"><i class="el-icon-d-arrow-right"></i></button>
+            <button @click="changeTime(10)" class="nz-btn nz-btn-size-normal nz-btn-style-light change-time-height"><i class="el-icon-d-arrow-right"></i></button>
           </div>
 
           <button @click="viewGraph" slot="reference" class="nz-btn nz-btn-size-normal nz-btn-style-normal nz-btn-min-width-120">
@@ -1189,7 +1207,7 @@
       },
       focusInput:function(){
         let classVal=document.getElementById('elementQuery').parentElement.getAttribute("class");
-        classVal=classVal.replace('query-input-inactive','');
+        classVal=classVal.replace('query-input-inactive','query-input-active');
         document.getElementById('elementQuery').parentElement.setAttribute("class",classVal );
         this.$refs.elementQuery.focus();
       },
@@ -1197,7 +1215,7 @@
         if(!this.queryExpression || this.queryExpression == ''){
           setTimeout(function(){
             let classVal=document.getElementById('elementQuery').parentElement.getAttribute("class");
-            classVal='query-input-inactive '+classVal;
+            classVal=classVal.replace('query-input-active','query-input-inactive');
             document.getElementById('elementQuery').parentElement.setAttribute("class",classVal );
           },100)
         }
@@ -1501,26 +1519,11 @@
   .el-table .disabledCheck .cell .el-checkbox__inner{
     display: none !important;
   }
-
   .el-table .disabledCheck .cell::before{
     content: '';
     text-align: center;
     line-height: 37px;
   }
   /* end--覆盖分页组件样式*/
-
-  /* 列表搜索框 样式重写*/
-  .relative-position{
-    position: relative;
-  }
-  .query-input-inactive{
-    left:213px;
-    width: 18%;
-  }
-  .query-input-inactive .el-input__inner{
-    height: 26px;
-    line-height: 26px;
-  }
-
 
 </style>

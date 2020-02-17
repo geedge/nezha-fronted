@@ -359,6 +359,7 @@ li{
   height: calc(90vh - 55px);
   width: 100%;
   padding-top: 24px;
+  font-size: 14px;
 }
 .content-left .sidebar-info-item {
   line-height: 20px;
@@ -436,7 +437,7 @@ li{
   display: flex;
   height: 50px;
   align-items : center;
-  justify-content: space-between
+  justify-content: space-between;
 }
 .top-tools>div {
   margin-top: 2px;
@@ -1096,4 +1097,21 @@ li{
 }
 .green {
   background-color:lightGreen;
+}
+
+/* panel-tool-tip列表搜索框 样式重写*/
+.relative-position{
+  position: relative;
+}
+.query-input-inactive{
+  left:213px;
+  width: 18%;
+  margin-top: 1px;
+}
+.query-input-active {
+  margin-top: 1px;
+}
+.query-input-active .el-input__inner, .query-input-inactive .el-input__inner {
+  height: 25px;
+  line-height: 25px !important;
 }

@@ -533,7 +533,7 @@
       },
       focusInput:function(){
         let classVal=document.getElementById('queryPanel').parentElement.getAttribute("class");
-        classVal=classVal.replace('query-input-inactive','');
+        classVal=classVal.replace('query-input-inactive','query-input-active');
         document.getElementById('queryPanel').parentElement.setAttribute("class",classVal );
         this.$refs.queryPanel.focus();
         this.queryFocus=true;
@@ -542,7 +542,7 @@
         if(!this.filter.searchName || this.filter.searchName == ''){
           setTimeout(function(){
             let classVal=document.getElementById('queryPanel').parentElement.getAttribute("class");
-            classVal='query-input-inactive '+classVal;
+            classVal=classVal.replace('query-input-active','query-input-inactive');
             document.getElementById('queryPanel').parentElement.setAttribute("class",classVal );
             this.queryFocus=true;
           },100)
@@ -775,18 +775,6 @@
     padding-right: 0;
     vertical-align: top;
   }
-  /* 列表搜索框 样式重写*/
-  .relative-position{
-    position: relative;
-  }
-  .query-input-inactive{
-    left:213px;
-    width: 18%;
-    margin-top: 1px;
-  }
-  .query-input-inactive .el-input__inner{
-    height: 25px;
-    line-height: 25px;
-  }
+
 </style>
 
