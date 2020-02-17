@@ -43,9 +43,9 @@
         </template>
         <template v-for="(item, index) in projectData">
           <el-menu-item :index="'2-' + index">
-            <div @click="jumpToProject(item)" :class="{'menu-item-active' :(activeIndex == 'project' && activeItemIndex == item.id)}">
+            <div @mouseenter="hoverItemIndex = '2-' + index" @mouseleave="hoverItemIndex = ''" @click="jumpToProject(item)" :class="{'menu-item-active' :(activeIndex == 'project' && activeItemIndex == item.id)}">
               <span class="too-long-split" style="width: 135px;">{{item.name}}</span>
-              <div @click.stop="toEditProject(item)" class="menu-edit"><i style="color: inherit" class="nz-icon nz-icon-edit"></i></div>
+              <div v-show="hoverItemIndex == '2-' + index" @click.stop="toEditProject(item)" class="menu-edit"><i style="color: inherit" class="nz-icon nz-icon-edit"></i></div>
             </div>
           </el-menu-item>
         </template>
@@ -56,11 +56,11 @@
         </template>
         <template v-for="(item, index) in assetData">
           <el-menu-item :index="'3-' + index">
-            <div @click="jumpToAsset(item.id)" :class="{'menu-item-active' : (activeIndex == 'asset' && indOf(activeItemIndexes, item.id) > -1) }">
+            <div @mouseenter="hoverItemIndex = '3-' + index" @mouseleave="hoverItemIndex = ''" @click="jumpToAsset(item.id)" :class="{'menu-item-active' : (activeIndex == 'asset' && indOf(activeItemIndexes, item.id) > -1) }">
               <span class="too-long-split" style="width: 130px;">{{item.name}}</span>
               <idc-config-box :post-idc="item" ref="idcConfigBox" placement="left" @after="getIDCOptionData" :user-data="userDatas">
                 <template v-slot:optionZone>
-                  <div @click="closeAllPop" class="menu-edit">
+                  <div v-show="hoverItemIndex == '3-' + index" @click="closeAllPop" class="menu-edit">
                     <i class="nz-icon nz-icon-edit" @click="getIDCOptionData(item.id)" style="color: inherit"></i>
                   </div>
                 </template>
@@ -133,6 +133,7 @@
         activeIndex:'',
         activeItemIndex:'',
         activeItemIndexes: [],
+        hoverItemIndex: '',
         editPanel:{//新增or编辑的panel
           id:'',
           name: ''

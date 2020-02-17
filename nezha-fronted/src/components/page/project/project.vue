@@ -8,9 +8,6 @@
     height: 25px !important;
     border-color: #d8d8d8;
   }
-  .project .nz-table .el-table__row td:first-of-type {
-    padding-left: 0;
-  }
   .change-time-height {
     height: 23px;
   }
@@ -126,12 +123,12 @@
           min-width="110px"
         >
           <template slot="header" slot-scope="scope">
-              <span v-if="index==0">
-                <span @click.stop="elementsetShow('shezhi',$event)" class="nz-table-gear">
-                    <i class="nz-icon nz-icon-gear"></i>
-                </span>
-                <span class="nz-table-txt">{{item.label}}</span>
+            <template v-if="index==tablelable.length-1">
+              <span class="nz-table-txt">{{item.label}}</span>
+              <span @click.stop="elementsetShow('shezhi',$event)" class="nz-table-gear">
+                <i class="nz-icon nz-icon-gear"></i>
               </span>
+            </template>
             <div v-else>
               <span>{{item.label}}</span>
             </div>

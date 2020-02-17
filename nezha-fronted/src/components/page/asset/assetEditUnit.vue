@@ -387,10 +387,10 @@
 
       <!--底部按钮-->
       <div class="right-box-bottom-btns">
-        <button @click.stop="sendStateData('close')" class="nz-btn nz-btn-size-large nz-btn-style-light nz-btn-min-width-120" id="asset-edit-cancel">
+        <button @click.stop="sendStateData('close')" class="nz-btn nz-btn-size-normal nz-btn-style-light nz-btn-min-width-100" id="asset-edit-cancel">
           <span>{{$t('overall.cancel')}}</span>
         </button>
-        <button v-if="!tabView" @click.stop="editData('asset')" class="nz-btn nz-btn-size-large nz-btn-style-normal nz-btn-min-width-120" id="asset-edit-save">
+        <button v-if="!tabView" @click.stop="editData('asset')" class="nz-btn nz-btn-size-normal nz-btn-style-normal nz-btn-min-width-100" id="asset-edit-save">
           <span>{{$t('overall.save')}}</span>
         </button>
       </div>

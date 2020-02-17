@@ -39,11 +39,11 @@
         <el-table-column :resizable="false" v-for="(item, index) in tablelable" v-if="item.show" :width="item.width"
                          :key="`col-${index}`" :label="item.label">
           <template slot="header" slot-scope="scope">
-            <template v-if="index==0">
-                            <span @click.stop="elementsetShow('shezhi',$event)" id="prom-tab-set" class="nz-table-gear">
-                                <i class="nz-icon nz-icon-gear"></i>
-                            </span>
+            <template v-if="index==tablelable.length-1">
               <span class="nz-table-txt">{{item.label}}</span>
+              <span @click.stop="elementsetShow('shezhi',$event)" id="prom-tab-set" class="nz-table-gear">
+                <i class="nz-icon nz-icon-gear"></i>
+              </span>
             </template>
             <div v-else>
               <span>{{item.label}}</span>
@@ -172,11 +172,11 @@
 
         <!--底部按钮-->
         <div class="right-box-bottom-btns">
-          <button @click="esc" id="prom-esc" class="nz-btn nz-btn-size-large nz-btn-style-light nz-btn-min-width-120">
+          <button @click="esc" id="prom-esc" class="nz-btn nz-btn-size-normal nz-btn-style-light nz-btn-min-width-100">
             <span>{{$t('overall.cancel')}}</span>
           </button>
           <button v-if="rightBox.isEdit" @click="saveOrToEdit" id="prom-save"
-                  class="nz-btn nz-btn-size-large nz-btn-style-normal nz-btn-min-width-120">
+                  class="nz-btn nz-btn-size-normal nz-btn-style-normal nz-btn-min-width-100">
             <span>{{$t('overall.save')}}</span>
           </button>
         </div>

@@ -63,11 +63,11 @@
           :class-name="item.prop == 'option' ? 'content-right-options' : ''"
         >
           <template slot="header" slot-scope="scope">
-            <template v-if="index==0">
-                <span @click.stop="elementsetShow('shezhi',$event)" id="asset-tab-set" class="nz-table-gear">
-                    <i class="nz-icon nz-icon-gear"></i>
-                </span>
-                <span class="nz-table-txt">{{item.label}}</span>
+            <template v-if="index==tablelable.length-1">
+              <span class="nz-table-txt">{{item.label}}</span>
+              <span @click.stop="elementsetShow('shezhi',$event)" id="asset-tab-set" class="nz-table-gear">
+                <i class="nz-icon nz-icon-gear"></i>
+              </span>
             </template>
             <div v-else>
               <span>{{item.label}}</span>

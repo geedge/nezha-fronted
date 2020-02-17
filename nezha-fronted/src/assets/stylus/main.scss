@@ -118,6 +118,9 @@ li{
 .nz-btn-min-width-82 {
   min-width: 82px;
 }
+.nz-btn-min-width-100 {
+  min-width: 100px;
+}
 .nz-btn-min-width-120 {
   min-width: 120px;
 }
@@ -506,8 +509,8 @@ li{
 }
 //小信息栏边框
 .nz-table.el-table th .cell{
-  height: 36px;
-  line-height: 36px;
+  height: 32px;
+  line-height: 32px;
   display:flex;
   background-image: linear-gradient(#f8f8f8, #e6e6e6);
   border-right: 1px solid #d4d4d4;
@@ -517,9 +520,9 @@ li{
   height: 38px;
   line-height: 38px;
 }
-.nz-table .el-table__row td:first-of-type {
-  padding-left: 38px;
-}
+/*.nz-table .el-table__row td:first-of-type {
+   padding-left: 38px;
+}*/
 .el-tooltip__popper.is-light[x-placement^=top] .popper__arrow { /*覆盖tooltip小三角颜色*/
   border-top-color: #ebeef5;
 }
@@ -528,22 +531,21 @@ li{
 }
 .nz-table-gear {
   display: inline-block;
-  width: 38px;
-  text-align: center;
-  border-right: 2px solid #d4d4d4;
+  width: 8px;
   box-sizing: border-box;
-  float: left;
-  margin-left: -10px;
+  border-left: 1px solid white;
+  position: relative;
 }
 .nz-table-gear>i {
   cursor: pointer;
+  position: absolute;
+  left: 7px;
 }
 .nz-table-txt {
+  border-right: 1px solid #d4d4d4;
+  width: calc(100% - 19px);
   display: inline-block;
-  border-left:1px solid #fff;
   box-sizing: border-box;
-  float: left;
-  padding-left: 10px;
 }
 
 /* end--内容*/
@@ -1114,4 +1116,8 @@ li{
 .query-input-active .el-input__inner, .query-input-inactive .el-input__inner {
   height: 25px;
   line-height: 25px !important;
+}
+
+.el-textarea textarea {
+  height: 140px !important;
 }
