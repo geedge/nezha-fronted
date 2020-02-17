@@ -316,6 +316,8 @@ export default {
                 }else{
                   if(response.msg){
                     this.$message.error(response.msg);
+                  }else if(response.error){
+                    this.$message.error(response.error);
                   }else {
                     this.$message.error(response);
                   }
