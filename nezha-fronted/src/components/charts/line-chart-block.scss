@@ -43,7 +43,7 @@
 }
 .line-chart-block {
   height: 100%;
-  // min-height: 500px;
+  //min-height: 0px;
   position: relative;
   background: #FFF;
   border: 1px solid #d8dce1;
@@ -53,15 +53,7 @@
   .line-area {
     box-sizing: border-box;
     background: #FFF;
-    min-height: 300px;
-    span.highcharts-title {
-      display: block !important;
-      width: 50%;
-      font-size: 14px !important;
-      overflow: hidden;
-      word-wrap: break-word !important;
-      white-space: pre-wrap !important;
-    }
+    min-height: 95px;
   }
   /*.edit:after{
     display: block;
@@ -73,39 +65,7 @@
     right: 20px;
     top: 17px;
     z-index: 10;
-    /*background: $btn-light-background-color;
-    border-radius: 6px;;
-    border: 1px solid #ccc;
-    .set-icon {
-      display: inline-block;
-      cursor: pointer;
-      padding: 5px 15px;
-      margin-right: -3px;
-      border-right: 1px solid #ccc;
-    }
-    .set-icon:hover{
-      background: $btn-light-background-color-hover;
-    }
-    .set-icon:last-child:hover{
-    }
-    .set-icon:last-child{
-      border-right: none !important;
-    }
-    .el-icon-refresh-right{
-      color: #F0BF84;
-    }
-    i{
-      font-size: 16px;
-      color: #000;
-    }
-    .list-icon {
-      float: left;
-    }
-    .show-icon {
-      cursor: pointer;
-      float: right;
-      font-size: 14px;
-    }*/
+
   }
   .chart-select {
     position: absolute;
@@ -138,7 +98,7 @@
   .line-area {
     box-sizing: border-box;
     background: #FFF;
-    min-height: 300px;
+    min-height: 95px;
     span.highcharts-title {/*针对highcharts设置的样式，echarts需要修改？？*/
       display: block !important;
       width: 50%;

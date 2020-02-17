@@ -4,6 +4,7 @@
     <el-menu
       class="nz-menu float-right"
       mode="horizontal"
+      active="1"
       unique-opened
     >
       <el-submenu index="0" popper-class="nz-submenu">

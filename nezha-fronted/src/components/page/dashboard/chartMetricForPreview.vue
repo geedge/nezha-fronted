@@ -190,7 +190,7 @@
     <el-row  v-if="tableShow == 2">
       <el-col :span="24" class="mt1">
         <el-form-item prop="expression" :rules="{ required: true,  message:$t('validate.required'), trigger: 'blur' }"><!--expression和metric的验证只能有一个，不能同时存在？？:rules="{ required: true, type: 'string', message: '', trigger: 'change' }"-->
-          <el-input size="mini" @input="changeExpression" class="full-width" ref="metricExpression" type="textarea" maxlength="1024" show-word-limit v-model="elementInfo.expression" :placeholder="this.$t('dashboard.metric.expertTip')" ></el-input>
+          <el-input size="mini" rows="7" @input="changeExpression" class="full-width" ref="metricExpression" type="textarea" maxlength="1024" show-word-limit v-model="elementInfo.expression" :placeholder="this.$t('dashboard.metric.expertTip')" ></el-input>
         </el-form-item>
       </el-col>
     </el-row>

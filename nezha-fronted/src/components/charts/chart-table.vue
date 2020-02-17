@@ -2,12 +2,12 @@
 @import './chart-table.scss';
 </style>
 <template>
-<div class="chart-table">
+<div class="chart-table" id="chartTableDiv">
     <div class="clearfix">
         <div class="table-title">
             {{data.title}}
         </div>
-        <div class="nz-btn-group nz-btn-group-light edit">
+        <div class="nz-btn-group nz-btn-group-light edit" v-if="firstShow">
           <button type="button" @click="refreshChart" style="padding: 6px 14px 5px 14px;" class="nz-btn nz-btn-size-large nz-btn-style-light"><i style="font-size: 16px;" class="global-active-color el-icon-refresh-right"></i></button><button
           @click="editChart" type="button" class="nz-btn nz-btn-size-large nz-btn-style-light"><i class="nz-icon nz-icon-edit"></i></button><button
           @click="removeChart" type="button" class="nz-btn nz-btn-size-large nz-btn-style-light"><i class="el-icon-delete"></i></button><button
@@ -35,7 +35,7 @@
     <div class="mt-10" v-cloak>
         <!--
       <el-table  size="small"   :loading="tableLoading">-->
-        <el-table class="nz-table" :data="seriesItem" height="350" border v-loading="tableLoading" tooltip-effect="light" v-cloak>
+        <el-table class="nz-table" id="tableContainer" ref="tableContainer" :data="seriesItem" :height="350" border v-loading="tableLoading" tooltip-effect="light" v-cloak>
             <el-table-column sortable :show-overflow-tooltip="true" prop="metric" :label="$t('dashboard.panel.chartTableColumn.metric')" ></el-table-column>
             <el-table-column sortable :show-overflow-tooltip="true" prop="label" :label="$t('dashboard.panel.chartTableColumn.label')" ></el-table-column>
             <el-table-column sortable prop="time" :label="$t('dashboard.panel.chartTableColumn.time')" width="145" ></el-table-column>
@@ -52,7 +52,7 @@
             <!--<button @click="refreshChart" type="button" class="nz-btn nz-btn-size-normal nz-btn-style-light"><i style="font-size: 14px;" class="el-icon-refresh-right"></i></button>-->
           </div>
         </div>
-            <el-table style="padding-top: 30px;" class="nz-table" :data="seriesItem" height="350" border v-loading="tableLoading" tooltip-effect="light">
+            <el-table style="padding-top: 30px;" class="nz-table" :data="seriesItem" :height="350" border v-loading="tableLoading" tooltip-effect="light">
                 <el-table-column sortable :show-overflow-tooltip="true" prop="metric" :label="$t('dashboard.panel.chartTableColumn.metric')" ></el-table-column>
                 <el-table-column sortable :show-overflow-tooltip="true" prop="label" :label="$t('dashboard.panel.chartTableColumn.label')" ></el-table-column>
                 <el-table-column sortable prop="time" :label="$t('dashboard.panel.chartTableColumn.time')" width="145" ></el-table-column>
@@ -254,6 +254,14 @@ export default {
             this.searchTime[0] = filter.start_time;
             this.searchTime[1] = filter.end_time;
             this.oldSearchTime = this.searchTime;
+            //设置高度 chart-table
+            this.$nextTick(() => {
+              const chartBox = document.getElementById('chartTableDiv');
+              let height = chartItem.height;
+              chartBox.style.height = `${height-25}px`;
+              const tableBox = document.getElementById('tableContainer');
+              tableBox.style.height = `${height-75}px`;
+            });
         },
         // 获取格式
         getNumStr(num) {

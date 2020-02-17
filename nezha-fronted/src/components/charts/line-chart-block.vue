@@ -645,7 +645,7 @@
           option.title = title;
           this.echartStore.setOption(option);//创建图表
           this.echartStore.hideLoading();
-          this.echartStore.resize({height:chartInfo.height});//,width:`${ele.clientWidth-100}`}
+          //this.echartStore.resize({height:chartInfo.height});//,width:`${ele.clientWidth-100}`}
           if(legend && legend.length>0){
             this.legendList = [];
             legend.forEach((item, i) => {
@@ -662,7 +662,7 @@
             if(!chartInfo.height){
               this.echartStore.resize({height:(400-divHeight)});
             }else {
-              this.echartStore.resize({height:(chartInfo.height-divHeight)});
+              this.echartStore.resize({height:(chartInfo.height-divHeight-25)});
             }
           });
         } else if (chartSite === 'screen') { // 全屏显示
@@ -716,7 +716,7 @@
           option.title = {};
           this.echartModalStore.setOption(option);//显示全屏界面
           this.echartModalStore.hideLoading();
-          this.echartModalStore.resize({height:chartInfo.height});
+          //this.echartModalStore.resize({height:chartInfo.height});
           if(legend && legend.length>0){
             this.screenLegendList = [];
             legend.forEach((item, i) => {
@@ -733,7 +733,7 @@
             if(!chartInfo.height){
               this.echartModalStore.resize({height:(400-divHeight)});
             }else {
-              this.echartModalStore.resize({height:(chartInfo.height-divHeight)});
+              this.echartModalStore.resize({height:(chartInfo.height-divHeight-25)});
             }
           });
         }

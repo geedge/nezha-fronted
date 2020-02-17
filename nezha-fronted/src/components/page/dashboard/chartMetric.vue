@@ -124,7 +124,7 @@
 
     <template  v-if="tableShow == 2">
       <el-form-item class="right-box-form-content" prop="expression" :rules="{ required: true,  message:$t('validate.required'), trigger: 'blur' }"><!--expression和metric的验证只能有一个，不能同时存在？？:rules="{ required: true, type: 'string', message: '', trigger: 'change' }"-->
-        <el-input size="mini" :class="{'right-box-row-with-btn': countTotal > 1, 'full-width': countTotal <= 1}" ref="metricExpression" type="textarea" rows="3" maxlength="512" show-word-limit v-model="elementInfo.expression" :placeholder="this.$t('dashboard.metric.expertTip')" ></el-input>
+        <el-input size="mini"  :class="{'right-box-row-with-btn': countTotal > 1, 'full-width': countTotal <= 1}" ref="metricExpression" type="textarea" rows="7" maxlength="1024" show-word-limit v-model="elementInfo.expression" :placeholder="this.$t('dashboard.metric.expertTip')" ></el-input>
         <div @click="deleteTarget" class="right-box-row-btn" v-if="countTotal > 1" style="vertical-align: top">
           <i class="el-icon-minus"></i>
         </div>
@@ -132,7 +132,7 @@
     </template>
     <template v-if="tableShow == 1">
       <el-form-item class="right-box-form-content" label-width="80"  prop="metric" :rules="{ required: true,  message: $t('validate.required'), trigger: 'blur' }"><!--:rules="{ required: true, type: 'string', message: '', trigger: 'change' }"-->
-        <el-cascader ref="metricSelect" :class="{'right-box-row-with-btn': countTotal > 1, 'full-width': countTotal <= 1}" filterable placeholder="" popper-class="chart-box-dropdown" size="small"
+        <el-cascader ref="metricSelect"  :class="{'right-box-row-with-btn': countTotal > 1, 'full-width': countTotal <= 1}" filterable placeholder="" popper-class="chart-box-dropdown" size="small"
                  v-model="elementInfo.metric"
                  :options="metricCascaderList"
                  :props="{ expandTrigger: 'hover' }"

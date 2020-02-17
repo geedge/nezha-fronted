@@ -15,7 +15,7 @@
 <template>
 
   <div class="list-width">
-    <div class="chartBox" v-for="(item, index) in dataList" :key="item.id" :id="item.title+'_'+item.id">
+    <div class="chartBox" v-for="(item, index) in dataList"    :key="item.id" :id="item.title+'_'+item.id">
 
       <line-chart-block v-if="item.type === 'line' || item.type === 'bar' || item.type === 4" :key="'inner' + item.id"
       ref="editChart" 
@@ -288,7 +288,7 @@ export default {
                           }
                           */
                           let t_date = new Date(dpsItem[0] * 1000);
-                          let timeTmp = bus.timeFormate(t_date, 'yyyy-MM-dd hh:mm');
+                          let timeTmp = bus.timeFormate(t_date, 'yyyy-MM-dd hh:mm:ss');
                           tableData.push({//表格数据
                             label: host.slice(host.indexOf('{') + 1,host.indexOf('}')),//label
                             metric: queryItem.metric.__name__?queryItem.metric.__name__:'',//metric列
