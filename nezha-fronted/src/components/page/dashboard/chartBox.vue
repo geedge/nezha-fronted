@@ -119,7 +119,7 @@
             <el-col :span="5">
               <div class="grid-content ">
                 <el-form-item prop="span">
-                  <el-select class="right-box-row-with-btn" value-key="chartSpan" popper-class="chart-box-dropdown" v-model="chart.span" placeholder="" size="mini">
+                  <el-select class="right-box-row-with-btn" value-key="chartSpan" popper-class="chart-box-dropdown-mini" v-model="chart.span" placeholder="" size="mini">
                     <el-option v-for="item in spanList" :key="item" :label="'span-' + item" :value="item">
                       <span class="panel-dropdown-label-txt" > span-{{item}}</span>
                     </el-option>
@@ -132,7 +132,18 @@
             </el-col><el-col :span="5">
               <div class="grid-content ">
                 <el-form-item prop="heigh">
-                  <el-input label="" v-model="chart.height" placeholder="" size="mini"></el-input>
+<!--                  <el-input label="" v-model="chart.height" placeholder="" size="mini"></el-input>-->
+                  <el-autocomplete
+                    v-model="chart.height"
+                    :fetch-suggestions="querySearch"
+                    placeholder=""
+                    size="mini"
+                    popper-class="popper-z-index"
+                    @select="handleSelect">
+                    <template slot-scope="{ item }">
+                      <div class="name">{{ item }}</div>
+                    </template>
+                  </el-autocomplete>
                   <span class="nz-input-append">px</span>
                 </el-form-item>
               </div>
@@ -198,7 +209,7 @@
           title: '',
           type:'line',
           span:12,
-          height:400,
+          height:'400',
           elements:{
             id: '',
             expression: '',
@@ -247,6 +258,7 @@
           id: '',
           name: ''
         },
+        heightSuggestions:['300','400','500','600']
       }
     },
     components:{
@@ -623,7 +635,7 @@
         this.chart.title = '';
         this.chart.type = 'line';
         this.chart.span = 12;
-        this.chart.height = 400;
+        this.chart.height = 400+'';
         this.elements = [1];
         this.elementTarget = [];
         bus.chartAddInfo.metricTarget = [];
@@ -640,7 +652,22 @@
       },
 
       /*metric部分相关方法--end*/
-
+      querySearch(queryString, cb) {
+        console.log(queryString)
+        var suggestions = this.heightSuggestions;
+        var results = queryString ? suggestions.filter(this.createFilter(queryString)) : suggestions;
+        console.log(results)
+        // 调用 callback 返回建议列表的数据
+        cb(results);
+      },
+      createFilter(queryString) {
+        return (suggestion) => {
+          return (suggestion.toLowerCase().indexOf(queryString.toLowerCase()) === 0);
+        };
+      },
+      handleSelect:function(item){
+        this.chart.height=item;
+      }
     },
     created() {
 
@@ -665,4 +692,9 @@
     }
   }
 </script>
+<style>
+  .popper-z-index{
+    z-index: 99999999 !important;
+  }
+</style>
 

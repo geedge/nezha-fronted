@@ -427,7 +427,7 @@ const en = {
       path: 'Path',//"路径"
       asset: 'Device',//"设备"
       lastUpdate: 'Last update time',//"最后更新时间"
-      moduleParameter: 'Module parameter',//"组件参数"
+      moduleParameter: 'Module',//"组件参数"
       addGraph: 'View Graph', //添加图标
       element: 'Element',
       value: 'Value',

@@ -46,7 +46,7 @@
             </el-popover>
             <span v-else>{{item.name}}</span>
           </div>
-          <div class="side-bar-menu-edit" @click.stop="toEditModule(item)" :id="'project-module-edit-'+item.id"><i class="nz-icon nz-icon-edit"></i></div>
+          <div class="hid-div side-bar-menu-edit " @click.stop="toEditModule(item)" :id="'project-module-edit-'+item.id" ><i class="nz-icon nz-icon-edit"></i></div>
         </div>
       </div>
     </div>
@@ -136,23 +136,24 @@
           <template slot-scope="scope" :column="item">
             <span v-if="item.prop == 'asset' && scope.row[item.prop]" class="link" @click="viewAsset(scope.row[item.prop].id)">{{scope.row[item.prop].host}}</span>
             <span v-else-if="item.prop == 'param'">
-              <span v-for="p in scope.row.paramObj">{{p.key}}={{p.value}}，</span>
+              <span v-for="(p,i) in scope.row.paramObj">{{p.key}}={{p.value}}<span v-if="i < scope.row.paramObj.length-1">，</span></span>
             </span>
             <div v-else-if="item.prop == 'option'" class="content-right-options">
-              <span @click="toEditEndpoint(scope.row)" class="content-right-option" :id="'edp-edit-'+scope.row.id"><i
-                class="nz-icon nz-icon-edit"></i>&nbsp;&nbsp;<span>{{$t('overall.edit')}}</span>
-              </span>&nbsp;&nbsp;
-
-              <span @click="endpointDetail(scope.row)" class="content-right-option" :id="'edp-detail-'+scope.row.id"><i
-                class="nz-icon nz-icon-view"></i>&nbsp;&nbsp;<span>{{$t('overall.view')}}</span>
-              </span>
-
-              <span @click="showEndpoint(scope.row)" class="content-right-option" :id="'edp-query-'+scope.row.id">
-                <i class="el-icon-search"></i>&nbsp;<span>{{$t('overall.query')}}</span>
-              </span>
+              <span :title="$t('overall.query')" @click="showEndpoint(scope.row)" class="content-right-option" :id="'edp-query-'+scope.row.id"><i class="el-icon-search"></i></span>
+              &nbsp;
+              <span :title="$t('overall.view')" @click="endpointDetail(scope.row)" class="content-right-option" :id="'edp-detail-'+scope.row.id"><i class="nz-icon nz-icon-view"></i></span>
+              &nbsp;
+              <span :title="$t('overall.edit')" @click="toEditEndpoint(scope.row)" class="content-right-option" :id="'edp-edit-'+scope.row.id"><i class="nz-icon nz-icon-edit"></i></span>
             </div>
-            <span v-else-if="item.prop == 'lastUpdate'">{{dateFormat(scope.row.lastUpdate)}}</span>
-            <span v-else-if="item.prop == 'state'" :style="{color: scope.row.state == 0 ? 'red' : (scope.row.state == 0 ? 'green' : '')}">{{scope.row.state == 1 ? 'up' : ''}}{{scope.row.state == 0 ? 'down' : ''}}</span>
+<!--            <span v-else-if="item.prop == 'lastUpdate'">{{dateFormat(scope.row.lastUpdate)}}</span>-->
+            <span v-else-if="item.prop == 'state'" >
+              <el-popover placement="right" width="50" trigger="hover" :content="(scope.row.state == '1'?'up':'down')+'['+(scope.row.lastUpdate&&scope.row.lastUpdate!=''?(new Date(scope.row.lastUpdate).getHours()+':'+new Date(scope.row.lastUpdate).getMinutes()):'--')+']'">
+                <div slot="reference" style="width: 20px">
+                  <div :class="{'active-icon green':scope.row.state == '1','active-icon red':scope.row.state == '0'}"></div>
+                </div>
+              </el-popover>
+<!--              {{ scope.row.state == 1 ? 'up' : ''}}{{scope.row.state == 0 ? 'down' : ''}}-->
+            </span>
             <span v-else>{{scope.row[item.prop]}}</span>
           </template>
         </el-table-column>
@@ -221,6 +222,21 @@
         <el-table-column
           prop="element"
           :label="$t('project.endpoint.element')">
+          <template slot-scope="scope">
+            <el-popover trigger="hover" placement="right">
+<!--              <div>-->
+<!--                <div>-->
+<!--                  <span>metric:{{scope.row.metricTip.metric}}</span>-->
+<!--                </div>-->
+<!--                <div>-->
+<!--                  <span>type:{{scope.row.metricTip.type}}</span>-->
+<!--                </div>-->
+<!--              </div>-->
+              <div>TODO</div>
+              <span slot="reference"><i class="el-icon-info"></i></span>
+            </el-popover>
+            <span>{{scope.row.element}}</span>
+          </template>
         </el-table-column>
         <el-table-column
           prop="value"
@@ -325,7 +341,7 @@
           },{
             label: this.$t("project.endpoint.lastUpdate"),
             prop: 'lastUpdate',
-            show: true,
+            show: false,
           }, {
             label: this.$t('config.account.option'),
             prop: 'option',
@@ -404,6 +420,7 @@
         showTableDataCopy:'',
         queryExpression:'',
         metricList: [], // metric列表
+        elementMetricDatas:[],//element 列提示信息列表
         labelSet:new Set(),
         labelList:[],
         formatTime:'',//查询endpoint的时间，
@@ -932,6 +949,10 @@
               for (let result of results){
                 // {"metric":{"instance":"192.168.40.126:9100","__name__":"scrape_duration_seconds","module":"node_exporter","project":"kafka","asset":"192.168.40.126","job":"ed_1","dc":"dc5"},"value":[1580782176.522,"0.000560761"]}
                 let temp=result.metric.__name__;
+                let metricTip={};
+                metricTip=(this.elementMetricDatas.filter((item)=>{
+                  return item.metric===temp;
+                }))[0];
                 delete result.metric.__name__;
                 temp+="{";
                 for (let key in result.metric){
@@ -940,7 +961,7 @@
                 }
                 temp=temp.charAt(temp.length-1) == ","?temp.substr(0,temp.length-1):temp;
                 temp+="}";
-                let edpQueryData={element:temp,value:result.value[1],type:(result.metric.type?result.metric.type:'2')};
+                let edpQueryData={element:temp,value:result.value[1],type:(result.metric.type?result.metric.type:'2'),metricTip:metricTip};
                 this.showTableData.push(edpQueryData);
                 this.labelList=Array.from(this.labelSet).map((item,index)=>{
                   return {key:item,type:'label'}
@@ -1219,6 +1240,14 @@
       },
       clearInput:function(){
         this.$refs.elementQuery.foucs();
+      },
+      queryElementTips:function(){
+        this.elementMetricDatas=[];
+        this.$get("/metric/metadata?endpointId="+this.curEndpoint.id).then(response=> {
+          if (response.status === "success") {
+            this.elementMetricDatas=response.data.list;
+          }
+        })
       }
     },
     created() {
@@ -1523,4 +1552,23 @@
   }
   /* end--覆盖分页组件样式*/
 
+  /* 列表搜索框 样式重写*/
+  .relative-position{
+    position: relative;
+  }
+  .query-input-inactive{
+    left:213px;
+    width: 18%;
+  }
+  .query-input-inactive .el-input__inner{
+    height: 26px;
+    line-height: 26px;
+  }
+/* 左侧列表dc 编辑按钮影藏样式*/
+  .hid-div{
+    visibility: hidden;
+  }
+  .sidebar-info-item:hover .hid-div{
+    visibility: visible;
+  }
 </style>

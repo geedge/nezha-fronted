@@ -129,7 +129,7 @@
                           </span>
                         </el-popover>
                         <span @mousedown.stop v-else @click.stop="showEditParamBox(true, scope.row, 2, $event)">
-                          <el-form-item :prop="'endpointList[' + scope.row.index + '].param'" :rules="{required: true, message: $t('validate.required'), trigger: 'blur'}">
+                          <el-form-item :prop="'endpointList[' + scope.row.index + '].param'" :rules="{required: false, message: $t('validate.required'), trigger: 'blur'}">
                             <el-input readonly class="endpoint-info endpoint-info-param input-x-mini-22" v-model="scope.row.param"></el-input>
                           </el-form-item>
                         </span>

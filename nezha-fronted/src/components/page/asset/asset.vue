@@ -58,6 +58,7 @@
           :width="item.width"
           :key="`col_${index}`"
           :label="item.label"
+          :fixed="item.fixed"
           :show-overflow-tooltip="item.prop != 'Alert' || item.prop != 'Module'"
           min-width="110px"
           :class-name="item.prop == 'option' ? 'content-right-options' : ''"
@@ -92,7 +93,7 @@
                 placement="right"
                 width="50"
                 trigger="hover"
-                :content="scope.row.pingRtt ? scope.row.pingRtt+'ms':'unreachable'">
+                :content="scope.row.pingRtt ? (scope.row.pingLastUpdate&&scope.row.pingLastUpdate!=''?(new Date(scope.row.pingLastUpdate).getHours()+':'+new Date(scope.row.pingLastUpdate).getMinutes()):'--')+'['+ scope.row.pingRtt+'ms'+']':(scope.row.pingLastUpdate&&scope.row.pingLastUpdate!=''?(new Date(scope.row.pingLastUpdate).getHours()+':'+new Date(scope.row.pingLastUpdate).getMinutes()):'--')+'[unreachable]'">
                 <div slot="reference" style="width: 20px">
                   <div :class="{'active-icon green':scope.row.pingState == 1,'active-icon red':scope.row.pingState == 0}"></div>
                 </div>
@@ -102,28 +103,34 @@
               <template v-if="scope.row.moduleNum > 0" >
                 <module-list-pop :asset-id="scope.row.id + ''" @openModuleBox="openModuleBox" placement="left" :ref="'moduleListPop' + scope.row.id">
                   <template v-slot:optionZone>
-                    <button class="nz-btn nz-btn-size-normal nz-btn-style-light nz-btn-min-width-75">{{scope.row.moduleNum}}</button>
+<!--                    <button class="nz-btn nz-btn-size-normal nz-btn-style-light nz-btn-min-width-75">{{scope.row.moduleNum}}</button>-->
+                      <span class="clickable">{{scope.row.moduleNum}}</span>
                   </template>
                 </module-list-pop>
               </template>
-              <button type="button" v-else class="nz-btn nz-btn-size-normal nz-btn-style-light nz-btn-min-width-75 nz-btn-disabled">{{scope.row.moduleNum}}</button>
+<!--              <button type="button" v-else class="nz-btn nz-btn-size-normal nz-btn-style-light nz-btn-min-width-75 nz-btn-disabled">{{scope.row.moduleNum}}</button>-->
+              <span v-else class="unclickable">{{scope.row.moduleNum}}</span>
             </template>
             <template v-if="item.prop=='Alert'">
-              <button type="button" v-if="scope.row.alertNum > 0" id="'asset-alerts-'+scope.row.id" @click="jumpToAlertMsg(scope.row.id)" class="nz-btn nz-btn-size-normal nz-btn-style-light nz-btn-min-width-75">{{scope.row.alertNum}}</button>
-              <button type="button" v-else class="nz-btn nz-btn-size-normal nz-btn-style-light nz-btn-min-width-75 nz-btn-disabled">{{scope.row.alertNum}}</button>
+<!--              <button type="button" v-if="scope.row.alertNum > 0" id="'asset-alerts-'+scope.row.id" @click="jumpToAlertMsg(scope.row.id)" class="nz-btn nz-btn-size-normal nz-btn-style-light nz-btn-min-width-75">{{scope.row.alertNum}}</button>-->
+<!--              <button type="button" v-else class="nz-btn nz-btn-size-normal nz-btn-style-light nz-btn-min-width-75 nz-btn-disabled">{{scope.row.alertNum}}</button>-->
+              <span v-if="scope.row.alertNum > 0" id="'asset-alerts-'+scope.row.id" @click="jumpToAlertMsg(scope.row.id)" class="clickable">{{scope.row.alertNum}}</span>
+              <span v-else class="unclickable">{{scope.row.alertNum}}</span>
             </template>
             <div v-if="item.prop=='dataCenter'">
               <idc-config-box :post-idc="JSON.parse(JSON.stringify(scope.row.idc))" ref="idcConfigBox" :is-edit="false" placement="left"  @after="getAssetData(null, true)" :button-class="'checkbox-edit'" :user-data="idcUserData">
                 <template v-slot:optionZone>
-                  <span class="link" @click="closeAllPop">{{scope.row.idc.name}}</span>
+<!--                  <span class="link" @click="closeAllPop">{{scope.row.idc.name}}</span>-->
+                  <span class="clickable" @click="closeAllPop">{{scope.row.idc.name}}</span>
                 </template>
               </idc-config-box>
             </div>
             <template v-if="item.prop=='cabinet'">
               <cabinet-config-box v-if="scope.row.cabinet&&scope.row.cabinet!='--'" ref="cabinetConfigBox"  placement="left" :is-edit="false" :post-cabinet="JSON.parse(JSON.stringify(scope.row.cabinet))"  @after="getAssetData(null, true)" :post-idc-datas="IDCOptionData">
-                <span slot="optionZone" @click="closeAllPop" class="link">{{returnData(scope.row.cabinet)}}</span>
+<!--                <span slot="optionZone" @click="closeAllPop" class="link">{{returnData(scope.row.cabinet)}}</span>-->
+                <span class="clickable" slot="optionZone" @click="closeAllPop" >{{returnData(scope.row.cabinet).name}}</span>
               </cabinet-config-box>
-              <span v-else>{{returnData(scope.row.cabinet)}}</span>
+              <span v-else class="unclickable">{{returnData(scope.row.cabinet)}}</span>
 
             </template>
             <div v-if="item.prop=='model'">
@@ -133,7 +140,7 @@
               <span>{{scope.row.model.vendor.value}}</span>
             </div>
             <div v-if="item.prop=='purchaseDate'">
-              <span>{{scope.row.purchaseDate}}</span>
+              <span>{{returnData(scope.row.purchaseDate)}}</span>
             </div>
             <div v-if="item.prop=='principal'">
               <span>{{getPrincipalName(scope.row.idc.principal)}}</span>
@@ -142,17 +149,20 @@
               <span>{{scope.row.idc.tel}}</span>
             </div>
             <template v-if="item.prop == 'option'">
-              <span @click.stop="deleteData('asset',scope.row.id)" class="content-right-option" :id="'asset-del-'+scope.row.id"><i
-                class="el-icon-delete"></i>&nbsp;&nbsp;<span>{{$t('overall.delete')}}</span>
+              <span :title="$t('overall.view')" @click.stop="tagShow('showView',scope.row.id)" class="content-right-option" :id="'asset-detail-'+scope.row.id"><i
+                class="el-icon-view"></i>
+              </span>
+              &nbsp;
+              <span :title="$t('overall.edit')" @click.stop="tagShow('showEdit',scope.row.id)" class="content-right-option" :id="'asset-edit-'+scope.row.id"><i
+                class="nz-icon nz-icon-edit"></i>
+              </span>&nbsp;
+              &nbsp;
+              <span :title="$t('overall.delete')" @click.stop="deleteData('asset',scope.row.id)" class="content-right-option" :id="'asset-del-'+scope.row.id"><i
+                class="el-icon-delete"></i>
               </span>&nbsp;&nbsp;&nbsp;
-              <span @click.stop="tagShow('showEdit',scope.row.id)" class="content-right-option" :id="'asset-edit-'+scope.row.id"><i
-                class="nz-icon nz-icon-edit"></i>&nbsp;&nbsp;<span>{{$t('overall.edit')}}</span>
-              </span>&nbsp;&nbsp;&nbsp;
-              <span @click.stop="tagShow('showView',scope.row.id)" class="content-right-option" :id="'asset-detail-'+scope.row.id"><i
-                class="el-icon-view"></i>&nbsp;&nbsp;<span>{{$t('overall.view')}}</span>
-              </span>&nbsp;&nbsp;&nbsp;
-              <span @click="ssss(scope.row.id ,scope.row.host)" class="content-right-option" :id="'asset-ssh-'+scope.row.id"><i
-                class="nz-icon nz-icon-cli"></i>&nbsp;&nbsp;<span>CLI</span>
+              &nbsp;
+              <span title="CLI" @click="ssss(scope.row.id ,scope.row.host)" class="content-right-option" :id="'asset-ssh-'+scope.row.id"><i
+                class="nz-icon nz-icon-cli"></i>
               </span>
             </template>
           </template>
@@ -222,6 +232,13 @@
         dropCol: [],
         tableTitle: [
           {
+            label: this.$t("asset.tableTitle.host"),
+            prop: 'HOST',
+            show: true,
+            width: 130,
+            fixed:'left'
+          },
+          {
             label: this.$t("asset.tableTitle.id"),
             prop: 'ID',
             show: true,
@@ -235,12 +252,7 @@
             prop: 'SN',
             show: true,
             width: 130
-          }, {
-            label: this.$t("asset.tableTitle.host"),
-            prop: 'HOST',
-            show: true,
-            width: 130
-          }, {
+          },  {
             label: this.$t("asset.tableTitle.assetState"),
             prop: 'state',
             show: true,
@@ -291,7 +303,8 @@
             label: this.$t('config.account.option'),
             prop: 'option',
             show: true,
-            width: 280
+            width: 280,
+            fixed:'right'
           }],
         tableData: [],
         checkListData: [],
@@ -657,11 +670,11 @@
       },
       returnData(data) {
         if (data && data !== '--') {
-          return data.name;
+          return data;
         } else if (data === '--') {
-          return '-';
+          return '--';
         } else {
-          return "-";
+          return "--";
         }
       },
       flushData() {

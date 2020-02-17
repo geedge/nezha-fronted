@@ -766,7 +766,7 @@ li{
   position: absolute;
   right: 0;
 }
-.config-dropdown, .chart-box-dropdown, .metric-dropdown {
+.config-dropdown, .chart-box-dropdown, .chart-box-dropdown-mini, .metric-dropdown {
   z-index: 2950 !important;
 }
 .dc-dropdown {
@@ -774,6 +774,9 @@ li{
 }
 .chart-box-dropdown {
   width: 519px;
+}
+.chart-box-dropdown-mini{
+  width: 110px;
 }
 .config-dropdown-btn i {
   font-size: 12px;
@@ -1089,7 +1092,7 @@ li{
 }
 /*列表中状态字段 的小圆点*/
 .active-icon{
-  margin-top:20px;
+  margin-top:15px;
   width:10px;
   height:10px;
   border-radius:50%;
@@ -1099,6 +1102,13 @@ li{
 }
 .green {
   background-color:lightGreen;
+}
+
+.clickable:hover{
+  cursor:pointer;
+}
+.unclickable:hover{
+  cursor: not-allowed;
 }
 
 /* panel-tool-tip列表搜索框 样式重写*/

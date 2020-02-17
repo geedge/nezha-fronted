@@ -64,7 +64,7 @@
                 {{scope.row[item.prop] == '2' ? 'Per-Datacenter' : ''}}
             </span>
             <span v-else-if="item.prop == 'status'">
-              <el-popover placement="right" width="50" trigger="hover" :content="(scope.row[item.prop] == '1'?$t('overall.available'):$t('overall.unavailable'))+'['+(scope.row.checkTime&&scope.row.checkTime!=''?(new Date(scope.row.checkTime).getHours()+':'+new Date(scope.row.checkTime).getMinutes()):'null')+']'">
+              <el-popover placement="right" width="50" trigger="hover" :content="(scope.row[item.prop] == '1'?$t('overall.available'):$t('overall.unavailable'))+'['+(scope.row.checkTime&&scope.row.checkTime!=''?(new Date(scope.row.checkTime).getHours()+':'+new Date(scope.row.checkTime).getMinutes()):'--')+']'">
                 <div slot="reference" style="width: 20px">
                   <div :class="{'active-icon green':scope.row[item.prop] == '1','active-icon red':scope.row[item.prop] == '0'}"></div>
                 </div>
