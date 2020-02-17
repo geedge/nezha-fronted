@@ -4,7 +4,7 @@
     v-clickoutside="elementsetHide"
     :style="{opacity:(eventfixedVal.shezhi==1),left:(eventfixedVal.shezhi==1 ? event_positionx : -2000)+'px',top:(event_positiony)+'px'}"
   >
-    <div class="pop-top-btns">
+    <!--<div class="pop-top-btns">
       <button type="button" @click="shezhiControl('ok')" class="nz-btn nz-btn-size-alien nz-btn-size-small nz-btn-style-light nz-btn-min-width-35" id="element-set-ok">
         <span class="pop-top-btn-icon"><i class="nz-icon nz-icon-edit"></i></span>
         <span class="pop-top-btn-txt">{{$t('overall.save')}}</span>
@@ -13,7 +13,7 @@
         <span class="pop-top-btn-icon"><i class="el-icon-close"></i></span>
         <span class="pop-top-btn-txt">{{$t('overall.esc')}}</span>
       </button>
-    </div>
+    </div>-->
     <div class="pop-title">{{$t('overall.select')}}</div>
     <div class="pop-box elementset-labels">
       <el-scrollbar style="height: 100%;">
@@ -33,12 +33,23 @@
       </el-scrollbar>
     </div>
     <div class="elementset-bottom-btns">
-      <button type="button" @click="dropAll(true)" class="nz-btn nz-btn-size-normal nz-btn-style-light">
+      <button v-if="isCancel" type="button" @click="dropAll(false)" class="nz-btn nz-btn-size-small nz-btn-style-light nz-btn-min-width-35 is-cancel">
+        <span class="top-tool-btn-txt">{{$t('overall.clear')}}</span>
+      </button>
+      <button v-if="!isCancel" type="button" @click="dropAll(true)" class="nz-btn nz-btn-size-small nz-btn-style-light nz-btn-min-width-35">
         <span class="top-tool-btn-txt">{{$t('overall.all')}}</span>
       </button>
-      <button type="button" @click="dropAll(false)" class="nz-btn nz-btn-size-normal nz-btn-style-light">
+      <div>
+        <button type="button" @click="shezhiControl('cancel')" class="nz-btn nz-btn-size-small nz-btn-style-light nz-btn-min-width-35">
+          <span class="top-tool-btn-txt">{{$t('overall.esc')}}</span>
+        </button>
+        <button type="button" @click="shezhiControl('ok')" class="nz-btn nz-btn-size-small nz-btn-style-normal nz-btn-min-width-35">
+          <span class="top-tool-btn-txt">{{$t('overall.save')}}</span>
+        </button>
+      </div>
+      <!--<button type="button" @click="dropAll(false)" class="nz-btn nz-btn-size-normal nz-btn-style-light">
         <span class="top-tool-btn-txt">{{$t('overall.cancel')}}</span>
-      </button>
+      </button>-->
     </div>
   </div>
 </template>
@@ -143,6 +154,17 @@ export default {
     tablelable() {
       return this.$store.state.tablelable;
     },
+    //点击all是否是全部取消选中，true为是
+    isCancel() {
+      let isCancel = true;
+      for (let i = 0; i < this.dropColRes.length; i++) {
+        if (!this.dropColRes[i].show) {
+          isCancel = false;
+          break;
+        }
+      }
+      return isCancel;
+    }
   }
 };
 </script>
@@ -163,7 +185,7 @@ export default {
 }
 
 .elementset-labels {
-  margin-top: 30px;
+  margin-top: 12px;
   width: 100%;
   height: 300px;
 }
@@ -187,6 +209,9 @@ export default {
 }
 .elementset-bottom-btns {
   margin-top: 7px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 .unshow {
   display: none;
