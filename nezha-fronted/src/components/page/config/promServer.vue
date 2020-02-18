@@ -38,17 +38,6 @@
       <el-table :data="tableData" border height="calc(100% - 160px)" style="width: 100%;" class="nz-table">
         <el-table-column :resizable="false" v-for="(item, index) in tablelable" v-if="item.show" :width="item.width"
                          :key="`col-${index}`" :label="item.label">
-          <template slot="header" slot-scope="scope">
-            <template v-if="index==tablelable.length-1">
-              <span class="nz-table-txt">{{item.label}}</span>
-              <span @click.stop="elementsetShow('shezhi',$event)" id="prom-tab-set" class="nz-table-gear">
-                <i class="nz-icon nz-icon-gear"></i>
-              </span>
-            </template>
-            <div v-else>
-              <span>{{item.label}}</span>
-            </div>
-          </template>
           <template slot-scope="scope" :column="item">
             <idc-config-box v-if="item.prop == 'idc'" ref="idcConfigBox"
                             :post-idc="JSON.parse(JSON.stringify(scope.row[item.prop]))" :is-edit="false"
@@ -80,6 +69,13 @@
               <span :title="$t('overall.delete')" @click="del(scope.row)" class="content-right-option" :id="'prom-del-'+scope.row.id"><i class="el-icon-delete"></i></span>
             </div>
             <span v-else>{{scope.row[item.prop]}}</span>
+          </template>
+        </el-table-column>
+        <el-table-column width="28">
+          <template slot="header" slot-scope="scope">
+            <span @click.stop="elementsetShow('shezhi',$event)" class="nz-table-gear">
+              <i class="nz-icon nz-icon-gear"></i>
+            </span>
           </template>
         </el-table-column>
       </el-table>
@@ -267,7 +263,7 @@
             label: this.$t('config.account.option'),
             prop: 'option',
             show: true,
-            width: 230
+            width: 120
           }
         ],
         tablelable: [],
@@ -357,11 +353,11 @@
         const dw = this.$refs.elementset.$el.offsetWidth;
         const dh = this.$refs.elementset.$el.offsetHeight;
         let positionx =
-          e.clientX + dw <= w - 10 ? e.clientX - 250 : e.clientX - 250 - dw;
+          e.clientX + dw <= w - 10 ? e.clientX + 14 : e.clientX + 14 - dw;
         let positiony =
           e.clientY + dh <= h - 10
-            ? e.clientY - 70
-            : e.clientY - 70 - (e.clientY + dh - h);
+            ? e.clientY + 20
+            : e.clientY + 20 - (e.clientY + dh - h);
         this.$store.commit('setPosition', {positionx, positiony});
       },
       elementsetHide() {

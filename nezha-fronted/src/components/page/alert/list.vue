@@ -38,17 +38,6 @@
           show-overflow-tooltip
           min-width="110px"
         >
-          <template slot="header" slot-scope="scope">
-            <template v-if="index==tablelable.length-1">
-              <span class="nz-table-txt">{{item.label}}</span>
-              <span @click.stop="elementsetShow('shezhi',$event)" class="nz-table-gear">
-                <i class="nz-icon nz-icon-gear"></i>
-              </span>
-            </template>
-            <div v-else>
-              <span>{{item.label}}</span>
-            </div>
-          </template>
           <template slot-scope="scope" :column="item">
             <template v-if="item.prop == 'alertRule'">
               <div class="link too-long-split"
@@ -90,6 +79,13 @@
               </span>
             </div>
             <span v-else>{{scope.row[item.prop]}}</span>
+          </template>
+        </el-table-column>
+        <el-table-column width="28">
+          <template slot="header" slot-scope="scope">
+            <span @click.stop="elementsetShow('shezhi',$event)" class="nz-table-gear">
+              <i class="nz-icon nz-icon-gear"></i>
+            </span>
           </template>
         </el-table-column>
       </el-table>
@@ -245,11 +241,11 @@
         const dw = this.$refs.elementset.$el.offsetWidth;
         const dh = this.$refs.elementset.$el.offsetHeight;
         let positionx =
-          e.clientX + dw <= w - 10 ? e.clientX - 250 : e.clientX - 250 - dw;
+          e.clientX + dw <= w - 10 ? e.clientX + 14 : e.clientX + 14 - dw;
         let positiony =
           e.clientY + dh <= h - 10
-            ? e.clientY - 70
-            : e.clientY - 70 - (e.clientY + dh - h);
+            ? e.clientY + 20
+            : e.clientY + 20 - (e.clientY + dh - h);
         this.$store.commit('setPosition', {positionx, positiony});
       },
       elementsetHide() {

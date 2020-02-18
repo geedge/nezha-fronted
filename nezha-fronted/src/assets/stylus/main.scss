@@ -530,22 +530,13 @@ li{
   background-color: #f0f0f0;
 }
 .nz-table-gear {
-  display: inline-block;
-  width: 8px;
   box-sizing: border-box;
-  border-left: 1px solid white;
   position: relative;
 }
 .nz-table-gear>i {
   cursor: pointer;
   position: absolute;
-  left: 7px;
-}
-.nz-table-txt {
-  border-right: 1px solid #d4d4d4;
-  width: calc(100% - 19px);
-  display: inline-block;
-  box-sizing: border-box;
+  left: -3px;
 }
 
 /* end--内容*/
