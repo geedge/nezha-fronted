@@ -1,37 +1,20 @@
 <template>
   <div class="login">
-    <div class="model">
-      <div class='login-right'>
-        <div class="login-content">
-          <div class="login-title">NEZHA</div>
-          <div class="login-label" style="padding-top: 35px;">User Name</div>
-          <div class="login-input">
-            <input v-model="loginData.username" class="inputL"></input>
-          </div>
-          <div class="login-label">Password</div>
-          <div class="login-input">
-            <input v-model="loginData.password" type="password" class="inputL" @keyup.enter="login"></input>
-          </div>
-          <div class="login-button">
-            <button @click="login" id="login">Login</button>
-          </div>
-          <div class="login-foot">
-            <div class="login-foot-remember"></div>
-            <div class="login-foot-langs">
-              <div @click="changeLang('en')" class="login-foot-lang" :class="{'login-foot-lang-active': lang == 'en'}">
-                <img v-if="lang == 'en'" src="../../assets/img/lang-box-active.svg"/>
-                <img v-if="lang != 'en'" src="../../assets/img/lang-box.svg"/>
-                <span class="lang-name lang-name-en" id="lang-en">EN</span>
-                <div v-if="lang == 'en'" class="lang-active-model"></div>
-              </div>
-              <div @click="changeLang('cn')" class="login-foot-lang" :class="{'login-foot-lang-active': lang == 'cn'}">
-                <img v-if="lang == 'cn'" src="../../assets/img/lang-box-active.svg"/>
-                <img v-if="lang != 'cn'" src="../../assets/img/lang-box.svg"/>
-                <span class="lang-name" id="lang-ch">中</span>
-                <div v-if="lang == 'cn'" class="lang-active-model"></div>
-              </div>
-            </div>
-          </div>
+    <div class="model"></div>
+    <div class="logo"><img height="155" src="../../assets/img/logo-big.png"></div>
+    <div class='login-box'>
+      <div class="login-label"></div>
+      <div class="login-input">
+        <input v-model="loginData.username" ></input>
+      </div>
+      <div class="login-label"></div>
+      <div class="login-input">
+        <input v-model="loginData.password" type="password"></input>
+      </div>
+      <div class="login-foot">
+        <button @click="login" class="login-btn" id="login">Login</button>
+        <div class="login-foot-langs">
+          <i class="nz-icon nz-icon-lang-en"></i><i class="nz-icon nz-icon-arrow-down"></i>
         </div>
       </div>
     </div>
@@ -81,117 +64,90 @@ export default {
 }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 .login {
   background-image: url("../../assets/img/login-background.png");
-  background-size: 100% 100%;
+  background-size: cover;
+  position: relative;
 }
 .model {
   height: 100%;
   width: 100%;
-  background-color: rgba(0, 0, 0, 0.737);
-}
-button {
-  width: 80%;
-  padding-top: 10px;
-  padding-bottom: 12px;
-  background: #31759c;
-  border-radius: 270px;
-  font-size: 18px;
-  box-shadow: none;
-  outline: none;
-  border: none;
-  color: #fff;
-  display: block;
-  margin: 0 auto;
-  margin-top: 50px;
-  cursor: pointer;
-}
-button:hover {
-  background-color: #5c9fc4;
+  background-color: rgba(130, 130, 135, 0.4);
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1;
 }
 
-.login-right {
-  position: relative;
-  width: 500px;
-  height: 475px;
-  margin: auto;
-  overflow: hidden;
-  padding: 250px 0 0 0;
-}
-.login-title {
+.logo {
   position: absolute;
-  font-size: 90px;
-  font-weight: 400;
+  top: 25%;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 2;
+}
+
+.login-box {
+  width: 460px;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  top: 50%;
+  height: 100%;
+  z-index: 2;
+}
+
+.login-box .login-input {
+  padding: 20px 0;
+  height: 60px;
+}
+.login-box .login-input input {
+  height: 100%;
+  width: calc(100% - 30px);
+  background-color: rgba(0, 0, 0, 0.55);
+  padding-left: 30px;
+  font-size: 20px;
+  border: none;
+  outline: none;
   color: white;
-  top: 60px;
-  width: 100%;
-  text-align: center;
-}
-.login-label {
-  margin-left: 10%;
-  font-size: 14px;
-  color: rgba(0, 0, 0, 0.6);
-}
-.login-input {
-  height: 30px;
-  margin: 28px 0 16px 10%;
-  width: 80%;
-  border-bottom: 2px solid rgba(0, 0, 0, 0.6);
-}
-.login-foot {
-  position: absolute;
-  bottom: 30px;
-  width: 100%;
-}
-.login-foot>div {
-  display: inline-block;
-}
-.login-foot-langs {
-  float: right;
-  padding-right: 10%;
-}
-.login-foot-lang {
-  display: inline-block;
-  margin-left: 8px;
-  cursor: pointer;
-  position: relative;
-}
-.lang-active-model {
-  width: 19px;
-  height: 16px;
-  position: absolute;
-  border-radius: 2px;
-  background-color: rgba(49, 117, 156, 0.27);
-  top: 8px;
-  left: 9px;
-}
-.lang-name {
-  position: absolute;
-  left: 6px;
-  top: 7px;
-  font-size: 13px;
-  font-weight: bold;
-  color: #656565;
-}
-.lang-name-en {
-  left: 4px;
-}
-.login-foot-lang-active .lang-name {
-  color: #31759c;
-}
-.login-input input {
-  outline: none;
-  border: none;
-  width: 100%;
-  height: 100%;
-  font-size: 14px;
+  border-radius: 4px;
 }
 
-.login-content {
-  background: #fff;
-  width: 100%;
-  height: 100%;
-  border-radius: 10px;
+.login-foot {
+  padding-top: 45px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.login-btn {
+  color: white;
+  border-radius: 3px;
+  background-image: $btn-normal-background-color;
+  border: none;
+  outline: none;
+  height: 44px;
+  width: 320px;
+  cursor: pointer;
+  font-size: 14px;
+  box-shadow: 0 2px 3px 2px rgba(0, 0, 0, 0.30);
+}
+
+.login-foot-langs {
+  position: relative;
+  cursor: pointer;
+}
+.login-foot-langs .nz-icon-lang-en, .login-foot-langs .nz-icon-lang-zh {
+  font-size: 40px;
+  color: white;
+  margin-right: 30px;
+}
+.nz-icon-arrow-down, .nz-icon-arrow-up {
+  position: absolute;
+  font-size: 18px;
+  color: white;
+  top: 50%;
+  right: 0;
+  transform: translateY(-50%);
 }
 </style>
