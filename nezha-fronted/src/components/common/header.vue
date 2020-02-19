@@ -129,7 +129,7 @@
     data() {
       return {
         username: sessionStorage.getItem("nz-username"),
-        language: localStorage.getItem("nz-language"),
+        language: '',
         assetData: [],
         activeIndex:'',
         activeItemIndex:'',
@@ -350,8 +350,9 @@
         })
       },
       changeLocal(lang) {
-        if (lang != localStorage.getItem("nz-language")) {
-          localStorage.setItem("nz-language", lang);
+        if (lang != localStorage.getItem("nz-language-" + this.username)) {
+          localStorage.setItem("nz-language-" + this.username, lang);
+          this.$i18n.locale = lang;
           window.location.reload();
         }
       },
@@ -412,24 +413,34 @@
           }
         })
       },
+      refreshLang() {
+        this.language = localStorage.getItem("nz-language-" + this.username);
+        this.$i18n.locale = this.language;
+      }
     },
     created() {
-      if (!localStorage.getItem("nz-language")) {
+      /*if (!localStorage.getItem("nz-language")) {
         localStorage.setItem("nz-language", "en");
-      }
-      this.language = localStorage.getItem("nz-language");
+      }*/
       this.getUserData();
     },
     mounted() {
       this.getUserData();
       this.getAssetData();
       this.getProjectList();
+      this.refreshLang();
       // 刷新后有高亮
       let activePath = this.$route.path.slice(1);
       this.activeIndex = activePath;
       bus.$on("menu-change", (menu) => {
-        console.info(menu);
         this.activeIndex = menu;
+      });
+      bus.$on('login', () => {
+        this.username = sessionStorage.getItem("nz-username");
+        this.refreshLang();
+        /*this.$nextTick(function(){
+          window.location.reload();
+        });*/
       });
     },
     computed: {
@@ -441,7 +452,7 @@
       },
       getAssetDcData() {
         return this.$store.state.assetData;
-      }
+      },
     },
     watch: {
       getAssetDcData: {

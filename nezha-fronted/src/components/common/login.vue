@@ -1,20 +1,26 @@
 <template>
-  <div class="login">
+  <div class="login" @click="langListShow = false">
     <div class="model"></div>
     <div class="logo"><img height="155" src="../../assets/img/logo-big.png"></div>
     <div class='login-box'>
       <div class="login-label"></div>
       <div class="login-input">
-        <input v-model="loginData.username" ></input>
+        <input v-model="loginData.username" autocomplete="new-password"></input>
       </div>
       <div class="login-label"></div>
       <div class="login-input">
-        <input v-model="loginData.password" type="password"></input>
+        <input v-model="loginData.password" type="password" autocomplete="new-password"></input>
       </div>
       <div class="login-foot">
         <button @click="login" class="login-btn" id="login">Login</button>
-        <div class="login-foot-langs">
-          <i class="nz-icon nz-icon-lang-en"></i><i class="nz-icon nz-icon-arrow-down"></i>
+        <div class="login-foot-lang" @click.stop="langListShow = !langListShow">
+          <i v-if="lang == 'en'" class="nz-icon nz-icon-lang-en"></i>
+          <i v-else-if="lang == 'cn'" class="nz-icon nz-icon-lang-zh"></i>
+          <i class="nz-icon nz-icon-arrow-down"></i>
+        </div>
+        <div class="login-foot-lang-list" v-show="langListShow">
+          <i v-if="lang != 'en'" @click="changeLang('en')" class="nz-icon nz-icon-lang-en"></i>
+          <i v-if="lang != 'cn'" @click="changeLang('cn')" class="nz-icon nz-icon-lang-zh"></i>
         </div>
       </div>
     </div>
@@ -22,7 +28,7 @@
 </template>
 
 <script>
-
+import bus from '../../libs/bus';
 export default {
   name: "login",
   data() {
@@ -32,32 +38,61 @@ export default {
         password: '',
         remember: false
       },
-      lang: localStorage.getItem("nz-language") ? localStorage.getItem("nz-language") : 'en'
+      lang: 'en', //en/cn
+      langListShow: false,
     }
   },
   methods: {
     login() {
-      this.$post('sys/login', (this.loginData)).then(res => {
-        if (res.code == 200) {
-          sessionStorage.setItem("nz-token", res.data.token);
-          sessionStorage.setItem("nz-username", this.loginData.username);
-          localStorage.setItem("nz-username", this.loginData.username);
-          this.$router.push({
-            path: "/panel",
-            query: {
-              t: +new Date()
-            }
-          });
-        }
-      })
+      if (this.validateLogin()) {
+        this.$post('sys/login', (this.loginData)).then(res => {
+          if (res.code == 200) {
+            //登录成功，记录用户名、token和lang
+            sessionStorage.setItem("nz-token", res.data.token);
+            sessionStorage.setItem("nz-username", this.loginData.username);
+            localStorage.setItem("nz-username", this.loginData.username);
+            localStorage.setItem('nz-language-' + this.loginData.username, this.lang);
+            console.info('llang:' + this.lang)
+            this.$i18n.locale = this.lang;
+            bus.$emit('login');
+            this.$router.push({
+              path: "/panel",
+              query: {
+                t: +new Date()
+              }
+            });
+          } else {
+            this.$message.error(res.msg);
+          }
+        });
+      }
     },
     changeLang(lang) {
-      if (this.lang == lang) {
-        return;
+      this.lang = lang;
+      this.langListShow = false;
+    },
+    validateLogin() {
+      if (!this.loginData.username || !this.loginData.password) {
+        this.$message.error("Empty username or password");
+        return false;
       } else {
-        localStorage.setItem("nz-language", lang);
+        return true;
+      }
+    }
+  },
+  watch: {
+    'loginData.username': function(n, o) {
+      let lang = localStorage.getItem('nz-language-' + n);
+      if (lang) {
         this.lang = lang;
-        this.$i18n.locale = lang;
+      }
+    }
+  },
+  mounted() {
+    const _this = this;
+    document.onkeydown = function(e) {
+      if(e.key === 'Enter'){
+        _this.login();
       }
     }
   }
@@ -118,6 +153,7 @@ export default {
   padding-top: 45px;
   display: flex;
   justify-content: space-between;
+  position: relative;
 }
 
 .login-btn {
@@ -133,14 +169,40 @@ export default {
   box-shadow: 0 2px 3px 2px rgba(0, 0, 0, 0.30);
 }
 
-.login-foot-langs {
+.login-foot-lang {
   position: relative;
   cursor: pointer;
 }
-.login-foot-langs .nz-icon-lang-en, .login-foot-langs .nz-icon-lang-zh {
+.login-foot-lang .nz-icon-lang-en, .login-foot-lang .nz-icon-lang-zh {
   font-size: 40px;
   color: white;
   margin-right: 30px;
+}
+.login-foot-lang-list {
+  position: absolute;
+  height: 32px;
+  padding: 16px;
+  background-color: rgba(0, 0, 0, 0.55);
+  top: 107px;
+  right: 0;
+  border-radius: 4px;
+}
+.login-foot-lang-list .nz-icon {
+  font-size: 32px;
+  color: white;
+  cursor: pointer;
+}
+.login-foot-lang-list::before {
+  content: " ";
+  width: 0px;
+  height: 0px;
+  border-width: 10px;
+  border-style: solid;
+  border-color: transparent transparent rgba(0, 0, 0, 0.55) transparent;
+  position: absolute;
+  top: -20px;
+  left: 50%;
+  transform: translateX(-50%);
 }
 .nz-icon-arrow-down, .nz-icon-arrow-up {
   position: absolute;
