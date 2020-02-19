@@ -2,9 +2,10 @@
   @import './line-chart-block.scss';
 </style>
 <template>
-  <div class="line-chart-block" id="lineChartDiv">
-
+  <div class="line-chart-block" :id="'lineChartDiv'+chartIndex" v-show="divFirstShow">
+    <loading  :ref="'localLoading'+chartIndex"></loading>
     <!--<div class="edit">
+
       <div class="list-icon" v-if="firstShow">
         <span @click="refreshChart" :title="$t('dashboard.refresh')" class="set-icon" v-if="showSetting">
           <i class="el-icon-refresh-right"></i>
@@ -20,16 +21,16 @@
         </span>
       </div>
     </div>-->
-    <div class="nz-btn-group nz-btn-group-light edit" v-if="firstShow">
+    <div class="nz-btn-group nz-btn-group-light edit" v-show="firstShow">
       <button type="button" @click="refreshChart" style="padding: 6px 14px 5px 14px;" class="nz-btn nz-btn-size-large nz-btn-style-light" v-if="showSetting"><i style="font-size: 16px;" class="global-active-color el-icon-refresh-right"></i></button><button
       @click="editChart" type="button" class="nz-btn nz-btn-size-large nz-btn-style-light" v-if="showSetting"><i class="nz-icon nz-icon-edit"></i></button><button
       @click="removeChart" type="button" class="nz-btn nz-btn-size-large nz-btn-style-light" v-if="showSetting"><i class="el-icon-delete"></i></button><button
       @click="showAllScreen" type="button" class="nz-btn nz-btn-size-large nz-btn-style-light"><i class="el-icon-full-screen"></i></button>
     </div>
 
-    <div class="line-area" ref="lineChartArea"  id="lineChartArea" ></div>
+    <div class="line-area" ref="lineChartArea"  id="lineChartArea" v-show="firstShow"></div>
 
-    <div class="legend-container"   id="legendArea" ref="legendArea">
+    <div class="legend-container"   id="legendArea" ref="legendArea" v-show="firstShow">
       <div v-for="(item, index) in legendList" :title="item.name"  @click="clickLegend(item.name,index)" class="legend-item" :class="{'ft-gr':isGrey[index]}" :key="'legend_' + item.name+'_'+index">
         <span class="legend-shape" :style="{background:(isGrey[index]?'#D3D3D3':bgColorList[index])}"></span>{{item.name}}
         <br/><!--bgColorList[index]-->
@@ -60,13 +61,14 @@
           <!--<button @click="refreshChart" type="button" class="nz-btn nz-btn-size-normal nz-btn-style-light"><i style="font-size: 14px;" class="el-icon-refresh-right"></i></button>-->
         </div>
       </div>
-      <div class="line-area " ref="screenShowArea"  id="screenShowArea"></div>
-      <div class="legend-container"   id="screenLegendArea" ref="screenLegendArea">
+      <div class="line-area " ref="screenShowArea"  id="screenShowArea" ></div>
+      <div class="legend-container"  id="screenLegendArea" ref="screenLegendArea"  v-show="showLegend">
         <div v-for="(item, index) in screenLegendList" :title="item.name"  @click="clickScreenLegend(item.name,index)" class="legend-item" :class="{'ft-gr':isGreyScreen[index]}"  :key="'legend_' + item.name+'_'+index">
           <span class="legend-shape" :style="{background:(isGreyScreen[index]?'#D3D3D3':bgColorList[index])}"></span>{{item.name}}
           <br/><!--bgColorList[index]-->
         </div>
       </div>
+      <loading  :ref="'localLoadingScreen'+chartIndex"></loading>
     </el-dialog>
     <!--</Modal>-->
   </div>
@@ -75,11 +77,12 @@
   import axios from 'axios';
   import echarts from 'echarts';
   import bus from '../../libs/bus';
+  import loading from "../common/loading";
 
   export default {
     name: 'lineChartBlock',
     components: {
-      //calendarSelect,
+      'loading': loading,
     },
     props: {
       editChartId: {
@@ -88,6 +91,10 @@
       },
       // 看板id
       panelId: {
+        type: Number,
+        default: 0,
+      },
+      chartIndex:{
         type: Number,
         default: 0,
       },
@@ -101,6 +108,7 @@
       return {
         data: {}, // 该图表信息,chartItem
         seriesItem: [], // 保存信息
+        seriesItemScreen:[],
         images: '',
         toolbox: false,
         items: {
@@ -111,6 +119,7 @@
         panelIdInner: '', // 看板id=panelId,原写作chart,由set_data获取
         chartName: '',
         firstLoad: false, // 是否第一次加载
+        divFirstShow:false,
         highchartStore: null, // 保存图表数据
         echartStore:null,// 保存图表数据
         echartModalStore: null, // 全屏查看时数据
@@ -136,6 +145,7 @@
           '#76624c', '#d71345', '#2468a2', '#ca8687', '#1b315e',
         ],
         firstShow: false, // 默认不显示操作按钮,
+        showLegend:true,
         searchTime:[new Date().setHours(new Date().getHours()-1),new Date()],
         oldSearchTime:[],
         pickerOptions: {
@@ -289,8 +299,6 @@
       },
       // chartSite用于区分是全屏显示还是局部显示
       initChart(chartInfo, dataArg, ele, chartSite,legend) {
-
-        this.firstShow = true; // 展示操作按键
         const self = this;
         this.chartType = ''; // 图表类型
         if ( chartInfo.type === 4) {//line,bar
@@ -644,8 +652,8 @@
           this.echartStore.clear();
           option.title = title;
           this.echartStore.setOption(option);//创建图表
-          this.echartStore.hideLoading();
-          //this.echartStore.resize({height:chartInfo.height});//,width:`${ele.clientWidth-100}`}
+          //this.echartStore.hideLoading();
+          this.$refs['localLoading'+this.chartIndex].endLoading();
           if(legend && legend.length>0){
             this.legendList = [];
             legend.forEach((item, i) => {
@@ -665,6 +673,7 @@
               this.echartStore.resize({height:(chartInfo.height-divHeight-25)});
             }
           });
+          this.firstShow = true; // 展示操作按键
         } else if (chartSite === 'screen') { // 全屏显示
           /*
           option.series = dataArg.map((item) => {// params.series = dataArg.map((item) => {
@@ -715,7 +724,9 @@
           this.echartModalStore.clear();
           option.title = {};
           this.echartModalStore.setOption(option);//显示全屏界面
-          this.echartModalStore.hideLoading();
+          //this.echartModalStore.hideLoading();
+          this.showLegend = true;
+          this.$refs['localLoadingScreen'+this.chartIndex].endLoading();
           //this.echartModalStore.resize({height:chartInfo.height});
           if(legend && legend.length>0){
             this.screenLegendList = [];
@@ -730,11 +741,15 @@
           }
           this.$nextTick(() => {
             let divHeight = this.$refs.screenLegendArea.offsetHeight;
+            this.echartModalStore.resize({height:(400-divHeight)});
+            /*
+            let divHeight = this.$refs.screenLegendArea.offsetHeight;
             if(!chartInfo.height){
               this.echartModalStore.resize({height:(400-divHeight)});
             }else {
               this.echartModalStore.resize({height:(chartInfo.height-divHeight-25)});
             }
+            */
           });
         }
       },
@@ -787,23 +802,47 @@
         //return rlt;
       },
       // 设置数据, filter区分
-      setData(chartItem, seriesItem, panelId, filter,legend) {
-        if (filter) { // 保存数据,用于同步时间
-          this.stableFilter = filter;
-        }
-        this.legend = legend;
-        this.panelIdInner = panelId;
-        this.data = chartItem;
-        this.seriesItem = seriesItem;
-        this.searchTime[0] = filter.start_time;
-        this.searchTime[1] = filter.end_time;
-        this.oldSearchTime = this.searchTime;
-        this.initChart(chartItem, seriesItem, this.$refs.lineChartArea, 'local',legend);
-        /*
-        if (chartItem.type === 'line' || chartItem.type === 'bar' || chartItem.type === 4) {
+      setData(chartItem, seriesItem, panelId, filter,legend,area) {
+        if(area==='showFullScreen'){//全屏按时间查询
+          /*
+          this.legend = legend;
+          this.data = chartItem;
+          this.searchTime[0] = filter.start_time;//将列表的查询时间复制给全屏的查询时间
+          this.searchTime[1] = filter.end_time;
+          this.seriesItemScreen = seriesItem;
+          //this.$refs['localLoadingScreen'+this.chartIndex].endLoading();
+          this.initChart(chartItem, seriesItem, this.$refs.lineChartArea, 'screen',legend);
+          */
+        }else{
+          this.legend = legend;
+          //设置高度 chart-table
+          this.$nextTick(() => {
+            const chartBox = document.getElementById('lineChartDiv'+this.chartIndex);
+            let height = chartItem.height;
+            if(height<200){
+              height = 200;
+            }
+            chartBox.style.height = `${height-25}px`;
+          });
+          this.$refs['localLoading'+this.chartIndex].startLoading();
+          this.divFirstShow = true;
+          this.firstShow = true; // 展示操作按键
+          this.panelIdInner = panelId;
+          this.data = chartItem;
+          this.seriesItem = seriesItem;
+          this.seriesItemScreen = seriesItem;
+
+          if (filter) { // 保存数据,用于同步时间
+            this.stableFilter = filter;
+            this.searchTime[0] = filter.start_time;
+            this.searchTime[1] = filter.end_time;
+            this.oldSearchTime[0] = this.searchTime[0];
+            this.oldSearchTime[1] = this.searchTime[1];
+          }
+          //this.$refs['localLoading'+this.chartIndex].endLoading();
           this.initChart(chartItem, seriesItem, this.$refs.lineChartArea, 'local',legend);
         }
-        */
+
       },
 
       // 删除该图表
@@ -816,7 +855,8 @@
       },
       // 重新请求数据 刷新操作
       refreshChart() {
-        this.echartStore.showLoading();
+        this.$refs['localLoading'+this.chartIndex].startLoading();
+        this.firstShow = false;
         this.$emit('on-refresh-data', this.data.id);
       },
       initDialog(){
@@ -844,11 +884,23 @@
         this.searchTime = this.oldSearchTime;
         this.screenModal = true;
         this.isGreyScreen=[];
+
+        this.seriesItemScreen = this.seriesItem;
+/*
+        this.searchTime = [];
+        this.searchTime[0] = this.oldSearchTime[0];//将列表的查询时间复制给全屏的查询时间
+        this.searchTime[1] = this.oldSearchTime[1];
+        this.seriesItemScreen = this.seriesItem;
+        this.screenModal = true;
+        */
         //this.dateChange();
       },
       dateChange(time) {
         this.filter.start_time = bus.timeFormate(this.searchTime[0], 'yyyy-MM-dd hh:mm:ss');
         this.filter.end_time = bus.timeFormate(this.searchTime[1], 'yyyy-MM-dd hh:mm:ss');
+        this.echartModalStore.clear();
+        this.showLegend = false;
+        this.$refs['localLoadingScreen'+this.chartIndex].startLoading();
         if (this.showSetting) {
           this.getQueryChart('list');
         } else {
@@ -857,9 +909,11 @@
       },
       // 查询数据,修改日期查询全屏数据
       getQueryChart(type) {
+        /*
         if (this.echartModalStore) {
           this.echartModalStore.showLoading();
         }
+        */
         let axiosArr = [];
         this.$nextTick(() => {
           let startTime = bus.timeFormate(this.searchTime[0], 'yyyy-MM-dd hh:mm:ss');
@@ -983,10 +1037,27 @@
           });
         });
       },
-      showLoad() {
+      showLoad(chartItem) {
+        //设置高度
+        this.$nextTick(() => {
+          const chartBox = document.getElementById('lineChartDiv'+this.chartIndex);
+          let height = chartItem.height;
+          if(height<200){
+            height = 200;
+          }
+          chartBox.style.height = `${height-25}px`;
+          //const tableBox = document.getElementById('tableContainer');
+         // const chartBox = document.getElementById('lineChartDiv'+this.chartIndex);
+          //tableBox.style.height = `${height-75}px`;
+        });
+        this.$refs['localLoading'+this.chartIndex].startLoading();
+        this.divFirstShow = true;
+
+        /*
         if (this.echartStore) {
           this.echartStore.showLoading();
         }
+        */
       },
       // 获取格式
       getNumStr(num) {

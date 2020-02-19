@@ -358,7 +358,7 @@ export default {
       // 将获取的数据运用于创建多个图表备用
       this.$refs.metricSet.setSeries(response.data.result,series);
       if (this.chartCount === 'single') {
-        this.setSize(chartItem.span, 0);
+        //this.setSize(chartItem.span, 0);
         const filterParams = Object.assign({}, this.filter);
         filterParams.chartCount = 'single';
         this.$nextTick(() => {

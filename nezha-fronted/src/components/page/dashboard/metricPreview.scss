@@ -16,7 +16,8 @@
     //width:calc(100% - 0px);
   }
   .chartBox {
-    width: 100%;
+    width: 100% !important;
+    height:400px;
   }
   .chartBoxMul {
     width: 100%;

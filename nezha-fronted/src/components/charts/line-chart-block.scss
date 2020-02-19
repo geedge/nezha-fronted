@@ -95,6 +95,9 @@
   margin-right: 40px;
 }
 .line-chart-block-modal {
+  .el-dialog{
+    height:480px;
+  }
   .line-area {
     box-sizing: border-box;
     background: #FFF;

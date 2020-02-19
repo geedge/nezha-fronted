@@ -47,7 +47,6 @@
   .li-list-part-label-val-list {
     height: 218px;
     border: 1px solid #dcdfe6;
-    margin-top: 39px;
     border-radius: 4px;
     box-sizing:border-box;
     padding: 15px 0 10px 15px;
@@ -84,7 +83,7 @@
   }
   .symbol-area {
     position: relative;
-    height: 166px;
+    height: 111px;
   }
   .symbol-equal {
     position: absolute;
@@ -216,7 +215,6 @@
     <!--create chart组件显示框  -->
     <el-row v-if="elementInfo.metric && tableShow == 1"><!--v-if="elementInfo.tagList.length > 0"-->
       <el-col :span="9" style="margin-bottom: 20px;">
-        <div class="metric-title-label too-long-split">{{elementInfo.metric}}</div>
         <div class="li-list-part">
           <el-scrollbar style="height: 100%">
               <div class="li-cursor" v-if="!item.isSelect"
