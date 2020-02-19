@@ -52,51 +52,51 @@
     </div>
 
     <!--metrics-->
-    <div class="content-right" v-show="tableShow == 2">
-      <div class="top-tools">
-        <div class="nz-tab">
-          <div @click="tableShow = 1" class="nz-tab-item-box">
-            <div class="nz-tab-item">{{$t('project.endpoint.endpoint')}}</div>
-          </div>
-          <div class="nz-tab-item-box">
-            <div class="nz-tab-item nz-tab-item-active">{{$t('project.metrics.metrics')}}</div>
-          </div>
-        </div>
-        <div class="top-tool-search"><search-input :searchMsg="metricSearchMsg" @search="metricSearch"></search-input></div>
-      </div>
-      <el-table
-        :data="metricsTableData"
-        class="nz-table"
-        border
-        height="calc(100% - 160px)"
-        style="width: 100%;">
-        <el-table-column
-          :resizable="false"
-          v-for="(item, index) in metricsTableTitle"
-          v-if="item.show"
-          :width="item.width"
-          :key="`col-${index}`"
-          :label="item.label"
-          min-width="110px"
-        >
-          <template slot-scope="scope" :column="item">
-            <span>{{scope.row[item.prop]}}</span>
-          </template>
-        </el-table-column>
-      </el-table>
-      <Pagination v-cloak :pageObj="metricPageObj" @pageNo='metricsPageNo' @pageSize='metricsPageSize' ref="metricPagination"></Pagination>
-    </div>
+<!--    <div class="content-right" v-show="tableShow == 2">-->
+<!--      <div class="top-tools">-->
+<!--        <div class="nz-tab">-->
+<!--          <div @click="tableShow = 1" class="nz-tab-item-box">-->
+<!--            <div class="nz-tab-item">{{$t('project.endpoint.endpoint')}}</div>-->
+<!--          </div>-->
+<!--          <div class="nz-tab-item-box">-->
+<!--            <div class="nz-tab-item nz-tab-item-active">{{$t('project.metrics.metrics')}}</div>-->
+<!--          </div>-->
+<!--        </div>-->
+<!--        <div class="top-tool-search"><search-input :searchMsg="metricSearchMsg" @search="metricSearch"></search-input></div>-->
+<!--      </div>-->
+<!--      <el-table-->
+<!--        :data="metricsTableData"-->
+<!--        class="nz-table"-->
+<!--        border-->
+<!--        height="calc(100% - 160px)"-->
+<!--        style="width: 100%;">-->
+<!--        <el-table-column-->
+<!--          :resizable="false"-->
+<!--          v-for="(item, index) in metricsTableTitle"-->
+<!--          v-if="item.show"-->
+<!--          :width="item.width"-->
+<!--          :key="`col-${index}`"-->
+<!--          :label="item.label"-->
+<!--          min-width="110px"-->
+<!--        >-->
+<!--          <template slot-scope="scope" :column="item">-->
+<!--            <span>{{scope.row[item.prop]}}</span>-->
+<!--          </template>-->
+<!--        </el-table-column>-->
+<!--      </el-table>-->
+<!--      <Pagination v-cloak :pageObj="metricPageObj" @pageNo='metricsPageNo' @pageSize='metricsPageSize' ref="metricPagination"></Pagination>-->
+<!--    </div>-->
 
     <!--endpoint-->
     <div class="content-right" v-show="tableShow == 1">
       <div class="top-tools">
         <div class="nz-tab">
-          <div class="nz-tab-item-box">
-            <div class="nz-tab-item nz-tab-item-active">{{$t('project.endpoint.endpoint')}}</div>
-          </div>
-          <div class="nz-tab-item-box" @click="tableShow = 2">
-            <div class="nz-tab-item">{{$t('project.metrics.metrics')}}</div>
-          </div>
+<!--          <div class="nz-tab-item-box">-->
+<!--            <div class="nz-tab-item nz-tab-item-active">{{$t('project.endpoint.endpoint')}}</div>-->
+<!--          </div>-->
+<!--          <div class="nz-tab-item-box" @click="tableShow = 2">-->
+<!--            <div class="nz-tab-item">{{$t('project.metrics.metrics')}}</div>-->
+<!--          </div>-->
         </div>
         <div>
           <button @click="toCreateEndpoint" class="nz-btn nz-btn-size-normal nz-btn-style-light float-right nz-btn-min-width-82" id="project-add-ep">
@@ -219,17 +219,16 @@
           prop="element"
           :label="$t('project.endpoint.element')">
           <template slot-scope="scope">
-            <el-popover trigger="hover" placement="right">
-<!--              <div>-->
-<!--                <div>-->
-<!--                  <span>metric:{{scope.row.metricTip.metric}}</span>-->
-<!--                </div>-->
-<!--                <div>-->
-<!--                  <span>type:{{scope.row.metricTip.type}}</span>-->
-<!--                </div>-->
-<!--              </div>-->
-              <div>TODO</div>
-              <span slot="reference"><i class="el-icon-info"></i></span>
+            <el-popover trigger="hover" placement="right" v-if="typeof scope.row.metricTip != 'undefined' && scope.row.metricTip != null">
+              <div>
+                <ul>
+                  <li><span class="metirc-tip-list">metric&nbsp;:&nbsp;</span><span>{{scope.row.metricTip.metric}}</span></li>
+                  <li><span class="metirc-tip-list">type&nbsp;:&nbsp;</span><span>{{scope.row.metricTip.type}}</span></li>
+                  <li><span class="metirc-tip-list">help&nbsp;:&nbsp;</span><span>{{scope.row.metricTip.help}}</span></li>
+                  <li><span class="metirc-tip-list">unit&nbsp;:&nbsp;</span><span>{{scope.row.metricTip.unit}}</span></li>
+                </ul>
+              </div>
+              <span slot="reference"><i class="nz-icon nz-icon-info-normal metric-tip-icon"></i></span>
             </el-popover>
             <span>{{scope.row.element}}</span>
           </template>
@@ -293,6 +292,7 @@
   import chartBox from "../dashboard/chartBox";
   import bus from "../../../libs/bus";
   import metricSearch from "./metricSearch";
+  import axios from 'axios';
   export default {
     name: "project2",
     components: {
@@ -930,11 +930,13 @@
         this.$refs.assetEditUnit.tabView=true;
       },
       showEndpoint:function(endpoint){
+
         this.queryEdpLoading=true;
         if(endpoint){
           this.curEndpoint=endpoint;
           this.formatTime='';
         }
+        this.queryElementTips();
         this.endpointQueryTabData=[];
         this.showTableData=[];
         this.showTableDataCopy='';
@@ -945,10 +947,13 @@
               for (let result of results){
                 // {"metric":{"instance":"192.168.40.126:9100","__name__":"scrape_duration_seconds","module":"node_exporter","project":"kafka","asset":"192.168.40.126","job":"ed_1","dc":"dc5"},"value":[1580782176.522,"0.000560761"]}
                 let temp=result.metric.__name__;
-                let metricTip={};
-                metricTip=(this.elementMetricDatas.filter((item)=>{
+                let metricTip=null;
+                let queryInfos=(this.elementMetricDatas.filter((item)=>{
                   return item.metric===temp;
-                }))[0];
+                }));
+                if(queryInfos&&queryInfos.length>0){
+                  metricTip=queryInfos[0];
+                }
                 delete result.metric.__name__;
                 temp+="{";
                 for (let key in result.metric){
@@ -1110,8 +1115,6 @@
         this.graphChart = echarts.init(document.getElementById('viewGraphChart'));
         this.chartOptions.legend.data=this.lenged;
         this.chartOptions.series=this.chartDatas;
-        console.log("chartOptions")
-        console.log(this.chartOptions)
         this.graphChart.setOption(this.chartOptions);//创建图表
       },
       cellClass(row){ //给复选框那一列添加 类名为 ‘disabledCheck’
@@ -1237,13 +1240,23 @@
       clearInput:function(){
         this.$refs.elementQuery.foucs();
       },
-      queryElementTips:function(){
+      queryElementTips:async function(){
         this.elementMetricDatas=[];
-        this.$get("/metric/metadata?endpointId="+this.curEndpoint.id).then(response=> {
-          if (response.status === "success") {
-            this.elementMetricDatas=response.data.list;
+        // this.$get("/metric/metadata?endpointId="+this.curEndpoint.id).then(response=> {
+        //   if (response.status === "success") {
+        //     this.elementMetricDatas=response.data.list;
+        //     console.log('metric tips')
+        //     console.log(this.elementMetricDatas)
+        //   }
+        // })
+        let response= await axios.get("/metric/metadata?endpointId="+this.curEndpoint.id);
+        if(response&&response.status === 200){
+          if(response.data.msg==='success'){
+            this.elementMetricDatas=response.data.data.list;
           }
-        })
+
+        }
+
       }
     },
     created() {
@@ -1262,7 +1275,6 @@
       this.dropCol = localStorage.getItem("nz-tableTitle-" + localStorage.getItem("nz-username") + "-" + this.$route.path)
         ? JSON.parse(localStorage.getItem("nz-tableTitle-" + localStorage.getItem("nz-username") + "-" + this.$route.path))
         : this.endpointTableTitle;
-      this.queryInputInitStyle();
     },
     computed: {
       currentProjectChange() {
@@ -1566,5 +1578,16 @@
   }
   .sidebar-info-item:hover .hid-div{
     visibility: visible;
+  }
+  .metric-tip-icon{
+    vertical-align: middle;
+    /*color: #3971BA;*/
+    -webkit-transform:scale(0.6);
+    /*-webkit-transform-origin: left top;*/
+    display:inline-block;
+  }
+  .metirc-tip-list{
+    line-height: 26px;
+    font-weight: bold;
   }
 </style>

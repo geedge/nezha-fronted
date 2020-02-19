@@ -25,7 +25,7 @@
         <div class="top-tool-right">
           <div class="top-tool-search relative-position" >
             <el-input ref="queryPanel" @clear="clearInput" id="queryPanel" @focus="focusInput"  @blur="blurInput" v-model="filter.searchName" class="query-input-inactive" size="mini" clearable   >
-              <i slot="suffix" class="el-input__icon el-icon-search" @click="(queryFocus ?search():focusInput())"></i>
+              <i slot="suffix" class="el-input__icon el-icon-search" @click="focusInput"></i>
             </el-input>
           </div>
 
@@ -252,7 +252,6 @@
         //removeModal: false, // 删除弹出
         //deleteObj: {}, // 删除对象
         //---图表相关参数--end
-        queryFocus:false, //搜索框是否获得焦点
       }
     },
     components: {
@@ -536,7 +535,6 @@
         classVal=classVal.replace('query-input-inactive','query-input-active');
         document.getElementById('queryPanel').parentElement.setAttribute("class",classVal );
         this.$refs.queryPanel.focus();
-        this.queryFocus=true;
       },
       blurInput:function(){
         if(!this.filter.searchName || this.filter.searchName == ''){
@@ -544,7 +542,6 @@
             let classVal=document.getElementById('queryPanel').parentElement.getAttribute("class");
             classVal=classVal.replace('query-input-active','query-input-inactive');
             document.getElementById('queryPanel').parentElement.setAttribute("class",classVal );
-            this.queryFocus=true;
           },100)
         }
       },
@@ -568,6 +565,12 @@
           this.getTableData();
           this.$store.commit('panelListChange', false);
         }
+      },
+      'filter.searchName':function(n,o){
+        let temp=this;
+        setTimeout(function(){
+          temp.search();
+        },1000)
       }
     }
   }
