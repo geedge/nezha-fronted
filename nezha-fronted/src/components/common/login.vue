@@ -5,11 +5,13 @@
     <div class='login-box'>
       <div class="login-label"></div>
       <div class="login-input">
-        <input v-model="loginData.username" autocomplete="new-password"></input>
+        <i class="nz-icon nz-icon-user"></i>
+        <input v-model="loginData.username" autocomplete="new-password" placeholder="Username"></input>
       </div>
       <div class="login-label"></div>
       <div class="login-input">
-        <input v-model="loginData.password" type="password" autocomplete="new-password"></input>
+        <i class="nz-icon nz-icon-password"></i>
+        <input v-model="loginData.password" type="password" autocomplete="new-password" placeholder="Password"></input>
       </div>
       <div class="login-foot">
         <button @click="login" class="login-btn" id="login">Login</button>
@@ -136,12 +138,21 @@ export default {
 .login-box .login-input {
   padding: 20px 0;
   height: 60px;
+  position: relative;
+}
+.login-box .login-input .nz-icon {
+  position: absolute;
+  left: 18px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: white;
+  font-size: 20px;
 }
 .login-box .login-input input {
   height: 100%;
-  width: calc(100% - 30px);
+  width: calc(100% - 60px);
   background-color: rgba(0, 0, 0, 0.55);
-  padding-left: 30px;
+  padding-left: 60px;
   font-size: 20px;
   border: none;
   outline: none;
@@ -173,22 +184,23 @@ export default {
   position: relative;
   cursor: pointer;
 }
-.login-foot-lang .nz-icon-lang-en, .login-foot-lang .nz-icon-lang-zh {
-  font-size: 40px;
+.login-foot-lang .nz-icon:not(.nz-icon-arrow-up):not(.nz-icon-arrow-down) {
+  font-size: 30px;
   color: white;
   margin-right: 30px;
+  line-height: 45px;
 }
 .login-foot-lang-list {
   position: absolute;
-  height: 32px;
-  padding: 16px;
+  height: 25px;
+  padding: 12px;
   background-color: rgba(0, 0, 0, 0.55);
   top: 107px;
   right: 0;
   border-radius: 4px;
 }
 .login-foot-lang-list .nz-icon {
-  font-size: 32px;
+  font-size: 25px;
   color: white;
   cursor: pointer;
 }
