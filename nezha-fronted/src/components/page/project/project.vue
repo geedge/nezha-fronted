@@ -158,8 +158,8 @@
     </div>
 
     <!--endpoint query-->
-    <div class="content-right" v-show="tableShow == 3">
-      <div class="top-tools">
+    <div class="content-right" v-show="tableShow == 3" style="position: relative">
+      <div class="top-tools" >
         <div>
           <div @click="backToEdpTab">
             <button  class="nz-btn nz-btn-size-normal nz-btn-style-light float-right nz-btn-min-width-82">
@@ -193,11 +193,12 @@
             <button @click="changeTime(10)" class="nz-btn nz-btn-size-normal nz-btn-style-light change-time-height"><i class="el-icon-d-arrow-right"></i></button>
           </div>
 
-          <button @click="viewGraph" slot="reference" class="nz-btn nz-btn-size-normal nz-btn-style-normal nz-btn-min-width-120">
+          <button @click="viewGraph" slot="reference" class="nz-btn nz-btn-size-normal nz-btn-style-normal nz-btn-min-width-120" :class="{'nz-btn-disabled':selectedEndpoints.length<1}">
             <span class='top-tool-btn-txt'>{{$t('project.endpoint.addGraph')}}</span>
           </button>
         </div>
       </div>
+      <div class="table-header-inner" @click="clearSelectedMetrics"><span><i class="nz-icon nz-icon-control " :class="{'control-icon-unchecked':selectedEndpoints.length<1,'control-icon-checked':selectedEndpoints.length>0}"></i></span></div>
       <el-table
         v-loading="queryEdpLoading"
         :data="showTableData"
@@ -205,7 +206,8 @@
         class="nz-table"
         :header-cell-class-name="cellClass"
         height="calc(100% - 110px)"
-        @select="selectRow"
+        @selection-change="selectChange"
+        ref="metricInfoTab"
         style="width: 100%;">
         <el-table-column
           type="selection"
@@ -222,10 +224,10 @@
             <el-popover trigger="hover" placement="right" v-if="typeof scope.row.metricTip != 'undefined' && scope.row.metricTip != null">
               <div>
                 <ul>
-                  <li><span class="metirc-tip-list">metric&nbsp;:&nbsp;</span><span>{{scope.row.metricTip.metric}}</span></li>
-                  <li><span class="metirc-tip-list">type&nbsp;:&nbsp;</span><span>{{scope.row.metricTip.type}}</span></li>
-                  <li><span class="metirc-tip-list">help&nbsp;:&nbsp;</span><span>{{scope.row.metricTip.help}}</span></li>
-                  <li><span class="metirc-tip-list">unit&nbsp;:&nbsp;</span><span>{{scope.row.metricTip.unit}}</span></li>
+                  <li><span class="metirc-tip-list">metric&nbsp;:&nbsp;</span><span>{{scope.row.metricTip.metric?scope.row.metricTip.metric:'--'}}</span></li>
+                  <li><span class="metirc-tip-list">type&nbsp;:&nbsp;</span><span>{{scope.row.metricTip.type?scope.row.metricTip.type:'unknown'}}</span></li>
+                  <li><span class="metirc-tip-list">help&nbsp;:&nbsp;</span><span>{{scope.row.metricTip.help?scope.row.metricTip.help:'--'}}</span></li>
+                  <li><span class="metirc-tip-list">unit&nbsp;:&nbsp;</span><span>{{scope.row.metricTip.unit?scope.row.metricTip.unit:'--'}}</span></li>
                 </ul>
               </div>
               <span slot="reference"><i class="nz-icon nz-icon-info-normal metric-tip-icon"></i></span>
@@ -249,10 +251,11 @@
       ref="elementset"
     ></element-set>
 
-    <el-dialog class="line-chart-block-modal"
+    <el-dialog class="line-chart-block-modal nz-dialog"
       :title="$t('project.endpoint.dialogTitle')"
       :visible.sync="graphShow"
       width="90%"
+     id="viewGraphDialog"
       @close="dialogClose"
       @opened="initDialog">
       <div slot="title">
@@ -272,7 +275,13 @@
           <!--<button @click="refreshChart" type="button" class="nz-btn nz-btn-size-normal nz-btn-style-light"><i style="font-size: 14px;" class="el-icon-refresh-right"></i></button>-->
         </div>
       </div>
-      <div class="line-area " ref="viewGraphChart"  id="viewGraphChart"></div>
+      <div class="line-area " style="height: 300px"  ref="viewGraphChart"  id="viewGraphChart"></div>
+      <div class="legend-container"   id="legendArea" ref="legendArea">
+        <div v-for="(item, index) in legend" :title="item.name"  @click="clickLegend(item.name,index)" class="legend-item" :class="{'ft-gr':isGrey[index]}" :key="'legend_' + item.name+'_'+index">
+          <span class="legend-shape" :style="{background:(isGrey[index]?'#D3D3D3':bgColorList[index])}"></span>{{item.name}}
+          <br/>
+        </div>
+      </div>
       <div class="line-100 margin-t-20 margin-b-30"></div>
       <div class="chart-bottom">
         <button class="nz-btn nz-btn-size-large nz-btn-style-normal nz-btn-min-width-82" @click="saveChart">{{$t('dashboard.metric.saveChart')}}</button>
@@ -422,7 +431,7 @@
         formatTime:'',//查询endpoint的时间，
         selectedEndpoints:[],//选中的metric{label='value'}
         chartDatas:[],//从query_range查询到的数据
-        lenged:[],//echart lenged
+        legend:[],//echart legend
         graphChart:null,//图标对象
         graphShow:false,
         searchTime:[],
@@ -509,6 +518,7 @@
             }]
         },
         chartOptions:{
+          color: this.bgColorList,
           title: {
             text: ""
           },
@@ -516,9 +526,9 @@
             trigger: 'axis',
           },
           legend: {
+            show:false,
             type:'scroll',
             height:80,
-            show:true,
             icon:"roundRect",
             itemHeight:5,
             itemWidth:15,
@@ -570,7 +580,7 @@
             //height:"50%",
             //top: '13%',
             containLabel: false,
-            bottom:156
+            bottom:70,//156
           },
           dataZoom: [{
             type: 'slider',
@@ -579,7 +589,7 @@
             start: 0,
             end: 100,
             height:25,
-            bottom:96
+            bottom:10//96
           }],
 
           xAxis: {
@@ -636,10 +646,64 @@
           useUTC: false,//使用本地时间
           series: []
         },
+        legendList:[],
+        screenLegendList:[],
+        isGrey:[],
+        isGreyScreen:[],
+        bgColorList: ['#7bbfea', '#b3424a', '#f05b72', '#596032', '#bd6758',
+          '#cd9a5b', '#918597', '#70a19f', '#005344', '#FF00FF',
+          '#f7acbc', '#5f5d46', '#66ffff', '#ccFF66', '#f47920',
+          '#769149', '#1d953f', '#abc88b', '#7f7522', '#9b95c9',
+          '#f3715c', '#ea66a6', '#d1c7b7', '#9d9087', '#77787b',
+          '#f58220', '#c37e00', '#00ae9d', '#f26522', '#76becc',
+          '#76624c', '#d71345', '#2468a2', '#ca8687', '#1b315e',
+        ],
         panelData: [], //chart-box的panel下拉框数据
       }
     },
     methods: {
+      clickLegend(legendName,index){
+        if (this.graphChart) {
+          this.graphChart.dispatchAction({
+            type: 'legendToggleSelect',
+            name: legendName
+          });
+          let isGreyTmp = this.isGrey[index];
+          this.$set(this.isGrey, index, !isGreyTmp);
+        }
+      },
+      formatLegend(name,chartWidth){
+        if(!name){
+          return '';
+        }
+        if(!chartWidth){
+          this.$refs.viewGraphChart.clientWidth;
+        }
+        //计算宽度
+        var span = document.createElement("span");
+        var result = {};
+        result.width = span.offsetWidth;
+        result.height = span.offsetHeight;
+        span.style.visibility = "hidden";
+        span.style.fontSize = 14;
+        span.style.fontFamily = "Arial";
+        span.style.display = "inline-block";
+        document.body.appendChild(span);
+        if(typeof span.textContent != "undefined"){
+          span.textContent = name;
+        }else{
+          span.innerText = name;
+        }
+        var txtWidth = parseFloat(window.getComputedStyle(span).width) - result.width;
+        document.body.removeChild(span);
+
+        if(txtWidth < chartWidth){
+          return name;
+        }else {
+          var charNum = `${(chartWidth-100)/(txtWidth/name.length)}`;
+          return name.slice(0,charNum)+'...';
+        }
+      },
       saveChart() { //新增chart
         this.$refs.addChartModal.setTitle(this.$t("dashboard.panel.createChartTitle"));
         this.$refs.addChartModal.show(true);
@@ -947,12 +1011,14 @@
               for (let result of results){
                 // {"metric":{"instance":"192.168.40.126:9100","__name__":"scrape_duration_seconds","module":"node_exporter","project":"kafka","asset":"192.168.40.126","job":"ed_1","dc":"dc5"},"value":[1580782176.522,"0.000560761"]}
                 let temp=result.metric.__name__;
-                let metricTip=null;
+                let metricTip={};
                 let queryInfos=(this.elementMetricDatas.filter((item)=>{
                   return item.metric===temp;
                 }));
                 if(queryInfos&&queryInfos.length>0){
                   metricTip=queryInfos[0];
+                }else{
+                  metricTip.metric=temp;
                 }
                 delete result.metric.__name__;
                 temp+="{";
@@ -1029,7 +1095,7 @@
         let current=year+"-"+month+"-"+day+" "+hour+":"+minute+":"+second;
         return current;
       },
-      selectRow:function(selection, row){//selection 选中的row的数组  row 选中的当前行
+      selectChange:function(selection){//selection 选中的row的数组
         this.selectedEndpoints=selection;
       },
       selectable:function(row,index){
@@ -1039,13 +1105,19 @@
           return true;
         }
       },
+      clearSelectedMetrics:function(){
+        this.$refs.metricInfoTab.clearSelection();
+      },
       viewGraph:function(){
+        if(this.selectedEndpoints.length<1){
+          return ;
+        }
         if(this.graphChart){
           this.graphChart.clear();
         }
 
         this.chartDatas=[];
-        this.lenged=[];
+        this.legend=[];
         this.queryChartDate();
         this.graphShow=true;
 
@@ -1093,7 +1165,13 @@
                 })
                 chartData.name=chartData.name.charAt(chartData.name.length-1) == ","?chartData.name.substr(0,chartData.name.length-1):chartData.name;
                 chartData.name+="}";
-                this.lenged.push(chartData.name);
+                let legend={
+                  name:chartData.name,
+                  showText:this.formatLegend(chartData.name)
+                }
+                this.legend.push(legend);
+                this.screenLegendList.push(legend);
+                this.isGreyScreen.push(false);
                 chartData.data=queryData.values.map((dpsItem, dpsIndex) => {
                   return [dpsItem[0] * 1000, Number(dpsItem[1])];
                 });
@@ -1107,15 +1185,24 @@
           this.graphChart.clear();
         }
         this.queryChartDate();
-        this.chartOptions.legend.data=this.lenged;
+        // this.chartOptions.legend.data=this.legend;
         this.chartOptions.series=this.chartDatas;
         this.graphChart.setOption(this.chartOptions);//创建图表
       },
       initDialog:function(){
         this.graphChart = echarts.init(document.getElementById('viewGraphChart'));
-        this.chartOptions.legend.data=this.lenged;
+        // this.chartOptions.legend.data=this.legend;
         this.chartOptions.series=this.chartDatas;
         this.graphChart.setOption(this.chartOptions);//创建图表
+        // let legendHeight = this.$refs.legendArea.offsetHeight;
+        // let dialogDom=document.getElementById('viewGraphDialog');
+        // let dialogWidth=dialogDom.offsetWidth
+        // let dialogHeight=dialogDom.offsetHeight
+        // console.log(legendHeight+":"+dialogWidth+":"+dialogHeight)
+        // let chartWidth=dialogWidth-130;
+        // let chartHeight=dialogHeight-58-legendHeight-60;
+        // console.log(chartWidth + ":"+chartHeight)
+        // this.graphChart.resize({height:300,width:chartWidth})
       },
       cellClass(row){ //给复选框那一列添加 类名为 ‘disabledCheck’
         if (row.columnIndex === 0) {
@@ -1275,6 +1362,7 @@
       this.dropCol = localStorage.getItem("nz-tableTitle-" + localStorage.getItem("nz-username") + "-" + this.$route.path)
         ? JSON.parse(localStorage.getItem("nz-tableTitle-" + localStorage.getItem("nz-username") + "-" + this.$route.path))
         : this.endpointTableTitle;
+
     },
     computed: {
       currentProjectChange() {
@@ -1554,7 +1642,8 @@
     display: none !important;
   }
   .el-table .disabledCheck .cell::before{
-    content: '';
+    /*content: '\e627';*/
+    /*font-family: 'nz-icon';*/
     text-align: center;
     line-height: 37px;
   }
@@ -1589,5 +1678,28 @@
   .metirc-tip-list{
     line-height: 26px;
     font-weight: bold;
+  }
+  .table-header-inner{
+    position: absolute;
+    z-index: 1;
+    top: 60px;
+    left: 25px;
+  }
+  .control-icon-unchecked{
+    color: #e5e5e5;
+  }
+  .control-icon-checked{
+    color:#666;
+  }
+  .legend-container{
+    width: calc(100% - 335px);
+    max-height:80px;
+    min-height:40px;
+    overflow-y: auto;
+    font-size:12px;
+    text-align:left;
+    margin:0 auto;
+    line-height: 18px;
+    font-family: Roboto,Helvetica Neue,Arial,sans-serif;
   }
 </style>
