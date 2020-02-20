@@ -655,8 +655,8 @@
       querySearch(queryString, cb) {
         console.log(queryString)
         var suggestions = this.heightSuggestions;
-        var results = queryString ? suggestions.filter(this.createFilter(queryString)) : suggestions;
-        console.log(results)
+        // var results = queryString ? suggestions.filter(this.createFilter(queryString)) : suggestions;
+        var results=queryString&&(suggestions.includes(queryString)||suggestions.filter(this.createFilter(queryString)).length>0)?suggestions:[];
         // 调用 callback 返回建议列表的数据
         cb(results);
       },
