@@ -32,7 +32,7 @@
               <div class="right-child-box-title">{{$t('asset.asset')}}</div>
               <!--end--标题-->
               <!--begin--搜索框-->
-              <div class="endpoint-asset-search">
+              <div class="nz-btn-group nz-btn-group-size-normal nz-btn-group-light endpoint-asset-search">
                 <button id="search-asset-drop" type="button" class="nz-btn nz-btn-size-small nz-btn-style-light nz-btn-style-square nz-input-group-prepend" @click="assetSearch.dropdownShow = !assetSearch.dropdownShow">
                   <span class="endpoint-asset-label-txt">{{assetSearch.label}}</span>
                   <span>
@@ -60,8 +60,8 @@
                 </div>
                 <div class="line-100"></div>
                 <div class="endpoint-sub-table-body">
-                  <div v-if="!currentModuleCopy.id" class="endpoint-sub-table-body-dialog"></div>
                   <div @click="selectAsset(item, index)" :data="item.id" v-for="item,index in assetList" class="endpoint-sub-table-row" :id="'select-asset-'+item.id">
+                    <div :id="index" @click.stop v-if="!currentModuleCopy.id" class="endpoint-sub-table-body-dialog"></div>
                     <div class="endpoint-sub-table-col">{{item.host}}</div>
                     <el-popover trigger="hover" placement="right-start" :content="item.sn" >
                       <div slot="reference" class="endpoint-sub-table-col">{{item.sn}}</div>
@@ -783,9 +783,11 @@
   /* begin--搜索框*/
   .endpoint-asset-search {
     display: inline-block;
-    float: right;
-    padding: 7px 8px 0 0;
     position: relative;
+    margin-left: 50px;
+  }
+  .endpoint-asset-search button {
+    height: 22px !important;
   }
   .endpoint-asset-search-dropdown {
     position: absolute;
@@ -822,6 +824,7 @@
     display: inline-block;
     width: 100px;
     vertical-align: top;
+    border-right: 1px solid rgba(162,162,162,0.5);
   }
   /* end--搜索框*/
 
@@ -841,6 +844,7 @@
     line-height: 28px;
     height: 30px;
     color: #656565;
+    position: relative;
   }
   .endpoint-sub-table-row:hover {
     background-color: #dadada;
@@ -876,9 +880,8 @@
   .endpoint-sub-table-body-dialog {
     width: 100%;
     height: 100%;
-    background-color: #e9ebec;
+    background-color: rgba(255, 255, 255, 0.7);
     position: absolute;
-    opacity: 0.2;
   }
   .endpoints-clear-btn {
     margin: 6px 0 0 7px;
@@ -919,5 +922,9 @@
   }
   .endpoints-box-endpoints .el-form-item.is-error {
     margin-bottom: 22px;
+  }
+  .endpoint-asset-search input {
+    border-radius: 0 !important;
+    border: 0;
   }
 </style>
