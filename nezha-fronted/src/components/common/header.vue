@@ -114,8 +114,8 @@
     <panel-box :panel="editPanel" @reload="panelListReload" @reloadForDel="" ref="panelBox"></panel-box>
     <project-box :project="editProject" ref="projectBox"></project-box>
     <module-box :currentProject="currentProject" :module="editModule" @reload="" ref="moduleBox"></module-box>
-    <asset-box :currentProject="currentProject" :currentModule="currentModule" @reload=""
-                      ref="addEndpointBox"></asset-box>
+    <!--<asset-box :currentProject="currentProject" :currentModule="currentModule" @reload=""
+                      ref="addEndpointBox"></asset-box>-->
     <asset-add-unit :add-unit-show='addUnitShow' @refreshData="refreshAsset" ref="assetAddUnit"
                     @sendStateData="closeAsset"></asset-add-unit>
     <alert-config-box :parentAlertRule="alertRule" @reload="" ref="alertConfigBox"></alert-config-box>
