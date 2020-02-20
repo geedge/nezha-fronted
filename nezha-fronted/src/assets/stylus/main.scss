@@ -1066,7 +1066,7 @@ li{
   color: $box-title-color;
 }
 
-.el-checkbox__input.is-checked .el-checkbox__inner, .asset .content-left .el-checkbox__input.is-indeterminate .el-checkbox__inner {
+.el-checkbox__input.is-checked .el-checkbox__inner, .asset .content-left .el-checkbox__input.is-indeterminate .el-checkbox__inner, .el-checkbox__input.is-indeterminate .el-checkbox__inner {
   background-color: $global-text-color-active;
 }
 /* --end--复选框自定义颜色 */
@@ -1115,6 +1115,9 @@ li{
 }
 .query-input-active {
   margin-top: 1px;
+}
+.top-tools input {
+  background-color: $content-right-background-color;
 }
 .query-input-active .el-input__inner, .query-input-inactive .el-input__inner {
   height: 25px;

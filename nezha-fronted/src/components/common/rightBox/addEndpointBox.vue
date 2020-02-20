@@ -784,14 +784,14 @@
   .endpoint-asset-search {
     display: inline-block;
     position: relative;
-    margin-left: 50px;
+    margin-left: 44px;
   }
   .endpoint-asset-search button {
     height: 22px !important;
   }
   .endpoint-asset-search-dropdown {
     position: absolute;
-    top: 34px;
+    top: 25px;
     background-color: #444;
     border-radius: 4px;
     width: 44px;

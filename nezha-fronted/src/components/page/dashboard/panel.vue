@@ -750,10 +750,10 @@
 
 </style>
 <style lang="scss">
-  .panel .panel-calendar input {
+  .panel .top-tools input {
     background-color: $content-right-background-color;
   }
-  .panel .panel-calendar  .el-input__inner {
+  .panel .top-tools  .el-input__inner {
     background-color: $content-right-background-color;
   }
   .panel-calendar .el-range-editor--mini.el-input__inner {
