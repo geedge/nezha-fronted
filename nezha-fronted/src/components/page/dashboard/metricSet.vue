@@ -551,14 +551,17 @@ export default {
     */
     // 获取metric列表
     getSuggestMetric(id) {
-      this.$get('metric', {pageNo: 1, pageSize: -1}).then(response => {
-        if (response.code === 200) {
-          this.metricList = response.data.list;
+      //this.$get('metric', {pageNo: 1, pageSize: -1}).then(response => {
+      this.$get('/prom/api/v1/label/__name__/values', {pageNo: 1, pageSize: -1}).then(response => {
+        //if (response.code === 200) {
+        if (response.status === 'success') {
+          this.metricList = response.data;
           const cascaderMap = new Map();
           this.metricList.forEach((item,index) => {
             let arr = [];
             let par = '';//父value
-            let metricTmp = item.metric;//子value
+            //let metricTmp = item.metric;//子value
+            let metricTmp = item;//子value
             if(metricTmp){
               arr  = metricTmp.split('_');
               par = arr[0];
@@ -578,7 +581,7 @@ export default {
           let metricCascaderArr = [];
           cascaderMap.forEach(function(value,index){
             const option = {
-              value: index,
+              value: index+"_par",//父节点和子节点的value相同，会出现点击与父节点label同名的子节点时，不显示选择的内容
               label: index,
               children:value,
             };

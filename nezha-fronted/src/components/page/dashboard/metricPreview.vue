@@ -214,6 +214,7 @@ export default {
       end.setSeconds(59);
       this.filter.start_time = bus.timeFormate(start, 'yyyy-MM-dd hh:mm:ss');
       this.filter.end_time = bus.timeFormate(end, 'yyyy-MM-dd hh:mm:ss');
+      this.$refs.editChartSingle.setDivFirstShow(true);
     },
     dateChange(time) {
       this.filter.start_time = `${time[0]}:00`;
@@ -262,6 +263,9 @@ export default {
             // 如果只有一组数据，强制显示一条
             if (response.data.result.length === 1) {
               this.chartCount = 'single';
+            }
+            if (response.data.result.length === 0) {
+              this.$refs.editChartSingle.setData(params, [], 0, this.filter,[]);
             }
           }
           this.getChartData(response, params);

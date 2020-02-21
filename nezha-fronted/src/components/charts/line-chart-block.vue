@@ -243,6 +243,9 @@
     },
     watch: {},
     methods: {
+      setDivFirstShow(showDiv){
+        this.divFirstShow = showDiv;
+      },
       clickLegend(legendName,index){
         if (this.echartStore) {
           this.echartStore.dispatchAction({
@@ -654,7 +657,7 @@
           this.echartStore.setOption(option);//创建图表
           //this.echartStore.hideLoading();
           this.$refs['localLoading'+this.chartIndex].endLoading();
-          if(legend && legend.length>0){
+          if(legend){
             this.legendList = [];
             legend.forEach((item, i) => {
               const legend = {
@@ -721,14 +724,16 @@
           });
           */
           // eslint-disable-next-line
-          this.echartModalStore.clear();
+          if(this.echartModalStore){
+            this.echartModalStore.clear();
+          }
           option.title = {};
           this.echartModalStore.setOption(option);//显示全屏界面
           //this.echartModalStore.hideLoading();
           this.showLegend = true;
           this.$refs['localLoadingScreen'+this.chartIndex].endLoading();
           //this.echartModalStore.resize({height:chartInfo.height});
-          if(legend && legend.length>0){
+          if(legend){
             this.screenLegendList = [];
             legend.forEach((item, i) => {
               const legend = {
@@ -950,6 +955,9 @@
                 visible: true,
                 threshold: null,
               };
+              if(!this.data.type){
+                this.data.type='line';
+              }
               res.forEach((response) => {
                 if (response.status === 'success') {
                   if (response.data.result) {
@@ -1029,10 +1037,7 @@
             }
           }).catch((error) => {
             if (error) {
-              this.$message.warning({
-                content: this.$t("tip.refreshLater"),//'Please refesh later',//请稍后刷新
-                duration: 3,
-              });
+              this.$message.error(error.toString());
             }
           });
         });
@@ -1050,6 +1055,8 @@
          // const chartBox = document.getElementById('lineChartDiv'+this.chartIndex);
           //tableBox.style.height = `${height-75}px`;
         });
+        this.clearData();
+        this.firstShow = false;
         this.$refs['localLoading'+this.chartIndex].startLoading();
         this.divFirstShow = true;
 

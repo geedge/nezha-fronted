@@ -3,12 +3,15 @@
 </style>
 <template>
     <div class="chart-table" :id="'chartTableDiv'+chartIndex" v-show="divFirstShow">
+        <loading  :ref="'localLoading'+chartIndex"></loading>
+      <!--
         <div v-show="showLoading" class="el-loading-mask" style="background-color: rgba(0, 0, 0, 0);">
           <div class="el-loading-spinner">
             <img width="42px" height="42px"  src="../../assets/img/loading.gif"/>
             <p class="el-loading-text loading-font">loading</p>
           </div>
         </div>
+        -->
         <div class="clearfix">
             <div class="table-title" v-show="firstShow">
                 {{data.title}}
@@ -46,12 +49,15 @@
                     <el-table-column sortable prop="value" :label="$t('dashboard.panel.chartTableColumn.value')" ></el-table-column>
 
                 </el-table>
+                <loading  :ref="'localLoadingScreen'+chartIndex"></loading>
+            <!--
                 <div v-show="showLoadingScreen" class="el-loading-mask" style="background-color: rgba(0, 0, 0, 0);">
                   <div class="el-loading-spinner">
                     <img width="42px" height="42px"  src="../../assets/img/loading.gif"/>
                     <p class="el-loading-text loading-font">loading</p>
                   </div>
                 </div>
+                -->
         </el-dialog>
     </div>
 </template>
@@ -59,10 +65,13 @@
 <script>
 import bus from '../../libs/bus';
 import {Loading} from 'element-ui';
+import loading from "../common/loading";
 
 export default {
     name: 'chartTable',
-    components: {},
+  components: {
+    'loading': loading,
+  },
     props: {
         // 看板id
         panelId: {
@@ -93,8 +102,8 @@ export default {
             },
             panelIdInner: '', // 看板id=panelId,原写作chart,由set_data获取
             firstLoad: false, // 是否第一次加载
-            showLoading:true,
-            showLoadingScreen:false,
+            //showLoading:true,
+            //showLoadingScreen:false,
             //showTable:true,
             chartType: 'table', // 图表类型
             screenModal: false,
@@ -218,9 +227,11 @@ export default {
     methods: {
         startLoading(area){
           if(area==='screen'){
-            this.showLoadingScreen = true;
+            //this.showLoadingScreen = true;
+            this.$refs['localLoadingScreen'+this.chartIndex].startLoading();
           }else {
-            this.showLoading = true;
+            //this.showLoading = true;
+            this.$refs['localLoading'+this.chartIndex].startLoading();
           }
 /*
           //this.loading = this.$loading({
@@ -236,9 +247,11 @@ export default {
         },
         endLoading(area){
           if(area==='screen'){
-            this.showLoadingScreen = false;
+            //this.showLoadingScreen = false;
+            this.$refs['localLoadingScreen'+this.chartIndex].endLoading();
           }else {
-            this.showLoading = false;
+            //this.showLoading = false;
+            this.$refs['localLoading'+this.chartIndex].endLoading();
           }
         },
         clearData(){

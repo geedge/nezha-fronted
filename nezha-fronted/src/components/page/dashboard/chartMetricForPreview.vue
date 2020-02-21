@@ -45,11 +45,12 @@
     width:90%;
    }
   .li-list-part-label-val-list {
-    height: 218px;
-    border: 1px solid #dcdfe6;
+    height: 280px;
+    /*border: 1px solid #dcdfe6;*/
     border-radius: 4px;
     box-sizing:border-box;
-    padding: 15px 0 10px 15px;
+    padding: 7px 0 10px 15px;
+    margin-bottom:0px !important;
   }
 
   .no-list-style{
@@ -103,6 +104,7 @@
     /* overflow: auto !important; */
     box-sizing:border-box;
     margin:0 auto;
+    margin-bottom:0px !important;
    }
   .el-input .el-input__inner{
     /* width:80%; */
@@ -133,7 +135,7 @@
 
 }
   .li-list-part-label-val-list .el-select--mini {
-    width: calc(100% - 45px);
+    width: calc(100% - 15px);/*calc(100% - 45px);*/
     margin:0 auto;
 
   } 
@@ -149,7 +151,13 @@
     width: 100px;
   }
   .li-list-part-label-val-list .el-select--mini {
-    width: calc(100% - 45px);
+    width: calc(100% - 15px);
+  }
+  .li-list-part-label-val-list .el-scrollbar__wrap{
+    /* overflow: auto !important; */
+    box-sizing:border-box;
+    margin:0 auto;
+    margin-bottom:0px !important;
   }
   .nz-tab-chart-item-box{
     padding:0;
@@ -195,7 +203,7 @@
     </el-row>
     <el-row  v-if="tableShow == 1">
       <el-col :span="24" >
-        <el-form-item label-width="80"  prop="metric" :rules="{ required: true,  message: $t('validate.required'), trigger: 'blur' }"><!--:rules="{ required: true, type: 'string', message: '', trigger: 'change' }"-->
+        <el-form-item style="margin-bottom:0px;" label-width="80"  prop="metric" :rules="{ required: true,  message: $t('validate.required'), trigger: 'blur' }"><!--:rules="{ required: true, type: 'string', message: '', trigger: 'change' }"-->
               <!--
               <el-select  ref="metricSelect" class="full-width"  filterable placeholder="" popper-class="" size="small" v-model="elementInfo.metric"  @change="selectMetric">
                 <el-option v-for="(item, index) in metricShowList.arr" :key="item.metric + index"
@@ -214,6 +222,7 @@
     </el-row>
     <!--create chart组件显示框  -->
     <el-row v-if="elementInfo.metric && tableShow == 1"><!--v-if="elementInfo.tagList.length > 0"-->
+      <!--
       <el-col :span="9" style="margin-bottom: 20px;">
         <div class="li-list-part">
           <el-scrollbar style="height: 100%">
@@ -228,20 +237,28 @@
       </el-col>
 
       <el-col :span="1" class="symbol-area"><span class="symbol-equal">=</span></el-col>
-
-      <el-col :span="14">
-        <div class="li-list-part-label-val-list" >
+-->
+      <el-col :span="24">
+        <div class="li-list-part-label-val-list" id="scrollDiv">
           <el-scrollbar style="height: 100%">
-            <el-form-item class="metric-title-position right-box-form-content" v-for="(item, index) in elementInfo.selectedTagList" :key="index" :label="item.name" label-width="100" :ref="'tagItem' + index" :prop="'tagList.' + index + '.value'" >
-              <el-select  v-model="item.value" ref="tagSelect" size="mini"
-                          placeholder=""
-                          collapse-tags
-                          filterable
-                          @change="changeTag"
-                          multiple>
-                <el-option v-for="(op, j) in elementInfo.selectedTagList[index].list" :key="op + j"  :value="op">{{op}}</el-option>
-              </el-select>
+            <el-form-item style="width:99%;" class="metric-title-position right-box-form-content" v-for="(item, index) in elementInfo.selectedTagList" :key="index"  label-width="100" :ref="'tagItem' + index" :prop="'tagList.' + index + '.value'" >
+              <el-row :gutter="10" >
+                <el-col :span="4" >
+                  <div style="text-align:right;padding-right:5px;">{{item.name}}</div>
+                </el-col>
+                <el-col :span="20" >
+                  <el-select  v-model="item.value" ref="tagSelect" size="mini"
+                              placeholder=""
+                              filterable
+                              @change="changeTag"
+                              multiple>
+                    <el-option v-for="(op, j) in elementInfo.selectedTagList[index].list" :key="op + j"  :value="op">{{op}}</el-option>
+                  </el-select>
+                </el-col>
+              <!--
               <span class="symbol-delete" @click="deleteMetricLabel(item,index)"><i class="nz-icon nz-icon-minus-square"></i></span>
+              -->
+                </el-row>
             </el-form-item>
           </el-scrollbar>
         </div>
@@ -309,10 +326,6 @@ export default {
         }
       });
     },
-
-
-
-
     // 删除该选项,第一步,传递要删除的参数
     deleteTarget() {
       //alert('metric第一步，删除的指针，之后回调box的第一个步'+this.pointer);
@@ -349,43 +362,51 @@ export default {
       }
     },
 
+    setLabelDivHeight(count){
+      if(count===0){
+        const chartBox = document.getElementById('scrollDiv');
+        chartBox.style.height = `${10}px`;
+      }else if(count<6){//小于6个需要调整容器的高度
+        const chartBox = document.getElementById('scrollDiv');
+        chartBox.style.height = `${(280 / 6) * count+10}px`;
+      }else {
+        const chartBox = document.getElementById('scrollDiv');
+        chartBox.style.height = `${280}px`;
+      }
+    },
+
     // 选择metric
     selectMetric() {
       if (this.elementInfo.metric) {//选择了metric，则设置tagList，否则设置为空
         this.elementInfo.metric = this.elementInfo.metric[1];
         this.getSuggestTags(this.elementInfo.metric);
       } else {
-        this.elementInfo.tagList = [];
+        this.elementInfo.selectedTagList = [];
+        this.setLabelDivHeight(0);
       }
       this.$emit('on-change-condition');
     },
     // 获取tags列表
     getSuggestTags(metric) {
-      this.$get('metric/labelName?metric='+metric).then(response => {
+      //this.$get('metric/labelName?metric='+metric).then(response => {
+      this.$get('/metric/series?match[]='+metric).then(response => {
         this.elementInfo.selectedTagList = [];
-        this.elementInfo.tagList = [];
+        //this.elementInfo.tagList = [];
         if (response.code === 200) {
-          if(response.data.list){
-            //this.elementInfo.tagList = response.data.list;
-            response.data.list.forEach((item) => {
-              const tagObj = {
-                name: item.name,
-                isSelect:false//当前元素是否被选中，默认都未选中
-              };
-              this.elementInfo.tagList.push(tagObj);
-            });
-          }else{
-            response.data.forEach((item) => {
-              const tagObj = {
-                name: item.name,
-                isSelect:false //当前元素是否被选中，默认都未选中
-              };
-              this.elementInfo.tagList.push(tagObj);
-            });
-          }
-          //this.elementInfo.tagList = response.data.list;
+          const objList = Object.entries(response.data);
+          objList.forEach((item) => {
+            const tagObj = {
+              name: item[0],
+              list:item[1],
+              value:[]//最终选择的值
+            };
+            this.elementInfo.selectedTagList.push(tagObj);
+          });
+          let tagNum = this.elementInfo.selectedTagList.length;
+          this.setLabelDivHeight(tagNum);
         }else {
-          this.elementInfo.tagList = [];
+          this.elementInfo.selectedTagList = [];
+          this.setLabelDivHeight(0);
         }
       });
     },
