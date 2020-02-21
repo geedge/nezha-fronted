@@ -370,10 +370,7 @@ export default {
             }
           }).catch((error) => {
             if (error) {
-              this.$message.error({
-                content: this.$t("tip.refreshLater"),//'Please refesh later',//请稍后刷新
-                duration: 3,
-              });
+              this.$message.error(error.toString());
             }
           });
         });

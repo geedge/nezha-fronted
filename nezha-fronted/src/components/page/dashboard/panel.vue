@@ -458,8 +458,21 @@
             this.$store.state.showPanel.id = 0;
             this.$store.state.showPanel.name = '';
 
+          }else {
+            if(response.msg){
+              this.$message.error(response.msg);
+            }else if(response.error){
+              this.$message.error(response.error);
+            }else {
+              this.$message.error(response);
+            }
           }
-        })
+        }).catch((error) => {
+          //console.log('error................'+JSON.stringify(error));
+          if (error) {
+            this.$message.error(error.toString());
+          }
+        });
       },
       //定期刷新
       selectInterval(val) {
