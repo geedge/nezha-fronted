@@ -198,7 +198,7 @@
           </button>
         </div>
       </div>
-      <div class="table-header-inner" @click="clearSelectedMetrics"><span><i class="nz-icon nz-icon-control " :class="{'control-icon-unchecked':selectedEndpoints.length<1,'control-icon-checked':selectedEndpoints.length>0}"></i></span></div>
+      <div class="table-header-inner" @click="clearSelectedMetrics"><span><i class="nz-icon nz-icon-duoxuan " :class="{'control-icon-unchecked':selectedEndpoints.length<1,'control-icon-checked':selectedEndpoints.length>0}"></i></span></div>
       <el-table
         v-loading="queryEdpLoading"
         :data="showTableData"
