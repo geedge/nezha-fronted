@@ -57,6 +57,10 @@ export default new Router({
           component: resolve => require(['../components/page/config/promServer.vue'], resolve),
         },
         {
+          path: '/dc',
+          component: resolve => require(['../components/page/config/dc.vue'], resolve),
+        },
+        {
           path: '/alertList',
           component: resolve => require(['../components/page/alert/list.vue'], resolve),
         },

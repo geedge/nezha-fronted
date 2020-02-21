@@ -1339,11 +1339,6 @@
   .content-right-option .el-icon-view:hover {
     color: #409EFF;
   }
-  .top-tools .top-tool-btn-txt .nz-icon{
-    display: inline-block;
-    font-size: 12px;
-    margin-right:6px;
-  }
   /* start--param*/
   .param-btn {
     float: right;

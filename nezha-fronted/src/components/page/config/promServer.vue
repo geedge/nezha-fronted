@@ -2,22 +2,19 @@
   .prom {
     height: 100%;
   }
-
-  .top-tools .top-tool-btn-txt .nz-icon {
-    display: inline-block;
-    font-size: 12px;
-    margin-right: 6px;
-  }
 </style>
 <template>
   <div class="prom">
     <div class="content-left">
-      <div class="sidebar-title">{{$t('config.config')}}</div>
+      <div class="sidebar-title">{{$t('overall.config')}}</div>
       <div class="sidebar-info">
         <div class="sidebar-info-item sidebar-info-top" @click="jumpTo('account')" id="prom-jump-account">
           {{$t('config.account.account')}}
         </div>
         <div class="sidebar-info-item sidebar-info-item-active">{{$t('config.promServer.promServerList')}}</div>
+        <div class="sidebar-info-item" @click="jumpTo('dc')" id="account-jump-dc">
+          {{$t('config.dc.dc')}}
+        </div>
       </div>
     </div>
     <div class="content-right">
@@ -513,8 +510,6 @@
         this.rightBox.show = false;
       },
       jumpTo(data, id) {
-        this.$store.state.assetData.moduleData = data
-        this.$store.state.assetData.selectedData = id
         this.$router.push({
           path: "/" + data,
           query: {

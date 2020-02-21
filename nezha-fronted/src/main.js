@@ -32,6 +32,8 @@ import dcConfigBox from "./components/common/popBox/dcConfig"; //idc配置弹框
 import panelBox from "./components/common/rightBox/panelBox"; //面板弹框组件
 import moduleListPop from "./components/page/asset/moduleListPop"; //面板弹框组件
 import cabinetConfigBox from "./components/common/popBox/cabinetConfig"; //面板弹框组件
+import dcBox from "./components/common/rightBox/dcBox"; //dc弹框
+
 
 Vue.component("Pagination", Pagination);
 Vue.component("searchInput", searchInput);
@@ -48,6 +50,7 @@ Vue.component("idc-config-box", dcConfigBox);
 Vue.component("panel-box", panelBox);
 Vue.component("module-list-pop", moduleListPop);
 Vue.component("cabinet-config-box", cabinetConfigBox);
+Vue.component("dc-box", dcBox);
 
 Vue.prototype.$axios = axios;
 Vue.prototype.$post = post;

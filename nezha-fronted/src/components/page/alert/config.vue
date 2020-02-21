@@ -2,12 +2,6 @@
   .config {
     height: 100%;
   }
-
-  .top-tools #alert-add .top-tool-btn-txt .nz-icon {
-    display: inline-block;
-    font-size: 12px;
-    margin-right: 6px;
-  }
 </style>
 <template>
   <div class="config">

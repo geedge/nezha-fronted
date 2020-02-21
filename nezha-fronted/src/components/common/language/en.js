@@ -351,6 +351,10 @@ const en = {
       type: 'Type',//"类别"
       checkTime: 'Check time'
     },
+    dc: {
+      dc: 'Datacenter',
+
+    }
   },
   alert: {
     alert: 'Alert',//"告警"

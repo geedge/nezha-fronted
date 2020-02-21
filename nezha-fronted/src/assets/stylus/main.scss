@@ -451,6 +451,11 @@ li{
   width: 260px;
   margin: -1px 20px 0 0;
 }
+.top-tools .top-tool-btn-txt .nz-icon{
+  display: inline-block;
+  font-size: 12px;
+  margin-right:6px;
+}
 .top-tool-right {
   display: flex;
   align-content: center;
@@ -619,7 +624,7 @@ li{
 }
 
 /*此处自定义弹框尺寸，不同功能可能需要的尺寸不一样，需自行添加*/
-.right-box-account, .right-box-prom, .right-box-alert-config, .right-box-project, .right-box-module, .right-box-edit-endpoint, .right-box-panel {
+.right-box-account, .right-box-prom, .right-box-alert-config, .right-box-project, .right-box-module, .right-box-edit-endpoint, .right-box-panel, .right-box-dc {
   width: 520px;
 }
 .right-box-add-asset, .right-box-add-chart {

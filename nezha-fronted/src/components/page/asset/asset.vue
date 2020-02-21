@@ -734,11 +734,6 @@
   .tab-input-square-high {
     border: 1px solid #1166bb;
   }
-  .top-tools .top-tool-btn-txt .nz-icon{
-    display: inline-block;
-    font-size: 12px;
-    margin-right:6px;
-  }
 </style>
 <style lang="scss">
 

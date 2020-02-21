@@ -2,21 +2,18 @@
   .account {
     height: 100%;
   }
-
-  .top-tools .top-tool-btn-txt .nz-icon {
-    display: inline-block;
-    font-size: 12px;
-    margin-right: 6px;
-  }
 </style>
 <template>
   <div class="account">
     <div class="content-left">
-      <div class="sidebar-title">Config</div>
+      <div class="sidebar-title">{{$t('overall.config')}}</div>
       <div class="sidebar-info">
         <div class="sidebar-info-item sidebar-info-top sidebar-info-item-active">{{$t('config.account.account')}}</div>
         <div class="sidebar-info-item" @click="jumpTo('promServer')" id="account-jump-promserver">
           {{$t('config.promServer.promServerList')}}
+        </div>
+        <div class="sidebar-info-item" @click="jumpTo('dc')" id="account-jump-dc">
+          {{$t('config.dc.dc')}}
         </div>
       </div>
     </div>
@@ -49,17 +46,6 @@
           :key="`col-${index}`"
           :label="item.label"
         >
-          <!--<template slot="header" slot-scope="scope">
-            <template v-if="index==tablelable.length-1">
-              <span class="nz-table-txt">{{item.label}}</span>
-              <span @click.stop="elementsetShow('shezhi',$event)" class="nz-table-gear">
-                <i class="nz-icon nz-icon-gear"></i>
-              </span>
-            </template>
-            <div v-else>
-              <span>{{item.label}}</span>
-            </div>
-          </template>-->
           <template slot-scope="scope" :column="item">
             <div v-if="item.prop == 'option'" class="content-right-options">
               <span :title="$t('overall.view')" @click="detail(scope.row)" class="content-right-option" :id="'account-detail-'+scope.row.id"><i class="nz-icon nz-icon-view"></i></span>
@@ -426,8 +412,6 @@
         this.tabSave();
       },
       jumpTo(data, id) {
-        this.$store.state.assetData.moduleData = data;
-        this.$store.state.assetData.selectedData = id;
         this.$router.push({
           path: "/" + data,
           query: {

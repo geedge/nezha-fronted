@@ -91,6 +91,9 @@
         <el-menu-item index="5-1">
           <div @click="jumpTo('promServer')" :class="{'menu-item-active' :(activeIndex == 'promServer' )}">{{$t('config.promServer.promServerList')}}</div>
         </el-menu-item>
+        <el-menu-item index="5-2">
+          <div @click="jumpTo('dc')" :class="{'menu-item-active' :(activeIndex == 'dc' )}">{{$t('config.dc.dc')}}</div>
+        </el-menu-item>
       </el-submenu>
       <el-submenu index="6" popper-class="nz-submenu">
         <template slot="title">

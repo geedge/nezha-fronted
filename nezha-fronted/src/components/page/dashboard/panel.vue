@@ -675,12 +675,6 @@
     margin-right: 1px;
   }
 
-  .top-tools .top-tool-btn-txt .nz-icon {
-    display: inline-block;
-    font-size: 12px;
-    margin-right: 6px;
-  }
-
   .top-tools {
     button {
       background: $btn-light-background-color;
