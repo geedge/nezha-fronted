@@ -1,0 +1,124 @@
+<template>
+  <div>
+    <el-dialog :title="$t('overall.changePwd')" :visible.sync="visible"  @open="dialogOpened"  :modal-append-to-body='false' @closed="dialogClosed" width="600px" :show-close="false" >
+      <el-form :model="user" label-position="right" label-width="135px" :rules="rules" ref="changePwdForm" size="mini">
+        <el-form-item :label="$t('config.account.account')" prop="username">
+          <el-input type="text" autocomplete="false" v-model="user.username" disabled></el-input>
+        </el-form-item>
+        <el-form-item :label="$t('config.account.oldPwd')" prop="pwd">
+          <el-input type="password" autocomplete="false" :show-password="true" v-model="user.pwd" maxlength="20" :placeholder="$t('config.account.inputOldPwd')"></el-input>
+        </el-form-item>
+        <el-form-item :label="$t('config.account.newPwd')" prop="newPwd">
+          <el-input type="password" autocomplete="false" :show-password="true" v-model="user.newPwd" maxlength="20" :placeholder="$t('config.account.inputNewPwd')"></el-input>
+        </el-form-item>
+        <el-form-item :label="$t('config.account.confirmPwd')" prop="confirmPwd">
+          <el-input type="password" autocomplete="false"  :show-password="true" v-model="user.confirmPwd" maxlength="20" :placeholder="$t('config.account.inputConfirmPwd')"></el-input>
+        </el-form-item>
+      </el-form>
+      <!--底部按钮-->
+      <template slot="footer">
+        <div class="right-box-bottom-btns" >
+          <button @click="close" id="account-esc"
+                  class="nz-btn nz-btn-size-normal nz-btn-style-light nz-btn-min-width-100">
+            <span>{{$t('overall.cancel')}}</span>
+          </button>
+          <button  @click="changePwd" id="account-save"
+                   class="nz-btn nz-btn-size-normal nz-btn-style-normal nz-btn-min-width-100">
+            <span>{{$t('overall.save')}}</span>
+          </button>
+        </div>
+      </template>
+
+    </el-dialog>
+  </div>
+</template>
+
+<script>
+    export default {
+      name: "changePwd",
+      props:{
+        curUser:{type:String},
+        showDialog:{type:Boolean,default:false}
+      },
+      data(){
+        let temp=this;
+        var validatePass = (rule, value, callback) => {
+          if(value && value != '' && value.length >= 6){
+            callback();
+          }else{
+            callback(new Error(temp.$t('config.account.invalidPwd')))
+          }
+        };
+        var validateConfirmPass=(rule,value,callback) => {
+          if(value && value != '' && value == temp.user.newPwd){
+            callback();
+          }else{
+            callback(new Error(temp.$t('config.account.confirmPwdErr')))
+          }
+        }
+        return {
+          user:{
+            username:'',
+            pwd:'',
+            newPwd:'',
+            confirmPwd:''
+          },
+          rules:{
+            pwd:[{required:true,message: this.$t('validate.required'), trigger: 'blur'}],
+            newPwd:[{required:true,message: this.$t('validate.required'), trigger: 'blur'},{validator:validatePass,trigger: 'blur'}],
+            confirmPwd:[{required:true,message: this.$t('config.account.reinputPwd'), trigger: 'blur'},{validator:validateConfirmPass,trigger: 'blur'}]
+          },
+          visible:false,
+        }
+      },
+      created() {
+        this.user.username=this.curUser && this.curUser != ''?this.curUser:sessionStorage.getItem("nz-username");
+      },
+      methods:{
+        dialogOpened:function(){
+          if(this.$refs.changePwdForm){
+            this.$refs.changePwdForm.resetFields();
+          }
+        },
+        dialogClosed:function(){
+          this.$emit('dialogClosed')
+        },
+        close:function(){
+          this.visible=false;
+        },
+        changePwd:function(){
+          this.$refs.changePwdForm.validate((valid)=>{
+            if(valid){
+              let paramObj={
+                password:this.user.pwd,
+                newPassword:this.user.newPwd
+              }
+              this.$get('/sys/user/password?password='+paramObj.password+"&newPassword="+paramObj.newPassword).then(response=>{
+                if(response && response.code == 200){
+                  this.$message({duration: 2000, type: 'success', message: this.$t("tip.saveSuccess")});
+                  this.close();
+                }else{
+                  this.$message.error(response.msg);
+                }
+              })
+            }
+          })
+        }
+      },
+      watch:{
+        showDialog:function(n,o){
+          this.visible=n;
+        }
+      }
+    }
+</script>
+
+<style >
+  .el-dialog__footer {
+    margin-top: 30px;
+    padding: 10px 20px 20px;
+    text-align: right;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+  }
+</style>

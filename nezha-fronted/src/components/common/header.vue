@@ -57,15 +57,16 @@
         </template>
         <template v-for="(item, index) in assetData">
           <el-menu-item :index="'3-' + index">
-            <div @mouseenter="hoverItemIndex = '3-' + index" @mouseleave="hoverItemIndex = ''" @click="jumpToAsset(item.id)" :class="{'menu-item-active' : (activeIndex == 'asset' && indOf(activeItemIndexes, item.id) > -1) }">
+<!--            <div @mouseenter="hoverItemIndex = '3-' + index" @mouseleave="hoverItemIndex = ''" @click="jumpToAsset(item.id)" :class="{'menu-item-active' : (activeIndex == 'asset' && indOf(activeItemIndexes, item.id) > -1) }">-->
+            <div @mouseenter="hoverItemIndex = '3-' + index" @mouseleave="hoverItemIndex = ''" @click="jumpToAsset(item.id)" >
               <span class="too-long-split" style="width: 130px;">{{item.name}}</span>
-              <idc-config-box :post-idc="item" ref="idcConfigBox" placement="left" @after="getIDCOptionData" :user-data="userDatas">
-                <template v-slot:optionZone>
-                  <div v-show="hoverItemIndex == '3-' + index" @click="closeAllPop" class="menu-edit">
-                    <i class="nz-icon nz-icon-edit" @click="getIDCOptionData(item.id)" style="color: inherit"></i>
-                  </div>
-                </template>
-              </idc-config-box>
+<!--              <idc-config-box :post-idc="item" ref="idcConfigBox" placement="left" @after="getIDCOptionData" :user-data="userDatas">-->
+<!--                <template v-slot:optionZone>-->
+<!--                  <div v-show="hoverItemIndex == '3-' + index" @click="closeAllPop" class="menu-edit">-->
+<!--                    <i class="nz-icon nz-icon-edit" @click="getIDCOptionData(item.id)" style="color: inherit"></i>-->
+<!--                  </div>-->
+<!--                </template>-->
+<!--              </idc-config-box>-->
             </div>
           </el-menu-item>
         </template>
@@ -106,6 +107,9 @@
           <div style="height: 1px; width: 100%; background-color: #cccccc;"></div>
         </el-menu-item>
         <el-menu-item index="6-3">
+          <div @click="showPwdDialog">{{$t('overall.changePwd')}}</div>
+        </el-menu-item>
+        <el-menu-item index="6-4">
           <div @click="logout">{{$t('overall.signOut')}}</div>
         </el-menu-item>
       </el-submenu>
@@ -121,13 +125,16 @@
     <asset-add-unit :add-unit-show='addUnitShow' @refreshData="refreshAsset" ref="assetAddUnit"
                     @sendStateData="closeAsset"></asset-add-unit>
     <alert-config-box :parentAlertRule="alertRule" @reload="" ref="alertConfigBox"></alert-config-box>
+    <change-password :cur-user="username" :show-dialog="showChangePwd" @click="showPwdDialog" @dialogClosed="dialogClosed"></change-password>
   </div>
 </template>
 
 <script>
   import bus from '../../libs/bus';
+  import changePwd from "../page/config/changePwd";
   export default {
     name: "Header",
+    components: {'change-password':changePwd},
     data() {
       return {
         username: sessionStorage.getItem("nz-username"),
@@ -213,7 +220,8 @@
         idcUserData: '',
         IDCOptionData: [],
         addUnitShow: false,
-        userDatas:[]
+        userDatas:[],
+        showChangePwd:false,
       }
     },
     methods: {
@@ -418,6 +426,12 @@
       refreshLang() {
         this.language = localStorage.getItem("nz-language-" + this.username);
         this.$i18n.locale = this.language;
+      },
+      showPwdDialog:function(){
+        this.showChangePwd=true;
+      },
+      dialogClosed:function(){
+        this.showChangePwd=false;
       }
     },
     created() {

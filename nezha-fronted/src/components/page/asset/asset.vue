@@ -1,7 +1,7 @@
 <template>
   <div class="asset" ref="asset">
     <div class="content-left">
-      <div class="sidebar-title">Asset</div>
+      <div class="sidebar-title">{{$t('asset.asset')}}</div>
       <div class="sidebar-info">
         <!--<div class="sidebar-info-header">ALL</div>-->
         <el-checkbox :indeterminate="checkAllHandler" class="sidebar-info-item" v-model="checkAllFlag" @change="dcSelectAll" :true-label="1" :false-label="0">
@@ -17,13 +17,13 @@
               <span v-else>{{item.name}}</span>
             </div>
 
-            <idc-config-box ref="idcConfigBox" :post-idc="item" placement="left" @after="getIDCOptionData" :button-class="'checkbox-edit'" :user-data="idcUserData">
-              <template v-slot:optionZone>
-                <span @click="closeAllPop">
-                  <i class="nz-icon nz-icon-edit" @click="getSingleIDCData(item.id,'edit')"></i>
-                </span>
-              </template>
-            </idc-config-box>
+<!--            <idc-config-box ref="idcConfigBox" :post-idc="item" placement="left" @after="getIDCOptionData" :button-class="'checkbox-edit'" :user-data="idcUserData">-->
+<!--              <template v-slot:optionZone>-->
+<!--                <span @click="closeAllPop">-->
+<!--                  <i class="nz-icon nz-icon-edit" @click="getSingleIDCData(item.id,'edit')"></i>-->
+<!--                </span>-->
+<!--              </template>-->
+<!--            </idc-config-box>-->
           </el-checkbox>
         </el-checkbox-group>
       </div>
@@ -107,20 +107,22 @@
               <span v-else class="unclickable">{{scope.row.alertNum}}</span>
             </template>
             <div v-if="item.prop=='dataCenter'">
-              <idc-config-box :post-idc="JSON.parse(JSON.stringify(scope.row.idc))" ref="idcConfigBox" :is-edit="false" placement="left"  @after="getAssetData(null, true)" :button-class="'checkbox-edit'" :user-data="idcUserData">
-                <template v-slot:optionZone>
-<!--                  <span class="link" @click="closeAllPop">{{scope.row.idc.name}}</span>-->
-                  <span class="clickable" @click="closeAllPop">{{scope.row.idc.name}}</span>
-                </template>
-              </idc-config-box>
+<!--              <idc-config-box :post-idc="JSON.parse(JSON.stringify(scope.row.idc))" ref="idcConfigBox" :is-edit="false" placement="left"  @after="getAssetData(null, true)" :button-class="'checkbox-edit'" :user-data="idcUserData">-->
+<!--                <template v-slot:optionZone>-->
+<!--&lt;!&ndash;                  <span class="link" @click="closeAllPop">{{scope.row.idc.name}}</span>&ndash;&gt;-->
+<!--                  <span class="clickable" @click="closeAllPop">{{scope.row.idc.name}}</span>-->
+<!--                </template>-->
+<!--              </idc-config-box>-->
+              <span  >{{scope.row.idc.name}}</span>
             </div>
             <template v-if="item.prop=='cabinet'">
-              <cabinet-config-box v-if="scope.row.cabinet&&scope.row.cabinet!='--'" ref="cabinetConfigBox"  placement="left" :is-edit="false" :post-cabinet="JSON.parse(JSON.stringify(scope.row.cabinet))"  @after="getAssetData(null, true)" :post-idc-datas="IDCOptionData">
-<!--                <span slot="optionZone" @click="closeAllPop" class="link">{{returnData(scope.row.cabinet)}}</span>-->
-                <span class="clickable" slot="optionZone" @click="closeAllPop" >{{returnData(scope.row.cabinet).name}}</span>
-              </cabinet-config-box>
-              <span v-else class="unclickable">{{returnData(scope.row.cabinet)}}</span>
-
+<!--              <cabinet-config-box v-if="scope.row.cabinet&&scope.row.cabinet!='&#45;&#45;'" ref="cabinetConfigBox"  placement="left" :is-edit="false" :post-cabinet="JSON.parse(JSON.stringify(scope.row.cabinet))"  @after="getAssetData(null, true)" :post-idc-datas="IDCOptionData">-->
+<!--&lt;!&ndash;                <span slot="optionZone" @click="closeAllPop" class="link">{{returnData(scope.row.cabinet)}}</span>&ndash;&gt;-->
+<!--                <span class="clickable" slot="optionZone" @click="closeAllPop" >{{returnData(scope.row.cabinet).name}}</span>-->
+<!--              </cabinet-config-box>-->
+              <span   v-if="scope.row.cabinet&&scope.row.cabinet!='--'">{{returnData(scope.row.cabinet).name}}</span>
+<!--              <span v-else class="unclickable">{{returnData(scope.row.cabinet)}}</span>-->
+              <span v-else >{{returnData(scope.row.cabinet)}}</span>
             </template>
             <div v-if="item.prop=='model'">
               <span>{{scope.row.model.name}}</span>
