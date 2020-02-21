@@ -34,7 +34,8 @@ const en = {
     query: 'Query', //查询
     back: 'Back', //返回
     unavailable: 'Unavailable',
-    available: 'Available'
+    available: 'Available',
+   changePwd:'Change Password',//修改密码
   },
   dashboard:{
     title:'Dashboard',
@@ -157,7 +158,7 @@ const en = {
     refreshLater:'Refresh later'//'请稍后刷新'
   },
   asset:{
-    asset: 'Asset',//'资产'
+    asset: 'Assets',//'资产'
     EditAsset:'Edit asset',//'编辑资产'
     pingActive: 'active',//可ping通
     pingInactive:'inactive',
@@ -340,7 +341,16 @@ const en = {
       createAccount: 'New account',//"新增用户"
       editAccount: 'Edit account',//"编辑用户"
       notCurrentlySupport: 'Not available',//'暂不支持'
-      password: 'Password'//'密码'
+      password: 'Password',//'密码'
+      oldPwd:'Old Password',
+      inputOldPwd:'Please input old password',
+      newPwd:'New password',
+      inputNewPwd:'Please input new password',
+      confirmPwd:'Confirm Password',
+      inputConfirmPwd:'Please input confirm password',
+      invalidPwd:'invalide password,the length at least 6',
+      confirmPwdErr:'The two passwords are inconsistent',
+      reinputPwd:'Enter password again'
     },
     promServer: {
       promServerList: 'Prometheus server',//"Prometheus Server"
@@ -357,10 +367,10 @@ const en = {
     }
   },
   alert: {
-    alert: 'Alert',//"告警"
+    alert: 'Alerts',//"告警"
     message: 'Message',//'信息'
     rule: 'Rule',//'规则'
-    alertList: 'Alert information',//"告警信息"
+    alertList: 'Alert message',//"告警信息"
     alertConfig: 'Alert rule',//"告警规则"
     alertName: 'Alert name',//"告警名称"
     severity: 'Level',//"等级"

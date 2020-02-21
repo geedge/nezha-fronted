@@ -297,7 +297,8 @@
           <!------------------------------------------IDC---------------------------------------------->
           <el-form-item :label="this.$t('asset.createAssetTab.dcName')" class="right-box-form-content" prop="idcId">
             <template v-if="!tabView">
-              <el-select popper-class="asset-dropdown" size="mini" v-model="assetData.idcId" clearable @change="getSingleIDCData" class="right-box-row-with-btn" placeholder="">
+<!--              <el-select popper-class="asset-dropdown" size="mini" v-model="assetData.idcId" clearable @change="getSingleIDCData" class="right-box-row-with-btn" placeholder="">-->
+              <el-select popper-class="asset-dropdown" size="mini" v-model="assetData.idcId" clearable @change="getSingleIDCData"  placeholder="">
                 <el-option
                   :id="'asset-edit-idc-op-'+item.id"
                   v-for="item in IDCOptionData"
@@ -306,21 +307,21 @@
                   :value="item.id"
                 >
                   <span class="config-dropdown-label-txt">{{ item.name }}</span>
-                  <div class="config-dropdown-label-icons">
-                    <span class="config-dropdown-btn config-dropdown-btn-delete"
-                          @click.stop="deleteData('idc',item.id)" :id="'asset-edit-idc-op-del-'+item.id"><i
-                      class="el-icon-delete"></i></span>
-                    <idc-config-box :post-idc="popIdcData" placement="left" @after="getIDCOptionData" :button-class="'config-dropdown-btn'">
-                      <template v-slot:optionZone>
-                        <i class="nz-icon nz-icon-edit" @click="getSingleIDCData(item.id,'edit', item)"></i>
-                      </template>
-                    </idc-config-box>
-                  </div>
+<!--                  <div class="config-dropdown-label-icons">-->
+<!--                    <span class="config-dropdown-btn config-dropdown-btn-delete"-->
+<!--                          @click.stop="deleteData('idc',item.id)" :id="'asset-edit-idc-op-del-'+item.id"><i-->
+<!--                      class="el-icon-delete"></i></span>-->
+<!--                    <idc-config-box :post-idc="popIdcData" placement="left" @after="getIDCOptionData" :button-class="'config-dropdown-btn'">-->
+<!--                      <template v-slot:optionZone>-->
+<!--                        <i class="nz-icon nz-icon-edit" @click="getSingleIDCData(item.id,'edit', item)"></i>-->
+<!--                      </template>-->
+<!--                    </idc-config-box>-->
+<!--                  </div>-->
                 </el-option>
               </el-select>
-              <div class="right-box-row-btn right-box-row-btn-small">
-                <idc-config-box placement="left" @after="getIDCOptionData"></idc-config-box>
-              </div>
+<!--              <div class="right-box-row-btn right-box-row-btn-small">-->
+<!--                <idc-config-box placement="left" @after="getIDCOptionData"></idc-config-box>-->
+<!--              </div>-->
             </template>
             <span v-if="tabView">{{assetViewData.idcName}}</span>
           </el-form-item>
@@ -339,7 +340,8 @@
           <!------------------------------------------cabinet---------------------------------------------->
           <el-form-item :label="$t('asset.createAssetTab.cabinet')" class="right-box-form-content">
             <template v-if="!tabView">
-              <el-select clearable v-model="assetData.cabinetId" clearable class="right-box-row-with-btn" popper-class="asset-dropdown"
+<!--              <el-select clearable v-model="assetData.cabinetId" clearable class="right-box-row-with-btn" popper-class="asset-dropdown"-->
+              <el-select clearable v-model="assetData.cabinetId" clearable  popper-class="asset-dropdown"
                          :disabled="assetData.idcId==''?true:false" size="mini" placeholder=""
                          @change="getSingleCabinetData">
                 <el-option
@@ -350,21 +352,21 @@
                   :value="item.id"
                 >
                   <span class="config-dropdown-label-txt">{{ item.name }}</span>
-                  <div class="config-dropdown-label-icons">
-                    <span class="config-dropdown-btn config-dropdown-btn-delete"
-                          @click.stop="deleteData('cabinet',item.id)" :id="'asset-edit-cabinet-op-del-'+item.id">
-                      <i class="el-icon-delete"></i>
-                    </span>
-                    <cabinet-config-box placement="left" :post-cabinet="item" button-class="config-dropdown-btn" @after="getCabinetOptionData">
-                      <i slot="optionZone" class="nz-icon nz-icon-edit"></i>
-                    </cabinet-config-box>
-                  </div>
+<!--                  <div class="config-dropdown-label-icons">-->
+<!--                    <span class="config-dropdown-btn config-dropdown-btn-delete"-->
+<!--                          @click.stop="deleteData('cabinet',item.id)" :id="'asset-edit-cabinet-op-del-'+item.id">-->
+<!--                      <i class="el-icon-delete"></i>-->
+<!--                    </span>-->
+<!--                    <cabinet-config-box placement="left" :post-cabinet="item" button-class="config-dropdown-btn" @after="getCabinetOptionData">-->
+<!--                      <i slot="optionZone" class="nz-icon nz-icon-edit"></i>-->
+<!--                    </cabinet-config-box>-->
+<!--                  </div>-->
                 </el-option>
               </el-select>
 
-              <div class="right-box-row-btn right-box-row-btn-small">
-                <cabinet-config-box placement="left" :post-cabinet="addCabinetData"  @after="getCabinetOptionData"></cabinet-config-box>
-              </div>
+<!--              <div class="right-box-row-btn right-box-row-btn-small">-->
+<!--                <cabinet-config-box placement="left" :post-cabinet="addCabinetData"  @after="getCabinetOptionData"></cabinet-config-box>-->
+<!--              </div>-->
             </template>
             <span v-if="tabView">{{assetViewData.cabinetName}}</span>
           </el-form-item>

@@ -48,10 +48,12 @@
     color: #666;
    }
   .li-list-part-label-val-list {
-    height: 176px;
-    border: 1px solid #dcdfe6;
+    height: 248px;
+   /* border: 1px solid #dcdfe6;*/
     border-radius: 4px;
     padding: 0px 0 10px 15px;
+    margin-bottom:0px !important;
+    width:100%;
   }
   .li-cursor{
     cursor: pointer;
@@ -66,7 +68,7 @@
   }
 
   .metric-title-position{
-    margin-bottom: 2px;
+    margin-bottom: 8px;
   }
   .metric-title-row-position{
     margin-top:-10px;
@@ -91,8 +93,9 @@
     width: 100px;
   }
   .li-list-part-label-val-list .el-select--mini {
-    width: calc(100% - 45px) !important;
+    width: calc(100% - 15px) ;
   }
+
   .nz-tab-chart-item-box{
     padding:0;
     display: inline-block;
@@ -146,7 +149,7 @@
 
 <!-- create chart组件显示框 -->
     <el-row v-if="elementInfo.metric && tableShow == 1"><!--v-if="elementInfo.tagList.length > 0"-->
-
+<!--
       <el-col :span="8">
         <div class="li-list-part">
           <el-scrollbar style="height: 100%">
@@ -161,20 +164,29 @@
       </el-col>
 
       <el-col :span="2" class="symbol-area"><span class="symbol-equal">=</span></el-col>
-
-      <el-col :span="14">
-        <div class="li-list-part-label-val-list" >
+-->
+      <el-col :span="24">
+        <div class="li-list-part-label-val-list" :id="'scrollDiv'+this.pointer">
           <el-scrollbar style="height: 100%">
-            <el-form-item class="metric-title-position right-box-form-content" v-for="(item, index) in elementInfo.selectedTagList" :key="index" :label="item.name" label-width="100" :ref="'tagItem' + index" :prop="'tagList.' + index + '.value'" >
-              <el-select  v-model="item.value" ref="tagSelect" size="mini"
-                          placeholder=""
-                          collapse-tags
-                          popper-class="metric-dropdown"
-                          filterable
-                          multiple>
-                <el-option v-for="(op, j) in elementInfo.selectedTagList[index].list" :key="op + j"  :value="op">{{op}}</el-option>
-              </el-select>
-              <span class="symbol-delete" @click="deleteMetricLabel(item,index)"><i class="nz-icon nz-icon-minus-square"></i></span>
+            <el-form-item style="width:99%;" class="metric-title-position right-box-form-content" v-for="(item, index) in elementInfo.selectedTagList" :key="index"  :ref="'tagItem' + index" :prop="'tagList.' + index + '.value'" >
+              <el-row :gutter="10" >
+                <el-col :span="4" >
+                  <div style="text-align:right;padding-right:5px;">{{item.name}}</div>
+                </el-col>
+                <el-col :span="20" >
+                  <el-select  v-model="item.value" ref="tagSelect" size="mini"
+                              placeholder=""
+                              collapse-tags
+                              popper-class="metric-dropdown"
+                              filterable
+                              multiple>
+                    <el-option v-for="(op, j) in elementInfo.selectedTagList[index].list" :key="op + j"  :value="op">{{op}}</el-option>
+                  </el-select>
+                </el-col>
+                <!--
+                <span class="symbol-delete" @click="deleteMetricLabel(item,index)"><i class="nz-icon nz-icon-minus-square"></i></span>
+                -->
+              </el-row>
             </el-form-item>
           </el-scrollbar>
         </div>
@@ -281,7 +293,19 @@ export default {
         });
       }
     },
+    setLabelDivHeight(count){
+        if (count === 0) {
+          const chartBox = document.getElementById('scrollDiv' + this.pointer);
+          chartBox.style.height = `${10}px`;
+        } else if (count < 6) {//小于6个需要调整容器的高度
+          const chartBox = document.getElementById('scrollDiv' + this.pointer);
+          chartBox.style.height = `${(248 / 6) * count + 10}px`;
+        } else {
+          const chartBox = document.getElementById('scrollDiv' + this.pointer);
+          chartBox.style.height = `${248}px`;
+        }
 
+    },
     // 选择metric
     selectMetric() {
       if (this.elementInfo.metric) {//选择了metric，则设置tagList，否则设置为空
@@ -289,6 +313,7 @@ export default {
         this.getSuggestTags(this.elementInfo.metric);
       } else {
         this.elementInfo.tagList = [];
+        this.setLabelDivHeight(0);
       }
     },
     // 选择主机
@@ -310,31 +335,25 @@ export default {
     */
     // 获取tags列表
     getSuggestTags(metric) {
-      this.$get('metric/labelName?metric='+metric).then(response => {
+      //this.$get('metric/labelName?metric='+metric).then(response => {
+      this.$get('/metric/series?match[]='+metric).then(response => {
         this.elementInfo.selectedTagList = [];
-        this.elementInfo.tagList = [];
+        //this.elementInfo.tagList = [];
         if (response.code === 200) {
-          if(response.data.list){
-            //this.elementInfo.tagList = response.data.list;
-            response.data.list.forEach((item) => {
-              const tagObj = {
-                name: item.name,
-                isSelect:false//当前元素是否被选中，默认都未选中
-              };
-              this.elementInfo.tagList.push(tagObj);
-            });
-          }else{
-            response.data.forEach((item) => {
-              const tagObj = {
-                name: item.name,
-                isSelect:false //当前元素是否被选中，默认都未选中
-              };
-              this.elementInfo.tagList.push(tagObj);
-            });
-          }
-          //this.elementInfo.tagList = response.data.list;
+          const objList = Object.entries(response.data);
+          objList.forEach((item) => {
+            const tagObj = {
+              name: item[0],
+              list:item[1],
+              value:[]//最终选择的值
+            };
+            this.elementInfo.selectedTagList.push(tagObj);
+          });
+          let tagNum = this.elementInfo.selectedTagList.length;
+          this.setLabelDivHeight(tagNum);
         }else {
-          this.elementInfo.tagList = [];
+          this.elementInfo.selectedTagList = [];
+          this.setLabelDivHeight(0);
         }
       });
     },
@@ -367,91 +386,102 @@ export default {
         }else {
           this.elementInfo.metric = expression;
         }
-
-        //alert(this.elementInfo.metric);
-        //this.selectMetric(); // 获取tag
-        this.$get('metric/labelName?metric='+this.elementInfo.metric).then(response => {
+        //this.$get('metric/labelName?metric='+this.elementInfo.metric).then(response => {
+        this.$get('/metric/series?match[]='+this.elementInfo.metric).then(response => {
           this.elementInfo.selectedTagList = [];
-          this.elementInfo.tagList = [];
+          //this.elementInfo.tagList = [];
           if (response.code === 200) {
-              //this.elementInfo.tagList = response.data.list;
-              if(response.data.list){
-                response.data.list.forEach((item) => {
-                  const tagObj = {
-                    name: item.name,
-                    isSelect:false//当前元素是否被选中，默认都未选中
-                  };
-                  this.elementInfo.tagList.push(tagObj);
+              const objList = Object.entries(response.data);
+              objList.forEach((item) => {
+                const tagObj = {
+                  name: item[0],
+                  list:item[1],
+                  value:[]//最终选择的值
+                };
+                let labelName = item[0];
+                let labelValList = expression.substring(expression.indexOf('{')+1,expression.indexOf('}'));
+                let labArr = labelValList.split(',');
+                labArr.forEach((item, index) => {//b=~'1|2|3'
+                    let labNameTmp = item.substring(0,item.indexOf('='));
+                    if(labNameTmp===labelName){
+                      let labVal = item.substring(item.indexOf('=')+1,item.length);
+                      if(labVal.indexOf('~')!=-1){
+                        labVal = labVal.substring(2,labVal.length-1);
+                        let valArr = labVal.split('|');
+                        valArr.forEach((labItem, labIndex) => {
+                          tagObj.value.push(labItem);
+                        });
+                      }else {
+                        labVal = labVal.substring(1,labVal.length-1);
+                        tagObj.value.push(labVal);
+                      }
+                    }
                 });
-              }else {
-                response.data.forEach((item) => {
-                  const tagObj = {
-                    name: item.name,
-                    isSelect:false//当前元素是否被选中，默认都未选中
-                  };
-                  this.elementInfo.tagList.push(tagObj);
-                });
-              }
-            if(expression.indexOf('{')>-1){
-              let labValArrStr = expression.substring(expression.indexOf('{')+1,expression.indexOf('}'));
-              this.stringToTags(labValArrStr);
-            }
+
+                this.elementInfo.selectedTagList.push(tagObj);
+              });
+              let tagNum = this.elementInfo.selectedTagList.length;
+              this.setLabelDivHeight(tagNum);
           }else {
-            this.elementInfo.tagList = [];
+            this.elementInfo.selectedTagList = [];
+            this.setLabelDivHeight(0);
           }
         });
       }
     },
-    //字符串格式化为对象metric{a='1',b=~'2|3|4'}===>a='1',b=~'2|3|4'
-    stringToTags(str) {
-      let labArr = str.split(',');
-      labArr.forEach((item, index) => {//b=~'1|2|3'
-        let labName = item.substring(0,item.indexOf('='));
-        this.elementInfo.tagList.every((tagItem,index) => {
-          if(tagItem.name===labName){
-            tagItem.isSelect = true;
-            return false;
-          }else {
-            return true;
-          }
-        });
 
-        //查询metricLabel名称对应的LabelValue
-        this.$get('metric/labelVal?metric='+this.elementInfo.metric+"&name="+labName).then(response => {
-          const tagObj = {
-            name:labName,//选中的metricLabel名称
-            list:[],//metricLabel名称对应的LabelValue
-            value:[]//最终选择的值
-          };
-          let labVal = item.substring(item.indexOf('=')+1,item.length);
-          if(labVal.indexOf('~')!=-1){
-            labVal = labVal.substring(2,labVal.length-1);
-            let valArr = labVal.split('|');
-            valArr.forEach((labItem, labIndex) => {
-              tagObj.value.push(labItem);
-            });
-          }else {
-            labVal = labVal.substring(1,labVal.length-1);
-            tagObj.value.push(labVal);
-          }
-          if (response.code === 200) {
-            if(response.data.list){
-              response.data.list.forEach((resItem) => {
-                tagObj.list.push(resItem.value)
-              });
-              this.elementInfo.selectedTagList.push(tagObj);
-            }else{
-              response.data.forEach((resItem) => {
-                tagObj.list.push(resItem.value)
-              });
-              this.elementInfo.selectedTagList.push(tagObj);
-            }
-          }else {
-            this.elementInfo.selectedTagList.push(tagObj);
-          }
-        });
-      });
-    },
+    /*
+   //字符串格式化为对象metric{a='1',b=~'2|3|4'}===>a='1',b=~'2|3|4'
+   stringToTags(str) {
+     let labArr = str.split(',');
+     labArr.forEach((item, index) => {//b=~'1|2|3'
+       let labName = item.substring(0,item.indexOf('='));
+       this.elementInfo.tagList.every((tagItem,index) => {
+         if(tagItem.name===labName){
+           tagItem.isSelect = true;
+           return false;
+         }else {
+           return true;
+         }
+       });
+
+       //查询metricLabel名称对应的LabelValue
+       this.$get('metric/labelVal?metric='+this.elementInfo.metric+"&name="+labName).then(response => {
+         const tagObj = {
+           name:labName,//选中的metricLabel名称
+           list:[],//metricLabel名称对应的LabelValue
+           value:[]//最终选择的值
+         };
+         let labVal = item.substring(item.indexOf('=')+1,item.length);
+         if(labVal.indexOf('~')!=-1){
+           labVal = labVal.substring(2,labVal.length-1);
+           let valArr = labVal.split('|');
+           valArr.forEach((labItem, labIndex) => {
+             tagObj.value.push(labItem);
+           });
+         }else {
+           labVal = labVal.substring(1,labVal.length-1);
+           tagObj.value.push(labVal);
+         }
+         if (response.code === 200) {
+           if(response.data.list){
+             response.data.list.forEach((resItem) => {
+               tagObj.list.push(resItem.value)
+             });
+             this.elementInfo.selectedTagList.push(tagObj);
+           }else{
+             response.data.forEach((resItem) => {
+               tagObj.list.push(resItem.value)
+             });
+             this.elementInfo.selectedTagList.push(tagObj);
+           }
+         }else {
+           this.elementInfo.selectedTagList.push(tagObj);
+         }
+       });
+     });
+   },
+   */
 
     clearHistory() {
       this.elementInfo.metric = '';

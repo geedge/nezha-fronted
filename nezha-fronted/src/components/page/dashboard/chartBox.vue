@@ -44,7 +44,8 @@
   }
   /*metric样式--end*/
   .label-center{
-    margin-top:6px;
+    vertical-align: middle;
+    line-height: 34px;
   }
 
   .z-top {
@@ -52,140 +53,141 @@
   }
 </style>
 <template key="chartBox">
-<div>
-  <panel-box :panel="panel" @reload="panelReload" ref="panelBox2"></panel-box>
+  <div>
+    <panel-box :panel="panel" @reload="panelReload" ref="panelBox2"></panel-box>
 
-  <transition name="right-box">
-    <div class="right-box right-box-add-chart z-top right-box-chart" v-if="rightBox.show" >
-      <!-- begin--顶部按钮-->
-      <div class="right-box-top-btns">
-        <button id="chart-box-delete" type="button" v-if="chart.id != ''" @click="del(chart)" class="nz-btn nz-btn-size-normal nz-btn-size-alien nz-btn-style-light nz-btn-min-width-82">
-          <span class="right-box-top-btn-icon"><i class="el-icon-delete"></i></span>
-          <span class="right-box-top-btn-txt">{{$t('overall.delete')}}</span>
-        </button>
-      </div>
-      <!-- end--顶部按钮-->
+    <transition name="right-box">
+      <div class="right-box right-box-add-chart z-top right-box-chart" v-if="rightBox.show" >
+        <!-- begin--顶部按钮-->
+        <div class="right-box-top-btns">
+          <button id="chart-box-delete" type="button" v-if="chart.id != ''" @click="del(chart)" class="nz-btn nz-btn-size-normal nz-btn-size-alien nz-btn-style-light nz-btn-min-width-82">
+            <span class="right-box-top-btn-icon"><i class="el-icon-delete"></i></span>
+            <span class="right-box-top-btn-txt">{{$t('overall.delete')}}</span>
+          </button>
+        </div>
+        <!-- end--顶部按钮-->
 
-      <!-- begin--标题-->
-      <div class="right-box-title">{{rightBox.title}}</div>
-      <!-- end--标题-->
+        <!-- begin--标题-->
+        <div class="right-box-title">{{rightBox.title}}</div>
+        <!-- end--标题-->
 
-      <!-- begin--表单-->
-      <el-scrollbar class="right-box-form-box">
-        <el-form class="right-box-form" :model="chart" label-position="top" :rules="rules" ref="chartForm">
-          <el-form-item :label="$t('dashboard.panel.title')">
-            <div class="right-box-form-content">
-              <el-select class="right-box-row-with-btn" popper-class="chart-box-dropdown"
-                         v-model="panelId" placeholder="" v-if="rightBox.show" size="small">
-                <el-option v-for="item in panelData" :key="item.id" :label="item.name"
-                           :value="item.id" :id="'chart-box-panel-'+item.id">
-                  <span class="config-dropdown-label-txt">{{item.name}}</span>
-                  <div class="config-dropdown-label-icons">
+        <!-- begin--表单-->
+        <el-scrollbar class="right-box-form-box">
+          <el-form class="right-box-form" :model="chart" label-position="top" :rules="rules" ref="chartForm">
+            <el-form-item :label="$t('dashboard.panel.title')">
+              <div class="right-box-form-content">
+                <el-select class="right-box-row-with-btn" popper-class="chart-box-dropdown"
+                           v-model="panelId" placeholder="" v-if="rightBox.show" size="small">
+                  <el-option v-for="item in panelData" :key="item.id" :label="item.name"
+                             :value="item.id" :id="'chart-box-panel-'+item.id">
+                    <span class="config-dropdown-label-txt">{{item.name}}</span>
+                    <div class="config-dropdown-label-icons">
                     <span class="config-dropdown-btn config-dropdown-btn-delete" @click.stop="deletePanel(item)"
                           :id="'chart-box-panel-op-del-'+item.id"><i class="el-icon-delete"></i></span>
-                    <span class="config-dropdown-btn" @click.stop="editPanel(item)"
-                    :id="'chart-box-panel-op-edit-'+item.id"><i class="nz-icon nz-icon-edit"></i></span>
-                  </div>
-                </el-option>
-              </el-select>
+                      <span class="config-dropdown-btn" @click.stop="editPanel(item)"
+                            :id="'chart-box-panel-op-edit-'+item.id"><i class="nz-icon nz-icon-edit"></i></span>
+                    </div>
+                  </el-option>
+                </el-select>
 
-              <div class="right-box-row-btn" v-if="rightBox.show" @click="toAddPanel">
-                <i class="el-icon-plus" id="chart-box-panel-plus"></i>
+                <div class="right-box-row-btn" v-if="rightBox.show" @click="toAddPanel">
+                  <i class="el-icon-plus" id="chart-box-panel-plus"></i>
+                </div>
               </div>
-            </div>
-          </el-form-item>
-          <el-form-item :label='$t("dashboard.panel.chartForm.chartName")' prop="title">
-            <el-input size="small" maxlength="64" show-word-limit v-model="chart.title"></el-input>
-          </el-form-item>
+            </el-form-item>
+            <el-form-item :label='$t("dashboard.panel.chartForm.chartName")' prop="title">
+              <el-input size="small" maxlength="64" show-word-limit v-model="chart.title"></el-input>
+            </el-form-item>
 
-          <el-row :gutter="10">
-            <el-col :span="3" >
-              <div class="label-center" >{{$t('dashboard.panel.chartForm.type')}}</div>
-            </el-col>
-            <el-col :span="5">
-              <div class="grid-content ">
+            <el-row :gutter="10">
+              <el-col :span="2" >
+                <div class="label-center" >{{$t('dashboard.panel.chartForm.type')}}</div>
+              </el-col>
+              <el-col :span="6" style="margin-left:-7px;">
+                <div class="grid-content ">
                   <el-form-item prop="type">
-                    <el-select class="right-box-row-with-btn" value-key="chartType" popper-class="chart-box-dropdown" v-model="chart.type" placeholder="" size="mini">
+                    <el-select class="right-box-row-with-btn" value-key="chartType" popper-class="chart-box-dropdown-mini" v-model="chart.type" placeholder="" size="mini">
                       <el-option v-for="item in chartTypeList" :key="item.id" :label="item.name" :value="item.id">
                         <span class="panel-dropdown-label-txt" >{{item.name}}</span>
                       </el-option>
                     </el-select>
                   </el-form-item>
-              </div>
-            </el-col>
-            <el-col :span="3">
-              <div class="label-center" >{{$t('dashboard.panel.chartForm.width')}}</div>
-            </el-col>
-            <el-col :span="5">
-              <div class="grid-content ">
-                <el-form-item prop="span">
-                  <el-select class="right-box-row-with-btn" value-key="chartSpan" popper-class="chart-box-dropdown-mini" v-model="chart.span" placeholder="" size="mini">
-                    <el-option v-for="item in spanList" :key="item" :label="'span-' + item" :value="item">
-                      <span class="panel-dropdown-label-txt" > span-{{item}}</span>
-                    </el-option>
-                  </el-select>
-                </el-form-item>
-              </div>
-            </el-col>
-            <el-col :span="3">
-              <div class="label-center" >{{$t('dashboard.panel.chartForm.high')}}</div>
-            </el-col><el-col :span="5">
-              <div class="grid-content ">
-                <el-form-item prop="heigh">
-<!--                  <el-input label="" v-model="chart.height" placeholder="" size="mini"></el-input>-->
-                  <el-autocomplete
-                    v-model="chart.height"
-                    :fetch-suggestions="querySearch"
-                    placeholder=""
-                    size="mini"
-                    popper-class="popper-z-index"
-                    @select="handleSelect">
-                    <template slot-scope="{ item }">
-                      <div class="name">{{ item }}</div>
-                    </template>
-                  </el-autocomplete>
-                  <span class="nz-input-append">px</span>
-                </el-form-item>
-              </div>
-            </el-col>
-          </el-row>
+                </div>
+              </el-col>
+              <el-col :span="2" style="margin-left: 7px;">
+                <div class="label-center"  >{{$t('dashboard.panel.chartForm.width')}}</div>
+              </el-col>
+              <el-col :span="6" style="margin-left:0px;">
+                <div class="grid-content ">
+                  <el-form-item prop="span">
+                    <el-select class="right-box-row-with-btn"  value-key="chartSpan" popper-class="chart-box-dropdown-mini" v-model="chart.span" placeholder="" size="mini">
+                      <el-option v-for="item in spanList" :key="item" :label="'span-' + item" :value="item">
+                        <span class="panel-dropdown-label-txt" > span-{{item}}</span>
+                      </el-option>
+                    </el-select>
+                  </el-form-item>
+                </div>
+              </el-col>
+              <el-col :span="2" style="padding-left: 10px;">
+                <div class="label-center" >{{$t('dashboard.panel.chartForm.high')}}</div>
+              </el-col>
+              <el-col :span="6" style="margin-left: 0px;">
+                <div class="grid-content" >
+                  <el-form-item prop="heigh">
+                    <!--                  <el-input label="" v-model="chart.height" placeholder="" size="mini"></el-input>-->
+                    <el-autocomplete
+                      v-model="chart.height"
+                      :fetch-suggestions="querySearch"
+                      placeholder=""
+                      size="mini"
+                      popper-class="popper-z-index"
+                      @select="handleSelect">
+                      <template slot-scope="{ item }">
+                        <div class="name">{{ item }}</div>
+                      </template>
+                    </el-autocomplete>
+                    <span class="nz-input-append">px</span>
+                  </el-form-item>
+                </div>
+              </el-col>
+            </el-row>
 
-          <div class="right-box-sub-title">{{$t('dashboard.panel.chartForm.metric')}}</div>
-          <div class="line-100"></div>
+            <div class="right-box-sub-title">{{$t('dashboard.panel.chartForm.metric')}}</div>
+            <div class="line-100"></div>
 
-          <el-row  class="element-item" v-for="(elem, index) in elements" :key="'ele' + index">
-            <chart-metric ref="chartTag"
-                           :pointer="index"
-                           :metric-list="metricList"
-                          :metricCascaderList="metricCascaderList"
-                           :count-total="elements.length"
-                           @on-delete-target="deleteTarget"
-                           @sub-save-ok="subOk"
-                           @on-add-target-success="getTarget"
-                ></chart-metric>
+            <el-row  class="element-item" v-for="(elem, index) in elements" :key="'ele' + index">
+              <chart-metric ref="chartTag"
+                            :pointer="index"
+                            :metric-list="metricList"
+                            :metricCascaderList="metricCascaderList"
+                            :count-total="elements.length"
+                            @on-delete-target="deleteTarget"
+                            @sub-save-ok="subOk"
+                            @on-add-target-success="getTarget"
+              ></chart-metric>
 
-          </el-row>
+            </el-row>
 
-          <button type="button" @click="addTarget" class="nz-btn nz-btn-size-normal nz-btn-style-light" style="margin-left: 1px;">
-            <span class="top-tool-btn-txt">{{$t('dashboard.panel.chartForm.addMetric')}}</span>
+            <button type="button" @click="addTarget" class="nz-btn nz-btn-size-normal nz-btn-style-light" style="margin-left: 1px;">
+              <span class="top-tool-btn-txt">{{$t('dashboard.panel.chartForm.addMetric')}}</span>
+            </button>
+
+          </el-form>
+        </el-scrollbar>
+
+        <!--底部按钮-->
+        <div class="right-box-bottom-btns">
+          <button @click="esc" id="chart-box-esc" class="nz-btn nz-btn-size-normal nz-btn-style-light nz-btn-min-width-100">
+            <span>{{$t('overall.cancel')}}</span>
           </button>
-
-        </el-form>
-      </el-scrollbar>
-
-      <!--底部按钮-->
-      <div class="right-box-bottom-btns">
-        <button @click="esc" id="chart-box-esc" class="nz-btn nz-btn-size-normal nz-btn-style-light nz-btn-min-width-100">
-          <span>{{$t('overall.cancel')}}</span>
-        </button>
-        <button @click="confirmAdd" id="chart-box-save" class="nz-btn nz-btn-size-normal nz-btn-style-normal nz-btn-min-width-100">
-          <span>{{$t('overall.save')}}</span>
-        </button>
+          <button @click="confirmAdd" id="chart-box-save" class="nz-btn nz-btn-size-normal nz-btn-style-normal nz-btn-min-width-100">
+            <span>{{$t('overall.save')}}</span>
+          </button>
+        </div>
       </div>
-    </div>
-  </transition>
+    </transition>
 
-</div>
+  </div>
 </template>
 
 <script>
@@ -221,11 +223,11 @@
           title: [
             {required: true,  message: this.$t('validate.required'),  trigger: 'blur'}
           ]
-         /*
-          heigh: [
-            {required: true, message: this.$t('validate.required'), trigger: 'blur'}
-          ]
-          */
+          /*
+           heigh: [
+             {required: true, message: this.$t('validate.required'), trigger: 'blur'}
+           ]
+           */
         },
         chartTypeList: [
           {
@@ -378,7 +380,7 @@
       deleteTarget(index) {
         //alert('box第一步，循环所有的metric，为什么要循环？？');
         this.deleteIndex = index;
-       // alert('box第一步，循环所有的metric，循环前metric,循环次数='+this.$refs.chartTag.length);
+        // alert('box第一步，循环所有的metric，循环前metric,循环次数='+this.$refs.chartTag.length);
         this.$refs.chartTag.forEach((item) => {
           // 子组件保存内容到bus
           item.subSave();
@@ -447,7 +449,6 @@
             this.$message({duration: 1000, type: 'success', message: this.$t("tip.saveSuccess")});
             this.$refs.chartForm.resetFields();//清空表单
             let panel = this.panelData.find(p => p.id === this.panelId);
-            //console.info("panel", panel)
             this.$emit('on-create-success', 'create', response.data,params, panel);
           } else {
             this.$message.error(response.msg);
@@ -473,7 +474,7 @@
         if (this.elementTarget.length === this.elements.length) {
           this.$refs.chartForm.validate((valid) => {
             const params = {
-             // productId: this.productId,
+              // productId: this.productId,
               //panelId: this.panelId,
               title: this.chart.title,//this.chart
               span: this.chart.span,
@@ -525,14 +526,17 @@
 
       // 获取metric列表
       getSuggestMetric() {
-        this.$get('metric', {pageNo: 1, pageSize: -1}).then(response => {
-          if (response.code === 200) {
-            this.metricList = response.data.list;
+        //this.$get('metric', {pageNo: 1, pageSize: -1}).then(response => {
+        this.$get('/prom/api/v1/label/__name__/values').then(response => {
+          //if (response.code === 200) {
+          if (response.status === 'success') {
+            this.metricList = response.data;
             const cascaderMap = new Map();
             this.metricList.forEach((item,index) => {
               let arr = [];
               let par = '';//父value
-              let metricTmp = item.metric;//子value
+              //let metricTmp = item.metric;//子value
+              let metricTmp = item;//子value
               if(metricTmp){
                 arr  = metricTmp.split('_');
                 par = arr[0];
@@ -552,7 +556,7 @@
             let metricCascaderArr = [];
             cascaderMap.forEach(function(value,index){
               const option = {
-                value: index,
+                value: index+"_par",
                 label: index,
                 children:value,
               };
@@ -567,7 +571,6 @@
       },
       // 创建打开
       createData(panelId, elementInfo) {
-        //console.info('bbb', elementInfo)
         if (panelId == -1) {
           this.panelId = this.panelData[0].id;
         } else {
@@ -584,7 +587,6 @@
               let dSet = this.$refs.chartTag;
               this.$nextTick(() => {
                 dSet.forEach((item, index) => {
-                  //console.info('bbb', elementInfo.elements[index])
                   item.setMdata(elementInfo.elements[index]);
                 });
               });
@@ -653,10 +655,9 @@
 
       /*metric部分相关方法--end*/
       querySearch(queryString, cb) {
-        console.log(queryString)
         var suggestions = this.heightSuggestions;
-        var results = queryString ? suggestions.filter(this.createFilter(queryString)) : suggestions;
-        console.log(results)
+        // var results = queryString ? suggestions.filter(this.createFilter(queryString)) : suggestions;
+        var results=queryString&&(suggestions.includes(queryString)||suggestions.filter(this.createFilter(queryString)).length>0)?suggestions:[];
         // 调用 callback 返回建议列表的数据
         cb(results);
       },
