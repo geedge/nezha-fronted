@@ -20,11 +20,9 @@
 
         </div>
         <div>
-          <button id="alert-add" @click="toAdd"
-                  class="nz-btn nz-btn-size-normal nz-btn-style-light float-right nz-btn-min-width-82">
-                    <span class="top-tool-btn-txt">
+          <button id="alert-add" @click="toAdd"  :title="$t('overall.createAlertRule')"
+                  class="nz-btn nz-btn-size-normal nz-btn-style-light float-right ">
                       <i class="nz-icon-create-square nz-icon"></i>
-                      {{$t('overall.add')}}</span>
           </button>
           <div class="top-tool-search float-right">
             <search-input :searchMsg="searchMsg" @search="search"></search-input>

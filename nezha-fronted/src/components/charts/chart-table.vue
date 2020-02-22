@@ -16,9 +16,9 @@
             <div class="table-title" v-show="firstShow">
                 {{data.title}}
             </div>
-            <div class="nz-btn-group nz-btn-group-light edit" v-show="firstShow">
+            <div class="nz-btn-group nz-btn-group-light edit button-panel-height"  v-show="firstShow">
               <button type="button" @click="refreshChart" style="padding: 6px 14px 5px 14px;" class="nz-btn nz-btn-size-large nz-btn-style-light"><i style="font-size: 16px;" class="global-active-color el-icon-refresh-right"></i></button><button
-              @click="editChart" type="button" class="nz-btn nz-btn-size-large nz-btn-style-light"><i class="nz-icon nz-icon-edit"></i></button><button
+              @click="editChart" type="button" class="nz-btn nz-btn-size-large nz-btn-style-light" ><i class="nz-icon nz-icon-edit"></i></button><button
               @click="removeChart" type="button" class="nz-btn nz-btn-size-large nz-btn-style-light"><i class="el-icon-delete"></i></button><button
               @click="showAllScreen" type="button" class="nz-btn nz-btn-size-large nz-btn-style-light"><i class="el-icon-full-screen"></i></button>
             </div>

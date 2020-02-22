@@ -33,10 +33,8 @@
       <div class="top-tools">
         <div></div>
         <div>
-          <button @click.stop="tagShow('showAdd')" class="nz-btn nz-btn-size-normal nz-btn-style-light float-right nz-btn-min-width-82" id="asset-add">
-            <span class="top-tool-btn-txt">
+          <button @click.stop="tagShow('showAdd')" :title="$t('overall.createAsset')"   class="nz-btn nz-btn-size-normal nz-btn-style-light float-right " id="asset-add">
                <i class="nz-icon-create-square nz-icon"></i>
-              {{$t('overall.add')}}</span>
             <!-- ADD按钮 -->
           </button>
           <div class="top-tool-search float-right"><search-input :searchMsg="searchMsg" @search="search"></search-input></div>

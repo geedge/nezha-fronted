@@ -28,7 +28,14 @@ const cn = {
     query: '查询',
     back: '返回',
     unavailable: '不可用',
-    available: '可用'
+    available: '可用',
+    createChart:'新增图表',
+    createProject:'新增项目',
+    createAsset:'新增资产',
+    createAlertRule:'新增告警规则',
+    createAccount:'新增用户名',
+    createPrometheusServer:'新增 prometheus server',
+    createDatacenter:'新增DC'
   },
   dashboard:{
     title:'仪表盘',

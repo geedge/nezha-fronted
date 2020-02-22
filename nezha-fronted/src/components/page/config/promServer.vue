@@ -21,11 +21,9 @@
       <div class="top-tools">
         <div></div>
         <div>
-          <button @click="toAdd" class="nz-btn nz-btn-size-normal nz-btn-style-light float-right nz-btn-min-width-82"
+          <button @click="toAdd" class="nz-btn nz-btn-size-normal nz-btn-style-light float-right "  :title="$t('overall.createPrometheusServer')"
                   id="prom-add">
-                  <span class="top-tool-btn-txt">
                     <i class="nz-icon-create-square nz-icon"></i>
-                    {{$t('overall.add')}}</span>
           </button>
           <div class="top-tool-search float-right">
             <search-input :searchMsg="searchMsg" @search="search"></search-input>

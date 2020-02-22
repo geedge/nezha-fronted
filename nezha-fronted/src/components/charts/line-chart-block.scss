@@ -2,12 +2,10 @@
 .clearfix:after{
   display: block;
   content: "";
-  height:0;
-  visibility:hidden;
   clear: both;
 }
 .clearfix{
-  //margin-bottom: 20px;
+  margin-bottom: 7px;
 }
 .legend-shape{
   display:inline-block;
@@ -47,9 +45,15 @@
   position: relative;
   background: #FFF;
   border: 1px solid #d8dce1;
-  padding: 20px 30px;
+  padding: 20px 8px;
   margin-bottom: 10px;
   padding-bottom: 3px;
+  .chart-title {
+    font-weight: bold;
+    font-size: 18px;
+    line-height: 26px;
+    color: #333;
+  }
   .line-area {
     box-sizing: border-box;
     background: #FFF;
@@ -60,6 +64,12 @@
     content: "";
     clear: both;
   }*/
+  .button-panel-height{
+    height:26px;
+  }
+  .button-panel-height button{
+    height:26px;
+  }
   .edit {
     position: absolute;
     right: 20px;

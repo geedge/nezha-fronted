@@ -99,10 +99,8 @@
 <!--          </div>-->
         </div>
         <div>
-          <button @click="toCreateEndpoint" class="nz-btn nz-btn-size-normal nz-btn-style-light float-right nz-btn-min-width-82" id="project-add-ep">
-            <span class='top-tool-btn-txt'>
-              <i class="nz-icon-create-square nz-icon"></i>
-              {{$t('overall.add')}}</span>
+          <button @click="toCreateEndpoint" :title="$t('overall.createProject')"  class="nz-btn nz-btn-size-normal nz-btn-style-light float-right " id="project-add-ep">
+            <i class="nz-icon-create-square nz-icon"></i>
           </button>
           <div class="top-tool-search float-right"><search-input :searchMsg="endpointSearchMsg" @search="endpointSearch" ref="projectSearch"></search-input></div>
         </div>

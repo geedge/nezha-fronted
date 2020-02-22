@@ -25,13 +25,20 @@
   .table-title {
     font-weight: bold;
     font-size: 18px;
-    line-height: 30px;
+    line-height: 26px;
     color: #333;
   }
   .edit:after{
     display: block;
     content: "";
     clear: both;
+  }
+
+  .button-panel-height{
+    height:26px;
+  }
+  .button-panel-height button{
+    height:26px;
   }
   .edit {
     position: absolute;

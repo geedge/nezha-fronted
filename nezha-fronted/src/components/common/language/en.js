@@ -36,6 +36,13 @@ const en = {
     unavailable: 'Unavailable',
     available: 'Available',
    changePwd:'Change Password',//修改密码
+    createChart:'create chart',
+    createProject:'create project',
+    createAsset:'create asset',
+    createAlertRule:'create alert rule',
+    createAccount:'create account',
+    createPrometheusServer:'create prometheus server',
+    createDatacenter:'create datacenter'
   },
   dashboard:{
     title:'Dashboard',

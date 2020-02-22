@@ -199,7 +199,9 @@ export default {
       // 没有数据的设置提示信息暂无数据-针对每一个图
       if (len === 0) {
         this.$nextTick(() => {
-          this.$refs.editChart[index].setData(chartItem, [], this.filter.panelId, this.filter);//????怎么设置的无数据？？
+          if(this.$refs.editChart[index]){
+            this.$refs.editChart[index].setData(chartItem, [], this.filter.panelId, this.filter);//????怎么设置的无数据？？
+          }
         });
       } else {
         let startTime = '';
@@ -327,44 +329,47 @@ export default {
                   }
                 }
               });
-              if (chartItem.type === 'table') {//表格
-                if(filterType==='showFullScreen'){//table的全屏查询
-                  this.$refs.editChart[index].setData(chartItem, tableData,
-                    this.filter.panelId, this.filter,filterType);
-                }else {
-                  this.$refs.editChart[index].setData(chartItem, tableData,
-                    this.filter.panelId, this.filter);
-                }
-
-              } else if (chartItem.type === 'line' || chartItem.type === 'bar' || chartItem.type === 4) {
-                if (series.length && chartItem.type === 4) {//曲线汇总
-                  //series.push(sumData);//后续需要
-                }
-                if(filterType==='showFullScreen'){//table的全屏查询
-                  this.$refs.editChart[index].setData(chartItem, series,
-                    this.filter.panelId, this.filter,legend,filterType);
-                }else {
-                  this.$refs.editChart[index].setData(chartItem, series,
-                    this.filter.panelId, this.filter,legend);
+              if(this.$refs.editChart[index]) {
+                if (chartItem.type === 'table') {//表格
+                  if (filterType === 'showFullScreen') {//table的全屏查询
+                    this.$refs.editChart[index].setData(chartItem, tableData,
+                      this.filter.panelId, this.filter, filterType);
+                  } else {
+                    this.$refs.editChart[index].setData(chartItem, tableData,
+                      this.filter.panelId, this.filter);
+                  }
+                } else if (chartItem.type === 'line' || chartItem.type === 'bar' || chartItem.type === 4) {
+                  if (series.length && chartItem.type === 4) {//曲线汇总
+                    //series.push(sumData);//后续需要
+                  }
+                  if (filterType === 'showFullScreen') {//table的全屏查询
+                    this.$refs.editChart[index].setData(chartItem, series,
+                      this.filter.panelId, this.filter, legend, filterType);
+                  } else {
+                    this.$refs.editChart[index].setData(chartItem, series,
+                      this.filter.panelId, this.filter, legend);
+                  }
                 }
               }
             } else {
               const type = chartItem.type;
-              if (type === 'table') {
-                if(filterType==='showFullScreen'){//table的全屏查询
-                  this.$refs.editChart[index].setData(chartItem, [], this.filter.panelId,
-                    this.filter,filterType);
-                }else {
-                  this.$refs.editChart[index].setData(chartItem, [], this.filter.panelId,
-                    this.filter);
-                }
-              } else if (type === 'line' || type === 'bar' || chartItem.type === 4) {
-                if(filterType==='showFullScreen'){//table的全屏查询
-                  this.$refs.editChart[index].setData(chartItem, [], this.filter.panelId,
-                    this.filter,filterType);
-                }else {
-                  this.$refs.editChart[index].setData(chartItem, [], this.filter.panelId,
-                    this.filter);
+              if(this.$refs.editChart[index]) {
+                if (type === 'table') {
+                  if (filterType === 'showFullScreen') {//table的全屏查询
+                    this.$refs.editChart[index].setData(chartItem, [], this.filter.panelId,
+                      this.filter, filterType);
+                  } else {
+                    this.$refs.editChart[index].setData(chartItem, [], this.filter.panelId,
+                      this.filter);
+                  }
+                } else if (type === 'line' || type === 'bar' || chartItem.type === 4) {
+                  if (filterType === 'showFullScreen') {//table的全屏查询
+                    this.$refs.editChart[index].setData(chartItem, [], this.filter.panelId,
+                      this.filter, filterType);
+                  } else {
+                    this.$refs.editChart[index].setData(chartItem, [], this.filter.panelId,
+                      this.filter);
+                  }
                 }
               }
             }

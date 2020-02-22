@@ -63,11 +63,9 @@
 <!--            <search-input ref="searchInput" :searchMsg="searchMsg" @search="search"></search-input>-->
 <!--          </div>-->
 
-          <button @click="toAddChart"
-                  class="nz-btn nz-btn-size-normal nz-btn-style-light nz-btn-min-width-82">
-                      <span class="top-tool-btn-txt">
+          <button @click="toAddChart" :title="$t('overall.createChart')"
+                  class="nz-btn nz-btn-size-normal nz-btn-style-light ">
                           <i class="nz-icon-create-square nz-icon"></i>
-                          {{$t('overall.add')}}</span>
           </button>
         </div>
       </div>
@@ -390,7 +388,9 @@
           params.start_time = startTimeTmp;
           params.end_time = endTimeTmp;
         }
-        this.$refs.chartList.initData(params);
+        if(this.$refs.chartList){
+          this.$refs.chartList.initData(params);
+        }
       },
 
       /*图表相关操作--end*/
@@ -706,7 +706,6 @@
 
     li {
       padding: 0 20px !important;
-
     }
   }
 

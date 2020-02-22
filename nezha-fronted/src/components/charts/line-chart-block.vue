@@ -2,7 +2,7 @@
   @import './line-chart-block.scss';
 </style>
 <template>
-  <div class="line-chart-block" :id="'lineChartDiv'+chartIndex" v-show="divFirstShow">
+  <div class="line-chart-block"   :id="'lineChartDiv'+chartIndex" v-show="divFirstShow">
     <loading  :ref="'localLoading'+chartIndex"></loading>
     <!--<div class="edit">
 
@@ -21,14 +21,19 @@
         </span>
       </div>
     </div>-->
-    <div class="nz-btn-group nz-btn-group-light edit" v-show="firstShow">
-      <button type="button" @click="refreshChart" style="padding: 6px 14px 5px 14px;" class="nz-btn nz-btn-size-large nz-btn-style-light" v-if="showSetting"><i style="font-size: 16px;" class="global-active-color el-icon-refresh-right"></i></button><button
-      @click="editChart" type="button" class="nz-btn nz-btn-size-large nz-btn-style-light" v-if="showSetting"><i class="nz-icon nz-icon-edit"></i></button><button
-      @click="removeChart" type="button" class="nz-btn nz-btn-size-large nz-btn-style-light" v-if="showSetting"><i class="el-icon-delete"></i></button><button
-      @click="showAllScreen" type="button" class="nz-btn nz-btn-size-large nz-btn-style-light"><i class="el-icon-full-screen"></i></button>
+    <div class="clearfix">
+      <div class="chart-title" v-show="firstShow">
+        {{data.title}}
+      </div>
+      <div class="nz-btn-group nz-btn-group-light edit button-panel-height" v-show="firstShow">
+        <button type="button" @click="refreshChart" style="padding: 6px 14px 5px 14px;" class="nz-btn nz-btn-size-large nz-btn-style-light" v-if="showSetting"><i style="font-size: 16px;" class="global-active-color el-icon-refresh-right"></i></button><button
+        @click="editChart" type="button" class="nz-btn nz-btn-size-large nz-btn-style-light" v-if="showSetting"><i class="nz-icon nz-icon-edit"></i></button><button
+        @click="removeChart" type="button" class="nz-btn nz-btn-size-large nz-btn-style-light" v-if="showSetting"><i class="el-icon-delete"></i></button><button
+        @click="showAllScreen" type="button" class="nz-btn nz-btn-size-large nz-btn-style-light"><i class="el-icon-full-screen"></i></button>
+      </div>
     </div>
 
-    <div class="line-area" ref="lineChartArea"  id="lineChartArea" v-show="firstShow"></div>
+    <div class="line-area" style="border:solid 0px red;" ref="lineChartArea"  id="lineChartArea" v-show="firstShow"></div>
 
     <div class="legend-container"   id="legendArea" ref="legendArea" v-show="firstShow">
       <div v-for="(item, index) in legendList" :title="item.name"  @click="clickLegend(item.name,index)" class="legend-item" :class="{'ft-gr':isGrey[index]}" :key="'legend_' + item.name+'_'+index">
@@ -61,7 +66,7 @@
           <!--<button @click="refreshChart" type="button" class="nz-btn nz-btn-size-normal nz-btn-style-light"><i style="font-size: 14px;" class="el-icon-refresh-right"></i></button>-->
         </div>
       </div>
-      <div class="line-area " ref="screenShowArea"  id="screenShowArea" ></div>
+      <div class="line-area " ref="screenShowArea"  id="screenShowArea"  style="margin-top:10px;"></div>
       <div class="legend-container"  id="screenLegendArea" ref="screenLegendArea"  v-show="showLegend">
         <div v-for="(item, index) in screenLegendList" :title="item.name"  @click="clickScreenLegend(item.name,index)" class="legend-item" :class="{'ft-gr':isGreyScreen[index]}"  :key="'legend_' + item.name+'_'+index">
           <span class="legend-shape" :style="{background:(isGreyScreen[index]?'#D3D3D3':bgColorList[index])}"></span>{{item.name}}
@@ -317,6 +322,7 @@
         }
         var chartWidth = ele.clientWidth;
         var title = {
+          show:false,
           text: chartInfo.title || null,
           textAlign: 'left',
           useHTML: true,
@@ -330,6 +336,9 @@
           }
         };
         var option = {
+          title:{
+            show:false,
+          },
           color: this.bgColorList,
           tooltip: {
             trigger: 'axis',
@@ -500,9 +509,9 @@
           },
           grid: {
             //height:"50%",
-            //top: '13%',
+            top: 13,
             left: 65,
-            right: 65,
+            right: 45,
             containLabel: false,
             bottom:70,//156
           },
@@ -653,7 +662,7 @@
           });
           */
           this.echartStore.clear();
-          option.title = title;
+          //option.title = title;
           this.echartStore.setOption(option);//创建图表
           //this.echartStore.hideLoading();
           this.$refs['localLoading'+this.chartIndex].endLoading();
@@ -671,9 +680,9 @@
           this.$nextTick(() => {
             let divHeight = this.$refs.legendArea.offsetHeight;
             if(!chartInfo.height){
-              this.echartStore.resize({height:(400-divHeight)});
+              this.echartStore.resize({height:(400-divHeight-35)});
             }else {
-              this.echartStore.resize({height:(chartInfo.height-divHeight-25)});
+              this.echartStore.resize({height:(chartInfo.height-divHeight-25-35)});
             }
           });
           this.firstShow = true; // 展示操作按键

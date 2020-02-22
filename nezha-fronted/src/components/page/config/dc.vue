@@ -23,11 +23,9 @@
       <div class="top-tools">
         <div></div>
         <div>
-          <button type="button" @click=""
-                  class="nz-btn nz-btn-size-normal nz-btn-style-light float-right nz-btn-min-width-82" id="dc-add">
-                <span class="top-tool-btn-txt">
+          <button type="button" @click=""  :title="$t('overall.createDatacenter')"
+                  class="nz-btn nz-btn-size-normal nz-btn-style-light float-right " id="dc-add">
                   <i class="nz-icon-create-square nz-icon"></i>
-                  {{$t('overall.add')}}</span>
           </button>
           <div class="top-tool-search float-right">
             <search-input :searchMsg="searchMsg" @search="search"></search-input>
