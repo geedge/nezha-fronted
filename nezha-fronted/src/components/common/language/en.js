@@ -314,7 +314,7 @@ const en = {
       assetState: 'State',//'状态'
       assetPing: 'Ping',
       modules: 'Module',//'组件'
-      alerts: 'Alert information',//'告警信息'
+      alerts: 'Alert message',//'告警信息'
       dataCenter: 'DC',//DC
       cabinet: 'Cabinet',//'机柜'
       model: 'Model',//'型号'
