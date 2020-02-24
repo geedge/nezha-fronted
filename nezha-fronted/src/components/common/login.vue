@@ -54,7 +54,6 @@ export default {
             sessionStorage.setItem("nz-username", this.loginData.username);
             localStorage.setItem("nz-username", this.loginData.username);
             localStorage.setItem('nz-language-' + this.loginData.username, this.lang);
-            console.info('llang:' + this.lang)
             this.$i18n.locale = this.lang;
             bus.$emit('login');
             this.$router.push({

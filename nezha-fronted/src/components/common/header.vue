@@ -84,7 +84,7 @@
       </el-submenu>
       <el-submenu index="5" popper-class="nz-submenu">
         <template slot="title">
-          <div @click="jumpTo('account')" :class ="activeIndex == 'account' || activeIndex == 'promServer' ? 'menu-active' :''">{{$t('overall.config')}}</div>
+          <div @click="jumpTo('account')" :class ="activeIndex == 'account' || activeIndex == 'promServer' || activeIndex == 'dc' ? 'menu-active' :''">{{$t('overall.config')}}</div>
         </template>
         <el-menu-item index="5-0">
           <div @click="jumpTo('account')" :class="{'menu-item-active' :(activeIndex == 'account' )}">{{$t('config.account.account')}}</div>
