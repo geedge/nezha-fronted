@@ -33,7 +33,7 @@
       </div>
     </div>
 
-    <div class="line-area" style="border:solid 0px red;" ref="lineChartArea"  id="lineChartArea" v-show="firstShow"></div>
+    <div class="line-area"  ref="lineChartArea"  id="lineChartArea" v-show="firstShow"></div>
 
     <div class="legend-container"   id="legendArea" ref="legendArea" v-show="firstShow">
       <div v-for="(item, index) in legendList" :title="item.name"  @click="clickLegend(item.name,index)" class="legend-item" :class="{'ft-gr':isGrey[index]}" :key="'legend_' + item.name+'_'+index">
@@ -344,7 +344,7 @@
             trigger: 'axis',
             confine:false,
             extraCssText:'z-index:1000;',
-            enterable:true,
+            /*enterable:true, 导致tooltip不消失，显示多个tooltip*/
             position:function(point,params,dom,rect,size){
               dom.style.transform = "translateZ(0)";
               //提示框位置
@@ -510,10 +510,10 @@
           grid: {
             //height:"50%",
             top: 13,
-            left: 65,
-            right: 45,
-            containLabel: false,
-            bottom:70,//156
+            left: 0,
+            right: 30,
+            containLabel: true,
+            bottom:35,//156
           },
           dataZoom: [{
             type: 'slider',
@@ -522,7 +522,9 @@
             start: 0,
             end: 100,
             height:25,
-            bottom:10//96
+            bottom:10,//96
+            left:40,
+            right:48,
           }
             /*
             , {

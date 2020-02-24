@@ -10,14 +10,22 @@
     <div class="content-right">
       <div class="top-tools">
         <div>
-          <el-dropdown @command="panelChange" trigger="click">
-                  <span class="el-dropdown-link">
-                      {{showPanel.name}}<i class="el-icon-arrow-down el-icon--right"></i>
-                  </span>
-            <el-dropdown-menu class="nz-dashboard-dropdown" slot="dropdown">
+          <el-dropdown @command="panelChange" class="panel-dropdown-title" trigger="click" >
+            <el-row  :gutter="10" class="el-dropdown-link" style="">
+              <el-col :span="21" class="panel-list-title" :title="showPanel.name">{{showPanel.name}}</el-col>
+              <el-col :span="3" style="padding-left:0px !important;"><i class="el-icon-arrow-down el-icon--right"></i></el-col>
+            </el-row>
+            <el-dropdown-menu class="nz-dashboard-dropdown" slot="dropdown" >
               <el-dropdown-item>{{$t('dashboard.panel.createPanelTitleSec')}}</el-dropdown-item>
               <el-dropdown-item v-for="item in panelData" :key="item.id+1"
-                                :class="showPanel.id==item.id?'nz-dashboard-dropdown-bg':''" :command="item">{{item.name}}
+                                :class="showPanel.id==item.id?'nz-dashboard-dropdown-bg':''" :command="item">
+                <!--{{item.name}}-->
+                <el-row  :gutter="10" class="panel-list-width" >
+                  <el-col :span="19" class="panel-list-item" :title="item.name">{{item.name}}</el-col>
+                  <el-col :span="2"><span class="panel-dropdown-btn panel-dropdown-btn-delete" @click.stop="del(item)"><i class="el-icon-delete"></i></span></el-col>
+                  <el-col :span="1">&nbsp;</el-col>
+                  <el-col :span="2"><span class="panel-dropdown-btn" @click.stop="toEdit(item)"><i class="el-icon-edit-outline" ></i></span></el-col>
+                </el-row>
               </el-dropdown-item>
             </el-dropdown-menu>
           </el-dropdown>
@@ -58,14 +66,14 @@
             </button>
           </el-popover>
           </div>
-              <!-- 2020-02-14 使用普通搜索框-->
-<!--          <div class="top-tool-search">-->
-<!--            <search-input ref="searchInput" :searchMsg="searchMsg" @search="search"></search-input>-->
-<!--          </div>-->
+          <!-- 2020-02-14 使用普通搜索框-->
+          <!--          <div class="top-tool-search">-->
+          <!--            <search-input ref="searchInput" :searchMsg="searchMsg" @search="search"></search-input>-->
+          <!--          </div>-->
 
           <button @click="toAddChart" :title="$t('overall.createChart')"
                   class="nz-btn nz-btn-size-normal nz-btn-style-light ">
-                          <i class="nz-icon-create-square nz-icon"></i>
+            <i class="nz-icon-create-square nz-icon"></i>
           </button>
         </div>
       </div>
@@ -597,6 +605,38 @@
     border-radius: 5px;
   }
 
+  .panel-list-width {
+    width:240px;
+  }
+
+  .panel-dropdown-title {
+    line-height:25px;
+    padding-left:5px;
+    margin-left:10px;
+    text-align:left;
+    border-radius:4px;
+    width:120px;
+    height:25px;
+    border:solid 1px  #d8dce1;
+    white-space: nowrap;
+    overflow-x: hidden;
+    text-overflow: ellipsis;
+  }
+  .panel-list-title {
+    min-height:25px;
+    width:100px;
+    white-space: nowrap;
+    overflow-x: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .panel-list-item {
+    width:190px;
+    white-space: nowrap;
+    overflow-x: hidden;
+    text-overflow: ellipsis;
+  }
+
   .content-right-option {
     cursor: pointer;
     display: inline-block;
@@ -703,9 +743,15 @@
   .nz-dashboard-dropdown {
     height: 300px;
     overflow-y: auto;
-
+    left:210px !important;
     li {
-      padding: 0 20px !important;
+      /*padding: 0 20px !important;*/
+      padding-left:20px !important;
+      padding-right:0px !important;
+      width:240px;
+      white-space:nowrap;
+      overflow-x:hidden;
+      text-overflow:ellipsis;
     }
   }
 
