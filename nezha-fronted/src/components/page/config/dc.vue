@@ -54,12 +54,17 @@
               &nbsp;
               <span :title="$t('overall.delete')" @click="del(scope.row)" class="content-right-option" :id="'dc-del-'+scope.row.id"><i class="el-icon-delete"></i></span>
             </div>
-            <template v-if="item.prop == 'principal'">
+            <template v-else-if="item.prop == 'principal'">
               <template v-for="item in userData">
                 <template v-if="scope.row.principal == item.userId">{{item.username}}</template>
               </template>
             </template>
-            <span v-else>{{scope.row[item.prop]}}</span>
+            <template v-else-if="item.prop == 'area'">
+              <template v-if="scope.row.area">{{scope.row.area.name}}</template>
+              <template v-else>-</template>
+            </template>
+            <template v-else-if="scope.row[item.prop]">{{scope.row[item.prop]}}</template>
+            <template v-else>-</template>
           </template>
         </el-table-column>
         <el-table-column width="28">
@@ -81,12 +86,12 @@
       ref="elementset"
     ></element-set>
 
-    <dc-box ref="dcBox" :dc="currentDc"></dc-box>
+    <dc-box ref="dcBox" :dc="currentDc" :user-data="userData"></dc-box>
   </div>
 </template>
 <script>
   export default {
-    name: "account",
+    name: "dc",
     data() {
       return {
         dc: {
@@ -121,6 +126,10 @@
             prop: 'name',
             show: true,
           }, {
+            label: this.$t("config.dc.cabinetNum"),
+            prop: 'cabinetNum',
+            show: true,
+          }, {
             label: this.$t("asset.createAssetTab.location"),
             prop: 'location',
             show: true,
@@ -131,6 +140,10 @@
           }, {
             label: this.$t('asset.createAssetTab.principal'),
             prop: 'principal',
+            show: true
+          }, {
+            label: this.$t('config.dc.area'),
+            prop: 'area',
             show: true
           }, {
             label: this.$t('config.account.option'),

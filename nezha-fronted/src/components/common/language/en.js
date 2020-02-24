@@ -370,7 +370,8 @@ const en = {
     },
     dc: {
       dc: 'Datacenter',
-
+      area: "Area",
+      cabinetNum: "Cabinet number"
     }
   },
   alert: {
