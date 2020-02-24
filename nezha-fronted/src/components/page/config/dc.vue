@@ -23,7 +23,7 @@
       <div class="top-tools">
         <div></div>
         <div>
-          <button type="button" @click=""  :title="$t('overall.createDatacenter')"
+          <button type="button" @click="toAdd" :title="$t('overall.createDatacenter')"
                   class="nz-btn nz-btn-size-normal nz-btn-style-light float-right " id="dc-add">
                   <i class="nz-icon-create-square nz-icon"></i>
           </button>
@@ -55,9 +55,12 @@
               <span :title="$t('overall.delete')" @click="del(scope.row)" class="content-right-option" :id="'dc-del-'+scope.row.id"><i class="el-icon-delete"></i></span>
             </div>
             <template v-else-if="item.prop == 'principal'">
-              <template v-for="item in userData">
-                <template v-if="scope.row.principal == item.userId">{{item.username}}</template>
+              <template v-if="scope.row.principal">
+                <template v-for="item in userData">
+                  <template v-if="scope.row.principal == item.userId">{{item.username}}</template>
+                </template>
               </template>
+              <template v-else>-</template>
             </template>
             <template v-else-if="item.prop == 'area'">
               <template v-if="scope.row.area">{{scope.row.area.name}}</template>
@@ -86,7 +89,7 @@
       ref="elementset"
     ></element-set>
 
-    <dc-box ref="dcBox" :dc="currentDc" :user-data="userData"></dc-box>
+    <dc-box ref="dcBox" :dc="currentDc" :user-data="userData" @reload="getTableData"></dc-box>
   </div>
 </template>
 <script>
@@ -94,21 +97,16 @@
     name: "dc",
     data() {
       return {
-        dc: {
-          id: '',
-          name: '',
-          location: '',
-          tel: '',
-          principal: '',
-          areaId: ''
-        },
         currentDc: {
           id: '',
           name: '',
           location: '',
           tel: '',
           principal: '',
-          areaId: ''
+          area: {
+            id: '',
+            name: ''
+          }
         },
         pageObj: {
           pageNo: 1,
@@ -209,12 +207,34 @@
         });
       },
       edit: function (u) {
-        this.currentDc = JSON.parse(JSON.stringify(u));
+        let tempDc = JSON.parse(JSON.stringify(u));
+        if (!tempDc.area) {
+          this.$set(tempDc, 'area', {id: '', name: ''});
+        }
+        this.currentDc = tempDc;
         this.$refs.dcBox.show(true, true);
       },
       detail(u) {
-        this.currentDc = JSON.parse(JSON.stringify(u));
+        let tempDc = JSON.parse(JSON.stringify(u));
+        if (!tempDc.area) {
+          this.$set(tempDc, 'area', {id: '', name: ''});
+        }
+        this.currentDc = tempDc;
         this.$refs.dcBox.show(true, false);
+      },
+      toAdd() {
+        this.currentDc = {
+          id: '',
+            name: '',
+            location: '',
+            tel: '',
+            principal: '',
+            area: {
+            id: '',
+              name: ''
+          }
+        },
+        this.$refs.dcBox.show(true, true);
       },
       del: function (u) {
         this.$confirm(this.$t("tip.confirmDelete"), {
@@ -222,7 +242,7 @@
           cancelButtonText: this.$t("tip.no"),
           type: 'warning'
         }).then(() => {
-          this.$delete("idc/ids=" + u.userId).then(response => {
+          this.$delete("idc/ids=" + u.id).then(response => {
             if (response.code === 200) {
               this.$message({duration: 1000, type: 'success', message: this.$t("tip.deleteSuccess")});
               this.getTableData();
@@ -267,8 +287,6 @@
         }
         this.getTableData();
       }
-    },
-    computed: {
     },
     mounted() {
       this.getTableData();

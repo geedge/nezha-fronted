@@ -33,6 +33,7 @@ import panelBox from "./components/common/rightBox/panelBox"; //面板弹框组�
 import moduleListPop from "./components/page/asset/moduleListPop"; //面板弹框组件
 import cabinetConfigBox from "./components/common/popBox/cabinetConfig"; //面板弹框组件
 import dcBox from "./components/common/rightBox/dcBox"; //dc弹框
+import selectArea from "./components/common/popBox/selectArea"; //dc弹框
 
 
 Vue.component("Pagination", Pagination);
@@ -51,6 +52,7 @@ Vue.component("panel-box", panelBox);
 Vue.component("module-list-pop", moduleListPop);
 Vue.component("cabinet-config-box", cabinetConfigBox);
 Vue.component("dc-box", dcBox);
+Vue.component("select-area", selectArea);
 
 Vue.prototype.$axios = axios;
 Vue.prototype.$post = post;
