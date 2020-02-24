@@ -3,7 +3,7 @@
     <div class="right-box right-box-dc" v-if="rightBox.show">
       <!-- begin--顶部按钮-->
       <div class="right-box-top-btns">
-        <button id="dc-del" type="button" v-if="dc.id != '' && rightBox.isEdit" @click="del" class="nz-btn nz-btn-size-normal nz-btn-size-alien nz-btn-style-light nz-btn-min-width-82">
+        <button id="dc-del" type="button" v-if="currentDc.id != '' && rightBox.isEdit" @click="del" class="nz-btn nz-btn-size-normal nz-btn-size-alien nz-btn-style-light nz-btn-min-width-82">
           <span class="right-box-top-btn-icon"><i class="el-icon-delete"></i></span>
           <span class="right-box-top-btn-txt">{{$t('overall.delete')}}</span>
         </button>
@@ -20,33 +20,44 @@
 
       <!-- begin--表单-->
       <el-scrollbar class="right-box-form-box">
-        <el-form class="right-box-form" :model="dc" label-position="top" :rules="rules" ref="dcForm">
+        <el-form class="right-box-form" :model="currentDc" label-position="top" :rules="rules" ref="dcForm">
           <el-form-item :label='$t("overall.name")' prop="name">
-            <el-input v-if="rightBox.isEdit" placeholder="" maxlength="64" show-word-limit v-model="dc.name" size="small"></el-input>
-            <div v-if="!rightBox.isEdit" class="right-box-form-content-txt">{{dc.name}}</div>
+            <el-input v-if="rightBox.isEdit" placeholder="" maxlength="64" show-word-limit v-model="currentDc.name" size="small"></el-input>
+            <div v-if="!rightBox.isEdit" class="right-box-form-content-txt">{{currentDc.name}}</div>
           </el-form-item>
           <el-form-item :label='$t("asset.createAssetTab.location")' prop="location">
-            <el-input v-if="rightBox.isEdit" placeholder="" v-model="dc.location" size="small"></el-input>
-            <div v-if="!rightBox.isEdit" class="right-box-form-content-txt">{{dc.location}}</div>
+            <el-input v-if="rightBox.isEdit" placeholder="" v-model="currentDc.location" size="small"></el-input>
+            <div v-if="!rightBox.isEdit && currentDc.location" class="right-box-form-content-txt">{{currentDc.location}}</div>
+            <div v-else-if="!rightBox.isEdit" class="right-box-form-content-txt">-</div>
           </el-form-item>
           <el-form-item :label='$t("asset.createAssetTab.tel")' prop="tel">
-            <el-input v-if="rightBox.isEdit" placeholder="" v-model="dc.tel" size="small"></el-input>
-            <div v-if="!rightBox.isEdit" class="right-box-form-content-txt">{{dc.tel}}</div>
+            <el-input v-if="rightBox.isEdit" placeholder="" v-model="currentDc.tel" size="small"></el-input>
+            <div v-if="!rightBox.isEdit && currentDc.tel" class="right-box-form-content-txt">{{currentDc.tel}}</div>
+            <div v-else-if="!rightBox.isEdit" class="right-box-form-content-txt">-</div>
           </el-form-item>
           <el-form-item :label='$t("asset.createAssetTab.principal")' prop="principal">
             <el-select value-key="id" popper-class="config-dropdown"
-                       v-model="dc.principal" placeholder="" v-if="rightBox.isEdit" size="small">
+                       v-model="currentDc.principal" placeholder="" v-if="rightBox.isEdit" size="small">
               <el-option @click.native="" v-for="item in userData" :key="item.userId" :label="item.username"
                          :value="item.userId" :id="'dc-principal-op-'+item.userId">
                 <span>{{item.username}}</span>
               </el-option>
-
             </el-select>
-            <div v-if="!rightBox.isEdit" class="right-box-form-content-txt">{{dc.tel}}</div>
+            <div v-if="!rightBox.isEdit && currentDc.principal" class="right-box-form-content-txt">
+              <template v-for="item in userData">
+                <template v-if="item.userId == currentDc.principal">{{item.username}}</template>
+              </template>
+            </div>
+            <div v-else-if="!rightBox.isEdit" class="right-box-form-content-txt">-</div>
           </el-form-item>
           <el-form-item :label='$t("config.dc.area")' prop="area">
-
-
+            <select-area ref="selectArea" :areaData="areaData" :placement="'left'" @selectArea="selectArea">
+              <template v-slot:trigger>
+                <el-input v-if="rightBox.isEdit" placeholder="" v-model="currentDc.area.name" size="small" readonly="readonly" @click.native="toSelectArea"></el-input>
+              </template>
+            </select-area>
+            <div v-if="!rightBox.isEdit && currentDc.area.name" class="right-box-form-content-txt">{{currentDc.area.name}}</div>
+            <div v-else-if="!rightBox.isEdit" class="right-box-form-content-txt">-</div>
           </el-form-item>
         </el-form>
       </el-scrollbar>
@@ -60,6 +71,7 @@
           <span>{{$t('overall.save')}}</span>
         </button>
       </div>
+
     </div>
   </transition>
 </template>
@@ -75,6 +87,18 @@
     },
     data() {
       return {
+        currentDc: {
+          id: '',
+          name: '',
+          location: '',
+          tel: '',
+          principal: '',
+          area: {
+            id: '',
+            name: ''
+          },
+          areaId: ''
+        },
         rightBox: {
           show: false,
           title: '',
@@ -82,8 +106,7 @@
         },
         rules: {
           name: [
-            {required: true, message: this.$t('validate.required'), trigger: 'blur'},
-            {validator: noSpecialChar,trigger: "change"}
+            {required: true, message: this.$t('validate.required'), trigger: 'blur'}
           ],
         },
         areaData: [],
@@ -132,51 +155,6 @@
             }]
           }
         },
-        data2: [{
-          id: 1,
-          label: '一级 1',
-          children: [{
-            id: 4,
-            label: '二级 1-1',
-            children: [{
-              id: 9,
-              label: '三级 1-1-1'
-            }, {
-              id: 10,
-              label: '三级 1-1-2'
-            }]
-          }]
-        }, {
-          id: 2,
-          label: '一级 2',
-          children: [{
-            id: 5,
-            label: '二级 2-1'
-          }, {
-            id: 6,
-            label: '二级 2-2'
-          }]
-        }, {
-          id: 3,
-          label: '一级 3',
-          children: [{
-            id: 7,
-            label: '二级 3-1'
-          }, {
-            id: 8,
-            label: '二级 3-2',
-            children: [{
-              id: 11,
-              label: '三级 3-2-1'
-            }, {
-              id: 12,
-              label: '三级 3-2-2'
-            }, {
-              id: 13,
-              label: '三级 3-2-3'
-            }]
-          }]
-        }],
       }
     },
     methods: {
@@ -190,12 +168,20 @@
         this.rightBox.show = false;
       },
 
+      /*弹出选择area弹框*/
+      toSelectArea() {
+        this.$refs.selectArea.openBox(this.currentDc.area);
+      },
+
       /*保存*/
       save() {
         this.$refs.dcForm.validate((valid) => {
           if (valid) {
-            if (this.dc.id) {
-              this.$put('idc', this.dc).then(response => {
+            if (this.currentDc.id) {
+              if (this.currentDc.area) {
+                this.currentDc.areaId = this.currentDc.area.id;
+              }
+              this.$put('idc', this.currentDc).then(response => {
                 if (response.code === 200) {
                   this.$message({duration: 1000, type: 'success', message: this.$t("tip.saveSuccess")});
                   this.rightBox.show = false;
@@ -205,10 +191,14 @@
                 }
               });
             } else {
-              this.$post('idc', this.dc).then(response => {
+              if (this.currentDc.area) {
+                this.currentDc.areaId = this.currentDc.area.id;
+              }
+              this.$post('idc', this.currentDc).then(response => {
                 if (response.code === 200) {
                   this.$message({duration: 1000, type: 'success', message: this.$t("tip.saveSuccess")});
                   this.rightBox.show = false;
+                  this.$emit("reload");
                 } else {
                   this.$message.error(response.msg);
                 }
@@ -222,7 +212,7 @@
       saveOrToEdit: function() {
         if (!this.rightBox.isEdit) {
           this.rightBox.isEdit = true;
-          this.rightBox.title = this.$t("asset.createAssetTab.editIdcTab.title") + "  ID：" + this.dc.id;
+          this.rightBox.title = this.$t("asset.createAssetTab.editIdcTab.title") + "  ID：" + this.currentDc.id;
         } else {
           this.save();
         }
@@ -234,11 +224,11 @@
           cancelButtonText: this.$t("tip.no"),
           type: 'warning'
         }).then(() => {
-          this.$delete("idc?ids=" + this.dc.id).then(response => {
+          this.$delete("idc?ids=" + this.currentDc.id).then(response => {
             if (response.code === 200) {
               this.$message({duration: 1000, type: 'success', message: this.$t("tip.deleteSuccess")});
               this.rightBox.show = false;
-              this.$store.commit('dcListChange');
+              this.$emit("reload");
             } else {
               this.$message.error(response.msg);
             }
@@ -246,19 +236,16 @@
         });
       },
       getAreaData() {
-        this.areaData = this.toTreeData(this.data);
-
-        /*this.$get('area', {}).then(response => {
+        this.$get('area', {pid: 0}).then(response => {
           if (response.code === 200) {
-            let rawData = response.data.list;
-            //将原始数据处理为el-tree格式
-
+            this.areaData = response.data.list;
           }
-        });*/
+        });
       },
-      toTreeData(rawData) {
 
-        return rawData;
+      selectArea(area) {
+        this.currentDc.area.id = area.id;
+        this.currentDc.area.name = area.name;
       }
     },
     mounted() {
@@ -271,6 +258,7 @@
         immediate: true,
         deep:true,
         handler(n, o) {
+          this.currentDc = JSON.parse(JSON.stringify(n));
           if (n && n.id) {
             this.rightBox.title =this.rightBox.isEdit? this.$t("asset.createAssetTab.editIdcTab.title") + "  ID：" + n.id : this.$t("config.dc.dc") + "  ID：" + n.id ;
           } else {

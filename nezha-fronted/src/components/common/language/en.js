@@ -371,6 +371,7 @@ const en = {
     dc: {
       dc: 'Datacenter',
       area: "Area",
+      selectArea: 'Select area',
       cabinetNum: "Cabinet number"
     }
   },
