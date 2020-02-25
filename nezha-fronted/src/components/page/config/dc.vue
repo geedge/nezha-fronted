@@ -242,7 +242,7 @@
           cancelButtonText: this.$t("tip.no"),
           type: 'warning'
         }).then(() => {
-          this.$delete("idc/ids=" + u.id).then(response => {
+          this.$delete("idc?ids=" + u.id).then(response => {
             if (response.code === 200) {
               this.$message({duration: 1000, type: 'success', message: this.$t("tip.deleteSuccess")});
               this.getTableData();
