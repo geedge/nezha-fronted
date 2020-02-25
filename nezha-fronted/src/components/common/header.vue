@@ -435,7 +435,12 @@
       },
       dialogClosed:function(){
         this.showChangePwd=false;
-      }
+      },
+      cancel: function() {
+        this.activeIndex = this.$route.path.slice(1, this.$route.path.length);
+        console.info(this.activeIndex)
+        //this.$router.go(-1);
+      },
     },
     created() {
       /*if (!localStorage.getItem("nz-language")) {
@@ -457,10 +462,16 @@
       bus.$on('login', () => {
         this.username = sessionStorage.getItem("nz-username");
         this.refreshLang();
+        this.activeIndex = 'panel';
         /*this.$nextTick(function(){
           window.location.reload();
         });*/
       });
+
+      if (window.history && window.history.pushState) {
+        history.pushState(null, null, document.URL);
+        window.addEventListener('popstate', this.cancel, false);
+      }
     },
     computed: {
       projectListReloadWatch() {
@@ -492,6 +503,9 @@
       projectListReloadWatch(n, o) {
         this.getProjectList();
       }
+    },
+    destroyed() {
+      window.removeEventListener('popstate', this.cancel, false);
     }
   }
 </script>
