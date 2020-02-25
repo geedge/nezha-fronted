@@ -440,6 +440,7 @@
         this.$get('panel?pageNo=1&pageSize=-1').then(response => {
           if (response.code === 200) {
             this.panelData = response.data.list;
+            let isInitData = false;
             if (response.data.list.length > 0) {
               if (this.$store.state.showPanel.id !== 0 && this.$store.state.showPanel.name !== '') {
                 this.showPanel.name = this.$store.state.showPanel.name;
@@ -453,6 +454,7 @@
                 this.showPanel.name = response.data.list[0].name;
                 this.filter.panelId = this.showPanel.id;
                 this.getData(this.filter);
+                isInitData = true;
               }
               this.filter.panelId = this.showPanel.id;
             } else {
@@ -460,7 +462,7 @@
               this.filter.panelId = '';
             }
             this.pageObj.total = response.data.total;
-            if (this.panel.id === '' || this.panel.id === this.showPanel.id) {
+            if (!isInitData &&(this.panel.id === '' || this.panel.id === this.showPanel.id)) {
               this.getData(this.filter);
             }
             this.$store.state.showPanel.id = 0;
