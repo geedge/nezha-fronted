@@ -65,13 +65,28 @@ Vue.use(ElementUI);
 Vue.use(Vuex);
 Vue.use(VueResource);
 
+const exceptClassName = [];
 const clickoutside = {
   // 初始化指令
   bind(el, binding, vnode) {
     function documentHandler(e) {
-      // 这里判断点击的元素是否是本身，是本身，则返回
       if (el.contains(e.target)) {
         return false;
+      } else {
+        let flag = true;
+        let attrs = e.target.attributes;
+        for (let i = 0; i < attrs.length; i++) {
+          if (attrs[i].name == 'class') {
+            console.info(attrs[i].value)
+            if ((attrs[i].value + '').indexOf("el-select-dropdown") != -1) {
+              flag = false;
+              break;
+            }
+          }
+        }
+        if (!flag) {
+          return false;
+        }
       }
       // 判断指令中是否绑定了函数
       if (binding.expression) {
@@ -87,11 +102,11 @@ const clickoutside = {
 
     // 给当前元素绑定个私有变量，方便在unbind中可以解除事件监听
     el.__vueClickOutside__ = documentHandler;
-    document.addEventListener('click', documentHandler);
+    document.addEventListener('mousedown', documentHandler);
   },
   unbind(el, binding) {
     // 解除事件监听
-    document.removeEventListener('click', el.__vueClickOutside__);
+    document.removeEventListener('mousedown', el.__vueClickOutside__);
     delete el.__vueClickOutside__;
   },
 };

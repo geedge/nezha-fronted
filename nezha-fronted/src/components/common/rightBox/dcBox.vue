@@ -1,6 +1,6 @@
 <template>
   <transition name="right-box">
-    <div class="right-box right-box-dc" v-if="rightBox.show">
+    <div class="right-box right-box-dc" v-if="rightBox.show" v-clickoutside="clickos">
       <!-- begin--顶部按钮-->
       <div class="right-box-top-btns">
         <button id="dc-del" type="button" v-if="currentDc.id != '' && rightBox.isEdit" @click="del" class="nz-btn nz-btn-size-normal nz-btn-size-alien nz-btn-style-light nz-btn-min-width-82">
@@ -101,6 +101,7 @@
         },
         rightBox: {
           show: false,
+          firstShow: false,
           title: '',
           isEdit: false
         },
@@ -162,10 +163,13 @@
         this.rightBox.show = show;
         this.rightBox.isEdit = isEdit;
       },
-
+      clickos() {
+        //this.rightBox.show = false;
+      },
       /*关闭弹框*/
       esc() {
         this.rightBox.show = false;
+        this.rightBox.firstShow = false;
       },
 
       /*弹出选择area弹框*/

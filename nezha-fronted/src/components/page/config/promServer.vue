@@ -78,7 +78,7 @@
     </div>
 
     <transition name="right-box">
-      <div class="right-box right-box-prom" v-if="rightBox.show">
+      <div class="right-box right-box-prom" v-if="rightBox.show" v-clickoutside="clickos">
         <!-- begin--顶部按钮-->
         <div class="right-box-top-btns">
           <button type="button" v-if="rightBox.isEdit && promServer.id != ''" @click="del(promServer)"
@@ -363,6 +363,9 @@
         //获取子组件传过来的参数
         this.$store.commit('setHeaderTable', data);
         this.tablelable = data;
+      },
+      clickos() {
+        this.rightBox.show = false;
       },
       toEdit: function (u) {
         this.promServer = Object.assign({}, u);

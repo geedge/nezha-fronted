@@ -85,7 +85,7 @@
     </div>
 
     <transition name="right-box">
-      <div class="right-box right-box-account" v-if="rightBox.show">
+      <div class="right-box right-box-account" v-if="rightBox.show" v-clickoutside="clickos">
         <!-- begin--顶部按钮-->
         <div class="right-box-top-btns">
           <button type="button" v-if="user.userId != '' && rightBox.isEdit" @click="del(user)"
@@ -307,6 +307,9 @@
         //获取子组件传过来的参数
         this.$store.commit('setHeaderTable', data);
         this.tablelable = data;
+      },
+      clickos() {
+        this.rightBox.show = false;
       },
       edit: function (u) {
         this.user = Object.assign({}, u);

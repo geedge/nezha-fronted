@@ -1,6 +1,6 @@
 <template>
   <transition name="right-box">
-    <div class="right-box right-box-alert-config" v-if="rightBox.show">
+    <div class="right-box right-box-alert-config" v-if="rightBox.show" v-clickoutside="clickos">
       <!-- begin--顶部按钮-->
       <div class="right-box-top-btns">
         <button type="button" v-if="alertRule.id != '' && rightBox.isEdit" id="alert-box-del" @click="del" class="nz-btn nz-btn-size-normal nz-btn-size-alien nz-btn-style-light nz-btn-min-width-82">
@@ -57,7 +57,7 @@
             <el-form-item :label="$t('alert.severity')" prop="severity">
               <el-select v-if="rightBox.isEdit" popper-class="config-dropdown" v-model="alertRule.severity" placeholder=""  size="small">
                 <el-option :id="'alert-severity-'+item.key" v-for="item in severityData" :key="item.key" :label="item.value" :value="item.key">
-                  <span class="config-dropdown-label-txt" v-if="!item.isEdit">{{item.value}}</span>
+                  <template v-if="!item.isEdit">{{item.value}}</template>
                   <span class="config-dropdown-label-input" v-if="item.isEdit" @click.stop>
                     <el-input type="text" v-model="item.name" size="mini"></el-input>
                   </span>
@@ -207,6 +207,9 @@
       }
     },
     methods: {
+      clickos() {
+        this.rightBox.show = false;
+      },
       show(show, isEdit) {
         this.rightBox.show = show;
         this.rightBox.isEdit = isEdit;
