@@ -176,12 +176,12 @@
       <Pagination :pageObj="pageObj" @pageNo='pageNo' @pageSize='pageSize' ref="Pagination"></Pagination>
     </div>
 
-    <asset-add-unit :add-unit-show='addUnitShow' @refreshData="flushData" ref="assetAddUnit"
+    <!--<asset-add-unit :add-unit-show='addUnitShow' @refreshData="flushData" ref="assetAddUnit"
                     @sendStateData="tabControl"></asset-add-unit>
     <asset-edit-unit :edit-unit-show='editUnitShow' @refreshData="flushData" @sendStateData="tabControl"
-               ref="assetEditUnit"></asset-edit-unit>
-    <!--<asset-box :edit-unit-show='editUnitShow' @refreshData="flushData" @sendStateData="tabControl"
-                     ref="assetEditUnit"></asset-box>-->
+               ref="assetEditUnit"></asset-edit-unit>-->
+    <asset-box :edit-unit-show='editUnitShow' @refreshData="flushData" @sendStateData="tabControl"
+                     ref="assetEditUnit"></asset-box>
     <element-set
       v-clickoutside="elementsetHide"
       :drop-col="dropCol"
@@ -632,9 +632,9 @@
       },
       tagShow(data, id, type) {
         if (data === 'showAdd') {
-          this.addUnitShow = true;
-          /*this.editUnitShow = true;
-          this.$refs['assetEditUnit'].getAssetData('');*/
+          //this.addUnitShow = true;
+          this.editUnitShow = true;
+          this.$refs['assetEditUnit'].getAssetData('');
         }
         if (data === 'showEdit') {
           this.editUnitShow = true;

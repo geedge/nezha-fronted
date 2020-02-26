@@ -121,12 +121,12 @@
     <panel-box :panel="editPanel" @reload="panelListReload" @reloadForDel="" ref="panelBox"></panel-box>
     <project-box :project="editProject" ref="projectBox"></project-box>
     <module-box :currentProject="currentProject" :module="editModule" @reload="" ref="moduleBox"></module-box>
-    <!--<asset-box :currentProject="currentProject" :currentModule="currentModule" @reload=""
-                      ref="addEndpointBox"></asset-box>-->
     <add-endpoint-box :currentProject="currentProject" :currentModule="currentModule" @reload=""
                       ref="addEndpointBox"></add-endpoint-box>
-    <asset-add-unit :add-unit-show='addUnitShow' @refreshData="refreshAsset" ref="assetAddUnit"
-                    @sendStateData="closeAsset"></asset-add-unit>
+    <!--<asset-add-unit :add-unit-show='addUnitShow' @refreshData="refreshAsset" ref="assetAddUnit"
+                    @sendStateData="closeAsset"></asset-add-unit>-->
+    <asset-box :edit-unit-show='addUnitShow' @refreshData="refreshAsset" @sendStateData="closeAsset"
+               ref="assetAddUnit"></asset-box>
     <alert-config-box :parentAlertRule="alertRule" @reload="" ref="alertConfigBox"></alert-config-box>
     <change-password :cur-user="username" :show-dialog="showChangePwd" @click="showPwdDialog" @dialogClosed="dialogClosed"></change-password>
   </div>

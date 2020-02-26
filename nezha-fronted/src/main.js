@@ -65,7 +65,7 @@ Vue.use(ElementUI);
 Vue.use(Vuex);
 Vue.use(VueResource);
 
-const exceptClassName = [];
+const exceptClassName = []; //clickoutside排除的class
 const clickoutside = {
   // 初始化指令
   bind(el, binding, vnode) {
@@ -77,7 +77,7 @@ const clickoutside = {
         let attrs = e.target.attributes;
         for (let i = 0; i < attrs.length; i++) {
           if (attrs[i].name == 'class') {
-            console.info(attrs[i].value)
+
             if ((attrs[i].value + '').indexOf("el-select-dropdown") != -1) {
               flag = false;
               break;
