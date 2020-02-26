@@ -1,6 +1,6 @@
 <template key="panelBox">
   <transition name="right-box-580">
-    <div class="right-box right-box-panel z-top" v-if="rightBox.show">
+    <div class="right-box right-box-panel z-top" v-if="rightBox.show" v-clickoutside="clickos">
       <!-- begin--顶部按钮-->
       <div class="right-box-top-btns">
         <button type="button" v-if="panel.id != ''" @click="del(panel)" class="nz-btn nz-btn-size-normal nz-btn-size-alien nz-btn-style-light nz-btn-min-width-82">
@@ -58,6 +58,9 @@
       },
       setTitle(title) {
         this.rightBox.title = title;
+      },
+      clickos() {
+        this.esc();
       },
       //面板相关方法
       del: function(u) {

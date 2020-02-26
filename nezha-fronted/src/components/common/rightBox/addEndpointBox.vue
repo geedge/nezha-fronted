@@ -1,6 +1,6 @@
 <template>
   <transition name="right-box-840">
-    <div class="right-box right-box-add-endpoint" v-if="rightBox.show" @mousedown="showEditParamBox(false)">
+    <div class="right-box right-box-add-endpoint" v-if="rightBox.show" @mousedown="showEditParamBox(false)" v-clickoutside="clickos">
       <!-- begin--顶部按钮-->
       <div class="right-box-top-btns">
       </div>
@@ -335,6 +335,10 @@
           this.tempParamObj = [];
         }
         this.editParamBox.show = show;
+      },
+
+      clickos() {
+        this.esc();
       },
 
       /*关闭弹框*/

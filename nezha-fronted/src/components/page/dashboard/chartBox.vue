@@ -53,7 +53,7 @@
   }
 </style>
 <template key="chartBox">
-  <div>
+  <div v-clickoutside="clickos">
     <panel-box :panel="panel" @reload="panelReload" ref="panelBox2"></panel-box>
 
     <transition name="right-box">
@@ -269,6 +269,9 @@
     methods: {
       show(show) {
         this.rightBox.show = show;
+      },
+      clickos() {
+        this.esc();
       },
       toAddPanel() {
         this.$refs.panelBox2.show(true);

@@ -1134,3 +1134,7 @@ li{
 .el-textarea textarea {
   height: 140px !important;
 }
+/*el-data-picker选中背景色*/
+.el-date-table td.current:not(.disabled) span {
+  background-color: $global-text-color-active;
+}

@@ -1,6 +1,6 @@
 <template>
   <transition name="right-box">
-    <div class="right-box right-box-edit-endpoint" v-if="rightBox.show">
+    <div class="right-box right-box-edit-endpoint" v-if="rightBox.show" v-clickoutside="clickos">
       <!-- begin--顶部按钮-->
       <div class="right-box-top-btns">
         <button id="edit-ep-del" type="button" v-if="rightBox.isEdit && endpoint.id != ''" @click="del" class="nz-btn nz-btn-size-normal nz-btn-size-alien nz-btn-style-light nz-btn-min-width-82">
@@ -233,6 +233,10 @@
       /*关闭子弹框*/
       subEsc() {
         this.subBox.show = false;
+      },
+
+      clickos() {
+        this.esc();
       },
 
       // 清除param

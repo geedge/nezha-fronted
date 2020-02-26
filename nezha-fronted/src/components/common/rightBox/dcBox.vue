@@ -164,7 +164,7 @@
         this.rightBox.isEdit = isEdit;
       },
       clickos() {
-        //this.rightBox.show = false;
+        this.rightBox.show = false;
       },
       /*关闭弹框*/
       esc() {

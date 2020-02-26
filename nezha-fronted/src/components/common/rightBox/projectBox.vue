@@ -1,6 +1,6 @@
 <template>
   <transition name="right-box">
-    <div class="right-box right-box-project" v-if="rightBox.show">
+    <div class="right-box right-box-project" v-if="rightBox.show" v-clickoutside="clickos">
       <!-- begin--顶部按钮-->
       <div class="right-box-top-btns">
         <button id="project-del" type="button" v-if="project.id != '' && rightBox.isEdit" @click="del" class="nz-btn nz-btn-size-normal nz-btn-size-alien nz-btn-style-light nz-btn-min-width-82">
@@ -69,6 +69,10 @@
       show(show,isEdit) {
         this.rightBox.show = show;
         this.rightBox.isEdit=isEdit;
+      },
+
+      clickos() {
+        this.esc();
       },
 
       /*关闭弹框*/

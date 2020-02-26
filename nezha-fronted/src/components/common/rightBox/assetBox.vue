@@ -1,6 +1,6 @@
 <template>
   <transition name="right-box-580">
-    <div class="right-box right-box-add-asset" v-if="editUnitShow" @click="editQuit" id="asset-edit-quit">
+    <div class="right-box right-box-add-asset" v-if="editUnitShow" @click="editQuit" id="asset-edit-quit" v-clickoutside="clickos">
       <!--顶部按钮-->
       <div class="right-box-top-btns">
         <button v-if="!tabView && pageObj.id" type="button" @click="deleteData('asset', pageObj.id)" id="asset-edit-del"
@@ -650,6 +650,9 @@
       }
     },
     methods: {
+      clickos() {
+        this.sendStateData('close');
+      },
       cancelEdit(data) {
         if (data === false) {
           this.getAssetTypeOptionData();

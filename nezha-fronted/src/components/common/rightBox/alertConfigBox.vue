@@ -36,7 +36,7 @@
             </el-form-item>
             <!--linkedId-->
             <el-form-item :label="$t('alert.config.link')" prop="linkId">
-              <el-select v-if="rightBox.isEdit" v-model="alertRule.linkId" placeholder="" size="small">
+              <el-select v-if="rightBox.isEdit" v-model="alertRule.linkId" placeholder="" size="small" popper-class="config-dropdown">
                 <el-option :id="'alert-linke-'+item.id" v-for="item in linkObjList" :key="item.id" :label="alertRule.type == 3 ? item.host : item.name" :value="item.id"></el-option>
               </el-select>
               <div v-if="!rightBox.isEdit" class="right-box-form-content-txt">{{alertRule.linkObject ? alertRule.linkObject.name : ''}}</div>
