@@ -33,11 +33,19 @@
       <div class="top-tools">
         <div></div>
         <div>
-          <button @click.stop="tagShow('showAdd')" :title="$t('overall.createAsset')"   class="nz-btn nz-btn-size-normal nz-btn-style-light float-right " id="asset-add">
-               <i class="nz-icon-create-square nz-icon"></i>
-            <!-- ADD按钮 -->
-          </button>
-          <div class="top-tool-search float-right"><search-input :searchMsg="searchMsg" @search="search"></search-input></div>
+          <export-excel
+            export-file-name="asset"
+            export-url="/asset/export"
+            :params="searchLabel"
+            :template-key="templateKey"
+            @afterImport="getAssetData"
+            class="float-right">
+            <template slot="optionZone">
+                <i class="nz-icon nz-icon-create-square" @click.stop="tagShow('showAdd')" :title="$t('overall.createAsset')" ></i>
+            </template>
+          </export-excel>
+
+          <div class="top-tool-search float-left"><search-input :searchMsg="searchMsg" @search="search"></search-input></div>
         </div>
       </div>
 
@@ -75,14 +83,15 @@
             <div v-if="item.prop=='state'">
               <span>{{scope.row.state==1 ? $t('asset.createAssetTab.inStock') : $t('asset.createAssetTab.notInStock')}}</span>
             </div>
+<!--            :content="scope.row.pingRtt ? (scope.row.pingLastUpdate&&scope.row.pingLastUpdate!=''?(new Date(scope.row.pingLastUpdate).getHours()+':'+new Date(scope.row.pingLastUpdate).getMinutes()):'&#45;&#45;')+'['+ scope.row.pingRtt+'ms'+']':(scope.row.pingLastUpdate&&scope.row.pingLastUpdate!=''?(new Date(scope.row.pingLastUpdate).getHours()+':'+new Date(scope.row.pingLastUpdate).getMinutes()):'&#45;&#45;')+'[unreachable]'"-->
             <div v-if="item.prop == 'pingStatus'">
               <el-popover
                 placement="right"
                 width="50"
                 trigger="hover"
-                :content="scope.row.pingRtt ? (scope.row.pingLastUpdate&&scope.row.pingLastUpdate!=''?(new Date(scope.row.pingLastUpdate).getHours()+':'+new Date(scope.row.pingLastUpdate).getMinutes()):'--')+'['+ scope.row.pingRtt+'ms'+']':(scope.row.pingLastUpdate&&scope.row.pingLastUpdate!=''?(new Date(scope.row.pingLastUpdate).getHours()+':'+new Date(scope.row.pingLastUpdate).getMinutes()):'--')+'[unreachable]'">
+                :content="formatPingTime(scope.row.pingLastUpdate)">
                 <div slot="reference" style="width: 20px">
-                  <div :class="{'active-icon green':scope.row.pingState == 1,'active-icon red':scope.row.pingState == 0}"></div>
+                  <div :class="{'active-icon green':scope.row.pingState == 1,'active-icon red':scope.row.pingState == 0}"></div><span>{{scope.row.pingRtt?scope.row.pingRtt+'ms':''}}</span>
                 </div>
               </el-popover>
             </div>
@@ -186,8 +195,10 @@
 
 <script>
   import bus from "../../../libs/bus";
+  import exportXLSX from "../../common/exportXLSX";
   export default {
     name: "asset",
+    components:{'export-excel':exportXLSX},
     data() {
       return {
         searchMsg: { //给搜索框子组件传递的信息
@@ -360,6 +371,25 @@
         checkAllFlag: false,
         checkAllHandler: false,
         assetClick: false,
+        templateHeader:['*Sn','*Type','*Vendor','*Model','*Idc','Cabinet','*Host','State','PurchaseDate','AuthType','User','Pwd','PrivateKey','Port','Exporter'],
+        templateDate:[{
+          sn:'0001',
+          type:'server/net',
+          vendor:'huawei',
+          model:'rongyao',
+          idc:'beijing',
+          cabinet:'cab-01',
+          host:'192.168.1.1',
+          state:'1:在库 2:出库 默认:在库',
+          purchaseData:'2020-02-11 19:30:33',
+          authType:'认证类型，1：密码，2：私钥证书',
+          user:'root',
+          pwd:'111111',
+          privateKey:'xxxxxxxx',
+          port:'22',
+          exporter:'是否安装node_exporter,1:安装，0:不安装'
+        }],
+        templateKey:['sn','type','vendor','model','idc','cabinet','host','state','purchaseData','authType','user','pwd','privateKey','port','exporter']
       }
     },
     computed: {
@@ -699,6 +729,23 @@
           }
         }
         this.getAssetData();
+      },
+      formatPingTime:function(str){
+        if(!str || str == ''){
+          return 'Never';
+        }
+        let ds='-';
+        let ts=':';
+        let time=new Date(str);
+        let year=time.getFullYear();
+        let month=time.getMonth()+1 > 9 ? time.getMonth()+1 : ('0'+(time.getMonth()+1));
+        let day=time.getDay() > 9 ? time.getDay():('0'+time.getDay());
+        let hours=time.getHours() > 9? time.getHours():('0'+time.getHours());
+        let minutes=time.getMinutes() > 9 ?time.getMinutes():('0'+time.getMinutes());
+        let seconds=time.getSeconds() > 9 ? time.getSeconds():('0'+time.getSeconds());
+
+        return year+ds+month+ds+day+' '+hours+ts+minutes+ts+seconds;
+
       }
     },
     created() {

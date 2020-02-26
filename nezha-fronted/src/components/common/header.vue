@@ -280,11 +280,13 @@
       },
       jumpToAsset(id) {
         let index = this.indOf(this.activeItemIndexes, id);
-        if (index > -1) {
-          this.activeItemIndexes.splice(index, 1);
-        } else {
-          this.activeItemIndexes.push(id);
-        }
+        this.activeItemIndexes=[];//2020-02-25 修改为单选
+        this.activeItemIndexes.push(id);
+        // if (index > -1) {
+        //   this.activeItemIndexes.splice(index, 1);
+        // } else {
+        //   this.activeItemIndexes.push(id);
+        // }
         this.$store.state.assetData = {selectedData: this.activeItemIndexes, step: this.$store.state.assetData.step+1, type: 1};
         this.jumpTo('asset');
       },

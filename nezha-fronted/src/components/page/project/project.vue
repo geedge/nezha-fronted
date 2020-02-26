@@ -99,9 +99,19 @@
 <!--          </div>-->
         </div>
         <div>
-          <button @click="toCreateEndpoint" :title="$t('overall.createProject')"  class="nz-btn nz-btn-size-normal nz-btn-style-light float-right " id="project-add-ep">
-            <i class="nz-icon-create-square nz-icon"></i>
-          </button>
+          <export-excel
+            export-file-name="endpoint"
+            export-url="/endpoint/export"
+            :params="endpointSearchLabel"
+            @afterImport="getEndpointTableData"
+            class="float-right">
+            <template slot="optionZone">
+              <i class="nz-icon nz-icon-create-square" @click.stop="toCreateEndpoint" :title="$t('overall.createProject')" ></i>
+            </template>
+          </export-excel>
+<!--          <button @click="toCreateEndpoint" :title="$t('overall.createProject')"  class="nz-btn nz-btn-size-normal nz-btn-style-light float-right " id="project-add-ep">-->
+<!--            <i class="nz-icon-create-square nz-icon"></i>-->
+<!--          </button>-->
           <div class="top-tool-search float-right"><search-input :searchMsg="endpointSearchMsg" @search="endpointSearch" ref="projectSearch"></search-input></div>
         </div>
       </div>
@@ -300,11 +310,13 @@
   import bus from "../../../libs/bus";
   import metricSearch from "./metricSearch";
   import axios from 'axios';
+  import exportXLSX from "../../common/exportXLSX";
   export default {
     name: "project2",
     components: {
       'chart-box': chartBox,
-      'metric-search':metricSearch
+      'metric-search':metricSearch,
+      'export-excel':exportXLSX
     },
     data() {
       let temp=this;

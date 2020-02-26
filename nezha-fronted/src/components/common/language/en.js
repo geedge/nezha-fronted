@@ -42,7 +42,24 @@ const en = {
     createAlertRule:'create alert rule',
     createAccount:'create account',
     createPrometheusServer:'create prometheus server',
-    createDatacenter:'create datacenter'
+    createDatacenter:'create datacenter',
+    exportExcel:'Export',
+    importExcel:'Import',
+    importExcelLower:'import',
+    exportExcelLower:'export',
+    rollbackImport:'rollback',
+    exportCur:'current page',
+    exportAll:'all',
+    importFile:'please upload file',
+    importTip:'only allowed xlsx/xls file',
+    upload:'upload',
+    template:'Template',
+    result:{
+      total:'Total',
+      failed:'Failed',
+      success:'Success',
+      failedDetail:'Failed Detail'
+    }
   },
   dashboard:{
     title:'Dashboard',
