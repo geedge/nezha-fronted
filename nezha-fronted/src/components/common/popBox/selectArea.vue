@@ -22,6 +22,7 @@
             :expand-on-click-node="false"
             check-on-click-node
             check-strictly
+            highlight-current
             @node-click="selectArea"
             @check-change="clearOthers">
           </el-tree>
@@ -44,9 +45,15 @@
       props:{
         placement: {type: String},
         isEdit: {type: Boolean, default: true},
-        areaData: {type: Array}
+        areaData: {type: Array},
+        currentArea: {type: Number}
       },
       created() {
+      },
+      mounted() {
+        this.$nextTick(() => {
+          this.$refs.areaTree.setCurrentKey(this.currentArea);
+        });
       },
       data(){
         return {
