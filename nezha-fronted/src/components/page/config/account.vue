@@ -35,6 +35,7 @@
         :data="tableData"
         border
         height="calc(100% - 160px)"
+        v-scrollBar:el-table
         style="width: 100%;">
         <el-table-column
           :resizable="false"

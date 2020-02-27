@@ -167,7 +167,7 @@
 -->
       <el-col :span="24">
         <div class="li-list-part-label-val-list" :id="'scrollDiv'+this.pointer">
-          <el-scrollbar style="height: 100%">
+          <el-scrollbar ref="scrollbar" style="height: 100%">
             <el-form-item style="width:99%;" class="metric-title-position right-box-form-content" v-for="(item, index) in elementInfo.selectedTagList" :key="index"  :ref="'tagItem' + index" :prop="'tagList.' + index + '.value'" >
               <el-row :gutter="10" >
                 <el-col :span="4" >
@@ -315,6 +315,12 @@ export default {
         this.elementInfo.tagList = [];
         this.setLabelDivHeight(0);
       }
+      this.$nextTick(() => {
+        setTimeout(() => {
+          this.$refs.scrollbar.update();
+        }, 100);
+      });
+
     },
     // 选择主机
     /*
@@ -367,7 +373,6 @@ export default {
 
     // 编辑已有图表状态时，先填充数据
     setMdata(data) {
-      console.info('metricSetData', JSON.stringify(data));
       this.setDataFlag = true;
       this.target = Object.assign({}, data);
       //this.pointer =
@@ -428,6 +433,9 @@ export default {
           }
         });
       }
+      setTimeout(() => {
+        this.$refs.scrollbar.update();
+      }, 1000);
     },
 
     /*

@@ -61,6 +61,7 @@
         class="nz-table"
         :data="tableData"
         border
+        v-scrollBar:el-table
         height="calc(100% - 160px)"
         style="width: 100%;">
         <el-table-column

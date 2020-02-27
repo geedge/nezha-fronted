@@ -36,10 +36,12 @@
     <div class="line-area"  ref="lineChartArea"  id="lineChartArea" v-show="firstShow"></div>
 
     <div class="legend-container"   id="legendArea" ref="legendArea" v-show="firstShow">
+      <el-scrollbar style="height: 100%;">
       <div v-for="(item, index) in legendList" :title="item.name"  @click="clickLegend(item.name,index)" class="legend-item" :class="{'ft-gr':isGrey[index]}" :key="'legend_' + item.name+'_'+index">
         <span class="legend-shape" :style="{background:(isGrey[index]?'#D3D3D3':bgColorList[index])}"></span>{{item.name}}
         <br/><!--bgColorList[index]-->
       </div>
+      </el-scrollbar>
     </div>
     <!--
     <Modal title="查看" v-model="screenModal" width="96%" class="line-chart-block-modal">-->

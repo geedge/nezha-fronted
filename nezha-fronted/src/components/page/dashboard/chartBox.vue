@@ -72,7 +72,7 @@
         <!-- end--标题-->
 
         <!-- begin--表单-->
-        <el-scrollbar class="right-box-form-box">
+        <el-scrollbar class="right-box-form-box" ref="scrollbar">
           <el-form class="right-box-form" :model="chart" label-position="top" :rules="rules" ref="chartForm">
             <el-form-item :label="$t('dashboard.panel.title')">
               <div class="right-box-form-content">
@@ -378,6 +378,9 @@
       // 增加指标,tarNum
       addTarget() {
         this.elements.push(1);
+        this.$nextTick(() => {
+          this.$refs.scrollbar.update();
+        });
       },
       // 删除指标,第一步, 新方法
       deleteTarget(index) {
@@ -387,6 +390,9 @@
         this.$refs.chartTag.forEach((item) => {
           // 子组件保存内容到bus
           item.subSave();
+        });
+        this.$nextTick(() => {
+          this.$refs.scrollbar.update();
         });
       },
       // subSave保存成功后回调,第二步

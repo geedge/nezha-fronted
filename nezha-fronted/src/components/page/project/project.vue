@@ -120,6 +120,7 @@
         border
         class="nz-table"
         height="calc(100% - 160px)"
+        v-scrollBar:el-table
         style="width: 100%;">
         <el-table-column
           :resizable="false"
@@ -211,6 +212,7 @@
         v-loading="queryEdpLoading"
         :data="showTableData"
         border
+        v-scrollBar:el-table
         class="nz-table"
         :header-cell-class-name="cellClass"
         height="calc(100% - 110px)"

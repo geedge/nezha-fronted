@@ -37,6 +37,8 @@ import selectArea from "./components/common/popBox/selectArea"; //dc弹框
 /*import 'vue-happy-scroll/docs/happy-scroll.css'
 import {HappyScroll}  from 'vue-happy-scroll'
 Vue.component('happy-scroll', HappyScroll)*/
+import PerfectScrollbar from "perfect-scrollbar";
+import "perfect-scrollbar/css/perfect-scrollbar.css";
 
 Vue.component("Pagination", Pagination);
 Vue.component("searchInput", searchInput);
@@ -66,6 +68,63 @@ Vue.config.productionTip = false;
 Vue.use(ElementUI);
 Vue.use(Vuex);
 Vue.use(VueResource);
+
+const el_scrollBar = el => {
+  //在元素上加点私货，名字随便取，确保不会和已有属性重复即可，我取名叫做_ps_
+  if (el._ps_ instanceof PerfectScrollbar) {
+    el._ps_.update();
+  } else {
+    //el上挂一份属性
+    el._ps_ = new PerfectScrollbar(el, {});
+  }
+};
+Vue.directive("scrollBar", {
+  inserted(el, binding, vnode) {
+    const { arg } = binding;
+    if (arg === "el-table") {
+      el = el.querySelector(".el-table__body-wrapper");
+      !el && console.warn("未发现className为el-table__body-wrapper的dom");
+
+      // 启用x轴后不让原生滚动条出来作乱
+      vnode.context.$nextTick(() => {
+        el.classList.add("ps");
+        el.addEventListener("ps-scroll-y", () =>
+          el.classList.add("ps")
+        );
+        el.addEventListener("ps-scroll-x", () =>
+          el.classList.add("ps")
+        );
+      });
+    } else if (arg === 'metric-set') {
+
+    }
+    const rules = ["fixed", "absolute", "relative"];
+    if (!rules.includes(window.getComputedStyle(el, null).position)) {
+      console.error(
+        `perfect-scrollbar所在的容器的position属性必须是以下之一：${rules.join(
+          "、"
+        )}`
+      );
+    }
+    //el上挂一份属性
+    el_scrollBar(el);
+  },
+  componentUpdated(el, binding, vnode, oldVnode) {
+    const { arg } = binding;
+    if (arg === "el-table") {
+      el = el.querySelector(".el-table__body-wrapper");
+      !el && console.warn("未发现className为el-table__body-wrapper的dom");
+    }
+    try {
+      vnode.context.$nextTick(() => {
+        el_scrollBar(el);
+      });
+    } catch (error) {
+      console.error(error);
+      el_scrollBar(el);
+    }
+  },
+});
 
 const exceptClassName = ["config-dropdown", "nz-pop", "el-picker", "chart-box-dropdown", 'metric-dropdown']; //clickoutside排除的class(白名单)
 const clickoutside = {
