@@ -36,13 +36,7 @@
           <div class="right-box-form-content-txt" v-if="!isEdit">{{account.port}}</div>
         </el-form-item>
         <el-form-item :label="this.$t('asset.createAssetTab.ssh')" v-show="account.authType==2" prop="file" v-if="isEdit">
-          <el-upload class="upload-demo" ref="upload" action="" :file-list="uploadFileList" :on-change="handleChange"  :auto-upload="false">
-            <div slot="tip" class="el-upload__tip" v-if="account.privateKey" >{{$t('asset.createAssetTab.sshKeyWasConfig')}}</div>
-            <button type="button" class="nz-btn nz-btn-size-normal nz-btn-style-normal">
-              <span class="top-tool-btn-txt" v-if="account.privateKey">{{$t('asset.createAssetTab.clickToCover')}}</span>
-              <span class="top-tool-btn-txt" v-else>{{$t('asset.createAssetTab.clickToUpload')}}</span>
-            </button>
-          </el-upload>
+          <el-input  rows="4" type="textarea" placeholder="" v-model="account.privateKey" size="small"></el-input>
         </el-form-item>
       </el-form>
     </div>
@@ -59,14 +53,7 @@ export default {
     created() {
     },
   data(){
-      let validateFile=(rule,value,callback) => {
-        if(!this.validateFile()){
-          callback(new Error(this.uploadTip))
-        }
-        callback();
-      }
       return {
-        uploadFileList:[],
         rules:{
           user:[
             { required: true, message:this.$t('validate.required'),trigger: 'blur'}
@@ -75,9 +62,6 @@ export default {
             {required:true,message:this.$t('validate.required'),trigger: 'blur'},
             { validator: port, trigger: 'blur'}
           ],
-          file:[
-            { validator: validateFile, trigger: 'change'}
-          ]
         },
         uploadTip:''
       }
@@ -97,11 +81,14 @@ export default {
       changeLoginType:function(loginType){
         this.account.authType=loginType;
         if(loginType == 1){//密码登录
-          this.clearFile();
+          this.clearPrivateKey();
         }
         if(loginType == 2){//公钥登录
           this.account.pwd='';
         }
+      },
+      clearPrivateKey:function(){
+        this.account.privateKey=null;
       },
       handleChange(file,fileList) {
         if (fileList.length > 0) {
@@ -110,27 +97,11 @@ export default {
         this.account.uploadFile = this.uploadFileList[0];
         this.validateFile();
       },
-      clearFile:function() {
-        if (this.$refs.upload) {
-          this.$refs.upload.clearFiles();
-        }
-        this.uploadFileList = [];
-      },
       validateAccount:function(){
         this.validateResult=false;
         this.$refs.accountForm.validate((valid) => {
           this.$emit("setValidateResult",valid);
-          console.log(valid)
         });
-      },
-      validateFile:function(){
-          let file=this.uploadFileList[0];
-          if(file&&file.size>500){
-            this.uploadTip=this.$t('validate.fileSize')
-            return false;
-          }else{
-            return true;
-          }
       },
 
     },

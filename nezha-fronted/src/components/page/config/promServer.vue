@@ -34,14 +34,14 @@
         <el-table-column :resizable="false" v-for="(item, index) in tablelable" v-if="item.show" :width="item.width"
                          :key="`col-${index}`" :label="item.label">
           <template slot-scope="scope" :column="item">
-            <idc-config-box v-if="item.prop == 'idc'" ref="idcConfigBox"
+            <!--<idc-config-box v-if="item.prop == 'idc'" ref="idcConfigBox"
                             :post-idc="JSON.parse(JSON.stringify(scope.row[item.prop]))" :is-edit="false"
                             placement="left" @after="getIdcData" :button-class="'checkbox-edit'">
               <template v-slot:optionZone>
                 <span class="link" @click="closeAllPop">{{scope.row[item.prop].name}}</span>
               </template>
-            </idc-config-box>
-
+            </idc-config-box>-->
+            <span  v-if="item.prop == 'idc'" >{{scope.row[item.prop].name}}</span>
 
             <span v-else-if="item.prop == 'type'">
                 {{scope.row[item.prop] == '1' ? 'Global' : ''}}
@@ -107,28 +107,30 @@
             <!--DC start-->
             <el-form-item label="DC" prop="idc.name">
               <div class="right-box-form-content">
-                <el-select class="right-box-row-with-btn" value-key="id" popper-class="config-dropdown"
+<!--                <el-select class="right-box-row-with-btn" value-key="id" popper-class="config-dropdown"-->
+<!--                           v-model="promServer.idc" placeholder="" v-if="rightBox.isEdit" size="small">-->
+                <el-select  value-key="id" popper-class="config-dropdown"
                            v-model="promServer.idc" placeholder="" v-if="rightBox.isEdit" size="small">
                   <el-option @click.native="blurEditIdc()" v-for="item in idcData" :key="item.id" :label="item.name"
                              :value="item" :id="'prom-edit-idc-op-'+item.id">
                     <span class="config-dropdown-label-txt">{{item.name}}</span>
-                    <div class="config-dropdown-label-icons">
-                       <span class="config-dropdown-btn config-dropdown-btn-delete" @click.stop="toDelIdc(item)"
-                             :id="'prom-edit-idc-op-del-'+item.id"><i class="el-icon-delete"></i></span>
-                      <idc-config-box :post-idc="item" placement="left" @after="getIdcData"
-                                      :button-class="'config-dropdown-btn'">
-                        <template v-slot:optionZone>
-                          <i class="nz-icon nz-icon-edit"></i>
-                        </template>
-                      </idc-config-box>
-                    </div>
+<!--                    <div class="config-dropdown-label-icons">-->
+<!--                       <span class="config-dropdown-btn config-dropdown-btn-delete" @click.stop="toDelIdc(item)"-->
+<!--                             :id="'prom-edit-idc-op-del-'+item.id"><i class="el-icon-delete"></i></span>-->
+<!--                      <idc-config-box :post-idc="item" placement="left" @after="getIdcData"-->
+<!--                                      :button-class="'config-dropdown-btn'">-->
+<!--                        <template v-slot:optionZone>-->
+<!--                          <i class="nz-icon nz-icon-edit"></i>-->
+<!--                        </template>-->
+<!--                      </idc-config-box>-->
+<!--                    </div>-->
                   </el-option>
                 </el-select>
 
 
-                <div class="right-box-row-btn" v-if="rightBox.isEdit">
-                  <idc-config-box placement="left" @after="getIdcData"></idc-config-box>
-                </div>
+<!--                <div class="right-box-row-btn" v-if="rightBox.isEdit">-->
+<!--                  <idc-config-box placement="left" @after="getIdcData"></idc-config-box>-->
+<!--                </div>-->
                 <div class="right-box-form-content-txt" v-if="!rightBox.isEdit">{{promServer.idc.name}}</div>
               </div>
             </el-form-item>

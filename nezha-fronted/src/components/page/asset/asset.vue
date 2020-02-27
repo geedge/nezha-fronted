@@ -37,7 +37,6 @@
             export-file-name="asset"
             export-url="/asset/export"
             :params="searchLabel"
-            :template-key="templateKey"
             @afterImport="getAssetData"
             class="float-right">
             <template slot="optionZone">
@@ -371,25 +370,6 @@
         checkAllFlag: false,
         checkAllHandler: false,
         assetClick: false,
-        templateHeader:['*Sn','*Type','*Vendor','*Model','*Idc','Cabinet','*Host','State','PurchaseDate','AuthType','User','Pwd','PrivateKey','Port','Exporter'],
-        templateDate:[{
-          sn:'0001',
-          type:'server/net',
-          vendor:'huawei',
-          model:'rongyao',
-          idc:'beijing',
-          cabinet:'cab-01',
-          host:'192.168.1.1',
-          state:'1:在库 2:出库 默认:在库',
-          purchaseData:'2020-02-11 19:30:33',
-          authType:'认证类型，1：密码，2：私钥证书',
-          user:'root',
-          pwd:'111111',
-          privateKey:'xxxxxxxx',
-          port:'22',
-          exporter:'是否安装node_exporter,1:安装，0:不安装'
-        }],
-        templateKey:['sn','type','vendor','model','idc','cabinet','host','state','purchaseData','authType','user','pwd','privateKey','port','exporter']
       }
     },
     computed: {

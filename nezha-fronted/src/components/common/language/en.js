@@ -330,7 +330,7 @@ const en = {
       host: 'Host',//'Host'
       assetState: 'State',//'状态'
       assetPing: 'Ping',
-      modules: 'Module',//'组件'
+      modules: 'Endpoint',//'组件'
       alerts: 'Alert message',//'告警信息'
       dataCenter: 'DC',//DC
       cabinet: 'Cabinet',//'机柜'

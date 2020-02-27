@@ -301,7 +301,8 @@
           <!------------------------------------------IDC---------------------------------------------->
           <el-form-item :label="this.$t('asset.createAssetTab.dcName')" class="right-box-form-content" prop="idcId">
             <template v-if="!tabView">
-              <el-select popper-class="asset-dropdown" size="mini" v-model="assetData.idcId" clearable @change="getSingleIDCData" class="right-box-row-with-btn" placeholder="">
+<!--              <el-select popper-class="asset-dropdown" size="mini" v-model="assetData.idcId" clearable @change="getSingleIDCData" class="right-box-row-with-btn" placeholder="">-->
+              <el-select popper-class="asset-dropdown" size="mini" v-model="assetData.idcId" clearable @change="getSingleIDCData"  placeholder="">
                 <el-option
                   :id="'asset-edit-idc-op-'+item.id"
                   v-for="item in IDCOptionData"
@@ -310,21 +311,21 @@
                   :value="item.id"
                 >
                   <span class="config-dropdown-label-txt">{{ item.name }}</span>
-                  <div class="config-dropdown-label-icons">
-                    <span class="config-dropdown-btn config-dropdown-btn-delete"
-                          @click.stop="deleteData('idc',item.id)" :id="'asset-edit-idc-op-del-'+item.id"><i
-                      class="el-icon-delete"></i></span>
-                    <idc-config-box :post-idc="popIdcData" placement="left" @after="getIDCOptionData" :button-class="'config-dropdown-btn'">
-                      <template v-slot:optionZone>
-                        <i class="nz-icon nz-icon-edit" @click="getSingleIDCData(item.id,'edit', item)"></i>
-                      </template>
-                    </idc-config-box>
-                  </div>
+<!--                  <div class="config-dropdown-label-icons">-->
+<!--                    <span class="config-dropdown-btn config-dropdown-btn-delete"-->
+<!--                          @click.stop="deleteData('idc',item.id)" :id="'asset-edit-idc-op-del-'+item.id"><i-->
+<!--                      class="el-icon-delete"></i></span>-->
+<!--                    <idc-config-box :post-idc="popIdcData" placement="left" @after="getIDCOptionData" :button-class="'config-dropdown-btn'">-->
+<!--                      <template v-slot:optionZone>-->
+<!--                        <i class="nz-icon nz-icon-edit" @click="getSingleIDCData(item.id,'edit', item)"></i>-->
+<!--                      </template>-->
+<!--                    </idc-config-box>-->
+<!--                  </div>-->
                 </el-option>
               </el-select>
-              <div class="right-box-row-btn right-box-row-btn-small">
-                <idc-config-box placement="left" @after="getIDCOptionData"></idc-config-box>
-              </div>
+<!--              <div class="right-box-row-btn right-box-row-btn-small">-->
+<!--                <idc-config-box placement="left" @after="getIDCOptionData"></idc-config-box>-->
+<!--              </div>-->
             </template>
             <span v-if="tabView">{{assetViewData.idcName}}</span>
           </el-form-item>
@@ -343,7 +344,8 @@
           <!------------------------------------------cabinet---------------------------------------------->
           <el-form-item :label="$t('asset.createAssetTab.cabinet')" class="right-box-form-content">
             <template v-if="!tabView">
-              <el-select clearable v-model="assetData.cabinetId" clearable class="right-box-row-with-btn" popper-class="asset-dropdown"
+<!--              <el-select clearable v-model="assetData.cabinetId" clearable class="right-box-row-with-btn" popper-class="asset-dropdown"-->
+              <el-select clearable v-model="assetData.cabinetId" clearable  popper-class="asset-dropdown"
                          :disabled="assetData.idcId==''?true:false" size="mini" placeholder=""
                          @change="getSingleCabinetData">
                 <el-option
@@ -354,21 +356,21 @@
                   :value="item.id"
                 >
                   <span class="config-dropdown-label-txt">{{ item.name }}</span>
-                  <div class="config-dropdown-label-icons">
-                    <span class="config-dropdown-btn config-dropdown-btn-delete"
-                          @click.stop="deleteData('cabinet',item.id)" :id="'asset-edit-cabinet-op-del-'+item.id">
-                      <i class="el-icon-delete"></i>
-                    </span>
-                    <cabinet-config-box placement="left" :post-cabinet="item" button-class="config-dropdown-btn" @after="getCabinetOptionData">
-                      <i slot="optionZone" class="nz-icon nz-icon-edit"></i>
-                    </cabinet-config-box>
-                  </div>
+<!--                  <div class="config-dropdown-label-icons">-->
+<!--                    <span class="config-dropdown-btn config-dropdown-btn-delete"-->
+<!--                          @click.stop="deleteData('cabinet',item.id)" :id="'asset-edit-cabinet-op-del-'+item.id">-->
+<!--                      <i class="el-icon-delete"></i>-->
+<!--                    </span>-->
+<!--                    <cabinet-config-box placement="left" :post-cabinet="item" button-class="config-dropdown-btn" @after="getCabinetOptionData">-->
+<!--                      <i slot="optionZone" class="nz-icon nz-icon-edit"></i>-->
+<!--                    </cabinet-config-box>-->
+<!--                  </div>-->
                 </el-option>
               </el-select>
 
-              <div class="right-box-row-btn right-box-row-btn-small">
-                <cabinet-config-box placement="left" :post-cabinet="addCabinetData"  @after="getCabinetOptionData"></cabinet-config-box>
-              </div>
+<!--              <div class="right-box-row-btn right-box-row-btn-small">-->
+<!--                <cabinet-config-box placement="left" :post-cabinet="addCabinetData"  @after="getCabinetOptionData"></cabinet-config-box>-->
+<!--              </div>-->
             </template>
             <span v-if="tabView">{{assetViewData.cabinetName}}</span>
           </el-form-item>
@@ -439,7 +441,6 @@
             user: '',
             pwd: '',
             port: '',
-            uploadFile: null
           }],
           exporter: 0
         },
@@ -597,7 +598,6 @@
             {required: true, message: this.$t('validate.required'), trigger: 'blur'}
           ]
         },
-        uploadFileList:[],
         formData:null,
         module:{},
         accountValideResult:true
@@ -638,7 +638,6 @@
               pwd:"",
               port:'',
               privateKey:'',
-              uploadFile:''
             });
           }
         }
@@ -740,7 +739,6 @@
               user: '',
               pwd: '',
               port: '',
-              uploadFile: null
             }]
           };
         }
@@ -822,15 +820,6 @@
           }
         })
       },
-      changeLoginType:function(loginType){
-        this.assetData.accounts[0].authType = loginType;
-        if(loginType == 1){//密码登录
-          this.clearFile();
-        }
-        if(loginType == 2){//公钥登录
-          this.assetData.accounts[0].pwd='';
-        }
-      },
       editData(data, item, mark) {
         let obj = {
           id: '',
@@ -846,35 +835,33 @@
           tel: ''
         }
         if (data === 'asset') {
-          //this.assetData.modelId = this.assetData.modelId.join(',').split(',')[1];
-          let modelId = this.assetData.modelId.join(',').split(',')[1];
-          let form = new FormData();
-          form.append("id", this.pageObj.id);
-          form.append("sn", this.assetData.sn);
-          form.append("host", this.assetData.host);
-          form.append("state", this.assetData.state);
-          form.append("purchaseDate", !this.assetData.purchaseDate?'':this.assetData.purchaseDate);
-          form.append("idcId", this.assetData.idcId);
-          form.append("cabinetId", this.assetData.cabinetId);
-          form.append("modelId", modelId);
-          if (!this.accountSwitch) {
-            this.assetData.accounts = [];
-          }
-          for(let i in this.assetData.accounts){
-            let account=this.assetData.accounts[i];
-            if(account.user){
-              if (account.id) {
-                form.append("accounts["+i+"].id", account.id);
-              }
-              form.append("accounts["+i+"].authType",account.authType);
-              form.append("accounts["+i+"].user", account.user);
-              form.append("accounts["+i+"].port", account.port);
-              form.append("accounts["+i+"].pwd", account.pwd);
-              if(account.authType==2){
-                form.append('cert',account.uploadFile?account.uploadFile.raw:null);
-              }
-            }
-          }
+          this.assetData.modelId = this.assetData.modelId.join(',').split(',')[1];
+          // let modelId = this.assetData.modelId.join(',').split(',')[1];
+          // let form = new FormData();
+          // form.append("id", this.pageObj.id);
+          // form.append("sn", this.assetData.sn);
+          // form.append("host", this.assetData.host);
+          // form.append("state", this.assetData.state);
+          // form.append("purchaseDate", !this.assetData.purchaseDate?'':this.assetData.purchaseDate);
+          // form.append("idcId", this.assetData.idcId);
+          // form.append("cabinetId", this.assetData.cabinetId);
+          // form.append("modelId", modelId);
+          // if (!this.accountSwitch) {
+          //   this.assetData.accounts = [];
+          // }
+          // for(let i in this.assetData.accounts){
+          //   let account=this.assetData.accounts[i];
+          //   if(account.user){
+          //     if (account.id) {
+          //       form.append("accounts["+i+"].id", account.id);
+          //     }
+          //     form.append("accounts["+i+"].authType",account.authType);
+          //     form.append("accounts["+i+"].user", account.user);
+          //     form.append("accounts["+i+"].port", account.port);
+          //     form.append("accounts["+i+"].pwd", account.pwd);
+          //     form.append("accounts["+i+"].privateKey", account.privateKey);
+          //   }
+          // }
 
           if(this.$refs.accountConfigBox&&this.$refs.accountConfigBox.length>0){
             this.$refs.accountConfigBox[0].validateAccount();
@@ -882,11 +869,12 @@
           this.$refs.assetEditForm.validate((valid) => {
             if (valid&&this.accountValideResult) {
               if (this.pageObj.id) {
-                this.$put('asset', form,{'Content-Type': 'multipart/form-data'}).then(res => {
+                this.assetData.id=this.pageObj.id;
+                console.log(JSON.stringify(this.assetData));
+                this.$put('asset', this.assetData).then(res => {
                   const h = this.$createElement;
                   if (res.code === 200) {
                     this.$message({duration: 2000, type: 'success', message: this.$t("tip.saveSuccess")});
-                    this.clearFile();
                     this.pageObj.id = '';
                     this.$emit('refreshData', 'true');
                     this.sendStateData('close');
@@ -901,44 +889,41 @@
                 }
                 let modelId = ''
                 let authType = ''
-                if (this.assetData.modelId !== '') {
-                  modelId = this.assetData.modelId.join(',').split(',')[1]
-                } else {
-                  this.assetData.modelId = ''
-                }
+                // if (this.assetData.modelId !== '') {
+                //   modelId = this.assetData.modelId.join(',').split(',')[1]
+                // } else {
+                //   this.assetData.modelId = ''
+                // }
                 if (this.assetData.accounts[0].user === '') {
                   authType = ''
                 } else {
                   authType = this.assetData.accounts[0].authType
                 }
-                let form = new FormData();
-                form.append("sn", this.assetData.sn);
-                form.append("host", this.assetData.host);
-                form.append("state", this.assetData.state);
-                form.append("purchaseDate", !this.assetData.purchaseDate?'':this.assetData.purchaseDate);
-                form.append("idcId", this.assetData.idcId);
-                form.append("cabinetId", this.assetData.cabinetId);
-                form.append("modelId", modelId);
-                if(this.accountSwitch){
-                  for(let i in this.assetData.accounts){
-                    let account=this.assetData.accounts[i];
-                    if(account.user){
-                      form.append("accounts["+i+"].authType",account.authType);
-                      form.append("accounts["+i+"].user", account.user);
-                      form.append("accounts["+i+"].port", account.port);
-                      form.append("accounts["+i+"].pwd", account.pwd);
-                      if(account.authType==2){
-                        form.append('cert',account.uploadFile?account.uploadFile.raw:null);
-                      }
-                    }
-                  }
-                }
-                form.append("exporter",parseInt(this.assetData.exporter));
-                this.$post('asset', form,{'Content-Type': 'multipart/form-data'}).then(res => {
+                // let form = new FormData();
+                // form.append("sn", this.assetData.sn);
+                // form.append("host", this.assetData.host);
+                // form.append("state", this.assetData.state);
+                // form.append("purchaseDate", !this.assetData.purchaseDate?'':this.assetData.purchaseDate);
+                // form.append("idcId", this.assetData.idcId);
+                // form.append("cabinetId", this.assetData.cabinetId);
+                // form.append("modelId", modelId);
+                // if(this.accountSwitch){
+                //   for(let i in this.assetData.accounts){
+                //     let account=this.assetData.accounts[i];
+                //     if(account.user){
+                //       form.append("accounts["+i+"].authType",account.authType);
+                //       form.append("accounts["+i+"].user", account.user);
+                //       form.append("accounts["+i+"].port", account.port);
+                //       form.append("accounts["+i+"].pwd", account.pwd);
+                //       form.append("accounts["+i+"].privateKey", account.privateKey)
+                //     }
+                //   }
+                // }
+                // form.append("exporter",parseInt(this.assetData.exporter));
+                this.$post('asset', this.assetData).then(res => {
                   const h = this.$createElement;
                   if (res.code === 200) {
                     this.$message({duration: 2000, type: 'success', message: this.$t("tip.saveSuccess")});
-                    this.clearFile();
                     this.$emit('refreshData', 'true');
                     this.sendStateData('close');
                   } else {
@@ -1097,13 +1082,6 @@
           });
 
         }
-      },
-      clearFile:function(){
-        if(this.$refs.upload){
-          this.$refs.upload.clearFiles();
-        }
-        this.uploadFileList=[];
-        this.assetData.accounts[0].privateKey='';
       },
       deleteData(data, item) {
         this.$confirm(this.$t("tip.confirmDelete"), {
@@ -1349,12 +1327,6 @@
           this.tempData = ''
         }
       },
-      handleChange(file,fileList) {
-        if (fileList.length > 0) {
-          this.uploadFileList = [fileList[fileList.length - 1]]
-        }
-        this.assetData.accounts[0].file = this.uploadFileList[0];
-      },
       editPopoverClose(data) {
         if (data === 'type') {
           this.modelCount = ''
@@ -1441,21 +1413,4 @@
   margin-bottom: 18px;
   background-color: #DCDFE6;
 }
-/*去除上传文件动画start*/
-/*.upload-demo {*/
-/*  display: flex;*/
-/*}*/
-/deep/ .el-list-enter-active,
-/deep/ .el-list-leave-active {
-  transition: none;
-}
-
-/deep/ .el-list-enter,
-/deep/ .el-list-leave-active {
-  opacity: 0;
-}
-/deep/ .el-upload-list {
-  height: 40px;
-}
-/*去除上传文件动画end*/
 </style>
