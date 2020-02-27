@@ -34,7 +34,9 @@ import moduleListPop from "./components/page/asset/moduleListPop"; //面板弹�
 import cabinetConfigBox from "./components/common/popBox/cabinetConfig"; //面板弹框组件
 import dcBox from "./components/common/rightBox/dcBox"; //dc弹框
 import selectArea from "./components/common/popBox/selectArea"; //dc弹框
-
+/*import 'vue-happy-scroll/docs/happy-scroll.css'
+import {HappyScroll}  from 'vue-happy-scroll'
+Vue.component('happy-scroll', HappyScroll)*/
 
 Vue.component("Pagination", Pagination);
 Vue.component("searchInput", searchInput);
@@ -73,7 +75,7 @@ const clickoutside = {
       if (el.contains(e.target)) {
         return false;
       } else {
-        console.info(e)
+        //console.info(e)
         let flag = true;
         top: for (let i = 0; i < e.path.length; i++) {
           for (let j = 0; j < exceptClassName.length; j++) {
@@ -125,7 +127,7 @@ window.vm = new Vue({
 })
 
 export default vm
-router.beforeEach((to, from, next) => {
+/*router.beforeEach((to, from, next) => {
   if (to.path === '/login') {
     next()
   } else {
@@ -136,4 +138,4 @@ router.beforeEach((to, from, next) => {
       next({ path: '/dashboard' })
     }
   }
-})
+})*/

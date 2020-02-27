@@ -1,8 +1,8 @@
 import axios from 'axios'
 import router from './router'
 
-import qs from 'qs'
-import he from "element-ui/src/locale/lang/he"; //引入数据格式化
+//import qs from 'qs'
+//import he from "element-ui/src/locale/lang/he"; //引入数据格式化
 //axios.defaults.baseURL = 'http://localhost:8088/nz-admin';
 // axios.defaults.baseURL = 'http://192.168.41.101:8088/nz-admin';
 //axios.defaults.baseURL = 'http://192.168.40.247:8080/nz-admin';
@@ -23,10 +23,11 @@ axios.interceptors.request.use(config => {
 axios.interceptors.response.use(
     response => {
       if(response.status === 200){
-        if(response.data.code == 101007){
-          router.push({
+        if(response.data.code == 101007) {
+          window.location.href = "/";
+          /*router.push({
             path: "/login"
-          })
+          });*/
         }
       }
       return response

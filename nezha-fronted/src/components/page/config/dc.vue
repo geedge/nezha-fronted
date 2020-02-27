@@ -2,6 +2,31 @@
   .dc {
     height: 100%;
   }
+  .dc-asset-states {
+    display: flex;
+    align-items: center;
+    height: 100%;
+  }
+  .dc-asset-state {
+    display: inline-block;
+    min-width: 25px;
+    height: 20px;
+    color: white;
+    text-align: center;
+    line-height: 20px;
+    margin-right: 6px;
+    border-radius: 3px;
+  }
+  .dc-asset-state.dc-asset-state-total {
+    background-color: #1166bb;
+    margin-right: 15px
+  }
+  .dc-asset-state-in {
+    background-color: #90ee90;
+  }
+  .dc-asset-state-out {
+    background-color: orange;
+  }
 </style>
 <template>
   <div class="dc">
@@ -66,6 +91,19 @@
               <template v-if="scope.row.area">{{scope.row.area.name}}</template>
               <template v-else>-</template>
             </template>
+            <template v-else-if="item.prop == 'assetStat'">
+              <el-popover
+                placement="top"
+                trigger="hover"
+                :content="$t('overall.result.total') + '：' + scope.row.assetStat.total + '，' + $t('asset.createAssetTab.inStock') + '：' + scope.row.assetStat.inStock + '，' + $t('asset.createAssetTab.notInStock') + '：' + scope.row.assetStat.outStock">
+                <div slot="reference" class="dc-asset-states">
+                  <span class="dc-asset-state dc-asset-state-total">{{scope.row.assetStat.total}}</span>
+                  <span class="dc-asset-state dc-asset-state-in">{{scope.row.assetStat.inStock}}</span>
+                  <span class="dc-asset-state dc-asset-state-out">{{scope.row.assetStat.outStock}}</span>
+                </div>
+              </el-popover>
+
+            </template>
             <template v-else-if="scope.row[item.prop]">{{scope.row[item.prop]}}</template>
             <template v-else>-</template>
           </template>
@@ -124,12 +162,20 @@
             prop: 'name',
             show: true,
           }, {
+            label: this.$t('config.dc.area'),
+            prop: 'area',
+            show: true
+          }, {
+            label: this.$t("asset.createAssetTab.location"),
+            prop: 'location',
+            show: true,
+          }, {
             label: this.$t("config.dc.cabinetNum"),
             prop: 'cabinetNum',
             show: true,
           }, {
-            label: this.$t("asset.createAssetTab.location"),
-            prop: 'location',
+            label: this.$t("config.dc.assets"),
+            prop: 'assetStat',
             show: true,
           }, {
             label: this.$t('asset.createAssetTab.tel'),
@@ -138,10 +184,6 @@
           }, {
             label: this.$t('asset.createAssetTab.principal'),
             prop: 'principal',
-            show: true
-          }, {
-            label: this.$t('config.dc.area'),
-            prop: 'area',
             show: true
           }, {
             label: this.$t('config.account.option'),

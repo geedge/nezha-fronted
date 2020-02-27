@@ -76,13 +76,16 @@
             <i class="nz-icon-create-square nz-icon"></i>
           </button>
         </div>
-      </div>
+      </div><!--<happy-scroll color="rgba(0,0,0,1)" size="15">-->
+      <!--<el-scrollbar style="height: 100%">-->
       <div class="table-list" @scroll="onScroll" id="tableList">
-        <div class="box-content">
-          <chart-list @on-edit-chart="editData" @on-refresh-time="refreshTime" @on-remove-chart="removeData"
-                      ref="chartList"></chart-list>
-        </div>
-      </div>
+        <el-scrollbar style="height: 100%">
+          <div class="box-content">
+            <chart-list @on-edit-chart="editData" @on-refresh-time="refreshTime" @on-remove-chart="removeData"
+                        ref="chartList"></chart-list>
+          </div>
+        </el-scrollbar>
+              </div><!--</happy-scroll>--><!--</el-scrollbar>-->
     </div>
 
     <panel-box :panel="panel" @reload="panelReload" @reloadForDel="panelReloadForDel" ref="panelBox"></panel-box>

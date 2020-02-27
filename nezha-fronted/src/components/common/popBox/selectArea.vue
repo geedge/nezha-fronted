@@ -12,22 +12,24 @@
 
       <div class="pop-title">{{$t('config.dc.selectArea')}}</div>
       <div class="pop-item-wider">
-        <el-tree
-          ref="areaTree"
-          node-key="id"
-          class="select-area-tree"
-          :props="{label: 'name', children: 'children'}"
-          show-checkbox
-          :data="areaData"
-          default-expand-all
-          check-strictly
-          :check-on-click-node="false"
-          @check-change="clearOthers">
-        </el-tree>
+        <el-scrollbar class="select-area-tree">
+          <el-tree
+            ref="areaTree"
+            node-key="id"
+            :props="{label: 'name', children: 'children'}"
+            :data="areaData"
+            default-expand-all
+            :expand-on-click-node="false"
+            check-on-click-node
+            check-strictly
+            @node-click="selectArea"
+            @check-change="clearOthers">
+          </el-tree>
+        </el-scrollbar>
       </div>
-      <div class="">
+      <!--<div class="">
         <button class="float-right nz-btn nz-btn-size-small nz-btn-style-normal nz-btn-min-width-60" type="button" @click="selectArea">{{$t('overall.ok')}}</button>
-      </div>
+      </div>-->
     </div>
     <div slot="reference">
       <slot name="trigger">
@@ -63,7 +65,8 @@
           this.popBox.show = false;
         },
         //确认选择某个节点，与父组件交互
-        selectArea() {
+        selectArea(data, checked, child) {
+          this.area = data;
           this.$emit('selectArea', this.area);
           this.esc();
         },
@@ -84,6 +87,6 @@
 
 <style>
 .select-area-tree {
-  height: 300px;
+  height: 350px;
 }
 </style>

@@ -389,7 +389,8 @@ const en = {
       dc: 'Datacenter',
       area: "Area",
       selectArea: 'Select area',
-      cabinetNum: "Cabinet number"
+      cabinetNum: "Cabinet number",
+      assets: "Assets",
     }
   },
   alert: {
