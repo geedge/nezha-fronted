@@ -221,10 +221,11 @@
         let date=new Date();
         let year=date.getFullYear();
         let month=this.formatNum(date.getMonth()+1);
-        let day=this.formatNum(date.getDay());
+        let day=this.formatNum(date.getDate());
         let hours=this.formatNum(date.getHours());
         let minutes=this.formatNum(date.getMinutes());
         let seconds=this.formatNum(date.getSeconds());
+        console.log(day)
         return year + split + month + split + day + ' ' + hours + split + minutes + split + seconds;
       },
       formatNum:function(num){
