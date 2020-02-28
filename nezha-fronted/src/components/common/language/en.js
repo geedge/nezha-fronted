@@ -217,18 +217,18 @@ const en = {
         title:'New Datacenter',//'新增DC'
         dcName:'Datacenter name',//'DC名称'
         location:'Location',//'地区'
-        principal:'Principal',//'负责人'
+        principal:'Administrator',//'负责人'
         tel:'Telephone'//'电话'
       },
       editIdcTab:{
         title:'Edit Datacenter',//'编辑DC'
         dcName:'Datacenter name',//'DC名称'
         location:'Location',//'地区'
-        principal:'Principal',//'负责人'
+        principal:'Administrator',//'负责人'
         tel:'Telephone'//'电话'
       },
       location:'Location',//'地区'
-      principal:'Principal',//'负责人'
+      principal:'Administrator',//'负责人'
       tel:'Telephone',//'电话'
       cabinet: 'Cabinet',//'机柜'
       AddCabinetTab:{
@@ -284,18 +284,18 @@ const en = {
         title:'New Datacenter',//'新增DC'
         dcName:'DC name',//'DC名称'
         location:'Location',//'地区'
-        principal:'Principal',//'负责人'
+        principal:'Administrator',//'负责人'
         tel:'Telephone'//'电话'
       },
       editIdcTab:{
         title:'Edit DC',//'编辑DC'
         dcName:'DC name',//'DC名称'
         location:'Location',//'地区'
-        principal:'Principal',//'负责人'
+        principal:'Administrator',//'负责人'
         tel:'Telephone'//'电话'
       },
       location:'Location',//'地区'
-      principal:'Principal',//'负责人'
+      principal:'Administrator',//'负责人'
       tel:'Telephone',//'电话'
       cabinet: 'Cabinet',//'机柜'
       AddCabinetTab:{
@@ -337,7 +337,7 @@ const en = {
       model: 'Model',//'型号'
       manufacturer: 'Manufacturer',//'厂商'
       procurementDate: 'Purchase date',//'购买日期'
-      principal: 'Principal',//'负责人'
+      principal: 'Administrator',//'负责人'
       principalTel: 'Telephone',//'电话'
       option: 'Operation'//"操作"
     },
