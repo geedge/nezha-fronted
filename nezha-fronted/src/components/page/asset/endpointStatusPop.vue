@@ -16,6 +16,7 @@
           <el-table
             :data="modules"
             :show-header="false"
+            height="100%"
             :row-key="getRowKeys"
             :expand-row-keys="expands"
             @expand-change="expandSelect"
@@ -77,6 +78,7 @@
           getRowKeys(row) {
             if(temp.showModule&&row.id==temp.showModule.id){
               temp.$refs.popTab.toggleRowExpansion(row,true);
+              // temp.$refs.popTab.setCurrentRow(row);
             }
             return row.id
           },
@@ -189,31 +191,36 @@
     height: 400px;
     border-radius: inherit;
   }
-
+  .pop-title{
+    margin-left: 5px;
+  }
   .pop-body .pop-body_title{
     line-height: 25px;
     display: inline;
     vertical-align: middle;
+    margin-left: 5px;
   }
   .pop-body .pop-body_content{
     border-top:1px solid lightgrey;
     box-shadow: 0px 0px 5px lightgrey inset;
     border-radius: inherit;
     height: calc(100% - 25px);
+    padding: 0px 2px 0px 2px;
   }
   .pop-box-table{
     font-size: 12px;
   }
 
   .table-inner{
-    background-color: #f1f1f1;
+    background-color: #F5F5F5;
   }
   .table-inner .inner-row{
     display: flex;
-    line-height: 20px;
+    line-height: 25px;
+    border-bottom: 1px solid white;
   }
   .table-inner .inner-row:hover {
-    background-color: white;
+    /*background-color: white;*/
   }
   .table-inner .inner-col{
     flex: 1;
@@ -238,7 +245,7 @@
 </style>
 <style>
   .el-table td,.el-table th{
-    padding: 0px;
+    padding: 5px;
   }
   .el-table__expanded-cell[class*=cell] {
     padding: 0px;
