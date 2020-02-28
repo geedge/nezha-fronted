@@ -4,13 +4,13 @@
       <el-dropdown split-button type="primary"  size="mini">
         <slot name="optionZone" class="option-button"></slot>
         <el-dropdown-menu slot="dropdown">
-          <el-dropdown-item @click.native="showImportBox(1)">{{$t('overall.importExcelLower')}}</el-dropdown-item>
-          <el-dropdown-item @click.native="showImportBox(2)">{{$t('overall.exportExcelLower')}}</el-dropdown-item>
+          <el-dropdown-item @click.native="showImportBox(1)" class="dropdown-content"><i class="el-icon-upload2"></i>{{$t('overall.importExcelLower')}}</el-dropdown-item>
+          <el-dropdown-item @click.native="showImportBox(2)" class="dropdown-content"><i class="el-icon-download"></i>{{$t('overall.exportExcelLower')}}</el-dropdown-item>
         </el-dropdown-menu>
       </el-dropdown>
     </div>
     <div>
-      <el-dialog :visible.sync="importBox.show" :title="importBox.title" :modal-append-to-body='false' :show-close="true" :width="importBox.width" @close="closeDialog">
+      <el-dialog :visible.sync="importBox.show" :title="importBox.title" :modal-append-to-body='false' :show-close="true" :width="importBox.width" @close="closeDialog" >
         <div v-if="importBox.type==1">
           <div class="upload-body">
             <el-upload class="upload-demo" ref="uploadExcel" action="" :file-list="importFileList" :on-change="importChange"  :auto-upload="false" accept=".xlsx,.xls">
@@ -21,15 +21,15 @@
             </el-upload>
           </div>
           <div slot="footer" class="footer">
-            <div class="right-box-bottom-btns">
-              <button @click="downloadTemplate"  class="nz-btn nz-btn-size-normal nz-btn-style-light nz-btn-min-width-100">
+            <div class="el-message-box__btns" style="text-align: right;">
+              <button @click="downloadTemplate"  class="el-button el-button--default el-button--small">
                 <span>{{$t('overall.template')}}</span>
               </button>
-              <button @click="closeDialog"  class="nz-btn nz-btn-size-normal nz-btn-style-light nz-btn-min-width-100" style="margin-left: 0px">
-                <span>{{$t('overall.cancel')}}</span>
-              </button>
-              <button  @click="importExcel"  class="nz-btn nz-btn-size-normal nz-btn-style-normal nz-btn-min-width-100">
+              <button  @click="importExcel"  class="el-button el-button--default el-button--small">
                 <span>{{$t('overall.importExcel')}}</span>
+              </button>
+              <button @click="closeDialog"  class="el-button el-button--default el-button--small" >
+                <span>{{$t('overall.cancel')}}</span>
               </button>
             </div>
           </div>
@@ -68,11 +68,11 @@
               </div>
             </div>
             <div slot="footer" class="footer">
-              <div class="right-box-bottom-btns">
-                <button @click="rollbackImport"  class="nz-btn nz-btn-size-normal nz-btn-style-light nz-btn-min-width-100">
+              <div class="el-message-box__btns">
+                <button @click="rollbackImport"  class="el-button el-button--default el-button--small">
                   <span>{{$t('overall.rollbackImport')}}</span>
                 </button>
-                <button  @click="closeDialog"  class="nz-btn nz-btn-size-normal nz-btn-style-light nz-btn-min-width-100">
+                <button  @click="closeDialog"  class="el-button el-button--default el-button--small">
                   <span>{{$t('overall.cancel')}}</span>
                 </button>
               </div>
@@ -296,10 +296,10 @@
     left:2px;
   }
   .footer:before{
-    content: '';
-    clear:both;
-    display: block;
-    height: 40px;
+    /*content: '';*/
+    /*clear:both;*/
+    /*display: block;*/
+    /*height: 40px;*/
   }
   .upload-body{
     text-align: center;
@@ -321,5 +321,26 @@
   }
   .result-title{
     font-weight: bold;
+  }
+  /**dialog 在视图中居中显示start*/
+  .el-dialog{
+    display: flex;
+    flex-direction: column;
+    margin:0 !important;
+    position:absolute;
+    top:50%;
+    left:50%;
+    transform:translate(-50%,-50%);
+    /*height:600px;*/
+    max-height:calc(100% - 30px);
+    max-width:calc(100% - 30px);
+  }
+  .el-dialog .el-dialog__body{
+    flex:1;
+    overflow: auto;
+  }
+  /**dialog 在视图中居中显示end*/
+  .dropdown-content{
+    font-size: 14px !important;
   }
 </style>
