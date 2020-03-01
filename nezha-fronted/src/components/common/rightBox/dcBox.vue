@@ -51,7 +51,7 @@
             <div v-else-if="!rightBox.isEdit" class="right-box-form-content-txt">-</div>
           </el-form-item>
           <el-form-item :label='$t("config.dc.area")' prop="area">
-            <select-area ref="selectArea" :areaData="areaData" :placement="'left'" @selectArea="selectArea" :currentArea="currentDc.area.id">
+            <select-area ref="selectArea" :areaData="areaData" :placement="'bottom-start'" @selectArea="selectArea" :currentArea="currentDc.area.id">
               <template v-slot:trigger>
                 <el-input v-if="rightBox.isEdit" placeholder="" v-model="currentDc.area.name" size="small" readonly="readonly" @click.native="toSelectArea"></el-input>
               </template>

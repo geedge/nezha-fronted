@@ -1,16 +1,16 @@
 <template>
-  <el-popover :placement="placement" width="250" ref="selectAreaPopBox" v-model="popBox.show" popper-class="nz-pop">
+  <el-popover :placement="placement" width="487" ref="selectAreaPopBox" v-model="popBox.show" popper-class="nz-pop nz-pop-select-area" transition="slide">
     <div>
       <!-- begin--顶部按钮-->
-      <div class="pop-top-btns">
+      <!--<div class="pop-top-btns">
         <button type="button" @click="esc" class="nz-btn nz-btn-size-alien nz-btn-size-small nz-btn-style-light nz-btn-min-width-35" id="dc-esc">
           <span class="pop-top-btn-icon"><i class="el-icon-close"></i></span>
           <span class="pop-top-btn-txt">{{$t('overall.esc')}}</span>
         </button>
-      </div>
+      </div>-->
       <!-- end--顶部按钮-->
 
-      <div class="pop-title">{{$t('config.dc.selectArea')}}</div>
+      <!--<div class="pop-title">{{$t('config.dc.selectArea')}}</div>-->
       <div class="pop-item-wider">
         <el-scrollbar class="select-area-tree">
           <el-tree
@@ -92,8 +92,20 @@
     }
 </script>
 
-<style>
+<style lang="scss">
 .select-area-tree {
   height: 350px;
+}
+.select-area-tree .el-tree-node__content {
+  height: 34px;
+  line-height: 34px;
+}
+.select-area-tree .el-tree-node__content:hover {
+  color: $global-text-color-active;
+}
+.select-area-tree .el-tree--highlight-current .el-tree-node.is-current>.el-tree-node__content {
+  background-color: #F5F7FA;
+  font-weight: bold;
+  color: $global-text-color-active;
 }
 </style>
