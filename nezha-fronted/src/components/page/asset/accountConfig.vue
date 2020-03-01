@@ -25,14 +25,14 @@
           <div class="right-box-form-content-txt" >{{account.authType==1?$t('asset.createAssetTab.password'):$t('asset.createAssetTab.ssh')}}</div>
         </el-form-item>
         <el-form-item :label="$t('asset.createAssetTab.account')" prop="user">
-          <el-input autocomplete="new-password" size="mini" v-model="account.user" v-if="isEdit"/>
+          <el-input autocomplete="new-password" size="small" v-model="account.user" v-if="isEdit"/>
           <div class="right-box-form-content-txt" v-if="!isEdit">{{account.user}}</div>
         </el-form-item>
         <el-form-item :label="$t('asset.createAssetTab.password')" v-show="account.authType==1" v-if="isEdit">
-          <el-input autocomplete="new-password" size="mini" type="password" v-model="account.pwd"/>
+          <el-input autocomplete="new-password" size="small" type="password" v-model="account.pwd"/>
         </el-form-item>
         <el-form-item :label="$t('asset.createAssetTab.port')" prop="port" style="display: inline-block">
-          <el-input size="mini" v-model.number="account.port" v-if="isEdit"/>
+          <el-input size="small" v-model.number="account.port" v-if="isEdit"/>
           <div class="right-box-form-content-txt" v-if="!isEdit">{{account.port}}</div>
         </el-form-item>
         <el-form-item :label="this.$t('asset.createAssetTab.ssh')" v-show="account.authType==2" prop="file" v-if="isEdit">

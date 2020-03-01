@@ -24,18 +24,18 @@
       <el-scrollbar class="right-box-form-box">
         <el-form ref="assetEditForm" :model="assetData" label-width="120px" class="right-box-form right-box-form-left" :rules="rules">
           <el-form-item :label="$t('asset.createAssetTab.sn')" prop="sn">
-            <el-input size="mini" v-if="!tabView" v-model="assetData.sn"/>
+            <el-input size="small" v-if="!tabView" v-model="assetData.sn"/>
             <el-popover trigger="hover" placement="bottom-start" :content="assetData.sn" >
               <span slot="reference" class="sidebar-info-item-txt" v-if="tabView">{{assetData.sn}}</span>
             </el-popover>
           </el-form-item>
           <el-form-item :label="this.$t('asset.createAssetTab.host')" prop="host">
-            <el-input size="mini" v-if="!tabView" v-model="assetData.host"/>
+            <el-input size="small" v-if="!tabView" v-model="assetData.host"/>
             <span v-if="tabView">{{assetData.host}}</span>
           </el-form-item>
           <el-form-item :label="this.$t('asset.createAssetTab.state')">
             <div v-if="!tabView" class="select-style">
-              <el-select size="mini" v-model="assetData.state" placeholder="">
+              <el-select size="small" v-model="assetData.state" placeholder="">
                 <el-option
                   :id="'asset-edit-state-op-'+item.value"
                   v-for="item in assetStateOption"
@@ -65,7 +65,7 @@
           <div class="line-100 asset-line"></div>
           <!------------------------------------------资产类型---------------------------------------------->
           <el-form-item :label="$t('asset.createAssetTab.assetType')" class="right-box-form-content" prop="assetType">
-            <el-select popper-class="asset-dropdown" size="mini" v-if="!tabView" v-model="assetType" clearable @visible-change="cancelEdit"
+            <el-select popper-class="asset-dropdown" size="small" v-if="!tabView" v-model="assetType" clearable @visible-change="cancelEdit"
                        @change="getAllModelOptionData()" class="right-box-row-with-btn">
               <el-option
                 :id="'asset-edit-type-op-'+item.id"
@@ -76,7 +76,7 @@
               >
                 <span class="config-dropdown-label-txt" v-if="!item.isEdit">{{ item.value }}</span>
                 <span class="config-dropdown-label-input" v-if="item.isEdit" @click.stop="editing(item)">
-                  <el-input type="text" v-model="item.value" size="mini"/>
+                  <el-input type="text" v-model="item.value" size="small"/>
                 </span>
                 <div class="config-dropdown-label-icons">
                   <span class="config-dropdown-btn config-dropdown-btn-delete" @click.stop="delOptionData(item)" :id="'asset-edit-type-op-del-'+item.id">
@@ -167,7 +167,7 @@
                 :disabled="this.assetType!=''?false:true"
                 v-model="assetData.modelId"
                 clearable
-                size="mini"
+                size="small"
                 placeholder=""
                 class="right-box-row-with-btn"
               >
@@ -286,7 +286,7 @@
           <el-form-item :label="this.$t('asset.createAssetTab.purchaseDate')">
             <div class="select-style" v-if="!tabView">
               <el-date-picker
-                size="mini"
+                size="small"
                 v-model="assetData.purchaseDate"
                 value-format="yyyy-MM-dd"
                 type="date"
@@ -302,7 +302,7 @@
           <el-form-item :label="this.$t('asset.createAssetTab.dcName')" class="right-box-form-content" prop="idcId">
             <template v-if="!tabView">
 <!--              <el-select popper-class="asset-dropdown" size="mini" v-model="assetData.idcId" clearable @change="getSingleIDCData" class="right-box-row-with-btn" placeholder="">-->
-              <el-select popper-class="asset-dropdown" size="mini" v-model="assetData.idcId" clearable @change="getSingleIDCData"  placeholder="">
+              <el-select popper-class="asset-dropdown" size="small" v-model="assetData.idcId" clearable @change="getSingleIDCData"  placeholder="">
                 <el-option
                   :id="'asset-edit-idc-op-'+item.id"
                   v-for="item in IDCOptionData"
@@ -346,7 +346,7 @@
             <template v-if="!tabView">
 <!--              <el-select clearable v-model="assetData.cabinetId" clearable class="right-box-row-with-btn" popper-class="asset-dropdown"-->
               <el-select clearable v-model="assetData.cabinetId" clearable  popper-class="asset-dropdown"
-                         :disabled="assetData.idcId==''?true:false" size="mini" placeholder=""
+                         :disabled="assetData.idcId==''?true:false" size="small" placeholder=""
                          @change="getSingleCabinetData">
                 <el-option
                   :id="'asset-edit-cabinet-op-'+item.id"
