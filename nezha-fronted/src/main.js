@@ -80,6 +80,7 @@ const el_scrollBar = el => {
 };
 Vue.directive("scrollBar", {
   inserted(el, binding, vnode) {
+    console.info(1)
     const { arg } = binding;
     if (arg === "el-table") {
       el = el.querySelector(".el-table__body-wrapper");
@@ -95,8 +96,6 @@ Vue.directive("scrollBar", {
           el.classList.add("ps")
         );
       });
-    } else if (arg === 'metric-set') {
-
     }
     const rules = ["fixed", "absolute", "relative"];
     if (!rules.includes(window.getComputedStyle(el, null).position)) {
@@ -110,9 +109,11 @@ Vue.directive("scrollBar", {
     el_scrollBar(el);
   },
   componentUpdated(el, binding, vnode, oldVnode) {
+    console.info(2)
     const { arg } = binding;
     if (arg === "el-table") {
       el = el.querySelector(".el-table__body-wrapper");
+      el.classList.add("ps");
       !el && console.warn("未发现className为el-table__body-wrapper的dom");
     }
     try {

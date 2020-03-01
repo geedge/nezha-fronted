@@ -53,6 +53,7 @@
         height="calc(100% - 160px)"
         style="width: 100%;"
         :data="tableData"
+        v-scrollBar:el-table
         border
         tooltip-effect="light"
       >

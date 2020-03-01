@@ -60,13 +60,15 @@
                 </div>
                 <div class="line-100"></div>
                 <div class="endpoint-sub-table-body">
-                  <div @click="selectAsset(item, index)" :data="item.id" v-for="item,index in assetList" class="endpoint-sub-table-row" :id="'select-asset-'+item.id">
-                    <div :id="index" @click.stop v-if="!currentModuleCopy.id" class="endpoint-sub-table-body-dialog"></div>
-                    <div class="endpoint-sub-table-col">{{item.host}}</div>
-                    <el-popover trigger="hover" placement="right-start" :content="item.sn" >
-                      <div slot="reference" class="endpoint-sub-table-col">{{item.sn}}</div>
-                    </el-popover>
-                  </div>
+                  <el-scrollbar style="height: 100%" ref="assetScrollbar">
+                    <div @click="selectAsset(item, index)" :data="item.id" v-for="item,index in assetList" class="endpoint-sub-table-row" :id="'select-asset-'+item.id">
+                      <div :id="index" @click.stop v-if="!currentModuleCopy.id" class="endpoint-sub-table-body-dialog"></div>
+                      <div class="endpoint-sub-table-col">{{item.host}}</div>
+                      <el-popover trigger="hover" placement="right-start" :content="item.sn" >
+                        <div slot="reference" class="endpoint-sub-table-col">{{item.sn}}</div>
+                      </el-popover>
+                    </div>
+                  </el-scrollbar>
                 </div>
               </div>
               <!--end--table-->
@@ -96,6 +98,7 @@
                   :data="endpointList"
                   ref="endpointTable"
                   style="width: 100%;border-radius: 4px;"
+                  v-scrollBar:el-table
                   height="calc(100% - 36px)"
                   :row-class-name="setRowIndex"
                   empty-text=" ">
@@ -393,6 +396,7 @@
             break;
           }
         }
+        this.$refs.assetScrollbar.update();
       },
 
       /*获取project列表*/
@@ -483,6 +487,7 @@
         this.endpointTouch = true;
         this.endpointForm.projectId = this.currentProject.id;
         this.endpointForm.moduleId = this.currentModuleCopy.id;
+        this.$refs.assetScrollbar.update();
       },
 
       //将param转为json字符串格式

@@ -368,10 +368,12 @@
 
       /*关闭弹框*/
       esc() {
-        this.rightBox.show = false;
-        //this.editParamBox.show = false;
-        this.$refs.chartForm.resetFields();//清空表单
-        this.chart.id='';//不清除，再次打开创建图表，会显示删除按钮
+        if (this.rightBox.show) {
+          this.rightBox.show = false;
+          //this.editParamBox.show = false;
+          this.$refs.chartForm.resetFields();//清空表单
+          this.chart.id='';//不清除，再次打开创建图表，会显示删除按钮
+        }
       },
 
       /*metric部分相关方法--begin*/

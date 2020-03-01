@@ -167,7 +167,7 @@
     </div>
 
     <!--endpoint query-->
-    <div class="content-right" v-show="tableShow == 3" style="position: relative">
+    <div class="content-right" v-if="tableShow == 3" style="position: relative">
       <div class="top-tools" >
         <div>
           <div @click="backToEdpTab">
