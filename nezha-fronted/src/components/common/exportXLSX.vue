@@ -10,7 +10,7 @@
       </el-dropdown>
     </div>
     <div>
-      <el-dialog :visible.sync="importBox.show" :title="importBox.title" :modal-append-to-body='false' :show-close="true" :width="importBox.width" @close="closeDialog" >
+      <el-dialog :visible.sync="importBox.show" :title="importBox.title" :modal-append-to-body='false' :show-close="true" :width="importBox.width" @close="closeDialog" class="nz-dialog">
         <div v-if="importBox.type==1">
           <div class="upload-body">
             <el-upload class="upload-demo" ref="uploadExcel" action="" :file-list="importFileList" :on-change="importChange"  :auto-upload="false" accept=".xlsx,.xls">
