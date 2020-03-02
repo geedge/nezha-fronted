@@ -43,6 +43,7 @@ const en = {
     createAccount:'create account',
     createPrometheusServer:'create prometheus server',
     createDatacenter:'create datacenter',
+    createCabinet:'create cabinet',
     exportExcel:'Export',
     importExcel:'Import',
     importExcelLower:'import',
@@ -391,6 +392,7 @@ const en = {
       selectArea: 'Select area',
       cabinetNum: "Cabinet number",
       assets: "Assets",
+      remark:'Remark',
     }
   },
   alert: {

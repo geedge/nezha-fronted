@@ -27,113 +27,202 @@
   .dc-asset-state-out {
     background-color: orange;
   }
+  .dc-asset-state-high {
+    background-color: rgba(255, 0, 0, 0.6);
+  }
 </style>
 <template>
-  <div class="dc">
-    <div class="content-left">
-      <div class="sidebar-title">{{$t('overall.config')}}</div>
-      <div class="sidebar-info">
-        <div class="sidebar-info-item sidebar-info-top" @click="jumpTo('account')" id="prom-jump-account">
-          {{$t('config.account.account')}}
-        </div>
-        <div class="sidebar-info-item" @click="jumpTo('promServer')" id="account-jump-promserver">
-          {{$t('config.promServer.promServerList')}}
-        </div>
-        <div class="sidebar-info-item sidebar-info-item-active"  id="account-jump-dc">
-          {{$t('config.dc.dc')}}
-        </div>
-      </div>
-    </div>
-    <div class="content-right">
-      <div class="top-tools">
-        <div></div>
-        <div>
-          <button type="button" @click="toAdd" :title="$t('overall.createDatacenter')"
-                  class="nz-btn nz-btn-size-normal nz-btn-style-light float-right " id="dc-add">
-                  <i class="nz-icon-create-square nz-icon"></i>
-          </button>
-          <div class="top-tool-search float-right">
-            <search-input :searchMsg="searchMsg" @search="search"></search-input>
+    <div class="dc" >
+      <div class="content-left">
+        <div class="sidebar-title">{{$t('overall.config')}}</div>
+        <div class="sidebar-info">
+          <div class="sidebar-info-item sidebar-info-top" @click="jumpTo('account')" id="prom-jump-account">
+            {{$t('config.account.account')}}
+          </div>
+          <div class="sidebar-info-item" @click="jumpTo('promServer')" id="account-jump-promserver">
+            {{$t('config.promServer.promServerList')}}
+          </div>
+          <div class="sidebar-info-item sidebar-info-item-active"  id="account-jump-dc">
+            {{$t('config.dc.dc')}}
           </div>
         </div>
       </div>
-      <el-table
-        class="nz-table"
-        :data="tableData"
-        border
-        v-scrollBar:el-table
-        height="calc(100% - 160px)"
-        style="width: 100%;">
-        <el-table-column
-          :resizable="false"
-          v-for="(item, index) in tablelable"
-          v-if="item.show"
-          :width="item.width"
-          :key="`col-${index}`"
-          :label="item.label"
-        >
-          <template slot-scope="scope" :column="item">
-            <div v-if="item.prop == 'option'" class="content-right-options">
-              <span :title="$t('overall.view')" @click="detail(scope.row)" class="content-right-option" :id="'dc-detail-'+scope.row.id"><i class="nz-icon nz-icon-view"></i></span>
-              &nbsp;
-              <span :title="$t('overall.edit')" @click="edit(scope.row)" class="content-right-option" :id="'dc-edit-'+scope.row.id"><i class="nz-icon nz-icon-edit"></i></span>
-              &nbsp;
-              <span :title="$t('overall.delete')" @click="del(scope.row)" class="content-right-option" :id="'dc-del-'+scope.row.id"><i class="el-icon-delete"></i></span>
+      <!--dc table start-->
+      <div class="content-right" v-if="tabShow==1">
+        <div class="top-tools">
+          <div></div>
+          <div>
+            <button type="button" @click="toAdd" :title="$t('overall.createDatacenter')"
+                    class="nz-btn nz-btn-size-normal nz-btn-style-light float-right " id="dc-add">
+              <i class="nz-icon-create-square nz-icon"></i>
+            </button>
+            <div class="top-tool-search float-right">
+              <search-input :searchMsg="searchMsg" @search="search"></search-input>
             </div>
-            <template v-else-if="item.prop == 'principal'">
-              <template v-if="scope.row.principal">
-                <template v-for="item in userData">
-                  <template v-if="scope.row.principal == item.userId">{{item.username}}</template>
+          </div>
+        </div>
+        <el-table
+          class="nz-table"
+          :data="tableData"
+          border
+          v-scrollBar:el-table
+          height="calc(100% - 160px)"
+          style="width: 100%;">
+          <el-table-column
+            :resizable="false"
+            v-for="(item, index) in tablelable"
+            v-if="item.show"
+            :width="item.width"
+            :key="`col-${index}`"
+            :label="item.label"
+          >
+            <template slot-scope="scope" :column="item">
+              <div v-if="item.prop == 'option'" class="content-right-options">
+                <span :title="$t('overall.view')" @click="detail(scope.row)" class="content-right-option" :id="'dc-detail-'+scope.row.id"><i class="nz-icon nz-icon-view"></i></span>
+                &nbsp;
+                <span :title="$t('overall.edit')" @click="edit(scope.row)" class="content-right-option" :id="'dc-edit-'+scope.row.id"><i class="nz-icon nz-icon-edit"></i></span>
+                &nbsp;
+                <span :title="$t('overall.delete')" @click="del(scope.row)" class="content-right-option" :id="'dc-del-'+scope.row.id"><i class="el-icon-delete"></i></span>
+              </div>
+              <template v-else-if="item.prop == 'principal'">
+                <template v-if="scope.row.principal">
+                  <template v-for="item in userData">
+                    <template v-if="scope.row.principal == item.userId">{{item.username}}</template>
+                  </template>
                 </template>
+                <template v-else>-</template>
               </template>
-              <template v-else>-</template>
-            </template>
-            <template v-else-if="item.prop == 'area'">
-              <template v-if="scope.row.area">{{scope.row.area.name}}</template>
-              <template v-else>-</template>
-            </template>
-            <template v-else-if="item.prop == 'assetStat'">
-              <el-popover
-                placement="top"
-                trigger="hover"
-                :content="$t('overall.result.total') + '：' + scope.row.assetStat.total + '，' + $t('asset.createAssetTab.inStock') + '：' + scope.row.assetStat.inStock + '，' + $t('asset.createAssetTab.notInStock') + '：' + scope.row.assetStat.outStock">
-                <div slot="reference" class="dc-asset-states">
-                  <span class="dc-asset-state dc-asset-state-total">{{scope.row.assetStat.total}}</span>
-                  <span class="dc-asset-state dc-asset-state-in">{{scope.row.assetStat.inStock}}</span>
-                  <span class="dc-asset-state dc-asset-state-out">{{scope.row.assetStat.outStock}}</span>
-                </div>
-              </el-popover>
+              <template v-else-if="item.prop == 'area'">
+                <template v-if="scope.row.area">{{scope.row.area.name}}</template>
+                <template v-else>-</template>
+              </template>
+              <template v-else-if="item.prop == 'assetStat'">
+                <el-popover
+                  placement="top"
+                  trigger="hover"
+                  :content="$t('overall.result.total') + '：' + scope.row.assetStat.total + '，' + $t('asset.createAssetTab.inStock') + '：' + scope.row.assetStat.inStock + '，' + $t('asset.createAssetTab.notInStock') + '：' + scope.row.assetStat.outStock">
+                  <div slot="reference" class="dc-asset-states">
+                    <span class="dc-asset-state dc-asset-state-total">{{scope.row.assetStat.total}}</span>
+                    <span class="dc-asset-state dc-asset-state-in">{{scope.row.assetStat.inStock}}</span>
+                    <span class="dc-asset-state dc-asset-state-out">{{scope.row.assetStat.outStock}}</span>
+                  </div>
+                </el-popover>
 
+              </template >
+              <template v-else-if="item.prop == 'cabinetNum'">
+                <span class="clickable" @click="showCabinet(scope.row)">{{scope.row[item.prop]}}</span>
+              </template>
+              <template v-else-if="scope.row[item.prop]">{{scope.row[item.prop]}}</template>
+              <template v-else>-</template>
             </template>
-            <template v-else-if="scope.row[item.prop]">{{scope.row[item.prop]}}</template>
-            <template v-else>-</template>
-          </template>
-        </el-table-column>
-        <el-table-column width="28">
-          <template slot="header" slot-scope="scope">
+          </el-table-column>
+          <el-table-column width="28">
+            <template slot="header" slot-scope="scope">
             <span @click.stop="elementsetShow('shezhi',$event)" class="nz-table-gear">
               <i class="nz-icon nz-icon-gear"></i>
             </span>
-          </template>
-        </el-table-column>
-      </el-table>
-      <Pagination :pageObj="pageObj" @pageNo='pageNo' @pageSize='pageSize' ref="Pagination"></Pagination>
+            </template>
+          </el-table-column>
+        </el-table>
+        <Pagination :pageObj="pageObj" @pageNo='pageNo' @pageSize='pageSize' ref="Pagination"></Pagination>
+        <!--dc table end-->
+      <element-set
+        v-clickoutside="elementsetHide"
+        :dropCol="dropCol"
+        @tablelable="tablelabelEmit"
+        :table-title="tableTitle"
+        ref="elementset"
+      ></element-set>
+      <dc-box ref="dcBox" :dc="currentDc" :user-data="userData" @reload="getTableData"></dc-box>
     </div>
+      <!--cabinet table start-->
+      <div v-if="tabShow==2" class="content-right">
+        <div class="top-tools">
+          <div>
+            <div @click="back">
+              <button  class="nz-btn nz-btn-size-normal nz-btn-style-light float-right nz-btn-min-width-82">
+                <span class='top-tool-btn-txt'>{{$t('overall.back')}}</span>
+              </button>
+            </div>
+          </div>
+          <div>
+            <button type="button" @click="toAddCabinet" :title="$t('overall.createCabinet')"
+                    class="nz-btn nz-btn-size-normal nz-btn-style-light float-right " id="cab-add">
+              <i class="nz-icon-create-square nz-icon"></i>
+            </button>
+            <div class="top-tool-search float-right">
+              <search-input :searchMsg="searchMsg" @search="search"></search-input>
+            </div>
+          </div>
+        </div>
 
-    <element-set
-      v-clickoutside="elementsetHide"
-      :dropCol="dropCol"
-      @tablelable="tablelabelEmit"
-      :table-title="tableTitle"
-      ref="elementset"
-    ></element-set>
+        <el-table
+          class="nz-table"
+          :data="cabinetDatas"
+          border
+          v-scrollBar:el-table
+          height="calc(100% - 160px)"
+          style="width: 100%;">
+          <el-table-column
+            :resizable="false"
+            v-for="(item, index) in cabinetLabel"
+            v-if="item.show"
+            :width="item.width"
+            :key="`col-${index}`"
+            :label="item.label"
+          >
+            <template slot-scope="scope" :column="item">
+              <div v-if="item.prop == 'option'" class="content-right-options">
+                <span :title="$t('overall.edit')" @click="editCabinet(scope.row)" class="content-right-option" :id="'dc-edit-'+scope.row.id"><i class="nz-icon nz-icon-edit"></i></span>
+                &nbsp;
+                <span :title="$t('overall.delete')" @click="delCabinet(scope.row)" class="content-right-option" :id="'dc-del-'+scope.row.id"><i class="el-icon-delete"></i></span>
+              </div>
+              <template v-else-if="item.prop == 'assetStat'">
+                <el-popover
+                  placement="top-start"
+                  offset="-100"
+                  trigger="hover"
+                  :content="$t('overall.result.total') + '：' + scope.row.assetStat.total + '，' + $t('asset.createAssetTab.inStock') + '：' + scope.row.assetStat.inStock + '，' + $t('asset.createAssetTab.notInStock') + '：' + scope.row.assetStat.outStock">
+                  <div slot="reference" class="dc-asset-states">
+                    <span class="dc-asset-state dc-asset-state-total">{{scope.row.assetStat.total}}</span>
+                    <span class="dc-asset-state dc-asset-state-in">{{scope.row.assetStat.inStock}}</span>
+                    <span class="dc-asset-state dc-asset-state-out">{{scope.row.assetStat.outStock}}</span>
+                  </div>
+                </el-popover>
 
-    <dc-box ref="dcBox" :dc="currentDc" :user-data="userData" @reload="getTableData"></dc-box>
-  </div>
+              </template >
+              <template v-else-if="item.prop == 'alertStat'">
+                <el-popover
+                  placement="top-start"
+                  offset="-128"
+                  trigger="hover"
+                  :content="$t('overall.result.total') + '：' + scope.row.alertStat.total + '，' + $t('alert.config.high') + '：' + scope.row.alertStat.high + '，' + $t('alert.config.medium') + '：' + scope.row.alertStat.medium+ '，' + $t('alert.config.low') + '：' + scope.row.alertStat.low">
+                  <div slot="reference" class="dc-asset-states">
+                    <span class="dc-asset-state dc-asset-state-total">{{scope.row.alertStat.total}}</span>
+                    <span class="dc-asset-state dc-asset-state-high">{{scope.row.alertStat.high}}</span>
+                    <span class="dc-asset-state dc-asset-state-in">{{scope.row.alertStat.medium}}</span>
+                    <span class="dc-asset-state dc-asset-state-out">{{scope.row.alertStat.low}}</span>
+                  </div>
+                </el-popover>
+
+              </template >
+              <template v-else-if="scope.row[item.prop]">{{scope.row[item.prop]}}</template>
+              <template v-else>-</template>
+            </template>
+          </el-table-column>
+        </el-table>
+      </div>
+      <!--cabinet table end-->
+      <cabinet-box :cur-cabinet="curCabinet" :cur-idc="currentShowDc" ref="cabinetEditBox" @after="getCabinetDatas"></cabinet-box>
+    </div>
 </template>
 <script>
+  import cabinetBox from "../../common/rightBox/cabinetBox";
   export default {
     name: "dc",
+    components:{
+      'cabinet-box':cabinetBox
+    },
     data() {
       return {
         currentDc: {
@@ -208,6 +297,56 @@
           }],
         },
         searchLabel: {}, //搜索参数
+        tabShow:1, // 控制显示一级页面和二级页面 1 dc 2cabinet
+        cabinetDatas:[],//显示的机柜信息
+        cabinetLabel:[
+          {
+            label: 'ID',
+            prop: 'id',
+            show: true,
+            width: 80
+          },
+          {
+            label:this.$t('overall.name'),
+            prop:'name',
+            show:true
+          },
+          {
+            label:this.$t('asset.createAssetTab.uSize'),
+            prop:'uSize',
+            show:true
+          },
+          {
+            label:this.$t('config.dc.assets'),
+            prop:'assetStat',
+            show:true
+          },
+          {
+            label:this.$t('alert.alert'),
+            prop:'alertStat',
+            show:true
+          },
+          {
+            label:this.$t('config.dc.remark'),
+            prop:'remark',
+            show:true
+          },
+          {
+            label: this.$t('config.account.option'),
+            prop: 'option',
+            show: true,
+            width: 120
+          }
+        ],
+        curCabinet:{
+          id:'',
+          idcId:'',
+          name:'',
+          remark:'',
+          seq:'',
+          uSize:0
+        },
+        currentShowDc:{}
       }
     },
     methods: {
@@ -328,6 +467,47 @@
             this.$set(this.searchLabel, item, searchObj[item]);
           }
         }
+        this.getTableData();
+      },
+      showCabinet:function(dc){
+        this.tabShow=2;
+        this.getCabinetDatas(dc.id);
+        this.currentShowDc=dc;
+      },
+      getCabinetDatas:function(dcId){
+        this.$get('/cabinet?idcId='+dcId).then(response=>{
+          if(response.code==200 && response.msg=='success'){
+            this.cabinetDatas=response.data.list;
+            console.log(this.cabinetDatas)
+          }
+        })
+      },
+      editCabinet:function(cabinet){
+        this.curCabinet=cabinet;
+        this.$refs.cabinetEditBox.show(true,true);
+      },
+      toAddCabinet:function(){
+        this.$refs.cabinetEditBox.show(true,true);
+        this.$refs.cabinetEditBox.reset();
+      },
+      delCabinet:function(cabinet){
+        this.$confirm(this.$t("tip.confirmDelete"), {
+          confirmButtonText: this.$t("tip.yes"),
+          cancelButtonText: this.$t("tip.no"),
+          type: 'warning'
+        }).then(() => {
+          this.$delete('/cabinet?ids='+cabinet.id).then(response=>{
+            if(response.code ==  200){
+              this.$message({duration: 2000, type: 'success', message: this.$t("tip.saveSuccess")});
+              this.getCabinetDatas(cabinet.idcId);
+            }else{
+              this.$message.error(response.msg);
+            }
+          })
+        })
+      },
+      back:function(){
+        this.tabShow=1;
         this.getTableData();
       }
     },

@@ -36,10 +36,10 @@
         </div>
         <div v-if="importBox.type == 2">
           <div class="upload-body">
-            <button @click="exportCur"  class="nz-btn nz-btn-size-normal nz-btn-style-light nz-btn-min-width-100">
+            <button @click="exportCur"  class="el-button el-button--default el-button--small">
               <span>{{$t('overall.exportCur')}}</span>
             </button>
-            <button  @click="exportAll"  class="nz-btn nz-btn-size-normal nz-btn-style-light nz-btn-min-width-100">
+            <button  @click="exportAll"  class="el-button el-button--default el-button--small">
               <span>{{$t('overall.exportAll')}}</span>
             </button>
           </div>
