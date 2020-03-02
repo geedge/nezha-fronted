@@ -215,8 +215,14 @@
         this.rightBox.show = show;
       },
 
-      toEdit(show) {
+      toEdit(show, id) {
         this.rightBox.isEdit = show;
+        this.rightBox.show = true;
+        if (show) {
+          this.rightBox.title = this.$t("project.endpoint.editEndpoint") + "  ID：" + id;
+        } else {
+          this.rightBox.title = this.$t("project.endpoint.endpoint") + "  ID：" + id;
+        }
       },
 
       //endpoint弹框中asset子弹框控制
@@ -415,13 +421,6 @@
       setTimeout(()=>{this.getModuleList(this.currentProject.id);}, 100);
     },
     watch: {
-      endpoint(n, o) {
-        if (n && n.id) {
-          this.rightBox.title = this.$t("project.endpoint.editEndpoint") + "  ID：" + n.id;
-        } else {
-          this.rightBox.title = this.$t("project.endpoint.createEndpoint");
-        }
-      },
       projectListReloadWatch(n, o) {
         this.getProjectList();
       },

@@ -887,7 +887,7 @@
       toEditEndpoint(endpoint) {
         this.editEndpoint = JSON.parse(JSON.stringify(endpoint));
         this.rightBoxHandler(3);
-        this.$refs.editEndpointBox.toEdit(true);
+        this.$refs.editEndpointBox.toEdit(true, this.editEndpoint.id);
         if (!this.editEndpoint.paramObj) {
           this.$set(this.editEndpoint, 'paramObj', []);
         }
@@ -905,7 +905,7 @@
           this.$set(this.editEndpoint, 'paramObj', []);
         }
         this.rightBoxHandler(3);
-        this.$refs.editEndpointBox.toEdit(false);
+        this.$refs.editEndpointBox.toEdit(false, this.editEndpoint.id);
       },
 
       //弹出module编辑页
