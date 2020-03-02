@@ -164,7 +164,7 @@
                 class="el-icon-delete"></i>
               </span>&nbsp;&nbsp;&nbsp;
               &nbsp;
-              <span title="CLI" @click="ssss(scope.row.id ,scope.row.host)" class="content-right-option" :id="'asset-ssh-'+scope.row.id"><i
+              <span title="CLI" @click="cli(scope.row.id ,scope.row.host,scope.row.accounts)" class="content-right-option" :id="'asset-ssh-'+scope.row.id"><i
                 class="nz-icon nz-icon-cli"></i>
               </span>
             </template>
@@ -195,6 +195,7 @@
       ref="elementset"
     ></element-set>
     <module-box :module="module" @reload="getAssetData" ref="moduleBox"></module-box>
+    <web-ssh ref="webSsh" ></web-ssh>
   </div>
 </template>
 
@@ -202,11 +203,14 @@
   import bus from "../../../libs/bus";
   import exportXLSX from "../../common/exportXLSX";
   import endpointStatusPop from "./endpointStatusPop";
+  import webSSH from "../../cli/webSSH";
+
   export default {
     name: "asset",
     components:{
       'export-excel':exportXLSX,
-      'endpoint-status-pop':endpointStatusPop
+      'endpoint-status-pop':endpointStatusPop,
+      'web-ssh':webSSH,
     },
     data() {
       return {
@@ -497,6 +501,15 @@
           }
         });
         window.open(routeData.href);
+      },
+      cli(id,host,accounts){
+        let port = '';
+        let accountId = '';
+        if(accounts && accounts.length>0 && accounts[0].port){
+          port = accounts[0].port;
+          accountId = accounts[0].id;
+        }
+        this.$refs.webSsh.show(id,host,accountId,port);
       },
       jumpToAlertMsg(assetId) {
         this.$store.commit('assetForAlertListChange', assetId);

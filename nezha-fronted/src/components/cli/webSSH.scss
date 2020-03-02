@@ -1,0 +1,62 @@
+
+.console-dialog {
+  .menu {
+
+  }
+  .console{
+
+  }
+
+  .console-title-icon{
+    font-size:18px;
+    color: #909399;
+    position: absolute;
+    top:9px;
+  }
+  .console-title-icon:hover:before{
+    color: #1989fa;
+  }
+
+  .el-dialog {
+    .el-dialog__body{
+      padding: 0px !important;
+    }
+    .el-dialog__header{
+      padding: 0px !important;
+    }
+   }
+  .el-tabs--border-card>.el-tabs__content {
+    padding: 0px !important;
+  }
+
+  .el-tabs {
+    /*background-color: #F5F7FA;*/
+  }
+
+  .el-tabs .el-tabs__header {
+    margin-left:90px;
+    margin-right:150px;
+  }
+
+  .el-menu--horizontal>.el-submenu .el-submenu__title {
+    height: 40px;
+    line-height: 40px;
+  }
+
+  .el-menu.el-menu--horizontal .el-submenu__title i:first-child:before{
+    color: #909399;
+    font-size:22px;
+  }
+  .el-menu.el-menu--horizontal .el-submenu__title i:first-child:hover:before{
+    color: #1989fa;
+  }
+
+  .el-submenu__title:hover{
+    background-color:#FFF !important;
+  }
+
+
+}
+.dailog-custom{
+  width:100%;
+}
