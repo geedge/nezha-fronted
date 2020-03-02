@@ -35,7 +35,7 @@
           </el-form-item>
           <el-form-item :label="this.$t('asset.createAssetTab.state')">
             <div v-if="!tabView" class="select-style">
-              <el-select size="small" v-model="assetData.state" placeholder="">
+              <el-select size="small" v-model="assetData.state" placeholder="" popper-class="asset-dropdown" >
                 <el-option
                   :id="'asset-edit-state-op-'+item.value"
                   v-for="item in assetStateOption"
@@ -74,15 +74,15 @@
                 :value="item.code"
                 :label="item.value"
               >
-                <span class="config-dropdown-label-txt" v-if="!item.isEdit">{{ item.value }}</span>
-                <span class="config-dropdown-label-input" v-if="item.isEdit" @click.stop="editing(item)">
+                <span class="asset-dropdown-label-txt" v-if="!item.isEdit">{{ item.value }}</span>
+                <span class="asset-dropdown-label-input" v-if="item.isEdit" @click.stop="editing(item)">
                   <el-input type="text" v-model="item.value" size="small"/>
                 </span>
-                <div class="config-dropdown-label-icons">
-                  <span class="config-dropdown-btn config-dropdown-btn-delete" @click.stop="delOptionData(item)" :id="'asset-edit-type-op-del-'+item.id">
+                <div class="asset-dropdown-label-icons">
+                  <span class="asset-dropdown-btn asset-dropdown-btn-delete" @click.stop="delOptionData(item)" :id="'asset-edit-type-op-del-'+item.id">
                     <i class="el-icon-delete"></i>
                   </span>
-                  <span class="config-dropdown-btn" @click.stop="editOptionData(item,'type')" :id="'asset-edit-type-op-edit-'+item.id">
+                  <span class="asset-dropdown-btn" @click.stop="editOptionData(item,'type')" :id="'asset-edit-type-op-edit-'+item.id">
                     <i class="nz-icon nz-icon-edit" v-if="!item.isEdit"></i>
                     <i class="el-icon-check" v-if="item.isEdit"
                        @click="editData('sys/dict/update',item)"></i>
@@ -131,17 +131,17 @@
                                 :key="index">
                               <div class="pop-item-contain">
                                 <span v-if="!item.isEdit">{{ item.value }}</span>
-                                <span class="config-dropdown-label-input" v-if="item.isEdit" @click.stop="editing">
+                                <span class="asset-dropdown-label-input" v-if="item.isEdit" @click.stop="editing">
                                   <el-input class="input-x-mini-24" v-model="item.value"/>
                                 </span>
                                 <div class="pop-item-icons">
-                                  <span class="config-dropdown-btn config-dropdown-btn-delete" :id="'asset-edit-sub-type-op-del-'+index"
+                                  <span class="asset-dropdown-btn asset-dropdown-btn-delete" :id="'asset-edit-sub-type-op-del-'+index"
                                     @click.stop="deleteData('/sys/dict/delete',item.id)"><i class="el-icon-delete"></i>
                                   </span>
-                                  <span v-if="!item.isEdit" class="config-dropdown-btn" @click.stop="editOptionData(item,'type',index)" :id="'asset-edit-sub-type-op-edit-'+index">
+                                  <span v-if="!item.isEdit" class="asset-dropdown-btn" @click.stop="editOptionData(item,'type',index)" :id="'asset-edit-sub-type-op-edit-'+index">
                                     <i class="nz-icon nz-icon-edit"></i>
                                   </span>
-                                  <span v-if="item.isEdit"  class="config-dropdown-btn" @click.stop="editData('sys/dict/update',item, 'assetType')" :id="'asset-edit-sub-type-op-save-'+index">
+                                  <span v-if="item.isEdit"  class="asset-dropdown-btn" @click.stop="editData('sys/dict/update',item, 'assetType')" :id="'asset-edit-sub-type-op-save-'+index">
                                     <i class="el-icon-check"></i>
                                   </span>
                                 </div>
@@ -215,14 +215,14 @@
                                   :key="index">
                                 <div class="pop-item-contain">
                                   <span v-if="!item.isEdit">{{ item.value }}</span>
-                                  <span class="config-dropdown-label-input" v-if="item.isEdit" @click.stop="editing">
+                                  <span class="asset-dropdown-label-input" v-if="item.isEdit" @click.stop="editing">
                                     <el-input class="input-x-mini-24" v-model="item.value"/>
                                   </span>
                                   <div class="pop-item-icons">
-                                    <span class="config-dropdown-btn config-dropdown-btn-delete" @click.stop="deleteData('/sys/dict/delete',item.id)" :id="'asset-edit-sub-vendor-op-del-'+index">
+                                    <span class="asset-dropdown-btn asset-dropdown-btn-delete" @click.stop="deleteData('/sys/dict/delete',item.id)" :id="'asset-edit-sub-vendor-op-del-'+index">
                                       <i class="el-icon-delete"></i>
                                     </span>
-                                    <span class="config-dropdown-btn" @click.stop="editVendorOptionData(item,'vendor',index)" :id="'asset-edit-sub-vendor-op-edit-'+index">
+                                    <span class="asset-dropdown-btn" @click.stop="editVendorOptionData(item,'vendor',index)" :id="'asset-edit-sub-vendor-op-edit-'+index">
                                       <i class="nz-icon nz-icon-edit" v-if="!item.isEdit"></i>
                                       <i class="el-icon-check" v-if="item.isEdit" @click="editData('sys/dict/update',item)" :id="'asset-edit-sub-vendor-op-save-'+index"></i>
                                     </span>
@@ -255,15 +255,15 @@
                                   :key="index">
                                 <div class="pop-item-contain">
                                   <span v-if="!item.isEdit">{{ item.name }}</span>
-                                  <span class="config-dropdown-label-input" v-if="item.isEdit" @click.stop="editing">
+                                  <span class="asset-dropdown-label-input" v-if="item.isEdit" @click.stop="editing">
                                     <el-input class="input-x-mini-24" v-model="item.name"/>
                                   </span>
                                   <div class="pop-item-icons">
-                                    <span class="config-dropdown-btn config-dropdown-btn-delete"
+                                    <span class="asset-dropdown-btn asset-dropdown-btn-delete"
                                           @click.stop="deleteData('model',item.id)" :id="'asset-edit-sub-model-op-del-'+index">
                                       <i class="el-icon-delete"></i>
                                     </span>
-                                    <span class="config-dropdown-btn" @click.stop="editOptionData(item,'model',index)" :id="'asset-edit-sub-model-op-edit-'+index">
+                                    <span class="asset-dropdown-btn" @click.stop="editOptionData(item,'model',index)" :id="'asset-edit-sub-model-op-edit-'+index">
                                       <i class="nz-icon nz-icon-edit" v-if="!item.isEdit"></i>
                                       <i class="el-icon-check" v-if="item.isEdit"
                                            @click="editData('model',item)" :id="'asset-edit-sub-model-op-save-'+index"></i>
@@ -310,12 +310,12 @@
                   :label="item.name"
                   :value="item.id"
                 >
-                  <span class="config-dropdown-label-txt">{{ item.name }}</span>
-<!--                  <div class="config-dropdown-label-icons">-->
-<!--                    <span class="config-dropdown-btn config-dropdown-btn-delete"-->
+                  <span class="asset-dropdown-label-txt">{{ item.name }}</span>
+<!--                  <div class="asset-dropdown-label-icons">-->
+<!--                    <span class="asset-dropdown-btn asset-dropdown-btn-delete"-->
 <!--                          @click.stop="deleteData('idc',item.id)" :id="'asset-edit-idc-op-del-'+item.id"><i-->
 <!--                      class="el-icon-delete"></i></span>-->
-<!--                    <idc-config-box :post-idc="popIdcData" placement="left" @after="getIDCOptionData" :button-class="'config-dropdown-btn'">-->
+<!--                    <idc-config-box :post-idc="popIdcData" placement="left" @after="getIDCOptionData" :button-class="'asset-dropdown-btn'">-->
 <!--                      <template v-slot:optionZone>-->
 <!--                        <i class="nz-icon nz-icon-edit" @click="getSingleIDCData(item.id,'edit', item)"></i>-->
 <!--                      </template>-->
@@ -355,13 +355,13 @@
                   :label="item.name"
                   :value="item.id"
                 >
-                  <span class="config-dropdown-label-txt">{{ item.name }}</span>
-<!--                  <div class="config-dropdown-label-icons">-->
-<!--                    <span class="config-dropdown-btn config-dropdown-btn-delete"-->
+                  <span class="asset-dropdown-label-txt">{{ item.name }}</span>
+<!--                  <div class="asset-dropdown-label-icons">-->
+<!--                    <span class="asset-dropdown-btn asset-dropdown-btn-delete"-->
 <!--                          @click.stop="deleteData('cabinet',item.id)" :id="'asset-edit-cabinet-op-del-'+item.id">-->
 <!--                      <i class="el-icon-delete"></i>-->
 <!--                    </span>-->
-<!--                    <cabinet-config-box placement="left" :post-cabinet="item" button-class="config-dropdown-btn" @after="getCabinetOptionData">-->
+<!--                    <cabinet-config-box placement="left" :post-cabinet="item" button-class="asset-dropdown-btn" @after="getCabinetOptionData">-->
 <!--                      <i slot="optionZone" class="nz-icon nz-icon-edit"></i>-->
 <!--                    </cabinet-config-box>-->
 <!--                  </div>-->

@@ -12,6 +12,8 @@ li{
 }
 .content-box {
   height: 100%;
+  min-width: 1430px;
+  overflow-x: scroll;
 }
 
 .nz-icon-gear:before {
@@ -418,6 +420,8 @@ li{
   margin-left: 201px;
   padding: 0 15px;
   background-color: $content-right-background-color;
+  min-width: 1200px;
+  overflow-x: scroll;
 }
 .content-right-option {
   cursor: pointer;
@@ -989,7 +993,7 @@ li{
   width: 490px;
 }
 .asset-dropdown {
-  width: 400px;
+  width: 370px;
 }
 .asset-dropdown .el-select-dropdown__item {
   position: relative;

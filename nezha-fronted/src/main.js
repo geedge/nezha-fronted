@@ -125,7 +125,7 @@ Vue.directive("scrollBar", {
   },
 });
 
-const exceptClassName = ["config-dropdown", "nz-pop", "el-picker", "chart-box-dropdown", 'metric-dropdown', 'el-cascader__dropdown']; //clickoutside排除的class(白名单)
+const exceptClassName = ["config-dropdown", "nz-pop", "el-picker", "chart-box-dropdown", 'metric-dropdown', 'el-cascader__dropdown', "asset-dropdown"]; //clickoutside排除的class(白名单)
 const clickoutside = {
   // 初始化指令
   bind(el, binding, vnode) {
