@@ -90,7 +90,7 @@
                 </div>
               </el-option>
             </el-select>
-            <div class="right-box-row-btn right-box-row-btn-small" v-if="!tabView">
+            <div class="right-box-row-btn " v-if="!tabView">
               <el-popover
                 placement="left"
                 trigger="click"
@@ -172,7 +172,7 @@
                 class="right-box-row-with-btn"
               >
               </el-cascader>
-              <div class="right-box-row-btn right-box-row-btn-small" v-if="!tabView">
+              <div class="right-box-row-btn " v-if="!tabView">
                 <el-popover
                   placement="left"
                   trigger="click"
@@ -323,7 +323,7 @@
 <!--                  </div>-->
                 </el-option>
               </el-select>
-<!--              <div class="right-box-row-btn right-box-row-btn-small">-->
+<!--              <div class="right-box-row-btn ">-->
 <!--                <idc-config-box placement="left" @after="getIDCOptionData"></idc-config-box>-->
 <!--              </div>-->
             </template>
@@ -368,7 +368,7 @@
                 </el-option>
               </el-select>
 
-<!--              <div class="right-box-row-btn right-box-row-btn-small">-->
+<!--              <div class="right-box-row-btn ">-->
 <!--                <cabinet-config-box placement="left" :post-cabinet="addCabinetData"  @after="getCabinetOptionData"></cabinet-config-box>-->
 <!--              </div>-->
             </template>

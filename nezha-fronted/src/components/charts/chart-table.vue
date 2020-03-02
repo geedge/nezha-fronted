@@ -25,7 +25,7 @@
 
         </div>
         <div class="mt-10" v-cloak  v-show="firstShow">
-            <el-table class="nz-table" :id="'tableContainer'+chartIndex" ref="tableContainer" :data="seriesItem" :height="350" border  tooltip-effect="light" v-cloak>
+            <el-table class="nz-table" :id="'tableContainer'+chartIndex" ref="tableContainer" :data="seriesItem" :height="350" border  tooltip-effect="light" v-cloak v-scrollBar:el-table>
                 <el-table-column sortable :show-overflow-tooltip="true" prop="metric" :label="$t('dashboard.panel.chartTableColumn.metric')" ></el-table-column>
                 <el-table-column sortable :show-overflow-tooltip="true" prop="label" :label="$t('dashboard.panel.chartTableColumn.label')" ></el-table-column>
                 <el-table-column sortable prop="time" :label="$t('dashboard.panel.chartTableColumn.time')" width="145" ></el-table-column>
@@ -42,7 +42,7 @@
                 <!--<button @click="refreshChart" type="button" class="nz-btn nz-btn-size-normal nz-btn-style-light"><i style="font-size: 14px;" class="el-icon-refresh-right"></i></button>-->
               </div>
             </div>
-                <el-table style="margin-top: 30px;" class="nz-table" :data="seriesItemScreen" :height="350" border  tooltip-effect="light">
+                <el-table style="margin-top: 30px;" class="nz-table" :data="seriesItemScreen" :height="350" border  tooltip-effect="light" v-scrollBar:el-table>
                     <el-table-column sortable :show-overflow-tooltip="true" prop="metric" :label="$t('dashboard.panel.chartTableColumn.metric')" ></el-table-column>
                     <el-table-column sortable :show-overflow-tooltip="true" prop="label" :label="$t('dashboard.panel.chartTableColumn.label')" ></el-table-column>
                     <el-table-column sortable prop="time" :label="$t('dashboard.panel.chartTableColumn.time')" width="145" ></el-table-column>

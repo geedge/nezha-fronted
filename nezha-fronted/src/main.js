@@ -75,12 +75,11 @@ const el_scrollBar = el => {
     el._ps_.update();
   } else {
     //el上挂一份属性
-    el._ps_ = new PerfectScrollbar(el, {});
+    el._ps_ = new PerfectScrollbar(el, {minScrollbarLength: 20});
   }
 };
 Vue.directive("scrollBar", {
   inserted(el, binding, vnode) {
-    console.info(1)
     const { arg } = binding;
     if (arg === "el-table") {
       el = el.querySelector(".el-table__body-wrapper");
@@ -109,7 +108,6 @@ Vue.directive("scrollBar", {
     el_scrollBar(el);
   },
   componentUpdated(el, binding, vnode, oldVnode) {
-    console.info(2)
     const { arg } = binding;
     if (arg === "el-table") {
       el = el.querySelector(".el-table__body-wrapper");
@@ -127,7 +125,7 @@ Vue.directive("scrollBar", {
   },
 });
 
-const exceptClassName = ["config-dropdown", "nz-pop", "el-picker", "chart-box-dropdown", 'metric-dropdown']; //clickoutside排除的class(白名单)
+const exceptClassName = ["config-dropdown", "nz-pop", "el-picker", "chart-box-dropdown", 'metric-dropdown', 'el-cascader__dropdown']; //clickoutside排除的class(白名单)
 const clickoutside = {
   // 初始化指令
   bind(el, binding, vnode) {

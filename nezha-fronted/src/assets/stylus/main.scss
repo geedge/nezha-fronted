@@ -507,6 +507,7 @@ li{
 }
 .nz-table .el-table__body-wrapper {
   background-color: $content-right-background-color;
+  overflow: hidden;
 }
 .chart-table .nz-table.el-table th:last-of-type {
   background-color: white;
@@ -628,7 +629,7 @@ li{
   width: 520px;
 }
 .right-box-add-asset, .right-box-add-chart {
-  width: 550px;
+  width: 520px;
 }
 .right-box-chart .el-input__inner, .right-box-chart input {
   background-color: white;
