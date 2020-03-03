@@ -182,15 +182,6 @@
             }
         },
         watch: {
-          searchMsg: {
-            deep: true,
-            immediate: true,
-            handler(n, o) {
-              this.$nextTick(() => {
-                this.clear_input();
-              })
-            }
-          },
           select_list: {
             //监听下拉列表
             handler(newData, oldData) {
