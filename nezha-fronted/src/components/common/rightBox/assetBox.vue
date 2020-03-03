@@ -722,25 +722,7 @@
             }
           })
         } else {
-          this.pageObj.id = '';
-          this.assetData = {
-            id: '',
-              sn: '',
-              host: '',
-              state: '',
-              purchaseDate: '',
-              idcId: '',
-              cabinetId: '',
-              modelId: '',
-              assetType: '',
-              accounts: [{
-              id: '',
-              authType: 1,
-              user: '',
-              pwd: '',
-              port: '',
-            }]
-          };
+          this.resetAsset();
         }
       },
       openModuleBox(module) {
@@ -807,7 +789,7 @@
       getModelOptionData(assetType, vendorCode) {
         this.$get('model?typeCode=' + assetType + '&vendorCode=' + vendorCode).then(response => {
           if (response.code === 200) {
-            this.modelUlData = response.data.list
+            this.modelUlData = response.data.list;
             this.markOptionData(this.modelUlData)
           }
         })
@@ -819,6 +801,35 @@
             this.allModelUlData = response.data.list
           }
         })
+      },
+      resetAsset() {
+        this.pageObj.id = '';
+        this.assetData = {
+          id: '',
+          sn: '',
+          host: '',
+          state: '',
+          purchaseDate: '',
+          idcId: '',
+          cabinetId: '',
+          modelId: '',
+          assetType: '',
+          accounts: [{
+            id: '',
+            authType: 1,
+            user: '',
+            pwd: '',
+            port: '',
+          }]
+        };
+        this.assetType = '';
+        this.idcSelectedData = {
+          id: '',
+            name: '',
+            location: '',
+            principal: '',
+            tel: ''
+        }
       },
       editData(data, item, mark) {
         let obj = {
@@ -835,7 +846,10 @@
           tel: ''
         }
         if (data === 'asset') {
-          this.assetData.modelId = this.assetData.modelId.join(',').split(',')[1];
+          if (this.assetData.modelId) {
+            console.info(this.assetData.modelId)
+            this.assetData.modelId = this.assetData.modelId.join(',').split(',')[1];
+          }
           // let modelId = this.assetData.modelId.join(',').split(',')[1];
           // let form = new FormData();
           // form.append("id", this.pageObj.id);
@@ -870,7 +884,7 @@
             if (valid&&this.accountValideResult) {
               if (this.pageObj.id) {
                 this.assetData.id=this.pageObj.id;
-                console.log(JSON.stringify(this.assetData));
+                //console.log(JSON.stringify(this.assetData));
                 this.$put('asset', this.assetData).then(res => {
                   const h = this.$createElement;
                   if (res.code === 200) {

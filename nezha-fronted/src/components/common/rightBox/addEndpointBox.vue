@@ -516,7 +516,7 @@
                   response.data.list[i].paramObj.push({key: k, value: tempObj[k]})
                 }
               } catch(err) {
-                console.info(response.data.list[i], err);
+                //console.info(response.data.list[i], err);
               }
             }
             this.moduleList = response.data.list;

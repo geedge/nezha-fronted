@@ -638,6 +638,7 @@
           //this.addUnitShow = true;
           this.editUnitShow = true;
           this.$refs['assetEditUnit'].getAssetData('');
+          this.$refs['assetEditUnit'].resetAsset();
         }
         if (data === 'showEdit') {
           this.editUnitShow = true;

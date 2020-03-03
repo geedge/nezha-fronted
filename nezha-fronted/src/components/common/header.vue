@@ -275,7 +275,8 @@
         } else if (item.type == 5) {
           this.$refs.alertConfigBox.show(true, true);
         } else if (item.type == 4) {
-          this.addUnitShow = true
+          this.addUnitShow = true;
+          this.$refs.assetAddUnit.resetAsset();
         }
       },
       jumpToAsset(id) {
