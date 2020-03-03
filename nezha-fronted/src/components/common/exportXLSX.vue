@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="export-xlsx">
     <div>
       <el-dropdown split-button type="primary"  size="mini" class="dropdownBtn">
         <slot name="optionZone" class="option-button"></slot>
@@ -261,7 +261,7 @@
   .el-dialog__body{
     padding: 10px 20px 20px 20px;
   }
-  .el-button:focus, .el-button:hover {
+  .export-xlsx .el-button:focus, .export-xlsx .el-button:hover {
     color: unset;
     border-color: unset;
     background-color:unset;
