@@ -111,7 +111,11 @@ Vue.directive("scrollBar", {
     const { arg } = binding;
     if (arg === "el-table") {
       el = el.querySelector(".el-table__body-wrapper");
-      el.classList.add("ps");
+      setTimeout(() => {
+        el.classList.add("ps");
+        el.classList.add("ps--active-y");
+        el._ps_.update();
+      }, 1500)
       !el && console.warn("未发现className为el-table__body-wrapper的dom");
     }
     try {
