@@ -1,7 +1,7 @@
 <template>
   <div>
     <div>
-      <el-dropdown split-button type="primary"  size="mini">
+      <el-dropdown split-button type="primary"  size="mini" class="dropdownBtn">
         <slot name="optionZone" class="option-button"></slot>
         <el-dropdown-menu slot="dropdown">
           <el-dropdown-item @click.native="showImportBox(1)" class="dropdown-content"><i class="el-icon-upload2"></i>{{$t('overall.importExcelLower')}}</el-dropdown-item>
@@ -266,7 +266,7 @@
     border-color: unset;
     background-color:unset;
   }
-  .el-button--primary{
+  .dropdownBtn .el-button--primary{
     top:2px;
     padding: 0 8px;
     background-image: linear-gradient(180deg, #fff 0%, #E0E0E0 100%);
@@ -277,10 +277,10 @@
     letter-spacing: 0;
     background-color: unset;
   }
-  .el-button--primary:hover{
+  .dropdownBtn .el-button--primary:hover{
     background-image: linear-gradient(180deg, #F0F0F0 0%, #D8D8D8 99%) !important;
   }
-  .el-button--mini{
+  .dropdownBtn .el-button--mini{
     font-size: 12px;
     height: 24px;
   }
