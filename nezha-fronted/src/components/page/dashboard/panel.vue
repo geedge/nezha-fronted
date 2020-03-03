@@ -76,16 +76,15 @@
             <i class="nz-icon-create-square nz-icon"></i>
           </button>
         </div>
-      </div><!--<happy-scroll color="rgba(0,0,0,1)" size="15">-->
-      <!--<el-scrollbar style="height: 100%">-->
-      <div class="table-list" @scroll="onScroll" id="tableList">
-        <el-scrollbar style="height: 100%">
+      </div>
+      <div class="table-list" id="tableList">
+        <el-scrollbar style="height: 100%" ref="dashboardScrollbar">
           <div class="box-content">
             <chart-list @on-edit-chart="editData" @on-refresh-time="refreshTime" @on-remove-chart="removeData"
                         ref="chartList"></chart-list>
           </div>
         </el-scrollbar>
-              </div><!--</happy-scroll>--><!--</el-scrollbar>-->
+       </div>
     </div>
 
     <panel-box :panel="panel" @reload="panelReload" @reloadForDel="panelReloadForDel" ref="panelBox"></panel-box>
@@ -548,13 +547,20 @@
       },
       // 滚动事件触发下拉加载
       onScroll() {
-        let dom = document.getElementById('tableList');
+        let _self = this;
+        let scrollbarWrap = this.$refs.dashboardScrollbar.wrap;
+        scrollbarWrap.onscroll = function() {
+          if (scrollbarWrap.scrollHeight - scrollbarWrap.scrollTop - scrollbarWrap.offsetHeight < 20) {
+            _self.$refs.chartList.pageDataList(true, _self.showPanel.id);
+          }
+        }
+        /*let dom = document.getElementById('tableList');
         let scrollHeight = dom.scrollHeight;//整个可滑动区域高度
         let clientHeight = dom.clientHeight;//可视高度
         let scrollTop = dom.scrollTop;//滚动条顶部与整个scrollHeight顶部的距离
         if (scrollHeight - clientHeight - scrollTop <= 20) {//滚动到底部，才加载新数据
           this.$refs.chartList.pageDataList(true, this.showPanel.id);
-        }
+        }*/
       },
       focusInput:function(){
         let classVal=document.getElementById('queryPanel').parentElement.getAttribute("class");
@@ -579,6 +585,7 @@
       this.getTableData();
     },
     mounted: function () {
+      this.onScroll();
     },
     computed: {
       refreshPanel() {
