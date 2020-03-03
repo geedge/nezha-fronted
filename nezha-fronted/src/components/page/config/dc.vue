@@ -57,7 +57,7 @@
               <i class="nz-icon-create-square nz-icon"></i>
             </button>
             <div class="top-tool-search float-right">
-              <search-input :searchMsg="searchMsg" @search="search" v-if="tabShow==1"></search-input>
+              <search-input ref="searchInput" :searchMsg="searchMsg" @search="search" v-if="tabShow==1"></search-input>
             </div>
           </div>
         </div>
@@ -151,7 +151,7 @@
               <i class="nz-icon-create-square nz-icon"></i>
             </button>
             <div class="top-tool-search float-right">
-              <search-input :searchMsg="cabSearchMsg" @search="cabSearch" v-if="tabShow==2"></search-input>
+              <search-input ref="cabSearchInput" :searchMsg="cabSearchMsg" @search="cabSearch" v-if="tabShow==2"></search-input>
             </div>
           </div>
         </div>

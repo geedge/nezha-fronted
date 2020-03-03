@@ -182,6 +182,15 @@
             }
         },
         watch: {
+          searchMsg: {
+            deep: true,
+            immediate: true,
+            handler(n, o) {
+              this.$nextTick(() => {
+                this.clear_input();
+              })
+            }
+          },
           select_list: {
             //监听下拉列表
             handler(newData, oldData) {
@@ -941,8 +950,10 @@
             },
             //阻止冒泡事件
             stop_click(e) {
-                e.cancelBubble = true;
-                e.stopPropagation();
+                if (e) {
+                  e.cancelBubble = true;
+                  e.stopPropagation();
+                }
             },
             //点击遮罩层
             zhezhao_click() {
