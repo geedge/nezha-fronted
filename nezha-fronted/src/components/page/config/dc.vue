@@ -57,7 +57,7 @@
               <i class="nz-icon-create-square nz-icon"></i>
             </button>
             <div class="top-tool-search float-right">
-              <search-input :searchMsg="searchMsg" @search="search"></search-input>
+              <search-input :searchMsg="searchMsg" @search="search" v-if="tabShow==1"></search-input>
             </div>
           </div>
         </div>
@@ -151,7 +151,7 @@
               <i class="nz-icon-create-square nz-icon"></i>
             </button>
             <div class="top-tool-search float-right">
-              <search-input :searchMsg="searchMsg" @search="search"></search-input>
+              <search-input :searchMsg="cabSearchMsg" @search="cabSearch" v-if="tabShow==2"></search-input>
             </div>
           </div>
         </div>
@@ -346,7 +346,34 @@
           seq:'',
           uSize:0
         },
-        currentShowDc:{}
+        currentShowDc:{},
+        cabSearchMsg: { //给搜索框子组件传递的信息
+          zheze_none: true,
+          searchLabelList: [
+            {
+            id: 11,
+            name: this.$t('overall.name'),
+            type: 'input',
+            label: 'name',
+            disabled: false
+          },
+          {
+            id:12,
+            name:this.$t('asset.createAssetTab.uSize'),
+            label:'uSize',
+            disabled: false
+          },
+          {
+            id:13,
+            name:this.$t('config.dc.remark'),
+            label:'remark',
+            disabled: false
+          }
+          ],
+        },
+        cabSearchLabel: {
+
+        }, //搜索参数
       }
     },
     methods: {
@@ -471,11 +498,12 @@
       },
       showCabinet:function(dc){
         this.tabShow=2;
-        this.getCabinetDatas(dc.id);
         this.currentShowDc=dc;
+        this.cabSearchLabel={idcId:this.currentShowDc.id};
+        this.getCabinetDatas();
       },
-      getCabinetDatas:function(dcId){
-        this.$get('/cabinet?idcId='+dcId).then(response=>{
+      getCabinetDatas:function(){
+        this.$get('/cabinet',this.cabSearchLabel).then(response=>{
           if(response.code==200 && response.msg=='success'){
             this.cabinetDatas=response.data.list;
             console.log(this.cabinetDatas)
@@ -499,7 +527,7 @@
           this.$delete('/cabinet?ids='+cabinet.id).then(response=>{
             if(response.code ==  200){
               this.$message({duration: 2000, type: 'success', message: this.$t("tip.saveSuccess")});
-              this.getCabinetDatas(cabinet.idcId);
+              this.getCabinetDatas();
             }else{
               this.$message.error(response.msg);
             }
@@ -509,6 +537,17 @@
       back:function(){
         this.tabShow=1;
         this.getTableData();
+      },
+      cabSearch:function(obj){
+        this.cabSearchLabel={idcId:this.currentShowDc.id};
+        if(obj){
+          for(let item in obj){
+            if(obj[item]){
+              this.$set(this.cabSearchLabel,item,obj[item]);
+            }
+          }
+        }
+        this.getCabinetDatas();
       }
     },
     mounted() {
