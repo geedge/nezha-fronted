@@ -501,12 +501,13 @@
         this.currentShowDc=dc;
         this.cabSearchLabel={idcId:this.currentShowDc.id};
         this.getCabinetDatas();
+        let temp=this;
+        setTimeout(function(){temp.$refs.cabSearchInput.clear_input();},100)
       },
       getCabinetDatas:function(){
         this.$get('/cabinet',this.cabSearchLabel).then(response=>{
           if(response.code==200 && response.msg=='success'){
             this.cabinetDatas=response.data.list;
-            console.log(this.cabinetDatas)
           }
         })
       },
@@ -537,6 +538,8 @@
       back:function(){
         this.tabShow=1;
         this.getTableData();
+        let temp=this;
+        setTimeout(function(){temp.$refs.searchInput.clear_input();},100)
       },
       cabSearch:function(obj){
         this.cabSearchLabel={idcId:this.currentShowDc.id};
