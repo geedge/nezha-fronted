@@ -119,7 +119,7 @@
         :data="endpointTableData"
         border
         class="nz-table"
-        height="calc(100% - 138px)"
+        height="calc(100% - 125px)"
         v-scrollBar:el-table
         style="width: 100%;">
         <el-table-column
@@ -215,7 +215,7 @@
         v-scrollBar:el-table
         class="nz-table"
         :header-cell-class-name="cellClass"
-        height="calc(100% - 110px)"
+        height="calc(100% - 92px)"
         @selection-change="selectChange"
         ref="metricInfoTab"
         style="width: 100%;">

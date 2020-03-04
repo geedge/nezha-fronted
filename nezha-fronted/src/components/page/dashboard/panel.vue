@@ -622,20 +622,21 @@
   }
 
   .panel-dropdown-title {
-    line-height:25px;
+    line-height:24px;
     padding-left:5px;
     margin-left:10px;
+    margin-top: 3px;
     text-align:left;
     border-radius:4px;
     width:120px;
-    height:25px;
+    height:24px;
     border:solid 1px  #d8dce1;
     white-space: nowrap;
     overflow-x: hidden;
     text-overflow: ellipsis;
   }
   .panel-list-title {
-    min-height:25px;
+    min-height:24px;
     width:100px;
     white-space: nowrap;
     overflow-x: hidden;
@@ -675,7 +676,7 @@
   .table-list {
     margin-top: 6px;
     overflow-y: auto;
-    height: calc(100% - 120px);
+    height: calc(100% - 92px);
   }
 
   .box-content {

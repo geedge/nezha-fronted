@@ -86,7 +86,7 @@ Vue.directive("scrollBar", {
       !el && console.warn("未发现className为el-table__body-wrapper的dom");
 
       // 启用x轴后不让原生滚动条出来作乱
-      vnode.context.$nextTick(() => {
+      /*vnode.context.$nextTick(() => {
         el.classList.add("ps");
         el.addEventListener("ps-scroll-y", () =>
           el.classList.add("ps")
@@ -94,7 +94,7 @@ Vue.directive("scrollBar", {
         el.addEventListener("ps-scroll-x", () =>
           el.classList.add("ps")
         );
-      });
+      });*/
     }
     const rules = ["fixed", "absolute", "relative"];
     if (!rules.includes(window.getComputedStyle(el, null).position)) {

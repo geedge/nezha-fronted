@@ -50,7 +50,7 @@
 
       <el-table
         class="nz-table"
-        height="calc(100% - 138px)"
+        height="calc(100% - 125px)"
         style="width: 100%;"
         :data="tableData"
         v-scrollBar:el-table
@@ -179,6 +179,7 @@
         </el-table-column>
       </el-table>
       <Pagination :pageObj="pageObj" @pageNo='pageNo' @pageSize='pageSize' ref="Pagination"></Pagination>
+      <!--<button class="to-top nz-btn nz-btn-size-normal nz-btn-style-light">TOP</button>-->
     </div>
 
     <!--<asset-add-unit :add-unit-show='addUnitShow' @refreshData="flushData" ref="assetAddUnit"
@@ -757,12 +758,13 @@
       this.getIDCOptionData();
     },
     mounted() {
-      setTimeout(()=>{
+      this.$nextTick(() => {
+        //左侧dc列表初始选中状态
         if (this.$store.state.assetData.selectedData.length > 0) {
           this.checkList = [];
           this.checkList = this.$store.state.assetData.selectedData;
         }
-      }, 50);
+      });
       let localStorageTitle=localStorage.getItem("nz-tableTitle-" + localStorage.getItem("nz-username") + "-" + this.$route.path);
       this.tablelable = localStorageTitle ? JSON.parse(localStorageTitle) : this.tableTitle;
       this.dropCol = localStorageTitle ? JSON.parse(localStorageTitle) : this.tableTitle;
@@ -785,7 +787,4 @@
   .tab-input-square-high {
     border: 1px solid #1166bb;
   }
-</style>
-<style lang="scss">
-
 </style>

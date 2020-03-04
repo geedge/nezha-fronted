@@ -8,7 +8,7 @@
     text-align: center
   }
   .list-width{
-    width:98%;
+    width: calc(100% - 14px);
     overflow-x:hidden;/*避免鼠标第一次放到曲线时，x轴出现滚动条后消失*/
   }
 </style>

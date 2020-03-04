@@ -34,7 +34,7 @@
         class="nz-table"
         :data="tableData"
         border
-        height="calc(100% - 138px)"
+        height="calc(100% - 125px)"
         v-scrollBar:el-table
         style="width: 100%;">
         <el-table-column

@@ -60,7 +60,7 @@ export default {
     float: left;
   }
   .pagination {
-    padding-top: 16px;
+    padding-top: 14px;
     text-align: center;
   }
 
