@@ -1,5 +1,60 @@
+#shell-service {
+  border-top: 1px solid #aaa;
+  width: 100%;
+  left: 0;
+  position: fixed;
+  bottom: 0;
+  background: #fff;
+  z-index: 1050;
+  height: 300px;
+  #shell-service-resize-mask {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    display: none;
+    z-index: 1;
+  }
+  .shell-split {
+    cursor: ns-resize;
+    height: 8px;
+    display: -webkit-flex;
+    display: flex;
+    -webkit-align-items: center;
+    align-items: center;
+    justify-content: center;
+    background-color: #eaeaea;
+    overflow: hidden;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    box-sizing: border-box;
+    position: relative;
+    z-index: 2;
+    font-size: 20px;
+    line-height: 8px;
+    color: #5f6368;
+  }
+  .shell-iconfont {
+    font-family: "cloudshell-scripts-iconfont";
+    font-size: 16px;
+    font-style: normal;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+}
+.shell-service-max {
+  height: 100% !important;
+  position: fixed !important;
+  top: 0;
+  bottom: 0;
+}
 
-.console-dialog {
+/*-------*/
+
   .menu {
 
   }
@@ -20,6 +75,7 @@
   .el-dialog {
     .el-dialog__body{
       padding: 0px !important;
+      overflow-x:hidden !important;/*防止console窗口x轴出现滚动条*/
     }
     .el-dialog__header{
       padding: 0px !important;
@@ -55,8 +111,6 @@
     background-color:#FFF !important;
   }
 
-
-}
 .dailog-custom{
   width:100%;
 }
