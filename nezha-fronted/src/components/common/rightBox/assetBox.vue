@@ -860,9 +860,9 @@
           // form.append("idcId", this.assetData.idcId);
           // form.append("cabinetId", this.assetData.cabinetId);
           // form.append("modelId", modelId);
-          // if (!this.accountSwitch) {
-          //   this.assetData.accounts = [];
-          // }
+          if (!this.accountSwitch) {
+            this.assetData.accounts = [];
+          }
           // for(let i in this.assetData.accounts){
           //   let account=this.assetData.accounts[i];
           //   if(account.user){
@@ -902,17 +902,17 @@
                   console.log("accountValideResult-->"+this.accountValideResult)
                 }
                 let modelId = ''
-                let authType = ''
+                // let authType = ''
                 // if (this.assetData.modelId !== '') {
                 //   modelId = this.assetData.modelId.join(',').split(',')[1]
                 // } else {
                 //   this.assetData.modelId = ''
                 // }
-                if (this.assetData.accounts[0].user === '') {
-                  authType = ''
-                } else {
-                  authType = this.assetData.accounts[0].authType
-                }
+                // if (this.assetData.accounts[0].user === '') {
+                //   authType = ''
+                // } else {
+                //   authType = this.assetData.accounts[0].authType
+                // }
                 // let form = new FormData();
                 // form.append("sn", this.assetData.sn);
                 // form.append("host", this.assetData.host);

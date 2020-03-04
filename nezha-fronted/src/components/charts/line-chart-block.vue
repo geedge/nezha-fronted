@@ -37,8 +37,8 @@
 
     <div class="legend-container"   id="legendArea" ref="legendArea" v-show="firstShow">
       <el-scrollbar style="height: 100%;">
-      <div v-for="(item, index) in legendList" :title="item.name"  @click="clickLegend(item.name,index)" class="legend-item" :class="{'ft-gr':isGrey[index]}" :key="'legend_' + item.name+'_'+index">
-        <span class="legend-shape" :style="{background:(isGrey[index]?'#D3D3D3':bgColorList[index])}"></span>{{item.name}}
+      <div v-for="(item, index) in legendList" :title="item.alias?item.alias:item.name"  @click="clickLegend(item.name,index)" class="legend-item" :class="{'ft-gr':isGrey[index]}" :key="'legend_' + item.name+'_'+index">
+        <span class="legend-shape" :style="{background:(isGrey[index]?'#D3D3D3':bgColorList[index])}"></span>{{item.alias?item.alias:item.name}}
         <br/><!--bgColorList[index]-->
       </div>
       </el-scrollbar>
@@ -70,8 +70,8 @@
       </div>
       <div class="line-area " ref="screenShowArea"  id="screenShowArea"  style="margin-top:10px;"></div>
       <div class="legend-container"  id="screenLegendArea" ref="screenLegendArea"  v-show="showLegend">
-        <div v-for="(item, index) in screenLegendList" :title="item.name"  @click="clickScreenLegend(item.name,index)" class="legend-item" :class="{'ft-gr':isGreyScreen[index]}"  :key="'legend_' + item.name+'_'+index">
-          <span class="legend-shape" :style="{background:(isGreyScreen[index]?'#D3D3D3':bgColorList[index])}"></span>{{item.name}}
+        <div v-for="(item, index) in screenLegendList" :title="item.alias?item.alias:item.name"  @click="clickScreenLegend(item.name,index)" class="legend-item" :class="{'ft-gr':isGreyScreen[index]}"  :key="'legend_' + item.name+'_'+index">
+          <span class="legend-shape" :style="{background:(isGreyScreen[index]?'#D3D3D3':bgColorList[index])}"></span>{{item.alias?item.alias:item.name}}
           <br/><!--bgColorList[index]-->
         </div>
       </div>
@@ -670,8 +670,9 @@
             this.legendList = [];
             legend.forEach((item, i) => {
               const legend = {
-                name:item,
-                showText:this.formatLegend(chartWidth,item)
+                name:item.name,
+                alias:item.alias,
+                showText:this.formatLegend(chartWidth,item.name)
               };
               this.legendList.push(legend);
               this.isGrey.push(false);
@@ -750,8 +751,9 @@
             this.screenLegendList = [];
             legend.forEach((item, i) => {
               const legend = {
-                name:item,
-                showText:this.formatLegend(chartWidth,item)
+                name:item.name,
+                alias:item.alias,
+                showText:this.formatLegend(chartWidth,item.alias?item.alias:item.name)
               };
               this.screenLegendList.push(legend);
               this.isGreyScreen.push(false);

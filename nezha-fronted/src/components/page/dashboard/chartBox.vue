@@ -215,7 +215,8 @@
           elements:{
             id: '',
             expression: '',
-            type: ''
+            type: '',
+            legend:'',
           },
           panel: ''
         },
@@ -317,6 +318,7 @@
         this.rightBox.title = title;
       },
       save() {
+        console.log(this.chart);
         this.$refs['chartForm'].validate((valid) => {
           if (valid) {
             if (this.chart.id) {//修改
@@ -503,6 +505,7 @@
                   //metric: elem.metric,//指标名称
                   expression: metricStr,//指标对应Label及Value组成的表达式字符串
                   type:elem.type,//指标类型
+                  legend:elem.legend,//配置的legend
                 });
               }else if(elem.type==='expert'){
                 elements.push({
@@ -510,6 +513,7 @@
                   //metric: elem.metric,//指标名称
                   expression: elem.expression,//指标对应Label及Value组成的表达式字符串
                   type:elem.type,//指标类型
+                  legend:elem.legend,//配置的legend
                 });
               }
             });

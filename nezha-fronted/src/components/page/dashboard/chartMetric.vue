@@ -103,7 +103,7 @@
   .nz-tab-chart-style-left{
     margin-left:40px;
   }
-  
+
 </style>
 <template>
   <el-form :model="elementInfo" ref="elementInfo"   >
@@ -193,6 +193,9 @@
       </el-col>
 
     </el-row>
+    <el-form-item label="legend" prop="legend" >
+      <el-input v-model="elementInfo.legend" type="text" size="small"></el-input>
+    </el-form-item>
   </el-form>
 </template>
 <script>
@@ -230,7 +233,8 @@ export default {
         // name: '',
         tagList: [], // 标签列表
         selectedTagList:[],//已选中的标签列表
-        expression:''
+        expression:'',
+        legend:''
       },
       metricLoading: false,
       keydataList: [], // tag标签键列表
@@ -380,6 +384,7 @@ export default {
         this.tableShow = 2;
         this.elementInfo.type = this.target.type;
         this.elementInfo.expression = this.target.expression;
+        this.elementInfo.legend=this.target.legend;
       }else {
         this.tableShow = 1;
         this.elementInfo.type = this.target.type;
@@ -391,6 +396,7 @@ export default {
         }else {
           this.elementInfo.metric = expression;
         }
+        this.elementInfo.legend=this.target.legend;
         //this.$get('metric/labelName?metric='+this.elementInfo.metric).then(response => {
         this.$get('/metric/series?match[]='+this.elementInfo.metric).then(response => {
           this.elementInfo.selectedTagList = [];

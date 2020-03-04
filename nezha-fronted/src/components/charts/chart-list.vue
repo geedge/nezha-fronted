@@ -18,7 +18,7 @@
     <div class="chartBox" v-for="(item, index) in dataList"    :key="item.id" :id="item.title+'_'+item.id">
 
       <line-chart-block v-if="item.type === 'line' || item.type === 'bar' || item.type === 4" :key="'inner' + item.id"
-      ref="editChart" 
+      ref="editChart"
       @on-refresh-data="refreshChart"
       @on-remove-chart-block="removeChart"
       @on-edit-chart-block="editData"
@@ -29,7 +29,7 @@
       <chart-table v-if="item.type === 'table'" ref="editChart" :key="'inner' + item.id"
       @on-refresh-data="refreshChart"
       @on-search-data="searchData"
-      @on-remove-chart-block="removeChart" 
+      @on-remove-chart-block="removeChart"
       @on-edit-chart-block="editData"
       :panel-id="filter.panelId"
       :chart-index="index"
@@ -243,10 +243,10 @@ export default {
                 visible: true,
                 threshold: null,
               };
-
               res.forEach((response, innerPos) => {
                 if (response.status === 'success') {
                   if (response.data.result) {
+                    // console.log(response.data.result)
                     // 循环处理每个elements下获取的数据列
                     response.data.result.forEach((queryItem) => {
                       const seriesItem = {
@@ -278,7 +278,9 @@ export default {
                         });
                         if(host.endsWith(',')){host = host.substr(0,host.length-1);}
                         host +="}";
-                        legend.push(host);
+                        //处理legend别名
+                        let alias=this.dealLegendAlias(host,chartItem.elements[innerPos].legend);
+                        legend.push({name:host,alias:alias});
                         // 图表中每条线的名字,去掉最后的逗号与空格:metric名称,  标签1=a,标签2=c
                         seriesItem.theData.name = host;
                         seriesItem.metric_name = seriesItem.theData.name;
@@ -388,7 +390,21 @@ export default {
         chartBox[index].style.width = `${(size / 12) * 100}%`;
       });
     },
+    dealLegendAlias:function(legend,expression){
+        if(/\{\{.+\}\}/.test(expression)){
+          let labelValue=expression.replace(/(\{\{.+?\}\})/g,function(i){
+            let label=i.substr(i.indexOf('{{')+2,i.indexOf('}}')-i.indexOf('{{')-2)
+            let reg=new RegExp(label+'=".+?"')
+            let find=legend.match(reg)[0];
+            let value=find.substr(find.indexOf('"')+1,find.lastIndexOf('"')-find.indexOf('"')-1);
+            return value;
+          })
+          return labelValue
+        }else{
+          return expression;
+        }
 
+    },
     getNewTime(time, num) {
       const date = new Date(time);
       const newDate = new Date(parseInt(date.getTime(), 10) + num);
