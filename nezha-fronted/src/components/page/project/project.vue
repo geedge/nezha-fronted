@@ -119,7 +119,7 @@
         :data="endpointTableData"
         border
         class="nz-table"
-        height="calc(100% - 160px)"
+        height="calc(100% - 138px)"
         v-scrollBar:el-table
         style="width: 100%;">
         <el-table-column

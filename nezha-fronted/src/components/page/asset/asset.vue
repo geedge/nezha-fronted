@@ -50,7 +50,7 @@
 
       <el-table
         class="nz-table"
-        height="calc(100% - 160px)"
+        height="calc(100% - 138px)"
         style="width: 100%;"
         :data="tableData"
         v-scrollBar:el-table

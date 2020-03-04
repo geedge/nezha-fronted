@@ -675,7 +675,7 @@
   .table-list {
     margin-top: 6px;
     overflow-y: auto;
-    height: calc(100% - 150px);
+    height: calc(100% - 120px);
   }
 
   .box-content {
