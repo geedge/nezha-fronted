@@ -90,6 +90,7 @@ export default {
       clearPrivateKey:function(){
         this.account.privateKey=null;
       },
+
       handleChange(file,fileList) {
         if (fileList.length > 0) {
           this.uploadFileList = [fileList[fileList.length - 1]]

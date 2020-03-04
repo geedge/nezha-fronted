@@ -38,7 +38,7 @@
                       <div class="inner-col right">
                         <el-popover placement="right"  width="50" trigger="hover" :content="(item.state == 1?'up':'down')+'['+(item.lastUpdate&&item.lastUpdate!=''?(new Date(item.lastUpdate).getHours()+':'+new Date(item.lastUpdate).getMinutes()):'--')+']'" >
                           <div slot="reference" style="width: 20px">
-                            <div @mouseover="resetZIndex" :class="{'active-icon green':item.state == 1,'active-icon red':item.state == 0}"></div>
+                            <div @mouseover="resetZIndex($event)" :class="{'active-icon green':item.state == 1,'active-icon red':item.state == 0}"></div>
                           </div>
                         </el-popover>
                       </div>
@@ -59,6 +59,7 @@
 </template>
 
 <script>
+  import {resetZIndex} from '../../common/js/common'
     export default {
       name: "endpointStatusPop",
       props:{
@@ -146,13 +147,7 @@
         esc:function(){
           this.popBox.show=false;
         },
-        resetZIndex:function(e){
-          let popId=e.target.parentElement.getAttribute('aria-describedby');
-          let pop=document.getElementById(popId);
-          setTimeout(function(){
-            pop.style.zIndex=999999;
-          },100)
-        },
+        resetZIndex,
         atShowPop:function(){
           this.getEndpointDatas();
         },

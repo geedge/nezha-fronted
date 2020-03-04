@@ -244,7 +244,7 @@
         if (this.data.type === 'line' || this.data.type === 'bar' || this.data.type === 4) {
           return true;
         }
-        return false;
+         return false;
       },
   */
     },
@@ -254,23 +254,114 @@
         this.divFirstShow = showDiv;
       },
       clickLegend(legendName,index){
-        if (this.echartStore) {
-          this.echartStore.dispatchAction({
-            type: 'legendToggleSelect',
-            name: legendName
-          });
-          let isGreyTmp = this.isGrey[index];
-          this.$set(this.isGrey, index, !isGreyTmp);
+        // if (this.echartStore) {
+        //   this.echartStore.dispatchAction({
+        //     type: 'legendToggleSelect',
+        //     name: legendName
+        //   });
+          // let isGreyTmp = this.isGrey[index];
+          // this.$set(this.isGrey, index, !isGreyTmp);
+        // }
+
+        //点击图表某一个legend，图表只显示当前点击的曲线或柱状图，其它隐藏，再次点击已选中的legend ，显示全部
+        let curIsGrey=this.isGrey[index];
+        if(this.echartStore){
+          this.legendList.forEach((item,i)=>{
+            let isGrey = this.isGrey[i];
+            if(index != i){
+              if(!curIsGrey && !isGrey){
+                this.echartStore.dispatchAction({
+                  type: 'legendUnSelect',
+                  name: item.name
+                });
+              }else if(!curIsGrey && isGrey){
+                this.echartStore.dispatchAction({
+                  type: 'legendSelect',
+                  name: item.name
+                });
+              }else{
+                this.echartStore.dispatchAction({
+                  type: 'legendUnSelect',
+                  name: item.name
+                });
+              }
+            }else {
+              this.echartStore.dispatchAction({
+                type: 'legendSelect',
+                name: item.name
+              });
+            }
+          })
+          this.isGrey.forEach((item,i)=>{
+            if(index != i){
+              if(!curIsGrey && !item){
+                this.$set(this.isGrey, i, true);
+              }else if(!curIsGrey && item){
+                this.$set(this.isGrey, i, false);
+              }else{
+                this.$set(this.isGrey, i, true);
+              }
+            }else{
+              if(item === true){
+                this.$set(this.isGrey, i, false);
+              }
+            }
+          })
         }
       },
       clickScreenLegend(legendName,index){
-        if (this.echartModalStore) {
-          this.echartModalStore.dispatchAction({
-            type: 'legendToggleSelect',
-            name: legendName
-          });
-          let isGreyTmp = this.isGreyScreen[index];
-          this.$set(this.isGreyScreen, index, !isGreyTmp);
+        // if (this.echartModalStore) {
+        //   this.echartModalStore.dispatchAction({
+        //     type: 'legendToggleSelect',
+        //     name: legendName
+        //   });
+        //   let isGreyTmp = this.isGreyScreen[index];
+        //   this.$set(this.isGreyScreen, index, !isGreyTmp);
+        // }
+        //点击图表某一个legend，图表只显示当前点击的曲线或柱状图，其它隐藏，再次点击已选中的legend ，显示全部
+        let curIsGrey=this.isGreyScreen[index];
+        if(this.echartModalStore){
+          this.screenLegendList.forEach((item,i)=>{
+            let isGrey = this.isGreyScreen[i];
+            if(index != i){
+              if(!curIsGrey && !isGrey){
+                this.echartModalStore.dispatchAction({
+                  type: 'legendUnSelect',
+                  name: item.name
+                });
+              }else if(!curIsGrey && isGrey){
+                this.echartModalStore.dispatchAction({
+                  type: 'legendSelect',
+                  name: item.name
+                });
+              }else{
+                this.echartModalStore.dispatchAction({
+                  type: 'legendUnSelect',
+                  name: item.name
+                });
+              }
+            }else {
+              this.echartModalStore.dispatchAction({
+                type: 'legendSelect',
+                name: item.name
+              });
+            }
+          })
+          this.isGreyScreen.forEach((item,i)=>{
+            if(index != i){
+              if(!curIsGrey && !item){
+                this.$set(this.isGreyScreen, i, true);
+              }else if(!curIsGrey && item){
+                this.$set(this.isGreyScreen, i, false);
+              }else{
+                this.$set(this.isGreyScreen, i, true);
+              }
+            }else{
+              if(item === true){
+                this.$set(this.isGreyScreen, i, false);
+              }
+            }
+          })
         }
       },
       clearData(){
@@ -406,6 +497,9 @@
               //display:inline-block;white-space:nowrap;overflow-x:hidden;text-overflow:ellipsis;
               let str = `<div   style='width:600px;display:inline-block;line-height: 18px;font-size:12px;font-family: Roboto,Helvetica Neue,Arial,sans-serif;'>`;
               params.forEach((item, i) => {
+                let tip=legend.find((element)=>{
+                  return element.name == item.seriesName;
+                })
                 if(i===0){
                   let t_date = new Date(item.data[0]);
                   str += [t_date.getFullYear(), t_date.getMonth() + 1, t_date.getDate()].join('-') + " "
@@ -446,7 +540,7 @@
                  */
                 str += `<div style='max-width:510px;display:inline-block;white-space:nowrap;overflow-x:hidden;text-overflow:ellipsis;line-height: 18px;font-size:12px;font-family: Roboto,Helvetica Neue,Arial,sans-serif;'>`;
 
-                str +=`<span style='display:inline-block;margin-right:5px;border-radius:10px;width:15px;height:5px;background-color: ${item.color};}'></span>${item.seriesName}: `;
+                str +=`<span style='display:inline-block;margin-right:5px;border-radius:10px;width:15px;height:5px;background-color: ${item.color};}'></span>${tip.alias?tip.alias:tip.name}: `;
                 str +=`</div>`;
                 str += `<div style='max-width:90px;min-width:20px;float:right;text-align:right;display:inline-block;white-space:nowrap;overflow-x:hidden;text-overflow:ellipsis;line-height: 18px;font-size:12px;font-family: Roboto,Helvetica Neue,Arial,sans-serif;'>`;
                 str +=val;

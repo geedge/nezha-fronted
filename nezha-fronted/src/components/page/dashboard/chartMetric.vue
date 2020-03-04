@@ -193,14 +193,23 @@
       </el-col>
 
     </el-row>
-    <el-form-item label="legend" prop="legend" >
-      <el-input v-model="elementInfo.legend" type="text" size="small"></el-input>
+    <el-form-item prop="legend" >
+      <el-row :gutter="4">
+        <el-col :span="4">
+          {{$t('dashboard.panel.chartForm.legend')}}&nbsp;
+          <el-popover :content="$t('dashboard.panel.chartForm.legendTip')" placement="top" width="150" trigger="hover">
+            <i slot="reference" class="nz-icon nz-icon-info-normal" style="font-size: 12px; -webkit-transform:scale(0.75);display:inline-block;" @mouseover="resetZIndex"></i>
+          </el-popover>
+        </el-col>
+        <el-col :span="20"><el-input v-model="elementInfo.legend" type="text" size="small"></el-input></el-col>
+      </el-row>
+<!--      <el-input v-model="elementInfo.legend" type="text" size="small"></el-input>-->
     </el-form-item>
   </el-form>
 </template>
 <script>
 import bus from '../../../libs/bus';
-
+import {resetZIndex} from "../../common/js/common";
 export default {
   name: 'chartTag',
   props: {
@@ -598,7 +607,8 @@ export default {
       if(val===1){
         this.elementInfo.expression='';
       }
-    }
+    },
+    resetZIndex,
   },
   computed: {
     metricShowList() {
