@@ -298,8 +298,9 @@ export default {
                           let t_date = new Date(dpsItem[0] * 1000);
                           let timeTmp = bus.timeFormate(t_date, 'yyyy-MM-dd hh:mm:ss');
                           tableData.push({//表格数据
-                            label: host.slice(host.indexOf('{') + 1,host.indexOf('}')),//label
-                            metric: queryItem.metric.__name__?queryItem.metric.__name__:'',//metric列
+                            // label: host.slice(host.indexOf('{') + 1,host.indexOf('}')),//label
+                            // metric: queryItem.metric.__name__?queryItem.metric.__name__:'',//metric列
+                            element:{element:host,alias:alias},
                             time: timeTmp,//采集时间
                             value: dpsItem[1],//数值
                           });
@@ -378,6 +379,7 @@ export default {
           }).catch((error) => {
             if (error) {
               this.$message.error(error.toString());
+              console.error(error)
             }
           });
         });
@@ -395,9 +397,12 @@ export default {
           let labelValue=expression.replace(/(\{\{.+?\}\})/g,function(i){
             let label=i.substr(i.indexOf('{{')+2,i.indexOf('}}')-i.indexOf('{{')-2)
             let reg=new RegExp(label+'=".+?"')
-            let find=legend.match(reg)[0];
-            let value=find.substr(find.indexOf('"')+1,find.lastIndexOf('"')-find.indexOf('"')-1);
-            return value;
+            let value=null;
+            if(reg.test(legend)){
+              let find=legend.match(reg)[0];
+              value=find.substr(find.indexOf('"')+1,find.lastIndexOf('"')-find.indexOf('"')-1);
+            }
+            return value?value:label;
           })
           return labelValue
         }else{

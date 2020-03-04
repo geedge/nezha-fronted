@@ -85,6 +85,8 @@ const en = {
         chartId:"ID",
         chartName:"Chart Name",
         type:"Type",
+        legend:'Legend',
+        legendTip:'Controls the name of the time series, using name or pattern. For example {{hostname}} will be replaced with label value for the label hostname.',
         typeVal:{
           line:{
             label:'Line Chart' //"曲线图"
@@ -104,6 +106,7 @@ const en = {
       chartTableColumn:{
         metric:'Metric', //'指标'
         label:'Label', //'标签'
+        element:'Element',
         time:'Time', //'时间'
         value:'Value', //'值'
       },

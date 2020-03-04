@@ -26,9 +26,14 @@
         </div>
         <div class="mt-10" v-cloak  v-show="firstShow">
             <el-table class="nz-table" :id="'tableContainer'+chartIndex" ref="tableContainer" :data="seriesItem" :height="350" border  tooltip-effect="light" v-cloak v-scrollBar:el-table>
-                <el-table-column sortable :show-overflow-tooltip="true" prop="metric" :label="$t('dashboard.panel.chartTableColumn.metric')" ></el-table-column>
-                <el-table-column sortable :show-overflow-tooltip="true" prop="label" :label="$t('dashboard.panel.chartTableColumn.label')" ></el-table-column>
-                <el-table-column sortable prop="time" :label="$t('dashboard.panel.chartTableColumn.time')" width="145" ></el-table-column>
+<!--                <el-table-column sortable :show-overflow-tooltip="true" prop="metric" :label="$t('dashboard.panel.chartTableColumn.metric')" ></el-table-column>-->
+<!--                <el-table-column sortable :show-overflow-tooltip="true" prop="label" :label="$t('dashboard.panel.chartTableColumn.label')" ></el-table-column>-->
+              <el-table-column sortable prop="time" :label="$t('dashboard.panel.chartTableColumn.time')" width="145" ></el-table-column>
+                <el-table-column sortable prop="element" :show-overflow-tooltip="true" :label="$t('dashboard.panel.chartTableColumn.element')" >
+                  <template slot-scope="scope">
+                    {{ scope.row.element.alias?scope.row.element.alias:scope.row.element.element}}
+                  </template>
+                </el-table-column>
                 <el-table-column sortable prop="value" :label="$t('dashboard.panel.chartTableColumn.value')" ></el-table-column>
             </el-table>
         </div>
@@ -43,9 +48,14 @@
               </div>
             </div>
                 <el-table style="margin-top: 30px;" class="nz-table" :data="seriesItemScreen" :height="350" border  tooltip-effect="light" v-scrollBar:el-table>
-                    <el-table-column sortable :show-overflow-tooltip="true" prop="metric" :label="$t('dashboard.panel.chartTableColumn.metric')" ></el-table-column>
-                    <el-table-column sortable :show-overflow-tooltip="true" prop="label" :label="$t('dashboard.panel.chartTableColumn.label')" ></el-table-column>
-                    <el-table-column sortable prop="time" :label="$t('dashboard.panel.chartTableColumn.time')" width="145" ></el-table-column>
+<!--                    <el-table-column sortable :show-overflow-tooltip="true" prop="metric" :label="$t('dashboard.panel.chartTableColumn.metric')" ></el-table-column>-->
+<!--                    <el-table-column sortable :show-overflow-tooltip="true" prop="label" :label="$t('dashboard.panel.chartTableColumn.label')" ></el-table-column>-->
+                  <el-table-column sortable prop="time" :label="$t('dashboard.panel.chartTableColumn.time')" width="145" ></el-table-column>
+                  <el-table-column sortable prop="element" :show-overflow-tooltip="true" :label="$t('dashboard.panel.chartTableColumn.element')" >
+                    <template slot-scope="scope">
+                      {{ scope.row.element.alias?scope.row.element.alias:scope.row.element.element}}
+                    </template>
+                  </el-table-column>
                     <el-table-column sortable prop="value" :label="$t('dashboard.panel.chartTableColumn.value')" ></el-table-column>
 
                 </el-table>
@@ -116,17 +126,24 @@ export default {
             firstShow: false, // 默认不显示操作按钮,
             divFirstShow:false,
             //tableLoading: false,
-            columns: [{
-                title: 'metric',
-                key: 'metric',
-                width: 200,
-                sortable: true,
-            }, {
-                title: 'Label', //tag
-                key: 'name',
-                minWidth: 200,
-                sortable: true,
-            }, {
+            columns: [
+            //   {
+            //     title: 'metric',
+            //     key: 'metric',
+            //     width: 200,
+            //     sortable: true,
+            // }, {
+            //     title: 'Label', //tag
+            //     key: 'name',
+            //     minWidth: 200,
+            //     sortable: true,
+            // }
+              {
+                title:'Element',
+                key:'element',
+                sortable: true
+              }
+            , {
                 title: '采集时间',
                 key: 'time',
                 width: 160,
@@ -300,8 +317,9 @@ export default {
             this.seriesItemScreen = [];
             for(let i=0;i<8;i++){
               this.seriesItemScreen.push({//表格数据
-                label: '',//label
-                metric: '',//metric列
+                // label: '',//label
+                // metric: '',//metric列
+                element:'',
                 time: '',//采集时间
                 value: '',//数值
               });
