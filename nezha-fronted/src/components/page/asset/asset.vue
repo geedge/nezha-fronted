@@ -56,6 +56,7 @@
         v-scrollBar:el-table
         border
         tooltip-effect="light"
+        ref="assetTable"
       >
         <el-table-column
           :resizable="false"
@@ -179,7 +180,7 @@
         </el-table-column>
       </el-table>
       <Pagination :pageObj="pageObj" @pageNo='pageNo' @pageSize='pageSize' ref="Pagination"></Pagination>
-      <!--<button class="to-top nz-btn nz-btn-size-normal nz-btn-style-light">TOP</button>-->
+      <button class="to-top nz-btn nz-btn-size-normal nz-btn-style-light" v-show="showTopBtn" @click="toTop">TOP</button>
     </div>
 
     <!--<asset-add-unit :add-unit-show='addUnitShow' @refreshData="flushData" ref="assetAddUnit"
@@ -249,6 +250,7 @@
             disabled: false
           }],
         },
+        showTopBtn: false,
         searchLabel: {}, //搜索参数
         checkList: [],
         tablelable: [],
@@ -503,6 +505,10 @@
         });
         window.open(routeData.href);
       },
+      /*toTop() {
+        let el = document.querySelector(".el-table__body-wrapper");
+        el.scrollTop = 0;
+      },*/
       cli(id,host,accounts){
         let port = '';
         let accountId = '';
@@ -763,6 +769,17 @@
         if (this.$store.state.assetData.selectedData.length > 0) {
           this.checkList = [];
           this.checkList = this.$store.state.assetData.selectedData;
+        }
+        //绑定滚动条事件，控制top按钮
+        let el = this.$refs.assetTable.$el.querySelector(".el-table__body-wrapper");
+        if (el._ps_) {
+          el.addEventListener("ps-scroll-y", () => {
+            if (el._ps_.scrollbarYTop > 100) {
+              this.showTopBtn = true;
+            } else {
+              this.showTopBtn = false;
+            }
+          });
         }
       });
       let localStorageTitle=localStorage.getItem("nz-tableTitle-" + localStorage.getItem("nz-username") + "-" + this.$route.path);

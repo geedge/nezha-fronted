@@ -118,9 +118,10 @@
       <el-table
         :data="endpointTableData"
         border
-        class="nz-table"
+        class="nz-table endpoint-table"
         height="calc(100% - 125px)"
         v-scrollBar:el-table
+        ref="endpointTable"
         style="width: 100%;">
         <el-table-column
           :resizable="false"
@@ -164,6 +165,7 @@
         </el-table-column>
       </el-table>
       <Pagination v-cloak :pageObj="endpointPageObj" @pageNo='endpointPageNo' @pageSize='endpointPageSize' ref="endpointPagination"></Pagination>
+      <button class="to-top nz-btn nz-btn-size-normal nz-btn-style-light" v-show="showTopBtn1" @click="toTop">TOP</button>
     </div>
 
     <!--endpoint query-->
@@ -213,7 +215,7 @@
         :data="showTableData"
         border
         v-scrollBar:el-table
-        class="nz-table"
+        class="nz-table endpoint-query-table"
         :header-cell-class-name="cellClass"
         height="calc(100% - 92px)"
         @selection-change="selectChange"
@@ -251,6 +253,7 @@
           width="180">
         </el-table-column>
       </el-table>
+      <button class="to-top nz-btn nz-btn-size-normal nz-btn-style-light" v-show="showTopBtn2" @click="toTop">TOP</button>
     </div>
 
     <element-set
@@ -324,6 +327,8 @@
       let temp=this;
       return {
         tableShow: 1, // 1.endpoint; 2.metrics
+        showTopBtn1: false,
+        showTopBtn2: false,
         editEndpoint: {id: '', host: '', port: '', param: '', path: '', asset: {}, project: {}, module: {}, moduleId: '', assetId: '', paramObj: []},
         endpointTableTitle: [
           {
@@ -794,7 +799,7 @@
                   response.data.list[i].paramObj.push({key: k, value: tempObj[k]})
                 }
               } catch (err) {
-                console.error(response.data.list[i], err);
+                //console.error(response.data.list[i], err);
               }
             }
             this.endpointTableData = response.data.list;
@@ -845,7 +850,7 @@
                     this.moduleList[i].paramObj.push({key: k, value: tempObj[k]});
                   }
                 } catch (err) {
-                  console.info(response.data.list[i], err);
+                  //console.error(response.data.list[i], err);
                 }
               }
               if (this.moduleList.length > 0) {
@@ -1049,12 +1054,28 @@
               this.showTableDataCopy=JSON.stringify(this.showTableData);
               this.tableShow=3;
               this.queryEdpLoading=false;
+              this.gutterHandler(".endpoint-query-table"); //控制table右边距
+              this.showTopBtn2 = false;
+              this.$nextTick(() => {
+                //绑定滚动条事件，控制top按钮
+                let el = this.$refs.metricInfoTab.$el.querySelector(".el-table__body-wrapper");
+                if (el._ps_) {
+                  el.addEventListener("ps-scroll-y", () => {
+                    if (el._ps_.scrollbarYTop > 20) {
+                      this.showTopBtn2 = true;
+                    } else {
+                      this.showTopBtn2 = false;
+                    }
+                  });
+                }
+              });
             }
         })
       },
       backToEdpTab:function(){
         this.tableShow=1;
         this.selectedEndpoints=[];
+        this.showTopBtn1 = false;
       },
       changeTime:function(size,unit){
         let time=this.getTime(size,unit);
@@ -1353,10 +1374,18 @@
           if(response.data.msg==='success'){
             this.elementMetricDatas=response.data.data.list;
           }
-
         }
-
-      }
+      },
+      /*gutterHandler() {
+        setTimeout(() => {
+          let gutterCol = document.querySelector(".endpoint-table col[name='gutter']");
+          if (gutterCol.attributes['width'].value != '0') {
+            gutterCol.attributes['width'].value = '10';
+            let bb = document.querySelector('.el-table__body');
+            document.querySelector('.endpoint-table .el-table__body').attributes['style'].value = "width: calc(100% - 10px)";
+          }
+        }, 10)
+      }*/
     },
     created() {
       this.currentProject = this.$store.state.currentProject;
@@ -1368,6 +1397,21 @@
       setTimeout(()=>{
         this.getEndpointTableData();
       }, 200);
+      this.$nextTick(() => {
+        this.gutterHandler(".endpoint-table");
+        //绑定滚动条事件，控制top按钮
+        let el = this.$refs.endpointTable.$el.querySelector(".el-table__body-wrapper");
+        if (el._ps_) {
+          el.addEventListener("ps-scroll-y", () => {
+            if (el._ps_.scrollbarYTop > 100) {
+              this.showTopBtn1 = true;
+            } else {
+              this.showTopBtn1 = false;
+            }
+          });
+        }
+      });
+
       this.tablelable = localStorage.getItem("nz-tableTitle-" + localStorage.getItem("nz-username") + "-" + this.$route.path)
         ? JSON.parse(localStorage.getItem("nz-tableTitle-" + localStorage.getItem("nz-username") + "-" + this.$route.path))
         : this.endpointTableTitle;

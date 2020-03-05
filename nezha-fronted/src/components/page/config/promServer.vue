@@ -30,7 +30,7 @@
           </div>
         </div>
       </div>
-      <el-table :data="tableData" border height="calc(100% - 125px)" style="width: 100%;" class="nz-table" v-scrollBar:el-table>
+      <el-table :data="tableData" border height="calc(100% - 125px)" style="width: 100%;" ref="promTable" class="nz-table" v-scrollBar:el-table>
         <el-table-column :resizable="false" v-for="(item, index) in tablelable" v-if="item.show" :width="item.width"
                          :key="`col-${index}`" :label="item.label">
           <template slot-scope="scope" :column="item">
@@ -75,6 +75,7 @@
         </el-table-column>
       </el-table>
       <Pagination :pageObj="pageObj" @pageNo='pageNo' @pageSize='pageSize' ref="Pagination"></Pagination>
+      <button class="to-top nz-btn nz-btn-size-normal nz-btn-style-light" v-show="showTopBtn" @click="toTop">TOP</button>
     </div>
 
     <transition name="right-box">
@@ -194,6 +195,7 @@
     name: "prom",
     data() {
       return {
+        showTopBtn: false,
         rightBox: { //弹出框相关
           show: false,
           isEdit: false, //false查看，true编辑
@@ -640,6 +642,19 @@
     mounted: function () {
       this.getIdcData();
       this.getUserData();
+      this.$nextTick(() => {
+        //绑定滚动条事件，控制top按钮
+        let el = this.$refs.promTable.$el.querySelector(".el-table__body-wrapper");
+        if (el._ps_) {
+          el.addEventListener("ps-scroll-y", () => {
+            if (el._ps_.scrollbarYTop > 100) {
+              this.showTopBtn = true;
+            } else {
+              this.showTopBtn = false;
+            }
+          });
+        }
+      });
       this.tablelable = localStorage.getItem("nz-tableTitle-" + localStorage.getItem("nz-username") + "-" + this.$route.path)
         ? JSON.parse(localStorage.getItem("nz-tableTitle-" + localStorage.getItem("nz-username") + "-" + this.$route.path))
         : this.tableTitle;

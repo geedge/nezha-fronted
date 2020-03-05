@@ -85,6 +85,7 @@
           </div>
         </el-scrollbar>
        </div>
+      <button class="to-top nz-btn nz-btn-size-normal nz-btn-style-light" v-show="showTopBtn" @click="toTop('el', $refs.dashboardScrollbar.wrap)">TOP</button>
     </div>
 
     <panel-box :panel="panel" @reload="panelReload" @reloadForDel="panelReloadForDel" ref="panelBox"></panel-box>
@@ -101,6 +102,7 @@
     name: "panel",
     data() {
       return {
+        showTopBtn: false, //top按钮
         visible: false,
         rightBox: { //面板弹出框相关
           show: false,
@@ -550,6 +552,11 @@
         let _self = this;
         let scrollbarWrap = this.$refs.dashboardScrollbar.wrap;
         scrollbarWrap.onscroll = function() {
+          if (scrollbarWrap.scrollTop > 100) {
+            _self.showTopBtn = true;
+          } else {
+            _self.showTopBtn = false;
+          }
           if (scrollbarWrap.scrollHeight - scrollbarWrap.scrollTop - scrollbarWrap.offsetHeight < 20) {
             _self.$refs.chartList.pageDataList(true, _self.showPanel.id);
           }

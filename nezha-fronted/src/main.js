@@ -63,6 +63,27 @@ Vue.prototype.$post = post;
 Vue.prototype.$get = get;
 Vue.prototype.$put = put;
 Vue.prototype.$delete = del;
+Vue.prototype.toTop = (type, wrap) => { //top按钮公共方法
+  if (type == 'el') {
+    wrap.scrollTop = 0;
+  } else {
+    let els = document.querySelectorAll(".el-table__body-wrapper");
+    for (let i = 0; i < els.length; i++) {
+      els[i].scrollTop = 0;
+    }
+  }
+};
+Vue.prototype.gutterHandler = (tableClass) => {
+  setTimeout(() => {
+    let gutterCol = document.querySelector(tableClass + " col[name='gutter']");
+    //console.info(gutterCol.attributes['width'].value)
+    if (gutterCol.attributes['width'].value != '0') {
+      //console.info(gutterCol)
+      gutterCol.attributes['width'].value = '10';
+      document.querySelector(tableClass + ' .el-table__body').attributes['style'].value = "width: calc(100% - 10px)";
+    }
+  }, 1000)
+}
 
 Vue.config.productionTip = false;
 Vue.use(ElementUI);
@@ -86,7 +107,7 @@ Vue.directive("scrollBar", {
       !el && console.warn("未发现className为el-table__body-wrapper的dom");
 
       // 启用x轴后不让原生滚动条出来作乱
-      /*vnode.context.$nextTick(() => {
+      vnode.context.$nextTick(() => {
         el.classList.add("ps");
         el.addEventListener("ps-scroll-y", () =>
           el.classList.add("ps")
@@ -94,7 +115,7 @@ Vue.directive("scrollBar", {
         el.addEventListener("ps-scroll-x", () =>
           el.classList.add("ps")
         );
-      });*/
+      });
     }
     const rules = ["fixed", "absolute", "relative"];
     if (!rules.includes(window.getComputedStyle(el, null).position)) {
@@ -188,7 +209,7 @@ window.vm = new Vue({
   template: '<App/>'
 })
 
-export default vm
+export default vm;
 /*router.beforeEach((to, from, next) => {
   if (to.path === '/login') {
     next()

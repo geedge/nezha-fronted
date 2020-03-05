@@ -34,6 +34,7 @@
         class="nz-table"
         :data="tableData"
         border
+        ref="accountTable"
         height="calc(100% - 125px)"
         v-scrollBar:el-table
         style="width: 100%;">
@@ -83,6 +84,7 @@
         </el-table-column>
       </el-table>
       <Pagination :pageObj="pageObj" @pageNo='pageNo' @pageSize='pageSize' ref="Pagination"></Pagination>
+      <button class="to-top nz-btn nz-btn-size-normal nz-btn-style-light" v-show="showTopBtn" @click="toTop">TOP</button>
     </div>
 
     <transition name="right-box">
@@ -172,6 +174,7 @@
     name: "account",
     data() {
       return {
+        showTopBtn: false,
         rightBox: { //弹出框相关
           show: false,
           isEdit: false, //false查看，true编辑
@@ -509,6 +512,19 @@
     mounted() {
       this.getTableData();
       this.initReceiverData();
+      this.$nextTick(() => {
+        //绑定滚动条事件，控制top按钮
+        let el = this.$refs.accountTable.$el.querySelector(".el-table__body-wrapper");
+        if (el._ps_) {
+          el.addEventListener("ps-scroll-y", () => {
+            if (el._ps_.scrollbarYTop > 100) {
+              this.showTopBtn = true;
+            } else {
+              this.showTopBtn = false;
+            }
+          });
+        }
+      });
       this.tablelable = localStorage.getItem("nz-tableTitle-" + localStorage.getItem("nz-username") + "-" + this.$route.path)
         ? JSON.parse(localStorage.getItem("nz-tableTitle-" + localStorage.getItem("nz-username") + "-" + this.$route.path))
         : this.tableTitle;

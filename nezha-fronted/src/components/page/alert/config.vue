@@ -33,6 +33,7 @@
         class="nz-table"
         :data="tableData"
         border
+        ref="alertRuleTable"
         tooltip-effect="light"
         height="calc(100% - 125px)"
         v-scrollBar:el-table
@@ -84,6 +85,7 @@
         </el-table-column>
       </el-table>
       <Pagination :pageObj="pageObj" @pageNo='pageNo' @pageSize='pageSize' ref="Pagination"></Pagination>
+      <button class="to-top nz-btn nz-btn-size-normal nz-btn-style-light" v-show="showTopBtn" @click="toTop">TOP</button>
     </div>
     <alert-config-box :parentAlertRule="alertRule" @reload="getTableData" ref="alertConfigBox"></alert-config-box>
     <project-box :project="viewProjectData" ref="projectBox" @reload="getTableData"></project-box>
@@ -105,6 +107,7 @@
     name: "alert-config",
     data() {
       return {
+        showTopBtn: false,
         searchMsg: { //给搜索框子组件传递的信息
           zheze_none: true,
           searchLabelList: [{
@@ -405,6 +408,19 @@
     },
     mounted() {
       this.getTableData();
+      this.$nextTick(() => {
+        //绑定滚动条事件，控制top按钮
+        let el = this.$refs.alertRuleTable.$el.querySelector(".el-table__body-wrapper");
+        if (el._ps_) {
+          el.addEventListener("ps-scroll-y", () => {
+            if (el._ps_.scrollbarYTop > 100) {
+              this.showTopBtn = true;
+            } else {
+              this.showTopBtn = false;
+            }
+          });
+        }
+      });
       this.tablelable = localStorage.getItem("nz-tableTitle-" + localStorage.getItem("nz-username") + "-" + this.$route.path)
         ? JSON.parse(localStorage.getItem("nz-tableTitle-" + localStorage.getItem("nz-username") + "-" + this.$route.path))
         : this.tableTitle;

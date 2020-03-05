@@ -66,7 +66,8 @@
           :data="tableData"
           border
           v-scrollBar:el-table
-          height="calc(100% - 160px)"
+          height="calc(100% - 125px)"
+          ref="dcTable"
           style="width: 100%;">
           <el-table-column
             :resizable="false"
@@ -125,6 +126,7 @@
           </el-table-column>
         </el-table>
         <Pagination :pageObj="pageObj" @pageNo='pageNo' @pageSize='pageSize' ref="Pagination"></Pagination>
+        <button class="to-top nz-btn nz-btn-size-normal nz-btn-style-light" v-show="showTopBtn1" @click="toTop">TOP</button>
         <!--dc table end-->
       <element-set
         v-clickoutside="elementsetHide"
@@ -160,6 +162,7 @@
           class="nz-table"
           :data="cabinetDatas"
           border
+          ref="cabTable"
           v-scrollBar:el-table
           height="calc(100% - 125px)"
           style="width: 100%;">
@@ -214,6 +217,7 @@
       </div>
       <!--cabinet table end-->
       <cabinet-box :cur-cabinet="curCabinet" :cur-idc="currentShowDc" ref="cabinetEditBox" @after="getCabinetDatas"></cabinet-box>
+      <button class="to-top nz-btn nz-btn-size-normal nz-btn-style-light" v-show="showTopBtn2" @click="toTop">TOP</button>
     </div>
 </template>
 <script>
@@ -225,6 +229,8 @@
     },
     data() {
       return {
+        showTopBtn1: false,
+        showTopBtn2: false,
         currentDc: {
           id: '',
           name: '',
@@ -556,7 +562,28 @@
     mounted() {
       this.getTableData();
       this.$nextTick(function(){
-        this.getUserData();
+        this.getUserData();//绑定滚动条事件，控制top按钮
+        let el = this.$refs.dcTable.$el.querySelector(".el-table__body-wrapper");
+        if (el._ps_) {
+          el.addEventListener("ps-scroll-y", () => {
+            if (el._ps_.scrollbarYTop > 100) {
+              this.showTopBtn1 = true;
+            } else {
+              this.showTopBtn1 = false;
+            }
+          });
+        }
+        let el2 = this.$refs.cabTable.$el.querySelector(".el-table__body-wrapper");
+        if (el2._ps_) {
+          el2.addEventListener("ps-scroll-y", () => {
+            if (el2._ps_.scrollbarYTop > 100) {
+              this.showTopBtn2 = true;
+            } else {
+              this.showTopBtn2 = false;
+            }
+          });
+        }
+
       });
       this.tablelable = localStorage.getItem("nz-tableTitle-" + localStorage.getItem("nz-username") + "-" + this.$route.path)
         ? JSON.parse(localStorage.getItem("nz-tableTitle-" + localStorage.getItem("nz-username") + "-" + this.$route.path))

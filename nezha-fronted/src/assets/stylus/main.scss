@@ -1174,3 +1174,30 @@ li{
 .el-button--primary:hover{
   background-color: rgba(255, 99, 71, .85);
 }
+
+/*滚动条相关，减小table内滚动条的空间*/
+.ps__rail-y:hover > .ps__thumb-y, .ps__rail-y:focus > .ps__thumb-y, .ps__rail-y.ps--clicking .ps__thumb-y {
+  width: 6px;
+}
+.ps__rail-x:hover > .ps__thumb-x, .ps__rail-x:focus > .ps__thumb-x, .ps__rail-x.ps--clicking .ps__thumb-x {
+  height: 6px;
+}
+.ps .ps__rail-x:hover, .ps .ps__rail-y:hover, .ps .ps__rail-x:focus, .ps .ps__rail-y:focus, .ps .ps__rail-x.ps--clicking, .ps .ps__rail-y.ps--clicking {
+  background-color: transparent;
+}
+.ps__rail-y {
+  width: 6px;
+}
+.ps__rail-x {
+  height: 6px;
+}
+.el-table__fixed-right {
+  right: 10px !important;
+}
+.el-table__fixed-right-patch {
+  width: 10px !important;
+  background-color: #fcfcfc;
+}
+.el-table__fixed-body-wrapper {
+  height: calc(100% - 42px) !important;
+}
