@@ -45,22 +45,6 @@
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
-}
-.shell-service-max {
-  height: 100% !important;
-  position: fixed !important;
-  top: 0;
-  bottom: 0;
-}
-
-/*-------*/
-
-  .menu {
-
-  }
-  .console{
-
-  }
 
   .console-title-icon{
     font-size:18px;
@@ -80,7 +64,7 @@
     .el-dialog__header{
       padding: 0px !important;
     }
-   }
+  }
   .el-tabs--border-card>.el-tabs__content {
     padding: 0px !important;
   }
@@ -110,7 +94,15 @@
   .el-submenu__title:hover{
     background-color:#FFF !important;
   }
+}
+.shell-service-max {
+  height: 100% !important;
+  position: fixed !important;
+  top: 0;
+  bottom: 0;
+}
 
+/*-------*/
 .dailog-custom{
   width:100%;
 }
