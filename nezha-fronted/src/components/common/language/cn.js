@@ -37,6 +37,9 @@ const cn = {
     createPrometheusServer:'新增 prometheus server',
     createDatacenter:'新增DC'
   },
+  webshell:{
+    shellTitle:'本地 Shell',
+  },
   dashboard:{
     title:'仪表盘',
     panel:{

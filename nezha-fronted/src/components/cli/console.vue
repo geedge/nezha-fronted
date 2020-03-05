@@ -38,6 +38,7 @@ export default {
       terminalSocket: null,
       termimalRows:15,
       termimalHeight:300,
+      fontSize:18,
       obj:{
         id:2
       },
@@ -64,19 +65,23 @@ export default {
       const consoleBox = document.getElementById('ternimalContainer'+this.idIndex);
       consoleBox.style.height = `${consoleHeigt}px`;
       //调整终端高度
-      let rows = (consoleHeigt-30)/18;
+      let rows = (consoleHeigt-30)/this.fontSize;
       rows = parseInt(rows);
       this.term.resize(this.term.cols,rows);
     },
     resizeServiceConsole(consoleHeigt){
       const consoleBox = document.getElementById('ternimalContainer'+this.idIndex);
-      const winStyl={
-        width:consoleBox.style.width,
-        height:consoleBox.style.height,
+      let width = document.body.clientWidth;//可视宽度
+      let height = parseInt(consoleBox.style.height);
+      if(height==null||!height){height=this.termimalHeight;}
+      const winStyle={
+        width:width,
+        height:height,
         cols:this.term.cols,
         rows:this.term.rows,
       };
-      this.$post('/terminal/resize?',winStyl).then(response => {
+      //alert(JSON.stringify(winStyle));
+      this.$post('/terminal/resize?',winStyle).then(response => {
         if (response.code === 200) {
           //this.term.fit();
           //this.term.scrollToBottom();
@@ -90,7 +95,7 @@ export default {
       //this.term.toggleFullScreen(isFullScreen);//全屏后无法显示顶部菜单和tab
       let height = document.body.clientHeight;//可视高度
       let width = document.body.clientWidth;//可视宽度
-      let rows = height/18;
+      let rows = height/this.fontSize;
       rows = parseInt(rows);
       if(isFullScreen){
         //容器高度设置100%
@@ -110,7 +115,7 @@ export default {
         cols:this.term.cols,
         rows:parseInt(rows),
       };
-      //alert(JSON.stringify(winStyl));
+      //alert("full="+JSON.stringify(winStyl));
       this.$post('/terminal/resize?',winStyl).then(response => {
         //alert(JSON.stringify(response));
         if (response.code === 200) {
@@ -155,7 +160,14 @@ term.toggleFullScreen();//全屏
         const consoleBox = document.getElementById('ternimalContainer'+this.idIndex);
         consoleBox.style.height = `${100}%`;
         let height = document.body.clientHeight;//可视高度
-        rows = height/18;
+        rows = height/this.fontSize;
+        rows = parseInt(rows);
+      }else{
+        //容器高度设置100%
+        const consoleBox = document.getElementById('ternimalContainer'+this.idIndex);
+        let height = this.terminal.height;//可视高度
+        consoleBox.style.height = `${height+5}px`;
+        rows = (height-30)/this.fontSize;
         rows = parseInt(rows);
       }
       let terminalContainer = document.getElementById('terminal'+this.idIndex);
@@ -283,6 +295,9 @@ term.toggleFullScreen();//全屏
       if(this.term) {
         this.term.destroy();
       }
+      //初始化console的高度
+      const consoleBox = document.getElementById('ternimalContainer'+this.idIndex);
+      consoleBox.style.height = `${this.termimalHeight}px`;
     },
   },
   mounted () {

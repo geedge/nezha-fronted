@@ -29,22 +29,35 @@
         </el-submenu>
       </el-menu>
 
-      <el-tabs v-model="editableTabsValue" @tab-click="handleClick" @tab-remove="removeTab"  closable style='width:100%' type="border-card">
-        <el-tab-pane
-          v-for="(item, index) in editableTabs"
+      <el-tabs v-model="editableTabsValue"
+               @tab-click="handleClick"
+               @tab-remove="removeTab"
+               :before-leave="beforeLeave"
+               style='width:100%'
+               type="border-card">
+        <el-tab-pane v-for="(item, index) in editableTabs"
           :key="item.name"
           :label="item.title"
           :name="item.name"
+           closable
         >
           <!-- tab显示的内容 -->
           <span slot="label" > <i class="el-icon-aim"></i>{{item.title}}</span>
           <my-console :terminal="item.terminal"  :ref="'console'+index"    @closeConsole="removeTab" :idIndex="index" :isFullScreen="isFullScreen"></my-console>
         </el-tab-pane>
+        <el-tab-pane key="add" name="add">
+          <span slot="label" style="padding:8px;font-size:20px;font-weight:bold;">+</span>
+        </el-tab-pane>
       </el-tabs>
+      <i style='right:70px;' @click="minScreen" class="el-icon-minus console-title-icon"></i>
+      <i style='right:38px;;' @click="fullScreen" class="el-icon-full-screen console-title-icon"></i>
+      <i style='right:8px;' @click="closeConsole" class="el-icon-close console-title-icon"></i>
+      <!--
       <i style='right:103px;' @click="minScreen" class="el-icon-minus console-title-icon"></i>
       <i style='right:70px;;' @click="fullScreen" class="el-icon-full-screen console-title-icon"></i>
       <i style='right:38px;' class="el-icon-copy-document console-title-icon" ></i>
       <i style='right:8px;' @click="closeConsole" class="el-icon-close console-title-icon"></i>
+      -->
       <!--el-icon-setting  el-icon-minus  el-icon-full-screen  el-icon-copy-document-->
     </div>
   </div>
@@ -53,7 +66,6 @@
 <script>
   import Console from './console'
   import uuidv1 from "uuid/v1";
-
   export default {
     name: 'webSSH',
     components: {
@@ -64,6 +76,9 @@
       return {
         consoleShow:false,
         isFullScreen:false,
+        initConsoleHeight:300,//只读,初始化高度
+        consoleHeight:300,
+        currentTransform:0,
         /*
         terminal: {
           //pid: 1,
@@ -76,6 +91,7 @@
         */
         //activeName:'',
         editableTabsValue: '-1',//当前显示的console
+        currentIndex:'-1',
         editableTabs: [/*
           {
           title: '用户管理',
@@ -112,6 +128,9 @@
         if(port){
           title = title+":"+port;
         }
+        if(!title){
+          title=this.$t("webshell.shellTitle");
+        }
         let width = document.body.clientWidth;//可视宽度
         const console = {
           title:title,
@@ -121,7 +140,7 @@
             cols: 225,
             rows: 200,
             width:width,
-            height:300,
+            height:this.consoleHeight,
             assetId:id,
             accountId:accountId,
             uuid:uuid,
@@ -129,6 +148,17 @@
         };
         this.editableTabsValue = newTabName;
         this.editableTabs.push(console);
+
+        setTimeout(function(){
+          let tabScroll = document.getElementsByClassName("el-tabs__nav is-top");
+          let tabViewWidth = document.getElementsByClassName("el-tabs__nav-scroll");
+          let scrollWidth = tabScroll[0].clientWidth;
+          let viewWidth = tabViewWidth[0].clientWidth;//可视宽度
+
+          if(viewWidth<scrollWidth){
+            tabScroll[0].style.transform = "translateX(" + (viewWidth-scrollWidth) + "px) ";//71(
+          }
+        },10)
       },
       show(id,host,accountId,port){
         this.addConsole(id,host,accountId,port);
@@ -154,6 +184,10 @@
 
         this.consoleShow = false;
         this.isFullScreen = false;
+
+        let targetDiv= document.getElementById('shell-service');
+        targetDiv.style.height=this.initConsoleHeight+'px';
+        this.consoleHeight = this.initConsoleHeight;
       },
       handleClick(){
 
@@ -180,6 +214,33 @@
           this.closeConsole();
         }
       },
+      /* 活动标签切换时触发 */
+      beforeLeave(currentName,oldName) {
+        var self=this;
+        //重点，如果name是add，则什么都不触发
+        if(currentName=="add"){
+          this.addTab()
+          return false
+        }else{
+          this.currentIndex=currentName;
+        }
+      },
+      addTab(targetName) {
+        this.addConsole('','','','');
+
+      //<div role="tablist" class="el-tabs__nav is-top" style="transform: translateX(-1207.78px);">
+        /*
+        let newTabName = ++this.tabIndex + '';
+        this.editableTabs.push({
+          title: 'New Tab',
+          name: newTabName,
+          content: 'New Tab content'
+        });
+        this.editableTabsValue = newTabName;
+        this.currentIndex=newTabName;
+        */
+
+      },
       handleSelect(key, keyPath) {
         //alert(key, keyPath);
       },
@@ -201,9 +262,9 @@
           this.$refs['console'+index][0].fullScreenConsole(this.isFullScreen);
         });
 
-        if(this.isFullScreen){
+        if(!this.isFullScreen){
           let targetDiv= document.getElementById('shell-service');
-          targetDiv.style.height='300px';
+          targetDiv.style.height=this.initConsoleHeight+'px';
         }
 
         //const dailog = document.getElementById("consoleDailog");
@@ -238,6 +299,7 @@
             if(parseInt(targetDiv.style.height)<=10){
               targetDiv.style.height=10+'px';
             }
+
             _this.editableTabs.forEach((tab, index) => {
               _this.$refs['console'+index][0].resizeConsole(parseInt(targetDiv.style.height));
             });
@@ -248,21 +310,11 @@
             _this.editableTabs.forEach((tab, index) => {
               _this.$refs['console'+index][0].resizeServiceConsole(parseInt(targetDiv.style.height));
             });
+
+            _this.consoleHeight = parseInt(targetDiv.style.height);
+            if(_this.consoleHeight===null || !_this.consoleHeight){_this.consoleHeight = _this.initConsoleHeight;}
           }
         },
-      /*
-      addTab(targetName) {
-        let newTabName = ++this.tabIndex + '';
-        this.editableTabs.push({
-          title: 'New Tab',
-          name: newTabName,
-          content: 'New Tab content'
-        });
-        this.editableTabsValue = newTabName;
-      },
-      */
-
-
     },
     watch: {
 

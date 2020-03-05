@@ -62,6 +62,9 @@ const en = {
       failedDetail:'Failed Detail'
     }
   },
+  webshell:{
+    shellTitle:'Local Shell',
+  },
   dashboard:{
     title:'Dashboard',
     panel:{
