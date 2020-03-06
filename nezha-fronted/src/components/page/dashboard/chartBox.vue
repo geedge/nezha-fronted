@@ -133,14 +133,14 @@
               </el-col>
               <el-col :span="6" style="margin-left: 0px;">
                 <div class="grid-content" >
-                  <el-form-item prop="heigh">
+                  <el-form-item prop="height">
                     <!--                  <el-input label="" v-model="chart.height" placeholder="" size="mini"></el-input>-->
                     <el-autocomplete
                       v-model="chart.height"
                       :fetch-suggestions="querySearch"
                       placeholder=""
                       size="mini"
-                      popper-class="popper-z-index"
+                      popper-class="popper-z-index no-style-class"
                       @select="handleSelect">
                       <template slot-scope="{ item }">
                         <div class="name">{{ item }}</div>
@@ -224,11 +224,6 @@
           title: [
             {required: true,  message: this.$t('validate.required'),  trigger: 'blur'}
           ]
-          /*
-           heigh: [
-             {required: true, message: this.$t('validate.required'), trigger: 'blur'}
-           ]
-           */
         },
         chartTypeList: [
           {
@@ -347,12 +342,13 @@
         });
       },
       del: function(u) {
+        let cloneChart=JSON.parse(JSON.stringify(u))
         this.$confirm(this.$t("tip.confirmDelete"), {
           confirmButtonText: this.$t("tip.yes"),
           cancelButtonText: this.$t("tip.no"),
           type: 'warning'
         }).then(() => {
-          this.$delete("panel/"+this.panelId+"/charts?ids="+u.id).then(response => {
+          this.$delete("panel/"+this.panelId+"/charts?ids="+cloneChart.id).then(response => {
             if (response.code === 200) {
               this.esc();
               this.$message({duration: 1000, type: 'success', message: this.$t("tip.deleteSuccess")});
@@ -629,7 +625,7 @@
         this.chart.id = data.id;
         this.chart.title = data.title;
         this.chart.span = data.span;
-        this.chart.height = data.height;
+        this.chart.height = data.height+'';
         this.chart.type = data.type;
         this.getSuggestMetric();//获得指标列表
         // 指标

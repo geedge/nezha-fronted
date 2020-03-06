@@ -495,7 +495,7 @@
             },
             formatter:function(params){
               //display:inline-block;white-space:nowrap;overflow-x:hidden;text-overflow:ellipsis;
-              let str = `<div   style='width:600px;display:inline-block;line-height: 18px;font-size:12px;font-family: Roboto,Helvetica Neue,Arial,sans-serif;'>`;
+              let str = `<div   style='max-width:600px;display:inline-block;line-height: 18px;font-size:12px;font-family: Roboto,Helvetica Neue,Arial,sans-serif;'>`;
               params.forEach((item, i) => {
                 let tip=legend.find((element)=>{
                   return element.name == item.seriesName;
@@ -540,7 +540,7 @@
                  */
                 str += `<div style='max-width:510px;display:inline-block;white-space:nowrap;overflow-x:hidden;text-overflow:ellipsis;line-height: 18px;font-size:12px;font-family: Roboto,Helvetica Neue,Arial,sans-serif;'>`;
 
-                str +=`<span style='display:inline-block;margin-right:5px;border-radius:10px;width:15px;height:5px;background-color: ${item.color};}'></span>${tip.alias?tip.alias:tip.name}: `;
+                str +=`<span style='display:inline-block;margin-right:5px;border-radius:10px;width:15px;height:5px;background-color: ${item.color};}'></span>${tip.alias?tip.alias:tip.name}:  `;
                 str +=`</div>`;
                 str += `<div style='max-width:90px;min-width:20px;float:right;text-align:right;display:inline-block;white-space:nowrap;overflow-x:hidden;text-overflow:ellipsis;line-height: 18px;font-size:12px;font-family: Roboto,Helvetica Neue,Arial,sans-serif;'>`;
                 str +=val;

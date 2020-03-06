@@ -481,7 +481,8 @@ const en = {
       element: 'Element',
       value: 'Value',
       promExpr: 'Please input expression',
-      dialogTitle:'View', //endpoint 弹出dialog 标题
+      dialogTitle:'View', //endpoint 弹出dialog 标题,
+      hideSameLabels:'Hide same labels'
     },
     metrics: {
       metrics: 'Metrics',//"指标"

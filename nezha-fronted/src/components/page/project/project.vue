@@ -182,9 +182,8 @@
         <!--时间选择器-->
         <div class="top-tool-right">
           <div class="top-tool-search relative-position" >
-<!--            <metric-search :metrics="metricList" :labels="labelList"  v-if="tableShow == 3" @expression-change="tableFilter"></metric-search>-->
             <el-input ref="elementQuery" @clear="clearInput" id="elementQuery" @focus="focusInput"  @blur="blurInput" v-model="queryExpression" class="query-input-inactive" size="mini" clearable  :placeholder="$t('project.endpoint.promExpr')" >
-              <i slot="suffix" class="el-input__icon el-icon-search" @click="focusInput"></i>
+              <i slot="suffix" class="el-input__icon el-icon-search" style="float:right" @click="focusInput"></i>
             </el-input>
           </div>
           <div class="margin-r-20 date-pick-group">
@@ -203,10 +202,23 @@
             </el-date-picker>
             <button @click="changeTime(10)" class="nz-btn nz-btn-size-normal nz-btn-style-light change-time-height"><i class="el-icon-d-arrow-right"></i></button>
           </div>
+          <el-dropdown split-button type="primary"  size="mini" class="dropdownBtn">
+            <i class="nz-icon nz-icon-chart" @click="viewGraph" ></i>
+            <el-dropdown-menu slot="dropdown" style="padding:10px 4px 10px 10px;">
+              <el-row>
+                <el-col :span="16" style="padding-top: 4px;padding-left: 1px"><span style="padding-top: 2px">{{$t('project.endpoint.hideSameLabels')}}</span></el-col>
+                <el-col :span="8">
+                  <el-dropdown-item class="dropdown-content" >
+                    <el-switch v-model="hideSameLabels" active-color="#ee9d3f" size="small"></el-switch>
+                  </el-dropdown-item>
+                </el-col>
+              </el-row>
 
-          <button @click="viewGraph" slot="reference" class="nz-btn nz-btn-size-normal nz-btn-style-normal nz-btn-min-width-120" :class="{'nz-btn-disabled':selectedEndpoints.length<1}">
-            <span class='top-tool-btn-txt'>{{$t('project.endpoint.addGraph')}}</span>
-          </button>
+            </el-dropdown-menu>
+          </el-dropdown>
+<!--          <button @click="viewGraph" slot="reference" class="nz-btn nz-btn-size-normal nz-btn-style-normal nz-btn-min-width-120" :class="{'nz-btn-disabled':selectedEndpoints.length<1}">-->
+<!--            <span class='top-tool-btn-txt'>{{$t('project.endpoint.addGraph')}}</span>-->
+<!--          </button>-->
         </div>
       </div>
       <div class="table-header-inner" @click="clearSelectedMetrics"><span><i class="nz-icon nz-icon-duoxuan " :class="{'control-icon-unchecked':selectedEndpoints.length<1,'control-icon-checked':selectedEndpoints.length>0}"></i></span></div>
@@ -244,7 +256,7 @@
               </div>
               <span slot="reference"><i class="nz-icon nz-icon-info-normal metric-tip-icon"></i></span>
             </el-popover>
-            <span>{{scope.row.element}}</span>
+            <span>{{hideSameLabels?scope.row.simpleElement: scope.row.element}}</span>
           </template>
         </el-table-column>
         <el-table-column
@@ -290,8 +302,8 @@
       </div>
       <div class="line-area " style="height: 300px"  ref="viewGraphChart"  id="viewGraphChart"></div>
       <div class="legend-container"   id="legendArea" ref="legendArea">
-        <div v-for="(item, index) in legend" :title="item.name"  @click="clickLegend(item.name,index)" class="legend-item" :class="{'ft-gr':isGrey[index]}" :key="'legend_' + item.name+'_'+index">
-          <span class="legend-shape" :style="{background:(isGrey[index]?'#D3D3D3':bgColorList[index])}"></span>{{item.name}}
+        <div v-for="(item, index) in legend" :title="hideSameLabels&&item.alias?item.alias:item.name"  @click="clickLegend(item.name,index)" class="legend-item" :class="{'ft-gr':isGrey[index]}" :key="'legend_' + item.name+'_'+index">
+          <span class="legend-shape" :style="{background:(isGrey[index]?'#D3D3D3':bgColorList[index])}"></span>{{hideSameLabels&&item.alias?item.alias:item.name}}
           <br/>
         </div>
       </div>
@@ -313,14 +325,12 @@
   import echarts from 'echarts';
   import chartBox from "../dashboard/chartBox";
   import bus from "../../../libs/bus";
-  import metricSearch from "./metricSearch";
   import axios from 'axios';
   import exportXLSX from "../../common/exportXLSX";
   export default {
     name: "project2",
     components: {
       'chart-box': chartBox,
-      'metric-search':metricSearch,
       'export-excel':exportXLSX
     },
     data() {
@@ -443,8 +453,6 @@
         queryExpression:'',
         metricList: [], // metric列表
         elementMetricDatas:[],//element 列提示信息列表
-        labelSet:new Set(),
-        labelList:[],
         formatTime:'',//查询endpoint的时间，
         selectedEndpoints:[],//选中的metric{label='value'}
         chartDatas:[],//从query_range查询到的数据
@@ -535,12 +543,69 @@
             }]
         },
         chartOptions:{
-          color: this.bgColorList,
+          color: temp.bgColorList,
           title: {
             text: ""
           },
           tooltip: {
             trigger: 'axis',
+            confine:false,
+            extraCssText:'z-index:1000;',
+            /*enterable:true, 导致tooltip不消失，显示多个tooltip*/
+            position:function(point,params,dom,rect,size){
+              dom.style.transform = "translateZ(0)";
+              //提示框位置
+              var x=0;
+              var y=0;
+              //当前鼠标位置
+              var pointX = point[0];
+              var pointY = point[1];
+              //外层div大小
+              var viewWidth = size.viewSize[0];
+              var viewHeight = size.viewSize[1];
+              //提示框大小
+              var boxWidth = size.contentSize[0];
+              var boxHeight = size.contentSize[1];
+              if(pointX<(viewWidth/2)){//说明鼠标在左边放不下提示框
+                x=pointX+10;
+              }else{
+                x = pointX - boxWidth;
+              }
+              if(pointY<(viewHeight/2)){//说明鼠标上面放不下提示框
+                y = pointY+10;
+              }else {
+                y = pointY-boxHeight;
+              }
+              return [x,y];
+            },
+            formatter:function(params){
+              //display:inline-block;white-space:nowrap;overflow-x:hidden;text-overflow:ellipsis;
+              let str = `<div   style='max-width:600px;display:inline-block;line-height: 18px;font-size:12px;font-family: Roboto,Helvetica Neue,Arial,sans-serif;'>`;
+              params.forEach((item, i) => {
+                let tip=temp.legend.find((element)=>{
+                  return element.name == item.seriesName;
+                })
+                if(i===0){
+                  let t_date = new Date(item.data[0]);
+                  str += [t_date.getFullYear(), t_date.getMonth() + 1, t_date.getDate()].join('-') + " "
+                    + [t_date.getHours(), t_date.getMinutes(),t_date.getSeconds()].join(':');
+                }
+                str +=`<br/>`;
+                let val = parseFloat(Number(item.data[1]).toFixed(2));
+                if(val===0){
+                  val = Number(item.data[1]);
+                }
+                str += `<div style='max-width:510px;display:inline-block;white-space:nowrap;overflow-x:hidden;text-overflow:ellipsis;line-height: 18px;font-size:12px;font-family: Roboto,Helvetica Neue,Arial,sans-serif;'>`;
+
+                str +=`<span style='display:inline-block;margin-right:5px;border-radius:10px;width:15px;height:5px;background-color: ${item.color};}'></span>${temp.hideSameLabels&& tip.alias?tip.alias:tip.name}:  `;
+                str +=`</div>`;
+                str += `<div style='max-width:90px;min-width:20px;float:right;text-align:right;display:inline-block;white-space:nowrap;overflow-x:hidden;text-overflow:ellipsis;line-height: 18px;font-size:12px;font-family: Roboto,Helvetica Neue,Arial,sans-serif;'>`;
+                str +=val;
+                str +=`</div>`;
+              });
+              str +=`</div>`;
+              return str;
+            },
           },
           legend: {
             show:false,
@@ -675,18 +740,57 @@
           '#f58220', '#c37e00', '#00ae9d', '#f26522', '#76becc',
           '#76624c', '#d71345', '#2468a2', '#ca8687', '#1b315e',
         ],
-        panelData: [], //chart-box的panel下拉框数据
+        panelData: [], //chart-box的panel下拉框数据,
+        hideSameLabels:true,
+        sameLabels:['instance','module','project','asset','job','dc'],
       }
     },
     methods: {
       clickLegend(legendName,index){
-        if (this.graphChart) {
-          this.graphChart.dispatchAction({
-            type: 'legendToggleSelect',
-            name: legendName
-          });
-          let isGreyTmp = this.isGrey[index];
-          this.$set(this.isGrey, index, !isGreyTmp);
+        //点击图表某一个legend，图表只显示当前点击的曲线或柱状图，其它隐藏，再次点击已选中的legend ，显示全部
+        let curIsGrey=this.isGrey[index];
+        if(this.graphChart){
+          this.legend.forEach((item,i)=>{
+            let isGrey = this.isGrey[i];
+            if(index != i){
+              if(!curIsGrey && !isGrey){
+                this.graphChart.dispatchAction({
+                  type: 'legendUnSelect',
+                  name: item.name
+                });
+              }else if(!curIsGrey && isGrey){
+                this.graphChart.dispatchAction({
+                  type: 'legendSelect',
+                  name: item.name
+                });
+              }else{
+                this.graphChart.dispatchAction({
+                  type: 'legendUnSelect',
+                  name: item.name
+                });
+              }
+            }else {
+              this.graphChart.dispatchAction({
+                type: 'legendSelect',
+                name: item.name
+              });
+            }
+          })
+          this.isGrey.forEach((item,i)=>{
+            if(index != i){
+              if(!curIsGrey && !item){
+                this.$set(this.isGrey, i, true);
+              }else if(!curIsGrey && item){
+                this.$set(this.isGrey, i, false);
+              }else{
+                this.$set(this.isGrey, i, true);
+              }
+            }else{
+              if(item === true){
+                this.$set(this.isGrey, i, false);
+              }
+            }
+          })
         }
       },
       formatLegend(name,chartWidth){
@@ -1028,6 +1132,7 @@
               for (let result of results){
                 // {"metric":{"instance":"192.168.40.126:9100","__name__":"scrape_duration_seconds","module":"node_exporter","project":"kafka","asset":"192.168.40.126","job":"ed_1","dc":"dc5"},"value":[1580782176.522,"0.000560761"]}
                 let temp=result.metric.__name__;
+                let simpleTemp=result.metric.__name__;//显示简略信息：隐藏same labels后的结果
                 let metricTip={};
                 let queryInfos=(this.elementMetricDatas.filter((item)=>{
                   return item.metric===temp;
@@ -1039,17 +1144,22 @@
                 }
                 delete result.metric.__name__;
                 temp+="{";
+                simpleTemp+="{";
                 for (let key in result.metric){
                   temp+=key +"='"+result.metric[key]+"',";
-                  this.labelSet.add(key);
+                  if(!this.sameLabels.some((i)=>{return i == key})){
+                    simpleTemp+=key +"='"+result.metric[key]+"',";
+                  }
                 }
                 temp=temp.charAt(temp.length-1) == ","?temp.substr(0,temp.length-1):temp;
+                simpleTemp=simpleTemp.charAt(simpleTemp.length-1) == ","?simpleTemp.substr(0,simpleTemp.length-1):simpleTemp;
                 temp+="}";
-                let edpQueryData={element:temp,value:result.value[1],type:(result.metric.type?result.metric.type:'2'),metricTip:metricTip};
+                simpleTemp+="}";
+                if(!/.+\{.+\}/.test(simpleTemp)){
+                  simpleTemp=simpleTemp.substr(0,simpleTemp.length-2);
+                }
+                let edpQueryData={element:temp,simpleElement:simpleTemp,value:result.value[1],type:(result.metric.type?result.metric.type:'2'),metricTip:metricTip};
                 this.showTableData.push(edpQueryData);
-                this.labelList=Array.from(this.labelSet).map((item,index)=>{
-                  return {key:item,type:'label'}
-                })
               }
               this.showTableDataCopy=JSON.stringify(this.showTableData);
               this.tableShow=3;
@@ -1178,10 +1288,16 @@
         }else{
           step='30m';
         }
+        let axiosArr=[];
         for(let endpoint of this.selectedEndpoints){
-          this.$get("/prom/api/v1/query_range?query="+endpoint.element+"&start="+start+"&end="+end+"&step="+step).then(response=> {
-            if (response.status === "success") {
-              let queryData=response.data.result[0];
+          axiosArr.push(axios.get("/prom/api/v1/query_range?query="+endpoint.element+"&start="+start+"&end="+end+"&step="+step));
+        }
+        this.legend=[];
+        this.isGrey=[];
+        axios.all(axiosArr).then(res =>{
+          res.forEach((response,promIndex)=>{
+            if (response.status == 200) {
+              let queryData=response.data.data.result[0];
               if(queryData){
                 let chartData={
                   type:"line",
@@ -1189,22 +1305,32 @@
                   smooth:true,  //曲线变平滑
                 };
                 chartData.name=queryData.metric.__name__;
+                let alias=queryData.metric.__name__;
                 delete queryData.metric.__name__;
                 chartData.name+="{";
+                alias+="{";
                 Object.keys(queryData.metric).forEach((item,index)=>{
                   let label=item;
                   let value=queryData.metric[label];
                   chartData.name+=label +"='"+value+"',";
+                  if(!this.sameLabels.some((i)=>{return i == label})){
+                    alias+=label +"='"+value+"',";
+                  }
                 })
                 chartData.name=chartData.name.charAt(chartData.name.length-1) == ","?chartData.name.substr(0,chartData.name.length-1):chartData.name;
+                alias=alias.charAt(alias.length-1) == ","?alias.substr(0,alias.length-1):alias;
                 chartData.name+="}";
+                alias+="}";
+                if(!/.+\{.+\}/.test(alias)){
+                  alias=alias.substr(0,alias.length-2);
+                }
                 let legend={
                   name:chartData.name,
+                  alias:alias,
                   showText:this.formatLegend(chartData.name)
                 }
                 this.legend.push(legend);
-                this.screenLegendList.push(legend);
-                this.isGreyScreen.push(false);
+                this.isGrey.push(false);
                 chartData.data=queryData.values.map((dpsItem, dpsIndex) => {
                   return [dpsItem[0] * 1000, Number(dpsItem[1])];
                 });
@@ -1212,21 +1338,28 @@
               }
             }
           })
-        }      },
+            this.$nextTick(()=>{
+              this.graphChart.clear();
+              this.chartOptions.color=this.bgColorList;
+              this.chartOptions.series=this.chartDatas;
+              this.graphChart.setOption(this.chartOptions);//创建图表
+            });
+        })
+      },
       dateChange:function(){
         if(this.graphChart){
           this.graphChart.clear();
+          this.queryChartDate();
         }
-        this.queryChartDate();
-        // this.chartOptions.legend.data=this.legend;
-        this.chartOptions.series=this.chartDatas;
-        this.graphChart.setOption(this.chartOptions);//创建图表
+
       },
       initDialog:function(){
         this.graphChart = echarts.init(document.getElementById('viewGraphChart'));
+        // this.queryChartDate();
         // this.chartOptions.legend.data=this.legend;
-        this.chartOptions.series=this.chartDatas;
-        this.graphChart.setOption(this.chartOptions);//创建图表
+        // this.chartOptions.series=this.chartDatas;
+        // this.graphChart.setOption(this.chartOptions);//创建图表
+        // console.log(this.chartOptions)
         // let legendHeight = this.$refs.legendArea.offsetHeight;
         // let dialogDom=document.getElementById('viewGraphDialog');
         // let dialogWidth=dialogDom.offsetWidth
@@ -1264,10 +1397,10 @@
         });
       },
       tableFilter:function(){
+        let temp=this;
         let tableDatas=JSON.parse(this.showTableDataCopy);
         this.showTableData=tableDatas.filter((item)=>{
-          let element=item.element;
-
+          let element=temp.hideSameLabels?item.simpleElement: item.element;
           return element.indexOf(this.queryExpression) != -1;
         })
       },
@@ -1358,7 +1491,8 @@
         }
       },
       clearInput:function(){
-        this.$refs.elementQuery.foucs();
+
+        this.$refs.elementQuery.focus();
       },
       queryElementTips:async function(){
         this.elementMetricDatas=[];

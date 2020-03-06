@@ -10,7 +10,7 @@
       </el-dropdown>
     </div>
     <div>
-      <el-dialog :visible.sync="importBox.show" :title="importBox.title" :modal-append-to-body='false' :show-close="true" :width="importBox.width" @close="closeDialog" class="nz-dialog">
+      <el-dialog :visible.sync="importBox.show" :title="importBox.title" :modal-append-to-body='false' :show-close="true" :width="importBox.width" @close="closeDialog" class="nz-dialog" :close-on-click-modal="importBox.type!=3">
         <div v-if="importBox.type==1">
           <div class="upload-body">
             <el-upload class="upload-demo" ref="uploadExcel" action="" :file-list="importFileList" :on-change="importChange"  :auto-upload="false" accept=".xlsx,.xls">
@@ -60,11 +60,13 @@
               </div>
               <div>
                 <div class="result-title">{{$t('overall.result.failedDetail')}}:</div>
-                <div class="result-detail" v-if="importResult&&importResult.failDetail">
-                  <ul>
-                    <li v-for="(item,index) in importResult.failDetail"><span>{{item.lineNo}}</span>:<span>{{item.errorMsg}}</span> </li>
-                  </ul>
-                </div>
+                <el-scrollbar style="height: 100%">
+                  <div class="result-detail" v-if="importResult&&importResult.failDetail">
+                    <ul>
+                      <li v-for="(item,index) in importResult.failDetail"><span>{{item.lineNo}}</span>:<span>{{item.errorMsg}}</span> </li>
+                    </ul>
+                  </div>
+                </el-scrollbar>
               </div>
             </div>
             <div slot="footer" class="footer">
@@ -311,7 +313,7 @@
   }
   .result-detail{
     height: 100px;
-    overflow-y: auto;
+    /*overflow-y: auto;*/
     margin-bottom: 20px;
   }
   .result-body{
