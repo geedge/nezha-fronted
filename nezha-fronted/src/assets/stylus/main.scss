@@ -146,20 +146,24 @@ li{
 }
 .to-top {
   position: fixed;
-  top: 49%;
+  bottom: 10px;
   right: 23px;
-  border-radius: 50%;
-  height: 40px;
-  width: 40px;
+  border-radius: 5px;
+  height: 31px;
+  width: 35px;
   border: none;
   cursor: pointer;
-  opacity: 0.3;
-  background-color: #e0e0e0;
+  opacity: 0.5;
+  background-color: #aaa;
   outline: none;
   z-index: 10;
 }
+.to-top>i {
+  font-size: 20px;
+}
 .to-top:hover {
   opacity: 1;
+  color: white;
 }
 .nz-btn-metricbtn{
   height: 32px;
@@ -822,6 +826,12 @@ li{
 }
 .el-scrollbar__wrap {
   overflow-x: hidden !important;
+}
+.el-scrollbar__thumb {
+  background-color: #aaa;
+}
+.el-scrollbar__thumb:hover {
+  background-color: #999;
 }
 .right-box-form {
   width: calc(100% - 30px);
