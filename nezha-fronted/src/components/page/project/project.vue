@@ -1881,15 +1881,4 @@
   .control-icon-checked{
     color:#666;
   }
-  .legend-container{
-    width: calc(100% - 335px);
-    max-height:80px;
-    min-height:40px;
-    overflow-y: auto;
-    font-size:12px;
-    text-align:left;
-    margin:0 auto;
-    line-height: 18px;
-    font-family: Roboto,Helvetica Neue,Arial,sans-serif;
-  }
 </style>
