@@ -85,7 +85,7 @@
           </div>
         </el-scrollbar>
        </div>
-      <button class="to-top nz-btn nz-btn-size-normal nz-btn-style-light" v-show="showTopBtn" @click="toTop('el', $refs.dashboardScrollbar.wrap)">TOP</button>
+      <button class="to-top" v-show="showTopBtn" @click="toTop('el', $refs.dashboardScrollbar.wrap)"><i class="nz-icon nz-icon-top"></i></button>
     </div>
 
     <panel-box :panel="panel" @reload="panelReload" @reloadForDel="panelReloadForDel" ref="panelBox"></panel-box>
@@ -552,7 +552,7 @@
         let _self = this;
         let scrollbarWrap = this.$refs.dashboardScrollbar.wrap;
         scrollbarWrap.onscroll = function() {
-          if (scrollbarWrap.scrollTop > 100) {
+          if (scrollbarWrap.scrollTop > 50) {
             _self.showTopBtn = true;
           } else {
             _self.showTopBtn = false;

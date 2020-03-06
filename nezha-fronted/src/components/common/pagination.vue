@@ -48,7 +48,7 @@ export default {
       this.list = this.$refs.page.$el.children[2].children;
       for (let i = 0; i < this.list.length; i++) {
         const element = this.list[i];
-        console.info(element)
+        //console.info(element)
       }
     },
   }

@@ -144,10 +144,22 @@ li{
   line-height: 16px;
   position: relative;
 }
-.to-top.nz-btn {
+.to-top {
   position: fixed;
-  bottom: 26px;
-  right: 20px;
+  top: 49%;
+  right: 23px;
+  border-radius: 50%;
+  height: 40px;
+  width: 40px;
+  border: none;
+  cursor: pointer;
+  opacity: 0.3;
+  background-color: #e0e0e0;
+  outline: none;
+  z-index: 10;
+}
+.to-top:hover {
+  opacity: 1;
 }
 .nz-btn-metricbtn{
   height: 32px;

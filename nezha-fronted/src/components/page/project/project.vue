@@ -165,7 +165,7 @@
         </el-table-column>
       </el-table>
       <Pagination v-cloak :pageObj="endpointPageObj" @pageNo='endpointPageNo' @pageSize='endpointPageSize' ref="endpointPagination"></Pagination>
-      <button class="to-top nz-btn nz-btn-size-normal nz-btn-style-light" v-show="showTopBtn1" @click="toTop">TOP</button>
+      <button class="to-top" v-show="showTopBtn1" @click="toTop"><i class="nz-icon nz-icon-top"></i></button>
     </div>
 
     <!--endpoint query-->
@@ -265,7 +265,7 @@
           width="180">
         </el-table-column>
       </el-table>
-      <button class="to-top nz-btn nz-btn-size-normal nz-btn-style-light" v-show="showTopBtn2" @click="toTop">TOP</button>
+      <button class="to-top" v-show="showTopBtn2" @click="toTop"><i class="nz-icon nz-icon-top"></i></button>
     </div>
 
     <element-set
@@ -1537,7 +1537,7 @@
         let el = this.$refs.endpointTable.$el.querySelector(".el-table__body-wrapper");
         if (el._ps_) {
           el.addEventListener("ps-scroll-y", () => {
-            if (el._ps_.scrollbarYTop > 100) {
+            if (el._ps_.scrollbarYTop > 50) {
               this.showTopBtn1 = true;
             } else {
               this.showTopBtn1 = false;

@@ -92,7 +92,7 @@
         </el-table-column>
       </el-table>
       <Pagination :pageObj="pageObj" @pageNo='pageNo' @pageSize='pageSize' ref="Pagination"></Pagination>
-      <button class="to-top nz-btn nz-btn-size-normal nz-btn-style-light" v-show="showTopBtn" @click="toTop()">TOP</button>
+      <button class="to-top" v-show="showTopBtn" @click="toTop()"><i class="nz-icon nz-icon-top"></i></button>
     </div>
     <alert-config-box :parentAlertRule="viewRuleData" @reload="getAlertList" ref="alertConfigBox"></alert-config-box>
     <project-box :project="viewProjectData" ref="projectBox" @reload="getAlertList"></project-box>
@@ -361,7 +361,7 @@
         let el = this.$refs.alertListTable.$el.querySelector(".el-table__body-wrapper");
         if (el._ps_) {
           el.addEventListener("ps-scroll-y", () => {
-            if (el._ps_.scrollbarYTop > 100) {
+            if (el._ps_.scrollbarYTop > 50) {
               this.showTopBtn = true;
             } else {
               this.showTopBtn = false;

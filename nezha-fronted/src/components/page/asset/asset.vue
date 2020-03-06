@@ -180,7 +180,7 @@
         </el-table-column>
       </el-table>
       <Pagination :pageObj="pageObj" @pageNo='pageNo' @pageSize='pageSize' ref="Pagination"></Pagination>
-      <button class="to-top nz-btn nz-btn-size-normal nz-btn-style-light" v-show="showTopBtn" @click="toTop">TOP</button>
+      <button class="to-top" v-show="showTopBtn" @click="toTop"><i class="nz-icon nz-icon-top"></i></button>
     </div>
 
     <!--<asset-add-unit :add-unit-show='addUnitShow' @refreshData="flushData" ref="assetAddUnit"
@@ -774,7 +774,8 @@
         let el = this.$refs.assetTable.$el.querySelector(".el-table__body-wrapper");
         if (el._ps_) {
           el.addEventListener("ps-scroll-y", () => {
-            if (el._ps_.scrollbarYTop > 100) {
+            console.info(el._ps_.scrollbarYTop)
+            if (el._ps_.scrollbarYTop > 50) {
               this.showTopBtn = true;
             } else {
               this.showTopBtn = false;

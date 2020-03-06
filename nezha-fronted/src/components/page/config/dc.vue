@@ -126,7 +126,7 @@
           </el-table-column>
         </el-table>
         <Pagination :pageObj="pageObj" @pageNo='pageNo' @pageSize='pageSize' ref="Pagination"></Pagination>
-        <button class="to-top nz-btn nz-btn-size-normal nz-btn-style-light" v-show="showTopBtn1" @click="toTop">TOP</button>
+        <button class="to-top" v-show="showTopBtn1" @click="toTop"><i class="nz-icon nz-icon-top"></i></button>
         <!--dc table end-->
       <element-set
         v-clickoutside="elementsetHide"
@@ -217,7 +217,7 @@
       </div>
       <!--cabinet table end-->
       <cabinet-box :cur-cabinet="curCabinet" :cur-idc="currentShowDc" ref="cabinetEditBox" @after="getCabinetDatas"></cabinet-box>
-      <button class="to-top nz-btn nz-btn-size-normal nz-btn-style-light" v-show="showTopBtn2" @click="toTop">TOP</button>
+      <button class="to-top" v-show="showTopBtn2" @click="toTop()"><i class="nz-icon nz-icon-top"></i></button>
     </div>
 </template>
 <script>
