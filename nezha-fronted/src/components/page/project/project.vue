@@ -26,6 +26,7 @@
 <style scope>
   .chart-bottom {
     text-align: center;
+    margin-top: 16px;
   }
 </style>
 <template>
@@ -300,14 +301,16 @@
           <!--<button @click="refreshChart" type="button" class="nz-btn nz-btn-size-normal nz-btn-style-light"><i style="font-size: 14px;" class="el-icon-refresh-right"></i></button>-->
         </div>
       </div>
-      <div class="line-area " style="height: 300px"  ref="viewGraphChart"  id="viewGraphChart"></div>
+      <div class="line-area" ref="viewGraphChart" id="viewGraphChart"></div>
       <div class="legend-container"   id="legendArea" ref="legendArea">
-        <div v-for="(item, index) in legend" :title="hideSameLabels&&item.alias?item.alias:item.name"  @click="clickLegend(item.name,index)" class="legend-item" :class="{'ft-gr':isGrey[index]}" :key="'legend_' + item.name+'_'+index">
-          <span class="legend-shape" :style="{background:(isGrey[index]?'#D3D3D3':bgColorList[index])}"></span>{{hideSameLabels&&item.alias?item.alias:item.name}}
-          <br/>
-        </div>
+        <el-scrollbar style="height: 100%" ref="chartScrollbar">
+          <div v-for="(item, index) in legend" :title="hideSameLabels&&item.alias?item.alias:item.name"  @click="clickLegend(item.name,index)" class="legend-item" :class="{'ft-gr':isGrey[index]}" :key="'legend_' + item.name+'_'+index">
+            <span class="legend-shape" :style="{background:(isGrey[index]?'#D3D3D3':bgColorList[index])}"></span>{{hideSameLabels&&item.alias?item.alias:item.name}}
+            <br/>
+          </div>
+        </el-scrollbar>
       </div>
-      <div class="line-100 margin-t-20 margin-b-30"></div>
+      <div class="line-100 margin-t-10"></div>
       <div class="chart-bottom">
         <button class="nz-btn nz-btn-size-large nz-btn-style-normal nz-btn-min-width-82" @click="saveChart">{{$t('dashboard.metric.saveChart')}}</button>
       </div>
@@ -659,10 +662,11 @@
             y:'bottom',
           },
           grid: {
-            //height:"50%",
-            //top: '13%',
-            containLabel: false,
-            bottom:70,//156
+            top: 13,
+            left: 0,
+            right: 30,
+            containLabel: true,
+            bottom:35,//156
           },
           dataZoom: [{
             type: 'slider',
@@ -1343,6 +1347,7 @@
               this.chartOptions.color=this.bgColorList;
               this.chartOptions.series=this.chartDatas;
               this.graphChart.setOption(this.chartOptions);//创建图表
+              this.$refs.chartScrollbar.update();
             });
         })
       },

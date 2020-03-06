@@ -1107,8 +1107,21 @@ li{
 /* --end--复选框自定义颜色 */
 
 /* dashboard-dialog */
+.nz-dialog {
+  overflow: hidden;
+}
 .nz-dialog .el-dialog {
-  border-radius: 10px;
+  border-radius: 5px;
+}
+.line-chart-block-modal .el-dialog {
+  margin-top: 5% !important;
+}
+.table-chart-dialog .el-dialog {
+  height: 80%;
+  margin-top: 5% !important;
+}
+.table-chart-dialog .el-dialog .el-dialog__body {
+  height: calc(100% - 100px);
 }
 .nz-dialog .el-dialog__body {
   padding: 0 20px 30px 20px;

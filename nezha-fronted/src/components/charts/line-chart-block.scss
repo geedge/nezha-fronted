@@ -29,6 +29,9 @@
   line-height: 18px;
   font-family: Roboto,Helvetica Neue,Arial,sans-serif;
 }
+.legend-container-screen.legend-container {
+  height: 115px;
+}
 .legend-item{
   text-overflow:ellipsis;
   white-space:nowrap;
@@ -107,12 +110,12 @@
 }
 .line-chart-block-modal {
   .el-dialog{
-    height:480px;
+    height: 80%;
   }
   .line-area {
     box-sizing: border-box;
     background: #FFF;
-    min-height: 95px;
+    height: 100%;
     span.highcharts-title {/*针对highcharts设置的样式，echarts需要修改？？*/
       display: block !important;
       width: 50%;
@@ -135,4 +138,8 @@
   .pt10{
     padding-top:10px;
   }
+  .el-dialog__body {
+    height: calc(100% - 200px);
+  }
+
 }

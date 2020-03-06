@@ -260,7 +260,7 @@
   /*去除上传文件动画end*/
 </style>
 <style>
-  .el-dialog__body{
+  .export-xlsx .el-dialog__body{
     padding: 10px 20px 20px 20px;
   }
   .export-xlsx .el-button:focus, .export-xlsx .el-button:hover {
@@ -291,7 +291,7 @@
     position: relative;
     top:-2px;
   }
-  .el-dropdown .el-dropdown__caret-button {
+  .export-xlsx .el-dropdown .el-dropdown__caret-button {
     padding-left: 5px;
     padding-right: 5px;
     border-left: none;
@@ -326,7 +326,7 @@
     font-weight: bold;
   }
   /**dialog 在视图中居中显示start*/
-  .el-dialog{
+  .export-xlsx .el-dialog{
     display: flex;
     flex-direction: column;
     margin:0 !important;
@@ -338,7 +338,7 @@
     max-height:calc(100% - 30px);
     max-width:calc(100% - 30px);
   }
-  .el-dialog .el-dialog__body{
+  .export-xlsx .el-dialog .el-dialog__body{
     flex:1;
     overflow: auto;
   }
