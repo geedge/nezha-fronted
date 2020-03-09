@@ -352,7 +352,7 @@
         this.$refs.addChartModal.editData(data, this.showPanel.id);
       },
       // 移除图表:弹出确认框询问
-      removeData(data) {
+      removeData(data,from) {
         this.$confirm(this.$t("tip.confirmDelete"), {
           confirmButtonText: this.$t("tip.yes"),
           cancelButtonText: this.$t("tip.no"),
@@ -361,11 +361,18 @@
           this.$delete("panel/" + data.panelId + "/charts?ids=" + data.id).then(response => {
             if (response.code === 200) {
               this.$message({
-                duration: 1000,
+                duration: 2000,
                 type: 'success',
                 message: this.$t("tip.deleteSuccess")
               });
-              this.getTableData(); //删除相关图表后，刷新面板数据
+                let chartList=this.$refs.chartList.dataList;
+                for (let i =0;i< chartList.length;i++){
+                  if(chartList[i].id === data.id){
+                    chartList.splice(i,1);
+                    break;
+                  }
+                }
+                // this.getTableData(); //删除相关图表后，刷新面板数据
             } else {
               this.$message.error(response.msg);
             }

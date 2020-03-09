@@ -145,7 +145,7 @@
               &nbsp;
               <span :title="$t('overall.edit')" @click="toEditEndpoint(scope.row)" class="content-right-option" :id="'edp-edit-'+scope.row.id"><i class="nz-icon nz-icon-edit"></i></span>
             </div>
-<!--            <span v-else-if="item.prop == 'lastUpdate'">{{dateFormat(scope.row.lastUpdate)}}</span>-->
+            <span v-else-if="item.prop == 'lastUpdate'">{{dateFormat(scope.row.lastUpdate)}}</span>
             <span v-else-if="item.prop == 'state'" >
               <el-popover placement="right" width="50" trigger="hover" :content="(scope.row.state == '1'?'up':'down')+'['+(scope.row.lastUpdate&&scope.row.lastUpdate!=''?(new Date(scope.row.lastUpdate).getHours()+':'+new Date(scope.row.lastUpdate).getMinutes()):'--')+']'">
                 <div slot="reference" style="width: 20px">
@@ -222,7 +222,7 @@
 <!--          </button>-->
         </div>
       </div>
-      <div class="table-header-inner" @click="clearSelectedMetrics"><span><i class="nz-icon nz-icon-duoxuan " :class="{'control-icon-unchecked':selectedEndpoints.length<1,'control-icon-checked':selectedEndpoints.length>0}"></i></span></div>
+      <div class="table-header-inner" @click="clearSelectedMetrics"><span><i style="font-size: 12px;margin-left: 2px;" class="nz-icon nz-icon-close " :class="{'control-icon-unchecked':selectedEndpoints.length<1,'control-icon-checked':selectedEndpoints.length>0}"></i></span></div>
       <el-table
         v-loading="queryEdpLoading"
         :data="showTableData"
@@ -257,7 +257,8 @@
               </div>
               <span slot="reference"><i class="nz-icon nz-icon-info-normal metric-tip-icon"></i></span>
             </el-popover>
-            <span>{{hideSameLabels?scope.row.simpleElement: scope.row.element}}</span>
+            <span v-html="hideSameLabels?scope.row.colorSimpleElement: scope.row.colorElement"></span>
+<!--            <span>{{hideSameLabels?scope.row.simpleElement: scope.row.element}}</span>-->
           </template>
         </el-table-column>
         <el-table-column
@@ -373,11 +374,13 @@
             label: this.$t("alert.list.state"),
             prop: 'state',
             show: true,
-          },{
+          },
+          {
             label: this.$t("project.endpoint.lastUpdate"),
             prop: 'lastUpdate',
-            show: false,
-          }, {
+            show: true,
+          },
+          {
             label: this.$t('config.account.option'),
             prop: 'option',
             show: true,
@@ -1135,8 +1138,15 @@
               this.endpointQueryTabData=JSON.parse(JSON.stringify(results));
               for (let result of results){
                 // {"metric":{"instance":"192.168.40.126:9100","__name__":"scrape_duration_seconds","module":"node_exporter","project":"kafka","asset":"192.168.40.126","job":"ed_1","dc":"dc5"},"value":[1580782176.522,"0.000560761"]}
-                let temp=result.metric.__name__;
-                let simpleTemp=result.metric.__name__;//显示简略信息：隐藏same labels后的结果
+                let metricName=result.metric.__name__;
+                let temp=metricName;
+                let simpleTemp=metricName;//显示简略信息：隐藏same labels后的结果
+                let metricColor="";
+                let bracketsColor="#eb7b18";//#eb7b18
+                let labelColor="#65bbd1";//#66d9ef
+                let valueColor="#61c261";//#74e680
+                let colorTemp=`<span style="${metricColor}">${metricName}</span>`;
+                let colorSimpleTemp=`<span>${metricName}</span>`;
                 let metricTip={};
                 let queryInfos=(this.elementMetricDatas.filter((item)=>{
                   return item.metric===temp;
@@ -1149,20 +1159,37 @@
                 delete result.metric.__name__;
                 temp+="{";
                 simpleTemp+="{";
-                for (let key in result.metric){
+                colorTemp+=`<span style="color: ${bracketsColor}">{</span>`;
+                colorSimpleTemp+=`<span style="color: ${bracketsColor}">{</span>`;
+                let keys=Object.keys(result.metric);
+                for (let index in keys){
+                  let key=keys[index];
                   temp+=key +"='"+result.metric[key]+"',";
+                  colorTemp +=`<span style="color: ${labelColor}">${key}</span>=<span style="color: ${valueColor}">'${result.metric[key]}'</span>,`;
                   if(!this.sameLabels.some((i)=>{return i == key})){
                     simpleTemp+=key +"='"+result.metric[key]+"',";
+                    colorSimpleTemp+=`<span style="color: ${labelColor}">${key}</span>=<span style="color: ${valueColor}">'${result.metric[key]}'</span>,`;
                   }
                 }
-                temp=temp.charAt(temp.length-1) == ","?temp.substr(0,temp.length-1):temp;
-                simpleTemp=simpleTemp.charAt(simpleTemp.length-1) == ","?simpleTemp.substr(0,simpleTemp.length-1):simpleTemp;
+                temp=temp.substr(0,temp.length-1);
+                simpleTemp=simpleTemp.substr(0,simpleTemp.length-1);
+                colorTemp=colorTemp.substr(0,colorTemp.length-1);
+                colorSimpleTemp=colorSimpleTemp.substr(0,colorSimpleTemp.length-1);
+
                 temp+="}";
                 simpleTemp+="}";
+                colorTemp+=`<span style="color: ${bracketsColor}">}</span>`;
+                colorSimpleTemp+=`<span style="color: ${bracketsColor}">}</span>`;
                 if(!/.+\{.+\}/.test(simpleTemp)){
                   simpleTemp=simpleTemp.substr(0,simpleTemp.length-2);
                 }
-                let edpQueryData={element:temp,simpleElement:simpleTemp,value:result.value[1],type:(result.metric.type?result.metric.type:'2'),metricTip:metricTip};
+
+                if(!/.+\{<\/span><span.+?>.+?\}/.test(colorSimpleTemp)){
+                  let metricReg=new RegExp("<span.*?>"+metricName+"<\/span>")
+                  colorSimpleTemp=metricReg.exec(colorSimpleTemp)[0];
+                }
+
+                let edpQueryData={element:temp,simpleElement:simpleTemp,colorElement:colorTemp,colorSimpleElement:colorSimpleTemp, value:result.value[1],type:(result.metric.type?result.metric.type:'2'),metricTip:metricTip};
                 this.showTableData.push(edpQueryData);
               }
               this.showTableDataCopy=JSON.stringify(this.showTableData);
@@ -1301,53 +1328,60 @@
         axios.all(axiosArr).then(res =>{
           res.forEach((response,promIndex)=>{
             if (response.status == 200) {
-              let queryData=response.data.data.result[0];
-              if(queryData){
-                let chartData={
-                  type:"line",
-                  symbol:'none',  //去掉点
-                  smooth:true,  //曲线变平滑
-                };
-                chartData.name=queryData.metric.__name__;
-                let alias=queryData.metric.__name__;
-                delete queryData.metric.__name__;
-                chartData.name+="{";
-                alias+="{";
-                Object.keys(queryData.metric).forEach((item,index)=>{
-                  let label=item;
-                  let value=queryData.metric[label];
-                  chartData.name+=label +"='"+value+"',";
-                  if(!this.sameLabels.some((i)=>{return i == label})){
-                    alias+=label +"='"+value+"',";
+              if(response.data.status == 'success'){
+                let queryData=response.data.data.result[0];
+                if(queryData){
+                  let chartData={
+                    type:"line",
+                    symbol:'none',  //去掉点
+                    smooth:true,  //曲线变平滑
+                  };
+                  chartData.name=queryData.metric.__name__;
+                  let alias=queryData.metric.__name__;
+                  delete queryData.metric.__name__;
+                  chartData.name+="{";
+                  alias+="{";
+                  Object.keys(queryData.metric).forEach((item,index)=>{
+                    let label=item;
+                    let value=queryData.metric[label];
+                    chartData.name+=label +"='"+value+"',";
+                    if(!this.sameLabels.some((i)=>{return i == label})){
+                      alias+=label +"='"+value+"',";
+                    }
+                  })
+                  chartData.name=chartData.name.charAt(chartData.name.length-1) == ","?chartData.name.substr(0,chartData.name.length-1):chartData.name;
+                  alias=alias.charAt(alias.length-1) == ","?alias.substr(0,alias.length-1):alias;
+                  chartData.name+="}";
+                  alias+="}";
+                  if(!/.+\{.+\}/.test(alias)){
+                    alias=alias.substr(0,alias.length-2);
                   }
-                })
-                chartData.name=chartData.name.charAt(chartData.name.length-1) == ","?chartData.name.substr(0,chartData.name.length-1):chartData.name;
-                alias=alias.charAt(alias.length-1) == ","?alias.substr(0,alias.length-1):alias;
-                chartData.name+="}";
-                alias+="}";
-                if(!/.+\{.+\}/.test(alias)){
-                  alias=alias.substr(0,alias.length-2);
+                  let legend={
+                    name:chartData.name,
+                    alias:alias,
+                    showText:this.formatLegend(chartData.name)
+                  }
+                  this.legend.push(legend);
+                  this.isGrey.push(false);
+                  chartData.data=queryData.values.map((dpsItem, dpsIndex) => {
+                    return [dpsItem[0] * 1000, Number(dpsItem[1])];
+                  });
+                  this.chartDatas.push(chartData);
                 }
-                let legend={
-                  name:chartData.name,
-                  alias:alias,
-                  showText:this.formatLegend(chartData.name)
-                }
-                this.legend.push(legend);
-                this.isGrey.push(false);
-                chartData.data=queryData.values.map((dpsItem, dpsIndex) => {
-                  return [dpsItem[0] * 1000, Number(dpsItem[1])];
-                });
-                this.chartDatas.push(chartData);
+              }else{
+                this.$message.error(response.data.error)
+                console.error(response.data)
               }
             }
           })
             this.$nextTick(()=>{
-              this.graphChart.clear();
-              this.chartOptions.color=this.bgColorList;
-              this.chartOptions.series=this.chartDatas;
-              this.graphChart.setOption(this.chartOptions);//创建图表
-              this.$refs.chartScrollbar.update();
+              if(this.graphChart){
+                this.graphChart.clear();
+                this.chartOptions.color=this.bgColorList;
+                this.chartOptions.series=this.chartDatas;
+                this.graphChart.setOption(this.chartOptions);//创建图表
+                this.$refs.chartScrollbar.update();
+              }
             });
         })
       },

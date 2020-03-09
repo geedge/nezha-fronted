@@ -350,10 +350,12 @@
         }).then(() => {
           this.$delete("panel/"+this.panelId+"/charts?ids="+cloneChart.id).then(response => {
             if (response.code === 200) {
+              if(this.$refs.chartForm){
+                this.$refs.chartForm.resetFields();//清空表单
+              }
               this.esc();
               this.$message({duration: 1000, type: 'success', message: this.$t("tip.deleteSuccess")});
               //this.getTableData();//删除相关图表后，刷新面板数据---调用panel的方法刷新
-              this.$refs.chartForm.resetFields();//清空表单
               this.chart.id='';//不清除，再次打开创建图表，会显示删除按钮
               this.$emit('on-delete-success');
             } else {

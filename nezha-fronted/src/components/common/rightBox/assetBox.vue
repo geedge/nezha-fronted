@@ -386,7 +386,7 @@
           </div>
           <div class="line-100 asset-line"></div>
           <template v-if="accountSwitch">
-            <account-config-box v-for="(item,index) in assetData.accounts" :is-edit="!tabView" :account="item" :key="index" ref="accountConfigBox" @setValidateResult="setAccountValideResult"></account-config-box>
+            <account-config-box v-for="(item,index) in assetData.accounts" :is-edit="!tabView" :account="item" :key="index" ref="accountConfigBox" @setValidateResult="setAccountValideResult" :is-allowed-change-protocol="changeProtocolSwitch"></account-config-box>
           </template>
 
           <template v-if="!pageObj.id">
@@ -438,9 +438,13 @@
           accounts: [{
             id: '',
             authType: 1,
+            protocol:'SSH',
             user: '',
             pwd: '',
             port: '',
+            userTip:"",
+            passwordTip:'',
+            reloginPasswordTip:''
           }],
           exporter: 0
         },
@@ -600,7 +604,8 @@
         },
         formData:null,
         module:{},
-        accountValideResult:true
+        accountValideResult:true,
+        changeProtocolSwitch:true,
       }
     },
     /*computed: {
@@ -635,9 +640,13 @@
               id: '',
               user:"",
               authType:1,
+              protocol:'SSH',
               pwd:"",
               port:'',
               privateKey:'',
+              userTip:"",
+              passwordTip:'',
+              reloginPasswordTip:''
             });
           }
         }
@@ -645,6 +654,12 @@
       'assetData.exporter':function(n,o){
         if(parseInt(n) === 1){
           this.accountSwitch=true;
+          this.changeProtocolSwitch=false;
+          for(let account of this.assetData.accounts){
+            account.protocol='SSH';
+          }
+        }else{
+          this.changeProtocolSwitch=true;
         }
       }
     },
@@ -817,9 +832,13 @@
           accounts: [{
             id: '',
             authType: 1,
+            protocol: 'SSH',
             user: '',
             pwd: '',
             port: '',
+            userTip:"",
+            passwordTip:'',
+            reloginPasswordTip:''
           }]
         };
         this.assetType = '';

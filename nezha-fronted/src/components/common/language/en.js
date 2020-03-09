@@ -258,6 +258,12 @@ const en = {
       loginType:'Login type',//'登录类型'
       password:'Password',//'密码'
       ssh:'SSH key',//'SSH-Key'
+      protocol:"Protocol",
+      sshProtocol:"SSH",
+      telnetProtocol:"Telnet",
+      userTip:"UserTip",
+      passwordTip:"PasswordTip",
+      reloginPasswordTip:"Relogin",
       account:'User name',//'用户名'
       port:'Port',//'端口'
       upload:'Upload',//'上传'
@@ -475,7 +481,7 @@ const en = {
       param: 'Parameter',//"参数"
       path: 'Path',//"路径"
       asset: 'Device',//"设备"
-      lastUpdate: 'Last update time',//"最后更新时间"
+      lastUpdate: 'Last Reply',//"最后更新时间"
       moduleParameter: 'Module',//"组件参数"
       addGraph: 'View Graph', //添加图标
       element: 'Element',

@@ -416,7 +416,7 @@ export default {
       return bus.timeFormate(newDate, 'yyyy-MM-dd hh:mm:ss');
     },
     // 删除图表
-    removeChart(chartId) {
+    removeChart(chartId) { //from 区分从哪里点击的删除 1.从图表面板 2.从编辑框
       const chart = this.dataList.find(item => item.id === chartId);
       if (chart) {
         this.$emit('on-remove-chart', chart);
