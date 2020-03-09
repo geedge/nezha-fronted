@@ -23,7 +23,7 @@ axios.interceptors.request.use(config => {
 axios.interceptors.response.use(
     response => {
       if(response.status === 200){
-        if(response.data.code == 101007) {
+        if(response.data.code == 518008) {
           window.location.href = "/";
           /*router.push({
             path: "/login"

@@ -164,7 +164,7 @@
           border
           ref="cabTable"
           v-scrollBar:el-table
-          height="calc(100% - 125px)"
+          :height="$tableHeight.normal"
           style="width: 100%;">
           <el-table-column
             :resizable="false"

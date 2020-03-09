@@ -1,9 +1,11 @@
 <template>
-  <div id="app">
-    <keep-alive>
-      <router-view style="height: 100%"/>
-    </keep-alive>
-  </div>
+  <el-scrollbar class="app">
+    <div id="app">
+      <keep-alive>
+        <router-view style="height: 100%"/>
+      </keep-alive>
+    </div>
+  </el-scrollbar>
 </template>
 
 <script>
@@ -20,8 +22,17 @@ export default {
 
 <style scoped>
 #app{
-    height: 100%;
-    width: 100%;
-    overflow: hidden;
+  height: 100%;
+  width: 100%;
+  min-width: 1400px;
 }
+</style>
+<style>
+  .app {
+    height: 100%;
+    overflow-y: hidden;
+  }
+  .app>.el-scrollbar__wrap>.el-scrollbar__view {
+    height: 100%;
+  }
 </style>

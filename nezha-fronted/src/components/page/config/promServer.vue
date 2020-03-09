@@ -30,7 +30,7 @@
           </div>
         </div>
       </div>
-      <el-table :data="tableData" border height="calc(100% - 125px)" style="width: 100%;" ref="promTable" class="nz-table" v-scrollBar:el-table>
+      <el-table :data="tableData" border :height="$tableHeight.normal" style="width: 100%;" ref="promTable" class="nz-table" v-scrollBar:el-table>
         <el-table-column :resizable="false" v-for="(item, index) in tablelable" v-if="item.show" :width="item.width"
                          :key="`col-${index}`" :label="item.label">
           <template slot-scope="scope" :column="item">

@@ -35,7 +35,7 @@
         border
         ref="alertRuleTable"
         tooltip-effect="light"
-        height="calc(100% - 125px)"
+        :height="$tableHeight.normal"
         v-scrollBar:el-table
         style="width: 100%;">
         <el-table-column

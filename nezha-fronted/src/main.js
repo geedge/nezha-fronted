@@ -63,6 +63,10 @@ Vue.prototype.$post = post;
 Vue.prototype.$get = get;
 Vue.prototype.$put = put;
 Vue.prototype.$delete = del;
+Vue.prototype.$tableHeight = { //列表页表格的高度
+  normal: 'calc(100% - 100px)',  //常规高度，特例在下方定义
+  endpointQuery: 'calc(100% - 60px)', //特例：endpoint query页，没有翻页组件
+};
 Vue.prototype.toTop = (type, wrap) => { //top按钮公共方法
   if (type == 'el') {
     let currentTop = wrap.scrollTop;

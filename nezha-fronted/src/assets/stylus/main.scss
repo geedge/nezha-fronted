@@ -6,14 +6,13 @@ body {
 }
 html {
   height: 100%;
+  overflow: hidden;
 }
 li{
   list-style-type:none ;
 }
 .content-box {
-  height: 100%;
-  min-width: 1430px;
-  overflow-x: scroll;
+  height: calc(100% - 53px);
 }
 
 .nz-icon-gear:before {
@@ -149,8 +148,8 @@ li{
   bottom: 10px;
   right: 23px;
   border-radius: 5px;
-  height: 31px;
-  width: 35px;
+  height: 40px;
+  width: 40px;
   border: none;
   cursor: pointer;
   opacity: 0.5;
@@ -378,7 +377,7 @@ li{
   width: 200px;
   height: 100%;
   border-right: 1px solid #eeeeee;
-  padding: 0 16px 0 15px;
+  padding: 0 0 0 15px;
   box-sizing: border-box;
 }
 .sidebar-title {
@@ -387,7 +386,7 @@ li{
   font-size: 14px;
 }
 .sidebar-info {
-  height: calc(90vh - 55px);
+  height: 100%;
   width: 100%;
   padding-top: 24px;
   font-size: 14px;
@@ -413,6 +412,7 @@ li{
 .side-bar-menu-edit {
   line-height: 20px;
   float: right;
+  margin-right: 12px;
 }
 .side-bar-menu-edit>i, .sidebar-info-item .el-checkbox__label .checkbox-edit i {
   font-size: 12px;
@@ -441,7 +441,6 @@ li{
   margin-left: 201px;
   padding: 0 15px;
   background-color: $content-right-background-color;
-  overflow-x: scroll;
 }
 .content-right-option {
   cursor: pointer;
@@ -492,6 +491,9 @@ li{
   font-size: 12px;
 }
 .nz-table.el-table::before {
+  height: 0;
+}
+.nz-table .el-table__fixed-right::before, .nz-table .el-table__fixed::before {
   height: 0;
 }
 .nz-table.el-table--border::after, .nz-table.el-table--group::after {

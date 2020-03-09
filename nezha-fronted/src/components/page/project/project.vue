@@ -31,25 +31,28 @@
 </style>
 <template>
   <div class="project">
+
     <div class="content-left">
-      <div class="sidebar-title too-long-split">{{$t('project.project.project')}}：{{currentProject.name}}</div>
-      <div class="sidebar-info">
-        <div
-          v-for="item in moduleList"
-          class="sidebar-info-item"
-          :class="{'sidebar-info-item-active': item.id == currentModule.id}"
-          @click="changeModule(item)"
-          :id="'project-module-'+item.id"
-        >
-          <div class="sidebar-info-item-txt">
-            <el-popover v-if="item.name.length > 16" trigger="hover" placement="top-start" :content="item.name" >
-              <span slot="reference">{{item.name}}</span>
-            </el-popover>
-            <span v-else>{{item.name}}</span>
+      <el-scrollbar ref="leftScrollbar" style="height: 100%">
+        <div class="sidebar-title too-long-split">{{$t('project.project.project')}}：{{currentProject.name}}</div>
+        <div class="sidebar-info">
+          <div
+            v-for="item in moduleList"
+            class="sidebar-info-item"
+            :class="{'sidebar-info-item-active': item.id == currentModule.id}"
+            @click="changeModule(item)"
+            :id="'project-module-'+item.id"
+          >
+            <div class="sidebar-info-item-txt">
+              <el-popover v-if="item.name.length > 16" trigger="hover" placement="top-start" :content="item.name" >
+                <span slot="reference">{{item.name}}</span>
+              </el-popover>
+              <span v-else>{{item.name}}</span>
+            </div>
+            <div class="hid-div side-bar-menu-edit " @click.stop="toEditModule(item)" :id="'project-module-edit-'+item.id" ><i class="nz-icon nz-icon-edit"></i></div>
           </div>
-          <div class="hid-div side-bar-menu-edit " @click.stop="toEditModule(item)" :id="'project-module-edit-'+item.id" ><i class="nz-icon nz-icon-edit"></i></div>
         </div>
-      </div>
+      </el-scrollbar>
     </div>
 
     <!--metrics-->
@@ -120,7 +123,7 @@
         :data="endpointTableData"
         border
         class="nz-table endpoint-table"
-        height="calc(100% - 125px)"
+        :height="$tableHeight.normal"
         v-scrollBar:el-table
         ref="endpointTable"
         style="width: 100%;">
@@ -230,7 +233,7 @@
         v-scrollBar:el-table
         class="nz-table endpoint-query-table"
         :header-cell-class-name="cellClass"
-        height="calc(100% - 92px)"
+        :height="$tableHeight.endpointQuery"
         @selection-change="selectChange"
         ref="metricInfoTab"
         style="width: 100%;">
@@ -1584,6 +1587,11 @@
           });
         }
       });
+      //resize时刷新左侧列表滚动条
+      let _this = this;
+      window.onresize = function() {
+        _this.$refs.leftScrollbar.update();
+      }
 
       this.tablelable = localStorage.getItem("nz-tableTitle-" + localStorage.getItem("nz-username") + "-" + this.$route.path)
         ? JSON.parse(localStorage.getItem("nz-tableTitle-" + localStorage.getItem("nz-username") + "-" + this.$route.path))
@@ -1631,6 +1639,9 @@
           temp.tableFilter();
         },100)
       },
+    },
+    destroyed() {
+      window.onresize = null;
     }
   }
 </script>
