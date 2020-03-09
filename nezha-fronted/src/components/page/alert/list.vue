@@ -295,6 +295,9 @@
       pageSize(val) {
         this.pageObj.pageSize = val;
         this.getAlertList();
+        this.$nextTick(() => {
+          this.gutterHandler(".nz-table");
+        });
       },
       search: function (searchObj) {
         this.searchLabel = {};
@@ -368,6 +371,9 @@
             }
           });
         }
+        this.$nextTick(() => {
+          this.gutterHandler(".nz-table");
+        });
       });
       this.tablelable = localStorage.getItem("nz-tableTitle-" + localStorage.getItem("nz-username") + "-" + this.$route.path)
         ? JSON.parse(localStorage.getItem("nz-tableTitle-" + localStorage.getItem("nz-username") + "-" + this.$route.path))

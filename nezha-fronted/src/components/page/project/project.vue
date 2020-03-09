@@ -939,6 +939,9 @@
       endpointPageSize(val) {
         this.endpointPageObj.pageSize = val;
         this.getEndpointTableData();
+        this.$nextTick(() => {
+          this.gutterHandler(".endpoint-table");
+        });
       },
       metricsPageNo(val) {
         this.metricPageObj.pageNo = val;
@@ -1220,6 +1223,9 @@
         this.tableShow=1;
         this.selectedEndpoints=[];
         this.showTopBtn1 = false;
+        this.$nextTick(() => {
+          this.gutterHandler(".endpoint-table");
+        });
       },
       changeTime:function(size,unit){
         let time=this.getTime(size,unit);
