@@ -6,9 +6,9 @@
     <div id="shell-service-resize-mask"></div>
     <div id="shell-split" class="shell-split shell-iconfont" @mousedown="dragEagle" v-show="!isFullScreen">一</div>
     <div style='position: relative;border:solid 0px red;'>
-      <el-menu  mode="horizontal" @select="handleSelect" style='position: absolute;left:0px;top:0px;border: 1px solid #DCDFE6;'>
+      <el-menu  mode="horizontal" @select="handleSelect" style='position: absolute;left:0px;top:0px;border-top: 1px solid #DCDFE6;'>
         <el-submenu index="1"  style="width:40px;">
-          <template slot="title" ><i class="el-icon-setting " style="position: absolute;left: 10px;top: 9px;"></i></template>
+          <template slot="title" ><i class="el-icon-setting " style="position: absolute;left: 10px;top: 4px;"></i></template>
           <el-submenu index="1-1">
             <template slot="title">文字大小</template>
             <el-menu-item index="1-1-1">最小</el-menu-item>
@@ -23,7 +23,7 @@
           </el-submenu>
         </el-submenu>
         <el-submenu index="2" style="width:50px;">
-          <template slot="title" ><i class="el-icon-upload console-title-icon" style="position: absolute;left: 10px;top: 9px;"></i></template>
+          <template slot="title" ><i class="el-icon-upload console-title-icon" style="position: absolute;left: 10px;top: 4px;"></i></template>
           <el-menu-item index="2-1" @click="download">下载</el-menu-item>
           <el-menu-item index="2-2" @click="upload">上传</el-menu-item>
         </el-submenu>
@@ -33,7 +33,7 @@
                @tab-click="handleClick"
                @tab-remove="removeTab"
                :before-leave="beforeLeave"
-               style='width:100%'
+               style='width:100%;'
                type="border-card">
         <el-tab-pane v-for="(item, index) in editableTabs"
           :key="item.name"
@@ -41,8 +41,10 @@
           :name="item.name"
            closable
         >
-          <!-- tab显示的内容 -->
-          <span slot="label" > <i class="el-icon-aim"></i>{{item.title}}</span>
+          <!-- tab显示的内容 <div :class="{'active-icon green':scope.row.pingState == 1,'active-icon red':scope.row.pingState == 0}"></div>-->
+          <span slot="label" style="">
+            <div class="active-icon grey"  style="margin-top: 0px;"></div>{{item.title}}
+          </span>
           <my-console :terminal="item.terminal"  :ref="'console'+index"    @closeConsole="removeTab" :idIndex="index" :isFullScreen="isFullScreen"></my-console>
         </el-tab-pane>
         <el-tab-pane key="add" name="add">
@@ -122,6 +124,10 @@
         return uuid;
       },
       addConsole(id,host,accountId,port){
+        if(!id){id=''}
+        if(!host){host=''}
+        if(!accountId){accountId=''}
+        if(!port){port=''}
         let uuid = this.getUuid();
         let newTabName = ++this.tabIndex + '';
         let title = host;
@@ -159,6 +165,8 @@
             tabScroll[0].style.transform = "translateX(" + (viewWidth-scrollWidth) + "px) ";//71(
           }
         },10)
+
+        //this.$store.commit('addConsole');
       },
       show(id,host,accountId,port){
         this.addConsole(id,host,accountId,port);
@@ -175,9 +183,8 @@
       closeConsole(){
         //关闭所有连接
         this.editableTabs.forEach((tab, index) => {
-          this.$refs['console'+index][0].closeSocket();
+          this.$refs['console' + index][0].closeSocket();
         });
-
         this.editableTabs = [];
         this.editableTabsValue= '-1',//当前显示的consol
         this.tabIndex = -1
@@ -188,6 +195,8 @@
         let targetDiv= document.getElementById('shell-service');
         targetDiv.style.height=this.initConsoleHeight+'px';
         this.consoleHeight = this.initConsoleHeight;
+
+        this.$store.commit('closeConsole');
       },
       handleClick(){
 
@@ -210,6 +219,8 @@
         //关闭此console的链接
         //?????????????????
 
+        this.$store.commit('removeConsole');
+
         if(this.editableTabs.length<=0){
           this.closeConsole();
         }
@@ -222,11 +233,22 @@
           this.addTab()
           return false
         }else{
+          //切换tab
+          this.$nextTick(() => {
+            if (this.editableTabs && this.editableTabs.length > 0) {
+              this.editableTabs.forEach((tab, index) => {
+                if (tab.name === currentName) {
+                  this.$refs['console' + index][0].focusConsole();
+                }
+              });
+            }
+          });
           this.currentIndex=currentName;
         }
       },
       addTab(targetName) {
-        this.addConsole('','','','');
+        this.$store.commit('addConsoleNum');
+        this.addConsole();
 
       //<div role="tablist" class="el-tabs__nav is-top" style="transform: translateX(-1207.78px);">
         /*
@@ -252,6 +274,7 @@
       },
       minScreen(){
         this.consoleShow = false;
+        this.$store.commit('minConsole');
       },
       fullScreen(){
         //dialog全屏
@@ -317,7 +340,20 @@
         },
     },
     watch: {
-
+      '$store.state.consoleShow':function(val){
+        if(val){
+          if(this.$store.state.isAddConsole){
+            let id = this.$store.state.consoleParam.id;
+            let host = this.$store.state.consoleParam.host;
+            let accountId = this.$store.state.consoleParam.accountId;
+            let port = this.$store.state.consoleParam.port;
+            this.show(id,host,accountId,port);
+          }else {
+            this.consoleShow = true;
+          }
+          this.$store.state.consoleShow = false;
+        }
+      }
     },
     created() {
 

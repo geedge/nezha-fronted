@@ -1,6 +1,7 @@
 <style scoped>
   .console{
     height:305px;
+    padding:5px 5px;
     background-color: black;
   }
 </style>
@@ -152,6 +153,9 @@ term.toggleFullScreen();//全屏
         window.removeEventListener('resize',this.windowChange)
       }; */
     },
+    focusConsole(){
+      this.term.focus();
+    },
     create(){
       let that = this;
       let rows = this.termimalRows;
@@ -297,7 +301,9 @@ term.toggleFullScreen();//全屏
       }
       //初始化console的高度
       const consoleBox = document.getElementById('ternimalContainer'+this.idIndex);
-      consoleBox.style.height = `${this.termimalHeight}px`;
+      if(consoleBox){
+        consoleBox.style.height = `${this.termimalHeight}px`;
+      }
     },
   },
   mounted () {

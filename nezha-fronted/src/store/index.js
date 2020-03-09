@@ -34,7 +34,11 @@ const store = new Vuex.Store({
     showPanel:{
       id:0,
       name:''
-    }
+    },
+    consoleShow:false,//是否显示console窗口
+    consoleCount:0,//当前console窗口数
+    isAddConsole:false,//是否增加窗口
+    consoleParam:{},//新开console窗口参数
   },
   getters: {
   },
@@ -74,7 +78,39 @@ const store = new Vuex.Store({
     },
     assetForAlertListChange(state, data) { //asset跳转alertmsg时
       state.assetForAlertList = data;
-    }
+    },
+    openConsole(state){//打开console，如果当前窗口数为0，则默认新建一个console
+      state.consoleShow=true;
+      if(state.consoleCount===0){
+        state.consoleCount++;
+        state.isAddConsole = true;
+      }else {
+        state.isAddConsole = false;
+      }
+    },
+    addConsole(state,data){//打开console，并新建一个console
+      state.consoleShow=true;
+      state.consoleCount++;
+      state.isAddConsole = true;
+      state.consoleParam = data;
+    },
+    addConsoleNum(state){
+      state.consoleCount++;
+    },
+    removeConsole(state){//移除一个console，如果是最后一个，则关闭窗口，否则不关闭窗口
+      state.consoleCount--;
+      if(state.consoleCount===0){
+        state.consoleShow=false;
+      }
+    },
+    closeConsole(state){//关闭console窗口
+      state.consoleShow=false;
+      state.consoleCount = 0;
+      state.consoleParam ={};
+    },
+    minConsole(state){//最小化窗口
+      state.consoleShow=false;
+    },
   },
   actions: {
   }

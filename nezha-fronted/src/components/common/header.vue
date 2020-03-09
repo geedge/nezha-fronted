@@ -6,15 +6,27 @@
       mode="horizontal"
       active="1"
       unique-opened
-    >
+    ><!--
+      <el-submenu index="-1" >
+        <template slot="title" >
+          <div  @click="cli()" >
+            <i class="nz-icon nz-icon-cli"></i>
+          </div>
+        </template>
+      </el-submenu>-->
+      <el-menu-item :index="-1" >
+        <div @click="cli()" >
+          <i class="nz-icon nz-icon-cli"></i>
+          <!--
+          <div style="background-color:orangered;border-radius:38%;width:20px;height:15px;position:absolute;right:15px;top:8px;border:solid 0px red;">10+</div>
+        -->
+        </div>
+      </el-menu-item>
       <el-submenu index="0" popper-class="nz-submenu">
         <template slot="title">
-          <div class="menu-create">
             <div class="menu-icon-create">
              <i class="nz-icon-create-square nz-icon"></i>
             </div>
-            <div class='menu-create-title'>{{$t('overall.create')}}</div>
-          </div>
         </template>
         <template v-for="(item, index) in createMenu">
           <el-menu-item :index="'0-' + index">
@@ -137,7 +149,9 @@
   import changePwd from "../page/config/changePwd";
   export default {
     name: "Header",
-    components: {'change-password':changePwd},
+    components: {
+      'change-password':changePwd,
+    },
     data() {
       return {
         username: sessionStorage.getItem("nz-username"),
@@ -235,6 +249,9 @@
         if (flag && this.$route.path == "/asset") {
           window.location.reload();
         }
+      },
+      cli(){
+        this.$store.commit('openConsole');
       },
       jumpTo(data) {
         if (data != "asset") {
@@ -560,7 +577,31 @@
     height: 50px;
     line-height: 50px;
   }
-
+  /* top el-menu-item sytle------start*/
+  .header .el-menu--horizontal>.el-menu-item  {
+    height: 50px;
+  }
+  .header .el-menu--horizontal>.el-menu-item >div {
+    min-width: 80px;
+    text-align: center;
+    /*color:$header-text-color;*/
+    padding: 0;
+    height: 50px;
+    line-height: 50px;
+  }
+  .header .el-menu--horizontal>.el-menu-item i {
+    color: $header-text-color;
+  }
+  .header .el-menu--horizontal>.el-menu-item>div {
+    padding-left: 0px !important;
+  }
+  .header .el-menu--horizontal>.el-menu-item>div:hover {
+    background-color: $header-background-color-hover !important;
+  }
+  .header .el-menu--horizontal>.el-menu-item:not(.is-disabled):focus, .header .el-menu--horizontal>.el-menu-item:not(.is-disabled):hover {
+    background-color:transparent !important;
+  }
+  /* top el-menu-item sytle------end*/
   .el-menu.el-menu--horizontal {
     border-bottom: 0px;
   }

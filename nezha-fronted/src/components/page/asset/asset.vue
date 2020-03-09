@@ -199,7 +199,6 @@
       ref="elementset"
     ></element-set>
     <module-box :module="module" @reload="getAssetData" ref="moduleBox"></module-box>
-    <web-ssh ref="webSsh" ></web-ssh>
   </div>
 </template>
 
@@ -207,14 +206,12 @@
   import bus from "../../../libs/bus";
   import exportXLSX from "../../common/exportXLSX";
   import endpointStatusPop from "./endpointStatusPop";
-  import webSSH from "../../cli/webSSH";
 
   export default {
     name: "asset",
     components:{
       'export-excel':exportXLSX,
       'endpoint-status-pop':endpointStatusPop,
-      'web-ssh':webSSH,
     },
     data() {
       return {
@@ -517,7 +514,14 @@
           port = accounts[0].port;
           accountId = accounts[0].id;
         }
-        this.$refs.webSsh.show(id,host,accountId,port);
+        const consoleParam = {
+          id:id,
+          host:host,
+          accountId:accountId,
+          port:port,
+        }
+        this.$store.commit('addConsole',consoleParam);
+        //this.$refs.webSsh.show(id,host,accountId,port);
       },
       jumpToAlertMsg(assetId) {
         this.$store.commit('assetForAlertListChange', assetId);
