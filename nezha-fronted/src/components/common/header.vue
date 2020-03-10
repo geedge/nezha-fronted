@@ -6,26 +6,17 @@
       mode="horizontal"
       active="1"
       unique-opened
-    ><!--
-      <el-submenu index="-1" >
-        <template slot="title" >
-          <div  @click="cli()" >
-            <i class="nz-icon nz-icon-cli"></i>
-          </div>
-        </template>
-      </el-submenu>-->
+    >
       <el-menu-item :index="-1" >
         <div @click="cli()" >
           <i class="nz-icon nz-icon-cli"></i>
-          <!--
-          <div style="background-color:orangered;border-radius:38%;width:20px;height:15px;position:absolute;right:15px;top:8px;border:solid 0px red;">10+</div>
-        -->
+          <div class="right-tip" v-show="$store.state.consoleCount>0">{{$store.state.consoleCount<=10?$store.state.consoleCount:'10+'}}</div>
         </div>
       </el-menu-item>
-      <el-submenu index="0" popper-class="nz-submenu">
+      <el-submenu index="0" popper-class="nz-submenu" class="icon-menu-item">
         <template slot="title">
-            <div class="menu-icon-create">
-             <i class="nz-icon-create-square nz-icon"></i>
+            <div class="menu-icon-create ">
+             <i class="nz-icon-create-square nz-icon" ></i>
             </div>
         </template>
         <template v-for="(item, index) in createMenu">
@@ -36,6 +27,9 @@
           </el-menu-item>
         </template>
       </el-submenu>
+      <el-menu-item :index="-2" >
+        <div class="vertical-line" ></div>
+      </el-menu-item>
       <el-submenu index="1" popper-class="nz-submenu">
         <template slot="title">
           <div @click="jumpTo('panel')" :class ="(activeIndex == 'panel' || activeIndex == 'metricPreview') ? 'menu-active' :'' " >
@@ -577,12 +571,30 @@
     height: 50px;
     line-height: 50px;
   }
+  .header .el-menu--horizontal>.icon-menu-item .el-submenu__title {
+    min-width: 50px !important;
+    /*margin-right:20px;*/
+  }
+  .header .vertical-line{
+    display:inline-block;
+    border-left:solid 2px white;
+    line-height:30px !important;
+    height:30px !important;
+    min-width:0px !important;
+    color:white;
+    margin-right: 8px;
+    margin-left: 8px;
+    margin-top: -8px;
+  }
+  .header .vertical-line:hover{
+    cursor:default !important;
+  }
   /* top el-menu-item sytle------start*/
   .header .el-menu--horizontal>.el-menu-item  {
     height: 50px;
   }
   .header .el-menu--horizontal>.el-menu-item >div {
-    min-width: 80px;
+    min-width: 50px;
     text-align: center;
     /*color:$header-text-color;*/
     padding: 0;
@@ -600,6 +612,19 @@
   }
   .header .el-menu--horizontal>.el-menu-item:not(.is-disabled):focus, .header .el-menu--horizontal>.el-menu-item:not(.is-disabled):hover {
     background-color:transparent !important;
+  }
+  .header .right-tip{
+    vertical-align:middle;
+    line-height: 15px;
+    font-size:6px;
+    background-color:orangered;
+    opacity:0.9;color:#4c4c4c;
+    border-radius:7px;
+    min-width:25px;
+    height:15px;
+    position:absolute;
+    left: 25px;
+    bottom: 27px;
   }
   /* top el-menu-item sytle------end*/
   .el-menu.el-menu--horizontal {
