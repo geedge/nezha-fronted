@@ -152,6 +152,22 @@
               </el-col>
             </el-row>
 
+            <el-row :gutter="10">
+              <el-col :span="2">
+                <div class="label-center" >{{$t('dashboard.panel.chartForm.unit')}}</div>
+              </el-col>
+              <el-col :span="22">
+                <el-cascader filterable placeholder="" popper-class="chart-box-dropdown" size="small" style="width: 100%"
+                             :options="unitOptions"
+                             :props="{ expandTrigger: 'hover' }"
+                             :show-all-levels="false"
+                             v-model="chart.unit"
+                             @change="unitSelected"
+                >
+                </el-cascader>
+              </el-col>
+            </el-row>
+
             <div class="right-box-sub-title">{{$t('dashboard.panel.chartForm.metric')}}</div>
             <div class="line-100"></div>
 
@@ -193,7 +209,7 @@
 <script>
   import bus from '../../../libs/bus';
   import ChartMetric from "./chartMetric";
-
+  import chartDataFormat from '../../charts/chartDataFormat';
   export default {
     name: "chartBox",
     props: {
@@ -212,6 +228,7 @@
           type:'line',
           span:12,
           height:'400',
+          unit:1,
           elements:{
             id: '',
             expression: '',
@@ -237,6 +254,10 @@
           {
             id:"table",
             name:this.$t("dashboard.panel.chartForm.typeVal.table.label")
+          },
+          {
+            id:'stackArea',
+            name:this.$t("dashboard.panel.chartForm.typeVal.stackArea.label")
           }
         ],
         elements: [1], // 指标部分 tarNum
@@ -256,7 +277,8 @@
           id: '',
           name: ''
         },
-        heightSuggestions:['300','400','500','600']
+        heightSuggestions:['300','400','500','600'],
+        unitOptions:chartDataFormat.unitOptions(),
       }
     },
     components:{
@@ -313,7 +335,6 @@
         this.rightBox.title = title;
       },
       save() {
-        console.log(this.chart);
         this.$refs['chartForm'].validate((valid) => {
           if (valid) {
             if (this.chart.id) {//修改
@@ -491,6 +512,7 @@
               span: this.chart.span,
               height: this.chart.height,
               type: this.chart.type,
+              unit:this.chart.unit,
             };
 
             //生成指标数组
@@ -629,6 +651,7 @@
         this.chart.span = data.span;
         this.chart.height = data.height+'';
         this.chart.type = data.type;
+        this.chart.unit=data.unit
         this.getSuggestMetric();//获得指标列表
         // 指标
         this.elements = [];
@@ -651,6 +674,7 @@
         this.chart.type = 'line';
         this.chart.span = 12;
         this.chart.height = 400+'';
+        this.chart.unit=1;
         this.elements = [1];
         this.elementTarget = [];
         bus.chartAddInfo.metricTarget = [];
@@ -681,6 +705,9 @@
       },
       handleSelect:function(item){
         this.chart.height=item;
+      },
+      unitSelected:function(value){
+        this.chart.unit=value[value.length-1];
       }
     },
     created() {

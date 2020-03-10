@@ -89,6 +89,7 @@
   import echarts from 'echarts';
   import bus from '../../libs/bus';
   import loading from "../common/loading";
+  import chartDataFormat from './chartDataFormat'
 
   export default {
     name: 'lineChartBlock',
@@ -498,8 +499,21 @@
               }
             },
             formatter:function(params){
+              // let maxWidth=0;
+              let avgWidth=0;
+              let sumWidth=0;
+              params.forEach((item, i) => {
+                let tip=legend.find((element)=>{
+                  return element.name == item.seriesName;
+                })
+
+                let curLength=(tip.alias?tip.alias:tip.name).length;
+                // maxWidth=maxWidth>curLength?maxWidth:curLength;
+                sumWidth+=curLength;
+              })
+              avgWidth=sumWidth/params.length;
               //display:inline-block;white-space:nowrap;overflow-x:hidden;text-overflow:ellipsis;
-              let str = `<div   style='max-width:600px;display:inline-block;line-height: 18px;font-size:12px;font-family: Roboto,Helvetica Neue,Arial,sans-serif;'>`;
+              let str = `<div  style='width:${avgWidth*11}px;max-width:600px;display:inline-block;line-height: 18px;font-size:12px;font-family: Roboto,Helvetica Neue,Arial,sans-serif;'>`;
               params.forEach((item, i) => {
                 let tip=legend.find((element)=>{
                   return element.name == item.seriesName;
@@ -543,9 +557,9 @@
                 str +=seriesNameTmp+":"+val;
                  */
                 str += `<div style='max-width:510px;display:inline-block;white-space:nowrap;overflow-x:hidden;text-overflow:ellipsis;line-height: 18px;font-size:12px;font-family: Roboto,Helvetica Neue,Arial,sans-serif;'>`;
-
                 str +=`<span style='display:inline-block;margin-right:5px;border-radius:10px;width:15px;height:5px;background-color: ${item.color};}'></span>${tip.alias?tip.alias:tip.name}:  `;
                 str +=`</div>`;
+                // str +=`<div style="display: inline-block;max-width: 10px; min-width: 5px;line-height: 18px;"></div>`;
                 str += `<div style='max-width:90px;min-width:20px;float:right;text-align:right;display:inline-block;white-space:nowrap;overflow-x:hidden;text-overflow:ellipsis;line-height: 18px;font-size:12px;font-family: Roboto,Helvetica Neue,Arial,sans-serif;'>`;
                 str +=val;
                 str +=`</div>`;
@@ -670,35 +684,10 @@
               show:true
             },
             axisLabel: {
-              formatter: function(num,index) {
-                if (num >= 1000) {
-                  const kbNum = num / 1000;
-                  if (kbNum >= 1000) {
-                    const mbNum = kbNum / 1000;
-                    if (mbNum >= 1000) {
-                      const gbNum = mbNum / 1000;
-                      /*
-                      if (gbNum > 1000) {
-                        const tbNum = gbNum / 1000;
-                        if (tbNum > 1000) {
-                          const pbNum = tbNum / 1000;
-                          return `${pbNum.toFixed(2)}PB`;
-                        }
-                        return `${tbNum.toFixed(2)}TB`;
-                      }*/
-                      return `${parseFloat(gbNum.toFixed(2))}B`;
-                    }
-                    return `${parseFloat(mbNum.toFixed(2))}M`;
-                  }
-                  return `${parseFloat(kbNum.toFixed(2))}K`;
-                }else {
-                  let rlt = parseFloat(num.toFixed(2));
-                  if(rlt===0){
-                    return num;
-                  }else {
-                    return rlt;
-                  }
-                }
+              formatter: function(value,index){
+                let chartUnit=chartInfo.unit;
+                let unit=chartDataFormat.getUnit(chartUnit);
+                return unit.compute(value,index);
               },
             },
             //boundaryGap:[0,0.2]
@@ -1401,7 +1390,11 @@
       }, 500)
 */
     },
-    beforeDestroy() {},
+    beforeDestroy() {
+      if(this.echartStore){
+        this.echartStore.clear();
+      }
+    },
   };
 
 </script>

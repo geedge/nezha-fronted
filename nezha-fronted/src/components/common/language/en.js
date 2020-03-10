@@ -88,6 +88,7 @@ const en = {
         chartId:"ID",
         chartName:"Chart Name",
         type:"Type",
+        unit:"Unit",
         legend:'Legend',
         legendTip:'Controls the name of the time series, using name or pattern. For example {{hostname}} will be replaced with label value for the label hostname.',
         typeVal:{
@@ -99,6 +100,9 @@ const en = {
           },
           table:{
             label:'Table' //"表格"
+          },
+          stackArea:{
+            label:"Stack Area"
           }
         },
         width:'Width', //"宽"
@@ -261,9 +265,11 @@ const en = {
       protocol:"Protocol",
       sshProtocol:"SSH",
       telnetProtocol:"Telnet",
-      userTip:"UserTip",
-      passwordTip:"PasswordTip",
-      reloginPasswordTip:"Relogin",
+      userTip:"UserTip",//用户名提示
+      passwordTip:"PasswordTip",//密码提示
+      reloginPasswordTip:"Relogin",//密码提示
+      userPwdIntroduce:'Please specify a user name and password so that the telenet login process can automatically log in',
+      reLoginPwdIntroduce:'Please specify the password prompt so that the login process can run automatically',
       account:'User name',//'用户名'
       port:'Port',//'端口'
       upload:'Upload',//'上传'
@@ -488,7 +494,11 @@ const en = {
       value: 'Value',
       promExpr: 'Please input expression',
       dialogTitle:'View', //endpoint 弹出dialog 标题,
-      hideSameLabels:'Hide same labels'
+      hideSameLabels:'Hide same labels',
+      stateInfo_230009:'promserver available',
+      stateInfo_230010:'promserver can be used',
+      stateInfo_230011:'promserver can not beused ',
+
     },
     metrics: {
       metrics: 'Metrics',//"指标"

@@ -51,12 +51,18 @@
 
       <div class="telnet-option" v-show="isEdit && account.protocol=='TELNET'">
         <div class="telnet-option_title clickable" @click="isShowTelnetOption">login option<i style="font-size: 12px;"  :class="{'el-icon-arrow-left':!showTelnetOption,'el-icon-arrow-down':showTelnetOption}"></i></div>
-        <el-form-item :label="$t('asset.createAssetTab.userTip')" v-show="isEdit && account.protocol=='TELNET' && showTelnetOption">
+        <div v-show="isEdit && account.protocol=='TELNET' && showTelnetOption" class="auto-login-tip">
+          {{$t('asset.createAssetTab.userPwdIntroduce')}}
+        </div>
+        <el-form-item :label="$t('asset.createAssetTab.userTip')" v-show="isEdit && account.protocol=='TELNET' && showTelnetOption" >
           <el-input type="text" size="small" v-model="account.userTip" />
         </el-form-item>
         <el-form-item :label="$t('asset.createAssetTab.passwordTip')" v-show="isEdit && account.protocol=='TELNET' && showTelnetOption">
           <el-input type="text" size="small" v-model="account.passwordTip" />
         </el-form-item>
+        <div v-show="isEdit && account.protocol=='TELNET' && showTelnetOption" class="auto-login-tip">
+          {{$t('asset.createAssetTab.reLoginPwdIntroduce')}}
+        </div>
         <el-form-item :label="$t('asset.createAssetTab.reloginPasswordTip')" v-show="isEdit && account.protocol=='TELNET' && showTelnetOption">
           <el-input type="text" size="small" v-model="account.reloginPasswordTip" />
         </el-form-item>
@@ -209,5 +215,12 @@ export default {
     display: inline-block;
     vertical-align: middle;
     margin-bottom: 18px;
+  }
+  .auto-login-tip{
+    font-size: 12px;
+    margin-bottom: 18px;
+    color: #b4b4b4;
+    min-height: 18px;
+
   }
 </style>

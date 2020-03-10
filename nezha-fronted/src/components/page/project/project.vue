@@ -150,7 +150,7 @@
             </div>
             <span v-else-if="item.prop == 'lastUpdate'">{{dateFormat(scope.row.lastUpdate)}}</span>
             <span v-else-if="item.prop == 'state'" >
-              <el-popover placement="right" width="50" trigger="hover" :content="(scope.row.state == '1'?'up':'down')+'['+(scope.row.lastUpdate&&scope.row.lastUpdate!=''?(new Date(scope.row.lastUpdate).getHours()+':'+new Date(scope.row.lastUpdate).getMinutes()):'--')+']'">
+              <el-popover placement="right" width="50" trigger="hover" :content="getStateContent(scope.row)">
                 <div slot="reference" style="width: 20px">
                   <div :class="{'active-icon green':scope.row.state == '1','active-icon red':scope.row.state == '0'}"></div>
                 </div>
@@ -588,8 +588,20 @@
               return [x,y];
             },
             formatter:function(params){
+              let avgWidth=0;
+              let sumWidth=0;
+              params.forEach((item, i) => {
+                let tip=temp.legend.find((element)=>{
+                  return element.name == item.seriesName;
+                })
+
+                let curLength=(temp.hideSameLabels&&tip.alias?tip.alias:tip.name).length;
+                // maxWidth=maxWidth>curLength?maxWidth:curLength;
+                sumWidth+=curLength;
+              })
+              avgWidth=sumWidth/params.length;
               //display:inline-block;white-space:nowrap;overflow-x:hidden;text-overflow:ellipsis;
-              let str = `<div   style='max-width:600px;display:inline-block;line-height: 18px;font-size:12px;font-family: Roboto,Helvetica Neue,Arial,sans-serif;'>`;
+              let str = `<div   style='width:${avgWidth*10}px;max-width:600px;display:inline-block;line-height: 18px;font-size:12px;font-family: Roboto,Helvetica Neue,Arial,sans-serif;'>`;
               params.forEach((item, i) => {
                 let tip=temp.legend.find((element)=>{
                   return element.name == item.seriesName;
@@ -922,15 +934,15 @@
         });
       },
       getMetricsTableData() {
-        this.metricSearchLabel.moduleId = this.currentModule.id;
-        this.$set(this.metricSearchLabel, 'pageNo', this.metricPageObj.pageNo);
-        this.$set(this.metricSearchLabel, 'pageSize', this.metricPageObj.pageSize);
-        this.$get('metric', this.metricSearchLabel).then(response => {
-          if (response.code === 200) {
-            this.metricsTableData = response.data.list;
-            this.metricPageObj.total = response.data.total;
-          }
-        });
+        // this.metricSearchLabel.moduleId = this.currentModule.id;
+        // this.$set(this.metricSearchLabel, 'pageNo', this.metricPageObj.pageNo);
+        // this.$set(this.metricSearchLabel, 'pageSize', this.metricPageObj.pageSize);
+        // this.$get('metric', this.metricSearchLabel).then(response => {
+        //   if (response.code === 200) {
+        //     this.metricsTableData = response.data.list;
+        //     this.metricPageObj.total = response.data.total;
+        //   }
+        // });
       },
       endpointPageNo(val) {
         this.endpointPageObj.pageNo = val;
@@ -1423,20 +1435,6 @@
           return 'disabledCheck'
         }
       },
-      // 获取metric列表
-      getSuggestMetric() {
-        this.$get('metric', {pageNo: 1, pageSize: -1}).then(response => {
-          if (response.code === 200) {
-            this.metricList = response.data.list.map((item,index)=>{
-              item.__label__='metric';
-              return {key:item.metric,type:'metric'};
-            });
-          }else {
-            this.metricList = [];
-          }
-        })
-
-      },
       getPanelData() { //获取panel数据
         this.$get('panel?pageNo=1&pageSize=-1').then(response => {
           if (response.code === 200) {
@@ -1558,6 +1556,36 @@
           }
         }
       },
+      getStateContent:function(row){
+        if(row){
+          if(row.state == 1){
+
+            return 'up'+'['+this.formatUpdateTime(row.lastUpdate)+']';
+          }else{
+            return 'down'+'['+this.getStateErrorMsg(row)+']';
+          }
+        }
+      },
+      formatUpdateTime:function(date){
+        let time=new Date(date);
+        let hours=time.getHours()>9?time.getHours():'0'+time.getHours();
+        let minutes=time.getMinutes()>9?time.getMinutes():'0'+time.getMinutes();
+
+        return hours+':'+minutes;
+      },
+      getStateErrorMsg:function(row){
+        let errCodes=[230009,230010,230011];
+        if(row){
+          if(row.state == 0){
+            if(errCodes.find((item)=>{return row.stateInfo.code == item})){
+              return this.$t('project.endpoint.stateInfo_'+row.stateInfo.code)
+            }else{
+              return row.stateInfo.msg;
+              this.$message.error('state code error');
+            }
+          }
+        }
+      }
       /*gutterHandler() {
         setTimeout(() => {
           let gutterCol = document.querySelector(".endpoint-table col[name='gutter']");
@@ -1931,5 +1959,9 @@
   }
   .control-icon-checked{
     color:#666;
+  }
+  .dropdownBtn .el-dropdown__caret-button{
+    top:0px !important;
+    left:2px;
   }
 </style>

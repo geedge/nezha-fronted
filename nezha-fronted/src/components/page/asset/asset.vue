@@ -649,6 +649,7 @@
         if (data === 'showAdd') {
           //this.addUnitShow = true;
           this.editUnitShow = true;
+          this.$refs['assetEditUnit'].accountSwitch=false;
           this.$refs['assetEditUnit'].getAssetData('');
           this.$refs['assetEditUnit'].resetAsset();
         }

@@ -261,6 +261,11 @@ export default {
                         },
                         metric_name: '',
                       };
+                      if(chartInfo.type === 'stackArea'){
+                        seriesItem.theData.type='line';
+                        seriesItem.theData.stack='stack'
+                        seriesItem.theData.areaStyle={};
+                      }
                       // 图表中每条线的名字,后半部分
                       let host = '';//up,
                       if(queryItem.metric.__name__){
@@ -332,7 +337,7 @@ export default {
                   }
                 }
               });
-              if(this.$refs.editChart[index]) {
+              if(this.$refs.editChart&&this.$refs.editChart[index]) {
                 if (chartItem.type === 'table') {//表格
                   if (filterType === 'showFullScreen') {//table的全屏查询
                     this.$refs.editChart[index].setData(chartItem, tableData,
@@ -341,7 +346,7 @@ export default {
                     this.$refs.editChart[index].setData(chartItem, tableData,
                       this.filter.panelId, this.filter);
                   }
-                } else if (chartItem.type === 'line' || chartItem.type === 'bar' || chartItem.type === 4) {
+                } else if (chartItem.type === 'line' || chartItem.type === 'bar' || chartItem.type === 'stackArea' || chartItem.type === 4) {
                   if (series.length && chartItem.type === 4) {//曲线汇总
                     //series.push(sumData);//后续需要
                   }
@@ -365,7 +370,7 @@ export default {
                     this.$refs.editChart[index].setData(chartItem, [], this.filter.panelId,
                       this.filter);
                   }
-                } else if (type === 'line' || type === 'bar' || chartItem.type === 4) {
+                } else if (type === 'line' || type === 'bar' || type === 'stackArea' || chartItem.type === 4) {
                   if (filterType === 'showFullScreen') {//table的全屏查询
                     this.$refs.editChart[index].setData(chartItem, [], this.filter.panelId,
                       this.filter, filterType);
