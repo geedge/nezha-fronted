@@ -45,6 +45,9 @@
           <div class="sidebar-info-item sidebar-info-item-active"  id="account-jump-dc">
             {{$t('config.dc.dc')}}
           </div>
+          <div class="sidebar-info-item" @click="jumpTo('model')" id="account-jump-model">
+            {{$t('config.model.model')}}
+          </div>
         </div>
       </div>
       <!--dc table start-->
@@ -97,7 +100,7 @@
                 <template v-if="scope.row.area">{{scope.row.area.name}}</template>
                 <template v-else>-</template>
               </template>
-              <template v-else-if="item.prop == 'assetStat'">
+              <template v-else-if="item.prop == 'assetStat' && scope.row.assetStat">
                 <el-popover
                   placement="top"
                   trigger="hover"

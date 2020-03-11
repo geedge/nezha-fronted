@@ -7,7 +7,7 @@
       active="1"
       unique-opened
     >
-      <el-menu-item :index="-1" >
+      <el-menu-item :index="'-1'" >
         <div @click="cli()" >
           <i class="nz-icon nz-icon-cli"></i>
           <div class="right-tip" v-show="$store.state.consoleCount>0">{{$store.state.consoleCount<=10?$store.state.consoleCount:'10+'}}</div>
@@ -27,7 +27,7 @@
           </el-menu-item>
         </template>
       </el-submenu>
-      <el-menu-item :index="-2" >
+      <el-menu-item :index="'-2'" >
         <div class="vertical-line" ></div>
       </el-menu-item>
       <el-submenu index="1" popper-class="nz-submenu">

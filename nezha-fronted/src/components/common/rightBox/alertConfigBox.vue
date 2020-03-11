@@ -43,7 +43,7 @@
             </el-form-item>
             <!--expr-->
             <el-form-item :label="$t('alert.config.expr')" prop="expr">
-              <el-input maxlength="512" rows="4" show-word-limit v-if="rightBox.isEdit" type="textarea"  placeholder="" v-model="alertRule.expr" size="small"></el-input>
+              <el-input maxlength="512" rows="4" show-word-limit v-if="rightBox.isEdit" type="textarea" placeholder="" v-model="alertRule.expr" size="small"></el-input>
               <div v-if="!rightBox.isEdit" class="right-box-form-content-txt">{{alertRule.expr}}</div>
             </el-form-item>
             <!--last-->

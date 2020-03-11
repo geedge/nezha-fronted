@@ -15,6 +15,9 @@
         <div class="sidebar-info-item" @click="jumpTo('dc')" id="account-jump-dc">
           {{$t('config.dc.dc')}}
         </div>
+        <div class="sidebar-info-item" @click="jumpTo('model')" id="account-jump-model">
+          {{$t('config.model.model')}}
+        </div>
       </div>
     </div>
     <div class="content-right">

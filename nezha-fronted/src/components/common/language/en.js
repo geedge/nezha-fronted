@@ -16,6 +16,7 @@ const en = {
     edit: 'Edit', //'编辑'
     delete: 'Delete', //'删除'
     view: 'View',
+    type: 'Type',
     esc: 'Cancel', //'取消'
     cancel: 'Cancel', //'取消'
     save: 'Save', //'保存'
@@ -35,7 +36,7 @@ const en = {
     back: 'Back', //返回
     unavailable: 'Unavailable',
     available: 'Available',
-   changePwd:'Change Password',//修改密码
+    changePwd:'Change Password',//修改密码
     createChart:'create chart',
     createProject:'create project',
     createAsset:'create asset',
@@ -44,6 +45,7 @@ const en = {
     createPrometheusServer:'create prometheus server',
     createDatacenter:'create datacenter',
     createCabinet:'create cabinet',
+    createModel:'create model',
     exportExcel:'Export',
     importExcel:'Import',
     importExcelLower:'import',
@@ -411,6 +413,14 @@ const en = {
       cabinetNum: "Cabinet number",
       assets: "Assets",
       remark:'Remark',
+    },
+    model: {
+      model: 'Model',
+      vendor: 'Vendor',
+      assets: "Assets",
+      editModel: 'Edit model',
+      createModel: 'Create model',
+      remark: 'Remark'
     }
   },
   alert: {

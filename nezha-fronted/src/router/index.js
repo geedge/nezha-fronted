@@ -61,6 +61,10 @@ export default new Router({
           component: resolve => require(['../components/page/config/dc.vue'], resolve),
         },
         {
+          path: '/model',
+          component: resolve => require(['../components/page/config/model.vue'], resolve),
+        },
+        {
           path: '/alertList',
           component: resolve => require(['../components/page/alert/list.vue'], resolve),
         },

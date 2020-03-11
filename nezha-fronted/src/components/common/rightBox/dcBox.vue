@@ -111,51 +111,6 @@
           ],
         },
         areaData: [],
-        data: {
-          code: 200,
-          msg: "success",
-          data: {
-            list: [{
-              id: 1,
-              pid: 0,
-              name: "astana",
-              longitude: 100.3,
-              latitude: 24.3,
-              i18n:{en:'astana',cn:'阿斯塔纳'},
-              children: [{
-                id: 2,
-                pid: 1,
-                name: "qu",
-                longitude: 100.3,
-                latitude: 24.3,
-                i18n:{en:'qu',cn:'阿斯塔纳一个区'},
-                children: [{
-                  id: 3,
-                  pid: 2,
-                  name: "qu2",
-                  longitude: 100.3,
-                  latitude: 24.3,
-                  i18n:{en:'qu2',cn:'阿斯塔纳二个区'}}
-                ]
-              }, {
-                id: 4,
-                pid: 0,
-                name: "alamutu",
-                longitude: 100.3,
-                latitude: 24.3,
-                i18n:{en:'alamutu',cn:'阿拉木图'},
-                children: [{
-                  id: 5,
-                  pid: 4,
-                  name: "qu3",
-                  longitude: 100.3,
-                  latitude: 24.3,
-                  i18n: {en: 'qu3', cn: '阿拉木图一个区'}
-                }]
-              }]
-            }]
-          }
-        },
       }
     },
     methods: {

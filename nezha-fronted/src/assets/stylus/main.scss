@@ -650,10 +650,8 @@ li{
 }
 
 /*此处自定义弹框尺寸，不同功能可能需要的尺寸不一样，需自行添加*/
-.right-box-account, .right-box-prom, .right-box-alert-config, .right-box-project, .right-box-module, .right-box-edit-endpoint, .right-box-panel, .right-box-dc {
-  width: 520px;
-}
-.right-box-add-asset, .right-box-add-chart {
+.right-box-account, .right-box-prom, .right-box-alert-config, .right-box-project, .right-box-module,
+.right-box-edit-endpoint, .right-box-panel, .right-box-dc, .right-box-model, .right-box-add-asset, .right-box-add-chart {
   width: 520px;
 }
 .right-box-chart .el-input__inner, .right-box-chart input {
@@ -663,7 +661,7 @@ li{
   width: 850px;
 }
 .right-box-cabinet{
-  width:400px
+  width: 400px
 }
 /* begin--右侧弹框--顶部按钮*/
 .right-box-top-btns {
