@@ -580,7 +580,7 @@
   }
   .header .vertical-line{
     display:inline-block;
-    border-left:solid 2px white;
+    border-left:solid 1px white;
     line-height:30px !important;
     height:30px !important;
     min-width:0px !important;
@@ -620,14 +620,15 @@
     vertical-align:middle;
     line-height: 15px;
     font-size:6px;
-    background-color:orangered;
-    opacity:0.9;color:#4c4c4c;
+    background-color:#ba3939;
+    opacity:0.9;
     border-radius:7px;
     min-width:25px;
     height:15px;
     position:absolute;
     left: 25px;
     bottom: 27px;
+    color:white;
   }
   /* top el-menu-item sytle------end*/
   .el-menu.el-menu--horizontal {

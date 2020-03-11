@@ -66,6 +66,14 @@ const en = {
   },
   webshell:{
     shellTitle:'Local Shell',
+    upload:'Upload',
+    download:'DownLoad',
+    uploadTitle:'Upload',
+    downloadTitle:'DownLoad',
+    uploadButtonTitle:'Upload',
+    fileSelect:'select',
+    downloadButtonTitle:'Download',
+    filePath:'file path',
   },
   dashboard:{
     title:'Dashboard',

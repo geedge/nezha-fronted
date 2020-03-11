@@ -39,6 +39,14 @@ const cn = {
   },
   webshell:{
     shellTitle:'本地 Shell',
+    upload:'上传',
+    download:'下载',
+    uploadTitle:'上传',
+    downloadTitle:'下载',
+    uploadButtonTitle:'上传',
+    fileSelect:'选择',
+    downloadButtonTitle:'下载',
+    filePath:'文件路径',
   },
   dashboard:{
     title:'仪表盘',

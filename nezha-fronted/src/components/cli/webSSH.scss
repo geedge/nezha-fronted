@@ -5,7 +5,7 @@
   position: fixed;
   bottom: 0;
   background: #fff;
-  z-index: 9050;
+  z-index: 2000;
   height: 300px;
   #shell-service-resize-mask {
     position: fixed;
@@ -58,11 +58,10 @@
 
   .el-dialog {
     .el-dialog__body{
-      padding: 0px !important;
       overflow-x:hidden !important;/*防止console窗口x轴出现滚动条*/
     }
     .el-dialog__header{
-      padding: 0px !important;
+
     }
   }
   .el-tabs--border-card>.el-tabs__content {
@@ -113,6 +112,16 @@
 
   .el-submenu__title:hover{
     background-color:#FFF !important;
+  }
+
+  .upload-body{
+    text-align: center;
+  }
+  .footer:before{
+    /*content: '';*/
+    /*clear:both;*/
+    /*display: block;*/
+    /*height: 40px;*/
   }
 }
 .shell-service-max {

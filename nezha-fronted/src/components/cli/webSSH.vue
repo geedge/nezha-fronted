@@ -24,8 +24,12 @@
         </el-submenu>
         <el-submenu index="2" style="width:50px;">
           <template slot="title" ><i class="el-icon-upload console-title-icon" style="position: absolute;left: 10px;top: 4px;"></i></template>
-          <el-menu-item index="2-1" @click="download">下载</el-menu-item>
-          <el-menu-item index="2-2" @click="upload">上传</el-menu-item>
+          <el-menu-item index="2-1" @click="showUploadBox">
+              <div>{{$t('webshell.upload')}}</div>
+          </el-menu-item>
+          <el-menu-item index="2-2" @click="showDownloadBox">
+            <div>{{$t('webshell.download')}}</div>
+          </el-menu-item>
         </el-submenu>
       </el-menu>
 
@@ -62,12 +66,79 @@
       -->
       <!--el-icon-setting  el-icon-minus  el-icon-full-screen  el-icon-copy-document-->
     </div>
+
+    <div >
+      <el-dialog :visible.sync="uploadBox.showUpload" :title="uploadBox.title" :modal-append-to-body='false' :show-close="true" width="500px" @close="closeDialog" class="nz-dialog" >
+        <div >
+          <div class="upload-body">
+
+            <el-row >
+              <el-col :span="24">
+                <el-upload class="upload-demo"
+                           ref="uploadFile" action=""
+                           :file-list="uploadFileList"
+                           :on-change="handleChange"
+                           :auto-upload="false" >
+                  <button type="button" class="nz-btn nz-btn-size-normal nz-btn-style-normal">
+                    <span class="top-tool-btn-txt" >{{$t('webshell.fileSelect')}}</span>
+                  </button>
+                </el-upload>
+              </el-col>
+            </el-row>
+            <el-row style="margin-top: 20px;">
+              <el-col :span="3" style="text-align:center;line-height: 24px;">
+                <label>{{$t('webshell.filePath')}}</label>
+              </el-col>
+              <el-col :span="21">
+                <el-input v-model="uploadFile.path" size="mini"></el-input>
+              </el-col>
+            </el-row>
+          </div>
+          <div slot="footer" class="footer">
+            <div class="el-message-box__btns" style="text-align: right;margin-top: 20px;">
+              <button  @click="upload"  class="el-button el-button--default el-button--small">
+                <span>{{$t('webshell.uploadButtonTitle')}}</span>
+              </button>
+              <button @click="closeDialog"  class="el-button el-button--default el-button--small" >
+                <span>{{$t('overall.cancel')}}</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </el-dialog>
+      <el-dialog :visible.sync="downloadBox.showDownload" :title="downloadBox.title" :modal-append-to-body='false' :show-close="true" width="500px" @close="closeDownloadDialog" class="nz-dialog" >
+        <div>
+          <div class="upload-body">
+            <el-row style="margin-top: 20px;">
+              <el-col :span="3" style="text-align:center;line-height: 24px;">
+                <label>{{$t('webshell.filePath')}}</label>
+              </el-col>
+              <el-col :span="21">
+                <el-input v-model="downloadFile.path" size="mini"></el-input>
+              </el-col>
+            </el-row>
+          </div>
+          <div slot="footer" class="footer">
+            <div class="el-message-box__btns" style="text-align: right;margin-top: 20px;">
+              <button @click="download"  class="el-button el-button--default el-button--small">
+                <span>{{$t('webshell.downloadButtonTitle')}}</span>
+              </button>
+              <button  @click="closeDownloadDialog"  class="el-button el-button--default el-button--small">
+                <span>{{$t('overall.cancel')}}</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </el-dialog>
+    </div>
   </div>
 </template>
 
 <script>
   import Console from './console'
   import uuidv1 from "uuid/v1";
+  import axios from 'axios'
+
   export default {
     name: 'webSSH',
     components: {
@@ -81,39 +152,21 @@
         initConsoleHeight:300,//只读,初始化高度
         consoleHeight:300,
         currentTransform:0,
-        /*
-        terminal: {
-          //pid: 1,
-          //name: 'terminal',
-          cols: 400,
-          rows: 400,
-          assetId:'',
-          uuid:'',
-        },
-        */
-        //activeName:'',
         editableTabsValue: '-1',//当前显示的console
         currentIndex:'-1',
-        editableTabs: [/*
-          {
-          title: '用户管理',
-          name: '1',
-          content: '用户管理内容',
-          terminal: {
-            cols: 400,
-            rows: 400,
-            width:'',
-            height:'',
-            assetId:0,
-            accountId:0,
-            uuid:'aaadwdwd',
-          },
-        }, {
-          title: '角色管理',
-          name: '2',
-          content: '角色管理内容'
-        },*/ ],
-        tabIndex: -1,//添加tab的时候使用，暂留
+        editableTabs: [ ],
+        tabIndex: -1,//添加tab的时候使用
+        //upoload-download
+
+        currentUuid:'',
+        uploadBox:{showUpload:false,title:this.$t('webshell.uploadTitle')},
+        uploadFile: {file: '',path: '',uuid: ''},
+        uploadFileList:[],
+        uploadResult:null,
+        downloadBox:{showDownload:false,title:this.$t('webshell.downloadTitle')},
+        downloadFile:{path: '',uuid: ''},
+        downloadFileList:[],
+        downloadResult:null,
       }
     },
     methods: {
@@ -121,6 +174,7 @@
         let uuid = uuidv1();
         let now = new Date().getTime();
         uuid = uuid+"-"+now+"-"+now;
+        this.currentUuid = uuid;
         return uuid;
       },
       addConsole(id,host,accountId,port){
@@ -177,9 +231,6 @@
       },
 
       //可以做最小化的处理，点击窗口外的空白处会调用此方法
-      closeDailog(){
-        //alert('closeDailog');
-      },
       closeConsole(){
         //关闭所有连接
         this.editableTabs.forEach((tab, index) => {
@@ -239,6 +290,7 @@
               this.editableTabs.forEach((tab, index) => {
                 if (tab.name === currentName) {
                   this.$refs['console' + index][0].focusConsole();
+                  this.currentUuid = tab.terminal.uuid;
                 }
               });
             }
@@ -264,14 +316,85 @@
 
       },
       handleSelect(key, keyPath) {
-        //alert(key, keyPath);
+        //alert(keyPath);
+      },
+
+      /*upload--download  start*/
+      closeDialog:function(){
+        this.uploadBox.showUpload=false;
+        this.uploadResult=null;
+        this.uploadFileList=[];
+        this.uploadFile={file: '',path: '',uuid: ''};
+      },
+      closeDownloadDialog(){
+        this.downloadBox.showDownload=false;
+        this.downloadResult=null;
+        this.downloadFileList=[];
+        this.downloadFile={path: '',uuid: ''};
+      },
+      showUploadBox(){
+        this.uploadBox.showUpload=true;
+        //this.uploadBox.width='600px';
+      },
+      /*
+      handleChange(file,fileList) {
+        this.uploadFile.file = file.raw;
+      },
+      */
+      handleChange:function(file,fileList){
+        //if (fileList.length > 0) {
+          //this.uploadFileList = [fileList[fileList.length - 1]]
+        //}
+        //this.uploadFile.file = this.uploadFileList[0];
+        this.uploadFile.file = file;
+      },
+      upload() {
+        //if(this.uploadFile && this.uploadFile.file.raw){
+          let form = new FormData();
+          form.append("uuid", this.currentUuid);
+          form.append("file", this.uploadFile.file.raw);
+          form.append("path", this.uploadFile.path);
+          this.$post('terminal/upload', form,{'Content-Type': 'multipart/form-data'}).then(res => {
+            if(res.code ==  200 ){
+              this.closeDialog();
+              this.$message({duration: 2000, type: 'success', message: this.$t("tip.saveSuccess")});
+            }else{
+              this.$message.error(res.msg);
+            }
+          })
+        //}
+      },
+      showDownloadBox(){
+        this.downloadBox.showDownload=true;
       },
       download(){
+        this.downloadFile.uuid = this.currentUuid;
+        this.$post('terminal/download',this.downloadFile,{responseType:'blob'}).then(res => {
+          let fileName= this.downloadFile.path.substring(this.downloadFile.path.indexOf('/')+1);
+          if(res.code ==  200 ){
+            if(window.navigator.msSaveOrOpenBlob){
+              // 兼容ie11
+              let blobObject = new Blob([res.data]);
+              window.navigator.msSaveOrOpenBlob(blobObject, fileName);
+            }else{
+              let url = URL.createObjectURL(new Blob([res.data]));
+              let a = document.createElement('a');
+              document.body.appendChild(a); //此处增加了将创建的添加到body当中
+              a.href = url;
+              a.download = fileName;
+              a.target = '_blank';
+              a.click();
+              a.remove(); //将a标签移除
+            }
+            this.closeDownloadDialog();
+          }else{
+            this.$message.error(res.msg);
+          }
+        })
+      },
+      /*upload--download  end*/
 
-      },
-      upload(){
-        //alert('upload');
-      },
+
       minScreen(){
         this.consoleShow = false;
         this.$store.commit('minConsole');
