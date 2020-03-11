@@ -33,7 +33,7 @@
             <div :class="{'right-box-form-content-txt':!rightBox.isEdit}" >{{cabinet.uSize}}</div>
             <el-slider v-model.number="cabinet.uSize" :max="47" v-if="rightBox.isEdit"></el-slider>
           </el-form-item>
-          <el-form-item :label="this.$t('asset.createAssetTab.AddCabinetTab.remark')">
+          <el-form-item :label="this.$t('config.dc.remark')">
             <el-input size='mini' v-model="cabinet.remark" type="textarea" :rows="2" v-if="rightBox.isEdit"/>
             <div class="right-box-form-content-txt" v-if="!rightBox.isEdit">{{cabinet.remark}}</div>
           </el-form-item>

@@ -99,11 +99,15 @@
               <el-input size="small" maxlength="64" show-word-limit v-model="chart.title"></el-input>
             </el-form-item>
 
-            <el-row :gutter="10">
+            <div class="right-box-sub-title">{{$t('dashboard.panel.chartForm.option')}}</div>
+            <div class="line-100"></div>
+
+            <!-- type unit start-->
+            <el-row :gutter="10" style="padding-top:20px">
               <el-col :span="2" >
                 <div class="label-center" >{{$t('dashboard.panel.chartForm.type')}}</div>
               </el-col>
-              <el-col :span="6" style="margin-left:-7px;">
+              <el-col :span="10" style="margin-left:-7px;">
                 <div class="grid-content ">
                   <el-form-item prop="type">
                     <el-select class="right-box-row-with-btn" value-key="chartType" popper-class="chart-box-dropdown-mini" v-model="chart.type" placeholder="" size="mini">
@@ -114,10 +118,27 @@
                   </el-form-item>
                 </div>
               </el-col>
-              <el-col :span="2" style="margin-left: 7px;">
+              <el-col :span="2" style="margin-left: 7px">
+                <div class="label-center" >{{$t('dashboard.panel.chartForm.unit')}}</div>
+              </el-col>
+              <el-col :span="10">
+                <el-cascader filterable placeholder="" popper-class="dc-dropdown" size="mini"
+                             :options="unitOptions"
+                             :props="{ expandTrigger: 'hover' }"
+                             :show-all-levels="false"
+                             v-model="chart.unit"
+                             @change="unitSelected"
+                >
+                </el-cascader>
+              </el-col>
+            </el-row>
+            <!--type unit end-->
+
+            <el-row :gutter="10">
+              <el-col :span="2" >
                 <div class="label-center"  >{{$t('dashboard.panel.chartForm.width')}}</div>
               </el-col>
-              <el-col :span="6" style="margin-left:0px;">
+              <el-col :span="10" style="margin-left:0px;">
                 <div class="grid-content ">
                   <el-form-item prop="span">
                     <el-select class="right-box-row-with-btn"  value-key="chartSpan" popper-class="chart-box-dropdown-mini" v-model="chart.span" placeholder="" size="mini">
@@ -128,10 +149,10 @@
                   </el-form-item>
                 </div>
               </el-col>
-              <el-col :span="2" style="padding-left: 10px;">
+              <el-col :span="2" >
                 <div class="label-center" >{{$t('dashboard.panel.chartForm.high')}}</div>
               </el-col>
-              <el-col :span="6" style="margin-left: 0px;">
+              <el-col :span="10" style="margin-left: 0px;">
                 <div class="grid-content" >
                   <el-form-item prop="height">
                     <!--                  <el-input label="" v-model="chart.height" placeholder="" size="mini"></el-input>-->
@@ -149,22 +170,6 @@
                     <span class="nz-input-append">px</span>
                   </el-form-item>
                 </div>
-              </el-col>
-            </el-row>
-
-            <el-row :gutter="10">
-              <el-col :span="2">
-                <div class="label-center" >{{$t('dashboard.panel.chartForm.unit')}}</div>
-              </el-col>
-              <el-col :span="22">
-                <el-cascader filterable placeholder="" popper-class="chart-box-dropdown" size="small" style="width: 100%"
-                             :options="unitOptions"
-                             :props="{ expandTrigger: 'hover' }"
-                             :show-all-levels="false"
-                             v-model="chart.unit"
-                             @change="unitSelected"
-                >
-                </el-cascader>
               </el-col>
             </el-row>
 

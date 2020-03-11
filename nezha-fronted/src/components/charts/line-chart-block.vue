@@ -561,7 +561,7 @@
                 str +=`</div>`;
                 // str +=`<div style="display: inline-block;max-width: 10px; min-width: 5px;line-height: 18px;"></div>`;
                 str += `<div style='max-width:90px;min-width:20px;float:right;text-align:right;display:inline-block;white-space:nowrap;overflow-x:hidden;text-overflow:ellipsis;line-height: 18px;font-size:12px;font-family: Roboto,Helvetica Neue,Arial,sans-serif;'>`;
-                str +=val;
+                str +=chartDataFormat.getUnit(chartInfo.unit).compute(val,null,2);
                 str +=`</div>`;
               });
               str +=`</div>`;
@@ -775,6 +775,8 @@
             this.echartStore.clear();
             //option.title = title;
             this.echartStore.setOption(option);//创建图表
+            console.log('图表参数')
+            console.log(option)
             this.$refs['localLoading'+this.chartIndex].endLoading();
             this.firstShow = true; // 展示操作按键
           });
@@ -943,7 +945,14 @@
         }
 
       },
-
+      clearChart(){
+        if(this.echartStore){
+          this.echartStore.clear();
+        }
+        if(this.echartModalStore){
+          this.echartModalStore.clear();
+        }
+      },
       // 删除该图表
       removeChart() {
         this.$emit('on-remove-chart-block', this.data.id);
@@ -954,6 +963,7 @@
       },
       // 重新请求数据 刷新操作
       refreshChart() {
+        this.clearChart();
         this.$refs['localLoading'+this.chartIndex].startLoading();
         this.firstShow = false;
         this.$emit('on-refresh-data', this.data.id);
@@ -1069,6 +1079,11 @@
                         },
                         metric_name: '',
                       };
+                      if(chartInfo.type === 'stackArea'){
+                        seriesItem.theData.type='line';
+                        seriesItem.theData.stack=chartInfo.title
+                        seriesItem.theData.areaStyle={};
+                      }
                       // 图表中每条线的名字,后半部分
                       // let host = `${queryItem.metric.__name__}{`;//up,
                       let host = '';//up,
@@ -1391,9 +1406,7 @@
 */
     },
     beforeDestroy() {
-      if(this.echartStore){
-        this.echartStore.clear();
-      }
+      this.clearChart();
     },
   };
 

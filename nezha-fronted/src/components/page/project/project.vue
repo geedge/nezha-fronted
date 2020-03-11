@@ -225,9 +225,9 @@
 <!--          </button>-->
         </div>
       </div>
-      <div class="table-header-inner" @click="clearSelectedMetrics"><span><i style="font-size: 12px;margin-left: 2px;" class="nz-icon nz-icon-close " :class="{'control-icon-unchecked':selectedEndpoints.length<1,'control-icon-checked':selectedEndpoints.length>0}"></i></span></div>
+      <div v-show="showTableData && showTableData.length>0" class="table-header-inner" @click="clearSelectedMetrics"><span><i style="font-size: 12px;margin-left: 2px;" class="nz-icon nz-icon-close " :class="{'control-icon-unchecked':selectedEndpoints.length<1,'control-icon-checked':selectedEndpoints.length>0}"></i></span></div>
       <el-table
-        v-loading="queryEdpLoading"
+        v-show="showTableData && showTableData.length>0"
         :data="showTableData"
         border
         v-scrollBar:el-table
@@ -271,8 +271,9 @@
         </el-table-column>
       </el-table>
       <button class="to-top" v-show="showTopBtn2" @click="toTop"><i class="nz-icon nz-icon-top"></i></button>
-    </div>
 
+    </div>
+    <loading  ref="loading"></loading>
     <element-set
       v-clickoutside="elementsetHide"
       :table-title="endpointTableTitle"
@@ -318,6 +319,7 @@
       <div class="chart-bottom">
         <button class="nz-btn nz-btn-size-large nz-btn-style-normal nz-btn-min-width-82" @click="saveChart">{{$t('dashboard.metric.saveChart')}}</button>
       </div>
+      <loading  ref="graphLoading"></loading>
     </el-dialog>
 
     <module-box :currentProject="currentProject" :module="editModule" @reload="getModuleList" ref="moduleBox"></module-box>
@@ -334,11 +336,13 @@
   import bus from "../../../libs/bus";
   import axios from 'axios';
   import exportXLSX from "../../common/exportXLSX";
+  import loading from "../../common/loading";
   export default {
     name: "project2",
     components: {
       'chart-box': chartBox,
-      'export-excel':exportXLSX
+      'export-excel':exportXLSX,
+      'loading': loading,
     },
     data() {
       let temp=this;
@@ -1140,8 +1144,10 @@
         this.$refs.assetEditUnit.tabView=true;
       },
       showEndpoint:function(endpoint){
-
-        this.queryEdpLoading=true;
+        this.tableShow=3;
+        // this.queryEdpLoading=true;
+        console.log(this.$refs)
+        this.$refs.loading.startLoading();
         if(endpoint){
           this.curEndpoint=endpoint;
           this.formatTime='';
@@ -1211,8 +1217,8 @@
                 this.showTableData.push(edpQueryData);
               }
               this.showTableDataCopy=JSON.stringify(this.showTableData);
-              this.tableShow=3;
-              this.queryEdpLoading=false;
+              // this.queryEdpLoading=false;
+              this.$refs.loading.endLoading();
               this.gutterHandler(".endpoint-query-table"); //控制table右边距
               this.showTopBtn2 = false;
               this.$nextTick(() => {
@@ -1313,8 +1319,8 @@
 
         this.chartDatas=[];
         this.legend=[];
-        this.queryChartDate();
         this.graphShow=true;
+        setTimeout(()=>{this.queryChartDate();},10)
 
       },
       dialogClose:function(){
@@ -1404,6 +1410,7 @@
                 this.$refs.chartScrollbar.update();
               }
             });
+          this.$refs.graphLoading.endLoading();
         })
       },
       dateChange:function(){
@@ -1414,6 +1421,7 @@
 
       },
       initDialog:function(){
+        this.$refs.graphLoading.startLoading();
         this.graphChart = echarts.init(document.getElementById('viewGraphChart'));
         // this.queryChartDate();
         // this.chartOptions.legend.data=this.legend;

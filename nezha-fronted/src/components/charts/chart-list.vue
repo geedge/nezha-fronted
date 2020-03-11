@@ -263,7 +263,7 @@ export default {
                       };
                       if(chartInfo.type === 'stackArea'){
                         seriesItem.theData.type='line';
-                        seriesItem.theData.stack='stack'
+                        seriesItem.theData.stack=chartInfo.title
                         seriesItem.theData.areaStyle={};
                       }
                       // 图表中每条线的名字,后半部分

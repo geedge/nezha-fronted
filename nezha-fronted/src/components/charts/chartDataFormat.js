@@ -1,14 +1,24 @@
+/*
+* value:yAxis 默认第一个参数  传递的数值
+* index:yAxis 默认第二个参数 y轴的位置
+* type:自定义参数，用于区分是y轴调用还是tooltip调用,以设置不同精度  type =1 y轴调用 type=2 tooltip调用
+* */
 function none(value,index){
   return value;
 }
-function short(value,index){
-  return asciiCompute(value,1000,['','K','Mil','Bil'],0)
+function short(value,index,type=1){
+  if(type == 1){
+    return asciiCompute(value,1000,['','K','Mil','Bil'],0)
+  }else{
+    return asciiCompute(value,1000,['','K','Mil','Bil'],2)
+  }
+
 }
 function percent01(value,index){
-  return `${value}%`;
+  return `${value} %`;
 }
 function percent02(value,index){
-  return `${value * 100 }%`;
+  return `${value * 100 } %`;
 }
 function localFormat(value,index){
   let num = (value || 0).toString();
@@ -20,70 +30,220 @@ function localFormat(value,index){
   if (num) { result = num + result; }
   return result;
 }
-function bits(value,index){
-  return asciiCompute(value,1024,['b','B','KB','MB','GB','TB','PB','EB','ZB','YB'],0)
+function bits(value,index,type=1){
+  if(type == 1){
+    return asciiCompute(value,1024,['b','B','KB','MB','GB','TB','PB','EB','ZB','YB'],0)
+  }else{
+    return asciiCompute(value,1024,['b','B','KB','MB','GB','TB','PB','EB','ZB','YB'],2)
+  }
 }
-function bytes(value,index){
-  return asciiCompute(value,1024,['B','KB','MB','GB','TB','PB','EB','ZB','YB'],0)
+function bytes(value,index,type=1){
+  if(type == 1){
+    return asciiCompute(value,1024,['B','KB','MB','GB','TB','PB','EB','ZB','YB'],0)
+  }else{
+    return asciiCompute(value,1024,['B','KB','MB','GB','TB','PB','EB','ZB','YB'],2)
+  }
+
 }
-function kilobytes(value,index){
-  return asciiCompute(value,1024,['KB','MB','GB','TB','PB','EB','ZB','YB'],0)
+function kilobytes(value,index,type=1){
+  if(type == 1){
+    return asciiCompute(value,1024,['KB','MB','GB','TB','PB','EB','ZB','YB'],0)
+  }else{
+    return asciiCompute(value,1024,['KB','MB','GB','TB','PB','EB','ZB','YB'],2)
+  }
+
 }
-function megabytes(value,index){
-  return asciiCompute(value,1024,['MB','GB','TB','PB','EB','ZB','YB'],0)
+function megabytes(value,index,type=1){
+  if(type == 1){
+    return asciiCompute(value,1024,['MB','GB','TB','PB','EB','ZB','YB'],0)
+  }else{
+    return asciiCompute(value,1024,['MB','GB','TB','PB','EB','ZB','YB'],2)
+  }
+
 }
-function gigabytes(value,index){
-  return asciiCompute(value,1024,['GB','TB','PB','EB','ZB','YB'],0)
+function gigabytes(value,index,type=1){
+  if(type == 1){
+    return asciiCompute(value,1024,['GB','TB','PB','EB','ZB','YB'],0)
+  }else{
+    return asciiCompute(value,1024,['GB','TB','PB','EB','ZB','YB'],2)
+  }
 }
-function terabytes(value,index){
-  return asciiCompute(value,1024,['TB','PB','EB','ZB','YB'],0)
+function terabytes(value,index,type=1){
+  if(type == 1){
+    return asciiCompute(value,1024,['TB','PB','EB','ZB','YB'],0)
+  }else{
+    return asciiCompute(value,1024,['TB','PB','EB','ZB','YB'],2)
+  }
 }
-function petabytes(value,index){
-  return asciiCompute(value,1024,['PB','EB','ZB','YB'],0)
+function petabytes(value,index,type=1){
+  if(type == 1){
+    return asciiCompute(value,1024,['PB','EB','ZB','YB'],0)
+  }else{
+    return asciiCompute(value,1024,['PB','EB','ZB','YB'],2)
+  }
 }
-function packetsSec(value,index){
-  return asciiCompute(value,1000,['pps','Kpps','Mpps','Gpps','Tpps','Ppps','Epps','Zpps','Ypps'],1)
+function packetsSec(value,index,type=1){
+  if(type == 1){
+    return asciiCompute(value,1000,['pps','Kpps','Mpps','Gpps','Tpps','Ppps','Epps','Zpps','Ypps'],1)
+  }else{
+    return asciiCompute(value,1000,['pps','Kpps','Mpps','Gpps','Tpps','Ppps','Epps','Zpps','Ypps'],2)
+  }
 }
-function bitsSec(value,index){
-  return asciiCompute(value,1000,['bps','Kbps','Mbps','Gbps','Tbps','Pbps','Epps','Zpps','Ypps'],1)
+function bitsSec(value,index,type=1){
+  if(type == 1){
+    return asciiCompute(value,1000,['bps','Kbps','Mbps','Gbps','Tbps','Pbps','Epps','Zpps','Ypps'],1)
+  }else{
+    return asciiCompute(value,1000,['bps','Kbps','Mbps','Gbps','Tbps','Pbps','Epps','Zpps','Ypps'],2)
+  }
 }
-function bytesSec(value,index){
-  return asciiCompute(value,1000,['Bs','KBs','MBs','GBs','TBs','PBs','EBs','ZBs','YBs'],1)
+function bytesSec(value,index,type=1){
+  if(type == 1){
+    return asciiCompute(value,1000,['Bs','KBs','MBs','GBs','TBs','PBs','EBs','ZBs','YBs'],1)
+  }else{
+    return asciiCompute(value,1000,['Bs','KBs','MBs','GBs','TBs','PBs','EBs','ZBs','YBs'],2)
+  }
 }
-function kilobytesSec(value,index){
-  return asciiCompute(value,1000,['KBs','MBs','GBs','TBs','PBs','EBs','ZBs','YBs'],1)
+function kilobytesSec(value,index,type=1){
+  if(type == 1){
+    return asciiCompute(value,1000,['KBs','MBs','GBs','TBs','PBs','EBs','ZBs','YBs'],1)
+  }else{
+    return asciiCompute(value,1000,['KBs','MBs','GBs','TBs','PBs','EBs','ZBs','YBs'],1)
+  }
 }
-function kilobitsSec(value,index){
-  return asciiCompute(value,1000,['Kbps','Mbps','Gbps','Tbps','Pbps','Ebps','Zbps','Ybps'],1)
+function kilobitsSec(value,index,type=1){
+  if(type == 1){
+    return asciiCompute(value,1000,['Kbps','Mbps','Gbps','Tbps','Pbps','Ebps','Zbps','Ybps'],1)
+  }else{
+    return asciiCompute(value,1000,['Kbps','Mbps','Gbps','Tbps','Pbps','Ebps','Zbps','Ybps'],2)
+  }
+
 }
-function megabytesSec(value,index){
-  return asciiCompute(value,1000,['MBs','GBs','TBs','PBs','EBs','ZBs','YBs'],1)
+function megabytesSec(value,index,type=1){
+  if(type == 1){
+    return asciiCompute(value,1000,['MBs','GBs','TBs','PBs','EBs','ZBs','YBs'],1)
+  }else{
+    return asciiCompute(value,1000,['MBs','GBs','TBs','PBs','EBs','ZBs','YBs'],2)
+  }
+
 }
-function megabitsSec(value,index){
-  return asciiCompute(value,1000,['Mbps','Gbps','Tbps','Pbps','Ebps','Zbps','Ybps'],1)
+function megabitsSec(value,index,type=1){
+  if(type == 1){
+    return asciiCompute(value,1000,['Mbps','Gbps','Tbps','Pbps','Ebps','Zbps','Ybps'],1)
+  }else{
+    return asciiCompute(value,1000,['Mbps','Gbps','Tbps','Pbps','Ebps','Zbps','Ybps'],2)
+  }
+
 }
-function gigabytesSec(value,index){
-  return asciiCompute(value,1000,['GBs','TBs','PBs','EBs','ZBs','YBs'],1)
+function gigabytesSec(value,index,type=1){
+  if(type == 1){
+    return asciiCompute(value,1000,['GBs','TBs','PBs','EBs','ZBs','YBs'],1)
+  }else{
+    return asciiCompute(value,1000,['GBs','TBs','PBs','EBs','ZBs','YBs'],2)
+  }
+
 }
-function gigabitsSec(value,index){
-  return asciiCompute(value,1000,['Gbps','Tbps','Pbps','Ebps','Zbps','Ybps'],1)
+function gigabitsSec(value,index,type=1){
+  if(type == 1){
+    return asciiCompute(value,1000,['Gbps','Tbps','Pbps','Ebps','Zbps','Ybps'],1)
+  }else{
+    return asciiCompute(value,1000,['Gbps','Tbps','Pbps','Ebps','Zbps','Ybps'],2)
+  }
+
 }
-function terabytesSec(value,index){
-  return asciiCompute(value,1000,['TBs','PBs','EBs','ZBs','YBs'],1)
+function terabytesSec(value,index,type=1){
+  if(type == 1){
+    return asciiCompute(value,1000,['TBs','PBs','EBs','ZBs','YBs'],1)
+  }else{
+    return asciiCompute(value,1000,['TBs','PBs','EBs','ZBs','YBs'],2)
+  }
+
 }
-function terabitsSec(value,index){
-  return asciiCompute(value,1000,['Tbps','Pbps','Ebps','Zbps','Ybps'],1)
+function terabitsSec(value,index,type=1){
+  if(type == 1){
+    return asciiCompute(value,1000,['Tbps','Pbps','Ebps','Zbps','Ybps'],1)
+  }else{
+    return asciiCompute(value,1000,['Tbps','Pbps','Ebps','Zbps','Ybps'],2)
+  }
+
 }
-function petabytesSec(value,index){
-  return asciiCompute(value,1000,['PBs','EBs','ZBs','YBs'],1)
+function petabytesSec(value,index,type=1){
+  if(type == 1){
+    return asciiCompute(value,1000,['PBs','EBs','ZBs','YBs'],1)
+  }else{
+    return asciiCompute(value,1000,['PBs','EBs','ZBs','YBs'],2)
+  }
+
 }
-function petabitsSec(value,index){
-  return asciiCompute(value,1000,['Pbps','Ebps','Zbps','Ybps'],1)
+function petabitsSec(value,index,type=1){
+  if(type == 1){
+    return asciiCompute(value,1000,['Pbps','Ebps','Zbps','Ybps'],1)
+  }else{
+    return asciiCompute(value,1000,['Pbps','Ebps','Zbps','Ybps'],2)
+  }
+
 }
-function Hertz(value,index){
-  return asciiCompute(value,1000,['Hz','KHz','MHz','GHz','THz','PHz','EHz','ZHz','YHz'],1);
+function Hertz(value,index,type=1){
+  if(type == 1){
+    return asciiCompute(value,1000,['Hz','KHz','MHz','GHz','THz','PHz','EHz','ZHz','YHz'],1);
+  }else{
+    return asciiCompute(value,1000,['Hz','KHz','MHz','GHz','THz','PHz','EHz','ZHz','YHz'],2);
+  }
+
 }
-function nanoseconds(value,index){
+function nanoseconds(value,index,type=1){
+  if(type == 1){
+    return timeCompute(value,'ns');
+  }else{
+    return timeCompute(value,'ns',2);
+  }
+
+}
+function microseconds(value,index,type=1){
+  if(type == 1){
+    return timeCompute(value,'us')
+  }else{
+    return timeCompute(value,'us',2)
+  }
+
+}
+function milliseconds(value,index,type=1){
+  if(type == 1){
+    return timeCompute(value,'ms')
+  }else{
+    return timeCompute(value,'ms',2)
+  }
+
+}
+function seconds(value,index,type=1){
+  if(type == 1){
+    return timeCompute(value,'s');
+  }else{
+    return timeCompute(value,'s',2);
+  }
+
+}
+function minutes(value,index,type=1){
+  if(type == 1){
+    return timeCompute(value,'m');
+  }else{
+    return timeCompute(value,'m',2);
+  }
+
+}
+function hours(value,index,type=1){
+  if(type == 1){
+    return timeCompute(value,'h');
+  }else{
+    return timeCompute(value,'h',2);
+  }
+
+}
+function days(value,index,type=1){
+  if(type == 1){
+    return timeCompute(value,'day');
+  }else{
+    return timeCompute(value,'day',3);
+  }
 
 }
 /*
@@ -101,9 +261,9 @@ function asciiCompute(num,ascii,units,dot=2,unitIndex=0){
     if(quotient <1 ){ //不足以进位
       let toFixed=parseFloat(num.toFixed(dot));
       if(toFixed == 0){
-        return `${num}${units[unitIndex]}`
+        return `${num} ${units[unitIndex]}`
       }else{
-        return `${num.toFixed(dot)}${units[unitIndex]}`;
+        return `${num.toFixed(dot)} ${units[unitIndex]}`;
       }
     }else if(quotient >= 1 && quotient <10){ //可以进位，但是又不足以更进一位
       if(unitIndex >= units.length-1){
@@ -111,7 +271,7 @@ function asciiCompute(num,ascii,units,dot=2,unitIndex=0){
         return asciiCompute(num,ascii,units,dot,unitIndex);
       }else{
         unitIndex++;
-        return `${quotient.toFixed(dot)}${units[unitIndex]}`;
+        return `${quotient.toFixed(dot)} ${units[unitIndex]}`;
       }
     } else{ //可以更进一位
       if(unitIndex >=  units.length-1){
@@ -124,13 +284,49 @@ function asciiCompute(num,ascii,units,dot=2,unitIndex=0){
       }
     }
   }else{
-    return `${num.toFixed(2)}${units[units.length-1]}`;
+    return `${num.toFixed(2)} ${units[units.length-1]}`;
   }
 
 }
 /*
 * 时间格式化方法
+* value:需要格式化的数值
+* unit:设置的单位
 * */
+function timeCompute(value,unit,dot=0){
+  if(unit == 'year'){
+    return `${value.toFixed(dot)} ${unit}`;
+  }
+  let units=[
+    {unit:'ns',ascii:1},
+    {unit:'us',ascii:1000},
+    {unit:'ms',ascii:1000},
+    {unit:'s',ascii:60},
+    {unit:'m',ascii:60},
+    {unit:'h',ascii:24},
+    {unit:'day',ascii:7},
+    {unit:'week',ascii:52},
+    {unit:'year',ascii:''}
+  ]
+  for(let i in units){
+    let u = units[i];
+    if(u.unit == unit){ //找到最小单位
+      let result = (time,minUnit)=>{
+        if(minUnit.unit == 'year'){
+          return `${time.toFixed(dot)} ${minUnit.unit}`
+        }
+        let quotient = time / minUnit.ascii;
+        if(quotient < 1){
+          return `${time.toFixed(dot)} ${minUnit.unit}`;
+        }else{
+          minUnit = units[++i];
+          return result(quotient,minUnit);
+        }
+      }
+      return result(value,u);
+    }
+  }
+}
 
 //unit转化配置信息
 /*
@@ -298,32 +494,32 @@ let unitOptions=[
       },
       {
         value:28,
-        compute:null,
+        compute:microseconds,
         label:'microseconds (us)'
       },
       {
         value:29,
-        compute:null,
+        compute:milliseconds,
         label:'milliseconds (ms)'
       },
       {
         value:30,
-        compute:null,
+        compute:seconds,
         label:'seconds (s)'
       },
       {
         value:31,
-        compute:null,
+        compute:minutes,
         label:'minutes (m)'
       },
       {
         value:32,
-        compute:null,
+        compute:hours,
         label:'hours (h)'
       },
       {
         value:33,
-        compute:null,
+        compute:days,
         label:'days (d)'
       },
     ]
@@ -345,6 +541,5 @@ export default {
   },
   getUnit:function(index){
     return units[index-1];
-  },
-  short,
+  }
 }

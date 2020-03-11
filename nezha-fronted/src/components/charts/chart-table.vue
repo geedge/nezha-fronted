@@ -1,6 +1,11 @@
 <style lang="scss" scoped>
 @import './chart-table.scss';
 </style>
+<style>
+  .max-width-90{
+    max-width: 90px;
+  }
+</style>
 <template>
     <div class="chart-table" :id="'chartTableDiv'+chartIndex" v-show="divFirstShow">
         <loading  :ref="'localLoading'+chartIndex"></loading>
@@ -34,11 +39,15 @@
                     {{ scope.row.element.alias?scope.row.element.alias:scope.row.element.element}}
                   </template>
                 </el-table-column>
-                <el-table-column sortable prop="value" :label="$t('dashboard.panel.chartTableColumn.value')" ></el-table-column>
+                <el-table-column sortable prop="value" :label="$t('dashboard.panel.chartTableColumn.value')" class-name="max-width-90">
+                  <template slot-scope="scope">
+                    {{ unit.compute(scope.row.value,null,2)}}
+                  </template>
+                </el-table-column>
             </el-table>
         </div>
         <!--全屏-->
-          <el-dialog class="nz-dialog table-chart-dialog" :title="$t('dashboard.panel.view')"  :visible.sync="screenModal" width="96%"  @close="screenModal = false;" >
+          <el-dialog class="nz-dialog table-chart-dialog" :title="$t('dashboard.panel.view')"  :visible.sync="screenModal" width="96%"  @close="screenModal = false" >
             <div slot="title">
               <span class="nz-dialog-title">{{data.title}}</span>
               <div class="float-right panel-calendar dialog-tool">
@@ -56,7 +65,11 @@
                       {{ scope.row.element.alias?scope.row.element.alias:scope.row.element.element}}
                     </template>
                   </el-table-column>
-                    <el-table-column sortable prop="value" :label="$t('dashboard.panel.chartTableColumn.value')" ></el-table-column>
+                    <el-table-column sortable prop="value" :label="$t('dashboard.panel.chartTableColumn.value')" width="90">
+                      <template slot-scope="scope">
+                        {{ unit.compute(scope.row.value,null,2)}}
+                      </template>
+                    </el-table-column>
 
                 </el-table>
                 <loading  :ref="'localLoadingScreen'+chartIndex"></loading>
@@ -75,6 +88,7 @@
 <script>
 import bus from '../../libs/bus';
 import {Loading} from 'element-ui';
+import chartDataFormat from './chartDataFormat'
 import loading from "../common/loading";
 
 export default {
@@ -100,6 +114,7 @@ export default {
     data() {
         return {
             data: {}, // 该图表信息,chartItem
+            unit:{},
             seriesItem: [], // 保存信息
             seriesItemScreen:[],//全屏数据
             images: '',
@@ -346,6 +361,9 @@ export default {
         setData(chartItem, seriesItem, panelId, filter,area) {
             if(area==='showFullScreen'){//全屏按时间查询
               this.data = chartItem;
+              this.unit = chartDataFormat.getUnit(this.data.unit);
+              console.log("unit-->")
+              console.log(this.unit);
               this.searchTime[0] = filter.start_time;//将列表的查询时间复制给全屏的查询时间
               this.searchTime[1] = filter.end_time;
               this.seriesItemScreen = seriesItem;
@@ -368,6 +386,7 @@ export default {
 
               this.panelIdInner = panelId;
               this.data = chartItem;
+              this.unit = chartDataFormat.getUnit(this.data.unit);
               this.seriesItem = seriesItem;
               this.seriesItemScreen = seriesItem;
               if (filter) { // 保存数据,用于同步时间
