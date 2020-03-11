@@ -3,11 +3,11 @@
     <div class="right-box right-box-model" v-if="rightBox.show" v-clickoutside="clickos">
       <!-- begin--顶部按钮-->
       <div class="right-box-top-btns">
-        <button id="dc-del" type="button" v-if="currentModel.id != '' && rightBox.isEdit" @click="del" class="nz-btn nz-btn-size-normal nz-btn-size-alien nz-btn-style-light nz-btn-min-width-82">
+        <button id="model-del" type="button" v-if="currentModel.id != '' && rightBox.isEdit" @click="del" class="nz-btn nz-btn-size-normal nz-btn-size-alien nz-btn-style-light nz-btn-min-width-82">
           <span class="right-box-top-btn-icon"><i class="el-icon-delete"></i></span>
           <span class="right-box-top-btn-txt">{{$t('overall.delete')}}</span>
         </button>
-        <button v-if="!rightBox.isEdit" id="dc-save" type="button" @click="saveOrToEdit" class="nz-btn nz-btn-size-normal nz-btn-size-alien nz-btn-style-light nz-btn-min-width-82">
+        <button v-if="!rightBox.isEdit" id="model-save" type="button" @click="saveOrToEdit" class="nz-btn nz-btn-size-normal nz-btn-size-alien nz-btn-style-light nz-btn-min-width-82">
           <span class="right-box-top-btn-icon"><i class="nz-icon nz-icon-edit"></i></span>
           <span class="right-box-top-btn-txt">{{$t('overall.edit')}}</span>
         </button>
@@ -25,32 +25,29 @@
             <el-input v-if="rightBox.isEdit" placeholder="" maxlength="64" show-word-limit v-model="currentModel.name" size="small"></el-input>
             <div v-if="!rightBox.isEdit" class="right-box-form-content-txt">{{currentModel.name}}</div>
           </el-form-item>
+          <el-form-item :label="$t('config.model.vendor')" prop="vendor">
+            <el-autocomplete
+              :fetch-suggestions="vendorSuggestion"
+              v-model="currentModel.vendor.name"
+              placeholder=""
+              size="small"
+              popper-class="no-style-class"
+              >
+            </el-autocomplete>
+          </el-form-item>
+          <el-form-item :label="$t('config.model.remark')" prop="remark">
+            <el-input maxlength="512" rows="4" show-word-limit v-if="rightBox.isEdit" type="textarea" placeholder="" v-model="currentModel.remark" size="small"></el-input>
+            <div v-if="!rightBox.isEdit" class="right-box-form-content-txt">{{currentModel.remark}}</div>
+          </el-form-item>
         </el-form>
-        <el-form-item prop="height">
-          <el-autocomplete
-            v-model="currentModel.height"
-            :fetch-suggestions="querySearch"
-            placeholder=""
-            size="mini"
-            popper-class="no-style-class"
-            @select="handleSelect">
-            <template slot-scope="{ item }">
-              <div class="name">{{ item }}</div>
-            </template>
-          </el-autocomplete>
-        </el-form-item>
-        <el-form-item :label="$t('config.model.remark')" prop="remark">
-          <el-input maxlength="512" rows="4" show-word-limit v-if="rightBox.isEdit" type="textarea" placeholder="" v-model="currentModel.remark" size="small"></el-input>
-          <div v-if="!rightBox.isEdit" class="right-box-form-content-txt">{{currentModel.remark}}</div>
-        </el-form-item>
       </el-scrollbar>
 
       <!--底部按钮-->
       <div class="right-box-bottom-btns">
-        <button @click="esc" id="dc-box-esc" class="nz-btn nz-btn-size-normal nz-btn-style-light nz-btn-min-width-100">
+        <button @click="esc" id="model-box-esc" class="nz-btn nz-btn-size-normal nz-btn-style-light nz-btn-min-width-100">
           <span>{{$t('overall.cancel')}}</span>
         </button>
-        <button v-if="rightBox.isEdit" @click="saveOrToEdit" id="dc-box-save" class="nz-btn nz-btn-size-normal nz-btn-style-normal nz-btn-min-width-100">
+        <button v-if="rightBox.isEdit" @click="saveOrToEdit" id="model-box-save" class="nz-btn nz-btn-size-normal nz-btn-style-normal nz-btn-min-width-100">
           <span>{{$t('overall.save')}}</span>
         </button>
       </div>
@@ -75,7 +72,9 @@
           vendor: {id: '', value: '', code: '', type: ''},
           type: {id: '', value: '', code: '', type: ''},
           assetStat: {total: '', inStock: '', outStock: ''},
-          remark: ''
+          remark: '',
+          vendorCode: '',
+          typeCode: ''
         },
         rightBox: {
           show: false,
@@ -88,6 +87,8 @@
             {required: true, message: this.$t('validate.required'), trigger: 'blur'}
           ],
         },
+        vendorData: [],
+        typeData: []
       }
     },
     methods: {
@@ -160,8 +161,39 @@
           });
         });
       },
+      getVendorData() {
+        this.$get('sys/dict/all?type=vendor').then(response => {
+          if (response.code === 200) {
+            this.vendorData = response.data
+          }
+        })
+      },
+      getTypeData() {
+        this.$get('sys/dict/all?type=assetType').then(response => {
+          if (response.code === 200) {
+            this.typeData = response.data
+          }
+        })
+      },
+      //vendor的输入建议
+      vendorSuggestion(queryString, callback) {
+        callback(this.suggestionFilter('vendor', queryString));
+      },
+      //type的输入建议
+      typeSuggestion(queryString, callback) {
+        callback(this.suggestionFilter('type', queryString));
+      },
+      suggestionFilter(type, queryString) {
+        if (type == 'vendor') {
+
+        } else if (type == 'type') {
+
+        }
+      }
     },
     mounted() {
+      this.getVendorData();
+      this.getTypeData();
     },
     computed: {
     },
@@ -182,5 +214,8 @@
   }
 </script>
 
-<style scoped>
+<style>
+  .right-box-model .el-autocomplete {
+    width: 100%;
+  }
 </style>

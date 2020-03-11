@@ -97,6 +97,9 @@
           vendor: {id: '', value: '', code: '', type: ''},
           type: {id: '', value: '', code: '', type: ''},
           assetStat: {total: '', inStock: '', outStock: ''},
+          remark: '',
+          vendorCode: '',
+          typeCode: ''
         },
         pageObj: {
           pageNo: 1,
@@ -264,7 +267,9 @@
           vendor: {id: '', value: '', code: '', type: ''},
           type: {id: '', value: '', code: '', type: ''},
           assetStat: {total: '', inStock: '', outStock: ''},
-          remark: ''
+          remark: '',
+          vendorCode: '',
+          typeCode: ''
         };
       }
     },
