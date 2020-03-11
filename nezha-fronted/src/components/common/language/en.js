@@ -214,7 +214,7 @@ const en = {
         addAssetType:'New asset type',//'新增资产类型'
         existAssetType:'Existed asset type'//'已存在的资产类型'
       },
-      vendor:'Vendor',//'厂商/型号'
+      vendorModel:'Vendor/Model',//'厂商/型号'
       vendorTab:{
         vendor:'Vendor/Model',//'厂商/型号'
         vendorName:'New vendor',//'新厂商'
@@ -420,7 +420,8 @@ const en = {
       assets: "Assets",
       editModel: 'Edit model',
       createModel: 'Create model',
-      remark: 'Remark'
+      remark: 'Remark',
+      type: 'Type'
     }
   },
   alert: {

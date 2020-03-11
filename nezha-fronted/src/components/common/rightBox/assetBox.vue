@@ -66,7 +66,7 @@
           <!------------------------------------------资产类型---------------------------------------------->
           <el-form-item :label="$t('asset.createAssetTab.assetType')" class="right-box-form-content" prop="assetType">
             <el-select popper-class="asset-dropdown" size="small" v-if="!tabView" v-model="assetType" clearable @visible-change="cancelEdit"
-                       @change="getAllModelOptionData()" class="right-box-row-with-btn">
+                       @change="getAllModelOptionData()">
               <el-option
                 :id="'asset-edit-type-op-'+item.id"
                 v-for="item in assetTypeOptionData"
@@ -90,7 +90,7 @@
                 </div>
               </el-option>
             </el-select>
-            <div class="right-box-row-btn " v-if="!tabView">
+            <!--<div class="right-box-row-btn " v-if="!tabView">
               <el-popover
                 placement="left"
                 trigger="click"
@@ -101,16 +101,16 @@
               >
                 <div class="pop-window-assetType" @click="editQuit()" id="asset-edit-sub-type-quit">
                   <div class="pop-window-assetType-content">
-                    <!--右上角按钮-->
+                    &lt;!&ndash;右上角按钮&ndash;&gt;
                     <div class="pop-top-btns">
                       <button type="button" @click="editPopoverClose('type')" id="asset-edit-sub-type-esc"  class="nz-btn nz-btn-size-alien nz-btn-size-small nz-btn-style-light nz-btn-min-width-35">
                         <span class="pop-top-btn-icon"><i class="el-icon-close"></i></span>
                         <span class="pop-top-btn-txt">{{$t('overall.esc')}}</span>
                       </button>
                     </div>
-                    <!--标题-->
+                    &lt;!&ndash;标题&ndash;&gt;
                     <div class="pop-title">{{$t('asset.createAssetTab.assetTypeTab.assetType')}}</div>
-                    <!--表单内容-->
+                    &lt;!&ndash;表单内容&ndash;&gt;
                     <div class="pop-item">
                       <div class="pop-label">{{$t('asset.createAssetTab.assetTypeTab.addAssetType')}}</div>
                       <el-input class="input-x-mini-26" v-model="assetTypeData.value"/>
@@ -155,11 +155,11 @@
                 </div>
                 <div slot="reference"><i class="el-icon-plus"></i></div>
               </el-popover>
-            </div>
+            </div>-->
             <span v-if="tabView">{{assetViewData.assetType}}</span>
           </el-form-item>
           <!------------------------------------------厂商/型号---------------------------------------------->
-          <el-form-item :label="this.$t('asset.createAssetTab.vendor')" class="right-box-form-content" prop="modelId">
+          <el-form-item :label="this.$t('asset.createAssetTab.vendorModel')" class="right-box-form-content" prop="modelId">
             <template v-if="!tabView">
               <el-cascader
                 :options="vendorTypeOptionData"

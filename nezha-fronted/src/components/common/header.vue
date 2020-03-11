@@ -90,7 +90,7 @@
       </el-submenu>
       <el-submenu index="5" popper-class="nz-submenu">
         <template slot="title">
-          <div @click="jumpTo('account')" :class ="activeIndex == 'account' || activeIndex == 'promServer' || activeIndex == 'dc' ? 'menu-active' :''">{{$t('overall.config')}}</div>
+          <div @click="jumpTo('account')" :class ="activeIndex == 'account' || activeIndex == 'promServer' || activeIndex == 'dc' || activeIndex == 'model' ? 'menu-active' :''">{{$t('overall.config')}}</div>
         </template>
         <el-menu-item index="5-0">
           <div @click="jumpTo('account')" :class="{'menu-item-active' :(activeIndex == 'account' )}">{{$t('config.account.account')}}</div>
@@ -100,6 +100,9 @@
         </el-menu-item>
         <el-menu-item index="5-2">
           <div @click="jumpTo('dc')" :class="{'menu-item-active' :(activeIndex == 'dc' )}">{{$t('config.dc.dc')}}</div>
+        </el-menu-item>
+        <el-menu-item index="5-3">
+          <div @click="jumpTo('model')" :class="{'menu-item-active' :(activeIndex == 'model' )}">{{$t('config.model.model')}}</div>
         </el-menu-item>
       </el-submenu>
       <el-submenu index="6" popper-class="nz-submenu">

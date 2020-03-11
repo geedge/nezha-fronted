@@ -21,14 +21,27 @@
       <!-- begin--表单-->
       <el-scrollbar class="right-box-form-box">
         <el-form class="right-box-form" :model="currentModel" label-position="top" :rules="rules" ref="modelForm">
+          <!--model名称-->
           <el-form-item :label='$t("overall.name")' prop="name">
-            <el-input v-if="rightBox.isEdit" placeholder="" maxlength="64" show-word-limit v-model="currentModel.name" size="small"></el-input>
+            <el-input v-if="rightBox.isEdit" placeholder="" maxlength="64" show-word-limit v-model.trim="currentModel.name" size="small"></el-input>
             <div v-if="!rightBox.isEdit" class="right-box-form-content-txt">{{currentModel.name}}</div>
           </el-form-item>
+          <!--厂商-->
           <el-form-item :label="$t('config.model.vendor')" prop="vendor">
             <el-autocomplete
               :fetch-suggestions="vendorSuggestion"
-              v-model="currentModel.vendor.name"
+              v-model.trim="currentModel.vendor.value"
+              placeholder=""
+              size="small"
+              popper-class="no-style-class"
+              >
+            </el-autocomplete>
+          </el-form-item>
+          <!--设备类型-->
+          <el-form-item :label="$t('config.model.type')" prop="vendor">
+            <el-autocomplete
+              :fetch-suggestions="typeSuggestion"
+              v-model.trim="currentModel.type.value"
               placeholder=""
               size="small"
               popper-class="no-style-class"
@@ -36,7 +49,7 @@
             </el-autocomplete>
           </el-form-item>
           <el-form-item :label="$t('config.model.remark')" prop="remark">
-            <el-input maxlength="512" rows="4" show-word-limit v-if="rightBox.isEdit" type="textarea" placeholder="" v-model="currentModel.remark" size="small"></el-input>
+            <el-input maxlength="512" rows="4" show-word-limit v-if="rightBox.isEdit" type="textarea" placeholder="" v-model.trim="currentModel.remark" size="small"></el-input>
             <div v-if="!rightBox.isEdit" class="right-box-form-content-txt">{{currentModel.remark}}</div>
           </el-form-item>
         </el-form>
@@ -109,27 +122,89 @@
       save() {
         this.$refs.modelForm.validate((valid) => {
           if (valid) {
-            if (this.currentModel.id) {
-              this.$put('model', this.currentModel).then(response => {
-                if (response.code === 200) {
-                  this.$message({duration: 1000, type: 'success', message: this.$t("tip.saveSuccess")});
-                  this.rightBox.show = false;
-                  this.$emit('reload');
-                } else {
-                  this.$message.error(response.msg);
-                }
-              });
+            let errMsg = [];
+            //vendor和type如果是新记录，需要先请求后台新增，再获取code
+            let vendorReady = false;
+            let vendorCode = this.autocompleteExist('vendor', this.currentModel.vendor.value);
+            if (vendorCode) {
+              this.currentModel.vendorCode = vendorCode;
+              vendorReady = true;
             } else {
-              this.$post('model', this.currentModel).then(response => {
+              let vendor = {type: 'vendor', value: this.currentModel.vendor.value};
+              this.$post("sys/dict/save", vendor).then(response => {
                 if (response.code === 200) {
-                  this.$message({duration: 1000, type: 'success', message: this.$t("tip.saveSuccess")});
-                  this.rightBox.show = false;
-                  this.$emit("reload");
+                  //保存成功后，重新获取
+                  this.$get('sys/dict/all?type=vendor').then(response => {
+                    if (response.code === 200) {
+                      this.vendorData = response.data;
+                      this.currentModel.vendorCode = this.autocompleteExist('vendor', this.currentModel.vendor.value);
+                      vendorReady = true;
+                    }
+                  });
                 } else {
-                  this.$message.error(response.msg);
+                  errMsg.push("vendor");
                 }
               });
             }
+
+            let typeReady = false;
+            let typeCode = this.autocompleteExist('type', this.currentModel.type.value);
+            if (typeCode) {
+              this.currentModel.typeCode = typeCode;
+              typeReady = true;
+            } else {
+              let type = {type: 'assetType', value: this.currentModel.type.value};
+              this.$post("sys/dict/save", type).then(response => {
+                if (response.code === 200) {
+                  this.$get('sys/dict/all?type=assetType').then(response => {
+                    if (response.code === 200) {
+                      this.typeData = response.data;
+                      this.currentModel.typeCode = this.autocompleteExist('type', this.currentModel.type.value);
+                      typeReady = true;
+                    }
+                  });
+                } else {
+                  errMsg.push("type");
+                }
+              });
+            }
+
+            let intervalTime = 1; //设置3秒超时
+            let interval = setInterval(() => {
+              if (vendorReady && typeReady) {
+                if (this.currentModel.id) {
+                  this.$put('model', this.currentModel).then(response => {
+                    if (response.code === 200) {
+                      this.$message({duration: 1000, type: 'success', message: this.$t("tip.saveSuccess")});
+                      this.rightBox.show = false;
+                      this.$emit('reload');
+                    } else {
+                      this.$message.error(response.msg);
+                    }
+                  });
+                } else {
+                  this.$post('model', this.currentModel).then(response => {
+                    if (response.code === 200) {
+                      this.$message({duration: 1000, type: 'success', message: this.$t("tip.saveSuccess")});
+                      this.rightBox.show = false;
+                      this.$emit("reload");
+                    } else {
+                      this.$message.error(response.msg);
+                    }
+                  });
+                }
+                clearInterval(interval);
+              } else if (intervalTime > 15) {
+                if (errMsg.length > 0) {
+                  this.$message.error(errMsg.join() + " error");
+                } else {
+                  this.$message.error("Time out");
+                }
+                clearInterval(interval);
+              } else {
+                intervalTime++;
+              }
+            }, 200);
           } else {
             return false;
           }
@@ -164,16 +239,16 @@
       getVendorData() {
         this.$get('sys/dict/all?type=vendor').then(response => {
           if (response.code === 200) {
-            this.vendorData = response.data
+            this.vendorData = response.data;
           }
-        })
+        });
       },
       getTypeData() {
         this.$get('sys/dict/all?type=assetType').then(response => {
           if (response.code === 200) {
-            this.typeData = response.data
+            this.typeData = response.data;
           }
-        })
+        });
       },
       //vendor的输入建议
       vendorSuggestion(queryString, callback) {
@@ -184,11 +259,45 @@
         callback(this.suggestionFilter('type', queryString));
       },
       suggestionFilter(type, queryString) {
+        let data = [];
         if (type == 'vendor') {
-
+          if (!queryString) {
+            data = this.vendorData;
+          } else {
+            for (let i = 0; i < this.vendorData.length; i++) {
+              if (this.vendorData[i].value.toLowerCase().indexOf(queryString.toLowerCase()) != -1) {
+                data.push(this.vendorData[i]);
+              }
+            }
+          }
         } else if (type == 'type') {
-
+          if (!queryString) {
+            data = this.typeData;
+          } else {
+            for (let i = 0; i < this.typeData.length; i++) {
+              if (this.typeData[i].value.toLowerCase().indexOf(queryString.toLowerCase()) != -1) {
+                data.push(this.typeData[i]);
+              }
+            }
+          }
         }
+        return data;
+      },
+      autocompleteExist(type, string) {
+        let result = false;
+        let data = [];
+        if (type == 'vendor') {
+          data = this.vendorData;
+        } else if (type == 'type') {
+          data = this.typeData;
+        }
+        for (let i = 0; i < data.length; i++) {
+          if (data[i].value.toLowerCase() == string.toLowerCase()) {
+            result = data[i].code;
+            break;
+          }
+        }
+        return result;
       }
     },
     mounted() {
