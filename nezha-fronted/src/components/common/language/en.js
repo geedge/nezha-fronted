@@ -75,6 +75,11 @@ const en = {
     downloadButtonTitle:'Download',
     filePath:'file path',
   },
+  login: {
+    username: 'Username',
+    password: 'Password',
+    login: 'Login'
+  },
   dashboard:{
     title:'Dashboard',
     panel:{

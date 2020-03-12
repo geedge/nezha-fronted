@@ -6,15 +6,15 @@
       <div class="login-label"></div>
       <div class="login-input">
         <i class="nz-icon nz-icon-user"></i>
-        <input v-model="loginData.username" autocomplete="new-password" placeholder="Username"></input>
+        <input v-model="loginData.username" autocomplete="new-password" :placeholder="$t('login.username')"></input>
       </div>
       <div class="login-label"></div>
       <div class="login-input">
         <i class="nz-icon nz-icon-password"></i>
-        <input v-model="loginData.password" type="password" autocomplete="new-password" placeholder="Password"></input>
+        <input v-model="loginData.password" type="password" autocomplete="new-password" :placeholder="$t('login.password')"></input>
       </div>
       <div class="login-foot">
-        <button @click="login" class="login-btn" id="login">Login</button>
+        <button @click="login" class="login-btn" id="login">{{$t("login.login")}}</button>
         <div class="login-foot-lang" @click.stop="langListShow = !langListShow">
           <i v-if="lang == 'en'" class="nz-icon nz-icon-lang-en"></i>
           <i v-else-if="lang == 'cn'" class="nz-icon nz-icon-lang-zh"></i>
@@ -40,7 +40,7 @@ export default {
         password: '',
         remember: false
       },
-      lang: 'en', //en/cn
+      lang: localStorage.getItem('nz-language') ? localStorage.getItem('nz-language') : 'en', //en/cn
       langListShow: false,
     }
   },
@@ -71,6 +71,8 @@ export default {
     changeLang(lang) {
       this.lang = lang;
       this.langListShow = false;
+      this.$i18n.locale = this.lang;
+      localStorage.setItem('nz-language', this.lang);
     },
     validateLogin() {
       if (!this.loginData.username || !this.loginData.password) {
@@ -86,11 +88,13 @@ export default {
       let lang = localStorage.getItem('nz-language-' + n);
       if (lang) {
         this.lang = lang;
+        this.$i18n.locale = this.lang;
       }
     }
   },
   mounted() {
     const _this = this;
+    this.$i18n.locale = this.lang;
     document.onkeydown = function(e) {
       if(e.key === 'Enter'){
         _this.login();

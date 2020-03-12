@@ -48,6 +48,11 @@ const cn = {
     downloadButtonTitle:'下载',
     filePath:'文件路径',
   },
+  login: {
+    username: '登录名',
+    password: '密码',
+    login: '登录'
+  },
   dashboard:{
     title:'仪表盘',
     panel:{

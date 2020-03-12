@@ -382,6 +382,7 @@
       changeLocal(lang) {
         if (lang != localStorage.getItem("nz-language-" + this.username)) {
           localStorage.setItem("nz-language-" + this.username, lang);
+          localStorage.setItem("nz-language", lang);
           this.$i18n.locale = lang;
           window.location.reload();
         }
