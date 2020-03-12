@@ -270,10 +270,10 @@
             id:"table",
             name:this.$t("dashboard.panel.chartForm.typeVal.table.label")
           },
-          // {
-          //   id:'stackArea',
-          //   name:this.$t("dashboard.panel.chartForm.typeVal.stackArea.label")
-          // }
+          {
+            id:'stackArea',
+            name:this.$t("dashboard.panel.chartForm.typeVal.stackArea.label")
+          }
         ],
         elements: [1], // 指标部分 tarNum
         elementTarget: [], // 本地保存数据

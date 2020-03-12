@@ -17,7 +17,7 @@
   <div class="list-width">
     <div class="chartBox" v-for="(item, index) in dataList"    :key="item.id" :id="item.title+'_'+item.id">
 
-      <line-chart-block v-if="item.type === 'line' || item.type === 'bar' || item.type === 4" :key="'inner' + item.id"
+      <line-chart-block v-if="item.type === 'line' || item.type === 'bar' ||item.type == 'stackArea' || item.type === 4" :key="'inner' + item.id"
       ref="editChart"
       @on-refresh-data="refreshChart"
       @on-remove-chart-block="removeChart"
@@ -261,11 +261,11 @@ export default {
                         },
                         metric_name: '',
                       };
-                      // if(chartInfo.type === 'stackArea'){
-                      //   seriesItem.theData.type='line';
-                      //   // seriesItem.theData.stack=chartInfo.title
-                      //   seriesItem.theData.areaStyle={};
-                      // }
+                      if(chartInfo.type === 'stackArea'){
+                        seriesItem.theData.type='line';
+                        seriesItem.theData.stack=chartInfo.title
+                        seriesItem.theData.areaStyle={};
+                      }
                       // 图表中每条线的名字,后半部分
                       let host = '';//up,
                       if(queryItem.metric.__name__){

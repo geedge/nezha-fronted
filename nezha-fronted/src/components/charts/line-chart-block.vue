@@ -627,7 +627,7 @@
 
           xAxis: {
             type: 'time',
-            //boundaryGap: false,//line-false; bar-true;
+            // boundaryGap: false,//line-false; bar-true;
             //data: ['20190101', '20190102', '周三', '周四', '周五', '周六', '周日']
             axisLabel: {
               intervale: 0,
@@ -743,8 +743,6 @@
             this.echartStore.clear();
             //option.title = title;
             this.echartStore.setOption(option);//创建图表
-            console.log('图表参数')
-            console.log(option)
             this.$refs['localLoading'+this.chartIndex].endLoading();
             this.firstShow = true; // 展示操作按键
           });
@@ -1047,11 +1045,11 @@
                         },
                         metric_name: '',
                       };
-                      // if(chartInfo.type === 'stackArea'){
-                      //   seriesItem.theData.type='line';
-                      //   // seriesItem.theData.stack=chartInfo.title
-                      //   seriesItem.theData.areaStyle={};
-                      // }
+                      if(this.data.type === 'stackArea'){
+                        seriesItem.theData.type='line';
+                        seriesItem.theData.stack=this.data.title
+                        seriesItem.theData.areaStyle={};
+                      }
                       // 图表中每条线的名字,后半部分
                       // let host = `${queryItem.metric.__name__}{`;//up,
                       let host = '';//up,
