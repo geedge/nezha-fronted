@@ -510,6 +510,7 @@
         } else {
           this.$post('panel', {name: this.panelName2}).then(response => {
             if (response.code === 200) {
+              this.$emit("reloadOnlyPanel");
               this.$store.commit('panelListChange', true);
             } else {
               this.$message.error(response.msg);
