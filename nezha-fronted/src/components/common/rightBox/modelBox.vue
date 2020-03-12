@@ -36,10 +36,10 @@
               popper-class="no-style-class"
               >
               <template slot-scope="{ item }">
-                <div class="autocomplete-dropdown">
+                <div class="autocomplete-dropdown" @mouseenter="dropdownHoverItem = 'type' + item.id" @mouseleave="dropdownHoverItem = ''">
                   <span v-if="!item.isEdit">{{item.value}}</span>
                   <span v-else @click.stop="inputHandler(item)"><el-input size="mini" v-model="editingType" @click.stop></el-input></span>
-                  <div class="dropdown-btns">
+                  <div class="dropdown-btns" v-show="dropdownHoverItem == 'type' + item.id">
                     <span class="dropdown-btn dropdown-btn-delete" :id="'model-type-op-del-' + item.id" @click.stop="delType(item.id)"><i class="el-icon-delete"></i></span>
                     <span v-if="!item.isEdit" class="dropdown-btn dropdown-btn-edit" :id="'model-type-op-edit-' + item.id" @click.stop="editType(item)"><i class="nz-icon nz-icon-edit"></i></span>
                     <span v-else class="dropdown-btn dropdown-btn-edit" :id="'model-type-op-edit-' + item.id" @click.stop="saveType(item)"><i class="el-icon-check"></i></span>
@@ -58,10 +58,10 @@
               popper-class="no-style-class"
             >
               <template slot-scope="{ item }">
-                <div class="autocomplete-dropdown">
+                <div class="autocomplete-dropdown" @mouseenter="dropdownHoverItem = 'vendor' + item.id" @mouseleave="dropdownHoverItem = ''">
                   <span v-if="!item.isEdit">{{item.value}}</span>
                   <span v-else @click.stop="inputHandler(item)"><el-input size="mini" v-model="editingVendor"></el-input></span>
-                  <div class="dropdown-btns">
+                  <div class="dropdown-btns" v-show="dropdownHoverItem == 'vendor' + item.id">
                     <span class="dropdown-btn dropdown-btn-delete" :id="'model-vendor-op-del-' + item.id" @click.stop="delVendor(item.id)"><i class="el-icon-delete"></i></span>
                     <span v-if="!item.isEdit" class="dropdown-btn dropdown-btn-edit" :id="'model-vendor-op-edit-' + item.id" @click.stop="editVendor(item)"><i class="nz-icon nz-icon-edit"></i></span>
                     <span v-else class="dropdown-btn dropdown-btn-edit" :id="'model-type-op-edit-' + item.id" @click.stop="saveVendor(item)"><i class="el-icon-check"></i></span>
@@ -132,6 +132,7 @@
         typeData: [],  //type下拉列表的数据
         editingVendor: '', //修改状态的vendor值
         editingType: '', //修改状态的assetType值
+        dropdownHoverItem: '', //控制vendor和type下拉列表中操作按钮的展示
       }
     },
     methods: {
