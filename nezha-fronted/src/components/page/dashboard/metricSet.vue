@@ -52,7 +52,7 @@
         <!--<button :disabled="saveDisabled || loading" type="primary" @click="preview('change')" class="margin-l-10"
                 :class="{'nz-btn nz-btn-disabled nz-btn-size-large nz-btn-style-light nz-btn-min-width-75 btn-disabled-cursor-not-allowed' : (saveDisabled || loading), 'nz-btn nz-btn-size-large nz-btn-style-light' : !(saveDisabled || loading)}"
         >{{chartSwitchWord}}</button>-->
-        
+
         <!-- <Button type="primary" @click="addTarget">添加指标</Button> -->
       </el-row>
 
@@ -97,8 +97,8 @@
               :rules="{ required: true,   trigger: 'change' }">
               <el-select transfer class="w-select" v-model="chartInfo.type" size="mini">
                 <el-option v-for="item in typeList"
-                  :key="item.id" 
-                  :label="item.name" 
+                  :key="item.id"
+                  :label="item.name"
                   :value="item.id">
                   {{item.name}}
                 </el-option>
@@ -278,7 +278,7 @@ export default {
           });
         }
       },
-      
+
     /*
     // 取消创建modal
     cancel() {

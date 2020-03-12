@@ -261,11 +261,11 @@ export default {
                         },
                         metric_name: '',
                       };
-                      if(chartInfo.type === 'stackArea'){
-                        seriesItem.theData.type='line';
-                        seriesItem.theData.stack=chartInfo.title
-                        seriesItem.theData.areaStyle={};
-                      }
+                      // if(chartInfo.type === 'stackArea'){
+                      //   seriesItem.theData.type='line';
+                      //   // seriesItem.theData.stack=chartInfo.title
+                      //   seriesItem.theData.areaStyle={};
+                      // }
                       // 图表中每条线的名字,后半部分
                       let host = '';//up,
                       if(queryItem.metric.__name__){
@@ -284,7 +284,7 @@ export default {
                         if(host.endsWith(',')){host = host.substr(0,host.length-1);}
                         host +="}";
                         //处理legend别名
-                        let alias=this.dealLegendAlias(host,chartItem.elements[innerPos].legend);
+                        let alias=this.$refs.editChart[index].dealLegendAlias(host,chartItem.elements[innerPos].legend);
                         legend.push({name:host,alias:alias});
                         // 图表中每条线的名字,去掉最后的逗号与空格:metric名称,  标签1=a,标签2=c
                         seriesItem.theData.name = host;
@@ -396,24 +396,6 @@ export default {
         const chartBox = document.getElementsByClassName('chartBox');
         chartBox[index].style.width = `${(size / 12) * 100}%`;
       });
-    },
-    dealLegendAlias:function(legend,expression){
-        if(/\{\{.+\}\}/.test(expression)){
-          let labelValue=expression.replace(/(\{\{.+?\}\})/g,function(i){
-            let label=i.substr(i.indexOf('{{')+2,i.indexOf('}}')-i.indexOf('{{')-2)
-            let reg=new RegExp(label+'=".+?"')
-            let value=null;
-            if(reg.test(legend)){
-              let find=legend.match(reg)[0];
-              value=find.substr(find.indexOf('"')+1,find.lastIndexOf('"')-find.indexOf('"')-1);
-            }
-            return value?value:label;
-          })
-          return labelValue
-        }else{
-          return expression;
-        }
-
     },
     getNewTime(time, num) {
       const date = new Date(time);

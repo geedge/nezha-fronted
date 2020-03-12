@@ -499,21 +499,8 @@
               }
             },
             formatter:function(params){
-              // let maxWidth=0;
-              let avgWidth=0;
-              let sumWidth=0;
-              params.forEach((item, i) => {
-                let tip=legend.find((element)=>{
-                  return element.name == item.seriesName;
-                })
-
-                let curLength=(tip.alias?tip.alias:tip.name).length;
-                // maxWidth=maxWidth>curLength?maxWidth:curLength;
-                sumWidth+=curLength;
-              })
-              avgWidth=sumWidth/params.length;
               //display:inline-block;white-space:nowrap;overflow-x:hidden;text-overflow:ellipsis;
-              let str = `<div  style='width:${avgWidth*11}px;max-width:600px;display:inline-block;line-height: 18px;font-size:12px;font-family: Roboto,Helvetica Neue,Arial,sans-serif;'>`;
+              let str = `<div  style='white-space:nowrap;overflow-x:hidden;text-overflow:ellipsis;min-width:150px;max-width:600px;display:inline-block;line-height: 18px;font-size:12px;font-family: Roboto,Helvetica Neue,Arial,sans-serif;'>`;
               params.forEach((item, i) => {
                 let tip=legend.find((element)=>{
                   return element.name == item.seriesName;
@@ -556,12 +543,12 @@
                 str +=`<span style='display:inline-block;margin-right:5px;border-radius:10px;width:15px;height:5px;background-color: ${item.color};}'></span> `;
                 str +=seriesNameTmp+":"+val;
                  */
-                str += `<div style='max-width:510px;display:inline-block;white-space:nowrap;overflow-x:hidden;text-overflow:ellipsis;line-height: 18px;font-size:12px;font-family: Roboto,Helvetica Neue,Arial,sans-serif;'>`;
-                str +=`<span style='display:inline-block;margin-right:5px;border-radius:10px;width:15px;height:5px;background-color: ${item.color};}'></span>${tip.alias?tip.alias:tip.name}:  `;
+                str += `<div style='max-width:500px;display:inline-block;white-space:nowrap;overflow-x:hidden;text-overflow:ellipsis;line-height: 18px;font-size:12px;font-family: Roboto,Helvetica Neue,Arial,sans-serif;'>`;
+                str +=`<span style='display:inline-block;margin-right:5px;border-radius:10px;width:15px;height:5px;background-color: ${item.color};}'></span>${tip?(tip.alias?tip.alias:tip.name):item.seriesName}:  `;
                 str +=`</div>`;
                 // str +=`<div style="display: inline-block;max-width: 10px; min-width: 5px;line-height: 18px;"></div>`;
                 str += `<div style='max-width:90px;min-width:20px;float:right;text-align:right;display:inline-block;white-space:nowrap;overflow-x:hidden;text-overflow:ellipsis;line-height: 18px;font-size:12px;font-family: Roboto,Helvetica Neue,Arial,sans-serif;'>`;
-                str +=chartDataFormat.getUnit(chartInfo.unit).compute(val,null,2);
+                str +=chartDataFormat.getUnit(chartInfo.unit?chartInfo.unit:2).compute(val,null,2);
                 str +=`</div>`;
               });
               str +=`</div>`;
@@ -686,6 +673,7 @@
             axisLabel: {
               formatter: function(value,index){
                 let chartUnit=chartInfo.unit;
+                chartUnit=chartUnit?chartUnit:2;
                 let unit=chartDataFormat.getUnit(chartUnit);
                 return unit.compute(value,index);
               },
@@ -1062,7 +1050,7 @@
               if(!this.data.type){
                 this.data.type='line';
               }
-              res.forEach((response) => {
+              res.forEach((response,pos) => {
                 if (response.status === 'success') {
                   if (response.data.result) {
                     // 循环处理每个elements下获取的数据列
@@ -1079,11 +1067,11 @@
                         },
                         metric_name: '',
                       };
-                      if(chartInfo.type === 'stackArea'){
-                        seriesItem.theData.type='line';
-                        seriesItem.theData.stack=chartInfo.title
-                        seriesItem.theData.areaStyle={};
-                      }
+                      // if(chartInfo.type === 'stackArea'){
+                      //   seriesItem.theData.type='line';
+                      //   // seriesItem.theData.stack=chartInfo.title
+                      //   seriesItem.theData.areaStyle={};
+                      // }
                       // 图表中每条线的名字,后半部分
                       // let host = `${queryItem.metric.__name__}{`;//up,
                       let host = '';//up,
@@ -1102,7 +1090,8 @@
                         });
                         if(host.endsWith(',')){host = host.substr(0,host.length-1);}
                         host +="}";
-                        legend.push(host);
+                        let alias=this.dealLegendAlias(host,this.data.elements[pos].legend);
+                        legend.push({name:host,alias:alias});
                         // 图表中每条线的名字,去掉最后的逗号与空格:metric名称,  标签1=a,标签2=c
                         seriesItem.theData.name = host;
                         seriesItem.metric_name = seriesItem.theData.name;
@@ -1174,6 +1163,24 @@
           this.echartStore.showLoading();
         }
         */
+      },
+      dealLegendAlias:function(legend,expression){
+        if(/\{\{.+\}\}/.test(expression)){
+          let labelValue=expression.replace(/(\{\{.+?\}\})/g,function(i){
+            let label=i.substr(i.indexOf('{{')+2,i.indexOf('}}')-i.indexOf('{{')-2)
+            let reg=new RegExp(label+'=".+?"')
+            let value=null;
+            if(reg.test(legend)){
+              let find=legend.match(reg)[0];
+              value=find.substr(find.indexOf('"')+1,find.lastIndexOf('"')-find.indexOf('"')-1);
+            }
+            return value?value:label;
+          })
+          return labelValue
+        }else{
+          return expression;
+        }
+
       },
       // 获取格式
       getNumStr(num) {

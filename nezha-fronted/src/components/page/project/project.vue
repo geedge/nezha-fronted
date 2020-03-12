@@ -225,10 +225,11 @@
 <!--          </button>-->
         </div>
       </div>
-      <div v-show="showTableData && showTableData.length>0" class="table-header-inner" @click="clearSelectedMetrics"><span><i style="font-size: 12px;margin-left: 2px;" class="nz-icon nz-icon-close " :class="{'control-icon-unchecked':selectedEndpoints.length<1,'control-icon-checked':selectedEndpoints.length>0}"></i></span></div>
+      <div  class="table-header-inner" @click="clearSelectedMetrics"><span><i style="font-size: 12px;margin-left: 2px;" class="nz-icon nz-icon-close " :class="{'control-icon-unchecked':selectedEndpoints.length<1,'control-icon-checked':selectedEndpoints.length>0}"></i></span></div>
       <el-table
-        v-show="showTableData && showTableData.length>0"
         :data="showTableData"
+        v-loading="queryEdpLoading"
+        element-loading-background="rgba(0, 0, 0, 0)"
         border
         v-scrollBar:el-table
         class="nz-table endpoint-query-table"
@@ -273,7 +274,6 @@
       <button class="to-top" v-show="showTopBtn2" @click="toTop"><i class="nz-icon nz-icon-top"></i></button>
 
     </div>
-    <loading  ref="loading"></loading>
     <element-set
       v-clickoutside="elementsetHide"
       :table-title="endpointTableTitle"
@@ -605,7 +605,7 @@
               })
               avgWidth=sumWidth/params.length;
               //display:inline-block;white-space:nowrap;overflow-x:hidden;text-overflow:ellipsis;
-              let str = `<div   style='width:${avgWidth*10}px;max-width:600px;display:inline-block;line-height: 18px;font-size:12px;font-family: Roboto,Helvetica Neue,Arial,sans-serif;'>`;
+              let str = `<div   style='width:${avgWidth*10}px;min-width:150px;max-width:600px;display:inline-block;line-height: 18px;font-size:12px;font-family: Roboto,Helvetica Neue,Arial,sans-serif;'>`;
               params.forEach((item, i) => {
                 let tip=temp.legend.find((element)=>{
                   return element.name == item.seriesName;
@@ -1145,9 +1145,7 @@
       },
       showEndpoint:function(endpoint){
         this.tableShow=3;
-        // this.queryEdpLoading=true;
-        console.log(this.$refs)
-        this.$refs.loading.startLoading();
+        this.queryEdpLoading=true;
         if(endpoint){
           this.curEndpoint=endpoint;
           this.formatTime='';
@@ -1217,8 +1215,7 @@
                 this.showTableData.push(edpQueryData);
               }
               this.showTableDataCopy=JSON.stringify(this.showTableData);
-              // this.queryEdpLoading=false;
-              this.$refs.loading.endLoading();
+              this.queryEdpLoading=false;
               this.gutterHandler(".endpoint-query-table"); //控制table右边距
               this.showTopBtn2 = false;
               this.$nextTick(() => {
@@ -1320,7 +1317,7 @@
         this.chartDatas=[];
         this.legend=[];
         this.graphShow=true;
-        setTimeout(()=>{this.queryChartDate();},10)
+        setTimeout(()=>{this.$refs.graphLoading.startLoading();this.queryChartDate();},10)
 
       },
       dialogClose:function(){
@@ -1408,9 +1405,10 @@
                 this.chartOptions.series=this.chartDatas;
                 this.graphChart.setOption(this.chartOptions);//创建图表
                 this.$refs.chartScrollbar.update();
+                this.$refs.graphLoading.endLoading();
               }
             });
-          this.$refs.graphLoading.endLoading();
+
         })
       },
       dateChange:function(){
@@ -1421,7 +1419,6 @@
 
       },
       initDialog:function(){
-        this.$refs.graphLoading.startLoading();
         this.graphChart = echarts.init(document.getElementById('viewGraphChart'));
         // this.queryChartDate();
         // this.chartOptions.legend.data=this.legend;
@@ -1971,5 +1968,20 @@
   .dropdownBtn .el-dropdown__caret-button{
     top:0px !important;
     left:2px;
+  }
+  .endpoint-query-table .el-loading-spinner .circular{
+    width: 42px;
+    height: 42px;
+    animation: loading-rotate 2s linear infinite;
+    display: none;
+  }
+  .endpoint-query-table .el-loading-spinner{
+    background: url(../../../assets/img/loading.gif) no-repeat;
+    background-size: 48px 48px;
+    width: 100%;
+    height: 100%;
+    position: relative;
+    top: 50%;
+    left: 48.5%;
   }
 </style>

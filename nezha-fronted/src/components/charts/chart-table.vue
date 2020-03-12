@@ -39,12 +39,13 @@
                     {{ scope.row.element.alias?scope.row.element.alias:scope.row.element.element}}
                   </template>
                 </el-table-column>
-                <el-table-column sortable prop="value" :label="$t('dashboard.panel.chartTableColumn.value')" class-name="max-width-90">
+                <el-table-column sortable prop="value" :label="$t('dashboard.panel.chartTableColumn.value')" width="90">
                   <template slot-scope="scope">
                     {{ unit.compute(scope.row.value,null,2)}}
                   </template>
                 </el-table-column>
             </el-table>
+          <Pagination :pageObj="pageObj" @pageNo='pageNo' @pageSize='pageSize' ref="Pagination"></Pagination>
         </div>
         <!--全屏-->
           <el-dialog class="nz-dialog table-chart-dialog" :title="$t('dashboard.panel.view')"  :visible.sync="screenModal" width="96%"  @close="screenModal = false" >
@@ -70,7 +71,7 @@
                         {{ unit.compute(scope.row.value,null,2)}}
                       </template>
                     </el-table-column>
-
+                  <Pagination :pageObj="screenPageObj" @pageNo='screenPageNo' @pageSize='screenPageSize' ref="Pagination"></Pagination>
                 </el-table>
                 <loading  :ref="'localLoadingScreen'+chartIndex"></loading>
             <!--
@@ -115,6 +116,16 @@ export default {
         return {
             data: {}, // 该图表信息,chartItem
             unit:{},
+            pageObj: {
+              pageNo: 1,
+              pageSize: 20,
+              total: 0
+            },
+            screenPageObj:{
+              pageNo: 1,
+              pageSize: 20,
+              total: 0
+            },
             seriesItem: [], // 保存信息
             seriesItemScreen:[],//全屏数据
             images: '',
@@ -257,6 +268,28 @@ export default {
     computed: {},
     watch: {},
     methods: {
+        pageNo(val) {
+          this.pageObj.pageNo = val;
+          // this.getAlertList();
+        },
+        pageSize(val) {
+          this.pageObj.pageSize = val;
+          // this.getAlertList();
+          this.$nextTick(() => {
+            this.gutterHandler(".nz-table");
+          });
+        },
+        screenPageNo(val) {
+          this.screenPageObj.pageNo = val;
+          // this.getAlertList();
+        },
+        screenPageSize(val) {
+          this.screenPageObj.pageSize = val;
+          // this.getAlertList();
+          this.$nextTick(() => {
+            this.gutterHandler(".nz-table");
+          });
+        },
         startLoading(area){
           if(area==='screen'){
             //this.showLoadingScreen = true;
@@ -401,6 +434,24 @@ export default {
               //this.tableLoading = false;
             }
         },
+      dealLegendAlias:function(legend,expression){
+        if(/\{\{.+\}\}/.test(expression)){
+          let labelValue=expression.replace(/(\{\{.+?\}\})/g,function(i){
+            let label=i.substr(i.indexOf('{{')+2,i.indexOf('}}')-i.indexOf('{{')-2)
+            let reg=new RegExp(label+'=".+?"')
+            let value=null;
+            if(reg.test(legend)){
+              let find=legend.match(reg)[0];
+              value=find.substr(find.indexOf('"')+1,find.lastIndexOf('"')-find.indexOf('"')-1);
+            }
+            return value?value:label;
+          })
+          return labelValue
+        }else{
+          return expression;
+        }
+
+      },
         // 获取格式
         getNumStr(num) {
             if (num) {

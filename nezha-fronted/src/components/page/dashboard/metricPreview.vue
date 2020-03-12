@@ -339,7 +339,7 @@ export default {
             });
           if(host.endsWith(',')){host = host.substr(0,host.length-1);}
           host +="}";
-          legend.push(host);
+          legend.push({name:host,alias:null});
 
           // 图表中每条线的名字,去掉最后的逗号与空格
           seriesItem.theData.name = host;

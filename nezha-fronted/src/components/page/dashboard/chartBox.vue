@@ -233,7 +233,7 @@
           type:'line',
           span:12,
           height:'400',
-          unit:1,
+          unit:2,
           elements:{
             id: '',
             expression: '',
@@ -260,10 +260,10 @@
             id:"table",
             name:this.$t("dashboard.panel.chartForm.typeVal.table.label")
           },
-          {
-            id:'stackArea',
-            name:this.$t("dashboard.panel.chartForm.typeVal.stackArea.label")
-          }
+          // {
+          //   id:'stackArea',
+          //   name:this.$t("dashboard.panel.chartForm.typeVal.stackArea.label")
+          // }
         ],
         elements: [1], // 指标部分 tarNum
         elementTarget: [], // 本地保存数据
@@ -679,7 +679,7 @@
         this.chart.type = 'line';
         this.chart.span = 12;
         this.chart.height = 400+'';
-        this.chart.unit=1;
+        this.chart.unit=2;
         this.elements = [1];
         this.elementTarget = [];
         bus.chartAddInfo.metricTarget = [];
