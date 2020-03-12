@@ -829,7 +829,7 @@ li{
 .el-scrollbar__thumb {
   background-color: #aaa;
 }
-.el-autocomplete-suggestion__wrap.el-scrollbar__wrap {
+.el-autocomplete-suggestion__wrap.el-scrollbar__wrap, .el-cascader-menu__wrap.el-scrollbar__wrap {
   margin-bottom: 0 !important;
 }
 .el-scrollbar__thumb:hover {
@@ -1240,4 +1240,18 @@ li{
 }
 .el-table__fixed-body-wrapper {
   height: calc(100% - 42px) !important;
+}
+
+/*model侧滑中下拉框*/
+.autocomplete-dropdown {
+  display: flex;
+  align-items : center;
+  justify-content: space-between;
+}
+.autocomplete-dropdown .dropdown-btn-edit>i {
+  font-size: 14px;
+}
+.autocomplete-dropdown .dropdown-btn-delete>i {
+  color: #ee6723;
+  margin-right: 4px;
 }

@@ -1,6 +1,6 @@
 <template>
   <transition name="right-box">
-    <div class="right-box right-box-model" v-if="rightBox.show" v-clickoutside="clickos">
+    <div class="right-box right-box-model" v-if="rightBox.show" v-clickoutside="clickos" @click="inputHandler">
       <!-- begin--顶部按钮-->
       <div class="right-box-top-btns">
         <button id="model-del" type="button" v-if="currentModel.id != '' && rightBox.isEdit" @click="del" class="nz-btn nz-btn-size-normal nz-btn-size-alien nz-btn-style-light nz-btn-min-width-82">
@@ -26,6 +26,28 @@
             <el-input v-if="rightBox.isEdit" placeholder="" maxlength="64" show-word-limit v-model.trim="currentModel.name" size="small"></el-input>
             <div v-if="!rightBox.isEdit" class="right-box-form-content-txt">{{currentModel.name}}</div>
           </el-form-item>
+          <!--设备类型-->
+          <el-form-item :label="$t('config.model.type')" prop="type">
+            <el-autocomplete
+              :fetch-suggestions="typeSuggestion"
+              v-model.trim="currentModel.type.value"
+              placeholder=""
+              size="small"
+              popper-class="no-style-class"
+              >
+              <template slot-scope="{ item }">
+                <div class="autocomplete-dropdown">
+                  <span v-if="!item.isEdit">{{item.value}}</span>
+                  <span v-else @click.stop="inputHandler(item)"><el-input size="mini" v-model="editingType" @click.stop></el-input></span>
+                  <div class="dropdown-btns">
+                    <span class="dropdown-btn dropdown-btn-delete" :id="'model-type-op-del-' + item.id" @click.stop="delType(item.id)"><i class="el-icon-delete"></i></span>
+                    <span v-if="!item.isEdit" class="dropdown-btn dropdown-btn-edit" :id="'model-type-op-edit-' + item.id" @click.stop="editType(item)"><i class="nz-icon nz-icon-edit"></i></span>
+                    <span v-else class="dropdown-btn dropdown-btn-edit" :id="'model-type-op-edit-' + item.id" @click.stop="saveType(item)"><i class="el-icon-check"></i></span>
+                  </div>
+                </div>
+              </template>
+            </el-autocomplete>
+          </el-form-item>
           <!--厂商-->
           <el-form-item :label="$t('config.model.vendor')" prop="vendor">
             <el-autocomplete
@@ -34,18 +56,18 @@
               placeholder=""
               size="small"
               popper-class="no-style-class"
-              >
-            </el-autocomplete>
-          </el-form-item>
-          <!--设备类型-->
-          <el-form-item :label="$t('config.model.type')" prop="vendor">
-            <el-autocomplete
-              :fetch-suggestions="typeSuggestion"
-              v-model.trim="currentModel.type.value"
-              placeholder=""
-              size="small"
-              popper-class="no-style-class"
-              >
+            >
+              <template slot-scope="{ item }">
+                <div class="autocomplete-dropdown">
+                  <span v-if="!item.isEdit">{{item.value}}</span>
+                  <span v-else @click.stop="inputHandler(item)"><el-input size="mini" v-model="editingVendor"></el-input></span>
+                  <div class="dropdown-btns">
+                    <span class="dropdown-btn dropdown-btn-delete" :id="'model-vendor-op-del-' + item.id" @click.stop="delVendor(item.id)"><i class="el-icon-delete"></i></span>
+                    <span v-if="!item.isEdit" class="dropdown-btn dropdown-btn-edit" :id="'model-vendor-op-edit-' + item.id" @click.stop="editVendor(item)"><i class="nz-icon nz-icon-edit"></i></span>
+                    <span v-else class="dropdown-btn dropdown-btn-edit" :id="'model-type-op-edit-' + item.id" @click.stop="saveVendor(item)"><i class="el-icon-check"></i></span>
+                  </div>
+                </div>
+              </template>
             </el-autocomplete>
           </el-form-item>
           <el-form-item :label="$t('config.model.remark')" prop="remark">
@@ -99,9 +121,17 @@
           name: [
             {required: true, message: this.$t('validate.required'), trigger: 'blur'}
           ],
+          type: [
+            {required: true, message: this.$t('validate.required'), trigger: 'blur'}
+          ],
+          vendor: [
+            {required: true, message: this.$t('validate.required'), trigger: 'blur'}
+          ]
         },
-        vendorData: [],
-        typeData: []
+        vendorData: [], //vendor下拉列表的数据
+        typeData: [],  //type下拉列表的数据
+        editingVendor: '', //修改状态的vendor值
+        editingType: '', //修改状态的assetType值
       }
     },
     methods: {
@@ -111,6 +141,29 @@
       },
       clickos() {
         this.rightBox.show = false;
+      },
+
+      //控制下拉框里input的状态
+      inputHandler(obj) {
+        if (obj) {
+          this.typeData.forEach((item, index) => {
+            if (obj.id != item.id) {
+              item.isEdit = false;
+            }
+          });
+          this.vendorData.forEach((item, index) => {
+            if (obj.id != item.id) {
+              item.isEdit = false;
+            }
+          });
+        } else {
+          this.typeData.forEach((item, index) => {
+            item.isEdit = false;
+          });
+          this.vendorData.forEach((item, index) => {
+            item.isEdit = false;
+          });
+        }
       },
       /*关闭弹框*/
       esc() {
@@ -136,7 +189,10 @@
                   //保存成功后，重新获取
                   this.$get('sys/dict/all?type=vendor').then(response => {
                     if (response.code === 200) {
-                      this.vendorData = response.data;
+                      this.vendorData = response.data.map((item) => {
+                        item.isEdit = false;
+                        return item;
+                      });
                       this.currentModel.vendorCode = this.autocompleteExist('vendor', this.currentModel.vendor.value);
                       vendorReady = true;
                     }
@@ -158,7 +214,10 @@
                 if (response.code === 200) {
                   this.$get('sys/dict/all?type=assetType').then(response => {
                     if (response.code === 200) {
-                      this.typeData = response.data;
+                      this.typeData = response.data.map((item) => {
+                        item.isEdit = false;
+                        return item;
+                      });
                       this.currentModel.typeCode = this.autocompleteExist('type', this.currentModel.type.value);
                       typeReady = true;
                     }
@@ -236,17 +295,103 @@
           });
         });
       },
+      delType(id) {
+        this.$confirm(this.$t("tip.confirmDelete"), {
+          confirmButtonText: this.$t("tip.yes"),
+          cancelButtonText: this.$t("tip.no"),
+          type: 'warning'
+        }).then(() => {
+          this.$delete("sys/dict/delete?ids=" + id).then(response => {
+            if (response.code === 200) {
+              this.$message({duration: 1000, type: 'success', message: this.$t("tip.deleteSuccess")});
+              this.getTypeData();
+            } else {
+              this.$message.error(response.msg);
+            }
+          });
+        });
+      },
+      editType(item) {
+        this.editingType = item.value;
+        this.inputHandler(item);
+        item.isEdit = true;
+      },
+      saveType(item) {
+        if (this.editingType) {
+          let temp = Object.assign({}, item);
+          temp.value = this.editingType;
+          this.$post('sys/dict/update', temp).then(response => {
+            if (response.code === 200) {
+              item.value = this.editingType;
+              item.isEdit = false;
+              if (this.currentModel.type.id == item.id) {
+                this.currentModel.type.value = item.value;
+              }
+              this.$emit("reload");
+              this.$message({duration: 1000, type: 'success', message: this.$t("tip.saveSuccess")});
+            } else {
+              this.$message.error(response.msg);
+            }
+          });
+        }
+      },
+      editVendor(item) {
+        this.editingVendor = item.value;
+        this.inputHandler(item);
+        item.isEdit = true;
+      },
+      saveVendor(item) {
+        if (this.editingVendor) {
+          let temp = Object.assign({}, item);
+          temp.value = this.editingVendor;
+          this.$post('sys/dict/update', temp).then(response => {
+            if (response.code === 200) {
+              item.value = this.editingVendor;
+              item.isEdit = false;
+              if (this.currentModel.vendor.id == item.id) {
+                this.currentModel.vendor.value = item.value;
+              }
+              this.$emit("reload");
+              this.$message({duration: 1000, type: 'success', message: this.$t("tip.saveSuccess")});
+            } else {
+              this.$message.error(response.msg);
+            }
+          });
+        }
+      },
+      delVendor(id) {
+        this.$confirm(this.$t("tip.confirmDelete"), {
+          confirmButtonText: this.$t("tip.yes"),
+          cancelButtonText: this.$t("tip.no"),
+          type: 'warning'
+        }).then(() => {
+          this.$delete("sys/dict/delete?ids=" + id).then(response => {
+            if (response.code === 200) {
+              this.$message({duration: 1000, type: 'success', message: this.$t("tip.deleteSuccess")});
+              this.getVendorData();
+            } else {
+              this.$message.error(response.msg);
+            }
+          });
+        });
+      },
       getVendorData() {
         this.$get('sys/dict/all?type=vendor').then(response => {
           if (response.code === 200) {
-            this.vendorData = response.data;
+            this.vendorData = response.data.map((item) => {
+              item.isEdit = false;
+              return item;
+            });
           }
         });
       },
       getTypeData() {
         this.$get('sys/dict/all?type=assetType').then(response => {
           if (response.code === 200) {
-            this.typeData = response.data;
+            this.typeData = response.data.map((item) => {
+              item.isEdit = false;
+              return item;
+            });
           }
         });
       },

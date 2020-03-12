@@ -262,7 +262,6 @@
           }
         });
         this.activeIndex = data
-
       },
 
       createBox(item) {
@@ -290,6 +289,7 @@
           this.$refs.alertConfigBox.show(true, true);
         } else if (item.type == 4) {
           this.addUnitShow = true;
+          this.$refs.assetAddUnit.show();
           this.$refs.assetAddUnit.resetAsset();
         }
       },

@@ -649,12 +649,14 @@
         if (data === 'showAdd') {
           //this.addUnitShow = true;
           this.editUnitShow = true;
+          this.$refs['assetEditUnit'].show();
           this.$refs['assetEditUnit'].accountSwitch=false;
           this.$refs['assetEditUnit'].getAssetData('');
           this.$refs['assetEditUnit'].resetAsset();
         }
         if (data === 'showEdit') {
           this.editUnitShow = true;
+          this.$refs['assetEditUnit'].show();
           this.$refs['assetEditUnit'].getAssetData(id)
         }
         if (data === 'showView') {

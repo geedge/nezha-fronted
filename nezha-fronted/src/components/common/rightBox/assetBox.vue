@@ -172,8 +172,8 @@
                 class="right-box-row-with-btn"
               >
               </el-cascader>
-              <div class="right-box-row-btn " v-if="!tabView">
-                <el-popover
+              <div class="right-box-row-btn" v-if="!tabView" @click="addVendor"><i class="el-icon-plus"></i>
+                <!--<el-popover
                   placement="left"
                   trigger="click"
                   width="370"
@@ -190,9 +190,9 @@
                           <span class="pop-top-btn-txt">{{$t('overall.esc')}}</span>
                         </button>
                       </div>
-                      <!--标题-->
+                      &lt;!&ndash;标题&ndash;&gt;
                       <div class="pop-title">{{$t('asset.createAssetTab.vendorTab.vendor')}}</div>
-                      <!--表单内容-->
+                      &lt;!&ndash;表单内容&ndash;&gt;
                       <div class="pop-item">
                         <div class="pop-label">{{$t('asset.createAssetTab.vendorTab.vendorName')}}</div>
                         <el-input class="input-x-mini-26" v-model="addVendorData.value"/>
@@ -278,7 +278,7 @@
                     </div>
                   </div>
                   <div slot="reference"><i class="el-icon-plus"></i></div>
-                </el-popover>
+                </el-popover>-->
               </div>
             </template>
             <span v-if="tabView">{{assetViewData.vendor}}   {{assetViewData.model}}</span>
@@ -408,6 +408,7 @@
         </button>
       </div>
       <module-box :module="module" @reload="refreshTabData" ref="moduleBox"></module-box>
+      <model-box ref="modelBox" :model="model" @reload="getAllModelOptionData"></model-box>
     </div>
   </transition>
 </template>
@@ -512,6 +513,16 @@
           principal: '',
           tel: ''
         },
+        model: {
+          id: '',
+          name: '',
+          vendor: {id: '', value: '', code: '', type: ''},
+          type: {id: '', value: '', code: '', type: ''},
+          assetStat: {total: '', inStock: '', outStock: ''},
+          remark: '',
+          vendorCode: '',
+          typeCode: ''
+        },
         addIdcData: {
           id: '',
           name: '',
@@ -614,11 +625,15 @@
       }
     },*/
     watch: {
-      allModelUlData(newVal) {
-        if (newVal) {
-          this.getConnectData();
-          if (this.pageObj.id != '') {
-            this.assetData.modelId = [this.obj.model.vendor.code, this.obj.model.id]
+      allModelUlData: {
+        deep: true,
+        immediate: true,
+        handler(newVal) {
+          if (newVal) {
+            this.getConnectData();
+            if (this.pageObj.id != '') {
+              this.assetData.modelId = [this.obj.model.vendor.code, this.obj.model.id]
+            }
           }
         }
       },
@@ -677,6 +692,11 @@
           this.editQuit();
           this.modelCount = '';
         }
+      },
+      show() {
+        this.getIDCOptionData();
+        this.getVendorOptionData();
+        this.getAssetTypeOptionData();
       },
       editQuit() {
         for (let i of this.assetTypeOptionData) {
@@ -796,8 +816,8 @@
       getVendorOptionData() {
         this.$get('sys/dict/all?type=vendor').then(response => {
           if (response.code === 200) {
-            this.vendorUlData = response.data
-            this.markOptionData(this.vendorUlData)
+            this.vendorUlData = response.data;
+            this.markOptionData(this.vendorUlData);
           }
         })
       },
@@ -805,7 +825,7 @@
         this.$get('model?typeCode=' + assetType + '&vendorCode=' + vendorCode).then(response => {
           if (response.code === 200) {
             this.modelUlData = response.data.list;
-            this.markOptionData(this.modelUlData)
+            this.markOptionData(this.modelUlData);
           }
         })
       },
@@ -816,6 +836,29 @@
             this.allModelUlData = response.data.list
           }
         })
+      },
+      addVendor() {
+        this.model = {
+          id: '',
+          name: '',
+          vendor: {id: '', value: '', code: '', type: ''},
+          type: {id: '', value: '', code: '', type: ''},
+          assetStat: {total: '', inStock: '', outStock: ''},
+          remark: '',
+          vendorCode: '',
+          typeCode: ''
+        };
+        if (this.assetType) {
+          //model侧滑弹出时，自动选好assetType
+          for (let i = 0; i < this.assetTypeOptionData.length; i++) {
+            if (this.assetTypeOptionData[i].code == this.assetType) {
+              this.model.type.code = this.assetType;
+              this.model.type.value = this.assetTypeOptionData[i].value;
+              break;
+            }
+          }
+        }
+        this.$refs.modelBox.show(true, true);
       },
       resetAsset() {
         this.pageObj.id = '';
@@ -1063,7 +1106,7 @@
           this.$post('sys/dict/save', this.assetTypeData).then(res => {
             const h = this.$createElement;
             if (res.code === 200) {
-              this.getAssetTypeOptionData()
+              this.getAssetTypeOptionData();
               this.$message({duration: 2000, type: 'success', message: this.$t("tip.saveSuccess")});
             } else {
               this.$message.error(res.msg);
