@@ -500,7 +500,9 @@
             },
             formatter:function(params){
               //display:inline-block;white-space:nowrap;overflow-x:hidden;text-overflow:ellipsis;
-              let str = `<div  style='white-space:nowrap;overflow-x:hidden;text-overflow:ellipsis;min-width:150px;max-width:600px;display:inline-block;line-height: 18px;font-size:12px;font-family: Roboto,Helvetica Neue,Arial,sans-serif;'>`;
+              let str = `<div>`;
+
+              //let str = `<div  style='white-space:nowrap;overflow-x:hidden;text-overflow:ellipsis;min-width:150px;max-width:600px;display:inline-block;line-height: 18px;font-size:12px;font-family: Roboto,Helvetica Neue,Arial,sans-serif;'>`;
               params.forEach((item, i) => {
                 let tip=legend.find((element)=>{
                   return element.name == item.seriesName;
@@ -509,49 +511,28 @@
                   let t_date = new Date(item.data[0]);
                   str += [t_date.getFullYear(), t_date.getMonth() + 1, t_date.getDate()].join('-') + " "
                     + [t_date.getHours(), t_date.getMinutes(),t_date.getSeconds()].join(':');
+                  str +=`<br/>`;
                 }
-                str +=`<br/>`;
                 let val = parseFloat(Number(item.data[1]).toFixed(2));
                 if(val===0){
                   val = Number(item.data[1]);
                 }
-                /*
-                let itemNameList = ["instance","module","project","job","dc","asset"];
-                let seriesNameTmp = item.seriesName;
-                itemNameList.forEach((itemName) => {
-                  let insIndex = seriesNameTmp.indexOf(itemName+"=");
-                  if(insIndex>-1){//{dd=""22,instance="aa",job="nn"},如果最后只有{},则去掉{}
-                    let start = seriesNameTmp.substring(0,insIndex);
-                    let endTmp = seriesNameTmp.substring(insIndex+itemName.length+1,seriesNameTmp.length);
-                    let sepInd = endTmp.indexOf(',');
-                    let end = "";
-                    if(sepInd>-1){
-                      end = endTmp.substring(sepInd+1,endTmp.length);
-                    }else {
-                      sepInd = endTmp.indexOf('"',1);
-                      end = endTmp.substring(sepInd+1,endTmp.length);
-                    }
-                    seriesNameTmp = start+end;
-                  }
-                });
-                if(seriesNameTmp.indexOf(",}")>-1){
-                  seriesNameTmp = seriesNameTmp.replace(",}","}");
-                }
-                if(seriesNameTmp.indexOf("{}")>-1){
-                  seriesNameTmp = seriesNameTmp.replace("{}","");
-                }
-                str +=`<span style='display:inline-block;margin-right:5px;border-radius:10px;width:15px;height:5px;background-color: ${item.color};}'></span> `;
-                str +=seriesNameTmp+":"+val;
-                 */
-                str += `<div style='max-width:500px;display:inline-block;white-space:nowrap;overflow-x:hidden;text-overflow:ellipsis;line-height: 18px;font-size:12px;font-family: Roboto,Helvetica Neue,Arial,sans-serif;'>`;
+                str += `<div style="white-space:nowrap;overflow-x:hidden;text-overflow:ellipsis;display: flex; justify-content: space-between; min-width: 150px; max-width: 600px; line-height: 18px; font-size: 12px;">`;
+                str += `<div style="max-width: 500px;white-space:nowrap;overflow-x:hidden;text-overflow:ellipsis;"><span style='display:inline-block;margin-right:5px;border-radius:10px;width:15px;height:5px;background-color: ${item.color};}'></span>${tip?(tip.alias?tip.alias:tip.name):item.seriesName}:  </div>`;
+                str += `<div style="padding-left: 10px;">`;
+                str += chartDataFormat.getUnit(chartInfo.unit?chartInfo.unit:2).compute(val,null,2);
+                str += `</div>`;
+                str += `</div>`;
+                /*str += `<div style='max-width:500px;display:inline-block;white-space:nowrap;overflow-x:hidden;text-overflow:ellipsis;line-height: 18px;font-size:12px;font-family: Roboto,Helvetica Neue,Arial,sans-serif;'>`;
                 str +=`<span style='display:inline-block;margin-right:5px;border-radius:10px;width:15px;height:5px;background-color: ${item.color};}'></span>${tip?(tip.alias?tip.alias:tip.name):item.seriesName}:  `;
-                str +=`</div>`;
+                str +=`</div>`;*/
                 // str +=`<div style="display: inline-block;max-width: 10px; min-width: 5px;line-height: 18px;"></div>`;
-                str += `<div style='max-width:90px;min-width:20px;float:right;text-align:right;display:inline-block;white-space:nowrap;overflow-x:hidden;text-overflow:ellipsis;line-height: 18px;font-size:12px;font-family: Roboto,Helvetica Neue,Arial,sans-serif;'>`;
+                /*str += `<div style='max-width:90px;min-width:20px;display:inline-block;white-space:nowrap;overflow-x:hidden;text-overflow:ellipsis;line-height: 18px;font-size:12px;font-family: Roboto,Helvetica Neue,Arial,sans-serif;'>`;
                 str +=chartDataFormat.getUnit(chartInfo.unit?chartInfo.unit:2).compute(val,null,2);
-                str +=`</div>`;
+                str +=`</div>`;*/
               });
               str +=`</div>`;
+              console.info(str)
               return str;
               // return `<div  style='width:100%;display:block;word-break:break-all;word-wrap:break-word;white-space:normal'><span style='display:inline-block;margin-right:5px;border-radius:10px;width:15px;height:5px;background-color: ${params[0].color};}'></span> ${params[0].seriesName}:${params[0].data[1]}</div>`;
             },
