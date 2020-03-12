@@ -527,12 +527,13 @@ let unitOptions=[
 ]
 let units=[];
 window.onload=function(){
-  unitOptions.forEach((item,index)=>{
-    item.children.forEach((n,i)=>{
-      units.push(n);
+  if(units.length <1){
+    unitOptions.forEach((item,index)=>{
+      item.children.forEach((n,i)=>{
+        units.push(n);
+      })
     })
-  })
-  console.log(units)
+  }
 }
 
 export default {
@@ -540,6 +541,13 @@ export default {
     return unitOptions;
   },
   getUnit:function(index){
+    if(units.length < 1){
+      unitOptions.forEach((item,index)=>{
+        item.children.forEach((n,i)=>{
+          units.push(n);
+        })
+      })
+    }
     return units[index-1];
   }
 }

@@ -30,7 +30,7 @@
 
         </div>
         <div class="mt-10" v-cloak  v-show="firstShow">
-            <el-table class="nz-table" :id="'tableContainer'+chartIndex" ref="tableContainer" :height="350" :data="seriesItem" border  tooltip-effect="light" v-cloak v-scrollBar:el-table>
+            <el-table class="nz-table" :id="'tableContainer'+chartIndex" ref="tableContainer" :height="290" :data="seriesItem" border  tooltip-effect="light" v-cloak v-scrollBar:el-table>
 <!--                <el-table-column sortable :show-overflow-tooltip="true" prop="metric" :label="$t('dashboard.panel.chartTableColumn.metric')" ></el-table-column>-->
 <!--                <el-table-column sortable :show-overflow-tooltip="true" prop="label" :label="$t('dashboard.panel.chartTableColumn.label')" ></el-table-column>-->
               <el-table-column sortable prop="time" :label="$t('dashboard.panel.chartTableColumn.time')" width="145" ></el-table-column>
@@ -57,7 +57,7 @@
                 <!--<button @click="refreshChart" type="button" class="nz-btn nz-btn-size-normal nz-btn-style-light"><i style="font-size: 14px;" class="el-icon-refresh-right"></i></button>-->
               </div>
             </div>
-                <el-table style="margin-top: 10px;" class="nz-table" height="100%" :data="seriesItemScreen" border  tooltip-effect="light" v-scrollBar:el-table>
+                <el-table style="margin-top: 10px;" class="nz-table" height="95%" :data="seriesItemScreen" border  tooltip-effect="light" v-scrollBar:el-table>
 <!--                    <el-table-column sortable :show-overflow-tooltip="true" prop="metric" :label="$t('dashboard.panel.chartTableColumn.metric')" ></el-table-column>-->
 <!--                    <el-table-column sortable :show-overflow-tooltip="true" prop="label" :label="$t('dashboard.panel.chartTableColumn.label')" ></el-table-column>-->
                   <el-table-column sortable prop="time" :label="$t('dashboard.panel.chartTableColumn.time')" width="145" ></el-table-column>
@@ -71,9 +71,9 @@
                         {{ unit.compute(scope.row.value,null,2)}}
                       </template>
                     </el-table-column>
-                  <Pagination :pageObj="screenPageObj" @pageNo='screenPageNo' @pageSize='screenPageSize' ref="Pagination"></Pagination>
                 </el-table>
-                <loading  :ref="'localLoadingScreen'+chartIndex"></loading>
+            <Pagination :pageObj="screenPageObj" @pageNo='screenPageNo' @pageSize='screenPageSize' ref="Pagination"></Pagination>
+            <loading  :ref="'localLoadingScreen'+chartIndex"></loading>
             <!--
                 <div v-show="showLoadingScreen" class="el-loading-mask" style="background-color: rgba(0, 0, 0, 0);">
                   <div class="el-loading-spinner">
@@ -126,6 +126,8 @@ export default {
               pageSize: 20,
               total: 0
             },
+            storedTableData:[],
+            storedScreanTableData:[],
             seriesItem: [], // 保存信息
             seriesItemScreen:[],//全屏数据
             images: '',
@@ -270,22 +272,25 @@ export default {
     methods: {
         pageNo(val) {
           this.pageObj.pageNo = val;
-          // this.getAlertList();
+          this.seriesItem=this.filterShowData(this.storedTableData,this.pageObj)
         },
         pageSize(val) {
           this.pageObj.pageSize = val;
-          // this.getAlertList();
+          this.seriesItem=this.filterShowData(this.storedTableData,this.pageObj)
           this.$nextTick(() => {
             this.gutterHandler(".nz-table");
           });
         },
+        filterShowData(source,pageObj){
+          return source.slice((pageObj.pageNo-1)*pageObj.pageSize,pageObj.pageNo*pageObj.pageSize)
+        },
         screenPageNo(val) {
           this.screenPageObj.pageNo = val;
-          // this.getAlertList();
+          this.seriesItemScreen=this.filterShowData(this.storedScreanTableData,this.screenPageObj)
         },
         screenPageSize(val) {
           this.screenPageObj.pageSize = val;
-          // this.getAlertList();
+          this.seriesItemScreen=this.filterShowData(this.storedScreanTableData,this.screenPageObj)
           this.$nextTick(() => {
             this.gutterHandler(".nz-table");
           });
@@ -331,7 +336,7 @@ export default {
             }
             chartBox.style.height = `${height-25}px`;
             const tableBox = document.getElementById('tableContainer'+this.chartIndex);
-            tableBox.style.height = `${height-75}px`;
+            tableBox.style.height = `${height-75-32}px`;
           });
           this.startLoading();
           this.divFirstShow = true;
@@ -395,11 +400,13 @@ export default {
             if(area==='showFullScreen'){//全屏按时间查询
               this.data = chartItem;
               this.unit = chartDataFormat.getUnit(this.data.unit);
-              console.log("unit-->")
-              console.log(this.unit);
               this.searchTime[0] = filter.start_time;//将列表的查询时间复制给全屏的查询时间
               this.searchTime[1] = filter.end_time;
-              this.seriesItemScreen = seriesItem;
+              // this.seriesItemScreen = seriesItem;
+              this.storedScreanTableData=seriesItem;
+              this.storedScreanTableData=Object.assign([],this.storedScreanTableData.reverse());
+              this.screenPageObj.total=this.storedScreanTableData.length;
+              this.seriesItemScreen=this.filterShowData(this.storedScreanTableData,this.screenPageObj);
               this.endLoading('screen');
             }else{
               //设置高度 chart-table
@@ -411,7 +418,7 @@ export default {
                 }
                 chartBox.style.height = `${height-25}px`;
                 const tableBox = document.getElementById('tableContainer'+this.chartIndex);
-                tableBox.style.height = `${height-75}px`;
+                tableBox.style.height = `${height-75-32}px`;
               });
               this.divFirstShow = true;
 
@@ -420,8 +427,16 @@ export default {
               this.panelIdInner = panelId;
               this.data = chartItem;
               this.unit = chartDataFormat.getUnit(this.data.unit);
-              this.seriesItem = seriesItem;
-              this.seriesItemScreen = seriesItem;
+              // this.seriesItem = seriesItem;
+              // this.seriesItemScreen = seriesItem;
+              this.storedTableData =seriesItem;
+              this.storedScreanTableData=seriesItem;
+              this.storedTableData=Object.assign([],this.storedTableData.reverse());
+              this.storedScreanTableData=Object.assign([],this.storedScreanTableData.reverse());
+              this.pageObj.total=this.storedTableData.length;
+              this.screenPageObj.total=this.storedScreanTableData.length;
+              this.seriesItem=this.filterShowData(this.storedTableData,this.pageObj);
+              this.seriesItemScreen =this.filterShowData(this.storedScreanTableData,this.screenPageObj)
               if (filter) { // 保存数据,用于同步时间
                 this.searchTime[0] = filter.start_time;//将列表的查询时间复制给全屏的查询时间
                 this.searchTime[1] = filter.end_time;

@@ -532,7 +532,6 @@
                 str +=`</div>`;*/
               });
               str +=`</div>`;
-              console.info(str)
               return str;
               // return `<div  style='width:100%;display:block;word-break:break-all;word-wrap:break-word;white-space:normal'><span style='display:inline-block;margin-right:5px;border-radius:10px;width:15px;height:5px;background-color: ${params[0].color};}'></span> ${params[0].seriesName}:${params[0].data[1]}</div>`;
             },
