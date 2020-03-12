@@ -74,9 +74,19 @@
         <!-- begin--表单-->
         <el-scrollbar class="right-box-form-box" ref="scrollbar">
           <el-form class="right-box-form" :model="chart" label-position="top" :rules="rules" ref="chartForm">
-            <el-form-item :label="$t('dashboard.panel.title')">
-              <div class="right-box-form-content">
-                <el-select class="right-box-row-with-btn" popper-class="chart-box-dropdown"
+            <el-form-item :label="$t('dashboard.panel.title')" prop="panel">
+                <el-autocomplete
+                  :fetch-suggestions="panelSuggestion"
+                  v-model.trim="panelName2"
+                  placeholder=""
+                  size="small"
+                  value-key="name"
+                  v-if="!chart.id"
+                  popper-class="chart-box-autocomplete no-style-class"
+                >
+                </el-autocomplete>
+                <el-input size="small" v-if="chart.id" readonly="readonly" :value="panelName2"></el-input>
+                <!--<el-select popper-class="chart-box-dropdown"
                            v-model="panelId" placeholder="" v-if="rightBox.show" size="small">
                   <el-option v-for="item in panelData" :key="item.id" :label="item.name"
                              :value="item.id" :id="'chart-box-panel-'+item.id">
@@ -92,8 +102,8 @@
 
                 <div class="right-box-row-btn" v-if="rightBox.show" @click="toAddPanel">
                   <i class="el-icon-plus" id="chart-box-panel-plus"></i>
-                </div>
-              </div>
+                </div>-->
+
             </el-form-item>
             <el-form-item :label='$t("dashboard.panel.chartForm.chartName")' prop="title">
               <el-input size="small" maxlength="64" show-word-limit v-model="chart.title"></el-input>
@@ -273,6 +283,7 @@
         //productId: 0,//不需要这个参数，可以删除
         panelId: 0,
         panelName: '',
+        panelName2: '',
         selectFirstPanel: false,
         metricList: [], // metric列表
         metricCascaderList:[],//metric级联列表
@@ -378,6 +389,7 @@
             if (response.code === 200) {
               if(this.$refs.chartForm){
                 this.$refs.chartForm.resetFields();//清空表单
+                this.panelName2 = '';
               }
               this.esc();
               this.$message({duration: 1000, type: 'success', message: this.$t("tip.deleteSuccess")});
@@ -398,6 +410,7 @@
           this.rightBox.show = false;
           //this.editParamBox.show = false;
           this.$refs.chartForm.resetFields();//清空表单
+          this.panelName2 = '';
           this.chart.id='';//不清除，再次打开创建图表，会显示删除按钮
         }
       },
@@ -478,30 +491,69 @@
         return str;
       },
        */
+      autocompleteExist(string) {
+        let result = false;
+        for (let i = 0; i < this.panelData.length; i++) {
+          if (this.panelData[i].name.toLowerCase() == string.toLowerCase()) {
+            result = this.panelData[i].id;
+            break;
+          }
+        }
+        return result;
+      },
       // 新建图表
       addCharts(params) {
-        this.$post('panel/'+this.panelId+'/charts', params).then(response => {
-          if (response.code === 200) {
-            this.esc();
-            this.$message({duration: 1000, type: 'success', message: this.$t("tip.saveSuccess")});
-            this.$refs.chartForm.resetFields();//清空表单
-            let panel = this.panelData.find(p => p.id === this.panelId);
-            this.$emit('on-create-success', 'create', response.data,params, panel);
+        //先处理panel
+        let panelId = this.autocompleteExist(this.panelName2);
+        if (panelId) {
+          this.panelId = panelId;
+        } else {
+          this.$post('panel', {name: this.panelName2}).then(response => {
+            if (response.code === 200) {
+              this.$store.commit('panelListChange', true);
+            } else {
+              this.$message.error(response.msg);
+            }
+          });
+        }
+
+        let intervalTime = 1; //设置3秒超时
+        let interval = setInterval(() => {
+          panelId = this.autocompleteExist(this.panelName2);
+          if (panelId) {
+            this.panelId = panelId;
+            this.$post('panel/' + this.panelId + '/charts', params).then(response => {
+              if (response.code === 200) {
+                this.esc();
+                this.$message({duration: 1000, type: 'success', message: this.$t("tip.saveSuccess")});
+                this.$refs.chartForm.resetFields();//清空表单
+                this.panelName2 = '';
+                let panel = this.panelData.find(p => p.id === this.panelId);
+                this.$emit('on-create-success', 'create', response.data,params, panel);
+              } else {
+                this.$message.error(response.msg);
+              }
+            });
+            clearInterval(interval);
+          } else if (intervalTime > 15) {
+            this.$message.error("Time out");
+            clearInterval(interval);
           } else {
-            this.$message.error(response.msg);
+            intervalTime++;
           }
-        });
+        }, 200);
       },
       // 更新图表
       updateCharts(params) {
-        this.$put('panel/'+this.panelId+'/charts', params).then(response => {
-          if (response.code === 200) {
+        this.$put('panel/' + this.panelId + '/charts', params).then(response2 => {
+          if (response2.code === 200) {
             this.esc();
             this.$message({duration: 1000, type: 'success', message: this.$t("tip.saveSuccess")});
             this.$refs.chartForm.resetFields();//清空表单
-            this.$emit('on-create-success', 'update', response.data,params);
+            this.panelName2 = '';
+            this.$emit('on-create-success', 'update', response2.data, params);
           } else {
-            this.$message.error(response.msg);
+            this.$message.error(response2.msg);
           }
         });
       },
@@ -647,6 +699,10 @@
       editData(data, panelId) {
         //alert('data='+JSON.stringify(data)+"=="+panelId);
         this.panelId = panelId;
+        let temp = this.panelData.filter((item) => {
+          return item.id == panelId;
+        });
+        this.panelName2 = temp[0].name;
         this.isedit = true;
         //this.chartModal = true;
         this.editInfo = data;
@@ -656,7 +712,7 @@
         this.chart.span = data.span;
         this.chart.height = data.height+'';
         this.chart.type = data.type;
-        this.chart.unit=data.unit
+        this.chart.unit=data.unit;
         this.getSuggestMetric();//获得指标列表
         // 指标
         this.elements = [];
@@ -713,7 +769,24 @@
       },
       unitSelected:function(value){
         this.chart.unit=value[value.length-1];
-      }
+      },
+
+      /*panel搜索建议*/
+      panelSuggestion(queryString, callback) {
+        let data = [];
+        if (!queryString) {
+          data = this.panelData;
+        } else {
+          for (let i = 0; i < this.panelData.length; i++) {
+            if (this.panelData[i].name.toLowerCase().indexOf(queryString.toLowerCase()) != -1) {
+              data.push(this.panelData[i]);
+            }
+          }
+        }
+        console.info(data);
+        callback(data);
+      },
+
     },
     created() {
 
@@ -741,6 +814,12 @@
 <style>
   .popper-z-index{
     z-index: 99999999 !important;
+  }
+  .right-box-add-chart .el-autocomplete {
+    width: 100%;
+  }
+  .chart-box-autocomplete {
+    z-index: 3000 !important;
   }
 </style>
 

@@ -193,11 +193,11 @@
           receiver: '',
         },
         createMenu: [ //新增按钮内容
-          {
+          /*{
             label: this.$t('dashboard.panel.title'),
             url: 'panel',
             type: 0
-          },
+          },*/
           {
             label: this.$t('project.project.project'),
             url: 'project',
