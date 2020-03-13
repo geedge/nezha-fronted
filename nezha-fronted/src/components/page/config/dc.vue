@@ -206,8 +206,8 @@
                   <div slot="reference" class="dc-asset-states">
                     <span class="dc-asset-state dc-asset-state-total">{{scope.row.alertStat.total}}</span>
                     <span class="dc-asset-state dc-asset-state-high">{{scope.row.alertStat.high}}</span>
-                    <span class="dc-asset-state dc-asset-state-in">{{scope.row.alertStat.medium}}</span>
-                    <span class="dc-asset-state dc-asset-state-out">{{scope.row.alertStat.low}}</span>
+                    <span class="dc-asset-state dc-asset-state-out">{{scope.row.alertStat.medium}}</span>
+                    <span class="dc-asset-state dc-asset-state-in">{{scope.row.alertStat.low}}</span>
                   </div>
                 </el-popover>
 
