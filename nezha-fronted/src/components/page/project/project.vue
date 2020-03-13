@@ -116,7 +116,7 @@
 <!--          <button @click="toCreateEndpoint" :title="$t('overall.createProject')"  class="nz-btn nz-btn-size-normal nz-btn-style-light float-right " id="project-add-ep">-->
 <!--            <i class="nz-icon-create-square nz-icon"></i>-->
 <!--          </button>-->
-          <div class="top-tool-search float-right"><search-input :searchMsg="endpointSearchMsg" @search="endpointSearch" ref="projectSearch"></search-input></div>
+          <div class="top-tool-search float-right margin-r-20"><search-input :searchMsg="endpointSearchMsg" @search="endpointSearch" ref="projectSearch"></search-input></div>
         </div>
       </div>
       <el-table
@@ -1563,16 +1563,6 @@
           }
         }
       }
-      /*gutterHandler() {
-        setTimeout(() => {
-          let gutterCol = document.querySelector(".endpoint-table col[name='gutter']");
-          if (gutterCol.attributes['width'].value != '0') {
-            gutterCol.attributes['width'].value = '10';
-            let bb = document.querySelector('.el-table__body');
-            document.querySelector('.endpoint-table .el-table__body').attributes['style'].value = "width: calc(100% - 10px)";
-          }
-        }, 10)
-      }*/
     },
     created() {
       this.currentProject = this.$store.state.currentProject;
@@ -1945,7 +1935,7 @@
   }
   .dropdownBtn .el-dropdown__caret-button{
     top:0px !important;
-    left:2px;
+    left: -1px;
   }
   .endpoint-query-table .el-loading-spinner .circular{
     width: 42px;

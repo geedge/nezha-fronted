@@ -146,7 +146,7 @@ li{
 .to-top {
   position: fixed;
   bottom: 10px;
-  right: 23px;
+  right: 5px;
   border-radius: 5px;
   height: 40px;
   width: 40px;
@@ -438,7 +438,7 @@ li{
 .content-right {
   height: 100%;
   margin-left: 201px;
-  padding: 0 15px;
+  padding: 0 5px;
   background-color: $content-right-background-color;
 }
 .content-right-option {
@@ -471,7 +471,7 @@ li{
 }
 .top-tools .top-tool-search {
   width: 260px;
-  margin: -1px 20px 0 0;
+  margin: -1px 0 0 0;
 }
 .top-tools .top-tool-btn-txt .nz-icon{
   display: inline-block;
@@ -1218,6 +1218,9 @@ li{
 /*滚动条相关，减小table内滚动条的空间*/
 .ps__rail-y:hover > .ps__thumb-y, .ps__rail-y:focus > .ps__thumb-y, .ps__rail-y.ps--clicking .ps__thumb-y {
   width: 6px;
+}
+.ps__thumb-y {
+  right: 0px;
 }
 .ps__rail-x:hover > .ps__thumb-x, .ps__rail-x:focus > .ps__thumb-x, .ps__rail-x.ps--clicking .ps__thumb-x {
   height: 6px;

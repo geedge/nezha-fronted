@@ -100,7 +100,7 @@ Vue.prototype.gutterHandler = (tableClass) => {
     //console.info(gutterCol.attributes['width'].value)
     if (gutterCol.attributes['width'].value != '0') {
       //console.info(gutterCol)
-      gutterCol.attributes['width'].value = '10';
+      gutterCol.attributes['width'].value = '1';
       document.querySelector(tableClass + ' .el-table__body').attributes['style'].value = "width: calc(100% - 10px)";
     }
   }, 1000)

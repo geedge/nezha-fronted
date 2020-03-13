@@ -286,6 +286,9 @@
     font-size: 12px;
     height: 24px;
   }
+  .dropdownBtn .el-button--mini:first-of-type {
+    right: 3px;
+  }
   .el-dropdown .el-button-group{
     display: block;
     position: relative;
@@ -296,7 +299,7 @@
     padding-right: 5px;
     border-left: none;
     top:0px;
-    left:2px;
+    left: -1px;
   }
   .footer:before{
     /*content: '';*/

@@ -24,7 +24,7 @@
       <div class="top-tools">
         <div></div>
         <div>
-          <button @click="toAdd" class="nz-btn nz-btn-size-normal nz-btn-style-light float-right "  :title="$t('overall.createPrometheusServer')"
+          <button @click="toAdd" class="nz-btn nz-btn-size-normal nz-btn-style-light float-right margin-l-20"  :title="$t('overall.createPrometheusServer')"
                   id="prom-add">
                     <i class="nz-icon-create-square nz-icon"></i>
           </button>
@@ -563,6 +563,9 @@
         this.pageObj.pageSize = val;
         localStorage.setItem('nz-pageSize-' + localStorage.getItem('nz-username') + '-' + this.tableId, val);
         this.getTableData();
+        this.$nextTick(() => {
+          this.gutterHandler(".nz-table");
+        });
       },
       search: function (searchObj) {
         this.pageObj.pageNo = 1;
@@ -655,6 +658,7 @@
       this.getIdcData();
       this.getUserData();
       this.$nextTick(() => {
+        this.gutterHandler(".nz-table");
         //绑定滚动条事件，控制top按钮
         let el = this.$refs.promTable.$el.querySelector(".el-table__body-wrapper");
         if (el._ps_) {

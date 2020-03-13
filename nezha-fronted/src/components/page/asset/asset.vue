@@ -46,7 +46,7 @@
             </template>
           </export-excel>
 
-          <div class="top-tool-search float-left"><search-input :searchMsg="searchMsg" @search="search"></search-input></div>
+          <div class="top-tool-search float-left margin-r-20"><search-input :searchMsg="searchMsg" @search="search"></search-input></div>
         </div>
       </div>
 
