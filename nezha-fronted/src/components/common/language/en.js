@@ -64,6 +64,7 @@ const en = {
       failedDetail:'Failed Detail'
     }
   },
+  pageSize: '/page',
   webshell:{
     shellTitle:'Local Shell',
     upload:'Upload',

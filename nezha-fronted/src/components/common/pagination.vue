@@ -8,7 +8,7 @@
       @current-change="current"
       :current-page="pageObj.pageNo"
       :page-sizes="pageSizes?pageSizes:[20, 50, 100]"
-      :page-size="20"
+      :page-size="pageSize"
       layout="total, prev, pager, next,sizes,jumper"
       :total="this.pageObj.total"
     ></el-pagination>
@@ -18,9 +18,11 @@
 <script>
 export default {
   name: "pagination",
-  props: ['pageObj','pageSizes'],
+  props: ['pageObj','pageSizes', 'tableId'],
   data() {
-    return {};
+    return {
+      pageSize: 20
+    };
   },
   methods: {
     background() {
@@ -51,6 +53,14 @@ export default {
         //console.info(element)
       }
     },
+  },
+  mounted() {
+    let pageSize = localStorage.getItem('nz-pageSize-' + localStorage.getItem('nz-username') + '-' + this.tableId);
+    this.pageSize = pageSize ? pageSize : 20;
+    this.$nextTick(() => {
+      let input = document.querySelector(".el-pagination .el-select .el-input__inner");
+      input.value = this.pageSize + this.$t('pageSize');
+    });
   }
 };
 </script>

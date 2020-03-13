@@ -48,6 +48,7 @@ const cn = {
     downloadButtonTitle:'下载',
     filePath:'文件路径',
   },
+  pageSize: '条/页',
   login: {
     username: '登录名',
     password: '密码',

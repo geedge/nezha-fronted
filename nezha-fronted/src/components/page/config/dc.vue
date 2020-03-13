@@ -69,7 +69,7 @@
           :data="tableData"
           border
           v-scrollBar:el-table
-          height="calc(100% - 125px)"
+          :height="$tableHeight.normal"
           ref="dcTable"
           style="width: 100%;">
           <el-table-column
@@ -128,7 +128,7 @@
             </template>
           </el-table-column>
         </el-table>
-        <Pagination :pageObj="pageObj" @pageNo='pageNo' @pageSize='pageSize' ref="Pagination"></Pagination>
+        <Pagination :tableId="tableId" :pageObj="pageObj" @pageNo='pageNo' @pageSize='pageSize' ref="Pagination"></Pagination>
         <button class="to-top" v-show="showTopBtn1" @click="toTop"><i class="nz-icon nz-icon-top"></i></button>
         <!--dc table end-->
       <element-set
@@ -232,6 +232,7 @@
     },
     data() {
       return {
+        tableId: 'dcTable', //需要分页的table的id，用于记录每页数量
         showTopBtn1: false,
         showTopBtn2: false,
         currentDc: {
@@ -492,6 +493,7 @@
         this.getTableData();
       },
       pageSize(val) {
+        localStorage.setItem('nz-pageSize-' + localStorage.getItem('nz-username') + '-' + this.tableId, val);
         this.pageObj.pageSize = val;
         this.getTableData();
       },
@@ -563,6 +565,12 @@
       }
     },
     mounted() {
+      //是否存在分页缓存
+      let pageSize = localStorage.getItem('nz-pageSize-' + localStorage.getItem('nz-username') + '-' + this.tableId);
+      if (pageSize) {
+        this.pageObj.pageSize = pageSize
+      }
+
       this.getTableData();
       this.$nextTick(function(){
         this.getUserData();//绑定滚动条事件，控制top按钮

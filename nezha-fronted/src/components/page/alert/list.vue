@@ -91,7 +91,7 @@
           </template>
         </el-table-column>
       </el-table>
-      <Pagination :pageObj="pageObj" @pageNo='pageNo' @pageSize='pageSize' ref="Pagination"></Pagination>
+      <Pagination :tableId="tableId" :pageObj="pageObj" @pageNo='pageNo' @pageSize='pageSize' ref="Pagination"></Pagination>
       <button class="to-top" v-show="showTopBtn" @click="toTop()"><i class="nz-icon nz-icon-top"></i></button>
     </div>
     <alert-config-box :parentAlertRule="viewRuleData" @reload="getAlertList" ref="alertConfigBox"></alert-config-box>
@@ -114,6 +114,7 @@
     name: "alertList",
     data() {
       return {
+        tableId: 'alertListTable', //需要分页的table的id，用于记录每页数量
         showTopBtn: false,
         pageObj: {
           pageNo: 1,
@@ -294,6 +295,7 @@
       },
       pageSize(val) {
         this.pageObj.pageSize = val;
+        localStorage.setItem('nz-pageSize-' + localStorage.getItem('nz-username') + '-' + this.tableId, val);
         this.getAlertList();
         this.$nextTick(() => {
           this.gutterHandler(".nz-table");
@@ -358,6 +360,12 @@
       }
     },
     mounted() {
+      //是否存在分页缓存
+      let pageSize = localStorage.getItem('nz-pageSize-' + localStorage.getItem('nz-username') + '-' + this.tableId);
+      if (pageSize) {
+        this.pageObj.pageSize = pageSize
+      }
+
       this.getAlertList();
       this.$nextTick(() => {
         //绑定滚动条事件，控制top按钮

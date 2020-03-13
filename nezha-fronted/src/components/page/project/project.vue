@@ -168,7 +168,7 @@
           </template>
         </el-table-column>
       </el-table>
-      <Pagination v-cloak :pageObj="endpointPageObj" @pageNo='endpointPageNo' @pageSize='endpointPageSize' ref="endpointPagination"></Pagination>
+      <Pagination :tableId="tableId" v-cloak :pageObj="endpointPageObj" @pageNo='endpointPageNo' @pageSize='endpointPageSize' ref="endpointPagination"></Pagination>
       <button class="to-top" v-show="showTopBtn1" @click="toTop"><i class="nz-icon nz-icon-top"></i></button>
     </div>
 
@@ -347,6 +347,7 @@
     data() {
       let temp=this;
       return {
+        tableId: 'projectTable', //需要分页的table的id，用于记录每页数量
         tableShow: 1, // 1.endpoint; 2.metrics
         showTopBtn1: false,
         showTopBtn2: false,
@@ -954,6 +955,7 @@
       },
       endpointPageSize(val) {
         this.endpointPageObj.pageSize = val;
+        localStorage.setItem('nz-pageSize-' + localStorage.getItem('nz-username') + '-' + this.tableId, val);
         this.getEndpointTableData();
         this.$nextTick(() => {
           this.gutterHandler(".endpoint-table");
@@ -1608,6 +1610,12 @@
       this.getMetricsTableData();
     },
     mounted() {
+      //是否存在分页缓存
+      let pageSize = localStorage.getItem('nz-pageSize-' + localStorage.getItem('nz-username') + '-' + this.tableId);
+      if (pageSize) {
+        this.endpointPageObj.pageSize = pageSize
+      }
+
       this.getPanelData();
       setTimeout(()=>{
         this.getEndpointTableData();

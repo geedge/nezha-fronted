@@ -70,7 +70,7 @@
           </template>
         </el-table-column>
       </el-table>
-      <Pagination :pageObj="pageObj" @pageNo='pageNo' @pageSize='pageSize' ref="Pagination"></Pagination>
+      <Pagination :tableId="tableId" :pageObj="pageObj" @pageNo='pageNo' @pageSize='pageSize' ref="Pagination"></Pagination>
       <button class="to-top" v-show="showTopBtn" @click="toTop"><i class="nz-icon nz-icon-top"></i></button>
     </div>
 
@@ -90,6 +90,7 @@
     name: "model",
     data() {
       return {
+        tableId: 'modelTable', //需要分页的table的id，用于记录每页数量
         showTopBtn: false,
         model: {
           id: '',
@@ -248,6 +249,7 @@
       },
       pageSize(val) {
         this.pageObj.pageSize = val;
+        localStorage.setItem('nz-pageSize-' + localStorage.getItem('nz-username') + '-' + this.tableId, val);
         this.getTableData();
       },
       search: function (searchObj) {
@@ -274,6 +276,12 @@
       }
     },
     mounted: function () {
+      //是否存在分页缓存
+      let pageSize = localStorage.getItem('nz-pageSize-' + localStorage.getItem('nz-username') + '-' + this.tableId);
+      if (pageSize) {
+        this.pageObj.pageSize = pageSize
+      }
+
       this.getTableData();
       this.$nextTick(() => {
         //绑定滚动条事件，控制top按钮

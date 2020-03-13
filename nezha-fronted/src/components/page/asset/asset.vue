@@ -181,7 +181,7 @@
           </template>
         </el-table-column>
       </el-table>
-      <Pagination :pageObj="pageObj" @pageNo='pageNo' @pageSize='pageSize' ref="Pagination"></Pagination>
+      <Pagination :tableId="tableId" :pageObj="pageObj" @pageNo='pageNo' @pageSize='pageSize' ref="Pagination"></Pagination>
       <button class="to-top" v-show="showTopBtn" @click="toTop"><i class="nz-icon nz-icon-top"></i></button>
     </div>
 
@@ -215,6 +215,7 @@
     },
     data() {
       return {
+        tableId: 'assetTable', //需要分页的table的id，用于记录每页数量
         searchMsg: { //给搜索框子组件传递的信息
           zheze_none: true,
           searchLabelList: [{
@@ -708,6 +709,7 @@
       ,
       pageSize(val) {
         this.pageObj.pageSize = val;
+        localStorage.setItem('nz-pageSize-' + localStorage.getItem('nz-username') + '-' + this.tableId, val);
         this.getAssetData()
       },
       getPrincipalName(data) {
@@ -772,6 +774,12 @@
       this.getIDCOptionData();
     },
     mounted() {
+      //是否存在分页缓存
+      let pageSize = localStorage.getItem('nz-pageSize-' + localStorage.getItem('nz-username') + '-' + this.tableId);
+      if (pageSize) {
+        this.pageObj.pageSize = pageSize
+      }
+
       this.$nextTick(() => {
         //左侧dc列表初始选中状态
         if (this.$store.state.assetData.selectedData.length > 0) {

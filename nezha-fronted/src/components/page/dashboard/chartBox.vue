@@ -784,7 +784,6 @@
             }
           }
         }
-        console.info(data);
         callback(data);
       },
 
