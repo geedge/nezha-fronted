@@ -133,6 +133,10 @@ Vue.directive("scrollBar", {
 
     // 启用x轴后不让原生滚动条出来作乱
     vnode.context.$nextTick(() => {
+      if (arg === "xterm") {
+        el = el.querySelector(".xterm-viewport");
+        !el && console.warn("未发现className为xterm-viewport的dom");
+      }
       el.classList.add("ps");
       el.addEventListener("ps-scroll-y", () =>
         el.classList.add("ps")
@@ -140,6 +144,8 @@ Vue.directive("scrollBar", {
       el.addEventListener("ps-scroll-x", () =>
         el.classList.add("ps")
       );
+      //el上挂一份属性
+      el_scrollBar(el);
     });
 
     const rules = ["fixed", "absolute", "relative"];
@@ -150,8 +156,6 @@ Vue.directive("scrollBar", {
         )}`
       );
     }
-    //el上挂一份属性
-    el_scrollBar(el);
   },
   componentUpdated(el, binding, vnode, oldVnode) {
     const { arg } = binding;
@@ -161,6 +165,9 @@ Vue.directive("scrollBar", {
     } else if (arg === "el-dropdown") {
       el = el.querySelector(".el-dropdown-menu");
       !el && console.warn("未发现className为el-dropdown-menu的dom");
+    }else if (arg === "xterm") {
+      el = el.querySelector(".xterm-viewport");
+      !el && console.warn("未发现className为xterm-viewport的dom");
     }
     setTimeout(() => {
       el.classList.add("ps");

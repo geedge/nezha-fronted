@@ -87,9 +87,10 @@
   }
   .el-tabs__item {
     height:30px;
-    margin-top: -2px !important;
+    margin-top: -1px !important;
     line-height: 30px;
     font-size:14px !important;
+    font-weight:normal;
   }
 
   .el-tabs__nav-prev {
@@ -98,6 +99,12 @@
   .el-tabs__nav-next{
     line-height: 30px;
   }
+
+  .el-tabs--border-card>.el-tabs__header .el-tabs__item.is-active {
+    border-top: solid 2px $global-text-color-active;
+    height: 29px !important;
+  }
+
   .el-menu--horizontal>.el-submenu .el-submenu__title {
     height: 29px;
     line-height: 29px;

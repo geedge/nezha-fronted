@@ -7,6 +7,7 @@
     <div id="shell-split" class="shell-split shell-iconfont" @mousedown="dragEagle" v-show="!isFullScreen">一</div>
     <div style='position: relative;'>
       <el-menu  mode="horizontal" @select="handleSelect" style='position: absolute;left:0px;top:0px;border-top: 1px solid #DCDFE6;'>
+        <!--
         <el-submenu index="1"  style="width:40px;">
           <template slot="title" ><i class="el-icon-setting " style="position: absolute;left: 10px;top: 4px;"></i></template>
           <el-submenu index="1-1">
@@ -21,8 +22,8 @@
             <el-menu-item index="1-2-1">Monosapace</el-menu-item>
             <el-menu-item index="1-2-2">Courier New</el-menu-item>
           </el-submenu>
-        </el-submenu>
-        <el-submenu index="2" style="width:50px;">
+        </el-submenu>-->
+        <el-submenu index="2" style="width:50px;margin-left:40px;">
           <template slot="title" ><i class="el-icon-upload console-title-icon" style="position: absolute;left: 10px;top: 4px;"></i></template>
           <el-menu-item index="2-1" @click="showUploadBox">
               <div>{{$t('webshell.upload')}}</div>
@@ -140,7 +141,6 @@
 <script>
   import Console from './console'
   import uuidv1 from "uuid/v1";
-  import axios from 'axios'
 
   export default {
     name: 'webSSH',
@@ -253,6 +253,8 @@
         this.consoleHeight = this.initConsoleHeight;
 
         this.$store.commit('closeConsole');
+
+        window.removeEventListener('resize',this.windowChange);
       },
       handleClick(){
 
@@ -284,9 +286,6 @@
         }
         this.editableTabsValue = activeName;
         this.editableTabs = tabs.filter(tab => tab.name !== targetName);
-        //关闭此console的链接
-        //?????????????????
-
         this.$store.commit('removeConsole');
 
         if(this.editableTabs.length<=0){
@@ -318,19 +317,6 @@
       addTab(targetName) {
         this.$store.commit('addConsoleNum');
         this.addConsole();
-
-      //<div role="tablist" class="el-tabs__nav is-top" style="transform: translateX(-1207.78px);">
-        /*
-        let newTabName = ++this.tabIndex + '';
-        this.editableTabs.push({
-          title: 'New Tab',
-          name: newTabName,
-          content: 'New Tab content'
-        });
-        this.editableTabsValue = newTabName;
-        this.currentIndex=newTabName;
-        */
-
       },
       handleSelect(key, keyPath) {
         //alert(keyPath);
@@ -351,22 +337,14 @@
       },
       showUploadBox(){
         this.uploadBox.showUpload=true;
-        //this.uploadBox.width='600px';
       },
-      /*
-      handleChange(file,fileList) {
-        this.uploadFile.file = file.raw;
-      },
-      */
       handleChange:function(file,fileList){
         if (fileList.length > 0) {
           this.uploadFileList = [fileList[fileList.length - 1]]
         }
         this.uploadFile.file = this.uploadFileList[0];
-        //this.uploadFile.file = file;
       },
       upload() {
-        //if(this.uploadFile && this.uploadFile.file.raw){
           let form = new FormData();
           form.append("uuid", this.currentUuid);
           form.append("file", this.uploadFile.file.raw);
@@ -379,7 +357,6 @@
               this.$message.error(res.msg);
             }
           })
-        //}
       },
       showDownloadBox(){
         this.downloadBox.showDownload=true;
@@ -403,17 +380,9 @@
             a.remove(); //将a标签移除
           }
           this.closeDownloadDialog();
-/*
-          if(res.code ==  200 ){
-
-          }else{
-            this.$message.error(res.msg);
-          }*/
         })
       },
       /*upload--download  end*/
-
-
       minScreen(){
         this.consoleShow = false;
         this.$store.commit('minConsole');
@@ -445,9 +414,6 @@
             }
           });
         }
-
-        //const dailog = document.getElementById("consoleDailog");
-        //dailog.style.width = `${100}%`;
       },
 
       dragEagle:function(e){
