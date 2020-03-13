@@ -533,9 +533,15 @@
           this.$refs.addEndpointForm.validate();
           return false;
         }
+        //对endpointList进行处理，避免携带过多无用数据
+        let endpointList = [];
+        this.endpointList.forEach((item, index) => {
+          let endpoint = {moduleId: item.moduleId, assetId: item.assetId, port: item.port, param: item.param, path: item.path, host: item.host};
+          endpointList.push(endpoint);
+        });
         this.$refs.addEndpointForm.validate((valid) => {
           if (valid) {
-            this.$post('endpoint', this.endpointList).then(response => {
+            this.$post('endpoint', endpointList).then(response => {
               if (response.code === 200) {
                 this.$message({duration: 1000, type: 'success', message: this.$t("tip.saveSuccess")});
                 this.esc();
