@@ -380,8 +380,7 @@
         })
       },
       changeLocal(lang) {
-        if (lang != localStorage.getItem("nz-language-" + this.username)) {
-          localStorage.setItem("nz-language-" + this.username, lang);
+        if (lang != localStorage.getItem("nz-language")) {
           localStorage.setItem("nz-language", lang);
           this.$i18n.locale = lang;
           window.location.reload();
@@ -445,7 +444,7 @@
         })
       },
       refreshLang() {
-        this.language = localStorage.getItem("nz-language-" + this.username);
+        this.language = localStorage.getItem("nz-language");
         this.$i18n.locale = this.language;
       },
       showPwdDialog:function(){

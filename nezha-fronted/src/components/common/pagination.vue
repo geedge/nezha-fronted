@@ -7,7 +7,7 @@
       @next-click="next"
       @current-change="current"
       :current-page="pageObj.pageNo"
-      :page-sizes="[20, 50, 100]"
+      :page-sizes="pageSizes?pageSizes:[20, 50, 100]"
       :page-size="20"
       layout="total, prev, pager, next,sizes,jumper"
       :total="this.pageObj.total"
@@ -18,7 +18,7 @@
 <script>
 export default {
   name: "pagination",
-  props: ['pageObj'],
+  props: ['pageObj','pageSizes'],
   data() {
     return {};
   },

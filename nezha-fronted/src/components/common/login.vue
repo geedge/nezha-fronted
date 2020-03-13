@@ -53,7 +53,7 @@ export default {
             sessionStorage.setItem("nz-token", res.data.token);
             sessionStorage.setItem("nz-username", this.loginData.username);
             localStorage.setItem("nz-username", this.loginData.username);
-            localStorage.setItem('nz-language-' + this.loginData.username, this.lang);
+            //localStorage.setItem('nz-language-' + this.loginData.username, this.lang);
             this.$i18n.locale = this.lang;
             bus.$emit('login');
             this.$router.push({
@@ -84,13 +84,13 @@ export default {
     }
   },
   watch: {
-    'loginData.username': function(n, o) {
+    /*'loginData.username': function(n, o) {
       let lang = localStorage.getItem('nz-language-' + n);
       if (lang) {
         this.lang = lang;
         this.$i18n.locale = this.lang;
       }
-    }
+    }*/
   },
   mounted() {
     const _this = this;

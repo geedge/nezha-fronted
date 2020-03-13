@@ -45,7 +45,7 @@
                   </template>
                 </el-table-column>
             </el-table>
-          <Pagination :pageObj="pageObj" @pageNo='pageNo' @pageSize='pageSize' ref="Pagination"></Pagination>
+          <Pagination :pageObj="pageObj" @pageNo='pageNo' :page-sizes="pageSizes" @pageSize='pageSize' ref="Pagination"></Pagination>
         </div>
         <!--全屏-->
           <el-dialog class="nz-dialog table-chart-dialog" :title="$t('dashboard.panel.view')"  :visible.sync="screenModal" width="96%"  @close="screenModal = false" >
@@ -72,7 +72,7 @@
                       </template>
                     </el-table-column>
                 </el-table>
-            <Pagination :pageObj="screenPageObj" @pageNo='screenPageNo' @pageSize='screenPageSize' ref="Pagination"></Pagination>
+            <Pagination :pageObj="screenPageObj" :page-sizes="pageSizes" @pageNo='screenPageNo' @pageSize='screenPageSize' ref="Pagination"></Pagination>
             <loading  :ref="'localLoadingScreen'+chartIndex"></loading>
             <!--
                 <div v-show="showLoadingScreen" class="el-loading-mask" style="background-color: rgba(0, 0, 0, 0);">
@@ -116,6 +116,7 @@ export default {
         return {
             data: {}, // 该图表信息,chartItem
             unit:{},
+            pageSizes:[50,100,200],
             pageObj: {
               pageNo: 1,
               pageSize: 20,
@@ -267,7 +268,11 @@ export default {
             },
         };
     },
-    computed: {},
+    created() {
+      this.pageObj.pageSize=this.pageSizes[0];
+      this.screenPageObj.pageSize=this.pageSizes[0];
+    },
+  computed: {},
     watch: {},
     methods: {
         pageNo(val) {
