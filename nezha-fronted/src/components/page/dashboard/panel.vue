@@ -24,7 +24,7 @@
                   <el-col :span="19" class="panel-list-item" :title="item.name">{{item.name}}</el-col>
                   <el-col :span="2"><span class="panel-dropdown-btn panel-dropdown-btn-delete" @click.stop="del(item)"><i class="el-icon-delete"></i></span></el-col>
                   <el-col :span="1">&nbsp;</el-col>
-                  <el-col :span="2"><span class="panel-dropdown-btn" @click.stop="toEdit(item)"><i class="el-icon-edit-outline" ></i></span></el-col>
+                  <el-col :span="2"><span class="panel-dropdown-btn" @click.stop="toEdit(item)"><i class="nz-icon nz-icon-edit"></i></span></el-col>
                 </el-row>
               </el-dropdown-item>
             </el-dropdown-menu>
@@ -858,5 +858,8 @@
     vertical-align: top;
   }
 
+  .nz-dashboard-dropdown .nz-icon-edit {
+    font-size: 12px;
+  }
 </style>
 
