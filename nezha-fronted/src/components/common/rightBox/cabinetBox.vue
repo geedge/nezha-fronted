@@ -171,6 +171,7 @@
           }).then(() => {
             this.$delete('/cabinet?ids='+temp.cabinet.id).then(response=>{
               if(response.code ==  200){
+                this.esc();
                 this.$message({duration: 2000, type: 'success', message: this.$t("tip.saveSuccess")});
                 this.$emit('after',this.cabinet.idcId)
               }else{

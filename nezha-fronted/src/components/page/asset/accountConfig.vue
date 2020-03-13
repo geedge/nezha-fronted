@@ -50,7 +50,7 @@
       </el-form>
 
       <div class="telnet-option" v-show="isEdit && account.protocol=='TELNET'">
-        <div class="telnet-option_title clickable" @click="isShowTelnetOption">login option<i style="font-size: 12px;"  :class="{'el-icon-arrow-left':!showTelnetOption,'el-icon-arrow-down':showTelnetOption}"></i></div>
+        <div class="telnet-option_title clickable" @click="isShowTelnetOption">login option<div class="telnet-option_spilt"></div><i style="font-size: 12px;"  :class="{'el-icon-arrow-left':!showTelnetOption,'el-icon-arrow-down':showTelnetOption}"></i></div>
         <div v-show="isEdit && account.protocol=='TELNET' && showTelnetOption" class="auto-login-tip">
           {{$t('asset.createAssetTab.userPwdIntroduce')}}
         </div>
@@ -127,6 +127,7 @@ export default {
       changeProtocolType:function(protocolType){
         if(this.isAllowedChangeProtocol){
           this.account.protocol=protocolType;
+          this.$emit('protocol-type-change',protocolType)
         }else{
           return ;
         }
@@ -202,19 +203,19 @@ export default {
   .telnet-option{
     position: relative;
   }
-  .telnet-option:before{
-    content: "";
+  .telnet-option_title .telnet-option_spilt{
     display: inline-block;
     width: 79.9%;
     height: 1px;
     background-color: lightgrey;
     vertical-align: middle;
-    margin-bottom: 18px;
+    /*margin-bottom: 18px;*/
   }
   .telnet-option .telnet-option_title{
     display: inline-block;
     vertical-align: middle;
     margin-bottom: 18px;
+    width: 100%;
   }
   .auto-login-tip{
     font-size: 12px;

@@ -386,12 +386,12 @@
           </div>
           <div class="line-100 asset-line"></div>
           <template v-if="accountSwitch">
-            <account-config-box v-for="(item,index) in assetData.accounts" :is-edit="!tabView" :account="item" :key="index" ref="accountConfigBox" @setValidateResult="setAccountValideResult" :is-allowed-change-protocol="changeProtocolSwitch"></account-config-box>
+            <account-config-box v-for="(item,index) in assetData.accounts" :is-edit="!tabView" :account="item" :key="index" ref="accountConfigBox" @setValidateResult="setAccountValideResult" :is-allowed-change-protocol="changeProtocolSwitch" @protocol-type-change="protocolTypeChange"></account-config-box>
           </template>
 
           <template v-if="!pageObj.id">
             <el-form-item :label="$t('asset.createAssetTab.exporter')" class="exporter-label">
-              <el-switch class="exporter-switch" v-model="assetData.exporter" active-color="#ee9d3f" active-value="1" inactive-value="0"></el-switch>
+              <el-switch class="exporter-switch" v-model="assetData.exporter" active-color="#ee9d3f" active-value="1" inactive-value="0" :disabled="exporterDisableSwitch"></el-switch>
             </el-form-item>
             <div class="line-100 asset-line" style="margin-top: -16px;"></div>
           </template>
@@ -617,6 +617,7 @@
         module:{},
         accountValideResult:true,
         changeProtocolSwitch:true,
+        exporterDisableSwitch:false
       }
     },
     /*computed: {
@@ -961,7 +962,6 @@
               } else {
                 if(this.$refs.accountConfigBox&&this.$refs.accountConfigBox.length>0){
                   this.$refs.accountConfigBox[0].validateAccount();
-                  console.log("accountValideResult-->"+this.accountValideResult)
                 }
                 let modelId = ''
                 // let authType = ''
@@ -1468,6 +1468,13 @@
           }
         }
       },
+      protocolTypeChange:function(protocol){
+        if(protocol == 'TELNET'){
+          this.exporterDisableSwitch=true;
+        }else{
+          this.exporterDisableSwitch=false;
+        }
+      }
     },
     mounted() {
       this.getUserData()

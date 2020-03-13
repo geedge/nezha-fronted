@@ -437,6 +437,13 @@ const en = {
       createModel: 'Create model',
       remark: 'Remark',
       type: 'Type'
+    },
+    mib:{
+      mib:'Mib',
+      fileName:'FileName',
+      remark:'Remark',
+      updateUser:'Update User',
+      updateAt:'Update Time',
     }
   },
   alert: {
