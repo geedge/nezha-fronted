@@ -126,18 +126,22 @@ Vue.directive("scrollBar", {
     if (arg === "el-table") {
       el = el.querySelector(".el-table__body-wrapper");
       !el && console.warn("未发现className为el-table__body-wrapper的dom");
-
-      // 启用x轴后不让原生滚动条出来作乱
-      vnode.context.$nextTick(() => {
-        el.classList.add("ps");
-        el.addEventListener("ps-scroll-y", () =>
-          el.classList.add("ps")
-        );
-        el.addEventListener("ps-scroll-x", () =>
-          el.classList.add("ps")
-        );
-      });
+    } else if (arg === "el-dropdown") {
+      el = el.querySelector(".el-dropdown-menu");
+      !el && console.warn("未发现className为el-dropdown-menu的dom");
     }
+
+    // 启用x轴后不让原生滚动条出来作乱
+    vnode.context.$nextTick(() => {
+      el.classList.add("ps");
+      el.addEventListener("ps-scroll-y", () =>
+        el.classList.add("ps")
+      );
+      el.addEventListener("ps-scroll-x", () =>
+        el.classList.add("ps")
+      );
+    });
+
     const rules = ["fixed", "absolute", "relative"];
     if (!rules.includes(window.getComputedStyle(el, null).position)) {
       console.error(
@@ -153,13 +157,17 @@ Vue.directive("scrollBar", {
     const { arg } = binding;
     if (arg === "el-table") {
       el = el.querySelector(".el-table__body-wrapper");
-      setTimeout(() => {
-        el.classList.add("ps");
-        el.classList.add("ps--active-y");
-        el._ps_.update();
-      }, 1500)
       !el && console.warn("未发现className为el-table__body-wrapper的dom");
+    } else if (arg === "el-dropdown") {
+      el = el.querySelector(".el-dropdown-menu");
+      !el && console.warn("未发现className为el-dropdown-menu的dom");
     }
+    setTimeout(() => {
+      el.classList.add("ps");
+      el.classList.add("ps--active-y");
+      el._ps_.update();
+    }, 1500)
+
     try {
       vnode.context.$nextTick(() => {
         el_scrollBar(el);

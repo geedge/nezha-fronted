@@ -10,12 +10,12 @@
     <div class="content-right">
       <div class="top-tools">
         <div>
-          <el-dropdown @command="panelChange" class="panel-dropdown-title" trigger="click" >
+          <el-dropdown @command="panelChange" class="panel-dropdown-title" trigger="click" v-scrollBar:el-dropdown>
             <el-row  :gutter="10" class="el-dropdown-link" style="">
               <el-col :span="21" class="panel-list-title" :title="showPanel.name">{{showPanel.name}}</el-col>
               <el-col :span="3" style="padding-left:0px !important;"><i class="el-icon-arrow-down el-icon--right"></i></el-col>
             </el-row>
-            <el-dropdown-menu class="nz-dashboard-dropdown" slot="dropdown" >
+            <el-dropdown-menu class="nz-dashboard-dropdown" slot="dropdown">
               <el-dropdown-item>{{$t('dashboard.panel.createPanelTitleSec')}}</el-dropdown-item>
               <el-dropdown-item v-for="item in panelData" :key="item.id+1"
                                 :class="showPanel.id==item.id?'nz-dashboard-dropdown-bg':''" :command="item">
