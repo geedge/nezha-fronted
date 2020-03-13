@@ -1235,10 +1235,13 @@ li{
   height: 6px;
 }
 .el-table__fixed-right {
-  right: 10px !important;
+  right: 0px !important;
+}
+.asset .ps__rail-y {
+  z-index: 2000;
 }
 .el-table__fixed-right-patch {
-  width: 10px !important;
+  width: 0px !important;
   background-color: #fcfcfc;
 }
 .el-table__fixed-body-wrapper {
