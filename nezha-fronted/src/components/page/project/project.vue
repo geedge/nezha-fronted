@@ -139,7 +139,10 @@
           <template slot-scope="scope" :column="item">
             <span v-if="item.prop == 'asset' && scope.row[item.prop]" class="link" @click="viewAsset(scope.row[item.prop].id)">{{scope.row[item.prop].host}}</span>
             <span v-else-if="item.prop == 'param'">
-              <span v-for="(p,i) in scope.row.paramObj">{{p.key}}={{p.value}}<span v-if="i < scope.row.paramObj.length-1">，</span></span>
+              <template v-if="scope.row.paramObj">
+                <span v-for="(p,i) in scope.row.paramObj">{{p.key}}={{p.value}}<span v-if="i < scope.row.paramObj.length-1">，</span></span>
+              </template>
+              <template v-else>-</template>
             </span>
             <div v-else-if="item.prop == 'option'" class="content-right-options">
               <span :title="$t('overall.query')" @click="showEndpoint(scope.row)" class="content-right-option" :id="'edp-query-'+scope.row.id"><i class="el-icon-search"></i></span>
@@ -157,7 +160,8 @@
               </el-popover>
 <!--              {{ scope.row.state == 1 ? 'up' : ''}}{{scope.row.state == 0 ? 'down' : ''}}-->
             </span>
-            <span v-else>{{scope.row[item.prop]}}</span>
+            <span v-else-if="scope.row[item.prop]">{{scope.row[item.prop]}}</span>
+            <template v-else>-</template>
           </template>
         </el-table-column>
         <el-table-column width="28">

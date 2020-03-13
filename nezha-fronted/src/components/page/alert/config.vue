@@ -73,7 +73,8 @@
               <span v-else>-</span>
             </template>
             <template v-else-if="item.prop == 'alertName'">{{scope.row.alertName}}</template>
-            <span v-else>{{scope.row[item.prop]}}</span>
+            <span v-else-if="scope.row[item.prop]">{{scope.row[item.prop]}}</span>
+            <template v-else>-</template>
           </template>
         </el-table-column>
         <el-table-column width="28">

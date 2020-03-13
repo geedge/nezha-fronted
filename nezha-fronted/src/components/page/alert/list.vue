@@ -80,7 +80,8 @@
                 {{scope.row['state'] == 2 ? "Expired" : ""}}
               </span>
             </div>
-            <span v-else>{{scope.row[item.prop]}}</span>
+            <span v-else-if="scope.row[item.prop]">{{scope.row[item.prop]}}</span>
+            <template v-else>-</template>
           </template>
         </el-table-column>
         <el-table-column width="28">
