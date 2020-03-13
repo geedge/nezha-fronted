@@ -90,72 +90,6 @@
                 </div>
               </el-option>
             </el-select>
-            <!--<div class="right-box-row-btn " v-if="!tabView">
-              <el-popover
-                placement="left"
-                trigger="click"
-                v-model="editPopTypeVisible"
-                v-clickoutside="clickOutSide"
-                popper-class="nz-pop2"
-                width="370"
-              >
-                <div class="pop-window-assetType" @click="editQuit()" id="asset-edit-sub-type-quit">
-                  <div class="pop-window-assetType-content">
-                    &lt;!&ndash;右上角按钮&ndash;&gt;
-                    <div class="pop-top-btns">
-                      <button type="button" @click="editPopoverClose('type')" id="asset-edit-sub-type-esc"  class="nz-btn nz-btn-size-alien nz-btn-size-small nz-btn-style-light nz-btn-min-width-35">
-                        <span class="pop-top-btn-icon"><i class="el-icon-close"></i></span>
-                        <span class="pop-top-btn-txt">{{$t('overall.esc')}}</span>
-                      </button>
-                    </div>
-                    &lt;!&ndash;标题&ndash;&gt;
-                    <div class="pop-title">{{$t('asset.createAssetTab.assetTypeTab.assetType')}}</div>
-                    &lt;!&ndash;表单内容&ndash;&gt;
-                    <div class="pop-item">
-                      <div class="pop-label">{{$t('asset.createAssetTab.assetTypeTab.addAssetType')}}</div>
-                      <el-input class="input-x-mini-26" v-model="assetTypeData.value"/>
-                      <button type="button" @click="addNewData('assetType')" class="nz-btn nz-btn-size-normal nz-btn-style-light float-right nz-btn-min-width-82" id="asset-edit-sub-type-add">
-                        <span class="top-tool-btn-txt">{{$t('overall.add')}}</span>
-                      </button>
-                    </div>
-                    <div class="pop-item">
-                      <div class="pop-label">{{$t('asset.createAssetTab.assetTypeTab.existAssetType')}}</div>
-                      <div class="pop-box pop-box-asset">
-                        <el-scrollbar style="height: 100%;">
-                          <ul style="list-style: none">
-                            <li style="cursor: pointer;"
-                                :id="'asset-edit-sub-type-op-'+index"
-                                v-for="(item,index) in assetTypeOptionData"
-                                @click="clickState(index,item,'type')"
-                                :class="{'pop-box-active': modelCount === index}"
-                                :key="index">
-                              <div class="pop-item-contain">
-                                <span v-if="!item.isEdit">{{ item.value }}</span>
-                                <span class="asset-dropdown-label-input" v-if="item.isEdit" @click.stop="editing">
-                                  <el-input class="input-x-mini-24" v-model="item.value"/>
-                                </span>
-                                <div class="pop-item-icons">
-                                  <span class="asset-dropdown-btn asset-dropdown-btn-delete" :id="'asset-edit-sub-type-op-del-'+index"
-                                    @click.stop="deleteData('/sys/dict/delete',item.id)"><i class="el-icon-delete"></i>
-                                  </span>
-                                  <span v-if="!item.isEdit" class="asset-dropdown-btn" @click.stop="editOptionData(item,'type',index)" :id="'asset-edit-sub-type-op-edit-'+index">
-                                    <i class="nz-icon nz-icon-edit"></i>
-                                  </span>
-                                  <span v-if="item.isEdit"  class="asset-dropdown-btn" @click.stop="editData('sys/dict/update',item, 'assetType')" :id="'asset-edit-sub-type-op-save-'+index">
-                                    <i class="el-icon-check"></i>
-                                  </span>
-                                </div>
-                              </div>
-                            </li>
-                          </ul>
-                        </el-scrollbar>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div slot="reference"><i class="el-icon-plus"></i></div>
-              </el-popover>
-            </div>-->
             <span v-if="tabView">{{assetViewData.assetType}}</span>
           </el-form-item>
           <!------------------------------------------厂商/型号---------------------------------------------->
@@ -173,112 +107,6 @@
               >
               </el-cascader>
               <div class="right-box-row-btn" v-if="!tabView" @click="addVendor"><i class="el-icon-plus"></i>
-                <!--<el-popover
-                  placement="left"
-                  trigger="click"
-                  width="370"
-                  v-model="editPopVendorVisible"
-                  v-clickoutside="clickOutSide"
-                  @hide="resetVendor"
-                  popper-class="nz-pop2"
-                >
-                  <div class="pop-window-assetType" @click="editQuit()" id="asset-edit-sub-vendor-quit">
-                    <div class="pop-window-assetType-content">
-                      <div class="pop-top-btns">
-                        <button type="button" @click="editPopoverClose('vendor')" id="asset-edit-sub-vendor-close" class="nz-btn nz-btn-size-alien nz-btn-size-small nz-btn-style-light nz-btn-min-width-35">
-                          <span class="pop-top-btn-icon"><i class="el-icon-close"></i></span>
-                          <span class="pop-top-btn-txt">{{$t('overall.esc')}}</span>
-                        </button>
-                      </div>
-                      &lt;!&ndash;标题&ndash;&gt;
-                      <div class="pop-title">{{$t('asset.createAssetTab.vendorTab.vendor')}}</div>
-                      &lt;!&ndash;表单内容&ndash;&gt;
-                      <div class="pop-item">
-                        <div class="pop-label">{{$t('asset.createAssetTab.vendorTab.vendorName')}}</div>
-                        <el-input class="input-x-mini-26" v-model="addVendorData.value"/>
-                        <button type="button" @click.stop="addNewData('vendor')" class="nz-btn nz-btn-size-normal nz-btn-style-light float-right nz-btn-min-width-82" id="asset-edit-sub-vendor-add">
-                        <span class="top-tool-btn-txt">
-                           <i class="nz-icon-create-square nz-icon"></i>
-                          {{$t('overall.add')}}</span>
-                        </button>
-                      </div>
-                      <div class="pop-item">
-                        <div class="pop-label">{{$t('asset.createAssetTab.vendorTab.existVendor')}}</div>
-                        <div class="pop-box pop-box-asset pop-box-asset2">
-                          <el-scrollbar style="height: 100%;">
-                            <ul style="list-style: none">
-                              <li style="cursor: pointer;"
-                                  :id="'asset-edit-sub-vendor-op-'+index"
-                                  v-for="(item,index) in vendorUlData"
-                                  @click="getLidata(index,item)"
-                                  :class="{'pop-box-active': vendorCount === index}"
-                                  :key="index">
-                                <div class="pop-item-contain">
-                                  <span v-if="!item.isEdit">{{ item.value }}</span>
-                                  <span class="asset-dropdown-label-input" v-if="item.isEdit" @click.stop="editing">
-                                    <el-input class="input-x-mini-24" v-model="item.value"/>
-                                  </span>
-                                  <div class="pop-item-icons">
-                                    <span class="asset-dropdown-btn asset-dropdown-btn-delete" @click.stop="deleteData('/sys/dict/delete',item.id)" :id="'asset-edit-sub-vendor-op-del-'+index">
-                                      <i class="el-icon-delete"></i>
-                                    </span>
-                                    <span class="asset-dropdown-btn" @click.stop="editVendorOptionData(item,'vendor',index)" :id="'asset-edit-sub-vendor-op-edit-'+index">
-                                      <i class="nz-icon nz-icon-edit" v-if="!item.isEdit"></i>
-                                      <i class="el-icon-check" v-if="item.isEdit" @click="editData('sys/dict/update',item)" :id="'asset-edit-sub-vendor-op-save-'+index"></i>
-                                    </span>
-                                  </div>
-                                </div>
-                              </li>
-                            </ul>
-                          </el-scrollbar>
-                        </div>
-                      </div>
-                      <div class="pop-item">
-                        <div class="pop-label">{{$t('asset.createAssetTab.vendorTab.modelName')}}</div>
-                        <el-input class="input-x-mini-26" v-model="addNewModelData.name"/>
-                        <button type="button" @click.stop="addNewData('model')" class="nz-btn nz-btn-size-normal nz-btn-style-light float-right nz-btn-min-width-82" id="asset-edit-sub-model-add">
-                        <span class="top-tool-btn-txt">
-                           <i class="nz-icon-create-square nz-icon"></i>
-                          {{$t('overall.add')}}</span>
-                        </button>
-                      </div>
-                      <div class="pop-item">
-                        <div class="pop-label">{{$t('asset.createAssetTab.vendorTab.existModel')}}</div>
-                        <div class="pop-box pop-box-asset pop-box-asset2">
-                          <el-scrollbar style="height: 100%;">
-                            <ul style="list-style: none">
-                              <li style="cursor: pointer;"
-                                  :id="'asset-edit-sub-model-op-'+index"
-                                  v-for="(item,index) in modelUlData"
-                                  @click=" clickState(index,item,'model') "
-                                  :class="{'pop-box-active': modelCount === index}"
-                                  :key="index">
-                                <div class="pop-item-contain">
-                                  <span v-if="!item.isEdit">{{ item.name }}</span>
-                                  <span class="asset-dropdown-label-input" v-if="item.isEdit" @click.stop="editing">
-                                    <el-input class="input-x-mini-24" v-model="item.name"/>
-                                  </span>
-                                  <div class="pop-item-icons">
-                                    <span class="asset-dropdown-btn asset-dropdown-btn-delete"
-                                          @click.stop="deleteData('model',item.id)" :id="'asset-edit-sub-model-op-del-'+index">
-                                      <i class="el-icon-delete"></i>
-                                    </span>
-                                    <span class="asset-dropdown-btn" @click.stop="editOptionData(item,'model',index)" :id="'asset-edit-sub-model-op-edit-'+index">
-                                      <i class="nz-icon nz-icon-edit" v-if="!item.isEdit"></i>
-                                      <i class="el-icon-check" v-if="item.isEdit"
-                                           @click="editData('model',item)" :id="'asset-edit-sub-model-op-save-'+index"></i>
-                                    </span>
-                                  </div>
-                                </div>
-                              </li>
-                            </ul>
-                          </el-scrollbar>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div slot="reference"><i class="el-icon-plus"></i></div>
-                </el-popover>-->
               </div>
             </template>
             <span v-if="tabView">{{assetViewData.vendor}}   {{assetViewData.model}}</span>
@@ -311,16 +139,6 @@
                   :value="item.id"
                 >
                   <span class="asset-dropdown-label-txt">{{ item.name }}</span>
-<!--                  <div class="asset-dropdown-label-icons">-->
-<!--                    <span class="asset-dropdown-btn asset-dropdown-btn-delete"-->
-<!--                          @click.stop="deleteData('idc',item.id)" :id="'asset-edit-idc-op-del-'+item.id"><i-->
-<!--                      class="el-icon-delete"></i></span>-->
-<!--                    <idc-config-box :post-idc="popIdcData" placement="left" @after="getIDCOptionData" :button-class="'asset-dropdown-btn'">-->
-<!--                      <template v-slot:optionZone>-->
-<!--                        <i class="nz-icon nz-icon-edit" @click="getSingleIDCData(item.id,'edit', item)"></i>-->
-<!--                      </template>-->
-<!--                    </idc-config-box>-->
-<!--                  </div>-->
                 </el-option>
               </el-select>
 <!--              <div class="right-box-row-btn ">-->
@@ -900,17 +718,17 @@
           type: '',
           value: '',
           code: ''
-        }
+        };
         let idcData = {
           id: '',
           name: '',
           location: '',
           principal: '',
           tel: ''
-        }
+        };
+        let tempModelId = this.assetData.modelId;
         if (data === 'asset') {
           if (this.assetData.modelId) {
-            console.info(this.assetData.modelId)
             this.assetData.modelId = this.assetData.modelId.join(',').split(',')[1];
           }
           // let modelId = this.assetData.modelId.join(',').split(',')[1];
@@ -956,6 +774,7 @@
                     this.$emit('refreshData', 'true');
                     this.sendStateData('close');
                   } else {
+                    this.assetData.modelId = tempModelId;
                     this.$message.error(res.msg);
                   }
                 });
@@ -1003,11 +822,13 @@
                     this.$emit('refreshData', 'true');
                     this.sendStateData('close');
                   } else {
+                    this.assetData.modelId = tempModelId;
                     this.$message.error(res.msg);
                   }
                 });
               }
             } else {
+              this.assetData.modelId = tempModelId;
               return false;
             }
           });

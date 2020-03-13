@@ -275,7 +275,7 @@ export default {
                       // 设置时间-数据格式对
                       const dpsArr = Object.entries(queryItem.values);//[ ["0",[1577959830.781,"0"]], ["1",[1577959845.781,"0"]] ]
                       // 判断是否有数据
-                      if (dpsArr.length > 0 && tagsArr.length > 0) {
+                      if (dpsArr.length > 0 && tagsArr.length > 0 && this.$refs.editChart[index]) {
                         tagsArr.forEach((tag, i) => {
                           if (tag !== '__name__') {
                             host += `${tag}="${queryItem.metric[tag]}",`;
