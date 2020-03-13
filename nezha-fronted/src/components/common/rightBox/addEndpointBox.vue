@@ -305,7 +305,7 @@
           if (this.editParamBox.type == 2) {
             this.tempEndpoint = obj;
           }
-          this.editParamBox.top = position.top - 234;
+          this.editParamBox.top = position.top - 227;
           this.editParamBox.left = position.left - 48;
           if (!obj.param) {
             this.$set(obj, 'paramObj', []);
