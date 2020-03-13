@@ -710,7 +710,10 @@
       pageSize(val) {
         this.pageObj.pageSize = val;
         localStorage.setItem('nz-pageSize-' + localStorage.getItem('nz-username') + '-' + this.tableId, val);
-        this.getAssetData()
+        this.getAssetData();
+        this.$nextTick(() => {
+          this.gutterHandler(".nz-table");
+        });
       },
       getPrincipalName(data) {
         for (let item in this.idcUserData) {
@@ -781,6 +784,7 @@
       }
 
       this.$nextTick(() => {
+        this.gutterHandler(".nz-table");
         //左侧dc列表初始选中状态
         if (this.$store.state.assetData.selectedData.length > 0) {
           this.checkList = [];
