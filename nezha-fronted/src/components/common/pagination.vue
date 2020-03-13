@@ -56,7 +56,7 @@ export default {
   },
   mounted() {
     let pageSize = localStorage.getItem('nz-pageSize-' + localStorage.getItem('nz-username') + '-' + this.tableId);
-    this.pageSize = pageSize ? pageSize : 20;
+    this.pageSize = pageSizes&&pageSizes.length>0?pageSizes[0]:(pageSize ? pageSize : 20);
     this.$nextTick(() => {
       let input = document.querySelector(".el-pagination .el-select .el-input__inner");
       input.value = this.pageSize + this.$t('pageSize');

@@ -119,12 +119,12 @@ export default {
             pageSizes:[50,100,200],
             pageObj: {
               pageNo: 1,
-              pageSize: 20,
+              pageSize: 50,
               total: 0
             },
             screenPageObj:{
               pageNo: 1,
-              pageSize: 20,
+              pageSize: 50,
               total: 0
             },
             storedTableData:[],

@@ -210,8 +210,8 @@
             </el-date-picker>
             <button @click="changeTime(10)" class="nz-btn nz-btn-size-normal nz-btn-style-light change-time-height"><i class="el-icon-d-arrow-right"></i></button>
           </div>
-          <el-dropdown split-button type="primary"  size="mini" class="dropdownBtn" >
-            <i class="nz-icon nz-icon-chart" @click="viewGraph" :class="{'control-icon-unchecked':selectedEndpoints.length<1,'control-icon-checked':selectedEndpoints.length>0}"></i>
+          <el-dropdown split-button type="primary"  size="mini" class="dropdownBtn" @click="viewGraph">
+            <i class="nz-icon nz-icon-chart"  :class="{'control-icon-unchecked':selectedEndpoints.length<1,'control-icon-checked':selectedEndpoints.length>0}"></i>
             <el-dropdown-menu slot="dropdown" style="padding:10px 4px 10px 10px;">
               <el-row>
                 <el-col :span="16" style="padding-top: 4px;padding-left: 1px"><span style="padding-top: 2px">{{$t('project.endpoint.hideSameLabels')}}</span></el-col>
@@ -608,8 +608,8 @@
                   let t_date = new Date(item.data[0]);
                   str += [t_date.getFullYear(), t_date.getMonth() + 1, t_date.getDate()].join('-') + " "
                     + [t_date.getHours(), t_date.getMinutes(),t_date.getSeconds()].join(':');
+                  str +=`<br/>`;
                 }
-                str +=`<br/>`;
                 let val = parseFloat(Number(item.data[1]).toFixed(2));
                 if(val===0){
                   val = Number(item.data[1]);
