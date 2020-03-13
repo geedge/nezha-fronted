@@ -5,7 +5,7 @@
   <div id="shell-service"  data-yunlog-scope="popup" :class="{'shell-service-max': isFullScreen}" v-show="consoleShow">
     <div id="shell-service-resize-mask"></div>
     <div id="shell-split" class="shell-split shell-iconfont" @mousedown="dragEagle" v-show="!isFullScreen">一</div>
-    <div style='position: relative;border:solid 0px red;'>
+    <div style='position: relative;'>
       <el-menu  mode="horizontal" @select="handleSelect" style='position: absolute;left:0px;top:0px;border-top: 1px solid #DCDFE6;'>
         <el-submenu index="1"  style="width:40px;">
           <template slot="title" ><i class="el-icon-setting " style="position: absolute;left: 10px;top: 4px;"></i></template>
@@ -37,19 +37,22 @@
                @tab-click="handleClick"
                @tab-remove="removeTab"
                :before-leave="beforeLeave"
-               style='width:100%;'
-               type="border-card">
+               style='width:100%; margin-left:0px;border-left:solid 1px black;border-bottom: 1px solid black;'
+               type="border-card" >
         <el-tab-pane v-for="(item, index) in editableTabs"
           :key="item.name"
           :label="item.title"
           :name="item.name"
            closable
         >
-          <!-- tab显示的内容 <div :class="{'active-icon green':scope.row.pingState == 1,'active-icon red':scope.row.pingState == 0}"></div>-->
+          <!-- tab显示的内容 1 grey,2 green, 3 red-->
           <span slot="label" style="">
-            <div class="active-icon grey"  style="margin-top: 0px;"></div>{{item.title}}
+            <div :class="{'active-icon grey':item.circleColor == 1,'active-icon green':item.circleColor == 2,'active-icon red':item.circleColor == 3}"
+                  style="margin-top: 0px;"></div>{{item.title}}
           </span>
-          <my-console :terminal="item.terminal"  :ref="'console'+index"    @closeConsole="removeTab" :idIndex="index" :isFullScreen="isFullScreen"></my-console>
+
+          <my-console :terminal="item.terminal"    @refreshConsoleTitle="refreshTabTitle" :ref="'console'+index"    @closeConsole="removeTab" :idIndex="index" :isFullScreen="isFullScreen"></my-console>
+
         </el-tab-pane>
         <el-tab-pane key="add" name="add">
           <span slot="label" style="padding:8px;font-size:20px;font-weight:bold;">+</span>
@@ -150,7 +153,7 @@
         consoleShow:false,
         isFullScreen:false,
         initConsoleHeight:300,//只读,初始化高度
-        consoleHeight:300,
+        consoleHeight:300,//console高度
         currentTransform:0,
         editableTabsValue: '-1',//当前显示的console
         currentIndex:'-1',
@@ -195,6 +198,7 @@
         const console = {
           title:title,
           name:newTabName,
+          circleColor:1,//1 grey,2 green, 3 red
           terminal: {
             name:newTabName,
             cols: 225,
@@ -221,6 +225,7 @@
         },10)
 
         //this.$store.commit('addConsole');
+
       },
       show(id,host,accountId,port){
         this.addConsole(id,host,accountId,port);
@@ -251,6 +256,18 @@
       },
       handleClick(){
 
+      },
+      refreshTabTitle(connectResult){
+          if (this.editableTabs && this.editableTabs.length > 0) {
+            this.editableTabs.forEach((tab, index) => {
+              if (tab.name === this.editableTabsValue) {
+                if(connectResult.title && connectResult.title!=''){
+                  tab.title = connectResult.title;
+                }
+                tab.circleColor = connectResult.color;
+              }
+            });
+          }
       },
       removeTab(targetName) {
         let tabs = this.editableTabs;
@@ -342,11 +359,11 @@
       },
       */
       handleChange:function(file,fileList){
-        //if (fileList.length > 0) {
-          //this.uploadFileList = [fileList[fileList.length - 1]]
-        //}
-        //this.uploadFile.file = this.uploadFileList[0];
-        this.uploadFile.file = file;
+        if (fileList.length > 0) {
+          this.uploadFileList = [fileList[fileList.length - 1]]
+        }
+        this.uploadFile.file = this.uploadFileList[0];
+        //this.uploadFile.file = file;
       },
       upload() {
         //if(this.uploadFile && this.uploadFile.file.raw){
@@ -370,26 +387,28 @@
       download(){
         this.downloadFile.uuid = this.currentUuid;
         this.$post('terminal/download',this.downloadFile,{responseType:'blob'}).then(res => {
-          let fileName= this.downloadFile.path.substring(this.downloadFile.path.indexOf('/')+1);
+          let fileName= this.downloadFile.path.substring(this.downloadFile.path.lastIndexOf('/')+1);
+          if(window.navigator.msSaveOrOpenBlob){
+            // 兼容ie11
+            let blobObject = new Blob([res]);
+            window.navigator.msSaveOrOpenBlob(blobObject, fileName);
+          }else{
+            let url = URL.createObjectURL(new Blob([res]));
+            let a = document.createElement('a');
+            document.body.appendChild(a); //此处增加了将创建的添加到body当中
+            a.href = url;
+            a.download = fileName;
+            a.target = '_blank';
+            a.click();
+            a.remove(); //将a标签移除
+          }
+          this.closeDownloadDialog();
+/*
           if(res.code ==  200 ){
-            if(window.navigator.msSaveOrOpenBlob){
-              // 兼容ie11
-              let blobObject = new Blob([res.data]);
-              window.navigator.msSaveOrOpenBlob(blobObject, fileName);
-            }else{
-              let url = URL.createObjectURL(new Blob([res.data]));
-              let a = document.createElement('a');
-              document.body.appendChild(a); //此处增加了将创建的添加到body当中
-              a.href = url;
-              a.download = fileName;
-              a.target = '_blank';
-              a.click();
-              a.remove(); //将a标签移除
-            }
-            this.closeDownloadDialog();
+
           }else{
             this.$message.error(res.msg);
-          }
+          }*/
         })
       },
       /*upload--download  end*/
@@ -399,7 +418,7 @@
         this.consoleShow = false;
         this.$store.commit('minConsole');
       },
-      fullScreen(){
+      fullScreen(isChange){
         //dialog全屏
         this.isFullScreen = !this.isFullScreen;
 
@@ -411,6 +430,20 @@
         if(!this.isFullScreen){
           let targetDiv= document.getElementById('shell-service');
           targetDiv.style.height=this.initConsoleHeight+'px';
+          this.consoleHeight=this.initConsoleHeight;
+        }else {
+          let targetDiv= document.getElementById('shell-service');
+          targetDiv.style.height=`${100}%`;
+          let height = document.body.clientHeight;//可视高度
+          this.consoleHeight=height;
+        }
+
+        if (this.editableTabs && this.editableTabs.length > 0) {
+          this.editableTabs.forEach((tab, index) => {
+            if (tab.name === this.editableTabsValue) {
+              this.$refs['console' + index][0].focusConsole();
+            }
+          });
         }
 
         //const dailog = document.getElementById("consoleDailog");
@@ -454,13 +487,25 @@
           document.onmouseup=function(){
             document.onmousemove=null;
             _this.editableTabs.forEach((tab, index) => {
-              _this.$refs['console'+index][0].resizeServiceConsole(parseInt(targetDiv.style.height));
+             // _this.$refs['console'+index][0].resizeServiceConsole(parseInt(targetDiv.style.height));
+              _this.$refs['console'+index][0].resizeServiceConsole();
             });
 
             _this.consoleHeight = parseInt(targetDiv.style.height);
             if(_this.consoleHeight===null || !_this.consoleHeight){_this.consoleHeight = _this.initConsoleHeight;}
           }
         },
+        windowChange(){
+          //alert('winChange');
+          if(this.editableTabs&&this.editableTabs.length>0){
+            let width = document.body.clientWidth;//可视宽度
+            var targetDiv= document.getElementById('shell-service'); //e.target.parentNode.parentNode;.children[0]
+            var targetDivHeight=targetDiv.offsetHeight;
+            this.editableTabs.forEach((tab, index) => {
+              this.$refs['console'+index][0].resize(targetDivHeight,width);
+            });
+          }
+        }
     },
     watch: {
       '$store.state.consoleShow':function(val){
@@ -473,13 +518,23 @@
             this.show(id,host,accountId,port);
           }else {
             this.consoleShow = true;
+            //min后，从header区域打开，获得焦点
+            this.$nextTick(() => {
+              if (this.editableTabs && this.editableTabs.length > 0) {
+                this.editableTabs.forEach((tab, index) => {
+                  if (tab.name === this.editableTabsValue ) {
+                    this.$refs['console' + index][0].focusConsole();
+                  }
+                });
+              }
+            });
           }
           this.$store.state.consoleShow = false;
         }
       }
     },
     created() {
-
+      window.addEventListener('resize',this.windowChange);
     },
     mounted() {
 
