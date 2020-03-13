@@ -152,7 +152,7 @@
     data() {
       return {
         username: sessionStorage.getItem("nz-username"),
-        language: '',
+        language: localStorage.getItem("nz-language") ? localStorage.getItem("nz-language") : 'en',
         assetData: [],
         activeIndex:'',
         activeItemIndex:'',
@@ -466,6 +466,7 @@
       this.getUserData();
     },
     mounted() {
+      this.$i18n.locale = this.language;
       this.getUserData();
       this.getAssetData();
       this.getProjectList();
