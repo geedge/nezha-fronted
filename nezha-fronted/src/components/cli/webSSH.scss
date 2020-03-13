@@ -7,6 +7,7 @@
   background: #fff;
   z-index: 2000;
   height: 300px;
+
   #shell-service-resize-mask {
     position: fixed;
     top: 0;
@@ -129,6 +130,7 @@
   position: fixed !important;
   top: 0;
   bottom: 0;
+  background: black !important;
 }
 
 /*-------*/

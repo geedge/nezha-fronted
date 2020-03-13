@@ -1,13 +1,13 @@
 <style scoped>
   .console{
-    height:305px;
+    height:270px;
     padding:5px 5px;
     background-color: black;
   }
 </style>
 <template>
     <div class="console" :id="'ternimalContainer'+idIndex">
-        <div  :id="'terminal'+idIndex"></div>
+        <div  :id="'terminal'+idIndex" ></div>
     </div>
 </template>
 <script>
@@ -38,11 +38,21 @@ export default {
       term: null,
       terminalSocket: null,
       termimalRows:15,
-      termimalHeight:300,
-      fontSize:18,
+      termimalHeight:270,
+      minRow:0,
+      fontSize:15,
+      fontSpaceHeight:2,//一行高度=fontSize+fontSpaceHeight
       obj:{
         id:2
       },
+      successBackContent:'Connecting to',
+      failBackContent:'Sorry',
+      connectFailContent:'Connection failed',
+      welcomeBackContent:'Welcome',
+      psdCont:'password: ',
+      conFinish:false,
+      conSuccessNum:0,
+      inputSecret:false,
     }
   },
   watch:{
@@ -61,16 +71,23 @@ export default {
     prompt(term) {
       term.write('\r\n ');//term.write('\r\n~$ ');
     },
-    resizeConsole(consoleHeigt){
+    resize(consoleHeigt,consoleWidth){
+      this.resizeConsole(consoleHeigt,consoleWidth);
+      this.resizeServiceConsole();
+    },
+    resizeConsole(consoleHeigt,consoleWidth){
       //调整终端容器高度
       const consoleBox = document.getElementById('ternimalContainer'+this.idIndex);
       consoleBox.style.height = `${consoleHeigt}px`;
       //调整终端高度
-      let rows = (consoleHeigt-30)/this.fontSize;
-      rows = parseInt(rows);
-      this.term.resize(this.term.cols,rows);
+      let rows = (consoleHeigt-38)/(this.fontSize+this.fontSpaceHeight);
+      let cols = this.term.cols;
+      if(consoleWidth){//需要调整宽度???
+        cols = (consoleWidth-30)/(this.fontSize+this.fontSpaceHeight);
+      }
+      this.term.resize(parseInt(cols),(parseInt(rows)-this.minRow));
     },
-    resizeServiceConsole(consoleHeigt){
+    resizeServiceConsole(){
       const consoleBox = document.getElementById('ternimalContainer'+this.idIndex);
       let width = document.body.clientWidth;//可视宽度
       let height = parseInt(consoleBox.style.height);
@@ -78,7 +95,7 @@ export default {
       const winStyle={
         width:width,
         height:height,
-        cols:this.term.cols,
+        cols:this.term.cols,//cols和rows在resizeConsole方法已经设置
         rows:this.term.rows,
       };
       //alert(JSON.stringify(winStyle));
@@ -94,21 +111,24 @@ export default {
     fullScreenConsole(isFullScreen){
       this.isFullScreen = isFullScreen;
       //this.term.toggleFullScreen(isFullScreen);//全屏后无法显示顶部菜单和tab
-      let height = document.body.clientHeight;//可视高度
+      let height = document.body.clientHeight-30;//可视高度
       let width = document.body.clientWidth;//可视宽度
-      let rows = height/this.fontSize;
+      let rows = height/(this.fontSize+this.fontSpaceHeight);
       rows = parseInt(rows);
       if(isFullScreen){
         //容器高度设置100%
         const consoleBox = document.getElementById('ternimalContainer'+this.idIndex);
-        consoleBox.style.height = `${100}%`;
+        consoleBox.style.height = `${height}px`;//减去菜单的高度
       }else {
-        rows = this.termimalRows;
+        //rows = this.termimalRows-this.minRow;
         height = this.termimalHeight;
         //容器高度设置
         const consoleBox = document.getElementById('ternimalContainer'+this.idIndex);
-        consoleBox.style.height = `${this.termimalHeight}px`;
+        consoleBox.style.height = `${this.termimalHeight+30}px`;
+        rows = (height-10)/(this.fontSize+this.fontSpaceHeight);//padding  5*2
+        rows = parseInt(rows);
       }
+
       this.term.resize(this.term.cols,rows);//this.term.setOption('rows', rows);
       const winStyl={
         width:width,
@@ -126,19 +146,7 @@ export default {
           this.$message.error(response.msg);
         }
       });
-      /*
-      import 'xterm/dist/addons/fullscreen/fullscreen.css'//如果不成功，请检查路径
 
-import * as fullscreen from 'xterm/lib/addons/fullscreen/fullscreen';
-Terminal.applyAddon(fullscreen);  // Apply the `fullscreen` addon
-
-//调用
-term.toggleFullScreen();//全屏
-term.toggleFullScreen();//正常
-term.toggleFullScreen();//全屏
-       */
-
-      //----------2
       /*
       window.addEventListener('resize',this.windowChange)
 
@@ -162,16 +170,16 @@ term.toggleFullScreen();//全屏
       if(this.isFullScreen){
         //容器高度设置100%
         const consoleBox = document.getElementById('ternimalContainer'+this.idIndex);
+        let height = document.body.clientHeight;//高度
         consoleBox.style.height = `${100}%`;
-        let height = document.body.clientHeight;//可视高度
-        rows = height/this.fontSize;
+        rows = (height-30)/(this.fontSize+this.fontSpaceHeight);
         rows = parseInt(rows);
       }else{
         //容器高度设置100%
         const consoleBox = document.getElementById('ternimalContainer'+this.idIndex);
         let height = this.terminal.height;//可视高度
-        consoleBox.style.height = `${height+5}px`;
-        rows = (height-30)/this.fontSize;
+        consoleBox.style.height = `${height}px`;
+        rows = (height-38)/(this.fontSize+this.fontSpaceHeight);//menu 30 ,drag  8
         rows = parseInt(rows);
       }
       let terminalContainer = document.getElementById('terminal'+this.idIndex);
@@ -181,6 +189,9 @@ term.toggleFullScreen();//全屏
         cursorStyle:'block', // 光标样式  null | 'block' | 'underline' | 'bar'
         //bellStyle:'sound',
         disableStdin:false,//是否应禁用输入
+        fontSize:this.fontSize,
+        //lineHeight:1,
+        //fontFamily: 'NotoSans',
         //scrollback: 800, //回滚
         //tabStopWidth: 8, //制表宽度
         //screenKeys: true//
@@ -199,18 +210,94 @@ term.toggleFullScreen();//全屏
       let url = baseUrl+"/terminal.ws?width="+this.terminal.width+"&height="+this.terminal.height+"&cols="+this.terminal.cols+"&rows="+this.terminal.rows+"&token="+token+"&assetId="+this.terminal.assetId+"&accountId="+this.terminal.accountId+"&uuid="+this.terminal.uuid;
       //alert(url);
       this.terminalSocket = new WebSocket(url);
-
+/*
+      alert(this.term.getOption('fontSize'));
+      alert(this.term.getOption('lineHeight'));
+      alert(this.term.getOption('fontWeight'));
+      alert(this.term.getOption('fontFamily'));
+*/
       //连接成功
       this.terminalSocket.onopen = () =>{
         //alert('open');
         //this.term.write("22222*444555*************"+this.terminal.assetId);
       };
+      //登录后，你输入的内容从后台服务返回
+      this.term.on("data", function(data) {
+        //alert("data="+data);
+        //alert("data"+ data.charCodeAt(0)+"==");
+        let code = data.charCodeAt(0);
+
+        if(code==13){
+          //that.term.clear();
+          //alert("data="+data);
+          //that.prompt(that.term);
+        }else {
+          //that.term.write(data);
+        }
+
+        //this.terminalSocket.send(new TextEncoder().encode("\x00" + data));
+
+      });
       //返回
       this.terminalSocket.onmessage = function(evt) {
-       //alert('socketmessage='+evt.data);
-        //alert('back='+evt.data);
-        //let str = new TextDecoder().decode(evt.data);
+        //let successBackContent = 'Connecting to';
+        let backContent = evt.data;
+        //alert(backContent+ backContent.charCodeAt(0)+"==");
+        /*
+        if(that.inputSecret){//当前为密码输入状态
+        }
+        if(backContent.length>1){
+          let pwdInput = backContent.endsWith(that.psdCont);
+          if(pwdInput){//输入密码
+            that.inputSecret = true;
+          }
+        }*/
 
+        let welComIndex = backContent.indexOf(that.welcomeBackContent);
+        if(welComIndex>-1){//无服务器信息（只与nezha进行了连接）
+          const connectResult = {
+            title:'',
+            color:1,
+          };
+          that.$emit("refreshConsoleTitle",connectResult);//1:grey 2 green 3 red
+        }else {
+            let successContentIndex = backContent.indexOf(that.successBackContent);
+            if(successContentIndex>-1 ){
+              //that.conFinish = true;
+              let startIndex = successContentIndex+that.successBackContent.length+1;
+              backContent = backContent.substring(startIndex);
+              let endIndex = backContent.indexOf('\r\n');
+              let title = backContent.substring(0,endIndex);
+              const connectResult = {
+                title:title,
+                color:2,
+              };
+              that.$emit("refreshConsoleTitle",connectResult);//1:grey 2 green 3 red
+            }else {//失败
+              let failContentIndex = backContent.indexOf(that.failBackContent);
+              let connectFailIndex = backContent.indexOf(that.connectFailContent);
+              if(failContentIndex>-1 ){
+                //that.conFinish = true;
+                const connectResult = {
+                  title:'',
+                  color:3,
+                };
+                that.$emit("refreshConsoleTitle",connectResult);//1:grey 2 green 3 red
+              }else if(connectFailIndex>-1){
+                let startIndex = successContentIndex+that.successBackContent.length+1;
+                backContent = backContent.substring(startIndex);
+                let endIndex = backContent.indexOf('\r\n');
+                let title = backContent.substring(0,endIndex);
+                const connectResult = {
+                  title:'',
+                  color:3,
+                };
+                that.$emit("refreshConsoleTitle",connectResult);//1:grey 2 green 3 red
+              }
+            }
+        }
+        //alert('socketmessage='+evt.data);
+        //let str = new TextDecoder().decode(evt.data);
         //let str = new TextDecoder().decode(evt.data);
         //this.term.write(evt.data);
         //that.term.write("666622222*444555*************"+evt.data);
@@ -230,9 +317,9 @@ term.toggleFullScreen();//全屏
       };
       //选中 复制
       this.term.on("selection", function() {
-        if (this.term.hasSelection()) {
+        //if (this.term.hasSelection()) {
           //this.copy = this.term.getSelection();
-        }
+        //}
       });
       this.term.attachCustomKeyEventHandler(function(ev) {
         //粘贴 ctrl+v
@@ -251,19 +338,7 @@ term.toggleFullScreen();//全屏
       this.term.onData = (data) =>{
         //alert('data:'+data);
       };*/
-      //登录后，你输入的内容从后台服务返回容
-      this.term.on("data", function(data) {
-        //alert("data"+ data.charCodeAt(0)+"==");
-         let code = data.charCodeAt(0);
-         if(code==13){
-           //that.prompt(that.term);
-         }else {
-           //that.term.write(data);
-         }
 
-        //this.terminalSocket.send(new TextEncoder().encode("\x00" + data));
-
-      });
       //this.term.on('key', function(key, ev) {
         //alert("key=========="+key);
         //this.term.write(key)//输入
@@ -304,6 +379,7 @@ term.toggleFullScreen();//全屏
       if(consoleBox){
         consoleBox.style.height = `${this.termimalHeight}px`;
       }
+      this.conFinish = false;
     },
   },
   mounted () {
