@@ -206,8 +206,8 @@
             </el-date-picker>
             <button @click="changeTime(10)" class="nz-btn nz-btn-size-normal nz-btn-style-light change-time-height"><i class="el-icon-d-arrow-right"></i></button>
           </div>
-          <el-dropdown split-button type="primary"  size="mini" class="dropdownBtn">
-            <i class="nz-icon nz-icon-chart" @click="viewGraph" ></i>
+          <el-dropdown split-button type="primary"  size="mini" class="dropdownBtn" >
+            <i class="nz-icon nz-icon-chart" @click="viewGraph" :class="{'control-icon-unchecked':selectedEndpoints.length<1,'control-icon-checked':selectedEndpoints.length>0}"></i>
             <el-dropdown-menu slot="dropdown" style="padding:10px 4px 10px 10px;">
               <el-row>
                 <el-col :span="16" style="padding-top: 4px;padding-left: 1px"><span style="padding-top: 2px">{{$t('project.endpoint.hideSameLabels')}}</span></el-col>
@@ -337,6 +337,7 @@
   import axios from 'axios';
   import exportXLSX from "../../common/exportXLSX";
   import loading from "../../common/loading";
+  import chartDataFormat from "../../charts/chartDataFormat";
   export default {
     name: "project2",
     components: {
@@ -593,20 +594,8 @@
               return [x,y];
             },
             formatter:function(params){
-              let avgWidth=0;
-              let sumWidth=0;
-              params.forEach((item, i) => {
-                let tip=temp.legend.find((element)=>{
-                  return element.name == item.seriesName;
-                })
-
-                let curLength=(temp.hideSameLabels&&tip.alias?tip.alias:tip.name).length;
-                // maxWidth=maxWidth>curLength?maxWidth:curLength;
-                sumWidth+=curLength;
-              })
-              avgWidth=sumWidth/params.length;
               //display:inline-block;white-space:nowrap;overflow-x:hidden;text-overflow:ellipsis;
-              let str = `<div   style='width:${avgWidth*10}px;min-width:150px;max-width:600px;display:inline-block;line-height: 18px;font-size:12px;font-family: Roboto,Helvetica Neue,Arial,sans-serif;'>`;
+              let str = `<div >`;
               params.forEach((item, i) => {
                 let tip=temp.legend.find((element)=>{
                   return element.name == item.seriesName;
@@ -621,13 +610,12 @@
                 if(val===0){
                   val = Number(item.data[1]);
                 }
-                str += `<div style='max-width:510px;display:inline-block;white-space:nowrap;overflow-x:hidden;text-overflow:ellipsis;line-height: 18px;font-size:12px;font-family: Roboto,Helvetica Neue,Arial,sans-serif;'>`;
-
-                str +=`<span style='display:inline-block;margin-right:5px;border-radius:10px;width:15px;height:5px;background-color: ${item.color};}'></span>${temp.hideSameLabels&& tip.alias?tip.alias:tip.name}:  `;
-                str +=`</div>`;
-                str += `<div style='max-width:90px;min-width:20px;float:right;text-align:right;display:inline-block;white-space:nowrap;overflow-x:hidden;text-overflow:ellipsis;line-height: 18px;font-size:12px;font-family: Roboto,Helvetica Neue,Arial,sans-serif;'>`;
-                str +=val;
-                str +=`</div>`;
+                str += `<div style="white-space:nowrap;overflow-x:hidden;text-overflow:ellipsis;display: flex; justify-content: space-between; min-width: 150px; max-width: 600px; line-height: 18px; font-size: 12px;">`;
+                str += `<div style="max-width: 500px;white-space:nowrap;overflow-x:hidden;text-overflow:ellipsis;"><span style='display:inline-block;margin-right:5px;border-radius:10px;width:15px;height:5px;background-color: ${item.color};}'></span>${tip?(tip.alias?tip.alias:tip.name):item.seriesName}:  </div>`;
+                str += `<div style="padding-left: 10px;">`;
+                str += chartDataFormat.short(val,null,2);
+                str += `</div>`;
+                str += `</div>`;
               });
               str +=`</div>`;
               return str;
@@ -726,29 +714,7 @@
             },
             axisLabel: {
               formatter: function(num,index) {
-                if (num >= 1000) {
-                  const kbNum = num / 1000;
-                  if (kbNum >= 1000) {
-                    const mbNum = kbNum / 1000;
-                    if (mbNum > 1000) {
-                      const gbNum = mbNum / 1000;
-                      /*
-                      if (gbNum > 1000) {
-                        const tbNum = gbNum / 1000;
-                        if (tbNum > 1000) {
-                          const pbNum = tbNum / 1000;
-                          return `${pbNum.toFixed(2)}PB`;
-                        }
-                        return `${tbNum.toFixed(2)}TB`;
-                      }*/
-                      return `${parseFloat(gbNum.toFixed(2))}B`;
-                    }
-                    return `${parseFloat(mbNum.toFixed(2))}M`;
-                  }
-                  return `${parseFloat(kbNum.toFixed(2))}K`;
-                }
-                // return parseFloat(num.toFixed(2));
-                return num;
+                return chartDataFormat.short(num,index)
               },
             },
           },
@@ -1968,7 +1934,7 @@
     left: 25px;
   }
   .control-icon-unchecked{
-    color: #e5e5e5;
+    color: #d1d1d1;
   }
   .control-icon-checked{
     color:#666;
