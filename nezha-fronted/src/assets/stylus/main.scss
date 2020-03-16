@@ -828,6 +828,7 @@ li{
 }
 .el-scrollbar__thumb {
   background-color: #aaa;
+  cursor: default;
 }
 .el-autocomplete-suggestion__wrap.el-scrollbar__wrap, .el-cascader-menu__wrap.el-scrollbar__wrap {
   margin-bottom: 0 !important;
@@ -1221,6 +1222,8 @@ li{
 }
 .ps__thumb-y {
   right: 0px;
+  transition: .3s background-color, .1s top;
+  background-color: #888;
 }
 .ps__rail-x:hover > .ps__thumb-x, .ps__rail-x:focus > .ps__thumb-x, .ps__rail-x.ps--clicking .ps__thumb-x {
   height: 6px;
