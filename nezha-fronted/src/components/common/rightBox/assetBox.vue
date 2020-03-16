@@ -26,7 +26,7 @@
           <el-form-item :label="$t('asset.createAssetTab.sn')" prop="sn">
             <el-input size="small" v-if="!tabView" v-model="assetData.sn"/>
             <el-popover trigger="hover" placement="bottom-start" :content="assetData.sn" >
-              <span slot="reference" class="sidebar-info-item-txt" v-if="tabView">{{assetData.sn}}</span>
+              <span slot="reference" class="sidebar-info-item-txt" style="margin-bottom: -14px; display: block;" v-if="tabView">{{assetData.sn}}</span>
             </el-popover>
           </el-form-item>
           <el-form-item :label="this.$t('asset.createAssetTab.host')" prop="host">

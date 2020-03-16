@@ -382,13 +382,14 @@
             break;
           case 2:
             // this.fillProject(typeObj);
-            let tempObj = JSON.parse(typeObj.param)
-            this.$set(typeObj, 'paramObj', []);
-            for (let k in tempObj) {
-              typeObj.paramObj.push({key: k, value: tempObj[k]});
+            if (typeObj.param) {
+              let tempObj = JSON.parse(typeObj.param);
+              this.$set(typeObj, 'paramObj', []);
+              for (let k in tempObj) {
+                typeObj.paramObj.push({key: k, value: tempObj[k]});
+              }
             }
             this.viewModuleData = JSON.parse(JSON.stringify(typeObj));
-
             this.$refs.moduleBox.show(true);
             break;
           case 3:

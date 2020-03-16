@@ -25,7 +25,7 @@
             <el-select v-if="rightBox.isEdit" value-key="id" popper-class="config-dropdown" v-model="module.project" placeholder="" size="small">
               <el-option :id="'module-project-'+item.id" v-for="item in projectList" :key="item.id" :label="item.name" :value="item"></el-option>
             </el-select>
-            <div v-if="!rightBox.isEdit" class="right-box-form-content-txt">{{module.project.name}}</div>
+            <div v-if="!rightBox.isEdit && module.project" class="right-box-form-content-txt">{{module.project.name}}</div>
           </el-form-item>
           <el-form-item :label='$t("project.module.moduleName")' prop="name">
             <el-input v-if="rightBox.isEdit" placeholder="" maxlength="64" show-word-limit v-model="module.name" size="small"></el-input>

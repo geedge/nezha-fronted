@@ -182,14 +182,14 @@
         <div>
           <div @click="backToEdpTab">
             <button  class="nz-btn nz-btn-size-normal nz-btn-style-light float-right nz-btn-min-width-82">
-          <span class='top-tool-btn-txt'>
-            {{$t('overall.back')}}</span>
+              <span class='top-tool-btn-txt'>
+              {{$t('overall.back')}}</span>
             </button>
           </div>
         </div>
         <!--时间选择器-->
         <div class="top-tool-right">
-          <div class="top-tool-search relative-position" >
+          <div class="top-tool-search relative-position margin-r-20">
             <el-input ref="elementQuery" @clear="clearInput" id="elementQuery" @focus="focusInput"  @blur="blurInput" v-model="queryExpression" class="query-input-inactive" size="mini" clearable  :placeholder="$t('project.endpoint.promExpr')" >
               <i slot="suffix" class="el-input__icon el-icon-search" style="float:right" @click="focusInput"></i>
             </el-input>

@@ -31,7 +31,7 @@
           </el-dropdown>
         </div>
         <div class="top-tool-right">
-          <div class="top-tool-search relative-position" >
+          <div class="top-tool-search relative-position margin-r-20">
             <el-input ref="queryPanel" @clear="clearInput" id="queryPanel" @focus="focusInput"  @blur="blurInput" v-model="filter.searchName" class="query-input-inactive" size="mini" clearable   >
               <i slot="suffix" class="el-input__icon el-icon-search" @click="focusInput" style="float: right"></i>
             </el-input>
