@@ -1146,10 +1146,19 @@
                       colorSimpleTemp+=`<span style="color: ${labelColor}">${key}</span>=<span style="color: ${valueColor}">'${result.metric[key]}'</span>,`;
                     }
                   }
-                  temp=temp.substr(0,temp.length-1);
-                  simpleTemp=simpleTemp.substr(0,simpleTemp.length-1);
-                  colorTemp=colorTemp.substr(0,colorTemp.length-1);
-                  colorSimpleTemp=colorSimpleTemp.substr(0,colorSimpleTemp.length-1);
+                  if(temp.indexOf(',') != -1){
+                    temp=temp.substr(0,temp.length-1);
+                  }
+                  if(simpleTemp.indexOf(',') != -1){
+                    simpleTemp=simpleTemp.substr(0,simpleTemp.length-1);
+                  }
+                  if(colorTemp.indexOf(',') != -1){
+                    colorTemp=colorTemp.substr(0,colorTemp.length-1);
+                  }
+                  if(colorSimpleTemp.indexOf(',') != -1){
+                    colorSimpleTemp=colorSimpleTemp.substr(0,colorSimpleTemp.length-1);
+                  }
+
 
                   temp+="}";
                   simpleTemp+="}";
@@ -1630,7 +1639,7 @@
         let temp=this;
         setTimeout(function(){
           temp.tableFilter();
-        },100)
+        },500)
       },
     },
     destroyed() {
