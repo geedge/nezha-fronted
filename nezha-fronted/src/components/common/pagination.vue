@@ -87,7 +87,8 @@ export default {
        this.resetPageSizes();
     }else{
       let pageSize = localStorage.getItem('nz-pageSize-' + localStorage.getItem('nz-username') + '-' + this.tableId);
-      if(pageSize != 'undefined'){
+      console.log(typeof pageSize)
+      if(pageSize != 'undefined' && pageSize != null){
         this.pageSize=parseInt(pageSize);
       }
     }
