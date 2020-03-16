@@ -22,6 +22,19 @@
   .date-pick-group button:last-of-type {
     margin-left: 4px;
   }
+
+  .main-list {
+    height: 100%;
+    transition: .4s height, .4s transform;
+  }
+  .main-list.main-list-with-sub {
+    transform: translate3d(0,0,0);
+    height: 50%;
+  }
+  .sub-list {
+    height: 50%;
+    transition: .4s height;
+  }
 </style>
 <style scope>
   .chart-bottom {
@@ -55,229 +68,196 @@
       </el-scrollbar>
     </div>
 
-    <!--metrics-->
-<!--    <div class="content-right" v-show="tableShow == 2">-->
-<!--      <div class="top-tools">-->
-<!--        <div class="nz-tab">-->
-<!--          <div @click="tableShow = 1" class="nz-tab-item-box">-->
-<!--            <div class="nz-tab-item">{{$t('project.endpoint.endpoint')}}</div>-->
-<!--          </div>-->
-<!--          <div class="nz-tab-item-box">-->
-<!--            <div class="nz-tab-item nz-tab-item-active">{{$t('project.metrics.metrics')}}</div>-->
-<!--          </div>-->
-<!--        </div>-->
-<!--        <div class="top-tool-search"><search-input :searchMsg="metricSearchMsg" @search="metricSearch"></search-input></div>-->
-<!--      </div>-->
-<!--      <el-table-->
-<!--        :data="metricsTableData"-->
-<!--        class="nz-table"-->
-<!--        border-->
-<!--        height="calc(100% - 160px)"-->
-<!--        style="width: 100%;">-->
-<!--        <el-table-column-->
-<!--          :resizable="false"-->
-<!--          v-for="(item, index) in metricsTableTitle"-->
-<!--          v-if="item.show"-->
-<!--          :width="item.width"-->
-<!--          :key="`col-${index}`"-->
-<!--          :label="item.label"-->
-<!--          min-width="110px"-->
-<!--        >-->
-<!--          <template slot-scope="scope" :column="item">-->
-<!--            <span>{{scope.row[item.prop]}}</span>-->
-<!--          </template>-->
-<!--        </el-table-column>-->
-<!--      </el-table>-->
-<!--      <Pagination v-cloak :pageObj="metricPageObj" @pageNo='metricsPageNo' @pageSize='metricsPageSize' ref="metricPagination"></Pagination>-->
-<!--    </div>-->
-
     <!--endpoint-->
-    <div class="content-right" v-show="tableShow == 1">
-      <div class="top-tools">
-        <div class="nz-tab">
-<!--          <div class="nz-tab-item-box">-->
-<!--            <div class="nz-tab-item nz-tab-item-active">{{$t('project.endpoint.endpoint')}}</div>-->
-<!--          </div>-->
-<!--          <div class="nz-tab-item-box" @click="tableShow = 2">-->
-<!--            <div class="nz-tab-item">{{$t('project.metrics.metrics')}}</div>-->
-<!--          </div>-->
-        </div>
-        <div>
-          <export-excel
-            export-file-name="endpoint"
-            export-url="/endpoint/export"
-            :params="endpointSearchLabel"
-            @afterImport="getEndpointTableData"
-            class="float-right">
-            <template slot="optionZone">
-              <i class="nz-icon nz-icon-create-square" @click.stop="toCreateEndpoint" :title="$t('overall.createProject')" ></i>
-            </template>
-          </export-excel>
-<!--          <button @click="toCreateEndpoint" :title="$t('overall.createProject')"  class="nz-btn nz-btn-size-normal nz-btn-style-light float-right " id="project-add-ep">-->
-<!--            <i class="nz-icon-create-square nz-icon"></i>-->
-<!--          </button>-->
-          <div class="top-tool-search float-right margin-r-20"><search-input :searchMsg="endpointSearchMsg" @search="endpointSearch" ref="projectSearch"></search-input></div>
-        </div>
-      </div>
-      <el-table
-        :data="endpointTableData"
-        border
-        class="nz-table endpoint-table"
-        :height="$tableHeight.normal"
-        v-scrollBar:el-table
-        ref="endpointTable"
-        style="width: 100%;">
-        <el-table-column
-          :resizable="false"
-          v-for="(item, index) in tablelable"
-          v-if="item.show"
-          :width="item.width"
-          :key="`col-${index}`"
-          :label="item.label"
-          min-width="110px"
-        >
-          <template slot-scope="scope" :column="item">
-            <span v-if="item.prop == 'asset' && scope.row[item.prop]" class="link" @click="viewAsset(scope.row[item.prop].id)">{{scope.row[item.prop].host}}</span>
-            <span v-else-if="item.prop == 'param'">
-              <template v-if="scope.row.paramObj">
-                <span v-for="(p,i) in scope.row.paramObj">{{p.key}}={{p.value}}<span v-if="i < scope.row.paramObj.length-1">，</span></span>
+    <div class="content-right">
+      <!-- 主列表 -->
+      <div class="main-list" :class="{'main-list-with-sub': tableShow == 3}">
+        <div class="top-tools">
+          <div class="nz-tab">
+  <!--          <div class="nz-tab-item-box">-->
+  <!--            <div class="nz-tab-item nz-tab-item-active">{{$t('project.endpoint.endpoint')}}</div>-->
+  <!--          </div>-->
+  <!--          <div class="nz-tab-item-box" @click="tableShow = 2">-->
+  <!--            <div class="nz-tab-item">{{$t('project.metrics.metrics')}}</div>-->
+  <!--          </div>-->
+          </div>
+          <div>
+            <export-excel
+              export-file-name="endpoint"
+              export-url="/endpoint/export"
+              :params="endpointSearchLabel"
+              @afterImport="getEndpointTableData"
+              class="float-right">
+              <template slot="optionZone">
+                <i class="nz-icon nz-icon-create-square" @click.stop="toCreateEndpoint" :title="$t('overall.createProject')" ></i>
               </template>
-              <template v-else>-</template>
-            </span>
-            <div v-else-if="item.prop == 'option'" class="content-right-options">
-              <span :title="$t('overall.query')" @click="showEndpoint(scope.row)" class="content-right-option" :id="'edp-query-'+scope.row.id"><i class="el-icon-search"></i></span>
-              &nbsp;
-              <span :title="$t('overall.view')" @click="endpointDetail(scope.row)" class="content-right-option" :id="'edp-detail-'+scope.row.id"><i class="nz-icon nz-icon-view"></i></span>
-              &nbsp;
-              <span :title="$t('overall.edit')" @click="toEditEndpoint(scope.row)" class="content-right-option" :id="'edp-edit-'+scope.row.id"><i class="nz-icon nz-icon-edit"></i></span>
-            </div>
-            <span v-else-if="item.prop == 'lastUpdate'">{{dateFormat(scope.row.lastUpdate)}}</span>
-            <span v-else-if="item.prop == 'state'" >
-              <el-popover placement="right" width="50" trigger="hover" :content="getStateContent(scope.row)">
-                <div slot="reference" style="width: 20px">
-                  <div :class="{'active-icon green':scope.row.state == '1','active-icon red':scope.row.state == '0'}"></div>
-                </div>
-              </el-popover>
-<!--              {{ scope.row.state == 1 ? 'up' : ''}}{{scope.row.state == 0 ? 'down' : ''}}-->
-            </span>
-            <span v-else-if="scope.row[item.prop]">{{scope.row[item.prop]}}</span>
-            <template v-else>-</template>
-          </template>
-        </el-table-column>
-        <el-table-column width="28">
-          <template slot="header" slot-scope="scope">
-            <span @click.stop="elementsetShow('shezhi',$event)" class="nz-table-gear">
-              <i class="nz-icon nz-icon-gear"></i>
-            </span>
-          </template>
-        </el-table-column>
-      </el-table>
-      <Pagination :tableId="tableId" v-cloak :pageObj="endpointPageObj" @pageNo='endpointPageNo' @pageSize='endpointPageSize' ref="endpointPagination"></Pagination>
-      <button class="to-top" v-show="showTopBtn1" @click="toTop"><i class="nz-icon nz-icon-top"></i></button>
-    </div>
-
-    <!--endpoint query-->
-    <div class="content-right" v-if="tableShow == 3" style="position: relative">
-      <div class="top-tools" >
-        <div>
-          <div @click="backToEdpTab">
-            <button  class="nz-btn nz-btn-size-normal nz-btn-style-light float-right nz-btn-min-width-82">
-              <span class='top-tool-btn-txt'>
-              {{$t('overall.back')}}</span>
-            </button>
+            </export-excel>
+  <!--          <button @click="toCreateEndpoint" :title="$t('overall.createProject')"  class="nz-btn nz-btn-size-normal nz-btn-style-light float-right " id="project-add-ep">-->
+  <!--            <i class="nz-icon-create-square nz-icon"></i>-->
+  <!--          </button>-->
+            <div class="top-tool-search float-right margin-r-20"><search-input :searchMsg="endpointSearchMsg" @search="endpointSearch" ref="projectSearch"></search-input></div>
           </div>
         </div>
-        <!--时间选择器-->
-        <div class="top-tool-right">
-          <div class="top-tool-search relative-position margin-r-20">
-            <el-input ref="elementQuery" @clear="clearInput" id="elementQuery" @focus="focusInput"  @blur="blurInput" v-model="queryExpression" class="query-input-inactive" size="mini" clearable  :placeholder="$t('project.endpoint.promExpr')" >
-              <i slot="suffix" class="el-input__icon el-icon-search" style="float:right" @click="focusInput"></i>
-            </el-input>
-          </div>
-          <div class="margin-r-20 date-pick-group">
-            <button @click="changeTime(-10)" class="nz-btn nz-btn-size-normal nz-btn-style-light change-time-height"><i class="el-icon-d-arrow-left"></i></button>
-            <el-date-picker
-              v-model="formatTime"
-              type="datetime"
-              size="mini"
-              class="project-calendar"
-              clearable
-              :time-arrow-control="true"
-              placeholder="Moment"
-              value-format="yyyy-MM-dd HH:mm:ss"
-              @change="pickTime"
-              >
-            </el-date-picker>
-            <button @click="changeTime(10)" class="nz-btn nz-btn-size-normal nz-btn-style-light change-time-height"><i class="el-icon-d-arrow-right"></i></button>
-          </div>
-          <el-dropdown split-button type="primary"  size="mini" class="dropdownBtn" @click="viewGraph">
-            <i class="nz-icon nz-icon-chart"  :class="{'control-icon-unchecked':selectedEndpoints.length<1,'control-icon-checked':selectedEndpoints.length>0}"></i>
-            <el-dropdown-menu slot="dropdown" style="padding:10px 4px 10px 10px;">
-              <el-row>
-                <el-col :span="16" style="padding-top: 4px;padding-left: 1px"><span style="padding-top: 2px">{{$t('project.endpoint.hideSameLabels')}}</span></el-col>
-                <el-col :span="8">
-                  <el-dropdown-item class="dropdown-content" >
-                    <el-switch v-model="hideSameLabels" active-color="#ee9d3f" size="small"></el-switch>
-                  </el-dropdown-item>
-                </el-col>
-              </el-row>
-
-            </el-dropdown-menu>
-          </el-dropdown>
-<!--          <button @click="viewGraph" slot="reference" class="nz-btn nz-btn-size-normal nz-btn-style-normal nz-btn-min-width-120" :class="{'nz-btn-disabled':selectedEndpoints.length<1}">-->
-<!--            <span class='top-tool-btn-txt'>{{$t('project.endpoint.addGraph')}}</span>-->
-<!--          </button>-->
-        </div>
-      </div>
-      <div  class="table-header-inner" @click="clearSelectedMetrics"><span><i style="font-size: 12px;margin-left: 2px;" class="nz-icon nz-icon-close " :class="{'control-icon-unchecked':selectedEndpoints.length<1,'control-icon-checked':selectedEndpoints.length>0}"></i></span></div>
-      <el-table
-        :data="showTableData"
-        v-loading="queryEdpLoading"
-        element-loading-background="rgba(0, 0, 0, 0)"
-        border
-        v-scrollBar:el-table
-        class="nz-table endpoint-query-table"
-        :header-cell-class-name="cellClass"
-        :height="$tableHeight.endpointQuery"
-        @selection-change="selectChange"
-        ref="metricInfoTab"
-        style="width: 100%;">
-        <el-table-column
-          type="selection"
-          width="38"
-          align="center"
-          :selectable="selectable"
-        >
-        </el-table-column>
-
-        <el-table-column
-          prop="element"
-          :label="$t('project.endpoint.element')">
-          <template slot-scope="scope">
-            <el-popover trigger="hover" placement="right" v-if="typeof scope.row.metricTip != 'undefined' && scope.row.metricTip != null">
-              <div>
-                <ul>
-                  <li><span class="metirc-tip-list">metric&nbsp;:&nbsp;</span><span>{{scope.row.metricTip.metric?scope.row.metricTip.metric:'--'}}</span></li>
-                  <li><span class="metirc-tip-list">type&nbsp;:&nbsp;</span><span>{{scope.row.metricTip.type?scope.row.metricTip.type:'unknown'}}</span></li>
-                  <li><span class="metirc-tip-list">help&nbsp;:&nbsp;</span><span>{{scope.row.metricTip.help?scope.row.metricTip.help:'--'}}</span></li>
-                  <li><span class="metirc-tip-list">unit&nbsp;:&nbsp;</span><span>{{scope.row.metricTip.unit?scope.row.metricTip.unit:'--'}}</span></li>
-                </ul>
+        <el-table
+          :data="endpointTableData"
+          border
+          class="nz-table endpoint-table"
+          :height="$tableHeight.normal"
+          v-scrollBar:el-table
+          ref="endpointTable"
+          style="width: 100%;">
+          <el-table-column
+            :resizable="false"
+            v-for="(item, index) in tablelable"
+            v-if="item.show"
+            :width="item.width"
+            :key="`col-${index}`"
+            :label="item.label"
+            min-width="110px"
+          >
+            <template slot-scope="scope" :column="item">
+              <span v-if="item.prop == 'asset' && scope.row[item.prop]" class="link" @click="viewAsset(scope.row[item.prop].id)">{{scope.row[item.prop].host}}</span>
+              <span v-else-if="item.prop == 'param'">
+                <template v-if="scope.row.paramObj">
+                  <span v-for="(p,i) in scope.row.paramObj">{{p.key}}={{p.value}}<span v-if="i < scope.row.paramObj.length-1">，</span></span>
+                </template>
+                <template v-else>-</template>
+              </span>
+              <div v-else-if="item.prop == 'option'" class="content-right-options">
+                <span :title="$t('overall.query')" @click="showEndpoint(scope.row)" class="content-right-option" :id="'edp-query-'+scope.row.id"><i class="el-icon-search"></i></span>
+                &nbsp;
+                <span :title="$t('overall.view')" @click="endpointDetail(scope.row)" class="content-right-option" :id="'edp-detail-'+scope.row.id"><i class="nz-icon nz-icon-view"></i></span>
+                &nbsp;
+                <span :title="$t('overall.edit')" @click="toEditEndpoint(scope.row)" class="content-right-option" :id="'edp-edit-'+scope.row.id"><i class="nz-icon nz-icon-edit"></i></span>
               </div>
-              <span slot="reference"><i class="nz-icon nz-icon-info-normal metric-tip-icon"></i></span>
-            </el-popover>
-            <span v-html="hideSameLabels?scope.row.colorSimpleElement: scope.row.colorElement"></span>
-<!--            <span>{{hideSameLabels?scope.row.simpleElement: scope.row.element}}</span>-->
-          </template>
-        </el-table-column>
-        <el-table-column
-          prop="value"
-          :label="$t('project.endpoint.value')"
-          width="180">
-        </el-table-column>
-      </el-table>
-      <button class="to-top" v-show="showTopBtn2" @click="toTop"><i class="nz-icon nz-icon-top"></i></button>
+              <span v-else-if="item.prop == 'lastUpdate'">{{dateFormat(scope.row.lastUpdate)}}</span>
+              <span v-else-if="item.prop == 'state'" >
+                <el-popover placement="right" width="50" trigger="hover" :content="getStateContent(scope.row)">
+                  <div slot="reference" style="width: 20px">
+                    <div :class="{'active-icon green':scope.row.state == '1','active-icon red':scope.row.state == '0'}"></div>
+                  </div>
+                </el-popover>
+  <!--              {{ scope.row.state == 1 ? 'up' : ''}}{{scope.row.state == 0 ? 'down' : ''}}-->
+              </span>
+              <span v-else-if="scope.row[item.prop]">{{scope.row[item.prop]}}</span>
+              <template v-else>-</template>
+            </template>
+          </el-table-column>
+          <el-table-column width="28">
+            <template slot="header" slot-scope="scope">
+              <span @click.stop="elementsetShow('shezhi',$event)" class="nz-table-gear">
+                <i class="nz-icon nz-icon-gear"></i>
+              </span>
+            </template>
+          </el-table-column>
+        </el-table>
+        <Pagination :tableId="tableId" v-cloak :pageObj="endpointPageObj" @pageNo='endpointPageNo' @pageSize='endpointPageSize' ref="endpointPagination"></Pagination>
+        <button class="to-top" v-show="showTopBtn1" @click="toTop"><i class="nz-icon nz-icon-top"></i></button>
+      </div>
 
+      <!-- 副列表 endpoint query-->
+      <div class="sub-list" v-show="tableShow == 3" style="position: relative">
+        <div class="top-tools" >
+          <div>
+            <div @click="backToEdpTab">
+              <button  class="nz-btn nz-btn-size-normal nz-btn-style-light float-right nz-btn-min-width-82">
+                <span class='top-tool-btn-txt'>
+                {{$t('overall.back')}}</span>
+              </button>
+            </div>
+          </div>
+          <!--时间选择器-->
+          <div class="top-tool-right">
+            <div class="top-tool-search relative-position margin-r-20">
+              <el-input ref="elementQuery" @clear="clearInput" id="elementQuery" @focus="focusInput"  @blur="blurInput" v-model="queryExpression" class="query-input-inactive" size="mini" clearable  :placeholder="$t('project.endpoint.promExpr')" >
+                <i slot="suffix" class="el-input__icon el-icon-search" style="float:right" @click="focusInput"></i>
+              </el-input>
+            </div>
+            <div class="margin-r-20 date-pick-group">
+              <button @click="changeTime(-10)" class="nz-btn nz-btn-size-normal nz-btn-style-light change-time-height"><i class="el-icon-d-arrow-left"></i></button>
+              <el-date-picker
+                v-model="formatTime"
+                type="datetime"
+                size="mini"
+                class="project-calendar"
+                clearable
+                :time-arrow-control="true"
+                placeholder="Moment"
+                value-format="yyyy-MM-dd HH:mm:ss"
+                @change="pickTime"
+                >
+              </el-date-picker>
+              <button @click="changeTime(10)" class="nz-btn nz-btn-size-normal nz-btn-style-light change-time-height"><i class="el-icon-d-arrow-right"></i></button>
+            </div>
+            <el-dropdown split-button type="primary"  size="mini" class="dropdownBtn" @click="viewGraph">
+              <i class="nz-icon nz-icon-chart"  :class="{'control-icon-unchecked':selectedEndpoints.length<1,'control-icon-checked':selectedEndpoints.length>0}"></i>
+              <el-dropdown-menu slot="dropdown" style="padding:10px 4px 10px 10px;">
+                <el-row>
+                  <el-col :span="16" style="padding-top: 4px;padding-left: 1px"><span style="padding-top: 2px">{{$t('project.endpoint.hideSameLabels')}}</span></el-col>
+                  <el-col :span="8">
+                    <el-dropdown-item class="dropdown-content" >
+                      <el-switch v-model="hideSameLabels" active-color="#ee9d3f" size="small"></el-switch>
+                    </el-dropdown-item>
+                  </el-col>
+                </el-row>
+
+              </el-dropdown-menu>
+            </el-dropdown>
+  <!--          <button @click="viewGraph" slot="reference" class="nz-btn nz-btn-size-normal nz-btn-style-normal nz-btn-min-width-120" :class="{'nz-btn-disabled':selectedEndpoints.length<1}">-->
+  <!--            <span class='top-tool-btn-txt'>{{$t('project.endpoint.addGraph')}}</span>-->
+  <!--          </button>-->
+          </div>
+        </div>
+        <div  class="table-header-inner" @click="clearSelectedMetrics"><span><i style="font-size: 12px;margin-left: 2px;" class="nz-icon nz-icon-close " :class="{'control-icon-unchecked':selectedEndpoints.length<1,'control-icon-checked':selectedEndpoints.length>0}"></i></span></div>
+        <el-table
+          :data="showTableData"
+          v-loading="queryEdpLoading"
+          element-loading-background="rgba(0, 0, 0, 0)"
+          border
+          v-scrollBar:el-table
+          class="nz-table endpoint-query-table"
+          :header-cell-class-name="cellClass"
+          :height="$tableHeight.endpointQuery"
+          @selection-change="selectChange"
+          ref="metricInfoTab"
+          style="width: 100%;">
+          <el-table-column
+            type="selection"
+            width="38"
+            align="center"
+            :selectable="selectable"
+          >
+          </el-table-column>
+
+          <el-table-column
+            prop="element"
+            :label="$t('project.endpoint.element')">
+            <template slot-scope="scope">
+              <el-popover trigger="hover" placement="right" v-if="typeof scope.row.metricTip != 'undefined' && scope.row.metricTip != null">
+                <div>
+                  <ul>
+                    <li><span class="metirc-tip-list">metric&nbsp;:&nbsp;</span><span>{{scope.row.metricTip.metric?scope.row.metricTip.metric:'--'}}</span></li>
+                    <li><span class="metirc-tip-list">type&nbsp;:&nbsp;</span><span>{{scope.row.metricTip.type?scope.row.metricTip.type:'unknown'}}</span></li>
+                    <li><span class="metirc-tip-list">help&nbsp;:&nbsp;</span><span>{{scope.row.metricTip.help?scope.row.metricTip.help:'--'}}</span></li>
+                    <li><span class="metirc-tip-list">unit&nbsp;:&nbsp;</span><span>{{scope.row.metricTip.unit?scope.row.metricTip.unit:'--'}}</span></li>
+                  </ul>
+                </div>
+                <span slot="reference"><i class="nz-icon nz-icon-info-normal metric-tip-icon"></i></span>
+              </el-popover>
+              <span v-html="hideSameLabels?scope.row.colorSimpleElement: scope.row.colorElement"></span>
+  <!--            <span>{{hideSameLabels?scope.row.simpleElement: scope.row.element}}</span>-->
+            </template>
+          </el-table-column>
+          <el-table-column
+            prop="value"
+            :label="$t('project.endpoint.value')"
+            width="180">
+          </el-table-column>
+        </el-table>
+        <button class="to-top" v-show="showTopBtn2" @click="toTop"><i class="nz-icon nz-icon-top"></i></button>
+      </div>
     </div>
+
     <element-set
       v-clickoutside="elementsetHide"
       :table-title="endpointTableTitle"
@@ -1118,97 +1098,103 @@
       showEndpoint:function(endpoint){
         this.tableShow=3;
         this.queryEdpLoading=true;
-        if(endpoint){
-          this.curEndpoint=endpoint;
-          this.formatTime='';
-        }
-        this.queryElementTips();
-        this.endpointQueryTabData=[];
-        this.showTableData=[];
-        this.showTableDataCopy='';
-        this.$get("/prom/api/v1/query?query={job='ed_"+this.curEndpoint.id+"'}&time="+this.formatTime).then(response=>{
-            if(response.status==="success"){
-              let results=response.data.result;
-              this.endpointQueryTabData=JSON.parse(JSON.stringify(results));
-              for (let result of results){
-                // {"metric":{"instance":"192.168.40.126:9100","__name__":"scrape_duration_seconds","module":"node_exporter","project":"kafka","asset":"192.168.40.126","job":"ed_1","dc":"dc5"},"value":[1580782176.522,"0.000560761"]}
-                let metricName=result.metric.__name__;
-                let temp=metricName;
-                let simpleTemp=metricName;//显示简略信息：隐藏same labels后的结果
-                let metricColor="";
-                let bracketsColor="#eb7b18";//#eb7b18
-                let labelColor="#65bbd1";//#66d9ef
-                let valueColor="#61c261";//#74e680
-                let colorTemp=`<span style="${metricColor}">${metricName}</span>`;
-                let colorSimpleTemp=`<span>${metricName}</span>`;
-                let metricTip={};
-                let queryInfos=(this.elementMetricDatas.filter((item)=>{
-                  return item.metric===temp;
-                }));
-                if(queryInfos&&queryInfos.length>0){
-                  metricTip=queryInfos[0];
-                }else{
-                  metricTip.metric=temp;
-                }
-                delete result.metric.__name__;
-                temp+="{";
-                simpleTemp+="{";
-                colorTemp+=`<span style="color: ${bracketsColor}">{</span>`;
-                colorSimpleTemp+=`<span style="color: ${bracketsColor}">{</span>`;
-                let keys=Object.keys(result.metric);
-                for (let index in keys){
-                  let key=keys[index];
-                  temp+=key +"='"+result.metric[key]+"',";
-                  colorTemp +=`<span style="color: ${labelColor}">${key}</span>=<span style="color: ${valueColor}">'${result.metric[key]}'</span>,`;
-                  if(!this.sameLabels.some((i)=>{return i == key})){
-                    simpleTemp+=key +"='"+result.metric[key]+"',";
-                    colorSimpleTemp+=`<span style="color: ${labelColor}">${key}</span>=<span style="color: ${valueColor}">'${result.metric[key]}'</span>,`;
+        setTimeout(() => {
+          if(endpoint){
+            this.curEndpoint=endpoint;
+            this.formatTime='';
+          }
+          this.queryElementTips();
+          this.endpointQueryTabData=[];
+          this.showTableData=[];
+          this.showTableDataCopy='';
+          this.$get("/prom/api/v1/query?query={job='ed_"+this.curEndpoint.id+"'}&time="+this.formatTime).then(response=>{
+              if(response.status==="success"){
+                let results=response.data.result;
+                this.endpointQueryTabData=JSON.parse(JSON.stringify(results));
+                for (let result of results){
+                  // {"metric":{"instance":"192.168.40.126:9100","__name__":"scrape_duration_seconds","module":"node_exporter","project":"kafka","asset":"192.168.40.126","job":"ed_1","dc":"dc5"},"value":[1580782176.522,"0.000560761"]}
+                  let metricName=result.metric.__name__;
+                  let temp=metricName;
+                  let simpleTemp=metricName;//显示简略信息：隐藏same labels后的结果
+                  let metricColor="";
+                  let bracketsColor="#eb7b18";//#eb7b18
+                  let labelColor="#65bbd1";//#66d9ef
+                  let valueColor="#61c261";//#74e680
+                  let colorTemp=`<span style="${metricColor}">${metricName}</span>`;
+                  let colorSimpleTemp=`<span>${metricName}</span>`;
+                  let metricTip={};
+                  let queryInfos=(this.elementMetricDatas.filter((item)=>{
+                    return item.metric===temp;
+                  }));
+                  if(queryInfos&&queryInfos.length>0){
+                    metricTip=queryInfos[0];
+                  }else{
+                    metricTip.metric=temp;
                   }
-                }
-                temp=temp.substr(0,temp.length-1);
-                simpleTemp=simpleTemp.substr(0,simpleTemp.length-1);
-                colorTemp=colorTemp.substr(0,colorTemp.length-1);
-                colorSimpleTemp=colorSimpleTemp.substr(0,colorSimpleTemp.length-1);
-
-                temp+="}";
-                simpleTemp+="}";
-                colorTemp+=`<span style="color: ${bracketsColor}">}</span>`;
-                colorSimpleTemp+=`<span style="color: ${bracketsColor}">}</span>`;
-                if(!/.+\{.+\}/.test(simpleTemp)){
-                  simpleTemp=simpleTemp.substr(0,simpleTemp.length-2);
-                }
-
-                if(!/.+\{<\/span><span.+?>.+?\}/.test(colorSimpleTemp)){
-                  let metricReg=new RegExp("<span.*?>"+metricName+"<\/span>")
-                  colorSimpleTemp=metricReg.exec(colorSimpleTemp)[0];
-                }
-
-                let edpQueryData={element:temp,simpleElement:simpleTemp,colorElement:colorTemp,colorSimpleElement:colorSimpleTemp, value:result.value[1],type:(result.metric.type?result.metric.type:'2'),metricTip:metricTip};
-                this.showTableData.push(edpQueryData);
-              }
-              this.showTableDataCopy=JSON.stringify(this.showTableData);
-              this.queryEdpLoading=false;
-              this.gutterHandler(".endpoint-query-table"); //控制table右边距
-              this.showTopBtn2 = false;
-              this.$nextTick(() => {
-                //绑定滚动条事件，控制top按钮
-                let el = this.$refs.metricInfoTab.$el.querySelector(".el-table__body-wrapper");
-                if (el._ps_) {
-                  el.addEventListener("ps-scroll-y", () => {
-                    if (el._ps_.scrollbarYTop > 20) {
-                      this.showTopBtn2 = true;
-                    } else {
-                      this.showTopBtn2 = false;
+                  delete result.metric.__name__;
+                  temp+="{";
+                  simpleTemp+="{";
+                  colorTemp+=`<span style="color: ${bracketsColor}">{</span>`;
+                  colorSimpleTemp+=`<span style="color: ${bracketsColor}">{</span>`;
+                  let keys=Object.keys(result.metric);
+                  for (let index in keys){
+                    let key=keys[index];
+                    temp+=key +"='"+result.metric[key]+"',";
+                    colorTemp +=`<span style="color: ${labelColor}">${key}</span>=<span style="color: ${valueColor}">'${result.metric[key]}'</span>,`;
+                    if(!this.sameLabels.some((i)=>{return i == key})){
+                      simpleTemp+=key +"='"+result.metric[key]+"',";
+                      colorSimpleTemp+=`<span style="color: ${labelColor}">${key}</span>=<span style="color: ${valueColor}">'${result.metric[key]}'</span>,`;
                     }
-                  });
+                  }
+                  temp=temp.substr(0,temp.length-1);
+                  simpleTemp=simpleTemp.substr(0,simpleTemp.length-1);
+                  colorTemp=colorTemp.substr(0,colorTemp.length-1);
+                  colorSimpleTemp=colorSimpleTemp.substr(0,colorSimpleTemp.length-1);
+
+                  temp+="}";
+                  simpleTemp+="}";
+                  colorTemp+=`<span style="color: ${bracketsColor}">}</span>`;
+                  colorSimpleTemp+=`<span style="color: ${bracketsColor}">}</span>`;
+                  if(!/.+\{.+\}/.test(simpleTemp)){
+                    simpleTemp=simpleTemp.substr(0,simpleTemp.length-2);
+                  }
+
+                  if(!/.+\{<\/span><span.+?>.+?\}/.test(colorSimpleTemp)){
+                    let metricReg=new RegExp("<span.*?>"+metricName+"<\/span>")
+                    colorSimpleTemp=metricReg.exec(colorSimpleTemp)[0];
+                  }
+
+                  let edpQueryData={element:temp,simpleElement:simpleTemp,colorElement:colorTemp,colorSimpleElement:colorSimpleTemp, value:result.value[1],type:(result.metric.type?result.metric.type:'2'),metricTip:metricTip};
+                  this.showTableData.push(edpQueryData);
                 }
-              });
-            }
-        })
+                this.showTableDataCopy=JSON.stringify(this.showTableData);
+                this.queryEdpLoading=false;
+                this.gutterHandler(".endpoint-query-table"); //控制table右边距
+                this.showTopBtn2 = false;
+                this.$nextTick(() => {
+                  //绑定滚动条事件，控制top按钮
+                  let el = this.$refs.metricInfoTab.$el.querySelector(".el-table__body-wrapper");
+                  if (el._ps_) {
+                    el.addEventListener("ps-scroll-y", () => {
+                      if (el._ps_.scrollbarYTop > 20) {
+                        this.showTopBtn2 = true;
+                      } else {
+                        this.showTopBtn2 = false;
+                      }
+                    });
+                  }
+                });
+              }
+          });
+          this.$nextTick(() => {
+            this.gutterHandler(".endpoint-table");
+          });
+        }, 400);
       },
       backToEdpTab:function(){
         this.tableShow=1;
         this.selectedEndpoints=[];
+        this.showTableData = [];
         this.showTopBtn1 = false;
         this.$nextTick(() => {
           this.gutterHandler(".endpoint-table");
@@ -1925,7 +1911,7 @@
     position: absolute;
     z-index: 1;
     top: 60px;
-    left: 25px;
+    left: 10px;
   }
   .control-icon-unchecked{
     color: #d1d1d1;
