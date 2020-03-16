@@ -416,7 +416,7 @@
     mounted() {
       //是否存在分页缓存
       let pageSize = localStorage.getItem('nz-pageSize-' + localStorage.getItem('nz-username') + '-' + this.tableId);
-      if (pageSize) {
+      if (pageSize != 'undefined') {
         this.pageObj.pageSize = pageSize
       }
 

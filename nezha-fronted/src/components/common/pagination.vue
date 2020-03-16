@@ -9,19 +9,38 @@
       :current-page="pageObj.pageNo"
       :page-sizes="pageSizes?pageSizes:[20, 50, 100]"
       :page-size="pageSize"
-      layout="total, prev, pager, next,sizes,jumper"
+      layout="total, prev, pager, next,slot,jumper"
       :total="this.pageObj.total"
-    ></el-pagination>
+    >
+      <el-select v-model="pageSize" :placeholder="pageSize+$t('pageSize')" size="mini"  :popper-append-to-body="false" class="pagination-size-select" @change="size">
+        <el-option v-for="(item,index) in pageSizes" :key="item.value" :label="item.label" :value="item.value"></el-option>
+      </el-select>
+
+    </el-pagination>
   </div>
 </template>
 
 <script>
 export default {
   name: "pagination",
-  props: ['pageObj','pageSizes', 'tableId'],
+  props: ['pageObj', 'tableId','postPageSizes'],
   data() {
     return {
-      pageSize: 20
+      pageSize: 20,
+      pageSizes:[
+        {
+          label:'20'+this.$t('pageSize'),
+          value:20
+        },
+        {
+          label:'50'+this.$t('pageSize'),
+          value:50
+        },
+        {
+          label:'100'+this.$t('pageSize'),
+          value:100
+        },
+      ]
     };
   },
   methods: {
@@ -42,8 +61,16 @@ export default {
       this.backgroundColor();
     },
     size(val) {
+      this.pageObj.pageNo=1;
       this.$emit("pageSize", val);
       this.backgroundColor();
+    },
+    resetPageSizes:function(){
+      if(this.postPageSizes){
+        this.pageSizes=this.postPageSizes.map((item)=>{
+          return {label:item+this.$t('pageSize'),value:item}
+        })
+      }
     },
     //设置当前页的样式
     backgroundColor() {
@@ -55,12 +82,28 @@ export default {
     },
   },
   mounted() {
-    let pageSize = localStorage.getItem('nz-pageSize-' + localStorage.getItem('nz-username') + '-' + this.tableId);
-    this.pageSize = this.pageSizes && this.pageSizes.length > 0 ? this.pageSizes[0] : (pageSize ? pageSize : 20);
+    if(this.postPageSizes&&this.postPageSizes.length>0){
+       this.pageSize=this.postPageSizes[0];
+       this.resetPageSizes();
+    }else{
+      let pageSize = localStorage.getItem('nz-pageSize-' + localStorage.getItem('nz-username') + '-' + this.tableId);
+      if(pageSize != 'undefined'){
+        this.pageSize=parseInt(pageSize);
+      }
+    }
     this.$nextTick(() => {
-      let input = document.querySelector(".el-pagination .el-select .el-input__inner");
-      input.value = this.pageSize + this.$t('pageSize');
+      // let input = document.querySelector(".el-pagination .el-select .el-input__inner");
+      // input.value = this.pageSize + this.$t('pageSize');
     });
+  },
+  watch:{
+    postPageSizes:{
+      immediate:true,
+      deep:true,
+      handler(n,o){
+        this.resetPageSizes();
+      }
+    }
   }
 };
 </script>
@@ -73,7 +116,14 @@ export default {
     padding-top: 8px;
     text-align: center;
   }
+  .pagination-size-select .el-input--mini .el-input__inner{
+    height: 20px;
+    line-height: 20px;
+    margin: 5px ;
+  }
+  .pagination-size-select input{
 
+  }
   .el-pager li, .el-pagination .btn-next, .el-pagination .btn-prev {
     margin:5px 5px 0px 5px;
     padding: 0 4px;

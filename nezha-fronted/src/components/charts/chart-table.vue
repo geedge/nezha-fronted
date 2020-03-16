@@ -45,7 +45,7 @@
                   </template>
                 </el-table-column>
             </el-table>
-          <Pagination :pageObj="pageObj" @pageNo='pageNo' :page-sizes="pageSizes" @pageSize='pageSize' ref="Pagination"></Pagination>
+          <Pagination :pageObj="pageObj" @pageNo='pageNo' :post-page-sizes="pageSizes" @pageSize='pageSize' ref="Pagination"></Pagination>
         </div>
         <!--全屏-->
           <el-dialog class="nz-dialog table-chart-dialog" :title="$t('dashboard.panel.view')"  :visible.sync="screenModal" width="96%"  @close="screenModal = false" >
@@ -72,7 +72,7 @@
                       </template>
                     </el-table-column>
                 </el-table>
-            <Pagination :pageObj="screenPageObj" :page-sizes="pageSizes" @pageNo='screenPageNo' @pageSize='screenPageSize' ref="Pagination"></Pagination>
+            <Pagination :pageObj="screenPageObj" :post-page-sizes="pageSizes" @pageNo='screenPageNo' @pageSize='screenPageSize' ref="Pagination"></Pagination>
             <loading  :ref="'localLoadingScreen'+chartIndex"></loading>
             <!--
                 <div v-show="showLoadingScreen" class="el-loading-mask" style="background-color: rgba(0, 0, 0, 0);">
