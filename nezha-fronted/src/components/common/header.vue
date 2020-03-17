@@ -55,7 +55,7 @@
           <el-menu-item :index="'2-' + index">
             <div @mouseenter="hoverItemIndex = '2-' + index" @mouseleave="hoverItemIndex = ''" @click="jumpToProject(item)" :class="{'menu-item-active' :(activeIndex == 'project' && activeItemIndex == item.id)}">
               <span class="too-long-split" style="width: 135px;">{{item.name}}</span>
-              <div v-show="hoverItemIndex == '2-' + index" @click.stop="toEditProject(item)" class="menu-edit"><i style="color: inherit" class="nz-icon nz-icon-edit"></i></div>
+              <div v-show="hoverItemIndex == '2-' + index && item.buildIn != 1" @click.stop="toEditProject(item)" class="menu-edit"><i style="color: inherit" class="nz-icon nz-icon-edit"></i></div>
             </div>
           </el-menu-item>
         </template>

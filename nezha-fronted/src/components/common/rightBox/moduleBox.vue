@@ -7,7 +7,7 @@
           <span class="right-box-top-btn-icon"><i class="el-icon-delete"></i></span>
           <span class="right-box-top-btn-txt">{{$t('overall.delete')}}</span>
         </button>
-        <button v-if="!rightBox.isEdit" id="module-save" type="button" @click="saveOrToEdit" class="nz-btn nz-btn-size-normal nz-btn-size-alien nz-btn-style-light nz-btn-min-width-82">
+        <button v-if="!rightBox.isEdit && module.buildIn != 1" id="module-save" type="button" @click="saveOrToEdit" class="nz-btn nz-btn-size-normal nz-btn-size-alien nz-btn-style-light nz-btn-min-width-82">
           <span class="right-box-top-btn-icon"><i class="nz-icon nz-icon-edit"></i></span>
           <span class="right-box-top-btn-txt">{{$t('overall.edit')}}</span>
         </button>

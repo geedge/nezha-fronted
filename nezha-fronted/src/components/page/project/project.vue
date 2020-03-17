@@ -95,7 +95,7 @@
               </el-popover>
               <span v-else>{{item.name}}</span>
             </div>
-            <div class="hid-div side-bar-menu-edit " @click.stop="toEditModule(item)" :id="'project-module-edit-'+item.id" ><i class="nz-icon nz-icon-edit"></i></div>
+            <div v-show="item.buildIn != 1" class="hid-div side-bar-menu-edit" @click.stop="toEditModule(item)" :id="'project-module-edit-'+item.id" ><i class="nz-icon nz-icon-edit"></i></div>
           </div>
         </div>
       </el-scrollbar>
