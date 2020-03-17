@@ -103,7 +103,9 @@
   .nz-tab-chart-style-left{
     margin-left:40px;
   }
-
+  .dashboard-metric-dropdown .el-scrollbar__wrap{
+    margin-bottom: 0px !important;
+  }
 </style>
 <template>
   <el-form :model="elementInfo" ref="elementInfo"   >
@@ -134,7 +136,7 @@
     </template>
     <template v-if="tableShow == 1">
       <el-form-item class="right-box-form-content" label-width="80"  prop="metric" :rules="{ required: true,  message: $t('validate.required'), trigger: 'blur' }"><!--:rules="{ required: true, type: 'string', message: '', trigger: 'change' }"-->
-        <el-cascader ref="metricSelect"  :class="{'right-box-row-with-btn': countTotal > 1, 'full-width': countTotal <= 1}" filterable placeholder="" popper-class="chart-box-dropdown" size="small"
+        <el-cascader ref="metricSelect"  :class="{'right-box-row-with-btn': countTotal > 1, 'full-width': countTotal <= 1}" filterable placeholder="" popper-class="chart-box-dropdown dashboard-metric-dropdown" size="small"
                  v-model="elementInfo.metric"
                  :options="metricCascaderList"
                  :props="{ expandTrigger: 'hover' }"
