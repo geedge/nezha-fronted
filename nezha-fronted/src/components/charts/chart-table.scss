@@ -13,6 +13,25 @@
 .dialog-tool {
   margin-right: 40px;
 }
+.hidden{
+  visibility: hidden;
+}
+.visible{
+  visibility: visible;
+}
+.nz-chart-dropdown {
+  height: 147px;
+  li {
+    /*padding: 0 20px !important;*/
+    padding-left:15px !important;
+    padding-right:0px !important;
+    width:140px;
+    text-align: left;
+    i {
+      margin-right: 10px;
+    }
+  }
+}
 .chart-table {
   width: calc(100% - 18px);
   height: 100%;//calc(100% - 40px);
@@ -22,12 +41,24 @@
   border: 1px solid #d8dce1;
   padding: 20px 8px 3px;
   margin-bottom: 10px;
-  .table-title {
-    margin: -3px 0 3px 10px;
-    font-weight: bold;
-    font-size: 18px;
-    line-height: 26px;
-    color: #333;
+  .chartTitle {
+    text-align: center;
+    width: 100%;
+    .nz-chart-top{
+    }
+    .el-dropdown-link {
+      cursor: pointer;
+    }
+    .el-icon-arrow-down {
+      font-size: 12px;
+    }
+    .chart-title {
+      font-weight: bold;
+      font-size: 18px;
+      line-height: 26px;
+      color: #333;
+      margin: -3px 0 3px 10px;
+    }
   }
   .edit:after{
     display: block;

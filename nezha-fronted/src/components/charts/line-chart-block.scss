@@ -7,6 +7,12 @@
 .clearfix{
   margin-bottom: 7px;
 }
+.hidden{
+  visibility: hidden;
+}
+.visible{
+  visibility: visible;
+}
 .legend-shape{
   display:inline-block;
   margin-right:5px;
@@ -41,6 +47,19 @@
   float:left;
   line-height: 20px;
 }
+.nz-chart-dropdown {
+  height: 147px;
+  li {
+    /*padding: 0 20px !important;*/
+    padding-left:15px !important;
+    padding-right:0px !important;
+    width:140px;
+    text-align: left;
+    i {
+      margin-right: 10px;
+    }
+  }
+}
 .line-chart-block {
   height: 100%;
   //min-height: 0px;
@@ -50,13 +69,26 @@
   padding: 20px 8px;
   margin-bottom: 10px;
   padding-bottom: 3px;
-  .chart-title {
-    font-weight: bold;
-    font-size: 18px;
-    line-height: 26px;
-    color: #333;
-    margin: -3px 0 3px 10px;
+  .chartTitle {
+     text-align: center;
+     width: 100%;
+    .nz-chart-top{
+    }
+    .el-dropdown-link {
+      cursor: pointer;
+    }
+    .el-icon-arrow-down {
+      font-size: 12px;
+    }
+    .chart-title {
+      font-weight: bold;
+      font-size: 18px;
+      line-height: 26px;
+      color: #333;
+      margin: -3px 0 3px 10px;
+    }
   }
+
   .line-area {
     box-sizing: border-box;
     background: #FFF;

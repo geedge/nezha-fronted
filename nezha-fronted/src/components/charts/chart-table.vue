@@ -7,7 +7,7 @@
   }
 </style>
 <template>
-    <div class="chart-table" :id="'chartTableDiv'+chartIndex" v-show="divFirstShow">
+    <div class="chart-table" :id="'chartTableDiv'+chartIndex" v-show="divFirstShow" @mouseenter="caretShow=true" @mouseleave="caretShow=false">
         <loading  :ref="'localLoading'+chartIndex"></loading>
       <!--
         <div v-show="showLoading" class="el-loading-mask" style="background-color: rgba(0, 0, 0, 0);">
@@ -17,16 +17,23 @@
           </div>
         </div>
         -->
-        <div class="clearfix">
-            <div class="table-title" v-show="firstShow">
-                {{data.title}}
-            </div>
-            <div class="nz-btn-group nz-btn-group-light edit button-panel-height"  v-show="firstShow">
-              <button type="button" @click="refreshChart" style="padding: 6px 14px 5px 14px;" class="nz-btn nz-btn-size-large nz-btn-style-light"><i style="font-size: 16px;" class="global-active-color el-icon-refresh-right"></i></button><button
-              @click="editChart" type="button" class="nz-btn nz-btn-size-large nz-btn-style-light" ><i class="nz-icon nz-icon-edit"></i></button><button
-              @click="removeChart" type="button" class="nz-btn nz-btn-size-large nz-btn-style-light"><i class="el-icon-delete"></i></button><button
-              @click="showAllScreen" type="button" class="nz-btn nz-btn-size-large nz-btn-style-light"><i class="el-icon-full-screen"></i></button>
-            </div>
+        <div class="clearfix chartTitle" :id="'chartTitle'+chartIndex">
+
+          <el-dropdown trigger="click" v-show="firstShow"   class="nz-chart-top" :key="'chartDropdown'+chartIndex"  v-clickoutside="clickos">
+            <span class="el-dropdown-link chart-title" @click="dropdownMenuShow=!dropdownMenuShow">
+              {{data.title}}<i class="el-icon-caret-bottom el-icon--right"  :class="{'visible':caretShow,'hidden':!caretShow}"></i>
+            </span>
+            <ul slot="dropdown" v-show="dropdownMenuShow"  :id="'dropdownUl'+chartIndex"  class="el-dropdown-menu nz-chart-dropdown"  style="position: absolute; top: 30px; left: 0px; transform-origin: center top; z-index: 1000;" >
+              <li  @click="refreshChart"  class="el-dropdown-menu__item">
+                <i class="global-active-color el-icon-refresh-right" style="font-size: 16px;"></i><span>{{$t('dashboard.refresh')}}</span></li>
+              <li  @click="editChart"  class="el-dropdown-menu__item">
+                <i class="nz-icon nz-icon-edit" style="font-size: 14px; margin-right: 11px; margin-left: 1px;"></i>{{$t('dashboard.edit')}}</li>
+              <li  @click="removeChart"  class="el-dropdown-menu__item">
+                <i class="el-icon-delete" style="font-size: 16px;"></i>{{$t('dashboard.delete')}}</li>
+              <li  @click="showAllScreen"  class="el-dropdown-menu__item">
+                <i class="el-icon-full-screen" style="font-size: 16px;"></i>{{$t('dashboard.screen')}}</li>
+            </ul>
+          </el-dropdown>
 
         </div>
         <div class="mt-10" v-cloak  v-show="firstShow">
@@ -153,6 +160,8 @@ export default {
             },
             stableFilter: {}, // 保存数据使用,初始化起止时间,单图or多图等
             firstShow: false, // 默认不显示操作按钮,
+            caretShow:false,
+            dropdownMenuShow:false,
             divFirstShow:false,
             //tableLoading: false,
             columns: [
@@ -355,16 +364,19 @@ export default {
         */
         // 重新请求数据 刷新操作-local
         refreshChart() {
+            this.dropdownMenuShow=false;
             this.startLoading();
             this.firstShow = false;
             this.$emit('on-refresh-data', this.data.id);
         },
         // 编辑图表
         editChart() {
+            this.dropdownMenuShow=false;
             this.$emit('on-edit-chart-block', this.data.id);
         },
         // 删除该图表
         removeChart() {
+            this.dropdownMenuShow=false;
             this.$emit('on-remove-chart-block', this.data.id);
         },
         //全屏时间条件查询
@@ -387,8 +399,12 @@ export default {
             //this.firstShow = false;
             this.$emit('on-search-data', this.data.id, this.searchTime);
         },
+        clickos() {
+          this.dropdownMenuShow=false;
+        },
         // 全屏查看
         showAllScreen() {
+            this.dropdownMenuShow=false;
             // 初始化同步时间
             //this.searchTime = this.oldSearchTime;
           //alert(JSON.stringify(this.oldSearchTime));
