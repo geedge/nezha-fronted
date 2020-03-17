@@ -3,6 +3,7 @@
     <div class="content-left">
       <div class="sidebar-title">{{$t('dashboard.title')}}</div>
       <div class="sidebar-info">
+        <div class="sidebar-info-item " @click="jumpTo('overview')">{{$t('dashboard.overview.title')}}</div>
         <div class="sidebar-info-item sidebar-info-top sidebar-info-item-active">{{$t('dashboard.panel.title')}}</div>
         <div class="sidebar-info-item" @click="jumpTo('metricPreview')">{{$t('dashboard.metricPreview.title')}}</div>
       </div>
