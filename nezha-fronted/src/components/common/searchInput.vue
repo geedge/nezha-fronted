@@ -102,8 +102,8 @@
 
                 </ul>
             </div>
-            <div class="clear-search" @click="clear_input">
-                <i class="el-icon-close"></i>
+            <div v-show="clearSearchShow" class="clear-search" @click="clear_input">
+                <i class="el-icon-circle-close"></i>
             </div>
             <div :class="input_list?'input_list none':'input_list'" @click="stop_click" id="input_list">
                 <ul>
@@ -129,6 +129,7 @@
         name: "index",
         data() {
             return {
+                clearSearchShow: false,
                 select_conditionsName:'',
                 selectInfoList: searchSelectInfo,
                 select_title: '',
@@ -187,6 +188,9 @@
             handler(newData, oldData) {
               if (newData.length == 0) {
                 this.change_sreach_show = true;
+                this.clearSearchShow = false;
+              } else {
+                this.clearSearchShow = true;
               }
               if (this.$route.path == "/alertList") {
                 // 处理alertType--asset联动问题：
@@ -1426,7 +1430,7 @@
         min-width: 100px;
     }
     .select_input input{
-        width: 100%;
+        width: calc(100% - 1px);
         height: 100%;
         border: none;
         float: left;
