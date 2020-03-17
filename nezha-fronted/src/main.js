@@ -80,17 +80,30 @@ Vue.prototype.toTop = (type, wrap) => { //top按钮公共方法
     }, 20);
   } else {
     let els = document.querySelectorAll(".el-table__body-wrapper");
-    for (let i = 0; i < els.length; i++) {
-      let currentTop = els[i].scrollTop;
+    if (wrap || wrap == 0) {
+      let currentTop = els[wrap].scrollTop;
       let interval = currentTop/10;
       let intervalFunc = setInterval(function(){ //花200ms分10次回到顶部，模拟动画效果
         if (currentTop == 0) {
           clearInterval(intervalFunc);
         } else {
           currentTop = (currentTop - interval) < interval*0.5 ? 0 : currentTop - interval;
-          els[i].scrollTop = currentTop;
+          els[wrap].scrollTop = currentTop;
         }
       }, 20);
+    } else {
+      for (let i = 0; i < els.length; i++) {
+        let currentTop = els[i].scrollTop;
+        let interval = currentTop/10;
+        let intervalFunc = setInterval(function(){ //花200ms分10次回到顶部，模拟动画效果
+          if (currentTop == 0) {
+            clearInterval(intervalFunc);
+          } else {
+            currentTop = (currentTop - interval) < interval*0.5 ? 0 : currentTop - interval;
+            els[i].scrollTop = currentTop;
+          }
+        }, 20);
+      }
     }
   }
 };
