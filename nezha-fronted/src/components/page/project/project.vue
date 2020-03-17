@@ -191,13 +191,8 @@
       <div @mousedown="listResize" class="sub-list-resize" v-show="tableShow == 3">一</div>
       <div class="sub-list" v-show="tableShow == 3">
         <div class="sub-top-tools" v-show="subResizeShow">
-          <div>
-            <!--<div @click="backToEdpTab">
-              <button class="nz-btn nz-btn-size-normal nz-btn-style-light float-right nz-btn-min-width-82">
-                <span class='top-tool-btn-txt'>
-                {{$t('overall.back')}}</span>
-              </button>
-            </div>-->
+          <div class="sub-list-tabs margin-l-20" style="width: calc(100% - 780px);">
+            <div class="sub-list-tab">{{$t("overall.query")}}</div>
           </div>
           <!--时间选择器-->
           <div class="top-tool-right">

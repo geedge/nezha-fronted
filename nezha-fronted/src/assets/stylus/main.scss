@@ -374,6 +374,24 @@ li{
 
 /* end--nz-tab组件*/
 
+/* begin--二级页面tab*/
+.sub-list-tabs {
+  margin-top: 0 !important;
+  height: 100%;
+  background-color: #f5f7fa;
+}
+.sub-list-tab {
+  width: 100px;
+  font-size: 14px;
+  color: $global-text-color-active;
+  background-color: white;
+  border-top: solid 2px #ee9d3f;
+  height: calc(100% - 2px);
+  padding-left: 20px;
+  line-height: 27px;
+}
+/* end--二级页面tab*/
+
 /* end--通用*/
 
 /* begin--左侧列表*/
@@ -492,7 +510,7 @@ li{
 /* begin--二级顶部工具栏*/
 .sub-top-tools {
   display: flex;
-  height: 40px;
+  height: 30px;
   align-items: center;
   justify-content: space-between;
   border-top: 1px solid #DCDFE6;

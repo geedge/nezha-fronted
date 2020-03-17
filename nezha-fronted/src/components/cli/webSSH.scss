@@ -53,10 +53,11 @@
     position: absolute;
     top:8px;
   }
-  .console-title-icon:hover:before{
-    color: #1989fa;
+  .console-title-icon:hover:before,
+  .el-tabs--border-card>.el-tabs__header .el-tabs__item.is-active,
+  .el-tabs--border-card>.el-tabs__header .el-tabs__item:not(.is-disabled):hover {
+    color: $global-text-color-active;
   }
-
   .el-dialog {
     .el-dialog__body{
       overflow-x:hidden !important;/*防止console窗口x轴出现滚动条*/
