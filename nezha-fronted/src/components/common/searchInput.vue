@@ -27,6 +27,7 @@
             </div>
 <!--            搜索框-->
             <div class="input-center-box" id="input-center-box">
+              <el-scrollbar style="height: 100%">
                 <ul class="sreach_fixe_left" id="search-ul">
                     <li class="selectinfo_box" v-if="select_list.length>0" v-for="(val,ind) in select_list" :key="ind" @click="update_sreach(ind,$event)">
                         <div class="select_condition">
@@ -99,8 +100,8 @@
                     <li class="select_input" v-if="change_sreach_show">
                         <input type="text" @click="read_input" v-model="no_condition" @keyup="enter_one" id="one-input" @keydown="clear_search_list" >
                     </li>
-
                 </ul>
+              </el-scrollbar>
             </div>
             <div v-show="clearSearchShow" class="clear-search" @click="clear_input">
                 <i class="el-icon-circle-close"></i>
@@ -1051,6 +1052,7 @@
             },
             //点击搜索框  显示搜索类型
             read_input(e) {
+                console.info(1)
                 e.cancelBubble = true;
                 e.stopPropagation();
                 this.getHeight()
@@ -1251,23 +1253,22 @@
     .search-input-all .input-center-box{
         flex: 1;
         height: 100%;
-        overflow-x: auto;
-        overflow-y: hidden;
+        overflow: hidden;
     }
-    .input-center-box::-webkit-scrollbar {/*滚动条整体样式*/
-        width: 4px;     /*高宽分别对应横竖滚动条的尺寸*/
+    /*.input-center-box::-webkit-scrollbar {
+        width: 4px;
         height: 6px;
     }
-    .input-center-box::-webkit-scrollbar-thumb {/*滚动条里面小方块*/
+    .input-center-box::-webkit-scrollbar-thumb {
         border-radius: 3px;
         -webkit-box-shadow: inset 0 0 5px rgba(0,0,0,0.2);
         background: rgba(0,0,0,0.2);
     }
-    .input-center-box::-webkit-scrollbar-track {/*滚动条里面轨道*/
+    .input-center-box::-webkit-scrollbar-track {
         -webkit-box-shadow: inset 0 0 5px rgba(0,0,0,0.2);
         border-radius: 0;
         background: rgba(0,0,0,0.1);
-    }
+    }*/
     .search-input-all .clear-search{
         padding: 0 5px;
         text-align: center;
