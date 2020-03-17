@@ -116,6 +116,27 @@ export default {
   .pagination {
     padding-top: 8px;
     text-align: center;
+    max-height: 42px;
+  }
+  .pagination .el-popper[x-placement^=bottom] .popper__arrow {
+    bottom: -6px;
+    margin-right: 3px;
+    border-top-color: #fff;
+    border-bottom-width: 0;
+    border-top-width: 6px;
+    top: unset;
+  }
+  .pagination .el-popper[x-placement^=bottom] .popper__arrow::after {
+    bottom: 1px;
+    margin-left: -6px;
+    border-top-color: #FFF;
+    border-bottom-width: 0;
+  }
+  .pagination .el-popper {
+    top: -135px !important;
+  }
+  .pagination .el-pagination {
+    max-height: 42px;
   }
   .pagination-size-select .el-input--mini .el-input__inner{
     height: 20px;

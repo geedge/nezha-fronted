@@ -1,9 +1,8 @@
 <style lang="scss">
   @import '../../charts/line-chart-block';
-/*  .project-calendar .el-input__inner {
-       height: 25px !important;
-       border-color: #d8d8d8;
-     }*/
+  .project-calendar .el-input__inner {
+     height: 24px;
+  }
   .top-tools .el-input__inner {
     height: 25px !important;
     border-color: #d8d8d8;
@@ -29,11 +28,45 @@
   }
   .main-list.main-list-with-sub {
     transform: translate3d(0,0,0);
-    height: 50%;
+    height: calc(50% - 4px);
   }
   .sub-list {
-    height: 50%;
+    height: calc(50% - 4px);
     transition: .4s height;
+  }
+  .sub-list-resize {
+    margin: 0 -6px;
+    border-top: 1px solid #aaa;
+    background-color: #eaeaea;
+    height: 9px;
+    box-sizing: border-box;
+    user-select: none;
+    color: #5f6368;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding-top: 3px;
+    cursor: ns-resize;
+  }
+  .sub-list-window-control {
+    display: flex;
+    align-items: center;
+    margin-left: 14px;
+  }
+  .window-control-btn {
+    cursor: pointer;
+    width: 29px;
+    text-align: center;
+  }
+  .window-control-btn:last-of-type {
+    margin-right: 4px;
+  }
+  .window-control-btn>i {
+    color: #909399;
+    font-size: 17px;
+  }
+  .window-control-btn>i:hover {
+    color: $global-text-color-active;
   }
 </style>
 <style scope>
@@ -72,7 +105,7 @@
     <div class="content-right">
       <!-- 主列表 -->
       <div class="main-list" :class="{'main-list-with-sub': tableShow == 3}">
-        <div class="top-tools">
+        <div class="top-tools" v-show="mainResizeShow">
           <div class="nz-tab">
   <!--          <div class="nz-tab-item-box">-->
   <!--            <div class="nz-tab-item nz-tab-item-active">{{$t('project.endpoint.endpoint')}}</div>-->
@@ -137,7 +170,6 @@
                     <div :class="{'active-icon green':scope.row.state == '1','active-icon red':scope.row.state == '0'}"></div>
                   </div>
                 </el-popover>
-  <!--              {{ scope.row.state == 1 ? 'up' : ''}}{{scope.row.state == 0 ? 'down' : ''}}-->
               </span>
               <span v-else-if="scope.row[item.prop]">{{scope.row[item.prop]}}</span>
               <template v-else>-</template>
@@ -151,20 +183,21 @@
             </template>
           </el-table-column>
         </el-table>
-        <Pagination :tableId="tableId" v-cloak :pageObj="endpointPageObj" @pageNo='endpointPageNo' @pageSize='endpointPageSize' ref="endpointPagination"></Pagination>
+        <Pagination v-show="mainResizeShow" :tableId="tableId" v-cloak :pageObj="endpointPageObj" @pageNo='endpointPageNo' @pageSize='endpointPageSize' ref="endpointPagination"></Pagination>
         <button class="to-top" v-show="showTopBtn1" @click="toTop"><i class="nz-icon nz-icon-top"></i></button>
       </div>
 
       <!-- 副列表 endpoint query-->
-      <div class="sub-list" v-show="tableShow == 3" style="position: relative">
-        <div class="top-tools" >
+      <div @mousedown="listResize" class="sub-list-resize" v-show="tableShow == 3">一</div>
+      <div class="sub-list" v-show="tableShow == 3">
+        <div class="sub-top-tools" v-show="subResizeShow">
           <div>
-            <div @click="backToEdpTab">
-              <button  class="nz-btn nz-btn-size-normal nz-btn-style-light float-right nz-btn-min-width-82">
+            <!--<div @click="backToEdpTab">
+              <button class="nz-btn nz-btn-size-normal nz-btn-style-light float-right nz-btn-min-width-82">
                 <span class='top-tool-btn-txt'>
                 {{$t('overall.back')}}</span>
               </button>
-            </div>
+            </div>-->
           </div>
           <!--时间选择器-->
           <div class="top-tool-right">
@@ -173,21 +206,19 @@
                 <i slot="suffix" class="el-input__icon el-icon-search" style="float:right" @click="focusInput"></i>
               </el-input>
             </div>
-            <div class="margin-r-20 date-pick-group">
-              <button @click="changeTime(-10)" class="nz-btn nz-btn-size-normal nz-btn-style-light change-time-height"><i class="el-icon-d-arrow-left"></i></button>
-              <el-date-picker
+            <div class="margin-r-20 nz-btn-group nz-btn-group-size-normal nz-btn-group-light">
+              <button @click="changeTime(-10)" class="nz-btn nz-btn-size-normal nz-btn-style-light change-time-height nz-input-group-prepend"><i class="el-icon-d-arrow-left"></i></button><el-date-picker
                 v-model="formatTime"
                 type="datetime"
                 size="mini"
-                class="project-calendar"
+                class="project-calendar nz-input-group-middle"
                 clearable
                 :time-arrow-control="true"
                 placeholder="Moment"
                 value-format="yyyy-MM-dd HH:mm:ss"
                 @change="pickTime"
                 >
-              </el-date-picker>
-              <button @click="changeTime(10)" class="nz-btn nz-btn-size-normal nz-btn-style-light change-time-height"><i class="el-icon-d-arrow-right"></i></button>
+              </el-date-picker><button @click="changeTime(10)" class="nz-btn nz-btn-size-normal nz-btn-style-light change-time-height nz-input-group-append"><i class="el-icon-d-arrow-right"></i></button>
             </div>
             <el-dropdown split-button type="primary"  size="mini" class="dropdownBtn" @click="viewGraph">
               <i class="nz-icon nz-icon-chart"  :class="{'control-icon-unchecked':selectedEndpoints.length<1,'control-icon-checked':selectedEndpoints.length>0}"></i>
@@ -203,9 +234,14 @@
 
               </el-dropdown-menu>
             </el-dropdown>
-  <!--          <button @click="viewGraph" slot="reference" class="nz-btn nz-btn-size-normal nz-btn-style-normal nz-btn-min-width-120" :class="{'nz-btn-disabled':selectedEndpoints.length<1}">-->
-  <!--            <span class='top-tool-btn-txt'>{{$t('project.endpoint.addGraph')}}</span>-->
-  <!--          </button>-->
+            <div class="sub-list-window-control">
+              <!--半屏-->
+              <div class="window-control-btn" @click="halfScreen"><i class="el-icon-minus"></i></div>
+              <!--全屏-->
+              <div class="window-control-btn" @click="fullScreen"><i class="el-icon-full-screen"></i></div>
+              <!--关闭-->
+              <div class="window-control-btn" @click="backToEdpTab"><i class="el-icon-close"></i></div>
+            </div>
           </div>
         </div>
         <div  class="table-header-inner" @click="clearSelectedMetrics"><span><i style="font-size: 12px;margin-left: 2px;" class="nz-icon nz-icon-close " :class="{'control-icon-unchecked':selectedEndpoints.length<1,'control-icon-checked':selectedEndpoints.length>0}"></i></span></div>
@@ -220,7 +256,7 @@
           :height="$tableHeight.endpointQuery"
           @selection-change="selectChange"
           ref="metricInfoTab"
-          style="width: 100%;">
+          style="width: 100%; margin-top: 5px;">
           <el-table-column
             type="selection"
             width="38"
@@ -309,7 +345,8 @@
     <module-box :currentProject="currentProject" :module="editModule" @reload="getModuleList" ref="moduleBox"></module-box>
     <edit-endpoint-box :currentProject="currentProject" :currentModule="currentModule" :endpoint="editEndpoint" @reload="getEndpointTableData" ref="editEndpointBox"></edit-endpoint-box>
     <add-endpoint-box :currentProject="currentProject" :currentModule="currentModule" @reload="getEndpointTableData" ref="addEndpointBox"></add-endpoint-box>
-    <asset-edit-unit :edit-unit-show='viewAssetState' @refreshData="getEndpointTableData" @sendStateData="tabControl" ref="assetEditUnit"></asset-edit-unit>
+    <asset-box :edit-unit-show='viewAssetState' @refreshData="getEndpointTableData" @sendStateData="tabControl"
+               ref="assetEditUnit"></asset-box>
     <chart-box ref="addChartModal" :panel-data="panelData" @on-create-success="createSuccess" @reloadOnlyPanel="getPanelData" @reload="getPanelData"></chart-box>
   </div>
 </template>
@@ -333,6 +370,8 @@
       let temp=this;
       return {
         tableId: 'projectTable', //需要分页的table的id，用于记录每页数量
+        mainResizeShow: true, //dom高度改变时部分内容是否展示
+        subResizeShow: true,
         tableShow: 1, // 1.endpoint; 2.metrics
         showTopBtn1: false,
         showTopBtn2: false,
@@ -723,6 +762,92 @@
       }
     },
     methods: {
+      // 鼠标拖动二级列表
+      listResize(e) {
+        let mainListDom = document.querySelector(".main-list-with-sub"); //主列表
+        let subListDom = document.querySelector(".sub-list"); //副列表
+        let contentRightDom = document.querySelector(".content-right"); //右侧内容区
+        let contentRightHeight = contentRightDom.offsetHeight;//可视高度
+        //得到点击时俩dom的初始高度：
+        let mainInitialHeight = mainListDom.offsetHeight;
+        let subInitialHeight = subListDom.offsetHeight;
+        //点击时鼠标的Y轴位置
+        let mouseInitialY = e.clientY;
+
+        let _this = this;
+
+        document.onmousemove = (e) => {
+          e.preventDefault();
+          //得到鼠标拖动的距离
+          let mouseMoveY = Math.abs(e.clientY - mouseInitialY);
+
+          //往上方拖动：
+          if (e.clientY < mouseInitialY) {
+            mainListDom.style.height = mainInitialHeight-mouseMoveY+'px';
+            subListDom.style.height = subInitialHeight+mouseMoveY+'px';
+          }
+          //往下方拖动：
+          if (e.clientY > mouseInitialY) {
+            mainListDom.style.height = mainInitialHeight+mouseMoveY+'px';
+            subListDom.style.height = subInitialHeight-mouseMoveY+'px';
+          }
+
+          // 主、副列表最小高度限制为15px
+          if(parseInt(mainListDom.style.height) >= contentRightHeight-15){
+            mainListDom.style.height = contentRightHeight-15+'px';
+          }
+          if(parseInt(mainListDom.style.height) <= 15){
+            mainListDom.style.height = 15+'px';
+          }
+          if(parseInt(subListDom.style.height) >= contentRightHeight-15){
+            subListDom.style.height = contentRightHeight-15+'px';
+          }
+          if(parseInt(subListDom.style.height) <= 15){
+            subListDom.style.height = 15+'px';
+          }
+          //当主副列表可视区域小于一定值时，不展示内容
+          if(parseInt(mainListDom.style.height) <= 100){
+            if (_this.mainResizeShow) {
+              _this.mainResizeShow = false;
+            }
+          } else {
+            if (!_this.mainResizeShow) {
+              _this.mainResizeShow = true;
+            }
+          }
+          if(parseInt(subListDom.style.height) <= 150){
+            if (_this.subResizeShow) {
+              _this.subResizeShow = false;
+            }
+          } else {
+            if (!_this.subResizeShow) {
+              _this.subResizeShow = true;
+            }
+          }
+        };
+        document.onmouseup = () => {
+          document.onmousemove = null;
+        }
+      },
+      halfScreen() {
+        let contentRightDom = document.querySelector(".content-right"); //右侧内容区
+        let contentRightHeight = contentRightDom.offsetHeight;//可视高度
+        //主列表
+        document.querySelector(".main-list-with-sub").style.height = 'calc(50% - 4px)';
+        this.mainResizeShow = true;
+        //副列表
+        document.querySelector(".sub-list").style.height = 'calc(50% - 4px)';
+        this.subResizeShow = true;
+      },
+      fullScreen() {
+        let contentRightDom = document.querySelector(".content-right"); //右侧内容区
+        let contentRightHeight = contentRightDom.offsetHeight;//可视高度
+        //主列表
+        document.querySelector(".main-list-with-sub").style.height = '15px';
+        this.mainResizeShow = false;
+        //副列表
+        document.querySelector(".sub-list").style.height = contentRightHeight-24 + 'px';
+      },
       clickLegend(legendName,index){
         //点击图表某一个legend，图表只显示当前点击的曲线或柱状图，其它隐藏，再次点击已选中的legend ，显示全部
         let curIsGrey=this.isGrey[index];
@@ -1205,6 +1330,10 @@
         this.selectedEndpoints=[];
         this.showTableData = [];
         this.showTopBtn1 = false;
+        // 主列表恢复全屏
+        this.mainResizeShow = this.subResizeShow = true;
+        document.querySelector('.main-list').style.height = "";
+
         this.$nextTick(() => {
           this.gutterHandler(".endpoint-table");
         });

@@ -265,6 +265,7 @@ li{
 .nz-btn-group .nz-btn:last-child:not(:first-child) {
   border-bottom-left-radius: 0;
   border-top-left-radius: 0;
+  border-left: 1px solid rgba(162,162,162,0.5);
 }
 .nz-btn-group .nz-btn:not(:first-child):not(:last-child) {
   border-radius: 0;
@@ -278,6 +279,10 @@ li{
 }
 .nz-btn-group.nz-btn-group-light {
   box-shadow: $btn-normal-shadow;
+}
+.nz-btn-group .nz-input-group-middle input {
+  border-radius: 0px !important;
+  border: none;
 }
 /* end--按钮组件*/
 
@@ -483,6 +488,38 @@ li{
   align-content: center;
 }
 /* end--顶部工具栏*/
+
+/* begin--二级顶部工具栏*/
+.sub-top-tools {
+  display: flex;
+  height: 40px;
+  align-items: center;
+  justify-content: space-between;
+  border-top: 1px solid #DCDFE6;
+  border-bottom: 1px solid #E4E7ED;
+  margin: 0 -6px;
+  background-color: #fcfcfc;
+}
+.sub-top-tools>div {
+  margin-top: 2px;
+}
+.sub-top-tools .top-tool-search {
+  width: 260px;
+  margin: -1px 0 0 0;
+}
+.sub-top-tools .top-tool-btn-txt .nz-icon{
+  display: inline-block;
+  font-size: 12px;
+  margin-right: 6px;
+}
+.sub-top-tool-right {
+  display: flex;
+  align-content: center;
+}
+.has-sub-popper {
+ color: red;
+}
+/* end--二级顶部工具栏*/
 
 /* start--内容*/
 .nz-table.el-table{
@@ -1182,7 +1219,7 @@ li{
 .query-input-active {
   margin-top: 1px;
 }
-.top-tools input {
+.top-tools input, .sub-top-tools input {
   background-color: $content-right-background-color;
 }
 .query-input-active .el-input__inner, .query-input-inactive .el-input__inner {

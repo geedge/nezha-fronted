@@ -839,7 +839,6 @@
     display: inline-block;
     width: 100px;
     vertical-align: top;
-    border-right: 1px solid rgba(162,162,162,0.5);
   }
   /* end--搜索框*/
 
@@ -937,9 +936,5 @@
   }
   .endpoints-box-endpoints .el-form-item.is-error {
     margin-bottom: 22px;
-  }
-  .endpoint-asset-search input {
-    border-radius: 0 !important;
-    border: 0;
   }
 </style>
