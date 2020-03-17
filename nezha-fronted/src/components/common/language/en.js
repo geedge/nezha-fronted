@@ -178,7 +178,11 @@ const en = {
     refresh:'Refresh',//'刷新'
     edit:'Edit',//'编辑'
     delete:'Delete',//'删除'
-    screen:'Full screen'//'全屏'
+    screen:'Full screen',//'全屏',
+    overview:{
+      title:'Overview',
+      contentTitle:'Nezha Management System',
+    }
   },
   validate: { //校验规则
     required: 'Required',//'必填项'
