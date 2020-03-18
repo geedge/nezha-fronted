@@ -3,10 +3,10 @@
   .project-calendar .el-input__inner {
      height: 24px;
   }
-  .top-tools .el-input__inner {
+  /*.top-tools .el-input__inner {
     height: 25px !important;
     border-color: #d8d8d8;
-  }
+  }*/
   .change-time-height {
     height: 23px;
   }
@@ -25,6 +25,7 @@
   .main-list {
     height: 100%;
     transition: .4s height, .4s transform;
+    position: relative;
   }
   .main-list.main-list-with-sub {
     transform: translate3d(0,0,0);
@@ -68,6 +69,22 @@
   .window-control-btn>i:hover {
     color: $global-text-color-active;
   }
+  .abc {
+    right: 100% !important;
+    transform: translateX(100%);
+  }
+  .pagination-position {
+    position: absolute;
+    transition: .4s right, .4s top, .4s width;
+  }
+  .pagination-position-bottom {
+    width: 100%;
+    top: calc(100% - 50px);
+  }
+  .pagination-position-top {
+    top: 0;
+    right: 0;
+  }
 </style>
 <style scope>
   .chart-bottom {
@@ -105,44 +122,36 @@
     <div class="content-right">
       <!-- 主列表 -->
       <div class="main-list" :class="{'main-list-with-sub': tableShow == 3}">
-        <!-- 一般状态的工具栏 -->
-        <div class="top-tools" v-show="tableShow == 1">
-          <div class="nz-tab">
-          </div>
-          <div>
+        <!--<div style="position: absolute; left: 0; top: 13px; z-index: 2;">
+          <div class="top-tool-search margin-r-20" style="margin: -2px 0 0 0;"><search-input :searchMsg="endpointSearchMsg" @search="endpointSearch" ref="projectSearch"></search-input></div>
+          <export-excel
+            export-file-name="endpoint"
+            export-url="/endpoint/export"
+            :params="endpointSearchLabel"
+            @afterImport="getEndpointTableData"
+          >
+            <template slot="optionZone">
+              <i class="nz-icon nz-icon-create-square" @click.stop="toCreateEndpoint" :title="$t('overall.createProject')" ></i>
+            </template>
+          </export-excel>
+
+        </div>-->
+        <div class="top-tools" style="position: relative;" :class="{'top-tools-reverse': tableShow == 3}" v-show="mainResizeShow">
+          <!--<div class="pagination-top"></div>-->
+          <div style="position: absolute; right: 0; display: flex; align-items: center; transition: .4s right;" :class="{'abc': tableShow == 3}">
+            <div class="top-tool-search"><search-input :searchMsg="endpointSearchMsg" @search="endpointSearch" ref="projectSearch"></search-input></div>
             <export-excel
               export-file-name="endpoint"
               export-url="/endpoint/export"
               :params="endpointSearchLabel"
               @afterImport="getEndpointTableData"
-              class="float-right">
+              class="margin-l-20"
+              style="width: 59px;"
+            >
               <template slot="optionZone">
                 <i class="nz-icon nz-icon-create-square" @click.stop="toCreateEndpoint" :title="$t('overall.createProject')" ></i>
               </template>
             </export-excel>
-            <div class="top-tool-search float-right margin-r-20"><search-input :searchMsg="endpointSearchMsg" @search="endpointSearch" ref="projectSearch"></search-input></div>
-          </div>
-        </div>
-        <!-- 浏览副列表时的工具栏 -->
-        <div class="top-tools" v-show="tableShow == 3 && mainResizeShow">
-          <div>
-            <export-excel
-              export-file-name="endpoint"
-              export-url="/endpoint/export"
-              :params="endpointSearchLabel"
-              @afterImport="getEndpointTableData"
-              class="float-left margin-l-5">
-              <template slot="optionZone">
-                <i class="nz-icon nz-icon-create-square" @click.stop="toCreateEndpoint" :title="$t('overall.createProject')" ></i>
-              </template>
-            </export-excel>
-            <div class="top-tool-search float-right margin-l-20"><search-input :searchMsg="endpointSearchMsg" @search="endpointSearch" ref="projectSearch"></search-input></div>
-          </div>
-          <div style="display: flex; justify-content: space-between; align-items: center">
-            <Pagination :isSubList="true" :tableId="tableId" v-cloak :pageObj="endpointPageObj" @pageNo='endpointPageNo' @pageSize='endpointPageSize' ref="endpointPagination2"></Pagination>
-            <span class="nz-table-gear" @click.stop="elementsetShow('shezhi',$event)">
-              <button class="top-tool-setting-btn"><i class="nz-icon nz-icon-gear"></i></button>
-            </span>
           </div>
         </div>
         <el-table
@@ -190,7 +199,7 @@
               <template v-else>-</template>
             </template>
           </el-table-column>
-          <el-table-column width="28" v-if="tableShow == 1">
+          <el-table-column width="28">
             <template slot="header" slot-scope="scope">
               <span @click.stop="elementsetShow('shezhi',$event)" class="nz-table-gear">
                 <i class="nz-icon nz-icon-gear"></i>
@@ -198,7 +207,9 @@
             </template>
           </el-table-column>
         </el-table>
-        <Pagination v-show="tableShow == 1" :tableId="tableId" v-cloak :pageObj="endpointPageObj" @pageNo='endpointPageNo' @pageSize='endpointPageSize' ref="endpointPagination"></Pagination>
+        <div class="pagination-position pagination-position-bottom">
+          <Pagination :tableId="tableId" v-cloak :pageObj="endpointPageObj" @pageNo='endpointPageNo' @pageSize='endpointPageSize' ref="endpointPagination"></Pagination>
+        </div>
         <button class="to-top" v-show="showTopBtn1" @click="toTop('ps', 0)"><i class="nz-icon nz-icon-top"></i></button>
       </div>
 
@@ -246,9 +257,9 @@
             </el-dropdown>
             <div class="sub-list-window-control">
               <!--半屏-->
-              <div class="window-control-btn" @click="halfScreen"><i class="el-icon-minus"></i></div>
+              <div class="window-control-btn" v-if="isFullScreen" @click="exitFullScreen"><i class="nz-icon nz-icon-exit-full-screen"></i></div>
               <!--全屏-->
-              <div class="window-control-btn" @click="fullScreen"><i class="el-icon-full-screen"></i></div>
+              <div class="window-control-btn" v-if="!isFullScreen" @click="fullScreen"><i class="el-icon-full-screen"></i></div>
               <!--关闭-->
               <div class="window-control-btn" @click="backToEdpTab"><i class="el-icon-close"></i></div>
             </div>
@@ -385,7 +396,8 @@
         tableId: 'projectTable', //需要分页的table的id，用于记录每页数量
         mainResizeShow: true, //dom高度改变时部分内容是否展示
         subResizeShow: true,
-        tableShow: 1, // 1.endpoint; 2.metrics
+        mainListHeight: '', //主列表dom的高度
+        tableShow: 1, // 1.endpoint; 3.query
         showTopBtn1: false,
         showTopBtn2: false,
         editEndpoint: {id: '', host: '', port: '', param: '', path: '', asset: {}, project: {}, module: {}, moduleId: '', assetId: '', paramObj: []},
@@ -842,14 +854,14 @@
           document.onmousemove = null;
         }
       },
-      halfScreen() {
+      exitFullScreen() {
         let contentRightDom = document.querySelector(".content-right"); //右侧内容区
         let contentRightHeight = contentRightDom.offsetHeight;//可视高度
         //主列表
-        document.querySelector(".main-list-with-sub").style.height = 'calc(50% - 4px)';
+        document.querySelector(".main-list-with-sub").style.height = this.mainListHeight ? this.mainListHeight + 'px' : 'calc(50% - 4px)';
 
         //副列表
-        document.querySelector(".sub-list").style.height = 'calc(50% - 4px)';
+        document.querySelector(".sub-list").style.height = this.mainListHeight ? contentRightHeight-this.mainListHeight-9 + 'px' : 'calc(50% - 4px)';
         setTimeout(() => {
           this.isFullScreen = false;
           this.mainResizeShow = true;
@@ -859,12 +871,12 @@
       fullScreen() {
         let contentRightDom = document.querySelector(".content-right"); //右侧内容区
         let contentRightHeight = contentRightDom.offsetHeight;//可视高度
+        this.isFullScreen = true;
         //主列表
+        this.mainListHeight = document.querySelector(".main-list-with-sub").offsetHeight; //记录全屏前主列表的高度
         document.querySelector(".main-list-with-sub").style.height = '0';
         this.mainResizeShow = false;
-
         //副列表
-        this.isFullScreen = true;
         document.querySelector(".sub-list").style.height = contentRightHeight + 'px';
       },
       clickLegend(legendName,index){
@@ -1241,7 +1253,12 @@
       },
       showEndpoint:function(endpoint){
         this.tableShow=3;
-        this.mainTableHeight = this.$tableHeight.openSubList.mainList;
+        this.mainTableHeight = this.$tableHeight.openSubList.mainList; //重置table高度
+        //移动分页组件的位置
+        let pagination = document.querySelector(".pagination-position");
+        pagination.classList.remove("pagination-position-bottom");
+        pagination.classList.add("pagination-position-top");
+
         this.queryEdpLoading=true;
         setTimeout(() => {
           if(endpoint){
@@ -1347,10 +1364,16 @@
       },
       backToEdpTab:function(){
         this.tableShow=1;
-        this.mainTableHeight = this.$tableHeight.normal;
+        this.mainTableHeight = this.$tableHeight.normal; //重置table的高度
         this.isFullScreen = false;
+        //重置二级列表数据
         this.selectedEndpoints=[];
         this.showTableData = [];
+        //移动分页组件的位置
+        let pagination = document.querySelector(".pagination-position");
+        pagination.classList.remove("pagination-position-top");
+        pagination.classList.add("pagination-position-bottom");
+
         this.showTopBtn1 = false;
         // 主列表恢复全屏
         this.mainResizeShow = this.subResizeShow = true;
