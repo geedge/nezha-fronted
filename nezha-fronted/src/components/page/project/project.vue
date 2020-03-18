@@ -137,6 +137,7 @@
           class="nz-table endpoint-table"
           :height="$tableHeight.normal"
           v-scrollBar:el-table
+          v-show="mainResizeShow"
           ref="endpointTable"
           style="width: 100%;">
           <el-table-column
@@ -188,7 +189,7 @@
       </div>
 
       <!-- 副列表 endpoint query-->
-      <div @mousedown="listResize" class="sub-list-resize" v-show="tableShow == 3">一</div>
+      <div @mousedown="listResize" class="sub-list-resize" v-show="tableShow == 3 && !isFullScreen">一</div>
       <div class="sub-list" v-show="tableShow == 3">
         <div class="sub-top-tools" v-show="subResizeShow">
           <div class="sub-list-tabs margin-l-20" style="width: calc(100% - 780px);">
@@ -364,6 +365,7 @@
     data() {
       let temp=this;
       return {
+        isFullScreen: false, //是否是全屏，用来控制拖动条是否展示
         tableId: 'projectTable', //需要分页的table的id，用于记录每页数量
         mainResizeShow: true, //dom高度改变时部分内容是否展示
         subResizeShow: true,
@@ -829,19 +831,25 @@
         let contentRightHeight = contentRightDom.offsetHeight;//可视高度
         //主列表
         document.querySelector(".main-list-with-sub").style.height = 'calc(50% - 4px)';
-        this.mainResizeShow = true;
+
         //副列表
         document.querySelector(".sub-list").style.height = 'calc(50% - 4px)';
-        this.subResizeShow = true;
+        setTimeout(() => {
+          this.isFullScreen = false;
+          this.mainResizeShow = true;
+          this.subResizeShow = true;
+        }, 200);
       },
       fullScreen() {
         let contentRightDom = document.querySelector(".content-right"); //右侧内容区
         let contentRightHeight = contentRightDom.offsetHeight;//可视高度
         //主列表
-        document.querySelector(".main-list-with-sub").style.height = '15px';
+        document.querySelector(".main-list-with-sub").style.height = '0';
         this.mainResizeShow = false;
+
         //副列表
-        document.querySelector(".sub-list").style.height = contentRightHeight-24 + 'px';
+        this.isFullScreen = true;
+        document.querySelector(".sub-list").style.height = contentRightHeight + 'px';
       },
       clickLegend(legendName,index){
         //点击图表某一个legend，图表只显示当前点击的曲线或柱状图，其它隐藏，再次点击已选中的legend ，显示全部
@@ -1322,6 +1330,7 @@
       },
       backToEdpTab:function(){
         this.tableShow=1;
+        this.isFullScreen = false;
         this.selectedEndpoints=[];
         this.showTableData = [];
         this.showTopBtn1 = false;
