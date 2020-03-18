@@ -34,6 +34,7 @@
   .sub-list {
     height: calc(50% - 4px);
     transition: .4s height;
+    position: relative;
   }
   .sub-list-resize {
     margin: 0 -6px;
@@ -75,15 +76,14 @@
   }
   .pagination-position {
     position: absolute;
-    transition: .4s right, .4s top, .4s width;
   }
   .pagination-position-bottom {
     width: 100%;
-    top: calc(100% - 50px);
   }
   .pagination-position-top {
     top: 0;
     right: 0;
+    transition: .1s transform;
   }
 </style>
 <style scope>
@@ -207,7 +207,7 @@
             </template>
           </el-table-column>
         </el-table>
-        <div class="pagination-position pagination-position-bottom">
+        <div class="pagination-position pagination-position-bottom" v-show="mainResizeShow">
           <Pagination :tableId="tableId" v-cloak :pageObj="endpointPageObj" @pageNo='endpointPageNo' @pageSize='endpointPageSize' ref="endpointPagination"></Pagination>
         </div>
         <button class="to-top" v-show="showTopBtn1" @click="toTop('ps', 0)"><i class="nz-icon nz-icon-top"></i></button>
@@ -265,7 +265,7 @@
             </div>
           </div>
         </div>
-        <div  class="table-header-inner" @click="clearSelectedMetrics"><span><i style="font-size: 12px;margin-left: 2px;" class="nz-icon nz-icon-close " :class="{'control-icon-unchecked':selectedEndpoints.length<1,'control-icon-checked':selectedEndpoints.length>0}"></i></span></div>
+        <div class="table-header-inner" @click="clearSelectedMetrics"><span><i style="font-size: 12px;margin-left: 2px;" class="nz-icon nz-icon-close " :class="{'control-icon-unchecked':selectedEndpoints.length<1,'control-icon-checked':selectedEndpoints.length>0}"></i></span></div>
         <el-table
           :data="showTableData"
           v-loading="queryEdpLoading"
@@ -284,6 +284,9 @@
             align="center"
             :selectable="selectable"
           >
+            <template slot="header" slot-scope="slot">
+
+            </template>
           </el-table-column>
 
           <el-table-column
@@ -1127,6 +1130,14 @@
         this.$refs.projectSearch.clearSearch();
         this.tableShow=1;
         this.selectedEndpoints=[];
+        //若原页面处于打开二级列表状态，调整分页组件的位置
+        let pagination = document.querySelector(".pagination-position");
+        if (pagination.classList.contains("pagination-position-top")) {
+          pagination.classList.remove("pagination-position-top");
+          pagination.classList.add("pagination-position-bottom");
+          pagination.style.transform = '';
+          this.mainTableHeight = this.$tableHeight.normal;
+        }
       },
 
       //弹出endpoint编辑页
@@ -1257,7 +1268,12 @@
         //移动分页组件的位置
         let pagination = document.querySelector(".pagination-position");
         pagination.classList.remove("pagination-position-bottom");
-        pagination.classList.add("pagination-position-top");
+        pagination.style.transform = 'translateX(200%)';
+        setTimeout(() => {
+          pagination.style.transform = 'translateX(0)';
+          pagination.classList.add("pagination-position-top");
+        }, 200);
+
 
         this.queryEdpLoading=true;
         setTimeout(() => {
@@ -1372,6 +1388,7 @@
         //移动分页组件的位置
         let pagination = document.querySelector(".pagination-position");
         pagination.classList.remove("pagination-position-top");
+        pagination.style.transform = '';
         pagination.classList.add("pagination-position-bottom");
 
         this.showTopBtn1 = false;
@@ -2093,8 +2110,9 @@
   .table-header-inner{
     position: absolute;
     z-index: 1;
-    top: 60px;
-    left: 10px;
+    top: 44px;
+    left: 11px;
+    cursor: pointer;
   }
   .control-icon-unchecked{
     color: #d1d1d1;
