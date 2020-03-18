@@ -1,0 +1,142 @@
+<template>
+    <div class="table-box">
+      <loading ref="loading"></loading>
+        <div class="table-box-left">
+          <div class="table-screen" v-show="showData.screen.show">
+            <div class="screen-top" v-show="showData.screen.total.show">
+              <div class="screen-row">
+                <div class="screen-col"><i class="nz-icon nz-icon-asset super-icon"></i></div>
+                <div class="screen-col">
+                  <div>{{showData.screen.total.title}}</div>
+                  <template v-if="showData.screen.total.showPopover">
+                    <el-popover trigger="hover" placement="top">
+                      <div class="popover-container">
+                        <div v-for="(pop,index) in showData.screen.total.popover">
+                          <span>{{pop.label}}:</span>&nbsp;
+                          <span>{{pop.value}}</span>
+                        </div>
+                      </div>
+                      <template slot="reference">
+                        <div class="super-font">{{showData.screen.total.num}}</div>
+                      </template>
+                    </el-popover>
+                  </template>
+                  <template v-else>
+                    <div class="super-font">{{showData.screen.total.num}}</div>
+                  </template>
+                </div>
+              </div>
+            </div>
+            <div class="screen-bottom" v-show="showData.screen.stat.show">
+              <div class="screen-row">
+                <div class="screen-col avg-children-space"><i class="nz-icon nz-icon-arrow-up middle-icon green-icon"></i><span class="middle-font">{{showData.screen.stat.up}}</span></div>
+                <div class="screen-col avg-children-space"><i class="nz-icon nz-icon-arrow-down middle-icon red-icon"></i><span class="middle-font">{{showData.screen.stat.down}}</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="table-box-right overview-table" v-show="showData.table.show">
+          <el-table
+            class="overview-table"
+            :data="showData.table.tableData"
+            v-scrollBar:el-table
+            height="100%"
+          >
+            <el-table-column
+              :resizable="false"
+              v-for="(item, index) in showData.table.tableLabel"
+              v-if="item.show"
+              :key="`col-${index}`"
+              :label="item.label"
+              show-overflow-tooltip
+              min-width="110px"
+            >
+              <template slot-scope="scope" :column="item">
+                <template v-if="item.showPopover">
+                  <el-popover trigger="hover" placement="right" >
+                    <div class="popover-container">
+                      <div v-for="(pop,index) in item.popover">
+                        <span>{{pop.label}}:</span>&nbsp;
+                        <span>{{scope.row[pop.prop]}}</span>
+                      </div>
+                    </div>
+                    <template slot="reference">
+                      <span>{{scope.row[item.prop]}}</span>
+                    </template>
+                  </el-popover>
+                </template>
+                <template v-else>
+                  {{scope.row[item.prop]}}
+                </template>
+              </template>
+            </el-table-column>
+
+          </el-table>
+        </div>
+    </div>
+</template>
+
+<script>
+  export default {
+    name: "tableBox",
+    components:{
+    },
+    props: {
+      popData: {type:Object,required:true},
+    },
+    data(){
+      return {
+        showData:{
+          screen:{ //左侧概览信息
+            show:true,
+            total:{ //左侧上方大图标及total信息
+              show:true,
+              num:0,
+              title:''
+            },
+            stat:{//左侧下方 小图标，
+              show:true,
+              up:0,
+              down:0
+            }
+          },
+          table:{//右侧table
+            show:true,
+            tableData:[],
+            tableLabel:[]
+          }
+        }
+      }
+    },
+    created() {
+    },
+    methods:{
+      startLoading(){
+        this.$refs.loading.startLoading();
+      },
+      endLoading(){
+        this.$refs.loading.endLoading();
+      }
+    },
+    mounted() {
+    },
+    watch:{
+      popData:{
+        immediate:true,
+        deep:true,
+        handler(n,o){
+          this.showData=JSON.parse(JSON.stringify(n));
+        }
+      }
+    }
+  }
+</script>
+
+<style scoped>
+@import "tableBox.scss";
+</style>
+<style>
+  .overview-table th, .overview-table tr {
+    background-color: #FCFCFC !important;
+  }
+</style>

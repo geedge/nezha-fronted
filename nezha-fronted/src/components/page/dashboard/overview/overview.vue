@@ -28,20 +28,21 @@
 
         <!--内容-->
         <div class="overview-content">
-          <el-scrollbar>
-            <div class="content-row-box">
-              <div class="content-col-box box-height-250 " style="width: 45%"></div>
-              <div class="content-col-box box-height-250 " style="width: 25%"></div>
-              <div class="content-col-box box-height-250 " style="width: 23%"></div>
+          <el-scrollbar style="height: 100%" ref="overviewScrollbar">
+            <div class="content-row-box" >
+              <div class="content-col-box box-height-200 " style="flex:3;">
+                <table-box :pop-data="assetStatData" ref="assetTab"></table-box>
+              </div>
+              <div class="content-col-box box-height-200 " style="flex: 2"></div>
+              <div class="content-col-box box-height-200 " style="flex:1;"></div>
             </div>
             <div class="content-row-box">
-              <div class="content-col-box box-height-350 " style="width: 45%"></div>
-              <div class="content-col-box box-height-350 "style="width: 50.2%"></div>
+              <div class="content-col-box box-height-250 " style="flex: 1;"></div>
             </div>
             <div class="content-row-box">
-              <div class="content-col-box box-height-400 "style="width: 25%"></div>
-              <div class="content-col-box box-height-400 "style="width: 48%"></div>
-              <div class="content-col-box box-height-400 "style="width: 20%"></div>
+              <div class="content-col-box box-height-300 "style="flex: 3"></div>
+              <div class="content-col-box box-height-300 "style="flex: 5;"></div>
+              <div class="content-col-box box-height-300 "style="flex: 2"></div>
             </div>
           </el-scrollbar>
         </div>
@@ -50,11 +51,17 @@
 </template>
 
 <script>
+  import tableBox from "./tableBox";
+  import axios from 'axios';
   export default {
     name: "overview",
+    components:{
+      'table-box':tableBox
+    },
     props:[],
     data(){
       return {
+        assetStatData:{},
         sysTime:'',
         sysDate:'',
         sysWeek:'',
@@ -63,6 +70,121 @@
     created() {
     },
     methods:{
+      /*加载数据 start*/
+      queryAssetData:function(){
+        // this.$refs.assetTab.startLoading();
+        axios.get('/overview/assetStat').then((res)=>{
+          let response=res.data;
+          if(response.msg == 'success'){
+            let showData=response.data.typeStat;
+            this.assetStatData=this.formatAssetData(showData,response.data.totalStat);
+            // this.$refs.assetTab.endLoading();
+          }
+        })
+      },
+      formatAssetData:function(data,totalData){
+        if(data && totalData){
+          let assetStatData={
+            screen:{ //左侧概览信息
+              show:true,
+              total:{ //左侧上方大图标及total信息
+                show:true,
+                num:totalData.total,
+                title:this.$t('dashboard.overview.asset.title'),
+                showPopover:true,
+                popover:[
+                  {
+                    label:this.$t('dashboard.overview.asset.inStock'),
+                    value:totalData.inStock
+                  },
+                  {
+                    label:this.$t('dashboard.overview.asset.outStock'),
+                    value:totalData.outStock
+                  },
+                  {
+                    label:this.$t('dashboard.overview.asset.alertLow'),
+                    value:totalData.alertLow
+                  },
+                  {
+                    label:this.$t('dashboard.overview.asset.alertMedium'),
+                    value:totalData.alertMedium
+                  },
+                  {
+                    label:this.$t('dashboard.overview.asset.alertHigh'),
+                    value:totalData.alertHigh
+                  },
+                ]
+              },
+              stat:{//左侧下方 小图标，
+                show:true,
+                up:totalData.pingUp,
+                down:totalData.pingDown
+              }
+            },
+            table:{//右侧table
+              show:true,
+              tableData:data,
+              tableLabel:[
+                {
+                  label:this.$t('dashboard.overview.asset.assetType'),
+                  prop:'name',
+                  show:true
+                },
+                {
+                  label:this.$t('dashboard.overview.asset.num'),
+                  prop:'total',
+                  show:true,
+                  showPopover:true,
+                  popover:[
+                    {
+                      label:this.$t('dashboard.overview.asset.inStock'),
+                      prop:'inStock'
+                    },
+                    {
+                      label:this.$t('dashboard.overview.asset.outStock'),
+                      prop:'outStock'
+                    },
+                    {
+                      label:this.$t('dashboard.overview.asset.pingUp'),
+                      prop:'pingUp'
+                    },
+                    {
+                      label:this.$t('dashboard.overview.asset.pingDown'),
+                      prop:'pingDown'
+                    },
+                  ]
+                },
+                {
+                  label:this.$t('dashboard.overview.asset.alert'),
+                  prop:'alertTotal',
+                  show:true,
+                  showPopover:true,
+                  popover:[
+                    {
+                      label:this.$t('dashboard.overview.asset.alertLow'),
+                      prop:'alertLow'
+                    },
+                    {
+                      label:this.$t('dashboard.overview.asset.alertMedium'),
+                      prop:'alertMedium'
+                    },
+                    {
+                      label:this.$t('dashboard.overview.asset.alertHigh'),
+                      prop:'alertHigh'
+                    },
+                  ]
+                }
+              ]
+            }
+          }
+          return assetStatData;
+        }else{
+          return {};
+          console.error('the param is invalid');
+        }
+
+      },
+      /*加载数据 end*/
       /*header 时间处理 start*/
       initDate:function(){
         this.sysTime=this.getTime();
@@ -123,6 +245,7 @@
     },
     mounted() {
       this.initDate();
+      this.queryAssetData();
     }
   }
 </script>

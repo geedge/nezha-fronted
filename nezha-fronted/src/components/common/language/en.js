@@ -182,6 +182,20 @@ const en = {
     overview:{
       title:'Overview',
       contentTitle:'Nezha Management System',
+      asset:{
+        title:'Asset',
+        assetType:'Asset Type',
+        num:'Nun',
+        alert:'Alert',
+        alertLow:'Low',
+        alertMedium:'Medium',
+        alertHigh:'High',
+        inStock:'In Stock',
+        outStock:'Out Stock',
+        pingUp:'Up',
+        pingDown:'Down',
+
+      }
     }
   },
   validate: { //校验规则

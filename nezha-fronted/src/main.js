@@ -37,6 +37,7 @@ import modelBox from "./components/common/rightBox/modelBox"; //model弹框
 import selectArea from "./components/common/popBox/selectArea"; //dc弹框
 import PerfectScrollbar from "perfect-scrollbar";
 import "perfect-scrollbar/css/perfect-scrollbar.css";
+import loading from "./components/common/loading";
 
 Vue.component("Pagination", Pagination);
 Vue.component("searchInput", searchInput);
@@ -56,6 +57,7 @@ Vue.component("cabinet-config-box", cabinetConfigBox);
 Vue.component("dc-box", dcBox);
 Vue.component("model-box", modelBox);
 Vue.component("select-area", selectArea);
+Vue.component('loading',loading);
 
 Vue.prototype.$axios = axios;
 Vue.prototype.$post = post;
