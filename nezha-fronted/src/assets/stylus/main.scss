@@ -1240,6 +1240,16 @@ li{
 .top-tools input, .sub-top-tools input {
   background-color: $content-right-background-color;
 }
+.top-tool-setting-btn {
+  width: 28px;
+  background-image: linear-gradient(#f8f8f8, #e6e6e6);
+  border: none;
+  height: 30px;
+  border-right: 1px solid #d4d4d4;
+  border-left: 1px solid #d4d4d4;
+  cursor: pointer;
+  outline: none;
+}
 .query-input-active .el-input__inner, .query-input-inactive .el-input__inner {
   height: 25px;
   line-height: 25px !important;

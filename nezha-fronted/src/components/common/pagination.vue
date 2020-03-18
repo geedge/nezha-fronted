@@ -1,5 +1,5 @@
 <template>
-  <div class="pagination">
+  <div class="pagination" :class="{'is-sub-list': isSubList}">
     <el-pagination
       ref="page"
       @size-change="size"
@@ -9,7 +9,7 @@
       :current-page="pageObj.pageNo"
       :page-sizes="pageSizes?pageSizes:[20, 50, 100]"
       :page-size="pageSize"
-      layout="total, prev, pager, next,slot,jumper"
+      :layout="isSubList ? 'prev, pager, next' : 'total, prev, pager, next, slot, jumper'"
       :total="this.pageObj.total"
     >
       <el-select v-model="pageSize" :placeholder="pageSize+$t('pageSize')" size="mini"  :popper-append-to-body="false" class="pagination-size-select" @change="size">
@@ -23,7 +23,7 @@
 <script>
 export default {
   name: "pagination",
-  props: ['pageObj', 'tableId','postPageSizes'],
+  props: ['pageObj', 'tableId', 'postPageSizes', 'isSubList'],
   data() {
     return {
       pageSize: 20,
@@ -117,7 +117,7 @@ export default {
     text-align: center;
     max-height: 42px;
   }
-  .pagination .el-popper[x-placement^=bottom] .popper__arrow {
+  /*.pagination .el-popper[x-placement^=bottom] .popper__arrow {
     bottom: -6px;
     margin-right: 3px;
     border-top-color: #fff;
@@ -133,7 +133,7 @@ export default {
   }
   .pagination .el-popper {
     top: -135px !important;
-  }
+  }*/
   .pagination .el-pagination {
     max-height: 42px;
   }
@@ -204,5 +204,9 @@ export default {
   }
   .el-pagination__sizes .el-input .el-input__inner:hover{
     border-color: rgba(154,154,154,0.20);
+  }
+  .pagination.is-sub-list {
+    margin-top: -4px !important;
+    padding-top: 0;
   }
 </style>

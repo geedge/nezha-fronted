@@ -105,14 +105,9 @@
     <div class="content-right">
       <!-- 主列表 -->
       <div class="main-list" :class="{'main-list-with-sub': tableShow == 3}">
-        <div class="top-tools" v-show="mainResizeShow">
+        <!-- 一般状态的工具栏 -->
+        <div class="top-tools" v-show="tableShow == 1">
           <div class="nz-tab">
-  <!--          <div class="nz-tab-item-box">-->
-  <!--            <div class="nz-tab-item nz-tab-item-active">{{$t('project.endpoint.endpoint')}}</div>-->
-  <!--          </div>-->
-  <!--          <div class="nz-tab-item-box" @click="tableShow = 2">-->
-  <!--            <div class="nz-tab-item">{{$t('project.metrics.metrics')}}</div>-->
-  <!--          </div>-->
           </div>
           <div>
             <export-excel
@@ -125,17 +120,36 @@
                 <i class="nz-icon nz-icon-create-square" @click.stop="toCreateEndpoint" :title="$t('overall.createProject')" ></i>
               </template>
             </export-excel>
-  <!--          <button @click="toCreateEndpoint" :title="$t('overall.createProject')"  class="nz-btn nz-btn-size-normal nz-btn-style-light float-right " id="project-add-ep">-->
-  <!--            <i class="nz-icon-create-square nz-icon"></i>-->
-  <!--          </button>-->
             <div class="top-tool-search float-right margin-r-20"><search-input :searchMsg="endpointSearchMsg" @search="endpointSearch" ref="projectSearch"></search-input></div>
+          </div>
+        </div>
+        <!-- 浏览副列表时的工具栏 -->
+        <div class="top-tools" v-show="tableShow == 3 && mainResizeShow">
+          <div>
+            <export-excel
+              export-file-name="endpoint"
+              export-url="/endpoint/export"
+              :params="endpointSearchLabel"
+              @afterImport="getEndpointTableData"
+              class="float-left margin-l-5">
+              <template slot="optionZone">
+                <i class="nz-icon nz-icon-create-square" @click.stop="toCreateEndpoint" :title="$t('overall.createProject')" ></i>
+              </template>
+            </export-excel>
+            <div class="top-tool-search float-right margin-l-20"><search-input :searchMsg="endpointSearchMsg" @search="endpointSearch" ref="projectSearch"></search-input></div>
+          </div>
+          <div style="display: flex; justify-content: space-between; align-items: center">
+            <Pagination :isSubList="true" :tableId="tableId" v-cloak :pageObj="endpointPageObj" @pageNo='endpointPageNo' @pageSize='endpointPageSize' ref="endpointPagination2"></Pagination>
+            <span class="nz-table-gear" @click.stop="elementsetShow('shezhi',$event)">
+              <button class="top-tool-setting-btn"><i class="nz-icon nz-icon-gear"></i></button>
+            </span>
           </div>
         </div>
         <el-table
           :data="endpointTableData"
           border
           class="nz-table endpoint-table"
-          :height="$tableHeight.normal"
+          :height="mainTableHeight"
           v-scrollBar:el-table
           v-show="mainResizeShow"
           ref="endpointTable"
@@ -176,7 +190,7 @@
               <template v-else>-</template>
             </template>
           </el-table-column>
-          <el-table-column width="28">
+          <el-table-column width="28" v-if="tableShow == 1">
             <template slot="header" slot-scope="scope">
               <span @click.stop="elementsetShow('shezhi',$event)" class="nz-table-gear">
                 <i class="nz-icon nz-icon-gear"></i>
@@ -184,7 +198,7 @@
             </template>
           </el-table-column>
         </el-table>
-        <Pagination v-show="mainResizeShow" :tableId="tableId" v-cloak :pageObj="endpointPageObj" @pageNo='endpointPageNo' @pageSize='endpointPageSize' ref="endpointPagination"></Pagination>
+        <Pagination v-show="tableShow == 1" :tableId="tableId" v-cloak :pageObj="endpointPageObj" @pageNo='endpointPageNo' @pageSize='endpointPageSize' ref="endpointPagination"></Pagination>
         <button class="to-top" v-show="showTopBtn1" @click="toTop('ps', 0)"><i class="nz-icon nz-icon-top"></i></button>
       </div>
 
@@ -365,6 +379,8 @@
     data() {
       let temp=this;
       return {
+        mainTableHeight: this.$tableHeight.normal, //主列表table高度
+        subTableHeight: this.$tableHeight.normal, //副列表table高度
         isFullScreen: false, //是否是全屏，用来控制拖动条是否展示
         tableId: 'projectTable', //需要分页的table的id，用于记录每页数量
         mainResizeShow: true, //dom高度改变时部分内容是否展示
@@ -1225,6 +1241,7 @@
       },
       showEndpoint:function(endpoint){
         this.tableShow=3;
+        this.mainTableHeight = this.$tableHeight.openSubList.mainList;
         this.queryEdpLoading=true;
         setTimeout(() => {
           if(endpoint){
@@ -1330,6 +1347,7 @@
       },
       backToEdpTab:function(){
         this.tableShow=1;
+        this.mainTableHeight = this.$tableHeight.normal;
         this.isFullScreen = false;
         this.selectedEndpoints=[];
         this.showTableData = [];
