@@ -138,7 +138,7 @@
         </div>-->
         <div class="top-tools" style="position: relative;" :class="{'top-tools-reverse': tableShow == 3}" v-show="mainResizeShow">
           <!--<div class="pagination-top"></div>-->
-          <div style="position: absolute; right: 0; display: flex; align-items: center; transition: .4s right;" :class="{'abc': tableShow == 3}">
+          <div style="position: absolute; right: 0; display: flex; align-items: center; transition: .4s right, .4s transform;" :class="{'abc': tableShow == 3}">
             <div class="top-tool-search"><search-input :searchMsg="endpointSearchMsg" @search="endpointSearch" ref="projectSearch"></search-input></div>
             <export-excel
               export-file-name="endpoint"
