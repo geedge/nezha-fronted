@@ -185,7 +185,7 @@ const en = {
       asset:{
         title:'Asset',
         assetType:'Asset Type',
-        num:'Nun',
+        num:'Num',
         alert:'Alert',
         alertLow:'Low',
         alertMedium:'Medium',
@@ -194,7 +194,24 @@ const en = {
         outStock:'Out Stock',
         pingUp:'Up',
         pingDown:'Down',
-
+        host:'Host'
+      },
+      project:{
+        project:'Project',
+        name:'Name',
+        module:'Module',
+        endpoint:'Endpoint',
+      },
+      dataCenter:{
+        dataCenter:'DataCenter',
+        cabinet:'Cabinet',
+        promServer:'Prom Server',
+      },
+      alert:{
+        level:'Level',
+        alertRule:'Alert Rule',
+        ruleNum:'Rule Num',
+        alertNum:'Alert Num'
       }
     }
   },

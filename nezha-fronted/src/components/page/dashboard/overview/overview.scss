@@ -55,7 +55,6 @@
   height: calc(100% - 45px);
   width: 100%;
 }
-/*100份*/
 .overview-content .content-row-box{
   width: 99%;
   display: flex;
@@ -68,6 +67,12 @@
   margin: 10px;
   display: inline-block;
 }
+
+.flex-container{
+  display: flex;
+  height: 100%;
+}
+
 .box-height-200{
   height: 200px;
 }
@@ -86,4 +91,19 @@
 .box-height-500{
   height: 500px;
 }
-
+.mini-button{
+  display: inline-block;
+  //visibility: hidden;
+}
+.mini-button .mini-button-icon{
+  visibility: hidden;
+}
+.mini-button:hover .mini-button-icon{
+  visibility: visible;
+  cursor: pointer;
+}
+.mini-font{
+  font-size: 12px;
+  -webkit-transform:scale(0.7);
+  display: inline-block;
+}
