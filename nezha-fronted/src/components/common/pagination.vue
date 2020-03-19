@@ -139,11 +139,12 @@ export default {
   }*/
   .pagination .el-pagination {
     max-height: 42px;
+    padding-right: 0;
   }
   .pagination-size-select .el-input--mini .el-input__inner{
     height: 20px;
     line-height: 20px;
-    margin: 5px ;
+    margin: 5px 0 5px 5px;
   }
   .pagination-size-select input{
 

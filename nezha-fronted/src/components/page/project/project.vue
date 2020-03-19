@@ -74,16 +74,14 @@
     right: 100% !important;
     transform: translateX(100%);
   }
-  .pagination-position {
-    position: absolute;
+  .pagination-top {
+    transition: .2s transform;
   }
-  .pagination-position-bottom {
-    width: 100%;
+  .pagination-top-show {
+    transform: translateX(0);
   }
-  .pagination-position-top {
-    top: 0;
-    right: 0;
-    transition: .1s transform;
+  .pagination-top-hide {
+    transform: translateX(150%);
   }
 </style>
 <style scope>
@@ -136,7 +134,7 @@
           </export-excel>
 
         </div>-->
-        <div class="top-tools" style="position: relative;" :class="{'top-tools-reverse': tableShow == 3}" v-show="mainResizeShow">
+        <div class="top-tools" style="position: relative;flex-direction:row-reverse;" :class="{'top-tools-reverse': tableShow == 3}" v-show="mainResizeShow">
           <!--<div class="pagination-top"></div>-->
           <div style="position: absolute; right: 0; display: flex; align-items: center; transition: .4s right, .4s transform;" :class="{'abc': tableShow == 3}">
             <div class="top-tool-search"><search-input :searchMsg="endpointSearchMsg" @search="endpointSearch" ref="projectSearch"></search-input></div>
@@ -152,6 +150,9 @@
                 <i class="nz-icon nz-icon-create-square" @click.stop="toCreateEndpoint" :title="$t('overall.createProject')" ></i>
               </template>
             </export-excel>
+          </div>
+          <div class="pagination-top pagination-top-hide">
+            <Pagination :tableId="tableId" v-cloak :pageObj="endpointPageObj" @pageNo='endpointPageNo' @pageSize='endpointPageSize' ref="endpointPagination"></Pagination>
           </div>
         </div>
         <el-table
@@ -207,10 +208,8 @@
             </template>
           </el-table-column>
         </el-table>
-        <div class="pagination-position pagination-position-bottom" v-show="mainResizeShow">
-          <Pagination :tableId="tableId" v-cloak :pageObj="endpointPageObj" @pageNo='endpointPageNo' @pageSize='endpointPageSize' ref="endpointPagination"></Pagination>
-        </div>
-        <button class="to-top" v-show="showTopBtn1" @click="toTop('ps', 0)"><i class="nz-icon nz-icon-top"></i></button>
+        <Pagination v-show="tableShow == 1" :tableId="tableId" v-cloak :pageObj="endpointPageObj" @pageNo='endpointPageNo' @pageSize='endpointPageSize' ref="endpointPagination"></Pagination>
+        <button class="to-top" v-show="showTopBtn1 && mainResizeShow" @click="toTop('ps', 0)"><i class="nz-icon nz-icon-top"></i></button>
       </div>
 
       <!-- 副列表 endpoint query-->
@@ -277,6 +276,7 @@
           :height="$tableHeight.endpointQuery"
           @selection-change="selectChange"
           ref="metricInfoTab"
+          v-show="subResizeShow"
           style="width: 100%; margin-top: 5px;">
           <el-table-column
             type="selection"
@@ -314,7 +314,7 @@
             width="180">
           </el-table-column>
         </el-table>
-        <button class="to-top" v-show="showTopBtn2" @click="toTop('ps', 1)"><i class="nz-icon nz-icon-top"></i></button>
+        <button class="to-top" v-show="showTopBtn2 && subResizeShow" @click="toTop('ps', 1)"><i class="nz-icon nz-icon-top"></i></button>
       </div>
     </div>
 
@@ -843,7 +843,7 @@
               _this.mainResizeShow = true;
             }
           }
-          if(parseInt(subListDom.style.height) <= 150){
+          if(parseInt(subListDom.offsetHeight) <= 100){
             if (_this.subResizeShow) {
               _this.subResizeShow = false;
             }
@@ -1131,13 +1131,17 @@
         this.tableShow=1;
         this.selectedEndpoints=[];
         //若原页面处于打开二级列表状态，调整分页组件的位置
-        let pagination = document.querySelector(".pagination-position");
-        if (pagination.classList.contains("pagination-position-top")) {
-          pagination.classList.remove("pagination-position-top");
-          pagination.classList.add("pagination-position-bottom");
-          pagination.style.transform = '';
-          this.mainTableHeight = this.$tableHeight.normal;
+        let pagination = document.querySelector(".pagination-top");
+        if (pagination.classList.contains("pagination-top-show")) {
+          pagination.classList.remove("pagination-top-show");
         }
+        if (!pagination.classList.contains("pagination-top-hide")) {
+          pagination.classList.add("pagination-top-hide");
+        }
+        // 主列表恢复全屏
+        this.mainResizeShow = this.subResizeShow = true;
+        document.querySelector('.main-list').style.height = "";
+        this.mainTableHeight = this.$tableHeight.normal; //重置table高度
       },
 
       //弹出endpoint编辑页
@@ -1266,13 +1270,13 @@
         this.tableShow=3;
         this.mainTableHeight = this.$tableHeight.openSubList.mainList; //重置table高度
         //移动分页组件的位置
-        let pagination = document.querySelector(".pagination-position");
-        pagination.classList.remove("pagination-position-bottom");
-        pagination.style.transform = 'translateX(200%)';
-        setTimeout(() => {
-          pagination.style.transform = 'translateX(0)';
-          pagination.classList.add("pagination-position-top");
-        }, 200);
+        let pagination = document.querySelector(".pagination-top");
+        if (pagination.classList.contains("pagination-top-hide")) {
+          pagination.classList.remove("pagination-top-hide");
+        }
+        if (!pagination.classList.contains("pagination-top-show")) {
+          pagination.classList.add("pagination-top-show");
+        }
 
 
         this.queryEdpLoading=true;
@@ -1386,10 +1390,13 @@
         this.selectedEndpoints=[];
         this.showTableData = [];
         //移动分页组件的位置
-        let pagination = document.querySelector(".pagination-position");
-        pagination.classList.remove("pagination-position-top");
-        pagination.style.transform = '';
-        pagination.classList.add("pagination-position-bottom");
+        let pagination = document.querySelector(".pagination-top");
+        if (pagination.classList.contains("pagination-top-show")) {
+          pagination.classList.remove("pagination-top-show");
+        }
+        if (!pagination.classList.contains("pagination-top-hide")) {
+          pagination.classList.add("pagination-top-hide");
+        }
 
         this.showTopBtn1 = false;
         // 主列表恢复全屏
@@ -2138,5 +2145,12 @@
     position: relative;
     top: 50%;
     left: 48.5%;
+  }
+
+  .dropdownBtn>.el-button-group>.el-button:first-of-type {
+    padding: 0 7px;
+  }
+  .dropdownBtn>.el-button-group>.el-button:last-of-type {
+    padding: 0 5px;
   }
 </style>
