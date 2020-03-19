@@ -10,7 +10,7 @@
     </div>
     <div class="content-right">
       <div class="top-tools">
-        <div>
+        <div class="top-tool-main-left">
           <el-dropdown @command="panelChange" class="panel-dropdown-title" trigger="click" v-scrollBar:el-dropdown>
             <el-row  :gutter="10" class="el-dropdown-link" style="">
               <el-col :span="21" class="panel-list-title" :title="showPanel.name">{{showPanel.name}}</el-col>
@@ -31,7 +31,7 @@
             </el-dropdown-menu>
           </el-dropdown>
         </div>
-        <div class="top-tool-right">
+        <div class="top-tool-main-right">
           <div class="top-tool-search relative-position margin-r-20">
             <el-input ref="queryPanel" @clear="clearInput" id="queryPanel" @focus="focusInput"  @blur="blurInput" v-model="filter.searchName" class="query-input-inactive" size="mini" clearable   >
               <i slot="suffix" class="el-input__icon el-icon-search" @click="focusInput" style="float: right"></i>

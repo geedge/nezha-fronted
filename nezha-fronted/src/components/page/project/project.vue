@@ -70,10 +70,6 @@
   .window-control-btn>i:hover {
     color: $global-text-color-active;
   }
-  .abc {
-    right: 100% !important;
-    transform: translateX(100%);
-  }
   .pagination-top {
     transition: .2s transform;
   }
@@ -134,9 +130,9 @@
           </export-excel>
 
         </div>-->
-        <div class="top-tools" style="position: relative;flex-direction:row-reverse;" :class="{'top-tools-reverse': tableShow == 3}" v-show="mainResizeShow">
+        <div class="top-tools" v-show="mainResizeShow">
           <!--<div class="pagination-top"></div>-->
-          <div style="position: absolute; right: 0; display: flex; align-items: center; transition: .4s right, .4s transform;" :class="{'abc': tableShow == 3}">
+          <div class="top-tool-main-right" :class="{'top-tool-main-right-to-left': tableShow == 3}">
             <div class="top-tool-search"><search-input :searchMsg="endpointSearchMsg" @search="endpointSearch" ref="projectSearch"></search-input></div>
             <export-excel
               export-file-name="endpoint"
@@ -144,7 +140,7 @@
               :params="endpointSearchLabel"
               @afterImport="getEndpointTableData"
               class="margin-l-20"
-              style="width: 59px;"
+              style="width: 57px;"
             >
               <template slot="optionZone">
                 <i class="nz-icon nz-icon-create-square" @click.stop="toCreateEndpoint" :title="$t('overall.createProject')" ></i>
@@ -218,6 +214,7 @@
         <div class="sub-top-tools" v-show="subResizeShow">
           <div class="sub-list-tabs margin-l-20" style="width: calc(100% - 780px);">
             <div class="sub-list-tab">{{$t("overall.query")}}</div>
+            <span class="sub-list-tab-txt">Endpoint ID: {{curEndpoint ? curEndpoint.id : ''}}</span>
           </div>
           <!--时间选择器-->
           <div class="top-tool-right">
@@ -251,7 +248,6 @@
                     </el-dropdown-item>
                   </el-col>
                 </el-row>
-
               </el-dropdown-menu>
             </el-dropdown>
             <div class="sub-list-window-control">
@@ -284,9 +280,6 @@
             align="center"
             :selectable="selectable"
           >
-            <template slot="header" slot-scope="slot">
-
-            </template>
           </el-table-column>
 
           <el-table-column
@@ -351,7 +344,7 @@
         </div>
       </div>
       <div class="line-area" ref="viewGraphChart" id="viewGraphChart"></div>
-      <div class="legend-container"   id="legendArea" ref="legendArea">
+      <div class="legend-container" id="legendArea" ref="legendArea">
         <el-scrollbar style="height: 100%" ref="chartScrollbar">
           <div v-for="(item, index) in legend" :title="hideSameLabels&&item.alias?item.alias:item.name"  @click="clickLegend(item.name,index)" class="legend-item" :class="{'ft-gr':isGrey[index]}" :key="'legend_' + item.name+'_'+index">
             <span class="legend-shape" :style="{background:(isGrey[index]?'#D3D3D3':bgColorList[index])}"></span>{{hideSameLabels&&item.alias?item.alias:item.name}}
@@ -1066,9 +1059,6 @@
         this.endpointPageObj.pageSize = val;
         localStorage.setItem('nz-pageSize-' + localStorage.getItem('nz-username') + '-' + this.tableId, val);
         this.getEndpointTableData();
-        this.$nextTick(() => {
-          this.gutterHandler(".endpoint-table");
-        });
       },
       metricsPageNo(val) {
         this.metricPageObj.pageNo = val;
@@ -1360,7 +1350,6 @@
                 }
                 this.showTableDataCopy=JSON.stringify(this.showTableData);
                 this.queryEdpLoading=false;
-                this.gutterHandler(".endpoint-query-table"); //控制table右边距
                 this.showTopBtn2 = false;
                 this.$nextTick(() => {
                   //绑定滚动条事件，控制top按钮
@@ -1376,9 +1365,6 @@
                   }
                 });
               }
-          });
-          this.$nextTick(() => {
-            this.gutterHandler(".endpoint-table");
           });
         }, 400);
       },
@@ -1402,10 +1388,6 @@
         // 主列表恢复全屏
         this.mainResizeShow = this.subResizeShow = true;
         document.querySelector('.main-list').style.height = "";
-
-        this.$nextTick(() => {
-          this.gutterHandler(".endpoint-table");
-        });
       },
       changeTime:function(size,unit){
         let time=this.getTime(size,unit);
@@ -1774,7 +1756,6 @@
         this.getEndpointTableData();
       }, 200);
       this.$nextTick(() => {
-        this.gutterHandler(".endpoint-table");
         //绑定滚动条事件，控制top按钮
         let el = this.$refs.endpointTable.$el.querySelector(".el-table__body-wrapper");
         if (el._ps_) {

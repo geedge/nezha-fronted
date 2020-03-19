@@ -16,9 +16,10 @@
     </div>
     <div class="content-right">
       <div class="top-tools">
-        <div></div>
-        <div class="top-tool-search float-right">
-          <search-input :searchMsg="searchMsg" @search="search"></search-input>
+        <div class="top-tool-main-right">
+          <div class="top-tool-search">
+            <search-input :searchMsg="searchMsg" @search="search"></search-input>
+          </div>
         </div>
       </div>
       <el-table
@@ -298,9 +299,6 @@
         this.pageObj.pageSize = val;
         localStorage.setItem('nz-pageSize-' + localStorage.getItem('nz-username') + '-' + this.tableId, val);
         this.getAlertList();
-        this.$nextTick(() => {
-          this.gutterHandler(".nz-table");
-        });
       },
       search: function (searchObj) {
         this.searchLabel = {};
@@ -380,9 +378,6 @@
             }
           });
         }
-        this.$nextTick(() => {
-          this.gutterHandler(".nz-table");
-        });
       });
       this.tablelable = localStorage.getItem("nz-tableTitle-" + localStorage.getItem("nz-username") + "-" + this.$route.path)
         ? JSON.parse(localStorage.getItem("nz-tableTitle-" + localStorage.getItem("nz-username") + "-" + this.$route.path))

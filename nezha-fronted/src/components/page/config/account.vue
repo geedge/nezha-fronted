@@ -22,15 +22,14 @@
     </div>
     <div class="content-right">
       <div class="top-tools">
-        <div></div>
-        <div>
-          <button type="button" @click="toAdd"  :title="$t('overall.createAccount')"
-                  class="nz-btn nz-btn-size-normal nz-btn-style-light float-right margin-l-20" id="account-add">
-                  <i class="nz-icon-create-square nz-icon"></i>
-          </button>
-          <div class="top-tool-search float-right">
+        <div class="top-tool-main-right">
+          <div class="top-tool-search margin-r-20">
             <search-input :searchMsg="searchMsg" @search="search"></search-input>
           </div>
+          <button type="button" @click="toAdd"  :title="$t('overall.createAccount')"
+                  class="nz-btn nz-btn-size-normal nz-btn-style-light" id="account-add">
+                  <i class="nz-icon-create-square nz-icon"></i>
+          </button>
         </div>
       </div>
       <el-table
@@ -495,9 +494,6 @@
         this.pageObj.pageSize = val;
         localStorage.setItem('nz-pageSize-' + localStorage.getItem('nz-username') + '-' + this.tableId, val);
         this.getTableData();
-        this.$nextTick(() => {
-          this.gutterHandler(".nz-table");
-        });
       },
       search: function (searchObj) {
         this.searchLabel = {};
@@ -527,7 +523,6 @@
       this.getTableData();
       this.initReceiverData();
       this.$nextTick(() => {
-        this.gutterHandler(".nz-table");
         //绑定滚动条事件，控制top按钮
         let el = this.$refs.accountTable.$el.querySelector(".el-table__body-wrapper");
         if (el._ps_) {

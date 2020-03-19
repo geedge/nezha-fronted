@@ -113,17 +113,6 @@ Vue.prototype.toTop = (type, wrap) => { //top按钮公共方法
     }
   }
 };
-Vue.prototype.gutterHandler = (tableClass) => {
-  setTimeout(() => {
-    let gutterCol = document.querySelector(tableClass + " col[name='gutter']");
-    //console.info(gutterCol.attributes['width'].value)
-    if (gutterCol.attributes['width'].value != '0') {
-      //console.info(gutterCol)
-      gutterCol.attributes['width'].value = '1';
-      document.querySelector(tableClass + ' .el-table__body').attributes['style'].value = "width: calc(100% - 10px)";
-    }
-  }, 1000)
-}
 
 Vue.config.productionTip = false;
 Vue.use(ElementUI);
@@ -136,7 +125,7 @@ const el_scrollBar = el => {
     el._ps_.update();
   } else {
     //el上挂一份属性
-    el._ps_ = new PerfectScrollbar(el, {minScrollbarLength: 20});
+    el._ps_ = new PerfectScrollbar(el, {minScrollbarLength: 25});
   }
 };
 Vue.directive("scrollBar", {
@@ -148,6 +137,9 @@ Vue.directive("scrollBar", {
     } else if (arg === "el-dropdown") {
       el = el.querySelector(".el-dropdown-menu");
       !el && console.warn("未发现className为el-dropdown-menu的dom");
+    } else if (arg == "legend") {
+      el = el.querySelector(".legend-container");
+      !el && console.warn("未发现className为legend-container的dom");
     }
 
     // 启用x轴后不让原生滚动条出来作乱
@@ -277,3 +269,8 @@ export default vm;
     }
   }
 })*/
+
+/* 重写组件内容 */
+const elUi = require("element-ui");
+//去掉el-table右侧的滚动条预留空间
+elUi.Table.components.TableHeader.computed.hasGutter = () => {return false;};

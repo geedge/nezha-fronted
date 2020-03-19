@@ -64,13 +64,11 @@
 
     <div class="line-area"  ref="lineChartArea"  id="lineChartArea" v-show="firstShow"></div>
 
-    <div class="legend-container"   id="legendArea" ref="legendArea" v-show="firstShow">
-      <el-scrollbar style="height: 100%;">
-        <div v-for="(item, index) in legendList" :title="item.alias?item.alias:item.name"  @click="clickLegend(item.name,index)" class="legend-item" :class="{'ft-gr':isGrey[index]}" :key="'legend_' + item.name+'_'+index">
-          <span class="legend-shape" :style="{background:(isGrey[index]?'#D3D3D3':bgColorList[index])}"></span>{{item.alias?item.alias:item.name}}
-          <br/><!--bgColorList[index]-->
-        </div>
-      </el-scrollbar>
+    <div class="legend-container" id="legendArea" ref="legendArea" v-show="firstShow" v-scrollBar:legend>
+      <div v-for="(item, index) in legendList" :title="item.alias?item.alias:item.name"  @click="clickLegend(item.name,index)" class="legend-item" :class="{'ft-gr':isGrey[index]}" :key="'legend_' + item.name+'_'+index">
+        <span class="legend-shape" :style="{background:(isGrey[index]?'#D3D3D3':bgColorList[index])}"></span>{{item.alias?item.alias:item.name}}
+        <br/><!--bgColorList[index]-->
+      </div>
     </div>
     <!--
     <Modal title="查看" v-model="screenModal" width="96%" class="line-chart-block-modal">-->
@@ -99,13 +97,11 @@
       </div>
       <div class="line-area" ref="screenShowArea"  id="screenShowArea"  style="margin-top:10px;"></div>
 
-      <div class="legend-container legend-container-screen"  id="screenLegendArea" ref="screenLegendArea"  v-show="showLegend">
-        <el-scrollbar style="height: 100%;" ref="screenLegendScrollbar">
-          <div v-for="(item, index) in screenLegendList" :title="item.alias?item.alias:item.name"  @click="clickScreenLegend(item.name,index)" class="legend-item" :class="{'ft-gr':isGreyScreen[index]}"  :key="'legend_' + item.name+'_'+index">
-            <span class="legend-shape" :style="{background:(isGreyScreen[index]?'#D3D3D3':bgColorList[index])}"></span>{{item.alias?item.alias:item.name}}
-            <br/><!--bgColorList[index]-->
-          </div>
-        </el-scrollbar>
+      <div class="legend-container legend-container-screen" id="screenLegendArea" ref="screenLegendArea" v-show="showLegend" v-scrollBar:legend>
+        <div v-for="(item, index) in screenLegendList" :title="item.alias?item.alias:item.name"  @click="clickScreenLegend(item.name,index)" class="legend-item" :class="{'ft-gr':isGreyScreen[index]}"  :key="'legend_' + item.name+'_'+index">
+          <span class="legend-shape" :style="{background:(isGreyScreen[index]?'#D3D3D3':bgColorList[index])}"></span>{{item.alias?item.alias:item.name}}
+          <br/><!--bgColorList[index]-->
+        </div>
       </div>
 
       <loading  :ref="'localLoadingScreen'+chartIndex"></loading>
@@ -844,11 +840,11 @@
               this.isGreyScreen.push(false);
             });
           }
-          this.$nextTick(() => {
+          /*this.$nextTick(() => {
             this.$refs.screenLegendScrollbar.update();
-            /*let divHeight = this.$refs.screenLegendArea.offsetHeight;
-            this.echartModalStore.resize({height: '100%'});*/
-          });
+            let divHeight = this.$refs.screenLegendArea.offsetHeight;
+            this.echartModalStore.resize({height: '100%'});
+          });*/
         }
       },
       handleLineFeed(str,chartWidth){

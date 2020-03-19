@@ -389,6 +389,12 @@ li{
   height: calc(100% - 2px);
   padding-left: 20px;
   line-height: 27px;
+  display: inline-block;
+}
+.sub-list-tab-txt {
+  font-size: 14px;
+  color: #666666;
+  padding-left: 8px;
 }
 /* end--二级页面tab*/
 
@@ -487,10 +493,8 @@ li{
   display: flex;
   height: 50px;
   align-items : center;
-  /*justify-content: space-between;*/
-}
-.top-tools-reverse {
-  /*flex-direction: row-reverse;*/
+  position: relative;
+  flex-direction: row-reverse;
 }
 .top-tools>div {
   margin-top: 2px;
@@ -507,6 +511,30 @@ li{
 .top-tool-right {
   display: flex;
   align-content: center;
+}
+.top-tool-main-right {
+  position: absolute;
+  right: 0;
+  display: flex;
+  align-items: center;
+  transition: .4s right, .4s transform;
+}
+.top-tool-main-left {
+  position: absolute;
+  left: 0;
+  display: flex;
+  align-items: center;
+  transition: .4s right, .4s transform;
+}
+.top-tool-main-left>.panel-dropdown-title {
+  margin-top: -2px;
+}
+.top-tool-main-right>.nz-btn, .top-tool-main-right-to-left>.nz-btn, .top-tool-main-right>.nz-btn-group, .top-tool-main-right>.panel-calendar {
+  margin-top: -2px;
+}
+.top-tool-main-right-to-left {
+  right: 100% !important;
+  transform: translateX(100%);
 }
 /* end--顶部工具栏*/
 
@@ -574,6 +602,9 @@ li{
 }
 .nz-table.el-table--border td, .el-table--border th, .nz-table .el-table__body-wrapper .el-table--border.is-scrolling-left~.el-table__fixed {
   border-right: none;
+}
+.nz-table .el-table__body {
+  width: 100% !important;
 }
 .chart-table .nz-table.el-table td {
   background-color: white;
@@ -881,12 +912,22 @@ li{
   height: calc(100% - 132px);
   width: 100%;
 }
+
 .el-scrollbar__wrap {
   overflow-x: hidden !important;
 }
 .el-scrollbar__thumb {
   background-color: #aaa;
   cursor: default;
+}
+.el-scrollbar__bar.is-vertical {
+  width: 11px;
+}
+.app>.el-scrollbar__bar.is-vertical {
+  width: 5px;
+}
+.el-scrollbar__bar {
+  border-radius: 6px;
 }
 .el-autocomplete-suggestion__wrap.el-scrollbar__wrap, .el-cascader-menu__wrap.el-scrollbar__wrap {
   margin-bottom: 0 !important;
@@ -1274,9 +1315,12 @@ li{
   background-color: rgba(255, 99, 71, .85);
 }
 
-/*滚动条相关，减小table内滚动条的空间*/
+/*滚动条相关*/
+.ps__thumb-y {
+  width: 11px;
+}
 .ps__rail-y:hover > .ps__thumb-y, .ps__rail-y:focus > .ps__thumb-y, .ps__rail-y.ps--clicking .ps__thumb-y {
-  width: 6px;
+  width: 11px;
 }
 .ps__thumb-y {
   right: 0px;

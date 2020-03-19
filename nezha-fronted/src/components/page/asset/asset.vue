@@ -33,8 +33,8 @@
 
     <div class="content-right">
       <div class="top-tools">
-        <div></div>
-        <div>
+        <div class="top-tool-main-right">
+          <div class="top-tool-search margin-r-20"><search-input :searchMsg="searchMsg" @search="search"></search-input></div>
           <export-excel
             export-file-name="asset"
             export-url="/asset/export"
@@ -45,8 +45,6 @@
                 <i class="nz-icon nz-icon-create-square" @click.stop="tagShow('showAdd')" :title="$t('overall.createAsset')" ></i>
             </template>
           </export-excel>
-
-          <div class="top-tool-search float-left margin-r-20"><search-input :searchMsg="searchMsg" @search="search"></search-input></div>
         </div>
       </div>
 
@@ -711,9 +709,6 @@
         this.pageObj.pageSize = val;
         localStorage.setItem('nz-pageSize-' + localStorage.getItem('nz-username') + '-' + this.tableId, val);
         this.getAssetData();
-        this.$nextTick(() => {
-          this.gutterHandler(".nz-table");
-        });
       },
       getPrincipalName(data) {
         for (let item in this.idcUserData) {
@@ -784,7 +779,6 @@
       }
 
       this.$nextTick(() => {
-        this.gutterHandler(".nz-table");
         //左侧dc列表初始选中状态
         if (this.$store.state.assetData.selectedData.length > 0) {
           this.checkList = [];

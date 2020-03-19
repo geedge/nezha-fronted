@@ -291,9 +291,6 @@ export default {
         pageSize(val) {
           this.pageObj.pageSize = val;
           this.seriesItem=this.filterShowData(this.storedTableData,this.pageObj)
-          this.$nextTick(() => {
-            this.gutterHandler(".nz-table");
-          });
         },
         filterShowData(source,pageObj){
           return source.slice((pageObj.pageNo-1)*pageObj.pageSize,pageObj.pageNo*pageObj.pageSize)
@@ -305,9 +302,6 @@ export default {
         screenPageSize(val) {
           this.screenPageObj.pageSize = val;
           this.seriesItemScreen=this.filterShowData(this.storedScreanTableData,this.screenPageObj)
-          this.$nextTick(() => {
-            this.gutterHandler(".nz-table");
-          });
         },
         startLoading(area){
           if(area==='screen'){

@@ -22,15 +22,14 @@
     </div>
     <div class="content-right">
       <div class="top-tools">
-        <div></div>
-        <div>
-          <button @click="toAdd" class="nz-btn nz-btn-size-normal nz-btn-style-light float-right margin-l-20"  :title="$t('overall.createModel')"
+        <div class="top-tool-main-right">
+          <div class="top-tool-search">
+            <search-input :searchMsg="searchMsg" @search="search"></search-input>
+          </div>
+          <button @click="toAdd" class="nz-btn nz-btn-size-normal nz-btn-style-light  margin-l-20"  :title="$t('overall.createModel')"
                   id="model-add">
                     <i class="nz-icon-create-square nz-icon"></i>
           </button>
-          <div class="top-tool-search float-right">
-            <search-input :searchMsg="searchMsg" @search="search"></search-input>
-          </div>
         </div>
       </div>
       <el-table :data="tableData" border :height="$tableHeight.normal" style="width: 100%;" ref="modelTable" class="nz-table" v-scrollBar:el-table>
@@ -251,9 +250,6 @@
         this.pageObj.pageSize = val;
         localStorage.setItem('nz-pageSize-' + localStorage.getItem('nz-username') + '-' + this.tableId, val);
         this.getTableData();
-        this.$nextTick(() => {
-          this.gutterHandler(".nz-table");
-        });
       },
       search: function (searchObj) {
         this.pageObj.pageNo = 1;
@@ -287,7 +283,6 @@
 
       this.getTableData();
       this.$nextTick(() => {
-        this.gutterHandler(".nz-table");
         //绑定滚动条事件，控制top按钮
         let el = this.$refs.modelTable.$el.querySelector(".el-table__body-wrapper");
         if (el._ps_) {
