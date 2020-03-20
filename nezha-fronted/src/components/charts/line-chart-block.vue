@@ -107,6 +107,8 @@
       <loading  :ref="'localLoadingScreen'+chartIndex"></loading>
     </el-dialog>
     <!--</Modal>-->
+    <!--style="touch-action: none;" -->
+    <span class="vue-resizable-handle" @mousedown="dragResize"></span>
   </div>
 </template>
 <script>
@@ -187,6 +189,9 @@
         showLegend:true,
         searchTime:[new Date().setHours(new Date().getHours()-1),new Date()],
         oldSearchTime:[],
+        minHeight:200,
+        dataZoomHeight:25,
+        gridBottom:35,
         pickerOptions: {
           shortcuts: [
             {
@@ -284,6 +289,144 @@
     methods: {
       setDivFirstShow(showDiv){
         this.divFirstShow = showDiv;
+      },
+      dragResize:function(e){
+        var diffWidth = 38;
+        var targetDiv= document.getElementById('lineChartDiv'+this.chartIndex); //e.target.parentNode.parentNode;.children[0]
+        var targetDivContainer= document.getElementById('listContainer'); //e.target.parentNode.parentNode;.children[0]
+        var maxWidth = targetDivContainer.offsetWidth-diffWidth;
+        var minWidth = maxWidth/12;
+        var stepWidth = maxWidth/12;
+        var stepHeight = 10;
+
+        //得到点击时该容器的宽高：
+        var targetDivHeight=targetDiv.offsetHeight;
+        var targetDivWidth=targetDiv.offsetWidth;
+        var startY=e.clientY;
+        var startX=e.clientX;
+        var _this=this;
+
+        //var heightTmp = targetDivHeight;
+        //var widthTmp = targetDivWidth;
+        document.onmousemove=function(e){
+          e.preventDefault();
+          //得到鼠标拖动的宽高距离：取绝对值
+          var distY=Math.abs(e.clientY-startY);
+          var distX=Math.abs(e.clientX-startX);
+
+          //往上方拖动：
+          if( e.clientY < startY){
+            targetDiv.style.height=targetDivHeight-distY+'px';
+            //heightTmp = targetDivHeight-distY;
+          }
+          if( e.clientX < startX){
+            targetDiv.style.width=targetDivWidth-distX+'px';
+            //widthTmp = targetDivWidth-distX;
+          }
+          //往下方拖动：
+          if (e.clientY > startY) {
+            targetDiv.style.height=(targetDivHeight+distY)+'px';
+            //heightTmp = targetDivHeight+distY;
+          }
+          if (e.clientX > startX) {
+            targetDiv.style.width=(targetDivWidth+distX)+'px';
+            //widthTmp = targetDivWidth+distX;
+          }
+
+          if(parseInt(targetDiv.style.height)<=_this.minHeight){
+            targetDiv.style.height=_this.minHeight+'px';
+            //heightTmp = _this.minHeight;
+          }
+
+          if(parseInt(targetDiv.style.width)>=maxWidth){
+            targetDiv.style.width=maxWidth+'px';
+            //widthTmp = maxWidth;
+          }
+          if(parseInt(targetDiv.style.width)<=minWidth){
+            targetDiv.style.width=minWidth+'px';
+            //widthTmp = minWidth;
+          }
+          //调整图表大小
+          if(_this.echartStore){
+            let divHeight = _this.$refs.legendArea.offsetHeight;
+            let containerHeight = parseInt(targetDiv.style.height);
+            let containerWidth = parseInt(targetDiv.style.width);
+            const chartBox = document.getElementsByClassName('chartBox');
+            chartBox[_this.chartIndex].style.width = (containerWidth+diffWidth)+'px';
+            _this.echartStore.resize({height:(containerHeight-divHeight-_this.gridBottom)});//-_this.dataZoomHeight
+          }
+        }
+
+        document.onmouseup=function(){
+          let targetDivHeightNew = parseInt(targetDiv.style.height);
+          //let targetDivHeightNew = heightTmp
+          let targetDivWidthNew = parseInt(targetDiv.style.width);
+          //let targetDivWidthNew = widthTmp;
+
+          let diffHeight =  Math.abs(targetDivHeight-targetDivHeightNew);
+          if(targetDivHeight>targetDivHeightNew){
+            let finalDiffHeight = Math.floor(diffHeight/stepHeight)*stepHeight;
+            targetDiv.style.height = (targetDivHeight-finalDiffHeight)+'px';
+          }
+          if(targetDivHeight<targetDivHeightNew){
+            let finalDiffHeight = Math.ceil(diffHeight/stepHeight)*stepHeight;
+            targetDiv.style.height = (targetDivHeight+finalDiffHeight)+'px';
+          }
+          var span = _this.data.span;
+          if(targetDivWidth>targetDivWidthNew){
+            span =  Math.floor((targetDivWidthNew*12)/maxWidth);
+            let finalWidth = Math.floor((targetDivWidthNew*12)/maxWidth)*stepWidth;
+            if((finalWidth)<minWidth){
+              targetDiv.style.width=minWidth+'px';
+              span = 1;
+            }else {
+              targetDiv.style.width = finalWidth+'px';
+            }
+          }
+          if(targetDivWidth<targetDivWidthNew){
+            span =  Math.ceil((targetDivWidthNew*12)/maxWidth);
+            let spanUnit = Math.ceil((targetDivWidthNew*12)/maxWidth);
+            let finalWidth = spanUnit*stepWidth;
+            if(finalWidth>maxWidth || spanUnit===12){
+              targetDiv.style.width=maxWidth+'px';
+              span = 12;
+            }else {
+              targetDiv.style.width = finalWidth+'px';
+            }
+          }
+          //调整图表大小
+          let containerHeight = parseInt(targetDiv.style.height);
+          let containerWidth = parseInt(targetDiv.style.width);
+          if(_this.echartStore){
+            let divHeight = _this.$refs.legendArea.offsetHeight;
+            const chartBox = document.getElementsByClassName('chartBox');
+            chartBox[_this.chartIndex].style.width = (containerWidth+diffWidth)+'px';
+            _this.echartStore.resize({height:(containerHeight-divHeight-_this.gridBottom)});//-_this.dataZoomHeight
+          }
+
+          const modifyParams = {
+            id:_this.data.id,
+            span:span,
+            height:containerHeight,
+            prev:parseInt(_this.data.prev),
+            next:parseInt(_this.data.next),
+          }
+          //alert('=55='+JSON.stringify(modifyParams));
+          _this.$put('panel/'+  _this.panelIdInner+'/charts/modify',modifyParams).then(response => {
+            if (response.code === 200) {
+            }else {
+              if(response.msg){
+                _this.$message.error(response.msg);
+              }else if(response.error){
+                _this.$message.error(response.error);
+              }else {
+                _this.$message.error(response);
+              }
+            }
+          });
+          document.onmousemove=null;
+          document.onmouseup = null;
+        }
       },
       clickLegend(legendName,index){
         // if (this.echartStore) {
@@ -762,9 +905,9 @@
           this.$nextTick(() => {
             let divHeight = this.$refs.legendArea.offsetHeight;
             if(!chartInfo.height){
-              this.echartStore.resize({height:(400-divHeight-35)});
+              this.echartStore.resize({height:(400-divHeight-this.gridBottom)});
             }else {
-              this.echartStore.resize({height:(chartInfo.height-divHeight-25-35)});
+              this.echartStore.resize({height:(chartInfo.height-divHeight-this.dataZoomHeight-this.gridBottom)});
             }
 
             this.echartStore.clear();
@@ -913,10 +1056,10 @@
           this.$nextTick(() => {
             const chartBox = document.getElementById('lineChartDiv'+this.chartIndex);
             let height = chartItem.height;
-            if(height<200){
-              height = 200;
+            if(height<this.minHeight){
+              height = this.minHeight;
             }
-            chartBox.style.height = `${height-25}px`;
+            chartBox.style.height = `${height-this.dataZoomHeight}px`;
           });
           this.$refs['localLoading'+this.chartIndex].startLoading();
           this.divFirstShow = true;
@@ -1157,10 +1300,10 @@
         this.$nextTick(() => {
           const chartBox = document.getElementById('lineChartDiv'+this.chartIndex);
           let height = chartItem.height;
-          if(height<200){
-            height = 200;
+          if(height<this.minHeight){
+            height = this.minHeight;
           }
-          chartBox.style.height = `${height-25}px`;
+          chartBox.style.height = `${height-this.dataZoomHeight}px`;
           //const tableBox = document.getElementById('tableContainer');
          // const chartBox = document.getElementById('lineChartDiv'+this.chartIndex);
           //tableBox.style.height = `${height-75}px`;

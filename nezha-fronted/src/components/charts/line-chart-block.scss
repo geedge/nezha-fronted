@@ -70,6 +70,28 @@
   padding: 20px 8px;
   margin-bottom: 10px;
   padding-bottom: 3px;
+  .vue-resizable-handle {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    bottom: 0;
+    right: 0;
+    cursor: se-resize;
+    box-sizing: border-box;
+  }
+  .vue-resizable-handle:after {
+    border-right: 2px solid #555;
+    border-bottom: 2px solid #555;
+    content: "";
+    position: absolute;
+    right: 3px;
+    bottom: 3px;
+    width: 5px;
+    height: 5px;
+    /*border-right: 2px solid rgba(0,0,0,.4);
+    border-bottom: 2px solid rgba(0,0,0,.4);*/
+    box-sizing: inherit;
+  }
   .chartTitle {
      text-align: center;
      width: 100%;
