@@ -15,79 +15,90 @@
       </div>
     </div>
     <div class="content-right">
-      <div class="top-tools">
-        <div class="top-tool-main-right">
-          <div class="top-tool-search float-right">
-            <search-input :searchMsg="searchMsg" @search="search"></search-input>
-          </div>
-          <button id="alert-add" @click="toAdd"  :title="$t('overall.createAlertRule')"
-                  class="nz-btn nz-btn-size-normal nz-btn-style-light margin-l-20">
-                      <i class="nz-icon-create-square nz-icon"></i>
-          </button>
-        </div>
-      </div>
-      <el-table
-        class="nz-table"
-        :data="tableData"
-        border
-        ref="alertRuleTable"
-        tooltip-effect="light"
-        :height="$tableHeight.normal"
-        v-scrollBar:el-table
-        style="width: 100%;">
-        <el-table-column
-          :resizable="false"
-          v-for="(item, index) in tablelable"
-          v-if="item.show"
-          :width="item.width"
-          :key="`col-${index}`"
-          :label="item.label"
-          show-overflow-tooltip
-          min-width="110px"
-        >
-          <template slot-scope="scope" :column="item">
-            <div v-if="item.prop == 'option'" class="content-right-options">
-              <span :title="$t('overall.view')" @click="detail(scope.row)" class="content-right-option" :id="'alert-detail-'+scope.row.id"><i class="nz-icon nz-icon-view"></i></span>
-              <span v-if="scope.row.buildIn != 1" :title="$t('overall.edit')" @click="toEdit(scope.row)" class="content-right-option" :id="'alert-edit-'+scope.row.id"><i class="nz-icon nz-icon-edit"></i></span>
-              <span :title="$t('overall.delete')" @click="del(scope.row)" class="content-right-option" :id="'alert-del-'+scope.row.id"><i  class="el-icon-delete"></i></span>
+      <div class="main-list" :class="{'main-list-with-sub': showSubList}">
+        <div class="top-tools" v-show="mainResizeShow">
+          <div class="top-tool-main-right" :class="{'top-tool-main-right-to-left': showSubList}">
+            <div class="top-tool-search float-right">
+              <search-input :searchMsg="searchMsg" @search="search"></search-input>
             </div>
-            <span v-else-if="item.prop == 'severity'">
-              <span v-if="scope.row[item.prop] == 'high'"><i class="el-icon-arrow-up"></i>&nbsp;{{severityData[1].value}}</span>
-              <span style="padding-left: 18px;" v-if="scope.row[item.prop] == 'medium'">{{severityData[0].value}}</span>
-              <span v-if="scope.row[item.prop] == 'low'"><i class="el-icon-arrow-down"></i>&nbsp;{{severityData[2].value}}</span>
-            </span>
-            <span v-else-if="item.prop == 'type'">
-              <template v-for="type in typeData" v-if="type.key == scope.row[item.prop]">{{type.value}}</template>
-            </span>
-            <!--                        <span v-else-if="item.prop == 'linkObject' && scope.row[item.prop]">{{scope.row.type != 3 && scope.row.linkObject ? scope.row[item.prop].name : scope.row[item.prop].host}}</span>-->
-            <template v-else-if="item.prop == 'linkObject'">
-              <span v-if="(scope.row['type'] == 1 || scope.row['type'] == 2) && scope.row[item.prop]" class="link too-long-split"
-                    @click="viewAlertType(scope.row['type'],scope.row[item.prop])" style="max-width: 125px;">{{scope.row[item.prop].name}}</span>
-              <span v-else-if="scope.row['type'] == 3 && scope.row[item.prop]" class="link"
-                    @click="viewAlertType(scope.row['type'],scope.row[item.prop].id)">{{scope.row[item.prop].host}}</span>
-              <span v-else>-</span>
+            <button id="alert-add" @click="toAdd"  :title="$t('overall.createAlertRule')"
+                    class="nz-btn nz-btn-size-normal nz-btn-style-light margin-l-20">
+                        <i class="nz-icon-create-square nz-icon"></i>
+            </button>
+          </div>
+          <div class="pagination-top pagination-top-hide display-none"></div>
+        </div>
+        <el-table
+          class="nz-table"
+          :data="tableData"
+          border
+          v-show="mainResizeShow"
+          ref="alertRuleTable"
+          tooltip-effect="light"
+          :height="mainTableHeight"
+          v-scrollBar:el-table
+          style="width: 100%;">
+          <el-table-column
+            :resizable="false"
+            v-for="(item, index) in tablelable"
+            v-if="item.show"
+            :width="item.width"
+            :key="`col-${index}`"
+            :label="item.label"
+            show-overflow-tooltip
+            min-width="110px"
+          >
+            <template slot-scope="scope" :column="item">
+              <div v-if="item.prop == 'option'" class="content-right-options">
+                <span :title="$t('overall.view')" @click="detail(scope.row)" class="content-right-option" :id="'alert-detail-'+scope.row.id"><i class="nz-icon nz-icon-view"></i></span>
+                <span v-if="scope.row.buildIn != 1" :title="$t('overall.edit')" @click="toEdit(scope.row)" class="content-right-option" :id="'alert-edit-'+scope.row.id"><i class="nz-icon nz-icon-edit"></i></span>
+                <span :title="$t('overall.delete')" @click="del(scope.row)" class="content-right-option" :id="'alert-del-'+scope.row.id"><i  class="el-icon-delete"></i></span>
+              </div>
+              <span v-else-if="item.prop == 'severity'">
+                <span v-if="scope.row[item.prop] == 'high'"><i class="el-icon-arrow-up"></i>&nbsp;{{severityData[1].value}}</span>
+                <span style="padding-left: 18px;" v-if="scope.row[item.prop] == 'medium'">{{severityData[0].value}}</span>
+                <span v-if="scope.row[item.prop] == 'low'"><i class="el-icon-arrow-down"></i>&nbsp;{{severityData[2].value}}</span>
+              </span>
+              <span v-else-if="item.prop == 'type'">
+                <template v-for="type in typeData" v-if="type.key == scope.row[item.prop]">{{type.value}}</template>
+              </span>
+              <!--                        <span v-else-if="item.prop == 'linkObject' && scope.row[item.prop]">{{scope.row.type != 3 && scope.row.linkObject ? scope.row[item.prop].name : scope.row[item.prop].host}}</span>-->
+              <template v-else-if="item.prop == 'linkObject'">
+                <span v-if="(scope.row['type'] == 1 || scope.row['type'] == 2) && scope.row[item.prop]" class="link too-long-split"
+                      @click="viewAlertType(scope.row['type'],scope.row[item.prop])" style="max-width: 125px;">{{scope.row[item.prop].name}}</span>
+                <span v-else-if="scope.row['type'] == 3 && scope.row[item.prop]" class="link"
+                      @click="viewAlertType(scope.row['type'],scope.row[item.prop].id)">{{scope.row[item.prop].host}}</span>
+                <span v-else>-</span>
+              </template>
+              <template v-else-if="item.prop == 'alertName'">{{scope.row.alertName}}</template>
+              <template v-else-if="item.prop == 'id'"><span class="link" @click="queryMessage(scope.row)">{{scope.row.id}}</span></template>
+              <span v-else-if="scope.row[item.prop]">{{scope.row[item.prop]}}</span>
+              <template v-else>-</template>
             </template>
-            <template v-else-if="item.prop == 'alertName'">{{scope.row.alertName}}</template>
-            <span v-else-if="scope.row[item.prop]">{{scope.row[item.prop]}}</span>
-            <template v-else>-</template>
-          </template>
-        </el-table-column>
-        <el-table-column width="28" :resizable="false">
-          <template slot="header" slot-scope="scope">
-            <span @click.stop="elementsetShow('shezhi',$event)" class="nz-table-gear">
-              <i class="nz-icon nz-icon-gear"></i>
-            </span>
-          </template>
-        </el-table-column>
-      </el-table>
-      <Pagination :tableId="tableId" :pageObj="pageObj" @pageNo='pageNo' @pageSize='pageSize' ref="Pagination"></Pagination>
-      <button class="to-top" v-show="showTopBtn" @click="toTop"><i class="nz-icon nz-icon-top"></i></button>
+          </el-table-column>
+          <el-table-column width="28" :resizable="false">
+            <template slot="header" slot-scope="scope">
+              <span @click.stop="elementsetShow('shezhi',$event)" class="nz-table-gear">
+                <i class="nz-icon nz-icon-gear"></i>
+              </span>
+            </template>
+          </el-table-column>
+        </el-table>
+        <div class="pagination-bottom" v-show="!showSubList">
+         <Pagination :tableId="tableId" :pageObj="pageObj" @pageNo='pageNo' @pageSize='pageSize' ref="Pagination"></Pagination>
+        </div>
+        <button class="to-top" v-show="showTopBtn" @click="toTop"><i class="nz-icon nz-icon-top"></i></button>
+      </div>
+      <alert-Message-box v-if="showSubList" @listResize="listResize" :show-sub-list="showSubList" :from="'alertRule'" :subResizeShow="subResizeShow" :obj="alertRule" :isFullScreen="isFullScreen"
+                         @closeSubList="showSubList = false" @fullScreen="fullScreen" @exitFullScreen="exitFullScreen"></alert-Message-box>
     </div>
     <alert-config-box :parentAlertRule="alertRule" @reload="getTableData" ref="alertConfigBox"></alert-config-box>
     <project-box :project="viewProjectData" ref="projectBox" @reload="getTableData"></project-box>
     <module-box :module="viewModuleData" @reload="getTableData" ref="moduleBox"></module-box>
-    <asset-edit-unit :edit-unit-show='viewAsset' @refreshData="getTableData" @sendStateData="tabControl"
-                     ref="assetEditUnit"></asset-edit-unit>
+    <!--<asset-edit-unit :edit-unit-show='viewAsset' @refreshData="getTableData" @sendStateData="tabControl"
+                     ref="assetEditUnit"></asset-edit-unit>-->
+    <asset-box :edit-unit-show='viewAsset' @refreshData="getTableData" @sendStateData="tabControl"
+               ref="assetEditUnit"></asset-box>
     <element-set
       v-clickoutside="elementsetHide"
       :table-title="tableTitle"
@@ -103,8 +114,13 @@
     name: "alert-config",
     data() {
       return {
+        mainResizeShow: true, //dom高度改变时部分内容是否展示
+        subResizeShow: true,
+        isFullScreen: false,
+        showSubList: false, //是否展示二级列表
         tableId: 'alertRuleTable', //需要分页的table的id，用于记录每页数量
         showTopBtn: false,
+        mainTableHeight: this.$tableHeight.normal, //主列表table高度
         searchMsg: { //给搜索框子组件传递的信息
           zheze_none: true,
           searchLabelList: [{
@@ -239,6 +255,77 @@
       }
     },
     methods: {
+      queryMessage(alertRule) {
+        this.alertRule = alertRule;
+        this.showSubList = true;
+      },
+      // 鼠标拖动二级列表
+      listResize(e) {
+        let mainListDom = document.querySelector(".main-list-with-sub"); //主列表
+        let subListDom = document.querySelector(".sub-list"); //副列表
+        let contentRightDom = document.querySelector(".content-right"); //右侧内容区
+        let contentRightHeight = contentRightDom.offsetHeight;//可视高度
+        //得到点击时俩dom的初始高度：
+        let mainInitialHeight = mainListDom.offsetHeight;
+        let subInitialHeight = subListDom.offsetHeight;
+        //点击时鼠标的Y轴位置
+        let mouseInitialY = e.clientY;
+
+        let _this = this;
+
+        document.onmousemove = (e) => {
+          e.preventDefault();
+          //得到鼠标拖动的距离
+          let mouseMoveY = Math.abs(e.clientY - mouseInitialY);
+
+          //往上方拖动：
+          if (e.clientY < mouseInitialY) {
+            mainListDom.style.height = mainInitialHeight-mouseMoveY+'px';
+            subListDom.style.height = subInitialHeight+mouseMoveY+'px';
+          }
+          //往下方拖动：
+          if (e.clientY > mouseInitialY) {
+            mainListDom.style.height = mainInitialHeight+mouseMoveY+'px';
+            subListDom.style.height = subInitialHeight-mouseMoveY+'px';
+          }
+
+          // 主、副列表最小高度限制为15px
+          if(parseInt(mainListDom.style.height) >= contentRightHeight-15){
+            mainListDom.style.height = contentRightHeight-15+'px';
+          }
+          if(parseInt(mainListDom.style.height) <= 15){
+            mainListDom.style.height = 15+'px';
+          }
+          if(parseInt(subListDom.style.height) >= contentRightHeight-15){
+            subListDom.style.height = contentRightHeight-15+'px';
+          }
+          if(parseInt(subListDom.style.height) <= 15){
+            subListDom.style.height = 15+'px';
+          }
+          //当主副列表可视区域小于一定值时，不展示内容
+          if(parseInt(mainListDom.style.height) <= 100){
+            if (_this.mainResizeShow) {
+              _this.mainResizeShow = false;
+            }
+          } else {
+            if (!_this.mainResizeShow) {
+              _this.mainResizeShow = true;
+            }
+          }
+          if(parseInt(subListDom.offsetHeight) <= 100){
+            if (_this.subResizeShow) {
+              _this.subResizeShow = false;
+            }
+          } else {
+            if (!_this.subResizeShow) {
+              _this.subResizeShow = true;
+            }
+          }
+        };
+        document.onmouseup = () => {
+          document.onmousemove = null;
+        }
+      },
       elementsetShow(s, e) {
         var eventfixed = {
           shezhi: 0,
@@ -365,6 +452,35 @@
         }
         this.getTableData();
       },
+      exitFullScreen() {
+        let contentRightDom = document.querySelector(".content-right"); //右侧内容区
+        let contentRightHeight = contentRightDom.offsetHeight;//可视高度
+        //主列表
+        document.querySelector(".main-list-with-sub").style.height = this.mainListHeight ? this.mainListHeight + 'px' : 'calc(50% - 4px)';
+
+        //副列表
+        document.querySelector(".sub-list").style.height = this.mainListHeight ? contentRightHeight-this.mainListHeight-9 + 'px' : 'calc(50% - 4px)';
+        setTimeout(() => {
+          this.isFullScreen = false;
+          if (document.querySelector(".main-list-with-sub").offsetHeight >= 100) {
+            this.mainResizeShow = true;
+          }
+          if (document.querySelector(".sub-list").offsetHeight >= 100) {
+            this.subResizeShow = true;
+          }
+        }, 210);
+      },
+      fullScreen() {
+        let contentRightDom = document.querySelector(".content-right"); //右侧内容区
+        let contentRightHeight = contentRightDom.offsetHeight;//可视高度
+        this.isFullScreen = true;
+        //主列表
+        this.mainListHeight = document.querySelector(".main-list-with-sub").offsetHeight; //记录全屏前主列表的高度
+        document.querySelector(".main-list-with-sub").style.height = '0';
+        this.mainResizeShow = false;
+        //副列表
+        document.querySelector(".sub-list").style.height = contentRightHeight + 'px';
+      },
       viewAlertType: function (type, typeObj) {
         this.closeViews();
         switch (type) {
@@ -404,6 +520,55 @@
         this.$refs.moduleBox.show(false, false);
         this.viewAsset = false;
       }
+    },
+    watch: {
+      showSubList(n) {
+        if (!n) {
+          this.mainTableHeight = this.$tableHeight.normal; //重置table的高度
+          this.isFullScreen = false;
+          //重置二级列表数据
+          this.selectedEndpoints=[];
+          this.showTableData = [];
+          //移动分页组件的位置
+          let paginationTop = document.querySelector(".pagination-top");
+          let paginationBottom = document.querySelector(".pagination-bottom");
+          paginationTop.classList.remove("display-none");
+          if (paginationTop.classList.contains("pagination-top-show")) {
+            paginationTop.classList.remove("pagination-top-show");
+          }
+          if (!paginationTop.classList.contains("pagination-top-hide")) {
+            paginationTop.classList.add("pagination-top-hide");
+          }
+          setTimeout(() => {
+            paginationTop.classList.add("display-none");
+            paginationBottom.appendChild(paginationTop.removeChild(document.querySelector(".pagination")));
+          }, 210);
+
+          this.showTopBtn1 = false;
+          // 主列表恢复全屏
+          this.mainResizeShow = this.subResizeShow = true;
+          document.querySelector('.main-list').style.height = "";
+          //副列表高度清空
+          document.querySelector(".sub-list").style.height = '';
+        } else {
+          this.mainTableHeight = this.$tableHeight.openSubList.mainList; //重置table高度
+          //移动分页组件的位置
+          let paginationTop = document.querySelector(".pagination-top");
+          paginationTop.appendChild(document.querySelector(".pagination-bottom").removeChild(document.querySelector(".pagination")));
+          paginationTop.classList.remove("display-none");
+          setTimeout(() => {
+            if (paginationTop.classList.contains("pagination-top-hide")) {
+              paginationTop.classList.remove("pagination-top-hide");
+            }
+            if (!paginationTop.classList.contains("pagination-top-show")) {
+              paginationTop.classList.add("pagination-top-show");
+            }
+          }, 210);
+        }
+      }
+    },
+    destroyed() {
+      window.onresize = null;
     },
     mounted() {
       //是否存在分页缓存

@@ -564,7 +564,7 @@ const en = {
       port: 'Port',//"端口"
       param: 'Parameter',//"参数"
       path: 'Path',//"路径"
-      asset: 'Device',//"设备"
+      asset: 'Asset',//"设备"
       lastUpdate: 'Last Reply',//"最后更新时间"
       moduleParameter: 'Module',//"组件参数"
       addGraph: 'View Graph', //添加图标

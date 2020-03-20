@@ -21,64 +21,6 @@
   .date-pick-group button:last-of-type {
     margin-left: 4px;
   }
-
-  .main-list {
-    height: 100%;
-    transition: .4s height, .4s transform;
-    position: relative;
-  }
-  .main-list.main-list-with-sub {
-    transform: translate3d(0,0,0);
-    height: calc(50% - 4px);
-  }
-  .sub-list {
-    height: calc(50% - 4px);
-    transition: .4s height;
-    position: relative;
-  }
-  .sub-list-resize {
-    margin: 0 -6px;
-    border-top: 1px solid #aaa;
-    background-color: #eaeaea;
-    height: 9px;
-    box-sizing: border-box;
-    user-select: none;
-    color: #5f6368;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding-top: 3px;
-    cursor: ns-resize;
-  }
-  .sub-list-window-control {
-    display: flex;
-    align-items: center;
-    margin-left: 14px;
-  }
-  .window-control-btn {
-    cursor: pointer;
-    width: 29px;
-    text-align: center;
-  }
-  .window-control-btn:last-of-type {
-    margin-right: 4px;
-  }
-  .window-control-btn>i {
-    color: #909399;
-    font-size: 17px;
-  }
-  .window-control-btn>i:hover {
-    color: $global-text-color-active;
-  }
-  .pagination-top {
-    transition: .2s transform;
-  }
-  .pagination-top-show {
-    transform: translateX(0);
-  }
-  .pagination-top-hide {
-    transform: translateX(150%);
-  }
 </style>
 <style scope>
   .chart-bottom {
@@ -147,9 +89,7 @@
               </template>
             </export-excel>
           </div>
-          <div class="pagination-top pagination-top-hide display-none">
-            <!--<Pagination :tableId="tableId" v-cloak :pageObj="endpointPageObj" @pageNo='endpointPageNo' @pageSize='endpointPageSize' ref="endpointPagination2"></Pagination>-->
-          </div>
+          <div class="pagination-top pagination-top-hide display-none"></div>
         </div>
         <el-table
           :data="endpointTableData"
@@ -216,7 +156,7 @@
         <div class="sub-top-tools" v-show="subResizeShow">
           <div class="sub-list-tabs margin-l-20" style="width: calc(100% - 780px);">
             <div class="sub-list-tab">{{$t("overall.query")}}</div>
-            <span class="sub-list-tab-txt">Endpoint ID: {{curEndpoint ? curEndpoint.id : ''}}</span>
+            <span class="sub-list-tab-txt">{{$t("project.endpoint.endpointId")}}: {{curEndpoint ? curEndpoint.id : ''}}</span>
           </div>
           <!--时间选择器-->
           <div class="top-tool-right">
@@ -271,7 +211,7 @@
           v-scrollBar:el-table
           class="nz-table endpoint-query-table"
           :header-cell-class-name="cellClass"
-          :height="$tableHeight.endpointQuery"
+          :height="$tableHeight.noPagination"
           @selection-change="selectChange"
           ref="metricInfoTab"
           v-show="subResizeShow"
@@ -398,8 +338,8 @@
         subResizeShow: true,
         mainListHeight: '', //主列表dom的高度
         tableShow: 1, // 1.endpoint; 3.query
-        showTopBtn1: false,
-        showTopBtn2: false,
+        showTopBtn1: false, //主列表top按钮
+        showTopBtn2: false, //副列表top按钮
         editEndpoint: {id: '', host: '', port: '', param: '', path: '', asset: {}, project: {}, module: {}, moduleId: '', assetId: '', paramObj: []},
         endpointTableTitle: [
           {
@@ -831,7 +771,7 @@
             subListDom.style.height = 15+'px';
           }
           //当主副列表可视区域小于一定值时，不展示内容
-          if(parseInt(mainListDom.style.height) <= 100){
+          if(parseInt(mainListDom.offsetHeight) <= 100){
             if (_this.mainResizeShow) {
               _this.mainResizeShow = false;
             }
@@ -864,9 +804,13 @@
         document.querySelector(".sub-list").style.height = this.mainListHeight ? contentRightHeight-this.mainListHeight-9 + 'px' : 'calc(50% - 4px)';
         setTimeout(() => {
           this.isFullScreen = false;
-          this.mainResizeShow = true;
-          this.subResizeShow = true;
-        }, 200);
+          if (document.querySelector(".main-list-with-sub").offsetHeight >= 100) {
+            this.mainResizeShow = true;
+          }
+          if (document.querySelector(".sub-list").offsetHeight >= 100) {
+            this.subResizeShow = true;
+          }
+        }, 210);
       },
       fullScreen() {
         let contentRightDom = document.querySelector(".content-right"); //右侧内容区
@@ -1634,7 +1578,6 @@
               let edpQueryData={element:temp,value:item.value[1],type:(item.metric.type?item.metric.type:'2')};
               this.showTableData.push(edpQueryData);
             }
-
         }
       },
       focusInput:function(){
@@ -1653,7 +1596,6 @@
         }
       },
       clearInput:function(){
-
         this.$refs.elementQuery.focus();
       },
       queryElementTips:async function(){

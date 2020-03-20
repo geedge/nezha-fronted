@@ -35,6 +35,7 @@ import cabinetConfigBox from "./components/common/popBox/cabinetConfig"; //面�
 import dcBox from "./components/common/rightBox/dcBox"; //dc弹框
 import modelBox from "./components/common/rightBox/modelBox"; //model弹框
 import selectArea from "./components/common/popBox/selectArea"; //dc弹框
+import alertMessageBox from "./components/common/bottomBox/alertMessageBox"; //dc弹框
 import PerfectScrollbar from "perfect-scrollbar";
 import "perfect-scrollbar/css/perfect-scrollbar.css";
 import loading from "./components/common/loading";
@@ -58,6 +59,7 @@ Vue.component("dc-box", dcBox);
 Vue.component("model-box", modelBox);
 Vue.component("select-area", selectArea);
 Vue.component('loading',loading);
+Vue.component('alert-Message-box',alertMessageBox);
 
 Vue.prototype.$axios = axios;
 Vue.prototype.$post = post;
@@ -68,9 +70,9 @@ Vue.prototype.$tableHeight = { //列表页表格的高度
   normal: 'calc(100% - 100px)',  //常规高度，特例在下方定义
   openSubList: { //打开二级列表后的高度
     mainList: 'calc(100% - 60px)',
-    subList: ''
+    subList: 'calc(100% - 86px)'
   },
-  endpointQuery: 'calc(100% - 60px)', //特例：endpoint query页，没有翻页组件
+  noPagination: 'calc(100% - 60px)', //特例：endpoint query页，没有翻页组件
 };
 Vue.prototype.toTop = (type, wrap) => { //top按钮公共方法
   if (type == 'el') {
@@ -272,5 +274,5 @@ export default vm;
 
 /* 重写组件内容 */
 const elUi = require("element-ui");
-//去掉el-table右侧的滚动条预留空间
+//去掉el-table表头右侧的滚动条预留空间
 elUi.Table.components.TableHeader.computed.hasGutter = () => {return false;};

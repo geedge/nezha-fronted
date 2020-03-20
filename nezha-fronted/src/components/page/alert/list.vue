@@ -99,8 +99,10 @@
     <alert-config-box :parentAlertRule="viewRuleData" @reload="getAlertList" ref="alertConfigBox"></alert-config-box>
     <project-box :project="viewProjectData" ref="projectBox" @reload="getAlertList"></project-box>
     <module-box :module="viewModuleData" @reload="getAlertList" ref="moduleBox"></module-box>
-    <asset-edit-unit :edit-unit-show='viewAssetState' @refreshData="getAlertList" @sendStateData="tabControl"
-                     ref="assetEditUnit"></asset-edit-unit>
+    <!--<asset-edit-unit :edit-unit-show='viewAssetState' @refreshData="getAlertList" @sendStateData="tabControl"
+                     ref="assetEditUnit"></asset-edit-unit>-->
+    <asset-box :edit-unit-show='viewAssetState' @refreshData="getAlertList" @sendStateData="tabControl"
+               ref="assetEditUnit"></asset-box>
     <element-set
       v-clickoutside="elementsetHide"
       :table-title="tableTitle"
@@ -121,7 +123,7 @@
         pageObj: {
           pageNo: 1,
           pageSize: 20,
-          total: 13
+          total: 0
         },
         tableTitle: [
           {
