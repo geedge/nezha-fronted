@@ -26,8 +26,9 @@
 
       <el-dropdown trigger="click" v-show="firstShow"   class="nz-chart-top" :key="'chartDropdown'+chartIndex"  v-clickoutside="clickos">
           <span class="el-dropdown-link chart-title" @click="dropdownMenuShow=!dropdownMenuShow">
-            {{data.title}}<i class="el-icon-caret-bottom el-icon--right"  :class="{'visible':caretShow,'hidden':!caretShow}"></i>
-          </span>
+            <span class="chart-title-text">{{data.title}}</span>
+            <span class="chart-title-icon"><i class="el-icon-caret-bottom el-icon--right"  :class="{'visible':caretShow,'hidden':!caretShow}"></i></span>
+        </span>
         <!--
           <el-dropdown-menu slot="dropdown"  class="nz-chart-dropdown" :popper-append-to-body="false">
             <el-dropdown-item @click.native="refreshChart" ><i style="font-size: 16px;" class="global-active-color el-icon-refresh-right"></i>{{$t('dashboard.refresh')}}</el-dropdown-item>
@@ -291,7 +292,7 @@
         this.divFirstShow = showDiv;
       },
       dragResize:function(e){
-        var diffWidth = 38;
+        var diffWidth = 38;//界面的宽度空白的地方的宽度
         var targetDiv= document.getElementById('lineChartDiv'+this.chartIndex); //e.target.parentNode.parentNode;.children[0]
         var targetDivContainer= document.getElementById('listContainer'); //e.target.parentNode.parentNode;.children[0]
         var maxWidth = targetDivContainer.offsetWidth-diffWidth;
@@ -366,12 +367,14 @@
           let diffHeight =  Math.abs(targetDivHeight-targetDivHeightNew);
           if(targetDivHeight>targetDivHeightNew){
             let finalDiffHeight = Math.floor(diffHeight/stepHeight)*stepHeight;
+            //alert('oldWidth='+targetDivHeight+"===diffHeight+"+diffHeight+"==finalDiffHeight="+finalDiffHeight);
             targetDiv.style.height = (targetDivHeight-finalDiffHeight)+'px';
           }
           if(targetDivHeight<targetDivHeightNew){
             let finalDiffHeight = Math.ceil(diffHeight/stepHeight)*stepHeight;
             targetDiv.style.height = (targetDivHeight+finalDiffHeight)+'px';
           }
+
           var span = _this.data.span;
           if(targetDivWidth>targetDivWidthNew){
             span =  Math.floor((targetDivWidthNew*12)/maxWidth);
@@ -407,13 +410,17 @@
           const modifyParams = {
             id:_this.data.id,
             span:span,
-            height:containerHeight,
+            height:(containerHeight+_this.dataZoomHeight),
             prev:parseInt(_this.data.prev),
             next:parseInt(_this.data.next),
           }
           //alert('=55='+JSON.stringify(modifyParams));
           _this.$put('panel/'+  _this.panelIdInner+'/charts/modify',modifyParams).then(response => {
             if (response.code === 200) {
+              //更新当前图表数据
+              _this.data.span= span;
+              _this.data.height= containerHeight+_this.dataZoomHeight;
+              _this.$emit('on-drag-chart', _this.data);
             }else {
               if(response.msg){
                 _this.$message.error(response.msg);

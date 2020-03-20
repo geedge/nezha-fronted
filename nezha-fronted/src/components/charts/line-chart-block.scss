@@ -96,6 +96,7 @@
      text-align: center;
      width: 100%;
     .nz-chart-top{
+      width:100%;
     }
     .el-dropdown-link {
       cursor: pointer;
@@ -108,7 +109,19 @@
       font-size: 18px;
       line-height: 26px;
       color: #333;
-      margin: -3px 0 3px 10px;
+      margin: -3px 0 3px 3px;
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      .chart-title-text{
+        max-width:calc(100% - 20px);
+        text-overflow: ellipsis;
+        overflow: hidden;
+        white-space: nowrap;
+      }
+      .chart-title-icon{
+        display: inline-block;
+      }
     }
   }
 

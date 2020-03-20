@@ -3,6 +3,7 @@
     box-sizing: border-box;
     float:left;
     padding: 0 10px 10px 10px;
+    /*position:relative;*/
   }
   .noData{
     text-align: center
@@ -11,31 +12,79 @@
     width: calc(100% - 14px);
     overflow-x:hidden;/*避免鼠标第一次放到曲线时，x轴出现滚动条后消失*/
   }
+
 </style>
 <template>
 
-  <div class="list-width">
-    <div class="chartBox" v-for="(item, index) in dataList"    :key="item.id" :id="item.title+'_'+item.id">
+  <div class="list-width"  id="listContainer"><!--v-drag-->
+    <!--
+    draggable="true"
+         @dragstart="handleDragStart($event, item)"
+         @dragover.prevent="handleDragOver($event, item)"
+         @dragenter="handleDragEnter($event, item)"
+         @dragend="handleDragEnd($event, item)"
 
-      <line-chart-block v-if="item.type === 'line' || item.type === 'bar' ||item.type == 'stackArea' || item.type === 4" :key="'inner' + item.id"
-      ref="editChart"
-      @on-refresh-data="refreshChart"
-      @on-remove-chart-block="removeChart"
-      @on-edit-chart-block="editData"
-      :panel-id="filter.panelId"
-      :chart-index="index"
-      :editChartId="'editChartId' + item.id"></line-chart-block>
+         const drag = {
+  // 指令的定义
+  bind: function (el) {
+    let odiv = el;   //获取当前元素
+    odiv.onmousedown = (e) => {
+      //算出鼠标相对元素的位置
+      let disX = e.clientX - odiv.offsetLeft;
+      let disY = e.clientY - odiv.offsetTop;
 
-      <chart-table v-if="item.type === 'table'" ref="editChart" :key="'inner' + item.id"
-      @on-refresh-data="refreshChart"
-      @on-search-data="searchData"
-      @on-remove-chart-block="removeChart"
-      @on-edit-chart-block="editData"
-      :panel-id="filter.panelId"
-      :chart-index="index"
-      :editChartId="'editChartId' + item.id"></chart-table>
+      document.onmousemove = (e)=>{
+        //用鼠标的位置减去鼠标相对元素的位置，得到元素的位置
+        let left = e.clientX - disX;
+        let top = e.clientY - disY;
 
-    </div>
+        //绑定元素位置到positionX和positionY上面
+        //this.positionX = top;
+        //this.positionY = left;
+
+        //移动当前元素
+        odiv.style.left = left + 'px';
+        odiv.style.top = top + 'px';
+      };
+      document.onmouseup = (e) => {
+        document.onmousemove = null;
+        document.onmouseup = null;
+      };
+    };
+  }
+};
+
+Vue.directive('drag',
+  drag
+)
+
+    <draggable v-model="dataList" @chang="change" @start="start" @end="end" :move="move">
+     -->
+      <div class="chartBox" v-for="(item, index) in dataList"    :key="item.id" :id="item.title+'_'+item.id"   style="border:solid 0px red;">
+
+        <line-chart-block v-if="item.type === 'line' || item.type === 'bar' ||item.type == 'stackArea' || item.type === 4" :key="'inner' + item.id"
+        ref="editChart"
+        @on-refresh-data="refreshChart"
+        @on-remove-chart-block="removeChart"
+        @on-drag-chart="editChartForDrag"
+        @on-edit-chart-block="editData"
+        :panel-id="filter.panelId"
+        :chart-index="index"
+        :editChartId="'editChartId' + item.id"></line-chart-block>
+
+        <chart-table v-if="item.type === 'table'" ref="editChart" :key="'inner' + item.id"
+        @on-refresh-data="refreshChart"
+        @on-search-data="searchData"
+        @on-remove-chart-block="removeChart"
+        @on-drag-chart="editChartForDrag"
+        @on-edit-chart-block="editData"
+        :panel-id="filter.panelId"
+        :chart-index="index"
+        :editChartId="'editChartId' + item.id"></chart-table>
+
+
+      </div>
+    <!--</draggable>-->
     <el-row v-if="dataList.length === 0"  class="noData"></el-row>
   </div>
 </template>
@@ -44,6 +93,7 @@ import axios from 'axios';
 import bus from '../../libs/bus';
 import lineChartBlock from './line-chart-block';
 import chartTable from './chart-table';
+//import draggable from 'vuedraggable'
 
 export default {
   name: 'chartList',
@@ -52,6 +102,7 @@ export default {
   components: {
     lineChartBlock,
     chartTable,
+    //draggable,
   },
   data() {
     return {
@@ -67,12 +118,49 @@ export default {
       isPage:true,//是否分页懒加载
       currentRecordNum:0,//懒加载：本次取记录的index，第一次从0开始取，每次取3行
       lineNum:3,//每页加载的行数
-      pagePanelId:''//当前分页的panelId
+      pagePanelId:'',//当前分页的panelId
+      dragging: null
     };
   },
   computed: {},
   watch: {},
   methods: {
+    change (event) {
+      console.log('change', event)
+    },
+    start (event) {
+      console.log('start', event)
+    },
+    end (event) {
+      console.log('end', event, this.groups)
+    },
+    move (event, orgin) {
+      console.log('move', event, orgin)
+    },
+    handleDragStart(e,item){
+      this.dragging = item;
+    },
+    handleDragEnd(e,item){
+      this.dragging = null
+    },
+    //首先把div变成可以放置的元素，即重写dragenter/dragover
+    handleDragOver(e) {
+      e.dataTransfer.dropEffect = 'move'// e.dataTransfer.dropEffect="move";//在dragenter中针对放置目标来设置!
+    },
+    handleDragEnter(e,item){
+      e.dataTransfer.effectAllowed = "move"//为需要移动的元素设置dragstart事件
+      if(item === this.dragging){
+        return
+      }
+      const newItems = [...this.dataList]
+      console.log(newItems)
+      const src = newItems.indexOf(this.dragging)
+      const dst = newItems.indexOf(item)
+
+      newItems.splice(dst, 0, ...newItems.splice(src, 1))
+
+      this.dataList = newItems
+    },
     initCurrentRecordNum(){
       this.currentRecordNum = 0;
     },
@@ -416,6 +504,12 @@ export default {
       if (chart) {
         this.$emit('on-edit-chart', chart);
       }
+    },
+
+    editChartForDrag(chartItem){
+      let chart = this.dataList.find(item => item.id === chartItem.id);
+      chart.span = chartItem.span;
+      chart.height = chartItem.height;
     },
     // 刷新列表中的一个图表
     refreshChart(chartId,searchTime) {

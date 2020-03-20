@@ -21,7 +21,8 @@
 
           <el-dropdown trigger="click" v-show="firstShow"   class="nz-chart-top" :key="'chartDropdown'+chartIndex"  v-clickoutside="clickos">
             <span class="el-dropdown-link chart-title" @click="dropdownMenuShow=!dropdownMenuShow">
-              {{data.title}}<i class="el-icon-caret-bottom el-icon--right"  :class="{'visible':caretShow,'hidden':!caretShow}"></i>
+              <span class="chart-title-text">{{data.title}}</span>
+              <span class="chart-title-icon"><i class="el-icon-caret-bottom el-icon--right"  :class="{'visible':caretShow,'hidden':!caretShow}"></i></span>
             </span>
             <ul slot="dropdown" v-show="dropdownMenuShow"  :id="'dropdownUl'+chartIndex"  class="el-dropdown-menu nz-chart-dropdown"  style="position: absolute; top: 30px; left: 0px; transform-origin: center top; z-index: 1000;" >
               <li  @click="refreshChart"  class="el-dropdown-menu__item">
@@ -90,6 +91,7 @@
                 </div>
                 -->
         </el-dialog>
+      <span class="vue-resizable-handle" @mousedown="dragResize"></span>
     </div>
 </template>
 
@@ -303,6 +305,148 @@ export default {
           this.screenPageObj.pageSize = val;
           this.seriesItemScreen=this.filterShowData(this.storedScreanTableData,this.screenPageObj)
         },
+      dragResize:function(e){
+        var diffWidth =38; //界面的宽度空白的地方的宽度
+        var targetDiv= document.getElementById('chartTableDiv'+this.chartIndex); //e.target.parentNode.parentNode;.children[0]
+        var targetDivContainer= document.getElementById('listContainer'); //e.target.parentNode.parentNode;.children[0]
+        var maxWidth = targetDivContainer.offsetWidth-diffWidth;
+        var minWidth = maxWidth/12;
+        var stepWidth = maxWidth/12;
+        var stepHeight = 10;
+
+        //得到点击时该容器的宽高：
+        var targetDivHeight=targetDiv.offsetHeight;
+        var targetDivWidth=targetDiv.offsetWidth;
+        var startY=e.clientY;
+        var startX=e.clientX;
+        var _this=this;
+
+        document.onmousemove=function(e){
+          e.preventDefault();
+          //得到鼠标拖动的宽高距离：取绝对值
+          var distY=Math.abs(e.clientY-startY);
+          var distX=Math.abs(e.clientX-startX);
+
+          //往上方拖动：
+          if( e.clientY < startY){
+            targetDiv.style.height=targetDivHeight-distY+'px';
+            //heightTmp = targetDivHeight-distY;
+          }
+          if( e.clientX < startX){
+            targetDiv.style.width=targetDivWidth-distX+'px';
+            //widthTmp = targetDivWidth-distX;
+          }
+          //往下方拖动：
+          if (e.clientY > startY) {
+            targetDiv.style.height=(targetDivHeight+distY)+'px';
+            //heightTmp = targetDivHeight+distY;
+          }
+          if (e.clientX > startX) {
+            targetDiv.style.width=(targetDivWidth+distX)+'px';
+            //widthTmp = targetDivWidth+distX;
+          }
+
+          if(parseInt(targetDiv.style.height)<=_this.minHeight){
+            targetDiv.style.height=_this.minHeight+'px';
+            //heightTmp = _this.minHeight;
+          }
+
+          if(parseInt(targetDiv.style.width)>=maxWidth){
+            targetDiv.style.width=maxWidth+'px';
+            //widthTmp = maxWidth;
+          }
+          if(parseInt(targetDiv.style.width)<=minWidth){
+            targetDiv.style.width=minWidth+'px';
+            //widthTmp = minWidth;
+          }
+          //调整表格大小
+            let containerHeight = parseInt(targetDiv.style.height);
+            let containerWidth = parseInt(targetDiv.style.width);
+            const chartBox = document.getElementsByClassName('chartBox');
+            chartBox[_this.chartIndex].style.width = (containerWidth+diffWidth)+'px';
+            //chartBox[_this.chartIndex].style.height = `${containerHeight}px`;
+            //表格的高度
+            const tableBox = document.getElementById('tableContainer'+_this.chartIndex);
+            tableBox.style.height = `${containerHeight-75-32+25}px`;
+        }
+
+        document.onmouseup=function(){
+          let targetDivHeightNew = parseInt(targetDiv.style.height);
+          //let targetDivHeightNew = heightTmp
+          let targetDivWidthNew = parseInt(targetDiv.style.width);
+          //let targetDivWidthNew = widthTmp;
+
+          let diffHeight =  Math.abs(targetDivHeight-targetDivHeightNew);
+          if(targetDivHeight>targetDivHeightNew){
+            let finalDiffHeight = Math.floor(diffHeight/stepHeight)*stepHeight;
+            //alert('oldWidth='+targetDivHeight+"===diffHeight+"+diffHeight+"==finalDiffHeight="+finalDiffHeight);
+            targetDiv.style.height = (targetDivHeight-finalDiffHeight)+'px';
+          }
+          if(targetDivHeight<targetDivHeightNew){
+            let finalDiffHeight = Math.ceil(diffHeight/stepHeight)*stepHeight;
+            targetDiv.style.height = (targetDivHeight+finalDiffHeight)+'px';
+          }
+
+          var span = _this.data.span;
+          if(targetDivWidth>targetDivWidthNew){
+            span =  Math.floor((targetDivWidthNew*12)/maxWidth);
+            let finalWidth = Math.floor((targetDivWidthNew*12)/maxWidth)*stepWidth;
+            if((finalWidth)<minWidth){
+              targetDiv.style.width=minWidth+'px';
+              span = 1;
+            }else {
+              targetDiv.style.width = finalWidth+'px';
+            }
+          }
+          if(targetDivWidth<targetDivWidthNew){
+            span =  Math.ceil((targetDivWidthNew*12)/maxWidth);
+            let spanUnit = Math.ceil((targetDivWidthNew*12)/maxWidth);
+            let finalWidth = spanUnit*stepWidth;
+            if(finalWidth>maxWidth || spanUnit===12){
+              targetDiv.style.width=maxWidth+'px';
+              span = 12;
+            }else {
+              targetDiv.style.width = finalWidth+'px';
+            }
+          }
+          //调整表格大小
+          let containerHeight = parseInt(targetDiv.style.height);
+          let containerWidth = parseInt(targetDiv.style.width);
+
+          const chartBox = document.getElementsByClassName('chartBox');
+          chartBox[_this.chartIndex].style.width = (containerWidth+diffWidth)+'px';
+          //chartBox[_this.chartIndex].style.height = `${containerHeight}px`;
+          //表格的高度
+          const tableBox = document.getElementById('tableContainer'+_this.chartIndex);
+          tableBox.style.height = `${containerHeight-75-32+25}px`;
+
+          const modifyParams = {
+            id:_this.data.id,
+            span:span,
+            height:(containerHeight+25),
+            prev:parseInt(_this.data.prev),
+            next:parseInt(_this.data.next),
+          }
+          _this.$put('panel/'+  _this.panelIdInner+'/charts/modify',modifyParams).then(response => {
+            if (response.code === 200) {
+              //更新当前图表数据
+              _this.data.span= span;
+              _this.data.height= containerHeight+25;
+              _this.$emit('on-drag-chart', _this.data);
+            }else {
+              if(response.msg){
+                _this.$message.error(response.msg);
+              }else if(response.error){
+                _this.$message.error(response.error);
+              }else {
+                _this.$message.error(response);
+              }
+            }
+          });
+          document.onmousemove=null;
+          document.onmouseup = null;
+        }
+      },
         startLoading(area){
           if(area==='screen'){
             //this.showLoadingScreen = true;

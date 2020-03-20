@@ -41,10 +41,33 @@
   border: 1px solid #d8dce1;
   padding: 20px 8px 3px;
   margin-bottom: 10px;
+  .vue-resizable-handle {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    bottom: 0;
+    right: 0;
+    cursor: se-resize;
+    box-sizing: border-box;
+  }
+  .vue-resizable-handle:after {
+    border-right: 2px solid #555;
+    border-bottom: 2px solid #555;
+    content: "";
+    position: absolute;
+    right: 3px;
+    bottom: 3px;
+    width: 5px;
+    height: 5px;
+    /*border-right: 2px solid rgba(0,0,0,.4);
+    border-bottom: 2px solid rgba(0,0,0,.4);*/
+    box-sizing: inherit;
+  }
   .chartTitle {
     text-align: center;
     width: 100%;
     .nz-chart-top{
+      width:100%;
     }
     .el-dropdown-link {
       cursor: pointer;
@@ -57,7 +80,19 @@
       font-size: 18px;
       line-height: 26px;
       color: #333;
-      margin: -3px 0 3px 10px;
+      margin: -3px 0 3px 3px;
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      .chart-title-text{
+        max-width:calc(100% - 20px);
+        text-overflow: ellipsis;
+        overflow: hidden;
+        white-space: nowrap;
+      }
+      .chart-title-icon{
+        display: inline-block;
+      }
     }
   }
   .edit:after{
