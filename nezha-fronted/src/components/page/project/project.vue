@@ -147,7 +147,7 @@
               </template>
             </export-excel>
           </div>
-          <div class="pagination-top pagination-top-hide">
+          <div class="pagination-top pagination-top-hide display-none">
             <Pagination :tableId="tableId" v-cloak :pageObj="endpointPageObj" @pageNo='endpointPageNo' @pageSize='endpointPageSize' ref="endpointPagination"></Pagination>
           </div>
         </div>
@@ -1120,18 +1120,6 @@
         this.$refs.projectSearch.clearSearch();
         this.tableShow=1;
         this.selectedEndpoints=[];
-        //若原页面处于打开二级列表状态，调整分页组件的位置
-        let pagination = document.querySelector(".pagination-top");
-        if (pagination.classList.contains("pagination-top-show")) {
-          pagination.classList.remove("pagination-top-show");
-        }
-        if (!pagination.classList.contains("pagination-top-hide")) {
-          pagination.classList.add("pagination-top-hide");
-        }
-        // 主列表恢复全屏
-        this.mainResizeShow = this.subResizeShow = true;
-        document.querySelector('.main-list').style.height = "";
-        this.mainTableHeight = this.$tableHeight.normal; //重置table高度
       },
 
       //弹出endpoint编辑页
@@ -1258,16 +1246,6 @@
       },
       showEndpoint:function(endpoint){
         this.tableShow=3;
-        this.mainTableHeight = this.$tableHeight.openSubList.mainList; //重置table高度
-        //移动分页组件的位置
-        let pagination = document.querySelector(".pagination-top");
-        if (pagination.classList.contains("pagination-top-hide")) {
-          pagination.classList.remove("pagination-top-hide");
-        }
-        if (!pagination.classList.contains("pagination-top-show")) {
-          pagination.classList.add("pagination-top-show");
-        }
-
 
         this.queryEdpLoading=true;
         setTimeout(() => {
@@ -1370,24 +1348,6 @@
       },
       backToEdpTab:function(){
         this.tableShow=1;
-        this.mainTableHeight = this.$tableHeight.normal; //重置table的高度
-        this.isFullScreen = false;
-        //重置二级列表数据
-        this.selectedEndpoints=[];
-        this.showTableData = [];
-        //移动分页组件的位置
-        let pagination = document.querySelector(".pagination-top");
-        if (pagination.classList.contains("pagination-top-show")) {
-          pagination.classList.remove("pagination-top-show");
-        }
-        if (!pagination.classList.contains("pagination-top-hide")) {
-          pagination.classList.add("pagination-top-hide");
-        }
-
-        this.showTopBtn1 = false;
-        // 主列表恢复全屏
-        this.mainResizeShow = this.subResizeShow = true;
-        document.querySelector('.main-list').style.height = "";
       },
       changeTime:function(size,unit){
         let time=this.getTime(size,unit);
@@ -1820,6 +1780,46 @@
           temp.tableFilter();
         },500)
       },
+      tableShow(n) {
+        if (n == 1) {
+          this.mainTableHeight = this.$tableHeight.normal; //重置table的高度
+          this.isFullScreen = false;
+          //重置二级列表数据
+          this.selectedEndpoints=[];
+          this.showTableData = [];
+          //移动分页组件的位置
+          let pagination = document.querySelector(".pagination-top");
+          if (pagination.classList.contains("pagination-top-show")) {
+            pagination.classList.remove("pagination-top-show");
+          }
+          if (!pagination.classList.contains("pagination-top-hide")) {
+            pagination.classList.add("pagination-top-hide");
+          }
+          setTimeout(() => {
+            pagination.classList.add("display-none");
+          }, 210);
+
+          this.showTopBtn1 = false;
+          // 主列表恢复全屏
+          this.mainResizeShow = this.subResizeShow = true;
+          document.querySelector('.main-list').style.height = "";
+          //副列表高度清空
+          document.querySelector(".sub-list").style.height = '';
+        } else if (n == 3) {
+          this.mainTableHeight = this.$tableHeight.openSubList.mainList; //重置table高度
+          //移动分页组件的位置
+          let pagination = document.querySelector(".pagination-top");
+          pagination.classList.remove("display-none");
+          setTimeout(() => {
+            if (pagination.classList.contains("pagination-top-hide")) {
+              pagination.classList.remove("pagination-top-hide");
+            }
+            if (!pagination.classList.contains("pagination-top-show")) {
+              pagination.classList.add("pagination-top-show");
+            }
+          }, 210);
+        }
+      }
     },
     destroyed() {
       window.onresize = null;
