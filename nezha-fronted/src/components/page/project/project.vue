@@ -148,7 +148,7 @@
             </export-excel>
           </div>
           <div class="pagination-top pagination-top-hide display-none">
-            <Pagination :tableId="tableId" v-cloak :pageObj="endpointPageObj" @pageNo='endpointPageNo' @pageSize='endpointPageSize' ref="endpointPagination"></Pagination>
+            <!--<Pagination :tableId="tableId" v-cloak :pageObj="endpointPageObj" @pageNo='endpointPageNo' @pageSize='endpointPageSize' ref="endpointPagination2"></Pagination>-->
           </div>
         </div>
         <el-table
@@ -196,7 +196,7 @@
               <template v-else>-</template>
             </template>
           </el-table-column>
-          <el-table-column width="28">
+          <el-table-column width="28" :resizable="false">
             <template slot="header" slot-scope="scope">
               <span @click.stop="elementsetShow('shezhi',$event)" class="nz-table-gear">
                 <i class="nz-icon nz-icon-gear"></i>
@@ -204,7 +204,9 @@
             </template>
           </el-table-column>
         </el-table>
-        <Pagination v-show="tableShow == 1" :tableId="tableId" v-cloak :pageObj="endpointPageObj" @pageNo='endpointPageNo' @pageSize='endpointPageSize' ref="endpointPagination"></Pagination>
+        <div class="pagination-bottom" v-show="tableShow == 1">
+          <Pagination :tableId="tableId" v-cloak :pageObj="endpointPageObj" @pageNo='endpointPageNo' @pageSize='endpointPageSize' ref="endpointPagination"></Pagination>
+        </div>
         <button class="to-top" v-show="showTopBtn1 && mainResizeShow" @click="toTop('ps', 0)"><i class="nz-icon nz-icon-top"></i></button>
       </div>
 
@@ -275,6 +277,7 @@
           v-show="subResizeShow"
           style="width: 100%; margin-top: 5px;">
           <el-table-column
+            :resizable="false"
             type="selection"
             width="38"
             align="center"
@@ -302,6 +305,7 @@
             </template>
           </el-table-column>
           <el-table-column
+            :resizable="false"
             prop="value"
             :label="$t('project.endpoint.value')"
             width="180">
@@ -1788,15 +1792,18 @@
           this.selectedEndpoints=[];
           this.showTableData = [];
           //移动分页组件的位置
-          let pagination = document.querySelector(".pagination-top");
-          if (pagination.classList.contains("pagination-top-show")) {
-            pagination.classList.remove("pagination-top-show");
+          let paginationTop = document.querySelector(".pagination-top");
+          let paginationBottom = document.querySelector(".pagination-bottom");
+          paginationTop.classList.remove("display-none");
+          if (paginationTop.classList.contains("pagination-top-show")) {
+            paginationTop.classList.remove("pagination-top-show");
           }
-          if (!pagination.classList.contains("pagination-top-hide")) {
-            pagination.classList.add("pagination-top-hide");
+          if (!paginationTop.classList.contains("pagination-top-hide")) {
+            paginationTop.classList.add("pagination-top-hide");
           }
           setTimeout(() => {
-            pagination.classList.add("display-none");
+            paginationTop.classList.add("display-none");
+            paginationBottom.appendChild(paginationTop.removeChild(document.querySelector(".pagination")));
           }, 210);
 
           this.showTopBtn1 = false;
@@ -1808,14 +1815,15 @@
         } else if (n == 3) {
           this.mainTableHeight = this.$tableHeight.openSubList.mainList; //重置table高度
           //移动分页组件的位置
-          let pagination = document.querySelector(".pagination-top");
-          pagination.classList.remove("display-none");
+          let paginationTop = document.querySelector(".pagination-top");
+          paginationTop.appendChild(document.querySelector(".pagination-bottom").removeChild(document.querySelector(".pagination")));
+          paginationTop.classList.remove("display-none");
           setTimeout(() => {
-            if (pagination.classList.contains("pagination-top-hide")) {
-              pagination.classList.remove("pagination-top-hide");
+            if (paginationTop.classList.contains("pagination-top-hide")) {
+              paginationTop.classList.remove("pagination-top-hide");
             }
-            if (!pagination.classList.contains("pagination-top-show")) {
-              pagination.classList.add("pagination-top-show");
+            if (!paginationTop.classList.contains("pagination-top-show")) {
+              paginationTop.classList.add("pagination-top-show");
             }
           }, 210);
         }

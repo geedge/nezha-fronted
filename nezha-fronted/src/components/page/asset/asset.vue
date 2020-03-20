@@ -171,7 +171,7 @@
             </template>
           </template>
         </el-table-column>
-        <el-table-column width="28" fixed="right">
+        <el-table-column width="28" fixed="right" :resizable="false">
           <template slot="header" slot-scope="scope">
             <span @click.stop="elementsetShow('shezhi',$event)" class="nz-table-gear">
               <i class="nz-icon nz-icon-gear"></i>
