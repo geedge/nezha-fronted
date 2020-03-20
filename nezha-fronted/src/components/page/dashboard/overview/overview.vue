@@ -31,18 +31,7 @@
           <el-scrollbar style="height: 100%" ref="overviewScrollbar">
             <div class="content-row-box" >
               <div class="content-col-box box-height-200 " style="flex:3;">
-                <table-box :pop-data="assetStatData" ref="assetTab">
-                  <div :slot="this.$t('dashboard.overview.asset.assetType')+'-header'" class="mini-button" @click="showTypeFilter" >
-                    <span class="mini-button-icon"><i class="nz-icon mini-font nz-icon-arrow-down" ></i></span>
-                    <div v-show="this.typeFilter.show">
-                      <ul>
-                        <li>1</li>
-                        <li>2</li>
-                        <li>3</li>
-                      </ul>
-                    </div>
-                  </div>
-                </table-box>
+                <table-box :pop-data="assetStatData" ref="assetTab" ></table-box>
               </div>
               <div class="content-col-box box-height-200 " style="flex: 2">
                 <table-box :pop-data="projectStatData" ref="projectTab"></table-box>
@@ -63,7 +52,15 @@
             </div>
             <div class="content-row-box">
               <div class="content-col-box box-height-300 "style="flex: 3">
-                <table-box :pop-data="topNStatData" ref="topNTab"></table-box>
+                <div class="avg-children-space">
+                  <el-select v-model="topNFilter.default" placeholder="" size="mini" style="display: inline-block;width: 200px" @change="topNChange">
+                    <el-option v-for="(item,index) in topNFilter.options" :label="item.label" :value="item.value" :key="item.value+index"></el-option>
+                  </el-select>
+                  <el-select v-model="topNFilter.defaultTop" placeholder="" size="mini" style="display: inline-block;width: 100px" @change="topNChange">
+                    <el-option v-for="(item,index) in topNFilter.tops" :label="item.label" :value="item.value" :key="item.value+index"></el-option>
+                  </el-select>
+                </div>
+                <table-box :pop-data="topNStatData" ref="topNTab" style="height: 90%;"></table-box>
               </div>
               <div class="content-col-box box-height-300 "style="flex: 8;"></div>
               <div class="content-col-box box-height-300 "style="flex: 2;">
@@ -88,14 +85,24 @@
     data(){
       return {
         assetStatData:{},
-        typeFilter:{
-          show:false,
-          type:'typeStat'
-        },
+        typeFilter: 'typeStat',
         projectStatData:{},
         endpointStatData:{},
         dataCenterStatData:{},
         topNStatData:{},
+        topNFilter:{
+          default:'alertRule',
+          defaultTop:10,
+          options:[
+            {label:this.$t('dashboard.overview.alert.alertRuleTopN'),value:'alertRule'},
+            {label:this.$t('dashboard.overview.alert.assetTopN'),value:'asset'},
+          ],
+          tops:[
+            {label:this.$t('dashboard.overview.alert.top')+'10',value:10},
+            {label:this.$t('dashboard.overview.alert.top')+'20',value:20},
+            {label:this.$t('dashboard.overview.alert.top')+'50',value:50},
+          ]
+        },
         alertRuleStatData:{},
         sysTime:'',
         sysDate:'',
@@ -111,7 +118,7 @@
         this.queryProjectData();
         this.queryEndpointData();
         this.queryDataCenterData();
-        this.queryAlertTopNData();
+        this.topNChange();
         this.queryAlertRuleStatData();
       },
       queryAssetData:function(){
@@ -119,7 +126,7 @@
         axios.get('/overview/assetStat').then((res)=>{
           let response=res.data;
           if(response.msg == 'success'){
-            let showData=response.data.typeStat;
+            let showData=response.data[this.typeFilter];
             this.assetStatData=this.formatAssetData(showData,response.data.totalStat);
             this.$refs.assetTab.endLoading();
           }else{
@@ -174,9 +181,10 @@
               tableData:data,
               tableLabel:[
                 {
-                  label:this.$t('dashboard.overview.asset.assetType'),
+                  label:this.getAssetTabTitle(),
                   prop:'name',
-                  show:true
+                  show:true,
+                  renderHeader:this.assetRenderHeader,
                 },
                 {
                   label:this.$t('dashboard.overview.asset.num'),
@@ -471,7 +479,7 @@
       },
       queryAlertTopNData:function(){
         this.$refs.topNTab.startLoading();
-        this.$get('/overview/alertStatByRule?top=10').then(response=>{
+        this.$get('/overview/alertStatByRule?top='+this.topNFilter.defaultTop).then(response=>{
           if(response.msg == 'success') {
             let showData = response.data.list;
             this.topNStatData = this.formatAlertTopNData(showData);
@@ -537,7 +545,7 @@
       },
       queryAssetTopNData:function(){
         this.$refs.topNTab.startLoading();
-        this.$get('/overview/alertStatByAsset?top=10').then(response=>{
+        this.$get('/overview/alertStatByAsset?top='+this.topNFilter.defaultTop).then(response=>{
           if(response.msg == 'success') {
             let showData=response.data.list;
             this.topNStatData=this.formatAssetTopNData(showData);
@@ -662,12 +670,76 @@
         }
       },
       /*加载数据 end*/
-      showTypeFilter:function(){
-        this.typeFilter.show=true;
-        console.log(this.typeFilter.show)
+      getAssetTabTitle:function(){
+        switch (this.typeFilter) {
+          case "typeStat":
+            return this.$t('dashboard.overview.asset.assetType');
+          case "modelStat":
+            return this.$t('dashboard.overview.asset.modelStat');
+          case "dcStat":
+            return this.$t('dashboard.overview.asset.dcStat');
+        }
       },
-      closeTypeFilter:function(){
-        // this.typeFilter.show=false;
+      assetRenderHeader:function(h, { column, $index }){ //修改header为dropdown
+        let filters = [
+          {text:this.$t('dashboard.overview.asset.dropDownLabel.type'),value:'typeStat'},
+          {text:this.$t('dashboard.overview.asset.dropDownLabel.model'),value:'modelStat'},
+          {text:this.$t('dashboard.overview.asset.dropDownLabel.dc'),value:'dcStat'},
+        ];
+        return h('div',
+          {
+
+          },
+          [
+            h('el-dropdown',
+              {
+                attrs:{
+                  trigger:'click'
+                }
+              },
+              [
+                h('span',
+                  {
+                    domProps: {
+                      innerHTML: column.label+'<i class="el-icon-arrow-down el-icon--right"></i>'
+                    }
+                  }
+                ),
+                h('el-dropdown-menu',
+                  {
+                    attrs:{
+                      slot:'dropdown'
+                    }
+                  },
+                  [
+                    filters.map(item => {
+                      return h("el-dropdown-item", {
+                        domProps: {
+                          innerHTML:item.text
+                        },
+                        nativeOn:{
+                          click:this.assetTabFilterChange.bind(this,item.value)
+                        }
+                      });
+                    })
+                  ]
+                  )
+              ]
+              )
+          ]
+        )
+
+      },
+      assetTabFilterChange:function(type){
+        this.typeFilter=type;
+        this.queryAssetData();
+      },
+      topNChange:function(){
+        if(this.topNFilter.default == 'alertRule'){
+          this.queryAlertTopNData();
+        }else if(this.topNFilter.default == 'asset'){
+          this.queryAssetTopNData();
+        }
       },
       /*header 时间处理 start*/
       initDate:function(){

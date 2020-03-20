@@ -185,6 +185,8 @@ const en = {
       asset:{
         title:'Asset',
         assetType:'Asset Type',
+        modelStat:'Model Stat',
+        dcStat:'DataCenter Stat',
         num:'Num',
         alert:'Alert',
         alertLow:'Low',
@@ -194,7 +196,12 @@ const en = {
         outStock:'Out Stock',
         pingUp:'Up',
         pingDown:'Down',
-        host:'Host'
+        host:'Host',
+        dropDownLabel:{
+          type:'type',
+          model:'model',
+          dc:'dataCenter'
+        }
       },
       project:{
         project:'Project',
@@ -211,7 +218,10 @@ const en = {
         level:'Level',
         alertRule:'Alert Rule',
         ruleNum:'Rule Num',
-        alertNum:'Alert Num'
+        alertNum:'Alert Num',
+        alertRuleTopN:'According to Alert Rule',
+        assetTopN:'According to Asset',
+        top:'Top'
       }
     }
   },

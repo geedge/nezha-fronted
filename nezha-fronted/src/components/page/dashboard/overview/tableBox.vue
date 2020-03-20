@@ -51,12 +51,10 @@
                 v-if="item.show"
                 :key="`col-${index}`"
                 :label="item.label"
+                :render-header="item.renderHeader"
                 show-overflow-tooltip
                 min-width="90"
               >
-                <template slot="header" slot-scope="scope">
-                  {{item.label}}<slot :name="item.label+'-header'"></slot>
-                </template>
                 <template slot-scope="scope" :column="item">
                   <template v-if="item.showPopover">
                     <el-popover trigger="hover" placement="right" >
@@ -76,7 +74,6 @@
                   </template>
                 </template>
               </el-table-column>
-
             </el-table>
           </div>
         </template>
@@ -136,7 +133,8 @@
         immediate:true,
         deep:true,
         handler(n,o){
-          this.showData=JSON.parse(JSON.stringify(n));
+          // this.showData=JSON.parse(JSON.stringify(n));
+          this.showData=Object.assign({},n);
         }
       }
     }

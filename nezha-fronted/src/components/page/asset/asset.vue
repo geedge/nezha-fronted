@@ -774,10 +774,10 @@
     mounted() {
       //是否存在分页缓存
       let pageSize = localStorage.getItem('nz-pageSize-' + localStorage.getItem('nz-username') + '-' + this.tableId);
-      if (pageSize != 'undefined') {
+      if (pageSize != 'undefined' && pageSize != null) {
         this.pageObj.pageSize = pageSize
       }
-
+      console.log('pageSize:'+this.pageObj.pageSize)
       this.$nextTick(() => {
         //左侧dc列表初始选中状态
         if (this.$store.state.assetData.selectedData.length > 0) {
@@ -788,7 +788,6 @@
         let el = this.$refs.assetTable.$el.querySelector(".el-table__body-wrapper");
         if (el._ps_) {
           el.addEventListener("ps-scroll-y", () => {
-            console.info(el._ps_.scrollbarYTop)
             if (el._ps_.scrollbarYTop > 50) {
               this.showTopBtn = true;
             } else {
