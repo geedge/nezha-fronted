@@ -37,7 +37,7 @@
             <el-dropdown-item @click.native="showAllScreen"  ><i style="font-size: 16px;" class="el-icon-full-screen"></i>{{$t('dashboard.screen')}}</el-dropdown-item>
           </el-dropdown-menu>
           -->
-        <ul slot="dropdown" v-show="dropdownMenuShow"  :id="'dropdownUl'+chartIndex"  class="el-dropdown-menu nz-chart-dropdown"  style="position: absolute; top: 30px; left: 0px; transform-origin: center top; z-index: 1000;" >
+        <ul slot="dropdown" v-show="dropdownMenuShow"  :id="'dropdownUl'+chartIndex"  class="el-dropdown-menu nz-chart-dropdown"  style="position: absolute; top: 30px; left: calc(50% - 79px); transform-origin: center top; z-index: 1000;" >
           <li  @click="refreshChart"  class="el-dropdown-menu__item">
             <i class="global-active-color el-icon-refresh-right" style="font-size: 16px;"></i><span>{{$t('dashboard.refresh')}}</span></li>
           <li  @click="editChart"  class="el-dropdown-menu__item">
