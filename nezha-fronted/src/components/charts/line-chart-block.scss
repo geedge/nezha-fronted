@@ -5,7 +5,7 @@
   clear: both;
 }
 .clearfix{
-  margin-bottom: 7px;
+  margin-bottom: 0px;
 }
 .hidden{
   visibility: hidden;
@@ -67,7 +67,7 @@
   position: relative;
   background: #FFF;
   border: 1px solid #d8dce1;
-  padding: 20px 8px;
+  padding: 0px 0px;
   margin-bottom: 10px;
   padding-bottom: 3px;
   .vue-resizable-handle {
@@ -92,14 +92,18 @@
     border-bottom: 2px solid rgba(0,0,0,.4);*/
     box-sizing: inherit;
   }
+  .chartTitle:hover {
+    background-color:#d8dce1;
+  }
   .chartTitle {
      text-align: center;
      width: 100%;
+     line-height: 28px;
     .nz-chart-top{
       width:100%;
     }
     .el-dropdown-link {
-      cursor: pointer;
+      cursor: move;
     }
     .el-icon-arrow-down {
       font-size: 12px;
@@ -118,9 +122,11 @@
         text-overflow: ellipsis;
         overflow: hidden;
         white-space: nowrap;
+        cursor: pointer;
       }
       .chart-title-icon{
         display: inline-block;
+        cursor: pointer;
       }
     }
   }
@@ -129,6 +135,8 @@
     box-sizing: border-box;
     background: #FFF;
     min-height: 95px;
+    padding-left:8px;
+    padding-right:8px;
   }
   /*.edit:after{
     display: block;

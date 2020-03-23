@@ -12,6 +12,18 @@
     width: calc(100% - 14px);
     overflow-x:hidden;/*避免鼠标第一次放到曲线时，x轴出现滚动条后消失*/
   }
+  .drag-chart-class{
+    cursor:move;
+    /*background-color:red;
+    opacity:1*/
+  }
+  .fallback-class{
+    /*background-color:green;
+    cursor:pointer;*/
+  }
+  .chart-ghost-class{
+    /*opacity:1*/
+  }
 
 </style>
 <template>
@@ -22,46 +34,19 @@
          @dragstart="handleDragStart($event, item)"
          @dragover.prevent="handleDragOver($event, item)"
          @dragenter="handleDragEnter($event, item)"
-         @dragend="handleDragEnd($event, item)"
+         @dragend="handleDragEnd($event, item)"    ,ghostClass:''  {scroll:true,forceFallback:true,animation:600,handle:'.drag-icon'
+-->
+    <draggable v-model="dataList" @chang="change" @start="start" @end="end" :move="move"
+               :options="{
+               dragClass:'drag-chart-class',
+               fallbackClass:'fallback-class',
+               forceFallback:true,
+               ghostClass:'chart-ghost-class',
+               scroll:true,
+               animation:150,
+               }"  >
 
-         const drag = {
-  // 指令的定义
-  bind: function (el) {
-    let odiv = el;   //获取当前元素
-    odiv.onmousedown = (e) => {
-      //算出鼠标相对元素的位置
-      let disX = e.clientX - odiv.offsetLeft;
-      let disY = e.clientY - odiv.offsetTop;
-
-      document.onmousemove = (e)=>{
-        //用鼠标的位置减去鼠标相对元素的位置，得到元素的位置
-        let left = e.clientX - disX;
-        let top = e.clientY - disY;
-
-        //绑定元素位置到positionX和positionY上面
-        //this.positionX = top;
-        //this.positionY = left;
-
-        //移动当前元素
-        odiv.style.left = left + 'px';
-        odiv.style.top = top + 'px';
-      };
-      document.onmouseup = (e) => {
-        document.onmousemove = null;
-        document.onmouseup = null;
-      };
-    };
-  }
-};
-
-Vue.directive('drag',
-  drag
-)
-
-    <draggable v-model="dataList" @chang="change" @start="start" @end="end" :move="move">
-     -->
-      <div class="chartBox" v-for="(item, index) in dataList"    :key="item.id" :id="item.title+'_'+item.id"   style="border:solid 0px red;">
-
+      <div class="chartBox" v-for="(item, index) in dataList"    :key="item.id" :id="item.title+'_'+item.id"   style="border:solid 0px red;" @dragstart="">
         <line-chart-block v-if="item.type === 'line' || item.type === 'bar' ||item.type == 'stackArea' || item.type === 4" :key="'inner' + item.id"
         ref="editChart"
         @on-refresh-data="refreshChart"
@@ -81,10 +66,8 @@ Vue.directive('drag',
         :panel-id="filter.panelId"
         :chart-index="index"
         :editChartId="'editChartId' + item.id"></chart-table>
-
-
       </div>
-    <!--</draggable>-->
+    </draggable>
     <el-row v-if="dataList.length === 0"  class="noData"></el-row>
   </div>
 </template>
@@ -93,7 +76,7 @@ import axios from 'axios';
 import bus from '../../libs/bus';
 import lineChartBlock from './line-chart-block';
 import chartTable from './chart-table';
-//import draggable from 'vuedraggable'
+import draggable from 'vuedraggable'
 
 export default {
   name: 'chartList',
@@ -102,7 +85,7 @@ export default {
   components: {
     lineChartBlock,
     chartTable,
-    //draggable,
+    draggable,
   },
   data() {
     return {

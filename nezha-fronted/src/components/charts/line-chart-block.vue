@@ -4,6 +4,7 @@
 <template>
   <div class="line-chart-block"   :id="'lineChartDiv'+chartIndex" v-show="divFirstShow" @mouseenter="caretShow=true" @mouseleave="caretShow=false">
     <loading  :ref="'localLoading'+chartIndex"></loading>
+
     <!--<div class="edit">
 
       <div class="list-icon" v-if="firstShow">
@@ -191,8 +192,9 @@
         searchTime:[new Date().setHours(new Date().getHours()-1),new Date()],
         oldSearchTime:[],
         minHeight:200,
-        dataZoomHeight:25,
-        gridBottom:35,
+        chartSpaceHeight:5,//top-border: 1,bottom-border: 1,padding-bottome:3
+        titleHeight:28,
+        legendHeight:80,
         pickerOptions: {
           shortcuts: [
             {
@@ -354,7 +356,7 @@
             let containerWidth = parseInt(targetDiv.style.width);
             const chartBox = document.getElementsByClassName('chartBox');
             chartBox[_this.chartIndex].style.width = (containerWidth+diffWidth)+'px';
-            _this.echartStore.resize({height:(containerHeight-divHeight-_this.gridBottom)});//-_this.dataZoomHeight
+            _this.echartStore.resize({height:(containerHeight-divHeight-_this.titleHeight)});
           }
         }
 
@@ -404,13 +406,13 @@
             let divHeight = _this.$refs.legendArea.offsetHeight;
             const chartBox = document.getElementsByClassName('chartBox');
             chartBox[_this.chartIndex].style.width = (containerWidth+diffWidth)+'px';
-            _this.echartStore.resize({height:(containerHeight-divHeight-_this.gridBottom)});//-_this.dataZoomHeight
+            _this.echartStore.resize({height:(containerHeight-divHeight-_this.titleHeight)});
           }
 
           const modifyParams = {
             id:_this.data.id,
             span:span,
-            height:(containerHeight+_this.dataZoomHeight),
+            height:(containerHeight+_this.chartSpaceHeight),
             prev:parseInt(_this.data.prev),
             next:parseInt(_this.data.next),
           }
@@ -419,7 +421,7 @@
             if (response.code === 200) {
               //更新当前图表数据
               _this.data.span= span;
-              _this.data.height= containerHeight+_this.dataZoomHeight;
+              _this.data.height= containerHeight+_this.chartSpaceHeight;
               _this.$emit('on-drag-chart', _this.data);
             }else {
               if(response.msg){
@@ -912,9 +914,9 @@
           this.$nextTick(() => {
             let divHeight = this.$refs.legendArea.offsetHeight;
             if(!chartInfo.height){
-              this.echartStore.resize({height:(400-divHeight-this.gridBottom)});
+              this.echartStore.resize({height:(400-divHeight-this.titleHeight-this.chartSpaceHeight)});
             }else {
-              this.echartStore.resize({height:(chartInfo.height-divHeight-this.dataZoomHeight-this.gridBottom)});
+              this.echartStore.resize({height:(chartInfo.height-divHeight-this.titleHeight-this.chartSpaceHeight)});
             }
 
             this.echartStore.clear();
@@ -1066,7 +1068,7 @@
             if(height<this.minHeight){
               height = this.minHeight;
             }
-            chartBox.style.height = `${height-this.dataZoomHeight}px`;
+            chartBox.style.height = `${height-this.chartSpaceHeight}px`;
           });
           this.$refs['localLoading'+this.chartIndex].startLoading();
           this.divFirstShow = true;
@@ -1310,7 +1312,7 @@
           if(height<this.minHeight){
             height = this.minHeight;
           }
-          chartBox.style.height = `${height-this.dataZoomHeight}px`;
+          chartBox.style.height = `${height-this.chartSpaceHeight}px`;
           //const tableBox = document.getElementById('tableContainer');
          // const chartBox = document.getElementById('lineChartDiv'+this.chartIndex);
           //tableBox.style.height = `${height-75}px`;

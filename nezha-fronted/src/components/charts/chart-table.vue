@@ -37,7 +37,7 @@
           </el-dropdown>
 
         </div>
-        <div class="mt-10" v-cloak  v-show="firstShow">
+        <div class="mt-10 table-container" v-cloak  v-show="firstShow">
             <el-table class="nz-table" :id="'tableContainer'+chartIndex" ref="tableContainer" :height="290" :data="seriesItem" border  tooltip-effect="light" v-cloak v-scrollBar:el-table>
 <!--                <el-table-column sortable :show-overflow-tooltip="true" prop="metric" :label="$t('dashboard.panel.chartTableColumn.metric')" ></el-table-column>-->
 <!--                <el-table-column sortable :show-overflow-tooltip="true" prop="label" :label="$t('dashboard.panel.chartTableColumn.label')" ></el-table-column>-->
@@ -164,6 +164,10 @@ export default {
             firstShow: false, // 默认不显示操作按钮,
             caretShow:false,
             dropdownMenuShow:false,
+            minHeight:200,
+            chartSpaceHeight:5,//top-border: 1,bottom-border: 1,padding-bottome:3
+            titleHeight:38,//title-height:28,magrin-bottom:10
+            pageHeight:40,
             divFirstShow:false,
             //tableLoading: false,
             columns: [
@@ -367,7 +371,7 @@ export default {
             //chartBox[_this.chartIndex].style.height = `${containerHeight}px`;
             //表格的高度
             const tableBox = document.getElementById('tableContainer'+_this.chartIndex);
-            tableBox.style.height = `${containerHeight-75-32+25}px`;
+            tableBox.style.height = `${containerHeight-_this.titleHeight-_this.pageHeight}px`;//-75-32+25
         }
 
         document.onmouseup=function(){
@@ -418,12 +422,12 @@ export default {
           //chartBox[_this.chartIndex].style.height = `${containerHeight}px`;
           //表格的高度
           const tableBox = document.getElementById('tableContainer'+_this.chartIndex);
-          tableBox.style.height = `${containerHeight-75-32+25}px`;
+          tableBox.style.height = `${containerHeight-_this.titleHeight-_this.pageHeight}px`;
 
           const modifyParams = {
             id:_this.data.id,
             span:span,
-            height:(containerHeight+25),
+            height:(containerHeight+_this.chartSpaceHeight),
             prev:parseInt(_this.data.prev),
             next:parseInt(_this.data.next),
           }
@@ -431,7 +435,7 @@ export default {
             if (response.code === 200) {
               //更新当前图表数据
               _this.data.span= span;
-              _this.data.height= containerHeight+25;
+              _this.data.height= containerHeight+_this.chartSpaceHeight;
               _this.$emit('on-drag-chart', _this.data);
             }else {
               if(response.msg){
@@ -483,12 +487,13 @@ export default {
           this.$nextTick(() => {
             const chartBox = document.getElementById('chartTableDiv'+this.chartIndex);
             let height = chartItem.height;
-            if(height<200){
-              height = 200;
+            if(height<this.minHeight){
+              height = this.minHeight;
             }
-            chartBox.style.height = `${height-25}px`;
+            chartBox.style.height = `${height-this.chartSpaceHeight}px`;
             const tableBox = document.getElementById('tableContainer'+this.chartIndex);
-            tableBox.style.height = `${height-75-32}px`;
+            //tableBox.style.height = `${height-75-32}px`;
+            tableBox.style.height = `${height-this.chartSpaceHeight-this.titleHeight-this.pageHeight}px`;// -75-32
           });
           this.startLoading();
           this.divFirstShow = true;
@@ -572,12 +577,12 @@ export default {
               this.$nextTick(() => {
                 const chartBox = document.getElementById('chartTableDiv'+this.chartIndex);
                 let height = chartItem.height;
-                if(height<200){
-                  height = 200;
+                if(height<this.minHeight){
+                  height = this.minHeight;
                 }
-                chartBox.style.height = `${height-25}px`;
+                chartBox.style.height = `${height-this.chartSpaceHeight}px`;
                 const tableBox = document.getElementById('tableContainer'+this.chartIndex);
-                tableBox.style.height = `${height-75-32}px`;
+                tableBox.style.height = `${height-this.chartSpaceHeight-this.titleHeight-this.pageHeight}px`;// -75-32
               });
               this.divFirstShow = true;
 
