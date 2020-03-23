@@ -52,7 +52,7 @@
             </div>
             <div class="content-row-box">
               <div class="content-col-box box-height-290 "style="flex: 3">
-                <div class="sub-title">
+                <div class="avg-children-space">
                   <!--<el-select v-model="topNFilter.default" placeholder="" size="mini" style="display: inline-block;width: 200px" @change="topNChange">
                     <el-option v-for="(item,index) in topNFilter.options" :label="item.label" :value="item.value" :key="item.value+index"></el-option>
                   </el-select>
@@ -65,7 +65,6 @@
                       <el-dropdown-item v-for="(item,index) in topNFilter.options" :key="item.value+index" @click.native="()=>{topNFilter.default=item.value;topNChange();}">{{item.label}}</el-dropdown-item>
                     </el-dropdown-menu>
                   </el-dropdown>
-                  <el-divider direction="vertical"></el-divider>
                   <el-dropdown trigger="click">
                     <span>{{topNFilter.tops.find((item)=>{return item.value==topNFilter.defaultTop})['label']}}<i class="el-icon-arrow-down el-icon--right"></i></span>
                     <el-dropdown-menu slot="dropdown">
@@ -167,7 +166,7 @@
               total:{ //左侧上方大图标及total信息
                 show:true,
                 direction:'row',
-                num:`<span style="font-size:1.875rem;"><span style="color: #1166bb">${totalData.total}</span>/<span style="color:#90EE90;">${totalData.inStock}</span>/<span style="color:orange">${totalData.outStock}</span></span>`,
+                num:`<span style="font-size:1.875rem;"><span style="color: #1166bb">${totalData.total}</span>/<span style="color:#90EE90;">${totalData.inStock}</span></span>`,
                 title:this.$t('dashboard.overview.asset.title'),
                 showPopover:true,
                 icon:'nz-icon nz-icon-asset',
