@@ -59,7 +59,7 @@ Vue.component("dc-box", dcBox);
 Vue.component("model-box", modelBox);
 Vue.component("select-area", selectArea);
 Vue.component('loading',loading);
-Vue.component('alert-Message-box',alertMessageBox);
+Vue.component('alert-message-box',alertMessageBox);
 
 Vue.prototype.$axios = axios;
 Vue.prototype.$post = post;

@@ -498,6 +498,7 @@ li{
   align-items : center;
   position: relative;
   flex-direction: row-reverse;
+  z-index: 10;
 }
 .top-tools>div {
   margin-top: 2px;
@@ -989,6 +990,9 @@ li{
 }
 .new-search .el-scrollbar__bar.is-horizontal {
   height: 4px;
+}
+.new-search .el-scrollbar__view {
+  height: calc(100% - 4px);
 }
 .app>.el-scrollbar__bar.is-vertical {
   width: 5px;

@@ -232,15 +232,18 @@
       }
     },
     methods: {
-      getAlertList: function () {
+      getAlertList() {
+        this.tableData = [];
+        this.loading = true;
         this.$set(this.searchLabel, "pageNo", this.pageObj.pageNo);
         this.$set(this.searchLabel, "pageSize", this.pageObj.pageSize);
         this.$get('alert/message', this.searchLabel).then(response => {
           if (response.code == 200) {
-            this.tableData = response.data.list
-            this.pageObj.total = response.data.total
+            this.loading = false;
+            this.tableData = response.data.list;
+            this.pageObj.total = response.data.total;
           }
-        })
+        });
       },
       pageNo(val) {
         this.pageObj.pageNo = val;
@@ -364,6 +367,21 @@
   }
 </script>
 
-<style scoped>
-
+<style lang="scss">
+  /*重写el-loading样式*/
+  .nz-table .el-loading-spinner .circular{
+    width: 42px;
+    height: 42px;
+    animation: loading-rotate 2s linear infinite;
+    display: none;
+  }
+  .nz-table .el-loading-spinner{
+    background: url(../../../assets/img/loading.gif) no-repeat;
+    background-size: 48px 48px;
+    width: 100%;
+    height: 100%;
+    position: relative;
+    top: 50%;
+    left: 48.5%;
+  }
 </style>

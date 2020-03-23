@@ -27,7 +27,7 @@
             </div>
 <!--            搜索框-->
             <div class="input-center-box" id="input-center-box">
-              <el-scrollbar style="height: 100%">
+              <el-scrollbar style="height: 100%;" ref="searchScrollbar">
                 <ul class="sreach_fixe_left" id="search-ul">
                     <li class="selectinfo_box" v-if="select_list.length>0" v-for="(val,ind) in select_list" :key="ind" @click="update_sreach(ind,$event)">
                         <div class="select_condition">
@@ -39,46 +39,46 @@
                         </div>
                         <div v-else-if="!change_sreach_show && ind==sreach_num && val.id!==7 " class="select_input">
                             <input type="text" autocomplete="off" id="sreach_input" v-model="input_sreach" @keyup="enter(val.name, $event)" @click="stop_click">
-                            <div class="select_info_list" v-if="val.type == 'select'">
+                            <div class="select_info_list" :style="'top:' + selectDom.top" v-if="val.type == 'select'">
                                 <ul>
                                     <li v-for="(item,key) in selectInfoList[val.label]" :key="key" @click="tr_selectInfo(val.label,item.value,item.label,$event)" :class="search_select_style_num==key?'search-style-ind':''">{{item.label}}</li>
                                 </ul>
                             </div>
-                            <div class="select_info_list" v-if="val.type == 'selectString'">
+                            <div class="select_info_list" :style="'top:' + selectDom.top" v-if="val.type == 'selectString'">
                                 <ul>
                                     <li v-for="(item,key) in selectInfoList[val.label]" :key="key" @click="stringSelectInfo(val, item, $event)" :class="search_select_style_num==key?'search-style-ind':''">{{item.label}}</li>
                                 </ul>
                             </div>
-                            <div class="select_info_list" v-if="val.type == 'dc'">
+                            <div class="select_info_list" :style="'top:' + selectDom.top" v-if="val.type == 'dc'">
                                 <ul>
                                     <li v-for="(item,key) in dcSelect" :key="key" @click="selectObject(val, item, $event)" :class="search_select_style_num==key?'search-style-ind':''">{{item.name}}</li>
                                 </ul>
                             </div>
-                            <div class="select_info_list" v-if="val.type == 'asset'">
+                            <div class="select_info_list" :style="'top:' + selectDom.top" v-if="val.type == 'asset'">
                                 <ul>
                                     <li v-for="(item,key) in assetSelect" :key="key" @click="selectObject(val, item, $event)" :class="search_select_style_num==key?'search-style-ind':''">{{item.host}}</li>
                                 </ul>
                             </div>
                             <!-- 新增日志模块action下拉选择 -->
-                            <div class="select_info_list" v-if="val.type == 'selectAction'">
+                            <div class="select_info_list" :style="'top:' + selectDom.top" v-if="val.type == 'selectAction'">
                                 <ul>
                                     <li v-for="(item,key) in actionSelect" :key="key" @click="tr_selectInfo(val.label,item.id,item.value,$event)">{{item.value}}</li>
                                 </ul>
                             </div>
                             <!-- 新增protocol下拉选择 -->
-                             <div class="select_info_list" v-if="val.type == 'selectType'">
+                             <div class="select_info_list" :style="'top:' + selectDom.top" v-if="val.type == 'selectType'">
                                 <ul>
                                     <li v-for="(item,key) in schemaTypeSelect" :key="key" @click="tr_selectTypeInfo(item)">{{item.value}}</li>
                                 </ul>
                             </div>
                             <!-- 新增protocol二层下拉 -->
-                            <div class="select_info_list" v-if="TypeSelect.length!=0&&val.type == 'selectType'&&secondShow">
+                            <div class="select_info_list" :style="'top:' + selectDom.top" v-if="TypeSelect.length!=0&&val.type == 'selectType'&&secondShow">
                                 <ul>
                                     <li v-for="(item,key) in TypeSelect" :key="key" @click="tr_selectProtocolInfo(item)">{{item.name}}</li>
                                 </ul>
                             </div>
 <!--                           时间计划-->
-                            <div class="select_info_list" v-if="val.type == 'select'&&val.id==5">
+                            <div class="select_info_list" :style="'top:' + selectDom.top" v-if="val.type == 'select'&&val.id==5">
                                 <ul>
                                     <li v-for="item in schlist" @click="selectSul(item.name)">{{item.name}}</li>
                                 </ul>
@@ -106,9 +106,9 @@
             <div v-show="clearSearchShow" class="clear-search" @click="clear_input">
                 <i class="el-icon-circle-close"></i>
             </div>
-            <div :class="input_list?'input_list none':'input_list'" @click="stop_click" id="input_list">
+            <div :class="input_list?'input_list none':'input_list'" :style="'top:' + selectDom.top" @click="stop_click" id="input_list">
                 <ul>
-                    <li v-for="(val,ind) in searchLabelList"  v-if="val.name!='Protocol'" @click="select_name(val.name,ind,val.id,val.type,val.label,val.disabled)" :key="ind" :class="{'search-style-ind':searchStyleNum==ind,'is-disabled':val.disabled}">
+                    <li v-for="(val,ind) in searchLabelList" @click="select_name(val.name,ind,val.id,val.type,val.label,val.disabled,$event)" :key="ind" :class="{'search-style-ind':searchStyleNum==ind,'is-disabled':val.disabled}">
                         <span>{{val.name}}</span>
                     </li>
                     <!--<li v-for="(val,ind) in searchLabelList"  v-if="val.name=='Protocol'" @click="select_type(val.name,ind,val.id,val.type,val.label,val.disabled)" :key="ind" :class="{'search-style-ind':searchStyleNum==ind,'is-disabled':val.disabled}">
@@ -130,6 +130,7 @@
         name: "index",
         data() {
             return {
+                selectDom: {top: '', tempTop: ''}, // 选择弹框的位置
                 clearSearchShow: false,
                 select_conditionsName:'',
                 selectInfoList: searchSelectInfo,
@@ -184,16 +185,44 @@
             }
         },
         watch: {
+          inTransform: {
+            immediate: true,
+            handler(n) {
+              let listsK = document.querySelectorAll(".input_list");
+              listsK.forEach((item, index) => {
+                item.style.display = "none";
+              });
+              let listsV = document.querySelectorAll(".select_info_list");
+              listsV.forEach((item, index) => {
+                item.style.display = "none";
+              });
+              if (n) {
+                this.selectDom.tempTop = this.selectDom.top;
+                this.selectDom.top = '36px';
+              } else {
+                this.selectDom.top = this.selectDom.tempTop;
+              }
+              setTimeout(() => {
+                listsK.forEach((item, index) => {
+                  item.style.display = "";
+                });
+                listsV.forEach((item, index) => {
+                  item.style.display = "";
+                });
+              }, 500);
+            }
+          },
           select_list: {
             //监听下拉列表
             handler(newData, oldData) {
+              this.$refs.searchScrollbar.update();
               if (newData.length == 0) {
                 this.change_sreach_show = true;
                 this.clearSearchShow = false;
               } else {
                 this.clearSearchShow = true;
               }
-              if (this.$route.path == "/alertList") {
+              if (this.$route.path.indexOf("alertList") > -1 || this.$route.path.indexOf("alertConfig") > -1) {
                 // 处理alertType--asset联动问题：
                 // 当已选alertType为asset时，将可选列表中的asset的disabled恢复为false；
                 // 当已选alertType不为asset时，将可选列表中的asset的disabled设为true，若有已选的asset，则删除；
@@ -340,7 +369,7 @@
             }
           }
         },
-        props:['searchMsg','defaultItem','defaultValue'],
+        props:['searchMsg','defaultItem','defaultValue','inTransform'],
         methods: {
           // isValidIP(ip) {
           //     var reg = /^(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])$/
@@ -1052,14 +1081,14 @@
             },
             //点击搜索框  显示搜索类型
             read_input(e) {
-                console.info(1)
                 e.cancelBubble = true;
                 e.stopPropagation();
-                this.getHeight()
-                this.input_list = !this.input_list
+                this.getHeight();
+                this.input_list = !this.input_list;
+                this.getSelectPosition(e);
             },
             //点击选择 搜索类型
-            select_name(val, ind, id, type,label,disabled) {
+            select_name(val, ind, id, type,label,disabled,e ) {
                 // if(id==43||id==45||id==48){  //根据id判断是否开启ip验证
                 //     this.select_conditionsName=true
                 // }
@@ -1097,7 +1126,7 @@
                   this.sreach_num = this.select_list.length-1
                   this.input_list = !this.input_list
                   setTimeout("document.getElementById(\"sreach_input\").focus()", 500);
-                  this.searchLabelList.forEach(val=>{
+                 /* this.searchLabelList.forEach(val=>{
                     if(val.id==30||val.id==31||val.id==32||val.id==33){
                       val.disabled = true
                     }
@@ -1111,18 +1140,18 @@
                     type:type,
                     label:label,
                     disabled:disabled
-                  })
+                  })*/
                   this.change_sreach_show = false
                   this.sreach_num = this.select_list.length-1
                   this.input_list = !this.input_list
                   setTimeout("document.getElementById(\"sreach_input\").focus()", 500);
-                  this.searchLabelList.forEach(val=>{
+                  /*this.searchLabelList.forEach(val=>{
                     if(val.id==29){
                       val.disabled = true
                     }
-                  })
+                  })*/
                 }else {
-                  this.searchLabelList.splice(ind, 1)
+                  this.searchLabelList.splice(ind, 1);
                   this.select_list.push({
                     name: val,
                     id:id,
@@ -1130,9 +1159,9 @@
                     label:label,
                     disabled:disabled
                   });
-                  this.change_sreach_show = false
-                  this.sreach_num = this.select_list.length-1
-                  this.input_list = !this.input_list
+                  this.change_sreach_show = false;
+                  this.sreach_num = this.select_list.length-1;
+                  this.input_list = !this.input_list;
                    if(id!==6&&id!==28){
                        setTimeout("document.getElementById(\"sreach_input\").focus()", 500);
                    }
@@ -1142,6 +1171,32 @@
                   _this.getHeight()
                 },)
 
+                // console.info(e.target.parentElement.parentElement.parentElement.getBoundingClientRect());
+              }
+            },
+            /*计算select弹框的位置*/
+            getSelectPosition(e) {
+              let inputListDom = this.getDomFromParents(e.target, 'input-center-box', 0);
+              if (inputListDom) {
+                if (this.inTransform) {
+                  this.selectDom.top = "36px";
+                } else {
+                  let position = inputListDom.getBoundingClientRect();
+                  this.selectDom.top = position.top+36+'px';
+                }
+              }
+            },
+            /*递归向上获取指定class的dom*/
+            getDomFromParents(dom, className, level) {
+              let parentClassNames = dom.parentElement.className;
+              if (parentClassNames.indexOf(className) == -1) {
+                if (level < 20 && dom.parentElement) { //限制20层，避免溢出
+                  return this.getDomFromParents(dom.parentElement, className, ++level);
+                } else {
+                  return false;
+                }
+              } else {
+                return dom.parentElement;
               }
             },
             // 判断输入框的高度
@@ -1176,7 +1231,7 @@
             if (this.$route.path == '/promServer') {
               this.getDcData();
             }
-            if (this.$route.path == '/project' || this.$route.path == '/alertList') {
+            if (this.$route.path == '/project' || this.$route.path == '/alertList' || this.$route.path == '/alertConfig') {
               this.getAssetData();
             }
             if (this.$route.path == '/asset') {
@@ -1443,9 +1498,9 @@
         box-shadow:none;
     }
     .select_input .select_info_list{
-        position: absolute;
-        left: 100px;
-        top: 36px;
+        position: fixed;
+        /*left: 100px;
+        top: 36px;*/
         height: auto;
         width: auto;
         max-height: 240px;
@@ -1488,9 +1543,9 @@
         color: rgba(0,0,0,0.55)
     }
     .input_list{
-        position: absolute;
-        left: 47px;
-        top: 36px;
+        position: fixed;
+        /*left: 47px;
+        top: 36px;*/
         width: auto;
         max-width: 400px;
         max-height: 240px;

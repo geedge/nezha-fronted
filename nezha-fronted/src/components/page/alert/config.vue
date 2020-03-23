@@ -19,7 +19,7 @@
         <div class="top-tools" v-show="mainResizeShow">
           <div class="top-tool-main-right" :class="{'top-tool-main-right-to-left': showSubList}">
             <div class="top-tool-search float-right">
-              <search-input :searchMsg="searchMsg" @search="search"></search-input>
+              <search-input :searchMsg="searchMsg" @search="search" :inTransform="inTransform"></search-input>
             </div>
             <button id="alert-add" @click="toAdd"  :title="$t('overall.createAlertRule')"
                     class="nz-btn nz-btn-size-normal nz-btn-style-light margin-l-20">
@@ -89,8 +89,8 @@
         </div>
         <button class="to-top" v-show="showTopBtn" @click="toTop"><i class="nz-icon nz-icon-top"></i></button>
       </div>
-      <alert-Message-box v-if="showSubList" @listResize="listResize" :show-sub-list="showSubList" :from="'alertRule'" :subResizeShow="subResizeShow" :obj="alertRule" :isFullScreen="isFullScreen"
-                         @closeSubList="showSubList = false" @fullScreen="fullScreen" @exitFullScreen="exitFullScreen"></alert-Message-box>
+      <alert-message-box v-if="showSubList" @listResize="listResize" :show-sub-list="showSubList" :from="'alertRule'" :subResizeShow="subResizeShow" :obj="alertRule" :isFullScreen="isFullScreen"
+                         @closeSubList="showSubList = false" @fullScreen="fullScreen" @exitFullScreen="exitFullScreen"></alert-message-box>
     </div>
     <alert-config-box :parentAlertRule="alertRule" @reload="getTableData" ref="alertConfigBox"></alert-config-box>
     <project-box :project="viewProjectData" ref="projectBox" @reload="getTableData"></project-box>
@@ -114,6 +114,7 @@
     name: "alert-config",
     data() {
       return {
+        inTransform: false, //搜索框相关，搜索条件下拉框是否在transform里
         mainResizeShow: true, //dom高度改变时部分内容是否展示
         subResizeShow: true,
         isFullScreen: false,
@@ -523,6 +524,7 @@
     },
     watch: {
       showSubList(n) {
+        this.inTransform = n;
         if (!n) {
           this.mainTableHeight = this.$tableHeight.normal; //重置table的高度
           this.isFullScreen = false;
