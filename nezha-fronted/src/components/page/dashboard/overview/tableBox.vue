@@ -2,7 +2,7 @@
     <div class="table-box" :class="{'table-column-box':showData&&showData.screen&&showData.screen.direction=='column'}">
       <loading ref="loading"></loading>
       <template v-if="showData&&showData.screen">
-        <div class="table-box-left" v-show="showData.screen.show">
+        <div class="table-box-left" :class="{'table-box-left-half':showData.screen.total.direction == 'column'}" v-show="showData.screen.show">
             <div class="table-screen"  :class="{'fill-flex-cavity':!showData.screen.stat.show&&showData.screen.total.direction != 'column'}">
               <div class="screen-top" v-show="showData.screen.total.show" >
                 <div :class="{'screen-row':showData.screen.total.direction == 'row','screen-column':showData.screen.total.direction == 'column'}">
@@ -18,7 +18,8 @@
                           </div>
                         </div>
                         <template slot="reference">
-                          <div class="super-font">{{showData.screen.total.num}}</div>
+<!--                          <div class="super-font">{{showData.screen.total.num}}</div>-->
+                          <div class="super-font" v-html="showData.screen.total.num"></div>
                         </template>
                       </el-popover>
                     </template>
@@ -50,6 +51,7 @@
                 v-for="(item, index) in showData.table.tableLabel"
                 v-if="item.show"
                 :key="`col-${index}`"
+                :width="item.width"
                 :label="item.label"
                 :render-header="item.renderHeader"
                 show-overflow-tooltip
@@ -65,12 +67,12 @@
                         </div>
                       </div>
                       <template slot="reference">
-                        <span>{{scope.row[item.prop]}}</span>
+                        <span v-html="scope.row[item.prop]"></span>
                       </template>
                     </el-popover>
                   </template>
                   <template v-else>
-                    {{scope.row[item.prop]}}
+                    <span v-html="scope.row[item.prop]"></span>
                   </template>
                 </template>
               </el-table-column>

@@ -57,7 +57,7 @@ export default {
             this.$i18n.locale = this.lang;
             bus.$emit('login');
             this.$router.push({
-              path: "/panel",
+              path: "/overview",
               query: {
                 t: +new Date()
               }

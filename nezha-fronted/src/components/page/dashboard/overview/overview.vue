@@ -10,7 +10,7 @@
         </div>
       </div>
       <!--右侧内容-->
-      <div class="overview-right content-right">
+      <div class="overview-right content-right" id="mainDisplay">
         <!--标题-->
         <div class="overview-content-header">
           <div class="header-title">{{$t('dashboard.overview.contentTitle')}}</div>
@@ -21,7 +21,7 @@
                 <div class="week">{{sysWeek}}</div>
                 <div class="sys-date">{{sysDate}}</div>
               </div>
-              <div class="operation"><span ><i class="nz-icon nz-icon-maxview"></i></span></div>
+              <div class="operation" @click="godView"><span ><i class="nz-icon nz-icon-maxview"></i></span></div>
             </div>
           </div>
         </div>
@@ -44,26 +44,41 @@
               <div class="content-col-box box-height-250 " style="flex: 1;">
                 <div class="flex-container">
                   <div style="flex: 2;">
-                    <table-box :pop-data="dataCenterStatData" ref="dataCenterTab"></table-box>
+                    <table-box :pop-data="dataCenterStatData" ref="dataCenterTab" ></table-box>
                   </div>
                   <div style="flex: 3;"></div>
                 </div>
               </div>
             </div>
             <div class="content-row-box">
-              <div class="content-col-box box-height-300 "style="flex: 3">
-                <div class="avg-children-space">
-                  <el-select v-model="topNFilter.default" placeholder="" size="mini" style="display: inline-block;width: 200px" @change="topNChange">
+              <div class="content-col-box box-height-290 "style="flex: 3">
+                <div class="sub-title">
+                  <!--<el-select v-model="topNFilter.default" placeholder="" size="mini" style="display: inline-block;width: 200px" @change="topNChange">
                     <el-option v-for="(item,index) in topNFilter.options" :label="item.label" :value="item.value" :key="item.value+index"></el-option>
                   </el-select>
                   <el-select v-model="topNFilter.defaultTop" placeholder="" size="mini" style="display: inline-block;width: 100px" @change="topNChange">
                     <el-option v-for="(item,index) in topNFilter.tops" :label="item.label" :value="item.value" :key="item.value+index"></el-option>
-                  </el-select>
+                  </el-select>-->
+                  <el-dropdown trigger="click">
+                    <span>{{topNFilter.options.find((item)=>{return item.value==topNFilter.default})['label']}}<i class="el-icon-arrow-down el-icon--right"></i></span>
+                    <el-dropdown-menu slot="dropdown">
+                      <el-dropdown-item v-for="(item,index) in topNFilter.options" :key="item.value+index" @click.native="()=>{topNFilter.default=item.value;topNChange();}">{{item.label}}</el-dropdown-item>
+                    </el-dropdown-menu>
+                  </el-dropdown>
+                  <el-divider direction="vertical"></el-divider>
+                  <el-dropdown trigger="click">
+                    <span>{{topNFilter.tops.find((item)=>{return item.value==topNFilter.defaultTop})['label']}}<i class="el-icon-arrow-down el-icon--right"></i></span>
+                    <el-dropdown-menu slot="dropdown">
+                      <el-dropdown-item v-for="(item,index) in topNFilter.tops" :key="item.value+index" @click.native="()=>{topNFilter.defaultTop=item.value;topNChange();}">{{item.label}}</el-dropdown-item>
+                    </el-dropdown-menu>
+                  </el-dropdown>
                 </div>
                 <table-box :pop-data="topNStatData" ref="topNTab" style="height: 90%;"></table-box>
               </div>
-              <div class="content-col-box box-height-300 "style="flex: 8;"></div>
-              <div class="content-col-box box-height-300 "style="flex: 2;">
+              <div class="content-col-box box-height-290 "style="flex: 8;" id="alertTrendBox">
+                <chart-box  ref="chartbox" :chart-title="$t('dashboard.overview.alert.chart.chartTitle')"></chart-box>
+              </div>
+              <div class="content-col-box box-height-290 "style="flex: 2;">
                 <table-box :pop-data="alertRuleStatData" ref="alertRuleTab" ></table-box>
               </div>
             </div>
@@ -75,11 +90,13 @@
 
 <script>
   import tableBox from "./tableBox";
+  import chart from "./chart";
   import axios from 'axios';
   export default {
     name: "overview",
     components:{
-      'table-box':tableBox
+      'table-box':tableBox,
+      'chart-box':chart,
     },
     props:[],
     data(){
@@ -103,7 +120,9 @@
             {label:this.$t('dashboard.overview.alert.top')+'50',value:50},
           ]
         },
+        chartSeries:[],
         alertRuleStatData:{},
+        isGodView:false,
         sysTime:'',
         sysDate:'',
         sysWeek:'',
@@ -120,6 +139,7 @@
         this.queryDataCenterData();
         this.topNChange();
         this.queryAlertRuleStatData();
+        this.queryAlertTrendData();
       },
       queryAssetData:function(){
         this.$refs.assetTab.startLoading();
@@ -136,6 +156,10 @@
       },
       formatAssetData:function(data,totalData){
         if(data && totalData){
+          data=data.map((item)=>{
+            item.alertInfo=`<span style="color: #FE6565;">${item.alertHigh}</span>/<span style="color: orange;">${item.alertMedium}</span>/<span style="color: #90ee90">${item.alertLow}</span>`;
+            return item;
+          })
           let assetStatData={
             screen:{ //左侧概览信息
               show:true,
@@ -143,7 +167,7 @@
               total:{ //左侧上方大图标及total信息
                 show:true,
                 direction:'row',
-                num:totalData.total,
+                num:`<span style="font-size:1.875rem;"><span style="color: #1166bb">${totalData.total}</span>/<span style="color:#90EE90;">${totalData.inStock}</span>/<span style="color:orange">${totalData.outStock}</span></span>`,
                 title:this.$t('dashboard.overview.asset.title'),
                 showPopover:true,
                 icon:'nz-icon nz-icon-asset',
@@ -212,10 +236,14 @@
                 },
                 {
                   label:this.$t('dashboard.overview.asset.alert'),
-                  prop:'alertTotal',
+                  prop:'alertInfo',
                   show:true,
                   showPopover:true,
                   popover:[
+                    {
+                      label:this.$t('dashboard.overview.asset.alertTotal'),
+                      prop:'alertTotal'
+                    },
                     {
                       label:this.$t('dashboard.overview.asset.alertLow'),
                       prop:'alertLow'
@@ -669,6 +697,41 @@
           return {}
         }
       },
+      queryAlertTrendData:function(){
+        this.$refs.chartbox.startLoading();
+        let cur=this.dateFormat('yyyy-mm-dd HH:MM:SS',new Date());
+        let beforeDate=new Date();
+        beforeDate.setHours(new Date().getHours()-1);
+        let before=this.dateFormat('yyyy-mm-dd HH:MM:SS',beforeDate);
+        let params={
+          query:'sum(nz_alert_nums)',
+          start:before,
+          end:cur,
+          step:'15s'
+        }
+        this.$get('/prom/api/v1/query_range',params).then(response=>{
+          if(response.status == 'success'){
+            if(response.data.result){
+              let series={
+                name: 'nz_alert_nums',
+                symbol:'none',  //去掉点
+                smooth:true,  //曲线变平滑
+                data: [],
+                type:'line',
+                areaStyle:{}
+              }
+              series.data=response.data.result[0].values.map((item)=>{
+                return [item[0]*1000,item[1]];
+              })
+              this.chartSeries=[series];
+              this.$refs.chartbox.setSeries(this.chartSeries);
+              this.$refs.chartbox.endLoading();
+            }
+          }else{
+            console.error(response)
+          }
+        })
+      },
       /*加载数据 end*/
       getAssetTabTitle:function(){
         switch (this.typeFilter) {
@@ -734,12 +797,18 @@
         this.typeFilter=type;
         this.queryAssetData();
       },
-      topNChange:function(){
+      topNChange:function(item){
         if(this.topNFilter.default == 'alertRule'){
           this.queryAlertTopNData();
         }else if(this.topNFilter.default == 'asset'){
           this.queryAssetTopNData();
         }
+      },
+      godView:function(el){
+
+      },
+      exitGodView:function(el){
+
       },
       /*header 时间处理 start*/
       initDate:function(){
@@ -784,6 +853,25 @@
           return enWeeks[day];
         }
       },
+      dateFormat:function(fmt, date) {
+        let ret;
+        const opt = {
+          "y+": date.getFullYear().toString(),        // 年
+          "m+": (date.getMonth() + 1).toString(),     // 月
+          "d+": date.getDate().toString(),            // 日
+          "H+": date.getHours().toString(),           // 时
+          "M+": date.getMinutes().toString(),         // 分
+          "S+": date.getSeconds().toString()          // 秒
+          // 有其他格式化字符需求可以继续添加，必须转化成字符串
+        };
+        for (let k in opt) {
+          ret = new RegExp("(" + k + ")").exec(fmt);
+          if (ret) {
+            fmt = fmt.replace(ret[1], (ret[1].length == 1) ? (opt[k]) : (opt[k].padStart(ret[1].length, "0")))
+          };
+        };
+        return fmt;
+      },
       /*header 时间处理end*/
       jumpTo(data, id) {
         //this.$store.state.assetData.moduleData = data
@@ -812,5 +900,8 @@
 <style>
   .overview .el-scrollbar__wrap{
     margin-bottom: 0px !important;
+  }
+  .overview-table .el-table__body{
+    width: 100% !important;
   }
 </style>

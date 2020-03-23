@@ -185,10 +185,11 @@ const en = {
       asset:{
         title:'Asset',
         assetType:'Asset Type',
-        modelStat:'Model Stat',
-        dcStat:'DataCenter Stat',
+        modelStat:'Model',
+        dcStat:'DataCenter',
         num:'Num',
         alert:'Alert',
+        alertTotal:'Total',
         alertLow:'Low',
         alertMedium:'Medium',
         alertHigh:'High',
@@ -221,8 +222,11 @@ const en = {
         alertNum:'Alert Num',
         alertRuleTopN:'According to Alert Rule',
         assetTopN:'According to Asset',
-        top:'Top'
-      }
+        top:'Top',
+        chart:{
+          chartTitle:'Alert Trend'
+        }
+      },
     }
   },
   validate: { //校验规则

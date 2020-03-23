@@ -5,6 +5,9 @@
         show:false,
       },
       color: this.bgColorList,
+      legend:{
+        show:false,
+      },
       tooltip: {
         trigger: 'axis',
         confine:false,
