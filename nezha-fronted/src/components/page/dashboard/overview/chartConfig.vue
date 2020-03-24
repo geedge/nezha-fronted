@@ -1,6 +1,6 @@
 <script>
     import chartDataFormat from "../../../charts/chartDataFormat";
-
+    import json from './geoJson'
     const commonOption={
       title:{
         show:false,
@@ -66,21 +66,49 @@
       series: [],
     }
     const mapOptions={
+      geo:{
+        map:'',
+        roam:true,//鼠标是否可以控制缩放
+        // center:[],//当前视角的中心点，用经纬度表示
+        label: { //控制显示地图名称
+          normal: {
+            show: true
+          },
+          emphasis: {
+            show: true
+          },
+        } ,
+        itemStyle:{
+          areaColor:'lightgrey', //设置默认状态下地图颜色
+        },
+        emphasis:{
+          itemStyle: {
+            areaColor:'white'
+          }
+        },
+        left:0,
+        top:0,
+        right:0,
+        bottom:0,
+      },
       tooltip : {
         trigger: 'item',
         type:'cross',
-        backgroundColor:"#ff7f50",//提示标签背景颜色
-        textStyle:{color:"#fff"}, //提示标签字体颜色
         alwaysShowContent: false,
+        backgroundColor:'#6E6E6E',
+        borderColor:'#ffffff',
         borderRadius: 4,
         borderWidth: 1,
-        borderColor: 'rgba(0,0,0,0.2)',
-        backgroundColor: 'rgba(255,255,255,0.9)',
         padding: 0,
-        textStyle: {
-          fontSize: 12,
-          color: '#333'
-        },
+        formatter(params){
+          var color = "orange";
+          var a = "<div style='background-color:"+color+";padding: 5px 10px;text-align:center;color:white;font-size: 16px;'>" + params.data.name + "</div>";
+          a += "<div style='padding:3px;text-align: center'>";
+          a +=params.data.value[2] + "<br>";
+          a += "</div>";
+
+          return a;
+        }
       },
     }
     const chartTypes={
@@ -91,5 +119,8 @@
       getOption:function(type){
         return Object.assign({},chartTypes[type].option);
       },
+      setMap:function(map){
+        mapOptions.geo.map=map
+      }
     }
 </script>

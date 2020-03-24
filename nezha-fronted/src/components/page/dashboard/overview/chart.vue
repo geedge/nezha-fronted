@@ -34,13 +34,7 @@
       }
     },
     created() {
-      this.option=chartConfig.getOption(this.chartType);
-      this.$set(this.option,'series',this.series);
-      if(this.chartType == 'line'){
-        this.$set(this.option.tooltip,'formatter',this.tooltipFormatter);
-        this.$set(this.option.tooltip,'position',this.tooltipPosition);
-        this.$set(this.option.yAxis,'formatter',this.yAxisFormatter);
-      }
+
     },
     methods:{
       tooltipPosition:function(point,params,dom,rect,size){
@@ -108,15 +102,22 @@
         return unit.compute(value,index);
       },
       setSeries:function(series){
-        this.option.series=series;
         if(!this.chart){
           this.chart=echarts.init(document.getElementById(this.chartId));
         }
+        this.series=series;
         if(this.chartType == 'map'){
-          console.log(json)
-          console.log(this.option)
           echarts.registerMap('map',json);
+          chartConfig.setMap('map');
         }
+        this.option=chartConfig.getOption(this.chartType);
+        this.$set(this.option,'series',this.series);
+        if(this.chartType == 'line'){
+          this.$set(this.option.tooltip,'formatter',this.tooltipFormatter);
+          this.$set(this.option.tooltip,'position',this.tooltipPosition);
+          this.$set(this.option.yAxis,'formatter',this.yAxisFormatter);
+        }
+
         this.chart.clear();
         this.chart.setOption(this.option)
       },

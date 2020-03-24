@@ -743,34 +743,25 @@
       queryDataCenterMapData:function(){
         this.dataCenterMapSeries=[{
           name: 'DataCenter',
-          type: 'map',
-          map:'map',
-          roam:true,
+          type: 'scatter',
+          coordinateSystem: 'geo',
           label: {
-            normal: {
-              show: true
-            },
-            emphasis: {
+            formatter: '{b}',
+            position: 'right',
+            show: false
+          },
+          itemStyle: {
+            color: 'grey'
+          },
+          emphasis: {
+            label: {
               show: true
             }
           },
-          layoutCenter: ['50%', '50%'],   //属性定义地图中心在屏幕中的位置，一般结合layoutSize 定义地图的大小
-          layoutSize:500,
-          itemStyle:{
-            normal:{label:{show:true}},
-            emphasis:{label:{show:true}}
-          },
           data:[
-            {name:'Alabama', value: 40000.34,},
-            {name:'Alaska', value: 38000},
-            {name:'Arizona', value: 18000},
-            {name:'Arkansas', value: 15092},
-            {name:'California', value: 28000},
-            {name:'Colorado', value: 12000},
-            {name:'Connecticut', value: 32000},
-            {name:'Delaware', value: 5100},
-            {name:'District of Columbia', value: 2200},
-            {name:'Florida', value: 4918}
+            {name:'Alabama', value: [-85.058981, 32.13674,40000.34]},
+            {name:'xxx', value: [-71.799309, 41.414677,38000]},
+            {name:'Arizona', value:[-114.470151, 32.843265,18000]},
           ]
         }]
         this.$refs.dataCenterMap.setSeries(this.dataCenterMapSeries);
