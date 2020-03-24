@@ -46,7 +46,9 @@
                   <div style="flex: 2;">
                     <table-box :pop-data="dataCenterStatData" ref="dataCenterTab" ></table-box>
                   </div>
-                  <div style="flex: 3;"></div>
+                  <div style="flex: 3;">
+                    <chart-box chart-title="DataCenter" chart-type="map" ref="dataCenterMap"></chart-box>
+                  </div>
                 </div>
               </div>
             </div>
@@ -60,13 +62,13 @@
                     <el-option v-for="(item,index) in topNFilter.tops" :label="item.label" :value="item.value" :key="item.value+index"></el-option>
                   </el-select>-->
                   <el-dropdown trigger="click">
-                    <span>{{topNFilter.options.find((item)=>{return item.value==topNFilter.default})['label']}}<i class="el-icon-arrow-down el-icon--right"></i></span>
+                    <span class="clickable">{{topNFilter.options.find((item)=>{return item.value==topNFilter.default})['label']}}<i class="el-icon-arrow-down el-icon--right"></i></span>
                     <el-dropdown-menu slot="dropdown">
                       <el-dropdown-item v-for="(item,index) in topNFilter.options" :key="item.value+index" @click.native="()=>{topNFilter.default=item.value;topNChange();}">{{item.label}}</el-dropdown-item>
                     </el-dropdown-menu>
                   </el-dropdown>
                   <el-dropdown trigger="click">
-                    <span>{{topNFilter.tops.find((item)=>{return item.value==topNFilter.defaultTop})['label']}}<i class="el-icon-arrow-down el-icon--right"></i></span>
+                    <span class="clickable">{{topNFilter.tops.find((item)=>{return item.value==topNFilter.defaultTop})['label']}}<i class="el-icon-arrow-down el-icon--right"></i></span>
                     <el-dropdown-menu slot="dropdown">
                       <el-dropdown-item v-for="(item,index) in topNFilter.tops" :key="item.value+index" @click.native="()=>{topNFilter.defaultTop=item.value;topNChange();}">{{item.label}}</el-dropdown-item>
                     </el-dropdown-menu>
@@ -91,6 +93,7 @@
   import tableBox from "./tableBox";
   import chart from "./chart";
   import axios from 'axios';
+  import json from './geoJson'
   export default {
     name: "overview",
     components:{
@@ -121,6 +124,7 @@
         },
         chartSeries:[],
         alertRuleStatData:{},
+        dataCenterMapSeries:[],
         isGodView:false,
         sysTime:'',
         sysDate:'',
@@ -139,6 +143,7 @@
         this.topNChange();
         this.queryAlertRuleStatData();
         this.queryAlertTrendData();
+        this.queryDataCenterMapData();
       },
       queryAssetData:function(){
         this.$refs.assetTab.startLoading();
@@ -166,11 +171,15 @@
               total:{ //左侧上方大图标及total信息
                 show:true,
                 direction:'row',
-                num:`<span style="font-size:1.875rem;"><span style="color: #1166bb">${totalData.total}</span>/<span style="color:#90EE90;">${totalData.inStock}</span></span>`,
+                num:totalData.inStock,
                 title:this.$t('dashboard.overview.asset.title'),
                 showPopover:true,
                 icon:'nz-icon nz-icon-asset',
                 popover:[
+                  {
+                    label:this.$t('dashboard.overview.asset.alertTotal'),
+                    value:totalData.total
+                  },
                   {
                     label:this.$t('dashboard.overview.asset.inStock'),
                     value:totalData.inStock
@@ -730,6 +739,41 @@
             console.error(response)
           }
         })
+      },
+      queryDataCenterMapData:function(){
+        this.dataCenterMapSeries=[{
+          name: 'DataCenter',
+          type: 'map',
+          map:'map',
+          roam:true,
+          label: {
+            normal: {
+              show: true
+            },
+            emphasis: {
+              show: true
+            }
+          },
+          layoutCenter: ['50%', '50%'],   //属性定义地图中心在屏幕中的位置，一般结合layoutSize 定义地图的大小
+          layoutSize:500,
+          itemStyle:{
+            normal:{label:{show:true}},
+            emphasis:{label:{show:true}}
+          },
+          data:[
+            {name:'Alabama', value: 40000.34,},
+            {name:'Alaska', value: 38000},
+            {name:'Arizona', value: 18000},
+            {name:'Arkansas', value: 15092},
+            {name:'California', value: 28000},
+            {name:'Colorado', value: 12000},
+            {name:'Connecticut', value: 32000},
+            {name:'Delaware', value: 5100},
+            {name:'District of Columbia', value: 2200},
+            {name:'Florida', value: 4918}
+          ]
+        }]
+        this.$refs.dataCenterMap.setSeries(this.dataCenterMapSeries);
       },
       /*加载数据 end*/
       getAssetTabTitle:function(){

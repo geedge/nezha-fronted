@@ -16,13 +16,15 @@
   import loading from "../../../common/loading";
   import uuidv1 from "uuid/v1";
   import chartConfig from './chartConfig'
+  import json from "./geoJson";
   export default {
     name: "chart",
     components:{
       'loading':loading,
     },
     props:{
-      chartTitle:{type:String}
+      chartTitle:{type:String},
+      chartType:{type:String,default:'line'},
     },
     data(){
       return {
@@ -32,11 +34,13 @@
       }
     },
     created() {
-      chartConfig.setSeries(this.series);
-      chartConfig.setTooltipFormatter(this.tooltipFormatter);
-      chartConfig.setTooltipPostion(this.tooltipPosition);
-      chartConfig.setYAxisLabelFormatter(this.yAxisFormatter);
-      this.option=chartConfig.getCommonOption();
+      this.option=chartConfig.getOption(this.chartType);
+      this.$set(this.option,'series',this.series);
+      if(this.chartType == 'line'){
+        this.$set(this.option.tooltip,'formatter',this.tooltipFormatter);
+        this.$set(this.option.tooltip,'position',this.tooltipPosition);
+        this.$set(this.option.yAxis,'formatter',this.yAxisFormatter);
+      }
     },
     methods:{
       tooltipPosition:function(point,params,dom,rect,size){
@@ -108,6 +112,11 @@
         if(!this.chart){
           this.chart=echarts.init(document.getElementById(this.chartId));
         }
+        if(this.chartType == 'map'){
+          console.log(json)
+          console.log(this.option)
+          echarts.registerMap('map',json);
+        }
         this.chart.clear();
         this.chart.setOption(this.option)
       },
@@ -120,7 +129,6 @@
     },
     mounted() {
       this.chart=echarts.init(document.getElementById(this.chartId));
-      this.chart.setOption(this.option);
     },
     watch:{
 

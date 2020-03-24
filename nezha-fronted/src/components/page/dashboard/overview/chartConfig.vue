@@ -1,5 +1,6 @@
 <script>
     import chartDataFormat from "../../../charts/chartDataFormat";
+
     const commonOption={
       title:{
         show:false,
@@ -64,22 +65,31 @@
       useUTC: false,//使用本地时间
       series: [],
     }
-
+    const mapOptions={
+      tooltip : {
+        trigger: 'item',
+        type:'cross',
+        backgroundColor:"#ff7f50",//提示标签背景颜色
+        textStyle:{color:"#fff"}, //提示标签字体颜色
+        alwaysShowContent: false,
+        borderRadius: 4,
+        borderWidth: 1,
+        borderColor: 'rgba(0,0,0,0.2)',
+        backgroundColor: 'rgba(255,255,255,0.9)',
+        padding: 0,
+        textStyle: {
+          fontSize: 12,
+          color: '#333'
+        },
+      },
+    }
+    const chartTypes={
+      line:{name:'line',option:commonOption},
+      map:{name:'map',option:mapOptions},
+    }
     export default {
-      getCommonOption:function(){
-        return commonOption;
+      getOption:function(type){
+        return Object.assign({},chartTypes[type].option);
       },
-      setTooltipPostion:function(positionFunc){
-        commonOption.tooltip.position=positionFunc;
-      },
-      setTooltipFormatter:function(formatFunc){
-        commonOption.tooltip.formatter=formatFunc;
-      },
-      setYAxisLabelFormatter:function(formatFunc){
-        commonOption.yAxis.axisLabel.formatter=formatFunc;
-      },
-      setSeries:function(series){
-        commonOption.series=series;
-      }
     }
 </script>
