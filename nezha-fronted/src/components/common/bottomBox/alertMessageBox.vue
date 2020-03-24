@@ -91,6 +91,13 @@
             <template v-else>-</template>
           </template>
         </el-table-column>
+        <el-table-column width="28" :resizable="false">
+          <template slot="header" slot-scope="scope">
+            <span @click.stop="elementsetShow('shezhi',$event)" class="nz-table-gear">
+              <i class="nz-icon nz-icon-gear"></i>
+            </span>
+          </template>
+        </el-table-column>
       </el-table>
       <Pagination :tableId="tableId" :pageObj="pageObj" @pageNo='pageNo' @pageSize='pageSize' ref="Pagination"></Pagination>
       <button class="to-top" v-show="showTopBtn && subResizeShow" @click="toTop('ps', 1)"><i class="nz-icon nz-icon-top"></i></button>
@@ -98,6 +105,16 @@
     <project-box :project="viewProjectData" ref="projectBox" @reload="getAlertList"></project-box>
     <module-box :module="viewModuleData" @reload="getAlertList" ref="moduleBox"></module-box>
     <asset-box :edit-unit-show='viewAssetState' @refreshData="getAlertList" @sendStateData="tabControl" ref="assetEditUnit"></asset-box>
+    <element-set
+      v-if="showElementSet"
+      v-clickoutside="elementsetHide"
+      :table-title="tableTitle"
+      :dropCol="dropCol"
+      :path="'/alertList'"
+      @close="elementsetHide"
+      @tablelable="tablelabelEmit"
+      ref="elementset"
+    ></element-set>
   </span>
 </template>
 
@@ -113,6 +130,7 @@
     },
     data() {
       return {
+        showElementSet: false,
         tableId: 'alertListTable', //需要分页的table的id，用于记录每页数量
         showTopBtn: false, //top按钮是否显示
         loading: false,
@@ -232,6 +250,41 @@
       }
     },
     methods: {
+      elementsetShow(s, e) {
+        this.showElementSet = true;
+        this.$nextTick(() => {
+          var eventfixed = {
+            shezhi: 0,
+            screen: 0
+          };
+          eventfixed[s] = 1;
+          e.preventDefault();
+          this.$store.commit('setHeaderTable', this.tablelable);
+          this.$store.commit('setEventfixed', eventfixed);
+          const h = document.documentElement.clientHeight;
+          const w = document.documentElement.clientWidth;
+          const dw = this.$refs.elementset.$el.offsetWidth;
+          const dh = this.$refs.elementset.$el.offsetHeight;
+          let positionx =
+            e.clientX + dw <= w - 10 ? e.clientX + 14 : e.clientX + 14 - dw;
+          let positiony =
+            e.clientY + dh <= h - 10
+              ? e.clientY
+              : e.clientY - (e.clientY + dh - h);
+          this.$store.commit('setPosition', {positionx, positiony});
+        });
+      },
+      elementsetHide() {
+        //悬浮点击空白隐藏
+        //this.$refs.elementset.elementsetHide();
+        this.showElementSet = false;
+      },
+      tablelabelEmit(data) {
+        //获取子组件传过来的参数
+        this.$store.commit('setHeaderTable', data);
+        this.tablelable = data;
+        this.dropCol = data;
+      },
       getAlertList() {
         this.tableData = [];
         this.loading = true;
@@ -256,6 +309,11 @@
       },
       search: function (searchObj) {
         this.searchLabel = {};
+        if (this.from == "alertRule") {
+          this.searchLabel.alertName = this.obj.alertName;
+        } else if (this.from == "asset") {
+
+        }
         this.pageObj.pageNo = 1;
         for (let item in searchObj) {
           if (searchObj[item]) {
@@ -264,7 +322,8 @@
         }
         this.getAlertList();
       },
-      viewAlertType: function (type, typeObj) {
+      viewAlertType(type, typeObj) {
+        console.info(type, typeObj)
         this.closeViews();
         switch (type) {
           case 1:
@@ -296,7 +355,6 @@
         })
       },
       closeViews: function () {
-        this.$refs.alertConfigBox.show(false, false);
         this.$refs.projectBox.show(false, false);
         this.$refs.moduleBox.show(false, false);
         this.viewAssetState = false;
@@ -328,11 +386,16 @@
         deep: true,
         handler(n) {
           if (this.from == "alertRule") {
+            this.searchMsg.searchLabelList = this.searchMsg.searchLabelList.filter((item, index) => {
+              return item.label != "alertName" && item.label != "severity"
+            });
             this.searchLabel.alertName = this.obj.alertName;
-            this.searchLabel.host = "";
           } else if (this.from == "asset") {
-            this.searchLabel.host = this.obj.host;
-            this.searchLabel.alertName = "";
+            this.searchMsg.searchLabelList = this.searchMsg.searchLabelList.filter((item, index) => {
+              return item.label != "alertType" && item.label != "asset"
+            });
+            this.searchLabel.type = 3;
+            this.searchLabel.linkId = this.obj.id;
           }
           this.getAlertList();
         }
@@ -357,11 +420,11 @@
           });
         }
       });
-      this.tablelable = localStorage.getItem("nz-tableTitle-" + localStorage.getItem("nz-username") + "-" + this.$route.path)
-        ? JSON.parse(localStorage.getItem("nz-tableTitle-" + localStorage.getItem("nz-username") + "-" + this.$route.path))
+      this.tablelable = localStorage.getItem("nz-tableTitle-" + localStorage.getItem("nz-username") + "-/alertList")
+        ? JSON.parse(localStorage.getItem("nz-tableTitle-" + localStorage.getItem("nz-username") + "-/alertList"))
         : this.tableTitle;
-      this.dropCol = localStorage.getItem("nz-tableTitle-" + localStorage.getItem("nz-username") + "-" + this.$route.path)
-        ? JSON.parse(localStorage.getItem("nz-tableTitle-" + localStorage.getItem("nz-username") + "-" + this.$route.path))
+      this.dropCol = localStorage.getItem("nz-tableTitle-" + localStorage.getItem("nz-username") + "-/alertList")
+        ? JSON.parse(localStorage.getItem("nz-tableTitle-" + localStorage.getItem("nz-username") + "-/alertList"))
         : this.tableTitle;
     }
   }

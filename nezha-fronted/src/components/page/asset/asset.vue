@@ -32,155 +32,164 @@
     </div>
 
     <div class="content-right">
-      <div class="top-tools">
-        <div class="top-tool-main-right">
-          <div class="top-tool-search margin-r-20"><search-input :searchMsg="searchMsg" @search="search"></search-input></div>
-          <export-excel
-            export-file-name="asset"
-            export-url="/asset/export"
-            :params="searchLabel"
-            @afterImport="getAssetData"
-            class="float-right">
-            <template slot="optionZone">
-                <i class="nz-icon nz-icon-create-square" @click.stop="tagShow('showAdd')" :title="$t('overall.createAsset')" ></i>
-            </template>
-          </export-excel>
-        </div>
-      </div>
-
-      <el-table
-        class="nz-table"
-        :height="$tableHeight.normal"
-        style="width: 100%;"
-        :data="tableData"
-        v-scrollBar:el-table
-        border
-        tooltip-effect="light"
-        ref="assetTable"
-      >
-        <el-table-column
-          :resizable="false"
-          v-for="(item, index) in tablelable"
-          v-if="item.show"
-          :width="item.width"
-          :key="`col_${index}`"
-          :label="item.label"
-          :fixed="item.fixed"
-          :show-overflow-tooltip="item.prop != 'Alert' || item.prop != 'Module'"
-          min-width="110px"
-          :class-name="item.prop == 'option' ? 'content-right-options' : ''"
-        >
-          <template slot-scope="scope" :column="item">
-            <div v-if="item.prop=='ID'">
-              <span>{{scope.row.id}}</span>
-            </div>
-            <div v-if="item.prop=='assetType'">
-              <span>{{scope.row.model.type.value}}</span>
-            </div>
-            <template v-if="item.prop=='SN'">{{scope.row.sn}}</template>
-            <div v-if="item.prop=='HOST'">
-              <span>{{scope.row.host}}</span>
-            </div>
-            <div v-if="item.prop=='state'">
-              <span>{{scope.row.state==1 ? $t('asset.createAssetTab.inStock') : $t('asset.createAssetTab.notInStock')}}</span>
-            </div>
-<!--            :content="scope.row.pingRtt ? (scope.row.pingLastUpdate&&scope.row.pingLastUpdate!=''?(new Date(scope.row.pingLastUpdate).getHours()+':'+new Date(scope.row.pingLastUpdate).getMinutes()):'&#45;&#45;')+'['+ scope.row.pingRtt+'ms'+']':(scope.row.pingLastUpdate&&scope.row.pingLastUpdate!=''?(new Date(scope.row.pingLastUpdate).getHours()+':'+new Date(scope.row.pingLastUpdate).getMinutes()):'&#45;&#45;')+'[unreachable]'"-->
-            <div v-if="item.prop == 'pingStatus'">
-              <el-popover
-                placement="right"
-                width="200"
-                trigger="hover"
-                :content="formatPingTime(scope.row.pingLastUpdate)">
-                <div slot="reference" style="width: 20px">
-                  <div :class="{'active-icon green':scope.row.pingState == 1,'active-icon red':scope.row.pingState == 0}"></div><span>{{scope.row.pingRtt?scope.row.pingRtt+'ms':''}}</span>
-                </div>
-              </el-popover>
-            </div>
-            <template v-if="item.prop=='Module'">
-              <template v-if="scope.row.moduleNum > 0" >
-                <endpoint-status-pop :asset-id="scope.row.id" :ref="'endpointPop' + scope.row.id">
-                  <template v-slot:optionZone>
-                  <span class="clickable">{{scope.row.endpointNum}}</span>
-                </template>
-                </endpoint-status-pop>
-                <!--<module-list-pop :asset-id="scope.row.id + ''" @openModuleBox="openModuleBox" placement="left" :ref="'moduleListPop' + scope.row.id">
-                  <template v-slot:optionZone>
-&lt;!&ndash;                    <button class="nz-btn nz-btn-size-normal nz-btn-style-light nz-btn-min-width-75">{{scope.row.moduleNum}}</button>&ndash;&gt;
-                      <span class="clickable">{{scope.row.moduleNum}}</span>
-                  </template>
-                </module-list-pop>-->
+      <div class="main-list" :class="{'main-list-with-sub': showSubList}">
+        <div class="top-tools" v-show="mainResizeShow">
+          <div class="top-tool-main-right" :class="{'top-tool-main-right-to-left': showSubList}">
+            <div class="top-tool-search margin-r-20"><search-input :searchMsg="searchMsg" @search="search" :inTransform="inTransform"></search-input></div>
+            <export-excel
+              export-file-name="asset"
+              export-url="/asset/export"
+              :params="searchLabel"
+              @afterImport="getAssetData"
+              style="width: 59px;"
+              class="float-right">
+              <template slot="optionZone">
+                  <i class="nz-icon nz-icon-create-square" @click.stop="tagShow('showAdd')" :title="$t('overall.createAsset')" ></i>
               </template>
-<!--              <button type="button" v-else class="nz-btn nz-btn-size-normal nz-btn-style-light nz-btn-min-width-75 nz-btn-disabled">{{scope.row.moduleNum}}</button>-->
-              <span v-else class="unclickable">{{scope.row.endpointNum}}</span>
+            </export-excel>
+          </div>
+          <div class="pagination-top pagination-top-hide display-none"></div>
+        </div>
+
+        <el-table
+          class="nz-table"
+          :height="mainTableHeight"
+          style="width: 100%;"
+          :data="tableData"
+          v-scrollBar:el-table
+          v-show="mainResizeShow"
+          border
+          tooltip-effect="light"
+          ref="assetTable"
+        >
+          <el-table-column
+            :resizable="false"
+            v-for="(item, index) in tablelable"
+            v-if="item.show"
+            :width="item.width"
+            :key="`col_${index}`"
+            :label="item.label"
+            :fixed="item.fixed"
+            :show-overflow-tooltip="item.prop != 'Alert' || item.prop != 'Module'"
+            min-width="110px"
+            :class-name="item.prop == 'option' ? 'content-right-options' : ''"
+          >
+            <template slot-scope="scope" :column="item">
+              <div v-if="item.prop=='ID'">
+                <span>{{scope.row.id}}</span>
+              </div>
+              <div v-if="item.prop=='assetType'">
+                <span>{{scope.row.model.type.value}}</span>
+              </div>
+              <template v-if="item.prop=='SN'">{{scope.row.sn}}</template>
+              <div v-if="item.prop=='HOST'">
+                <span>{{scope.row.host}}</span>
+              </div>
+              <div v-if="item.prop=='state'">
+                <span>{{scope.row.state==1 ? $t('asset.createAssetTab.inStock') : $t('asset.createAssetTab.notInStock')}}</span>
+              </div>
+  <!--            :content="scope.row.pingRtt ? (scope.row.pingLastUpdate&&scope.row.pingLastUpdate!=''?(new Date(scope.row.pingLastUpdate).getHours()+':'+new Date(scope.row.pingLastUpdate).getMinutes()):'&#45;&#45;')+'['+ scope.row.pingRtt+'ms'+']':(scope.row.pingLastUpdate&&scope.row.pingLastUpdate!=''?(new Date(scope.row.pingLastUpdate).getHours()+':'+new Date(scope.row.pingLastUpdate).getMinutes()):'&#45;&#45;')+'[unreachable]'"-->
+              <div v-if="item.prop == 'pingStatus'">
+                <el-popover
+                  placement="right"
+                  width="200"
+                  trigger="hover"
+                  :content="formatPingTime(scope.row.pingLastUpdate)">
+                  <div slot="reference" style="width: 20px">
+                    <div :class="{'active-icon green':scope.row.pingState == 1,'active-icon red':scope.row.pingState == 0}"></div><span>{{scope.row.pingRtt?scope.row.pingRtt+'ms':''}}</span>
+                  </div>
+                </el-popover>
+              </div>
+              <template v-if="item.prop=='Module'">
+                <template v-if="scope.row.moduleNum > 0" >
+                  <endpoint-status-pop :asset-id="scope.row.id" :ref="'endpointPop' + scope.row.id">
+                    <template v-slot:optionZone>
+                    <span class="clickable">{{scope.row.endpointNum}}</span>
+                  </template>
+                  </endpoint-status-pop>
+                  <!--<module-list-pop :asset-id="scope.row.id + ''" @openModuleBox="openModuleBox" placement="left" :ref="'moduleListPop' + scope.row.id">
+                    <template v-slot:optionZone>
+  &lt;!&ndash;                    <button class="nz-btn nz-btn-size-normal nz-btn-style-light nz-btn-min-width-75">{{scope.row.moduleNum}}</button>&ndash;&gt;
+                        <span class="clickable">{{scope.row.moduleNum}}</span>
+                    </template>
+                  </module-list-pop>-->
+                </template>
+  <!--              <button type="button" v-else class="nz-btn nz-btn-size-normal nz-btn-style-light nz-btn-min-width-75 nz-btn-disabled">{{scope.row.moduleNum}}</button>-->
+                <span v-else class="unclickable">{{scope.row.endpointNum}}</span>
+              </template>
+              <template v-if="item.prop=='Alert'">
+  <!--              <button type="button" v-if="scope.row.alertNum > 0" id="'asset-alerts-'+scope.row.id" @click="jumpToAlertMsg(scope.row.id)" class="nz-btn nz-btn-size-normal nz-btn-style-light nz-btn-min-width-75">{{scope.row.alertNum}}</button>-->
+  <!--              <button type="button" v-else class="nz-btn nz-btn-size-normal nz-btn-style-light nz-btn-min-width-75 nz-btn-disabled">{{scope.row.alertNum}}</button>-->
+                <span v-if="scope.row.alertNum" :id="'asset-alerts-'+scope.row.id" @click="jumpToAlertMsg(scope.row)" class="link">{{scope.row.alertNum}}</span>
+                <span v-else>0</span>
+              </template>
+              <div v-if="item.prop=='dataCenter'">
+  <!--              <idc-config-box :post-idc="JSON.parse(JSON.stringify(scope.row.idc))" ref="idcConfigBox" :is-edit="false" placement="left"  @after="getAssetData(null, true)" :button-class="'checkbox-edit'" :user-data="idcUserData">-->
+  <!--                <template v-slot:optionZone>-->
+  <!--&lt;!&ndash;                  <span class="link" @click="closeAllPop">{{scope.row.idc.name}}</span>&ndash;&gt;-->
+  <!--                  <span class="clickable" @click="closeAllPop">{{scope.row.idc.name}}</span>-->
+  <!--                </template>-->
+  <!--              </idc-config-box>-->
+                <span  >{{scope.row.idc.name}}</span>
+              </div>
+              <template v-if="item.prop=='cabinet'">
+  <!--              <cabinet-config-box v-if="scope.row.cabinet&&scope.row.cabinet!='&#45;&#45;'" ref="cabinetConfigBox"  placement="left" :is-edit="false" :post-cabinet="JSON.parse(JSON.stringify(scope.row.cabinet))"  @after="getAssetData(null, true)" :post-idc-datas="IDCOptionData">-->
+  <!--&lt;!&ndash;                <span slot="optionZone" @click="closeAllPop" class="link">{{returnData(scope.row.cabinet)}}</span>&ndash;&gt;-->
+  <!--                <span class="clickable" slot="optionZone" @click="closeAllPop" >{{returnData(scope.row.cabinet).name}}</span>-->
+  <!--              </cabinet-config-box>-->
+                <span   v-if="scope.row.cabinet&&scope.row.cabinet!='--'">{{returnData(scope.row.cabinet).name}}</span>
+  <!--              <span v-else class="unclickable">{{returnData(scope.row.cabinet)}}</span>-->
+                <span v-else >{{returnData(scope.row.cabinet)}}</span>
+              </template>
+              <div v-if="item.prop=='model'">
+                <span>{{scope.row.model.name}}</span>
+              </div>
+              <div v-if="item.prop=='vendor'">
+                <span>{{scope.row.model.vendor.value}}</span>
+              </div>
+              <div v-if="item.prop=='purchaseDate'">
+                <span>{{returnData(scope.row.purchaseDate)}}</span>
+              </div>
+              <div v-if="item.prop=='principal'">
+                <span>{{getPrincipalName(scope.row.idc.principal)}}</span>
+              </div>
+              <div v-if="item.prop=='tel'">
+                <span>{{scope.row.idc.tel}}</span>
+              </div>
+              <template v-if="item.prop == 'option'">
+                <span :title="$t('overall.view')" @click.stop="tagShow('showView',scope.row.id)" class="content-right-option" :id="'asset-detail-'+scope.row.id"><i
+                  class="el-icon-view"></i>
+                </span>
+                &nbsp;
+                <span :title="$t('overall.edit')" @click.stop="tagShow('showEdit',scope.row.id)" class="content-right-option" :id="'asset-edit-'+scope.row.id"><i
+                  class="nz-icon nz-icon-edit"></i>
+                </span>&nbsp;
+                &nbsp;
+                <span :title="$t('overall.delete')" @click.stop="deleteData('asset',scope.row.id)" class="content-right-option" :id="'asset-del-'+scope.row.id"><i
+                  class="el-icon-delete"></i>
+                </span>&nbsp;&nbsp;&nbsp;
+                &nbsp;
+                <span title="CLI" @click="cli(scope.row.id ,scope.row.host,scope.row.accounts)" class="content-right-option" :id="'asset-ssh-'+scope.row.id"><i
+                  class="nz-icon nz-icon-cli"></i>
+                </span>
+              </template>
             </template>
-            <template v-if="item.prop=='Alert'">
-<!--              <button type="button" v-if="scope.row.alertNum > 0" id="'asset-alerts-'+scope.row.id" @click="jumpToAlertMsg(scope.row.id)" class="nz-btn nz-btn-size-normal nz-btn-style-light nz-btn-min-width-75">{{scope.row.alertNum}}</button>-->
-<!--              <button type="button" v-else class="nz-btn nz-btn-size-normal nz-btn-style-light nz-btn-min-width-75 nz-btn-disabled">{{scope.row.alertNum}}</button>-->
-              <span v-if="scope.row.alertNum > 0" id="'asset-alerts-'+scope.row.id" @click="jumpToAlertMsg(scope.row.id)" class="clickable">{{scope.row.alertNum}}</span>
-              <span v-else class="unclickable">{{scope.row.alertNum}}</span>
-            </template>
-            <div v-if="item.prop=='dataCenter'">
-<!--              <idc-config-box :post-idc="JSON.parse(JSON.stringify(scope.row.idc))" ref="idcConfigBox" :is-edit="false" placement="left"  @after="getAssetData(null, true)" :button-class="'checkbox-edit'" :user-data="idcUserData">-->
-<!--                <template v-slot:optionZone>-->
-<!--&lt;!&ndash;                  <span class="link" @click="closeAllPop">{{scope.row.idc.name}}</span>&ndash;&gt;-->
-<!--                  <span class="clickable" @click="closeAllPop">{{scope.row.idc.name}}</span>-->
-<!--                </template>-->
-<!--              </idc-config-box>-->
-              <span  >{{scope.row.idc.name}}</span>
-            </div>
-            <template v-if="item.prop=='cabinet'">
-<!--              <cabinet-config-box v-if="scope.row.cabinet&&scope.row.cabinet!='&#45;&#45;'" ref="cabinetConfigBox"  placement="left" :is-edit="false" :post-cabinet="JSON.parse(JSON.stringify(scope.row.cabinet))"  @after="getAssetData(null, true)" :post-idc-datas="IDCOptionData">-->
-<!--&lt;!&ndash;                <span slot="optionZone" @click="closeAllPop" class="link">{{returnData(scope.row.cabinet)}}</span>&ndash;&gt;-->
-<!--                <span class="clickable" slot="optionZone" @click="closeAllPop" >{{returnData(scope.row.cabinet).name}}</span>-->
-<!--              </cabinet-config-box>-->
-              <span   v-if="scope.row.cabinet&&scope.row.cabinet!='--'">{{returnData(scope.row.cabinet).name}}</span>
-<!--              <span v-else class="unclickable">{{returnData(scope.row.cabinet)}}</span>-->
-              <span v-else >{{returnData(scope.row.cabinet)}}</span>
-            </template>
-            <div v-if="item.prop=='model'">
-              <span>{{scope.row.model.name}}</span>
-            </div>
-            <div v-if="item.prop=='vendor'">
-              <span>{{scope.row.model.vendor.value}}</span>
-            </div>
-            <div v-if="item.prop=='purchaseDate'">
-              <span>{{returnData(scope.row.purchaseDate)}}</span>
-            </div>
-            <div v-if="item.prop=='principal'">
-              <span>{{getPrincipalName(scope.row.idc.principal)}}</span>
-            </div>
-            <div v-if="item.prop=='tel'">
-              <span>{{scope.row.idc.tel}}</span>
-            </div>
-            <template v-if="item.prop == 'option'">
-              <span :title="$t('overall.view')" @click.stop="tagShow('showView',scope.row.id)" class="content-right-option" :id="'asset-detail-'+scope.row.id"><i
-                class="el-icon-view"></i>
+          </el-table-column>
+          <el-table-column width="28" fixed="right" :resizable="false">
+            <template slot="header" slot-scope="scope">
+              <span @click.stop="elementsetShow('shezhi',$event)" class="nz-table-gear">
+                <i class="nz-icon nz-icon-gear"></i>
               </span>
-              &nbsp;
-              <span :title="$t('overall.edit')" @click.stop="tagShow('showEdit',scope.row.id)" class="content-right-option" :id="'asset-edit-'+scope.row.id"><i
-                class="nz-icon nz-icon-edit"></i>
-              </span>&nbsp;
-              &nbsp;
-              <span :title="$t('overall.delete')" @click.stop="deleteData('asset',scope.row.id)" class="content-right-option" :id="'asset-del-'+scope.row.id"><i
-                class="el-icon-delete"></i>
-              </span>&nbsp;&nbsp;&nbsp;
-              &nbsp;
-              <span title="CLI" @click="cli(scope.row.id ,scope.row.host,scope.row.accounts)" class="content-right-option" :id="'asset-ssh-'+scope.row.id"><i
-                class="nz-icon nz-icon-cli"></i>
-              </span>
             </template>
-          </template>
-        </el-table-column>
-        <el-table-column width="28" fixed="right" :resizable="false">
-          <template slot="header" slot-scope="scope">
-            <span @click.stop="elementsetShow('shezhi',$event)" class="nz-table-gear">
-              <i class="nz-icon nz-icon-gear"></i>
-            </span>
-          </template>
-        </el-table-column>
-      </el-table>
-      <Pagination :tableId="tableId" :pageObj="pageObj" @pageNo='pageNo' @pageSize='pageSize' ref="Pagination"></Pagination>
-      <button class="to-top" v-show="showTopBtn" @click="toTop"><i class="nz-icon nz-icon-top"></i></button>
+          </el-table-column>
+        </el-table>
+        <div class="pagination-bottom" v-show="!showSubList">
+          <Pagination :tableId="tableId" :pageObj="pageObj" @pageNo='pageNo' @pageSize='pageSize' ref="Pagination"></Pagination>
+        </div>
+        <button class="to-top" v-show="showTopBtn" @click="toTop"><i class="nz-icon nz-icon-top"></i></button>
+      </div>
+      <alert-message-box v-if="showSubList" @listResize="listResize" :show-sub-list="showSubList" :from="'asset'" :subResizeShow="subResizeShow" :obj="alertMsgAsset" :isFullScreen="isFullScreen"
+                         @closeSubList="showSubList = false" @fullScreen="fullScreen" @exitFullScreen="exitFullScreen"></alert-message-box>
     </div>
 
     <!--<asset-add-unit :add-unit-show='addUnitShow' @refreshData="flushData" ref="assetAddUnit"
@@ -190,6 +199,8 @@
     <asset-box :edit-unit-show='editUnitShow' @refreshData="flushData" @sendStateData="tabControl"
                      ref="assetEditUnit"></asset-box>
     <element-set
+      v-if="showElementSet"
+      @close="elementsetHide"
       v-clickoutside="elementsetHide"
       :drop-col="dropCol"
       :table-title="tableTitle"
@@ -213,6 +224,15 @@
     },
     data() {
       return {
+        alertMsgAsset: {}, //告警信息对应的asset对象
+        showElementSet: false, //控制自定义列的弹框
+        inTransform: false, //搜索框相关，搜索条件下拉框是否在transform里
+        mainResizeShow: true, //dom高度改变时部分内容是否展示
+        subResizeShow: true,
+        isFullScreen: false,
+        mainTableHeight: this.$tableHeight.normal, //主列表table高度
+        showSubList: false, //是否展示二级列表
+        showElementSet: false, //自定义列弹框是否显示
         tableId: 'assetTable', //需要分页的table的id，用于记录每页数量
         searchMsg: { //给搜索框子组件传递的信息
           zheze_none: true,
@@ -292,7 +312,7 @@
             label: this.$t("asset.tableTitle.alerts"),
             prop: 'Alert',
             show: true,
-            width: 105
+            width: 80
           }, {
             label: this.$t("asset.tableTitle.dataCenter"),
             prop: 'dataCenter',
@@ -427,9 +447,146 @@
           }
           this.getAssetData();
         }, 50);
+      },
+      showSubList(n) {
+        this.inTransform = n;
+        if (!n) {
+          this.mainTableHeight = this.$tableHeight.normal; //重置table的高度
+          this.isFullScreen = false;
+          //移动分页组件的位置
+          let paginationTop = document.querySelector(".pagination-top");
+          let paginationBottom = document.querySelector(".pagination-bottom");
+          paginationTop.classList.remove("display-none");
+          if (paginationTop.classList.contains("pagination-top-show")) {
+            paginationTop.classList.remove("pagination-top-show");
+          }
+          if (!paginationTop.classList.contains("pagination-top-hide")) {
+            paginationTop.classList.add("pagination-top-hide");
+          }
+          setTimeout(() => {
+            paginationTop.classList.add("display-none");
+            paginationBottom.appendChild(paginationTop.removeChild(document.querySelector(".pagination")));
+          }, 210);
+
+          // 主列表恢复全屏
+          this.mainResizeShow = this.subResizeShow = true;
+          document.querySelector('.main-list').style.height = "";
+          //副列表高度清空
+          document.querySelector(".sub-list").style.height = '';
+        } else {
+          this.mainTableHeight = this.$tableHeight.openSubList.mainList; //重置table高度
+          //移动分页组件的位置
+          let paginationTop = document.querySelector(".pagination-top");
+          paginationTop.appendChild(document.querySelector(".pagination-bottom").removeChild(document.querySelector(".pagination")));
+          paginationTop.classList.remove("display-none");
+          setTimeout(() => {
+            if (paginationTop.classList.contains("pagination-top-hide")) {
+              paginationTop.classList.remove("pagination-top-hide");
+            }
+            if (!paginationTop.classList.contains("pagination-top-show")) {
+              paginationTop.classList.add("pagination-top-show");
+            }
+          }, 210);
+        }
       }
     },
     methods: {
+      // 鼠标拖动二级列表
+      listResize(e) {
+        let mainListDom = document.querySelector(".main-list-with-sub"); //主列表
+        let subListDom = document.querySelector(".sub-list"); //副列表
+        let contentRightDom = document.querySelector(".content-right"); //右侧内容区
+        let contentRightHeight = contentRightDom.offsetHeight;//可视高度
+        //得到点击时俩dom的初始高度：
+        let mainInitialHeight = mainListDom.offsetHeight;
+        let subInitialHeight = subListDom.offsetHeight;
+        //点击时鼠标的Y轴位置
+        let mouseInitialY = e.clientY;
+
+        let _this = this;
+
+        document.onmousemove = (e) => {
+          e.preventDefault();
+          //得到鼠标拖动的距离
+          let mouseMoveY = Math.abs(e.clientY - mouseInitialY);
+
+          //往上方拖动：
+          if (e.clientY < mouseInitialY) {
+            mainListDom.style.height = mainInitialHeight-mouseMoveY+'px';
+            subListDom.style.height = subInitialHeight+mouseMoveY+'px';
+          }
+          //往下方拖动：
+          if (e.clientY > mouseInitialY) {
+            mainListDom.style.height = mainInitialHeight+mouseMoveY+'px';
+            subListDom.style.height = subInitialHeight-mouseMoveY+'px';
+          }
+
+          // 主、副列表最小高度限制为15px
+          if(parseInt(mainListDom.style.height) >= contentRightHeight-15){
+            mainListDom.style.height = contentRightHeight-15+'px';
+          }
+          if(parseInt(mainListDom.style.height) <= 15){
+            mainListDom.style.height = 15+'px';
+          }
+          if(parseInt(subListDom.style.height) >= contentRightHeight-15){
+            subListDom.style.height = contentRightHeight-15+'px';
+          }
+          if(parseInt(subListDom.style.height) <= 15){
+            subListDom.style.height = 15+'px';
+          }
+          //当主副列表可视区域小于一定值时，不展示内容
+          if(parseInt(mainListDom.style.height) <= 100){
+            if (_this.mainResizeShow) {
+              _this.mainResizeShow = false;
+            }
+          } else {
+            if (!_this.mainResizeShow) {
+              _this.mainResizeShow = true;
+            }
+          }
+          if(parseInt(subListDom.offsetHeight) <= 100){
+            if (_this.subResizeShow) {
+              _this.subResizeShow = false;
+            }
+          } else {
+            if (!_this.subResizeShow) {
+              _this.subResizeShow = true;
+            }
+          }
+        };
+        document.onmouseup = () => {
+          document.onmousemove = null;
+        }
+      },
+      exitFullScreen() {
+        let contentRightDom = document.querySelector(".content-right"); //右侧内容区
+        let contentRightHeight = contentRightDom.offsetHeight;//可视高度
+        //主列表
+        document.querySelector(".main-list-with-sub").style.height = this.mainListHeight ? this.mainListHeight + 'px' : 'calc(50% - 4px)';
+
+        //副列表
+        document.querySelector(".sub-list").style.height = this.mainListHeight ? contentRightHeight-this.mainListHeight-9 + 'px' : 'calc(50% - 4px)';
+        setTimeout(() => {
+          this.isFullScreen = false;
+          if (document.querySelector(".main-list-with-sub").offsetHeight >= 100) {
+            this.mainResizeShow = true;
+          }
+          if (document.querySelector(".sub-list").offsetHeight >= 100) {
+            this.subResizeShow = true;
+          }
+        }, 210);
+      },
+      fullScreen() {
+        let contentRightDom = document.querySelector(".content-right"); //右侧内容区
+        let contentRightHeight = contentRightDom.offsetHeight;//可视高度
+        this.isFullScreen = true;
+        //主列表
+        this.mainListHeight = document.querySelector(".main-list-with-sub").offsetHeight; //记录全屏前主列表的高度
+        document.querySelector(".main-list-with-sub").style.height = '0';
+        this.mainResizeShow = false;
+        //副列表
+        document.querySelector(".sub-list").style.height = contentRightHeight + 'px';
+      },
       dcSelectAll(val) { //DC全选
         if (this.checkListData.length > 0) {
           this.checkList = [];
@@ -463,25 +620,28 @@
         this.$refs['moduleListPop' + id][0].getModuleList();
       },
       elementsetShow(s, e) {
-        var eventfixed = {
-          shezhi: 0,
-          screen: 0
-        };
-        eventfixed[s] = 1;
-        e.preventDefault();
-        this.$store.commit('setHeaderTable', this.tablelable);
-        this.$store.commit('setEventfixed', eventfixed);
-        const h = document.documentElement.clientHeight;
-        const w = document.documentElement.clientWidth;
-        const dw = this.$refs.elementset.$el.offsetWidth;
-        const dh = this.$refs.elementset.$el.offsetHeight;
-        let positionx =
-          e.clientX + dw <= w - 10 ? e.clientX + 14 : e.clientX + 14 - dw;
-        let positiony =
-          e.clientY + dh <= h - 10
-            ? e.clientY + 20
-            : e.clientY + 20 - (e.clientY + dh - h);
-        this.$store.commit('setPosition', { positionx, positiony });
+        this.showElementSet = true;
+        this.$nextTick(() => {
+          var eventfixed = {
+            shezhi: 0,
+            screen: 0
+          };
+          eventfixed[s] = 1;
+          e.preventDefault();
+          this.$store.commit('setHeaderTable', this.tablelable);
+          this.$store.commit('setEventfixed', eventfixed);
+          const h = document.documentElement.clientHeight;
+          const w = document.documentElement.clientWidth;
+          const dw = this.$refs.elementset.$el.offsetWidth;
+          const dh = this.$refs.elementset.$el.offsetHeight;
+          let positionx =
+            e.clientX + dw <= w - 10 ? e.clientX + 14 : e.clientX + 14 - dw;
+          let positiony =
+            e.clientY + dh <= h - 10
+              ? e.clientY + 20
+              : e.clientY + 20 - (e.clientY + dh - h);
+          this.$store.commit('setPosition', { positionx, positiony });
+        });
       },
       elementsetHide() {
         //悬浮点击空白隐藏
@@ -522,15 +682,9 @@
         this.$store.commit('addConsole',consoleParam);
         //this.$refs.webSsh.show(id,host,accountId,port);
       },
-      jumpToAlertMsg(assetId) {
-        this.$store.commit('assetForAlertListChange', assetId);
-        bus.$emit("menu-change", 'alertList');
-        this.$router.push({
-          path: "/alertList",
-          query: {
-            t: +new Date()
-          }
-        });
+      jumpToAlertMsg(asset) {
+        this.alertMsgAsset = JSON.parse(JSON.stringify(asset));
+        this.showSubList = true;
       },
       getAssetData(data, flushRightBoxDc) {
         this.searchLabel = Object.assign(this.searchLabel, this.pageObj);

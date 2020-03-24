@@ -71,7 +71,10 @@
                 <span v-else>-</span>
               </template>
               <template v-else-if="item.prop == 'alertName'">{{scope.row.alertName}}</template>
-              <template v-else-if="item.prop == 'id'"><span class="link" @click="queryMessage(scope.row)">{{scope.row.id}}</span></template>
+              <template v-else-if="item.prop == 'alertNum'">
+                <span v-if="scope.row.alertNum" class="link" @click="queryMessage(scope.row)">{{scope.row.alertNum}}</span>
+                <template v-else>0</template>
+              </template>
               <span v-else-if="scope.row[item.prop]">{{scope.row[item.prop]}}</span>
               <template v-else>-</template>
             </template>
@@ -85,11 +88,11 @@
           </el-table-column>
         </el-table>
         <div class="pagination-bottom" v-show="!showSubList">
-         <Pagination :tableId="tableId" :pageObj="pageObj" @pageNo='pageNo' @pageSize='pageSize' ref="Pagination"></Pagination>
+          <Pagination :tableId="tableId" :pageObj="pageObj" @pageNo='pageNo' @pageSize='pageSize' ref="Pagination"></Pagination>
         </div>
         <button class="to-top" v-show="showTopBtn" @click="toTop"><i class="nz-icon nz-icon-top"></i></button>
       </div>
-      <alert-message-box v-if="showSubList" @listResize="listResize" :show-sub-list="showSubList" :from="'alertRule'" :subResizeShow="subResizeShow" :obj="alertRule" :isFullScreen="isFullScreen"
+      <alert-message-box v-if="showSubList" @listResize="listResize" :show-sub-list="showSubList" :from="'alertRule'" :subResizeShow="subResizeShow" :obj="alertRuleForMessage" :isFullScreen="isFullScreen"
                          @closeSubList="showSubList = false" @fullScreen="fullScreen" @exitFullScreen="exitFullScreen"></alert-message-box>
     </div>
     <alert-config-box :parentAlertRule="alertRule" @reload="getTableData" ref="alertConfigBox"></alert-config-box>
@@ -100,6 +103,8 @@
     <asset-box :edit-unit-show='viewAsset' @refreshData="getTableData" @sendStateData="tabControl"
                ref="assetEditUnit"></asset-box>
     <element-set
+      v-if="showElementSet"
+      @close="elementsetHide"
       v-clickoutside="elementsetHide"
       :table-title="tableTitle"
       :dropCol="dropCol"
@@ -114,6 +119,7 @@
     name: "alert-config",
     data() {
       return {
+        showElementSet: false, //控制自定义列的弹框
         inTransform: false, //搜索框相关，搜索条件下拉框是否在transform里
         mainResizeShow: true, //dom高度改变时部分内容是否展示
         subResizeShow: true,
@@ -167,6 +173,7 @@
           description: '',
           receiver: '',
         },
+        alertRuleForMessage: {}, //传给alertMessage上滑框的对象
         tablelable: [],
         dropCol: [],
         pageObj: {
@@ -214,6 +221,11 @@
             show: true,
             width: 120
           }, {
+            label: this.$t("alert.config.alertNum"),
+            prop: 'alertNum',
+            show: true,
+            width: 120
+          }, {
             label: this.$t("alert.config.expr"),
             prop: 'expr',
             show: true,
@@ -257,7 +269,7 @@
     },
     methods: {
       queryMessage(alertRule) {
-        this.alertRule = alertRule;
+        this.alertRuleForMessage = alertRule;
         this.showSubList = true;
       },
       // 鼠标拖动二级列表
@@ -328,34 +340,39 @@
         }
       },
       elementsetShow(s, e) {
-        var eventfixed = {
-          shezhi: 0,
-          screen: 0
-        };
-        eventfixed[s] = 1;
-        e.preventDefault();
-        this.$store.commit('setHeaderTable', this.tablelable);
-        this.$store.commit('setEventfixed', eventfixed);
-        const h = document.documentElement.clientHeight;
-        const w = document.documentElement.clientWidth;
-        const dw = this.$refs.elementset.$el.offsetWidth;
-        const dh = this.$refs.elementset.$el.offsetHeight;
-        let positionx =
-          e.clientX + dw <= w - 10 ? e.clientX + 14 : e.clientX + 14 - dw;
-        let positiony =
-          e.clientY + dh <= h - 10
-            ? e.clientY + 20
-            : e.clientY + 20 - (e.clientY + dh - h);
-        this.$store.commit('setPosition', {positionx, positiony});
+        this.showElementSet = true;
+        this.$nextTick(() => {
+          var eventfixed = {
+            shezhi: 0,
+            screen: 0
+          };
+          eventfixed[s] = 1;
+          e.preventDefault();
+          this.$store.commit('setHeaderTable', this.tablelable);
+          this.$store.commit('setEventfixed', eventfixed);
+          const h = document.documentElement.clientHeight;
+          const w = document.documentElement.clientWidth;
+          const dw = this.$refs.elementset.$el.offsetWidth;
+          const dh = this.$refs.elementset.$el.offsetHeight;
+          let positionx =
+            e.clientX + dw <= w - 10 ? e.clientX + 14 : e.clientX + 14 - dw;
+          let positiony =
+            e.clientY + dh <= h - 10
+              ? e.clientY + 20
+              : e.clientY + 20 - (e.clientY + dh - h);
+          this.$store.commit('setPosition', {positionx, positiony});
+        });
       },
       elementsetHide() {
         //悬浮点击空白隐藏
-        this.$refs.elementset.elementsetHide();
+        //this.$refs.elementset.elementsetHide();
+        this.showElementSet = false;
       },
       tablelabelEmit(data) {
         //获取子组件传过来的参数
         this.$store.commit('setHeaderTable', data);
         this.tablelable = data;
+        this.dropCol = data;
       },
       toEdit: function (u) {
         this.alertRule = Object.assign({}, u);
@@ -528,9 +545,6 @@
         if (!n) {
           this.mainTableHeight = this.$tableHeight.normal; //重置table的高度
           this.isFullScreen = false;
-          //重置二级列表数据
-          this.selectedEndpoints=[];
-          this.showTableData = [];
           //移动分页组件的位置
           let paginationTop = document.querySelector(".pagination-top");
           let paginationBottom = document.querySelector(".pagination-bottom");
@@ -546,7 +560,6 @@
             paginationBottom.appendChild(paginationTop.removeChild(document.querySelector(".pagination")));
           }, 210);
 
-          this.showTopBtn1 = false;
           // 主列表恢复全屏
           this.mainResizeShow = this.subResizeShow = true;
           document.querySelector('.main-list').style.height = "";

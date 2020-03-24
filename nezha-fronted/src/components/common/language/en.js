@@ -416,7 +416,7 @@ const en = {
       assetState: 'State',//'状态'
       assetPing: 'Ping',
       modules: 'Endpoint',//'组件'
-      alerts: 'Alert message',//'告警信息'
+      alerts: 'Alerts',//'告警信息'
       dataCenter: 'DC',//DC
       cabinet: 'Cabinet',//'机柜'
       model: 'Model',//'型号'
@@ -531,6 +531,7 @@ const en = {
       createAlertConfig: 'New alert rule',//"新增告警规则"
       editAlertConfig: 'Edit alert rule',//"修改告警规则"
       medium: 'Medium',//"中"
+      alertNum: 'Alert number', //告警信息数量
       high: 'High',//"高"
       low: 'Low',//"低"
       typeOption: {

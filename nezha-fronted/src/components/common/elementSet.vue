@@ -1,7 +1,6 @@
 <template>
   <div
     class="pop-elementset"
-    v-clickoutside="elementsetHide"
     :style="{opacity:(eventfixedVal.shezhi==1),left:(eventfixedVal.shezhi==1 ? event_positionx : -2000)+'px',top:(event_positiony)+'px'}"
   >
     <!--<div class="pop-top-btns">
@@ -56,7 +55,7 @@
 
 <script>
 export default {
-  props: ["dropCol","tableTitle"],
+  props: ["dropCol","tableTitle","path"],
   data() {
     return {
       other: this.$t("overall.other"),
@@ -110,6 +109,7 @@ export default {
     //悬浮点击空白隐藏
     elementsetHide() {
       this.eventfixedVal.shezhi = 0;
+      this.$emit('close');
     },
     //点击全选all或者cancel按钮
     dropAll(state) {
@@ -134,7 +134,7 @@ export default {
       if (t == "ok") {
         this.$emit("tablelable", JSON.parse(JSON.stringify(this.dropColRes)));
         localStorage.setItem(
-          "nz-tableTitle-" + localStorage.getItem("nz-username") + "-" + this.$route.path,
+          "nz-tableTitle-" + localStorage.getItem("nz-username") + "-" + ((typeof this.path != 'undefined') ? this.path : this.$route.path),
           JSON.stringify(this.tablelable)
         );
       } else {
