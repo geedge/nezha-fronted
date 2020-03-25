@@ -310,7 +310,7 @@
       search: function (searchObj) {
         this.searchLabel = {};
         if (this.from == "alertRule") {
-          this.searchLabel.alertName = this.obj.alertName;
+          this.searchLabel.ruleId = this.obj.id;
         } else if (this.from == "asset") {
           this.searchLabel.type = 3;
           this.searchLabel.linkId = this.obj.id;
@@ -390,7 +390,7 @@
             this.searchMsg.searchLabelList = this.searchMsg.searchLabelList.filter((item, index) => {
               return item.label != "alertName" && item.label != "severity"
             });
-            this.searchLabel.alertName = n.alertName;
+            this.searchLabel.ruleId = n.id;
           } else if (this.from == "asset") {
             this.searchMsg.searchLabelList = this.searchMsg.searchLabelList.filter((item, index) => {
               return item.label != "alertType" && item.label != "asset"
