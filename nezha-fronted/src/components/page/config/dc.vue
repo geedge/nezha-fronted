@@ -116,7 +116,8 @@
 
                 </template >
                 <template v-else-if="item.prop == 'cabinetNum'">
-                  <span class="link" @click="showCabinet(scope.row)">{{scope.row[item.prop]}}</span>
+                  <span v-if="scope.row.cabinetNum" class="link" @click="showCabinet(scope.row)">{{scope.row[item.prop]}}</span>
+                  <template v-else>0</template>
                 </template>
                 <template v-else-if="scope.row[item.prop]">{{scope.row[item.prop]}}</template>
                 <template v-else>-</template>
