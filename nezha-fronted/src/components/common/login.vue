@@ -6,7 +6,7 @@
       <div class="login-label"></div>
       <div class="login-input">
         <i class="nz-icon nz-icon-user"></i>
-        <input v-model="loginData.username" autocomplete="new-password" :placeholder="$t('login.username')"></input>
+        <input id="usernameInput" v-model="loginData.username" autocomplete="new-password" :placeholder="$t('login.username')"></input>
       </div>
       <div class="login-label"></div>
       <div class="login-input">
@@ -99,7 +99,8 @@ export default {
       if(e.key === 'Enter'){
         _this.login();
       }
-    }
+    };
+    document.getElementById("usernameInput").focus();
   }
 }
 </script>
