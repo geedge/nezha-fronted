@@ -21,7 +21,7 @@
                 <div class="week">{{sysWeek}}</div>
                 <div class="sys-date">{{sysDate}}</div>
               </div>
-              <div class="operation" @click="godView"><span ><i class="nz-icon nz-icon-maxview"></i></span></div>
+              <div class="operation" @click="switchFullScreen" ><span ><i class="nz-icon screen-icon" :class="{'nz-icon-maxview':!isFullScreen,'nz-icon-exit-full-screen':isFullScreen}"></i></span></div>
             </div>
           </div>
         </div>
@@ -30,18 +30,18 @@
         <div class="overview-content">
           <el-scrollbar style="height: 100%" ref="overviewScrollbar">
             <div class="content-row-box" >
-              <div class="content-col-box box-height-200 " style="flex:3;">
+              <div class="content-col-box box-height-200 " style="flex:3;" :class="{'box-height-266':isFullScreen}">
                 <table-box :pop-data="assetStatData" ref="assetTab" ></table-box>
               </div>
-              <div class="content-col-box box-height-200 " style="flex: 2">
+              <div class="content-col-box box-height-200 " style="flex: 2" :class="{'box-height-266':isFullScreen}">
                 <table-box :pop-data="projectStatData" ref="projectTab"></table-box>
               </div>
-              <div class="content-col-box box-height-200 " style="flex:1;">
+              <div class="content-col-box box-height-200 " style="flex:1;" :class="{'box-height-266':isFullScreen}">
                 <table-box :pop-data="endpointStatData" ref="endpointTab"></table-box>
               </div>
             </div>
             <div class="content-row-box">
-              <div class="content-col-box box-height-250 " style="flex: 1;">
+              <div class="content-col-box box-height-250 " style="flex: 1;" :class="{'box-height-316':isFullScreen}">
                 <div class="flex-container">
                   <div style="flex: 2;">
                     <table-box :pop-data="dataCenterStatData" ref="dataCenterTab" ></table-box>
@@ -53,7 +53,7 @@
               </div>
             </div>
             <div class="content-row-box">
-              <div class="content-col-box box-height-290 "style="flex: 3">
+              <div class="content-col-box box-height-290 "style="flex: 3" :class="{'box-height-356':isFullScreen}">
                 <div class="avg-children-space">
                   <!--<el-select v-model="topNFilter.default" placeholder="" size="mini" style="display: inline-block;width: 200px" @change="topNChange">
                     <el-option v-for="(item,index) in topNFilter.options" :label="item.label" :value="item.value" :key="item.value+index"></el-option>
@@ -76,10 +76,10 @@
                 </div>
                 <table-box :pop-data="topNStatData" ref="topNTab" style="height: 90%;"></table-box>
               </div>
-              <div class="content-col-box box-height-290 "style="flex: 8;" id="alertTrendBox">
+              <div class="content-col-box box-height-290 "style="flex: 8;" id="alertTrendBox" :class="{'box-height-356':isFullScreen}">
                 <chart-box  ref="chartbox" :chart-title="$t('dashboard.overview.alert.chart.chartTitle')"></chart-box>
               </div>
-              <div class="content-col-box box-height-290 "style="flex: 2;">
+              <div class="content-col-box box-height-290 "style="flex: 2;" :class="{'box-height-356':isFullScreen}">
                 <table-box :pop-data="alertRuleStatData" ref="alertRuleTab" ></table-box>
               </div>
             </div>
@@ -125,7 +125,7 @@
         chartSeries:[],
         alertRuleStatData:{},
         dataCenterMapSeries:[],
-        isGodView:false,
+        isFullScreen:false,
         sysTime:'',
         sysDate:'',
         sysWeek:'',
@@ -838,11 +838,42 @@
           this.queryAssetTopNData();
         }
       },
-      godView:function(el){
-
+      switchFullScreen:function(){
+        this.isFullScreen=this.judgeFullScreen();
+        if(this.isFullScreen){
+          this.exitFullScreen();
+        }else{
+          this.fullScreen();
+        }
       },
-      exitGodView:function(el){
-
+      judgeFullScreen:function(){
+        return document.isFullScreen || document.mozIsFullScreen || document.webkitIsFullScreen;
+      },
+      fullScreen:function(){
+        let container=document.getElementById('mainDisplay');
+        let fullScreenFunc=container.requestFullscreen||container.mozRequestFullScreen||container.webkitRequestFullscreen||container.msRequestFullscreen;
+        console.log(fullScreenFunc)
+        fullScreenFunc.call(container)
+        // if(container.requestFullscreen){
+        //   container.requestFullscreen();
+        // } else if(container.mozRequestFullScreen) {
+        //   container.mozRequestFullScreen();
+        // } else if(container.webkitRequestFullscreen) {
+        //   container.webkitRequestFullscreen();
+        // } else if(container.msRequestFullscreen) {
+        //   container.msRequestFullscreen();
+        // }
+      },
+      exitFullScreen:function(){
+        if(this.judgeFullScreen()){
+          if(document.exitFullscreen) {
+            document.exitFullscreen();
+          } else if(document.mozCancelFullScreen) {
+            document.mozCancelFullScreen();
+          } else if(document.webkitExitFullscreen) {
+            document.webkitExitFullscreen();
+          }
+        }
       },
       /*header 时间处理 start*/
       initDate:function(){
@@ -924,6 +955,22 @@
     mounted() {
       this.initDate();
       this.initData();
+      window.onresize = () => {
+        this.isFullScreen=this.judgeFullScreen();
+      }
+    },
+    watch:{
+      isFullScreen:function(n,o){
+        this.$nextTick(()=>{
+          let width=this.$refs.chartbox.$el.clientWidth;
+          let height=this.$refs.chartbox.$el.clientHeight * .95;
+          this.$refs.chartbox.resizeChart(width,height);
+          let mapWidth=this.$refs.dataCenterMap.$el.clientWidth;
+          let mapHeight=this.$refs.dataCenterMap.$el.clientHeight * .95;
+          this.$refs.dataCenterMap.resizeChart(mapWidth,mapHeight);
+
+        });
+      }
     }
   }
 </script>

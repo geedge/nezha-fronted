@@ -45,6 +45,7 @@
               :data="showData.table.tableData"
               v-scrollBar:el-table
               height="100%"
+              ref="dataTable"
             >
               <el-table-column
                 :resizable="false"

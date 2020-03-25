@@ -121,6 +121,11 @@
         this.chart.clear();
         this.chart.setOption(this.option)
       },
+      resizeChart:function(width,height){
+        if(this.chart){
+          this.chart.resize({width:width,height:height});
+        }
+      },
       startLoading:function(){
         this.$refs.loading.startLoading();
       },
