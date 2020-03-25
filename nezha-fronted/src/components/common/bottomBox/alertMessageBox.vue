@@ -312,7 +312,8 @@
         if (this.from == "alertRule") {
           this.searchLabel.alertName = this.obj.alertName;
         } else if (this.from == "asset") {
-
+          this.searchLabel.type = 3;
+          this.searchLabel.linkId = this.obj.id;
         }
         this.pageObj.pageNo = 1;
         for (let item in searchObj) {
@@ -389,13 +390,13 @@
             this.searchMsg.searchLabelList = this.searchMsg.searchLabelList.filter((item, index) => {
               return item.label != "alertName" && item.label != "severity"
             });
-            this.searchLabel.alertName = this.obj.alertName;
+            this.searchLabel.alertName = n.alertName;
           } else if (this.from == "asset") {
             this.searchMsg.searchLabelList = this.searchMsg.searchLabelList.filter((item, index) => {
               return item.label != "alertType" && item.label != "asset"
             });
             this.searchLabel.type = 3;
-            this.searchLabel.linkId = this.obj.id;
+            this.searchLabel.linkId = n.id;
           }
           this.getAlertList();
         }

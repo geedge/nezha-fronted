@@ -1,4 +1,4 @@
-<style scoped>
+<style>
   .dc {
     height: 100%;
   }
@@ -51,85 +51,94 @@
         </div>
       </div>
       <!--dc table start-->
-      <div class="content-right" v-if="tabShow==1">
-        <div class="top-tools">
-          <div class="top-tool-main-right">
-            <div class="top-tool-search">
-              <search-input ref="searchInput" :searchMsg="searchMsg" @search="search" v-if="tabShow==1"></search-input>
-            </div>
-            <button type="button" @click="toAdd" :title="$t('overall.createDatacenter')"
-                    class="nz-btn nz-btn-size-normal nz-btn-style-light margin-l-20" id="dc-add">
-              <i class="nz-icon-create-square nz-icon"></i>
-            </button>
-          </div>
-        </div>
-        <el-table
-          class="nz-table"
-          :data="tableData"
-          border
-          v-scrollBar:el-table
-          :height="$tableHeight.normal"
-          ref="dcTable"
-          style="width: 100%;">
-          <el-table-column
-            :resizable="false"
-            v-for="(item, index) in tablelable"
-            v-if="item.show"
-            :width="item.width"
-            :key="`col-${index}`"
-            :label="item.label"
-          >
-            <template slot-scope="scope" :column="item">
-              <div v-if="item.prop == 'option'" class="content-right-options">
-                <span :title="$t('overall.view')" @click="detail(scope.row)" class="content-right-option" :id="'dc-detail-'+scope.row.id"><i class="nz-icon nz-icon-view"></i></span>
-                &nbsp;
-                <span :title="$t('overall.edit')" @click="edit(scope.row)" class="content-right-option" :id="'dc-edit-'+scope.row.id"><i class="nz-icon nz-icon-edit"></i></span>
-                &nbsp;
-                <span :title="$t('overall.delete')" @click="del(scope.row)" class="content-right-option" :id="'dc-del-'+scope.row.id"><i class="el-icon-delete"></i></span>
+      <div class="content-right">
+        <div class="main-list" :class="{'main-list-with-sub': showSubList}">
+          <div class="top-tools" v-show="mainResizeShow">
+            <div class="top-tool-main-right" :class="{'top-tool-main-right-to-left': showSubList}">
+              <div class="top-tool-search">
+                <search-input ref="searchInput" :searchMsg="searchMsg" @search="search" :inTransform="inTransform"></search-input>
               </div>
-              <template v-else-if="item.prop == 'principal'">
-                <template v-if="scope.row.principal">
-                  <template v-for="item in userData">
-                    <template v-if="scope.row.principal == item.userId">{{item.username}}</template>
+              <button type="button" @click="toAdd" :title="$t('overall.createDatacenter')"
+                      class="nz-btn nz-btn-size-normal nz-btn-style-light margin-l-20" id="dc-add">
+                <i class="nz-icon-create-square nz-icon"></i>
+              </button>
+            </div>
+            <div class="pagination-top pagination-top-hide display-none"></div>
+          </div>
+          <el-table
+            class="nz-table"
+            :data="tableData"
+            border
+            v-show="mainResizeShow"
+            v-scrollBar:el-table
+            :height="mainTableHeight"
+            ref="dcTable"
+            style="width: 100%;">
+            <el-table-column
+              :resizable="false"
+              v-for="(item, index) in tablelable"
+              v-if="item.show"
+              :width="item.width"
+              :key="`col-${index}`"
+              :label="item.label"
+            >
+              <template slot-scope="scope" :column="item">
+                <div v-if="item.prop == 'option'" class="content-right-options">
+                  <span :title="$t('overall.view')" @click="detail(scope.row)" class="content-right-option" :id="'dc-detail-'+scope.row.id"><i class="nz-icon nz-icon-view"></i></span>
+                  &nbsp;
+                  <span :title="$t('overall.edit')" @click="edit(scope.row)" class="content-right-option" :id="'dc-edit-'+scope.row.id"><i class="nz-icon nz-icon-edit"></i></span>
+                  &nbsp;
+                  <span :title="$t('overall.delete')" @click="del(scope.row)" class="content-right-option" :id="'dc-del-'+scope.row.id"><i class="el-icon-delete"></i></span>
+                </div>
+                <template v-else-if="item.prop == 'principal'">
+                  <template v-if="scope.row.principal">
+                    <template v-for="item in userData">
+                      <template v-if="scope.row.principal == item.userId">{{item.username}}</template>
+                    </template>
                   </template>
+                  <template v-else>-</template>
                 </template>
-                <template v-else>-</template>
-              </template>
-              <template v-else-if="item.prop == 'area'">
-                <template v-if="scope.row.area">{{scope.row.area.name}}</template>
-                <template v-else>-</template>
-              </template>
-              <template v-else-if="item.prop == 'assetStat' && scope.row.assetStat">
-                <el-popover
-                  placement="top"
-                  trigger="hover"
-                  :content="$t('overall.result.total') + '：' + scope.row.assetStat.total + '，' + $t('asset.createAssetTab.inStock') + '：' + scope.row.assetStat.inStock + '，' + $t('asset.createAssetTab.notInStock') + '：' + scope.row.assetStat.outStock">
-                  <div slot="reference" class="dc-asset-states">
-                    <span class="dc-asset-state dc-asset-state-total">{{scope.row.assetStat.total}}</span>
-                    <span class="dc-asset-state dc-asset-state-in">{{scope.row.assetStat.inStock}}</span>
-                    <span class="dc-asset-state dc-asset-state-out">{{scope.row.assetStat.outStock}}</span>
-                  </div>
-                </el-popover>
+                <template v-else-if="item.prop == 'area'">
+                  <template v-if="scope.row.area">{{scope.row.area.name}}</template>
+                  <template v-else>-</template>
+                </template>
+                <template v-else-if="item.prop == 'assetStat' && scope.row.assetStat">
+                  <el-popover
+                    placement="top"
+                    trigger="hover"
+                    :content="$t('overall.result.total') + '：' + scope.row.assetStat.total + '，' + $t('asset.createAssetTab.inStock') + '：' + scope.row.assetStat.inStock + '，' + $t('asset.createAssetTab.notInStock') + '：' + scope.row.assetStat.outStock">
+                    <div slot="reference" class="dc-asset-states">
+                      <span class="dc-asset-state dc-asset-state-total">{{scope.row.assetStat.total}}</span>
+                      <span class="dc-asset-state dc-asset-state-in">{{scope.row.assetStat.inStock}}</span>
+                      <span class="dc-asset-state dc-asset-state-out">{{scope.row.assetStat.outStock}}</span>
+                    </div>
+                  </el-popover>
 
-              </template >
-              <template v-else-if="item.prop == 'cabinetNum'">
-                <span class="clickable" @click="showCabinet(scope.row)">{{scope.row[item.prop]}}</span>
+                </template >
+                <template v-else-if="item.prop == 'cabinetNum'">
+                  <span class="link" @click="showCabinet(scope.row)">{{scope.row[item.prop]}}</span>
+                </template>
+                <template v-else-if="scope.row[item.prop]">{{scope.row[item.prop]}}</template>
+                <template v-else>-</template>
               </template>
-              <template v-else-if="scope.row[item.prop]">{{scope.row[item.prop]}}</template>
-              <template v-else>-</template>
-            </template>
-          </el-table-column>
-          <el-table-column width="28" :resizable="false">
-            <template slot="header" slot-scope="scope">
-            <span @click.stop="elementsetShow('shezhi',$event)" class="nz-table-gear">
-              <i class="nz-icon nz-icon-gear"></i>
-            </span>
-            </template>
-          </el-table-column>
-        </el-table>
-        <Pagination :tableId="tableId" :pageObj="pageObj" @pageNo='pageNo' @pageSize='pageSize' ref="Pagination"></Pagination>
-        <button class="to-top" v-show="showTopBtn1" @click="toTop"><i class="nz-icon nz-icon-top"></i></button>
-        <!--dc table end-->
+            </el-table-column>
+            <el-table-column width="28" :resizable="false">
+              <template slot="header" slot-scope="scope">
+              <span @click.stop="elementsetShow('shezhi',$event)" class="nz-table-gear">
+                <i class="nz-icon nz-icon-gear"></i>
+              </span>
+              </template>
+            </el-table-column>
+          </el-table>
+          <div class="pagination-bottom" v-show="!showSubList">
+            <Pagination :tableId="tableId" :pageObj="pageObj" @pageNo='pageNo' @pageSize='pageSize' ref="Pagination"></Pagination>
+          </div>
+          <button class="to-top" v-show="showTopBtn" @click="toTop"><i class="nz-icon nz-icon-top"></i></button>
+        </div>
+        <cabinet-bottom-box v-if="showSubList" @listResize="listResize" :show-sub-list="showSubList" :subResizeShow="subResizeShow" :obj="cabinetDc" :isFullScreen="isFullScreen"
+                     @closeSubList="showSubList = false" @fullScreen="fullScreen" @exitFullScreen="exitFullScreen"></cabinet-bottom-box>
+      </div>
+      <!--dc table end-->
       <element-set
         v-clickoutside="elementsetHide"
         :dropCol="dropCol"
@@ -139,101 +148,21 @@
       ></element-set>
       <dc-box ref="dcBox" :dc="currentDc" :user-data="userData" @reload="getTableData"></dc-box>
     </div>
-      <!--cabinet table start-->
-      <div v-if="tabShow==2" class="content-right">
-        <div class="top-tools">
-          <div>
-            <div @click="back">
-              <button  class="nz-btn nz-btn-size-normal nz-btn-style-light float-right nz-btn-min-width-82">
-                <span class='top-tool-btn-txt'>{{$t('overall.back')}}</span>
-              </button>
-            </div>
-          </div>
-          <div>
-            <button type="button" @click="toAddCabinet" :title="$t('overall.createCabinet')"
-                    class="nz-btn nz-btn-size-normal nz-btn-style-light float-right margin-l-20" id="cab-add">
-              <i class="nz-icon-create-square nz-icon"></i>
-            </button>
-            <div class="top-tool-search float-right">
-              <search-input ref="cabSearchInput" :searchMsg="cabSearchMsg" @search="cabSearch" v-if="tabShow==2"></search-input>
-            </div>
-          </div>
-        </div>
-
-        <el-table
-          class="nz-table"
-          :data="cabinetDatas"
-          border
-          ref="cabTable"
-          v-scrollBar:el-table
-          :height="$tableHeight.normal"
-          style="width: 100%;">
-          <el-table-column
-            :resizable="false"
-            v-for="(item, index) in cabinetLabel"
-            v-if="item.show"
-            :width="item.width"
-            :key="`col-${index}`"
-            :label="item.label"
-          >
-            <template slot-scope="scope" :column="item">
-              <div v-if="item.prop == 'option'" class="content-right-options">
-                <span :title="$t('overall.edit')" @click="editCabinet(scope.row)" class="content-right-option" :id="'dc-edit-'+scope.row.id"><i class="nz-icon nz-icon-edit"></i></span>
-                &nbsp;
-                <span :title="$t('overall.delete')" @click="delCabinet(scope.row)" class="content-right-option" :id="'dc-del-'+scope.row.id"><i class="el-icon-delete"></i></span>
-              </div>
-              <template v-else-if="item.prop == 'assetStat'">
-                <el-popover
-                  placement="top-start"
-                  offset="-100"
-                  trigger="hover"
-                  :content="$t('overall.result.total') + '：' + scope.row.assetStat.total + '，' + $t('asset.createAssetTab.inStock') + '：' + scope.row.assetStat.inStock + '，' + $t('asset.createAssetTab.notInStock') + '：' + scope.row.assetStat.outStock">
-                  <div slot="reference" class="dc-asset-states">
-                    <span class="dc-asset-state dc-asset-state-total">{{scope.row.assetStat.total}}</span>
-                    <span class="dc-asset-state dc-asset-state-in">{{scope.row.assetStat.inStock}}</span>
-                    <span class="dc-asset-state dc-asset-state-out">{{scope.row.assetStat.outStock}}</span>
-                  </div>
-                </el-popover>
-
-              </template >
-              <template v-else-if="item.prop == 'alertStat'">
-                <el-popover
-                  placement="top-start"
-                  offset="-128"
-                  trigger="hover"
-                  :content="$t('overall.result.total') + '：' + scope.row.alertStat.total + '，' + $t('alert.config.high') + '：' + scope.row.alertStat.high + '，' + $t('alert.config.medium') + '：' + scope.row.alertStat.medium+ '，' + $t('alert.config.low') + '：' + scope.row.alertStat.low">
-                  <div slot="reference" class="dc-asset-states">
-                    <span class="dc-asset-state dc-asset-state-total">{{scope.row.alertStat.total}}</span>
-                    <span class="dc-asset-state dc-asset-state-high">{{scope.row.alertStat.high}}</span>
-                    <span class="dc-asset-state dc-asset-state-out">{{scope.row.alertStat.medium}}</span>
-                    <span class="dc-asset-state dc-asset-state-in">{{scope.row.alertStat.low}}</span>
-                  </div>
-                </el-popover>
-
-              </template >
-              <template v-else-if="scope.row[item.prop]">{{scope.row[item.prop]}}</template>
-              <template v-else>-</template>
-            </template>
-          </el-table-column>
-        </el-table>
-      </div>
-      <!--cabinet table end-->
-      <cabinet-box :cur-cabinet="curCabinet" :cur-idc="currentShowDc" ref="cabinetEditBox" @after="getCabinetDatas"></cabinet-box>
-      <button class="to-top" v-show="showTopBtn2" @click="toTop()"><i class="nz-icon nz-icon-top"></i></button>
-    </div>
 </template>
 <script>
-  import cabinetBox from "../../common/rightBox/cabinetBox";
   export default {
     name: "dc",
-    components:{
-      'cabinet-box':cabinetBox
-    },
     data() {
       return {
+        showElementSet: false, //控制自定义列的弹框
+        inTransform: false, //搜索框相关，搜索条件下拉框是否在transform里
+        mainResizeShow: true, //dom高度改变时部分内容是否展示
+        subResizeShow: true,
+        isFullScreen: false,
+        showSubList: false, //是否展示二级列表
         tableId: 'dcTable', //需要分页的table的id，用于记录每页数量
-        showTopBtn1: false,
-        showTopBtn2: false,
+        showTopBtn: false,
+        mainTableHeight: this.$tableHeight.normal, //主列表table高度
         currentDc: {
           id: '',
           name: '',
@@ -245,6 +174,7 @@
             name: ''
           }
         },
+        cabinetDc: {},
         pageObj: {
           pageNo: 1,
           pageSize: 20,
@@ -308,81 +238,7 @@
         searchLabel: {}, //搜索参数
         tabShow:1, // 控制显示一级页面和二级页面 1 dc 2cabinet
         cabinetDatas:[],//显示的机柜信息
-        cabinetLabel:[
-          {
-            label: 'ID',
-            prop: 'id',
-            show: true,
-            width: 80
-          },
-          {
-            label:this.$t('overall.name'),
-            prop:'name',
-            show:true
-          },
-          {
-            label:this.$t('asset.createAssetTab.uSize'),
-            prop:'uSize',
-            show:true
-          },
-          {
-            label:this.$t('config.dc.assets'),
-            prop:'assetStat',
-            show:true
-          },
-          {
-            label:this.$t('alert.alert'),
-            prop:'alertStat',
-            show:true
-          },
-          {
-            label:this.$t('config.dc.remark'),
-            prop:'remark',
-            show:true
-          },
-          {
-            label: this.$t('config.account.option'),
-            prop: 'option',
-            show: true,
-            width: 120
-          }
-        ],
-        curCabinet:{
-          id:'',
-          idcId:'',
-          name:'',
-          remark:'',
-          seq:'',
-          uSize:0
-        },
-        currentShowDc:{},
-        cabSearchMsg: { //给搜索框子组件传递的信息
-          zheze_none: true,
-          searchLabelList: [
-            {
-            id: 11,
-            name: this.$t('overall.name'),
-            type: 'input',
-            label: 'name',
-            disabled: false
-          },
-          {
-            id:12,
-            name:this.$t('asset.createAssetTab.uSize'),
-            label:'uSize',
-            disabled: false
-          },
-          {
-            id:13,
-            name:this.$t('config.dc.remark'),
-            label:'remark',
-            disabled: false
-          }
-          ],
-        },
-        cabSearchLabel: {
 
-        }, //搜索参数
       }
     },
     methods: {
@@ -415,6 +271,102 @@
         //获取子组件传过来的参数
         this.$store.commit('setHeaderTable', data);
         this.tablelable = data;
+      },
+      // 鼠标拖动二级列表
+      listResize(e) {
+        let mainListDom = document.querySelector(".main-list-with-sub"); //主列表
+        let subListDom = document.querySelector(".sub-list"); //副列表
+        let contentRightDom = document.querySelector(".content-right"); //右侧内容区
+        let contentRightHeight = contentRightDom.offsetHeight;//可视高度
+        //得到点击时俩dom的初始高度：
+        let mainInitialHeight = mainListDom.offsetHeight;
+        let subInitialHeight = subListDom.offsetHeight;
+        //点击时鼠标的Y轴位置
+        let mouseInitialY = e.clientY;
+
+        let _this = this;
+
+        document.onmousemove = (e) => {
+          e.preventDefault();
+          //得到鼠标拖动的距离
+          let mouseMoveY = Math.abs(e.clientY - mouseInitialY);
+
+          //往上方拖动：
+          if (e.clientY < mouseInitialY) {
+            mainListDom.style.height = mainInitialHeight-mouseMoveY+'px';
+            subListDom.style.height = subInitialHeight+mouseMoveY+'px';
+          }
+          //往下方拖动：
+          if (e.clientY > mouseInitialY) {
+            mainListDom.style.height = mainInitialHeight+mouseMoveY+'px';
+            subListDom.style.height = subInitialHeight-mouseMoveY+'px';
+          }
+
+          // 主、副列表最小高度限制为15px
+          if(parseInt(mainListDom.style.height) >= contentRightHeight-15){
+            mainListDom.style.height = contentRightHeight-15+'px';
+          }
+          if(parseInt(mainListDom.style.height) <= 15){
+            mainListDom.style.height = 15+'px';
+          }
+          if(parseInt(subListDom.style.height) >= contentRightHeight-15){
+            subListDom.style.height = contentRightHeight-15+'px';
+          }
+          if(parseInt(subListDom.style.height) <= 15){
+            subListDom.style.height = 15+'px';
+          }
+          //当主副列表可视区域小于一定值时，不展示内容
+          if(parseInt(mainListDom.style.height) <= 100){
+            if (_this.mainResizeShow) {
+              _this.mainResizeShow = false;
+            }
+          } else {
+            if (!_this.mainResizeShow) {
+              _this.mainResizeShow = true;
+            }
+          }
+          if(parseInt(subListDom.offsetHeight) <= 100){
+            if (_this.subResizeShow) {
+              _this.subResizeShow = false;
+            }
+          } else {
+            if (!_this.subResizeShow) {
+              _this.subResizeShow = true;
+            }
+          }
+        };
+        document.onmouseup = () => {
+          document.onmousemove = null;
+        }
+      },
+      exitFullScreen() {
+        let contentRightDom = document.querySelector(".content-right"); //右侧内容区
+        let contentRightHeight = contentRightDom.offsetHeight;//可视高度
+        //主列表
+        document.querySelector(".main-list-with-sub").style.height = this.mainListHeight ? this.mainListHeight + 'px' : 'calc(50% - 4px)';
+
+        //副列表
+        document.querySelector(".sub-list").style.height = this.mainListHeight ? contentRightHeight-this.mainListHeight-9 + 'px' : 'calc(50% - 4px)';
+        setTimeout(() => {
+          this.isFullScreen = false;
+          if (document.querySelector(".main-list-with-sub").offsetHeight >= 100) {
+            this.mainResizeShow = true;
+          }
+          if (document.querySelector(".sub-list").offsetHeight >= 100) {
+            this.subResizeShow = true;
+          }
+        }, 210);
+      },
+      fullScreen() {
+        let contentRightDom = document.querySelector(".content-right"); //右侧内容区
+        let contentRightHeight = contentRightDom.offsetHeight;//可视高度
+        this.isFullScreen = true;
+        //主列表
+        this.mainListHeight = document.querySelector(".main-list-with-sub").offsetHeight; //记录全屏前主列表的高度
+        document.querySelector(".main-list-with-sub").style.height = '0';
+        this.mainResizeShow = false;
+        //副列表
+        document.querySelector(".sub-list").style.height = contentRightHeight + 'px';
       },
       jumpTo(data, id) {
         this.$router.push({
@@ -507,14 +459,16 @@
         this.getTableData();
       },
       showCabinet:function(dc){
-        this.tabShow=2;
-        this.currentShowDc=dc;
-        this.cabSearchLabel={idcId:this.currentShowDc.id};
-        this.getCabinetDatas();
-        let temp=this;
-        setTimeout(function(){temp.$refs.cabSearchInput.clear_input();},100)
+        //this.currentShowDc=dc;
+        //this.tabShow=2;
+        this.cabinetDc = JSON.parse(JSON.stringify(dc));
+        this.showSubList = true;
+        //this.cabSearchLabel={idcId:this.currentShowDc.id};
+        //this.getCabinetDatas();
+        /*let temp=this;
+        setTimeout(function(){temp.$refs.cabSearchInput.clear_input();},100)*/
       },
-      getCabinetDatas:function(){
+      /*getCabinetDatas:function(){
         this.$get('/cabinet',this.cabSearchLabel).then(response=>{
           if(response.code==200 && response.msg=='success'){
             this.cabinetDatas=response.data.list;
@@ -528,8 +482,8 @@
       toAddCabinet:function(){
         this.$refs.cabinetEditBox.show(true,true);
         this.$refs.cabinetEditBox.reset();
-      },
-      delCabinet:function(cabinet){
+      },*/
+      /*delCabinet:function(cabinet){
         this.$confirm(this.$t("tip.confirmDelete"), {
           confirmButtonText: this.$t("tip.yes"),
           cancelButtonText: this.$t("tip.no"),
@@ -544,8 +498,8 @@
             }
           })
         })
-      },
-      back:function(){
+      },*/
+      /*back:function(){
         this.tabShow=1;
         this.getTableData();
         let temp=this;
@@ -561,15 +515,60 @@
           }
         }
         this.getCabinetDatas();
+      }*/
+    },
+    watch: {
+      showSubList(n) {
+        this.inTransform = n;
+        if (!n) {
+          this.mainTableHeight = this.$tableHeight.normal; //重置table的高度
+          this.isFullScreen = false;
+          //移动分页组件的位置
+          let paginationTop = document.querySelector(".pagination-top");
+          let paginationBottom = document.querySelector(".pagination-bottom");
+          paginationTop.classList.remove("display-none");
+          if (paginationTop.classList.contains("pagination-top-show")) {
+            paginationTop.classList.remove("pagination-top-show");
+          }
+          if (!paginationTop.classList.contains("pagination-top-hide")) {
+            paginationTop.classList.add("pagination-top-hide");
+          }
+          setTimeout(() => {
+            paginationTop.classList.add("display-none");
+            paginationBottom.appendChild(paginationTop.removeChild(document.querySelector(".pagination")));
+          }, 210);
+
+          // 主列表恢复全屏
+          this.mainResizeShow = this.subResizeShow = true;
+          document.querySelector('.main-list').style.height = "";
+          //副列表高度清空
+          document.querySelector(".sub-list").style.height = '';
+        } else {
+          this.mainTableHeight = this.$tableHeight.openSubList.mainList; //重置table高度
+          //移动分页组件的位置
+          let paginationTop = document.querySelector(".pagination-top");
+          paginationTop.appendChild(document.querySelector(".pagination-bottom").removeChild(document.querySelector(".pagination")));
+          paginationTop.classList.remove("display-none");
+          setTimeout(() => {
+            if (paginationTop.classList.contains("pagination-top-hide")) {
+              paginationTop.classList.remove("pagination-top-hide");
+            }
+            if (!paginationTop.classList.contains("pagination-top-show")) {
+              paginationTop.classList.add("pagination-top-show");
+            }
+          }, 210);
+        }
       }
+    },
+    destroyed() {
+      window.onresize = null;
     },
     mounted() {
       //是否存在分页缓存
       let pageSize = localStorage.getItem('nz-pageSize-' + localStorage.getItem('nz-username') + '-' + this.tableId);
       if (pageSize != 'undefined' && pageSize != null) {
-        this.pageObj.pageSize = pageSize
+        this.pageObj.pageSize = pageSize;
       }
-
       this.getTableData();
       this.$nextTick(function(){
         this.getUserData();//绑定滚动条事件，控制top按钮
@@ -577,23 +576,12 @@
         if (el._ps_) {
           el.addEventListener("ps-scroll-y", () => {
             if (el._ps_.scrollbarYTop > 100) {
-              this.showTopBtn1 = true;
+              this.showTopBtn = true;
             } else {
-              this.showTopBtn1 = false;
+              this.showTopBtn = false;
             }
           });
         }
-        let el2 = this.$refs.cabTable.$el.querySelector(".el-table__body-wrapper");
-        if (el2._ps_) {
-          el2.addEventListener("ps-scroll-y", () => {
-            if (el2._ps_.scrollbarYTop > 100) {
-              this.showTopBtn2 = true;
-            } else {
-              this.showTopBtn2 = false;
-            }
-          });
-        }
-
       });
       this.tablelable = localStorage.getItem("nz-tableTitle-" + localStorage.getItem("nz-username") + "-" + this.$route.path)
         ? JSON.parse(localStorage.getItem("nz-tableTitle-" + localStorage.getItem("nz-username") + "-" + this.$route.path))

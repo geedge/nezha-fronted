@@ -35,7 +35,8 @@ import cabinetConfigBox from "./components/common/popBox/cabinetConfig"; //面�
 import dcBox from "./components/common/rightBox/dcBox"; //dc弹框
 import modelBox from "./components/common/rightBox/modelBox"; //model弹框
 import selectArea from "./components/common/popBox/selectArea"; //dc弹框
-import alertMessageBox from "./components/common/bottomBox/alertMessageBox"; //dc弹框
+import alertMessageBox from "./components/common/bottomBox/alertMessageBox"; //alertMessage上滑框
+import cabinetBottomBox from "./components/common/bottomBox/cabinetBottomBox"; //机柜上滑框
 import PerfectScrollbar from "perfect-scrollbar";
 import "perfect-scrollbar/css/perfect-scrollbar.css";
 import loading from "./components/common/loading";
@@ -60,6 +61,7 @@ Vue.component("model-box", modelBox);
 Vue.component("select-area", selectArea);
 Vue.component('loading',loading);
 Vue.component('alert-message-box',alertMessageBox);
+Vue.component('cabinet-bottom-box',cabinetBottomBox);
 
 Vue.prototype.$axios = axios;
 Vue.prototype.$post = post;
@@ -72,7 +74,7 @@ Vue.prototype.$tableHeight = { //列表页表格的高度
     mainList: 'calc(100% - 60px)',
     subList: 'calc(100% - 86px)'
   },
-  noPagination: 'calc(100% - 60px)', //特例：endpoint query页，没有翻页组件
+  noPagination: 'calc(100% - 60px)', //特例：没有翻页组件
 };
 Vue.prototype.toTop = (type, wrap) => { //top按钮公共方法
   if (type == 'el') {
@@ -88,7 +90,7 @@ Vue.prototype.toTop = (type, wrap) => { //top按钮公共方法
     }, 20);
   } else {
     let els = document.querySelectorAll(".el-table__body-wrapper");
-    if (wrap || wrap == 0) {
+    if (wrap || wrap == 0) { //指定index的table__body
       let currentTop = els[wrap].scrollTop;
       let interval = currentTop/10;
       let intervalFunc = setInterval(function(){ //花200ms分10次回到顶部，模拟动画效果
@@ -99,7 +101,7 @@ Vue.prototype.toTop = (type, wrap) => { //top按钮公共方法
           els[wrap].scrollTop = currentTop;
         }
       }, 20);
-    } else {
+    } else { //所有table__body
       for (let i = 0; i < els.length; i++) {
         let currentTop = els[i].scrollTop;
         let interval = currentTop/10;

@@ -186,7 +186,9 @@
           deep:true,
           immediate:true,
           handler:function(n,o){
-            this.cabinet=JSON.parse(JSON.stringify(n));
+            if (n) {
+              this.cabinet=JSON.parse(JSON.stringify(n));
+            }
           }
         },
         cabinet:{
