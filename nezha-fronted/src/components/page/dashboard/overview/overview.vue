@@ -103,6 +103,7 @@
     props:[],
     data(){
       return {
+        storedAssetStatData:null,
         assetStatData:{},
         typeFilter: 'typeStat',
         projectStatData:{},
@@ -147,16 +148,23 @@
       },
       queryAssetData:function(){
         this.$refs.assetTab.startLoading();
-        axios.get('/overview/assetStat').then((res)=>{
-          let response=res.data;
-          if(response.msg == 'success'){
-            let showData=response.data[this.typeFilter];
-            this.assetStatData=this.formatAssetData(showData,response.data.totalStat);
-            this.$refs.assetTab.endLoading();
-          }else{
-            this.$message.error(response.msg)
-          }
-        })
+        if(this.storedAssetStatData){
+          let showData=this.storedAssetStatData[this.typeFilter];
+          this.assetStatData=this.formatAssetData(showData,this.storedAssetStatData.totalStat);
+          this.$refs.assetTab.endLoading();
+        }else{
+          axios.get('/overview/assetStat').then((res)=>{
+            let response=res.data;
+            if(response.msg == 'success'){
+              this.storedAssetStatData=Object.assign({},response.data)
+              let showData=response.data[this.typeFilter];
+              this.assetStatData=this.formatAssetData(showData,response.data.totalStat);
+              this.$refs.assetTab.endLoading();
+            }else{
+              this.$message.error(response.msg)
+            }
+          })
+        }
       },
       formatAssetData:function(data,totalData){
         if(data && totalData){
@@ -411,7 +419,7 @@
                 num:data.dcTotal,
                 title:this.$t('dashboard.overview.dataCenter.dataCenter'),
                 showPopover:true,
-                icon:'nz-icon nz-icon-idc_barn-black',
+                icon:'nz-icon nz-icon-IDCCabinet',
                 popover:[
                   {
                     label:this.$t('dashboard.overview.dataCenter.cabinet'),
@@ -852,7 +860,6 @@
       fullScreen:function(){
         let container=document.getElementById('mainDisplay');
         let fullScreenFunc=container.requestFullscreen||container.mozRequestFullScreen||container.webkitRequestFullscreen||container.msRequestFullscreen;
-        console.log(fullScreenFunc)
         fullScreenFunc.call(container)
       },
       exitFullScreen:function(){
@@ -864,24 +871,6 @@
           } else if(document.webkitExitFullscreen) {
             document.webkitExitFullscreen();
           }
-          //解决flex排版错乱问题
-          document.querySelectorAll(".content-row-box").forEach((item,index)=>{
-            item.style.display = "none";
-            setTimeout(()=>{item.style.display = '';},100)
-          })
-          //解决table显示原生滚动条问题
-          setTimeout(() => {
-            document.querySelectorAll('.el-table__body-wrapper').forEach((item,index)=>{
-              item.classList.add("ps");
-              item.classList.add("ps--active-y");
-              item._ps_.update();
-            })
-          },200)
-
-          setTimeout(()=>{
-            this.$refs.alertRuleTab.layoutTable();
-            console.log('layout')
-          },1000)
         }
       },
       /*header 时间处理 start*/
@@ -915,7 +904,7 @@
       },
       getWeek:function(){
         let language=localStorage.getItem("nz-language") ? localStorage.getItem("nz-language") : 'en';
-        let enWeeks=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+        let enWeeks=['SUN','MON','TUE','WED','THU','FRI','SAT'];
         let cnWeeks=['星期日','星期一','星期二','星期三','星期四','星期五','星期六'];
         let date=new Date();
         let day=date.getDay();
@@ -966,6 +955,20 @@
       this.initData();
       window.onresize = () => {
         setTimeout(()=>{this.isFullScreen=this.judgeFullScreen();},200)
+        console.log('resize')
+        //解决flex排版错乱问题
+        document.querySelectorAll(".content-row-box").forEach((item,index)=>{
+          item.style.display = "none";
+          setTimeout(()=>{item.style.display = '';},100)
+        })
+        //解决table显示原生滚动条问题
+        setTimeout(() => {
+          document.querySelectorAll('.el-table__body-wrapper').forEach((item,index)=>{
+            item.classList.add("ps");
+            item.classList.add("ps--active-y");
+            item._ps_.update();
+          })
+        },200)
       }
       // window.addEventListener('keyup',(e)=>{
       //   if(e.key == 'F11'){
