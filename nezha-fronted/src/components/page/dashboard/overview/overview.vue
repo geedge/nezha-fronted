@@ -28,61 +28,61 @@
 
         <!--内容-->
         <div class="overview-content">
-          <el-scrollbar style="height: 100%" ref="overviewScrollbar">
-            <div class="content-row-box" >
-              <div class="content-col-box box-height-200 " style="flex:3;" :class="{'box-height-266':isFullScreen}">
-                <table-box :pop-data="assetStatData" ref="assetTab" ></table-box>
+          <el-scrollbar style="height: 100%" ref="overviewScrollbar" class="column-flex">
+              <div class="content-row-box" style="flex: 1;height: 100%;">
+                <div class="content-col-box  " style="flex:3;" >
+                  <table-box :pop-data="assetStatData" ref="assetTab" ></table-box>
+                </div>
+                <div class="content-col-box  " style="flex: 2" >
+                  <table-box :pop-data="projectStatData" ref="projectTab"></table-box>
+                </div>
+                <div class="content-col-box  " style="flex:1;" >
+                  <table-box :pop-data="endpointStatData" ref="endpointTab"></table-box>
+                </div>
               </div>
-              <div class="content-col-box box-height-200 " style="flex: 2" :class="{'box-height-266':isFullScreen}">
-                <table-box :pop-data="projectStatData" ref="projectTab"></table-box>
-              </div>
-              <div class="content-col-box box-height-200 " style="flex:1;" :class="{'box-height-266':isFullScreen}">
-                <table-box :pop-data="endpointStatData" ref="endpointTab"></table-box>
-              </div>
-            </div>
-            <div class="content-row-box">
-              <div class="content-col-box box-height-250 " style="flex: 1;" :class="{'box-height-316':isFullScreen}">
-                <div class="flex-container">
-                  <div style="flex: 2;">
-                    <table-box :pop-data="dataCenterStatData" ref="dataCenterTab" ></table-box>
-                  </div>
-                  <div style="flex: 3;">
-                    <chart-box chart-title="DataCenter" chart-type="map" ref="dataCenterMap"></chart-box>
+              <div class="content-row-box" style="flex: 1.2;height: 100%;">
+                <div class="content-col-box  " style="flex: 1;" >
+                  <div class="flex-container">
+                    <div style="flex: 2;">
+                      <table-box :pop-data="dataCenterStatData" ref="dataCenterTab" ></table-box>
+                    </div>
+                    <div style="flex: 3;">
+                      <chart-box chart-title="DataCenter" chart-type="map" ref="dataCenterMap"></chart-box>
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
-            <div class="content-row-box">
-              <div class="content-col-box box-height-290 "style="flex: 3" :class="{'box-height-356':isFullScreen}">
-                <div class="avg-children-space">
-                  <!--<el-select v-model="topNFilter.default" placeholder="" size="mini" style="display: inline-block;width: 200px" @change="topNChange">
-                    <el-option v-for="(item,index) in topNFilter.options" :label="item.label" :value="item.value" :key="item.value+index"></el-option>
-                  </el-select>
-                  <el-select v-model="topNFilter.defaultTop" placeholder="" size="mini" style="display: inline-block;width: 100px" @change="topNChange">
-                    <el-option v-for="(item,index) in topNFilter.tops" :label="item.label" :value="item.value" :key="item.value+index"></el-option>
-                  </el-select>-->
-                  <el-dropdown trigger="click">
-                    <span class="clickable">{{topNFilter.options.find((item)=>{return item.value==topNFilter.default})['label']}}<i class="el-icon-arrow-down el-icon--right"></i></span>
-                    <el-dropdown-menu slot="dropdown">
-                      <el-dropdown-item v-for="(item,index) in topNFilter.options" :key="item.value+index" @click.native="()=>{topNFilter.default=item.value;topNChange();}">{{item.label}}</el-dropdown-item>
-                    </el-dropdown-menu>
-                  </el-dropdown>
-                  <el-dropdown trigger="click">
-                    <span class="clickable">{{topNFilter.tops.find((item)=>{return item.value==topNFilter.defaultTop})['label']}}<i class="el-icon-arrow-down el-icon--right"></i></span>
-                    <el-dropdown-menu slot="dropdown">
-                      <el-dropdown-item v-for="(item,index) in topNFilter.tops" :key="item.value+index" @click.native="()=>{topNFilter.defaultTop=item.value;topNChange();}">{{item.label}}</el-dropdown-item>
-                    </el-dropdown-menu>
-                  </el-dropdown>
+              <div class="content-row-box" style="flex: 1.3;height: 100%;">
+                <div class="content-col-box  "style="flex: 3">
+                  <div class="avg-children-space">
+                    <!--<el-select v-model="topNFilter.default" placeholder="" size="mini" style="display: inline-block;width: 200px" @change="topNChange">
+                      <el-option v-for="(item,index) in topNFilter.options" :label="item.label" :value="item.value" :key="item.value+index"></el-option>
+                    </el-select>
+                    <el-select v-model="topNFilter.defaultTop" placeholder="" size="mini" style="display: inline-block;width: 100px" @change="topNChange">
+                      <el-option v-for="(item,index) in topNFilter.tops" :label="item.label" :value="item.value" :key="item.value+index"></el-option>
+                    </el-select>-->
+                    <el-dropdown trigger="click">
+                      <span class="clickable">{{topNFilter.options.find((item)=>{return item.value==topNFilter.default})['label']}}<i class="el-icon-arrow-down el-icon--right"></i></span>
+                      <el-dropdown-menu slot="dropdown">
+                        <el-dropdown-item v-for="(item,index) in topNFilter.options" :key="item.value+index" @click.native="()=>{topNFilter.default=item.value;topNChange();}">{{item.label}}</el-dropdown-item>
+                      </el-dropdown-menu>
+                    </el-dropdown>
+                    <el-dropdown trigger="click">
+                      <span class="clickable">{{topNFilter.tops.find((item)=>{return item.value==topNFilter.defaultTop})['label']}}<i class="el-icon-arrow-down el-icon--right"></i></span>
+                      <el-dropdown-menu slot="dropdown">
+                        <el-dropdown-item v-for="(item,index) in topNFilter.tops" :key="item.value+index" @click.native="()=>{topNFilter.defaultTop=item.value;topNChange();}">{{item.label}}</el-dropdown-item>
+                      </el-dropdown-menu>
+                    </el-dropdown>
+                  </div>
+                  <table-box :pop-data="topNStatData" ref="topNTab" style="height: 90%;"></table-box>
                 </div>
-                <table-box :pop-data="topNStatData" ref="topNTab" style="height: 90%;"></table-box>
+                <div class="content-col-box  "style="flex: 8;" id="alertTrendBox" >
+                  <chart-box  ref="chartbox" :chart-title="$t('dashboard.overview.alert.chart.chartTitle')"></chart-box>
+                </div>
+                <div class="content-col-box  "style="flex: 2;" >
+                  <table-box :pop-data="alertRuleStatData" ref="alertRuleTab"></table-box>
+                </div>
               </div>
-              <div class="content-col-box box-height-290 "style="flex: 8;" id="alertTrendBox" :class="{'box-height-356':isFullScreen}">
-                <chart-box  ref="chartbox" :chart-title="$t('dashboard.overview.alert.chart.chartTitle')"></chart-box>
-              </div>
-              <div class="content-col-box box-height-290 "style="flex: 2;" :class="{'box-height-356':isFullScreen}">
-                <table-box :pop-data="alertRuleStatData" ref="alertRuleTab" ></table-box>
-              </div>
-            </div>
           </el-scrollbar>
         </div>
       </div>
@@ -174,7 +174,7 @@
                 num:totalData.inStock,
                 title:this.$t('dashboard.overview.asset.title'),
                 showPopover:true,
-                icon:'nz-icon nz-icon-asset',
+                icon:'nz-icon nz-icon-server',
                 popover:[
                   {
                     label:this.$t('dashboard.overview.asset.alertTotal'),
@@ -367,7 +367,7 @@
                 num:data.total,
                 title:this.$t('dashboard.overview.project.endpoint'),
                 showPopover:false,
-                icon:'nz-icon nz-icon-project',
+                icon:'nz-icon nz-icon-dataRecv',
                 popover:[]
               },
               stat:{//左侧下方 小图标，
@@ -411,7 +411,7 @@
                 num:data.dcTotal,
                 title:this.$t('dashboard.overview.dataCenter.dataCenter'),
                 showPopover:true,
-                icon:'nz-icon nz-icon-page',
+                icon:'nz-icon nz-icon-idc_barn-black',
                 popover:[
                   {
                     label:this.$t('dashboard.overview.dataCenter.cabinet'),
@@ -854,15 +854,6 @@
         let fullScreenFunc=container.requestFullscreen||container.mozRequestFullScreen||container.webkitRequestFullscreen||container.msRequestFullscreen;
         console.log(fullScreenFunc)
         fullScreenFunc.call(container)
-        // if(container.requestFullscreen){
-        //   container.requestFullscreen();
-        // } else if(container.mozRequestFullScreen) {
-        //   container.mozRequestFullScreen();
-        // } else if(container.webkitRequestFullscreen) {
-        //   container.webkitRequestFullscreen();
-        // } else if(container.msRequestFullscreen) {
-        //   container.msRequestFullscreen();
-        // }
       },
       exitFullScreen:function(){
         if(this.judgeFullScreen()){
@@ -873,6 +864,24 @@
           } else if(document.webkitExitFullscreen) {
             document.webkitExitFullscreen();
           }
+          //解决flex排版错乱问题
+          document.querySelectorAll(".content-row-box").forEach((item,index)=>{
+            item.style.display = "none";
+            setTimeout(()=>{item.style.display = '';},100)
+          })
+          //解决table显示原生滚动条问题
+          setTimeout(() => {
+            document.querySelectorAll('.el-table__body-wrapper').forEach((item,index)=>{
+              item.classList.add("ps");
+              item.classList.add("ps--active-y");
+              item._ps_.update();
+            })
+          },200)
+
+          setTimeout(()=>{
+            this.$refs.alertRuleTab.layoutTable();
+            console.log('layout')
+          },1000)
         }
       },
       /*header 时间处理 start*/
@@ -956,8 +965,13 @@
       this.initDate();
       this.initData();
       window.onresize = () => {
-        this.isFullScreen=this.judgeFullScreen();
+        setTimeout(()=>{this.isFullScreen=this.judgeFullScreen();},200)
       }
+      // window.addEventListener('keyup',(e)=>{
+      //   if(e.key == 'F11'){
+      //     this.fullScreen()
+      //   }
+      // })
     },
     watch:{
       isFullScreen:function(n,o){
@@ -968,7 +982,6 @@
           let mapWidth=this.$refs.dataCenterMap.$el.clientWidth;
           let mapHeight=this.$refs.dataCenterMap.$el.clientHeight * .95;
           this.$refs.dataCenterMap.resizeChart(mapWidth,mapHeight);
-
         });
       }
     }
@@ -984,5 +997,10 @@
   }
   .overview-table .el-table__body{
     width: 100% !important;
+  }
+  .overview-content .column-flex .el-scrollbar__view{
+    display: flex;
+    flex-direction: column;
+    height: 100%;
   }
 </style>

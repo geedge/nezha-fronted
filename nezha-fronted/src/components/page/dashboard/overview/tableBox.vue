@@ -3,7 +3,7 @@
       <loading ref="loading"></loading>
       <template v-if="showData&&showData.screen">
         <div class="table-box-left" :class="{'table-box-left-half':showData.screen.total.direction == 'column'}" v-show="showData.screen.show">
-            <div class="table-screen"  :class="{'fill-flex-cavity':!showData.screen.stat.show&&showData.screen.total.direction != 'column'}">
+            <div class="table-screen"  :class="{'fill-flex-cavity':!showData.screen.stat.show&&showData.screen.total.direction != 'column'&&showData.screen.direction!='column'}">
               <div class="screen-top" v-show="showData.screen.total.show" >
                 <div :class="{'screen-row':showData.screen.total.direction == 'row','screen-column':showData.screen.total.direction == 'column'}">
                   <div class="screen-col"><i class="super-icon" :class="showData.screen.total.icon"></i></div>
@@ -127,6 +127,9 @@
       },
       endLoading(){
         this.$refs.loading.endLoading();
+      },
+      layoutTable:function(){
+        this.$refs.dataTable.doLayout();
       }
     },
     mounted() {
