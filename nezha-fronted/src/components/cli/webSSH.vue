@@ -60,7 +60,8 @@
         </el-tab-pane>
       </el-tabs>
       <i style='right:70px;' @click="minScreen" class="el-icon-minus console-title-icon"></i>
-      <i style='right:38px;;' @click="fullScreen" class="el-icon-full-screen console-title-icon"></i>
+      <i style='right:38px;' v-if="!isFullScreen" @click="fullScreen" class="el-icon-full-screen console-title-icon"></i>
+      <i style='right:38px;' v-else @click="exitFullScreen" class="nz-icon nz-icon-exit-full-screen console-title-icon"></i>
       <i style='right:8px;' @click="closeConsole" class="el-icon-close console-title-icon"></i>
       <!--
       <i style='right:103px;' @click="minScreen" class="el-icon-minus console-title-icon"></i>
@@ -154,6 +155,7 @@
         isFullScreen:false,
         initConsoleHeight:300,//只读,初始化高度
         consoleHeight:300,//console高度
+        resizeConsoleHeight: 300, //resize后的高度，用于记录最大化、最小化前的高度
         currentTransform:0,
         editableTabsValue: '-1',//当前显示的console
         currentIndex:'-1',
@@ -388,6 +390,7 @@
         this.$store.commit('minConsole');
       },
       fullScreen(isChange){
+        this.resizeConsoleHeight = document.querySelector("#shell-service").offsetHeight; //记录全屏前主列表的高度
         //dialog全屏
         this.isFullScreen = !this.isFullScreen;
 
@@ -415,7 +418,32 @@
           });
         }
       },
+      exitFullScreen() {
+        this.isFullScreen = !this.isFullScreen;
+        //所有的console全屏
+        this.editableTabs.forEach((tab, index) => {
+          this.$refs['console'+index][0].fullScreenConsole(this.isFullScreen, this.resizeConsoleHeight-30);
+        });
 
+        if(!this.isFullScreen){
+          let targetDiv= document.getElementById('shell-service');
+          targetDiv.style.height=this.resizeConsoleHeight+'px';
+          this.consoleHeight=this.resizeConsoleHeight;
+        }else {
+          let targetDiv= document.getElementById('shell-service');
+          targetDiv.style.height=`${100}%`;
+          let height = document.body.clientHeight;//可视高度
+          this.consoleHeight=height;
+        }
+
+        if (this.editableTabs && this.editableTabs.length > 0) {
+          this.editableTabs.forEach((tab, index) => {
+            if (tab.name === this.editableTabsValue) {
+              this.$refs['console' + index][0].focusConsole();
+            }
+          });
+        }
+      },
       dragEagle:function(e){
           var targetDiv= document.getElementById('shell-service'); //e.target.parentNode.parentNode;.children[0]
 

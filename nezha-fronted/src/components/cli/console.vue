@@ -92,7 +92,10 @@ export default {
         }
       });
     },
-    fullScreenConsole(isFullScreen){
+    fullScreenConsole(isFullScreen, resizeHeight){
+      if (resizeHeight) {
+        this.termimalHeight = resizeHeight;
+      }
       this.isFullScreen = isFullScreen;
       //this.term.toggleFullScreen(isFullScreen);//全屏后无法显示顶部菜单和tab
       let height = document.body.clientHeight-this.topMenuHeight;//可视高度
