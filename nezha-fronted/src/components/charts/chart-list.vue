@@ -12,17 +12,38 @@
     width: calc(100% - 14px);
     overflow-x:hidden;/*避免鼠标第一次放到曲线时，x轴出现滚动条后消失*/
   }
-  .drag-chart-class{
-    cursor:move;
+  .dragChartClass{
+    cursor:move;/*
+    border:solid 2px yellow;
+    color:yellow;
+    background-color:yellow;
+    opacity:1;*/
     /*background-color:red;
     opacity:1*/
   }
+  .chooseClass{
+    cursor:move;/*
+    border:solid 2px purple;
+    color:purple;
+    background-color:purple;*/
+  }
+  .chosenClass .chartTitle{/*
+    color:orange;
+    border:solid 2px orange;*/
+  }
   .fallback-class{
+    cursor:move;
     /*background-color:green;
     cursor:pointer;*/
   }
   .chart-ghost-class{
     /*opacity:1*/
+  }
+  .ghost {/*
+    opacity: 1;
+    border:solid 2px green;
+    color:green;
+    background-color:green;*/
   }
 
 </style>
@@ -37,15 +58,18 @@
          @dragend="handleDragEnd($event, item)"    ,ghostClass:''  {scroll:true,forceFallback:true,animation:600,handle:'.drag-icon'
 -->
     <draggable v-model="dataList" @chang="change" @start="start" @end="end" :move="move"
+               :scroll-sensitivity="150"
                :options="{
-               dragClass:'drag-chart-class',
-               fallbackClass:'fallback-class',
-               forceFallback:true,
-               ghostClass:'chart-ghost-class',
-               scroll:true,
-               animation:150,
+                 dragClass:'dragChartClass',
+                 fallbackClass:'fallback-class',
+                 forceFallback:true,
+                 ghostClass:'ghost',
+                 chosenClass:'chooseClass',
+                 scroll:true,
+                 scrollFn:function(offsetX,offsetY,originalEvent,touchEvt,hoverTargetEI){},
+                 animation:150,
+                 handle:'.chartTitle',
                }"  >
-
       <div class="chartBox" v-for="(item, index) in dataList"    :key="item.id" :id="item.title+'_'+item.id"   style="border:solid 0px red;" @dragstart="">
         <line-chart-block v-if="item.type === 'line' || item.type === 'bar' ||item.type == 'stackArea' || item.type === 4" :key="'inner' + item.id"
         ref="editChart"
@@ -91,6 +115,7 @@ export default {
     return {
       filter: {},
       dataList: [], // 看板中所有图表信息
+      //dataListDragTmp:[],
       time: {
         start: '',
         end: '',
@@ -112,14 +137,97 @@ export default {
       console.log('change', event)
     },
     start (event) {
-      console.log('start', event)
+      console.log('start', event, this.dataList)
+      let item = event.item;
+      let chartTitle = item.querySelector('.chartTitle');
+      chartTitle.style.background = '#d8dce1';
+      console.log('start-title',chartTitle);
+      //this.dataListDragTmp = [...this.dataList];
     },
     end (event) {
-      console.log('end', event, this.groups)
+      let item = event.item;
+      let chartTitle = item.querySelector('.chartTitle');
+      chartTitle.style.background = '';
+      console.log('end', event, this.dataList);
+      /*
+      let len = this.dataListDragTmp.length;
+      let endIndex = len-1;
+      let oldIndex = event.oldIndex;
+      if(oldIndex===0){//挪动之前为第一个元素
+        let oldNextItem = this.dataListDragTmp[oldIndex+1];
+        let nextItem = this.dataList.find(item => item.id === oldNextItem.id);
+        nextItem.prev = 0;
+      }else if(oldIndex===endIndex){//挪动之前为最后一个元素
+        let oldPrevItem = this.dataListDragTmp[oldIndex-1];
+        let prevItem = this.dataList.find(item => item.id === oldPrevItem.id);
+        prevItem.next = -1;
+      }else{//挪动之前为中间元素
+        let oldPrevItem = this.dataListDragTmp[oldIndex-1];
+        let oldNextItem = this.dataListDragTmp[oldIndex+1];
+        let nextItem = this.dataList.find(item => item.id === oldNextItem.id);
+        let prevItem = this.dataList.find(item => item.id === oldPrevItem.id);
+        prevItem.next = oldNextItem.id;
+        nextItem.prev = oldPrevItem.id;
+      }
+
+      let newIndex = event.newIndex;
+      let newItem = this.dataList[newIndex];
+      if(newIndex===0){//挪动之后为第一个元素
+        let newNextItem = this.dataList[newIndex+1];
+        newNextItem.prev = newItem.id;
+      }else if(newIndex===endIndex){//挪动之后为最后一个元素
+        let newPrevItem = this.dataList[newIndex-1];
+        newPrevItem.next =newItem.id;
+      }else{//挪动之后为中间元素
+        let newPrevItem = this.dataList[newIndex-1];
+        let newNextItem = this.dataList[newIndex+1];
+        newPrevItem.next = newItem.id;
+        newNextItem.prev = newItem.id;
+      }
+*/
+      let newIndex = event.newIndex;
+      let newItem = this.dataList[newIndex];
+
+      if(newIndex===0){//挪动之后为第一个元素
+        let newNextItem = this.dataList[newIndex+1];
+        newItem.prev = 0;
+        newItem.next = newNextItem.id;
+      }else if(newIndex===(this.dataList.length-1)){//挪动之后为最后一个元素
+        let newPrevItem = this.dataList[newIndex-1];
+        newItem.prev = newPrevItem.id;
+        newItem.next = -1;
+      }else{//挪动之后为中间元素
+        let newNextItem = this.dataList[newIndex+1];
+        let newPrevItem = this.dataList[newIndex-1];
+        newItem.prev = newPrevItem.id;
+        newItem.next = newNextItem.id;
+      }
+      //更新图表prev和next
+      const modifyParams = {
+        id:newItem.id,
+        span:newItem.span,
+        height:newItem.height,
+        prev:newItem.prev,
+        next:newItem.next,
+      }
+      this.$put('panel/'+ this.pagePanelId+'/charts/modify',modifyParams).then(response => {
+        if (response.code === 200) {
+          //let item = this.dataList.find(item => item.id === newItem.id);
+        }else {
+          if(response.msg){
+            this.$message.error(response.msg);
+          }else if(response.error){
+            this.$message.error(response.error);
+          }else {
+            this.$message.error(response);
+          }
+        }
+      });
     },
     move (event, orgin) {
       console.log('move', event, orgin)
     },
+    /*
     handleDragStart(e,item){
       this.dragging = item;
     },
@@ -144,6 +252,7 @@ export default {
 
       this.dataList = newItems
     },
+    */
     initCurrentRecordNum(){
       this.currentRecordNum = 0;
     },

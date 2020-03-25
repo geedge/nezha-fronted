@@ -294,9 +294,10 @@
         this.divFirstShow = showDiv;
       },
       dragResize:function(e){
-        var diffWidth = 38;//界面的宽度空白的地方的宽度
-        var targetDiv= document.getElementById('lineChartDiv'+this.chartIndex); //e.target.parentNode.parentNode;.children[0]
-        var targetDivContainer= document.getElementById('listContainer'); //e.target.parentNode.parentNode;.children[0]
+        var diffWidth = 20;//界面的宽度空白的地方的宽度
+        var chartBoxPadding = 20;
+        var targetDiv= document.getElementById('lineChartDiv'+this.chartIndex); //
+        var targetDivContainer= document.getElementById('listContainer'); //
         var maxWidth = targetDivContainer.offsetWidth-diffWidth;
         var minWidth = maxWidth/12;
         var stepWidth = maxWidth/12;
@@ -355,7 +356,7 @@
             let containerHeight = parseInt(targetDiv.style.height);
             let containerWidth = parseInt(targetDiv.style.width);
             const chartBox = document.getElementsByClassName('chartBox');
-            chartBox[_this.chartIndex].style.width = (containerWidth+diffWidth)+'px';
+            chartBox[_this.chartIndex].style.width = (containerWidth+chartBoxPadding)+'px';
             _this.echartStore.resize({height:(containerHeight-divHeight-_this.titleHeight)});
           }
         }
@@ -405,7 +406,7 @@
           if(_this.echartStore){
             let divHeight = _this.$refs.legendArea.offsetHeight;
             const chartBox = document.getElementsByClassName('chartBox');
-            chartBox[_this.chartIndex].style.width = (containerWidth+diffWidth)+'px';
+            chartBox[_this.chartIndex].style.width = (containerWidth+chartBoxPadding)+'px';
             _this.echartStore.resize({height:(containerHeight-divHeight-_this.titleHeight)});
           }
 

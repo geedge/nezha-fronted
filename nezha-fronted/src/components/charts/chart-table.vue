@@ -17,7 +17,7 @@
           </div>
         </div>
         -->
-        <div class="clearfix chartTitle" :id="'chartTitle'+chartIndex">
+        <div class="clearfix chartTitle" :class="{'dragTitle':dragTitleShow}" :id="'chartTitle'+chartIndex">
 
           <el-dropdown trigger="click" v-show="firstShow"   class="nz-chart-top" :key="'chartDropdown'+chartIndex"  v-clickoutside="clickos">
             <span class="el-dropdown-link chart-title" @click="dropdownMenuShow=!dropdownMenuShow">
@@ -163,6 +163,7 @@ export default {
             stableFilter: {}, // 保存数据使用,初始化起止时间,单图or多图等
             firstShow: false, // 默认不显示操作按钮,
             caretShow:false,
+            dragTitleShow:false,
             dropdownMenuShow:false,
             minHeight:200,
             chartSpaceHeight:5,//top-border: 1,bottom-border: 1,padding-bottome:3
@@ -310,7 +311,8 @@ export default {
           this.seriesItemScreen=this.filterShowData(this.storedScreanTableData,this.screenPageObj)
         },
       dragResize:function(e){
-        var diffWidth =38; //界面的宽度空白的地方的宽度
+        var diffWidth =20; //界面的宽度空白的地方的宽度
+        var chartBoxPadding = 22;
         var targetDiv= document.getElementById('chartTableDiv'+this.chartIndex); //e.target.parentNode.parentNode;.children[0]
         var targetDivContainer= document.getElementById('listContainer'); //e.target.parentNode.parentNode;.children[0]
         var maxWidth = targetDivContainer.offsetWidth-diffWidth;
@@ -367,7 +369,7 @@ export default {
             let containerHeight = parseInt(targetDiv.style.height);
             let containerWidth = parseInt(targetDiv.style.width);
             const chartBox = document.getElementsByClassName('chartBox');
-            chartBox[_this.chartIndex].style.width = (containerWidth+diffWidth)+'px';
+            chartBox[_this.chartIndex].style.width = (containerWidth+chartBoxPadding)+'px';
             //chartBox[_this.chartIndex].style.height = `${containerHeight}px`;
             //表格的高度
             const tableBox = document.getElementById('tableContainer'+_this.chartIndex);
@@ -418,7 +420,7 @@ export default {
           let containerWidth = parseInt(targetDiv.style.width);
 
           const chartBox = document.getElementsByClassName('chartBox');
-          chartBox[_this.chartIndex].style.width = (containerWidth+diffWidth)+'px';
+          chartBox[_this.chartIndex].style.width = (containerWidth+chartBoxPadding)+'px';
           //chartBox[_this.chartIndex].style.height = `${containerHeight}px`;
           //表格的高度
           const tableBox = document.getElementById('tableContainer'+_this.chartIndex);
