@@ -18,6 +18,9 @@
         <div class="sidebar-info-item sidebar-info-item-active" id="model-jump-model">
           {{$t('config.model.model')}}
         </div>
+        <div class="sidebar-info-item" @click="jumpTo('mib')" id="account-jump-mib">
+          {{$t('config.mib.mib')}}
+        </div>
       </div>
     </div>
     <div class="content-right">

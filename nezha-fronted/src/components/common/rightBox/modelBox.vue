@@ -70,11 +70,7 @@
               </template>
             </el-autocomplete>
           </el-form-item>
-          <el-form-item :label="$t('config.model.remark')" prop="remark">
-            <el-input maxlength="512" rows="4" show-word-limit v-if="rightBox.isEdit" type="textarea" placeholder="" v-model.trim="currentModel.remark" size="small"></el-input>
-            <div v-if="!rightBox.isEdit" class="right-box-form-content-txt">{{currentModel.remark}}</div>
-          </el-form-item>
-        </el-form>
+        </el-form>save
       </el-scrollbar>
 
       <!--底部按钮-->

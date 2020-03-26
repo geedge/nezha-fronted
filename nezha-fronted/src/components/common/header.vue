@@ -107,6 +107,9 @@
         <el-menu-item index="5-3">
           <div @click="jumpTo('model')" :class="{'menu-item-active' :(activeIndex == 'model' )}">{{$t('config.model.model')}}</div>
         </el-menu-item>
+        <el-menu-item index="5-4">
+          <div @click="jumpTo('mib')" :class="{'menu-item-active' :(activeIndex == 'mib' )}">{{$t('config.mib.mib')}}</div>
+        </el-menu-item>
       </el-submenu>
       <el-submenu index="6" popper-class="nz-submenu">
         <template slot="title">

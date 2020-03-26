@@ -46,6 +46,7 @@ const en = {
     createDatacenter:'create datacenter',
     createCabinet:'create cabinet',
     createModel:'create model',
+    createMib:'create mib',
     exportExcel:'Export',
     importExcel:'Import',
     importExcelLower:'import',
@@ -493,6 +494,13 @@ const en = {
       remark:'Remark',
       updateUser:'Update User',
       updateAt:'Update Time',
+      editMib:'Edit Mib',
+      models:'Models',
+      modelTip:'please select models',
+      createMib:'Create Mib',
+      mibFile:'Mib File',
+      uploadTip:'please upload mib file',
+      requiredMibFile:'mib file is required',
     }
   },
   alert: {

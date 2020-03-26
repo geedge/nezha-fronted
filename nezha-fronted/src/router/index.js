@@ -69,6 +69,10 @@ export default new Router({
           component: resolve => require(['../components/page/config/model.vue'], resolve),
         },
         {
+          path: '/mib',
+          component: resolve => require(['../components/page/config/mib.vue'], resolve),
+        },
+        {
           path: '/alertList',
           component: resolve => require(['../components/page/alert/list.vue'], resolve),
         },

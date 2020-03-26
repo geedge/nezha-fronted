@@ -40,6 +40,7 @@ import cabinetBottomBox from "./components/common/bottomBox/cabinetBottomBox"; /
 import PerfectScrollbar from "perfect-scrollbar";
 import "perfect-scrollbar/css/perfect-scrollbar.css";
 import loading from "./components/common/loading";
+import mibBox from "./components/common/rightBox/mibBox";
 
 Vue.component("Pagination", Pagination);
 Vue.component("searchInput", searchInput);
@@ -62,6 +63,7 @@ Vue.component("select-area", selectArea);
 Vue.component('loading',loading);
 Vue.component('alert-message-box',alertMessageBox);
 Vue.component('cabinet-bottom-box',cabinetBottomBox);
+Vue.component('mib-box',mibBox);
 
 Vue.prototype.$axios = axios;
 Vue.prototype.$post = post;
