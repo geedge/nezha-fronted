@@ -442,7 +442,7 @@ const en = {
     account: {
       accountList: 'Account list',//"用户列表"
       //列表表头
-      account: 'Username',//"用户"
+      account: 'Account',//"用户"
       language: 'Language',//"语言"
       receiver: 'Account group',//"用户组"
       createTime: 'Create time',//"创建时间"
