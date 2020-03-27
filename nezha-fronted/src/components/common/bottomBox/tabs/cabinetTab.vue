@@ -1,10 +1,10 @@
 <template>
   <span>
     <div class="sub-top-tools">
-      <div class="sub-list-tabs margin-l-20" style="width: calc(100% - 780px);">
-        <div class="sub-list-tab" @click="changeTab('detail')">{{$t("overall.detail")}}</div>
-        <div class="sub-list-tab sub-list-tab-active">{{$t("config.dc.cabinets")}}</div>
-        <span class="sub-list-tab-txt">{{$t("asset.createAssetTab.dcName")}}：{{obj.name}}</span>
+      <div class="sub-list-tabs">
+        <div class="sub-list-tab-title">{{$t("asset.createAssetTab.dcName")}}：{{obj.name}}</div><div
+        class="sub-list-tab" @click="changeTab('detail')">{{$t("overall.detail")}}</div><div
+        class="sub-list-tab sub-list-tab-active">{{$t("config.dc.cabinets")}}</div>
       </div>
       <div class="top-tool-right">
         <div class="top-tool-search">

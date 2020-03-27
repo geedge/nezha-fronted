@@ -178,7 +178,7 @@
             name: ''
           }
         },
-        cabinetDc: {},
+        cabinetDc: {}, // 用在二级cabinet列表页里
         dcDetail: [], //dc的详情信息，包含标题
         pageObj: {
           pageNo: 1,
@@ -414,7 +414,6 @@
         }
         detail.push({label: this.$t("asset.createAssetTab.principal"), value: principal});
         detail.push({label: this.$t("config.dc.area"), value: obj.area.name});
-        console.info(detail)
         return detail;
       },
       toAdd() {

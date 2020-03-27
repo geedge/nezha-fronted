@@ -1,11 +1,12 @@
 <template>
   <span>
     <div class="sub-top-tools">
-      <div class="sub-list-tabs margin-l-20">
-        <div class="sub-list-tab sub-list-tab-active">{{$t("overall.detail")}}</div>
-        <template v-if="from == 'dc'">
-          <div class="sub-list-tab" @click="changeTab('cabinet')">{{$t("config.dc.cabinets")}}</div>
-          <span class="sub-list-tab-txt">{{$t("asset.createAssetTab.dcName")}}：{{obj.name}}</span>
+      <div class="sub-list-tabs">
+        <div class="sub-list-tab-title">
+          <template v-if="from == 'dc'">{{$t("asset.createAssetTab.dcName")}}：{{obj.name}}</template>
+          <template v-else-if="from == 'account'">{{$t("config.account.account")}}：{{obj.username}}</template>
+        </div><div class="sub-list-tab sub-list-tab-active">{{$t("overall.detail")}}</div><template v-if="from == 'dc'">
+        <div class="sub-list-tab" @click="changeTab('cabinet')">{{$t("config.dc.cabinets")}}</div>
         </template>
       </div>
     </div>

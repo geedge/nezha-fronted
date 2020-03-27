@@ -380,6 +380,7 @@ li{
 /* begin--二级页面tab*/
 .sub-list-tabs {
   margin-top: 0 !important;
+  position: relative;
   height: 100%;
   background-color: #f5f7fa;
 }
@@ -401,10 +402,14 @@ li{
   background-color: white;
   border-top: solid 2px #ee9d3f;
 }
-.sub-list-tab-txt {
+.sub-list-tab-title {
   font-size: 14px;
   color: #666666;
-  padding-left: 8px;
+  padding: 0 8px;
+  height: 100%;
+  display: inline-block;
+  background-color: #eeeeee;
+  line-height: 30px;
 }
 /* end--二级页面tab*/
 
