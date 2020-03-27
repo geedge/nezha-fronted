@@ -501,6 +501,8 @@ const en = {
       mibFile:'Mib File',
       uploadTip:'please upload mib file',
       requiredMibFile:'mib file is required',
+      vendor:'Vendor',
+      type:'Type',
     }
   },
   alert: {

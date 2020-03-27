@@ -27,7 +27,7 @@
             <div v-if="!rightBox.isEdit" class="right-box-form-content-txt">{{currentMib.name}}</div>
           </el-form-item>
 
-          <el-form-item :label='$t("config.mib.models")' prop="models">
+          <el-form-item :label='$t("config.mib.models")' prop="models" :rules="[{validator:checkModels,trigger:'change'}]" class="add-required">
             <el-cascader
               v-if="rightBox.isEdit"
               :options="modelOptions"
@@ -54,8 +54,8 @@
             <el-input maxlength="512" rows="4" show-word-limit v-if="rightBox.isEdit" type="textarea" placeholder="" v-model.trim="currentMib.remark" size="small"></el-input>
             <div v-if="!rightBox.isEdit" class="right-box-form-content-txt">{{currentMib.remark}}</div>
           </el-form-item>
-          <el-form-item :label="$t('config.mib.mibFile')" prop="file" :rules="!currentMib.id?[{validator:checkMibFile,trigger:'change'},{required: true,message:' ',trigger: 'blur'}]:[{validator:checkMibFile,trigger:'change'}]">
-            <el-upload v-if="rightBox.isEdit" :multiple="false" action="" :file-list="uploadFileList" :on-change="uploadChange"  :auto-upload="false" accept="">
+          <el-form-item :label="$t('config.mib.mibFile')" prop="file" :rules="[{validator:checkMibFile,trigger:'change'}]" :class="{'add-required':!currentMib.id}">
+            <el-upload v-if="rightBox.isEdit" :multiple="false" action="" :file-list="uploadFileList" :on-change="uploadChange"  :auto-upload="false" accept="" :on-remove="afterClearFile" ref="mibFileUpload">
               <div slot="tip" class="el-upload__tip" >
                 <span v-if="!currentMib.fileName">{{$t('config.mib.uploadTip')}}</span>
                 <span v-else>{{currentMib.fileName}}</span>
@@ -95,7 +95,7 @@
       let $temp=this;
       return {
         currentMib: {
-          id: '',
+          id: null,
           name: '',
           remark:'',
           models:'',
@@ -109,10 +109,7 @@
         rules: {
           name: [
             {required: true, message: this.$t('validate.required'), trigger: 'blur'}
-          ],
-          models:[
-            {required: true, message: this.$t('validate.required'), trigger: 'blur'}
-          ],
+          ]
         },
         checkMibFile : (rule, value, callback) => {
           setTimeout(() => {
@@ -128,7 +125,16 @@
               $temp.uploadErrorMsg=null;
               return callback();
             }
-          }, 500);
+          }, 200);
+        },
+        checkModels:(rule, value, callback)=>{
+          setTimeout(() => {
+            if(!$temp.currentMib.models||$temp.currentMib.models == ''){
+              return callback(new Error($temp.$t('validate.required')))
+            }else{
+              return callback();
+            }
+          }, 200);
         },
         selectedModels:[],
         modelOptions:[],
@@ -202,14 +208,20 @@
         this.$refs.mibForm.validateField('models')
       },
       uploadChange:function(file,fileList){
+        console.log('fileChange')
         if (fileList.length > 0) {
           this.uploadFileList = [fileList[fileList.length - 1]]
+          this.uploadFile = this.uploadFileList[0];
         }
-        this.uploadFile = this.uploadFileList[0];
+        this.validateFile();
+      },
+      afterClearFile:function(file, fileList){
+        this.uploadFileList = [];
+        this.uploadFile = null;
         this.validateFile();
       },
       validateFile:function(){
-
+        this.$refs.mibForm.validateField('file')
       },
       /*保存*/
       save() {
@@ -220,15 +232,28 @@
             form.append('remark',this.currentMib.remark);
             form.append('models',this.currentMib.models);
             form.append('file',this.uploadFile&&this.uploadFile.raw?this.uploadFile.raw:null);
-            this.$post('/mib',form,{'Content-Type': 'multipart/form-data'}).then(response=>{
-              if(response.code==200 && response.msg=='success'){
-                this.$message({duration: 1000, type: 'success', message: this.$t("tip.saveSuccess")});
-                this.esc();
-                this.$emit('after');
-              }else{
-                this.$message.error(response.msg);
-              }
-            })
+            if(!this.currentMib.id){
+              this.$post('/mib',form,{'Content-Type': 'multipart/form-data'}).then(response=>{
+                if(response.code==200 && response.msg=='success'){
+                  this.$message({duration: 1000, type: 'success', message: this.$t("tip.saveSuccess")});
+                  this.esc();
+                  this.$emit('after');
+                }else{
+                  this.$message.error(response.msg);
+                }
+              })
+            }else{
+              form.append('id',this.currentMib.id);
+              this.$put('/mib',form,{'Content-Type': 'multipart/form-data'}).then(response=>{
+                if(response.code==200 && response.msg=='success'){
+                  this.$message({duration: 1000, type: 'success', message: this.$t("tip.saveSuccess")});
+                  this.esc();
+                  this.$emit('after');
+                }else{
+                  this.$message.error(response.msg);
+                }
+              })
+            }
           }
         })
       },
@@ -239,6 +264,19 @@
         } else {
           this.save();
         }
+      },
+      clearData:function(){
+        this.currentMib={
+          id: null,
+          name: '',
+          remark:'',
+          file:'',
+          models:'',
+        }
+        this.uploadFile=null;
+        this.uploadFileList=[];
+        this.selectedModels=[];
+        this.uploadErrorMsg=null;
       },
       /*删除*/
       del() {
@@ -292,7 +330,13 @@
 
 <style>
   .right-box-mib .right-box-form-row{
+    margin-top:0;
     width: 100%;
+  }
+  .add-required .el-form-item__label:before{
+    content: '*';
+    color: #F56C6C;
+    margin-right: 4px;
   }
 </style>
 <style scoped>

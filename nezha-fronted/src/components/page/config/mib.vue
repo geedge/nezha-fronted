@@ -44,12 +44,35 @@
               <span class="clickable" @click="downloadMib(scope.row.id)">{{scope.row[item.prop]}}</span>
             </template>
             <template v-else-if="item.prop == 'modelsDetail' && scope.row['modelsDetail'] && scope.row['modelsDetail'].length >0">
-              <span v-for="(n,i) in scope.row['modelsDetail']" :key="n.name+'-'+n.id+'-'+i" >
-                <template v-if="i < scope.row['modelsDetail'].length-1">
-                  {{n.name}}，
-                </template>
-                <template v-else>{{n.name}}</template>
-              </span>
+              <div style="max-height: 100px">
+                <el-scrollbar style="height: 100%">
+                  <span v-for="(n,i) in scope.row['modelsDetail']" :key="n.name+'-'+n.id+'-'+i" >
+                  <el-popover trigger="hover" placement="right" >
+                    <div>
+                      <div>
+                        <span>{{$t('overall.name')}}:</span>
+                        <span>{{n.name}}</span>
+                      </div>
+                      <div>
+                        <span>{{$t('config.mib.vendor')}}:</span>
+                        <span>{{n.vendor}}</span>
+                      </div>
+                      <div>
+                        <span>{{$t('config.mib.type')}}:</span>
+                        <span>{{n.type}}</span>
+                      </div>
+                    </div>
+                    <template slot="reference">
+                      <template v-if="i < scope.row['modelsDetail'].length-1">
+                        {{n.name}}
+                        <el-divider></el-divider>
+                      </template>
+                      <template v-else>{{n.name}}</template>
+                    </template>
+                  </el-popover>
+                </span>
+              </el-scrollbar>
+              </div>
             </template>
             <div v-else-if="item.prop == 'option'" class="content-right-options">
               <span :title="$t('overall.view')" @click="detail(scope.row)" class="content-right-option" :id="'mib-detail-'+scope.row.id"><i class="nz-icon nz-icon-view"></i></span>
@@ -94,7 +117,7 @@
         tableId: 'mibTable', //需要分页的table的id，用于记录每页数量
         showTopBtn: false,
         mib: {
-          id: '',
+          id: null,
           name: '',
           remark:'',
           models:'',
@@ -294,13 +317,14 @@
       },
       cleanMib() {
         this.mib = {
-          id: '',
+          id: null,
           name: '',
           remark:'',
           file:'',
           models:'',
           file:null,
         };
+        this.$refs.mibBox.clearData();
       }
     },
     mounted: function () {
