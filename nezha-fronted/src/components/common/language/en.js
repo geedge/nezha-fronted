@@ -263,6 +263,8 @@ const en = {
     asset: 'Assets',//'资产'
     EditAsset:'Edit asset',//'编辑资产'
     pingActive: 'active',//可ping通
+    assetStatPre:'Last reply:',
+    assetStatDown:'Never',
     pingInactive:'inactive',
     createAssetTab:{
       title:'New asset',//'新增资产'
