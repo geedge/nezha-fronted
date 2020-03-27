@@ -904,7 +904,7 @@
       },
       formatPingTime:function(str){
         if(!str || str == ''){
-          return 'Last reply:Never';
+          return this.$t('asset.assetStatPre')+this.$t('asset.assetStatDown');
         }
         let ds='-';
         let ts=':';
@@ -916,7 +916,7 @@
         let minutes=time.getMinutes() > 9 ?time.getMinutes():('0'+time.getMinutes());
         let seconds=time.getSeconds() > 9 ? time.getSeconds():('0'+time.getSeconds());
 
-        return 'Last reply:'+year+ds+month+ds+day+' '+hours+ts+minutes+ts+seconds;
+        return this.$t('asset.assetStatPre')+year+ds+month+ds+day+' '+hours+ts+minutes+ts+seconds;
 
       }
     },
