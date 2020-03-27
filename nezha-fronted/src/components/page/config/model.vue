@@ -54,10 +54,8 @@
                 </el-popover>
             </template>
             <div v-else-if="item.prop == 'option'" class="content-right-options">
-              <span :title="$t('overall.view')" @click="detail(scope.row)" class="content-right-option" :id="'model-detail-'+scope.row.id"><i class="nz-icon nz-icon-view"></i></span>
-              &nbsp;
+              <!--<span :title="$t('overall.view')" @click="detail(scope.row)" class="content-right-option" :id="'model-detail-'+scope.row.id"><i class="nz-icon nz-icon-view"></i></span>-->
               <span :title="$t('overall.edit')" @click="toEdit(scope.row)" class="content-right-option" :id="'model-edit-'+scope.row.id"><i class="nz-icon nz-icon-edit"></i></span>
-              &nbsp;
               <span :title="$t('overall.delete')" @click="del(scope.row)" class="content-right-option" :id="'model-del-'+scope.row.id"><i class="el-icon-delete"></i></span>
             </div>
             <template v-else-if="scope.row[item.prop]">{{scope.row[item.prop]}}</template>
