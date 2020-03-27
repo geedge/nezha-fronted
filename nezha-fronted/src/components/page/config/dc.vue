@@ -138,8 +138,8 @@
           </div>
           <button class="to-top" v-show="showTopBtn" @click="toTop"><i class="nz-icon nz-icon-top"></i></button>
         </div>
-        <cabinet-bottom-box v-if="showSubList" @listResize="listResize" :show-sub-list="showSubList" :subResizeShow="subResizeShow" :obj="cabinetDc" :isFullScreen="isFullScreen"
-                     @closeSubList="showSubList = false" @fullScreen="fullScreen" @exitFullScreen="exitFullScreen"></cabinet-bottom-box>
+        <bottom-box v-if="showSubList" :show-sub-list="showSubList" :subResizeShow="subResizeShow" :obj="cabinetDc" :isFullScreen="isFullScreen" :from="'dc'" :targetTab="targetTab" :detail="dcDetail"
+                     @closeSubList="showSubList = false" @fullScreen="fullScreen" @exitFullScreen="exitFullScreen" @listResize="listResize" ></bottom-box>
       </div>
       <!--dc table end-->
       <element-set
@@ -157,6 +157,7 @@
     name: "dc",
     data() {
       return {
+        targetTab: '', //展示二级列表中的哪个页签
         showElementSet: false, //控制自定义列的弹框
         inTransform: false, //搜索框相关，搜索条件下拉框是否在transform里
         mainResizeShow: true, //dom高度改变时部分内容是否展示
@@ -178,6 +179,7 @@
           }
         },
         cabinetDc: {},
+        dcDetail: [], //dc的详情信息，包含标题
         pageObj: {
           pageNo: 1,
           pageSize: 20,
@@ -387,13 +389,33 @@
         this.currentDc = tempDc;
         this.$refs.dcBox.show(true, true);
       },
-      detail(u) {
-        let tempDc = JSON.parse(JSON.stringify(u));
+      detail(obj) {
+        let tempDc = JSON.parse(JSON.stringify(obj));
         if (!tempDc.area) {
           this.$set(tempDc, 'area', {id: '', name: ''});
         }
-        this.currentDc = tempDc;
-        this.$refs.dcBox.show(true, false);
+        //this.currentDc = tempDc;
+        //this.$refs.dcBox.show(true, false);
+        this.cabinetDc = tempDc;
+        this.targetTab = "detail";
+        this.showSubList = true;
+      },
+      convertToDetail(obj) {
+        let detail = [];
+        detail.push({label: this.$t("overall.name"), value: obj.name});
+        detail.push({label: this.$t("asset.createAssetTab.location"), value: obj.location});
+        detail.push({label: this.$t("asset.createAssetTab.tel"), value: obj.tel});
+        let principal = '';
+        for (let i = 0; i < this.userData.length; i++) {
+          if (this.userData[i].userId == obj.principal) {
+            principal = this.userData[i].username;
+            break;
+          }
+        }
+        detail.push({label: this.$t("asset.createAssetTab.principal"), value: principal});
+        detail.push({label: this.$t("config.dc.area"), value: obj.area.name});
+        console.info(detail)
+        return detail;
       },
       toAdd() {
         this.currentDc = {
@@ -464,6 +486,7 @@
       showCabinet:function(dc){
         //this.currentShowDc=dc;
         //this.tabShow=2;
+        this.targetTab = 'cabinet';
         this.cabinetDc = JSON.parse(JSON.stringify(dc));
         this.showSubList = true;
         //this.cabSearchLabel={idcId:this.currentShowDc.id};
@@ -471,56 +494,14 @@
         /*let temp=this;
         setTimeout(function(){temp.$refs.cabSearchInput.clear_input();},100)*/
       },
-      /*getCabinetDatas:function(){
-        this.$get('/cabinet',this.cabSearchLabel).then(response=>{
-          if(response.code==200 && response.msg=='success'){
-            this.cabinetDatas=response.data.list;
-          }
-        })
-      },
-      editCabinet:function(cabinet){
-        this.curCabinet=cabinet;
-        this.$refs.cabinetEditBox.show(true,true);
-      },
-      toAddCabinet:function(){
-        this.$refs.cabinetEditBox.show(true,true);
-        this.$refs.cabinetEditBox.reset();
-      },*/
-      /*delCabinet:function(cabinet){
-        this.$confirm(this.$t("tip.confirmDelete"), {
-          confirmButtonText: this.$t("tip.yes"),
-          cancelButtonText: this.$t("tip.no"),
-          type: 'warning'
-        }).then(() => {
-          this.$delete('/cabinet?ids='+cabinet.id).then(response=>{
-            if(response.code ==  200){
-              this.$message({duration: 2000, type: 'success', message: this.$t("tip.saveSuccess")});
-              this.getCabinetDatas();
-            }else{
-              this.$message.error(response.msg);
-            }
-          })
-        })
-      },*/
-      /*back:function(){
-        this.tabShow=1;
-        this.getTableData();
-        let temp=this;
-        setTimeout(function(){temp.$refs.searchInput.clear_input();},100)
-      },
-      cabSearch:function(obj){
-        this.cabSearchLabel={idcId:this.currentShowDc.id};
-        if(obj){
-          for(let item in obj){
-            if(obj[item]){
-              this.$set(this.cabSearchLabel,item,obj[item]);
-            }
-          }
-        }
-        this.getCabinetDatas();
-      }*/
     },
     watch: {
+      cabinetDc: {
+        deep: true,
+        handler(n) {
+          this.dcDetail = this.convertToDetail(n);
+        }
+      },
       showSubList(n) {
         this.inTransform = n;
         if (!n) {

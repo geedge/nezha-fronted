@@ -3,94 +3,97 @@
     <!-- 副列表 endpoint query-->
     <div @mousedown="listResize" class="sub-list-resize" v-if="showSubList && !isFullScreen">一</div>
     <div class="sub-list" v-if="showSubList">
-      <div class="sub-top-tools" v-show="subResizeShow">
-        <div class="sub-list-tabs margin-l-20" style="width: calc(100% - 780px);">
-          <div class="sub-list-tab">{{$t("overall.query")}}</div>
-          <span class="sub-list-tab-txt">{{$t("asset.createAssetTab.dcName")}}：{{obj.name}}</span>
-        </div>
-        <div class="top-tool-right">
-          <div class="top-tool-search">
-            <search-input :searchMsg="searchMsg" @search="search"></search-input>
-          </div>
-          <button type="button" @click="toAddCabinet" :title="$t('overall.createCabinet')"
-                class="nz-btn nz-btn-size-normal nz-btn-style-light float-right margin-l-20" id="cab-add">
-            <i class="nz-icon-create-square nz-icon"></i>
-          </button>
-          <div class="sub-list-window-control">
-            <!--半屏-->
-            <div class="window-control-btn" v-if="isFullScreen" @click="exitFullScreen"><i class="nz-icon nz-icon-exit-full-screen"></i></div>
-            <!--全屏-->
-            <div class="window-control-btn" v-if="!isFullScreen" @click="fullScreen"><i class="el-icon-full-screen"></i></div>
-            <!--关闭-->
-            <div class="window-control-btn" @click="closeSubList"><i class="el-icon-close"></i></div>
-          </div>
-        </div>
+      <div class="sub-list-window-control">
+        <!--半屏-->
+        <div class="window-control-btn" v-if="isFullScreen" @click="exitFullScreen"><i class="nz-icon nz-icon-exit-full-screen"></i></div>
+        <!--全屏-->
+        <div class="window-control-btn" v-if="!isFullScreen" @click="fullScreen"><i class="el-icon-full-screen"></i></div>
+        <!--关闭-->
+        <div class="window-control-btn" @click="closeSubList"><i class="el-icon-close"></i></div>
       </div>
-      <el-table
-        class="nz-table"
-        :data="tableData"
-        border
-        v-loading="loading"
-        ref="cabTable"
-        v-scrollBar:el-table
-        :height="$tableHeight.noPagination"
-        style="width: 100%;">
-        <el-table-column
-          :resizable="false"
-          v-for="(item, index) in tableTitle"
-          v-if="item.show"
-          :width="item.width"
-          :key="`col-${index}`"
-          :label="item.label"
-        >
-          <template slot-scope="scope" :column="item">
-            <div v-if="item.prop == 'option'" class="content-right-options">
-              <span :title="$t('overall.edit')" @click="editCabinet(scope.row)" class="content-right-option" :id="'dc-edit-'+scope.row.id"><i class="nz-icon nz-icon-edit"></i></span>
-              &nbsp;
-              <span :title="$t('overall.delete')" @click="delCabinet(scope.row)" class="content-right-option" :id="'dc-del-'+scope.row.id"><i class="el-icon-delete"></i></span>
+      <template>
+        <div class="sub-top-tools" v-show="subResizeShow">
+          <div class="sub-list-tabs margin-l-20" style="width: calc(100% - 780px);">
+            <div class="sub-list-tab">{{$t("dashboard.overview.dataCenter.cabinet")}}</div>
+            <span class="sub-list-tab-txt">{{$t("asset.createAssetTab.dcName")}}：{{obj.name}}</span>
+          </div>
+          <div class="top-tool-right">
+            <div class="top-tool-search">
+              <search-input :searchMsg="searchMsg" @search="search"></search-input>
             </div>
-            <template v-else-if="item.prop == 'assetStat'">
-              <el-popover
-                placement="top-start"
-                offset="-100"
-                trigger="hover"
-                :content="$t('overall.result.total') + '：' + scope.row.assetStat.total + '，' + $t('asset.createAssetTab.inStock') + '：' + scope.row.assetStat.inStock + '，' + $t('asset.createAssetTab.notInStock') + '：' + scope.row.assetStat.outStock">
-                <div slot="reference" class="dc-asset-states">
-                  <span class="dc-asset-state dc-asset-state-total">{{scope.row.assetStat.total}}</span>
-                  <span class="dc-asset-state dc-asset-state-in">{{scope.row.assetStat.inStock}}</span>
-                  <span class="dc-asset-state dc-asset-state-out">{{scope.row.assetStat.outStock}}</span>
-                </div>
-              </el-popover>
+            <button type="button" @click="toAddCabinet" :title="$t('overall.createCabinet')"
+                  class="nz-btn nz-btn-size-normal nz-btn-style-light float-right margin-l-20" id="cab-add">
+              <i class="nz-icon-create-square nz-icon"></i>
+            </button>
+          </div>
+        </div>
+        <el-table
+          class="nz-table"
+          :data="tableData"
+          border
+          v-show="subResizeShow"
+          v-loading="loading"
+          ref="cabTable"
+          v-scrollBar:el-table
+          :height="$tableHeight.noPagination"
+          style="width: 100%;">
+          <el-table-column
+            :resizable="false"
+            v-for="(item, index) in tableTitle"
+            v-if="item.show"
+            :width="item.width"
+            :key="`col-${index}`"
+            :label="item.label"
+          >
+            <template slot-scope="scope" :column="item">
+              <div v-if="item.prop == 'option'" class="content-right-options">
+                <span :title="$t('overall.edit')" @click="editCabinet(scope.row)" class="content-right-option" :id="'dc-edit-'+scope.row.id"><i class="nz-icon nz-icon-edit"></i></span>
+                &nbsp;
+                <span :title="$t('overall.delete')" @click="delCabinet(scope.row)" class="content-right-option" :id="'dc-del-'+scope.row.id"><i class="el-icon-delete"></i></span>
+              </div>
+              <template v-else-if="item.prop == 'assetStat'">
+                <el-popover
+                  placement="top-start"
+                  offset="-100"
+                  trigger="hover"
+                  :content="$t('overall.result.total') + '：' + scope.row.assetStat.total + '，' + $t('asset.createAssetTab.inStock') + '：' + scope.row.assetStat.inStock + '，' + $t('asset.createAssetTab.notInStock') + '：' + scope.row.assetStat.outStock">
+                  <div slot="reference" class="dc-asset-states">
+                    <span class="dc-asset-state dc-asset-state-total">{{scope.row.assetStat.total}}</span>
+                    <span class="dc-asset-state dc-asset-state-in">{{scope.row.assetStat.inStock}}</span>
+                    <span class="dc-asset-state dc-asset-state-out">{{scope.row.assetStat.outStock}}</span>
+                  </div>
+                </el-popover>
 
-            </template >
-            <template v-else-if="item.prop == 'alertStat'">
-              <el-popover
-                placement="top-start"
-                offset="-128"
-                trigger="hover"
-                :content="$t('overall.result.total') + '：' + scope.row.alertStat.total + '，' + $t('alert.config.high') + '：' + scope.row.alertStat.high + '，' + $t('alert.config.medium') + '：' + scope.row.alertStat.medium+ '，' + $t('alert.config.low') + '：' + scope.row.alertStat.low">
-                <div slot="reference" class="dc-asset-states">
-                  <span class="dc-asset-state dc-asset-state-total">{{scope.row.alertStat.total}}</span>
-                  <span class="dc-asset-state dc-asset-state-high">{{scope.row.alertStat.high}}</span>
-                  <span class="dc-asset-state dc-asset-state-out">{{scope.row.alertStat.medium}}</span>
-                  <span class="dc-asset-state dc-asset-state-in">{{scope.row.alertStat.low}}</span>
-                </div>
-              </el-popover>
-
-            </template >
-            <template v-else-if="scope.row[item.prop]">{{scope.row[item.prop]}}</template>
-            <template v-else>-</template>
-          </template>
-        </el-table-column>
-      </el-table>
-      <cabinet-box :cur-cabinet="currentCabinet" :cur-idc="currentDc" ref="cabinetEditBox" @after="getCabinetList"></cabinet-box>
-      <button class="to-top" v-show="showTopBtn && subResizeShow" @click="toTop('ps', 1)"><i class="nz-icon nz-icon-top"></i></button>
+              </template >
+              <template v-else-if="item.prop == 'alertStat'">
+                <el-popover
+                  placement="top-start"
+                  offset="-128"
+                  trigger="hover"
+                  :content="$t('overall.result.total') + '：' + scope.row.alertStat.total + '，' + $t('alert.config.high') + '：' + scope.row.alertStat.high + '，' + $t('alert.config.medium') + '：' + scope.row.alertStat.medium+ '，' + $t('alert.config.low') + '：' + scope.row.alertStat.low">
+                  <div slot="reference" class="dc-asset-states">
+                    <span class="dc-asset-state dc-asset-state-total">{{scope.row.alertStat.total}}</span>
+                    <span class="dc-asset-state dc-asset-state-high">{{scope.row.alertStat.high}}</span>
+                    <span class="dc-asset-state dc-asset-state-out">{{scope.row.alertStat.medium}}</span>
+                    <span class="dc-asset-state dc-asset-state-in">{{scope.row.alertStat.low}}</span>
+                  </div>
+                </el-popover>
+              </template >
+              <template v-else-if="scope.row[item.prop]">{{scope.row[item.prop]}}</template>
+              <template v-else>-</template>
+            </template>
+          </el-table-column>
+        </el-table>
+        <cabinet-box :cur-cabinet="currentCabinet" :cur-idc="currentDc" ref="cabinetEditBox" @after="getCabinetList"></cabinet-box>
+        <button class="to-top" v-show="showTopBtn && subResizeShow" @click="toTop('ps', 1)"><i class="nz-icon nz-icon-top"></i></button>
+      </template>
     </div>
   </span>
 </template>
 
 <script>
   import cabinetBox from "../../common/rightBox/cabinetBox";
+
   export default {
     name: "cabinetBox",
     components:{

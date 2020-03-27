@@ -36,7 +36,8 @@ import dcBox from "./components/common/rightBox/dcBox"; //dc弹框
 import modelBox from "./components/common/rightBox/modelBox"; //model弹框
 import selectArea from "./components/common/popBox/selectArea"; //dc弹框
 import alertMessageBox from "./components/common/bottomBox/alertMessageBox"; //alertMessage上滑框
-import cabinetBottomBox from "./components/common/bottomBox/cabinetBottomBox"; //机柜上滑框
+import dcBottomBox from "./components/common/bottomBox/dcBottomBox"; //机柜上滑框
+import bottomBox from "./components/common/bottomBox/bottomBox"; //机柜上滑框
 import PerfectScrollbar from "perfect-scrollbar";
 import "perfect-scrollbar/css/perfect-scrollbar.css";
 import loading from "./components/common/loading";
@@ -61,8 +62,9 @@ Vue.component("dc-box", dcBox);
 Vue.component("model-box", modelBox);
 Vue.component("select-area", selectArea);
 Vue.component('loading',loading);
-Vue.component('alert-message-box',alertMessageBox);
-Vue.component('cabinet-bottom-box',cabinetBottomBox);
+Vue.component('alert-message-box', alertMessageBox);
+Vue.component('dc-bottom-box', dcBottomBox);
+Vue.component('bottom-box', bottomBox);
 Vue.component('mib-box',mibBox);
 
 Vue.prototype.$axios = axios;

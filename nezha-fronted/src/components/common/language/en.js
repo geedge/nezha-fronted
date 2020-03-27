@@ -23,7 +23,6 @@ const en = {
     search: 'Search', //'搜索'
     add: 'Create', //"新增"
     option: 'Operation', //"操作"
-    clearAll: 'Clear All', //"清空"
     clear: 'Clear', //"清除"
     name: 'Name', //'名称'
     cover: 'Override', //'覆盖'
@@ -32,6 +31,7 @@ const en = {
     ok: 'Ok',//OK
     all: 'All',//'全选'
     other: 'Others',//"其他"
+    detail: 'Detail', //详情
     query: 'Query', //查询
     back: 'Back', //返回
     unavailable: 'Unavailable',
@@ -478,6 +478,7 @@ const en = {
       cabinetNum: "Cabinet number",
       assets: "Assets",
       remark:'Remark',
+      cabinets: "Cabinets"
     },
     model: {
       model: 'Model',

@@ -386,13 +386,20 @@ li{
 .sub-list-tab {
   width: 100px;
   font-size: 14px;
-  color: $global-text-color-active;
-  background-color: white;
-  border-top: solid 2px #ee9d3f;
+  color: #909399;
   height: calc(100% - 2px);
   padding-left: 20px;
   line-height: 27px;
   display: inline-block;
+  cursor: pointer;
+}
+.sub-list-tab:hover {
+  color: $global-text-color-active;
+}
+.sub-list-tab-active {
+  color: $global-text-color-active;
+  background-color: white;
+  border-top: solid 2px #ee9d3f;
 }
 .sub-list-tab-txt {
   font-size: 14px;
@@ -516,6 +523,7 @@ li{
   display: flex;
   align-content: center;
   height: 26px;
+  margin-right: 76px;
 }
 .top-tool-main-right {
   position: absolute;
@@ -605,14 +613,15 @@ li{
   display: flex;
   align-items: center;
   margin-left: 14px;
+  position: absolute;
+  right: 0;
+  top: 8px;
+  z-index: 1;
 }
 .window-control-btn {
   cursor: pointer;
   width: 29px;
   text-align: center;
-}
-.window-control-btn:last-of-type {
-  margin-right: 4px;
 }
 .window-control-btn>i {
   color: #909399;
