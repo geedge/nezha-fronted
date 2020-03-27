@@ -12,7 +12,7 @@
       layout="total, prev, pager, next, slot"
       :total="this.pageObj.total"
     >
-      <el-select v-model="pageSize" :placeholder="pageSize+$t('pageSize')" size="mini"  :popper-append-to-body="false" class="pagination-size-select" @change="size">
+      <el-select v-model="pageSize" :placeholder="pageSize+$t('pageSize')" size="mini"  :popper-append-to-body="appendToBody" class="pagination-size-select" @change="size">
         <el-option v-for="(item,index) in pageSizes" :key="item.value" :label="item.label" :value="item.value"></el-option>
       </el-select>
 
@@ -23,7 +23,13 @@
 <script>
 export default {
   name: "pagination",
-  props: ['pageObj', 'tableId', 'postPageSizes'],
+  // props: ['pageObj', 'tableId', 'postPageSizes'],
+  props: {
+    pageObj:{},
+    tableId:{},
+    postPageSizes:{},
+    appendToBody:{default:true}
+  },
   data() {
     return {
       pageSize: 20,
