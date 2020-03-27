@@ -100,7 +100,7 @@
         </el-table-column>
       </el-table>
       <Pagination :tableId="tableId" :pageObj="pageObj" @pageNo='pageNo' @pageSize='pageSize' ref="Pagination"></Pagination>
-      <button class="to-top" v-show="showTopBtn && subResizeShow" @click="toTop('ps', 1)"><i class="nz-icon nz-icon-top"></i></button>
+      <button class="to-top" v-show="showTopBtn && subResizeShow" @click="$toTop('ps', 1)"><i class="nz-icon nz-icon-top"></i></button>
     </div>
     <project-box :project="viewProjectData" ref="projectBox" @reload="getAlertList"></project-box>
     <module-box :module="viewModuleData" @reload="getAlertList" ref="moduleBox"></module-box>

@@ -30,8 +30,8 @@
             <div class="top-tool-search">
               <search-input ref="searchInput" :searchMsg="searchMsg" @search="search" :inTransform="inTransform"></search-input>
             </div>
-            <button type="button" @click="toAdd" :title="$t('overall.createDatacenter')"
-                    class="nz-btn nz-btn-size-normal nz-btn-style-light margin-l-20" id="dc-add">
+            <button type="button" @click="toAdd" :title="$t('overall.createAccount')"
+                    class="nz-btn nz-btn-size-normal nz-btn-style-light margin-l-20" id="account-add">
               <i class="nz-icon-create-square nz-icon"></i>
             </button>
           </div>
@@ -105,7 +105,7 @@
         <div class="pagination-bottom" v-show="!showSubList">
           <Pagination :tableId="tableId" :pageObj="pageObj" @pageNo='pageNo' @pageSize='pageSize' ref="Pagination"></Pagination>
         </div>
-       <button class="to-top" v-show="showTopBtn" @click="toTop"><i class="nz-icon nz-icon-top"></i></button>
+       <button class="to-top" v-show="showTopBtn" @click="$toTop"><i class="nz-icon nz-icon-top"></i></button>
       </div>
       <bottom-box v-if="showSubList" :show-sub-list="showSubList" :subResizeShow="subResizeShow" :obj="user" :isFullScreen="isFullScreen" :from="'account'" :targetTab="targetTab" :detail="userDetail"
                   @closeSubList="showSubList = false" @fullScreen="fullScreen" @exitFullScreen="exitFullScreen" @listResize="listResize" ></bottom-box>
@@ -198,14 +198,18 @@
     name: "account",
     data() {
       return {
+        //底部上滑框相关
         mainTableHeight: this.$tableHeight.normal, //主列表table高度
+        showSubList: false, //是否展示二级列表
         targetTab: '', //展示二级列表中的哪个页签
         showElementSet: false, //控制自定义列的弹框
         inTransform: false, //搜索框相关，搜索条件下拉框是否在transform里
         mainResizeShow: true, //dom高度改变时部分内容是否展示
         subResizeShow: true,
         isFullScreen: false,
-        showSubList: false, //是否展示二级列表
+        userDetail: [],
+        //底部上滑框相关end
+
         tableId: 'accountTable', //需要分页的table的id，用于记录每页数量
         showTopBtn: false,
         rightBox: { //弹出框相关
@@ -222,7 +226,6 @@
           receiver: [],
           lang: ''
         },
-        userDetail: [],
         pageObj: {
           pageNo: 1,
           pageSize: 20,

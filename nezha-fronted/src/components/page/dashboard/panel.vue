@@ -86,7 +86,7 @@
           </div>
         </el-scrollbar>
        </div>
-      <button class="to-top" v-show="showTopBtn" @click="toTop('el', $refs.dashboardScrollbar.wrap)"><i class="nz-icon nz-icon-top"></i></button>
+      <button class="to-top" v-show="showTopBtn" @click="$toTop('el', $refs.dashboardScrollbar.wrap)"><i class="nz-icon nz-icon-top"></i></button>
     </div>
 
     <panel-box :panel="panel" @reload="panelReload" @reloadForDel="panelReloadForDel" ref="panelBox"></panel-box>

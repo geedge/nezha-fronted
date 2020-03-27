@@ -147,7 +147,7 @@
         <div class="pagination-bottom" v-show="tableShow == 1">
           <Pagination :tableId="tableId" v-cloak :pageObj="endpointPageObj" @pageNo='endpointPageNo' @pageSize='endpointPageSize' ref="endpointPagination"></Pagination>
         </div>
-        <button class="to-top" v-show="showTopBtn1 && mainResizeShow" @click="toTop('ps', 0)"><i class="nz-icon nz-icon-top"></i></button>
+        <button class="to-top" v-show="showTopBtn1 && mainResizeShow" @click="$toTop('ps', 0)"><i class="nz-icon nz-icon-top"></i></button>
       </div>
 
       <!-- 副列表 endpoint query-->
@@ -251,7 +251,7 @@
             width="180">
           </el-table-column>
         </el-table>
-        <button class="to-top" v-show="showTopBtn2 && subResizeShow" @click="toTop('ps', 1)"><i class="nz-icon nz-icon-top"></i></button>
+        <button class="to-top" v-show="showTopBtn2 && subResizeShow" @click="$toTop('ps', 1)"><i class="nz-icon nz-icon-top"></i></button>
       </div>
     </div>
 

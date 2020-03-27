@@ -24,7 +24,20 @@
       </div>
     </div>
     <div class="content-right">
-      <div class="top-tools">
+      <div class="main-list" :class="{'main-list-with-sub': showSubList}">
+        <div class="top-tools" v-show="mainResizeShow">
+          <div class="top-tool-main-right" :class="{'top-tool-main-right-to-left': showSubList}">
+            <div class="top-tool-search">
+              <search-input ref="searchInput" :searchMsg="searchMsg" @search="search" :inTransform="inTransform"></search-input>
+            </div>
+            <button type="button" @click="toAdd" :title="$t('overall.createPrometheusServer')"
+                    class="nz-btn nz-btn-size-normal nz-btn-style-light margin-l-20" id="prom-add">
+              <i class="nz-icon-create-square nz-icon"></i>
+            </button>
+          </div>
+          <div class="pagination-top pagination-top-hide display-none"></div>
+        </div>
+      <!--<div class="top-tools">
         <div class="top-tool-main-right">
           <div class="top-tool-search">
             <search-input :searchMsg="searchMsg" @search="search"></search-input>
@@ -34,19 +47,12 @@
             <i class="nz-icon-create-square nz-icon"></i>
           </button>
         </div>
-      </div>
-      <el-table :data="tableData" border :height="$tableHeight.normal" style="width: 100%;" ref="promTable" class="nz-table" v-scrollBar:el-table>
-        <el-table-column :resizable="false" v-for="(item, index) in tablelable" v-if="item.show" :width="item.width"
-                         :key="`col-${index}`" :label="item.label">
-          <template slot-scope="scope" :column="item">
-            <!--<idc-config-box v-if="item.prop == 'idc'" ref="idcConfigBox"
-                            :post-idc="JSON.parse(JSON.stringify(scope.row[item.prop]))" :is-edit="false"
-                            placement="left" @after="getIdcData" :button-class="'checkbox-edit'">
-              <template v-slot:optionZone>
-                <span class="link" @click="closeAllPop">{{scope.row[item.prop].name}}</span>
-              </template>
-            </idc-config-box>-->
-            <span  v-if="item.prop == 'idc'" >{{scope.row[item.prop].name}}</span>
+      </div>-->
+        <el-table :data="tableData" border v-show="mainResizeShow" :height="mainTableHeight" style="width: 100%;" ref="promTable" class="nz-table" v-scrollBar:el-table>
+          <el-table-column :resizable="false" v-for="(item, index) in tablelable" v-if="item.show" :width="item.width"
+                           :key="`col-${index}`" :label="item.label">
+            <template slot-scope="scope" :column="item">
+              <span v-if="item.prop == 'idc'" >{{scope.row[item.prop].name}}</span>
 
             <span v-else-if="item.prop == 'type'">
                 {{scope.row[item.prop] == '1' ? 'Global' : ''}}
@@ -112,32 +118,15 @@
           <el-form class="right-box-form" :model="promServer" label-position="top" label-width="80px" :rules="rules"
                    ref="promServerForm">
             <!--DC start-->
-            <el-form-item label="DC" prop="idc.name">
+            <el-form-item :label="$t('config.dc.dc')" prop="idc.name">
               <div class="right-box-form-content">
-<!--                <el-select class="right-box-row-with-btn" value-key="id" popper-class="config-dropdown"-->
-<!--                           v-model="promServer.idc" placeholder="" v-if="rightBox.isEdit" size="small">-->
                 <el-select  value-key="id" popper-class="config-dropdown"
                            v-model="promServer.idc" placeholder="" v-if="rightBox.isEdit" size="small">
                   <el-option @click.native="blurEditIdc()" v-for="item in idcData" :key="item.id" :label="item.name"
                              :value="item" :id="'prom-edit-idc-op-'+item.id">
                     <span class="config-dropdown-label-txt">{{item.name}}</span>
-<!--                    <div class="config-dropdown-label-icons">-->
-<!--                       <span class="config-dropdown-btn config-dropdown-btn-delete" @click.stop="toDelIdc(item)"-->
-<!--                             :id="'prom-edit-idc-op-del-'+item.id"><i class="el-icon-delete"></i></span>-->
-<!--                      <idc-config-box :post-idc="item" placement="left" @after="getIdcData"-->
-<!--                                      :button-class="'config-dropdown-btn'">-->
-<!--                        <template v-slot:optionZone>-->
-<!--                          <i class="nz-icon nz-icon-edit"></i>-->
-<!--                        </template>-->
-<!--                      </idc-config-box>-->
-<!--                    </div>-->
                   </el-option>
                 </el-select>
-
-
-<!--                <div class="right-box-row-btn" v-if="rightBox.isEdit">-->
-<!--                  <idc-config-box placement="left" @after="getIdcData"></idc-config-box>-->
-<!--                </div>-->
                 <div class="right-box-form-content-txt" v-if="!rightBox.isEdit">{{promServer.idc.name}}</div>
               </div>
             </el-form-item>
@@ -201,6 +190,18 @@
     name: "prom",
     data() {
       return {
+        //底部上滑框相关
+        mainTableHeight: this.$tableHeight.normal, //主列表table高度
+        showSubList: false, //是否展示二级列表
+        targetTab: '', //展示二级列表中的哪个页签
+        showElementSet: false, //控制自定义列的弹框
+        inTransform: false, //搜索框相关，搜索条件下拉框是否在transform里
+        mainResizeShow: true, //dom高度改变时部分内容是否展示
+        subResizeShow: true,
+        isFullScreen: false,
+        promDetail: [],
+        //底部上滑框相关end
+
         tableId: 'promTable', //需要分页的table的id，用于记录每页数量
         showTopBtn: false,
         rightBox: { //弹出框相关
@@ -345,6 +346,117 @@
       }
     },
     methods: {
+      // 鼠标拖动二级列表
+      listResize(e) {
+        let mainListDom = document.querySelector(".main-list-with-sub"); //主列表
+        let subListDom = document.querySelector(".sub-list"); //副列表
+        let contentRightDom = document.querySelector(".content-right"); //右侧内容区
+        let contentRightHeight = contentRightDom.offsetHeight;//可视高度
+        //得到点击时俩dom的初始高度：
+        let mainInitialHeight = mainListDom.offsetHeight;
+        let subInitialHeight = subListDom.offsetHeight;
+        //点击时鼠标的Y轴位置
+        let mouseInitialY = e.clientY;
+
+        let _this = this;
+
+        document.onmousemove = (e) => {
+          e.preventDefault();
+          //得到鼠标拖动的距离
+          let mouseMoveY = Math.abs(e.clientY - mouseInitialY);
+
+          //往上方拖动：
+          if (e.clientY < mouseInitialY) {
+            mainListDom.style.height = mainInitialHeight-mouseMoveY+'px';
+            subListDom.style.height = subInitialHeight+mouseMoveY+'px';
+          }
+          //往下方拖动：
+          if (e.clientY > mouseInitialY) {
+            mainListDom.style.height = mainInitialHeight+mouseMoveY+'px';
+            subListDom.style.height = subInitialHeight-mouseMoveY+'px';
+          }
+
+          // 主、副列表最小高度限制为15px
+          if(parseInt(mainListDom.style.height) >= contentRightHeight-15){
+            mainListDom.style.height = contentRightHeight-15+'px';
+          }
+          if(parseInt(mainListDom.style.height) <= 15){
+            mainListDom.style.height = 15+'px';
+          }
+          if(parseInt(subListDom.style.height) >= contentRightHeight-15){
+            subListDom.style.height = contentRightHeight-15+'px';
+          }
+          if(parseInt(subListDom.style.height) <= 15){
+            subListDom.style.height = 15+'px';
+          }
+          //当主副列表可视区域小于一定值时，不展示内容
+          if(parseInt(mainListDom.style.height) <= 100){
+            if (_this.mainResizeShow) {
+              _this.mainResizeShow = false;
+            }
+          } else {
+            if (!_this.mainResizeShow) {
+              _this.mainResizeShow = true;
+            }
+          }
+          if(parseInt(subListDom.offsetHeight) <= 100){
+            if (_this.subResizeShow) {
+              _this.subResizeShow = false;
+            }
+          } else {
+            if (!_this.subResizeShow) {
+              _this.subResizeShow = true;
+            }
+          }
+        };
+        document.onmouseup = () => {
+          document.onmousemove = null;
+        }
+      },
+      exitFullScreen() {
+        let contentRightDom = document.querySelector(".content-right"); //右侧内容区
+        let contentRightHeight = contentRightDom.offsetHeight;//可视高度
+        //主列表
+        document.querySelector(".main-list-with-sub").style.height = this.mainListHeight ? this.mainListHeight + 'px' : 'calc(50% - 4px)';
+
+        //副列表
+        document.querySelector(".sub-list").style.height = this.mainListHeight ? contentRightHeight-this.mainListHeight-9 + 'px' : 'calc(50% - 4px)';
+        setTimeout(() => {
+          this.isFullScreen = false;
+          if (document.querySelector(".main-list-with-sub").offsetHeight >= 100) {
+            this.mainResizeShow = true;
+          }
+          if (document.querySelector(".sub-list").offsetHeight >= 100) {
+            this.subResizeShow = true;
+          }
+        }, 210);
+      },
+      fullScreen() {
+        let contentRightDom = document.querySelector(".content-right"); //右侧内容区
+        let contentRightHeight = contentRightDom.offsetHeight;//可视高度
+        this.isFullScreen = true;
+        //主列表
+        this.mainListHeight = document.querySelector(".main-list-with-sub").offsetHeight; //记录全屏前主列表的高度
+        document.querySelector(".main-list-with-sub").style.height = '0';
+        this.mainResizeShow = false;
+        //副列表
+        document.querySelector(".sub-list").style.height = contentRightHeight + 'px';
+      },
+      convertToDetail(obj) {
+        let detail = [];
+        detail.push({label: this.$t("config.dc.dc"), value: obj.idc.name});
+        detail.push({label: "Host", value: obj.host});
+        detail.push({label: "Port", value: obj.port});
+        let type = "";
+        for (let i = 0; i < this.typeData.length; i++) {
+          if (obj.key == this.typeData[i].type) {
+            type = this.typeData[i].value;
+            break;
+          }
+        }
+        detail.push({label: this.$t('config.promServer.type'), value: type});
+        return detail;
+      },
       elementsetShow(s, e) {
         var eventfixed = {
           shezhi: 0,
@@ -403,9 +515,11 @@
       },
       detail: function (u) {
         this.promServer = Object.assign({}, u);
-        this.rightBox.isEdit = false;
+        /*this.rightBox.isEdit = false;
         this.rightBox.title = "Prometheus Server ID：" + u.id;
-        this.rightBox.show = true;
+        this.rightBox.show = true;*/
+        this.targetTab = "detail";
+        this.showSubList = true;
       },
       toAdd: function () {
         this.cleanPromServer();
@@ -676,9 +790,57 @@
         ? JSON.parse(localStorage.getItem("nz-tableTitle-" + localStorage.getItem("nz-username") + "-" + this.$route.path))
         : this.tableTitle;
     },
+
     watch: {
       'promServer.idc': function (n, o) {
         this.promServer.idcId = n.id;
+      },
+      promServer: {
+        deep: true,
+        handler(n) {
+          this.promDetail = this.convertToDetail(n);
+        }
+      },
+      showSubList(n) {
+        this.inTransform = n;
+        if (!n) {
+          this.mainTableHeight = this.$tableHeight.normal; //重置table的高度
+          this.isFullScreen = false;
+          //移动分页组件的位置
+          let paginationTop = document.querySelector(".pagination-top");
+          let paginationBottom = document.querySelector(".pagination-bottom");
+          paginationTop.classList.remove("display-none");
+          if (paginationTop.classList.contains("pagination-top-show")) {
+            paginationTop.classList.remove("pagination-top-show");
+          }
+          if (!paginationTop.classList.contains("pagination-top-hide")) {
+            paginationTop.classList.add("pagination-top-hide");
+          }
+          setTimeout(() => {
+            paginationTop.classList.add("display-none");
+            paginationBottom.appendChild(paginationTop.removeChild(document.querySelector(".pagination")));
+          }, 210);
+
+          // 主列表恢复全屏
+          this.mainResizeShow = this.subResizeShow = true;
+          document.querySelector('.main-list').style.height = "";
+          //副列表高度清空
+          document.querySelector(".sub-list").style.height = '';
+        } else {
+          this.mainTableHeight = this.$tableHeight.openSubList.mainList; //重置table高度
+          //移动分页组件的位置
+          let paginationTop = document.querySelector(".pagination-top");
+          paginationTop.appendChild(document.querySelector(".pagination-bottom").removeChild(document.querySelector(".pagination")));
+          paginationTop.classList.remove("display-none");
+          setTimeout(() => {
+            if (paginationTop.classList.contains("pagination-top-hide")) {
+              paginationTop.classList.remove("pagination-top-hide");
+            }
+            if (!paginationTop.classList.contains("pagination-top-show")) {
+              paginationTop.classList.add("pagination-top-show");
+            }
+          }, 210);
+        }
       }
     }
   }

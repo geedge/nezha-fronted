@@ -94,7 +94,7 @@
         </el-table-column>
       </el-table>
       <Pagination :tableId="tableId" :pageObj="pageObj" @pageNo='pageNo' @pageSize='pageSize' ref="Pagination"></Pagination>
-      <button class="to-top" v-show="showTopBtn" @click="toTop()"><i class="nz-icon nz-icon-top"></i></button>
+      <button class="to-top" v-show="showTopBtn" @click="$toTop"><i class="nz-icon nz-icon-top"></i></button>
     </div>
     <alert-config-box :parentAlertRule="viewRuleData" @reload="getAlertList" ref="alertConfigBox"></alert-config-box>
     <project-box :project="viewProjectData" ref="projectBox" @reload="getAlertList"></project-box>

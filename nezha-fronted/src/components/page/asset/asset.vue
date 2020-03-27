@@ -185,7 +185,7 @@
         <div class="pagination-bottom" v-show="!showSubList">
           <Pagination :tableId="tableId" :pageObj="pageObj" @pageNo='pageNo' @pageSize='pageSize' ref="Pagination"></Pagination>
         </div>
-        <button class="to-top" v-show="showTopBtn" @click="toTop"><i class="nz-icon nz-icon-top"></i></button>
+        <button class="to-top" v-show="showTopBtn" @click="$toTop"><i class="nz-icon nz-icon-top"></i></button>
       </div>
       <alert-message-box v-if="showSubList" @listResize="listResize" :show-sub-list="showSubList" :from="'asset'" :subResizeShow="subResizeShow" :obj="alertMsgAsset" :isFullScreen="isFullScreen"
                          @closeSubList="showSubList = false" @fullScreen="fullScreen" @exitFullScreen="exitFullScreen"></alert-message-box>
@@ -661,10 +661,6 @@
         });
         window.open(routeData.href);
       },
-      /*toTop() {
-        let el = document.querySelector(".el-table__body-wrapper");
-        el.scrollTop = 0;
-      },*/
       cli(id,host,accounts){
         let port = '';
         let accountId = '';

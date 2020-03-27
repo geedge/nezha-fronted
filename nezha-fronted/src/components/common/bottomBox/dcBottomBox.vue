@@ -85,7 +85,7 @@
           </el-table-column>
         </el-table>
         <cabinet-box :cur-cabinet="currentCabinet" :cur-idc="currentDc" ref="cabinetEditBox" @after="getCabinetList"></cabinet-box>
-        <button class="to-top" v-show="showTopBtn && subResizeShow" @click="toTop('ps', 1)"><i class="nz-icon nz-icon-top"></i></button>
+        <button class="to-top" v-show="showTopBtn && subResizeShow" @click="$toTop('ps', 1)"><i class="nz-icon nz-icon-top"></i></button>
       </template>
     </div>
   </span>
