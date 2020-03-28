@@ -156,7 +156,7 @@
                 <span>{{scope.row.idc.tel}}</span>
               </div>
               <template v-if="item.prop == 'option'">
-                <span :title="$t('overall.view')" @click.stop="tagShow('showView',scope.row.id)" class="content-right-option" :id="'asset-detail-'+scope.row.id"><i
+                <span :title="$t('overall.view')" @click.stop="tagShow('showView',scope.row)" class="content-right-option" :id="'asset-detail-'+scope.row.id"><i
                   class="el-icon-view"></i>
                 </span>
                 &nbsp;
@@ -187,14 +187,10 @@
         </div>
         <button class="to-top" v-show="showTopBtn" @click="$toTop"><i class="nz-icon nz-icon-top"></i></button>
       </div>
-      <alert-message-box v-if="showSubList" @listResize="listResize" :show-sub-list="showSubList" :from="'asset'" :subResizeShow="subResizeShow" :obj="alertMsgAsset" :isFullScreen="isFullScreen"
-                         @closeSubList="showSubList = false" @fullScreen="fullScreen" @exitFullScreen="exitFullScreen"></alert-message-box>
+      <bottom-box v-if="showSubList" :show-sub-list="showSubList" :subResizeShow="subResizeShow" :obj="alertMsgAsset" :isFullScreen="isFullScreen" :from="'asset'" :targetTab="targetTab" :detail="assetDetail"
+                  @closeSubList="showSubList = false" @fullScreen="fullScreen" @exitFullScreen="exitFullScreen" @listResize="listResize" ></bottom-box>
     </div>
 
-    <!--<asset-add-unit :add-unit-show='addUnitShow' @refreshData="flushData" ref="assetAddUnit"
-                    @sendStateData="tabControl"></asset-add-unit>
-    <asset-edit-unit :edit-unit-show='editUnitShow' @refreshData="flushData" @sendStateData="tabControl"
-               ref="assetEditUnit"></asset-edit-unit>-->
     <asset-box :edit-unit-show='editUnitShow' @refreshData="flushData" @sendStateData="tabControl"
                      ref="assetEditUnit"></asset-box>
     <element-set
@@ -223,6 +219,8 @@
     },
     data() {
       return {
+        /*二级页面相关*/
+        assetDetail: [], //asset详情
         alertMsgAsset: {}, //告警信息对应的asset对象
         showElementSet: false, //控制自定义列的弹框
         inTransform: false, //搜索框相关，搜索条件下拉框是否在transform里
@@ -231,6 +229,8 @@
         isFullScreen: false,
         mainTableHeight: this.$tableHeight.normal, //主列表table高度
         showSubList: false, //是否展示二级列表
+        targetTab: '', //展示二级列表中的哪个页签
+
         showElementSet: false, //自定义列弹框是否显示
         tableId: 'assetTable', //需要分页的table的id，用于记录每页数量
         searchMsg: { //给搜索框子组件传递的信息
@@ -487,7 +487,13 @@
             }
           }, 210);
         }
-      }
+      },
+      alertMsgAsset: {
+        deep: true,
+        handler(n) {
+          this.assetDetail = this.convertToDetail(n);
+        }
+      },
     },
     methods: {
       // 鼠标拖动二级列表
@@ -651,16 +657,6 @@
         this.$store.commit('setHeaderTable', data);
         this.tablelable = data;
       },
-      ssss(id, sn) {
-        let routeData = this.$router.resolve({
-          name: "terminal",
-          query: {
-            id: id,
-            host: sn
-          }
-        });
-        window.open(routeData.href);
-      },
       cli(id,host,accounts){
         let port = '';
         let accountId = '';
@@ -678,6 +674,7 @@
         //this.$refs.webSsh.show(id,host,accountId,port);
       },
       jumpToAlertMsg(asset) {
+        this.targetTab = 'alertMessage';
         this.alertMsgAsset = JSON.parse(JSON.stringify(asset));
         this.showSubList = true;
       },
@@ -808,9 +805,12 @@
           this.$refs['assetEditUnit'].getAssetData(id)
         }
         if (data === 'showView') {
-          this.editUnitShow = true
+          this.alertMsgAsset = Object.assign({}, id);
+          this.targetTab = "detail";
+          this.showSubList = true;
+          /*this.editUnitShow = true
           this.$refs['assetEditUnit'].getAssetData(id)
-          this.$refs['assetEditUnit'].tabView = true
+          this.$refs['assetEditUnit'].tabView = true*/
         }
       },
       editing() {
@@ -897,6 +897,45 @@
           }
         }
         this.getAssetData();
+      },
+      convertToDetail(obj) {
+        let detail = [];
+        detail.push({label: this.$t("asset.createAssetTab.sn"), value: obj.sn});
+        detail.push({label: this.$t("asset.createAssetTab.host"), value: obj.host});
+        detail.push({label: this.$t("asset.createAssetTab.state"), value: obj.state == 1 ? this.$t('asset.createAssetTab.inStock'): this.$t('asset.createAssetTab.notInStock')});
+        detail.push({label: this.$t("asset.tableTitle.modules"), value: obj.endpointNum});
+        detail.push({label: this.$t("asset.tableTitle.alerts"), value: obj.alertNum});
+        detail.push({label: this.$t("asset.createAssetTab.assetType"), value: obj.model.type.value});
+        detail.push({label: this.$t("asset.createAssetTab.vendorModel"), value: obj.model.vendor.value + " " + obj.model.name});
+        detail.push({label: this.$t("asset.createAssetTab.assetType"), value: obj.model.type.value});
+        detail.push({label: this.$t("asset.createAssetTab.purchaseDate"), value: obj.purchaseDate});
+        detail.push({label: this.$t("asset.createAssetTab.dcName"), value: obj.idc ? obj.idc.name : ""});
+        detail.push({label: this.$t("asset.createAssetTab.location"), value: obj.idc ? obj.idc.location : ""});
+        detail.push({label: this.$t("asset.createAssetTab.principal"), value: obj.idc ? this.getPrincipalName(obj.idc.principal) : ""});
+        detail.push({label: this.$t("asset.createAssetTab.location"), value: obj.idc ? obj.idc.location : ""});
+        detail.push({label: this.$t("asset.createAssetTab.tel"), value: obj.idc ? obj.idc.tel : ""});
+        detail.push({label: this.$t("asset.createAssetTab.cabinet"), value: obj.cabinet ? obj.cabinet.name : ""});
+        detail.push({label: this.$t("asset.editAssetTab.uSize"), value: obj.cabinet ? obj.cabinet.uSize : ""});
+        detail.push({label: this.$t("asset.editAssetTab.remark"), value: obj.idc ? obj.idc.remark : ""});
+        if (obj.accounts.length > 0) {
+          let account = obj.accounts[0];
+          if (account.protocol == 'SSH') {
+            detail.push({label: this.$t("asset.createAssetTab.protocol"), value: 'SSH'});
+            detail.push({label: this.$t("asset.createAssetTab.account"), value: account.user});
+            let loginType = "";
+            if (account.authType == 1) {
+              loginType = this.$t('asset.createAssetTab.password');
+            } else if (account.authType == 2) {
+              loginType = this.$t('asset.createAssetTab.ssh');
+            }
+            detail.push({label: this.$t("asset.createAssetTab.loginType"), value: loginType});
+          } else if (account.protocol == 'TELNET') {
+            detail.push({label: this.$t("asset.createAssetTab.protocol"), value: 'TELNET'});
+            detail.push({label: this.$t("asset.createAssetTab.account"), value: account.user});
+          }
+          detail.push({label: this.$t("asset.createAssetTab.port"), value: account.port});
+        }
+        return detail;
       },
       formatPingTime:function(str){
         if(!str || str == ''){

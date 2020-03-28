@@ -458,6 +458,12 @@
           }
         }
         detail.push({label: this.$t('config.promServer.type'), value: type});
+        detail.push({
+          label: this.$t('asset.createAssetTab.state'),
+          value: obj.status,
+          type: 'status',
+          msg: this.$t('asset.assetStatPre')+(obj.checkTime ? obj.checkTime : this.$t('asset.assetStatDown'))
+        });
         return detail;
       },
       elementsetShow(s, e) {

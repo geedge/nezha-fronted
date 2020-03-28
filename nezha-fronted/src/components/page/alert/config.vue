@@ -37,6 +37,7 @@
           tooltip-effect="light"
           :height="mainTableHeight"
           v-scrollBar:el-table
+          :cell-class-name="messageStyle"
           style="width: 100%;">
           <el-table-column
             :resizable="false"
@@ -47,6 +48,7 @@
             :label="item.label"
             show-overflow-tooltip
             min-width="110px"
+
           >
             <template slot-scope="scope" :column="item">
               <div v-if="item.prop == 'option'" class="content-right-options">
@@ -70,7 +72,6 @@
                       @click="viewAlertType(scope.row['type'],scope.row[item.prop].id)">{{scope.row[item.prop].host}}</span>
                 <span v-else>-</span>
               </template>
-              <template v-else-if="item.prop == 'alertName'">{{scope.row.alertName}}</template>
               <template v-else-if="item.prop == 'alertNum'">
                 <span class="link" @click="queryMessage(scope.row)">{{scope.row.alertNum}}</span>
               </template>
@@ -91,8 +92,10 @@
         </div>
         <button class="to-top" v-show="showTopBtn" @click="$toTop"><i class="nz-icon nz-icon-top"></i></button>
       </div>
-      <alert-message-box v-if="showSubList" @listResize="listResize" :show-sub-list="showSubList" :from="'alertRule'" :subResizeShow="subResizeShow" :obj="alertRuleForMessage" :isFullScreen="isFullScreen"
-                         @closeSubList="showSubList = false" @fullScreen="fullScreen" @exitFullScreen="exitFullScreen"></alert-message-box>
+      <bottom-box v-if="showSubList" :show-sub-list="showSubList" :subResizeShow="subResizeShow" :obj="alertRuleForMessage" :isFullScreen="isFullScreen" :from="'alertRule'" :targetTab="targetTab" :detail="ruleDetail"
+                  @closeSubList="showSubList = false" @fullScreen="fullScreen" @exitFullScreen="exitFullScreen" @listResize="listResize" ></bottom-box>
+      <!--<alert-message-box v-if="showSubList" @listResize="listResize" :show-sub-list="showSubList" :from="'alertRule'" :subResizeShow="subResizeShow" :obj="alertRuleForMessage" :isFullScreen="isFullScreen"
+                         @closeSubList="showSubList = false" @fullScreen="fullScreen" @exitFullScreen="exitFullScreen"></alert-message-box>-->
     </div>
     <alert-config-box :parentAlertRule="alertRule" @reload="getTableData" ref="alertConfigBox"></alert-config-box>
     <project-box :project="viewProjectData" ref="projectBox" @reload="getTableData"></project-box>
@@ -118,12 +121,17 @@
     name: "alert-config",
     data() {
       return {
+        /*二级列表相关*/
+        ruleDetail: {},
+        targetTab: '', //展示二级列表中的哪个页签
         showElementSet: false, //控制自定义列的弹框
         inTransform: false, //搜索框相关，搜索条件下拉框是否在transform里
         mainResizeShow: true, //dom高度改变时部分内容是否展示
         subResizeShow: true,
         isFullScreen: false,
         showSubList: false, //是否展示二级列表
+        alertRuleForMessage: {}, //传给alertMessage上滑框的对象
+
         tableId: 'alertRuleTable', //需要分页的table的id，用于记录每页数量
         showTopBtn: false,
         mainTableHeight: this.$tableHeight.normal, //主列表table高度
@@ -172,7 +180,6 @@
           description: '',
           receiver: '',
         },
-        alertRuleForMessage: {}, //传给alertMessage上滑框的对象
         tablelable: [],
         dropCol: [],
         pageObj: {
@@ -220,11 +227,6 @@
             show: true,
             width: 120
           }, {
-            label: this.$t("alert.config.alertNum"),
-            prop: 'alertNum',
-            show: true,
-            width: 120
-          }, {
             label: this.$t("alert.config.expr"),
             prop: 'expr',
             show: true,
@@ -249,6 +251,11 @@
             label: this.$t('alert.description'),
             prop: 'description',
             show: true,
+          }, {
+            label: this.$t("alert.message"),
+            prop: 'alertNum',
+            show: true,
+            width: 90
           }, /*{
             label: this.$t('alert.config.receiver'),
             prop: 'receiver',
@@ -270,6 +277,7 @@
       queryMessage(alertRule) {
         this.alertRuleForMessage = alertRule;
         this.showSubList = true;
+        this.targetTab = 'alertMessage';
       },
       // 鼠标拖动二级列表
       listResize(e) {
@@ -405,10 +413,20 @@
         this.$refs.alertConfigBox.show(true, true);
       },
       detail: function (u) {
-        this.alertRule = Object.assign({}, u);
-        this.$refs.alertConfigBox.show(true, false);
+        this.alertRuleForMessage = Object.assign({}, u);
+        this.targetTab = "detail";
+        this.showSubList = true;
       },
-
+      messageStyle(e) {
+        if (e.columnIndex == 8) {
+          if (e.row.alertNum > 0) {
+            return 'has-message';
+          } else {
+            return 'has-no-message';
+          }
+        }
+        return '';
+      },
       getTableData: function () {
         this.$set(this.searchLabel, "pageNo", this.pageObj.pageNo);
         this.$set(this.searchLabel, "pageSize", this.pageObj.pageSize);
@@ -536,7 +554,35 @@
         this.$refs.projectBox.show(false, false);
         this.$refs.moduleBox.show(false, false);
         this.viewAsset = false;
-      }
+      },
+      convertToDetail(obj) {
+        let detail = [];
+        detail.push({label: this.$t("alert.alertName"), value: obj.alertName});
+        detail.push({label: this.$t("alert.config.expr"), value: obj.expr});
+        let type = "";
+        for (let i = 0; i < this.typeData.length; i++) {
+          if (obj.type == this.typeData[i].key) {
+            type = this.typeData[i].value;
+            break;
+          }
+        }
+        detail.push({label: this.$t("alert.list.type"), value: type});
+        let link = "";
+        if (obj.type == 1 || obj.type == 2) {
+          link = obj.linkObject.name;
+        } else if (obj.type == 3) {
+          link = obj.linkObject.host;
+        }
+        detail.push({label: this.$t("alert.config.link"), value: link});
+        detail.push({label: this.$t("alert.config.for"), value: obj.last});
+        let severity = this.severityData.filter((item, index) => {
+          return obj.severity == item.key;
+        })[0].value;
+        detail.push({label: this.$t("alert.severity"), value: severity});
+        detail.push({label: this.$t("alert.description"), value: obj.description});
+        detail.push({label: this.$t("alert.message"), value: obj.alertNum});
+        return detail;
+      },
     },
     watch: {
       showSubList(n) {
@@ -579,7 +625,13 @@
             }
           }, 210);
         }
-      }
+      },
+      alertRuleForMessage: {
+        deep: true,
+        handler(n) {
+          this.ruleDetail = this.convertToDetail(n);
+        }
+      },
     },
     destroyed() {
       window.onresize = null;

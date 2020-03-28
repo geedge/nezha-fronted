@@ -21,6 +21,9 @@
       ></common-detail-tab>
       <!--机柜-->
       <cabinet-tab v-show="subResizeShow" v-if="from == 'dc' && targetTab == 'cabinet'" :obj="obj" @changeTab="changeTab"></cabinet-tab>
+      <!--告警信息-->
+      <alert-message-tab v-show="subResizeShow" v-if="((from == 'alertRule' || from == 'asset') && targetTab == 'alertMessage')" :from="from" :obj="obj" @changeTab="changeTab"></alert-message-tab>
+
     </div>
   </span>
 </template>
@@ -28,12 +31,14 @@
 <script>
   import commonDetailTab from "./tabs/commonDetailTab"
   import cabinetTab from "./tabs/cabinetTab";
+  import alertMessageTab from "./tabs/alertMessageTab";
 
   export default {
     name: "cabinetBox",
     components:{
       'common-detail-tab': commonDetailTab,
       'cabinet-tab': cabinetTab,
+      'alert-message-tab': alertMessageTab,
     },
     props: {
       isFullScreen: false, //是否全屏

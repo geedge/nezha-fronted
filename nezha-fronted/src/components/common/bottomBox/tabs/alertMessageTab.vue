@@ -1,107 +1,94 @@
 <template>
   <span>
-    <!-- 副列表 endpoint query-->
-    <div @mousedown="listResize" class="sub-list-resize" v-if="showSubList && !isFullScreen">一</div>
-    <div class="sub-list" v-if="showSubList">
-      <div class="sub-top-tools" v-show="subResizeShow">
-        <div class="sub-list-tabs margin-l-20" style="width: calc(100% - 780px);">
-          <div class="sub-list-tab">{{$t("overall.query")}}</div>
-          <span class="sub-list-tab-txt">
-            <template v-if="from == 'asset'">{{$t("project.endpoint.asset")}}：{{obj.host}}</template>
-            <template v-if="from == 'alertRule'">{{$t("alert.alertName")}}：{{obj.alertName}}</template>
-          </span>
-        </div>
-        <!--时间选择器-->
-        <div class="top-tool-right">
-          <div class="top-tool-search">
-            <search-input :searchMsg="searchMsg" @search="search"></search-input>
-          </div>
-          <div class="sub-list-window-control">
-            <!--半屏-->
-            <div class="window-control-btn" v-if="isFullScreen" @click="exitFullScreen"><i class="nz-icon nz-icon-exit-full-screen"></i></div>
-            <!--全屏-->
-            <div class="window-control-btn" v-if="!isFullScreen" @click="fullScreen"><i class="el-icon-full-screen"></i></div>
-            <!--关闭-->
-            <div class="window-control-btn" @click="closeSubList"><i class="el-icon-close"></i></div>
-          </div>
+    <div class="sub-top-tools">
+      <div class="sub-list-tabs">
+        <div class="sub-list-tab-title">
+          <template v-if="from == 'asset'">{{$t("project.endpoint.asset")}}：{{obj.host}}</template>
+          <template v-if="from == 'alertRule'">{{$t("alert.alertName")}}：{{obj.alertName}}</template>
+        </div><div
+        class="sub-list-tab" @click="changeTab('detail')">{{$t("overall.detail")}}</div><div
+        class="sub-list-tab sub-list-tab-active">{{$t("alert.message")}}</div>
+      </div>
+      <div class="top-tool-right">
+        <div class="top-tool-search">
+          <search-input :searchMsg="searchMsg" @search="search"></search-input>
         </div>
       </div>
-      <el-table
-        :data="tableData"
-        v-loading="loading"
-        element-loading-background="rgba(0, 0, 0, 0)"
-        border
-        tooltip-effect="light"
-        v-scrollBar:el-table
-        class="nz-table"
-        :height="$tableHeight.openSubList.subList"
-        ref="alertMessageSubList"
-        v-show="subResizeShow"
-        style="width: 100%; margin-top: 5px;">
-        <el-table-column
-          :resizable="false"
-          v-for="(item, index) in tablelable"
-          v-if="item.show"
-          :width="item.width"
-          :key="`col-${index}`"
-          :label="item.label"
-          show-overflow-tooltip
-          min-width="110px"
-        >
-          <template slot-scope="scope" :column="item">
-            <template v-if="item.prop == 'alertRule'">
-              <div class="too-long-split" :id="'view-rule-'+scope.row[item.prop].id"
-                   v-if="scope.row[item.prop].alertName">{{scope.row[item.prop].alertName}}</div>
-              <template v-else>-</template>
-            </template>
-            <div v-else-if="item.prop == 'type'" class="content-right-options">
-              <span v-if="scope.row[item.prop] == 1">Project</span>
-              <span v-if="scope.row[item.prop] == 2">Module</span>
-              <span v-if="scope.row[item.prop] == 3">Device</span>
-            </div>
-            <template v-else-if="item.prop == 'summary'">
-              <template v-if="scope.row[item.prop]">{{scope.row[item.prop]}}</template>
-              <template v-else>-</template>
-            </template>
-            <template v-else-if="item.prop == 'description'">
-              <template v-if="scope.row[item.prop]">{{scope.row[item.prop]}}</template>
-              <span v-else>-</span>
-            </template>
-            <span v-else-if="item.prop == 'severity'">
-              <span v-if="scope.row[item.prop] == 'high'"><i class="el-icon-arrow-up"></i>&nbsp;{{severityData[1].value}}</span>
-              <span style="padding-left: 18px;" v-if="scope.row[item.prop] == 'medium'">{{severityData[0].value}}</span>
-              <span v-if="scope.row[item.prop] == 'low'"><i class="el-icon-arrow-down"></i>&nbsp;{{severityData[2].value}}</span>
-            </span>
-            <div v-else-if="item.prop == 'linkObject'">
-              <span v-if="(scope.row['type'] == 1 || scope.row['type'] == 2) && scope.row[item.prop]" class="link too-long-split"
-                    @click="viewAlertType(scope.row['type'],scope.row[item.prop])" style="max-width: 125px;"
-                    :id="'link-obj-'+scope.row['type']+'-'+scope.row[item.prop].id">{{scope.row[item.prop].name}}</span>
-              <span v-else-if="scope.row['type'] == 3 && scope.row[item.prop]" class="link"
-                    @click="viewAlertType(scope.row['type'],scope.row[item.prop].id)"
-                    :id="'link-obj-'+scope.row['type']+'-'+scope.row[item.prop].id">{{scope.row[item.prop].host}}</span>
-              <span v-else>-</span>
-            </div>
-            <div v-else-if="item.prop == 'state'">
-              <span class="">
-                {{scope.row['state'] == 1 ? "Pending" : ""}}
-                {{scope.row['state'] == 2 ? "Expired" : ""}}
-              </span>
-            </div>
-            <span v-else-if="scope.row[item.prop]">{{scope.row[item.prop]}}</span>
+    </div>
+    <el-table
+      class="nz-table"
+      :data="tableData"
+      element-loading-background="rgba(0, 0, 0, 0)"
+      border
+      v-loading="loading"
+      ref="alertMessageSubList"
+      tooltip-effect="light"
+      v-scrollBar:el-table
+      :height="$tableHeight.openSubList.subList"
+      style="width: 100%;">
+      <el-table-column
+        :resizable="false"
+        v-for="(item, index) in tablelable"
+        v-if="item.show"
+        :width="item.width"
+        :key="`col-${index}`"
+        :label="item.label"
+        show-overflow-tooltip
+        min-width="110px"
+      >
+        <template slot-scope="scope" :column="item">
+          <template v-if="item.prop == 'alertRule'">
+            <div class="too-long-split" :id="'view-rule-'+scope.row[item.prop].id"
+                 v-if="scope.row[item.prop].alertName">{{scope.row[item.prop].alertName}}</div>
             <template v-else>-</template>
           </template>
-        </el-table-column>
-        <el-table-column width="28" :resizable="false">
-          <template slot="header" slot-scope="scope">
-            <span @click.stop="elementsetShow('shezhi',$event)" class="nz-table-gear">
-              <i class="nz-icon nz-icon-gear"></i>
-            </span>
+          <div v-else-if="item.prop == 'type'" class="content-right-options">
+            <span v-if="scope.row[item.prop] == 1">Project</span>
+            <span v-if="scope.row[item.prop] == 2">Module</span>
+            <span v-if="scope.row[item.prop] == 3">Device</span>
+          </div>
+          <template v-else-if="item.prop == 'summary'">
+            <template v-if="scope.row[item.prop]">{{scope.row[item.prop]}}</template>
+            <template v-else>-</template>
           </template>
-        </el-table-column>
-      </el-table>
-      <Pagination :tableId="tableId" :pageObj="pageObj" @pageNo='pageNo' @pageSize='pageSize' ref="Pagination"></Pagination>
-      <button class="to-top" v-show="showTopBtn && subResizeShow" @click="$toTop('ps', 1)"><i class="nz-icon nz-icon-top"></i></button>
-    </div>
+          <template v-else-if="item.prop == 'description'">
+            <template v-if="scope.row[item.prop]">{{scope.row[item.prop]}}</template>
+            <span v-else>-</span>
+          </template>
+          <span v-else-if="item.prop == 'severity'">
+            <span v-if="scope.row[item.prop] == 'high'"><i class="el-icon-arrow-up"></i>&nbsp;{{severityData[1].value}}</span>
+            <span style="padding-left: 18px;" v-if="scope.row[item.prop] == 'medium'">{{severityData[0].value}}</span>
+            <span v-if="scope.row[item.prop] == 'low'"><i class="el-icon-arrow-down"></i>&nbsp;{{severityData[2].value}}</span>
+          </span>
+          <div v-else-if="item.prop == 'linkObject'">
+            <span v-if="(scope.row['type'] == 1 || scope.row['type'] == 2) && scope.row[item.prop]" class="link too-long-split"
+                  @click="viewAlertType(scope.row['type'],scope.row[item.prop])" style="max-width: 125px;"
+                  :id="'link-obj-'+scope.row['type']+'-'+scope.row[item.prop].id">{{scope.row[item.prop].name}}</span>
+            <span v-else-if="scope.row['type'] == 3 && scope.row[item.prop]" class="link"
+                  @click="viewAlertType(scope.row['type'],scope.row[item.prop].id)"
+                  :id="'link-obj-'+scope.row['type']+'-'+scope.row[item.prop].id">{{scope.row[item.prop].host}}</span>
+            <span v-else>-</span>
+          </div>
+          <div v-else-if="item.prop == 'state'">
+            <span class="">
+              {{scope.row['state'] == 1 ? "Pending" : ""}}
+              {{scope.row['state'] == 2 ? "Expired" : ""}}
+            </span>
+          </div>
+          <span v-else-if="scope.row[item.prop]">{{scope.row[item.prop]}}</span>
+          <template v-else>-</template>
+        </template>
+      </el-table-column>
+      <el-table-column width="28" :resizable="false">
+        <template slot="header" slot-scope="scope">
+          <span @click.stop="elementsetShow('shezhi',$event)" class="nz-table-gear">
+            <i class="nz-icon nz-icon-gear"></i>
+          </span>
+        </template>
+      </el-table-column>
+    </el-table>
+    <Pagination :tableId="tableId" :pageObj="pageObj" @pageNo='pageNo' @pageSize='pageSize' ref="Pagination"></Pagination>
+    <button class="to-top" v-show="showTopBtn && subResizeShow" @click="$toTop('ps', 1)"><i class="nz-icon nz-icon-top"></i></button>
     <project-box :project="viewProjectData" ref="projectBox" @reload="getAlertList"></project-box>
     <module-box :module="viewModuleData" @reload="getAlertList" ref="moduleBox"></module-box>
     <asset-box :edit-unit-show='viewAssetState' @refreshData="getAlertList" @sendStateData="tabControl" ref="assetEditUnit"></asset-box>
@@ -120,13 +107,12 @@
 
 <script>
   export default {
-    name: "alertMessageBox",
+    name: "alertMessageTab",
+    components: {
+    },
     props: {
-      isFullScreen: false, //是否全屏
-      showSubList: Boolean, //是否显示
-      subResizeShow: Boolean, //resize时，用v-show="subResizeShow"控制页面内容是否显示
       from: String, //来自哪个主页面，有："asset"、"alertRule"
-      obj: Object, //关联的实体对象，有："asset"、"alertRule"
+      obj: Object, //关联的实体对象
     },
     data() {
       return {
@@ -231,19 +217,6 @@
           }
         ],
         tableData: [],
-        viewRuleData: {
-          id: '',
-          alertName: '',
-          type: '',
-          linkObject: {id: '', name: ''},
-          linkId: '',
-          expr: '',
-          last: '',
-          severity: '',
-          summary: '',
-          description: '',
-          receiver: '',
-        },
         viewProjectData: {id: '', name: '', remark: ''},
         viewModuleData: {id: '', name: '', project: {}, port: '', path: '', param: '', paramObj: []},
         viewAssetState: false,
@@ -285,6 +258,10 @@
         this.tablelable = data;
         this.dropCol = data;
       },
+      // 切换tab
+      changeTab(tab) {
+        this.$emit('changeTab', tab);
+      },
       getAlertList() {
         this.tableData = [];
         this.loading = true;
@@ -307,24 +284,7 @@
         localStorage.setItem('nz-pageSize-' + localStorage.getItem('nz-username') + '-' + this.tableId, val);
         this.getAlertList();
       },
-      search: function (searchObj) {
-        this.searchLabel = {};
-        if (this.from == "alertRule") {
-          this.searchLabel.ruleId = this.obj.id;
-        } else if (this.from == "asset") {
-          this.searchLabel.type = 3;
-          this.searchLabel.linkId = this.obj.id;
-        }
-        this.pageObj.pageNo = 1;
-        for (let item in searchObj) {
-          if (searchObj[item]) {
-            this.$set(this.searchLabel, item, searchObj[item]);
-          }
-        }
-        this.getAlertList();
-      },
       viewAlertType(type, typeObj) {
-        console.info(type, typeObj)
         this.closeViews();
         switch (type) {
           case 1:
@@ -360,11 +320,21 @@
         this.$refs.moduleBox.show(false, false);
         this.viewAssetState = false;
       },
-      exitFullScreen() {
-        this.$emit("exitFullScreen");
-      },
-      fullScreen() {
-        this.$emit("fullScreen");
+      search: function (searchObj) {
+        this.searchLabel = {};
+        if (this.from == "alertRule") {
+          this.searchLabel.ruleId = this.obj.id;
+        } else if (this.from == "asset") {
+          this.searchLabel.type = 3;
+          this.searchLabel.linkId = this.obj.id;
+        }
+        this.pageObj.pageNo = 1;
+        for (let item in searchObj) {
+          if (searchObj[item]) {
+            this.$set(this.searchLabel, item, searchObj[item]);
+          }
+        }
+        this.getAlertList();
       },
       closeSubList() {
         this.$emit("closeSubList");
@@ -376,9 +346,6 @@
           this.viewAssetState = false
           this.$refs['assetEditUnit'].tabView = false
         }
-      },
-      listResize(e) {
-        this.$emit('listResize', e);
       }
     },
     watch: {
@@ -431,21 +398,6 @@
   }
 </script>
 
-<style lang="scss">
-  /*重写el-loading样式*/
-  .nz-table .el-loading-spinner .circular{
-    width: 42px;
-    height: 42px;
-    animation: loading-rotate 2s linear infinite;
-    display: none;
-  }
-  .nz-table .el-loading-spinner{
-    background: url(../../../assets/img/loading.gif) no-repeat;
-    background-size: 48px 48px;
-    width: 100%;
-    height: 100%;
-    position: relative;
-    top: 50%;
-    left: 48.5%;
-  }
+<style scoped>
+
 </style>

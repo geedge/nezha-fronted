@@ -689,6 +689,12 @@ li{
   padding: 0;
   background-color: $content-right-background-color;
 }
+.nz-table.el-table td.has-message .cell {
+  background-color: #f8d7da;
+}
+.nz-table.el-table td.has-no-message .cell {
+  background-color: #d4edda;
+}
 .nz-table.el-table th {
   padding: 0;
 }
@@ -1335,10 +1341,10 @@ li{
   margin-right: 5px;
 }
 .red {
-  background-color:#ff6347;
+  background-color: #ff6347 !important;
 }
 .green {
-  background-color:lightGreen;
+  background-color:lightGreen !important;
 }
 .grey {
   background-color:lightGrey;

@@ -29,11 +29,11 @@
               <span slot="reference" class="sidebar-info-item-txt" style="margin-bottom: -14px; display: block;" v-if="tabView">{{assetData.sn}}</span>
             </el-popover>
           </el-form-item>
-          <el-form-item :label="this.$t('asset.createAssetTab.host')" prop="host">
+          <el-form-item :label="$t('asset.createAssetTab.host')" prop="host">
             <el-input size="small" v-if="!tabView" v-model="assetData.host"/>
             <span v-if="tabView">{{assetData.host}}</span>
           </el-form-item>
-          <el-form-item :label="this.$t('asset.createAssetTab.state')">
+          <el-form-item :label="$t('asset.createAssetTab.state')">
             <div v-if="!tabView" class="select-style">
               <el-select size="small" v-model="assetData.state" placeholder="" popper-class="asset-dropdown" >
                 <el-option
@@ -93,7 +93,7 @@
             <span v-if="tabView">{{assetViewData.assetType}}</span>
           </el-form-item>
           <!------------------------------------------厂商/型号---------------------------------------------->
-          <el-form-item :label="this.$t('asset.createAssetTab.vendorModel')" class="right-box-form-content" prop="modelId">
+          <el-form-item :label="$t('asset.createAssetTab.vendorModel')" class="right-box-form-content" prop="modelId">
             <template v-if="!tabView">
               <el-cascader
                 :options="vendorTypeOptionData"
@@ -111,7 +111,7 @@
             </template>
             <span v-if="tabView">{{assetViewData.vendor}}   {{assetViewData.model}}</span>
           </el-form-item>
-          <el-form-item :label="this.$t('asset.createAssetTab.purchaseDate')">
+          <el-form-item :label="$t('asset.createAssetTab.purchaseDate')">
             <div class="select-style" v-if="!tabView">
               <el-date-picker
                 size="small"
@@ -127,7 +127,7 @@
           <div class="asset-sub-title">{{$t('asset.createAssetTab.dc')}}</div>
           <div class="line-100 asset-line"></div>
           <!------------------------------------------IDC---------------------------------------------->
-          <el-form-item :label="this.$t('asset.createAssetTab.dcName')" class="right-box-form-content" prop="idcId">
+          <el-form-item :label="$t('asset.createAssetTab.dcName')" class="right-box-form-content" prop="idcId">
             <template v-if="!tabView">
 <!--              <el-select popper-class="asset-dropdown" size="mini" v-model="assetData.idcId" clearable @change="getSingleIDCData" class="right-box-row-with-btn" placeholder="">-->
               <el-select popper-class="asset-dropdown" size="small" v-model="assetData.idcId" clearable @change="getSingleIDCData"  placeholder="">

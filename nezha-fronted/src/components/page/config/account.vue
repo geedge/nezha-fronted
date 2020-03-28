@@ -26,7 +26,7 @@
     <div class="content-right">
       <div class="main-list" :class="{'main-list-with-sub': showSubList}">
         <div class="top-tools" v-show="mainResizeShow">
-          <div class="top-tool-main-right margin-r-20" :class="{'top-tool-main-right-to-left': showSubList}">
+          <div class="top-tool-main-right" :class="{'top-tool-main-right-to-left': showSubList}">
             <div class="top-tool-search">
               <search-input ref="searchInput" :searchMsg="searchMsg" @search="search" :inTransform="inTransform"></search-input>
             </div>

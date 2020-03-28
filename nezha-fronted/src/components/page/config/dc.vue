@@ -157,13 +157,17 @@
     name: "dc",
     data() {
       return {
+        /*二级列表相关*/
         targetTab: '', //展示二级列表中的哪个页签
-        showElementSet: false, //控制自定义列的弹框
         inTransform: false, //搜索框相关，搜索条件下拉框是否在transform里
         mainResizeShow: true, //dom高度改变时部分内容是否展示
         subResizeShow: true,
         isFullScreen: false,
         showSubList: false, //是否展示二级列表
+        cabinetDc: {}, // 用在二级cabinet列表页里
+        dcDetail: [], //dc的详情信息，包含标题
+
+        showElementSet: false, //控制自定义列的弹框
         tableId: 'dcTable', //需要分页的table的id，用于记录每页数量
         showTopBtn: false,
         mainTableHeight: this.$tableHeight.normal, //主列表table高度
@@ -178,8 +182,6 @@
             name: ''
           }
         },
-        cabinetDc: {}, // 用在二级cabinet列表页里
-        dcDetail: [], //dc的详情信息，包含标题
         pageObj: {
           pageNo: 1,
           pageSize: 20,
@@ -403,7 +405,11 @@
       convertToDetail(obj) {
         let detail = [];
         detail.push({label: this.$t("overall.name"), value: obj.name});
+        detail.push({label: this.$t("config.dc.area"), value: obj.area.name});
         detail.push({label: this.$t("asset.createAssetTab.location"), value: obj.location});
+        detail.push({label: this.$t("config.dc.cabinetNum"), value: obj.cabinetNum});
+        let assets = this.$t('overall.result.total') + ' ' + obj.assetStat.total + '，' + this.$t('asset.createAssetTab.inStock') + ' ' + obj.assetStat.inStock + '，' + this.$t('asset.createAssetTab.notInStock') + ' ' + obj.assetStat.outStock;
+        detail.push({label: this.$t("config.dc.assets"), value: assets});
         detail.push({label: this.$t("asset.createAssetTab.tel"), value: obj.tel});
         let principal = '';
         for (let i = 0; i < this.userData.length; i++) {
@@ -413,7 +419,6 @@
           }
         }
         detail.push({label: this.$t("asset.createAssetTab.principal"), value: principal});
-        detail.push({label: this.$t("config.dc.area"), value: obj.area.name});
         return detail;
       },
       toAdd() {
