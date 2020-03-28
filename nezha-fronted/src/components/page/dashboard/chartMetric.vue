@@ -296,14 +296,14 @@ export default {
 
 
     // (最后整体保存添加的图标的时候执行)保存, chartdata点击确认后保存本身数据并返回给chartdata
-    saveTarget(pointer) {
+    saveTarget(pointer,optType) {
       if (this.pointer === pointer) {
         this.$refs.elementInfo.validate((valid) => {
           if (valid) {//根据设置的rules进行验证，验证通过，则返回，继续进行保存（每个el-form-item都需要验证）
             if(this.elementInfo.expression){
               this.elementInfo.expression = this.elementInfo.expression.replace(/\s+|&nbsp;/ig,'');
             }
-            this.$emit('on-add-target-success', this.elementInfo, pointer);
+            this.$emit('on-add-target-success', this.elementInfo, pointer,optType);
           }
         });
       }

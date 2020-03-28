@@ -211,13 +211,17 @@
           <button @click="esc" id="chart-box-esc" class="nz-btn nz-btn-size-normal nz-btn-style-light nz-btn-min-width-100">
             <span>{{$t('overall.cancel')}}</span>
           </button>
+          <button @click="preview" id="chart-box-preview" class="nz-btn nz-btn-size-normal nz-btn-style-normal nz-btn-min-width-100">
+            <span>{{$t('overall.preview')}}</span>
+          </button>
           <button @click="confirmAdd" id="chart-box-save" class="nz-btn nz-btn-size-normal nz-btn-style-normal nz-btn-min-width-100">
             <span>{{$t('overall.save')}}</span>
           </button>
         </div>
       </div>
     </transition>
-
+    <!--preview -->
+    <chart-preview :panelId="panelId" ref="chartsPreview" ></chart-preview>
   </div>
 </template>
 
@@ -225,6 +229,7 @@
   import bus from '../../../libs/bus';
   import ChartMetric from "./chartMetric";
   import chartDataFormat from '../../charts/chartDataFormat';
+  import chartPreview from '../../charts/chartPreview';
   export default {
     name: "chartBox",
     props: {
@@ -299,6 +304,7 @@
     },
     components:{
       'chart-metric':ChartMetric,
+      'chart-preview':chartPreview,
     },
     methods: {
       show(show) {
@@ -559,7 +565,7 @@
         });
       },
       // 获取每个tag组件内部校验后数据,点击生成图表时触发
-      getTarget(target) {
+      getTarget(target,pointer,optType) {
         this.elementTarget.push(target);
         if (this.elementTarget.length === this.elements.length) {
           this.$refs.chartForm.validate((valid) => {
@@ -597,17 +603,23 @@
             });
             params.elements = elements;
             if (valid) {
-              if (this.isedit) {
-                params.id = this.chart.id;
-                this.updateCharts(params);
-              } else {
-                this.addCharts(params);
+              if(optType==='preview') {
+                if (this.isedit) {
+                  params.id = this.chart.id;
+                }
+                this.$refs.chartsPreview.show(params);
+              }else{
+                if (this.isedit) {
+                  params.id = this.chart.id;
+                  this.updateCharts(params);
+                } else {
+                  this.addCharts(params);
+                }
               }
             }
           });
         }
       },
-      // 生成图表
       confirmAdd() {
         this.elementTarget = []; // 初始化清空参数
         this.$refs.chartTag.forEach((item, index) => {//循环指标列表
@@ -616,7 +628,6 @@
         });
         this.$refs.chartForm.validate();
       },
-
       // 获取metric列表
       getSuggestMetric() {
         //this.$get('metric', {pageNo: 1, pageSize: -1}).then(response => {
@@ -786,6 +797,19 @@
         }
         callback(data);
       },
+
+      //preview -start
+      //预览图表
+      preview(){
+        //验证图表数据是否合法？？，合法了再显示预览窗口
+        this.elementTarget = []; // 初始化清空参数
+        this.$refs.chartTag.forEach((item, index) => {//循环指标列表
+          // 触发每个tag组件内部进行校验
+          item.saveTarget(index,'preview');
+        });
+        this.$refs.chartForm.validate();
+      },
+      //preview--end
 
     },
     created() {

@@ -12,38 +12,34 @@
     width: calc(100% - 14px);
     overflow-x:hidden;/*避免鼠标第一次放到曲线时，x轴出现滚动条后消失*/
   }
-  .dragChartClass{
-    cursor:move;/*
+  .drag-chart-class{
+    cursor:move !important;
+    /*
     border:solid 2px yellow;
     color:yellow;
-    background-color:yellow;
-    opacity:1;*/
+    background-color:yellow !important;
+    */
     /*background-color:red;
     opacity:1*/
   }
-  .chooseClass{
-    cursor:move;/*
-    border:solid 2px purple;
+  .choose-class{
+    cursor:move;
+   /* border:solid 2px purple;
     color:purple;
     background-color:purple;*/
   }
-  .chosenClass .chartTitle{/*
-    color:orange;
-    border:solid 2px orange;*/
+  .chosen-class .chartTitle{
   }
   .fallback-class{
     cursor:move;
     /*background-color:green;
     cursor:pointer;*/
   }
-  .chart-ghost-class{
-    /*opacity:1*/
-  }
-  .ghost {/*
+  .chart-ghost {
+    /*
     opacity: 1;
     border:solid 2px green;
-    color:green;
-    background-color:green;*/
+    */
   }
 
 </style>
@@ -55,22 +51,41 @@
          @dragstart="handleDragStart($event, item)"
          @dragover.prevent="handleDragOver($event, item)"
          @dragenter="handleDragEnter($event, item)"
-         @dragend="handleDragEnd($event, item)"    ,ghostClass:''  {scroll:true,forceFallback:true,animation:600,handle:'.drag-icon'
--->
-    <draggable v-model="dataList" @chang="change" @start="start" @end="end" :move="move"
+         @dragend="handleDragEnd($event, item)"
+ @mousedown="dragPosition($event,item)"
+    <draggable v-model="dataList" @chang="change" @start="start" @end="end" :move="move" @choose="choose"
+               @add="add" @clone="clone" @update="update" @remove="remove" @sort="sort"
                :scroll-sensitivity="150"
                :options="{
-                 dragClass:'dragChartClass',
+                 group:{name:'chartGroup',pull:'false'},
+                 dragClass:'drag-chart-class',
                  fallbackClass:'fallback-class',
                  forceFallback:true,
-                 ghostClass:'ghost',
-                 chosenClass:'chooseClass',
+                 ghostClass:'chart-ghost',
+                 chosenClass:'choose-class',
+                 scroll:true,
+                 scrollFn:function(offsetX,offsetY,originalEvent,touchEvt,hoverTargetEI){},
+                 animation:150,
+                 handle:'.chartTitle',
+               }"  >@clone="clone"
+     -->
+    <draggable v-model="dataList" @chang="change" @start="start" @end="end" :move="move" @choose="choose"
+               @add="add"  @update="update" @remove="remove" @sort="sort"
+               :scroll-sensitivity="150"
+               :options="{
+                 group:{name:'chartGroup',pull:'false'},
+                 dragClass:'drag-chart-class',
+                 fallbackClass:'fallback-class',
+                 forceFallback:true,
+                 ghostClass:'chart-ghost',
+                 chosenClass:'choose-class',
                  scroll:true,
                  scrollFn:function(offsetX,offsetY,originalEvent,touchEvt,hoverTargetEI){},
                  animation:150,
                  handle:'.chartTitle',
                }"  >
-      <div class="chartBox" v-for="(item, index) in dataList"    :key="item.id" :id="item.title+'_'+item.id"   style="border:solid 0px red;" @dragstart="">
+      <div class="chartBox" v-for="(item, index) in dataList"    :key="item.id" :id="item.title+'_'+item.id"
+          >
         <line-chart-block v-if="item.type === 'line' || item.type === 'bar' ||item.type == 'stackArea' || item.type === 4" :key="'inner' + item.id"
         ref="editChart"
         @on-refresh-data="refreshChart"
@@ -91,7 +106,7 @@
         :chart-index="index"
         :editChartId="'editChartId' + item.id"></chart-table>
       </div>
-    </draggable>
+   </draggable>
     <el-row v-if="dataList.length === 0"  class="noData"></el-row>
   </div>
 </template>
@@ -143,11 +158,36 @@ export default {
       chartTitle.style.background = '#d8dce1';
       console.log('start-title',chartTitle);
       //this.dataListDragTmp = [...this.dataList];
+      let dragClass = document.querySelector('.drag-chart-class');//drag-chart-class:yellow chart-ghost:green  fallback-class choose-class:purple
+      console.log('start---class', dragClass);
+      //dragClass.style.opacity = 1;
+      //dragClass.style.pointerEvents = 'auto';
+/*
+      let canvas = item.querySelector('canvas');
+      console.log('start-canvas',canvas);
+      let canvasclone = event.clone.querySelector('canvas');
+      console.log('start-canvas-style',canvasclone.style);
+      canvasclone.style.border='solid 2px green !importmant';
+      console.log('start-canvas-style2',canvasclone.style);
+      if(canvas&&canvasclone) {
+        let ctx = canvas.getContext("2d");
+        let image = new Image();
+        image.src = canvas.toDataURL();
+        //var a = document.createElement("a");
+        //a.href=canvas.toDataURL();
+        //a.download="drcQrcode";
+        //a.click();
+        console.log('clone-image', image)
+        let ctxClone = canvasclone.getContext("2d");
+        image.onload = function () {
+          console.log('clone-image-load', image)
+          //ctxClone.drawImage(image, 0, 0);
+        }
+      }
+      */
     },
     end (event) {
       let item = event.item;
-      let chartTitle = item.querySelector('.chartTitle');
-      chartTitle.style.background = '';
       console.log('end', event, this.dataList);
       /*
       let len = this.dataListDragTmp.length;
@@ -187,8 +227,10 @@ export default {
 */
       let newIndex = event.newIndex;
       let newItem = this.dataList[newIndex];
-
-      if(newIndex===0){//挪动之后为第一个元素
+      if(this.dataList.length===1){
+        newItem.prev = 0;
+        newItem.next = -1;
+      }else if(newIndex===0){//挪动之后为第一个元素
         let newNextItem = this.dataList[newIndex+1];
         newItem.prev = 0;
         newItem.next = newNextItem.id;
@@ -223,11 +265,112 @@ export default {
           }
         }
       });
+
+      let chartTitle = item.querySelector('.chartTitle');
+      chartTitle.style.background = '';
     },
     move (event, orgin) {
-      console.log('move', event, orgin)
+      console.log('move', event, orgin);
+      let dragClass = document.querySelector('.drag-chart-class');//drag-chart-class:yellow chart-ghost:green  fallback-class choose-class:purple
+      console.log('move---class', dragClass);
+      //dragClass.style.opacity = 1;
+      //dragClass.style.pointerEvents = 'auto';//设置此属性，end事件里newIndex为 列表长度
+
+      let chartTitle = dragClass.querySelector('.chartTitle');
+      console.log('move-title',chartTitle);
+      chartTitle.style.background = '#d8dce1';
+
     },
-    /*
+    choose(event ){
+      console.log('choose', event);
+      let chartTitle = event.item.querySelector('.chartTitle');
+      console.log('choose-title',chartTitle);
+      chartTitle.style.background = '#d8dce1';
+    },
+    clone(event){
+      console.log('clone',event );
+      let canvas = event.item.querySelector('canvas');
+      console.log('clone-canvas',canvas);
+      let canvasclone = event.clone.querySelector('canvas');
+      canvasclone.style.border='solid 1px yellow';
+      console.log('clone-canvasclone',canvasclone);
+      if(canvas&&canvasclone){
+        let ctx = canvas.getContext("2d");
+        let image = new Image();
+        image.src= canvas.toDataURL();
+        /*var a = document.createElement("a");
+        a.href=canvas.toDataURL();
+        a.download="drcQrcode";
+        a.click();*/
+        console.log('clone-image',image)
+        let ctxClone = canvasclone.getContext("2d");
+        //ctxClone.drawImage(image,0,0);
+        image.onload = function(){
+          console.log('clone-image-load',image)
+          ctxClone.drawImage(image,0,0);
+        }
+
+      }
+    },
+    add(event){
+      console.log('add',event );
+    },
+    update(event){
+      console.log('update',event );
+    },
+    remove(event){
+      console.log('remove',event );
+    },
+    sort(event){
+      console.log('sort',event );
+    },
+    dragPosition:function(e){
+      console.log('===',e.clientY,e.clientX);
+      let odiv=e;//目标元素e.target
+      console.log('odiv====',odiv);
+      //var targetDiv= document.getElementById('lineChartDiv'+this.chartIndex); //
+      //得到点击时该容器的：
+      var startY=e.clientY;
+      var startX=e.clientX;
+      var _this=this;
+//鼠标相对元素的位置
+      var distY=e.clientY-odiv.offsetLeft;
+      var distX=e.clientX-odiv.offsetTop;
+      document.onmousemove=function(e){
+        e.preventDefault();
+        console.log('===onmousemove',e.clientY,e.clientX);
+        //e.preventDefault();
+
+       // var distY=Math.abs(e.clientY-startY);
+       // var distX=Math.abs(e.clientX-startX);
+        let left=e.clientX-distX;
+        let top=e.clientY-distY;
+        odiv.style.top=top+'px';
+        odiv.style.left=left+'px';
+        console.log('odiv====',odiv);
+        /*
+        //往上方拖动：
+        if( e.clientY < startY){
+          targetDiv.style.top=(startY-distY)+'px';
+        }
+        if( e.clientX < startX){
+          targetDiv.style.left=(startX-distX)+'px';
+        }
+        //往下方拖动：
+        if (e.clientY > startY) {
+          targetDiv.style.top=(startY+distY)+'px';
+        }
+        if (e.clientX > startX) {
+          targetDiv.style.left=(startX+distX)+'px';
+        }
+        */
+      }
+
+      document.onmouseup=function(){
+        document.onmousemove=null;
+        document.onmouseup = null;
+      }
+    },
     handleDragStart(e,item){
       this.dragging = item;
     },
@@ -252,7 +395,6 @@ export default {
 
       this.dataList = newItems
     },
-    */
     initCurrentRecordNum(){
       this.currentRecordNum = 0;
     },

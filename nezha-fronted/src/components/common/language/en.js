@@ -20,6 +20,7 @@ const en = {
     esc: 'Cancel', //'取消'
     cancel: 'Cancel', //'取消'
     save: 'Save', //'保存'
+    preview:'Preview',//预览
     search: 'Search', //'搜索'
     add: 'Create', //"新增"
     option: 'Operation', //"操作"

@@ -1188,7 +1188,7 @@ li{
   border-top: 1px solid #ccc;
   text-align: center;
 }
-.right-box-bottom-btns :nth-child(2) {
+.right-box-bottom-btns :not(:first-child){
   margin-left: 40px;
 }
 /* end--右侧弹框--底部按钮*/

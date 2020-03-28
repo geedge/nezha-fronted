@@ -64,7 +64,7 @@
    -->
     </div>
 
-    <div class="line-area"  ref="lineChartArea"  id="lineChartArea" v-show="firstShow"></div>
+    <div class="line-area"  ref="lineChartArea"  :id="'lineChartArea'+chartIndex" v-show="firstShow"></div>
 
     <div class="legend-container" id="legendArea" ref="legendArea" v-show="firstShow" v-scrollBar:legend>
       <div v-for="(item, index) in legendList" :title="item.alias?item.alias:item.name"  @click="clickLegend(item.name,index)" class="legend-item" :class="{'ft-gr':isGrey[index]}" :key="'legend_' + item.name+'_'+index">
@@ -590,14 +590,14 @@
         if ( chartInfo.type === 4) {//line,bar
           this.chartType = 'line';
         }
-        let chartId = '';
+        //let chartId = '';
 
         if (chartSite === 'local') {
           this.echartStore = echarts.init(ele);
-          chartId='lineChartArea';
+          //chartId='lineChartArea';
         }else if (chartSite === 'screen') {
           this.echartModalStore = echarts.init(ele);
-          chartId='screenShowArea';
+          //chartId='screenShowArea';
         }
         var chartWidth = ele.clientWidth;
         var title = {

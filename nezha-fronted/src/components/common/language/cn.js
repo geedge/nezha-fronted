@@ -13,6 +13,7 @@ const cn = {
     esc: '取消',
     cancel: '取消',
     save: '保存',
+    preivew:'预览',
     search: '搜索',
     add: "新增",
     option: "操作",
