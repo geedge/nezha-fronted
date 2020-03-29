@@ -1,11 +1,11 @@
 <template>
   <span>
-    <!-- 副列表 endpoint query-->
+    <!-- 副列表 -->
     <div @mousedown="listResize" class="sub-list-resize" v-if="showSubList && !isFullScreen">一</div>
     <div class="sub-list" v-if="showSubList">
       <!--窗口大小控制-->
       <div class="sub-list-window-control">
-        <!--半屏-->
+        <!--退出全屏-->
         <div class="window-control-btn" v-if="isFullScreen" @click="exitFullScreen"><i class="nz-icon nz-icon-exit-full-screen"></i></div>
         <!--全屏-->
         <div class="window-control-btn" v-if="!isFullScreen" @click="fullScreen"><i class="el-icon-full-screen"></i></div>
@@ -23,7 +23,8 @@
       <cabinet-tab v-show="subResizeShow" v-if="from == 'dc' && targetTab == 'cabinet'" :obj="obj" @changeTab="changeTab"></cabinet-tab>
       <!--告警信息-->
       <alert-message-tab v-show="subResizeShow" v-if="((from == 'alertRule' || from == 'asset') && targetTab == 'alertMessage')" :from="from" :obj="obj" @changeTab="changeTab"></alert-message-tab>
-
+      <!--endpoint-query-->
+      <endpoint-query-tab v-show="subResizeShow" v-if="(from == 'endpoint' && targetTab == 'endpointQuery')" :from="from" :obj="obj" @changeTab="changeTab"></endpoint-query-tab>
     </div>
   </span>
 </template>
@@ -32,6 +33,7 @@
   import commonDetailTab from "./tabs/commonDetailTab"
   import cabinetTab from "./tabs/cabinetTab";
   import alertMessageTab from "./tabs/alertMessageTab";
+  import endpointQueryTab from "./tabs/endpointQueryTab";
 
   export default {
     name: "cabinetBox",
@@ -39,6 +41,7 @@
       'common-detail-tab': commonDetailTab,
       'cabinet-tab': cabinetTab,
       'alert-message-tab': alertMessageTab,
+      'endpoint-query-tab': endpointQueryTab,
     },
     props: {
       isFullScreen: false, //是否全屏
@@ -71,22 +74,3 @@
     }
   }
 </script>
-
-<style lang="scss">
-  /*重写el-loading样式*/
-  .nz-table .el-loading-spinner .circular{
-    width: 42px;
-    height: 42px;
-    animation: loading-rotate 2s linear infinite;
-    display: none;
-  }
-  .nz-table .el-loading-spinner{
-    background: url(../../../assets/img/loading.gif) no-repeat;
-    background-size: 48px 48px;
-    width: 100%;
-    height: 100%;
-    position: relative;
-    top: 50%;
-    left: 48.5%;
-  }
-</style>

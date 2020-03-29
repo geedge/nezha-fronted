@@ -261,7 +261,8 @@ const en = {
     refreshLater:'Refresh later'//'请稍后刷新'
   },
   asset:{
-    asset: 'Assets',//'资产'
+    asset: 'Asset',
+    assets: 'Assets',//'资产'
     EditAsset:'Edit asset',//'编辑资产'
     pingActive: 'active',//可ping通
     assetStatPre:'Last reply:',

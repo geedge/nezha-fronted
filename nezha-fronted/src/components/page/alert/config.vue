@@ -94,14 +94,10 @@
       </div>
       <bottom-box v-if="showSubList" :show-sub-list="showSubList" :subResizeShow="subResizeShow" :obj="alertRuleForMessage" :isFullScreen="isFullScreen" :from="'alertRule'" :targetTab="targetTab" :detail="ruleDetail"
                   @closeSubList="showSubList = false" @fullScreen="fullScreen" @exitFullScreen="exitFullScreen" @listResize="listResize" ></bottom-box>
-      <!--<alert-message-box v-if="showSubList" @listResize="listResize" :show-sub-list="showSubList" :from="'alertRule'" :subResizeShow="subResizeShow" :obj="alertRuleForMessage" :isFullScreen="isFullScreen"
-                         @closeSubList="showSubList = false" @fullScreen="fullScreen" @exitFullScreen="exitFullScreen"></alert-message-box>-->
     </div>
     <alert-config-box :parentAlertRule="alertRule" @reload="getTableData" ref="alertConfigBox"></alert-config-box>
     <project-box :project="viewProjectData" ref="projectBox" @reload="getTableData"></project-box>
     <module-box :module="viewModuleData" @reload="getTableData" ref="moduleBox"></module-box>
-    <!--<asset-edit-unit :edit-unit-show='viewAsset' @refreshData="getTableData" @sendStateData="tabControl"
-                     ref="assetEditUnit"></asset-edit-unit>-->
     <asset-box :edit-unit-show='viewAsset' @refreshData="getTableData" @sendStateData="tabControl"
                ref="assetEditUnit"></asset-box>
     <element-set

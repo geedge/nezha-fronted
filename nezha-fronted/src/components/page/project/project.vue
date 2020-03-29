@@ -3,10 +3,6 @@
   .project-calendar .el-input__inner {
      height: 24px;
   }
-  /*.top-tools .el-input__inner {
-    height: 25px !important;
-    border-color: #d8d8d8;
-  }*/
   .change-time-height {
     height: 23px;
   }
@@ -20,12 +16,6 @@
   }
   .date-pick-group button:last-of-type {
     margin-left: 4px;
-  }
-</style>
-<style scope>
-  .chart-bottom {
-    text-align: center;
-    margin-top: 16px;
   }
 </style>
 <template>
@@ -57,24 +47,10 @@
     <!--endpoint-->
     <div class="content-right">
       <!-- 主列表 -->
-      <div class="main-list" :class="{'main-list-with-sub': tableShow == 3}">
-        <!--<div style="position: absolute; left: 0; top: 13px; z-index: 2;">
-          <div class="top-tool-search margin-r-20" style="margin: -2px 0 0 0;"><search-input :searchMsg="endpointSearchMsg" @search="endpointSearch" ref="projectSearch"></search-input></div>
-          <export-excel
-            export-file-name="endpoint"
-            export-url="/endpoint/export"
-            :params="endpointSearchLabel"
-            @afterImport="getEndpointTableData"
-          >
-            <template slot="optionZone">
-              <i class="nz-icon nz-icon-create-square" @click.stop="toCreateEndpoint" :title="$t('overall.createProject')" ></i>
-            </template>
-          </export-excel>
-
-        </div>-->
+      <div class="main-list" :class="{'main-list-with-sub': showSubList}">
         <div class="top-tools" v-show="mainResizeShow">
           <!--<div class="pagination-top"></div>-->
-          <div class="top-tool-main-right" :class="{'top-tool-main-right-to-left': tableShow == 3}">
+          <div class="top-tool-main-right" :class="{'top-tool-main-right-to-left': showSubList}">
             <div class="top-tool-search"><search-input :searchMsg="endpointSearchMsg" @search="endpointSearch" ref="projectSearch"></search-input></div>
             <export-excel
               export-file-name="endpoint"
@@ -120,7 +96,7 @@
               <div v-else-if="item.prop == 'option'" class="content-right-options">
                 <span :title="$t('overall.query')" @click="showEndpoint(scope.row)" class="content-right-option" :id="'edp-query-'+scope.row.id"><i class="el-icon-search"></i></span>
                 &nbsp;
-                <span :title="$t('overall.view')" @click="endpointDetail(scope.row)" class="content-right-option" :id="'edp-detail-'+scope.row.id"><i class="nz-icon nz-icon-view"></i></span>
+                <span :title="$t('overall.view')" @click="detail(scope.row)" class="content-right-option" :id="'edp-detail-'+scope.row.id"><i class="nz-icon nz-icon-view"></i></span>
                 &nbsp;
                 <span :title="$t('overall.edit')" @click="toEditEndpoint(scope.row)" class="content-right-option" :id="'edp-edit-'+scope.row.id"><i class="nz-icon nz-icon-edit"></i></span>
               </div>
@@ -144,115 +120,13 @@
             </template>
           </el-table-column>
         </el-table>
-        <div class="pagination-bottom" v-show="tableShow == 1">
+        <div class="pagination-bottom" v-show="!showSubList">
           <Pagination :tableId="tableId" v-cloak :pageObj="endpointPageObj" @pageNo='endpointPageNo' @pageSize='endpointPageSize' ref="endpointPagination"></Pagination>
         </div>
-        <button class="to-top" v-show="showTopBtn1 && mainResizeShow" @click="$toTop('ps', 0)"><i class="nz-icon nz-icon-top"></i></button>
+        <button class="to-top" v-show="showTopBtn && mainResizeShow" @click="$toTop('ps', 0)"><i class="nz-icon nz-icon-top"></i></button>
       </div>
-
-      <!-- 副列表 endpoint query-->
-      <div @mousedown="listResize" class="sub-list-resize" v-show="tableShow == 3 && !isFullScreen">一</div>
-      <div class="sub-list" v-show="tableShow == 3">
-        <div class="sub-top-tools" v-show="subResizeShow">
-          <div class="sub-list-tabs margin-l-20" style="width: calc(100% - 780px);">
-            <div class="sub-list-tab">{{$t("overall.query")}}</div>
-            <span class="sub-list-tab-txt">{{$t("project.endpoint.endpointId")}}: {{curEndpoint ? curEndpoint.id : ''}}</span>
-          </div>
-          <!--时间选择器-->
-          <div class="top-tool-right">
-            <div class="top-tool-search relative-position margin-r-20">
-              <el-input ref="elementQuery" @clear="clearInput" id="elementQuery" @focus="focusInput"  @blur="blurInput" v-model="queryExpression" class="query-input-inactive" size="mini" clearable  :placeholder="$t('project.endpoint.promExpr')" >
-                <i slot="suffix" class="el-input__icon el-icon-search" style="float:right" @click="focusInput"></i>
-              </el-input>
-            </div>
-            <div class="margin-r-20 nz-btn-group nz-btn-group-size-normal nz-btn-group-light">
-              <button @click="changeTime(-10)" class="nz-btn nz-btn-size-normal nz-btn-style-light change-time-height nz-input-group-prepend"><i class="el-icon-d-arrow-left"></i></button><el-date-picker
-                v-model="formatTime"
-                type="datetime"
-                size="mini"
-                class="project-calendar nz-input-group-middle"
-                clearable
-                :time-arrow-control="true"
-                placeholder="Moment"
-                value-format="yyyy-MM-dd HH:mm:ss"
-                @change="pickTime"
-                >
-              </el-date-picker><button @click="changeTime(10)" class="nz-btn nz-btn-size-normal nz-btn-style-light change-time-height nz-input-group-append"><i class="el-icon-d-arrow-right"></i></button>
-            </div>
-            <el-dropdown split-button type="primary"  size="mini" class="dropdownBtn" @click="viewGraph">
-              <i class="nz-icon nz-icon-chart"  :class="{'control-icon-unchecked':selectedEndpoints.length<1,'control-icon-checked':selectedEndpoints.length>0}"></i>
-              <el-dropdown-menu slot="dropdown" style="padding:10px 4px 10px 10px;">
-                <el-row>
-                  <el-col :span="16" style="padding-top: 4px;padding-left: 1px"><span style="padding-top: 2px">{{$t('project.endpoint.hideSameLabels')}}</span></el-col>
-                  <el-col :span="8">
-                    <el-dropdown-item class="dropdown-content" >
-                      <el-switch v-model="hideSameLabels" active-color="#ee9d3f" size="small"></el-switch>
-                    </el-dropdown-item>
-                  </el-col>
-                </el-row>
-              </el-dropdown-menu>
-            </el-dropdown>
-            <div class="sub-list-window-control">
-              <!--半屏-->
-              <div class="window-control-btn" v-if="isFullScreen" @click="exitFullScreen"><i class="nz-icon nz-icon-exit-full-screen"></i></div>
-              <!--全屏-->
-              <div class="window-control-btn" v-if="!isFullScreen" @click="fullScreen"><i class="el-icon-full-screen"></i></div>
-              <!--关闭-->
-              <div class="window-control-btn" @click="backToEdpTab"><i class="el-icon-close"></i></div>
-            </div>
-          </div>
-        </div>
-        <div class="table-header-inner" @click="clearSelectedMetrics"><span><i style="font-size: 12px;margin-left: 2px;" class="nz-icon nz-icon-close " :class="{'control-icon-unchecked':selectedEndpoints.length<1,'control-icon-checked':selectedEndpoints.length>0}"></i></span></div>
-        <el-table
-          :data="showTableData"
-          v-loading="queryEdpLoading"
-          element-loading-background="rgba(0, 0, 0, 0)"
-          border
-          v-scrollBar:el-table
-          class="nz-table endpoint-query-table"
-          :header-cell-class-name="cellClass"
-          :height="$tableHeight.noPagination"
-          @selection-change="selectChange"
-          ref="metricInfoTab"
-          v-show="subResizeShow"
-          style="width: 100%; margin-top: 5px;">
-          <el-table-column
-            :resizable="false"
-            type="selection"
-            width="38"
-            align="center"
-            :selectable="selectable"
-          >
-          </el-table-column>
-
-          <el-table-column
-            prop="element"
-            :label="$t('project.endpoint.element')">
-            <template slot-scope="scope">
-              <el-popover trigger="hover" placement="right" v-if="typeof scope.row.metricTip != 'undefined' && scope.row.metricTip != null">
-                <div>
-                  <ul>
-                    <li><span class="metirc-tip-list">metric&nbsp;:&nbsp;</span><span>{{scope.row.metricTip.metric?scope.row.metricTip.metric:'--'}}</span></li>
-                    <li><span class="metirc-tip-list">type&nbsp;:&nbsp;</span><span>{{scope.row.metricTip.type?scope.row.metricTip.type:'unknown'}}</span></li>
-                    <li><span class="metirc-tip-list">help&nbsp;:&nbsp;</span><span>{{scope.row.metricTip.help?scope.row.metricTip.help:'--'}}</span></li>
-                    <li><span class="metirc-tip-list">unit&nbsp;:&nbsp;</span><span>{{scope.row.metricTip.unit?scope.row.metricTip.unit:'--'}}</span></li>
-                  </ul>
-                </div>
-                <span slot="reference"><i class="nz-icon nz-icon-info-normal metric-tip-icon"></i></span>
-              </el-popover>
-              <span v-html="hideSameLabels?scope.row.colorSimpleElement: scope.row.colorElement"></span>
-  <!--            <span>{{hideSameLabels?scope.row.simpleElement: scope.row.element}}</span>-->
-            </template>
-          </el-table-column>
-          <el-table-column
-            :resizable="false"
-            prop="value"
-            :label="$t('project.endpoint.value')"
-            width="180">
-          </el-table-column>
-        </el-table>
-        <button class="to-top" v-show="showTopBtn2 && subResizeShow" @click="$toTop('ps', 1)"><i class="nz-icon nz-icon-top"></i></button>
-      </div>
+      <bottom-box v-if="showSubList" :show-sub-list="showSubList" :subResizeShow="subResizeShow" :obj="curEndpoint" :isFullScreen="isFullScreen" :from="'endpoint'" :targetTab="targetTab" :detail="endpointDetail"
+                  @closeSubList="showSubList = false" @fullScreen="fullScreen" @exitFullScreen="exitFullScreen" @listResize="listResize" ></bottom-box>
     </div>
 
     <element-set
@@ -263,83 +137,38 @@
       ref="elementset"
     ></element-set>
 
-    <el-dialog class="line-chart-block-modal nz-dialog"
-      :title="$t('project.endpoint.dialogTitle')"
-      :visible.sync="graphShow"
-      width="90%"
-     id="viewGraphDialog"
-      @close="dialogClose"
-      @opened="initDialog">
-      <div slot="title">
-        {{$t("project.endpoint.dialogTitle")}}
-        <div class="float-right panel-calendar dialog-tool">
-          <el-date-picker ref="calendar" prefix-icon=" " size="mini" class="nz-dashboard-picker"
-                          @change="dateChange"
-                          v-model="searchTime"
-                          type="datetimerange"
-                          :picker-options="pickerOptions"
-                          :range-separator="$t('dashboard.panel.to')"
-                          :start-placeholder="$t('dashboard.panel.startTime')"
-                          :end-placeholder="$t('dashboard.panel.endTime')"
-                          value-format="yyyy-MM-dd hh:mm:ss"
-                          align="right">
-          </el-date-picker>
-          <!--<button @click="refreshChart" type="button" class="nz-btn nz-btn-size-normal nz-btn-style-light"><i style="font-size: 14px;" class="el-icon-refresh-right"></i></button>-->
-        </div>
-      </div>
-      <div class="line-area" ref="viewGraphChart" id="viewGraphChart"></div>
-      <div class="legend-container" id="legendArea" ref="legendArea">
-        <el-scrollbar style="height: 100%" ref="chartScrollbar">
-          <div v-for="(item, index) in legend" :title="hideSameLabels&&item.alias?item.alias:item.name"  @click="clickLegend(item.name,index)" class="legend-item" :class="{'ft-gr':isGrey[index]}" :key="'legend_' + item.name+'_'+index">
-            <span class="legend-shape" :style="{background:(isGrey[index]?'#D3D3D3':bgColorList[index])}"></span>{{hideSameLabels&&item.alias?item.alias:item.name}}
-            <br/>
-          </div>
-        </el-scrollbar>
-      </div>
-      <div class="line-100 margin-t-10"></div>
-      <div class="chart-bottom">
-        <button class="nz-btn nz-btn-size-large nz-btn-style-normal nz-btn-min-width-82" @click="saveChart">{{$t('dashboard.metric.saveChart')}}</button>
-      </div>
-      <loading  ref="graphLoading"></loading>
-    </el-dialog>
-
     <module-box :currentProject="currentProject" :module="editModule" @reload="getModuleList" ref="moduleBox"></module-box>
     <edit-endpoint-box :currentProject="currentProject" :currentModule="currentModule" :endpoint="editEndpoint" @reload="getEndpointTableData" ref="editEndpointBox"></edit-endpoint-box>
     <add-endpoint-box :currentProject="currentProject" :currentModule="currentModule" @reload="getEndpointTableData" ref="addEndpointBox"></add-endpoint-box>
     <asset-box :edit-unit-show='viewAssetState' @refreshData="getEndpointTableData" @sendStateData="tabControl"
                ref="assetEditUnit"></asset-box>
-    <chart-box ref="addChartModal" :panel-data="panelData" @on-create-success="createSuccess" @reloadOnlyPanel="getPanelData" @reload="getPanelData"></chart-box>
   </div>
 </template>
 
 <script>
-  import echarts from 'echarts';
-  import chartBox from "../dashboard/chartBox";
-  import bus from "../../../libs/bus";
-  import axios from 'axios';
   import exportXLSX from "../../common/exportXLSX";
   import loading from "../../common/loading";
   import chartDataFormat from "../../charts/chartDataFormat";
   export default {
     name: "project2",
     components: {
-      'chart-box': chartBox,
       'export-excel':exportXLSX,
       'loading': loading,
     },
     data() {
-      let temp=this;
+      let temp = this;
       return {
+        endpointDetail: [],
+        targetTab: '',
         mainTableHeight: this.$tableHeight.normal, //主列表table高度
-        subTableHeight: this.$tableHeight.normal, //副列表table高度
         isFullScreen: false, //是否是全屏，用来控制拖动条是否展示
         tableId: 'projectTable', //需要分页的table的id，用于记录每页数量
         mainResizeShow: true, //dom高度改变时部分内容是否展示
         subResizeShow: true,
         mainListHeight: '', //主列表dom的高度
-        tableShow: 1, // 1.endpoint; 3.query
-        showTopBtn1: false, //主列表top按钮
-        showTopBtn2: false, //副列表top按钮
+        showSubList: false,
+
+        showTopBtn: false, //主列表top按钮
         editEndpoint: {id: '', host: '', port: '', param: '', path: '', asset: {}, project: {}, module: {}, moduleId: '', assetId: '', paramObj: []},
         endpointTableTitle: [
           {
@@ -390,29 +219,6 @@
           pageSize: 20,
           total:0
         },
-        metricsTableTitle: [
-          {
-            label: this.$t("project.metrics.name"),
-            prop: 'metric',
-            show: true,
-          },
-          {
-            label: this.$t("project.metrics.type"),
-            prop: 'type',
-            show: true,
-          },
-          {
-            label: this.$t("project.metrics.description"),
-            prop: 'help',
-            show: true,
-          },
-        ],
-        metricsTableData: [],
-        metricPageObj: {
-          pageNo: 1,
-          pageSize: 20,
-          total: 0
-        },
         tablelable: [],
         dropCol: [],
         moduleList: [],
@@ -421,7 +227,6 @@
         editModule: {id: '', name: '', project: {}, port: '', path: '', param: '', paramObj: []}, //编辑的module
         currentModule: {id: '', name: '', project: {}, port: '', path: '', param: '', paramObj: []}, //endpoint弹框用来回显module
         endpointSearchLabel: {moduleId: ''}, //endpoint搜索参数
-        metricSearchLabel: {moduleId: ''}, //metrics搜索参数
         endpointSearchMsg: { //给搜索框子组件传递的信息
           zheze_none: true,
           searchLabelList: [{
@@ -438,23 +243,11 @@
             disabled: false
           }],
         },
-        metricSearchMsg: { //给搜索框子组件传递的信息
-          zheze_none: true,
-          searchLabelList: [{
-            id: 12,
-            name: 'Metric',
-            type: 'input',
-            label: 'metric',
-            disabled: false
-          }],
-        },
         viewAssetState:false,
         curEndpoint:null,
         endpointQueryTabData:[],//endpoint 查询列表数据
         showTableData:[],
         showTableDataCopy:'',
-        queryExpression:'',
-        metricList: [], // metric列表
         elementMetricDatas:[],//element 列提示信息列表
         formatTime:'',//查询endpoint的时间，
         selectedEndpoints:[],//选中的metric{label='value'}
@@ -721,7 +514,6 @@
           '#f58220', '#c37e00', '#00ae9d', '#f26522', '#76becc',
           '#76624c', '#d71345', '#2468a2', '#ca8687', '#1b315e',
         ],
-        panelData: [], //chart-box的panel下拉框数据,
         hideSameLabels:true,
         sameLabels:['instance','module','project','asset','job','dc'],
       }
@@ -823,119 +615,6 @@
         //副列表
         document.querySelector(".sub-list").style.height = contentRightHeight + 'px';
       },
-      clickLegend(legendName,index){
-        //点击图表某一个legend，图表只显示当前点击的曲线或柱状图，其它隐藏，再次点击已选中的legend ，显示全部
-        let curIsGrey=this.isGrey[index];
-        if(this.graphChart){
-          this.legend.forEach((item,i)=>{
-            let isGrey = this.isGrey[i];
-            if(index != i){
-              if(!curIsGrey && !isGrey){
-                this.graphChart.dispatchAction({
-                  type: 'legendUnSelect',
-                  name: item.name
-                });
-              }else if(!curIsGrey && isGrey){
-                this.graphChart.dispatchAction({
-                  type: 'legendSelect',
-                  name: item.name
-                });
-              }else{
-                this.graphChart.dispatchAction({
-                  type: 'legendUnSelect',
-                  name: item.name
-                });
-              }
-            }else {
-              this.graphChart.dispatchAction({
-                type: 'legendSelect',
-                name: item.name
-              });
-            }
-          })
-          this.isGrey.forEach((item,i)=>{
-            if(index != i){
-              if(!curIsGrey && !item){
-                this.$set(this.isGrey, i, true);
-              }else if(!curIsGrey && item){
-                this.$set(this.isGrey, i, false);
-              }else{
-                this.$set(this.isGrey, i, true);
-              }
-            }else{
-              if(item === true){
-                this.$set(this.isGrey, i, false);
-              }
-            }
-          })
-        }
-      },
-      formatLegend(name,chartWidth){
-        if(!name){
-          return '';
-        }
-        if(!chartWidth){
-          this.$refs.viewGraphChart.clientWidth;
-        }
-        //计算宽度
-        var span = document.createElement("span");
-        var result = {};
-        result.width = span.offsetWidth;
-        result.height = span.offsetHeight;
-        span.style.visibility = "hidden";
-        span.style.fontSize = 14;
-        span.style.fontFamily = "Arial";
-        span.style.display = "inline-block";
-        document.body.appendChild(span);
-        if(typeof span.textContent != "undefined"){
-          span.textContent = name;
-        }else{
-          span.innerText = name;
-        }
-        var txtWidth = parseFloat(window.getComputedStyle(span).width) - result.width;
-        document.body.removeChild(span);
-
-        if(txtWidth < chartWidth){
-          return name;
-        }else {
-          var charNum = `${(chartWidth-100)/(txtWidth/name.length)}`;
-          return name.slice(0,charNum)+'...';
-        }
-      },
-      saveChart() { //新增chart
-        this.$refs.addChartModal.setTitle(this.$t("dashboard.panel.createChartTitle"));
-        this.$refs.addChartModal.show(true);
-        let metricInfo = {};
-        metricInfo.elements = [];
-        //console.info("aaa", this.selectedEndpoints)
-        for(let i = 0; i < this.selectedEndpoints.length; i++) {
-          let type = '';
-          if (this.selectedEndpoints[i].type == '1') {
-            type = 'expert';
-          } else if (this.selectedEndpoints[i].type == '2') {
-            type = 'normal';
-          }
-          metricInfo.elements.push({expression: this.selectedEndpoints[i].element, type: type});
-        }
-        this.$refs.addChartModal.createData(-1, metricInfo);
-      },
-      createSuccess(type, response, param, panel) {
-        this.$confirm(this.$t("dashboard.metric.goPanelTip"),this.$t("tip.saveSuccess"), {
-          confirmButtonText: this.$t("tip.yes"),
-          cancelButtonText: this.$t("tip.no"),
-          type: 'success'
-        }).then(() => {
-          bus.$emit("menu-change", 'panel');
-          this.$store.state.showPanel.id = panel.id;
-          this.$store.state.showPanel.name = panel.name;
-          this.$router.push({
-            path: "/panel",
-            query: {
-              t: +new Date()
-            }
-          });
-        });
-      },
       elementsetShow(s, e) {
         var eventfixed = {
           shezhi: 0,
@@ -988,17 +667,6 @@
           }
         });
       },
-      getMetricsTableData() {
-        // this.metricSearchLabel.moduleId = this.currentModule.id;
-        // this.$set(this.metricSearchLabel, 'pageNo', this.metricPageObj.pageNo);
-        // this.$set(this.metricSearchLabel, 'pageSize', this.metricPageObj.pageSize);
-        // this.$get('metric', this.metricSearchLabel).then(response => {
-        //   if (response.code === 200) {
-        //     this.metricsTableData = response.data.list;
-        //     this.metricPageObj.total = response.data.total;
-        //   }
-        // });
-      },
       endpointPageNo(val) {
         this.endpointPageObj.pageNo = val;
         this.getEndpointTableData();
@@ -1007,14 +675,6 @@
         this.endpointPageObj.pageSize = val;
         localStorage.setItem('nz-pageSize-' + localStorage.getItem('nz-username') + '-' + this.tableId, val);
         this.getEndpointTableData();
-      },
-      metricsPageNo(val) {
-        this.metricPageObj.pageNo = val;
-        this.getMetricsTableData();
-      },
-      metricsPageSize(val) {
-        this.metricPageObj.pageSize = val;
-        this.getMetricsTableData();
       },
 
       // 获取左侧module列表数据
@@ -1064,9 +724,8 @@
       changeModule(module) {
         this.currentModule = module;
         this.endpointSearchLabel = {moduleId: ''};
-        this.metricSearchLabel = {moduleId: ''};
         this.$refs.projectSearch.clearSearch();
-        this.tableShow=1;
+        this.showSubList=1;
         this.selectedEndpoints=[];
       },
 
@@ -1086,13 +745,10 @@
       },
 
       //查看endpoint详情
-      endpointDetail(endpoint) {
-        this.editEndpoint = JSON.parse(JSON.stringify(endpoint));
-        if (!this.editEndpoint.paramObj) {
-          this.$set(this.editEndpoint, 'paramObj', []);
-        }
-        this.rightBoxHandler(3);
-        this.$refs.editEndpointBox.toEdit(false, this.editEndpoint.id);
+      detail(endpoint) {
+        this.curEndpoint = Object.assign({}, endpoint);
+        this.targetTab = "detail";
+        this.showSubList = true;
       },
 
       //弹出module编辑页
@@ -1125,17 +781,6 @@
           }
         }
         this.getEndpointTableData();
-      },
-      //搜索
-      metricSearch: function(searchObj) {
-        this.metricSearchLabel = {};
-        this.metricPageObj.pageNo = 1;
-        for (let item in searchObj) {
-          if (searchObj[item]) {
-            this.$set(this.metricSearchLabel, item, searchObj[item]);
-          }
-        }
-        this.getMetricsTableData();
       },
 
       //控制弹框状态 type  1:project; 2:module; 3:editEndponit; 4:addEndpoint;
@@ -1192,427 +837,10 @@
         this.$refs.assetEditUnit.getAssetData(id);
         this.$refs.assetEditUnit.tabView=true;
       },
-      showEndpoint:function(endpoint){
-        this.tableShow=3;
-
-        this.queryEdpLoading=true;
-        setTimeout(() => {
-          if(endpoint){
-            this.curEndpoint=endpoint;
-            this.formatTime='';
-          }
-          this.queryElementTips();
-          this.endpointQueryTabData=[];
-          this.showTableData=[];
-          this.showTableDataCopy='';
-          this.$get("/prom/api/v1/query?query={job='ed_"+this.curEndpoint.id+"'}&time="+this.formatTime).then(response=>{
-              if(response.status==="success"){
-                let results=response.data.result;
-                this.endpointQueryTabData=JSON.parse(JSON.stringify(results));
-                for (let result of results){
-                  // {"metric":{"instance":"192.168.40.126:9100","__name__":"scrape_duration_seconds","module":"node_exporter","project":"kafka","asset":"192.168.40.126","job":"ed_1","dc":"dc5"},"value":[1580782176.522,"0.000560761"]}
-                  let metricName=result.metric.__name__;
-                  let temp=metricName;
-                  let simpleTemp=metricName;//显示简略信息：隐藏same labels后的结果
-                  let metricColor="";
-                  let bracketsColor="#eb7b18";//#eb7b18
-                  let labelColor="#65bbd1";//#66d9ef
-                  let valueColor="#61c261";//#74e680
-                  let colorTemp=`<span style="${metricColor}">${metricName}</span>`;
-                  let colorSimpleTemp=`<span>${metricName}</span>`;
-                  let metricTip={};
-                  let queryInfos=(this.elementMetricDatas.filter((item)=>{
-                    return item.metric===temp;
-                  }));
-                  if(queryInfos&&queryInfos.length>0){
-                    metricTip=queryInfos[0];
-                  }else{
-                    metricTip.metric=temp;
-                  }
-                  delete result.metric.__name__;
-                  temp+="{";
-                  simpleTemp+="{";
-                  colorTemp+=`<span style="color: ${bracketsColor}">{</span>`;
-                  colorSimpleTemp+=`<span style="color: ${bracketsColor}">{</span>`;
-                  let keys=Object.keys(result.metric);
-                  for (let index in keys){
-                    let key=keys[index];
-                    temp+=key +"='"+result.metric[key]+"',";
-                    colorTemp +=`<span style="color: ${labelColor}">${key}</span>=<span style="color: ${valueColor}">'${result.metric[key]}'</span>,`;
-                    if(!this.sameLabels.some((i)=>{return i == key})){
-                      simpleTemp+=key +"='"+result.metric[key]+"',";
-                      colorSimpleTemp+=`<span style="color: ${labelColor}">${key}</span>=<span style="color: ${valueColor}">'${result.metric[key]}'</span>,`;
-                    }
-                  }
-                  if(temp.indexOf(',') != -1){
-                    temp=temp.substr(0,temp.length-1);
-                  }
-                  if(simpleTemp.indexOf(',') != -1){
-                    simpleTemp=simpleTemp.substr(0,simpleTemp.length-1);
-                  }
-                  if(colorTemp.indexOf(',') != -1){
-                    colorTemp=colorTemp.substr(0,colorTemp.length-1);
-                  }
-                  if(colorSimpleTemp.indexOf(',') != -1){
-                    colorSimpleTemp=colorSimpleTemp.substr(0,colorSimpleTemp.length-1);
-                  }
-
-
-                  temp+="}";
-                  simpleTemp+="}";
-                  colorTemp+=`<span style="color: ${bracketsColor}">}</span>`;
-                  colorSimpleTemp+=`<span style="color: ${bracketsColor}">}</span>`;
-                  if(!/.+\{.+\}/.test(simpleTemp)){
-                    simpleTemp=simpleTemp.substr(0,simpleTemp.length-2);
-                  }
-
-                  if(!/.+\{<\/span><span.+?>.+?\}/.test(colorSimpleTemp)){
-                    let metricReg=new RegExp("<span.*?>"+metricName+"<\/span>")
-                    colorSimpleTemp=metricReg.exec(colorSimpleTemp)[0];
-                  }
-
-                  let edpQueryData={element:temp,simpleElement:simpleTemp,colorElement:colorTemp,colorSimpleElement:colorSimpleTemp, value:result.value[1],type:(result.metric.type?result.metric.type:'2'),metricTip:metricTip};
-                  this.showTableData.push(edpQueryData);
-                }
-                this.showTableDataCopy=JSON.stringify(this.showTableData);
-                this.queryEdpLoading=false;
-                this.showTopBtn2 = false;
-                this.$nextTick(() => {
-                  //绑定滚动条事件，控制top按钮
-                  let el = this.$refs.metricInfoTab.$el.querySelector(".el-table__body-wrapper");
-                  if (el._ps_) {
-                    el.addEventListener("ps-scroll-y", () => {
-                      if (el._ps_.scrollbarYTop > 20) {
-                        this.showTopBtn2 = true;
-                      } else {
-                        this.showTopBtn2 = false;
-                      }
-                    });
-                  }
-                });
-              }
-          });
-        }, 400);
-      },
-      backToEdpTab:function(){
-        this.tableShow=1;
-      },
-      changeTime:function(size,unit){
-        let time=this.getTime(size,unit);
-        this.formatTime=time;
-        this.showEndpoint();
-      },
-      pickTime:function(){
-        //console.log(this.formatTime)
-        this.showEndpoint();
-      },
-      getTime:function(size,unit){//计算时间
-        let now=!this.formatTime? new Date():new Date(this.formatTime);
-        if(unit){
-          switch (unit) {
-            case 'y':
-              now.setFullYear(now.getFullYear()+size);
-              break;
-            case 'M':
-              now.setMonth(now.getMonth()+size);
-              break;
-            case 'd':
-              now.setDate(now.getDate()+size);
-              break;
-            case 'h':
-              now.setHours(now.getHours()+size);
-              break;
-            case 'm':
-              now.setMinutes(now.getMinutes()+size);
-              break;
-            case 's':
-              now.setSeconds(now.getSeconds()+size);
-              break;
-            default:
-              console.error('unit error');
-          }
-        }else{
-          now.setSeconds(now.getSeconds()+size);
-        }
-        let year=now.getFullYear();
-        let month=now.getMonth()+1;
-        month=month<10?"0"+month:month;
-        let day=now.getDate();
-        day=day<10?"0"+day:day;
-        let hour=now.getHours();
-        hour=hour<10?"0"+hour:hour;
-        let minute=now.getMinutes();
-        minute=minute<10?"0"+minute:minute;
-        let second=now.getSeconds();
-        second=second<10?"0"+second:second;
-        let current=year+"-"+month+"-"+day+" "+hour+":"+minute+":"+second;
-        return current;
-      },
-      selectChange:function(selection){//selection 选中的row的数组
-        this.selectedEndpoints=selection;
-      },
-      selectable:function(row,index){
-        if(this.selectedEndpoints.length>=20 && !this.selectedEndpoints.includes(row)){
-          return false;
-        }else{
-          return true;
-        }
-      },
-      clearSelectedMetrics:function(){
-        this.$refs.metricInfoTab.clearSelection();
-      },
-      viewGraph:function(){
-        if(this.selectedEndpoints.length<1){
-          return ;
-        }
-        if(this.graphChart){
-          this.graphChart.clear();
-        }
-
-        this.chartDatas=[];
-        this.legend=[];
-        this.graphShow=true;
-        setTimeout(()=>{this.$refs.graphLoading.startLoading();this.queryChartDate();},10)
-
-      },
-      dialogClose:function(){
-        this.graphShow=false;
-        this.graphChart.clear();
-      },
-      queryChartDate:function(){
-        let start=this.searchTime[0]?this.searchTime[0]:this.getTime(-1,'h');
-        let end=this.searchTime[1]?this.searchTime[1]:this.getTime(0,'h')
-        this.searchTime=[start,end];
-        let timeDiff=(new Date(end).getTime()-new Date(start).getTime())/1000/(24*60*60);
-        // end - start < 1 day : 15s
-        // end - start < 7 day : 5m
-        // end - start < 30 day : 10m
-        // end - start > 30 day : 30m
-        let step='15s';
-        if(timeDiff< 1){
-          step='15s';
-        }else if(timeDiff < 7){
-          step='5m';
-        }else if(timeDiff<30){
-          step='10m';
-        }else{
-          step='30m';
-        }
-        let axiosArr=[];
-        for(let endpoint of this.selectedEndpoints){
-          axiosArr.push(axios.get("/prom/api/v1/query_range?query="+endpoint.element+"&start="+start+"&end="+end+"&step="+step));
-        }
-        this.legend=[];
-        this.isGrey=[];
-        axios.all(axiosArr).then(res =>{
-          res.forEach((response,promIndex)=>{
-            if (response.status == 200) {
-              if(response.data.status == 'success'){
-                let queryData=response.data.data.result[0];
-                if(queryData){
-                  let chartData={
-                    type:"line",
-                    symbol:'none',  //去掉点
-                    smooth:true,  //曲线变平滑
-                  };
-                  chartData.name=queryData.metric.__name__;
-                  let alias=queryData.metric.__name__;
-                  delete queryData.metric.__name__;
-                  chartData.name+="{";
-                  alias+="{";
-                  Object.keys(queryData.metric).forEach((item,index)=>{
-                    let label=item;
-                    let value=queryData.metric[label];
-                    chartData.name+=label +"='"+value+"',";
-                    if(!this.sameLabels.some((i)=>{return i == label})){
-                      alias+=label +"='"+value+"',";
-                    }
-                  })
-                  chartData.name=chartData.name.charAt(chartData.name.length-1) == ","?chartData.name.substr(0,chartData.name.length-1):chartData.name;
-                  alias=alias.charAt(alias.length-1) == ","?alias.substr(0,alias.length-1):alias;
-                  chartData.name+="}";
-                  alias+="}";
-                  if(!/.+\{.+\}/.test(alias)){
-                    alias=alias.substr(0,alias.length-2);
-                  }
-                  let legend={
-                    name:chartData.name,
-                    alias:alias,
-                    showText:this.formatLegend(chartData.name)
-                  }
-                  this.legend.push(legend);
-                  this.isGrey.push(false);
-                  chartData.data=queryData.values.map((dpsItem, dpsIndex) => {
-                    return [dpsItem[0] * 1000, Number(dpsItem[1])];
-                  });
-                  this.chartDatas.push(chartData);
-                }
-              }else{
-                this.$message.error(response.data.error)
-                console.error(response.data)
-              }
-            }
-          })
-            this.$nextTick(()=>{
-              if(this.graphChart){
-                this.graphChart.clear();
-                this.chartOptions.color=this.bgColorList;
-                this.chartOptions.series=this.chartDatas;
-                this.graphChart.setOption(this.chartOptions);//创建图表
-                this.$refs.chartScrollbar.update();
-                this.$refs.graphLoading.endLoading();
-              }
-            });
-
-        })
-      },
-      dateChange:function(){
-        if(this.graphChart){
-          this.graphChart.clear();
-          this.queryChartDate();
-        }
-
-      },
-      initDialog:function(){
-        this.graphChart = echarts.init(document.getElementById('viewGraphChart'));
-        // this.queryChartDate();
-        // this.chartOptions.legend.data=this.legend;
-        // this.chartOptions.series=this.chartDatas;
-        // this.graphChart.setOption(this.chartOptions);//创建图表
-        // console.log(this.chartOptions)
-        // let legendHeight = this.$refs.legendArea.offsetHeight;
-        // let dialogDom=document.getElementById('viewGraphDialog');
-        // let dialogWidth=dialogDom.offsetWidth
-        // let dialogHeight=dialogDom.offsetHeight
-        // console.log(legendHeight+":"+dialogWidth+":"+dialogHeight)
-        // let chartWidth=dialogWidth-130;
-        // let chartHeight=dialogHeight-58-legendHeight-60;
-        // console.log(chartWidth + ":"+chartHeight)
-        // this.graphChart.resize({height:300,width:chartWidth})
-      },
-      cellClass(row){ //给复选框那一列添加 类名为 ‘disabledCheck’
-        if (row.columnIndex === 0) {
-          return 'disabledCheck'
-        }
-      },
-      getPanelData() { //获取panel数据
-        this.$get('panel?pageNo=1&pageSize=-1').then(response => {
-          if (response.code === 200) {
-            this.panelData = response.data.list;
-          }
-        });
-      },
-      tableFilter:function(){
-        let temp=this;
-        let tableDatas=JSON.parse(this.showTableDataCopy);
-        this.showTableData=tableDatas.filter((item)=>{
-          let element=temp.hideSameLabels?item.simpleElement: item.element;
-          return element.indexOf(this.queryExpression) != -1;
-        })
-      },
-      tableFilterHistory:function(expression){
-        let metric='';
-        let labels=[];
-        if(/\w*\{.*\}.*/i.test(expression)){
-          metric=expression.substr(0,expression.indexOf('{'));
-          let labelStr=expression.substr(expression.indexOf('{')+1,expression.indexOf('}')-expression.indexOf('{')-1);
-          let labelArr=labelStr.split(',');
-
-          if(labelArr.length>0){
-            labels=labelArr.map((item,index)=>{
-              let temp=item.split('=');
-              let label=temp[0]&&temp[0]!=''?temp[0]:null;
-              let value=temp[1]&&temp[1]!=''?temp[1]:null;
-              return label?{label:label,value:value}:null;
-            })
-          }
-
-        }else{
-            metric=expression;
-        }
-        this.showTableData=[];
-        let sourceData=JSON.parse(JSON.stringify(this.endpointQueryTabData))
-        sourceData=sourceData.filter((item)=>{
-          let metricName=item.metric.__name__;
-          if(metricName.indexOf(metric)==-1){
-            return false;
-          }
-
-          if(labels.length>0){
-            for(let i in labels){
-              let label=labels[i];
-              if(label&&label.label){
-                let value=item.metric[label.label];
-                let queryVal=label.value;
-                debugger
-                if(/^'.+'$/.test(queryVal)){
-                  queryVal=queryVal.substr(1,queryVal.length-2);
-                }
-                if(!value || value != queryVal){
-                  return false;
-                }
-              }else{
-                return true;
-              }
-            }
-          }
-
-          return true;
-        })
-        for(let i in sourceData){
-            let item=sourceData[i];
-            // {"metric":{"instance":"192.168.40.126:9100","__name__":"scrape_duration_seconds","module":"node_exporter","project":"kafka","asset":"192.168.40.126","job":"ed_1","dc":"dc5"},"value":[1580782176.522,"0.000560761"]}
-            let metricName=item.metric.__name__;
-            let temp=metricName;
-            delete item.metric.__name__;
-            temp+="{";
-            let hasLabel=true;
-            for (let key in item.metric){
-              let label=key;
-              let value=item.metric[label];
-              temp+=label +"='"+value+"',";
-            }
-            temp=temp.charAt(temp.length-1) == ","?temp.substr(0,temp.length-1):temp;
-            temp+="}";
-            if(hasLabel){
-              let edpQueryData={element:temp,value:item.value[1],type:(item.metric.type?item.metric.type:'2')};
-              this.showTableData.push(edpQueryData);
-            }
-        }
-      },
-      focusInput:function(){
-        let classVal=document.getElementById('elementQuery').parentElement.getAttribute("class");
-        classVal=classVal.replace('query-input-inactive','query-input-active');
-        document.getElementById('elementQuery').parentElement.setAttribute("class",classVal );
-        this.$refs.elementQuery.focus();
-      },
-      blurInput:function(){
-        if(!this.queryExpression || this.queryExpression == ''){
-          setTimeout(function(){
-            let classVal=document.getElementById('elementQuery').parentElement.getAttribute("class");
-            classVal=classVal.replace('query-input-active','query-input-inactive');
-            document.getElementById('elementQuery').parentElement.setAttribute("class",classVal );
-          },100)
-        }
-      },
-      clearInput:function(){
-        this.$refs.elementQuery.focus();
-      },
-      queryElementTips:async function(){
-        this.elementMetricDatas=[];
-        // this.$get("/metric/metadata?endpointId="+this.curEndpoint.id).then(response=> {
-        //   if (response.status === "success") {
-        //     this.elementMetricDatas=response.data.list;
-        //     console.log('metric tips')
-        //     console.log(this.elementMetricDatas)
-        //   }
-        // })
-        let response= await axios.get("/metric/metadata?endpointId="+this.curEndpoint.id);
-        if(response&&response.status === 200){
-          if(response.data.msg==='success'){
-            this.elementMetricDatas=response.data.data.list;
-          }
-        }
+      showEndpoint(endpoint) {
+        this.curEndpoint = endpoint;
+        this.targetTab = 'endpointQuery';
+        this.showSubList = true;
       },
       getStateContent:function(row){
         if(row){
@@ -1623,6 +851,17 @@
             return 'down'+'['+this.getStateErrorMsg(row)+']';
           }
         }
+      },
+      convertToDetail(obj) {
+        let detail = [];
+        detail.push({label: this.$t('project.project.project'), value: obj.project.name});
+        detail.push({label: this.$t("project.module.module"), value: obj.module.name});
+        detail.push({label: this.$t("asset.asset"), value: obj.asset.host});
+        detail.push({label: this.$t("project.endpoint.host"), value: obj.host});
+        detail.push({label: this.$t("project.endpoint.port"), value: obj.port});
+        detail.push({label: this.$t("project.endpoint.path"), value: obj.path});
+        detail.push({label: this.$t("project.endpoint.param"), value: obj.param});
+        return detail;
       },
       formatUpdateTime:function(date){
         let time=new Date(date);
@@ -1648,7 +887,6 @@
     created() {
       this.currentProject = this.$store.state.currentProject;
       this.getModuleList();
-      this.getMetricsTableData();
     },
     mounted() {
       //是否存在分页缓存
@@ -1657,7 +895,6 @@
         this.endpointPageObj.pageSize = pageSize
       }
 
-      this.getPanelData();
       setTimeout(()=>{
         this.getEndpointTableData();
       }, 200);
@@ -1667,9 +904,9 @@
         if (el._ps_) {
           el.addEventListener("ps-scroll-y", () => {
             if (el._ps_.scrollbarYTop > 50) {
-              this.showTopBtn1 = true;
+              this.showTopBtn = true;
             } else {
-              this.showTopBtn1 = false;
+              this.showTopBtn = false;
             }
           });
         }
@@ -1704,35 +941,21 @@
         this.getModuleList();
       },
       currentModule(n, o) {
-        this.metricPageObj.pageNo = 1;
         this.endpointPageObj.pageNo = 1;
         if (n && n.id) {
           this.getEndpointTableData();
-          this.getMetricsTableData();
         } else {
           this.endpointTableData = [];
-          this.metricsTableData = [];
         }
       },
       moduleListReloadWatch(n, o) {
         this.getModuleList(this.currentProject.id);
       },
-      curEndpoint:function(n,o){
-        // this.chartOptions.title.text=n.host+ " tsg disk"
-      },
-      queryExpression:function(n,o){
-        let temp=this;
-        setTimeout(function(){
-          temp.tableFilter();
-        },500)
-      },
-      tableShow(n) {
-        if (n == 1) {
+      showSubList(n) {
+        this.inTransform = n;
+        if (!n) {
           this.mainTableHeight = this.$tableHeight.normal; //重置table的高度
           this.isFullScreen = false;
-          //重置二级列表数据
-          this.selectedEndpoints=[];
-          this.showTableData = [];
           //移动分页组件的位置
           let paginationTop = document.querySelector(".pagination-top");
           let paginationBottom = document.querySelector(".pagination-bottom");
@@ -1748,13 +971,12 @@
             paginationBottom.appendChild(paginationTop.removeChild(document.querySelector(".pagination")));
           }, 210);
 
-          this.showTopBtn1 = false;
           // 主列表恢复全屏
           this.mainResizeShow = this.subResizeShow = true;
           document.querySelector('.main-list').style.height = "";
           //副列表高度清空
           document.querySelector(".sub-list").style.height = '';
-        } else if (n == 3) {
+        } else {
           this.mainTableHeight = this.$tableHeight.openSubList.mainList; //重置table高度
           //移动分页组件的位置
           let paginationTop = document.querySelector(".pagination-top");
@@ -1769,7 +991,13 @@
             }
           }, 210);
         }
-      }
+      },
+      curEndpoint: {
+        deep: true,
+        handler(n) {
+          this.endpointDetail = this.convertToDetail(n);
+        }
+      },
     },
     destroyed() {
       window.onresize = null;

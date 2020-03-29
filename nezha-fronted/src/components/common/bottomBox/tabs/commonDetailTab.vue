@@ -8,10 +8,13 @@
           <template v-else-if="from == 'promServer'">ID：{{obj.id}}</template>
           <template v-else-if="from == 'alertRule'">{{$t("alert.alertName")}}：{{obj.alertName}}</template>
           <template v-else-if="from == 'asset'">{{$t("asset.tableTitle.host")}}：{{obj.host}}</template>
+          <template v-else-if="from == 'endpoint'">{{$t("project.endpoint.endpointId")}}: {{obj.id}}</template>
         </div><div class="sub-list-tab sub-list-tab-active">{{$t("overall.detail")}}</div><template v-if="from == 'dc'">
           <div class="sub-list-tab" @click="changeTab('cabinet')">{{$t("config.dc.cabinets")}}</div>
         </template><template v-if="from == 'alertRule' || from == 'asset'">
           <div class="sub-list-tab" @click="changeTab('alertMessage')">{{$t("alert.message")}}</div>
+        </template><template v-if="from == 'endpoint'">
+          <div class="sub-list-tab" @click="changeTab('endpointQuery')">{{$t("overall.query")}}</div>
         </template>
       </div>
     </div>
