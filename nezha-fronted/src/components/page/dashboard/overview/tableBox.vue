@@ -44,6 +44,7 @@
               class="overview-table"
               :data="showData.table.tableData"
               v-scrollBar:el-table
+              tooltip-effect="light"
               height="100%"
               ref="dataTable"
             >
@@ -52,10 +53,11 @@
                 v-for="(item, index) in showData.table.tableLabel"
                 v-if="item.show"
                 :key="`col-${index}`"
+                :class-name="typeof item.showOverflowTooltip != 'undefined'&& item.showOverflowTooltip == false?'cell-tooltip':''"
                 :width="item.width"
                 :label="item.label"
                 :render-header="item.renderHeader"
-                show-overflow-tooltip
+                :show-overflow-tooltip="typeof item.showOverflowTooltip != 'undefined'?item.showOverflowTooltip:true"
                 min-width="90"
               >
                 <template slot-scope="scope" :column="item">
@@ -128,9 +130,33 @@
       endLoading(){
         this.$refs.loading.endLoading();
       },
-      layoutTable:function(){
-        this.$refs.dataTable.doLayout();
+      formatTableColumn:function(column,len=14){
+        let length=this.getLength(column);
+        if(length<=15){
+          return column;
+        }else{
+          let tempStr=column.substr(0,len);
+          if(this.getLength(tempStr) <= 15){
+            return tempStr+'';
+          }else{
+            return this.formatTableColumn(tempStr,len-1)
+          }
+        }
+      },
+      getLength(val) {
+        var str = new String(val);
+        var bytesCount = 0;
+        for (var i = 0 ,n = str.length; i < n; i++) {
+          var c = str.charCodeAt(i);
+          if ((c >= 0x0001 && c <= 0x007e) || (0xff60<=c && c<=0xff9f)) {
+            bytesCount += 1;
+          } else {
+            bytesCount += 2;
+          }
+        }
+        return bytesCount;
       }
+
     },
     mounted() {
     },
@@ -153,5 +179,12 @@
 <style>
   .overview-table th, .overview-table tr {
     background-color: #FCFCFC !important;
+  }
+  .cell-tooltip .cell{
+    white-space: nowrap;
+    min-width: 50px;
+    word-break: break-all;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 </style>

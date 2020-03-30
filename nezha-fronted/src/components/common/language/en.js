@@ -508,6 +508,9 @@ const en = {
       requiredMibFile:'mib file is required',
       vendor:'Vendor',
       type:'Type',
+    },
+    system:{
+      system:'System',
     }
   },
   alert: {

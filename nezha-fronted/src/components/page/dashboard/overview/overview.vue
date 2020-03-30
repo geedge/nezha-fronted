@@ -326,7 +326,12 @@
                   prop:'name',
                   show:true,
                   showPopover:true,
+                  showOverflowTooltip:false,
                   popover:[
+                    {
+                      label:this.$t('dashboard.overview.project.project'),
+                      prop:'name'
+                    },
                     {
                       label:this.$t('dashboard.overview.project.module'),
                       prop:'moduleNum'
@@ -442,7 +447,12 @@
                   prop:'name',
                   show:true,
                   showPopover:true,
+                  showOverflowTooltip:false,
                   popover:[
+                    {
+                      label:this.$t('dashboard.overview.dataCenter.dataCenter'),
+                      prop:'name'
+                    },
                     {
                       label:this.$t('dashboard.overview.asset.pingUp'),
                       prop:'endpointUp'
