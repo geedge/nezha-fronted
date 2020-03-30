@@ -48,6 +48,8 @@ const cn = {
     fileSelect:'选择',
     downloadButtonTitle:'下载',
     filePath:'文件路径',
+    closeTip:'是否断开所有连接，关闭窗口？',
+    remember:'记住我的决定',
   },
   pageSize: '条/页',
   login: {

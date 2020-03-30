@@ -80,6 +80,8 @@ const en = {
     fileSelect:'select',
     downloadButtonTitle:'Download',
     filePath:'file path',
+    closeTip:'All connections will be closed, are you sure you want to close the window?',
+    remember:'Remember my decision'
   },
   login: {
     username: 'Username',

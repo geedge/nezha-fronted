@@ -135,6 +135,30 @@
           </div>
         </div>
       </el-dialog>
+      <el-dialog :visible.sync="closeConfirmShow"  :modal-append-to-body='false' :show-close="true" width="500px" @close="cancleConfirm" class="nz-dialog" >
+        <div >
+          <div class="el-message-box__content">
+            <div class="el-message-box__container">
+              <div class="el-message-box__status el-icon-warning">
+              </div>
+              <div class="el-message-box__message">
+                <p>{{$t('webshell.closeTip')}}</p>
+              </div>
+            </div>
+          </div>
+          <div slot="footer" class="footer">
+            <div class="el-message-box__btns" style="text-align: right;margin-top: 5px;">
+              <el-checkbox v-model="closeRemember" style="padding-right: 132px;">{{$t('webshell.remember')}}</el-checkbox>
+              <button @click="cancleConfirm"   type="button" class="el-button el-button--default el-button--small">
+                <span>{{$t('tip.no')}}</span>
+              </button>
+              <button @click="closeShellWindow"  type="button" class="el-button el-button--default el-button--small el-button--primary ">
+                <span>{{$t('tip.yes')}}</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </el-dialog>
     </div>
   </div>
 </template>
@@ -153,6 +177,8 @@
       return {
         consoleShow:false,
         isFullScreen:false,
+        closeConfirmShow:false,
+        closeRemember:false,
         initConsoleHeight:300,//只读,初始化高度
         consoleHeight:300,//console高度
         resizeConsoleHeight: 300, //resize后的高度，用于记录最大化、最小化前的高度
@@ -239,13 +265,30 @@
 
       //可以做最小化的处理，点击窗口外的空白处会调用此方法
       closeConsole(){
+        //弹窗询问是否关闭所有链接，关闭窗口？复选框：记住我的选择（用户勾选且选择yes 后，保存到localstorage，之后关闭不再提醒）
+        //localStorage.getItem('nz-language') ? localStorage.getItem('nz-language') : 'en', //en/cn
+        //localStorage.setItem('nz-language', this.lang);
+        let remember = localStorage.getItem('close-shell-remember') ? localStorage.getItem('close-shell-remember') : false;
+        if(remember){
+          this.closeShellWindow();
+        }else {
+          this.closeConfirmShow = true;
+        }
+      },
+      cancleConfirm(){
+        this.closeConfirmShow = false;
+      },
+      closeShellWindow(){
+        if(this.closeRemember){// remember me
+          localStorage.setItem('close-shell-remember', this.closeRemember);
+        }
         //关闭所有连接
         this.editableTabs.forEach((tab, index) => {
           this.$refs['console' + index][0].closeSocket();
         });
         this.editableTabs = [];
         this.editableTabsValue= '-1',//当前显示的consol
-        this.tabIndex = -1
+          this.tabIndex = -1
 
         this.consoleShow = false;
         this.isFullScreen = false;
@@ -257,6 +300,7 @@
         this.$store.commit('closeConsole');
 
         window.removeEventListener('resize',this.windowChange);
+        this.closeConfirmShow = false;
       },
       handleClick(){
 
