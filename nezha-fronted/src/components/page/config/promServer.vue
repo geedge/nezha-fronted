@@ -12,14 +12,17 @@
           {{$t('config.account.account')}}
         </div>
         <div class="sidebar-info-item sidebar-info-item-active">{{$t('config.promServer.promServerList')}}</div>
-        <div class="sidebar-info-item" @click="jumpTo('dc')" id="account-jump-dc">
+        <div class="sidebar-info-item" @click="jumpTo('dc')" id="prom-jump-dc">
           {{$t('config.dc.dc')}}
         </div>
-        <div class="sidebar-info-item" @click="jumpTo('model')" id="account-jump-model">
+        <div class="sidebar-info-item" @click="jumpTo('model')" id="prom-jump-model">
           {{$t('config.model.model')}}
         </div>
-        <div class="sidebar-info-item" @click="jumpTo('mib')" id="account-jump-mib">
+        <div class="sidebar-info-item" @click="jumpTo('mib')" id="prom-jump-mib">
           {{$t('config.mib.mib')}}
+        </div>
+        <div class="sidebar-info-item" @click="jumpTo('system')" id="prom-jump-system">
+          {{$t('config.system.system')}}
         </div>
       </div>
     </div>

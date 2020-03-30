@@ -16,7 +16,6 @@
   import loading from "../../../common/loading";
   import uuidv1 from "uuid/v1";
   import chartConfig from './chartConfig'
-  import json from "./geoJson";
   export default {
     name: "chart",
     components:{
@@ -25,6 +24,7 @@
     props:{
       chartTitle:{type:String},
       chartType:{type:String,default:'line'},
+      map:{}
     },
     data(){
       return {
@@ -107,8 +107,13 @@
         }
         this.series=series;
         if(this.chartType == 'map'){
-          echarts.registerMap('map',json);
-          chartConfig.setMap('map');
+          if(this.map){
+            echarts.registerMap(this.map.name,this.map.geoJson);
+            chartConfig.setMap(this.map.name);
+          }else{
+            console.error('map chart need map data');
+          }
+
         }
         this.option=chartConfig.getOption(this.chartType);
         this.$set(this.option,'series',this.series);

@@ -21,6 +21,9 @@
         <div class="sidebar-info-item" @click="jumpTo('mib')" id="account-jump-mib">
           {{$t('config.mib.mib')}}
         </div>
+        <div class="sidebar-info-item" @click="jumpTo('system')" id="account-jump-system">
+          {{$t('config.system.system')}}
+        </div>
       </div>
     </div>
     <div class="content-right">

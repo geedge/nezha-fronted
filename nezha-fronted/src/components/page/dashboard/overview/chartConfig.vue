@@ -1,6 +1,5 @@
 <script>
     import chartDataFormat from "../../../charts/chartDataFormat";
-    import json from './geoJson'
     const commonOption={
       title:{
         show:false,

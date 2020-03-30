@@ -308,12 +308,8 @@
         deep:true,
         handler(n, o) {
           this.currentMib = Object.assign({},n);
-          if(this.currentMib.modelsDetail && this.currentMib.modelsDetail.length>0){
-            for(let model of this.currentMib.modelsDetail){
-              model.label=model.name;
-              model.value=model.id;
-              this.selectedModels.push(model);
-            }
+          if(this.currentMib.models){
+            this.selectedModels=this.currentMib.models.split(',');
           }else{
             this.selectedModels=[];
           }

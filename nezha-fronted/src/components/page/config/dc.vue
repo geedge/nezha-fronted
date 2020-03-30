@@ -42,14 +42,17 @@
           <div class="sidebar-info-item" @click="jumpTo('promServer')" id="account-jump-promserver">
             {{$t('config.promServer.promServerList')}}
           </div>
-          <div class="sidebar-info-item sidebar-info-item-active"  id="account-jump-dc">
+          <div class="sidebar-info-item sidebar-info-item-active"  id="dc-jump-dc">
             {{$t('config.dc.dc')}}
           </div>
-          <div class="sidebar-info-item" @click="jumpTo('model')" id="account-jump-model">
+          <div class="sidebar-info-item" @click="jumpTo('model')" id="dc-jump-model">
             {{$t('config.model.model')}}
           </div>
-          <div class="sidebar-info-item" @click="jumpTo('mib')" id="account-jump-mib">
+          <div class="sidebar-info-item" @click="jumpTo('mib')" id="dc-jump-mib">
             {{$t('config.mib.mib')}}
+          </div>
+          <div class="sidebar-info-item" @click="jumpTo('system')" id="dc-jump-system">
+            {{$t('config.system.system')}}
           </div>
         </div>
       </div>

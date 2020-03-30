@@ -47,7 +47,7 @@
                       <table-box :pop-data="dataCenterStatData" ref="dataCenterTab" ></table-box>
                     </div>
                     <div style="flex: 3;">
-                      <chart-box chart-title="DataCenter" chart-type="map" ref="dataCenterMap"></chart-box>
+                      <chart-box chart-title="DataCenter" chart-type="map" :map="map" ref="dataCenterMap"></chart-box>
                     </div>
                   </div>
                 </div>
@@ -93,7 +93,6 @@
   import tableBox from "./tableBox";
   import chart from "./chart";
   import axios from 'axios';
-  import json from './geoJson'
   export default {
     name: "overview",
     components:{
@@ -130,6 +129,7 @@
         sysTime:'',
         sysDate:'',
         sysWeek:'',
+        map:null,
       }
     },
     created() {
@@ -144,7 +144,8 @@
         this.topNChange();
         this.queryAlertRuleStatData();
         this.queryAlertTrendData();
-        this.queryDataCenterMapData();
+        // this.queryDataCenterMapData();
+        this.queryMapChartGeoJson();
       },
       queryAssetData:function(){
         this.$refs.assetTab.startLoading();
@@ -758,6 +759,20 @@
           }
         })
       },
+      queryMapChartGeoJson:function(){
+        this.$get('/sysConfig?paramKey=geoJson').then(response=>{
+          if(response.code == 200){
+            this.map={
+              name:'Kazakhstan',
+              geoJson:response.data.paramKey
+            }
+            setTimeout(()=>{this.queryDataCenterMapData();},200)
+          }else{
+            console.error('loading map info faild')
+          }
+        })
+
+      },
       queryDataCenterMapData:function(){
         this.dataCenterMapSeries=[{
           name: 'DataCenter',
@@ -777,9 +792,9 @@
             }
           },
           data:[
-            {name:'Alabama', value: [-85.058981, 32.13674,40000.34]},
-            {name:'xxx', value: [-71.799309, 41.414677,38000]},
-            {name:'Arizona', value:[-114.470151, 32.843265,18000]},
+            {name:'Astana', value: [5591, 8316,56]},
+            {name:'Atyrau', value: [762,6740,88]},
+            {name:'Almaty', value:[6760, 5586,102]},
           ]
         }]
         this.$refs.dataCenterMap.setSeries(this.dataCenterMapSeries);
@@ -965,7 +980,6 @@
       this.initData();
       window.onresize = () => {
         setTimeout(()=>{this.isFullScreen=this.judgeFullScreen();},200)
-        console.log('resize')
         //解决flex排版错乱问题
         document.querySelectorAll(".content-row-box").forEach((item,index)=>{
           item.style.display = "none";

@@ -65,7 +65,9 @@ const en = {
       failed:'Failed',
       success:'Success',
       failedDetail:'Failed Detail'
-    }
+    },
+    reset:'Reset',
+    submit:'Submit'
   },
   pageSize: '/page',
   webshell:{
@@ -235,11 +237,13 @@ const en = {
   validate: { //校验规则
     required: 'Required',//'必填项'
     number: 'Numberic',//'必须是数字'
+    positiveInteger:'Positive Integer',
     email:'Invalid email',//'不合法的E-mail地址'
     tel:'Invalid phone number',//'不合法的电话号码'
     host:'Invalid IP',//'不合法的IP'
     fileSize:'文件过大',//File exceed max size.
     port:'Invalid Port',
+    url:'Invalid URL',
     config: {
       account: {
 
@@ -512,6 +516,56 @@ const en = {
     },
     system:{
       system:'System',
+      basic:{
+        basic:'Basic',
+        alertApi:'Alert API',
+        assetPingSwith:'Asset Ping',
+        assetPingInterval:'Interval',
+        exporterTarget:'Exporter Path',
+        scrapeInterval:'Scrape Interval',
+        storageRetention:'Local Retention',
+        systemName:'System Name',
+        curUrl:'Current URL'
+      },
+      email:{
+        email:'Email',
+        smtpHost:'SMTP Host',
+        smtpPort:'SMTP Port',
+        smtpAccount:'SMTP Account',
+        smtpPwd:'SMTP Password',
+        sendAccount:'Send Account',
+        testAccount:'Test Account',
+        useSSL:'SSL',
+        useTLS:'TLS',
+        testConnection:'Test Connection',
+        pwdTip:'Tip:Some email providers need to enter token',
+        sendAccountTip:'Tip:The SMTP account is used as the sending account by default',
+        testAccountTip:'Tip:Used only as test mail recipient',
+        sslTip:'If the SMTP port is 465, you usually need to enable SSL',
+        tlsTip:'If the SMTP port is 587, you usually need to enable TLS'
+      },
+      terminal:{
+        terminal:'Terminal',
+        terminalNum:'Max Terminal Number'
+      },
+      ldap:{
+        ldap:'LDAP',
+        address:'LDAP Address',
+        dn:'Bind DN',
+        pwd:'Password',
+        ou:'User OU',
+        filter:'User Filter',
+        map:'LDAP Field Mapping',
+        active:'LDAP Authentication'
+      },
+      reset:{
+        reset:'Reset',
+        type:'Type',
+        pwd:'Password',
+        metric:'metric',
+        alert:'alert',
+        sysConfig:'system config',
+      }
     }
   },
   alert: {

@@ -21,6 +21,9 @@
         <div class="sidebar-info-item sidebar-info-item-active" id="mib-jump-mib">
           {{$t('config.mib.mib')}}
         </div>
+        <div class="sidebar-info-item" @click="jumpTo('system')" id="mib-jump-system">
+          {{$t('config.system.system')}}
+        </div>
       </div>
     </div>
     <div class="content-right">
@@ -35,8 +38,8 @@
           </button>
         </div>
       </div>
-      <el-table :data="tableData" border :height="$tableHeight.normal" style="width: 100%;" ref="mibTable" class="nz-table" v-scrollBar:el-table>
-        <el-table-column :resizable="false" v-for="(item, index) in tablelable" v-if="item.show" :width="item.width"
+      <el-table :data="tableData" border :height="$tableHeight.normal" style="width: 100%;" ref="mibTable" class="nz-table mib-table" v-scrollBar:el-table>
+        <el-table-column :resizable="false" v-for="(item, index) in tablelable" v-if="item.show" :width="item.width" :class-name="item.prop == 'modelsDetail'?'detail-column':''"
                          :key="`col-${index}`" :label="item.label">
           <template slot-scope="scope" :column="item">
             <template v-if="item.prop == 'updateUser'" >{{scope.row[item.prop].name}}</template>
@@ -44,9 +47,9 @@
               <span class="clickable" @click="downloadMib(scope.row.id)">{{scope.row[item.prop]}}</span>
             </template>
             <template v-else-if="item.prop == 'modelsDetail' && scope.row['modelsDetail'] && scope.row['modelsDetail'].length >0">
-              <div style="max-height: 100px">
+              <div style="height: 100px">
                 <el-scrollbar style="height: 100%">
-                  <span v-for="(n,i) in scope.row['modelsDetail']" :key="n.name+'-'+n.id+'-'+i" >
+                  <div v-for="(n,i) in scope.row['modelsDetail']" :key="n.name+'-'+n.id+'-'+i" >
                   <el-popover trigger="hover" placement="right" >
                     <div>
                       <div>
@@ -63,14 +66,10 @@
                       </div>
                     </div>
                     <template slot="reference">
-                      <template v-if="i < scope.row['modelsDetail'].length-1">
-                        {{n.name}}
-                        <el-divider></el-divider>
-                      </template>
-                      <template v-else>{{n.name}}</template>
+                        <div  class="detail-item-content">{{n.name}}</div>
                     </template>
                   </el-popover>
-                </span>
+                </div>
               </el-scrollbar>
               </div>
             </template>
@@ -360,3 +359,19 @@
     }
   }
 </script>
+<style >
+  .mib-table .el-divider--horizontal{
+    margin:2px 0 !important;
+  }
+  .mib-table td .cell{
+    min-height: 80px !important;
+    padding-bottom: 3px;
+  }
+  .mib-table td .cell .detail-item-content{
+    width:fit-content;
+    width:-webkit-fit-content;
+    width:-moz-fit-content;
+    height: 20px;
+    line-height: 20px;
+  }
+</style>

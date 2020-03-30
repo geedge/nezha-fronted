@@ -54,3 +54,30 @@ export function noSpecialChar(rule, value, callback){
     }
   }, 100)
 }
+
+export function positiveInteger(rule, value, callback){
+  setTimeout(() => {
+    if(Number(value) == 'NaN'){
+      callback(new Error(vm.$t('validate.number')))
+    }else{
+      if(Number(value) >=0 ){
+        callback();
+      }else{
+        callback(new Error(vm.$t('validate.positiveInteger')))
+      }
+    }
+  }, 100)
+}
+
+export function url(rule, value, callback){
+  let urlReg='';
+  let reg=new RegExp(urlReg)
+  setTimeout(() => {
+    if (reg.test(value)) {
+      callback()
+    } else {
+      callback(new Error(vm.$t('validate.url')))
+    }
+  }, 100)
+}
+

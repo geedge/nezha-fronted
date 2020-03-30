@@ -18,8 +18,11 @@
         <div class="sidebar-info-item sidebar-info-item-active" id="model-jump-model">
           {{$t('config.model.model')}}
         </div>
-        <div class="sidebar-info-item" @click="jumpTo('mib')" id="account-jump-mib">
+        <div class="sidebar-info-item" @click="jumpTo('mib')" id="model-jump-mib">
           {{$t('config.mib.mib')}}
+        </div>
+        <div class="sidebar-info-item" @click="jumpTo('system')" id="model-jump-system">
+          {{$t('config.system.system')}}
         </div>
       </div>
     </div>
