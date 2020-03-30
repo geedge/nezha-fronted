@@ -178,7 +178,7 @@ const en = {
       saveChartToPanel:"Save chart to panel"//Save chart to panel.
     },
     metricPreview:{
-      title:'Metric preview',//'指标预览'
+      title:'Explore',
     },
     refresh:'Refresh',//'刷新'
     edit:'Edit',//'编辑'

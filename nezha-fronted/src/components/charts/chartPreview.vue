@@ -232,8 +232,7 @@
     methods: {
       // 全屏查看
       show(chartInfo) {
-        this.searchTime[0] = new Date().setHours(new Date().getHours()-1);
-        this.searchTime[1] =new Date();
+        this.searchTime = [new Date().setHours(new Date().getHours()-1),new Date()];
         this.chart=chartInfo;
         let chartType= chartInfo.type;
         let chartContainerId = 'chartEchartPreview'
@@ -267,7 +266,7 @@
           chartDiv.style.height = `${height-this.chartSpaceHeight-this.titleHeight}px`;
           const addChartBox = document.querySelector('.right-box-add-chart');
           //this.oldChartBoxCss = addChartBox.style.cssText;
-          addChartBox.style.cssText =  'z-index:2003 !important';
+          addChartBox.style.cssText =  'z-index:1500 !important';
           if(chartType==='table'){
             const tableBox = document.getElementById('tableContainer');
             tableBox.style.height = `${height-this.titleHeight-this.pageHeight}px`;//-75-32+25
@@ -579,45 +578,17 @@
               //提示框大小
               var boxWidth = size.contentSize[0];
               var boxHeight = size.contentSize[1];
-              if (chartSite === 'local') { // 本地显示
-                let chartDom = document.getElementById(chartInfo.title+"_"+chartInfo.id);
-                if(chartDom){
-                  let parTop = document.getElementById(chartInfo.title+"_"+chartInfo.id).offsetTop;
-                  let parleft = document.getElementById(chartInfo.title+"_"+chartInfo.id).offsetLeft;
-
-                  let parent = document.getElementById('tableList');
-                  let parClientHeight = parent.clientHeight;//可视高度
-                  let parClientWidth = parent.clientWidth;//可视宽度
-                  let parScrollTop = parent.scrollTop;
-                  if((parClientWidth-pointX-parleft-20)>=boxWidth){//说明鼠标在左边放不下提示框
-                    x=pointX+10;
-                  }else{
-                    x = pointX - boxWidth;
-                  }
-                  if((parClientHeight-pointY-(parTop-parScrollTop)-20)>=boxHeight){//说明鼠标上面放不下提示框
-                    y = pointY+10;
-                  }else {
-                    y = pointY-boxHeight;
-                  }
-                  return [x,y];
-                }else {//preview page
-                  x = pointX - boxWidth;
-                  y = pointY+10;
-                  return [x,y];
-                }
-              }else {
-                if(pointX<(viewWidth/2)){//说明鼠标在左边放不下提示框
-                  x=pointX+10;
-                }else{
-                  x = pointX - boxWidth;
-                }
-                if(pointY<(viewHeight/2)){//说明鼠标上面放不下提示框
-                  y = pointY+10;
-                }else {
-                  y = pointY-boxHeight;
-                }
-                return [x,y];
+              if(pointX<(viewWidth/2)){//说明鼠标在左边放不下提示框
+                x=pointX+10;
+              }else{
+                x = pointX - boxWidth;
               }
+              if(pointY<(viewHeight/2)){//说明鼠标上面放不下提示框
+                y = pointY+10;
+              }else {
+                y = pointY-boxHeight;
+              }
+              return [x,y];
             },
             formatter:function(params){
               //display:inline-block;white-space:nowrap;overflow-x:hidden;text-overflow:ellipsis;

@@ -139,7 +139,7 @@ const cn = {
       saveChartToPanel:"保存图表到看板"
     },
     metricPreview:{
-      title:'指标预览',
+      title:'探索',
     },
     refresh:'刷新',
     edit:'编辑',
