@@ -24,7 +24,9 @@
       </div>
     </div>
     <div class="content-right">
+      <!-- 主页面 -->
       <div class="main-list" :class="{'main-list-with-sub': showSubList}">
+        <!-- 顶部工具栏 -->
         <div class="top-tools" v-show="mainResizeShow">
           <div class="top-tool-main-right" :class="{'top-tool-main-right-to-left': showSubList}">
             <div class="top-tool-search">
@@ -35,19 +37,9 @@
               <i class="nz-icon-create-square nz-icon"></i>
             </button>
           </div>
+          <!-- 顶部分页组件，当打开底部上滑框时出现 -->
           <div class="pagination-top pagination-top-hide display-none"></div>
         </div>
-      <!--<div class="top-tools">
-        <div class="top-tool-main-right">
-          <div class="top-tool-search margin-r-20">
-            <search-input :searchMsg="searchMsg" @search="search"></search-input>
-          </div>
-          <button type="button" @click="toAdd"  :title="$t('overall.createAccount')"
-                  class="nz-btn nz-btn-size-normal nz-btn-style-light" id="account-add">
-                  <i class="nz-icon-create-square nz-icon"></i>
-          </button>
-        </div>
-      </div>-->
         <el-table
           class="nz-table"
           :data="tableData"
@@ -107,6 +99,7 @@
         </div>
        <button class="to-top" v-show="showTopBtn" @click="$toTop"><i class="nz-icon nz-icon-top"></i></button>
       </div>
+      <!-- 底部上滑框 -->
       <bottom-box v-if="showSubList" :show-sub-list="showSubList" :subResizeShow="subResizeShow" :obj="user" :isFullScreen="isFullScreen" :from="'account'" :targetTab="targetTab" :detail="userDetail"
                   @closeSubList="showSubList = false" @fullScreen="fullScreen" @exitFullScreen="exitFullScreen" @listResize="listResize" ></bottom-box>
     </div>
@@ -153,12 +146,6 @@
               <el-input v-if="rightBox.isEdit" type="text" placeholder="" v-model="user.email" size="small"></el-input>
               <div v-if="!rightBox.isEdit" class="right-box-form-content-txt">{{user.email}}</div>
             </el-form-item>
-            <!--language-->
-            <!--<el-form-item :label="$t('config.account.language')" prop="language">
-              <el-radio v-model="user.lang" label="en" :disabled="user.lang != 'en'">English</el-radio>
-              <el-radio v-model="user.lang" label="zh" :disabled="user.lang != 'zh'">中文</el-radio>
-              <el-radio v-model="user.lang" label="ru" disabled>русский（{{$t('config.account.notCurrentlySupport')}}）</el-radio>
-            </el-form-item>-->
             <!--enable-->
             <el-form-item :label="$t('config.account.enable')">
               <el-switch v-model="user.status" active-color="#ee9d3f" :disabled="!rightBox.isEdit || isCurrentUser(user.username)" active-value="1"
@@ -184,6 +171,7 @@
         </div>
       </div>
     </transition>
+    <!-- 自定义table列 -->
     <element-set
       v-clickoutside="elementsetHide"
       :dropCol="dropCol"
@@ -205,13 +193,13 @@
         showElementSet: false, //控制自定义列的弹框
         inTransform: false, //搜索框相关，搜索条件下拉框是否在transform里
         mainResizeShow: true, //dom高度改变时部分内容是否展示
-        subResizeShow: true,
-        isFullScreen: false,
+        subResizeShow: true, //二级列表拖动时，用于控制主列表内容展示
+        isFullScreen: false, //是否全屏
         userDetail: [],
         //底部上滑框相关end
 
         tableId: 'accountTable', //需要分页的table的id，用于记录每页数量
-        showTopBtn: false,
+        showTopBtn: false, //是否显示回到顶部按钮
         rightBox: { //弹出框相关
           show: false,
           isEdit: false, //false查看，true编辑
@@ -226,7 +214,7 @@
           receiver: [],
           lang: ''
         },
-        pageObj: {
+        pageObj: { //分页对象
           pageNo: 1,
           pageSize: 20,
           total: 0
@@ -264,10 +252,10 @@
             show: true,
             width: 120
           }
-        ],
-        tablelable: [],
-        dropCol: [],
-        rules: {
+        ], //原table列
+        tablelable: [], //实际显示的列
+        dropCol: [], //用于element-set组件显示
+        rules: { //表单校验规则
           username: [
             {required: true, message: this.$t('validate.required'), trigger: 'blur'}
           ],
