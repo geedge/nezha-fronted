@@ -130,7 +130,7 @@
               <div class="right-box-form-btns" v-if="rightBox.isEdit">
                 <button style="display: none;">第一个button会出现意料之外的hover样式，找不到原因，只好加个不可见的button规避问题</button>
                 <button type="button" id="edit-clear-all" @click="clearAllParam" class="nz-btn nz-btn-size-normal nz-btn-style-light">
-                  <span class="top-tool-btn-txt">{{$t('overall.clearAll')}}</span>
+                  <span class="top-tool-btn-txt">{{$t('overall.clear')}}</span>
                 </button>
                 <button type="button" id="edit-add-param" @click="addParam" class="nz-btn nz-btn-size-normal nz-btn-style-normal">
                   <span class="top-tool-btn-txt">{{$t('overall.add')}}</span>
@@ -234,6 +234,7 @@
       esc() {
         this.rightBox.show = false;
         this.subBox.show = false;
+        this.$emit("close");
       },
 
       /*关闭子弹框*/

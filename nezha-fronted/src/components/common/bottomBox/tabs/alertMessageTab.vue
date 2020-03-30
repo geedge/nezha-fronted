@@ -7,7 +7,8 @@
           <template v-if="from == 'alertRule'">{{$t("alert.alertName")}}：{{obj.alertName}}</template>
         </div><div
         class="sub-list-tab" @click="changeTab('detail')">{{$t("overall.detail")}}</div><div
-        class="sub-list-tab sub-list-tab-active">{{$t("alert.message")}}</div>
+        class="sub-list-tab sub-list-tab-active">{{$t("asset.tableTitle.alerts")}}</div><div v-if="from == 'asset'"
+        class="sub-list-tab" @click="changeTab('endpoint')">{{$t("asset.tableTitle.modules")}}</div>
       </div>
       <div class="top-tool-right">
         <div class="top-tool-search">
@@ -39,7 +40,7 @@
         <template slot-scope="scope" :column="item">
           <template v-if="item.prop == 'alertRule'">
             <div class="too-long-split" :id="'view-rule-'+scope.row[item.prop].id"
-                 v-if="scope.row[item.prop].alertName">{{scope.row[item.prop].alertName}}</div>
+                 v-if="scope.row[item.prop].alertName">{{scope.row[item.prop].alertName + ' ' + $t('overall.active')}}</div>
             <template v-else>-</template>
           </template>
           <div v-else-if="item.prop == 'type'" class="content-right-options">
@@ -64,7 +65,7 @@
             <span v-if="(scope.row['type'] == 1 || scope.row['type'] == 2) && scope.row[item.prop]" class="link too-long-split"
                   @click="viewAlertType(scope.row['type'],scope.row[item.prop])" style="max-width: 125px;"
                   :id="'link-obj-'+scope.row['type']+'-'+scope.row[item.prop].id">{{scope.row[item.prop].name}}</span>
-            <span v-else-if="scope.row['type'] == 3 && scope.row[item.prop]" class="link"
+            <span v-else-if="scope.row['type'] == 3 && scope.row[item.prop]" :class="{'link': from == 'alertRule'}"
                   @click="viewAlertType(scope.row['type'],scope.row[item.prop].id)"
                   :id="'link-obj-'+scope.row['type']+'-'+scope.row[item.prop].id">{{scope.row[item.prop].host}}</span>
             <span v-else>-</span>

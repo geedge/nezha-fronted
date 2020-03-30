@@ -23,6 +23,8 @@
       <cabinet-tab v-show="subResizeShow" v-if="from == 'dc' && targetTab == 'cabinet'" :obj="obj" @changeTab="changeTab"></cabinet-tab>
       <!--告警信息-->
       <alert-message-tab v-show="subResizeShow" v-if="((from == 'alertRule' || from == 'asset') && targetTab == 'alertMessage')" :from="from" :obj="obj" @changeTab="changeTab"></alert-message-tab>
+      <!--asset页的endpoint列表-->
+      <endpoint-tab v-show="subResizeShow" v-if="from == 'asset' && targetTab == 'endpoint'" :from="from" :obj="obj" @changeTab="changeTab"></endpoint-tab>
       <!--endpoint页的asset详情-->
       <common-detail-tab v-show="subResizeShow" :obj="obj" :from="from" :detail="assetDetail" :targetTab="targetTab"
                          v-if="targetTab == 'assetDetail' && from == 'endpoint'"
@@ -39,6 +41,7 @@
   import cabinetTab from "./tabs/cabinetTab";
   import alertMessageTab from "./tabs/alertMessageTab";
   import endpointQueryTab from "./tabs/endpointQueryTab";
+  import endpointTab from "./tabs/endpointTab";
 
   export default {
     name: "cabinetBox",
@@ -47,6 +50,7 @@
       'cabinet-tab': cabinetTab,
       'alert-message-tab': alertMessageTab,
       'endpoint-query-tab': endpointQueryTab,
+      'endpoint-tab': endpointTab,
     },
     props: {
       isFullScreen: false, //是否全屏

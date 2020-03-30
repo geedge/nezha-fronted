@@ -73,7 +73,7 @@
                 <span v-else>-</span>
               </template>
               <template v-else-if="item.prop == 'alertNum'">
-                <span class="link" @click="queryMessage(scope.row)">{{scope.row.alertNum}}</span>
+                <span class="link" @click="queryMessage(scope.row)">{{scope.row.alertNum}}<template v-if="scope.row.alertNum && scope.row.alertNum > 0">{{' ' + $t('overall.active')}}</template></span>
               </template>
               <span v-else-if="scope.row[item.prop]">{{scope.row[item.prop]}}</span>
               <template v-else>-</template>

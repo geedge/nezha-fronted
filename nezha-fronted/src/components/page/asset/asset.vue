@@ -101,26 +101,25 @@
                 </el-popover>
               </div>
               <template v-if="item.prop=='Module'">
-                <template v-if="scope.row.moduleNum > 0" >
+                <span class="link" @click="showEndpoint(scope.row)">{{scope.row.endpointNum}}</span>
+                <!--<template v-if="scope.row.moduleNum > 0" >
                   <endpoint-status-pop :asset-id="scope.row.id" :ref="'endpointPop' + scope.row.id">
                     <template v-slot:optionZone>
                     <span class="clickable">{{scope.row.endpointNum}}</span>
                   </template>
                   </endpoint-status-pop>
-                  <!--<module-list-pop :asset-id="scope.row.id + ''" @openModuleBox="openModuleBox" placement="left" :ref="'moduleListPop' + scope.row.id">
+                  <module-list-pop :asset-id="scope.row.id + ''" @openModuleBox="openModuleBox" placement="left" :ref="'moduleListPop' + scope.row.id">
                     <template v-slot:optionZone>
   &lt;!&ndash;                    <button class="nz-btn nz-btn-size-normal nz-btn-style-light nz-btn-min-width-75">{{scope.row.moduleNum}}</button>&ndash;&gt;
                         <span class="clickable">{{scope.row.moduleNum}}</span>
                     </template>
-                  </module-list-pop>-->
+                  </module-list-pop>
                 </template>
-  <!--              <button type="button" v-else class="nz-btn nz-btn-size-normal nz-btn-style-light nz-btn-min-width-75 nz-btn-disabled">{{scope.row.moduleNum}}</button>-->
-                <span v-else class="unclickable">{{scope.row.endpointNum}}</span>
+  &lt;!&ndash;              <button type="button" v-else class="nz-btn nz-btn-size-normal nz-btn-style-light nz-btn-min-width-75 nz-btn-disabled">{{scope.row.moduleNum}}</button>&ndash;&gt;
+                <span v-else class="unclickable">{{scope.row.endpointNum}}</span>-->
               </template>
               <template v-if="item.prop=='Alert'">
-  <!--              <button type="button" v-if="scope.row.alertNum > 0" id="'asset-alerts-'+scope.row.id" @click="jumpToAlertMsg(scope.row.id)" class="nz-btn nz-btn-size-normal nz-btn-style-light nz-btn-min-width-75">{{scope.row.alertNum}}</button>-->
-  <!--              <button type="button" v-else class="nz-btn nz-btn-size-normal nz-btn-style-light nz-btn-min-width-75 nz-btn-disabled">{{scope.row.alertNum}}</button>-->
-                <span :id="'asset-alerts-'+scope.row.id" @click="jumpToAlertMsg(scope.row)" class="link">{{scope.row.alertNum}}</span>
+                <span :id="'asset-alerts-'+scope.row.id" @click="jumpToAlertMsg(scope.row)" class="link">{{scope.row.alertNum}}<template v-if="scope.row.alertNum && scope.row.alertNum > 0">{{' ' + $t('overall.active')}}</template></span>
               </template>
               <div v-if="item.prop=='dataCenter'">
   <!--              <idc-config-box :post-idc="JSON.parse(JSON.stringify(scope.row.idc))" ref="idcConfigBox" :is-edit="false" placement="left"  @after="getAssetData(null, true)" :button-class="'checkbox-edit'" :user-data="idcUserData">-->
@@ -667,6 +666,11 @@
         } else {
           return false;
         }
+      },
+      showEndpoint(asset) {
+        this.alertMsgAsset = Object.assign({}, asset);
+        this.targetTab = "endpoint";
+        this.showSubList = true;
       },
       tagShow(data, id, type) {
         if (data === 'showAdd') {

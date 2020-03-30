@@ -59,6 +59,7 @@ const en = {
     importTip:'only allowed xlsx/xls file',
     upload:'upload',
     template:'Template',
+    active: 'active',
     result:{
       total:'Total',
       failed:'Failed',

@@ -742,7 +742,7 @@
 
       dateFormat(time) {
         if (!time) {
-          return;
+          return '-';
         }
         let date = new Date(time * 1000);
         let year = date.getFullYear();
