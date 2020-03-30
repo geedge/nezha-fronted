@@ -10,7 +10,8 @@
       <div class="sub-list-tabs">
         <div class="sub-list-tab-title">{{$t("project.endpoint.endpointId")}}: {{currentEndpoint ? currentEndpoint.id : ''}}</div><div
         class="sub-list-tab" @click="changeTab('detail')">{{$t("overall.detail")}}</div><div
-        class="sub-list-tab sub-list-tab-active">{{$t("overall.query")}}</div>
+        class="sub-list-tab sub-list-tab-active">{{$t("overall.query")}}</div><div
+        class="sub-list-tab" v-if="from == 'endpoint'" @click="changeTab('assetDetail')">{{$t("project.endpoint.asset")}}</div>
       </div>
       <div class="top-tool-right">
         <div class="top-tool-search margin-r-20">
@@ -59,7 +60,7 @@
       :height="$tableHeight.noPagination"
       @selection-change="selectChange"
       ref="endpointQueryTable"
-      style="width: 100%; margin-top: 5px;">
+      style="width: 100%;">
       <el-table-column
         :resizable="false"
         type="selection"
@@ -156,6 +157,7 @@
     },
     props: {
       obj: Object, //关联的实体对象
+      from: String,
     },
     data() {
       let temp = this;

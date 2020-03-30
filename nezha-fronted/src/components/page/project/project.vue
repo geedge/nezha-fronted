@@ -86,7 +86,7 @@
             min-width="110px"
           >
             <template slot-scope="scope" :column="item">
-              <span v-if="item.prop == 'asset' && scope.row[item.prop]" class="link" @click="viewAsset(scope.row[item.prop].id)">{{scope.row[item.prop].host}}</span>
+              <span v-if="item.prop == 'asset' && scope.row[item.prop]" class="link" @click="viewAsset(scope.row)">{{scope.row[item.prop].host}}</span>
               <span v-else-if="item.prop == 'param'">
                 <template v-if="scope.row.paramObj">
                   <span v-for="(p,i) in scope.row.paramObj">{{p.key}}={{p.value}}<span v-if="i < scope.row.paramObj.length-1">，</span></span>
@@ -125,7 +125,8 @@
         </div>
         <button class="to-top" v-show="showTopBtn && mainResizeShow" @click="$toTop('ps', 0)"><i class="nz-icon nz-icon-top"></i></button>
       </div>
-      <bottom-box v-if="showSubList" :show-sub-list="showSubList" :subResizeShow="subResizeShow" :obj="curEndpoint" :isFullScreen="isFullScreen" :from="'endpoint'" :targetTab="targetTab" :detail="endpointDetail"
+      <bottom-box v-if="showSubList" :show-sub-list="showSubList" :subResizeShow="subResizeShow" :isFullScreen="isFullScreen"
+                  :from="'endpoint'" :targetTab="targetTab" :detail="endpointDetail" :obj="curEndpoint" :assetDetail="assetDetail"
                   @closeSubList="showSubList = false" @fullScreen="fullScreen" @exitFullScreen="exitFullScreen" @listResize="listResize" ></bottom-box>
     </div>
 
@@ -140,8 +141,8 @@
     <module-box :currentProject="currentProject" :module="editModule" @reload="getModuleList" ref="moduleBox"></module-box>
     <edit-endpoint-box :currentProject="currentProject" :currentModule="currentModule" :endpoint="editEndpoint" @reload="getEndpointTableData" ref="editEndpointBox"></edit-endpoint-box>
     <add-endpoint-box :currentProject="currentProject" :currentModule="currentModule" @reload="getEndpointTableData" ref="addEndpointBox"></add-endpoint-box>
-    <asset-box :edit-unit-show='viewAssetState' @refreshData="getEndpointTableData" @sendStateData="tabControl"
-               ref="assetEditUnit"></asset-box>
+    <!--<asset-box :edit-unit-show='viewAssetState' @refreshData="getEndpointTableData" @sendStateData="tabControl"
+               ref="assetEditUnit"></asset-box>-->
   </div>
 </template>
 
@@ -161,6 +162,7 @@
       vm = this;
       let temp = this;
       return {
+        assetDetail: [], //asset详情
         endpointDetail: [],
         targetTab: '',
         mainTableHeight: this.$tableHeight.normal, //主列表table高度
@@ -171,6 +173,7 @@
         mainListHeight: '', //主列表dom的高度
         showSubList: false,
 
+        userData: [],
         showTopBtn: false, //主列表top按钮
         editEndpoint: {id: '', host: '', port: '', param: '', path: '', asset: {}, project: {}, module: {}, moduleId: '', assetId: '', paramObj: []},
         endpointTableTitle: [
@@ -246,7 +249,7 @@
             disabled: false
           }],
         },
-        viewAssetState:false,
+        /*viewAssetState:false,*/
         curEndpoint:null,
         endpointQueryTabData:[],//endpoint 查询列表数据
         showTableData:[],
@@ -684,12 +687,12 @@
       },
 
       //asset弹框控制
-      tabControl(data) {
+      /*tabControl(data) {
         if (data === 'close') {
           this.viewAssetState = false
           this.$refs['assetEditUnit'].tabView = false
         }
-      },
+      },*/
       //搜索
       endpointSearch: function(searchObj) {
         this.endpointSearchLabel = {};
@@ -751,10 +754,13 @@
 
         return year + "-" + month + "-" + day + " " + hours + ":" + minutes + ":" + seconds;
       },
-      viewAsset:function(id){
-        this.viewAssetState=true;
+      viewAsset(endpoint) {
+        this.curEndpoint = endpoint;
+        this.targetTab = 'assetDetail';
+        this.showSubList = true;
+        /*this.viewAssetState=true;
         this.$refs.assetEditUnit.getAssetData(id);
-        this.$refs.assetEditUnit.tabView=true;
+        this.$refs.assetEditUnit.tabView=true;*/
       },
       showEndpoint(endpoint) {
         this.curEndpoint = endpoint;
@@ -801,11 +807,65 @@
             }
           }
         }
-      }
+      },
+      assetConvertToDetail(obj) {
+        let detail = [];
+        detail.push({label: this.$t("asset.createAssetTab.sn"), value: obj.sn});
+        detail.push({label: this.$t("asset.createAssetTab.host"), value: obj.host});
+        detail.push({label: this.$t("asset.createAssetTab.state"), value: obj.state == 1 ? this.$t('asset.createAssetTab.inStock'): this.$t('asset.createAssetTab.notInStock')});
+        detail.push({label: this.$t("asset.tableTitle.modules"), value: obj.endpointNum});
+        detail.push({label: this.$t("asset.tableTitle.alerts"), value: obj.alertNum});
+        detail.push({label: this.$t("asset.createAssetTab.assetType"), value: obj.model.type.value});
+        detail.push({label: this.$t("asset.createAssetTab.vendorModel"), value: obj.model.vendor.value + " " + obj.model.name});
+        detail.push({label: this.$t("asset.createAssetTab.assetType"), value: obj.model.type.value});
+        detail.push({label: this.$t("asset.createAssetTab.purchaseDate"), value: obj.purchaseDate});
+        detail.push({label: this.$t("asset.createAssetTab.dcName"), value: obj.idc ? obj.idc.name : ""});
+        detail.push({label: this.$t("asset.createAssetTab.location"), value: obj.idc ? obj.idc.location : ""});
+        detail.push({label: this.$t("asset.createAssetTab.principal"), value: obj.idc ? this.getPrincipalName(obj.idc.principal) : ""});
+        detail.push({label: this.$t("asset.createAssetTab.location"), value: obj.idc ? obj.idc.location : ""});
+        detail.push({label: this.$t("asset.createAssetTab.tel"), value: obj.idc ? obj.idc.tel : ""});
+        detail.push({label: this.$t("asset.createAssetTab.cabinet"), value: obj.cabinet ? obj.cabinet.name : ""});
+        detail.push({label: this.$t("asset.editAssetTab.uSize"), value: obj.cabinet ? obj.cabinet.uSize : ""});
+        detail.push({label: this.$t("asset.editAssetTab.remark"), value: obj.idc ? obj.idc.remark : ""});
+        if (obj.accounts.length > 0) {
+          let account = obj.accounts[0];
+          if (account.protocol == 'SSH') {
+            detail.push({label: this.$t("asset.createAssetTab.protocol"), value: 'SSH'});
+            detail.push({label: this.$t("asset.createAssetTab.account"), value: account.user});
+            let loginType = "";
+            if (account.authType == 1) {
+              loginType = this.$t('asset.createAssetTab.password');
+            } else if (account.authType == 2) {
+              loginType = this.$t('asset.createAssetTab.ssh');
+            }
+            detail.push({label: this.$t("asset.createAssetTab.loginType"), value: loginType});
+          } else if (account.protocol == 'TELNET') {
+            detail.push({label: this.$t("asset.createAssetTab.protocol"), value: 'TELNET'});
+            detail.push({label: this.$t("asset.createAssetTab.account"), value: account.user});
+          }
+          detail.push({label: this.$t("asset.createAssetTab.port"), value: account.port});
+        }
+        return detail;
+      },
+      getPrincipalName(data) {
+        for (let item in this.userData) {
+          if (this.userData[item].userId === data) {
+            return this.userData[item].username
+          }
+        }
+      },
+      getUserData() {
+        this.$get('sys/user/list').then(response => {
+          if (response.code === 200) {
+            this.userData = response.data.list
+          }
+        })
+      },
     },
     created() {
       this.currentProject = this.$store.state.currentProject;
       this.getModuleList();
+      this.getUserData();
     },
     mounted() {
       //是否存在分页缓存
@@ -877,6 +937,11 @@
         deep: true,
         handler(n) {
           this.endpointDetail = this.convertToDetail(n);
+          this.$get('asset', {id: n.assetId}).then(response => {
+            if (response.code === 200) {
+              this.assetDetail = this.assetConvertToDetail(response.data.list[0]);
+            }
+          });
         }
       },
     },

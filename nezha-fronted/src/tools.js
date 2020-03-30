@@ -168,11 +168,10 @@ export const scrollBar = {
   },
 };
 
+// 底部上滑框窗口控制
 export const bottomBoxWindow = {
   // 鼠标拖动二级列表
   listResize(vm, e) {
-    console.info(vm);
-    console.info(e);
     let mainListDom = document.querySelector(".main-list-with-sub"); //主列表
     let subListDom = document.querySelector(".sub-list"); //副列表
     let contentRightDom = document.querySelector(".content-right"); //右侧内容区

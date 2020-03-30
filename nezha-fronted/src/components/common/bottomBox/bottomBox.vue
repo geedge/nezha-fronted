@@ -15,7 +15,7 @@
 
       <!------TAB区------>
       <!--通用详情-->
-      <common-detail-tab v-show="subResizeShow" :obj="obj" :from="from" :detail="detail"
+      <common-detail-tab v-show="subResizeShow" :obj="obj" :from="from" :detail="detail" :targetTab="targetTab"
                          v-if="targetTab == 'detail'"
                          @changeTab="changeTab"
       ></common-detail-tab>
@@ -23,6 +23,11 @@
       <cabinet-tab v-show="subResizeShow" v-if="from == 'dc' && targetTab == 'cabinet'" :obj="obj" @changeTab="changeTab"></cabinet-tab>
       <!--告警信息-->
       <alert-message-tab v-show="subResizeShow" v-if="((from == 'alertRule' || from == 'asset') && targetTab == 'alertMessage')" :from="from" :obj="obj" @changeTab="changeTab"></alert-message-tab>
+      <!--endpoint页的asset详情-->
+      <common-detail-tab v-show="subResizeShow" :obj="obj" :from="from" :detail="assetDetail" :targetTab="targetTab"
+                         v-if="targetTab == 'assetDetail' && from == 'endpoint'"
+                         @changeTab="changeTab"
+      ></common-detail-tab>
       <!--endpoint-query-->
       <endpoint-query-tab v-show="subResizeShow" v-if="(from == 'endpoint' && targetTab == 'endpointQuery')" :from="from" :obj="obj" @changeTab="changeTab"></endpoint-query-tab>
     </div>
@@ -51,6 +56,8 @@
       from: String, //来自哪个页面
       targetTab: String, //展示哪个页签
       detail: Array, //对象详情内容
+
+      assetDetail: Array, //endpoint页的asset详情
     },
     data() {
       return {}
