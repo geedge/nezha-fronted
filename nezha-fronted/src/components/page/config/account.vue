@@ -187,6 +187,7 @@
     data() {
       return {
         //底部上滑框相关
+        mainListHeight: '', //主列表高度
         mainTableHeight: this.$tableHeight.normal, //主列表table高度
         showSubList: false, //是否展示二级列表
         targetTab: '', //展示二级列表中的哪个页签
@@ -219,7 +220,7 @@
           pageSize: 20,
           total: 0
         },
-        tableTitle: [
+        tableTitle: [ //原table列
           {
             label: 'ID',
             prop: 'userId',
@@ -252,7 +253,7 @@
             show: true,
             width: 120
           }
-        ], //原table列
+        ],
         tablelable: [], //实际显示的列
         dropCol: [], //用于element-set组件显示
         rules: { //表单校验规则
