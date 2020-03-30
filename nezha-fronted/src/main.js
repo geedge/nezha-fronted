@@ -15,7 +15,7 @@ import router from './router'
 import VueResource from 'vue-resource'
 import axios from 'axios';
 import {post, get, put, del} from './http.js'
-import {toTop, clickoutside, scrollBar} from './tools.js'
+import {toTop, clickoutside, scrollBar, bottomBoxWindow} from './tools.js'
 
 import Pagination from "./components/common/pagination"; //引入全局分页组件
 import searchInput from "./components/common/searchInput"; //搜索框组件
@@ -69,6 +69,7 @@ Vue.prototype.$get = get;
 Vue.prototype.$put = put;
 Vue.prototype.$delete = del;
 Vue.prototype.$toTop = toTop; //toTop置顶按钮方法
+Vue.prototype.$bottomBoxWindow = bottomBoxWindow; //底部上滑框控制
 Vue.prototype.$tableHeight = { //列表页表格的高度
   normal: 'calc(100% - 100px)',  //常规高度，特例在下方定义
   openSubList: { //打开二级列表后的高度

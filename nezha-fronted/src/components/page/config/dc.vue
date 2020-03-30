@@ -55,7 +55,7 @@
       </div>
       <!--dc table start-->
       <div class="content-right">
-        <div class="main-list" :class="{'main-list-with-sub': showSubList}">
+        <div class="main-list main-and-sub-transition" :class="{'main-list-with-sub': showSubList}">
           <div class="top-tools" v-show="mainResizeShow">
             <div class="top-tool-main-right" :class="{'top-tool-main-right-to-left': showSubList}">
               <div class="top-tool-search">
@@ -153,9 +153,11 @@
     </div>
 </template>
 <script>
+  var vm;
   export default {
     name: "dc",
     data() {
+      vm = this;
       return {
         /*二级列表相关*/
         targetTab: '', //展示二级列表中的哪个页签
@@ -279,102 +281,6 @@
         this.$store.commit('setHeaderTable', data);
         this.tablelable = data;
       },
-      // 鼠标拖动二级列表
-      listResize(e) {
-        let mainListDom = document.querySelector(".main-list-with-sub"); //主列表
-        let subListDom = document.querySelector(".sub-list"); //副列表
-        let contentRightDom = document.querySelector(".content-right"); //右侧内容区
-        let contentRightHeight = contentRightDom.offsetHeight;//可视高度
-        //得到点击时俩dom的初始高度：
-        let mainInitialHeight = mainListDom.offsetHeight;
-        let subInitialHeight = subListDom.offsetHeight;
-        //点击时鼠标的Y轴位置
-        let mouseInitialY = e.clientY;
-
-        let _this = this;
-
-        document.onmousemove = (e) => {
-          e.preventDefault();
-          //得到鼠标拖动的距离
-          let mouseMoveY = Math.abs(e.clientY - mouseInitialY);
-
-          //往上方拖动：
-          if (e.clientY < mouseInitialY) {
-            mainListDom.style.height = mainInitialHeight-mouseMoveY+'px';
-            subListDom.style.height = subInitialHeight+mouseMoveY+'px';
-          }
-          //往下方拖动：
-          if (e.clientY > mouseInitialY) {
-            mainListDom.style.height = mainInitialHeight+mouseMoveY+'px';
-            subListDom.style.height = subInitialHeight-mouseMoveY+'px';
-          }
-
-          // 主、副列表最小高度限制为15px
-          if(parseInt(mainListDom.style.height) >= contentRightHeight-15){
-            mainListDom.style.height = contentRightHeight-15+'px';
-          }
-          if(parseInt(mainListDom.style.height) <= 15){
-            mainListDom.style.height = 15+'px';
-          }
-          if(parseInt(subListDom.style.height) >= contentRightHeight-15){
-            subListDom.style.height = contentRightHeight-15+'px';
-          }
-          if(parseInt(subListDom.style.height) <= 15){
-            subListDom.style.height = 15+'px';
-          }
-          //当主副列表可视区域小于一定值时，不展示内容
-          if(parseInt(mainListDom.style.height) <= 100){
-            if (_this.mainResizeShow) {
-              _this.mainResizeShow = false;
-            }
-          } else {
-            if (!_this.mainResizeShow) {
-              _this.mainResizeShow = true;
-            }
-          }
-          if(parseInt(subListDom.offsetHeight) <= 100){
-            if (_this.subResizeShow) {
-              _this.subResizeShow = false;
-            }
-          } else {
-            if (!_this.subResizeShow) {
-              _this.subResizeShow = true;
-            }
-          }
-        };
-        document.onmouseup = () => {
-          document.onmousemove = null;
-        }
-      },
-      exitFullScreen() {
-        let contentRightDom = document.querySelector(".content-right"); //右侧内容区
-        let contentRightHeight = contentRightDom.offsetHeight;//可视高度
-        //主列表
-        document.querySelector(".main-list-with-sub").style.height = this.mainListHeight ? this.mainListHeight + 'px' : 'calc(50% - 4px)';
-
-        //副列表
-        document.querySelector(".sub-list").style.height = this.mainListHeight ? contentRightHeight-this.mainListHeight-9 + 'px' : 'calc(50% - 4px)';
-        setTimeout(() => {
-          this.isFullScreen = false;
-          if (document.querySelector(".main-list-with-sub").offsetHeight >= 100) {
-            this.mainResizeShow = true;
-          }
-          if (document.querySelector(".sub-list").offsetHeight >= 100) {
-            this.subResizeShow = true;
-          }
-        }, 210);
-      },
-      fullScreen() {
-        let contentRightDom = document.querySelector(".content-right"); //右侧内容区
-        let contentRightHeight = contentRightDom.offsetHeight;//可视高度
-        this.isFullScreen = true;
-        //主列表
-        this.mainListHeight = document.querySelector(".main-list-with-sub").offsetHeight; //记录全屏前主列表的高度
-        document.querySelector(".main-list-with-sub").style.height = '0';
-        this.mainResizeShow = false;
-        //副列表
-        document.querySelector(".sub-list").style.height = contentRightHeight + 'px';
-      },
       jumpTo(data, id) {
         this.$router.push({
           path: "/" + data,
@@ -401,6 +307,18 @@
         this.cabinetDc = tempDc;
         this.targetTab = "detail";
         this.showSubList = true;
+      },
+      // 全屏
+      fullScreen() {
+        this.$bottomBoxWindow.fullScreen(vm);
+      },
+      // 退出全屏
+      exitFullScreen() {
+        this.$bottomBoxWindow.exitFullScreen(vm);
+      },
+      // 鼠标拖动二级列表
+      listResize(e) {
+        this.$bottomBoxWindow.listResize(vm, e);
       },
       convertToDetail(obj) {
         let detail = [];
@@ -507,45 +425,7 @@
         }
       },
       showSubList(n) {
-        this.inTransform = n;
-        if (!n) {
-          this.mainTableHeight = this.$tableHeight.normal; //重置table的高度
-          this.isFullScreen = false;
-          //移动分页组件的位置
-          let paginationTop = document.querySelector(".pagination-top");
-          let paginationBottom = document.querySelector(".pagination-bottom");
-          paginationTop.classList.remove("display-none");
-          if (paginationTop.classList.contains("pagination-top-show")) {
-            paginationTop.classList.remove("pagination-top-show");
-          }
-          if (!paginationTop.classList.contains("pagination-top-hide")) {
-            paginationTop.classList.add("pagination-top-hide");
-          }
-          setTimeout(() => {
-            paginationTop.classList.add("display-none");
-            paginationBottom.appendChild(paginationTop.removeChild(document.querySelector(".pagination")));
-          }, 210);
-
-          // 主列表恢复全屏
-          this.mainResizeShow = this.subResizeShow = true;
-          document.querySelector('.main-list').style.height = "";
-          //副列表高度清空
-          document.querySelector(".sub-list").style.height = '';
-        } else {
-          this.mainTableHeight = this.$tableHeight.openSubList.mainList; //重置table高度
-          //移动分页组件的位置
-          let paginationTop = document.querySelector(".pagination-top");
-          paginationTop.appendChild(document.querySelector(".pagination-bottom").removeChild(document.querySelector(".pagination")));
-          paginationTop.classList.remove("display-none");
-          setTimeout(() => {
-            if (paginationTop.classList.contains("pagination-top-hide")) {
-              paginationTop.classList.remove("pagination-top-hide");
-            }
-            if (!paginationTop.classList.contains("pagination-top-show")) {
-              paginationTop.classList.add("pagination-top-show");
-            }
-          }, 210);
-        }
+        this.$bottomBoxWindow.showSubListWatch(vm, n);
       }
     },
     destroyed() {

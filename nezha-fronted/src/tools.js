@@ -167,3 +167,147 @@ export const scrollBar = {
     }
   },
 };
+
+export const bottomBoxWindow = {
+  // 鼠标拖动二级列表
+  listResize(vm, e) {
+    console.info(vm);
+    console.info(e);
+    let mainListDom = document.querySelector(".main-list-with-sub"); //主列表
+    let subListDom = document.querySelector(".sub-list"); //副列表
+    let contentRightDom = document.querySelector(".content-right"); //右侧内容区
+    let contentRightHeight = contentRightDom.offsetHeight;//可视高度
+    //得到点击时俩dom的初始高度：
+    let mainInitialHeight = mainListDom.offsetHeight;
+    let subInitialHeight = subListDom.offsetHeight;
+    //点击时鼠标的Y轴位置
+    let mouseInitialY = e.clientY;
+
+    document.onmousemove = (e) => {
+      mainListDom.classList.remove('main-and-sub-transition');
+      subListDom.classList.remove('main-and-sub-transition');
+      e.preventDefault();
+      //得到鼠标拖动的距离
+      let mouseMoveY = Math.abs(e.clientY - mouseInitialY);
+
+      //往上方拖动：
+      if (e.clientY < mouseInitialY) {
+        mainListDom.style.height = mainInitialHeight-mouseMoveY+'px';
+        subListDom.style.height = subInitialHeight+mouseMoveY+'px';
+      }
+      //往下方拖动：
+      if (e.clientY > mouseInitialY) {
+        mainListDom.style.height = mainInitialHeight+mouseMoveY+'px';
+        subListDom.style.height = subInitialHeight-mouseMoveY+'px';
+      }
+
+      // 主、副列表最小高度限制为15px
+      if(parseInt(mainListDom.style.height) >= contentRightHeight-15){
+        mainListDom.style.height = contentRightHeight-15+'px';
+      }
+      if(parseInt(mainListDom.style.height) <= 15){
+        mainListDom.style.height = 15+'px';
+      }
+      if(parseInt(subListDom.style.height) >= contentRightHeight-15){
+        subListDom.style.height = contentRightHeight-15+'px';
+      }
+      if(parseInt(subListDom.style.height) <= 15){
+        subListDom.style.height = 15+'px';
+      }
+      //当主副列表可视区域小于一定值时，不展示内容
+      if(parseInt(mainListDom.style.height) <= 100){
+        if (vm.mainResizeShow) {
+          vm.mainResizeShow = false;
+        }
+      } else {
+        if (!vm.mainResizeShow) {
+          vm.mainResizeShow = true;
+        }
+      }
+      if(parseInt(subListDom.offsetHeight) <= 100){
+        if (vm.subResizeShow) {
+          vm.subResizeShow = false;
+        }
+      } else {
+        if (!vm.subResizeShow) {
+          vm.subResizeShow = true;
+        }
+      }
+    };
+    document.onmouseup = () => {
+      mainListDom.classList.add('main-and-sub-transition');
+      subListDom.classList.add('main-and-sub-transition');
+      document.onmousemove = null;
+    }
+  },
+  exitFullScreen(vm) {
+    let contentRightDom = document.querySelector(".content-right"); //右侧内容区
+    let contentRightHeight = contentRightDom.offsetHeight;//可视高度
+    //主列表
+    document.querySelector(".main-list-with-sub").style.height = vm.mainListHeight ? vm.mainListHeight + 'px' : 'calc(50% - 4px)';
+
+    //副列表
+    document.querySelector(".sub-list").style.height = vm.mainListHeight ? contentRightHeight-vm.mainListHeight-9 + 'px' : 'calc(50% - 4px)';
+    setTimeout(() => {
+      vm.isFullScreen = false;
+      if (document.querySelector(".main-list-with-sub").offsetHeight >= 100) {
+        vm.mainResizeShow = true;
+      }
+      if (document.querySelector(".sub-list").offsetHeight >= 100) {
+        vm.subResizeShow = true;
+      }
+    }, 210);
+  },
+  fullScreen(vm) {
+    let contentRightDom = document.querySelector(".content-right"); //右侧内容区
+    let contentRightHeight = contentRightDom.offsetHeight;//可视高度
+    vm.isFullScreen = true;
+    //主列表
+    vm.mainListHeight = document.querySelector(".main-list-with-sub").offsetHeight; //记录全屏前主列表的高度
+    document.querySelector(".main-list-with-sub").style.height = '0';
+    vm.mainResizeShow = false;
+    //副列表
+    document.querySelector(".sub-list").style.height = contentRightHeight + 'px';
+  },
+  showSubListWatch(vm, n) {
+    vm.inTransform = n;
+    if (!n) {
+      vm.mainTableHeight = vm.$tableHeight.normal; //重置table的高度
+      vm.isFullScreen = false;
+      //移动分页组件的位置
+      let paginationTop = document.querySelector(".pagination-top");
+      let paginationBottom = document.querySelector(".pagination-bottom");
+      paginationTop.classList.remove("display-none");
+      if (paginationTop.classList.contains("pagination-top-show")) {
+        paginationTop.classList.remove("pagination-top-show");
+      }
+      if (!paginationTop.classList.contains("pagination-top-hide")) {
+        paginationTop.classList.add("pagination-top-hide");
+      }
+      setTimeout(() => {
+        paginationTop.classList.add("display-none");
+        paginationBottom.appendChild(paginationTop.removeChild(document.querySelector(".pagination")));
+      }, 210);
+
+      // 主列表恢复全屏
+      vm.mainResizeShow = vm.subResizeShow = true;
+      document.querySelector('.main-list').style.height = "";
+      //副列表高度清空
+      document.querySelector(".sub-list").style.height = '';
+    } else {
+      vm.mainTableHeight = vm.$tableHeight.openSubList.mainList; //重置table高度
+      //移动分页组件的位置
+      let paginationTop = document.querySelector(".pagination-top");
+      paginationTop.appendChild(document.querySelector(".pagination-bottom").removeChild(document.querySelector(".pagination")));
+      paginationTop.classList.remove("display-none");
+      setTimeout(() => {
+        if (paginationTop.classList.contains("pagination-top-hide")) {
+          paginationTop.classList.remove("pagination-top-hide");
+        }
+        if (!paginationTop.classList.contains("pagination-top-show")) {
+          paginationTop.classList.add("pagination-top-show");
+        }
+      }, 210);
+    }
+  }
+};

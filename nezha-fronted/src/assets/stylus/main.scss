@@ -588,17 +588,17 @@ li{
 }
 .main-list {
   height: 100%;
-  transition: .4s height, .4s transform;
   position: relative;
 }
 .main-list.main-list-with-sub {
-  transform: translate3d(0,0,0);
   height: calc(50% - 4px);
 }
 .sub-list {
   height: calc(50% - 4px);
-  transition: .4s height;
   position: relative;
+}
+.main-and-sub-transition {
+  transition: .4s height;
 }
 .sub-list-resize {
   margin: 0 -6px;

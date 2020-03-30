@@ -2,7 +2,7 @@
   <span>
     <!-- 副列表 -->
     <div @mousedown="listResize" class="sub-list-resize" v-if="showSubList && !isFullScreen">一</div>
-    <div class="sub-list" v-if="showSubList">
+    <div class="sub-list sub-list-transition" v-if="showSubList">
       <!--窗口大小控制-->
       <div class="sub-list-window-control">
         <!--退出全屏-->
