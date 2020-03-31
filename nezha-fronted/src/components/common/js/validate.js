@@ -1,7 +1,7 @@
 import vm from '../../../main'
 
 export function host(rule, value, callback) {
-  const hostReg = /^(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])$/
+  const hostReg = /^(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])(\:\d{0,5})?$/
   setTimeout(() => {
     if (hostReg.test(value)) {
       callback()
@@ -69,14 +69,13 @@ export function positiveInteger(rule, value, callback){
   }, 100)
 }
 
-export function url(rule, value, callback){
-  let urlReg='';
-  let reg=new RegExp(urlReg)
+export function domain(rule, value, callback){
+  let urlReg=/^(?=^.{3,255}$)[a-zA-Z0-9][-a-zA-Z0-9]{0,62}(\.[a-zA-Z0-9][-a-zA-Z0-9]{0,62})+$/;
   setTimeout(() => {
-    if (reg.test(value)) {
+    if (urlReg.test(value)) {
       callback()
     } else {
-      callback(new Error(vm.$t('validate.url')))
+      callback(new Error(vm.$t('validate.domain')))
     }
   }, 100)
 }

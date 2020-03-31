@@ -46,11 +46,11 @@
             <template v-else-if="item.prop == 'fileName' && scope.row[item.prop]" >
               <span class="clickable" @click="downloadMib(scope.row.id)">{{scope.row[item.prop]}}</span>
             </template>
-            <template v-else-if="item.prop == 'modelsDetail' && scope.row['modelsDetail'] && scope.row['modelsDetail'].length >0">
-              <div style="height: 100px">
+            <template v-else-if="item.prop == 'modelsDetail' && scope.row['modelsDetail'] && scope.row['modelsDetail'].length >0" >
+              <div style="height: 100%">
                 <el-scrollbar style="height: 100%">
-                  <div v-for="(n,i) in scope.row['modelsDetail']" :key="n.name+'-'+n.id+'-'+i" >
-                  <el-popover trigger="hover" placement="right" >
+                  <div v-for="(n,i) in scope.row['modelsDetail']" :key="n.name+'-'+n.id+'-'+i" class="detail-item-content">
+                  <el-popover trigger="hover" placement="top" >
                     <div>
                       <div>
                         <span>{{$t('overall.name')}}:</span>
@@ -66,11 +66,12 @@
                       </div>
                     </div>
                     <template slot="reference">
-                        <div  class="detail-item-content">{{n.name}}</div>
+                      <div  class="detail-item-content" v-if="i < scope.row['modelsDetail'].length-1">{{n.name}},</div>
+                      <div  class="detail-item-content" v-else>{{n.name}}</div>
                     </template>
                   </el-popover>
                 </div>
-              </el-scrollbar>
+                </el-scrollbar>
               </div>
             </template>
             <div v-else-if="item.prop == 'option'" class="content-right-options">
@@ -364,14 +365,17 @@
     margin:2px 0 !important;
   }
   .mib-table td .cell{
-    min-height: 80px !important;
+    min-height: 60px !important;
     padding-bottom: 3px;
   }
   .mib-table td .cell .detail-item-content{
-    width:fit-content;
-    width:-webkit-fit-content;
-    width:-moz-fit-content;
     height: 20px;
     line-height: 20px;
+    display: inline-block;
   }
+  .mib-table.el-table td .cell{
+    height: 20px !important;
+    line-height: 20px !important;
+  }
+
 </style>

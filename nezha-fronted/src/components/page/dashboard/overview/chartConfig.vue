@@ -99,15 +99,6 @@
         borderRadius: 4,
         borderWidth: 1,
         padding: 0,
-        formatter(params){
-          var color = "orange";
-          var a = "<div style='background-color:"+color+";padding: 5px 10px;text-align:center;color:white;font-size: 16px;'>" + params.data.name + "</div>";
-          a += "<div style='padding:3px;text-align: center'>";
-          a +=params.data.value[2] + "<br>";
-          a += "</div>";
-
-          return a;
-        }
       },
     }
     const chartTypes={

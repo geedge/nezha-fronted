@@ -243,6 +243,7 @@ const en = {
     email:'Invalid email',//'不合法的E-mail地址'
     tel:'Invalid phone number',//'不合法的电话号码'
     host:'Invalid IP',//'不合法的IP'
+    domain:'Invalid domain',
     fileSize:'文件过大',//File exceed max size.
     port:'Invalid Port',
     url:'Invalid URL',
@@ -527,10 +528,11 @@ const en = {
         scrapeInterval:'Scrape Interval',
         storageRetention:'Local Retention',
         systemName:'System Name',
-        curUrl:'Current URL'
+        curUrl:'Current site URL'
       },
       email:{
         email:'Email',
+        enable:'Enable Email',
         smtpHost:'SMTP Host',
         smtpPort:'SMTP Port',
         smtpAccount:'SMTP Account',
@@ -567,6 +569,10 @@ const en = {
         metric:'metric',
         alert:'alert',
         sysConfig:'system config',
+        pwdTip:'Please input your password',
+        promptTitle:'Confirm',
+        yes:'Yes',
+        no:'No',
       }
     }
   },

@@ -93,6 +93,7 @@
   import tableBox from "./tableBox";
   import chart from "./chart";
   import axios from 'axios';
+  import chartDataFormat from "../../../charts/chartDataFormat";
   export default {
     name: "overview",
     components:{
@@ -751,6 +752,9 @@
                 return [item[0]*1000,item[1]];
               })
               this.chartSeries=[series];
+              this.$refs.chartbox.modifyOption('tooltip','formatter',this.tooltipFormatter);
+              this.$refs.chartbox.modifyOption('tooltip','position',this.tooltipPosition);
+              this.$refs.chartbox.modifyOption('yAxis','formatter',this.yAxisFormatter);
               this.$refs.chartbox.setSeries(this.chartSeries);
               this.$refs.chartbox.endLoading();
             }
@@ -774,32 +778,137 @@
 
       },
       queryDataCenterMapData:function(){
-        this.dataCenterMapSeries=[{
-          name: 'DataCenter',
-          type: 'scatter',
-          coordinateSystem: 'geo',
-          label: {
-            formatter: '{b}',
-            position: 'right',
-            show: false
-          },
-          itemStyle: {
-            color: 'grey'
-          },
-          emphasis: {
-            label: {
-              show: true
+        let language=localStorage.getItem("nz-language") ? localStorage.getItem("nz-language") : 'en';
+        let requests=[axios.get('/idc?pageSize=-1'),axios.get('/overview/datacenterStat')];
+        axios.all(requests).then((result)=>{
+          if(result){
+            let seriesDatas=[];
+            this.$refs.dataCenterMap.setSeries(this.dataCenterMapSeries);
+            let idcInfos=null;
+            let dcStats=null;
+            if(result[0].data && result[0].data.code == 200){
+              idcInfos=result[0].data.data.list;
             }
-          },
-          data:[
-            {name:'Astana', value: [5591, 8316,56]},
-            {name:'Atyrau', value: [762,6740,88]},
-            {name:'Almaty', value:[6760, 5586,102]},
-          ]
-        }]
-        this.$refs.dataCenterMap.setSeries(this.dataCenterMapSeries);
+            if(result[1].data && result[1].data.code == 200){
+              dcStats=result[1].data.data.dcStat;
+            }
+            if(idcInfos && dcStats){
+              for(let dcStat of dcStats){
+                let dcId=dcStat.id;
+                let dcInfo=idcInfos.find((item)=>{
+                  return item.id == dcId ;
+                })
+                let areaInfo=dcInfo.area;
+                if(areaInfo){
+                  let areaName='';
+                  if(areaInfo.i18n){
+                    areaName=JSON.parse(areaInfo.i18n)[language];
+                  }else{
+                    areaName=areaInfo.name;
+                  }
+                  seriesDatas.push({name:areaName,value:[areaInfo.longitude,areaInfo.latitude,dcStat.assetTotal,dcStat.alertTotal]})
+                }
+              }
+            }
+            this.$refs.dataCenterMap.modifyOption('tooltip','formatter',this.mapTooltipFormatter)
+            this.dataCenterMapSeries=[{
+              name: 'DataCenter',
+              type: 'scatter',
+              coordinateSystem: 'geo',
+              label: {
+                formatter: '{b}',
+                position: 'right',
+                show: false
+              },
+              itemStyle: {
+                color: 'orange'
+              },
+              emphasis: {
+                label: {
+                  show: true
+                }
+              },
+              data:seriesDatas
+            }]
+            this.$refs.dataCenterMap.setSeries(this.dataCenterMapSeries);
+          }
+        })
       },
       /*加载数据 end*/
+      mapTooltipFormatter(params){
+        var color = "orange";
+        var a = "<div style='background-color:"+color+";padding: 5px 10px;text-align:center;color:white;font-size: 16px;'>" + params.data.name + "</div>";
+        a += "<div style='padding:3px;text-align: center'>";
+        a +=this.$t('dashboard.overview.asset.title')+': '+params.data.value[2] + "<br>";
+        a +=this.$t('dashboard.overview.asset.alert')+': '+params.data.value[3] + "<br>";
+        a += "</div>";
+
+        return a;
+      },
+      tooltipPosition:function(point,params,dom,rect,size){
+        dom.style.transform = "translateZ(0)";
+        //提示框位置
+        var x=0;
+        var y=0;
+        //当前鼠标位置
+        var pointX = point[0];
+        var pointY = point[1];
+        //外层div大小
+        var viewWidth = size.viewSize[0];
+        var viewHeight = size.viewSize[1];
+        //提示框大小
+        var boxWidth = size.contentSize[0];
+        var boxHeight = size.contentSize[1];
+        let chartDom = document.getElementById(this.chartId);
+        if(chartDom){
+          let parTop = chartDom.offsetTop;
+          let parLeft = chartDom.offsetLeft;
+
+          let parent = chartDom.parentElement;
+          let parClientHeight = parent.clientHeight;//可视高度
+          let parClientWidth = parent.clientWidth;//可视宽度
+          let parScrollTop = parent.scrollTop;
+          if((parClientWidth-pointX-parLeft-20)>=boxWidth){//说明鼠标在左边放不下提示框
+            x=pointX+10;
+          }else{
+            x = pointX - boxWidth;
+          }
+          if((parClientHeight-pointY-(parTop-parScrollTop)-20)>=boxHeight){//说明鼠标上面放不下提示框
+            y = pointY+10;
+          }else {
+            y = pointY-boxHeight;
+          }
+          return [x,y];
+        }else {
+          x = pointX - boxWidth;
+          y = pointY+10;
+          return [x,y];
+        }
+      },
+      tooltipFormatter:function(params){
+        let str = `<div>`;
+        params.forEach((item, i) => {
+          if(i===0){
+            let t_date = new Date(item.data[0]);
+            str += [t_date.getFullYear(), t_date.getMonth() + 1, t_date.getDate()].join('-') + " "
+              + [t_date.getHours(), t_date.getMinutes(),t_date.getSeconds()].join(':');
+            str +=`<br/>`;
+          }
+          let val = Number(item.data[1]);
+          str += `<div style="white-space:nowrap;overflow-x:hidden;text-overflow:ellipsis;display: flex; justify-content: space-between; min-width: 150px; max-width: 600px; line-height: 18px; font-size: 12px;">`;
+          str += `<div style="max-width: 500px;white-space:nowrap;overflow-x:hidden;text-overflow:ellipsis;"><span style='display:inline-block;margin-right:5px;border-radius:10px;width:15px;height:5px;background-color: ${item.color};}'></span>${item.seriesName}:  </div>`;
+          str += `<div style="padding-left: 10px;">`;
+          str += chartDataFormat.getUnit(5).compute(val,null,2);
+          str += `</div>`;
+          str += `</div>`;
+        });
+        str +=`</div>`;
+        return str;
+      },
+      yAxisFormatter:function(value,index){
+        let unit=chartDataFormat.getUnit(5);
+        return unit.compute(value,index);
+      },
       getAssetTabTitle:function(){
         switch (this.typeFilter) {
           case "typeStat":
