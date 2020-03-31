@@ -631,8 +631,10 @@
       currentModule: {
         immediate: true,
         handler(n, o) {
-          this.endpointForm.moduleId = n.id;
-          this.currentModuleCopy = JSON.parse(JSON.stringify(n));
+          if(n) {
+            this.endpointForm.moduleId = n.id;
+            this.currentModuleCopy = JSON.parse(JSON.stringify(n));
+          }
         }
       },
       projectListReloadWatch(n, o) {

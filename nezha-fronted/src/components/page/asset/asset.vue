@@ -119,7 +119,7 @@
                 <span v-else class="unclickable">{{scope.row.endpointNum}}</span>-->
               </template>
               <template v-if="item.prop=='Alert'">
-                <span :id="'asset-alerts-'+scope.row.id" @click="jumpToAlertMsg(scope.row)" class="link">{{scope.row.alertNum}}<template v-if="scope.row.alertNum && scope.row.alertNum > 0">{{' ' + $t('overall.active')}}</template></span>
+                <span :id="'asset-alerts-'+scope.row.id" @click="jumpToAlertMsg(scope.row)" class="link">{{scope.row.alertNum + ' ' + $t('overall.active')}}</span>
               </template>
               <div v-if="item.prop=='dataCenter'">
   <!--              <idc-config-box :post-idc="JSON.parse(JSON.stringify(scope.row.idc))" ref="idcConfigBox" :is-edit="false" placement="left"  @after="getAssetData(null, true)" :button-class="'checkbox-edit'" :user-data="idcUserData">-->
@@ -187,6 +187,7 @@
         <button class="to-top" v-show="showTopBtn" @click="$toTop"><i class="nz-icon nz-icon-top"></i></button>
       </div>
       <bottom-box v-if="showSubList" :show-sub-list="showSubList" :subResizeShow="subResizeShow" :obj="alertMsgAsset" :isFullScreen="isFullScreen" :from="'asset'" :targetTab="targetTab" :detail="assetDetail"
+                  @reload="getAssetData"
                   @closeSubList="showSubList = false"
                   @fullScreen="fullScreen"
                   @exitFullScreen="exitFullScreen"
@@ -554,6 +555,9 @@
         this.targetTab = 'alertMessage';
         this.alertMsgAsset = JSON.parse(JSON.stringify(asset));
         this.showSubList = true;
+        /*this.$nextTick(() => {
+          this.$store.commit("assetForAlertListChange", this.$store.state.assetForAlertList+1);
+        });*/
       },
       getAssetData(data, flushRightBoxDc) {
         this.searchLabel = Object.assign(this.searchLabel, this.pageObj);

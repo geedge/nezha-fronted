@@ -185,6 +185,37 @@
             }
         },
         watch: {
+          defaultValue: {
+            immediate: true,
+            handler(n) {
+              if (n) {
+                this.$nextTick(() => {
+                  if (this.defaultItem) {
+                    if (this.defaultItem == 'alertMessageState' && this.defaultValue) {
+                      this.searchLabelList.forEach((item, index) => {
+                        if (item.id == 12) {
+                          this.searchLabelList.splice(index, 1);
+                        }
+                      });
+                      this.select_list.push({
+                        name: this.$t('alert.list.state'),
+                        type: 'select',
+                        label: 'state',
+                        disabled: false,
+                        val: this.$t('alert.list.pending'),
+                        valnum: 1
+                      });
+                      this.input_sreach = '';
+                      this.sreach_num = this.select_list.length;
+                      this.change_sreach_show = false;
+                      this.input_list = true;
+                      this.select();
+                    }
+                  }
+                });
+              }
+            }
+          },
           inTransform: {
             immediate: true,
             handler(n) {
@@ -274,7 +305,7 @@
                   }
               }
           },
-          alertListAssetId: {
+          /*alertListAssetId: {
             immediate: true,
             handler(newData, oldData) {
               if (newData && this.$route.path == '/alertList') {
@@ -367,7 +398,7 @@
                 this.$store.commit('assetForAlertListChange', '');
               }
             }
-          }
+          }*/
         },
         props:['searchMsg','defaultItem','defaultValue','inTransform'],
         methods: {
@@ -1222,8 +1253,8 @@
             },
         },
         mounted() {
-            this.defaultItem ? this.select_list.push({name:this.defaultItem,label:this.defaultItem}) : '';
-            this.defaultValue != '' ? this.no_condition=this.defaultValue:'';
+            /*this.defaultItem ? this.select_list.push({name:this.defaultItem,label:this.defaultItem}) : '';
+            this.defaultValue != '' ? this.no_condition=this.defaultValue:'';*/
             this.restructure_historyDate()
             if(this.$route.path=='/Objects_Objects'){
               this.schelistget()
@@ -1257,7 +1288,6 @@
                 if(e.keyCode==27){
                     _this.close_search(e)
                 }
-
             }
         }
     }

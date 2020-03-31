@@ -57,6 +57,16 @@
         value: '1',
         label:i18n.t('asset.pingActive')
       }
+    ],
+    alertMessageState: [
+      {
+        value: '1',
+        label:i18n.t('alert.list.pending')
+      },
+      {
+        value: '2',
+        label:i18n.t('alert.list.expired')
+      }
     ]
   };
   export default searchSelectInfo;

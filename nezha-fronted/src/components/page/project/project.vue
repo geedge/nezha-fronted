@@ -647,7 +647,7 @@
         this.currentModule = module;
         this.endpointSearchLabel = {moduleId: ''};
         this.$refs.projectSearch.clearSearch();
-        this.showSubList=1;
+        this.showSubList = false;
         this.selectedEndpoints=[];
       },
 

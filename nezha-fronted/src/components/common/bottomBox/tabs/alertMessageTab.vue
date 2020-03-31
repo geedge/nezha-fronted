@@ -12,7 +12,7 @@
       </div>
       <div class="top-tool-right">
         <div class="top-tool-search">
-          <search-input :searchMsg="searchMsg" @search="search"></search-input>
+          <search-input :default-item="'alertMessageState'" :default-value="defaultSearchValue" :searchMsg="searchMsg" @search="search"></search-input>
         </div>
       </div>
     </div>
@@ -117,6 +117,7 @@
     },
     data() {
       return {
+        defaultSearchValue: this.obj.alertNum ? 1 : 0,
         showElementSet: false,
         tableId: 'alertListTable', //需要分页的table的id，用于记录每页数量
         showTopBtn: false, //top按钮是否显示
@@ -196,6 +197,12 @@
             type: 'asset',
             label: 'asset',
             disabled: true
+          }, {
+            id: 12,
+            name: this.$t('alert.list.state'),
+            type: 'select',
+            label: 'alertMessageState',
+            disabled: false
           }],
         },
         searchLabel: { //搜索参数
@@ -365,6 +372,9 @@
             });
             this.searchLabel.type = 3;
             this.searchLabel.linkId = n.id;
+          }
+          if (n.alertNum) {
+            this.defaultSearchValue = 1;
           }
           this.getAlertList();
         }

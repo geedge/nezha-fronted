@@ -10,7 +10,7 @@ const store = new Vuex.Store({
       type: -1  //0: asset  1: header
     },
     assetDcList: 0, //监听此值，改变则刷新dc列表
-    assetForAlertList: '', //asset页跳转alertList时传递的assetId
+    assetForAlertList: 0, //asset页跳转alertList时传递的assetId
     currentProject: {
       id: '',
       name: '',

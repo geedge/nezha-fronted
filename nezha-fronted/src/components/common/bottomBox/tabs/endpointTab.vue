@@ -11,10 +11,18 @@
         <div class="top-tool-search">
           <search-input :searchMsg="searchMsg" @search="search"></search-input>
         </div>
-        <!--<button type="button" @click="toAddCabinet" :title="$t('overall.createCabinet')"
-                class="nz-btn nz-btn-size-normal nz-btn-style-light float-right margin-l-20" id="cab-add">
-          <i class="nz-icon-create-square nz-icon"></i>
-        </button>-->
+        <export-excel
+          export-file-name="endpoint"
+          export-url="/endpoint/export"
+          :params="searchLabel"
+          @afterImport="getTableData"
+          class="margin-l-20"
+          style="width: 59px;"
+        >
+          <template slot="optionZone">
+            <i class="nz-icon nz-icon-create-square" @click.stop="toAdd" :title="$t('overall.createProject')" ></i>
+          </template>
+        </export-excel>
       </div>
     </div>
     <el-table
@@ -82,21 +90,24 @@
       :path="'/assetEndpoint'"
       ref="elementset"
     ></element-set>
+    <add-endpoint-box :currentProject="currentProject" :module="currentModule" @reload="getTableData" ref="addEndpointBox"></add-endpoint-box>
     <edit-endpoint-box @close="closeEditEndpoint" v-if="editBoxShow" :currentProject="endpoint.project" :currentModule="endpoint.module" :endpoint="endpoint" @reload="getTableData" ref="editEndpointBox"></edit-endpoint-box>
   </span>
 </template>
 
 <script>
+  import exportXLSX from "../../exportXLSX";
   export default {
     name: "endpointTab",
     components: {
-
+      'export-excel': exportXLSX
     },
     props: {
       obj: Object, //关联的实体对象
     },
     data() {
       return {
+        showAddBox: false,
         editBoxShow: false,
         endpoint: {}, //用来查看详情和编辑的对象
         endpointDetail: {}, //用来查看详情的对象
@@ -155,6 +166,8 @@
         ],
         tablelable: [],
         dropCol: [],
+        currentProject: {id: '', name: '', remark: ''}, //endpoint弹框、module列表用来回显project
+        currentModule: {id: '', name: '', project: {}, port: '', path: '', param: '', paramObj: []}, //endpoint弹框用来回显module
         searchMsg: { //给搜索框子组件传递的信息
           zheze_none: true,
           searchLabelList: [{
@@ -185,6 +198,7 @@
         this.$get('/endpoint?assetId=' + this.asset.id + 'pageSize=-1').then(response => {
           if (response.code === 200) {
             this.tableData = response.data.list;
+            this.$emit("reload");
           }
         });
       },
@@ -207,7 +221,10 @@
           this.$refs.editEndpointBox.show(true);
           this.$refs.editEndpointBox.toEdit(true, this.endpoint.id);
         });
-
+      },
+      toAdd() {
+        this.$refs.addEndpointBox.show(true);
+        this.$refs.addEndpointBox.clearEndpoints();
       },
       search: function (searchObj) {
         /*this.searchLabel = {idcId: this.currentDc.id, pageNo: 1, pageSize: -1};
