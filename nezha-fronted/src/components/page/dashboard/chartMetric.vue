@@ -82,6 +82,10 @@
   .mt1{
     margin-top:1px;
   }
+  .chart-metric-box-dropdown{
+    width: 619px;
+    z-index: 2950 !important;
+  }
 </style>
 <style>
   .li-list-part-label-val-list .metric-title-position .el-form-item__label {
@@ -141,7 +145,9 @@
                  :options="metricCascaderList"
                  :props="{ expandTrigger: 'hover' }"
                  :show-all-levels="false"
-                 @change="selectMetric"></el-cascader>
+                 @change="selectMetric"
+                 @expand-change="handleItemChange"
+        ></el-cascader>
         <span v-if="metricShowList.text" class="error-info-text">{{metricShowList.text}}</span>
         <div @click="deleteTarget" class="right-box-row-btn" v-if="countTotal > 1">
           <i class="el-icon-minus"></i>
@@ -253,6 +259,7 @@ export default {
       tagSet: null, // 根据你metric获取的tags信息
       setDataFlag: false, // true时为获取数据,编辑状态
       vendorCount: '',
+      labelSort:['project','module','endpoint','datacenter','asset'],
     };
   },
   watch: {},
@@ -321,11 +328,63 @@ export default {
         }
 
     },
+    //动态加载第三级选项metric及label
+    handleItemChange(val) {
+      if(val && val.length===2) {//点击二级菜单，才进行查询
+        let proTmp = val[0];
+        let module = val[1];
+        let project = proTmp.substring(0, proTmp.length - 4);
+        this.metricCascaderList.map((item, index) => {
+          if(item.value===proTmp){//选择的project
+            item.children.map((innerItem, innerIndex) => {
+              if (innerItem.value === module && innerItem.children.length === 0) {//不重复加载
+                // 当二级分类的的child为空时才请求一次数据
+                let match = '{project="'+project+'",module="'+module+'"}';
+                this.$get('/prom/api/v1/series?match[]='+match).then(res => {
+                //this.$get('http://192.168.40.247:9090/api/v1/series?match[]='+match).then(res => {
+                  if (res.status === 'success') {
+                    let queryItem = res.data;//[]设置  metric和label
+                    let metricArr = [];
+                    let metricArrTmp = [];
+                    res.data.forEach((tag, i) => {
+                      //const tagsArr = Object.keys(tag);//["__name__","asset","idc","instance","job","module","project"]
+                      let metricName = tag.__name__;
+                      if(metricArrTmp.indexOf(metricName)===-1){
+                        const childOption = {
+                          value: metricName,//+"_par",
+                          label: metricName
+                        };
+                        metricArrTmp.push(metricName);
+                        metricArr.push(childOption);
+                      }
+                    });
+                    this.$set(item.children[innerIndex], 'children', metricArr);
+                    //this.$set(innerItem, 'children', metricArr);
+
+
+                    /*
+                    const tagObj = {
+                      name: item[0],
+                      list:item[1],
+                      value:[]//最终选择的值
+                    };
+                    this.elementInfo.selectedTagList.push(tagObj);
+                     */
+
+                  }
+                })
+              }
+            })
+          }
+        });
+      }
+    },
     // 选择metric
     selectMetric() {
       if (this.elementInfo.metric) {//选择了metric，则设置tagList，否则设置为空
-        this.elementInfo.metric = this.elementInfo.metric[1];
         this.getSuggestTags(this.elementInfo.metric);
+        this.elementInfo.metric = this.elementInfo.metric[2];
+
       } else {
         this.elementInfo.tagList = [];
         this.setLabelDivHeight(0);
@@ -355,11 +414,15 @@ export default {
     },
     */
     // 获取tags列表
-    getSuggestTags(metric) {
+    getSuggestTags(metricArr) {
+      let metric = metricArr[2];
+      let proTmp = metricArr[0];
+      let project = proTmp.substring(0, proTmp.length - 4);
+      let module = metricArr[1];
       //this.$get('metric/labelName?metric='+metric).then(response => {
       this.$get('/metric/series?match[]='+metric).then(response => {
         this.elementInfo.selectedTagList = [];
-        //this.elementInfo.tagList = [];
+        let tagListTmp = [];
         if (response.code === 200) {
           const objList = Object.entries(response.data);
           objList.forEach((item) => {
@@ -368,8 +431,29 @@ export default {
               list:item[1],
               value:[]//最终选择的值
             };
-            this.elementInfo.selectedTagList.push(tagObj);
+            if(item[0]==='project'){
+              tagObj.value.push(project);
+            }else if(item[0]==='module'){
+              tagObj.value.push(module);
+            }
+            tagListTmp.push(tagObj);
           });
+          this.labelSort.forEach((sortItem) => {
+            let itemIndex = -1;
+            tagListTmp.forEach((item,i) => {
+              if(sortItem===item.name){//labelSort:['project','module','endpoint','datacenter','asset'],
+                this.elementInfo.selectedTagList.push(item);
+                itemIndex = i;
+              }
+            });
+            if(itemIndex!==-1){
+              tagListTmp.splice(itemIndex,1);
+            }
+          });
+          tagListTmp.forEach((item,i) => {
+            this.elementInfo.selectedTagList.push(item);
+          });
+
           let tagNum = this.elementInfo.selectedTagList.length;
           this.setLabelDivHeight(tagNum);
         }else {

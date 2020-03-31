@@ -630,31 +630,25 @@
       },
       // 获取metric列表
       getSuggestMetric() {
-        //this.$get('metric', {pageNo: 1, pageSize: -1}).then(response => {
-        this.$get('/prom/api/v1/label/__name__/values').then(response => {
-          //if (response.code === 200) {
-          if (response.status === 'success') {
-            this.metricList = response.data;
+        //this.$get('/prom/api/v1/label/__name__/values').then(response => {
+        this.$get('/module?pageSize=-1').then(response => {
+          if (response.code === 200) {
+            this.metricList = response.data.list;
             const cascaderMap = new Map();
             this.metricList.forEach((item,index) => {
-              let arr = [];
-              let par = '';//父value
-              //let metricTmp = item.metric;//子value
-              let metricTmp = item;//子value
-              if(metricTmp){
-                arr  = metricTmp.split('_');
-                par = arr[0];
-              }
+              let projectName = item.project.name;
+              let moduleName = item.name;
               const childOption = {
-                value: metricTmp,
-                label: metricTmp,
+                value: moduleName,
+                label: moduleName,
+                children:[],
               };
-              if(cascaderMap.has(par)){
-                cascaderMap.get(par).push(childOption);
+              if(cascaderMap.has(projectName)){
+                cascaderMap.get(projectName).push(childOption);
               }else {
                 let childArr = [];
                 childArr.push(childOption);
-                cascaderMap.set(par,childArr);
+                cascaderMap.set(projectName,childArr);
               }
             });
             let metricCascaderArr = [];
