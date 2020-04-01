@@ -252,19 +252,21 @@ export default {
         prev:newItem.prev,
         next:newItem.next,
       }
-      this.$put('panel/'+ this.pagePanelId+'/charts/modify',modifyParams).then(response => {
-        if (response.code === 200) {
-          //let item = this.dataList.find(item => item.id === newItem.id);
-        }else {
-          if(response.msg){
-            this.$message.error(response.msg);
-          }else if(response.error){
-            this.$message.error(response.error);
+      if(this.dataList.length>1){
+        this.$put('panel/'+ this.pagePanelId+'/charts/modify',modifyParams).then(response => {
+          if (response.code === 200) {
+            //let item = this.dataList.find(item => item.id === newItem.id);
           }else {
-            this.$message.error(response);
+            if(response.msg){
+              this.$message.error(response.msg);
+            }else if(response.error){
+              this.$message.error(response.error);
+            }else {
+              this.$message.error(response);
+            }
           }
-        }
-      });
+        });
+      }
 
       let chartTitle = item.querySelector('.chartTitle');
       chartTitle.style.background = '';
@@ -284,8 +286,8 @@ export default {
     choose(event ){
       console.log('choose', event);
       let chartTitle = event.item.querySelector('.chartTitle');
-      console.log('choose-title',chartTitle);
-      chartTitle.style.background = '#d8dce1';
+      //console.log('choose-title',chartTitle);
+      //chartTitle.style.background = '#d8dce1';
     },
     clone(event){
       console.log('clone',event );
