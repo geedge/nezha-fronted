@@ -266,7 +266,7 @@
       //可以做最小化的处理，点击窗口外的空白处会调用此方法
       closeConsole(){
         //弹窗询问是否关闭所有链接，关闭窗口？复选框：记住我的选择（用户勾选且选择yes 后，保存到localstorage，之后关闭不再提醒）
-        if(this.editableTabs.length===1){
+        if(this.editableTabs.length<=1){
           this.closeShellWindow();
         }else {
           let remember = localStorage.getItem('close-shell-remember') ? localStorage.getItem('close-shell-remember') : false;
