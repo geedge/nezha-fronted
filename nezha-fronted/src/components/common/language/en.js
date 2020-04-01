@@ -530,7 +530,9 @@ const en = {
       rows: 'Rows',
       uuid: 'UUID',
       path: 'Path',
-      file: 'File'
+      file: 'File',
+      success: 'Success',
+      fail: 'Fail'
     },
     mib:{
       mib:'Mib',

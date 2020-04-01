@@ -374,7 +374,7 @@ const cn = {
     },
     terminallog: {
       terminallog: '终端',
-      enable: '可用',//"可用"
+      status: '状态',//"可用"
       option: '操作',//"操作",
       host: '主机',
       cmd: '命令',
@@ -397,7 +397,9 @@ const cn = {
       rows: '显示的行数',
       uuid: '唯一标识',
       path: '路径',
-      file: '文件'
+      file: '文件',
+      success: '成功',
+      fail: '失败'
     },
   },
   alert: {

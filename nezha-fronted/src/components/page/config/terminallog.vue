@@ -65,10 +65,11 @@
             <span v-else-if="item.prop == 'status'">
                             <el-tag v-if="scope.row.status==='1'"
                                     type="success"
-                                    disable-transitions>Success</el-tag>
+                                    disable-transitions>{{$t("config.terminallog.success")}}</el-tag>
                             <el-tag v-else
                     type="danger"
-                    disable-transitions>Fail</el-tag>
+                    disable-transitions>
+                              {{$t("config.terminallog.fail")}}</el-tag>
                         </span>
             <span v-else>{{scope.row[item.prop]}}</span>
           </template>
