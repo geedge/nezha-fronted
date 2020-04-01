@@ -18,6 +18,9 @@
         <div class="sidebar-info-item" @click="jumpTo('model')" id="prom-jump-model">
           {{$t('config.model.model')}}
         </div>
+        <div class="sidebar-info-item" @click="jumpTo('terminallog')" id="prom-jump-terminallog">
+          {{$t('config.terminallog.terminallog')}}
+        </div>
         <div class="sidebar-info-item" @click="jumpTo('mib')" id="prom-jump-mib">
           {{$t('config.mib.mib')}}
         </div>

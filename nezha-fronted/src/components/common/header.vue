@@ -108,9 +108,12 @@
           <div @click="jumpTo('model')" :class="{'menu-item-active' :(activeIndex == 'model' )}">{{$t('config.model.model')}}</div>
         </el-menu-item>
         <el-menu-item index="5-4">
-          <div @click="jumpTo('mib')" :class="{'menu-item-active' :(activeIndex == 'mib' )}">{{$t('config.mib.mib')}}</div>
+          <div @click="jumpTo('terminallog')" :class="{'menu-item-active' :(activeIndex == 'terminallog' )}">{{$t('config.terminallog.terminallog')}}</div>
         </el-menu-item>
         <el-menu-item index="5-5">
+          <div @click="jumpTo('mib')" :class="{'menu-item-active' :(activeIndex == 'mib' )}">{{$t('config.mib.mib')}}</div>
+        </el-menu-item>
+        <el-menu-item index="5-6">
           <div @click="jumpTo('system')" :class="{'menu-item-active' :(activeIndex == 'system' )}">{{$t('config.system.system')}}</div>
         </el-menu-item>
       </el-submenu>

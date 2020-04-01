@@ -67,6 +67,16 @@
         value: '2',
         label:i18n.t('alert.list.expired')
       }
+    ],
+    terminalProtocol:[
+      {
+        value: 'SSH',
+        label: i18n.t('config.terminallog.SSH')
+      },
+      {
+        value: 'TELNET',
+        label: i18n.t('config.terminallog.TELNET')
+      }
     ]
   };
   export default searchSelectInfo;

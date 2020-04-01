@@ -48,6 +48,9 @@
           <div class="sidebar-info-item" @click="jumpTo('model')" id="dc-jump-model">
             {{$t('config.model.model')}}
           </div>
+          <div class="sidebar-info-item" @click="jumpTo('terminallog')" id="dc-jump-terminallog">
+            {{$t('config.terminallog.terminallog')}}
+          </div>
           <div class="sidebar-info-item" @click="jumpTo('mib')" id="dc-jump-mib">
             {{$t('config.mib.mib')}}
           </div>

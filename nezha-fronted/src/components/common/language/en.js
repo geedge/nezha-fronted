@@ -20,6 +20,7 @@ const en = {
     esc: 'Cancel', //'取消'
     cancel: 'Cancel', //'取消'
     save: 'Save', //'保存'
+    download: 'Download', //下载
     preview:'Preview',//预览
     search: 'Search', //'搜索'
     add: 'Create', //"新增"
@@ -268,6 +269,8 @@ const en = {
     coverSuccess: 'Override success',//'覆盖成功'
     refreshLater:'Refresh later',//'请稍后刷新'
     testSuccess:'Test success',
+    downloadSuccess : 'Download Success',
+    uploadSuccess: 'Upload Success'
   },
   asset:{
     asset: 'Asset',
@@ -501,6 +504,33 @@ const en = {
       createModel: 'Create model',
       remark: 'Remark',
       type: 'Type'
+    },
+    terminallog: {
+      terminallog: 'TerminalLog',
+      enable: 'Available',//"可用"
+      option: 'Operation',//"操作",
+      host: 'Host',
+      cmd: 'CMD',
+      port: 'Port',
+      userId: 'UserID',
+      protocol: 'Protocol',
+      user: 'User',
+      detail: 'Terminal Log Detail',
+      resize: 'Terminal Resize',
+      download: 'Terminal Download',
+      upload: 'Terminal Upload',
+      selectFile: 'Select File',
+      SSH: 'SSH',
+      TELNET: 'TELNET',
+      id: 'ID',
+      time: 'Time',
+      width: 'Width',
+      height: 'Height',
+      cols: 'Cols',
+      rows: 'Rows',
+      uuid: 'UUID',
+      path: 'Path',
+      file: 'File'
     },
     mib:{
       mib:'Mib',
