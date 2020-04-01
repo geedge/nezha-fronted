@@ -266,7 +266,8 @@ const en = {
     deleteSuccess: 'Delete success',//"删除成功"
     saveSuccess: 'Save success', //"保存成功"
     coverSuccess: 'Override success',//'覆盖成功'
-    refreshLater:'Refresh later'//'请稍后刷新'
+    refreshLater:'Refresh later',//'请稍后刷新'
+    testSuccess:'Test success',
   },
   asset:{
     asset: 'Asset',

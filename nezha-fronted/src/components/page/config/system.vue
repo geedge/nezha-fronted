@@ -26,9 +26,9 @@
         <el-tab-pane :label="$t('config.system.basic.basic')" name="basic">
           <div class="system-config-form">
             <el-form :model="basic"  label-width="180px" size="small" ref="basicForm" :rules="basic.asset_ping_switch == 'on'?basicRules:basicRules2" :validate-on-rule-change="false">
-<!--              <el-form-item :label="$t('config.system.basic.curUrl')" prop="current_site_url">-->
-<!--                <el-input v-model="basic.current_site_url"></el-input>-->
-<!--              </el-form-item>-->
+              <el-form-item :label="$t('config.system.basic.systemName')" prop="system_name">
+                <el-input v-model="basic.system_name"></el-input>
+              </el-form-item>
               <el-form-item :label="$t('config.system.basic.curUrl')" prop="alert_api">
                 <el-input v-model="basic.alert_api"></el-input>
               </el-form-item>
@@ -177,7 +177,6 @@
     export default {
         name: "system",
         data(){
-
           return {
             basic:{
               alert_api:'',
@@ -190,6 +189,7 @@
               current_site_url:'',
             },
             basicRules:{
+              system_name:[{required:true,message:this.$t('validate.required'),trigger:'blur'},],
               node_exporter_target_path:[{required:true,message:this.$t('validate.required'),trigger:'blur'},],
               alert_api:[{required:true,message:this.$t('validate.required'),trigger:'blur'},{validator:host,trigger: 'blur'}],
               asset_ping_interval:[{required:true,message:this.$t('validate.required'),trigger:'blur'},{validator:positiveInteger,trigger:'blur'}],
@@ -197,6 +197,7 @@
               storage_local_retention:[{required:true,message:this.$t('validate.required'),trigger:'blur'},{validator:positiveInteger,trigger:'blur'}],
             },
             basicRules2:{
+              system_name:[{required:true,message:this.$t('validate.required'),trigger:'blur'},],
               node_exporter_target_path:[{required:true,message:this.$t('validate.required'),trigger:'blur'},],
               alert_api:[{required:true,message:this.$t('validate.required'),trigger:'blur'},,{validator:host,trigger: 'blur'}],
               scrape_interval:[{required:true,message:this.$t('validate.required'),trigger:'blur'},{validator:positiveInteger,trigger:'blur'}],
@@ -210,8 +211,8 @@
               email_smtp_password: "",
               email_send_account: "",
               email_test_reciver: "",
-              email_ssl_flag: 0,
-              email_tls_flag: 0,
+              email_ssl_flag: 'off',
+              email_tls_flag: 'off',
             },
             emailRules:{
               email_smtp_host: [
@@ -302,8 +303,13 @@
             this.$refs[formName].validate((valid) => {
               if (valid) {
                 let param={};
-                param[type]=this[type];
-                this.$put('/sysConfig',param).then(response=>{
+                param[type]=Object.assign({},this[type]);
+                this.$set(param[type],'test','false')
+                let postParam=Object.assign({},param);
+                for (let key in postParam[type]){
+                  postParam[type][key]=postParam[type][key]+'';
+                }
+                this.$put('/sysConfig',postParam).then(response=>{
                   if(response.code == 200){
                     this.$message({duration: 2000, type: 'success', message: this.$t("tip.saveSuccess")});
                     this.resetForm(formName);
@@ -320,15 +326,16 @@
           testSetInfo:function(type,formName){
             this.$refs[formName].validate((valid) => {
               if (valid) {
-                let param={test:true};
-                param[type]=this[type];
-                this.$put('/sysConfig',param).then(response=>{
+                let param={};
+                param[type]=Object.assign({},this[type]);
+                this.$set(param[type],'test','true')
+                let postParam=Object.assign({},param);
+                for (let key in postParam[type]){
+                  postParam[type][key]=postParam[type][key]+'';
+                }
+                this.$put('/sysConfig',postParam).then(response=>{
                   if(response.code == 200){
-                    this.$message({duration: 2000, type: 'success', message: this.$t("tip.success")});
-                    this.resetForm(formName);
-                    setTimeout(()=>{
-                      this.querySetInfo(type);
-                    },200)
+                    this.$message({duration: 2000, type: 'success', message: this.$t("tip.testSuccess")});
                   }else{
                     this.$message.error(response.msg);
                   }

@@ -32,7 +32,7 @@ export function port(rule, value, callback) {
   setTimeout(() => {
     if (!value) {
       callback();
-    } else if(typeof value != 'number'){
+    } else if(Number(value) == 'NaN'){
       callback(new Error(vm.$t('validate.number')))
     }else{
       if(value < 1 ||value > 65535){
