@@ -563,7 +563,7 @@
         this.queryData = [];
         this.tableData = [];
         this.tableDataCopy = '';
-        this.$get("/prom/api/v1/query?query={job='ed_" + this.currentEndpoint.id + "'}&time=" + this.formatTime).then(response=>{
+        this.$get("/prom/api/v1/query?query={endpoint='" + this.currentEndpoint.id + "'}&time=" + this.formatTime).then(response=>{
           if(response.status==="success"){
             let results = response.data.result;
             this.queryData=JSON.parse(JSON.stringify(results));

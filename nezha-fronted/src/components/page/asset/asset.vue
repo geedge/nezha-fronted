@@ -5,7 +5,7 @@
         <div class="sidebar-title">{{$t('asset.asset')}}</div>
         <div class="sidebar-info">
           <!--<div class="sidebar-info-header">ALL</div>-->
-          <el-checkbox :indeterminate="checkAllHandler" class="sidebar-info-item" v-model="checkAllFlag" @change="dcSelectAll" :true-label="1" :false-label="0">
+          <!--<el-checkbox :indeterminate="checkAllHandler" class="sidebar-info-item" v-model="checkAllFlag" @change="dcSelectAll" :true-label="1" :false-label="0">
             <div class="sidebar-info-item-txt" style="font-weight: bold;">All</div>
           </el-checkbox>
           <el-checkbox-group v-model="checkList" size="small" @change="changeCheckBox">
@@ -16,7 +16,7 @@
                   <span slot="reference">{{item.name}}</span>
                 </el-popover>
                 <span v-else>{{item.name}}</span>
-              </div>
+              </div>-->
 
   <!--            <idc-config-box ref="idcConfigBox" :post-idc="item" placement="left" @after="getIDCOptionData" :button-class="'checkbox-edit'" :user-data="idcUserData">-->
   <!--              <template v-slot:optionZone>-->
@@ -25,70 +25,128 @@
   <!--                </span>-->
   <!--              </template>-->
   <!--            </idc-config-box>-->
-            </el-checkbox>
-          </el-checkbox-group>
+            <!--</el-checkbox>
+          </el-checkbox-group>-->
+          <el-collapse v-model="activeType">
+            <el-collapse-item name="dataCenter" :title="$t('asset.left.dataCenter')">
+              <el-checkbox-group v-model="checkList" size="small" @change="changeCheckBox">
+                <el-checkbox class="sidebar-info-item" :class="{'sidebar-info-item-active': indOf(checkList, item.id)}"
+                             v-for="(item,key) in checkListData" :key="key" :label=item.id>
+                  <div class="sidebar-info-item-txt">
+                    <el-popover v-if="item.name.length > 16" trigger="hover" placement="top-start" :content="item.name" >
+                      <span slot="reference">{{item.name}}</span>
+                    </el-popover>
+                    <span v-else>{{item.name}}</span>
+                  </div>
+                  <!--            <idc-config-box ref="idcConfigBox" :post-idc="item" placement="left" @after="getIDCOptionData" :button-class="'checkbox-edit'" :user-data="idcUserData">-->
+                  <!--              <template v-slot:optionZone>-->
+                  <!--                <span @click="closeAllPop">-->
+                  <!--                  <i class="nz-icon nz-icon-edit" @click="getSingleIDCData(item.id,'edit')"></i>-->
+                  <!--                </span>-->
+                  <!--              </template>-->
+                  <!--            </idc-config-box>-->
+                  </el-checkbox>
+              </el-checkbox-group>
+            </el-collapse-item>
+            <el-collapse-item name="assetType" :title="$t('asset.left.assetType')">
+              <el-checkbox-group v-model="assetTypeCheckList" size="small" @change="changeAssetTypeCheckBox">
+                <el-checkbox class="sidebar-info-item" :class="{'sidebar-info-item-active': indOf(assetTypeCheckList, item.id)}" v-for="(item,key) in assetTypeCheckListData" :key="key" :label=item.id>
+                  <div class="sidebar-info-item-txt">
+                    <el-popover v-if="item.value.length > 16" trigger="hover" placement="top-start" :content="item.value" >
+                      <span slot="reference">{{item.value}}</span>
+                    </el-popover>
+                    <span v-else>{{item.value}}</span>
+                  </div>
+                </el-checkbox>
+              </el-checkbox-group>
+            </el-collapse-item>
+            <el-collapse-item name="vendor" :title="$t('asset.left.vendor')">
+              <el-checkbox-group v-model="vendorCheckList" size="small" @change="changeVendorCheckBox">
+                <el-checkbox class="sidebar-info-item" :class="{'sidebar-info-item-active': indOf(vendorCheckList, item.id)}" v-for="(item,key) in vendorCheckListData" :key="key" :label=item.id>
+                  <div class="sidebar-info-item-txt">
+                    <el-popover v-if="item.value.length > 16" trigger="hover" placement="top-start" :content="item.value" >
+                      <span slot="reference">{{item.value}}</span>
+                    </el-popover>
+                    <span v-else>{{item.value}}</span>
+                  </div>
+                </el-checkbox>
+              </el-checkbox-group>
+            </el-collapse-item>
+            <el-collapse-item name="ping" :title="$t('asset.left.ping')">
+              <el-checkbox-group v-model="pingCheckList" size="small" @change="changePingCheckBox">
+                <el-checkbox class="sidebar-info-item" :class="{'sidebar-info-item-active': indOf(pingCheckList, item.value)}" v-for="(item,key) in pingCheckListData" :key="key" :label=item.value>
+                  <div class="sidebar-info-item-txt">
+                    <el-popover v-if="item.label.length > 16" trigger="hover" placement="top-start" :content="item.label" >
+                      <span slot="reference">{{item.label}}</span>
+                    </el-popover>
+                    <span v-else>{{item.label}}</span>
+                  </div>
+                </el-checkbox>
+              </el-checkbox-group>
+            </el-collapse-item>
+          </el-collapse>
         </div>
       </el-scrollbar>
     </div>
 
-    <div class="content-right">
-      <div class="main-list main-and-sub-transition" :class="{'main-list-with-sub': showSubList}">
-        <div class="top-tools" v-show="mainResizeShow">
-          <div class="top-tool-main-right" :class="{'top-tool-main-right-to-left': showSubList}">
-            <div class="top-tool-search margin-r-20"><search-input :searchMsg="searchMsg" @search="search" :inTransform="inTransform"></search-input></div>
-            <export-excel
-              export-file-name="asset"
-              export-url="/asset/export"
-              :params="searchLabel"
-              @afterImport="getAssetData"
-              style="width: 59px;"
-              class="float-right">
-              <template slot="optionZone">
-                  <i class="nz-icon nz-icon-create-square" @click.stop="tagShow('showAdd')" :title="$t('overall.createAsset')" ></i>
-              </template>
-            </export-excel>
-          </div>
-          <div class="pagination-top pagination-top-hide display-none"></div>
-        </div>
+          <div class="content-right">
+            <div class="main-list main-and-sub-transition" :class="{'main-list-with-sub': showSubList}">
+              <div class="top-tools" v-show="mainResizeShow">
+                <div class="top-tool-main-right" :class="{'top-tool-main-right-to-left': showSubList}">
+                  <div class="top-tool-search margin-r-20"><search-input :searchMsg="searchMsg" @search="search" :inTransform="inTransform"></search-input></div>
+                  <export-excel
+                    export-file-name="asset"
+                    export-url="/asset/export"
+                    :params="searchLabel"
+                    @afterImport="getAssetData"
+                    style="width: 59px;"
+                    class="float-right">
+                    <template slot="optionZone">
+                        <i class="nz-icon nz-icon-create-square" @click.stop="tagShow('showAdd')" :title="$t('overall.createAsset')" ></i>
+                    </template>
+                  </export-excel>
+                </div>
+                <div class="pagination-top pagination-top-hide display-none"></div>
+              </div>
 
-        <el-table
-          class="nz-table"
-          :height="mainTableHeight"
-          style="width: 100%;"
-          :data="tableData"
-          v-scrollBar:el-table
-          v-show="mainResizeShow"
-          border
-          tooltip-effect="light"
-          ref="assetTable"
-        >
-          <el-table-column
-            :resizable="false"
-            v-for="(item, index) in tablelable"
-            v-if="item.show"
-            :width="item.width"
-            :key="`col_${index}`"
-            :label="item.label"
-            :fixed="item.fixed"
-            :show-overflow-tooltip="item.prop != 'Alert' || item.prop != 'Module'"
-            min-width="110px"
-            :class-name="item.prop == 'option' ? 'content-right-options' : ''"
-          >
-            <template slot-scope="scope" :column="item">
-              <div v-if="item.prop=='ID'">
-                <span>{{scope.row.id}}</span>
-              </div>
-              <div v-if="item.prop=='assetType'">
-                <span>{{scope.row.model.type.value}}</span>
-              </div>
-              <template v-if="item.prop=='SN'">{{scope.row.sn}}</template>
-              <div v-if="item.prop=='HOST'">
-                <span>{{scope.row.host}}</span>
-              </div>
-              <div v-if="item.prop=='state'">
-                <span>{{scope.row.state==1 ? $t('asset.createAssetTab.inStock') : $t('asset.createAssetTab.notInStock')}}</span>
-              </div>
-  <!--            :content="scope.row.pingRtt ? (scope.row.pingLastUpdate&&scope.row.pingLastUpdate!=''?(new Date(scope.row.pingLastUpdate).getHours()+':'+new Date(scope.row.pingLastUpdate).getMinutes()):'&#45;&#45;')+'['+ scope.row.pingRtt+'ms'+']':(scope.row.pingLastUpdate&&scope.row.pingLastUpdate!=''?(new Date(scope.row.pingLastUpdate).getHours()+':'+new Date(scope.row.pingLastUpdate).getMinutes()):'&#45;&#45;')+'[unreachable]'"-->
+              <el-table
+                class="nz-table"
+                :height="mainTableHeight"
+                style="width: 100%;"
+                :data="tableData"
+                v-scrollBar:el-table
+                v-show="mainResizeShow"
+                border
+                tooltip-effect="light"
+                ref="assetTable"
+              >
+                <el-table-column
+                  :resizable="false"
+                  v-for="(item, index) in tablelable"
+                  v-if="item.show"
+                  :width="item.width"
+                  :key="`col_${index}`"
+                  :label="item.label"
+                  :fixed="item.fixed"
+                  :show-overflow-tooltip="item.prop != 'Alert' || item.prop != 'Module'"
+                  min-width="110px"
+                  :class-name="item.prop == 'option' ? 'content-right-options' : ''"
+                >
+                  <template slot-scope="scope" :column="item">
+                    <div v-if="item.prop=='ID'">
+                      <span>{{scope.row.id}}</span>
+                    </div>
+                    <div v-if="item.prop=='assetType'">
+                      <span>{{scope.row.model.type.value}}</span>
+                    </div>
+                    <template v-if="item.prop=='SN'">{{scope.row.sn}}</template>
+                    <div v-if="item.prop=='HOST'">
+                      <span>{{scope.row.host}}</span>
+                    </div>
+                    <div v-if="item.prop=='state'">
+                      <span>{{scope.row.state==1 ? $t('asset.createAssetTab.inStock') : $t('asset.createAssetTab.notInStock')}}</span>
+                    </div>
+        <!--            :content="scope.row.pingRtt ? (scope.row.pingLastUpdate&&scope.row.pingLastUpdate!=''?(new Date(scope.row.pingLastUpdate).getHours()+':'+new Date(scope.row.pingLastUpdate).getMinutes()):'&#45;&#45;')+'['+ scope.row.pingRtt+'ms'+']':(scope.row.pingLastUpdate&&scope.row.pingLastUpdate!=''?(new Date(scope.row.pingLastUpdate).getHours()+':'+new Date(scope.row.pingLastUpdate).getMinutes()):'&#45;&#45;')+'[unreachable]'"-->
               <div v-if="item.prop == 'pingStatus'">
                 <el-popover
                   placement="right"
@@ -273,7 +331,11 @@
         },
         showTopBtn: false,
         searchLabel: {}, //搜索参数
+        activeType:'dataCenter',
         checkList: [],
+        assetTypeCheckList:[],
+        vendorCheckList:[],
+        pingCheckList:[],
         tablelable: [],
         dropCol: [],
         tableTitle: [
@@ -354,6 +416,9 @@
           }],
         tableData: [],
         checkListData: [],
+        assetTypeCheckListData:[],
+        vendorCheckListData:[],
+        pingCheckListData:[],
         IDCData: '',
         IDCOptionData: [],
         cabinetData: '',
@@ -421,6 +486,7 @@
       getData: {
         handler(newVal) {
           if (newVal.type == 1) {
+            this.activeType='dataCenter'
             this.checkList = newVal.selectedData;
             this.assetClick = false;
           }
@@ -580,6 +646,26 @@
           }
         })
       },
+      getAssetTypeData:function(){
+        this.$get('sys/dict/all?type=assetType').then(response => {
+          if (response.code === 200) {
+            this.assetTypeCheckListData = response.data
+          }
+        })
+      },
+      getVendorData:function(){
+        this.$get('sys/dict/all?type=vendor').then(response => {
+          if (response.code === 200) {
+            this.vendorCheckListData = response.data
+          }
+        })
+      },
+      getPingData:function(){
+        this.pingCheckListData=[
+          {label:'up',value:1},
+          {label:'down',value:2},
+        ]
+      },
       getUserData() {
         this.$get('sys/user/list').then(response => {
           if (response.code === 200) {
@@ -729,6 +815,33 @@
         this.assetClick = true;
         this.getSingleAsset();
       },
+      changeAssetTypeCheckBox:function(){
+        if(this.assetTypeCheckList && this.assetTypeCheckList.length > 0){
+          let assetTypeIds=this.assetTypeCheckList.join(',');
+          this.pageObj.typeIds=assetTypeIds;
+          this.getAssetData();
+        }else{
+          this.pageObj.typeIds='';
+        }
+      },
+      changeVendorCheckBox:function(){
+        if(this.vendorCheckList && this.vendorCheckList.length > 0){
+          let vendorIds=this.vendorCheckList.join(',');
+          this.pageObj.vendorIds=vendorIds;
+          this.getAssetData();
+        }else{
+          this.pageObj.vendorIds='';
+        }
+      },
+      changePingCheckBox:function(){
+        if(this.pingCheckList && this.pingCheckList.length > 0){
+          let pingStates=this.pingCheckList.join(',');
+          this.pageObj.pingStates=pingStates;
+          this.getAssetData();
+        }else{
+          this.pageObj.pingStates='';
+        }
+      },
       getSingleAsset() {
         let checkedCount = this.checkList.length;
         let allCount = this.checkListData.length;
@@ -844,6 +957,9 @@
     created() {
       this.getUserData();
       this.getIDCOptionData();
+      this.getAssetTypeData();
+      this.getVendorData();
+      this.getPingData();
     },
     mounted() {
       //是否存在分页缓存

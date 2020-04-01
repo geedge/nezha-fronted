@@ -94,7 +94,7 @@
         trigger: 'item',
         type:'cross',
         alwaysShowContent: false,
-        backgroundColor:'#6E6E6E',
+        // backgroundColor: 'rgba(0,0,0,0.7)',
         borderColor:'#ffffff',
         borderRadius: 4,
         borderWidth: 1,

@@ -806,7 +806,7 @@
                   }else{
                     areaName=areaInfo.name;
                   }
-                  seriesDatas.push({name:areaName,value:[areaInfo.longitude,areaInfo.latitude,dcStat.assetTotal,dcStat.alertTotal]})
+                  seriesDatas.push({name:areaName,value:[areaInfo.longitude,areaInfo.latitude,dcStat]})
                 }
               }
             }
@@ -836,14 +836,80 @@
       },
       /*加载数据 end*/
       mapTooltipFormatter(params){
-        var color = "orange";
-        var a = "<div style='background-color:"+color+";padding: 5px 10px;text-align:center;color:white;font-size: 16px;'>" + params.data.name + "</div>";
-        a += "<div style='padding:3px;text-align: center'>";
-        a +=this.$t('dashboard.overview.asset.title')+': '+params.data.value[2] + "<br>";
-        a +=this.$t('dashboard.overview.asset.alert')+': '+params.data.value[3] + "<br>";
-        a += "</div>";
+        let dcStat=params.data.value[2];
+        let tooltip=`
+            <div class="tooltip">
+                <div>${dcStat.name}</div>
+                <div class="flex-box">
+                   <div style="width: 60%;">
+                        <table  style="width: 100%;" class="tooltip-table">
+                            <tr ><td colspan="3"><div style="display: flex;justify-content: space-between"><div>${this.$t('dashboard.overview.mapTooltip.asset')}</div><div>${this.$t('dashboard.overview.mapTooltip.total')}: ${dcStat.assetTotal}</div></div></td></tr>
+                            <tr>
+                                <td rowspan="2">${this.$t('dashboard.overview.mapTooltip.state')}</td>
+                                <td >${this.$t('dashboard.overview.mapTooltip.inStock')}</td>
+                                <td >${dcStat.assetInStock}</td>
+                            </tr>
+                            <tr>
+                                <td >${this.$t('dashboard.overview.mapTooltip.outStock')}</td>
+                                <td >${dcStat.assetOutStock}</td>
+                            </tr>
+                            <tr>
+                                <td rowspan="2">${this.$t('dashboard.overview.mapTooltip.ping')}</td>
+                                <td >${this.$t('dashboard.overview.mapTooltip.active')}</td>
+                                <td >${dcStat.assetPingUp}</td>
+                            </tr>
+                            <tr>
+                                <td >${this.$t('dashboard.overview.mapTooltip.inactive')}</td>
+                                <td >${dcStat.assetPingDown}</td>
+                            </tr>
+                            <tr>
+                                <td rowspan="3">${this.$t('dashboard.overview.mapTooltip.alert')}</td>
+                                <td >${this.$t('dashboard.overview.mapTooltip.high')}</td>
+                                <td >${dcStat.alertHigh}</td>
+                            </tr>
+                            <tr>
+                                <td >${this.$t('dashboard.overview.mapTooltip.medium')}</td>
+                                <td >${dcStat.alertMedium}</td>
+                            </tr>
+                            <tr>
+                                <td >${this.$t('dashboard.overview.mapTooltip.low')}</td>
+                                <td >${dcStat.alertLow}</td>
+                            </tr>
+                        </table>
+                   </div>
+                   <div style="width: 30%;" class="flex-box column-box">
+                      <div  >
+                        <table style="width: 100%;" class="tooltip-table">
+                            <tr><td colspan="2"><div style="display: flex;justify-content: space-between"><div>${this.$t('dashboard.overview.mapTooltip.endpoint')}</div><div>${this.$t('dashboard.overview.mapTooltip.total')}: ${dcStat.endpointTotal}</div></div></td></tr>
+                            <tr>
+                                <td>${this.$t('dashboard.overview.mapTooltip.up')}</td>
+                                <td>${dcStat.endpointUp}</td>
+                            </tr>
+                            <tr>
+                                <td>${this.$t('dashboard.overview.mapTooltip.down')}</td>
+                                <td>${dcStat.endpointDown}</td>
+                            </tr>
+                        </table>
+                      </div>
+                       <div >
+                           <table style="width: 100%;" class="tooltip-table">
+                            <tr><td colspan="2"><div style="display: flex;justify-content: space-between"><div>${this.$t('dashboard.overview.mapTooltip.prometheus')}</div><div>${this.$t('dashboard.overview.mapTooltip.total')}: ${dcStat.promTotal}</div></div></td></tr>
+                            <tr>
+                                <td>${this.$t('dashboard.overview.mapTooltip.up')}</td>
+                                <td>${dcStat.promUp}</td>
+                            </tr>
+                            <tr>
+                                <td>${this.$t('dashboard.overview.mapTooltip.down')}</td>
+                                <td>${dcStat.promDown}</td>
+                            </tr>
+                           </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
 
-        return a;
+        return tooltip;
       },
       tooltipPosition:function(point,params,dom,rect,size){
         dom.style.transform = "translateZ(0)";
@@ -1138,5 +1204,37 @@
     display: flex;
     flex-direction: column;
     height: 100%;
+  }
+  .tooltip{
+    padding:5px;
+    min-width: 500px;
+  }
+  .tooltip-table{
+    border-spacing: 0px;
+    border-collapse:collapse;
+  }
+  .tooltip-table tr{
+    display: table-row;
+    vertical-align: inherit;
+    border-color: inherit;
+  }
+  .tooltip-table td{
+    min-width: 0;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    text-overflow: ellipsis;
+    vertical-align: middle;
+    text-align: left;
+    border: 1px solid #EBEEF5;
+    display: table-cell;
+    padding:0px 5px ;
+  }
+  .flex-box{
+    display: flex;
+    justify-content: space-around;
+  }
+  .column-box{
+    flex-direction: column;
+    justify-content: space-between !important;
   }
 </style>

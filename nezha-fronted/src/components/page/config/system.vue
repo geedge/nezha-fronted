@@ -157,7 +157,7 @@
 <!--                  <el-option v-for="(item,index) in resetOptions" :label="item.label" :value="item.value" :key="item.value+index"></el-option>-->
 <!--                </el-select>-->
                 <el-checkbox-group v-model="reset.type">
-                  <el-checkbox v-for="(item,index) in resetOptions" :label="item.label" :value="item.value" :key="item.value+index"></el-checkbox>
+                  <div v-for="(item,index) in resetOptions" :key="item.value+index"><el-checkbox  :label="item.label" :value="item.value"  ></el-checkbox></div>
                 </el-checkbox-group>
               </el-form-item>
               <el-form-item>
@@ -347,19 +347,20 @@
             });
           },
           resetSys:function(){
+            let $temp=this;
             this.$prompt(this.$t('config.system.reset.pwdTip'), this.$t('config.system.reset.promptTitle'), {
               confirmButtonText: this.$t('config.system.reset.yes'),
               cancelButtonText: this.$t('config.system.reset.no'),
               inputType:'password',
             }).then(({ value }) => {
-              this.reset.password=value
-              this.$refs['resetForm'].validate(valid=>{
+              $temp.reset.password=value
+              $temp.$refs['resetForm'].validate(valid=>{
                 if(valid){
-                  this.$delete('/sysConfig/reset',this.reset).then(response=>{
+                  $temp.$put('/sysConfig/reset',$temp.reset).then(response=>{
                     if(response.code == 200){
-                      this.$message({duration: 2000, type: 'success', message: this.$t("tip.success")});
+                      $temp.$message({duration: 2000, type: 'success', message: this.$t("tip.resetSuccess")});
                     }else{
-                      this.$message.error(response.msg);
+                      $temp.$message.error(response.msg);
                     }
                   })
                 }
