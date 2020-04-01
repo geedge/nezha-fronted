@@ -507,7 +507,7 @@ const en = {
     },
     terminallog: {
       terminallog: 'TerminalLog',
-      enable: 'Available',//"可用"
+      status: 'Status',//"状态"
       option: 'Operation',//"操作",
       host: 'Host',
       cmd: 'CMD',

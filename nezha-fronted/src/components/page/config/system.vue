@@ -13,14 +13,14 @@
         <div class="sidebar-info-item" @click="jumpTo('model')" id="system-jump-model">
           {{$t('config.model.model')}}
         </div>
-        <div class="sidebar-info-item" @click="jumpTo('terminallog')" id="system-jump-terminallog">
-          {{$t('config.terminallog.terminallog')}}
-        </div>
         <div class="sidebar-info-item" @click="jumpTo('mib')" id="system-jump-mib">
           {{$t('config.mib.mib')}}
         </div>
         <div class="sidebar-info-item sidebar-info-item-active"  id="system-jump-system">
           {{$t('config.system.system')}}
+        </div>
+        <div class="sidebar-info-item" @click="jumpTo('terminallog')" id="system-jump-terminallog">
+          {{$t('config.terminallog.terminallog')}}
         </div>
       </div>
     </div>
