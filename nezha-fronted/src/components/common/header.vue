@@ -292,7 +292,23 @@
             port: '',
             path: '',
             param: '',
-            paramObj: []
+            type: '',
+            paramObj: [],
+            //snmp setting 下划线命名是因为业务需求
+            walk: [],
+            walkStr: '', //转为string的walk，用于回显
+            version: 2, //2/3
+            max_repetitions: 25,
+            retries: 3,
+            timeout: 10, //s
+            community: 'public',
+            username: '',
+            security_level: 'noAuthNoPriv', //noAuthNoPriv/authNoPriv/authPriv
+            password: '',
+            auth_protocol: 'MD5', //MD5/SHA
+            priv_protocol: 'DES', //DES/AES
+            priv_password: '',
+            context_name: ''
           };
         } else if (item.type == 3) {
           this.$refs.addEndpointBox.show(true);

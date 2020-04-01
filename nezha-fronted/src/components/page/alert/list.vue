@@ -8,8 +8,7 @@
     <div class="content-left">
       <div class="sidebar-title">{{$t('alert.alert')}}</div>
       <div class="sidebar-info">
-        <div class="sidebar-info-item sidebar-info-top sidebar-info-item-
-">{{$t('alert.alertList')}}</div>
+        <div class="sidebar-info-item sidebar-info-top sidebar-info-item-active">{{$t('alert.alertList')}}</div>
         <div class="sidebar-info-item" @click="jumpTo('alertConfig')" id="alert-jump-config">
           {{$t('alert.alertConfig')}}
         </div>

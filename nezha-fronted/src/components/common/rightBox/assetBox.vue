@@ -61,8 +61,8 @@
             <button type="button" v-if="assetViewData.alertNum > 0" id="'asset-alerts-'+scope.row.id" @click="jumpToAlertMsg(obj.id)" class="nz-btn nz-btn-size-normal nz-btn-style-light nz-btn-min-width-75">{{assetViewData.alertNum}}</button>
             <button type="button" v-else class="nz-btn nz-btn-size-normal nz-btn-style-light nz-btn-min-width-75 nz-btn-disabled">{{assetViewData.alertNum}}</button>
           </el-form-item>
-          <div class="asset-sub-title">{{$t('asset.createAssetTab.assetInfo')}}</div>
-          <div class="line-100 asset-line"></div>
+          <div class="right-box-sub-title">{{$t('asset.createAssetTab.assetInfo')}}</div>
+          <div class="line-100 right-box-line"></div>
           <!------------------------------------------资产类型---------------------------------------------->
           <el-form-item :label="$t('asset.createAssetTab.assetType')" class="right-box-form-content" prop="assetType">
             <el-select popper-class="asset-dropdown" size="small" v-if="!tabView" v-model="assetType" clearable @visible-change="cancelEdit"
@@ -124,8 +124,8 @@
             </div>
             <span v-if="tabView">{{assetData.purchaseDate}}</span>
           </el-form-item>
-          <div class="asset-sub-title">{{$t('asset.createAssetTab.dc')}}</div>
-          <div class="line-100 asset-line"></div>
+          <div class="right-box-sub-title">{{$t('asset.createAssetTab.dc')}}</div>
+          <div class="line-100 right-box-line"></div>
           <!------------------------------------------IDC---------------------------------------------->
           <el-form-item :label="$t('asset.createAssetTab.dcName')" class="right-box-form-content" prop="idcId">
             <template v-if="!tabView">
@@ -199,10 +199,10 @@
             <span>{{cabinetSelectedData.remark}}</span>
           </el-form-item>
           <!--cli-->
-          <div class="asset-sub-title">{{$t('asset.createAssetTab.cli')}}
+          <div class="right-box-sub-title">{{$t('asset.createAssetTab.cli')}}
             <el-switch v-if="!tabView" style="float: right;" v-model="accountSwitch" active-color="#ee9d3f" :disabled="parseInt(assetData.exporter)===1"></el-switch>
           </div>
-          <div class="line-100 asset-line"></div>
+          <div class="line-100 right-box-line"></div>
           <template v-if="accountSwitch">
             <account-config-box v-for="(item,index) in assetData.accounts" :is-edit="!tabView" :account="item" :key="index" ref="accountConfigBox" @setValidateResult="setAccountValideResult" :is-allowed-change-protocol="changeProtocolSwitch" @protocol-type-change="protocolTypeChange"></account-config-box>
           </template>
@@ -211,7 +211,7 @@
             <el-form-item :label="$t('asset.createAssetTab.exporter')" class="exporter-label">
               <el-switch class="exporter-switch" v-model="assetData.exporter" active-color="#ee9d3f" active-value="1" inactive-value="0" :disabled="exporterDisableSwitch"></el-switch>
             </el-form-item>
-            <div class="line-100 asset-line" style="margin-top: -16px;"></div>
+            <div class="line-100 right-box-line" style="margin-top: -16px;"></div>
           </template>
         </el-form>
       </el-scrollbar>
@@ -1308,13 +1308,3 @@
     }
   }
 </script>
-
-<style scoped>
-.asset-sub-title {
-  padding: 8px 0;
-}
-.asset-line {
-  margin-bottom: 18px;
-  background-color: #DCDFE6;
-}
-</style>

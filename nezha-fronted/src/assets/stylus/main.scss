@@ -858,6 +858,13 @@ li{
 .right-box .el-form-item__label {
   line-height: 30px;
 }
+.right-box-sub-title {
+  padding: 8px 0;
+}
+.right-box-line {
+  margin-bottom: 18px;
+  background-color: #DCDFE6;
+}
 .pop-top-btns {
   text-align: center;
   float: right;
@@ -1304,6 +1311,16 @@ li{
 .el-checkbox__input.is-checked .el-checkbox__inner, .asset .content-left .el-checkbox__input.is-indeterminate .el-checkbox__inner, .el-checkbox__input.is-indeterminate .el-checkbox__inner {
   background-color: $global-text-color-active;
 }
+
+.el-radio-button__inner:hover {
+  color: $global-text-color-active;
+}
+
+.el-radio-button__orig-radio:checked+.el-radio-button__inner {
+  background-color: $global-text-color-active;
+  border-color: $global-text-color-active;
+  box-shadow: -1px 0 0 0 $global-text-color-active;
+}
 /* --end--复选框自定义颜色 */
 
 /* dashboard-dialog */
@@ -1377,7 +1394,7 @@ li{
   line-height: 25px !important;
 }
 
-.el-textarea textarea {
+.el-textarea textarea:not(.snmp-walk textarea) {
   height: 140px !important;
 }
 /*el-data-picker选中背景色*/

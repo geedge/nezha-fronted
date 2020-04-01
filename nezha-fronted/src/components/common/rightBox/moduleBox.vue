@@ -19,7 +19,7 @@
       <!-- end--标题-->
 
       <!-- begin--表单-->
-      <el-scrollbar class="right-box-form-box">
+      <el-scrollbar class="right-box-form-box" ref="scrollbar">
         <el-form class="right-box-form" :model="module" label-position="top" :rules="rules" ref="moduleForm">
           <el-form-item :label='$t("project.project.project")' prop="project">
             <el-select v-if="rightBox.isEdit" value-key="id" popper-class="config-dropdown" v-model="module.project" placeholder="" size="small">
@@ -31,36 +31,224 @@
             <el-input v-if="rightBox.isEdit" placeholder="" maxlength="64" show-word-limit v-model="module.name" size="small"></el-input>
             <div v-if="!rightBox.isEdit" class="right-box-form-content-txt">{{module.name}}</div>
           </el-form-item>
+
+          <el-form-item :label="$t('overall.type')" prop="type">
+            <el-radio-group v-model="module.type" size="small" @change="updateScrollbar" :disabled="module.id">
+              <el-radio-button label="http"></el-radio-button>
+              <el-radio-button label="snmp"></el-radio-button>
+            </el-radio-group>
+          </el-form-item>
+
+          <!-- snmp表单 -->
+          <template v-if="module.type && module.type == 'snmp'">
+            <div class="right-box-sub-title">SNMP</div>
+            <div class="line-100 right-box-line"></div>
+
+            <el-row>
+              <el-col :span="6">
+                <div class="sub-label sub-label-required">{{$t('project.module.walk')}}</div>
+              </el-col>
+              <el-col :span="18">
+                <el-form-item prop="walkStr">
+                  <el-input class="snmp-walk" v-model="module.walkStr" autosize type="textarea" :placeholder="$t('tip.pressEnterToAdd')"></el-input>
+                </el-form-item>
+              </el-col>
+            </el-row>
+
+            <el-row>
+              <el-col :span="6">
+                <div class="sub-label">{{$t('project.module.version')}}</div>
+              </el-col>
+              <el-col :span="18">
+                <el-form-item prop="version">
+                  <el-radio-group v-model.number="module.version" size="small" @change="updateScrollbar">
+                    <el-radio-button :label="2"></el-radio-button>
+                    <el-radio-button :label="3"></el-radio-button>
+                  </el-radio-group>
+                </el-form-item>
+              </el-col>
+            </el-row>
+
+            <el-row>
+              <el-col :span="6">
+                <div class="sub-label">{{$t('project.module.maxRepetitions')}}</div>
+              </el-col>
+              <el-col :span="18">
+                <el-form-item prop="max_repetitions">
+                  <el-input v-model.number="module.max_repetitions" size="small"></el-input>
+                </el-form-item>
+              </el-col>
+            </el-row>
+
+            <el-row>
+              <el-col :span="6">
+                <div class="sub-label">{{$t('project.module.retries')}}</div>
+              </el-col>
+              <el-col :span="18">
+                <el-form-item prop="retries">
+                  <el-input v-model.number="module.retries" size="small"></el-input>
+                </el-form-item>
+              </el-col>
+            </el-row>
+
+            <el-row>
+              <el-col :span="6">
+                <div class="sub-label">{{$t('project.module.timeout')}}</div>
+              </el-col>
+              <el-col :span="18">
+                <el-form-item prop="timeout">
+                  <el-input v-model.number="module.timeout" size="small">
+                    <template slot="append">second</template>
+                  </el-input>
+                </el-form-item>
+              </el-col>
+            </el-row>
+
+            <el-row>
+              <el-col :span="1">&nbsp;</el-col>
+              <el-col :span="23">
+                <div class="right-box-sub-title">Auth</div>
+                <div class="line-100 right-box-line"></div>
+              </el-col>
+            </el-row>
+
+            <el-row>
+              <el-col :span="6">
+                <div class="sub-label sub-label-required">{{$t('project.module.community')}}</div>
+              </el-col>
+              <el-col :span="18">
+                <el-form-item prop="community">
+                  <el-input v-model.trim="module.community" maxlength="64" show-word-limit size="small"></el-input>
+                </el-form-item>
+              </el-col>
+            </el-row>
+
+            <!--SNMP V3 setting-->
+            <template v-if="module.version == 3">
+              <el-row>
+                <el-col :span="6">
+                  <div class="sub-label sub-label-required">{{$t('login.username')}}</div>
+                </el-col>
+                <el-col :span="18">
+                  <el-form-item prop="username">
+                    <el-input v-model.trim="module.username" maxlength="64" show-word-limit size="small"></el-input>
+                  </el-form-item>
+                </el-col>
+              </el-row>
+
+              <el-row>
+                <el-col :span="6">
+                  <div class="sub-label">{{$t('project.module.securityLevel')}}</div>
+                </el-col>
+                <el-col :span="18">
+                  <el-form-item prop="security_level">
+                    <el-radio-group v-model="module.security_level" size="small" @change="updateScrollbar">
+                      <el-radio-button label="noAuthNoPriv"></el-radio-button>
+                      <el-radio-button label="authNoPriv"></el-radio-button>
+                      <el-radio-button label="authPriv"></el-radio-button>
+                    </el-radio-group>
+                  </el-form-item>
+                </el-col>
+              </el-row>
+
+              <el-row v-if="module.security_level == 'authNoPriv' || module.security_level == 'authPriv'">
+                <el-col :span="6">
+                  <div class="sub-label sub-label-required">{{$t('login.password')}}</div>
+                </el-col>
+                <el-col :span="18">
+                  <el-form-item prop="password">
+                    <el-input v-model.trim="module.password" maxlength="64" show-word-limit size="small"></el-input>
+                  </el-form-item>
+                </el-col>
+              </el-row>
+
+              <el-row v-if="module.security_level == 'authNoPriv' || module.security_level == 'authPriv'">
+                <el-col :span="6">
+                  <div class="sub-label">{{$t('project.module.authProtocol')}}</div>
+                </el-col>
+                <el-col :span="18">
+                  <el-form-item prop="auth_protocol">
+                    <el-radio-group v-model="module.auth_protocol" size="small">
+                      <el-radio-button label="MD5"></el-radio-button>
+                      <el-radio-button label="SHA"></el-radio-button>
+                    </el-radio-group>
+                  </el-form-item>
+                </el-col>
+              </el-row>
+
+              <el-row v-if="module.security_level == 'authPriv'">
+                <el-col :span="6">
+                  <div class="sub-label">{{$t('project.module.privProtocol')}}</div>
+                </el-col>
+                <el-col :span="18">
+                  <el-form-item prop="priv_protocol">
+                    <el-radio-group v-model="module.priv_protocol" size="small">
+                      <el-radio-button label="DES"></el-radio-button>
+                      <el-radio-button label="AES"></el-radio-button>
+                    </el-radio-group>
+                  </el-form-item>
+                </el-col>
+              </el-row>
+
+              <el-row v-if="module.security_level == 'authPriv'">
+                <el-col :span="6">
+                  <div class="sub-label sub-label-required">{{$t('project.module.privPassword')}}</div>
+                </el-col>
+                <el-col :span="18">
+                  <el-form-item prop="priv_password">
+                    <el-input v-model.trim="module.priv_password" maxlength="64" show-word-limit size="small"></el-input>
+                  </el-form-item>
+                </el-col>
+              </el-row>
+            </template>
+
+            <el-row>
+              <el-col :span="6">
+                <div class="sub-label">{{$t('project.module.contextName')}}</div>
+              </el-col>
+              <el-col :span="18">
+                <el-form-item prop="context_name">
+                  <el-input v-model.trim="module.context_name" maxlength="64" show-word-limit size="small"></el-input>
+                </el-form-item>
+              </el-col>
+            </el-row>
+          </template>
+
           <el-form-item :label='$t("project.module.description")' prop="remark">
             <el-input v-if="rightBox.isEdit" type="textarea" placeholder="" maxlength="1024" show-word-limit v-model="module.remark" size="small"></el-input>
             <div v-if="!rightBox.isEdit" class="right-box-form-content-txt">{{module.remark}}</div>
           </el-form-item>
+
           <div class="right-box-form-tip" v-if="rightBox.isEdit">
             {{$t('project.module.tip.defaultEndpointSet')}}
             <div class="line-100"></div>
             {{$t('project.module.tip.relation')}}
           </div>
-          <el-form-item :label='$t("project.endpoint.port")' prop="port">
+
+          <el-form-item :label='$t("project.endpoint.port")' prop="port" >
             <el-input v-if="rightBox.isEdit" placeholder="" v-model.number="module.port" size="small"></el-input>
             <div v-if="!rightBox.isEdit" class="right-box-form-content-txt">{{module.port}}</div>
           </el-form-item>
-          <el-form-item :label='$t("project.endpoint.path")' prop="path">
-            <el-input  v-if="rightBox.isEdit" placeholder="" v-model="module.path" size="small"></el-input>
+
+          <el-form-item v-if="module.type && module.type.toLowerCase() == 'http'" :label='$t("project.endpoint.path")' prop="path">
+            <el-input v-if="rightBox.isEdit" placeholder="" v-model="module.path" size="small"></el-input>
             <div v-if="!rightBox.isEdit" class="right-box-form-content-txt">{{module.path}}</div>
           </el-form-item>
+
           <el-form-item class="right-box-form-param">
             <template slot="label">
               <span>{{$t('project.endpoint.param')}}</span>
               <div class="right-box-form-btns" v-if="rightBox.isEdit">
                 <button style="display: none;">第一个button会出现意料之外的hover样式，找不到原因，只好加个不可见的button规避问题</button>
                 <button id="module-clear-all" type="button" @click="clearAllParam" class="nz-btn nz-btn-size-normal nz-btn-style-light">
-                  <span class="top-tool-btn-txt">{{$t('overall.clearAll')}}</span>
+                  <span class="top-tool-btn-txt">{{$t('overall.clear')}}</span>
                 </button>
                 <button id="module-add-param" type="button" @click="addParam" class="nz-btn nz-btn-size-normal nz-btn-style-normal">
                   <span class="top-tool-btn-txt">{{$t('overall.add')}}</span>
                 </button>
               </div>
             </template>
+
             <div v-if="rightBox.isEdit" class="param-box param-box-module">
               <div class="param-box-row" v-for="(item, index) in module.paramObj">
                 <el-form-item class="param-box-row-key" :rules="{required: true, message: $t('validate.required'), trigger: 'blur'}" :prop="'paramObj.' + index + '.key'">
@@ -123,8 +311,18 @@
           port: [
             {validator:port, trigger: 'blur'},
           ],
-          path: [
-          ]
+          walk: [
+            {required: true, message: this.$t('validate.required'), trigger: 'blur'}
+          ],
+          username: [
+            {required: true, message: this.$t('validate.required'), trigger: 'blur'}
+          ],
+          password: [
+            {required: true, message: this.$t('validate.required'), trigger: 'blur'}
+          ],
+          priv_password: [
+            {required: true, message: this.$t('validate.required'), trigger: 'blur'}
+          ],
         },
         projectList: [],
       }
@@ -144,11 +342,66 @@
         this.esc();
       },
 
+      //转化snmpParam属性
+      parseSnmpParam() {
+        let snmpObj = { //下划线命名是因为业务需求
+          walk: this.module.walkStr.split(/\n/),
+          version: this.module.version, //2/3
+          max_repetitions: this.module.max_repetitions ? this.module.max_repetitions : 25,
+          retries: this.module.retries ? this.module.retries : 3,
+          timeout: this.module.timeout ? this.module.timeout + "s" : "10s", //s
+          auth: {
+            community: this.module.community,
+          }
+        };
+        if (this.module.version == 3) {
+          snmpObj.auth.username = this.module.username;
+          snmpObj.auth.security_level = this.module.security_level;
+        }
+        if (this.module.security_level == "authNoPriv" || this.module.security_level == "authPriv") {
+          snmpObj.auth.password = this.module.password;
+          snmpObj.auth.auth_protocol = this.module.auth_protocol;
+          if (this.module.security_level != "authNoPriv") {
+            snmpObj.auth.priv_password = this.module.priv_password;
+            snmpObj.auth.priv_protocol = this.module.priv_protocol;
+          }
+        }
+        this.module.snmpParam = JSON.stringify(snmpObj);
+      },
+      //回显时解析snmpParam
+      reparseSnmpParam(module) {
+        let snmpObj = JSON.parse(module.snmpParam);
+        module.walkStr = snmpObj.walk.join("\n");
+        module.version = snmpObj.version;
+        module.max_repetitions = snmpObj.max_repetitions;
+        module.retries = snmpObj.retries;
+        module.timeout = parseInt(snmpObj.timeout.replace("s", ""));
+        module.community = snmpObj.auth.community;
+        if (snmpObj.version == 3) {
+          module.username = snmpObj.auth.username;
+          module.security_level = snmpObj.auth.security_level;
+        }
+        if (snmpObj.auth.security_level == "authNoPriv" || snmpObj.auth.security_level == "authPriv") {
+          module.password = snmpObj.auth.password;
+          module.auth_protocol = snmpObj.auth.auth_protocol;
+          if (snmpObj.auth.security_level != "authNoPriv") {
+            module.priv_password = snmpObj.auth.priv_password;
+            module.priv_protocol = snmpObj.auth.priv_protocol;
+          }
+        }
+      },
       /*保存*/
       save() {
         this.module.param = this.paramToJson(this.module.paramObj);
         this.$refs.moduleForm.validate((valid) => {
           if (valid) {
+            if (this.module.type.toLowerCase() == 'snmp') {
+              this.parseSnmpParam();
+            } else {
+              if (this.module.snmpParam) {
+                this.module.snmpParam = "";
+              }
+            }
             this.module.projectId = this.module.project.id;
             if (this.module.id) {
               this.$put('module', this.module).then(response => {
@@ -251,6 +504,9 @@
           return jsonString;
         }
       },
+      updateScrollbar() {
+        this.$refs.scrollbar.update();
+      }
     },
     created() {
       this.getProjectList();
@@ -263,11 +519,20 @@
     watch: {
       module: {
         immediate: true,
-        deep:true,
+        deep: true,
         handler(n, o) {
+          if (n) {
+            if (n.type && n.type.toLowerCase() == 'snmp') {
+              n.port = 161;
+              this.reparseSnmpParam(n);
+            }
+          }
           if (n && n.id) {
             this.rightBox.title =this.rightBox.isEdit? this.$t("project.module.editModule") + "  ID：" + n.id : this.$t("project.module.module") + "  ID：" + n.id ;
           } else {
+            if (!n.type) {
+              n.type = 'http';
+            }
             this.rightBox.title = this.$t("project.module.createModule");
           }
         }
@@ -279,5 +544,17 @@
   }
 </script>
 
-<style scoped>
+<style>
+  .sub-label {
+    padding-right: 15px;
+    font-size: 14px;
+    color: #666;
+    text-align: right;
+    line-height: 32px
+  }
+  .sub-label-required::before {
+    content: '*';
+    color: #F56C6C;
+    margin-right: 4px;
+  }
 </style>
