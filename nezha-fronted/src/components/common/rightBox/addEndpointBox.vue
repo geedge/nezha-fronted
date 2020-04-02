@@ -1,6 +1,6 @@
 <template>
   <transition name="right-box-840">
-    <div class="right-box right-box-add-endpoint" :class="{'right-box-add-endpoint-snmp': currentModuleCopy.type.toLowerCase() == 'snmp'}" v-if="rightBox.show" @mousedown="showEditParamBox(false)" v-clickoutside="clickos">
+    <div class="right-box right-box-add-endpoint" :class="{'right-box-add-endpoint-snmp': currentModuleCopy.type && currentModuleCopy.type.toLowerCase() == 'snmp'}" v-if="rightBox.show" @mousedown="showEditParamBox(false)" v-clickoutside="clickos">
       <!-- begin--顶部按钮-->
       <div class="right-box-top-btns">
       </div>
@@ -74,23 +74,23 @@
               <!--end--table-->
             </div>
             <!--右侧endpoint列表-->
-            <div class="right-child-box endpoints-box" :class="{'endpoints-box-snmp': currentModuleCopy.type.toLowerCase() == 'snmp'}">
+            <div class="right-child-box endpoints-box" :class="{'endpoints-box-snmp': currentModuleCopy.type && currentModuleCopy.type.toLowerCase() == 'snmp'}">
               <!--module-->
               <div class="endpoints-box-module-info">
                 <div class="title">{{$t('project.endpoint.moduleParameter')}}:</div>
-                <el-input class="module-info module-info-port input-x-mini-22" :class="{'module-info-port-snmp': currentModuleCopy.type.toLowerCase() == 'snmp'}" v-model="currentModuleCopy.port"></el-input>
+                <el-input class="module-info module-info-port input-x-mini-22" :class="{'module-info-port-snmp': currentModuleCopy.type && currentModuleCopy.type.toLowerCase() == 'snmp'}" v-model="currentModuleCopy.port"></el-input>
                 <el-popover
                   placement="bottom"
                   width="200"
                   trigger="hover"
-                  v-if="currentModuleCopy.type.toLowerCase() == 'http'"
+                  v-if="currentModuleCopy.type && currentModuleCopy.type.toLowerCase() == 'http'"
                 >
                   <div class="endpoint-param-pop">
                     <div v-for="item,index in currentModuleCopy.paramObj">{{item.key}}={{item.value}}</div>
                   </div>
                   <el-input id="edit-param" @click.native.stop="showEditParamBox(true, currentModuleCopy, 1, $event)" slot="reference" disabled class="module-info module-info-param input-x-mini-22" v-model="currentModuleCopy.param"></el-input>
                 </el-popover>
-                <el-input v-if="currentModuleCopy.type.toLowerCase() == 'http'" class="module-info module-info-path input-x-mini-22" v-model="currentModuleCopy.path"></el-input>
+                <el-input v-if="currentModuleCopy.type && currentModuleCopy.type.toLowerCase() == 'http'" class="module-info module-info-path input-x-mini-22" v-model="currentModuleCopy.path"></el-input>
                 <button type="button" id="cover-param" @click="coverEndpoint" class="nz-btn nz-btn-size-small nz-btn-style-light module-info module-info-cover"><i class="nz-icon nz-icon-override"></i></button>
               </div>
               <!--endpoints-->
@@ -635,13 +635,20 @@
           if(n) {
             this.endpointForm.moduleId = n.id;
             this.currentModuleCopy = JSON.parse(JSON.stringify(n));
-            if (n.type && n.type.toLowerCase() == 'snmp') {
-              this.endpointTableTitle[3].show = false;
-              this.endpointTableTitle[4].show = false;
-            } else {
-              this.endpointTableTitle[3].show = true;
-              this.endpointTableTitle[4].show = true;
-            }
+
+          }
+        }
+      },
+      currentModuleCopy: {
+        immediate: true,
+        handler(n, o) {
+          console.info(n)
+          if (n.type && n.type.toLowerCase() == 'snmp') {
+            this.endpointTableTitle[3].show = false;
+            this.endpointTableTitle[4].show = false;
+          } else {
+            this.endpointTableTitle[3].show = true;
+            this.endpointTableTitle[4].show = true;
           }
         }
       },
