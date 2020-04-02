@@ -32,7 +32,7 @@ export function port(rule, value, callback) {
   setTimeout(() => {
     if (!value) {
       callback();
-    } else if(Number(value) == 'NaN'){
+    } else if(isNaN(Number(value))){
       callback(new Error(vm.$t('validate.number')))
     }else{
       if(value < 1 ||value > 65535){
@@ -40,6 +40,18 @@ export function port(rule, value, callback) {
       }else{
         callback();
       }
+    }
+  }, 100)
+}
+
+export function nzNumber(rule, value, callback) {
+  setTimeout(() => {
+    if (!value) {
+      callback();
+    } else if(isNaN(Number(value))){
+      callback(new Error(vm.$t('validate.number')))
+    }else{
+      callback();
     }
   }, 100)
 }
@@ -57,7 +69,7 @@ export function noSpecialChar(rule, value, callback){
 
 export function positiveInteger(rule, value, callback){
   setTimeout(() => {
-    if(Number(value) == 'NaN'){
+    if(isNaN(Number(value))){
       callback(new Error(vm.$t('validate.number')))
     }else{
       if(Number(value) >=0 ){

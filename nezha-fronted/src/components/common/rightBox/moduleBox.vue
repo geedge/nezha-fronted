@@ -3,11 +3,11 @@
     <div class="right-box right-box-module" v-if="rightBox.show" v-clickoutside="clickos">
       <!-- begin--顶部按钮-->
       <div class="right-box-top-btns">
-        <button id="module-del" type="button" v-if="module.id != '' && rightBox.isEdit" @click="del" class="nz-btn nz-btn-size-normal nz-btn-size-alien nz-btn-style-light nz-btn-min-width-82">
+        <button id="module-del" type="button" v-if="currentModule.id != '' && rightBox.isEdit" @click="del" class="nz-btn nz-btn-size-normal nz-btn-size-alien nz-btn-style-light nz-btn-min-width-82">
           <span class="right-box-top-btn-icon"><i class="el-icon-delete"></i></span>
           <span class="right-box-top-btn-txt">{{$t('overall.delete')}}</span>
         </button>
-        <button v-if="!rightBox.isEdit && module.buildIn != 1" id="module-save" type="button" @click="saveOrToEdit" class="nz-btn nz-btn-size-normal nz-btn-size-alien nz-btn-style-light nz-btn-min-width-82">
+        <button v-if="!rightBox.isEdit && currentModule.buildIn != 1" id="module-save" type="button" @click="saveOrToEdit" class="nz-btn nz-btn-size-normal nz-btn-size-alien nz-btn-style-light nz-btn-min-width-82">
           <span class="right-box-top-btn-icon"><i class="nz-icon nz-icon-edit"></i></span>
           <span class="right-box-top-btn-txt">{{$t('overall.edit')}}</span>
         </button>
@@ -20,28 +20,37 @@
 
       <!-- begin--表单-->
       <el-scrollbar class="right-box-form-box" ref="scrollbar">
-        <el-form class="right-box-form" :model="module" label-position="top" :rules="rules" ref="moduleForm">
+        <el-form class="right-box-form" :model="currentModule" label-position="top" :rules="rules" ref="moduleForm">
           <el-form-item :label='$t("project.project.project")' prop="project">
-            <el-select v-if="rightBox.isEdit" value-key="id" popper-class="config-dropdown" v-model="module.project" placeholder="" size="small">
+            <el-select v-if="rightBox.isEdit" value-key="id" popper-class="config-dropdown" v-model="currentModule.project" placeholder="" size="small">
               <el-option :id="'module-project-'+item.id" v-for="item in projectList" :key="item.id" :label="item.name" :value="item"></el-option>
             </el-select>
-            <div v-if="!rightBox.isEdit && module.project" class="right-box-form-content-txt">{{module.project.name}}</div>
+            <div v-if="!rightBox.isEdit && currentModule.project" class="right-box-form-content-txt">{{currentModule.project.name}}</div>
           </el-form-item>
           <el-form-item :label='$t("project.module.moduleName")' prop="name">
-            <el-input v-if="rightBox.isEdit" placeholder="" maxlength="64" show-word-limit v-model="module.name" size="small"></el-input>
-            <div v-if="!rightBox.isEdit" class="right-box-form-content-txt">{{module.name}}</div>
+            <el-input v-if="rightBox.isEdit" placeholder="" maxlength="64" show-word-limit v-model="currentModule.name" size="small"></el-input>
+            <div v-if="!rightBox.isEdit" class="right-box-form-content-txt">{{currentModule.name}}</div>
           </el-form-item>
 
-          <el-form-item :label="$t('overall.type')" prop="type">
-            <el-radio-group v-model="module.type" size="small" @change="updateScrollbar" :disabled="module.id">
+          <!--<el-form-item :label="$t('overall.type')" prop="type">
+            <el-radio-group v-model="module.type" size="small" @change="updateScrollbar" :disabled="module.id ? true : false">
               <el-radio-button label="http"></el-radio-button>
               <el-radio-button label="snmp"></el-radio-button>
             </el-radio-group>
-          </el-form-item>
+          </el-form-item>-->
+
+          <div class="nz-tab module-box-type">
+            <div class="nz-tab-item-box" @click="changeType('http')" id="module-type-1">
+              <div class="nz-tab-item" :class="{'nz-tab-item-active' : currentModule.type.toLowerCase() == 'http', 'unclickable': currentModule.id}">HTTP</div>
+            </div>
+            <div @click="changeType('snmp')" class="nz-tab-item-box" id="module-type-2">
+              <div class="nz-tab-item" :class="{'nz-tab-item-active' : currentModule.type.toLowerCase() == 'snmp', 'unclickable': currentModule.id}">SNMP</div>
+            </div>
+          </div>
 
           <!-- snmp表单 -->
-          <template v-if="module.type && module.type == 'snmp'">
-            <div class="right-box-sub-title">SNMP</div>
+          <template v-if="currentModule.type && currentModule.type == 'snmp'">
+            <div class="right-box-sub-title">SNMP setting</div>
             <div class="line-100 right-box-line"></div>
 
             <el-row>
@@ -50,7 +59,7 @@
               </el-col>
               <el-col :span="18">
                 <el-form-item prop="walkStr">
-                  <el-input class="snmp-walk" v-model="module.walkStr" autosize type="textarea" :placeholder="$t('tip.pressEnterToAdd')"></el-input>
+                  <el-input class="snmp-walk" v-model="currentModule.walkStr" autosize type="textarea" :placeholder="$t('tip.pressEnterToAdd')"></el-input>
                 </el-form-item>
               </el-col>
             </el-row>
@@ -61,7 +70,7 @@
               </el-col>
               <el-col :span="18">
                 <el-form-item prop="version">
-                  <el-radio-group v-model.number="module.version" size="small" @change="updateScrollbar">
+                  <el-radio-group v-model.number="currentModule.version" size="small">
                     <el-radio-button :label="2"></el-radio-button>
                     <el-radio-button :label="3"></el-radio-button>
                   </el-radio-group>
@@ -75,7 +84,7 @@
               </el-col>
               <el-col :span="18">
                 <el-form-item prop="max_repetitions">
-                  <el-input v-model.number="module.max_repetitions" size="small"></el-input>
+                  <el-input v-model.number="currentModule.max_repetitions" size="small"></el-input>
                 </el-form-item>
               </el-col>
             </el-row>
@@ -86,7 +95,7 @@
               </el-col>
               <el-col :span="18">
                 <el-form-item prop="retries">
-                  <el-input v-model.number="module.retries" size="small"></el-input>
+                  <el-input v-model.number="currentModule.retries" size="small"></el-input>
                 </el-form-item>
               </el-col>
             </el-row>
@@ -97,7 +106,7 @@
               </el-col>
               <el-col :span="18">
                 <el-form-item prop="timeout">
-                  <el-input v-model.number="module.timeout" size="small">
+                  <el-input v-model.number="currentModule.timeout" size="small">
                     <template slot="append">second</template>
                   </el-input>
                 </el-form-item>
@@ -118,20 +127,20 @@
               </el-col>
               <el-col :span="18">
                 <el-form-item prop="community">
-                  <el-input v-model.trim="module.community" maxlength="64" show-word-limit size="small"></el-input>
+                  <el-input v-model.trim="currentModule.community" maxlength="64" show-word-limit size="small"></el-input>
                 </el-form-item>
               </el-col>
             </el-row>
 
             <!--SNMP V3 setting-->
-            <template v-if="module.version == 3">
+            <template v-if="currentModule.version == 3">
               <el-row>
                 <el-col :span="6">
                   <div class="sub-label sub-label-required">{{$t('login.username')}}</div>
                 </el-col>
                 <el-col :span="18">
                   <el-form-item prop="username">
-                    <el-input v-model.trim="module.username" maxlength="64" show-word-limit size="small"></el-input>
+                    <el-input v-model.trim="currentModule.username" maxlength="64" show-word-limit size="small"></el-input>
                   </el-form-item>
                 </el-col>
               </el-row>
@@ -142,7 +151,7 @@
                 </el-col>
                 <el-col :span="18">
                   <el-form-item prop="security_level">
-                    <el-radio-group v-model="module.security_level" size="small" @change="updateScrollbar">
+                    <el-radio-group v-model="currentModule.security_level" size="small" @change="updateScrollbar">
                       <el-radio-button label="noAuthNoPriv"></el-radio-button>
                       <el-radio-button label="authNoPriv"></el-radio-button>
                       <el-radio-button label="authPriv"></el-radio-button>
@@ -151,24 +160,24 @@
                 </el-col>
               </el-row>
 
-              <el-row v-if="module.security_level == 'authNoPriv' || module.security_level == 'authPriv'">
+              <el-row v-if="currentModule.security_level == 'authNoPriv' || currentModule.security_level == 'authPriv'">
                 <el-col :span="6">
                   <div class="sub-label sub-label-required">{{$t('login.password')}}</div>
                 </el-col>
                 <el-col :span="18">
                   <el-form-item prop="password">
-                    <el-input v-model.trim="module.password" maxlength="64" show-word-limit size="small"></el-input>
+                    <el-input v-model.trim="currentModule.password" maxlength="64" show-word-limit size="small"></el-input>
                   </el-form-item>
                 </el-col>
               </el-row>
 
-              <el-row v-if="module.security_level == 'authNoPriv' || module.security_level == 'authPriv'">
+              <el-row v-if="currentModule.security_level == 'authNoPriv' || currentModule.security_level == 'authPriv'">
                 <el-col :span="6">
                   <div class="sub-label">{{$t('project.module.authProtocol')}}</div>
                 </el-col>
                 <el-col :span="18">
                   <el-form-item prop="auth_protocol">
-                    <el-radio-group v-model="module.auth_protocol" size="small">
+                    <el-radio-group v-model="currentModule.auth_protocol" size="small">
                       <el-radio-button label="MD5"></el-radio-button>
                       <el-radio-button label="SHA"></el-radio-button>
                     </el-radio-group>
@@ -176,13 +185,13 @@
                 </el-col>
               </el-row>
 
-              <el-row v-if="module.security_level == 'authPriv'">
+              <el-row v-if="currentModule.security_level == 'authPriv'">
                 <el-col :span="6">
                   <div class="sub-label">{{$t('project.module.privProtocol')}}</div>
                 </el-col>
                 <el-col :span="18">
                   <el-form-item prop="priv_protocol">
-                    <el-radio-group v-model="module.priv_protocol" size="small">
+                    <el-radio-group v-model="currentModule.priv_protocol" size="small">
                       <el-radio-button label="DES"></el-radio-button>
                       <el-radio-button label="AES"></el-radio-button>
                     </el-radio-group>
@@ -190,13 +199,13 @@
                 </el-col>
               </el-row>
 
-              <el-row v-if="module.security_level == 'authPriv'">
+              <el-row v-if="currentModule.security_level == 'authPriv'">
                 <el-col :span="6">
                   <div class="sub-label sub-label-required">{{$t('project.module.privPassword')}}</div>
                 </el-col>
                 <el-col :span="18">
                   <el-form-item prop="priv_password">
-                    <el-input v-model.trim="module.priv_password" maxlength="64" show-word-limit size="small"></el-input>
+                    <el-input v-model.trim="currentModule.priv_password" maxlength="64" show-word-limit size="small"></el-input>
                   </el-form-item>
                 </el-col>
               </el-row>
@@ -208,15 +217,15 @@
               </el-col>
               <el-col :span="18">
                 <el-form-item prop="context_name">
-                  <el-input v-model.trim="module.context_name" maxlength="64" show-word-limit size="small"></el-input>
+                  <el-input v-model.trim="currentModule.context_name" maxlength="64" show-word-limit size="small"></el-input>
                 </el-form-item>
               </el-col>
             </el-row>
           </template>
 
           <el-form-item :label='$t("project.module.description")' prop="remark">
-            <el-input v-if="rightBox.isEdit" type="textarea" placeholder="" maxlength="1024" show-word-limit v-model="module.remark" size="small"></el-input>
-            <div v-if="!rightBox.isEdit" class="right-box-form-content-txt">{{module.remark}}</div>
+            <el-input v-if="rightBox.isEdit" type="textarea" placeholder="" maxlength="1024" show-word-limit v-model="currentModule.remark" size="small"></el-input>
+            <div v-if="!rightBox.isEdit" class="right-box-form-content-txt">{{currentModule.remark}}</div>
           </el-form-item>
 
           <div class="right-box-form-tip" v-if="rightBox.isEdit">
@@ -226,13 +235,13 @@
           </div>
 
           <el-form-item :label='$t("project.endpoint.port")' prop="port" >
-            <el-input v-if="rightBox.isEdit" placeholder="" v-model.number="module.port" size="small"></el-input>
-            <div v-if="!rightBox.isEdit" class="right-box-form-content-txt">{{module.port}}</div>
+            <el-input v-if="rightBox.isEdit" placeholder="" v-model.number="currentModule.port" size="small"></el-input>
+            <div v-if="!rightBox.isEdit" class="right-box-form-content-txt">{{currentModule.port}}</div>
           </el-form-item>
 
-          <el-form-item v-if="module.type && module.type.toLowerCase() == 'http'" :label='$t("project.endpoint.path")' prop="path">
-            <el-input v-if="rightBox.isEdit" placeholder="" v-model="module.path" size="small"></el-input>
-            <div v-if="!rightBox.isEdit" class="right-box-form-content-txt">{{module.path}}</div>
+          <el-form-item v-if="currentModule.type && currentModule.type.toLowerCase() == 'http'" :label='$t("project.endpoint.path")' prop="path">
+            <el-input v-if="rightBox.isEdit" placeholder="" v-model="currentModule.path" size="small"></el-input>
+            <div v-if="!rightBox.isEdit" class="right-box-form-content-txt">{{currentModule.path}}</div>
           </el-form-item>
 
           <el-form-item class="right-box-form-param">
@@ -250,7 +259,7 @@
             </template>
 
             <div v-if="rightBox.isEdit" class="param-box param-box-module">
-              <div class="param-box-row" v-for="(item, index) in module.paramObj">
+              <div class="param-box-row" v-for="(item, index) in currentModule.paramObj">
                 <el-form-item class="param-box-row-key" :rules="{required: true, message: $t('validate.required'), trigger: 'blur'}" :prop="'paramObj.' + index + '.key'">
                   <el-input placeholder="key" size="mini" v-model="item.key"></el-input>
                 </el-form-item>
@@ -261,7 +270,7 @@
                 <span class="param-box-row-symbol" :id="'moduel-remove-param-'+index" @click="removeParam(index)"><i class="nz-icon nz-icon-minus-square"></i></span>
               </div>
             </div>
-            <div v-for="(item, index) in module.paramObj" v-if="!rightBox.isEdit">
+            <div v-for="(item, index) in currentModule.paramObj" v-if="!rightBox.isEdit">
               <div  class="right-box-form-content-txt">{{item.key}}={{item.value}}</div>
             </div>
 
@@ -284,8 +293,7 @@
 </template>
 
 <script>
-  import {noSpecialChar} from "../js/validate";
-  import {port} from "../js/validate";
+  import {noSpecialChar, port, nzNumber} from "../js/validate";
 
   export default {
     name: "moduleBox",
@@ -295,6 +303,7 @@
     },
     data() {
       return {
+        currentModule: {},
         rightBox: {
           show: false,
           title: '',
@@ -323,6 +332,15 @@
           priv_password: [
             {required: true, message: this.$t('validate.required'), trigger: 'blur'}
           ],
+          max_repetitions: [
+            {validator:nzNumber, trigger: 'blur'},
+          ],
+          retries: [
+            {validator:nzNumber, trigger: 'blur'},
+          ],
+          timeout: [
+            {validator:nzNumber, trigger: 'blur'},
+          ],
         },
         projectList: [],
       }
@@ -341,32 +359,39 @@
       clickos() {
         this.esc();
       },
-
+      changeType(type) {
+        if (this.currentModule.id) {
+          return;
+        }
+        this.currentModule.type = type;
+        this.updateScrollbar();
+      },
       //转化snmpParam属性
-      parseSnmpParam() {
+      parseSnmpParam(module) {
         let snmpObj = { //下划线命名是因为业务需求
-          walk: this.module.walkStr.split(/\n/),
-          version: this.module.version, //2/3
-          max_repetitions: this.module.max_repetitions ? this.module.max_repetitions : 25,
-          retries: this.module.retries ? this.module.retries : 3,
-          timeout: this.module.timeout ? this.module.timeout + "s" : "10s", //s
+          walk: module.walkStr.split(/\n/),
+          version: module.version, //2/3
+          max_repetitions: module.max_repetitions ? module.max_repetitions : 25,
+          retries: module.retries ? module.retries : 3,
+          timeout: module.timeout ? module.timeout + "s" : "10s", //s
           auth: {
-            community: this.module.community,
+            community: module.community,
           }
         };
-        if (this.module.version == 3) {
-          snmpObj.auth.username = this.module.username;
-          snmpObj.auth.security_level = this.module.security_level;
+        if (module.version == 3) {
+          snmpObj.auth.username = module.username;
+          snmpObj.auth.security_level = module.security_level;
+          snmpObj.auth.context_name = module.context_name;
         }
-        if (this.module.security_level == "authNoPriv" || this.module.security_level == "authPriv") {
-          snmpObj.auth.password = this.module.password;
-          snmpObj.auth.auth_protocol = this.module.auth_protocol;
-          if (this.module.security_level != "authNoPriv") {
-            snmpObj.auth.priv_password = this.module.priv_password;
-            snmpObj.auth.priv_protocol = this.module.priv_protocol;
+        if (module.security_level == "authNoPriv" || module.security_level == "authPriv") {
+          snmpObj.auth.password = module.password;
+          snmpObj.auth.auth_protocol = module.auth_protocol;
+          if (module.security_level != "authNoPriv") {
+            snmpObj.auth.priv_password = module.priv_password;
+            snmpObj.auth.priv_protocol = module.priv_protocol;
           }
         }
-        this.module.snmpParam = JSON.stringify(snmpObj);
+        module.snmpParam = JSON.stringify(snmpObj);
       },
       //回显时解析snmpParam
       reparseSnmpParam(module) {
@@ -380,6 +405,7 @@
         if (snmpObj.version == 3) {
           module.username = snmpObj.auth.username;
           module.security_level = snmpObj.auth.security_level;
+          module.context_name = snmpObj.auth.context_name;
         }
         if (snmpObj.auth.security_level == "authNoPriv" || snmpObj.auth.security_level == "authPriv") {
           module.password = snmpObj.auth.password;
@@ -392,19 +418,19 @@
       },
       /*保存*/
       save() {
-        this.module.param = this.paramToJson(this.module.paramObj);
+        this.currentModule.param = this.paramToJson(this.currentModule.paramObj);
         this.$refs.moduleForm.validate((valid) => {
           if (valid) {
-            if (this.module.type.toLowerCase() == 'snmp') {
-              this.parseSnmpParam();
+            if (this.currentModule.type.toLowerCase() == 'snmp') {
+              this.parseSnmpParam(this.currentModule);
             } else {
-              if (this.module.snmpParam) {
-                this.module.snmpParam = "";
+              if (this.currentModule.snmpParam) {
+                this.currentModule.snmpParam = "";
               }
             }
-            this.module.projectId = this.module.project.id;
-            if (this.module.id) {
-              this.$put('module', this.module).then(response => {
+            this.currentModule.projectId = this.currentModule.project.id;
+            if (this.currentModule.id) {
+              this.$put('module', this.currentModule).then(response => {
                 if (response.code === 200) {
                   this.$message({duration: 1000, type: 'success', message: this.$t("tip.saveSuccess")});
                   this.$store.commit('moduleListChange');
@@ -415,7 +441,7 @@
                 }
               });
             } else {
-              this.$post('module', this.module).then(response => {
+              this.$post('module', this.currentModule).then(response => {
                 if (response.code === 200) {
                   this.$message({duration: 1000, type: 'success', message: this.$t("tip.saveSuccess")});
                   this.$store.commit('moduleListChange');
@@ -433,7 +459,7 @@
       saveOrToEdit: function() {
         if (!this.rightBox.isEdit) {
           this.rightBox.isEdit = true;
-          this.rightBox.title = this.$t("project.module.editModule") + "  ID：" + this.module.id;
+          this.rightBox.title = this.$t("project.module.editModule") + "  ID：" + this.currentModule.id;
         } else {
           this.save();
         }
@@ -445,7 +471,7 @@
           cancelButtonText: this.$t("tip.no"),
           type: 'warning'
         }).then(() => {
-          this.$delete("module?ids=" + this.module.id).then(response => {
+          this.$delete("module?ids=" + this.currentModule.id).then(response => {
             if (response.code === 200) {
               this.$message({duration: 1000, type: 'success', message: this.$t("tip.deleteSuccess")});
               this.rightBox.show = false;
@@ -478,17 +504,17 @@
 
       // 清除param
       clearAllParam: function() {
-        this.module.paramObj = [];
+        this.currentModule.paramObj = [];
       },
 
       // 新增param
       addParam: function() {
-        this.module.paramObj.push({key: '', value: ''});
+        this.currentModule.paramObj.push({key: '', value: ''});
       },
 
       // 移除单个param
       removeParam: function(index) {
-        this.module.paramObj.splice(index, 1);
+        this.currentModule.paramObj.splice(index, 1);
       },
 
       //将param转为json字符串格式
@@ -521,19 +547,31 @@
         immediate: true,
         deep: true,
         handler(n, o) {
-          if (n) {
-            if (n.type && n.type.toLowerCase() == 'snmp') {
-              n.port = 161;
-              this.reparseSnmpParam(n);
-            }
-          }
           if (n && n.id) {
             this.rightBox.title =this.rightBox.isEdit? this.$t("project.module.editModule") + "  ID：" + n.id : this.$t("project.module.module") + "  ID：" + n.id ;
-          } else {
+            if (n.snmpParam) {
+              this.reparseSnmpParam(n);
+            }
+            this.currentModule = JSON.parse(JSON.stringify(n));
+          } else if (n) {
             if (!n.type) {
               n.type = 'http';
+            } else if (n.type.toLowerCase() == 'snmp') {
+              if (n.snmpParam) {
+                this.reparseSnmpParam(n);
+              }
             }
             this.rightBox.title = this.$t("project.module.createModule");
+            this.currentModule = JSON.parse(JSON.stringify(n));
+          }
+        }
+      },
+      currentModule: {
+        immediate: true,
+        deep: true,
+        handler(n, o) {
+          if (n.type.toLowerCase() == 'snmp') {
+            n.port = 161;
           }
         }
       },
@@ -556,5 +594,8 @@
     content: '*';
     color: #F56C6C;
     margin-right: 4px;
+  }
+  .module-box-type {
+    margin: 25px 0 10px -15px;
   }
 </style>

@@ -294,6 +294,7 @@
             param: '',
             type: '',
             paramObj: [],
+            snmpParam: '',
             //snmp setting 下划线命名是因为业务需求
             walk: [],
             walkStr: '', //转为string的walk，用于回显

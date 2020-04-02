@@ -230,8 +230,8 @@
         moduleList: [],
         projectList: [],
         currentProject: {id: '', name: '', remark: ''}, //endpoint弹框、module列表用来回显project
-        editModule: {id: '', name: '', project: {}, port: '', path: '', param: '', paramObj: []}, //编辑的module
-        currentModule: {id: '', name: '', project: {}, port: '', path: '', param: '', paramObj: []}, //endpoint弹框用来回显module
+        editModule: {id: '', name: '', project: {}, port: '', path: '', param: '', paramObj: [], snmpParam: ''}, //编辑的module
+        currentModule: {id: '', name: '', project: {}, port: '', path: '', param: '', paramObj: [], snmpParam: ''}, //endpoint弹框用来回显module
         endpointSearchLabel: {moduleId: ''}, //endpoint搜索参数
         endpointSearchMsg: { //给搜索框子组件传递的信息
           zheze_none: true,
@@ -672,7 +672,22 @@
         this.targetTab = "detail";
         this.showSubList = true;
       },
-
+      initSnmpParam(module) {
+        this.$set(module, 'walk', []);
+        this.$set(module, 'walkStr', '');
+        this.$set(module, 'version', '');
+        this.$set(module, 'max_repetitions', '');
+        this.$set(module, 'retries', '');
+        this.$set(module, 'timeout', '');
+        this.$set(module, 'community', '');
+        this.$set(module, 'username', '');
+        this.$set(module, 'security_level', '');
+        this.$set(module, 'password', '');
+        this.$set(module, 'auth_protocol', '');
+        this.$set(module, 'priv_protocol', '');
+        this.$set(module, 'priv_password', '');
+        this.$set(module, 'context_name', '');
+      },
       //弹出module编辑页
       toEditModule(module) {
         this.currentModule = JSON.parse(JSON.stringify(module));
@@ -682,6 +697,9 @@
         this.editModule = JSON.parse(JSON.stringify(module));
         if (!this.editModule.paramObj) {
           this.$set(this.editModule, 'paramObj', []);
+        }
+        if (this.editModule.snmpParam) {
+          this.initSnmpParam(this.editModule);
         }
         this.rightBoxHandler(2);
       },
