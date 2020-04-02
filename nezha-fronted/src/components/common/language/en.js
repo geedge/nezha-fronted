@@ -531,6 +531,35 @@ const en = {
       remark: 'Remark',
       type: 'Type'
     },
+    terminallog: {
+      terminallog: 'TerminalLog',
+      status: 'Status',//"状态"
+      option: 'Operation',//"操作",
+      host: 'Host',
+      cmd: 'CMD',
+      port: 'Port',
+      userId: 'UserID',
+      protocol: 'Protocol',
+      user: 'User',
+      detail: 'Terminal Log Detail',
+      resize: 'Terminal Resize',
+      download: 'Terminal Download',
+      upload: 'Terminal Upload',
+      selectFile: 'Select File',
+      SSH: 'SSH',
+      TELNET: 'TELNET',
+      id: 'ID',
+      time: 'Time',
+      width: 'Width',
+      height: 'Height',
+      cols: 'Cols',
+      rows: 'Rows',
+      uuid: 'UUID',
+      path: 'Path',
+      file: 'File',
+      success: 'Success',
+      fail: 'Fail'
+    },
     mib:{
       mib:'Mib',
       fileName:'FileName',
@@ -666,6 +695,17 @@ const en = {
       editModule: 'Edit module',//"编辑组件"
       description: 'Description',//"描述"
       createModule: 'New module',//"新增组件"
+      version: 'Version',
+      walk: 'Walk',
+      maxRepetitions: 'Max repetitions',
+      retries: 'Retries',
+      timeout: 'Timeout',
+      community: 'Community',
+      securityLevel: 'Security level',
+      authProtocol: 'Auth protocol',
+      privProtocol: 'Priv protocol',
+      contextName: 'Context name',
+      privPassword: 'Priv password',
       tip: {
         defaultEndpointSet: 'Default endpoint settings',//"默认的Endpoint设置"
         relation: 'Module associated Endpoint will configure the following ports/paths/parameters by default'//"组件关联的Endpoint将默认配置以下端口/路径/参数"
