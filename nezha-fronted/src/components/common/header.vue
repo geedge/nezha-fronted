@@ -297,7 +297,6 @@
             snmpParam: '',
             //snmp setting 下划线命名是因为业务需求
             walk: [],
-            walkStr: '', //转为string的walk，用于回显
             version: 2, //2/3
             max_repetitions: 25,
             retries: 3,

@@ -50,7 +50,7 @@
 
           <!-- snmp表单 -->
           <template v-if="currentModule.type && currentModule.type == 'snmp'">
-            <div class="right-box-sub-title">SNMP setting</div>
+            <div class="right-box-sub-title">SNMP settings</div>
             <div class="line-100 right-box-line"></div>
 
             <el-row>
@@ -58,9 +58,44 @@
                 <div class="sub-label sub-label-required">{{$t('project.module.walk')}}</div>
               </el-col>
               <el-col :span="18">
-                <el-form-item prop="walkStr">
-                  <el-input class="snmp-walk" v-model="currentModule.walkStr" autosize type="textarea" :placeholder="$t('tip.pressEnterToAdd')"></el-input>
+                <el-form-item prop="walk">
+                  <select-walk ref="selectWalk" :walkData="walkData" :placement="'bottom-start'" @selectWalk="selectWalk" :currentWalk="currentModule.walk">
+                    <template v-slot:trigger>
+                      <div class="el-cascader" style="width:100%">
+                        <div class="el-input el-input--suffix">
+                          <input type="text" readonly="readonly" autocomplete="off" class="el-input__inner" aria-expanded="false">
+                          <span class="el-input__suffix">
+                            <span class="el-input__suffix-inner"><i class="el-input__icon el-icon-arrow-down"></i></span>
+                          </span>
+                        </div>
+                        <div class="el-cascader__tags">
+                          <span class="el-tag el-tag--info el-tag--small el-tag--light" v-for="item in currentModule.walk">
+                            <span>{{item}}</span>
+                            <i class="el-tag__close el-icon-close"></i>
+                          </span>
+                        </div>
+                      </div>
+                    </template>
+                  </select-walk>
                 </el-form-item>
+                <!--<el-form-item prop="walkStr">
+                  <el-input class="snmp-walk" v-model="currentModule.walkStr" autosize type="textarea" :placeholder="$t('tip.pressEnterToAdd')"></el-input>
+                </el-form-item>-->
+                <!--<div class="module-walk">
+                  <div class="module-walk-box">
+                    <div class="walk-box-item" v-for="item in currentModule.walk">
+                      <div class="walk-box-item-txt">{{item}}</div>
+                      <div class="walk-box-item-op">
+                        <span><i class="nz-icon nz-icon-edit"></i></span>
+                        <span><i class="nz-icon nz-icon-minus-square"></i></span>
+                      </div>
+                    </div>
+                    <div class="walk-box-op">
+                      <span><i class="nz-icon-create-square nz-icon"></i></span>
+                    </div>
+                  </div>
+                </div>-->
+                <!--<span class="el-tag el-tag&#45;&#45;info el-tag&#45;&#45;small el-tag&#45;&#45;light"><span>东南 / 浙江 / 杭州</span><i class="el-tag__close el-icon-close"></i></span>-->
               </el-col>
             </el-row>
 
@@ -223,11 +258,6 @@
             </el-row>
           </template>
 
-          <el-form-item :label='$t("project.module.description")' prop="remark">
-            <el-input v-if="rightBox.isEdit" type="textarea" placeholder="" maxlength="1024" show-word-limit v-model="currentModule.remark" size="small"></el-input>
-            <div v-if="!rightBox.isEdit" class="right-box-form-content-txt">{{currentModule.remark}}</div>
-          </el-form-item>
-
           <div class="right-box-form-tip" v-if="rightBox.isEdit">
             {{$t('project.module.tip.defaultEndpointSet')}}
             <div class="line-100"></div>
@@ -244,7 +274,7 @@
             <div v-if="!rightBox.isEdit" class="right-box-form-content-txt">{{currentModule.path}}</div>
           </el-form-item>
 
-          <el-form-item class="right-box-form-param">
+          <el-form-item class="right-box-form-param" v-if="currentModule.type.toLowerCase() == 'http'">
             <template slot="label">
               <span>{{$t('project.endpoint.param')}}</span>
               <div class="right-box-form-btns" v-if="rightBox.isEdit">
@@ -276,6 +306,11 @@
 
           </el-form-item>
 
+          <el-form-item :label='$t("project.module.description")' prop="remark">
+            <el-input v-if="rightBox.isEdit" type="textarea" placeholder="" maxlength="1024" show-word-limit v-model="currentModule.remark" size="small"></el-input>
+            <div v-if="!rightBox.isEdit" class="right-box-form-content-txt">{{currentModule.remark}}</div>
+          </el-form-item>
+
         </el-form>
       </el-scrollbar>
 
@@ -294,6 +329,7 @@
 
 <script>
   import {noSpecialChar, port, nzNumber} from "../js/validate";
+  import selectWalk from "../popBox/selectWalk";
 
   export default {
     name: "moduleBox",
@@ -301,8 +337,12 @@
       module: Object,
       currentProject: Object
     },
+    components: {
+      'select-walk': selectWalk
+    },
     data() {
       return {
+        walkData: [],
         currentModule: {},
         rightBox: {
           show: false,
@@ -320,9 +360,9 @@
           port: [
             {validator:port, trigger: 'blur'},
           ],
-          walk: [
+          /*walk: [
             {required: true, message: this.$t('validate.required'), trigger: 'blur'}
-          ],
+          ],*/
           username: [
             {required: true, message: this.$t('validate.required'), trigger: 'blur'}
           ],
@@ -346,6 +386,19 @@
       }
     },
     methods: {
+      selectWalk() {
+
+      },
+
+      getWalkData() {
+        /*this.$get('mib/tree', {pageSize: -1, pageNo: 1}).then(response => {
+          if (response.code === 200) {
+            this.walkData = response.data.list;
+            console.info(this.walkData);
+          }
+        });*/
+      },
+
       show(show, isEdit) {
         this.rightBox.show = show;
         this.rightBox.isEdit = isEdit;
@@ -369,7 +422,7 @@
       //转化snmpParam属性
       parseSnmpParam(module) {
         let snmpObj = { //下划线命名是因为业务需求
-          walk: module.walkStr.split(/\n/),
+          walk: module.walk,
           version: module.version, //2/3
           max_repetitions: module.max_repetitions ? module.max_repetitions : 25,
           retries: module.retries ? module.retries : 3,
@@ -396,7 +449,7 @@
       //回显时解析snmpParam
       reparseSnmpParam(module) {
         let snmpObj = JSON.parse(module.snmpParam);
-        module.walkStr = snmpObj.walk.join("\n");
+        module.walk = snmpObj.walk;
         module.version = snmpObj.version;
         module.max_repetitions = snmpObj.max_repetitions;
         module.retries = snmpObj.retries;
@@ -485,7 +538,7 @@
 
       /*获取project列表*/
       getProjectList: function() {
-        this.$get('project', {pageSize: 999, pageNo: 1}).then(response => {
+        this.$get('project', {pageSize: -1, pageNo: 1}).then(response => {
           if (response.code === 200) {
             this.projectList = response.data.list;
             if (this.currentProject && this.currentProject.id) {
@@ -534,6 +587,9 @@
         this.$refs.scrollbar.update();
       }
     },
+    mounted() {
+      this.getWalkData();
+    },
     created() {
       this.getProjectList();
     },
@@ -547,22 +603,22 @@
         immediate: true,
         deep: true,
         handler(n, o) {
+          this.currentModule = JSON.parse(JSON.stringify(n));
           if (n && n.id) {
             this.rightBox.title =this.rightBox.isEdit? this.$t("project.module.editModule") + "  ID：" + n.id : this.$t("project.module.module") + "  ID：" + n.id ;
             if (n.snmpParam) {
-              this.reparseSnmpParam(n);
+              this.reparseSnmpParam(this.currentModule);
             }
-            this.currentModule = JSON.parse(JSON.stringify(n));
+
           } else if (n) {
+            this.rightBox.title = this.$t("project.module.createModule");
             if (!n.type) {
               n.type = 'http';
             } else if (n.type.toLowerCase() == 'snmp') {
               if (n.snmpParam) {
-                this.reparseSnmpParam(n);
+                this.reparseSnmpParam(this.currentModule);
               }
             }
-            this.rightBox.title = this.$t("project.module.createModule");
-            this.currentModule = JSON.parse(JSON.stringify(n));
           }
         }
       },
@@ -570,7 +626,7 @@
         immediate: true,
         deep: true,
         handler(n, o) {
-          if (n.type.toLowerCase() == 'snmp') {
+          if (n.type && n.type.toLowerCase() == 'snmp') {
             n.port = 161;
           }
         }
@@ -581,14 +637,46 @@
     }
   }
 </script>
-
+<style scoped>
+  .module-walk-box {
+    width: 100%;
+    border: 1px solid #DCDFE6;
+    border-radius: 4px;
+    min-height: 32px;
+    margin-bottom: 22px;
+    padding: 3px 0;
+  }
+  .module-walk-box i {
+    color: #C0C4CC;
+  }
+  .walk-box-item {
+    padding: 5px 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .walk-box-item-txt {
+    color: #606266;
+  }
+  .walk-box-item-op span:first-of-type {
+    margin-right: 4px;
+  }
+  .walk-box-item-op span {
+    cursor: pointer;
+  }
+  .walk-box-op {
+    width: 18px;
+    margin: 5px 0 5px 15px;
+    cursor: pointer;
+  }
+</style>
 <style>
   .sub-label {
     padding-right: 15px;
     font-size: 14px;
     color: #666;
     text-align: right;
-    line-height: 32px
+    line-height: 30px
   }
   .sub-label-required::before {
     content: '*';

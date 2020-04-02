@@ -230,8 +230,8 @@
         moduleList: [],
         projectList: [],
         currentProject: {id: '', name: '', remark: ''}, //endpoint弹框、module列表用来回显project
-        editModule: {id: '', name: '', project: {}, port: '', path: '', param: '', paramObj: [], snmpParam: ''}, //编辑的module
-        currentModule: {id: '', name: '', project: {}, port: '', path: '', param: '', paramObj: [], snmpParam: ''}, //endpoint弹框用来回显module
+        editModule: {id: '', type: '', name: '', project: {}, port: '', path: '', param: '', paramObj: [], snmpParam: ''}, //编辑的module
+        currentModule: {id: '', type: '', name: '', project: {}, port: '', path: '', param: '', paramObj: [], snmpParam: ''}, //endpoint弹框用来回显module
         endpointSearchLabel: {moduleId: ''}, //endpoint搜索参数
         endpointSearchMsg: { //给搜索框子组件传递的信息
           zheze_none: true,
@@ -674,7 +674,6 @@
       },
       initSnmpParam(module) {
         this.$set(module, 'walk', []);
-        this.$set(module, 'walkStr', '');
         this.$set(module, 'version', '');
         this.$set(module, 'max_repetitions', '');
         this.$set(module, 'retries', '');

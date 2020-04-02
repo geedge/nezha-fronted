@@ -119,12 +119,12 @@
             <div v-if="!rightBox.isEdit" class="right-box-form-content-txt">{{endpoint.port}}</div>
           </el-form-item>
           <!--path-->
-          <el-form-item :label="$t('project.endpoint.path')" prop="path">
+          <el-form-item :label="$t('project.endpoint.path')" prop="path" v-if="currentModule.type.toLowerCase() == 'http'">
             <el-input v-if="rightBox.isEdit" placeholder="" v-model="endpoint.path" size="small"></el-input>
             <div v-if="!rightBox.isEdit" class="right-box-form-content-txt">{{endpoint.path}}</div>
           </el-form-item>
           <!--param-->
-          <el-form-item class="right-box-form-param">
+          <el-form-item class="right-box-form-param" v-if="currentModule.type.toLowerCase() == 'http'">
             <template slot="label">
               <span>{{$t('project.endpoint.param')}}</span>
               <div class="right-box-form-btns" v-if="rightBox.isEdit">
