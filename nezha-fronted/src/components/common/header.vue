@@ -177,7 +177,7 @@
         projectData: [], //顶部菜单project列表中的数据
         editProject: {id: '', name: '', remark: ''}, //新增/编辑的project
         currentProject: {id: '', name: '', remark: ''}, //module/endpoint弹框用来回显project
-        editModule: {id: '', name: '', project: {}, port: '', path: '', param: '', paramObj: []}, //新增/编辑的module
+        editModule: {id: '', type: 'http', name: '', project: {}, port: '', path: '', param: '', paramObj: []}, //新增/编辑的module
         currentModule: {id: '', name: '', project: {}, port: '', path: '', param: '', paramObj: []}, //endpoint弹框用来回显module，此处固定为空对象
         editEndpoint: { //新增/编辑的endpoint
           id: '',
