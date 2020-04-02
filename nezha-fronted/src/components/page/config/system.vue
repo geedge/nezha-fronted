@@ -24,8 +24,8 @@
         </div>
       </div>
     </div>
-    <div class="content-right">
-      <el-tabs type="border-card" @tab-click="selectTab" v-model="activeTab">
+    <div class="content-right system-tabs">
+      <el-tabs type="border-card" @tab-click="selectTab" v-model="activeTab" class="system-tabs">
         <el-tab-pane :label="$t('config.system.basic.basic')" name="basic">
           <div class="system-config-form">
             <el-form :model="basic"  label-width="180px" size="small" ref="basicForm" :rules="basic.asset_ping_switch == 'on'?basicRules:basicRules2" :validate-on-rule-change="false">
@@ -62,7 +62,7 @@
           <div class="system-config-form">
             <el-form :model="email"  label-width="180px" size="small" ref="emailForm" :rules="email.email_enable=='on'?emailRules:{}" :validate-on-rule-change="false">
               <el-form-item :label="$t('config.system.email.enable')" prop="email_enable">
-                <el-checkbox v-model="email.email_enable" true-label="on" false-label="off"></el-checkbox>
+                <el-checkbox v-model="email.email_enable" true-label="on" false-label="off"  @change="switchChange('emailForm')"></el-checkbox>
               </el-form-item>
               <el-form-item :label="$t('config.system.email.smtpHost')" prop="email_smtp_host">
                 <el-input v-model="email.email_smtp_host" :disabled="email.email_enable == 'off'"></el-input>
@@ -139,7 +139,7 @@
                 <el-input v-model="ldap.ldap_mapping"></el-input>
               </el-form-item>
               <el-form-item :label="$t('config.system.ldap.active')" prop="ldap_enable">
-                <el-checkbox v-model="ldap.ldap_enable" true-label='on' false-label='off'></el-checkbox>
+                <el-checkbox v-model="ldap.ldap_enable" true-label='on' false-label='off' @change="switchChange('ldapForm')"></el-checkbox>
               </el-form-item>
               <el-form-item>
                 <el-button class="nz-btn nz-btn-size-normal nz-btn-style-light nz-btn-min-width-100" @click="resetForm('ldapForm')" style="top:2px">{{$t('overall.reset')}}</el-button>
@@ -152,13 +152,23 @@
         <el-tab-pane :label="$t('config.system.reset.reset')" name="reset">
           <div class="system-config-form">
             <el-form :model="reset"  label-width="180px" size="small" ref="resetForm" :rules="resetRules" :validate-on-rule-change="false">
-              <el-form-item :label="$t('config.system.reset.type')" prop="type">
-<!--                <el-select v-model="reset.type" size="small">-->
-<!--                  <el-option v-for="(item,index) in resetOptions" :label="item.label" :value="item.value" :key="item.value+index"></el-option>-->
-<!--                </el-select>-->
-                <el-checkbox-group v-model="reset.type">
-                  <div v-for="(item,index) in resetOptions" :key="item.value+index"><el-checkbox  :label="item.label" :value="item.value"  ></el-checkbox></div>
-                </el-checkbox-group>
+              <el-form-item  prop="type">
+<!--                <el-checkbox-group v-model="reset.type">-->
+<!--                  <div v-for="(item,index) in resetOptions" :key="item.value+index">-->
+<!--                    <el-checkbox :value="item.value"   :label="item.label" ></el-checkbox>-->
+<!--                  </div>-->
+<!--                </el-checkbox-group>-->
+                <div class="el-checkbox-group">
+                  <div v-for="(item,index) in resetOptions" :key="item.value+index" >
+                    <label class="el-checkbox sys-reset-label" :for="item.value" >
+                      <span class="el-checkbox__label" style="width: 100px;;">{{item.label}}</span>
+                      <span class="el-checkbox__input">
+                        <input type="checkbox" name="resetType" :value="item.value" class="el-checkbox__original" aria-hidden="true" :id="item.value" @change="resetCheckBoxChange"/>
+                        <span class="el-checkbox__inner"></span>
+                      </span>
+                    </label>
+                  </div>
+                </div>
               </el-form-item>
               <el-form-item>
                 <el-button class="nz-btn nz-btn-size-normal nz-btn-style-normal nz-btn-min-width-100" @click="resetSys()" style="top:2px">{{$t('overall.reset')}}</el-button>
@@ -384,6 +394,21 @@
                 break;
             }
           },
+          switchChange:function(formName){
+            let $temp=this;
+            $temp.$refs[formName].clearValidate();
+            setTimeout(()=>{
+              $temp.$refs[formName].validate();
+            },100)
+          },
+          resetCheckBoxChange:function(e){
+            if(e.target.checked == true ){
+              this.reset.type.push(e.target.value)
+            }else{
+              let index = this.reset.type.indexOf(e.target.value);
+              this.reset.type.splice(index,1);
+            }
+          },
           jumpTo(data, id) {
             this.$router.push({
               path: "/" + data,
@@ -419,5 +444,16 @@
     height: 28px;
     line-height: 28px;
     width: 512px;
+  }
+  .system-tabs .el-tabs--border-card{
+    webkit-box-shadow: unset !important;
+    box-shadow: unset !important;
+  }
+  .sys-reset-label .el-checkbox__original:checked + span{
+    background-color: orange;
+  }
+  .sys-reset-label .el-checkbox__original:checked + span:after{
+    -webkit-transform: rotate(45deg) scaleY(1);
+    transform: rotate(45deg) scaleY(1);
   }
 </style>

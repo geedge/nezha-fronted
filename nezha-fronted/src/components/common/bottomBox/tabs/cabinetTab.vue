@@ -94,7 +94,7 @@
           name:'',
           remark:'',
           seq:'',
-          uSize:0
+          uSize:1
         },
         showTopBtn: false, //top按钮是否显示
         loading: false,

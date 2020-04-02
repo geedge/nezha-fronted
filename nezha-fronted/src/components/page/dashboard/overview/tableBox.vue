@@ -2,7 +2,7 @@
     <div class="table-box" :class="{'table-column-box':showData&&showData.screen&&showData.screen.direction=='column'}">
       <loading ref="loading"></loading>
       <template v-if="showData&&showData.screen">
-        <div class="table-box-left" :class="{'table-box-left-half':showData.screen.total.direction == 'column'}" v-show="showData.screen.show">
+        <div class="table-box-left" :class="{'table-box-left-half':showData.screen.total.direction == 'column'&& showData.table.show && !showData.screen.stat.show}" v-show="showData.screen.show">
             <div class="table-screen"  :class="{'fill-flex-cavity':!showData.screen.stat.show&&showData.screen.total.direction != 'column'&&showData.screen.direction!='column'}">
               <div class="screen-top" v-show="showData.screen.total.show" >
                 <div :class="{'screen-row':showData.screen.total.direction == 'row','screen-column':showData.screen.total.direction == 'column'}">
@@ -30,9 +30,23 @@
                 </div>
               </div>
               <div class="screen-bottom" v-show="showData.screen.stat.show">
-                <div class="screen-row">
-                  <div class="screen-col avg-children-space"><i class="nz-icon nz-icon-arrow-up middle-icon green-icon"></i><span class="middle-font">{{showData.screen.stat.up}}</span></div>
-                  <div class="screen-col avg-children-space"><i class="nz-icon nz-icon-arrow-down middle-icon red-icon"></i><span class="middle-font">{{showData.screen.stat.down}}</span></div>
+                <div :class="{'screen-row':showData.screen.total.direction == 'row','screen-column':showData.screen.total.direction == 'column'}">
+                  <div class="screen-col avg-children-space">
+                    <div class="col-box">
+                      <div>
+                        <div><i class="nz-icon nz-icon-arrow-up middle-icon green-icon"></i></div>
+                        <div><span class="middle-font">{{showData.screen.stat.up}}</span></div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="screen-col avg-children-space">
+                    <div class="col-box">
+                      <div>
+                        <div><i class="nz-icon nz-icon-arrow-down middle-icon red-icon"></i></div>
+                        <div><span class="middle-font">{{showData.screen.stat.down}}</span></div>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>

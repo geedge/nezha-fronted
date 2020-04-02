@@ -391,7 +391,7 @@
             prop: 'model',
             show: true,
           }, {
-            label: this.$t("asset.tableTitle.manufacturer"),
+            label: this.$t("asset.tableTitle.vendor"),
             prop: 'vendor',
             show: true,
           }, {
@@ -663,7 +663,7 @@
       getPingData:function(){
         this.pingCheckListData=[
           {label:'up',value:1},
-          {label:'down',value:2},
+          {label:'down',value:0},
         ]
       },
       getUserData() {
@@ -819,28 +819,29 @@
         if(this.assetTypeCheckList && this.assetTypeCheckList.length > 0){
           let assetTypeIds=this.assetTypeCheckList.join(',');
           this.pageObj.typeIds=assetTypeIds;
-          this.getAssetData();
         }else{
           this.pageObj.typeIds='';
         }
+        this.getAssetData();
       },
       changeVendorCheckBox:function(){
         if(this.vendorCheckList && this.vendorCheckList.length > 0){
           let vendorIds=this.vendorCheckList.join(',');
           this.pageObj.vendorIds=vendorIds;
-          this.getAssetData();
+
         }else{
           this.pageObj.vendorIds='';
         }
+        this.getAssetData();
       },
       changePingCheckBox:function(){
         if(this.pingCheckList && this.pingCheckList.length > 0){
           let pingStates=this.pingCheckList.join(',');
           this.pageObj.pingStates=pingStates;
-          this.getAssetData();
         }else{
           this.pageObj.pingStates='';
         }
+        this.getAssetData();
       },
       getSingleAsset() {
         let checkedCount = this.checkList.length;

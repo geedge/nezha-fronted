@@ -19,8 +19,10 @@
 }
 .table-screen{
   display: flex;
-  flex-direction: column;
+  //flex-direction: column;
   height: 100%;
+  width: 100%;
+  justify-content: space-around;
 }
 .table-screen .screen-top{
   flex: 1;
@@ -38,13 +40,28 @@
   display: flex;
   flex-direction: column;
   height: 100%;
-  align-items:center;
+  align-items:flex-start;
   justify-content: space-around;
   text-align: center;
 }
 .screen-row .screen-col{
   flex: 1;
   text-align: center;
+}
+.screen-column .screen-col{
+  width: 100%;
+  vertical-align: top;
+}
+.screen-col .col-box{
+  display: flex;
+  width: 100%;
+  text-align: center;
+  align-items: center;
+  justify-content: flex-start;
+}
+.screen-col .col-box div{
+  display: inline-block;
+  text-align: left;
 }
 .super-icon{
 font-size:5rem !important;
@@ -83,4 +100,6 @@ popover-container{
   flex:1;
   content: '';
 }
-
+.column-flex{
+  flex-direction: column;
+}

@@ -436,7 +436,7 @@
         ],
         panelData: [], //chart-box的panel下拉框数据,
         hideSameLabels: true,
-        sameLabels:['instance','module','project','asset','job','dc'],
+        sameLabels:['instance','module','project','asset','endpoint','datacenter'],
       }
     },
     methods: {

@@ -266,11 +266,7 @@ const en = {
     fileSize:'文件过大',//File exceed max size.
     port:'Invalid Port',
     url:'Invalid URL',
-    config: {
-      account: {
-
-      }
-    }
+    uSize:'Must be number(1 - 47)'
   },
   search: {
     searchTip: 'Enter to search',//'点击或回车执行搜索'
@@ -463,7 +459,7 @@ const en = {
       dataCenter: 'DC',//DC
       cabinet: 'Cabinet',//'机柜'
       model: 'Model',//'型号'
-      manufacturer: 'Manufacturer',//'厂商'
+      vendor: 'Vendor',//'厂商'
       procurementDate: 'Purchase date',//'购买日期'
       principal: 'Administrator',//'负责人'
       principalTel: 'Telephone',//'电话'

@@ -30,8 +30,8 @@
             <div class="right-box-form-content-txt" v-if="!rightBox.isEdit">{{idc?idc.name:''}}</div>
           </el-form-item>
           <el-form-item :label="this.$t('asset.createAssetTab.AddCabinetTab.uSize')" prop="uSize">
-            <div :class="{'right-box-form-content-txt':!rightBox.isEdit}" >{{cabinet.uSize}}</div>
-            <el-slider v-model.number="cabinet.uSize" :max="47" v-if="rightBox.isEdit"></el-slider>
+            <el-input v-model.number="cabinet.uSize" :max="47" ></el-input>
+<!--            <el-slider v-model.number="cabinet.uSize" :max="47" v-if="rightBox.isEdit"></el-slider>-->
           </el-form-item>
           <el-form-item :label="this.$t('config.dc.remark')">
             <el-input size='mini' v-model="cabinet.remark" type="textarea" :rows="2" v-if="rightBox.isEdit"/>
@@ -70,14 +70,15 @@
             name:'',
             remark:'',
             seq:'',
-            uSize:0
+            uSize:1
           },
           rules:{
             name: [
               {required: true, message: this.$t('validate.required'), trigger: 'blur'}
             ],
             uSize: [
-              {required: true, type: 'number', min: 1, max: 47, message: this.$t('validate.required'), trigger: 'blur'}
+              {required: true,  message: this.$t('validate.required'), trigger: 'blur'},
+              {type: 'number', min: 1, max: 47,message: this.$t('validate.uSize'),trigger: 'blur'}
             ],
           },
         }
@@ -93,7 +94,7 @@
               name:'',
               remark:'',
               seq:'',
-              uSize:0
+              uSize:1
           };
         },
         show(show, isEdit) {

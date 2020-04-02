@@ -180,7 +180,7 @@
               direction:'row',
               total:{ //左侧上方大图标及total信息
                 show:true,
-                direction:'row',
+                direction:'column',
                 num:totalData.inStock,
                 title:this.$t('dashboard.overview.asset.title'),
                 showPopover:true,
@@ -306,7 +306,7 @@
               direction:'row',
               total:{ //左侧上方大图标及total信息
                 show:true,
-                direction:'row',
+                direction:'column',
                 num:data.total,
                 title:this.$t('dashboard.overview.project.project'),
                 showPopover:false,
@@ -378,7 +378,7 @@
               direction:'row',
               total:{ //左侧上方大图标及total信息
                 show:true,
-                direction:'row',
+                direction:'column',
                 num:data.total,
                 title:this.$t('dashboard.overview.project.endpoint'),
                 showPopover:false,
