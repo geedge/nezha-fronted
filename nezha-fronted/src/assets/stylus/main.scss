@@ -895,7 +895,7 @@ li{
   padding-top: 0;
   box-shadow: $pop-box-shadow;
   z-index: 2951 !important;
-  border-radius: 10px;
+  border-radius: 5px;
 }
 .nz-pop2 {
   padding: 0 20px 20px 20px;
@@ -1397,7 +1397,7 @@ li{
   line-height: 25px !important;
 }
 
-.el-textarea textarea:not(.snmp-walk textarea) {
+.el-textarea textarea {
   height: 140px !important;
 }
 /*el-data-picker选中背景色*/
@@ -1432,7 +1432,6 @@ li{
 }
 .ps__thumb-y {
   right: 0px;
-  transition: .3s background-color, .1s top;
   background-color: #888;
 }
 .ps__rail-x:hover > .ps__thumb-x, .ps__rail-x:focus > .ps__thumb-x, .ps__rail-x.ps--clicking .ps__thumb-x {

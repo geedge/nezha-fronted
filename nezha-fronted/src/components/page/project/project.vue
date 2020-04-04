@@ -701,6 +701,9 @@
           this.initSnmpParam(this.editModule);
         }
         this.rightBoxHandler(2);
+        this.$nextTick(() => {
+          this.$refs.moduleBox.initWalk();
+        });
       },
 
       //asset弹框控制

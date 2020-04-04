@@ -642,7 +642,6 @@
       currentModuleCopy: {
         immediate: true,
         handler(n, o) {
-          console.info(n)
           if (n.type && n.type.toLowerCase() == 'snmp') {
             this.endpointTableTitle[3].show = false;
             this.endpointTableTitle[4].show = false;

@@ -32,13 +32,6 @@
             <div v-if="!rightBox.isEdit" class="right-box-form-content-txt">{{currentModule.name}}</div>
           </el-form-item>
 
-          <!--<el-form-item :label="$t('overall.type')" prop="type">
-            <el-radio-group v-model="module.type" size="small" @change="updateScrollbar" :disabled="module.id ? true : false">
-              <el-radio-button label="http"></el-radio-button>
-              <el-radio-button label="snmp"></el-radio-button>
-            </el-radio-group>
-          </el-form-item>-->
-
           <div class="nz-tab module-box-type">
             <div class="nz-tab-item-box" @click="changeType('http')" id="module-type-1">
               <div class="nz-tab-item" :class="{'nz-tab-item-active' : currentModule.type.toLowerCase() == 'http', 'unclickable': currentModule.id}">HTTP</div>
@@ -59,43 +52,24 @@
               </el-col>
               <el-col :span="18">
                 <el-form-item prop="walk">
-                  <select-walk ref="selectWalk" :walkData="walkData" :placement="'bottom-start'" @selectWalk="selectWalk" :currentWalk="currentModule.walk">
+                  <select-walk ref="selectWalk" :walkData="walkData" :expandedWalk="expandedWalkData" :placement="'bottom-start'" @selectWalk="selectWalk" :currentWalk="currentModule.walk">
                     <template v-slot:trigger>
-                      <div class="el-cascader" style="width:100%">
-                        <div class="el-input el-input--suffix">
+                      <div class="el-cascader">
+                        <div class="el-input">
                           <input type="text" readonly="readonly" autocomplete="off" class="el-input__inner" aria-expanded="false">
-                          <span class="el-input__suffix">
-                            <span class="el-input__suffix-inner"><i class="el-input__icon el-icon-arrow-down"></i></span>
-                          </span>
                         </div>
                         <div class="el-cascader__tags">
-                          <span class="el-tag el-tag--info el-tag--small el-tag--light" v-for="item in currentModule.walk">
-                            <span>{{item}}</span>
-                            <i class="el-tag__close el-icon-close"></i>
-                          </span>
+                          <el-scrollbar style="height: 100%;" ref="walkScrollbar">
+                            <span class="el-tag el-tag--info el-tag--small el-tag--light" v-for="item in currentModule.walk">
+                              <span>{{item}}</span>
+                              <i @click.stop="removeWalk(item)" class="el-tag__close el-icon-close"></i>
+                            </span>
+                          </el-scrollbar>
                         </div>
                       </div>
                     </template>
                   </select-walk>
                 </el-form-item>
-                <!--<el-form-item prop="walkStr">
-                  <el-input class="snmp-walk" v-model="currentModule.walkStr" autosize type="textarea" :placeholder="$t('tip.pressEnterToAdd')"></el-input>
-                </el-form-item>-->
-                <!--<div class="module-walk">
-                  <div class="module-walk-box">
-                    <div class="walk-box-item" v-for="item in currentModule.walk">
-                      <div class="walk-box-item-txt">{{item}}</div>
-                      <div class="walk-box-item-op">
-                        <span><i class="nz-icon nz-icon-edit"></i></span>
-                        <span><i class="nz-icon nz-icon-minus-square"></i></span>
-                      </div>
-                    </div>
-                    <div class="walk-box-op">
-                      <span><i class="nz-icon-create-square nz-icon"></i></span>
-                    </div>
-                  </div>
-                </div>-->
-                <!--<span class="el-tag el-tag&#45;&#45;info el-tag&#45;&#45;small el-tag&#45;&#45;light"><span>东南 / 浙江 / 杭州</span><i class="el-tag__close el-icon-close"></i></span>-->
               </el-col>
             </el-row>
 
@@ -343,6 +317,7 @@
     data() {
       return {
         walkData: [],
+        expandedWalkData: [],
         currentModule: {},
         rightBox: {
           show: false,
@@ -386,17 +361,37 @@
       }
     },
     methods: {
-      selectWalk() {
+      selectWalk(walk) {
+        if (this.currentModule.walk.indexOf(walk) != -1) {
+          this.currentModule.walk.splice(this.currentModule.walk.indexOf(walk), 1);
+        } else {
+          this.currentModule.walk.push(walk);
+        }
 
+        this.$refs.walkScrollbar.update();
+      },
+
+      removeWalk(walk) {
+        this.currentModule.walk.splice(this.currentModule.walk.indexOf(walk), 1);
+        this.$refs.selectWalk.$refs.walkTree.setChecked(walk, false);
+      },
+
+      initWalk() {
+        this.$nextTick(() => {
+          this.$refs.selectWalk.show();
+        })
       },
 
       getWalkData() {
-        /*this.$get('mib/tree', {pageSize: -1, pageNo: 1}).then(response => {
+        this.$get('mib/tree', {pageSize: -1, pageNo: 1}).then(response => {
           if (response.code === 200) {
-            this.walkData = response.data.list;
-            console.info(this.walkData);
+            let obj = JSON.parse(response.data);
+            this.walkData = [];
+            for (let item in obj) {
+              this.walkData.push({name: item, subTree: obj[item]});
+            }
           }
-        });*/
+        });
       },
 
       show(show, isEdit) {
@@ -628,6 +623,13 @@
         handler(n, o) {
           if (n.type && n.type.toLowerCase() == 'snmp') {
             n.port = 161;
+            this.expandedWalkData = [];
+            this.$nextTick(() => {
+              this.$refs.selectWalk.show();
+            });
+            for (let i = 0; i < n.walk.length; i++) {
+              this.expandedWalkData.push(n.walk[i].substring(0, n.walk[i].lastIndexOf(".")));
+            }
           }
         }
       },
@@ -668,6 +670,16 @@
     width: 18px;
     margin: 5px 0 5px 15px;
     cursor: pointer;
+  }
+  .el-cascader {
+    width: 100%;
+  }
+  .el-cascader__tags {
+    height: calc(100% - 10px);
+    width: 100%;
+  }
+  .right-box-module .el-cascader .el-input__inner {
+    height: 150px;
   }
 </style>
 <style>
