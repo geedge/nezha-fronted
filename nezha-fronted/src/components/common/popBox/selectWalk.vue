@@ -25,7 +25,7 @@
                 <i v-if="data.type.toUpperCase() == 'ENTRY'" class="nz-icon nz-icon-table-edit"></i>
                 <i v-if="data.type.toUpperCase() == 'TABLE'" class="nz-icon nz-icon-table"></i>
               </span>
-              <el-popover trigger="hover" placement="left" v-if="data.objectID" popper-class="walk-detail">
+              <el-popover trigger="click" placement="left" v-if="data.objectID" popper-class="walk-detail">
                 <div>
                   <ul>
                     <li><span class="metirc-tip-list">Name&nbsp;:&nbsp;</span><span>{{data.name}}</span></li>
@@ -33,7 +33,7 @@
                     <li><span class="metirc-tip-list">MIB&nbsp;:&nbsp;</span><span>{{mibName(node)}}</span></li>
                   </ul>
                 </div>
-                <span slot="reference"><i class="nz-icon nz-icon-info-normal metric-tip-icon"></i></span>
+                <span @click.stop slot="reference"><i class="nz-icon nz-icon-info-normal metric-tip-icon"></i></span>
               </el-popover>
               {{data.name}}
             </span>
