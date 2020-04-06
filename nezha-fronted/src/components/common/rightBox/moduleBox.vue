@@ -411,7 +411,8 @@
         if (!objectName) {
           objectName = walk;
         }
-        return mibName ? mibName + "：<span style='font-weight:bold'>" + objectName : objectName + "</span>";
+        objectName = "<span style='font-weight:bold'>" + objectName + "</span>";
+        return mibName ? mibName + "：" + objectName : objectName;
       },
 
       removeWalk(walk) {

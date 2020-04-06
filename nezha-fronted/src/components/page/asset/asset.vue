@@ -99,10 +99,12 @@
                     export-url="/asset/export"
                     :params="searchLabel"
                     @afterImport="getAssetData"
-                    style="width: 59px;"
+                    style="width: 57px;"
                     class="float-right">
                     <template slot="optionZone">
-                        <i class="nz-icon nz-icon-create-square" @click.stop="tagShow('showAdd')" :title="$t('overall.createAsset')" ></i>
+                      <div class="export-left-btn" @click.stop="tagShow('showAdd')">
+                        <i class="nz-icon nz-icon-create-square" :title="$t('overall.createAsset')" ></i>
+                      </div>
                     </template>
                   </export-excel>
                 </div>

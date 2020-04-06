@@ -1473,3 +1473,16 @@ li{
   color: #ee6723;
   margin-right: 4px;
 }
+
+.dropdownBtn>.el-button-group>.el-button:first-of-type {
+  padding: 0 7px;
+}
+.dropdownBtn>.el-button-group>.el-button:last-of-type {
+  padding: 0 5px;
+}
+.export-left-btn {
+  display: inline-block;
+  width: 30px;
+  margin: 0 -7px;
+  padding: 3px 0;
+}

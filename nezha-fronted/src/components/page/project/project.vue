@@ -61,7 +61,9 @@
               style="width: 57px;"
             >
               <template slot="optionZone">
-                <i class="nz-icon nz-icon-create-square" @click.stop="toCreateEndpoint" :title="$t('overall.createProject')" ></i>
+                <div class="export-left-btn" @click.stop="toCreateEndpoint">
+                  <i class="nz-icon nz-icon-create-square" :title="$t('overall.createProject')" ></i>
+                </div>
               </template>
             </export-excel>
           </div>
@@ -1270,12 +1272,5 @@
     position: relative;
     top: 50%;
     left: 48.5%;
-  }
-
-  .dropdownBtn>.el-button-group>.el-button:first-of-type {
-    padding: 0 7px;
-  }
-  .dropdownBtn>.el-button-group>.el-button:last-of-type {
-    padding: 0 5px;
   }
 </style>
