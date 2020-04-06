@@ -36,14 +36,6 @@
       <template v-if="from == 'alertMessage'">
         <common-detail-tab v-show="subResizeShow" :from="from" :targetTab="targetTab" v-for="item, index in tabList"
                            v-if="targetTab == item" @changeTab="changeTab"></common-detail-tab>
-        <!--<common-detail-tab v-show="subResizeShow" :from="from" :detail="detail" :targetTab="targetTab" v-for="item in tagList"
-                           v-if="targetTab == 'project'" @changeTab="changeTab"></common-detail-tab>
-        <common-detail-tab v-show="subResizeShow" :from="from" :detail="detail" :targetTab="targetTab" v-for="item in tagList"
-                           v-if="targetTab == 'module'" @changeTab="changeTab"></common-detail-tab>
-        <common-detail-tab v-show="subResizeShow" :from="from" :detail="detail" :targetTab="targetTab" v-for="item in tagList"
-                           v-if="targetTab == 'endpoint'" @changeTab="changeTab"></common-detail-tab>
-        <common-detail-tab v-show="subResizeShow" :from="from" :detail="detail" :targetTab="targetTab" v-for="item in tagList"
-                           v-if="targetTab == 'dc'" @changeTab="changeTab"></common-detail-tab>-->
       </template>
     </div>
   </span>

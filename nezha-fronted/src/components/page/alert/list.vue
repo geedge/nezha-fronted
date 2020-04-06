@@ -83,7 +83,7 @@
                 <el-tag @click="showTagDetail(scope.row.labels, key)"
                         :class="{'link': key == 'asset' || key == 'endpoint' || key == 'project' || key == 'module' || key == 'datacenter'}"
                         :type="tagType(key)"
-                        size="mini" v-for="(value, key) in scope.row.labels" class="alert-message-tag">{{value}}</el-tag>
+                        size="mini" v-for="(value, key) in scope.row.labels" class="alert-message-tag">{{key}}：{{value}}</el-tag>
               </template>
               <div v-else-if="item.prop == 'state'">
                 <span class="">
