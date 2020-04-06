@@ -24,17 +24,17 @@
                 <i v-if="data.type.toUpperCase() == 'OBJECT' && data.subTree.length == 0" class="nz-icon nz-icon-leaf"></i>
                 <i v-if="data.type.toUpperCase() == 'ENTRY'" class="nz-icon nz-icon-table-edit"></i>
                 <i v-if="data.type.toUpperCase() == 'TABLE'" class="nz-icon nz-icon-table"></i>
+                <el-popover ref="walkDetail" trigger="click" placement="left" popper-class="nz-pop nz-pop-walk-detail">
+                  <div>
+                    <ul>
+                      <li><span class="metirc-tip-list">Name&nbsp;:&nbsp;</span><span>{{data.name}}</span></li>
+                      <li><span class="metirc-tip-list">OID&nbsp;:&nbsp;</span><span>{{data.objectID}}</span></li>
+                      <li><span class="metirc-tip-list">MIB&nbsp;:&nbsp;</span><span>{{mibName(node)}}</span></li>
+                    </ul>
+                  </div>
+                  <span @click.stop slot="reference"><i class="nz-icon nz-icon-info-normal metric-tip-icon"></i></span>
+                </el-popover>
               </span>
-              <el-popover trigger="click" placement="left" v-if="data.objectID" popper-class="walk-detail">
-                <div>
-                  <ul>
-                    <li><span class="metirc-tip-list">Name&nbsp;:&nbsp;</span><span>{{data.name}}</span></li>
-                    <li><span class="metirc-tip-list">OID&nbsp;:&nbsp;</span><span>{{data.objectID}}</span></li>
-                    <li><span class="metirc-tip-list">MIB&nbsp;:&nbsp;</span><span>{{mibName(node)}}</span></li>
-                  </ul>
-                </div>
-                <span @click.stop slot="reference"><i class="nz-icon nz-icon-info-normal metric-tip-icon"></i></span>
-              </el-popover>
               {{data.name}}
             </span>
           </el-tree>
@@ -59,7 +59,7 @@
       },
       data() {
         return {
-          popBox: {show: false}
+          popBox: {show: false},
         }
       },
       computed: {

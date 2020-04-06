@@ -186,6 +186,7 @@
     import {port} from '../../common/js/validate'
     import {domain} from '../../common/js/validate'
     import {host} from '../../common/js/validate'
+    import bus from '../../../libs/bus';
 
     export default {
         name: "system",
@@ -410,6 +411,7 @@
             }
           },
           jumpTo(data, id) {
+            bus.$emit("menu-change", data);
             this.$router.push({
               path: "/" + data,
               query: {

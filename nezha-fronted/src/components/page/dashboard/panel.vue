@@ -428,6 +428,7 @@
       jumpTo(data, id) {
         //this.$store.state.assetData.moduleData = data
         //this.$store.state.assetData.selectedData = id
+        bus.$emit("menu-change", data);
         this.$router.push({
           path: "/" + data,
           query: {

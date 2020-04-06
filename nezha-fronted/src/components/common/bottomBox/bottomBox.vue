@@ -28,10 +28,23 @@
       <!--endpoint页的asset详情-->
       <common-detail-tab v-show="subResizeShow" :obj="obj" :from="from" :detail="assetDetail" :targetTab="targetTab"
                          v-if="targetTab == 'assetDetail' && from == 'endpoint'"
-                         @changeTab="changeTab"
-      ></common-detail-tab>
+                         @changeTab="changeTab"></common-detail-tab>
       <!--endpoint-query-->
       <endpoint-query-tab v-show="subResizeShow" v-if="(from == 'endpoint' && targetTab == 'endpointQuery')" :from="from" :obj="obj" @changeTab="changeTab"></endpoint-query-tab>
+
+      <!--alertMessage页的详情-->
+      <template v-if="from == 'alertMessage'">
+        <common-detail-tab v-show="subResizeShow" :from="from" :targetTab="targetTab" v-for="item, index in tabList"
+                           v-if="targetTab == item" @changeTab="changeTab"></common-detail-tab>
+        <!--<common-detail-tab v-show="subResizeShow" :from="from" :detail="detail" :targetTab="targetTab" v-for="item in tagList"
+                           v-if="targetTab == 'project'" @changeTab="changeTab"></common-detail-tab>
+        <common-detail-tab v-show="subResizeShow" :from="from" :detail="detail" :targetTab="targetTab" v-for="item in tagList"
+                           v-if="targetTab == 'module'" @changeTab="changeTab"></common-detail-tab>
+        <common-detail-tab v-show="subResizeShow" :from="from" :detail="detail" :targetTab="targetTab" v-for="item in tagList"
+                           v-if="targetTab == 'endpoint'" @changeTab="changeTab"></common-detail-tab>
+        <common-detail-tab v-show="subResizeShow" :from="from" :detail="detail" :targetTab="targetTab" v-for="item in tagList"
+                           v-if="targetTab == 'dc'" @changeTab="changeTab"></common-detail-tab>-->
+      </template>
     </div>
   </span>
 </template>
@@ -58,8 +71,10 @@
       subResizeShow: Boolean, //resize时，用v-show="subResizeShow"控制页面内容是否显示
       obj: Object, //关联的实体对象
       from: String, //来自哪个页面
+      tabList: Array, //动态页签列表
       targetTab: String, //展示哪个页签
       detail: Array, //对象详情内容
+      detailList: Array, //多个对象详情内容
 
       assetDetail: Array, //endpoint页的asset详情
     },

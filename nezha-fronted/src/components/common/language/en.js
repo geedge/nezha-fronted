@@ -654,7 +654,8 @@ const en = {
       moduleAlert: 'Module alert',//"组件告警"
       deviceAlert: 'Device alert',//"设备告警"
       pending: 'Pending',//"待处理"
-      expired: 'Expired'//"已过期"
+      expired: 'Expired',//"已过期"
+      labels: 'Labels'
     },
     config: {
       name: 'Name',//"名称"

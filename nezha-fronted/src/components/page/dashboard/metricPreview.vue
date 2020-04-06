@@ -197,6 +197,7 @@ export default {
     jumpTo(data,id) {
       //this.$store.state.assetData.moduleData = data;
       //this.$store.state.assetData.selectedData = id;
+      bus.$emit("menu-change", data);
       this.$store.state.showPanel.id = 0;
       this.$store.state.showPanel.name = '';
       this.$router.push({

@@ -28,19 +28,19 @@
               <div v-if="!rightBox.isEdit" class="right-box-form-content-txt">{{alertRule.alertName}}</div>
             </el-form-item>
             <!--type-->
-            <el-form-item :label="$t('alert.list.type')" prop="type">
+           <!-- <el-form-item :label="$t('alert.list.type')" prop="type">
               <el-select v-if="rightBox.isEdit" @change="(val) => {changeType(val);}" popper-class="config-dropdown" v-model="alertRule.type" placeholder="" size="small" >
                 <el-option :id="'alert-type-'+item.value" v-for="item in typeData" :key="item.key" :label="item.value" :value="item.key"></el-option>
               </el-select>
               <div v-for="item in typeData" v-if="!rightBox.isEdit && item.key == alertRule.type" class="right-box-form-content-txt">{{item.value}}</div>
-            </el-form-item>
+            </el-form-item>-->
             <!--linkedId-->
-            <el-form-item :label="$t('alert.config.link')" prop="linkId">
+            <!--<el-form-item :label="$t('alert.config.link')" prop="linkId">
               <el-select v-if="rightBox.isEdit" v-model="alertRule.linkId" placeholder="" size="small" popper-class="config-dropdown">
                 <el-option :id="'alert-linke-'+item.id" v-for="item in linkObjList" :key="item.id" :label="alertRule.type == 3 ? item.host : item.name" :value="item.id"></el-option>
               </el-select>
               <div v-if="!rightBox.isEdit" class="right-box-form-content-txt">{{alertRule.linkObject ? alertRule.linkObject.name : ''}}</div>
-            </el-form-item>
+            </el-form-item>-->
             <!--expr-->
             <el-form-item :label="$t('alert.config.expr')" prop="expr">
               <el-input maxlength="512" rows="4" show-word-limit v-if="rightBox.isEdit" type="textarea" placeholder="" v-model="alertRule.expr" size="small"></el-input>

@@ -94,6 +94,7 @@
   import chart from "./chart";
   import axios from 'axios';
   import chartDataFormat from "../../../charts/chartDataFormat";
+  import bus from '../../../../libs/bus';
   export default {
     name: "overview",
     components:{
@@ -1139,6 +1140,7 @@
       jumpTo(data, id) {
         //this.$store.state.assetData.moduleData = data
         //this.$store.state.assetData.selectedData = id
+        bus.$emit("menu-change", data);
         this.$router.push({
           path: "/" + data,
           query: {

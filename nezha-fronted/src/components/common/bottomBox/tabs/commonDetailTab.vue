@@ -9,8 +9,9 @@
           <template v-else-if="from == 'alertRule'">{{$t("alert.alertName")}}：{{obj.alertName}}</template>
           <template v-else-if="from == 'asset'">{{$t("project.endpoint.asset")}}：{{obj.host}}</template>
           <template v-else-if="from == 'endpoint'">{{$t("project.endpoint.endpointId")}}: {{obj.id}}</template>
+          <template v-else-if="from == 'alertMessage'">&nbsp;</template>
   <!-- 为防止代码换行导致页面中元素之间有间隙，所以将元素的标签尾部和相邻元素的标签头部连在一起写 -->
-        </div><div class="sub-list-tab" :class="{'sub-list-tab-active': targetTab == 'detail'}" @click="changeTab('detail')">{{$t("overall.detail")}}</div><template v-if="from == 'dc'">
+        </div><div v-if="from != 'alertMessage'" class="sub-list-tab" :class="{'sub-list-tab-active': targetTab == 'detail'}" @click="changeTab('detail')">{{$t("overall.detail")}}</div><template v-if="from == 'dc'">
           <div class="sub-list-tab" @click="changeTab('cabinet')">{{$t("config.dc.cabinets")}}</div>
         </template><template v-if="from == 'alertRule' || from == 'asset'">
           <div class="sub-list-tab" @click="changeTab('alertMessage')">{{$t("asset.tableTitle.alerts")}}</div>
@@ -19,6 +20,12 @@
         </template><template v-if="from == 'endpoint'">
           <div class="sub-list-tab" @click="changeTab('endpointQuery')">{{$t("overall.query")}}</div><div
             class="sub-list-tab" :class="{'sub-list-tab-active': targetTab == 'assetDetail'}" @click="changeTab('assetDetail')">{{$t("project.endpoint.asset")}}</div>
+        </template><template v-if="from == 'alertMessage'">
+          <div class="sub-list-tab" :class="{'sub-list-tab-active': targetTab == 'asset'}" @click="changeTab('asset')">{{$t("project.endpoint.asset")}}</div><div
+        class="sub-list-tab" :class="{'sub-list-tab-active': targetTab == 'project'}" @click="changeTab('project')">{{$t("project.project.project")}}</div><div
+        class="sub-list-tab" :class="{'sub-list-tab-active': targetTab == 'module'}" @click="changeTab('module')">{{$t("project.module.module")}}</div><div
+        class="sub-list-tab" :class="{'sub-list-tab-active': targetTab == 'endpoint'}" @click="changeTab('endpoint')">{{$t("project.endpoint.endpoint")}}</div><div
+        class="sub-list-tab" :class="{'sub-list-tab-active': targetTab == 'datacenter'}" @click="changeTab('datacenter')">{{$t("config.dc.dc")}}</div>
         </template>
       </div>
     </div>

@@ -113,6 +113,7 @@
 </template>
 <script>
   import axios from 'axios'
+  import bus from '../../../libs/bus';
   export default {
     name: "mib",
     data() {
@@ -257,6 +258,7 @@
         this.rightBox.show = false;
       },
       jumpTo(data, id) {
+        bus.$emit("menu-change", data);
         this.$router.push({
           path: "/" + data,
           query: {

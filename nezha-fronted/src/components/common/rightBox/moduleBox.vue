@@ -62,8 +62,8 @@
                           <el-scrollbar style="height: 100%;" ref="walkScrollbar">
                             <span class="el-tag el-tag--info el-tag--small el-tag--light" v-for="item in currentModule.walk">
                               <span v-html="mibName(item)"></span>
-                              <div @click.stop="removeWalk(item)">
-                                <i class="el-tag__close el-icon-close"></i>
+                              <div class="walk-close-box" @click.stop="removeWalk(item)">
+                                <i class="el-tag__close el-icon-close walk-close"></i>
                               </div>
                             </span>
                           </el-scrollbar>
@@ -432,10 +432,21 @@
             let obj = JSON.parse(response.data);
             this.walkData = [];
             for (let item in obj) {
-              this.walkData.push({name: item, subTree: obj[item]});
+              setAttr(obj[item], "detailShow", false);
+              this.walkData.push({name: item, detailShow: false, subTree: obj[item]});
             }
           }
         });
+        function setAttr(tree, name, value) {
+          if (tree && tree.length > 0) {
+            for (let i = 0; i < tree.length; i++) {
+              tree[i][name] = value;
+              if (tree[i].subTree && tree[i].subTree.length > 0) {
+                setAttr(tree[i].subTree, name, value);
+              }
+            }
+          }
+        }
       },
 
       show(show, isEdit) {
@@ -746,5 +757,12 @@
   }
   .module-box-type {
     margin: 25px 0 10px -15px;
+  }
+  .walk-close-box {
+    margin-left: 6px;
+    width: 14px;
+  }
+  .walk-close {
+    margin-left: -6px;
   }
 </style>

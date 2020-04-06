@@ -61,17 +61,16 @@
                 <span style="padding-left: 18px;" v-if="scope.row[item.prop] == 'medium'">{{severityData[0].value}}</span>
                 <span v-if="scope.row[item.prop] == 'low'"><i class="el-icon-arrow-down"></i>&nbsp;{{severityData[2].value}}</span>
               </span>
-              <span v-else-if="item.prop == 'type'">
+              <!--<span v-else-if="item.prop == 'type'">
                 <template v-for="type in typeData" v-if="type.key == scope.row[item.prop]">{{type.value}}</template>
               </span>
-              <!--                        <span v-else-if="item.prop == 'linkObject' && scope.row[item.prop]">{{scope.row.type != 3 && scope.row.linkObject ? scope.row[item.prop].name : scope.row[item.prop].host}}</span>-->
               <template v-else-if="item.prop == 'linkObject'">
                 <span v-if="(scope.row['type'] == 1 || scope.row['type'] == 2) && scope.row[item.prop]" class="link too-long-split"
                       @click="viewAlertType(scope.row['type'],scope.row[item.prop])" style="max-width: 125px;">{{scope.row[item.prop].name}}</span>
                 <span v-else-if="scope.row['type'] == 3 && scope.row[item.prop]" class="link"
                       @click="viewAlertType(scope.row['type'],scope.row[item.prop].id)">{{scope.row[item.prop].host}}</span>
                 <span v-else>-</span>
-              </template>
+              </template>-->
               <template v-else-if="item.prop == 'alertNum'">
                 <span class="link" @click="queryMessage(scope.row)">{{scope.row.alertNum + ' ' + $t('overall.active')}}</span>
               </template>
@@ -114,6 +113,7 @@
 </template>
 <script>
   var vm;
+  import bus from '../../../libs/bus';
   export default {
     name: "alert-config",
     data() {
@@ -228,7 +228,7 @@
             label: this.$t("alert.config.expr"),
             prop: 'expr',
             show: true,
-          }, {
+          }, /*{
             label: this.$t("alert.list.type"),
             prop: 'type',
             show: true,
@@ -237,7 +237,7 @@
             prop: 'linkObject',
             show: true,
             width: 140
-          }, {
+          }, */{
             label: this.$t("alert.config.for"),
             prop: 'last',
             show: true,
@@ -349,7 +349,7 @@
         this.showSubList = true;
       },
       messageStyle(e) {
-        if (e.columnIndex == 8) {
+        if (e.columnIndex == 6) {
           if (e.row.alertNum > 0) {
             return 'has-message';
           } else {
@@ -392,6 +392,7 @@
         }
       },
       jumpTo(data, id) {
+        bus.$emit("menu-change", data);
         this.$router.push({
           path: "/" + data,
           query: {

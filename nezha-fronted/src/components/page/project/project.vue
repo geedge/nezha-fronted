@@ -1233,7 +1233,7 @@
   .metric-tip-icon{
     vertical-align: middle;
     /*color: #3971BA;*/
-    -webkit-transform:scale(0.6);
+    transform: scale(0.6);
     /*-webkit-transform-origin: left top;*/
     display:inline-block;
   }

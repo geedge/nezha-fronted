@@ -160,6 +160,7 @@
 </template>
 <script>
   var vm;
+  import bus from '../../../libs/bus';
   export default {
     name: "dc",
     data() {
@@ -288,6 +289,7 @@
         this.tablelable = data;
       },
       jumpTo(data, id) {
+        bus.$emit("menu-change", data);
         this.$router.push({
           path: "/" + data,
           query: {

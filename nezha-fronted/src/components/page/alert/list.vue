@@ -15,94 +15,109 @@
       </div>
     </div>
     <div class="content-right">
-      <div class="top-tools">
-        <div class="top-tool-main-right">
-          <div class="top-tool-search">
-            <search-input :searchMsg="searchMsg" @search="search"></search-input>
+      <div class="main-list main-and-sub-transition" :class="{'main-list-with-sub': showSubList}">
+        <div class="top-tools" v-show="mainResizeShow">
+          <div class="top-tool-main-right" :class="{'top-tool-main-right-to-left': showSubList}">
+            <div class="top-tool-search">
+              <search-input :searchMsg="searchMsg" @search="search" :inTransform="inTransform"></search-input>
+            </div>
           </div>
+          <div class="pagination-top pagination-top-hide display-none"></div>
         </div>
-      </div>
-      <el-table
-        class="nz-table"
-        :data="tableData"
-        border
-        ref="alertListTable"
-        tooltip-effect="light"
-        :height="$tableHeight.normal"
-        v-scrollBar:el-table
-        style="width: 100%;">
-        <el-table-column
-          :resizable="false"
-          v-for="(item, index) in tablelable"
-          v-if="item.show"
-          :width="item.width"
-          :key="`col-${index}`"
-          :label="item.label"
-          show-overflow-tooltip
-          min-width="110px"
-        >
-          <template slot-scope="scope" :column="item">
-            <template v-if="item.prop == 'alertRule'">
-              <div class="link too-long-split"
-                 @click="viewRule(scope.row[item.prop].id)" :id="'view-rule-'+scope.row[item.prop].id"
-                 v-if="scope.row[item.prop].alertName">{{scope.row[item.prop].alertName}}</div>
-              <template v-else>-</template>
-            </template>
-            <div v-else-if="item.prop == 'type'" class="content-right-options">
-              <span v-if="scope.row[item.prop] == 1">Project</span>
-              <span v-if="scope.row[item.prop] == 2">Module</span>
-              <span v-if="scope.row[item.prop] == 3">Device</span>
-            </div>
-            <template v-else-if="item.prop == 'summary'">
-              <template v-if="scope.row[item.prop]">{{scope.row[item.prop]}}</template>
-              <template v-else>-</template>
-            </template>
-            <template v-else-if="item.prop == 'description'">
-              <template v-if="scope.row[item.prop]">{{scope.row[item.prop]}}</template>
-              <span v-else>-</span>
-            </template>
-            <span v-else-if="item.prop == 'severity'">
-              <span v-if="scope.row[item.prop] == 'high'"><i class="el-icon-arrow-up"></i>&nbsp;{{severityData[1].value}}</span>
-              <span style="padding-left: 18px;" v-if="scope.row[item.prop] == 'medium'">{{severityData[0].value}}</span>
-              <span v-if="scope.row[item.prop] == 'low'"><i class="el-icon-arrow-down"></i>&nbsp;{{severityData[2].value}}</span>
-            </span>
-            <div v-else-if="item.prop == 'linkObject'">
-              <span v-if="(scope.row['type'] == 1 || scope.row['type'] == 2) && scope.row[item.prop]" class="link too-long-split"
-                    @click="viewAlertType(scope.row['type'],scope.row[item.prop])" style="max-width: 125px;"
-                    :id="'link-obj-'+scope.row['type']+'-'+scope.row[item.prop].id">{{scope.row[item.prop].name}}</span>
-              <span v-else-if="scope.row['type'] == 3 && scope.row[item.prop]" class="link"
-                    @click="viewAlertType(scope.row['type'],scope.row[item.prop].id)"
-                    :id="'link-obj-'+scope.row['type']+'-'+scope.row[item.prop].id">{{scope.row[item.prop].host}}</span>
-              <span v-else>-</span>
-            </div>
-            <div v-else-if="item.prop == 'state'">
-              <span class="">
-                {{scope.row['state'] == 1 ? "Pending" : ""}}
-                {{scope.row['state'] == 2 ? "Expired" : ""}}
+        <el-table
+          class="nz-table"
+          :data="tableData"
+          border
+          v-show="mainResizeShow"
+          ref="alertListTable"
+          tooltip-effect="light"
+          :height="mainTableHeight"
+          v-scrollBar:el-table
+          :cell-class-name="labelsClassName"
+          style="width: 100%;">
+          <el-table-column
+            :resizable="false"
+            v-for="(item, index) in tablelable"
+            v-if="item.show"
+            :width="item.width"
+            :key="`col-${index}`"
+            :label="item.label"
+            :show-overflow-tooltip="item.prop != 'labels'"
+            min-width="110px"
+          >
+            <template slot-scope="scope" :column="item">
+              <template v-if="item.prop == 'alertRule'">
+                <div class="link too-long-split"
+                   @click="viewRule(scope.row[item.prop].id)" :id="'view-rule-'+scope.row[item.prop].id"
+                   v-if="scope.row[item.prop].alertName">{{scope.row[item.prop].alertName}}</div>
+                <template v-else>-</template>
+              </template>
+              <!--<div v-else-if="item.prop == 'type'" class="content-right-options">
+                <span v-if="scope.row[item.prop] == 1">Project</span>
+                <span v-if="scope.row[item.prop] == 2">Module</span>
+                <span v-if="scope.row[item.prop] == 3">Device</span>
+              </div>-->
+              <template v-else-if="item.prop == 'summary'">
+                <template v-if="scope.row[item.prop]">{{scope.row[item.prop]}}</template>
+                <template v-else>-</template>
+              </template>
+              <template v-else-if="item.prop == 'description'">
+                <template v-if="scope.row[item.prop]">{{scope.row[item.prop]}}</template>
+                <span v-else>-</span>
+              </template>
+              <span v-else-if="item.prop == 'severity'">
+                <span v-if="scope.row[item.prop] == 'high'"><i class="el-icon-arrow-up"></i>&nbsp;{{severityData[1].value}}</span>
+                <span style="padding-left: 18px;" v-if="scope.row[item.prop] == 'medium'">{{severityData[0].value}}</span>
+                <span v-if="scope.row[item.prop] == 'low'"><i class="el-icon-arrow-down"></i>&nbsp;{{severityData[2].value}}</span>
               </span>
-            </div>
-            <span v-else-if="scope.row[item.prop]">{{scope.row[item.prop]}}</span>
-            <template v-else>-</template>
-          </template>
-        </el-table-column>
-        <el-table-column width="28" :resizable="false">
-          <template slot="header" slot-scope="scope">
-            <span @click.stop="elementsetShow('shezhi',$event)" class="nz-table-gear">
-              <i class="nz-icon nz-icon-gear"></i>
-            </span>
-          </template>
-        </el-table-column>
-      </el-table>
-      <Pagination :tableId="tableId" :pageObj="pageObj" @pageNo='pageNo' @pageSize='pageSize' ref="Pagination"></Pagination>
-      <button class="to-top" v-show="showTopBtn" @click="$toTop"><i class="nz-icon nz-icon-top"></i></button>
+              <!--<div v-else-if="item.prop == 'linkObject'">
+                <span v-if="(scope.row['type'] == 1 || scope.row['type'] == 2) && scope.row[item.prop]" class="link too-long-split"
+                      @click="viewAlertType(scope.row['type'],scope.row[item.prop])" style="max-width: 125px;"
+                      :id="'link-obj-'+scope.row['type']+'-'+scope.row[item.prop].id">{{scope.row[item.prop].name}}</span>
+                <span v-else-if="scope.row['type'] == 3 && scope.row[item.prop]" class="link"
+                      @click="viewAlertType(scope.row['type'],scope.row[item.prop].id)"
+                      :id="'link-obj-'+scope.row['type']+'-'+scope.row[item.prop].id">{{scope.row[item.prop].host}}</span>
+                <span v-else>-</span>
+              </div>-->
+              <template v-else-if="item.prop == 'labels'">
+                <el-tag @click="showTagDetail(scope.row.labels, key)"
+                        :class="{'link': key == 'asset' || key == 'endpoint' || key == 'project' || key == 'module' || key == 'datacenter'}"
+                        :type="tagType(key)"
+                        size="mini" v-for="(value, key) in scope.row.labels" class="alert-message-tag">{{value}}</el-tag>
+              </template>
+              <div v-else-if="item.prop == 'state'">
+                <span class="">
+                  {{scope.row['state'] == 1 ? "Pending" : ""}}
+                  {{scope.row['state'] == 2 ? "Expired" : ""}}
+                </span>
+              </div>
+              <span v-else-if="scope.row[item.prop]">{{scope.row[item.prop]}}</span>
+              <template v-else>-</template>
+            </template>
+          </el-table-column>
+          <el-table-column width="28" :resizable="false">
+            <template slot="header" slot-scope="scope">
+              <span @click.stop="elementsetShow('shezhi',$event)" class="nz-table-gear">
+                <i class="nz-icon nz-icon-gear"></i>
+              </span>
+            </template>
+          </el-table-column>
+        </el-table>
+        <div class="pagination-bottom" v-show="!showSubList">
+          <Pagination :tableId="tableId" :pageObj="pageObj" @pageNo='pageNo' @pageSize='pageSize' ref="Pagination"></Pagination>
+        </div>
+        <button class="to-top" v-show="showTopBtn" @click="$toTop"><i class="nz-icon nz-icon-top"></i></button>
+      </div>
+      <bottom-box v-if="showSubList" :show-sub-list="showSubList" :subResizeShow="subResizeShow" :isFullScreen="isFullScreen" :from="'alertMessage'" :targetTab="targetTab" :detailList="tabDetailList"
+                  @closeSubList="showSubList = false" @fullScreen="fullScreen" @exitFullScreen="exitFullScreen" @listResize="listResize" :tabList="tabList"></bottom-box>
     </div>
-    <alert-config-box :parentAlertRule="viewRuleData" @reload="getAlertList" ref="alertConfigBox"></alert-config-box>
+    <!--<alert-config-box :parentAlertRule="viewRuleData" @reload="getAlertList" ref="alertConfigBox"></alert-config-box>
     <project-box :project="viewProjectData" ref="projectBox" @reload="getAlertList"></project-box>
-    <module-box :module="viewModuleData" @reload="getAlertList" ref="moduleBox"></module-box>
+    <module-box :module="viewModuleData" @reload="getAlertList" ref="moduleBox"></module-box>-->
     <!--<asset-edit-unit :edit-unit-show='viewAssetState' @refreshData="getAlertList" @sendStateData="tabControl"
                      ref="assetEditUnit"></asset-edit-unit>-->
-    <asset-box :edit-unit-show='viewAssetState' @refreshData="getAlertList" @sendStateData="tabControl"
-               ref="assetEditUnit"></asset-box>
+    <!--<asset-box :edit-unit-show='viewAssetState' @refreshData="getAlertList" @sendStateData="tabControl"
+               ref="assetEditUnit"></asset-box>-->
     <element-set
       v-clickoutside="elementsetHide"
       :table-title="tableTitle"
@@ -114,10 +129,24 @@
 
 </template>
 <script>
+  import bus from '../../../libs/bus';
+  var vm;
   export default {
     name: "alertList",
     data() {
+      vm = this;
       return {
+        /*二级列表相关*/
+        tabList: [], //二级列表的标签
+        tabDetailList: [], //多个详情
+        targetTab: '', //展示二级列表中的哪个页签
+        inTransform: false, //搜索框相关，搜索条件下拉框是否在transform里
+        mainResizeShow: true, //dom高度改变时部分内容是否展示
+        subResizeShow: true,
+        isFullScreen: false,
+        showSubList: false, //是否展示二级列表
+        mainTableHeight: this.$tableHeight.normal, //主列表table高度
+
         tableId: 'alertListTable', //需要分页的table的id，用于记录每页数量
         showTopBtn: false,
         pageObj: {
@@ -131,7 +160,7 @@
             prop: 'alertRule',
             show: true,
             width: 180
-          }, {
+          }, /*{
             label: this.$t("alert.list.type"),
             prop: 'type',
             show: true,
@@ -141,6 +170,10 @@
             prop: 'linkObject',
             show: true,
             width: 140
+          }, */{
+            label: this.$t("alert.list.labels"),
+            prop: 'labels',
+            show: true,
           }, {
             label: this.$t("alert.severity"),
             prop: 'severity',
@@ -241,6 +274,17 @@
         viewAssetState: false,
       }
     },
+    computed: {
+      tagType() {
+        return (key) => {
+          if (key == 'asset' || key == 'module' || key == 'project' || key == 'datacenter' || key == 'endpoint') {
+            return "";
+          } else {
+            return "info";
+          }
+        }
+      }
+    },
     methods: {
       elementsetShow(s, e) {
         var eventfixed = {
@@ -277,10 +321,13 @@
         this.$set(this.searchLabel, "pageSize", this.pageObj.pageSize);
         this.$get('alert/message', this.searchLabel).then(response => {
           if (response.code == 200) {
-            this.tableData = response.data.list
-            this.pageObj.total = response.data.total
+            this.tableData = response.data.list;
+            this.tableData.forEach((item) => {
+              item.labels = JSON.parse(item.labels);
+            });
+            this.pageObj.total = response.data.total;
           }
-        })
+        });
       },
       //asset弹框控制
       tabControl(data) {
@@ -289,7 +336,47 @@
           this.$refs['assetEditUnit'].tabView = false
         }
       },
+      // 全屏
+      fullScreen() {
+        this.$bottomBoxWindow.fullScreen(vm);
+      },
+      // 退出全屏
+      exitFullScreen() {
+        this.$bottomBoxWindow.exitFullScreen(vm);
+      },
+      // 鼠标拖动二级列表
+      listResize(e) {
+        this.$bottomBoxWindow.listResize(vm, e);
+      },
+      showTagDetail(labels, key) {
+        let open = false;
+        if (key == "asset" || key == "project" || key == "module" || key == "endpoint" || key == "datacenter") {
+          open = true;
+        }
+        if (open) {
+          let labelList = [];
+          let detailList = [];
+          for (let item in labels) {
+            if (item == "asset" || item == "project" || item == "module" || item == "endpoint" || item == "datacenter") {
+              labelList.push(item);
+              detailList.push(labels[item]);
+            }
+          }
+          this.showSubList = true;
+          this.tabList = labelList;
+          this.tabDetailList = detailList;
+          this.targetTab = key;
+        }
+      },
+      labelsClassName(row) {
+        if (row.columnIndex == 1) {
+          return "alert-message-list-labels";
+        } else {
+          return "";
+        }
+      },
       jumpTo(data, id) {
+        bus.$emit("menu-change", data);
         this.$store.state.assetData.moduleData = data
         this.$store.state.assetData.selectedData = id
         this.$router.push({
@@ -365,6 +452,11 @@
         this.$refs.moduleBox.show(false, false);
         this.viewAssetState = false;
       }
+    },
+    watch: {
+      showSubList(n) {
+        this.$bottomBoxWindow.showSubListWatch(vm, n);
+      },
     },
     mounted() {
       //是否存在分页缓存

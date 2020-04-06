@@ -147,7 +147,7 @@ li{
   position: relative;
 }
 .to-top {
-  position: fixed;
+  position: absolute;
   bottom: 10px;
   right: 5px;
   border-radius: 5px;
@@ -721,8 +721,12 @@ li{
   /*box-shadow: inset -1px -2px 1px 0 rgba(0,0,0,0.11), inset 2px 2px 1px 0 rgba(255,255,255,0.50);*/
 }
 .nz-table.el-table td .cell{
-  height: 38px;
+  min-height: 38px;
   line-height: 38px;
+}
+.nz-table.el-table td.alert-message-list-labels .cell{
+  line-height: unset;
+  padding: 3px;
 }
 /*.nz-table .el-table__row td:first-of-type {
    padding-left: 38px;
@@ -742,7 +746,9 @@ li{
   position: absolute;
   left: -3px;
 }
-
+.alert-message-tag {
+  margin: 3px;
+}
 /* end--内容*/
 
 /* begin--右弹框滑入滑出动画*/
@@ -1485,4 +1491,10 @@ li{
   width: 30px;
   margin: 0 -7px;
   padding: 3px 0;
+}
+
+.metric-tip-icon{
+  vertical-align: middle;
+  transform: scale(0.6);
+  display:inline-block;
 }

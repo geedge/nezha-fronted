@@ -193,7 +193,7 @@
 <script>
   import {host} from '../../common/js/validate';
   import {port} from '../../common/js/validate';
-
+  import bus from '../../../libs/bus';
   var vm;
   export default {
     name: "prom",
@@ -568,6 +568,7 @@
         this.rightBox.show = false;
       },
       jumpTo(data, id) {
+        bus.$emit("menu-change", data);
         this.$router.push({
           path: "/" + data,
           query: {

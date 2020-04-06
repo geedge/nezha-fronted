@@ -95,6 +95,7 @@
   </div>
 </template>
 <script>
+  import bus from '../../../libs/bus';
   export default {
     name: "terminallog",
     data() {
@@ -278,6 +279,7 @@
         })
       },
       jumpTo(data, id) {
+        bus.$emit("menu-change", data);
         this.$router.push({
           path: "/" + data,
           query: {

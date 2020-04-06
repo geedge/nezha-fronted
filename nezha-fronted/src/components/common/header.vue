@@ -93,7 +93,7 @@
       </el-submenu>
       <el-submenu index="5" popper-class="nz-submenu">
         <template slot="title">
-          <div @click="jumpTo('account')" :class ="activeIndex == 'account' || activeIndex == 'promServer' || activeIndex == 'dc' || activeIndex == 'model' ? 'menu-active' :''">{{$t('overall.config')}}</div>
+          <div @click="jumpTo('account')" :class ="activeIndex == 'account' || activeIndex == 'promServer' || activeIndex == 'dc' || activeIndex == 'model' || activeIndex == 'mib' || activeIndex == 'system' || activeIndex == 'terminallog' ? 'menu-active' :''">{{$t('overall.config')}}</div>
         </template>
         <el-menu-item index="5-0">
           <div @click="jumpTo('account')" :class="{'menu-item-active' :(activeIndex == 'account' )}">{{$t('config.account.account')}}</div>
@@ -325,11 +325,6 @@
         let index = this.indOf(this.activeItemIndexes, id);
         this.activeItemIndexes=[];//2020-02-25 修改为单选
         this.activeItemIndexes.push(id);
-        // if (index > -1) {
-        //   this.activeItemIndexes.splice(index, 1);
-        // } else {
-        //   this.activeItemIndexes.push(id);
-        // }
         this.$store.state.assetData = {selectedData: this.activeItemIndexes, step: this.$store.state.assetData.step+1, type: 1};
         this.jumpTo('asset');
       },
@@ -449,11 +444,6 @@
           c.push(a[i]);
         }
         return c.indexOf(b);
-        /*if (c.indexOf(b) > -1) {
-          return true;
-        } else {
-          return false;
-        }*/
       },
       panelListReload(){
         if(this.$route.path==='/panel'){
@@ -474,6 +464,9 @@
       refreshLang() {
         this.language = localStorage.getItem("nz-language");
         this.$i18n.locale = this.language;
+        this.$nextTick(() => {
+          window.location.reload();
+        });
       },
       showPwdDialog:function(){
         this.showChangePwd=true;
@@ -498,7 +491,6 @@
       this.getUserData();
       this.getAssetData();
       this.getProjectList();
-      this.refreshLang();
       // 刷新后有高亮
       let activePath = this.$route.path.slice(1);
       this.activeIndex = activePath;
@@ -508,10 +500,7 @@
       bus.$on('login', () => {
         this.username = sessionStorage.getItem("nz-username");
         this.refreshLang();
-        this.activeIndex = 'panel';
-        /*this.$nextTick(function(){
-          window.location.reload();
-        });*/
+        this.activeIndex = 'overview';
       });
 
       if (window.history && window.history.pushState) {

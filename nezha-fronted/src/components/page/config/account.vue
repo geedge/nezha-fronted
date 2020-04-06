@@ -189,6 +189,7 @@
 </template>
 <script>
   var vm;
+  import bus from '../../../libs/bus';
   export default {
     name: "account",
     data() {
@@ -329,6 +330,7 @@
         this.$bottomBoxWindow.listResize(vm, e);
       },
       jumpTo(data, id) {
+        bus.$emit("menu-change", data);
         this.$router.push({
           path: "/" + data,
           query: {
