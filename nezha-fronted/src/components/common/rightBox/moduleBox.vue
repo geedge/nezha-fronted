@@ -61,8 +61,10 @@
                         <div class="el-cascader__tags">
                           <el-scrollbar style="height: 100%;" ref="walkScrollbar">
                             <span class="el-tag el-tag--info el-tag--small el-tag--light" v-for="item in currentModule.walk">
-                              <span>{{item}}</span>
-                              <i @click.stop="removeWalk(item)" class="el-tag__close el-icon-close"></i>
+                              <span v-html="mibName(item)"></span>
+                              <div @click.stop="removeWalk(item)">
+                                <i class="el-tag__close el-icon-close"></i>
+                              </div>
                             </span>
                           </el-scrollbar>
                         </div>
@@ -370,6 +372,47 @@
 
         this.$refs.walkScrollbar.update();
       },
+      //从mibData里取得oid对应的mib名称
+      getMibName(walkData, walk) {
+        let mibName = "";
+        let objectName = "";
+        walkData.forEach((item, index) => {
+          if (!mibName && item.subTree && item.subTree.length > 0) {
+            item.subTree.forEach((item2, index2) => {
+              if (!mibName && getMibName(item2, walk)) {
+                mibName = item.name;
+              }
+            });
+          }
+        });
+        function getMibName(tree, oid) {
+          if (oid.indexOf(tree.objectID) > -1) {
+            if (tree.objectID == oid) {
+              objectName = tree.name;
+              return true;
+            } else {
+              if (tree.subTree && tree.subTree.length > 0) {
+                let result = false;
+                for (let i = 0; i < tree.subTree.length; i++) {
+                  if (getMibName(tree.subTree[i], oid)) {
+                    result = true;
+                    break;
+                  }
+                }
+                return result;
+              } else {
+                return false;
+              }
+            }
+          } else {
+            return false;
+          }
+        }
+        if (!objectName) {
+          objectName = walk;
+        }
+        return mibName ? mibName + "：<span style='font-weight:bold'>" + objectName : objectName + "</span>";
+      },
 
       removeWalk(walk) {
         this.currentModule.walk.splice(this.currentModule.walk.indexOf(walk), 1);
@@ -592,6 +635,11 @@
       projectListReloadWatch() {
         return this.$store.state.projectListChange;
       },
+      mibName() {
+        return (value) => {
+          return this.getMibName(this.walkData, value);
+        }
+      }
     },
     watch: {
       module: {
