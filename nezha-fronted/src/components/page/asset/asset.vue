@@ -1,9 +1,10 @@
 <template>
   <div class="asset" ref="asset">
     <div class="content-left">
-      <el-scrollbar ref="leftScrollbar" style="height: 100%">
+
         <div class="sidebar-title">{{$t('asset.asset')}}</div>
-        <div class="sidebar-info">
+        <div class="sidebar-info" style="height: 90%">
+          <el-scrollbar ref="leftScrollbar" style="height: 100%">
           <!--<div class="sidebar-info-header">ALL</div>-->
           <!--<el-checkbox :indeterminate="checkAllHandler" class="sidebar-info-item" v-model="checkAllFlag" @change="dcSelectAll" :true-label="1" :false-label="0">
             <div class="sidebar-info-item-txt" style="font-weight: bold;">All</div>
@@ -85,8 +86,8 @@
               </el-checkbox-group>
             </el-collapse-item>
           </el-collapse>
+          </el-scrollbar>
         </div>
-      </el-scrollbar>
     </div>
 
           <div class="content-right">

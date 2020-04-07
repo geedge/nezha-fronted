@@ -68,7 +68,11 @@
       geo:{
         map:'',
 
-        roam:true,//鼠标是否可以控制缩放
+        roam:'scale',//鼠标是否可以控制缩放
+        scaleLimit:{
+          min:0.7,
+          max:1.5
+        },
         // center:[],//当前视角的中心点，用经纬度表示
         label: { //控制显示地图名称
           normal: {
@@ -91,15 +95,6 @@
         top:0,
         right:0,
         bottom:0,
-      },
-      dataRange:{
-        x: '-1000 px', //图例横轴位置
-        y: '-1000 px', //图例纵轴位置
-        splitList: [
-          { start: 1, end: 1, label: 'astana', color: '#cfc5de' },
-          { start: 2, end: 2, label: '天津', color: '#f1ebd1' },
-          { start: 3, end: 3, label: '上海', color: '#feffdb' },
-          ]
       },
       tooltip : {
         trigger: 'item',

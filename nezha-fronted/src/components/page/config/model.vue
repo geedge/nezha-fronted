@@ -107,7 +107,8 @@
           assetStat: {total: '', inStock: '', outStock: ''},
           remark: '',
           vendorCode: '',
-          typeCode: ''
+          typeCode: '',
+          uSize:1,
         },
         pageObj: {
           pageNo: 1,
@@ -279,7 +280,8 @@
           assetStat: {total: '', inStock: '', outStock: ''},
           remark: '',
           vendorCode: '',
-          typeCode: ''
+          typeCode: '',
+          uSize:1,
         };
       }
     },

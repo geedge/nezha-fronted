@@ -13,7 +13,7 @@
       <div class="overview-right content-right" id="mainDisplay">
         <!--标题-->
         <div class="overview-content-header">
-          <div class="header-title">{{$t('dashboard.overview.contentTitle')}}</div>
+          <div class="header-title" :class="{'hide-div':!isFullScreen}">{{$t('dashboard.overview.contentTitle')}}</div>
           <div class="header-tool">
             <div class="tool-container">
               <div class="time">{{sysTime}}</div>
@@ -47,7 +47,7 @@
                       <table-box :pop-data="dataCenterStatData" ref="dataCenterTab" ></table-box>
                     </div>
                     <div style="flex: 3;">
-                      <chart-box chart-title="DataCenter" chart-type="map" :map="map" ref="dataCenterMap"></chart-box>
+                      <chart-box chart-title="" chart-type="map" :map="map" ref="dataCenterMap"></chart-box>
                     </div>
                   </div>
                 </div>

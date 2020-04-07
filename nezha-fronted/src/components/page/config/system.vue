@@ -51,6 +51,9 @@
               <el-form-item :label="$t('config.system.basic.storageRetention')" prop="storage_local_retention">
                 <el-input v-model.number="basic.storage_local_retention" ></el-input><span class="nz-input-append">h</span>
               </el-form-item>
+              <el-form-item :label="$t('config.system.basic.timezone')" prop="timezone">
+                <el-input v-model.number="basic.timezone" ></el-input>
+              </el-form-item>
               <el-form-item>
                 <el-button class="nz-btn nz-btn-size-normal nz-btn-style-light nz-btn-min-width-100" @click="resetForm('basicForm')" style="top:2px">{{$t('overall.reset')}}</el-button>
                 <el-button type="primary" @click="saveSetInfo('basic','basicForm')" class="nz-btn nz-btn-size-normal nz-btn-style-normal nz-btn-min-width-100">{{$t('overall.submit')}}</el-button>
@@ -120,6 +123,9 @@
         <el-tab-pane :label="$t('config.system.ldap.ldap')" name="ldap">
           <div class="system-config-form">
             <el-form :model="ldap"  label-width="180px" size="small" ref="ldapForm" :rules="ldap.ldap_enable == 'on'?ldapRules:{}" :validate-on-rule-change="false">
+              <el-form-item :label="$t('config.system.ldap.active')" prop="ldap_enable">
+                <el-checkbox v-model="ldap.ldap_enable" true-label='on' false-label='off' @change="switchChange('ldapForm')"></el-checkbox>
+              </el-form-item>
               <el-form-item :label="$t('config.system.ldap.address')" prop="ldap_address">
                 <el-input v-model="ldap.ldap_address"></el-input>
               </el-form-item>
@@ -138,9 +144,6 @@
               <el-form-item :label="$t('config.system.ldap.map')" prop="ldap_mapping">
                 <el-input v-model="ldap.ldap_mapping"></el-input>
               </el-form-item>
-              <el-form-item :label="$t('config.system.ldap.active')" prop="ldap_enable">
-                <el-checkbox v-model="ldap.ldap_enable" true-label='on' false-label='off' @change="switchChange('ldapForm')"></el-checkbox>
-              </el-form-item>
               <el-form-item>
                 <el-button class="nz-btn nz-btn-size-normal nz-btn-style-light nz-btn-min-width-100" @click="resetForm('ldapForm')" style="top:2px">{{$t('overall.reset')}}</el-button>
                 <el-button class="nz-btn nz-btn-size-normal nz-btn-style-light nz-btn-min-width-100" @click="testSetInfo('ldap','ldapForm')" style="top:2px">{{$t('config.system.email.testConnection')}}</el-button>
@@ -153,11 +156,11 @@
           <div class="system-config-form">
             <el-form :model="reset"  label-width="180px" size="small" ref="resetForm" :rules="resetRules" :validate-on-rule-change="false">
               <el-form-item  prop="type">
-<!--                <el-checkbox-group v-model="reset.type">-->
-<!--                  <div v-for="(item,index) in resetOptions" :key="item.value+index">-->
-<!--                    <el-checkbox :value="item.value"   :label="item.label" ></el-checkbox>-->
-<!--                  </div>-->
-<!--                </el-checkbox-group>-->
+                <el-checkbox-group v-model="reset.type">
+                  <div v-for="(item,index) in resetOptions" :key="item.value+index">
+                    <el-checkbox :value="item.value"   :label="item.label" :disabled="true" :checked="true"></el-checkbox>
+                  </div>
+                </el-checkbox-group>
                 <div class="el-checkbox-group">
                   <div v-for="(item,index) in resetOptions" :key="item.value+index" >
                     <label class="el-checkbox sys-reset-label" :for="item.value" >
@@ -201,6 +204,7 @@
               storage_local_retention:15*24,
               system_name:'',
               current_site_url:'',
+              timezone:'',
             },
             basicRules:{
               system_name:[{required:true,message:this.$t('validate.required'),trigger:'blur'},],
@@ -209,6 +213,7 @@
               asset_ping_interval:[{required:true,message:this.$t('validate.required'),trigger:'blur'},{validator:positiveInteger,trigger:'blur'}],
               scrape_interval:[{required:true,message:this.$t('validate.required'),trigger:'blur'},{validator:positiveInteger,trigger:'blur'}],
               storage_local_retention:[{required:true,message:this.$t('validate.required'),trigger:'blur'},{validator:positiveInteger,trigger:'blur'}],
+              timezone:[{validator:positiveInteger,trigger:'blur'}],
             },
             basicRules2:{
               system_name:[{required:true,message:this.$t('validate.required'),trigger:'blur'},],
@@ -216,6 +221,7 @@
               alert_api:[{required:true,message:this.$t('validate.required'),trigger:'blur'},,{validator:host,trigger: 'blur'}],
               scrape_interval:[{required:true,message:this.$t('validate.required'),trigger:'blur'},{validator:positiveInteger,trigger:'blur'}],
               storage_local_retention:[{required:true,message:this.$t('validate.required'),trigger:'blur'},{validator:positiveInteger,trigger:'blur'}],
+              timezone:[{validator:positiveInteger,trigger:'blur'}],
             },
             email:{
               email_enable: 'on',

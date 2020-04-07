@@ -381,7 +381,7 @@ const en = {
       clickToUpload:'Upload',//'上传'
       clickToCover:'Cover',//'覆盖'
       sshKeyWasConfig:'SSH-KEY configured',//'SSH-KEY已配置'
-      exporter:'Exporter'
+      exporter:'Exporter',
     },
     editAssetTab:{
       title:'New asset',//'新增资产'
@@ -583,7 +583,8 @@ const en = {
         scrapeInterval:'Scrape Interval',
         storageRetention:'Local Retention',
         systemName:'System Name',
-        curUrl:'Current site URL'
+        curUrl:'Current site URL',
+        timezone:'Timezone'
       },
       email:{
         email:'Email',

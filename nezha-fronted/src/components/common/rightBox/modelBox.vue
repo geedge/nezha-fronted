@@ -69,6 +69,9 @@
                 </div>
               </template>
             </el-autocomplete>
+            <el-form-item :label="this.$t('asset.createAssetTab.AddCabinetTab.uSize')" prop="uSize">
+              <el-input v-model.number="currentModel.uSize" :max="47" size="small"></el-input>
+            </el-form-item>
           </el-form-item>
         </el-form>
       </el-scrollbar>
@@ -105,7 +108,8 @@
           assetStat: {total: '', inStock: '', outStock: ''},
           remark: '',
           vendorCode: '',
-          typeCode: ''
+          typeCode: '',
+          uSize:1,
         },
         rightBox: {
           show: false,
@@ -122,7 +126,10 @@
           ],
           vendor: [
             {required: true, message: this.$t('validate.required'), trigger: 'blur'}
-          ]
+          ],
+          uSize: [
+            {type: 'number', min: 1, max: 47,message: this.$t('validate.uSize'),trigger: 'blur'}
+          ],
         },
         vendorData: [], //vendor下拉列表的数据
         typeData: [],  //type下拉列表的数据
