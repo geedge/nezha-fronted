@@ -258,11 +258,13 @@ const en = {
   validate: { //校验规则
     required: 'Required',//'必填项'
     number: 'Numberic',//'必须是数字'
+    integer:'Integer',
     positiveInteger:'Positive Integer',
     email:'Invalid email',//'不合法的E-mail地址'
     tel:'Invalid phone number',//'不合法的电话号码'
     host:'Invalid IP',//'不合法的IP'
     domain:'Invalid domain',
+    timezone:'Must be number(-12 - 12)',
     fileSize:'文件过大',//File exceed max size.
     port:'Invalid Port',
     url:'Invalid URL',

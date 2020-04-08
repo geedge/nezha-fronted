@@ -1,4 +1,5 @@
 import vm from '../../../main'
+import ca from "element-ui/src/locale/lang/ca";
 
 export function host(rule, value, callback) {
   const hostReg = /^(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])(\:\d{0,5})?$/
@@ -67,6 +68,21 @@ export function noSpecialChar(rule, value, callback){
   }, 100)
 }
 
+export function integer(rule, value, callback){
+  setTimeout(() => {
+    if(isNaN(Number(value))){
+      callback(new Error(vm.$t('validate.number')))
+    }else{
+      if(Number.isInteger(Number(value))){
+        callback();
+      }else{
+        callback(new Error(vm.$t('validate.integer')));
+      }
+
+    }
+  }, 100)
+}
+
 export function positiveInteger(rule, value, callback){
   setTimeout(() => {
     if(isNaN(Number(value))){
@@ -88,6 +104,22 @@ export function domain(rule, value, callback){
       callback()
     } else {
       callback(new Error(vm.$t('validate.domain')))
+    }
+  }, 100)
+}
+
+export function timezone(rule, value, callback){
+
+  setTimeout(() => {
+    if(isNaN(Number(value))){
+      callback(new Error(vm.$t('validate.number')))
+    }else{
+      let timezone=Math.abs(Number(value));
+      if(timezone>12){
+        callback(new Error(vm.$t('validate.timezone')))
+      }else{
+        callback();
+      }
     }
   }, 100)
 }

@@ -189,6 +189,8 @@
     import {port} from '../../common/js/validate'
     import {domain} from '../../common/js/validate'
     import {host} from '../../common/js/validate'
+    import {timezone} from '../../common/js/validate'
+    import {integer} from '../../common/js/validate'
     import bus from '../../../libs/bus';
 
     export default {
@@ -213,7 +215,7 @@
               asset_ping_interval:[{required:true,message:this.$t('validate.required'),trigger:'blur'},{validator:positiveInteger,trigger:'blur'}],
               scrape_interval:[{required:true,message:this.$t('validate.required'),trigger:'blur'},{validator:positiveInteger,trigger:'blur'}],
               storage_local_retention:[{required:true,message:this.$t('validate.required'),trigger:'blur'},{validator:positiveInteger,trigger:'blur'}],
-              timezone:[{validator:positiveInteger,trigger:'blur'}],
+              timezone:[{validator:integer,trigger:'blur'},{validator:timezone,trigger:'blur' }],
             },
             basicRules2:{
               system_name:[{required:true,message:this.$t('validate.required'),trigger:'blur'},],
@@ -221,7 +223,7 @@
               alert_api:[{required:true,message:this.$t('validate.required'),trigger:'blur'},,{validator:host,trigger: 'blur'}],
               scrape_interval:[{required:true,message:this.$t('validate.required'),trigger:'blur'},{validator:positiveInteger,trigger:'blur'}],
               storage_local_retention:[{required:true,message:this.$t('validate.required'),trigger:'blur'},{validator:positiveInteger,trigger:'blur'}],
-              timezone:[{validator:positiveInteger,trigger:'blur'}],
+              timezone:[{validator:integer,trigger:'blur'},{validator:timezone,trigger:'blur' }],
             },
             email:{
               email_enable: 'on',
