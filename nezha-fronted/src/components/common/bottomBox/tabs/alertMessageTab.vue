@@ -26,6 +26,7 @@
       tooltip-effect="light"
       v-scrollBar:el-table
       :height="$tableHeight.openSubList.subList"
+      :cell-class-name="labelsClassName"
       style="width: 100%;">
       <el-table-column
         :resizable="false"
@@ -34,7 +35,7 @@
         :width="item.width"
         :key="`col-${index}`"
         :label="item.label"
-        show-overflow-tooltip
+        :show-overflow-tooltip="item.prop != 'labels'"
         min-width="110px"
       >
         <template slot-scope="scope" :column="item">
@@ -70,6 +71,11 @@
                   :id="'link-obj-'+scope.row['type']+'-'+scope.row[item.prop].id">{{scope.row[item.prop].host}}</span>
             <span v-else>-</span>
           </div>-->
+          <template v-else-if="item.prop == 'labels'">
+            <el-tag v-if="key != 'alertname' && key != 'severity'"
+                    type="info"
+                    size="mini" v-for="(value, key) in scope.row.labels" class="alert-message-tag">{{key}}：{{value}}</el-tag>
+          </template>
           <div v-else-if="item.prop == 'state'">
             <span class="">
               {{scope.row['state'] == 1 ? "Pending" : ""}}
@@ -134,15 +140,9 @@
             show: true,
             width: 180
           }, {
-            label: this.$t("alert.list.type"),
-            prop: 'type',
+            label: this.$t("alert.list.labels"),
+            prop: 'labels',
             show: true,
-            width: 100
-          }, {
-            label: this.$t("alert.list.linked"),
-            prop: 'linkObject',
-            show: true,
-            width: 140
           }, {
             label: this.$t("alert.severity"),
             prop: 'severity',
@@ -279,6 +279,9 @@
           if (response.code == 200) {
             this.loading = false;
             this.tableData = response.data.list;
+            this.tableData.forEach((item) => {
+              item.labels = JSON.parse(item.labels);
+            });
             this.pageObj.total = response.data.total;
           }
         });
@@ -314,6 +317,13 @@
             this.$refs.assetEditUnit.getAssetData(typeObj);
             this.$refs.assetEditUnit.tabView = true;
             break;
+        }
+      },
+      labelsClassName(row) {
+        if (row.columnIndex == 1) {
+          return "alert-message-list-labels";
+        } else {
+          return "";
         }
       },
       fillProject: function (module) {

@@ -1336,6 +1336,9 @@ li{
 /* --end--复选框自定义颜色 */
 
 /* dashboard-dialog */
+.nz-message .el-dialog__body {
+  padding: 0 20px 10px 20px;
+}
 .nz-dialog {
   overflow: hidden;
 }
@@ -1408,6 +1411,9 @@ li{
 
 .el-textarea textarea {
   height: 140px !important;
+}
+.nz-message .el-textarea textarea {
+  height: 70px !important;
 }
 /*el-data-picker选中背景色*/
 .el-date-table td.current:not(.disabled) span {
