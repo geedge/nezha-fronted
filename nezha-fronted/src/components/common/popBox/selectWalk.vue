@@ -1,45 +1,41 @@
 <template>
-  <el-popover v-if="popBox.show" :placement="placement" width="367" ref="selectWalkPopBox" popper-class="nz-pop nz-pop-select-walk" transition="slide">
-    <div>
-      <div class="pop-item-wider">
-        <el-scrollbar class="select-walk-tree" ref="scrollbar">
-          <el-tree
-            ref="walkTree"
-            node-key="objectID"
-            :props="{label: 'name', children: 'subTree', disabled: disabledNode}"
-            :data="walkData"
-            :default-expanded-keys="expandedWalk"
-            :expand-on-click-node="false"
-            check-on-click-node
-            check-strictly
-            show-checkbox
-            @check="change"
-            :default-checked-keys="currentWalk"
-          >
-            <span slot-scope="{node, data}" :class="getClass(data.objectID)">
-              <span v-if="!data.type"><i class="el-icon-reading"></i></span>
-              <span v-else>
-                <i v-if="data.type.toUpperCase() == 'IDENTIFIER'" class="el-icon-folder-opened"></i>
-                <i v-if="data.type.toUpperCase() == 'OBJECT' && data.subTree.length > 0" class="el-icon-folder-opened"></i>
-                <i v-if="data.type.toUpperCase() == 'OBJECT' && data.subTree.length == 0" class="nz-icon nz-icon-leaf"></i>
-                <i v-if="data.type.toUpperCase() == 'ENTRY'" class="nz-icon nz-icon-table-edit"></i>
-                <i v-if="data.type.toUpperCase() == 'TABLE'" class="nz-icon nz-icon-table"></i>
-                <el-popover ref="walkDetail" trigger="click" placement="left" popper-class="nz-pop nz-pop-walk-detail">
-                  <div>
-                    <ul>
-                      <li><span class="metirc-tip-list">Name&nbsp;:&nbsp;</span><span>{{data.name}}</span></li>
-                      <li><span class="metirc-tip-list">OID&nbsp;:&nbsp;</span><span>{{data.objectID}}</span></li>
-                      <li><span class="metirc-tip-list">MIB&nbsp;:&nbsp;</span><span>{{mibName(node)}}</span></li>
-                    </ul>
-                  </div>
-                  <span @click.stop slot="reference"><i class="nz-icon nz-icon-info-normal metric-tip-icon"></i></span>
-                </el-popover>
-              </span>
-              {{data.name}}
-            </span>
-          </el-tree>
-        </el-scrollbar>
+  <el-popover @show="tempWalk.detailShow = false" v-if="popBox.show" :placement="placement" width="367" ref="selectWalkPopBox" popper-class="nz-pop nz-pop-select-walk" transition="slide">
+    <div class="pop-item-wider" @click="tempWalk.detailShow = false">
+      <div v-if="tempWalk.detailShow" class="el-popover nz-pop walk-pop" :style="{left: detailPopPosition.left, top: detailPopPosition.top}">
+        <p><span class="metirc-tip-list">Name&nbsp;:&nbsp;</span><span>{{tempWalk.name}}</span></p>
+        <p><span class="metirc-tip-list">OID&nbsp;:&nbsp;</span><span>{{tempWalk.objectID}}</span></p>
+        <p><span class="metirc-tip-list">MIB&nbsp;:&nbsp;</span><span>{{mibName(tempWalk.objectID)}}</span></p>
       </div>
+      <el-scrollbar class="select-walk-tree" ref="scrollbar">
+        <el-tree
+          ref="walkTree"
+          node-key="objectID"
+          :props="{label: 'name', children: 'subTree', disabled: disabledNode}"
+          :data="walkData"
+          :default-expanded-keys="expandedWalk"
+          :expand-on-click-node="false"
+          check-on-click-node
+          check-strictly
+          show-checkbox
+          @check="change"
+          :default-checked-keys="currentWalk"
+        >
+          <div slot-scope="{node, data}" class="walk-tree-item" :class="getClass(data.objectID)">
+            <span v-if="!data.type"><i class="el-icon-reading"></i></span>
+            <span v-else>
+              <i v-if="data.type.toUpperCase() == 'IDENTIFIER'" class="el-icon-folder-opened"></i>
+              <i v-if="data.type.toUpperCase() == 'OBJECT' && data.subTree.length > 0" class="el-icon-folder-opened"></i>
+              <i v-if="data.type.toUpperCase() == 'OBJECT' && data.subTree.length == 0" class="nz-icon nz-icon-leaf"></i>
+              <i v-if="data.type.toUpperCase() == 'ENTRY'" class="nz-icon nz-icon-table-edit"></i>
+              <i v-if="data.type.toUpperCase() == 'TABLE'" class="nz-icon nz-icon-table"></i>
+              <span @click.stop="showDetail(data, $event)" style="position: relative;">
+                <i class="nz-icon nz-icon-info-normal metric-tip-icon"></i>
+              </span>
+            </span>
+            {{data.name}}
+          </div>
+        </el-tree>
+      </el-scrollbar>
     </div>
     <div slot="reference">
       <slot name="trigger">
@@ -60,6 +56,8 @@
       data() {
         return {
           popBox: {show: false},
+          tempWalk: {detailShow: false, objectID: ''},
+          detailPopPosition: {top: "0", left: "0"}
         }
       },
       computed: {
@@ -70,12 +68,13 @@
         },
         mibName() {
           return (value) => {
-            return this.getMibName(value);
+            return value ? this.getMibName(value) : "";
           }
         }
       },
       methods:{
-        getMibName(node) {
+        getMibName(oid) {
+          let node = this.$refs.walkTree.getNode(oid);
           let mibName = getMibName(node);
           function getMibName(n) {
             if (n.parent && n.parent.parent) {
@@ -94,9 +93,22 @@
         },
         change(data, tree) {
           this.$emit("selectWalk", data.objectID);
+          this.tempWalk.detailShow = false
         },
         show() {
           this.popBox.show = true;
+        },
+        showDetail(data, e) {
+          if (this.tempWalk.objectID != data.objectID) {
+            this.tempWalk.detailShow = false;
+            data.detailShow = !data.detailShow;
+            this.tempWalk = data;
+          } else {
+            data.detailShow = !data.detailShow;
+          }
+
+          this.detailPopPosition.top = e.screenY-23 + "px";
+          this.detailPopPosition.left = e.screenX-16 + "px";
         },
         disabledNode(data) {
           if (data.objectID) {
@@ -130,7 +142,32 @@
 .walk-active {
   color: $global-text-color-active;
 }
+.walk-tree-item {
+  height: 34px;
+  line-height: 34px;
+}
 .walk-detail {
   z-index: 10000 !important;
+}
+
+.walk-pop {
+  position: fixed;
+  transform: translate(-100%, -100%);
+}
+.walk-pop::after {
+  content: '';
+  display: block;
+  width:0;
+  height:0;
+  overflow: hidden;
+  font-size: 0;
+  line-height: 0;
+  border: 5px;
+  border-style: dashed dashed dashed solid;
+  border-color: transparent transparent transparent #fff ;
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translate(10px, -50%);
 }
 </style>

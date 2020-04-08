@@ -74,7 +74,7 @@
         prop="element"
         :label="$t('project.endpoint.element')">
         <template slot-scope="scope">
-          <el-popover trigger="hover" placement="right" v-if="typeof scope.row.metricTip != 'undefined' && scope.row.metricTip != null">
+          <el-popover trigger="click" placement="right" v-if="typeof scope.row.metricTip != 'undefined' && scope.row.metricTip != null">
             <div>
               <ul>
                 <li><span class="metirc-tip-list">metric&nbsp;:&nbsp;</span><span>{{scope.row.metricTip.metric?scope.row.metricTip.metric:'--'}}</span></li>

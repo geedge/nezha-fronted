@@ -43,11 +43,11 @@
                  v-if="scope.row[item.prop].alertName">{{scope.row[item.prop].alertName + ' ' + $t('overall.active')}}</div>
             <template v-else>-</template>
           </template>
-          <div v-else-if="item.prop == 'type'" class="content-right-options">
+          <!--<div v-else-if="item.prop == 'type'" class="content-right-options">
             <span v-if="scope.row[item.prop] == 1">Project</span>
             <span v-if="scope.row[item.prop] == 2">Module</span>
             <span v-if="scope.row[item.prop] == 3">Device</span>
-          </div>
+          </div>-->
           <template v-else-if="item.prop == 'summary'">
             <template v-if="scope.row[item.prop]">{{scope.row[item.prop]}}</template>
             <template v-else>-</template>
@@ -61,7 +61,7 @@
             <span style="padding-left: 18px;" v-if="scope.row[item.prop] == 'medium'">{{severityData[0].value}}</span>
             <span v-if="scope.row[item.prop] == 'low'"><i class="el-icon-arrow-down"></i>&nbsp;{{severityData[2].value}}</span>
           </span>
-          <div v-else-if="item.prop == 'linkObject'">
+          <!--<div v-else-if="item.prop == 'linkObject'">
             <span v-if="(scope.row['type'] == 1 || scope.row['type'] == 2) && scope.row[item.prop]" class="link too-long-split"
                   @click="viewAlertType(scope.row['type'],scope.row[item.prop])" style="max-width: 125px;"
                   :id="'link-obj-'+scope.row['type']+'-'+scope.row[item.prop].id">{{scope.row[item.prop].name}}</span>
@@ -69,7 +69,7 @@
                   @click="viewAlertType(scope.row['type'],scope.row[item.prop].id)"
                   :id="'link-obj-'+scope.row['type']+'-'+scope.row[item.prop].id">{{scope.row[item.prop].host}}</span>
             <span v-else>-</span>
-          </div>
+          </div>-->
           <div v-else-if="item.prop == 'state'">
             <span class="">
               {{scope.row['state'] == 1 ? "Pending" : ""}}

@@ -734,7 +734,7 @@ li{
 .el-tooltip__popper.is-light[x-placement^=top] .popper__arrow { /*覆盖tooltip小三角颜色*/
   border-top-color: #ebeef5;
 }
-.nz-table.el-table--enable-row-hover .el-table__body tr:hover>td {
+.el-table .el-table__body tr:hover>td {
   background-color: #f0f0f0;
 }
 .nz-table-gear {
@@ -910,6 +910,9 @@ li{
 .nz-pop-select-area {
   padding: 0 !important;
   box-shadow: 0 2px 12px 0 rgba(0,0,0,.1) !important;
+}
+.nz-pop-select-walk .pop-item-wider {
+  position: relative;
 }
 .right-box-title {
   height: 36px;

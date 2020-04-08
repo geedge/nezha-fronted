@@ -2,8 +2,7 @@
   <div class="export-xlsx">
     <div>
       <el-dropdown split-button type="primary"  size="mini" class="dropdownBtn">
-        <slot name="optionZone" class="option-button"></slot>
-        <el-dropdown-menu slot="dropdown">
+        <slot name="optionZone" class="option-button"></slot><el-dropdown-menu slot="dropdown">
           <el-dropdown-item @click.native="showImportBox(1)" class="dropdown-content"><i class="el-icon-upload2"></i>{{$t('overall.importExcelLower')}}</el-dropdown-item>
           <el-dropdown-item @click.native="showImportBox(2)" class="dropdown-content"><i class="el-icon-download"></i>{{$t('overall.exportExcelLower')}}</el-dropdown-item>
         </el-dropdown-menu>
