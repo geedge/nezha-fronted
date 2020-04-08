@@ -21,6 +21,10 @@
             <div class="top-tool-search">
               <search-input :searchMsg="searchMsg" @search="search" :inTransform="inTransform"></search-input>
             </div>
+            <button type="button" @click="showExportDialog" :title="$t('overall.exportExcelLower')"
+                    class="nz-btn nz-btn-size-normal nz-btn-style-light margin-l-20" id="alert-list-export">
+              <i class="el-icon-download"></i>
+            </button>
           </div>
           <div class="pagination-top pagination-top-hide display-none"></div>
         </div>
@@ -126,11 +130,24 @@
       @tablelable="tablelabelEmit"
       ref="elementset"
     ></element-set>
+    <div class="export-xlsx">
+      <el-dialog :visible.sync="importBox.show" :title="importBox.title" :modal-append-to-body='false' :show-close="true" width="300px" @close="closeDialog" class="nz-dialog">
+        <div class="upload-body">
+          <button @click="exportCur" class="el-button el-button--default el-button--small">
+            <span>{{$t('overall.exportCur')}}</span>
+          </button>
+          <button  @click="exportAll" class="el-button el-button--default el-button--small">
+            <span>{{$t('overall.exportAll')}}</span>
+          </button>
+        </div>
+      </el-dialog>
+    </div>
   </div>
 
 </template>
 <script>
   import bus from '../../../libs/bus';
+  import axios from 'axios'
   var vm;
   export default {
     name: "alertList",
@@ -147,6 +164,10 @@
         isFullScreen: false,
         showSubList: false, //是否展示二级列表
         mainTableHeight: this.$tableHeight.normal, //主列表table高度
+
+        //导出相关
+        importBox: {show:false, title:this.$t('overall.exportExcel')},
+
 
         tableId: 'alertListTable', //需要分页的table的id，用于记录每页数量
         showTopBtn: false,
@@ -336,6 +357,44 @@
           this.viewAssetState = false
           this.$refs['assetEditUnit'].tabView = false
         }
+      },
+      showExportDialog() {
+        this.importBox.show = true;
+      },
+      closeDialog() {
+        this.importBox.show = false;
+      },
+      exportCur:function(){
+        this.exportExcel(this.searchLabel);
+        this.closeDialog();
+      },
+      exportAll:function(){
+        this.searchLabel.pageSize = -1;
+        this.exportExcel(this.searchLabel);
+        this.closeDialog();
+      },
+      exportExcel:function(params){
+        let temp=this;
+        if(!params){
+          params=temp.params;
+        }
+        axios.get("alert/message/export", {responseType:'blob', params: params}).then(res=>{
+          let fileName = 'alert-message-'+temp.getTimeString()+'.xlsx';
+          if(window.navigator.msSaveOrOpenBlob){
+            // 兼容ie11
+            let blobObject = new Blob([res.data]);
+            window.navigator.msSaveOrOpenBlob(blobObject, fileName);
+          }else{
+            let url = URL.createObjectURL(new Blob([res.data]));
+            let a = document.createElement('a');
+            document.body.appendChild(a); //此处增加了将创建的添加到body当中
+            a.href = url;
+            a.download = fileName;
+            a.target = '_blank';
+            a.click();
+            a.remove(); //将a标签移除
+          }
+        })
       },
       // 全屏
       fullScreen() {

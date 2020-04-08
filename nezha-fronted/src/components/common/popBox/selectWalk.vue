@@ -1,7 +1,7 @@
 <template>
   <el-popover @show="tempWalk.detailShow = false" v-if="popBox.show" :placement="placement" width="367" ref="selectWalkPopBox" popper-class="nz-pop nz-pop-select-walk" transition="slide">
     <div class="pop-item-wider" @click="tempWalk.detailShow = false">
-      <div v-if="tempWalk.detailShow" class="el-popover nz-pop walk-pop" :style="{left: detailPopPosition.left, top: detailPopPosition.top}">
+      <div v-if="tempWalk.detailShow" class="el-popover walk-pop" :style="{left: detailPopPosition.left, top: detailPopPosition.top}">
         <p><span class="metirc-tip-list">Name&nbsp;:&nbsp;</span><span>{{tempWalk.name}}</span></p>
         <p><span class="metirc-tip-list">OID&nbsp;:&nbsp;</span><span>{{tempWalk.objectID}}</span></p>
         <p><span class="metirc-tip-list">MIB&nbsp;:&nbsp;</span><span>{{mibName(tempWalk.objectID)}}</span></p>
