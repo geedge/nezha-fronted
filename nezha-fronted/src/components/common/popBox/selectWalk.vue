@@ -18,6 +18,7 @@
           check-strictly
           show-checkbox
           @check="change"
+          @node-click="hideDetail"
           :default-checked-keys="currentWalk"
         >
           <div slot-scope="{node, data}" class="walk-tree-item" :class="getClass(data.objectID)">
@@ -93,10 +94,12 @@
         },
         change(data, tree) {
           this.$emit("selectWalk", data.objectID);
-          this.tempWalk.detailShow = false
         },
         show() {
           this.popBox.show = true;
+        },
+        hideDetail() {
+          this.tempWalk.detailShow = false;
         },
         showDetail(data, e) {
           if (this.tempWalk.objectID != data.objectID) {
