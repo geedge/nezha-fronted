@@ -34,7 +34,7 @@
 
       <!--alertMessage页的详情-->
       <template v-if="from == 'alertMessage'">
-        <common-detail-tab v-show="subResizeShow" :from="from" :targetTab="targetTab" v-for="item, index in tabList"
+        <common-detail-tab v-show="subResizeShow" :from="from" :targetTab="targetTab" v-for="(item, index) in tabList" :key="index"
                            v-if="targetTab == item" @changeTab="changeTab"></common-detail-tab>
       </template>
     </div>

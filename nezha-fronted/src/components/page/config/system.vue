@@ -22,6 +22,9 @@
         <div class="sidebar-info-item" @click="jumpTo('terminallog')" id="system-jump-terminallog">
           {{$t('config.terminallog.terminallog')}}
         </div>
+        <div class="sidebar-info-item" @click="jumpTo('operationlog')" id="account-jump-operation">
+          {{$t('config.operationlog.operationlog')}}
+        </div>
       </div>
     </div>
     <div class="content-right system-tabs">
@@ -54,7 +57,7 @@
               <el-form-item :label="$t('config.system.basic.timezone')" prop="timezone">
 <!--                <el-input v-model.number="basic.timezone" ></el-input>-->
                 <el-select v-model="basic.timezone">
-                  <el-option v-for="(item,index) in timezoneOption" :label="item.label" :value="item.value"></el-option>
+                  <el-option v-for="(item,index) in timezoneOption" :key="index" :label="item.label" :value="item.value"></el-option>
                 </el-select>
               </el-form-item>
               <el-form-item>

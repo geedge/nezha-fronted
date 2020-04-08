@@ -538,7 +538,7 @@ const en = {
       type: 'Type'
     },
     terminallog: {
-      terminallog: 'TerminalLog',
+      terminallog: 'Terminal Log',
       status: 'Status',//"状态"
       option: 'Operation',//"操作",
       host: 'Host',
@@ -565,6 +565,15 @@ const en = {
       file: 'File',
       success: 'Success',
       fail: 'Fail'
+    },
+    operationlog: {
+      operationlog: 'Operation Log',
+      id : 'ID',
+      username: 'User',
+      operation: 'Operation',
+      type: 'Type',
+      createDate: 'CreateDate',
+      ip: "IP"
     },
     mib:{
       mib:'Mib',

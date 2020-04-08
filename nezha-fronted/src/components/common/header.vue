@@ -116,6 +116,9 @@
         <el-menu-item index="5-6">
           <div @click="jumpTo('terminallog')" :class="{'menu-item-active' :(activeIndex == 'terminallog' )}">{{$t('config.terminallog.terminallog')}}</div>
         </el-menu-item>
+        <el-menu-item index="5-7">
+          <div @click="jumpTo('operationlog')" :class="{'menu-item-active' :(activeIndex == 'operationlog' )}">{{$t('config.operationlog.operationlog')}}</div>
+        </el-menu-item>
       </el-submenu>
       <el-submenu index="6" popper-class="nz-submenu">
         <template slot="title">

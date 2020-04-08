@@ -85,6 +85,7 @@
               </div>-->
               <template v-else-if="item.prop == 'labels'">
                 <el-tag @click="showTagDetail(scope.row.labels, key)"
+                        :key="key"
                         :class="{'link': key == 'asset' || key == 'endpoint' || key == 'project' || key == 'module' || key == 'datacenter'}"
                         v-if="key != 'alertname' && key != 'severity'"
                         :type="tagType(key)"

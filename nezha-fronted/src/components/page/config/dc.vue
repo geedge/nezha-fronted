@@ -57,6 +57,9 @@
           <div class="sidebar-info-item" @click="jumpTo('terminallog')" id="dc-jump-terminallog">
             {{$t('config.terminallog.terminallog')}}
           </div>
+          <div class="sidebar-info-item" @click="jumpTo('operationlog')" id="account-jump-operation">
+            {{$t('config.operationlog.operationlog')}}
+          </div>
         </div>
       </div>
       <!--dc table start-->

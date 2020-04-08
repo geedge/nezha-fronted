@@ -68,7 +68,7 @@
         label:i18n.t('alert.list.expired')
       }
     ],
-    terminalProtocol:[
+    protocol:[
       {
         value: 'SSH',
         label: i18n.t('config.terminallog.SSH')

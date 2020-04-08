@@ -73,6 +73,10 @@ export default new Router({
           component: resolve => require(['../components/page/config/terminallog.vue'], resolve),
         },
         {
+          path: '/operationlog',
+          component: resolve => require(['../components/page/config/operationlog.vue'], resolve),
+        },
+        {
           path: '/mib',
           component: resolve => require(['../components/page/config/mib.vue'], resolve),
         },

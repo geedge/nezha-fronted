@@ -27,6 +27,9 @@
         <div class="sidebar-info-item" @click="jumpTo('terminallog')" id="mib-jump-terminallog">
           {{$t('config.terminallog.terminallog')}}
         </div>
+        <div class="sidebar-info-item" @click="jumpTo('operationlog')" id="account-jump-operation">
+          {{$t('config.operationlog.operationlog')}}
+        </div>
       </div>
     </div>
     <div class="content-right">

@@ -74,13 +74,13 @@
             <span v-else>{{scope.row[item.prop]}}</span>
           </template>
         </el-table-column>
-        <el-table-column width="28">
-          <template slot="header" slot-scope="scope">
-            <span @click.stop="elementsetShow('shezhi',$event)" class="nz-table-gear">
-              <i class="nz-icon nz-icon-gear"></i>
-            </span>
-          </template>
-        </el-table-column>
+<!--        <el-table-column width="28">-->
+<!--          <template slot="header" slot-scope="scope">-->
+<!--            <span @click.stop="elementsetShow('shezhi',$event)" class="nz-table-gear">-->
+<!--              <i class="nz-icon nz-icon-gear"></i>-->
+<!--            </span>-->
+<!--          </template>-->
+<!--        </el-table-column>-->
       </el-table>
       <Pagination :tableId="tableId" :pageObj="pageObj" @pageNo='pageNo' @pageSize='pageSize' ref="Pagination"></Pagination>
       <button class="to-top" v-show="showTopBtn" @click="$toTop"><i class="nz-icon nz-icon-top"></i></button>
@@ -200,8 +200,8 @@
           //   {
           //   id: 10,
           //   name: this.$t('config.terminallog.protocol'),
-          //   type: 'selectString',
-          //   label: 'terminalProtocol',
+          //   type: 'selectType',
+          //   label: 'protocol',
           //   disabled: false
           // },
             {
@@ -235,27 +235,27 @@
       }
     },
     methods: {
-      elementsetShow(s, e) {
-        var eventfixed = {
-          shezhi: 0,
-          screen: 0
-        };
-        eventfixed[s] = 1;
-        e.preventDefault();
-        this.$store.commit('setHeaderTable', this.tablelable);
-        this.$store.commit('setEventfixed', eventfixed);
-        const h = document.documentElement.clientHeight;
-        const w = document.documentElement.clientWidth;
-        const dw = this.$refs.elementset.$el.offsetWidth;
-        const dh = this.$refs.elementset.$el.offsetHeight;
-        let positionx =
-          e.clientX + dw <= w - 10 ? e.clientX + 14 : e.clientX + 14 - dw;
-        let positiony =
-          e.clientY + dh <= h - 10
-            ? e.clientY + 20
-            : e.clientY + 20 - (e.clientY + dh - h);
-        this.$store.commit('setPosition', {positionx, positiony});
-      },
+      // elementsetShow(s, e) {
+      //   var eventfixed = {
+      //     shezhi: 0,
+      //     screen: 0
+      //   };
+      //   eventfixed[s] = 1;
+      //   e.preventDefault();
+      //   this.$store.commit('setHeaderTable', this.tablelable);
+      //   this.$store.commit('setEventfixed', eventfixed);
+      //   const h = document.documentElement.clientHeight;
+      //   const w = document.documentElement.clientWidth;
+      //   const dw = this.$refs.elementset.$el.offsetWidth;
+      //   const dh = this.$refs.elementset.$el.offsetHeight;
+      //   let positionx =
+      //     e.clientX + dw <= w - 10 ? e.clientX + 14 : e.clientX + 14 - dw;
+      //   let positiony =
+      //     e.clientY + dh <= h - 10
+      //       ? e.clientY + 20
+      //       : e.clientY + 20 - (e.clientY + dh - h);
+      //   this.$store.commit('setPosition', {positionx, positiony});
+      // },
       elementsetHide() {
         //悬浮点击空白隐藏
         this.$refs.elementset.elementsetHide();

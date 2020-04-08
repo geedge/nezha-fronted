@@ -373,7 +373,7 @@ const cn = {
       checkTime: '检查时间'
     },
     terminallog: {
-      terminallog: '终端',
+      terminallog: '终端日志',
       status: '状态',//"可用"
       option: '操作',//"操作",
       host: '主机',
