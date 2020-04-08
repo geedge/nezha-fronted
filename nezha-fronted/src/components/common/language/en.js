@@ -58,6 +58,9 @@ const en = {
     exportAll:'all',
     importFile:'please upload file',
     importTip:'only allowed xlsx/xls file',
+    dragFileTip:'Drag file here',
+    or:'or',
+    clickUpload:'click to upload',
     upload:'upload',
     template:'Template',
     active: 'active',
@@ -314,6 +317,11 @@ const en = {
       notInStock: 'Not in stock',//'出库'
       assetInfo:'Asset information',//'资产信息'
       assetType:'Asset type',//'资产类型'
+      impi:{
+        title:'IMPI',
+        host:'Host',
+        port:'Port',
+      },
       assetTypeTab:{
         assetType:'Asset type',//'资产类型'
         addAssetType:'New asset type',//'新增资产类型'

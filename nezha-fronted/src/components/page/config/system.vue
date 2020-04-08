@@ -52,7 +52,10 @@
                 <el-input v-model.number="basic.storage_local_retention" ></el-input><span class="nz-input-append">h</span>
               </el-form-item>
               <el-form-item :label="$t('config.system.basic.timezone')" prop="timezone">
-                <el-input v-model.number="basic.timezone" ></el-input>
+<!--                <el-input v-model.number="basic.timezone" ></el-input>-->
+                <el-select v-model="basic.timezone">
+                  <el-option v-for="(item,index) in timezoneOption" :label="item.label" :value="item.value"></el-option>
+                </el-select>
               </el-form-item>
               <el-form-item>
                 <el-button class="nz-btn nz-btn-size-normal nz-btn-style-light nz-btn-min-width-100" @click="resetForm('basicForm')" style="top:2px">{{$t('overall.reset')}}</el-button>
@@ -156,11 +159,11 @@
           <div class="system-config-form">
             <el-form :model="reset"  label-width="180px" size="small" ref="resetForm" :rules="resetRules" :validate-on-rule-change="false">
               <el-form-item  prop="type">
-                <el-checkbox-group v-model="reset.type">
-                  <div v-for="(item,index) in resetOptions" :key="item.value+index">
-                    <el-checkbox :value="item.value"   :label="item.label" :disabled="true" :checked="true"></el-checkbox>
-                  </div>
-                </el-checkbox-group>
+<!--                <el-checkbox-group v-model="reset.type">-->
+<!--                  <div v-for="(item,index) in resetOptions" :key="item.value+index">-->
+<!--                    <el-checkbox :value="item.value"   :label="item.label" :disabled="true" :checked="true"></el-checkbox>-->
+<!--                  </div>-->
+<!--                </el-checkbox-group>-->
                 <div class="el-checkbox-group">
                   <div v-for="(item,index) in resetOptions" :key="item.value+index" >
                     <label class="el-checkbox sys-reset-label" :for="item.value" >
@@ -215,7 +218,7 @@
               asset_ping_interval:[{required:true,message:this.$t('validate.required'),trigger:'blur'},{validator:positiveInteger,trigger:'blur'}],
               scrape_interval:[{required:true,message:this.$t('validate.required'),trigger:'blur'},{validator:positiveInteger,trigger:'blur'}],
               storage_local_retention:[{required:true,message:this.$t('validate.required'),trigger:'blur'},{validator:positiveInteger,trigger:'blur'}],
-              timezone:[{validator:integer,trigger:'blur'},{validator:timezone,trigger:'blur' }],
+              timezone:[{required:true,message:this.$t('validate.required'),trigger:'blur'}],
             },
             basicRules2:{
               system_name:[{required:true,message:this.$t('validate.required'),trigger:'blur'},],
@@ -223,8 +226,35 @@
               alert_api:[{required:true,message:this.$t('validate.required'),trigger:'blur'},,{validator:host,trigger: 'blur'}],
               scrape_interval:[{required:true,message:this.$t('validate.required'),trigger:'blur'},{validator:positiveInteger,trigger:'blur'}],
               storage_local_retention:[{required:true,message:this.$t('validate.required'),trigger:'blur'},{validator:positiveInteger,trigger:'blur'}],
-              timezone:[{validator:integer,trigger:'blur'},{validator:timezone,trigger:'blur' }],
+              timezone:[{required:true,message:this.$t('validate.required'),trigger:'blur'}],
             },
+            timezoneOption:[
+              {label:'UTC-12:00',value:'-12'},
+              {label:'UTC-11:00',value:'-11'},
+              {label:'UTC-10:00',value:'-10'},
+              {label:'UTC-09:00',value:'-9'},
+              {label:'UTC-08:00',value:'-8'},
+              {label:'UTC-07:00',value:'-7'},
+              {label:'UTC-06:00',value:'-6'},
+              {label:'UTC-05:00',value:'-5'},
+              {label:'UTC-04:00',value:'-4'},
+              {label:'UTC-03:00',value:'-3'},
+              {label:'UTC-02:00',value:'-2'},
+              {label:'UTC-01:00',value:'-1'},
+              {label:'UTC 00:00',value:'0'},
+              {label:'UTC+01:00',value:'1'},
+              {label:'UTC+02:00',value:'2'},
+              {label:'UTC+03:00',value:'3'},
+              {label:'UTC+04:00',value:'4'},
+              {label:'UTC+05:00',value:'5'},
+              {label:'UTC+06:00',value:'6'},
+              {label:'UTC+07:00',value:'7'},
+              {label:'UTC+08:00',value:'8'},
+              {label:'UTC+09:00',value:'9'},
+              {label:'UTC+10:00',value:'10'},
+              {label:'UTC+11:00',value:'11'},
+              {label:'UTC+12:00',value:'12'},
+            ],
             email:{
               email_enable: 'on',
               email_smtp_host: '',
@@ -458,6 +488,8 @@
   .system-tabs .el-tabs--border-card{
     webkit-box-shadow: unset !important;
     box-shadow: unset !important;
+    height: 100%;
+    border-bottom: unset;
   }
   .sys-reset-label .el-checkbox__original:checked + span{
     background-color: orange;

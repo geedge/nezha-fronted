@@ -13,7 +13,7 @@
       <div class="overview-right content-right" id="mainDisplay">
         <!--标题-->
         <div class="overview-content-header">
-          <div class="header-title" :class="{'hide-div':!isFullScreen}">{{$t('dashboard.overview.contentTitle')}}</div>
+          <div class="header-title" :class="{'hide-div':!isFullScreen}">{{systemName&&systemName != 'undefined'&&systemName != null?systemName: $t('dashboard.overview.contentTitle')}}</div>
           <div class="header-tool">
             <div class="tool-container">
               <div class="time">{{sysTime}}</div>
@@ -104,6 +104,7 @@
     props:[],
     data(){
       return {
+        systemName:localStorage.getItem('nz-sys-name'),
         storedAssetStatData:null,
         assetStatData:{},
         typeFilter: 'typeStat',

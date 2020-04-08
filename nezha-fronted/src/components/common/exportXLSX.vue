@@ -12,11 +12,13 @@
       <el-dialog :visible.sync="importBox.show" :title="importBox.title" :modal-append-to-body='false' :show-close="true" :width="importBox.width" @close="closeDialog" class="nz-dialog" :close-on-click-modal="importBox.type!=3">
         <div v-if="importBox.type==1">
           <div class="upload-body">
-            <el-upload class="upload-demo" ref="uploadExcel" action="" :file-list="importFileList" :on-change="importChange"  :auto-upload="false" accept=".xlsx,.xls">
+            <el-upload drag class="upload-demo" ref="uploadExcel"  action="" :file-list="importFileList" :on-change="importChange"  :auto-upload="false" accept=".xlsx,.xls">
               <div slot="tip" class="el-upload__tip" >{{$t('overall.importTip')}}</div>
-              <button type="button" class="nz-btn nz-btn-size-normal nz-btn-style-normal">
+              <i class="el-icon-upload"></i>
+              <div class="el-upload__text">{{$t('overall.dragFileTip')}}，{{$t('overall.or')}}&nbsp;<em>{{$t('overall.clickUpload')}}</em></div>
+              <!--<button type="button" class="nz-btn nz-btn-size-normal nz-btn-style-normal">
                 <span class="top-tool-btn-txt" >{{$t('overall.upload')}}</span>
-              </button>
+              </button>-->
             </el-upload>
           </div>
           <div slot="footer" class="footer">

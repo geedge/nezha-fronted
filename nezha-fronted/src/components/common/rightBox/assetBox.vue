@@ -124,12 +124,25 @@
             </div>
             <span v-if="tabView">{{assetData.purchaseDate}}</span>
           </el-form-item>
+          <!------------------------------------------impi---------------------------------------------->
+          <div v-if="assetType == 1">
+            <div class="right-box-sub-title">{{$t('asset.createAssetTab.impi.title')}}</div>
+            <div class="line-100 right-box-line"></div>
+            <el-form-item :label="$t('asset.createAssetTab.impi.host')" class="right-box-form-content" prop="impi.host">
+              <el-input v-model="assetData.impi.host" size="small" v-if="!tabView"></el-input>
+              <span v-if="tabView">{{assetData.impi.host}}</span>
+            </el-form-item>
+            <el-form-item :label="$t('asset.createAssetTab.impi.port')" class="right-box-form-content" prop="impi.port">
+              <el-input v-model="assetData.impi.port" size="small" v-if="!tabView"></el-input>
+              <span v-if="tabView">{{assetData.impi.port}}</span>
+            </el-form-item>
+          </div>
           <div class="right-box-sub-title">{{$t('asset.createAssetTab.location')}}</div>
           <div class="line-100 right-box-line"></div>
           <!------------------------------------------IDC---------------------------------------------->
-          <!--<el-form-item :label="$t('asset.createAssetTab.dcName')" class="right-box-form-content" prop="idcId">
+          <el-form-item :label="$t('asset.createAssetTab.dcName')" class="right-box-form-content" prop="idcId">
             <template v-if="!tabView">
-&lt;!&ndash;              <el-select popper-class="asset-dropdown" size="mini" v-model="assetData.idcId" clearable @change="getSingleIDCData" class="right-box-row-with-btn" placeholder="">&ndash;&gt;
+<!--              <el-select popper-class="asset-dropdown" size="mini" v-model="assetData.idcId" clearable @change="getSingleIDCData" class="right-box-row-with-btn" placeholder="">-->
               <el-select popper-class="asset-dropdown" size="small" v-model="assetData.idcId" clearable @change="getSingleIDCData"  placeholder="">
                 <el-option
                   :id="'asset-edit-idc-op-'+item.id"
@@ -141,9 +154,9 @@
                   <span class="asset-dropdown-label-txt">{{ item.name }}</span>
                 </el-option>
               </el-select>
-&lt;!&ndash;              <div class="right-box-row-btn ">&ndash;&gt;
-&lt;!&ndash;                <idc-config-box placement="left" @after="getIDCOptionData"></idc-config-box>&ndash;&gt;
-&lt;!&ndash;              </div>&ndash;&gt;
+<!--              <div class="right-box-row-btn ">-->
+<!--                <idc-config-box placement="left" @after="getIDCOptionData"></idc-config-box>-->
+<!--              </div>-->
             </template>
             <span v-if="tabView">{{assetViewData.idcName}}</span>
           </el-form-item>
@@ -159,10 +172,10 @@
           <el-divider></el-divider>
 
 
-          &lt;!&ndash;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;cabinet&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&ndash;&gt;
+          <!------------------------------------------cabinet---------------------------------------------->
           <el-form-item :label="$t('asset.createAssetTab.cabinet')" class="right-box-form-content">
             <template v-if="!tabView">
-&lt;!&ndash;              <el-select clearable v-model="assetData.cabinetId" clearable class="right-box-row-with-btn" popper-class="asset-dropdown"&ndash;&gt;
+<!--              <el-select clearable v-model="assetData.cabinetId" clearable class="right-box-row-with-btn" popper-class="asset-dropdown"-->
               <el-select clearable v-model="assetData.cabinetId" clearable  popper-class="asset-dropdown"
                          :disabled="assetData.idcId==''?true:false" size="small" placeholder=""
                          @change="getSingleCabinetData">
@@ -174,38 +187,23 @@
                   :value="item.id"
                 >
                   <span class="asset-dropdown-label-txt">{{ item.name }}</span>
-&lt;!&ndash;                  <div class="asset-dropdown-label-icons">&ndash;&gt;
-&lt;!&ndash;                    <span class="asset-dropdown-btn asset-dropdown-btn-delete"&ndash;&gt;
-&lt;!&ndash;                          @click.stop="deleteData('cabinet',item.id)" :id="'asset-edit-cabinet-op-del-'+item.id">&ndash;&gt;
-&lt;!&ndash;                      <i class="el-icon-delete"></i>&ndash;&gt;
-&lt;!&ndash;                    </span>&ndash;&gt;
-&lt;!&ndash;                    <cabinet-config-box placement="left" :post-cabinet="item" button-class="asset-dropdown-btn" @after="getCabinetOptionData">&ndash;&gt;
-&lt;!&ndash;                      <i slot="optionZone" class="nz-icon nz-icon-edit"></i>&ndash;&gt;
-&lt;!&ndash;                    </cabinet-config-box>&ndash;&gt;
-&lt;!&ndash;                  </div>&ndash;&gt;
+<!--                  <div class="asset-dropdown-label-icons">-->
+<!--                    <span class="asset-dropdown-btn asset-dropdown-btn-delete"-->
+<!--                          @click.stop="deleteData('cabinet',item.id)" :id="'asset-edit-cabinet-op-del-'+item.id">-->
+<!--                      <i class="el-icon-delete"></i>-->
+<!--                    </span>-->
+<!--                    <cabinet-config-box placement="left" :post-cabinet="item" button-class="asset-dropdown-btn" @after="getCabinetOptionData">-->
+<!--                      <i slot="optionZone" class="nz-icon nz-icon-edit"></i>-->
+<!--                    </cabinet-config-box>-->
+<!--                  </div>-->
                 </el-option>
               </el-select>
 
-&lt;!&ndash;              <div class="right-box-row-btn ">&ndash;&gt;
-&lt;!&ndash;                <cabinet-config-box placement="left" :post-cabinet="addCabinetData"  @after="getCabinetOptionData"></cabinet-config-box>&ndash;&gt;
-&lt;!&ndash;              </div>&ndash;&gt;
+<!--              <div class="right-box-row-btn ">-->
+<!--                <cabinet-config-box placement="left" :post-cabinet="addCabinetData"  @after="getCabinetOptionData"></cabinet-config-box>-->
+<!--              </div>-->
             </template>
             <span v-if="tabView">{{assetViewData.cabinetName}}</span>
-          </el-form-item>-->
-          <el-form-item :label="$t('asset.editAssetTab.location')">
-            <el-cascader  :props="locationCascaderProps" popper-class="location-selector" size="small" style="width: 100%" id="locationSelector" ref="locationSelector" @visible-change="locationSelectorExpand" v-clickoutside="closeDropdown" >
-              <template slot-scope="{node,data}">
-                <label class="el-checkbox cabinet-u-label" :for="node.value" v-if="node.isLeaf" :class="{'is-disabled':data.occupy == true}">
-                  <span class="el-checkbox__input">
-                        <input type="checkbox" name="cabinetU" :value="node.value" class="el-checkbox__original" aria-hidden="true" :id="node.value" @change="cabinetUStateChange" :checked="data.occupy == true || data.checked ==true?'checked':''" :disabled="data.occupy == true"/>
-                        <span class="el-checkbox__inner" :class="{'is-disabled is-disabled-bg is-disabled-check':data.occupy == true}"></span>
-                  </span>
-                  <span class="el-checkbox__label" style="width: 100px;;" :class="{'is-disabled':data.occupy == true}">{{node.label}}</span>
-                </label>
-              </template>
-            </el-cascader>
-            {{this.checkedUStart?this.checkedUStart.value:''}}
-            {{this.checkedUEnd?this.checkedUEnd.value:''}}
           </el-form-item>
           <el-form-item :label="$t('asset.editAssetTab.uSize')">
             <span>{{cabinetSelectedData.uSize}}</span>
@@ -222,9 +220,9 @@
             <account-config-box v-for="(item,index) in assetData.accounts" :is-edit="!tabView" :account="item" :key="index" ref="accountConfigBox" @setValidateResult="setAccountValideResult" :is-allowed-change-protocol="changeProtocolSwitch" @protocol-type-change="protocolTypeChange"></account-config-box>
           </template>
 
-          <template v-if="!pageObj.id">
+          <template v-if="!pageObj.id && !exporterDisableSwitch">
             <el-form-item :label="$t('asset.createAssetTab.exporter')" class="exporter-label">
-              <el-switch class="exporter-switch" v-model="assetData.exporter" active-color="#ee9d3f" active-value="1" inactive-value="0" :disabled="exporterDisableSwitch"></el-switch>
+              <el-switch class="exporter-switch" v-model="assetData.exporter" active-color="#ee9d3f" active-value="1" inactive-value="0" :show="!exporterDisableSwitch"></el-switch>
             </el-form-item>
             <div class="line-100 right-box-line" style="margin-top: -16px;"></div>
           </template>
@@ -249,6 +247,7 @@
 <script>
   import accountConfig from '../../page/asset/accountConfig';
   import {host} from '../js/validate';
+  import {port} from '../js/validate'
   export default {
     name: "assetEditUnit",
     props: ["editUnitShow", "editUnitId"],
@@ -256,7 +255,6 @@
       'account-config-box': accountConfig,
     },
     data() {
-      let $temp=this;
       return {
         visible: '',
         vendorModelData: '',
@@ -270,6 +268,10 @@
           cabinetId: '',
           modelId: '',
           assetType: '',
+          impi:{
+            host:'',
+            port:'',
+          },
           accounts: [{
             id: '',
             authType: 1,
@@ -435,6 +437,12 @@
           idcId: [
             {required: true, message: this.$t('validate.required'), trigger: 'change'}
           ],
+          'impi.host':[
+            {validator:host,trigger:'blur'}
+          ],
+          'impi.port':[
+            {validator:port,trigger:'blur'}
+          ]
         },
         cabRules: {
           name: [
@@ -451,15 +459,7 @@
         module:{},
         accountValideResult:true,
         changeProtocolSwitch:true,
-        exporterDisableSwitch:false,
-        locationCascaderProps:{
-          lazy:true,
-          lazyLoad:$temp.locationLazyMethod
-        },
-        cabinetUState:[],
-        checkedUStart:null,//记录前一次选中的节点
-        checkedUEnd:null,//记录前一次选中的节点
-        storedTriggerMethod:null,
+        exporterDisableSwitch:false
       }
     },
     /*computed: {
@@ -522,216 +522,6 @@
       }
     },
     methods: {
-      closeDropdown:function(){
-        this.$refs.locationSelector.dropDownVisible = false;
-        this.$refs.locationSelector.toggleDropDownVisible=this.storedTriggerMethod;
-      },
-      locationSelectorExpand:function(flag){
-        this.storedTriggerMethod=this.$refs.locationSelector.toggleDropDownVisible;
-        if(flag){
-          this.$refs.locationSelector.toggleDropDownVisible=(value)=>{}
-          document.querySelector('#locationSelector').onclick=()=>{
-            this.$refs.locationSelector.dropDownVisible = !this.$refs.locationSelector.dropDownVisible;
-          }
-        }
-      },
-      cabinetUStateChange:function(e){
-        let defaultUsize=1;
-        if(this.assetData.modelId && this.assetData.modelId !=''){
-          let currentModel=this.allModelUlData.find((item,index)=>{
-            return item.id= this.assetData.modelId[1];
-          })
-          console.log(currentModel)
-          if(currentModel && currentModel.usize){
-            defaultUsize=currentModel.usize;
-          }
-        }
-
-        if(e.target.checked == true ){//选中
-          if(!this.checkedUStart){//第一次选中
-            let range=this.findEnoughCabinet(e.target.value,defaultUsize);
-            if(range[0] != -1&&range[1] != -1){
-              this.changeRange(range[0],range[1])
-              this.checkedUStart=this.cabinetUState[range[0]];
-              this.checkedUEnd=this.cabinetUState[range[1]];
-            }else{
-              e.target.checked = false;
-              console.warn("don't have enough cabinet");
-            }
-          }else{//第二次选中
-            if(this.checkedUStart.value - e.target.value  >1 ){ //在选中的之前选择且不连续
-              this.changeRange(e.target.value -1,this.checkedUStart.value -2)
-              this.checkedUStart=this.cabinetUState[e.target.value -1]
-            }else if(e.target.value - this.checkedUEnd.value > 1){//在选中的之后选择且不连续
-              this.changeRange(this.checkedUEnd.value,e.target.value -1);
-              this.checkedUEnd=this.cabinetUState[e.target.value -1]
-            }else if(this.checkedUStart.value - e.target.value  == 1){
-              this.checkedUStart=this.cabinetUState[e.target.value-1]
-            }else if(e.target.value - this.checkedUEnd.value == 1){
-              this.checkedUEnd=this.cabinetUState[e.target.value-1]
-            }
-          }
-        }else{//取消选中
-          if(e.target.value ==  this.checkedUStart.value){//消减头部
-            if(this.checkedUEnd.value - this.checkedUStart.value >= defaultUsize){
-              this.$set(this.cabinetUState[e.target.value -1],'checked',false);
-              this.checkedUStart = this.cabinetUState[e.target.value];
-            }else{
-              this.changeRange(this.checkedUStart.value-1,this.checkedUEnd.value-1,false);
-              this.checkedUStart=null;
-              this.checkedUEnd=null;
-            }
-          }else if(e.target.value ==  this.checkedUEnd.value){//消减尾部
-            if(this.checkedUEnd.value - this.checkedUStart.value >= defaultUsize) {
-              this.$set(this.cabinetUState[e.target.value - 1], 'checked', false);
-              this.checkedUEnd = this.cabinetUState[e.target.value - 2];
-            }else{
-              this.changeRange(this.checkedUStart.value-1,this.checkedUEnd.value-1,false);
-              this.checkedUStart=null;
-              this.checkedUEnd=null;
-            }
-          }else{//截断
-            if(this.checkedUEnd.value - this.checkedUStart.value < defaultUsize){//刚好是model 的usize
-              this.changeRange(this.checkedUStart.value-1,this.checkedUEnd.value-1,false);
-              this.checkedUStart=null;
-              this.checkedUEnd=null;
-            }else{
-              if(e.target.value - this.checkedUStart.value >= defaultUsize){ //低位的机柜足够
-                this.changeRange(this.checkedUStart.value-1,e.target.value -2 );
-                this.changeRange(e.target.value -1 ,this.checkedUEnd.value-1,false);
-                this.checkedUEnd=this.cabinetUState[e.target.value -2];
-              }else{ //低位的机柜不够
-                this.changeRange(this.checkedUStart.value-1,this.checkedUStart.value-1+defaultUsize-1);
-                e.target.checked=true;//解决无法改变当前点击的checkbox状态
-                this.changeRange(this.checkedUStart.value-1+defaultUsize, this.checkedUEnd.value -1,false);
-                this.checkedUEnd=this.cabinetUState[this.checkedUStart.value-1+defaultUsize-1];
-              }
-            }
-          }
-        }
-        this.modifyInput();
-      },
-      modifyInput:function(){
-        let input=document.querySelector('#locationSelector input');
-        let arr=input.value.split('/');
-        if(this.checkedUStart && this.checkedUEnd){
-          arr[arr.length-1]=this.checkedUStart.value +'-' +this.checkedUEnd.value;
-        }else{
-          arr[arr.length-1]='';
-        }
-        let value='';
-        arr.forEach((item,index)=>{
-          value +=item +'/';
-        })
-        input.value=value.substr(0,value.length-1);
-      },
-      changeRange:function(start, end,state=true){
-        if(start == -1 || end ==-1){
-          return;
-        }
-        let startIndex=start;
-        while(startIndex <= end){
-          this.$set(this.cabinetUState[startIndex],'checked',state);
-          startIndex++;
-        }
-      },
-      findEnoughCabinet:function(clickIndex,defaultSize){
-        if(defaultSize == 1){
-          return [clickIndex-1,clickIndex-1];
-        }
-        let left=this.cabinetUState.slice(0,clickIndex-1).reverse();
-        let right=this.cabinetUState.slice(clickIndex,this.cabinetUState.length);
-        let leftCount=0;
-        for(let i=0;i<left.length;i++){
-          let node=left[i];
-          if(!node.occupy){
-            leftCount++
-          }else{
-            break;
-          }
-        }
-        let rightCount=0;
-        for(let i=0;i<right.length;i++){
-          let node=right[i];
-          if(!node.occupy){
-            rightCount++
-          }else{
-            break;
-          }
-        }
-        if(rightCount >= defaultSize-1){
-          return [clickIndex-1,clickIndex-1+defaultSize-1]
-        }else if(leftCount + rightCount >= defaultSize -1){
-          return [clickIndex -1 -(defaultSize-1 - rightCount),clickIndex -1 + rightCount]
-        }else{
-          return [-1,-1]
-        }
-      },
-      locationLazyMethod:function(node,resolve){
-        if(node.level == 0){
-          this.$get('idc').then(response=>{
-            if(response.code == 200){
-              let idcInfos=response.data.list;
-              let nodes=idcInfos.map((item,index)=>{
-                item.label=item.name;
-                item.value=item.id;
-                item.leaf=false;
-                return item;
-              })
-              return resolve(nodes)
-            }else{
-              this.$message.error(response.msg);
-              return resolve([]);
-            }
-          })
-        }else if(node.level == 1){
-          this.$get('cabinet?idcId='+node.value).then(response=>{
-            if(response.code == 200){
-              let cabinetInfos=response.data.list;
-              let nodes=cabinetInfos.map((item,index)=>{
-                item.label=item.name;
-                item.value=item.id;
-                item.leaf=false;
-                return item;
-              })
-              return resolve(nodes)
-            }else{
-              this.$message.error(response.msg);
-              return resolve([]);
-            }
-          })
-        }else if(node.level == 2){
-          console.log(1111)
-          this.$get('cabinet/u?id='+node.value).then(response=>{
-            if(response.code == 200){
-              let nodes=[];
-              for(let i=1;i<=response.data.total;i++){
-                let node={
-                  label:i,
-                  value:i,
-                  occupy:false,
-                  checked:false,
-                  leaf:true,
-                }
-                if(response.data.occupy.find((item=>{return i == item}))){
-                  node.occupy=true;
-                }
-                nodes.push(node)
-              }
-              if(this.cabinetUState&& this.cabinetUState.length>0){
-                this.changeRange(0,this.cabinetUState.length-1,false)
-              }
-              this.cabinetUState=nodes;
-              this.checkedUStart=null;
-              this.checkedUEnd=null;
-              return resolve(nodes)
-            }else{
-              this.$message.error(response.msg);
-              return resolve([]);
-            }
-          })
-        }
-      },
       clickos() {
         this.sendStateData('close');
       },
@@ -787,6 +577,7 @@
               this.assetViewData.cabinetName = response.data.list[0].cabinet == null ? '' : response.data.list[0].cabinet.name
               this.getCabinetOptionData(response.data.list[0].idc.id)
               this.assetType = response.data.list[0].model.type.code
+              this.assetData.impi=response.data.list[0].impi?response.data.list[0].impi:{host:'',port:''};
               this.assetData.sn = response.data.list[0].sn
               this.assetData.host = response.data.list[0].host
               this.assetData.state = response.data.list[0].state
@@ -925,6 +716,10 @@
           cabinetId: '',
           modelId: '',
           assetType: '',
+          impi:{
+            host:'',
+            port:'',
+          },
           accounts: [{
             id: '',
             authType: 1,

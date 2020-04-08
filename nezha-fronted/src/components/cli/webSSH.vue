@@ -79,14 +79,16 @@
 
             <el-row >
               <el-col :span="24">
-                <el-upload class="upload-demo"
+                <el-upload drag class="upload-demo"
                            ref="uploadFile" action=""
                            :file-list="uploadFileList"
                            :on-change="handleChange"
                            :auto-upload="false" >
-                  <button type="button" class="nz-btn nz-btn-size-normal nz-btn-style-normal">
+                  <i class="el-icon-upload"></i>
+                  <div class="el-upload__text">{{$t('overall.dragFileTip')}}，{{$t('overall.or')}}&nbsp;<em>{{$t('overall.clickUpload')}}</em></div>
+                  <!--<button type="button" class="nz-btn nz-btn-size-normal nz-btn-style-normal">
                     <span class="top-tool-btn-txt" >{{$t('webshell.fileSelect')}}</span>
-                  </button>
+                  </button>-->
                 </el-upload>
               </el-col>
             </el-row>

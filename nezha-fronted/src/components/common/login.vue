@@ -54,6 +54,10 @@ export default {
             sessionStorage.setItem("nz-username", this.loginData.username);
             localStorage.setItem("nz-username", this.loginData.username);
             localStorage.setItem('nz-language', this.lang);
+            localStorage.setItem('nz-sys-name',res.data.systemName);
+            localStorage.setItem('nz-sys-timezone',res.data.timezone);
+            localStorage.setItem('nz-sys-default-cabinet-usize',res.data.defaultCabinetUsize);
+            localStorage.setItem('nz-sys-man-terminal-num',res.data.maxTerminalNum);
             this.$i18n.locale = this.lang;
             bus.$emit('login');
             this.$router.push({

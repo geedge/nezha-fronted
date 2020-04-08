@@ -22,10 +22,10 @@
       <el-scrollbar class="right-box-form-box">
         <el-form class="right-box-form" :model="currentMib" label-position="top" :rules="rules" ref="mibForm">
           <!--mib名称-->
-          <el-form-item :label='$t("overall.name")' prop="name">
+          <!--<el-form-item :label='$t("overall.name")' prop="name">
             <el-input v-if="rightBox.isEdit" placeholder="" maxlength="64" show-word-limit v-model.trim="currentMib.name" size="small"></el-input>
             <div v-if="!rightBox.isEdit" class="right-box-form-content-txt">{{currentMib.name}}</div>
-          </el-form-item>
+          </el-form-item>-->
 
           <el-form-item :label='$t("config.mib.models")' prop="models" :rules="[{validator:checkModels,trigger:'change'}]" class="add-required">
             <el-cascader
@@ -55,15 +55,18 @@
             <div v-if="!rightBox.isEdit" class="right-box-form-content-txt">{{currentMib.remark}}</div>
           </el-form-item>
           <el-form-item :label="$t('config.mib.mibFile')" prop="file" :rules="[{validator:checkMibFile,trigger:'change'}]" :class="{'add-required':!currentMib.id}">
-            <el-upload v-if="rightBox.isEdit" :multiple="false" action="" :file-list="uploadFileList" :on-change="uploadChange"  :auto-upload="false" accept="" :on-remove="afterClearFile" ref="mibFileUpload">
+            <el-upload drag v-if="rightBox.isEdit" :multiple="false" action="" :file-list="uploadFileList" :on-change="uploadChange"  :auto-upload="false" accept="" :on-remove="afterClearFile" ref="mibFileUpload" class="mib-upload right-box-form-row">
               <div slot="tip" class="el-upload__tip" >
-                <span v-if="!currentMib.fileName">{{$t('config.mib.uploadTip')}}</span>
-                <span v-else>{{currentMib.fileName}}</span>
+               <!-- <span v-if="!currentMib.fileName">{{$t('config.mib.uploadTip')}}</span>
+                <span v-else>{{currentMib.fileName}}</span>-->
+                <span v-if="currentMib.fileName">{{currentMib.fileName}}</span>
                 <span v-if="uploadErrorMsg" style="color: #F56C6C"><br>{{uploadErrorMsg}}</span>
               </div>
-              <button type="button" class="nz-btn nz-btn-size-normal nz-btn-style-normal">
+              <i class="el-icon-upload"></i>
+              <div class="el-upload__text">{{$t('overall.dragFileTip')}}，{{$t('overall.or')}}&nbsp;<em>{{$t('overall.clickUpload')}}</em></div>
+             <!-- <button type="button" class="nz-btn nz-btn-size-normal nz-btn-style-normal">
                 <span class="top-tool-btn-txt" >{{$t('overall.upload')}}</span>
-              </button>
+              </button>-->
             </el-upload>
             <div v-if="!rightBox.isEdit" class="right-box-form-content-txt">{{currentMib.fileName}}</div>
           </el-form-item>
@@ -333,6 +336,12 @@
     content: '*';
     color: #F56C6C;
     margin-right: 4px;
+  }
+  .mib-upload .el-upload{
+    width: 100%;
+  }
+  .mib-upload /deep/.el-upload-dragger{
+    width: 100% !important;
   }
 </style>
 <style scoped>

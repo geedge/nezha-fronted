@@ -40,12 +40,12 @@
         <el-form-item :label="$t('asset.createAssetTab.password')" v-show="isEdit&&(account.authType==1 || account.protocol == 'TELNET')" >
           <el-input autocomplete="new-password" size="small" type="password" v-model="account.pwd"/>
         </el-form-item>
+        <el-form-item :label="this.$t('asset.createAssetTab.ssh')" v-show="isEdit&&(account.authType==2 && account.protocol == 'SSH')" prop="file">
+          <el-input  rows="4" type="textarea" placeholder="" v-model="account.privateKey" size="small"></el-input>
+        </el-form-item>
         <el-form-item :label="$t('asset.createAssetTab.port')" prop="port" style="display: inline-block">
           <el-input size="small" v-model.number="account.port" v-show="isEdit"/>
           <div class="right-box-form-content-txt" v-show="!isEdit">{{account.port}}</div>
-        </el-form-item>
-        <el-form-item :label="this.$t('asset.createAssetTab.ssh')" v-show="isEdit&&(account.authType==2 && account.protocol == 'SSH')" prop="file">
-          <el-input  rows="4" type="textarea" placeholder="" v-model="account.privateKey" size="small"></el-input>
         </el-form-item>
       </el-form>
 
