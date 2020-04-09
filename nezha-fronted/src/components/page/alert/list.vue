@@ -28,6 +28,9 @@
           </div>
           <div class="pagination-top pagination-top-hide display-none"></div>
         </div>
+        <div class="el-popover alert-clean-pop" @click="toDeleteMessage" v-if="deleteBox.ids.length > 0">
+          <i style="cursor: pointer" class="el-icon-delete"></i>
+        </div>
         <el-table
           class="nz-table"
           :data="tableData"
@@ -38,7 +41,15 @@
           :height="mainTableHeight"
           v-scrollBar:el-table
           :cell-class-name="labelsClassName"
+          @selection-change="selectChange"
           style="width: 100%;">
+          <el-table-column
+            :resizable="false"
+            type="selection"
+            width="38"
+            align="center"
+          >
+          </el-table-column>
           <el-table-column
             :resizable="false"
             v-for="(item, index) in tablelable"
@@ -88,6 +99,7 @@
                         :key="key"
                         :class="{'link': key == 'asset' || key == 'endpoint' || key == 'project' || key == 'module' || key == 'datacenter'}"
                         v-if="key != 'alertname' && key != 'severity'"
+                        :key="key"
                         :type="tagType(key)"
                         size="mini" v-for="(value, key) in scope.row.labels" class="alert-message-tag">{{key}}：{{value}}</el-tag>
               </template>
@@ -131,15 +143,32 @@
       @tablelable="tablelabelEmit"
       ref="elementset"
     ></element-set>
+    <!--导出-->
     <div class="export-xlsx">
       <el-dialog :visible.sync="importBox.show" :title="importBox.title" :modal-append-to-body='false' :show-close="true" width="300px" @close="closeDialog" class="nz-dialog">
         <div class="upload-body">
           <button @click="exportCur" class="el-button el-button--default el-button--small">
             <span>{{$t('overall.exportCur')}}</span>
           </button>
-          <button  @click="exportAll" class="el-button el-button--default el-button--small">
+          <button @click="exportAll" class="el-button el-button--default el-button--small">
             <span>{{$t('overall.exportAll')}}</span>
           </button>
+        </div>
+      </el-dialog>
+    </div>
+    <!--删除确认提示-->
+    <div class="export-xlsx">
+      <el-dialog :visible.sync="deleteBox.show" :title="$t('overall.delete')" :modal-append-to-body='false' :show-close="true" width="300px" @close="closeDialog" class="nz-message">
+        <div class="upload-body">
+          <el-input type="textarea" :placeholder="$t('alert.description')" v-model="deleteBox.remark"></el-input>
+          <div style="text-align: right; margin-top: 10px;">
+            <button @click="closeDialog" class="el-button el-button--default el-button--small">
+              <span>{{$t('tip.no')}}</span>
+            </button>
+            <button @click="deleteMessage" class="el-button el-button--default el-button--small el-button--primary">
+              <span>{{$t('tip.yes')}}</span>
+            </button>
+          </div>
         </div>
       </el-dialog>
     </div>
@@ -167,8 +196,8 @@
         mainTableHeight: this.$tableHeight.normal, //主列表table高度
 
         //导出相关
-        importBox: {show:false, title:this.$t('overall.exportExcel')},
-
+        importBox: {show: false, title:this.$t('overall.exportExcel')},
+        deleteBox: {show: false, ids: [], remark: ''},
 
         tableId: 'alertListTable', //需要分页的table的id，用于记录每页数量
         showTopBtn: false,
@@ -223,7 +252,11 @@
             label: this.$t('alert.endAt'),
             prop: 'endAt',
             show: true,
-          }
+          }, /*{
+            label: this.$t('config.account.option'),
+            prop: 'option',
+            show: true
+          }*/
         ],
         searchMsg: { //给搜索框子组件传递的信息
           zheze_none: true,
@@ -359,19 +392,40 @@
           this.$refs['assetEditUnit'].tabView = false
         }
       },
+      toDeleteMessage() {
+        this.deleteBox.show = true;
+      },
+      deleteMessage() {
+        this.$put("alert/message", this.deleteBox).then(res => {
+          if (res.code === 200) {
+            this.$message({duration: 2000, type: 'success', message: this.$t("tip.deleteSuccess")});
+            this.getAlertList();
+          } else {
+            this.$message.error(res.msg);
+          }
+        })
+      },
+      selectChange(s) {
+        this.deleteBox.ids = [];
+        s.forEach(item => {
+          this.deleteBox.ids.push(item.id);
+        });
+      },
       showExportDialog() {
         this.importBox.show = true;
       },
       closeDialog() {
         this.importBox.show = false;
+        this.deleteBox.show = false;
       },
       exportCur:function(){
         this.exportExcel(this.searchLabel);
         this.closeDialog();
       },
       exportAll:function(){
-        this.searchLabel.pageSize = -1;
-        this.exportExcel(this.searchLabel);
+        let temp = JSON.parse(JSON.stringify(this.searchLabel));
+        temp.pageSize = -1;
+        this.exportExcel(temp);
         this.closeDialog();
       },
       exportExcel:function(params){

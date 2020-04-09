@@ -1,5 +1,5 @@
 <template>
-  <span>
+  <span class="sub-list">
     <div class="sub-top-tools">
       <div class="sub-list-tabs">
         <div class="sub-list-tab-title">
@@ -14,8 +14,17 @@
         <div class="top-tool-search">
           <search-input :default-item="'alertMessageState'" :default-value="defaultSearchValue" :searchMsg="searchMsg" @search="search"></search-input>
         </div>
+        <button type="button" @click="importBox.show = true" :title="$t('overall.exportExcelLower')"
+            class="nz-btn nz-btn-size-normal nz-btn-style-light margin-l-20" id="alert-list-export">
+          <i class="el-icon-download"></i>
+        </button>
       </div>
     </div>
+    <!--删除message按钮-->
+    <div class="el-popover alert-clean-pop" @click="toDeleteMessage" v-if="deleteBox.ids.length > 0">
+      <i style="cursor: pointer" class="el-icon-delete"></i>
+    </div>
+
     <el-table
       class="nz-table"
       :data="tableData"
@@ -27,7 +36,15 @@
       v-scrollBar:el-table
       :height="$tableHeight.openSubList.subList"
       :cell-class-name="labelsClassName"
+      @selection-change="selectChange"
       style="width: 100%;">
+      <el-table-column
+        :resizable="false"
+        type="selection"
+        width="38"
+        align="center"
+      >
+      </el-table-column>
       <el-table-column
         :resizable="false"
         v-for="(item, index) in tablelable"
@@ -73,6 +90,7 @@
           </div>-->
           <template v-else-if="item.prop == 'labels'">
             <el-tag v-if="key != 'alertname' && key != 'severity'"
+                    :key="key"
                     type="info"
                     size="mini" v-for="(value, key) in scope.row.labels" :key="key" class="alert-message-tag">{{key}}：{{value}}</el-tag>
           </template>
@@ -109,10 +127,40 @@
       @tablelable="tablelabelEmit"
       ref="elementset"
     ></element-set>
+    <!--导出-->
+    <div class="export-xlsx">
+      <el-dialog :visible.sync="importBox.show" :title="importBox.title" :modal-append-to-body='false' :show-close="true" width="300px" @close="importBox.show = false" class="nz-dialog">
+        <div class="upload-body">
+          <button @click="exportCur" class="el-button el-button--default el-button--small">
+            <span>{{$t('overall.exportCur')}}</span>
+          </button>
+          <button @click="exportAll" class="el-button el-button--default el-button--small">
+            <span>{{$t('overall.exportAll')}}</span>
+          </button>
+        </div>
+      </el-dialog>
+    </div>
+    <!--删除确认提示-->
+    <div class="export-xlsx">
+      <el-dialog :visible.sync="deleteBox.show" :title="$t('overall.delete')" :modal-append-to-body='false' :show-close="true" width="300px" @close="deleteBox.show = false" class="nz-message">
+        <div class="upload-body">
+          <el-input type="textarea" :placeholder="$t('alert.description')" v-model="deleteBox.remark"></el-input>
+          <div style="text-align: right; margin-top: 10px;">
+            <button @click="deleteBox.show = false" class="el-button el-button--default el-button--small">
+              <span>{{$t('tip.no')}}</span>
+            </button>
+            <button @click="deleteMessage" class="el-button el-button--default el-button--small el-button--primary">
+              <span>{{$t('tip.yes')}}</span>
+            </button>
+          </div>
+        </div>
+      </el-dialog>
+    </div>
   </span>
 </template>
 
 <script>
+  import axios from 'axios'
   export default {
     name: "alertMessageTab",
     components: {
@@ -133,6 +181,10 @@
           pageSize: 20,
           total: 0
         },
+
+        importBox: {show: false, title:this.$t('overall.exportExcel')},
+        deleteBox: {show: false, ids: [], remark: ''},
+
         tableTitle: [
           {
             label: this.$t("alert.alertName"),
@@ -269,6 +321,58 @@
       // 切换tab
       changeTab(tab) {
         this.$emit('changeTab', tab);
+      },
+      toDeleteMessage() {
+        this.deleteBox.show = true;
+      },
+      deleteMessage() {
+        this.$put("alert/message", this.deleteBox).then(res => {
+          if (res.code === 200) {
+            this.$message({duration: 2000, type: 'success', message: this.$t("tip.deleteSuccess")});
+            this.getAlertList();
+          } else {
+            this.$message.error(res.msg);
+          }
+        })
+      },
+      selectChange(s) {
+        this.deleteBox.ids = [];
+        s.forEach(item => {
+          this.deleteBox.ids.push(item.id);
+        });
+      },
+      exportCur:function(){
+        this.exportExcel(this.searchLabel);
+        this.importBox.show = false;
+      },
+      exportAll:function(){
+        let temp = JSON.parse(JSON.stringify(this.searchLabel));
+        temp.pageSize = -1;
+        this.exportExcel(temp);
+        this.importBox.show = false;
+      },
+      exportExcel:function(params){
+        let temp=this;
+        if(!params){
+          params=temp.params;
+        }
+        axios.get("alert/message/export", {responseType:'blob', params: params}).then(res=>{
+          let fileName = 'alert-message-'+temp.getTimeString()+'.xlsx';
+          if(window.navigator.msSaveOrOpenBlob){
+            // 兼容ie11
+            let blobObject = new Blob([res.data]);
+            window.navigator.msSaveOrOpenBlob(blobObject, fileName);
+          }else{
+            let url = URL.createObjectURL(new Blob([res.data]));
+            let a = document.createElement('a');
+            document.body.appendChild(a); //此处增加了将创建的添加到body当中
+            a.href = url;
+            a.download = fileName;
+            a.target = '_blank';
+            a.click();
+            a.remove(); //将a标签移除
+          }
+        })
       },
       getAlertList() {
         this.tableData = [];

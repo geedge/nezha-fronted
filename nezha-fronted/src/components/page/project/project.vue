@@ -1244,7 +1244,7 @@
   .table-header-inner{
     position: absolute;
     z-index: 1;
-    top: 44px;
+    top: 40px;
     left: 11px;
     cursor: pointer;
   }
