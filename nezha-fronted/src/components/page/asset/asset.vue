@@ -222,11 +222,11 @@
                 &nbsp;
                 <span :title="$t('overall.edit')" @click.stop="tagShow('showEdit',scope.row.id)" class="content-right-option" :id="'asset-edit-'+scope.row.id"><i
                   class="nz-icon nz-icon-edit"></i>
-                </span>&nbsp;
+                </span>
                 &nbsp;
                 <span :title="$t('overall.delete')" @click.stop="deleteData('asset',scope.row.id)" class="content-right-option" :id="'asset-del-'+scope.row.id"><i
                   class="el-icon-delete"></i>
-                </span>&nbsp;&nbsp;&nbsp;
+                </span>
                 &nbsp;
                 <span title="CLI" @click="cli(scope.row.id ,scope.row.host,scope.row.accounts)" class="content-right-option" :id="'asset-ssh-'+scope.row.id"><i
                   class="nz-icon nz-icon-cli"></i>

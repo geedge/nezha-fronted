@@ -443,7 +443,7 @@
         }
       },
       labelsClassName(row) {
-        if (row.columnIndex == 1) {
+        if (row.columnIndex == 2) {
           return "alert-message-list-labels";
         } else {
           return "";
