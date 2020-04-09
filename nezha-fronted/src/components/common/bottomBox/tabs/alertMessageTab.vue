@@ -89,10 +89,10 @@
             <span v-else>-</span>
           </div>-->
           <template v-else-if="item.prop == 'labels'">
-            <el-tag v-if="key != 'alertname' && key != 'severity'"
+            <el-tag v-if="key != 'alertname' && key != 'severity' && key != 'linkId'"
                     :key="key"
                     type="info"
-                    size="mini" v-for="(value, key) in scope.row.labels" class="alert-message-tag">{{key}}：{{value}}</el-tag>
+                    size="mini" v-for="(value, key) in scope.row.labels" class="alert-message-tag">{{tagValue(key, value)}}</el-tag>
           </template>
           <div v-else-if="item.prop == 'state'">
             <span class="">
@@ -280,6 +280,22 @@
         viewProjectData: {id: '', name: '', remark: ''},
         viewModuleData: {id: '', name: '', project: {}, port: '', path: '', param: '', paramObj: []},
         viewAssetState: false,
+      }
+    },
+    computed: {
+      tagValue() {
+        return (key, value) => {
+          if (key == 'type') {
+            if (value ==  1) {
+              value = this.$t("project.project.project");
+            } else if (value == 2) {
+              value = this.$t("module.module.module");
+            } else if (value == 3) {
+              value = this.$t("asset.asset");
+            }
+          }
+          return key + "：" + value;
+        }
       }
     },
     methods: {
