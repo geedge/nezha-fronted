@@ -1,5 +1,6 @@
 <script>
     import chartDataFormat from "../../../charts/chartDataFormat";
+    import bus from '../../../../libs/bus';
     const commonOption={
       title:{
         show:false,
@@ -40,6 +41,7 @@
           intervale: 0,
           rotate: 0,
           formatter: function (value) {
+            value=bus.computeTimezone(value)
             var t_date = new Date(value);
             return [t_date.getFullYear(), t_date.getMonth() + 1, t_date.getDate()].join('-') + "\n"
               + [t_date.getHours(), t_date.getMinutes()].join(':');

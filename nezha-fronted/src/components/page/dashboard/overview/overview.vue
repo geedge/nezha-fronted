@@ -748,7 +748,7 @@
                 smooth:true,  //曲线变平滑
                 data: [],
                 type:'line',
-                areaStyle:{}
+                // areaStyle:{}
               }
               series.data=response.data.result[0].values.map((item)=>{
                 return [item[0]*1000,item[1]];
@@ -957,7 +957,8 @@
         let str = `<div>`;
         params.forEach((item, i) => {
           if(i===0){
-            let t_date = new Date(item.data[0]);
+            let value=bus.computeTimezone(item.data[0])
+            let t_date = new Date(value);
             str += [t_date.getFullYear(), t_date.getMonth() + 1, t_date.getDate()].join('-') + " "
               + [t_date.getHours(), t_date.getMinutes(),t_date.getSeconds()].join(':');
             str +=`<br/>`;

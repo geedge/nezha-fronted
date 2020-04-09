@@ -45,6 +45,9 @@
               <el-form-item :label="$t('config.system.basic.assetPingInterval')" prop="asset_ping_interval">
                 <el-input v-model.number="basic.asset_ping_interval" :disabled="basic.asset_ping_switch == 'off'"></el-input><span class="nz-input-append">s</span>
               </el-form-item>
+              <el-form-item :label="$t('config.system.basic.defaultCabinetUsize')" prop="default_cabinet_usize">
+                <el-input v-model.number="basic.default_cabinet_usize" ></el-input>
+              </el-form-item>
               <el-form-item :label="$t('config.system.basic.exporterTarget')" prop="node_exporter_target_path">
                 <el-input v-model="basic.node_exporter_target_path"></el-input>
               </el-form-item>
@@ -160,7 +163,7 @@
         </el-tab-pane>
         <el-tab-pane :label="$t('config.system.reset.reset')" name="reset">
           <div class="system-config-form">
-            <el-form :model="reset"  label-width="180px" size="small" ref="resetForm" :rules="resetRules" :validate-on-rule-change="false">
+            <el-form :model="reset"  label-width="180px" size="small" ref="resetForm" :rules="resetRules" :validate-on-rule-change="false" class="reset-form">
               <el-form-item  prop="type">
 <!--                <el-checkbox-group v-model="reset.type">-->
 <!--                  <div v-for="(item,index) in resetOptions" :key="item.value+index">-->
@@ -170,7 +173,7 @@
                 <div class="el-checkbox-group">
                   <div v-for="(item,index) in resetOptions" :key="item.value+index" >
                     <label class="el-checkbox sys-reset-label" :for="item.value" >
-                      <span class="el-checkbox__label" style="width: 100px;;">{{item.label}}</span>
+                      <span class="el-checkbox__label" style="width: 100px;text-align: right;">{{item.label}}</span>
                       <span class="el-checkbox__input">
                         <input type="checkbox" name="resetType" :value="item.value" class="el-checkbox__original" aria-hidden="true" :id="item.value" @change="resetCheckBoxChange"/>
                         <span class="el-checkbox__inner"></span>
@@ -195,8 +198,7 @@
     import {port} from '../../common/js/validate'
     import {domain} from '../../common/js/validate'
     import {host} from '../../common/js/validate'
-    import {timezone} from '../../common/js/validate'
-    import {integer} from '../../common/js/validate'
+    import {uSize} from '../../common/js/validate'
     import bus from '../../../libs/bus';
 
     export default {
@@ -213,6 +215,7 @@
               system_name:'',
               current_site_url:'',
               timezone:'',
+              default_cabinet_usize:'',
             },
             basicRules:{
               system_name:[{required:true,message:this.$t('validate.required'),trigger:'blur'},],
@@ -222,6 +225,7 @@
               scrape_interval:[{required:true,message:this.$t('validate.required'),trigger:'blur'},{validator:positiveInteger,trigger:'blur'}],
               storage_local_retention:[{required:true,message:this.$t('validate.required'),trigger:'blur'},{validator:positiveInteger,trigger:'blur'}],
               timezone:[{required:true,message:this.$t('validate.required'),trigger:'blur'}],
+              default_cabinet_usize:[{validator:positiveInteger,trigger:'blur'},{validator:uSize,trigger:'blur'}],
             },
             basicRules2:{
               system_name:[{required:true,message:this.$t('validate.required'),trigger:'blur'},],
@@ -230,6 +234,7 @@
               scrape_interval:[{required:true,message:this.$t('validate.required'),trigger:'blur'},{validator:positiveInteger,trigger:'blur'}],
               storage_local_retention:[{required:true,message:this.$t('validate.required'),trigger:'blur'},{validator:positiveInteger,trigger:'blur'}],
               timezone:[{required:true,message:this.$t('validate.required'),trigger:'blur'}],
+              default_cabinet_usize:[{validator:positiveInteger,trigger:'blur'},{validator:uSize,trigger:'blur'}],
             },
             timezoneOption:[
               {label:'UTC-12:00',value:'-12'},
@@ -370,6 +375,14 @@
                     this.resetForm(formName);
                     setTimeout(()=>{
                       this.querySetInfo(type);
+                      if(type ==  'basic'){
+                        localStorage.setItem('nz-sys-name',this.basic.system_name);
+                        localStorage.setItem('nz-sys-timezone',this.basic.timezone);
+                        localStorage.setItem('nz-sys-asset-ping-switch',this.basic.asset_ping_switch);
+                        localStorage.setItem('nz-sys-default-cabinet-usize',this.basic.default_cabinet_usize);
+                      }else if(type == 'terminal'){
+                        localStorage.setItem('nz-sys-max-terminal-num',this.terminal.max_terminal_num);
+                      }
                     },200)
                   }else{
                     this.$message.error(response.msg);
@@ -492,7 +505,9 @@
     webkit-box-shadow: unset !important;
     box-shadow: unset !important;
     height: 100%;
+    width: 100%;
     border-bottom: unset;
+    border-left: unset;
   }
   .sys-reset-label .el-checkbox__original:checked + span{
     background-color: orange;
@@ -500,5 +515,8 @@
   .sys-reset-label .el-checkbox__original:checked + span:after{
     -webkit-transform: rotate(45deg) scaleY(1);
     transform: rotate(45deg) scaleY(1);
+  }
+  .reset-form .el-checkbox-group{
+    margin-left: -28px !important;
   }
 </style>

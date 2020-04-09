@@ -189,7 +189,7 @@
             }
           }]
         },
-        searchTime: [new Date().setHours(new Date().getHours() - 1), new Date()],
+        searchTime: [new Date(bus.computeTimezone(new Date().getTime())).setHours(new Date(bus.computeTimezone(new Date().getTime())).getHours() - 1), new Date(bus.computeTimezone(new Date().getTime()))],
         intervalTimer: null,
         intervalList: [{
           value: 0,

@@ -688,7 +688,8 @@
                   return element.name == item.seriesName;
                 })
                 if(i===0){
-                  let t_date = new Date(item.data[0]);
+                  let value=bus.computeTimezone(item.data[0]);
+                  let t_date = new Date(value);
                   str += [t_date.getFullYear(), t_date.getMonth() + 1, t_date.getDate()].join('-') + " "
                     + [t_date.getHours(), t_date.getMinutes(),t_date.getSeconds()].join(':');
                   str +=`<br/>`;
@@ -813,6 +814,7 @@
               intervale: 0,
               rotate: 0,
               formatter: function (value) {
+                value = bus.computeTimezone(value);
                 var t_date = new Date(value);
                 return [t_date.getFullYear(), t_date.getMonth() + 1, t_date.getDate()].join('-') + "\n"
                   + [t_date.getHours(), t_date.getMinutes()].join(':');

@@ -109,15 +109,15 @@ export function domain(rule, value, callback){
   }, 100)
 }
 
-export function timezone(rule, value, callback){
+export function uSize(rule, value, callback){
 
   setTimeout(() => {
     if(isNaN(Number(value))){
       callback(new Error(vm.$t('validate.number')))
     }else{
-      let timezone=Math.abs(Number(value));
-      if(timezone>12){
-        callback(new Error(vm.$t('validate.timezone')))
+      let num=Number(value);
+      if(num<0 || num > 49 ){
+        callback(new Error(vm.$t('validate.usize')))
       }else{
         callback();
       }

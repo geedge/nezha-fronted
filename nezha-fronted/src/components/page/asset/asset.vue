@@ -475,6 +475,7 @@
         checkAllFlag: false,
         checkAllHandler: false,
         assetClick: false,
+        assetPingSwitch:localStorage.getItem('nz-sys-asset-ping-switch'),
       }
     },
     computed: {
@@ -990,12 +991,26 @@
         }
         //resize时刷新左侧列表滚动条
         let _this = this;
-        window.onresize = function() {
+        window.onresize = function () {
           _this.$refs.leftScrollbar.update();
         }
       });
-      let localStorageTitle=localStorage.getItem("nz-tableTitle-" + localStorage.getItem("nz-username") + "-" + this.$route.path);
+      let localStorageTitle = localStorage.getItem("nz-tableTitle-" + localStorage.getItem("nz-username") + "-" + this.$route.path);
       this.tablelable = localStorageTitle ? JSON.parse(localStorageTitle) : this.tableTitle;
+      // this.assetPingSwit
+      if (this.assetPingSwitch == 'off') {
+        console.log(this.assetPingSwitch)
+        console.log(this.tablelable)
+        for (let i in this.tablelable) {
+          let label = this.tablelable[i];
+
+          if (label.prop == 'pingStatus') {
+           this.tablelable.splice(i, 1);
+            console.log(this.tablelable)
+            break;
+          }
+        }
+      }
       this.dropCol = localStorageTitle ? JSON.parse(localStorageTitle) : this.tableTitle;
     },
     destroyed() {

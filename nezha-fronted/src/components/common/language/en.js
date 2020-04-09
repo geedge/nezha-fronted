@@ -267,7 +267,7 @@ const en = {
     tel:'Invalid phone number',//'不合法的电话号码'
     host:'Invalid IP',//'不合法的IP'
     domain:'Invalid domain',
-    timezone:'Must be number(-12 - 12)',
+    usize:'Must be number(1 - 49)',
     fileSize:'文件过大',//File exceed max size.
     port:'Invalid Port',
     url:'Invalid URL',
@@ -603,7 +603,8 @@ const en = {
         storageRetention:'Local Retention',
         systemName:'System Name',
         curUrl:'Current site URL',
-        timezone:'Timezone'
+        timezone:'Timezone',
+        defaultCabinetUsize:'Cabinet U Size'
       },
       email:{
         email:'Email',

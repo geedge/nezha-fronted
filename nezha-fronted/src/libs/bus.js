@@ -210,6 +210,18 @@ export default new Vue({
       }
       return num.toFixed(2);
     },
+    computeTimezone:function(sourceTime){
+      let offset=localStorage.getItem('nz-sys-timezone');
+      if(offset&& offset != 'undefined' && offset != null){
+        offset=Number.parseInt(offset);
+        let date=new Date(sourceTime);
+        let localOffset=date.getTimezoneOffset()*60*1000; //默认 一分钟显示时区偏移的结果
+        let utcTime=sourceTime + localOffset;
+        return utcTime+(offset * 60*60*1000);
+      }else{
+        return sourceTime;
+      }
+    }
   },
   created() {
     this.getDefaultDate();
