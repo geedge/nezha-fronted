@@ -265,16 +265,18 @@
             </template>
 
             <div v-if="rightBox.isEdit" class="param-box param-box-module">
-              <div class="param-box-row" v-for="(item, index) in currentModule.paramObj">
-                <el-form-item class="param-box-row-key" :rules="{required: true, message: $t('validate.required'), trigger: 'blur'}" :prop="'paramObj.' + index + '.key'">
-                  <el-input placeholder="key" size="mini" v-model="item.key"></el-input>
-                </el-form-item>
-                <span class="param-box-row-eq">=</span>
-                <el-form-item class="param-box-row-value" :rules="{required: true, message: $t('validate.required'), trigger: 'blur'}" :prop="'paramObj.' + index + '.value'">
-                  <el-input placeholder="value" size="mini" v-model="item.value"></el-input>
-                </el-form-item>
-                <span class="param-box-row-symbol" :id="'moduel-remove-param-'+index" @click="removeParam(index)"><i class="nz-icon nz-icon-minus-square"></i></span>
-              </div>
+              <el-scrollbar ref="paramBoxScrollbar" style="height: 100%">
+                <div class="param-box-row" v-for="(item, index) in currentModule.paramObj">
+                  <el-form-item class="param-box-row-key" :rules="{required: true, message: $t('validate.required'), trigger: 'blur'}" :prop="'paramObj.' + index + '.key'">
+                    <el-input placeholder="key" size="mini" v-model="item.key"></el-input>
+                  </el-form-item>
+                  <span class="param-box-row-eq">=</span>
+                  <el-form-item class="param-box-row-value" :rules="{required: true, message: $t('validate.required'), trigger: 'blur'}" :prop="'paramObj.' + index + '.value'">
+                    <el-input placeholder="value" size="mini" v-model="item.value"></el-input>
+                  </el-form-item>
+                  <span class="param-box-row-symbol" :id="'moduel-remove-param-'+index" @click="removeParam(index)"><i class="nz-icon nz-icon-minus-square"></i></span>
+                </div>
+              </el-scrollbar>
             </div>
             <div v-for="(item, index) in currentModule.paramObj" v-if="!rightBox.isEdit">
               <div  class="right-box-form-content-txt">{{item.key}}={{item.value}}</div>
@@ -613,6 +615,7 @@
       // 新增param
       addParam: function() {
         this.currentModule.paramObj.push({key: '', value: ''});
+        this.$refs.paramBoxScrollbar.update();
       },
 
       // 移除单个param

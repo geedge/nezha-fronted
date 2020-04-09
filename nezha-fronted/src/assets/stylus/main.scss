@@ -1120,16 +1120,15 @@ li{
 .param-box {
   border: 1px solid #DCDFE6;
   border-radius: 4px;
-  padding: 0 10px;
 }
 .param-box-endpoint {
   height: 325px;
 }
 .param-box-module {
-  min-height: 258px;
+  height: 258px;
 }
 .param-box-row {
-  padding: 7px 0 0 0;
+  padding: 7px 10px 0 10px;
   position: relative;
 }
 .param-box-row:last-of-type {
