@@ -34,6 +34,14 @@
     </div>
     <div class="content-right">
       <div class="top-tools">
+        <div class="nz-tab" style="right: 100%; transform: translateX(100%); position: absolute;width: 200px;">
+          <div class="nz-tab-item-box" @click="" id="module-type-1">
+            <div class="nz-tab-item nz-tab-item-active">Files</div>
+          </div>
+          <div @click="" class="nz-tab-item-box" id="module-type-2">
+            <div class="nz-tab-item">Browser</div>
+          </div>
+        </div>
         <div class="top-tool-main-right">
           <div class="top-tool-search">
             <search-input :searchMsg="searchMsg" @search="search"></search-input>

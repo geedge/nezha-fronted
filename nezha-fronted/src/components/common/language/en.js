@@ -576,7 +576,7 @@ const en = {
       ip: "IP"
     },
     mib:{
-      mib:'Mib',
+      mib:'SNMP mib',
       fileName:'FileName',
       remark:'Remark',
       updateUser:'Update User',

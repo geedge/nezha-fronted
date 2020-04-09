@@ -27,7 +27,7 @@
             </div>
 <!--            搜索框-->
             <div class="input-center-box" id="input-center-box">
-              <el-scrollbar style="height: 100%;" ref="searchScrollbar">
+              <el-scrollbar style="height: 100%;width: 200px; overflow-y: hidden" ref="searchScrollbar">
                 <ul class="sreach_fixe_left" id="search-ul">
                     <li class="selectinfo_box" v-if="select_list.length>0" v-for="(val,ind) in select_list" :key="ind" @click="update_sreach(ind,$event)">
                         <div class="select_condition">
@@ -1308,7 +1308,8 @@
       border-radius: 0 4px 4px 0;
     }
     .new-search .search-input-all{
-        width: 240px;
+        width: 231px !important;
+        min-width: 231px;
         background-color: $content-right-background-color;
         color: rgba(0,0,0,.55);
         height: 24px;
@@ -1317,7 +1318,6 @@
         border-top-left-radius: 5px;
         display: flex;
         position: relative;
-
     }
     input {
         background-color: $content-right-background-color;
@@ -1513,7 +1513,7 @@
         height: 100%;
         flex: 1;
         float: left;
-        min-width: 100px;
+        width: 100px;
     }
     .select_input input{
         width: calc(100% - 1px);
