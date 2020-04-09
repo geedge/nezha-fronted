@@ -1,8 +1,5 @@
 <style lang="scss">
   @import 'metricSet';
-  // .el-checkbox__input.is-checked+.el-checkbox__label{
-  //   color:$global-text-color-active;
-  // }
   .el-checkbox-button.is-disabled:first-child .el-checkbox-button__inner,.el-checkbox-button.is-checked .el-checkbox-button__inner{
     border: 1px solid $header-text-color-active;
     color:#666;
@@ -22,25 +19,15 @@
     <div class="metric-form">
       <el-row class="element-item" >
           <chart-metric ref="chartTag"
-          :metric-list="metricList"
-          :metricCascaderList="metricCascaderList"
-          @on-add-target-success="getTarget"
-          @on-change-condition="getCondition"
+            :hasLegend="false"
+            :count-total="elements.length"
+            :metric-list="metricList"
+            :metricCascaderList="metricCascaderList"
+            :metricAllData="metricAllData"
+            @on-add-target-success="getTarget"
+            @on-change-condition="getCondition"
           ></chart-metric>
       </el-row>
-       <!-- <el-row  class="element-item" v-for="(elem, index) in elements" :key="'ele' + index">
-            <chart-metric ref="chartTag"
-                           :pointer="index"
-                           :metric-list="metricList"
-                           :metricCascaderList="metricCascaderList"
-                           :count-total="elements.length"
-                           @on-delete-target="deleteTarget"
-                           @sub-save-ok="subOk"
-                           @on-add-target-success="getTarget"
-                           @on-change-condition="getCondition"
-                ></chart-metric>
-
-          </el-row> -->
 
       <el-row class="operate-area">
 
@@ -49,73 +36,16 @@
                 class="nz-btn nz-btn-size-large nz-btn-style-normal nz-btn-min-width-120"
                 :class="{'nz-btn-disabled btn-disabled-cursor-not-allowed' : saveDisabled}"
         >{{$t('dashboard.metric.saveChart')}}</button>
-        <!--<button :disabled="saveDisabled || loading" type="primary" @click="preview('change')" class="margin-l-10"
-                :class="{'nz-btn nz-btn-disabled nz-btn-size-large nz-btn-style-light nz-btn-min-width-75 btn-disabled-cursor-not-allowed' : (saveDisabled || loading), 'nz-btn nz-btn-size-large nz-btn-style-light' : !(saveDisabled || loading)}"
-        >{{chartSwitchWord}}</button>-->
-
-        <!-- <Button type="primary" @click="addTarget">添加指标</Button> -->
       </el-row>
-
-      <!--<el-row class="nz-btn-metric-bottom">
-
-        <button :disabled="saveDisabled" type="button" @click="saveChart"
-                :class="{'nz-btn nz-btn-disabled nz-btn-size-normal nz-btn-size-large nz-btn-min-width-120 nz-btn-style-light nz-btn-metricbtn  btn-disabled-cursor-not-allowed' : saveDisabled , 'nz-btn nz-btn-size-normal nz-btn-metricbtn nz-btn-style-normal nz-btn-min-width-120' : !saveDisabled}"
-        >{{$t('dashboard.metric.saveChart')}}</button>
-
-      </el-row>-->
-<!-- options -->
-      <!--<el-row class="mt-10 margin-b-10">
-        <div>Options</div>
-      </el-row>
-      <el-form :model="chartInfo" ref="chartInfo">
-        <el-row>
-          <div class="common-float-left">
-            <el-form-item  label-width="80px" :label="$t('dashboard.panel.chartForm.width')" prop="span"
-            :rules="{ required: true, type: 'number', trigger: 'change' }">
-              <el-select class="w-select" size="mini" v-model="chartInfo.span" transfer>
-                <el-option v-for="item in spanList" :key="item" :label="'span-' + item" :value="item">
-                  span-{{item}}
-                </el-option>
-              </el-select>
-            </el-form-item>
-          </div>
-        </el-row>
-
-        <el-row>
-          <div class="common-float-left common-middle">
-            <el-form-item label-width="80px" :label="$t('dashboard.panel.chartForm.high')" prop="height"
-            :rules="{ required: true, type: 'number', trigger: 'change' }">
-              <el-input v-model="chartInfo.height" :min="400" size="mini" class="w-select" placeholder=""></el-input>
-              <span class='nz-input-append'>px</span>
-            </el-form-item>
-          </div>
-        </el-row>
-
-        <el-row>
-          <div class="common-float-left">
-            <el-form-item  label-width="80px" :label="$t('dashboard.panel.chartForm.type')" prop="type"
-              :rules="{ required: true,   trigger: 'change' }">
-              <el-select transfer class="w-select" v-model="chartInfo.type" size="mini">
-                <el-option v-for="item in typeList"
-                  :key="item.id"
-                  :label="item.name"
-                  :value="item.id">
-                  {{item.name}}
-                </el-option>
-              </el-select>
-            </el-form-item>
-          </div>
-        </el-row>
-      </el-form>-->
     </div>
-    <!--<metric-pre-panel-box :chartInfo="chartInfo"  :elementTarget="elementTarget" :seriesData="seriesData" :series="series" :chartCount="chartCount" @reload="reload"  ref="panelBox"></metric-pre-panel-box>-->
     <chart-box ref="addChartModal" :panel-data="panelData" @on-create-success="createSuccess" @reloadOnlyPanel="reloadPanelData" @reload="reloadPanelData"></chart-box>
   </div>
 </template>
 <script>
 //import axios from 'axios';
 import bus from '../../../libs/bus';
-import chartMetric from "./chartMetricForPreview";
+//import chartMetric from "./chartMetricForPreview";
+import chartMetric from "./chartMetric";
 import chartBox from "./chartBox";
 //import metricPrePanelBox from "../../common/rightBox/metricPrePanelBox";
 
@@ -134,7 +64,7 @@ export default {
       total: 0,
       loading: false, // 加载中
       chartModal: false, // 展示弹出框
-      elements: [1], // 指标部分 tarNum
+      //elements: [1], // 指标部分 tarNum
       // 新建信息
       /*chartInfo: {
         title: '', // 名称
@@ -161,6 +91,7 @@ export default {
       panelId: 0,
       metricList: [], // metric列表
       metricCascaderList:[],//metric级联列表
+      metricAllData:new Map(),//存放所有的project-module-metric-labelValue，避免重复加载
       isSave: false, // 是否要保存
       saveDisabled: true, // 不可保存
       createModal: false, // 创建看板panel
@@ -245,6 +176,7 @@ export default {
     saveChart() { //新增chart
       this.$refs.addChartModal.setTitle(this.$t("dashboard.panel.createChartTitle"));
       this.$refs.addChartModal.show(true);
+      //console.log('1_+_+_+_+_+_+',JSON.stringify(this.metricInfo));
       this.$refs.addChartModal.createData(-1, this.metricInfo);
     },
      // 删除指标,第一步, 新方法
@@ -323,16 +255,13 @@ export default {
       }
       this.elementTarget = {}; // 初始化清空参数
       // 触发每个tag组件内部进行校验
-      this.$refs.chartTag.saveTarget(); // => getTartget
-      // 保存图表时进行参数认证
-      /*if (this.isSave) {
-        this.$refs.chartInfo.validate();
-      }*/
+      this.$refs.chartTag.saveTarget(0);
     },
     // 获取每个tag组件内部校验后数据,点击生成图表时触发
     getTarget(target) {
       // 由于条件限制，每次其实只有一个target
       this.elementTarget = JSON.parse(JSON.stringify(target));
+      console.log('2_+_+_+_+_+_+',JSON.stringify(this.elementTarget));
       /*this.$refs.chartInfo.validate((valid) => {
         if (valid) {*/
           this.loading = true;
@@ -550,44 +479,55 @@ export default {
     },
     */
     // 获取metric列表
-    getSuggestMetric(id) {
-      //this.$get('metric', {pageNo: 1, pageSize: -1}).then(response => {
-      this.$get('/prom/api/v1/label/__name__/values', {pageNo: 1, pageSize: -1}).then(response => {
-        //if (response.code === 200) {
-        if (response.status === 'success') {
-          this.metricList = response.data;
+    getSuggestMetric() {
+      //this.$get('/prom/api/v1/label/__name__/values').then(response => {
+      this.$get('/module?pageSize=-1').then(response => {
+        console.log('---response---',response);
+        if (response.code === 200) {
+          console.log('---response200---',response);
+          this.metricList = response.data.list;
           const cascaderMap = new Map();
           this.metricList.forEach((item,index) => {
-            let arr = [];
-            let par = '';//父value
-            //let metricTmp = item.metric;//子value
-            let metricTmp = item;//子value
-            if(metricTmp){
-              arr  = metricTmp.split('_');
-              par = arr[0];
-            }
+            let projectName = item.project.name;
+            let moduleName = item.name;
             const childOption = {
-              value: metricTmp,
-              label: metricTmp,
+              value: moduleName,
+              label: moduleName,
+              children:[],
             };
-            if(cascaderMap.has(par)){
-              cascaderMap.get(par).push(childOption);
+            if(cascaderMap.has(projectName)){
+              cascaderMap.get(projectName).push(childOption);
             }else {
               let childArr = [];
               childArr.push(childOption);
-              cascaderMap.set(par,childArr);
+              cascaderMap.set(projectName,childArr);
+            }
+            //缓存全局数据
+            const moduleItem = {
+              name:moduleName,
+              metricMap:new Map()
+            };
+            if(this.metricAllData.has(projectName)){
+              let moduleGroup = this.metricAllData.get(projectName);
+              this.metricAllData.get(projectName).push(moduleItem);
+            }else {
+              let moduleList = [];
+              moduleList.push(moduleItem);
+              this.metricAllData.set(projectName,moduleList);
             }
           });
           let metricCascaderArr = [];
           cascaderMap.forEach(function(value,index){
             const option = {
-              value: index+"_par",//父节点和子节点的value相同，会出现点击与父节点label同名的子节点时，不显示选择的内容
+              value: index+"_par",
               label: index,
               children:value,
             };
             metricCascaderArr.push(option);
           });
+
           this.metricCascaderList = metricCascaderArr;
+          console.log('---response200metricCascaderList---',this.metricCascaderList);
         }else {
           this.metricList = [];
           this.metricCascaderList = [];
@@ -634,8 +574,11 @@ export default {
     },
     */
   },
+  created() {
+    this.getSuggestMetric();
+  },
   mounted() {
-    this.initOpen();
+    //this.initOpen();
     /*
     bus.$on('on-shrink-change', () => {
       this.preview();

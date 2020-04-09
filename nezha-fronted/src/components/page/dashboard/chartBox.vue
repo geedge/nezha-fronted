@@ -191,6 +191,7 @@
                             :pointer="index"
                             :metric-list="metricList"
                             :metricCascaderList="metricCascaderList"
+                            :metricAllData="metricAllData"
                             :count-total="elements.length"
                             @on-delete-target="deleteTarget"
                             @sub-save-ok="subOk"
@@ -292,6 +293,7 @@
         selectFirstPanel: false,
         metricList: [], // metric列表
         metricCascaderList:[],//metric级联列表
+        metricAllData:new Map(),//存放所有的project-module-metric-labelValue，避免重复加载
         deleteIndex: '', // 要删除的指标模块
         subCount: 0, // subSave保存data到bus计数器
         panel: {
@@ -450,12 +452,13 @@
         if (this.subCount === this.elements.length) {
           this.subCount = 0;
           // 保存完成,进行删除操作
-          //alert('box第二步，deleteIndex='+this.deleteIndex+'=开始删除一个元素')
-          //alert('box第二步，删除之前，elements='+JSON.stringify(this.elements)+'  elementTarget='+JSON.stringify(this.elementTarget)+'  bus='+JSON.stringify(bus.chartAddInfo.metricTarget));
+          console.log('box第二步，deleteIndex='+this.deleteIndex+'=开始删除一个元素')
+          console.log('box第二步，删除之前，elements='+JSON.stringify(this.elements)+'  elementTarget='+JSON.stringify(this.elementTarget)+'  bus='+JSON.stringify(bus.chartAddInfo.metricTarget));
           this.elements.splice(this.deleteIndex, 1);
           this.elementTarget.splice(this.deleteIndex, 1);//没有作用，此处是[]
           bus.chartAddInfo.metricTarget.splice(this.deleteIndex, 1);
-          //alert('box第二步，删除完毕，elements='+JSON.stringify(this.elements)+'  elementTarget='+JSON.stringify(this.elementTarget)+'  bus='+JSON.stringify(bus.chartAddInfo.metricTarget));
+          console.log('box第二步，删除完毕，elements='+JSON.stringify(this.elements),'  elementTarget='+JSON.stringify(this.elementTarget),'  bus='+JSON.stringify(bus.chartAddInfo.metricTarget));
+
           this.$nextTick(() => {
             this.$refs.chartTag.forEach((item, index) => {
               item.setSubdata(index); // 将数据从bus重新赋值
@@ -552,6 +555,7 @@
       },
       // 更新图表
       updateCharts(params) {
+        console.log('))))))))))))=',params)
         this.$put('panel/' + this.panelId + '/charts', params).then(response2 => {
           if (response2.code === 200) {
             this.esc();
@@ -632,7 +636,9 @@
       getSuggestMetric() {
         //this.$get('/prom/api/v1/label/__name__/values').then(response => {
         this.$get('/module?pageSize=-1').then(response => {
+          console.log('---response---',response);
           if (response.code === 200) {
+            console.log('---response200---',response);
             this.metricList = response.data.list;
             const cascaderMap = new Map();
             this.metricList.forEach((item,index) => {
@@ -650,6 +656,20 @@
                 childArr.push(childOption);
                 cascaderMap.set(projectName,childArr);
               }
+
+              //缓存全局数据
+              const moduleItem = {
+                name:moduleName,
+                metricMap:new Map()
+              };
+              if(this.metricAllData.has(projectName)){
+                let moduleGroup = this.metricAllData.get(projectName);
+                this.metricAllData.get(projectName).push(moduleItem);
+              }else {
+                let moduleList = [];
+                moduleList.push(moduleItem);
+                this.metricAllData.set(projectName,moduleList);
+              }
             });
             let metricCascaderArr = [];
             cascaderMap.forEach(function(value,index){
@@ -660,7 +680,9 @@
               };
               metricCascaderArr.push(option);
             });
+
             this.metricCascaderList = metricCascaderArr;
+            console.log('---response200metricCascaderList---',this.metricCascaderList);
           }else {
             this.metricList = [];
             this.metricCascaderList = [];
@@ -692,6 +714,7 @@
 
           } else {
             this.$nextTick(() => {
+              console.log('1_+_+_+_+_+_+',JSON.stringify(elementInfo.elements[0]));
               this.$refs.chartTag[0].setMdata(elementInfo.elements[0]);
             });
           }
@@ -719,7 +742,7 @@
         this.chart.height = data.height+'';
         this.chart.type = data.type;
         this.chart.unit=data.unit;
-        this.getSuggestMetric();//获得指标列表
+        //this.getSuggestMetric();//获得指标列表
         // 指标
         this.elements = [];
         bus.chartAddInfo.metricTarget = [];
@@ -754,7 +777,7 @@
           this.productId = parseInt(this.$route.params.productId, 10);
         }
         */
-        this.getSuggestMetric();//this.getSuggestMetric(this.productId);
+        //this.getSuggestMetric();
       },
 
       /*metric部分相关方法--end*/
@@ -807,7 +830,7 @@
 
     },
     created() {
-
+      this.getSuggestMetric();
     },
     watch: {
       panelData: {
@@ -826,7 +849,14 @@
           }
         }
       }
-    }
+    },
+    beforeDestroy() {
+      if(this.$refs.chartTag){
+        this.$refs.chartTag.forEach((item, index) => {//循环指标列表
+          item.clearSelectedTagList();
+        });
+      }
+    },
   }
 </script>
 <style>

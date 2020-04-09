@@ -118,6 +118,11 @@ export const scrollBar = {
           el = el.querySelector(".xterm-viewport");
           !el && console.warn("未发现className为xterm-viewport的dom");
         }
+        if(arg==="metric-label-cascader"){
+          el = el.querySelector(".el-cascader__tags");
+          !el && console.warn("未发现className为el-cascader__tags的dom");
+        }
+
         el.classList.add("ps");
         el.addEventListener("ps-scroll-y", () =>
           el.classList.add("ps")
@@ -150,6 +155,9 @@ export const scrollBar = {
     }else if (arg === "xterm") {
       el = el.querySelector(".xterm-viewport");
       !el && console.warn("未发现className为xterm-viewport的dom");
+    }else if(arg==="metric-label-cascader"){
+      el = el.querySelector(".el-cascader__tags");
+      !el && console.warn("未发现className为el-cascader__tags的dom");
     }
     setTimeout(() => {
       el.classList.add("ps");
