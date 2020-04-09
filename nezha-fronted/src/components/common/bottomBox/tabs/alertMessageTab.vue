@@ -92,7 +92,7 @@
             <el-tag v-if="key != 'alertname' && key != 'severity'"
                     :key="key"
                     type="info"
-                    size="mini" v-for="(value, key) in scope.row.labels" :key="key" class="alert-message-tag">{{key}}：{{value}}</el-tag>
+                    size="mini" v-for="(value, key) in scope.row.labels" class="alert-message-tag">{{key}}：{{value}}</el-tag>
           </template>
           <div v-else-if="item.prop == 'state'">
             <span class="">

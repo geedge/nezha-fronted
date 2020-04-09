@@ -99,7 +99,6 @@
                         :key="key"
                         :class="{'link': key == 'asset' || key == 'endpoint' || key == 'project' || key == 'module' || key == 'datacenter'}"
                         v-if="key != 'alertname' && key != 'severity'"
-                        :key="key"
                         :type="tagType(key)"
                         size="mini" v-for="(value, key) in scope.row.labels" class="alert-message-tag">{{key}}：{{value}}</el-tag>
               </template>
