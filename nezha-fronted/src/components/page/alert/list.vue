@@ -196,7 +196,7 @@
 
         //导出相关
         importBox: {show: false, title:this.$t('overall.exportExcel')},
-        deleteBox: {show: false, ids: [], remark: ''},
+        deleteBox: {show: false, ids: "", remark: '', state: 2},
 
         tableId: 'alertListTable', //需要分页的table的id，用于记录每页数量
         showTopBtn: false,
@@ -398,6 +398,7 @@
         this.$put("alert/message", this.deleteBox).then(res => {
           if (res.code === 200) {
             this.$message({duration: 2000, type: 'success', message: this.$t("tip.deleteSuccess")});
+            this.deleteBox.show = false;
             this.getAlertList();
           } else {
             this.$message.error(res.msg);
@@ -405,10 +406,12 @@
         })
       },
       selectChange(s) {
-        this.deleteBox.ids = [];
+        let ids = [];
+        this.deleteBox.ids = "";
         s.forEach(item => {
-          this.deleteBox.ids.push(item.id);
+          ids.push(item.id);
         });
+        this.deleteBox.ids = ids.join(",");
       },
       showExportDialog() {
         this.importBox.show = true;
