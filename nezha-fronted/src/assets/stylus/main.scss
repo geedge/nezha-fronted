@@ -258,7 +258,7 @@ li{
   border-radius: 4px;
   display: inline-block;
 }
-.nz-btn-group-size-normal {
+.nz-btn-group-size-small {
   max-height: 24px;
 }
 .nz-btn-group .nz-btn:first-child:not(:last-child) {
@@ -268,7 +268,6 @@ li{
 .nz-btn-group .nz-btn:last-child:not(:first-child) {
   border-bottom-left-radius: 0;
   border-top-left-radius: 0;
-  border-left: 1px solid rgba(162,162,162,0.5);
 }
 .nz-btn-group .nz-btn:not(:first-child):not(:last-child) {
   border-radius: 0;
@@ -285,6 +284,16 @@ li{
 }
 .nz-btn-group .nz-input-group-middle input {
   border-radius: 0px !important;
+  border: none;
+  border-right: 1px solid rgba(162,162,162,0.50) !important;
+}
+.nz-btn-group .nz-input-group-left input {
+  border-radius: 4px 0px 0px 4px !important;
+  border: none;
+  border-right: 1px solid rgba(162,162,162,0.50) !important;
+}
+.nz-btn-group .nz-input-group-right input {
+  border-radius: 0px 4px 4px 0px !important;
   border: none;
 }
 /* end--按钮组件*/
@@ -306,14 +315,17 @@ li{
 .input-x-mini-24 .el-input__inner {
   height: 24px;
   line-height: 24px;
-  padding: 0 5px;
-  font-size: 12px;
+  padding: 0 10px;
+  font-size: 13px;
+}
+.input-x-mini-24 .el-input__icon {
+  line-height: 24px;
 }
 .input-x-mini-26 .el-input__inner {
   height: 26px;
   line-height: 26px;
   padding: 0 5px;
-  font-size: 12px;
+  font-size: 14px;
 }
 .el-textarea .el-input__count { /*防止字数限制提示信息遮挡内容和滚动条*/
   right: 20px;

@@ -56,7 +56,7 @@
                   <!---->
                   <div class="pop-item-wider " >
                     <!-- begin--搜索框-->
-                    <div class="nz-btn-group nz-btn-group-size-normal nz-btn-group-light endpoint-asset-search">
+                    <div class="nz-btn-group nz-btn-group-size-small nz-btn-group-light endpoint-asset-search">
                       <button type="button" class="nz-btn nz-btn-size-small nz-btn-style-light nz-btn-style-square nz-input-group-prepend" @click="assetSearch.dropdownShow = !assetSearch.dropdownShow">
                         <span class="endpoint-asset-label-txt">{{assetSearch.label}}</span>
                         <span>

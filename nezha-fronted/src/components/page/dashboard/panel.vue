@@ -49,7 +49,7 @@
             </div>
           </div>
 
-          <div class="nz-btn-group nz-btn-group-size-normal nz-btn-group-light margin-r-20">
+          <div class="nz-btn-group nz-btn-group-size-small nz-btn-group-light margin-r-20">
             <button style="border-right: 1px solid rgba(162,162,162,0.50);" type="button"
                     class="nz-btn nz-btn-size-normal nz-btn-style-light" @click="Refresh()">
               <i style="font-size: 12px" class="global-active-color nz-icon nz-icon-refresh"></i>

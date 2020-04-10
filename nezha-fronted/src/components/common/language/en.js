@@ -589,11 +589,12 @@ const en = {
       models:'Models',
       modelTip:'please select models',
       createMib:'Create Mib',
-      mibFile:'Mib File',
+      mibFiles:'Mib Files',
       uploadTip:'please upload mib file',
       requiredMibFile:'mib file is required',
       vendor:'Vendor',
       type:'Type',
+      mibBrowser: 'Mib browser',
     },
     system:{
       system:'System',
