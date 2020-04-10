@@ -572,8 +572,12 @@ const en = {
       username: 'User',
       operation: 'Operation',
       type: 'Type',
-      createDate: 'CreateDate',
-      ip: "IP"
+      createDate: 'Date',
+      ip: "IP",
+      userId: "UserId",
+      operaId: "OperaId",
+      time: "time(ms)",
+      params: "Params"
     },
     mib:{
       mib:'SNMP mib',

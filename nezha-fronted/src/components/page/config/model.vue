@@ -27,7 +27,7 @@
         <div class="sidebar-info-item" @click="jumpTo('terminallog')" id="modeel-jump-terminallog">
           {{$t('config.terminallog.terminallog')}}
         </div>
-        <div class="sidebar-info-item" @click="jumpTo('operationlog')" id="account-jump-operation">
+        <div class="sidebar-info-item" @click="jumpTo('operationlog')" id="model-jump-operation">
           {{$t('config.operationlog.operationlog')}}
         </div>
       </div>
