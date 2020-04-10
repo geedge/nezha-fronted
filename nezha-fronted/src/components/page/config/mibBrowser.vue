@@ -220,7 +220,7 @@
   .operation {
     width: 90px;
   }
-  .oid-input {
+  .oid-input.top-tool-search {
     width: 500px;
   }
 
