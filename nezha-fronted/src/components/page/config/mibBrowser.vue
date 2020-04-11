@@ -19,106 +19,203 @@
         <div class="nz-btn-group nz-btn-group-size-normal nz-btn-group-light margin-l-20">
           <el-select class="nz-input-group-left input-x-mini-24 operation" v-model="searchParam.operation">
             <el-option v-for="item in operationData" :key="item" :value="item"></el-option>
-          </el-select><button
-          @click="advancedShow = true" class="nz-btn nz-btn-size-normal nz-btn-style-light" id="browser-advanced"><i class="el-icon-more"></i></button><button
-          @click="search" class="nz-btn nz-btn-size-normal nz-btn-style-light" id="browser-go">Go</button>
+          </el-select><el-popover trigger="click" placement="bottom">
+            <div class="mib-browser-ad-search">
+              <el-row class="mib-browser-ad-search-item">
+                <el-col :span="6"><div class="mib-browser-ad-search-label">{{$t("project.endpoint.port")}}</div></el-col>
+                <el-col :span="17">
+                  <el-input class="input-x-mini-24" v-model="searchParam.port"></el-input>
+                </el-col>
+              </el-row>
+              <el-row class="mib-browser-ad-search-item">
+                <el-col :span="6"><div class="mib-browser-ad-search-label">{{$t('project.module.community')}}</div></el-col>
+                <el-col :span="17">
+                  <el-input class="input-x-mini-24" v-model="searchParam.community"></el-input>
+                </el-col>
+              </el-row>
+              <el-row class="mib-browser-ad-search-item">
+                <el-col :span="6"><div class="mib-browser-ad-search-label">{{$t('project.module.version')}}</div></el-col>
+                <el-col :span="17">
+                  <el-radio-group v-model.number="searchParam.version">
+                    <el-radio-button :label="2"></el-radio-button>
+                    <el-radio-button :label="3"></el-radio-button>
+                  </el-radio-group>
+                </el-col>
+              </el-row>
+              <!--SNMP V3 setting-->
+              <template v-if="searchParam.version == 3">
+                <el-row class="mib-browser-ad-search-item">
+                  <el-col :span="6">
+                    <div class="mib-browser-ad-search-label">{{$t('login.username')}}</div>
+                  </el-col>
+                  <el-col :span="17">
+                    <el-input class="input-x-mini-24" v-model.trim="searchParam.auth.username"></el-input>
+                  </el-col>
+                </el-row>
+
+                <el-row class="mib-browser-ad-search-item">
+                  <el-col :span="6">
+                    <div class="mib-browser-ad-search-label">{{$t('project.module.securityLevel')}}</div>
+                  </el-col>
+                  <el-col :span="17">
+                    <el-radio-group v-model="searchParam.auth.securityLevel" size="small" @change="updateScrollbar">
+                      <el-radio-button label="noAuthNoPriv"></el-radio-button>
+                      <el-radio-button label="authNoPriv"></el-radio-button>
+                      <el-radio-button label="authPriv"></el-radio-button>
+                    </el-radio-group>
+                  </el-col>
+                </el-row>
+
+                <el-row class="mib-browser-ad-search-item" v-if="searchParam.auth.securityLevel == 'authNoPriv' || searchParam.auth.securityLevel == 'authPriv'">
+                  <el-col :span="6">
+                    <div class="mib-browser-ad-search-label">{{$t('login.password')}}</div>
+                  </el-col>
+                  <el-col :span="17">
+                    <el-input class="input-x-mini-24" v-model.trim="searchParam.auth.password"></el-input>
+                  </el-col>
+                </el-row>
+
+                <el-row class="mib-browser-ad-search-item" v-if="searchParam.auth.securityLevel == 'authNoPriv' || searchParam.auth.securityLevel == 'authPriv'">
+                  <el-col :span="6">
+                    <div class="mib-browser-ad-search-label">{{$t('project.module.authProtocol')}}</div>
+                  </el-col>
+                  <el-col :span="17">
+                    <el-radio-group v-model="searchParam.auth.authProtocol">
+                      <el-radio-button label="MD5"></el-radio-button>
+                      <el-radio-button label="SHA"></el-radio-button>
+                    </el-radio-group>
+                  </el-col>
+                </el-row>
+
+                <el-row class="mib-browser-ad-search-item" v-if="searchParam.auth.securityLevel == 'authPriv'">
+                  <el-col :span="6">
+                    <div class="mib-browser-ad-search-label">{{$t('project.module.privProtocol')}}</div>
+                  </el-col>
+                  <el-col :span="17">
+                    <el-radio-group v-model="searchParam.auth.privProtocol">
+                      <el-radio-button label="DES"></el-radio-button>
+                      <el-radio-button label="AES"></el-radio-button>
+                    </el-radio-group>
+                  </el-col>
+                </el-row>
+
+                <el-row class="mib-browser-ad-search-item" v-if="searchParam.auth.securityLevel == 'authPriv'">
+                  <el-col :span="6">
+                    <div class="mib-browser-ad-search-label">{{$t('project.module.privPassword')}}</div>
+                  </el-col>
+                  <el-col :span="17">
+                    <el-input class="input-x-mini-24" v-model.trim="searchParam.auth.privPassword"></el-input>
+                  </el-col>
+                </el-row>
+              </template>
+
+            </div>
+            <button slot="reference" @click="advancedShow = true" class="nz-btn nz-btn-size-normal nz-btn-style-light" id="browser-advanced">
+              <i class="el-icon-more"></i>
+            </button>
+          </el-popover><button
+            @click="search" class="nz-btn nz-btn-size-normal nz-btn-style-light" id="browser-go">Go
+          </button>
         </div>
       </div>
     </div>
     <div class="mib-browser-box">
-      <el-row style="height: 100%;">
-        <!--左半部分-->
-        <el-col :span="7" class="mib-browser-left">
-          <!--tree-->
-          <el-scrollbar class="mib-browser-tree" ref="scrollbar">
-            <el-tree
-              ref="walkTree"
-              node-key="objectID"
-              :props="{label: 'name', children: 'subTree', disabled: disabledNode}"
-              :data="walkData"
-              :expand-on-click-node="false"
-              check-on-click-node
-              check-strictly
-              @node-click="showDetail"
-            >
-              <div slot-scope="{node, data}" class="walk-tree-item">
-                <span v-if="!data.type"><i class="el-icon-reading"></i></span>
-                <span v-else>
-                  <i v-if="data.type.toUpperCase() == 'IDENTIFIER'" class="el-icon-folder-opened"></i>
-                  <i v-if="data.type.toUpperCase() == 'OBJECT' && data.subTree.length > 0" class="el-icon-folder-opened"></i>
-                  <i v-if="data.type.toUpperCase() == 'OBJECT' && data.subTree.length == 0" class="nz-icon nz-icon-leaf"></i>
-                  <i v-if="data.type.toUpperCase() == 'ENTRY'" class="nz-icon nz-icon-table-edit"></i>
-                  <i v-if="data.type.toUpperCase() == 'TABLE'" class="nz-icon nz-icon-table"></i>
-                </span>
-                {{data.name}}
-              </div>
-            </el-tree>
-          </el-scrollbar>
-          <!--detail-->
-          <div class="mib-browser-detail">
-            <el-row class="mib-browser-detail-row">
-              <el-col :span="5">Name</el-col>
-              <el-col :span="19">{{currentWalk.name}}</el-col>
-            </el-row>
-            <el-row class="mib-browser-detail-row">
-              <el-col :span="5">OID</el-col>
-              <el-col :span="19">{{currentWalk.objectID}}</el-col>
-            </el-row>
-            <el-row class="mib-browser-detail-row">
-              <el-col :span="5">MIB</el-col>
-              <el-col :span="19">{{mibName(currentWalk.objectID)}}</el-col>
-            </el-row>
-            <el-row class="mib-browser-detail-row">
-              <el-col :span="5">Syntax</el-col>
-              <el-col :span="19">{{currentWalk.syntax}}</el-col>
-            </el-row>
-            <el-row class="mib-browser-detail-row">
-              <el-col :span="5">Access</el-col>
-              <el-col :span="19">{{currentWalk.access}}</el-col>
-            </el-row>
-            <el-row class="mib-browser-detail-row">
-              <el-col :span="5">Status</el-col>
-              <el-col :span="19">{{currentWalk.status}}</el-col>
-            </el-row>
-            <el-row class="mib-browser-detail-row">
-              <el-col :span="5">Indexes</el-col>
-              <el-col :span="19">{{currentWalk.index}}</el-col>
-            </el-row>
-            <el-row class="mib-browser-detail-row">
-              <el-col :span="5">Description</el-col>
-              <el-col :span="19">
-                <el-scrollbar style="height: 100%;">
-                  <div class="mib-browser-detail-description">{{currentWalk.description}}</div>
-                </el-scrollbar>
-              </el-col>
-            </el-row>
+      <!--左半部分-->
+      <div class="mib-browser-left">
+        <div class="mib-browser-tree-title">
+          <span>SNMP MIBs</span>
+          <span class="mib-browser-table-op"><i class="nz-icon nz-icon-funnel"></i></span>
+        </div>
+        <!--tree-->
+        <el-scrollbar class="mib-browser-tree" ref="treeScrollbar">
+          <el-tree
+            ref="walkTree"
+            highlight-current
+            node-key="objectID"
+            :props="{label: 'name', children: 'subTree'}"
+            :data="walkData"
+            :expand-on-click-node="false"
+            check-on-click-node
+            check-strictly
+            @node-click="showDetail"
+          >
+            <div slot-scope="{node, data}" class="walk-tree-item">
+              <span v-if="!data.type"><i class="el-icon-reading"></i></span>
+              <span v-else>
+                <i v-if="data.type.toUpperCase() == 'IDENTIFIER'" class="el-icon-folder-opened"></i>
+                <i v-if="data.type.toUpperCase() == 'OBJECT' && data.subTree.length > 0" class="el-icon-folder-opened"></i>
+                <i v-if="data.type.toUpperCase() == 'OBJECT' && data.subTree.length == 0" class="nz-icon nz-icon-leaf"></i>
+                <i v-if="data.type.toUpperCase() == 'ENTRY'" class="nz-icon nz-icon-table-edit"></i>
+                <i v-if="data.type.toUpperCase() == 'TABLE'" class="nz-icon nz-icon-table"></i>
+              </span>
+              {{data.name}}
+            </div>
+          </el-tree>
+        </el-scrollbar>
+        <!--拖拽区-->
+        <div class="tree-detail-resize" @mousedown="treeDetailResize"></div>
+        <!--detail-->
+        <el-scrollbar class="mib-browser-detail" ref="detailScrollbar">
+          <div class="mib-browser-detail-row">
+            <div>Name</div>
+            <div>{{currentWalk.name}}</div>
           </div>
-        </el-col>
-        <!--右半部分-->
-        <el-col :span="17" class="mib-browser-right">
-          <div class="mib-browser-table-title">
-            <span>Result table</span>
-            <span>
-              <span class="mib-browser-table-op" :title="$t('overall.exportExcel')"><i class="el-icon-download"></i></span>
-              <span @click="clearResult" class="mib-browser-table-op" :title="$t('overall.clear')"><i class="el-icon-close"></i></span>
-            </span>
+          <div class="mib-browser-detail-row">
+            <div>OID</div>
+            <div>{{currentWalk.objectID}}</div>
           </div>
-          <div class="mib-browser-table">
-            <el-row class="mib-browser-table-header">
-              <el-col :span="8">Name/OID</el-col>
-              <el-col :span="9">Value</el-col>
-              <el-col :span="3">Type</el-col>
-              <el-col :span="4">IP:Port</el-col>
-            </el-row>
-            <el-row class="mib-browser-table-tr" v-for="item, index in resultData" :key="index">
-              <el-col :span="8">{{item.name ? item.name : item.oid}}</el-col>
-              <el-col :span="9">{{item.value}}</el-col>
-              <el-col :span="3">{{item.type}}</el-col>
-              <el-col :span="4">{{item.ip + (item.port ? ":" + item.port : "")}}</el-col>
-            </el-row>
+          <div class="mib-browser-detail-row">
+            <div>MIB</div>
+            <div>{{mibName(currentWalk.objectID)}}</div>
           </div>
-        </el-col>
-      </el-row>
+          <div class="mib-browser-detail-row">
+            <div>Syntax</div>
+            <div>{{currentWalk.syntax}}</div>
+          </div>
+          <div class="mib-browser-detail-row">
+            <div>Access</div>
+            <div>{{currentWalk.access}}</div>
+          </div>
+          <div class="mib-browser-detail-row">
+            <div>Status</div>
+            <div>{{currentWalk.status}}</div>
+          </div>
+          <div class="mib-browser-detail-row">
+            <div>Indexes</div>
+            <div>{{currentWalk.index && currentWalk.index.length > 0 ? currentWalk.index : ""}}</div>
+          </div>
+          <div class="mib-browser-detail-row">
+            <div>Description</div>
+            <div>{{currentWalk.description}}</div>
+          </div>
+        </el-scrollbar>
+      </div>
+      <!--拖拽区-->
+      <div style="width: 1px; border: 1px solid #d8d8d8; background-color: #fcfcfc; cursor: ew-resize; height: 100%;border-top: none;border-bottom: none;"></div>
+      <!--右半部分-->
+      <div class="mib-browser-right">
+        <div class="mib-browser-table-title">
+          <span>Result table</span>
+          <span>
+            <span class="mib-browser-table-op" :title="$t('overall.exportExcel')"><i class="el-icon-download"></i></span>
+            <span @click="clearResult" class="mib-browser-table-op" :title="$t('overall.clear')"><i class="el-icon-close"></i></span>
+          </span>
+        </div>
+        <div class="mib-browser-table">
+          <el-row class="mib-browser-table-header">
+            <el-col :span="8">Name/OID</el-col>
+            <el-col :span="9">Value</el-col>
+            <el-col :span="3">Type</el-col>
+            <el-col :span="4">IP:Port</el-col>
+          </el-row>
+          <el-row class="mib-browser-table-tr" v-for="item, index in resultData" :key="index">
+            <el-col :span="8">{{item.name ? item.name : item.oid}}</el-col>
+            <el-col :span="9">{{item.value}}</el-col>
+            <el-col :span="3">{{item.type}}</el-col>
+            <el-col :span="4">{{item.ip + (item.port ? ":" + item.port : "")}}</el-col>
+          </el-row>
+        </div>
+      </div>
     </div>
   </span>
 </template>
@@ -135,7 +232,17 @@
           host: '',
           port: 161,
           oid: '',
-          operation: 'get'
+          operation: 'get',
+          version: 2,
+          community: 'public',
+          auth: {
+            username: '',
+            password: '',
+            securityLevel: '',
+            authProtocol: '',
+            privProtocol: '',
+            privPassword: ''
+          }
         },
         operationData: ['get', 'walk', 'getnext', 'set'],
         advancedShow: false,
@@ -158,13 +265,13 @@
       },
       showDetail(data, node) {
         this.currentWalk = data;
+        this.searchParam.oid = data.objectID;
+        this.$nextTick(() => {
+          this.$refs.detailScrollbar.update();
+        });
       },
-      disabledNode(data) {
-        if (data.objectID) {
-          return false;
-        }
-        return true;
-      },
+
+      /*根据oid获取对应的根mib名称*/
       getMibName(oid) {
         let node = this.$refs.walkTree.getNode(oid);
         let mibName = getMibName(node);
@@ -183,6 +290,8 @@
           return "";
         }
       },
+
+      /*获取tree的数据*/
       getWalkData() {
         this.$get('mib/tree', {pageSize: -1, pageNo: 1}).then(response => {
           if (response.code === 200) {
@@ -201,8 +310,15 @@
           }
         });
       },
+
+      /*清空result table*/
       clearResult() {
         this.resultData = [];
+      },
+
+      /*左侧上下拖动*/
+      treeDetailResize() {
+
       }
     },
     mounted() {
@@ -212,6 +328,19 @@
 </script>
 
 <style lang="scss">
+.mib-browser-ad-search-item {
+  margin-bottom: 10px;
+}
+.mib-browser-ad-search .el-radio-group .el-radio-button__inner {
+  height: 24px;
+  line-height: 0;
+}
+.mib-browser-ad-search-label {
+  line-height: 24px;
+}
+.mib-browser-ad-search {
+  width: 400px;
+}
 .mib-browser {
   .top-tool-search .el-input__inner {
     height: 25px;
@@ -219,6 +348,10 @@
   }
   .operation {
     width: 90px;
+  }
+  #browser-advanced {
+    border-radius: 0;
+    border-right: 1px solid rgba(162,162,162,0.50);
   }
   .oid-input.top-tool-search {
     width: 500px;
@@ -229,56 +362,87 @@
     border-radius: 4px;
     height: calc(100% - 55px);
     width: 100%;
+    display: flex;
   }
 
   .mib-browser-left {
-    border-right: 2px solid #D8D8D8;
     height: 100%;
+    width: 28%;
   }
   .mib-browser-tree {
-    height: calc(66% - 1px);
+    height: calc(69% - 39px);
     background-color: white;
     border-radius: 4px 0 0 0;
-    border-bottom: 2px solid #dcdcdc;
     font-size: 14px;
+    padding-bottom: 5px;
+    width: 100%;
   }
   .mib-browser-detail {
-    height: 34%;
+    height: 31%;
+    width: 100%;
+  }
+  .mib-browser-detail .el-scrollbar__wrap .el-scrollbar__view, .mib-browser-detail .el-scrollbar__wrap {
+    height: 100%;
+  }
+  .tree-detail-resize {
+    height: 1px;
+    width: 100%;
+    background-color: #fcfcfc;
+    cursor: ns-resize;
+    border: 1px solid #d8d8d8;
+    border-left: none;
+    border-right: none;
   }
   .mib-browser-detail-row {
     line-height: 25px;
     background-color: white;
     border-bottom: 1px solid #D8D8D8;
     font-size: 14px;
+    display: flex;
   }
-  .mib-browser-detail-row .el-col:first-of-type {
+  .mib-browser-detail-row:last-of-type {
+    border-bottom: none;
+    position: relative;
+  }
+  .mib-browser-detail-row:last-of-type div:last-of-type {
+    position: absolute;
+    left: calc(25% + 2px);
+    width: calc(75% - 8px);
+    min-height: 100%;
+  }
+  /*第一列宽25%*/
+  .mib-browser-detail-row>div:first-of-type {
     color: #666;
+    width: 25%;
+  }
+  /*第一列宽75%*/
+  .mib-browser-detail-row>div:last-of-type {
+    width: 75%;
+    border-left: 1px solid #D8D8D8;
   }
   .mib-browser-detail-row:not(:last-of-type) {
     border-bottom: 1px solid #D8D8D8;
     height: 25px;
   }
   .mib-browser-detail-row:last-of-type {
-    height: calc(100% - 175px);
+    min-height: calc(100% - 182px);
   }
-  .mib-browser-detail-row:last-of-type .el-col {
+/*  .mib-browser-detail-row:last-of-type>div {
     height: 100%;
-  }
-  .mib-browser-detail-row .el-col {
-    padding: 0 5px
-  }
-  .mib-browser-detail-row .el-col:first-of-type {
-    border-right: 1px solid #D8D8D8;
-  }
-  .mib-browser-detail-row:last-of-type .el-col:last-of-type {
-    padding-right: 0;
+  }*/
+  .mib-browser-detail-row>div {
+    padding-left: 5px;
   }
   .mib-browser-detail-description {
     padding: 0 14px 0 0;
   }
-  .mib-browser-table-title {
-    height: 32px;
-    line-height: 32px;
+  .mib-browser-right {
+    width: calc(72% - 3px);
+  }
+  .mib-browser-table-title, .mib-browser-tree-title {
+    height: 30px;
+    line-height: 30px;
+    color: #333;
     font-size: 16px;
     border-bottom: 1px solid #D8D8D8;
     padding: 0 5px 0 8px;
@@ -307,6 +471,11 @@
     padding: 0 4px;
     font-size: 14px;
     background-color: white;
+  }
+  .el-tree--highlight-current .el-tree-node.is-current>.el-tree-node__content {
+    background-color: #F5F7FA;
+    font-weight: bold;
+    color: #ee9d3f;
   }
 }
 </style>
