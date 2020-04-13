@@ -25,7 +25,7 @@
             <ul v-if="showCabinetInfos&& showCabinetInfos.length>0">
               <li v-for="(item,index) in showCabinetInfos" :key="item.id+'-'+index" @click="loadCabinetUInfos(item)">
                 <div class="container-item-content">
-                  <div class="container-item-content_label" :class="{'selected':selectedData.cabinet&&selectedData.cabinet.id == item.id}">{{item.name}}</div>
+                  <div :title="item.name" class="container-item-content_label" :class="{'selected':selectedData.cabinet&&selectedData.cabinet.id == item.id}">{{item.name}}</div>
                   <div><i class="el-icon-arrow-right"></i></div>
                 </div>
               </li>
@@ -91,6 +91,16 @@
       toggleDropdown:function(){
         if(this.disabled == false){
           this.dropDownVisible = !this.dropDownVisible;
+          if(this.dropDownVisible){
+            let $temp=this;
+            document.addEventListener('click',function(e){
+              e.stopPropagation ? e.stopPropagation() : e.cancelBubble = true;
+              $temp.dropDownVisible=false;
+            },false)
+            this.$el.addEventListener('click',function(e){
+              e.stopPropagation ? e.stopPropagation() : e.cancelBubble = true;
+            },false)
+          }
         }
       },
       queryIdcInfos:function(){
@@ -169,6 +179,7 @@
                 })
                 this.oldUChecked=this.uChecked
                 this.selectedData.u=this.initData.u;
+                this.$emit('change',this.selectedData);
               }
               this.uInfos.set(cabinetUKey,us);
             }else{
@@ -355,7 +366,6 @@
       }
     },
     mounted() {
-
     },
     computed:{
       inputShowInfo:function(){
