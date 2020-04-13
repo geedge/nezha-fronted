@@ -70,7 +70,7 @@
                     <div class="mib-browser-ad-search-label">{{$t('project.module.securityLevel')}}</div>
                   </el-col>
                   <el-col :span="17">
-                    <el-radio-group v-model="searchParamPop.auth.securityLevel" size="small" @change="updateScrollbar">
+                    <el-radio-group v-model="searchParamPop.auth.securityLevel" size="small">
                       <el-radio-button label="noAuthNoPriv"></el-radio-button>
                       <el-radio-button label="authNoPriv"></el-radio-button>
                       <el-radio-button label="authPriv"></el-radio-button>
@@ -551,7 +551,7 @@
           )
         } catch (e) {}
         return out
-      }
+      },
     },
     mounted() {
       this.getWalkData();
