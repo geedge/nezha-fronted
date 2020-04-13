@@ -71,7 +71,8 @@ const en = {
       failedDetail:'Failed Detail'
     },
     reset:'Reset',
-    submit:'Submit'
+    submit:'Submit',
+    noData:'No data',
   },
   pageSize: '/page',
   webshell:{

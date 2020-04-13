@@ -140,6 +140,9 @@
           <div class="right-box-sub-title">{{$t('asset.createAssetTab.location')}}</div>
           <div class="line-100 right-box-line"></div>
           <!------------------------------------------IDC---------------------------------------------->
+          <el-form-item>
+<!--            <location-cascader :default-model-u-size="temp"></location-cascader>-->
+          </el-form-item>
           <el-form-item :label="$t('asset.createAssetTab.dcName')" class="right-box-form-content" prop="idcId">
             <template v-if="!tabView">
 <!--              <el-select popper-class="asset-dropdown" size="mini" v-model="assetData.idcId" clearable @change="getSingleIDCData" class="right-box-row-with-btn" placeholder="">-->
@@ -170,7 +173,6 @@
             <span>{{idcSelectedData.tel}}</span>
           </el-form-item>
           <el-divider></el-divider>
-
 
           <!------------------------------------------cabinet---------------------------------------------->
           <el-form-item :label="$t('asset.createAssetTab.cabinet')" class="right-box-form-content">
@@ -205,6 +207,7 @@
             </template>
             <span v-if="tabView">{{assetViewData.cabinetName}}</span>
           </el-form-item>
+
           <el-form-item :label="$t('asset.editAssetTab.uSize')">
             <span>{{cabinetSelectedData.uSize}}</span>
           </el-form-item>
@@ -248,14 +251,17 @@
   import accountConfig from '../../page/asset/accountConfig';
   import {host} from '../js/validate';
   import {port} from '../js/validate'
+  import locationCascader from "./locationCascader";
   export default {
     name: "assetEditUnit",
     props: ["editUnitShow", "editUnitId"],
     components:{
       'account-config-box': accountConfig,
+      'location-cascader':locationCascader,
     },
     data() {
       return {
+        temp:3,
         visible: '',
         vendorModelData: '',
         assetData: {

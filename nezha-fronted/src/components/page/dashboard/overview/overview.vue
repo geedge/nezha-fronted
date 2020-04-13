@@ -808,7 +808,11 @@
                   }else{
                     areaName=areaInfo.name;
                   }
-                  seriesDatas.push({name:areaName,value:[areaInfo.longitude,areaInfo.latitude,dcStat]})
+                  seriesDatas.push({
+                    name:areaName,
+                    value:[areaInfo.longitude,areaInfo.latitude,dcStat],
+                    // symbolSize:5,
+                  })
                 }
               }
             }
@@ -841,7 +845,7 @@
         let dcStat=params.data.value[2];
         let tooltip=`
             <div class="tooltip">
-                <div>${dcStat.name}</div>
+                <div style="margin-left: 12px">${dcStat.name}</div>
                 <div class="flex-box">
                    <div style="width: 60%;">
                         <table  style="width: 100%;" class="tooltip-table">
