@@ -399,7 +399,7 @@
           this.resultData = [];
           this.loading = false;
           if (response.code === 200) {
-            this.resultData = response.data;
+            this.resultData = response.data.list;
             if (this.searchParam.operation == 'set') {
               this.$message({duration: 2000, type: 'success', message: this.$t("tip.success")});
             }
