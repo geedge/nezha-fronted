@@ -782,10 +782,8 @@
 
       /*metric部分相关方法--end*/
       querySearch(queryString, cb) {
-        var suggestions = this.heightSuggestions;
-        // var results = queryString ? suggestions.filter(this.createFilter(queryString)) : suggestions;
-        var results=queryString&&(suggestions.includes(queryString)||suggestions.filter(this.createFilter(queryString)).length>0)?suggestions:[];
-        // 调用 callback 返回建议列表的数据
+        let suggestions = this.heightSuggestions;
+        let results=queryString&&(suggestions.includes(queryString)||suggestions.filter(this.createFilter(queryString)).length>0)?suggestions:[];
         cb(results);
       },
       createFilter(queryString) {

@@ -109,6 +109,7 @@ li{
   overflow: hidden;
   display: inline-block;
   width: 100%;
+  white-space: nowrap;
 }
 .global-active-color {
   color: $global-text-color-active;

@@ -65,33 +65,33 @@
                 <div style="height: 100%">
                   <el-scrollbar style="height: 100%">
                     <div v-for="(n,i) in scope.row['modelsDetail']" :key="n.name+'-'+n.id+'-'+i" class="detail-item-content">
-                    <el-popover trigger="hover" placement="top" >
-                      <div>
+                      <el-popover trigger="hover" placement="top" >
                         <div>
-                          <span>{{$t('overall.name')}}:</span>
-                          <span>{{n.name}}</span>
+                          <div>
+                            <span>{{$t('overall.name')}}:</span>
+                            <span>{{n.name}}</span>
+                          </div>
+                          <div>
+                            <span>{{$t('config.mib.vendor')}}:</span>
+                            <span>{{n.vendor}}</span>
+                          </div>
+                          <div>
+                            <span>{{$t('config.mib.type')}}:</span>
+                            <span>{{n.type}}</span>
+                          </div>
                         </div>
-                        <div>
-                          <span>{{$t('config.mib.vendor')}}:</span>
-                          <span>{{n.vendor}}</span>
-                        </div>
-                        <div>
-                          <span>{{$t('config.mib.type')}}:</span>
-                          <span>{{n.type}}</span>
-                        </div>
-                      </div>
-                      <template slot="reference">
-                        <div  class="detail-item-content" v-if="i < scope.row['modelsDetail'].length-1">{{n.name}},</div>
-                        <div  class="detail-item-content" v-else>{{n.name}}</div>
-                      </template>
-                    </el-popover>
-                  </div>
+                        <template slot="reference">
+                          <div  class="detail-item-content" v-if="i < scope.row['modelsDetail'].length-1">{{n.name}},</div>
+                          <div  class="detail-item-content" v-else>{{n.name}}</div>
+                        </template>
+                      </el-popover>
+                    </div>
                   </el-scrollbar>
                 </div>
               </template>
               <div v-else-if="item.prop == 'option'" class="content-right-options">
-  <!--              <span :title="$t('overall.view')" @click="detail(scope.row)" class="content-right-option" :id="'mib-detail-'+scope.row.id"><i class="nz-icon nz-icon-view"></i></span>-->
-  <!--              &nbsp;-->
+                <!--              <span :title="$t('overall.view')" @click="detail(scope.row)" class="content-right-option" :id="'mib-detail-'+scope.row.id"><i class="nz-icon nz-icon-view"></i></span>-->
+                <!--              &nbsp;-->
                 <span :title="$t('overall.edit')" @click="toEdit(scope.row)" class="content-right-option" :id="'mib-edit-'+scope.row.id"><i class="nz-icon nz-icon-edit"></i></span>
                 &nbsp;
                 <span :title="$t('overall.delete')" @click="del(scope.row)" class="content-right-option" :id="'mib-del-'+scope.row.id"><i class="el-icon-delete"></i></span>
@@ -111,7 +111,7 @@
         <Pagination :tableId="tableId" :pageObj="pageObj" @pageNo='pageNo' @pageSize='pageSize' ref="Pagination"></Pagination>
         <button class="to-top" v-show="showTopBtn" @click="$toTop"><i class="nz-icon nz-icon-top"></i></button>
       </template>
-      <mib-browser :showTab="showTab" v-show="showTab == 'browser'" @toFileTab="showTab = 'file'"></mib-browser>
+      <mib-browser :showTab="showTab" v-if="showTab == 'browser'" @toFileTab="showTab = 'file'"></mib-browser>
     </div>
 
     <element-set

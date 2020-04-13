@@ -284,6 +284,7 @@ const en = {
     assetConfirmDelete: 'Related endpoints and alerts will be removed, are you sure you want to delete this asset?',//Related endpoints and alerts will be removed, are you sure you want to delete this asset?
     yes: 'Yes', //"是"
     no: "No",//No
+    success: "Success",
     deleteSuccess: 'Delete success',//"删除成功"
     saveSuccess: 'Save success', //"保存成功"
     coverSuccess: 'Override success',//'覆盖成功'

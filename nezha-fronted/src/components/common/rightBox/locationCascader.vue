@@ -30,7 +30,7 @@
         <div class="container-item" v-show="isShowCabinetU" style="border-right: unset">
           <el-scrollbar style="height: 100%">
             <el-checkbox-group v-model="uChecked" v-if="refresh" @change="uChange">
-              <el-checkbox v-for="(item,index) in showUInfos " :label="item.label" :value="item.value" :disabled="item.occupy==true" :checked="item.occupy==true||item.checked==true" :ref="'u-'+selectedData.idc.id+'-'+selectedData.cabinet.id+'-'+item.value" style="width: 50%"></el-checkbox>
+              <el-checkbox v-for="(item,index) in showUInfos" :key="index" :label="item.label" :value="item.value" :disabled="item.occupy==true" :checked="item.occupy==true||item.checked==true" :ref="'u-'+selectedData.idc.id+'-'+selectedData.cabinet.id+'-'+item.value" style="width: 50%"></el-checkbox>
             </el-checkbox-group>
           </el-scrollbar>
         </div>
