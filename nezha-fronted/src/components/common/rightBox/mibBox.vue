@@ -27,7 +27,7 @@
             <div v-if="!rightBox.isEdit" class="right-box-form-content-txt">{{currentMib.name}}</div>
           </el-form-item>-->
 
-          <el-form-item :label='$t("config.mib.models")' prop="models" :rules="[{validator:checkModels,trigger:'change'}]" class="add-required">
+          <el-form-item :label='$t("config.mib.models")' prop="models" :rules="[{validator:checkModels,trigger:'change'}]" >
             <el-cascader
               v-if="rightBox.isEdit"
               :options="modelOptions"
@@ -133,7 +133,8 @@
         checkModels:(rule, value, callback)=>{
           setTimeout(() => {
             if(!$temp.currentMib.models||$temp.currentMib.models == ''){
-              return callback(new Error($temp.$t('validate.required')))
+              // return callback(new Error($temp.$t('validate.required')))
+              return callback();
             }else{
               return callback();
             }

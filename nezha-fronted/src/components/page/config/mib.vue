@@ -391,8 +391,8 @@
     margin:2px 0 !important;
   }
   .mib-table td .cell{
-    min-height: 60px !important;
-    padding-bottom: 3px;
+    /*min-height: 60px !important;*/
+    /*padding-bottom: 3px;*/
   }
   .mib-table td .cell .detail-item-content{
     height: 20px;
@@ -401,7 +401,6 @@
   }
   .mib-table.el-table td .cell{
     height: 20px !important;
-    line-height: 20px !important;
   }
 
 </style>

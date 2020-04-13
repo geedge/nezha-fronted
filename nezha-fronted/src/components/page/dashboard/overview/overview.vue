@@ -795,6 +795,17 @@
               dcStats=result[1].data.data.dcStat;
             }
             if(idcInfos && dcStats){
+              let dcStatsCopy=Object.assign([],dcStats);
+              dcStatsCopy.sort((a,b)=>{
+                return a.assetTotal - b.assetTotal;
+              });
+              let bigScatter=25;
+              let mediumScatter=20;
+              let smallScatter=15;
+              let maxAssetTotal=dcStatsCopy[dcStatsCopy.length-1].assetTotal;
+
+              let bigBoundary=Number.parseInt(maxAssetTotal/3*2);
+              let mediumBoundary=Number.parseInt(maxAssetTotal/3);
               for(let dcStat of dcStats){
                 let dcId=dcStat.id;
                 let dcInfo=idcInfos.find((item)=>{
@@ -808,10 +819,20 @@
                   }else{
                     areaName=areaInfo.name;
                   }
+                  let symbolSize=mediumScatter;
+                  if(dcStat.assetTotal>=bigBoundary){
+                    symbolSize=bigScatter;
+                  }else if(dcStat.assetTotal<bigBoundary && dcStat.assetTotal>= mediumBoundary){
+                    symbolSize=mediumScatter;
+                  }else{
+                    symbolSize=smallScatter;
+                  }
+
+                  console.log(dcStat.name+'-->'+ symbolSize)
                   seriesDatas.push({
                     name:areaName,
                     value:[areaInfo.longitude,areaInfo.latitude,dcStat],
-                    // symbolSize:5,
+                    symbolSize:symbolSize,
                   })
                 }
               }

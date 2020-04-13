@@ -1,33 +1,39 @@
 <template>
   <div class="location" >
     <div @click="toggleDropdown">
-      <el-input :placeholder="$t('overall.select')" size="small" style="position: relative" >
+      <el-input :placeholder="$t('overall.select')" size="small" style="position: relative" :value="inputShowInfo"  :readonly="true" :disabled="disabled">
         <i slot="suffix" class="el-select__caret el-input__icon el-icon-arrow-down" style="font-size: 14px" :class="{'reverse':dropDownVisible == true}"></i>
       </el-input>
     </div>
-    <div class="dropdown" :class="{'dropdown-active':dropDownVisible == true}">
+    <div class="dropdown" :class="{'dropdown-active':dropDownVisible == true}" >
       <div class="container">
         <div class="container-item">
           <el-scrollbar style="height: 100%;">
             <ul v-if="idcInfos&& idcInfos.length>0">
               <li v-for="(item,index) in idcInfos" :key="item.id+'-'+index" @click="loadCabinetInfos(item)">
-                <div class="container-item-content"><div class="container-item-content_label" :class="{'selected':selectedData.idc&&selectedData.idc.id == item.id}">{{item.name}}</div><div><i class="el-icon-arrow-right"></i></div></div>
+                <div class="container-item-content">
+                  <div :title="item.name" class="container-item-content_label" :class="{'selected':selectedData.idc&&selectedData.idc.id == item.id}">{{item.name}}</div>
+                  <div><i class="el-icon-arrow-right"></i></div>
+                </div>
               </li>
             </ul>
             <div v-else class="dropdown-empty">{{$t('overall.noData')}}</div>
           </el-scrollbar>
         </div>
-        <div class="container-item" v-show="isShowCabinet">
+        <div class="container-item" v-show="isShowCabinet || selectedData.cabinet">
           <el-scrollbar style="height: 100%;">
             <ul v-if="showCabinetInfos&& showCabinetInfos.length>0">
               <li v-for="(item,index) in showCabinetInfos" :key="item.id+'-'+index" @click="loadCabinetUInfos(item)">
-                <div class="container-item-content"><div class="container-item-content_label" :class="{'selected':selectedData.cabinet&&selectedData.cabinet.id == item.id}">{{item.name}}</div><div><i class="el-icon-arrow-right"></i></div></div>
+                <div class="container-item-content">
+                  <div class="container-item-content_label" :class="{'selected':selectedData.cabinet&&selectedData.cabinet.id == item.id}">{{item.name}}</div>
+                  <div><i class="el-icon-arrow-right"></i></div>
+                </div>
               </li>
             </ul>
             <div v-else class="dropdown-empty">{{$t('overall.noData')}}</div>
           </el-scrollbar>
         </div>
-        <div class="container-item" v-show="isShowCabinetU" style="border-right: unset">
+        <div class="container-item" v-show="isShowCabinetU || uChecked.length>0" style="border-right: unset">
           <el-scrollbar style="height: 100%">
             <el-checkbox-group v-model="uChecked" v-if="refresh" @change="uChange">
               <el-checkbox v-for="(item,index) in showUInfos" :key="index" :label="item.label" :value="item.value" :disabled="item.occupy==true" :checked="item.occupy==true||item.checked==true" :ref="'u-'+selectedData.idc.id+'-'+selectedData.cabinet.id+'-'+item.value" style="width: 50%"></el-checkbox>
@@ -46,11 +52,18 @@
     components:{
 
     },
+    model:{
+      prop:'value',
+      event:'change'
+    },
     props:{
-      defaultModelUSize:{default:1}
+      defaultModelUSize:{default:1},
+      value:{default:null},
+      disabled:{type:Boolean}
     },
     data(){
       return {
+        initData:null,
         dropDownVisible:false,
         idcInfos:[],
         cabinetInfos:new Map(),
@@ -76,7 +89,9 @@
     },
     methods:{
       toggleDropdown:function(){
-        this.dropDownVisible = !this.dropDownVisible;
+        if(this.disabled == false){
+          this.dropDownVisible = !this.dropDownVisible;
+        }
       },
       queryIdcInfos:function(){
         this.idcInfos=[];
@@ -89,7 +104,12 @@
         })
       },
       loadCabinetInfos:function(idc){
+        if(!idc){
+          return;
+        }
         this.selectedData.idc=idc;
+        this.selectedData.cabinet=null;
+        this.selectedData.u=null;
         let cabinetKey='idc-'+idc.name+'-'+idc.id;
         this.showCabinetInfos=[];
         if(this.cabinetInfos.has(cabinetKey)&&this.cabinetInfos.get(cabinetKey)&&this.cabinetInfos.get(cabinetKey).length>0){
@@ -108,11 +128,17 @@
         this.isShowCabinetU=false;
         this.showUInfos=[];
       },
-      loadCabinetUInfos:function(cabinet){
+      loadCabinetUInfos:function(cabinet,isInit=false){
+        if(!cabinet){
+          return ;
+        }
         this.selectedData.cabinet=cabinet;
+        this.selectedData.u=null;
         let cabinetUKey='cabinet-'+this.selectedData.idc.id+'-'+cabinet.id
         this.showUInfos=[];
         this.uChecked=[];
+        this.oldUChecked=[];
+        this.occupyU=[];
         if(this.uInfos.has(cabinetUKey)&&this.uInfos.get(cabinetUKey)&&this.uInfos.get(cabinetUKey).length>0){
           this.showUInfos=this.uInfos.get(cabinetUKey);
         }else{
@@ -133,6 +159,17 @@
                 us.push(u)
               }
               this.showUInfos=us;
+              if(isInit){ //回显处理
+                this.showUinfos=this.showUInfos.map((item,index)=>{
+                  if(item.value >= this.initData.u[0] && item.value <= this.initData.u[1]){
+                    item.occupy=false;//修改时，当前asset使用的u位不算占用
+                    this.occupyU=this.occupyU.filter((t,i)=>{return t != item.value})
+                    this.uChecked.push(item.value)
+                  }
+                })
+                this.oldUChecked=this.uChecked
+                this.selectedData.u=this.initData.u;
+              }
               this.uInfos.set(cabinetUKey,us);
             }else{
               console.error(response.msg);
@@ -145,15 +182,44 @@
       uChange:function(data){
         if(data.length < this.oldUChecked.length){ //取消选择操作
           //1.判断是否仅剩下defualtModelusize 的u位选中
-          let checkedValue=this.findUnoccupyU(this.oldUChecked);
-          if(checkedValue.length <= this.defaultModelUSize){ // 刚好满足或小于默认usize
-            this.uChecked=[];
-            this.uChecked.push(this.occupyU);
+          let checkedValues=this.findUnoccupyU(this.oldUChecked);
+          if(checkedValues.length <= this.defaultModelUSize){ // 刚好满足或小于默认usize
+            this.clearUChecked();
           }else{
             let unCheckValue=this.oldUChecked.filter((item)=>{//取消选择的那个元素
               return this.oldUChecked.includes(item)&&!data.includes(item);
             })
-            //2.判断是否连续，如果不是连续取消
+            unCheckValue=unCheckValue[0];
+            //2.判断是否连续，如果不是连续取消后面的选中
+            let oldUCheckCopy=this.findOldCheckedMinMax()
+            let min=oldUCheckCopy[0];
+            let max=oldUCheckCopy[oldUCheckCopy.length-1];
+            if(unCheckValue != min && unCheckValue != max){ //非连续取消选中
+              debugger
+              // 需要留下连续的 且 满足defaultModelUsize的u位
+              if(unCheckValue - min >= this.defaultModelUSize){ //上方满足条件
+                this.clearUChecked();
+                for(let i = min; i<unCheckValue;i++){
+                  this.uChecked.push(i);
+                }
+              }else if(max - unCheckValue >= this.defaultModelUSize){//下方满足条件
+                this.clearUChecked();
+                for(let i= unCheckValue+1;i<=max;i++){
+                  this.uChecked.push(i);
+                }
+              }else{//两边都不满足条件，则优先上方
+                this.clearUChecked();
+                let counter=0;
+                let item=min;
+                while(counter < this.defaultModelUSize){
+                  this.uChecked.push(item);
+                  counter++;
+                  item++;
+                }
+              }
+            }else{ //连续取消选中
+              //doNothing
+            }
           }
         }else{
           let checkValues=this.findUnoccupyU(data);
@@ -163,16 +229,14 @@
             if(suitU.length>0){ //有合适的u位
               while(this.uChecked.length - this.occupyU.length < this.defaultModelUSize){
                 let popU=suitU.splice(0,1)[0]
-                this.uChecked.push(popU.value);
+                this.uChecked.push(popU);
               }
             }else{
               this.uChecked.splice(this.uChecked.length-1,1);
             }
           }else{//至少已经选择了defaultCabinetUsize 个u ，这里需要处理不连续选择的情况
             //1.判断是否连续
-            let oldUCheckCopy=Object.assign([],this.oldUChecked);
-            oldUCheckCopy=this.findUnoccupyU(oldUCheckCopy)
-            oldUCheckCopy.sort((a,b)=>{return a-b});
+            let oldUCheckCopy=this.findOldCheckedMinMax()
             let min=oldUCheckCopy[0];
             let max=oldUCheckCopy[oldUCheckCopy.length-1];
             if(checkValue - max > 1 ){ //不连续
@@ -213,9 +277,32 @@
           }
 
         }
+        console.log('最终选择结果：')
+        console.log(this.uChecked)
         this.oldUChecked=this.uChecked;
+        this.selectedData.u=this.findOldCheckedMinMax(this.uChecked);
+        this.$emit('change',this.selectedData);
+      },
+      clearUChecked:function(){ //取消所有选中，恢复到刚打开时的状态
+        this.uChecked=[];
+        this.uChecked=this.uChecked.concat(this.occupyU);
+      },
+      findOldCheckedMinMax:function(){
+        let oldUCheckCopy=Object.assign([],this.oldUChecked);
+        oldUCheckCopy=this.findUnoccupyU(oldUCheckCopy)
+        if(oldUCheckCopy&&oldUCheckCopy.length>0){
+          oldUCheckCopy.sort((a,b)=>{return a-b});
+          let min=oldUCheckCopy[0];
+          let max=oldUCheckCopy[oldUCheckCopy.length-1];
+          return [min,max]
+        }else{
+          return [];
+        }
+
       },
       findUnoccupyU:function(arr){
+        console.log('findUnoccupyU')
+        console.log(this.occupyU)
         return  arr.filter((item,index)=>{
          return !this.occupyU.includes(item);
         })
@@ -230,7 +317,7 @@
         for(let i=0;i<left.length;i++){
           let item=left[i];
           if(item.occupy == false){
-            leftCount.push(item);
+            leftCount.push(item.value);
           }else{
             break;
           }
@@ -239,7 +326,7 @@
         for(let i=0;i<right.length;i++){
           let item=right[i];
           if(item.occupy == false){
-            rightCount.push(item);
+            rightCount.push(item.value);
           }else{
             break;
           }
@@ -255,9 +342,41 @@
         this.$nextTick(() => {
           this.refresh = true
         })
+      },
+      initComponet:function(initData){
+        this.initData=Object.assign({},initData);
+        if(initData){
+          this.selectedData.idc=initData.idc;
+          this.selectedData.cabinet=initData.cabinet;
+          this.selectedData.u=initData.u;
+          this.loadCabinetInfos(initData.idc);
+          this.loadCabinetUInfos(initData.cabinet,true);
+        }
       }
     },
     mounted() {
+
+    },
+    computed:{
+      inputShowInfo:function(){
+        let idcName=this.selectedData.idc?this.selectedData.idc.name+'/':'';
+
+        let cabinetName=this.selectedData.cabinet?this.selectedData.cabinet.name+'/':'';
+
+        let uValues=this.selectedData.u&&this.selectedData.u.length>0?this.selectedData.u[0]+'-'+this.selectedData.u[1]:'';
+
+        if(!this.selectedData.idc){
+          return '';
+        }else if(this.selectedData.idc && !this.selectedData.cabinet){
+          return idcName
+        }else if(this.selectedData.idc && this.selectedData.cabinet && !this.selectedData.u ){
+          return idcName+cabinetName;
+        }else if(this.selectedData.idc && this.selectedData.cabinet && this.selectedData.u){
+          return idcName+cabinetName+uValues;
+        }
+      }
+    },
+    watch:{
 
     }
   }

@@ -104,6 +104,7 @@
                 size="small"
                 placeholder=""
                 class="right-box-row-with-btn"
+                @change="modelChange"
               >
               </el-cascader>
               <div class="right-box-row-btn" v-if="!tabView" @click="addVendor"><i class="el-icon-plus"></i>
@@ -140,12 +141,12 @@
           <div class="right-box-sub-title">{{$t('asset.createAssetTab.location')}}</div>
           <div class="line-100 right-box-line"></div>
           <!------------------------------------------IDC---------------------------------------------->
-          <el-form-item>
-<!--            <location-cascader :default-model-u-size="temp"></location-cascader>-->
+          <el-form-item :label="$t('asset.createAssetTab.location')">
+            <location-cascader :disabled="assetData.modelId !=''?false:true" :default-model-u-size="modelSize" @change="setLocationData" :init-data="initLocationData" ref="locationCascader"></location-cascader>
           </el-form-item>
-          <el-form-item :label="$t('asset.createAssetTab.dcName')" class="right-box-form-content" prop="idcId">
+          <!--<el-form-item :label="$t('asset.createAssetTab.dcName')" class="right-box-form-content" prop="idcId">
             <template v-if="!tabView">
-<!--              <el-select popper-class="asset-dropdown" size="mini" v-model="assetData.idcId" clearable @change="getSingleIDCData" class="right-box-row-with-btn" placeholder="">-->
+&lt;!&ndash;              <el-select popper-class="asset-dropdown" size="mini" v-model="assetData.idcId" clearable @change="getSingleIDCData" class="right-box-row-with-btn" placeholder="">&ndash;&gt;
               <el-select popper-class="asset-dropdown" size="small" v-model="assetData.idcId" clearable @change="getSingleIDCData"  placeholder="">
                 <el-option
                   :id="'asset-edit-idc-op-'+item.id"
@@ -157,9 +158,9 @@
                   <span class="asset-dropdown-label-txt">{{ item.name }}</span>
                 </el-option>
               </el-select>
-<!--              <div class="right-box-row-btn ">-->
-<!--                <idc-config-box placement="left" @after="getIDCOptionData"></idc-config-box>-->
-<!--              </div>-->
+&lt;!&ndash;              <div class="right-box-row-btn ">&ndash;&gt;
+&lt;!&ndash;                <idc-config-box placement="left" @after="getIDCOptionData"></idc-config-box>&ndash;&gt;
+&lt;!&ndash;              </div>&ndash;&gt;
             </template>
             <span v-if="tabView">{{assetViewData.idcName}}</span>
           </el-form-item>
@@ -174,10 +175,10 @@
           </el-form-item>
           <el-divider></el-divider>
 
-          <!------------------------------------------cabinet---------------------------------------------->
+          &lt;!&ndash;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;cabinet&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&ndash;&gt;
           <el-form-item :label="$t('asset.createAssetTab.cabinet')" class="right-box-form-content">
             <template v-if="!tabView">
-<!--              <el-select clearable v-model="assetData.cabinetId" clearable class="right-box-row-with-btn" popper-class="asset-dropdown"-->
+&lt;!&ndash;              <el-select clearable v-model="assetData.cabinetId" clearable class="right-box-row-with-btn" popper-class="asset-dropdown"&ndash;&gt;
               <el-select clearable v-model="assetData.cabinetId" clearable  popper-class="asset-dropdown"
                          :disabled="assetData.idcId==''?true:false" size="small" placeholder=""
                          @change="getSingleCabinetData">
@@ -189,21 +190,21 @@
                   :value="item.id"
                 >
                   <span class="asset-dropdown-label-txt">{{ item.name }}</span>
-<!--                  <div class="asset-dropdown-label-icons">-->
-<!--                    <span class="asset-dropdown-btn asset-dropdown-btn-delete"-->
-<!--                          @click.stop="deleteData('cabinet',item.id)" :id="'asset-edit-cabinet-op-del-'+item.id">-->
-<!--                      <i class="el-icon-delete"></i>-->
-<!--                    </span>-->
-<!--                    <cabinet-config-box placement="left" :post-cabinet="item" button-class="asset-dropdown-btn" @after="getCabinetOptionData">-->
-<!--                      <i slot="optionZone" class="nz-icon nz-icon-edit"></i>-->
-<!--                    </cabinet-config-box>-->
-<!--                  </div>-->
+&lt;!&ndash;                  <div class="asset-dropdown-label-icons">&ndash;&gt;
+&lt;!&ndash;                    <span class="asset-dropdown-btn asset-dropdown-btn-delete"&ndash;&gt;
+&lt;!&ndash;                          @click.stop="deleteData('cabinet',item.id)" :id="'asset-edit-cabinet-op-del-'+item.id">&ndash;&gt;
+&lt;!&ndash;                      <i class="el-icon-delete"></i>&ndash;&gt;
+&lt;!&ndash;                    </span>&ndash;&gt;
+&lt;!&ndash;                    <cabinet-config-box placement="left" :post-cabinet="item" button-class="asset-dropdown-btn" @after="getCabinetOptionData">&ndash;&gt;
+&lt;!&ndash;                      <i slot="optionZone" class="nz-icon nz-icon-edit"></i>&ndash;&gt;
+&lt;!&ndash;                    </cabinet-config-box>&ndash;&gt;
+&lt;!&ndash;                  </div>&ndash;&gt;
                 </el-option>
               </el-select>
 
-<!--              <div class="right-box-row-btn ">-->
-<!--                <cabinet-config-box placement="left" :post-cabinet="addCabinetData"  @after="getCabinetOptionData"></cabinet-config-box>-->
-<!--              </div>-->
+&lt;!&ndash;              <div class="right-box-row-btn ">&ndash;&gt;
+&lt;!&ndash;                <cabinet-config-box placement="left" :post-cabinet="addCabinetData"  @after="getCabinetOptionData"></cabinet-config-box>&ndash;&gt;
+&lt;!&ndash;              </div>&ndash;&gt;
             </template>
             <span v-if="tabView">{{assetViewData.cabinetName}}</span>
           </el-form-item>
@@ -213,7 +214,7 @@
           </el-form-item>
           <el-form-item :label="$t('asset.editAssetTab.remark')">
             <span>{{cabinetSelectedData.remark}}</span>
-          </el-form-item>
+          </el-form-item>-->
           <!--cli-->
           <div class="right-box-sub-title">{{$t('asset.createAssetTab.cli')}}
             <el-switch v-if="!tabView" style="float: right;" v-model="accountSwitch" active-color="#ee9d3f" :disabled="parseInt(assetData.exporter)===1"></el-switch>
@@ -261,7 +262,6 @@
     },
     data() {
       return {
-        temp:3,
         visible: '',
         vendorModelData: '',
         assetData: {
@@ -291,6 +291,9 @@
           }],
           exporter: 0
         },
+        modelSize:1,
+        initLocationData:null,
+        locationInfo:null,
         accountSwitch:false,//true 开启，false 关闭
         accountData: '',
         assetViewData: {
@@ -525,6 +528,11 @@
         }else{
           this.changeProtocolSwitch=true;
         }
+      },
+      locationInfo:{
+        deep:true,
+        handler(n,o){
+        }
       }
     },
     methods: {
@@ -567,6 +575,16 @@
           }
         }
       },
+      setLocationData:function(data){
+        this.locationInfo=data;
+      },
+      modelChange:function(ids){
+        let modelId=ids[1];
+        let model=this.allModelUlData.find((item,index)=>{
+          return modelId==item.id;
+        })
+        this.modelSize=model.usize;
+      },
       getAssetData(data) {
         if (data) {
           this.pageObj.id = data;
@@ -576,8 +594,15 @@
               this.assetViewData.assetType = response.data.list[0].model.type.value
               this.assetViewData.vendor = response.data.list[0].model.vendor.value
               this.assetViewData.model = response.data.list[0].model.name
+              this.modelSize=response.data.list[0].model.usize;
               this.assetViewData.idcName = response.data.list[0].idc.name
               this.assetViewData.cabinetName = response.data.list[0].cabinet == null ? '' : response.data.list[0].cabinet.name
+              let initLocationData={
+                idc:response.data.list[0].idc,
+                cabinet:response.data.list[0].cabinet,
+                u:[response.data.list[0].cabinetStart,response.data.list[0].cabinetEnd]
+              }
+              this.$refs.locationCascader.initComponet(initLocationData)
               this.assetViewData.moduleNum = response.data.list[0].moduleNum
               this.assetViewData.alertNum = response.data.list[0].alertNum
               this.assetViewData.cabinetName = response.data.list[0].cabinet == null ? '' : response.data.list[0].cabinet.name
@@ -766,6 +791,10 @@
           if (this.assetData.modelId) {
             this.assetData.modelId = this.assetData.modelId.join(',').split(',')[1];
           }
+          this.assetData.idcId=this.locationInfo.idc.id;
+          this.assetData.cabinetId=this.locationInfo.cabinet.id;
+          this.assetData.cabinetStart=this.locationInfo.u[0];
+          this.assetData.cabinetEnd=this.locationInfo.u[1];
           // let modelId = this.assetData.modelId.join(',').split(',')[1];
           // let form = new FormData();
           // form.append("id", this.pageObj.id);
