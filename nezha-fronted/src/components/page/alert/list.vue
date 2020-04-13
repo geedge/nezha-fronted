@@ -444,6 +444,21 @@
         this.exportExcel(temp);
         this.closeDialog();
       },
+      getTimeString:function(){
+        let split='-';
+        let date=new Date();
+        let year=date.getFullYear();
+        let month=this.formatNum(date.getMonth()+1);
+        let day=this.formatNum(date.getDate());
+        let hours=this.formatNum(date.getHours());
+        let minutes=this.formatNum(date.getMinutes());
+        let seconds=this.formatNum(date.getSeconds());
+        console.log(day)
+        return year + split + month + split + day + ' ' + hours + split + minutes + split + seconds;
+      },
+      formatNum:function(num){
+        return num>9?num:'0'+num;
+      },
       exportExcel:function(params){
         let temp=this;
         if(!params){
