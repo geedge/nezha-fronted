@@ -218,17 +218,17 @@
             <span @click="clearResult" class="mib-browser-table-op" :title="$t('overall.clear')"><i class="el-icon-close"></i></span>
           </span>
         </div>
-        <el-table :data="resultData" border class="mib-browser-table nz-table" v-scrollBar:el-table height="calc(100% - 31px)" style="width: 100%;" tooltip-effect="light" v-loading="loading">
-          <el-table-column label="Name/OID" show-overflow-tooltip>
+        <el-table :data="resultData" border class="mib-browser-table nz-table" v-scrollBar:el-table height="calc(100% - 31px)" style="width: 100%;" v-loading="loading">
+          <el-table-column label="Name/OID">
             <div slot-scope="scope" class="too-long-split" @click="searchParam.oid = scope.row.oid">{{scope.row.name ? scope.row.name : scope.row.oid}}</div>
           </el-table-column>
-          <el-table-column show-overflow-tooltip label="Value">
+          <el-table-column label="Value">
             <div slot-scope="scope" @click="searchParam.oid = scope.row.oid">{{scope.row.value}}</div>
           </el-table-column>
-          <el-table-column show-overflow-tooltip label="Type">
+          <el-table-column label="Type">
             <div slot-scope="scope" @click="searchParam.oid = scope.row.oid">{{scope.row.type}}</div>
           </el-table-column>
-          <el-table-column show-overflow-tooltip label="IP:Port">
+          <el-table-column label="IP:Port">
             <div slot-scope="scope" @click="searchParam.oid = scope.row.oid">{{scope.row.ip + (scope.row.port ? ":" + scope.row.port : "")}}</div>
           </el-table-column>
         </el-table>
@@ -312,7 +312,6 @@
         resultData: [],
         modelData: [],
         assetData: [],
-        colWidth: ['35%', '35%', '15%', '15%'], //result table列宽
 
         typeData: ["OctetString", "Integer", "OID", "Gauge", "Counter32", "IpAddress", "TimeTicks", "Counter64", "UnsignedInteger", "BITS", "Float", "DateAndTime"],
       }
@@ -396,10 +395,9 @@
         }
         this.loading = true;
         this.$post('mib/browser', this.searchParam).then(response => {
-          this.resultData = [];
           this.loading = false;
           if (response.code === 200) {
-            this.resultData = response.data.list;
+            this.resultData = response.data.list.concat(this.resultData);
             if (this.searchParam.operation == 'set') {
               this.$message({duration: 2000, type: 'success', message: this.$t("tip.success")});
             }
