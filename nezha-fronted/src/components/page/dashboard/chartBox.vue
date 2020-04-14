@@ -75,34 +75,34 @@
         <el-scrollbar class="right-box-form-box" ref="scrollbar">
           <el-form class="right-box-form" :model="chart" label-position="top" :rules="rules" ref="chartForm">
             <el-form-item :label="$t('dashboard.panel.title')" prop="panel">
-                <el-autocomplete
-                  :fetch-suggestions="panelSuggestion"
-                  v-model.trim="panelName2"
-                  placeholder=""
-                  size="small"
-                  value-key="name"
-                  v-if="!chart.id"
-                  popper-class="chart-box-autocomplete no-style-class"
-                >
-                </el-autocomplete>
-                <el-input size="small" v-if="chart.id" readonly="readonly" :value="panelName2"></el-input>
-                <!--<el-select popper-class="chart-box-dropdown"
-                           v-model="panelId" placeholder="" v-if="rightBox.show" size="small">
-                  <el-option v-for="item in panelData" :key="item.id" :label="item.name"
-                             :value="item.id" :id="'chart-box-panel-'+item.id">
-                    <span class="config-dropdown-label-txt">{{item.name}}</span>
-                    <div class="config-dropdown-label-icons">
-                    <span class="config-dropdown-btn config-dropdown-btn-delete" @click.stop="deletePanel(item)"
-                          :id="'chart-box-panel-op-del-'+item.id"><i class="el-icon-delete"></i></span>
-                      <span class="config-dropdown-btn" @click.stop="editPanel(item)"
-                            :id="'chart-box-panel-op-edit-'+item.id"><i class="nz-icon nz-icon-edit"></i></span>
-                    </div>
-                  </el-option>
-                </el-select>
+              <el-autocomplete
+                :fetch-suggestions="panelSuggestion"
+                v-model.trim="panelName2"
+                placeholder=""
+                size="small"
+                value-key="name"
+                v-if="!chart.id"
+                popper-class="chart-box-autocomplete no-style-class"
+              >
+              </el-autocomplete>
+              <el-input size="small" v-if="chart.id" readonly="readonly" :value="panelName2"></el-input>
+              <!--<el-select popper-class="chart-box-dropdown"
+                         v-model="panelId" placeholder="" v-if="rightBox.show" size="small">
+                <el-option v-for="item in panelData" :key="item.id" :label="item.name"
+                           :value="item.id" :id="'chart-box-panel-'+item.id">
+                  <span class="config-dropdown-label-txt">{{item.name}}</span>
+                  <div class="config-dropdown-label-icons">
+                  <span class="config-dropdown-btn config-dropdown-btn-delete" @click.stop="deletePanel(item)"
+                        :id="'chart-box-panel-op-del-'+item.id"><i class="el-icon-delete"></i></span>
+                    <span class="config-dropdown-btn" @click.stop="editPanel(item)"
+                          :id="'chart-box-panel-op-edit-'+item.id"><i class="nz-icon nz-icon-edit"></i></span>
+                  </div>
+                </el-option>
+              </el-select>
 
-                <div class="right-box-row-btn" v-if="rightBox.show" @click="toAddPanel">
-                  <i class="el-icon-plus" id="chart-box-panel-plus"></i>
-                </div>-->
+              <div class="right-box-row-btn" v-if="rightBox.show" @click="toAddPanel">
+                <i class="el-icon-plus" id="chart-box-panel-plus"></i>
+              </div>-->
 
             </el-form-item>
             <el-form-item :label='$t("dashboard.panel.chartForm.chartName")' prop="title">
@@ -120,7 +120,7 @@
               <el-col :span="10" style="margin-left:-7px;">
                 <div class="grid-content ">
                   <el-form-item prop="type">
-                    <el-select class="right-box-row-with-btn" value-key="chartType" popper-class="chart-box-dropdown-mini" v-model="chart.type" placeholder="" size="mini">
+                    <el-select class="right-box-row-with-btn" @change="chartTypeChange" value-key="chartType" popper-class="chart-box-dropdown-mini" v-model="chart.type" placeholder="" size="mini">
                       <el-option v-for="item in chartTypeList" :key="item.id" :label="item.name" :value="item.id">
                         <span class="panel-dropdown-label-txt" >{{item.name}}</span>
                       </el-option>
@@ -128,10 +128,10 @@
                   </el-form-item>
                 </div>
               </el-col>
-              <el-col :span="2" style="margin-left: 7px">
+              <el-col v-show="!isUrl" :span="2" style="margin-left: 7px">
                 <div class="label-center" >{{$t('dashboard.panel.chartForm.unit')}}</div>
               </el-col>
-              <el-col :span="10">
+              <el-col v-show="!isUrl" :span="10">
                 <el-cascader filterable placeholder="" popper-class="dc-dropdown" size="mini"
                              :options="unitOptions"
                              :props="{ expandTrigger: 'hover' }"
@@ -183,10 +183,14 @@
               </el-col>
             </el-row>
 
-            <div class="right-box-sub-title">{{$t('dashboard.panel.chartForm.metric')}}</div>
-            <div class="line-100"></div>
+            <el-form-item v-if="isUrl" :label='$t("dashboard.panel.chartForm.url")' prop="param.url" :rules="{ required: true,  message: $t('validate.required'), trigger: 'blur' }">
+              <el-input size="small" maxlength="64" show-word-limit v-model="chart.param.url"></el-input>
+            </el-form-item>
 
-            <el-row  class="element-item" v-for="(elem, index) in elements" :key="'ele' + index">
+            <div v-if="!isUrl" class="right-box-sub-title">{{$t('dashboard.panel.chartForm.metric')}}</div>
+            <div v-if="!isUrl" class="line-100"></div>
+
+            <el-row v-if="!isUrl" class="element-item" v-for="(elem, index) in elements" :key="'ele' + index">
               <chart-metric ref="chartTag"
                             :pointer="index"
                             :metric-list="metricList"
@@ -200,7 +204,7 @@
 
             </el-row>
 
-            <button type="button" @click="addTarget" class="nz-btn nz-btn-size-normal nz-btn-style-light" style="margin-left: 1px;">
+            <button v-if="!isUrl" type="button" @click="addTarget" class="nz-btn nz-btn-size-normal nz-btn-style-light" style="margin-left: 1px;">
               <span class="top-tool-btn-txt">{{$t('dashboard.panel.chartForm.addMetric')}}</span>
             </button>
 
@@ -250,6 +254,9 @@
           span:12,
           height:'400',
           unit:2,
+          param:{
+            url:''
+          },
           elements:{
             id: '',
             expression: '',
@@ -258,8 +265,12 @@
           },
           panel: ''
         },
+        isUrl:false,
         rules: {
           title: [
+            {required: true,  message: this.$t('validate.required'),  trigger: 'blur'}
+          ],
+          url: [
             {required: true,  message: this.$t('validate.required'),  trigger: 'blur'}
           ]
         },
@@ -279,6 +290,10 @@
           {
             id:'stackArea',
             name:this.$t("dashboard.panel.chartForm.typeVal.stackArea.label")
+          },
+          {
+            id:'url',
+            name:this.$t("dashboard.panel.chartForm.typeVal.url.label")
           }
         ],
         elements: [1], // 指标部分 tarNum
@@ -311,6 +326,7 @@
     methods: {
       show(show) {
         this.rightBox.show = show;
+        this.isUrl = false;
       },
       clickos() {
         this.esc();
@@ -452,12 +468,12 @@
         if (this.subCount === this.elements.length) {
           this.subCount = 0;
           // 保存完成,进行删除操作
-          console.log('box第二步，deleteIndex='+this.deleteIndex+'=开始删除一个元素')
-          console.log('box第二步，删除之前，elements='+JSON.stringify(this.elements)+'  elementTarget='+JSON.stringify(this.elementTarget)+'  bus='+JSON.stringify(bus.chartAddInfo.metricTarget));
+          //('box第二步，deleteIndex='+this.deleteIndex+'=开始删除一个元素')
+          //console.log('box第二步，删除之前，elements='+JSON.stringify(this.elements)+'  elementTarget='+JSON.stringify(this.elementTarget)+'  bus='+JSON.stringify(bus.chartAddInfo.metricTarget));
           this.elements.splice(this.deleteIndex, 1);
           this.elementTarget.splice(this.deleteIndex, 1);//没有作用，此处是[]
           bus.chartAddInfo.metricTarget.splice(this.deleteIndex, 1);
-          console.log('box第二步，删除完毕，elements='+JSON.stringify(this.elements),'  elementTarget='+JSON.stringify(this.elementTarget),'  bus='+JSON.stringify(bus.chartAddInfo.metricTarget));
+          //console.log('box第二步，删除完毕，elements='+JSON.stringify(this.elements),'  elementTarget='+JSON.stringify(this.elementTarget),'  bus='+JSON.stringify(bus.chartAddInfo.metricTarget));
 
           this.$nextTick(() => {
             this.$refs.chartTag.forEach((item, index) => {
@@ -522,7 +538,12 @@
               this.$emit("reloadOnlyPanel");
               this.$store.commit('panelListChange', true);
             } else {
-              this.$message.error(response.msg);
+              if(response.msg){
+                this.$message.error(response.msg);
+              }else {
+                this.$message.error(response);
+              }
+
             }
           });
         }
@@ -541,7 +562,11 @@
                 let panel = this.panelData.find(p => p.id === this.panelId);
                 this.$emit('on-create-success', 'create', response.data,params, panel);
               } else {
-                this.$message.error(response.msg);
+                if(response.msg){
+                  this.$message.error(response.msg);
+                }else {
+                  this.$message.error(response);
+                }
               }
             });
             clearInterval(interval);
@@ -555,7 +580,6 @@
       },
       // 更新图表
       updateCharts(params) {
-        console.log('))))))))))))=',params)
         this.$put('panel/' + this.panelId + '/charts', params).then(response2 => {
           if (response2.code === 200) {
             this.esc();
@@ -564,7 +588,11 @@
             this.panelName2 = '';
             this.$emit('on-create-success', 'update', response2.data, params);
           } else {
-            this.$message.error(response2.msg);
+            if(response2.msg){
+              this.$message.error(response2.msg);
+            }else {
+              this.$message.error(response2);
+            }
           }
         });
       },
@@ -626,19 +654,41 @@
       },
       confirmAdd() {
         this.elementTarget = []; // 初始化清空参数
-        this.$refs.chartTag.forEach((item, index) => {//循环指标列表
-          // 触发每个tag组件内部进行校验
-          item.saveTarget(index);
-        });
-        this.$refs.chartForm.validate();
+        if(this.chart.type!=='url'){
+          this.$refs.chartTag.forEach((item, index) => {//循环指标列表
+            // 触发每个tag组件内部进行校验
+            item.saveTarget(index);
+          });
+        }else {
+          this.$refs.chartForm.validate((valid) => {
+            const params = {
+              title: this.chart.title,//this.chart
+              span: this.chart.span,
+              height: this.chart.height,
+              type: this.chart.type,
+              unit:this.chart.unit,
+              param:{
+                url:this.chart.param.url,
+              }
+            };
+
+            if (valid) {
+              params.elements = [];
+              if (this.isedit) {
+                params.id = this.chart.id;
+                this.updateCharts(params);
+              } else {
+                this.addCharts(params);
+              }
+            }
+          });
+        }
       },
       // 获取metric列表
       getSuggestMetric() {
         //this.$get('/prom/api/v1/label/__name__/values').then(response => {
         this.$get('/module?pageSize=-1').then(response => {
-          console.log('---response---',response);
           if (response.code === 200) {
-            console.log('---response200---',response);
             this.metricList = response.data.list;
             const cascaderMap = new Map();
             this.metricList.forEach((item,index) => {
@@ -682,7 +732,6 @@
             });
 
             this.metricCascaderList = metricCascaderArr;
-            console.log('---response200metricCascaderList---',this.metricCascaderList);
           }else {
             this.metricList = [];
             this.metricCascaderList = [];
@@ -714,7 +763,6 @@
 
           } else {
             this.$nextTick(() => {
-              console.log('1_+_+_+_+_+_+',JSON.stringify(elementInfo.elements[0]));
               this.$refs.chartTag[0].setMdata(elementInfo.elements[0]);
             });
           }
@@ -742,20 +790,26 @@
         this.chart.height = data.height+'';
         this.chart.type = data.type;
         this.chart.unit=data.unit;
-        //this.getSuggestMetric();//获得指标列表
-        // 指标
-        this.elements = [];
-        bus.chartAddInfo.metricTarget = [];
-        data.elements.forEach((item, index) => {
-          this.elements.push(index);
-        });
-        this.$nextTick(() => {
-          const cSet = this.$refs.chartTag;
-          // 派发charttag数据
-          cSet.forEach((item, index) => {
-            item.setMdata(data.elements[index]);
+        if(this.chart.type==='url'){
+          this.chart.param.url = data.param.url;
+          this.isUrl = true;
+          this.elements = [1];
+        }else{
+          //this.getSuggestMetric();//获得指标列表
+          // 指标
+          this.elements = [];
+          bus.chartAddInfo.metricTarget = [];
+          data.elements.forEach((item, index) => {
+            this.elements.push(index);
           });
-        });
+          this.$nextTick(() => {
+            const cSet = this.$refs.chartTag;
+            // 派发charttag数据
+            cSet.forEach((item, index) => {
+              item.setMdata(data.elements[index]);
+            });
+          });
+        }
       },
 
       // 初始化信息
@@ -797,7 +851,15 @@
       unitSelected:function(value){
         this.chart.unit=value[value.length-1];
       },
-
+      chartTypeChange(){
+        let chartType = this.chart.type;
+        this.chart.param.url='';
+        if(chartType==='url'){
+          this.isUrl = true;
+        }else {
+          this.isUrl = false;
+        }
+      },
       /*panel搜索建议*/
       panelSuggestion(queryString, callback) {
         let data = [];
@@ -818,11 +880,41 @@
       preview(){
         //验证图表数据是否合法？？，合法了再显示预览窗口
         this.elementTarget = []; // 初始化清空参数
-        this.$refs.chartTag.forEach((item, index) => {//循环指标列表
-          // 触发每个tag组件内部进行校验
-          item.saveTarget(index,'preview');
-        });
-        this.$refs.chartForm.validate();
+        if(this.chart.type!=='url'){
+          this.$refs.chartTag.forEach((item, index) => {//循环指标列表
+            // 触发每个tag组件内部进行校验
+            item.saveTarget(index,'preview');
+          });
+        }else {
+          this.$refs.chartForm.validate((valid) => {
+            const params = {
+              title: this.chart.title,//this.chart
+              span: this.chart.span,
+              height: this.chart.height,
+              type: this.chart.type,
+              unit:this.chart.unit,
+              param:{
+                url:this.chart.param.url,
+              }
+            };
+
+            if (valid) {
+              if (this.isedit) {
+                params.id = this.chart.id;
+              }
+              this.$refs.chartsPreview.show(params);
+              /*
+                if (this.isedit) {
+                  params.id = this.chart.id;
+                  this.updateCharts(params);
+                } else {
+                  this.addCharts(params);
+                }
+              */
+            }
+          });
+        }
+        //this.$refs.chartForm.validate();
       },
       //preview--end
 
@@ -854,6 +946,7 @@
           item.clearSelectedTagList();
         });
       }
+      this.isUrl = false;
     },
   }
 </script>

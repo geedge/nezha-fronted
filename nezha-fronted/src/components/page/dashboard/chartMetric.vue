@@ -343,7 +343,6 @@ export default {
               let module = node.data.label;
               let metricArr = [];
               let metricArrTmp = [];
-              console.log('success=3',project,module,_this.metricCascaderList);
 
               let metricLabelValMap = new Map();
               let projectItem = _this.metricAllData.get(project);
@@ -363,10 +362,8 @@ export default {
                   };
                   metricArr.push(childOption);
                 });
-                console.log('success=111',metricArr);
                 resolve(metricArr);
               }else {
-                console.log('success=222');
                 _this.metricCascaderList.map((item, index) => {
                   if(item.label===project){//选择的project
                     item.children.map((innerItem, innerIndex) => {
@@ -375,7 +372,6 @@ export default {
                           // 当二级分类的的child为空时才请求一次数据
                           let match = '{project="'+project+'",module="'+module+'"}';
                           _this.$get('/prom/api/v1/series?match[]='+match).then(res => {
-                            console.log('success=5',res)
                             if (res.status === 'success') {
                               res.data.forEach((tag, i) => {
                                 let metricName = tag.__name__;
@@ -432,12 +428,10 @@ export default {
                               });
                               resolve(metricArr);
                             }else {
-                              console.log('success=999')
                               resolve([]);
                             }
                           })
                         }else {//已经加载过了
-                          console.log('success=78')
                           resolve([]);
                         }
                       }
@@ -474,11 +468,11 @@ export default {
     },
     // 第三步,将数据重新赋值,sub-save-ok回调
     setSubdata(index) {
-      console.log('metric第三步，bus='+JSON.stringify(bus.chartAddInfo.metricTarget));
-      console.log('metric第三步，bus('+this.pointer+')='+JSON.stringify(bus.chartAddInfo.metricTarget[this.pointer]));
+      //('metric第三步，bus='+JSON.stringify(bus.chartAddInfo.metricTarget));
+      //console.log('metric第三步，bus('+this.pointer+')='+JSON.stringify(bus.chartAddInfo.metricTarget[this.pointer]));
       this.elementInfo = bus.chartAddInfo.metricTarget[this.pointer];
-      console.log('metric第三步，index'+index+',如果index是当前pointer('+this.pointer+')，则继续，把bus中的值赋值给当前metric')
-      console.log('metric第三步，elementInfo='+JSON.stringify(this.elementInfo));
+      //console.log('metric第三步，index'+index+',如果index是当前pointer('+this.pointer+')，则继续，把bus中的值赋值给当前metric')
+      //console.log('metric第三步，elementInfo='+JSON.stringify(this.elementInfo));
       if(this.elementInfo.type==='expert'){
         //alert('metric第三步，expert');
         // 当该项expression为空时，重置一下
@@ -497,36 +491,29 @@ export default {
       }
     },
     clearSelectedTagList(){
-      console.log('--------clear selected')
       this.elementInfo.selectedTagList.forEach((selectItem)=>{
         selectItem.value = [];//清空值，再进行赋值
       });
     },
     convertLabelValueCascadeVal(){
-      //把级联选择label及value，转换为selectedTagList里的value？？？？？？
+      //把级联选择label及value，转换为selectedTagList里的value
       this.clearSelectedTagList();
-      console.log('*** this.labelValueCascaderVal***',JSON.stringify(this.labelValueCascaderVal))
       this.labelValueCascaderVal.forEach((item)=>{//[label,value]
         let casLabel = item[0];
         let casValue = item[1];
-        console.log('*** this.elementInfo.selectedTagList***',JSON.stringify(this.elementInfo.selectedTagList))
         this.elementInfo.selectedTagList.forEach((selectItem)=>{
           let selectLabel = selectItem.name;
           let selectValue = selectItem.value;
-          console.log('111',selectLabel,casLabel)
           if(selectLabel===casLabel){
-            console.log('222',selectValue.indexOf(casValue),selectValue,casValue)
             if(selectValue.indexOf(casValue)===-1){
               selectValue.push(casValue);
             }
           }
         });
-        console.log('*** this.elementInfo.selectedTagList***end',JSON.stringify(this.elementInfo.selectedTagList))
       });
     },
     // (最后整体保存添加的图标的时候执行)保存, chartdata点击确认后保存本身数据并返回给chartdata
     saveTarget(pointer,optType) {
-      console.log(this.pointer,pointer,'this.labelValueCascaderVal=====',JSON.stringify(this.labelValueCascaderVal));
       if (this.pointer === pointer) {
         this.$refs.elementInfo.validate((valid) => {
           if (valid) {//根据设置的rules进行验证，验证通过，则返回，继续进行保存（每个el-form-item都需要验证）
@@ -536,7 +523,6 @@ export default {
             if(this.elementInfo.type==='normal' && this.elementInfo.metric instanceof Array){
               this.elementInfo.metric = this.elementInfo.metric[2];
             }
-            console.log('+++++++',JSON.stringify(this.labelValueCascaderVal));
             this.convertLabelValueCascadeVal();//将label，value级联选择的值，转换为selectTagList里
             this.$emit('on-add-target-success', this.elementInfo, pointer,optType);
           }
@@ -785,7 +771,6 @@ export default {
         }
         this.labelValueCascaderOptions.push(labelOption);
 
-        console.log('++++item.val.length',item.value);
         if(item.value.length>0){
           item.value.forEach((valueItem)=>{
             let labelVal = [];
@@ -795,8 +780,6 @@ export default {
           });
         }
       });
-      console.log('++++val',this.labelValueCascaderVal);
-      console.log('++++22',this.labelValueCascaderOptions);
     },
     changeTag(){
       this.$emit('on-change-condition');
@@ -806,7 +789,6 @@ export default {
     },
     // 选择metric
     selectMetric() {
-      console.log('---setMetricToLabelValue---start')
       if (this.elementInfo.metric) {//选择了metric，则设置tagList，否则设置为空
         this.getSuggestTags(this.elementInfo.metric);
         this.setLabelValueCascader();
@@ -858,14 +840,12 @@ export default {
     },
     // 获取tags列表
     getSuggestTags(metricArr) {
-      console.log('---getSuggestTags---start',this.metricLabelValInfo)
       let metric = metricArr[2];
       let proTmp = metricArr[0];
       let project = proTmp.substring(0, proTmp.length - 4);
       let module = metricArr[1];
       this.elementInfo.selectedTagList = [];
       if(this.metricLabelValInfo.has(metric)){
-        console.log('---metricLabelValInfo--has---start')
         let tagListTmp = [];
         tagListTmp = [...this.metricLabelValInfo.get(metric)];
         tagListTmp.forEach((selectItem)=>{
@@ -988,7 +968,6 @@ export default {
           });
           //排序label顺序
           this.sortLabel(tagListTmp,this.elementInfo.selectedTagList);
-          console.log('11111111111111');
           this.setLabelValueCascader();
         }
       }else {
@@ -1062,7 +1041,6 @@ export default {
             });
 
             this.elementInfo.selectedTagList = [];
-            console.log('---response---start',this.metricLabelValInfo)
             if(this.metricLabelValInfo.has(metric)){
               let tagListTmp = [];
               tagListTmp = [...this.metricLabelValInfo.get(metric)];//[...this.metricList],
@@ -1133,7 +1111,6 @@ export default {
 
     // 编辑已有图表状态时，先填充数据
     setMdata(data) {
-      console.log('-------data******',JSON.stringify(data))
       this.setDataFlag = true;
       this.target = Object.assign({}, data);
       //this.pointer =
@@ -1344,7 +1321,6 @@ export default {
     bus.$on('clear_history', () => {
       this.clearHistory();
     });
-    console.log('@#$%%',this.metricCascaderList);
     //this.metricCascaderList = [...this.metricCascaderListTmp];
   },
   beforeDestroy() {

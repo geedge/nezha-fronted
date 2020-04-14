@@ -46,10 +46,13 @@
                               :start-placeholder="$t('dashboard.panel.startTime')"
                               :end-placeholder="$t('dashboard.panel.endTime')" align="right">
               </el-date-picker>
+              <!--
+              <calendar ref="calendarPanel" class="nz-dashboard-picker"></calendar>
+              -->
             </div>
           </div>
 
-          <div class="nz-btn-group nz-btn-group-size-small nz-btn-group-light margin-r-20">
+          <div class="nz-btn-group nz-btn-group-size-normal nz-btn-group-light margin-r-20">
             <button style="border-right: 1px solid rgba(162,162,162,0.50);" type="button"
                     class="nz-btn nz-btn-size-normal nz-btn-style-light" @click="Refresh()">
               <i style="font-size: 12px" class="global-active-color nz-icon nz-icon-refresh"></i>
@@ -85,7 +88,7 @@
                         ref="chartList"></chart-list>
           </div>
         </el-scrollbar>
-       </div>
+      </div>
       <button class="to-top" v-show="showTopBtn" @click="$toTop('el', $refs.dashboardScrollbar.wrap)"><i class="nz-icon nz-icon-top"></i></button>
     </div>
 
@@ -98,6 +101,7 @@
   import ChartBox from "./chartBox";
   import ChartList from '../../charts/chart-list';
   import bus from '../../../libs/bus';
+  //import calendar from '../../common/calendar'
 
   export default {
     name: "panel",
@@ -267,7 +271,8 @@
     },
     components: {
       'chart-box': ChartBox,
-      'chart-list': ChartList
+      'chart-list': ChartList,
+      //'calendar':calendar
     },
     methods: {
       //刷新
@@ -366,14 +371,14 @@
                 type: 'success',
                 message: this.$t("tip.deleteSuccess")
               });
-                let chartList=this.$refs.chartList.dataList;
-                for (let i =0;i< chartList.length;i++){
-                  if(chartList[i].id === data.id){
-                    chartList.splice(i,1);
-                    break;
-                  }
+              let chartList=this.$refs.chartList.dataList;
+              for (let i =0;i< chartList.length;i++){
+                if(chartList[i].id === data.id){
+                  chartList.splice(i,1);
+                  break;
                 }
-                // this.getTableData(); //删除相关图表后，刷新面板数据
+              }
+              // this.getTableData(); //删除相关图表后，刷新面板数据
             } else {
               this.$message.error(response.msg);
             }

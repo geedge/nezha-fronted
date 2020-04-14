@@ -12,6 +12,11 @@
       visibility: visible;
     }
 </style>
+<style>
+  .char-url-preview html{
+
+  }
+</style>
 <template>
     <el-dialog class="chart-preview-dialog nz-dialog" id="chartPreviewDailog"
                :visible.sync="screenModal"
@@ -21,7 +26,7 @@
                @opened="initDialog">
       <div slot="title">
         <span class="nz-dialog-title">{{chart.title}}</span>
-        <div class="float-right panel-calendar dialog-tool">
+        <div class="float-right panel-calendar dialog-tool"  v-if="chart.type!=='url'">
           <el-date-picker ref="calendar" prefix-icon=" " size="mini" class="nz-preview-picker"
                           format="yyyy/MM/dd HH:mm"
                           @change="dateChange"
@@ -69,6 +74,14 @@
         </div>
       </template>
 
+      <template  v-if="chart.type==='url'">
+        <div id="chartUrlPreview" :class="{'visible':urlShow,'hidden':!urlShow}" class="char-url-preview">
+          <iframe id="chartUrlFrame" frameborder="0" width="100%" height="100%" name="showHere" scrolling=auto
+                  style="z-index:5000;"
+          ></iframe><!--  style=" position: absolute; width: 100%; height: 100%; top: 0;left:0;"  :src="chart.url" v-scrollBar:char-url-preview-->
+        </div>
+      </template>
+
       <loading  ref="loadingPreview"></loading>
     </el-dialog>
 </template>
@@ -108,12 +121,6 @@
           xAxis: [],
           theData: [], // series数据组
         },
-        //panelIdInner: '', // 看板id=panelId,原写作chart,由set_data获取
-        //chartName: '',
-        //firstLoad: false, // 是否第一次加载
-        //divFirstShow:false,
-        //highchartStore: null, // 保存图表数据
-        //echartStore:null,// 保存图表数据
         echartModalStore: null, // 全屏查看时数据
         chartType: 'line', // 图表类型
         screenModal: false,
@@ -136,6 +143,7 @@
         //dropdownMenuShow:false,
         showLegend:true,
         tableShow:true,
+        urlShow:true,
         searchTime:[new Date().setHours(new Date().getHours()-1),new Date()],
         //oldSearchTime:[],
         minHeight:200,
@@ -234,25 +242,19 @@
       show(chartInfo) {
         this.searchTime = [new Date().setHours(new Date().getHours()-1),new Date()];
         this.chart=chartInfo;
+
         let chartType= chartInfo.type;
         let chartContainerId = 'chartEchartPreview'
         if(chartType==='table'){
-          /*
-          for(let i=0;i<8;i++){
-            this.seriesItemScreen.push({//表格数据
-              // label: '',//label
-              // metric: '',//metric列
-              element:'',
-              time: '',//采集时间
-              value: '',//数值
-            });
-          }*/
           this.tableShow = false;
           chartContainerId = 'chartTablePreview';
         }else if (chartType === 'line' || chartType === 'bar' || chartType === 'stackArea' || chartType === 4) {
           this.isGreyScreen=[];
           this.showLegend = false;
           chartContainerId = 'chartEchartPreview';
+        }else if(chartType==='url'){
+          this.urlShow = false;
+          chartContainerId = 'chartUrlPreview';
         }
 
         //设置高度 chart-table
@@ -275,6 +277,33 @@
         this.setSize(chartInfo.span); // 设置该图表宽度
 
         this.screenModal = true;
+
+      },
+      setLoadFrame(){
+        if(this.chart.type==='url'){
+          let that = this;
+          this.$nextTick(() => {
+            let iframeBox = document.querySelector('#chartUrlPreview');
+            let iframe = document.querySelector('#chartUrlFrame');
+
+            // 处理兼容行问题
+            if (iframe.attachEvent) {
+              iframe.attachEvent('onload', function () {
+                // iframe加载完毕以后执行操作
+                console.log('iframe已加载完毕');
+                that.$refs.loadingPreview.endLoading();
+              })
+            } else {
+              iframe.onload = function () {
+                // iframe加载完毕以后执行操作
+                console.log('iframe已加载完毕');
+                that.$refs.loadingPreview.endLoading();
+              }
+            }
+console.log('=======',this.chart)
+            iframe.src = this.chart.param.url;
+          });
+        }
       },
       filterShowData(source,pageObj){
         return source.slice((pageObj.pageNo-1)*pageObj.pageSize,pageObj.pageNo*pageObj.pageSize)
@@ -288,10 +317,18 @@
           if(this.echartModalStore){
             this.echartModalStore.clear();
           }
+        }else if(chartType==='url'){
+
         }
         //后台获得数据
-        this.$refs.loadingPreview.startLoading();
-        this.getChartData();
+        if(this.chart.type!=='url'){
+          this.$refs.loadingPreview.startLoading();
+          this.getChartData();
+        }else {
+          this.$refs.loadingPreview.startLoading();
+          this.urlShow = true;
+          this.setLoadFrame();
+        }
       },
       // 设置图表的宽度
       setSize(size) {
@@ -789,6 +826,12 @@
         this.seriesItemScreen = [];
         this.searchTime[0] = new Date().setHours(new Date().getHours()-1);
         this.searchTime[1] =new Date();
+
+        let iframe = document.querySelector('#chartUrlFrame');
+        if(iframe){
+          iframe.src="";
+        }
+
       },
       // 重新请求数据 刷新操作
       /*
@@ -955,6 +998,7 @@
       },
     },
     mounted() {
+
     },
     beforeDestroy() {
       this.clearChart();

@@ -105,6 +105,16 @@
         :panel-id="filter.panelId"
         :chart-index="index"
         :editChartId="'editChartId' + item.id"></chart-table>
+
+        <chart-url v-if="item.type === 'url'" ref="editChart" :key="'inner' + item.id"
+                     @on-refresh-data="refreshChart"
+                     @on-search-data="searchData"
+                     @on-remove-chart-block="removeChart"
+                     @on-drag-chart="editChartForDrag"
+                     @on-edit-chart-block="editData"
+                     :panel-id="filter.panelId"
+                     :chart-index="index"
+                     :editChartId="'editChartId' + item.id"></chart-url>
       </div>
    </draggable>
     <el-row v-if="dataList.length === 0"  class="noData"></el-row>
@@ -115,6 +125,7 @@ import axios from 'axios';
 import bus from '../../libs/bus';
 import lineChartBlock from './line-chart-block';
 import chartTable from './chart-table';
+import chartUrl from './chart-url';
 import draggable from 'vuedraggable'
 
 export default {
@@ -124,6 +135,7 @@ export default {
   components: {
     lineChartBlock,
     chartTable,
+    chartUrl,
     draggable,
   },
   data() {
@@ -489,6 +501,7 @@ export default {
           }else {
             this.dataList = this.dataTotalList;
           }
+          console.log('0000==========',this.dataList);
           this.$nextTick(() => {
             if (this.dataList.length > 0 && this.$refs.editChart) {
               this.$refs.editChart.forEach((item, i) => {
@@ -508,7 +521,12 @@ export default {
           if(oldDataListLen){
             realIndex += oldDataListLen;
           }
-          this.getChartData(item, realIndex);
+          let chartType = item.type;
+          if(chartType!=='url'){
+            this.getChartData(item, realIndex);
+          }else {
+            this.setSize(item.span, realIndex); // 设置该图表宽度
+          }
         });
       }
     },

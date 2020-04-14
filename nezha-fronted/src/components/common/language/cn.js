@@ -82,6 +82,7 @@ const cn = {
         chartId:"ID",
         chartName:"图表名称",
         type:"类型",
+        url:"Url",
         typeVal:{
           line:{
             label:"曲线图"
@@ -91,7 +92,13 @@ const cn = {
           },
           table:{
             label:"表格"
-          }
+          },
+          stackArea:{
+            label:"面积图"
+          },
+          url:{
+            label:"Url"
+          },
         },
         width:"宽",
         high:"高",
@@ -115,6 +122,18 @@ const cn = {
       recOneMonth:'最近1月',
       curMonth:'本月',
       lastMonth:'上月',
+      customTimeRange:'Custom time range',
+      lastFiveMin:'最近5分钟',
+      lastFifteenMin:'最近15分钟',
+      lastThirtyMin:'最近30分钟',
+      lastOneHour:'最近1小时',
+      lastThreeHour:'最近3小时',
+      lastSixHour:'最近6小时',
+      lastTwelveHour:'最近12小时',
+      lastTwentyFourHour:'最近24小时',
+      lastTwo:'最近2天',
+      lastSevenDay:'最近7天',
+      lastThirtyDay:'最近30天',
       refreshInterval:{
         never:'从不',
         oneMinute:'1分钟',

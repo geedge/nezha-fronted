@@ -537,6 +537,29 @@
             if(_this.consoleHeight===null || !_this.consoleHeight){_this.consoleHeight = _this.initConsoleHeight;}
           }
         },
+
+        debounce(operate, delay) {
+          let time = null
+          let timer = null
+          let newTime = null
+          function task() {
+            newTime = +new Date()
+            if(newTime - time < delay){
+              timer = setTimeout(task, delay)
+            }else {
+              operate()
+              timer = null
+            }
+            time = newTime
+          }
+          return function () {
+            // 更新时间戳
+            time = +new Date()
+            if(!timer){
+              timer = setTimeout(task, delay)
+            }
+          }
+        },
         windowChange(){
           //alert('winChange');
           if(this.editableTabs&&this.editableTabs.length>0){
@@ -576,7 +599,8 @@
       }
     },
     created() {
-      window.addEventListener('resize',this.windowChange);
+      //window.addEventListener('resize',this.windowChange);
+      window.addEventListener('resize',this.debounce(this.windowChange, 1000),false);
     },
     mounted() {
 

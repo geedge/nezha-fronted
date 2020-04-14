@@ -71,8 +71,7 @@ const en = {
       failedDetail:'Failed Detail'
     },
     reset:'Reset',
-    submit:'Submit',
-    noData:'No data',
+    submit:'Submit'
   },
   pageSize: '/page',
   webshell:{
@@ -117,6 +116,7 @@ const en = {
         chartName:"Chart Name",
         type:"Type",
         unit:"Unit",
+        url:"Url",
         legend:'Legend',
         legendTip:'Controls the name of the time series, using name or pattern. For example {{hostname}} will be replaced with label value for the label hostname.',
         typeVal:{
@@ -131,6 +131,9 @@ const en = {
           },
           stackArea:{
             label:"Stack Area"
+          },
+          url:{
+            label:"Url"
           }
         },
         width:'Width', //"宽"
@@ -157,6 +160,18 @@ const en = {
       recOneMonth:'Last 1 month',//'最近1月'
       curMonth:'This month',//'本月'
       lastMonth:'Last month',//'上月'
+      customTimeRange:'Custom time range',
+      lastFiveMin:'Last 5 minutes',
+      lastFifteenMin:'Last 15 minutes',
+      lastThirtyMin:'Last 30 minutes',
+      lastOneHour:'Last 1 hour',
+      lastThreeHour:'Last 3 hours',
+      lastSixHour:'Last 6 hours',
+      lastTwelveHour:'Last 12 hours',
+      lastTwentyFourHour:'Last 24 hours',
+      lastTwoDay:'Last 2 days',
+      lastSevenDay:'Last 7 days',
+      lastThirtyDay:'Last 30 days',
       refreshInterval:{
         never:'Never', //'从不'
         oneMinute:'1 minute', // 1 minute
@@ -284,7 +299,6 @@ const en = {
     assetConfirmDelete: 'Related endpoints and alerts will be removed, are you sure you want to delete this asset?',//Related endpoints and alerts will be removed, are you sure you want to delete this asset?
     yes: 'Yes', //"是"
     no: "No",//No
-    success: "Success",
     deleteSuccess: 'Delete success',//"删除成功"
     saveSuccess: 'Save success', //"保存成功"
     coverSuccess: 'Override success',//'覆盖成功'
@@ -574,12 +588,8 @@ const en = {
       username: 'User',
       operation: 'Operation',
       type: 'Type',
-      createDate: 'Date',
-      ip: "IP",
-      userId: "UserId",
-      operaId: "OperaId",
-      time: "time(ms)",
-      params: "Params"
+      createDate: 'CreateDate',
+      ip: "IP"
     },
     mib:{
       mib:'SNMP mib',
@@ -591,12 +601,11 @@ const en = {
       models:'Models',
       modelTip:'please select models',
       createMib:'Create Mib',
-      mibFiles:'Mib Files',
+      mibFile:'Mib File',
       uploadTip:'please upload mib file',
       requiredMibFile:'mib file is required',
       vendor:'Vendor',
       type:'Type',
-      mibBrowser: 'Mib browser',
     },
     system:{
       system:'System',

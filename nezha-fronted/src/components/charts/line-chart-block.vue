@@ -38,12 +38,12 @@
             <el-dropdown-item @click.native="showAllScreen"  ><i style="font-size: 16px;" class="el-icon-full-screen"></i>{{$t('dashboard.screen')}}</el-dropdown-item>
           </el-dropdown-menu>
           -->
-        <ul slot="dropdown" v-show="dropdownMenuShow"  :id="'dropdownUl'+chartIndex"  class="el-dropdown-menu nz-chart-dropdown"  style="position: absolute; top: 30px; left: calc(50% - 79px); transform-origin: center top; z-index: 1000;" >
-          <li  @click="refreshChart"  class="el-dropdown-menu__item">
+        <ul slot="dropdown" v-show="dropdownMenuShow"  :id="'dropdownUl'+chartIndex" :class="{'el-dropdown-menu nz-chart-dropdown':!isExplore,'el-dropdown-menu nz-chart-dropdown-one':isExplore}"    style="position: absolute; top: 30px; left: calc(50% - 79px); transform-origin: center top; z-index: 1000;" >
+          <li v-show="!isExplore"  @click="refreshChart"  class="el-dropdown-menu__item">
             <i class="global-active-color el-icon-refresh-right" style="font-size: 16px;"></i><span>{{$t('dashboard.refresh')}}</span></li>
-          <li  @click="editChart"  class="el-dropdown-menu__item">
+          <li v-show="!isExplore" @click="editChart"  class="el-dropdown-menu__item">
             <i class="nz-icon nz-icon-edit" style="font-size: 14px; margin-right: 11px; margin-left: 1px;"></i>{{$t('dashboard.edit')}}</li>
-          <li  @click="removeChart"  class="el-dropdown-menu__item">
+          <li v-show="!isExplore" @click="removeChart"  class="el-dropdown-menu__item">
             <i class="el-icon-delete" style="font-size: 16px;"></i>{{$t('dashboard.delete')}}</li>
           <li  @click="showAllScreen"  class="el-dropdown-menu__item">
             <i class="el-icon-full-screen" style="font-size: 16px;"></i>{{$t('dashboard.screen')}}</li>
@@ -80,8 +80,9 @@
                width="90%"
                @close="screenModal = false"
                @opened="initDialog">
-      <div slot="title">
-        <span class="nz-dialog-title">{{data.title}}</span>
+      <div slot="title" >
+        <span class="nz-dialog-title" v-show="!isExplore">{{data.title}}</span>
+        <span class="nz-dialog-title" v-show="isExplore">&nbsp;</span>
         <div class="float-right panel-calendar dialog-tool">
           <el-date-picker ref="calendar" prefix-icon=" " size="mini" class="nz-dashboard-picker"
                           format="yyyy/MM/dd HH:mm"
@@ -144,6 +145,10 @@
         type: Boolean,
         default: true,
       },
+      isExplore:{
+        type:Boolean,
+        default:false,
+      }
     },
     data() {
       return {
