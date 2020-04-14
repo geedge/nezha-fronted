@@ -3,7 +3,8 @@
 </style>
 <template>
     <div class="main-container metric-dashboard">
-        <div class="content-left">
+      <left-menu >
+        <div slot="content-left" class="slot-content">
             <div class="sidebar-title">{{$t('dashboard.title')}}</div>
             <div class="sidebar-info">
                 <div class="sidebar-info-item " @click="jumpTo('overview')">{{$t('dashboard.overview.title')}}</div>
@@ -11,7 +12,7 @@
                 <div class="sidebar-info-item sidebar-info-item-active">{{$t('dashboard.metricPreview.title')}}</div>
             </div>
         </div>
-        <div class="content-right">
+        <div slot="content-right" class="slot-content">
 
 
           <!--<div class="top-tools">
@@ -81,6 +82,7 @@
               </div>
             </div>
         </div>
+      </left-menu>
     </div>
 </template>
 <script>

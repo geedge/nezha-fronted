@@ -21,7 +21,8 @@
 <template>
   <div class="project">
 
-    <div class="content-left">
+    <left-menu >
+      <div slot="content-left" class="slot-content">
       <el-scrollbar ref="leftScrollbar" style="height: 100%">
         <div class="sidebar-title too-long-split">{{$t('project.project.project')}}：{{currentProject.name}}</div>
         <div class="sidebar-info">
@@ -45,7 +46,7 @@
     </div>
 
     <!--endpoint-->
-    <div class="content-right">
+    <div slot="content-right" class="slot-content">
       <!-- 主列表 -->
       <div class="main-list main-and-sub-transition" :class="{'main-list-with-sub': showSubList}">
         <div class="top-tools" v-show="mainResizeShow">
@@ -131,6 +132,7 @@
                   :from="'endpoint'" :targetTab="targetTab" :detail="endpointDetail" :obj="curEndpoint" :assetDetail="assetDetail"
                   @closeSubList="showSubList = false" @fullScreen="fullScreen" @exitFullScreen="exitFullScreen" @listResize="listResize" ></bottom-box>
     </div>
+    </left-menu>
 
     <element-set
       v-clickoutside="elementsetHide"

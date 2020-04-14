@@ -1,6 +1,7 @@
 <template>
   <div class="panel">
-    <div class="content-left">
+    <left-menu >
+      <div slot="content-left" class="slot-content">
       <div class="sidebar-title">{{$t('dashboard.title')}}</div>
       <div class="sidebar-info">
         <div class="sidebar-info-item " @click="jumpTo('overview')">{{$t('dashboard.overview.title')}}</div>
@@ -8,7 +9,7 @@
         <div class="sidebar-info-item" @click="jumpTo('metricPreview')">{{$t('dashboard.metricPreview.title')}}</div>
       </div>
     </div>
-    <div class="content-right">
+    <div slot="content-right" class="slot-content">
       <div class="top-tools">
         <div class="top-tool-main-left">
           <el-dropdown @command="panelChange" class="panel-dropdown-title" trigger="click" v-scrollBar:el-dropdown>
@@ -91,6 +92,7 @@
       </div>
       <button class="to-top" v-show="showTopBtn" @click="$toTop('el', $refs.dashboardScrollbar.wrap)"><i class="nz-icon nz-icon-top"></i></button>
     </div>
+    </left-menu>
 
     <panel-box :panel="panel" @reload="panelReload" @reloadForDel="panelReloadForDel" ref="panelBox"></panel-box>
     <chart-box ref="addChartModal" :panel-data="panelData" @reload="panelReload" @on-create-success="createSuccess" @on-delete-success="delChartOk" @reloadOnlyPanel="panelReloadOnlyPanel"></chart-box>
