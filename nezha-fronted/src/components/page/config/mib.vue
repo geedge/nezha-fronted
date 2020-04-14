@@ -5,7 +5,8 @@
 </style>
 <template>
   <div class="mib">
-    <div class="content-left">
+    <left-menu >
+      <div slot="content-left" class="slot-content">
       <div class="sidebar-title">{{$t('overall.config')}}</div>
       <div class="sidebar-info">
         <div class="sidebar-info-item sidebar-info-top" @click="jumpTo('account')" id="mib-jump-account">
@@ -32,7 +33,7 @@
         </div>
       </div>
     </div>
-    <div class="content-right">
+    <div slot="content-right" class="slot-content">
       <template v-if="showTab == 'file'">
         <div class="top-tools">
           <div class="nz-tab top-tool-main-right top-tool-main-right-to-left" style="width: 300px">
@@ -113,7 +114,7 @@
       </template>
       <mib-browser :showTab="showTab" v-if="showTab == 'browser'" @toFileTab="showTab = 'file'"></mib-browser>
     </div>
-
+    </left-menu>
     <element-set
       v-clickoutside="elementsetHide"
       :table-title="tableTitle"

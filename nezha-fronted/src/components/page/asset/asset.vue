@@ -1,7 +1,7 @@
 <template>
   <div class="asset" ref="asset">
-    <div class="content-left">
-
+    <left-menu >
+      <div slot="content-left" class="slot-content">
         <div class="sidebar-title">{{$t('asset.asset')}}</div>
         <div class="sidebar-info" style="height: 90%">
           <el-scrollbar ref="leftScrollbar" style="height: 100%">
@@ -89,8 +89,7 @@
           </el-scrollbar>
         </div>
     </div>
-
-          <div class="content-right">
+          <div slot="content-right" class="slot-content">
             <div class="main-list main-and-sub-transition" :class="{'main-list-with-sub': showSubList}">
               <div class="top-tools" v-show="mainResizeShow">
                 <div class="top-tool-main-right" :class="{'top-tool-main-right-to-left': showSubList}">
@@ -254,6 +253,7 @@
                   @exitFullScreen="exitFullScreen"
                   @listResize="listResize" ></bottom-box>
     </div>
+    </left-menu>
 
     <asset-box :edit-unit-show='editUnitShow' @refreshData="flushData" @sendStateData="tabControl"
                      ref="assetEditUnit"></asset-box>
@@ -400,7 +400,7 @@
           }, {
             label: this.$t("asset.tableTitle.procurementDate"),
             prop: 'purchaseDate',
-            show: true,
+            show: false,
           }, {
             label: this.$t("asset.tableTitle.principal"),
             prop: 'principal',

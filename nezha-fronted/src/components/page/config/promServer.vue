@@ -5,7 +5,8 @@
 </style>
 <template>
   <div class="prom">
-    <div class="content-left">
+    <left-menu >
+    <div slot="content-left" class="slot-content">
       <div class="sidebar-title">{{$t('overall.config')}}</div>
       <div class="sidebar-info">
         <div class="sidebar-info-item sidebar-info-top" @click="jumpTo('account')" id="prom-jump-account">
@@ -32,7 +33,7 @@
         </div>
       </div>
     </div>
-    <div class="content-right">
+    <div slot="content-right"class="slot-content">
       <div class="main-list main-and-sub-transition" :class="{'main-list-with-sub': showSubList}">
         <div class="top-tools" v-show="mainResizeShow">
           <div class="top-tool-main-right" :class="{'top-tool-main-right-to-left': showSubList}">
@@ -101,7 +102,7 @@
       <bottom-box v-if="showSubList" :show-sub-list="showSubList" :subResizeShow="subResizeShow" :obj="promServer" :isFullScreen="isFullScreen" :from="'promServer'" :targetTab="targetTab" :detail="promDetail"
                   @closeSubList="showSubList = false" @fullScreen="fullScreen" @exitFullScreen="exitFullScreen" @listResize="listResize" ></bottom-box>
     </div>
-
+    </left-menu>
     <transition name="right-box">
       <div class="right-box right-box-prom" v-if="rightBox.show" v-clickoutside="clickos">
         <!-- begin--顶部按钮-->

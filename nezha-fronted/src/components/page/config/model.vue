@@ -5,7 +5,8 @@
 </style>
 <template>
   <div class="model">
-    <div class="content-left">
+    <left-menu >
+      <div slot="content-left" class="slot-content">
       <div class="sidebar-title">{{$t('overall.config')}}</div>
       <div class="sidebar-info">
         <div class="sidebar-info-item sidebar-info-top" @click="jumpTo('account')" id="model-jump-account">
@@ -32,7 +33,7 @@
         </div>
       </div>
     </div>
-    <div class="content-right">
+    <div slot="content-right" class="slot-content">
       <div class="top-tools">
         <div class="top-tool-main-right">
           <div class="top-tool-search">
@@ -82,7 +83,7 @@
       <Pagination :tableId="tableId" :pageObj="pageObj" @pageNo='pageNo' @pageSize='pageSize' ref="Pagination"></Pagination>
       <button class="to-top" v-show="showTopBtn" @click="$toTop"><i class="nz-icon nz-icon-top"></i></button>
     </div>
-
+    </left-menu>
     <element-set
       v-clickoutside="elementsetHide"
       :table-title="tableTitle"

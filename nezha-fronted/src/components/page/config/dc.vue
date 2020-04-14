@@ -33,7 +33,8 @@
 </style>
 <template>
     <div class="dc" >
-      <div class="content-left">
+      <left-menu >
+        <div slot="content-left" class="slot-content">
         <div class="sidebar-title">{{$t('overall.config')}}</div>
         <div class="sidebar-info">
           <div class="sidebar-info-item sidebar-info-top" @click="jumpTo('account')" id="prom-jump-account">
@@ -63,7 +64,7 @@
         </div>
       </div>
       <!--dc table start-->
-      <div class="content-right">
+      <div slot="content-right" class="slot-content">
         <div class="main-list main-and-sub-transition" :class="{'main-list-with-sub': showSubList}">
           <div class="top-tools" v-show="mainResizeShow">
             <div class="top-tool-main-right" :class="{'top-tool-main-right-to-left': showSubList}">
@@ -81,6 +82,7 @@
             class="nz-table"
             :data="tableData"
             border
+            tooltip-effect="light"
             v-show="mainResizeShow"
             v-scrollBar:el-table
             :height="mainTableHeight"
@@ -88,6 +90,7 @@
             style="width: 100%;">
             <el-table-column
               :resizable="false"
+              show-overflow-tooltip
               v-for="(item, index) in tablelable"
               v-if="item.show"
               :width="item.width"
@@ -150,6 +153,7 @@
         <bottom-box v-if="showSubList" :show-sub-list="showSubList" :subResizeShow="subResizeShow" :obj="cabinetDc" :isFullScreen="isFullScreen" :from="'dc'" :targetTab="targetTab" :detail="dcDetail"
                      @closeSubList="showSubList = false" @fullScreen="fullScreen" @exitFullScreen="exitFullScreen" @listResize="listResize" ></bottom-box>
       </div>
+      </left-menu>
       <!--dc table end-->
       <element-set
         v-clickoutside="elementsetHide"

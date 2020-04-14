@@ -5,7 +5,8 @@
 </style>
 <template>
   <div class="list">
-    <div class="content-left">
+    <left-menu >
+      <div slot="content-left" class="slot-content">
       <div class="sidebar-title">{{$t('alert.alert')}}</div>
       <div class="sidebar-info">
         <div class="sidebar-info-item sidebar-info-top sidebar-info-item-active">{{$t('alert.alertList')}}</div>
@@ -14,7 +15,7 @@
         </div>
       </div>
     </div>
-    <div class="content-right">
+    <div slot="content-right" class="slot-content">
       <div class="main-list main-and-sub-transition" :class="{'main-list-with-sub': showSubList}">
         <div class="top-tools" v-show="mainResizeShow">
           <div class="top-tool-main-right" :class="{'top-tool-main-right-to-left': showSubList}">
@@ -128,6 +129,7 @@
       <bottom-box v-if="showSubList" :show-sub-list="showSubList" :subResizeShow="subResizeShow" :isFullScreen="isFullScreen" :from="'alertMessage'" :targetTab="targetTab" :detailList="tabDetailList"
                   @closeSubList="showSubList = false" @fullScreen="fullScreen" @exitFullScreen="exitFullScreen" @listResize="listResize" :tabList="tabList"></bottom-box>
     </div>
+    </left-menu>
     <!--<alert-config-box :parentAlertRule="viewRuleData" @reload="getAlertList" ref="alertConfigBox"></alert-config-box>
     <project-box :project="viewProjectData" ref="projectBox" @reload="getAlertList"></project-box>
     <module-box :module="viewModuleData" @reload="getAlertList" ref="moduleBox"></module-box>-->

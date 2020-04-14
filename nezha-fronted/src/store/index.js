@@ -39,6 +39,7 @@ const store = new Vuex.Store({
     consoleCount:0,//当前console窗口数
     isAddConsole:false,//是否增加窗口
     consoleParam:{},//新开console窗口参数
+    leftMenuStat:false, //0展开状态，1隐藏状态
   },
   getters: {
   },
@@ -111,6 +112,9 @@ const store = new Vuex.Store({
     minConsole(state){//最小化窗口
       state.consoleShow=false;
     },
+    setLeftMenuStat:function(state,data){
+      state.leftMenuStat=data
+    }
   },
   actions: {
   }

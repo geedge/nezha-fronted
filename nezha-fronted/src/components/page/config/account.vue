@@ -5,7 +5,8 @@
 </style>
 <template>
   <div class="account">
-    <div class="content-left">
+    <left-menu >
+    <div slot="content-left" class="slot-content">
       <div class="sidebar-title">{{$t('overall.config')}}</div>
       <div class="sidebar-info">
         <div class="sidebar-info-item sidebar-info-top sidebar-info-item-active">{{$t('config.account.account')}}</div>
@@ -32,7 +33,7 @@
         </div>
       </div>
     </div>
-    <div class="content-right">
+    <div slot="content-right" class="slot-content">
       <!-- 主页面 -->
       <div class="main-list main-and-sub-transition" :class="{'main-list-with-sub': showSubList}">
         <!-- 顶部工具栏 -->
@@ -112,7 +113,7 @@
       <bottom-box v-if="showSubList" :show-sub-list="showSubList" :subResizeShow="subResizeShow" :obj="user" :isFullScreen="isFullScreen" :from="'account'" :targetTab="targetTab" :detail="userDetail"
                   @closeSubList="showSubList = false" @fullScreen="fullScreen" @exitFullScreen="exitFullScreen" @listResize="listResize" ></bottom-box>
     </div>
-
+    </left-menu>
     <transition name="right-box">
       <div class="right-box right-box-account" v-if="rightBox.show" v-clickoutside="clickos">
         <!-- begin--顶部按钮-->
@@ -571,7 +572,7 @@
           }
         }
         this.getTableData();
-      }
+      },
     },
     computed: {
       isCurrentUser() {

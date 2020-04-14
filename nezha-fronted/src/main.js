@@ -40,6 +40,7 @@ import bottomBox from "./components/common/bottomBox/bottomBox"; //上滑框
 import "perfect-scrollbar/css/perfect-scrollbar.css";
 import loading from "./components/common/loading";
 import mibBox from "./components/common/rightBox/mibBox";
+import leftMenu from "./components/common/leftMenu";
 
 Vue.component("Pagination", Pagination);
 Vue.component("searchInput", searchInput);
@@ -62,6 +63,7 @@ Vue.component("select-area", selectArea);
 Vue.component('loading',loading);
 Vue.component('bottom-box', bottomBox);
 Vue.component('mib-box',mibBox);
+Vue.component('left-menu',leftMenu);
 
 Vue.prototype.$axios = axios;
 Vue.prototype.$post = post;

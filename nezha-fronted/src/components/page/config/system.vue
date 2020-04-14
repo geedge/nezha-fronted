@@ -1,6 +1,7 @@
 <template>
   <div class="system">
-    <div class="content-left">
+    <left-menu >
+      <div slot="content-left" class="slot-content">
       <div class="sidebar-title">{{$t('overall.config')}}</div>
       <div class="sidebar-info">
         <div class="sidebar-info-item sidebar-info-top" @click="jumpTo('account')" id="prom-jump-account">
@@ -27,7 +28,7 @@
         </div>
       </div>
     </div>
-    <div class="content-right system-tabs">
+    <div slot="content-right" class="slot-content system-tabs">
       <el-tabs type="border-card" @tab-click="selectTab" v-model="activeTab" class="system-tabs">
         <el-tab-pane :label="$t('config.system.basic.basic')" name="basic">
           <div class="system-config-form">
@@ -190,6 +191,7 @@
         </el-tab-pane>
       </el-tabs>
     </div>
+    </left-menu>
   </div>
 </template>
 

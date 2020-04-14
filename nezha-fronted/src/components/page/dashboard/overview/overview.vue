@@ -1,7 +1,8 @@
 <template>
     <div class="overview">
       <!--左侧菜单栏-->
-      <div class="overview-left content-left">
+      <left-menu :resize-func="resizeChart">
+      <div slot="content-left" class="overview-left slot-content">
         <div class="sidebar-title">{{$t('dashboard.title')}}</div>
         <div class="sidebar-info">
           <div class="sidebar-info-item sidebar-info-item-active" >{{$t('dashboard.overview.title')}}</div>
@@ -10,7 +11,7 @@
         </div>
       </div>
       <!--右侧内容-->
-      <div class="overview-right content-right" id="mainDisplay">
+      <div class="overview-right slot-content" id="mainDisplay" slot="content-right">
         <!--标题-->
         <div class="overview-content-header">
           <div class="header-title" :class="{'hide-div':!isFullScreen}">{{systemName&&systemName != 'undefined'&&systemName != null?systemName: $t('dashboard.overview.contentTitle')}}</div>
@@ -86,6 +87,7 @@
           </el-scrollbar>
         </div>
       </div>
+      </left-menu>
     </div>
 </template>
 
@@ -1175,6 +1177,16 @@
           }
         });
       },
+      resizeChart:function() {
+        this.$nextTick(() => {
+          let width = this.$refs.chartbox.$el.clientWidth;
+          let height = this.$refs.chartbox.$el.clientHeight * .95;
+          this.$refs.chartbox.resizeChart(width, height);
+          let mapWidth = this.$refs.dataCenterMap.$el.clientWidth;
+          let mapHeight = this.$refs.dataCenterMap.$el.clientHeight * .95;
+          this.$refs.dataCenterMap.resizeChart(mapWidth, mapHeight);
+        })
+      }
     },
     computed:{
 
@@ -1207,12 +1219,7 @@
     watch:{
       isFullScreen:function(n,o){
         this.$nextTick(()=>{
-          let width=this.$refs.chartbox.$el.clientWidth;
-          let height=this.$refs.chartbox.$el.clientHeight * .95;
-          this.$refs.chartbox.resizeChart(width,height);
-          let mapWidth=this.$refs.dataCenterMap.$el.clientWidth;
-          let mapHeight=this.$refs.dataCenterMap.$el.clientHeight * .95;
-          this.$refs.dataCenterMap.resizeChart(mapWidth,mapHeight);
+          this.resizeChart();
         });
       }
     }
