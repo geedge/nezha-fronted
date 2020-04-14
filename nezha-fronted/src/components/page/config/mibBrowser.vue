@@ -124,9 +124,8 @@
             <button slot="reference" @click="advancedShow = true" class="nz-btn nz-btn-size-normal nz-btn-style-light" id="browser-advanced">
               <i class="el-icon-more"></i>
             </button>
-          </el-popover><button
-            @click="search(false)
-" class="nz-btn nz-btn-size-normal nz-btn-style-light" id="browser-go">Go
+          </el-popover><button :class="{'nz-btn-disabled': loading}"
+            @click="search(false)" class="nz-btn nz-btn-size-normal nz-btn-style-light" id="browser-go">Go
           </button>
         </div>
       </div>
@@ -380,6 +379,9 @@
         this.getWalkData();
       },
       search(set) {
+        if (this.loading) {
+          return;
+        }
         if (!set) {
           if (this.searchParam.operation == 'set') {
             this.snmpSetFormVisible = true;
