@@ -182,7 +182,7 @@
                 </el-col>
               </el-row>
 
-              <el-row v-if="currentModule.security_level == 'authNoPriv' || currentModule.security_level == 'authPriv'">
+              <el-row class="same-label-width" v-if="currentModule.security_level == 'authNoPriv' || currentModule.security_level == 'authPriv'">
                 <el-col :span="6">
                   <div class="sub-label">{{$t('project.module.authProtocol')}}</div>
                 </el-col>
@@ -196,7 +196,7 @@
                 </el-col>
               </el-row>
 
-              <el-row v-if="currentModule.security_level == 'authPriv'">
+              <el-row class="same-label-width" v-if="currentModule.security_level == 'authPriv'">
                 <el-col :span="6">
                   <div class="sub-label">{{$t('project.module.privProtocol')}}</div>
                 </el-col>

@@ -87,7 +87,7 @@
                   </el-col>
                 </el-row>
 
-                <el-row class="mib-browser-ad-search-item" v-if="searchParamPop.auth.securityLevel == 'authNoPriv' || searchParamPop.auth.securityLevel == 'authPriv'">
+                <el-row class="mib-browser-ad-search-item same-label-width" v-if="searchParamPop.auth.securityLevel == 'authNoPriv' || searchParamPop.auth.securityLevel == 'authPriv'">
                   <el-col :span="6">
                     <div class="mib-browser-ad-search-label">{{$t('project.module.authProtocol')}}</div>
                   </el-col>
@@ -99,7 +99,7 @@
                   </el-col>
                 </el-row>
 
-                <el-row class="mib-browser-ad-search-item" v-if="searchParamPop.auth.securityLevel == 'authPriv'">
+                <el-row class="mib-browser-ad-search-item same-label-width" v-if="searchParamPop.auth.securityLevel == 'authPriv'">
                   <el-col :span="6">
                     <div class="mib-browser-ad-search-label">{{$t('project.module.privProtocol')}}</div>
                   </el-col>
@@ -573,7 +573,7 @@
   line-height: 24px;
 }
 .mib-browser-ad-search {
-  width: 400px;
+  width: 450px;
 }
 .mib-browser-model-dropdown {
   height: 300px;
