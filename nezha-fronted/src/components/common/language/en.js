@@ -228,7 +228,7 @@ const en = {
         dropDownLabel:{
           type:'type',
           model:'model',
-          dc:'dataCenter'
+          dc:'data center'
         },
       },
       project:{
@@ -334,7 +334,7 @@ const en = {
       assetInfo:'Asset information',//'资产信息'
       assetType:'Asset type',//'资产类型'
       impi:{
-        title:'IMPI',
+        title:'IPMI',
         host:'Host',
         port:'Port',
       },
@@ -606,7 +606,7 @@ const en = {
       requiredMibFile:'MIB file is required',
       vendor:'Vendor',
       type:'Type',
-      mibBrowser: 'Mib browser',
+      mibBrowser: 'MIB browser',
     },
     system:{
       system:'System',
