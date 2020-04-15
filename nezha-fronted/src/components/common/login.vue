@@ -6,12 +6,12 @@
       <div class="login-label"></div>
       <div class="login-input">
         <i class="nz-icon nz-icon-user"></i>
-        <input id="usernameInput" v-model="loginData.username" autocomplete="new-password" :placeholder="$t('login.username')"></input>
+        <input id="usernameInput" v-model="loginData.username" name="userName" autocomplete="on" :placeholder="$t('login.username')"></input>
       </div>
       <div class="login-label"></div>
       <div class="login-input">
         <i class="nz-icon nz-icon-password"></i>
-        <input v-model="loginData.password" type="password" autocomplete="new-password" :placeholder="$t('login.password')"></input>
+        <input v-model="loginData.password" type="password" name="password" autocomplete="on" :placeholder="$t('login.password')"></input>
       </div>
       <div class="login-foot">
         <button @click="login" class="login-btn" id="login">{{$t("login.login")}}</button>

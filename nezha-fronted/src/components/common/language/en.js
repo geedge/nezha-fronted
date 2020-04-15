@@ -45,7 +45,7 @@ const en = {
     createAlertRule:'create alert rule',
     createAccount:'create account',
     createPrometheusServer:'create prometheus server',
-    createDatacenter:'create datacenter',
+    createDatacenter:'create Data Center',
     createCabinet:'create cabinet',
     createModel:'create model',
     createMib:'create mib',
@@ -213,7 +213,7 @@ const en = {
         title:'Asset',
         assetType:'Asset Type',
         modelStat:'Model',
-        dcStat:'DataCenter',
+        dcStat:'Data Center',
         num:'Num',
         alert:'Alert',
         alertTotal:'Total',
@@ -238,7 +238,7 @@ const en = {
         endpoint:'Endpoint',
       },
       dataCenter:{
-        dataCenter:'DataCenter',
+        dataCenter:'Data Center',
         cabinet:'Cabinet',
         promServer:'Prom Server',
       },
@@ -318,7 +318,7 @@ const en = {
     assetStatDown:'Never',
     pingInactive:'inactive',
     left:{
-      dataCenter:'DataCenter',
+      dataCenter:'Data Center',
       assetType:'Asset Type',
       vendor:'Vendor',
       ping:'Ping',
@@ -354,17 +354,17 @@ const en = {
       purchaseDate:'Purchase date',//'购买日期'
       dataSelectTip:'Please select date',//'请选择日期'
       dc:'DC',
-      dcName:'Datacenter name',//'DC名称'
+      dcName:'Data Center name',//'DC名称'
       AddIdcTab:{
-        title:'New Datacenter',//'新增DC'
-        dcName:'Datacenter name',//'DC名称'
+        title:'New Data Center',//'新增DC'
+        dcName:'Data Center name',//'DC名称'
         location:'Location',//'地区'
         principal:'Administrator',//'负责人'
         tel:'Telephone'//'电话'
       },
       editIdcTab:{
-        title:'Edit Datacenter',//'编辑DC'
-        dcName:'Datacenter name',//'DC名称'
+        title:'Edit Data Center',//'编辑DC'
+        dcName:'Data Center name',//'DC名称'
         location:'Location',//'地区'
         principal:'Administrator',//'负责人'
         tel:'Telephone'//'电话'
@@ -431,7 +431,7 @@ const en = {
       dc:'DC',
       dcName:'DC name',//'DC名称'
       AddIdcTab:{
-        title:'New Datacenter',//'新增DC'
+        title:'New Data Center',//'新增DC'
         dcName:'DC name',//'DC名称'
         location:'Location',//'地区'
         principal:'Administrator',//'负责人'
@@ -536,7 +536,7 @@ const en = {
       checkTime: 'Check time'
     },
     dc: {
-      dc: 'Datacenter',
+      dc: 'Data Center',
       area: "Area",
       selectArea: 'Select area',
       cabinetNum: "Cabinet number",
@@ -545,7 +545,7 @@ const en = {
       cabinets: "Cabinets"
     },
     model: {
-      model: 'Model',
+      model: 'Asset Model',
       vendor: 'Vendor',
       assets: "Assets",
       editModel: 'Edit model',
@@ -592,18 +592,18 @@ const en = {
       ip: "IP"
     },
     mib:{
-      mib:'SNMP mib',
+      mib:'SNMP MIB',
       fileName:'FileName',
       remark:'Remark',
       updateUser:'Update User',
       updateAt:'Update Time',
-      editMib:'Edit Mib',
+      editMib:'Edit MIB',
       models:'Models',
       modelTip:'please select models',
-      createMib:'Create Mib',
-      mibFile:'Mib File',
-      uploadTip:'please upload mib file',
-      requiredMibFile:'mib file is required',
+      createMib:'Create MIB',
+      mibFile:'MIB File',
+      uploadTip:'please upload MIB file',
+      requiredMibFile:'MIB file is required',
       vendor:'Vendor',
       type:'Type',
     },
