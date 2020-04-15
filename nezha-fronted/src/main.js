@@ -14,8 +14,13 @@ import App from './App'
 import router from './router'
 import VueResource from 'vue-resource'
 import axios from 'axios';
+
+import plTable from 'pl-table'
+import 'pl-table/themes/index.css'
+
 import {post, get, put, del} from './http.js'
 import {toTop, clickoutside, scrollBar, bottomBoxWindow} from './tools.js'
+
 
 import Pagination from "./components/common/pagination"; //引入全局分页组件
 import searchInput from "./components/common/searchInput"; //搜索框组件
@@ -85,6 +90,7 @@ Vue.config.productionTip = false;
 Vue.use(ElementUI);
 Vue.use(Vuex);
 Vue.use(VueResource);
+Vue.use(plTable);
 
 /*指令*/
 Vue.directive('clickoutside', clickoutside);
@@ -103,5 +109,7 @@ export default vm;
 
 /* 重写组件内容 */
 const elUi = require("element-ui");
+const pl = require("pl-table");
 //去掉el-table表头右侧的滚动条预留空间
 elUi.Table.components.TableHeader.computed.hasGutter = () => {return false;};
+pl.PlTable.components.ElTable.components.TableHeader.computed.hasGutter = () => {return false;};

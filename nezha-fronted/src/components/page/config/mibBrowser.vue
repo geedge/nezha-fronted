@@ -217,20 +217,21 @@
             <span @click="clearResult" class="mib-browser-table-op" :title="$t('overall.clear')"><i class="el-icon-close"></i></span>
           </span>
         </div>
-        <el-table :data="resultData" border class="mib-browser-table nz-table" v-scrollBar:el-table height="calc(100% - 31px)" style="width: 100%;" v-loading="loading">
-          <el-table-column label="Name/OID">
-            <div slot-scope="scope" class="too-long-split" @click="searchParam.oid = scope.row.oid">{{scope.row.name ? scope.row.name : scope.row.oid}}</div>
-          </el-table-column>
-          <el-table-column label="Value">
-            <div slot-scope="scope" @click="searchParam.oid = scope.row.oid">{{scope.row.value}}</div>
-          </el-table-column>
-          <el-table-column label="Type">
-            <div slot-scope="scope" @click="searchParam.oid = scope.row.oid">{{scope.row.type}}</div>
-          </el-table-column>
-          <el-table-column label="IP:Port">
-            <div slot-scope="scope" @click="searchParam.oid = scope.row.oid">{{scope.row.ip + (scope.row.port ? ":" + scope.row.port : "")}}</div>
-          </el-table-column>
-        </el-table>
+        <pl-table :row-height="28" use-virtual :datas="resultData" border :empty-text="$t('config.mib.noData')"
+                  class="mib-browser-table nz-table" style="width: 100%;height: calc(100% - 31px)" v-loading="loading" v-scrollBar:el-table :pagination-show="false">
+          <pl-table-column label="Name/OID" v-slot="{row}">
+            <div class="too-long-split" @click="searchParam.oid = row.oid">{{row.name ? row.name : row.oid}}</div>
+          </pl-table-column>
+          <pl-table-column label="Value" v-slot="{row}">
+            <template><div @click="searchParam.oid = row.oid">{{row.value}}</div></template>
+          </pl-table-column>
+          <pl-table-column label="Type" v-slot="{row}">
+            <template><div @click="searchParam.oid = row.oid">{{row.type}}</div></template>
+          </pl-table-column>
+          <pl-table-column label="IP:Port" v-slot="{row}">
+            <template><div @click="searchParam.oid = row.oid">{{row.ip + (row.port ? ":" + row.port : "")}}</div></template>
+          </pl-table-column>
+        </pl-table>
       </div>
     </div>
 
@@ -749,11 +750,11 @@
   }
 }
 
-.mib-browser-table.nz-table.el-table th .cell {
+.mib-browser-table.nz-table th .cell {
   height: 28px;
   line-height: 28px;
 }
-.mib-browser-table.nz-table.el-table td .cell {
+.mib-browser-table.nz-table td .cell {
   height: 28px;
   min-height: 28px;
   line-height: 28px;

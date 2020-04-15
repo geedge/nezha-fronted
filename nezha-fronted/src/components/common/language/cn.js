@@ -603,7 +603,8 @@ const cn = {
       requiredMibFile: "必须上传MIB文件",
       vendor: "厂商",
       type: "类型",
-      mibBrowser: "MIB浏览器"
+      mibBrowser: "MIB浏览器",
+      noData: "暂无数据"
     },
     system: {
       system: "系统设置",

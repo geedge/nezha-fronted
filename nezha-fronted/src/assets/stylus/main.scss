@@ -660,11 +660,15 @@ li{
 /* end--二级顶部工具栏*/
 
 /* start--内容*/
-.nz-table.el-table{
+.nz-table {
   border: none;
   font-size: 12px;
 }
-.nz-table.el-table::before {
+.nz-table .el-table {
+  border: none;
+  font-size: 12px;
+}
+.nz-table::before {
   height: 0;
 }
 .nz-table .el-table__fixed-right::before, .nz-table .el-table__fixed::before {
@@ -676,17 +680,17 @@ li{
 .nz-table .el-table__header {
   line-height: 36px;
 }
-.nz-table.el-table .el-table__header th {
+.nz-table .el-table__header th {
   color: #666666;
   font-weight: normal;
   font-size: 14px;
   border-left: 1px solid white;
   border-bottom: 1px solid #d4d4d4;
 }
-.nz-table.el-table .el-table__header th:first-of-type {
+.nz-table .el-table__header th:first-of-type {
   border-left: none;
 }
-.nz-table.el-table .el-table__header th:nth-last-child(2) {
+.nz-table .el-table__header th:nth-last-child(2) {
   border-right: none;
 }
 .nz-table.el-table--border td, .el-table--border th, .nz-table .el-table__body-wrapper .el-table--border.is-scrolling-left~.el-table__fixed {
@@ -695,37 +699,40 @@ li{
 .nz-table .el-table__body {
   width: 100% !important;
 }
-.chart-table .nz-table.el-table td {
+.nz-table .el-table__virtual-wrapper {
+  width: 100% !important;
+}
+.chart-table .nz-table td {
   background-color: white;
 }
-.nz-table.el-table td {
+.nz-table td {
   padding: 0;
   background-color: $content-right-background-color;
 }
-.nz-table.el-table td.has-message .cell {
+.nz-table td.has-message .cell {
   background-color: #f8d7da;
 }
-.nz-table.el-table td.has-no-message .cell {
+.nz-table td.has-no-message .cell {
   background-color: #d4edda;
 }
-.nz-table.el-table th {
+.nz-table th {
   padding: 0;
 }
-.nz-table.el-table th:last-of-type {
+.nz-table th:last-of-type {
   background-color: $content-right-background-color;
 }
 .nz-table .el-table__body-wrapper {
   background-color: $content-right-background-color;
   overflow: hidden;
 }
-.chart-table .nz-table.el-table th:last-of-type {
+.chart-table .nz-table th:last-of-type {
   background-color: white;
 }
 .chart-table .nz-table .el-table__body-wrapper {
   background-color: white;
 }
 //小信息栏边框
-.nz-table.el-table th .cell{
+.nz-table th .cell{
   height: 32px;
   line-height: 32px;
   display:flex;
@@ -733,11 +740,11 @@ li{
   border-right: 1px solid #d4d4d4;
   /*box-shadow: inset -1px -2px 1px 0 rgba(0,0,0,0.11), inset 2px 2px 1px 0 rgba(255,255,255,0.50);*/
 }
-.nz-table.el-table td .cell{
+.nz-table td .cell{
   min-height: 38px;
   line-height: 38px;
 }
-.nz-table.el-table td.alert-message-list-labels .cell{
+.nz-table td.alert-message-list-labels .cell{
   line-height: unset;
   padding: 3px;
 }

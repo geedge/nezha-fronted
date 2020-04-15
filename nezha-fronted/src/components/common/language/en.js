@@ -607,6 +607,7 @@ const en = {
       vendor:'Vendor',
       type:'Type',
       mibBrowser: 'MIB browser',
+      noData: "No Data"
     },
     system:{
       system:'System',
