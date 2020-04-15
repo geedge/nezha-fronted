@@ -29,7 +29,7 @@
       </div>
     </div>
     <div slot="content-right" class="slot-content system-tabs">
-      <el-tabs type="border-card" @tab-click="selectTab" v-model="activeTab" class="system-tabs">
+      <el-tabs type="border-card" @tab-click="selectTab" v-model="activeTab" class="system-tabs" >
         <el-tab-pane :label="$t('config.system.basic.basic')" name="basic">
           <div class="system-config-form">
             <el-form :model="basic"  label-width="180px" size="small" ref="basicForm" :rules="basic.asset_ping_switch == 'on'?basicRules:basicRules2" :validate-on-rule-change="false">
@@ -65,13 +65,13 @@
                 </el-select>
               </el-form-item>
               <el-form-item>
-                <el-button class="nz-btn nz-btn-size-normal nz-btn-style-light nz-btn-min-width-100" @click="resetForm('basicForm')" style="top:2px">{{$t('overall.reset')}}</el-button>
+                <el-button class="nz-btn nz-btn-size-normal nz-btn-style-light nz-btn-min-width-100" @click="resetForm('basicForm')" style="top:2px">{{$t('overall.clear')}}</el-button>
                 <el-button type="primary" @click="saveSetInfo('basic','basicForm')" class="nz-btn nz-btn-size-normal nz-btn-style-normal nz-btn-min-width-100">{{$t('overall.submit')}}</el-button>
               </el-form-item>
             </el-form>
           </div>
         </el-tab-pane>
-        <el-tab-pane :label="$t('config.system.email.email')" name="email">
+        <el-tab-pane :label="$t('config.system.email.email')" name="email" >
           <div class="system-config-form">
             <el-form :model="email"  label-width="180px" size="small" ref="emailForm" :rules="email.email_enable=='on'?emailRules:{}" :validate-on-rule-change="false">
               <el-form-item :label="$t('config.system.email.enable')" prop="email_enable">
@@ -111,8 +111,8 @@
                 </el-row>
               </el-form-item>
               <el-form-item>
-                <el-button class="nz-btn nz-btn-size-normal nz-btn-style-light nz-btn-min-width-100" @click="resetForm('emailForm')" style="top:2px">{{$t('overall.reset')}}</el-button>
-                <el-button class="nz-btn nz-btn-size-normal nz-btn-style-light nz-btn-min-width-100" @click="testSetInfo('email','emailForm')" style="top:2px">{{$t('config.system.email.testConnection')}}</el-button>
+                <el-button class="nz-btn nz-btn-size-normal nz-btn-style-light nz-btn-min-width-100" @click="resetForm('emailForm')" style="top:2px">{{$t('overall.clear')}}</el-button>
+                <el-button class="nz-btn nz-btn-size-normal nz-btn-style-light nz-btn-min-width-100" :class="{'nz-btn-disabled':email.email_enable == 'off'}" :disabled="email.email_enable == 'off'" @click="testSetInfo('email','emailForm')" style="top:2px">{{$t('config.system.email.testConnection')}}</el-button>
                 <el-button type="primary" @click="saveSetInfo('email','emailForm')" class="nz-btn nz-btn-size-normal nz-btn-style-normal nz-btn-min-width-100">{{$t('overall.submit')}}</el-button>
               </el-form-item>
             </el-form>
@@ -155,7 +155,7 @@
                 <el-input v-model="ldap.ldap_mapping"></el-input>
               </el-form-item>
               <el-form-item>
-                <el-button class="nz-btn nz-btn-size-normal nz-btn-style-light nz-btn-min-width-100" @click="resetForm('ldapForm')" style="top:2px">{{$t('overall.reset')}}</el-button>
+                <el-button class="nz-btn nz-btn-size-normal nz-btn-style-light nz-btn-min-width-100" @click="resetForm('ldapForm')" style="top:2px">{{$t('overall.clear')}}</el-button>
                 <el-button class="nz-btn nz-btn-size-normal nz-btn-style-light nz-btn-min-width-100" @click="testSetInfo('ldap','ldapForm')" style="top:2px">{{$t('config.system.email.testConnection')}}</el-button>
                 <el-button type="primary" @click="saveSetInfo('ldap','ldapForm')" class="nz-btn nz-btn-size-normal nz-btn-style-normal nz-btn-min-width-100">{{$t('overall.submit')}}</el-button>
               </el-form-item>
@@ -357,6 +357,9 @@
                 let sets=response.data[type];
                 for(let key in sets){
                   this[type][key]=sets[key];
+                }
+                if(type == 'email'){
+                  this.$refs.emailForm.clearValidate();
                 }
               }
             })

@@ -668,8 +668,8 @@ const cn = {
   },
   alert: {
     alert: "告警",
-    message: "信息",
-    rule: "规则",
+    message: "告警信息",
+    rule: "告警规则",
     alertList: "告警信息",
     alertConfig: "告警规则",
     alertName: "告警名称",

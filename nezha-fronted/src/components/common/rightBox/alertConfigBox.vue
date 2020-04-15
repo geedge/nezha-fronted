@@ -320,7 +320,7 @@
       },
 
       getProjectList() {
-        this.$get('project', {pageNo: 1, pageSize: 9999}).then(response => {
+        this.$get('project', {pageNo: 1, pageSize: -1}).then(response => {
           if (response.code == 200) {
             this.linkObjList = response.data.list;
           }
@@ -328,7 +328,7 @@
       },
 
       getModuleList() {
-        this.$get('module', {pageNo: 1, pageSize: 9999}).then(response => {
+        this.$get('module', {pageNo: 1, pageSize: -1}).then(response => {
           if (response.code == 200) {
             this.linkObjList = response.data.list;
           }
@@ -336,7 +336,7 @@
       },
 
       getAssetList() {
-        this.$get('asset', {pageNo: 1, pageSize: 9999}).then(response => {
+        this.$get('asset', {pageNo: 1, pageSize: -1}).then(response => {
           if (response.code == 200) {
             this.linkObjList = response.data.list;
           }
