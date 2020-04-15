@@ -768,7 +768,7 @@
         })
       },
       queryMapChartGeoJson:function(){
-        this.$get('/sysConfig/list?paramKey=geoJson').then(response=>{
+        this.$get('/sysConfig?paramKey=geoJson').then(response=>{
           if(response.code == 200){
             this.map={
               name:'Kazakhstan',
