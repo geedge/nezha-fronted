@@ -25,7 +25,7 @@
         class="sub-list-tab" :class="{'sub-list-tab-active': targetTab == 'project'}" @click="changeTab('project')">{{$t("project.project.project")}}</div><div
         class="sub-list-tab" :class="{'sub-list-tab-active': targetTab == 'module'}" @click="changeTab('module')">{{$t("project.module.module")}}</div><div
         class="sub-list-tab" :class="{'sub-list-tab-active': targetTab == 'endpoint'}" @click="changeTab('endpoint')">{{$t("project.endpoint.endpoint")}}</div><div
-        class="sub-list-tab" :class="{'sub-list-tab-active': targetTab == 'datacenter'}" @click="changeTab('datacenter')">{{$t("config.dc.dc")}}</div>
+        class="sub-list-tab" :class="{'sub-list-tab-active': targetTab == 'dc'}" @click="changeTab('dc')">{{$t("config.dc.dc")}}</div>
         </template>
       </div>
     </div>

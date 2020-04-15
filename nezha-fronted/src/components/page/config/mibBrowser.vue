@@ -28,7 +28,7 @@
           <el-input size="mini" v-model="searchParam.oid" placeholder="OID"></el-input>
         </div>
         <div class="nz-btn-group nz-btn-group-size-normal nz-btn-group-light margin-l-20 mib-browser-btn-group">
-          <div class="el-popover mib-browser-ad-tip" v-show="searchParam.version != 2 || searchParam.port != 161 || searchParam.community != 'public'"><i class="el-icon-more"></i></div>
+          <!--<div class="el-popover mib-browser-ad-tip" v-show="searchParam.version != 2 || searchParam.port != 161 || searchParam.community != 'public'"><i class="el-icon-more"></i></div>-->
           <el-select class="nz-input-group-left input-x-mini-24 operation" v-model="searchParam.operation">
             <el-option v-for="item in operationData" :key="item" :value="item"></el-option>
           </el-select><el-popover trigger="click" placement="bottom" @show="popShow" @hide="popHide">
@@ -36,7 +36,7 @@
               <el-row class="mib-browser-ad-search-item">
                 <el-col :span="6"><div class="mib-browser-ad-search-label">{{$t("project.endpoint.port")}}</div></el-col>
                 <el-col :span="17">
-                  <el-input class="input-x-mini-24" v-model="searchParamPop.port"></el-input>
+                  <el-input class="input-x-mini-24" v-model.number="searchParamPop.port"></el-input>
                 </el-col>
               </el-row>
               <el-row class="mib-browser-ad-search-item">

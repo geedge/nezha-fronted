@@ -96,7 +96,7 @@
                 <span v-else>-</span>
               </div>-->
               <template v-else-if="item.prop == 'labels'">
-                <el-tag @click="showTagDetail(scope.row.labels, key)"
+                <el-tag @click="showTagDetail(scope.row, key)"
                         :key="key"
                         :class="{'link': key == 'asset' || key == 'endpoint' || key == 'project' || key == 'module' || key == 'datacenter'}"
                         v-if="key != 'alertname' && key != 'severity' && key != 'linkId'"
@@ -455,7 +455,6 @@
         let hours=this.formatNum(date.getHours());
         let minutes=this.formatNum(date.getMinutes());
         let seconds=this.formatNum(date.getSeconds());
-        console.log(day)
         return year + split + month + split + day + ' ' + hours + split + minutes + split + seconds;
       },
       formatNum:function(num){
@@ -496,7 +495,7 @@
       listResize(e) {
         this.$bottomBoxWindow.listResize(vm, e);
       },
-      showTagDetail(labels, key) {
+      showTagDetail(data, key) {
         let open = false;
         if (key == "asset" || key == "project" || key == "module" || key == "endpoint" || key == "datacenter") {
           open = true;
@@ -504,16 +503,16 @@
         if (open) {
           let labelList = [];
           let detailList = [];
-          for (let item in labels) {
-            if (item == "asset" || item == "project" || item == "module" || item == "endpoint" || item == "datacenter") {
+          for (let item in data) {
+            if (item == "asset" || item == "project" || item == "module" || item == "endpoint" || item == "dc") {
               labelList.push(item);
-              detailList.push(labels[item]);
+              detailList.push(data[item]);
             }
           }
           this.showSubList = true;
           this.tabList = labelList;
-          this.tabDetailList = detailList;
-          this.targetTab = key;
+          /*this.tabDetailList = detailList;
+          this.targetTab = key;*/
         }
       },
       labelsClassName(row) {
