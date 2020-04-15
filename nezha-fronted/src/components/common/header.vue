@@ -396,7 +396,7 @@
         }
       },
       getAssetData() {
-        this.$get('idc', this.pageObj).then(response => {
+        this.$get('idc', {pageSize:-1}).then(response => {
           if (response.code == 200) {
             this.assetData = response.data.list
             this.assetData.forEach(item => {
@@ -418,7 +418,7 @@
         })
       },
       getProjectList() {
-        this.$get('project', {}).then(response => {
+        this.$get('project', {pageSize:-1}).then(response => {
           if (response.code == 200) {
             this.projectData = response.data.list;
             let flag = false;

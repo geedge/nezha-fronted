@@ -46,7 +46,7 @@ export default {
       moduleList: [],
       pageObj: {
         pageNo: 1,
-        pageSize: 999,
+        pageSize: -1,
         name: '',
         assetId: this.assetId
       }

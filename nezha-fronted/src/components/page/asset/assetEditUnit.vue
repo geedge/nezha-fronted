@@ -777,7 +777,7 @@
       },
       getAllModelOptionData(data) {
         this.assetData.assetType = this.assetType;
-        this.$get('model?typeCode=' + this.assetType + '&pageNo=1&pageSize=999').then(response => {
+        this.$get('model?typeCode=' + this.assetType + '&pageNo=1&pageSize=-1').then(response => {
           if (response.code === 200) {
             this.allModelUlData = response.data.list
           }

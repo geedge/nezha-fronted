@@ -610,7 +610,7 @@
       getModuleList() {
         //若currentProject不存在（如页面刷新了），默认取project列表的第一个
         if (this.currentProject && this.currentProject.id) {
-          this.$get('module', {projectId: this.currentProject.id, pageSize: 999, pageNo: 1}).then(response => {
+          this.$get('module', {projectId: this.currentProject.id, pageSize: -1, pageNo: 1}).then(response => {
             if (response.code === 200) {
               this.moduleList = response.data.list;
               for (let i = 0; i < this.moduleList.length; i++) {
@@ -635,7 +635,7 @@
           if (this.projectList && this.projectList.length > 0) {
             this.$store.commit('setProject', this.projectList[0]);
           } else {
-            this.$get('project', {pageSize: 999, pageNo: 1}).then(response => {
+            this.$get('project', {pageSize: -1, pageNo: 1}).then(response => {
               if (response.code == 200) {
                 this.projectList = response.data.list;
                 if (this.projectList.length > 0) {

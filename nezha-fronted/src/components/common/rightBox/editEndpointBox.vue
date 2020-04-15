@@ -158,7 +158,7 @@
           </el-form-item>
         </el-form>
       </el-scrollbar>
-       
+
       <!-- end--表单-->
 
       <!--底部按钮-->
@@ -280,7 +280,7 @@
 
       /*获取project列表*/
       getProjectList() {
-        this.$get('project', {pageSize: 999, pageNo: 1}).then(response => {
+        this.$get('project', {pageSize: -1, pageNo: 1}).then(response => {
           if (response.code === 200) {
             this.projectList = response.data.list;
             if ((!this.currentProject || !this.currentProject.id) && this.projectList.length > 0) {

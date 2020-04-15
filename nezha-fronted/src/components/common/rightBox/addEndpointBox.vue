@@ -255,7 +255,7 @@
         editParamBox: {show: false, top: 0, left: 0, type: 0}, //param编辑弹框
         moduleParamShow: false, //module默认参数param悬浮窗
         assetSearch: {host: '', sn: '', text: '', label: 'IP', dropdownShow: false}, //侧滑框中asset的搜索相关
-        assetPageObj: {pageNo: 1, pageSize: 9999},
+        assetPageObj: {pageNo: 1, pageSize: -1},
         selectedAssets: [], //侧滑框中选中的asset
         projectList: [],
         moduleList: [],
@@ -402,7 +402,7 @@
 
       /*获取project列表*/
       getProjectList() {
-        this.$get('project', {pageSize: 999, pageNo: 1}).then(response => {
+        this.$get('project', {pageSize: -1, pageNo: 1}).then(response => {
           if (response.code === 200) {
             this.projectList = response.data.list;
             if (this.moduleList.length == 0) {

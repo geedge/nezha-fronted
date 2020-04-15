@@ -495,21 +495,21 @@
               }
             },
             getDcData() {
-              this.$get('idc', {pageNo: 1, pageSize: 999}).then(response => {
+              this.$get('idc', {pageNo: 1, pageSize: -1}).then(response => {
                 if (response.code === 200) {
                   this.dcSelect = response.data.list;
                 }
               });
             },
             getAssetData() {
-              this.$get('asset', {pageNo: 1, pageSize: 999}).then(response => {
+              this.$get('asset', {pageNo: 1, pageSize: -1}).then(response => {
                 if (response.code === 200) {
                   this.assetSelect = response.data.list;
                 }
               });
             },
             getModelData() {
-              this.$get('asset', {pageNo: 1, pageSize: 999}).then(response => {
+              this.$get('asset', {pageNo: 1, pageSize: -1}).then(response => {
                 if (response.code === 200) {
                   this.assetSelect = response.data.list;
                 }
