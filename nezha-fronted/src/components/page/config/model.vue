@@ -45,7 +45,7 @@
           </button>
         </div>
       </div>
-      <el-table :data="tableData" border :height="$tableHeight.normal" style="width: 100%;" ref="modelTable" class="nz-table" v-scrollBar:el-table>
+      <el-table :data="tableData" border :height="$tableHeight.normal" style="width: 100%;" ref="modelTable" class="nz-table" v-scrollBar:el-table :cell-class-name="assetStatClassName">
         <el-table-column :resizable="false" v-for="(item, index) in tablelable" v-if="item.show" :width="item.width"
                          :key="`col-${index}`" :label="item.label">
           <template slot-scope="scope" :column="item">
@@ -196,6 +196,12 @@
         //悬浮点击空白隐藏
         this.$refs.elementset.elementsetHide();
       },
+      assetStatClassName(param) {
+        if (param.column.label == this.$t("config.model.assets")) {
+          return "asset-state";
+        }
+        return "";
+      },
       tablelabelEmit(data) {
         //获取子组件传过来的参数
         this.$store.commit('setHeaderTable', data);
@@ -249,6 +255,7 @@
         this.tableData = [];
         this.$set(this.searchLabel, "pageNo", this.pageObj.pageNo);
         this.$set(this.searchLabel, "pageSize", this.pageObj.pageSize);
+        this.$set(this.searchLabel, "stat", 1);
         this.$get('model', this.searchLabel).then(response => {
           if (response.code === 200) {
             this.tableData = response.data.list;

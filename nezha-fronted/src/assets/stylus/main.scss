@@ -1010,6 +1010,41 @@ li{
 .dc-dropdown {
   z-index: 2952 !important;
 }
+.asset-state .cell {
+  height: 38px;
+}
+.asset-state .cell>span {
+  display: block;
+  height: 100%;
+}
+.dc-asset-states {
+  display: flex;
+  align-items: center;
+  height: 100%;
+}
+.dc-asset-state {
+  display: inline-block;
+  min-width: 25px;
+  height: 20px;
+  color: white;
+  text-align: center;
+  line-height: 20px;
+  margin-right: 6px;
+  border-radius: 3px;
+}
+.dc-asset-state-total {
+  background-color: #1166bb;
+  margin-right: 15px
+}
+.dc-asset-state-in {
+  background-color: #90ee90;
+}
+.dc-asset-state-out {
+  background-color: orange;
+}
+.dc-asset-state-high {
+  background-color: rgba(255, 0, 0, 0.6);
+}
 .chart-box-dropdown {
   width: 519px;
 }

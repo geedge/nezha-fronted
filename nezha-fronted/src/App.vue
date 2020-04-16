@@ -24,7 +24,6 @@ export default {
 #app{
   height: 100%;
   width: 100%;
-  min-width: 1300px;
 }
 </style>
 <style>

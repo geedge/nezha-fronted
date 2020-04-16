@@ -2,34 +2,6 @@
   .dc {
     height: 100%;
   }
-  .dc-asset-states {
-    display: flex;
-    align-items: center;
-    height: 100%;
-  }
-  .dc-asset-state {
-    display: inline-block;
-    min-width: 25px;
-    height: 20px;
-    color: white;
-    text-align: center;
-    line-height: 20px;
-    margin-right: 6px;
-    border-radius: 3px;
-  }
-  .dc-asset-state.dc-asset-state-total {
-    background-color: #1166bb;
-    margin-right: 15px
-  }
-  .dc-asset-state-in {
-    background-color: #90ee90;
-  }
-  .dc-asset-state-out {
-    background-color: orange;
-  }
-  .dc-asset-state-high {
-    background-color: rgba(255, 0, 0, 0.6);
-  }
 </style>
 <template>
     <div class="dc" >
@@ -87,6 +59,7 @@
             v-scrollBar:el-table
             :height="mainTableHeight"
             ref="dcTable"
+            :cell-class-name="assetStatClassName"
             style="width: 100%;">
             <el-table-column
               :resizable="false"
@@ -289,6 +262,12 @@
       elementsetHide() {
         //悬浮点击空白隐藏
         this.$refs.elementset.elementsetHide();
+      },
+      assetStatClassName(param) {
+        if (param.column.label == this.$t("config.dc.assets")) {
+          return "asset-state";
+        }
+        return "";
       },
       tablelabelEmit(data) {
         //获取子组件传过来的参数
