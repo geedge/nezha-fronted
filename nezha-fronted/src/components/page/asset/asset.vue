@@ -993,7 +993,8 @@
         let _this = this;
         window.onresize = function () {
           _this.$refs.leftScrollbar.update();
-        }
+          el._ps_.update();
+        };
       });
       let localStorageTitle = localStorage.getItem("nz-tableTitle-" + localStorage.getItem("nz-username") + "-" + this.$route.path);
       this.tablelable = localStorageTitle ? JSON.parse(localStorageTitle) : this.tableTitle;

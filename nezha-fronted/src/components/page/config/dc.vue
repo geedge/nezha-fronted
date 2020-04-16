@@ -443,8 +443,12 @@
               this.showTopBtn = false;
             }
           });
+          window.onresize = function() {
+            el._ps_.update();
+          };
         }
       });
+
       this.tablelable = localStorage.getItem("nz-tableTitle-" + localStorage.getItem("nz-username") + "-" + this.$route.path)
         ? JSON.parse(localStorage.getItem("nz-tableTitle-" + localStorage.getItem("nz-username") + "-" + this.$route.path))
         : this.tableTitle;
