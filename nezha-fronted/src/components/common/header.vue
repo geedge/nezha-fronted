@@ -53,7 +53,8 @@
         </template>
         <template v-for="(item, index) in projectData">
           <el-menu-item :index="'2-' + index">
-            <div @mouseenter="hoverItemIndex = '2-' + index" @mouseleave="hoverItemIndex = ''" @click="jumpToProject(item)" :class="{'menu-item-active' :(activeIndex == 'project' && activeItemIndex == item.id)}">
+<!--            <div @mouseenter="hoverItemIndex = '2-' + index" @mouseleave="hoverItemIndex = ''" @click="jumpToProject(item)" :class="{'menu-item-active' :(activeIndex == 'project' && activeItemIndex == item.id)}">-->
+            <div @mouseenter="hoverItemIndex = '2-' + index" @mouseleave="hoverItemIndex = ''" @click="jumpToProject(item)" >
               <span class="too-long-split" style="width: 135px;">{{item.name}}</span>
               <div v-show="hoverItemIndex == '2-' + index && item.buildIn != 1" @click.stop="toEditProject(item)" class="menu-edit"><i style="color: inherit" class="nz-icon nz-icon-edit"></i></div>
             </div>
@@ -521,6 +522,9 @@
       getAssetDcData() {
         return this.$store.state.assetData;
       },
+      currentProjectWatch(){
+        return this.$store.state.currentProject;
+      }
     },
     watch: {
       getAssetDcData: {
@@ -540,6 +544,10 @@
       },
       projectListReloadWatch(n, o) {
         this.getProjectList();
+      },
+      currentProjectWatch(n,o){
+        this.currentProject=n;
+        this.activeItemIndex=n.id;
       }
     },
     destroyed() {

@@ -24,8 +24,8 @@
     <left-menu >
       <div slot="content-left" class="slot-content">
       <el-scrollbar ref="leftScrollbar" style="height: 100%">
-        <div class="sidebar-title too-long-split">{{$t('project.project.project')}}：{{currentProject.name}}</div>
-        <div class="sidebar-info">
+        <div class="sidebar-title too-long-split">{{$t('project.project.project')}}</div>
+        <!--<div class="sidebar-info">
           <div
             v-for="item in moduleList"
             class="sidebar-info-item"
@@ -41,12 +41,39 @@
             </div>
             <div v-show="item.buildIn != 1" class="hid-div side-bar-menu-edit" @click.stop="toEditModule(item)" :id="'project-module-edit-'+item.id" ><i class="nz-icon nz-icon-edit"></i></div>
           </div>
-        </div>
+        </div>-->
+        <el-collapse v-model="currentProjectTitle" class="sidebar-info" accordion style="padding-top:0px;" @change="projectChange" ref="projectLeft">
+          <el-collapse-item v-for="(item,index) in projectList" :key="item.name+item.id+index" :name="item.name+'-'+item.id">
+            <template slot="title">
+              <div class="sidebar-info-item" :class="{'sidebar-info-item-active': item.name+'-'+item.id==currentProjectTitle || item.id==currentProject.id}" @click.stop="detailProjectInfo($event,item)" :id="'project-module-'+item.id">
+                <div class="sidebar-info-item-txt">
+                  <el-popover v-if="item.name.length > 14" trigger="hover" placement="top-start" :content="item.name" >
+                    <span slot="reference" class="">
+                      {{item.name}}
+                    </span>
+                  </el-popover>
+                  <span v-else>{{item.name}}</span>
+                </div>
+              </div>
+            </template>
+            <div class="sidebar-info sub-sidebar-info" >
+              <div v-for="module in getProjectModule(item.id)" class="sidebar-info-item" :class="{'sidebar-info-item-active': module.id == currentModule.id}" @click="changeModule(module)" :id="'project-module-'+module.id">
+                <div class="sidebar-info-item-txt">
+                  <el-popover v-if="module.name.length > 16" trigger="hover" placement="top-start" :content="module.name" >
+                    <span slot="reference">{{module.name}}</span>
+                  </el-popover>
+                  <span v-else>{{module.name}}</span>
+                </div>
+                <div v-show="module.buildIn != 1" class="hid-div side-bar-menu-edit sub-side-bar-menu-edit" @click.stop="toEditModule(module)" :id="'project-module-edit-'+module.id" ><i class="nz-icon nz-icon-edit"></i></div>
+              </div>
+            </div>
+          </el-collapse-item>
+        </el-collapse>
       </el-scrollbar>
     </div>
 
     <!--endpoint-->
-    <div slot="content-right" class="slot-content">
+    <div slot="content-right" class="slot-content" v-show="pageType ==  'endpoint'">
       <!-- 主列表 -->
       <div class="main-list main-and-sub-transition" :class="{'main-list-with-sub': showSubList}">
         <div class="top-tools" v-show="mainResizeShow">
@@ -88,7 +115,7 @@
             :label="item.label"
             min-width="110px"
           >
-            <template slot-scope="scope" :column="item">
+            <template slot-scope="scope" :column="item" >
               <span v-if="item.prop == 'asset' && scope.row[item.prop]" class="link" @click="viewAsset(scope.row)">{{scope.row[item.prop].host}}</span>
               <span v-else-if="item.prop == 'param'">
                 <template v-if="scope.row.paramObj">
@@ -132,6 +159,11 @@
                   :from="'endpoint'" :targetTab="targetTab" :detail="endpointDetail" :obj="curEndpoint" :assetDetail="assetDetail"
                   @closeSubList="showSubList = false" @fullScreen="fullScreen" @exitFullScreen="exitFullScreen" @listResize="listResize" ></bottom-box>
     </div>
+      <div slot="content-right" class="slot-content" v-show="pageType == 'project'">
+        <div style="height: 100%;width:100%;position: relative;">
+          <div style="position: absolute;top: 50%;left: 50%;">come soon</div>
+        </div>
+      </div>
     </left-menu>
 
     <element-set
@@ -142,7 +174,7 @@
       ref="elementset"
     ></element-set>
 
-    <module-box :currentProject="currentProject" :module="editModule" @reload="getModuleList" ref="moduleBox"></module-box>
+    <module-box :currentProject="currentProject" :module="editModule" @reload="getAllModuleList" ref="moduleBox"></module-box>
     <edit-endpoint-box :currentProject="currentProject" :currentModule="currentModule" :endpoint="editEndpoint" @reload="getEndpointTableData" ref="editEndpointBox"></edit-endpoint-box>
     <add-endpoint-box :currentProject="currentProject" :currentModule="currentModule" @reload="getEndpointTableData" ref="addEndpointBox"></add-endpoint-box>
     <!--<asset-box :edit-unit-show='viewAssetState' @refreshData="getEndpointTableData" @sendStateData="tabControl"
@@ -232,8 +264,10 @@
         },
         tablelable: [],
         dropCol: [],
+        currentProjectTitle:'',
         moduleList: [],
         projectList: [],
+        pageType:'',//project endpoint
         currentProject: {id: '', name: '', remark: ''}, //endpoint弹框、module列表用来回显project
         editModule: {id: '', type: '', name: '', project: {}, port: '', path: '', param: '', paramObj: [], snmpParam: ''}, //编辑的module
         currentModule: {id: '', type: '', name: '', project: {}, port: '', path: '', param: '', paramObj: [], snmpParam: ''}, //endpoint弹框用来回显module
@@ -255,280 +289,7 @@
           }],
         },
         /*viewAssetState:false,*/
-        curEndpoint:null,
-        endpointQueryTabData:[],//endpoint 查询列表数据
-        showTableData:[],
-        showTableDataCopy:'',
-        elementMetricDatas:[],//element 列提示信息列表
-        formatTime:'',//查询endpoint的时间，
         selectedEndpoints:[],//选中的metric{label='value'}
-        chartDatas:[],//从query_range查询到的数据
-        legend:[],//echart legend
-        graphChart:null,//图标对象
-        graphShow:false,
-        searchTime:[],
-        queryEdpLoading:false,
-        pickerOptions: {
-          shortcuts: [
-            {
-              text:  this.$t("dashboard.panel.recOne"),
-              onClick(picker) {
-                const end = new Date();
-                const start = new Date();
-                start.setHours(start.getHours() - 1);
-                picker.$emit('pick', [start, end]);
-              }
-            },{
-              text: this.$t("dashboard.panel.recFour"),
-              onClick(picker) {
-                const end = new Date();
-                const start = new Date();
-                start.setHours(start.getHours() - 4);
-                picker.$emit('pick', [start, end]);
-              }
-            }, {
-              text: this.$t("dashboard.panel.recOneDay"),
-              onClick(picker) {
-                const end = new Date();
-                const start = new Date();
-                start.setDate(start.getDate() - 1);
-                picker.$emit('pick', [start, end]);
-              }
-            },  {
-              text: this.$t("dashboard.panel.yesterday"),
-              onClick(picker) {
-                const start = new Date();
-                const end = new Date();
-                start.setDate(start.getDate() - 1);
-                start.setHours(0);
-                start.setMinutes(0);
-                start.setSeconds(0);
-                end.setDate(end.getDate() - 1);
-                end.setHours(23);
-                end.setMinutes(59);
-                end.setSeconds(59);
-                picker.$emit('pick', [start, end]);
-              }
-            },{
-              text: this.$t("dashboard.panel.recSevenDay"),
-              onClick(picker) {
-                const end = new Date();
-                const start = new Date();
-                start.setDate(start.getDate() - 7);
-                picker.$emit('pick', [start, end]);
-              }
-            }, {
-              text: this.$t("dashboard.panel.recOneMonth"),
-              onClick(picker) {
-                const end = new Date();
-                const start = new Date();
-                start.setDate(start.getDate() - 30);
-                picker.$emit('pick', [start, end]);
-              }
-            }, {
-              text: this.$t("dashboard.panel.curMonth"),
-              onClick(picker) {
-                const end = new Date();
-                const start = new Date();
-                start.setDate(1);
-                start.setHours(0);
-                start.setMinutes(0);
-                picker.$emit('pick', [start, end]);
-              }
-            },{
-              text: this.$t("dashboard.panel.lastMonth"),
-              onClick(picker) {
-                const end = new Date();
-                const start = new Date();
-                start.setDate(1);
-                start.setMonth(start.getMonth() - 1);
-                end.setDate(0);
-                start.setStart();
-                end.setEnd();
-                picker.$emit('pick', [start, end]);
-              }
-            }]
-        },
-        chartOptions:{
-          color: temp.bgColorList,
-          title: {
-            text: ""
-          },
-          tooltip: {
-            trigger: 'axis',
-            confine:false,
-            extraCssText:'z-index:1000;',
-            /*enterable:true, 导致tooltip不消失，显示多个tooltip*/
-            position:function(point,params,dom,rect,size){
-              dom.style.transform = "translateZ(0)";
-              //提示框位置
-              var x=0;
-              var y=0;
-              //当前鼠标位置
-              var pointX = point[0];
-              var pointY = point[1];
-              //外层div大小
-              var viewWidth = size.viewSize[0];
-              var viewHeight = size.viewSize[1];
-              //提示框大小
-              var boxWidth = size.contentSize[0];
-              var boxHeight = size.contentSize[1];
-              if(pointX<(viewWidth/2)){//说明鼠标在左边放不下提示框
-                x=pointX+10;
-              }else{
-                x = pointX - boxWidth;
-              }
-              if(pointY<(viewHeight/2)){//说明鼠标上面放不下提示框
-                y = pointY+10;
-              }else {
-                y = pointY-boxHeight;
-              }
-              return [x,y];
-            },
-            formatter:function(params){
-              //display:inline-block;white-space:nowrap;overflow-x:hidden;text-overflow:ellipsis;
-              let str = `<div >`;
-              params.forEach((item, i) => {
-                let tip=temp.legend.find((element)=>{
-                  return element.name == item.seriesName;
-                })
-                if(i===0){
-                  let value=bus.computeTimezone(item.data[0]);
-                  let t_date = new Date(value);
-                  str += [t_date.getFullYear(), t_date.getMonth() + 1, t_date.getDate()].join('-') + " "
-                    + [t_date.getHours(), t_date.getMinutes(),t_date.getSeconds()].join(':');
-                  str +=`<br/>`;
-                }
-                let val = parseFloat(Number(item.data[1]).toFixed(2));
-                if(val===0){
-                  val = Number(item.data[1]);
-                }
-                str += `<div style="white-space:nowrap;overflow-x:hidden;text-overflow:ellipsis;display: flex; justify-content: space-between; min-width: 150px; max-width: 600px; line-height: 18px; font-size: 12px;">`;
-                str += `<div style="max-width: 500px;white-space:nowrap;overflow-x:hidden;text-overflow:ellipsis;"><span style='display:inline-block;margin-right:5px;border-radius:10px;width:15px;height:5px;background-color: ${item.color};}'></span>${tip?(tip.alias?tip.alias:tip.name):item.seriesName}:  </div>`;
-                str += `<div style="padding-left: 10px;">`;
-                str += chartDataFormat.short(val,null,2);
-                str += `</div>`;
-                str += `</div>`;
-              });
-              str +=`</div>`;
-              return str;
-            },
-          },
-          legend: {
-            show:false,
-            type:'scroll',
-            height:80,
-            icon:"roundRect",
-            itemHeight:5,
-            itemWidth:15,
-            data:[],
-            orient:'vertical',
-            formatter:function(name){
-              if(!name){
-                return '';
-              }
-              //计算宽度
-              let chartWidth=temp.$refs.viewGraphChart.clientWidth;
-              var span = document.createElement("span");
-              var result = {};
-              result.width = span.offsetWidth;
-              result.height = span.offsetHeight;
-              span.style.visibility = "hidden";
-              span.style.fontSize = 14;
-              span.style.fontFamily = "Arial";
-              span.style.display = "inline-block";
-              document.body.appendChild(span);
-              if(typeof span.textContent != "undefined"){
-                span.textContent = name;
-              }else{
-                span.innerText = name;
-              }
-              var txtWidth = parseFloat(window.getComputedStyle(span).width) - result.width;
-              document.body.removeChild(span);
-
-              if(txtWidth < chartWidth){
-                return name;
-              }else {
-                var charNum = `${(chartWidth-100)/(txtWidth/name.length)}`;
-                return name.slice(0,charNum)+'...';
-              }
-            },
-            tooltip:{
-              show:true,
-              formatter:function(params){
-                //console.log("params")
-                //console.log(params);
-                return `<div  style='width:100%;display:block;word-break:break-all;word-wrap:break-word;white-space:normal'> ${params.name}</div>`;
-              },
-            },
-            orient:'vertical',
-            x:'center',
-            y:'bottom',
-          },
-          grid: {
-            top: 13,
-            left: 0,
-            right: 30,
-            containLabel: true,
-            bottom:35,//156
-          },
-          dataZoom: [{
-            type: 'slider',
-            show:true,
-            xAxisIndex: [0],
-            start: 0,
-            end: 100,
-            height:25,
-            bottom:10//96
-          }],
-
-          xAxis: {
-            type: 'time',
-            axisLabel: {
-              intervale: 0,
-              rotate: 0,
-              formatter: function (value) {
-                value = bus.computeTimezone(value);
-                var t_date = new Date(value);
-                return [t_date.getFullYear(), t_date.getMonth() + 1, t_date.getDate()].join('-') + "\n"
-                  + [t_date.getHours(), t_date.getMinutes()].join(':');
-              }
-            },
-            axisPointer: {//y轴上显示指针对应的值
-              show: true,
-            },
-            splitLine:{
-              show:false
-            }
-          },
-          yAxis: {
-            type: 'value',
-            splitLine:{
-              show:true
-            },
-            axisLabel: {
-              formatter: function(num,index) {
-                return chartDataFormat.short(num,index)
-              },
-            },
-          },
-          useUTC: false,//使用本地时间
-          series: []
-        },
-        legendList:[],
-        screenLegendList:[],
-        isGrey:[],
-        isGreyScreen:[],
-        bgColorList: ['#7bbfea', '#b3424a', '#f05b72', '#596032', '#bd6758',
-          '#cd9a5b', '#918597', '#70a19f', '#005344', '#FF00FF',
-          '#f7acbc', '#5f5d46', '#66ffff', '#ccFF66', '#f47920',
-          '#769149', '#1d953f', '#abc88b', '#7f7522', '#9b95c9',
-          '#f3715c', '#ea66a6', '#d1c7b7', '#9d9087', '#77787b',
-          '#f58220', '#c37e00', '#00ae9d', '#f26522', '#76becc',
-          '#76624c', '#d71345', '#2468a2', '#ca8687', '#1b315e',
-        ],
-        hideSameLabels:true,
-        sameLabels:['instance','module','project','asset','job','dc'],
       }
     },
     methods: {
@@ -575,6 +336,7 @@
         this.tablelable = data;
       },
       getEndpointTableData() {
+        this.pageType='endpoint'
         this.endpointSearchLabel.moduleId = this.currentModule.id;
         this.$set(this.endpointSearchLabel, 'pageNo', this.endpointPageObj.pageNo);
         this.$set(this.endpointSearchLabel, 'pageSize', this.endpointPageObj.pageSize);
@@ -648,7 +410,63 @@
           }
         }
       },
-
+      getProjectList:function(){
+        this.$get('project',{pageSize:-1}).then(response=>{
+          if(response.code == 200){
+            this.projectList=response.data.list;
+          }
+        })
+      },
+      getProjectModule:function(projectId){
+        return this.moduleList.filter((item,index)=>{
+          return item.project.id==projectId;
+        })
+      },
+      projectChange:function(){
+        //展开后为避免左侧无数据，显示对应project的第一个module下的endpoint
+        let currentProjectId=this.currentProjectTitle&&this.cuurentProjectTitle != ""?this.currentProjectTitle.split('-')[1]:"";
+        if(currentProjectId != ''){
+          currentProjectId=Number.parseInt(currentProjectId);
+          let moduleList=this.getProjectModule(currentProjectId);
+          this.currentModule=moduleList[0];
+          this.getEndpointTableData();
+          this.currentProject=this.projectList.find((item)=>{return item.id == currentProjectId})
+          // this.$store.commit('setProject',null)
+        }
+      },
+      detailProjectInfo:function(event,project){
+        if(event){
+          this.pageType='project'
+          if(project){
+            this.currentProject=project;
+            this.$store.commit('setProject',this.currentProject)
+          }
+          this.$refs.projectLeft.setActiveNames([]);
+        }
+      },
+      getAllModuleList:function(){
+        this.$get('module', {projectId: this.currentProject.id, pageSize: -1, pageNo: 1}).then(response => {
+          if (response.code === 200) {
+            this.moduleList = response.data.list;
+            for (let i = 0; i < this.moduleList.length; i++) {
+              try {
+                let tempObj = JSON.parse(this.moduleList[i].param);
+                this.$set(this.moduleList[i], 'paramObj', []);
+                for (let k in tempObj) {
+                  this.moduleList[i].paramObj.push({key: k, value: tempObj[k]});
+                }
+              } catch (err) {
+                //console.error(response.data.list[i], err);
+              }
+            }
+            // if (this.moduleList.length > 0) {
+            //   this.currentModule = this.moduleList[0];
+            // } else {
+            //   this.currentModule = {id: '', name: '', project: {}, port: '', path: '', param: '', paramObj: []};
+            // }
+          }
+        });
+      },
       //左侧module列表选中切换
       changeModule(module) {
         this.currentModule = module;
@@ -891,8 +709,10 @@
     },
     created() {
       this.currentProject = this.$store.state.currentProject;
-      this.getModuleList();
+      // this.getModuleList();
+      this.getAllModuleList();
       this.getUserData();
+      this.getProjectList();
     },
     mounted() {
       //是否存在分页缓存
@@ -901,9 +721,9 @@
         this.endpointPageObj.pageSize = pageSize
       }
 
-      setTimeout(()=>{
-        this.getEndpointTableData();
-      }, 200);
+      // setTimeout(()=>{
+      //   this.getEndpointTableData();
+      // }, 200);
       this.$nextTick(() => {
         //绑定滚动条事件，控制top按钮
         let el = this.$refs.endpointTable.$el.querySelector(".el-table__body-wrapper");
@@ -942,9 +762,11 @@
     watch: {
       currentProjectChange(n, o) {
         this.currentProject = Object.assign({}, n);
+        this.detailProjectInfo({});
       },
       currentProject(n, o) {
-        this.getModuleList();
+        // this.getModuleList();
+        // this.$store.commit('setProject',n)
       },
       currentModule(n, o) {
         this.endpointPageObj.pageNo = 1;
@@ -955,7 +777,8 @@
         }
       },
       moduleListReloadWatch(n, o) {
-        this.getModuleList(this.currentProject.id);
+        // this.getModuleList(this.currentProject.id);
+        this.getAllModuleList();
       },
       showSubList(n) {
         this.$bottomBoxWindow.showSubListWatch(vm, n);
@@ -1162,6 +985,13 @@
   /* end--table*/
 
   /* end--子弹框*/
+  .sub-sidebar-info{
+    padding-top: 0px !important;
+    margin-left: 10px;
+  }
+  .sub-side-bar-menu-edit{
+    margin-right: 18px;
+  }
 </style>
 <style>
   /* begin--覆盖分页组件样式*/
