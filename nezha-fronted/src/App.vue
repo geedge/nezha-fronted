@@ -24,7 +24,7 @@ export default {
 #app{
   height: 100%;
   width: 100%;
-  min-width: 1400px;
+  min-width: 1300px;
 }
 </style>
 <style>
@@ -34,5 +34,8 @@ export default {
   }
   .app>.el-scrollbar__wrap>.el-scrollbar__view {
     height: 100%;
+  }
+  .app>.el-scrollbar__bar.is-vertical {
+    display: none;
   }
 </style>
