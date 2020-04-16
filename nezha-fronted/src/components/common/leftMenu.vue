@@ -4,7 +4,7 @@
         <slot name="content-left"></slot>
         <div  @click="toggleStat" class="bottom-icon">
           <div class="bottom-divider"></div>
-          <div style="display: inline-block;float: right"><i style="font-size: 16px;" :class="{'el-icon-d-arrow-right':isShrink,'el-icon-d-arrow-left':!isShrink}"></i></div>
+          <div style="display: inline-block;float: right"><i style="font-size: 16px;" :class="{'nz-icon nz-icon-push-pin-line':isShrink,'nz-icon nz-icon-push-pin-fill':!isShrink}" :style="{color:!isShrink?'#EE9D3F':''}"></i></div>
         </div>
       </div>
       <div class="content-right right-slot" :class="{'right-slot-open':isShrink}">
@@ -78,15 +78,25 @@
     bottom: 15px;
     left: 0px;
   }
+  .left-slot .bottom-icon i{
+    visibility: hidden;
+  }
   .left-slot .bottom-icon:hover{
+    i{
+      visibility: visible;
+    }
+  }
+  .left-slot .bottom-icon i:hover{
     cursor: pointer;
   }
+
   .bottom-icon .bottom-divider{
     display: inline-block;
     height: 1px;
     width: 175px;
     border-top: 1px solid lightgrey;
     vertical-align: middle;
+    visibility: hidden;
   }
   .content .left-slot-shrink:hover{
     width: 200px;

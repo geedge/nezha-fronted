@@ -292,7 +292,6 @@
         console.log(this.uChecked)
         this.oldUChecked=this.uChecked;
         this.selectedData.u=this.findOldCheckedMinMax(this.uChecked);
-        this.$emit('change',this.selectedData);
       },
       clearUChecked:function(){ //取消所有选中，恢复到刚打开时的状态
         this.uChecked=[];
@@ -387,7 +386,13 @@
       }
     },
     watch:{
-
+      selectedData:{
+        immediate:true,
+        deep:true,
+        handler(n,o){
+          this.$emit('change',n);
+        }
+      }
     }
   }
 </script>

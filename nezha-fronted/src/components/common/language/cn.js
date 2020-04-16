@@ -67,7 +67,8 @@ const cn = {
       failedDetail: "失败详情"
     },
     reset: "重置",
-    submit: "提交"
+    submit: "提交",
+    noData:'没有数据',
   },
   webshell: {
     shellTitle: "本地 Shell",
@@ -286,7 +287,8 @@ const cn = {
     domain: "不合法的域名",
     usize: "必须是(1 - 49)的数字",
     url: "不合法的URL",
-    uSize: "必须是(1 - 47)的数字"
+    uSize: "必须是(1 - 47)的数字",
+    requiredIdc:'机房为必选项'
   },
   search: {
     searchTip: "点击或回车执行搜索",

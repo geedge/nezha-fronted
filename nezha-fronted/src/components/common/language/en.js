@@ -71,7 +71,8 @@ const en = {
       failedDetail:'Failed Detail'
     },
     reset:'Reset',
-    submit:'Submit'
+    submit:'Submit',
+    noData:'No data'
   },
   pageSize: '/page',
   webshell:{
@@ -287,7 +288,8 @@ const en = {
     fileSize:'文件过大',//File exceed max size.
     port:'Invalid Port',
     url:'Invalid URL',
-    uSize:'Must be number(1 - 47)'
+    uSize:'Must be number(1 - 47)',
+    requiredIdc:'dc is required'
   },
   search: {
     searchTip: 'Enter to search',//'点击或回车执行搜索'

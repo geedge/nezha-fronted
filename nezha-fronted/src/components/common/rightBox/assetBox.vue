@@ -141,7 +141,7 @@
           <div class="right-box-sub-title">{{$t('asset.createAssetTab.location')}}</div>
           <div class="line-100 right-box-line"></div>
           <!------------------------------------------IDC---------------------------------------------->
-          <el-form-item :label="$t('asset.createAssetTab.location')">
+          <el-form-item :label="$t('asset.createAssetTab.location')" prop="locationInfo" :rules="[{validator:locationValidator,trigger:'blur'}]">
             <location-cascader :disabled="assetData.modelId !=''?false:true" :default-model-u-size="modelSize" @change="setLocationData" :init-data="initLocationData" ref="locationCascader"></location-cascader>
           </el-form-item>
           <!--<el-form-item :label="$t('asset.createAssetTab.dcName')" class="right-box-form-content" prop="idcId">
@@ -578,6 +578,18 @@
       setLocationData:function(data){
         this.locationInfo=data;
       },
+      locationValidator:function(rule, value, callback){
+        let $temp=this;
+        setTimeout(()=>{
+          if(!this.locationInfo){
+            callback(new Error($temp.$t('validate.requiredIdc')))
+          }else if(this.locationInfo && !this.locationInfo.idc){
+            callback(new Error($temp.$t('validate.requiredIdc')))
+          }else{
+            callback();
+          }
+        },100)
+      },
       modelChange:function(ids){
         let modelId=ids[1];
         let model=this.allModelUlData.find((item,index)=>{
@@ -751,6 +763,7 @@
             host:'',
             port:'',
           },
+          locationInfo:null,
           accounts: [{
             id: '',
             authType: 1,
@@ -791,10 +804,19 @@
           if (this.assetData.modelId) {
             this.assetData.modelId = this.assetData.modelId.join(',').split(',')[1];
           }
-          this.assetData.idcId=this.locationInfo.idc.id;
-          this.assetData.cabinetId=this.locationInfo.cabinet.id;
-          this.assetData.cabinetStart=this.locationInfo.u[0];
-          this.assetData.cabinetEnd=this.locationInfo.u[1];
+          if(this.locationInfo){
+            if(this.locationInfo.idc){
+              this.assetData.idcId=this.locationInfo.idc.id;
+            }
+            if(this.locationInfo.cabinet){
+              this.assetData.cabinetId=this.locationInfo.cabinet.id;
+            }
+            if(this.locationInfo.u&&this.locationInfo.u.length>0){
+              this.assetData.cabinetStart=this.locationInfo.u[0];
+              this.assetData.cabinetEnd=this.locationInfo.u[1];
+            }
+          }
+
           // let modelId = this.assetData.modelId.join(',').split(',')[1];
           // let form = new FormData();
           // form.append("id", this.pageObj.id);
