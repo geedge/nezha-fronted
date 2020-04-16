@@ -537,8 +537,10 @@
         if (this.resultData.length == 0) {
           return;
         }
-        let box = xlsx.utils.table_to_book(document.querySelector('.mib-browser-table'));
-        let out = xlsx.write(box, {
+        let book = xlsx.utils.book_new();
+        let sheet = xlsx.utils.json_to_sheet(this.resultData, {header: ["name", "oid", "value", "type", "ip", "port"]});
+        xlsx.utils.book_append_sheet(book, sheet, 'result');
+        let out = xlsx.write(book, {
           bookType: 'xlsx',
           bookSST: true,
           type: 'array'
