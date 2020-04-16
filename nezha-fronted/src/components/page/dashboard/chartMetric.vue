@@ -518,7 +518,9 @@ export default {
         this.$refs.elementInfo.validate((valid) => {
           if (valid) {//根据设置的rules进行验证，验证通过，则返回，继续进行保存（每个el-form-item都需要验证）
             if(this.elementInfo.expression){
-              this.elementInfo.expression = this.elementInfo.expression.replace(/\s+|&nbsp;/ig,'');
+              // this.elementInfo.expression = this.elementInfo.expression.replace(/\s+|&nbsp;/ig,'');
+              //只取消两端空格，中间空格保留
+              this.elementInfo.expression = this.elementInfo.expression.trim();
             }
             if(this.elementInfo.type==='normal' && this.elementInfo.metric instanceof Array){
               this.elementInfo.metric = this.elementInfo.metric[2];
