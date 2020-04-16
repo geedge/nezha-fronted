@@ -130,10 +130,10 @@
               <div class="right-box-form-btns" v-if="rightBox.isEdit">
                 <button style="display: none;">第一个button会出现意料之外的hover样式，找不到原因，只好加个不可见的button规避问题</button>
                 <button type="button" id="edit-clear-all" @click="clearAllParam" class="nz-btn nz-btn-size-normal nz-btn-style-light">
-                  <span class="top-tool-btn-txt">{{$t('overall.clear')}}</span>
+                  <span><i class="el-icon-delete"></i></span>
                 </button>
-                <button type="button" id="edit-add-param" @click="addParam" class="nz-btn nz-btn-size-normal nz-btn-style-normal">
-                  <span class="top-tool-btn-txt">{{$t('overall.add')}}</span>
+                <button type="button" id="edit-add-param" @click="addParam" class="nz-btn nz-btn-size-normal nz-btn-style-light">
+                  <span><i style="font-size: 12px;" class="nz-icon nz-icon-create-square"></i></span>
                 </button>
               </div>
             </template>
@@ -251,17 +251,25 @@
       // 清除param
       clearAllParam() {
         this.endpoint.paramObj = [];
+        this.$nextTick(() => {
+          this.$refs.paramBoxScrollbar.update();
+        });
       },
 
       // 新增param
       addParam() {
         this.endpoint.paramObj.push({key: '', value: ''});
-        this.$refs.paramBoxScrollbar.update();
+        this.$nextTick(() => {
+          this.$refs.paramBoxScrollbar.update();
+        });
       },
 
       // 移除单个param
       removeParam(index) {
         this.endpoint.paramObj.splice(index, 1);
+        this.$nextTick(() => {
+          this.$refs.paramBoxScrollbar.update();
+        });
       },
 
       //将param转为json字符串格式
