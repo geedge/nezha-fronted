@@ -132,7 +132,7 @@
                 &nbsp;
                 <span :title="$t('overall.edit')" @click="toEditEndpoint(scope.row)" class="content-right-option" :id="'edp-edit-'+scope.row.id"><i class="nz-icon nz-icon-edit"></i></span>
               </div>
-              <span v-else-if="item.prop == 'lastUpdate'">{{dateFormat(scope.row.lastUpdate)}}</span>
+<!--              <span v-else-if="item.prop == 'lastUpdate'">{{dateFormat(scope.row.lastUpdate)}}</span>-->
               <span v-else-if="item.prop == 'state'" >
                 <el-popover placement="right" width="50" trigger="hover" :content="getStateContent(scope.row)">
                   <div slot="reference" style="width: 20px">
@@ -246,11 +246,11 @@
             prop: 'state',
             show: true,
           },
-          {
-            label: this.$t("project.endpoint.lastUpdate"),
-            prop: 'lastUpdate',
-            show: true,
-          },
+          // {
+          //   label: this.$t("project.endpoint.lastUpdate"),
+          //   prop: 'lastUpdate',
+          //   show: true,
+          // },
           {
             label: this.$t('config.account.option'),
             prop: 'option',
@@ -623,9 +623,9 @@
         if(row){
           if(row.state == 1){
 
-            return 'up'+'['+this.formatUpdateTime(row.lastUpdate)+']';
+            return 'up';
           }else{
-            return 'down'+'['+this.getStateErrorMsg(row)+']';
+            return 'down';
           }
         }
       },
