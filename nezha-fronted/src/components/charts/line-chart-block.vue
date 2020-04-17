@@ -402,7 +402,7 @@
             chartBox[_this.chartIndex].style.width = (containerWidth+chartBoxPadding)+'px';
             _this.echartStore.resize({height:(containerHeight-divHeight-_this.titleHeight)});
           }
-        }
+        };
 
         document.onmouseup=function(){
           let targetDivHeightNew = parseInt(targetDiv.style.height);
@@ -459,7 +459,7 @@
             height:(containerHeight+_this.chartSpaceHeight),
             prev:parseInt(_this.data.prev),
             next:parseInt(_this.data.next),
-          }
+          };
           //alert('=55='+JSON.stringify(modifyParams));
           _this.$put('panel/'+  _this.panelIdInner+'/charts/modify',modifyParams).then(response => {
             if (response.code === 200) {
@@ -519,7 +519,7 @@
                 name: item.name
               });
             }
-          })
+          });
           this.isGrey.forEach((item,i)=>{
             if(index != i){
               if(!curIsGrey && !item){
@@ -574,7 +574,7 @@
                 name: item.name
               });
             }
-          })
+          });
           this.isGreyScreen.forEach((item,i)=>{
             if(index != i){
               if(!curIsGrey && !item){
@@ -746,7 +746,7 @@
               params.forEach((item, i) => {
                 let tip=legend.find((element)=>{
                   return element.name == item.seriesName;
-                })
+                });
                 if(i===0){
                   let value=bus.computeTimezone(item.data[0]);
                   let t_date = new Date(value);
@@ -1250,14 +1250,17 @@
           if (type === 'list') { // 普通模式,主控台使用
             axiosArr = this.data.elements.map((ele) => {
               const filterItem = ele;
-              return  this.$get('/prom/api/v1/query_range?query='+filterItem.expression+"&start="+startTime+"&end="+endTime+'&step='+step);
+              let query = encodeURIComponent(filterItem.expression);
+              return  this.$get('/prom/api/v1/query_range?query='+query+"&start="+startTime+"&end="+endTime+'&step='+step);
             });
           } else if (type === 'dashboard') { // 概览模式,指标概览中使用
             // 概览模式,需要区分单独一个和多个
             if (this.stableFilter.chartCount === 'multiple') {
-              axiosArr = [this.$get('/prom/api/v1/query_range?query='+this.data.title+"&start="+startTime+"&end="+endTime+'&step='+step)];
+              let query = encodeURIComponent(this.data.title);
+              axiosArr = [this.$get('/prom/api/v1/query_range?query='+query+"&start="+startTime+"&end="+endTime+'&step='+step)];
             } else {
-              axiosArr = [this.$get('/prom/api/v1/query_range?query='+this.data.elements[0].expression+"&start="+startTime+"&end="+endTime+'&step='+step)];
+              let query = encodeURIComponent(this.data.elements[0].expression);
+              axiosArr = [this.$get('/prom/api/v1/query_range?query='+query+"&start="+startTime+"&end="+endTime+'&step='+step)];
             }
           }
           // 一个图表
@@ -1293,7 +1296,7 @@
                       };
                       if(this.data.type === 'stackArea'){
                         seriesItem.theData.type='line';
-                        seriesItem.theData.stack=this.data.title
+                        seriesItem.theData.stack=this.data.title;
                         seriesItem.theData.areaStyle={};
                       }
                       // 图表中每条线的名字,后半部分
@@ -1399,15 +1402,15 @@
       dealLegendAlias:function(legend,expression){
         if(/\{\{.+\}\}/.test(expression)){
           let labelValue=expression.replace(/(\{\{.+?\}\})/g,function(i){
-            let label=i.substr(i.indexOf('{{')+2,i.indexOf('}}')-i.indexOf('{{')-2)
-            let reg=new RegExp(label+'=".+?"')
+            let label=i.substr(i.indexOf('{{')+2,i.indexOf('}}')-i.indexOf('{{')-2);
+            let reg=new RegExp(label+'=".+?"');
             let value=null;
             if(reg.test(legend)){
               let find=legend.match(reg)[0];
               value=find.substr(find.indexOf('"')+1,find.lastIndexOf('"')-find.indexOf('"')-1);
             }
             return value?value:label;
-          })
+          });
           return labelValue
         }else{
           return expression;

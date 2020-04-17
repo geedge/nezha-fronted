@@ -247,7 +247,7 @@
         this.chart=chartInfo;
 
         let chartType= chartInfo.type;
-        let chartContainerId = 'chartEchartPreview'
+        let chartContainerId = 'chartEchartPreview';
         if(chartType==='table'){
           this.tableShow = false;
           chartContainerId = 'chartTablePreview';
@@ -303,7 +303,7 @@
                 that.$refs.loadingPreview.endLoading();
               }
             }
-console.log('=======',this.chart)
+console.log('=======',this.chart);
             iframe.src = this.chart.param.url;
           });
         }
@@ -369,7 +369,8 @@ console.log('=======',this.chart)
           this.$nextTick(() => {
             const axiosArr = chartItem.elements.map((ele) => {
               const filterItem = ele;
-              return  this.$get('/prom/api/v1/query_range?query='+filterItem.expression+"&start="+startTime+"&end="+endTime+'&step='+step);
+              let query = encodeURIComponent(filterItem.expression);
+              return  this.$get('/prom/api/v1/query_range?query='+query+"&start="+startTime+"&end="+endTime+'&step='+step);
             });
             // 一个图表的所有element单独获取数据
             axios.all(axiosArr).then((res) => {
@@ -401,7 +402,7 @@ console.log('=======',this.chart)
                         };
                         if(chartItem.type === 'stackArea'){
                           seriesItem.theData.type='line';
-                          seriesItem.theData.stack=chartItem.title
+                          seriesItem.theData.stack=chartItem.title;
                           seriesItem.theData.areaStyle={};
                         }
                         // 图表中每条线的名字,后半部分
@@ -532,7 +533,7 @@ console.log('=======',this.chart)
                 name: item.name
               });
             }
-          })
+          });
           this.isGreyScreen.forEach((item,i)=>{
             if(index != i){
               if(!curIsGrey && !item){
@@ -663,7 +664,7 @@ console.log('=======',this.chart)
               params.forEach((item, i) => {
                 let tip=legend.find((element)=>{
                   return element.name == item.seriesName;
-                })
+                });
                 if(i===0){
                   let t_date = new Date(item.data[0]);
                   str += [t_date.getFullYear(), t_date.getMonth() + 1, t_date.getDate()].join('-') + " "
@@ -928,7 +929,8 @@ console.log('=======',this.chart)
           let step = bus.getStep(startTime,endTime);
           axiosArr = this.chart.elements.map((ele) => {
             const filterItem = ele;
-            return  this.$get('/prom/api/v1/query_range?query='+filterItem.expression+"&start="+startTime+"&end="+endTime+'&step='+step);
+            let query = encodeURIComponent(filterItem.expression);
+            return  this.$get('/prom/api/v1/query_range?query='+query+"&start="+startTime+"&end="+endTime+'&step='+step);
           });
           // 一个图表
           axios.all(axiosArr).then((res) => {
@@ -963,7 +965,7 @@ console.log('=======',this.chart)
                       };
                       if(this.chart.type === 'stackArea'){
                         seriesItem.theData.type='line';
-                        seriesItem.theData.stack=this.chart.title
+                        seriesItem.theData.stack=this.chart.title;
                         seriesItem.theData.areaStyle={};
                       }
                       // 图表中每条线的名字,后半部分
@@ -1023,15 +1025,15 @@ console.log('=======',this.chart)
       dealLegendAlias:function(legend,expression){
         if(/\{\{.+\}\}/.test(expression)){
           let labelValue=expression.replace(/(\{\{.+?\}\})/g,function(i){
-            let label=i.substr(i.indexOf('{{')+2,i.indexOf('}}')-i.indexOf('{{')-2)
-            let reg=new RegExp(label+'=".+?"')
+            let label=i.substr(i.indexOf('{{')+2,i.indexOf('}}')-i.indexOf('{{')-2);
+            let reg=new RegExp(label+'=".+?"');
             let value=null;
             if(reg.test(legend)){
               let find=legend.match(reg)[0];
               value=find.substr(find.indexOf('"')+1,find.lastIndexOf('"')-find.indexOf('"')-1);
             }
             return value?value:label;
-          })
+          });
           return labelValue
         }else{
           return expression;

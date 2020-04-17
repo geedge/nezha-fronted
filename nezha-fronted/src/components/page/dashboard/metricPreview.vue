@@ -260,7 +260,8 @@ export default {
       this.filter.start_time = startTime;
       this.filter.end_time = endTime;
       let step = bus.getStep(startTime,endTime);
-      this.$get('/prom/api/v1/query_range?query='+params.elements[0].expression+"&start="+startTime+"&end="+endTime+'&step='+step).then(response => {
+      let query = encodeURIComponent(params.elements[0].expression);
+      this.$get('/prom/api/v1/query_range?query='+query+"&start="+startTime+"&end="+endTime+'&step='+step).then(response => {
         this.$refs.metricSet.loading = false;
         if (response.status === 'success') {
           if (response.data.result) {

@@ -164,7 +164,7 @@ export default {
       console.log('change', event)
     },
     start (event) {
-      console.log('start', event, this.dataList)
+      console.log('start', event, this.dataList);
       let item = event.item;
       let chartTitle = item.querySelector('.chartTitle');
       chartTitle.style.background = '#d8dce1';
@@ -263,7 +263,7 @@ export default {
         height:newItem.height,
         prev:newItem.prev,
         next:newItem.next,
-      }
+      };
       if(this.dataList.length>1){
         this.$put('panel/'+ this.pagePanelId+'/charts/modify',modifyParams).then(response => {
           if (response.code === 200) {
@@ -316,11 +316,11 @@ export default {
         a.href=canvas.toDataURL();
         a.download="drcQrcode";
         a.click();*/
-        console.log('clone-image',image)
+        console.log('clone-image',image);
         let ctxClone = canvasclone.getContext("2d");
         //ctxClone.drawImage(image,0,0);
         image.onload = function(){
-          console.log('clone-image-load',image)
+          console.log('clone-image-load',image);
           ctxClone.drawImage(image,0,0);
         }
 
@@ -378,7 +378,7 @@ export default {
           targetDiv.style.left=(startX+distX)+'px';
         }
         */
-      }
+      };
 
       document.onmouseup=function(){
         document.onmousemove=null;
@@ -396,16 +396,16 @@ export default {
       e.dataTransfer.dropEffect = 'move'// e.dataTransfer.dropEffect="move";//在dragenter中针对放置目标来设置!
     },
     handleDragEnter(e,item){
-      e.dataTransfer.effectAllowed = "move"//为需要移动的元素设置dragstart事件
+      e.dataTransfer.effectAllowed = "move";//为需要移动的元素设置dragstart事件
       if(item === this.dragging){
         return
       }
-      const newItems = [...this.dataList]
-      console.log(newItems)
-      const src = newItems.indexOf(this.dragging)
-      const dst = newItems.indexOf(item)
+      const newItems = [...this.dataList];
+      console.log(newItems);
+      const src = newItems.indexOf(this.dragging);
+      const dst = newItems.indexOf(item);
 
-      newItems.splice(dst, 0, ...newItems.splice(src, 1))
+      newItems.splice(dst, 0, ...newItems.splice(src, 1));
 
       this.dataList = newItems
     },
@@ -456,7 +456,7 @@ export default {
                 dataTmpList.push(item);
                 this.currentRecordNum = i+1;
               }else{
-                this.currentRecordNum = i
+                this.currentRecordNum = i;
                 break;
               }
             }else {//数据加载够了
@@ -571,7 +571,8 @@ export default {
         this.$nextTick(() => {
           const axiosArr = chartItem.elements.map((ele) => {
             const filterItem = ele;
-            return  this.$get('/prom/api/v1/query_range?query='+filterItem.expression+"&start="+startTime+"&end="+endTime+'&step='+step);
+            let query = encodeURIComponent(filterItem.expression);
+            return  this.$get('/prom/api/v1/query_range?query='+query+"&start="+startTime+"&end="+endTime+'&step='+step);
           });
           // 一个图表的所有element单独获取数据
           axios.all(axiosArr).then((res) => {
@@ -605,7 +606,7 @@ export default {
                       };
                       if(chartInfo.type === 'stackArea'){
                         seriesItem.theData.type='line';
-                        seriesItem.theData.stack=chartInfo.title
+                        seriesItem.theData.stack=chartInfo.title;
                         seriesItem.theData.areaStyle={};
                       }
                       // 图表中每条线的名字,后半部分
