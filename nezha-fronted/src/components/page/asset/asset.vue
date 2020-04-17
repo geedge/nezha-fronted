@@ -28,7 +28,7 @@
   <!--            </idc-config-box>-->
             <!--</el-checkbox>
           </el-checkbox-group>-->
-          <el-collapse v-model="activeType">
+          <el-collapse v-model="activeType" class="left-menu-bg">
             <el-collapse-item name="dataCenter" :title="$t('asset.left.dataCenter')">
               <el-checkbox-group v-model="checkList" size="small" @change="changeCheckBox">
                 <el-checkbox class="sidebar-info-item" :class="{'sidebar-info-item-active': indOf(checkList, item.id)}"

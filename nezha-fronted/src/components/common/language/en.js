@@ -38,17 +38,17 @@ const en = {
     back: 'Back', //返回
     unavailable: 'Unavailable',
     available: 'Available',
-    changePwd:'Change Password',//修改密码
-    createChart:'create chart',
-    createProject:'create project',
-    createAsset:'create asset',
-    createAlertRule:'create alert rule',
-    createAccount:'create account',
-    createPrometheusServer:'create prometheus server',
-    createDatacenter:'create Data Center',
-    createCabinet:'create cabinet',
-    createModel:'create model',
-    createMib:'create MIB',
+    changePwd:'Change password',//修改密码
+    createChart:'Create chart',
+    createProject:'Create project',
+    createAsset:'Create asset',
+    createAlertRule:'Create alert rule',
+    createAccount:'Create account',
+    createPrometheusServer:'Create prometheus server',
+    createDatacenter:'Create Data Center',
+    createCabinet:'Create cabinet',
+    createModel:'Create model',
+    createMib:'Create MIB',
     exportExcel:'Export',
     importExcel:'Import',
     importExcelLower:'import',
@@ -84,7 +84,7 @@ const en = {
     uploadButtonTitle:'Upload',
     fileSelect:'select',
     downloadButtonTitle:'Download',
-    filePath:'file path',
+    filePath:'File path',
     closeTip:'All connections will be closed, are you sure you want to close the window?',
     remember:'Remember my decision'
   },
@@ -101,20 +101,20 @@ const en = {
         name:'name'
       },
       //面板-侧滑框
-      createPanelTitle: 'New Panel', //"新增面板"
+      createPanelTitle: 'New panel', //"新增面板"
       selectPanelTitle:'Select', //"选择面板"
-      createPanelTitleSec:'New Panel',//"新增面板"
+      createPanelTitleSec:'New panel',//"新增面板"
       editPanelTitle: 'Panel', //"面板"
       panelForm:{
-        panelName:'Panel Name', //"面板名称"
+        panelName:'Panel name', //"面板名称"
         panelId:"ID" //ID
       },
       //图表-侧滑框
-      createChartTitle: 'New Chart', //"新增图表"
+      createChartTitle: 'New chart', //"新增图表"
       editChartTitle: 'Edit',//"编辑图表"
       chartForm:{
         chartId:"ID",
-        chartName:"Chart Name",
+        chartName:"Chart n",
         type:"Type",
         unit:"Unit",
         url:"URL",
@@ -185,11 +185,11 @@ const en = {
       cancel:'Cancel'//'取消'
     },
     metric:{
-      name:'Metric Name', //"指标名称"
+      name:'Metric name', //"指标名称"
       normal:'Normal', //"普通"
       expert:"Expert",// Expert
       label:'Label', //"指标标签"
-      addMetric:'Add Metric',//"添加指标"
+      addMetric:'Add metric',//"添加指标"
       expertTip:'Add expression',//"请输入表达式"
       goPanelTip:"View created panel?",//View created panel?
       previewChart:'Preview',//"预览图表"
@@ -212,17 +212,17 @@ const en = {
       contentTitle:'Nezha Management System',
       asset:{
         title:'Asset',
-        assetType:'Asset Type',
+        assetType:'Asset type',
         modelStat:'Model',
-        dcStat:'Data Center',
+        dcStat:'Data center',
         num:'Num',
         alert:'Alert',
         alertTotal:'Total',
         alertLow:'Low',
         alertMedium:'Medium',
         alertHigh:'High',
-        inStock:'In Stock',
-        outStock:'Out Stock',
+        inStock:'In stock',
+        outStock:'Out stock',
         pingUp:'Up',
         pingDown:'Down',
         host:'Host',
@@ -239,15 +239,15 @@ const en = {
         endpoint:'Endpoint',
       },
       dataCenter:{
-        dataCenter:'Data Center',
+        dataCenter:'Data center',
         cabinet:'Cabinet',
-        promServer:'Prom Server',
+        promServer:'Prom server',
       },
       alert:{
         level:'Level',
-        alertRule:'Alert Rule',
-        ruleNum:'Rule Num',
-        alertNum:'Alert Num',
+        alertRule:'Alert rule',
+        ruleNum:'Rule num',
+        alertNum:'Alert num',
         alertRuleTopN:'According to Alert Rule',
         assetTopN:'According to Asset',
         top:'Top',
@@ -279,14 +279,14 @@ const en = {
     required: 'Required',//'必填项'
     number: 'Numberic',//'必须是数字'
     integer:'Integer',
-    positiveInteger:'Positive Integer',
+    positiveInteger:'Positive integer',
     email:'Invalid email',//'不合法的E-mail地址'
     tel:'Invalid phone number',//'不合法的电话号码'
     host:'Invalid IP',//'不合法的IP'
     domain:'Invalid domain',
     usize:'Must be number(1 - 49)',
     fileSize:'文件过大',//File exceed max size.
-    port:'Invalid Port',
+    port:'Invalid port',
     url:'Invalid URL',
     uSize:'Must be number(1 - 47)',
     requiredIdc:'dc is required'
@@ -306,8 +306,8 @@ const en = {
     coverSuccess: 'Override success',//'覆盖成功'
     refreshLater:'Refresh later',//'请稍后刷新'
     testSuccess:'Test success',
-    downloadSuccess : 'Download Success',
-    uploadSuccess: 'Upload Success',
+    downloadSuccess : 'Download success',
+    uploadSuccess: 'Upload success',
     pressEnterToAdd: 'Press enter to add new line',
     resetSuccess:'Reset success',
   },
@@ -320,8 +320,8 @@ const en = {
     assetStatDown:'Never',
     pingInactive:'inactive',
     left:{
-      dataCenter:'Data Center',
-      assetType:'Asset Type',
+      dataCenter:'Data center',
+      assetType:'Asset type',
       vendor:'Vendor',
       ping:'Ping',
     },
@@ -518,11 +518,11 @@ const en = {
       editAccount: 'Edit account',//"编辑用户"
       notCurrentlySupport: 'Not available',//'暂不支持'
       password: 'Password',//'密码'
-      oldPwd:'Old Password',
+      oldPwd:'Old password',
       inputOldPwd:'Please input old password',
       newPwd:'New password',
       inputNewPwd:'Please input new password',
-      confirmPwd:'Confirm Password',
+      confirmPwd:'Confirm password',
       inputConfirmPwd:'Please input confirm password',
       invalidPwd:'invalide password,the length at least 6',
       confirmPwdErr:'The two passwords are inconsistent',
@@ -538,7 +538,7 @@ const en = {
       checkTime: 'Check time'
     },
     dc: {
-      dc: 'Data Center',
+      dc: 'Data center',
       area: "Area",
       selectArea: 'Select area',
       cabinetNum: "Cabinet number",
@@ -547,7 +547,7 @@ const en = {
       cabinets: "Cabinets"
     },
     model: {
-      model: 'Asset Model',
+      model: 'Asset model',
       vendor: 'Vendor',
       assets: "Assets",
       editModel: 'Edit model',
@@ -556,7 +556,7 @@ const en = {
       type: 'Type'
     },
     terminallog: {
-      terminallog: 'Terminal Log',
+      terminallog: 'Terminal log',
       status: 'Status',//"状态"
       option: 'Operation',//"操作",
       host: 'Host',
@@ -566,10 +566,10 @@ const en = {
       protocol: 'Protocol',
       user: 'User',
       detail: 'Terminal Log Detail',
-      resize: 'Terminal Resize',
-      download: 'Terminal Download',
-      upload: 'Terminal Upload',
-      selectFile: 'Select File',
+      resize: 'Terminal resize',
+      download: 'Terminal download',
+      upload: 'Terminal upload',
+      selectFile: 'Select file',
       SSH: 'SSH',
       TELNET: 'TELNET',
       id: 'ID',
@@ -585,7 +585,7 @@ const en = {
       fail: 'Fail'
     },
     operationlog: {
-      operationlog: 'Operation Log',
+      operationlog: 'Operation log',
       id : 'ID',
       username: 'User',
       operation: 'Operation',
@@ -597,13 +597,13 @@ const en = {
       mib:'SNMP MIB',
       fileName:'FileName',
       remark:'Remark',
-      updateUser:'Update User',
-      updateAt:'Update Time',
+      updateUser:'Update user',
+      updateAt:'Update time',
       editMib:'Edit MIB',
       models:'Models',
       modelTip:'please select models',
       createMib:'Create MIB',
-      mibFiles:'MIB File',
+      mibFiles:'MIB file',
       uploadTip:'please upload MIB file',
       requiredMibFile:'MIB file is required',
       vendor:'Vendor',
@@ -616,28 +616,28 @@ const en = {
       basic:{
         basic:'Basic',
         alertApi:'Alert API',
-        assetPingSwith:'Asset Ping',
+        assetPingSwith:'Asset ping',
         assetPingInterval:'Interval',
-        exporterTarget:'Exporter Path',
-        scrapeInterval:'Scrape Interval',
-        storageRetention:'Local Retention',
-        systemName:'System Name',
+        exporterTarget:'Exporter path',
+        scrapeInterval:'Scrape interval',
+        storageRetention:'Local retention',
+        systemName:'System name',
         curUrl:'Current site URL',
         timezone:'Timezone',
         defaultCabinetUsize:'Cabinet U Size'
       },
       email:{
         email:'Email',
-        enable:'Enable Email',
-        smtpHost:'SMTP Host',
-        smtpPort:'SMTP Port',
-        smtpAccount:'SMTP Account',
-        smtpPwd:'SMTP Password',
-        sendAccount:'Send Account',
-        testAccount:'Test Account',
+        enable:'Enable email',
+        smtpHost:'SMTP host',
+        smtpPort:'SMTP port',
+        smtpAccount:'SMTP account',
+        smtpPwd:'SMTP password',
+        sendAccount:'Send account',
+        testAccount:'Test account',
         useSSL:'SSL',
         useTLS:'TLS',
-        testConnection:'Test Connection',
+        testConnection:'Test connection',
         pwdTip:'Tip:Some email providers need to enter token',
         sendAccountTip:'Tip:The SMTP account is used as the sending account by default',
         testAccountTip:'Tip:Used only as test mail recipient',
@@ -650,11 +650,11 @@ const en = {
       },
       ldap:{
         ldap:'LDAP',
-        address:'LDAP Address',
+        address:'LDAP address',
         dn:'Bind DN',
         pwd:'Password',
         ou:'User OU',
-        filter:'User Filter',
+        filter:'User filter',
         map:'LDAP Field Mapping',
         active:'LDAP Authentication'
       },
@@ -664,7 +664,7 @@ const en = {
         pwd:'Password',
         metric:'metric',
         alert:'alert',
-        sysConfig:'system config',
+        sysConfig:'System config',
         pwdTip:'Please input your password',
         promptTitle:'Confirm',
         yes:'Yes',
@@ -750,8 +750,8 @@ const en = {
       }
     },
     endpoint: {
-      createEndpoint: 'New Endpoint',//"新增Endpoint"
-      editEndpoint: 'Edit Endpoint',//"编辑Endpoint"
+      createEndpoint: 'New endpoint',//"新增Endpoint"
+      editEndpoint: 'Edit endpoint',//"编辑Endpoint"
       endpoint: 'Endpoint',//"Endpoint"
       endpointId: 'Endpoint ID',//"Endpoint ID"
       host: 'Host',//"Host"
@@ -759,9 +759,9 @@ const en = {
       param: 'Parameter',//"参数"
       path: 'Path',//"路径"
       asset: 'Asset',//"设备"
-      lastUpdate: 'Last Reply',//"最后更新时间"
+      lastUpdate: 'Last reply',//"最后更新时间"
       moduleParameter: 'Module',//"组件参数"
-      addGraph: 'View Graph', //添加图标
+      addGraph: 'View graph', //添加图标
       element: 'Element',
       value: 'Value',
       promExpr: 'Please input expression',

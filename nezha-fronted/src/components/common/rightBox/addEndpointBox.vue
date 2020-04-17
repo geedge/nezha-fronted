@@ -627,7 +627,9 @@
       },
       currentProject(n, o) {
         this.endpointForm.projectId = n.id;
-        this.getModuleList(n.id);
+        if(this.rightBox.show){
+          this.getModuleList(n.id);
+        }
       },
       currentModule: {
         immediate: true,
@@ -696,7 +698,7 @@
     border: none;
   }
   .param-box-row {
-    padding: 7px 0 0 0;
+    padding: 7px 10px 0 10px;
     position: relative;
   }
   .param-box-row:last-of-type {

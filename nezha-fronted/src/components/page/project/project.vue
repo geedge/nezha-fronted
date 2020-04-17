@@ -24,7 +24,7 @@
     <left-menu >
       <div slot="content-left" class="slot-content">
       <el-scrollbar ref="leftScrollbar" style="height: 100%">
-        <div class="sidebar-title too-long-split">{{$t('project.project.project')}}</div>
+        <div class="sidebar-title too-long-split" style="ma">{{$t('project.project.project')}}</div>
         <!--<div class="sidebar-info">
           <div
             v-for="item in moduleList"
@@ -42,12 +42,13 @@
             <div v-show="item.buildIn != 1" class="hid-div side-bar-menu-edit" @click.stop="toEditModule(item)" :id="'project-module-edit-'+item.id" ><i class="nz-icon nz-icon-edit"></i></div>
           </div>
         </div>-->
-        <el-collapse v-model="currentProjectTitle" class="sidebar-info" accordion style="padding-top:0px;" @change="projectChange" ref="projectLeft">
+        <div class="sidebar-info">
+        <el-collapse v-model="currentProjectTitle" class="left-menu-bg" accordion style="padding-top:0px;" @change="projectChange" ref="projectLeft">
           <el-collapse-item v-for="(item,index) in projectList" :key="item.name+item.id+index" :name="item.name+'-'+item.id">
             <template slot="title">
               <div class="sidebar-info-item" :class="{'sidebar-info-item-active': item.name+'-'+item.id==currentProjectTitle || item.id==currentProject.id}" @click.stop="detailProjectInfo($event,item)" :id="'project-module-'+item.id">
                 <div class="sidebar-info-item-txt">
-                  <el-popover v-if="item.name.length > 14" trigger="hover" placement="top-start" :content="item.name" >
+                  <el-popover v-if="item.name.length > 14" trigger="hover" placement="top-start" :content="item.name" popper-class="transparent-pop">
                     <span slot="reference" class="">
                       {{item.name}}
                     </span>
@@ -69,6 +70,7 @@
             </div>
           </el-collapse-item>
         </el-collapse>
+        </div>
       </el-scrollbar>
     </div>
 
@@ -336,27 +338,29 @@
         this.tablelable = data;
       },
       getEndpointTableData() {
-        this.pageType='endpoint'
-        this.endpointSearchLabel.moduleId = this.currentModule.id;
-        this.$set(this.endpointSearchLabel, 'pageNo', this.endpointPageObj.pageNo);
-        this.$set(this.endpointSearchLabel, 'pageSize', this.endpointPageObj.pageSize);
-        this.$get('endpoint', this.endpointSearchLabel).then(response => {
-          if (response.code === 200) {
-            for (let i = 0; i < response.data.list.length; i++) {
-              try {
-                let tempObj = JSON.parse(response.data.list[i].param);
-                response.data.list[i].paramObj = [];
-                for (let k in tempObj) {
-                  response.data.list[i].paramObj.push({key: k, value: tempObj[k]})
+        if(this.currentModule&&this.currentModule.id){
+          this.pageType='endpoint'
+          this.endpointSearchLabel.moduleId = this.currentModule.id;
+          this.$set(this.endpointSearchLabel, 'pageNo', this.endpointPageObj.pageNo);
+          this.$set(this.endpointSearchLabel, 'pageSize', this.endpointPageObj.pageSize);
+          this.$get('endpoint', this.endpointSearchLabel).then(response => {
+            if (response.code === 200) {
+              for (let i = 0; i < response.data.list.length; i++) {
+                try {
+                  let tempObj = JSON.parse(response.data.list[i].param);
+                  response.data.list[i].paramObj = [];
+                  for (let k in tempObj) {
+                    response.data.list[i].paramObj.push({key: k, value: tempObj[k]})
+                  }
+                } catch (err) {
+                  //console.error(response.data.list[i], err);
                 }
-              } catch (err) {
-                //console.error(response.data.list[i], err);
               }
+              this.endpointTableData = response.data.list;
+              this.endpointPageObj.total = response.data.total;
             }
-            this.endpointTableData = response.data.list;
-            this.endpointPageObj.total = response.data.total;
-          }
-        });
+          });
+        }
       },
       endpointPageNo(val) {
         this.endpointPageObj.pageNo = val;
@@ -418,7 +422,8 @@
         })
       },
       getProjectModule:function(projectId){
-        return this.moduleList.filter((item,index)=>{
+        let moduleList=Object.assign([],this.moduleList);
+        return moduleList.filter((item,index)=>{
           return item.project.id==projectId;
         })
       },
@@ -429,8 +434,10 @@
           currentProjectId=Number.parseInt(currentProjectId);
           let moduleList=this.getProjectModule(currentProjectId);
           this.currentModule=moduleList[0];
+          this.currentProject=this.projectList.find((item)=>{
+            return item.id == currentProjectId
+          })
           this.getEndpointTableData();
-          this.currentProject=this.projectList.find((item)=>{return item.id == currentProjectId})
           // this.$store.commit('setProject',null)
         }
       },
@@ -445,7 +452,7 @@
         }
       },
       getAllModuleList:function(){
-        this.$get('module', {projectId: this.currentProject.id, pageSize: -1, pageNo: 1}).then(response => {
+        this.$get('module', { pageSize: -1, pageNo: 1}).then(response => {
           if (response.code === 200) {
             this.moduleList = response.data.list;
             for (let i = 0; i < this.moduleList.length; i++) {
@@ -720,7 +727,7 @@
       if (pageSize) {
         this.endpointPageObj.pageSize = pageSize
       }
-
+      this.detailProjectInfo({});
       // setTimeout(()=>{
       //   this.getEndpointTableData();
       // }, 200);
@@ -760,9 +767,11 @@
       },
     },
     watch: {
-      currentProjectChange(n, o) {
-        this.currentProject = Object.assign({}, n);
-        this.detailProjectInfo({});
+      currentProjectChange:{
+        handler(n, o) {
+          this.currentProject = Object.assign({}, n);
+          this.detailProjectInfo({});
+        }
       },
       currentProject(n, o) {
         // this.getModuleList();
@@ -1107,5 +1116,8 @@
     position: relative;
     top: 50%;
     left: 48.5%;
+  }
+  .project .sidebar-info-item{
+    margin:0px !important;
   }
 </style>
