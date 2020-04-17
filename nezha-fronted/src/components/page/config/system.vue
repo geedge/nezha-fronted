@@ -65,7 +65,7 @@
                 </el-select>
               </el-form-item>
               <el-form-item>
-                <el-button class="nz-btn nz-btn-size-normal nz-btn-style-light nz-btn-min-width-100" @click="resetForm('basicForm')" style="top:2px">{{$t('overall.clear')}}</el-button>
+                <el-button class="nz-btn nz-btn-size-normal nz-btn-style-light nz-btn-min-width-100" @click="resetForm('basicForm','basic')" style="top:2px">{{$t('overall.reset')}}</el-button>
                 <el-button type="primary" @click="saveSetInfo('basic','basicForm')" class="nz-btn nz-btn-size-normal nz-btn-style-normal nz-btn-min-width-100">{{$t('overall.submit')}}</el-button>
               </el-form-item>
             </el-form>
@@ -111,7 +111,7 @@
                 </el-row>
               </el-form-item>
               <el-form-item>
-                <el-button class="nz-btn nz-btn-size-normal nz-btn-style-light nz-btn-min-width-100" @click="resetForm('emailForm')" style="top:2px">{{$t('overall.clear')}}</el-button>
+                <el-button class="nz-btn nz-btn-size-normal nz-btn-style-light nz-btn-min-width-100" @click="resetForm('emailForm','email')" style="top:2px">{{$t('overall.reset')}}</el-button>
                 <el-button class="nz-btn nz-btn-size-normal nz-btn-style-light nz-btn-min-width-100" :class="{'nz-btn-disabled':email.email_enable == 'off'}" :disabled="email.email_enable == 'off'" @click="testSetInfo('email','emailForm')" style="top:2px">{{$t('config.system.email.testConnection')}}</el-button>
                 <el-button type="primary" @click="saveSetInfo('email','emailForm')" class="nz-btn nz-btn-size-normal nz-btn-style-normal nz-btn-min-width-100">{{$t('overall.submit')}}</el-button>
               </el-form-item>
@@ -155,7 +155,7 @@
                 <el-input v-model="ldap.ldap_mapping"></el-input>
               </el-form-item>
               <el-form-item>
-                <el-button class="nz-btn nz-btn-size-normal nz-btn-style-light nz-btn-min-width-100" @click="resetForm('ldapForm')" style="top:2px">{{$t('overall.clear')}}</el-button>
+                <el-button class="nz-btn nz-btn-size-normal nz-btn-style-light nz-btn-min-width-100" @click="resetForm('ldapForm','ldap')" style="top:2px">{{$t('overall.reset')}}</el-button>
                 <el-button class="nz-btn nz-btn-size-normal nz-btn-style-light nz-btn-min-width-100" @click="testSetInfo('ldap','ldapForm')" style="top:2px">{{$t('config.system.email.testConnection')}}</el-button>
                 <el-button type="primary" @click="saveSetInfo('ldap','ldapForm')" class="nz-btn nz-btn-size-normal nz-btn-style-normal nz-btn-min-width-100">{{$t('overall.submit')}}</el-button>
               </el-form-item>
@@ -219,6 +219,7 @@
               timezone:'',
               default_cabinet_usize:'',
             },
+            basicCopy:null,
             basicRules:{
               system_name:[{required:true,message:this.$t('validate.required'),trigger:'blur'},],
               node_exporter_target_path:[{required:true,message:this.$t('validate.required'),trigger:'blur'},],
@@ -276,6 +277,7 @@
               email_ssl_flag: 'off',
               email_tls_flag: 'off',
             },
+            emailCopy:null,
             emailRules:{
               email_smtp_host: [
                 {required:true,message:this.$t('validate.required'),trigger:'blur'},
@@ -295,6 +297,7 @@
             terminal:{
               max_terminal_num:10
             },
+            terminalCopy:null,
             terminalRules:{
               max_terminal_num:[
                 {required:true,message:this.$t('validate.required'),trigger:'blur'},
@@ -310,6 +313,7 @@
               ldap_mapping:'',
               ldap_enable:'off',
             },
+            ldapCopy:null,
             ldapRules:{
               ldap_address:[{required:true,message:this.$t('validate.required'),trigger:'blur'},],
               ldap_user_filter:[{required:true,message:this.$t('validate.required'),trigger:'blur'},],
@@ -361,6 +365,7 @@
                 if(type == 'email'){
                   this.$refs.emailForm.clearValidate();
                 }
+                this[type+"Copy"]=Object.assign({},this[type])
               }
             })
           },
@@ -439,20 +444,9 @@
 
             });
           },
-          resetForm(formName){
+          resetForm(formName,type){
             this.$refs[formName].resetFields();
-            switch (formName) {
-              case 'basicForm':
-                this.basic.scrape_interval=15;
-                this.basic.storage_local_retention=15*24;
-                break;
-              case 'emailForm':
-                this.email.email_smtp_port=25;
-                break;
-              case 'terminalForm':
-                this.terminal.max_terminal_num=10;
-                break;
-            }
+            this[type]=Object.assign({},this[type+"Copy"]);
           },
           switchChange:function(formName){
             let $temp=this;
