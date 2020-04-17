@@ -120,7 +120,12 @@
   .dashboard-metric-dropdown .el-scrollbar__wrap{
     margin-bottom: 0px !important;
   }
-
+  .dashboard-metric-dropdown>.el-cascader-panel{
+    height:200px !important;
+  }
+  .metric-dropdown>.el-cascader-panel{
+    height:200px !important;
+  }
   .dashboard-metric-dropdown .el-cascader-menu:nth-child(1){
     min-width:80px !important;
   }
@@ -132,7 +137,6 @@
   }
 
   .label-cascader .el-cascader__tags{
-
     max-height:50px;
     overflow-y:auto;
     right:5px !important;
@@ -756,7 +760,7 @@ export default {
           value:item.name,
           label:item.name,
           children:[]
-        }
+        };
         if(valList && valList.length>0){
           valList.forEach((valuItem)=>{
             let disabled = false;
@@ -767,7 +771,7 @@ export default {
               value:valuItem,
               label:valuItem,
               disabled: disabled,
-            }
+            };
             labelOption.children.push(valOption);
           });
         }
@@ -997,7 +1001,7 @@ export default {
                     }
                   })
                 }
-              })
+              });
 
               const tagsArr = Object.keys(tag);//["__name__","asset","idc","instance","job","module","project"]
               let labelValList = [];

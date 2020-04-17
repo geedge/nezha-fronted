@@ -32,7 +32,7 @@
         </div>
         <div :id="'chartUrl'+chartIndex" class="mt-10 url-container"  v-show="firstShow" >
             <iframe :id="'urlContainer'+chartIndex" frameborder="0" width="100%" height="100%" name="showHere" scrolling=auto
-                    style="z-index:5000;"
+                    style="z-index:5000;padding-bottom:6px;"
             ></iframe><!--  style=" position: absolute; width: 100%; height: 100%; top: 0;left:0;"  :src="chart.url" v-scrollBar:char-url-preview-->
         </div>
         <!--全屏-->
@@ -41,7 +41,7 @@
               <span class="nz-dialog-title">{{data.title}}</span>
             </div>
             <iframe :id="'urlContainerFull'+chartIndex"  frameborder="0" width="100%" height="100%" name="showHereFull" scrolling=auto
-                    style="z-index:5000;"
+                    style="z-index:5000;padding-bottom:6px;"
             ></iframe><!--  style=" position: absolute; width: 100%; height: 100%; top: 0;left:0;"  :src="chart.url" v-scrollBar:char-url-preview-->
 
             <loading  :ref="'localLoadingScreen'+chartIndex"></loading>
@@ -92,6 +92,7 @@ export default {
             minHeight:200,
             chartSpaceHeight:5,//top-border: 1,bottom-border: 1,padding-bottome:3
             titleHeight:38,//title-height:28,magrin-bottom:10
+            paddingBottom:6,
             divFirstShow:false,
         };
     },
@@ -113,7 +114,7 @@ export default {
           }
           chartBox.style.height = `${height-this.chartSpaceHeight}px`;
           const urlBox = document.getElementById('urlContainer'+this.chartIndex);
-          urlBox.style.height = `${height-this.chartSpaceHeight-this.titleHeight}px`;// -75-32
+          urlBox.style.height = `${height-this.chartSpaceHeight-this.titleHeight-this.paddingBottom}px`;// -75-32
         });
         this.startLoading();
         this.setLoadFrame();
@@ -150,7 +151,7 @@ export default {
         this.setLoadFrameFull();
       },
       dragResize:function(e){
-        console.log('========',this.data)
+        console.log('========',this.data);
         var diffWidth =20; //界面的宽度空白的地方的宽度
         var chartBoxPadding = 22;
         var targetDiv= document.getElementById('chartUrlDiv'+this.chartIndex); //e.target.parentNode.parentNode;.children[0]
@@ -214,7 +215,7 @@ export default {
             //表格的高度
             const tableBox = document.getElementById('urlContainer'+_this.chartIndex);
             tableBox.style.height = `${containerHeight-_this.titleHeight}px`;//-75-32+25
-        }
+        };
 
         document.onmouseup=function(){
           document.onmousemove=null;
@@ -273,10 +274,10 @@ export default {
             height:(containerHeight+_this.chartSpaceHeight),
             prev:parseInt(_this.data.prev),
             next:parseInt(_this.data.next),
-          }
-          console.log('========2',_this.data)
+          };
+          console.log('========2',_this.data);
           _this.$put('panel/'+  _this.panelIdInner+'/charts/modify',modifyParams).then(response => {
-            console.log('========3',_this.data)
+            console.log('========3',_this.data);
             if (response.code === 200) {
               //更新当前图表数据
               _this.data.span= span;

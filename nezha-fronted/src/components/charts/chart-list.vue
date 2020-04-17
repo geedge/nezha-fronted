@@ -69,8 +69,7 @@
                  handle:'.chartTitle',
                }"  >@clone="clone"
      -->
-    <draggable v-model="dataList" @chang="change" @start="start" @end="end" :move="move" @choose="choose"
-               @add="add"  @update="update" @remove="remove" @sort="sort"
+    <draggable v-model="dataList" @start="start" @end="end" :move="move"
                :scroll-sensitivity="150"
                :options="{
                  group:{name:'chartGroup',pull:'false'},
@@ -501,7 +500,6 @@ export default {
           }else {
             this.dataList = this.dataTotalList;
           }
-          console.log('0000==========',this.dataList);
           this.$nextTick(() => {
             if (this.dataList.length > 0 && this.$refs.editChart) {
               this.$refs.editChart.forEach((item, i) => {
@@ -636,6 +634,9 @@ export default {
                         if(!alias || alias===''){
                           alias = chartItem.elements[innerPos].expression;
                         }
+                        //if(alias){
+                          //host = alias;
+                        //}
                         legend.push({name:host,alias:alias});
                         // 图表中每条线的名字,去掉最后的逗号与空格:metric名称,  标签1=a,标签2=c
                         seriesItem.theData.name = host;

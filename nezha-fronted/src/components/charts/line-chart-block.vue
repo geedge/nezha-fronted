@@ -120,6 +120,7 @@
   import bus from '../../libs/bus';
   import loading from "../common/loading";
   import chartDataFormat from './chartDataFormat'
+  import {randomcolor} from  '../common/js/radomcolor/randomcolor.js'
 
   export default {
     name: 'lineChartBlock',
@@ -182,13 +183,13 @@
         screenLegendList:[],
         isGrey:[],
         isGreyScreen:[],
-        bgColorList: ['#7bbfea', '#b3424a', '#f05b72', '#596032', '#bd6758',
+        bgColorList: [/*'#7bbfea', '#b3424a', '#f05b72', '#596032', '#bd6758',
           '#cd9a5b', '#918597', '#70a19f', '#005344', '#FF00FF',
           '#f7acbc', '#5f5d46', '#66ffff', '#ccFF66', '#f47920',
           '#769149', '#1d953f', '#abc88b', '#7f7522', '#9b95c9',
           '#f3715c', '#ea66a6', '#d1c7b7', '#9d9087', '#77787b',
           '#f58220', '#c37e00', '#00ae9d', '#f26522', '#76becc',
-          '#76624c', '#d71345', '#2468a2', '#ca8687', '#1b315e',
+          '#76624c', '#d71345', '#2468a2', '#ca8687', '#1b315e',*/
         ],
         firstShow: false, // 默认不显示操作按钮,
         caretShow:false,
@@ -744,9 +745,13 @@
 
               //let str = `<div  style='white-space:nowrap;overflow-x:hidden;text-overflow:ellipsis;min-width:150px;max-width:600px;display:inline-block;line-height: 18px;font-size:12px;font-family: Roboto,Helvetica Neue,Arial,sans-serif;'>`;
               params.forEach((item, i) => {
-                let tip=legend.find((element)=>{
-                  return element.name == item.seriesName;
-                });
+                //alert('tooltip====='+JSON.stringify(item))
+                //let tip=legend.find((element)=>{
+                  //alert('legend====='+JSON.stringify(element))
+                  //return element.name == item.seriesName;
+                //});
+                let tip=legend[i];
+                let color = self.bgColorList[i];
                 if(i===0){
                   let value=bus.computeTimezone(item.data[0]);
                   let t_date = new Date(value);
@@ -759,7 +764,7 @@
                   val = Number(item.data[1]);
                 }
                 str += `<div style="white-space:nowrap;overflow-x:hidden;text-overflow:ellipsis;display: flex; justify-content: space-between; min-width: 150px; max-width: 600px; line-height: 18px; font-size: 12px;">`;
-                str += `<div style="max-width: 500px;white-space:nowrap;overflow-x:hidden;text-overflow:ellipsis;"><span style='display:inline-block;margin-right:5px;border-radius:10px;width:15px;height:5px;background-color: ${item.color};}'></span>${tip?(tip.alias?tip.alias:tip.name):item.seriesName}:  </div>`;
+                str += `<div style="max-width: 500px;white-space:nowrap;overflow-x:hidden;text-overflow:ellipsis;"><span style='display:inline-block;margin-right:5px;border-radius:10px;width:15px;height:5px;background-color: ${color};}'></span>${tip?(tip.alias?tip.alias:tip.name):item.seriesName}  </div>`;
                 str += `<div style="padding-left: 10px;">`;
                 str += chartDataFormat.getUnit(chartInfo.unit?chartInfo.unit:2).compute(val,null,2);
                 str += `</div>`;
@@ -868,14 +873,23 @@
               show: true,
             },
             splitLine:{
-              show:false
-            }
+              show:true
+            },
+            //boundaryGap:['20%', '0'],
           },
           yAxis: {
             type: 'value',
             splitLine:{
               show:true
             },
+            //去掉y轴--start
+            axisLine:{
+              show:false
+            },
+            axisTick: {
+              show: false,
+            },
+            //去掉y轴--end
             axisLabel: {
               formatter: function(value,index){
                 let chartUnit=chartInfo.unit;
@@ -1107,8 +1121,15 @@
         */
         //return rlt;
       },
+      setColor(colorNum){
+        this.bgColorList = [];
+        for(let i=0;i<colorNum;i++) {
+          this.bgColorList.push(randomcolor())
+        }
+      },
       // 设置数据, filter区分
       setData(chartItem, seriesItem, panelId, filter,legend,area) {
+        this.setColor(legend.length);
         if(area==='showFullScreen'){//全屏按时间查询
           /*
           this.legend = legend;
