@@ -37,25 +37,36 @@
           </el-form-item>
           <!--asset-->
           <el-form-item :label="$t('asset.asset')" prop="assetId">
-            <div class="right-box-form-content">
-              <el-input class="right-box-row-with-btn" readonly v-if="rightBox.isEdit && endpoint.asset" placeholder="" :value="endpoint.asset.host" size="small"></el-input>
+            <el-autocomplete
+              :fetch-suggestions="assetSuggestion"
+              v-model.trim="endpoint.asset.host"
+              placeholder=""
+              @select="selectAsset"
+              @change.native="inputAsset"
+              size="small"
+              value-key="host"
+              popper-class="no-style-class"
+              style="width: 100%;"
+            >
+            </el-autocomplete>
+              <!--<el-input class="right-box-row-with-btn" readonly v-if="rightBox.isEdit && endpoint.asset" placeholder="" :value="endpoint.asset.host" size="small"></el-input>
               <el-input class="right-box-row-with-btn" readonly v-if="rightBox.isEdit && !endpoint.asset" placeholder="" value="" size="small"></el-input>
               <el-popover placement="left" width="400" v-model="subBox.show" popper-class="nz-pop">
                 <div class="pop-window-assetType-content">
-                  <!-- begin--顶部按钮-->
+                  &lt;!&ndash; begin&#45;&#45;顶部按钮&ndash;&gt;
                   <div class="pop-top-btns">
                     <button type="button" @click="subEsc" class="nz-btn nz-btn-size-alien nz-btn-size-small nz-btn-style-light nz-btn-min-width-35" id="edit-ep-subesc">
                       <span class="pop-top-btn-icon"><i class="el-icon-close"></i></span>
                       <span class="pop-top-btn-txt">{{$t('overall.esc')}}</span>
                     </button>
                   </div>
-                  <!-- end--顶部按钮-->
-                  <!--begin--标题-->
+                  &lt;!&ndash; end&#45;&#45;顶部按钮&ndash;&gt;
+                  &lt;!&ndash;begin&#45;&#45;标题&ndash;&gt;
                   <div class="pop-title">{{subBox.title}}</div>
-                  <!--end--标题-->
-                  <!---->
+                  &lt;!&ndash;end&#45;&#45;标题&ndash;&gt;
+                  &lt;!&ndash;&ndash;&gt;
                   <div class="pop-item-wider " >
-                    <!-- begin--搜索框-->
+                    &lt;!&ndash; begin&#45;&#45;搜索框&ndash;&gt;
                     <div class="nz-btn-group nz-btn-group-size-small nz-btn-group-light endpoint-asset-search">
                       <button type="button" class="nz-btn nz-btn-size-small nz-btn-style-light nz-btn-style-square nz-input-group-prepend" @click="assetSearch.dropdownShow = !assetSearch.dropdownShow">
                         <span class="endpoint-asset-label-txt">{{assetSearch.label}}</span>
@@ -74,8 +85,8 @@
                         <div @click="dropdownSelect('SN')" class="endpoint-asset-search-dropdown-item" id="edit-ep-search-sn">SN</div>
                       </div>
                     </div>
-                    <!-- end--搜索框-->
-                    <!-- begin--table-->
+                    &lt;!&ndash; end&#45;&#45;搜索框&ndash;&gt;
+                    &lt;!&ndash; begin&#45;&#45;table&ndash;&gt;
                     <div class="endpoint-sub-table">
                       <div class="endpoint-sub-table-head">
                         <div class="endpoint-sub-table-col">IP</div>
@@ -98,15 +109,14 @@
                         <el-pagination background :pager-count="5" layout="prev, pager, next" @current-change="(currentPage) => {getAssetList(currentPage)}" :total="assetPageObj.total"></el-pagination>
                       </div>
                     </div>
-                    <!-- end--table-->
+                    &lt;!&ndash; end&#45;&#45;table&ndash;&gt;
                   </div>
                 </div>
                 <div slot="reference" @click.prevent="" class="right-box-row-btn" v-if="rightBox.isEdit">
                   <span class="el-icon-more"></span>
                 </div>
               </el-popover>
-              <div v-if="!rightBox.isEdit" class="right-box-form-content-txt">{{endpoint.host}}</div>
-            </div>
+              <div v-if="!rightBox.isEdit" class="right-box-form-content-txt">{{endpoint.host}}</div>-->
           </el-form-item>
           <!--host-->
           <el-form-item :label="$t('project.endpoint.host')" prop="host">
@@ -345,9 +355,22 @@
         this.selectedAsset = obj;
         this.endpoint.host = obj.host;
         this.endpoint.assetId = obj.id;
-        this.endpoint.asset = obj;
+        this.$refs.endPointForm.validate();
       },
-
+      inputAsset(e) {
+        this.endpoint.assetId = "";
+        let host = e.target.value;
+        if (host) {
+          for (let i = 0; i < this.assetList.length; i++) {
+            if (host == this.assetList[i].host) {
+              this.endpoint.assetId = this.assetList[i].id;
+              this.selectedAsset = this.assetList[i];
+              this.endpoint.host = host;
+              break;
+            }
+          }
+        }
+      },
       // 获取endpoint弹框中module下拉框数据
       getModuleList(projectId) {
         this.$get('module', {projectId: projectId}).then(response => {
@@ -415,6 +438,20 @@
       dropdownSelect(label) {
         this.assetSearch.label = label;
         this.assetSearch.dropdownShow = false;
+      },
+      /*asset搜索建议*/
+      assetSuggestion(queryString, callback) {
+        let data = [];
+        if (!queryString) {
+          data = this.assetList;
+        } else {
+          for (let i = 0; i < this.assetList.length; i++) {
+            if (this.assetList[i].host.indexOf(queryString.toLowerCase()) != -1) {
+              data.push(this.assetList[i]);
+            }
+          }
+        }
+        callback(data);
       },
     },
     created() {

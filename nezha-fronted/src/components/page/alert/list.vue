@@ -29,9 +29,11 @@
           </div>
           <div class="pagination-top pagination-top-hide display-none"></div>
         </div>
-        <div class="el-popover alert-clean-pop" @click="toDeleteMessage" v-if="deleteBox.ids.length > 0">
-          <i style="cursor: pointer" class="el-icon-delete"></i>
-        </div>
+        <transition name="el-zoom-in-bottom">
+          <div class="el-popover alert-clean-pop" @click="toDeleteMessage" v-if="deleteBox.ids.length > 0">
+            <i style="cursor: pointer" class="el-icon-delete"></i>
+          </div>
+        </transition>
         <el-table
           class="nz-table"
           :data="tableData"

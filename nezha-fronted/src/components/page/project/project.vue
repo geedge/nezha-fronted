@@ -88,7 +88,6 @@
               :params="endpointSearchLabel"
               @afterImport="getEndpointTableData"
               class="margin-l-20"
-              style="width: 57px;"
             >
               <template slot="optionZone">
                 <div class="export-left-btn" @click.stop="toCreateEndpoint">

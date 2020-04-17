@@ -99,7 +99,6 @@
                     export-url="/asset/export"
                     :params="searchLabel"
                     @afterImport="getAssetData"
-                    style="width: 57px;"
                     class="float-right">
                     <template slot="optionZone">
                       <div class="export-left-btn" @click.stop="tagShow('showAdd')">
