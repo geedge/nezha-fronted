@@ -1685,7 +1685,7 @@ li{
   width: 90px;
 }
 .left-menu-bg .el-collapse-item__header,.left-menu-bg .el-collapse-item__content{ //当左侧菜单含有el-collapse组件时使用
-  background-color: #e2e2e2;
+  background-color: $left-menu-bgcolor;
 }
 .transparent-pop{ //防止popover的提示框挡住页面元素无法操作
   pointer-events: none;

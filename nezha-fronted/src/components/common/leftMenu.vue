@@ -4,7 +4,7 @@
         <slot name="content-left"></slot>
         <div  @click="toggleStat" class="bottom-icon">
           <div class="bottom-divider"></div>
-          <div style="display: inline-block;float: right"><i style="font-size: 24px;" :class="{'nz-icon nz-icon-push-pin-line':isShrink,'nz-icon nz-icon-push-pin-fill':!isShrink}" :style="{color:!isShrink?'#EE9D3F':''}"></i></div>
+          <div style="display: inline-block;float: right;margin-right:15px;"><i style="font-size: 24px;" :class="{'nz-icon nz-icon-push-pin-line':isShrink,'nz-icon nz-icon-push-pin-fill':!isShrink}" :style="{color:!isShrink?'#EE9D3F':''}"></i></div>
         </div>
       </div>
       <div class="content-right right-slot" :class="{'right-slot-open':isShrink}">
@@ -49,7 +49,7 @@
   }
   .content .left-slot{
     position: relative;
-    background-color: #e2e2e2;
+    background-color: $left-menu-bgcolor;
     /*border-bottom: 1px solid #eeeeee;*/
     /*transition: all 100ms;*/
   }

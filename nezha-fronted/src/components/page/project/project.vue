@@ -134,9 +134,13 @@
               </div>
 <!--              <span v-else-if="item.prop == 'lastUpdate'">{{dateFormat(scope.row.lastUpdate)}}</span>-->
               <span v-else-if="item.prop == 'state'" >
-                <el-popover placement="right" width="50" trigger="hover" :content="getStateContent(scope.row)">
+                <el-popover placement="right" width="50" trigger="hover" :popper-class="scope.row.state == '1'?'small-pop':''">
                   <div slot="reference" style="width: 20px">
                     <div :class="{'active-icon green':scope.row.state == '1','active-icon red':scope.row.state == '0'}"></div>
+                  </div>
+                  <div >
+                    <div v-if="scope.row.state == '1'">up</div>
+                    <div v-else>down:<br/>{{getStateErrorMsg(scope.row)}}</div>
                   </div>
                 </el-popover>
               </span>
@@ -622,10 +626,10 @@
       getStateContent:function(row){
         if(row){
           if(row.state == 1){
-
             return 'up';
           }else{
-            return 'down';
+            // return 'down'+'['+this.getStateErrorMsg(row)+']';
+            return `down:${this.getStateErrorMsg(row)}`
           }
         }
       },
@@ -1119,5 +1123,9 @@
   }
   .project .sidebar-info-item{
     margin:0px !important;
+  }
+  .small-pop{
+    width: 25px !important;
+    min-width: unset !important;
   }
 </style>
