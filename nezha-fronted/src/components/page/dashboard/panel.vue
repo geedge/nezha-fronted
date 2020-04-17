@@ -12,7 +12,7 @@
     <div slot="content-right" class="slot-content">
       <div class="top-tools">
         <div class="top-tool-main-left">
-          <el-dropdown @command="panelChange" class="panel-dropdown-title" trigger="click" v-scrollBar:el-dropdown>
+          <el-dropdown @command="panelChange" class="panel-dropdown-title" trigger="click" placement="bottom-start" v-scrollBar:el-dropdown>
             <el-row  :gutter="10" class="el-dropdown-link" style="">
               <el-col :span="21" class="panel-list-title" :title="showPanel.name">{{showPanel.name}}</el-col>
               <el-col :span="3" style="padding-left:0px !important;"><i class="el-icon-arrow-down el-icon--right"></i></el-col>
@@ -783,7 +783,6 @@
   .nz-dashboard-dropdown {
     height: 300px;
     overflow-y: auto;
-    left:210px !important;
     li {
       /*padding: 0 20px !important;*/
       padding-left:20px !important;
