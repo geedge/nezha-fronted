@@ -24,7 +24,7 @@
     <left-menu >
       <div slot="content-left" class="slot-content">
       <el-scrollbar ref="leftScrollbar" style="height: 100%">
-        <div class="sidebar-title too-long-split" style="ma">{{$t('project.project.project')}}</div>
+        <div class="sidebar-title too-long-split">{{$t('project.project.project')}}</div>
         <!--<div class="sidebar-info">
           <div
             v-for="item in moduleList"
@@ -267,6 +267,7 @@
           pageSize: 20,
           total:0
         },
+        curEndpoint: {},
         tablelable: [],
         dropCol: [],
         currentProjectTitle:'',
@@ -610,7 +611,7 @@
         return year + "-" + month + "-" + day + " " + hours + ":" + minutes + ":" + seconds;
       },
       viewAsset(endpoint) {
-        this.curEndpoint = endpoint;
+        this.curEndpoint = Object.assign({}, endpoint);
         this.targetTab = 'assetDetail';
         this.showSubList = true;
         /*this.viewAssetState=true;
@@ -618,7 +619,7 @@
         this.$refs.assetEditUnit.tabView=true;*/
       },
       showEndpoint(endpoint) {
-        this.curEndpoint = endpoint;
+        this.curEndpoint = Object.assign({}, endpoint);
         this.targetTab = 'endpointQuery';
         this.showSubList = true;
       },
@@ -798,6 +799,7 @@
       curEndpoint: {
         deep: true,
         handler(n) {
+          console.info(n)
           this.endpointDetail = this.convertToDetail(n);
           this.$get('asset', {id: n.assetId}).then(response => {
             if (response.code === 200) {
