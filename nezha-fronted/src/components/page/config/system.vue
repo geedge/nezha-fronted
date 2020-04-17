@@ -334,7 +334,7 @@
               },
               {
                 label:this.$t('config.system.reset.sysConfig'),
-                value:'sysConfig',
+                value:'sysconfig',
               },
             ],
             activeTab:'basic'
