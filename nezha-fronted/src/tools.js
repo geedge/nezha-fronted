@@ -125,14 +125,13 @@ export const scrollBar = {
           el = el.querySelector(".el-cascader__tags");
           !el && console.warn("未发现className为el-cascader__tags的dom");
         }
-
         el.classList.add("ps");
-        el.addEventListener("ps-scroll-y", () =>
-          el.classList.add("ps")
-        );
-        el.addEventListener("ps-scroll-x", () =>
-          el.classList.add("ps")
-        );
+        el.addEventListener("ps-scroll-y", () => {
+          el.classList.add("ps");
+        });
+        el.addEventListener("ps-scroll-x", () => {
+          el.classList.add("ps");
+        });
         //el上挂一份属性
         el_scrollBar(el);
       });
@@ -148,10 +147,17 @@ export const scrollBar = {
     }
   },
   componentUpdated(el, binding, vnode, oldVnode) {
-    const { arg } = binding;
+    const { arg, value } = binding;
     if (arg === "el-table") {
       el = el.querySelector(".el-table__body-wrapper");
       !el && console.warn("未发现className为el-table__body-wrapper的dom");
+      // 滚动条尺寸  large/normal/small 默认normal
+      vnode.context.$nextTick(() => {
+        if (value) {
+          el.querySelector(".ps__rail-x").classList.add("ps-scroll-" + value);
+          el.querySelector(".ps__rail-y").classList.add("ps-scroll-" + value);
+        }
+      });
     } else if (arg === "el-dropdown") {
       el = el.querySelector(".el-dropdown-menu");
       !el && console.warn("未发现className为el-dropdown-menu的dom");
@@ -165,6 +171,7 @@ export const scrollBar = {
       el = el.querySelector(".table-scroll");
       !el && console.warn("未发现className为table-scroll的dom");
     }
+
     setTimeout(() => {
       el.classList.add("ps");
       el.classList.add("ps--active-y");

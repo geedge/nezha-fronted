@@ -1071,23 +1071,60 @@ li{
   overflow-x: hidden !important;
 }
 .el-scrollbar__thumb {
-  background-color: #aaa;
+  background-color: #ccc;
   cursor: default;
 }
+.el-scrollbar__thumb:hover {
+  background-color: #bbb;
+}
+/*大中小三个尺寸，默认中*/
 .el-scrollbar__bar.is-vertical {
-  width: 11px;
+  width: 8px;
 }
 .el-scrollbar__bar.is-horizontal {
+  height: 8px;
+}
+/*.el-scrollbar__bar.is-vertical:hover {
+  width: 11px;
+}
+.el-scrollbar__bar.is-horizontal:hover {
+  height: 11px;
+}*/
+.el-scrollbar-large .el-scrollbar__bar.is-vertical {
+  width: 11px;
+}
+.el-scrollbar-large .el-scrollbar__bar.is-horizontal {
   height: 11px;
 }
+.el-scrollbar-normal .el-scrollbar__bar.is-vertical {
+  width: 8px;
+}
+.el-scrollbar-normal .el-scrollbar__bar.is-horizontal {
+  height: 8px;
+}
+/*.el-scrollbar-normal .el-scrollbar__bar.is-vertical:hover {
+  width: 11px;
+}
+.el-scrollbar-normal .el-scrollbar__bar.is-horizontal:hover {
+  height: 11px;
+}*/
+.el-scrollbar-small .el-scrollbar__bar.is-vertical {
+  width: 5px;
+}
+.el-scrollbar-small .el-scrollbar__bar.is-horizontal {
+  height: 5px;
+}
+/*.el-scrollbar-small .el-scrollbar__bar.is-vertical:hover {
+  width: 8px;
+}
+.el-scrollbar-small .el-scrollbar__bar.is-horizontal:hover {
+  height: 8px;
+}*/
 .new-search .el-scrollbar__bar.is-horizontal {
   height: 4px;
 }
 .new-search .el-scrollbar__view {
   height: calc(100% - 4px);
-}
-.app>.el-scrollbar__bar.is-vertical {
-  width: 5px;
 }
 .el-scrollbar__bar {
   border-radius: 6px;
@@ -1095,9 +1132,7 @@ li{
 .el-autocomplete-suggestion__wrap.el-scrollbar__wrap, .el-cascader-menu__wrap.el-scrollbar__wrap {
   margin-bottom: 0 !important;
 }
-.el-scrollbar__thumb:hover {
-  background-color: #999;
-}
+
 .right-box-form {
   width: calc(100% - 30px);
 }
@@ -1519,31 +1554,83 @@ li{
   background-color: rgba(255, 99, 71, .85);
 }
 
-/*滚动条相关*/
-.ps__thumb-y {
+/*滚动条相关, 11px/8px/5px, 默认8px*/
+.ps__rail-y:hover > .ps__thumb-y,
+.ps__rail-y:focus > .ps__thumb-y,
+.ps__rail-y.ps--clicking .ps__thumb-y,
+.ps__thumb-y,
+.ps__rail-y  {
+  width: 8px;
+}
+.ps__rail-x:hover > .ps__thumb-x,
+.ps__rail-x:focus > .ps__thumb-x,
+.ps__rail-x.ps--clicking .ps__thumb-x,
+.ps__rail-x,
+.ps__thumb-x {
+  height: 8px;
+}
+.ps-scroll-small.ps__rail-y:hover > .ps__thumb-y,
+.ps-scroll-small.ps__rail-y:focus > .ps__thumb-y,
+.ps-scroll-small.ps__rail-y.ps--clicking .ps__thumb-y,
+.ps-scroll-small .ps__thumb-y,
+.ps-scroll-small .ps__rail-y  {
+  width: 5px;
+}
+.ps-scroll-small.ps__rail-x:hover > .ps__thumb-x,
+.ps-scroll-small.ps__rail-x:focus > .ps__thumb-x,
+.ps-scroll-small.ps__rail-x.ps--clicking .ps__thumb-x,
+.ps-scroll-small .ps__rail-x,
+.ps-scroll-small .ps__thumb-x {
+  height: 5px;
+}
+.ps-scroll-normal.ps__rail-y:hover > .ps__thumb-y,
+.ps-scroll-normal.ps__rail-y:focus > .ps__thumb-y,
+.ps-scroll-normal.ps__rail-y.ps--clicking .ps__thumb-y,
+.ps-scroll-normal .ps__thumb-y,
+.ps-scroll-normal .ps__rail-y  {
+  width: 8px;
+}
+.ps-scroll-normal.ps__rail-x:hover > .ps__thumb-x,
+.ps-scroll-normal.ps__rail-x:focus > .ps__thumb-x,
+.ps-scroll-normal.ps__rail-x.ps--clicking .ps__thumb-x,
+.ps-scroll-normal .ps__rail-x,
+.ps-scroll-normal .ps__thumb-x {
+  height: 8px;
+}
+.ps-scroll-large.ps__rail-y:hover > .ps__thumb-y,
+.ps-scroll-large.ps__rail-y:focus > .ps__thumb-y,
+.ps-scroll-large.ps__rail-y.ps--clicking .ps__thumb-y,
+.ps-scroll-large .ps__thumb-y,
+.ps-scroll-large .ps__rail-y  {
   width: 11px;
 }
-.ps__rail-y:hover > .ps__thumb-y, .ps__rail-y:focus > .ps__thumb-y, .ps__rail-y.ps--clicking .ps__thumb-y {
-  width: 11px;
+.ps-scroll-large.ps__rail-x:hover > .ps__thumb-x,
+.ps-scroll-large.ps__rail-x:focus > .ps__thumb-x,
+.ps-scroll-large.ps__rail-x.ps--clicking .ps__thumb-x,
+.ps-scroll-large .ps__rail-x,
+.ps-scroll-large .ps__thumb-x {
+  height: 11px;
 }
 .ps__thumb-y {
-  right: 0px;
-  background-color: #888;
+  right: 0;
+  background-color: #bbb;
 }
-.ps__rail-x:hover > .ps__thumb-x, .ps__rail-x:focus > .ps__thumb-x, .ps__rail-x.ps--clicking .ps__thumb-x {
-  height: 6px;
+.ps__thumb-x {
+  bottom: 0;
+}
+.ps__rail-y:hover > .ps__thumb-y,
+.ps__rail-y:focus > .ps__thumb-y,
+.ps__rail-y.ps--clicking .ps__thumb-y,
+.ps__rail-x:hover > .ps__thumb-x,
+.ps__rail-x:focus > .ps__thumb-x,
+.ps__rail-x.ps--clicking .ps__thumb-x{
+  background-color: #bbb;
 }
 .ps .ps__rail-x:hover, .ps .ps__rail-y:hover, .ps .ps__rail-x:focus, .ps .ps__rail-y:focus, .ps .ps__rail-x.ps--clicking, .ps .ps__rail-y.ps--clicking {
   background-color: transparent;
 }
-.ps__rail-y {
-  width: 6px;
-}
-.ps__rail-x {
-  height: 6px;
-}
 .el-table__fixed-right {
-  right: 0px !important;
+  right: 0 !important;
 }
 .asset .ps__rail-y {
   z-index: 2000;

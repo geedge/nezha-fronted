@@ -143,7 +143,7 @@
           </el-dropdown>
         </div>
         <!--tree-->
-        <el-scrollbar class="mib-browser-tree" ref="treeScrollbar">
+        <el-scrollbar class="el-scrollbar-normal mib-browser-tree" ref="treeScrollbar">
           <el-tree
             ref="walkTree"
             highlight-current
@@ -171,7 +171,7 @@
         <!--拖拽区-->
         <div class="tree-detail-resize" @mousedown="treeDetailResize"></div>
         <!--detail-->
-        <el-scrollbar class="mib-browser-detail" ref="detailScrollbar">
+        <el-scrollbar class="el-scrollbar-normal mib-browser-detail" ref="detailScrollbar">
           <div class="mib-browser-detail-row">
             <div>Name</div>
             <div>{{currentWalk.name}}</div>
@@ -218,7 +218,7 @@
           </span>
         </div>
         <pl-table :row-height="28" use-virtual :datas="resultData" border :empty-text="$t('config.mib.noData')"
-                  class="mib-browser-table nz-table" style="width: 100%;height: calc(100% - 31px)" v-loading="loading" v-scrollBar:el-table :pagination-show="false">
+                  class="mib-browser-table nz-table" style="width: 100%;height: calc(100% - 31px)" v-loading="loading" v-scrollBar:el-table="'large'" :pagination-show="false">
           <pl-table-column label="Name/OID" v-slot="{row}">
             <div class="too-long-split" @click="searchParam.oid = row.oid">{{row.name ? row.name : row.oid}}</div>
           </pl-table-column>
@@ -554,7 +554,7 @@
           )
         } catch (e) {}
         return out
-      },
+      }
     },
     mounted() {
       this.getWalkData();

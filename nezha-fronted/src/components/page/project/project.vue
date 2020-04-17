@@ -104,7 +104,7 @@
           border
           class="nz-table endpoint-table"
           :height="mainTableHeight"
-          v-scrollBar:el-table
+          v-scrollBar:el-table="'normal'"
           v-show="mainResizeShow"
           ref="endpointTable"
           style="width: 100%;">
