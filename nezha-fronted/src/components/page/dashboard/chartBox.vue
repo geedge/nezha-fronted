@@ -184,7 +184,7 @@
             </el-row>
 
             <el-form-item v-if="isUrl" :label='$t("dashboard.panel.chartForm.url")' prop="param.url" :rules="{ required: true,  message: $t('validate.required'), trigger: 'blur' }">
-              <el-input size="small" maxlength="64" show-word-limit v-model="chart.param.url"></el-input>
+              <el-input size="small" type="textarea" maxlength="1024" show-word-limit v-model="chart.param.url"></el-input>
             </el-form-item>
 
             <div v-if="!isUrl" class="right-box-sub-title">{{$t('dashboard.panel.chartForm.metric')}}</div>

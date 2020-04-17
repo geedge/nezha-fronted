@@ -34,7 +34,7 @@
               <div class="box-content" >
                 <el-row :gutter="20"  class="row-width" style="height: calc(100% - 65px);">
                   <el-col :span="10" >
-                      <metric-set  :panelData="panelData" ref="metricSet" @on-view-chart="getChartParam"  @reloadPanel="getPanelData"></metric-set>
+                      <metric-set  :panelData="panelData" ref="metricSet" @on-view-chart="getChartParam"  @reloadPanel="getPanelData" ></metric-set>
                   </el-col>
                   <el-col :span="0.5" ><div>&nbsp;</div></el-col>
                   <el-col :span="13" class="chart-preview-area" >
@@ -327,9 +327,11 @@ export default {
         const tagsArr = Object.keys(queryItem.metric);//["__name__","asset","idc","instance","job","module","project"]
         // 设置时间-数据格式对
         const dpsArr = Object.entries(queryItem.values);//[ ["0",[1577959830.781,"0"]], ["1",[1577959845.781,"0"]] ]
-        // 判断是否有数据
-        if (dpsArr.length > 0 && tagsArr.length > 0) {
-            host +="{";
+        // 判断是否有数据, && tagsArr.length > 0
+        if (dpsArr.length > 0) {
+            if(queryItem.metric.__name__){
+              host +="{";
+            }
             tagsArr.forEach((tag, i) => {
               if (tag !== '__name__') {
                 host += `${tag}="${queryItem.metric[tag]}",`;
@@ -343,8 +345,14 @@ export default {
               }
             });
           if(host.endsWith(',')){host = host.substr(0,host.length-1);}
-          host +="}";
-          legend.push({name:host,alias:null});
+          if(queryItem.metric.__name__){
+            host +="}";
+          }
+          if(!host || host===''){
+            host = params.metric;
+          }
+          let alias = params.metric;
+          legend.push({name:host,alias:alias});
 
           // 图表中每条线的名字,去掉最后的逗号与空格
           seriesItem.theData.name = host;

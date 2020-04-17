@@ -48,7 +48,8 @@
                               :end-placeholder="$t('dashboard.panel.endTime')" align="right">
               </el-date-picker>
               <!--
-              <calendar ref="calendarPanel" class="nz-dashboard-picker"></calendar>
+
+              <time-picker ref="calendarPanel" class="nz-dashboard-picker" @change="dateChange"></time-picker>
               -->
             </div>
           </div>
@@ -103,7 +104,7 @@
   import ChartBox from "./chartBox";
   import ChartList from '../../charts/chart-list';
   import bus from '../../../libs/bus';
-  //import calendar from '../../common/calendar'
+  //import timePicker from '../../common/timePicker'
 
   export default {
     name: "panel",
@@ -195,7 +196,10 @@
             }
           }]
         },
-        searchTime: [new Date(bus.computeTimezone(new Date().getTime())).setHours(new Date(bus.computeTimezone(new Date().getTime())).getHours() - 1), new Date(bus.computeTimezone(new Date().getTime()))],
+        searchTime: [
+          new Date(bus.computeTimezone(new Date().getTime())).setMinutes(new Date(bus.computeTimezone(new Date().getTime())).getMinutes() - 5),
+          new Date(bus.computeTimezone(new Date().getTime()))
+        ],
         intervalTimer: null,
         intervalList: [{
           value: 0,
@@ -274,7 +278,7 @@
     components: {
       'chart-box': ChartBox,
       'chart-list': ChartList,
-      //'calendar':calendar
+      //'time-picker':timePicker
     },
     methods: {
       //刷新
@@ -411,7 +415,7 @@
         if (params.start_time === '' || params.end_time === '') {
           let now = new Date();
           let endTimeTmp = bus.timeFormate(now, 'yyyy-MM-dd hh:mm:ss');
-          let startTimeTmp = bus.timeFormate(now.setHours(now.getHours() - 1), 'yyyy-MM-dd hh:mm:ss');
+          let startTimeTmp = bus.timeFormate(now.setMinutes(now.getMinutes() - 5), 'yyyy-MM-dd hh:mm:ss');
           params.start_time = startTimeTmp;
           params.end_time = endTimeTmp;
         }
@@ -423,8 +427,8 @@
       /*图表相关操作--end*/
       /*时间条件查询--start*/
       // 选择日期变化
-      dateChange() {
-        //this.$refs.searchInput.select();
+      dateChange(val) {
+        this.searchTime = [...val];
         this.filter.start_time = bus.timeFormate(this.searchTime[0], 'yyyy-MM-dd hh:mm:ss');
         this.filter.end_time = bus.timeFormate(this.searchTime[1], 'yyyy-MM-dd hh:mm:ss');
         this.filter.panelId = this.showPanel.id;

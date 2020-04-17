@@ -16,6 +16,9 @@
   .char-url-preview html{
 
   }
+  #chartPreviewDailog .el-dialog__body {
+    padding-bottom:5px !important;
+  }
 </style>
 <template>
     <el-dialog class="chart-preview-dialog nz-dialog" id="chartPreviewDailog"
@@ -42,8 +45,8 @@
       </div>
 
       <template v-if="chart.type==='line'||chart.type==='bar'||chart.type==='stackArea'">
-        <div id="chartEchartPreview">
-          <div class="line-area" ref="screenShowArea"  id="screenShowArea"  style="margin-top:10px;"></div>
+        <div id="chartEchartPreview" @mouseenter="mouseEnterFullChart" @mouseleave="mouseLeaveFullChart">
+          <div class="line-area" ref="screenShowArea"  id="screenShowArea"  style="margin-top:0px;"></div>
           <div class="legend-container legend-container-screen" id="screenLegendArea" ref="screenLegendArea" v-show="showLegend" v-scrollBar:legend>
             <div v-for="(item, index) in screenLegendList" :title="item.alias?item.alias:item.name"  @click="clickScreenLegend(item.name,index)" class="legend-item" :class="{'ft-gr':isGreyScreen[index]}"  :key="'legend_' + item.name+'_'+index">
               <span class="legend-shape" :style="{background:(isGreyScreen[index]?'#D3D3D3':bgColorList[index])}"></span>{{item.alias?item.alias:item.name}}
@@ -147,7 +150,7 @@
         searchTime:[new Date().setHours(new Date().getHours()-1),new Date()],
         //oldSearchTime:[],
         minHeight:200,
-        chartSpaceHeight:0,//top-border: 1,bottom-border: 1,padding-bottome:3
+        chartSpaceHeight:5,//top-border: 1,bottom-border: 1,padding-bottome:3
         titleHeight:50,
         legendHeight:80,
         //oldChartBoxCss:'',
@@ -409,17 +412,25 @@ console.log('=======',this.chart)
                         const tagsArr = Object.keys(queryItem.metric);//["__name__","asset","idc","instance","job","module","project"]
                         // 设置时间-数据格式对
                         const dpsArr = Object.entries(queryItem.values);//[ ["0",[1577959830.781,"0"]], ["1",[1577959845.781,"0"]] ]
-                        // 判断是否有数据
-                        if (dpsArr.length > 0 && tagsArr.length > 0 ) {
+                        // 判断是否有数据, && tagsArr.length > 0
+                        if (dpsArr.length > 0 ) {
                           tagsArr.forEach((tag, i) => {
                             if (tag !== '__name__') {
                               host += `${tag}="${queryItem.metric[tag]}",`;
                             }
                           });
                           if(host.endsWith(',')){host = host.substr(0,host.length-1);}
-                          host +="}";
+                          if(queryItem.metric.__name__){
+                            host +="}";
+                          }
+                          if(!host || host===''){
+                            host = chartItem.elements[innerPos].expression;
+                          }
                           //处理legend别名
                           let alias=this.dealLegendAlias(host,chartItem.elements[innerPos].legend);
+                          if(!alias || alias===''){
+                            alias = chartItem.elements[innerPos].expression;
+                          }
                           legend.push({name:host,alias:alias});
                           // 图表中每条线的名字,去掉最后的逗号与空格:metric名称,  标签1=a,标签2=c
                           seriesItem.theData.name = host;
@@ -596,9 +607,26 @@ console.log('=======',this.chart)
             show:false,
           },
           color: this.bgColorList,
+          toolbox:{
+            show:false,
+            top:'0',
+            showTitle:false,
+            feature:{
+              dataZoom:{
+                yAxisIndex:false
+              },
+              magicType:{
+                type:['stack']
+              }
+            }
+          },
           tooltip: {
             trigger: 'axis',
             confine:false,
+            backgroundColor:'rgba(221,228,237,1)',
+            textStyle:{
+              color:'#000'
+            },
             extraCssText:'z-index:1000;',
             /*enterable:true, 导致tooltip不消失，显示多个tooltip*/
             position:function(point,params,dom,rect,size){
@@ -712,12 +740,12 @@ console.log('=======',this.chart)
             //bottom:0
           },
           grid: {
-            top: 13,
+            top: 30,
             left: 0,
             right: 30,
             containLabel: true,
-            bottom:35,//156
-          },
+            bottom:8,//156
+          },/*
           dataZoom: [{
             type: 'slider',
             show:true,
@@ -729,7 +757,7 @@ console.log('=======',this.chart)
             left:40,
             right:48,
           }
-           ],
+          ],*/
 
           xAxis: {
             type: 'time',
@@ -795,6 +823,24 @@ console.log('=======',this.chart)
           this.echartModalStore.setOption(option);//创建图表
           this.$refs.loadingPreview.endLoading();
         });
+      },
+      mouseEnterFullChart(){
+        if (this.echartModalStore) {
+          this.echartModalStore.setOption({
+            toolbox: {
+              show:true,
+            }
+          })
+        }
+      },
+      mouseLeaveFullChart(){
+        if (this.echartModalStore) {
+          this.echartModalStore.setOption({
+            toolbox: {
+              show:false,
+            }
+          })
+        }
       },
       // 设置数据
       setData(chartItem, seriesItem,legend) {
@@ -929,16 +975,24 @@ console.log('=======',this.chart)
                       const tagsArr = Object.keys(queryItem.metric);//["__name__","asset","idc","instance","job","module","project"]
                       // 设置时间-数据格式对
                       const dpsArr = Object.entries(queryItem.values);//[ ["0",[1577959830.781,"0"]], ["1",[1577959845.781,"0"]] ]
-                      // 判断是否有数据
-                      if (dpsArr.length > 0 && tagsArr.length > 0) {
+                      // 判断是否有数据,&& tagsArr.length > 0
+                      if (dpsArr.length > 0 ) {
                         tagsArr.forEach((tag, i) => {
                           if (tag !== '__name__') {
                             host += `${tag}="${queryItem.metric[tag]}",`;
                           }
                         });
                         if(host.endsWith(',')){host = host.substr(0,host.length-1);}
-                        host +="}";
+                        if(queryItem.metric.__name__){
+                          host +="}";
+                        }
+                        if(!host || host===''){
+                          host = this.chart.elements[pos].expression;
+                        }
                         let alias=this.dealLegendAlias(host,this.chart.elements[pos].legend);
+                        if(!alias || alias===''){
+                          alias = this.chart.elements[pos].expression;
+                        }
                         legend.push({name:host,alias:alias});
                         // 图表中每条线的名字,去掉最后的逗号与空格:metric名称,  标签1=a,标签2=c
                         seriesItem.theData.name = host;

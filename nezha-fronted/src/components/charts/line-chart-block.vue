@@ -2,7 +2,7 @@
   @import './line-chart-block.scss';
 </style>
 <template>
-  <div class="line-chart-block"   :id="'lineChartDiv'+chartIndex" v-show="divFirstShow" @mouseenter="caretShow=true" @mouseleave="caretShow=false">
+  <div class="line-chart-block"   :id="'lineChartDiv'+chartIndex" v-show="divFirstShow" @mouseenter="mouseEnterChart" @mouseleave="mouseLeaveChart">
     <loading  :ref="'localLoading'+chartIndex"></loading>
 
     <!--<div class="edit">
@@ -49,19 +49,19 @@
             <i class="el-icon-full-screen" style="font-size: 16px;"></i>{{$t('dashboard.screen')}}</li>
         </ul>
       </el-dropdown>
-    <!--
-   <div class="chart-title" v-show="firstShow">
-     {{data.title}}
-   </div>
+      <!--
+     <div class="chart-title" v-show="firstShow">
+       {{data.title}}
+     </div>
 
-   <div class="nz-btn-group nz-btn-group-light edit button-panel-height" v-show="firstShow">
-     <button type="button" @click="refreshChart" style="padding: 6px 14px 5px 14px;" class="nz-btn nz-btn-size-large nz-btn-style-light" v-if="showSetting"><i style="font-size: 16px;" class="global-active-color el-icon-refresh-right"></i></button>
-     <button @click="editChart" type="button" class="nz-btn nz-btn-size-large nz-btn-style-light" v-if="showSetting"><i class="nz-icon nz-icon-edit"></i></button>
-     <button  @click="removeChart" type="button" class="nz-btn nz-btn-size-large nz-btn-style-light" v-if="showSetting"><i class="el-icon-delete"></i></button>
-     <button
-     @click="showAllScreen" type="button" class="nz-btn nz-btn-size-large nz-btn-style-light"><i class="el-icon-full-screen"></i></button>
-   </div>
-   -->
+     <div class="nz-btn-group nz-btn-group-light edit button-panel-height" v-show="firstShow">
+       <button type="button" @click="refreshChart" style="padding: 6px 14px 5px 14px;" class="nz-btn nz-btn-size-large nz-btn-style-light" v-if="showSetting"><i style="font-size: 16px;" class="global-active-color el-icon-refresh-right"></i></button>
+       <button @click="editChart" type="button" class="nz-btn nz-btn-size-large nz-btn-style-light" v-if="showSetting"><i class="nz-icon nz-icon-edit"></i></button>
+       <button  @click="removeChart" type="button" class="nz-btn nz-btn-size-large nz-btn-style-light" v-if="showSetting"><i class="el-icon-delete"></i></button>
+       <button
+       @click="showAllScreen" type="button" class="nz-btn nz-btn-size-large nz-btn-style-light"><i class="el-icon-full-screen"></i></button>
+     </div>
+     -->
     </div>
 
     <div class="line-area"  ref="lineChartArea"  :id="'lineChartArea'+chartIndex" v-show="firstShow"></div>
@@ -98,9 +98,9 @@
           <!--<button @click="refreshChart" type="button" class="nz-btn nz-btn-size-normal nz-btn-style-light"><i style="font-size: 14px;" class="el-icon-refresh-right"></i></button>-->
         </div>
       </div>
-      <div class="line-area" ref="screenShowArea"  id="screenShowArea"  style="margin-top:10px;"></div>
+      <div class="line-area" ref="screenShowArea"  id="screenShowArea"  style="margin-top:10px;" @mouseenter="mouseEnterFullChart" @mouseleave="mouseLeaveFullChart"></div>
 
-      <div class="legend-container legend-container-screen" id="screenLegendArea" ref="screenLegendArea" v-show="showLegend" v-scrollBar:legend>
+      <div class="legend-container legend-container-screen" id="screenLegendArea" ref="screenLegendArea" @mouseenter="mouseEnterFullChart" @mouseleave="mouseLeaveFullChart" v-show="showLegend" v-scrollBar:legend>
         <div v-for="(item, index) in screenLegendList" :title="item.alias?item.alias:item.name"  @click="clickScreenLegend(item.name,index)" class="legend-item" :class="{'ft-gr':isGreyScreen[index]}"  :key="'legend_' + item.name+'_'+index">
           <span class="legend-shape" :style="{background:(isGreyScreen[index]?'#D3D3D3':bgColorList[index])}"></span>{{item.alias?item.alias:item.name}}
           <br/><!--bgColorList[index]-->
@@ -298,6 +298,44 @@
       setDivFirstShow(showDiv){
         this.divFirstShow = showDiv;
       },
+      mouseEnterChart(){
+        this.caretShow=true;
+        if (this.echartStore) {
+          this.echartStore.setOption({
+            toolbox: {
+              show:true,
+            }
+          })
+        }
+      },
+      mouseLeaveChart(){
+        this.caretShow=false;
+        if (this.echartStore) {
+          this.echartStore.setOption({
+            toolbox: {
+              show:false,
+            }
+          })
+        }
+      },
+      mouseEnterFullChart(){
+        if (this.echartModalStore) {
+          this.echartModalStore.setOption({
+            toolbox: {
+              show:true,
+            }
+          })
+        }
+      },
+      mouseLeaveFullChart(){
+        if (this.echartModalStore) {
+          this.echartModalStore.setOption({
+            toolbox: {
+              show:false,
+            }
+          })
+        }
+      },
       dragResize:function(e){
         var diffWidth = 20;//界面的宽度空白的地方的宽度
         var chartBoxPadding = 20;
@@ -449,8 +487,8 @@
         //     type: 'legendToggleSelect',
         //     name: legendName
         //   });
-          // let isGreyTmp = this.isGrey[index];
-          // this.$set(this.isGrey, index, !isGreyTmp);
+        // let isGreyTmp = this.isGrey[index];
+        // this.$set(this.isGrey, index, !isGreyTmp);
         // }
 
         //点击图表某一个legend，图表只显示当前点击的曲线或柱状图，其它隐藏，再次点击已选中的legend ，显示全部
@@ -624,9 +662,26 @@
             show:false,
           },
           color: this.bgColorList,
+          toolbox:{
+            show:false,
+            top:'0',
+            showTitle:false,
+            feature:{
+              dataZoom:{
+                yAxisIndex:false
+              },
+              magicType:{
+                type:['stack']
+              }
+            }
+          },
           tooltip: {
             trigger: 'axis',
             confine:false,
+            backgroundColor:'rgba(221,228,237,1)',
+            textStyle:{
+              color:'#000'
+            },
             extraCssText:'z-index:1000;',
             /*enterable:true, 导致tooltip不消失，显示多个tooltip*/
             position:function(point,params,dom,rect,size){
@@ -776,12 +831,13 @@
             //bottom:0
           },
           grid: {
-            top: 13,
+            top: 30,
             left: 0,
             right: 30,
             containLabel: true,
-            bottom:35,//156
+            bottom:8,//156
           },
+          /*
           dataZoom: [{
             type: 'slider',
             show:true,
@@ -793,24 +849,7 @@
             left:40,
             right:48,
           }
-            /*
-            , {
-              start: 0,
-              end: 100,
-              handleIcon: 'M10.7,11.9v-1.3H9.3v1.3c-4.9,0.3-8.8,4.4-8.8,9.4c0,5,3.9,9.1,8.8,9.4v1.3h1.3v-1.3c4.9-0.3,8.8-4.4,8.8-9.4C19.5,16.3,15.6,12.2,10.7,11.9z M13.3,24.4H6.7V23h6.6V24.4z M13.3,19.6H6.7v-1.4h6.6V19.6z',
-              handleSize: '80%',
-              handleStyle: {
-                color: '#fff',
-                shadowBlur: 3,
-                shadowColor: 'rgba(0, 0, 0, 0.6)',
-                shadowOffsetX: 2,
-                shadowOffsetY: 2
-              }
-
-
-            }
-            */],
-
+           ],*/
           xAxis: {
             type: 'time',
             // boundaryGap: false,//line-false; bar-true;
@@ -994,10 +1033,23 @@
               const legend = {
                 name:item.name,
                 alias:item.alias,
-                showText:this.formatLegend(chartWidth,item.alias?item.alias:item.name)
+                showText:this.formatLegend(chartWidth,item.name)
               };
               this.screenLegendList.push(legend);
               this.isGreyScreen.push(false);
+            });
+          }
+
+          if(legend){
+            this.legendList = [];
+            legend.forEach((item, i) => {
+              const legend = {
+                name:item.name,
+                alias:item.alias,
+                showText:this.formatLegend(chartWidth,item.name)
+              };
+              this.legendList.push(legend);
+              this.isGrey.push(false);
             });
           }
           /*this.$nextTick(() => {
@@ -1155,13 +1207,13 @@
         this.isGreyScreen=[];
 
         this.seriesItemScreen = this.seriesItem;
-/*
-        this.searchTime = [];
-        this.searchTime[0] = this.oldSearchTime[0];//将列表的查询时间复制给全屏的查询时间
-        this.searchTime[1] = this.oldSearchTime[1];
-        this.seriesItemScreen = this.seriesItem;
-        this.screenModal = true;
-        */
+        /*
+                this.searchTime = [];
+                this.searchTime[0] = this.oldSearchTime[0];//将列表的查询时间复制给全屏的查询时间
+                this.searchTime[1] = this.oldSearchTime[1];
+                this.seriesItemScreen = this.seriesItem;
+                this.screenModal = true;
+                */
         //this.dateChange();
       },
       dateChange(time) {
@@ -1253,16 +1305,24 @@
                       const tagsArr = Object.keys(queryItem.metric);//["__name__","asset","idc","instance","job","module","project"]
                       // 设置时间-数据格式对
                       const dpsArr = Object.entries(queryItem.values);//[ ["0",[1577959830.781,"0"]], ["1",[1577959845.781,"0"]] ]
-                      // 判断是否有数据
-                      if (dpsArr.length > 0 && tagsArr.length > 0) {
+                      // 判断是否有数据,&& tagsArr.length > 0
+                      if (dpsArr.length > 0 ) {
                         tagsArr.forEach((tag, i) => {
                           if (tag !== '__name__') {
                             host += `${tag}="${queryItem.metric[tag]}",`;
                           }
                         });
                         if(host.endsWith(',')){host = host.substr(0,host.length-1);}
-                        host +="}";
+                        if(queryItem.metric.__name__){
+                          host +="}";
+                        }
+                        if(!host || host===''){
+                          host = this.data.elements[pos].expression;
+                        }
                         let alias=this.dealLegendAlias(host,this.data.elements[pos].legend);
+                        if(!alias || alias===''){
+                          alias = this.data.elements[pos].expression;
+                        }
                         legend.push({name:host,alias:alias});
                         // 图表中每条线的名字,去掉最后的逗号与空格:metric名称,  标签1=a,标签2=c
                         seriesItem.theData.name = host;
@@ -1322,7 +1382,7 @@
           }
           chartBox.style.height = `${height-this.chartSpaceHeight}px`;
           //const tableBox = document.getElementById('tableContainer');
-         // const chartBox = document.getElementById('lineChartDiv'+this.chartIndex);
+          // const chartBox = document.getElementById('lineChartDiv'+this.chartIndex);
           //tableBox.style.height = `${height-75}px`;
         });
         this.clearData();
@@ -1381,6 +1441,10 @@
       },
       handleClose(){},
       /*
+     // 展示图表编辑区
+      showTool() {
+        this.toolbox = !this.toolbox;
+      },
       handleClose(done) {
         /*
         this.$confirm('确认关闭？')
@@ -1391,10 +1455,6 @@
 
       },*/
       /*
-        // 展示图表编辑区
-        showTool() {
-          this.toolbox = !this.toolbox;
-        },
         // 修改图表类型
         changeChart(type) {
           this.chartType = type;
@@ -1403,16 +1463,6 @@
               type: this.chartType,
             },
           });
-        },
-
-        dateChange(time) {
-          this.filter.start_time = `${time[0]}:00`;
-          this.filter.end_time = `${time[1]}:59`;
-          if (this.showSetting) {
-            this.getQueryChart('list');
-          } else {
-            this.getQueryChart('dashboard');
-          }
         },
         // 查询数据,修改日期查询全屏数据
         getQueryChart(type) {

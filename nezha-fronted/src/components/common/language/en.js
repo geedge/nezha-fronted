@@ -117,7 +117,7 @@ const en = {
         chartName:"Chart Name",
         type:"Type",
         unit:"Unit",
-        url:"Url",
+        url:"URL",
         legend:'Legend',
         legendTip:'Controls the name of the time series, using name or pattern. For example {{hostname}} will be replaced with label value for the label hostname.',
         typeVal:{
@@ -134,7 +134,7 @@ const en = {
             label:"Stack Area"
           },
           url:{
-            label:"Url"
+            label:"URL"
           }
         },
         width:'Width', //"宽"

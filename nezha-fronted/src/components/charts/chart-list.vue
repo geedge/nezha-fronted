@@ -616,17 +616,25 @@ export default {
                       const tagsArr = Object.keys(queryItem.metric);//["__name__","asset","idc","instance","job","module","project"]
                       // 设置时间-数据格式对
                       const dpsArr = Object.entries(queryItem.values);//[ ["0",[1577959830.781,"0"]], ["1",[1577959845.781,"0"]] ]
-                      // 判断是否有数据
-                      if (dpsArr.length > 0 && tagsArr.length > 0 && this.$refs.editChart[index]) {
+                      // 判断是否有数据, && tagsArr.length > 0
+                      if (dpsArr.length > 0 && this.$refs.editChart[index]) {
                         tagsArr.forEach((tag, i) => {
                           if (tag !== '__name__') {
                             host += `${tag}="${queryItem.metric[tag]}",`;
                           }
                         });
                         if(host.endsWith(',')){host = host.substr(0,host.length-1);}
-                        host +="}";
+                        if(queryItem.metric.__name__){
+                          host +="}";
+                        }
+                        if(!host || host===''){
+                          host = chartItem.elements[innerPos].expression;
+                        }
                         //处理legend别名
                         let alias=this.$refs.editChart[index].dealLegendAlias(host,chartItem.elements[innerPos].legend);
+                        if(!alias || alias===''){
+                          alias = chartItem.elements[innerPos].expression;
+                        }
                         legend.push({name:host,alias:alias});
                         // 图表中每条线的名字,去掉最后的逗号与空格:metric名称,  标签1=a,标签2=c
                         seriesItem.theData.name = host;
