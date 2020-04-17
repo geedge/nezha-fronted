@@ -589,7 +589,7 @@ export default {
                   if (response.data.result) {
                     // console.log(response.data.result)
                     // 循环处理每个elements下获取的数据列
-                    response.data.result.forEach((queryItem) => {
+                    response.data.result.forEach((queryItem,resIndex) => {
                       const seriesItem = {
                         theData: {
                           name: '',
@@ -634,12 +634,13 @@ export default {
                         if(!alias || alias===''){
                           alias = chartItem.elements[innerPos].expression;
                         }
-                        //if(alias){
-                          //host = alias;
-                        //}
-                        legend.push({name:host,alias:alias});
+                        if(alias){
+                          host = alias;
+                        }
+                        legend.push({name:host+resIndex,alias:alias});
                         // 图表中每条线的名字,去掉最后的逗号与空格:metric名称,  标签1=a,标签2=c
-                        seriesItem.theData.name = host;
+                        seriesItem.theData.name = host+resIndex;
+                        //alert(seriesItem.theData.name);
                         seriesItem.metric_name = seriesItem.theData.name;
                         // 将秒改为毫秒
                         //alert('table=='+JSON.stringify(queryItem))

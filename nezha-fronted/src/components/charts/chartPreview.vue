@@ -95,7 +95,7 @@
   import bus from '../../libs/bus';
   import loading from "../common/loading";
   import chartDataFormat from './chartDataFormat'
-  import {randomcolor} from  '../common/js/radomcolor/randomcolor.js'
+  //import {randomcolor} from  '../common/js/radomcolor/randomcolor.js'
 
   export default {
     name: 'chartPreview',
@@ -136,7 +136,14 @@
         screenLegendList:[],
         isGrey:[],
         isGreyScreen:[],
-        bgColorList: [],
+        bgColorList: ['#7bbfea', '#b3424a', '#f05b72', '#596032', '#bd6758',
+          '#cd9a5b', '#918597', '#70a19f', '#005344', '#FF00FF',
+          '#f7acbc', '#5f5d46', '#66ffff', '#ccFF66', '#f47920',
+          '#769149', '#1d953f', '#abc88b', '#7f7522', '#9b95c9',
+          '#f3715c', '#ea66a6', '#d1c7b7', '#9d9087', '#77787b',
+          '#f58220', '#c37e00', '#00ae9d', '#f26522', '#76becc',
+          '#76624c', '#d71345', '#2468a2', '#ca8687', '#1b315e',
+        ],
         //firstShow: false, // 默认不显示操作按钮,
         //dropdownMenuShow:false,
         showLegend:true,
@@ -384,7 +391,7 @@ console.log('=======',this.chart);
                     if (response.data.result) {
                       // console.log(response.data.result)
                       // 循环处理每个elements下获取的数据列
-                      response.data.result.forEach((queryItem) => {
+                      response.data.result.forEach((queryItem,resInnerPos) => {
                         const seriesItem = {
                           theData: {
                             name: '',
@@ -427,9 +434,12 @@ console.log('=======',this.chart);
                           if(!alias || alias===''){
                             alias = chartItem.elements[innerPos].expression;
                           }
-                          legend.push({name:host,alias:alias});
+                          if(alias){
+                            host = alias;
+                          }
+                          legend.push({name:host+resInnerPos,alias:alias});
                           // 图表中每条线的名字,去掉最后的逗号与空格:metric名称,  标签1=a,标签2=c
-                          seriesItem.theData.name = host;
+                          seriesItem.theData.name = host+resInnerPos;
                           seriesItem.metric_name = seriesItem.theData.name;
                           // 将秒改为毫秒
                           //alert('table=='+JSON.stringify(queryItem))
@@ -855,7 +865,7 @@ console.log('=======',this.chart);
       },
       // 设置数据
       setData(chartItem, seriesItem,legend) {
-          this.setColor(legend.length);
+          //this.setColor(legend.length);
           this.legend = legend;
           //this.data = chartItem;
           //this.seriesItem = seriesItem;
@@ -1006,9 +1016,12 @@ console.log('=======',this.chart);
                         if(!alias || alias===''){
                           alias = this.chart.elements[pos].expression;
                         }
-                        legend.push({name:host,alias:alias});
+                        if(alias){
+                          host = alias;
+                        }
+                        legend.push({name:host+innerPos,alias:alias});
                         // 图表中每条线的名字,去掉最后的逗号与空格:metric名称,  标签1=a,标签2=c
-                        seriesItem.theData.name = host;
+                        seriesItem.theData.name = host+innerPos;
                         seriesItem.metric_name = seriesItem.theData.name;
                         // 将秒改为毫秒
                         //alert('table=='+JSON.stringify(queryItem))

@@ -120,7 +120,7 @@
   import bus from '../../libs/bus';
   import loading from "../common/loading";
   import chartDataFormat from './chartDataFormat'
-  import {randomcolor} from  '../common/js/radomcolor/randomcolor.js'
+  //import {randomcolor} from  '../common/js/radomcolor/randomcolor.js'
 
   export default {
     name: 'lineChartBlock',
@@ -183,13 +183,13 @@
         screenLegendList:[],
         isGrey:[],
         isGreyScreen:[],
-        bgColorList: [/*'#7bbfea', '#b3424a', '#f05b72', '#596032', '#bd6758',
+        bgColorList: ['#7bbfea', '#b3424a', '#f05b72', '#596032', '#bd6758',
           '#cd9a5b', '#918597', '#70a19f', '#005344', '#FF00FF',
           '#f7acbc', '#5f5d46', '#66ffff', '#ccFF66', '#f47920',
           '#769149', '#1d953f', '#abc88b', '#7f7522', '#9b95c9',
           '#f3715c', '#ea66a6', '#d1c7b7', '#9d9087', '#77787b',
           '#f58220', '#c37e00', '#00ae9d', '#f26522', '#76becc',
-          '#76624c', '#d71345', '#2468a2', '#ca8687', '#1b315e',*/
+          '#76624c', '#d71345', '#2468a2', '#ca8687', '#1b315e',
         ],
         firstShow: false, // 默认不显示操作按钮,
         caretShow:false,
@@ -1124,12 +1124,12 @@
       setColor(colorNum){
         this.bgColorList = [];
         for(let i=0;i<colorNum;i++) {
-          this.bgColorList.push(randomcolor())
+          //this.bgColorList.push(randomcolor())
         }
       },
       // 设置数据, filter区分
       setData(chartItem, seriesItem, panelId, filter,legend,area) {
-        this.setColor(legend.length);
+        //this.setColor(legend.length);
         if(area==='showFullScreen'){//全屏按时间查询
           /*
           this.legend = legend;
@@ -1347,9 +1347,12 @@
                         if(!alias || alias===''){
                           alias = this.data.elements[pos].expression;
                         }
-                        legend.push({name:host,alias:alias});
+                        if(alias){
+                          host = alias;
+                        }
+                        legend.push({name:host+innerPos,alias:alias});
                         // 图表中每条线的名字,去掉最后的逗号与空格:metric名称,  标签1=a,标签2=c
-                        seriesItem.theData.name = host;
+                        seriesItem.theData.name = host+innerPos;
                         seriesItem.metric_name = seriesItem.theData.name;
                         // 将秒改为毫秒
                         //alert('table=='+JSON.stringify(queryItem))
