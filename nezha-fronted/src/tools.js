@@ -151,13 +151,6 @@ export const scrollBar = {
     if (arg === "el-table") {
       el = el.querySelector(".el-table__body-wrapper");
       !el && console.warn("未发现className为el-table__body-wrapper的dom");
-      // 滚动条尺寸  large/normal/small 默认normal
-      vnode.context.$nextTick(() => {
-        if (value) {
-          el.querySelector(".ps__rail-x").classList.add("ps-scroll-" + value);
-          el.querySelector(".ps__rail-y").classList.add("ps-scroll-" + value);
-        }
-      });
     } else if (arg === "el-dropdown") {
       el = el.querySelector(".el-dropdown-menu");
       !el && console.warn("未发现className为el-dropdown-menu的dom");
@@ -171,7 +164,6 @@ export const scrollBar = {
       el = el.querySelector(".table-scroll");
       !el && console.warn("未发现className为table-scroll的dom");
     }
-
     setTimeout(() => {
       el.classList.add("ps");
       el.classList.add("ps--active-y");
@@ -181,6 +173,10 @@ export const scrollBar = {
     try {
       vnode.context.$nextTick(() => {
         el_scrollBar(el);
+        if (value) {
+          el.querySelector(".ps__rail-x").classList.add("ps-scroll-" + value);
+          el.querySelector(".ps__rail-y").classList.add("ps-scroll-" + value);
+        }
       });
     } catch (error) {
       console.error(error);
