@@ -40,24 +40,44 @@
                         <div v-else-if="!change_sreach_show && ind==sreach_num && val.id!==7 " class="select_input">
                             <input type="text" autocomplete="off" id="sreach_input" v-model="input_sreach" @keyup="enter(val.name, $event)" @click="stop_click">
                             <div class="select_info_list" :style="'top:' + selectDom.top" v-if="val.type == 'select'">
+                              <el-scrollbar v-if="selectInfoList[val.label].length > 8" class="el-scrollbar-small" style="height: 240px;">
                                 <ul>
                                     <li v-for="(item,key) in selectInfoList[val.label]" :key="key" @click="tr_selectInfo(val.label,item.value,item.label,$event)" :class="search_select_style_num==key?'search-style-ind':''">{{item.label}}</li>
                                 </ul>
+                              </el-scrollbar>
+                              <ul v-else>
+                                <li v-for="(item,key) in selectInfoList[val.label]" :key="key" @click="tr_selectInfo(val.label,item.value,item.label,$event)" :class="search_select_style_num==key?'search-style-ind':''">{{item.label}}</li>
+                              </ul>
                             </div>
                             <div class="select_info_list" :style="'top:' + selectDom.top" v-if="val.type == 'selectString'">
+                              <el-scrollbar v-if="selectInfoList[val.label].length > 8" class="el-scrollbar-small" style="height: 240px;">
                                 <ul>
                                     <li v-for="(item,key) in selectInfoList[val.label]" :key="key" @click="stringSelectInfo(val, item, $event)" :class="search_select_style_num==key?'search-style-ind':''">{{item.label}}</li>
                                 </ul>
+                              </el-scrollbar>
+                              <ul v-else>
+                                <li v-for="(item,key) in selectInfoList[val.label]" :key="key" @click="stringSelectInfo(val, item, $event)" :class="search_select_style_num==key?'search-style-ind':''">{{item.label}}</li>
+                              </ul>
                             </div>
                             <div class="select_info_list" :style="'top:' + selectDom.top" v-if="val.type == 'dc'">
+                              <el-scrollbar v-if="dcSelect.length > 8" class="el-scrollbar-small" style="height: 240px;">
                                 <ul>
-                                    <li v-for="(item,key) in dcSelect" :key="key" @click="selectObject(val, item, $event)" :class="search_select_style_num==key?'search-style-ind':''">{{item.name}}</li>
+                                  <li v-for="(item,key) in dcSelect" :key="key" @click="selectObject(val, item, $event)" :class="search_select_style_num==key?'search-style-ind':''">{{item.name}}</li>
                                 </ul>
+                              </el-scrollbar>
+                              <ul v-else>
+                                <li v-for="(item,key) in dcSelect" :key="key" @click="selectObject(val, item, $event)" :class="search_select_style_num==key?'search-style-ind':''">{{item.name}}</li>
+                              </ul>
                             </div>
                             <div class="select_info_list" :style="'top:' + selectDom.top" v-if="val.type == 'asset'">
+                              <el-scrollbar v-if="assetSelect.length > 8" class="el-scrollbar-small" style="height: 240px;">
                                 <ul>
                                     <li v-for="(item,key) in assetSelect" :key="key" @click="selectObject(val, item, $event)" :class="search_select_style_num==key?'search-style-ind':''">{{item.host}}</li>
                                 </ul>
+                              </el-scrollbar>
+                              <ul v-else>
+                                <li v-for="(item,key) in assetSelect" :key="key" @click="selectObject(val, item, $event)" :class="search_select_style_num==key?'search-style-ind':''">{{item.host}}</li>
+                              </ul>
                             </div>
                             <!-- 新增日志模块action下拉选择 -->
                             <div class="select_info_list" :style="'top:' + selectDom.top" v-if="val.type == 'selectAction'">
@@ -144,6 +164,8 @@
                 actionSelect:[],
                 dcSelect: [], //数据中心
                 assetSelect: [], //资产
+                projectSelect: [],
+                moduleSelect: [],
                 schemaTypeSelect:[], //日志检索Protocol下拉菜单
                 TypeSelect:[],//Protocol二层下拉菜单
                 secondShow:'',//二层显示控制
@@ -253,7 +275,7 @@
               } else {
                 this.clearSearchShow = true;
               }
-              if (this.$route.path.indexOf("alertList") > -1 || this.$route.path.indexOf("alertConfig") > -1) {
+              /*if (this.$route.path.indexOf("alertList") > -1 || this.$route.path.indexOf("alertConfig") > -1) {
                 // 处理alertType--asset联动问题：
                 // 当已选alertType为asset时，将可选列表中的asset的disabled恢复为false；
                 // 当已选alertType不为asset时，将可选列表中的asset的disabled设为true，若有已选的asset，则删除；
@@ -295,7 +317,7 @@
                     }
                   }
                 }
-              }
+              }*/
             }
           },
           no_condition: {
@@ -1531,7 +1553,6 @@
         position: fixed;
         /*left: 100px;
         top: 36px;*/
-        height: auto;
         width: auto;
         max-height: 240px;
         padding: 5px 0;

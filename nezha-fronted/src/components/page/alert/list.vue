@@ -269,13 +269,13 @@
             type: 'input',
             label: 'alertName',
             disabled: false
-          }, {
+          }, /*{
             id: 3,
             name: this.$t('alert.list.type'),
             type: 'select',
             label: 'alertType',
             disabled: false
-          }, {
+          }, */{
             id: 4,
             name: this.$t('alert.severity'),
             type: 'selectString',
@@ -286,7 +286,7 @@
             name: this.$t('asset.asset'),
             type: 'asset',
             label: 'asset',
-            disabled: true
+            disabled: false
           }, {
             id: 12,
             name: this.$t('alert.list.state'),
@@ -549,7 +549,11 @@
         this.pageObj.pageNo = 1;
         for (let item in searchObj) {
           if (searchObj[item]) {
-            this.$set(this.searchLabel, item, searchObj[item]);
+            if (item == "alertMessageState") {
+              this.$set(this.searchLabel, "state", searchObj[item]);
+            } else {
+              this.$set(this.searchLabel, item, searchObj[item]);
+            }
           }
         }
         this.getAlertList();
