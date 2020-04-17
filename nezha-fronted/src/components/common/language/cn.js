@@ -587,8 +587,13 @@ const cn = {
       username: "用户名",
       operation: "操作",
       type: "类型",
-      createDate: "创建时间",
-      ip: "IP"
+      createDate: "操作时间",
+      ip: "IP",
+      userId: "UserId",
+      operaId: "数据ID",
+      time: "耗时",
+      params: "请求参数",
+      state: "请求结果"
     },
     mib: {
       mib: "SNMP MIB",

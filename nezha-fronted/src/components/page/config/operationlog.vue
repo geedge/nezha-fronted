@@ -150,24 +150,29 @@
             show: true,
           },
           {
-            label: this.$t('config.operationlog.createDate'),
-            prop: 'createDate',
+            label: this.$t('config.operationlog.state'),
+            prop: 'state',
             show: true,
           },
-          {
-            label: this.$t('config.operationlog.userId'),
-            prop: 'userId',
-            show: false,
-          },
+          // {
+          //   label: this.$t('config.operationlog.userId'),
+          //   prop: 'userId',
+          //   show: false,
+          // },
           {
             label: this.$t('config.operationlog.operaId'),
             prop: 'operaId',
             show: false,
           },
           {
+            label: this.$t('config.operationlog.createDate'),
+            prop: 'createDate',
+            show: true,
+          },
+          {
             label: this.$t('config.operationlog.time'),
             prop: 'time',
-            show: true,
+            show: false,
           },
           {
             label: this.$t('config.operationlog.params'),
@@ -196,7 +201,7 @@
           },{
             id: 13,
             name: this.$t('config.operationlog.operation'),
-            type: 'input',
+            type: 'selectString',
             label: 'operation',
             disabled: false
           }

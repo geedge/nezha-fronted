@@ -58,6 +58,32 @@
         label:i18n.t('asset.pingActive')
       }
     ],
+    operation: [
+      {
+        value: 'add',
+        label: i18n.t('overall.add')
+      },
+      {
+        value: 'update',
+        label: i18n.t('overall.edit')
+      },
+      {
+        value: 'query',
+        label: i18n.t('overall.query')
+      },
+      {
+        value: 'import',
+        label: i18n.t('overall.importExcelLower')
+      },
+      {
+        value: 'export',
+        label: i18n.t('overall.exportExcelLower')
+      },
+      {
+        value: 'reset',
+        label: i18n.t('overall.reset')
+      }
+    ],
     alertMessageState: [
       {
         value: '1',
