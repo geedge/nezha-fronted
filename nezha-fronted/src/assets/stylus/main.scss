@@ -1109,10 +1109,10 @@ li{
   height: 11px;
 }*/
 .el-scrollbar-small .el-scrollbar__bar.is-vertical {
-  width: 5px;
+  width: 6px;
 }
 .el-scrollbar-small .el-scrollbar__bar.is-horizontal {
-  height: 5px;
+  height: 6px;
 }
 /*.el-scrollbar-small .el-scrollbar__bar.is-vertical:hover {
   width: 8px;
@@ -1574,14 +1574,14 @@ li{
 .ps-scroll-small.ps__rail-y.ps--clicking .ps__thumb-y,
 .ps-scroll-small .ps__thumb-y,
 .ps-scroll-small .ps__rail-y  {
-  width: 5px;
+  width: 6px;
 }
 .ps-scroll-small.ps__rail-x:hover > .ps__thumb-x,
 .ps-scroll-small.ps__rail-x:focus > .ps__thumb-x,
 .ps-scroll-small.ps__rail-x.ps--clicking .ps__thumb-x,
 .ps-scroll-small .ps__rail-x,
 .ps-scroll-small .ps__thumb-x {
-  height: 5px;
+  height: 6px;
 }
 .ps-scroll-normal.ps__rail-y:hover > .ps__thumb-y,
 .ps-scroll-normal.ps__rail-y:focus > .ps__thumb-y,
