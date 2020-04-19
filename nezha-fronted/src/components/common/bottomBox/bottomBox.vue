@@ -15,7 +15,7 @@
 
       <!------TAB区------>
       <!--通用详情-->
-      <common-detail-tab v-show="subResizeShow" :obj="obj" :from="from" :detail="detail" :targetTab="targetTab"
+      <common-detail-tab v-show="subResizeShow" :obj="obj" :from="from" :detail="detail" :targetTab.sync="targetTab"
                          v-if="targetTab == 'detail'"
                          @changeTab="changeTab"
       ></common-detail-tab>
@@ -26,7 +26,7 @@
       <!--asset页的endpoint列表-->
       <endpoint-tab v-show="subResizeShow" v-if="from == 'asset' && targetTab == 'endpoint'" :from="from" :obj="obj" @changeTab="changeTab"></endpoint-tab>
       <!--endpoint页的asset详情-->
-      <common-detail-tab v-show="subResizeShow" :obj="obj" :from="from" :detail="assetDetail" :targetTab="targetTab"
+      <common-detail-tab v-show="subResizeShow" :obj="obj" :from="from" :detail="assetDetail" :targetTab.sync="targetTab"
                          v-if="targetTab == 'assetDetail' && from == 'endpoint'"
                          @changeTab="changeTab"></common-detail-tab>
       <!--endpoint-query-->
@@ -34,7 +34,7 @@
 
       <!--alertMessage页的详情-->
       <template v-if="from == 'alertMessage'">
-        <common-detail-tab v-show="subResizeShow" :from="from" :targetTab="targetTab" v-for="(item, index) in tabList" :key="index" :detail="detailList[index]"
+        <common-detail-tab v-show="subResizeShow" :from="from" :targetTab.sync="targetTab" v-for="(item, index) in tabList" :key="index" :detail="detailList[index]"
                            v-if="targetTab == item" @changeTab="changeTab"></common-detail-tab>
       </template>
     </div>
@@ -87,7 +87,8 @@
         this.$emit('listResize', e);
       },
       changeTab(tab) {
-        this.targetTab = tab;
+        this.$emit('update:targetTab', tab);
+        //this.targetTab = tab;
       }
     }
   }

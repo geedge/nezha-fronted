@@ -124,7 +124,7 @@
           </div>
           <button class="to-top" v-show="showTopBtn" @click="$toTop"><i class="nz-icon nz-icon-top"></i></button>
         </div>
-        <bottom-box v-if="showSubList" :show-sub-list="showSubList" :subResizeShow="subResizeShow" :obj="cabinetDc" :isFullScreen="isFullScreen" :from="'dc'" :targetTab="targetTab" :detail="dcDetail"
+        <bottom-box v-if="showSubList" :show-sub-list="showSubList" :subResizeShow="subResizeShow" :obj="cabinetDc" :isFullScreen="isFullScreen" :from="'dc'" :targetTab.sync="targetTab" :detail="dcDetail"
                      @closeSubList="showSubList = false" @fullScreen="fullScreen" @exitFullScreen="exitFullScreen" @listResize="listResize" ></bottom-box>
       </div>
       </left-menu>

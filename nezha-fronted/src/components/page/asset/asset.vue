@@ -246,7 +246,7 @@
         </div>
         <button class="to-top" v-show="showTopBtn" @click="$toTop"><i class="nz-icon nz-icon-top"></i></button>
       </div>
-      <bottom-box v-if="showSubList" :show-sub-list="showSubList" :subResizeShow="subResizeShow" :obj="alertMsgAsset" :isFullScreen="isFullScreen" :from="'asset'" :targetTab="targetTab" :detail="assetDetail"
+      <bottom-box v-if="showSubList" :show-sub-list="showSubList" :subResizeShow="subResizeShow" :obj="alertMsgAsset" :isFullScreen="isFullScreen" :from="'asset'" :targetTab.sync="targetTab" :detail="assetDetail"
                   @reload="getAssetData"
                   @closeSubList="showSubList = false"
                   @fullScreen="fullScreen"

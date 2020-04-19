@@ -162,7 +162,7 @@
         <button class="to-top" v-show="showTopBtn && mainResizeShow" @click="$toTop('ps', 0)"><i class="nz-icon nz-icon-top"></i></button>
       </div>
       <bottom-box v-if="showSubList" :show-sub-list="showSubList" :subResizeShow="subResizeShow" :isFullScreen="isFullScreen"
-                  :from="'endpoint'" :targetTab="targetTab" :detail="endpointDetail" :obj="curEndpoint" :assetDetail="assetDetail"
+                  :from="'endpoint'" :targetTab.sync="targetTab" :detail="endpointDetail" :obj="curEndpoint" :assetDetail="assetDetail"
                   @closeSubList="showSubList = false" @fullScreen="fullScreen" @exitFullScreen="exitFullScreen" @listResize="listResize" ></bottom-box>
     </div>
       <div slot="content-right" class="slot-content" v-show="pageType == 'project'">
@@ -804,7 +804,6 @@
       curEndpoint: {
         deep: true,
         handler(n) {
-          console.info(n)
           this.endpointDetail = this.convertToDetail(n);
           this.$get('asset', {id: n.assetId}).then(response => {
             if (response.code === 200) {
