@@ -58,7 +58,8 @@
             </button>
           </div>
         </div>-->
-        <el-table :data="tableData" border v-show="mainResizeShow" :height="mainTableHeight" style="width: 100%;" ref="promTable" class="nz-table" v-scrollBar:el-table>
+        <el-table :data="tableData" border v-show="mainResizeShow" :height="mainTableHeight" style="width: 100%;"
+                  v-loading="loading" ref="promTable" class="nz-table" v-scrollBar:el-table="'large'">
           <el-table-column :resizable="false" v-for="(item, index) in tablelable" v-if="item.show" :width="item.width"
                            :key="`col-${index}`" :label="item.label">
             <template slot-scope="scope" :column="item">
@@ -223,6 +224,7 @@
           isEdit: false, //false查看，true编辑
           title: ''
         },
+        loading: false,
         promServer: {
           id: '',
           host: '',
@@ -584,7 +586,9 @@
         this.tableData = [];
         this.$set(this.searchLabel, "pageNo", this.pageObj.pageNo);
         this.$set(this.searchLabel, "pageSize", this.pageObj.pageSize);
+        this.loading = true;
         this.$get('promServer', this.searchLabel).then(response => {
+          this.loading = false;
           if (response.code === 200) {
             for (var i = 0; i < response.data.list.length; i++) {
               for (var j = 0; j < this.idcData.length; j++) {

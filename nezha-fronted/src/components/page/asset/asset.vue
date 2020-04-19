@@ -115,9 +115,10 @@
                 :height="mainTableHeight"
                 style="width: 100%;"
                 :data="tableData"
-                v-scrollBar:el-table
+                v-scrollBar:el-table="'large'"
                 v-show="mainResizeShow"
                 border
+                v-loading="loading"
                 tooltip-effect="light"
                 ref="assetTable"
               >
@@ -283,6 +284,7 @@
     data() {
       vm = this;
       return {
+        loading: false,
         /*二级页面相关*/
         assetDetail: [], //asset详情
         alertMsgAsset: {}, //告警信息对应的asset对象
@@ -630,7 +632,9 @@
       },
       getAssetData(data, flushRightBoxDc) {
         this.searchLabel = Object.assign(this.searchLabel, this.pageObj);
+        this.loading = true;
         this.$get('asset', this.searchLabel).then(response => {
+          this.loading = false;
           if (response.code === 200) {
             this.tableData = response.data.list;
             this.pageObj.total = response.data.total

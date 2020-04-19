@@ -6,8 +6,8 @@
 <template>
   <div v-show="showLoading" class="el-loading-mask" style="background-color: rgba(0, 0, 0, 0);">
     <div class="el-loading-spinner">
-      <img width="42px" height="42px"  src="../../assets/img/loading.gif"/>
-      <p class="el-loading-text loading-font">loading</p>
+      <!--<img width="42px" height="42px"  src="../../assets/img/loading.gif"/>
+      <p class="el-loading-text loading-font">loading</p>-->
     </div>
   </div>
 </template>

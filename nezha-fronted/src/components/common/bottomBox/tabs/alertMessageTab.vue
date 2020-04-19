@@ -28,7 +28,6 @@
     <el-table
       class="nz-table"
       :data="tableData"
-      element-loading-background="rgba(0, 0, 0, 0)"
       border
       v-loading="loading"
       ref="alertMessageSubList"
@@ -399,8 +398,8 @@
         this.$set(this.searchLabel, "pageNo", this.pageObj.pageNo);
         this.$set(this.searchLabel, "pageSize", this.pageObj.pageSize);
         this.$get('alert/message', this.searchLabel).then(response => {
+          this.loading = false;
           if (response.code == 200) {
-            this.loading = false;
             this.tableData = response.data.list;
             this.tableData.forEach((item) => {
               item.labels = JSON.parse(item.labels);

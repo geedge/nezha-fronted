@@ -37,7 +37,8 @@
           ref="alertRuleTable"
           tooltip-effect="light"
           :height="mainTableHeight"
-          v-scrollBar:el-table
+          v-scrollBar:el-table="'large'"
+          v-loading="loading"
           :cell-class-name="messageStyle"
           style="width: 100%;">
           <el-table-column
@@ -121,6 +122,7 @@
     data() {
       vm = this;
       return {
+        loading: false,
         /*二级列表相关*/
         ruleDetail: {},
         targetTab: '', //展示二级列表中的哪个页签
@@ -363,7 +365,9 @@
       getTableData: function () {
         this.$set(this.searchLabel, "pageNo", this.pageObj.pageNo);
         this.$set(this.searchLabel, "pageSize", this.pageObj.pageSize);
+        this.loading = true;
         this.$get('alert/rule', this.searchLabel).then(response => {
+          this.loading = false;
           if (response.code == 200) {
             this.tableData = response.data.list;
             this.pageObj.total = response.data.total;

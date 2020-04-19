@@ -45,7 +45,8 @@
           </button>
         </div>
       </div>
-      <el-table :data="tableData" border :height="$tableHeight.normal" style="width: 100%;" ref="modelTable" class="nz-table" v-scrollBar:el-table :cell-class-name="assetStatClassName">
+      <el-table :data="tableData" border :height="$tableHeight.normal" style="width: 100%;" ref="modelTable" class="nz-table" v-scrollBar:el-table="'large'"
+                v-loading="loading" :cell-class-name="assetStatClassName">
         <el-table-column :resizable="false" v-for="(item, index) in tablelable" v-if="item.show" :width="item.width"
                          :key="`col-${index}`" :label="item.label">
           <template slot-scope="scope" :column="item">
@@ -119,6 +120,7 @@
           pageSize: 20,
           total: 0
         },
+        loading: false,
         tableTitle: [
           {
             label: 'ID',
@@ -256,7 +258,9 @@
         this.$set(this.searchLabel, "pageNo", this.pageObj.pageNo);
         this.$set(this.searchLabel, "pageSize", this.pageObj.pageSize);
         this.$set(this.searchLabel, "stat", 1);
+        this.loading = true;
         this.$get('model', this.searchLabel).then(response => {
+          this.loading = false;
           if (response.code === 200) {
             this.tableData = response.data.list;
             this.pageObj.total = response.data.total

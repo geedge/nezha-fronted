@@ -50,7 +50,8 @@
         border
         ref="operationLogTable"
         :height="$tableHeight.normal"
-        v-scrollBar:el-table
+        v-loading="loading"
+        v-scrollBar:el-table="'large'"
         style="width: 100%;">
         <el-table-column
           :resizable="false"
@@ -96,6 +97,7 @@
     name: "oparetionlog",
     data() {
       return {
+        loading: false,
         tableId: 'operationLogTable', //需要分页的table的id，用于记录每页数量
         showTopBtn: false,
         rightBox: { //弹出框相关
@@ -244,7 +246,9 @@
       getTableData: function () {
         this.$set(this.searchLabel, "pageNo", this.pageObj.pageNo);
         this.$set(this.searchLabel, "pageSize", this.pageObj.pageSize);
+        this.loading = true;
         this.$get('sys/log/list', this.searchLabel).then(response => {
+          this.loading = false;
           if (response.code === 200) {
             // for (let i = 0; i < response.data.list.length; i++) {
             //   response.data.list[i].status = response.data.list[i].status + "";

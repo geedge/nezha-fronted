@@ -1197,8 +1197,8 @@
         this.dropdownMenuShow=false;
         this.clearChart();
         this.$refs['localLoading'+this.chartIndex].startLoading();
-        this.firstShow = false;
-        this.$emit('on-refresh-data', this.data.id);
+        /*this.firstShow = false;
+        this.$emit('on-refresh-data', this.data.id);*/
       },
       initDialog(){
         //此时初始化，才能获得screenShowArea对象，否则此对象为undefined，无法初始化图表

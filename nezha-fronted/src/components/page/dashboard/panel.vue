@@ -84,7 +84,7 @@
         </div>
       </div>
       <div class="table-list" id="tableList">
-        <el-scrollbar style="height: 100%" ref="dashboardScrollbar">
+        <el-scrollbar class="el-scrollbar-large" style="height: 100%" ref="dashboardScrollbar">
           <div class="box-content">
             <chart-list @on-edit-chart="editData" @on-refresh-time="refreshTime" @on-remove-chart="removeData"
                         ref="chartList"></chart-list>

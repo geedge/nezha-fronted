@@ -54,7 +54,7 @@
             </button>
           </div>
         </div>
-        <el-table :data="tableData" border :height="$tableHeight.normal" style="width: 100%;" ref="mibTable" class="nz-table mib-table" v-scrollBar:el-table>
+        <el-table :data="tableData" border :height="$tableHeight.normal" style="width: 100%;" ref="mibTable" class="nz-table mib-table" v-scrollBar:el-table="'large'" v-loading="loading">
           <el-table-column :resizable="false" v-for="(item, index) in tablelable" v-if="item.show" :width="item.width" :class-name="item.prop == 'modelsDetail'?'detail-column':''"
                            :key="`col-${index}`" :label="item.label">
             <template slot-scope="scope" :column="item">
@@ -139,6 +139,7 @@
     data() {
       return {
         showTab: 'file', //file/browser
+        loading: false,
 
         tableId: 'mibTable', //需要分页的table的id，用于记录每页数量
         showTopBtn: false,
@@ -292,7 +293,9 @@
         this.tableData = [];
         this.$set(this.searchLabel, "pageNo", this.pageObj.pageNo);
         this.$set(this.searchLabel, "pageSize", this.pageObj.pageSize);
+        this.loading = true;
         this.$get('mib', this.searchLabel).then(response => {
+          this.loading = false;
           if (response.code === 200) {
             this.tableData = response.data.list;
             this.pageObj.total = response.data.total

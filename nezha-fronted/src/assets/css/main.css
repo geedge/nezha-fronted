@@ -2,3 +2,18 @@
   font-family: 'NotoSans';   /*字体名称*/
   src: url('font/NotoSansSC-6.ttf');
 }
+.el-loading-spinner .circular{
+  width: 42px;
+  height: 42px;
+  animation: loading-rotate 2s linear infinite;
+  display: none;
+}
+.el-loading-mask .el-loading-spinner{
+  background: url(../img/loading.gif) no-repeat;
+  background-size: 48px 48px;
+  width: 200px;
+  height: 200px;
+  position: relative;
+  top: 50%;
+  left: 48.5%;
+}

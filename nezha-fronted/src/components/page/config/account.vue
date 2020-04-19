@@ -57,7 +57,8 @@
           v-show="mainResizeShow"
           ref="accountTable"
           :height="mainTableHeight"
-          v-scrollBar:el-table
+          v-loading="loading"
+          v-scrollBar:el-table="'large'"
           style="width: 100%;">
           <el-table-column
             :resizable="false"
@@ -199,6 +200,7 @@
     data() {
       vm = this;
       return {
+        loading: false,
         //底部上滑框相关
         mainListHeight: '', //主列表高度
         mainTableHeight: this.$tableHeight.normal, //主列表table高度
@@ -419,7 +421,9 @@
       getTableData: function () {
         this.$set(this.searchLabel, "pageNo", this.pageObj.pageNo);
         this.$set(this.searchLabel, "pageSize", this.pageObj.pageSize);
+        this.loading = true;
         this.$get('sys/user/list', this.searchLabel).then(response => {
+          this.loading = false;
           if (response.code === 200) {
             for (let i = 0; i < response.data.list.length; i++) {
               response.data.list[i].status = response.data.list[i].status + "";

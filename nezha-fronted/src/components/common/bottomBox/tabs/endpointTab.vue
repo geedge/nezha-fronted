@@ -195,7 +195,9 @@
         this.$emit('changeTab', tab);
       },
       getTableData() {
+        this.loading = true;
         this.$get('/endpoint?assetId=' + this.asset.id + 'pageSize=-1').then(response => {
+          this.loading = false;
           if (response.code === 200) {
             this.tableData = response.data.list;
             this.$emit("reload");

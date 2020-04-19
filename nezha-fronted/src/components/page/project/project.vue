@@ -103,9 +103,10 @@
           border
           class="nz-table endpoint-table"
           :height="mainTableHeight"
-          v-scrollBar:el-table="'normal'"
+          v-scrollBar:el-table="'large'"
           v-show="mainResizeShow"
           ref="endpointTable"
+          v-loading="loading"
           style="width: 100%;">
           <el-table-column
             :resizable="false"
@@ -204,6 +205,8 @@
       vm = this;
       let temp = this;
       return {
+        loading: false,
+
         assetDetail: [], //asset详情
         endpointDetail: [],
         targetTab: '',
@@ -347,7 +350,9 @@
           this.endpointSearchLabel.moduleId = this.currentModule.id;
           this.$set(this.endpointSearchLabel, 'pageNo', this.endpointPageObj.pageNo);
           this.$set(this.endpointSearchLabel, 'pageSize', this.endpointPageObj.pageSize);
+          this.loading = true;
           this.$get('endpoint', this.endpointSearchLabel).then(response => {
+            this.loading = false;
             if (response.code === 200) {
               for (let i = 0; i < response.data.list.length; i++) {
                 try {

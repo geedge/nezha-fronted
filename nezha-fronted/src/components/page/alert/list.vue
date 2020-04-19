@@ -42,7 +42,8 @@
           ref="alertListTable"
           tooltip-effect="light"
           :height="mainTableHeight"
-          v-scrollBar:el-table
+          v-scrollBar:el-table="'large'"
+          v-loading="loading"
           :cell-class-name="labelsClassName"
           @selection-change="selectChange"
           style="width: 100%;">
@@ -187,6 +188,7 @@
     data() {
       vm = this;
       return {
+        loading: false,
         /*二级列表相关*/
         tabList: [], //二级列表的标签
         tabDetailList: [], //多个详情
@@ -392,7 +394,9 @@
       getAlertList: function () {
         this.$set(this.searchLabel, "pageNo", this.pageObj.pageNo);
         this.$set(this.searchLabel, "pageSize", this.pageObj.pageSize);
+        this.loading = true;
         this.$get('alert/message', this.searchLabel).then(response => {
+          this.loading = false;
           if (response.code == 200) {
             this.tableData = response.data.list;
             this.tableData.forEach((item) => {

@@ -104,7 +104,7 @@ export const scrollBar = {
       el = el.querySelector(".el-table__body-wrapper");
       !el && console.warn("未发现className为el-table__body-wrapper的dom");
     } else if (arg === "el-dropdown") {
-      el = el.querySelector(".el-dropdown-menu");
+      el = document.querySelector(".el-dropdown-menu");
       !el && console.warn("未发现className为el-dropdown-menu的dom");
     } else if (arg == "legend") {
       el = el.querySelector(".legend-container");
@@ -152,7 +152,7 @@ export const scrollBar = {
       el = el.querySelector(".el-table__body-wrapper");
       !el && console.warn("未发现className为el-table__body-wrapper的dom");
     } else if (arg === "el-dropdown") {
-      el = el.querySelector(".el-dropdown-menu");
+      el = document.querySelector(".el-dropdown-menu");
       !el && console.warn("未发现className为el-dropdown-menu的dom");
     }else if (arg === "xterm") {
       el = el.querySelector(".xterm-viewport");

@@ -187,8 +187,8 @@
         this.$set(this.searchLabel, "pageNo", 1);
         this.$set(this.searchLabel, "pageSize", -1);
         this.$get("/cabinet", this.searchLabel).then(response => {
+          this.loading = false;
           if (response.code == 200) {
-            this.loading = false;
             this.tableData = response.data.list;
           }
         });

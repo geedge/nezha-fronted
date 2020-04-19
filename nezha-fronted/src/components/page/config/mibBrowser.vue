@@ -135,7 +135,7 @@
       <div class="mib-browser-left">
         <div class="mib-browser-tree-title">
           <span>SNMP MIBs</span>
-          <el-dropdown trigger="click" v-scrollBar:el-dropdown :hide-on-click="false" @command="selectModel">
+          <el-dropdown trigger="click" v-scrollBar:el-dropdown="'small'" :hide-on-click="false" @command="selectModel">
             <span class="mib-browser-table-op">{{$t("config.model.model") + " "}}<i class="nz-icon nz-icon-funnel"></i></span>
             <el-dropdown-menu slot="dropdown" class="mib-browser-model-dropdown">
               <el-dropdown-item :class="{'mib-browser-model-dropdown-item-active': walkParam.models.indexOf(item.id) > -1}" :command="item" v-for="item, index in modelData" :key="index">{{item.name}}</el-dropdown-item>
@@ -154,6 +154,7 @@
             check-on-click-node
             check-strictly
             @node-click="showDetail"
+            v-loading="treeLoading"
           >
             <div slot-scope="{node, data}" class="walk-tree-item">
               <span v-if="!data.type"><i class="el-icon-reading"></i></span>
@@ -268,6 +269,7 @@
     data() {
       return {
         loading: false,
+        treeLoading: false,
         snmpSetFormVisible: false, //snmp set表单
         searchParam: {
           host: '',
@@ -353,13 +355,18 @@
 
       /*获取tree的数据*/
       getWalkData() {
+        this.treeLoading = true;
         this.$get('mib/tree', {models: this.walkParam.models.join(",")}).then(response => {
+          this.treeLoading = false;
           if (response.code === 200) {
             let obj = JSON.parse(response.data);
             this.walkData = [];
             for (let item in obj) {
               this.walkData.push({name: item, subTree: obj[item]});
             }
+            this.$nextTick(() => {
+              this.$refs.treeScrollbar.update();
+            });
           }
         });
       },
@@ -658,7 +665,7 @@
     height: 31%;
     width: 100%;
   }
-  .mib-browser-detail .el-scrollbar__wrap .el-scrollbar__view, .mib-browser-detail .el-scrollbar__wrap {
+  .el-scrollbar__wrap .el-scrollbar__view, .el-scrollbar__wrap, .el-tree {
     height: 100%;
   }
   .tree-detail-resize {

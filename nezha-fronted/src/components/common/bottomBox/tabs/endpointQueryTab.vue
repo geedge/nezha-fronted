@@ -21,7 +21,7 @@
         </div>
         <div class="margin-r-20 nz-btn-group nz-btn-group-size-small nz-btn-group-light">
           <button @click="changeTime(-10)" class="nz-btn nz-btn-size-normal nz-btn-style-light change-time-height nz-input-group-prepend"><i class="el-icon-d-arrow-left"></i></button><el-date-picker
-          v-model="formatTime"loading
+          v-model="formatTime"
           type="datetime"
           size="mini"
           class="project-calendar nz-input-group-middle"
@@ -51,11 +51,10 @@
     <div class="table-header-inner" @click="clearSelectedMetrics"><span><i style="font-size: 12px;margin-left: 2px;" class="nz-icon nz-icon-close " :class="{'control-icon-unchecked':selectedEndpoints.length<1,'control-icon-checked':selectedEndpoints.length>0}"></i></span></div>
     <el-table
       :data="tableData"
-      v-loading="loading"
-      element-loading-background="rgba(0, 0, 0, 0)"
       border
-      v-scrollBar:el-table
+      v-scrollBar:el-table="'normal'"
       class="nz-table endpoint-query-table"
+      v-loading="loading"
       :header-cell-class-name="cellClass"
       :height="$tableHeight.noPagination"
       @selection-change="selectChange"
@@ -162,6 +161,7 @@
     data() {
       let temp = this;
       return {
+        loading: false,
         showTopBtn: false, //主列表top按钮
         currentEndpoint: {},
         queryData: [],//endpoint 查询列表数据
@@ -176,7 +176,6 @@
         graphChart:null,//图标对象
         graphShow:false,
         searchTime:[],
-        loading:false,
         pickerOptions: {
           shortcuts: [
             {
@@ -566,6 +565,7 @@
         this.tableData = [];
         this.tableDataCopy = '';
         this.$get("/prom/api/v1/query?query={endpoint='" + this.currentEndpoint.id + "'}&time=" + this.formatTime).then(response=>{
+          this.loading = false;
           if(response.status==="success"){
             let results = response.data.result;
             this.queryData=JSON.parse(JSON.stringify(results));
@@ -634,7 +634,6 @@
               this.tableData.push(edpQueryData);
             }
             this.tableDataCopy = JSON.stringify(this.tableData);
-            this.loading = false;
           }
         });
       },
