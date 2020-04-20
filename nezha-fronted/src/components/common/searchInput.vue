@@ -34,7 +34,7 @@
                             {{val.name}}
                         </div>
                         <div class="select_content" v-if="val.val && ind!=sreach_num">
-                            <span :style="val.id==7?'min-width:260px':''">{{val.valString ? val.valString : val.val}}</span>
+                            <span>{{val.valString ? val.valString : val.val}}</span>
                             <i class="el-icon-close" @click="close_selcet_list(ind,$event)"></i>
                         </div>
                         <div v-else-if="!change_sreach_show && ind==sreach_num && val.id!==7 " class="select_input">
@@ -77,6 +77,26 @@
                               </el-scrollbar>
                               <ul v-else>
                                 <li v-for="(item,key) in assetSelect" :key="key" @click="selectObject(val, item, $event)" :class="search_select_style_num==key?'search-style-ind':''">{{item.host}}</li>
+                              </ul>
+                            </div>
+                            <div class="select_info_list" :style="'top:' + selectDom.top" v-if="val.type == 'project'">
+                              <el-scrollbar v-if="projectSelect.length > 8" class="el-scrollbar-small" style="height: 240px;">
+                                <ul>
+                                    <li v-for="(item,key) in projectSelect" :key="key" @click="selectObject(val, item, $event)" :class="search_select_style_num==key?'search-style-ind':''">{{item.name}}</li>
+                                </ul>
+                              </el-scrollbar>
+                              <ul v-else>
+                                <li v-for="(item,key) in projectSelect" :key="key" @click="selectObject(val, item, $event)" :class="search_select_style_num==key?'search-style-ind':''">{{item.name}}</li>
+                              </ul>
+                            </div>
+                            <div class="select_info_list" :style="'top:' + selectDom.top" v-if="val.type == 'module'">
+                              <el-scrollbar v-if="moduleSelect.length > 8" class="el-scrollbar-small" style="height: 240px;">
+                                <ul>
+                                    <li v-for="(item,key) in moduleSelect" :key="key" @click="selectObject(val, item, $event)" :class="search_select_style_num==key?'search-style-ind':''">{{item.name}}</li>
+                                </ul>
+                              </el-scrollbar>
+                              <ul v-else>
+                                <li v-for="(item,key) in moduleSelect" :key="key" @click="selectObject(val, item, $event)" :class="search_select_style_num==key?'search-style-ind':''">{{item.name}}</li>
                               </ul>
                             </div>
                             <!-- 新增日志模块action下拉选择 -->
@@ -166,6 +186,7 @@
                 assetSelect: [], //资产
                 projectSelect: [],
                 moduleSelect: [],
+                modelSelect: [],
                 schemaTypeSelect:[], //日志检索Protocol下拉菜单
                 TypeSelect:[],//Protocol二层下拉菜单
                 secondShow:'',//二层显示控制
@@ -424,47 +445,32 @@
         },
         props:['searchMsg','defaultItem','defaultValue','inTransform'],
         methods: {
-          // isValidIP(ip) {
-          //     var reg = /^(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])$/
-          //     if(reg.test(ip)){
-
-          //     }else{
-          //       alert('ip格式不正确')
-          //     }
-          // } ,
-              //点击选择protocol类型  (日志新增)
-              /*select_type(val, ind, id, type,label,disabled){
-                        this.downBool = false;
-                        this.secondShow=false;
-                        this.searchLabelList.splice(ind, 1)
-                        this.select_list.push({
-                          name: val,
-                          id:id,
-                          type:type,
-                          label:label,
-                          disabled:disabled
-                        })
-                        this.change_sreach_show = false
-                        this.sreach_num = this.select_list.length-1
-                        this.input_list = !this.input_list
-                },*/
               //dc
               clearSearch() {
                 this.select_list = [];
               },
               selectObject(column, selectItem, e) {
                 this.stop_click(e);
-                this.select_list.forEach(val=>{
-                  if (val.type == 'dc'){
+                for (let i = 0; i < this.select_list.length; i++) {
+                  let val = this.select_list[i];
+                  if (val.type == 'dc' && selectItem.searchType == 'dc'){
                     val.val = selectItem.name;
                     val.valnum = selectItem.id;
                     val.valString = '';
-                  } else if (val.type == 'asset') {
+                  } else if (val.type == 'project' && selectItem.searchType == 'project') {
+                    val.val = selectItem.name;
+                    val.valnum = selectItem.id;
+                    val.valString = '';
+                  } else if (val.type == 'module' && selectItem.searchType == 'module') {
+                    val.val = selectItem.name;
+                    val.valnum = selectItem.id;
+                    val.valString = '';
+                  } else if (val.type == 'asset' && selectItem.searchType == 'asset') {
                     val.val = selectItem.host;
                     val.valnum = selectItem.id;
                     val.valString = '';
                   }
-                });
+                }
                 //this.select_list.push({type: 'dc', val: selectItem.name, valnum: selectItem.id});
                 this.input_sreach = '';
                 this.sreach_num = this.select_list.length;
@@ -475,6 +481,9 @@
                 setTimeout(function () {
                   _this.getHeight();
                 });
+                /*this.$nextTick(() => {
+                  this.$refs.searchScrollbar.update();
+                });*/
               },
                //一层下拉点击
               tr_selectTypeInfo(val){
@@ -520,6 +529,9 @@
               this.$get('idc', {pageNo: 1, pageSize: -1}).then(response => {
                 if (response.code === 200) {
                   this.dcSelect = response.data.list;
+                  this.dcSelect.forEach((item, index) => {
+                    this.$set(item, 'searchType', 'dc');
+                  });
                 }
               });
             },
@@ -527,13 +539,39 @@
               this.$get('asset', {pageNo: 1, pageSize: -1}).then(response => {
                 if (response.code === 200) {
                   this.assetSelect = response.data.list;
+                  this.assetSelect.forEach((item, index) => {
+                    this.$set(item, 'searchType', 'asset');
+                  });
                 }
               });
             },
             getModelData() {
-              this.$get('asset', {pageNo: 1, pageSize: -1}).then(response => {
+              this.$get('model', {pageNo: 1, pageSize: -1}).then(response => {
                 if (response.code === 200) {
-                  this.assetSelect = response.data.list;
+                  this.modelSelect = response.data.list;
+                  this.modelSelect.forEach((item, index) => {
+                    this.$set(item, 'searchType', 'model');
+                  });
+                }
+              });
+            },
+            getProjectData() {
+              this.$get('project', {pageNo: 1, pageSize: -1}).then(response => {
+                if (response.code === 200) {
+                  this.projectSelect = response.data.list;
+                  this.projectSelect.forEach((item, index) => {
+                    this.$set(item, 'searchType', 'project');
+                  });
+                }
+              });
+            },
+            getModuleData() {
+              this.$get('module', {pageNo: 1, pageSize: -1}).then(response => {
+                if (response.code === 200) {
+                  this.moduleSelect = response.data.list;
+                  this.moduleSelect.forEach((item, index) => {
+                    this.$set(item, 'searchType', 'module');
+                  });
                 }
               });
             },
@@ -734,8 +772,10 @@
                           objectInfo.idcId = val.valnum;
                         } else if (val.type == 'asset' && this.$route.path == "/project") {
                           objectInfo.assetId = val.valnum;
-                        } else if (val.type == 'asset' && this.$route.path == "/alertList") {
-                          objectInfo.linkId = val.valnum;
+                        } else if (val.type == 'module') {
+                          objectInfo.moduleId = val.valnum;
+                        } else if (val.type == 'project') {
+                          objectInfo.projectId = val.valnum;
                         } else {
                             objectInfo[val.label] = val.val;
                         }
@@ -965,13 +1005,16 @@
             // 清空已输入的搜索条件
             clear_input(e) {
                 this.stop_click(e)
-              this.no_condition = ''
-              this.input_sreach = ''
+                this.no_condition = ''
+                this.input_sreach = ''
                 this.select_list = []
                 this.searchLabelList = [{id: 0, name: 'Press Enter or click to search', icon: 'el-icon-search'},]
                 JSON.parse(JSON.stringify(this.searchMsg.searchLabelList)).forEach(val => {
                     this.searchLabelList.push(val)
                 })
+              this.$nextTick(() => {
+                this.$refs.searchScrollbar.update();
+              });
             },
             //修改已有参数
             update_sreach(ind,e) {
@@ -1287,6 +1330,10 @@
             if (this.$route.path == '/project' || this.$route.path == '/alertList' || this.$route.path == '/alertConfig') {
               this.getAssetData();
             }
+            if (this.$route.path == '/alertList') {
+              this.getProjectData();
+              this.getModuleData();
+            }
             if (this.$route.path == '/asset') {
               this.getModelData();
             }
@@ -1531,6 +1578,14 @@
         color: rgba(0,0,0,0.85);
         display: flex;
     }
+    .selectinfo_box .select_content>span {
+      max-width: 100px;
+      display: inline-block;
+      white-space: nowrap;
+      word-break: break-all;
+      text-overflow: ellipsis;
+      overflow: hidden;
+    }
     .select_input{
         height: 100%;
         flex: 1;
@@ -1562,10 +1617,16 @@
         box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         overflow-y: auto;
         z-index: 9999;
+        right: 139px;
     }
     .select_info_list ul li{
         padding: 5px 10px;
         line-height: 20px;
+        text-overflow: ellipsis;
+        width: 150px;
+        word-break: break-all;
+        white-space: nowrap;
+        overflow: hidden;
     }
     .select_info_list ul li:hover{
         background: #f0f0f0;

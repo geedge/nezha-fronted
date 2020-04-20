@@ -290,6 +290,21 @@
             label: 'asset',
             disabled: false
           }, {
+            name: this.$t('project.project.project'),
+            type: 'project',
+            label: 'project',
+            disabled: false
+          }, {
+            name: this.$t('project.module.module'),
+            type: 'module',
+            label: 'module',
+            disabled: false
+          }, {
+            name: this.$t('project.endpoint.endpoint'),
+            type: 'input',
+            label: 'endpointId',
+            disabled: false
+          }, {
             id: 12,
             name: this.$t('alert.list.state'),
             type: 'select',
@@ -551,11 +566,12 @@
       search: function (searchObj) {
         this.searchLabel = {};
         this.pageObj.pageNo = 1;
+        console.info(searchObj)
         for (let item in searchObj) {
           if (searchObj[item]) {
             if (item == "alertMessageState") {
               this.$set(this.searchLabel, "state", searchObj[item]);
-            } else {
+            } else{
               this.$set(this.searchLabel, item, searchObj[item]);
             }
           }

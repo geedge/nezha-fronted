@@ -1129,6 +1129,9 @@ li{
 .new-search .el-scrollbar__view {
   height: calc(100% - 4px);
 }
+.new-search .search-input-all .input-center-box>.el-scrollbar>.el-scrollbar__wrap {
+  overflow-y: hidden;
+}
 .el-scrollbar__bar {
   border-radius: 6px;
 }
