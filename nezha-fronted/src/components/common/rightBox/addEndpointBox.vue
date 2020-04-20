@@ -32,22 +32,21 @@
               <div class="right-child-box-title">{{$t('asset.asset')}}</div>
               <!--end--标题-->
               <!--begin--搜索框-->
-              <div class="nz-btn-group nz-btn-group-size-small nz-btn-group-light endpoint-asset-search">
-                <button id="search-asset-drop" type="button" class="nz-btn nz-btn-size-small nz-btn-style-light nz-btn-style-square nz-input-group-prepend" @click="assetSearch.dropdownShow = !assetSearch.dropdownShow">
-                  <span class="endpoint-asset-label-txt">{{assetSearch.label}}</span>
-                  <span>
-                    <i v-if="assetSearch.dropdownShow" class="el-icon-caret-top"></i>
-                    <i v-if="!assetSearch.dropdownShow" class="el-icon-caret-bottom"></i>
-                  </span>
-                </button><div
-                class="endpoint-asset-search-input">
-                  <el-input class="input-x-mini-22 nz-input-group-middle" placeholder="" v-model="assetSearch.text"></el-input>
-                </div><button
-                type="button" class="nz-btn nz-btn-size-small nz-btn-style-light nz-btn-style-square nz-input-group-append" id="search-asset"><i @click="searchAsset" class="el-icon-search"></i></button>
+              <div style="display: inline-block">
+                <div class="nz-btn-group nz-btn-group-size-small nz-btn-group-light endpoint-asset-search">
+                  <button id="search-asset-drop" type="button" class="nz-btn nz-btn-size-small nz-btn-style-light nz-btn-style-square nz-input-group-prepend" @click="assetSearch.dropdownShow = !assetSearch.dropdownShow">
+                    <span class="endpoint-asset-label-txt">{{assetSearch.label}}</span>
+                    <span>
+                      <i v-if="assetSearch.dropdownShow" class="el-icon-caret-top"></i>
+                      <i v-if="!assetSearch.dropdownShow" class="el-icon-caret-bottom"></i>
+                    </span>
+                  </button><el-input style="width: 100px;" class="input-x-mini-24 nz-input-group-middle" placeholder="" v-model="assetSearch.text"></el-input><button
+                  type="button" class="nz-btn nz-btn-size-small nz-btn-style-light nz-btn-style-square nz-input-group-append" id="search-asset"><i @click="searchAsset" class="el-icon-search"></i></button>
 
-                <div class="endpoint-asset-search-dropdown" v-if="assetSearch.dropdownShow">
-                  <div @click="dropdownSelect('IP')" class="endpoint-asset-search-dropdown-item" id="search-asset-ip">IP</div>
-                  <div @click="dropdownSelect('SN')" class="endpoint-asset-search-dropdown-item" id="search-asset-sn">SN</div>
+                  <div class="endpoint-asset-search-dropdown" v-if="assetSearch.dropdownShow">
+                    <div @click="dropdownSelect('IP')" class="endpoint-asset-search-dropdown-item" id="search-asset-ip">IP</div>
+                    <div @click="dropdownSelect('SN')" class="endpoint-asset-search-dropdown-item" id="search-asset-sn">SN</div>
+                  </div>
                 </div>
               </div>
               <!--end--搜索框-->
@@ -824,12 +823,11 @@
   }
   /* begin--搜索框*/
   .endpoint-asset-search {
-    display: inline-block;
     position: relative;
     margin-left: 44px;
   }
   .endpoint-asset-search button {
-    height: 22px !important;
+    height: 24px !important;
   }
   .endpoint-asset-search-dropdown {
     position: absolute;

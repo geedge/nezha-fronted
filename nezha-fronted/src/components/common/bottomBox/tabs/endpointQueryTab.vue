@@ -49,7 +49,7 @@
       </div>
     </div>
     <div class="table-header-inner" @click="clearSelectedMetrics"><span><i style="font-size: 12px;margin-left: 2px;" class="nz-icon nz-icon-close " :class="{'control-icon-unchecked':selectedEndpoints.length<1,'control-icon-checked':selectedEndpoints.length>0}"></i></span></div>
-    <pl-table :row-height="28" use-virtual :datas="tableData" border :empty-text="$t('config.mib.noData')" :header-cell-class-name="cellClass" :height="$tableHeight.noPagination"
+    <pl-table :row-height="28" use-virtual :datas="tableData" border :empty-text="$t('config.mib.noData')" :header-cell-class-name="cellClass" :style="{height: $tableHeight.noPagination}"
               class="nz-table endpoint-query-table" style="width: 100%;" v-loading="loading" v-scrollBar:el-table="'large'" :pagination-show="false" ref="endpointQueryTable"
               @selection-change="selectChange">
       <pl-table-column
@@ -75,7 +75,7 @@
             <span slot="reference"><i class="nz-icon nz-icon-info-normal metric-tip-icon"></i></span>
           </el-popover>
           <span v-html="hideSameLabels?scope.row.colorSimpleElement: scope.row.colorElement"></span>
-          &lt;!&ndash;            <span>{{hideSameLabels?scope.row.simpleElement: scope.row.element}}</span>&ndash;&gt;
+          <span>{{hideSameLabels?scope.row.simpleElement: scope.row.element}}</span>
         </template>
       </pl-table-column>
       <pl-table-column
