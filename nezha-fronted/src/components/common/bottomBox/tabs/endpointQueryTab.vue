@@ -75,7 +75,6 @@
             <span slot="reference"><i class="nz-icon nz-icon-info-normal metric-tip-icon"></i></span>
           </el-popover>
           <span v-html="hideSameLabels?scope.row.colorSimpleElement: scope.row.colorElement"></span>
-          <span>{{hideSameLabels?scope.row.simpleElement: scope.row.element}}</span>
         </template>
       </pl-table-column>
       <pl-table-column
