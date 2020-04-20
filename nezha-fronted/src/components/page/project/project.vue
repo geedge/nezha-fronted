@@ -438,7 +438,7 @@
       },
       projectChange:function(){
         //展开后为避免左侧无数据，显示对应project的第一个module下的endpoint
-        let currentProjectId=this.currentProjectTitle&&this.cuurentProjectTitle != ""?this.currentProjectTitle.split('-')[1]:"";
+        let currentProjectId=this.currentProjectTitle&&this.cuurentProjectTitle != ""?this.currentProjectTitle.split('-')[this.currentProjectTitle.split('-').length -1]:"";
         if(currentProjectId != ''){
           currentProjectId=Number.parseInt(currentProjectId);
           let moduleList=this.getProjectModule(currentProjectId);
