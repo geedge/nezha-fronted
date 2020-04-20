@@ -1380,7 +1380,7 @@ li{
 .el-dropdown-menu__item:not(.is-disabled):hover,
 .el-select-dropdown.is-multiple .el-select-dropdown__item.selected.hover,
 .el-select-dropdown__item.hover, .el-select-dropdown__item:hover {
-  color:$global-text-color-active !important;
+  color: $global-text-color-active;
   background-color: $dropdown-hover-background-color !important;
 }
 

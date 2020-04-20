@@ -109,9 +109,6 @@ export const scrollBar = {
     } else if (arg == "legend") {
       el = el.querySelector(".legend-container");
       !el && console.warn("未发现className为legend-container的dom");
-    } else if (arg == "table") {
-      el = el.querySelector(".table-scroll");
-      !el && console.warn("未发现className为table-scroll的dom");
     }
 
     // 启用x轴后不让原生滚动条出来作乱
@@ -160,9 +157,6 @@ export const scrollBar = {
     }else if(arg==="metric-label-cascader"){
       el = el.querySelector(".el-cascader__tags");
       !el && console.warn("未发现className为el-cascader__tags的dom");
-    } else if (arg == 'table') {
-      el = el.querySelector(".table-scroll");
-      !el && console.warn("未发现className为table-scroll的dom");
     }
     setTimeout(() => {
       el.classList.add("ps");

@@ -218,7 +218,7 @@
             <span @click="clearResult" class="mib-browser-table-op" :title="$t('overall.clear')"><i class="el-icon-close"></i></span>
           </span>
         </div>
-        <pl-table :row-height="28" use-virtual :datas="resultData" border :empty-text="$t('config.mib.noData')"
+        <pl-table :row-height="28" use-virtual :datas="resultData" border :empty-text="$t('config.mib.noData')" ref="resultTable"
                   class="mib-browser-table nz-table" style="width: 100%;height: calc(100% - 31px)" v-loading="loading" v-scrollBar:el-table="'large'" :pagination-show="false">
           <pl-table-column label="Name/OID" v-slot="{row}">
             <div class="too-long-split" @click="searchParam.oid = row.oid">{{row.name ? row.name : row.oid}}</div>
@@ -407,7 +407,11 @@
         this.$post('mib/browser', this.searchParam).then(response => {
           this.loading = false;
           if (response.code === 200) {
-            this.resultData = response.data.list.concat(this.resultData);
+            let wrapper = document.querySelector(".el-table__body-wrapper");
+            if (wrapper._ps_) {
+              wrapper.scrollTop = wrapper._ps_.contentHeight;
+            }
+            this.resultData = this.resultData.concat(response.data.list);
             if (this.searchParam.operation == 'set') {
               this.$message({duration: 2000, type: 'success', message: this.$t("tip.success")});
             }
@@ -588,8 +592,11 @@
 .mib-browser-model-dropdown {
   height: 300px;
 }
+.mib-browser-model-dropdown .el-dropdown-menu__item:focus {
+  color: #606266;
+}
 .mib-browser-model-dropdown-item-active {
-  color: $global-text-color-active;
+  color: $global-text-color-active !important;
   font-weight: bold;
   background-color: #FAFAFA;
 }
