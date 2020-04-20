@@ -1097,7 +1097,7 @@
   .table-header-inner{
     position: absolute;
     z-index: 1;
-    top: 40px;
+    top: 38px;
     left: 11px;
     cursor: pointer;
   }

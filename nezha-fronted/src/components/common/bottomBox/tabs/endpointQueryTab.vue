@@ -49,7 +49,43 @@
       </div>
     </div>
     <div class="table-header-inner" @click="clearSelectedMetrics"><span><i style="font-size: 12px;margin-left: 2px;" class="nz-icon nz-icon-close " :class="{'control-icon-unchecked':selectedEndpoints.length<1,'control-icon-checked':selectedEndpoints.length>0}"></i></span></div>
-    <el-table
+    <pl-table :row-height="28" use-virtual :datas="tableData" border :empty-text="$t('config.mib.noData')" :header-cell-class-name="cellClass" :height="$tableHeight.noPagination"
+              class="nz-table endpoint-query-table" style="width: 100%;" v-loading="loading" v-scrollBar:el-table="'large'" :pagination-show="false" ref="endpointQueryTable"
+              @selection-change="selectChange">
+      <pl-table-column
+        :resizable="false"
+        type="selection"
+        width="39"
+        align="center"
+        :selectable="selectable">
+      </pl-table-column>
+      <pl-table-column
+        prop="element"
+        :label="$t('project.endpoint.element')">
+        <template v-slot="scope">
+          <el-popover trigger="click" placement="right" v-if="typeof scope.row.metricTip != 'undefined' && scope.row.metricTip != null">
+            <div>
+              <ul>
+                <li><span class="metirc-tip-list">metric&nbsp;:&nbsp;</span><span>{{scope.row.metricTip.metric?scope.row.metricTip.metric:'&#45;&#45;'}}</span></li>
+                <li><span class="metirc-tip-list">type&nbsp;:&nbsp;</span><span>{{scope.row.metricTip.type?scope.row.metricTip.type:'unknown'}}</span></li>
+                <li><span class="metirc-tip-list">help&nbsp;:&nbsp;</span><span>{{scope.row.metricTip.help?scope.row.metricTip.help:'&#45;&#45;'}}</span></li>
+                <li><span class="metirc-tip-list">unit&nbsp;:&nbsp;</span><span>{{scope.row.metricTip.unit?scope.row.metricTip.unit:'&#45;&#45;'}}</span></li>
+              </ul>
+            </div>
+            <span slot="reference"><i class="nz-icon nz-icon-info-normal metric-tip-icon"></i></span>
+          </el-popover>
+          <span v-html="hideSameLabels?scope.row.colorSimpleElement: scope.row.colorElement"></span>
+          &lt;!&ndash;            <span>{{hideSameLabels?scope.row.simpleElement: scope.row.element}}</span>&ndash;&gt;
+        </template>
+      </pl-table-column>
+      <pl-table-column
+        :resizable="false"
+        prop="value"
+        :label="$t('project.endpoint.value')"
+        width="180">
+      </pl-table-column>
+    </pl-table>
+    <!--<el-table
       :data="tableData"
       border
       v-scrollBar:el-table="'normal'"
@@ -76,16 +112,16 @@
           <el-popover trigger="click" placement="right" v-if="typeof scope.row.metricTip != 'undefined' && scope.row.metricTip != null">
             <div>
               <ul>
-                <li><span class="metirc-tip-list">metric&nbsp;:&nbsp;</span><span>{{scope.row.metricTip.metric?scope.row.metricTip.metric:'--'}}</span></li>
+                <li><span class="metirc-tip-list">metric&nbsp;:&nbsp;</span><span>{{scope.row.metricTip.metric?scope.row.metricTip.metric:'&#45;&#45;'}}</span></li>
                 <li><span class="metirc-tip-list">type&nbsp;:&nbsp;</span><span>{{scope.row.metricTip.type?scope.row.metricTip.type:'unknown'}}</span></li>
-                <li><span class="metirc-tip-list">help&nbsp;:&nbsp;</span><span>{{scope.row.metricTip.help?scope.row.metricTip.help:'--'}}</span></li>
-                <li><span class="metirc-tip-list">unit&nbsp;:&nbsp;</span><span>{{scope.row.metricTip.unit?scope.row.metricTip.unit:'--'}}</span></li>
+                <li><span class="metirc-tip-list">help&nbsp;:&nbsp;</span><span>{{scope.row.metricTip.help?scope.row.metricTip.help:'&#45;&#45;'}}</span></li>
+                <li><span class="metirc-tip-list">unit&nbsp;:&nbsp;</span><span>{{scope.row.metricTip.unit?scope.row.metricTip.unit:'&#45;&#45;'}}</span></li>
               </ul>
             </div>
             <span slot="reference"><i class="nz-icon nz-icon-info-normal metric-tip-icon"></i></span>
           </el-popover>
           <span v-html="hideSameLabels?scope.row.colorSimpleElement: scope.row.colorElement"></span>
-          <!--            <span>{{hideSameLabels?scope.row.simpleElement: scope.row.element}}</span>-->
+          &lt;!&ndash;            <span>{{hideSameLabels?scope.row.simpleElement: scope.row.element}}</span>&ndash;&gt;
         </template>
       </el-table-column>
       <el-table-column
@@ -94,7 +130,7 @@
         :label="$t('project.endpoint.value')"
         width="180">
       </el-table-column>
-    </el-table>
+    </el-table>-->
     <button class="to-top" v-show="showTopBtn" @click="$('ps', 1)"><i class="nz-icon nz-icon-top"></i></button>
 
     <el-dialog class="line-chart-block-modal nz-dialog"
@@ -565,76 +601,78 @@
         this.tableData = [];
         this.tableDataCopy = '';
         this.$get("/prom/api/v1/query?query={endpoint='" + this.currentEndpoint.id + "'}&time=" + this.formatTime).then(response=>{
-          this.loading = false;
-          if(response.status==="success"){
-            let results = response.data.result;
-            this.queryData=JSON.parse(JSON.stringify(results));
-            for(let result of results) {
-              let metricName = result.metric.__name__;
-              let temp = metricName;
-              let simpleTemp = metricName;//显示简略信息：隐藏same labels后的结果
-              let metricColor = "";
-              let bracketsColor = "#eb7b18";//#eb7b18
-              let labelColor = "#65bbd1";//#66d9ef
-              let valueColor = "#61c261";//#74e680
-              let colorTemp = `<span style="${metricColor}">${metricName}</span>`;
-              let colorSimpleTemp = `<span>${metricName}</span>`;
-              let metricTip = {};
-              let queryInfos = (this.elementMetricDatas.filter((item)=> {
-                return item.metric === temp;
-              }));
-              if(queryInfos && queryInfos.length > 0) {
-                metricTip = queryInfos[0];
-              } else {
-                metricTip.metric=temp;
-              }
-              delete result.metric.__name__;
-              temp += "{";
-              simpleTemp += "{";
-              colorTemp += `<span style="color: ${bracketsColor}">{</span>`;
-              colorSimpleTemp += `<span style="color: ${bracketsColor}">{</span>`;
-              let keys = Object.keys(result.metric);
-              for (let index in keys){
-                let key = keys[index];
-                temp += key + "='" + result.metric[key] + "',";
-                colorTemp += `<span style="color: ${labelColor}">${key}</span>=<span style="color: ${valueColor}">'${result.metric[key]}'</span>,`;
-                if(!this.sameLabels.some((i)=> {return i == key})) {
-                  simpleTemp += key + "='" + result.metric[key] + "',";
-                  colorSimpleTemp += `<span style="color: ${labelColor}">${key}</span>=<span style="color: ${valueColor}">'${result.metric[key]}'</span>,`;
+          setTimeout(() => {
+            this.loading = false;
+            if(response.status==="success"){
+              let results = response.data.result;
+              this.queryData=JSON.parse(JSON.stringify(results));
+              for(let result of results) {
+                let metricName = result.metric.__name__;
+                let temp = metricName;
+                let simpleTemp = metricName;//显示简略信息：隐藏same labels后的结果
+                let metricColor = "";
+                let bracketsColor = "#eb7b18";//#eb7b18
+                let labelColor = "#65bbd1";//#66d9ef
+                let valueColor = "#61c261";//#74e680
+                let colorTemp = `<span style="${metricColor}">${metricName}</span>`;
+                let colorSimpleTemp = `<span>${metricName}</span>`;
+                let metricTip = {};
+                let queryInfos = (this.elementMetricDatas.filter((item)=> {
+                  return item.metric === temp;
+                }));
+                if(queryInfos && queryInfos.length > 0) {
+                  metricTip = queryInfos[0];
+                } else {
+                  metricTip.metric=temp;
                 }
-              }
-              if(temp.indexOf(',') != -1){
-                temp = temp.substr(0,temp.length-1);
-              }
-              if(simpleTemp.indexOf(',') != -1){
-                simpleTemp = simpleTemp.substr(0,simpleTemp.length-1);
-              }
-              if(colorTemp.indexOf(',') != -1){
-                colorTemp = colorTemp.substr(0,colorTemp.length-1);
-              }
-              if(colorSimpleTemp.indexOf(',') != -1){
-                colorSimpleTemp = colorSimpleTemp.substr(0,colorSimpleTemp.length-1);
-              }
+                delete result.metric.__name__;
+                temp += "{";
+                simpleTemp += "{";
+                colorTemp += `<span style="color: ${bracketsColor}">{</span>`;
+                colorSimpleTemp += `<span style="color: ${bracketsColor}">{</span>`;
+                let keys = Object.keys(result.metric);
+                for (let index in keys){
+                  let key = keys[index];
+                  temp += key + "='" + result.metric[key] + "',";
+                  colorTemp += `<span style="color: ${labelColor}">${key}</span>=<span style="color: ${valueColor}">'${result.metric[key]}'</span>,`;
+                  if(!this.sameLabels.some((i)=> {return i == key})) {
+                    simpleTemp += key + "='" + result.metric[key] + "',";
+                    colorSimpleTemp += `<span style="color: ${labelColor}">${key}</span>=<span style="color: ${valueColor}">'${result.metric[key]}'</span>,`;
+                  }
+                }
+                if(temp.indexOf(',') != -1){
+                  temp = temp.substr(0,temp.length-1);
+                }
+                if(simpleTemp.indexOf(',') != -1){
+                  simpleTemp = simpleTemp.substr(0,simpleTemp.length-1);
+                }
+                if(colorTemp.indexOf(',') != -1){
+                  colorTemp = colorTemp.substr(0,colorTemp.length-1);
+                }
+                if(colorSimpleTemp.indexOf(',') != -1){
+                  colorSimpleTemp = colorSimpleTemp.substr(0,colorSimpleTemp.length-1);
+                }
 
 
-              temp += "}";
-              simpleTemp += "}";
-              colorTemp += `<span style="color: ${bracketsColor}">}</span>`;
-              colorSimpleTemp += `<span style="color: ${bracketsColor}">}</span>`;
-              if(!/.+\{.+\}/.test(simpleTemp)) {
-                simpleTemp = simpleTemp.substr(0,simpleTemp.length-2);
-              }
+                temp += "}";
+                simpleTemp += "}";
+                colorTemp += `<span style="color: ${bracketsColor}">}</span>`;
+                colorSimpleTemp += `<span style="color: ${bracketsColor}">}</span>`;
+                if(!/.+\{.+\}/.test(simpleTemp)) {
+                  simpleTemp = simpleTemp.substr(0,simpleTemp.length-2);
+                }
 
-              if(!/.+\{<\/span><span.+?>.+?\}/.test(colorSimpleTemp)){
-                let metricReg=new RegExp("<span.*?>"+metricName+"<\/span>")
-                colorSimpleTemp=metricReg.exec(colorSimpleTemp)[0];
-              }
+                if(!/.+\{<\/span><span.+?>.+?\}/.test(colorSimpleTemp)){
+                  let metricReg=new RegExp("<span.*?>"+metricName+"<\/span>")
+                  colorSimpleTemp=metricReg.exec(colorSimpleTemp)[0];
+                }
 
-              let edpQueryData={element:temp,simpleElement:simpleTemp,colorElement:colorTemp,colorSimpleElement:colorSimpleTemp, value:result.value[1],type:(result.metric.type?result.metric.type:'2'),metricTip:metricTip};
-              this.tableData.push(edpQueryData);
+                let edpQueryData={element:temp,simpleElement:simpleTemp,colorElement:colorTemp,colorSimpleElement:colorSimpleTemp, value:result.value[1],type:(result.metric.type?result.metric.type:'2'),metricTip:metricTip};
+                this.tableData.push(edpQueryData);
+              }
+              this.tableDataCopy = JSON.stringify(this.tableData);
             }
-            this.tableDataCopy = JSON.stringify(this.tableData);
-          }
+          }, 300);
         });
       },
       clearSelectedMetrics() {
