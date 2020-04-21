@@ -1012,9 +1012,9 @@
       let localStorageTitle = localStorage.getItem("nz-tableTitle-" + localStorage.getItem("nz-username") + "-" + this.$route.path);
       this.tablelable = localStorageTitle ? JSON.parse(localStorageTitle) : this.tableTitle;
       // this.assetPingSwit
+
       if (this.assetPingSwitch == 'off') {
-        console.log(this.assetPingSwitch)
-        console.log(this.tablelable)
+
         for (let i in this.tablelable) {
           let label = this.tablelable[i];
 

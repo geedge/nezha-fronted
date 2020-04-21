@@ -362,6 +362,14 @@
                 for(let key in sets){
                   this[type][key]=sets[key];
                 }
+                if(type ==  'basic'){
+                  localStorage.setItem('nz-sys-name',this.basic.system_name);
+                  localStorage.setItem('nz-sys-timezone',this.basic.timezone);
+                  localStorage.setItem('nz-sys-asset-ping-switch',this.basic.asset_ping_switch);
+                  localStorage.setItem('nz-sys-default-cabinet-usize',this.basic.default_cabinet_usize);
+                }else if(type == 'terminal'){
+                  localStorage.setItem('nz-sys-max-terminal-num',this.terminal.max_terminal_num);
+                }
                 if(type == 'email'){
                   this.$refs.emailForm.clearValidate();
                 }
@@ -383,16 +391,8 @@
                   if(response.code == 200){
                     this.$message({duration: 2000, type: 'success', message: this.$t("tip.saveSuccess")});
                     this.resetForm(formName);
-                    setTimeout(()=>{
+                    setTimeout(()=> {
                       this.querySetInfo(type);
-                      if(type ==  'basic'){
-                        localStorage.setItem('nz-sys-name',this.basic.system_name);
-                        localStorage.setItem('nz-sys-timezone',this.basic.timezone);
-                        localStorage.setItem('nz-sys-asset-ping-switch',this.basic.asset_ping_switch);
-                        localStorage.setItem('nz-sys-default-cabinet-usize',this.basic.default_cabinet_usize);
-                      }else if(type == 'terminal'){
-                        localStorage.setItem('nz-sys-max-terminal-num',this.terminal.max_terminal_num);
-                      }
                     },200)
                   }else{
                     this.$message.error(response.msg);

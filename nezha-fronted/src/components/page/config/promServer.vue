@@ -63,7 +63,7 @@
           <el-table-column :resizable="false" v-for="(item, index) in tablelable" v-if="item.show" :width="item.width"
                            :key="`col-${index}`" :label="item.label">
             <template slot-scope="scope" :column="item">
-              <span v-if="item.prop == 'idc'" >{{scope.row[item.prop].name}}</span>
+              <span v-if="item.prop == 'idc'" >{{scope.row[item.prop]?scope.row[item.prop].name:'-'}}</span>
 
               <span v-else-if="item.prop == 'type'">
                   {{scope.row[item.prop] == '1' ? 'Global' : ''}}
