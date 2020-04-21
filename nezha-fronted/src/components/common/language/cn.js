@@ -767,7 +767,7 @@ const cn = {
       promExpr: "请输入表达式",
       dialogTitle: "图表",
       hideSameLabels: "隐藏重复标签",
-      stateInfo_230009: "prometheus服务可以获取",
+      stateInfo_230009: "无法获取prometheus服务",
       stateInfo_230010: "prometheus服务可用",
       stateInfo_230011: "prometheus服务不可用 "
     },

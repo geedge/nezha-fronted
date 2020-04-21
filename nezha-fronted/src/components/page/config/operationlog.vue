@@ -67,6 +67,9 @@
                             {{scope.row[item.prop] == 'zh' ? '中文' : ''}}
                             {{scope.row[item.prop] == 'ru' ? 'русский' : ''}}
                         </span>
+            <span v-if="item.prop == 'time'">
+              {{scope.row[item.prop]}} ms
+            </span>
             <span v-else>{{scope.row[item.prop]}}</span>
           </template>
         </el-table-column>
@@ -180,7 +183,12 @@
             label: this.$t('config.operationlog.params'),
             prop: 'params',
             show: false,
-          }
+          },
+          {
+            label: this.$t('config.operationlog.response'),
+            prop: 'response',
+            show: false,
+          },
         ],
         tablelable: [],
         dropCol: [],

@@ -590,13 +590,14 @@ const en = {
       username: 'User',
       operation: 'Operation',
       type: 'Type',
-      createDate: 'Date',
+      createDate: 'Time',
       ip: "IP",
       userId: "UserId",
-      operaId: "OperaId",
-      time: "Time",
+      operaId: "Resources",
+      time: "Duration",
       params: "Params",
-      state: "State"
+      state: "State",
+      response:"Response"
     },
     mib:{
       mib:'SNMP MIB',
@@ -772,9 +773,9 @@ const en = {
       promExpr: 'Please input expression',
       dialogTitle:'View', //endpoint 弹出dialog 标题,
       hideSameLabels:'Hide same labels',
-      stateInfo_230009:'promserver available',
+      stateInfo_230009:'promserver unavailable',
       stateInfo_230010:'promserver can be used',
-      stateInfo_230011:'promserver can not beused ',
+      stateInfo_230011:'promserver can not be used',
 
     },
     metrics: {
