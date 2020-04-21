@@ -114,7 +114,7 @@ const en = {
       editChartTitle: 'Edit',//"编辑图表"
       chartForm:{
         chartId:"ID",
-        chartName:"Chart n",
+        chartName:"Chart Name",
         type:"Type",
         unit:"Unit",
         url:"URL",

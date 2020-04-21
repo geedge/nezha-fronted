@@ -24,10 +24,21 @@
     </div>-->
 
     <div class="clearfix chartTitle" :id="'chartTitle'+chartIndex" >
-
+      <el-popover
+        v-if="isError"
+        placement="top-start"
+        width="200"
+        popper-class="chart-error-popper"
+        trigger="hover"
+        content="。。">
+        <span slot="reference" style="" class="panel-info-corner panel-info-corner--error">
+          <i class="nz-icon nz-icon-warning fa"></i>
+          <span class="panel-info-corner-inner"></span>
+      </span>
+      </el-popover>
       <el-dropdown trigger="click" v-show="firstShow"   class="nz-chart-top" :key="'chartDropdown'+chartIndex"  v-clickoutside="clickos">
         <el-dropdown-menu style="display: none"></el-dropdown-menu>
-          <span class="el-dropdown-link chart-title" @click="dropdownMenuShow=!dropdownMenuShow">
+        <span class="el-dropdown-link chart-title" @click="dropdownMenuShow=!dropdownMenuShow">
             <span class="chart-title-text">{{data.title}}</span>
             <span class="chart-title-icon"><i class="el-icon-caret-bottom el-icon--right"  :class="{'visible':caretShow,'hidden':!caretShow}"></i></span>
         </span>
@@ -121,7 +132,7 @@
   import bus from '../../libs/bus';
   import loading from "../common/loading";
   import chartDataFormat from './chartDataFormat'
-  //import {randomcolor} from  '../common/js/radomcolor/randomcolor.js'
+  import {randomcolor} from  '../common/js/radomcolor/randomcolor.js'
 
   export default {
     name: 'lineChartBlock',
@@ -158,6 +169,7 @@
         seriesItem: [], // 保存信息
         seriesItemScreen:[],
         images: '',
+        isError:false,
         toolbox: false,
         items: {
           metric_name: [], // 每条数据列名称
@@ -635,8 +647,14 @@
         if ( chartInfo.type === 4) {//line,bar
           this.chartType = 'line';
         }
-        //let chartId = '';
-
+        let minTime = null;
+        let maxTime = null
+        if(dataArg.length>0 && dataArg[0].data
+          && dataArg[0].data.length>0 && dataArg[0].data[0].length>0){
+          let len = dataArg[0].data.length-1;
+          minTime = dataArg[0].data[0][0];
+          maxTime = dataArg[0].data[len][0];
+        }
         if (chartSite === 'local') {
           this.echartStore = echarts.init(ele);
           //chartId='lineChartArea';
@@ -748,11 +766,11 @@
               params.forEach((item, i) => {
                 //alert('tooltip====='+JSON.stringify(item))
                 //let tip=legend.find((element)=>{
-                  //alert('legend====='+JSON.stringify(element))
-                  //return element.name == item.seriesName;
+                //alert('legend====='+JSON.stringify(element))
+                //return element.name == item.seriesName;
                 //});
-                let tip=legend[i];
-                let color = self.bgColorList[i];
+                let tip=legend[item.seriesIndex];
+                let color = self.bgColorList[item.seriesIndex];
                 if(i===0){
                   let value=bus.computeTimezone(item.data[0]);
                   let t_date = new Date(value);
@@ -865,9 +883,27 @@
               rotate: 0,
               formatter: function (value) {
                 value = bus.computeTimezone(value);
-                var t_date = new Date(value);
-                return [t_date.getFullYear(), t_date.getMonth() + 1, t_date.getDate()].join('-') + "\n"
-                  + [t_date.getHours(), t_date.getMinutes()].join(':');
+                let t_date = new Date(value);
+                let hour = t_date.getHours();
+                hour=hour>9?hour:"0"+hour; //加0补充为两位数字
+                let minute = t_date.getMinutes();
+                minute=minute>9?minute:"0"+minute; //如果分钟小于10,则在前面加0补充为两位数字
+                if(minTime!==null && maxTime!==null){
+                  let diffSec = (maxTime-minTime)/1000;
+                  let secOneDay = 24*60*60;//1天的秒数
+                  let secOneMonth = secOneDay*30;//30天的秒数
+                  if(diffSec<=secOneDay) {//同一天
+                    return [hour,minute ].join(':');
+                  }else if(diffSec<secOneMonth){//大于1天，小于30天
+                    return [t_date.getMonth() + 1, t_date.getDate()].join('/') +" "+  [hour, minute].join(':');
+                  }else {//大于等于30天
+                    return [t_date.getMonth() + 1, t_date.getDate()].join('/');
+                  }
+                }else {
+                  return [t_date.getFullYear(), t_date.getMonth() + 1, t_date.getDate()].join('/') + "\n"
+                    + [hour, minute].join(':');
+                }
+
               }
             },
             axisPointer: {//y轴上显示指针对应的值
@@ -1125,12 +1161,12 @@
       setColor(colorNum){
         this.bgColorList = [];
         for(let i=0;i<colorNum;i++) {
-          //this.bgColorList.push(randomcolor())
+          this.bgColorList.push(randomcolor())
         }
       },
       // 设置数据, filter区分
       setData(chartItem, seriesItem, panelId, filter,legend,area) {
-        //this.setColor(legend.length);
+        this.setColor(legend.length);
         if(area==='showFullScreen'){//全屏按时间查询
           /*
           this.legend = legend;
@@ -1319,7 +1355,7 @@
                       if(this.data.type === 'stackArea'){
                         seriesItem.theData.type='line';
                         seriesItem.theData.stack=this.data.title;
-                        seriesItem.theData.areaStyle={};
+                        seriesItem.theData.areaStyle={"opacity": 0.3};
                       }
                       // 图表中每条线的名字,后半部分
                       // let host = `${queryItem.metric.__name__}{`;//up,

@@ -597,15 +597,16 @@ export default {
                           smooth:true,  //曲线变平滑
                           data: [],
                           type:chartInfo.type,
+                        },
                           //visible: true,
                           //threshold: null,
-                        },
                         metric_name: '',
                       };
+
                       if(chartInfo.type === 'stackArea'){
                         seriesItem.theData.type='line';
                         seriesItem.theData.stack=chartInfo.title;
-                        seriesItem.theData.areaStyle={};
+                        seriesItem.theData.areaStyle={"opacity": 0.3};
                       }
                       // 图表中每条线的名字,后半部分
                       let host = '';//up,

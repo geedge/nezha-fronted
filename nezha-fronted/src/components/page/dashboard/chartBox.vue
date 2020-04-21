@@ -117,7 +117,7 @@
               <el-col :span="2" >
                 <div class="label-center" >{{$t('dashboard.panel.chartForm.type')}}</div>
               </el-col>
-              <el-col :span="10" style="margin-left:-7px;">
+              <el-col :span="10" >
                 <div class="grid-content ">
                   <el-form-item prop="type">
                     <el-select class="right-box-row-with-btn" @change="chartTypeChange" value-key="chartType" popper-class="chart-box-dropdown-mini" v-model="chart.type" placeholder="" size="mini">
@@ -128,7 +128,7 @@
                   </el-form-item>
                 </div>
               </el-col>
-              <el-col v-show="!isUrl" :span="2" style="margin-left: 7px">
+              <el-col v-show="!isUrl" :span="2" >
                 <div class="label-center" >{{$t('dashboard.panel.chartForm.unit')}}</div>
               </el-col>
               <el-col v-show="!isUrl" :span="10">
@@ -148,7 +148,7 @@
               <el-col :span="2" >
                 <div class="label-center"  >{{$t('dashboard.panel.chartForm.width')}}</div>
               </el-col>
-              <el-col :span="10" style="margin-left:0px;">
+              <el-col :span="10" >
                 <div class="grid-content ">
                   <el-form-item prop="span">
                     <el-select class="right-box-row-with-btn"  value-key="chartSpan" popper-class="chart-box-dropdown-mini" v-model="chart.span" placeholder="" size="mini">
@@ -162,7 +162,7 @@
               <el-col :span="2" >
                 <div class="label-center" >{{$t('dashboard.panel.chartForm.high')}}</div>
               </el-col>
-              <el-col :span="10" style="margin-left: 0px;">
+              <el-col :span="10" >
                 <div class="grid-content" >
                   <el-form-item prop="height">
                     <!--                  <el-input label="" v-model="chart.height" placeholder="" size="mini"></el-input>-->
@@ -238,7 +238,8 @@
   export default {
     name: "chartBox",
     props: {
-      panelData: Array
+      panelData: Array,
+      showPanel:{}
     },
     data() {
       return {
@@ -325,6 +326,7 @@
     },
     methods: {
       show(show) {
+        this.panelName2 = this.showPanel.name;
         this.rightBox.show = show;
         this.isUrl = false;
       },

@@ -95,7 +95,7 @@
   import bus from '../../libs/bus';
   import loading from "../common/loading";
   import chartDataFormat from './chartDataFormat'
-  //import {randomcolor} from  '../common/js/radomcolor/randomcolor.js'
+  import {randomcolor} from  '../common/js/radomcolor/randomcolor.js'
 
   export default {
     name: 'chartPreview',
@@ -405,7 +405,7 @@ console.log('=======',this.chart);
                         if(chartItem.type === 'stackArea'){
                           seriesItem.theData.type='line';
                           seriesItem.theData.stack=chartItem.title;
-                          seriesItem.theData.areaStyle={};
+                          seriesItem.theData.areaStyle={"opacity": 0.3};
                         }
                         // 图表中每条线的名字,后半部分
                         let host = '';//up,
@@ -588,6 +588,15 @@ console.log('=======',this.chart);
       // chartSite用于区分是全屏显示还是局部显示
       initChart(chartInfo, dataArg, ele,legend) {
         const self = this;
+        let minTime = null;
+        let maxTime = null
+        if(dataArg.length>0 && dataArg[0].data
+          && dataArg[0].data.length>0 && dataArg[0].data[0].length>0){
+          let len = dataArg[0].data.length-1;
+          minTime = dataArg[0].data[0][0];
+          maxTime = dataArg[0].data[len][0];
+          //console.log('time==========',minTime,maxTime)
+        }
         this.chartType = ''; // 图表类型
         if ( chartInfo.type === 4) {//line,bar
           this.chartType = 'line';
@@ -670,7 +679,8 @@ console.log('=======',this.chart);
                 //let tip=legend.find((element)=>{
                   //return element.name == item.seriesName;
                 //});
-                let tip=legend[i];
+                let tip=legend[item.seriesIndex];
+                let color = self.bgColorList[item.seriesIndex];
                 if(i===0){
                   let t_date = new Date(item.data[0]);
                   str += [t_date.getFullYear(), t_date.getMonth() + 1, t_date.getDate()].join('-') + " "
@@ -682,7 +692,7 @@ console.log('=======',this.chart);
                   val = Number(item.data[1]);
                 }
                 str += `<div style="white-space:nowrap;overflow-x:hidden;text-overflow:ellipsis;display: flex; justify-content: space-between; min-width: 150px; max-width: 600px; line-height: 18px; font-size: 12px;">`;
-                str += `<div style="max-width: 500px;white-space:nowrap;overflow-x:hidden;text-overflow:ellipsis;"><span style='display:inline-block;margin-right:5px;border-radius:10px;width:15px;height:5px;background-color: ${item.color};}'></span>${tip?(tip.alias?tip.alias:tip.name):item.seriesName}  </div>`;
+                str += `<div style="max-width: 500px;white-space:nowrap;overflow-x:hidden;text-overflow:ellipsis;"><span style='display:inline-block;margin-right:5px;border-radius:10px;width:15px;height:5px;background-color: ${color};}'></span>${tip?(tip.alias?tip.alias:tip.name):item.seriesName}  </div>`;
                 str += `<div style="padding-left: 10px;">`;
                 str += chartDataFormat.getUnit(chartInfo.unit?chartInfo.unit:2).compute(val,null,2);
                 str += `</div>`;
@@ -774,9 +784,27 @@ console.log('=======',this.chart);
               intervale: 0,
               rotate: 0,
               formatter: function (value) {
-                var t_date = new Date(value);
-                return [t_date.getFullYear(), t_date.getMonth() + 1, t_date.getDate()].join('-') + "\n"
-                  + [t_date.getHours(), t_date.getMinutes()].join(':');
+                value = bus.computeTimezone(value);
+                let t_date = new Date(value);
+                let hour = t_date.getHours();
+                hour=hour>9?hour:"0"+hour; //加0补充为两位数字
+                let minute = t_date.getMinutes();
+                minute=minute>9?minute:"0"+minute; //如果分钟小于10,则在前面加0补充为两位数字
+                if(minTime!==null && maxTime!==null){
+                  let diffSec = (maxTime-minTime)/1000;
+                  let secOneDay = 24*60*60;//1天的秒数
+                  let secOneMonth = secOneDay*30;//30天的秒数
+                  if(diffSec<=secOneDay) {//同一天
+                    return [hour,minute ].join(':');
+                  }else if(diffSec<secOneMonth){//大于1天，小于30天
+                    return [t_date.getMonth() + 1, t_date.getDate()].join('/') +" "+  [hour, minute].join(':');
+                  }else {//大于等于30天
+                    return [t_date.getMonth() + 1, t_date.getDate()].join('/');
+                  }
+                }else {
+                  return [t_date.getFullYear(), t_date.getMonth() + 1, t_date.getDate()].join('/') + "\n"
+                    + [hour, minute].join(':');
+                }
               }
             },
             axisPointer: {//y轴上显示指针对应的值
@@ -865,7 +893,7 @@ console.log('=======',this.chart);
       },
       // 设置数据
       setData(chartItem, seriesItem,legend) {
-          //this.setColor(legend.length);
+          this.setColor(legend.length);
           this.legend = legend;
           //this.data = chartItem;
           //this.seriesItem = seriesItem;
@@ -987,7 +1015,7 @@ console.log('=======',this.chart);
                       if(this.chart.type === 'stackArea'){
                         seriesItem.theData.type='line';
                         seriesItem.theData.stack=this.chart.title;
-                        seriesItem.theData.areaStyle={};
+                        seriesItem.theData.areaStyle={"opacity": 0.3};
                       }
                       // 图表中每条线的名字,后半部分
                       // let host = `${queryItem.metric.__name__}{`;//up,

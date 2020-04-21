@@ -112,6 +112,49 @@
      text-align: center;
      width: 100%;
      line-height: 28px;
+    .panel-info-corner {
+      color: #767980;
+      cursor: pointer;
+      position: absolute;
+      display: none;
+      left: 0;
+      width: 28px;
+      height: 28px;
+      z-index: 2;
+      top: 0;
+    }
+    .panel-info-corner--error {
+      display: block;
+      color: #fff;
+    }
+    .panel-info-corner .fa {
+      position: relative;
+      top: -6px;
+      left: -6px;
+      font-size: 75%;
+      z-index: 3;
+    }
+    .fa {
+      display: inline-block;
+      text-rendering: auto;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .panel-info-corner--error .panel-info-corner-inner {
+      border-left: 28px solid #e02f44;
+      border-right: none;
+      border-bottom: 28px solid rgba(0,0,0,0);
+    }
+    .panel-info-corner-inner {
+      width: 0;
+      height: 0;
+      position: absolute;
+      left: 0;
+      bottom: 0;
+    }
+    .chart-error-popper{
+      background-color:#e02f44;
+    }
     .nz-chart-top{
       width:100%;
     }
