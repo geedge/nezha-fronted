@@ -33,7 +33,20 @@
         >
           </el-date-picker><button @click="changeTime(10)" class="nz-btn nz-btn-size-normal nz-btn-style-light change-time-height nz-input-group-append"><i class="el-icon-d-arrow-right"></i></button>
         </div>
-        <el-dropdown split-button type="primary"  size="mini" class="dropdownBtn" @click="viewGraph">
+        <div class="nz-btn-group nz-btn-group-size-normal nz-btn-group-light" style="height: 24px;">
+          <button class="nz-btn nz-btn-size-normal nz-btn-style-light">
+            <i class="nz-icon nz-icon-chart"  :class="{'control-icon-unchecked':selectedEndpoints.length<1,'control-icon-checked':selectedEndpoints.length>0}"></i>
+          </button><button @mouseenter="dropdownHandler(true)" @mouseleave="dropdownHandler(false)" class="nz-btn nz-btn-size-normal nz-btn-style-light export-dropdown-btn" id="browser-go">
+            <i class="el-icon-arrow-down"></i>
+            <transition name="el-zoom-in-top">
+              <div v-if="dropdownShow" class="endpoint-query-dropdown el-popover">
+                <span style="padding-top: 2px">{{$t('project.endpoint.hideSameLabels')}}</span>
+                <el-switch v-model="hideSameLabels" active-color="#ee9d3f" size="small"></el-switch>
+              </div>
+            </transition>
+          </button>
+        </div>
+        <!--<el-dropdown split-button type="primary"  size="mini" class="dropdownBtn" @click="viewGraph">
           <i class="nz-icon nz-icon-chart"  :class="{'control-icon-unchecked':selectedEndpoints.length<1,'control-icon-checked':selectedEndpoints.length>0}"></i>
           <el-dropdown-menu slot="dropdown" style="padding:10px 4px 10px 10px;">
             <el-row>
@@ -45,7 +58,7 @@
               </el-col>
             </el-row>
           </el-dropdown-menu>
-        </el-dropdown>
+        </el-dropdown>-->
       </div>
     </div>
     <div class="table-header-inner" @click="clearSelectedMetrics"><span><i style="font-size: 12px;margin-left: 2px;" class="nz-icon nz-icon-close " :class="{'control-icon-unchecked':selectedEndpoints.length<1,'control-icon-checked':selectedEndpoints.length>0}"></i></span></div>
@@ -182,7 +195,7 @@
   import loading from "../../loading";
   import bus from "../../../../libs/bus";
   import chartDataFormat from "../../../charts/chartDataFormat";
-
+  var timeout;
   export default {
     name: "endpointQueryTab",
     components: {
@@ -197,6 +210,7 @@
       let temp = this;
       return {
         tableHover: false,
+        dropdownShow: false,
         loading: false,
         showTopBtn: false, //主列表top按钮
         currentEndpoint: {},
@@ -575,6 +589,16 @@
           metricInfo.elements.push({expression: this.selectedEndpoints[i].element, type: type});
         }
         this.$refs.addChartModal.createData(-1, metricInfo);
+      },
+      dropdownHandler(show) {
+        if (show) {
+          clearTimeout(timeout);
+          this.dropdownShow = true;
+        } else {
+          timeout = setTimeout(() => {
+            this.dropdownShow = false;
+          }, 700);
+        }
       },
       createSuccess(type, response, param, panel) {
         this.$confirm(this.$t("dashboard.metric.goPanelTip"),this.$t("tip.saveSuccess"), {

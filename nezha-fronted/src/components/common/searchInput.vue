@@ -770,7 +770,7 @@
                           objectInfo[val.label] = val.valnum;
                         } else if (val.type == 'dc') {
                           objectInfo.idcId = val.valnum;
-                        } else if (val.type == 'asset' && this.$route.path == "/project") {
+                        } else if (val.type == 'asset') {
                           objectInfo.assetId = val.valnum;
                         } else if (val.type == 'module') {
                           objectInfo.moduleId = val.valnum;
@@ -1045,7 +1045,7 @@
                   this.stop_click(e)
                 }
                 // 处理alertType--asset联动问题：删除alertType时，将asset也删除
-                if (this.select_list[ind].label == 'alertType') {
+                /*if (this.select_list[ind].label == 'alertType') {
                   for (let i = 0; i < this.select_list.length; i++) {
                     if (this.select_list[i].label == 'asset') {
                       this.close_selcet_list(i);
@@ -1058,7 +1058,7 @@
                       break;
                     }
                   }
-                }
+                }*/
                 this.searchMsg.searchLabelList.forEach((val, key) => {
                     if (this.select_list[ind].id == val.id) {
                         this.searchLabelList.splice(key + 1, 0, val);
@@ -1320,23 +1320,25 @@
         mounted() {
             /*this.defaultItem ? this.select_list.push({name:this.defaultItem,label:this.defaultItem}) : '';
             this.defaultValue != '' ? this.no_condition=this.defaultValue:'';*/
-            this.restructure_historyDate()
-            if(this.$route.path=='/Objects_Objects'){
-              this.schelistget()
-            }
-            if (this.$route.path == '/promServer') {
-              this.getDcData();
-            }
-            if (this.$route.path == '/project' || this.$route.path == '/alertList' || this.$route.path == '/alertConfig') {
-              this.getAssetData();
-            }
-            if (this.$route.path == '/alertList') {
-              this.getProjectData();
-              this.getModuleData();
-            }
-            if (this.$route.path == '/asset') {
-              this.getModelData();
-            }
+            this.restructure_historyDate();
+            setTimeout(() => {
+              if(this.$route.path=='/Objects_Objects'){
+                this.schelistget();
+              }
+              if (this.$route.path == '/promServer') {
+                this.getDcData();
+              }
+              if (this.$route.path == '/project' || this.$route.path == '/alertList' || this.$route.path == '/alertConfig') {
+                this.getAssetData();
+              }
+              if (this.$route.path == '/alertList') {
+                this.getProjectData();
+                this.getModuleData();
+              }
+              if (this.$route.path == '/asset') {
+                this.getModelData();
+              }
+            }, 1000);
             JSON.parse(JSON.stringify(this.searchMsg.searchLabelList)).forEach(val => {
               if(val.name=='Protocol'){
                   this.schemaTypeSelect=val.doc.data

@@ -487,6 +487,15 @@
         return num>9?num:'0'+num;
       },
       exportExcel:function(params){
+        for (let item in params) {
+          if (params[item]) {
+            if (item == "alertMessageState") {
+              this.$set(params, "state", params[item]);
+            } else{
+              this.$set(params, item, params[item]);
+            }
+          }
+        }
         let temp=this;
         if(!params){
           params=temp.params;
@@ -571,7 +580,6 @@
       search: function (searchObj) {
         this.searchLabel = {};
         this.pageObj.pageNo = 1;
-        console.info(searchObj)
         for (let item in searchObj) {
           if (searchObj[item]) {
             if (item == "alertMessageState") {

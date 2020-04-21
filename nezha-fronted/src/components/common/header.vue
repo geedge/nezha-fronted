@@ -563,7 +563,6 @@
     left: 18px;
   }
   .header {
-    background-image: linear-gradient(180deg, #565656 0%, #3C3C3C 100%);
     box-shadow: 0 2px 4px 0 rgba(0,0,0,0.30);
   }
   .header .el-menu {

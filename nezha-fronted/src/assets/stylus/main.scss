@@ -539,7 +539,7 @@ li{
 }
 .top-tools .top-tool-search {
   width: 260px;
-  margin: -2px 0 0 0;
+  /*margin: -2px 0 0 0;*/
 }
 .top-tools .top-tool-btn-txt .nz-icon{
   display: inline-block;
@@ -569,9 +569,9 @@ li{
 .top-tool-main-left>.panel-dropdown-title {
   margin-top: -2px;
 }
-.top-tool-main-right>.nz-btn, .top-tool-main-right-to-left>.nz-btn, .top-tool-main-right>.nz-btn-group, .top-tool-main-right>.panel-calendar {
+/*.top-tool-main-right>.nz-btn, .top-tool-main-right-to-left>.nz-btn, .top-tool-main-right>.nz-btn-group, .top-tool-main-right>.panel-calendar {
   margin-top: -2px;
-}
+}*/
 .top-tool-main-right-to-left {
   right: 100% !important;
   transform: translateX(100%);
@@ -1708,10 +1708,46 @@ li{
 
 
 /*export相关*/
-.dropdownBtn .el-dropdown__caret-button{
+.export-dropdown-btn {
+  position: relative;
+}
+.endpoint-query-dropdown {
+  position: absolute;
+  right: 0;
+  top: 31px;
+}
+.export-dropdown {
+  width: 90px;
+  right: 0;
+  left: unset !important;
+  top: 27px;
+}
+.endpoint-query-dropdown::after, .export-dropdown::after {
+  content: '';
+  display: block;
+  width:0;
+  height:0;
+  overflow: hidden;
+  font-size: 0;
+  line-height: 0;
+  border: 5px;
+  border-style: dashed dashed solid dashed;
+  border-color: transparent transparent #fff transparent;
+  position: absolute;
+  right: 3px;
+  bottom: 0;
+
+}
+.export-dropdown::after {
+  transform: translate(-50%, -54px);
+}
+.endpoint-query-dropdown::after {
+  transform: translate(-50%, -45px);
+}
+/*.dropdownBtn .el-dropdown__caret-button{
   top:0px !important;
   left: -1px;
-}
+}*/
 .export-xlsx .el-dialog__body{
   padding: 10px 20px 20px 20px;
 }

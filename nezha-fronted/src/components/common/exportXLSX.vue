@@ -1,13 +1,23 @@
 <template>
   <div class="export-xlsx">
-    <div>
-      <el-dropdown split-button type="primary"  size="mini" class="dropdownBtn">
+    <div class="nz-btn-group nz-btn-group-size-normal nz-btn-group-light">
+      <slot name="optionZone"></slot><button @mouseenter="exportMenuHandler(true)" @mouseleave="exportMenuHandler(false)" class="nz-btn nz-btn-size-normal nz-btn-style-light export-dropdown-btn" id="browser-go">
+        <i class="el-icon-arrow-down"></i>
+        <transition name="el-zoom-in-top">
+          <ul class="el-dropdown-menu el-popper el-dropdown-menu--mini export-dropdown" v-if="exportShow">
+            <li @click="showImportBox(1)" class="el-dropdown-menu__item dropdown-content"><i class="el-icon-upload2"></i>import</li>
+            <li @click="showImportBox(2)" class="el-dropdown-menu__item dropdown-content"><i class="el-icon-download"></i>export</li>
+          </ul>
+        </transition>
+      </button>
+      <!--<el-dropdown split-button type="primary" size="mini" class="dropdownBtn">
         <slot name="optionZone" class="option-button"></slot><el-dropdown-menu slot="dropdown">
           <el-dropdown-item @click.native="showImportBox(1)" class="dropdown-content"><i class="el-icon-upload2"></i>{{$t('overall.importExcelLower')}}</el-dropdown-item>
           <el-dropdown-item @click.native="showImportBox(2)" class="dropdown-content"><i class="el-icon-download"></i>{{$t('overall.exportExcelLower')}}</el-dropdown-item>
         </el-dropdown-menu>
-      </el-dropdown>
+      </el-dropdown>-->
     </div>
+
     <div>
       <el-dialog :visible.sync="importBox.show" :title="importBox.title" :modal-append-to-body='false' :show-close="true" :width="importBox.width" @close="closeDialog" class="nz-dialog" :close-on-click-modal="importBox.type!=3">
         <div v-if="importBox.type==1">
@@ -88,6 +98,7 @@
 
 <script>
   import axios from 'axios'
+  var timeout;
   export default {
     name: "exportXLSX",
     props:{
@@ -97,12 +108,13 @@
 
     },
     data:function(){
-        return {
-          importBox:{show:false,title:this.$t('overall.importExcel'),type:1},
-          importFile:null,
-          importFileList:[],
-          importResult:null,
-        }
+      return {
+        importBox:{show:false,title:this.$t('overall.importExcel'),type:1},
+        importFile:null,
+        importFileList:[],
+        importResult:null,
+        exportShow: false,
+      }
     },
     created(){
     },
@@ -140,7 +152,16 @@
             }
           })
         }
-
+      },
+      exportMenuHandler(show) {
+        if (show) {
+          clearTimeout(timeout);
+          this.exportShow = true;
+        } else {
+          timeout = setTimeout(() => {
+            this.exportShow = false;
+          }, 700);
+        }
       },
       closeDialog:function(){
         this.importBox.show=false;

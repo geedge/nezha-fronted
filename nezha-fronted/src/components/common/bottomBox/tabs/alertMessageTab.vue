@@ -236,10 +236,19 @@
             label: 'alertName',
             disabled: false
           }, {
-            id: 3,
-            name: this.$t('alert.list.type'),
-            type: 'select',
-            label: 'alertType',
+            name: this.$t('project.project.project'),
+            type: 'project',
+            label: 'project',
+            disabled: false
+          }, {
+            name: this.$t('project.module.module'),
+            type: 'module',
+            label: 'module',
+            disabled: false
+          }, {
+            name: this.$t('project.endpoint.endpoint'),
+            type: 'input',
+            label: 'endpointId',
             disabled: false
           }, {
             id: 4,
@@ -252,7 +261,7 @@
             name: this.$t('asset.asset'),
             type: 'asset',
             label: 'asset',
-            disabled: true
+            disabled: false
           }, {
             id: 12,
             name: this.$t('alert.list.state'),
@@ -368,6 +377,20 @@
         this.exportExcel(this.searchLabel);
         this.importBox.show = false;
       },
+      getTimeString:function(){
+        let split='-';
+        let date=new Date();
+        let year=date.getFullYear();
+        let month=this.formatNum(date.getMonth()+1);
+        let day=this.formatNum(date.getDate());
+        let hours=this.formatNum(date.getHours());
+        let minutes=this.formatNum(date.getMinutes());
+        let seconds=this.formatNum(date.getSeconds());
+        return year + split + month + split + day + ' ' + hours + split + minutes + split + seconds;
+      },
+      formatNum:function(num){
+        return num>9?num:'0'+num;
+      },
       exportAll:function(){
         let temp = JSON.parse(JSON.stringify(this.searchLabel));
         temp.pageSize = -1;
@@ -402,16 +425,18 @@
         this.loading = true;
         this.$set(this.searchLabel, "pageNo", this.pageObj.pageNo);
         this.$set(this.searchLabel, "pageSize", this.pageObj.pageSize);
-        this.$get('alert/message', this.searchLabel).then(response => {
-          this.loading = false;
-          if (response.code == 200) {
-            this.tableData = response.data.list;
-            this.tableData.forEach((item) => {
-              item.labels = JSON.parse(item.labels);
-            });
-            this.pageObj.total = response.data.total;
-          }
-        });
+        setTimeout(() => {
+          this.$get('alert/message', this.searchLabel).then(response => {
+            this.loading = false;
+            if (response.code == 200) {
+              this.tableData = response.data.list;
+              this.tableData.forEach((item) => {
+                item.labels = JSON.parse(item.labels);
+              });
+              this.pageObj.total = response.data.total;
+            }
+          });
+        }, 1000);
       },
       pageNo(val) {
         this.pageObj.pageNo = val;
@@ -470,8 +495,7 @@
         if (this.from == "alertRule") {
           this.searchLabel.ruleId = this.obj.id;
         } else if (this.from == "asset") {
-          this.searchLabel.type = 3;
-          this.searchLabel.linkId = this.obj.id;
+          this.searchLabel.assetId = this.obj.id;
         }
         this.pageObj.pageNo = 1;
         for (let item in searchObj) {
