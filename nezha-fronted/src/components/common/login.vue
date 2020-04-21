@@ -58,7 +58,7 @@ export default {
             localStorage.setItem('nz-sys-timezone',res.data.timezone);
             localStorage.setItem('nz-sys-default-cabinet-usize',res.data.defaultCabinetUsize);
             localStorage.setItem('nz-sys-max-terminal-num',res.data.maxTerminalNum);
-            localStorage.setItem('nz-sys-asset-ping-switch',res.data.assetPingSwith);
+            localStorage.setItem('nz-sys-asset-ping-switch',res.data.assetPingSwitch);
             this.$i18n.locale = this.lang;
             bus.$emit('login');
             this.$router.push({

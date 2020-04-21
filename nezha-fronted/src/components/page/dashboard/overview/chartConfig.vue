@@ -1,11 +1,19 @@
 <script>
     import chartDataFormat from "../../../charts/chartDataFormat";
     import bus from '../../../../libs/bus';
+    let bgColorList=['#7bbfea', '#b3424a', '#f05b72', '#596032', '#bd6758',
+      '#cd9a5b', '#918597', '#70a19f', '#005344', '#FF00FF',
+      '#f7acbc', '#5f5d46', '#66ffff', '#ccFF66', '#f47920',
+      '#769149', '#1d953f', '#abc88b', '#7f7522', '#9b95c9',
+      '#f3715c', '#ea66a6', '#d1c7b7', '#9d9087', '#77787b',
+      '#f58220', '#c37e00', '#00ae9d', '#f26522', '#76becc',
+      '#76624c', '#d71345', '#2468a2', '#ca8687', '#1b315e',
+    ]
     const commonOption={
       title:{
         show:false,
       },
-      color: this.bgColorList,
+      color: bgColorList,
       legend:{
         show:false,
       },
@@ -25,7 +33,7 @@
       },
       dataZoom: [{
         type: 'slider',
-        show:true,
+        show:false,
         xAxisIndex: [0],
         start: 0,
         end: 100,
@@ -119,6 +127,9 @@
       },
       setMap:function(map){
         mapOptions.geo.map=map
+      },
+      getBgColorList:function(){
+        return Object.assign([],bgColorList)
       }
     }
 </script>

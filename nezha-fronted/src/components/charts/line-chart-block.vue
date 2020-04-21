@@ -26,6 +26,7 @@
     <div class="clearfix chartTitle" :id="'chartTitle'+chartIndex" >
 
       <el-dropdown trigger="click" v-show="firstShow"   class="nz-chart-top" :key="'chartDropdown'+chartIndex"  v-clickoutside="clickos">
+        <el-dropdown-menu style="display: none"></el-dropdown-menu>
           <span class="el-dropdown-link chart-title" @click="dropdownMenuShow=!dropdownMenuShow">
             <span class="chart-title-text">{{data.title}}</span>
             <span class="chart-title-icon"><i class="el-icon-caret-bottom el-icon--right"  :class="{'visible':caretShow,'hidden':!caretShow}"></i></span>
