@@ -22,7 +22,8 @@
       border
       v-loading="loading"
       ref="cabTable"
-      v-scrollBar:el-table
+      v-scrollBar:el-table="'large'"
+      :cell-class-name="assetStatClassName"
       :height="$tableHeight.noPagination"
       style="width: 100%;">
       <el-table-column
@@ -205,6 +206,12 @@
       closeSubList() {
         this.$emit("closeSubList");
         this.tableData = [];
+      },
+      assetStatClassName(param) {
+        if (param.column.label == this.$t("config.model.assets") || param.column.label == this.$t("alert.alert")) {
+          return "asset-state";
+        }
+        return "";
       },
       delCabinet:function(cabinet){
         this.$confirm(this.$t("tip.confirmDelete"), {
