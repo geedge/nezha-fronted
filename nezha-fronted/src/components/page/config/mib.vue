@@ -60,7 +60,7 @@
             <template slot-scope="scope" :column="item">
               <template v-if="item.prop == 'updateUser'" >{{scope.row[item.prop].name}}</template>
               <template v-else-if="item.prop == 'fileName' && scope.row[item.prop]" >
-                <span class="clickable" @click="downloadMib(scope.row.id)">{{scope.row[item.prop]}}</span>
+                <span class="link" @click="downloadMib(scope.row.id)">{{scope.row[item.prop]}}</span>
               </template>
               <template v-else-if="item.prop == 'modelsDetail' && scope.row['modelsDetail'] && scope.row['modelsDetail'].length >0" >
                 <div style="height: 100%">
@@ -91,8 +91,8 @@
                 </div>
               </template>
               <div v-else-if="item.prop == 'option'" class="content-right-options">
-                <!--              <span :title="$t('overall.view')" @click="detail(scope.row)" class="content-right-option" :id="'mib-detail-'+scope.row.id"><i class="nz-icon nz-icon-view"></i></span>-->
-                <!--              &nbsp;-->
+                <span :title="$t('overall.download')" @click="downloadMib(scope.row.id)" class="content-right-option" :id="'mib-download-'+scope.row.id"><i class="el-icon-download"></i></span>
+                &nbsp;
                 <span :title="$t('overall.edit')" @click="toEdit(scope.row)" class="content-right-option" :id="'mib-edit-'+scope.row.id"><i class="nz-icon nz-icon-edit"></i></span>
                 &nbsp;
                 <span :title="$t('overall.delete')" @click="del(scope.row)" class="content-right-option" :id="'mib-del-'+scope.row.id"><i class="el-icon-delete"></i></span>
