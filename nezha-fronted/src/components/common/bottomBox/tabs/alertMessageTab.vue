@@ -32,7 +32,7 @@
       v-loading="loading"
       ref="alertMessageSubList"
       tooltip-effect="light"
-      v-scrollBar:el-table
+      v-scrollBar:el-table="'large'"
       :height="$tableHeight.openSubList.subList"
       :cell-class-name="labelsClassName"
       @selection-change="selectChange"
@@ -109,10 +109,13 @@
             <i class="nz-icon nz-icon-gear"></i>
           </span>
         </template>
+        <template v-slot="scope">
+          <button v-if="scope.$index == 0" :class="{'to-top-is-hover': tableHover}" class="to-top" v-show="showTopBtn" @click="$toTop('ps', 1)"><i class="nz-icon nz-icon-top"></i></button>
+        </template>
       </el-table-column>
     </el-table>
     <Pagination :tableId="tableId" :pageObj="pageObj" @pageNo='pageNo' @pageSize='pageSize' ref="Pagination"></Pagination>
-    <button class="to-top" v-show="showTopBtn && subResizeShow" @click="$toTop('ps', 1)"><i class="nz-icon nz-icon-top"></i></button>
+
     <project-box :project="viewProjectData" ref="projectBox" @reload="getAlertList"></project-box>
     <module-box :module="viewModuleData" @reload="getAlertList" ref="moduleBox"></module-box>
     <asset-box :edit-unit-show='viewAssetState' @refreshData="getAlertList" @sendStateData="tabControl" ref="assetEditUnit"></asset-box>
@@ -180,6 +183,8 @@
           pageSize: 20,
           total: 0
         },
+
+        tableHover: false, //控制滚动条和top按钮同时出现
 
         importBox: {show: false, title:this.$t('overall.exportExcel')},
         deleteBox: {show: false, ids: "", remark: '', state: 2},
@@ -528,6 +533,12 @@
             } else {
               this.showTopBtn = false;
             }
+          });
+          el.addEventListener("mouseenter", () => {
+            this.tableHover = true;
+          });
+          el.addEventListener("mouseleave", () => {
+            this.tableHover = false;
           });
         }
       });

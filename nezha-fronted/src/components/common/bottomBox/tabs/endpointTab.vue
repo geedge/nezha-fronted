@@ -31,7 +31,7 @@
       v-loading="loading"
       class="nz-table endpoint-table"
       :height="$tableHeight.noPagination"
-      v-scrollBar:el-table
+      v-scrollBar:el-table="'large'"
       ref="endpointTable"
       style="width: 100%;">
       <el-table-column
@@ -78,9 +78,11 @@
             <i class="nz-icon nz-icon-gear"></i>
           </span>
         </template>
+        <template v-slot="scope">
+          <button v-if="scope.$index == 0" class="to-top" :style="{top: toTopBtnTop}" :class="{'to-top-is-hover': tableHover}" v-show="showTopBtn" @click="$toTop('ps', 1)"><i class="nz-icon nz-icon-top"></i></button>
+        </template>
       </el-table-column>
     </el-table>
-    <button class="to-top" v-show="showTopBtn" @click="$toTop('ps', 1)"><i class="nz-icon nz-icon-top"></i></button>
 
     <element-set
       v-clickoutside="elementsetHide"
@@ -113,6 +115,9 @@
         endpointDetail: {}, //用来查看详情的对象
         asset: {}, //对应props的obj
         showTopBtn: false, //top按钮是否显示
+        toTopBtnTop: this.$tableHeight.toTopBtnTop, //to-top按钮的top属性
+        tableHover: false, //控制滚动条和top按钮同时出现
+
         loading: false,
         tableTitle: [
           {
@@ -346,6 +351,12 @@
             } else {
               this.showTopBtn = false;
             }
+          });
+          el.addEventListener("mouseenter", () => {
+            this.tableHover = true;
+          });
+          el.addEventListener("mouseleave", () => {
+            this.tableHover = false;
           });
         }
       });

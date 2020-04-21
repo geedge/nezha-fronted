@@ -239,12 +239,14 @@
                 <i class="nz-icon nz-icon-gear"></i>
               </span>
             </template>
+            <template v-slot="scope">
+              <button v-if="scope.$index == 0" class="to-top" :style="{top: toTopBtnTop}" :class="{'to-top-is-hover': tableHover}" v-show="showTopBtn && mainResizeShow" @click="$toTop('ps', 0)"><i class="nz-icon nz-icon-top"></i></button>
+            </template>
           </el-table-column>
         </el-table>
         <div class="pagination-bottom" v-show="!showSubList">
           <Pagination :tableId="tableId" :pageObj="pageObj" @pageNo='pageNo' @pageSize='pageSize' ref="Pagination"></Pagination>
         </div>
-        <button class="to-top" v-show="showTopBtn" @click="$toTop"><i class="nz-icon nz-icon-top"></i></button>
       </div>
       <bottom-box v-if="showSubList" :show-sub-list="showSubList" :subResizeShow="subResizeShow" :obj="alertMsgAsset" :isFullScreen="isFullScreen" :from="'asset'" :targetTab.sync="targetTab" :detail="assetDetail"
                   @reload="getAssetData"
@@ -297,6 +299,8 @@
         showSubList: false, //是否展示二级列表
         targetTab: '', //展示二级列表中的哪个页签
 
+        toTopBtnTop: this.$tableHeight.toTopBtnTop, //to-top按钮的top属性
+        tableHover: false, //控制滚动条和top按钮同时出现
         showElementSet: false, //自定义列弹框是否显示
         tableId: 'assetTable', //需要分页的table的id，用于记录每页数量
         searchMsg: { //给搜索框子组件传递的信息
@@ -990,6 +994,12 @@
             } else {
               this.showTopBtn = false;
             }
+          });
+          el.addEventListener("mouseenter", () => {
+            this.tableHover = true;
+          });
+          el.addEventListener("mouseleave", () => {
+            this.tableHover = false;
           });
         }
         //resize时刷新左侧列表滚动条

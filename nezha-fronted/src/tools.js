@@ -202,27 +202,31 @@ export const bottomBoxWindow = {
 
       //往上方拖动：
       if (e.clientY < mouseInitialY) {
+        vm.toTopBtnTop = mainInitialHeight-mouseMoveY+20+'px';
         mainListDom.style.height = mainInitialHeight-mouseMoveY+'px';
         subListDom.style.height = subInitialHeight+mouseMoveY+'px';
       }
       //往下方拖动：
       if (e.clientY > mouseInitialY) {
+        vm.toTopBtnTop = mainInitialHeight+mouseMoveY+20+'px';
         mainListDom.style.height = mainInitialHeight+mouseMoveY+'px';
         subListDom.style.height = subInitialHeight-mouseMoveY+'px';
       }
 
       // 主、副列表最小高度限制为15px
       if(parseInt(mainListDom.style.height) >= contentRightHeight-15){
+        vm.toTopBtnTop = contentRightHeight+5+'px';
         mainListDom.style.height = contentRightHeight-15+'px';
       }
       if(parseInt(mainListDom.style.height) <= 15){
-        mainListDom.style.height = 15+'px';
+        vm.toTopBtnTop = '35px';
+        mainListDom.style.height = '15px';
       }
       if(parseInt(subListDom.style.height) >= contentRightHeight-15){
         subListDom.style.height = contentRightHeight-15+'px';
       }
       if(parseInt(subListDom.style.height) <= 15){
-        subListDom.style.height = 15+'px';
+        subListDom.style.height = '15px';
       }
       //当主副列表可视区域小于一定值时，不展示内容
       if(parseInt(mainListDom.style.height) <= 100){
@@ -283,6 +287,7 @@ export const bottomBoxWindow = {
     vm.inTransform = n;
     if (!n) {
       vm.mainTableHeight = vm.$tableHeight.normal; //重置table的高度
+      vm.toTopBtnTop = vm.$tableHeight.toTopBtnTop;
       vm.isFullScreen = false;
       //移动分页组件的位置
       let paginationTop = document.querySelector(".pagination-top");
@@ -306,6 +311,7 @@ export const bottomBoxWindow = {
       document.querySelector(".sub-list").style.height = '';
     } else {
       vm.mainTableHeight = vm.$tableHeight.openSubList.mainList; //重置table高度
+      vm.toTopBtnTop = vm.$tableHeight.openSubList.toTopBtnTop;
       //移动分页组件的位置
       let paginationTop = document.querySelector(".pagination-top");
       paginationTop.appendChild(document.querySelector(".pagination-bottom").removeChild(document.querySelector(".pagination")));

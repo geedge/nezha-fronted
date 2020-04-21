@@ -154,12 +154,14 @@
                 <i class="nz-icon nz-icon-gear"></i>
               </span>
             </template>
+            <template v-slot="scope">
+              <button v-if="scope.$index == 0" class="to-top" :style="{top: toTopBtnTop}" :class="{'to-top-is-hover': tableHover}" v-show="showTopBtn && mainResizeShow" @click="$toTop('ps', 0)"><i class="nz-icon nz-icon-top"></i></button>
+            </template>
           </el-table-column>
         </el-table>
         <div class="pagination-bottom" v-show="!showSubList">
           <Pagination :tableId="tableId" v-cloak :pageObj="endpointPageObj" @pageNo='endpointPageNo' @pageSize='endpointPageSize' ref="endpointPagination"></Pagination>
         </div>
-        <button class="to-top" v-show="showTopBtn && mainResizeShow" @click="$toTop('ps', 0)"><i class="nz-icon nz-icon-top"></i></button>
       </div>
       <bottom-box v-if="showSubList" :show-sub-list="showSubList" :subResizeShow="subResizeShow" :isFullScreen="isFullScreen"
                   :from="'endpoint'" :targetTab.sync="targetTab" :detail="endpointDetail" :obj="curEndpoint" :assetDetail="assetDetail"
@@ -211,6 +213,7 @@
         endpointDetail: [],
         targetTab: '',
         mainTableHeight: this.$tableHeight.normal, //主列表table高度
+        toTopBtnTop: this.$tableHeight.toTopBtnTop, //to-top按钮的top属性
         isFullScreen: false, //是否是全屏，用来控制拖动条是否展示
         tableId: 'projectTable', //需要分页的table的id，用于记录每页数量
         mainResizeShow: true, //dom高度改变时部分内容是否展示
@@ -220,6 +223,7 @@
 
         userData: [],
         showTopBtn: false, //主列表top按钮
+        tableHover: false, //控制滚动条和top按钮同时出现
         editEndpoint: {id: '', host: '', port: '', param: '', path: '', asset: {}, project: {}, module: {}, moduleId: '', assetId: '', paramObj: []},
         endpointTableTitle: [
           {
@@ -721,7 +725,7 @@
             this.userData = response.data.list
           }
         })
-      },
+      }
     },
     created() {
       this.currentProject = this.$store.state.currentProject;
@@ -750,6 +754,13 @@
             } else {
               this.showTopBtn = false;
             }
+          });
+
+          el.addEventListener("mouseenter", () => {
+            this.tableHover = true;
+          });
+          el.addEventListener("mouseleave", () => {
+            this.tableHover = false;
           });
         }
       });
@@ -1106,10 +1117,6 @@
   }
   .control-icon-checked{
     color:#666;
-  }
-  .dropdownBtn .el-dropdown__caret-button{
-    top:0px !important;
-    left: -1px;
   }
   .endpoint-query-table .el-loading-spinner .circular{
     width: 42px;

@@ -107,10 +107,12 @@
                 <i class="nz-icon nz-icon-gear"></i>
               </span>
             </template>
+            <template v-slot="scope">
+              <button v-if="scope.$index == 0" class="to-top" :style="{top: toTopBtnTop}" :class="{'to-top-is-hover': tableHover}" v-show="showTopBtn" @click="$toTop('ps', 0)"><i class="nz-icon nz-icon-top"></i></button>
+            </template>
           </el-table-column>
         </el-table>
         <Pagination :tableId="tableId" :pageObj="pageObj" @pageNo='pageNo' @pageSize='pageSize' ref="Pagination"></Pagination>
-        <button class="to-top" v-show="showTopBtn" @click="$toTop"><i class="nz-icon nz-icon-top"></i></button>
       </template>
       <mib-browser :showTab="showTab" v-if="showTab == 'browser'" @toFileTab="showTab = 'file'"></mib-browser>
     </div>
@@ -140,6 +142,9 @@
       return {
         showTab: 'file', //file/browser
         loading: false,
+
+        toTopBtnTop: this.$tableHeight.toTopBtnTop, //to-top按钮的top属性
+        tableHover: false, //控制滚动条和top按钮同时出现
 
         tableId: 'mibTable', //需要分页的table的id，用于记录每页数量
         showTopBtn: false,
@@ -375,6 +380,12 @@
             } else {
               this.showTopBtn = false;
             }
+          });
+          el.addEventListener("mouseenter", () => {
+            this.tableHover = true;
+          });
+          el.addEventListener("mouseleave", () => {
+            this.tableHover = false;
           });
         }
       });

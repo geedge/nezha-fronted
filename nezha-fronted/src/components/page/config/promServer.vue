@@ -93,12 +93,14 @@
                 <i class="nz-icon nz-icon-gear"></i>
               </span>
             </template>
+            <template v-slot="scope">
+              <button v-if="scope.$index == 0" class="to-top" :style="{top: toTopBtnTop}" :class="{'to-top-is-hover': tableHover}" v-show="showTopBtn && mainResizeShow" @click="$toTop('ps', 0)"><i class="nz-icon nz-icon-top"></i></button>
+            </template>
           </el-table-column>
         </el-table>
         <div class="pagination-bottom" v-show="!showSubList">
           <Pagination :tableId="tableId" :pageObj="pageObj" @pageNo='pageNo' @pageSize='pageSize' ref="Pagination"></Pagination>
         </div>
-        <button class="to-top" v-show="showTopBtn" @click="$toTop"><i class="nz-icon nz-icon-top"></i></button>
       </div>
       <bottom-box v-if="showSubList" :show-sub-list="showSubList" :subResizeShow="subResizeShow" :obj="promServer" :isFullScreen="isFullScreen" :from="'promServer'" :targetTab.sync="targetTab" :detail="promDetail"
                   @closeSubList="showSubList = false" @fullScreen="fullScreen" @exitFullScreen="exitFullScreen" @listResize="listResize" ></bottom-box>
@@ -216,6 +218,9 @@
         isFullScreen: false,
         promDetail: [],
         //底部上滑框相关end
+
+        toTopBtnTop: this.$tableHeight.toTopBtnTop, //to-top按钮的top属性
+        tableHover: false, //控制滚动条和top按钮同时出现
 
         tableId: 'promTable', //需要分页的table的id，用于记录每页数量
         showTopBtn: false,
@@ -721,6 +726,12 @@
             } else {
               this.showTopBtn = false;
             }
+          });
+          el.addEventListener("mouseenter", () => {
+            this.tableHover = true;
+          });
+          el.addEventListener("mouseleave", () => {
+            this.tableHover = false;
           });
         }
       });

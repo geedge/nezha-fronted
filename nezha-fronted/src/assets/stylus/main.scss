@@ -149,18 +149,23 @@ li{
   position: relative;
 }
 .to-top {
-  position: absolute;
-  bottom: 10px;
-  right: 5px;
+  position: fixed;
+  right: 16px;
   border-radius: 5px;
   height: 40px;
   width: 40px;
   border: none;
   cursor: pointer;
-  opacity: 0.5;
+  opacity: 0;
   background-color: #bbb;
   outline: none;
   z-index: 10;
+  transition: opacity .2s linear, top .2s linear;
+  transform: translateY(-50%);
+  bottom: 35px;
+}
+.to-top.to-top-is-hover, .nz-table .el-table__body-wrapper.ps--scrolling-y .to-top {
+  opacity: 0.5;
 }
 .to-top>i {
   font-size: 20px;
@@ -1626,6 +1631,7 @@ li{
 }
 .ps__thumb-x {
   bottom: 0;
+  background-color: #bbb;
 }
 .ps__rail-y:hover > .ps__thumb-y,
 .ps__rail-y:focus > .ps__thumb-y,
@@ -1681,6 +1687,12 @@ li{
 .dropdownBtn>.el-button-group>.el-button:last-of-type {
   padding: 0 5px;
 }
+.dropdownBtn>.el-button-group>.el-button {
+  width: 30px;
+}
+.dropdownBtn>.el-button-group {
+  width: 60px;
+}
 .export-left-btn {
   display: inline-block;
   width: 30px;
@@ -1696,6 +1708,10 @@ li{
 
 
 /*export相关*/
+.dropdownBtn .el-dropdown__caret-button{
+  top:0px !important;
+  left: -1px;
+}
 .export-xlsx .el-dialog__body{
   padding: 10px 20px 20px 20px;
 }

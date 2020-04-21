@@ -81,8 +81,10 @@ Vue.prototype.$tableHeight = { //列表页表格的高度
   normal: 'calc(100% - 100px)',  //常规高度，特例在下方定义
   openSubList: { //打开二级列表后的高度
     mainList: 'calc(100% - 60px)',
-    subList: 'calc(100% - 86px)'
+    subList: 'calc(100% - 86px)',
+    toTopBtnTop: 'calc(50% - 11px)'
   },
+  toTopBtnTop: 'calc(100% - 73px)',
   noPagination: 'calc(100% - 60px)', //特例：没有翻页组件
 };
 
