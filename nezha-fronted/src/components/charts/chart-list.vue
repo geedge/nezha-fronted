@@ -584,6 +584,7 @@ export default {
                 visible: true,
                 threshold: null,
               };
+              let errorMsg = "";
               res.forEach((response, innerPos) => {
                 if (response.status === 'success') {
                   if (response.data.result) {
@@ -683,33 +684,36 @@ export default {
                   }
                 }else{
                   if(response.msg){
-                    this.$message.error(response.msg);
+                    //this.$message.error(response.msg);
+                    errorMsg = response.msg;
                   }else if(response.error){
-                    this.$message.error(response.error);
+                    //this.$message.error(response.error);
+                    errorMsg = response.error;
                   }else {
-                    this.$message.error(response);
+                    //this.$message.error(response);
+                    errorMsg = response;
                   }
                 }
               });
               if(this.$refs.editChart&&this.$refs.editChart[index]) {
                 if (chartItem.type === 'table') {//表格
-                  if (filterType === 'showFullScreen') {//table的全屏查询
+                  if (filterType === 'showFullScreen') {//全屏查询
                     this.$refs.editChart[index].setData(chartItem, tableData,
-                      this.filter.panelId, this.filter, filterType);
+                      this.filter.panelId, this.filter, filterType,errorMsg);
                   } else {
                     this.$refs.editChart[index].setData(chartItem, tableData,
-                      this.filter.panelId, this.filter);
+                      this.filter.panelId, this.filter,'',errorMsg);
                   }
                 } else if (chartItem.type === 'line' || chartItem.type === 'bar' || chartItem.type === 'stackArea' || chartItem.type === 4) {
                   if (series.length && chartItem.type === 4) {//曲线汇总
                     //series.push(sumData);//后续需要
                   }
-                  if (filterType === 'showFullScreen') {//table的全屏查询
+                  if (filterType === 'showFullScreen') {//全屏查询
                     this.$refs.editChart[index].setData(chartItem, series,
-                      this.filter.panelId, this.filter, legend, filterType);
+                      this.filter.panelId, this.filter, legend, filterType,errorMsg);
                   } else {
                     this.$refs.editChart[index].setData(chartItem, series,
-                      this.filter.panelId, this.filter, legend);
+                      this.filter.panelId, this.filter, legend,'',errorMsg);
                   }
                 }
               }

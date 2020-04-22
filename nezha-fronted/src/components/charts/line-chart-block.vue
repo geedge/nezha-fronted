@@ -27,10 +27,10 @@
       <el-popover
         v-if="isError"
         placement="top-start"
-        width="200"
-        popper-class="chart-error-popper"
+        close-delay="10"
         trigger="hover"
-        content="。。">
+        popper-class="chart-error-popper">
+        <div >{{errorContent}}</div>
         <span slot="reference" style="" class="panel-info-corner panel-info-corner--error">
           <i class="nz-icon nz-icon-warning fa"></i>
           <span class="panel-info-corner-inner"></span>
@@ -170,6 +170,7 @@
         seriesItemScreen:[],
         images: '',
         isError:false,
+        errorContent:'',
         toolbox: false,
         items: {
           metric_name: [], // 每条数据列名称
@@ -1165,8 +1166,15 @@
         }
       },
       // 设置数据, filter区分
-      setData(chartItem, seriesItem, panelId, filter,legend,area) {
+      setData(chartItem, seriesItem, panelId, filter,legend,area,errorMsg) {
         this.setColor(legend.length);
+        if(errorMsg && errorMsg!==''){
+          this.isError = true;
+          this.errorContent = errorMsg;
+        }else {
+          this.isError = false;
+          this.errorContent = '';
+        }
         if(area==='showFullScreen'){//全屏按时间查询
           /*
           this.legend = legend;

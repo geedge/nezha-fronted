@@ -18,7 +18,18 @@
         </div>
         -->
         <div class="clearfix chartTitle" :class="{'dragTitle':dragTitleShow}" :id="'chartTitle'+chartIndex">
-
+          <el-popover
+            v-if="isError"
+            close-delay="10"
+            placement="top-start"
+            trigger="hover"
+            popper-class="chart-error-popper">
+            <div >{{errorContent}}</div>
+            <span slot="reference" style="" class="panel-info-corner panel-info-corner--error">
+                <i class="nz-icon nz-icon-warning fa"></i>
+                <span class="panel-info-corner-inner"></span>
+            </span>
+          </el-popover>
           <el-dropdown trigger="click" v-show="firstShow"   class="nz-chart-top" :key="'chartDropdown'+chartIndex"  v-clickoutside="clickos">
             <el-dropdown-menu style="display: none"></el-dropdown-menu>
             <span class="el-dropdown-link chart-title" @click="dropdownMenuShow=!dropdownMenuShow">
@@ -126,6 +137,8 @@ export default {
         return {
             data: {}, // 该图表信息,chartItem
             unit:{},
+            isError:false,
+            errorContent:'',
             pageSizes:[50,100,200],
             pageObj: {
               pageNo: 1,
@@ -563,7 +576,14 @@ export default {
             //this.endLoading('screen');
         },
         // 设置数据, filter区分
-        setData(chartItem, seriesItem, panelId, filter,area) {
+        setData(chartItem, seriesItem, panelId, filter,area,errorMsg) {
+          if(errorMsg && errorMsg!==''){
+            this.isError = true;
+            this.errorContent = errorMsg;
+          }else {
+            this.isError = false;
+            this.errorContent = '';
+          }
             if(area==='showFullScreen'){//全屏按时间查询
               this.data = chartItem;
               this.unit = chartDataFormat.getUnit(this.data.unit);
