@@ -239,18 +239,26 @@ const en = {
         module:'Module',
         endpoint:'Endpoint',
       },
+      module: {
+        module: "Module",
+      },
+      endpoint: {
+        endpoint: "Endpoint",
+      },
       dataCenter:{
         dataCenter:'Data center',
         cabinet:'Cabinet',
         promServer:'Prom server',
       },
       alert:{
+        alertMessage: 'Alert message',
         level:'Level',
         alertRule:'Alert rule',
         ruleNum:'Rule num',
         alertNum:'Alert num',
-        alertRuleTopN:'According to Alert Rule',
-        assetTopN:'According to Asset',
+        alertRuleTopN: 'Top alert message',
+        assetTopN: 'Top alert message by Asset',
+        moduleTopN: 'Top alert message by Module',
         top:'Top',
         chart:{
           chartTitle:'Alert Trend'

@@ -1120,21 +1120,6 @@
   .control-icon-checked{
     color:#666;
   }
-  .endpoint-query-table .el-loading-spinner .circular{
-    width: 42px;
-    height: 42px;
-    animation: loading-rotate 2s linear infinite;
-    display: none;
-  }
-  .endpoint-query-table .el-loading-spinner{
-    background: url(../../../assets/img/loading.gif) no-repeat;
-    background-size: 48px 48px;
-    width: 100%;
-    height: 100%;
-    position: relative;
-    top: 50%;
-    left: 48.5%;
-  }
   .project .sidebar-info-item{
     margin:0px !important;
   }

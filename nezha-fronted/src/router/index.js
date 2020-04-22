@@ -46,7 +46,7 @@ export default new Router({
         },
         {
           path: 'overview',
-          component: resolve => require(['../components/page/dashboard/overview/overview.vue'],resolve)
+          component: resolve => require(['../components/page/dashboard/overview/overview2.vue'],resolve)
         },
         {
           path: '/project',

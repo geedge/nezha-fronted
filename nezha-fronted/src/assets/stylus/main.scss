@@ -587,7 +587,7 @@ li{
   border-top: 1px solid #DCDFE6;
   border-bottom: 1px solid #E4E7ED;
   margin: 0 -6px;
-  background-color: #fcfcfc;
+  background-color: $content-right-background-color;
 }
 .sub-top-tools>div {
   margin-top: 2px;
@@ -1652,7 +1652,7 @@ li{
 }
 .el-table__fixed-right-patch {
   width: 0px !important;
-  background-color: #fcfcfc;
+  background-color: $content-right-background-color;
 }
 .nz-table .el-table__fixed, .nz-table .el-table__fixed-right {
   height: 100% !important;
