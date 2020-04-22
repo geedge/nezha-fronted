@@ -7,7 +7,6 @@
         <div class="sidebar-info">
           <div class="sidebar-info-item sidebar-info-item-active" >{{$t('dashboard.overview.title')}}</div>
           <div class="sidebar-info-item sidebar-info-top " @click="jumpTo('panel')">{{$t('dashboard.panel.title')}}</div>
-          <div class="sidebar-info-item" @click="jumpTo('metricPreview')">{{$t('dashboard.metricPreview.title')}}</div>
           <div class="sidebar-info-item" @click="jumpTo('explore')">{{$t('dashboard.metricPreview.title')}}</div>
         </div>
       </div>
@@ -79,7 +78,7 @@
                   <table-box :pop-data="topNStatData" ref="topNTab" style="height: 90%;"></table-box>
                 </div>
                 <div class="content-col-box  "style="flex: 8;" id="alertTrendBox" >
-                  <chart-box  ref="chartbox" :chart-title="$t('dashboard.overview.alert.chart.chartTitle')"></chart-box>
+                  <chart-box  ref="chartbox" :chart-title="$t('dashboard.overview.alert.chart.chartTitle')" :show-toolbox="false"></chart-box>
                 </div>
                 <div class="content-col-box  "style="flex: 2;" >
                   <table-box :pop-data="alertRuleStatData" ref="alertRuleTab"></table-box>

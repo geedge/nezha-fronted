@@ -12,9 +12,9 @@
 export default {
   name: 'App',
   mounted() {
-    /*this.$http.get("config.json").then((result)=>{
-      this.$axios.defaults.baseURL = result.body.baseUrl;
-    });*/
+    // this.$http.get("config.json").then((result)=>{
+    //   this.$axios.defaults.baseURL = result.body.baseUrl;
+    // });
     this.$axios.defaults.baseURL = 'http://192.168.40.247:8080/nz-admin';
   }
 }

@@ -1,5 +1,5 @@
 <template>
-  <div class="chart-room">
+  <div class="chart-room" @mouseenter="mouseEnterChart" @mouseleave="mouseLeaveChart">
     <loading  ref="loading"></loading>
 
     <div class="chart-header">{{chartTitle}}</div>
@@ -31,6 +31,7 @@
     },
     props:{
       chartTitle:{type:String},
+      showToolbox:{type:Boolean,default:true},
       chartType:{type:String,default:'line'},
       tooltipFormatter:Function,
       yAxisFormatter:Function,
@@ -45,7 +46,10 @@
       }
     },
     created() {
-
+      this.option=chartConfig.getOption(this.chartType);
+      if(this.showToolbox == false){
+        this.option.grid.top=10;
+      }
     },
     methods:{
       modifyOption:function(target,name,obj){
@@ -105,7 +109,7 @@
       },
       resize:function(){
         if(this.chart){
-          let height=this.$el.clientHeight ;
+          let height=this.$el.clientHeight;
           let width=this.$el.clientWidth;
           if(this.chartTitle){
             height = height - 20;
@@ -114,6 +118,24 @@
             height = height - 80;
           }
           this.chart.resize({width:width,height:height});
+        }
+      },
+      mouseEnterChart(){
+        if (this.chart&&this.showToolbox) {
+          this.chart.setOption({
+            toolbox: {
+              show:true,
+            }
+          })
+        }
+      },
+      mouseLeaveChart(){
+        if (this.chart) {
+          this.chart.setOption({
+            toolbox: {
+              show:false,
+            }
+          })
         }
       },
       getBgColor:function(index){
@@ -246,7 +268,7 @@
 
 <style scoped>
   .chart-room{
-    width: 95%;
+    width: 100%;
     height: 100%;
     position: relative;
   }

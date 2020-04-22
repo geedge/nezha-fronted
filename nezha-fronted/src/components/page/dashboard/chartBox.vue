@@ -326,7 +326,9 @@
     },
     methods: {
       show(show) {
-        this.panelName2 = this.showPanel.name;
+        if(this.showPanel){
+          this.panelName2 = this.showPanel.name;
+        }
         this.rightBox.show = show;
         this.isUrl = false;
       },

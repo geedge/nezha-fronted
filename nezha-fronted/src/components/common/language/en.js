@@ -202,6 +202,7 @@ const en = {
     },
     metricPreview:{
       title:'Explore',
+      inputTip:'Enter a PromQL query'
     },
     refresh:'Refresh',//'刷新'
     edit:'Edit',//'编辑'

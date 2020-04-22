@@ -1,7 +1,7 @@
 <script>
     import chartDataFormat from "../../../charts/chartDataFormat";
     import bus from '../../../../libs/bus';
-    let bgColorList=['#7bbfea', '#b3424a', '#f05b72', '#596032', '#bd6758',
+    let bgColorList=['#b3424a','#7bbfea', '#f05b72', '#596032', '#bd6758',
       '#cd9a5b', '#918597', '#70a19f', '#005344', '#FF00FF',
       '#f7acbc', '#5f5d46', '#66ffff', '#ccFF66', '#f47920',
       '#769149', '#1d953f', '#abc88b', '#7f7522', '#9b95c9',
@@ -17,6 +17,23 @@
       legend:{
         show:false,
       },
+      toolbox:{
+        show:false,
+        top:'0',
+        showTitle:false,
+        tooltip:{
+          show:false,
+        },
+        feature:{
+          dataZoom:{
+            yAxisIndex:false
+          },
+          magicType:{
+            type:['stack']
+          },
+          // restore: {},
+        }
+      },
       tooltip: {
         trigger: 'axis',
         confine:false,
@@ -25,11 +42,11 @@
         // position:null,
       },
       grid: {
-        top: 13,
+        top: 30,
         left: 0,
         right: 30,
         containLabel: true,
-        bottom:35,//156
+        bottom:8,//156
       },
       dataZoom: [{
         type: 'slider',

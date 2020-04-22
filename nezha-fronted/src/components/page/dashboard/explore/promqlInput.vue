@@ -5,21 +5,20 @@
           <div class="metricBtn">
             <el-dropdown class="metric-selector">
               <el-dropdown-menu style="display: none"></el-dropdown-menu>
-              <el-button class="metric-btn" @click="toggleDropdown">Metric &nbsp;<i class="el-icon-arrow-down"></i></el-button>
-              <el-cascader-panel v-show="dropDownVisible" v-model="cascaderValue" slot="dropdown" ref="metricSelector" :props="{emitPath:false}" :options="metricOptions"  @change="metricChange"></el-cascader-panel>
+              <el-button class="metric-btn nz-btn nz-btn-size-normal nz-btn-style-light" @click="toggleDropdown">Metric &nbsp;<i class="el-icon-arrow-down"></i></el-button>
+              <el-cascader-panel v-show="dropDownVisible"  slot="dropdown" ref="metricSelector" :props="{emitPath:false}" :options="metricOptions"  @change="metricChange"></el-cascader-panel>
             </el-dropdown>
 
           </div>
           <div class="inputBox">
-            <el-autocomplete :fetch-suggestions="filterInput" :trigger-on-focus="false" v-model="expressionList[index]" @blur="expressionChange" style="width: 100%"></el-autocomplete>
+            <el-autocomplete :placeholder="$t('dashboard.metricPreview.inputTip')" :fetch-suggestions="filterInput" clearable @clear="clearExpression" :trigger-on-focus="false" v-model="expressionList[index]" @blur="expressionChange" style="width: 100%;height:36px"></el-autocomplete>
           </div>
         </div>
       </div>
-      <div>
-        <div class="query-options">
-          <div class="option" @click="clearExpression"><i class="el-icon-close"></i></div>
-          <div class="option" @click="addExpression"><i class="el-icon-plus"></i></div>
-          <div class="option" @click="removeExpression"><i class="el-icon-minus"></i></div>
+      <div style="margin-left: 5px">
+        <div class="query-options nz-btn-group nz-btn-group-size-normal nz-btn-group-light">
+          <div class="option nz-btn nz-btn-size-normal nz-btn-style-light" @click="addExpression"><i class="el-icon-plus"></i></div>
+          <div class="option nz-btn nz-btn-size-normal nz-btn-style-light" @click="removeExpression"><i class="el-icon-minus"></i></div>
         </div>
       </div>
     </div>
@@ -37,7 +36,6 @@
           dropDownVisible:false,
           metricStore:[],
           metricOptions:[],
-          cascaderValue:'',
         }
       },
       created() {
@@ -46,7 +44,7 @@
       },
       methods:{
         clearExpression:function(){
-          this.expressionList[this.index]='';
+          this.expressionChange();
         },
         addExpression:function(){
           this.$emit('addExpression',this.index);
@@ -133,7 +131,7 @@
 <style scoped>
   .promqlInput{
     position: relative;
-    height: 40px;
+    height: 36px;
     width: 100%;
     display: flex;
     margin-bottom: 10px;
@@ -146,17 +144,17 @@
     justify-content: flex-start;
   }
   .promqlInput .query-options{
-    display: flex;
-    justify-content: space-around;
-    width: 126px;
+    /*display: flex;*/
+    /*justify-content: flex-start;*/
+    /*width: 84px;*/
   }
   .query-options .option{
-    border-right: 1px solid #dde4ed;
-    border-radius: 3px;
-    background-color: #dde4ed;
-    width: 40px;
-    height: 40px;
-    line-height: 40px;
+    /*border-right: 1px solid #dde4ed;*/
+    /*border-radius: 3px;*/
+    /*background-color: #dde4ed;*/
+    width: 34px;
+    height: 34px !important;
+    line-height: 34px;
     text-align: center;
   }
   .query-options .option:focus,.query-options .option:hover{
@@ -170,7 +168,9 @@
     width: 100%;
   }
   .metric-btn{
-    background-color: #dde4ed;
+    height: 36px !important;
+    width: 105px;
+    margin-left: 1px;
   }
   .metric-btn:hover ,.metric-btn:focus {
     background-color: #CCD7E4;
@@ -188,5 +188,7 @@
     position:relative;
     z-index: 2100;
   }
-
+  .inputBox .el-input__inner{
+    height: 36px;
+  }
 </style>
