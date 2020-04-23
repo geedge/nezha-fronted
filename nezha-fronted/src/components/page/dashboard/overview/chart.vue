@@ -30,6 +30,7 @@
       'loading':loading,
     },
     props:{
+      name: {type: String},
       chartTitle:{type:String},
       showToolbox:{type:Boolean,default:true},
       chartType:{type:String,default:'line'},
@@ -41,7 +42,7 @@
       return {
         chart:null,
         option:{},
-        chartId:new uuidv1()+'-'+new Date().getTime(),
+        chartId: this.name + new uuidv1()+'-'+new Date().getTime(),
         legend:[],
       }
     },
@@ -64,9 +65,9 @@
       },
       setSeries:function(series){
         if(!this.chart){
-          this.chart=echarts.init(document.getElementById(this.chartId));
+          this.chart = echarts.init(document.getElementById(this.chartId));
         }
-        this.series=series;
+        this.series = series;
         if(this.chartType == 'map'){
           if(this.map){
             echarts.registerMap(this.map.name,this.map.geoJson);
@@ -85,7 +86,7 @@
         if (this.tooltipFormatter) {
           this.modifyOption('tooltip', 'formatter', this.tooltipFormatter)
         } else {
-          this.modifyOption('tooltip', 'formatter', this.defaultTooltipFormatter)
+          //this.modifyOption('tooltip', 'formatter', this.defaultTooltipFormatter)
         }
 
         if(this.chartType == 'line'){

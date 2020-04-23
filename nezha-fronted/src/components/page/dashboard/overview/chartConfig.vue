@@ -90,7 +90,7 @@
       },
       useUTC: false,//使用本地时间
       series: [],
-    }
+    };
     const mapOptions={
       geo:{
         map:'',
@@ -133,11 +133,44 @@
         borderWidth: 1,
         padding: 0,
       },
-    }
+    };
+    const assetTypePie = {
+      title: {
+        show: false,
+      },
+      color: bgColorList,
+      legend: {
+        show: false,
+      },
+      grid: {},
+      series: [],
+      tooltip : {}
+    };
+    const alertMessageBar = {
+      title: {
+        show: false,
+      },
+      color: bgColorList,
+      legend: {
+        show: false,
+      },
+      grid: {},
+      series: [],
+      tooltip : {},
+      xAxis: {
+        type: 'value'
+      },
+      yAxis: {
+        type: 'category',
+        data: []
+      },
+    };
     const chartTypes={
       line:{name:'line',option:commonOption},
       map:{name:'map',option:mapOptions},
-    }
+      pie: {name: 'assetType', option: assetTypePie},
+      bar: {name: 'alertMessage', option: alertMessageBar}
+    };
     export default {
       getOption:function(type){
         return Object.assign({},chartTypes[type].option);

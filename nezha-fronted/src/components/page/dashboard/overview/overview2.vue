@@ -29,58 +29,86 @@
         </div>
         <!--内容-->
         <div class="overview-content">
+          <!--第一行-->
           <div class="content-row-box">
             <div class="content-col-box">
               <div class="content-col-title">{{$t("dashboard.overview.asset.title")}}</div>
-              <div class="content-col-content content-col-content-num" v-loading="assetLoading">
-                <span>{{(assetData ? assetData.totalStat.total  : "") | numberFormat}}</span>
+              <div class="content-col-content" v-loading="assetLoading">
+                <div class="content-col-content-num">{{(assetData ? assetData.totalStat.total  : "") | numberFormat}}</div>
               </div>
             </div>
             <div class="content-col-box">
               <div class="content-col-title">{{$t("dashboard.overview.project.project")}}</div>
-              <div class="content-col-content content-col-content-num" v-loading="projectLoading">
-                <span>{{(projectData ? projectData.projectStat.length : "") | numberFormat}}</span>
+              <div class="content-col-content" v-loading="projectLoading">
+                <div class="content-col-content-num">{{(projectData ? projectData.projectStat.length  : "") | numberFormat}}</div>
               </div>
             </div>
             <div class="content-col-box">
               <div class="content-col-title">{{$t("dashboard.overview.module.module")}}</div>
-              <div class="content-col-content content-col-content-num" v-loading="moduleLoading">
-                <span>{{(moduleData ? moduleData.moduleStat.length  : "") | numberFormat}}</span>
+              <div class="content-col-content" v-loading="moduleLoading">
+                <div class="content-col-content-num">{{(moduleData ? moduleData.moduleStat.length  : "") | numberFormat}}</div>
               </div>
             </div>
             <div class="content-col-box">
               <div class="content-col-title">{{$t("dashboard.overview.endpoint.endpoint")}}</div>
-              <div class="content-col-content content-col-content-num" v-loading="endpointLoading">
-                <span>{{(endpointData ? endpointData.total : "") | numberFormat}}</span>
+              <div class="content-col-content" v-loading="endpointLoading">
+                <div class="content-col-content-num">{{(endpointData ? endpointData.total : "") | numberFormat}}</div>
               </div>
             </div>
             <div class="content-col-box">
               <div class="content-col-title">{{$t("dashboard.overview.alert.alertMessage")}}</div>
-              <div class="content-col-content content-col-content-num" v-loading="alertMessageLoading">
-                <span>{{(alertMessageData ? alertMessageData.alertMessageTotal : "") | numberFormat}}</span>
+              <div class="content-col-content" v-loading="alertMessageLoading">
+                <div class="content-col-content-num">{{(alertMessageData ? alertMessageData.alertMessageTotal : "") | numberFormat}}</div>
+                <span>{{$t("dashboard.overview.alert.ruleNum")}}&nbsp;&nbsp;{{(alertRuleData ? alertRuleData.alertRuleTotal : "") | numberFormat}}</span>
               </div>
             </div>
           </div>
+          <!--第二行-->
           <div class="content-row-box">
             <div class="content-col-box">
               <div class="content-col-title">{{$t("dashboard.overview.alert.chart.chartTitle")}}</div>
+              <div class="content-col-content">
+                <chart-box ref="chartbox" :show-toolbox="false" name="trend"></chart-box>
+              </div>
             </div>
             <div class="content-col-box">
               <div class="content-col-title">{{$t("dashboard.overview.dataCenter.dataCenter")}}</div>
               <div class="content-col-content">
-                <chart-box chart-title="" chart-type="map" :tooltip-formatter="mapTooltipFormatter" :map="map" ref="dataCenterMap"></chart-box>
+                <chart-box chart-type="map" :tooltip-formatter="mapTooltipFormatter" :map="map" ref="dataCenterMap"></chart-box>
               </div>
             </div>
           </div>
+          <!--第三行-->
           <div class="content-row-box">
             <div class="content-col-box">
               <div class="content-col-title">{{$t("dashboard.overview.asset.assetType")}}</div>
+              <div class="content-col-content">
+                <chart-box chart-type="pie" ref="assetTypePie" :show-toolbox="false" name="assetTypePie"></chart-box>
+              </div>
             </div>
             <div class="content-col-box">
               <div class="content-col-title">{{$t("dashboard.overview.alert.alertRuleTopN")}}</div>
+              <div class="content-col-content">
+                <chart-box chart-type="bar" ref="ruleMessage" :show-toolbox="false" name="ruleMessage"></chart-box>
+              </div>
             </div>
             <div class="content-col-box">
-              <div class="content-col-title">{{$t("dashboard.overview.alert.assetTopN")}}</div>
+              <div class="content-col-title">
+                <span>{{$t("dashboard.overview.alert.assetTopN")}}</span>
+                <span class="dropdown-btn" @mouseenter="alertMessageDropdownHandler(true)" @mouseleave="alertMessageDropdownHandler(false)">
+                  <i class="el-icon-arrow-down"></i>
+                  <transition name="el-zoom-in-top">
+                    <ul class="el-dropdown-menu el-popper el-dropdown-menu--mini" v-if="bottom3DropdownShow">
+                      <li @click="alertMessageChange('asset')" class="el-dropdown-menu__item dropdown-content">{{$t("dashboard.overview.asset.title")}}</li>
+                      <li @click="alertMessageChange('module')" class="el-dropdown-menu__item dropdown-content">{{$t("dashboard.overview.module.module")}}</li>
+                    </ul>
+                  </transition>
+                </span>
+              </div>
+              <div class="content-col-content">
+                <chart-box v-show="alertMessageShow == 'asset'" chart-type="bar" ref="assetMessage" name="assetMessage" :show-toolbox="false"></chart-box>
+                <chart-box v-show="alertMessageShow == 'module'" chart-type="bar" ref="moduleMessage" name="moduleMessage" :show-toolbox="false"></chart-box>
+              </div>
             </div>
           </div>
         </div>
@@ -93,7 +121,7 @@
   import chart from "./chart";
   import chartDataFormat from "../../../charts/chartDataFormat";
   import axios from 'axios';
-
+  var timeout;
   export default {
     name: "overview2",
     components:{
@@ -119,10 +147,18 @@
         endpointData: '',
         alertMessageLoading: false,
         alertMessageData: '',
+        alertRuleData: '',
         map: null,
-        chartSeries:[],
-        alertRuleStatData:{},
-        dataCenterMapSeries:[],
+        chartSeries: [],
+        assetTypeSeries: [],
+        messageByRuleSeries: [],
+        messageByAssetSeries: [],
+        messageByModuleSeries: [],
+        alertRuleStatData: {},
+        dataCenterMapSeries: [],
+
+        alertMessageShow: 'asset', //asset/module
+        bottom3DropdownShow: false, //最底部行第三列的下拉选择框
       }
     },
     filters: {
@@ -134,9 +170,9 @@
             if (num < 1000) {
               return num;
             } else if (num < 1000000) {
-              return (num/1000).toFixed(fixed);
+              return (num/1000).toFixed(fixed) + "K";
             } else if (num < 1000000000) {
-              return (num/1000000).toFixed(fixed);
+              return (num/1000000).toFixed(fixed) + "M";
             }
           } catch (err) {
             return 0;
@@ -153,8 +189,12 @@
         this.queryModuleData();
         this.queryEndpointData();
         this.queryAlertMessageData();
+        this.queryAlertRuleData();
         this.queryDatacenterData();
+        this.queryAlertTrendData();
         this.queryMapChartGeoJson();
+        this.queryAlertStatByRule();
+        this.queryAlertStatByAsset();
       },
       queryAssetData() {
         this.assetLoading = true;
@@ -162,6 +202,20 @@
           this.assetLoading = false;
           if (response.code === 200) {
             this.assetData = response.data;
+
+            /*饼图*/
+            this.$refs.assetTypePie.startLoading();
+            let seriesData = [];
+            this.assetData.typeStat.forEach(item => {
+              seriesData.push({name: item.name, value: item.total});
+            });
+            let series = {
+              name: 'nz_alert_nums',
+              data: seriesData,
+              type: 'pie'
+            };
+            this.$refs.assetTypePie.setSeries(series);
+            this.$refs.assetTypePie.endLoading();
           }
         })
       },
@@ -201,6 +255,13 @@
           }
         })
       },
+      queryAlertRuleData() {
+        this.$get('overview/alertRuleStat').then(response => {
+          if (response.code === 200) {
+            this.alertRuleData = response.data;
+          }
+        })
+      },
       queryDatacenterData() {
         this.$get('overview/datacenterStat').then(response => {
           if (response.code === 200) {
@@ -208,7 +269,45 @@
           }
         })
       },
-      queryMapChartGeoJson:function(){
+      queryAlertTrendData() {
+        this.$refs.chartbox.startLoading();
+        let cur=this.dateFormat('yyyy-mm-dd HH:MM:SS',new Date());
+        let beforeDate=new Date();
+        beforeDate.setHours(new Date().getHours()-1);
+        let before=this.dateFormat('yyyy-mm-dd HH:MM:SS',beforeDate);
+        let params={
+          query:'sum(nz_alert_nums)',
+          start:before,
+          end:cur,
+          step:'15s'
+        }
+        this.$get('/prom/api/v1/query_range',params).then(response=>{
+          if(response.status == 'success'){
+            if(response.data.result){
+              let series={
+                name: 'nz_alert_nums',
+                symbol:'none',  //去掉点
+                smooth:true,  //曲线变平滑
+                data: [],
+                type:'line',
+                // areaStyle:{}
+              }
+              series.data=response.data.result[0].values.map((item)=>{
+                return [item[0]*1000,item[1]];
+              })
+              this.chartSeries=[series];
+              this.$refs.chartbox.modifyOption('tooltip','formatter',this.tooltipFormatter);
+              this.$refs.chartbox.modifyOption('tooltip','position',this.tooltipPosition);
+              this.$refs.chartbox.modifyOption('yAxis','formatter',this.yAxisFormatter);
+              this.$refs.chartbox.setSeries(this.chartSeries);
+              this.$refs.chartbox.endLoading();
+            }
+          }else{
+            console.error(response)
+          }
+        })
+      },
+      queryMapChartGeoJson() {
         this.$get('/sysConfig?paramKey=geoJson').then(response=>{
           if(response.code == 200){
             this.map={
@@ -221,7 +320,7 @@
           }
         })
       },
-      queryDataCenterMapData:function(){
+      queryDataCenterMapData() {
         let language=localStorage.getItem("nz-language") ? localStorage.getItem("nz-language") : 'en';
         let requests=[axios.get('/idc?pageSize=-1'),axios.get('/overview/datacenterStat')];
         axios.all(requests).then((result)=>{
@@ -270,12 +369,11 @@
                     symbolSize=smallScatter;
                   }
 
-                  console.log(dcStat.name+'-->'+ symbolSize)
                   seriesDatas.push({
                     name:areaName,
                     value:[areaInfo.longitude,areaInfo.latitude,dcStat],
                     symbolSize:symbolSize,
-                  })
+                  });
                 }
               }
             }
@@ -303,8 +401,81 @@
           }
         })
       },
-
+      queryAlertStatByRule() {
+        this.$get('overview/alertStatByRule').then(response => {
+          if (response.code === 200) {
+            this.$refs.ruleMessage.startLoading();
+            let seriesData = [];
+            let categoryData = [];
+            response.data.list.forEach(item => {
+              seriesData.push(item.nums);
+              categoryData.push(item.alertName);
+            });
+            this.messageByRuleSeries = {
+              name: 'alertStatByRule',
+              data: seriesData,
+              type: 'bar'
+            };
+            this.$refs.ruleMessage.modifyOption('yAxis', 'data', categoryData);
+            this.$refs.ruleMessage.setSeries(this.messageByRuleSeries);
+            this.$refs.ruleMessage.endLoading();
+          }
+        });
+      },
+      queryAlertStatByAsset() {
+        this.$get('overview/alertStatByAsset').then(response => {
+          if (response.code === 200) {
+            this.$refs.assetMessage.startLoading();
+            let seriesData = [];
+            let categoryData = [];
+            response.data.list.forEach(item => {
+              seriesData.push(item.nums);
+              categoryData.push(item.host);
+            });
+            this.messageByAssetSeries = {
+              name: 'alertStatByAsset',
+              data: seriesData,
+              type: 'bar'
+            };
+            this.$refs.assetMessage.modifyOption('yAxis', 'data', categoryData);
+            this.$refs.assetMessage.setSeries(this.messageByAssetSeries);
+            this.$refs.assetMessage.endLoading();
+          }
+        });
+      },
+      queryAlertStatByModule() {
+        this.$get('overview/alertStatByModule').then(response => {
+          if (response.code === 200) {
+            this.$refs.moduleMessage.startLoading();
+            let seriesData = [];
+            let categoryData = [];
+            response.data.list.forEach(item => {
+              seriesData.push(item.nums);
+              categoryData.push(item.module);
+            });
+            this.messageByModuleSeries = {
+              name: 'alertStatByModule',
+              data: seriesData,
+              type: 'bar'
+            };
+            this.$refs.moduleMessage.modifyOption('yAxis', 'data', categoryData);
+            this.$refs.moduleMessage.setSeries(this.messageByModuleSeries);
+            this.$refs.moduleMessage.endLoading();
+          }
+        });
+      },
       /*初始化数据 end*/
+      alertMessageChange(type) {
+        this.bottom3DropdownShow = false;
+        this.alertMessageShow = type;
+        this.$nextTick(() => {
+          if (type == 'asset') {
+            this.queryAlertStatByAsset();
+          } else if (type == 'module') {
+            this.queryAlertStatByModule();
+          }
+        });
+      },
 
       mapTooltipFormatter(params){
         let dcStat = params.data.value[2];
@@ -410,6 +581,16 @@
           }
         }
       },
+      alertMessageDropdownHandler(show) {
+        if (show) {
+          clearTimeout(timeout);
+          this.bottom3DropdownShow = true;
+        } else {
+          timeout = setTimeout(() => {
+            this.bottom3DropdownShow = false;
+          }, 700);
+        }
+      },
       /*header 时间处理 start*/
       initDate:function(){
         this.sysTime=this.getTime();
@@ -485,6 +666,14 @@
     mounted() {
       this.initDate();
       this.initData();
+      window.onresize = () => {
+        setTimeout(() => {
+          this.$parent.$parent.update();
+        }, 100);
+      }
+    },
+    destroyed() {
+      window.onresize = null;
     }
   }
 </script>
