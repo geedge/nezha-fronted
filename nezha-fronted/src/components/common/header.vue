@@ -43,9 +43,6 @@
           <div @click="jumpTo('panel')" :class="{'menu-item-active' :activeIndex == 'panel'}" >{{$t('dashboard.panel.title')}}</div>
         </el-menu-item>
         <el-menu-item index="1-2">
-          <div @click="jumpTo('metricPreview')" :class="{'menu-item-active' :activeIndex == 'metricPreview'}">{{$t('dashboard.metricPreview.title')}}</div>
-        </el-menu-item>
-        <el-menu-item index="1-3">
           <div @click="jumpTo('explore')" :class="{'menu-item-active' :activeIndex == 'explore'}">{{$t('dashboard.metricPreview.title')}}</div>
         </el-menu-item>
       </el-submenu>
