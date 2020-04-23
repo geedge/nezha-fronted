@@ -46,7 +46,7 @@
         <el-collapse v-model="currentProjectTitle" class="left-menu-bg" accordion style="padding-top:0px;" @change="projectChange" ref="projectLeft">
           <el-collapse-item v-for="(item,index) in projectList" :key="item.name+item.id+index" :name="item.name+'-'+item.id">
             <template slot="title">
-              <div class="sidebar-info-item" :class="{'sidebar-info-item-active': item.name+'-'+item.id==currentProjectTitle || item.id==currentProject.id}" @click.stop="detailProjectInfo($event,item)" :id="'project-module-'+item.id">
+              <div class="sidebar-info-item" :class="{'sidebar-info-item-active': item.name+'-'+item.id==currentProjectTitle || item.id==currentProject.id}" @click="detailProjectInfo($event,item)" :id="'project-module-'+item.id">
                 <div class="sidebar-info-item-txt">
                   <el-popover v-if="item.name.length > 14" trigger="hover" placement="top-start" :content="item.name" popper-class="transparent-pop">
                     <span slot="reference" class="">
@@ -444,17 +444,17 @@
       },
       projectChange:function(){
         //展开后为避免左侧无数据，显示对应project的第一个module下的endpoint
-        let currentProjectId=this.currentProjectTitle&&this.cuurentProjectTitle != ""?this.currentProjectTitle.split('-')[this.currentProjectTitle.split('-').length -1]:"";
-        if(currentProjectId != ''){
-          currentProjectId=Number.parseInt(currentProjectId);
-          let moduleList=this.getProjectModule(currentProjectId);
-          this.currentModule=moduleList[0];
-          this.currentProject=this.projectList.find((item)=>{
-            return item.id == currentProjectId
-          })
-          this.getEndpointTableData();
-          // this.$store.commit('setProject',null)
-        }
+        // let currentProjectId=this.currentProjectTitle&&this.cuurentProjectTitle != ""?this.currentProjectTitle.split('-')[this.currentProjectTitle.split('-').length -1]:"";
+        // if(currentProjectId != ''){
+        //   currentProjectId=Number.parseInt(currentProjectId);
+        //   let moduleList=this.getProjectModule(currentProjectId);
+        //   this.currentModule=moduleList[0];
+        //   this.currentProject=this.projectList.find((item)=>{
+        //     return item.id == currentProjectId
+        //   })
+        //   this.getEndpointTableData();
+        //   // this.$store.commit('setProject',null)
+        // }
       },
       detailProjectInfo:function(event,project){
         if(event){
@@ -463,7 +463,8 @@
             this.currentProject=project;
             this.$store.commit('setProject',this.currentProject)
           }
-          this.$refs.projectLeft.setActiveNames([]);
+          this.currentModule={};
+          // this.$refs.projectLeft.setActiveNames([]);
         }
       },
       getAllModuleList:function(){

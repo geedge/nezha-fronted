@@ -20,12 +20,12 @@
           v-for="(item,index) in dropColRes"
           :key="index"
           class="elementset-label"
-          :class="index==0 || index == 1 ? 'elementset-label-disabled' : ''"
+          :class="!allowedAll&&(index==0 || index == 1) ? 'elementset-label-disabled' : ''"
           :title="item.visibility == 'disabled' ? other.inDevelopment : ''"
           @click="addcol(item,index)"
           :id="'element-set-el-'+index"
         >
-          <i class="el-icon-check" v-if="index==0||index==1||item.visibility=='disabled'"></i>
+          <i class="el-icon-check" v-if="!allowedAll&&(index==0||index==1||item.visibility=='disabled')"></i>
           <i v-else class="el-icon-check" v-show="item.show"></i>
           <span>{{item.label}}</span>
         </div>
@@ -55,7 +55,13 @@
 
 <script>
 export default {
-  props: ["dropCol","tableTitle","path"],
+  // props: ["dropCol","tableTitle","path"],
+  props:{
+    dropCol:{},
+    tableTitle:{},
+    path:{},
+    allowedAll:{default:false},
+  },
   data() {
     return {
       other: this.$t("overall.other"),
@@ -123,7 +129,7 @@ export default {
     },
     //下拉选项选择
     addcol(val, index) {
-      if (index == 0 || index == 1) {
+      if (!this.allowedAll&&(index == 0 || index == 1)) {
         this.dropColRes[index].show = true;
       } else {
         this.dropColRes[index].show = !this.dropColRes[index].show;
