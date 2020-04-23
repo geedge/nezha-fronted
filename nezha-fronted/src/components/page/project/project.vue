@@ -464,6 +464,7 @@
             this.$store.commit('setProject',this.currentProject)
           }
           this.currentModule={};
+          this.currentProjectTitle=this.currentProject.name+"-"+this.currentProject.id
           // this.$refs.projectLeft.setActiveNames([]);
         }
       },
