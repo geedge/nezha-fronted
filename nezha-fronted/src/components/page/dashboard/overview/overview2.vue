@@ -93,7 +93,8 @@
             </div>
             <div class="content-col-box">
               <div class="content-col-title">
-                <span>{{$t("dashboard.overview.alert.assetTopN")}}</span>
+                <span v-if="alertMessageShow == 'asset'">{{$t("dashboard.overview.alert.assetTopN")}}</span>
+                <span v-if="alertMessageShow == 'module'">{{$t("dashboard.overview.alert.moduleTopN")}}</span>
                 <span class="dropdown-btn" @mouseenter="alertMessageDropdownHandler(true)" @mouseleave="alertMessageDropdownHandler(false)">
                   <i class="el-icon-arrow-down"></i>
                   <transition name="el-zoom-in-top">
