@@ -6,7 +6,7 @@
             <el-dropdown class="metric-selector">
               <el-dropdown-menu style="display: none"></el-dropdown-menu>
               <el-button class="metric-btn nz-btn nz-btn-size-normal nz-btn-style-light" @click="toggleDropdown">Metric &nbsp;<i class="el-icon-arrow-down"></i></el-button>
-              <el-cascader-panel v-show="dropDownVisible"  slot="dropdown" ref="metricSelector" :props="{emitPath:false}" :options="metricOptions"  @change="metricChange"></el-cascader-panel>
+              <el-cascader-panel v-show="dropDownVisible" v-model="cascaderValue"  slot="dropdown" ref="metricSelector" :props="{emitPath:false}" :options="metricOptions"  @change="metricChange"></el-cascader-panel>
             </el-dropdown>
 
           </div>
@@ -36,6 +36,7 @@
           dropDownVisible:false,
           metricStore:[],
           metricOptions:[],
+          cascaderValue:'',
         }
       },
       created() {
@@ -45,6 +46,7 @@
       methods:{
         clearExpression:function(){
           this.expressionChange();
+          this.cascaderValue='';
         },
         addExpression:function(){
           this.$emit('addExpression',this.index);
