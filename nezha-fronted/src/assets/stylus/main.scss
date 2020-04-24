@@ -1837,6 +1837,14 @@ li{
   flex:1;
   overflow: auto;
 }
+.export-xlsx .el-upload__tip {
+  text-align: left;
+  padding-left: 100px;
+}
+.export-xlsx .el-upload-list--text {
+  text-align: left;
+  padding-left: 95px;
+}
 /**dialog 在视图中居中显示end*/
 .dropdown-content{
   font-size: 14px !important;
