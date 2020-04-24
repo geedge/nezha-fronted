@@ -168,7 +168,7 @@ const cn = {
       lastSevenDay: "最近7天",
       lastThirtyDay: "最近30天",
       refreshInterval: {
-        never: "从不",
+        never: "关闭",
         oneMinute: "1分钟",
         threeMinutes: "3分钟",
         fiveMinutes: "5分钟",
@@ -196,7 +196,9 @@ const cn = {
       saveChartToPanel: "保存图表到看板"
     },
     metricPreview: {
-      title: "探索"
+      title: "探索",
+      inputTip:'输入PromQL查询语句',
+      runQuery:'查询',
     },
     refresh: "刷新",
     edit: "编辑",

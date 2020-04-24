@@ -46,6 +46,7 @@ import "perfect-scrollbar/css/perfect-scrollbar.css";
 import loading from "./components/common/loading";
 import mibBox from "./components/common/rightBox/mibBox";
 import leftMenu from "./components/common/leftMenu";
+import intervalRefresh from "./components/common/intervalRefresh";
 
 Vue.component("Pagination", Pagination);
 Vue.component("searchInput", searchInput);
@@ -69,6 +70,7 @@ Vue.component('loading',loading);
 Vue.component('bottom-box', bottomBox);
 Vue.component('mib-box',mibBox);
 Vue.component('left-menu',leftMenu);
+Vue.component('interval-refresh',intervalRefresh);
 
 Vue.prototype.$axios = axios;
 Vue.prototype.$post = post;

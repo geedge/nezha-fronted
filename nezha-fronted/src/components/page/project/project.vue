@@ -457,15 +457,18 @@
         // }
       },
       detailProjectInfo:function(event,project){
+        console.log(event)
         if(event){
           this.pageType='project'
           if(project){
             this.currentProject=project;
-            this.$store.commit('setProject',this.currentProject)
+            // this.$store.commit('setProject',this.currentProject)
           }
           this.currentModule={};
-          this.currentProjectTitle=this.currentProject.name+"-"+this.currentProject.id
+
           // this.$refs.projectLeft.setActiveNames([]);
+        }else{
+          this.currentProjectTitle=this.currentProject.name+"-"+this.currentProject.id
         }
       },
       getAllModuleList:function(){
@@ -744,7 +747,7 @@
       if (pageSize) {
         this.endpointPageObj.pageSize = pageSize
       }
-      this.detailProjectInfo({});
+      this.detailProjectInfo();
       // setTimeout(()=>{
       //   this.getEndpointTableData();
       // }, 200);
@@ -794,7 +797,7 @@
       currentProjectChange:{
         handler(n, o) {
           this.currentProject = Object.assign({}, n);
-          this.detailProjectInfo({});
+          this.detailProjectInfo();
         }
       },
       currentProject(n, o) {

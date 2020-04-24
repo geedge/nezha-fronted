@@ -254,6 +254,10 @@ li{
 .nz-btn:focus {
   outline: 0;
 }
+.nz-btn .nz-btn-text{
+  font-weight: 500;
+  white-space: nowrap;
+}
 .nz-btn.nz-btn-disabled {
   background-image: none;
   color: #e5e5e5;

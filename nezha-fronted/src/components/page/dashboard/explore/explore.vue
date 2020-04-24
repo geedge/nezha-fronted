@@ -11,7 +11,6 @@
       </div>
       <div slot="content-right" class="slot-content">
         <div class="main-list main-and-sub-transition">
-          <el-scrollbar style="height: 100%">
             <!-- 顶部工具栏 -->
             <div class="top-tools" style="z-index: 1">
               <button :disabled="saveDisabled" type="button" @click="saveChart"
@@ -19,188 +18,163 @@
                       :class="{'nz-btn-disabled btn-disabled-cursor-not-allowed' : saveDisabled}">
                 {{$t('dashboard.metric.saveChart')}}
               </button>
-              <div class="nz-btn-group nz-btn-group-size-normal nz-btn-group-light margin-r-20">
-                <button style="border-right: 1px solid rgba(162,162,162,0.50);" type="button"
-                        class="nz-btn nz-btn-size-normal nz-btn-style-light" @click="expressionChange">
-                  <i style="font-size: 12px" class="global-active-color nz-icon nz-icon-refresh"></i>
-                </button>
-                <el-popover
-                  v-model="visible" placement="bottom-start" width="200" trigger="click">
-                  <ul class="popover_ul">
-                    <li v-for="i in intervalList" :style="{color:interval==i.value?'#31749C':''}" :key="i.value+i.name"
-                        @click="selectInterval(i.value)">
-                      {{i.name}}
-                    </li>
-                  </ul>
-                  <button type="button" style="border-radius: 0 4px 4px 0"
-                          class="nz-btn nz-btn-size-normal nz-btn-style-light" slot="reference">
-                    <i style="font-size: 12px" class="nz-icon nz-icon-arrow-down"></i>
-                  </button>
-                </el-popover>
+              <interval-refresh :refresh-data-func="expressionChange" v-model="filterTime">
+                <template slot="added-text">{{$t('dashboard.metricPreview.runQuery')}}</template>
+              </interval-refresh>
+            </div>
+            <div style="height: 100%;width: 100%;" >
+              <el-scrollbar style="height: 100%" class="el-scrollbar-large">
+              <div class="expression-room right-margin" style="padding-top: 5px">
+                <!--坑，这个index居然是从1开始-->
+                <promql-input
+                  v-for="index of promqlKeys.length"
+                  :id="promqlKeys[index-1]"
+                  :key="promqlKeys[index-1]"
+                  :expression-list="expressions"
+                  :index="index-1"
+                  @change="expressionChange"
+                  @addExpression="addExpression"
+                  @removeExpression="removeExpression"
+                ></promql-input>
               </div>
-
-              <el-date-picker size="mini" ref="calendar"
-                              format="yyyy/MM/dd HH:mm"
-                              @change="dateChange"
-                              v-model="searchTime"
-                              type="datetimerange"
-                              :picker-options="pickerOptions"
-                              :range-separator="$t('dashboard.panel.to')"
-                              :start-placeholder="$t('dashboard.panel.startTime')"
-                              :end-placeholder="$t('dashboard.panel.endTime')"
-                              style="margin-right: 20px"
-                              align="right">
-              </el-date-picker>
-            </div>
-            <div class="expression-room">
-              <!--坑，这个index居然是从1开始-->
-              <promql-input
-                v-for="index of promqlKeys.length"
-                :id="promqlKeys[index-1]"
-                :key="promqlKeys[index-1]"
-                :expression-list="expressions"
-                :index="index"
-                @change="expressionChange"
-                @addExpression="addExpression"
-                @removeExpression="removeExpression"
-              ></promql-input>
-            </div>
-            <div class="chart-view " v-show="!showIntroduce"
-                 :class="{'shrink-view':!chartVisible || !defaultChartVisible}">
-              <div class="view-title" @click="changeChartVisible"><i class="el-icon-caret-top"></i>&nbsp;graph</div>
-              <div class="chart-room">
-                <chart ref="exploreChart"></chart>
+              <div class="chart-view right-margin" v-show="!showIntroduce"
+                   :class="{'shrink-view':!chartVisible || !defaultChartVisible}">
+                <div class="view-title" @click="changeChartVisible"><i class="el-icon-caret-top"></i>&nbsp;graph</div>
+                <div class="chart-room">
+                  <chart ref="exploreChart"></chart>
+                </div>
               </div>
-            </div>
-            <div class="table-view " v-show="!showIntroduce"
-                 :class="{'shrink-view':!tableVisible || !defaultTableVisible}">
-              <div class="view-title" @click="changeTableVisible"><i class="el-icon-caret-top"></i>&nbsp;table</div>
-              <div class="table-room">
-                <el-table class="nz-table explore-table"
-                          :data="tableData"
-                          border
-                          ref="exploreTable"
-                          tooltip-effect="light"
-                          v-scrollBar:el-table="'large'"
-                          v-loading="tableLoading"
-                          style="width: 100%;">
-                  <el-table-column
-                    :resizable="false"
-                    v-for="(item, index) in showTableLabels"
-                    v-if="item.show"
-                    :key="`col-${index}`"
-                    :label="item.label"
-                    :prop="item.prop"
-                    show-overflow-tooltip
-                    min-width="110px"
-                  ></el-table-column>
-                  <el-table-column width="28">
-                    <template slot="header" slot-scope="scope" :resizable="false">
+              <div class="table-view right-margin" v-show="!showIntroduce"
+                   :class="{'shrink-view':!tableVisible || !defaultTableVisible}">
+                <div class="view-title" @click="changeTableVisible"><i class="el-icon-caret-top"></i>&nbsp;table</div>
+                <div class="table-room">
+                  <el-table class="nz-table explore-table"
+                            :data="tableData"
+                            border
+                            ref="exploreTable"
+                            tooltip-effect="light"
+                            v-scrollBar:el-table="'large'"
+                            v-loading="tableLoading"
+                            style="width: 100%;">
+                    <el-table-column
+                      :resizable="false"
+                      v-for="(item, index) in showTableLabels"
+                      v-if="item.show"
+                      :key="`col-${index}`"
+                      :label="item.label"
+                      :prop="item.prop"
+                      show-overflow-tooltip
+                      min-width="110px"
+                    ></el-table-column>
+                    <el-table-column width="28" v-if="showTableLabels.length>0">
+                      <template slot="header" slot-scope="scope" :resizable="false">
                       <span @click.stop="elementsetShow('shezhi',$event)" class="nz-table-gear">
                         <i class="nz-icon nz-icon-gear"></i>
                       </span>
-                    </template>
-                  </el-table-column>
-                </el-table>
-                <pagination :page-obj="pageObj" @pageNo='pageNo' @pageSize='pageSize' ref="Pagination"
-                            :append-to-body="false"></pagination>
+                      </template>
+                    </el-table-column>
+                  </el-table>
+                  <pagination :page-obj="pageObj" @pageNo='pageNo' @pageSize='pageSize' ref="Pagination"
+                              :append-to-body="false"></pagination>
+                </div>
               </div>
-            </div>
-            <div class="introduce-view" v-show="showIntroduce">
-              <div class="info-room">
-                <div class="col-md-9 doc-content">
-                  <h2 >
-                    Simple time series selection
-                  </h2>
+              <div class="introduce-view right-margin" v-show="showIntroduce">
+                <div class="info-room">
+                  <div class="col-md-9 doc-content">
+                    <h2 >
+                      Simple time series selection
+                    </h2>
 
-                  <p>Return all time series with the metric <code>http_requests_total</code>:</p>
+                    <p>Return all time series with the metric <code>http_requests_total</code>:</p>
 
-                  <pre><code>http_requests_total</code></pre>
+                    <pre><code>http_requests_total</code></pre>
 
-                  <p>Return all time series with the metric <code>http_requests_total</code> and the given<code>job</code> and <code>handler</code> labels:</p>
+                    <p>Return all time series with the metric <code>http_requests_total</code> and the given<code>job</code> and <code>handler</code> labels:</p>
 
-                  <pre><code>http_requests_total{job="apiserver", handler="/api/comments"}</code></pre>
+                    <pre><code>http_requests_total{job="apiserver", handler="/api/comments"}</code></pre>
 
-                  <p>Return a whole range of time (in this case 5 minutes) for the same vector,
-                    making it a range vector:</p>
+                    <p>Return a whole range of time (in this case 5 minutes) for the same vector,
+                      making it a range vector:</p>
 
-                  <pre><code>http_requests_total{job="apiserver", handler="/api/comments"}[5m]</code></pre>
+                    <pre><code>http_requests_total{job="apiserver", handler="/api/comments"}[5m]</code></pre>
 
-                  <p>Note that an expression resulting in a range vector cannot be graphed directly,
-                    but viewed in the tabular ("Console") view of the expression browser.</p>
+                    <p>Note that an expression resulting in a range vector cannot be graphed directly,
+                      but viewed in the tabular ("Console") view of the expression browser.</p>
 
-                  <p>Using regular expressions, you could select time series only for jobs whose
-                    name match a certain pattern, in this case, all jobs that end with <code>server</code>:</p>
+                    <p>Using regular expressions, you could select time series only for jobs whose
+                      name match a certain pattern, in this case, all jobs that end with <code>server</code>:</p>
 
-                  <pre><code>http_requests_total{job=~".*server"}</code></pre>
+                    <pre><code>http_requests_total{job=~".*server"}</code></pre>
 
-                  <p>All regular expressions in Prometheus use RE2 syntax.</p>
+                    <p>All regular expressions in Prometheus use RE2 syntax.</p>
 
-                  <p>To select all HTTP status codes except 4xx ones, you could run:</p>
+                    <p>To select all HTTP status codes except 4xx ones, you could run:</p>
 
-                  <pre><code>http_requests_total{status!~"4.."}</code></pre>
+                    <pre><code>http_requests_total{status!~"4.."}</code></pre>
 
-                  <h2 >
-                    Subquery
-                  </h2>
+                    <h2 >
+                      Subquery
+                    </h2>
 
-                  <p>Return the 5-minute rate of the <code>http_requests_total</code> metric for the past 30 minutes, with a resolution of 1 minute.</p>
+                    <p>Return the 5-minute rate of the <code>http_requests_total</code> metric for the past 30 minutes, with a resolution of 1 minute.</p>
 
-                  <pre><code>rate(http_requests_total[5m])[30m:1m]</code></pre>
+                    <pre><code>rate(http_requests_total[5m])[30m:1m]</code></pre>
 
-                  <p>This is an example of a nested subquery. The subquery for the <code>deriv</code> function uses the default resolution. Note that using subqueries unnecessarily is unwise.</p>
+                    <p>This is an example of a nested subquery. The subquery for the <code>deriv</code> function uses the default resolution. Note that using subqueries unnecessarily is unwise.</p>
 
-                  <pre><code>max_over_time(deriv(rate(distance_covered_total[5s])[30s:5s])[10m:])</code></pre>
+                    <pre><code>max_over_time(deriv(rate(distance_covered_total[5s])[30s:5s])[10m:])</code></pre>
 
-                  <h2 >
-                    Using functions, operators, etc.
-                  </h2>
+                    <h2 >
+                      Using functions, operators, etc.
+                    </h2>
 
-                  <p>Return the per-second rate for all time series with the <code>http_requests_total</code>
-                    metric name, as measured over the last 5 minutes:</p>
+                    <p>Return the per-second rate for all time series with the <code>http_requests_total</code>
+                      metric name, as measured over the last 5 minutes:</p>
 
-                  <pre><code>rate(http_requests_total[5m])</code></pre>
+                    <pre><code>rate(http_requests_total[5m])</code></pre>
 
-                  <p>Assuming that the <code>http_requests_total</code> time series all have the labels <code>job</code>
-                    (fanout by job name) and <code>instance</code> (fanout by instance of the job), we might
-                    want to sum over the rate of all instances, so we get fewer output time series,
-                    but still preserve the <code>job</code> dimension:</p>
+                    <p>Assuming that the <code>http_requests_total</code> time series all have the labels <code>job</code>
+                      (fanout by job name) and <code>instance</code> (fanout by instance of the job), we might
+                      want to sum over the rate of all instances, so we get fewer output time series,
+                      but still preserve the <code>job</code> dimension:</p>
 
-                  <pre><code>sum by (job) (rate(http_requests_total[5m]))</code></pre>
+                    <pre><code>sum by (job) (rate(http_requests_total[5m]))</code></pre>
 
-                  <p>If we have two different metrics with the same dimensional labels, we can apply
-                    binary operators to them and elements on both sides with the same label set
-                    will get matched and propagated to the output. For example, this expression
-                    returns the unused memory in MiB for every instance (on a fictional cluster
-                    scheduler exposing these metrics about the instances it runs):</p>
+                    <p>If we have two different metrics with the same dimensional labels, we can apply
+                      binary operators to them and elements on both sides with the same label set
+                      will get matched and propagated to the output. For example, this expression
+                      returns the unused memory in MiB for every instance (on a fictional cluster
+                      scheduler exposing these metrics about the instances it runs):</p>
 
-                  <pre><code>(instance_memory_limit_bytes - instance_memory_usage_bytes) / 1024 / 1024</code></pre>
+                    <pre><code>(instance_memory_limit_bytes - instance_memory_usage_bytes) / 1024 / 1024</code></pre>
 
-                  <p>The same expression, but summed by application, could be written like this:</p>
+                    <p>The same expression, but summed by application, could be written like this:</p>
 
-                  <pre><code>sum by (app, proc) (instance_memory_limit_bytes - instance_memory_usage_bytes) / 1024 / 1024</code></pre>
+                    <pre><code>sum by (app, proc) (instance_memory_limit_bytes - instance_memory_usage_bytes) / 1024 / 1024</code></pre>
 
-                  <p>If the same fictional cluster scheduler exposed CPU usage metrics like the following for every instance:</p>
+                    <p>If the same fictional cluster scheduler exposed CPU usage metrics like the following for every instance:</p>
 
-                  <pre><code>instance_cpu_time_ns{app="lion", proc="web", rev="34d0f99", env="prod", job="cluster-manager"}
+                    <pre><code>instance_cpu_time_ns{app="lion", proc="web", rev="34d0f99", env="prod", job="cluster-manager"}
 instance_cpu_time_ns{app="elephant", proc="worker", rev="34d0f99", env="prod", job="cluster-manager"}
 instance_cpu_time_ns{app="turtle", proc="api", rev="4d3a513", env="prod", job="cluster-manager"}
 instance_cpu_time_ns{app="fox", proc="widget", rev="4d3a513", env="prod", job="cluster-manager"}
 ...
 </code></pre>
 
-                  <p>...we could get the top 3 CPU users grouped by application (<code>app</code>) and process type (<code>proc</code>) like this:</p>
+                    <p>...we could get the top 3 CPU users grouped by application (<code>app</code>) and process type (<code>proc</code>) like this:</p>
 
-                  <pre><code>topk(3, sum by (app, proc) (rate(instance_cpu_time_ns[5m])))</code></pre>
+                    <pre><code>topk(3, sum by (app, proc) (rate(instance_cpu_time_ns[5m])))</code></pre>
 
-                  <p>Assuming this metric contains one time series per running instance, you could count the number of running instances per application like this:</p>
+                    <p>Assuming this metric contains one time series per running instance, you could count the number of running instances per application like this:</p>
 
-                  <pre><code>count by (app) (instance_cpu_time_ns)</code></pre>
+                    <pre><code>count by (app) (instance_cpu_time_ns)</code></pre>
 
+                  </div>
                 </div>
               </div>
-            </div>
           </el-scrollbar>
+            </div>
+
         </div>
         <chart-box ref="addChartModal" :panel-data="panelData" @on-create-success="createSuccess"></chart-box>
         <element-set
@@ -235,9 +209,7 @@ instance_cpu_time_ns{app="fox", proc="widget", rev="4d3a513", env="prod", job="c
         promqlCount: 1,
         promqlKeys: [],
         expressions: [''],
-        searchTime: [new Date().setHours(new Date().getHours() - 1), new Date()],
-        filterTime: {},
-        visible: false,
+        filterTime: [new Date().setHours(new Date().getHours() - 1), new Date()],
         showIntroduce: true,
         defaultChartVisible: true,
         defaultTableVisible: true,
@@ -253,112 +225,11 @@ instance_cpu_time_ns{app="fox", proc="widget", rev="4d3a513", env="prod", job="c
         tableLabels: [],
         showTableLabels: [],
         tableLoading: false,
-        intervalTimer: null,
-        intervalList: [{
-          value: 0,
-          name: this.$t("dashboard.panel.refreshInterval.never"),
-        }, {
-          value: 60,
-          name: this.$t("dashboard.panel.refreshInterval.oneMinute"),
-        }, {
-          value: 180,
-          name: this.$t("dashboard.panel.refreshInterval.threeMinutes"),
-        }, {
-          value: 300,
-          name: this.$t("dashboard.panel.refreshInterval.fiveMinutes"),
-        }, {
-          value: 600,
-          name: this.$t("dashboard.panel.refreshInterval.tenMinutes"),
-        }],
-        interval: 0,
         saveDisabled: true,
         panelData: [],
-        pickerOptions: {
-          shortcuts: [
-            {
-              text: this.$t("dashboard.panel.recOne"),
-              onClick(picker) {
-                const end = new Date();
-                const start = new Date();
-                start.setHours(start.getHours() - 1);
-                picker.$emit('pick', [start, end]);
-              }
-            }, {
-              text: this.$t("dashboard.panel.recFour"),
-              onClick(picker) {
-                const end = new Date();
-                const start = new Date();
-                start.setHours(start.getHours() - 4);
-                picker.$emit('pick', [start, end]);
-              }
-            }, {
-              text: this.$t("dashboard.panel.recOneDay"),
-              onClick(picker) {
-                const end = new Date();
-                const start = new Date();
-                start.setDate(start.getDate() - 1);
-                picker.$emit('pick', [start, end]);
-              }
-            }, {
-              text: this.$t("dashboard.panel.yesterday"),
-              onClick(picker) {
-                const start = new Date();
-                const end = new Date();
-                start.setDate(start.getDate() - 1);
-                start.setHours(0);
-                start.setMinutes(0);
-                start.setSeconds(0);
-                end.setDate(end.getDate() - 1);
-                end.setHours(23);
-                end.setMinutes(59);
-                end.setSeconds(59);
-                picker.$emit('pick', [start, end]);
-              }
-            }, {
-              text: this.$t("dashboard.panel.recSevenDay"),
-              onClick(picker) {
-                const end = new Date();
-                const start = new Date();
-                start.setDate(start.getDate() - 7);
-                picker.$emit('pick', [start, end]);
-              }
-            }, {
-              text: this.$t("dashboard.panel.recOneMonth"),
-              onClick(picker) {
-                const end = new Date();
-                const start = new Date();
-                start.setDate(start.getDate() - 30);
-                picker.$emit('pick', [start, end]);
-              }
-            }, {
-              text: this.$t("dashboard.panel.curMonth"),
-              onClick(picker) {
-                const end = new Date();
-                const start = new Date();
-                start.setDate(1);
-                start.setHours(0);
-                start.setMinutes(0);
-                picker.$emit('pick', [start, end]);
-              }
-            }, {
-              text: this.$t("dashboard.panel.lastMonth"),
-              onClick(picker) {
-                const end = new Date();
-                const start = new Date();
-                start.setDate(1);
-                start.setMonth(start.getMonth() - 1);
-                end.setDate(0);
-                start.setStart();
-                end.setEnd();
-                picker.$emit('pick', [start, end]);
-              }
-            }],
-        },
       }
     },
     created() {
-      this.filterTime.startTime = bus.timeFormate(this.searchTime[0], 'yyyy-MM-dd hh:mm:ss');
-      this.filterTime.endTime = bus.timeFormate(this.searchTime[1], 'yyyy-MM-dd hh:mm:ss');
       this.getPanelData();
       this.promqlKeys.push(this.guid());
     },
@@ -381,7 +252,8 @@ instance_cpu_time_ns{app="fox", proc="widget", rev="4d3a513", env="prod", job="c
             let requestArr = [];
             this.expressions.forEach((item, index) => {
               if (item != '') {
-                requestArr.push(axios.get('/prom/api/v1/query_range?query=' + item + '&start=' + this.filterTime.startTime + '&end=' + this.filterTime.endTime + '&step=15'))
+                let step=bus.getStep(this.filterTime[0],this.filterTime[1]);
+                requestArr.push(axios.get('/prom/api/v1/query_range?query=' + item + '&start=' + this.filterTime[0] + '&end=' + this.filterTime[1] + '&step='+step))
               }
             })
             if (requestArr.length > 0) {
@@ -500,46 +372,14 @@ instance_cpu_time_ns{app="fox", proc="widget", rev="4d3a513", env="prod", job="c
         this.promqlCount++;
       },
       removeExpression: function (index) {
+        console.log(this.expressions)
+        console.log(this.promqlKeys)
+        console.log(this.promqlCount)
         if (this.promqlCount > 1) {
           this.expressions.splice(index, 1);
           this.promqlKeys.splice(index, 1);
           this.promqlCount--;
         }
-      },
-      dateChange(time) {
-        this.filterTime.startTime = bus.timeFormate(time[0], 'yyyy-MM-dd hh:mm:ss');
-        this.filterTime.endTime = bus.timeFormate(time[1], 'yyyy-MM-dd hh:mm:ss');
-        this.expressionChange();
-      },
-      //定期刷新
-      selectInterval(val) {
-        this.visible = false;
-        clearInterval(this.intervalTimer);
-        if (val) {
-          this.interval = val;
-          const start = new Date(this.searchTime[1]);
-          const now = new Date();
-          const interval = Math.floor((now.getTime() - start.getTime()) / 1000); //计算当前结束时间到现在的间隔（秒）
-          if (interval >= 60) { //如果结束时间到现在超过1分钟，则
-            this.getIntervalData(interval);
-          }
-          this.intervalTimer = setInterval(() => {
-            this.getIntervalData(this.interval);
-          }, val * 1000);
-        }
-      },
-      getIntervalData(interval) { //interval:结束时间到现在的秒数
-        const start = new Date(this.searchTime[0]);
-        const end = new Date(this.searchTime[1]);
-        start.setSeconds(start.getSeconds() + interval);
-        end.setSeconds(end.getSeconds() + interval);
-        const startTime = bus.timeFormate(start, 'yyyy-MM-dd hh:mm');
-        const endTime = bus.timeFormate(end, 'yyyy-MM-dd hh:mm');
-        this.searchTime = [startTime, endTime];
-        this.filterTime.startTime = startTime;
-        this.filterTime.endTime = endTime;
-        //刷新数据
-        this.expressionChange();
       },
       changeChartVisible: function () {
         this.chartVisible = !this.chartVisible;
@@ -708,7 +548,6 @@ instance_cpu_time_ns{app="fox", proc="widget", rev="4d3a513", env="prod", job="c
     background-color: #e9edf2;
     border-top: 3px solid #3274d9;
     margin-bottom: 16px;
-    margin-right: 4px;
     -webkit-box-shadow: -1px -1px 0 0 hsla(0, 0%, 100%, .1), 1px 1px 0 0 rgba(0, 0, 0, .1);
     box-shadow: -1px -1px 0 0 hsla(0, 0%, 100%, .1), 1px 1px 0 0 rgba(0, 0, 0, .1);
     -webkit-box-flex: 1;
@@ -733,17 +572,9 @@ instance_cpu_time_ns{app="fox", proc="widget", rev="4d3a513", env="prod", job="c
     border: 1px solid #c7d0d9;
     border-radius: 4px;
   }
-
-  .popover_ul li {
-    padding: 10px 3px;
-    cursor: pointer;
+  .right-margin{
+    margin-right: 15px;
   }
-
-  .popover_ul li:hover {
-    background: $dropdown-hover-background-color !important;
-    color: $global-text-color-active !important;
-  }
-
   /*外部引用 样式start*/
   .doc-content {
     font-size: 16px;

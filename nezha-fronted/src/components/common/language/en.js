@@ -174,7 +174,7 @@ const en = {
       lastSevenDay:'Last 7 days',
       lastThirtyDay:'Last 30 days',
       refreshInterval:{
-        never:'Never', //'从不'
+        never:'OFF', //'从不'
         oneMinute:'1 minute', // 1 minute
         threeMinutes:'3 minutes', //'3分钟'
         fiveMinutes:'5 minutes', //'5分钟'
@@ -202,7 +202,8 @@ const en = {
     },
     metricPreview:{
       title:'Explore',
-      inputTip:'Enter a PromQL query'
+      inputTip:'Enter a PromQL query',
+      runQuery:'Run query',
     },
     refresh:'Refresh',//'刷新'
     edit:'Edit',//'编辑'
