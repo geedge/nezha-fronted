@@ -67,7 +67,7 @@
             <div class="content-col-box">
               <div class="content-col-title">{{$t("dashboard.overview.alert.chart.chartTitle")}}</div>
               <div class="content-col-content">
-                <chart-box ref="chartbox" :show-toolbox="false" name="trend"></chart-box>
+                <chart-box chart-type="overviewLine" ref="chartbox" :show-toolbox="false" name="trend"></chart-box>
               </div>
             </div>
             <div class="content-col-box">
@@ -82,13 +82,13 @@
             <div class="content-col-box">
               <div class="content-col-title">{{$t("dashboard.overview.asset.assetType")}}</div>
               <div class="content-col-content">
-                <chart-box chart-type="pie" ref="assetTypePie" :show-toolbox="false" name="assetTypePie"></chart-box>
+                <chart-box chart-type="pie" ref="assetTypePie" :show-toolbox="false" name="assetTypePie" :tooltip-formatter="assetTypeFormatter" ></chart-box>
               </div>
             </div>
             <div class="content-col-box">
               <div class="content-col-title">{{$t("dashboard.overview.alert.alertRuleTopN")}}</div>
               <div class="content-col-content">
-                <chart-box chart-type="bar" ref="ruleMessage" :show-toolbox="false" name="ruleMessage"></chart-box>
+                <chart-box axis-tooltip="y" chart-type="bar" ref="ruleMessage" :tooltip-formatter="simpleFormatter" :show-toolbox="false" name="ruleMessage"></chart-box>
               </div>
             </div>
             <div class="content-col-box">
@@ -106,14 +106,15 @@
                 </span>
               </div>
               <div class="content-col-content">
-                <chart-box v-show="alertMessageShow == 'asset'" chart-type="bar" ref="assetMessage" name="assetMessage" :show-toolbox="false"></chart-box>
-                <chart-box v-show="alertMessageShow == 'module'" chart-type="bar" ref="moduleMessage" name="moduleMessage" :show-toolbox="false"></chart-box>
+                <chart-box axis-tooltip="y" v-show="alertMessageShow == 'asset'" :tooltip-formatter="simpleFormatter" chart-type="bar" ref="assetMessage" name="assetMessage" :show-toolbox="false"></chart-box>
+                <chart-box axis-tooltip="y" v-show="alertMessageShow == 'module'" :tooltip-formatter="simpleFormatter" chart-type="bar" ref="moduleMessage" name="moduleMessage" :show-toolbox="false"></chart-box>
               </div>
             </div>
           </div>
         </div>
       </div>
     </left-menu>
+    <div class="axis-tooltip el-popover"></div>
   </div>
 </template>
 
@@ -205,15 +206,61 @@
 
             /*饼图*/
             this.$refs.assetTypePie.startLoading();
-            let seriesData = [];
+            let legendData = [];
+            let typeSeriesData = [];
+            let modelSeriesData = [];
             this.assetData.typeStat.forEach(item => {
-              seriesData.push({name: item.name, value: item.total});
+              legendData.push(item.name);
+              typeSeriesData.push({name: item.name, value: item.total});
             });
-            let series = {
-              name: 'nz_alert_nums',
-              data: seriesData,
-              type: 'pie'
-            };
+            this.assetData.modelStat.forEach(item => {
+              legendData.push(item.name);
+              modelSeriesData.push({name: item.name, value: item.total});
+            });
+            let series = [{
+              name: 'Type',
+              data: typeSeriesData,
+              type: 'pie',
+              radius: [0, '50%'],
+              label: {
+                position: 'inner',
+                formatter: function(params) {
+                  if (params.name.length > 12) {
+                    return params.name.substring(0, 9) + "...";
+                  }
+                  return params.name;
+                }
+              },
+              labelLine: {
+                show: false
+              },
+              left: '25%'
+            }, {
+              name: 'Model',
+              radius: ['65%', '80%'],
+              data: modelSeriesData,
+              type: 'pie',
+              left: '25%',
+              label: {
+                formatter: function(params) {
+                  if (params.name.length > 12) {
+                    return params.name.substring(0, 9) + "...";
+                  }
+                  return params.name;
+                }
+              }
+            }];
+            this.$refs.assetTypePie.modifyOption('legend','show', true);
+            this.$refs.assetTypePie.modifyOption('legend','orient', "vertical");
+            this.$refs.assetTypePie.modifyOption('legend','data', legendData);
+            this.$refs.assetTypePie.modifyOption('legend','left', 0);
+            this.$refs.assetTypePie.modifyOption('legend','top', 5);
+            this.$refs.assetTypePie.modifyOption('legend','formatter', function(name) {
+              if (name.length > 12) {
+                return name.substring(0, 9) + "...";
+              }
+              return name;
+            });
             this.$refs.assetTypePie.setSeries(series);
             this.$refs.assetTypePie.endLoading();
           }
@@ -296,9 +343,6 @@
                 return [item[0]*1000,item[1]];
               })
               this.chartSeries=[series];
-              this.$refs.chartbox.modifyOption('tooltip','formatter',this.tooltipFormatter);
-              this.$refs.chartbox.modifyOption('tooltip','position',this.tooltipPosition);
-              this.$refs.chartbox.modifyOption('yAxis','formatter',this.yAxisFormatter);
               this.$refs.chartbox.setSeries(this.chartSeries);
               this.$refs.chartbox.endLoading();
             }
@@ -553,7 +597,12 @@
 
         return tooltip;
       },
-
+      simpleFormatter(params) {
+        return `<div class="tooltip" style="min-width: unset;">${params.name}:&nbsp;${params.value}</div>`;
+      },
+      assetTypeFormatter(params) {
+        return `<div class="tooltip" style="min-width: unset;">${params.seriesName}<br/>${params.name}:&nbsp;${params.value}</div>`;
+      },
       switchFullScreen:function(){
         this.isFullScreen = this.judgeFullScreen();
         if(this.isFullScreen){

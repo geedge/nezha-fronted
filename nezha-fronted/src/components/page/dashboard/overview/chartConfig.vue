@@ -154,19 +154,138 @@
       legend: {
         show: false,
       },
-      grid: {},
+      grid: {
+        top: 30,
+        left: 0,
+        right: 30,
+        containLabel: true,
+        bottom:8
+      },
       series: [],
       tooltip : {},
       xAxis: {
-        type: 'value'
+        type: 'value',
+        axisLine: {
+          show: false
+        },
+        axisTick: {
+          show: false
+        },
+        axisLabel: {
+          fontSize: 13*window.devicePixelRatio
+        }
       },
       yAxis: {
         type: 'category',
-        data: []
+        axisLine: {
+          show: false
+        },
+        axisTick: {
+          show: false
+        },
+        data: [],
+        axisLabel: {
+          formatter: function(value) {
+            if (value.length > 12) {
+              return value.substring(0, 9) + "...";
+            }
+            return value;
+          },
+          fontSize: 12*window.devicePixelRatio
+        },
+        triggerEvent: true
       },
+    };
+    const overViewLine = {
+      title:{
+        show: false,
+      },
+      color: bgColorList,
+      legend:{
+        show:false,
+      },
+      toolbox:{
+        show:false,
+        top:'0',
+        showTitle:false,
+        tooltip:{
+          show:false,
+        },
+        feature:{
+          dataZoom:{
+            yAxisIndex:false
+          },
+          magicType:{
+            type:['stack']
+          },
+        }
+      },
+      tooltip: {
+        trigger: 'axis',
+        confine: false,
+        extraCssText:'z-index:1000;',
+      },
+      grid: {
+        left: 6,
+        right: 30,
+        containLabel: true,
+        bottom:8,
+      },
+      xAxis: {
+        type: 'time',
+        axisLabel: {
+          intervale: 0,
+          rotate: 0,
+          formatter: function (value) {
+            value = bus.computeTimezone(value)
+            let now = bus.computeTimezone(new Date().getTime());
+            let t_date = new Date(value);
+            let hhmm = [t_date.getHours(), t_date.getMinutes() < 10 ? "0" + t_date.getMinutes() : t_date.getMinutes()].join(':');
+            let mmdd = [t_date.getMonth() + 1, t_date.getDate() < 10 ? "0" + t_date.getDate() : t_date.getDate()].join('/');
+            if (value-now < 1000*60*60*24) {
+              return hhmm;
+            } else if (value-now >= 1000*60*60*24 && value-now < 1000*60*60*24*30) {
+              return mmdd + " " + hhmm;
+            } else {
+              return mmdd;
+            }
+          },
+          fontSize: 13*window.devicePixelRatio
+        },
+        axisPointer: {//y轴上显示指针对应的值
+          show: true,
+        },
+        splitLine:{
+          show:false
+        },
+        axisLine: {
+          show: false
+        },
+        axisTick: {
+          show: false
+        },
+      },
+      yAxis: {
+        type: 'value',
+        splitLine:{
+          show:true
+        },
+        axisLine: {
+          show: false
+        },
+        axisTick: {
+          show: false
+        },
+        axisLabel: {
+          fontSize: 13*window.devicePixelRatio
+        }
+      },
+      useUTC: false,//使用本地时间
+      series: [],
     };
     const chartTypes={
       line:{name:'line',option:commonOption},
+      overviewLine: {name: 'line', option: overViewLine},
       map:{name:'map',option:mapOptions},
       pie: {name: 'assetType', option: assetTypePie},
       bar: {name: 'alertMessage', option: alertMessageBar}

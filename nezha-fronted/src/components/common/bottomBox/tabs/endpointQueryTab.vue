@@ -143,7 +143,7 @@
         width="180">
       </el-table-column>
     </el-table>-->
-    <button class="to-top" v-show="showTopBtn" :class="{'to-top-is-hover': tableHover}" @click="$('ps', 1)"><i class="nz-icon nz-icon-top"></i></button>
+    <button class="to-top" v-show="showTopBtn" :class="{'to-top-is-hover': tableHover}" @click="$toTop('ps', 1)"><i class="nz-icon nz-icon-top"></i></button>
 
     <el-dialog class="line-chart-block-modal nz-dialog"
                :title="$t('project.endpoint.dialogTitle')"

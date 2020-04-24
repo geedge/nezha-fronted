@@ -1,5 +1,5 @@
 <template>
-  <div class="chart-room" @mouseenter="mouseEnterChart" @mouseleave="mouseLeaveChart">
+  <div class="chart-room" @mouseenter="mouseEnterChart" @mouseleave="mouseLeaveChart" ref="chartRoom">
     <loading  ref="loading"></loading>
 
     <div class="chart-header">{{chartTitle}}</div>
@@ -36,7 +36,8 @@
       chartType:{type:String,default:'line'},
       tooltipFormatter:Function,
       yAxisFormatter:Function,
-      map:{}
+      map:{},
+      axisTooltip: {type: String}, // x/y
     },
     data(){
       return {
@@ -97,11 +98,30 @@
             this.modifyOption('yAxis','formatter',this.defaultYAxisFormatter)
           }
         }
-        console.log(this.option)
+        //console.log(this.option)
         this.$set(this.option,'series',this.series);
 
         this.chart.clear();
-        this.chart.setOption(this.option)
+        this.chart.setOption(this.option);
+        //坐标轴label鼠标悬浮提示
+        if (this.axisTooltip) {
+          let tooltipDom = document.querySelector(".axis-tooltip");
+          this.chart.on('mouseover', (params) => {
+            if(params.componentType == this.axisTooltip + "Axis") {
+              tooltipDom.style.display = "block";
+              tooltipDom.innerHTML = params.value;
+            }
+            this.$refs.chartRoom.addEventListener("mousemove", (event) => {
+              tooltipDom.style.top = event.pageY + "px";
+              tooltipDom.style.left = event.pageX-15 + "px";
+            });
+          });
+          this.chart.on('mouseout', (params) => {
+            if(params.componentType == this.axisTooltip + "Axis") {
+              tooltipDom.style.display = "";
+            }
+          });
+        }
         this.resize();
       },
       resizeChart:function(width,height){
