@@ -18,9 +18,9 @@
                       :class="{'nz-btn-disabled btn-disabled-cursor-not-allowed' : saveDisabled}">
                 {{$t('dashboard.metric.saveChart')}}
               </button>
-              <interval-refresh :refresh-data-func="expressionChange" v-model="filterTime">
+              <pick-time :refresh-data-func="expressionChange" v-model="filterTime">
                 <template slot="added-text">{{$t('dashboard.metricPreview.runQuery')}}</template>
-              </interval-refresh>
+              </pick-time>
             </div>
             <div style="height: 100%;width: 100%;" >
               <el-scrollbar style="height: 100%" class="el-scrollbar-large">
