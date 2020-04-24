@@ -46,7 +46,7 @@
         <el-collapse v-model="currentProjectTitle" class="left-menu-bg" accordion style="padding-top:0px;" @change="projectChange" ref="projectLeft">
           <el-collapse-item v-for="(item,index) in projectList" :key="item.name+item.id+index" :name="item.name+'-'+item.id">
             <template slot="title">
-              <div class="sidebar-info-item" :class="{'sidebar-info-item-active': item.name+'-'+item.id==currentProjectTitle || item.id==currentProject.id}" @click="detailProjectInfo($event,item)" :id="'project-module-'+item.id">
+              <div class="sidebar-info-item" :class="{'sidebar-info-item-active': item.id==currentProject.id}" @click="detailProjectInfo($event,item)" :id="'project-module-'+item.id">
                 <div class="sidebar-info-item-txt">
                   <el-popover v-if="item.name.length > 14" trigger="hover" placement="top-start" :content="item.name" popper-class="transparent-pop">
                     <span slot="reference" class="">
@@ -497,6 +497,7 @@
       //左侧module列表选中切换
       changeModule(module) {
         this.currentModule = module;
+        this.currentProject={};
         this.endpointSearchLabel = {moduleId: ''};
         this.$refs.projectSearch.clearSearch();
         this.showSubList = false;

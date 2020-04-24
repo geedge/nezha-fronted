@@ -4,6 +4,11 @@
     margin-top: 16px;
   }
 </style>
+<style>
+  .endpoint-dialog .el-dialog__body{
+    height: 100% !important;
+  }
+</style>
 <template>
   <span>
     <div class="sub-top-tools">
@@ -145,7 +150,7 @@
     </el-table>-->
     <button class="to-top" v-show="showTopBtn" :class="{'to-top-is-hover': tableHover}" @click="$('ps', 1)"><i class="nz-icon nz-icon-top"></i></button>
 
-    <el-dialog class="line-chart-block-modal nz-dialog"
+    <el-dialog class="line-chart-block-modal nz-dialog endpoint-dialog"
                :title="$t('project.endpoint.dialogTitle')"
                :visible.sync="graphShow"
                width="90%"
@@ -153,16 +158,12 @@
                @close="dialogClose">
       <div slot="title">
         {{$t("project.endpoint.dialogTitle")}}
-        <div class="float-right panel-calendar dialog-tool">
+        <div class="float-right panel-calendar dialog-tool" style="display: flex">
           <pick-time :refresh-data-func="queryChartDate" :use-refresh="false" v-model="searchTime"></pick-time>
+           <button class="nz-btn nz-btn-size-large nz-btn-style-normal nz-btn-min-width-82" @click="saveChart">{{$t('dashboard.metric.saveChart')}}</button>
         </div>
       </div>
       <chart ref="endpointChart" ></chart>
-      <div class="line-100 margin-t-10"></div>
-      <div class="chart-bottom">
-        <button class="nz-btn nz-btn-size-large nz-btn-style-normal nz-btn-min-width-82" @click="saveChart">{{$t('dashboard.metric.saveChart')}}</button>
-      </div>
-      <loading  ref="graphLoading"></loading>
     </el-dialog>
 
     <chart-box ref="addChartModal" :panel-data="panelData" @on-create-success="createSuccess" @reloadOnlyPanel="getPanelData" @reload="getPanelData"></chart-box>
@@ -224,12 +225,12 @@
         metricInfo.elements = [];
         //console.info("aaa", this.selectedEndpoints)
         for(let i = 0; i < this.selectedEndpoints.length; i++) {
-          let type = '';
-          if (this.selectedEndpoints[i].type == '1') {
-            type = 'expert';
-          } else if (this.selectedEndpoints[i].type == '2') {
-            type = 'normal';
-          }
+          let type = 'expert';
+          // if (this.selectedEndpoints[i].type == '1') {
+          //   type = 'expert';
+          // } else if (this.selectedEndpoints[i].type == '2') {
+          //   type = 'normal';
+          // }
           metricInfo.elements.push({expression: this.selectedEndpoints[i].element, type: type});
         }
         this.$refs.addChartModal.createData(-1, metricInfo);
@@ -418,10 +419,6 @@
           this.$refs.endpointChart.startLoading();
           this.queryChartDate();
         });
-        /*setTimeout(()=> {
-          this.$refs.graphLoading.startLoading();
-          this.queryChartDate();
-        }, 200);*/
       },
       dialogClose:function(){
         this.graphShow=false;

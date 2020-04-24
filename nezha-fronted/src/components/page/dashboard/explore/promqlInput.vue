@@ -1,5 +1,5 @@
 <template>
-    <div class="promqlInput">
+    <div class="promqlInput" :style="{height:(errorMsg || appendMsg)?'50px':'36px'}">
       <div class="query-row">
         <div class="query-input">
           <div class="metricBtn">
@@ -8,10 +8,11 @@
               <el-button class="metric-btn nz-btn nz-btn-size-normal nz-btn-style-light" @click="toggleDropdown">Metric &nbsp;<i class="el-icon-arrow-down"></i></el-button>
               <el-cascader-panel v-show="dropDownVisible" v-model="cascaderValue"  slot="dropdown" ref="metricSelector" :props="{emitPath:false}" :options="metricOptions"  @change="metricChange"></el-cascader-panel>
             </el-dropdown>
-
           </div>
           <div class="inputBox">
             <el-autocomplete :placeholder="$t('dashboard.metricPreview.inputTip')" :fetch-suggestions="filterInput" clearable @clear="clearExpression" :trigger-on-focus="false" v-model="expressionList[index]" @blur="expressionChange" style="width: 100%;height:36px"></el-autocomplete>
+            <div class="append-msg error" v-if="errorMsg"><span>{{errorMsg}}</span></div>
+            <div class="append-msg error" v-if="appendMsg"><span>{{appendMsg}}</span></div>
           </div>
         </div>
       </div>
@@ -21,6 +22,7 @@
           <div class="option nz-btn nz-btn-size-normal nz-btn-style-light" @click="removeExpression"><i class="el-icon-minus"></i></div>
         </div>
       </div>
+
     </div>
 </template>
 
@@ -37,6 +39,8 @@
           metricStore:[],
           metricOptions:[],
           cascaderValue:'',
+          errorMsg:null,
+          appendMsg:null,
         }
       },
       created() {
@@ -118,6 +122,13 @@
         },
         expressionChange:function(){
           this.$emit('change')
+        },
+        setError:function(errMsg){
+          console.log(errMsg)
+          this.errorMsg=errMsg;
+        },
+        setMsg:function(){
+          this.appendMsg
         }
       },
       watch:{
@@ -140,6 +151,14 @@
   }
   .promqlInput .query-row{
     width: 100%;
+  }
+  .inputBox .append-msg{
+    font-size: 12px;
+    line-height: 1;
+    padding-top: 4px;
+  }
+  .inputBox .error{
+    color: #F56C6C;
   }
   .query-row .query-input{
     display: flex;
