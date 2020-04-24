@@ -6,7 +6,7 @@
 }
 .overview-content-header{
   display: flex;
-  padding-top: 10px;
+  padding-top: 6px;
 }
 .overview-content-header .header-title{
   flex:13;
@@ -26,8 +26,7 @@
 }
 .tool-container .time{
   flex: 4;
-  font-size: 1.5rem !important;
-  font-weight: 700;
+  font-size: 1.2rem !important;
   display: inline-block;
   height: 35px;
   line-height: 35px;
@@ -38,11 +37,10 @@
   height: 35px;
 }
 .date .week{
-  font-size: 1.125rem;
-  font-weight: bold;
+  font-size: 0.9rem;
+  line-height: 1.1rem;
 }
 .date .sys-date{
-  margin-top: -6px;
   font-size: .75rem;
 }
 .tool-container .operation{
@@ -52,9 +50,10 @@
 }
 .operation .screen-icon{
   font-size: 1.875rem !important;
+  cursor: pointer;
 }
 .overview-content{
-  height: calc(100% - 45px);
+  height: calc(100% - 42px);
   width: 100%;
 }
 .overview-content .content-row-box {
@@ -136,8 +135,11 @@
   font-size: 0.9rem;
 }
 .content-col-content-num {
-  font-size: 2.5rem;
+  font-size: 3.2rem;
+  font-weight: bold;
   color: #333;
 }
-
+.hide-div {
+  visibility: hidden;
+}
 

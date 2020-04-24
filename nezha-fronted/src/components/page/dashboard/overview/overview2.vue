@@ -555,7 +555,7 @@
       },
 
       switchFullScreen:function(){
-        this.isFullScreen=this.judgeFullScreen();
+        this.isFullScreen = this.judgeFullScreen();
         if(this.isFullScreen){
           this.exitFullScreen();
         }else{
@@ -568,18 +568,18 @@
       fullScreen:function(){
         let container=document.getElementById('mainDisplay');
         let fullScreenFunc=container.requestFullscreen||container.mozRequestFullScreen||container.webkitRequestFullscreen||container.msRequestFullscreen;
-        fullScreenFunc.call(container)
+        fullScreenFunc.call(container);
+        this.isFullScreen = true;
       },
       exitFullScreen:function(){
-        if(this.judgeFullScreen()){
-          if(document.exitFullscreen) {
-            document.exitFullscreen();
-          } else if(document.mozCancelFullScreen) {
-            document.mozCancelFullScreen();
-          } else if(document.webkitExitFullscreen) {
-            document.webkitExitFullscreen();
-          }
+        if(document.exitFullscreen) {
+          document.exitFullscreen();
+        } else if(document.mozCancelFullScreen) {
+          document.mozCancelFullScreen();
+        } else if(document.webkitExitFullscreen) {
+          document.webkitExitFullscreen();
         }
+        this.isFullScreen = false;
       },
       alertMessageDropdownHandler(show) {
         if (show) {
