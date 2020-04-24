@@ -41,15 +41,14 @@
 
           <div class="panel-calendar margin-r-20">
             <div class="block">
-              <el-date-picker prefix-icon=" " class="nz-dashboard-picker" size="mini" ref="calendar"
+              <time-picker ref="calendarPanel" class="nz-dashboard-picker" @change="dateChange"></time-picker>
+              <!--
+<el-date-picker prefix-icon=" " class="nz-dashboard-picker" size="mini" ref="calendar"
                               format="yyyy/MM/dd HH:mm" @change="dateChange" v-model="searchTime" type="datetimerange"
                               :picker-options="pickerOptions" :range-separator="$t('dashboard.panel.to')"
                               :start-placeholder="$t('dashboard.panel.startTime')"
                               :end-placeholder="$t('dashboard.panel.endTime')" align="right">
               </el-date-picker>
-              <!--
-
-              <time-picker ref="calendarPanel" class="nz-dashboard-picker" @change="dateChange"></time-picker>
               -->
             </div>
           </div>
@@ -104,7 +103,7 @@
   import ChartBox from "./chartBox";
   import ChartList from '../../charts/chart-list';
   import bus from '../../../libs/bus';
-  //import timePicker from '../../common/timePicker'
+  import timePicker from '../../common/timePicker'
 
   export default {
     name: "panel",
@@ -116,6 +115,7 @@
           show: false,
           title: this.$t('dashboard.panel.createPanelTitle')
         },
+        /*
         pickerOptions: {
           shortcuts: [{
             text: this.$t("dashboard.panel.recOne"),
@@ -195,7 +195,7 @@
               picker.$emit('pick', [start, end]);
             }
           }]
-        },
+        },*/
         searchTime: [
           new Date(bus.computeTimezone(new Date().getTime())).setMinutes(new Date(bus.computeTimezone(new Date().getTime())).getMinutes() - 5),
           new Date(bus.computeTimezone(new Date().getTime()))
@@ -278,7 +278,7 @@
     components: {
       'chart-box': ChartBox,
       'chart-list': ChartList,
-      //'time-picker':timePicker
+      'time-picker':timePicker
     },
     methods: {
       //刷新
@@ -837,7 +837,6 @@
 
   .nz-dashboard-picker {
   }
-
 
 </style>
 <style lang="scss">

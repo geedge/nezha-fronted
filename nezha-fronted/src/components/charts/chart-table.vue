@@ -20,7 +20,7 @@
         <div class="clearfix chartTitle" :class="{'dragTitle':dragTitleShow}" :id="'chartTitle'+chartIndex">
           <el-popover
             v-if="isError"
-            close-delay="10"
+            :close-delay=10
             placement="top-start"
             trigger="hover"
             popper-class="chart-error-popper">
@@ -72,8 +72,10 @@
             <div slot="title">
               <span class="nz-dialog-title">{{data.title}}</span>
               <div class="float-right panel-calendar dialog-tool">
+                <!--
                 <el-date-picker prefix-icon=" " size="mini" class="nz-dashboard-picker" ref="calendar" format="yyyy/MM/dd HH:mm" @change="dateChange" v-model="searchTime" type="datetimerange" :picker-options="pickerOptions" :range-separator="$t('dashboard.panel.to')" :start-placeholder="$t('dashboard.panel.startTime')" :end-placeholder="$t('dashboard.panel.endTime')" align="right">
-                </el-date-picker>
+                </el-date-picker>-->
+                <time-picker ref="calendarPanel" class="nz-dashboard-picker" style="margin-top: -12px;" @change="dateChange"></time-picker>
                 <!--<button @click="refreshChart" type="button" class="nz-btn nz-btn-size-normal nz-btn-style-light"><i style="font-size: 14px;" class="el-icon-refresh-right"></i></button>-->
               </div>
             </div>
@@ -112,11 +114,13 @@ import bus from '../../libs/bus';
 import {Loading} from 'element-ui';
 import chartDataFormat from './chartDataFormat'
 import loading from "../common/loading";
+import timePicker from '../common/timePicker'
 
 export default {
     name: 'chartTable',
   components: {
     'loading': loading,
+    'time-picker':timePicker
   },
     props: {
         // 看板id
@@ -216,7 +220,7 @@ export default {
             }],
             searchTime: [new Date().setHours(new Date().getHours() - 1), new Date()],//全屏显示的时间
             oldSearchTime: [],
-            pickerOptions: {
+            /*pickerOptions: {
                 shortcuts: [{
                     text: this.$t("dashboard.panel.recOne"),
                     onClick(picker) {
@@ -295,7 +299,7 @@ export default {
                         picker.$emit('pick', [start, end]);
                     }
                 }]
-            },
+            },*/
         };
     },
     created() {
@@ -543,6 +547,7 @@ export default {
             //this.filter.start_time = bus.timeFormate(this.searchTime[0], 'yyyy-MM-dd hh:mm:ss');
             //this.filter.end_time = bus.timeFormate(this.searchTime[1], 'yyyy-MM-dd hh:mm:ss');
             //this.showTable = false;
+            this.searchTime = [...time];
             this.seriesItemScreen = [];
             for(let i=0;i<8;i++){
               this.seriesItemScreen.push({//表格数据
@@ -568,8 +573,12 @@ export default {
             //this.searchTime = this.oldSearchTime;
           //alert(JSON.stringify(this.oldSearchTime));
             this.searchTime = [];
-            this.searchTime[0] = this.oldSearchTime[0];//将列表的查询时间复制给全屏的查询时间
-            this.searchTime[1] = this.oldSearchTime[1];
+            //this.searchTime[0] = this.oldSearchTime[0];//将列表的查询时间复制给全屏的查询时间
+            //this.searchTime[1] = this.oldSearchTime[1];
+            this.$set(this.searchTime, 0, this.oldSearchTime[0]);
+            this.$set(this.searchTime, 1, this.oldSearchTime[1]);
+            this.$refs.calendarPanel.setCustomTime(this.searchTime);
+
             this.seriesItemScreen = this.seriesItem;
             this.screenModal = true;
             //this.startLoading('screen');

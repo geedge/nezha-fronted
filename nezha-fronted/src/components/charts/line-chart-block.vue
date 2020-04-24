@@ -27,7 +27,7 @@
       <el-popover
         v-if="isError"
         placement="top-start"
-        close-delay="10"
+        :close-delay=10
         trigger="hover"
         popper-class="chart-error-popper">
         <div >{{errorContent}}</div>
@@ -91,11 +91,27 @@
                :visible.sync="screenModal"
                width="90%"
                @close="screenModal = false"
+               style="margin-top: 1vh !important;"
                @opened="initDialog">
+      <el-popover
+        v-if="isError"
+        placement="top-start"
+        :close-delay=10
+        trigger="hover"
+        popper-class="chart-error-popper">
+        <div >{{errorContent}}</div>
+        <span slot="reference"  class="panel-info-corner panel-info-corner--error">
+              <i class="nz-icon nz-icon-warning fa-model" ></i>
+              <span class="panel-info-corner-inner"></span>
+          </span>
+      </el-popover>
       <div slot="title" >
         <span class="nz-dialog-title" v-show="!isExplore">{{data.title}}</span>
         <span class="nz-dialog-title" v-show="isExplore">&nbsp;</span>
         <div class="float-right panel-calendar dialog-tool">
+
+          <time-picker ref="calendarPanel" class="nz-dashboard-picker" style="margin-top: -12px;"  @change="dateChange"></time-picker>
+          <!--
           <el-date-picker ref="calendar" prefix-icon=" " size="mini" class="nz-dashboard-picker"
                           format="yyyy/MM/dd HH:mm"
                           @change="dateChange"
@@ -106,7 +122,7 @@
                           :start-placeholder="$t('dashboard.panel.startTime')"
                           :end-placeholder="$t('dashboard.panel.endTime')"
                           align="right">
-          </el-date-picker>
+          </el-date-picker>-->
           <!--<button @click="refreshChart" type="button" class="nz-btn nz-btn-size-normal nz-btn-style-light"><i style="font-size: 14px;" class="el-icon-refresh-right"></i></button>-->
         </div>
       </div>
@@ -133,11 +149,13 @@
   import loading from "../common/loading";
   import chartDataFormat from './chartDataFormat'
   import {randomcolor} from  '../common/js/radomcolor/randomcolor.js'
+  import timePicker from '../common/timePicker'
 
   export default {
     name: 'lineChartBlock',
     components: {
       'loading': loading,
+      'time-picker':timePicker
     },
     props: {
       editChartId: {
@@ -215,7 +233,7 @@
         chartSpaceHeight:5,//top-border: 1,bottom-border: 1,padding-bottome:3
         titleHeight:28,
         legendHeight:80,
-        pickerOptions: {
+        /*pickerOptions: {
           shortcuts: [
             {
               text:  this.$t("dashboard.panel.recOne"),
@@ -295,7 +313,7 @@
                 picker.$emit('pick', [start, end]);
               }
             }]
-        },
+        },*/
       };
     },
     computed: {
@@ -1268,7 +1286,10 @@
         // 初始化同步时间
         this.filter.start_time = this.stableFilter.start_time;
         this.filter.end_time = this.stableFilter.end_time;
-        this.searchTime = this.oldSearchTime;
+        //this.searchTime = this.oldSearchTime;
+        this.$set(this.searchTime, 0, this.oldSearchTime[0]);
+        this.$set(this.searchTime, 1, this.oldSearchTime[1]);
+        this.$refs.calendarPanel.setCustomTime(this.searchTime);
         this.screenModal = true;
         this.isGreyScreen=[];
 
@@ -1283,6 +1304,7 @@
         //this.dateChange();
       },
       dateChange(time) {
+        this.searchTime = [...time];
         this.filter.start_time = bus.timeFormate(this.searchTime[0], 'yyyy-MM-dd hh:mm:ss');
         this.filter.end_time = bus.timeFormate(this.searchTime[1], 'yyyy-MM-dd hh:mm:ss');
         this.echartModalStore.clear();
@@ -1345,6 +1367,8 @@
               }
               res.forEach((response,pos) => {
                 if (response.status === 'success') {
+                  this.isError = false;
+                  this.errorContent = "";
                   if (response.data.result) {
                     // 循环处理每个elements下获取的数据列
                     response.data.result.forEach((queryItem,innerPos) => {
@@ -1427,6 +1451,15 @@
                         */
                       }
                     });
+                  }
+                }else{
+                  this.isError = true;
+                  if(response.msg){
+                    this.errorContent = response.msg;
+                  }else if(response.error){
+                    this.errorContent = response.error;
+                  }else {
+                    this.errorContent = response;
                   }
                 }
               });
