@@ -149,7 +149,7 @@
             </div>
           </div>
           <div slot="footer" class="footer">
-            <div class="el-message-box__btns" style="">
+            <div class="el-message-box__btns" style="text-align: unset; padding-left: 50px;">
               <el-checkbox v-model="closeRemember">{{$t('webshell.remember')}}</el-checkbox>
               <button @click="closeShellWindow" type="button" class="el-button el-button--default el-button--small el-button--primary float-right">
                 <span>{{$t('tip.yes')}}</span>

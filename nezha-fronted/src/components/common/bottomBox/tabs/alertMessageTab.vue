@@ -191,6 +191,11 @@
 
         tableTitle: [
           {
+            label: 'ID',
+            prop: 'id',
+            show: true,
+            width: 80
+          }, {
             label: this.$t("alert.alertName"),
             prop: 'alertRule',
             show: true,
