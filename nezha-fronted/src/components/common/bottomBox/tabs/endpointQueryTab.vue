@@ -34,7 +34,7 @@
           </el-date-picker><button @click="changeTime(10)" class="nz-btn nz-btn-size-normal nz-btn-style-light change-time-height nz-input-group-append"><i class="el-icon-d-arrow-right"></i></button>
         </div>
         <div class="nz-btn-group nz-btn-group-size-normal nz-btn-group-light" style="height: 24px;">
-          <button class="nz-btn nz-btn-size-normal nz-btn-style-light">
+          <button class="nz-btn nz-btn-size-normal nz-btn-style-light" @click="viewGraph">
             <i class="nz-icon nz-icon-chart"  :class="{'control-icon-unchecked':selectedEndpoints.length<1,'control-icon-checked':selectedEndpoints.length>0}"></i>
           </button><button @mouseenter="dropdownHandler(true)" @mouseleave="dropdownHandler(false)" class="nz-btn nz-btn-size-normal nz-btn-style-light export-dropdown-btn" id="browser-go">
             <i class="el-icon-arrow-down"></i>
@@ -154,29 +154,10 @@
       <div slot="title">
         {{$t("project.endpoint.dialogTitle")}}
         <div class="float-right panel-calendar dialog-tool">
-          <el-date-picker ref="calendar" prefix-icon=" " size="mini" class="nz-dashboard-picker"
-                          @change="dateChange"
-                          v-model="searchTime"
-                          type="datetimerange"
-                          :picker-options="pickerOptions"
-                          :range-separator="$t('dashboard.panel.to')"
-                          :start-placeholder="$t('dashboard.panel.startTime')"
-                          :end-placeholder="$t('dashboard.panel.endTime')"
-                          value-format="yyyy-MM-dd hh:mm:ss"
-                          align="right">
-          </el-date-picker>
-          <!--<button @click="refreshChart" type="button" class="nz-btn nz-btn-size-normal nz-btn-style-light"><i style="font-size: 14px;" class="el-icon-refresh-right"></i></button>-->
+          <pick-time :refresh-data-func="queryChartDate" :use-refresh="false" v-model="searchTime"></pick-time>
         </div>
       </div>
-      <div class="line-area" ref="viewGraphChart" id="viewGraphChart"></div>
-      <div class="legend-container" id="legendArea" ref="legendArea">
-        <el-scrollbar style="height: 100%" ref="chartScrollbar">
-          <div v-for="(item, index) in legend" :title="hideSameLabels&&item.alias?item.alias:item.name"  @click="clickLegend(item.name,index)" class="legend-item" :class="{'ft-gr':isGrey[index]}" :key="'legend_' + item.name+'_'+index">
-            <span class="legend-shape" :style="{background:(isGrey[index]?'#D3D3D3':bgColorList[index])}"></span>{{hideSameLabels&&item.alias?item.alias:item.name}}
-            <br/>
-          </div>
-        </el-scrollbar>
-      </div>
+      <chart ref="endpointChart" ></chart>
       <div class="line-100 margin-t-10"></div>
       <div class="chart-bottom">
         <button class="nz-btn nz-btn-size-large nz-btn-style-normal nz-btn-min-width-82" @click="saveChart">{{$t('dashboard.metric.saveChart')}}</button>
@@ -195,12 +176,14 @@
   import loading from "../../loading";
   import bus from "../../../../libs/bus";
   import chartDataFormat from "../../../charts/chartDataFormat";
+  import chart from '../../../page/dashboard/overview/chart'
   var timeout;
   export default {
     name: "endpointQueryTab",
     components: {
       'chart-box': chartBox,
-      'loading': loading
+      'loading': loading,
+      'chart':chart
     },
     props: {
       obj: Object, //关联的实体对象
@@ -223,268 +206,8 @@
         selectedEndpoints:[],//选中的metric{label='value'}
         chartDatas:[],//从query_range查询到的数据
         legend:[],//echart legend
-        graphChart:null,//图标对象
         graphShow:false,
-        searchTime:[],
-        pickerOptions: {
-          shortcuts: [
-            {
-              text:  this.$t("dashboard.panel.recOne"),
-              onClick(picker) {
-                const end = new Date();
-                const start = new Date();
-                start.setHours(start.getHours() - 1);
-                picker.$emit('pick', [start, end]);
-              }
-            },{
-              text: this.$t("dashboard.panel.recFour"),
-              onClick(picker) {
-                const end = new Date();
-                const start = new Date();
-                start.setHours(start.getHours() - 4);
-                picker.$emit('pick', [start, end]);
-              }
-            }, {
-              text: this.$t("dashboard.panel.recOneDay"),
-              onClick(picker) {
-                const end = new Date();
-                const start = new Date();
-                start.setDate(start.getDate() - 1);
-                picker.$emit('pick', [start, end]);
-              }
-            },  {
-              text: this.$t("dashboard.panel.yesterday"),
-              onClick(picker) {
-                const start = new Date();
-                const end = new Date();
-                start.setDate(start.getDate() - 1);
-                start.setHours(0);
-                start.setMinutes(0);
-                start.setSeconds(0);
-                end.setDate(end.getDate() - 1);
-                end.setHours(23);
-                end.setMinutes(59);
-                end.setSeconds(59);
-                picker.$emit('pick', [start, end]);
-              }
-            },{
-              text: this.$t("dashboard.panel.recSevenDay"),
-              onClick(picker) {
-                const end = new Date();
-                const start = new Date();
-                start.setDate(start.getDate() - 7);
-                picker.$emit('pick', [start, end]);
-              }
-            }, {
-              text: this.$t("dashboard.panel.recOneMonth"),
-              onClick(picker) {
-                const end = new Date();
-                const start = new Date();
-                start.setDate(start.getDate() - 30);
-                picker.$emit('pick', [start, end]);
-              }
-            }, {
-              text: this.$t("dashboard.panel.curMonth"),
-              onClick(picker) {
-                const end = new Date();
-                const start = new Date();
-                start.setDate(1);
-                start.setHours(0);
-                start.setMinutes(0);
-                picker.$emit('pick', [start, end]);
-              }
-            },{
-              text: this.$t("dashboard.panel.lastMonth"),
-              onClick(picker) {
-                const end = new Date();
-                const start = new Date();
-                start.setDate(1);
-                start.setMonth(start.getMonth() - 1);
-                end.setDate(0);
-                start.setStart();
-                end.setEnd();
-                picker.$emit('pick', [start, end]);
-              }
-            }]
-        },
-        chartOptions:{
-          color: temp.bgColorList,
-          title: {
-            text: ""
-          },
-          tooltip: {
-            trigger: 'axis',
-            confine:false,
-            extraCssText:'z-index:1000;',
-            /*enterable:true, 导致tooltip不消失，显示多个tooltip*/
-            position:function(point,params,dom,rect,size){
-              dom.style.transform = "translateZ(0)";
-              //提示框位置
-              var x=0;
-              var y=0;
-              //当前鼠标位置
-              var pointX = point[0];
-              var pointY = point[1];
-              //外层div大小
-              var viewWidth = size.viewSize[0];
-              var viewHeight = size.viewSize[1];
-              //提示框大小
-              var boxWidth = size.contentSize[0];
-              var boxHeight = size.contentSize[1];
-              if(pointX<(viewWidth/2)){//说明鼠标在左边放不下提示框
-                x=pointX+10;
-              }else{
-                x = pointX - boxWidth;
-              }
-              if(pointY<(viewHeight/2)){//说明鼠标上面放不下提示框
-                y = pointY+10;
-              }else {
-                y = pointY-boxHeight;
-              }
-              return [x,y];
-            },
-            formatter:function(params){
-              //display:inline-block;white-space:nowrap;overflow-x:hidden;text-overflow:ellipsis;
-              let str = `<div >`;
-              params.forEach((item, i) => {
-                let tip=temp.legend.find((element)=>{
-                  return element.name == item.seriesName;
-                })
-                if(i===0){
-                  let value=bus.computeTimezone(item.data[0]);
-                  let t_date = new Date(value);
-                  str += [t_date.getFullYear(), t_date.getMonth() + 1, t_date.getDate()].join('-') + " "
-                    + [t_date.getHours(), t_date.getMinutes(),t_date.getSeconds()].join(':');
-                  str +=`<br/>`;
-                }
-                let val = parseFloat(Number(item.data[1]).toFixed(2));
-                if(val===0){
-                  val = Number(item.data[1]);
-                }
-                str += `<div style="white-space:nowrap;overflow-x:hidden;text-overflow:ellipsis;display: flex; justify-content: space-between; min-width: 150px; max-width: 600px; line-height: 18px; font-size: 12px;">`;
-                str += `<div style="max-width: 500px;white-space:nowrap;overflow-x:hidden;text-overflow:ellipsis;"><span style='display:inline-block;margin-right:5px;border-radius:10px;width:15px;height:5px;background-color: ${item.color};}'></span>${tip?(tip.alias?tip.alias:tip.name):item.seriesName}:  </div>`;
-                str += `<div style="padding-left: 10px;">`;
-                str += chartDataFormat.short(val,null,2);
-                str += `</div>`;
-                str += `</div>`;
-              });
-              str +=`</div>`;
-              return str;
-            },
-          },
-          legend: {
-            show:false,
-            type:'scroll',
-            height:80,
-            icon:"roundRect",
-            itemHeight:5,
-            itemWidth:15,
-            data:[],
-            orient:'vertical',
-            formatter:function(name){
-              if(!name){
-                return '';
-              }
-              //计算宽度
-              let chartWidth=temp.$refs.viewGraphChart.clientWidth;
-              var span = document.createElement("span");
-              var result = {};
-              result.width = span.offsetWidth;
-              result.height = span.offsetHeight;
-              span.style.visibility = "hidden";
-              span.style.fontSize = 14;
-              span.style.fontFamily = "Arial";
-              span.style.display = "inline-block";
-              document.body.appendChild(span);
-              if(typeof span.textContent != "undefined"){
-                span.textContent = name;
-              }else{
-                span.innerText = name;
-              }
-              var txtWidth = parseFloat(window.getComputedStyle(span).width) - result.width;
-              document.body.removeChild(span);
-
-              if(txtWidth < chartWidth){
-                return name;
-              }else {
-                var charNum = `${(chartWidth-100)/(txtWidth/name.length)}`;
-                return name.slice(0,charNum)+'...';
-              }
-            },
-            tooltip:{
-              show:true,
-              formatter:function(params){
-                //console.log("params")
-                //console.log(params);
-                return `<div  style='width:100%;display:block;word-break:break-all;word-wrap:break-word;white-space:normal'> ${params.name}</div>`;
-              },
-            },
-            orient:'vertical',
-            x:'center',
-            y:'bottom',
-          },
-          grid: {
-            top: 13,
-            left: 0,
-            right: 30,
-            containLabel: true,
-            bottom:35,//156
-          },
-          dataZoom: [{
-            type: 'slider',
-            show:true,
-            xAxisIndex: [0],
-            start: 0,
-            end: 100,
-            height:25,
-            bottom:10//96
-          }],
-
-          xAxis: {
-            type: 'time',
-            axisLabel: {
-              intervale: 0,
-              rotate: 0,
-              formatter: function (value) {
-                value = bus.computeTimezone(value);
-                var t_date = new Date(value);
-                return [t_date.getFullYear(), t_date.getMonth() + 1, t_date.getDate()].join('-') + "\n"
-                  + [t_date.getHours(), t_date.getMinutes()].join(':');
-              }
-            },
-            axisPointer: {//y轴上显示指针对应的值
-              show: true,
-            },
-            splitLine:{
-              show:false
-            }
-          },
-          yAxis: {
-            type: 'value',
-            splitLine:{
-              show:true
-            },
-            axisLabel: {
-              formatter: function(num,index) {
-                return chartDataFormat.short(num,index)
-              },
-            },
-          },
-          useUTC: false,//使用本地时间
-          series: []
-        },
-        legendList:[],
-        screenLegendList:[],
-        isGrey:[],
-        isGreyScreen:[],
-        bgColorList: ['#7bbfea', '#b3424a', '#f05b72', '#596032', '#bd6758',
-          '#cd9a5b', '#918597', '#70a19f', '#005344', '#FF00FF',
-          '#f7acbc', '#5f5d46', '#66ffff', '#ccFF66', '#f47920',
-          '#769149', '#1d953f', '#abc88b', '#7f7522', '#9b95c9',
-          '#f3715c', '#ea66a6', '#d1c7b7', '#9d9087', '#77787b',
-          '#f58220', '#c37e00', '#00ae9d', '#f26522', '#76becc',
-          '#76624c', '#d71345', '#2468a2', '#ca8687', '#1b315e',
-        ],
+        searchTime:[new Date().setHours(new Date().getHours() - 1), new Date()],
         panelData: [], //chart-box的panel下拉框数据,
         hideSameLabels: true,
         sameLabels:['instance','module','project','asset','endpoint','datacenter'],
@@ -493,85 +216,6 @@
     methods: {
       changeTab(tab) {
         this.$emit('changeTab', tab);
-      },
-      clickLegend(legendName,index){
-        //点击图表某一个legend，图表只显示当前点击的曲线或柱状图，其它隐藏，再次点击已选中的legend ，显示全部
-        let curIsGrey=this.isGrey[index];
-        if(this.graphChart){
-          this.legend.forEach((item,i)=>{
-            let isGrey = this.isGrey[i];
-            if(index != i){
-              if(!curIsGrey && !isGrey){
-                this.graphChart.dispatchAction({
-                  type: 'legendUnSelect',
-                  name: item.name
-                });
-              }else if(!curIsGrey && isGrey){
-                this.graphChart.dispatchAction({
-                  type: 'legendSelect',
-                  name: item.name
-                });
-              }else{
-                this.graphChart.dispatchAction({
-                  type: 'legendUnSelect',
-                  name: item.name
-                });
-              }
-            }else {
-              this.graphChart.dispatchAction({
-                type: 'legendSelect',
-                name: item.name
-              });
-            }
-          })
-          this.isGrey.forEach((item,i)=>{
-            if(index != i){
-              if(!curIsGrey && !item){
-                this.$set(this.isGrey, i, true);
-              }else if(!curIsGrey && item){
-                this.$set(this.isGrey, i, false);
-              }else{
-                this.$set(this.isGrey, i, true);
-              }
-            }else{
-              if(item === true){
-                this.$set(this.isGrey, i, false);
-              }
-            }
-          })
-        }
-      },
-      formatLegend(name,chartWidth){
-        if(!name){
-          return '';
-        }
-        if(!chartWidth){
-          this.$refs.viewGraphChart.clientWidth;
-        }
-        //计算宽度
-        var span = document.createElement("span");
-        var result = {};
-        result.width = span.offsetWidth;
-        result.height = span.offsetHeight;
-        span.style.visibility = "hidden";
-        span.style.fontSize = 14;
-        span.style.fontFamily = "Arial";
-        span.style.display = "inline-block";
-        document.body.appendChild(span);
-        if(typeof span.textContent != "undefined"){
-          span.textContent = name;
-        }else{
-          span.innerText = name;
-        }
-        var txtWidth = parseFloat(window.getComputedStyle(span).width) - result.width;
-        document.body.removeChild(span);
-
-        if(txtWidth < chartWidth){
-          return name;
-        }else {
-          var charNum = `${(chartWidth-100)/(txtWidth/name.length)}`;
-          return name.slice(0,charNum)+'...';
-        }
       },
       saveChart() { //新增chart
         this.$refs.addChartModal.setTitle(this.$t("dashboard.panel.createChartTitle"));
@@ -771,8 +415,7 @@
         this.legend = [];
         this.graphShow = true;
         this.$nextTick(() => {
-          this.graphChart = echarts.init(document.getElementById('viewGraphChart'));
-          this.$refs.graphLoading.startLoading();
+          this.$refs.endpointChart.startLoading();
           this.queryChartDate();
         });
         /*setTimeout(()=> {
@@ -808,7 +451,6 @@
           axiosArr.push(axios.get("/prom/api/v1/query_range?query="+endpoint.element+"&start="+start+"&end="+end+"&step="+step));
         }
         this.legend=[];
-        this.isGrey=[];
         axios.all(axiosArr).then(res =>{
           res.forEach((response,promIndex)=>{
             if (response.status == 200) {
@@ -843,10 +485,10 @@
                   let legend={
                     name:chartData.name,
                     alias:alias,
-                    showText:this.formatLegend(chartData.name)
+                    // showText:this.formatLegend(chartData.name),
+                    isGray:false
                   }
                   this.legend.push(legend);
-                  this.isGrey.push(false);
                   chartData.data=queryData.values.map((dpsItem, dpsIndex) => {
                     return [dpsItem[0] * 1000, Number(dpsItem[1])];
                   });
@@ -859,24 +501,13 @@
             }
           });
           this.$nextTick(()=>{
-            if(this.graphChart){
-              this.graphChart.clear();
-              this.chartOptions.color=this.bgColorList;
-              this.chartOptions.series=this.chartDatas;
-              this.graphChart.setOption(this.chartOptions);//创建图表
-            }
-            this.$refs.chartScrollbar.update();
-            this.$refs.graphLoading.endLoading();
+            this.$refs.endpointChart.setRandomColors(this.chartDatas.length)
+            this.$refs.endpointChart.setLegend(this.legend)
+            this.$refs.endpointChart.setSeries(this.chartDatas);
+            this.$refs.endpointChart.endLoading();
           });
 
         })
-      },
-      dateChange:function(){
-        if(this.graphChart){
-          this.graphChart.clear();
-          this.queryChartDate();
-        }
-
       },
       cellClass(row){ //给复选框那一列添加 类名为 ‘disabledCheck’
         if (row.columnIndex === 0) {

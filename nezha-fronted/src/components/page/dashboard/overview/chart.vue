@@ -30,7 +30,7 @@
       'loading':loading,
     },
     props:{
-      name: {type: String},
+      name: {type: String,default:'chart'},
       chartTitle:{type:String},
       showToolbox:{type:Boolean,default:true},
       chartType:{type:String,default:'line'},
@@ -55,7 +55,7 @@
     },
     methods:{
       modifyOption:function(target,name,obj){
-        if(this.option){
+        if(!this.option){
           this.option=chartConfig.getOption(this.chartType);
         }
         this.$set(this.option[target],name,obj)
@@ -78,7 +78,7 @@
           }
 
         }
-        if(this.option){
+        if(!this.option){
           this.option=chartConfig.getOption(this.chartType);
         }
 
@@ -97,7 +97,7 @@
             this.modifyOption('yAxis','formatter',this.defaultYAxisFormatter)
           }
         }
-
+        console.log(this.option)
         this.$set(this.option,'series',this.series);
 
         this.chart.clear();
@@ -231,9 +231,10 @@
               + [t_date.getHours(), t_date.getMinutes(),t_date.getSeconds()].join(':');
             str +=`<br/>`;
           }
+          let alias=this.queryAlias(item.seriesName)
           let val = Number(item.data[1]);
           str += `<div style="white-space:nowrap;overflow-x:hidden;text-overflow:ellipsis;display: flex; justify-content: space-between; min-width: 150px; max-width: 600px; line-height: 18px; font-size: 12px;">`;
-          str += `<div style="max-width: 500px;white-space:nowrap;overflow-x:hidden;text-overflow:ellipsis;"><span style='display:inline-block;margin-right:5px;border-radius:10px;width:15px;height:5px;background-color: ${item.color};}'></span>${item.seriesName}:  </div>`;
+          str += `<div style="max-width: 500px;white-space:nowrap;overflow-x:hidden;text-overflow:ellipsis;"><span style='display:inline-block;margin-right:5px;border-radius:10px;width:15px;height:5px;background-color: ${item.color};}'></span>${alias?alias:item.seriesName}:  </div>`;
           str += `<div style="padding-left: 10px;">`;
           str += chartDataFormat.getUnit(5).compute(val,null,2);
           str += `</div>`;
@@ -242,17 +243,28 @@
         str +=`</div>`;
         return str;
       },
+      queryAlias:function(seriesName){
+        let alias=null;
+        if(this.legend&&this.legend.length>0){
+          let tempLegend=this.legend.find((item)=>{return item.name == seriesName});
+          if(tempLegend){
+            alias=tempLegend.alias;
+          }
+        }
+        return alias;
+      },
       defaultYAxisFormatter:function(value,index){
         let unit=chartDataFormat.getUnit(5);
         return unit.compute(value,index);
       },
-      setRandomColors:function(num){
+      setRandomColors:function(num){//当线条过多，默认颜色数量不够时须使用此方法,num 颜色的数量，通常传递series的length即可
         let colors=[];
         for(let i=0;i<num;i++){
           colors.push(randomcolor())
         }
         this.colors=Object.assign([],colors)
-        this.option.color=colors;
+        this.$set(this.option,'color',colors)
+        console.log(this.option)
       },
       startLoading:function(){
         this.$refs.loading.startLoading();
