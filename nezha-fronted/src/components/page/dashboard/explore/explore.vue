@@ -18,7 +18,7 @@
                       :class="{'nz-btn-disabled btn-disabled-cursor-not-allowed' : saveDisabled}">
                 {{$t('dashboard.metric.saveChart')}}
               </button>
-              <pick-time :refresh-data-func="expressionChange" v-model="filterTime">
+              <pick-time :refresh-data-func="expressionChange" v-model="filterTime" >
                 <template slot="added-text">{{$t('dashboard.metricPreview.runQuery')}}</template>
               </pick-time>
             </div>

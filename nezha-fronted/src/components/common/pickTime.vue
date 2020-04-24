@@ -12,12 +12,12 @@
                     style="margin-right: 20px"
                     align="right">
     </el-date-picker>
-    <div class="nz-btn-group nz-btn-group-size-normal nz-btn-group-light margin-r-20">
+    <div class="nz-btn-group nz-btn-group-size-normal nz-btn-group-light margin-r-20" v-show="useRefresh">
       <button style="border-right: 1px solid rgba(162,162,162,0.50);height: 100%" type="button" class="nz-btn nz-btn-size-normal nz-btn-style-light" @click="refreshDataFunc">
         <i style="font-size: 12px" class="global-active-color nz-icon nz-icon-refresh"></i>&nbsp;
         <span class="nz-btn nz-btn-text" ><slot name="added-text"></slot></span>
       </button>
-      <el-popover v-model="visible" placement="bottom-start" :width="50" trigger="click" popper-class="interval-refresh-popover">
+      <el-popover v-model="visible" placement="bottom-start" :width="50" trigger="click" popper-class="interval-refresh-popover" >
         <ul class="popover_ul">
           <li v-for="i in intervalList" :style="{color:interval==i.value?'#31749C':''}" :key="i.value+i.name" @click="selectInterval(i)">
             {{i.name}}
@@ -48,6 +48,10 @@
       timeRange:{
         type:Array,
         required: true,
+      },
+      useRefresh:{
+        type:Boolean,
+        default:true,
       }
     },
     data(){
