@@ -13,14 +13,16 @@
         <div class="main-list main-and-sub-transition">
             <!-- 顶部工具栏 -->
             <div class="top-tools" style="z-index: 1">
-              <button :disabled="saveDisabled" type="button" @click="saveChart"
-                      class="nz-btn nz-btn-size-large nz-btn-style-normal nz-btn-min-width-120"
-                      :class="{'nz-btn-disabled btn-disabled-cursor-not-allowed' : saveDisabled}">
-                {{$t('dashboard.metric.saveChart')}}
-              </button>
-              <pick-time :refresh-data-func="expressionChange" v-model="filterTime" >
-                <template slot="added-text">{{$t('dashboard.metricPreview.runQuery')}}</template>
-              </pick-time>
+              <div class="top-tool-main-right">
+                <pick-time :refresh-data-func="expressionChange" v-model="filterTime" >
+                  <template slot="added-text">{{$t('dashboard.metricPreview.runQuery')}}</template>
+                </pick-time>
+                <button :disabled="saveDisabled" type="button" @click="saveChart"
+                        class="nz-btn nz-btn-size-large nz-btn-style-normal nz-btn-min-width-120"
+                        :class="{'nz-btn-disabled btn-disabled-cursor-not-allowed' : saveDisabled}">
+                  {{$t('dashboard.metric.saveChart')}}
+                </button>
+              </div>
             </div>
             <div style="height: calc(100% - 50px);width: 100%;" >
               <el-scrollbar style="height: 100%" class="el-scrollbar-large">
@@ -28,6 +30,7 @@
                 <!--坑，这个index居然是从1开始-->
                 <promql-input
                   v-for="index of promqlKeys.length"
+                  :ref="'promql-'+(index-1)"
                   :id="promqlKeys[index-1]"
                   :key="promqlKeys[index-1]"
                   :expression-list="expressions"
@@ -39,7 +42,7 @@
               </div>
               <div class="chart-view right-margin" v-show="!showIntroduce"
                    :class="{'shrink-view':!chartVisible || !defaultChartVisible}">
-                <div class="view-title" @click="changeChartVisible"><i class="el-icon-caret-top"></i>&nbsp;graph</div>
+                <div class="view-title" @click="changeChartVisible" style="float: left"><i class="el-icon-caret-top" ></i>&nbsp;graph</div>
                 <div class="chart-room">
                   <chart ref="exploreChart"></chart>
                 </div>
@@ -209,7 +212,10 @@ instance_cpu_time_ns{app="fox", proc="widget", rev="4d3a513", env="prod", job="c
         promqlCount: 1,
         promqlKeys: [],
         expressions: [''],
-        filterTime: [new Date().setHours(new Date().getHours() - 1), new Date()],
+        filterTime: [
+          bus.timeFormate(new Date(bus.computeTimezone(new Date().getTime())).setMinutes(new Date(bus.computeTimezone(new Date().getTime())).getMinutes() - 5),'yyyy-MM-dd hh:mm:ss'),
+          bus.timeFormate(new Date(bus.computeTimezone(new Date().getTime())),'yyyy-MM-dd hh:mm:ss')
+        ],
         showIntroduce: true,
         defaultChartVisible: true,
         defaultTableVisible: true,
@@ -250,9 +256,11 @@ instance_cpu_time_ns{app="fox", proc="widget", rev="4d3a513", env="prod", job="c
         setTimeout(() => {
           if (this.expressions.length > 0) {
             let requestArr = [];
+            let promqlInputIndexs=[];
             this.expressions.forEach((item, index) => {
               if (item != '') {
                 let step=bus.getStep(this.filterTime[0],this.filterTime[1]);
+                promqlInputIndexs.push(index);
                 requestArr.push(axios.get('/prom/api/v1/query_range?query=' + item + '&start=' + this.filterTime[0] + '&end=' + this.filterTime[1] + '&step='+step))
               }
             })
@@ -267,7 +275,7 @@ instance_cpu_time_ns{app="fox", proc="widget", rev="4d3a513", env="prod", job="c
                 res.forEach((response, index) => {
                   if (response.data.status == 'success') {
                     let data = response.data.data.result;
-                    data.forEach((result, index) => {
+                    data.forEach((result, i) => {
                       let seriesItem = {
                         name: '',
                         symbol: 'none',  //去掉点
@@ -289,13 +297,22 @@ instance_cpu_time_ns{app="fox", proc="widget", rev="4d3a513", env="prod", job="c
                       series.push(seriesItem);
                       legend.push({name: seriesItem.name, alias: null, isGray: false});
                     })
+                  }else{
+                    let promqlIndex=promqlInputIndexs[index];
+                    console.log(response)
+                    this.$refs['promql-'+promqlIndex][0].setError(response.data.error)
                   }
                 })
-                this.$refs.exploreChart.setLegend(legend);
-                this.$refs.exploreChart.setRandomColors(series.length)
-                this.$refs.exploreChart.setSeries(series)
+                if(series.length>0){
+                  this.$refs.exploreChart.setLegend(legend);
+                  this.$refs.exploreChart.setRandomColors(series.length)
+                  this.$refs.exploreChart.setSeries(series)
+                  this.defaultChartVisible = true;
+                }else{
+                  // this.defaultChartVisible = false;
+                }
               }
-              this.defaultChartVisible = true;
+
               this.$refs.exploreChart.endLoading();
             })
           }
@@ -348,14 +365,19 @@ instance_cpu_time_ns{app="fox", proc="widget", rev="4d3a513", env="prod", job="c
                       return a.prop.charCodeAt(0) - b.prop.charCodeAt(0);
                     })
                   })
-                  this.storedTableData = Object.assign([], tData);
-                  this.pageObj.total = this.storedTableData.length;
-                  this.tableData = this.filterShowData(this.storedTableData, this.pageObj);
-                  this.tableLabels = Object.assign([], tLabels);
-                  this.showTableLabels = Object.assign([], tLabels);
-                  this.dropCol = Object.assign([], tLabels);
+                  console.log(tData.length)
+                  if(tData.length>0){
+                    this.storedTableData = Object.assign([], tData);
+                    this.pageObj.total = this.storedTableData.length;
+                    this.tableData = this.filterShowData(this.storedTableData, this.pageObj);
+                    this.tableLabels = Object.assign([], tLabels);
+                    this.showTableLabels = Object.assign([], tLabels);
+                    this.dropCol = Object.assign([], tLabels);
+                    this.defaultTableVisible = true;
+                  }else{
+                    // this.defaultTableVisible = false;
+                  }
                 }
-                this.defaultTableVisible = true;
                 this.tableLoading = false;
               })
             }
@@ -448,8 +470,6 @@ instance_cpu_time_ns{app="fox", proc="widget", rev="4d3a513", env="prod", job="c
         const dh = this.$refs.elementset.$el.offsetHeight;
         let positionx =
           e.clientX + dw <= w - 10 ? e.clientX + 14 : e.clientX + 14 - dw;
-        console.log(e.clientY + dh)
-        console.log(h)
         let positiony =
           e.clientY + dh <= h - 10
             ? e.clientY + 20

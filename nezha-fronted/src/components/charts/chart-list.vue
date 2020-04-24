@@ -587,6 +587,7 @@ export default {
               let errorMsg = "";
               res.forEach((response, innerPos) => {
                 if (response.status === 'success') {
+                  errorMsg = "";
                   if (response.data.result) {
                     // console.log(response.data.result)
                     // 循环处理每个elements下获取的数据列

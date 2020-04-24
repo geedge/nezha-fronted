@@ -28,9 +28,24 @@
                :modal-append-to-body='false'
                @close="handleClose"
                @opened="initDialog">
+      <el-popover
+        v-if="isError"
+        placement="top-start"
+        :close-delay=10
+        trigger="hover"
+        popper-class="chart-error-popper">
+        <div >{{errorContent}}</div>
+        <span slot="reference"  class="panel-info-corner panel-info-corner--error">
+              <i class="nz-icon nz-icon-warning fa-model" ></i>
+              <span class="panel-info-corner-inner"></span>
+          </span>
+      </el-popover>
       <div slot="title">
         <span class="nz-dialog-title">{{chart.title}}</span>
         <div class="float-right panel-calendar dialog-tool"  v-if="chart.type!=='url'">
+
+          <time-picker ref="calendarPanel" class="nz-dashboard-picker" style="margin-top: -12px;" @change="dateChange"></time-picker>
+          <!--
           <el-date-picker ref="calendar" prefix-icon=" " size="mini" class="nz-preview-picker"
                           format="yyyy/MM/dd HH:mm"
                           @change="dateChange"
@@ -41,7 +56,7 @@
                           :start-placeholder="$t('dashboard.panel.startTime')"
                           :end-placeholder="$t('dashboard.panel.endTime')"
                           align="right">
-          </el-date-picker>
+          </el-date-picker>-->
         </div>
       </div>
 
@@ -96,11 +111,13 @@
   import loading from "../common/loading";
   import chartDataFormat from './chartDataFormat'
   import {randomcolor} from  '../common/js/radomcolor/randomcolor.js'
+  import timePicker from '../common/timePicker'
 
   export default {
     name: 'chartPreview',
     components: {
       'loading': loading,
+      'time-picker':timePicker
     },
     props: {
       panelId:Number,
@@ -111,6 +128,8 @@
         //data: {}, // 该图表信息,chartItem
         dailogWidth:'80%',
         //seriesItem: [], // 保存信息
+        isError:false,
+        errorContent:'',
         seriesItemScreen:[],
         pageSizes:[50,100,200],
         screenPageObj:{
@@ -149,13 +168,17 @@
         showLegend:true,
         tableShow:true,
         urlShow:true,
-        searchTime:[new Date().setHours(new Date().getHours()-1),new Date()],
+        searchTime: [
+          new Date(bus.computeTimezone(new Date().getTime())).setMinutes(new Date(bus.computeTimezone(new Date().getTime())).getMinutes() - 5),
+          new Date(bus.computeTimezone(new Date().getTime()))
+        ],
         //oldSearchTime:[],
         minHeight:200,
         chartSpaceHeight:5,//top-border: 1,bottom-border: 1,padding-bottome:3
         titleHeight:50,
         legendHeight:80,
         //oldChartBoxCss:'',
+        /*
         pickerOptions: {
           shortcuts: [
             {
@@ -236,7 +259,7 @@
                 picker.$emit('pick', [start, end]);
               }
             }]
-        },
+        },*/
       };
     },
     computed: {
@@ -245,7 +268,9 @@
     methods: {
       // 全屏查看
       show(chartInfo) {
-        this.searchTime = [new Date().setHours(new Date().getHours()-1),new Date()];
+        this.isError = false;
+        this.searchTime = [new Date(bus.computeTimezone(new Date().getTime())).setMinutes(new Date(bus.computeTimezone(new Date().getTime())).getMinutes() - 5),
+          new Date(bus.computeTimezone(new Date().getTime()))];
         this.chart=chartInfo;
 
         let chartType= chartInfo.type;
@@ -388,6 +413,8 @@ console.log('=======',this.chart);
                 };
                 res.forEach((response, innerPos) => {
                   if (response.status === 'success') {
+                    this.isError = false;
+                    this.errorContent = "";
                     if (response.data.result) {
                       // console.log(response.data.result)
                       // 循环处理每个elements下获取的数据列
@@ -472,12 +499,14 @@ console.log('=======',this.chart);
                       });
                     }
                   }else{
+                    alert('error')
+                    this.isError = true;
                     if(response.msg){
-                      this.$message.error(response.msg);
+                      this.errorContent = response.msg;
                     }else if(response.error){
-                      this.$message.error(response.error);
+                      this.errorContent = response.error;
                     }else {
-                      this.$message.error(response);
+                      this.errorContent = response;
                     }
                   }
                 });
@@ -940,6 +969,7 @@ console.log('=======',this.chart);
       },
       */
       dateChange(time) {
+        this.searchTime = [...time];
         let chartType = this.chart.type;
         if (chartType === 'table') {
           this.seriesItemScreen = [];
@@ -997,6 +1027,8 @@ console.log('=======',this.chart);
               }
               res.forEach((response,pos) => {
                 if (response.status === 'success') {
+                  this.isError = false;
+                  this.errorContent = "";
                   if (response.data.result) {
                     // 循环处理每个elements下获取的数据列
                     response.data.result.forEach((queryItem,innerPos) => {
@@ -1062,6 +1094,15 @@ console.log('=======',this.chart);
                         // 无数据提示
                       }
                     });
+                  }
+                }else{
+                  this.isError = true;
+                  if(response.msg){
+                    this.errorContent = response.msg;
+                  }else if(response.error){
+                    this.errorContent = response.error;
+                  }else {
+                    this.errorContent = response;
                   }
                 }
               });

@@ -152,7 +152,7 @@ const en = {
       },
       startTime:'Start time', //'开始时间'
       endTime:'End time',//'结束时间'
-      to:'To', //To
+      to:'to', //To
       recOne:'Last 1 hour', //'最近1小时'
       recFour:'Last 4 hours',//'最近4小时'
       recOneDay:'Last 1 day',//'最近1日'
