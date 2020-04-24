@@ -149,13 +149,13 @@
             </div>
           </div>
           <div slot="footer" class="footer">
-            <div class="el-message-box__btns" style="text-align: right;margin-top: 5px;">
-              <el-checkbox v-model="closeRemember" style="padding-right: 132px;">{{$t('webshell.remember')}}</el-checkbox>
-              <button @click="cancleConfirm"   type="button" class="el-button el-button--default el-button--small">
-                <span>{{$t('tip.no')}}</span>
-              </button>
-              <button @click="closeShellWindow"  type="button" class="el-button el-button--default el-button--small el-button--primary ">
+            <div class="el-message-box__btns" style="">
+              <el-checkbox v-model="closeRemember">{{$t('webshell.remember')}}</el-checkbox>
+              <button @click="closeShellWindow" type="button" class="el-button el-button--default el-button--small el-button--primary float-right">
                 <span>{{$t('tip.yes')}}</span>
+              </button>
+              <button @click="cancleConfirm" type="button" class="el-button el-button--default el-button--small float-right">
+                <span>{{$t('tip.no')}}</span>
               </button>
             </div>
           </div>
