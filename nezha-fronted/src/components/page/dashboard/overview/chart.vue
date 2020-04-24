@@ -20,10 +20,10 @@
   import echarts from 'echarts';
   import chartDataFormat from "../../../charts/chartDataFormat";
   import loading from "../../../common/loading";
-  import uuidv1 from "uuid/v1";
   import chartConfig from './chartConfig'
   import bus from "../../../../libs/bus";
   import EleResize from "../../../common/js/divResize";
+  import {randomcolor} from "../../../common/js/radomcolor/randomcolor";
   export default {
     name: "chart",
     components:{
@@ -41,9 +41,10 @@
     data(){
       return {
         chart:null,
-        option:{},
-        chartId: this.name + new uuidv1()+'-'+new Date().getTime(),
+        option:null,
+        chartId: this.name + '-'+this.guid()+'-'+new Date().getTime(),
         legend:[],
+        colors:chartConfig.getBgColorList(),
       }
     },
     created() {
@@ -86,7 +87,7 @@
         if (this.tooltipFormatter) {
           this.modifyOption('tooltip', 'formatter', this.tooltipFormatter)
         } else {
-          //this.modifyOption('tooltip', 'formatter', this.defaultTooltipFormatter)
+          this.modifyOption('tooltip', 'formatter', this.defaultTooltipFormatter)
         }
 
         if(this.chartType == 'line'){
@@ -140,7 +141,7 @@
         }
       },
       getBgColor:function(index){
-        let color=chartConfig.getBgColorList()[index];
+        let color=this.colors[index];
         return color;
       },
       clickLegend(legendName,index){
@@ -245,12 +246,27 @@
         let unit=chartDataFormat.getUnit(5);
         return unit.compute(value,index);
       },
+      setRandomColors:function(num){
+        let colors=[];
+        for(let i=0;i<num;i++){
+          colors.push(randomcolor())
+        }
+        this.colors=Object.assign([],colors)
+        this.option.color=colors;
+      },
       startLoading:function(){
         this.$refs.loading.startLoading();
       },
       endLoading:function(){
         this.$refs.loading.endLoading();
-      }
+      },
+      guid() {
+        function S4() {
+          return (((1 + Math.random()) * 0x10000) | 0).toString(16).substring(1);
+        }
+
+        return (S4() + S4() + "-" + S4() + "-" + S4() + "-" + S4() + "-" + S4() + S4() + S4());
+      },
     },
     mounted() {
       this.chart=echarts.init(document.getElementById(this.chartId));

@@ -174,7 +174,7 @@ const en = {
       lastSevenDay:'Last 7 days',
       lastThirtyDay:'Last 30 days',
       refreshInterval:{
-        never:'OFF', //'从不'
+        never:'Off', //'从不'
         oneMinute:'1 minute', // 1 minute
         threeMinutes:'3 minutes', //'3分钟'
         fiveMinutes:'5 minutes', //'5分钟'

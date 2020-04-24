@@ -22,7 +22,7 @@
                 <template slot="added-text">{{$t('dashboard.metricPreview.runQuery')}}</template>
               </pick-time>
             </div>
-            <div style="height: 100%;width: 100%;" >
+            <div style="height: calc(100% - 50px);width: 100%;" >
               <el-scrollbar style="height: 100%" class="el-scrollbar-large">
               <div class="expression-room right-margin" style="padding-top: 5px">
                 <!--坑，这个index居然是从1开始-->
@@ -292,6 +292,7 @@ instance_cpu_time_ns{app="fox", proc="widget", rev="4d3a513", env="prod", job="c
                   }
                 })
                 this.$refs.exploreChart.setLegend(legend);
+                this.$refs.exploreChart.setRandomColors(series.length)
                 this.$refs.exploreChart.setSeries(series)
               }
               this.defaultChartVisible = true;
@@ -511,7 +512,7 @@ instance_cpu_time_ns{app="fox", proc="widget", rev="4d3a513", env="prod", job="c
 
   .explore .chart-room {
     width: 100%;
-    height: 500px
+    height: 400px
   }
 
   .explore .chart-view, .table-view {

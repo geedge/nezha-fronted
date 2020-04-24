@@ -171,7 +171,7 @@
       selectInterval(val) {
         this.visible = false;
         clearInterval(this.intervalTimer);
-        if (val) {
+        if (val && val.value != -1) {
           this.interval = val;
           const start = new Date(this.searchTime[1]);
           const now = new Date();
