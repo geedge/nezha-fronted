@@ -159,7 +159,7 @@
       <div slot="title">
         {{$t("project.endpoint.dialogTitle")}}
         <div class="float-right panel-calendar dialog-tool" style="display: flex">
-          <pick-time :refresh-data-func="queryChartDate" :use-refresh="false" v-model="searchTime"></pick-time>
+          <pick-time :refresh-data-func="queryChartDate" :use-refresh="false" v-model="searchTime" style="height: 28px;"></pick-time>
            <button class="nz-btn nz-btn-size-large nz-btn-style-normal nz-btn-min-width-82" @click="saveChart">{{$t('dashboard.metric.saveChart')}}</button>
         </div>
       </div>

@@ -67,7 +67,7 @@
 <template>
   <div class="calendar top-tools" id="panel-calender">
     <el-date-picker prefix-icon=" " class="panel-time-picker-hidden hidden" size="mini" ref="calendar"
-                    format="yyyy/MM/dd HH:mm" @change="dateChange" v-model="searchTime" type="datetimerange"
+                    format="yyyy/MM/dd HH:mm:ss" @change="dateChange" v-model="searchTime" type="datetimerange"
                     popper-class="panel-time-picker-popper"
                     :range-separator="$t('dashboard.panel.to')"
                     :start-placeholder="$t('dashboard.panel.startTime')"
@@ -289,6 +289,12 @@ export default {
         this.$set(this.searchTime, 0, startTime);
         this.$set(this.searchTime, 1, endTime);
       }
+    },
+    setCostomTime:function(costomTime){
+      this.searchTime=Object.assign(costomTime);
+      let val=Object.assign(this.timeData[0]);
+      this.$set(this.showTime, 'id', val.id);
+      this.$set(this.showTime, 'text', val.text);
     },
     popoverClick(val){
       if(val){

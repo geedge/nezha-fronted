@@ -13,14 +13,16 @@
         <div class="main-list main-and-sub-transition">
             <!-- 顶部工具栏 -->
             <div class="top-tools" style="z-index: 1">
-              <button :disabled="saveDisabled" type="button" @click="saveChart"
-                      class="nz-btn nz-btn-size-large nz-btn-style-normal nz-btn-min-width-120"
-                      :class="{'nz-btn-disabled btn-disabled-cursor-not-allowed' : saveDisabled}">
-                {{$t('dashboard.metric.saveChart')}}
-              </button>
-              <pick-time :refresh-data-func="expressionChange" v-model="filterTime" >
-                <template slot="added-text">{{$t('dashboard.metricPreview.runQuery')}}</template>
-              </pick-time>
+              <div class="top-tool-main-right">
+                <pick-time :refresh-data-func="expressionChange" v-model="filterTime" >
+                  <template slot="added-text">{{$t('dashboard.metricPreview.runQuery')}}</template>
+                </pick-time>
+                <button :disabled="saveDisabled" type="button" @click="saveChart"
+                        class="nz-btn nz-btn-size-large nz-btn-style-normal nz-btn-min-width-120"
+                        :class="{'nz-btn-disabled btn-disabled-cursor-not-allowed' : saveDisabled}">
+                  {{$t('dashboard.metric.saveChart')}}
+                </button>
+              </div>
             </div>
             <div style="height: calc(100% - 50px);width: 100%;" >
               <el-scrollbar style="height: 100%" class="el-scrollbar-large">
@@ -40,7 +42,7 @@
               </div>
               <div class="chart-view right-margin" v-show="!showIntroduce"
                    :class="{'shrink-view':!chartVisible || !defaultChartVisible}">
-                <div class="view-title" @click="changeChartVisible"><i class="el-icon-caret-top"></i>&nbsp;graph</div>
+                <div class="view-title" @click="changeChartVisible" style="float: left"><i class="el-icon-caret-top" ></i>&nbsp;graph</div>
                 <div class="chart-room">
                   <chart ref="exploreChart"></chart>
                 </div>
@@ -210,7 +212,10 @@ instance_cpu_time_ns{app="fox", proc="widget", rev="4d3a513", env="prod", job="c
         promqlCount: 1,
         promqlKeys: [],
         expressions: [''],
-        filterTime: [new Date().setHours(new Date().getHours() - 1), new Date()],
+        filterTime: [
+          bus.timeFormate(new Date(bus.computeTimezone(new Date().getTime())).setMinutes(new Date(bus.computeTimezone(new Date().getTime())).getMinutes() - 5),'yyyy-MM-dd hh:mm:ss'),
+          bus.timeFormate(new Date(bus.computeTimezone(new Date().getTime())),'yyyy-MM-dd hh:mm:ss')
+        ],
         showIntroduce: true,
         defaultChartVisible: true,
         defaultTableVisible: true,
