@@ -123,6 +123,7 @@
                 v-loading="loading"
                 tooltip-effect="light"
                 ref="assetTable"
+                :cell-class-name="messageStyle"
               >
                 <el-table-column
                   :resizable="false"
@@ -685,6 +686,16 @@
             this.idcUserData = response.data.list
           }
         })
+      },
+      messageStyle(e) {
+        if (e.column.label == this.$t("asset.tableTitle.alerts")) {
+          if (e.row.alertNum > 0) {
+            return 'has-message';
+          } else {
+            return 'has-no-message';
+          }
+        }
+        return '';
       },
       editData(data, item) {
         if (data === 'idc') {

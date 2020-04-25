@@ -358,7 +358,7 @@
         this.showSubList = true;
       },
       messageStyle(e) {
-        if (e.columnIndex == 6) {
+        if (e.column.label == this.$t("alert.message")) {
           if (e.row.alertNum > 0) {
             return 'has-message';
           } else {

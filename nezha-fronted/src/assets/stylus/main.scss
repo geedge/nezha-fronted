@@ -722,11 +722,17 @@ li{
   padding: 0;
   background-color: $content-right-background-color;
 }
-.nz-table td.has-message .cell {
-  background-color: #f8d7da;
+.nz-table td.has-message .cell>span {
+  background-color: #ff6666;
+  color: white;
+  padding:2px 5px;
+  border-radius: 4px;
 }
-.nz-table td.has-no-message .cell {
-  background-color: #d4edda;
+.nz-table td.has-no-message .cell>span {
+  background-color: #1bd383;
+  color: white;
+  padding:2px 5px;
+  border-radius: 4px;
 }
 .nz-table th {
   padding: 0;
