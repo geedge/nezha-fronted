@@ -13,7 +13,7 @@
       <div class="top-tools">
         <div class="top-tool-main-left">
           <el-dropdown @command="panelChange" class="panel-dropdown-title" trigger="click" placement="bottom-start" v-scrollBar:el-dropdown>
-            <el-row  :gutter="10" class="el-dropdown-link" style="">
+            <el-row @click.native="scrollbarHeightHandler" :gutter="10" class="el-dropdown-link" style="">
               <el-col :span="21" class="panel-list-title" :title="showPanel.name">{{showPanel.name}}</el-col>
               <el-col :span="3" style="padding-left:0px !important;"><i class="el-icon-arrow-down el-icon--right"></i></el-col>
             </el-row>
@@ -356,7 +356,27 @@
         this.$refs.addChartModal.show(true);
         this.$refs.addChartModal.createData(this.showPanel.id); //初始化创建图表需要的初始数据
       },
-
+      scrollbarHeightHandler() {
+        console.info(1)
+        setTimeout(() => {
+          let top = '';
+          let top2 = '';
+          document.querySelector("body>.el-dropdown-menu").addEventListener("ps-y-reach-end", () => {
+            let yDom = document.querySelector("body>.el-dropdown-menu>.ps__rail-y");
+            let yDom2 = document.querySelector("body>.el-dropdown-menu>.ps__rail-y>.ps__thumb-y");
+            if (top) {
+              yDom.style.top = top;
+            } else {
+              top = yDom.style.top;
+            }
+            if (top2) {
+              yDom2.style.top = top2;
+            } else {
+              top2 = yDom2.style.top;
+            }
+          });
+        }, 100);
+      },
       // 编辑图表信息,打开编辑弹窗
       editData(data) {
         this.$refs.addChartModal.setTitle(this.$t("dashboard.panel.editChartTitle"));

@@ -135,8 +135,8 @@
       <div class="mib-browser-left">
         <div class="mib-browser-tree-title">
           <span>SNMP MIBs</span>
-          <el-dropdown trigger="click" v-scrollBar:el-dropdown="'small'" :hide-on-click="false" @command="selectModel">
-            <span class="mib-browser-table-op">{{$t("config.model.model") + " "}}<i class="nz-icon nz-icon-funnel"></i></span>
+          <el-dropdown trigger="click" v-scrollBar:el-dropdown="'small'" :hide-on-click="false" @command="selectModel" ref="modelDropdown">
+            <span class="mib-browser-table-op" @click="scrollbarHeightHandler">{{$t("config.model.model") + " "}}<i class="nz-icon nz-icon-funnel"></i></span>
             <el-dropdown-menu slot="dropdown" class="mib-browser-model-dropdown">
               <el-dropdown-item :class="{'mib-browser-model-dropdown-item-active': walkParam.models.indexOf(item.id) > -1}" :command="item" v-for="item, index in modelData" :key="index">{{item.name}}</el-dropdown-item>
             </el-dropdown-menu>
@@ -326,6 +326,19 @@
       }
     },
     methods: {
+      scrollbarHeightHandler() {
+        setTimeout(() => {
+          let top = '';
+          document.querySelector("body>.el-dropdown-menu").addEventListener("ps-y-reach-end", () => {
+            let yDom = document.querySelector("body>.el-dropdown-menu>.ps__rail-y");
+            if (top) {
+              yDom.style.top = top;
+            } else {
+              top = yDom.style.top;
+            }
+          });
+        }, 100);
+      },
       toFileTab() {
         this.$emit("toFileTab");
       },
@@ -571,6 +584,7 @@
       this.getWalkData();
       this.getModelData();
       this.getAssetData();
+
     }
   }
 </script>
