@@ -690,9 +690,9 @@
       messageStyle(e) {
         if (e.column.label == this.$t("asset.tableTitle.alerts")) {
           if (e.row.alertNum > 0) {
-            return 'has-message';
+            return 'danger';
           } else {
-            return 'has-no-message';
+            return 'success';
           }
         }
         return '';

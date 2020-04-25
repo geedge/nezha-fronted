@@ -52,6 +52,7 @@
         :height="$tableHeight.normal"
         v-scrollBar:el-table="'large'"
         v-loading="loading"
+        :cell-class-name="messageStyle"
         style="width: 100%;">
         <el-table-column
           :resizable="false"
@@ -67,15 +68,9 @@
                             {{scope.row[item.prop] == 'zh' ? '中文' : ''}}
                             {{scope.row[item.prop] == 'ru' ? 'русский' : ''}}
                         </span>
-            <span v-else-if="item.prop == 'status'">
-                            <el-tag v-if="scope.row.status==='1'"
-                                    type="success"
-                                    disable-transitions>{{$t("config.terminallog.success")}}</el-tag>
-                            <el-tag v-else
-                    type="danger"
-                    disable-transitions>
-                              {{$t("config.terminallog.fail")}}</el-tag>
-                        </span>
+            <template v-else-if="item.prop == 'status'">
+              <span>{{scope.row.status==='1' ? $t("config.terminallog.success") : $t("config.terminallog.fail")}}</span>
+            </template>
             <span v-else>{{scope.row[item.prop]}}</span>
           </template>
         </el-table-column>
@@ -300,6 +295,17 @@
             t: +new Date()
           }
         });
+      },
+      messageStyle(e) {
+        if (e.column.label == this.$t('config.terminallog.status')) {
+          console.info(e.row)
+          if (e.row.status == '1') {
+            return 'success';
+          } else {
+            return 'danger';
+          }
+        }
+        return '';
       },
       toEditReceiver: function (item) {
         if (!item.isEdit) {
