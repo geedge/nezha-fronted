@@ -298,7 +298,6 @@
       },
       messageStyle(e) {
         if (e.column.label == this.$t('config.terminallog.status')) {
-          console.info(e.row)
           if (e.row.status == '1') {
             return 'success';
           } else {
