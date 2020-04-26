@@ -52,6 +52,7 @@
         :height="$tableHeight.normal"
         v-loading="loading"
         v-scrollBar:el-table="'large'"
+        :cell-class-name="messageStyle"
         style="width: 100%;">
         <el-table-column
           :resizable="false"
@@ -62,11 +63,6 @@
           :label="item.label"
         >
           <template slot-scope="scope" :column="item">
-            <span v-if="item.prop == 'lang'">
-                            {{scope.row[item.prop] == 'en' ? 'English' : ''}}
-                            {{scope.row[item.prop] == 'zh' ? '中文' : ''}}
-                            {{scope.row[item.prop] == 'ru' ? 'русский' : ''}}
-                        </span>
             <span v-if="item.prop == 'time'">
               {{scope.row[item.prop]}} ms
             </span>
@@ -255,6 +251,16 @@
         //获取子组件传过来的参数
         this.$store.commit('setHeaderTable', data);
         this.tablelable = data;
+      },
+      messageStyle(e) {
+        if (e.column.label == this.$t('config.operationlog.state')) {
+          if (e.row.state == 'success') {
+            return 'success';
+          } else {
+            return 'danger';
+          }
+        }
+        return '';
       },
       getTableData: function () {
         this.$set(this.searchLabel, "pageNo", this.pageObj.pageNo);

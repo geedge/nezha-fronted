@@ -70,13 +70,6 @@
 <!--            <div @mouseenter="hoverItemIndex = '3-' + index" @mouseleave="hoverItemIndex = ''" @click="jumpToAsset(item.id)" :class="{'menu-item-active' : (activeIndex == 'asset' && indOf(activeItemIndexes, item.id) > -1) }">-->
             <div @mouseenter="hoverItemIndex = '3-' + index" @mouseleave="hoverItemIndex = ''" @click="jumpToAsset(item.id)" >
               <span class="too-long-split" style="width: 130px;">{{item.name}}</span>
-<!--              <idc-config-box :post-idc="item" ref="idcConfigBox" placement="left" @after="getIDCOptionData" :user-data="userDatas">-->
-<!--                <template v-slot:optionZone>-->
-<!--                  <div v-show="hoverItemIndex == '3-' + index" @click="closeAllPop" class="menu-edit">-->
-<!--                    <i class="nz-icon nz-icon-edit" @click="getIDCOptionData(item.id)" style="color: inherit"></i>-->
-<!--                  </div>-->
-<!--                </template>-->
-<!--              </idc-config-box>-->
             </div>
           </el-menu-item>
         </template>
@@ -94,7 +87,7 @@
       </el-submenu>
       <el-submenu index="5" popper-class="nz-submenu">
         <template slot="title">
-          <div @click="jumpTo('account')" :class ="activeIndex == 'account' || activeIndex == 'promServer' || activeIndex == 'dc' || activeIndex == 'model' || activeIndex == 'mib' || activeIndex == 'system' || activeIndex == 'terminallog' ? 'menu-active' :''">{{$t('overall.config')}}</div>
+          <div @click="jumpTo('account')" :class ="activeIndex == 'account' || activeIndex == 'promServer' || activeIndex == 'dc' || activeIndex == 'model' || activeIndex == 'mib' || activeIndex == 'system' || activeIndex == 'terminallog' || activeIndex == 'operationlog' ? 'menu-active' :''">{{$t('overall.config')}}</div>
         </template>
         <el-menu-item index="5-0">
           <div @click="jumpTo('account')" :class="{'menu-item-active' :(activeIndex == 'account' )}">{{$t('config.account.account')}}</div>
@@ -277,7 +270,7 @@
             t: +new Date()
           }
         });
-        this.activeIndex = data
+        this.activeIndex = data;
       },
 
       createBox(item) {

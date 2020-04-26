@@ -191,7 +191,6 @@
         this.queryEndpointData();
         this.queryAlertMessageData();
         this.queryAlertRuleData();
-        this.queryDatacenterData();
         this.queryAlertTrendData();
         this.queryMapChartGeoJson();
         this.queryAlertStatByRule();
@@ -306,13 +305,6 @@
         this.$get('overview/alertRuleStat').then(response => {
           if (response.code === 200) {
             this.alertRuleData = response.data;
-          }
-        })
-      },
-      queryDatacenterData() {
-        this.$get('overview/datacenterStat').then(response => {
-          if (response.code === 200) {
-            this.alertMessageData = response.data;
           }
         })
       },
