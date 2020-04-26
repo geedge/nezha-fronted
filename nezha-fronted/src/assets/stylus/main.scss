@@ -723,13 +723,13 @@ li{
   background-color: $content-right-background-color;
 }
 .nz-table td.danger .cell>span {
-  background-color: #ff6666;
+  background-color: #d64f40;
   color: white;
   padding:2px 5px;
   border-radius: 4px;
 }
 .nz-table td.success .cell>span {
-  background-color: #1bd383;
+  background-color: #50d050;
   color: white;
   padding:2px 5px;
   border-radius: 4px;
@@ -1510,10 +1510,10 @@ li{
   margin-right: 5px;
 }
 .red {
-  background-color: #ff6666 !important;
+  background-color: #d64f40 !important;
 }
 .green {
-  background-color:#1bd383 !important;
+  background-color:#50d050 !important;
 }
 .grey {
   background-color:lightGrey;

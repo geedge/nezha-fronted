@@ -115,6 +115,9 @@
       </div>
     </left-menu>
     <div class="axis-tooltip el-popover"></div>
+    <!--用于assetType饼图label-->
+    <img src='../../../../assets/img/up.png' id="upPic" style="display: none;">
+    <img src='../../../../assets/img/down.png' id="downPic" style="display: none;">
   </div>
 </template>
 
@@ -207,34 +210,96 @@
             this.$refs.assetTypePie.startLoading();
             let legendData = [];
             let typeSeriesData = [];
-            let modelSeriesData = [];
+            //let modelSeriesData = [];
             this.assetData.typeStat.forEach(item => {
               legendData.push(item.name);
-              typeSeriesData.push({name: item.name, value: item.total});
+              typeSeriesData.push({name: item.name, value: item.total, up: item.pingUp, down: item.pingDown});
             });
-            this.assetData.modelStat.forEach(item => {
+            /*this.assetData.modelStat.forEach(item => {
               legendData.push(item.name);
               modelSeriesData.push({name: item.name, value: item.total});
-            });
+            });*/
             let series = [{
               name: 'Type',
-              data: typeSeriesData,
+              data: typeSeriesData.sort((a, b) => {return a.value > b.value ? -1 : 1}),
               type: 'pie',
-              radius: [0, '50%'],
+              minAngle: 15,
+              itemStyle: {
+                borderColor: "#fff",
+                borderWidth: 1,
+              },
               label: {
-                position: 'inner',
-                formatter: function(params) {
-                  if (params.name.length > 12) {
-                    return params.name.substring(0, 9) + "...";
+                borderWidth: 1,
+                borderColor: "#cfcfcf",
+                borderRadius: 4,
+                formatter: function(param) {
+                  return ['{title|' + param.name + ' (' + param.percent + '%)}',
+                          '{hr|}',
+                          '{block5|}{upPic|}{block3|}{upNum|' + param.data.up + '}{block15|}{downPic|}{block3|}{downNum|' + param.data.down + '}{block15|}']
+                    .join("\n");
+                },
+                rich: {
+                  title: {
+                    align: 'center',
+                    color: "#333",
+                    height: 20*window.devicePixelRatio,
+                    padding: [0, 8, 0, 8]
+                  },
+                  hr: {
+                    width: '100%',
+                    borderWidth: 0.5,
+                    height: 0,
+                    borderColor: "#cfcfcf"
+                  },
+                  block3: {
+                    width: 3*window.devicePixelRatio,
+                    align: 'left'
+                  },
+                  block5: {
+                    width: 5*window.devicePixelRatio,
+                    align: 'left'
+                  },
+                  block15: {
+                    width: 15*window.devicePixelRatio,
+                    align: 'left'
+                  },
+                  upPic: {
+                    backgroundColor: {
+                      image: document.getElementById("upPic")
+                    },
+                    height: 15*window.devicePixelRatio,
+                    align: 'left',
+                    width: 15*window.devicePixelRatio,
+                  },
+                  upNum: {
+                    color: "#333",
+                    height: 20*window.devicePixelRatio,
+                    align: 'left',
+                    //width: 35*window.devicePixelRatio,
+                    lineHeight: 18*window.devicePixelRatio,
+                  },
+                  downPic: {
+                    backgroundColor: {
+                      image: document.getElementById("downPic")
+                    },
+                    height: 15*window.devicePixelRatio,
+                    align: 'left',
+                    width: 15*window.devicePixelRatio
+                  },
+                  downNum: {
+                    color: "#333",
+                    height: 20*window.devicePixelRatio,
+                    align: 'left',
+                    //width: 43*window.devicePixelRatio,
+                    lineHeight: 18*window.devicePixelRatio,
                   }
-                  return params.name;
                 }
               },
               labelLine: {
-                show: false
+                show: true
               },
-              left: '25%'
-            }, {
+              //left: '25%'
+            }, /*{
               name: 'Model',
               radius: ['65%', '80%'],
               data: modelSeriesData,
@@ -248,18 +313,18 @@
                   return params.name;
                 }
               }
-            }];
-            this.$refs.assetTypePie.modifyOption('legend','show', true);
+            }*/];
+            /*this.$refs.assetTypePie.modifyOption('legend','show', true);
             this.$refs.assetTypePie.modifyOption('legend','orient', "vertical");
             this.$refs.assetTypePie.modifyOption('legend','data', legendData);
-            this.$refs.assetTypePie.modifyOption('legend','left', 0);
-            this.$refs.assetTypePie.modifyOption('legend','top', 5);
+            this.$refs.assetTypePie.modifyOption('legend','left', 40);
+            this.$refs.assetTypePie.modifyOption('legend','top', 40);
             this.$refs.assetTypePie.modifyOption('legend','formatter', function(name) {
               if (name.length > 12) {
                 return name.substring(0, 9) + "...";
               }
               return name;
-            });
+            });*/
             this.$refs.assetTypePie.setSeries(series);
             this.$refs.assetTypePie.endLoading();
           }
@@ -593,7 +658,7 @@
         return `<div class="tooltip" style="min-width: unset;">${params.name}:&nbsp;${params.value}</div>`;
       },
       assetTypeFormatter(params) {
-        return `<div class="tooltip" style="min-width: unset;">${params.seriesName}<br/>${params.name}:&nbsp;${params.value}</div>`;
+        return `<div class="tooltip" style="min-width: unset;">${params.name}:&nbsp;${params.value}</div>`;
       },
       switchFullScreen:function(){
         this.isFullScreen = this.judgeFullScreen();

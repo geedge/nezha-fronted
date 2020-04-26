@@ -8,7 +8,11 @@
       '#f3715c', '#ea66a6', '#d1c7b7', '#9d9087', '#77787b',
       '#f58220', '#c37e00', '#00ae9d', '#f26522', '#76becc',
       '#76624c', '#d71345', '#2468a2', '#ca8687', '#1b315e',
-    ]
+    ];
+    let overviewBgColor = ['#d64f40', '#ffdb28', '#7bfc95', '#77baf4',
+      '#ac958f', '', '', '', '', '', '', '', '', '', '', ];
+    let pieColor = ['#d64f40', '#e65f50', '#f66f60', '#f69f90',
+      '#ffdb28', '#ffeb38', '#fffb48', '#ffffbb'];
     const commonOption={
       title:{
         show:false,
@@ -138,7 +142,7 @@
       title: {
         show: false,
       },
-      color: bgColorList,
+      color: pieColor,
       legend: {
         show: false,
       },
@@ -150,7 +154,7 @@
       title: {
         show: false,
       },
-      color: bgColorList,
+      color: overviewBgColor,
       legend: {
         show: false,
       },
@@ -196,11 +200,11 @@
         triggerEvent: true
       },
     };
-    const overViewLine = {
+    const overviewLine = {
       title:{
         show: false,
       },
-      color: bgColorList,
+      color: overviewBgColor,
       legend:{
         show:false,
       },
@@ -227,9 +231,9 @@
       },
       grid: {
         left: 6,
-        right: 30,
+        right: 20,
         containLabel: true,
-        bottom:8,
+        bottom: 0,
       },
       xAxis: {
         type: 'time',
@@ -285,7 +289,7 @@
     };
     const chartTypes={
       line:{name:'line',option:commonOption},
-      overviewLine: {name: 'line', option: overViewLine},
+      overviewLine: {name: 'line', option: overviewLine},
       map:{name:'map',option:mapOptions},
       pie: {name: 'assetType', option: assetTypePie},
       bar: {name: 'alertMessage', option: alertMessageBar}
