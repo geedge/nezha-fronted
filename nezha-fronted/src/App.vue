@@ -15,7 +15,7 @@ export default {
     // this.$http.get("config.json").then((result)=>{
     //   this.$axios.defaults.baseURL = result.body.baseUrl;
     // });
-    this.$axios.defaults.baseURL = 'http://192.168.40.247:8080/nz-admin';
+    this.$axios.defaults.baseURL = 'http://192.168.40.42:8080/nz-admin';
   }
 }
 </script>
