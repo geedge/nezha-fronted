@@ -168,10 +168,7 @@
         showLegend:true,
         tableShow:true,
         urlShow:true,
-        searchTime: [
-          new Date(bus.computeTimezone(new Date().getTime())).setMinutes(new Date(bus.computeTimezone(new Date().getTime())).getMinutes() - 5),
-          new Date(bus.computeTimezone(new Date().getTime()))
-        ],
+        searchTime: [new Date().setHours(new Date().getHours()-1),new Date()],
         //oldSearchTime:[],
         minHeight:200,
         chartSpaceHeight:5,//top-border: 1,bottom-border: 1,padding-bottome:3
@@ -269,8 +266,7 @@
       // 全屏查看
       show(chartInfo) {
         this.isError = false;
-        this.searchTime = [new Date(bus.computeTimezone(new Date().getTime())).setMinutes(new Date(bus.computeTimezone(new Date().getTime())).getMinutes() - 5),
-          new Date(bus.computeTimezone(new Date().getTime()))];
+        this.searchTime = [new Date().setHours(new Date().getHours()-1),new Date()];
         this.chart=chartInfo;
 
         let chartType= chartInfo.type;

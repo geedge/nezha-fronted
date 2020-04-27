@@ -2,7 +2,7 @@
   @import './line-chart-block.scss';
 </style>
 <template>
-  <div class="line-chart-block"   :id="'lineChartDiv'+chartIndex" v-show="divFirstShow" @mouseenter="mouseEnterChart" @mouseleave="mouseLeaveChart">
+  <div class="line-chart-block"    :id="'lineChartDiv'+chartIndex" v-show="divFirstShow" @mouseenter="mouseEnterChart" @mouseleave="mouseLeaveChart">
     <loading  :ref="'localLoading'+chartIndex"></loading>
 
     <!--<div class="edit">
@@ -1241,6 +1241,7 @@
         if(this.echartModalStore){
           this.echartModalStore.clear();
         }
+        this.data = {};
       },
       clickos() {
         this.dropdownMenuShow=false;

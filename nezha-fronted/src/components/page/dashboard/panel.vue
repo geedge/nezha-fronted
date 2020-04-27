@@ -197,7 +197,7 @@
           }]
         },*/
         searchTime: [
-          new Date(bus.computeTimezone(new Date().getTime())).setMinutes(new Date(bus.computeTimezone(new Date().getTime())).getMinutes() - 5),
+          new Date(bus.computeTimezone(new Date().getTime())).setHours(new Date(bus.computeTimezone(new Date().getTime())).getHours() - 1),
           new Date(bus.computeTimezone(new Date().getTime()))
         ],
         intervalTimer: null,
@@ -435,7 +435,7 @@
         if (params.start_time === '' || params.end_time === '') {
           let now = new Date();
           let endTimeTmp = bus.timeFormate(now, 'yyyy-MM-dd hh:mm:ss');
-          let startTimeTmp = bus.timeFormate(now.setMinutes(now.getMinutes() - 5), 'yyyy-MM-dd hh:mm:ss');
+          let startTimeTmp = bus.timeFormate(now.setHours(now.getHours() - 1), 'yyyy-MM-dd hh:mm:ss');
           params.start_time = startTimeTmp;
           params.end_time = endTimeTmp;
         }
@@ -584,8 +584,12 @@
       //   this.getData(this.filter);
       // },
       search:function(){
-        this.filter.panelId=this.showPanel.id;
-        this.getData(this.filter);
+        //this.filter.panelId=this.showPanel.id;
+        //this.getData(this.filter);
+
+        if(this.$refs.chartList){
+          this.$refs.chartList.searchCharts(this.filter.searchName);
+        }
       },
       // 滚动事件触发下拉加载
       onScroll() {

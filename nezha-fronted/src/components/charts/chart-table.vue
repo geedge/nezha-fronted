@@ -7,7 +7,7 @@
   }
 </style>
 <template>
-    <div class="chart-table" :id="'chartTableDiv'+chartIndex" v-show="divFirstShow" @mouseenter="caretShow=true" @mouseleave="caretShow=false">
+    <div class="chart-table"  :id="'chartTableDiv'+chartIndex" v-show="divFirstShow" @mouseenter="caretShow=true" @mouseleave="caretShow=false">
         <loading  :ref="'localLoading'+chartIndex"></loading>
       <!--
         <div v-show="showLoading" class="el-loading-mask" style="background-color: rgba(0, 0, 0, 0);">
@@ -566,6 +566,9 @@ export default {
         clickos() {
           this.dropdownMenuShow=false;
         },
+      clearChart(){
+        this.data = {};
+      },
         // 全屏查看
         showAllScreen() {
             this.dropdownMenuShow=false;
@@ -694,6 +697,8 @@ export default {
     mounted() {
         this.firstLoad = false;
     },
-    beforeDestroy() {},
+    beforeDestroy() {
+      this.clearChart();
+    },
 };
 </script>

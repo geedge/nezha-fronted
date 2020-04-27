@@ -7,7 +7,7 @@
   }
 </style>
 <template>
-    <div class="chart-url" :id="'chartUrlDiv'+chartIndex" v-show="divFirstShow" @mouseenter="caretShow=true" @mouseleave="caretShow=false">
+    <div class="chart-url"  :id="'chartUrlDiv'+chartIndex" v-show="divFirstShow" @mouseenter="caretShow=true" @mouseleave="caretShow=false">
         <loading  :ref="'localLoading'+chartIndex"></loading>
 
         <div class="clearfix chartTitle" :class="{'dragTitle':dragTitleShow}" :id="'chartTitle'+chartIndex">
@@ -313,8 +313,9 @@ export default {
         },
         clearData(){
         },
-
-
+        clearChart(){
+          this.data = {};
+        },
         // 重新请求数据 刷新操作-local
         refreshChart() {
             this.dropdownMenuShow=false;
@@ -371,6 +372,8 @@ export default {
     mounted() {
         this.firstLoad = false;
     },
-    beforeDestroy() {},
+    beforeDestroy() {
+      this.clearChart();
+    },
 };
 </script>

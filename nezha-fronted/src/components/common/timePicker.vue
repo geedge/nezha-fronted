@@ -30,10 +30,10 @@
     text-align:center;
   }
   .panel-time-picker-hidden{
-    width:0px;
+    width:0px !important;
     padding:0px !important;
-    visibility: hidden;
-    border: none;
+    border:0px !important;
+    visibility: hidden !important;
   }
   .time-picker-button{
     padding: 0 1px !important;
@@ -67,7 +67,7 @@
 </style>
 <template>
   <div class="calendar top-tools" id="panel-calender">
-    <el-date-picker prefix-icon=" " class="panel-time-picker-hidden hidden" size="mini" ref="calendar"
+    <el-date-picker prefix-icon=" " class="panel-time-picker-hidden " size="mini" ref="calendar"
                     format="yyyy/MM/dd HH:mm:ss" @change="dateChange" v-model="searchTime" type="datetimerange"
                     popper-class="panel-time-picker-popper"
                     :range-separator="$t('dashboard.panel.to')"
@@ -130,12 +130,12 @@ export default {
       isPopoverDisabled:false,
       isCustom:false,
       searchTime:[
-        bus.timeFormate(new Date(bus.computeTimezone(new Date().getTime())).setMinutes(new Date(bus.computeTimezone(new Date().getTime())).getMinutes() - 5),'yyyy-MM-dd hh:mm:ss'),
+        bus.timeFormate(new Date(bus.computeTimezone(new Date().getTime())).setHours(new Date(bus.computeTimezone(new Date().getTime())).getHours() - 1),'yyyy-MM-dd hh:mm:ss'),
         bus.timeFormate(new Date(bus.computeTimezone(new Date().getTime())),'yyyy-MM-dd hh:mm:ss')
       ],
       showTime: {
-        id: 1,
-        text: this.$t("dashboard.panel.lastFiveMin"),
+        id: 4,
+        text: this.$t("dashboard.panel.lastOneHour"),
       },
       timeData: [
         {

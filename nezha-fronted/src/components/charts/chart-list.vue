@@ -69,7 +69,7 @@
                  handle:'.chartTitle',
                }"  >@clone="clone"
      -->
-    <draggable v-model="dataList" @start="start" @end="end" :move="move"
+    <draggable v-model="dataList" @start="start" @end="end" :move="move" :key
                :scroll-sensitivity="150"
                :options="{
                  group:{name:'chartGroup',pull:'false'},
@@ -83,19 +83,20 @@
                  animation:150,
                  handle:'.chartTitle',
                }"  >
-      <div class="chartBox" v-for="(item, index) in dataList"    :key="item.id" :id="item.title+'_'+item.id"
+      <div class="chartBox" v-for="(item, index) in dataList"    :key="'chartBox'+item.id" :id="item.title+'_'+item.id"
           >
         <line-chart-block v-if="item.type === 'line' || item.type === 'bar' ||item.type == 'stackArea' || item.type === 4" :key="'inner' + item.id"
-        ref="editChart"
+        :ref="'editChart'+item.id"
         @on-refresh-data="refreshChart"
         @on-remove-chart-block="removeChart"
         @on-drag-chart="editChartForDrag"
         @on-edit-chart-block="editData"
         :panel-id="filter.panelId"
+
         :chart-index="index"
         :editChartId="'editChartId' + item.id"></line-chart-block>
 
-        <chart-table v-if="item.type === 'table'" ref="editChart" :key="'inner' + item.id"
+        <chart-table v-if="item.type === 'table'" :ref="'editChart'+item.id" :key="'inner' + item.id"
         @on-refresh-data="refreshChart"
         @on-search-data="searchData"
         @on-remove-chart-block="removeChart"
@@ -105,7 +106,7 @@
         :chart-index="index"
         :editChartId="'editChartId' + item.id"></chart-table>
 
-        <chart-url v-if="item.type === 'url'" ref="editChart" :key="'inner' + item.id"
+        <chart-url v-if="item.type === 'url'" :ref="'editChart'+item.id" :key="'inner' + item.id"
                      @on-refresh-data="refreshChart"
                      @on-search-data="searchData"
                      @on-remove-chart-block="removeChart"
@@ -141,7 +142,7 @@ export default {
     return {
       filter: {},
       dataList: [], // 看板中所有图表信息
-      //dataListDragTmp:[],
+      dataListDragTmp:[],
       time: {
         start: '',
         end: '',
@@ -149,6 +150,7 @@ export default {
       panelId: '',
       timer: null,
       dataTotalList:[],//懒加载：总记录数
+      dataTotalListBak:[],//用于查询：懒加载，总记录备份
       isPage:true,//是否分页懒加载
       currentRecordNum:0,//懒加载：本次取记录的index，第一次从0开始取，每次取3行
       lineNum:3,//每页加载的行数
@@ -168,7 +170,7 @@ export default {
       let chartTitle = item.querySelector('.chartTitle');
       chartTitle.style.background = '#d8dce1';
       console.log('start-title',chartTitle);
-      //this.dataListDragTmp = [...this.dataList];
+      this.dataListDragTmp = [...this.dataList];
       let dragClass = document.querySelector('.drag-chart-class');//drag-chart-class:yellow chart-ghost:green  fallback-class choose-class:purple
       console.log('start---class', dragClass);
       //dragClass.style.opacity = 1;
@@ -199,7 +201,9 @@ export default {
     },
     end (event) {
       let item = event.item;
-      console.log('end', event, this.dataList);
+      //console.log('item--old', item);
+      //console.log('end', event, this.dataList);
+      //console.log('totalBak', event, this.dataTotalListBak);
       /*
       let len = this.dataListDragTmp.length;
       let endIndex = len-1;
@@ -236,8 +240,7 @@ export default {
         newNextItem.prev = newItem.id;
       }
 */
-      let newIndex = event.newIndex;
-      let newItem = this.dataList[newIndex];
+      /*
       if(this.dataList.length===1){
         newItem.prev = 0;
         newItem.next = -1;
@@ -255,6 +258,85 @@ export default {
         newItem.prev = newPrevItem.id;
         newItem.next = newNextItem.id;
       }
+      */
+      let oldIndex = event.oldIndex;
+      let newIndex = event.newIndex;
+      let newItem = this.dataList[newIndex];
+      //移动前，移动元素前后元素next及prev修改；移动后，移动元素前后元素next及prev修改--start
+      let len = this.dataListDragTmp.length;//移动之前的元素列表
+      let endIndex = len-1;
+      if(oldIndex===0){//挪动之前为第一个元素
+        let oldNextItem = this.dataListDragTmp[oldIndex+1];
+        let nextItem = this.dataList.find(item => item.id === oldNextItem.id);
+        nextItem.prev = 0;
+      }else if(oldIndex===endIndex){//挪动之前为最后一个元素
+        let oldPrevItem = this.dataListDragTmp[oldIndex-1];
+        let prevItem = this.dataList.find(item => item.id === oldPrevItem.id);
+        prevItem.next = -1;
+      }else{//挪动之前为中间元素
+        let oldPrevItem = this.dataListDragTmp[oldIndex-1];
+        let oldNextItem = this.dataListDragTmp[oldIndex+1];
+        let nextItem = this.dataList.find(item => item.id === oldNextItem.id);
+        let prevItem = this.dataList.find(item => item.id === oldPrevItem.id);
+        prevItem.next = oldNextItem.id;
+        nextItem.prev = oldPrevItem.id;
+      }
+
+      if(newIndex===0){//挪动之后为第一个元素
+        let newNextItem = this.dataList[newIndex+1];
+        newNextItem.prev = newItem.id;
+      }else if(newIndex===endIndex){//挪动之后为最后一个元素
+        let newPrevItem = this.dataList[newIndex-1];
+        newPrevItem.next =newItem.id;
+      }else{//挪动之后为中间元素
+        let newPrevItem = this.dataList[newIndex-1];
+        let newNextItem = this.dataList[newIndex+1];
+        newPrevItem.next = newItem.id;
+        newNextItem.prev = newItem.id;
+      }
+      //移动前，移动元素前后元素next及prev修改；移动后，移动元素前后元素next及prev修改--end
+
+      //前台总列表中的顺序也得修改（dataTotalList及dataTotalListBak），后台接口也得调用
+      if(newIndex<oldIndex){//从后往前移动：
+        //console.log('从后往前移动：oldIndex='+oldIndex+',newIndex='+newIndex)
+        let newNextItem = this.dataList[newIndex+1];
+        newItem.next = newNextItem.id;
+
+        let nextItemIndexInTotal = -1;
+        this.dataTotalListBak.forEach((item,index)=>{
+          if(item.id===newNextItem.id){
+            nextItemIndexInTotal = index;
+          }
+        })
+       // console.log('从后往前移动：next元素在总列表中之前的元素的index='+nextItemIndexInTotal)
+        if(nextItemIndexInTotal>0){//总列表中：移动之后的当前元素后面的元素之前有元素
+          let prevItem = this.dataTotalListBak[nextItemIndexInTotal-1];
+          newItem.prev = prevItem.id;
+        }else{//之前无元素
+          newItem.prev = 0;
+        }
+      }else if(newIndex>oldIndex){//从前往后移动
+        //console.log('从前往后移动：oldIndex='+oldIndex+',newIndex='+newIndex)
+        let newPrevItem = this.dataList[newIndex-1];
+        newItem.prev = newPrevItem.id;
+
+        let prevItemIndexInTotal = -1;
+        this.dataTotalListBak.forEach((item,index)=>{
+          if(item.id===newPrevItem.id){
+            prevItemIndexInTotal = index;
+          }
+        })
+        //console.log('从前往后移动：prev元素在总列表中之后的元素的index='+prevItemIndexInTotal)
+        if(prevItemIndexInTotal<this.dataTotalListBak.length-1){//总列表中：移动之后的当前元素前面的元素之后有元素
+          let nextItem = this.dataTotalListBak[prevItemIndexInTotal+1];
+          newItem.next = nextItem.id;
+        }else{//之后无元素
+          newItem.next = -1;
+        }
+      }else {//oldIndex = newIndex
+
+      }
+
       //更新图表prev和next
       const modifyParams = {
         id:newItem.id,
@@ -263,10 +345,22 @@ export default {
         prev:newItem.prev,
         next:newItem.next,
       };
-      if(this.dataList.length>1){
+
+      if(this.dataList.length>1 && oldIndex !== newIndex){
         this.$put('panel/'+ this.pagePanelId+'/charts/modify',modifyParams).then(response => {
           if (response.code === 200) {
-            //let item = this.dataList.find(item => item.id === newItem.id);
+            //修改前台列表中元素的顺序
+            let curItem = this.dataTotalListBak.find((item,index)=>{return newItem.id===item.id});
+            let curIndex = this.dataTotalListBak.indexOf(curItem);
+            this.dataTotalListBak.splice(curIndex,1);
+
+            let nextItemTmp = this.dataTotalListBak.find((item)=>{return item.id===newItem.next});
+            if(nextItemTmp){
+              let nextIndex = this.dataTotalListBak.indexOf(nextItemTmp);
+              this.dataTotalListBak.splice(nextIndex,0,newItem);
+            }else{//移动到最后一个元素
+              this.dataTotalListBak.push(newItem);
+            }
           }else {
             if(response.msg){
               this.$message.error(response.msg);
@@ -412,9 +506,14 @@ export default {
       this.currentRecordNum = 0;
     },
     cleanData(){
-      if (this.dataList.length > 0 && this.$refs.editChart) {
-        this.$refs.editChart.forEach((item) => {
-          item.clearData();
+      /*if (this.dataList.length > 0 && this.$refs.editChart) {
+         this.$refs.editChart.forEach((item) => {
+           item.clearData();
+         });
+        }*/
+      if (this.dataList.length > 0 ) {
+        this.dataList.forEach((item) => {
+          this.$refs['editChart'+item.id][0].clearData();
         });
       }
       this.dataList = [];
@@ -425,6 +524,47 @@ export default {
       this.filter = filter;
       this.pagePanelId = this.filter.panelId;
       this.getData(this.filter);
+    },
+    searchCharts(searchName){
+      this.currentRecordNum = 0;
+      this.dataList = [];
+      this.dataTotalList = [];
+
+      let chartListTmp = [];
+      if(searchName && searchName.trim()!==''){
+        this.dataTotalListBak.forEach((item)=>{
+          if(item.title.indexOf(searchName)>-1){
+            chartListTmp.push(item);
+          }
+        });
+      }else{
+        this.dataTotalListBak.forEach((item)=>{
+            chartListTmp.push(item);
+        });
+        //chartListTmp = [...this.dataTotalListBak];
+      }
+
+      this.dataTotalList = [...chartListTmp];
+      if(this.isPage){
+        this.pageDataList();
+      }else {
+        this.dataList = [...this.dataTotalList];
+      }
+
+      this.$nextTick(() => {
+        /*
+        if (this.dataList.length > 0 && this.$refs.editChart) {
+          this.$refs.editChart.forEach((item, i) => {
+            item.showLoad(this.dataList[i]);//之后要实现
+          });
+        }*/
+        if (this.dataList.length > 0 ) {
+          this.dataList.forEach((item) => {
+            this.$refs['editChart'+item.id][0].showLoad(item);//之后要实现
+          });
+        }
+        this.dataSetFirst(this.dataList);
+      });
     },
     pageDataList(isAdd,panelId){
       if(panelId!==this.pagePanelId){
@@ -466,11 +606,13 @@ export default {
           }
           if(isAdd){
             let oldDataListLen = this.dataList.length;
-            let dataListTmp = this.dataList;
-            this.dataList =  dataListTmp.concat(dataTmpList);
-            this.dataSetFirst(dataTmpList,oldDataListLen);
+            let dataListTmp = [...this.dataList];
+            this.dataList =  [...dataListTmp.concat(dataTmpList)];
+            this.$nextTick(() => {
+              this.dataSetFirst(dataTmpList,oldDataListLen);
+            });
           }else {
-            this.dataList = dataTmpList;
+            this.dataList = [...dataTmpList];
           }
         }
       }
@@ -484,30 +626,49 @@ export default {
       };
       if (!param.query) delete param.query;
       //根据panelId获得panel下的所有图表
-      let searchTitleStr = '';
-      if(this.filter.searchName&&this.filter.searchName!=''){
-        searchTitleStr = '?title='+this.filter.searchName;
-      }
-      this.$get('panel/'+ params.panelId+'/charts'+searchTitleStr).then(response => {
+      //let searchTitleStr = '';
+      //if(this.filter.searchName&&this.filter.searchName!=''){
+        //searchTitleStr = '?title='+this.filter.searchName;
+      //}
+      this.$get('panel/'+ params.panelId+'/charts').then(response => {
         if (response.code === 200) {
           if(response.data.list){
             this.dataTotalList =  response.data.list;
           }else {
             this.dataTotalList = response.data;
           }
+          this.dataTotalListBak = [...this.dataTotalList];
+
+          if(this.filter.searchName&&this.filter.searchName!=''){
+            let chartListTmp = [];
+            let searchTitleStr = this.filter.searchName;
+            this.dataTotalListBak.forEach((item)=>{
+              if(item.title.indexOf(searchTitleStr)>-1){
+                chartListTmp.push(item);
+              }
+            });
+            this.dataTotalList = chartListTmp;
+          }
+
           if(this.isPage){
             this.pageDataList();
           }else {
             this.dataList = this.dataTotalList;
           }
           this.$nextTick(() => {
+            /*
             if (this.dataList.length > 0 && this.$refs.editChart) {
               this.$refs.editChart.forEach((item, i) => {
                 item.showLoad(this.dataList[i]);//之后要实现
               });
+            }*/
+            if (this.dataList.length > 0 ) {
+              this.dataList.forEach((item) => {
+                this.$refs['editChart'+item.id][0].showLoad(item);//之后要实现
+              });
             }
+            this.dataSetFirst(this.dataList);
           });
-          this.dataSetFirst(this.dataList);
         }
       });
     },
@@ -531,7 +692,6 @@ export default {
 
     // 获取一个图表具体数据,图表信息，图表位置index
     getChartData(chartInfo, pos, filterType) {
-      //alert(JSON.stringify(chartInfo));
       const chartItem = chartInfo;
       const index = pos; // 指标
       const len = chartItem.elements.length;
@@ -539,8 +699,13 @@ export default {
       // 没有数据的设置提示信息暂无数据-针对每一个图
       if (len === 0) {
         this.$nextTick(() => {
+          /*
           if(this.$refs.editChart[index]){
             this.$refs.editChart[index].setData(chartItem, [], this.filter.panelId, this.filter);//????怎么设置的无数据？？
+          }*/
+
+          if(this.$refs['editChart'+chartItem.id]){
+            this.$refs['editChart'+chartItem.id][0].setData(chartItem, [], this.filter.panelId, this.filter);//????怎么设置的无数据？？
           }
         });
       } else {
@@ -586,6 +751,7 @@ export default {
               };
               let errorMsg = "";
               res.forEach((response, innerPos) => {
+                //alert(pos+'==response==='+JSON.stringify(chartInfo))
                 if (response.status === 'success') {
                   errorMsg = "";
                   if (response.data.result) {
@@ -619,7 +785,7 @@ export default {
                       // 设置时间-数据格式对
                       const dpsArr = Object.entries(queryItem.values);//[ ["0",[1577959830.781,"0"]], ["1",[1577959845.781,"0"]] ]
                       // 判断是否有数据, && tagsArr.length > 0
-                      if (dpsArr.length > 0 && this.$refs.editChart[index]) {
+                      if (dpsArr.length > 0 && this.$refs['editChart'+chartItem.id]) {
                         tagsArr.forEach((tag, i) => {
                           if (tag !== '__name__') {
                             host += `${tag}="${queryItem.metric[tag]}",`;
@@ -633,7 +799,7 @@ export default {
                           host = chartItem.elements[innerPos].expression;
                         }
                         //处理legend别名
-                        let alias=this.$refs.editChart[index].dealLegendAlias(host,chartItem.elements[innerPos].legend);
+                        let alias=this.$refs['editChart'+chartItem.id][0].dealLegendAlias(host,chartItem.elements[innerPos].legend);
                         if(!alias || alias===''){
                           alias = chartItem.elements[innerPos].expression;
                         }
@@ -696,13 +862,14 @@ export default {
                   }
                 }
               });
-              if(this.$refs.editChart&&this.$refs.editChart[index]) {
+
+              if(this.$refs['editChart'+chartItem.id]) {
                 if (chartItem.type === 'table') {//表格
                   if (filterType === 'showFullScreen') {//全屏查询
-                    this.$refs.editChart[index].setData(chartItem, tableData,
+                    this.$refs['editChart'+chartItem.id][0].setData(chartItem, tableData,
                       this.filter.panelId, this.filter, filterType,errorMsg);
                   } else {
-                    this.$refs.editChart[index].setData(chartItem, tableData,
+                    this.$refs['editChart'+chartItem.id][0].setData(chartItem, tableData,
                       this.filter.panelId, this.filter,'',errorMsg);
                   }
                 } else if (chartItem.type === 'line' || chartItem.type === 'bar' || chartItem.type === 'stackArea' || chartItem.type === 4) {
@@ -710,31 +877,31 @@ export default {
                     //series.push(sumData);//后续需要
                   }
                   if (filterType === 'showFullScreen') {//全屏查询
-                    this.$refs.editChart[index].setData(chartItem, series,
+                    this.$refs['editChart'+chartItem.id][0].setData(chartItem, series,
                       this.filter.panelId, this.filter, legend, filterType,errorMsg);
                   } else {
-                    this.$refs.editChart[index].setData(chartItem, series,
+                    this.$refs['editChart'+chartItem.id][0].setData(chartItem, series,
                       this.filter.panelId, this.filter, legend,'',errorMsg);
                   }
                 }
               }
             } else {
               const type = chartItem.type;
-              if(this.$refs.editChart[index]) {
+              if(this.$refs['editChart'+chartItem.id]) {
                 if (type === 'table') {
                   if (filterType === 'showFullScreen') {//table的全屏查询
-                    this.$refs.editChart[index].setData(chartItem, [], this.filter.panelId,
+                    this.$refs['editChart'+chartItem.id][0].setData(chartItem, [], this.filter.panelId,
                       this.filter, filterType);
                   } else {
-                    this.$refs.editChart[index].setData(chartItem, [], this.filter.panelId,
+                    this.$refs['editChart'+chartItem.id][0].setData(chartItem, [], this.filter.panelId,
                       this.filter);
                   }
                 } else if (type === 'line' || type === 'bar' || type === 'stackArea' || chartItem.type === 4) {
                   if (filterType === 'showFullScreen') {//table的全屏查询
-                    this.$refs.editChart[index].setData(chartItem, [], this.filter.panelId,
+                    this.$refs['editChart'+chartItem.id][0].setData(chartItem, [], this.filter.panelId,
                       this.filter, filterType);
                   } else {
-                    this.$refs.editChart[index].setData(chartItem, [], this.filter.panelId,
+                    this.$refs['editChart'+chartItem.id][0].setData(chartItem, [], this.filter.panelId,
                       this.filter);
                   }
                 }
