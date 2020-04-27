@@ -404,11 +404,8 @@
         this.$get('project', {pageSize: -1, pageNo: 1}).then(response => {
           if (response.code === 200) {
             this.projectList = response.data.list;
-            if (this.moduleList.length == 0) {
-              this.getModuleList(this.currentProject.id);
-            }
+            this.getModuleList(this.currentProject.id);
           }
-
         });
       },
 
@@ -520,6 +517,7 @@
               }
             }
             this.moduleList = response.data.list;
+            console.info(this.moduleList)
           }
         });
       },
@@ -626,7 +624,7 @@
       },
       currentProject(n, o) {
         this.endpointForm.projectId = n.id;
-        if(this.rightBox.show){
+        if(n.id != o.id){
           this.getModuleList(n.id);
         }
       },

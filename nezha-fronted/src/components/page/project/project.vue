@@ -457,7 +457,6 @@
         // }
       },
       detailProjectInfo:function(event,project){
-        console.log(event)
         if(event){
           this.pageType='project'
           if(project){
@@ -468,6 +467,7 @@
 
           // this.$refs.projectLeft.setActiveNames([]);
         }else{
+          console.info(this.currentProject)
           this.currentProjectTitle=this.currentProject.name+"-"+this.currentProject.id
         }
       },
@@ -497,7 +497,6 @@
       //左侧module列表选中切换
       changeModule(module) {
         this.currentModule = module;
-        this.currentProject={};
         this.endpointSearchLabel = {moduleId: ''};
         this.$refs.projectSearch.clearSearch();
         this.showSubList = false;
@@ -748,7 +747,7 @@
       if (pageSize) {
         this.endpointPageObj.pageSize = pageSize
       }
-      this.detailProjectInfo();
+      //this.detailProjectInfo();
       // setTimeout(()=>{
       //   this.getEndpointTableData();
       // }, 200);
