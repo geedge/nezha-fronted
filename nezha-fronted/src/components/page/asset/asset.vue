@@ -970,11 +970,10 @@
         let time=new Date(str);
         let year=time.getFullYear();
         let month=time.getMonth()+1 > 9 ? time.getMonth()+1 : ('0'+(time.getMonth()+1));
-        let day=time.getDay() > 9 ? time.getDay():('0'+time.getDay());
+        let day=time.getDate() > 9 ? time.getDate():('0'+time.getDate());
         let hours=time.getHours() > 9? time.getHours():('0'+time.getHours());
         let minutes=time.getMinutes() > 9 ?time.getMinutes():('0'+time.getMinutes());
         let seconds=time.getSeconds() > 9 ? time.getSeconds():('0'+time.getSeconds());
-
         return this.$t('asset.assetStatPre')+year+ds+month+ds+day+' '+hours+ts+minutes+ts+seconds;
 
       }
