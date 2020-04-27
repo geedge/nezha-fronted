@@ -883,8 +883,7 @@
     line-height: 17px;
   }
 
-  .panel-calendar .el-date-editor--datetimerange.el-input, .el-date-editor--datetimerange.el-input__inner {
-    width: 310px;
+  .panel-calendar .el-date-editor--datetimerange.el-input, .panel-calendar .el-date-editor--datetimerange.el-input__inner {
     padding-right: 0;
     vertical-align: top;
   }

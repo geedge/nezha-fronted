@@ -33,6 +33,7 @@
     width:0px;
     padding:0px !important;
     visibility: hidden;
+    border: none;
   }
   .time-picker-button{
     padding: 0 1px !important;

@@ -11,8 +11,14 @@
     ];
     let overviewBgColor = ['#d64f40', '#ffdb28', '#7bfc95', '#77baf4',
       '#ac958f', '', '', '', '', '', '', '', '', '', '', ];
-    let pieColor = ['#d64f40', '#e65f50', '#f66f60', '#f69f90',
+/*    let pieColor = ["#0c69ff","#59f747","#2eeab8","#b5ed8e",
+      "#205299","#ffd6c6","#a0ffdf","#9be524",
+      "#8abafc","#d181e8","#d88d50","#cce8ff",
+      "#161ef9"];*/
+
+    let pieColor = ['#d64f40', '#e66f60', '#f68f80', '#f6afa0',
       '#ffdb28', '#ffeb38', '#fffb48', '#ffffbb'];
+
     const commonOption={
       title:{
         show:false,

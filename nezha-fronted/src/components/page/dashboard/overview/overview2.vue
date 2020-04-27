@@ -58,14 +58,17 @@
               <div class="content-col-title">{{$t("dashboard.overview.alert.alertMessage")}}</div>
               <div class="content-col-content" v-loading="alertMessageLoading">
                 <div class="content-col-content-num">{{(alertMessageData ? alertMessageData.alertMessageTotal : "") | numberFormat}}</div>
-                <span>{{$t("dashboard.overview.alert.ruleNum")}}&nbsp;&nbsp;{{(alertRuleData ? alertRuleData.alertRuleTotal : "") | numberFormat}}</span>
+                <span>{{$t("dashboard.overview.alert.ruleNum")}}&nbsp;:&nbsp;{{(alertRuleData ? alertRuleData.alertRuleTotal : "") | numberFormat}}</span>
               </div>
             </div>
           </div>
           <!--第二行-->
           <div class="content-row-box">
             <div class="content-col-box">
-              <div class="content-col-title">{{$t("dashboard.overview.alert.chart.chartTitle")}}</div>
+              <div class="content-col-title">
+                <span>{{$t("dashboard.overview.alert.chart.chartTitle")}}</span>
+                <time-picker ref="calendarPanel" class="nz-dashboard-picker" @change="dateChange"></time-picker>
+              </div>
               <div class="content-col-content">
                 <chart-box chart-type="overviewLine" ref="chartbox" :show-toolbox="false" name="trend"></chart-box>
               </div>
@@ -80,30 +83,54 @@
           <!--第三行-->
           <div class="content-row-box">
             <div class="content-col-box">
-              <div class="content-col-title">{{$t("dashboard.overview.asset.assetType")}}</div>
+              <div class="content-col-title">
+                <span>{{$t("dashboard.overview.asset.assetType")}}</span>
+              </div>
               <div class="content-col-content">
                 <chart-box chart-type="pie" ref="assetTypePie" :show-toolbox="false" name="assetTypePie" :tooltip-formatter="assetTypeFormatter" ></chart-box>
               </div>
             </div>
             <div class="content-col-box">
-              <div class="content-col-title">{{$t("dashboard.overview.alert.alertRuleTopN")}}</div>
+              <div class="content-col-title">
+                <span>{{$t("dashboard.overview.alert.alertRuleTopN")}}</span>
+                <el-dropdown trigger="hover" :show-timeout="0">
+                  <span>Top&nbsp;{{topFilter.rule}}<i class="el-icon-arrow-down el-icon--right"></i></span>
+                  <el-dropdown-menu slot="dropdown">
+                    <el-dropdown-item v-for="(item,index) in topFilter.optionals" :key="index" @click.native="topNChange('rule', item)">{{item}}</el-dropdown-item>
+                  </el-dropdown-menu>
+                </el-dropdown>
+              </div>
               <div class="content-col-content">
                 <chart-box axis-tooltip="y" chart-type="bar" ref="ruleMessage" :tooltip-formatter="simpleFormatter" :show-toolbox="false" name="ruleMessage"></chart-box>
               </div>
             </div>
             <div class="content-col-box">
               <div class="content-col-title">
-                <span v-if="alertMessageShow == 'asset'">{{$t("dashboard.overview.alert.assetTopN")}}</span>
-                <span v-if="alertMessageShow == 'module'">{{$t("dashboard.overview.alert.moduleTopN")}}</span>
-                <span class="dropdown-btn" @mouseenter="alertMessageDropdownHandler(true)" @mouseleave="alertMessageDropdownHandler(false)">
-                  <i class="el-icon-arrow-down"></i>
-                  <transition name="el-zoom-in-top">
-                    <ul class="el-dropdown-menu el-popper el-dropdown-menu--mini" v-if="bottom3DropdownShow">
-                      <li @click="alertMessageChange('asset')" class="el-dropdown-menu__item dropdown-content">{{$t("dashboard.overview.asset.title")}}</li>
-                      <li @click="alertMessageChange('module')" class="el-dropdown-menu__item dropdown-content">{{$t("dashboard.overview.module.module")}}</li>
-                    </ul>
-                  </transition>
+                <span>
+                  <span v-if="alertMessageShow == 'asset'">{{$t("dashboard.overview.alert.assetTopN")}}</span>
+                  <span v-if="alertMessageShow == 'module'">{{$t("dashboard.overview.alert.moduleTopN")}}</span>
+                  <span class="dropdown-btn" @mouseenter="alertMessageDropdownHandler(true)" @mouseleave="alertMessageDropdownHandler(false)">
+                    <i class="el-icon-arrow-down"></i>
+                    <transition name="el-zoom-in-top">
+                      <ul class="el-dropdown-menu el-popper el-dropdown-menu--mini" v-if="bottom3DropdownShow">
+                        <li @click="alertMessageChange('asset')" class="el-dropdown-menu__item dropdown-content">{{$t("dashboard.overview.asset.title")}}</li>
+                        <li @click="alertMessageChange('module')" class="el-dropdown-menu__item dropdown-content">{{$t("dashboard.overview.module.module")}}</li>
+                      </ul>
+                    </transition>
+                  </span>
                 </span>
+                <el-dropdown trigger="hover" v-if="alertMessageShow == 'asset'" :show-timeout="0">
+                  <span>Top&nbsp;{{topFilter.asset}}<i class="el-icon-arrow-down el-icon--right"></i></span>
+                  <el-dropdown-menu slot="dropdown">
+                    <el-dropdown-item v-for="(item,index) in topFilter.optionals" :key="index" @click.native="topNChange('asset', item)">{{item}}</el-dropdown-item>
+                  </el-dropdown-menu>
+                </el-dropdown>
+                <el-dropdown trigger="hover" v-if="alertMessageShow == 'module'" :show-timeout="0">
+                  <span>Top&nbsp;{{topFilter.module}}<i class="el-icon-arrow-down el-icon--right"></i></span>
+                  <el-dropdown-menu slot="dropdown">
+                    <el-dropdown-item v-for="(item,index) in topFilter.optionals" :key="index" @click.native="topNChange('module', item)">{{item}}</el-dropdown-item>
+                  </el-dropdown-menu>
+                </el-dropdown>
               </div>
               <div class="content-col-content">
                 <chart-box axis-tooltip="y" v-show="alertMessageShow == 'asset'" :tooltip-formatter="simpleFormatter" chart-type="bar" ref="assetMessage" name="assetMessage" :show-toolbox="false"></chart-box>
@@ -125,11 +152,14 @@
   import chart from "./chart";
   import chartDataFormat from "../../../charts/chartDataFormat";
   import axios from 'axios';
+  import timePicker from '../../../common/timePicker'
   var timeout;
+
   export default {
     name: "overview2",
     components:{
       'chart-box': chart,
+      'time-picker': timePicker
     },
     data() {
       return {
@@ -163,6 +193,13 @@
 
         alertMessageShow: 'asset', //asset/module
         bottom3DropdownShow: false, //最底部行第三列的下拉选择框
+
+        topFilter:{
+          optionals: [10, 20, 50],
+          rule: 10,
+          asset: 10,
+          module: 10
+        },
       }
     },
     filters: {
@@ -215,6 +252,10 @@
               legendData.push(item.name);
               typeSeriesData.push({name: item.name, value: item.total, up: item.pingUp, down: item.pingDown});
             });
+            /*for (let i = 0; i < 4; i++) {
+              legendData.push("type" + i);
+              typeSeriesData.push({name: "type" + i, value: (i+1)*10, up: (i+1)*5, down: (i+1)*5});
+            }*/
             /*this.assetData.modelStat.forEach(item => {
               legendData.push(item.name);
               modelSeriesData.push({name: item.name, value: item.total});
@@ -503,7 +544,7 @@
         })
       },
       queryAlertStatByRule() {
-        this.$get('overview/alertStatByRule').then(response => {
+        this.$get('overview/alertStatByRule', {top: this.topFilter.rule}).then(response => {
           if (response.code === 200) {
             this.$refs.ruleMessage.startLoading();
             let seriesData = [];
@@ -524,7 +565,7 @@
         });
       },
       queryAlertStatByAsset() {
-        this.$get('overview/alertStatByAsset').then(response => {
+        this.$get('overview/alertStatByAsset', {top: this.topFilter.asset}).then(response => {
           if (response.code === 200) {
             this.$refs.assetMessage.startLoading();
             let seriesData = [];
@@ -545,7 +586,7 @@
         });
       },
       queryAlertStatByModule() {
-        this.$get('overview/alertStatByModule').then(response => {
+        this.$get('overview/alertStatByModule', {top: this.topFilter.module}).then(response => {
           if (response.code === 200) {
             this.$refs.moduleMessage.startLoading();
             let seriesData = [];
@@ -566,6 +607,23 @@
         });
       },
       /*初始化数据 end*/
+      dateChange(val) {
+        /*this.searchTime = [...val];
+        this.filter.start_time = bus.timeFormate(this.searchTime[0], 'yyyy-MM-dd hh:mm:ss');
+        this.filter.end_time = bus.timeFormate(this.searchTime[1], 'yyyy-MM-dd hh:mm:ss');
+        this.filter.panelId = this.showPanel.id;
+        this.getData(this.filter);*/
+      },
+      topNChange(type, top) {
+        this.topFilter[type] = top;
+        if (type == 'asset') {
+          this.queryAlertStatByAsset();
+        } else if (type == 'module') {
+          this.queryAlertStatByModule();
+        } else if (type == 'rule') {
+          this.queryAlertStatByRule();
+        }
+      },
       alertMessageChange(type) {
         this.bottom3DropdownShow = false;
         this.alertMessageShow = type;

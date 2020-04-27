@@ -91,9 +91,22 @@
   line-height: 1.6rem;
   color: #777;
   font-size: 1rem;
-  padding-left: 8px;
+  padding: 0 8px;
   background-color: #efefef;
   border-radius: 5px 5px 0 0;
+  display: flex;
+  justify-content: space-between;
+}
+.content-col-box .content-col-title .nz-dashboard-picker {
+  height: 100%;
+}
+.content-col-box .content-col-title .nz-dashboard-picker .el-icon-arrow-down {
+  width: unset !important;
+}
+.content-col-box .content-col-title .calendar-dropdown-title {
+  height: 100%;
+  line-height: unset;
+  border: none;
 }
 .dropdown-btn {
   position: relative;
@@ -138,7 +151,8 @@
   position: absolute;
   bottom: 5%;
   right: 5%;
-  font-size: 0.9rem;
+  font-size: 0.7rem;
+  font-style: italic;
 }
 .content-col-content-num {
   font-size: 3.2rem;
