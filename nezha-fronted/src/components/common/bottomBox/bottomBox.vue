@@ -30,7 +30,7 @@
                          v-if="targetTab == 'assetDetail' && from == 'endpoint'"
                          @changeTab="changeTab"></common-detail-tab>
       <!--endpoint-query-->
-      <endpoint-query-tab v-show="subResizeShow" v-if="(from == 'endpoint' && targetTab == 'endpointQuery')" :from="from" :obj="obj" @changeTab="changeTab"></endpoint-query-tab>
+      <endpoint-query-tab v-show="subResizeShow" v-if="(from == 'endpoint' && targetTab == 'endpointQuery')" :from="from" :obj="obj" @changeTab="changeTab" ref="endpointQuery"></endpoint-query-tab>
 
       <!--alertMessage页的详情-->
       <template v-if="from == 'alertMessage'">
@@ -76,19 +76,26 @@
     methods: {
       exitFullScreen() {
         this.$emit("exitFullScreen");
+        this.$nextTick(this.afterResize());
       },
       fullScreen() {
         this.$emit("fullScreen");
+        this.$nextTick(this.afterResize());
       },
       closeSubList() {
         this.$emit("closeSubList");
       },
       listResize(e) {
         this.$emit('listResize', e);
+        this.$nextTick(this.afterResize());
       },
       changeTab(tab) {
         this.$emit('update:targetTab', tab);
-        //this.targetTab = tab;
+      },
+      afterResize() {
+        if (this.from == 'endpoint' && this.targetTab == 'endpointQuery') {
+          this.$refs.endpointQuery.tableReload();
+        }
       }
     }
   }

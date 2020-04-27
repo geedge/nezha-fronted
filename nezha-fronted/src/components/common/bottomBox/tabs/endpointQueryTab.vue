@@ -69,7 +69,7 @@
     <div class="table-header-inner" @click="clearSelectedMetrics"><span><i style="font-size: 12px;margin-left: 2px;" class="nz-icon nz-icon-close " :class="{'control-icon-unchecked':selectedEndpoints.length<1,'control-icon-checked':selectedEndpoints.length>0}"></i></span></div>
     <pl-table :row-height="28" use-virtual :datas="tableData" border :empty-text="$t('config.mib.noData')" :header-cell-class-name="cellClass" :style="{height: $tableHeight.noPagination}"
               class="nz-table endpoint-query-table" style="width: 100%;" v-loading="loading" v-scrollBar:el-table="'large'" :pagination-show="false" ref="endpointQueryTable"
-              @selection-change="selectChange">
+              @selection-change="selectChange" v-if="tableShow">
       <pl-table-column
         :resizable="false"
         type="selection"
@@ -193,6 +193,7 @@
     data() {
       let temp = this;
       return {
+        tableShow: true,
         tableHover: false,
         dropdownShow: false,
         loading: false,
@@ -263,6 +264,14 @@
           });
         });
       },
+      tableReload() {
+        this.tableShow = false;
+        setTimeout(() => {
+          this.tableShow = true;
+          //this.queryEndpoint();
+        }, 300);
+        //this.$nextTick(() => {this.tableShow = true});
+      },
       queryEndpoint() {
         this.loading = true;
         this.queryElementTips();
@@ -270,78 +279,77 @@
         this.tableData = [];
         this.tableDataCopy = '';
         this.$get("/prom/api/v1/query?query={endpoint='" + this.currentEndpoint.id + "'}&time=" + this.formatTime).then(response=>{
-          setTimeout(() => {
-            this.loading = false;
-            if(response.status==="success"){
-              let results = response.data.result;
-              this.queryData=JSON.parse(JSON.stringify(results));
-              for(let result of results) {
-                let metricName = result.metric.__name__;
-                let temp = metricName;
-                let simpleTemp = metricName;//显示简略信息：隐藏same labels后的结果
-                let metricColor = "";
-                let bracketsColor = "#eb7b18";//#eb7b18
-                let labelColor = "#65bbd1";//#66d9ef
-                let valueColor = "#61c261";//#74e680
-                let colorTemp = `<span style="${metricColor}">${metricName}</span>`;
-                let colorSimpleTemp = `<span>${metricName}</span>`;
-                let metricTip = {};
-                let queryInfos = (this.elementMetricDatas.filter((item)=> {
-                  return item.metric === temp;
-                }));
-                if(queryInfos && queryInfos.length > 0) {
-                  metricTip = queryInfos[0];
-                } else {
-                  metricTip.metric=temp;
-                }
-                delete result.metric.__name__;
-                temp += "{";
-                simpleTemp += "{";
-                colorTemp += `<span style="color: ${bracketsColor}">{</span>`;
-                colorSimpleTemp += `<span style="color: ${bracketsColor}">{</span>`;
-                let keys = Object.keys(result.metric);
-                for (let index in keys){
-                  let key = keys[index];
-                  temp += key + "='" + result.metric[key] + "',";
-                  colorTemp += `<span style="color: ${labelColor}">${key}</span>=<span style="color: ${valueColor}">'${result.metric[key]}'</span>,`;
-                  if(!this.sameLabels.some((i)=> {return i == key})) {
-                    simpleTemp += key + "='" + result.metric[key] + "',";
-                    colorSimpleTemp += `<span style="color: ${labelColor}">${key}</span>=<span style="color: ${valueColor}">'${result.metric[key]}'</span>,`;
-                  }
-                }
-                if(temp.indexOf(',') != -1){
-                  temp = temp.substr(0,temp.length-1);
-                }
-                if(simpleTemp.indexOf(',') != -1){
-                  simpleTemp = simpleTemp.substr(0,simpleTemp.length-1);
-                }
-                if(colorTemp.indexOf(',') != -1){
-                  colorTemp = colorTemp.substr(0,colorTemp.length-1);
-                }
-                if(colorSimpleTemp.indexOf(',') != -1){
-                  colorSimpleTemp = colorSimpleTemp.substr(0,colorSimpleTemp.length-1);
-                }
-
-
-                temp += "}";
-                simpleTemp += "}";
-                colorTemp += `<span style="color: ${bracketsColor}">}</span>`;
-                colorSimpleTemp += `<span style="color: ${bracketsColor}">}</span>`;
-                if(!/.+\{.+\}/.test(simpleTemp)) {
-                  simpleTemp = simpleTemp.substr(0,simpleTemp.length-2);
-                }
-
-                if(!/.+\{<\/span><span.+?>.+?\}/.test(colorSimpleTemp)){
-                  let metricReg=new RegExp("<span.*?>"+metricName+"<\/span>")
-                  colorSimpleTemp=metricReg.exec(colorSimpleTemp)[0];
-                }
-
-                let edpQueryData={element:temp,simpleElement:simpleTemp,colorElement:colorTemp,colorSimpleElement:colorSimpleTemp, value:result.value[1],type:(result.metric.type?result.metric.type:'2'),metricTip:metricTip};
-                this.tableData.push(edpQueryData);
+          this.loading = false;
+          if(response.status==="success"){
+            let results = response.data.result;
+            this.queryData=JSON.parse(JSON.stringify(results));
+            for(let result of results) {
+              let metricName = result.metric.__name__;
+              let temp = metricName;
+              let simpleTemp = metricName;//显示简略信息：隐藏same labels后的结果
+              let metricColor = "";
+              let bracketsColor = "#eb7b18";//#eb7b18
+              let labelColor = "#65bbd1";//#66d9ef
+              let valueColor = "#61c261";//#74e680
+              let colorTemp = `<span style="${metricColor}">${metricName}</span>`;
+              let colorSimpleTemp = `<span>${metricName}</span>`;
+              let metricTip = {};
+              let queryInfos = (this.elementMetricDatas.filter((item)=> {
+                return item.metric === temp;
+              }));
+              if(queryInfos && queryInfos.length > 0) {
+                metricTip = queryInfos[0];
+              } else {
+                metricTip.metric=temp;
               }
-              this.tableDataCopy = JSON.stringify(this.tableData);
+              delete result.metric.__name__;
+              temp += "{";
+              simpleTemp += "{";
+              colorTemp += `<span style="color: ${bracketsColor}">{</span>`;
+              colorSimpleTemp += `<span style="color: ${bracketsColor}">{</span>`;
+              let keys = Object.keys(result.metric);
+              for (let index in keys){
+                let key = keys[index];
+                temp += key + "='" + result.metric[key] + "',";
+                colorTemp += `<span style="color: ${labelColor}">${key}</span>=<span style="color: ${valueColor}">'${result.metric[key]}'</span>,`;
+                if(!this.sameLabels.some((i)=> {return i == key})) {
+                  simpleTemp += key + "='" + result.metric[key] + "',";
+                  colorSimpleTemp += `<span style="color: ${labelColor}">${key}</span>=<span style="color: ${valueColor}">'${result.metric[key]}'</span>,`;
+                }
+              }
+              if(temp.indexOf(',') != -1){
+                temp = temp.substr(0,temp.length-1);
+              }
+              if(simpleTemp.indexOf(',') != -1){
+                simpleTemp = simpleTemp.substr(0,simpleTemp.length-1);
+              }
+              if(colorTemp.indexOf(',') != -1){
+                colorTemp = colorTemp.substr(0,colorTemp.length-1);
+              }
+              if(colorSimpleTemp.indexOf(',') != -1){
+                colorSimpleTemp = colorSimpleTemp.substr(0,colorSimpleTemp.length-1);
+              }
+
+
+              temp += "}";
+              simpleTemp += "}";
+              colorTemp += `<span style="color: ${bracketsColor}">}</span>`;
+              colorSimpleTemp += `<span style="color: ${bracketsColor}">}</span>`;
+              if(!/.+\{.+\}/.test(simpleTemp)) {
+                simpleTemp = simpleTemp.substr(0,simpleTemp.length-2);
+              }
+
+              if(!/.+\{<\/span><span.+?>.+?\}/.test(colorSimpleTemp)){
+                let metricReg=new RegExp("<span.*?>"+metricName+"<\/span>")
+                colorSimpleTemp=metricReg.exec(colorSimpleTemp)[0];
+              }
+
+              let edpQueryData={element:temp,simpleElement:simpleTemp,colorElement:colorTemp,colorSimpleElement:colorSimpleTemp, value:result.value[1],type:(result.metric.type?result.metric.type:'2'),metricTip:metricTip};
+              this.tableData.push(edpQueryData);
             }
-          }, 300);
+            this.tableDataCopy = JSON.stringify(this.tableData);
+            this.$nextTick(this.$refs.endpointQueryTable.doLayout());
+          }
         });
       },
       clearSelectedMetrics() {
@@ -675,7 +683,8 @@
     },
     mounted() {
       this.getPanelData();
-      this.$nextTick(() => {
+      //this.$nextTick(() => {
+      setTimeout(() => {
         //绑定滚动条事件，控制top按钮
         let el = this.$refs.endpointQueryTable.$el.querySelector(".el-table__body-wrapper");
         if (el._ps_) {
@@ -693,7 +702,9 @@
             this.tableHover = false;
           });
         }
-      });
+      }, 300);
+
+      //});
     }
   }
 </script>
