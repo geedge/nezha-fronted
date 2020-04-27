@@ -299,6 +299,11 @@
 
         return (S4() + S4() + "-" + S4() + "-" + S4() + "-" + S4() + "-" + S4() + S4() + S4());
       },
+      clearChart() {
+        if(this.chart) {
+          this.chart.clear();
+        }
+      }
     },
     mounted() {
       this.chart=echarts.init(document.getElementById(this.chartId));

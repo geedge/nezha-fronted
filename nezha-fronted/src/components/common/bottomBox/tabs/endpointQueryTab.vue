@@ -448,6 +448,7 @@
           axiosArr.push(axios.get("/prom/api/v1/query_range?query="+endpoint.element+"&start="+start+"&end="+end+"&step="+step));
         }
         this.legend=[];
+        this.chartDatas = [];
         axios.all(axiosArr).then(res =>{
           res.forEach((response,promIndex)=>{
             if (response.status == 200) {

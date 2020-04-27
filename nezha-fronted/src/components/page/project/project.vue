@@ -467,7 +467,6 @@
 
           // this.$refs.projectLeft.setActiveNames([]);
         }else{
-          console.info(this.currentProject)
           this.currentProjectTitle=this.currentProject.name+"-"+this.currentProject.id
         }
       },

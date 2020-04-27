@@ -517,7 +517,6 @@
               }
             }
             this.moduleList = response.data.list;
-            console.info(this.moduleList)
           }
         });
       },
