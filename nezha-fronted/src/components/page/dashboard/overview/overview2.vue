@@ -191,6 +191,8 @@
         alertRuleStatData: {},
         dataCenterMapSeries: [],
 
+        trendSearchTime: {start: '', end: ''},
+
         alertMessageShow: 'asset', //asset/module
         bottom3DropdownShow: false, //最底部行第三列的下拉选择框
 
@@ -416,16 +418,27 @@
       },
       queryAlertTrendData() {
         this.$refs.chartbox.startLoading();
-        let cur=this.dateFormat('yyyy-mm-dd HH:MM:SS',new Date());
-        let beforeDate=new Date();
-        beforeDate.setHours(new Date().getHours()-1);
-        let before=this.dateFormat('yyyy-mm-dd HH:MM:SS',beforeDate);
-        let params={
-          query:'sum(nz_alert_nums)',
-          start:before,
-          end:cur,
-          step:'15s'
+        let before;
+        let end;
+        if (this.trendSearchTime.start) {
+          before = this.trendSearchTime.start;
+        } else {
+          before = new Date();
+          before.setMinutes(new Date().getMinutes()-5);
+          before = this.dateFormat('yyyy-mm-dd HH:MM:SS', before);
         }
+        if (this.trendSearchTime.end) {
+          end = this.trendSearchTime.end;
+        } else {
+          end = new Date();
+          end = this.dateFormat('yyyy-mm-dd HH:MM:SS', end);
+        }
+        let params = {
+          query: 'sum(nz_alert_nums)',
+          start: before,
+          end: end,
+          step: '15s'
+        };
         this.$get('/prom/api/v1/query_range',params).then(response=>{
           if(response.status == 'success'){
             if(response.data.result){
@@ -435,12 +448,11 @@
                 smooth:true,  //曲线变平滑
                 data: [],
                 type:'line',
-                // areaStyle:{}
-              }
+              };
               series.data=response.data.result[0].values.map((item)=>{
                 return [item[0]*1000,item[1]];
-              })
-              this.chartSeries=[series];
+              });
+              this.chartSeries = [series];
               this.$refs.chartbox.setSeries(this.chartSeries);
               this.$refs.chartbox.endLoading();
             }
@@ -608,11 +620,9 @@
       },
       /*初始化数据 end*/
       dateChange(val) {
-        /*this.searchTime = [...val];
-        this.filter.start_time = bus.timeFormate(this.searchTime[0], 'yyyy-MM-dd hh:mm:ss');
-        this.filter.end_time = bus.timeFormate(this.searchTime[1], 'yyyy-MM-dd hh:mm:ss');
-        this.filter.panelId = this.showPanel.id;
-        this.getData(this.filter);*/
+        this.trendSearchTime.start = val[0];
+        this.trendSearchTime.end = val[1];
+        this.queryAlertTrendData();
       },
       topNChange(type, top) {
         this.topFilter[type] = top;
