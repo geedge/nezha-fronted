@@ -931,12 +931,10 @@
         detail.push({label: this.$t("asset.tableTitle.alerts"), value: obj.alertNum});
         detail.push({label: this.$t("asset.createAssetTab.assetType"), value: obj.model.type.value});
         detail.push({label: this.$t("asset.createAssetTab.vendorModel"), value: obj.model.vendor.value + " " + obj.model.name});
-        detail.push({label: this.$t("asset.createAssetTab.assetType"), value: obj.model.type.value});
         detail.push({label: this.$t("asset.createAssetTab.purchaseDate"), value: obj.purchaseDate});
         detail.push({label: this.$t("asset.createAssetTab.dcName"), value: obj.idc ? obj.idc.name : ""});
         detail.push({label: this.$t("asset.createAssetTab.location"), value: obj.idc ? obj.idc.location : ""});
         detail.push({label: this.$t("asset.createAssetTab.principal"), value: obj.idc ? this.getPrincipalName(obj.idc.principal) : ""});
-        detail.push({label: this.$t("asset.createAssetTab.location"), value: obj.idc ? obj.idc.location : ""});
         detail.push({label: this.$t("asset.createAssetTab.tel"), value: obj.idc ? obj.idc.tel : ""});
         detail.push({label: this.$t("asset.createAssetTab.cabinet"), value: obj.cabinet ? obj.cabinet.name : ""});
         detail.push({label: this.$t("asset.editAssetTab.uSize"), value: obj.cabinet ? obj.cabinet.uSize : ""});

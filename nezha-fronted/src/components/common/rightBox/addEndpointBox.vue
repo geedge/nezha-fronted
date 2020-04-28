@@ -911,7 +911,7 @@
     font-size: 15px;
     position: relative;
     overflow: auto;
-    height: calc(100% - 34px);
+    height: calc(100% - 37px);
   }
   .endpoint-sub-table-body-dialog {
     width: 100%;
