@@ -67,7 +67,21 @@
             <div class="content-col-box">
               <div class="content-col-title">
                 <span>{{$t("dashboard.overview.alert.chart.chartTitle")}}</span>
-                <time-picker ref="calendarPanel" class="nz-dashboard-picker" @change="dateChange"></time-picker>
+                <span class="content-col-title-tools">
+                  <time-picker ref="calendarPanel" class="nz-dashboard-picker" @change="dateChange"></time-picker>
+                  <el-dropdown trigger="hover" :show-timeout="0" size="small" :hide-on-click="false" @command="selectDatacenter">
+                    <span class="content-col-title-tool">{{$t("dashboard.overview.dataCenter.dataCenter")}}&nbsp;<i class="el-icon-arrow-down"></i></span>
+                    <el-dropdown-menu slot="dropdown" class="el-dropdown-multi">
+                      <el-dropdown-item :class="{'dropdown-item-active': trendSearchParam.dc.indexOf(item.id) > -1}" :command="item" v-for="(item,index) in trafficDatacenterData" :key="index">{{item.name}}</el-dropdown-item>
+                    </el-dropdown-menu>
+                  </el-dropdown>
+                  <el-dropdown trigger="hover" :show-timeout="0" size="small" :hide-on-click="false" @command="selectTag">
+                    <span class="content-col-title-tool">{{$t("overall.tag")}}&nbsp;<i class="el-icon-arrow-down"></i></span>
+                    <el-dropdown-menu slot="dropdown" class="el-dropdown-multi">
+                      <el-dropdown-item :class="{'dropdown-item-active': trendSearchParam.tag.some(tag => {return item.name == tag.name && item.value == tag.value;})}" :command="item" v-for="(item,index) in trafficTagData" :key="index">{{item.name}}&nbsp;:&nbsp;{{item.value}}</el-dropdown-item>
+                    </el-dropdown-menu>
+                  </el-dropdown>
+                </span>
               </div>
               <div class="content-col-content">
                 <chart-box chart-type="overviewLine" ref="chartbox" :show-toolbox="false" name="trend"></chart-box>
@@ -152,6 +166,7 @@
   import chart from "./chart";
   import chartDataFormat from "../../../charts/chartDataFormat";
   import axios from 'axios';
+  import bus from '../../../../libs/bus';
   import timePicker from '../../../common/timePicker'
   var timeout;
 
@@ -190,8 +205,10 @@
         messageByModuleSeries: [],
         alertRuleStatData: {},
         dataCenterMapSeries: [],
+        trafficDatacenterData: [],
+        trafficTagData: [],
 
-        trendSearchTime: {start: '', end: ''},
+        trendSearchParam: {start: '', end: '', dc: [], tag: []},
 
         alertMessageShow: 'asset', //asset/module
         bottom3DropdownShow: false, //最底部行第三列的下拉选择框
@@ -237,6 +254,7 @@
         this.queryMapChartGeoJson();
         this.queryAlertStatByRule();
         this.queryAlertStatByAsset();
+        this.getDcTrafficData();
       },
       queryAssetData() {
         this.assetLoading = true;
@@ -420,15 +438,15 @@
         this.$refs.chartbox.startLoading();
         let before;
         let end;
-        if (this.trendSearchTime.start) {
-          before = this.trendSearchTime.start;
+        if (this.trendSearchParam.start) {
+          before = this.trendSearchParam.start;
         } else {
           before = new Date();
-          before.setMinutes(new Date().getMinutes()-5);
+          before.setHours(new Date().getHours()-1);
           before = this.dateFormat('yyyy-mm-dd HH:MM:SS', before);
         }
-        if (this.trendSearchTime.end) {
-          end = this.trendSearchTime.end;
+        if (this.trendSearchParam.end) {
+          end = this.trendSearchParam.end;
         } else {
           end = new Date();
           end = this.dateFormat('yyyy-mm-dd HH:MM:SS', end);
@@ -437,7 +455,11 @@
           query: 'sum(nz_alert_nums)',
           start: before,
           end: end,
-          step: '15s'
+          step: bus.getStep(before, end),
+          dc: this.trendSearchParam.dc.join(","),
+          tag: this.trendSearchParam.tag.map(item => {
+            return "{" + item.name + ":" + item.value + "}"
+          }).join(",")
         };
         this.$get('/prom/api/v1/query_range',params).then(response=>{
           if(response.status == 'success'){
@@ -449,9 +471,11 @@
                 data: [],
                 type:'line',
               };
-              series.data=response.data.result[0].values.map((item)=>{
-                return [item[0]*1000,item[1]];
-              });
+              if (response.data.result.length > 0) {
+                series.data=response.data.result[0].values.map((item)=>{
+                  return [item[0]*1000,item[1]];
+                });
+              }
               this.chartSeries = [series];
               this.$refs.chartbox.setSeries(this.chartSeries);
               this.$refs.chartbox.endLoading();
@@ -618,10 +642,37 @@
           }
         });
       },
+      getDcTrafficData() {
+        this.$get('idc/trafficSetting', {pageSize: -1}).then(response => {
+          if (response.code === 200) {
+            this.trafficTagData = [];
+            response.data.list.forEach(item => {
+              if (!(this.trafficDatacenterData.some(idc => {
+                return item.idc.id == idc.id;
+              }))) {
+                this.trafficDatacenterData.push(item.idc);
+              }
+            });
+            response.data.list.forEach(item => {
+              if (item.tags) {
+                for (let key in item.tags) {
+                  //过滤重复的tag（key、value同时相等）
+                  if (!(this.trafficTagData.some(tag => {
+                    return tag.name == key && tag.value == item.tags[key];
+                  }))) {
+                    this.trafficTagData.push({name: key, value: item.tags[key]});
+                  }
+                }
+              }
+            });
+          }
+        });
+      },
       /*初始化数据 end*/
+
       dateChange(val) {
-        this.trendSearchTime.start = val[0];
-        this.trendSearchTime.end = val[1];
+        this.trendSearchParam.start = val[0];
+        this.trendSearchParam.end = val[1];
         this.queryAlertTrendData();
       },
       topNChange(type, top) {
@@ -633,6 +684,31 @@
         } else if (type == 'rule') {
           this.queryAlertStatByRule();
         }
+      },
+      selectDatacenter(dc) {
+        let index = this.trendSearchParam.dc.indexOf(parseInt(dc.id));
+        if (index == -1) {
+          this.trendSearchParam.dc.push(parseInt(dc.id));
+        } else {
+          this.trendSearchParam.dc.splice(index, 1);
+        }
+        this.queryAlertTrendData();
+      },
+      selectTag(tag) {
+        let index = -1;
+        this.trendSearchParam.tag.some((item, i) => {
+          if (item.name == tag.name && item.value == tag.value) {
+            index = i;
+            return true;
+          }
+          return false;
+        });
+        if (index == -1) {
+          this.trendSearchParam.tag.push(tag);
+        } else {
+          this.trendSearchParam.tag.splice(index, 1);
+        }
+        this.queryAlertTrendData();
       },
       alertMessageChange(type) {
         this.bottom3DropdownShow = false;

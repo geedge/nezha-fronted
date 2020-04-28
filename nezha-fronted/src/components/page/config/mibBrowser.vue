@@ -10,7 +10,7 @@
         </div>
       </div>
       <div class="top-tool-main-right">
-        <div class="top-tool-search">
+        <div class="top-tool-search host-input">
           <el-autocomplete
             v-model="searchParam.host"
             :fetch-suggestions="assetSuggestion"
@@ -137,8 +137,8 @@
           <span>SNMP MIBs</span>
           <el-dropdown trigger="click" v-scrollBar:el-dropdown="'small'" :hide-on-click="false" @command="selectModel" ref="modelDropdown">
             <span class="mib-browser-table-op" @click="scrollbarHeightHandler">{{$t("config.model.model") + " "}}<i class="nz-icon nz-icon-funnel"></i></span>
-            <el-dropdown-menu slot="dropdown" class="mib-browser-model-dropdown">
-              <el-dropdown-item :class="{'mib-browser-model-dropdown-item-active': walkParam.models.indexOf(item.id) > -1}" :command="item" v-for="item, index in modelData" :key="index">{{item.name}}</el-dropdown-item>
+            <el-dropdown-menu slot="dropdown" class="mib-browser-model-dropdown el-dropdown-multi">
+              <el-dropdown-item :class="{'dropdown-item-active': walkParam.models.indexOf(item.id) > -1}" :command="item" v-for="item, index in modelData" :key="index">{{item.name}}</el-dropdown-item>
             </el-dropdown-menu>
           </el-dropdown>
         </div>
@@ -391,7 +391,7 @@
         });
       },
       selectModel(model) {
-        let index = this.walkParam.models.indexOf(model.id);
+        let index = this.walkParam.models.indexOf(parseInt(model.id));
         if (index == -1) {
           this.walkParam.models.push(parseInt(model.id));
         } else {
@@ -606,14 +606,6 @@
 .mib-browser-model-dropdown {
   height: 300px;
 }
-.mib-browser-model-dropdown .el-dropdown-menu__item:focus {
-  color: #606266;
-}
-.mib-browser-model-dropdown-item-active {
-  color: $global-text-color-active !important;
-  font-weight: bold;
-  background-color: #FAFAFA;
-}
 .mib-browser {
   .top-tool-search .el-input__inner {
     height: 25px;
@@ -627,7 +619,10 @@
     border-right: 1px solid rgba(162,162,162,0.50);
   }
   .oid-input.top-tool-search {
-    width: 500px;
+    width: 380px;
+  }
+  .host-input.top-tool-search {
+    width: 160px;
   }
   .mib-browser-btn-group {
     position: relative;

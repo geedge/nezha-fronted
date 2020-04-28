@@ -97,6 +97,19 @@
   display: flex;
   justify-content: space-between;
 }
+.content-col-title .el-dropdown {
+  font-size: 0.85rem;
+}
+.content-col-title-tools {
+  display: flex;
+  font-size: 0.85rem;
+}
+.content-col-title-tool {
+  cursor: pointer;
+  padding-left: 7px;
+  border-left: 1px solid #dadada;
+  margin-left: 7px;
+}
 .content-col-box .content-col-title .nz-dashboard-picker {
   height: 100%;
 }

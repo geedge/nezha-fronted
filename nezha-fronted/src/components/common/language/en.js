@@ -72,7 +72,8 @@ const en = {
     },
     reset:'Reset',
     submit:'Submit',
-    noData:'No data'
+    noData:'No data',
+    tag: 'Tag'
   },
   pageSize: '/page',
   webshell:{

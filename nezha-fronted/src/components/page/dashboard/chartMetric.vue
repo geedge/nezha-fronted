@@ -115,7 +115,7 @@
     display: inline-block;
   }
   .nz-tab-chart-style-left{
-    margin-left:40px;
+    margin-left: 0;
   }
   .dashboard-metric-dropdown .el-scrollbar__wrap{
     margin-bottom: 0px !important;

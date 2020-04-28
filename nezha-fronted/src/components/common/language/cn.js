@@ -69,6 +69,7 @@ const cn = {
     reset: "重置",
     submit: "提交",
     noData:'没有数据',
+    tag: '标签'
   },
   webshell: {
     shellTitle: "本地 Shell",
