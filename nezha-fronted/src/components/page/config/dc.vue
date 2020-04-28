@@ -78,6 +78,8 @@
                   <span :title="$t('overall.edit')" @click="edit(scope.row)" class="content-right-option" :id="'dc-edit-'+scope.row.id"><i class="nz-icon nz-icon-edit"></i></span>
                   &nbsp;
                   <span :title="$t('overall.delete')" @click="del(scope.row)" class="content-right-option" :id="'dc-del-'+scope.row.id"><i class="el-icon-delete"></i></span>
+                  &nbsp;
+                  <span :title="$t('config.dc.traffic.title')" @click="configTraffic(scope.row)" class="content-right-option" :id="'dc-del-'+scope.row.id" ><i class="el-icon-s-tools"></i></span>
                 </div>
                 <template v-else-if="item.prop == 'principal'">
                   <template v-if="scope.row.principal">
@@ -139,13 +141,18 @@
         ref="elementset"
       ></element-set>
       <dc-box ref="dcBox" :dc="currentDc" :user-data="userData" @reload="getTableData"></dc-box>
+      <traffic-setting-box :dc-obj="currentDc" ref="trafficBox"></traffic-setting-box>
     </div>
 </template>
 <script>
   var vm;
   import bus from '../../../libs/bus';
+  import trafficSettingBox from "../../common/rightBox/trafficSetting/trafficSettingBox";
   export default {
     name: "dc",
+    components:{
+      'traffic-setting-box':trafficSettingBox,
+    },
     data() {
       vm = this;
       return {
@@ -297,6 +304,14 @@
         }
         this.currentDc = tempDc;
         this.$refs.dcBox.show(true, true);
+      },
+      configTraffic: function (u) {
+        let tempDc = JSON.parse(JSON.stringify(u));
+        this.currentDc = tempDc;
+        console.log(this.currentDc)
+        setTimeout(()=>{
+          this.$refs.trafficBox.show(true, true);
+        },200)
       },
       detail(obj) {
         let tempDc = JSON.parse(JSON.stringify(obj));

@@ -31,6 +31,7 @@
     },
     props:{
       name: {type: String,default:'chart'},
+      unit:{type:Number,default:5},
       chartTitle:{type:String},
       showToolbox:{type:Boolean,default:true},
       chartType:{type:String,default:'line'},
@@ -93,12 +94,12 @@
 
         if(this.chartType == 'line'){
           if(this.yAxisFormatter){
-            this.modifyOption('yAxis','formatter',this.yAxisFormatter)
+            this.option.yAxis.axisLabel.formatter=this.yAxisFormatter;
           }else{
-            this.modifyOption('yAxis','formatter',this.defaultYAxisFormatter)
+            this.option.yAxis.axisLabel.formatter=this.defaultYAxisFormatter
           }
         }
-        //console.log(this.option)
+        // console.log(this.option)
         this.$set(this.option,'series',this.series);
 
         this.chart.clear();
@@ -256,7 +257,7 @@
           str += `<div style="white-space:nowrap;overflow-x:hidden;text-overflow:ellipsis;display: flex; justify-content: space-between; min-width: 150px; max-width: 600px; line-height: 18px; font-size: 12px;">`;
           str += `<div style="max-width: 500px;white-space:nowrap;overflow-x:hidden;text-overflow:ellipsis;"><span style='display:inline-block;margin-right:5px;border-radius:10px;width:15px;height:5px;background-color: ${item.color};}'></span>${alias?alias:item.seriesName}:  </div>`;
           str += `<div style="padding-left: 10px;">`;
-          str += chartDataFormat.getUnit(5).compute(val,null,2);
+          str += chartDataFormat.getUnit(this.unit).compute(val,null,2);
           str += `</div>`;
           str += `</div>`;
         });
@@ -274,7 +275,7 @@
         return alias;
       },
       defaultYAxisFormatter:function(value,index){
-        let unit=chartDataFormat.getUnit(5);
+        let unit=chartDataFormat.getUnit(this.unit);
         return unit.compute(value,index);
       },
       setRandomColors:function(num){//当线条过多，默认颜色数量不够时须使用此方法,num 颜色的数量，通常传递series的length即可
@@ -284,7 +285,6 @@
         }
         this.colors=Object.assign([],colors)
         this.$set(this.option,'color',colors)
-        console.log(this.option)
       },
       startLoading:function(){
         this.$refs.loading.startLoading();

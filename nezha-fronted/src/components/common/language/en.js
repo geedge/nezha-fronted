@@ -555,7 +555,11 @@ const en = {
       cabinetNum: "Cabinet number",
       assets: "Assets",
       remark:'Remark',
-      cabinets: "Cabinets"
+      cabinets: "Cabinets",
+      traffic:{
+        title:'Traffic Setting',
+        add:'Add',
+      }
     },
     model: {
       model: 'Asset model',
