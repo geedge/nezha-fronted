@@ -44,7 +44,7 @@ export function toTop(type, wrap) {
 }
 
 /*弹窗点击外部后关闭*/
-const exceptClassName = ["config-dropdown", "nz-pop", "el-picker", "chart-box-dropdown", 'metric-dropdown', 'el-cascader__dropdown', "asset-dropdown", "no-style-class", 'el-message-box']; //clickoutside排除的class(白名单)  no-style-class：没有任何样式的class
+const exceptClassName = ["config-dropdown", "nz-pop", "el-picker", "chart-box-dropdown", 'metric-dropdown', 'el-cascader__dropdown', "asset-dropdown", "no-style-class", 'el-message-box','nz-dashboard-dropdown']; //clickoutside排除的class(白名单)  no-style-class：没有任何样式的class
 export const clickoutside = {
   // 初始化指令
   bind(el, binding, vnode) {
