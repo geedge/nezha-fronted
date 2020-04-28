@@ -102,7 +102,7 @@
                 <el-tag @click="showTagDetail(scope.row, key)"
                         :key="key"
                         :class="{'link': key == 'asset' || key == 'endpoint' || key == 'project' || key == 'module' || key == 'datacenter'}"
-                        v-if="key != 'alertname' && key != 'severity' && key != 'linkId'"
+                        v-if="key != 'alertname' && key != 'severity'"
                         :type="tagType(key)"
                         size="mini" v-for="(value, key) in scope.row.labels" class="alert-message-tag">{{tagValue(key, value)}}</el-tag>
               </template>

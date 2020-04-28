@@ -93,7 +93,7 @@
             <div class="content-col-box">
               <div class="content-col-title">
                 <span>{{$t("dashboard.overview.alert.alertRuleTopN")}}</span>
-                <el-dropdown trigger="hover" :show-timeout="0">
+                <el-dropdown trigger="hover" :show-timeout="0" size="small">
                   <span>Top&nbsp;{{topFilter.rule}}<i class="el-icon-arrow-down el-icon--right"></i></span>
                   <el-dropdown-menu slot="dropdown">
                     <el-dropdown-item v-for="(item,index) in topFilter.optionals" :key="index" @click.native="topNChange('rule', item)">{{item}}</el-dropdown-item>
@@ -113,19 +113,19 @@
                     <i class="el-icon-arrow-down"></i>
                     <transition name="el-zoom-in-top">
                       <ul class="el-dropdown-menu el-popper el-dropdown-menu--mini" v-if="bottom3DropdownShow">
-                        <li @click="alertMessageChange('asset')" class="el-dropdown-menu__item dropdown-content">{{$t("dashboard.overview.asset.title")}}</li>
-                        <li @click="alertMessageChange('module')" class="el-dropdown-menu__item dropdown-content">{{$t("dashboard.overview.module.module")}}</li>
+                        <li @click="alertMessageChange('asset')" class="el-dropdown-menu__item dropdown-content" style="padding: 0 15px;">{{$t("dashboard.overview.asset.title")}}</li>
+                        <li @click="alertMessageChange('module')" class="el-dropdown-menu__item dropdown-content" style="padding: 0 15px;">{{$t("dashboard.overview.module.module")}}</li>
                       </ul>
                     </transition>
                   </span>
                 </span>
-                <el-dropdown trigger="hover" v-if="alertMessageShow == 'asset'" :show-timeout="0">
+                <el-dropdown trigger="hover" v-if="alertMessageShow == 'asset'" :show-timeout="0" size="small">
                   <span>Top&nbsp;{{topFilter.asset}}<i class="el-icon-arrow-down el-icon--right"></i></span>
                   <el-dropdown-menu slot="dropdown">
                     <el-dropdown-item v-for="(item,index) in topFilter.optionals" :key="index" @click.native="topNChange('asset', item)">{{item}}</el-dropdown-item>
                   </el-dropdown-menu>
                 </el-dropdown>
-                <el-dropdown trigger="hover" v-if="alertMessageShow == 'module'" :show-timeout="0">
+                <el-dropdown trigger="hover" v-if="alertMessageShow == 'module'" :show-timeout="0" size="small">
                   <span>Top&nbsp;{{topFilter.module}}<i class="el-icon-arrow-down el-icon--right"></i></span>
                   <el-dropdown-menu slot="dropdown">
                     <el-dropdown-item v-for="(item,index) in topFilter.optionals" :key="index" @click.native="topNChange('module', item)">{{item}}</el-dropdown-item>

@@ -391,8 +391,6 @@
         this.alertRule = {
           id: '',
           alertName: '',
-          type: '',
-          linkId: '',
           linkObject: {id: '', name: ''},
           expr: '',
           last: '',

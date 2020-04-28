@@ -124,12 +124,6 @@
           alertName:[
             {required:true,message:this.$t('validate.required'),trigger:'blur'}
           ],
-          type:[
-            {required:true,message:this.$t('validate.required'),trigger:'change'}
-          ],
-          linkId:[
-            {required:true,message:this.$t('validate.required'),trigger:"change"}
-          ],
           expr:[
             {required:true,message:this.$t('validate.required'),trigger:'blur'}
           ],
@@ -243,7 +237,7 @@
           }
         })
       },
-      changeType(type) {
+      /*changeType(type) {
         this.alertRule.linkId = '';
         if (type == 1) {
           this.getProjectList();
@@ -252,7 +246,7 @@
         } else if (type == 3) {
           this.getAssetList();
         }
-      },
+      },*/
       del: function() {
         this.$confirm(this.$t("tip.confirmDelete"), {
           confirmButtonText: this.$t("tip.yes"),

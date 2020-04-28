@@ -88,7 +88,7 @@
             <span v-else>-</span>
           </div>-->
           <template v-else-if="item.prop == 'labels'">
-            <el-tag v-if="key != 'alertname' && key != 'severity' && key != 'linkId'"
+            <el-tag v-if="key != 'alertname' && key != 'severity'"
                     :key="key"
                     type="info"
                     size="mini" v-for="(value, key) in scope.row.labels" class="alert-message-tag">{{tagValue(key, value)}}</el-tag>
@@ -536,8 +536,7 @@
             this.searchMsg.searchLabelList = this.searchMsg.searchLabelList.filter((item, index) => {
               return item.label != "alertType" && item.label != "asset"
             });
-            this.searchLabel.type = 3;
-            this.searchLabel.linkId = n.id;
+            this.searchLabel.assetId = n.id;
           }
           if (n.alertNum) {
             this.defaultSearchValue = 1;
