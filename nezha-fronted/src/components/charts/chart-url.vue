@@ -104,7 +104,6 @@ export default {
     methods: {
       showLoad(chartItem) {
         this.data = chartItem;
-        console.log('=========',this.data);
         this.panelIdInner = this.panelId;
         //设置高度
         this.$nextTick(() => {
@@ -152,7 +151,6 @@ export default {
         this.setLoadFrameFull();
       },
       dragResize:function(e){
-        console.log('========',this.data);
         var diffWidth =20; //界面的宽度空白的地方的宽度
         var chartBoxPadding = 22;
         var targetDiv= document.getElementById('chartUrlDiv'+this.chartIndex); //e.target.parentNode.parentNode;.children[0]
@@ -276,9 +274,8 @@ export default {
             prev:parseInt(_this.data.prev),
             next:parseInt(_this.data.next),
           };
-          console.log('========2',_this.data);
+
           _this.$put('panel/'+  _this.panelIdInner+'/charts/modify',modifyParams).then(response => {
-            console.log('========3',_this.data);
             if (response.code === 200) {
               //更新当前图表数据
               _this.data.span= span;

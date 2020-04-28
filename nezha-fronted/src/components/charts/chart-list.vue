@@ -704,7 +704,7 @@ export default {
             this.$refs.editChart[index].setData(chartItem, [], this.filter.panelId, this.filter);//????怎么设置的无数据？？
           }*/
 
-          if(this.$refs['editChart'+chartItem.id]){
+          if(this.$refs['editChart'+chartItem.id] && this.$refs['editChart'+chartItem.id].length>0){
             this.$refs['editChart'+chartItem.id][0].setData(chartItem, [], this.filter.panelId, this.filter);//????怎么设置的无数据？？
           }
         });
@@ -785,7 +785,7 @@ export default {
                       // 设置时间-数据格式对
                       const dpsArr = Object.entries(queryItem.values);//[ ["0",[1577959830.781,"0"]], ["1",[1577959845.781,"0"]] ]
                       // 判断是否有数据, && tagsArr.length > 0
-                      if (dpsArr.length > 0 && this.$refs['editChart'+chartItem.id]) {
+                      if (dpsArr.length > 0 && this.$refs['editChart'+chartItem.id]  && this.$refs['editChart'+chartItem.id].length>0) {
                         tagsArr.forEach((tag, i) => {
                           if (tag !== '__name__') {
                             host += `${tag}="${queryItem.metric[tag]}",`;
@@ -799,6 +799,7 @@ export default {
                           host = chartItem.elements[innerPos].expression;
                         }
                         //处理legend别名
+
                         let alias=this.$refs['editChart'+chartItem.id][0].dealLegendAlias(host,chartItem.elements[innerPos].legend);
                         if(!alias || alias===''){
                           alias = chartItem.elements[innerPos].expression;
@@ -863,7 +864,7 @@ export default {
                 }
               });
 
-              if(this.$refs['editChart'+chartItem.id]) {
+              if(this.$refs['editChart'+chartItem.id] && this.$refs['editChart'+chartItem.id].length>0) {
                 if (chartItem.type === 'table') {//表格
                   if (filterType === 'showFullScreen') {//全屏查询
                     this.$refs['editChart'+chartItem.id][0].setData(chartItem, tableData,
@@ -887,7 +888,7 @@ export default {
               }
             } else {
               const type = chartItem.type;
-              if(this.$refs['editChart'+chartItem.id]) {
+              if(this.$refs['editChart'+chartItem.id] && this.$refs['editChart'+chartItem.id].length>0) {
                 if (type === 'table') {
                   if (filterType === 'showFullScreen') {//table的全屏查询
                     this.$refs['editChart'+chartItem.id][0].setData(chartItem, [], this.filter.panelId,
