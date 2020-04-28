@@ -265,10 +265,12 @@ instance_cpu_time_ns{app="fox", proc="widget", rev="4d3a513", env="prod", job="c
           if (this.expressions.length > 0) {
             let requestArr = [];
             let promqlInputIndexs=[];
+            let queryExpression=[];
             this.expressions.forEach((item, index) => {
               if (item != '') {
                 let step=bus.getStep(this.filterTime[0],this.filterTime[1]);
                 promqlInputIndexs.push(index);
+                queryExpression.push(item)
                 requestArr.push(axios.get('/prom/api/v1/query_range?query=' + item + '&start=' + this.filterTime[0] + '&end=' + this.filterTime[1] + '&step='+step))
               }
             })
@@ -294,14 +296,19 @@ instance_cpu_time_ns{app="fox", proc="widget", rev="4d3a513", env="prod", job="c
                       seriesItem.data = result.values.map((item) => {
                         return [item[0] * 1000, item[1]];
                       })
-                      let metric = Object.assign({}, result.metric);
-                      seriesItem.name += metric.__name__ + '{';
-                      delete metric.__name__;
-                      for (let key in metric) {
-                        seriesItem.name += key + "=" + '"' + metric[key] + '",';
+                      console.log(result)
+                      if(result.metric&&Object.keys(result.metric).length>0){
+                        let metric = Object.assign({}, result.metric);
+                        seriesItem.name += metric.__name__ + '{';
+                        delete metric.__name__;
+                        for (let key in metric) {
+                          seriesItem.name += key + "=" + '"' + metric[key] + '",';
+                        }
+                        seriesItem.name = seriesItem.name.substr(0, seriesItem.name.length - 1);
+                        seriesItem.name += "}";
+                      }else{
+                        seriesItem.name=queryExpression[index]
                       }
-                      seriesItem.name = seriesItem.name.substr(0, seriesItem.name.length - 1);
-                      seriesItem.name += "}";
                       series.push(seriesItem);
                       legend.push({name: seriesItem.name, alias: null, isGray: false});
                     })
