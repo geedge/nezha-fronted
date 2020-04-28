@@ -14,7 +14,7 @@
             <!-- 顶部工具栏 -->
             <div class="top-tools" style="z-index: 1">
               <div class="top-tool-main-right">
-                <pick-time :refresh-data-func="expressionChange" v-model="filterTime" >
+                <pick-time :refresh-data-func="expressionChange" v-model="filterTime" @unitChange="chartUnitChange">
                   <template slot="added-text">{{$t('dashboard.metricPreview.runQuery')}}</template>
                 </pick-time>
                 <button :disabled="saveDisabled" type="button" @click="saveChart"
@@ -44,7 +44,7 @@
                    :class="{'shrink-view':!chartVisible || !defaultChartVisible}">
                 <div class="view-title" @click="changeChartVisible" style="float: left"><i class="el-icon-caret-top" ></i>&nbsp;graph</div>
                 <div class="chart-room">
-                  <chart ref="exploreChart"></chart>
+                  <chart ref="exploreChart" :unit="chartUnit"></chart>
                 </div>
               </div>
               <div class="table-view right-margin" v-show="!showIntroduce"
@@ -199,6 +199,7 @@ instance_cpu_time_ns{app="fox", proc="widget", rev="4d3a513", env="prod", job="c
   import chart from "../overview/chart";
   import axios from 'axios';
   import chartBox from "../../../page/dashboard/chartBox";
+  import {getUUID} from "../../../common/js/common";
 
   export default {
     name: "explore",
@@ -233,11 +234,12 @@ instance_cpu_time_ns{app="fox", proc="widget", rev="4d3a513", env="prod", job="c
         tableLoading: false,
         saveDisabled: true,
         panelData: [],
+        chartUnit:0,
       }
     },
     created() {
       this.getPanelData();
-      this.promqlKeys.push(this.guid());
+      this.promqlKeys.push(getUUID());
     },
     methods: {
       pageNo(val) {
@@ -250,6 +252,12 @@ instance_cpu_time_ns{app="fox", proc="widget", rev="4d3a513", env="prod", job="c
       },
       filterShowData(source, pageObj) {
         return source.slice((pageObj.pageNo - 1) * pageObj.pageSize, pageObj.pageNo * pageObj.pageSize)
+      },
+      chartUnitChange:function(unit){
+        this.chartUnit=unit;
+        this.$nextTick(()=>{
+          this.queryChartData();
+        })
       },
       queryChartData: function () {
         this.$refs.exploreChart.startLoading();
@@ -391,7 +399,7 @@ instance_cpu_time_ns{app="fox", proc="widget", rev="4d3a513", env="prod", job="c
       },
       addExpression: function (index) {
         this.expressions.splice(index + 1, 0, '');
-        this.promqlKeys.splice(index + 1, 0, this.guid());
+        this.promqlKeys.splice(index + 1, 0, getUUID());
         this.promqlCount++;
       },
       removeExpression: function (index) {
@@ -448,13 +456,6 @@ instance_cpu_time_ns{app="fox", proc="widget", rev="4d3a513", env="prod", job="c
             this.panelData = response.data.list;
           }
         });
-      },
-      guid() {
-        function S4() {
-          return (((1 + Math.random()) * 0x10000) | 0).toString(16).substring(1);
-        }
-
-        return (S4() + S4() + "-" + S4() + "-" + S4() + "-" + S4() + "-" + S4() + S4() + S4());
       },
       elementsetShow(s, e) {
         var eventfixed = {
