@@ -418,8 +418,10 @@
                         const seriesItem = {
                           theData: {
                             name: '',
-                            symbol:'none',  //去掉点
+                            symbol:'emptyCircle',  //去掉点
+                            symbolSize:[2,2],
                             smooth:true,  //曲线变平滑
+                            showSymbol:false,
                             data: [],
                             type:chartItem.type,
                           },
@@ -1108,8 +1110,10 @@
                       const seriesItem = {
                         theData: {
                           name: '',
-                          symbol:'none',  //去掉点
+                          symbol:'emptyCircle',  //去掉点
+                          symbolSize:[2,2],
                           smooth:true,  //曲线变平滑
+                          showSymbol:false,
                           data: [],
                           type:this.chart.type,
                           //visible: true,
