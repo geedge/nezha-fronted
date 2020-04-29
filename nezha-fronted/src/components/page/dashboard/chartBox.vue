@@ -134,7 +134,7 @@
               <el-col v-show="!isUrl" :span="10">
                 <el-cascader filterable placeholder="" popper-class="dc-dropdown" size="mini"
                              :options="unitOptions"
-                             :props="{ expandTrigger: 'hover' }"
+                             :props="{ expandTrigger: 'hover',emitPath:false }"
                              :show-all-levels="false"
                              v-model="chart.unit"
                              @change="unitSelected"
@@ -377,6 +377,9 @@
       },
       setTitle(title) {
         this.rightBox.title = title;
+      },
+      setUnit:function(unit){
+        this.$set(this.chart,'unit',Number.parseInt(unit))
       },
       save() {
         this.$refs['chartForm'].validate((valid) => {

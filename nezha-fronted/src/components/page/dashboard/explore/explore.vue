@@ -200,6 +200,7 @@ instance_cpu_time_ns{app="fox", proc="widget", rev="4d3a513", env="prod", job="c
   import axios from 'axios';
   import chartBox from "../../../page/dashboard/chartBox";
   import {getUUID} from "../../../common/js/common";
+  import chartDataFormat from "../../../charts/chartDataFormat";
 
   export default {
     name: "explore",
@@ -256,7 +257,7 @@ instance_cpu_time_ns{app="fox", proc="widget", rev="4d3a513", env="prod", job="c
       chartUnitChange:function(unit){
         this.chartUnit=unit;
         this.$nextTick(()=>{
-          this.queryChartData();
+          this.expressionChange()
         })
       },
       queryChartData: function () {
@@ -296,7 +297,6 @@ instance_cpu_time_ns{app="fox", proc="widget", rev="4d3a513", env="prod", job="c
                       seriesItem.data = result.values.map((item) => {
                         return [item[0] * 1000, item[1]];
                       })
-                      console.log(result)
                       if(result.metric&&Object.keys(result.metric).length>0){
                         let metric = Object.assign({}, result.metric);
                         seriesItem.name += metric.__name__ + '{';
@@ -358,7 +358,7 @@ instance_cpu_time_ns{app="fox", proc="widget", rev="4d3a513", env="prod", job="c
                       if (data) {
                         data.forEach((result, i) => {
                           let metrics = Object.assign({}, result.metric);
-                          this.$set(metrics, 'value#' + index, result.value[1]);
+                          this.$set(metrics, 'value#' + index, chartDataFormat.getUnit(this.chartUnit).compute(result.value[1],null,2));
                           for (let key in metrics) {
                             let label = {
                               label: key == '__name__' ? 'metric' : key,
@@ -380,7 +380,6 @@ instance_cpu_time_ns{app="fox", proc="widget", rev="4d3a513", env="prod", job="c
                       return a.prop.charCodeAt(0) - b.prop.charCodeAt(0);
                     })
                   })
-                  console.log(tData.length)
                   if(tData.length>0){
                     this.storedTableData = Object.assign([], tData);
                     this.pageObj.total = this.storedTableData.length;
@@ -410,9 +409,6 @@ instance_cpu_time_ns{app="fox", proc="widget", rev="4d3a513", env="prod", job="c
         this.promqlCount++;
       },
       removeExpression: function (index) {
-        console.log(this.expressions)
-        console.log(this.promqlKeys)
-        console.log(this.promqlCount)
         if (this.promqlCount > 1) {
           this.expressions.splice(index, 1);
           this.promqlKeys.splice(index, 1);
@@ -439,6 +435,7 @@ instance_cpu_time_ns{app="fox", proc="widget", rev="4d3a513", env="prod", job="c
           }
         }
         this.$refs.addChartModal.createData(-1, metricInfo);
+        this.$refs.addChartModal.setUnit(this.chartUnit)
       },
       createSuccess(type, response, param, panel) { //添加chart成功
         this.$confirm(this.$t("dashboard.metric.goPanelTip"), this.$t("tip.saveSuccess"), {
