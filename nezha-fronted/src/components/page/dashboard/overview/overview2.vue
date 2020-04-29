@@ -69,7 +69,7 @@
                 <span>{{$t("dashboard.overview.alert.chart.chartTitle")}}</span>
                 <span class="content-col-title-tools">
                   <time-picker ref="calendarPanel" class="nz-dashboard-picker" @change="dateChange"></time-picker>
-                  <el-dropdown trigger="hover" :show-timeout="0" size="small" :hide-on-click="false" @command="selectDatacenter">
+                  <!--<el-dropdown trigger="hover" :show-timeout="0" size="small" :hide-on-click="false" @command="selectDatacenter">
                     <span class="content-col-title-tool">{{$t("dashboard.overview.dataCenter.dataCenter")}}&nbsp;<i class="el-icon-arrow-down"></i></span>
                     <el-dropdown-menu slot="dropdown" class="el-dropdown-multi">
                       <el-dropdown-item :class="{'dropdown-item-active': trendSearchParam.dc.indexOf(item.id) > -1}" :command="item" v-for="(item,index) in trafficDatacenterData" :key="index">{{item.name}}</el-dropdown-item>
@@ -80,7 +80,16 @@
                     <el-dropdown-menu slot="dropdown" class="el-dropdown-multi">
                       <el-dropdown-item :class="{'dropdown-item-active': trendSearchParam.tag.some(tag => {return item.name == tag.name && item.value == tag.value;})}" :command="item" v-for="(item,index) in trafficTagData" :key="index">{{item.name}}&nbsp;:&nbsp;{{item.value}}</el-dropdown-item>
                     </el-dropdown-menu>
-                  </el-dropdown>
+                  </el-dropdown>-->
+                  <span class="content-col-title-tool">
+                    <el-cascader
+                      :options="trafficData"
+                      :props="{multiple: true, checkStrictly: true}"
+                      clearable
+                      collapse-tags
+                      v-model="trendSearchParam.select"
+                    ></el-cascader>
+                  </span>
                 </span>
               </div>
               <div class="content-col-content">
@@ -207,8 +216,9 @@
         dataCenterMapSeries: [],
         trafficDatacenterData: [],
         trafficTagData: [],
+        trafficData: [],
 
-        trendSearchParam: {start: '', end: '', dc: [], tag: []},
+        trendSearchParam: {start: '', end: '', dc: [], tag: [], select: []},
 
         alertMessageShow: 'asset', //asset/module
         bottom3DropdownShow: false, //最底部行第三列的下拉选择框
@@ -436,6 +446,55 @@
       },
       queryAlertTrendData() {
         this.$refs.chartbox.startLoading();
+        this.chartSeries = [];
+        this.$get('/prom/api/v1/query_range', this.trendParamHandle('rx')).then(response=>{
+          if(response.status == 'success'){
+            if(response.data.result){
+              let series={
+                name: 'ifHCInOctets',
+                symbol:'none',  //去掉点
+                smooth:true,  //曲线变平滑
+                data: [],
+                type:'line',
+              };
+              if (response.data.result.length > 0) {
+                series.data=response.data.result[0].values.map((item)=>{
+                  return [item[0]*1000,item[1]];
+                });
+              }
+              this.chartSeries.push(series);
+              this.$refs.chartbox.setSeries(this.chartSeries);
+              this.$refs.chartbox.endLoading();
+            }
+          }else{
+            console.error(response)
+          }
+        });
+        this.$get('/prom/api/v1/query_range', this.trendParamHandle('tx')).then(response=>{
+          if(response.status == 'success'){
+            if(response.data.result){
+              let series={
+                name: 'ifHCOutOctets',
+                symbol:'none',  //去掉点
+                smooth:true,  //曲线变平滑
+                data: [],
+                type:'line',
+              };
+              if (response.data.result.length > 0) {
+                series.data=response.data.result[0].values.map((item)=>{
+                  return [item[0]*1000,item[1]];
+                });
+              }
+              this.chartSeries.push(series);
+              this.$refs.chartbox.setSeries(this.chartSeries);
+              this.$refs.chartbox.endLoading();
+            }
+          }else{
+            console.error(response)
+          }
+        });
+      },
+      trendParamHandle(t) {
         let before;
         let end;
         if (this.trendSearchParam.start) {
@@ -451,39 +510,96 @@
           end = new Date();
           end = this.dateFormat('yyyy-mm-dd HH:MM:SS', end);
         }
+        let metric;
+        let rule;
+        if (t == 'rx') {
+          metric = {rx: '"1"'};
+          rule = "ifHCInOctets";
+        } else if (t == 'tx') {
+          metric = {tx: '"1"'};
+          rule = "ifHCOutOctets";
+        }
+        if (this.trendSearchParam.select.length > 0) {
+          let dc = [];
+          let tags = [];
+          this.trendSearchParam.select.forEach(select => {
+            let item = select[select.length-1];
+            let type = item.split("::")[0];
+            let value = item.split("::")[1];
+            if (type == "$dc$") {
+              dc.push(value);
+            } else if (type == "$key$") {
+              let hasDc = dc.some(d => {
+                if (d == select[0].split("::")[1]) {
+                  return true;
+                }
+                return false;
+              });
+              if (!hasDc) {
+                dc.push(select[0].split("::")[1]);
+              }
+              let hasKey = tags.some(tag => {
+                if (tag.key == value) {
+                  //TODO 选择所有这个tag的value
+                  return true;
+                }
+                return false;
+              });
+              if (!hasKey) {
+                //TODO 选择所有这个tag的value
+                tags.push({key: value, value: []});
+              }
+            } else {
+              let key = select[1].split("::")[1];
+              let hasKey = tags.some(tag => {
+                if (tag.key == key) {
+                  tag.value.push(value);
+                  console.info(tag.value)
+                  console.info(tags)
+                  return true;
+                }
+                return false;
+              });
+              if (!hasKey) {
+                tags.push({key: key, value: [value]});
+              }
+            }
+          });
+console.info(dc);
+console.info(metric);
+          if (dc.length == 1) {
+            metric.datacenter = '"' + dc[0] + '"';
+          } else if (dc.length > 1) {
+            metric.datacenter = '~"' + dc.join("|") + '"'
+          }
+          tags.forEach(item => {
+            if (item.value.length == 1) {
+              metric[item.key] = '"' + item.value[0] + '"';
+              //eval('metric.' + item.key + '="' + item.value[0] + '"');
+            } else if (item.value.length > 1) {
+              metric[item.key] = '~"' + item.value.join("|") + '"';
+              //eval('metric.' + item.key + '="~' + item.value.join("|") + '"');
+            }
+          });
+        }
+        let metricString = "{";
+        for (let key in metric) {
+          /*if (key != 'rx' && key != 'tx' && key != 'datacenter') {
+            metricString += key + '=' + metric[key] + ',';
+          } else {
+            metricString += key + "=" + metric[key] + ",";
+          }*/
+          metricString += key + "=" + metric[key] + ",";
+        }
+        metricString = metricString.substring(0, metricString.length-1);
+        metricString += "}";
         let params = {
-          query: 'sum(nz_alert_nums)',
           start: before,
           end: end,
           step: bus.getStep(before, end),
-          dc: this.trendSearchParam.dc.join(","),
-          tag: this.trendSearchParam.tag.map(item => {
-            return "{" + item.name + ":" + item.value + "}"
-          }).join(",")
+          query: 'sum(irate(' + rule + metricString + '[' + (this.trendSearchParam.timeRange ? this.trendSearchParam.timeRange : "1h") + ']))'
         };
-        this.$get('/prom/api/v1/query_range',params).then(response=>{
-          if(response.status == 'success'){
-            if(response.data.result){
-              let series={
-                name: 'nz_alert_nums',
-                symbol:'none',  //去掉点
-                smooth:true,  //曲线变平滑
-                data: [],
-                type:'line',
-              };
-              if (response.data.result.length > 0) {
-                series.data=response.data.result[0].values.map((item)=>{
-                  return [item[0]*1000,item[1]];
-                });
-              }
-              this.chartSeries = [series];
-              this.$refs.chartbox.setSeries(this.chartSeries);
-              this.$refs.chartbox.endLoading();
-            }
-          }else{
-            console.error(response)
-          }
-        })
+        return params;
       },
       queryMapChartGeoJson() {
         this.$get('/sysConfig?paramKey=geoJson').then(response=>{
@@ -645,7 +761,8 @@
       getDcTrafficData() {
         this.$get('idc/trafficSetting', {pageSize: -1}).then(response => {
           if (response.code === 200) {
-            this.trafficTagData = [];
+            this.trafficData = this.convertTrafficData(response.data.list);
+            /*this.trafficTagData = [];
             response.data.list.forEach(item => {
               if (!(this.trafficDatacenterData.some(idc => {
                 return item.idc.id == idc.id;
@@ -664,15 +781,57 @@
                   }
                 }
               }
-            });
+            });*/
           }
         });
+      },
+      convertTrafficData(data) {
+        let result = [];
+        data.forEach(item => {
+          let hasDc = result.some(dc => { //dc去重
+            if (dc.label == item.idc.name) {
+              handleTag(dc, item.tags);
+              return true;
+            }
+            return false;
+          });
+          if (!hasDc) {
+            let dc = {label: item.idc.name, value: "$dc$::" + item.idc.name, children: []};
+            handleTag(dc, item.tags);
+            result.push(dc);
+          }
+        });
+        function handleTag(dc, tagData) { // dc: cascader数据里的第一级；tagData: 原始数据中的tags
+          if (tagData) {
+            let tags = dc.children;
+            for (let key in tagData) {
+              let hasKey = tags.some(tag => { //tag-key去重
+                if (tag.label == key) {
+                  let hasValue = tag.children.some(value => { //tag-value去重
+                    return value.label == tagData[key];
+                  });
+                  if (!hasValue) {
+                    tag.children.push({label: tagData[key], value: key + "::" + tagData[key]});
+                  }
+                  return true;
+                }
+                return false;
+              });
+              if (!hasKey) {
+                tags.push({label: key, value: "$key$::" + key, children: [{label: tagData[key], value: key + "::" + tagData[key]}]});
+              }
+            }
+            dc.children = tags;
+          }
+        }
+        return result;
       },
       /*初始化数据 end*/
 
       dateChange(val) {
         this.trendSearchParam.start = val[0];
         this.trendSearchParam.end = val[1];
+        this.trendSearchParam.timeRange = val[2];
         this.queryAlertTrendData();
       },
       topNChange(type, top) {
@@ -685,7 +844,7 @@
           this.queryAlertStatByRule();
         }
       },
-      selectDatacenter(dc) {
+      /*selectDatacenter(dc) {
         let index = this.trendSearchParam.dc.indexOf(parseInt(dc.id));
         if (index == -1) {
           this.trendSearchParam.dc.push(parseInt(dc.id));
@@ -709,7 +868,7 @@
           this.trendSearchParam.tag.splice(index, 1);
         }
         this.queryAlertTrendData();
-      },
+      },*/
       alertMessageChange(type) {
         this.bottom3DropdownShow = false;
         this.alertMessageShow = type;
@@ -912,6 +1071,11 @@
           }
         });
       },
+    },
+    watch: {
+      "trendSearchParam.select": function() {
+        this.queryAlertTrendData();
+      }
     },
     mounted() {
       this.initDate();

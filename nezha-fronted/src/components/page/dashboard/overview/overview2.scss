@@ -100,6 +100,7 @@
 .content-col-title .el-dropdown {
   font-size: 0.85rem;
 }
+
 .content-col-title-tools {
   display: flex;
   font-size: 0.85rem;
@@ -109,6 +110,40 @@
   padding-left: 7px;
   border-left: 1px solid #dadada;
   margin-left: 7px;
+  .el-cascader {
+    height: 100%;
+    line-height: 1.6rem;
+    .el-input__suffix i {
+      color: #606266;
+    }
+    .el-tag {
+      background-color: #efefef;
+      height: 100%;
+      line-height: 1.6rem;
+      margin: 0;
+      border: none;
+      padding-left: 2px;
+      font-size: 0.85rem;
+      color: #606266;
+      max-width: calc(100% - 25px);
+    }
+    .el-tag:last-of-type:not(first-of-type) {
+      padding-right: 0;
+    }
+    .el-input {
+      height: 100%;
+      line-height: 1.6rem;
+      i {
+        line-height: 1.6rem;
+      }
+      .el-input__inner {
+        height: 100% !important;
+        line-height: 1.6rem;
+        background-color: #efefef;
+        border: none;
+      }
+    }
+  }
 }
 .content-col-box .content-col-title .nz-dashboard-picker {
   height: 100%;
@@ -156,6 +191,9 @@
 .content-row-box:nth-of-type(2) .content-col-box .content-col-content {
   padding: 0.7rem;
   height: calc(100% - 3rem);
+}
+.content-row-box:nth-of-type(2) .content-col-box:first-of-type .content-col-title {
+  padding-right: 0;
 }
 .content-row-box:first-of-type .content-col-box:last-of-type .content-col-content {
   position: relative;

@@ -279,16 +279,19 @@ export default {
         let endTime = bus.timeFormate(new Date(bus.computeTimezone(new Date().getTime())),'yyyy-MM-dd hh:mm:ss');
         this.$set(this.searchTime, 0, startTime);
         this.$set(this.searchTime, 1, endTime);
+        this.$set(this.searchTime, 2, val + "m");
       }else if(type==='hour'){
         let startTime = bus.timeFormate(new Date(bus.computeTimezone(new Date().getTime())).setHours(new Date(bus.computeTimezone(new Date().getTime())).getHours() - val),'yyyy-MM-dd hh:mm:ss');
         let endTime = bus.timeFormate(new Date(bus.computeTimezone(new Date().getTime())),'yyyy-MM-dd hh:mm:ss');
         this.$set(this.searchTime, 0, startTime);
         this.$set(this.searchTime, 1, endTime);
+        this.$set(this.searchTime, 2, val + "h");
       }else if(type==='date'){
         let startTime = bus.timeFormate(new Date(bus.computeTimezone(new Date().getTime())).setDate(new Date(bus.computeTimezone(new Date().getTime())).getDate() - val),'yyyy-MM-dd hh:mm:ss');
         let endTime = bus.timeFormate(new Date(bus.computeTimezone(new Date().getTime())),'yyyy-MM-dd hh:mm:ss');
         this.$set(this.searchTime, 0, startTime);
         this.$set(this.searchTime, 1, endTime);
+        this.$set(this.searchTime, 2, val + "d");
       }
     },
     setCostomTime:function(costomTime){
