@@ -97,6 +97,7 @@ const cn = {
       searchItem: {
         name: "名称"
       },
+      chartTotal:'总和',
       createPanelTitle: "新增面板",
       selectPanelTitle: "选择面板",
       createPanelTitleSec: "新增面板",

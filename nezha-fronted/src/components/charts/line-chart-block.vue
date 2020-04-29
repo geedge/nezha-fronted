@@ -187,6 +187,7 @@
         seriesItem: [], // 保存信息
         seriesItemScreen:[],
         images: '',
+        isStackArea:false,
         isError:false,
         errorContent:'',
         toolbox: false,
@@ -696,6 +697,8 @@
 
           }
         };
+        let stackIconBorderColor = (chartInfo.type==='stackArea'?'#53a3cb':'#7e7e7e');
+        let stackIconChooseBorderColor = (chartInfo.type==='stackArea'?'#7e7e7e':'#53a3cb');
         var option = {
           title:{
             show:false,
@@ -710,8 +713,14 @@
                 yAxisIndex:false
               },
               magicType:{
-                type:['stack']
-              }
+                type:['stack'],
+                iconStyle:{
+                  borderColor:stackIconBorderColor,
+                },
+                emphasis:{
+                  borderColor:stackIconChooseBorderColor,
+                }
+              },
             }
           },
           tooltip: {
@@ -782,6 +791,7 @@
               let str = `<div>`;
 
               //let str = `<div  style='white-space:nowrap;overflow-x:hidden;text-overflow:ellipsis;min-width:150px;max-width:600px;display:inline-block;line-height: 18px;font-size:12px;font-family: Roboto,Helvetica Neue,Arial,sans-serif;'>`;
+              let sum = 0;
               params.forEach((item, i) => {
                 //alert('tooltip====='+JSON.stringify(item))
                 //let tip=legend.find((element)=>{
@@ -801,6 +811,7 @@
                 if(val===0){
                   val = Number(item.data[1]);
                 }
+                sum +=val;
                 str += `<div style="white-space:nowrap;overflow-x:hidden;text-overflow:ellipsis;display: flex; justify-content: space-between; min-width: 150px; max-width: 600px; line-height: 18px; font-size: 12px;">`;
                 str += `<div style="max-width: 500px;white-space:nowrap;overflow-x:hidden;text-overflow:ellipsis;"><span style='display:inline-block;margin-right:5px;border-radius:10px;width:15px;height:5px;background-color: ${color};}'></span>${tip?(tip.alias?tip.alias:tip.name):item.seriesName}  </div>`;
                 str += `<div style="padding-left: 10px;">`;
@@ -815,6 +826,18 @@
                 str +=chartDataFormat.getUnit(chartInfo.unit?chartInfo.unit:2).compute(val,null,2);
                 str +=`</div>`;*/
               });
+              if(self.data.type==='stackArea' || self.isStackArea){
+                sum = parseFloat(Number(sum).toFixed(2));
+                str +=`<div style="white-space:nowrap;overflow-x:hidden;text-overflow:ellipsis;display: flex; justify-content: space-between; min-width: 150px; max-width: 600px; line-height: 18px; font-size: 12px;">`;
+                str +=`<div style="line-height: 18px; font-size: 12px;padding-left:20px;">`
+                str +=self.$t("dashboard.panel.chartTotal");
+                str +=`</div>`;
+                str +=`<div style="padding-left: 10px;">`;
+                str +=chartDataFormat.getUnit(chartInfo.unit?chartInfo.unit:2).compute(sum,null,2);
+                str +=`</div>`;
+                str += `</div>`;
+              }
+
               str +=`</div>`;
               return str;
               // return `<div  style='width:100%;display:block;word-break:break-all;word-wrap:break-word;white-space:normal'><span style='display:inline-block;margin-right:5px;border-radius:10px;width:15px;height:5px;background-color: ${params[0].color};}'></span> ${params[0].seriesName}:${params[0].data[1]}</div>`;
@@ -1041,6 +1064,67 @@
             this.echartStore.setOption(option);//创建图表
             this.$refs['localLoading'+this.chartIndex].endLoading();
             this.firstShow = true; // 展示操作按键
+
+            this.echartStore.on('magictypechanged', function (params) {
+                self.isStackArea = !self.isStackArea;
+                if(self.isStackArea){
+                  this.setOption({
+                    toolbox:{
+                      feature:{
+                        magicType:{
+                          iconStyle:{
+                            borderColor:'#7e7e7e',
+                          },
+                        },
+                      }
+                    },
+                    tooltip: {
+                      formatter:function(params){
+                        let str = `<div>`;
+                        let sum = 0;
+                        params.forEach((item, i) => {let tip=legend[item.seriesIndex];
+                          let color = self.bgColorList[item.seriesIndex];
+                          if(i===0){
+                            let value=bus.computeTimezone(item.data[0]);
+                            let t_date = new Date(value);
+                            str += [t_date.getFullYear(), t_date.getMonth() + 1, t_date.getDate()].join('-') + " "
+                              + [t_date.getHours(), t_date.getMinutes(),t_date.getSeconds()].join(':');
+                            str +=`<br/>`;
+                          }
+                          let val = parseFloat(Number(item.data[1]).toFixed(2));
+                          if(val===0){
+                            val = Number(item.data[1]);
+                          }
+                          sum +=val;
+                          str += `<div style="white-space:nowrap;overflow-x:hidden;text-overflow:ellipsis;display: flex; justify-content: space-between; min-width: 150px; max-width: 600px; line-height: 18px; font-size: 12px;">`;
+                          str += `<div style="max-width: 500px;white-space:nowrap;overflow-x:hidden;text-overflow:ellipsis;"><span style='display:inline-block;margin-right:5px;border-radius:10px;width:15px;height:5px;background-color: ${color};}'></span>${tip?(tip.alias?tip.alias:tip.name):item.seriesName}  </div>`;
+                          str += `<div style="padding-left: 10px;">`;
+                          str += chartDataFormat.getUnit(chartInfo.unit?chartInfo.unit:2).compute(val,null,2);
+                          str += `</div>`;
+                          str += `</div>`;
+                        });
+                        if(self.data.type==='stackArea' || self.isStackArea){
+                          sum = parseFloat(Number(sum).toFixed(2));
+                          str +=`<div style="white-space:nowrap;overflow-x:hidden;text-overflow:ellipsis;display: flex; justify-content: space-between; min-width: 150px; max-width: 600px; line-height: 18px; font-size: 12px;">`;
+                          str +=`<div style="line-height: 18px; font-size: 12px;padding-left:20px;">`
+                          str +=self.$t("dashboard.panel.chartTotal");
+                          str +=`</div>`;
+                          str +=`<div style="padding-left: 10px;">`;
+                          str +=chartDataFormat.getUnit(chartInfo.unit?chartInfo.unit:2).compute(sum,null,2);
+                          str +=`</div>`;
+                          str += `</div>`;
+                        }
+
+                        str +=`</div>`;
+                        return str;
+                        },
+                    }
+                  });
+                }
+            });
+            //this.echartStore.dispatchAction({
+              //type: 'magictypechanged',
+            //});
           });
 
         } else if (chartSite === 'screen') { // 全屏显示
@@ -1127,6 +1211,63 @@
             let divHeight = this.$refs.screenLegendArea.offsetHeight;
             this.echartModalStore.resize({height: '100%'});
           });*/
+          this.echartModalStore.on('magictypechanged', function (params) {
+            self.isStackArea = !self.isStackArea;
+            if(self.isStackArea){
+              this.setOption({
+                toolbox:{
+                  feature:{
+                    magicType:{
+                      iconStyle:{
+                        borderColor:'#7e7e7e',
+                      },
+                    },
+                  }
+                },
+                tooltip: {
+                  formatter:function(params){
+                    let str = `<div>`;
+                    let sum = 0;
+                    params.forEach((item, i) => {let tip=legend[item.seriesIndex];
+                      let color = self.bgColorList[item.seriesIndex];
+                      if(i===0){
+                        let value=bus.computeTimezone(item.data[0]);
+                        let t_date = new Date(value);
+                        str += [t_date.getFullYear(), t_date.getMonth() + 1, t_date.getDate()].join('-') + " "
+                          + [t_date.getHours(), t_date.getMinutes(),t_date.getSeconds()].join(':');
+                        str +=`<br/>`;
+                      }
+                      let val = parseFloat(Number(item.data[1]).toFixed(2));
+                      if(val===0){
+                        val = Number(item.data[1]);
+                      }
+                      sum +=val;
+                      str += `<div style="white-space:nowrap;overflow-x:hidden;text-overflow:ellipsis;display: flex; justify-content: space-between; min-width: 150px; max-width: 600px; line-height: 18px; font-size: 12px;">`;
+                      str += `<div style="max-width: 500px;white-space:nowrap;overflow-x:hidden;text-overflow:ellipsis;"><span style='display:inline-block;margin-right:5px;border-radius:10px;width:15px;height:5px;background-color: ${color};}'></span>${tip?(tip.alias?tip.alias:tip.name):item.seriesName}  </div>`;
+                      str += `<div style="padding-left: 10px;">`;
+                      str += chartDataFormat.getUnit(chartInfo.unit?chartInfo.unit:2).compute(val,null,2);
+                      str += `</div>`;
+                      str += `</div>`;
+                    });
+                    if(self.data.type==='stackArea' || self.isStackArea){
+                      sum = parseFloat(Number(sum).toFixed(2));
+                      str +=`<div style="white-space:nowrap;overflow-x:hidden;text-overflow:ellipsis;display: flex; justify-content: space-between; min-width: 150px; max-width: 600px; line-height: 18px; font-size: 12px;">`;
+                      str +=`<div style="line-height: 18px; font-size: 12px;padding-left:20px;">`
+                      str +=self.$t("dashboard.panel.chartTotal");
+                      str +=`</div>`;
+                      str +=`<div style="padding-left: 10px;">`;
+                      str +=chartDataFormat.getUnit(chartInfo.unit?chartInfo.unit:2).compute(sum,null,2);
+                      str +=`</div>`;
+                      str += `</div>`;
+                    }
+
+                    str +=`</div>`;
+                    return str;
+                  },
+                }
+              });
+            }
+          });
         }
       },
       handleLineFeed(str,chartWidth){
@@ -1259,10 +1400,11 @@
       // 重新请求数据 刷新操作
       refreshChart() {
         this.dropdownMenuShow=false;
+        let id = this.data.id;
         this.clearChart();
         this.$refs['localLoading'+this.chartIndex].startLoading();
-        /*this.firstShow = false;
-        this.$emit('on-refresh-data', this.data.id);*/
+        this.firstShow = false;
+        this.$emit('on-refresh-data', id);
       },
       initDialog(){
         //此时初始化，才能获得screenShowArea对象，否则此对象为undefined，无法初始化图表

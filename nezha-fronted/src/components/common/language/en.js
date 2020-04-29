@@ -101,6 +101,7 @@ const en = {
       searchItem:{
         name:'name'
       },
+      chartTotal:'total',
       //面板-侧滑框
       createPanelTitle: 'New panel', //"新增面板"
       selectPanelTitle:'Select', //"选择面板"
