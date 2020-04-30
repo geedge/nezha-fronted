@@ -155,7 +155,8 @@ export default {
       currentRecordNum:0,//懒加载：本次取记录的index，第一次从0开始取，每次取3行
       lineNum:3,//每页加载的行数
       pagePanelId:'',//当前分页的panelId
-      dragging: null
+      dragging: null,
+      chartDataCacheGroup:new Map,//图表数据缓存，用于查询：id:{}
     };
   },
   computed: {},
@@ -546,27 +547,21 @@ export default {
 
       this.dataTotalList = [...chartListTmp];
       if(this.isPage){
-        this.pageDataList();
+        this.pageDataList(null,null,true);
       }else {
         this.dataList = [...this.dataTotalList];
       }
 
       this.$nextTick(() => {
-        /*
-        if (this.dataList.length > 0 && this.$refs.editChart) {
-          this.$refs.editChart.forEach((item, i) => {
-            item.showLoad(this.dataList[i]);//之后要实现
-          });
-        }*/
         if (this.dataList.length > 0 ) {
           this.dataList.forEach((item) => {
             this.$refs['editChart'+item.id][0].showLoad(item);//之后要实现
           });
         }
-        this.dataSetFirst(this.dataList);
+        this.dataSetFirst(this.dataList,null,true);
       });
     },
-    pageDataList(isAdd,panelId){
+    pageDataList(isAdd,panelId,isSearch){
       if(panelId!==this.pagePanelId){
         this.currentRecordNum = 0;
       }
@@ -609,7 +604,7 @@ export default {
             let dataListTmp = [...this.dataList];
             this.dataList =  [...dataListTmp.concat(dataTmpList)];
             this.$nextTick(() => {
-              this.dataSetFirst(dataTmpList,oldDataListLen);
+              this.dataSetFirst(dataTmpList,oldDataListLen,isSearch);
             });
           }else {
             this.dataList = [...dataTmpList];
@@ -673,7 +668,7 @@ export default {
       });
     },
     // arr: 该panel下图表list,生成该看板下所有图表
-    dataSetFirst(arr,oldDataListLen) {
+    dataSetFirst(arr,oldDataListLen,isSearch) {
       if (arr.length) {
         arr.forEach((item, index) => {
           let realIndex = index;
@@ -682,14 +677,52 @@ export default {
           }
           let chartType = item.type;
           if(chartType!=='url'){
-            this.getChartData(item, realIndex);
+            if(isSearch){
+              this.getChartDataForSearch(item,realIndex);///？？？
+              //this.getChartData(item, realIndex);
+            }else {
+              this.getChartData(item, realIndex);
+            }
           }else {
             this.setSize(item.span, realIndex); // 设置该图表宽度
           }
         });
       }
     },
-
+    getChartDataForSearch(chartItem,realIndex){
+      let chartData = this.chartDataCacheGroup.get(chartItem.id);
+      if(chartData){
+        this.setSize(chartItem.span, realIndex); // 设置该图表宽度
+        let filterType = chartData.filterType;
+        let errorMsg = chartData.errorMsg;
+        let tableData = chartData.tableData;
+        let panelId = chartData.panelId;
+        let filter = chartData.filter;
+        let legend = chartData.legend;
+        let series = chartData.series;
+        if(this.$refs['editChart'+chartItem.id] && this.$refs['editChart'+chartItem.id].length>0) {
+          if (chartItem.type === 'table') {//表格
+            if (filterType === 'showFullScreen') {//全屏查询
+              this.$refs['editChart'+chartItem.id][0].setData(chartItem, tableData,
+                panelId, filter, filterType,errorMsg);
+            } else {
+              this.$refs['editChart'+chartItem.id][0].setData(chartItem, tableData,
+                panelId, filter,'',errorMsg);
+            }
+          } else if (chartItem.type === 'line' || chartItem.type === 'bar' || chartItem.type === 'stackArea' || chartItem.type === 4) {
+            if (filterType === 'showFullScreen') {//全屏查询
+              this.$refs['editChart'+chartItem.id][0].setData(chartItem, series,
+                panelId, filter, legend, filterType,errorMsg);
+            } else {
+              this.$refs['editChart'+chartItem.id][0].setData(chartItem, series,
+                panelId, filter, legend,'',errorMsg);
+            }
+          }
+        }
+      }else {
+        this.getChartData(chartItem, realIndex);
+      }
+    },
     // 获取一个图表具体数据,图表信息，图表位置index
     getChartData(chartInfo, pos, filterType) {
       const chartItem = chartInfo;
@@ -867,6 +900,17 @@ export default {
               });
 
               if(this.$refs['editChart'+chartItem.id] && this.$refs['editChart'+chartItem.id].length>0) {
+                const chartData = {
+                  chartItem:chartItem,
+                  series:series,
+                  legend:legend,
+                  tableData:tableData,
+                  panelId:this.filter.panelId,
+                  filter:this.filter,
+                  filterType:filterType,
+                  errorMsg:errorMsg,
+                }
+                this.chartDataCacheGroup.set(chartInfo.id,chartData);
                 if (chartItem.type === 'table') {//表格
                   if (filterType === 'showFullScreen') {//全屏查询
                     this.$refs['editChart'+chartItem.id][0].setData(chartItem, tableData,

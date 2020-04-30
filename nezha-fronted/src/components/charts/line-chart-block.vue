@@ -921,7 +921,9 @@
             // boundaryGap: false,//line-false; bar-true;
             //data: ['20190101', '20190102', '周三', '周四', '周五', '周六', '周日']
             axisLabel: {
-              intervale: 0,
+              interval: '0',
+              //showMinLabel:false,
+              showMaxLabel:false,
               rotate: 0,
               formatter: function (value) {
                 value = bus.computeTimezone(value);
