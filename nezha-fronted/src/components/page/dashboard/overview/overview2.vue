@@ -87,6 +87,8 @@
                       :props="{multiple: true, checkStrictly: true}"
                       clearable
                       collapse-tags
+                      placeholder=""
+                      popper-class="trend-cascader"
                       v-model="trendSearchParam.select"
                     ></el-cascader>
                   </span>
@@ -177,8 +179,7 @@
   import axios from 'axios';
   import bus from '../../../../libs/bus';
   import timePicker from '../../../common/timePicker'
-  var timeout;
-
+  var timeout; //第三行第三个图的dropdown下拉菜单timeout
   export default {
     name: "overview2",
     components:{
@@ -218,7 +219,7 @@
         trafficTagData: [],
         trafficData: [],
 
-        trendSearchParam: {start: '', end: '', dc: [], tag: [], select: []},
+        trendSearchParam: {start: '', end: '', dc: [], tag: [], select: [], watch: true},
 
         alertMessageShow: 'asset', //asset/module
         bottom3DropdownShow: false, //最底部行第三列的下拉选择框
@@ -520,6 +521,7 @@
           rule = "ifHCOutOctets";
         }
         if (this.trendSearchParam.select.length > 0) {
+          console.info("select", this.trendSearchParam.select)
           let dc = [];
           let tags = [];
           this.trendSearchParam.select.forEach(select => {
@@ -540,22 +542,43 @@
               }
               let hasKey = tags.some(tag => {
                 if (tag.key == value) {
-                  //TODO 选择所有这个tag的value
-                  return true;
+                  //选择所有这个tag的value
+                  first: for (let i = 0; i < this.trafficData.length; i++) {
+                    for (let j = 0; j < this.trafficData[i].children.length; j++) {
+                      let originalTag = this.trafficData[i].children[j];
+                      if (originalTag.label == tag.key) {
+                        tag.value = [];
+                        for (let k = 0; k < originalTag.children.length; k++) {
+                          tag.value.push(originalTag.children[k].label);
+                        }
+                        break first;
+                      }
+                    }
+                  }
                 }
                 return false;
               });
               if (!hasKey) {
-                //TODO 选择所有这个tag的value
-                tags.push({key: value, value: []});
+                //选择所有这个tag的value
+                let tag = {key: value, value: []};
+                first: for (let i = 0; i < this.trafficData.length; i++) {
+                  for (let j = 0; j < this.trafficData[i].children.length; j++) {
+                    let originalTag = this.trafficData[i].children[j];
+                    if (originalTag.label == tag.key) {
+                      for (let k = 0; k < originalTag.children.length; k++) {
+                        tag.value.push(originalTag.children[k].label);
+                      }
+                      break first;
+                    }
+                  }
+                }
+                tags.push(tag);
               }
             } else {
               let key = select[1].split("::")[1];
               let hasKey = tags.some(tag => {
                 if (tag.key == key) {
                   tag.value.push(value);
-                  console.info(tag.value)
-                  console.info(tags)
                   return true;
                 }
                 return false;
@@ -565,8 +588,6 @@
               }
             }
           });
-console.info(dc);
-console.info(metric);
           if (dc.length == 1) {
             metric.datacenter = '"' + dc[0] + '"';
           } else if (dc.length > 1) {
@@ -584,11 +605,6 @@ console.info(metric);
         }
         let metricString = "{";
         for (let key in metric) {
-          /*if (key != 'rx' && key != 'tx' && key != 'datacenter') {
-            metricString += key + '=' + metric[key] + ',';
-          } else {
-            metricString += key + "=" + metric[key] + ",";
-          }*/
           metricString += key + "=" + metric[key] + ",";
         }
         metricString = metricString.substring(0, metricString.length-1);
@@ -599,6 +615,7 @@ console.info(metric);
           step: bus.getStep(before, end),
           query: 'sum(irate(' + rule + metricString + '[' + (this.trendSearchParam.timeRange ? this.trendSearchParam.timeRange : "1h") + ']))'
         };
+        console.info("params", params);
         return params;
       },
       queryMapChartGeoJson() {
@@ -827,7 +844,6 @@ console.info(metric);
         return result;
       },
       /*初始化数据 end*/
-
       dateChange(val) {
         this.trendSearchParam.start = val[0];
         this.trendSearchParam.end = val[1];
@@ -1071,9 +1087,137 @@ console.info(metric);
           }
         });
       },
+      trendTool(type, param1, param2, param3) {
+        if (type == 'difference') { //两个数组的差集
+          return trendSelectDifference(param1, param2);
+        } else if (type == 'containArray') {
+          return containArray(param1, param2, param3);
+        } else if (type == 'sameLevelActive') {
+          return sameLevelActive(param1, param2, param3);
+        } else if (type == 'active') {
+          return active(param1, param2, param3);
+        }
+        function trendSelectDifference(short, long) {
+          let difference = [];
+          first: for (let i = 0; i < long.length; i++) {
+            if (i == short.length) {
+              difference.push([long[i], i]);
+              break;
+            }
+            if (short[i].length != long[i].length) {
+              difference.push([long[i], i]);
+              break;
+            }
+            for (let j = 0; j < long[i].length; j++) {
+              if (long[i][j] != short[i][j]) {
+                difference.push([long[i], i]);
+                break first;
+              }
+            }
+          }
+          return difference;
+        }
+        function containArray(item, arr, level) { //return [index, levelIndex];
+          let index = -1, levelIndex = 0;
+          for (let i = 0; i < arr.length; i++) {
+            if (arr[i].length == level) {
+              let flag = 0;
+              for (let j = 0; j < level; j++) {
+                if (arr[i][j] == item[j]) {
+                  flag++;
+                }
+              }
+              if (flag == level) {
+                index = i;
+                break;
+              } else {
+                levelIndex++;
+              }
+            }
+          }
+          return [index, levelIndex];
+        }
+        function sameLevelActive(item, arr, level) {
+          let indexes = [];
+          let index = -1;
+          for (let i = 0; i < arr.length; i++) {
+            if (arr[i].length == level) {
+              let flag = 0;
+              for (let j = 0; j < level; j++) {
+                if (arr[i][j] == item[j]) {
+                  flag++;
+                }
+              }
+              if (flag == level) {
+                index = i;
+                indexes.push(i);
+              }
+            }
+          }
+          return indexes;
+        }
+        function active(level, index, isActive) {
+          let levels = document.querySelectorAll(".trend-cascader .el-cascader-panel .el-cascader-menu");
+          let items = levels[level-1].querySelectorAll("li");
+          if (items && items.length >= index) {
+            if (isActive) {
+              items[index].classList.add("is-active");
+              items[index].querySelector("label").classList.add("is-checked");
+              items[index].querySelector("label>.el-checkbox__input").classList.add("is-checked");
+            } else {
+              items[index].classList.remove("is-active");
+              items[index].querySelector("label").classList.remove("is-checked");
+              items[index].querySelector("label>.el-checkbox__input").classList.remove("is-checked");
+            }
+          }
+        }
+      }
     },
     watch: {
-      "trendSearchParam.select": function() {
+      "trendSearchParam.select": function(n, o) {
+        console.info("n", n);
+        console.info("o", o);
+        let tempN = JSON.parse(JSON.stringify(n));
+        /*if (n.length == o.length || Math.abs(n.length-o.length) > 1) {
+          return false;
+        }*/
+        if (!this.trendSearchParam.watch) {
+          this.trendSearchParam.watch = true;
+          return false;
+        }
+        let isAdd = tempN.length > o.length ? true : false; //true是新增，false是减少
+        let difference = isAdd ? this.trendTool('difference', o, tempN) : this.trendTool('difference', tempN, o);
+        console.info("difference", difference);
+        if (difference[0][0].length == 1) {
+
+        } else if (difference[0][0].length == 2) {
+
+        } else if (difference[0][0].length == 3) {
+          if (isAdd) { //三级选中，二级取消则选中
+            let index = this.trendTool('containArray', [difference[0][0][0], difference[0][0][1]], tempN, 2);
+            console.info("index", index);
+            if (index[0] == -1) {
+              tempN.splice(difference[0][1], 0, [difference[0][0][0], difference[0][0][1]]);
+              let afterIndex = this.trendTool('containArray', [difference[0][0][0], difference[0][0][1]], tempN, 2);
+              console.info("afterIndex", afterIndex);
+              this.trendTool('active', 2, index[1], true);
+            }
+          } else { //三级取消，若同级全取消则二级取消
+            let indexes = this.trendTool('sameLevelActive', difference[0][0], tempN, 3);
+            console.info("indexes", indexes);
+            if (indexes.length == 0) {
+              let level2Index = this.trendTool('containArray', [difference[0][0][0], difference[0][0][1]], tempN, 2);
+              console.info("level2Index", level2Index);
+              if (level2Index[0] > -1) {
+                this.trendTool('active', 2, level2Index[1], false);
+                tempN.splice(difference[0][1], 1);
+                this.trendSearchParam.watch = false;
+              }
+            }
+          }
+        }
+        this.trendSearchParam.watch = false;
+        this.trendSearchParam.select = JSON.parse(JSON.stringify(tempN));
         this.queryAlertTrendData();
       }
     },

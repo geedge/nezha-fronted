@@ -127,6 +127,9 @@
       color: #606266;
       max-width: calc(100% - 25px);
     }
+    .el-cascader__tags {
+      display: none;
+    }
     .el-tag:last-of-type:not(first-of-type) {
       padding-right: 0;
     }
@@ -140,8 +143,16 @@
         height: 100% !important;
         line-height: 1.6rem;
         background-color: #efefef;
+        width: 150px;
+        padding-left: 10px;
         border: none;
       }
+    }
+    .el-input::after {
+      content: "Datacenter & Tag";
+      position: absolute;
+      left: 0;
+      top: 0;
     }
   }
 }
