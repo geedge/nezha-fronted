@@ -301,7 +301,8 @@ const en = {
     port:'Invalid port',
     url:'Invalid URL',
     uSize:'Must be number(1 - 47)',
-    requiredIdc:'dc is required'
+    requiredIdc:'dc is required',
+    key:'Invalid key'
   },
   search: {
     searchTip: 'Enter to search',//'点击或回车执行搜索'

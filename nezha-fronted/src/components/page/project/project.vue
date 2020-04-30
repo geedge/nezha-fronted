@@ -463,12 +463,11 @@
             this.currentProject=project;
             // this.$store.commit('setProject',this.currentProject)
           }
-          this.currentModule={};
-
           // this.$refs.projectLeft.setActiveNames([]);
         }else{
           this.currentProjectTitle=this.currentProject.name+"-"+this.currentProject.id
         }
+        this.currentModule={};
       },
       getAllModuleList:function(){
         this.$get('module', { pageSize: -1, pageNo: 1}).then(response => {
@@ -500,6 +499,7 @@
         this.$refs.projectSearch.clearSearch();
         this.showSubList = false;
         this.selectedEndpoints=[];
+        this.currentProject={};
       },
 
       //弹出endpoint编辑页

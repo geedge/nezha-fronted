@@ -3,16 +3,27 @@
     <div class="right-sub-box sub-box" v-if="editTagsBox.show" :style="'top: ' + editTagsBox.top + 'px; left: ' + editTagsBox.left + 'px;'" >
       <div class="param-box" style="height: calc(100% - 25px)">
         <el-scrollbar style="height: 100%">
-          <div class="param-box-row" v-for="(item, index) in tempTagsObj" :key="index">
+          <!--<div class="param-box-row" v-for="(item, index) in tempTagsObj" :key="index">
             <el-input placeholder="key" class="param-box-row-key input-x-mini-22" v-model="item.key"></el-input>
             <span class="param-box-row-eq">=</span>
             <el-input placeholder="value" class="param-box-row-value input-x-mini-22" v-model="item.value"></el-input>
             <span class="param-box-row-symbol" :id="'remove-param-'+index" @click="removeTags(index)"><i class="nz-icon nz-icon-minus-square"></i></span>
+          </div>-->
+          <el-tag v-for="(item, index) in tempTagsObj" class="sub-box-tags"  size="small" :closable="true" :key="index" @close='delTag(item,index)'>
+            <div >{{item.key}}：{{item.value}}</div>
+          </el-tag>
+          <div class="param-box-row" v-show="showNewTagInput">
+            <el-input placeholder="key" style="width: 63px" ref="tagKeyInput" class="param-box-row-key input-x-mini-22" :class="{'input-error':newTagInputError}" v-model="newTag.key" @keydown.enter.native="confirmInput" @blur="confirmInput"></el-input>
+            <span class="param-box-row-eq">=</span>
+            <el-input placeholder="value" style="width: 63px" class="param-box-row-value input-x-mini-22" v-model="newTag.value" @keydown.enter.native="confirmInput" @blur="confirmInput"></el-input>
+          </div>
+          <div v-if="showNewTagInput&&newTagInputError" style="text-align: left;padding-left: 10px">
+            <span  style="color: #F56C6C;font-size: 12px;">{{$t('validate.key')}}</span>
           </div>
         </el-scrollbar>
       </div>
       <div class="add-btn">
-        <el-button @click="addTags" id="add-param" style="height: 18px; line-height: 18px; padding-top: 0; padding-bottom: 0;" size="mini"><i class="el-icon-plus"></i></el-button>
+<!--        <el-button @click="addTags" id="add-param" style="height: 18px; line-height: 18px; padding-top: 0; padding-bottom: 0;" size="mini"><i class="el-icon-plus"></i></el-button>-->
         <el-button @click="showEditTagsBox(false)"  style="height: 18px; line-height: 18px; padding-top: 0; padding-bottom: 0;" size="mini"><i class="el-icon-check"></i></el-button>
       </div>
     </div>
@@ -28,6 +39,9 @@
         tempTagsObj:[],
         rowIndex:0,
         curConfigs:null,
+        newTag:{key:'',value:''},
+        showNewTagInput:true,
+        newTagInputError:false,
       }
     },
     methods:{
@@ -41,7 +55,7 @@
           this.tempTagsObj=[];
           let obj=null;
           try{
-            obj=JSON.parse(configs[index]['tags'])
+            obj=configs[index]['tags']
           }catch (e) {
 
           }
@@ -54,40 +68,89 @@
           if (!this.editTagsBox.show) {
             return;
           }
-          for (let i = 0; i < this.tempTagsObj.length; i++) {
-            if (!this.tempTagsObj[i].key || !this.tempTagsObj[i].value) {
-              this.tempTagsObj.splice(i, 1);
-              i--;
+          this.confirmInput();
+          this.showNewTagInput=true;
+          let tempObj={};
+          for(let i=0;i<this.tempTagsObj.length;i++){
+            let obj=this.tempTagsObj[i];
+            if(obj.key && obj.value){
+              tempObj[obj.key]=obj.value;
             }
           }
-
-          let tagsJson=this.tagsToJson(this.tempTagsObj);
-          this.curConfigs[this.rowIndex]['tags']=tagsJson;
+          this.curConfigs[this.rowIndex]['tags']=Object.assign({},tempObj)
         }
         this.editTagsBox.show = show;
       },
-      tagsToJson(tags) {
-        let tempTags = {};
-        for (let i = 0; i < tags.length; i++) {
-          eval('tempTags["' + tags[i].key + '"]="' + tags[i].value + '"');
+      validateInput:function(){
+        if(this.newTag.key == ''){
+           return false;
         }
-        let jsonString = JSON.stringify(tempTags);
-        if (jsonString == '{}') {
-          return "";
-        } else {
-          return jsonString;
+        if(!/[a-zA-Z_:][a-zA-Z0-9_:]*/.test(this.newTag.key)){
+          this.newTagInputError=true;
+          return false;
         }
+        if(this.newTag.value == ''){
+          return false;
+        }
+        this.newTagInputError=false;
+        return true;
+      },
+      confirmInput:function(){
+        if(this.validateInput()){
+          this.tempTagsObj.push(Object.assign({},this.newTag));
+          this.showNewTagInput=true;
+          this.newTag={key:'',value:''};
+          this.$nextTick(()=>{
+            this.$refs.tagKeyInput.focus();
+          })
+        }
+      },
+      editTag:function(tag,index){
+        if(this.showNewTagInput == true){//已经有编辑状态的tag，先保存
+          this.confirmInput();
+        }
+        this.tempTagsObj.splice(index,1);
+        this.newTag=Object.assign({},tag)
+        this.showNewTagInput=true;
+        this.$nextTick(()=>{
+          this.$refs.tagKeyInput.focus();
+        })
       },
       addTags:function(){
-        this.tempTagsObj.push({key:'',value:''})
+        if(this.showNewTagInput == true){//已经有编辑状态的tag，先保存
+          this.confirmInput();
+        }
+        this.newTag={key:'',value:''}
+        this.showNewTagInput=true;
+        this.$nextTick(()=>{
+          this.$refs.tagKeyInput.focus();
+        })
       },
-      removeTags:function(index){
+      delTag:function(tag,index){
         this.tempTagsObj.splice(index,1)
+      },
+      clearNewTag:function(){
+        this.newTag={key:'',value:''}
+        this.showNewTagInput=true;
       }
     },
   }
 </script>
-
+<style>
+  .sub-box-tags{
+    position: relative;
+    margin-bottom: 5px;
+    display: block;
+    width: 150px;
+    margin-left: 10px;
+    text-align: left;
+  }
+  .sub-box-tags .el-tag__close{
+    position: absolute;
+    top: 5px;
+    right: 2px;
+  }
+</style>
 <style scoped>
   .right-sub-box {
     width: 170px;
@@ -95,6 +158,13 @@
     position: fixed;
     z-index: 2;
     padding: 0;
+  }
+  .sub-box{
+    padding:5px;
+    text-align: center;
+  }
+  .sub-box .param-box-row{
+    padding:0 10px 0 10px !important;
   }
   .sub-box .add-btn{
     width: 100%;

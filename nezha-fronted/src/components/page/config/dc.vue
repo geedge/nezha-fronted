@@ -308,8 +308,8 @@
       configTraffic: function (u) {
         let tempDc = JSON.parse(JSON.stringify(u));
         this.currentDc = tempDc;
-        console.log(this.currentDc)
         setTimeout(()=>{
+
           this.$refs.trafficBox.show(true, true);
         },200)
       },

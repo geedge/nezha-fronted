@@ -57,7 +57,7 @@
         assetList:[],
         rightBox: {
           show: false,
-          title: '',
+          title: this.$t('config.dc.traffic.title'),
           isCreate: false,
           isEdit:false
         },
@@ -66,7 +66,18 @@
           idcId:'',
           setting:[
             {
-              assetId:null,
+              host:'',
+              port:161,
+              community:'public',
+              version:2,
+              auth:{
+                username:'',
+                securityLevel:'',
+                securityLevel:'',
+                authProtocol:'',
+                privProtocol:'',
+                privPassword:'',
+              },
               configs:[
                 {
                   direction:[],
@@ -89,9 +100,21 @@
       addAssetSetting:function(){
         let valid=this.validateTabs();
         if(valid){
+
           this.uuids.push(getUUID());
           this.traffic.setting.push({
-            assetId:null,
+            host:'',
+            port:161,
+            community:'public',
+            version:2,
+            auth:{
+              username:'',
+              securityLevel:'',
+              securityLevel:'',
+              authProtocol:'',
+              privProtocol:'',
+              privPassword:'',
+            },
             configs:[
               {
                 direction:[],
@@ -99,7 +122,6 @@
                 ifdescr:' ',
                 tags:"",
                 edit:true,
-                inputError:false,
               }
             ]
           })
@@ -107,7 +129,18 @@
       },
       getEmptyTraffic:function(){
         let obj={
-          assetId:null,
+          host:'',
+          port:161,
+          community:'public',
+          version:2,
+          auth:{
+            username:'',
+            securityLevel:'',
+            securityLevel:'',
+            authProtocol:'',
+            privProtocol:'',
+            privPassword:'',
+          },
           configs:[
             {
               direction:[],
@@ -166,7 +199,7 @@
                 direction:config.direction.toString(),
                 ifindex:config.ifindex,
                 ifdescr:config.ifdescr,
-                tags:config.tags&&config.tags!=''?JSON.parse(config.tags):{},
+                tags:config.tags,
               }
               result.setting.push(settingItem);
             })
@@ -201,12 +234,12 @@
               if(list.length>0){
                 let map=new Map();
                 list.forEach(item=>{
-                  let arr=map.get(item.asset.id);
+                  let arr=map.get(item.host);
                   if(arr){
                     arr.push(item)
-                    map.set(item.asset.id,arr);
+                    map.set(item.host,arr);
                   }else{
-                    map.set(item.asset.id,[item])
+                    map.set(item.host,[item])
                   }
                 })
                 this.traffic={
@@ -215,17 +248,21 @@
                 }
                 let keys=map.keys();
                 for(let key of keys){//settings 为同一asset下的设置集合
+                  let configs=map.get(key);
                   let settingItem={
-                    assetId:key,
+                    host:configs[0].host,
+                    port:configs[0].port,
+                    community:configs[0].community,
+                    version:configs[0].version,
+                    auth:configs[0].auth,
                     configs:[],
                   }
-                  let configs=map.get(key);
                   configs.forEach(item=>{
                     let config={
                       direction:item.direction&&item.direction!=''?item.direction.split(','):[],
                       ifindex:item.ifindex,
                       ifdescr:item.ifdescr,
-                      tags:JSON.stringify(item.tags),
+                      tags:item.tags,
                       edit:false,
                     }
                     settingItem.configs.push(config);
@@ -237,7 +274,18 @@
                   idcId:'',
                   setting:[
                     {
-                      assetId:null,
+                      host:'',
+                      port:161,
+                      community:'public',
+                      version:2,
+                      auth:{
+                        username:'',
+                        securityLevel:'',
+                        securityLevel:'',
+                        authProtocol:'',
+                        privProtocol:'',
+                        privPassword:'',
+                      },
                       configs:[
                         {
                           direction:[],
