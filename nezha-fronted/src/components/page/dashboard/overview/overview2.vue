@@ -84,7 +84,7 @@
                   <span class="content-col-title-tool">
                     <el-cascader
                       :options="trafficData"
-                      :props="{multiple: true, checkStrictly: true}"
+                      :props="{multiple: true}"
                       clearable
                       collapse-tags
                       placeholder=""
@@ -521,7 +521,7 @@
           rule = "ifHCOutOctets";
         }
         if (this.trendSearchParam.select.length > 0) {
-          console.info("select", this.trendSearchParam.select)
+          console.info("select", this.trendSearchParam.select);
           let dc = [];
           let tags = [];
           this.trendSearchParam.select.forEach(select => {
@@ -531,7 +531,7 @@
             if (type == "$dc$") {
               dc.push(value);
             } else if (type == "$key$") {
-              let hasDc = dc.some(d => {
+              /*let hasDc = dc.some(d => {
                 if (d == select[0].split("::")[1]) {
                   return true;
                 }
@@ -573,12 +573,21 @@
                   }
                 }
                 tags.push(tag);
-              }
+              }*/
             } else {
+              let dcIndex = dc.indexOf(select[0].split("::")[1]);
+              if (dcIndex == -1) {
+                dc.push(select[0].split("::")[1]);
+              }
               let key = select[1].split("::")[1];
               let hasKey = tags.some(tag => {
                 if (tag.key == key) {
-                  tag.value.push(value);
+                  let hasValue = tag.value.some(v => {
+                    return v == value;
+                  });
+                  if (!hasValue) {
+                    tag.value.push(value);
+                  }
                   return true;
                 }
                 return false;
@@ -591,7 +600,7 @@
           if (dc.length == 1) {
             metric.datacenter = '"' + dc[0] + '"';
           } else if (dc.length > 1) {
-            metric.datacenter = '~"' + dc.join("|") + '"'
+            metric.datacenter = '~"' + dc.join("|") + '"';
           }
           tags.forEach(item => {
             if (item.value.length == 1) {
@@ -779,26 +788,7 @@
         this.$get('idc/trafficSetting', {pageSize: -1}).then(response => {
           if (response.code === 200) {
             this.trafficData = this.convertTrafficData(response.data.list);
-            /*this.trafficTagData = [];
-            response.data.list.forEach(item => {
-              if (!(this.trafficDatacenterData.some(idc => {
-                return item.idc.id == idc.id;
-              }))) {
-                this.trafficDatacenterData.push(item.idc);
-              }
-            });
-            response.data.list.forEach(item => {
-              if (item.tags) {
-                for (let key in item.tags) {
-                  //过滤重复的tag（key、value同时相等）
-                  if (!(this.trafficTagData.some(tag => {
-                    return tag.name == key && tag.value == item.tags[key];
-                  }))) {
-                    this.trafficTagData.push({name: key, value: item.tags[key]});
-                  }
-                }
-              }
-            });*/
+            console.info(this.trafficData)
           }
         });
       },
@@ -813,7 +803,7 @@
             return false;
           });
           if (!hasDc) {
-            let dc = {label: item.idc.name, value: "$dc$::" + item.idc.name, children: []};
+            let dc = {label: item.idc.name, value: "$dc$::" + item.idc.name, children: [], level: 1};
             handleTag(dc, item.tags);
             result.push(dc);
           }
@@ -828,14 +818,14 @@
                     return value.label == tagData[key];
                   });
                   if (!hasValue) {
-                    tag.children.push({label: tagData[key], value: key + "::" + tagData[key]});
+                    tag.children.push({label: tagData[key], value: key + "::" + tagData[key], level: 3});
                   }
                   return true;
                 }
                 return false;
               });
               if (!hasKey) {
-                tags.push({label: key, value: "$key$::" + key, children: [{label: tagData[key], value: key + "::" + tagData[key]}]});
+                tags.push({label: key, value: "$key$::" + key, children: [{label: tagData[key], value: key + "::" + tagData[key]}], level: 2});
               }
             }
             dc.children = tags;
@@ -1094,6 +1084,8 @@
           return containArray(param1, param2, param3);
         } else if (type == 'sameLevelActive') {
           return sameLevelActive(param1, param2, param3);
+        } else if (type == 'sameLevel') {
+          return sameLevel(param1, param2, param3);
         } else if (type == 'active') {
           return active(param1, param2, param3);
         }
@@ -1102,6 +1094,7 @@
           first: for (let i = 0; i < long.length; i++) {
             if (i == short.length) {
               difference.push([long[i], i]);
+              console.info("dd", difference)
               break;
             }
             if (short[i].length != long[i].length) {
@@ -1137,37 +1130,56 @@
           }
           return [index, levelIndex];
         }
-        function sameLevelActive(item, arr, level) {
+        function sameLevelActive(item, arr, level) { //已选中的同级项的index
           let indexes = [];
-          let index = -1;
           for (let i = 0; i < arr.length; i++) {
             if (arr[i].length == level) {
-              let flag = 0;
-              for (let j = 0; j < level; j++) {
-                if (arr[i][j] == item[j]) {
-                  flag++;
+              let flag = true;
+              for (let j = 0; j < level-1; j++) {
+                if (arr[i][j] != item[j]) {
+                  flag = false;
                 }
               }
-              if (flag == level) {
-                index = i;
+              if (flag) {
                 indexes.push(i);
               }
             }
           }
           return indexes;
         }
+        function sameLevel(item, arr, level) { //所有3级的同级项data（从原始数据trafficData查）
+          let result = [];
+          for (let i = 0; i < arr.length; i++) {
+            if (arr[i].value == item[0] && arr[i].children) {
+              for (let j = 0; j < arr[i].children.length; j++) {
+                if (arr[i].children[j].value == item[1]) {
+                  let temp = arr[i].children[j].children;
+                  if (temp) {
+                    for (let k = 0; k < temp.length; k++) {
+                      result.push([item[0], item[1], temp[k].value]);
+                    }
+                  }
+                  return result;
+                }
+              }
+            }
+          }
+          return result;
+        }
         function active(level, index, isActive) {
           let levels = document.querySelectorAll(".trend-cascader .el-cascader-panel .el-cascader-menu");
-          let items = levels[level-1].querySelectorAll("li");
-          if (items && items.length >= index) {
-            if (isActive) {
-              items[index].classList.add("is-active");
-              items[index].querySelector("label").classList.add("is-checked");
-              items[index].querySelector("label>.el-checkbox__input").classList.add("is-checked");
-            } else {
-              items[index].classList.remove("is-active");
-              items[index].querySelector("label").classList.remove("is-checked");
-              items[index].querySelector("label>.el-checkbox__input").classList.remove("is-checked");
+          if (levels.length >= level) {
+            let items = levels[level-1].querySelectorAll("li");
+            if (items.length >= index) {
+              if (isActive) {
+                items[index].classList.add("is-active");
+                items[index].querySelector("label").classList.add("is-checked");
+                items[index].querySelector("label>.el-checkbox__input").classList.add("is-checked");
+              } else {
+                items[index].classList.remove("is-active");
+                items[index].querySelector("label").classList.remove("is-checked");
+                items[index].querySelector("label>.el-checkbox__input").classList.remove("is-checked");
+              }
             }
           }
         }
@@ -1177,11 +1189,9 @@
       "trendSearchParam.select": function(n, o) {
         console.info("n", n);
         console.info("o", o);
-        let tempN = JSON.parse(JSON.stringify(n));
-        /*if (n.length == o.length || Math.abs(n.length-o.length) > 1) {
-          return false;
-        }*/
-        if (!this.trendSearchParam.watch) {
+        this.queryAlertTrendData();
+        /*let tempN = JSON.parse(JSON.stringify(n));
+        if (n.length == o.length || !this.trendSearchParam.watch) {
           this.trendSearchParam.watch = true;
           return false;
         }
@@ -1191,34 +1201,56 @@
         if (difference[0][0].length == 1) {
 
         } else if (difference[0][0].length == 2) {
-
+          if (isAdd) { //二级选中，三级全取消则全选中
+            let level3 = this.trendTool('sameLevel', difference[0][0], this.trafficData, 3);
+            if (level3.length > 0) {
+              let level2Index = this.trendTool('containArray', difference[0][0], tempN, 2); //二级的index
+              if (level2Index[0] != -1) {
+                for (let i = level3.length-1; i >= 0; i--) {
+                  tempN.splice(difference[0][1]+1, 0, level3[i]);
+                }
+                this.trendSearchParam.watch = false;
+              }
+            }
+          } else { //二级取消，三级有选中则全取消，无选中不变
+            let temp = JSON.parse(JSON.stringify(difference[0][0]));
+            temp.push("temp");
+            let indexes = this.trendTool('sameLevelActive', temp, tempN, 3);
+            //console.info("indexes", indexes);
+            if (indexes.length > 0) {
+              for (let i = indexes.length-1; i >= 0; i--) {
+                tempN.splice(indexes[i], 1);
+              }
+              this.trendSearchParam.watch = false;
+            }
+          }
         } else if (difference[0][0].length == 3) {
           if (isAdd) { //三级选中，二级取消则选中
-            let index = this.trendTool('containArray', [difference[0][0][0], difference[0][0][1]], tempN, 2);
+            let index = this.trendTool('containArray', [difference[0][0][0], difference[0][0][1]], tempN, 2); //二级的index
             console.info("index", index);
             if (index[0] == -1) {
-              tempN.splice(difference[0][1], 0, [difference[0][0][0], difference[0][0][1]]);
-              let afterIndex = this.trendTool('containArray', [difference[0][0][0], difference[0][0][1]], tempN, 2);
-              console.info("afterIndex", afterIndex);
-              this.trendTool('active', 2, index[1], true);
+              tempN.splice(difference[0][1], 0, [difference[0][0][0], difference[0][0][1]]); //插入二级
+              //let afterIndex = this.trendTool('containArray', [difference[0][0][0], difference[0][0][1]], tempN, 2); //插入后的index
+              //console.info("afterIndex", afterIndex);
+              //this.trendTool('active', 2, index[1], true); //dom处理
+              this.trendSearchParam.watch = false;
             }
           } else { //三级取消，若同级全取消则二级取消
             let indexes = this.trendTool('sameLevelActive', difference[0][0], tempN, 3);
-            console.info("indexes", indexes);
+            //console.info("indexes", indexes);
             if (indexes.length == 0) {
               let level2Index = this.trendTool('containArray', [difference[0][0][0], difference[0][0][1]], tempN, 2);
-              console.info("level2Index", level2Index);
+              //console.info("level2Index", level2Index);
               if (level2Index[0] > -1) {
                 this.trendTool('active', 2, level2Index[1], false);
-                tempN.splice(difference[0][1], 1);
+                tempN.splice(level2Index[0], 1);
                 this.trendSearchParam.watch = false;
               }
             }
           }
         }
-        this.trendSearchParam.watch = false;
         this.trendSearchParam.select = JSON.parse(JSON.stringify(tempN));
-        this.queryAlertTrendData();
+        this.queryAlertTrendData();*/
       }
     },
     mounted() {
