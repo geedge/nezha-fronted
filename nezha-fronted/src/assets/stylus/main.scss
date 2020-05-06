@@ -785,8 +785,11 @@ li{
   position: absolute;
   left: -3px;
 }
-.alert-message-tag {
+.alert-message-tag, .alert-rule-tag {
   margin: 3px;
+}
+.alert-rule-tag {
+  cursor: default;
 }
 /* end--内容*/
 

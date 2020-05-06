@@ -521,7 +521,7 @@ const en = {
       //列表表头
       account: 'Account',//"用户"
       language: 'Language',//"语言"
-      receiver: 'Account group',//"用户组"
+      receiver: 'Receiver',//"用户组"
       createTime: 'Create time',//"创建时间"
       enable: 'Available',//"可用"
       option: 'Operation',//"操作"
@@ -723,7 +723,7 @@ const en = {
     },
     config: {
       name: 'Name',//"名称"
-      receiver: 'User group',//"用户组"
+      receiver: 'Receiver',//"用户组"
       expr: 'Expression',//"表达式"
       for: "For (s)",//For (s)
       link: 'Link',//'关联'

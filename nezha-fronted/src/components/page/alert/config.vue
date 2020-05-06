@@ -63,18 +63,11 @@
                 <span style="padding-left: 18px;" v-if="scope.row[item.prop] == 'medium'">{{severityData[0].value}}</span>
                 <span v-if="scope.row[item.prop] == 'low'"><i class="el-icon-arrow-down"></i>&nbsp;{{severityData[2].value}}</span>
               </span>
-              <!--<span v-else-if="item.prop == 'type'">
-                <template v-for="type in typeData" v-if="type.key == scope.row[item.prop]">{{type.value}}</template>
-              </span>
-              <template v-else-if="item.prop == 'linkObject'">
-                <span v-if="(scope.row['type'] == 1 || scope.row['type'] == 2) && scope.row[item.prop]" class="link too-long-split"
-                      @click="viewAlertType(scope.row['type'],scope.row[item.prop])" style="max-width: 125px;">{{scope.row[item.prop].name}}</span>
-                <span v-else-if="scope.row['type'] == 3 && scope.row[item.prop]" class="link"
-                      @click="viewAlertType(scope.row['type'],scope.row[item.prop].id)">{{scope.row[item.prop].host}}</span>
-                <span v-else>-</span>
-              </template>-->
               <template v-else-if="item.prop == 'alertNum'">
                 <span class="link" @click="queryMessage(scope.row)">{{scope.row.alertNum + ' ' + $t('overall.active')}}</span>
+              </template>
+              <template v-else-if="item.prop == 'receivers'">
+                <el-tag effect="dark" v-if="user.userName" :key="index" size="mini" v-for="(user, index) in scope.row[item.prop]" class="alert-rule-tag">{{user.userName}}</el-tag>
               </template>
               <span v-else-if="scope.row[item.prop]">{{scope.row[item.prop]}}</span>
               <template v-else>-</template>
@@ -185,7 +178,7 @@
           severity: '',
           summary: '',
           description: '',
-          receiver: '',
+          receivers: '',
         },
         tablelable: [],
         dropCol: [],
@@ -263,11 +256,11 @@
             prop: 'alertNum',
             show: true,
             width: 90
-          }, /*{
+          }, {
             label: this.$t('alert.config.receiver'),
-            prop: 'receiver',
+            prop: 'receivers',
             show: true,
-          }, */{
+          }, {
             label: this.$t('alert.config.option'),
             prop: 'option',
             show: true,
@@ -379,14 +372,6 @@
           }
         })
       },
-      updateReceiverName: function (item) {
-        //TODO 请求接口改名
-        var code = 200;
-        //this.$set(item, 'errorMessage', 'err');
-        item.errorMessage = '';
-        item.oldName = item.name;
-        return code;
-      },
       cleanAlertRule: function () {
         this.alertRule = {
           id: '',
@@ -397,7 +382,7 @@
           severity: '',
           summary: '',
           description: '',
-          receiver: '',
+          receivers: '',
         }
       },
       jumpTo(data, id) {

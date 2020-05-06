@@ -456,7 +456,7 @@
           if(response.status == 'success'){
             if(response.data.result){
               let series={
-                name: 'ifHCInOctets',
+                name: 'ifInOctets',
                 symbol:'none',  //去掉点
                 smooth:true,  //曲线变平滑
                 data: [],
@@ -479,7 +479,7 @@
           if(response.status == 'success'){
             if(response.data.result){
               let series={
-                name: 'ifHCOutOctets',
+                name: 'ifOutOctets',
                 symbol:'none',  //去掉点
                 smooth:true,  //曲线变平滑
                 data: [],
@@ -519,10 +519,10 @@
         let rule;
         if (t == 'rx') {
           metric = {rx: '"1"'};
-          rule = "ifHCInOctets";
+          rule = "ifInOctets";
         } else if (t == 'tx') {
           metric = {tx: '"1"'};
-          rule = "ifHCOutOctets";
+          rule = "ifOutOctets";
         }
         if (this.trendSearchParam.select.length > 0) {
           //console.info("select", this.trendSearchParam.select);
