@@ -1395,10 +1395,10 @@ li{
 .nz-submenu .el-menu--popup .el-menu-item .menu-item-active{
   color:$global-text-color-active !important;
 }
-.el-icon-setting:before {
-  content: "\E6CA";
-  color: #BA3939;
-}
+//.el-icon-setting:before {
+//  content: "\E6CA";
+//  color: #BA3939;
+//}
 
 .el-dropdown-menu__item:focus,
 .el-dropdown-menu__item:not(.is-disabled):hover,

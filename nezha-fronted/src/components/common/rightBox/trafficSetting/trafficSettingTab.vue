@@ -15,6 +15,7 @@
           :trigger-on-focus="false"
           :highlight-first-item="true"
           @input="hostInputChange"
+          @blur="validateHostEmpty"
         ></el-autocomplete>
         <el-popover trigger="click" placement="bottom" @show="popShow" @hide="popHide" popper-class="no-style-class">
           <div class="mib-browser-ad-search">
@@ -111,6 +112,11 @@
           </button>
         </el-popover>
         <div class="right-box-row-btn" @click="delSelf"><i class="el-icon-minus"></i></div>
+        <div>
+          <span style="color:#F56C6C;font-size: 12px;" v-if="hostRepeat">{{$t('validate.repeat')}}</span>
+          <span style="color:#F56C6C;font-size: 12px;" v-if="hostInvalid">{{$t('validate.host')}}</span>
+          <span style="color:#F56C6C;font-size: 12px;" v-if="hostEmpty">{{$t('validate.required')}}</span>
+        </div>
       </el-form-item>
       <div class="endpoints-box-endpoints">
         <el-table :data="assetSetting.configs"
@@ -122,6 +128,7 @@
                   @row-dblclick="changeRowEditState"
                   @row-click="validateRows"
                   class="taffic-setting-tab"
+                  v-if="refreshTab"
                   style="width: 100%;">
           <el-table-column
             label-class-name="endpoints-box-endpoints-title"
@@ -139,22 +146,34 @@
             </template>
             <template slot-scope="scope" :column="item">
               <template v-if="item.prop == 'tags'">
-                <div style="height: 50px;" @click="showEditTagsBox(true,scope.$index,scope.row,$event)">
-                  <el-scrollbar style="height: 100%;">
+                <div class="tab-tags" @click="showEditTagsBox(true,scope.$index,scope.row,$event)">
+                  <!--<el-scrollbar style="height: 100%;">
                     <el-tag
                       v-for="(value, key, index) in scope.row[item.prop]"
                       class="tab-tags"
                       size="mini"
-                      :closable="scope.row.edit==true"
                       :key="key"
                       style="display: block;margin-bottom:5px;" >
-                      <!--                  <div class="tab-tags-item">-->
-                      <!--                    <div class="tag-item-key">{{key}}：</div><div class="tag-item-value">{{value}}</div>-->
+                      &lt;!&ndash;                  <div class="tab-tags-item">&ndash;&gt;
+                      &lt;!&ndash;                    <div class="tag-item-key">{{key}}：</div><div class="tag-item-value">{{value}}</div>&ndash;&gt;
 
-                      <!--                  </div>-->
+                      &lt;!&ndash;                  </div>&ndash;&gt;
                       {{key}}：{{value}}
                     </el-tag>
-                  </el-scrollbar>
+                  </el-scrollbar>-->
+                  <el-tooltip placement="top" effect="light" popper-class="tags-pop transparent-pop">
+                    <div slot="content">
+                      <div class="tab-tags-item" v-for="(value, key, index) in scope.row[item.prop]">
+                        <div class="tag-item-key">{{key}}</div>
+                        <div class="tag-item-value">{{value}}</div>
+                      </div>
+                    </div>
+                    <div class="tab-tags-item" v-if="Object.keys(scope.row[item.prop]).length>0">
+                      <div class="tag-item-key">{{Object.keys(scope.row[item.prop])[0]}}</div>
+                      <div class="tag-item-value">{{scope.row[item.prop][Object.keys(scope.row[item.prop])[0]]}}</div>
+                      <div class="tag-item-text" v-if="Object.keys(scope.row[item.prop]).length>1">+{{Object.keys(scope.row[item.prop]).length-1}}</div>
+                    </div>
+                  </el-tooltip>
                 </div>
               </template>
               <template v-if="item.prop == 'ifindex'">
@@ -177,10 +196,11 @@
                 </template>
               </template>
               <template v-if="item.prop == 'ifdescr'">
-                <span v-if="scope.row.edit==false">{{scope.row[item.prop]}}</span>
+                <!--<span v-if="scope.row.edit==false">{{scope.row[item.prop]}}</span>
                 <template v-else>
                   <el-input v-model="scope.row[item.prop]" size="small" clearable></el-input>
-                </template>
+                </template>-->
+                <span>{{scope.row[item.prop]}}</span>
               </template>
               <template v-if="item.prop == 'direction'">
                 <template v-if="scope.row.edit==false">
@@ -200,7 +220,7 @@
           </el-table-column>
           <el-table-column label="" :width="30">
             <template slot-scope="scope">
-              <el-button @click.stop="delTabRow(scope.$index,scope.row.ifindex)" :disabled="assetSetting.host == null" style="width: 18px;height: 18px; line-height: 18px; padding:0;" size="mini"><i class="el-icon-minus"></i></el-button>
+              <el-button @click.stop="delTabRow(scope.$index,scope.row)" :disabled="assetSetting.host == null" style="width: 18px;height: 18px; line-height: 18px; padding:0;" size="mini"><i class="el-icon-minus"></i></el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -208,7 +228,7 @@
           <el-button @click="addTabRow"  style="height: 18px; line-height: 18px; padding-top: 0; padding-bottom: 0;" size="mini"><i class="el-icon-plus"></i></el-button>
         </div>
       </div>
-      <sub-box ref="subBox"></sub-box>
+      <sub-box ref="subBox" @after="refreshTabFunc"></sub-box>
       <loading ref="loading"></loading>
     </div>
 </template>
@@ -235,6 +255,8 @@
         assetValidate:false,
         hostRepeat:false,
         hostInvalid:false,
+        hostEmpty:false,
+        refreshTab:true,
         tableLabels:[
           {
             label:'ifIndex',
@@ -251,14 +273,14 @@
             errRows:[],
           },
           {
-            label:'direction',
+            label:this.$t('config.dc.traffic.direction'),
             prop:'direction',
             width:100,
             required:true,
             errRows:[],
           },
           {
-            label:'tags',
+            label:this.$t('config.dc.traffic.tags'),
             prop:'tags',
             required:false,
             errRows:[],
@@ -282,6 +304,12 @@
     methods:{
       clearAssetInput:function(){
         this.resetComponet();
+      },
+      refreshTabFunc:function(){
+        this.refreshTab=false;
+        this.$nextTick(()=>{
+          this.refreshTab=true;
+        });
       },
       resetComponet:function(){
         this.ifIndexList=[];
@@ -401,15 +429,15 @@
       },
       ifIndexInputChange:function(ifindex,row,index){
         if(this.ifIndexList && this.ifIndexList.length>0){
-          let temp=this.ifIndexList.find(item=>{
-            return item.value == ifindex;
-          })
-          if(!temp){
-            this.ifIndexError=true;
-            return ;
-          }else{
-            this.ifIndexError=false;
-          }
+          // let temp=this.ifIndexList.find(item=>{
+          //   return item.value == ifindex;
+          // })
+          // if(!temp){
+          //   this.ifIndexError=true;
+          //   return ;
+          // }else{
+          //   this.ifIndexError=false;
+          // }
           this.ifIndexChange(ifindex,row)
           let tmp=this.assetSetting.configs.find((item,i)=>{
             return i != index && item.ifindex == ifindex;
@@ -429,12 +457,20 @@
           clearTimeout(this.hostTimer);
         }
         this.hostTimer=setTimeout(()=>{
-          this.queryInterfaceInfos(true);
           this.validateHostRepeat(value);
           this.validateHostValid(value);
-        },1000)
+          if(!this.hostEmpty&&!this.hostRepeat&&!this.hostInvalid){
+            this.queryInterfaceInfos(true);
+          }
+        },500)
+      },
+      validateHostEmpty:function(){
+        this.hostEmpty=!this.assetSetting.host||this.assetSetting.host == '';
       },
       validateHostValid:function(host){
+        if(host==''){
+          return false
+        }
         const hostReg = /^(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])(\:\d{0,5})?$/
         if (hostReg.test(host)) {
           this.hostInvalid=false;
@@ -478,6 +514,18 @@
             if(required &&(!value || (typeof value =='string' && value == '')||(value instanceof Array && value.length<1))){
               validateFlag=false
               label.errRows.push(index) //保存有错误的行的index，通过行列唯一定位有错误的输入框
+            }else{
+              if(label.prop == 'ifindex'){
+                if(this.ifIndexList && this.ifIndexList.length>0) {
+                  let temp = this.ifIndexList.find(item => {
+                    return item.value == value;
+                  })
+                  if(!temp){
+                    validateFlag=false
+                    label.errRows.push(index) //保存有错误的行的index，通过行列唯一定位有错误的输入框
+                  }
+                }
+              }
             }
           })
         })
@@ -507,15 +555,18 @@
             direction:[],
             ifindex:null,
             ifdescr:' ',
-            tags:"",
+            tags:{},
             edit:true,
           })
         }
       },
-      delTabRow:function(index,ifindex){
+      delTabRow:function(index,row){
         if(this.assetSetting.configs.length>1){
-          this.assetSetting.configs.splice(index,1)
-          this.changeIfIndexOccupyState(ifindex,false)
+          this.assetSetting.configs.splice(index,1);
+          if(row.edit == true && this.ifIndexError == true){
+            this.ifIndexError=false;
+          }
+          this.changeIfIndexOccupyState(row.ifindex,false)
         }
       },
       resetIfIndexOccupyState:function(){
@@ -578,17 +629,36 @@
 </style>
 <style lang="scss">
   .tab-tags{
-    /*border: 0px;*/
-    /*padding: 0;*/
-    /*display: inline-block;*/
-    /*border-radius: 2px;*/
-    /*width: 100px;*/
+    width: 100%;
+    height: 22px;
   }
-  .tab-tags .tab-tags-item{
+  .tags-pop{
+    width: 110px;
+    text-align: center;
+  }
+  .tab-tags-item{
     display: flex;
+    margin-bottom: 5px;
+    height: 20px;
+    line-height: 20px;
   }
   .tab-tags-item .tag-item-key{
-    /*background-color: #E6E4E4;*/
+    border:1px solid #E6E4E4;
+    border-top-left-radius: 3px;
+    border-bottom-left-radius: 3px;
+    background-color: #E6E4E4;
+    width: 52px;
+  }
+  .tab-tags-item .tag-item-value{
+    border:1px solid #E6E4E4;
+    border-top-right-radius: 3px;
+    border-bottom-right-radius: 3px;
+    background-color: #FFF;
+    width: 52px;
+  }
+  .tab-tags-item .tag-item-text{
+    background-color: #FFF;
+    width: 20px;
   }
   .taffic-setting-tab .el-table__row:hover{
     .input__inner{

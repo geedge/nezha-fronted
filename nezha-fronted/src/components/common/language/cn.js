@@ -575,7 +575,13 @@ const cn = {
       cabinetNum: "机柜数量",
       assets: "资产",
       remark: "备注",
-      cabinets: "机柜"
+      cabinets: "机柜",
+      traffic:{
+        title:'流量配置',
+        add:'添加',
+        direction:'方向',
+        tags:'标签'
+      }
     },
     model: {
       model: "资产模型",
