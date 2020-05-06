@@ -96,6 +96,7 @@
               </div>
               <div class="content-col-content">
                 <chart-box chart-type="overviewLine" ref="chartbox" :show-toolbox="false" name="trend"></chart-box>
+                <div class="no-data-tip" v-if="(!chartSeries[0] && !chartSeries[1]) || (chartSeries[0].data.length == 0 && chartSeries[1] && chartSeries[1].data.length == 0)">N/A</div>
               </div>
             </div>
             <div class="content-col-box">
@@ -113,6 +114,7 @@
               </div>
               <div class="content-col-content">
                 <chart-box chart-type="pie" ref="assetTypePie" :show-toolbox="false" name="assetTypePie" :tooltip-formatter="assetTypeFormatter" ></chart-box>
+                <div class="no-data-tip" v-if="assetData.typeStat && assetData.typeStat.length == 0">N/A</div>
               </div>
             </div>
             <div class="content-col-box">
@@ -127,6 +129,7 @@
               </div>
               <div class="content-col-content">
                 <chart-box axis-tooltip="y" chart-type="bar" ref="ruleMessage" :tooltip-formatter="simpleFormatter" :show-toolbox="false" name="ruleMessage"></chart-box>
+                <div class="no-data-tip" v-if="(!messageByRuleSeries.data && !messageByRuleSeries.category) || (messageByRuleSeries.data.length == 0 && messageByRuleSeries.category.length == 0)">N/A</div>
               </div>
             </div>
             <div class="content-col-box">
@@ -160,6 +163,8 @@
               <div class="content-col-content">
                 <chart-box axis-tooltip="y" v-show="alertMessageShow == 'asset'" :tooltip-formatter="simpleFormatter" chart-type="bar" ref="assetMessage" name="assetMessage" :show-toolbox="false"></chart-box>
                 <chart-box axis-tooltip="y" v-show="alertMessageShow == 'module'" :tooltip-formatter="simpleFormatter" chart-type="bar" ref="moduleMessage" name="moduleMessage" :show-toolbox="false"></chart-box>
+                <div class="no-data-tip" v-show="alertMessageShow == 'asset'" v-if="(!messageByAssetSeries.data && !messageByAssetSeries.category) || (messageByAssetSeries.data.length == 0 && messageByAssetSeries.category.length == 0)">N/A</div>
+                <div class="no-data-tip" v-show="alertMessageShow == 'module'" v-if="(!messageByModuleSeries.data && !messageByModuleSeries.category) || (messageByModuleSeries.data.length == 0 && messageByModuleSeries.category.length == 0)">N/A</div>
               </div>
             </div>
           </div>
@@ -273,7 +278,6 @@
           this.assetLoading = false;
           if (response.code === 200) {
             this.assetData = response.data;
-
             /*饼图*/
             this.$refs.assetTypePie.startLoading();
             let legendData = [];
@@ -521,7 +525,7 @@
           rule = "ifHCOutOctets";
         }
         if (this.trendSearchParam.select.length > 0) {
-          console.info("select", this.trendSearchParam.select);
+          //console.info("select", this.trendSearchParam.select);
           let dc = [];
           let tags = [];
           this.trendSearchParam.select.forEach(select => {
@@ -624,7 +628,7 @@
           step: bus.getStep(before, end),
           query: 'sum(irate(' + rule + metricString + '[' + (this.trendSearchParam.timeRange ? this.trendSearchParam.timeRange : "1h") + ']))'
         };
-        console.info("params", params);
+        //console.info("params", params);
         return params;
       },
       queryMapChartGeoJson() {
@@ -734,7 +738,8 @@
             this.messageByRuleSeries = {
               name: 'alertStatByRule',
               data: seriesData,
-              type: 'bar'
+              type: 'bar',
+              category: categoryData, //自定义，用来判断N/A是否显示
             };
             this.$refs.ruleMessage.modifyOption('yAxis', 'data', categoryData);
             this.$refs.ruleMessage.setSeries(this.messageByRuleSeries);
@@ -755,7 +760,8 @@
             this.messageByAssetSeries = {
               name: 'alertStatByAsset',
               data: seriesData,
-              type: 'bar'
+              type: 'bar',
+              category: categoryData
             };
             this.$refs.assetMessage.modifyOption('yAxis', 'data', categoryData);
             this.$refs.assetMessage.setSeries(this.messageByAssetSeries);
@@ -776,7 +782,8 @@
             this.messageByModuleSeries = {
               name: 'alertStatByModule',
               data: seriesData,
-              type: 'bar'
+              type: 'bar',
+              category: categoryData
             };
             this.$refs.moduleMessage.modifyOption('yAxis', 'data', categoryData);
             this.$refs.moduleMessage.setSeries(this.messageByModuleSeries);
@@ -788,7 +795,7 @@
         this.$get('idc/trafficSetting', {pageSize: -1}).then(response => {
           if (response.code === 200) {
             this.trafficData = this.convertTrafficData(response.data.list);
-            console.info(this.trafficData)
+            //console.info(this.trafficData)
           }
         });
       },
@@ -1094,7 +1101,6 @@
           first: for (let i = 0; i < long.length; i++) {
             if (i == short.length) {
               difference.push([long[i], i]);
-              console.info("dd", difference)
               break;
             }
             if (short[i].length != long[i].length) {
@@ -1187,8 +1193,8 @@
     },
     watch: {
       "trendSearchParam.select": function(n, o) {
-        console.info("n", n);
-        console.info("o", o);
+        /*console.info("n", n);
+        console.info("o", o);*/
         this.queryAlertTrendData();
         /*let tempN = JSON.parse(JSON.stringify(n));
         if (n.length == o.length || !this.trendSearchParam.watch) {
