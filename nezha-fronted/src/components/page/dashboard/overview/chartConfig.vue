@@ -234,6 +234,10 @@
         trigger: 'axis',
         confine: false,
         extraCssText:'z-index:1000;',
+        formatter: function(v, i) {
+          console.info(v)
+          return v;
+        }
       },
       grid: {
         left: 6,
@@ -287,7 +291,20 @@
           show: false
         },
         axisLabel: {
-          fontSize: 13*window.devicePixelRatio
+          fontSize: 13*window.devicePixelRatio,
+          formatter: function(value, i) {
+            let y;
+            if (value < 1000) {
+              y = value + " Bs";
+            } else if (value < 1000000) {
+              y = value/1000 + " KBs";
+            } else if (value >= 1000000) {
+              y = value/1000000 + " MBs";
+            } else {
+              y = value/1000000000 + " GBs";
+            }
+            return y;
+          }
         }
       },
       useUTC: false,//使用本地时间

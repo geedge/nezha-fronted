@@ -66,7 +66,7 @@
           <div class="content-row-box">
             <div class="content-col-box">
               <div class="content-col-title">
-                <span>{{$t("dashboard.overview.alert.chart.chartTitle")}}</span>
+                <span>{{$t("dashboard.overview.traffic")}}</span>
                 <span class="content-col-title-tools">
                   <time-picker ref="calendarPanel" class="nz-dashboard-picker" @change="dateChange"></time-picker>
                   <!--<el-dropdown trigger="hover" :show-timeout="0" size="small" :hide-on-click="false" @command="selectDatacenter">
@@ -95,7 +95,7 @@
                 </span>
               </div>
               <div class="content-col-content">
-                <chart-box chart-type="overviewLine" ref="chartbox" :show-toolbox="false" name="trend"></chart-box>
+                <chart-box chart-type="overviewLine" ref="chartbox" :show-toolbox="false" name="trend" :unit="15"></chart-box>
                 <div class="no-data-tip" v-if="(!chartSeries[0] && !chartSeries[1]) || (chartSeries[0].data.length == 0 && chartSeries[1] && chartSeries[1].data.length == 0)">N/A</div>
               </div>
             </div>
@@ -456,7 +456,7 @@
           if(response.status == 'success'){
             if(response.data.result){
               let series={
-                name: 'ifInOctets',
+                name: 'RX',
                 symbol:'none',  //去掉点
                 smooth:true,  //曲线变平滑
                 data: [],
@@ -479,7 +479,7 @@
           if(response.status == 'success'){
             if(response.data.result){
               let series={
-                name: 'ifOutOctets',
+                name: 'TX',
                 symbol:'none',  //去掉点
                 smooth:true,  //曲线变平滑
                 data: [],

@@ -214,6 +214,7 @@ const en = {
     overview:{
       title:'Overview',
       contentTitle:'Nezha Management System',
+      traffic: 'Traffic',
       asset:{
         title:'Asset',
         assetType:'Asset type',

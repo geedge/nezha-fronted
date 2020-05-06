@@ -137,7 +137,7 @@ const cn = {
         unit: "单位",
         legend: "图例",
         legendTip: "使用名称或表达式控制时间序列的名称。例如{{hostname}将替换为标签主机名的标签值。",
-        option: "操作"
+        option: "操作",
       },
       chartTableColumn: {
         metric: "指标",
@@ -209,6 +209,7 @@ const cn = {
     overview: {
       title: "系统总览",
       contentTitle: "Nezha 管理系统",
+      traffic: '流量',
       asset: {
         title: "资产",
         assetType: "资产类型",
