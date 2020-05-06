@@ -302,7 +302,8 @@ const en = {
     url:'Invalid URL',
     uSize:'Must be number(1 - 47)',
     requiredIdc:'dc is required',
-    key:'Invalid key'
+    key:'Invalid key',
+    repeat:'Repeat'
   },
   search: {
     searchTip: 'Enter to search',//'点击或回车执行搜索'
@@ -561,6 +562,8 @@ const en = {
       traffic:{
         title:'Traffic Setting',
         add:'Add',
+        direction:'Direction',
+        tags:'Tags'
       }
     },
     model: {

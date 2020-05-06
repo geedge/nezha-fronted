@@ -47,6 +47,10 @@
                       class="nz-btn nz-btn-size-normal nz-btn-style-light margin-l-20" id="dc-add">
                 <i class="nz-icon-create-square nz-icon"></i>
               </button>
+<!--              <button type="button" @click="listLanguage" :title="$t('overall.createDatacenter')"-->
+<!--                      class="nz-btn nz-btn-size-normal nz-btn-style-light margin-l-20" >-->
+<!--                <i class="nz-icon-create-square nz-icon"></i>-->
+<!--              </button>-->
             </div>
             <div class="pagination-top pagination-top-hide display-none"></div>
           </div>
@@ -79,7 +83,7 @@
                   &nbsp;
                   <span :title="$t('overall.delete')" @click="del(scope.row)" class="content-right-option" :id="'dc-del-'+scope.row.id"><i class="el-icon-delete"></i></span>
                   &nbsp;
-                  <span :title="$t('config.dc.traffic.title')" @click="configTraffic(scope.row)" class="content-right-option" :id="'dc-del-'+scope.row.id" ><i class="el-icon-s-tools"></i></span>
+                  <span :title="$t('config.dc.traffic.title')" @click="configTraffic(scope.row)" class="content-right-option" :id="'dc-setting-'+scope.row.id" ><i class="el-icon-setting"></i></span>
                 </div>
                 <template v-else-if="item.prop == 'principal'">
                   <template v-if="scope.row.principal">
@@ -148,6 +152,7 @@
   var vm;
   import bus from '../../../libs/bus';
   import trafficSettingBox from "../../common/rightBox/trafficSetting/trafficSettingBox";
+  import util from "./util";
   export default {
     name: "dc",
     components:{
@@ -252,6 +257,10 @@
       }
     },
     methods: {
+      listLanguage:function(){
+        util.methods.listLanguage();
+        console.log(util.data().languageList)
+      },
       elementsetShow(s, e) {
         var eventfixed = {
           shezhi: 0,

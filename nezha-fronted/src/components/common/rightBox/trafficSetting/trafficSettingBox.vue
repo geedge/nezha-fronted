@@ -165,10 +165,14 @@
         return valid;
       },
       valiateRepeatFunc:function(host,index){
-        let temp=this.traffic.setting.find((item,i)=>{
-          return i != index && item.host == host;
-        })
-        return typeof temp == "undefined";
+        if(host != ''){
+          let temp=this.traffic.setting.find((item,i)=>{
+            return i != index && item.host == host;
+          })
+          return typeof temp == "undefined";
+        }else{
+          return true;
+        }
       },
       delAssetSetting:function(index){
         this.uuids.splice(index,1);
@@ -300,7 +304,7 @@
                           direction:[],
                           ifindex:'',
                           ifdescr:' ',
-                          tags:"",
+                          tags:{},
                           edit:true,
                         }
                       ]
