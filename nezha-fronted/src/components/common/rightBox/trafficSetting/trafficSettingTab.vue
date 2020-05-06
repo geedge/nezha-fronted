@@ -6,8 +6,10 @@
         </el-select>-->
         <el-autocomplete
           clearable
+          :class="{'input-error':hostInvalid || hostRepeat}"
           class="asset-input right-box-row-with-btn"
           v-model="assetSetting.host"
+          popper-class="no-style-class"
           :fetch-suggestions="queryAssetHosts"
           :debounce="1000"
           :trigger-on-focus="false"
@@ -137,7 +139,7 @@
             </template>
             <template slot-scope="scope" :column="item">
               <template v-if="item.prop == 'tags'">
-                <div style="height: 50px;">
+                <div style="height: 50px;" @click="showEditTagsBox(true,scope.$index,scope.row,$event)">
                   <el-scrollbar style="height: 100%;">
                     <el-tag
                       v-for="(value, key, index) in scope.row[item.prop]"
@@ -145,7 +147,6 @@
                       size="mini"
                       :closable="scope.row.edit==true"
                       :key="key"
-                      @click="showEditTagsBox(true,scope.$index,$event)"
                       style="display: block;margin-bottom:5px;" >
                       <!--                  <div class="tab-tags-item">-->
                       <!--                    <div class="tag-item-key">{{key}}：</div><div class="tag-item-value">{{value}}</div>-->
@@ -163,18 +164,23 @@
 <!--                    <el-option v-for="(item,index) in ifIndexList" :label="item.label" :value="item.value" :key="item.value" :disabled="item.isOccupy"></el-option>-->
 <!--                  </el-select>-->
                   <el-autocomplete
-                    v-model.number="scope.row[item.prop]"
+                    v-model="scope.row[item.prop]"
+                    :class="{'input-error':isError(item.errRows,scope.$index)||ifIndexError,'transparent-pop':assetSetting.host == ''}"
                     :fetch-suggestions="loadIfIndex"
                     :debounce="300"
                     :trigger-on-focus="true"
+                    popper-class="no-style-class"
                     size="mini"
                     :highlight-first-item="true"
-                    @input="ifIndexInputChange"
+                    @input="ifIndexInputChange(scope.row[item.prop],scope.row,scope.$index)"
                   ></el-autocomplete>
                 </template>
               </template>
               <template v-if="item.prop == 'ifdescr'">
-                <span >{{scope.row[item.prop]}}</span>
+                <span v-if="scope.row.edit==false">{{scope.row[item.prop]}}</span>
+                <template v-else>
+                  <el-input v-model="scope.row[item.prop]" size="small" clearable></el-input>
+                </template>
               </template>
               <template v-if="item.prop == 'direction'">
                 <template v-if="scope.row.edit==false">
@@ -184,8 +190,8 @@
                 <template v-else>
                   <el-checkbox-group :disabled="assetSetting.host == null" v-model="scope.row[item.prop]" class="direction-checkbox" :class="{'input-error':isError(item.errRows,scope.$index),'transparent-pop':assetSetting.host == null}">
                     <div class="input__inner">
-                      <el-checkbox label="rx"></el-checkbox>
-                      <el-checkbox label="tx"></el-checkbox>
+                      <el-checkbox label="rx">RX</el-checkbox>
+                      <el-checkbox label="tx" >TX</el-checkbox>
                     </div>
                   </el-checkbox-group>
                 </template>
@@ -210,6 +216,7 @@
 <script>
   import subBox from "./subBox";
   import loading from "../../loading";
+  import vm from "../../../../main";
   export default {
     name: "assetConfigTab",
     components:{
@@ -220,21 +227,24 @@
       index:{},
       postAssetList:{type:Array,required:true},
       assetSetting:{type:Object},
+      validateRepeatFunc:{type:Function},
     },
     data(){
       return {
         assetList:[],
         assetValidate:false,
+        hostRepeat:false,
+        hostInvalid:false,
         tableLabels:[
           {
-            label:'ifindex',
+            label:'ifIndex',
             prop:'ifindex',
             width:90,
             required:true,
             errRows:[],
           },
           {
-            label:'ifdescr',
+            label:'ifDescr',
             prop:'ifdescr',
             width:100,
             required:false,
@@ -329,7 +339,7 @@
             })
 
             this.ifIndexList=ifIndexList.map(item=>{
-              return {label:item.value,value:Number.parseInt(item.value),isOccupy:false};
+              return {label:item.value,value:item.value,isOccupy:false};
             })
 
             let ifDescrList=resultList.filter(item=>{
@@ -343,13 +353,20 @@
           }else{
             // this.$refs.loading.endLoading();
             console.error(response);
-            this.$message.error(response.msg)
+            // this.$message.error(response.msg)
           }
         })
 
       },
       loadIfIndex:function(queryString,cb){
-        cb(this.ifIndexList);
+        let result=Object.assign([],this.ifIndexList);
+        result=result.filter(item=>{
+          let temp=this.assetSetting.configs.find(c=>{
+            return c.ifindex == item.value;
+          })
+          return typeof temp == "undefined";
+        })
+        cb(result)
       },
       queryAssetHosts:function(queryString,cb){
         let param={
@@ -382,32 +399,59 @@
       handleInputConfirm:function(){
 
       },
-      ifIndexInputChange:function(value){
+      ifIndexInputChange:function(ifindex,row,index){
         if(this.ifIndexList && this.ifIndexList.length>0){
           let temp=this.ifIndexList.find(item=>{
-            return item.value == Number.parseInt(value);
-            if(!temp){
-              this.ifIndexError=true;
-            }else{
-              this.ifIndexError=false;
-            }
+            return item.value == ifindex;
           })
+          if(!temp){
+            this.ifIndexError=true;
+            return ;
+          }else{
+            this.ifIndexError=false;
+          }
+          this.ifIndexChange(ifindex,row)
+          let tmp=this.assetSetting.configs.find((item,i)=>{
+            return i != index && item.ifindex == ifindex;
+          })
+          if(tmp){
+            this.ifIndexError=true;
+            return ;
+          }else{
+            this.ifIndexError=false;
+          }
+        }else{
+          this.ifIndexError=false;
         }
       },
       hostInputChange:function(value){
-        console.log('input change')
         if(this.hostTimer){
           clearTimeout(this.hostTimer);
         }
         this.hostTimer=setTimeout(()=>{
-          console.log('lazy loading')
-          this.queryInterfaceInfos();
+          this.queryInterfaceInfos(true);
+          this.validateHostRepeat(value);
+          this.validateHostValid(value);
         },1000)
       },
-
+      validateHostValid:function(host){
+        const hostReg = /^(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])(\:\d{0,5})?$/
+        if (hostReg.test(host)) {
+          this.hostInvalid=false;
+        } else {
+          this.hostInvalid=true;
+        }
+      },
+      validateHostRepeat:function(host){
+        if(!this.validateRepeatFunc(host,this.index)){
+          this.hostRepeat=true;
+        }else{
+          this.hostRepeat=false;
+        }
+      },
       changeRowEditState:function(row,column,event){
         if(this.validateRows()){
-          this.commitAdd(true);
+          this.commitAdd(false);
           if(row.edit == true){
             this.$set(row,'edit',false)
           }else{
@@ -437,7 +481,9 @@
             }
           })
         })
-
+        if(this.ifIndexError){
+          validateFlag=false;
+        }
         return validateFlag;
       },
       isError:function(columnErrRows,rowIndex){
@@ -489,15 +535,15 @@
       delSelf:function(){
         this.$emit('delSelf',this.index)
       },
-      showEditTagsBox:function(show,index,e){
-        if(this.assetSetting.host != ''){
+      showEditTagsBox:function(show,index,row,e){
+        if(this.assetSetting.host != '' && row.edit == true){
           this.$refs.subBox.showEditTagsBox(show,this.assetSetting.configs,index,e);
         }
       },
     },
     mounted() {
-      if(this.assetSetting&&this.assetSetting.assetId){
-        this.queryInterfaceInfos(this.assetSetting.assetId,true);
+      if(this.assetSetting&&this.assetSetting.host&&this.assetSetting.host != ''){
+        this.queryInterfaceInfos(true);
       }
     }
   }

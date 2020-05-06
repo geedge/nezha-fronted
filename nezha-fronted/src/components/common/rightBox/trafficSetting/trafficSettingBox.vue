@@ -19,7 +19,7 @@
           <el-form-item :label="$t('config.dc.dc')" size="small">
             <el-input :disabled="true" v-model="dcObj.name"></el-input>
           </el-form-item>
-          <traffic-setting-tab ref="trafficSetting" :post-asset-list="assetList" v-for="(item,index) in traffic.setting" :index="index" :asset-setting="item" :key="uuids[index]" :id="uuids[index]" @delSelf="delAssetSetting" ></traffic-setting-tab>
+          <traffic-setting-tab ref="trafficSetting" :post-asset-list="assetList" v-for="(item,index) in traffic.setting" :index="index" :asset-setting="item" :key="uuids[index]" :id="uuids[index]" @delSelf="delAssetSetting" :validate-repeat-func="valiateRepeatFunc"></traffic-setting-tab>
           <button @click="addAssetSetting" class="nz-btn nz-btn-size-normal nz-btn-style-light nz-btn-min-width-100" style="margin:5px 1px">{{$t('config.dc.traffic.add')}}</button>
         </el-form>
       </el-scrollbar>
@@ -164,6 +164,12 @@
         }
         return valid;
       },
+      valiateRepeatFunc:function(host,index){
+        let temp=this.traffic.setting.find((item,i)=>{
+          return i != index && item.host == host;
+        })
+        return typeof temp == "undefined";
+      },
       delAssetSetting:function(index){
         this.uuids.splice(index,1);
         this.traffic.setting.splice(index,1)
@@ -192,10 +198,13 @@
             setting:[],
           }
           this.traffic.setting.forEach(assetSetting=>{
-            let assetId=assetSetting.assetId;
             assetSetting.configs.forEach(config=>{
               let settingItem={
-                assetId:assetId,
+                host:assetSetting.host,
+                port:assetSetting.port,
+                community:assetSetting.community,
+                version:assetSetting.version,
+                auth:assetSetting.auth,
                 direction:config.direction.toString(),
                 ifindex:config.ifindex,
                 ifdescr:config.ifdescr,
@@ -260,7 +269,7 @@
                   configs.forEach(item=>{
                     let config={
                       direction:item.direction&&item.direction!=''?item.direction.split(','):[],
-                      ifindex:item.ifindex,
+                      ifindex:item.ifindex+'',
                       ifdescr:item.ifdescr,
                       tags:item.tags,
                       edit:false,
@@ -289,7 +298,7 @@
                       configs:[
                         {
                           direction:[],
-                          ifindex:null,
+                          ifindex:'',
                           ifdescr:' ',
                           tags:"",
                           edit:true,

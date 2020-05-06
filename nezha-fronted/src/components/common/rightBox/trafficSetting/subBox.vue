@@ -9,7 +9,7 @@
             <el-input placeholder="value" class="param-box-row-value input-x-mini-22" v-model="item.value"></el-input>
             <span class="param-box-row-symbol" :id="'remove-param-'+index" @click="removeTags(index)"><i class="nz-icon nz-icon-minus-square"></i></span>
           </div>-->
-          <el-tag v-for="(item, index) in tempTagsObj" class="sub-box-tags"  size="small" :closable="true" :key="index" @close='delTag(item,index)'>
+          <el-tag v-for="(item, index) in tempTagsObj" class="sub-box-tags"  size="small" :closable="true" :key="index" @close='delTag(item,index)' @click="editTag(item,index)">
             <div >{{item.key}}：{{item.value}}</div>
           </el-tag>
           <div class="param-box-row" v-show="showNewTagInput">
@@ -106,6 +106,7 @@
         }
       },
       editTag:function(tag,index){
+        console.log(222)
         if(this.showNewTagInput == true){//已经有编辑状态的tag，先保存
           this.confirmInput();
         }
