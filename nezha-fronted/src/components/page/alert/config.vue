@@ -367,6 +367,15 @@
         this.$get('alert/rule', this.searchLabel).then(response => {
           this.loading = false;
           if (response.code == 200) {
+            response.data.list.forEach(item => {
+              let temp = [];
+              if (item.receiver) {
+                temp = item.receiver.split(",").map(t => {
+                  return parseInt(t);
+                });
+              }
+              item.receiverShow = temp;
+            });
             this.tableData = response.data.list;
             this.pageObj.total = response.data.total;
           }
@@ -382,7 +391,6 @@
           severity: '',
           summary: '',
           description: '',
-          receivers: '',
         }
       },
       jumpTo(data, id) {

@@ -21,79 +21,66 @@
 
       <!-- begin--表单-->
       <el-scrollbar class="right-box-form-box">
-          <el-form class="right-box-form" :model="alertRule" label-position="top" :rules="rules" ref="alertRuleForm">
-            <!--alertName-->
-            <el-form-item :label='$t("alert.config.name")' prop="alertName">
-              <el-input v-if="rightBox.isEdit" placeholder="" maxlength="64" show-word-limit v-model="alertRule.alertName" size="small"></el-input>
-              <div v-if="!rightBox.isEdit" class="right-box-form-content-txt">{{alertRule.alertName}}</div>
-            </el-form-item>
-            <!--type-->
-           <!-- <el-form-item :label="$t('alert.list.type')" prop="type">
-              <el-select v-if="rightBox.isEdit" @change="(val) => {changeType(val);}" popper-class="config-dropdown" v-model="alertRule.type" placeholder="" size="small" >
-                <el-option :id="'alert-type-'+item.value" v-for="item in typeData" :key="item.key" :label="item.value" :value="item.key"></el-option>
-              </el-select>
-              <div v-for="item in typeData" v-if="!rightBox.isEdit && item.key == alertRule.type" class="right-box-form-content-txt">{{item.value}}</div>
-            </el-form-item>-->
-            <!--linkedId-->
-            <!--<el-form-item :label="$t('alert.config.link')" prop="linkId">
-              <el-select v-if="rightBox.isEdit" v-model="alertRule.linkId" placeholder="" size="small" popper-class="config-dropdown">
-                <el-option :id="'alert-linke-'+item.id" v-for="item in linkObjList" :key="item.id" :label="alertRule.type == 3 ? item.host : item.name" :value="item.id"></el-option>
-              </el-select>
-              <div v-if="!rightBox.isEdit" class="right-box-form-content-txt">{{alertRule.linkObject ? alertRule.linkObject.name : ''}}</div>
-            </el-form-item>-->
-            <!--expr-->
-            <el-form-item :label="$t('alert.config.expr')" prop="expr">
-              <el-input maxlength="512" rows="4" show-word-limit v-if="rightBox.isEdit" type="textarea" placeholder="" v-model="alertRule.expr" size="small"></el-input>
-              <div v-if="!rightBox.isEdit" class="right-box-form-content-txt">{{alertRule.expr}}</div>
-            </el-form-item>
-            <!--last-->
-            <el-form-item :label="$t('alert.config.for')" prop="last">
-              <el-input v-if="rightBox.isEdit" type="text" placeholder="" v-model.number="alertRule.last" size="small">
-                <template slot="append">second</template>
-              </el-input>
-              <div v-if="!rightBox.isEdit" class="right-box-form-content-txt">{{alertRule.last}}s</div>
-            </el-form-item>
-            <!--severity-->
-            <el-form-item :label="$t('alert.severity')" prop="severity">
-              <el-select v-if="rightBox.isEdit" popper-class="config-dropdown" v-model="alertRule.severity" placeholder=""  size="small">
-                <el-option :id="'alert-severity-'+item.key" v-for="item in severityData" :key="item.key" :label="item.value" :value="item.key">
-                  <template v-if="!item.isEdit">{{item.value}}</template>
-                  <span class="config-dropdown-label-input" v-if="item.isEdit" @click.stop>
-                    <el-input type="text" v-model="item.name" size="mini"></el-input>
-                  </span>
-                </el-option>
-              </el-select>
-              <div v-if="!rightBox.isEdit" class="right-box-form-content-txt">{{alertRule.severity}}</div>
-            </el-form-item>
-            <!--summary-->
-            <el-form-item :label="$t('alert.summary')" prop="summary">
-              <el-input maxlength="512" rows="3" type="textarea" show-word-limit v-if="rightBox.isEdit" placeholder="" v-model="alertRule.summary" size="small"></el-input>
-              <div v-if="!rightBox.isEdit" class="right-box-form-content-txt">{{alertRule.summary}}</div>
-            </el-form-item>
-            <!--description-->
-            <el-form-item :label="$t('alert.description')" prop="description">
-              <el-input maxlength="512" rows="4" show-word-limit v-if="rightBox.isEdit" type="textarea" placeholder="" v-model="alertRule.description" size="small"></el-input>
-              <div v-if="!rightBox.isEdit" class="right-box-form-content-txt">{{alertRule.description}}</div>
-            </el-form-item>
-            <!--receiver-->
-            <!--<el-form-item :label="$t('config.account.receiver')" prop="receiver">
-              <el-select class="right-box-row-with-btn" value-key="id" popper-class="config-dropdown" v-model="alertRule.receiver" placeholder="" v-if="rightBox.isEdit" size="small">
-                <el-option @click.native="blurEditReceiver()" v-for="item in receiverData" :key="item.id" :label="item.name" :value="item">
-                  <span class="config-dropdown-label-txt" v-if="!item.isEdit">{{item.name}}</span>
-                  <span class="config-dropdown-label-input" v-if="item.isEdit" @click.stop>
-                    <el-input type="text" v-model="item.name" size="mini"></el-input>
-                  </span>
-                  <span class="config-dropdown-error-message">{{item.errorMessage}}</span>
-                  <span class="config-dropdown-btn" @click.stop="toEditReceiver(item)">
-                    <i class="el-icon-edit-outline" v-if="!item.isEdit"></i>
-                    <i class="el-icon-check" v-if="item.isEdit"></i>
-                  </span>
-                  <span class="config-dropdown-btn config-dropdown-btn-delete" @click.stop="toDelReceiver(item)"><i class="el-icon-delete"></i></span>
-                </el-option>
-              </el-select>
-              <div class="right-box-form-content-txt" v-if="!rightBox.isEdit">{{alertRule.receiver}}</div>
-            </el-form-item>-->
-          </el-form>
+        <el-form class="right-box-form" :model="alertRule" label-position="top" :rules="rules" ref="alertRuleForm">
+          <!--alertName-->
+          <el-form-item :label='$t("alert.config.name")' prop="alertName">
+            <el-input v-if="rightBox.isEdit" placeholder="" maxlength="64" show-word-limit v-model="alertRule.alertName" size="small"></el-input>
+            <div v-if="!rightBox.isEdit" class="right-box-form-content-txt">{{alertRule.alertName}}</div>
+          </el-form-item>
+          <!--expr-->
+          <el-form-item :label="$t('alert.config.expr')" prop="expr">
+            <el-input maxlength="512" rows="4" show-word-limit v-if="rightBox.isEdit" type="textarea" placeholder="" v-model="alertRule.expr" size="small"></el-input>
+            <div v-if="!rightBox.isEdit" class="right-box-form-content-txt">{{alertRule.expr}}</div>
+          </el-form-item>
+          <!--last-->
+          <el-form-item :label="$t('alert.config.for')" prop="last">
+            <el-input v-if="rightBox.isEdit" type="text" placeholder="" v-model.number="alertRule.last" size="small">
+              <template slot="append">second</template>
+            </el-input>
+            <div v-if="!rightBox.isEdit" class="right-box-form-content-txt">{{alertRule.last}}s</div>
+          </el-form-item>
+          <!--severity-->
+          <el-form-item :label="$t('alert.severity')" prop="severity">
+            <el-select v-if="rightBox.isEdit" popper-class="config-dropdown" v-model="alertRule.severity" placeholder=""  size="small">
+              <el-option :id="'alert-severity-'+item.key" v-for="item in severityData" :key="item.key" :label="item.value" :value="item.key">
+                <template v-if="!item.isEdit">{{item.value}}</template>
+                <span class="config-dropdown-label-input" v-if="item.isEdit" @click.stop>
+                  <el-input type="text" v-model="item.name" size="mini"></el-input>
+                </span>
+              </el-option>
+            </el-select>
+            <div v-if="!rightBox.isEdit" class="right-box-form-content-txt">{{alertRule.severity}}</div>
+          </el-form-item>
+          <!--receiver-->
+          <el-form-item :label="$t('config.account.receiver')" prop="receiver">
+            <el-select
+              v-model.trim="alertRule.receiverShow"
+              placeholder=""
+              multiple
+              filterable
+              size="small"
+              value-key="userId"
+              popper-class="no-style-class"
+            >
+              <el-option
+                v-for="item in userData"
+                :key="item.userId"
+                :label="item.username"
+                :value="item.userId">
+              </el-option>
+            </el-select>
+          </el-form-item>
+          <!--summary-->
+          <el-form-item :label="$t('alert.summary')" prop="summary">
+            <el-input maxlength="512" rows="3" type="textarea" show-word-limit v-if="rightBox.isEdit" placeholder="" v-model="alertRule.summary" size="small"></el-input>
+            <div v-if="!rightBox.isEdit" class="right-box-form-content-txt">{{alertRule.summary}}</div>
+          </el-form-item>
+          <!--description-->
+          <el-form-item :label="$t('alert.description')" prop="description">
+            <el-input maxlength="512" rows="4" show-word-limit v-if="rightBox.isEdit" type="textarea" placeholder="" v-model="alertRule.description" size="small"></el-input>
+            <div v-if="!rightBox.isEdit" class="right-box-form-content-txt">{{alertRule.description}}</div>
+          </el-form-item>
+        </el-form>
       </el-scrollbar>
       <!-- end--表单-->
 
@@ -118,7 +105,7 @@
     },
     data() {
       return {
-        alertRule: {id: ''},
+        alertRule: {id: '', receiverShow: [], receiver: ''},
         rightBox: {show: false, isEdit: false, title: ''},
         rules:{
           alertName:[
@@ -172,31 +159,7 @@
             value: this.$t('alert.config.typeOption.asset')
           }
         ],
-        receiverData: [{
-          id: '1',
-          name: 'group1',
-          description: '小组1desc'
-        }, {
-          id: '2',
-          name: 'group2',
-          description: '小组2desc'
-        }, {
-          id: '3',
-          name: '小组3',
-          description: '小组3desc'
-        }, {
-          id: '4',
-          name: '小组4',
-          description: '小组4desc'
-        }, {
-          id: '5',
-          name: '小组啊小组5',
-          description: '小组5desc'
-        }, {
-          id: '6',
-          name: '小组6',
-          description: '小组6desc'
-        }],
+        userData: [],
         linkObjList: []
       }
     },
@@ -211,6 +174,7 @@
       save: function() {
         this.$refs.alertRuleForm.validate((valid) => {
           if (valid) {
+            this.alertRule.receiver = this.alertRule.receiverShow.join(",");
             if (this.alertRule.id) {
               this.$put('alert/rule', this.alertRule).then(response => {
                 if (response.code === 200) {
@@ -237,16 +201,6 @@
           }
         })
       },
-      /*changeType(type) {
-        this.alertRule.linkId = '';
-        if (type == 1) {
-          this.getProjectList();
-        } else if (type == 2) {
-          this.getModuleList();
-        } else if (type == 3) {
-          this.getAssetList();
-        }
-      },*/
       del: function() {
         this.$confirm(this.$t("tip.confirmDelete"), {
           confirmButtonText: this.$t("tip.yes"),
@@ -272,43 +226,6 @@
           this.save();
         }
       },
-      toEditReceiver: function(item) {
-        if (!item.isEdit) {
-          //如果不在编辑状态，那么其他项如果有改动，则还原改动，最后开始编辑
-          this.blurEditReceiver();
-          item.isEdit = true;
-        } else {
-          //如果已在编辑状态，判断name是否有变更，有变更则发请求
-          if (item.name != item.oldName) {
-            if (this.updateReceiverName(item) == 200) {
-              item.isEdit = false;
-            }
-          } else {
-            item.errorMessage = '';
-            item.isEdit = false;
-          }
-        }
-      },
-      blurEditReceiver: function() {
-        for (let i = 0; i < this.receiverData.length; i++) {
-          if (this.receiverData[i].isEdit) {
-            this.receiverData[i].name = this.receiverData[i].oldName;
-            this.receiverData[i].isEdit = false;
-            this.receiverData[i].errorMessage = '';
-            break;
-          }
-        }
-      },
-      toDelReceiver: function(item) {
-        this.blurEditReceiver();
-        //TODO 请求后台，删除组
-      },
-      initReceiverData: function() {
-        for (let i = 0; i < this.receiverData.length; i++) {
-          this.$set(this.receiverData[i], 'oldName', this.receiverData[i].name);
-          this.$set(this.receiverData[i], 'isEdit', false);
-        }
-      },
       esc: function() {
         this.rightBox.show = false;
       },
@@ -320,7 +237,13 @@
           }
         })
       },
-
+      getUserList() {
+        this.$get('sys/user/list', {pageNo: 1, pageSize: -1}).then(response => {
+          if (response.code == 200) {
+            this.userData = response.data.list;
+          }
+        })
+      },
       getModuleList() {
         this.$get('module', {pageNo: 1, pageSize: -1}).then(response => {
           if (response.code == 200) {
@@ -338,7 +261,7 @@
       },
     },
     created() {
-      this.initReceiverData();
+      this.getUserList();
       this.rightBox.title = this.$t("alert.config.createAlertConfig");
     },
     watch: {
