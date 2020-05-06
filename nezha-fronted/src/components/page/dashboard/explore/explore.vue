@@ -284,6 +284,7 @@ instance_cpu_time_ns{app="fox", proc="widget", rev="4d3a513", env="prod", job="c
               let legend = [];
               if (res.length > 0) {
                 res.forEach((response, index) => {
+                  let promqlIndex=promqlInputIndexs[index];
                   if (response.data.status == 'success') {
                     let data = response.data.data.result;
                     data.forEach((result, i) => {
@@ -312,8 +313,9 @@ instance_cpu_time_ns{app="fox", proc="widget", rev="4d3a513", env="prod", job="c
                       series.push(seriesItem);
                       legend.push({name: seriesItem.name, alias: null, isGray: false});
                     })
+
+                    this.$refs['promql-'+promqlIndex][0].setError('')
                   }else{
-                    let promqlIndex=promqlInputIndexs[index];
                     console.log(response)
                     this.$refs['promql-'+promqlIndex][0].setError(response.data.error)
                   }
