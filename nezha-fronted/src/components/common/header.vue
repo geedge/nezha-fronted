@@ -1,6 +1,6 @@
 <template>
   <div class="header">
-    <div class="logo"><img height="45" src="../../assets/img/logo.png"/></div>
+    <div class="logo link" @click="jumpTo('overview')"><img height="45" src="../../assets/img/logo.png"/></div>
     <el-menu
       class="nz-menu float-right"
       mode="horizontal"
