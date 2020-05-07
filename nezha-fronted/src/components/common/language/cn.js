@@ -102,6 +102,7 @@ const cn = {
       selectPanelTitle: "选择面板",
       createPanelTitleSec: "新增面板",
       editPanelTitle: "面板",
+      singleStatErrorTip:'Only queries that return single series/table is supported',
       panelForm: {
         panelName: "面板名称",
         panelId: "ID"
@@ -113,6 +114,7 @@ const cn = {
         chartName: "图表名称",
         type: "类型",
         url: "URL",
+        statistics:'Statistics',
         typeVal: {
           line: {
             label: "曲线图"
@@ -128,7 +130,20 @@ const cn = {
           },
           url: {
             label: "URL"
+          },
+          singleStat:{
+            label:"SingleStat"
           }
+        },
+        statisticsVal:{
+          min:'Min',
+          max:'Max',
+          average:'Average',
+          total:'Total',
+          first:'First',
+          last:'Last',
+          range:'Range',
+          different:'Different',
         },
         width: "宽",
         high: "高",

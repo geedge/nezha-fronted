@@ -107,6 +107,7 @@ const en = {
       selectPanelTitle:'Select', //"选择面板"
       createPanelTitleSec:'New panel',//"新增面板"
       editPanelTitle: 'Panel', //"面板"
+      singleStatErrorTip:'Only queries that return single series/table is supported',
       panelForm:{
         panelName:'Panel name', //"面板名称"
         panelId:"ID" //ID
@@ -121,6 +122,7 @@ const en = {
         unit:"Unit",
         url:"URL",
         legend:'Legend',
+        statistics:'Statistics',
         legendTip:'Controls the name of the time series, using name or pattern. For example {{hostname}} will be replaced with label value for the label hostname.',
         typeVal:{
           line:{
@@ -137,7 +139,20 @@ const en = {
           },
           url:{
             label:"URL"
+          },
+          singleStat:{
+            label:"SingleStat"
           }
+        },
+        statisticsVal:{
+          min:'Min',
+          max:'Max',
+          average:'Average',
+          total:'Total',
+          first:'First',
+          last:'Last',
+          range:'Range',
+          different:'Different',
         },
         width:'Width', //"宽"
         high:'High', //"高"

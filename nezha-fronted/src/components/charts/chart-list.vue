@@ -92,9 +92,18 @@
         @on-drag-chart="editChartForDrag"
         @on-edit-chart-block="editData"
         :panel-id="filter.panelId"
-
         :chart-index="index"
         :editChartId="'editChartId' + item.id"></line-chart-block>
+
+        <chart-single-stat v-if="item.type === 'singleStat'" :ref="'editChart'+item.id" :key="'inner' + item.id"
+                     @on-refresh-data="refreshChart"
+                     @on-search-data="searchData"
+                     @on-remove-chart-block="removeChart"
+                     @on-drag-chart="editChartForDrag"
+                     @on-edit-chart-block="editData"
+                     :panel-id="filter.panelId"
+                     :chart-index="index"
+                     :editChartId="'editChartId' + item.id"></chart-single-stat>
 
         <chart-table v-if="item.type === 'table'" :ref="'editChart'+item.id" :key="'inner' + item.id"
         @on-refresh-data="refreshChart"
@@ -126,6 +135,7 @@ import bus from '../../libs/bus';
 import lineChartBlock from './line-chart-block';
 import chartTable from './chart-table';
 import chartUrl from './chart-url';
+import chartSingleStat from './chart-single-stat';
 import draggable from 'vuedraggable'
 
 export default {
@@ -136,6 +146,7 @@ export default {
     lineChartBlock,
     chartTable,
     chartUrl,
+    chartSingleStat,
     draggable,
   },
   data() {
@@ -542,7 +553,6 @@ export default {
         this.dataTotalListBak.forEach((item)=>{
             chartListTmp.push(item);
         });
-        //chartListTmp = [...this.dataTotalListBak];
       }
 
       this.dataTotalList = [...chartListTmp];
@@ -621,10 +631,6 @@ export default {
       };
       if (!param.query) delete param.query;
       //根据panelId获得panel下的所有图表
-      //let searchTitleStr = '';
-      //if(this.filter.searchName&&this.filter.searchName!=''){
-        //searchTitleStr = '?title='+this.filter.searchName;
-      //}
       this.$get('panel/'+ params.panelId+'/charts').then(response => {
         if (response.code === 200) {
           if(response.data.list){
@@ -651,12 +657,6 @@ export default {
             this.dataList = this.dataTotalList;
           }
           this.$nextTick(() => {
-            /*
-            if (this.dataList.length > 0 && this.$refs.editChart) {
-              this.$refs.editChart.forEach((item, i) => {
-                item.showLoad(this.dataList[i]);//之后要实现
-              });
-            }*/
             if (this.dataList.length > 0 ) {
               this.dataList.forEach((item) => {
                 this.$refs['editChart'+item.id][0].showLoad(item);//之后要实现
@@ -678,12 +678,14 @@ export default {
           let chartType = item.type;
           if(chartType!=='url'){
             if(isSearch){
-              this.getChartDataForSearch(item,realIndex);///？？？
-              //this.getChartData(item, realIndex);
+              this.getChartDataForSearch(item,realIndex);
             }else {
               this.getChartData(item, realIndex);
             }
           }else {
+            if (!isSearch && this.$refs['editChart'+item.id] && this.$refs['editChart'+item.id][0]) {
+              this.$refs['editChart'+item.id][0].showLoad(item);
+            }
             this.setSize(item.span, realIndex); // 设置该图表宽度
           }
         });
@@ -700,6 +702,7 @@ export default {
         let filter = chartData.filter;
         let legend = chartData.legend;
         let series = chartData.series;
+        let singleStatRlt = chartData.singleStatRlt;
         if(this.$refs['editChart'+chartItem.id] && this.$refs['editChart'+chartItem.id].length>0) {
           if (chartItem.type === 'table') {//表格
             if (filterType === 'showFullScreen') {//全屏查询
@@ -717,12 +720,66 @@ export default {
               this.$refs['editChart'+chartItem.id][0].setData(chartItem, series,
                 panelId, filter, legend,'',errorMsg);
             }
+          }else if(chartItem.type ==='singleStat'){
+            if (filterType === 'showFullScreen') {//全屏查询
+              this.$refs['editChart'+chartItem.id][0].setData(chartItem, singleStatRlt,
+                this.filter.panelId, this.filter, filterType,errorMsg);
+            } else {
+              this.$refs['editChart'+chartItem.id][0].setData(chartItem, singleStatRlt,
+                this.filter.panelId, this.filter,'',errorMsg);
+            }
           }
         }
       }else {
         this.getChartData(chartItem, realIndex);
       }
     },
+    /*
+    getSingleStatRlt(statistics,result){
+      let dataArray = [];
+      if(result){
+        result.forEach((item)=>{
+          dataArray.push(item[1]);
+        })
+      }
+      let statisticsRlt = '';
+      if(dataArray.length>0){
+        if(statistics==='min'){//min：最小值
+          statisticsRlt = dataArray.reduce(function(a , b){
+            return b < a ? b : a;
+          });
+        }else if(statistics==='max'){// max：最大值
+          statisticsRlt = dataArray.reduce(function(a , b){
+            return b > a ? b : a;
+          });
+        }else if(statistics==='average'){// average：平均值
+          let sum = 0;
+          dataArray.forEach((item)=>{
+            sum =Number(sum) + Number(item);
+          })
+          statisticsRlt = sum/dataArray.length;
+        }else if(statistics==='total'){//total：总计
+          dataArray.forEach((item)=>{
+            statisticsRlt =Number(statisticsRlt) + Number(item);
+          })
+        }else if(statistics==='first'){//first：第一个值
+          statisticsRlt = dataArray[0];
+        }else if(statistics==='last'){// last：最后一个值
+          statisticsRlt = dataArray[dataArray.length-1];
+        }else if(statistics==='range'){//range : max - min
+          let min = dataArray.reduce(function(a , b){
+            return b < a ? b : a;
+          });
+          let max = dataArray.reduce(function(a , b){
+            return b > a ? b : a;
+          });
+          statisticsRlt = max-min;
+        }else if(statistics==='different'){//different : last - first
+          statisticsRlt = dataArray[dataArray.length-1]-dataArray[0];
+        }
+      }
+      return statisticsRlt;
+    },*/
     // 获取一个图表具体数据,图表信息，图表位置index
     getChartData(chartInfo, pos, filterType) {
       const chartItem = chartInfo;
@@ -732,11 +789,6 @@ export default {
       // 没有数据的设置提示信息暂无数据-针对每一个图
       if (len === 0) {
         this.$nextTick(() => {
-          /*
-          if(this.$refs.editChart[index]){
-            this.$refs.editChart[index].setData(chartItem, [], this.filter.panelId, this.filter);//????怎么设置的无数据？？
-          }*/
-
           if(this.$refs['editChart'+chartItem.id] && this.$refs['editChart'+chartItem.id].length>0){
             this.$refs['editChart'+chartItem.id][0].setData(chartItem, [], this.filter.panelId, this.filter);//????怎么设置的无数据？？
           }
@@ -774,6 +826,7 @@ export default {
           axios.all(axiosArr).then((res) => {
             if (res.length > 0) {
               const series = [];
+              let singleStatRlt = '';
               const legend = [];
               const tableData = [];
               const sumData = {
@@ -788,102 +841,112 @@ export default {
                 if (response.status === 'success') {
                   errorMsg = "";
                   if (response.data.result) {
-                    // console.log(response.data.result)
                     // 循环处理每个elements下获取的数据列
-                    response.data.result.forEach((queryItem,resIndex) => {
-                      const seriesItem = {
-                        theData: {
-                          name: '',
-                          symbol:'emptyCircle',  //去掉点
-                          symbolSize:[2,2],
-                          smooth:true,  //曲线变平滑
-                          showSymbol:false,
-                          data: [],
-                          type:chartInfo.type,
-                        },
+                    if(chartItem.type==='singleStat'){
+                      if(response.data.result.length===1){
+                        let statistics = chartItem.param.statistics;
+                        if(response.data.result[0].values){
+                          singleStatRlt  = bus.getSingleStatRlt(statistics,response.data.result[0].values);
+                        }
+                      }else if(response.data.result.length > 1){
+                        singleStatRlt = this.$t("dashboard.panel.singleStatErrorTip");
+                      }
+                    }else {
+                      response.data.result.forEach((queryItem,resIndex) => {
+                        const seriesItem = {
+                          theData: {
+                            name: '',
+                            symbol:'emptyCircle',  //去掉点
+                            symbolSize:[2,2],
+                            smooth:true,  //曲线变平滑
+                            showSymbol:false,
+                            data: [],
+                            type:chartInfo.type,
+                          },
                           //visible: true,
                           //threshold: null,
-                        metric_name: '',
-                      };
+                          metric_name: '',
+                        };
 
-                      if(chartInfo.type === 'stackArea'){
-                        seriesItem.theData.type='line';
-                        seriesItem.theData.stack=chartInfo.title;
-                        seriesItem.theData.areaStyle={"opacity": 0.3};
-                      }
-                      // 图表中每条线的名字,后半部分
-                      let host = '';//up,
-                      if(queryItem.metric.__name__){
-                        host = `${queryItem.metric.__name__}{`;//up,
-                      }
-                      const tagsArr = Object.keys(queryItem.metric);//["__name__","asset","idc","instance","job","module","project"]
-                      // 设置时间-数据格式对
-                      const dpsArr = Object.entries(queryItem.values);//[ ["0",[1577959830.781,"0"]], ["1",[1577959845.781,"0"]] ]
-                      // 判断是否有数据, && tagsArr.length > 0
-                      if (dpsArr.length > 0 && this.$refs['editChart'+chartItem.id]  && this.$refs['editChart'+chartItem.id].length>0) {
-                        tagsArr.forEach((tag, i) => {
-                          if (tag !== '__name__') {
-                            host += `${tag}="${queryItem.metric[tag]}",`;
-                          }
-                        });
-                        if(host.endsWith(',')){host = host.substr(0,host.length-1);}
+                        if(chartInfo.type === 'stackArea'){
+                          seriesItem.theData.type='line';
+                          seriesItem.theData.stack=chartInfo.title;
+                          seriesItem.theData.areaStyle={"opacity": 0.3};
+                        }
+                        // 图表中每条线的名字,后半部分
+                        let host = '';//up,
                         if(queryItem.metric.__name__){
-                          host +="}";
+                          host = `${queryItem.metric.__name__}{`;//up,
                         }
-                        if(!host || host===''){
-                          host = chartItem.elements[innerPos].expression;
-                        }
-                        //处理legend别名
-
-                        let alias=this.$refs['editChart'+chartItem.id][0].dealLegendAlias(host,chartItem.elements[innerPos].legend);
-                        if(!alias || alias===''){
-                          alias = chartItem.elements[innerPos].expression;
-                        }
-                        if(alias){
-                          host = alias;
-                        }
-                        legend.push({name:host+resIndex,alias:alias});
-                        // 图表中每条线的名字,去掉最后的逗号与空格:metric名称,  标签1=a,标签2=c
-                        seriesItem.theData.name = host+resIndex;
-                        //alert(seriesItem.theData.name);
-                        seriesItem.metric_name = seriesItem.theData.name;
-                        // 将秒改为毫秒
-                        //alert('table=='+JSON.stringify(queryItem))
-                        seriesItem.theData.data = queryItem.values.map((dpsItem, dpsIndex) => {
-                          /*曲线汇总暂不需要
-                          if (sumData.data[dpsIndex]) {
-                            const sumNum = sumData.data[dpsIndex][1] || 0;
-                            sumData.data[dpsIndex][1] = sumNum + dpsItem[1];
-                          } else {
-                            sumData.data[dpsIndex] = [dpsItem[0] * 1000, dpsItem[1]];
-                          }
-                          */
-                          let t_date = new Date(dpsItem[0] * 1000);
-                          let timeTmp = bus.timeFormate(t_date, 'yyyy-MM-dd hh:mm:ss');
-                          tableData.push({//表格数据
-                            // label: host.slice(host.indexOf('{') + 1,host.indexOf('}')),//label
-                            // metric: queryItem.metric.__name__?queryItem.metric.__name__:'',//metric列
-                            element:{element:host,alias:alias},
-                            time: timeTmp,//采集时间
-                            value: dpsItem[1],//数值
+                        const tagsArr = Object.keys(queryItem.metric);//["__name__","asset","idc","instance","job","module","project"]
+                        // 设置时间-数据格式对
+                        const dpsArr = Object.entries(queryItem.values);//[ ["0",[1577959830.781,"0"]], ["1",[1577959845.781,"0"]] ]
+                        // 判断是否有数据, && tagsArr.length > 0
+                        if (dpsArr.length > 0 && this.$refs['editChart'+chartItem.id]  && this.$refs['editChart'+chartItem.id].length>0) {
+                          tagsArr.forEach((tag, i) => {
+                            if (tag !== '__name__') {
+                              host += `${tag}="${queryItem.metric[tag]}",`;
+                            }
                           });
-                          return [dpsItem[0] * 1000, dpsItem[1]];
-                        });
-                        series.push(seriesItem.theData);
+                          if(host.endsWith(',')){host = host.substr(0,host.length-1);}
+                          if(queryItem.metric.__name__){
+                            host +="}";
+                          }
+                          if(!host || host===''){
+                            host = chartItem.elements[innerPos].expression;
+                          }
+                          //处理legend别名
 
-                      } else if (chartItem.elements && chartItem.elements[innerPos]) {
-                        // 无数据提示
-                        /*
-                        const currentInfo = chartItem.elements[innerPos];
-                        const errorMsg = `图表 ${chartItem.title} 中 ${currentInfo.metric},${currentInfo.tags} 无数据`;
-                        this.$message.warning({
-                          duration: 15,
-                          content: errorMsg,
-                          closable: true,
-                        });
-                        */
-                      }
-                    });
+                          let alias=this.$refs['editChart'+chartItem.id][0].dealLegendAlias(host,chartItem.elements[innerPos].legend);
+                          if(!alias || alias===''){
+                            alias = chartItem.elements[innerPos].expression;
+                          }
+                          if(alias){
+                            host = alias;
+                          }
+                          legend.push({name:host+resIndex,alias:alias});
+                          // 图表中每条线的名字,去掉最后的逗号与空格:metric名称,  标签1=a,标签2=c
+                          seriesItem.theData.name = host+resIndex;
+                          //alert(seriesItem.theData.name);
+                          seriesItem.metric_name = seriesItem.theData.name;
+                          // 将秒改为毫秒
+                          //alert('table=='+JSON.stringify(queryItem))
+                          seriesItem.theData.data = queryItem.values.map((dpsItem, dpsIndex) => {
+                            /*曲线汇总暂不需要
+                            if (sumData.data[dpsIndex]) {
+                              const sumNum = sumData.data[dpsIndex][1] || 0;
+                              sumData.data[dpsIndex][1] = sumNum + dpsItem[1];
+                            } else {
+                              sumData.data[dpsIndex] = [dpsItem[0] * 1000, dpsItem[1]];
+                            }
+                            */
+                            let t_date = new Date(dpsItem[0] * 1000);
+                            let timeTmp = bus.timeFormate(t_date, 'yyyy-MM-dd hh:mm:ss');
+                            tableData.push({//表格数据
+                              // label: host.slice(host.indexOf('{') + 1,host.indexOf('}')),//label
+                              // metric: queryItem.metric.__name__?queryItem.metric.__name__:'',//metric列
+                              element:{element:host,alias:alias},
+                              time: timeTmp,//采集时间
+                              value: dpsItem[1],//数值
+                            });
+                            return [dpsItem[0] * 1000, dpsItem[1]];
+                          });
+                          series.push(seriesItem.theData);
+
+                        } else if (chartItem.elements && chartItem.elements[innerPos]) {
+                          // 无数据提示
+                          /*
+                          const currentInfo = chartItem.elements[innerPos];
+                          const errorMsg = `图表 ${chartItem.title} 中 ${currentInfo.metric},${currentInfo.tags} 无数据`;
+                          this.$message.warning({
+                            duration: 15,
+                            content: errorMsg,
+                            closable: true,
+                          });
+                          */
+                        }
+                      });
+                    }
                   }
                 }else{
                   if(response.msg){
@@ -903,6 +966,7 @@ export default {
                 const chartData = {
                   chartItem:chartItem,
                   series:series,
+                  singleStatRlt:singleStatRlt,
                   legend:legend,
                   tableData:tableData,
                   panelId:this.filter.panelId,
@@ -930,6 +994,14 @@ export default {
                     this.$refs['editChart'+chartItem.id][0].setData(chartItem, series,
                       this.filter.panelId, this.filter, legend,'',errorMsg);
                   }
+                } else if(chartItem.type ==='singleStat'){
+                  if (filterType === 'showFullScreen') {//全屏查询
+                    this.$refs['editChart'+chartItem.id][0].setData(chartItem, singleStatRlt,
+                      this.filter.panelId, this.filter, filterType,errorMsg);
+                  } else {
+                    this.$refs['editChart'+chartItem.id][0].setData(chartItem, singleStatRlt,
+                      this.filter.panelId, this.filter,'',errorMsg);
+                  }
                 }
               }
             } else {
@@ -950,6 +1022,14 @@ export default {
                   } else {
                     this.$refs['editChart'+chartItem.id][0].setData(chartItem, [], this.filter.panelId,
                       this.filter);
+                  }
+                }else if(chartItem.type ==='singleStat'){
+                  if (filterType === 'showFullScreen') {//全屏查询
+                    this.$refs['editChart'+chartItem.id][0].setData(chartItem, '',
+                      this.filter.panelId, this.filter, filterType);
+                  } else {
+                    this.$refs['editChart'+chartItem.id][0].setData(chartItem, '',
+                      this.filter.panelId, this.filter);
                   }
                 }
               }

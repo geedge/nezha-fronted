@@ -210,6 +210,51 @@ export default new Vue({
       }
       return num.toFixed(2);
     },
+    getSingleStatRlt(statistics,result){
+      let dataArray = [];
+      if(result){
+        result.forEach((item)=>{
+          dataArray.push(item[1]);
+        })
+      }
+      let statisticsRlt = '';
+      if(dataArray.length>0){
+        if(statistics==='min'){//min：最小值
+          statisticsRlt = dataArray.reduce(function(a , b){
+            return b < a ? b : a;
+          });
+        }else if(statistics==='max'){// max：最大值
+          statisticsRlt = dataArray.reduce(function(a , b){
+            return b > a ? b : a;
+          });
+        }else if(statistics==='average'){// average：平均值
+          let sum = 0;
+          dataArray.forEach((item)=>{
+            sum =Number(sum) + Number(item);
+          })
+          statisticsRlt = sum/dataArray.length;
+        }else if(statistics==='total'){//total：总计
+          dataArray.forEach((item)=>{
+            statisticsRlt =Number(statisticsRlt) + Number(item);
+          })
+        }else if(statistics==='first'){//first：第一个值
+          statisticsRlt = dataArray[0];
+        }else if(statistics==='last'){// last：最后一个值
+          statisticsRlt = dataArray[dataArray.length-1];
+        }else if(statistics==='range'){//range : max - min
+          let min = dataArray.reduce(function(a , b){
+            return b < a ? b : a;
+          });
+          let max = dataArray.reduce(function(a , b){
+            return b > a ? b : a;
+          });
+          statisticsRlt = max-min;
+        }else if(statistics==='different'){//different : last - first
+          statisticsRlt = dataArray[dataArray.length-1]-dataArray[0];
+        }
+      }
+      return statisticsRlt;
+    },
     computeTimezone:function(sourceTime){
       let offset=localStorage.getItem('nz-sys-timezone');
       if(offset&& offset != 'undefined' && offset != null){

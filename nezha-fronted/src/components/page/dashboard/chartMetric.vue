@@ -268,6 +268,22 @@
         <el-col :span="20"><el-input v-model="elementInfo.legend" type="text" size="small"></el-input></el-col>
       </el-row>
     </el-form-item>
+
+    <el-form-item prop="statistics" v-show="isSingleStat">
+      <el-row :gutter="4">
+        <el-col :span="4">
+          {{$t('dashboard.panel.chartForm.statistics')}}&nbsp;
+        </el-col>
+        <el-col :span="20">
+          <el-select class="right-box-row-with-btn" popper-class="chart-box-dropdown-mini" v-model="elementInfo.statistics" placeholder="" size="small">
+            <el-option v-for="item in statisticsList" :key="item.id" :label="item.name" :value="item.id">
+              <span class="panel-dropdown-label-txt" >{{item.name}}</span>
+            </el-option>
+          </el-select>
+        </el-col>
+      </el-row>
+    </el-form-item>
+
   </el-form>
 </template>
 <script>
@@ -297,6 +313,10 @@ export default {
     hasLegend:{
       type:Boolean,
       default:true
+    },
+    isSingleStat:{
+      type:Boolean,
+      default:false
     }
   },
   components: {
@@ -313,8 +333,44 @@ export default {
         tagList: [], // 标签列表
         selectedTagList:[],//已选中的标签列表
         expression:'',
-        legend:''
+        legend:'',
+        statistics:'last'
       },
+      //isSingleStat:false,
+      statisticsList:[
+        {
+          id:"min",
+          name:this.$t("dashboard.panel.chartForm.statisticsVal.min")
+        },
+        {
+          id:"max",
+          name:this.$t("dashboard.panel.chartForm.statisticsVal.max")
+        },
+        {
+          id:"average",
+          name:this.$t("dashboard.panel.chartForm.statisticsVal.average")
+        },
+        {
+          id:"total",
+          name:this.$t("dashboard.panel.chartForm.statisticsVal.total")
+        },
+        {
+          id:"first",
+          name:this.$t("dashboard.panel.chartForm.statisticsVal.first")
+        },
+        {
+          id:"last",
+          name:this.$t("dashboard.panel.chartForm.statisticsVal.last")
+        },
+        {
+          id:"range",
+          name:this.$t("dashboard.panel.chartForm.statisticsVal.range")
+        },
+        {
+          id:"different",
+          name:this.$t("dashboard.panel.chartForm.statisticsVal.different")
+        },
+      ],
       labelValueCascaderOptions:[],//label及value改为级联后，显示用的待选label及value
       labelValueCascaderVal:[],//label及value改为级联后，选择的label及value
       //metricCascaderList:[],
@@ -516,6 +572,14 @@ export default {
         });
       });
     },
+    setSingleStat(){
+      this.hasLegend = false;
+      this.isSingleStat = true;
+    },
+    setNotSingleStat(){
+      this.hasLegend = true;
+      this.isSingleStat = false;
+    },
     // (最后整体保存添加的图标的时候执行)保存, chartdata点击确认后保存本身数据并返回给chartdata
     saveTarget(pointer,optType) {
       if (this.pointer === pointer) {
@@ -530,6 +594,7 @@ export default {
               this.elementInfo.metric = this.elementInfo.metric[2];
             }
             this.convertLabelValueCascadeVal();//将label，value级联选择的值，转换为selectTagList里
+            console.log('___saveTarget___',this.elementInfo)
             this.$emit('on-add-target-success', this.elementInfo, pointer,optType);
           }
         });
@@ -1116,10 +1181,11 @@ export default {
     },
 
     // 编辑已有图表状态时，先填充数据
-    setMdata(data) {
+    setMdata(data,statistics) {
       this.setDataFlag = true;
       this.target = Object.assign({}, data);
-      //this.pointer =
+
+      this.elementInfo.statistics = statistics;
       if(this.target.type==='expert'){
         this.tableShow = 2;
         this.elementInfo.type = this.target.type;

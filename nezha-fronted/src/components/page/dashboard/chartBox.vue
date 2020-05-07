@@ -190,7 +190,7 @@
             <div v-if="!isUrl" class="right-box-sub-title">{{$t('dashboard.panel.chartForm.metric')}}</div>
             <div v-if="!isUrl" class="line-100"></div>
 
-            <el-row v-if="!isUrl" class="element-item" v-for="(elem, index) in elements" :key="'ele' + index">
+            <el-row v-if="!isUrl && !isSingleStat" class="element-item" v-for="(elem, index) in elements" :key="'ele' + index">
               <chart-metric ref="chartTag"
                             :pointer="index"
                             :metric-list="metricList"
@@ -201,10 +201,39 @@
                             @sub-save-ok="subOk"
                             @on-add-target-success="getTarget"
               ></chart-metric>
-
             </el-row>
 
-            <button v-if="!isUrl" type="button" @click="addTarget" class="nz-btn nz-btn-size-normal nz-btn-style-light" style="margin-left: 1px;">
+            <el-row v-if="isSingleStat" class="element-item" v-for="(elem, index) in elements" :key="'ele' + index">
+              <chart-metric ref="chartTag"
+                            :has-legend="false"
+                            :is-single-stat="true"
+                            :pointer="index"
+                            :metric-list="metricList"
+                            :metricCascaderList="metricCascaderList"
+                            :metricAllData="metricAllData"
+                            :count-total="elements.length"
+                            @on-delete-target="deleteTarget"
+                            @sub-save-ok="subOk"
+                            @on-add-target-success="getTarget"
+              ></chart-metric>
+            </el-row>
+<!--
+            <el-form-item prop="param.statistics" v-show="isSingleStat">
+              <el-row :gutter="4">
+                <el-col :span="4">
+                  {{$t('dashboard.panel.chartForm.statistics')}}&nbsp;
+                </el-col>
+                <el-col :span="20">
+                  <el-select class="right-box-row-with-btn" popper-class="chart-box-dropdown-mini" v-model="chart.param.statistics" placeholder="" size="small">
+                    <el-option v-for="item in statisticsList" :key="item.id" :label="item.name" :value="item.id">
+                      <span class="panel-dropdown-label-txt" >{{item.name}}</span>
+                    </el-option>
+                  </el-select>
+                </el-col>
+              </el-row>
+            </el-form-item>
+-->
+            <button v-if="!isUrl && !isSingleStat" type="button" @click="addTarget" class="nz-btn nz-btn-size-normal nz-btn-style-light" style="margin-left: 1px;">
               <span class="top-tool-btn-txt">{{$t('dashboard.panel.chartForm.addMetric')}}</span>
             </button>
 
@@ -267,6 +296,7 @@
           panel: ''
         },
         isUrl:false,
+        isSingleStat:false,
         rules: {
           title: [
             {required: true,  message: this.$t('validate.required'),  trigger: 'blur'}
@@ -295,6 +325,10 @@
           {
             id:'url',
             name:this.$t("dashboard.panel.chartForm.typeVal.url.label")
+          },
+          {
+            id:'singleStat',
+            name:this.$t("dashboard.panel.chartForm.typeVal.singleStat.label")
           }
         ],
         elements: [1], // 指标部分 tarNum
@@ -331,6 +365,7 @@
         }
         this.rightBox.show = show;
         this.isUrl = false;
+        this.isSingleStat = false;
       },
       clickos() {
         this.esc();
@@ -560,6 +595,7 @@
           panelId = this.autocompleteExist(this.panelName2);
           if (panelId) {
             this.panelId = panelId;
+            console.log('___params___',params)
             this.$post('panel/' + this.panelId + '/charts', params).then(response => {
               if (response.code === 200) {
                 this.esc();
@@ -616,6 +652,9 @@
               height: this.chart.height,
               type: this.chart.type,
               unit:this.chart.unit,
+              param:{
+              statistics:target.statistics
+              }
             };
 
             //生成指标数组
@@ -779,6 +818,18 @@
         //this.chartModal = true;//????控制弹出框显示和隐藏的，不需要了
         this.initOpen(); // 获取metric, productId数据
       },
+      setIsUrl(){
+        this.isUrl = true;
+        this.isSingleStat = false;
+      },
+      setIsSingleStat(){
+        this.isUrl = false;
+        this.isSingleStat = true;
+      },
+      setIsOtherChart(){
+        this.isSingleStat = false;
+        this.isUrl = false;
+      },
       // 编辑chart时使用, set_tdata
       editData(data, panelId) {
         //alert('data='+JSON.stringify(data)+"=="+panelId);
@@ -799,9 +850,24 @@
         this.chart.unit=data.unit;
         if(this.chart.type==='url'){
           this.chart.param.url = data.param.url;
-          this.isUrl = true;
+          this.setIsUrl();
           this.elements = [1];
+        }else if(this.chart.type==='singleStat'){
+          this.setIsSingleStat();
+          this.elements = [];
+          bus.chartAddInfo.metricTarget = [];
+          data.elements.forEach((item, index) => {
+            this.elements.push(index);
+          });
+          this.$nextTick(() => {
+            const cSet = this.$refs.chartTag;
+            // 派发charttag数据
+            cSet.forEach((item, index) => {
+              item.setMdata(data.elements[index],data.param.statistics);
+            });
+          });
         }else{
+          this.setIsOtherChart();
           //this.getSuggestMetric();//获得指标列表
           // 指标
           this.elements = [];
@@ -862,9 +928,27 @@
         let chartType = this.chart.type;
         this.chart.param.url='';
         if(chartType==='url'){
-          this.isUrl = true;
+          this.setIsUrl();
+          /*if(this.$refs.chartTag){
+            this.$refs.chartTag.forEach((item, index) => {
+              item.setNotSingleStat();
+            });
+          }*/
+        }else if(chartType==='singleStat'){
+          this.elements = [1];
+          this.setIsSingleStat();
+          /*if(this.$refs.chartTag){
+            this.$refs.chartTag.forEach((item, index) => {
+              item.setSingleStat();
+            });
+          }*/
         }else {
-          this.isUrl = false;
+          this.setIsOtherChart();
+          /*if(this.$refs.chartTag){
+            this.$refs.chartTag.forEach((item, index) => {
+              item.setNotSingleStat();
+            });
+          }*/
         }
       },
       /*panel搜索建议*/

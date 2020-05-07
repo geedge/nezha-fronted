@@ -72,6 +72,18 @@
         </div>
       </template>
 
+      <template v-if="chart.type==='singleStat'">
+        <div id="chartSingleStatPreview" @mouseenter="mouseEnterFullChart" @mouseleave="mouseLeaveFullChart"
+         style=" height:100%;display:table;text-align:center;width:calc(100% - 16px);color:#000;" >
+          <div class="line-area" ref="singleStatArea"  id="singleStatArea"  style="margin-top:0px; text-align:center;
+      vertical-align: middle;
+      display:table-cell;
+      font-size:30px;">
+            {{serieSingleStat}}
+          </div>
+        </div>
+      </template>
+
       <template  v-if="chart.type==='table'">
         <div id="chartTablePreview" :class="{'visible':tableShow,'hidden':!tableShow}" >
         <el-table id="tableContainer" style="margin-top: 10px;" class="nz-table" height="95%" :data="seriesItemScreen" border  tooltip-effect="light" v-scrollBar:el-table >
@@ -130,6 +142,7 @@
         //seriesItem: [], // 保存信息
         isError:false,
         errorContent:'',
+        serieSingleStat:'',
         seriesItemScreen:[],
         pageSizes:[50,100,200],
         screenPageObj:{
@@ -175,89 +188,6 @@
         chartSpaceHeight:5,//top-border: 1,bottom-border: 1,padding-bottome:3
         titleHeight:50,
         legendHeight:80,
-        //oldChartBoxCss:'',
-        /*
-        pickerOptions: {
-          shortcuts: [
-            {
-              text:  this.$t("dashboard.panel.recOne"),
-              onClick(picker) {
-                const end = new Date();
-                const start = new Date();
-                start.setHours(start.getHours() - 1);
-                picker.$emit('pick', [start, end]);
-              }
-            },{
-              text: this.$t("dashboard.panel.recFour"),
-              onClick(picker) {
-                const end = new Date();
-                const start = new Date();
-                start.setHours(start.getHours() - 4);
-                picker.$emit('pick', [start, end]);
-              }
-            }, {
-              text: this.$t("dashboard.panel.recOneDay"),
-              onClick(picker) {
-                const end = new Date();
-                const start = new Date();
-                start.setDate(start.getDate() - 1);
-                picker.$emit('pick', [start, end]);
-              }
-            },  {
-              text: this.$t("dashboard.panel.yesterday"),
-              onClick(picker) {
-                const start = new Date();
-                const end = new Date();
-                start.setDate(start.getDate() - 1);
-                start.setHours(0);
-                start.setMinutes(0);
-                start.setSeconds(0);
-                end.setDate(end.getDate() - 1);
-                end.setHours(23);
-                end.setMinutes(59);
-                end.setSeconds(59);
-                picker.$emit('pick', [start, end]);
-              }
-            },{
-              text: this.$t("dashboard.panel.recSevenDay"),
-              onClick(picker) {
-                const end = new Date();
-                const start = new Date();
-                start.setDate(start.getDate() - 7);
-                picker.$emit('pick', [start, end]);
-              }
-            }, {
-              text: this.$t("dashboard.panel.recOneMonth"),
-              onClick(picker) {
-                const end = new Date();
-                const start = new Date();
-                start.setDate(start.getDate() - 30);
-                picker.$emit('pick', [start, end]);
-              }
-            }, {
-              text: this.$t("dashboard.panel.curMonth"),
-              onClick(picker) {
-                const end = new Date();
-                const start = new Date();
-                start.setDate(1);
-                start.setHours(0);
-                start.setMinutes(0);
-                picker.$emit('pick', [start, end]);
-              }
-            },{
-              text: this.$t("dashboard.panel.lastMonth"),
-              onClick(picker) {
-                const end = new Date();
-                const start = new Date();
-                start.setDate(1);
-                start.setMonth(start.getMonth() - 1);
-                end.setDate(0);
-                start.setStart();
-                end.setEnd();
-                picker.$emit('pick', [start, end]);
-              }
-            }]
-        },*/
       };
     },
     computed: {
@@ -282,6 +212,8 @@
         }else if(chartType==='url'){
           this.urlShow = false;
           chartContainerId = 'chartUrlPreview';
+        }else if (chartType === 'singleStat') {
+          chartContainerId = 'chartSingleStatPreview';
         }
 
         //设置高度 chart-table
@@ -376,6 +308,9 @@
               this.setTableData([]);
             } else if (chartItem.type === 'line' || chartItem.type === 'bar' || chartItem.type === 'stackArea' || chartItem.type === 4) {
               this.setData(chartItem, []);
+            }else if(chartItem.type ==='singleStat'){
+              this.serieSingleStat = "";
+              this.$refs.loadingPreview.endLoading();
             }
           });
         } else {
@@ -399,6 +334,7 @@
             axios.all(axiosArr).then((res) => {
               if (res.length > 0) {
                 const series = [];
+                let singleStatRlt = '';
                 const legend = [];
                 const tableData = [];
                 const sumData = {
@@ -412,89 +348,101 @@
                     this.isError = false;
                     this.errorContent = "";
                     if (response.data.result) {
-                      // console.log(response.data.result)
-                      // 循环处理每个elements下获取的数据列
-                      response.data.result.forEach((queryItem,resInnerPos) => {
-                        const seriesItem = {
-                          theData: {
-                            name: '',
-                            symbol:'emptyCircle',  //去掉点
-                            symbolSize:[2,2],
-                            smooth:true,  //曲线变平滑
-                            showSymbol:false,
-                            data: [],
-                            type:chartItem.type,
-                          },
-                          metric_name: '',
-                        };
-                        if(chartItem.type === 'stackArea'){
-                          seriesItem.theData.type='line';
-                          seriesItem.theData.stack=chartItem.title;
-                          seriesItem.theData.areaStyle={"opacity": 0.3};
+                      if(chartItem.type==='singleStat'){
+                        if(response.data.result.length===1){
+                          let statistics = chartItem.param.statistics;
+                          if(response.data.result[0].values){
+                            singleStatRlt  = bus.getSingleStatRlt(statistics,response.data.result[0].values);
+                          }
+                        }else if(response.data.result.length > 1){
+                          singleStatRlt = this.$t("dashboard.panel.singleStatErrorTip");
                         }
-                        // 图表中每条线的名字,后半部分
-                        let host = '';//up,
-                        if(queryItem.metric.__name__){
-                          host = `${queryItem.metric.__name__}{`;//up,
-                        }
-                        const tagsArr = Object.keys(queryItem.metric);//["__name__","asset","idc","instance","job","module","project"]
-                        // 设置时间-数据格式对
-                        const dpsArr = Object.entries(queryItem.values);//[ ["0",[1577959830.781,"0"]], ["1",[1577959845.781,"0"]] ]
-                        // 判断是否有数据, && tagsArr.length > 0
-                        if (dpsArr.length > 0 ) {
-                          tagsArr.forEach((tag, i) => {
-                            if (tag !== '__name__') {
-                              host += `${tag}="${queryItem.metric[tag]}",`;
-                            }
-                          });
-                          if(host.endsWith(',')){host = host.substr(0,host.length-1);}
-                          if(queryItem.metric.__name__){
-                            host +="}";
+                      }else {
+                        // 循环处理每个elements下获取的数据列
+                        response.data.result.forEach((queryItem, resInnerPos) => {
+                          const seriesItem = {
+                            theData: {
+                              name: '',
+                              symbol: 'emptyCircle',  //去掉点
+                              symbolSize: [2, 2],
+                              smooth: true,  //曲线变平滑
+                              showSymbol: false,
+                              data: [],
+                              type: chartItem.type,
+                            },
+                            metric_name: '',
+                          };
+                          if (chartItem.type === 'stackArea') {
+                            seriesItem.theData.type = 'line';
+                            seriesItem.theData.stack = chartItem.title;
+                            seriesItem.theData.areaStyle = {"opacity": 0.3};
                           }
-                          if(!host || host===''){
-                            host = chartItem.elements[innerPos].expression;
+                          // 图表中每条线的名字,后半部分
+                          let host = '';//up,
+                          if (queryItem.metric.__name__) {
+                            host = `${queryItem.metric.__name__}{`;//up,
                           }
-                          //处理legend别名
-                          let alias=this.dealLegendAlias(host,chartItem.elements[innerPos].legend);
-                          if(!alias || alias===''){
-                            alias = chartItem.elements[innerPos].expression;
-                          }
-                          if(alias){
-                            host = alias;
-                          }
-                          legend.push({name:host+resInnerPos,alias:alias});
-                          // 图表中每条线的名字,去掉最后的逗号与空格:metric名称,  标签1=a,标签2=c
-                          seriesItem.theData.name = host+resInnerPos;
-                          seriesItem.metric_name = seriesItem.theData.name;
-                          // 将秒改为毫秒
-                          //alert('table=='+JSON.stringify(queryItem))
-                          seriesItem.theData.data = queryItem.values.map((dpsItem, dpsIndex) => {
-                            let t_date = new Date(dpsItem[0] * 1000);
-                            let timeTmp = bus.timeFormate(t_date, 'yyyy-MM-dd hh:mm:ss');
-                            tableData.push({//表格数据
-                              // label: host.slice(host.indexOf('{') + 1,host.indexOf('}')),//label
-                              // metric: queryItem.metric.__name__?queryItem.metric.__name__:'',//metric列
-                              element:{element:host,alias:alias},
-                              time: timeTmp,//采集时间
-                              value: dpsItem[1],//数值
+                          const tagsArr = Object.keys(queryItem.metric);//["__name__","asset","idc","instance","job","module","project"]
+                          // 设置时间-数据格式对
+                          const dpsArr = Object.entries(queryItem.values);//[ ["0",[1577959830.781,"0"]], ["1",[1577959845.781,"0"]] ]
+                          // 判断是否有数据, && tagsArr.length > 0
+                          if (dpsArr.length > 0) {
+                            tagsArr.forEach((tag, i) => {
+                              if (tag !== '__name__') {
+                                host += `${tag}="${queryItem.metric[tag]}",`;
+                              }
                             });
-                            return [dpsItem[0] * 1000, dpsItem[1]];
-                          });
-                          series.push(seriesItem.theData);
+                            if (host.endsWith(',')) {
+                              host = host.substr(0, host.length - 1);
+                            }
+                            if (queryItem.metric.__name__) {
+                              host += "}";
+                            }
+                            if (!host || host === '') {
+                              host = chartItem.elements[innerPos].expression;
+                            }
+                            //处理legend别名
+                            let alias = this.dealLegendAlias(host, chartItem.elements[innerPos].legend);
+                            if (!alias || alias === '') {
+                              alias = chartItem.elements[innerPos].expression;
+                            }
+                            if (alias) {
+                              host = alias;
+                            }
+                            legend.push({name: host + resInnerPos, alias: alias});
+                            // 图表中每条线的名字,去掉最后的逗号与空格:metric名称,  标签1=a,标签2=c
+                            seriesItem.theData.name = host + resInnerPos;
+                            seriesItem.metric_name = seriesItem.theData.name;
+                            // 将秒改为毫秒
+                            //alert('table=='+JSON.stringify(queryItem))
+                            seriesItem.theData.data = queryItem.values.map((dpsItem, dpsIndex) => {
+                              let t_date = new Date(dpsItem[0] * 1000);
+                              let timeTmp = bus.timeFormate(t_date, 'yyyy-MM-dd hh:mm:ss');
+                              tableData.push({//表格数据
+                                // label: host.slice(host.indexOf('{') + 1,host.indexOf('}')),//label
+                                // metric: queryItem.metric.__name__?queryItem.metric.__name__:'',//metric列
+                                element: {element: host, alias: alias},
+                                time: timeTmp,//采集时间
+                                value: dpsItem[1],//数值
+                              });
+                              return [dpsItem[0] * 1000, dpsItem[1]];
+                            });
+                            series.push(seriesItem.theData);
 
-                        } else if (chartItem.elements && chartItem.elements[innerPos]) {
-                          // 无数据提示
-                          /*
-                          const currentInfo = chartItem.elements[innerPos];
-                          const errorMsg = `图表 ${chartItem.title} 中 ${currentInfo.metric},${currentInfo.tags} 无数据`;
-                          this.$message.warning({
-                            duration: 15,
-                            content: errorMsg,
-                            closable: true,
-                          });
-                          */
-                        }
-                      });
+                          } else if (chartItem.elements && chartItem.elements[innerPos]) {
+                            // 无数据提示
+                            /*
+                            const currentInfo = chartItem.elements[innerPos];
+                            const errorMsg = `图表 ${chartItem.title} 中 ${currentInfo.metric},${currentInfo.tags} 无数据`;
+                            this.$message.warning({
+                              duration: 15,
+                              content: errorMsg,
+                              closable: true,
+                            });
+                            */
+                          }
+                        });
+                    }
                     }
                   }else{
                     alert('error')
@@ -515,6 +463,14 @@
                     if (series.length && chartItem.type === 4) {//曲线汇总
                     }
                     this.setData(chartItem, series, legend);
+                  }else if(chartItem.type ==='singleStat'){
+                    if(Number(singleStatRlt)){
+                      let singleStatTmp =parseFloat(Number(singleStatRlt).toFixed(2));
+                      this.serieSingleStat = chartDataFormat.getUnit(chartItem.unit?chartItem.unit:2).compute(singleStatTmp,null,2);
+                    }else {
+                      this.serieSingleStat =singleStatRlt;
+                    }
+                    this.$refs.loadingPreview.endLoading();
                   }
                 //}
               } else {
@@ -524,6 +480,9 @@
                       this.setTableData([]);
                   } else if (type === 'line' || type === 'bar' || type === 'stackArea' || type === 4) {
                       this.setData(chartItem, []);
+                  }else if(chartItem.type ==='singleStat'){
+                    this.serieSingleStat = "";
+                    this.$refs.loadingPreview.endLoading();
                   }
                 //}
               }
@@ -1031,7 +990,7 @@
           iframe.src="";
         }
         this.isStackArea = false;
-
+        this.serieSingleStat = '';
       },
       // 重新请求数据 刷新操作
       /*
@@ -1065,6 +1024,10 @@
           this.showLegend = false;
           this.$refs.loadingPreview.startLoading();
           this.getQueryChart();
+        }else if (chartType === 'singleStat') {
+          this.serieSingleStat = "";
+          this.$refs.loadingPreview.startLoading();
+          this.getChartData();
         }
       },
       // 查询数据,修改日期查询全屏数据
