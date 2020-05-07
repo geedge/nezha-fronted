@@ -159,7 +159,7 @@ const en = {
       recFour:'Last 4 hours',//'最近4小时'
       recOneDay:'Last 1 day',//'最近1日'
       yesterday:'Yesterday', //'昨日'
-      recSevenDay:'最近7日',// Last 7 days
+      recSevenDay:'Last 7 day',// Last 7 days
       recOneMonth:'Last 1 month',//'最近1月'
       curMonth:'This month',//'本月'
       lastMonth:'Last month',//'上月'
@@ -298,7 +298,7 @@ const en = {
     host:'Invalid IP',//'不合法的IP'
     domain:'Invalid domain',
     usize:'Must be number(1 - 49)',
-    fileSize:'文件过大',//File exceed max size.
+    fileSize:'File exceed max size',//File exceed max size.
     port:'Invalid port',
     url:'Invalid URL',
     uSize:'Must be number(1 - 47)',
