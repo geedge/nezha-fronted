@@ -63,4 +63,8 @@
     border-bottom-right-radius: 0px !important;
     border-top-right-radius: 0px !important;
   }
+  .chart-unit .el-input__inner{
+    border-top-left-radius: 0 !important;
+    border-bottom-left-radius: 0 !important;
+  }
 </style>

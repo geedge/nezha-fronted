@@ -61,28 +61,32 @@
     operation: [
       {
         value: 'add',
-        label: i18n.t('overall.add')
+        label: i18n.t('config.operationlog.operations.add')
       },
       {
         value: 'update',
-        label: i18n.t('overall.edit')
+        label: i18n.t('config.operationlog.operations.update')
       },
       {
         value: 'query',
-        label: i18n.t('overall.query')
+        label: i18n.t('config.operationlog.operations.query')
       },
       {
         value: 'import',
-        label: i18n.t('overall.importExcelLower')
+        label: i18n.t('config.operationlog.operations.import')
       },
       {
         value: 'export',
-        label: i18n.t('overall.exportExcelLower')
+        label: i18n.t('config.operationlog.operations.export')
       },
       {
         value: 'reset',
-        label: i18n.t('overall.reset')
-      }
+        label: i18n.t('config.operationlog.operations.reset')
+      },
+      {
+        value: 'unknown',
+        label: i18n.t('config.operationlog.operations.unknown')
+      },
     ],
     alertMessageState: [
       {

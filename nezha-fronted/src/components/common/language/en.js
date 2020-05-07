@@ -618,7 +618,17 @@ const en = {
       time: "Duration",
       params: "Params",
       state: "State",
-      response:"Response"
+      response:"Response",
+      operations:{
+        add:'add',
+        query:'query',
+        update:'update',
+        import:'import',
+        export:'export',
+        delete:'delete',
+        reset:'reset',
+        unknown:'unknown'
+      }
     },
     mib:{
       mib:'SNMP MIB',

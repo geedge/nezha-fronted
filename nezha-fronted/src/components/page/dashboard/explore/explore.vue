@@ -767,4 +767,10 @@ instance_cpu_time_ns{app="fox", proc="widget", rev="4d3a513", env="prod", job="c
     text-overflow: ellipsis;
     white-space: nowrap;
   }
+  .explore-table .ps__rail-x:hover{
+    opacity: 0.4 !important;
+  }
+  .explore-table .ps__rail-x:focus{
+    opacity: 0.9 !important;
+  }
 </style>

@@ -604,7 +604,17 @@ const cn = {
       operaId: "数据ID",
       time: "耗时",
       params: "请求参数",
-      state: "请求结果"
+      state: "请求结果",
+      operations:{
+        add:'add',
+        query:'query',
+        update:'update',
+        import:'import',
+        export:'export',
+        delete:'delete',
+        reset:'reset',
+        unknown:'unknown'
+      }
     },
     mib: {
       mib: "SNMP MIB",
