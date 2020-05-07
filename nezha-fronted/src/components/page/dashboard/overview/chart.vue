@@ -288,9 +288,11 @@
       },
       startLoading:function(){
         this.$refs.loading.startLoading();
+        this.$emit("is-loading", true);
       },
       endLoading:function(){
         this.$refs.loading.endLoading();
+        this.$emit("is-loading", false);
       },
       guid() {
         function S4() {

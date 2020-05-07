@@ -95,28 +95,31 @@
                 </span>
               </div>
               <div class="content-col-content">
-                <chart-box chart-type="overviewLine" ref="chartbox" :show-toolbox="false" name="trend" :unit="15"></chart-box>
-                <div class="no-data-tip" v-if="(!chartSeries[0] && !chartSeries[1]) || (chartSeries[0].data.length == 0 && chartSeries[1] && chartSeries[1].data.length == 0)">N/A</div>
+                <chart-box chart-type="overviewLine" ref="chartbox" :show-toolbox="false" name="trend" :unit="15" @is-loading="(isLoading)=>{this.trendLoading = isLoading}"></chart-box>
+                <div class="no-data-tip" v-if="!trendLoading && ((!chartSeries[0] && !chartSeries[1]) || (chartSeries[0].data.length == 0 && chartSeries[1] && chartSeries[1].data.length == 0))">N/A</div>
               </div>
             </div>
             <div class="content-col-box">
               <div class="content-col-title">{{$t("dashboard.overview.dataCenter.dataCenter")}}</div>
               <div class="content-col-content">
-                <chart-box chart-type="map" :tooltip-formatter="mapTooltipFormatter" :map="map" ref="dataCenterMap"></chart-box>
+                <chart-box chart-type="map" :tooltip-formatter="mapTooltipFormatter" :map="map" ref="dataCenterMap" @is-loading="(isLoading)=>{this.mapLoading = isLoading}"></chart-box>
+                <div class="no-data-tip" v-if="!mapLoading && (!map || !map.geoJson || !map.geoJson.geoJson)">N/A</div>
               </div>
             </div>
           </div>
           <!--第三行-->
           <div class="content-row-box">
+            <!--第一个图-->
             <div class="content-col-box">
               <div class="content-col-title">
                 <span>{{$t("dashboard.overview.asset.assetType")}}</span>
               </div>
               <div class="content-col-content">
-                <chart-box chart-type="pie" ref="assetTypePie" :show-toolbox="false" name="assetTypePie" :tooltip-formatter="assetTypeFormatter" ></chart-box>
-                <div class="no-data-tip" v-if="assetData.typeStat && assetData.typeStat.length == 0">N/A</div>
+                <chart-box chart-type="pie" ref="assetTypePie" :show-toolbox="false" name="assetTypePie" :tooltip-formatter="assetTypeFormatter" @is-loading="(isLoading)=>{this.assetTypeLoading = isLoading}"></chart-box>
+                <div class="no-data-tip" v-if="!assetTypeLoading && assetData.typeStat && assetData.typeStat.length == 0">N/A</div>
               </div>
             </div>
+            <!--第二个图-->
             <div class="content-col-box">
               <div class="content-col-title">
                 <span>{{$t("dashboard.overview.alert.alertRuleTopN")}}</span>
@@ -128,10 +131,11 @@
                 </el-dropdown>
               </div>
               <div class="content-col-content">
-                <chart-box axis-tooltip="y" chart-type="bar" ref="ruleMessage" :tooltip-formatter="simpleFormatter" :show-toolbox="false" name="ruleMessage"></chart-box>
-                <div class="no-data-tip" v-if="(!messageByRuleSeries.data && !messageByRuleSeries.category) || (messageByRuleSeries.data.length == 0 && messageByRuleSeries.category.length == 0)">N/A</div>
+                <chart-box axis-tooltip="y" chart-type="bar" ref="ruleMessage" :tooltip-formatter="simpleFormatter" :show-toolbox="false" name="ruleMessage" @is-loading="(isLoading)=>{this.ruleMessageLoading = isLoading}"></chart-box>
+                <div class="no-data-tip" v-if="!ruleMessageLoading && ((!messageByRuleSeries.data && !messageByRuleSeries.category) || (messageByRuleSeries.data.length == 0 && messageByRuleSeries.category.length == 0))">N/A</div>
               </div>
             </div>
+            <!--第三个图-->
             <div class="content-col-box">
               <div class="content-col-title">
                 <span>
@@ -161,10 +165,10 @@
                 </el-dropdown>
               </div>
               <div class="content-col-content">
-                <chart-box axis-tooltip="y" v-show="alertMessageShow == 'asset'" :tooltip-formatter="simpleFormatter" chart-type="bar" ref="assetMessage" name="assetMessage" :show-toolbox="false"></chart-box>
-                <chart-box axis-tooltip="y" v-show="alertMessageShow == 'module'" :tooltip-formatter="simpleFormatter" chart-type="bar" ref="moduleMessage" name="moduleMessage" :show-toolbox="false"></chart-box>
-                <div class="no-data-tip" v-show="alertMessageShow == 'asset'" v-if="(!messageByAssetSeries.data && !messageByAssetSeries.category) || (messageByAssetSeries.data.length == 0 && messageByAssetSeries.category.length == 0)">N/A</div>
-                <div class="no-data-tip" v-show="alertMessageShow == 'module'" v-if="(!messageByModuleSeries.data && !messageByModuleSeries.category) || (messageByModuleSeries.data.length == 0 && messageByModuleSeries.category.length == 0)">N/A</div>
+                <chart-box axis-tooltip="y" v-show="alertMessageShow == 'asset'" :tooltip-formatter="simpleFormatter" chart-type="bar" ref="assetMessage" name="assetMessage" :show-toolbox="false" @is-loading="(isLoading)=>{this.assetMessageLoading = isLoading}"></chart-box>
+                <chart-box axis-tooltip="y" v-show="alertMessageShow == 'module'" :tooltip-formatter="simpleFormatter" chart-type="bar" ref="moduleMessage" name="moduleMessage" :show-toolbox="false" @is-loading="(isLoading)=>{this.moduleMessageLoading = isLoading}"></chart-box>
+                <div class="no-data-tip" v-show="alertMessageShow == 'asset'" v-if="!assetMessageLoading && ((!messageByAssetSeries.data && !messageByAssetSeries.category) || (messageByAssetSeries.data.length == 0 && messageByAssetSeries.category.length == 0))">N/A</div>
+                <div class="no-data-tip" v-show="alertMessageShow == 'module'" v-if="!moduleMessageLoading && ((!messageByModuleSeries.data && !messageByModuleSeries.category) || (messageByModuleSeries.data.length == 0 && messageByModuleSeries.category.length == 0))">N/A</div>
               </div>
             </div>
           </div>
@@ -202,6 +206,7 @@
 
         //data
         assetLoading: false,
+        assetTypeLoading: false, //第三行第一个图
         assetData: '',
         projectLoading: false,
         projectData: '',
@@ -213,11 +218,16 @@
         alertMessageData: '',
         alertRuleData: '',
         map: null,
+        mapLoading: false,
         chartSeries: [],
+        trendLoading: false,
         assetTypeSeries: [],
         messageByRuleSeries: [],
+        ruleMessageLoading: false, //第三行第二个图
         messageByAssetSeries: [],
+        assetMessageLoading: false, //第三行第三个图
         messageByModuleSeries: [],
+        moduleMessageLoading: false, //第三行第三个图
         alertRuleStatData: {},
         dataCenterMapSeries: [],
         trafficDatacenterData: [],
@@ -274,12 +284,13 @@
       },
       queryAssetData() {
         this.assetLoading = true;
+        this.$refs.assetTypePie.startLoading();
         this.$get('overview/assetStat').then(response => {
           this.assetLoading = false;
           if (response.code === 200) {
             this.assetData = response.data;
+
             /*饼图*/
-            this.$refs.assetTypePie.startLoading();
             let legendData = [];
             let typeSeriesData = [];
             //let modelSeriesData = [];
@@ -452,6 +463,7 @@
       queryAlertTrendData() {
         this.$refs.chartbox.startLoading();
         this.chartSeries = [];
+
         this.$get('/prom/api/v1/query_range', this.trendParamHandle('rx')).then(response=>{
           if(response.status == 'success'){
             if(response.data.result){
@@ -468,8 +480,10 @@
                 });
               }
               this.chartSeries.push(series);
-              this.$refs.chartbox.setSeries(this.chartSeries);
-              this.$refs.chartbox.endLoading();
+              if (this.chartSeries.length == 2) {
+                this.$refs.chartbox.setSeries(this.chartSeries);
+                this.$refs.chartbox.endLoading();
+              }
             }
           }else{
             console.error(response)
@@ -491,8 +505,10 @@
                 });
               }
               this.chartSeries.push(series);
-              this.$refs.chartbox.setSeries(this.chartSeries);
-              this.$refs.chartbox.endLoading();
+              if (this.chartSeries.length == 2) {
+                this.$refs.chartbox.setSeries(this.chartSeries);
+                this.$refs.chartbox.endLoading();
+              }
             }
           }else{
             console.error(response)
@@ -632,7 +648,9 @@
         return params;
       },
       queryMapChartGeoJson() {
+        this.$refs.dataCenterMap.startLoading();
         this.$get('/sysConfig?paramKey=geoJson').then(response=>{
+          this.$refs.dataCenterMap.endLoading();
           if(response.code == 200){
             this.map={
               name:'Kazakhstan',
@@ -640,6 +658,7 @@
             }
             setTimeout(()=>{this.queryDataCenterMapData();},200)
           }else{
+            this.$refs.dataCenterMap.endLoading();
             console.error('loading map info faild')
           }
         })
@@ -726,9 +745,9 @@
         })
       },
       queryAlertStatByRule() {
+        this.$refs.ruleMessage.startLoading();
         this.$get('overview/alertStatByRule', {top: this.topFilter.rule}).then(response => {
           if (response.code === 200) {
-            this.$refs.ruleMessage.startLoading();
             let seriesData = [];
             let categoryData = [];
             response.data.list.forEach(item => {
@@ -748,9 +767,9 @@
         });
       },
       queryAlertStatByAsset() {
+        this.$refs.assetMessage.startLoading();
         this.$get('overview/alertStatByAsset', {top: this.topFilter.asset}).then(response => {
           if (response.code === 200) {
-            this.$refs.assetMessage.startLoading();
             let seriesData = [];
             let categoryData = [];
             response.data.list.forEach(item => {
@@ -770,9 +789,9 @@
         });
       },
       queryAlertStatByModule() {
+        this.$refs.moduleMessage.startLoading();
         this.$get('overview/alertStatByModule', {top: this.topFilter.module}).then(response => {
           if (response.code === 200) {
-            this.$refs.moduleMessage.startLoading();
             let seriesData = [];
             let categoryData = [];
             response.data.list.forEach(item => {
