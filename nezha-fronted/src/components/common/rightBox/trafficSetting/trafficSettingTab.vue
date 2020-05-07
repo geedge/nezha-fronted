@@ -643,14 +643,15 @@
     line-height: 20px;
   }
   .tab-tags-item .tag-item-key{
-    border:1px solid #E6E4E4;
+    border:1px solid #409eff;;
     border-top-left-radius: 3px;
     border-bottom-left-radius: 3px;
-    background-color: #E6E4E4;
+    background-color: #409eff;
     width: 52px;
+    color: white;
   }
   .tab-tags-item .tag-item-value{
-    border:1px solid #E6E4E4;
+    border:1px solid #409eff;
     border-top-right-radius: 3px;
     border-bottom-right-radius: 3px;
     background-color: #FFF;
