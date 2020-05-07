@@ -443,9 +443,10 @@ li{
 
 /* begin--左侧列表*/
 .content-left {
-  float: left;
+  display: inline-block;
   width: 200px;
   height: 100%;
+  vertical-align: top;
   border-right: 1px solid #eeeeee;
   padding: 0 0 0 15px;
   box-sizing: border-box;
@@ -507,8 +508,9 @@ li{
 /* begin--右侧内容*/
 .content-right {
   height: 100%;
-  margin-left: 201px;
   padding: 0 5px;
+  display: inline-block;
+  box-sizing: border-box;
   background-color: $content-right-background-color;
 }
 .content-right-option {

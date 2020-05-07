@@ -6,8 +6,7 @@
           <div class="bottom-divider"></div>
           <div style="display: inline-block;float: right;margin-right:15px;"><i style="font-size: 24px;" :class="{'nz-icon nz-icon-push-pin-line':isShrink,'nz-icon nz-icon-push-pin-fill':!isShrink}" :style="{color:!isShrink?'#EE9D3F':''}"></i></div>
         </div>
-      </div>
-      <div class="content-right right-slot" :class="{'right-slot-open':isShrink}">
+      </div><div class="content-right right-slot" :class="{'right-slot-open':isShrink}">
         <slot name="content-right" ></slot>
       </div>
     </div>
@@ -21,7 +20,7 @@
       },
       data(){
         return{
-          isShrink:false,
+          isShrink: this.$store.state.leftMenuStat,
         }
       },
       methods:{
@@ -33,9 +32,6 @@
           }
         }
       },
-      mounted() {
-        this.isShrink=this.$store.state.leftMenuStat ;
-      }
     }
 </script>
 
@@ -50,27 +46,35 @@
   .content .left-slot{
     position: relative;
     background-color: $left-menu-bgcolor;
+    transition: transform 200ms;
+    /*transition: width 200ms;*/
+    transform: scaleX(1);
+    transform-origin: left;
     /*border-bottom: 1px solid #eeeeee;*/
     /*transition: all 100ms;*/
   }
   .content .right-slot{
-    margin-left: unset !important;
-    width: calc(100% - 210px);
-    float: right;
+    width: calc(100% - 200px);
+  }
+  .content .right-slot-open{
+    width: calc(100% - 46px);
+    margin-left: -154px;
   }
   .content .left-slot-shrink{
-    width: 25px;
-    padding: 0px;
+    /*width: 25px;*/
+    transform: scaleX(0.25);
     .bottom-icon .bottom-divider{
       width: 0px;
     }
     .slot-content{
-      visibility: hidden;
+      /*visibility: hidden;*/
+      opacity: 0;
     }
   }
-  .content .right-slot-open{
-    width:calc(100% - 35px);
+  .slot-content {
+    transition: opacity 200ms;
   }
+
   .left-slot .bottom-icon{
     position:absolute;
     bottom: 15px;
@@ -97,12 +101,14 @@
     visibility: hidden;
   }
   .content .left-slot-shrink:hover{
-    width: 200px;
-    padding: 0px 0px 0px 15px;
-    position: absolute;
+    /*width: 200px;*/
+    transform: scaleX(1);
+    /*padding: 0px 0px 0px 15px;
+    position: absolute;*/
     z-index: 100;
     .slot-content{
-      visibility: visible;
+      /*visibility: visible;*/
+      opacity: 1;
     }
     .bottom-icon{
       z-index: 101;
