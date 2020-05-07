@@ -183,6 +183,7 @@ export const scrollBar = {
 export const bottomBoxWindow = {
   // 鼠标拖动二级列表
   listResize(vm, e) {
+    window.resizing = true;
     let mainListDom = document.querySelector(".main-list-with-sub"); //主列表
     let subListDom = document.querySelector(".sub-list"); //副列表
     let contentRightDom = document.querySelector(".content-right"); //右侧内容区
@@ -194,6 +195,7 @@ export const bottomBoxWindow = {
     let mouseInitialY = e.clientY;
 
     document.onmousemove = (e) => {
+      window.resizing = true;
       mainListDom.classList.remove('main-and-sub-transition');
       subListDom.classList.remove('main-and-sub-transition');
       e.preventDefault();
@@ -213,17 +215,17 @@ export const bottomBoxWindow = {
         subListDom.style.height = subInitialHeight-mouseMoveY+'px';
       }
 
-      // 主、副列表最小高度限制为15px
-      if(parseInt(mainListDom.style.height) >= contentRightHeight-15){
+      // 主、副列表最小高度限制为15px; 23是因为拖动区域有8的高度
+      if(parseInt(mainListDom.style.height) > contentRightHeight-23){
         vm.toTopBtnTop = contentRightHeight+5+'px';
-        mainListDom.style.height = contentRightHeight-15+'px';
+        mainListDom.style.height = contentRightHeight-23+'px';
       }
       if(parseInt(mainListDom.style.height) <= 15){
         vm.toTopBtnTop = '35px';
         mainListDom.style.height = '15px';
       }
-      if(parseInt(subListDom.style.height) >= contentRightHeight-15){
-        subListDom.style.height = contentRightHeight-15+'px';
+      if(parseInt(subListDom.style.height) > contentRightHeight-23){
+        subListDom.style.height = contentRightHeight-23+'px';
       }
       if(parseInt(subListDom.style.height) <= 15){
         subListDom.style.height = '15px';
@@ -249,6 +251,7 @@ export const bottomBoxWindow = {
       }
     };
     document.onmouseup = () => {
+      window.resizing = false;
       mainListDom.classList.add('main-and-sub-transition');
       subListDom.classList.add('main-and-sub-transition');
       document.onmousemove = null;

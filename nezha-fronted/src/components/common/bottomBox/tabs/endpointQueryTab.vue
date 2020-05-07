@@ -265,12 +265,13 @@
         });
       },
       tableReload() {
-        this.tableShow = false;
-        setTimeout(() => {
-          this.tableShow = true;
-          //this.queryEndpoint();
-        }, 300);
-        //this.$nextTick(() => {this.tableShow = true});
+        var table = this.$refs.endpointQueryTable;
+        let resizeTimeout = setInterval(() => {
+          if (!window.resizing) {
+            table.setHeight();
+            clearInterval(resizeTimeout);
+          }
+        }, 200);
       },
       queryEndpoint() {
         this.loading = true;
@@ -684,6 +685,7 @@
     mounted() {
       this.getPanelData();
       //this.$nextTick(() => {
+      setTimeout(() => {this.$refs.endpointQueryTable.setHeight();}, 700);
       setTimeout(() => {
         //绑定滚动条事件，控制top按钮
         let el = this.$refs.endpointQueryTable.$el.querySelector(".el-table__body-wrapper");

@@ -99,7 +99,7 @@ Vue.use(plTable);
 /*指令*/
 Vue.directive('clickoutside', clickoutside);
 Vue.directive('scrollBar', scrollBar);
-
+window.resizing = false;
 window.vm = new Vue({
   el: '#app',
   router,
