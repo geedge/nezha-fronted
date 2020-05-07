@@ -152,7 +152,7 @@
   var vm;
   import bus from '../../../libs/bus';
   import trafficSettingBox from "../../common/rightBox/trafficSetting/trafficSettingBox";
-  import util from "./util";
+  // import util from "./util";
   export default {
     name: "dc",
     components:{
@@ -257,10 +257,10 @@
       }
     },
     methods: {
-      listLanguage:function(){
-        util.methods.listLanguage();
-        console.log(util.data().languageList)
-      },
+      // listLanguage:function(){
+      //   util.methods.listLanguage();
+      //   console.log(util.data().languageList)
+      // },
       elementsetShow(s, e) {
         var eventfixed = {
           shezhi: 0,
