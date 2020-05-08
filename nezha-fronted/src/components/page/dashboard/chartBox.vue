@@ -922,7 +922,7 @@
         this.chart.height=item;
       },
       unitSelected:function(value){
-        this.chart.unit=value[value.length-1];
+        //this.chart.unit=value[value.length-1];
       },
       chartTypeChange(){
         let chartType = this.chart.type;

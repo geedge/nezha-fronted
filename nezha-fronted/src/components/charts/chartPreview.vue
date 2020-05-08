@@ -11,6 +11,15 @@
     .visible{
       visibility: visible;
     }
+    .chart-title {
+      display: flex;
+    }
+    .chart-title-text{
+      max-width:calc(100% - 175px);
+      text-overflow: ellipsis;
+      overflow: hidden;
+      white-space: nowrap;
+    }
 </style>
 <style>
   .char-url-preview html{
@@ -40,8 +49,8 @@
               <span class="panel-info-corner-inner"></span>
           </span>
       </el-popover>
-      <div slot="title">
-        <span class="nz-dialog-title">{{chart.title}}</span>
+      <div slot="title" class="chart-title">
+        <span class="nz-dialog-title chart-title-text">{{chart.title}}</span>
         <div class="float-right panel-calendar dialog-tool"  v-if="chart.type!=='url'">
 
           <time-picker ref="calendarPanel" class="nz-dashboard-picker" style="margin-top: -12px;" @change="dateChange"></time-picker>
