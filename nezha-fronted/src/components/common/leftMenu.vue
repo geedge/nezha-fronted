@@ -47,7 +47,6 @@
     position: relative;
     background-color: $left-menu-bgcolor;
     transition: transform 200ms;
-    /*transition: width 200ms;*/
     transform: scaleX(1);
     transform-origin: left;
     /*border-bottom: 1px solid #eeeeee;*/
