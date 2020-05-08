@@ -114,17 +114,12 @@ export default {
             },
             panelIdInner: '', // 看板id=panelId,原写作chart,由set_data获取
             firstLoad: false, // 是否第一次加载
-            //showLoading:true,
-            //showLoadingScreen:false,
-            //showTable:true,
-            chartType: 'table', // 图表类型
             screenModal: false,
             // 查询数据使用
             filter: {
                 start_time: '',
                 end_time: '',
             },
-            stableFilter: {}, // 保存数据使用,初始化起止时间,单图or多图等
             firstShow: false, // 默认不显示操作按钮,
             caretShow:false,
             dragTitleShow:false,
@@ -204,8 +199,8 @@ export default {
             chartBox[_this.chartIndex].style.width = (containerWidth+chartBoxPadding)+'px';
             //chartBox[_this.chartIndex].style.height = `${containerHeight}px`;
             //表格的高度
-            const tableBox = document.getElementById('chartContainer'+_this.chartIndex);
-            tableBox.style.height = `${containerHeight-_this.titleHeight}px`;//-75-32+25
+            const chartSingleStatBox = document.getElementById('chartContainer'+_this.chartIndex);
+          chartSingleStatBox.style.height = `${containerHeight-_this.titleHeight}px`;//-75-32+25
         }
 
         document.onmouseup=function(){
@@ -255,8 +250,8 @@ export default {
           chartBox[_this.chartIndex].style.width = (containerWidth+chartBoxPadding)+'px';
           //chartBox[_this.chartIndex].style.height = `${containerHeight}px`;
           //表格的高度
-          const tableBox = document.getElementById('chartContainer'+_this.chartIndex);
-          tableBox.style.height = `${containerHeight-_this.titleHeight}px`;
+          const chartSingleStatBox = document.getElementById('chartContainer'+_this.chartIndex);
+          chartSingleStatBox.style.height = `${containerHeight-_this.titleHeight}px`;
 
           const modifyParams = {
             id:_this.data.id,
@@ -305,7 +300,6 @@ export default {
         clearData(){
         },
         showLoad(chartItem) {
-          //设置高度 chart-table
           this.$nextTick(() => {
             const chartBox = document.getElementById('chartSingleStatDiv'+this.chartIndex);
             let height = chartItem.height;
@@ -374,7 +368,7 @@ export default {
               this.data = chartItem;
               this.unit = chartDataFormat.getUnit(this.data.unit);
               if(Number(seriesItem)){
-                let singleStatTmp =parseFloat(Number(seriesItem).toFixed(2));
+                let singleStatTmp =Number(seriesItem).toFixed(2);
                 this.serieSingleStat = chartDataFormat.getUnit(chartItem.unit?chartItem.unit:2).compute(singleStatTmp,null,2);
               }else {
                 this.serieSingleStat =seriesItem;
@@ -383,7 +377,6 @@ export default {
               this.searchTime[1] = filter.end_time;
               this.endLoading('screen');
             }else{
-              //设置高度 chart-table
               this.$nextTick(() => {
                 const chartBox = document.getElementById('chartSingleStatDiv'+this.chartIndex);
                 let height = chartItem.height;
@@ -402,7 +395,7 @@ export default {
               this.data = chartItem;
               this.unit = chartDataFormat.getUnit(this.data.unit);
               if(Number(seriesItem)){
-                let singleStatTmp =parseFloat(Number(seriesItem).toFixed(2));
+                let singleStatTmp =Number(seriesItem).toFixed(2);
                 this.serieSingleStat = chartDataFormat.getUnit(chartItem.unit?chartItem.unit:2).compute(singleStatTmp,null,2);
               }else {
                 this.serieSingleStat =seriesItem;
