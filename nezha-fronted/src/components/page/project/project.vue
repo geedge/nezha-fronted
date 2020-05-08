@@ -85,6 +85,7 @@
             <export-excel
               export-file-name="endpoint"
               export-url="/endpoint/export"
+              import-url="/endpoint/import"
               :params="endpointSearchLabel"
               @afterImport="getEndpointTableData"
               class="margin-l-20"

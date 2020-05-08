@@ -97,6 +97,7 @@
                   <export-excel
                     export-file-name="asset"
                     export-url="/asset/export"
+                    import-url="/asset/import"
                     :params="searchLabel"
                     @afterImport="getAssetData"
                    >

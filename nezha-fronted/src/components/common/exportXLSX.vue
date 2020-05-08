@@ -105,7 +105,7 @@
       exportUrl:{type:String,required:true},
       params:{type:Object},
       exportFileName:{type:String},
-
+      importUrl: {type:String,required:true},
     },
     data:function(){
       return {
@@ -130,7 +130,13 @@
 
       },
       rollbackImport:function(){
-        this.$delete('/asset/cancelImport?seq='+this.importResult.seq).then(response=>{
+        let url;
+        if (this.importUrl.indexOf("asset") > -1) {
+          url = "/asset/cancelImport";
+        } else if (this.importUrl.indexOf("endpoint") > -1) {
+          url = "/endpoint/cancelImport";
+        }
+        this.$delete(url + '?seq='+this.importResult.seq).then(response=>{
           if(response.code ==  200 ){
             this.$message({duration: 2000, type: 'success', message: this.$t("tip.saveSuccess")});
           }else{
@@ -142,8 +148,8 @@
       importExcel:function(){
         if(this.importFile && this.importFile.raw){
           let form = new FormData();
-          form.append('assetsExcelFile',this.importFile.raw);
-          this.$post('/asset/import',form,{'Content-Type': 'multipart/form-data'}).then(response=>{
+          form.append('excelFile',this.importFile.raw);
+          this.$post(this.importUrl,form,{'Content-Type': 'multipart/form-data'}).then(response=>{
             if(response.code==200 && response.msg=='success'){
               this.importResult=response.data;
               this.$emit('afterImport')

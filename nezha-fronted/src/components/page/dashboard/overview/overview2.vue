@@ -33,31 +33,44 @@
             <div class="content-col-box">
               <div class="content-col-title">{{$t("dashboard.overview.asset.title")}}</div>
               <div class="content-col-content" v-loading="assetLoading">
-                <div class="content-col-content-num">{{(assetData ? assetData.totalStat.total  : "") | numberFormat}}</div>
+                <div class="content-col-content-num">
+                  <vue-countup :start-value="0" :end-value="(assetData ? assetData.totalStat.total  : '') | numberFormat"></vue-countup>
+                  <span class="overview-row-unit">{{(assetData ? assetData.totalStat.total  : '') | unitFormat}}</span>
+                </div>
               </div>
             </div>
             <div class="content-col-box">
               <div class="content-col-title">{{$t("dashboard.overview.project.project")}}</div>
               <div class="content-col-content" v-loading="projectLoading">
-                <div class="content-col-content-num">{{(projectData ? projectData.projectStat.length  : "") | numberFormat}}</div>
+                <div class="content-col-content-num">
+                  <vue-countup :start-value="0" :end-value="(projectData ? projectData.projectStat.length  : '') | numberFormat"></vue-countup>
+                  <span class="overview-row-unit">{{(projectData ? projectData.projectStat.length  : '') | unitFormat}}</span>
+                </div>
               </div>
             </div>
             <div class="content-col-box">
               <div class="content-col-title">{{$t("dashboard.overview.module.module")}}</div>
               <div class="content-col-content" v-loading="moduleLoading">
-                <div class="content-col-content-num">{{(moduleData ? moduleData.moduleStat.length  : "") | numberFormat}}</div>
+                <div class="content-col-content-num">
+                  <vue-countup :start-value="0" :end-value="(moduleData ? moduleData.moduleStat.length  : '') | numberFormat"></vue-countup>
+                  <span class="overview-row-unit">{{(moduleData ? moduleData.moduleStat.length  : '') | unitFormat}}</span>
+                </div>
               </div>
             </div>
             <div class="content-col-box">
               <div class="content-col-title">{{$t("dashboard.overview.endpoint.endpoint")}}</div>
               <div class="content-col-content" v-loading="endpointLoading">
-                <div class="content-col-content-num">{{(endpointData ? endpointData.total : "") | numberFormat}}</div>
+                <div class="content-col-content-num">
+                  <vue-countup :start-value="0" :end-value="(endpointData ? endpointData.total : '') | numberFormat"></vue-countup>
+                  <span class="overview-row-unit">{{(endpointData ? endpointData.total : '') | unitFormat}}</span>
+                </div>
               </div>
             </div>
             <div class="content-col-box">
               <div class="content-col-title">{{$t("dashboard.overview.alert.alertMessage")}}</div>
               <div class="content-col-content" v-loading="alertMessageLoading">
-                <div class="content-col-content-num">{{(alertMessageData ? alertMessageData.alertMessageTotal : "") | numberFormat}}</div>
+                <div class="content-col-content-num"><vue-countup :start-value="0" :end-value="(alertMessageData ? alertMessageData.alertMessageTotal : '') | numberFormat"></vue-countup></div>
+                <span class="overview-row-unit">{{(alertMessageData ? alertMessageData.alertMessageTotal : '') | unitFormat}}</span>
                 <span>{{$t("dashboard.overview.alert.ruleNum")}}&nbsp;:&nbsp;{{(alertRuleData ? alertRuleData.alertRuleTotal : "") | numberFormat}}</span>
               </div>
             </div>
@@ -188,12 +201,15 @@
   import axios from 'axios';
   import bus from '../../../../libs/bus';
   import timePicker from '../../../common/timePicker'
+  import VueCountUp from 'vue-countupjs'
+
   var timeout; //第三行第三个图的dropdown下拉菜单timeout
   export default {
     name: "overview2",
     components:{
       'chart-box': chart,
-      'time-picker': timePicker
+      'time-picker': timePicker,
+      'vue-countup': VueCountUp
     },
     data() {
       return {
@@ -265,6 +281,23 @@
           }
         }
         return 0;
+      },
+      unitFormat(num) {
+        if (num) {
+          try {
+            num = parseFloat(num);
+            if (num < 1000) {
+              return "";
+            } else if (num < 1000000) {
+              return " K";
+            } else if (num < 1000000000) {
+              return " M";
+            }
+          } catch (err) {
+            return "";
+          }
+        }
+        return "";
       }
     },
     methods: {

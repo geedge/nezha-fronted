@@ -217,7 +217,7 @@
 .content-row-box:first-of-type .content-col-box:last-of-type .content-col-content {
   position: relative;
 }
-.content-row-box:first-of-type .content-col-box:last-of-type .content-col-content span {
+.content-row-box:first-of-type .content-col-box:last-of-type .content-col-content>span:last-of-type {
   position: absolute;
   bottom: 5%;
   right: 5%;
