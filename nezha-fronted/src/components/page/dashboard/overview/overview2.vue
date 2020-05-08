@@ -34,7 +34,7 @@
               <div class="content-col-title">{{$t("dashboard.overview.asset.title")}}</div>
               <div class="content-col-content" v-loading="assetLoading">
                 <div class="content-col-content-num">
-                  <vue-countup :start-value="0" :end-value="(assetData ? assetData.totalStat.total  : '') | numberFormat"></vue-countup>
+                  <vue-countup :start-value="0" :end-value="(assetData ? assetData.totalStat.total  : '') | numberFormat" :decimals="(assetData ? assetData.totalStat.total  : 0) < 1000 ? 0 : 1"></vue-countup>
                   <span class="overview-row-unit">{{(assetData ? assetData.totalStat.total  : '') | unitFormat}}</span>
                 </div>
               </div>
@@ -43,7 +43,7 @@
               <div class="content-col-title">{{$t("dashboard.overview.project.project")}}</div>
               <div class="content-col-content" v-loading="projectLoading">
                 <div class="content-col-content-num">
-                  <vue-countup :start-value="0" :end-value="(projectData ? projectData.projectStat.length  : '') | numberFormat"></vue-countup>
+                  <vue-countup :start-value="0" :end-value="(projectData ? projectData.projectStat.length : '') | numberFormat" :decimals="(projectData ? projectData.projectStat.length : 0) < 1000 ? 0 : 1"></vue-countup>
                   <span class="overview-row-unit">{{(projectData ? projectData.projectStat.length  : '') | unitFormat}}</span>
                 </div>
               </div>
@@ -52,7 +52,7 @@
               <div class="content-col-title">{{$t("dashboard.overview.module.module")}}</div>
               <div class="content-col-content" v-loading="moduleLoading">
                 <div class="content-col-content-num">
-                  <vue-countup :start-value="0" :end-value="(moduleData ? moduleData.moduleStat.length  : '') | numberFormat"></vue-countup>
+                  <vue-countup :start-value="0" :end-value="(moduleData ? moduleData.moduleStat.length : '') | numberFormat" :decimals="(moduleData ? moduleData.moduleStat.length : 0) < 1000 ? 0 : 1"></vue-countup>
                   <span class="overview-row-unit">{{(moduleData ? moduleData.moduleStat.length  : '') | unitFormat}}</span>
                 </div>
               </div>
@@ -61,7 +61,7 @@
               <div class="content-col-title">{{$t("dashboard.overview.endpoint.endpoint")}}</div>
               <div class="content-col-content" v-loading="endpointLoading">
                 <div class="content-col-content-num">
-                  <vue-countup :start-value="0" :end-value="(endpointData ? endpointData.total : '') | numberFormat"></vue-countup>
+                  <vue-countup :start-value="0" :end-value="(endpointData ? endpointData.total : '') | numberFormat" :decimals="(endpointData ? endpointData.total : 0) < 1000 ? 0 : 1"></vue-countup>
                   <span class="overview-row-unit">{{(endpointData ? endpointData.total : '') | unitFormat}}</span>
                 </div>
               </div>
@@ -69,7 +69,7 @@
             <div class="content-col-box">
               <div class="content-col-title">{{$t("dashboard.overview.alert.alertMessage")}}</div>
               <div class="content-col-content" v-loading="alertMessageLoading">
-                <div class="content-col-content-num"><vue-countup :start-value="0" :end-value="(alertMessageData ? alertMessageData.alertMessageTotal : '') | numberFormat"></vue-countup></div>
+                <div class="content-col-content-num"><vue-countup :start-value="0" :end-value="(alertMessageData ? alertMessageData.alertMessageTotal : '') | numberFormat" :decimals="(alertMessageData ? alertMessageData.alertMessageTotal : 0) < 1000 ? 0 : 1"></vue-countup></div>
                 <span class="overview-row-unit">{{(alertMessageData ? alertMessageData.alertMessageTotal : '') | unitFormat}}</span>
                 <span>{{$t("dashboard.overview.alert.ruleNum")}}&nbsp;:&nbsp;{{(alertRuleData ? alertRuleData.alertRuleTotal : "") | numberFormat}}</span>
               </div>
@@ -272,9 +272,9 @@
             if (num < 1000) {
               return num;
             } else if (num < 1000000) {
-              return (num/1000).toFixed(fixed) + "K";
+              return (num/1000).toFixed(fixed);
             } else if (num < 1000000000) {
-              return (num/1000000).toFixed(fixed) + "M";
+              return (num/1000000).toFixed(fixed);
             }
           } catch (err) {
             return 0;
