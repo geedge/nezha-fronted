@@ -57,12 +57,12 @@
     width: calc(100% - 200px);
   }
   .content .right-slot-open{
-    width: calc(100% - 46px);
-    margin-left: -154px;
+    width: calc(100% - 23px);
+    margin-left: -177px;
   }
   .content .left-slot-shrink{
     /*width: 25px;*/
-    transform: scaleX(0.25);
+    transform: scaleX(0.12);
     .bottom-icon .bottom-divider{
       width: 0px;
     }
