@@ -403,6 +403,7 @@
         if (this.loading) {
           return;
         }
+        /*处理snmpset*/
         if (!set) {
           if (this.searchParam.operation == 'set') {
             this.snmpSetFormVisible = true;
@@ -416,22 +417,25 @@
           }
           this.snmpSetFormVisible = false;
         }
+
         this.loading = true;
-        this.$post('mib/browser', this.searchParam).then(response => {
-          this.loading = false;
-          if (response.code === 200) {
-            let wrapper = document.querySelector(".el-table__body-wrapper");
-            if (wrapper._ps_) {
-              wrapper.scrollTop = wrapper._ps_.contentHeight;
+        setTimeout(() => {
+          this.$post('mib/browser', this.searchParam).then(response => {
+            this.loading = false;
+            if (response.code === 200) {
+              let wrapper = document.querySelector(".el-table__body-wrapper");
+              if (wrapper._ps_) {
+                wrapper.scrollTop = wrapper._ps_.contentHeight;
+              }
+              this.resultData = this.resultData.concat(response.data.list);
+              if (this.searchParam.operation == 'set') {
+                this.$message({duration: 2000, type: 'success', message: this.$t("tip.success")});
+              }
+            } else {
+              this.$message.error(response.msg);
             }
-            this.resultData = this.resultData.concat(response.data.list);
-            if (this.searchParam.operation == 'set') {
-              this.$message({duration: 2000, type: 'success', message: this.$t("tip.success")});
-            }
-          } else {
-            this.$message.error(response.msg);
-          }
-        });
+          });
+        }, 300);
       },
 
       popShow() {
