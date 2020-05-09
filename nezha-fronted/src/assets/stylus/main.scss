@@ -880,6 +880,7 @@ li{
 }
 .right-box-add-endpoint {
   width: 850px;
+  transition: width 200ms;
 }
 .right-box-add-endpoint.right-box-add-endpoint-snmp {
   width: 690px;

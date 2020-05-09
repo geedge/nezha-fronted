@@ -41,6 +41,7 @@ const en = {
     changePwd:'Change password',//修改密码
     createChart:'Create chart',
     createProject:'Create project',
+    createEndpoint:'Create Endpoint',
     createAsset:'Create asset',
     createAlertRule:'Create alert rule',
     createAccount:'Create account',

@@ -23,15 +23,15 @@
         <el-form class="right-box-form" :model="endpoint" label-position="top" :rules="rules" ref="endPointForm">
           <!--project-->
           <el-form-item :label="$t('project.project.project')" prop="project.id">
-            <el-select @change="((val) => {changeProject(val);})" value-key="id" popper-class="config-dropdown" v-model="currentProject" placeholder="" v-if="rightBox.isEdit" size="small">
-              <el-option :id="'edit-project-'+item.id" v-for="item in projectList" :key="item.id" :label="item.name" :value="item"></el-option>
+            <el-select @change="((val) => {changeProject(val);})" value-key="id" popper-class="config-dropdown" v-model="endpoint.projectId" placeholder="" v-if="rightBox.isEdit" size="small">
+              <el-option :id="'edit-project-'+item.id" v-for="item in projectList" :key="item.id" :label="item.name" :value="item.id"></el-option>
             </el-select>
             <div v-if="!rightBox.isEdit" class="right-box-form-content-txt">{{endpoint.project.name}}</div>
           </el-form-item>
           <!--module-->
           <el-form-item :label="$t('project.module.module')" prop="module.id">
-            <el-select @change="((val) => {changeModule(val);})" value-key="id" popper-class="config-dropdown" v-model="currentModule" placeholder="" v-if="rightBox.isEdit" size="small">
-              <el-option :id="'edit-module-'+item.id" v-for="item in moduleList" :key="item.id" :label="item.name" :value="item"></el-option>
+            <el-select @change="((val) => {changeModule(val);})" value-key="id" popper-class="config-dropdown" v-model="endpoint.moduleId" placeholder="" v-if="rightBox.isEdit" size="small">
+              <el-option :id="'edit-module-'+item.id" v-for="item in moduleList" :key="item.id" :label="item.name" :value="item.id"></el-option>
             </el-select>
             <div v-if="!rightBox.isEdit" class="right-box-form-content-txt">{{endpoint.module.name}}</div>
           </el-form-item>
@@ -189,17 +189,18 @@
   export default {
     name: "endpointBox",
     props: {
-      endpoint: Object,
-      currentProject: Object,
-      currentModule: Object
+      postEndpoint: Object,
     },
     data() {
       return {
+        endpoint:null,
         rightBox: {show: false, title: '',isEdit: false},
         subBox: {show: false, title: this.$t("overall.asset")}, //asset子弹框
         assetSearch: {host: '', sn: '', text: '', label: 'IP', dropdownShow: false}, //侧滑框中asset的搜索相关
         assetPageObj: {pageNo: 1, pageSize: 11, total: 0},
         selectedAsset: {id: '', host: '', sn: ''}, //endpoint侧滑框中选中的asset
+        currentProject: null,
+        currentModule: null,
         projectList: [],
         moduleList: [],
         assetList: [],
@@ -230,11 +231,15 @@
       toEdit(show, id) {
         this.rightBox.isEdit = show;
         this.rightBox.show = true;
-        if (show) {
-          this.rightBox.title = this.$t("project.endpoint.editEndpoint") + "  ID：" + id;
-        } else {
-          this.rightBox.title = this.$t("project.endpoint.endpoint") + "  ID：" + id;
-        }
+        this.$nextTick(()=>{
+          if (show) {
+            this.rightBox.title = this.$t("project.endpoint.editEndpoint") + "  ID：" + id;
+            this.currentProject=this.projectList.find(item=>{return item.id == this.endpoint.projectId})
+            this.getModuleList(this.endpoint.projectId,true)
+          } else {
+            this.rightBox.title = this.$t("project.endpoint.endpoint") + "  ID：" + id;
+          }
+        });
       },
 
       //endpoint弹框中asset子弹框控制
@@ -309,17 +314,18 @@
       },
 
       //project下拉框点击事件
-      changeProject(project) {
-        this.currentModule = {id: '', name: '', project: {}, port: '', path: '', param: '', paramObj: []};
-        this.getModuleList(project.id);
+      changeProject(projectId) {
+        this.currentModule = {id: '', name: '', project: {},type:'', port: '', path: '', param: '', paramObj: []};
+        this.getModuleList(projectId);
+        this.endpoint.moduleId='';
       },
 
       //project下拉框点击事件
-      changeModule(module) {
-        this.currentModule = module;
-        this.endpoint.port = module.port;
-        this.endpoint.path = module.path;
-        this.endpoint.paramObj = module.paramObj;
+      changeModule(moduleId) {
+        this.currentModule = this.moduleList.find(item=>{return item.id ==  this.endpoint.moduleId});
+        this.endpoint.port = this.currentModule.port;
+        this.endpoint.path = this.currentModule.path;
+        this.endpoint.paramObj = this.currentModule.paramObj;
       },
 
       // 获取endpoint弹框中的asset子弹框里asset列表数据
@@ -372,7 +378,7 @@
         }
       },
       // 获取endpoint弹框中module下拉框数据
-      getModuleList(projectId) {
+      getModuleList(projectId,setCurModule=false) {
         this.$get('module', {projectId: projectId}).then(response => {
           if (response.code === 200) {
             for (let i = 0; i < response.data.list.length; i++) {
@@ -387,6 +393,9 @@
               }
             }
             this.moduleList = response.data.list;
+            if(setCurModule){
+              this.currentModule=this.moduleList.find(item=>{return item.id == this.endpoint.moduleId});
+            }
           }
         });
       },
@@ -467,7 +476,7 @@
       },
     },
     mounted() {
-      setTimeout(()=>{this.getModuleList(this.currentProject.id);}, 100);
+      // setTimeout(()=>{this.getModuleList(this.currentProject.id);}, 100);
     },
     watch: {
       projectListReloadWatch(n, o) {
@@ -475,7 +484,14 @@
       },
       moduleListReloadWatch(n, o) {
         this.getModuleList(this.currentProject.id);
-      }
+      },
+      postEndpoint:{
+        immediate:true,
+        deep:true,
+        handler(n,o){
+          this.endpoint=Object.assign({},n)
+        },
+      },
     }
   }
 </script>

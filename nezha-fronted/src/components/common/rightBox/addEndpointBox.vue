@@ -15,7 +15,7 @@
         <el-form class="right-box-form" label-position="top" ref="addEndpointForm" :model="endpointForm" :rules="rules">
           <!--project-->
           <el-form-item :label='$t("project.project.project")' prop="projectId">
-            <el-select @change="((val) => {changeProject(val)})" value-key="id" popper-class="config-dropdown" v-model="currentProject" placeholder="" size="small">
+            <el-select @change="((val) => {changeProject(val)})" value-key="id" popper-class="config-dropdown" v-model="currentProjectCopy" placeholder="" size="small">
               <el-option v-for="item in projectList" :key="item.id" :label="item.name" :value="item" :id="'project-'+item.id"></el-option>
             </el-select>
           </el-form-item>
@@ -404,7 +404,7 @@
         this.$get('project', {pageSize: -1, pageNo: 1}).then(response => {
           if (response.code === 200) {
             this.projectList = response.data.list;
-            this.getModuleList(this.currentProject.id);
+            this.getModuleList(this.currentProjectCopy.id);
           }
         });
       },
@@ -449,6 +449,7 @@
         this.tempParamObj = [];
         this.endpointList = [];
         this.getAssetList();
+        this.getModuleList(project.id);
       },
 
       changeModule(module) {
@@ -482,7 +483,7 @@
         });
         this.assetList.splice(index, 1);
         this.endpointTouch = true;
-        this.endpointForm.projectId = this.currentProject.id;
+        this.endpointForm.projectId = this.currentProjectCopy.id;
         this.endpointForm.moduleId = this.currentModuleCopy.id;
         this.$refs.assetScrollbar.update();
       },
@@ -523,7 +524,7 @@
 
       //保存endpoint
       save() {
-        this.endpointForm.projectId = this.currentProject.id;
+        this.endpointForm.projectId = this.currentProjectCopy.id;
         this.endpointForm.moduleId = this.currentModuleCopy.id;
         if (this.endpointList.length == 0) {
           this.endpointTouch = true;
@@ -593,6 +594,7 @@
       clearEndpoints() {
         this.getAssetList();
         this.endpointList = [];
+        this.assetSearch= {host: '', sn: '', text: '', label: 'IP', dropdownShow: false}
       },
 
       setRowIndex({row, rowIndex}) {
@@ -622,10 +624,9 @@
 
       },
       currentProject(n, o) {
+        this.currentProjectCopy=Object.assign({},n);
         this.endpointForm.projectId = n.id;
-        if(n.id != o.id){
-          this.getModuleList(n.id);
-        }
+        this.getModuleList(n.id);
       },
       currentModule: {
         immediate: true,
@@ -653,7 +654,7 @@
         this.getProjectList();
       },
       moduleListReloadWatch(n, o) {
-        this.getModuleList(this.currentProject.id);
+        this.getModuleList(this.currentProjectCopy.id);
       }
     }
   }

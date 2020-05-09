@@ -91,7 +91,7 @@
               class="margin-l-20"
             >
               <template slot="optionZone">
-                <button @click.stop="toCreateEndpoint" :title="$t('overall.createProject')" class="nz-btn nz-btn-size-normal nz-btn-style-light" id="project-create-project">
+                <button @click.stop="toCreateEndpoint" :title="$t('overall.createEndpoint')" class="nz-btn nz-btn-size-normal nz-btn-style-light" id="project-create-project">
                   <i class="nz-icon nz-icon-create-square"></i></button>
                 <!--<div class="export-left-btn" @click.stop="toCreateEndpoint">
                   <i class="nz-icon nz-icon-create-square" :title="$t('overall.createProject')" ></i>
@@ -186,8 +186,8 @@
     ></element-set>
 
     <module-box :currentProject="currentProject" :module="editModule" @reload="getAllModuleList" ref="moduleBox"></module-box>
-    <edit-endpoint-box :currentProject="currentProject" :currentModule="currentModule" :endpoint="editEndpoint" @reload="getEndpointTableData" ref="editEndpointBox"></edit-endpoint-box>
-    <add-endpoint-box :currentProject="currentProject" :currentModule="currentModule" @reload="getEndpointTableData" ref="addEndpointBox"></add-endpoint-box>
+    <edit-endpoint-box :project="currentProject" :module="currentModule" :post-endpoint="editEndpoint" @reload="getEndpointTableData" ref="editEndpointBox"></edit-endpoint-box>
+    <add-endpoint-box :currentProject="endpointEditInfos.project" :currentModule="endpointEditInfos.module" @reload="getEndpointTableData" ref="addEndpointBox"></add-endpoint-box>
     <!--<asset-box :edit-unit-show='viewAssetState' @refreshData="getEndpointTableData" @sendStateData="tabControl"
                ref="assetEditUnit"></asset-box>-->
   </div>
@@ -223,7 +223,10 @@
         subResizeShow: true,
         mainListHeight: '', //主列表dom的高度
         showSubList: false,
-
+        endpointEditInfos:{
+          project:null,
+          module:null,
+        },
         userData: [],
         showTopBtn: false, //主列表top按钮
         tableHover: false, //控制滚动条和top按钮同时出现
@@ -458,8 +461,8 @@
         // }
       },
       detailProjectInfo:function(event,project){
+        this.pageType='project'
         if(event){
-          this.pageType='project'
           if(project){
             this.currentProject=project;
             // this.$store.commit('setProject',this.currentProject)
@@ -506,6 +509,9 @@
       //弹出endpoint编辑页
       toEditEndpoint(endpoint) {
         this.editEndpoint = JSON.parse(JSON.stringify(endpoint));
+        this.$set(this.editEndpoint,'projectId',this.currentModule.project.id)
+        this.$set(this.editEndpoint,'moduleId',this.currentModule.id)
+
         this.rightBoxHandler(3);
         this.$refs.editEndpointBox.toEdit(true, this.editEndpoint.id);
         if (!this.editEndpoint.paramObj) {
@@ -514,6 +520,8 @@
       },
 
       toCreateEndpoint() {
+        this.endpointEditInfos.project=Object.assign({},this.currentModule.project);
+        this.endpointEditInfos.module=Object.assign({},this.currentModule)
         this.$refs.addEndpointBox.show(true);
         this.$refs.addEndpointBox.clearEndpoints();
       },
@@ -789,6 +797,9 @@
       currentProjectChange() {
         return this.$store.state.currentProject;
       },
+      projectListChange(){
+        return this.$store.state.projectListChange;
+      },
       moduleListReloadWatch() {
         return this.$store.state.moduleListChange;
       },
@@ -799,6 +810,9 @@
           this.currentProject = Object.assign({}, n);
           this.detailProjectInfo();
         }
+      },
+      projectListChange:function(n,o){
+        this.getProjectList();
       },
       currentProject(n, o) {
         // this.getModuleList();
