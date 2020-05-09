@@ -1129,6 +1129,7 @@
       },
       /*header 时间处理end*/
       jumpTo(data, id) {
+        bus.$emit("menu-change", data);
         this.$router.push({
           path: "/" + data,
           query: {

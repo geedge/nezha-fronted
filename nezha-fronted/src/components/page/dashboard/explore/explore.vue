@@ -84,6 +84,7 @@
               <div class="introduce-view right-margin" v-show="showIntroduce">
                 <div class="info-room">
                   <div class="col-md-9 doc-content">
+                    <h2 class="page-header">Query examples<a class="header-anchor" href="https://prometheus.io/docs/prometheus/latest/querying/examples/" target="_blank"><i style="font-size: 16px;" class="nz-icon nz-icon-link1"></i></a></h2>
                     <h2 >
                       Simple time series selection
                     </h2>
@@ -617,11 +618,11 @@ instance_cpu_time_ns{app="fox", proc="widget", rev="4d3a513", env="prod", job="c
     color: #e6522c;
     font-size: 30px;
     text-transform: uppercase;
-    margin: 40px 0 10px 0;
+    margin: 0px 0 10px 0;
   }
 
   .doc-content > h1 a {
-    color: #e6522c;
+    color: #000 !important;
   }
 
   .doc-content.blog > h1 {
@@ -657,18 +658,14 @@ instance_cpu_time_ns{app="fox", proc="widget", rev="4d3a513", env="prod", job="c
 
   .doc-content a.header-anchor {
     padding-left: 15px;
+    color: gray;
+    text-decoration: none;
   }
 
-  .doc-content a.header-anchor:after {
-    content: "\F0C1";
-    font-family: FontAwesome;
-    font-weight: normal;
-    font-size: .8em;
-  }
 
   .doc-content a.header-anchor:link,
   .doc-content a.header-anchor:visited {
-    visibility: hidden;
+    /*visibility: hidden;*/
   }
 
   .doc-content h1:hover a.header-anchor:hover,
@@ -677,7 +674,7 @@ instance_cpu_time_ns{app="fox", proc="widget", rev="4d3a513", env="prod", job="c
   .doc-content h4:hover a.header-anchor:hover,
   .doc-content h5:hover a.header-anchor:hover,
   .doc-content h6:hover a.header-anchor:hover {
-    color: #000;
+    /*color: #000;*/
   }
 
   .doc-content h1:hover a.header-anchor,
@@ -686,8 +683,8 @@ instance_cpu_time_ns{app="fox", proc="widget", rev="4d3a513", env="prod", job="c
   .doc-content h4:hover a.header-anchor,
   .doc-content h5:hover a.header-anchor,
   .doc-content h6:hover a.header-anchor {
-    color: #999;
-    visibility: visible;
+    /*color: #999;*/
+    /*visibility: visible;*/
   }
 
   .doc-content img {
