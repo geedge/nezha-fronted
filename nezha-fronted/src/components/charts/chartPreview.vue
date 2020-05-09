@@ -13,9 +13,10 @@
     }
     .chart-title {
       display: flex;
+      justify-content: space-between;
     }
     .chart-title-text{
-      max-width:calc(100% - 175px);
+      max-width:calc(100% - 20px);
       text-overflow: ellipsis;
       overflow: hidden;
       white-space: nowrap;
