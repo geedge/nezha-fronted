@@ -45,6 +45,9 @@
         <el-menu-item index="1-2">
           <div @click="jumpTo('explore')" :class="{'menu-item-active' :activeIndex == 'explore'}">{{$t('dashboard.metricPreview.title')}}</div>
         </el-menu-item>
+        <el-menu-item index="1-3">
+          <div @click="jumpTo('test')" :class="{'menu-item-active' :activeIndex == 'test'}">test</div>
+        </el-menu-item>
       </el-submenu>
 
       <el-submenu index="2" popper-class="nz-submenu">
