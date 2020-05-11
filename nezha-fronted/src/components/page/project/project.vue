@@ -1142,8 +1142,4 @@
   .project .sidebar-info-item{
     margin:0px !important;
   }
-  .small-pop{
-    width: 25px !important;
-    min-width: unset !important;
-  }
 </style>

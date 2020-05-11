@@ -62,7 +62,7 @@
           </div>
           <span v-else-if="item.prop == 'lastUpdate'">{{dateFormat(scope.row.lastUpdate)}}</span>
           <span v-else-if="item.prop == 'state'" >
-            <el-popover placement="right" width="50" trigger="hover" :content="getStateContent(scope.row)">
+            <el-popover placement="right" trigger="hover" :content="getStateContent(scope.row)" popper-class="small-pop">
               <div slot="reference" style="width: 20px">
                 <div :class="{'active-icon green':scope.row.state == '1','active-icon red':scope.row.state == '0'}"></div>
               </div>
@@ -157,11 +157,11 @@
             prop: 'state',
             show: true,
           },
-          {
+          /*{
             label: this.$t("project.endpoint.lastUpdate"),
             prop: 'lastUpdate',
             show: true,
-          },
+          },*/
           {
             label: this.$t('config.account.option'),
             prop: 'option',
@@ -293,10 +293,11 @@
       getStateContent:function(row){
         if(row){
           if(row.state == 1){
-
-            return 'up'+'['+this.formatUpdateTime(row.lastUpdate)+']';
+            return 'up';
+            //return 'up'+'['+this.formatUpdateTime(row.lastUpdate)+']';
           }else{
-            return 'down'+'['+this.getStateErrorMsg(row)+']';
+            return 'down';
+            //return 'down'+'['+this.getStateErrorMsg(row)+']';
           }
         }
       },
