@@ -784,8 +784,10 @@
             let seriesData = [];
             let categoryData = [];
             response.data.list.forEach(item => {
-              seriesData.push(item.nums);
-              categoryData.push(item.alertName);
+              //seriesData.push(item.nums);
+              //categoryData.push(item.alertName);
+              seriesData.splice(0, 0, item.nums);
+              categoryData.splice(0, 0, item.alertName);
             });
             this.messageByRuleSeries = {
               name: 'alertStatByRule',
@@ -806,8 +808,10 @@
             let seriesData = [];
             let categoryData = [];
             response.data.list.forEach(item => {
-              seriesData.push(item.nums);
-              categoryData.push(item.host);
+              /*seriesData.push(item.nums);
+              categoryData.push(item.host);*/
+              seriesData.splice(0, 0, item.nums);
+              categoryData.splice(0, 0, item.host);
             });
             this.messageByAssetSeries = {
               name: 'alertStatByAsset',
@@ -828,8 +832,10 @@
             let seriesData = [];
             let categoryData = [];
             response.data.list.forEach(item => {
-              seriesData.push(item.nums);
-              categoryData.push(item.module);
+              /*seriesData.push(item.nums);
+              categoryData.push(item.module);*/
+              seriesData.splice(0, 0, item.nums);
+              categoryData.splice(0, 0, item.module);
             });
             this.messageByModuleSeries = {
               name: 'alertStatByModule',
