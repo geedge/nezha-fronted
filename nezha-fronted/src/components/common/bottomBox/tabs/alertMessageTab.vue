@@ -88,10 +88,14 @@
             <span v-else>-</span>
           </div>-->
           <template v-else-if="item.prop == 'labels'">
-            <el-tag v-if="key != 'alertname' && key != 'severity'"
+            <nz-alert-tag :label="key" type="info" style="margin: 5px;"
+                          :cursor-point="false"
+                          v-if="key != 'alertname' && key != 'severity'"
+                          v-for="(value, key) in scope.row.labels">{{value}}</nz-alert-tag>
+            <!--<el-tag v-if="key != 'alertname' && key != 'severity'"
                     :key="key"
                     type="info"
-                    size="mini" v-for="(value, key) in scope.row.labels" class="alert-message-tag">{{tagValue(key, value)}}</el-tag>
+                    size="mini" v-for="(value, key) in scope.row.labels" class="alert-message-tag">{{tagValue(key, value)}}</el-tag>-->
           </template>
           <div v-else-if="item.prop == 'state'">
             <span class="">
@@ -162,10 +166,12 @@
 </template>
 
 <script>
-  import axios from 'axios'
+  import axios from 'axios';
+  import nzAlertTag from '../../../page/alert/nzAlertTag';
   export default {
     name: "alertMessageTab",
     components: {
+      'nz-alert-tag': nzAlertTag
     },
     props: {
       from: String, //来自哪个主页面，有："asset"、"alertRule"
@@ -477,7 +483,7 @@
         }
       },
       labelsClassName(row) {
-        if (row.columnIndex == 2) {
+        if (row.column.label == this.$t("alert.list.labels")) {
           return "alert-message-list-labels";
         } else {
           return "";

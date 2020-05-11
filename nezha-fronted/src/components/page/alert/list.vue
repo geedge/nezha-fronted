@@ -99,12 +99,17 @@
                 <span v-else>-</span>
               </div>-->
               <template v-else-if="item.prop == 'labels'">
-                <el-tag @click="showTagDetail(scope.row, key)"
+                <nz-alert-tag :label="key" :type="tagType(key)" style="margin: 5px;"
+                              :cursor-point="tagType(key) == 'info' ? false : true"
+                              @click="showTagDetail(scope.row, key)"
+                              v-if="key != 'alertname' && key != 'severity'"
+                              v-for="(value, key) in scope.row.labels">{{value}}</nz-alert-tag>
+                <!--<el-tag @click="showTagDetail(scope.row, key)"
                         :key="key"
                         :class="{'link': key == 'asset' || key == 'endpoint' || key == 'project' || key == 'module' || key == 'datacenter'}"
                         v-if="key != 'alertname' && key != 'severity'"
                         :type="tagType(key)"
-                        size="mini" v-for="(value, key) in scope.row.labels" class="alert-message-tag">{{tagValue(key, value)}}</el-tag>
+                        size="mini" v-for="(value, key) in scope.row.labels" class="alert-message-tag">{{tagValue(key, value)}}</el-tag>-->
               </template>
               <div v-else-if="item.prop == 'state'">
                 <span class="">
@@ -184,9 +189,14 @@
 <script>
   import bus from '../../../libs/bus';
   import axios from 'axios'
+  import nzAlertTag from './nzAlertTag'
+
   var vm;
   export default {
     name: "alertList",
+    components: {
+      'nz-alert-tag': nzAlertTag
+    },
     data() {
       vm = this;
       return {
@@ -364,7 +374,7 @@
       tagType() {
         return (key) => {
           if (key == 'asset' || key == 'module' || key == 'project' || key == 'datacenter' || key == 'endpoint') {
-            return "";
+            return "normal";
           } else {
             return "info";
           }
@@ -556,7 +566,7 @@
         }
       },
       labelsClassName(row) {
-        if (row.columnIndex == 2) {
+        if (row.column.label == this.$t("alert.list.labels")) {
           return "alert-message-list-labels";
         } else {
           return "";

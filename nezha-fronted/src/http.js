@@ -20,14 +20,12 @@ axios.interceptors.request.use(config => {
     },
     err => Promise.reject(err)
 );
+const accountErrorCode = [518003, 518004, 518005, 518006, 518007, 518008]; //账号锁定等
 axios.interceptors.response.use(
     response => {
       if(response.status === 200){
-        if(response.data.code == 518008) {
+        if(accountErrorCode.indexOf(response.data.code) != -1) {
           window.location.href = "/";
-          /*router.push({
-            path: "/login"
-          });*/
         }
       }
       return response
