@@ -136,12 +136,12 @@
             <div class="content-col-box">
               <div class="content-col-title">
                 <span>{{$t("dashboard.overview.alert.alertRuleTopN")}}</span>
-                <el-dropdown trigger="hover" :show-timeout="0" size="small">
-                  <span>Top&nbsp;{{topFilter.rule}}<i class="el-icon-arrow-down el-icon--right"></i></span>
+                <!--<el-dropdown trigger="hover" :show-timeout="0" size="small">
+                  <span>Top&nbsp;{{topFilter.rule}}<i class="el-icon-arrow-down el-icon&#45;&#45;right"></i></span>
                   <el-dropdown-menu slot="dropdown">
                     <el-dropdown-item v-for="(item,index) in topFilter.optionals" :key="index" @click.native="topNChange('rule', item)">{{item}}</el-dropdown-item>
                   </el-dropdown-menu>
-                </el-dropdown>
+                </el-dropdown>-->
               </div>
               <div class="content-col-content">
                 <chart-box axis-tooltip="y" chart-type="bar" ref="ruleMessage" :tooltip-formatter="simpleFormatter" :show-toolbox="false" name="ruleMessage" @is-loading="(isLoading)=>{this.ruleMessageLoading = isLoading}"></chart-box>
@@ -164,18 +164,18 @@
                     </transition>
                   </span>
                 </span>
-                <el-dropdown trigger="hover" v-if="alertMessageShow == 'asset'" :show-timeout="0" size="small">
-                  <span>Top&nbsp;{{topFilter.asset}}<i class="el-icon-arrow-down el-icon--right"></i></span>
+                <!--<el-dropdown trigger="hover" v-if="alertMessageShow == 'asset'" :show-timeout="0" size="small">
+                  <span>Top&nbsp;{{topFilter.asset}}<i class="el-icon-arrow-down el-icon&#45;&#45;right"></i></span>
                   <el-dropdown-menu slot="dropdown">
                     <el-dropdown-item v-for="(item,index) in topFilter.optionals" :key="index" @click.native="topNChange('asset', item)">{{item}}</el-dropdown-item>
                   </el-dropdown-menu>
                 </el-dropdown>
                 <el-dropdown trigger="hover" v-if="alertMessageShow == 'module'" :show-timeout="0" size="small">
-                  <span>Top&nbsp;{{topFilter.module}}<i class="el-icon-arrow-down el-icon--right"></i></span>
+                  <span>Top&nbsp;{{topFilter.module}}<i class="el-icon-arrow-down el-icon&#45;&#45;right"></i></span>
                   <el-dropdown-menu slot="dropdown">
                     <el-dropdown-item v-for="(item,index) in topFilter.optionals" :key="index" @click.native="topNChange('module', item)">{{item}}</el-dropdown-item>
                   </el-dropdown-menu>
-                </el-dropdown>
+                </el-dropdown>-->
               </div>
               <div class="content-col-content">
                 <chart-box axis-tooltip="y" v-show="alertMessageShow == 'asset'" :tooltip-formatter="simpleFormatter" chart-type="bar" ref="assetMessage" name="assetMessage" :show-toolbox="false" @is-loading="(isLoading)=>{this.assetMessageLoading = isLoading}"></chart-box>
@@ -793,6 +793,7 @@
               name: 'alertStatByRule',
               data: seriesData,
               type: 'bar',
+              barMaxWidth: 30,
               category: categoryData, //自定义，用来判断N/A是否显示
             };
             this.$refs.ruleMessage.modifyOption('yAxis', 'data', categoryData);
@@ -817,6 +818,7 @@
               name: 'alertStatByAsset',
               data: seriesData,
               type: 'bar',
+              barMaxWidth: 30,
               category: categoryData
             };
             this.$refs.assetMessage.modifyOption('yAxis', 'data', categoryData);
@@ -841,6 +843,7 @@
               name: 'alertStatByModule',
               data: seriesData,
               type: 'bar',
+              barMaxWidth: 30,
               category: categoryData
             };
             this.$refs.moduleMessage.modifyOption('yAxis', 'data', categoryData);
@@ -852,7 +855,6 @@
       getDcTrafficData() {
         this.$get('idc/trafficSetting', {pageSize: -1}).then(response => {
           if (response.code === 200) {
-            console.info(response.data.list)
             this.trafficData = this.convertTrafficData(response.data.list);
 
             //console.info(this.trafficData)

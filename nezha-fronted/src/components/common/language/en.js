@@ -276,9 +276,9 @@ const en = {
         alertRule:'Alert rule',
         ruleNum:'Rule num',
         alertNum:'Alert num',
-        alertRuleTopN: 'Top alert message',
-        assetTopN: 'Top alert message by Asset',
-        moduleTopN: 'Top alert message by Module',
+        alertRuleTopN: 'Top10 alert message',
+        assetTopN: 'Top10 alert message by Asset',
+        moduleTopN: 'Top10 alert message by Module',
         top:'Top',
         chart:{
           chartTitle:'Alert Trend'
