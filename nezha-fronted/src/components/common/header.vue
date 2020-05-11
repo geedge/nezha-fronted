@@ -32,7 +32,7 @@
       </el-menu-item>
       <el-submenu index="1" popper-class="nz-submenu">
         <template slot="title">
-          <div @click="jumpTo('overview')" :class ="(activeIndex == 'overview' ||activeIndex == 'panel' || activeIndex == 'metricPreview') ? 'menu-active' :'' " >
+          <div @click="jumpTo('overview')" :class ="(activeIndex == 'overview' ||activeIndex == 'panel' || activeIndex == 'explore') ? 'menu-active' :'' " >
             {{$t('overall.dashboard')}}
           </div>
         </template>

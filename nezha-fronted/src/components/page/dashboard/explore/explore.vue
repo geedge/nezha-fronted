@@ -84,7 +84,8 @@
               <div class="introduce-view right-margin" v-show="showIntroduce">
                 <div class="info-room">
                   <div class="col-md-9 doc-content">
-                    <h2 class="page-header">Query examples<a class="header-anchor" href="https://prometheus.io/docs/prometheus/latest/querying/examples/" target="_blank"><i style="font-size: 16px;" class="nz-icon nz-icon-link1"></i></a></h2>
+                    <h1 class="page-header">Query examples<a class="header-anchor" href="https://prometheus.io/docs/prometheus/latest/querying/examples/" target="_blank"><i style="font-size: 16px;" class="nz-icon nz-icon-link1"></i></a></h1>
+                    <div class="content-divider"></div>
                     <h2 >
                       Simple time series selection
                     </h2>
@@ -614,11 +615,17 @@ instance_cpu_time_ns{app="fox", proc="widget", rev="4d3a513", env="prod", job="c
     line-height: 1.5;
   }
 
+  .doc-content .content-divider{
+    height: 1px;
+    width:100%;
+    border-bottom: 2px solid #C0C4CC;
+    margin: 5px 0px;
+  }
+
   .doc-content > h1 {
     color: #e6522c;
     font-size: 30px;
     text-transform: uppercase;
-    margin: 0px 0 10px 0;
   }
 
   .doc-content > h1 a {
@@ -634,10 +641,14 @@ instance_cpu_time_ns{app="fox", proc="widget", rev="4d3a513", env="prod", job="c
     display: inline-block !important;
     margin: 15px 55px;
   }
+  .doc-content > h1 {
+    color: #e6522c;
+    font-size: 22px;
+  }
 
   .doc-content > h2 {
     color: #e6522c;
-    font-size: 22px;
+    font-size: 18px;
   }
 
   .doc-content > h2 code {

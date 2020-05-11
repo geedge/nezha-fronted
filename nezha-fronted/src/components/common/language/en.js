@@ -311,7 +311,7 @@ const en = {
     positiveInteger:'Positive integer',
     email:'Invalid email',//'不合法的E-mail地址'
     tel:'Invalid phone number',//'不合法的电话号码'
-    host:'Invalid IP',//'不合法的IP'
+    host:'Invalid Host',//'不合法的Host'
     domain:'Invalid domain',
     usize:'Must be number(1 - 49)',
     fileSize:'File exceed max size',//File exceed max size.

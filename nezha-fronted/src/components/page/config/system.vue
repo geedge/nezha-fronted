@@ -198,7 +198,7 @@
 <script>
     import {positiveInteger} from '../../common/js/validate'
     import {port} from '../../common/js/validate'
-    import {domain} from '../../common/js/validate'
+    import {hostPlus} from '../../common/js/validate'
     import {host} from '../../common/js/validate'
     import {uSize} from '../../common/js/validate'
     import bus from '../../../libs/bus';
@@ -281,7 +281,7 @@
             emailRules:{
               email_smtp_host: [
                 {required:true,message:this.$t('validate.required'),trigger:'blur'},
-                {validator:domain,trigger: 'blur'}
+                {validator:hostPlus,trigger: 'blur'}
               ],
               email_smtp_port: [
                 {required:true,message:this.$t('validate.required'),trigger:'blur'},
@@ -390,7 +390,7 @@
                 this.$put('/sysConfig',postParam).then(response=>{
                   if(response.code == 200){
                     this.$message({duration: 2000, type: 'success', message: this.$t("tip.saveSuccess")});
-                    this.resetForm(formName);
+                    // this.resetForm(formName);
                     setTimeout(()=> {
                       this.querySetInfo(type);
                     },200)
