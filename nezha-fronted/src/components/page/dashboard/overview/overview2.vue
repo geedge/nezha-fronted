@@ -852,7 +852,9 @@
       getDcTrafficData() {
         this.$get('idc/trafficSetting', {pageSize: -1}).then(response => {
           if (response.code === 200) {
+            console.info(response.data.list)
             this.trafficData = this.convertTrafficData(response.data.list);
+
             //console.info(this.trafficData)
           }
         });
@@ -860,6 +862,16 @@
       convertTrafficData(data) {
         let result = [];
         data.forEach(item => {
+          let hasDc = result.some(dc => { //dc去重
+            if (dc.label == item.idc.name) {
+              return true;
+            }
+          });
+          if (!hasDc) {
+            result.push({label: item.idc.name, value: "$dc$::" + item.idc.name, level: 1});
+          }
+        });
+        /*data.forEach(item => {
           let hasDc = result.some(dc => { //dc去重
             if (dc.label == item.idc.name) {
               handleTag(dc, item.tags);
@@ -872,7 +884,7 @@
             handleTag(dc, item.tags);
             result.push(dc);
           }
-        });
+        });*/
         function handleTag(dc, tagData) { // dc: cascader数据里的第一级；tagData: 原始数据中的tags
           if (tagData) {
             let tags = dc.children;
