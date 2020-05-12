@@ -732,7 +732,8 @@ const cn = {
       deviceAlert: "设备告警",
       pending: "待处理",
       expired: "已过期",
-      labels: "标签"
+      labels: "标签",
+      current: "当前",
     },
     config: {
       name: "名称",

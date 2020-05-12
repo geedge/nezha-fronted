@@ -749,7 +749,8 @@ const en = {
       deviceAlert: 'Device alert',//"设备告警"
       pending: 'Pending',//"待处理"
       expired: 'Expired',//"已过期"
-      labels: 'Labels'
+      labels: 'Labels',
+      current: 'Current',
     },
     config: {
       name: 'Name',//"名称"

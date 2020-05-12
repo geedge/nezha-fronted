@@ -118,10 +118,16 @@
                   {{scope.row['state'] == 2 ? "Expired" : ""}}
                 </span>
               </div>
+              <div v-else-if="item.prop == 'current'" class="too-long-split">{{scope.row.current}}</div>
+              <div v-else-if="item.prop == 'option'" class="content-right-options">
+                <span :title="$t('overall.view')" @click="detail(scope.row)" class="content-right-option" :id="'alert-list-detail-'+scope.row.id"><i class="nz-icon nz-icon-view"></i></span>
+                <span :title="$t('overall.delete')" @click="del(scope.row)" class="content-right-option" :id="'alert-list-delete-'+scope.row.id"><i  class="el-icon-delete"></i></span>
+              </div>
               <span v-else-if="scope.row[item.prop]">{{scope.row[item.prop]}}</span>
               <template v-else>-</template>
             </template>
           </el-table-column>
+
           <el-table-column width="28" :resizable="false">
             <template slot="header" slot-scope="scope">
               <span @click.stop="elementsetShow('shezhi',$event)" class="nz-table-gear">
@@ -168,7 +174,7 @@
         </div>
       </el-dialog>
     </div>
-    <!--删除确认提示-->
+    <!--export-->
     <div class="export-xlsx">
       <el-dialog :visible.sync="deleteBox.show" :title="$t('overall.delete')" :modal-append-to-body='false' :show-close="true" width="300px" @close="closeDialog" class="nz-message">
         <div class="upload-body">
@@ -184,19 +190,35 @@
         </div>
       </el-dialog>
     </div>
+    <el-dialog class="line-chart-block-modal nz-dialog endpoint-dialog"
+               :title="$t('overall.detail')"
+               :visible.sync="graphShow"
+               width="90%"
+               id="viewGraphDialog"
+               @close="dialogClose">
+      <div slot="title">
+        {{$t("project.endpoint.dialogTitle")}}
+        <div class="float-right panel-calendar dialog-tool" style="display: flex">
+          <pick-time :refresh-data-func="queryChartDate" :use-refresh="false" v-model="searchTime" style="height: 28px;"></pick-time>
+        </div>
+      </div>
+      <chart ref="messageChart" ></chart>
+    </el-dialog>
   </div>
 
 </template>
 <script>
   import bus from '../../../libs/bus';
-  import axios from 'axios'
-  import nzAlertTag from './nzAlertTag'
+  import axios from 'axios';
+  import nzAlertTag from './nzAlertTag';
+  import chart from '../../page/dashboard/overview/chart'
 
   var vm;
   export default {
     name: "alertList",
     components: {
-      'nz-alert-tag': nzAlertTag
+      'nz-alert-tag': nzAlertTag,
+      'chart': chart
     },
     data() {
       vm = this;
@@ -219,6 +241,12 @@
         //导出相关
         importBox: {show: false, title:this.$t('overall.exportExcel')},
         deleteBox: {show: false, ids: "", remark: '', state: 2},
+
+        //详情相关
+        graphShow: false,
+        chartDatas: [],
+        legend: [],
+        searchTime: [new Date().setHours(new Date().getHours() - 1), new Date()],
 
         tableId: 'alertListTable', //需要分页的table的id，用于记录每页数量
         showTopBtn: false,
@@ -278,11 +306,16 @@
             label: this.$t('alert.endAt'),
             prop: 'endAt',
             show: true,
-          }, /*{
-            label: this.$t('config.account.option'),
-            prop: 'option',
+          }, {
+            label: this.$t('alert.list.current'),
+            prop: 'current',
             show: true
-          }*/
+          }, {
+            label: this.$t('overall.option'),
+            prop: 'option',
+            show: true,
+            width: 90
+          }
         ],
         searchMsg: { //给搜索框子组件传递的信息
           zheze_none: true,
@@ -427,6 +460,112 @@
         this.$store.commit('setHeaderTable', data);
         this.tablelable = data;
       },
+      queryChartDate(obj) {
+        let start = this.searchTime[0]?this.searchTime[0]:this.getTime(-1, 'h');
+        let end = this.searchTime[1]?this.searchTime[1]:this.getTime(0, 'h')
+        this.searchTime = [start, end];
+        let timeDiff = (new Date(end).getTime()-new Date(start).getTime())/1000/(24*60*60);
+        let step = '15s';
+        if(timeDiff< 1){
+          step='15s';
+        }else if(timeDiff < 7){
+          step='5m';
+        }else if(timeDiff<30){
+          step='10m';
+        }else{
+          step='30m';
+        }
+        let axiosArr=[];
+        let queryParam = this.promQueryParamConvert(obj);
+        axiosArr.push(axios.get("/prom/api/v1/query_range?query="+queryParam+"&start="+start+"&end="+end+"&step="+step));
+        this.legend = [];
+        this.chartDatas = [];
+        axios.all(axiosArr).then(res =>{
+          res.forEach((response,promIndex)=>{
+            console.info(response);
+            if (response.status == 200) {
+              if(response.data.status == 'success'){
+                let queryData=response.data.data.result[0];
+                /*if(queryData){
+                  let chartData={
+                    type:"line",
+                    symbol:'none',  //去掉点
+                    smooth:true,  //曲线变平滑
+                  };
+                  chartData.name=queryData.metric.__name__;
+                  let alias=queryData.metric.__name__;
+                  delete queryData.metric.__name__;
+                  chartData.name+="{";
+                  alias+="{";
+                  Object.keys(queryData.metric).forEach((item,index)=>{
+                    let label=item;
+                    let value=queryData.metric[label];
+                    chartData.name+=label +"='"+value+"',";
+                    if(!this.sameLabels.some((i)=>{return i == label})){
+                      alias+=label +"='"+value+"',";
+                    }
+                  })
+                  chartData.name=chartData.name.charAt(chartData.name.length-1) == ","?chartData.name.substr(0,chartData.name.length-1):chartData.name;
+                  alias=alias.charAt(alias.length-1) == ","?alias.substr(0,alias.length-1):alias;
+                  chartData.name+="}";
+                  alias+="}";
+                  if(!/.+\{.+\}/.test(alias)){
+                    alias=alias.substr(0,alias.length-2);
+                  }
+                  let legend={
+                    name:chartData.name,
+                    alias:alias,
+                    // showText:this.formatLegend(chartData.name),
+                    isGray:false
+                  }
+                  this.legend.push(legend);
+                  chartData.data=queryData.values.map((dpsItem, dpsIndex) => {
+                    return [dpsItem[0] * 1000, Number(dpsItem[1])];
+                  });
+                  this.chartDatas.push(chartData);
+                }*/
+              }else{
+                this.$message.error(response.data.error)
+                console.error(response.data)
+              }
+            }
+          });
+          this.$nextTick(()=>{
+            this.$refs.messageChart.setRandomColors(this.chartDatas.length)
+            this.$refs.messageChart.setLegend(this.legend)
+            this.$refs.messageChart.setSeries(this.chartDatas);
+            this.$refs.messageChart.endLoading();
+          });
+        })
+      },
+      detail(obj) {
+        this.chartDatas = [];
+        this.legend = [];
+        this.graphShow = true;
+        this.$nextTick(() => {
+          this.$refs.messageChart.startLoading();
+          this.queryChartDate(obj);
+        });
+      },
+      dialogClose() {
+        this.graphShow = false;
+      },
+      del(u) {
+        this.$confirm(this.$t("tip.confirmDelete"), {
+          confirmButtonText: this.$t("tip.yes"),
+          cancelButtonText: this.$t("tip.no"),
+          type: 'warning'
+        }).then(() => {
+          this.$delete("alert/message?ids=" + u.id).then(response => {
+            if (response.code === 200) {
+              this.$message({type: 'success', message: this.$t("tip.deleteSuccess")});
+              this.getAlertList();
+            } else {
+              this.$message.error(response.msg);
+            }
+          })
+        });
+      },
       getAlertList: function () {
         this.$set(this.searchLabel, "pageNo", this.pageObj.pageNo);
         this.$set(this.searchLabel, "pageSize", this.pageObj.pageSize);
@@ -437,10 +576,28 @@
             this.tableData = response.data.list;
             this.tableData.forEach((item) => {
               item.labels = JSON.parse(item.labels);
+              this.$get('/prom/api/v1/query', {query: this.promQueryParamConvert(item)}).then(response2 => {
+                console.info(response2)
+              });
             });
             this.pageObj.total = response.data.total;
           }
         });
+      },
+      promQueryParamConvert(obj) {
+        return "(" + obj.alertRule.expr + ") and (" + function(){
+          let q = "{";
+          for (let k in obj.labels) {
+            q += k;
+            q += "=";
+            q += ("'" + obj.labels[k] + "',");
+          };
+          if (q.length > 1) {
+            q = q.substring(0, q.length-1);
+          }
+          q += "}";
+          return q;
+        }() + ")";
       },
       //asset弹框控制
       tabControl(data) {

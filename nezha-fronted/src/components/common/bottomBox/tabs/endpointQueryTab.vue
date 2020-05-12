@@ -353,7 +353,7 @@
               this.$nextTick(this.$refs.endpointQueryTable.doLayout());
             }
           });
-        }, 420);
+        }, 450);
       },
       clearSelectedMetrics() {
         this.$refs.endpointQueryTable.clearSelection();
@@ -433,7 +433,6 @@
       },
       dialogClose:function(){
         this.graphShow=false;
-        this.graphChart.clear();
       },
       queryChartDate:function(){
         let start = this.searchTime[0]?this.searchTime[0]:this.getTime(-1, 'h');
