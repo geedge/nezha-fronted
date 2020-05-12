@@ -260,6 +260,7 @@ export default {
             prev:parseInt(_this.data.prev),
             next:parseInt(_this.data.next),
           }
+          targetDiv.style.height = (Math.round((containerHeight+_this.chartSpaceHeight)/10)*10-_this.chartSpaceHeight)+'px';//图表实际渲染高度，采用个位数字四舍五入
           _this.$put('panel/'+  _this.panelIdInner+'/charts/modify',modifyParams).then(response => {
             if (response.code === 200) {
               //更新当前图表数据
@@ -302,7 +303,7 @@ export default {
         showLoad(chartItem) {
           this.$nextTick(() => {
             const chartBox = document.getElementById('chartSingleStatDiv'+this.chartIndex);
-            let height = chartItem.height;
+            let height = Math.round(chartItem.height/10)*10;//图表高度四舍五入
             if(height<this.minHeight){
               height = this.minHeight;
             }
@@ -379,7 +380,7 @@ export default {
             }else{
               this.$nextTick(() => {
                 const chartBox = document.getElementById('chartSingleStatDiv'+this.chartIndex);
-                let height = chartItem.height;
+                let height = Math.round(chartItem.height/10)*10;//图表高度四舍五入
                 if(height<this.minHeight){
                   height = this.minHeight;
                 }

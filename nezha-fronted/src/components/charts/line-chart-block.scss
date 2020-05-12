@@ -26,17 +26,19 @@
 }
 .legend-container{
   width: calc(100% - 30px);
-  /*max-height:80px;
-  min-height:40px;*/
-  height: 80px;
+  max-height:80px;
+  min-height:25px;
   font-size:12px;
   text-align:left;
-  margin:0 auto;
+  left: 10px;
+  bottom: 0px;
   line-height: 18px;
-  position: relative;
+  position: absolute;
+  padding-bottom:5px;
 }
 .legend-container-screen.legend-container {
-  height: 115px;
+  max-height: 80px;
+  min-height:20px;
 }
 .legend-item{
   text-overflow:ellipsis;
@@ -294,7 +296,11 @@
     padding-top:10px;
   }
   .el-dialog__body {
-    height: calc(100% - 200px);
+    height: calc(100% - 80px);
+  }
+
+  .el-dialog__header{
+    padding: 20px 20px 0px;
   }
 
 }

@@ -125,9 +125,9 @@
           <!--<button @click="refreshChart" type="button" class="nz-btn nz-btn-size-normal nz-btn-style-light"><i style="font-size: 14px;" class="el-icon-refresh-right"></i></button>-->
         </div>
       </div>
-      <div class="line-area" ref="screenShowArea"  id="screenShowArea"  style="margin-top:10px;" @mouseenter="mouseEnterFullChart" @mouseleave="mouseLeaveFullChart"></div>
+      <div class="line-area" ref="screenShowArea"  id="screenShowArea"  style="margin-top:0px;" @mouseenter="mouseEnterFullChart" @mouseleave="mouseLeaveFullChart"></div>
 
-      <div class="legend-container legend-container-screen" id="screenLegendArea" ref="screenLegendArea" @mouseenter="mouseEnterFullChart" @mouseleave="mouseLeaveFullChart" v-show="showLegend" v-scrollBar:legend>
+      <div class="legend-container legend-container-screen"  :id="'screenLegendArea'+chartIndex" @mouseenter="mouseEnterFullChart" @mouseleave="mouseLeaveFullChart" v-show="showLegend" v-scrollBar:legend>
         <div v-for="(item, index) in screenLegendList" :title="item.alias?item.alias:item.name"  @click="clickScreenLegend(item.name,index)" class="legend-item" :class="{'ft-gr':isGreyScreen[index]}"  :key="'legend_' + item.name+'_'+index">
           <span class="legend-shape" :style="{background:(isGreyScreen[index]?'#D3D3D3':bgColorList[index])}"></span>{{item.alias?item.alias:item.name}}
           <br/><!--bgColorList[index]-->
@@ -232,88 +232,8 @@
         minHeight:200,
         chartSpaceHeight:5,//top-border: 1,bottom-border: 1,padding-bottome:3
         titleHeight:28,
+        screenTitleHeight:58,
         legendHeight:80,
-        /*pickerOptions: {
-          shortcuts: [
-            {
-              text:  this.$t("dashboard.panel.recOne"),
-              onClick(picker) {
-                const end = new Date();
-                const start = new Date();
-                start.setHours(start.getHours() - 1);
-                picker.$emit('pick', [start, end]);
-              }
-            },{
-              text: this.$t("dashboard.panel.recFour"),
-              onClick(picker) {
-                const end = new Date();
-                const start = new Date();
-                start.setHours(start.getHours() - 4);
-                picker.$emit('pick', [start, end]);
-              }
-            }, {
-              text: this.$t("dashboard.panel.recOneDay"),
-              onClick(picker) {
-                const end = new Date();
-                const start = new Date();
-                start.setDate(start.getDate() - 1);
-                picker.$emit('pick', [start, end]);
-              }
-            },  {
-              text: this.$t("dashboard.panel.yesterday"),
-              onClick(picker) {
-                const start = new Date();
-                const end = new Date();
-                start.setDate(start.getDate() - 1);
-                start.setHours(0);
-                start.setMinutes(0);
-                start.setSeconds(0);
-                end.setDate(end.getDate() - 1);
-                end.setHours(23);
-                end.setMinutes(59);
-                end.setSeconds(59);
-                picker.$emit('pick', [start, end]);
-              }
-            },{
-              text: this.$t("dashboard.panel.recSevenDay"),
-              onClick(picker) {
-                const end = new Date();
-                const start = new Date();
-                start.setDate(start.getDate() - 7);
-                picker.$emit('pick', [start, end]);
-              }
-            }, {
-              text: this.$t("dashboard.panel.recOneMonth"),
-              onClick(picker) {
-                const end = new Date();
-                const start = new Date();
-                start.setDate(start.getDate() - 30);
-                picker.$emit('pick', [start, end]);
-              }
-            }, {
-              text: this.$t("dashboard.panel.curMonth"),
-              onClick(picker) {
-                const end = new Date();
-                const start = new Date();
-                start.setDate(1);
-                start.setHours(0);
-                start.setMinutes(0);
-                picker.$emit('pick', [start, end]);
-              }
-            },{
-              text: this.$t("dashboard.panel.lastMonth"),
-              onClick(picker) {
-                const end = new Date();
-                const start = new Date();
-                start.setDate(1);
-                start.setMonth(start.getMonth() - 1);
-                end.setDate(0);
-                start.setStart();
-                end.setEnd();
-                picker.$emit('pick', [start, end]);
-              }
-            }]
-        },*/
       };
     },
     computed: {
@@ -446,7 +366,7 @@
           let diffHeight =  Math.abs(targetDivHeight-targetDivHeightNew);
           if(targetDivHeight>targetDivHeightNew){
             let finalDiffHeight = Math.floor(diffHeight/stepHeight)*stepHeight;
-            //alert('oldWidth='+targetDivHeight+"===diffHeight+"+diffHeight+"==finalDiffHeight="+finalDiffHeight);
+            //console.log('oldWidth='+targetDivHeight+"===diffHeight+"+diffHeight+"==finalDiffHeight="+finalDiffHeight);
             targetDiv.style.height = (targetDivHeight-finalDiffHeight)+'px';
           }
           if(targetDivHeight<targetDivHeightNew){
@@ -493,6 +413,7 @@
             prev:parseInt(_this.data.prev),
             next:parseInt(_this.data.next),
           };
+          targetDiv.style.height = (Math.round((containerHeight+_this.chartSpaceHeight)/10)*10-_this.chartSpaceHeight)+'px';//图表实际渲染高度，采用个位数字四舍五入
           //alert('=55='+JSON.stringify(modifyParams));
           _this.$put('panel/'+  _this.panelIdInner+'/charts/modify',modifyParams).then(response => {
             if (response.code === 200) {
@@ -985,61 +906,6 @@
         };
         // params.series = dataArg;
         if (chartSite === 'local') { // 本地显示
-          /*
-          option.series = dataArg.map((item) => {// params.series = dataArg.map((item) => {
-            const obj = Object.assign(item);
-            /*
-            obj.events = {
-              // eslint-disable-next-line
-              legendItemClick: function(event) {//点击metric的事件，可以用默认的先
-                event.preventDefault();
-                let visibleAll = true; // 全部显示
-                let visibleThis = true; // 点击是否是当前显示的那个条目
-                self.highchartStore.series.forEach((serie, i) => {
-                  // 最后一个为导航,排除。
-                  if (i !== self.highchartStore.series.length - 1) {
-                    // 查看是否为显示一条状态数据,如果有非显示状态的,表示当前只显示一条数据
-                    if (!serie.visible) {
-                      visibleAll = false;
-                      // 点击前显示单个,判断是否点击为正在显示那个,该种情况表示点击了其他隐藏状态数据
-                      if (event.target.index === i) { // one to another
-                        visibleThis = false;
-                      }
-                    }
-                  }
-                });
-                // 根据visibleAll和visibleThis判断是要显示一个还是全显示
-                // 当visibleAll为true(表示all => one)
-                // visibleAll为false: visibleThis为false(one => another one)。
-                // visibleAll为false: visibleThis为true(one => all)。
-                if (visibleAll || !visibleThis) { // 隐藏显示其中一个
-                  self.highchartStore.series.forEach((serie, i) => {
-                    const operateObj = serie;
-                    // 除显示条目以外,还有一条serie是导航栏
-                    if (i !== self.highchartStore.series.length - 1) {
-                      if (event.target.index === i) {
-                        operateObj.setVisible(true, false);
-                      } else {
-                        operateObj.setVisible(false, false);
-                      }
-                    } else {
-                      operateObj.setVisible(true, false);
-                    }
-                  });
-                  self.highchartStore.redraw();
-                } else { // 全部显示
-                  self.highchartStore.series.forEach((serie) => {
-                    const operateObj = serie;
-                    operateObj.setVisible(true, false);
-                  });
-                  self.highchartStore.redraw();
-                }
-              },
-            };
-
-            return obj;
-          });
-          */
           if(legend){
             this.legendList = [];
             legend.forEach((item, i) => {
@@ -1053,18 +919,18 @@
             });
           }
           this.$nextTick(() => {
-            let divHeight = this.$refs.legendArea.offsetHeight;
-            if(!chartInfo.height){
-              this.echartStore.resize({height:(400-divHeight-this.titleHeight-this.chartSpaceHeight)});
-            }else {
-              this.echartStore.resize({height:(chartInfo.height-divHeight-this.titleHeight-this.chartSpaceHeight)});
-            }
-
-            this.echartStore.clear();
-            //option.title = title;
-            this.echartStore.setOption(option);//创建图表
-            this.$refs['localLoading'+this.chartIndex].endLoading();
-            this.firstShow = true; // 展示操作按键
+            setTimeout(function () {
+              let divHeight = self.$refs.legendArea.offsetHeight;
+              if(!chartInfo.height){
+                self.echartStore.resize({height:(400-divHeight-self.titleHeight-self.chartSpaceHeight)});
+              }else {
+                self.echartStore.resize({height:(chartInfo.height-divHeight-self.titleHeight-self.chartSpaceHeight)});
+              }
+              self.echartStore.clear();
+              self.echartStore.setOption(option);//创建图表
+              self.$refs['localLoading'+self.chartIndex].endLoading();
+              self.firstShow = true; // 展示操作按键
+            }, 100)
 
             this.echartStore.on('magictypechanged', function (params) {
                 self.isStackArea = !self.isStackArea;
@@ -1123,65 +989,9 @@
                   });
                 }
             });
-            //this.echartStore.dispatchAction({
-              //type: 'magictypechanged',
-            //});
           });
-
         } else if (chartSite === 'screen') { // 全屏显示
-          /*
-          option.series = dataArg.map((item) => {// params.series = dataArg.map((item) => {
-            const obj = Object.assign(item);
-            obj.events = {
-              // eslint-disable-next-line
-              legendItemClick: function(event) {
-                event.preventDefault();
-                let visibleAll = true; // 全部显示
-                let visibleThis = true; // 点击是否是当前显示的那个条目
-                self.highchartModalStore.series.forEach((serie, i) => {
-                  if (i !== self.highchartModalStore.series.length - 1) {
-                    if (!serie.visible) {
-                      visibleAll = false;
-                      if (event.target.index === i) {
-                        visibleThis = false;
-                      }
-                    }
-                  }
-                });
-                if (visibleAll || !visibleThis) {
-                  self.highchartModalStore.series.forEach((serie, i) => {
-                    const operateObj = serie;
-                    if (i !== self.highchartModalStore.series.length - 1) {
-                      if (event.target.index === i) {
-                        operateObj.setVisible(true, false);
-                      } else {
-                        operateObj.setVisible(false, false);
-                      }
-                    } else {
-                      operateObj.setVisible(true, false);
-                    }
-                  });
-                  self.highchartModalStore.redraw();
-                } else {
-                  self.highchartModalStore.series.forEach((serie) => {
-                    const operateObj = serie;
-                    operateObj.setVisible(true, false);
-                  });
-                  self.highchartModalStore.redraw();
-                }
-              },
-            };
-            return obj;
-          });
-          */
           // eslint-disable-next-line
-          if(this.echartModalStore){
-            this.echartModalStore.clear();
-          }
-          option.title = {};
-          this.echartModalStore.setOption(option);//显示全屏界面
-          this.showLegend = true;
-          this.$refs['localLoadingScreen'+this.chartIndex].endLoading();
           if(legend){
             this.screenLegendList = [];
             legend.forEach((item, i) => {
@@ -1194,80 +1004,81 @@
               this.isGreyScreen.push(false);
             });
           }
-
-          if(legend){
-            this.legendList = [];
-            legend.forEach((item, i) => {
-              const legend = {
-                name:item.name,
-                alias:item.alias,
-                showText:this.formatLegend(chartWidth,item.name)
-              };
-              this.legendList.push(legend);
-              this.isGrey.push(false);
-            });
+          if(self.echartModalStore){
+            self.echartModalStore.clear();
+            option.title = {};
+            self.showLegend = true;
+            self.$refs['localLoadingScreen'+self.chartIndex].endLoading();
           }
-          /*this.$nextTick(() => {
-            this.$refs.screenLegendScrollbar.update();
-            let divHeight = this.$refs.screenLegendArea.offsetHeight;
-            this.echartModalStore.resize({height: '100%'});
-          });*/
-          this.echartModalStore.on('magictypechanged', function (params) {
-            self.isStackArea = !self.isStackArea;
-            if(self.isStackArea){
-              this.setOption({
-                toolbox:{
-                  feature:{
-                    magicType:{
-                      iconStyle:{
-                        borderColor:'#7e7e7e',
+          this.$nextTick(() => {
+            setTimeout(function () {
+              let legendDiv = document.getElementById('screenLegendArea'+self.chartIndex);
+              let divHeight = legendDiv.offsetHeight;
+              let screenHeight = document.documentElement.clientHeight || document.body.clientHeight;
+              let sumHeight = Math.round(screenHeight*0.99*0.8);//margin-top:1vh; dailog:80%
+                //console.log("11____00",sumHeight,divHeight,legendDiv)
+              self.$refs.screenShowArea.style.height = `${sumHeight - divHeight - self.screenTitleHeight}px`;
+              self.echartModalStore.resize({height: (sumHeight - divHeight - self.screenTitleHeight)});//图表的高度
+              self.echartModalStore.setOption(option);//显示全屏界面
+            }, 100)
+
+            this.echartModalStore.on('magictypechanged', function (params) {
+              self.isStackArea = !self.isStackArea;
+              if(self.isStackArea){
+                this.setOption({
+                  toolbox:{
+                    feature:{
+                      magicType:{
+                        iconStyle:{
+                          borderColor:'#7e7e7e',
+                        },
                       },
+                    }
+                  },
+                  tooltip: {
+                    formatter:function(params){
+                      let str = `<div>`;
+                      let sum = 0;
+                      params.forEach((item, i) => {let tip=legend[item.seriesIndex];
+                        let color = self.bgColorList[item.seriesIndex];
+                        if(i===0){
+                          let value=bus.computeTimezone(item.data[0]);
+                          let t_date = new Date(value);
+                          str += [t_date.getFullYear(), t_date.getMonth() + 1, t_date.getDate()].join('-') + " "
+                            + [t_date.getHours(), t_date.getMinutes(),t_date.getSeconds()].join(':');
+                          str +=`<br/>`;
+                        }
+                        let val = parseFloat(Number(item.data[1]).toFixed(2));
+                        if(val===0){
+                          val = Number(item.data[1]);
+                        }
+                        sum +=val;
+                        str += `<div style="white-space:nowrap;overflow-x:hidden;text-overflow:ellipsis;display: flex; justify-content: space-between; min-width: 150px; max-width: 600px; line-height: 18px; font-size: 12px;">`;
+                        str += `<div style="max-width: 500px;white-space:nowrap;overflow-x:hidden;text-overflow:ellipsis;"><span style='display:inline-block;margin-right:5px;border-radius:10px;width:15px;height:5px;background-color: ${color};}'></span>${tip?(tip.alias?tip.alias:tip.name):item.seriesName}  </div>`;
+                        str += `<div style="padding-left: 10px;">`;
+                        str += chartDataFormat.getUnit(chartInfo.unit?chartInfo.unit:2).compute(val,null,2);
+                        str += `</div>`;
+                        str += `</div>`;
+                      });
+                      if(self.data.type==='stackArea' || self.isStackArea){
+                        sum = parseFloat(Number(sum).toFixed(2));
+                        str +=`<div style="white-space:nowrap;overflow-x:hidden;text-overflow:ellipsis;display: flex; justify-content: space-between; min-width: 150px; max-width: 600px; line-height: 18px; font-size: 12px;">`;
+                        str +=`<div style="line-height: 18px; font-size: 12px;padding-left:20px;">`
+                        str +=self.$t("dashboard.panel.chartTotal");
+                        str +=`</div>`;
+                        str +=`<div style="padding-left: 10px;">`;
+                        str +=chartDataFormat.getUnit(chartInfo.unit?chartInfo.unit:2).compute(sum,null,2);
+                        str +=`</div>`;
+                        str += `</div>`;
+                      }
+
+                      str +=`</div>`;
+                      return str;
                     },
                   }
-                },
-                tooltip: {
-                  formatter:function(params){
-                    let str = `<div>`;
-                    let sum = 0;
-                    params.forEach((item, i) => {let tip=legend[item.seriesIndex];
-                      let color = self.bgColorList[item.seriesIndex];
-                      if(i===0){
-                        let value=bus.computeTimezone(item.data[0]);
-                        let t_date = new Date(value);
-                        str += [t_date.getFullYear(), t_date.getMonth() + 1, t_date.getDate()].join('-') + " "
-                          + [t_date.getHours(), t_date.getMinutes(),t_date.getSeconds()].join(':');
-                        str +=`<br/>`;
-                      }
-                      let val = parseFloat(Number(item.data[1]).toFixed(2));
-                      if(val===0){
-                        val = Number(item.data[1]);
-                      }
-                      sum +=val;
-                      str += `<div style="white-space:nowrap;overflow-x:hidden;text-overflow:ellipsis;display: flex; justify-content: space-between; min-width: 150px; max-width: 600px; line-height: 18px; font-size: 12px;">`;
-                      str += `<div style="max-width: 500px;white-space:nowrap;overflow-x:hidden;text-overflow:ellipsis;"><span style='display:inline-block;margin-right:5px;border-radius:10px;width:15px;height:5px;background-color: ${color};}'></span>${tip?(tip.alias?tip.alias:tip.name):item.seriesName}  </div>`;
-                      str += `<div style="padding-left: 10px;">`;
-                      str += chartDataFormat.getUnit(chartInfo.unit?chartInfo.unit:2).compute(val,null,2);
-                      str += `</div>`;
-                      str += `</div>`;
-                    });
-                    if(self.data.type==='stackArea' || self.isStackArea){
-                      sum = parseFloat(Number(sum).toFixed(2));
-                      str +=`<div style="white-space:nowrap;overflow-x:hidden;text-overflow:ellipsis;display: flex; justify-content: space-between; min-width: 150px; max-width: 600px; line-height: 18px; font-size: 12px;">`;
-                      str +=`<div style="line-height: 18px; font-size: 12px;padding-left:20px;">`
-                      str +=self.$t("dashboard.panel.chartTotal");
-                      str +=`</div>`;
-                      str +=`<div style="padding-left: 10px;">`;
-                      str +=chartDataFormat.getUnit(chartInfo.unit?chartInfo.unit:2).compute(sum,null,2);
-                      str +=`</div>`;
-                      str += `</div>`;
-                    }
-
-                    str +=`</div>`;
-                    return str;
-                  },
-                }
-              });
-            }
+                });
+              }
+            });
           });
         }
       },
@@ -1350,11 +1161,12 @@
           //设置高度 chart-table
           this.$nextTick(() => {
             const chartBox = document.getElementById('lineChartDiv'+this.chartIndex);
-            let height = chartItem.height;
+            let height = Math.round(chartItem.height/10)*10;//图表高度四舍五入
             if(height<this.minHeight){
               height = this.minHeight;
             }
             chartBox.style.height = `${height-this.chartSpaceHeight}px`;
+
           });
           this.$refs['localLoading'+this.chartIndex].startLoading();
           this.divFirstShow = true;
@@ -1614,6 +1426,7 @@
                 series.push(sumData);
               }
               */
+              this.setColor(legend.length);
               this.initChart(this.data, series, this.$refs.screenShowArea, 'screen',legend);
             }
           }).catch((error) => {
@@ -1627,7 +1440,7 @@
         //设置高度
         this.$nextTick(() => {
           const chartBox = document.getElementById('lineChartDiv'+this.chartIndex);
-          let height = chartItem.height;
+          let height = Math.round(chartItem.height/10)*10;//图表高度四舍五入
           if(height<this.minHeight){
             height = this.minHeight;
           }
@@ -1691,188 +1504,6 @@
         return num.toFixed(2);
       },
       handleClose(){},
-      /*
-     // 展示图表编辑区
-      showTool() {
-        this.toolbox = !this.toolbox;
-      },
-      handleClose(done) {
-        /*
-        this.$confirm('确认关闭？')
-          .then(_ => {
-            done();
-          })
-          .catch(_ => {});
-
-      },*/
-      /*
-        // 修改图表类型
-        changeChart(type) {
-          this.chartType = type;
-          this.highchartStore.update({
-            chart: {
-              type: this.chartType,
-            },
-          });
-        },
-        // 查询数据,修改日期查询全屏数据
-        getQueryChart(type) {
-          if (this.highchartModalStore) {
-            this.highchartModalStore.showLoading();
-          }
-          let axiosArr = [];
-          if (type === 'list') { // 普通模式,主控台使用
-            axiosArr = this.data.elements.map((ele) => {
-              const filterItem = ele;
-              return getQueryChart({
-                product_id: this.productId,
-                metric: filterItem.metric,
-                tags: filterItem.tags,
-                start: this.filter.start_time,
-                end: this.filter.end_time,
-              });
-            });
-          } else if (type === 'dashboard') { // 概览模式,指标概览中使用
-            // 概览模式,需要区分单独一个和多个
-            if (this.stableFilter.chartCount === 'multiple') {
-              // 所有tag标签
-              const tagAllArr = this.proTags(this.data.tags);
-              // 根据title格式化的标签
-              const titles = this.data.title.split(',');
-              const titleArr = titles.map(item => item.trim());
-              // 获取所需标签
-              const tagArr = this.getCompilation(tagAllArr, titleArr);
-              axiosArr = [getQueryChart({
-                product_id: this.productId,
-                metric: this.data.metric,
-                tags: tagArr.toString(),
-                start: this.filter.start_time,
-                end: this.filter.end_time,
-              })];
-            } else {
-              axiosArr = [getQueryChart({
-                product_id: this.productId,
-                metric: this.data.metric,
-                tags: this.data.tags,
-                start: this.filter.start_time,
-                end: this.filter.end_time,
-              })];
-            }
-          }
-          // 一个图表
-          axios.all(axiosArr).then((res) => {
-            if (res.length > 0) {
-              const series = [];
-              const sumData = {
-                name: 'sum',
-                data: [],
-                visible: true,
-                threshold: null,
-              };
-              res.forEach((response) => {
-                if (response.data.code === 200) {
-                  if (response.data.data) {
-                    // 循环处理每个elements下获取的数据列
-                    response.data.data.forEach((queryItem) => {
-                      const seriesItem = {
-                        theData: {
-                          name: '',
-                          data: [],
-                          visible: true,
-                          threshold: null,
-                        },
-                        metric_name: '',
-                      };
-                      // 图表中每条线的名字,后半部分
-                      let host = `${queryItem.metric}, `;
-                      const tagsArr = Object.keys(queryItem.tags);
-                      // 设置时间-数据格式对
-                      const dpsArr = Object.entries(queryItem.dps);
-                      if (tagsArr.length > 0 && dpsArr.length > 0) {
-                        tagsArr.forEach((tag, i) => {
-                          if (tag !== 'uuid') {
-                            host += i === 0 ? `${tag}=${queryItem.tags[tag]}` : `, ${tag}=${queryItem.tags[tag]}`;
-                          }
-                        });
-                        // 图表中每条线的名字,去掉最后的逗号与空格
-                        seriesItem.theData.name = host;
-                        seriesItem.metric_name = seriesItem.theData.name;
-                        // 将秒改为毫秒
-                        seriesItem.theData.data = dpsArr.map((dpsItem, dpsIndex) => {
-                          if (sumData.data[dpsIndex]) {
-                            const sumNum = sumData.data[dpsIndex][1] || 0;
-                            sumData.data[dpsIndex][1] = sumNum + dpsItem[1];
-                          } else {
-                            sumData.data[dpsIndex] = [dpsItem[0] * 1000, dpsItem[1]];
-                          }
-                          return [dpsItem[0] * 1000, dpsItem[1]];
-                        });
-                        series.push(seriesItem.theData);
-                      }
-                    });
-                  }
-                }
-              });
-              if (series.length && this.data.type === 4) {
-                series.push(sumData);
-              }
-              this.initChart(this.data, series, this.$refs.screenShowArea, 'screen');
-            }
-          }).catch((error) => {
-            if (error) {
-              this.$Message.warning({
-                content: '请稍后刷新',
-                duration: 3,
-              });
-            }
-          });
-        },
-
-
-        // 获取tag数组
-        proTags(data) {
-          const dou = data.indexOf(',');
-          const tmp = [];
-          if (dou === -1) {
-            const set = data.split('=');
-            if (set[1].indexOf('|') > -1) {
-              const valueArr = set[1].split('|');
-              valueArr.forEach((keyV) => {
-                tmp.push(`${set[0]}=${keyV}`);
-              });
-            } else {
-              tmp.push(`${set[0]}=${set[1]}`);
-            }
-          } else {
-            const mid = data.split(','); // ['key=v1','key=v2',....]
-            mid.forEach((item) => {
-              const setInner = item.split('=');
-              if (setInner[1].indexOf('|') > -1) {
-                const valueArr = setInner[1].split('|');
-                valueArr.forEach((keyV) => {
-                  tmp.push(`${setInner[0]}=${keyV}`);
-                });
-              } else {
-                tmp.push(`${setInner[0]}=${setInner[1]}`);
-              }
-            });
-          }
-          return tmp;
-        },
-        // 获取交集,取得所需tags进行查询,k1=v1,k2=v2
-        getCompilation(arr1, arr2) {
-          const arr = [];
-          if (arr1.length && arr2.length) {
-            arr1.forEach((item) => {
-              if (arr2.indexOf(item) > -1) {
-                arr.push(item);
-              }
-            });
-            return arr;
-          }
-          return [];
-        },
-        */
     },
     mounted() {
       this.firstLoad = false;

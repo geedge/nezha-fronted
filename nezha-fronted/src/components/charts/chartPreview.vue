@@ -30,6 +30,11 @@
     padding-bottom:20px !important;
   }
 
+  #chartPreviewDailog .el-dialog__header{
+    padding: 20px 20px 0px !important;
+  }
+
+
 </style>
 <template>
     <el-dialog class="chart-preview-dialog nz-dialog" id="chartPreviewDailog"
@@ -196,8 +201,9 @@
         //oldSearchTime:[],
         minHeight:200,
         chartSpaceHeight:5,//top-border: 1,bottom-border: 1,padding-bottome:3
-        titleHeight:50,
+        titleHeight:58,
         legendHeight:80,
+        pageHeight:40,
       };
     },
     computed: {
@@ -229,18 +235,25 @@
         //设置高度 chart-table
         this.$nextTick(() => {
           //const chartBox = document.getElementById('chartPreviewDailog');
-          let height = this.chart.height;
+          //let height = this.chart.height;
+          let height = Math.round(this.chart.height/10)*10
           if(height<this.minHeight){
             height = this.minHeight;
           }
-          const chartDiv = document.getElementById(chartContainerId);
-          chartDiv.style.height = `${height-this.chartSpaceHeight-this.titleHeight}px`;
+
+          let dailogBox = document.querySelector("#chartPreviewDailog  .el-dialog");
+          dailogBox.style.height = `${height}px`;
+
           const addChartBox = document.querySelector('.right-box-add-chart');
-          //this.oldChartBoxCss = addChartBox.style.cssText;
           addChartBox.style.cssText =  'z-index:1500 !important';
           if(chartType==='table'){
+            const chartDiv = document.getElementById(chartContainerId);
+            chartDiv.style.height = `${height-this.chartSpaceHeight-this.titleHeight-25}px`;
             const tableBox = document.getElementById('tableContainer');
-            tableBox.style.height = `${height-this.titleHeight-this.pageHeight}px`;//-75-32+25
+            tableBox.style.height = `${height-this.titleHeight-this.pageHeight-25}px`;//-75-32+25
+          }else{
+            const chartDiv = document.getElementById(chartContainerId);
+            chartDiv.style.height = `${height-this.chartSpaceHeight-this.titleHeight-15}px`;
           }
         });
         this.setSize(chartInfo.span); // 设置该图表宽度
@@ -1156,6 +1169,7 @@
                   }
                 }
               });
+              this.setColor(legend.length);
               this.initChart(this.chart,series, this.$refs.screenShowArea,legend);
             }
           }).catch((error) => {
