@@ -69,7 +69,7 @@
             <div class="content-col-box">
               <div class="content-col-title">{{$t("dashboard.overview.alert.alertMessage")}}</div>
               <div class="content-col-content" v-loading="alertMessageLoading">
-                <div class="content-col-content-num"><vue-countup :start-value="0" :end-value="9999999"></vue-countup></div>
+                <div class="content-col-content-num"><vue-countup :start-value="0" :end-value="(alertMessageData ? alertMessageData.alertMessageTotal : '') | numberFormat" :decimals="(alertMessageData ? alertMessageData.alertMessageTotal : 0) < 1000 ? 0 : 1"></vue-countup></div>
                 <span class="overview-row-unit">{{(alertMessageData ? alertMessageData.alertMessageTotal : '') | unitFormat}}</span>
                 <span>{{$t("dashboard.overview.alert.ruleNum")}}&nbsp;:&nbsp;{{(alertRuleData ? alertRuleData.alertRuleTotal : "") | numberFormat}}</span>
               </div>
