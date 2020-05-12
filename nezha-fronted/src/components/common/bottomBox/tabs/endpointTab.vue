@@ -53,6 +53,7 @@
             </template>
             <template v-else>-</template>
           </span>
+          <template v-else-if="item.prop == 'type'">{{scope.row.module.type}}</template>
           <div v-else-if="item.prop == 'option'" class="content-right-options">
             <span :title="$t('overall.query')" @click="query(scope.row)" class="content-right-option" :id="'edp-query-'+scope.row.id"><i class="el-icon-search"></i></span>
             &nbsp;
@@ -144,6 +145,10 @@
             label: this.$t("project.endpoint.port"),
             prop: 'port',
             show: true,
+          },{
+            label: this.$t("overall.type"),
+            prop: 'type',
+            show: false,
           },{
             label: this.$t("project.endpoint.param"),
             prop: 'param',
