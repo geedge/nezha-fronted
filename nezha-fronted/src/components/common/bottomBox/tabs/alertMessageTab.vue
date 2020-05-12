@@ -90,6 +90,7 @@
           <template v-else-if="item.prop == 'labels'">
             <nz-alert-tag :label="key" type="info" style="margin: 5px;"
                           :cursor-point="false"
+                          :key="key"
                           v-if="key != 'alertname' && key != 'severity'"
                           v-for="(value, key) in scope.row.labels">{{value}}</nz-alert-tag>
             <!--<el-tag v-if="key != 'alertname' && key != 'severity'"
