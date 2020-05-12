@@ -258,6 +258,7 @@ export const bottomBoxWindow = {
     }
   },
   exitFullScreen(vm) {
+    window.resizing = true;
     let contentRightDom = document.querySelector(".content-right"); //右侧内容区
     let contentRightHeight = contentRightDom.offsetHeight;//可视高度
     //主列表
@@ -273,9 +274,11 @@ export const bottomBoxWindow = {
       if (document.querySelector(".sub-list").offsetHeight >= 100) {
         vm.subResizeShow = true;
       }
+      window.resizing = false;
     }, 210);
   },
   fullScreen(vm) {
+    window.resizing = true;
     let contentRightDom = document.querySelector(".content-right"); //右侧内容区
     let contentRightHeight = contentRightDom.offsetHeight;//可视高度
     vm.isFullScreen = true;
@@ -285,6 +288,7 @@ export const bottomBoxWindow = {
     vm.mainResizeShow = false;
     //副列表
     document.querySelector(".sub-list").style.height = contentRightHeight + 'px';
+    window.resizing = false;
   },
   showSubListWatch(vm, n) {
     vm.inTransform = n;
