@@ -317,7 +317,7 @@ function timeCompute(value,unit,dot=0){
         }
         let quotient = time / minUnit.ascii;
         if(quotient < 1){
-          return `${time.toFixed(dot)} ${minUnit.unit}`;
+          return `${Number(time).toFixed(dot)} ${minUnit.unit}`;
         }else{
           minUnit = units[++i];
           return result(quotient,minUnit);
