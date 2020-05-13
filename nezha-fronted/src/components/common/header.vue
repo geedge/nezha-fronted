@@ -15,9 +15,9 @@
       </el-menu-item>
       <el-submenu index="0" popper-class="nz-submenu" class="icon-menu-item">
         <template slot="title">
-            <div class="menu-icon-create ">
-             <i class="nz-icon-create-square nz-icon" ></i>
-            </div>
+          <div class="menu-icon-create ">
+           <i class="nz-icon-create-square nz-icon" ></i>
+          </div>
         </template>
         <template v-for="(item, index) in createMenu">
           <el-menu-item :index="'0-' + index">
@@ -49,29 +49,35 @@
 
       <el-submenu index="2" popper-class="nz-submenu">
         <template slot="title">
-          <div @click="jumpToProject(projectData[0], 0)" :class ="activeIndex == 'project' ? 'menu-active' :''" >{{$t('overall.project')}}</div>
+          <div v-if="projectData.length == 0">{{$t('overall.project')}}</div>
+          <div v-else @click="jumpToProject(projectData[0], 0)" :class ="activeIndex == 'project' ? 'menu-active' :''" >{{$t('overall.project')}}</div>
         </template>
-        <template v-for="(item, index) in projectData">
-          <el-menu-item :index="'2-' + index">
-<!--            <div @mouseenter="hoverItemIndex = '2-' + index" @mouseleave="hoverItemIndex = ''" @click="jumpToProject(item)" :class="{'menu-item-active' :(activeIndex == 'project' && activeItemIndex == item.id)}">-->
-            <div @mouseenter="hoverItemIndex = '2-' + index" @mouseleave="hoverItemIndex = ''" @click="jumpToProject(item)" >
-              <span class="too-long-split" style="width: 135px;">{{item.name}}</span>
-              <div v-show="hoverItemIndex == '2-' + index && item.buildIn != 1" @click.stop="toEditProject(item)" class="menu-edit"><i style="color: inherit" class="nz-icon nz-icon-edit"></i></div>
-            </div>
-          </el-menu-item>
+        <template>
+          <el-menu-item v-if="projectData.length == 0" index="2-0"><span @click="createBox({type: 1})" class="header-dropdown-add"><i class="nz-icon nz-icon-create-square"></i></span></el-menu-item>
+          <template v-else>
+            <el-menu-item :index="'2-' + index" v-for="(item, index) in projectData">
+              <div @mouseenter="hoverItemIndex = '2-' + index" @mouseleave="hoverItemIndex = ''" @click="jumpToProject(item)" >
+                <span class="too-long-split" style="width: 135px;">{{item.name}}</span>
+                <div v-show="hoverItemIndex == '2-' + index && item.buildIn != 1" @click.stop="toEditProject(item)" class="menu-edit"><i style="color: inherit" class="nz-icon nz-icon-edit"></i></div>
+              </div>
+            </el-menu-item>
+          </template>
         </template>
       </el-submenu>
       <el-submenu index="3" popper-class="nz-submenu">
         <template slot="title">
-          <div @click="jumpTo('asset')" :class="{'menu-active' : activeIndex == 'asset'}">{{$t('overall.asset')}}</div>
+          <div v-if="projectData.length == 0">{{$t('overall.asset')}}</div>
+          <div v-else @click="jumpTo('asset')" :class="{'menu-active' : activeIndex == 'asset'}">{{$t('overall.asset')}}</div>
         </template>
-        <template v-for="(item, index) in assetData">
-          <el-menu-item :index="'3-' + index">
-<!--            <div @mouseenter="hoverItemIndex = '3-' + index" @mouseleave="hoverItemIndex = ''" @click="jumpToAsset(item.id)" :class="{'menu-item-active' : (activeIndex == 'asset' && indOf(activeItemIndexes, item.id) > -1) }">-->
-            <div @mouseenter="hoverItemIndex = '3-' + index" @mouseleave="hoverItemIndex = ''" @click="jumpToAsset(item.id)" >
-              <span class="too-long-split" style="width: 130px;">{{item.name}}</span>
-            </div>
-          </el-menu-item>
+        <template>
+          <el-menu-item v-if="assetData.length == 0" index="3-0"><span @click="createBox({type: 4})" class="header-dropdown-add"><i class="nz-icon nz-icon-create-square"></i></span></el-menu-item>
+          <template v-else>
+            <el-menu-item :index="'3-' + index" v-for="(item, index) in assetData">
+              <div @mouseenter="hoverItemIndex = '3-' + index" @mouseleave="hoverItemIndex = ''" @click="jumpToAsset(item.id)" >
+                <span class="too-long-split" style="width: 130px;">{{item.name}}</span>
+              </div>
+            </el-menu-item>
+          </template>
         </template>
       </el-submenu>
       <el-submenu index="4-0" popper-class="nz-submenu">
@@ -598,6 +604,10 @@
   .header .el-menu--horizontal>.icon-menu-item .el-submenu__title {
     min-width: 50px !important;
     /*margin-right:20px;*/
+  }
+  .header-dropdown-add {
+    display: block;
+    text-align: center;
   }
   .header .vertical-line{
     display:inline-block;

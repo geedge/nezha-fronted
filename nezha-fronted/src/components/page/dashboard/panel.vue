@@ -11,76 +11,68 @@
     </div>
     <div slot="content-right" class="slot-content">
       <div class="top-tools">
-        <div class="top-tool-main-left">
-          <el-dropdown @command="panelChange" class="panel-dropdown-title" trigger="click" placement="bottom-start" v-scrollBar:el-dropdown>
-            <el-row @click.native="scrollbarHeightHandler" :gutter="10" class="el-dropdown-link" style="">
-              <el-col :span="21" class="panel-list-title" :title="showPanel.name">{{showPanel.name}}</el-col>
-              <el-col :span="3" style="padding-left:0px !important;"><i class="el-icon-arrow-down el-icon--right"></i></el-col>
-            </el-row>
-            <el-dropdown-menu class="nz-dashboard-dropdown" slot="dropdown">
-              <el-dropdown-item>{{$t('dashboard.panel.createPanelTitleSec')}}</el-dropdown-item>
-              <el-dropdown-item v-for="item in panelData" :key="item.id+1"
-                                :class="showPanel.id==item.id?'nz-dashboard-dropdown-bg':''" :command="item">
-                <!--{{item.name}}-->
-                <el-row  :gutter="10" class="panel-list-width" >
-                  <el-col :span="19" class="panel-list-item" :title="item.name">{{item.name}}</el-col>
-                  <el-col :span="2"><span class="panel-dropdown-btn panel-dropdown-btn-delete" @click.stop="del(item)"><i class="el-icon-delete"></i></span></el-col>
-                  <el-col :span="1">&nbsp;</el-col>
-                  <el-col :span="2"><span class="panel-dropdown-btn" @click.stop="toEdit(item)"><i class="nz-icon nz-icon-edit"></i></span></el-col>
-                </el-row>
-              </el-dropdown-item>
-            </el-dropdown-menu>
-          </el-dropdown>
+        <div class="top-tool-main-left" v-if="panelData.length == 0" style="margin-left: 10px;">
+          <button @click="toAdd" class="nz-btn nz-btn-style-light nz-btn-size-small">{{$t("dashboard.panel.createPanelTitleSec")}}</button>
         </div>
-        <div class="top-tool-main-right">
-          <div class="top-tool-search relative-position margin-r-20">
-            <el-input ref="queryPanel" @clear="clearInput" id="queryPanel" @focus="focusInput"  @blur="blurInput" v-model="filter.searchName" class="query-input-inactive" size="mini" clearable   >
-              <i slot="suffix" class="el-input__icon el-icon-search" @click="focusInput" style="float: right"></i>
-            </el-input>
+        <template v-else>
+          <div class="top-tool-main-left">
+            <el-dropdown @command="panelChange" class="panel-dropdown-title" trigger="click" placement="bottom-start" v-scrollBar:el-dropdown>
+              <el-row @click.native="scrollbarHeightHandler" :gutter="10" class="el-dropdown-link" style="">
+                <el-col :span="21" class="panel-list-title" :title="showPanel.name">{{showPanel.name}}</el-col>
+                <el-col :span="3" style="padding-left:0px !important;"><i class="el-icon-arrow-down el-icon--right"></i></el-col>
+              </el-row>
+              <el-dropdown-menu class="nz-dashboard-dropdown" slot="dropdown">
+                <el-dropdown-item>{{$t('dashboard.panel.createPanelTitleSec')}}</el-dropdown-item>
+                <el-dropdown-item v-for="item in panelData" :key="item.id+1"
+                                  :class="showPanel.id==item.id?'nz-dashboard-dropdown-bg':''" :command="item">
+                  <!--{{item.name}}-->
+                  <el-row  :gutter="10" class="panel-list-width" >
+                    <el-col :span="19" class="panel-list-item" :title="item.name">{{item.name}}</el-col>
+                    <el-col :span="2"><span class="panel-dropdown-btn panel-dropdown-btn-delete" @click.stop="del(item)"><i class="el-icon-delete"></i></span></el-col>
+                    <el-col :span="1">&nbsp;</el-col>
+                    <el-col :span="2"><span class="panel-dropdown-btn" @click.stop="toEdit(item)"><i class="nz-icon nz-icon-edit"></i></span></el-col>
+                  </el-row>
+                </el-dropdown-item>
+              </el-dropdown-menu>
+            </el-dropdown>
           </div>
-
-          <div class="panel-calendar margin-r-20">
-            <div class="block">
-              <time-picker ref="calendarPanel" class="nz-dashboard-picker" @change="dateChange"></time-picker>
-              <!--
-<el-date-picker prefix-icon=" " class="nz-dashboard-picker" size="mini" ref="calendar"
-                              format="yyyy/MM/dd HH:mm" @change="dateChange" v-model="searchTime" type="datetimerange"
-                              :picker-options="pickerOptions" :range-separator="$t('dashboard.panel.to')"
-                              :start-placeholder="$t('dashboard.panel.startTime')"
-                              :end-placeholder="$t('dashboard.panel.endTime')" align="right">
-              </el-date-picker>
-              -->
+          <div class="top-tool-main-right">
+            <div class="top-tool-search relative-position margin-r-20">
+              <el-input ref="queryPanel" @clear="clearInput" id="queryPanel" @focus="focusInput"  @blur="blurInput" v-model="filter.searchName" class="query-input-inactive" size="mini" clearable   >
+                <i slot="suffix" class="el-input__icon el-icon-search" @click="focusInput" style="float: right"></i>
+              </el-input>
             </div>
-          </div>
 
-          <div class="nz-btn-group nz-btn-group-size-normal nz-btn-group-light margin-r-20">
-            <button style="border-right: 1px solid rgba(162,162,162,0.50);" type="button"
-                    class="nz-btn nz-btn-size-normal nz-btn-style-light" @click="Refresh()">
-              <i style="font-size: 12px" class="global-active-color nz-icon nz-icon-refresh"></i>
-            </button><el-popover
-            v-model="visible" placement="bottom-start" width="200" trigger="click">
-            <ul class="popover_ul">
-              <li v-for="i in intervalList" :style="{color:interval==i.value?'#31749C':''}" :key="i.value+i.name"
-                  @click="selectInterval(i.value)">
-                {{i.name}}
-              </li>
-            </ul>
-            <button type="button" style="border-radius: 0 4px 4px 0"
-                    class="nz-btn nz-btn-size-normal nz-btn-style-light" slot="reference">
-              <i style="font-size: 12px" class="nz-icon nz-icon-arrow-down"></i>
+            <div class="panel-calendar margin-r-20">
+              <div class="block">
+                <time-picker ref="calendarPanel" class="nz-dashboard-picker" @change="dateChange"></time-picker>
+              </div>
+            </div>
+
+            <div class="nz-btn-group nz-btn-group-size-normal nz-btn-group-light margin-r-20">
+              <button style="border-right: 1px solid rgba(162,162,162,0.50);" type="button"
+                      class="nz-btn nz-btn-size-normal nz-btn-style-light" @click="Refresh()">
+                <i style="font-size: 12px" class="global-active-color nz-icon nz-icon-refresh"></i>
+              </button><el-popover
+              v-model="visible" placement="bottom-start" width="200" trigger="click">
+              <ul class="popover_ul">
+                <li v-for="i in intervalList" :style="{color:interval==i.value?'#31749C':''}" :key="i.value+i.name"
+                    @click="selectInterval(i.value)">
+                  {{i.name}}
+                </li>
+              </ul>
+              <button type="button" style="border-radius: 0 4px 4px 0"
+                      class="nz-btn nz-btn-size-normal nz-btn-style-light" slot="reference">
+                <i style="font-size: 12px" class="nz-icon nz-icon-arrow-down"></i>
+              </button>
+            </el-popover>
+            </div>
+            <button @click="toAddChart" :title="$t('overall.createChart')"
+                    class="nz-btn nz-btn-size-normal nz-btn-style-light ">
+              <i class="nz-icon-create-square nz-icon"></i>
             </button>
-          </el-popover>
           </div>
-          <!-- 2020-02-14 使用普通搜索框-->
-          <!--          <div class="top-tool-search">-->
-          <!--            <search-input ref="searchInput" :searchMsg="searchMsg" @search="search"></search-input>-->
-          <!--          </div>-->
-
-          <button @click="toAddChart" :title="$t('overall.createChart')"
-                  class="nz-btn nz-btn-size-normal nz-btn-style-light ">
-            <i class="nz-icon-create-square nz-icon"></i>
-          </button>
-        </div>
+        </template>
       </div>
       <div class="table-list" id="tableList">
         <el-scrollbar class="el-scrollbar-large" style="height: 100%" ref="dashboardScrollbar">

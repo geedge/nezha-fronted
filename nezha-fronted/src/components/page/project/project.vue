@@ -58,15 +58,20 @@
               </div>
             </template>
             <div class="sidebar-info sub-sidebar-info" >
-              <div v-for="module in getProjectModule(item.id)" class="sidebar-info-item" :class="{'sidebar-info-item-active': module.id == currentModule.id}" @click="changeModule(module)" :id="'project-module-'+module.id">
-                <div class="sidebar-info-item-txt">
-                  <el-popover v-if="module.name.length > 16" trigger="hover" placement="top-start" :content="module.name" >
-                    <span slot="reference">{{module.name}}</span>
-                  </el-popover>
-                  <span v-else>{{module.name}}</span>
-                </div>
-                <div v-show="module.buildIn != 1" class="hid-div side-bar-menu-edit sub-side-bar-menu-edit" @click.stop="toEditModule(module)" :id="'project-module-edit-'+module.id" ><i class="nz-icon nz-icon-edit"></i></div>
+              <div v-if="getProjectModule(item.id).length == 0" class="sidebar-info-item sidebar-info-item-add" @click="toAddModule">
+                <i class="nz-icon nz-icon-create-square"></i>
               </div>
+              <template v-else>
+                <div v-for="module in getProjectModule(item.id)" class="sidebar-info-item" :class="{'sidebar-info-item-active': module.id == currentModule.id}" @click="changeModule(module)" :id="'project-module-'+module.id">
+                  <div class="sidebar-info-item-txt">
+                    <el-popover v-if="module.name.length > 16" trigger="hover" placement="top-start" :content="module.name" >
+                      <span slot="reference">{{module.name}}</span>
+                    </el-popover>
+                    <span v-else>{{module.name}}</span>
+                  </div>
+                  <div v-show="module.buildIn != 1" class="hid-div side-bar-menu-edit sub-side-bar-menu-edit" @click.stop="toEditModule(module)" :id="'project-module-edit-'+module.id" ><i class="nz-icon nz-icon-edit"></i></div>
+                </div>
+              </template>
             </div>
           </el-collapse-item>
         </el-collapse>
@@ -446,6 +451,7 @@
         })
       },
       getProjectModule:function(projectId){
+        //return [];
         let moduleList=Object.assign([],this.moduleList);
         return moduleList.filter((item,index)=>{
           return item.project.id==projectId;
@@ -565,6 +571,13 @@
         if (this.editModule.snmpParam) {
           this.initSnmpParam(this.editModule);
         }
+        this.rightBoxHandler(2);
+        this.$nextTick(() => {
+          this.$refs.moduleBox.initWalk();
+        });
+      },
+      toAddModule() {
+        this.editModule = {id: '', type: '', name: '', project: this.currentProject, port: '', path: '', param: '', paramObj: [], snmpParam: ''};
         this.rightBoxHandler(2);
         this.$nextTick(() => {
           this.$refs.moduleBox.initWalk();
@@ -1042,7 +1055,8 @@
   /* end--子弹框*/
   .sub-sidebar-info{
     padding-top: 0px !important;
-    margin-left: 10px;
+    padding-left: 10px;
+    box-sizing: border-box;
   }
   .sub-side-bar-menu-edit{
     margin-right: 18px;

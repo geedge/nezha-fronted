@@ -469,6 +469,9 @@ li{
   margin: 0 0 12px;
   display: block;
 }
+.content-left .sidebar-info-item-add {
+  padding-left: calc(50% - 14px);
+}
 .content-left .sidebar-info-item.el-checkbox {
   padding: 0;
 }
