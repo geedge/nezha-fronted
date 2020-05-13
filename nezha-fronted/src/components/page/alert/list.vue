@@ -120,7 +120,7 @@
               </div>
               <div v-else-if="item.prop == 'current'" class="too-long-split">{{scope.row.current}}</div>
               <div v-else-if="item.prop == 'option'" class="content-right-options">
-                <span :title="$t('overall.view')" @click="detail(scope.row)" class="content-right-option" :id="'alert-list-detail-'+scope.row.id"><i class="nz-icon nz-icon-view"></i></span>
+                <span :title="$t('overall.view')" @click="detail(scope.row)" class="content-right-option" :id="'alert-list-detail-'+scope.row.id"><i class="nz-icon nz-icon-chart"></i></span>
                 <span :title="$t('overall.delete')" @click="del(scope.row)" class="content-right-option" :id="'alert-list-delete-'+scope.row.id"><i  class="el-icon-delete"></i></span>
               </div>
               <span v-else-if="scope.row[item.prop]">{{scope.row[item.prop]}}</span>
@@ -476,8 +476,8 @@
           step='30m';
         }
         let axiosArr=[];
-        let queryParam = this.promQueryParamConvert(obj);
-        axiosArr.push(axios.get("/prom/api/v1/query_range?query="+queryParam+"&start="+start+"&end="+end+"&step="+step));
+        let paramStr = JSON.stringify(this.promQueryParamConvert(obj));
+        axiosArr.push(axios.get("/prom/api/v1/query_range?query="+paramStr.substring(1, paramStr.length-1).replace(/\+/g, "%2B").replace(/ /g, "%20")+"&start="+start+"&end="+end+"&step="+step));
         this.legend = [];
         this.chartDatas = [];
         axios.all(axiosArr).then(res =>{
@@ -486,7 +486,7 @@
             if (response.status == 200) {
               if(response.data.status == 'success'){
                 let queryData=response.data.data.result[0];
-                /*if(queryData){
+                if(queryData){
                   let chartData={
                     type:"line",
                     symbol:'none',  //去掉点
@@ -523,7 +523,7 @@
                     return [dpsItem[0] * 1000, Number(dpsItem[1])];
                   });
                   this.chartDatas.push(chartData);
-                }*/
+                }
               }else{
                 this.$message.error(response.data.error)
                 console.error(response.data)
@@ -576,7 +576,8 @@
             this.tableData = response.data.list;
             this.tableData.forEach((item) => {
               item.labels = JSON.parse(item.labels);
-              this.$get('/prom/api/v1/query', {query: this.promQueryParamConvert(item)}).then(response2 => {
+              let paramStr = JSON.stringify(this.promQueryParamConvert(item));
+              this.$get('/prom/api/v1/query?query=' + paramStr.substring(1, paramStr.length-1).replace(/\+/g, "%2B").replace(/ /g, "%20")).then(response2 => {
                 console.info(response2)
               });
             });
@@ -588,9 +589,11 @@
         return "(" + obj.alertRule.expr + ") and (" + function(){
           let q = "{";
           for (let k in obj.labels) {
-            q += k;
-            q += "=";
-            q += ("'" + obj.labels[k] + "',");
+            if (k != 'alertname' && k != 'severity') {
+              q += k;
+              q += "=";
+              q += ("'" + obj.labels[k] + "',");
+            }
           };
           if (q.length > 1) {
             q = q.substring(0, q.length-1);
