@@ -53,12 +53,12 @@
           <div v-else @click="jumpToProject(projectData[0], 0)" :class ="activeIndex == 'project' ? 'menu-active' :''" >{{$t('overall.project')}}</div>
         </template>
         <template>
-          <el-menu-item v-if="projectData.length == 0" index="2-0"><span @click="createBox({type: 1})" class="header-dropdown-add"><i class="nz-icon nz-icon-create-square"></i></span></el-menu-item>
+          <el-menu-item v-if="projectData.length == 0" index="2-0"><div @click="createBox({type: 1})"><i class="nz-icon nz-icon-create-square header-dropdown-add"></i>&nbsp;&nbsp;{{$t("overall.createProject")}}</div></el-menu-item>
           <template v-else>
-            <el-menu-item :index="'2-' + index" v-for="(item, index) in projectData">
+            <el-menu-item :index="'2-' + index" v-for="(item, index) in projectData" :key="index">
               <div @mouseenter="hoverItemIndex = '2-' + index" @mouseleave="hoverItemIndex = ''" @click="jumpToProject(item)" >
                 <span class="too-long-split" style="width: 135px;">{{item.name}}</span>
-                <div v-show="hoverItemIndex == '2-' + index && item.buildIn != 1" @click.stop="toEditProject(item)" class="menu-edit"><i style="color: inherit" class="nz-icon nz-icon-edit"></i></div>
+                <div v-show="hoverItemIndex == '2-' + index && item.buildIn != 1" @click.stop="toEditProject(item)" class="menu-edit"><i class="nz-icon nz-icon-edit"></i></div>
               </div>
             </el-menu-item>
           </template>
@@ -66,13 +66,13 @@
       </el-submenu>
       <el-submenu index="3" popper-class="nz-submenu">
         <template slot="title">
-          <div v-if="projectData.length == 0">{{$t('overall.asset')}}</div>
+          <div v-if="assetData.length == 0">{{$t('overall.asset')}}</div>
           <div v-else @click="jumpTo('asset')" :class="{'menu-active' : activeIndex == 'asset'}">{{$t('overall.asset')}}</div>
         </template>
         <template>
-          <el-menu-item v-if="assetData.length == 0" index="3-0"><span @click="createBox({type: 4})" class="header-dropdown-add"><i class="nz-icon nz-icon-create-square"></i></span></el-menu-item>
+          <el-menu-item v-if="assetData.length == 0" index="3-0"><div @click="createBox({type: 6})"><i class="nz-icon nz-icon-create-square header-dropdown-add"></i>&nbsp;&nbsp;{{$t("overall.createDatacenter")}}</div></el-menu-item>
           <template v-else>
-            <el-menu-item :index="'3-' + index" v-for="(item, index) in assetData">
+            <el-menu-item :index="'3-' + index" v-for="(item, index) in assetData" :key="index">
               <div @mouseenter="hoverItemIndex = '3-' + index" @mouseleave="hoverItemIndex = ''" @click="jumpToAsset(item.id)" >
                 <span class="too-long-split" style="width: 130px;">{{item.name}}</span>
               </div>
@@ -151,6 +151,7 @@
                     @sendStateData="closeAsset"></asset-add-unit>-->
     <asset-box :edit-unit-show='addUnitShow' @refreshData="refreshAsset" @sendStateData="closeAsset"
                ref="assetAddUnit"></asset-box>
+    <dc-box ref="dcBox" :dc="currentDc" :user-data="userDatas" @reload="getAssetData"></dc-box>
     <alert-config-box :parentAlertRule="alertRule" @reload="" ref="alertConfigBox"></alert-config-box>
     <change-password :cur-user="username" :show-dialog="showChangePwd" @click="showPwdDialog" @dialogClosed="dialogClosed"></change-password>
   </div>
@@ -177,6 +178,7 @@
           id:'',
           name: ''
         },
+        currentDc: {},
         projectData: [], //顶部菜单project列表中的数据
         editProject: {id: '', name: '', remark: ''}, //新增/编辑的project
         currentProject: {id: '', name: '', remark: ''}, //module/endpoint弹框用来回显project
@@ -237,6 +239,11 @@
             label: this.$t('alert.config.alertConfig'),
             url: 'alertConfig',
             type: 5
+          },
+          {
+            label: this.$t('config.dc.dc'),
+            url: 'dc',
+            type: 6
           }
         ],
         addIdcData: {
@@ -246,7 +253,6 @@
           principal: '',
           tel: ''
         },
-        idcUserData: '',
         IDCOptionData: [],
         addUnitShow: false,
         userDatas:[],
@@ -322,6 +328,19 @@
           this.addUnitShow = true;
           this.$refs.assetAddUnit.show();
           this.$refs.assetAddUnit.resetAsset();
+        } else if (item.type == 6) {
+          this.currentDc = {
+            id: '',
+            name: '',
+            location: '',
+            tel: '',
+            principal: '',
+            area: {
+              id: '',
+              name: ''
+            }
+          },
+          this.$refs.dcBox.show(true, true);
         }
       },
       jumpToAsset(id) {
@@ -336,13 +355,6 @@
         this.$store.commit('setProject', p);
         this.activeItemIndex = p.id;
         this.jumpTo('project');
-      },
-      getUserData() {
-        this.$get('sys/user/list').then(response => {
-          if (response.code === 200) {
-            this.idcUserData = response.data.list
-          }
-        })
       },
       getIDCOptionData(data) {
         this.$get('idc?id=' + data).then(response => {
@@ -483,12 +495,6 @@
         //this.$router.go(-1);
       },
     },
-    created() {
-      /*if (!localStorage.getItem("nz-language")) {
-        localStorage.setItem("nz-language", "en");
-      }*/
-      this.getUserData();
-    },
     mounted() {
       this.$i18n.locale = this.language;
       this.getUserData();
@@ -605,10 +611,6 @@
     min-width: 50px !important;
     /*margin-right:20px;*/
   }
-  .header-dropdown-add {
-    display: block;
-    text-align: center;
-  }
   .header .vertical-line{
     display:inline-block;
     border-left:solid 1px white;
@@ -716,7 +718,11 @@
     color: #444444 !important;
     transition: none;
   }
-
+  .header-dropdown-add {
+    position: absolute;
+    left: 14px;
+    top: 1px;
+  }
   .nz-submenu.el-menu--horizontal   {
     color: $global-text-color-active !important;
   }
