@@ -39,14 +39,7 @@
                     </el-popover>
                     <span v-else>{{item.name}}</span>
                   </div>
-                  <!--            <idc-config-box ref="idcConfigBox" :post-idc="item" placement="left" @after="getIDCOptionData" :button-class="'checkbox-edit'" :user-data="idcUserData">-->
-                  <!--              <template v-slot:optionZone>-->
-                  <!--                <span @click="closeAllPop">-->
-                  <!--                  <i class="nz-icon nz-icon-edit" @click="getSingleIDCData(item.id,'edit')"></i>-->
-                  <!--                </span>-->
-                  <!--              </template>-->
-                  <!--            </idc-config-box>-->
-                  </el-checkbox>
+                </el-checkbox>
               </el-checkbox-group>
             </el-collapse-item>
             <el-collapse-item name="assetType" :title="$t('asset.left.assetType')">

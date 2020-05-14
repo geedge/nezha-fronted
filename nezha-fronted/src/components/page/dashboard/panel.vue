@@ -12,7 +12,7 @@
     <div slot="content-right" class="slot-content">
       <div class="top-tools">
         <div class="top-tool-main-left" v-if="panelData.length == 0" style="margin-left: 10px;">
-          <button @click="toAdd" class="nz-btn nz-btn-style-light nz-btn-size-small">{{$t("dashboard.panel.createPanelTitleSec")}}</button>
+          <button @click="toAdd" class="nz-btn nz-btn-style-light nz-btn-size-small"><i class="nz-icon nz-icon-create-square"></i>&nbsp;&nbsp;{{$t("dashboard.panel.createPanelTitleSec")}}</button>
         </div>
         <template v-else>
           <div class="top-tool-main-left">
