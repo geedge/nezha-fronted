@@ -17,10 +17,11 @@
           :params="searchLabel"
           @afterImport="getTableData"
           class="margin-l-20"
-          style="width: 59px;"
         >
           <template slot="optionZone">
-            <i class="nz-icon nz-icon-create-square" @click.stop="toAdd" :title="$t('overall.createProject')" ></i>
+            <button @click.stop="toAdd" :title="$t('overall.createProject')" class="nz-btn nz-btn-size-normal nz-btn-style-light" id="project-create-project">
+              <i class="nz-icon nz-icon-create-square"></i>
+            </button>
           </template>
         </export-excel>
       </div>
