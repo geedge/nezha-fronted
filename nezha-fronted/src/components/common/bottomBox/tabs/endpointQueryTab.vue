@@ -500,6 +500,7 @@
                   chartData.data=queryData.values.map((dpsItem, dpsIndex) => {
                     return [dpsItem[0] * 1000, Number(dpsItem[1])];
                   });
+                  console.info(chartData.data)
                   this.chartDatas.push(chartData);
                 }
               }else{

@@ -118,7 +118,13 @@
                   {{scope.row['state'] == 2 ? "Expired" : ""}}
                 </span>
               </div>
-              <div v-else-if="item.prop == 'current'" class="too-long-split">{{scope.row.current}}</div>
+              <div v-else-if="item.prop == 'current'" class="too-long-split" >
+                <span v-if="!scope.row.current">-</span>
+                <el-popover v-else placement="right" trigger="hover">
+                  <span slot="reference">{{scope.row.current[1]}}</span>
+                  <div>{{$unixTimeParseToString(scope.row.current[0])}}</div>
+                </el-popover>
+              </div>
               <div v-else-if="item.prop == 'option'" class="content-right-options">
                 <span :title="$t('overall.view')" @click="detail(scope.row)" class="content-right-option" :id="'alert-list-detail-'+scope.row.id"><i class="nz-icon nz-icon-chart"></i></span>
                 <span :title="$t('overall.delete')" @click="del(scope.row)" class="content-right-option" :id="'alert-list-delete-'+scope.row.id"><i  class="el-icon-delete"></i></span>
@@ -245,6 +251,7 @@
         //详情相关
         graphShow: false,
         chartDatas: [],
+        sameLabels: ['instance','module','project','asset','endpoint','datacenter'],
         legend: [],
         searchTime: [new Date().setHours(new Date().getHours() - 1), new Date()],
 
@@ -477,65 +484,59 @@
         }
         let axiosArr=[];
         let paramStr = JSON.stringify(this.promQueryParamConvert(obj));
-        axiosArr.push(axios.get("/prom/api/v1/query_range?query="+paramStr.substring(1, paramStr.length-1).replace(/\+/g, "%2B").replace(/ /g, "%20")+"&start="+this.$stringTimeParseToUnix(start)+"&end="+this.$stringTimeParseToUnix(end)+"&step="+step));
+		    axiosArr.push(axios.get("/prom/api/v1/query_range?query="+paramStr.substring(1, paramStr.length-1).replace(/\+/g, "%2B").replace(/ /g, "%20").replace(/\\/g, "")+"&start="+this.$stringTimeParseToUnix(start)+"&end="+this.$stringTimeParseToUnix(end)+"&step="+step));
         this.legend = [];
         this.chartDatas = [];
         axios.all(axiosArr).then(res =>{
-          res.forEach((response,promIndex)=>{
-            console.info(response);
-            if (response.status == 200) {
-              if(response.data.status == 'success'){
-                let queryData=response.data.data.result[0];
-                if(queryData){
-                  let chartData={
-                    type:"line",
-                    symbol:'none',  //去掉点
-                    smooth:true,  //曲线变平滑
-                  };
-                  chartData.name=queryData.metric.__name__;
-                  let alias=queryData.metric.__name__;
-                  delete queryData.metric.__name__;
-                  chartData.name+="{";
-                  alias+="{";
-                  Object.keys(queryData.metric).forEach((item,index)=>{
-                    let label=item;
-                    let value=queryData.metric[label];
-                    chartData.name+=label +"='"+value+"',";
-                    if(!this.sameLabels.some((i)=>{return i == label})){
-                      alias+=label +"='"+value+"',";
+          try {
+            res.forEach((response, promIndex) => {
+              if (response.status == 200) {
+                if (response.data.status == 'success') {
+                  let queryData = response.data.data.result[0];
+                  if (queryData) {
+                    let chartData = {
+                      type: "line",
+                      symbol: 'none',  //去掉点
+                      smooth: true,  //曲线变平滑
+                      name: ''
+                    };
+                    chartData.name += "{";
+                    alias += "{";
+                    Object.keys(queryData.metric).forEach((item, index) => {
+                      let label = item;
+                      let value = queryData.metric[label];
+                      chartData.name += label + "='" + value + "',";
+                    });
+                    chartData.name = chartData.name.charAt(chartData.name.length - 1) == "," ? chartData.name.substr(0, chartData.name.length - 1) : chartData.name;
+                    chartData.name += "}";
+                    let alias = chartData.name;
+                    let legend = {
+                      name: chartData.name,
+                      alias: alias,
+                      isGray: false
                     }
-                  })
-                  chartData.name=chartData.name.charAt(chartData.name.length-1) == ","?chartData.name.substr(0,chartData.name.length-1):chartData.name;
-                  alias=alias.charAt(alias.length-1) == ","?alias.substr(0,alias.length-1):alias;
-                  chartData.name+="}";
-                  alias+="}";
-                  if(!/.+\{.+\}/.test(alias)){
-                    alias=alias.substr(0,alias.length-2);
+                    this.legend.push(legend);
+                    chartData.data = queryData.values.map((dpsItem, dpsIndex) => {
+                      return [dpsItem[0] * 1000, parseFloat(dpsItem[1]).toFixed(1)];
+                    });
+                    this.chartDatas.push(chartData);
+                    this.$refs.messageChart.setRandomColors(this.chartDatas.length)
+                    this.$refs.messageChart.setLegend(this.legend)
+                    this.$refs.messageChart.setSeries(this.chartDatas);
                   }
-                  let legend={
-                    name:chartData.name,
-                    alias:alias,
-                    // showText:this.formatLegend(chartData.name),
-                    isGray:false
-                  }
-                  this.legend.push(legend);
-                  chartData.data=queryData.values.map((dpsItem, dpsIndex) => {
-                    return [dpsItem[0] * 1000, Number(dpsItem[1])];
-                  });
-                  this.chartDatas.push(chartData);
+                } else {
+                  this.$message.error(response.data.error)
+                  console.error(response.data)
                 }
-              }else{
-                this.$message.error(response.data.error)
-                console.error(response.data)
               }
-            }
-          });
-          this.$nextTick(()=>{
-            this.$refs.messageChart.setRandomColors(this.chartDatas.length)
-            this.$refs.messageChart.setLegend(this.legend)
-            this.$refs.messageChart.setSeries(this.chartDatas);
+            });
+            this.$nextTick(() => {
+              this.$refs.messageChart.endLoading();
+            });
+          } catch(err) {
+            this.$message.error(err);
             this.$refs.messageChart.endLoading();
-          });
+          }
         })
       },
       detail(obj) {
@@ -577,8 +578,12 @@
             this.tableData.forEach((item) => {
               item.labels = JSON.parse(item.labels);
               let paramStr = JSON.stringify(this.promQueryParamConvert(item));
-              this.$get('/prom/api/v1/query?query=' + paramStr.substring(1, paramStr.length-1).replace(/\+/g, "%2B").replace(/ /g, "%20")).then(response2 => {
-                console.info(response2)
+              this.$get('/prom/api/v1/query?query=' + paramStr.substring(1, paramStr.length-1).replace(/\+/g, "%2B").replace(/ /g, "%20").replace(/\\/g, "")).then(response2 => {
+                let current = [];
+                if (response2.data && response2.data.result && response2.data.result.length > 0) {
+                  current = response2.data.result[0].value;
+                }
+                this.$set(item, "current", current);
               });
             });
             this.pageObj.total = response.data.total;
