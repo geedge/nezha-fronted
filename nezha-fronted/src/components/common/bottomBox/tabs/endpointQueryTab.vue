@@ -159,11 +159,11 @@
       <div slot="title">
         {{$t("project.endpoint.dialogTitle")}}
         <div class="float-right panel-calendar dialog-tool" style="display: flex">
-          <pick-time :refresh-data-func="queryChartDate" :use-refresh="false" v-model="searchTime" style="height: 28px;"></pick-time>
+          <pick-time :refresh-data-func="queryChartDate" :use-refresh="false" v-model="searchTime" style="height: 28px;" @unitChange="chartUnitChange"></pick-time>
            <button class="nz-btn nz-btn-size-large nz-btn-style-normal nz-btn-min-width-82" @click="saveChart">{{$t('dashboard.metric.saveChart')}}</button>
         </div>
       </div>
-      <chart ref="endpointChart" ></chart>
+      <chart ref="endpointChart" :unit="chartUnit"></chart>
     </el-dialog>
 
     <chart-box ref="addChartModal" :panel-data="panelData" @on-create-success="createSuccess" @reloadOnlyPanel="getPanelData" @reload="getPanelData"></chart-box>
@@ -214,6 +214,7 @@
         panelData: [], //chart-box的panel下拉框数据,
         hideSameLabels: true,
         sameLabels:['instance','module','project','asset','endpoint','datacenter'],
+        chartUnit:5
       }
     },
     methods: {
@@ -236,6 +237,7 @@
           metricInfo.elements.push({expression: this.selectedEndpoints[i].element, type: type});
         }
         this.$refs.addChartModal.createData(-1, metricInfo);
+        this.$refs.addChartModal.setUnit(this.chartUnit)
       },
       dropdownHandler(show) {
         if (show) {
@@ -433,6 +435,12 @@
       },
       dialogClose:function(){
         this.graphShow=false;
+      },
+      chartUnitChange:function(unit){
+        this.chartUnit=unit;
+        this.$nextTick(()=>{
+          this.queryChartDate()
+        })
       },
       queryChartDate:function(){
         let start = this.searchTime[0]?this.searchTime[0]:this.getTime(-1, 'h');
