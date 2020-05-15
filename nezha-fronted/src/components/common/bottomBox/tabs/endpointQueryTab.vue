@@ -455,7 +455,7 @@
         }
         let axiosArr=[];
         for(let endpoint of this.selectedEndpoints){
-          axiosArr.push(axios.get("/prom/api/v1/query_range?query="+endpoint.element+"&start="+start+"&end="+end+"&step="+step));
+          axiosArr.push(axios.get("/prom/api/v1/query_range?query="+endpoint.element+"&start="+this.$stringTimeParseToUnix(start)+"&end="+this.$stringTimeParseToUnix(end)+"&step="+step));
         }
         this.legend=[];
         this.chartDatas = [];

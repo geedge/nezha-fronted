@@ -43,9 +43,9 @@
                 <el-switch v-model.number="basic.asset_ping_switch" active-color="rgb(238, 157, 63)"  active-value='on' inactive-value='off'>
                 </el-switch>
               </el-form-item>
-              <el-form-item :label="$t('config.system.basic.assetPingInterval')" prop="asset_ping_interval">
+              <!--<el-form-item :label="$t('config.system.basic.assetPingInterval')" prop="asset_ping_interval">
                 <el-input v-model.number="basic.asset_ping_interval" :disabled="basic.asset_ping_switch == 'off'"></el-input><span class="nz-input-append">s</span>
-              </el-form-item>
+              </el-form-item>-->
               <el-form-item :label="$t('config.system.basic.defaultCabinetUsize')" prop="default_cabinet_usize">
                 <el-input v-model.number="basic.default_cabinet_usize" ></el-input>
               </el-form-item>

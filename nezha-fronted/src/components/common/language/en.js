@@ -74,7 +74,8 @@ const en = {
     reset:'Reset',
     submit:'Submit',
     noData:'No data',
-    tag: 'Tag'
+    tag: 'Tag',
+    placeHolder:'please enter'
   },
   pageSize: '/page',
   webshell:{
@@ -756,7 +757,7 @@ const en = {
       name: 'Name',//"名称"
       receiver: 'Receiver',//"用户组"
       expr: 'Expression',//"表达式"
-      for: "For (s)",//For (s)
+      for: "Duration (s)",//For (s)
       link: 'Link',//'关联'
       option: 'Operation',//"操作"
       alertConfig: 'Alert rule',//"告警规则"

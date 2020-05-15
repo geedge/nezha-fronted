@@ -484,7 +484,7 @@
         }
         let axiosArr=[];
         let queryParam = this.promQueryParamConvert(obj);
-        axiosArr.push(axios.get("/prom/api/v1/query_range?query="+queryParam+"&start="+start+"&end="+end+"&step="+step));
+        axiosArr.push(axios.get("/prom/api/v1/query_range?query="+queryParam+"&start="+this.$stringTimeParseToUnix(start)+"&end="+this.$stringTimeParseToUnix(end)+"&step="+step));
         this.legend = [];
         this.chartDatas = [];
         axios.all(axiosArr).then(res =>{

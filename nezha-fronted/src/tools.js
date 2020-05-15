@@ -334,3 +334,7 @@ export const bottomBoxWindow = {
     }
   }
 };
+export function stringTimeParseToUnix(stringTime){
+  let time=new Date(stringTime).getTime();
+  return time/1000;
+}

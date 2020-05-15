@@ -672,8 +672,8 @@
         metricString = metricString.substring(0, metricString.length-1);
         metricString += "}";
         let params = {
-          start: before,
-          end: end,
+          start: this.$stringTimeParseToUnix(before),
+          end: this.$stringTimeParseToUnix(end),
           step: bus.getStep(before, end),
           query: 'sum(irate(' + rule + metricString + '[' + (this.trendSearchParam.timeRange ? this.trendSearchParam.timeRange : "1h") + ']))'
         };

@@ -39,6 +39,16 @@
                   @addExpression="addExpression"
                   @removeExpression="removeExpression"
                 ></promql-input>
+<!--                <promql-input-plus-->
+<!--                  v-for="index of promqlKeys.length"-->
+<!--                  :ref="'promql-plus'+(index-1)"-->
+<!--                  :id="promqlKeys[index-1]"-->
+<!--                  :key="promqlKeys[index-1]"-->
+<!--                  :index="index-1"-->
+<!--                  @change="expressionChange"-->
+<!--                  @addExpression="addExpression"-->
+<!--                  @removeExpression="removeExpression"-->
+<!--                ></promql-input-plus>-->
               </div>
               <div class="chart-view right-margin" v-show="!showIntroduce"
                    :class="{'shrink-view':!chartVisible || !defaultChartVisible}">
@@ -198,6 +208,7 @@ instance_cpu_time_ns{app="fox", proc="widget", rev="4d3a513", env="prod", job="c
 <script>
   import bus from "../../../../libs/bus";
   import promqlInput from "./promqlInput";
+  import promqlInputPlus from "./promqlInputPlus";
   import chart from "../overview/chart";
   import axios from 'axios';
   import chartBox from "../../../page/dashboard/chartBox";
@@ -208,6 +219,7 @@ instance_cpu_time_ns{app="fox", proc="widget", rev="4d3a513", env="prod", job="c
     name: "explore",
     components: {
       'promql-input': promqlInput,
+      'promql-input-plus':promqlInputPlus,
       'chart': chart,
       'chart-box': chartBox,
     },
@@ -274,7 +286,7 @@ instance_cpu_time_ns{app="fox", proc="widget", rev="4d3a513", env="prod", job="c
                 let step=bus.getStep(this.filterTime[0],this.filterTime[1]);
                 promqlInputIndexs.push(index);
                 queryExpression.push(item)
-                requestArr.push(axios.get('/prom/api/v1/query_range?query=' + item + '&start=' + this.filterTime[0] + '&end=' + this.filterTime[1] + '&step='+step))
+                requestArr.push(axios.get('/prom/api/v1/query_range?query=' + item + '&start=' + this.$stringTimeParseToUnix(this.filterTime[0]) + '&end=' + this.$stringTimeParseToUnix(this.filterTime[1]) + '&step='+step))
               }
             })
             if (requestArr.length > 0) {

@@ -1295,16 +1295,16 @@
             axiosArr = this.data.elements.map((ele) => {
               const filterItem = ele;
               let query = encodeURIComponent(filterItem.expression);
-              return  this.$get('/prom/api/v1/query_range?query='+query+"&start="+startTime+"&end="+endTime+'&step='+step);
+              return  this.$get('/prom/api/v1/query_range?query='+query+"&start="+this.$stringTimeParseToUnix(startTime)+"&end="+this.$stringTimeParseToUnix(endTime)+'&step='+step);
             });
           } else if (type === 'dashboard') { // 概览模式,指标概览中使用
             // 概览模式,需要区分单独一个和多个
             if (this.stableFilter.chartCount === 'multiple') {
               let query = encodeURIComponent(this.data.title);
-              axiosArr = [this.$get('/prom/api/v1/query_range?query='+query+"&start="+startTime+"&end="+endTime+'&step='+step)];
+              axiosArr = [this.$get('/prom/api/v1/query_range?query='+query+"&start="+this.$stringTimeParseToUnix(startTime)+"&end="+this.$stringTimeParseToUnix(endTime)+'&step='+step)];
             } else {
               let query = encodeURIComponent(this.data.elements[0].expression);
-              axiosArr = [this.$get('/prom/api/v1/query_range?query='+query+"&start="+startTime+"&end="+endTime+'&step='+step)];
+              axiosArr = [this.$get('/prom/api/v1/query_range?query='+query+"&start="+this.$stringTimeParseToUnix(startTime)+"&end="+this.$stringTimeParseToUnix(endTime)+'&step='+step)];
             }
           }
           // 一个图表

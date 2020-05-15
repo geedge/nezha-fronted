@@ -737,8 +737,8 @@
         let before=this.dateFormat('yyyy-mm-dd HH:MM:SS',beforeDate);
         let params={
           query:'sum(nz_alert_nums)',
-          start:before,
-          end:cur,
+          start:this.$stringTimeParseToUnix(before),
+          end:this.$stringTimeParseToUnix(cur),
           step:'15s'
         }
         this.$get('/prom/api/v1/query_range',params).then(response=>{
