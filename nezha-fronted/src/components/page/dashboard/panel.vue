@@ -82,7 +82,7 @@
           </div>
         </el-scrollbar>
       </div>
-      <button class="to-top" v-show="showTopBtn" @click="$toTop('el', $refs.dashboardScrollbar.wrap)"><i class="nz-icon nz-icon-top"></i></button>
+      <button class="to-top" :class="{'to-top-is-hover': tableHover}" v-show="showTopBtn" @click="$toTop('el', $refs.dashboardScrollbar.wrap)" style="bottom: 0;"><i class="nz-icon nz-icon-top"></i></button>
     </div>
     </left-menu>
 
@@ -107,6 +107,7 @@
           show: false,
           title: this.$t('dashboard.panel.createPanelTitle')
         },
+        tableHover: false,
         /*
         pickerOptions: {
           shortcuts: [{
@@ -349,7 +350,6 @@
         this.$refs.addChartModal.createData(this.showPanel.id); //初始化创建图表需要的初始数据
       },
       scrollbarHeightHandler() {
-        console.info(1)
         setTimeout(() => {
           let top = '';
           let top2 = '';
@@ -588,6 +588,7 @@
         let _self = this;
         let scrollbarWrap = this.$refs.dashboardScrollbar.wrap;
         scrollbarWrap.onscroll = function() {
+          console.info(scrollbarWrap.scrollTop)
           if (scrollbarWrap.scrollTop > 50) {
             _self.showTopBtn = true;
           } else {
@@ -629,6 +630,12 @@
     },
     mounted: function () {
       this.onScroll();
+      document.querySelector("#tableList").addEventListener("mouseenter", () => {
+        this.tableHover = true;
+      });
+      document.querySelector("#tableList").addEventListener("mouseleave", () => {
+        this.tableHover = false;
+      });
     },
     computed: {
       refreshPanel() {
