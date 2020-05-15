@@ -339,7 +339,7 @@ export function stringTimeParseToUnix(stringTime){
   return time/1000;
 }
 
-export function unixTimeParseToString(unixTime,fmt='yyyy-MM-dd hh-mm-ss'){
+export function unixTimeParseToString(unixTime,fmt='yyyy-MM-dd hh:mm:ss'){
   let date=new Date(unixTime * 1000);
   var o = {
     "M+" : date.getMonth()+1,                 //月份
