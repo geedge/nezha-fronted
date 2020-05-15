@@ -196,6 +196,7 @@
   import axios from 'axios';
   import nzAlertTag from '../../../page/alert/nzAlertTag';
   import chart from '../../../page/dashboard/overview/chart'
+  import bus from '../../../../libs/bus'
   export default {
     name: "alertMessageTab",
     components: {
@@ -526,12 +527,10 @@
                     }
                     this.legend.push(legend);
                     chartData.data = queryData.values.map((dpsItem, dpsIndex) => {
-                      return [dpsItem[0] * 1000, parseFloat(dpsItem[1]).toFixed(1)];
+                      return [bus.computeTimezone(dpsItem[0]) * 1000, parseFloat(dpsItem[1]).toFixed(2)];
                     });
                     this.chartDatas.push(chartData);
-                    this.$refs.messageChart.setRandomColors(this.chartDatas.length)
-                    this.$refs.messageChart.setLegend(this.legend)
-                    this.$refs.messageChart.setSeries(this.chartDatas);
+
                   }
                 } else {
                   this.$message.error(response.data.error)
@@ -540,6 +539,9 @@
               }
             });
             this.$nextTick(() => {
+              this.$refs.messageChart.setRandomColors(this.chartDatas.length);
+              this.$refs.messageChart.setLegend(this.legend);
+              this.$refs.messageChart.setSeries(this.chartDatas);
               this.$refs.messageChart.endLoading();
             });
           } catch(err) {
@@ -592,7 +594,13 @@
                 this.$get('/prom/api/v1/query?query=' + paramStr.substring(1, paramStr.length-1).replace(/\+/g, "%2B").replace(/ /g, "%20").replace(/\\/g, "")).then(response2 => {
                   let current = [];
                   if (response2.data && response2.data.result && response2.data.result.length > 0) {
-                    current = response2.data.result[0].value;
+                    current = response2.data.result[0].value.map((item, i) => {
+                      if (i == 0) {
+                        return bus.computeTimezone(item);
+                      } else {
+                        return parseFloat(item).toFixed(2);
+                      }
+                    });
                   }
                   this.$set(item, "current", current);
                 });

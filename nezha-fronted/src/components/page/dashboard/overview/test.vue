@@ -12,26 +12,41 @@
       </div>
       <!--右侧内容-->
       <div class="overview-right slot-content" id="mainDisplay" slot="content-right">
+        <svg width="500" height="500">
+          <path fill="none" stroke-width="10"></path>
+        </svg>
+      </div>
+      <!--<div class="overview-right slot-content" id="mainDisplay" slot="content-right">
         <div id="topo" style="width: 75%; display: inline-block; height: 99%"></div>
         <div style="width: 24%; display: inline-block; height: 99%; background-color: white; vertical-align: top">
           name: <input id="k1"></input><br/>
           alerts: <input id="k2"></input><br/>
           x: <input id="k3"></input>
         </div>
-      </div>
+      </div>-->
     </left-menu>
-    <div class="axis-tooltip el-popover"></div>
-    <!--用于assetType饼图label-->
-    <img src='../../../../assets/img/up.png' id="upPic" style="display: none;">
-    <img src='../../../../assets/img/down.png' id="downPic" style="display: none;">
   </div>
 </template>
 
 <script>
-  import chart from "./chart";
-  import echarts from 'echarts';
-
+  import * as d3 from "d3";
   export default {
+    name: "test",
+    data() {
+      return {
+
+      }
+    },
+    methods: {
+      test() {
+
+      }
+    },
+    mounted() {
+      this.test();
+    }
+  }
+  /*export default {
     name: "test",
     data() {
       return {
@@ -97,26 +112,6 @@
             }
           ]
         });
-        /*myChart.setOption({
-          // 声明一个 graphic component，里面有若干个 type 为 'circle' 的 graphic elements。
-          // 这里使用了 echarts.util.map 这个帮助方法，其行为和 Array.prototype.map 一样，但是兼容 es5 以下的环境。
-          // 用 map 方法遍历 data 的每项，为每项生成一个圆点。
-          graphic: echarts.util.map(data, function (dataItem, dataIndex) {
-            let a = {
-              type: 'circle',
-              shape: {
-                r: symbolSize / 2
-              },
-              position: myChart.convertToPixel('grid', dataItem),
-              invisible: true,
-              draggable: true,
-              z: 100,
-              ondrag: echarts.util.curry(onPointDragging, dataIndex)
-            };
-            console.info(a);
-            return a;
-          })
-        });*/
         setTimeout(() => {
           myChart.setOption({
             graphic: echarts.util.map(data1, function (dataItem, dataIndex) {
@@ -196,5 +191,5 @@
     mounted() {
       this.load();
     }
-  }
+  }*/
 </script>
