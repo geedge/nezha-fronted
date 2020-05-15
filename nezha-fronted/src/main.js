@@ -19,7 +19,7 @@ import plTable from 'pl-table'
 import 'pl-table/themes/index.css'
 
 import {post, get, put, del} from './http.js'
-import {toTop, clickoutside, scrollBar, bottomBoxWindow,stringTimeParseToUnix} from './tools.js'
+import {toTop, clickoutside, scrollBar, bottomBoxWindow,stringTimeParseToUnix,unixTimeParseToString} from './tools.js'
 
 
 import Pagination from "./components/common/pagination"; //引入全局分页组件
@@ -80,6 +80,7 @@ Vue.prototype.$delete = del;
 Vue.prototype.$toTop = toTop; //toTop置顶按钮方法
 Vue.prototype.$bottomBoxWindow = bottomBoxWindow; //底部上滑框控制
 Vue.prototype.$stringTimeParseToUnix = stringTimeParseToUnix;
+Vue.prototype.$unixTimeParseToString = unixTimeParseToString;
 Vue.prototype.$tableHeight = { //列表页表格的高度
   normal: 'calc(100% - 100px)',  //常规高度，特例在下方定义
   openSubList: { //打开二级列表后的高度

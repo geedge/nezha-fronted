@@ -208,7 +208,7 @@ instance_cpu_time_ns{app="fox", proc="widget", rev="4d3a513", env="prod", job="c
 <script>
   import bus from "../../../../libs/bus";
   import promqlInput from "./promqlInput";
-  import promqlInputPlus from "./promqlInputPlus";
+  // import promqlInputPlus from "./promqlInputPlus";
   import chart from "../overview/chart";
   import axios from 'axios';
   import chartBox from "../../../page/dashboard/chartBox";
@@ -219,7 +219,7 @@ instance_cpu_time_ns{app="fox", proc="widget", rev="4d3a513", env="prod", job="c
     name: "explore",
     components: {
       'promql-input': promqlInput,
-      'promql-input-plus':promqlInputPlus,
+      // 'promql-input-plus':promqlInputPlus,
       'chart': chart,
       'chart-box': chartBox,
     },
