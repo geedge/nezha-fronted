@@ -184,10 +184,10 @@
       <div slot="title">
         {{$t("project.endpoint.dialogTitle")}}
         <div class="float-right panel-calendar dialog-tool" style="display: flex">
-          <pick-time :refresh-data-func="queryChartDate" :use-refresh="false" v-model="searchTime" style="height: 28px;"></pick-time>
+          <pick-time :refresh-data-func="queryChartDate" :use-refresh="false" v-model="searchTime" style="height: 28px;" @unitChange="chartUnitChange"></pick-time>
         </div>
       </div>
-      <chart ref="messageChart" ></chart>
+      <chart ref="messageChart" :unit="chartUnit"></chart>
     </el-dialog>
   </span>
 </template>
@@ -216,6 +216,7 @@
         sameLabels: ['instance','module','project','asset','endpoint','datacenter'],
         searchTime: [new Date().setHours(new Date().getHours() - 1), new Date()],
         currentMsg: {},
+        chartUnit: 5,
 
         defaultSearchValue: this.obj.alertNum ? 1 : 0,
         showElementSet: false,
@@ -561,6 +562,13 @@
           this.queryChartDate();
         });
       },
+      chartUnitChange:function(unit){
+        this.chartUnit=unit;
+        this.$nextTick(()=>{
+          this.queryChartDate()
+        })
+      },
+
       dialogClose() {
         this.graphShow = false;
       },

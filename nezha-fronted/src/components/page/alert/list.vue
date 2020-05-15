@@ -208,10 +208,10 @@
       <div slot="title">
         {{$t("project.endpoint.dialogTitle")}}
         <div class="float-right panel-calendar dialog-tool" style="display: flex">
-          <pick-time :refresh-data-func="queryChartDate" :use-refresh="false" v-model="searchTime" style="height: 28px;"></pick-time>
+          <pick-time :refresh-data-func="queryChartDate" :use-refresh="false" v-model="searchTime" style="height: 28px;" @unitChange="chartUnitChange"></pick-time>
         </div>
       </div>
-      <chart ref="messageChart" name="alertMessageChart"></chart>
+      <chart ref="messageChart" name="alertMessageChart" :unit="chartUnit"></chart>
     </el-dialog>
   </div>
 
@@ -258,6 +258,7 @@
         legend: [],
         searchTime: [new Date().setHours(new Date().getHours() - 1), new Date()],
         currentMsg: {},
+        chartUnit: 5,
 
         tableId: 'alertListTable', //需要分页的table的id，用于记录每页数量
         showTopBtn: false,
@@ -470,6 +471,12 @@
         //获取子组件传过来的参数
         this.$store.commit('setHeaderTable', data);
         this.tablelable = data;
+      },
+      chartUnitChange:function(unit){
+        this.chartUnit=unit;
+        this.$nextTick(()=>{
+          this.queryChartDate()
+        })
       },
       queryChartDate() {
         let start = this.searchTime[0]?this.searchTime[0]:this.getTime(-1, 'h');
