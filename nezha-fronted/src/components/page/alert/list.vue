@@ -257,6 +257,7 @@
         sameLabels: ['instance','module','project','asset','endpoint','datacenter'],
         legend: [],
         searchTime: [new Date().setHours(new Date().getHours() - 1), new Date()],
+        currentMsg: {},
 
         tableId: 'alertListTable', //需要分页的table的id，用于记录每页数量
         showTopBtn: false,
@@ -470,7 +471,7 @@
         this.$store.commit('setHeaderTable', data);
         this.tablelable = data;
       },
-      queryChartDate(obj) {
+      queryChartDate() {
         let start = this.searchTime[0]?this.searchTime[0]:this.getTime(-1, 'h');
         let end = this.searchTime[1]?this.searchTime[1]:this.getTime(0, 'h')
         this.searchTime = [start, end];
@@ -486,7 +487,7 @@
           step='30m';
         }
         let axiosArr=[];
-        let paramStr = JSON.stringify(this.promQueryParamConvert(obj));
+        let paramStr = JSON.stringify(this.promQueryParamConvert(this.currentMsg));
 		    axiosArr.push(axios.get("/prom/api/v1/query_range?query="+paramStr.substring(1, paramStr.length-1).replace(/\+/g, "%2B").replace(/ /g, "%20").replace(/\\/g, "")+"&start="+this.$stringTimeParseToUnix(start)+"&end="+this.$stringTimeParseToUnix(end)+"&step="+step));
         this.legend = [];
         this.chartDatas = [];
@@ -522,7 +523,6 @@
                     chartData.data = queryData.values.map((dpsItem, dpsIndex) => {
                       return [bus.computeTimezone(dpsItem[0]) * 1000, parseFloat(dpsItem[1]).toFixed(2)];
                     });
-                    console.info(chartData)
                     this.chartDatas.push(chartData);
                   }
                 } else {
@@ -547,9 +547,10 @@
         this.chartDatas = [];
         this.legend = [];
         this.graphShow = true;
+        this.currentMsg = obj;
         this.$nextTick(() => {
           this.$refs.messageChart.startLoading();
-          this.queryChartDate(obj);
+          this.queryChartDate();
         });
       },
       dialogClose() {

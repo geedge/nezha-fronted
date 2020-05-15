@@ -215,6 +215,7 @@
         legend: [],
         sameLabels: ['instance','module','project','asset','endpoint','datacenter'],
         searchTime: [new Date().setHours(new Date().getHours() - 1), new Date()],
+        currentMsg: {},
 
         defaultSearchValue: this.obj.alertNum ? 1 : 0,
         showElementSet: false,
@@ -477,7 +478,7 @@
           }
         })
       },
-      queryChartDate(obj) {
+      queryChartDate() {
         let start = this.searchTime[0]?this.searchTime[0]:this.getTime(-1, 'h');
         let end = this.searchTime[1]?this.searchTime[1]:this.getTime(0, 'h')
         this.searchTime = [start, end];
@@ -493,7 +494,7 @@
           step='30m';
         }
         let axiosArr=[];
-        let paramStr = JSON.stringify(this.promQueryParamConvert(obj));
+        let paramStr = JSON.stringify(this.promQueryParamConvert(this.currentMsg));
         axiosArr.push(axios.get("/prom/api/v1/query_range?query="+paramStr.substring(1, paramStr.length-1).replace(/\+/g, "%2B").replace(/ /g, "%20").replace(/\\/g, "")+"&start="+this.$stringTimeParseToUnix(start)+"&end="+this.$stringTimeParseToUnix(end)+"&step="+step));
         this.legend = [];
         this.chartDatas = [];
@@ -554,9 +555,10 @@
         this.chartDatas = [];
         this.legend = [];
         this.graphShow = true;
+        this.currentMsg = obj;
         this.$nextTick(() => {
           this.$refs.messageChart.startLoading();
-          this.queryChartDate(obj);
+          this.queryChartDate();
         });
       },
       dialogClose() {
