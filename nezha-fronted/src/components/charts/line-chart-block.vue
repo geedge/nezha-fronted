@@ -59,6 +59,8 @@
             <i class="el-icon-delete" style="font-size: 16px;"></i>{{$t('dashboard.delete')}}</li>
           <li  @click="showAllScreen"  class="el-dropdown-menu__item">
             <i class="el-icon-full-screen" style="font-size: 16px;"></i>{{$t('dashboard.screen')}}</li>
+          <li  v-show="!isExplore" @click="duplicate"  class="el-dropdown-menu__item">
+            <i class="el-icon-copy-document" style="font-size: 16px;"></i>{{$t('dashboard.duplicate')}}</li>
         </ul>
       </el-dropdown>
       <!--
@@ -1258,6 +1260,28 @@
                 this.screenModal = true;
                 */
         //this.dateChange();
+      },
+      duplicate(){
+        this.dropdownMenuShow=false;
+        const param = {id:this.data.id};
+        this.$post('panel/'+ this.data.panelId+'/charts/duplicate',(param)).then(response => {
+          if (response.code === 200) {
+            this.$message({
+              duration: 2000,
+              type: 'success',
+              message: this.$t("tip.duplicateSuccess")
+            });
+            this.$emit('on-duplicate-chart-block', this.data.id,response.data);
+          }else {
+            if(response.msg){
+              this.$message.error(response.msg);
+            }else if(response.error){
+              this.$message.error(response.error);
+            }else {
+              this.$message.error(response);
+            }
+          }
+        });
       },
       dateChange(time) {
         this.searchTime = [...time];

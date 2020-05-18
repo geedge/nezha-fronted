@@ -228,6 +228,7 @@ const en = {
     edit:'Edit',//'编辑'
     delete:'Delete',//'删除'
     screen:'Full screen',//'全屏',
+    duplicate:'Duplicate',//复制
     overview:{
       title:'Overview',
       contentTitle:'Nezha Management System',
@@ -335,6 +336,7 @@ const en = {
     no: "No",//No
     deleteSuccess: 'Delete success',//"删除成功"
     saveSuccess: 'Save success', //"保存成功"
+    duplicateSuccess: 'Duplicate success', //"复制成功"
     coverSuccess: 'Override success',//'覆盖成功'
     refreshLater:'Refresh later',//'请稍后刷新'
     testSuccess:'Test success',

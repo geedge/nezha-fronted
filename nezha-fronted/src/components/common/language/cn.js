@@ -221,6 +221,7 @@ const cn = {
     edit: "编辑",
     delete: "删除",
     screen: "全屏",
+    duplicate:'复制',
     overview: {
       title: "系统总览",
       contentTitle: "Nezha 管理系统",
@@ -322,6 +323,7 @@ const cn = {
     no: "否",
     deleteSuccess: "删除成功",
     saveSuccess: "保存成功",
+    duplicateSuccess: '复制成功', //"复制成功"
     coverSuccess: "覆盖成功",
     refreshLater: "请稍后刷新",
     testSuccess: "测试成功",
