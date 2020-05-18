@@ -235,7 +235,6 @@
         confine: false,
         extraCssText:'z-index:1000;',
         formatter: function(v, i) {
-          console.info(v)
           return v;
         }
       },

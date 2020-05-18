@@ -6,10 +6,9 @@
 
     <div class="chart-body" ref="chartBody" :id="chartId" ></div>
 
-    <div class="legend-container" id="legendArea" ref="legendArea" v-show="legend.length>0" v-scrollBar:legend>
+    <div class="legend-container legend-container-screen" id="legendArea" ref="legendArea" v-show="legend.length>0" v-scrollBar:legend>
       <div v-for="(item, index) in legend" :title="item.alias?item.alias:item.name"  @click="clickLegend(item.name,index)" class="legend-item" :class="{'ft-gr':item.isGray}" :key="'legend_' + item.name+'_'+index">
         <span class="legend-shape" :style="{background:(item.isGray?'#D3D3D3':getBgColor(index))}"></span>{{item.alias?item.alias:item.name}}
-        <br/>
       </div>
     </div>
 
@@ -131,17 +130,25 @@
         }
       },
       resize:function(){
-        if(this.chart){
-          let height=this.$el.clientHeight;
-          let width=this.$el.clientWidth;
-          if(this.chartTitle){
-            height = height - 20;
+        this.$nextTick(() => {
+          if(this.chart){
+            //let height=this.$el.clientHeight;
+            //console.info(this.$el.clientHeight)
+            let height = this.$el.clientHeight-document.querySelector("#legendArea").offsetHeight;
+            //console.info(document.querySelector("#legendArea").offsetHeight)
+            /*for (let i in document.querySelector("#legendArea")) {
+              console.info(i, document.querySelector("#legendArea")[i])
+            }*/
+            let width=this.$el.clientWidth;
+            /*if(this.chartTitle){
+              height = height - 20;
+            }
+            if(this.legend && this.legend.length>0){
+              height = height - 80;
+            }*/
+            this.chart.resize({width:width,height:height});
           }
-          if(this.legend && this.legend.length>0){
-            height = height - 80;
-          }
-          this.chart.resize({width:width,height:height});
-        }
+        });
       },
       mouseEnterChart(){
         if (this.chart&&this.showToolbox) {
@@ -321,7 +328,9 @@
     }
   }
 </script>
-
+<!--<style>
+ @import "../../../charts/line-chart-block.scss";
+</style>-->
 <style scoped>
   .chart-room{
     width: 100%;
@@ -330,19 +339,19 @@
   }
   .chart-room .legend-container{
     width: calc(100% - 30px);
-    /*max-height:80px;*/
-    /*min-height:40px;*/
-    height: 80px;
+    max-height:80px;
+    min-height:25px;
+    /*height: 80px;*/
     font-size:12px;
     text-align:left;
-    margin:0 auto;
+    left: 10px;
+    bottom: 5px;
     line-height: 18px;
-    position: relative;
+    position: absolute;
   }
   .chart-room .legend-container .legend-item{
     text-overflow:ellipsis;
     white-space:nowrap;
-    width:100%;
     overflow-x:hidden;
     cursor:pointer;
     display:inline-block;

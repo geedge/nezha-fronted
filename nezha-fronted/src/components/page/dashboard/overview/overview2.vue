@@ -445,6 +445,13 @@
               }
               return name;
             });*/
+            this.$refs.assetTypePie.modifyOption("tooltip", "backgroundColor", "rgba(221,228,237,1)");
+            this.$refs.assetTypePie.modifyOption("tooltip", "textStyle", {color: "#000"});
+            this.$refs.assetTypePie.modifyOption("grid", "top", 30);
+            this.$refs.assetTypePie.modifyOption("grid", "left", 0);
+            this.$refs.assetTypePie.modifyOption("grid", "right", 30);
+            this.$refs.assetTypePie.modifyOption("grid", "bottom", 8);
+            this.$refs.assetTypePie.modifyOption("grid", "containLabel", true);
             this.$refs.assetTypePie.setSeries(series);
             this.$refs.assetTypePie.endLoading();
           }
@@ -514,6 +521,13 @@
               }
               this.chartSeries.push(series);
               if (this.chartSeries.length == 2) {
+                this.$refs.chartbox.modifyOption("tooltip", "backgroundColor", "rgba(221,228,237,1)");
+                this.$refs.chartbox.modifyOption("tooltip", "textStyle", {color: "#000"});
+                this.$refs.chartbox.modifyOption("grid", "top", 30);
+                this.$refs.chartbox.modifyOption("grid", "left", 0);
+                this.$refs.chartbox.modifyOption("grid", "right", 30);
+                this.$refs.chartbox.modifyOption("grid", "bottom", 8);
+                this.$refs.chartbox.modifyOption("grid", "containLabel", true);
                 this.$refs.chartbox.setSeries(this.chartSeries);
                 this.$refs.chartbox.endLoading();
               }
@@ -539,6 +553,12 @@
               }
               this.chartSeries.push(series);
               if (this.chartSeries.length == 2) {
+                this.$refs.chartbox.modifyOption("tooltip", "backgroundColor", "rgba(221,228,237,1)");
+                this.$refs.chartbox.modifyOption("tooltip", "textStyle", {color: "#000"});
+                this.$refs.chartbox.modifyOption("grid", "top", 30);
+                this.$refs.chartbox.modifyOption("grid", "left", 0);
+                this.$refs.chartbox.modifyOption("grid", "right", 30);
+                this.$refs.chartbox.modifyOption("grid", "bottom", 8);
                 this.$refs.chartbox.setSeries(this.chartSeries);
                 this.$refs.chartbox.endLoading();
               }
@@ -797,6 +817,12 @@
               category: categoryData, //自定义，用来判断N/A是否显示
             };
             this.$refs.ruleMessage.modifyOption('yAxis', 'data', categoryData);
+            this.$refs.ruleMessage.modifyOption("tooltip", "backgroundColor", "rgba(221,228,237,1)");
+            this.$refs.ruleMessage.modifyOption("tooltip", "textStyle", {color: "#000"});
+            this.$refs.ruleMessage.modifyOption("grid", "top", 30);
+            this.$refs.ruleMessage.modifyOption("grid", "left", 0);
+            this.$refs.ruleMessage.modifyOption("grid", "right", 30);
+            this.$refs.ruleMessage.modifyOption("grid", "bottom", 8);
             this.$refs.ruleMessage.setSeries(this.messageByRuleSeries);
             this.$refs.ruleMessage.endLoading();
           }
@@ -822,6 +848,12 @@
               category: categoryData
             };
             this.$refs.assetMessage.modifyOption('yAxis', 'data', categoryData);
+            this.$refs.assetMessage.modifyOption("tooltip", "backgroundColor", "rgba(221,228,237,1)");
+            this.$refs.assetMessage.modifyOption("tooltip", "textStyle", {color: "#000"});
+            this.$refs.assetMessage.modifyOption("grid", "top", 30);
+            this.$refs.assetMessage.modifyOption("grid", "left", 0);
+            this.$refs.assetMessage.modifyOption("grid", "right", 30);
+            this.$refs.assetMessage.modifyOption("grid", "bottom", 8);
             this.$refs.assetMessage.setSeries(this.messageByAssetSeries);
             this.$refs.assetMessage.endLoading();
           }
@@ -847,6 +879,12 @@
               category: categoryData
             };
             this.$refs.moduleMessage.modifyOption('yAxis', 'data', categoryData);
+            this.$refs.moduleMessage.modifyOption("tooltip", "backgroundColor", "rgba(221,228,237,1)");
+            this.$refs.moduleMessage.modifyOption("tooltip", "textStyle", {color: "#000"});
+            this.$refs.moduleMessage.modifyOption("grid", "top", 30);
+            this.$refs.moduleMessage.modifyOption("grid", "left", 0);
+            this.$refs.moduleMessage.modifyOption("grid", "right", 30);
+            this.$refs.moduleMessage.modifyOption("grid", "bottom", 8);
             this.$refs.moduleMessage.setSeries(this.messageByModuleSeries);
             this.$refs.moduleMessage.endLoading();
           }
@@ -1360,7 +1398,6 @@
   .tooltip-table tr{
     display: table-row;
     vertical-align: inherit;
-    border-color: inherit;
   }
   .tooltip-table td{
     min-width: 0;
@@ -1369,7 +1406,7 @@
     text-overflow: ellipsis;
     vertical-align: middle;
     text-align: left;
-    border: 1px solid #EBEEF5;
+    border: 1px solid #b9b9bf;
     display: table-cell;
     padding:0px 5px ;
   }

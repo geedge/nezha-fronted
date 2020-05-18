@@ -6,7 +6,8 @@
 </style>
 <style>
   .endpoint-dialog .el-dialog__body{
-    height: 100% !important;
+    height: calc(100% - 48px) !important;
+    padding-bottom: 0 !important;
   }
 </style>
 <template>
@@ -51,19 +52,6 @@
             </transition>
           </button>
         </div>
-        <!--<el-dropdown split-button type="primary"  size="mini" class="dropdownBtn" @click="viewGraph">
-          <i class="nz-icon nz-icon-chart"  :class="{'control-icon-unchecked':selectedEndpoints.length<1,'control-icon-checked':selectedEndpoints.length>0}"></i>
-          <el-dropdown-menu slot="dropdown" style="padding:10px 4px 10px 10px;">
-            <el-row>
-              <el-col :span="16" style="padding-top: 4px;padding-left: 1px"><span style="padding-top: 2px">{{$t('project.endpoint.hideSameLabels')}}</span></el-col>
-              <el-col :span="8">
-                <el-dropdown-item class="dropdown-content" >
-                  <el-switch v-model="hideSameLabels" active-color="#ee9d3f" size="small"></el-switch>
-                </el-dropdown-item>
-              </el-col>
-            </el-row>
-          </el-dropdown-menu>
-        </el-dropdown>-->
       </div>
     </div>
     <div class="table-header-inner" @click="clearSelectedMetrics"><span><i style="font-size: 12px;margin-left: 2px;" class="nz-icon nz-icon-close " :class="{'control-icon-unchecked':selectedEndpoints.length<1,'control-icon-checked':selectedEndpoints.length>0}"></i></span></div>
@@ -102,52 +90,6 @@
         width="180">
       </pl-table-column>
     </pl-table>
-    <!--<el-table
-      :data="tableData"
-      border
-      v-scrollBar:el-table="'normal'"
-      class="nz-table endpoint-query-table"
-      v-loading="loading"
-      :header-cell-class-name="cellClass"
-      :height="$tableHeight.noPagination"
-      @selection-change="selectChange"
-      ref="endpointQueryTable"
-      style="width: 100%;">
-      <el-table-column
-        :resizable="false"
-        type="selection"
-        width="38"
-        align="center"
-        :selectable="selectable"
-      >
-      </el-table-column>
-
-      <el-table-column
-        prop="element"
-        :label="$t('project.endpoint.element')">
-        <template slot-scope="scope">
-          <el-popover trigger="click" placement="right" v-if="typeof scope.row.metricTip != 'undefined' && scope.row.metricTip != null">
-            <div>
-              <ul>
-                <li><span class="metirc-tip-list">metric&nbsp;:&nbsp;</span><span>{{scope.row.metricTip.metric?scope.row.metricTip.metric:'&#45;&#45;'}}</span></li>
-                <li><span class="metirc-tip-list">type&nbsp;:&nbsp;</span><span>{{scope.row.metricTip.type?scope.row.metricTip.type:'unknown'}}</span></li>
-                <li><span class="metirc-tip-list">help&nbsp;:&nbsp;</span><span>{{scope.row.metricTip.help?scope.row.metricTip.help:'&#45;&#45;'}}</span></li>
-                <li><span class="metirc-tip-list">unit&nbsp;:&nbsp;</span><span>{{scope.row.metricTip.unit?scope.row.metricTip.unit:'&#45;&#45;'}}</span></li>
-              </ul>
-            </div>
-            <span slot="reference"><i class="nz-icon nz-icon-info-normal metric-tip-icon"></i></span>
-          </el-popover>
-          <span v-html="hideSameLabels?scope.row.colorSimpleElement: scope.row.colorElement"></span>
-          &lt;!&ndash;            <span>{{hideSameLabels?scope.row.simpleElement: scope.row.element}}</span>&ndash;&gt;
-        </template>
-      </el-table-column>
-      <el-table-column
-        :resizable="false"
-        prop="value"
-        :label="$t('project.endpoint.value')"
-        width="180">
-      </el-table-column>
-    </el-table>-->
     <button class="to-top" v-show="showTopBtn" :class="{'to-top-is-hover': tableHover}" @click="$toTop('ps', 1)"><i class="nz-icon nz-icon-top"></i></button>
 
     <el-dialog class="line-chart-block-modal nz-dialog endpoint-dialog"
@@ -503,23 +445,29 @@
                     alias:alias,
                     // showText:this.formatLegend(chartData.name),
                     isGray:false
-                  }
+                  };
                   this.legend.push(legend);
                   chartData.data=queryData.values.map((dpsItem, dpsIndex) => {
                     return [dpsItem[0] * 1000, Number(dpsItem[1])];
                   });
-                  console.info(chartData.data)
                   this.chartDatas.push(chartData);
                 }
               }else{
-                this.$message.error(response.data.error)
-                console.error(response.data)
+                this.$message.error(response.data.error);
+                console.error(response.data);
               }
             }
           });
           this.$nextTick(()=>{
             this.$refs.endpointChart.setRandomColors(this.chartDatas.length)
             this.$refs.endpointChart.setLegend(this.legend)
+            this.$refs.endpointChart.modifyOption("tooltip", "backgroundColor", "rgba(221,228,237,1)");
+            this.$refs.endpointChart.modifyOption("tooltip", "textStyle", {color: "#000"});
+            this.$refs.endpointChart.modifyOption("grid", "top", 30);
+            this.$refs.endpointChart.modifyOption("grid", "left", 0);
+            this.$refs.endpointChart.modifyOption("grid", "right", 30);
+            this.$refs.endpointChart.modifyOption("grid", "bottom", 8);
+            this.$refs.endpointChart.modifyOption("grid", "containLabel", true);
             this.$refs.endpointChart.setSeries(this.chartDatas);
             this.$refs.endpointChart.endLoading();
           });
