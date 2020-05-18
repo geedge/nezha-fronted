@@ -51,8 +51,8 @@
 <!--                ></promql-input-plus>-->
               </div>
               <div class="chart-view right-margin" v-show="!showIntroduce"
-                   :class="{'shrink-view':!chartVisible || !defaultChartVisible}">
-                <div class="view-title" @click="changeChartVisible" style="float: left"><i class="el-icon-caret-top" ></i>&nbsp;graph</div>
+                   :class="{'shrink-view':!chartVisible || !defaultChartVisible}" style="position:relative;">
+                <div class="view-title" @click="changeChartVisible" style="position:absolute;z-index: 1000"><i class="el-icon-caret-top" ></i>&nbsp;graph</div>
                 <div class="chart-room">
                   <chart ref="exploreChart" :unit="chartUnit"></chart>
                 </div>
@@ -563,7 +563,9 @@ instance_cpu_time_ns{app="fox", proc="widget", rev="4d3a513", env="prod", job="c
     margin-bottom: 5px;
     transition: height 1s;
   }
-
+  .explore .chart-view:hover,.explore .table-view:hover {
+    cursor: default;
+  }
   .shrink-view {
     height: 30px;
 
