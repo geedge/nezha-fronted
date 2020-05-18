@@ -89,6 +89,7 @@
         :ref="'editChart'+item.id"
         @on-refresh-data="refreshChart"
         @on-remove-chart-block="removeChart"
+        @on-duplicate-chart-block="duplicateChart"
         @on-drag-chart="editChartForDrag"
         @on-edit-chart-block="editData"
         :panel-id="filter.panelId"
@@ -99,6 +100,7 @@
                      @on-refresh-data="refreshChart"
                      @on-search-data="searchData"
                      @on-remove-chart-block="removeChart"
+                      @on-duplicate-chart-block="duplicateChart"
                      @on-drag-chart="editChartForDrag"
                      @on-edit-chart-block="editData"
                      :panel-id="filter.panelId"
@@ -109,6 +111,7 @@
         @on-refresh-data="refreshChart"
         @on-search-data="searchData"
         @on-remove-chart-block="removeChart"
+        @on-duplicate-chart-block="duplicateChart"
         @on-drag-chart="editChartForDrag"
         @on-edit-chart-block="editData"
         :panel-id="filter.panelId"
@@ -119,6 +122,7 @@
                      @on-refresh-data="refreshChart"
                      @on-search-data="searchData"
                      @on-remove-chart-block="removeChart"
+                     @on-duplicate-chart-block="duplicateChart"
                      @on-drag-chart="editChartForDrag"
                      @on-edit-chart-block="editData"
                      :panel-id="filter.panelId"
@@ -1060,6 +1064,67 @@ export default {
       const chart = this.dataList.find(item => item.id === chartId);
       if (chart) {
         this.$emit('on-remove-chart', chart);
+      }
+    },
+    //复制图表
+    duplicateChart(chartId,duplicateChartBack){
+      let duplicateChartId = duplicateChartBack.id;
+      let chart;
+      let chartIndex = -1;
+      this.dataList.forEach((item,index)=>{
+        if(item.id===chartId){
+          chartIndex = index;
+          chart = item;
+        }
+      });
+      let chartNext;
+      let chartNextIndex = chartIndex+1;
+      if(chartNextIndex<=(this.dataList.length-1)){
+        chartNext = this.dataList[chartNextIndex];
+      }
+
+      if (chart) {
+        chart.next = duplicateChartId;
+        let duplicateChart = JSON.parse(JSON.stringify(chart));
+        duplicateChart.id = duplicateChartId;
+        duplicateChart.prev = duplicateChartBack.prev;
+        duplicateChart.next = duplicateChartBack.next;
+        duplicateChart.title = duplicateChartBack.title;
+        if(chartNext){
+          chartNext.prev = duplicateChartId;
+        }
+
+        this.dataList.splice(chartNextIndex,0,duplicateChart);
+
+        let indexInTotal = this.dataTotalList.indexOf(chart);
+        this.dataTotalList.splice(indexInTotal+1,0,duplicateChart);
+        let chartInTotal = this.dataTotalList.find(item => item.id === chartId);
+        chartInTotal.next = duplicateChartId;
+        let chartNextInTotal = this.dataTotalList.find(item => item.id === chartNext.id);
+        chartNextInTotal.prev = chartNext.prev;
+
+        let indexInTotalBak = this.dataTotalListBak.indexOf(chart);
+        this.dataTotalListBak.splice(indexInTotalBak+1,0,duplicateChart);
+        let chartInTotalBak = this.dataTotalListBak.find(item => item.id === chartId);
+        chartInTotalBak.next = duplicateChartId;
+        let chartNextInTotalBak = this.dataTotalListBak.find(item => item.id === chartNext.id);
+        chartNextInTotalBak.prev = chartNext.prev;
+
+        this.currentRecordNum = this.currentRecordNum+1;
+        let chartData = this.chartDataCacheGroup.get(chart.id);
+        this.chartDataCacheGroup.set(duplicateChartId,chartData);
+        this.$nextTick(() => {
+          if (this.$refs['editChart'+duplicateChartId][0]) {
+              this.$refs['editChart'+duplicateChartId][0].showLoad(duplicateChart);//之后要实现
+          }
+
+          let chartType = duplicateChart.type;
+          if(chartType!=='url'){
+            this.getChartDataForSearch(duplicateChart,chartNextIndex);
+          }else {
+            this.setSize(duplicateChart.span, chartNextIndex); // 设置该图表宽度
+          }
+        });
       }
     },
     // 编辑图表
