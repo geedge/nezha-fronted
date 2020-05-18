@@ -1008,7 +1008,7 @@
         let dcStat = params.data.value[2];
         let tooltip=`
             <div class="tooltip">
-                <div style="margin-left: 12px">${dcStat.name}</div>
+                <div style="margin-left: 12px; color: black">${dcStat.name}</div>
                 <div class="flex-box">
                    <div style="width: 60%;">
                         <table  style="width: 100%;" class="tooltip-table">
@@ -1390,6 +1390,7 @@
   .tooltip{
     padding:5px;
     min-width: 500px;
+    background-color: rgba(221,228,237,1);
   }
   .tooltip-table{
     border-spacing: 0px;
@@ -1409,6 +1410,7 @@
     border: 1px solid #b9b9bf;
     display: table-cell;
     padding:0px 5px ;
+    color: black;
   }
   .flex-box{
     display: flex;
