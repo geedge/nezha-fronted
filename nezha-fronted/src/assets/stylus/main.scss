@@ -150,16 +150,17 @@ li{
 }
 .to-top {
   position: fixed;
-  right: 16px;
-  border-radius: 5px;
+  right: 17px;
+  border-radius: 50%;
   height: 40px;
   width: 40px;
   border: none;
   cursor: pointer;
   opacity: 0;
-  background-color: #bbb;
+  background-color: #aaa;
   outline: none;
   z-index: 10;
+  color: white;
   transition: opacity .2s linear, top .2s linear;
   transform: translateY(-50%);
   bottom: 35px;
