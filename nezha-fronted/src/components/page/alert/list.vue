@@ -332,7 +332,7 @@
         searchMsg: { //给搜索框子组件传递的信息
           zheze_none: true,
           searchLabelList: [{
-            id: 2,
+            id: 1,
             name: this.$t('alert.alertName'),
             type: 'input',
             label: 'alertName',
@@ -344,34 +344,37 @@
             label: 'alertType',
             disabled: false
           }, */{
-            id: 4,
+            id: 20,
             name: this.$t('alert.severity'),
             type: 'selectString',
             label: 'severity',
             disabled: false
           }, {
-            id: 11,
+            id: 21,
             name: this.$t('asset.asset'),
             type: 'asset',
             label: 'asset',
             disabled: false
           }, {
+            id:22,
             name: this.$t('project.project.project'),
             type: 'project',
             label: 'project',
             disabled: false
           }, {
+            id:23,
             name: this.$t('project.module.module'),
             type: 'module',
             label: 'module',
             disabled: false
           }, {
+            id:24,
             name: this.$t('project.endpoint.endpoint'),
             type: 'input',
             label: 'endpointId',
             disabled: false
           }, {
-            id: 12,
+            id:25,
             name: this.$t('alert.list.state'),
             type: 'select',
             label: 'alertMessageState',
