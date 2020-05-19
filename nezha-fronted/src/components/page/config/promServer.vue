@@ -47,17 +47,6 @@
           </div>
           <div class="pagination-top pagination-top-hide display-none"></div>
         </div>
-        <!--<div class="top-tools">
-          <div class="top-tool-main-right">
-            <div class="top-tool-search">
-              <search-input :searchMsg="searchMsg" @search="search"></search-input>
-            </div>
-            <button @click="toAdd" class="nz-btn nz-btn-size-normal nz-btn-style-light margin-l-20"  :title="$t('overall.createPrometheusServer')"
-                    id="prom-add">
-              <i class="nz-icon-create-square nz-icon"></i>
-            </button>
-          </div>
-        </div>-->
         <el-table :data="tableData" border v-show="mainResizeShow" :height="mainTableHeight" style="width: 100%;"
                   v-loading="loading" ref="promTable" class="nz-table" v-scrollBar:el-table="'large'">
           <el-table-column :resizable="false" v-for="(item, index) in tablelable" v-if="item.show" :width="item.width"

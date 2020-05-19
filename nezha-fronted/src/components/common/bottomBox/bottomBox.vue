@@ -37,6 +37,10 @@
         <common-detail-tab v-show="subResizeShow" :from="from" :targetTab.sync="targetTab" v-for="(item, index) in tabList" :key="index" :detail="detailList[index]"
                            v-if="targetTab == item" @changeTab="changeTab"></common-detail-tab>
       </template>
+
+      <!-- model-panel/asset-detail/project-overview的panel-->
+      <panel-tab v-if="from == 'model' && targetTab == 'panel'" v-show="subResizeShow" :from="from" :obj="obj"></panel-tab>
+
     </div>
   </span>
 </template>
@@ -47,15 +51,17 @@
   import alertMessageTab from "./tabs/alertMessageTab";
   import endpointQueryTab from "./tabs/endpointQueryTab";
   import endpointTab from "./tabs/endpointTab";
+  import panelTab from "./tabs/panelTab";
 
   export default {
-    name: "cabinetBox",
+    name: "bottomBox",
     components:{
       'common-detail-tab': commonDetailTab,
       'cabinet-tab': cabinetTab,
       'alert-message-tab': alertMessageTab,
       'endpoint-query-tab': endpointQueryTab,
       'endpoint-tab': endpointTab,
+      'panel-tab': panelTab,
     },
     props: {
       isFullScreen: false, //是否全屏
