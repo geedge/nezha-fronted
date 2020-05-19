@@ -1100,15 +1100,19 @@ export default {
         this.dataTotalList.splice(indexInTotal+1,0,duplicateChart);
         let chartInTotal = this.dataTotalList.find(item => item.id === chartId);
         chartInTotal.next = duplicateChartId;
-        let chartNextInTotal = this.dataTotalList.find(item => item.id === chartNext.id);
-        chartNextInTotal.prev = chartNext.prev;
+        if(chartNext) {
+          let chartNextInTotal = this.dataTotalList.find(item => item.id === chartNext.id);
+          chartNextInTotal.prev = chartNext.prev;
+        }
 
         let indexInTotalBak = this.dataTotalListBak.indexOf(chart);
         this.dataTotalListBak.splice(indexInTotalBak+1,0,duplicateChart);
         let chartInTotalBak = this.dataTotalListBak.find(item => item.id === chartId);
         chartInTotalBak.next = duplicateChartId;
-        let chartNextInTotalBak = this.dataTotalListBak.find(item => item.id === chartNext.id);
-        chartNextInTotalBak.prev = chartNext.prev;
+        if(chartNext) {
+          let chartNextInTotalBak = this.dataTotalListBak.find(item => item.id === chartNext.id);
+          chartNextInTotalBak.prev = chartNext.prev;
+        }
 
         this.currentRecordNum = this.currentRecordNum+1;
         let chartData = this.chartDataCacheGroup.get(chart.id);
