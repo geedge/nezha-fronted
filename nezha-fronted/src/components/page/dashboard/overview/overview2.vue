@@ -774,6 +774,7 @@
               }
             }
             this.$refs.dataCenterMap.modifyOption('tooltip','formatter',this.mapTooltipFormatter)
+            this.$refs.dataCenterMap.modifyOption('tooltip','borderColor',"rgba(221,228,237,1)")
             this.dataCenterMapSeries=[{
               name: 'DataCenter',
               type: 'scatter',
