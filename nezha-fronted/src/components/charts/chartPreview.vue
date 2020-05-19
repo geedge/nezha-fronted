@@ -468,7 +468,6 @@
                     }
                     }
                   }else{
-                    alert('error')
                     this.isError = true;
                     if(response.msg){
                       this.errorContent = response.msg;
