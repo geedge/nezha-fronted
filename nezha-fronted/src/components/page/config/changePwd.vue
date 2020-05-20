@@ -1,8 +1,8 @@
 <template>
   <div>
     <el-dialog class="nz-dialog" :title="$t('overall.changePwd')" :visible.sync="visible"  @open="dialogOpened"  :modal-append-to-body='false' @closed="dialogClosed" width="600px" :show-close="false" >
-      <el-form :model="user" label-position="right" label-width="135px" :rules="rules" ref="changePwdForm" size="mini">
-        <el-form-item :label="$t('config.account.account')" prop="username">
+      <el-form :model="user" label-position="right" label-width="150px" :rules="rules" ref="changePwdForm" size="mini">
+        <el-form-item :label="$t('config.account.account')" prop="username" v-show="curUser != sysUser">
           <el-input type="text" autocomplete="false" v-model="user.username" disabled></el-input>
         </el-form-item>
         <el-form-item :label="$t('config.account.oldPwd')" prop="pwd">
@@ -63,6 +63,7 @@
             newPwd:'',
             confirmPwd:''
           },
+          sysUser:sessionStorage.getItem("nz-username"),
           rules:{
             pwd:[{required:true,message: this.$t('validate.required'), trigger: 'blur'}],
             newPwd:[{required:true,message: this.$t('validate.required'), trigger: 'blur'},{validator:validatePass,trigger: 'blur'}],

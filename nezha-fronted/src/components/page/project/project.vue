@@ -821,6 +821,7 @@
     },
     watch: {
       currentProjectChange:{
+        immediate:true,
         handler(n, o) {
           this.currentProject = Object.assign({}, n);
           this.detailProjectInfo();
