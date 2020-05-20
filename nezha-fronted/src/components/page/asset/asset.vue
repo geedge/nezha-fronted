@@ -327,7 +327,7 @@
             label: 'assetState',
             disabled: false
           },{
-            id: 22,
+            id: 23,
             name: "pingStatus",
             type: 'select',
             label: 'pingStatus',

@@ -1061,8 +1061,7 @@
                 }*/
                 this.searchMsg.searchLabelList.forEach((val, key) => {
                     if (this.select_list[ind].id == val.id) {
-                        this.searchLabelList.splice(key + 1, 0, val);
-
+                        this.searchLabelList.splice(key , 1, val);
                         this.Iskeywords(ind)
                     }
                 });

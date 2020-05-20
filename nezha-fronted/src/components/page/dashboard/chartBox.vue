@@ -54,7 +54,7 @@
 </style>
 <template key="chartBox">
   <div v-clickoutside="clickos">
-    <panel-box :panel="panel" @reload="panelReload" ref="panelBox2"></panel-box>
+    <panel-box :panel="panel" @reload="panelReload" ref="panelBox2" v-if="!showPanel.type"></panel-box>
 
     <transition name="right-box">
       <div class="right-box right-box-add-chart z-top right-box-chart" v-if="rightBox.show" >
@@ -74,7 +74,7 @@
         <!-- begin--表单-->
         <el-scrollbar class="right-box-form-box" ref="scrollbar">
           <el-form class="right-box-form" :model="chart" label-position="top" :rules="rules" ref="chartForm">
-            <el-form-item :label="$t('dashboard.panel.title')" prop="panel">
+            <el-form-item :label="$t('dashboard.panel.title')" prop="panel" v-if="showPanel.type != 'model'">
               <el-autocomplete
                 :fetch-suggestions="panelSuggestion"
                 v-model.trim="panelName2"
@@ -570,32 +570,34 @@
       },
       // 新建图表
       addCharts(params) {
+        let panelId;
         //先处理panel
-        let panelId = this.autocompleteExist(this.panelName2);
-        if (panelId) {
-          this.panelId = panelId;
+        if (this.showPanel.type == 'model') {
+          panelId = this.panelData[0].id;
         } else {
-          this.$post('panel', {name: this.panelName2}).then(response => {
-            if (response.code === 200) {
-              this.$emit("reloadOnlyPanel");
-              this.$store.commit('panelListChange', true);
-            } else {
-              if(response.msg){
-                this.$message.error(response.msg);
-              }else {
-                this.$message.error(response);
+          panelId = this.autocompleteExist(this.panelName2);
+          if (!panelId) {
+            this.$post('panel', {name: this.panelName2}).then(response => {
+              if (response.code === 200) {
+                this.$emit("reloadOnlyPanel");
+                this.$store.commit('panelListChange', true);
+                panelId = this.autocompleteExist(this.panelName2);
+              } else {
+                if(response.msg){
+                  this.$message.error(response.msg);
+                }else {
+                  this.$message.error(response);
+                }
               }
-
-            }
-          });
+            });
+          }
         }
+
 
         let intervalTime = 1; //设置3秒超时
         let interval = setInterval(() => {
-          panelId = this.autocompleteExist(this.panelName2);
           if (panelId) {
             this.panelId = panelId;
-            console.log('___params___',params)
             this.$post('panel/' + this.panelId + '/charts', params).then(response => {
               if (response.code === 200) {
                 this.esc();
@@ -1018,13 +1020,15 @@
         deep: true,
         immediate: true,
         handler(n, o) {
-          if (this.selectFirstPanel) {
-            this.selectFirstPanel = false;
-            this.panelId = n[0].id;
-          } else if (this.panelName) {
-            for (let i = 0; i < n.length; i++) {
-              if (n[i].name == this.panelName) {
-                this.panelId = n[i].id;
+          if (this.showPanel.type != 'model') {
+            if (this.selectFirstPanel) {
+              this.selectFirstPanel = false;
+              this.panelId = n[0].id;
+            } else if (this.panelName) {
+              for (let i = 0; i < n.length; i++) {
+                if (n[i].name == this.panelName) {
+                  this.panelId = n[i].id;
+                }
               }
             }
           }
