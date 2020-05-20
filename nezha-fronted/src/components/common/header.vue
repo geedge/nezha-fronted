@@ -635,7 +635,7 @@
     /*color:$header-text-color;*/
     padding: 0;
     height: 50px;
-    line-height: 50px;
+    line-height: 51px;
   }
   .header .el-menu--horizontal>.el-menu-item i {
     color: $header-text-color;
