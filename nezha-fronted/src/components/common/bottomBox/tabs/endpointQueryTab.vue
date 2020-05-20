@@ -108,7 +108,7 @@
       <chart ref="endpointChart" :unit="chartUnit"></chart>
     </el-dialog>
 
-    <chart-box ref="addChartModal" :panel-data="panelData" @on-create-success="createSuccess" @reloadOnlyPanel="getPanelData" @reload="getPanelData"></chart-box>
+    <chart-box ref="addChartModal" :panel-data="panelData" @on-create-success="createSuccess" @reloadOnlyPanel="getPanelData" @reload="getPanelData" :show-panel="{}"></chart-box>
   </span>
 </template>
 

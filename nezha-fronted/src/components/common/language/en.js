@@ -126,6 +126,7 @@ const en = {
         legend:'Legend',
         statistics:'Statistics',
         legendTip:'Controls the name of the time series, using name or pattern. For example {{hostname}} will be replaced with label value for the label hostname.',
+        sync: 'Sync to assets',
         typeVal:{
           line:{
             label:'Line Chart' //"曲线图"

@@ -174,11 +174,9 @@
                   :from="'endpoint'" :targetTab.sync="targetTab" :detail="endpointDetail" :obj="curEndpoint" :assetDetail="assetDetail"
                   @closeSubList="showSubList = false" @fullScreen="fullScreen" @exitFullScreen="exitFullScreen" @listResize="listResize" ></bottom-box>
     </div>
-      <div slot="content-right" class="slot-content" v-show="pageType == 'project'">
-        <div style="height: 100%;width:100%;position: relative;">
-          <div style="position: absolute;top: 50%;left: 50%;">come soon</div>
-        </div>
-      </div>
+    <div slot="content-right" class="slot-content" v-show="pageType == 'project'">
+      <panel-tab from="project" :obj="currentProject" targetTab.sync="panel"></panel-tab>
+    </div>
     </left-menu>
 
     <element-set
@@ -202,6 +200,7 @@
   import loading from "../../common/loading";
   import chartDataFormat from "../../charts/chartDataFormat";
   import bus from '../../../libs/bus'
+  import panelTab from '../../common/bottomBox/tabs/panelTab'
 
   var vm;
   export default {
@@ -209,6 +208,7 @@
     components: {
       'export-excel':exportXLSX,
       'loading': loading,
+      'panel-tab': panelTab
     },
     data() {
       vm = this;
@@ -469,7 +469,7 @@
         // }
       },
       detailProjectInfo:function(event,project){
-        this.pageType='project'
+        this.pageType = 'project';
         if(event){
           if(project){
             this.currentProject=project;

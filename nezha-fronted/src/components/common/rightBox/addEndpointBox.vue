@@ -247,6 +247,7 @@
         endpointTouch: false,
         endpointForm: {projectId: '', moduleId: '', endpointList: []},
         currentModuleCopy: {},
+        currentProjectCopy: {id: ''},
         tempParamObj: [],
         tempEndpoint: {},
         tempEndpoint2: {},

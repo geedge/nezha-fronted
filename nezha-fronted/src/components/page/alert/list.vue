@@ -292,6 +292,7 @@
             label: this.$t("alert.list.labels"),
             prop: 'labels',
             show: true,
+            width: 200
           }, {
             label: this.$t("alert.severity"),
             prop: 'severity',

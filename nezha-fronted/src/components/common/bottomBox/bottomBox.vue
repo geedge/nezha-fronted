@@ -39,7 +39,8 @@
       </template>
 
       <!-- model-panel/asset-detail/project-overview的panel-->
-      <panel-tab v-if="from == 'model' && targetTab == 'panel'" v-show="subResizeShow" :from="from" :obj="obj" ref="panelTab"></panel-tab>
+      <panel-tab v-if="(from == 'model' || from == 'asset' || from == 'project') && targetTab == 'panel'" v-show="subResizeShow" :from="from" :obj="obj" ref="panelTab"
+                 @changeTab="changeTab" :targetTab.sync="targetTab"></panel-tab>
 
     </div>
   </span>

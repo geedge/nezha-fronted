@@ -796,7 +796,7 @@
         }
         if (data === 'showView') {
           this.alertMsgAsset = Object.assign({}, id);
-          this.targetTab = "detail";
+          this.targetTab = "panel";
           this.showSubList = true;
           /*this.editUnitShow = true
           this.$refs['assetEditUnit'].getAssetData(id)

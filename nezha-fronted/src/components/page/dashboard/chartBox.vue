@@ -74,7 +74,7 @@
         <!-- begin--表单-->
         <el-scrollbar class="right-box-form-box" ref="scrollbar">
           <el-form class="right-box-form" :model="chart" label-position="top" :rules="rules" ref="chartForm">
-            <el-form-item :label="$t('dashboard.panel.title')" prop="panel" v-if="showPanel.type != 'model'">
+            <el-form-item :label="$t('dashboard.panel.title')" prop="panel" v-if="!showPanel.type">
               <el-autocomplete
                 :fetch-suggestions="panelSuggestion"
                 v-model.trim="panelName2"
@@ -186,7 +186,9 @@
             <el-form-item v-if="isUrl" :label='$t("dashboard.panel.chartForm.url")' prop="param.url" :rules="{ required: true,  message: $t('validate.required'), trigger: 'blur' }">
               <el-input size="small" type="textarea" maxlength="1024" show-word-limit v-model="chart.param.url"></el-input>
             </el-form-item>
-
+            <el-form-item :label="$t('dashboard.panel.chartForm.sync')" v-if="showPanel.type && showPanel.type == 'model'">
+              <el-switch class="exporter-switch" v-model="chart.sync" active-color="#ee9d3f" :active-value="1" :inactive-value="0"></el-switch>
+            </el-form-item>
             <div v-if="!isUrl" class="right-box-sub-title">{{$t('dashboard.panel.chartForm.metric')}}</div>
             <div v-if="!isUrl" class="line-100"></div>
 
@@ -236,7 +238,6 @@
             <button v-if="!isUrl && !isSingleStat" type="button" @click="addTarget" class="nz-btn nz-btn-size-normal nz-btn-style-light" style="margin-left: 1px;">
               <span class="top-tool-btn-txt">{{$t('dashboard.panel.chartForm.addMetric')}}</span>
             </button>
-
           </el-form>
         </el-scrollbar>
 
@@ -268,7 +269,7 @@
     name: "chartBox",
     props: {
       panelData: Array,
-      showPanel:{}
+      showPanel: Object
     },
     data() {
       return {
@@ -293,7 +294,8 @@
             type: '',
             legend:'',
           },
-          panel: ''
+          panel: '',
+          sync: 0
         },
         isUrl:false,
         isSingleStat:false,
@@ -572,7 +574,7 @@
       addCharts(params) {
         let panelId;
         //先处理panel
-        if (this.showPanel.type == 'model') {
+        if (this.showPanel.type) {
           panelId = this.panelData[0].id;
         } else {
           panelId = this.autocompleteExist(this.panelName2);
@@ -655,8 +657,9 @@
               type: this.chart.type,
               unit:this.chart.unit,
               param:{
-              statistics:target.statistics
-              }
+                statistics:target.statistics
+              },
+              sync: this.chart.sync
             };
 
             //生成指标数组
@@ -1020,7 +1023,7 @@
         deep: true,
         immediate: true,
         handler(n, o) {
-          if (this.showPanel.type != 'model') {
+          if (!this.showPanel.type) {
             if (this.selectFirstPanel) {
               this.selectFirstPanel = false;
               this.panelId = n[0].id;

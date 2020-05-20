@@ -2,8 +2,8 @@
   <span>
     <div class="sub-top-tools">
       <div class="sub-list-tabs">
-        <div class="sub-list-tab-title">{{$t("project.endpoint.asset")}}：{{obj.host}}</div><div
-        class="sub-list-tab" @click="changeTab('detail')">{{$t("overall.detail")}}</div><div
+        <div class="sub-list-tab-title">{{obj.host}}</div><div
+        class="sub-list-tab" @click="changeTab('panel')">{{$t("overall.detail")}}</div><div
         class="sub-list-tab" @click="changeTab('alertMessage')">{{$t("asset.tableTitle.alerts")}}</div><div
         class="sub-list-tab sub-list-tab-active">{{$t("asset.tableTitle.modules")}}</div>
       </div>

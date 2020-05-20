@@ -1,10 +1,16 @@
 <template>
-  <div class="panel sub-list">
-    <div class="sub-top-tools">
+  <div class="panel" :class="{'sub-list': from != 'project'}">
+    <!--model和asset的工具栏-->
+    <div class="sub-top-tools" v-if="from != 'project'">
       <div class="sub-list-tabs">
         <div class="sub-list-tab-title">
           <template v-if="from == 'model'">{{obj.name}}</template>
-        </div><div class="sub-list-tab">{{$t("dashboard.panel.title")}}</div>
+          <template v-else-if="from == 'asset'">{{obj.host}}</template>
+        </div><div class="sub-list-tab sub-list-tab-active" v-if="from == 'model'">{{$t("dashboard.panel.title")}}</div><template v-if="from == 'asset'"><div
+          class="sub-list-tab sub-list-tab-active">{{$t("overall.detail")}}</div><div
+          class="sub-list-tab" @click="changeTab('alertMessage')">{{$t("asset.tableTitle.alerts")}}</div><div
+          class="sub-list-tab" @click="changeTab('endpoint')">{{$t("asset.tableTitle.modules")}}</div>
+        </template>
       </div>
       <div class="top-tool-right">
         <div class="top-tool-search margin-r-20">
@@ -39,6 +45,48 @@
         </button>
       </div>
     </div>
+
+    <!--project的工具栏-->
+    <div class="top-tools" v-else>
+      <div class="top-tool-main-right">
+        <div class="top-tool-search relative-position margin-r-20">
+          <el-input ref="queryPanel" @clear="clearInput" id="queryPanel2" @focus="focusInput"  @blur="blurInput" v-model="filter.searchName" class="query-input-inactive" size="mini" clearable   >
+            <i slot="suffix" class="el-input__icon el-icon-search" @click="focusInput" style="float: right"></i>
+          </el-input>
+        </div>
+
+        <div class="panel-calendar margin-r-20">
+          <div class="block">
+            <time-picker ref="calendarPanel" class="nz-dashboard-picker" @change="dateChange"></time-picker>
+          </div>
+        </div>
+
+        <div class="nz-btn-group nz-btn-group-size-normal nz-btn-group-light margin-r-20">
+          <button style="border-right: 1px solid rgba(162,162,162,0.50);" type="button"
+                  class="nz-btn nz-btn-size-normal nz-btn-style-light" @click="Refresh()">
+            <i style="font-size: 12px" class="global-active-color nz-icon nz-icon-refresh"></i>
+          </button><el-popover
+          v-model="visible" placement="bottom-start" width="200" trigger="click">
+          <ul class="popover_ul">
+            <li v-for="i in intervalList" :style="{color:interval==i.value?'#31749C':''}" :key="i.value+i.name"
+                @click="selectInterval(i.value)">
+              {{i.name}}
+            </li>
+          </ul>
+          <button type="button" style="border-radius: 0 4px 4px 0"
+                  class="nz-btn nz-btn-size-normal nz-btn-style-light" slot="reference">
+            <i style="font-size: 12px" class="nz-icon nz-icon-arrow-down"></i>
+          </button>
+        </el-popover>
+        </div>
+        <button @click="toAddChart" :title="$t('overall.createChart')"
+                class="nz-btn nz-btn-size-normal nz-btn-style-light ">
+          <i class="nz-icon-create-square nz-icon"></i>
+        </button>
+      </div>
+    </div>
+
+    <!--图表-->
     <div class="table-list" id="tableList">
       <el-scrollbar class="el-scrollbar-large" style="height: 100%" ref="dashboardScrollbar">
         <div class="box-content">
@@ -137,7 +185,7 @@
         },
         showPanel: {
           name: '',
-          type: 'model',
+          type: this.from,
           id: ''
         },
         panelId: 0,
@@ -169,6 +217,10 @@
         this.$refs.addChartModal.setTitle(this.$t("dashboard.panel.createChartTitle"));
         this.$refs.addChartModal.show(true);
         this.$refs.addChartModal.createData(this.panelId); //初始化创建图表需要的初始数据
+      },
+      // 切换tab
+      changeTab(tab) {
+        this.$emit('changeTab', tab);
       },
       scrollbarHeightHandler() {
         setTimeout(() => {

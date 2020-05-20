@@ -115,6 +115,7 @@ const cn = {
         type: "类型",
         url: "URL",
         statistics:'Statistics',
+        sync: '同步到设备',
         typeVal: {
           line: {
             label: "曲线图"
