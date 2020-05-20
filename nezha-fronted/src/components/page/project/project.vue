@@ -212,7 +212,6 @@
     },
     data() {
       vm = this;
-      let temp = this;
       return {
         loading: false,
 

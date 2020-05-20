@@ -39,7 +39,7 @@
       </template>
 
       <!-- model-panel/asset-detail/project-overview的panel-->
-      <panel-tab v-if="from == 'model' && targetTab == 'panel'" v-show="subResizeShow" :from="from" :obj="obj"></panel-tab>
+      <panel-tab v-if="from == 'model' && targetTab == 'panel'" v-show="subResizeShow" :from="from" :obj="obj" ref="panelTab"></panel-tab>
 
     </div>
   </span>
@@ -101,6 +101,9 @@
       afterResize() {
         if (this.from == 'endpoint' && this.targetTab == 'endpointQuery') {
           this.$refs.endpointQuery.tableReload();
+        }
+        if (this.from == 'model') {
+          setTimeout(() => {this.$refs.panelTab.$refs.dashboardScrollbar.update();}, 400);
         }
       }
     }

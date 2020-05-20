@@ -388,7 +388,9 @@
       obj: {
         immediate: true,
         handler(n) {
-          this.getTableData(n.id);
+          setTimeout(() => {
+            this.getTableData(n.id);
+          }, 500);
         }
       }
     }

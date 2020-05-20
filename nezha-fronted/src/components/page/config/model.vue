@@ -67,7 +67,7 @@
                   </el-popover>
               </template>
               <div v-else-if="item.prop == 'option'" class="content-right-options">
-                <span :title="$t('dashboard.panel.title')" @click="panel(scope.row)" class="content-right-option" :id="'model-panel-'+scope.row.id"><i class="nz-icon nz-icon-chart"></i></span>
+                <span :title="$t('dashboard.panel.title')" @click="panel(scope.row)" class="content-right-option" :id="'model-panel-'+scope.row.id"><i class="nz-icon nz-icon-template"></i></span>
                 <span :title="$t('overall.edit')" @click="toEdit(scope.row)" class="content-right-option" :id="'model-edit-'+scope.row.id"><i class="nz-icon nz-icon-edit"></i></span>
                 <span :title="$t('overall.delete')" @click="del(scope.row)" class="content-right-option" :id="'model-del-'+scope.row.id"><i class="el-icon-delete"></i></span>
               </div>
@@ -107,9 +107,11 @@
 </template>
 <script>
   import bus from '../../../libs/bus';
+  var vm;
   export default {
     name: "model",
     data() {
+      vm = this;
       return {
         /*二级列表相关*/
         targetTab: '', //展示二级列表中的哪个页签
