@@ -102,10 +102,10 @@
                 <span v-else>-</span>
               </div>-->
               <template v-else-if="item.prop == 'labels'">
+<!--                <nz-alert-tag :label="key" :type="tagType(key)" style="margin: 5px;" @click="showTagDetail(scope.row, key)"-->
                 <nz-alert-tag :label="key" :type="tagType(key)" style="margin: 5px;"
                               :cursor-point="tagType(key) == 'info' ? false : true"
                               :key="key"
-                              @click="showTagDetail(scope.row, key)"
                               v-if="key != 'alertname' && key != 'severity'"
                               v-for="(value, key) in scope.row.labels">{{value}}</nz-alert-tag>
                 <!--<el-tag @click="showTagDetail(scope.row, key)"
