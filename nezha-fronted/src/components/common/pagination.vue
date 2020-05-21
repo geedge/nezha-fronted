@@ -56,20 +56,33 @@ export default {
     //点击上一页箭头
     prev() {
       this.backgroundColor();
+      this.scrollbarToTop();
     },
     //点击下一页箭头
     next(val) {
       this.backgroundColor();
+      this.scrollbarToTop();
     },
     //currentPage 改变时会触发
     current(val) {
       this.$emit("pageNo", val);
       this.backgroundColor();
+      this.scrollbarToTop();
     },
     size(val) {
       this.pageObj.pageNo=1;
       this.$emit("pageSize", val);
       this.backgroundColor();
+    },
+    scrollbarToTop() {
+      this.$nextTick(() => {
+        let wraps = document.querySelectorAll(".el-table__body-wrapper");
+        wraps.forEach(wrap => {
+          if (wrap._ps_) {
+            wrap.scrollTop = 0;
+          }
+        });
+      });
     },
     resetPageSizes:function(){
       if(this.postPageSizes){
@@ -83,7 +96,6 @@ export default {
       this.list = this.$refs.page.$el.children[2].children;
       for (let i = 0; i < this.list.length; i++) {
         const element = this.list[i];
-        //console.info(element)
       }
     },
   },
@@ -97,10 +109,6 @@ export default {
         this.pageSize=parseInt(pageSize);
       }
     }
-    this.$nextTick(() => {
-      // let input = document.querySelector(".el-pagination .el-select .el-input__inner");
-      // input.value = this.pageSize + this.$t('pageSize');
-    });
   },
   watch:{
     postPageSizes:{
