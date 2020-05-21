@@ -314,7 +314,7 @@ instance_cpu_time_ns{app="fox", proc="widget", rev="4d3a513", env="prod", job="c
                       })
                       if(result.metric&&Object.keys(result.metric).length>0){
                         let metric = Object.assign({}, result.metric);
-                        seriesItem.name += metric.__name__ + '{';
+                        seriesItem.name += metric.__name__?metric.__name__:''+ '{';
                         delete metric.__name__;
                         for (let key in metric) {
                           seriesItem.name += key + "=" + '"' + metric[key] + '",';
