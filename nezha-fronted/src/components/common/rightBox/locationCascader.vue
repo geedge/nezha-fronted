@@ -368,11 +368,12 @@
     },
     computed:{
       inputShowInfo:function(){
+        console.log(this.selectedData)
         let idcName=this.selectedData.idc?this.selectedData.idc.name+'/':'';
 
         let cabinetName=this.selectedData.cabinet?this.selectedData.cabinet.name+'/':'';
 
-        let uValues=this.selectedData.u&&this.selectedData.u.length>0?this.selectedData.u[0]+'-'+this.selectedData.u[1]:'';
+        let uValues=this.selectedData.u&&this.selectedData.u.length>0&&this.selectedData.u[0]&&this.selectedData.u[1]?this.selectedData.u[0]+'-'+this.selectedData.u[1]:'';
 
         if(!this.selectedData.idc){
           return '';

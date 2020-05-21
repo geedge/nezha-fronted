@@ -270,12 +270,22 @@
                     auth:configs[0].auth,
                     configs:[],
                   }
+                  if(settingItem.version == 2){
+                    settingItem.auth={
+                      username:'',
+                      securityLevel:'',
+                      securityLevel:'',
+                      authProtocol:'',
+                      privProtocol:'',
+                      privPassword:'',
+                    }
+                  }
                   configs.forEach(item=>{
                     let config={
                       direction:item.direction&&item.direction!=''?item.direction.split(','):[],
                       ifindex:item.ifindex+'',
                       ifdescr:item.ifdescr,
-                      tags:item.tags,
+                      tags:item.tags&&item.tags!=''?item.tags:{},
                       edit:false,
                     }
                     settingItem.configs.push(config);

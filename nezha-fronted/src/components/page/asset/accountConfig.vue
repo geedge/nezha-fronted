@@ -50,7 +50,7 @@
       </el-form>
 
       <div class="telnet-option" v-show="isEdit && account.protocol=='TELNET'">
-        <div class="telnet-option_title clickable" @click="isShowTelnetOption">login option<div class="telnet-option_spilt"></div><i style="font-size: 12px;"  :class="{'el-icon-arrow-left':!showTelnetOption,'el-icon-arrow-down':showTelnetOption}"></i></div>
+        <div class="telnet-option_title clickable" @click="isShowTelnetOption"><div style="width: 100px;">login option</div><div class="telnet-option_spilt"></div><div style="width: 20px"><i style="font-size: 12px;"  :class="{'el-icon-arrow-left':!showTelnetOption,'el-icon-arrow-down':showTelnetOption}"></i></div></div>
         <div v-show="isEdit && account.protocol=='TELNET' && showTelnetOption" class="auto-login-tip">
           {{$t('asset.createAssetTab.userPwdIntroduce')}}
         </div>
@@ -204,15 +204,15 @@ export default {
     position: relative;
   }
   .telnet-option_title .telnet-option_spilt{
-    display: inline-block;
-    width: 79.9%;
+    width: calc(100% - 125px);
     height: 1px;
     background-color: lightgrey;
-    vertical-align: middle;
+    margin:auto 0;
+
     /*margin-bottom: 18px;*/
   }
   .telnet-option .telnet-option_title{
-    display: inline-block;
+    display: flex;
     vertical-align: middle;
     margin-bottom: 18px;
     width: 100%;

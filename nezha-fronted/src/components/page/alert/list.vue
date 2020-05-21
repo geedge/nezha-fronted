@@ -497,6 +497,7 @@
         }else{
           step='30m';
         }
+        this.$refs.messageChart.startLoading();
         let axiosArr=[];
         let paramStr = JSON.stringify(this.promQueryParamConvert(this.currentMsg));
 		    axiosArr.push(axios.get("/prom/api/v1/query_range?query="+paramStr.substring(1, paramStr.length-1).replace(/\+/g, "%2B").replace(/ /g, "%20").replace(/\\/g, "")+"&start="+this.$stringTimeParseToUnix(start)+"&end="+this.$stringTimeParseToUnix(end)+"&step="+step));
@@ -560,7 +561,6 @@
         this.graphShow = true;
         this.currentMsg = obj;
         this.$nextTick(() => {
-          this.$refs.messageChart.startLoading();
           this.queryChartDate();
         });
       },

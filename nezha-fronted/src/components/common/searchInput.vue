@@ -1,5 +1,5 @@
 <template>
-    <div class="new-search" >
+    <div class="new-search"  v-clickoutside="clickout">
         <div class="search-input-all input-position" @click="stop_click">
 <!--            历史记录-->
             <div class="search-history">
@@ -449,6 +449,9 @@
               clearSearch() {
                 this.select_list = [];
               },
+              clickout(){
+                this.input_list=true;
+              },
               selectObject(column, selectItem, e) {
                 this.stop_click(e);
                 for (let i = 0; i < this.select_list.length; i++) {
@@ -798,6 +801,7 @@
                 }
                 this.input_list = true;
                 this.restructure_historyDate();
+
                 this.$emit("search", objectInfo);
             },
             //清空历史记录
@@ -1077,6 +1081,7 @@
             },
             //点击遮罩层
             zhezhao_click() {
+                console.log(111)
                 if(this.input_sreach!=''){
                   if(!this.searchMsg.zheze_none){
                     if (this.input_sreach!='') {
