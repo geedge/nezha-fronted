@@ -468,7 +468,7 @@
         });
       },
       panelReloadOnlyPanel() { //仅刷新panel数据
-        this.$get('panel?pageNo=1&pageSize=-1').then(response => {
+        this.$get('panel').then(response => {
           if (response.code === 200) {
             this.panelData = response.data.list;
             for (let i = 0; i < this.panelData.length; i++) {
@@ -481,7 +481,7 @@
         });
       },
       getTableData: function (clearShowPanel) {
-        this.$get('panel?pageNo=1&pageSize=-1').then(response => {
+        this.$get('panel').then(response => {
           if (response.code === 200) {
             this.panelData = response.data.list;
             let isInitData = false;

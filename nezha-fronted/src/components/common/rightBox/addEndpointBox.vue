@@ -476,8 +476,8 @@
           assetId: obj.id,
           asset: obj,
           host: obj.host,
-          param: this.currentModuleCopy.param,
-          paramObj: this.currentModuleCopy.paramObj,
+          param: this.currentModuleCopy.param ? this.currentModuleCopy.param : "",
+          paramObj: this.currentModuleCopy.paramObj ? this.currentModuleCopy.paramObj : {},
           port: this.currentModuleCopy.port,
           path: this.currentModuleCopy.path,
           moduleId: this.currentModuleCopy.id

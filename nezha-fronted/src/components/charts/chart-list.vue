@@ -145,6 +145,7 @@ import draggable from 'vuedraggable'
 export default {
   name: 'chartList',
   props: {
+    isModel: {type: Boolean, default: false}
   },
   components: {
     lineChartBlock,
@@ -873,13 +874,17 @@ export default {
                   if (response.data.result) {
                     // 循环处理每个elements下获取的数据列
                     if(chartItem.type==='singleStat'){
-                      if(response.data.result.length===1){
-                        let statistics = chartItem.param.statistics;
-                        if(response.data.result[0].values){
-                          singleStatRlt  = bus.getSingleStatRlt(statistics,response.data.result[0].values);
+                      if (this.isModel) {
+                        singleStatRlt = 999;
+                      } else {
+                        if(response.data.result.length===1){
+                          let statistics = chartItem.param.statistics;
+                          if(response.data.result[0].values){
+                            singleStatRlt  = bus.getSingleStatRlt(statistics,response.data.result[0].values);
+                          }
+                        }else if(response.data.result.length > 1){
+                          singleStatRlt = this.$t("dashboard.panel.singleStatErrorTip");
                         }
-                      }else if(response.data.result.length > 1){
-                        singleStatRlt = this.$t("dashboard.panel.singleStatErrorTip");
                       }
                     }else {
                       response.data.result.forEach((queryItem,resIndex) => {
@@ -910,7 +915,21 @@ export default {
                         }
                         const tagsArr = Object.keys(queryItem.metric);//["__name__","asset","idc","instance","job","module","project"]
                         // 设置时间-数据格式对
-                        const dpsArr = Object.entries(queryItem.values);//[ ["0",[1577959830.781,"0"]], ["1",[1577959845.781,"0"]] ]
+                        let tempArr = [];
+                        let dpsArr = [];
+                        if (this.isModel) {
+                          let timeStamp = Math.floor(new Date().getTime()/1000);
+                          for (let i = 0; i < 20; i++) {
+                            tempArr.push([timeStamp - (20-i)*15, Math.floor(Math.random()*10) + ""]);
+                            dpsArr.push([i+"", tempArr[i]]);
+                          }
+                        } else {
+                          tempArr = queryItem.values;
+                          dpsArr = Object.entries(queryItem.values);//[ ["0",[1577959830.781,"0"]], ["1",[1577959845.781,"0"]] ]
+                          dpsArr = dpsArr.map(item => {
+                            return [item[0], [item[1][0], Number(item[1][1])]]
+                          })
+                        }
                         // 判断是否有数据, && tagsArr.length > 0
                         if (dpsArr.length > 0 && this.$refs['editChart'+chartItem.id]  && this.$refs['editChart'+chartItem.id].length>0) {
                           tagsArr.forEach((tag, i) => {
@@ -937,7 +956,7 @@ export default {
                           seriesItem.metric_name = seriesItem.theData.name;
                           // 将秒改为毫秒
                           //alert('table=='+JSON.stringify(queryItem))
-                          seriesItem.theData.data = queryItem.values.map((dpsItem, dpsIndex) => {
+                          seriesItem.theData.data = tempArr.map((dpsItem, dpsIndex) => {
                             /*曲线汇总暂不需要
                             if (sumData.data[dpsIndex]) {
                               const sumNum = sumData.data[dpsIndex][1] || 0;

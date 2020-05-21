@@ -103,7 +103,7 @@
         if (this.from == 'endpoint' && this.targetTab == 'endpointQuery') {
           this.$refs.endpointQuery.tableReload();
         }
-        if (this.from == 'model') {
+        if (this.targetTab == 'panel') {
           setTimeout(() => {this.$refs.panelTab.$refs.dashboardScrollbar.update();}, 400);
         }
       }

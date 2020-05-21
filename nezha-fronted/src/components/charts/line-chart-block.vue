@@ -898,7 +898,8 @@
                 let chartUnit=chartInfo.unit;
                 chartUnit=chartUnit?chartUnit:2;
                 let unit=chartDataFormat.getUnit(chartUnit);
-                return unit.compute(value,index);
+                //console.info(value, chartUnit, unit.compute(value,index))
+                return unit.compute(value,index,2);
               },
             },
             //boundaryGap:[0,0.2]

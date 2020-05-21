@@ -55,13 +55,7 @@
             <template v-else>-</template>
           </span>
           <template v-else-if="item.prop == 'type'">{{scope.row.module.type}}</template>
-          <div v-else-if="item.prop == 'option'" class="content-right-options">
-            <span :title="$t('overall.query')" @click="query(scope.row)" class="content-right-option" :id="'edp-query-'+scope.row.id"><i class="el-icon-search"></i></span>
-            &nbsp;
-            <span :title="$t('overall.view')" @click="detail(scope.row)" class="content-right-option" :id="'edp-detail-'+scope.row.id"><i class="nz-icon nz-icon-view"></i></span>
-            &nbsp;
-            <span :title="$t('overall.edit')" @click="toEdit(scope.row)" class="content-right-option" :id="'edp-edit-'+scope.row.id"><i class="nz-icon nz-icon-edit"></i></span>
-          </div>
+          <div v-else-if="item.prop == 'option'">-</div>
           <span v-else-if="item.prop == 'lastUpdate'">{{dateFormat(scope.row.lastUpdate)}}</span>
           <span v-else-if="item.prop == 'state'" >
             <el-popover placement="right" trigger="hover" :content="getStateContent(scope.row)" popper-class="small-pop">

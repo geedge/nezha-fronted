@@ -91,7 +91,7 @@
       <el-scrollbar class="el-scrollbar-large" style="height: 100%" ref="dashboardScrollbar">
         <div class="box-content">
           <chart-list @on-edit-chart="editData" @on-refresh-time="refreshTime" @on-remove-chart="removeData"
-                      ref="chartList"></chart-list>
+                      ref="chartList" :is-model="from == 'model'"></chart-list>
         </div>
       </el-scrollbar>
     </div>
@@ -320,7 +320,7 @@
         });
       },
       getTableData(linkId) {
-        this.$get('panel', {pageNo: 1, pageSize: -1, type: this.from, link: linkId}).then(response => {
+        this.$get('panel', {type: this.from, link: linkId}).then(response => {
           if (response.code === 200) {
             this.panelData = response.data.list;
             if (this.panelData.length > 0) {
