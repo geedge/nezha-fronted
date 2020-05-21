@@ -1400,10 +1400,7 @@
                         }
                         let alias=this.dealLegendAlias(host,this.data.elements[pos].legend);
                         if(!alias || alias===''){
-                          alias = this.data.elements[pos].expression;
-                        }
-                        if(alias){
-                          host = alias;
+                          alias = host;
                         }
                         legend.push({name:host+innerPos,alias:alias});
                         // 图表中每条线的名字,去掉最后的逗号与空格:metric名称,  标签1=a,标签2=c

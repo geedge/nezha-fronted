@@ -427,10 +427,7 @@
                             //处理legend别名
                             let alias = this.dealLegendAlias(host, chartItem.elements[innerPos].legend);
                             if (!alias || alias === '') {
-                              alias = chartItem.elements[innerPos].expression;
-                            }
-                            if (alias) {
-                              host = alias;
+                              alias = host;
                             }
                             legend.push({name: host + resInnerPos, alias: alias});
                             // 图表中每条线的名字,去掉最后的逗号与空格:metric名称,  标签1=a,标签2=c
@@ -1136,10 +1133,7 @@
                         }
                         let alias=this.dealLegendAlias(host,this.chart.elements[pos].legend);
                         if(!alias || alias===''){
-                          alias = this.chart.elements[pos].expression;
-                        }
-                        if(alias){
-                          host = alias;
+                          alias = host;
                         }
                         legend.push({name:host+innerPos,alias:alias});
                         // 图表中每条线的名字,去掉最后的逗号与空格:metric名称,  标签1=a,标签2=c

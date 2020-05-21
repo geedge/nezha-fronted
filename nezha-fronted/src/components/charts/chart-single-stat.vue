@@ -393,7 +393,7 @@ export default {
               this.data = chartItem;
               this.unit = chartDataFormat.getUnit(this.data.unit);
               if(Number(seriesItem)){
-                let singleStatTmp =Number(seriesItem).toFixed(2);
+                let singleStatTmp =parseFloat(Number(seriesItem).toFixed(2));
                 this.serieSingleStat = chartDataFormat.getUnit(chartItem.unit?chartItem.unit:2).compute(singleStatTmp,null,2);
               }else {
                 this.serieSingleStat =seriesItem;
@@ -420,7 +420,7 @@ export default {
               this.data = chartItem;
               this.unit = chartDataFormat.getUnit(this.data.unit);
               if(Number(seriesItem)){
-                let singleStatTmp =Number(seriesItem).toFixed(2);
+                let singleStatTmp =parseFloat(Number(seriesItem).toFixed(2));//parseFloat ：如果没有小数点，或者小数点后都是零，parseFloat() 会返回整数。
                 this.serieSingleStat = chartDataFormat.getUnit(chartItem.unit?chartItem.unit:2).compute(singleStatTmp,null,2);
               }else {
                 this.serieSingleStat =seriesItem;

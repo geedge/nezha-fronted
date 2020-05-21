@@ -926,13 +926,9 @@ export default {
                             host = chartItem.elements[innerPos].expression;
                           }
                           //处理legend别名
-
                           let alias=this.$refs['editChart'+chartItem.id][0].dealLegendAlias(host,chartItem.elements[innerPos].legend);
                           if(!alias || alias===''){
-                            alias = chartItem.elements[innerPos].expression;
-                          }
-                          if(alias){
-                            host = alias;
+                            alias = host;
                           }
                           legend.push({name:host+resIndex,alias:alias});
                           // 图表中每条线的名字,去掉最后的逗号与空格:metric名称,  标签1=a,标签2=c
