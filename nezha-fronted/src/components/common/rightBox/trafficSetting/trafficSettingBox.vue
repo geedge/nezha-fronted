@@ -83,7 +83,7 @@
                   direction:[],
                   ifindex:null,
                   ifdescr:' ',
-                  tags:"",
+                  tags:{},
                   edit:true,
                 }
               ]
@@ -120,7 +120,7 @@
                 direction:[],
                 ifindex:null,
                 ifdescr:' ',
-                tags:"",
+                tags:{},
                 edit:true,
               }
             ]
@@ -146,7 +146,7 @@
               direction:[],
               ifindex:null,
               ifdescr:' ',
-              tags:"",
+              tags:{},
               edit:true,
             }
           ]

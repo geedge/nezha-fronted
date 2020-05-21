@@ -321,7 +321,7 @@
           direction:[],
           ifindex:null,
           ifdescr:' ',
-          tags:"",
+          tags:{},
           edit:true,
         })
         this.tableLabels=this.tableLabels.map(item=>{
@@ -342,7 +342,7 @@
             direction:[],
             ifindex:null,
             ifdescr:' ',
-            tags:"",
+            tags:{},
             edit:true,
           }
         ]

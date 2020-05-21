@@ -1,7 +1,7 @@
 <template>
     <div style="display: flex;justify-content: flex-start">
       <button class="input-prepend nz-btn nz-btn-size-small nz-btn-style-light nz-btn-style-square nz-input-group-prepend" @click="openSeletor">{{$t('dashboard.panel.chartForm.unit')}}</button>
-      <el-cascader filterable placeholder="" popper-class="no-style-class unit-pop-class" size="mini"
+      <el-cascader placeholder="" popper-class="no-style-class unit-pop-class" size="mini"
                    :options="chartUnits"
                    class="chart-unit"
                    :props="{ expandTrigger: 'click' ,emitPath:false}"
