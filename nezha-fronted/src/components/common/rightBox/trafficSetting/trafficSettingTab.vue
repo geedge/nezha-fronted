@@ -34,7 +34,7 @@
             <el-row class="mib-browser-ad-search-item">
               <el-col :span="6"><div class="mib-browser-ad-search-label">{{$t('project.module.version')}}</div></el-col>
               <el-col :span="17">
-                <el-radio-group v-model.number="assetSetting.version">
+                <el-radio-group v-model.number="assetSetting.version" >
                   <el-radio-button :label="2"></el-radio-button>
                   <el-radio-button :label="3"></el-radio-button>
                 </el-radio-group>
@@ -163,12 +163,14 @@
                   </el-scrollbar>-->
                   <el-tooltip placement="top" effect="light" popper-class="tags-pop transparent-pop">
                     <div slot="content">
-                      <div class="tab-tags-item" v-for="(value, key, index) in scope.row[item.prop]">
-                        <div class="tag-item-key">{{key}}</div>
-                        <div class="tag-item-value">{{value}}</div>
-                      </div>
+                      <template v-if="scope.row[item.prop]">
+                        <div class="tab-tags-item" v-for="(value, key, index) in scope.row[item.prop]">
+                          <div class="tag-item-key">{{key}}</div>
+                          <div class="tag-item-value">{{value}}</div>
+                        </div>
+                      </template>
                     </div>
-                    <div class="tab-tags-item" v-if="Object.keys(scope.row[item.prop]).length>0">
+                    <div class="tab-tags-item" v-if="scope.row[item.prop]&&Object.keys(scope.row[item.prop]).length>0">
                       <div class="tag-item-key">{{Object.keys(scope.row[item.prop])[0]}}</div>
                       <div class="tag-item-value">{{scope.row[item.prop][Object.keys(scope.row[item.prop])[0]]}}</div>
                       <div class="tag-item-text" v-if="Object.keys(scope.row[item.prop]).length>1">+{{Object.keys(scope.row[item.prop]).length-1}}</div>
@@ -419,7 +421,8 @@
 
       },
       popHide() {
-
+        console.log(this.assetSetting)
+        this.queryInterfaceInfos(true);
       },
       showInput:function(){
         this.showTagInput=true;
