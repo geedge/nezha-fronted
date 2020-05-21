@@ -273,6 +273,18 @@ export default {
         }
       }
     },
+    getCurrentTime(){
+       let timeTypeId = this.showTime.id;
+       if(timeTypeId===0){
+         return this.searchTime;
+       }else {
+         if(!timeTypeId){timeTypeId = 4;}
+         let currentTime = this.timeData.find(item => item.id === timeTypeId);
+         this.setSearchTime(currentTime.type,currentTime.value);
+         return this.searchTime;
+       }
+
+    },
     setSearchTime(type,val){
       if(type==='minute'){
         let startTime = bus.timeFormate(new Date(bus.computeTimezone(new Date().getTime())).setMinutes(new Date(bus.computeTimezone(new Date().getTime())).getMinutes() - val),'yyyy-MM-dd hh:mm:ss');

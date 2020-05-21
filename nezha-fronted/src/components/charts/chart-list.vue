@@ -166,7 +166,7 @@ export default {
       timer: null,
       dataTotalList:[],//懒加载：总记录数
       dataTotalListBak:[],//用于查询：懒加载，总记录备份
-      isPage:true,//是否分页懒加载
+      isPage:false,//是否分页懒加载
       currentRecordNum:0,//懒加载：本次取记录的index，第一次从0开始取，每次取3行
       lineNum:3,//每页加载的行数
       pagePanelId:'',//当前分页的panelId
@@ -533,16 +533,19 @@ export default {
         });
       }
       this.dataList = [];
+      //console.log("__map__",JSON.stringify(this.chartDataCacheGroup))
+      this.chartDataCacheGroup.clear();
+      //console.log("__map22__",JSON.stringify(this.chartDataCacheGroup))
     },
     initData(filter) {
-      this.dataList = [];
+      //this.dataList = [];
+      this.cleanData();
       // 内含 panelId,开始时间,结束时间
       this.filter = filter;
       this.pagePanelId = this.filter.panelId;
       this.getData(this.filter);
     },
     searchCharts(searchName){
-      this.currentRecordNum = 0;
       this.dataList = [];
       this.dataTotalList = [];
 
@@ -550,29 +553,34 @@ export default {
       if(searchName && searchName.trim()!==''){
         this.dataTotalListBak.forEach((item)=>{
           if(item.title.indexOf(searchName)>-1){
+            item.isLoaded = false;
             chartListTmp.push(item);
           }
         });
       }else{
         this.dataTotalListBak.forEach((item)=>{
+            item.isLoaded = false;
             chartListTmp.push(item);
         });
       }
 
       this.dataTotalList = [...chartListTmp];
-      if(this.isPage){
-        this.pageDataList(null,null,true);
-      }else {
-        this.dataList = [...this.dataTotalList];
-      }
+      this.dataList = [...this.dataTotalList];
 
       this.$nextTick(() => {
         if (this.dataList.length > 0 ) {
-          this.dataList.forEach((item) => {
+          this.dataList.forEach((item,index) => {
             this.$refs['editChart'+item.id][0].showLoad(item);//之后要实现
+            this.setSize(item.span, index);//设置该图表宽度
+
+            //获得当前显示在浏览器的图表，从后台获取数据
+            let chartBox = document.getElementById(item.title+'_'+item.id);//this.$refs['editChart'+item.id][0];
+            //console.log(item.title,"___searchChart___",JSON.stringify(item))
+            if(!item.isLoaded ){
+              this.handleElementInViewport(chartBox,0,item,index,true);
+            }
           });
         }
-        this.dataSetFirst(this.dataList,null,true);
       });
     },
     pageDataList(isAdd,panelId,isSearch){
@@ -637,6 +645,10 @@ export default {
       //根据panelId获得panel下的所有图表
       this.$get('panel/'+ params.panelId+'/charts').then(response => {
         if (response.code === 200) {
+          response.data.list.forEach((item,index)=>{
+            item.isLoaded = false;
+          });
+
           if(response.data.list){
             this.dataTotalList =  response.data.list;
           }else {
@@ -655,21 +667,36 @@ export default {
             this.dataTotalList = chartListTmp;
           }
 
-          if(this.isPage){
-            this.pageDataList();
-          }else {
-            this.dataList = this.dataTotalList;
-          }
+          this.dataList = this.dataTotalList;
           this.$nextTick(() => {
             if (this.dataList.length > 0 ) {
-              this.dataList.forEach((item) => {
-                this.$refs['editChart'+item.id][0].showLoad(item);//之后要实现
+              this.dataList.forEach((item,index) => {
+                this.$refs['editChart'+item.id][0].showLoad(item);//设置该图表的高度
+                this.setSize(item.span, index);//设置该图表宽度
+
+                //获得当前显示在浏览器的图表，从后台获取数据
+                  let chartBox = document.getElementById(item.title+'_'+item.id);//this.$refs['editChart'+item.id][0];
+                  if( !item.isLoaded ){
+                    this.handleElementInViewport(chartBox,0,item,index);
+                  }
               });
             }
-            this.dataSetFirst(this.dataList);
           });
         }
       });
+    },
+    loadChartData(scrollTop){
+      if (this.dataList.length > 0 ) {
+        let chartListInViewport = [];
+        this.dataList.forEach((item,index) => {
+          //获得当前显示在浏览器的图表，从后台获取数据
+          let chartBox = document.getElementById(item.title+'_'+item.id);//this.$refs['editChart'+item.id][0];
+          //console.log("loadChartData___",item.title,item.isLoaded)
+          if(!item.isLoaded){
+            this.handleElementInViewport(chartBox,scrollTop,item,index);
+          }
+        });
+      }
     },
     // arr: 该panel下图表list,生成该看板下所有图表
     dataSetFirst(arr,oldDataListLen,isSearch) {
@@ -841,7 +868,6 @@ export default {
               };
               let errorMsg = "";
               res.forEach((response, innerPos) => {
-                //alert(pos+'==response==='+JSON.stringify(chartInfo))
                 if (response.status === 'success') {
                   errorMsg = "";
                   if (response.data.result) {
@@ -1163,18 +1189,61 @@ export default {
           this.getChartData(item, index, 'showFullScreen');
         }
       });
-    }
+    },
     /*
     // 刷新数据
     refreshData() {
       this.getData(this.filter);
     },
      */
+    handleElementInViewport(ele,scrollTop,item,index,isSearch) {
+      /*
+      网页被卷去的高：document.body.scrollTop
+      网页正文全文高：document.body.scrollHeight
+      网页可见区域高（包括边线的高）：document.body.offsetHeight；
+      网页可见区域高：document.body.clientHeight
+      */
+      let that = this;
+      setTimeout(function () {
+        let itemHeight = item.height;
+        //1.元素距离页面顶部的距离
+        var mainOffsetTop = ele.offsetTop;//offsetTop: 当前元素顶部距离最近父元素顶部的距离,和有没有滚动条没有关系。单位px，只读元素。
+        //2.元素的高度
+        var mainHeight = itemHeight//ele.offsetHeight;//itemHeight;
+        //3.页面滚动的距离
+        var windowScrollTop = scrollTop;//document.documentElement.scrollTop || document.body.scrollTop;
+        //4.浏览器可见区域的高度
+        var windowHeight = (window.innerHeight || document.documentElement.clientHeight)-50-42;
+
+        /*
+        * 在窗口上下滚动的情况下, 一个页面元素的状态有下面3种：
+        1.向上滚动超出可见区域
+        2.向下滚动超出可视区域
+        3.在可视区域内
+        * 第一种情况   由于元素随页面向上滚动, 整个页面滚动的距离  大于 （元素距离页面顶部的距离 + 元素本身的高度 ）-> 超出
+        * 第二种情况   由于元素随页面向下滚动, 整个页面滚动的距离  小于 （元素距离页面顶部的距离 - 浏览器可见区域高度 ）-> 超出
+        * */
+          //console.log("___isInView____","元素距离页面顶部的距离mainOffsetTop="+mainOffsetTop)//不变
+          //console.log("___isInView____","元素高度mainHeight="+mainHeight)//不变
+          //console.log("___isInView____","scrollTop页面滚动的距离windowScrollTop="+windowScrollTop)//变
+          //console.log("___isInView____","浏览器可见区域高度windowHeight="+windowHeight)//不变
+          //console.log(item.title,(mainOffsetTop+mainHeight),"<",(windowScrollTop+windowHeight),((mainOffsetTop+mainHeight) < (windowScrollTop+windowHeight)))
+          if((mainOffsetTop+mainHeight/3) < (windowScrollTop+windowHeight)){
+            let chartType = item.type;
+            item.isLoaded = true;
+            if(chartType!=='url'){
+              that.getChartDataForSearch(item,index);
+            }
+          }
+      }, 100);
+    },
   },
 
   mounted() {
   },
   beforeDestroy() {
+  },
+  destroyed () {
   },
 };
 

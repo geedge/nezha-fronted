@@ -276,6 +276,9 @@
     methods: {
       //刷新
       Refresh() {
+        let curTime = this.$refs.calendarPanel.getCurrentTime();
+        this.filter.start_time = bus.timeFormate(curTime[0], 'yyyy-MM-dd hh:mm:ss');
+        this.filter.end_time = bus.timeFormate(curTime[1], 'yyyy-MM-dd hh:mm:ss');
         this.getTableData();
       },
       //面板相关操作
@@ -287,7 +290,10 @@
         //this.$refs.searchInput.select();
         this.showPanel = val
         this.filter.panelId = this.showPanel.id;
-        this.$refs.chartList.initCurrentRecordNum();
+        let curTime = this.$refs.calendarPanel.getCurrentTime();
+        this.filter.start_time = bus.timeFormate(curTime[0], 'yyyy-MM-dd hh:mm:ss');
+        this.filter.end_time = bus.timeFormate(curTime[1], 'yyyy-MM-dd hh:mm:ss');
+        //this.$refs.chartList.initCurrentRecordNum();
         this.$refs.chartList.cleanData();
         this.getData(this.filter);
 
@@ -440,7 +446,9 @@
       /*时间条件查询--start*/
       // 选择日期变化
       dateChange(val) {
-        this.searchTime = [...val];
+        if(val){
+          this.searchTime = [...val];
+        }
         this.filter.start_time = bus.timeFormate(this.searchTime[0], 'yyyy-MM-dd hh:mm:ss');
         this.filter.end_time = bus.timeFormate(this.searchTime[1], 'yyyy-MM-dd hh:mm:ss');
         this.filter.panelId = this.showPanel.id;
@@ -587,24 +595,18 @@
       onScroll() {
         let _self = this;
         let scrollbarWrap = this.$refs.dashboardScrollbar.wrap;
-        scrollbarWrap.onscroll = function() {
-          console.info(scrollbarWrap.scrollTop)
+
+        scrollbarWrap.onscroll = bus.debounce(function() {
           if (scrollbarWrap.scrollTop > 50) {
             _self.showTopBtn = true;
           } else {
             _self.showTopBtn = false;
           }
-          if (scrollbarWrap.scrollHeight - scrollbarWrap.scrollTop - scrollbarWrap.offsetHeight < 20) {
-            _self.$refs.chartList.pageDataList(true, _self.showPanel.id);
-          }
-        }
-        /*let dom = document.getElementById('tableList');
-        let scrollHeight = dom.scrollHeight;//整个可滑动区域高度
-        let clientHeight = dom.clientHeight;//可视高度
-        let scrollTop = dom.scrollTop;//滚动条顶部与整个scrollHeight顶部的距离
-        if (scrollHeight - clientHeight - scrollTop <= 20) {//滚动到底部，才加载新数据
-          this.$refs.chartList.pageDataList(true, this.showPanel.id);
-        }*/
+          _self.$refs.chartList.loadChartData(scrollbarWrap.scrollTop);
+          //if (scrollbarWrap.scrollHeight - scrollbarWrap.scrollTop - scrollbarWrap.offsetHeight < 20) {
+            //_self.$refs.chartList.pageDataList(true, _self.showPanel.id);
+          //}
+        },300);
       },
       focusInput:function(){
         let classVal=document.getElementById('queryPanel').parentElement.getAttribute("class");
