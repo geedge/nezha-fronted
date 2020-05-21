@@ -33,7 +33,7 @@
           <div class="pagination-top pagination-top-hide display-none"></div>
         </div>
         <transition name="el-zoom-in-bottom">
-          <div class="el-popover alert-clean-pop" @click="toDeleteMessage" v-if="deleteBox.ids.length > 0">
+          <div class="el-popover alert-clean-pop" @click="toDeleteMessage(false)" v-if="deleteBox.ids.length > 0">
             <i style="cursor: pointer" class="el-icon-delete"></i>
           </div>
         </transition>
@@ -130,7 +130,7 @@
               </div>
               <div v-else-if="item.prop == 'option'" class="content-right-options">
                 <span :title="$t('overall.view')" @click="detail(scope.row)" class="content-right-option" :id="'alert-list-detail-'+scope.row.id"><i class="nz-icon nz-icon-chart"></i></span>
-                <span :title="$t('overall.delete')" @click="del(scope.row)" class="content-right-option" :id="'alert-list-delete-'+scope.row.id"><i  class="el-icon-delete"></i></span>
+                <span :title="$t('overall.delete')" @click="toDeleteMessage(scope.row)" class="content-right-option" :id="'alert-list-delete-'+scope.row.id"><i  class="el-icon-delete"></i></span>
               </div>
               <span v-else-if="scope.row[item.prop]">{{scope.row[item.prop]}}</span>
               <template v-else>-</template>
@@ -567,22 +567,6 @@
       dialogClose() {
         this.graphShow = false;
       },
-      del(u) {
-        this.$confirm(this.$t("tip.confirmDelete"), {
-          confirmButtonText: this.$t("tip.yes"),
-          cancelButtonText: this.$t("tip.no"),
-          type: 'warning'
-        }).then(() => {
-          this.$delete("alert/message?ids=" + u.id).then(response => {
-            if (response.code === 200) {
-              this.$message({type: 'success', message: this.$t("tip.deleteSuccess")});
-              this.getAlertList();
-            } else {
-              this.$message.error(response.msg);
-            }
-          })
-        });
-      },
       getAlertList: function () {
         this.$set(this.searchLabel, "pageNo", this.pageObj.pageNo);
         this.$set(this.searchLabel, "pageSize", this.pageObj.pageSize);
@@ -636,7 +620,10 @@
           this.$refs['assetEditUnit'].tabView = false
         }
       },
-      toDeleteMessage() {
+      toDeleteMessage(obj) {
+        if (obj) {
+          this.deleteBox.ids = obj.id + "";
+        }
         this.deleteBox.show = true;
       },
       deleteMessage() {

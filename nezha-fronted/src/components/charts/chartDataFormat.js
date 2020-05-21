@@ -255,19 +255,13 @@ function days(value,index,type=1){
 * unitIndex：不需要传递，用于递归获取units中的单位
 * */
 function asciiCompute(num,ascii,units,dot=2,unitIndex=0){
-  console.info(parseFloat(0.6.toFixed(2)))
   let quotient=num / ascii;
-  console.info("aa", parseFloat(0.6.toFixed(0)), parseFloat(0.6.toFixed(1)));
-  console.info("quotient", quotient);
   if(unitIndex <= units.length-1){
     if(quotient <1 ){ //不足以进位
       let toFixed=parseFloat(num.toFixed(dot));
-      console.info("toFixed", num, dot, toFixed);
       if(toFixed == 0){
-        console.info("toFixed-r1", `${num} ${units[unitIndex]}`);
         return `${num} ${units[unitIndex]}`
       }else{
-        console.info("toFixed-r2", `${num.toFixed(dot)} ${units[unitIndex]}`);
         return `${num.toFixed(dot)} ${units[unitIndex]}`;
       }
     }else if(quotient >= 1 && quotient <10){ //可以进位，但是又不足以更进一位

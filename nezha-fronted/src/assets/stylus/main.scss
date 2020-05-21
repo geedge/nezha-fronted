@@ -583,8 +583,8 @@ li{
   margin-top: -2px;
 }*/
 .top-tool-main-right-to-left {
-  right: 100% !important;
-  transform: translateX(100%);
+  right: calc(100% - 341px) !important;
+  /*transform: translateX(100%);*/
 }
 /* end--顶部工具栏*/
 

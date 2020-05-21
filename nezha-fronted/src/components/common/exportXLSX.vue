@@ -18,81 +18,79 @@
       </el-dropdown>-->
     </div>
 
-    <div>
-      <el-dialog :visible.sync="importBox.show" :title="importBox.title" :modal-append-to-body='false' :show-close="true" :width="importBox.width" @close="closeDialog" class="nz-dialog" :close-on-click-modal="importBox.type!=3">
-        <div v-if="importBox.type==1">
-          <div class="upload-body">
-            <el-upload drag class="upload-demo" ref="uploadExcel"  action="" :file-list="importFileList" :on-change="importChange"  :auto-upload="false" accept=".xlsx,.xls">
-              <div slot="tip" class="el-upload__tip" >{{$t('overall.importTip')}}</div>
-              <i class="el-icon-upload"></i>
-              <div class="el-upload__text">{{$t('overall.dragFileTip')}}，{{$t('overall.or')}}&nbsp;<em>{{$t('overall.clickUpload')}}</em></div>
-              <!--<button type="button" class="nz-btn nz-btn-size-normal nz-btn-style-normal">
-                <span class="top-tool-btn-txt" >{{$t('overall.upload')}}</span>
-              </button>-->
-            </el-upload>
+    <el-dialog :visible.sync="importBox.show" :title="importBox.title" :modal-append-to-body='false' :show-close="true" :width="importBox.width" @close="closeDialog" class="nz-dialog" :close-on-click-modal="importBox.type!=3">
+      <div v-if="importBox.type==1">
+        <div class="upload-body">
+          <el-upload drag class="upload-demo" ref="uploadExcel"  action="" :file-list="importFileList" :on-change="importChange"  :auto-upload="false" accept=".xlsx,.xls">
+            <div slot="tip" class="el-upload__tip" >{{$t('overall.importTip')}}</div>
+            <i class="el-icon-upload"></i>
+            <div class="el-upload__text">{{$t('overall.dragFileTip')}}，{{$t('overall.or')}}&nbsp;<em>{{$t('overall.clickUpload')}}</em></div>
+            <!--<button type="button" class="nz-btn nz-btn-size-normal nz-btn-style-normal">
+              <span class="top-tool-btn-txt" >{{$t('overall.upload')}}</span>
+            </button>-->
+          </el-upload>
+        </div>
+        <div slot="footer" class="footer">
+          <div class="el-message-box__btns" style="text-align: right;">
+            <button @click="downloadTemplate"  class="el-button el-button--default el-button--small">
+              <span>{{$t('overall.template')}}</span>
+            </button>
+            <button  @click="importExcel"  class="el-button el-button--default el-button--small">
+              <span>{{$t('overall.importExcel')}}</span>
+            </button>
+            <button @click="closeDialog"  class="el-button el-button--default el-button--small" >
+              <span>{{$t('overall.cancel')}}</span>
+            </button>
+          </div>
+        </div>
+      </div>
+      <div v-if="importBox.type == 2">
+        <div class="upload-body">
+          <button @click="exportCur"  class="el-button el-button--default el-button--small">
+            <span>{{$t('overall.exportCur')}}</span>
+          </button>
+          <button  @click="exportAll"  class="el-button el-button--default el-button--small">
+            <span>{{$t('overall.exportAll')}}</span>
+          </button>
+        </div>
+        <div slot="footer" class="footer">
+        </div>
+      </div>
+      <div v-if="importBox.type==3">
+          <div class="upload-body result-body">
+            <div>
+              <span class="result-title">{{$t('overall.result.total')}}:</span>
+              <span>{{importResult&&importResult.totalNum?importResult.totalNum:0}}</span>
+            </div>
+            <div>
+              <span class="result-title">{{$t('overall.result.failed')}}:</span>
+              <span>{{importResult&&importResult.failNum?importResult.failNum:0}}</span>
+              <span class="result-title">{{$t('overall.result.success')}}:</span>
+              <span>{{importResult&&importResult.successNum?importResult.successNum:0}}</span>
+            </div>
+            <div>
+              <div class="result-title">{{$t('overall.result.failedDetail')}}:</div>
+              <el-scrollbar style="height: 100%">
+                <div class="result-detail" v-if="importResult&&importResult.failDetail">
+                  <ul>
+                    <li v-for="(item,index) in importResult.failDetail"><span>{{item.lineNo}}</span>:<span>{{item.errorMsg}}</span> </li>
+                  </ul>
+                </div>
+              </el-scrollbar>
+            </div>
           </div>
           <div slot="footer" class="footer">
-            <div class="el-message-box__btns" style="text-align: right;">
-              <button @click="downloadTemplate"  class="el-button el-button--default el-button--small">
-                <span>{{$t('overall.template')}}</span>
+            <div class="el-message-box__btns">
+              <button @click="rollbackImport"  class="el-button el-button--default el-button--small">
+                <span>{{$t('overall.rollbackImport')}}</span>
               </button>
-              <button  @click="importExcel"  class="el-button el-button--default el-button--small">
-                <span>{{$t('overall.importExcel')}}</span>
-              </button>
-              <button @click="closeDialog"  class="el-button el-button--default el-button--small" >
+              <button  @click="closeDialog"  class="el-button el-button--default el-button--small">
                 <span>{{$t('overall.cancel')}}</span>
               </button>
             </div>
           </div>
-        </div>
-        <div v-if="importBox.type == 2">
-          <div class="upload-body">
-            <button @click="exportCur"  class="el-button el-button--default el-button--small">
-              <span>{{$t('overall.exportCur')}}</span>
-            </button>
-            <button  @click="exportAll"  class="el-button el-button--default el-button--small">
-              <span>{{$t('overall.exportAll')}}</span>
-            </button>
-          </div>
-          <div slot="footer" class="footer">
-          </div>
-        </div>
-        <div v-if="importBox.type==3">
-            <div class="upload-body result-body">
-              <div>
-                <span class="result-title">{{$t('overall.result.total')}}:</span>
-                <span>{{importResult&&importResult.totalNum?importResult.totalNum:0}}</span>
-              </div>
-              <div>
-                <span class="result-title">{{$t('overall.result.failed')}}:</span>
-                <span>{{importResult&&importResult.failNum?importResult.failNum:0}}</span>
-                <span class="result-title">{{$t('overall.result.success')}}:</span>
-                <span>{{importResult&&importResult.successNum?importResult.successNum:0}}</span>
-              </div>
-              <div>
-                <div class="result-title">{{$t('overall.result.failedDetail')}}:</div>
-                <el-scrollbar style="height: 100%">
-                  <div class="result-detail" v-if="importResult&&importResult.failDetail">
-                    <ul>
-                      <li v-for="(item,index) in importResult.failDetail"><span>{{item.lineNo}}</span>:<span>{{item.errorMsg}}</span> </li>
-                    </ul>
-                  </div>
-                </el-scrollbar>
-              </div>
-            </div>
-            <div slot="footer" class="footer">
-              <div class="el-message-box__btns">
-                <button @click="rollbackImport"  class="el-button el-button--default el-button--small">
-                  <span>{{$t('overall.rollbackImport')}}</span>
-                </button>
-                <button  @click="closeDialog"  class="el-button el-button--default el-button--small">
-                  <span>{{$t('overall.cancel')}}</span>
-                </button>
-              </div>
-            </div>
-        </div>
-      </el-dialog>
-    </div>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
