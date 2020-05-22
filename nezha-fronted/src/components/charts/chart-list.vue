@@ -668,7 +668,7 @@ export default {
             this.dataTotalList = chartListTmp;
           }
 
-          this.dataList = this.dataTotalList;
+          this.dataList = [...this.dataTotalList];
           this.$nextTick(() => {
             if (this.dataList.length > 0 ) {
               this.dataList.forEach((item,index) => {
@@ -1008,7 +1008,7 @@ export default {
               });
 
               if(this.$refs['editChart'+chartItem.id] && this.$refs['editChart'+chartItem.id].length>0) {
-                const chartData = {
+                let chartData = {
                   chartItem:chartItem,
                   series:series,
                   singleStatRlt:singleStatRlt,
@@ -1131,6 +1131,7 @@ export default {
         duplicateChart.prev = duplicateChartBack.prev;
         duplicateChart.next = duplicateChartBack.next;
         duplicateChart.title = duplicateChartBack.title;
+        duplicateChart.elements = duplicateChartBack.elements;
         if(chartNext){
           chartNext.prev = duplicateChartId;
         }
@@ -1157,7 +1158,23 @@ export default {
 
         this.currentRecordNum = this.currentRecordNum+1;
         let chartData = this.chartDataCacheGroup.get(chart.id);
-        this.chartDataCacheGroup.set(duplicateChartId,chartData);
+        console.log("__chartItem00__",JSON.stringify(chartData))
+
+        let duplicateChartData = JSON.parse(JSON.stringify(chartData));
+        /*
+        let chartData2 = {
+          chartItem:chartItem,
+          series:series,
+          singleStatRlt:singleStatRlt,
+          legend:legend,
+          tableData:tableData,
+          panelId:this.filter.panelId,
+          filter:this.filter,
+          filterType:filterType,
+          errorMsg:errorMsg,
+        }*/
+        duplicateChartData.chartItem = duplicateChart;
+        this.chartDataCacheGroup.set(duplicateChartId,duplicateChartData);
         this.$nextTick(() => {
           if (this.$refs['editChart'+duplicateChartId][0]) {
               this.$refs['editChart'+duplicateChartId][0].showLoad(duplicateChart);//之后要实现
