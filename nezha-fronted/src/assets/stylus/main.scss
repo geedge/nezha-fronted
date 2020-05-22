@@ -816,12 +816,28 @@ li{
   to {right: -870px}
 }
 @keyframes slide-in-from-right {
-  from {right: -550px}
-  to {right: 0px}
+  /*from {right: -550px}
+  to {right: 0px}*/
+  from {
+    transform: scaleX(0);
+    transform-origin: right;
+  }
+  to {
+    transform: scaleX(1);
+    transform-origin: right;
+  }
 }
 @keyframes slide-out-to-right {
-  from {right: 0px}
-  to {right: -550px}
+  /*from {right: 0px}
+  to {right: -550px}*/
+  from {
+    transform: scaleX(1);
+    transform-origin: right;
+  }
+  to {
+    transform: scaleX(0);
+    transform-origin: right;
+  }
 }
 .right-box-enter-active {
   animation: slide-in-from-right 0.4s;

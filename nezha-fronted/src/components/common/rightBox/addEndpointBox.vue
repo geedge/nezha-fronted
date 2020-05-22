@@ -1,5 +1,5 @@
 <template>
-  <transition name="right-box-840">
+  <transition name="right-box">
     <div class="right-box right-box-add-endpoint" :class="{'right-box-add-endpoint-snmp': currentModuleCopy.type && currentModuleCopy.type.toLowerCase() == 'snmp'}" v-if="rightBox.show" @mousedown="showEditParamBox(false)" v-clickoutside="clickos">
       <!-- begin--顶部按钮-->
       <div class="right-box-top-btns">

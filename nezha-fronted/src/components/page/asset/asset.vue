@@ -216,7 +216,7 @@
                   class="el-icon-view"></i>
                 </span>
                 &nbsp;
-                <span :title="$t('overall.edit')" @click.stop="tagShow('showEdit',scope.row.id)" class="content-right-option" :id="'asset-edit-'+scope.row.id"><i
+                <span :title="$t('overall.edit')" @click.stop="tagShow('showEdit',scope.row)" class="content-right-option" :id="'asset-edit-'+scope.row.id"><i
                   class="nz-icon nz-icon-edit"></i>
                 </span>
                 &nbsp;
@@ -972,9 +972,7 @@
     },
     created() {
       this.getUserData();
-      this.getIDCOptionData();
-      this.getAssetTypeData();
-      this.getVendorData();
+      this.flushData();
       this.getPingData();
     },
     mounted() {

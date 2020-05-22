@@ -1,5 +1,5 @@
 <template>
-  <transition name="right-box-580">
+  <transition name="right-box">
     <div class="right-box right-box-add-asset" v-if="editUnitShow" @click="editQuit" id="asset-edit-quit" v-clickoutside="clickos">
       <!--顶部按钮-->
       <div class="right-box-top-btns">
@@ -142,7 +142,7 @@
           <div class="line-100 right-box-line"></div>
           <!------------------------------------------IDC---------------------------------------------->
           <el-form-item :label="$t('asset.createAssetTab.location')" prop="locationInfo" :rules="[{validator:locationValidator,trigger:'blur'}]">
-            <location-cascader :disabled="assetData.modelId !=''?false:true" :default-model-u-size="modelSize" @change="setLocationData" :init-data="initLocationData" ref="locationCascader"></location-cascader>
+            <location-cascader :disabled="assetData.modelId !=''?false:true" :default-model-u-size="modelSize" @change="setLocationData" :init-data="initLocationData" ref="locationCascader" :idc-option="IDCOptionData"></location-cascader>
           </el-form-item>
           <!--<el-form-item :label="$t('asset.createAssetTab.dcName')" class="right-box-form-content" prop="idcId">
             <template v-if="!tabView">
@@ -243,7 +243,7 @@
         </button>
       </div>
       <module-box :module="module" @reload="refreshTabData" ref="moduleBox"></module-box>
-      <model-box ref="modelBox" :model="model" @reload="getAllModelOptionData"></model-box>
+      <model-box v-if="firstShowModel" ref="modelBox" :model="model" @reload="getAllModelOptionData"></model-box>
     </div>
   </transition>
 </template>
@@ -262,6 +262,7 @@
     },
     data() {
       return {
+        firstShowModel: false,
         visible: '',
         vendorModelData: '',
         assetData: {
@@ -484,7 +485,7 @@
           if (newVal) {
             this.getConnectData();
             if (this.pageObj.id != '') {
-              this.assetData.modelId = [this.obj.model.vendor.code, this.obj.model.id]
+              this.assetData.modelId = [this.obj.model.vendor.code, this.obj.model.id];
             }
           }
         }
@@ -598,7 +599,53 @@
         this.modelSize=model.usize;
       },
       getAssetData(data) {
-        if (data) {
+        this.$nextTick(() => {
+          if (data) {
+            this.pageObj.id = data.id;
+            this.obj = JSON.parse(JSON.stringify(data));
+            this.assetViewData.assetType = this.obj.model.type.value
+            this.assetViewData.vendor = this.obj.model.vendor.value
+            this.assetViewData.model = this.obj.model.name
+            this.modelSize=this.obj.model.usize;
+            this.assetViewData.idcName = this.obj.idc.name
+            this.assetViewData.cabinetName = this.obj.cabinet == null ? '' : this.obj.cabinet.name
+            let initLocationData={
+              idc:this.obj.idc,
+              cabinet:this.obj.cabinet,
+              u:[this.obj.cabinetStart,this.obj.cabinetEnd]
+            }
+            this.$refs.locationCascader.initComponet(initLocationData)
+            this.assetViewData.moduleNum = this.obj.moduleNum
+            this.assetViewData.alertNum = this.obj.alertNum
+            this.assetViewData.cabinetName = this.obj.cabinet == null ? '' : this.obj.cabinet.name
+            this.getCabinetOptionData(this.obj.idc.id)
+            this.assetType = this.obj.model.type.code
+            this.assetData.impi=this.obj.impi?this.obj.impi:{host:'',port:''};
+            this.assetData.sn = this.obj.sn
+            this.assetData.host = this.obj.host
+            this.assetData.state = this.obj.state
+            this.assetData.idcId = this.obj.idc.id
+            this.assetData.cabinetId = this.obj.cabinet == null ? '' : this.obj.cabinet.id
+            this.assetData.purchaseDate = this.obj.purchaseDate;
+            // this.assetData.accounts[0].id = this.obj.accounts[0].id
+            // this.assetData.accounts[0].authType = this.obj.accounts[0].authType
+            // this.assetData.accounts[0].user = this.obj.accounts[0].user
+            // this.assetData.accounts[0].pwd = this.obj.accounts[0].pwd
+            // this.assetData.accounts[0].port = this.obj.accounts[0].port
+            // this.assetData.accounts[0].cert = this.obj.accounts[0].privateKey
+            this.assetData.accounts=this.obj.accounts[0]?this.obj.accounts:[];
+            this.accountSwitch=this.assetData.accounts.length>0;
+            this.idcSelectedData.location = this.obj.idc.location
+            this.idcSelectedData.principal = this.obj.idc.principal
+            this.idcSelectedData.tel = this.obj.idc.tel
+            this.cabinetSelectedData.uSize = this.obj.cabinet == null ? '' : this.obj.cabinet.uSize
+            this.cabinetSelectedData.remark = this.obj.cabinet == null ? '' : this.obj.cabinet.remark
+            this.getAllModelOptionData(this.assetType);
+          } else {
+            this.resetAsset();
+          }
+        });
+        /*if (data) {
           this.pageObj.id = data;
           this.$get('asset', this.pageObj).then(response => {
             if (response.code === 200) {
@@ -645,7 +692,7 @@
           })
         } else {
           this.resetAsset();
-        }
+        }*/
       },
       openModuleBox(module) {
         this.module = module;
@@ -664,13 +711,15 @@
           }
         });
       },
-      getIDCOptionData() {
+      getIDCOptionData(isUpdate) {
         this.$get('idc').then(response => {
           if (response.code === 200) {
             this.IDCOptionData = response.data.list;
             this.markOptionData(this.IDCOptionData);
-            this.$store.commit('assetDcListChange');
-            this.$emit('refreshData');
+            if (isUpdate) {
+              this.$store.commit('assetDcListChange');
+              this.$emit('refreshData');
+            }
           }
         })
       },
@@ -745,7 +794,11 @@
             }
           }
         }
-        this.$refs.modelBox.show(true, true);
+        this.firstShowModel = true;
+        this.$nextTick(() => {
+          this.$refs.modelBox.show(true, true);
+        });
+
       },
       resetAsset() {
         this.pageObj.id = '';
@@ -799,11 +852,11 @@
           principal: '',
           tel: ''
         };
-        let tempModelId = this.assetData.modelId;
+
         if (data === 'asset') {
-          if (this.assetData.modelId) {
+          /*if (this.assetData.modelId) {
             this.assetData.modelId = this.assetData.modelId.join(',').split(',')[1];
-          }
+          }*/
           if(this.locationInfo){
             if(this.locationInfo.idc){
               this.assetData.idcId=this.locationInfo.idc.id;
@@ -847,12 +900,16 @@
           if(this.$refs.accountConfigBox&&this.$refs.accountConfigBox.length>0){
             this.$refs.accountConfigBox[0].validateAccount();
           }
+
           this.$refs.assetEditForm.validate((valid) => {
             if (valid&&this.accountValideResult) {
               if (this.pageObj.id) {
                 this.assetData.id=this.pageObj.id;
-                //console.log(JSON.stringify(this.assetData));
-                this.$put('asset', this.assetData).then(res => {
+                let reqData = JSON.parse(JSON.stringify(this.assetData));
+                if (reqData.modelId) {
+                  reqData.modelId = reqData.modelId.join(',').split(',')[1];
+                }
+                this.$put('asset', reqData).then(res => {
                   const h = this.$createElement;
                   if (res.code === 200) {
                     this.$message({duration: 2000, type: 'success', message: this.$t("tip.saveSuccess")});
@@ -860,7 +917,7 @@
                     this.$emit('refreshData', 'true');
                     this.sendStateData('close');
                   } else {
-                    this.assetData.modelId = tempModelId;
+                    //this.assetData.modelId = tempModelId;
                     this.$message.error(res.msg);
                   }
                 });
@@ -967,7 +1024,7 @@
           this.$put(data, item).then(res => {
             if (res.code === 200) {
               this.$message({duration: 2000, type: 'success', message: this.$t("tip.saveSuccess")});
-              this.getIDCOptionData();
+              this.getIDCOptionData(true);
               if (data === 'cabinet') {
                 this.getCabinetOptionData(item.idcId);
               }
@@ -1076,7 +1133,7 @@
             if (response.code === 200) {
               this.$message({duration: 2000, type: 'success', message: this.$t("tip.deleteSuccess")});
               this.getAssetData();
-              this.getIDCOptionData();
+              this.getIDCOptionData(true);
               this.getVendorOptionData();
               this.getCabinetOptionData(this.assetData.idcId);
               this.getAllModelOptionData(this.assetType);

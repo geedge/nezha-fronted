@@ -59,7 +59,8 @@
     props:{
       defaultModelUSize:{default:1},
       value:{default:null},
-      disabled:{type:Boolean}
+      disabled:{type:Boolean},
+      idcOption: {type: Array}
     },
     data(){
       return {
@@ -104,14 +105,15 @@
         }
       },
       queryIdcInfos:function(){
-        this.idcInfos=[];
-        this.$get('idc?pageSize=-1').then(response=>{
+        this.idcInfos = this.idcOption;
+        /*this.$get('idc?pageSize=-1').then(response=>{
+          console.info(2)
           if(response.code == 200){
               this.idcInfos=response.data.list;
           }else{
             console.error(response.msg);
           }
-        })
+        })*/
       },
       loadCabinetInfos:function(idc){
         if(!idc){
