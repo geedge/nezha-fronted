@@ -369,17 +369,6 @@ export default {
           }
         });
       },
-        // 全屏查看
-        showAllScreen() {
-            this.dropdownMenuShow=false;
-            this.searchTime = [];
-            this.$set(this.searchTime, 0, this.oldSearchTime[0]);
-            this.$set(this.searchTime, 1, this.oldSearchTime[1]);
-            this.$refs.calendarPanel.setCustomTime(this.searchTime);
-
-            this.seriesItemScreen = this.seriesItem;
-            this.screenModal = true;
-        },
         // 设置数据, filter区分
         setData(chartItem, seriesItem, panelId, filter,area,errorMsg) {
           if(errorMsg && errorMsg!==''){

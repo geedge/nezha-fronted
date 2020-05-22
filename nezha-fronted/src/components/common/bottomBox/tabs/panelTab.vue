@@ -91,7 +91,7 @@
       <el-scrollbar class="el-scrollbar-large" style="height: 100%" ref="dashboardScrollbar">
         <div class="box-content">
           <chart-list @on-edit-chart="editData" @on-refresh-time="refreshTime" @on-remove-chart="removeData"
-                      ref="chartList" :is-model="from == 'model'"></chart-list>
+                      ref="chartList" :is-model="from == 'model'" :additional-info="obj"></chart-list>
         </div>
       </el-scrollbar>
     </div>

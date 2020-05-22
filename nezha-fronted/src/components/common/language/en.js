@@ -445,6 +445,8 @@ const en = {
       clickToCover:'Cover',//'覆盖'
       sshKeyWasConfig:'SSH-KEY configured',//'SSH-KEY已配置'
       exporter:'Exporter',
+      basicTitle:'Basic info',
+      featureTitle:'Feature'
     },
     editAssetTab:{
       title:'New asset',//'新增资产'

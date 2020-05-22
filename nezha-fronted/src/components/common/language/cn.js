@@ -421,7 +421,9 @@ const cn = {
       reloginPasswordTip: "RELOGIN提示",
       userPwdIntroduce: "请指定用户名和密码提示以便TELNET登录过程可自动运行",
       reLoginPwdIntroduce: "请指定密码提示以便RELOGIN登录过程可自动运行",
-      exporter: "Exporter"
+      exporter: "Exporter",
+      basicTitle:'基础信息',
+      featureTitle:'特征'
     },
     editAssetTab: {
       title: "新增资产",
