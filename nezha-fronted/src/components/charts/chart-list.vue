@@ -1103,16 +1103,20 @@ export default {
       }
     },
     getAssetInfoChartData(chartInfo){
-      this.$refs['editChart'+chartInfo.id][0].showLoad(chartInfo);
+      if(!this.isModel){
+        this.$refs['editChart'+chartInfo.id][0].showLoad(chartInfo);
 
-      this.$get('/asset/info?id='+this.additionalInfo.id).then(response=>{
-        if(response.code == 200){
-          let data=response.data;
-          this.$refs['editChart'+chartInfo.id][0].setData(chartInfo, data, this.filter.panelId, this.filter);
-        }else{
-          this.$refs['editChart'+chartInfo.id][0].setData(chartInfo, {}, this.filter.panelId, this.filter,reponse.msg);
-        }
-      })
+        this.$get('/asset/info?id='+this.additionalInfo.id).then(response=>{
+          if(response.code == 200){
+            let data=response.data;
+            this.$refs['editChart'+chartInfo.id][0].setData(chartInfo, data, this.filter.panelId, this.filter);
+          }else{
+            this.$refs['editChart'+chartInfo.id][0].setData(chartInfo, {}, this.filter.panelId, this.filter,reponse.msg);
+          }
+        })
+      }else{
+        this.$refs['editChart'+chartInfo.id][0].endLoading();
+      }
     },
     // 设置图表的宽度
     setSize(size, index) {

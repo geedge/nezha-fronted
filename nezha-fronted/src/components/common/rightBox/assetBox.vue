@@ -98,6 +98,7 @@
               <el-cascader
                 :options="vendorTypeOptionData"
                 :key="isResourceShow"
+                :props="{emitPath:false}"
                 :disabled="this.assetType!=''?false:true"
                 v-model="assetData.modelId"
                 clearable
@@ -965,13 +966,13 @@
                     this.$emit('refreshData', 'true');
                     this.sendStateData('close');
                   } else {
-                    this.assetData.modelId = tempModelId;
+                    // this.assetData.modelId = tempModelId;
                     this.$message.error(res.msg);
                   }
                 });
               }
             } else {
-              this.assetData.modelId = tempModelId;
+              // this.assetData.modelId = tempModelId;
               return false;
             }
           });
