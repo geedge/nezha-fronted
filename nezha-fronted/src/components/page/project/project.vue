@@ -43,38 +43,36 @@
           </div>
         </div>-->
         <div class="sidebar-info">
-        <el-collapse v-model="currentProjectTitle" class="left-menu-bg" accordion style="padding-top:0px;" @change="projectChange" ref="projectLeft">
-          <el-collapse-item v-for="(item,index) in projectList" :key="item.name+item.id+index" :name="item.name+'-'+item.id">
-            <template slot="title">
-              <div class="sidebar-info-item" :class="{'sidebar-info-item-active': item.id==currentProject.id}" @click="detailProjectInfo($event,item)" :id="'project-module-'+item.id">
-                <div class="sidebar-info-item-txt">
-                  <el-popover v-if="item.name.length > 14" trigger="hover" placement="top-start" :content="item.name" popper-class="transparent-pop">
-                    <span slot="reference" class="">
-                      {{item.name}}
-                    </span>
-                  </el-popover>
-                  <span v-else>{{item.name}}</span>
-                </div>
-              </div>
-            </template>
-            <div class="sidebar-info sub-sidebar-info" >
-              <div v-if="getProjectModule(item.id).length == 0" class="sidebar-info-item sidebar-info-item-add" @click="toAddModule">
-                <i class="nz-icon nz-icon-create-square"></i>
-              </div>
-              <template v-else>
-                <div v-for="module in getProjectModule(item.id)" class="sidebar-info-item" :class="{'sidebar-info-item-active': module.id == currentModule.id}" @click="changeModule(module)" :id="'project-module-'+module.id">
+          <el-collapse v-model="currentProjectTitle" class="left-menu-bg" accordion style="padding-top:0px;" @change="projectChange" ref="projectLeft">
+            <el-collapse-item v-for="(item,index) in projectList" :key="item.name+item.id+index" :name="item.name+'-'+item.id">
+              <template slot="title">
+                <div class="sidebar-info-item" :class="{'sidebar-info-item-active': item.id==currentProject.id}" @click="detailProjectInfo($event,item)" :id="'project-module-'+item.id">
                   <div class="sidebar-info-item-txt">
+                    <el-popover v-if="item.name.length > 14" trigger="hover" placement="top-start" :content="item.name" popper-class="transparent-pop">
+                      <span slot="reference" class="">
+                        {{item.name}}
+                      </span>
+                    </el-popover>
+                    <span v-else>{{item.name}}</span>
+                  </div>
+                </div>
+              </template>
+              <div class="sidebar-info sub-sidebar-info" >
+                <div v-if="getProjectModule(item.id).length == 0" class="sidebar-info-item sidebar-info-item-add" @click="toAddModule">
+                  <i class="nz-icon nz-icon-create-square"></i>
+                </div>
+                <template v-else>
+                  <div v-for="module in getProjectModule(item.id)" class="sidebar-info-sub-item" :class="{'sidebar-info-item-active': module.id == currentModule.id}" @click="changeModule(module)" :id="'project-module-'+module.id">
                     <el-popover v-if="module.name.length > 16" trigger="hover" placement="top-start" :content="module.name" >
                       <span slot="reference">{{module.name}}</span>
                     </el-popover>
                     <span v-else>{{module.name}}</span>
+                    <div v-show="module.buildIn != 1" class="hid-div side-bar-menu-edit sub-side-bar-menu-edit" @click.stop="toEditModule(module)" :id="'project-module-edit-'+module.id" ><i class="nz-icon nz-icon-edit"></i></div>
                   </div>
-                  <div v-show="module.buildIn != 1" class="hid-div side-bar-menu-edit sub-side-bar-menu-edit" @click.stop="toEditModule(module)" :id="'project-module-edit-'+module.id" ><i class="nz-icon nz-icon-edit"></i></div>
-                </div>
-              </template>
-            </div>
-          </el-collapse-item>
-        </el-collapse>
+                </template>
+              </div>
+            </el-collapse-item>
+          </el-collapse>
         </div>
       </el-scrollbar>
     </div>
@@ -1130,6 +1128,9 @@
     visibility: hidden;
   }
   .sidebar-info-item:hover .hid-div{
+    visibility: visible;
+  }
+  .sidebar-info-sub-item:hover .hid-div{
     visibility: visible;
   }
   .metric-tip-icon{
