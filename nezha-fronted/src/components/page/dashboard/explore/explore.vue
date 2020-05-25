@@ -191,7 +191,7 @@ instance_cpu_time_ns{app="fox", proc="widget", rev="4d3a513", env="prod", job="c
             </div>
 
         </div>
-        <chart-box ref="addChartModal" :panel-data="panelData" @on-create-success="createSuccess"></chart-box>
+        <chart-box ref="addChartModal" :panel-data="panelData" @on-create-success="createSuccess" :show-panel="{}"></chart-box>
         <element-set
           :allowed-all="true"
           v-clickoutside="elementsetHide"
@@ -316,7 +316,8 @@ instance_cpu_time_ns{app="fox", proc="widget", rev="4d3a513", env="prod", job="c
                       })
                       if(result.metric&&Object.keys(result.metric).length>0){
                         let metric = Object.assign({}, result.metric);
-                        seriesItem.name += metric.__name__?metric.__name__:''+ '{';
+                        seriesItem.name += metric.__name__?metric.__name__:'';
+                        seriesItem.name +='{'
                         delete metric.__name__;
                         for (let key in metric) {
                           seriesItem.name += key + "=" + '"' + metric[key] + '",';

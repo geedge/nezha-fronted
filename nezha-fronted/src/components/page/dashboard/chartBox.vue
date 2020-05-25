@@ -360,6 +360,11 @@
       'chart-metric':ChartMetric,
       'chart-preview':chartPreview,
     },
+    mounted() {
+      this.$nextTick(()=>{
+        console.log(!this.isUrl && !this.isSingleStat)
+      })
+    },
     methods: {
       show(show) {
         if(this.showPanel){
@@ -574,7 +579,7 @@
       addCharts(params) {
         let panelId;
         //先处理panel
-        if (this.showPanel.type) {
+        if (this.showPanel&&this.showPanel.type) {
           panelId = this.panelData[0].id;
         } else {
           panelId = this.autocompleteExist(this.panelName2);
@@ -813,7 +818,9 @@
             });
 
           } else {
+            console.log(this.$refs)
             this.$nextTick(() => {
+
               this.$refs.chartTag[0].setMdata(elementInfo.elements[0]);
             });
           }
@@ -1023,14 +1030,16 @@
         deep: true,
         immediate: true,
         handler(n, o) {
-          if (!this.showPanel.type) {
-            if (this.selectFirstPanel) {
-              this.selectFirstPanel = false;
-              this.panelId = n[0].id;
-            } else if (this.panelName) {
-              for (let i = 0; i < n.length; i++) {
-                if (n[i].name == this.panelName) {
-                  this.panelId = n[i].id;
+          if(this.showPanel){
+            if (!this.showPanel.type) {
+              if (this.selectFirstPanel) {
+                this.selectFirstPanel = false;
+                this.panelId = n[0].id;
+              } else if (this.panelName) {
+                for (let i = 0; i < n.length; i++) {
+                  if (n[i].name == this.panelName) {
+                    this.panelId = n[i].id;
+                  }
                 }
               }
             }
