@@ -128,6 +128,13 @@
                      :panel-id="filter.panelId"
                      :chart-index="index"
                      :editChartId="'editChartId' + item.id"></chart-url>
+
+        <chart-asset-info v-if="item.type  === 'assetInfo'" :ref="'editChart'+item.id" :key="'inner' + item.id"
+                    @on-drag-chart="editChartForDrag"
+                    :panel-id="filter.panelId"
+                    :chart-index="index"
+                    :editChartId="'editChartId' + item.id"
+        ></chart-asset-info>
       </div>
    </draggable>
     <el-row v-if="dataList.length === 0"  class="noData"></el-row>
@@ -140,14 +147,17 @@ import lineChartBlock from './line-chart-block';
 import chartTable from './chart-table';
 import chartUrl from './chart-url';
 import chartSingleStat from './chart-single-stat';
+import chartAssetInfo from './chart-asset-info'
 import draggable from 'vuedraggable'
 
 export default {
   name: 'chartList',
   props: {
-    isModel: {type: Boolean, default: false}
+    isModel: {type: Boolean, default: false},
+    additionalInfo:{}
   },
   components: {
+    chartAssetInfo,
     lineChartBlock,
     chartTable,
     chartUrl,
@@ -816,9 +826,13 @@ export default {
     getChartData(chartInfo, pos, filterType) {
       const chartItem = chartInfo;
       const index = pos; // 指标
-      const len = chartItem.elements.length;
       this.setSize(chartItem.span, index); // 设置该图表宽度
+      if(chartItem.type === 'assetInfo'){
+        this.getAssetInfoChartData(chartItem);
+        return;
+      }
       // 没有数据的设置提示信息暂无数据-针对每一个图
+      const len = chartItem.elements.length;
       if (len === 0) {
         this.$nextTick(() => {
           if(this.$refs['editChart'+chartItem.id] && this.$refs['editChart'+chartItem.id].length>0){
@@ -1087,6 +1101,18 @@ export default {
           });
         });
       }
+    },
+    getAssetInfoChartData(chartInfo){
+      this.$refs['editChart'+chartInfo.id][0].showLoad(chartInfo);
+
+      this.$get('/asset/info?id='+this.additionalInfo.id).then(response=>{
+        if(response.code == 200){
+          let data=response.data;
+          this.$refs['editChart'+chartInfo.id][0].setData(chartInfo, data, this.filter.panelId, this.filter);
+        }else{
+          this.$refs['editChart'+chartInfo.id][0].setData(chartInfo, {}, this.filter.panelId, this.filter,reponse.msg);
+        }
+      })
     },
     // 设置图表的宽度
     setSize(size, index) {

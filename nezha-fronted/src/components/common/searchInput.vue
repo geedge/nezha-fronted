@@ -1081,7 +1081,6 @@
             },
             //点击遮罩层
             zhezhao_click() {
-                console.log(111)
                 if(this.input_sreach!=''){
                   if(!this.searchMsg.zheze_none){
                     if (this.input_sreach!='') {
