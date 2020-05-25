@@ -907,7 +907,7 @@ export default {
                             name: '',
                             symbol:'emptyCircle',  //去掉点
                             symbolSize:[2,2],
-                            smooth:true,  //曲线变平滑
+                            smooth:0.2,  //曲线变平滑
                             showSymbol:false,
                             data: [],
                             type:chartInfo.type,

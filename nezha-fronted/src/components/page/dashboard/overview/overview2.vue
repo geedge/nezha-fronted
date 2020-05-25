@@ -510,7 +510,7 @@
               let series={
                 name: 'RX',
                 symbol:'none',  //去掉点
-                smooth:true,  //曲线变平滑
+                smooth:0.2,  //曲线变平滑
                 data: [],
                 type:'line',
               };
@@ -542,7 +542,7 @@
               let series={
                 name: 'TX',
                 symbol:'none',  //去掉点
-                smooth:true,  //曲线变平滑
+                smooth:0.2,  //曲线变平滑
                 data: [],
                 type:'line',
               };

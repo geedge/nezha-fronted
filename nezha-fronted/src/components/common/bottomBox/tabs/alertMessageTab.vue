@@ -512,7 +512,7 @@
                     let chartData = {
                       type: "line",
                       symbol: 'none',  //去掉点
-                      smooth: true,  //曲线变平滑
+                      smooth: 0.2,  //曲线变平滑
                       name: ''
                     };
                     chartData.name += "{";

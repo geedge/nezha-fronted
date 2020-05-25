@@ -308,7 +308,7 @@ export default {
           theData: {
             name: '',
             symbol:'none',  //去掉点
-            smooth:true,  //曲线变平滑
+            smooth:0.2,  //曲线变平滑
             data: [],
             type:chartItem.type ? chartItem.type : 'line',
             //visible: true,

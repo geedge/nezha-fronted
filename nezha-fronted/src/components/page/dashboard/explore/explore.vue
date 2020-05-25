@@ -305,7 +305,7 @@ instance_cpu_time_ns{app="fox", proc="widget", rev="4d3a513", env="prod", job="c
                       let seriesItem = {
                         name: '',
                         symbol: 'none',  //去掉点
-                        smooth: true,  //曲线变平滑
+                        smooth: 0.2,  //曲线变平滑
                         data: [],
                         type: 'line',
                       }
