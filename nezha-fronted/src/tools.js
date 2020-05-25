@@ -53,9 +53,10 @@ export const clickoutside = {
         return false;
       } else {
         let flag = true;
-        top: for (let i = 0; i < e.path.length; i++) {
+        let path = e.path || (e.composedPath && e.composedPath());
+        top: for (let i = 0; i < path.length; i++) {
           for (let j = 0; j < exceptClassName.length; j++) {
-            if (e.path[i].className && e.path[i].className.indexOf(exceptClassName[j]) != -1) {
+            if (path[i].className && path[i].className.indexOf(exceptClassName[j]) != -1) {
               flag = false;
               break top;
             }
