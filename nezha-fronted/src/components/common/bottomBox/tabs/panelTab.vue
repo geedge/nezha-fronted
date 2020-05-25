@@ -202,7 +202,7 @@
     methods: {
       //刷新
       Refresh() {
-        this.getTableData();
+        this.getTableData(this.obj.id);
       },
       refreshTime(st, et) {
         const startTime = bus.timeFormate(st, 'yyyy-MM-dd hh:mm');
@@ -210,7 +210,7 @@
         this.searchTime = [startTime, endTime];
       },
       panelReloadForDel: function () {
-        this.getTableData();
+        this.getTableData(this.obj.id);
       },
       /*图表相关操作--start*/
       toAddChart: function () {
@@ -269,7 +269,7 @@
                   break;
                 }
               }
-              this.getTableData(); //删除相关图表后，刷新面板数据
+              this.getTableData(this.obj.id); //删除相关图表后，刷新面板数据
             } else {
               console.error(response.msg);
               this.$message.error(response.msg);
@@ -376,11 +376,11 @@
       },
       pageNo(val) {
         this.pageObj.pageNo = val;
-        this.getTableData();
+        this.getTableData(this.obj.id);
       },
       pageSize(val) {
         this.pageObj.pageSize = val;
-        this.getTableData();
+        this.getTableData(this.obj.id);
       },
       search:function(){
         if(this.$refs.chartList){

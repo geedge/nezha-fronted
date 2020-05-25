@@ -180,7 +180,7 @@
       },
       replaceSplit(key){
         if(key){
-          return key.replace('$_$',' ')
+          return key.replace(/\$_\$/g,' ')
         }
       },
       dragResize:function(e){

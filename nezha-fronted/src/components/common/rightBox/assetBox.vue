@@ -907,9 +907,9 @@
               if (this.pageObj.id) {
                 this.assetData.id=this.pageObj.id;
                 let reqData = JSON.parse(JSON.stringify(this.assetData));
-                if (reqData.modelId) {
-                  reqData.modelId = reqData.modelId.join(',').split(',')[1];
-                }
+                // if (reqData.modelId) {
+                //   reqData.modelId = reqData.modelId.join(',').split(',')[1];
+                // }
                 this.$put('asset', reqData).then(res => {
                   const h = this.$createElement;
                   if (res.code === 200) {

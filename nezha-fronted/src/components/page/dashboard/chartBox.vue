@@ -361,9 +361,7 @@
       'chart-preview':chartPreview,
     },
     mounted() {
-      this.$nextTick(()=>{
-        console.log(!this.isUrl && !this.isSingleStat)
-      })
+
     },
     methods: {
       show(show) {
