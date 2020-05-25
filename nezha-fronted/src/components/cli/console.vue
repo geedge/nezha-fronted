@@ -192,11 +192,12 @@ export default {
       let token = sessionStorage.getItem('nz-token');
       let baseUrl = this.$axios.defaults.baseURL;
       if (baseUrl.startsWith("/")) {
-        baseUrl = "ws://" + window.location.host + ":" + window.location.port + baseUrl;
+        baseUrl = "ws://" + window.location.host + baseUrl;
       } else {
         baseUrl = baseUrl.replace("http://", "ws://").replace("https://", "ws://");
       }
       let url = baseUrl+"/terminal.ws?width="+this.terminal.width+"&height="+this.terminal.height+"&cols="+this.terminal.cols+"&rows="+this.terminal.rows+"&token="+token+"&assetId="+this.terminal.assetId+"&accountId="+this.terminal.accountId+"&uuid="+this.terminal.uuid;
+      console.info(baseUrl, url);
       this.terminalSocket = new WebSocket(url);
       //连接成功
       this.terminalSocket.onopen = () =>{
