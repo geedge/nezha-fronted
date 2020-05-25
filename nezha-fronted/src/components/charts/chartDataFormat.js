@@ -255,6 +255,7 @@ function days(value,index,type=1){
 * unitIndex：不需要传递，用于递归获取units中的单位
 * */
 function asciiCompute(num,ascii,units,dot=2,unitIndex=0){
+  num=Number(num)
   let quotient=num / ascii;
   if(unitIndex <= units.length-1){
     if(quotient <1 ){ //不足以进位
