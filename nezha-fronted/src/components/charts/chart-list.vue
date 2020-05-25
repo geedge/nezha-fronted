@@ -1104,50 +1104,15 @@ export default {
     },
     getAssetInfoChartData(chartInfo){
       this.$refs['editChart'+chartInfo.id][0].showLoad(chartInfo);
-      setTimeout(()=>{
-        if(this.additionalInfo){
-          let data={
-            Basic:{
-              sn:'assetInfo Test',
-              host:'192.168.40.42',
-              host1:'192.168.40.42',
-              host2:'192.168.40.42',
-              host3:'192.168.40.42',
-              host4:'192.168.40.42',
-              host5:'192.168.40.42',
-              host6:'192.168.40.42',
-              host7:'192.168.40.42',
-              host8:'192.168.40.42',
-              host9:'192.168.40.42',
-              host10:'192.168.40.42',
-              cpuNum:'8',
-              memery:'12GB',
-              memery$_$free:'3GB'
-            },
-            Feature:{
-              CPU:"Intel E500",
-              Memory:"256GB",
-              NetworkInterface:["eth0","eth1"],
-              Disk:[{
-                mount:"/",
-                total:"256GB",
-                free:"128GB",
-                usageRate:"50%"
-              }]
-            }
-          }
-          this.$refs['editChart'+chartInfo.id][0].setData(chartInfo, data, this.filter.panelId, this.filter);
-        }
-      },1000)
 
-      // this.$get('/asset/info?id='+this.additionalInfo.id).then(response=>{
-      //   if(response.code == 200){
-      //     let data=response.data;
-      //     this.$refs['editChart'+chartInfo.id][0].setData(chartInfo, data, this.filter.panelId, this.filter);
-      //   }else{
-      //     this.$refs['editChart'+chartInfo.id][0].setData(chartInfo, {}, this.filter.panelId, this.filter,reponse.msg);
-      //   }
-      // })
+      this.$get('/asset/info?id='+this.additionalInfo.id).then(response=>{
+        if(response.code == 200){
+          let data=response.data;
+          this.$refs['editChart'+chartInfo.id][0].setData(chartInfo, data, this.filter.panelId, this.filter);
+        }else{
+          this.$refs['editChart'+chartInfo.id][0].setData(chartInfo, {}, this.filter.panelId, this.filter,reponse.msg);
+        }
+      })
     },
     // 设置图表的宽度
     setSize(size, index) {

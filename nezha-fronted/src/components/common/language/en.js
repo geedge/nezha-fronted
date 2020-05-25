@@ -446,7 +446,7 @@ const en = {
       sshKeyWasConfig:'SSH-KEY configured',//'SSH-KEY已配置'
       exporter:'Exporter',
       basicTitle:'Basic info',
-      featureTitle:'Feature'
+      featureTitle:'Feature',
     },
     editAssetTab:{
       title:'New asset',//'新增资产'

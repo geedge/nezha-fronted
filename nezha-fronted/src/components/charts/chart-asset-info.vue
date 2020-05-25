@@ -15,21 +15,21 @@
             </span>
       </el-popover>
       <span class="el-dropdown-link chart-title" @click="dropdownMenuShow=!dropdownMenuShow">
-        <span class="chart-title-text">{{data.title}}</span>
+        <span class="chart-title-text">{{$t('asset.createAssetTab.assetInfo')}}</span>
       </span>
     </div>
     <div class="mt-10 chart-info-container" v-cloak  v-show="firstShow" >
       <div :id="'chartContainer'+chartIndex"  ref="chartContainer" class="asset-info-content" >
-          <el-scrollbar style="height: 100%;" ref="scrollbar" class="el-scrollbar-large">
+          <el-scrollbar style="height: 100%;width:100%;" ref="scrollbar" class="el-scrollbar-small">
             <div style="padding: 0 15px">
               <div class="basic-container">
                 <div class="basic-title" @click="hideElement('basic')">
-                  <div>{{$t('asset.basicTitle')}}</div>
+                  <div>{{$t('asset.createAssetTab.basicTitle')}}</div>
                   <div><i :class="{'el-icon-caret-bottom':hideBasic,'el-icon-caret-top':!hideBasic}"></i></div>
                 </div>
                 <div class="basic-content" :class="{'shrink':hideBasic}">
                   <template v-if="assetInfos.Basic && Object.keys(assetInfos.Basic).length>0">
-                    <div v-for="(value,key,index) in assetInfos.Basic" :key="index" class="content-item" :class="{'bg-grey':index % 2 == 1}">
+                    <div v-for="(value,key,index) in assetInfos.Basic" :key="index" class="content-item hover-bg" :class="{'bg-grey':index % 2 == 1}">
                       <div class="content-item-key">{{replaceSplit(key)}}</div>
                       <div class="content-item-value">{{value}}</div>
                     </div>
@@ -38,11 +38,11 @@
               </div>
               <div class="feature-container">
                 <div class="feature-title" @click="hideElement('feature')" >
-                  <div>{{$t('asset.featureTitle')}}</div>
+                  <div>{{$t('asset.createAssetTab.featureTitle')}}</div>
                   <div><i :class="{'el-icon-caret-bottom':hideFeature,'el-icon-caret-top':!hideFeature}"></i></div>
                 </div>
                 <div class="feature-content" :class="{'shrink':hideFeature}">
-                  <div v-for="(value,key,index) in assetInfos.Feature" class="content-item" :class="{'bg-grey':index % 2 == 1}">
+                  <div v-for="(value,key,index) in assetInfos.Feature" class="content-item" :class="{'bg-grey':index % 2 == 1,'hover-bg':Array.isArray(value) && value.length>0 &&typeof value[0] == 'string'}">
                     <div class="content-item-key" ><div style="vertical-align: middle">{{replaceSplit(key)}}</div></div>
                     <template v-if="typeof value == 'string'">
                       <div class="content-item-value">{{value}}</div>
@@ -53,20 +53,19 @@
                       </template>
                       <template v-else>
                         <el-table
-                          class="overview-table"
+                          class="nz-table asset-info-table"
                           :data="value"
                           tooltip-effect="light"
                           height="100%"
                           ref="dataTable"
+                          v-scrollBar:el-table="'large'"
                         >
                           <el-table-column
                             :resizable="false"
                             v-for="(item, index) in setLabels(value)"
                             v-if="item.show"
                             :key="`col-${index}`"
-                            :width="item.width"
                             :label="item.label"
-                            min-width="90"
                           >
                             <template slot-scope="scope" :column="item">
                               <template >
@@ -327,6 +326,10 @@
           document.onmousemove=null;
           document.onmouseup = null;
         }
+        this.$nextTick(()=>{
+          this.$refs.scrollbar.update();
+        })
+
       },
       startLoading(area){
         this.$refs['localLoading'+this.chartIndex].startLoading();
@@ -424,5 +427,11 @@
 <style>
   .asset-info-content .el-scrollbar__view {
     height: 100%;
+  }
+  .asset-info-table .el-table__body-wrapper{
+    overflow: inherit;
+  }
+  .asset-info-table:hover .ps__rail-x{
+    opacity: 1 !important;
   }
 </style>
