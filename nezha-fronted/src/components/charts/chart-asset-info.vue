@@ -29,9 +29,28 @@
                 </div>
                 <div class="basic-content" :class="{'shrink':hideBasic}">
                   <template v-if="assetInfos.Basic && Object.keys(assetInfos.Basic).length>0">
-                    <div v-for="(value,key,index) in assetInfos.Basic" :key="index" class="content-item hover-bg" :class="{'bg-grey':index % 2 == 1}">
-                      <div class="content-item-key">{{replaceSplit(key)}}</div>
-                      <div class="content-item-value">{{value}}</div>
+                    <div v-for="(item,index) in basicKey" :key="index" class="content-item hover-bg" :class="{'bg-grey':index % 2 == 1}">
+                      <div class="content-item-key">{{item.label}}</div>
+                      <template v-if="item.prop == 'pingStatus'">
+                        <div class="content-item-value">
+                          <div :class="{'active-icon green':assetInfos.Basic[item.prop] == 1,'active-icon red':assetInfos.Basic[item.prop] == 0}" style="margin-top: 0px;"></div><span>{{assetInfos.Basic.pingRtt?assetInfos.Basic.pingRtt+'ms':''}}</span>
+                        </div>
+                      </template>
+                      <template v-else-if="item.prop == 'alert'">
+                        <div class="content-item-value">
+                          <span   class="as-button" :class="{'success':assetInfos.Basic[item.prop]<=0,'danger':assetInfos.Basic[item.prop]>0}">{{assetInfos.Basic[item.prop] + ' ' + $t('overall.active')}}</span>
+                        </div>
+                      </template>
+                      <template v-else-if="item.prop == 'state'">
+                        <div class="content-item-value">
+                          {{assetInfos.Basic[item.prop] == 1?$t('asset.createAssetTab.inStock'):$t('asset.createAssetTab.outStock')}}
+                        </div>
+                      </template>
+                      <template v-else>
+                        <div class="content-item-value">
+                          {{assetInfos.Basic[item.prop]}}
+                        </div>
+                      </template>
                     </div>
                   </template>
                 </div>
@@ -43,7 +62,7 @@
                 </div>
                 <div class="feature-content" :class="{'shrink':hideFeature}">
                   <div v-for="(value,key,index) in assetInfos.Feature" class="content-item" :class="{'bg-grey':index % 2 == 1,'hover-bg':Array.isArray(value) && value.length>0 &&typeof value[0] == 'string'}">
-                    <div class="content-item-key" ><div style="vertical-align: middle">{{replaceSplit(key)}}</div></div>
+                    <div class="content-item-key" ><div style="vertical-align: middle">{{key}}</div></div>
                     <template v-if="typeof value == 'string'">
                       <div class="content-item-value">{{value}}</div>
                     </template>
@@ -144,6 +163,72 @@
         divFirstShow:false,
         searchTime: [new Date().setHours(new Date().getHours() - 1), new Date()],//全屏显示的时间
         oldSearchTime: [],
+        basicKey:[
+          {
+            label: this.$t("asset.tableTitle.host"),
+            prop: 'host',
+          },
+          {
+            label: this.$t("asset.tableTitle.id"),
+            prop: 'id',
+          },
+          {
+            label: this.$t("asset.tableTitle.assetType"),
+            prop: 'assetType',
+          },
+          {
+            label: this.$t("asset.tableTitle.device"),
+            prop: 'sn',
+          },
+          {
+            label: this.$t("asset.tableTitle.assetState"),
+            prop: 'state',
+          },
+          {
+            label: this.$t("asset.tableTitle.dataCenter"),
+            prop: 'dataCenter',
+          },
+          {
+            label: this.$t("asset.tableTitle.cabinet"),
+            prop: 'cabinet',
+          },
+          {
+            label: this.$t("asset.tableTitle.model"),
+            prop: 'model',
+          },
+          {
+            label: this.$t("asset.tableTitle.vendor"),
+            prop: 'vendor',
+          },
+          {
+            label: this.$t("asset.tableTitle.procurementDate"),
+            prop: 'purchaseDate',
+          },
+          {
+            label: this.$t("asset.tableTitle.principal"),
+            prop: 'principal',
+          },
+          {
+            label: this.$t("asset.tableTitle.principalTel"),
+            prop: 'tel',
+          },
+          {
+            label:this.$t('asset.tableTitle.assetPing'),
+            prop:'pingStatus',
+          },
+          {
+            label:this.$t('asset.tableTitle.lastReply'),
+            prop:'pingLastReply',
+          },
+          {
+            label: this.$t("asset.tableTitle.modules"),
+            prop: 'endpoint',
+          },
+          {
+            label: this.$t("asset.tableTitle.alerts"),
+            prop: 'alert',
+          },
+        ]
       };
     },
     created() {
@@ -423,6 +508,17 @@
 </script>
 <style lang="scss" scoped>
   @import './chart-asset-info';
+  .as-button{
+    color: white;
+    padding: 2px 5px;
+    border-radius: 4px;
+  }
+  .success{
+    background-color: #50d050;
+  }
+  .danger{
+    background-color: #d64f40;
+  }
 </style>
 <style>
   .asset-info-content .el-scrollbar__view {

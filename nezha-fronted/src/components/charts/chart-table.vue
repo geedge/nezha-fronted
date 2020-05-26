@@ -55,13 +55,13 @@
             <el-table class="nz-table" :id="'tableContainer'+chartIndex" ref="tableContainer" :height="290" :data="seriesItem" border  tooltip-effect="light" v-cloak v-scrollBar:el-table>
 <!--                <el-table-column sortable :show-overflow-tooltip="true" prop="metric" :label="$t('dashboard.panel.chartTableColumn.metric')" ></el-table-column>-->
 <!--                <el-table-column sortable :show-overflow-tooltip="true" prop="label" :label="$t('dashboard.panel.chartTableColumn.label')" ></el-table-column>-->
-              <el-table-column sortable prop="time" :label="$t('dashboard.panel.chartTableColumn.time')" width="145" ></el-table-column>
-                <el-table-column sortable prop="element" :show-overflow-tooltip="true" :label="$t('dashboard.panel.chartTableColumn.element')" >
+              <el-table-column sortable prop="time" :label="$t('dashboard.panel.chartTableColumn.time')" min-width="100" ></el-table-column>
+                <el-table-column sortable prop="element" :show-overflow-tooltip="true" :label="$t('dashboard.panel.chartTableColumn.element')" min-width="260">
                   <template slot-scope="scope">
                     {{ scope.row.element.alias?scope.row.element.alias:scope.row.element.element}}
                   </template>
                 </el-table-column>
-                <el-table-column sortable prop="value" :label="$t('dashboard.panel.chartTableColumn.value')" width="90">
+                <el-table-column sortable prop="value" :label="$t('dashboard.panel.chartTableColumn.value')" min-width="90" :resizable="false">
                   <template slot-scope="scope">
                     {{ unit.compute(scope.row.value,null,2)}}
                   </template>
@@ -84,13 +84,13 @@
                 <el-table style="margin-top: 10px;" class="nz-table" height="95%" :data="seriesItemScreen" border  tooltip-effect="light" v-scrollBar:el-table>
 <!--                    <el-table-column sortable :show-overflow-tooltip="true" prop="metric" :label="$t('dashboard.panel.chartTableColumn.metric')" ></el-table-column>-->
 <!--                    <el-table-column sortable :show-overflow-tooltip="true" prop="label" :label="$t('dashboard.panel.chartTableColumn.label')" ></el-table-column>-->
-                  <el-table-column sortable prop="time" :label="$t('dashboard.panel.chartTableColumn.time')" width="145" ></el-table-column>
-                  <el-table-column sortable prop="element" :show-overflow-tooltip="true" :label="$t('dashboard.panel.chartTableColumn.element')" >
+                  <el-table-column sortable prop="time" :label="$t('dashboard.panel.chartTableColumn.time')" min-width="100" ></el-table-column>
+                  <el-table-column sortable prop="element" :show-overflow-tooltip="true" :label="$t('dashboard.panel.chartTableColumn.element')" min-width="420">
                     <template slot-scope="scope">
                       {{ scope.row.element.alias?scope.row.element.alias:scope.row.element.element}}
                     </template>
                   </el-table-column>
-                    <el-table-column sortable prop="value" :label="$t('dashboard.panel.chartTableColumn.value')" width="90">
+                    <el-table-column sortable prop="value" :label="$t('dashboard.panel.chartTableColumn.value')" min-width="90" :resizable="false">
                       <template slot-scope="scope">
                         {{ unit.compute(scope.row.value,null,2)}}
                       </template>

@@ -1105,7 +1105,31 @@ export default {
     getAssetInfoChartData(chartInfo){
       if(!this.isModel){
         this.$refs['editChart'+chartInfo.id][0].showLoad(chartInfo);
-
+        // setTimeout(()=>{
+        //   if(this.additionalInfo){
+        //     let data={
+        //       Basic:{
+        //         sn:'assetInfo Test',
+        //         host:'192.168.40.42',
+        //         'cpu Num':'8',
+        //         memery:'12GB',
+        //         'memery free':'3GB'
+        //       },
+        //       Feature:{
+        //         CPU:"Intel E500",
+        //         Memory:"256GB",
+        //         NetworkInterface:["eth0","eth1"],
+        //         Disk:[{
+        //           mount:"/",
+        //           total:"256GB",
+        //           free:"128GB",
+        //           usageRate:"50%"
+        //         }]
+        //       }
+        //     }
+        //     this.$refs['editChart'+chartInfo.id][0].setData(chartInfo, data, this.filter.panelId, this.filter);
+        //   }
+        // },1000)
         this.$get('/asset/info?id='+this.additionalInfo.id).then(response=>{
           if(response.code == 200){
             let data=response.data;

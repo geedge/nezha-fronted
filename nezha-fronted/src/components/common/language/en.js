@@ -519,6 +519,7 @@ const en = {
       host: 'Host',//'Host'
       assetState: 'State',//'状态'
       assetPing: 'Ping',
+      lastReply:'Ping last reply',
       modules: 'Endpoint',//'组件'
       alerts: 'Alerts',//'告警信息'
       dataCenter: 'DC',//DC

@@ -506,6 +506,7 @@ const cn = {
       principalTel: "电话",
       option: "操作",
       assetPing: "Ping",
+      lastReply:'Ping最后应答',
       vendor: "厂商"
     },
     tagTableTitle: {
