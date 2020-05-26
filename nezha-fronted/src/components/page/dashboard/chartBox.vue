@@ -183,12 +183,18 @@
               </el-col>
             </el-row>
 
-            <el-form-item v-if="isUrl" :label='$t("dashboard.panel.chartForm.url")' prop="param.url" :rules="{ required: true,  message: $t('validate.required'), trigger: 'blur' }">
-              <el-input size="small" type="textarea" maxlength="1024" show-word-limit v-model="chart.param.url"></el-input>
-            </el-form-item>
             <el-form-item :label="$t('dashboard.panel.chartForm.sync')" v-if="showPanel.type && showPanel.type == 'model'">
               <el-switch class="exporter-switch" v-model="chart.sync" active-color="#ee9d3f" :active-value="1" :inactive-value="0"></el-switch>
             </el-form-item>
+
+            <el-form-item v-if="isUrl" :label='$t("dashboard.panel.chartForm.url")' prop="param.url" :rules="{ required: true,  message: $t('validate.required'), trigger: 'blur' }">
+              <el-input size="small" type="textarea" maxlength="1024" show-word-limit v-model="chart.param.url"></el-input>
+            </el-form-item>
+
+            <el-form-item v-if="chart.type == 'line' || chart.type == 'bar' || chart.type == 'stackArea'" :label='$t("dashboard.panel.chartForm.threshold")' prop="param.threshold" >
+              <el-input size="small" type="input"  v-model="chart.param.threshold"></el-input>
+            </el-form-item>
+
             <div v-if="!isUrl" class="right-box-sub-title">{{$t('dashboard.panel.chartForm.metric')}}</div>
             <div v-if="!isUrl" class="line-100"></div>
 
@@ -286,7 +292,8 @@
           height:'400',
           unit:2,
           param:{
-            url:''
+            url:'',
+            threshold:'',
           },
           elements:{
             id: '',
@@ -660,11 +667,16 @@
               type: this.chart.type,
               unit:this.chart.unit,
               param:{
-                statistics:target.statistics
+
               },
               sync: this.chart.sync
             };
-
+            if(this.chart.type === 'singleStat'){
+              params.param.statistics=target.statistics;
+            }
+            if(this.chart.type==='line'||this.chart.type==='bar'||this.chart.type==='stackArea'){
+              params.param.threshold=this.chart.param.threshold;
+            }
             //生成指标数组
             const elements = [];
             this.elementTarget.forEach((elem,index) => {
@@ -877,6 +889,9 @@
             });
           });
         }else{
+          if((this.chart.type==='line'||this.chart.type==='bar'||this.chart.type==='stackArea')&&data.param){
+            this.chart.param.threshold=data.param.threshold;
+          }
           this.setIsOtherChart();
           //this.getSuggestMetric();//获得指标列表
           // 指标
@@ -954,6 +969,9 @@
           }*/
         }else {
           this.setIsOtherChart();
+          if(chartType === 'bar'||chartType === 'line'||chartType === 'stackArea'){
+            this.chart.param={threshold:''}
+          }
           /*if(this.$refs.chartTag){
             this.$refs.chartTag.forEach((item, index) => {
               item.setNotSingleStat();

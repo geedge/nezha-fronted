@@ -1376,6 +1376,27 @@
                         seriesItem.theData.stack=this.data.title;
                         seriesItem.theData.areaStyle={"opacity": 0.3};
                       }
+
+                      if((this.data.type === 'line'||this.data.type === 'stackArea'||this.data.type === 'bar')&& this.data.param && this.data.param.threshold){
+                        seriesItem.theData.markLine={
+                          silent: true,
+                          symbol:['circle','circle'],
+                          label:{
+                            distance:this.computeDistance(chartDataFormat.getUnit(this.data.unit?this.data.unit:2).compute(this.data.param.threshold)),
+                            formatter:function(params){
+                              return chartDataFormat.getUnit(this.data.unit?this.data.unit:2).compute(params.value)
+                            }
+                          },
+                          lineStyle:{
+                            width:2,
+                            type:'dotted'
+                          },
+                          data: [{
+                            yAxis: Number(this.data.param.threshold)
+                          }, ]
+                        }
+                      }
+
                       // 图表中每条线的名字,后半部分
                       // let host = `${queryItem.metric.__name__}{`;//up,
                       let host = '';//up,
@@ -1461,6 +1482,11 @@
             }
           });
         });
+      },
+      computeDistance:function(value){
+        let temp=value+'';
+        let length=temp.length *12 -20;
+        return Number('-'+length)
       },
       showLoad(chartItem) {
         //设置高度

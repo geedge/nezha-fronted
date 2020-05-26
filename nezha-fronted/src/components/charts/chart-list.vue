@@ -149,6 +149,7 @@ import chartUrl from './chart-url';
 import chartSingleStat from './chart-single-stat';
 import chartAssetInfo from './chart-asset-info'
 import draggable from 'vuedraggable'
+import chartDataFormat from "./chartDataFormat";
 
 export default {
   name: 'chartList',
@@ -921,6 +922,26 @@ export default {
                             seriesItem.theData.stack = chartInfo.title;
                             seriesItem.theData.areaStyle = {"opacity": 0.3};
                           }
+                          if((chartInfo.type === 'line'||chartInfo.type === 'stackArea'||chartInfo.type === 'bar')&& chartInfo.param && chartInfo.param.threshold){
+                            seriesItem.theData.markLine={
+                              silent: true,
+                              symbol:['circle','circle'],
+                              label:{
+                                distance:this.computeDistance(chartDataFormat.getUnit(chartInfo.unit?chartInfo.unit:2).compute(chartInfo.param.threshold)),
+                                formatter:function(params){
+                                  return chartDataFormat.getUnit(chartInfo.unit?chartInfo.unit:2).compute(params.value)
+                                }
+                              },
+                              lineStyle:{
+                                color:'#d64f40',
+                                width:2,
+                                type:'dotted'
+                              },
+                              data: [{
+                                yAxis: Number(chartInfo.param.threshold)
+                              }, ]
+                            }
+                          }
                           // 图表中每条线的名字,后半部分
                           let host = '';//up,
                           if (queryItem.metric.__name__) {
@@ -1095,6 +1116,11 @@ export default {
           });
         }
       }
+    },
+    computeDistance:function(value){
+      let temp=value+'';
+      let length=temp.length *12 -20;
+      return Number('-'+length)
     },
     modelStaticData(chartInfo, filterType) {
       let series = [];

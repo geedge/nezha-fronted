@@ -116,6 +116,7 @@ const cn = {
         url: "URL",
         statistics:'Statistics',
         sync: '同步到设备',
+        threshold:'阈值',
         typeVal: {
           line: {
             label: "曲线图"
