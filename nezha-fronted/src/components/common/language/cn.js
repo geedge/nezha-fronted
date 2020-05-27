@@ -155,6 +155,12 @@ const cn = {
         legend: "图例",
         legendTip: "使用名称或表达式控制时间序列的名称。例如{{hostname}将替换为标签主机名的标签值。",
         option: "操作",
+        alertParam:{
+          select:'选择',
+          alertRule:'告警规则',
+          level:'级别',
+          state:'状态'
+        }
       },
       chartTableColumn: {
         metric: "指标",

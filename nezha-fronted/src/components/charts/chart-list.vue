@@ -1124,64 +1124,69 @@ export default {
     },
     modelStaticData(chartInfo, filterType) {
       let series = [];
-      let seriesItem = {
-        theData: {
-          name: '',
-          symbol:'emptyCircle',  //去掉点
-          symbolSize:[2,2],
-          smooth:0.2,  //曲线变平滑
-          showSymbol:false,
-          data: [],
-          type:chartInfo.type,
-        },
-        //visible: true,
-        //threshold: null,
-        metric_name: '',
-      };
       let legend = [];
       let tableData = [];
-      if(chartInfo.type === 'stackArea'){
-        seriesItem.theData.type='line';
-        seriesItem.theData.stack=chartInfo.title;
-        seriesItem.theData.areaStyle={"opacity": 0.3};
-      }
-      // 图表中每条线的名字,后半部分
-      let host = 'host';//up,
-      let queryItem = {metric: {item1: "item1", item2: "item2", item3: "item3"}, values: []};
-      const tagsArr = Object.keys(queryItem.metric);//["__name__","asset","idc","instance","job","module","project"]
-      // 设置时间-数据格式对
-      let tempArr = [];
-      let dpsArr = [];
-      let timeStamp = Math.floor(new Date().getTime()/1000);
-      for (let i = 0; i < 20; i++) {
-        tempArr.push([timeStamp - (20-i)*15, Math.floor(Math.random()*10) + ""]);
-        queryItem.values.push(tempArr[i])
-        dpsArr.push([i+"", tempArr[i]]);
-      }
-      // 判断是否有数据, && tagsArr.length > 0
-      if (dpsArr.length > 0 && this.$refs['editChart'+chartInfo.id]  && this.$refs['editChart'+chartInfo.id].length>0) {
-        tagsArr.forEach((tag, i) => {
-          if (tag !== '__name__') {
-            host += `${tag}="${queryItem.metric[tag]}",`;
+      let singleStatRlt = 999;
+      if (chartInfo.type === 'singleStat') {
+          let statistics = chartInfo.param.statistics;
+      } else {
+        let seriesItem = {
+          theData: {
+            name: '',
+            symbol: 'emptyCircle',  //去掉点
+            symbolSize: [2, 2],
+            smooth: 0.2,  //曲线变平滑
+            showSymbol: false,
+            data: [],
+            type: chartInfo.type,
+          },
+          //visible: true,
+          //threshold: null,
+          metric_name: '',
+        };
+        if (chartInfo.type === 'stackArea') {
+          seriesItem.theData.type = 'line';
+          seriesItem.theData.stack = chartInfo.title;
+          seriesItem.theData.areaStyle = {"opacity": 0.3};
+        }
+        // 图表中每条线的名字,后半部分
+        let host = 'host';//up,
+        let queryItem = {metric: {item1: "item1", item2: "item2", item3: "item3"}, values: []};
+        const tagsArr = Object.keys(queryItem.metric);//["__name__","asset","idc","instance","job","module","project"]
+        // 设置时间-数据格式对
+        let tempArr = [];
+        let dpsArr = [];
+        let timeStamp = Math.floor(new Date().getTime() / 1000);
+        for (let i = 0; i < 20; i++) {
+          tempArr.push([timeStamp - (20 - i) * 15, Math.floor(Math.random() * 10) + ""]);
+          queryItem.values.push(tempArr[i])
+          dpsArr.push([i + "", tempArr[i]]);
+        }
+        // 判断是否有数据, && tagsArr.length > 0
+        if (dpsArr.length > 0 && this.$refs['editChart' + chartInfo.id] && this.$refs['editChart' + chartInfo.id].length > 0) {
+          tagsArr.forEach((tag, i) => {
+            if (tag !== '__name__') {
+              host += `${tag}="${queryItem.metric[tag]}",`;
+            }
+          });
+          if (queryItem.metric.__name__) {
+            host += "}";
           }
-        });
-        if(queryItem.metric.__name__){
-          host +="}";
-        }
-        //处理legend别名
-        let alias=this.$refs['editChart'+chartInfo.id][0].dealLegendAlias(host,chartInfo.elements[0].legend);
-        if(!alias || alias===''){
-          alias = host;
-        }
-        legend.push({name:host, alias:alias});
-        // 图表中每条线的名字,去掉最后的逗号与空格:metric名称,  标签1=a,标签2=c
-        seriesItem.theData.name = host;
-        //alert(seriesItem.theData.name);
-        seriesItem.metric_name = seriesItem.theData.name;
-        // 将秒改为毫秒
-        //alert('table=='+JSON.stringify(queryItem))
-        seriesItem.theData.data = tempArr.map((dpsItem, dpsIndex) => {
-          /*曲线汇总暂不需要
+          //处理legend别名
+          console.log(this.$refs['editChart' + chartInfo.id])
+          let alias = this.$refs['editChart' + chartInfo.id][0].dealLegendAlias(host, chartInfo.elements[0].legend);
+          if (!alias || alias === '') {
+            alias = host;
+          }
+          legend.push({name: host, alias: alias});
+          // 图表中每条线的名字,去掉最后的逗号与空格:metric名称,  标签1=a,标签2=c
+          seriesItem.theData.name = host;
+          //alert(seriesItem.theData.name);
+          seriesItem.metric_name = seriesItem.theData.name;
+          // 将秒改为毫秒
+          //alert('table=='+JSON.stringify(queryItem))
+          seriesItem.theData.data = tempArr.map((dpsItem, dpsIndex) => {
+            /*曲线汇总暂不需要
           if (sumData.data[dpsIndex]) {
             const sumNum = sumData.data[dpsIndex][1] || 0;
             sumData.data[dpsIndex][1] = sumNum + dpsItem[1];
@@ -1189,22 +1194,22 @@ export default {
             sumData.data[dpsIndex] = [dpsItem[0] * 1000, dpsItem[1]];
           }
           */
-          let t_date = new Date(dpsItem[0] * 1000);
-          let timeTmp = bus.timeFormate(t_date, 'yyyy-MM-dd hh:mm:ss');
-          tableData.push({//表格数据
-            // label: host.slice(host.indexOf('{') + 1,host.indexOf('}')),//label
-            // metric: queryItem.metric.__name__?queryItem.metric.__name__:'',//metric列
-            element:{element:host,alias:alias},
-            time: timeTmp,//采集时间
-            value: dpsItem[1],//数值
+            let t_date = new Date(dpsItem[0] * 1000);
+            let timeTmp = bus.timeFormate(t_date, 'yyyy-MM-dd hh:mm:ss');
+            tableData.push({//表格数据
+              // label: host.slice(host.indexOf('{') + 1,host.indexOf('}')),//label
+              // metric: queryItem.metric.__name__?queryItem.metric.__name__:'',//metric列
+              element: {element: host, alias: alias},
+              time: timeTmp,//采集时间
+              value: dpsItem[1],//数值
+            });
+            return [dpsItem[0] * 1000, dpsItem[1]];
           });
-          return [dpsItem[0] * 1000, dpsItem[1]];
-        });
-        series.push(seriesItem.theData);
+          series.push(seriesItem.theData);
 
-      } else if (chartInfo.elements && chartInfo.elements[0]) {
-        // 无数据提示
-        /*
+        } else if (chartInfo.elements && chartInfo.elements[0]) {
+          // 无数据提示
+          /*
         const currentInfo = chartItem.elements[innerPos];
         const errorMsg = `图表 ${chartItem.title} 中 ${currentInfo.metric},${currentInfo.tags} 无数据`;
         this.$message.warning({
@@ -1213,8 +1218,8 @@ export default {
           closable: true,
         });
         */
+        }
       }
-      let singleStatRlt = 999;
       if (this.$refs['editChart' + chartInfo.id] && this.$refs['editChart' + chartInfo.id].length > 0) {
         let errorMsg = '';
         let chartData = {
@@ -1234,7 +1239,7 @@ export default {
             this.$refs['editChart' + chartInfo.id][0].setData(chartInfo, tableData,
               this.filter.panelId, this.filter, filterType, '');
           } else {
-            this.$refs['editChart' + chartItem.id][0].setData(chartInfo, tableData,
+            this.$refs['editChart' + chartInfo.id][0].setData(chartInfo, tableData,
               this.filter.panelId, this.filter, '', '');
           }
         } else if (chartInfo.type === 'line' || chartInfo.type === 'bar' || chartInfo.type === 'stackArea' || chartInfo.type === 4) {

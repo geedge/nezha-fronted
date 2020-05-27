@@ -1058,7 +1058,7 @@ li{
   position: absolute;
   right: 0;
 }
-.config-dropdown, .chart-box-dropdown, .chart-box-dropdown-mini, .metric-dropdown {
+.config-dropdown, .chart-box-dropdown, .chart-box-dropdown-mini,.chart-box-dropdown-small, .metric-dropdown {
   z-index: 2950 !important;
 }
 .dc-dropdown {
@@ -1104,6 +1104,9 @@ li{
 }
 .chart-box-dropdown-mini{
   width: 110px;
+}
+.chart-box-dropdown-small{
+  width: 200px;
 }
 .config-dropdown-btn i {
   font-size: 12px;

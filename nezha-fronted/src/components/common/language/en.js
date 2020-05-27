@@ -146,6 +146,9 @@ const en = {
           },
           singleStat:{
             label:"SingleStat"
+          },
+          alertInfo:{
+            label:"Alert information"
           }
         },
         statisticsVal:{
@@ -163,6 +166,13 @@ const en = {
         metric:'Metric', //"指标"
         option:'Option',
         addMetric:'Add metric', //"添加指标"
+        alertParam:{
+          param:'Parameters',
+          select:'Select',
+          alertRule:'Alert rule',
+          level:'Level',
+          state:'State'
+        }
       },
       chartTableColumn:{
         metric:'Metric', //'指标'
