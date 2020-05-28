@@ -481,7 +481,7 @@
         });
       },
       getTableData: function (clearShowPanel) {
-        this.$get('panel').then(response => {
+        this.$get('panel?pageSize=-1').then(response => {
           if (response.code === 200) {
             this.panelData = response.data.list;
             let isInitData = false;

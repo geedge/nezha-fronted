@@ -135,6 +135,19 @@
                     :chart-index="index"
                     :editChartId="'editChartId' + item.id"
         ></chart-asset-info>
+
+        <chart-alert-list :ref="'editChart'+item.id"
+                          :panel-id="filter.panelId"
+                          :chart-index="index"
+                          :editChartId="'editChartId' + item.id"
+                          :chart-info="item"
+                          @on-refresh-data="refreshChart"
+                          @on-search-data="searchData"
+                          @on-remove-chart-block="removeChart"
+                          @on-duplicate-chart-block="duplicateChart"
+                          @on-drag-chart="editChartForDrag"
+                          @on-edit-chart-block="editData"
+        ></chart-alert-list>
       </div>
    </draggable>
     <el-row v-if="dataList.length === 0"  class="noData"></el-row>
@@ -150,7 +163,7 @@ import chartSingleStat from './chart-single-stat';
 import chartAssetInfo from './chart-asset-info'
 import draggable from 'vuedraggable'
 import chartDataFormat from "./chartDataFormat";
-
+import chartAlertList from './chart-alert-list'
 export default {
   name: 'chartList',
   props: {
@@ -158,6 +171,7 @@ export default {
     additionalInfo:{}
   },
   components: {
+    chartAlertList,
     chartAssetInfo,
     lineChartBlock,
     chartTable,
@@ -832,6 +846,10 @@ export default {
         this.getAssetInfoChartData(chartItem);
         return;
       }
+      if(chartItem.type === 'alertList'){
+        this.getAlertListChartData(chartItem,filterType);
+        return;
+      }
       if (this.isModel) {
         this.modelStaticData(chartInfo, filterType);
       } else {
@@ -1173,7 +1191,6 @@ export default {
             host += "}";
           }
           //处理legend别名
-          console.log(this.$refs['editChart' + chartInfo.id])
           let alias = this.$refs['editChart' + chartInfo.id][0].dealLegendAlias(host, chartInfo.elements[0].legend);
           if (!alias || alias === '') {
             alias = host;
@@ -1267,31 +1284,6 @@ export default {
     getAssetInfoChartData(chartInfo){
       if(!this.isModel){
         this.$refs['editChart'+chartInfo.id][0].showLoad(chartInfo);
-        // setTimeout(()=>{
-        //   if(this.additionalInfo){
-        //     let data={
-        //       Basic:{
-        //         sn:'assetInfo Test',
-        //         host:'192.168.40.42',
-        //         'cpu Num':'8',
-        //         memery:'12GB',
-        //         'memery free':'3GB'
-        //       },
-        //       Feature:{
-        //         CPU:"Intel E500",
-        //         Memory:"256GB",
-        //         NetworkInterface:["eth0","eth1"],
-        //         Disk:[{
-        //           mount:"/",
-        //           total:"256GB",
-        //           free:"128GB",
-        //           usageRate:"50%"
-        //         }]
-        //       }
-        //     }
-        //     this.$refs['editChart'+chartInfo.id][0].setData(chartInfo, data, this.filter.panelId, this.filter);
-        //   }
-        // },1000)
         this.$get('/asset/info?id='+this.additionalInfo.id).then(response=>{
           if(response.code == 200){
             let data=response.data;
@@ -1322,6 +1314,9 @@ export default {
         }};
         this.$refs['editChart'+chartInfo.id][0].setData(chartInfo, data, this.filter.panelId, this.filter);
       }
+    },
+    getAlertListChartData:function(chartInfo,filterType){
+      this.$refs['editChart'+chartInfo.id][0].getAlertList(filterType);
     },
     // 设置图表的宽度
     setSize(size, index) {

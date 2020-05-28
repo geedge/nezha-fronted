@@ -247,6 +247,10 @@
             label: this.$t('alert.severity'),
             prop: 'severity',
             show: true,
+          },{
+            label: this.$t('alert.summary'),
+            prop: 'summary',
+            show: true,
           }, {
             label: this.$t('alert.description'),
             prop: 'description',

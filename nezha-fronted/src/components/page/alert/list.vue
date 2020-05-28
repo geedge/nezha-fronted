@@ -592,6 +592,7 @@
                 this.$set(item, "current", current);
               });
             });
+            this.deleteBox.ids='';
             this.pageObj.total = response.data.total;
           }
         });

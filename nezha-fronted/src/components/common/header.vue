@@ -240,11 +240,11 @@
             url: 'alertConfig',
             type: 5
           },
-          {
-            label: this.$t('config.dc.dc'),
-            url: 'dc',
-            type: 6
-          }
+          // {
+          //   label: this.$t('config.dc.dc'),
+          //   url: 'dc',
+          //   type: 6
+          // }
         ],
         addIdcData: {
           id: '',

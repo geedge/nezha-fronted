@@ -147,8 +147,8 @@ const en = {
           singleStat:{
             label:"SingleStat"
           },
-          alertInfo:{
-            label:"Alert information"
+          alertList:{
+            label:"Alert list"
           }
         },
         statisticsVal:{

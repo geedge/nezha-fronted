@@ -73,7 +73,7 @@
 
         <!-- begin--表单-->
         <el-scrollbar class="right-box-form-box" ref="scrollbar">
-          <el-form class="right-box-form" :model="chart" label-position="top" :rules="rules" ref="chartForm">
+          <el-form class="right-box-form" :model="chart"  :rules="rules" ref="chartForm">
             <el-form-item :label="$t('dashboard.panel.title')" prop="panel" v-if="!showPanel.type">
               <el-autocomplete
                 :fetch-suggestions="panelSuggestion"
@@ -120,7 +120,7 @@
               <el-col :span="10" >
                 <div class="grid-content ">
                   <el-form-item prop="type">
-                    <el-select class="right-box-row-with-btn" @change="chartTypeChange" value-key="chartType" popper-class="chart-box-dropdown-mini" v-model="chart.type" placeholder="" size="mini">
+                    <el-select class="right-box-row-with-btn" @change="chartTypeChange" value-key="chartType" popper-class="chart-box-dropdown-small" v-model="chart.type" placeholder="" size="mini">
                       <el-option v-for="item in chartTypeList" :key="item.id" :label="item.name" :value="item.id">
                         <span class="panel-dropdown-label-txt" >{{item.name}}</span>
                       </el-option>
@@ -128,10 +128,10 @@
                   </el-form-item>
                 </div>
               </el-col>
-              <el-col v-show="!isUrl" :span="2" >
+              <el-col v-show="!isUrl&&!isAlert" :span="2" >
                 <div class="label-center" >{{$t('dashboard.panel.chartForm.unit')}}</div>
               </el-col>
-              <el-col v-show="!isUrl" :span="10">
+              <el-col v-show="!isUrl&&!isAlert" :span="10">
                 <el-cascader filterable placeholder="" popper-class="dc-dropdown" size="mini"
                              :options="unitOptions"
                              :props="{ expandTrigger: 'hover',emitPath:false }"
@@ -195,10 +195,15 @@
               <el-input size="small" type="input"  v-model="chart.param.threshold"></el-input>
             </el-form-item>
 
-            <div v-if="!isUrl" class="right-box-sub-title">{{$t('dashboard.panel.chartForm.metric')}}</div>
+            <div v-if="!isUrl&&!isAlert" class="right-box-sub-title">{{$t('dashboard.panel.chartForm.metric')}}</div>
+            <div v-if="isAlert" class="right-box-sub-title">{{$t('dashboard.panel.chartForm.alertParam.param')}}</div>
             <div v-if="!isUrl" class="line-100"></div>
 
-            <el-row v-if="!isUrl && !isSingleStat" class="element-item" v-for="(elem, index) in elements" :key="'ele' + index">
+            <el-row v-if="isAlert" class="element-item">
+              <alert-chart-param ref="alertParamBox" @on-enter-complate="getAlertParam"></alert-chart-param>
+            </el-row>
+
+            <el-row v-if="!isUrl && !isSingleStat&&!isAlert" class="element-item" v-for="(elem, index) in elements" :key="'ele' + index">
               <chart-metric ref="chartTag"
                             :pointer="index"
                             :metric-list="metricList"
@@ -241,7 +246,7 @@
               </el-row>
             </el-form-item>
 -->
-            <button v-if="!isUrl && !isSingleStat" type="button" @click="addTarget" class="nz-btn nz-btn-size-normal nz-btn-style-light" style="margin-left: 1px;">
+            <button v-if="!isUrl && !isSingleStat&& !isAlert" type="button" @click="addTarget" class="nz-btn nz-btn-size-normal nz-btn-style-light" style="margin-left: 1px;">
               <span class="top-tool-btn-txt">{{$t('dashboard.panel.chartForm.addMetric')}}</span>
             </button>
           </el-form>
@@ -271,6 +276,7 @@
   import ChartMetric from "./chartMetric";
   import chartDataFormat from '../../charts/chartDataFormat';
   import chartPreview from '../../charts/chartPreview';
+  import alertChartParam from "./alertChartParam";
   export default {
     name: "chartBox",
     props: {
@@ -306,6 +312,7 @@
         },
         isUrl:false,
         isSingleStat:false,
+        isAlert:false,
         rules: {
           title: [
             {required: true,  message: this.$t('validate.required'),  trigger: 'blur'}
@@ -338,10 +345,15 @@
           {
             id:'singleStat',
             name:this.$t("dashboard.panel.chartForm.typeVal.singleStat.label")
+          },
+          {
+            id:'alertList',
+            name:this.$t("dashboard.panel.chartForm.typeVal.alertList.label")
           }
         ],
         elements: [1], // 指标部分 tarNum
         elementTarget: [], // 本地保存数据
+        alertParams:{},
         spanList: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
         // 是否为编辑已有信息
         isedit: false,
@@ -366,6 +378,7 @@
     components:{
       'chart-metric':ChartMetric,
       'chart-preview':chartPreview,
+      'alert-chart-param':alertChartParam
     },
     mounted() {
 
@@ -718,13 +731,45 @@
           });
         }
       },
+      getAlertParam:function(param,opType){
+        this.$refs.chartForm.validate((valid) => {
+          const params = {
+            title: this.chart.title,//this.chart
+            span: this.chart.span,
+            height: this.chart.height,
+            type: this.chart.type,
+            unit:this.chart.unit,
+            param:param,
+            sync: this.chart.sync
+          };
+          if (valid) {
+            if(opType==='preview') {
+              if (this.isedit) {
+                params.id = this.chart.id;
+              }
+              this.$refs.chartsPreview.show(params);
+            }else{
+              if (this.isedit) {
+                params.id = this.chart.id;
+                this.updateCharts(params);
+              } else {
+                this.addCharts(params);
+              }
+            }
+          }
+        })
+      },
       confirmAdd() {
         this.elementTarget = []; // 初始化清空参数
         if(this.chart.type!=='url'){
-          this.$refs.chartTag.forEach((item, index) => {//循环指标列表
-            // 触发每个tag组件内部进行校验
-            item.saveTarget(index);
-          });
+          if(this.chart.type == 'alertList'){
+            this.$refs.alertParamBox.saveParam();
+          }else{
+            this.$refs.chartTag.forEach((item, index) => {//循环指标列表
+              // 触发每个tag组件内部进行校验
+              item.saveTarget(index);
+            });
+          }
         }else {
           this.$refs.chartForm.validate((valid) => {
             const params = {
@@ -735,7 +780,8 @@
               unit:this.chart.unit,
               param:{
                 url:this.chart.param.url,
-              }
+              },
+              sync: this.chart.sync
             };
 
             if (valid) {
@@ -843,14 +889,22 @@
       setIsUrl(){
         this.isUrl = true;
         this.isSingleStat = false;
+        this.isAlert=false;
       },
       setIsSingleStat(){
         this.isUrl = false;
         this.isSingleStat = true;
+        this.isAlert=false;
+      },
+      setIsAlertList(){
+        this.isAlert=true;
+        this.isUrl = false;
+        this.isSingleStat = false;
       },
       setIsOtherChart(){
         this.isSingleStat = false;
         this.isUrl = false;
+        this.isAlert=false;
       },
       // 编辑chart时使用, set_tdata
       editData(data, panelId) {
@@ -888,6 +942,10 @@
               item.setMdata(data.elements[index],data.param.statistics);
             });
           });
+        }else if(this.chart.type==='alertLine'){
+          this.chart.param=data.param;
+          this.setIsAlertList();
+          this.elements=[1];
         }else{
           if((this.chart.type==='line'||this.chart.type==='bar'||this.chart.type==='stackArea')&&data.param){
             this.chart.param.threshold=data.param.threshold;
@@ -901,11 +959,18 @@
             this.elements.push(index);
           });
           this.$nextTick(() => {
-            const cSet = this.$refs.chartTag;
-            // 派发charttag数据
-            cSet.forEach((item, index) => {
-              item.setMdata(data.elements[index]);
-            });
+            if(this.chart.type==='alertList'){
+              this.setIsAlertList();
+              this.$nextTick(()=>{
+                this.$refs.alertParamBox.setData(data);
+              })
+            }else{
+              const cSet = this.$refs.chartTag;
+              // 派发charttag数据
+              cSet.forEach((item, index) => {
+                item.setMdata(data.elements[index]);
+              });
+            }
           });
         }
       },
@@ -967,6 +1032,8 @@
               item.setSingleStat();
             });
           }*/
+        }else if(chartType === 'alertList'){
+          this.setIsAlertList();
         }else {
           this.setIsOtherChart();
           if(chartType === 'bar'||chartType === 'line'||chartType === 'stackArea'){
@@ -999,11 +1066,16 @@
       preview(){
         //验证图表数据是否合法？？，合法了再显示预览窗口
         this.elementTarget = []; // 初始化清空参数
+        this.alertParams={};
         if(this.chart.type!=='url'){
-          this.$refs.chartTag.forEach((item, index) => {//循环指标列表
-            // 触发每个tag组件内部进行校验
-            item.saveTarget(index,'preview');
-          });
+          if(this.chart.type == 'alertList'){
+            this.$refs.alertParamBox.saveParam('preview');
+          }else{
+            this.$refs.chartTag.forEach((item, index) => {//循环指标列表
+              // 触发每个tag组件内部进行校验
+              item.saveTarget(index,'preview');
+            });
+          }
         }else {
           this.$refs.chartForm.validate((valid) => {
             const params = {

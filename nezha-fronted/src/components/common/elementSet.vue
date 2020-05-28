@@ -187,7 +187,7 @@ export default {
   color: #606266;
   background: #fff;
   border-radius: 4px;
-  z-index: 999;
+  z-index: 999999;
 }
 
 .elementset-labels {
