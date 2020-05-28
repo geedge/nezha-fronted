@@ -1135,10 +1135,15 @@ export default {
         }
       }
     },
-    computeDistance:function(value){
-      let temp=value+'';
-      let length=temp.length *12 -20;
-      return Number('-'+length)
+    computeDistance:function(str){
+      var width = 0;
+      var html = document.createElement('span');
+      html.innerText = str;
+      html.className = 'getTextWidth';
+      document.querySelector('body').appendChild(html);
+      width = document.querySelector('.getTextWidth').offsetWidth;
+      document.querySelector('.getTextWidth').remove();
+      return Number('-'+width);
     },
     modelStaticData(chartInfo, filterType) {
       let series = [];

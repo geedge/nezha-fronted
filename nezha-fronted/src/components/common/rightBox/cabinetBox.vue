@@ -202,9 +202,5 @@
       }
     }
 </script>
-
-<style>
-  .config-dropdown{
-    width: unset !important;
-  }
+<style >
 </style>
