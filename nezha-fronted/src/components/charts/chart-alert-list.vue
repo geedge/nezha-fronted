@@ -571,7 +571,9 @@ export default {
         }else{
           step='30m';
         }
-        this.$refs.messageChart.startLoading();
+        if(this.$refs.messageChart){
+          this.$refs.messageChart.startLoading();
+        }
         let axiosArr=[];
         let paramStr = JSON.stringify(this.promQueryParamConvert(this.currentMsg));
         axiosArr.push(axios.get("/prom/api/v1/query_range?query="+paramStr.substring(1, paramStr.length-1).replace(/\+/g, "%2B").replace(/ /g, "%20").replace(/\\/g, "")+"&start="+this.$stringTimeParseToUnix(start)+"&end="+this.$stringTimeParseToUnix(end)+"&step="+step));
@@ -667,19 +669,21 @@ export default {
               this.storedTableData.forEach((item) => {
                 item.labels = JSON.parse(item.labels);
                 let paramStr = JSON.stringify(this.promQueryParamConvert(item));
-                this.$get('/prom/api/v1/query?query=' + paramStr.substring(1, paramStr.length-1).replace(/\+/g, "%2B").replace(/ /g, "%20").replace(/\\/g, "")).then(response2 => {
-                  let current = [];
-                  if (response2.data && response2.data.result && response2.data.result.length > 0) {
-                    current = response2.data.result[0].value.map((item, i) => {
-                      if (i == 0) {
-                        return bus.computeTimezone(item);
-                      } else {
-                        return parseFloat(item).toFixed(2);
-                      }
-                    });
-                  }
-                  this.$set(item, "current", current);
-                });
+                if(paramStr&& paramStr !=''){
+                  this.$get('/prom/api/v1/query?query=' + paramStr.substring(1, paramStr.length-1).replace(/\+/g, "%2B").replace(/ /g, "%20").replace(/\\/g, "")).then(response2 => {
+                    let current = [];
+                    if (response2.data && response2.data.result && response2.data.result.length > 0) {
+                      current = response2.data.result[0].value.map((item, i) => {
+                        if (i == 0) {
+                          return bus.computeTimezone(item);
+                        } else {
+                          return parseFloat(item).toFixed(2);
+                        }
+                      });
+                    }
+                    this.$set(item, "current", current);
+                  });
+                }
               });
               this.pageObj.total = response.data.total;
               this.isError = false;
@@ -695,21 +699,24 @@ export default {
           });
         },
         promQueryParamConvert(obj) {
-          return "(" + obj.alertRule.expr + ") and (" + function(){
-            let q = "{";
-            for (let k in obj.labels) {
-              if (k != 'alertname' && k != 'severity') {
-                q += k;
-                q += "=";
-                q += ("'" + obj.labels[k] + "',");
+          if(obj){
+            return "(" + obj.alertRule.expr + ") and (" + function(){
+              let q = "{";
+              for (let k in obj.labels) {
+                if (k != 'alertname' && k != 'severity') {
+                  q += k;
+                  q += "=";
+                  q += ("'" + obj.labels[k] + "',");
+                }
+              };
+              if (q.length > 1) {
+                q = q.substring(0, q.length-1);
               }
-            };
-            if (q.length > 1) {
-              q = q.substring(0, q.length-1);
-            }
-            q += "}";
-            return q;
-          }() + ")";
+              q += "}";
+              return q;
+            }() + ")";
+          }
+          return '';
         },
       elementsetShow(s, e) {
         var eventfixed = {
