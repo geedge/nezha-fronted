@@ -576,60 +576,62 @@ export default {
         }
         let axiosArr=[];
         let paramStr = JSON.stringify(this.promQueryParamConvert(this.currentMsg));
-        axiosArr.push(axios.get("/prom/api/v1/query_range?query="+paramStr.substring(1, paramStr.length-1).replace(/\+/g, "%2B").replace(/ /g, "%20").replace(/\\/g, "")+"&start="+this.$stringTimeParseToUnix(start)+"&end="+this.$stringTimeParseToUnix(end)+"&step="+step));
-        this.legend = [];
-        this.chartDatas = [];
-        axios.all(axiosArr).then(res =>{
-          try {
-            res.forEach((response, promIndex) => {
-              if (response.status == 200) {
-                if (response.data.status == 'success') {
-                  let queryData = response.data.data.result[0];
-                  if (queryData) {
-                    let chartData = {
-                      type: "line",
-                      symbol: 'none',  //去掉点
-                      smooth: 0.2,  //曲线变平滑
-                      name: ''
-                    };
-                    chartData.name += "{";
-                    alias += "{";
-                    Object.keys(queryData.metric).forEach((item, index) => {
-                      let label = item;
-                      let value = queryData.metric[label];
-                      chartData.name += label + "='" + value + "',";
-                    });
-                    chartData.name = chartData.name.charAt(chartData.name.length - 1) == "," ? chartData.name.substr(0, chartData.name.length - 1) : chartData.name;
-                    chartData.name += "}";
-                    let alias = chartData.name;
-                    let legend = {
-                      name: chartData.name,
-                      alias: alias,
-                      isGray: false
+        if(paramStr&&paramStr.trim()!='""'){
+          axiosArr.push(axios.get("/prom/api/v1/query_range?query="+paramStr.substring(1, paramStr.length-1).replace(/\+/g, "%2B").replace(/ /g, "%20").replace(/\\/g, "")+"&start="+this.$stringTimeParseToUnix(start)+"&end="+this.$stringTimeParseToUnix(end)+"&step="+step));
+          this.legend = [];
+          this.chartDatas = [];
+          axios.all(axiosArr).then(res =>{
+            try {
+              res.forEach((response, promIndex) => {
+                if (response.status == 200) {
+                  if (response.data.status == 'success') {
+                    let queryData = response.data.data.result[0];
+                    if (queryData) {
+                      let chartData = {
+                        type: "line",
+                        symbol: 'none',  //去掉点
+                        smooth: 0.2,  //曲线变平滑
+                        name: ''
+                      };
+                      chartData.name += "{";
+                      alias += "{";
+                      Object.keys(queryData.metric).forEach((item, index) => {
+                        let label = item;
+                        let value = queryData.metric[label];
+                        chartData.name += label + "='" + value + "',";
+                      });
+                      chartData.name = chartData.name.charAt(chartData.name.length - 1) == "," ? chartData.name.substr(0, chartData.name.length - 1) : chartData.name;
+                      chartData.name += "}";
+                      let alias = chartData.name;
+                      let legend = {
+                        name: chartData.name,
+                        alias: alias,
+                        isGray: false
+                      }
+                      this.legend.push(legend);
+                      chartData.data = queryData.values.map((dpsItem, dpsIndex) => {
+                        return [bus.computeTimezone(dpsItem[0]) * 1000, parseFloat(dpsItem[1]).toFixed(2)];
+                      });
+                      this.chartDatas.push(chartData);
                     }
-                    this.legend.push(legend);
-                    chartData.data = queryData.values.map((dpsItem, dpsIndex) => {
-                      return [bus.computeTimezone(dpsItem[0]) * 1000, parseFloat(dpsItem[1]).toFixed(2)];
-                    });
-                    this.chartDatas.push(chartData);
+                  } else {
+                    this.$message.error(response.data.error)
+                    console.error(response.data)
                   }
-                } else {
-                  this.$message.error(response.data.error)
-                  console.error(response.data)
                 }
-              }
-            });
-            this.$nextTick(() => {
-              this.$refs.messageChart.setRandomColors(this.chartDatas.length);
-              this.$refs.messageChart.setLegend(this.legend);
-              this.$refs.messageChart.setSeries(this.chartDatas);
+              });
+              this.$nextTick(() => {
+                this.$refs.messageChart.setRandomColors(this.chartDatas.length);
+                this.$refs.messageChart.setLegend(this.legend);
+                this.$refs.messageChart.setSeries(this.chartDatas);
+                this.$refs.messageChart.endLoading();
+              });
+            } catch(err) {
+              this.$message.error(err);
               this.$refs.messageChart.endLoading();
-            });
-          } catch(err) {
-            this.$message.error(err);
-            this.$refs.messageChart.endLoading();
-          }
-        })
+            }
+          })
+        }
       },
         getAlertList: function (filterType) {
           let queryParam={
@@ -669,7 +671,7 @@ export default {
               this.storedTableData.forEach((item) => {
                 item.labels = JSON.parse(item.labels);
                 let paramStr = JSON.stringify(this.promQueryParamConvert(item));
-                if(paramStr&& paramStr !=''){
+                if(paramStr&& paramStr !='""'){
                   this.$get('/prom/api/v1/query?query=' + paramStr.substring(1, paramStr.length-1).replace(/\+/g, "%2B").replace(/ /g, "%20").replace(/\\/g, "")).then(response2 => {
                     let current = [];
                     if (response2.data && response2.data.result && response2.data.result.length > 0) {
