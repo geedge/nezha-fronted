@@ -7,7 +7,7 @@
   }
 </style>
 <template>
-    <div class="chart-url"  :id="'chartUrlDiv'+chartIndex" v-show="divFirstShow" @mouseenter="caretShow=true" @mouseleave="caretShow=false">
+    <div class="chart-url"  :id="'chartUrlDiv'+chartIndex" v-show="divFirstShow" @mouseenter="caretShow=true" @mouseleave="caretShow=false" >
         <loading  :ref="'localLoading'+chartIndex"></loading>
 
         <div class="clearfix chartTitle" :class="{'dragTitle':dragTitleShow}" :id="'chartTitle'+chartIndex">
@@ -34,19 +34,24 @@
 
         </div>
         <div :id="'chartUrl'+chartIndex" class="mt-10 url-container"  v-show="firstShow" >
-            <iframe :id="'urlContainer'+chartIndex" frameborder="0" width="100%" height="100%" name="showHere" scrolling=auto
+            <iframe :id="'urlContainer'+chartIndex" frameborder="0" width="100%" height="100%" name="showHere" scrolling=auto v-if="!showStatic"
                     style="z-index:5000;padding-bottom:6px;"
             ></iframe><!--  style=" position: absolute; width: 100%; height: 100%; top: 0;left:0;"  :src="chart.url" v-scrollBar:char-url-preview-->
         </div>
+      <div style="position: relative;width: 100%;height: 100%;" v-if="showStatic">
+        <div  :id="'staticContainer'+chartIndex" class="center-content"></div>
+      </div>
         <!--全屏-->
           <el-dialog class="nz-dialog table-chart-dialog" :title="$t('dashboard.panel.view')"  :visible.sync="screenModal" width="96%" @opened="initDialog"  @close="screenModal = false" >
             <div slot="title">
               <span class="nz-dialog-title">{{data.title}}</span>
             </div>
-            <iframe :id="'urlContainerFull'+chartIndex"  frameborder="0" width="100%" height="100%" name="showHereFull" scrolling=auto
+            <iframe :id="'urlContainerFull'+chartIndex"  frameborder="0" width="100%" height="100%" name="showHereFull" scrolling=auto v-if="!showStatic"
                     style="z-index:5000;padding-bottom:6px;"
             ></iframe><!--  style=" position: absolute; width: 100%; height: 100%; top: 0;left:0;"  :src="chart.url" v-scrollBar:char-url-preview-->
-
+            <div style="position: relative;width: 100%;height: 100%;" v-if="showStatic">
+              <div  :id="'staticContainerFull'+chartIndex" class="center-content"></div>
+            </div>
             <loading  :ref="'localLoadingScreen'+chartIndex"></loading>
         </el-dialog>
       <span class="vue-resizable-handle" @mousedown="dragResize"></span>
@@ -97,6 +102,7 @@ export default {
             titleHeight:38,//title-height:28,magrin-bottom:10
             paddingBottom:6,
             divFirstShow:false,
+            showStatic:false,
         };
     },
     created() {
@@ -105,6 +111,7 @@ export default {
     watch: {},
     methods: {
       showLoad(chartItem) {
+        console.log(chartItem)
         this.data = chartItem;
         this.panelIdInner = this.panelId;
         //设置高度
@@ -119,14 +126,29 @@ export default {
           urlBox.style.height = `${height-this.chartSpaceHeight-this.titleHeight-this.paddingBottom}px`;// -75-32
         });
         this.startLoading();
-        this.setLoadFrame();
+
+        if(/\{\{.*?\}\}/g.test(this.data.param.url)){
+          this.showStatic=true;
+          this.setStaticContent();
+        }else{
+          this.showStatic=false;
+          this.setLoadFrame();
+        }
         this.divFirstShow = true;
+      },
+      setStaticContent:function(){
+        let that = this;
+        this.$nextTick(() => {
+          let staticDiv = document.querySelector('#staticContainer'+this.chartIndex);
+          staticDiv.innerHTML=`<div class="content-static-url">${that.data.param.url}</div><div class="content-static-tip">${that.$t('dashboard.panel.chartForm.typeVal.url.staticTip')}</div>`
+          that.firstShow = true;
+          that.endLoading();
+        });
       },
       setLoadFrame(){
         let that = this;
         this.$nextTick(() => {
           let iframe = document.querySelector('#urlContainer'+this.chartIndex);
-
           // 处理兼容行问题
           if (iframe.attachEvent) {
             iframe.attachEvent('onload', function () {
@@ -143,14 +165,19 @@ export default {
               that.endLoading();
             }
           }
-
           iframe.src = that.data.param.url;
         });
       },
       initDialog(){
         this.startLoading('screen');
+        if(/\{\{.*?\}\}/g.test(this.data.param.url)){
+          this.showStatic=true;
+          this.setStaticContentFull();
+        }else{
+          this.showStatic=false;
+          this.setLoadFrameFull();
+        }
 
-        this.setLoadFrameFull();
       },
       dragResize:function(e){
         var diffWidth =20; //界面的宽度空白的地方的宽度
@@ -389,6 +416,15 @@ export default {
           iframe.src = this.data.param.url;
         });
       },
+      setStaticContentFull:function(){
+        let that = this;
+        this.$nextTick(() => {
+          let staticDiv = document.querySelector('#staticContainerFull'+this.chartIndex);
+          staticDiv.innerHTML=`<span>${that.data.param.url}</span><span>${that.$t('dashboard.panel.chartForm.typeVal.url.staticTip')}</span>`
+          that.firstShow = true;
+          that.endLoading('screen');
+        });
+      },
     },
     mounted() {
         this.firstLoad = false;
@@ -398,3 +434,13 @@ export default {
     },
 };
 </script>
+<style>
+  .center-content .content-static-url{
+    font-weight: bold;
+    font-size: 24px;
+  }
+  .center-content .content-static-tip{
+    font-size: 18px;
+    color: lightgrey;
+  }
+</style>

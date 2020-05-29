@@ -7,7 +7,7 @@
   }
 </style>
 <template>
-    <div class="chart-table"  :id="'chartTableDiv'+chartIndex" v-show="divFirstShow" @mouseenter="caretShow=true" @mouseleave="caretShow=false">
+    <div class="chart-table"  :id="'chartTableDiv'+chartIndex" v-show="divFirstShow" @mouseenter="caretShow=true" @mouseleave="caretShow=false" :style="{'border':isPreview?'unset':'1px solid #d8dce1','height':isPreview?'92%':'100%'}">
         <loading  :ref="'localLoading'+chartIndex"></loading>
       <!--
         <div v-show="showLoading" class="el-loading-mask" style="background-color: rgba(0, 0, 0, 0);">
@@ -30,7 +30,7 @@
                 <span class="panel-info-corner-inner"></span>
             </span>
           </el-popover>
-          <el-dropdown trigger="click" v-show="firstShow"   class="nz-chart-top" :key="'chartDropdown'+chartIndex"  v-clickoutside="clickos">
+          <el-dropdown trigger="click" v-show="!isPreview&&firstShow"   class="nz-chart-top" :key="'chartDropdown'+chartIndex"  v-clickoutside="clickos">
             <el-dropdown-menu style="display: none"></el-dropdown-menu>
             <span class="el-dropdown-link chart-title" @click="dropdownMenuShow=!dropdownMenuShow">
               <span class="chart-title-text">{{data.title}}</span>
@@ -51,9 +51,9 @@
           </el-dropdown>
 
         </div>
-        <div class="mt-10 table-container" v-cloak  v-show="firstShow">
+        <div class="mt-10 table-container" v-cloak  v-show="firstShow || isPreview">
           <transition name="el-zoom-in-bottom">
-            <div class="el-popover alert-clean-pop" @click="toDeleteMessage(false)" v-if="deleteBox.ids.length > 0" style="top:10px">
+            <div class="el-popover alert-clean-pop" @click="toDeleteMessage(false)" v-if="deleteBox.ids.length > 0" :style="{'top':isPreview?'-30px':'10px'}">
               <i style="cursor: pointer" class="el-icon-delete"></i>
             </div>
           </transition>
@@ -133,9 +133,9 @@
                 <template v-else>-</template>
               </template>
             </el-table-column>
-            <el-table-column width="28" :resizable="false">
+            <el-table-column width="28" :resizable="false" v-if="!isPreview">
               <template slot="header" slot-scope="scope">
-              <span @click.stop="elementsetShow('shezhi',$event)" class="nz-table-gear">
+              <span @click.stop="elementsetShow('shezhi',$event)" class="nz-table-gear" >
                 <i class="nz-icon nz-icon-gear"></i>
               </span>
               </template>
@@ -268,6 +268,7 @@
                  :title="$t('overall.detail')"
                  :visible.sync="graphShow"
                  width="90%"
+                 :append-to-body="true"
                  id="viewGraphDialog"
                  @close="dialogClose">
         <div slot="title">
@@ -278,7 +279,7 @@
         </div>
         <chart ref="messageChart" name="alertMessageChart" :unit="chartUnit"></chart>
       </el-dialog>
-      <span class="vue-resizable-handle" @mousedown="dragResize"></span>
+      <span class="vue-resizable-handle" @mousedown="dragResize" v-if="!isPreview"></span>
       <element-set
         path="/alertList"
         :table-title="tableTitle"
@@ -457,6 +458,7 @@ export default {
           chartDatas: [],
           chartUnit:5,
           deleteBox: {show: false, ids: "", remark: '', state: 2},
+          isPreview:false,
         };
     },
     created() {
@@ -633,7 +635,8 @@ export default {
           })
         }
       },
-        getAlertList: function (filterType) {
+        getAlertList: function (filterType,isPreview=false) {
+          this.isPreview = isPreview;
           let queryParam={
             pageSize:this.pageObj.pageSize,
             pageNo:this.pageObj.pageNo,
@@ -1042,64 +1045,7 @@ export default {
         },
         // 设置数据, filter区分
         setData(chartItem, seriesItem, panelId, filter,area,errorMsg) {
-          if(errorMsg && errorMsg!==''){
-            this.isError = true;
-            this.errorContent = errorMsg;
-          }else {
-            this.isError = false;
-            this.errorContent = '';
-          }
-            if(area==='showFullScreen'){//全屏按时间查询
-              this.data = chartItem;
-              this.unit = chartDataFormat.getUnit(this.data.unit);
-              this.searchTime[0] = filter.start_time;//将列表的查询时间复制给全屏的查询时间
-              this.searchTime[1] = filter.end_time;
-              // this.seriesItemScreen = seriesItem;
-              this.storedScreanTableData=seriesItem;
-              this.storedScreanTableData=Object.assign([],this.storedScreanTableData.reverse());
-              this.screenPageObj.total=this.storedScreanTableData.length;
-              this.seriesItemScreen=this.filterShowData(this.storedScreanTableData,this.screenPageObj);
-              this.endLoading('screen');
-            }else{
-              //设置高度 chart-table
-              this.$nextTick(() => {
-                const chartBox = document.getElementById('chartTableDiv'+this.chartIndex);
-                let height = Math.round(chartItem.height/10)*10;//图表高度四舍五入
-                if(height<this.minHeight){
-                  height = this.minHeight;
-                }
-                chartBox.style.height = `${height-this.chartSpaceHeight}px`;
-                const tableBox = document.getElementById('tableContainer'+this.chartIndex);
-                tableBox.style.height = `${height-this.chartSpaceHeight-this.titleHeight-this.pageHeight}px`;// -75-32
-              });
-              this.divFirstShow = true;
 
-              this.firstShow = true; // 展示操作按键
-
-              this.panelIdInner = panelId;
-              this.data = chartItem;
-              this.unit = chartDataFormat.getUnit(this.data.unit);
-              // this.seriesItem = seriesItem;
-              // this.seriesItemScreen = seriesItem;
-              this.storedTableData =seriesItem;
-              this.storedScreanTableData=seriesItem;
-              this.storedTableData=Object.assign([],this.storedTableData.reverse());
-              this.storedScreanTableData=Object.assign([],this.storedScreanTableData.reverse());
-              this.pageObj.total=this.storedTableData.length;
-              this.screenPageObj.total=this.storedScreanTableData.length;
-              this.seriesItem=this.filterShowData(this.storedTableData,this.pageObj);
-              this.seriesItemScreen =this.filterShowData(this.storedScreanTableData,this.screenPageObj)
-              if (filter) { // 保存数据,用于同步时间
-                this.searchTime[0] = filter.start_time;//将列表的查询时间复制给全屏的查询时间
-                this.searchTime[1] = filter.end_time;
-                this.oldSearchTime[0] = this.searchTime[0];
-                this.oldSearchTime[1] = this.searchTime[1];
-              }
-
-              this.endLoading();
-              //this.showTable = true;
-              //this.tableLoading = false;
-            }
         },
 
     },

@@ -1192,14 +1192,18 @@
 
           this.currentRecordNum = this.currentRecordNum+1;
           let chartData = this.chartDataCacheGroup.get(chart.id);
-          console.log("__chartItem00__",JSON.stringify(chartData))
-
-          let duplicateChartData = JSON.parse(JSON.stringify(chartData));
+          // console.log("__chartItem00__",JSON.stringify(chartData))
+          let duplicateChartData ={};
+          try{
+            duplicateChartData = JSON.parse(JSON.stringify(chartData));
+          }catch (e) {
+            console.warn(e);
+          }
           duplicateChartData.chartItem = duplicateChart;
           this.chartDataCacheGroup.set(duplicateChartId,duplicateChartData);
           this.$nextTick(() => {
             if (this.$refs['editChart'+duplicateChartId][0]) {
-              this.$refs['editChart'+duplicateChartId][0].showLoad(duplicateChart);//之后要实现
+                this.$refs['editChart'+duplicateChartId][0].showLoad(duplicateChart);//之后要实现
             }
 
             let chartType = duplicateChart.type;

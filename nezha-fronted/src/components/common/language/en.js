@@ -142,7 +142,8 @@ const en = {
             label:"Stack Area"
           },
           url:{
-            label:"URL"
+            label:"URL",
+            staticTip:'The content in the double curly braces will be replaced on the Asset page',
           },
           singleStat:{
             label:"SingleStat"
