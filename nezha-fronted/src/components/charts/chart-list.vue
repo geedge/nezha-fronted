@@ -1372,6 +1372,7 @@ export default {
           chartNext.prev = duplicateChartId;
         }
         console.log(duplicateChart)
+
         this.dataList.splice(chartNextIndex,0,duplicateChart);
 
         let indexInTotal = this.dataTotalList.indexOf(chart);

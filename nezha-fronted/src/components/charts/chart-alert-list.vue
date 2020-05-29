@@ -7,7 +7,7 @@
   }
 </style>
 <template>
-    <div class="chart-table"  :id="'chartTableDiv'+chartIndex" v-show="divFirstShow" @mouseenter="caretShow=true" @mouseleave="caretShow=false">
+    <div class="chart-table"  :id="'chartTableDiv'+chartIndex" v-show="divFirstShow" @mouseenter="caretShow=true" @mouseleave="caretShow=false" :style="{'border':isPreview?'unset':'1px solid #d8dce1','height':isPreview?'92%':'100%'}">
         <loading  :ref="'localLoading'+chartIndex"></loading>
       <!--
         <div v-show="showLoading" class="el-loading-mask" style="background-color: rgba(0, 0, 0, 0);">
@@ -30,7 +30,7 @@
                 <span class="panel-info-corner-inner"></span>
             </span>
           </el-popover>
-          <el-dropdown trigger="click" v-show="firstShow"   class="nz-chart-top" :key="'chartDropdown'+chartIndex"  v-clickoutside="clickos">
+          <el-dropdown trigger="click" v-show="!isPreview&&firstShow"   class="nz-chart-top" :key="'chartDropdown'+chartIndex"  v-clickoutside="clickos">
             <el-dropdown-menu style="display: none"></el-dropdown-menu>
             <span class="el-dropdown-link chart-title" @click="dropdownMenuShow=!dropdownMenuShow">
               <span class="chart-title-text">{{data.title}}</span>
@@ -51,9 +51,9 @@
           </el-dropdown>
 
         </div>
-        <div class="mt-10 table-container" v-cloak  v-show="firstShow">
+        <div class="mt-10 table-container" v-cloak  v-show="firstShow || isPreview">
           <transition name="el-zoom-in-bottom">
-            <div class="el-popover alert-clean-pop" @click="toDeleteMessage(false)" v-if="deleteBox.ids.length > 0" style="top:10px">
+            <div class="el-popover alert-clean-pop" @click="toDeleteMessage(false)" v-if="deleteBox.ids.length > 0" :style="{'top':isPreview?'-30px':'10px'}">
               <i style="cursor: pointer" class="el-icon-delete"></i>
             </div>
           </transition>
@@ -268,6 +268,7 @@
                  :title="$t('overall.detail')"
                  :visible.sync="graphShow"
                  width="90%"
+                 :append-to-body="true"
                  id="viewGraphDialog"
                  @close="dialogClose">
         <div slot="title">
@@ -278,7 +279,7 @@
         </div>
         <chart ref="messageChart" name="alertMessageChart" :unit="chartUnit"></chart>
       </el-dialog>
-      <span class="vue-resizable-handle" @mousedown="dragResize"></span>
+      <span class="vue-resizable-handle" @mousedown="dragResize" v-if="!isPreview"></span>
       <element-set
         path="/alertList"
         :table-title="tableTitle"
@@ -457,6 +458,7 @@ export default {
           chartDatas: [],
           chartUnit:5,
           deleteBox: {show: false, ids: "", remark: '', state: 2},
+          isPreview:false,
         };
     },
     created() {
@@ -633,7 +635,8 @@ export default {
           })
         }
       },
-        getAlertList: function (filterType) {
+        getAlertList: function (filterType,isPreview=false) {
+          this.isPreview = isPreview;
           let queryParam={
             pageSize:this.pageObj.pageSize,
             pageNo:this.pageObj.pageNo,

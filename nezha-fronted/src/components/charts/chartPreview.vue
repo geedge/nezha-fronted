@@ -128,6 +128,10 @@
         </div>
       </template>
 
+      <template v-if="chart.type === 'alertList'">
+        <chart-alert-list ref="alertListChart"></chart-alert-list>
+      </template>
+
       <loading  ref="loadingPreview"></loading>
     </el-dialog>
 </template>
@@ -139,12 +143,14 @@
   import chartDataFormat from './chartDataFormat'
   import {randomcolor} from  '../common/js/radomcolor/randomcolor.js'
   import timePicker from '../common/timePicker'
+  import chartAlertList from './chart-alert-list'
 
   export default {
     name: 'chartPreview',
     components: {
       'loading': loading,
-      'time-picker':timePicker
+      'time-picker':timePicker,
+      'chart-alert-list':chartAlertList,
     },
     props: {
       panelId:Number,
@@ -320,9 +326,17 @@
           this.dailogWidth = `${containerWidth*(size / 12)}px`;
         });
       },
+      getAlertListChartData:function(chartInfo,filterType){
+        this.$refs.alertListChart.getAlertList(filterType,true);
+        this.$refs.loadingPreview.endLoading();
+      },
       // 获取一个图表具体数据
       getChartData() {
         const chartItem = this.chart;
+        if(chartItem.type === 'alertList'){
+          this.getAlertListChartData(chartItem,null);
+          return;
+        }
         const len = chartItem.elements.length;
         // 没有数据的设置提示信息暂无数据-针对每一个图
         if (len === 0) {
