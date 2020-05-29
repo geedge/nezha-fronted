@@ -949,6 +949,8 @@
         }else{
           if((this.chart.type==='line'||this.chart.type==='bar'||this.chart.type==='stackArea')&&data.param){
             this.chart.param.threshold=data.param.threshold;
+          }else{
+            this.chart.param.threshold='';
           }
           this.setIsOtherChart();
           //this.getSuggestMetric();//获得指标列表
@@ -982,6 +984,8 @@
         this.chart.span = 12;
         this.chart.height = 400+'';
         this.chart.unit=2;
+        this.chart.param.url='';
+        this.chart.param.threshold='';
         this.elements = [1];
         this.elementTarget = [];
         bus.chartAddInfo.metricTarget = [];

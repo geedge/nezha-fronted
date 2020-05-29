@@ -131,7 +131,8 @@ const cn = {
             label: "面积图"
           },
           url: {
-            label: "URL"
+            label: "URL",
+            staticTip:'双大括号中的内容将会在asset页面被替换',
           },
           singleStat:{
             label:"SingleStat"

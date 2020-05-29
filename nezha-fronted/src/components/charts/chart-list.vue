@@ -1367,10 +1367,11 @@ export default {
         duplicateChart.next = duplicateChartBack.next;
         duplicateChart.title = duplicateChartBack.title;
         duplicateChart.elements = duplicateChartBack.elements;
+        duplicateChart.param = JSON.parse(duplicateChartBack.param);
         if(chartNext){
           chartNext.prev = duplicateChartId;
         }
-
+        console.log(duplicateChart)
         this.dataList.splice(chartNextIndex,0,duplicateChart);
 
         let indexInTotal = this.dataTotalList.indexOf(chart);
@@ -1393,9 +1394,14 @@ export default {
 
         this.currentRecordNum = this.currentRecordNum+1;
         let chartData = this.chartDataCacheGroup.get(chart.id);
-        console.log("__chartItem00__",JSON.stringify(chartData))
-
-        let duplicateChartData = JSON.parse(JSON.stringify(chartData));
+        // console.log("__chartItem00__",JSON.stringify(chartData))
+        let duplicateChartData ={};
+        try{
+          duplicateChartData = JSON.parse(JSON.stringify(chartData));
+        }catch (e) {
+          console.warn(e);
+        }
+        console.log(chartData)
         /*
         let chartData2 = {
           chartItem:chartItem,

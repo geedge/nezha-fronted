@@ -1042,64 +1042,7 @@ export default {
         },
         // 设置数据, filter区分
         setData(chartItem, seriesItem, panelId, filter,area,errorMsg) {
-          if(errorMsg && errorMsg!==''){
-            this.isError = true;
-            this.errorContent = errorMsg;
-          }else {
-            this.isError = false;
-            this.errorContent = '';
-          }
-            if(area==='showFullScreen'){//全屏按时间查询
-              this.data = chartItem;
-              this.unit = chartDataFormat.getUnit(this.data.unit);
-              this.searchTime[0] = filter.start_time;//将列表的查询时间复制给全屏的查询时间
-              this.searchTime[1] = filter.end_time;
-              // this.seriesItemScreen = seriesItem;
-              this.storedScreanTableData=seriesItem;
-              this.storedScreanTableData=Object.assign([],this.storedScreanTableData.reverse());
-              this.screenPageObj.total=this.storedScreanTableData.length;
-              this.seriesItemScreen=this.filterShowData(this.storedScreanTableData,this.screenPageObj);
-              this.endLoading('screen');
-            }else{
-              //设置高度 chart-table
-              this.$nextTick(() => {
-                const chartBox = document.getElementById('chartTableDiv'+this.chartIndex);
-                let height = Math.round(chartItem.height/10)*10;//图表高度四舍五入
-                if(height<this.minHeight){
-                  height = this.minHeight;
-                }
-                chartBox.style.height = `${height-this.chartSpaceHeight}px`;
-                const tableBox = document.getElementById('tableContainer'+this.chartIndex);
-                tableBox.style.height = `${height-this.chartSpaceHeight-this.titleHeight-this.pageHeight}px`;// -75-32
-              });
-              this.divFirstShow = true;
 
-              this.firstShow = true; // 展示操作按键
-
-              this.panelIdInner = panelId;
-              this.data = chartItem;
-              this.unit = chartDataFormat.getUnit(this.data.unit);
-              // this.seriesItem = seriesItem;
-              // this.seriesItemScreen = seriesItem;
-              this.storedTableData =seriesItem;
-              this.storedScreanTableData=seriesItem;
-              this.storedTableData=Object.assign([],this.storedTableData.reverse());
-              this.storedScreanTableData=Object.assign([],this.storedScreanTableData.reverse());
-              this.pageObj.total=this.storedTableData.length;
-              this.screenPageObj.total=this.storedScreanTableData.length;
-              this.seriesItem=this.filterShowData(this.storedTableData,this.pageObj);
-              this.seriesItemScreen =this.filterShowData(this.storedScreanTableData,this.screenPageObj)
-              if (filter) { // 保存数据,用于同步时间
-                this.searchTime[0] = filter.start_time;//将列表的查询时间复制给全屏的查询时间
-                this.searchTime[1] = filter.end_time;
-                this.oldSearchTime[0] = this.searchTime[0];
-                this.oldSearchTime[1] = this.searchTime[1];
-              }
-
-              this.endLoading();
-              //this.showTable = true;
-              //this.tableLoading = false;
-            }
         },
 
     },
