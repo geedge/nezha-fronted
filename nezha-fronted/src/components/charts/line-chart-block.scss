@@ -34,7 +34,7 @@
   bottom: 0px;
   line-height: 18px;
   position: absolute;
-  padding-bottom:5px;
+  padding-bottom:3px;
 }
 .legend-container-screen.legend-container {
   max-height: 80px;
@@ -142,45 +142,40 @@
   max-width:280px;
   border: 1px solid #e02f44;
 }
+.nz-chart-resize {
+  height: 100%;
+  width: 100%;
+  position: relative;
+}
+.resize-box {
+  border: 1px solid #d8dce1;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+}
+.resize-shadow {
+  height: 100%;
+  width: 100%;
+  position: absolute;
+}
+.resize-shadow-active {
+  background-color: #888;
+}
 .line-chart-block {
   height: 100%;
-  //min-height: 0px;
   position: relative;
-  background: #FFF;
-  border: 1px solid #d8dce1;
-  padding: 0px 0px;
-  margin-bottom: 10px;
-  padding-bottom: 3px;
-  .vue-resizable-handle {
-    position: absolute;
-    width: 20px;
-    height: 20px;
-    bottom: 0;
-    right: 0;
-    cursor: se-resize;
-    box-sizing: border-box;
-  }
-  .vue-resizable-handle:after {
-    border-right: 2px solid #555;
-    border-bottom: 2px solid #555;
-    content: "";
-    position: absolute;
-    right: 3px;
-    bottom: 3px;
-    width: 5px;
-    height: 5px;
-    /*border-right: 2px solid rgba(0,0,0,.4);
-    border-bottom: 2px solid rgba(0,0,0,.4);*/
-    box-sizing: inherit;
-  }
+  background-color: white;
   .chartTitle:hover {
     background-color:#d8dce1;
   }
   .chartTitle {
-     text-align: center;
-     width: 100%;
-     line-height: 28px;
-
+    text-align: center;
+    width: 100%;
+    line-height: 28px;
+    padding: 0 3px;
+    box-sizing: border-box;
     .nz-chart-top{
       width:100%;
     }
@@ -195,7 +190,6 @@
       font-size: 18px;
       line-height: 26px;
       color: #333;
-      margin: -3px 0 3px 3px;
       display:flex;
       justify-content:center;
       align-items:center;

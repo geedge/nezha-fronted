@@ -358,3 +358,80 @@ export function unixTimeParseToString(unixTime,fmt='yyyy-MM-dd hh:mm:ss'){
       fmt = fmt.replace(RegExp.$1, (RegExp.$1.length==1) ? (o[k]) : (("00"+ o[k]).substr((""+ o[k]).length)));
   return fmt;
 }
+
+//chart-resize工具
+export const chartResizeTool = {
+  minHeight: 200, //图表最小高度
+  chartBlankHeight: 2, //图表空白占位高度
+  chartBlankWidth: 20, //图表空白占位宽度
+  containerBlankWidth: 25, //容器空白占位宽度（#listContainer的padding）
+  titleHeight: 28, //标题dom高度
+  stepHeight: 50, //单元高度
+  stepWidth(containerWidth) { //单元宽度，参数为容器总宽度
+    return (containerWidth-this.containerBlankWidth)/12;
+  },
+  calculateHeight(original) {
+    let height = Math.round(original/this.stepHeight)*this.stepHeight;
+    if (height < this.minHeight) {
+      height = this.minHeight;
+    }
+    return height-this.chartSpaceHeight;
+  },
+  start(vm, data, event) {
+    let shadow; //缩放时底部阴影dom
+    let box; //图表内容dom
+    try {
+      shadow = vm.$refs.resizeShadow;
+    } catch (e) {
+      shadow = vm.$refs[0].resizeShadow;
+    }
+    try {
+      box = vm.$refs.resizeBox;
+    } catch (e) {
+      box = vm.$refs[0].resizeBox;
+    }
+    let chartBlankWidth = this.chartBlankWidth;
+    let chartBlankHeight = this.chartBlankHeight;
+    let stepWidth = this.stepWidth(document.getElementById('listContainer').offsetWidth);
+    let stepHeight = this.stepHeight;
+
+    let containerAvailableWidth = document.getElementById('listContainer').offsetWidth-this.containerBlankWidth;
+    let mouseOriginalX = event.clientX; //鼠标初始坐标
+    let mouseOriginalY = event.clientY;
+    let originalHeight = data.height; //图表初始宽高
+    let originalWidth = stepWidth*data.span;
+    //console.info("mouseOrigX %s, mouseOrigY %s, chartOrigX %s, chartOrigY %s", mouseOriginalX, mouseOriginalY, originalHeight, originalWidth)
+    //1.激活背景阴影
+    shadow.classList.add("resize-shadow-active");
+    //2.鼠标移动时调整resize-box的宽高，同时监听宽高的变化，变化量每达到step的50%时改变resize-shadow的尺寸并重绘resize-box内容
+    document.addEventListener("mousemove", moveListener);
+    //3.鼠标松开，将resize-box宽高改为resize-shadow宽高，结束
+    document.addEventListener("mouseup", mouseupListener);
+
+
+    function moveListener(e) {
+      let mouseX = e.clientX;
+      let mouseY = e.clientY;
+      //调整resize-box的宽高
+      box.style.height = `${originalHeight+(mouseY-mouseOriginalY)-chartBlankHeight}px`;
+      box.style.width = `${originalWidth+(mouseX-mouseOriginalX)-chartBlankWidth}px`;
+      //监听宽高的变化，变化量每达到step的50%时改变resize-shadow的尺寸并重绘resize-box内容
+      let remainderWidth = (box.offsetWidth+chartBlankWidth)%stepWidth; //宽的余数
+      let remainderHeight = (box.offsetHeight+chartBlankHeight)%stepHeight; //高的余数
+
+    }
+    function mouseupListener(e) {
+      let remainderWidth = (box.offsetHeight+chartBlankHeight)%stepHeight; //高的余数
+      let remainderHeight = (box.offsetHeight+chartBlankHeight)%stepHeight; //高的余数
+      data.height = box.offsetHeight+chartBlankHeight;
+      data.span = (box.offsetWidth+chartBlankWidth)/(containerAvailableWidth/12);
+      //关闭背景阴影
+      shadow.classList.remove("resize-shadow-active");
+      document.removeEventListener("mousemove", moveListener);
+      document.removeEventListener("mouseup", mouseupListener);
+    }
+    function boxStepHandler(type, op) {
+
+    }
+  }
+}

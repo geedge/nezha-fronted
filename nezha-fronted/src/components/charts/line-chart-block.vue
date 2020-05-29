@@ -2,145 +2,95 @@
   @import './line-chart-block.scss';
 </style>
 <template>
-  <div class="line-chart-block"    :id="'lineChartDiv'+chartIndex" v-show="divFirstShow" @mouseenter="mouseEnterChart" @mouseleave="mouseLeaveChart">
-    <loading  :ref="'localLoading'+chartIndex"></loading>
-
-    <!--<div class="edit">
-
-      <div class="list-icon" v-if="firstShow">
-        <span @click="refreshChart" :title="$t('dashboard.refresh')" class="set-icon" v-if="showSetting">
-          <i class="el-icon-refresh-right"></i>
+  <div class="nz-chart-resize">
+    <div class="resize-shadow" ref="resizeShadow"></div>
+    <div class="resize-box" ref="resizeBox">
+      <div class="line-chart-block" :id="'lineChartDiv'+chartIndex" v-show="divFirstShow" @mouseenter="mouseEnterChart" @mouseleave="mouseLeaveChart">
+        <loading  :ref="'localLoading'+chartIndex"></loading>
+        <div class="clearfix chartTitle" :id="'chartTitle'+chartIndex" >
+          <el-popover
+            v-if="isError"
+            placement="top-start"
+            :close-delay=10
+            trigger="hover"
+            popper-class="chart-error-popper">
+            <div >{{errorContent}}</div>
+            <span slot="reference" style="" class="panel-info-corner panel-info-corner--error">
+            <i class="nz-icon nz-icon-warning fa"></i>
+            <span class="panel-info-corner-inner"></span>
         </span>
-        <span @click="editChart" :title="$t('dashboard.edit')" class="set-icon" v-if="showSetting">
-          <i class="el-icon-edit-outline"></i>
-        </span>
-        <span @click="removeChart" :title="$t('dashboard.delete')" class="set-icon" v-if="showSetting">
-          <i class="el-icon-delete"></i>
-        </span>
-        <span @click="showAllScreen" :title="$t('dashboard.screen')" class="set-icon">
-          <i class="el-icon-full-screen"></i>
-        </span>
-      </div>
-    </div>-->
-
-    <div class="clearfix chartTitle" :id="'chartTitle'+chartIndex" >
-      <el-popover
-        v-if="isError"
-        placement="top-start"
-        :close-delay=10
-        trigger="hover"
-        popper-class="chart-error-popper">
-        <div >{{errorContent}}</div>
-        <span slot="reference" style="" class="panel-info-corner panel-info-corner--error">
-          <i class="nz-icon nz-icon-warning fa"></i>
-          <span class="panel-info-corner-inner"></span>
-      </span>
-      </el-popover>
-      <el-dropdown trigger="click" v-show="firstShow"   class="nz-chart-top" :key="'chartDropdown'+chartIndex"  v-clickoutside="clickos">
-        <el-dropdown-menu style="display: none"></el-dropdown-menu>
-        <span class="el-dropdown-link chart-title" @click="dropdownMenuShow=!dropdownMenuShow">
-            <span class="chart-title-text">{{data.title}}</span>
-            <span class="chart-title-icon"><i class="el-icon-caret-bottom el-icon--right"  :class="{'visible':caretShow,'hidden':!caretShow}"></i></span>
-        </span>
-        <!--
-          <el-dropdown-menu slot="dropdown"  class="nz-chart-dropdown" :popper-append-to-body="false">
-            <el-dropdown-item @click.native="refreshChart" ><i style="font-size: 16px;" class="global-active-color el-icon-refresh-right"></i>{{$t('dashboard.refresh')}}</el-dropdown-item>
-            <el-dropdown-item @click.native="editChart"><i style="font-size: 14px;margin-right: 11px;margin-left: 1px;" class="nz-icon nz-icon-edit"></i>{{$t('dashboard.edit')}}</el-dropdown-item>
-            <el-dropdown-item @click.native="removeChart" ><i style="font-size: 16px;" class="el-icon-delete"></i>{{$t('dashboard.delete')}}</el-dropdown-item>
-            <el-dropdown-item @click.native="showAllScreen"  ><i style="font-size: 16px;" class="el-icon-full-screen"></i>{{$t('dashboard.screen')}}</el-dropdown-item>
-          </el-dropdown-menu>
-          -->
-        <ul slot="dropdown" v-show="dropdownMenuShow"  :id="'dropdownUl'+chartIndex" :class="{'el-dropdown-menu nz-chart-dropdown':!isExplore,'el-dropdown-menu nz-chart-dropdown-one':isExplore}"    style="position: absolute; top: 30px; left: calc(50% - 79px); transform-origin: center top; z-index: 1000;" >
-          <li v-show="!isExplore"  @click="refreshChart"  class="el-dropdown-menu__item">
-            <i class="global-active-color el-icon-refresh-right" style="font-size: 16px;"></i><span>{{$t('dashboard.refresh')}}</span></li>
-          <li v-show="!isExplore" @click="editChart"  class="el-dropdown-menu__item">
-            <i class="nz-icon nz-icon-edit" style="font-size: 14px; margin-right: 11px; margin-left: 1px;"></i>{{$t('dashboard.edit')}}</li>
-          <li v-show="!isExplore" @click="removeChart"  class="el-dropdown-menu__item">
-            <i class="el-icon-delete" style="font-size: 16px;"></i>{{$t('dashboard.delete')}}</li>
-          <li  @click="showAllScreen"  class="el-dropdown-menu__item">
-            <i class="el-icon-full-screen" style="font-size: 16px;"></i>{{$t('dashboard.screen')}}</li>
-          <li  v-show="!isExplore" @click="duplicate"  class="el-dropdown-menu__item">
-            <i class="el-icon-copy-document" style="font-size: 16px;"></i>{{$t('dashboard.duplicate')}}</li>
-        </ul>
-      </el-dropdown>
-      <!--
-     <div class="chart-title" v-show="firstShow">
-       {{data.title}}
-     </div>
-
-     <div class="nz-btn-group nz-btn-group-light edit button-panel-height" v-show="firstShow">
-       <button type="button" @click="refreshChart" style="padding: 6px 14px 5px 14px;" class="nz-btn nz-btn-size-large nz-btn-style-light" v-if="showSetting"><i style="font-size: 16px;" class="global-active-color el-icon-refresh-right"></i></button>
-       <button @click="editChart" type="button" class="nz-btn nz-btn-size-large nz-btn-style-light" v-if="showSetting"><i class="nz-icon nz-icon-edit"></i></button>
-       <button  @click="removeChart" type="button" class="nz-btn nz-btn-size-large nz-btn-style-light" v-if="showSetting"><i class="el-icon-delete"></i></button>
-       <button
-       @click="showAllScreen" type="button" class="nz-btn nz-btn-size-large nz-btn-style-light"><i class="el-icon-full-screen"></i></button>
-     </div>
-     -->
-    </div>
-
-    <div class="line-area"  ref="lineChartArea"  :id="'lineChartArea'+chartIndex" v-show="firstShow" style="width:100%;"></div>
-
-    <div class="legend-container" id="legendArea" ref="legendArea" v-show="firstShow" v-scrollBar:legend>
-      <div v-for="(item, index) in legendList" :title="item.alias?item.alias:item.name"  @click="clickLegend(item.name,index)" class="legend-item" :class="{'ft-gr':isGrey[index]}" :key="'legend_' + item.name+'_'+index">
-        <span class="legend-shape" :style="{background:(isGrey[index]?'#D3D3D3':bgColorList[index])}"></span>{{item.alias?item.alias:item.name}}
-      </div>
-    </div>
-    <!--
-    <Modal title="查看" v-model="screenModal" width="96%" class="line-chart-block-modal">-->
-    <el-dialog class="line-chart-block-modal nz-dialog"
-               :title="$t('dashboard.panel.view')"
-               :visible.sync="screenModal"
-               width="90%"
-               @close="screenModal = false"
-               style="margin-top: 1vh !important;"
-               @opened="initDialog">
-      <el-popover
-        v-if="isError"
-        placement="top-start"
-        :close-delay=10
-        trigger="hover"
-        popper-class="chart-error-popper">
-        <div >{{errorContent}}</div>
-        <span slot="reference"  class="panel-info-corner panel-info-corner--error">
-              <i class="nz-icon nz-icon-warning fa-model" ></i>
-              <span class="panel-info-corner-inner"></span>
+          </el-popover>
+          <el-dropdown trigger="click" v-show="firstShow"   class="nz-chart-top" :key="'chartDropdown'+chartIndex"  v-clickoutside="clickos">
+            <el-dropdown-menu style="display: none"></el-dropdown-menu>
+            <span class="el-dropdown-link chart-title" @click="dropdownMenuShow=!dropdownMenuShow">
+              <span class="chart-title-text">{{data.title}}</span>
+              <span class="chart-title-icon"><i class="el-icon-caret-bottom el-icon--right"  :class="{'visible':caretShow,'hidden':!caretShow}"></i></span>
           </span>
-      </el-popover>
-      <div slot="title" >
-        <span class="nz-dialog-title" v-show="!isExplore">{{data.title}}</span>
-        <span class="nz-dialog-title" v-show="isExplore">&nbsp;</span>
-        <div class="float-right panel-calendar dialog-tool">
-
-          <time-picker ref="calendarPanel" class="nz-dashboard-picker" style="margin-top: -12px;"  @change="dateChange"></time-picker>
-          <!--
-          <el-date-picker ref="calendar" prefix-icon=" " size="mini" class="nz-dashboard-picker"
-                          format="yyyy/MM/dd HH:mm"
-                          @change="dateChange"
-                          v-model="searchTime"
-                          type="datetimerange"
-                          :picker-options="pickerOptions"
-                          :range-separator="$t('dashboard.panel.to')"
-                          :start-placeholder="$t('dashboard.panel.startTime')"
-                          :end-placeholder="$t('dashboard.panel.endTime')"
-                          align="right">
-          </el-date-picker>-->
-          <!--<button @click="refreshChart" type="button" class="nz-btn nz-btn-size-normal nz-btn-style-light"><i style="font-size: 14px;" class="el-icon-refresh-right"></i></button>-->
+            <ul slot="dropdown" v-show="dropdownMenuShow"  :id="'dropdownUl'+chartIndex" :class="{'el-dropdown-menu nz-chart-dropdown':!isExplore,'el-dropdown-menu nz-chart-dropdown-one':isExplore}"    style="position: absolute; top: 30px; left: calc(50% - 79px); transform-origin: center top; z-index: 1000;" >
+              <li v-show="!isExplore"  @click="refreshChart"  class="el-dropdown-menu__item">
+                <i class="global-active-color el-icon-refresh-right" style="font-size: 16px;"></i><span>{{$t('dashboard.refresh')}}</span></li>
+              <li v-show="!isExplore" @click="editChart"  class="el-dropdown-menu__item">
+                <i class="nz-icon nz-icon-edit" style="font-size: 14px; margin-right: 11px; margin-left: 1px;"></i>{{$t('dashboard.edit')}}</li>
+              <li v-show="!isExplore" @click="removeChart"  class="el-dropdown-menu__item">
+                <i class="el-icon-delete" style="font-size: 16px;"></i>{{$t('dashboard.delete')}}</li>
+              <li  @click="showAllScreen"  class="el-dropdown-menu__item">
+                <i class="el-icon-full-screen" style="font-size: 16px;"></i>{{$t('dashboard.screen')}}</li>
+              <li  v-show="!isExplore" @click="duplicate"  class="el-dropdown-menu__item">
+                <i class="el-icon-copy-document" style="font-size: 16px;"></i>{{$t('dashboard.duplicate')}}</li>
+            </ul>
+          </el-dropdown>
         </div>
-      </div>
-      <div class="line-area" ref="screenShowArea"  id="screenShowArea"  style="margin-top:0px;" @mouseenter="mouseEnterFullChart" @mouseleave="mouseLeaveFullChart"></div>
 
-      <div class="legend-container legend-container-screen"  :id="'screenLegendArea'+chartIndex" @mouseenter="mouseEnterFullChart" @mouseleave="mouseLeaveFullChart" v-show="showLegend" v-scrollBar:legend>
-        <div v-for="(item, index) in screenLegendList" :title="item.alias?item.alias:item.name"  @click="clickScreenLegend(item.name,index)" class="legend-item" :class="{'ft-gr':isGreyScreen[index]}"  :key="'legend_' + item.name+'_'+index">
-          <span class="legend-shape" :style="{background:(isGreyScreen[index]?'#D3D3D3':bgColorList[index])}"></span>{{item.alias?item.alias:item.name}}
-          <br/><!--bgColorList[index]-->
+        <div class="line-area"  ref="lineChartArea"  :id="'lineChartArea'+chartIndex" v-show="firstShow" style="width:100%;"></div>
+
+        <div class="legend-container" id="legendArea" ref="legendArea" v-show="firstShow" v-scrollBar:legend>
+          <div v-for="(item, index) in legendList" :title="item.alias?item.alias:item.name"  @click="clickLegend(item.name,index)" class="legend-item" :class="{'ft-gr':isGrey[index]}" :key="'legend_' + item.name+'_'+index">
+            <span class="legend-shape" :style="{background:(isGrey[index]?'#D3D3D3':bgColorList[index])}"></span>{{item.alias?item.alias:item.name}}
+          </div>
         </div>
-      </div>
+        <!--
+        <Modal title="查看" v-model="screenModal" width="96%" class="line-chart-block-modal">-->
+        <el-dialog class="line-chart-block-modal nz-dialog"
+                   :title="$t('dashboard.panel.view')"
+                   :visible.sync="screenModal"
+                   width="90%"
+                   @close="screenModal = false"
+                   style="margin-top: 1vh !important;"
+                   @opened="initDialog">
+          <el-popover
+            v-if="isError"
+            placement="top-start"
+            :close-delay=10
+            trigger="hover"
+            popper-class="chart-error-popper">
+            <div >{{errorContent}}</div>
+            <span slot="reference"  class="panel-info-corner panel-info-corner--error">
+                <i class="nz-icon nz-icon-warning fa-model" ></i>
+                <span class="panel-info-corner-inner"></span>
+            </span>
+          </el-popover>
+          <div slot="title" >
+            <span class="nz-dialog-title" v-show="!isExplore">{{data.title}}</span>
+            <span class="nz-dialog-title" v-show="isExplore">&nbsp;</span>
+            <div class="float-right panel-calendar dialog-tool">
 
-      <loading  :ref="'localLoadingScreen'+chartIndex"></loading>
-    </el-dialog>
-    <!--</Modal>-->
-    <!--style="touch-action: none;" -->
-    <span class="vue-resizable-handle" @mousedown="dragResize"></span>
+              <time-picker ref="calendarPanel" class="nz-dashboard-picker" style="margin-top: -12px;"  @change="dateChange"></time-picker>
+            </div>
+          </div>
+          <div class="line-area" ref="screenShowArea"  id="screenShowArea"  style="margin-top:0px;" @mouseenter="mouseEnterFullChart" @mouseleave="mouseLeaveFullChart"></div>
+
+          <div class="legend-container legend-container-screen"  :id="'screenLegendArea'+chartIndex" @mouseenter="mouseEnterFullChart" @mouseleave="mouseLeaveFullChart" v-show="showLegend" v-scrollBar:legend>
+            <div v-for="(item, index) in screenLegendList" :title="item.alias?item.alias:item.name"  @click="clickScreenLegend(item.name,index)" class="legend-item" :class="{'ft-gr':isGreyScreen[index]}"  :key="'legend_' + item.name+'_'+index">
+              <span class="legend-shape" :style="{background:(isGreyScreen[index]?'#D3D3D3':bgColorList[index])}"></span>{{item.alias?item.alias:item.name}}
+              <br/><!--bgColorList[index]-->
+            </div>
+          </div>
+
+          <loading  :ref="'localLoadingScreen'+chartIndex"></loading>
+        </el-dialog>
+      </div>
+      <span class="vue-resizable-handle" @mousedown="startResize"></span>
+    </div>
   </div>
 </template>
 <script>
@@ -151,7 +101,6 @@
   import chartDataFormat from './chartDataFormat'
   import {randomcolor} from  '../common/js/radomcolor/randomcolor.js'
   import timePicker from '../common/timePicker'
-
   export default {
     name: 'lineChartBlock',
     components: {
@@ -159,9 +108,8 @@
       'time-picker':timePicker
     },
     props: {
-      editChartId: {
-        type: String,
-        default: 'editChartId',
+      chartData: {
+        type: Object
       },
       // 看板id
       panelId: {
@@ -180,7 +128,8 @@
       isExplore:{
         type:Boolean,
         default:false,
-      }
+      },
+      stepHeight: {type: Number}
     },
     data() {
       return {
@@ -232,24 +181,17 @@
         searchTime:[new Date().setHours(new Date().getHours()-1),new Date()],
         oldSearchTime:[],
         minHeight:200,
-        chartSpaceHeight:5,//top-border: 1,bottom-border: 1,padding-bottome:3
+        chartSpaceHeight:2,//top-border: 1,bottom-border: 1,padding-bottome:3
         titleHeight:28,
-        screenTitleHeight:58,
-        legendHeight:80,
+        screenTitleHeight:58
       };
-    },
-    computed: {
-      /*
-      typeVisible() {
-        if (this.data.type === 'line' || this.data.type === 'bar' || this.data.type === 4) {
-          return true;
-        }
-         return false;
-      },
-  */
     },
     watch: {},
     methods: {
+      startResize(e) {
+        let vm = this;
+        this.$chartResizeTool.start(vm, this.chartData, e);
+      },
       setDivFirstShow(showDiv){
         this.divFirstShow = showDiv;
       },
@@ -292,6 +234,10 @@
         }
       },
       dragResize:function(e){
+        this.$refs.shadow.classList.add("resize-shadow-active");
+
+
+
         var diffWidth = 20;//界面的宽度空白的地方的宽度
         var chartBoxPadding = 20;
         var targetDiv= document.getElementById('lineChartDiv'+this.chartIndex); //
@@ -438,14 +384,6 @@
         }
       },
       clickLegend(legendName,index){
-        // if (this.echartStore) {
-        //   this.echartStore.dispatchAction({
-        //     type: 'legendToggleSelect',
-        //     name: legendName
-        //   });
-        // let isGreyTmp = this.isGrey[index];
-        // this.$set(this.isGrey, index, !isGreyTmp);
-        // }
 
         //点击图表某一个legend，图表只显示当前点击的曲线或柱状图，其它隐藏，再次点击已选中的legend ，显示全部
         let curIsGrey=this.isGrey[index];
@@ -494,14 +432,6 @@
         }
       },
       clickScreenLegend(legendName,index){
-        // if (this.echartModalStore) {
-        //   this.echartModalStore.dispatchAction({
-        //     type: 'legendToggleSelect',
-        //     name: legendName
-        //   });
-        //   let isGreyTmp = this.isGreyScreen[index];
-        //   this.$set(this.isGreyScreen, index, !isGreyTmp);
-        // }
         //点击图表某一个legend，图表只显示当前点击的曲线或柱状图，其它隐藏，再次点击已选中的legend ，显示全部
         let curIsGrey=this.isGreyScreen[index];
         if(this.echartModalStore){
@@ -715,11 +645,6 @@
               //let str = `<div  style='white-space:nowrap;overflow-x:hidden;text-overflow:ellipsis;min-width:150px;max-width:600px;display:inline-block;line-height: 18px;font-size:12px;font-family: Roboto,Helvetica Neue,Arial,sans-serif;'>`;
               let sum = 0;
               params.forEach((item, i) => {
-                //alert('tooltip====='+JSON.stringify(item))
-                //let tip=legend.find((element)=>{
-                //alert('legend====='+JSON.stringify(element))
-                //return element.name == item.seriesName;
-                //});
                 let tip=legend[item.seriesIndex];
                 let color = self.bgColorList[item.seriesIndex];
                 if(i===0){
@@ -740,13 +665,6 @@
                 str += chartDataFormat.getUnit(chartInfo.unit?chartInfo.unit:2).compute(val,null,2);
                 str += `</div>`;
                 str += `</div>`;
-                /*str += `<div style='max-width:500px;display:inline-block;white-space:nowrap;overflow-x:hidden;text-overflow:ellipsis;line-height: 18px;font-size:12px;font-family: Roboto,Helvetica Neue,Arial,sans-serif;'>`;
-                str +=`<span style='display:inline-block;margin-right:5px;border-radius:10px;width:15px;height:5px;background-color: ${item.color};}'></span>${tip?(tip.alias?tip.alias:tip.name):item.seriesName}:  `;
-                str +=`</div>`;*/
-                // str +=`<div style="display: inline-block;max-width: 10px; min-width: 5px;line-height: 18px;"></div>`;
-                /*str += `<div style='max-width:90px;min-width:20px;display:inline-block;white-space:nowrap;overflow-x:hidden;text-overflow:ellipsis;line-height: 18px;font-size:12px;font-family: Roboto,Helvetica Neue,Arial,sans-serif;'>`;
-                str +=chartDataFormat.getUnit(chartInfo.unit?chartInfo.unit:2).compute(val,null,2);
-                str +=`</div>`;*/
               });
               if(self.data.type==='stackArea' || self.isStackArea){
                 sum = parseFloat(Number(sum).toFixed(2));
@@ -762,7 +680,6 @@
 
               str +=`</div>`;
               return str;
-              // return `<div  style='width:100%;display:block;word-break:break-all;word-wrap:break-word;white-space:normal'><span style='display:inline-block;margin-right:5px;border-radius:10px;width:15px;height:5px;background-color: ${params[0].color};}'></span> ${params[0].seriesName}:${params[0].data[1]}</div>`;
             },
           },
           legend: {
@@ -773,7 +690,6 @@
             itemHeight:5,
             itemWidth:15,
             formatter:function(name){
-              //console.log('==========='+name);
               if(!name){
                 return '';
               }
@@ -805,9 +721,6 @@
             tooltip:{
               show:true,
               formatter:function(params){
-                //alert(params.length);
-                //alert(JSON.stringify(params));
-
                 return `<div  style='width:100%;display:block;word-break:break-all;word-wrap:break-word;white-space:normal'> ${params.name}</div>`;
               },
             },
@@ -815,8 +728,6 @@
             orient:'vertical',
             x:'center',
             y:'bottom',
-            //top:'5%',
-            //bottom:0
           },
           grid: {
             top: 30,
@@ -825,26 +736,10 @@
             containLabel: true,
             bottom:8,//156
           },
-          /*
-          dataZoom: [{
-            type: 'slider',
-            show:true,
-            xAxisIndex: [0],
-            start: 0,
-            end: 100,
-            height:25,
-            bottom:10,//96
-            left:40,
-            right:48,
-          }
-           ],*/
           xAxis: {
             type: 'time',
-            // boundaryGap: false,//line-false; bar-true;
-            //data: ['20190101', '20190102', '周三', '周四', '周五', '周六', '周日']
             axisLabel: {
               interval: '0',
-              //showMinLabel:false,
               showMaxLabel:false,
               rotate: 0,
               formatter: function (value) {
@@ -1118,24 +1013,6 @@
           var charNum = `${(chartWidth-100)/(txtWidth/str.length)}`;
           return str.slice(0,charNum)+'...';
         }
-        /*
-        if(txtWidth < (chartWidth-30)){
-          return str;
-        }else {
-          var charNum = `${(chartWidth-200)/(txtWidth/str.length)}`;//一行的字符数
-          charNum = parseInt(charNum);
-          if(str.length>charNum){
-            let num = `${str.length/charNum}`;
-            num = parseInt(num)+1;
-            for(let i=0;i<num;i++){
-              rlt += str.substring(charNum*i,charNum*(i+1))+'\n';
-            }
-          }else {
-            return str;
-          }
-        }
-        */
-        //return rlt;
       },
       setColor(colorNum){
         this.bgColorList = [];
@@ -1167,13 +1044,8 @@
           this.legend = legend;
           //设置高度 chart-table
           this.$nextTick(() => {
-            const chartBox = document.getElementById('lineChartDiv'+this.chartIndex);
-            let height = Math.round(chartItem.height/10)*10;//图表高度四舍五入
-            if(height<this.minHeight){
-              height = this.minHeight;
-            }
-            chartBox.style.height = `${height-this.chartSpaceHeight}px`;
-
+            let chartBox = document.getElementById('lineChartDiv'+this.chartIndex);
+            chartBox.style.height = `${this.$chartResizeTool.calculateHeight(chartItem.height)}px`;
           });
           this.$refs['localLoading'+this.chartIndex].startLoading();
           this.divFirstShow = true;
@@ -1468,11 +1340,6 @@
                   }
                 }
               });
-              /*
-              if (series.length && this.data.type === 4) {
-                series.push(sumData);
-              }
-              */
               this.setColor(legend.length);
               this.initChart(this.data, series, this.$refs.screenShowArea, 'screen',legend);
             }
@@ -1497,20 +1364,11 @@
             height = this.minHeight;
           }
           chartBox.style.height = `${height-this.chartSpaceHeight}px`;
-          //const tableBox = document.getElementById('tableContainer');
-          // const chartBox = document.getElementById('lineChartDiv'+this.chartIndex);
-          //tableBox.style.height = `${height-75}px`;
         });
         this.clearData();
         this.firstShow = false;
         this.$refs['localLoading'+this.chartIndex].startLoading();
         this.divFirstShow = true;
-
-        /*
-        if (this.echartStore) {
-          this.echartStore.showLoading();
-        }
-        */
       },
       dealLegendAlias:function(legend,expression){
         if(/\{\{.+\}\}/.test(expression)){
@@ -1538,15 +1396,6 @@
             const mbNum = kbNum / 1000;
             if (mbNum > 1000) {
               const gbNum = mbNum / 1000;
-              /*
-              if (gbNum > 1000) {
-                const tbNum = gbNum / 1000;
-                if (tbNum > 1000) {
-                  const pbNum = tbNum / 1000;
-                  return `${pbNum.toFixed(2)}PB`;
-                }
-                return `${tbNum.toFixed(2)}TB`;
-              }*/
               return `${gbNum.toFixed(2)}B`;
             }
             return `${mbNum.toFixed(2)}M`;
@@ -1559,14 +1408,6 @@
     },
     mounted() {
       this.firstLoad = false;
-      /*
-      let Myecharts2 = echarts.init(document.getElementById('lineChartArea'));
-      console.log(Myecharts2);
-
-      setTimeout(function () {
-        Myecharts2.resize()
-      }, 500)
-*/
     },
     beforeDestroy() {
       this.clearChart();

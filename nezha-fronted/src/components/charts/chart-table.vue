@@ -9,14 +9,6 @@
 <template>
     <div class="chart-table"  :id="'chartTableDiv'+chartIndex" v-show="divFirstShow" @mouseenter="caretShow=true" @mouseleave="caretShow=false">
         <loading  :ref="'localLoading'+chartIndex"></loading>
-      <!--
-        <div v-show="showLoading" class="el-loading-mask" style="background-color: rgba(0, 0, 0, 0);">
-          <div class="el-loading-spinner">
-            <img width="42px" height="42px"  src="../../assets/img/loading.gif"/>
-            <p class="el-loading-text loading-font">loading</p>
-          </div>
-        </div>
-        -->
         <div class="clearfix chartTitle" :class="{'dragTitle':dragTitleShow}" :id="'chartTitle'+chartIndex">
           <el-popover
             v-if="isError"
@@ -53,8 +45,6 @@
         </div>
         <div class="mt-10 table-container" v-cloak  v-show="firstShow">
             <el-table class="nz-table" :id="'tableContainer'+chartIndex" ref="tableContainer" :height="290" :data="seriesItem" border  tooltip-effect="light" v-cloak v-scrollBar:el-table>
-<!--                <el-table-column sortable :show-overflow-tooltip="true" prop="metric" :label="$t('dashboard.panel.chartTableColumn.metric')" ></el-table-column>-->
-<!--                <el-table-column sortable :show-overflow-tooltip="true" prop="label" :label="$t('dashboard.panel.chartTableColumn.label')" ></el-table-column>-->
               <el-table-column sortable prop="time" :label="$t('dashboard.panel.chartTableColumn.time')" min-width="100" ></el-table-column>
                 <el-table-column sortable prop="element" :show-overflow-tooltip="true" :label="$t('dashboard.panel.chartTableColumn.element')" min-width="260">
                   <template slot-scope="scope">
