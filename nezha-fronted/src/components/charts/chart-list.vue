@@ -1367,7 +1367,7 @@ export default {
         duplicateChart.next = duplicateChartBack.next;
         duplicateChart.title = duplicateChartBack.title;
         duplicateChart.elements = duplicateChartBack.elements;
-        duplicateChart.param = JSON.parse(duplicateChartBack.param);
+        duplicateChart.param = duplicateChartBack.param;
         if(chartNext){
           chartNext.prev = duplicateChartId;
         }

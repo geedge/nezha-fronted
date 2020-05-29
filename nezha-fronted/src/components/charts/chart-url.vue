@@ -165,9 +165,7 @@ export default {
               that.endLoading();
             }
           }
-          console.log(that.data)
           iframe.src = that.data.param.url;
-          console.log(iframe)
         });
       },
       initDialog(){
