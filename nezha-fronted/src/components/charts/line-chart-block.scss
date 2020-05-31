@@ -179,7 +179,23 @@
       }
     }
   }
-  .line-chart-block, .chart-table {
+  .chart-single-stat {
+    width: 100%;
+    .single-stat-container {
+      padding-left: 8px;
+      padding-right: 8px;
+      display: table;
+      text-align: center;
+      width: calc(100% - 16px);
+      .single-stat-content{
+        text-align:center;
+        vertical-align: middle;
+        display:table-cell;
+        font-size:30px;
+      }
+    }
+  }
+  .line-chart-block, .chart-table, .chart-single-stat {
     height: 100%;
     position: relative;
     background-color: white;

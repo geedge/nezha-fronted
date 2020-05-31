@@ -41,7 +41,7 @@
           </el-dropdown>
         </div>
         <div class="mt-10 table-container" v-cloak  v-show="firstShow">
-          <el-table class="nz-table" :id="'tableContainer'+chartIndex" ref="tableContainer" :height="290" :data="seriesItem" border  tooltip-effect="light" v-cloak v-scrollBar:el-table>
+          <el-table class="nz-table" :id="'tableContainer'+chartIndex" ref="tableContainer" :height="tableHeight" :data="seriesItem" border  tooltip-effect="light" v-cloak v-scrollBar:el-table>
             <el-table-column sortable prop="time" :label="$t('dashboard.panel.chartTableColumn.time')" min-width="100" ></el-table-column>
               <el-table-column sortable prop="element" :show-overflow-tooltip="true" :label="$t('dashboard.panel.chartTableColumn.element')" min-width="260">
                 <template slot-scope="scope">
@@ -116,6 +116,7 @@ export default {
   },
   data() {
     return {
+      tableHeight: 0,
       data: {}, // 该图表信息,chartItem
       unit:{},
       isError:false,
@@ -224,13 +225,13 @@ export default {
       }
     },
     resize(chartItem) {
-      let height = Math.round(chartItem.height/this.$chartResizeTool.stepHeight)*this.$chartResizeTool.stepHeight;//图表高度四舍五入
-      if(height < this.$chartResizeTool.minHeight){
-        height = this.$chartResizeTool.minHeight;
-      }
-      const tableBox = document.getElementById('tableContainer'+this.chartIndex);
-      tableBox.style.height = `${height-this.$refs.Pagination.$el.offsetHeight-this.$chartResizeTool.titleHeight-this.$chartResizeTool.chartBlankHeight-this.$chartResizeTool.chartTableBlankHeight}px`;
-      tableBox.querySelector(".el-table__body-wrapper")._ps_.update();
+      let deHeight = this.$chartResizeTool.titleHeight+this.$chartResizeTool.chartTableBlankHeight;
+      let container = document.querySelector('#chartTableDiv' + this.chartIndex + " .table-container");
+      container.style.height = `calc(100% - ${deHeight}px)`;
+      this.tableHeight = `calc(100% - ${this.$refs.Pagination.$el.offsetHeight}px)`;
+      this.$nextTick(() => {
+        container.querySelector(".el-table__body-wrapper")._ps_.update();
+      });
     },
     showLoad(chartItem) {
       //设置高度 chart-table

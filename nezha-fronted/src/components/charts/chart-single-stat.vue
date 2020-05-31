@@ -1,13 +1,11 @@
-<style lang="scss" scoped>
-@import './chart-single-stat.scss';
-</style>
-<style>
-  .max-width-90{
-    max-width: 90px;
-  }
+<style lang="scss">
+@import './line-chart-block.scss';
 </style>
 <template>
-    <div class="chart-single-stat"  :id="'chartSingleStatDiv'+chartIndex" v-show="divFirstShow" @mouseenter="caretShow=true" @mouseleave="caretShow=false">
+  <div class="nz-chart-resize">
+    <div class="resize-shadow" ref="resizeShadow"></div>
+    <div class="resize-box resize-box-single" ref="resizeBox">
+      <div class="chart-single-stat"  :id="'chartSingleStatDiv'+chartIndex" v-show="divFirstShow" @mouseenter="caretShow=true" @mouseleave="caretShow=false">
         <loading  :ref="'localLoading'+chartIndex"></loading>
         <div class="clearfix chartTitle" :class="{'dragTitle':dragTitleShow}" :id="'chartTitle'+chartIndex">
           <el-popover
@@ -18,8 +16,8 @@
             popper-class="chart-error-popper">
             <div >{{errorContent}}</div>
             <span slot="reference" style="" class="panel-info-corner panel-info-corner--error">
-                <i class="nz-icon nz-icon-warning fa"></i>
-                <span class="panel-info-corner-inner"></span>
+              <i class="nz-icon nz-icon-warning fa"></i>
+              <span class="panel-info-corner-inner"></span>
             </span>
           </el-popover>
           <el-dropdown trigger="click" v-show="firstShow"   class="nz-chart-top" :key="'chartDropdown'+chartIndex"  v-clickoutside="clickos">
@@ -41,7 +39,6 @@
                 <i class="el-icon-copy-document" style="font-size: 16px;"></i>{{$t('dashboard.duplicate')}}</li>
             </ul>
           </el-dropdown>
-
         </div>
         <div class="mt-10 single-stat-container" v-cloak  v-show="firstShow" >
           <div :id="'chartContainer'+chartIndex"  ref="chartContainer" class="single-stat-content" >
@@ -49,24 +46,26 @@
           </div>
         </div>
         <!--全屏-->
-          <el-dialog class="nz-dialog table-chart-dialog" :title="$t('dashboard.panel.view')"
-                     :visible.sync="screenModal"
-                     width="96%"  @close="screenModal = false" >
-            <div slot="title">
-              <span class="nz-dialog-title">{{data.title}}</span>
-              <div class="float-right panel-calendar dialog-tool">
-                <time-picker ref="calendarPanel" class="nz-dashboard-picker" style="margin-top: -12px;" @change="dateChange"></time-picker>
-              </div>
+        <el-dialog class="nz-dialog table-chart-dialog" :title="$t('dashboard.panel.view')"
+                   :visible.sync="screenModal"
+                   width="96%"  @close="screenModal = false" >
+          <div slot="title">
+            <span class="nz-dialog-title">{{data.title}}</span>
+            <div class="float-right panel-calendar dialog-tool">
+              <time-picker ref="calendarPanel" class="nz-dashboard-picker" style="margin-top: -12px;" @change="dateChange"></time-picker>
             </div>
-            <div class="single-stat-screen-container"  >
-              <div id="chartScreenContainer"  ref="chartScreenContainer" class="single-stat-content" >
-                {{serieSingleStat}}
-              </div>
+          </div>
+          <div class="single-stat-screen-container"  >
+            <div id="chartScreenContainer"  ref="chartScreenContainer" class="single-stat-content" >
+              {{serieSingleStat}}
             </div>
-            <loading  :ref="'localLoadingScreen'+chartIndex"></loading>
+          </div>
+          <loading  :ref="'localLoadingScreen'+chartIndex"></loading>
         </el-dialog>
-      <span class="vue-resizable-handle" @mousedown="dragResize"></span>
+      </div>
+      <span class="vue-resizable-handle" @mousedown="startResize"></span>
     </div>
+  </div>
 </template>
 
 <script>
@@ -77,68 +76,68 @@ import loading from "../common/loading";
 import timePicker from '../common/timePicker'
 
 export default {
-    name: 'chartSingleStat',
+  name: 'chartSingleStat',
   components: {
     'loading': loading,
     'time-picker':timePicker
   },
-    props: {
-        // 看板id
-        panelId: {
-            type: Number,
-            default: 0,
-        },
-        editChartId: {
-          type: String,
-          default: 'editChartId',
-        },
-        chartIndex:{
-          type: Number,
-          default: 0,
-        }
+  props: {
+    // 看板id
+    panelId: {
+      type: Number,
+      default: 0,
     },
-    data() {
-        return {
-            data: {}, // 该图表信息,chartItem
-            unit:{},
-            isError:false,
-            errorContent:'',
-            seriesItem: [], // 保存信息
-            seriesItemScreen:[],//全屏数据
-            serieSingleStat:'',
-            images: '',
-            //toolbox: false,
-            loading:Object,
-            items: {
-                metric_name: [], // 每条数据列名称
-                xAxis: [],
-                theData: [], // series数据组
-            },
-            panelIdInner: '', // 看板id=panelId,原写作chart,由set_data获取
-            firstLoad: false, // 是否第一次加载
-            screenModal: false,
-            // 查询数据使用
-            filter: {
-                start_time: '',
-                end_time: '',
-            },
-            firstShow: false, // 默认不显示操作按钮,
-            caretShow:false,
-            dragTitleShow:false,
-            dropdownMenuShow:false,
-            minHeight:200,
-            chartSpaceHeight:5,//top-border: 1,bottom-border: 1,padding-bottome:3
-            titleHeight:38,//title-height:28,magrin-bottom:10
-            divFirstShow:false,
-            searchTime: [new Date().setHours(new Date().getHours() - 1), new Date()],//全屏显示的时间
-            oldSearchTime: [],
-        };
+    editChartId: {
+      type: String,
+      default: 'editChartId',
     },
-    created() {
-    },
+    chartIndex:{
+      type: Number,
+      default: 0,
+    }
+  },
+  data() {
+    return {
+      data: {}, // 该图表信息,chartItem
+      unit:{},
+      isError:false,
+      errorContent:'',
+      seriesItem: [], // 保存信息
+      seriesItemScreen:[],//全屏数据
+      serieSingleStat:'',
+      images: '',
+      loading:Object,
+      items: {
+        metric_name: [], // 每条数据列名称
+        xAxis: [],
+        theData: [], // series数据组
+      },
+      panelIdInner: '', // 看板id=panelId,原写作chart,由set_data获取
+      firstLoad: false, // 是否第一次加载
+      screenModal: false,
+      // 查询数据使用
+      filter: {
+          start_time: '',
+          end_time: '',
+      },
+      firstShow: false, // 默认不显示操作按钮,
+      caretShow:false,
+      dragTitleShow:false,
+      dropdownMenuShow:false,
+      divFirstShow:false,
+      searchTime: [new Date().setHours(new Date().getHours() - 1), new Date()],//全屏显示的时间
+      oldSearchTime: [],
+    };
+  },
+  created() {
+  },
   computed: {},
     watch: {},
     methods: {
+      startResize(e) {
+        let vm = this;
+        this.$chartResizeTool.start(vm, this.data, e);
+      },
       dragResize:function(e){
         var diffWidth =20; //界面的宽度空白的地方的宽度
         var chartBoxPadding = 22;
@@ -283,67 +282,65 @@ export default {
           document.onmouseup = null;
         }
       },
-        startLoading(area){
-          if(area==='screen'){
-            this.$refs['localLoadingScreen'+this.chartIndex].startLoading();
-          }else {
-            //this.showLoading = true;
-            this.$refs['localLoading'+this.chartIndex].startLoading();
+      startLoading(area){
+        if(area==='screen'){
+          this.$refs['localLoadingScreen'+this.chartIndex].startLoading();
+        }else {
+          //this.showLoading = true;
+          this.$refs['localLoading'+this.chartIndex].startLoading();
+        }
+      },
+      endLoading(area){
+        if(area==='screen'){
+          //this.showLoadingScreen = false;
+          this.$refs['localLoadingScreen'+this.chartIndex].endLoading();
+        }else {
+          //this.showLoading = false;
+          this.$refs['localLoading'+this.chartIndex].endLoading();
+        }
+      },
+      showLoad(chartItem) {
+        this.$nextTick(() => {
+          const chartBox = document.getElementById('chartSingleStatDiv'+this.chartIndex);
+          let height = Math.round(chartItem.height/10)*10;//图表高度四舍五入
+          if(height<this.minHeight){
+            height = this.minHeight;
           }
-        },
-        endLoading(area){
-          if(area==='screen'){
-            //this.showLoadingScreen = false;
-            this.$refs['localLoadingScreen'+this.chartIndex].endLoading();
-          }else {
-            //this.showLoading = false;
-            this.$refs['localLoading'+this.chartIndex].endLoading();
-          }
-        },
-        clearData(){
-        },
-        showLoad(chartItem) {
-          this.$nextTick(() => {
-            const chartBox = document.getElementById('chartSingleStatDiv'+this.chartIndex);
-            let height = Math.round(chartItem.height/10)*10;//图表高度四舍五入
-            if(height<this.minHeight){
-              height = this.minHeight;
-            }
-            chartBox.style.height = `${height-this.chartSpaceHeight}px`;
-            const singleStatBox = document.getElementById('chartContainer'+this.chartIndex);
-            singleStatBox.style.height = `${height-this.chartSpaceHeight-this.titleHeight}px`;// -75-32
-          });
-          this.startLoading();
-          this.divFirstShow = true;
-        },
-        // 重新请求数据 刷新操作-local
-        refreshChart() {
-            this.dropdownMenuShow=false;
-            this.startLoading();
-            this.firstShow = false;
-            this.$emit('on-refresh-data', this.data.id);
-        },
-        // 编辑图表
-        editChart() {
-            this.dropdownMenuShow=false;
-            this.$emit('on-edit-chart-block', this.data.id);
-        },
-        // 删除该图表
-        removeChart() {
-            this.dropdownMenuShow=false;
-            this.$emit('on-remove-chart-block', this.data.id);
-        },
-        //全屏时间条件查询
-        dateChange(time) {
-            this.searchTime = [...time];
-            this.seriesItemScreen = [];
-            this.serieSingleStat = "";
-            this.startLoading('screen');
-            this.$emit('on-search-data', this.data.id, this.searchTime);
-        },
-        clickos() {
-          this.dropdownMenuShow=false;
-        },
+          chartBox.style.height = `${height-this.chartSpaceHeight}px`;
+          const singleStatBox = document.getElementById('chartContainer'+this.chartIndex);
+          singleStatBox.style.height = `${height-this.chartSpaceHeight-this.titleHeight}px`;// -75-32
+        });
+        this.startLoading();
+        this.divFirstShow = true;
+      },
+      // 重新请求数据 刷新操作-local
+      refreshChart() {
+        this.dropdownMenuShow=false;
+        this.startLoading();
+        this.firstShow = false;
+        this.$emit('on-refresh-data', this.data.id);
+      },
+      // 编辑图表
+      editChart() {
+        this.dropdownMenuShow=false;
+        this.$emit('on-edit-chart-block', this.data.id);
+      },
+      // 删除该图表
+      removeChart() {
+        this.dropdownMenuShow=false;
+        this.$emit('on-remove-chart-block', this.data.id);
+      },
+      //全屏时间条件查询
+      dateChange(time) {
+        this.searchTime = [...time];
+        this.seriesItemScreen = [];
+        this.serieSingleStat = "";
+        this.startLoading('screen');
+        this.$emit('on-search-data', this.data.id, this.searchTime);
+      },
+      clickos() {
+        this.dropdownMenuShow=false;
+      },
       clearChart(){
         this.data = {};
       },
@@ -369,75 +366,70 @@ export default {
           }
         });
       },
-        // 全屏查看
-        showAllScreen() {
-            this.dropdownMenuShow=false;
-            this.searchTime = [];
-            this.$set(this.searchTime, 0, this.oldSearchTime[0]);
-            this.$set(this.searchTime, 1, this.oldSearchTime[1]);
-            this.$refs.calendarPanel.setCustomTime(this.searchTime);
+      // 全屏查看
+      showAllScreen() {
+          this.dropdownMenuShow=false;
+          this.searchTime = [];
+          this.$set(this.searchTime, 0, this.oldSearchTime[0]);
+          this.$set(this.searchTime, 1, this.oldSearchTime[1]);
+          this.$refs.calendarPanel.setCustomTime(this.searchTime);
 
-            this.seriesItemScreen = this.seriesItem;
-            this.screenModal = true;
-        },
-        // 设置数据, filter区分
-        setData(chartItem, seriesItem, panelId, filter,area,errorMsg) {
-          if(errorMsg && errorMsg!==''){
-            this.isError = true;
-            this.errorContent = errorMsg;
+          this.seriesItemScreen = this.seriesItem;
+          this.screenModal = true;
+      },
+      resize(chartItem) {
+        document.querySelector('#chartSingleStatDiv' + this.chartIndex + " .single-stat-container").style.height = `calc(100% - ${this.$chartResizeTool.titleHeight}px)`;
+      },
+      // 设置数据, filter区分
+      setData(chartItem, seriesItem, panelId, filter,area,errorMsg) {
+        if(errorMsg && errorMsg!==''){
+          this.isError = true;
+          this.errorContent = errorMsg;
+        }else {
+          this.isError = false;
+          this.errorContent = '';
+        }
+        if(area==='showFullScreen'){//全屏按时间查询
+          this.data = chartItem;
+          this.unit = chartDataFormat.getUnit(this.data.unit);
+          if(Number(seriesItem)){
+            let singleStatTmp =parseFloat(Number(seriesItem).toFixed(2));
+            this.serieSingleStat = chartDataFormat.getUnit(chartItem.unit?chartItem.unit:2).compute(singleStatTmp,null,2);
           }else {
-            this.isError = false;
-            this.errorContent = '';
+            this.serieSingleStat =seriesItem;
           }
-            if(area==='showFullScreen'){//全屏按时间查询
-              this.data = chartItem;
-              this.unit = chartDataFormat.getUnit(this.data.unit);
-              if(Number(seriesItem)){
-                let singleStatTmp =parseFloat(Number(seriesItem).toFixed(2));
-                this.serieSingleStat = chartDataFormat.getUnit(chartItem.unit?chartItem.unit:2).compute(singleStatTmp,null,2);
-              }else {
-                this.serieSingleStat =seriesItem;
-              }
-              this.searchTime[0] = filter.start_time;//将列表的查询时间复制给全屏的查询时间
-              this.searchTime[1] = filter.end_time;
-              this.endLoading('screen');
-            }else{
-              this.$nextTick(() => {
-                const chartBox = document.getElementById('chartSingleStatDiv'+this.chartIndex);
-                let height = Math.round(chartItem.height/10)*10;//图表高度四舍五入
-                if(height<this.minHeight){
-                  height = this.minHeight;
-                }
-                chartBox.style.height = `${height-this.chartSpaceHeight}px`;
-                const singleStatBox = document.getElementById('chartContainer'+this.chartIndex);
-                singleStatBox.style.height = `${height-this.chartSpaceHeight-this.titleHeight}px`;// -75-32
-              });
-              this.divFirstShow = true;
+          this.searchTime[0] = filter.start_time;//将列表的查询时间复制给全屏的查询时间
+          this.searchTime[1] = filter.end_time;
+          this.endLoading('screen');
+        }else{
+          this.$nextTick(() => {
+            this.resize(chartItem);
+          });
+          this.divFirstShow = true;
 
-              this.firstShow = true; // 展示操作按键
+          this.firstShow = true; // 展示操作按键
 
-              this.panelIdInner = panelId;
-              this.data = chartItem;
-              this.unit = chartDataFormat.getUnit(this.data.unit);
-              if(Number(seriesItem)){
-                let singleStatTmp =parseFloat(Number(seriesItem).toFixed(2));//parseFloat ：如果没有小数点，或者小数点后都是零，parseFloat() 会返回整数。
-                this.serieSingleStat = chartDataFormat.getUnit(chartItem.unit?chartItem.unit:2).compute(singleStatTmp,null,2);
-              }else {
-                this.serieSingleStat =seriesItem;
-              }
-              if (filter) { // 保存数据,用于同步时间
-                this.searchTime[0] = filter.start_time;//将列表的查询时间复制给全屏的查询时间
-                this.searchTime[1] = filter.end_time;
-                this.oldSearchTime[0] = this.searchTime[0];
-                this.oldSearchTime[1] = this.searchTime[1];
-              }
-
-              this.endLoading();
-            }
-        },
+          this.panelIdInner = panelId;
+          this.data = chartItem;
+          this.unit = chartDataFormat.getUnit(this.data.unit);
+          if(Number(seriesItem)){
+            let singleStatTmp =parseFloat(Number(seriesItem).toFixed(2));//parseFloat ：如果没有小数点，或者小数点后都是零，parseFloat() 会返回整数。
+            this.serieSingleStat = chartDataFormat.getUnit(chartItem.unit?chartItem.unit:2).compute(singleStatTmp,null,2);
+          }else {
+            this.serieSingleStat =seriesItem;
+          }
+          if (filter) { // 保存数据,用于同步时间
+            this.searchTime[0] = filter.start_time;//将列表的查询时间复制给全屏的查询时间
+            this.searchTime[1] = filter.end_time;
+            this.oldSearchTime[0] = this.searchTime[0];
+            this.oldSearchTime[1] = this.searchTime[1];
+          }
+          this.endLoading();
+        }
+      },
     },
     mounted() {
-        this.firstLoad = false;
+      this.firstLoad = false;
     },
     beforeDestroy() {
       this.clearChart();

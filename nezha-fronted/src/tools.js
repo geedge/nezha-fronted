@@ -419,6 +419,7 @@ export const chartResizeTool = {
       //调整resize-box的宽高
       box.style.width = `${originalWidth+(mouseX-mouseOriginalX)-chartBlankWidth}px`;
       box.style.height = `${originalHeight+(mouseY-mouseOriginalY)-chartBlankHeight}px`;
+      //调整
       //监听宽高的变化，变化量每达到step的50%时改变resize-shadow的尺寸并重绘resize-box内容
       let remainderWidth = (box.offsetWidth+chartBlankWidth-shadowNewWidth)%stepWidth; //宽的余数
       let remainderHeight = (box.offsetHeight+chartBlankHeight-shadowNewHeight)%stepHeight; //高的余数
@@ -467,13 +468,11 @@ export const chartResizeTool = {
       }
 
       if (widthChange || heightChange) {
-        //chart重绘
+        //step时chart重绘
         if (box.classList.contains("resize-box-echarts")) { //echarts类型
           vm.echartStore.resize({width: shadow.offsetWidth-16, height: shadow.offsetHeight-titleHeight-vm.$refs.legendArea.offsetHeight});
         } else if (box.classList.contains("resize-box-table")) { //table类型
-          vm.$nextTick(() => {
-            vm.resize({height: shadow.offsetHeight});
-          });
+          box.querySelector(".el-table__body-wrapper")._ps_.update();
         }
         //chart外层宽高调整
         let outerBox = document.getElementById(`chart-${data.id}`);
