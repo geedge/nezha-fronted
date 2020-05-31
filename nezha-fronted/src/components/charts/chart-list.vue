@@ -25,6 +25,7 @@
     right: 0;
     cursor: se-resize;
     box-sizing: border-box;
+    user-select: none;
   }
   .vue-resizable-handle:after {
     border-right: 2px solid #555;
@@ -1248,12 +1249,6 @@
           }
         });
       },
-      /*
-      // 刷新数据
-      refreshData() {
-        this.getData(this.filter);
-      },
-       */
       handleElementInViewport(ele,scrollTop,item,index,isSearch) {
         /*
         网页被卷去的高：document.body.scrollTop

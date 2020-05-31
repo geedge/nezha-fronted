@@ -363,6 +363,7 @@ export function unixTimeParseToString(unixTime,fmt='yyyy-MM-dd hh:mm:ss'){
 export const chartResizeTool = {
   minHeight: 200, //图表最小高度
   chartBlankHeight: 2, //图表空白占位高度
+  chartTableBlankHeight: 6, //表格型图表额外空白占位高度
   chartBlankWidth: 20, //图表空白占位宽度
   containerBlankWidth: 25, //容器空白占位宽度（#listContainer的padding）
   titleHeight: 28, //标题dom高度
@@ -375,9 +376,10 @@ export const chartResizeTool = {
     if (height < this.minHeight) {
       height = this.minHeight;
     }
-    return height-this.chartSpaceHeight;
+    return height-this.chartBlankHeight;
   },
-  start(vm, data, event) {
+  start(vm, originalData, event) {
+    let data = JSON.parse(JSON.stringify(originalData)); //将初始对象复制，后续操作使用复制对象
     let shadow; //缩放时底部阴影dom
     let box; //图表内容dom
     try {
@@ -392,15 +394,17 @@ export const chartResizeTool = {
     }
     let chartBlankWidth = this.chartBlankWidth;
     let chartBlankHeight = this.chartBlankHeight;
+    let titleHeight = this.titleHeight;
     let stepWidth = this.stepWidth(document.getElementById('listContainer').offsetWidth);
     let stepHeight = this.stepHeight;
 
-    let containerAvailableWidth = document.getElementById('listContainer').offsetWidth-this.containerBlankWidth;
     let mouseOriginalX = event.clientX; //鼠标初始坐标
     let mouseOriginalY = event.clientY;
-    let originalHeight = data.height; //图表初始宽高
-    let originalWidth = stepWidth*data.span;
-    //console.info("mouseOrigX %s, mouseOrigY %s, chartOrigX %s, chartOrigY %s", mouseOriginalX, mouseOriginalY, originalHeight, originalWidth)
+    let originalWidth = stepWidth*data.span; //图表、阴影初始宽高
+    let shadowNewWidth = originalWidth;
+    let originalHeight = data.height;
+    let shadowNewHeight = originalHeight;
+
     //1.激活背景阴影
     shadow.classList.add("resize-shadow-active");
     //2.鼠标移动时调整resize-box的宽高，同时监听宽高的变化，变化量每达到step的50%时改变resize-shadow的尺寸并重绘resize-box内容
@@ -413,25 +417,69 @@ export const chartResizeTool = {
       let mouseX = e.clientX;
       let mouseY = e.clientY;
       //调整resize-box的宽高
-      box.style.height = `${originalHeight+(mouseY-mouseOriginalY)-chartBlankHeight}px`;
       box.style.width = `${originalWidth+(mouseX-mouseOriginalX)-chartBlankWidth}px`;
+      box.style.height = `${originalHeight+(mouseY-mouseOriginalY)-chartBlankHeight}px`;
       //监听宽高的变化，变化量每达到step的50%时改变resize-shadow的尺寸并重绘resize-box内容
-      let remainderWidth = (box.offsetWidth+chartBlankWidth)%stepWidth; //宽的余数
-      let remainderHeight = (box.offsetHeight+chartBlankHeight)%stepHeight; //高的余数
-
+      let remainderWidth = (box.offsetWidth+chartBlankWidth-shadowNewWidth)%stepWidth; //宽的余数
+      let remainderHeight = (box.offsetHeight+chartBlankHeight-shadowNewHeight)%stepHeight; //高的余数
+      boxStepHandler(remainderWidth, remainderHeight);
     }
     function mouseupListener(e) {
-      let remainderWidth = (box.offsetHeight+chartBlankHeight)%stepHeight; //高的余数
-      let remainderHeight = (box.offsetHeight+chartBlankHeight)%stepHeight; //高的余数
-      data.height = box.offsetHeight+chartBlankHeight;
-      data.span = (box.offsetWidth+chartBlankWidth)/(containerAvailableWidth/12);
+      //将resize-box的宽高设为resize-shadow的宽高
+      box.style.width = `${shadow.offsetWidth}px`;
+      box.style.height = `${shadow.offsetHeight}px`;
+      data.height = box.offsetHeight;
+      data.span = (box.offsetWidth+chartBlankWidth)/stepWidth;
+      //请求后台，保存变更
+      if (data.height != originalData.height || data.span != originalData.span) {
+        originalData.height = data.height;
+        originalData.span = data.span;
+        vm.$put("panel/" + vm.panelIdInner + "/charts/modify", originalData);
+      }
       //关闭背景阴影
       shadow.classList.remove("resize-shadow-active");
+
       document.removeEventListener("mousemove", moveListener);
       document.removeEventListener("mouseup", mouseupListener);
     }
-    function boxStepHandler(type, op) {
+    function boxStepHandler(width, height) { //宽高变化量，大于0放大小于0缩小等于0不变; return: boolean 是否重绘
+      let widthChange = false;
+      let heightChange = false;
+      if (width > stepWidth/2) { //放大shadow宽
+        widthChange = true;
+        shadow.style.width = `${shadow.offsetWidth+stepWidth}px`;
+      } else if (width <= 0-(stepWidth/2)) { //缩小shadow宽
+        widthChange = true;
+        shadow.style.width = `${shadow.offsetWidth-stepWidth}px`;
+      }
+      if (widthChange) {
+        shadowNewWidth = shadow.offsetWidth;
+      }
+      if (height > stepHeight/2) { //放大shadow宽
+        heightChange = true;
+        shadow.style.height = `${shadow.offsetHeight+stepHeight}px`;
+      } else if (height <= 0-(stepHeight/2)) { //缩小shadow宽
+        heightChange = true;
+        shadow.style.height = `${shadow.offsetHeight-stepHeight}px`;
+      }
+      if (heightChange) {
+        shadowNewHeight = shadow.offsetHeight;
+      }
 
+      if (widthChange || heightChange) {
+        //chart重绘
+        if (box.classList.contains("resize-box-echarts")) { //echarts类型
+          vm.echartStore.resize({width: shadow.offsetWidth-16, height: shadow.offsetHeight-titleHeight-vm.$refs.legendArea.offsetHeight});
+        } else if (box.classList.contains("resize-box-table")) { //table类型
+          vm.$nextTick(() => {
+            vm.resize({height: shadow.offsetHeight});
+          });
+        }
+        //chart外层宽高调整
+        let outerBox = document.getElementById(`chart-${data.id}`);
+        outerBox.style.height = `${shadow.offsetHeight}px`;
+        outerBox.style.width = `${shadow.offsetWidth+chartBlankWidth}px`;
+      }
     }
   }
 }

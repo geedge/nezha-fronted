@@ -4,7 +4,7 @@
 <template>
   <div class="nz-chart-resize">
     <div class="resize-shadow" ref="resizeShadow"></div>
-    <div class="resize-box" ref="resizeBox">
+    <div class="resize-box resize-box-echarts" ref="resizeBox">
       <div class="line-chart-block" :id="'lineChartDiv'+chartIndex" v-show="divFirstShow" @mouseenter="mouseEnterChart" @mouseleave="mouseLeaveChart">
         <loading  :ref="'localLoading'+chartIndex"></loading>
         <div class="clearfix chartTitle" :id="'chartTitle'+chartIndex" >
@@ -16,16 +16,16 @@
             popper-class="chart-error-popper">
             <div >{{errorContent}}</div>
             <span slot="reference" style="" class="panel-info-corner panel-info-corner--error">
-            <i class="nz-icon nz-icon-warning fa"></i>
-            <span class="panel-info-corner-inner"></span>
-        </span>
+              <i class="nz-icon nz-icon-warning fa"></i>
+              <span class="panel-info-corner-inner"></span>
+           </span>
           </el-popover>
           <el-dropdown trigger="click" v-show="firstShow"   class="nz-chart-top" :key="'chartDropdown'+chartIndex"  v-clickoutside="clickos">
             <el-dropdown-menu style="display: none"></el-dropdown-menu>
             <span class="el-dropdown-link chart-title" @click="dropdownMenuShow=!dropdownMenuShow">
               <span class="chart-title-text">{{data.title}}</span>
               <span class="chart-title-icon"><i class="el-icon-caret-bottom el-icon--right"  :class="{'visible':caretShow,'hidden':!caretShow}"></i></span>
-          </span>
+            </span>
             <ul slot="dropdown" v-show="dropdownMenuShow"  :id="'dropdownUl'+chartIndex" :class="{'el-dropdown-menu nz-chart-dropdown':!isExplore,'el-dropdown-menu nz-chart-dropdown-one':isExplore}"    style="position: absolute; top: 30px; left: calc(50% - 79px); transform-origin: center top; z-index: 1000;" >
               <li v-show="!isExplore"  @click="refreshChart"  class="el-dropdown-menu__item">
                 <i class="global-active-color el-icon-refresh-right" style="font-size: 16px;"></i><span>{{$t('dashboard.refresh')}}</span></li>
@@ -180,9 +180,6 @@
         showLegend:true,
         searchTime:[new Date().setHours(new Date().getHours()-1),new Date()],
         oldSearchTime:[],
-        minHeight:200,
-        chartSpaceHeight:2,//top-border: 1,bottom-border: 1,padding-bottome:3
-        titleHeight:28,
         screenTitleHeight:58
       };
     },
@@ -366,7 +363,7 @@
           _this.$put('panel/'+  _this.panelIdInner+'/charts/modify',modifyParams).then(response => {
             if (response.code === 200) {
               //更新当前图表数据
-              _this.data.span= span;
+              _this.data.span= span;re
               _this.data.height= containerHeight+_this.chartSpaceHeight;
               _this.$emit('on-drag-chart', _this.data);
             }else {
@@ -820,15 +817,15 @@
             setTimeout(function () {
               let divHeight = self.$refs.legendArea.offsetHeight;
               if(!chartInfo.height){
-                self.echartStore.resize({height:(400-divHeight-self.titleHeight-self.chartSpaceHeight)});
+                self.echartStore.resize({height:(400-divHeight-self.$chartResizeTool.titleHeight-self.$chartResizeTool.chartBlankHeight)});
               }else {
-                self.echartStore.resize({height:(chartInfo.height-divHeight-self.titleHeight-self.chartSpaceHeight)});
+                self.echartStore.resize({height:(chartInfo.height-divHeight-self.$chartResizeTool.titleHeight-self.$chartResizeTool.chartBlankHeight)});
               }
               self.echartStore.clear();
               self.echartStore.setOption(option);//创建图表
               self.$refs['localLoading'+self.chartIndex].endLoading();
               self.firstShow = true; // 展示操作按键
-            }, 100)
+            }, 100);
 
             window.addEventListener('resize', function () {
               self.echartStore.resize();
@@ -1042,11 +1039,6 @@
           */
         }else{
           this.legend = legend;
-          //设置高度 chart-table
-          this.$nextTick(() => {
-            let chartBox = document.getElementById('lineChartDiv'+this.chartIndex);
-            chartBox.style.height = `${this.$chartResizeTool.calculateHeight(chartItem.height)}px`;
-          });
           this.$refs['localLoading'+this.chartIndex].startLoading();
           this.divFirstShow = true;
           this.firstShow = true; // 展示操作按键
@@ -1062,10 +1054,13 @@
             this.oldSearchTime[0] = this.searchTime[0];
             this.oldSearchTime[1] = this.searchTime[1];
           }
-          //this.$refs['localLoading'+this.chartIndex].endLoading();
           this.initChart(chartItem, seriesItem, this.$refs.lineChartArea, 'local',legend);
         }
 
+      },
+      resize(chartItem) {
+        let chartBox = document.getElementById('lineChartDiv'+this.chartIndex);
+        chartBox.style.height = `${this.$chartResizeTool.calculateHeight(chartItem.height)}px`;
       },
       clearChart(){
         if(this.echartStore){
@@ -1359,11 +1354,11 @@
         //设置高度
         this.$nextTick(() => {
           const chartBox = document.getElementById('lineChartDiv'+this.chartIndex);
-          let height = Math.round(chartItem.height/10)*10;//图表高度四舍五入
-          if(height<this.minHeight){
-            height = this.minHeight;
+          let height = Math.round(chartItem.height/this.$chartResizeTool.stepHeight)*this.$chartResizeTool.stepHeight;//图表高度四舍五入
+          if(height<this.$chartResizeTool.minHeight){
+            height = this.$chartResizeTool.minHeight;
           }
-          chartBox.style.height = `${height-this.chartSpaceHeight}px`;
+          chartBox.style.height = `${height-this.$chartResizeTool.chartBlankHeight}px`;
         });
         this.clearData();
         this.firstShow = false;
