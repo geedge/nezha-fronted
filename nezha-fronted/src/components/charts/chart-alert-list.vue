@@ -1,5 +1,5 @@
-<style lang="scss" scoped>
-@import './chart-table.scss';
+<style lang="scss">
+@import 'chart.scss';
 </style>
 <style>
   .max-width-90{

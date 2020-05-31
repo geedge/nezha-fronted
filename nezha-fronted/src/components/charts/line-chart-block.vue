@@ -1,5 +1,5 @@
 <style lang="scss">
-  @import './line-chart-block.scss';
+  @import 'chart.scss';
 </style>
 <template>
   <div class="nz-chart-resize">
@@ -128,8 +128,7 @@
       isExplore:{
         type:Boolean,
         default:false,
-      },
-      stepHeight: {type: Number}
+      }
     },
     data() {
       return {

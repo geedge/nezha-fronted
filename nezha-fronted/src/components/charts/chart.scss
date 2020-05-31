@@ -164,6 +164,11 @@
 .resize-shadow-active {
   background-color: #888;
 }
+.resize-box-url {
+  .vue-resizable-handle {
+    background-color: white;
+  }
+}
 .resize-box {
   .pagination {
     padding-top: 0;
@@ -195,7 +200,7 @@
       }
     }
   }
-  .line-chart-block, .chart-table, .chart-single-stat {
+  .line-chart-block, .chart-table, .chart-single-stat, .chart-url {
     height: 100%;
     position: relative;
     background-color: white;
@@ -205,8 +210,8 @@
     .chartTitle {
       text-align: center;
       width: 100%;
-      line-height: 28px;
-      padding: 0 3px;
+      line-height: 26px;
+      padding: 1px 3px 0 3px;
       box-sizing: border-box;
       .nz-chart-top{
         width:100%;

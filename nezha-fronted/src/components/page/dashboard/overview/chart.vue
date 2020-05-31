@@ -329,7 +329,7 @@
   }
 </script>
 <!--<style>
- @import "../../../charts/line-chart-block.scss";
+ @import "../../../charts/chart.scss";
 </style>-->
 <style scoped>
   .chart-room{

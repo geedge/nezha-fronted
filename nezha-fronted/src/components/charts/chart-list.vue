@@ -65,8 +65,7 @@
                           @on-edit-chart-block="editData"
                           :panel-id="filter.panelId"
                           :chart-index="index"
-                          :chart-data="item"
-                          :step-height="stepHeight"></line-chart-block>
+                          :chart-data="item"></line-chart-block>
 
         <chart-single-stat v-if="item.type === 'singleStat'" :ref="'editChart'+item.id" :key="'inner' + item.id"
                      @on-refresh-data="refreshChart"
@@ -87,8 +86,7 @@
           @on-drag-chart="editChartForDrag"
           @on-edit-chart-block="editData"
           :panel-id="filter.panelId"
-          :chart-index="index"
-          :step-height="stepHeight"></chart-table>
+          :chart-index="index"></chart-table>
 
         <chart-url v-if="item.type === 'url'" :ref="'editChart'+item.id" :key="'inner' + item.id"
                      @on-refresh-data="refreshChart"
@@ -98,12 +96,14 @@
                      @on-drag-chart="editChartForDrag"
                      @on-edit-chart-block="editData"
                      :panel-id="filter.panelId"
+                     :chart-data="item"
                      :chart-index="index"></chart-url>
 
         <chart-asset-info v-if="item.type  === 'assetInfo'" :ref="'editChart'+item.id" :key="'inner' + item.id"
                     @on-drag-chart="editChartForDrag"
                     :panel-id="filter.panelId"
                     :chart-index="index"
+                    :chart-data="item"
                     :editChartId="'editChartId' + item.id"
         ></chart-asset-info>
 
@@ -551,7 +551,7 @@
                   this.setChartSize(item, index);//设置该图表宽度
                   if(!item.isLoaded){
                     //获得当前显示在浏览器的图表，从后台获取数据
-                    let chartBox = document.getElementById('chart-' + item.id);//this.$refs['editChart'+item.id][0];
+                    let chartBox = document.getElementById('chart-' + item.id);
                     this.handleElementInViewport(chartBox, 0, item, index);
                   }
                 });
@@ -591,7 +591,7 @@
               if (!isSearch && this.$refs['editChart'+item.id] && this.$refs['editChart'+item.id][0]) {
                 this.$refs['editChart'+item.id][0].showLoad(item);
               }
-              this.setChartSize(item.span, realIndex); // 设置该图表宽度
+              this.setChartSize(item, realIndex); // 设置该图表宽度
             }
           });
         }
@@ -1286,17 +1286,13 @@
             item.isLoaded = true;
             if(chartType!=='url'){
               that.getChartDataForSearch(item,index);
+            } else {
+              console.info(that.$refs['editChart'+item.id])
+              that.$refs['editChart'+item.id][0].showLoad(item);
             }
           }
         }, 100);
       },
-    },
-
-    mounted() {
-    },
-    beforeDestroy() {
-    },
-    destroyed () {
     },
   };
 

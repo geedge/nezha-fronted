@@ -1,5 +1,5 @@
 <style lang="scss">
-  @import '../../charts/line-chart-block';
+  @import '../../charts/chart';
   .project-calendar .el-input__inner {
      height: 24px;
   }

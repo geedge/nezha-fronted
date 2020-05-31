@@ -1,5 +1,5 @@
 <style lang="scss">
-@import './line-chart-block.scss';
+@import 'chart';
 </style>
 <template>
   <div class="nz-chart-resize">

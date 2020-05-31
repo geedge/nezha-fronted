@@ -4,7 +4,7 @@
   }
 </style>
 <style lang="scss">
-  @import '../../charts/line-chart-block.scss';
+  @import '../../charts/chart';
 </style>
 <template>
   <div class="list">
