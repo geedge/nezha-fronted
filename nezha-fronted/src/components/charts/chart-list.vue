@@ -110,6 +110,7 @@
         <chart-alert-list :ref="'editChart'+item.id"
                           :panel-id="filter.panelId"
                           :chart-index="index"
+                          v-if="item.type  === 'alertList'"
                           :editChartId="'editChartId' + item.id"
                           :chart-info="item"
                           @on-refresh-data="refreshChart"

@@ -6,7 +6,7 @@
     <div class="resize-shadow" ref="resizeShadow"></div>
     <div class="resize-box resize-box-asset" ref="resizeBox">
       <div class="chart-asset-info" :id="'chartAssetInfoDiv'+chartIndex" v-show="divFirstShow" @mouseenter="caretShow=true" @mouseleave="caretShow=false">
-        <loading  :ref="'localLoading'+chartIndex"></loading>
+        <loading :ref="'localLoading'+chartIndex"></loading>
         <div class="clearfix chartTitle" :class="{'dragTitle':dragTitleShow}" :id="'chartTitle'+chartIndex">
           <el-popover
             v-if="isError"
@@ -14,10 +14,10 @@
             placement="top-start"
             trigger="hover"
             popper-class="chart-error-popper">
-            <div >{{errorContent}}</div>
+            <div>{{errorContent}}</div>
             <span slot="reference" class="panel-info-corner panel-info-corner--error">
-                <i class="nz-icon nz-icon-warning fa"></i>
-                <span class="panel-info-corner-inner"></span>
+              <i class="nz-icon nz-icon-warning fa"></i>
+              <span class="panel-info-corner-inner"></span>
             </span>
           </el-popover>
           <span class="el-dropdown-link chart-title" @click="dropdownMenuShow=!dropdownMenuShow">

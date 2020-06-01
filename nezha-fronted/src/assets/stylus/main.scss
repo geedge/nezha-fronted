@@ -726,7 +726,7 @@ li{
 .nz-table .el-table__virtual-wrapper {
   width: 100% !important;
 }
-.chart-table .nz-table td {
+.chart-table .nz-table td, .chart-alert-info .nz-table td {
   background-color: white;
 }
 .nz-table td {

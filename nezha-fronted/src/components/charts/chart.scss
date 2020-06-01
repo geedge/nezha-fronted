@@ -173,7 +173,7 @@
   .pagination {
     padding-top: 0;
   }
-  .chart-table {
+  .chart-table, .chart-alert-info {
     width: 100%;
     .table-container {
       padding: 0 6px;
@@ -268,6 +268,9 @@
               min-height: 26px;
               line-height: 26px;
             }
+            .el-table__body {
+              background-color: white;
+            }
             .el-table__body tr:last-of-type td {
               border: none;
             }
@@ -287,7 +290,7 @@
       }
     }
   }
-  .line-chart-block, .chart-table, .chart-single-stat, .chart-url, .chart-asset-info {
+  .line-chart-block, .chart-table, .chart-single-stat, .chart-url, .chart-asset-info, .chart-alert-info {
     height: 100%;
     position: relative;
     background-color: white;

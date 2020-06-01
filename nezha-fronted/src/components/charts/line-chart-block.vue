@@ -6,7 +6,7 @@
     <div class="resize-shadow" ref="resizeShadow"></div>
     <div class="resize-box resize-box-echarts" ref="resizeBox">
       <div class="line-chart-block" :id="'lineChartDiv'+chartIndex" v-show="divFirstShow" @mouseenter="mouseEnterChart" @mouseleave="mouseLeaveChart">
-        <loading  :ref="'localLoading'+chartIndex"></loading>
+        <loading :ref="'localLoading'+chartIndex"></loading>
         <div class="clearfix chartTitle" :id="'chartTitle'+chartIndex" >
           <el-popover
             v-if="isError"
@@ -15,7 +15,7 @@
             trigger="hover"
             popper-class="chart-error-popper">
             <div >{{errorContent}}</div>
-            <span slot="reference" style="" class="panel-info-corner panel-info-corner--error">
+            <span slot="reference" class="panel-info-corner panel-info-corner--error">
               <i class="nz-icon nz-icon-warning fa"></i>
               <span class="panel-info-corner-inner"></span>
            </span>

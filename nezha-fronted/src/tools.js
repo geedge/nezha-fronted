@@ -466,12 +466,6 @@ export const chartResizeTool = {
         //step时chart重绘
         if (box.classList.contains("resize-box-echarts")) { //echarts类型
           vm.echartStore.resize({width: shadow.offsetWidth-16, height: shadow.offsetHeight-titleHeight-vm.$refs.legendArea.offsetHeight});
-        } else if (box.classList.contains("resize-box-table")) { //table类型
-          //刷新滚动条
-          let scrollbar = box.querySelector(".el-table__body-wrapper")._ps_;
-          if (scrollbar) {
-            scrollbar.update();
-          }
         }
         //chart外层宽高调整
         let outerBox = document.getElementById(`chart-${data.id}`);
