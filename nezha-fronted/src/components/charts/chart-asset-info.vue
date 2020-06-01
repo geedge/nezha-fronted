@@ -1,83 +1,77 @@
+<style lang="scss">
+  @import './chart.scss';
+</style>
 <template>
-  <div class="chart-asset-info"  :id="'chartAssetInfoDiv'+chartIndex" v-show="divFirstShow" @mouseenter="caretShow=true" @mouseleave="caretShow=false">
-    <loading  :ref="'localLoading'+chartIndex"></loading>
-    <div class="clearfix chartTitle" :class="{'dragTitle':dragTitleShow}" :id="'chartTitle'+chartIndex">
-      <el-popover
-        v-if="isError"
-        :close-delay=10
-        placement="top-start"
-        trigger="hover"
-        popper-class="chart-error-popper">
-        <div >{{errorContent}}</div>
-        <span slot="reference" style="" class="panel-info-corner panel-info-corner--error">
+  <div class="nz-chart-resize">
+    <div class="resize-shadow" ref="resizeShadow"></div>
+    <div class="resize-box resize-box-asset" ref="resizeBox">
+      <div class="chart-asset-info" :id="'chartAssetInfoDiv'+chartIndex" v-show="divFirstShow" @mouseenter="caretShow=true" @mouseleave="caretShow=false">
+        <loading  :ref="'localLoading'+chartIndex"></loading>
+        <div class="clearfix chartTitle" :class="{'dragTitle':dragTitleShow}" :id="'chartTitle'+chartIndex">
+          <el-popover
+            v-if="isError"
+            :close-delay=10
+            placement="top-start"
+            trigger="hover"
+            popper-class="chart-error-popper">
+            <div >{{errorContent}}</div>
+            <span slot="reference" class="panel-info-corner panel-info-corner--error">
                 <i class="nz-icon nz-icon-warning fa"></i>
                 <span class="panel-info-corner-inner"></span>
             </span>
-      </el-popover>
-      <span class="el-dropdown-link chart-title" @click="dropdownMenuShow=!dropdownMenuShow">
-        <span class="chart-title-text">{{$t('asset.createAssetTab.assetInfo')}}</span>
-      </span>
-    </div>
-    <div class="mt-10 chart-info-container" v-cloak  v-show="firstShow" >
-      <div :id="'chartContainer'+chartIndex"  ref="chartContainer" class="asset-info-content" >
-          <el-scrollbar style="height: 100%;width:100%;" ref="scrollbar" class="el-scrollbar-small">
-            <div style="padding: 0 15px">
-              <div class="basic-container">
-                <div class="basic-title" @click="hideElement('basic')">
-                  <div>{{$t('asset.createAssetTab.basicTitle')}}</div>
-                  <div><i :class="{'el-icon-caret-bottom':hideBasic,'el-icon-caret-top':!hideBasic}"></i></div>
-                </div>
-                <div class="basic-content" :class="{'shrink':hideBasic}">
-                  <template v-if="assetInfos.Basic && Object.keys(assetInfos.Basic).length>0">
-                    <div v-for="(item,index) in basicKey" :key="index" class="content-item hover-bg" :class="{'bg-grey':index % 2 == 1}">
-                      <div class="content-item-key">{{item.label}}</div>
-                      <template v-if="item.prop == 'pingStatus'">
-                        <div class="content-item-value">
-                          <div :class="{'active-icon green':assetInfos.Basic[item.prop] == 1,'active-icon red':assetInfos.Basic[item.prop] == 0}" style="margin-top: 0px;"></div><span>{{assetInfos.Basic.pingRtt?assetInfos.Basic.pingRtt+'ms':''}}</span>
+          </el-popover>
+          <span class="el-dropdown-link chart-title" @click="dropdownMenuShow=!dropdownMenuShow">
+            <span class="chart-title-text">{{$t('asset.createAssetTab.assetInfo')}}</span>
+          </span>
+        </div>
+        <div class="mt-10 chart-info-container" v-cloak  v-show="firstShow" >
+          <div :id="'chartContainer'+chartIndex"  ref="chartContainer" class="asset-info-content" >
+            <el-scrollbar style="height: 100%;width:100%;" ref="scrollbar" class="el-scrollbar-normal">
+              <div style="padding: 0 15px">
+                <div class="basic-container">
+                  <div class="basic-title asset-info-content-title" @click="hideElement('basic')">
+                    <span><i :class="{'el-icon-caret-right':hideBasic,'el-icon-caret-bottom':!hideBasic}"></i></span>
+                    <span>{{$t('asset.createAssetTab.basicTitle')}}</span>
+                  </div>
+                  <div class="basic-content" :class="{'shrink':hideBasic}">
+                    <template v-if="assetInfos.Basic && Object.keys(assetInfos.Basic).length>0">
+                      <div v-for="(item,index) in basicKey" :key="index" class="content-item hover-bg" :class="{'bg-grey':index % 2 == 1}">
+                        <div class="content-item-key">{{item.label}}</div><div
+                        class="content-item-value" v-if="item.prop == 'pingStatus'">
+                          <div class="active-icon" :class="{'green':assetInfos.Basic[item.prop] == 1,'red':assetInfos.Basic[item.prop] != 1}"></div>
+                          <span>{{assetInfos.Basic.pingRtt ? assetInfos.Basic.pingRtt + 'ms' : '&nbsp;'}}</span>
                         </div>
-                      </template>
-                      <template v-else-if="item.prop == 'alert'">
-                        <div class="content-item-value">
-                          <span   class="as-button" :class="{'success':assetInfos.Basic[item.prop]<=0,'danger':assetInfos.Basic[item.prop]>0}">{{assetInfos.Basic[item.prop] + ' ' + $t('overall.active')}}</span>
+                        <div class="content-item-value" v-else-if="item.prop == 'alert'">
+                          <span class="as-button" :class="{'success': assetInfos.Basic[item.prop] <= 0, 'danger': assetInfos.Basic[item.prop] > 0}">{{assetInfos.Basic[item.prop] + ' ' + $t('overall.active')}}</span>
                         </div>
-                      </template>
-                      <template v-else-if="item.prop == 'state'">
-                        <div class="content-item-value">
+                        <div class="content-item-value" v-else-if="item.prop == 'state'">
                           {{assetInfos.Basic[item.prop] == 1?$t('asset.createAssetTab.inStock'):$t('asset.createAssetTab.outStock')}}
                         </div>
-                      </template>
-                      <template v-else>
-                        <div class="content-item-value">
-                          {{assetInfos.Basic[item.prop]}}
+                        <div class="content-item-value" v-else>
+                          {{assetInfos.Basic[item.prop] ? assetInfos.Basic[item.prop] : "&nbsp;"}}
                         </div>
-                      </template>
-                    </div>
-                  </template>
-                </div>
-              </div>
-              <div class="feature-container">
-                <div class="feature-title" @click="hideElement('feature')" >
-                  <div>{{$t('asset.createAssetTab.featureTitle')}}</div>
-                  <div><i :class="{'el-icon-caret-bottom':hideFeature,'el-icon-caret-top':!hideFeature}"></i></div>
-                </div>
-                <div class="feature-content" :class="{'shrink':hideFeature}">
-                  <div v-for="(value,key,index) in assetInfos.Feature" class="content-item" :class="{'bg-grey':index % 2 == 1,'hover-bg':Array.isArray(value) && value.length>0 &&typeof value[0] == 'string'}">
-                    <div class="content-item-key" ><div style="vertical-align: middle">{{key}}</div></div>
-                    <template v-if="typeof value == 'string'">
-                      <div class="content-item-value">{{value}}</div>
+                      </div>
                     </template>
-                    <div v-if="Array.isArray(value) && value.length>0" class="content-item-value">
-                      <template v-if="typeof value[0] == 'string'">
-                        <div class="item-value-sub" v-for="(item,index) in value" :key="index">{{item}}</div>
-                      </template>
-                      <template v-else>
+                  </div>
+                </div>
+                <div class="feature-container">
+                  <div class="feature-title asset-info-content-title" @click="hideElement('feature')" >
+                    <span><i :class="{'el-icon-caret-right':hideFeature,'el-icon-caret-bottom':!hideFeature}"></i></span>
+                    <span>{{$t('asset.createAssetTab.featureTitle')}}</span>
+                  </div>
+                  <div class="feature-content" :class="{'shrink':hideFeature}">
+                    <div v-for="(value,key,index) in assetInfos.Feature" class="content-item" :class="{'bg-grey':index % 2 == 1,'hover-bg':Array.isArray(value) && value.length>0 &&typeof value[0] == 'string'}">
+                      <div class="content-item-key" >{{key}}</div><div
+                      class="content-item-value" v-if="typeof value == 'string'">{{value}}</div><div v-if="Array.isArray(value) && value.length>0" class="content-item-value content-item-value-muti">
+                        <div v-if="typeof value[0] == 'string'" class="item-value-sub" v-for="(item,index) in value" :key="index">{{item}}</div>
                         <el-table
+                          v-else
                           class="nz-table asset-info-table"
                           :data="value"
                           tooltip-effect="light"
                           height="100%"
                           ref="dataTable"
-                          v-scrollBar:el-table="'large'"
+                          v-scrollBar:el-table="'small'"
                         >
                           <el-table-column
                             :resizable="false"
@@ -93,16 +87,17 @@
                             </template>
                           </el-table-column>
                         </el-table>
-                      </template>
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
-            </div>
-          </el-scrollbar>
+            </el-scrollbar>
+          </div>
         </div>
+      </div>
+      <span class="vue-resizable-handle" @mousedown="startResize"></span>
     </div>
-    <span class="vue-resizable-handle" @mousedown="dragResize"></span>
   </div>
 </template>
 
@@ -157,9 +152,6 @@
         caretShow:false,
         dragTitleShow:false,
         dropdownMenuShow:false,
-        minHeight:200,
-        chartSpaceHeight:5,//top-border: 1,bottom-border: 1,padding-bottome:3
-        titleHeight:38,//title-height:28,magrin-bottom:10
         divFirstShow:false,
         searchTime: [new Date().setHours(new Date().getHours() - 1), new Date()],//全屏显示的时间
         oldSearchTime: [],
@@ -231,11 +223,11 @@
         ]
       };
     },
-    created() {
-    },
-    computed: {},
-    watch: {},
     methods: {
+      startResize(e) {
+        let vm = this;
+        this.$chartResizeTool.start(vm, this.data, e);
+      },
       setLabels:function(source){
         let labels=[];
         source.forEach(item=>{
@@ -268,172 +260,19 @@
           return key.replace(/\$_\$/g,' ')
         }
       },
-      dragResize:function(e){
-        var diffWidth =20; //界面的宽度空白的地方的宽度
-        var chartBoxPadding = 22;
-        var targetDiv= document.getElementById('chartAssetInfoDiv'+this.chartIndex); //e.target.parentNode.parentNode;.children[0]
-        var targetDivContainer= document.getElementById('listContainer'); //e.target.parentNode.parentNode;.children[0]
-        var maxWidth = targetDivContainer.offsetWidth-diffWidth;
-        var minWidth = maxWidth/12;
-        var stepWidth = maxWidth/12;
-        var stepHeight = 10;
-
-        //得到点击时该容器的宽高：
-        var targetDivHeight=targetDiv.offsetHeight;
-        var targetDivWidth=targetDiv.offsetWidth;
-        var startY=e.clientY;
-        var startX=e.clientX;
-        var _this=this;
-
-        document.onmousemove=function(e){
-          e.preventDefault();
-          //得到鼠标拖动的宽高距离：取绝对值
-          var distY=Math.abs(e.clientY-startY);
-          var distX=Math.abs(e.clientX-startX);
-
-          //往上方拖动：
-          if( e.clientY < startY){
-            targetDiv.style.height=targetDivHeight-distY+'px';
-            //heightTmp = targetDivHeight-distY;
-          }
-          if( e.clientX < startX){
-            targetDiv.style.width=targetDivWidth-distX+'px';
-            //widthTmp = targetDivWidth-distX;
-          }
-          //往下方拖动：
-          if (e.clientY > startY) {
-            targetDiv.style.height=(targetDivHeight+distY)+'px';
-            //heightTmp = targetDivHeight+distY;
-          }
-          if (e.clientX > startX) {
-            targetDiv.style.width=(targetDivWidth+distX)+'px';
-            //widthTmp = targetDivWidth+distX;
-          }
-
-          if(parseInt(targetDiv.style.height)<=_this.minHeight){
-            targetDiv.style.height=_this.minHeight+'px';
-            //heightTmp = _this.minHeight;
-          }
-
-          if(parseInt(targetDiv.style.width)>=maxWidth){
-            targetDiv.style.width=maxWidth+'px';
-            //widthTmp = maxWidth;
-          }
-          if(parseInt(targetDiv.style.width)<=minWidth){
-            targetDiv.style.width=minWidth+'px';
-            //widthTmp = minWidth;
-          }
-          //调整表格大小
-          let containerHeight = parseInt(targetDiv.style.height);
-          let containerWidth = parseInt(targetDiv.style.width);
-          const chartBox = document.getElementsByClassName('chartBox');
-          chartBox[_this.chartIndex].style.width = (containerWidth+chartBoxPadding)+'px';
-          //chartBox[_this.chartIndex].style.height = `${containerHeight}px`;
-          //表格的高度
-          const chartAssetInfoBox = document.getElementById('chartContainer'+_this.chartIndex);
-          chartAssetInfoBox.style.height = `${containerHeight-_this.titleHeight}px`;//-75-32+25
-        }
-
-        document.onmouseup=function(){
-          let targetDivHeightNew = parseInt(targetDiv.style.height);
-          //let targetDivHeightNew = heightTmp
-          let targetDivWidthNew = parseInt(targetDiv.style.width);
-          //let targetDivWidthNew = widthTmp;
-
-          let diffHeight =  Math.abs(targetDivHeight-targetDivHeightNew);
-          if(targetDivHeight>targetDivHeightNew){
-            let finalDiffHeight = Math.floor(diffHeight/stepHeight)*stepHeight;
-            //alert('oldWidth='+targetDivHeight+"===diffHeight+"+diffHeight+"==finalDiffHeight="+finalDiffHeight);
-            targetDiv.style.height = (targetDivHeight-finalDiffHeight)+'px';
-          }
-          if(targetDivHeight<targetDivHeightNew){
-            let finalDiffHeight = Math.ceil(diffHeight/stepHeight)*stepHeight;
-            targetDiv.style.height = (targetDivHeight+finalDiffHeight)+'px';
-          }
-
-          var span = _this.data.span;
-          if(targetDivWidth>targetDivWidthNew){
-            span =  Math.floor((targetDivWidthNew*12)/maxWidth);
-            let finalWidth = Math.floor((targetDivWidthNew*12)/maxWidth)*stepWidth;
-            if((finalWidth)<minWidth){
-              targetDiv.style.width=minWidth+'px';
-              span = 1;
-            }else {
-              targetDiv.style.width = finalWidth+'px';
-            }
-          }
-          if(targetDivWidth<targetDivWidthNew){
-            span =  Math.ceil((targetDivWidthNew*12)/maxWidth);
-            let spanUnit = Math.ceil((targetDivWidthNew*12)/maxWidth);
-            let finalWidth = spanUnit*stepWidth;
-            if(finalWidth>maxWidth || spanUnit===12){
-              targetDiv.style.width=maxWidth+'px';
-              span = 12;
-            }else {
-              targetDiv.style.width = finalWidth+'px';
-            }
-          }
-          //调整表格大小
-          let containerHeight = parseInt(targetDiv.style.height);
-          let containerWidth = parseInt(targetDiv.style.width);
-
-          const chartBox = document.getElementsByClassName('chartBox');
-          chartBox[_this.chartIndex].style.width = (containerWidth+chartBoxPadding)+'px';
-          //chartBox[_this.chartIndex].style.height = `${containerHeight}px`;
-          //表格的高度
-          const chartAssetInfoBox = document.getElementById('chartContainer'+_this.chartIndex);
-          chartAssetInfoBox.style.height = `${containerHeight-_this.titleHeight}px`;
-
-          const modifyParams = {
-            id:_this.data.id,
-            span:span,
-            height:(containerHeight+_this.chartSpaceHeight),
-            prev:parseInt(_this.data.prev),
-            next:parseInt(_this.data.next),
-          }
-          targetDiv.style.height = (Math.round((containerHeight+_this.chartSpaceHeight)/10)*10-_this.chartSpaceHeight)+'px';//图表实际渲染高度，采用个位数字四舍五入
-          _this.$put('panel/'+  _this.panelIdInner+'/charts/modify',modifyParams).then(response => {
-            if (response.code === 200) {
-              //更新当前图表数据
-              _this.data.span= span;
-              _this.data.height= containerHeight+_this.chartSpaceHeight;
-              _this.$emit('on-drag-chart', _this.data);
-            }else {
-              if(response.msg){
-                _this.$message.error(response.msg);
-              }else if(response.error){
-                _this.$message.error(response.error);
-              }else {
-                _this.$message.error(response);
-              }
-            }
-          });
-          document.onmousemove=null;
-          document.onmouseup = null;
-        }
-        this.$nextTick(()=>{
-          this.$refs.scrollbar.update();
-        })
-
-      },
       startLoading(area){
         this.$refs['localLoading'+this.chartIndex].startLoading();
       },
       endLoading(area){
         this.$refs['localLoading'+this.chartIndex].endLoading();
       },
-      clearData(){
+      resize() {
+        let container = document.querySelector('#chartAssetInfoDiv' + this.chartIndex + " .chart-info-container");
+        container.style.height = `calc(100% - ${this.$chartResizeTool.titleHeight+this.$chartResizeTool.chartTableBlankHeight}px)`;
       },
       showLoad(chartItem) {
         this.$nextTick(() => {
-          const chartBox = document.getElementById('chartAssetInfoDiv'+this.chartIndex);
-          let height = Math.round(chartItem.height/10)*10;//图表高度四舍五入
-          if(height<this.minHeight){
-            height = this.minHeight;
-          }
-          chartBox.style.height = `${height-this.chartSpaceHeight}px`;
-          const singleStatBox = document.getElementById('chartContainer'+this.chartIndex);
-          singleStatBox.style.height = `${height-this.chartSpaceHeight-this.titleHeight}px`;// -75-32
+          this.resize();
         });
         this.startLoading();
         this.divFirstShow = true;
@@ -471,16 +310,6 @@
           this.isError = false;
           this.errorContent = '';
         }
-        this.$nextTick(() => {
-          const chartBox = document.getElementById('chartAssetInfoDiv'+this.chartIndex);
-          let height = Math.round(chartItem.height/10)*10;//图表高度四舍五入
-          if(height<this.minHeight){
-            height = this.minHeight;
-          }
-          chartBox.style.height = `${height-this.chartSpaceHeight}px`;
-          const singleStatBox = document.getElementById('chartContainer'+this.chartIndex);
-          singleStatBox.style.height = `${height-this.chartSpaceHeight-this.titleHeight}px`;// -75-32
-        });
         this.divFirstShow = true;
 
         this.firstShow = true; // 展示操作按键
@@ -506,28 +335,3 @@
     },
   };
 </script>
-<style lang="scss" scoped>
-  @import './chart-asset-info';
-  .as-button{
-    color: white;
-    padding: 2px 5px;
-    border-radius: 4px;
-  }
-  .success{
-    background-color: #50d050;
-  }
-  .danger{
-    background-color: #d64f40;
-  }
-</style>
-<style>
-  .asset-info-content .el-scrollbar__view {
-    height: 100%;
-  }
-  .asset-info-table .el-table__body-wrapper{
-    overflow: inherit;
-  }
-  .asset-info-table:hover .ps__rail-x{
-    opacity: 1 !important;
-  }
-</style>

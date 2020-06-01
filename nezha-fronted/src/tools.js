@@ -380,16 +380,12 @@ export const chartResizeTool = {
   },
   start(vm, originalData, event) {
     let data = JSON.parse(JSON.stringify(originalData)); //将初始对象复制，后续操作使用复制对象
-    let shadow; //缩放时底部阴影dom
-    let box; //图表内容dom
-    try {
-      shadow = vm.$refs.resizeShadow;
-    } catch (e) {
+    let shadow = vm.$refs.resizeShadow; //缩放时底部阴影dom
+    if (!shadow) {
       shadow = vm.$refs[0].resizeShadow;
     }
-    try {
-      box = vm.$refs.resizeBox;
-    } catch (e) {
+    let box = vm.$refs.resizeBox; //图表内容dom
+    if (!box) {
       box = vm.$refs[0].resizeBox;
     }
     let chartBlankWidth = this.chartBlankWidth;
@@ -419,7 +415,6 @@ export const chartResizeTool = {
       //调整resize-box的宽高
       box.style.width = `${originalWidth+(mouseX-mouseOriginalX)-chartBlankWidth}px`;
       box.style.height = `${originalHeight+(mouseY-mouseOriginalY)-chartBlankHeight}px`;
-      //调整
       //监听宽高的变化，变化量每达到step的50%时改变resize-shadow的尺寸并重绘resize-box内容
       let remainderWidth = (box.offsetWidth+chartBlankWidth-shadowNewWidth)%stepWidth; //宽的余数
       let remainderHeight = (box.offsetHeight+chartBlankHeight-shadowNewHeight)%stepHeight; //高的余数
@@ -429,8 +424,8 @@ export const chartResizeTool = {
       //将resize-box的宽高设为resize-shadow的宽高
       box.style.width = `${shadow.offsetWidth}px`;
       box.style.height = `${shadow.offsetHeight}px`;
-      data.height = box.offsetHeight;
-      data.span = (box.offsetWidth+chartBlankWidth)/stepWidth;
+      data.height = Math.round(box.offsetHeight/stepHeight*stepHeight);
+      data.span = Math.round((box.offsetWidth+chartBlankWidth)/stepWidth);
       //请求后台，保存变更
       if (data.height != originalData.height || data.span != originalData.span) {
         originalData.height = data.height;
@@ -443,7 +438,7 @@ export const chartResizeTool = {
       document.removeEventListener("mousemove", moveListener);
       document.removeEventListener("mouseup", mouseupListener);
     }
-    function boxStepHandler(width, height) { //宽高变化量，大于0放大小于0缩小等于0不变; return: boolean 是否重绘
+    function boxStepHandler(width, height) { //param: 宽高变化量，大于0放大，小于0缩小
       let widthChange = false;
       let heightChange = false;
       if (width > stepWidth/2) { //放大shadow宽
@@ -456,10 +451,10 @@ export const chartResizeTool = {
       if (widthChange) {
         shadowNewWidth = shadow.offsetWidth;
       }
-      if (height > stepHeight/2) { //放大shadow宽
+      if (height > stepHeight/2) { //放大shadow高
         heightChange = true;
         shadow.style.height = `${shadow.offsetHeight+stepHeight}px`;
-      } else if (height <= 0-(stepHeight/2)) { //缩小shadow宽
+      } else if (height <= 0-(stepHeight/2)) { //缩小shadow高
         heightChange = true;
         shadow.style.height = `${shadow.offsetHeight-stepHeight}px`;
       }
@@ -472,7 +467,11 @@ export const chartResizeTool = {
         if (box.classList.contains("resize-box-echarts")) { //echarts类型
           vm.echartStore.resize({width: shadow.offsetWidth-16, height: shadow.offsetHeight-titleHeight-vm.$refs.legendArea.offsetHeight});
         } else if (box.classList.contains("resize-box-table")) { //table类型
-          box.querySelector(".el-table__body-wrapper")._ps_.update();
+          //刷新滚动条
+          let scrollbar = box.querySelector(".el-table__body-wrapper")._ps_;
+          if (scrollbar) {
+            scrollbar.update();
+          }
         }
         //chart外层宽高调整
         let outerBox = document.getElementById(`chart-${data.id}`);

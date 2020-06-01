@@ -108,87 +108,6 @@
           title: this.$t('dashboard.panel.createPanelTitle')
         },
         tableHover: false,
-        /*
-        pickerOptions: {
-          shortcuts: [{
-            text: this.$t("dashboard.panel.recOne"),
-            onClick(picker) {
-              const end = new Date();
-              const start = new Date();
-              start.setHours(start.getHours() - 1);
-              picker.$emit('pick', [start, end]);
-            }
-          }, {
-            text: this.$t("dashboard.panel.recFour"),
-            onClick(picker) {
-              const end = new Date();
-              const start = new Date();
-              start.setHours(start.getHours() - 4);
-              picker.$emit('pick', [start, end]);
-            }
-          }, {
-            text: this.$t("dashboard.panel.recOneDay"),
-            onClick(picker) {
-              const end = new Date();
-              const start = new Date();
-              start.setDate(start.getDate() - 1);
-              picker.$emit('pick', [start, end]);
-            }
-          }, {
-            text: this.$t("dashboard.panel.yesterday"),
-            onClick(picker) {
-              const start = new Date();
-              const end = new Date();
-              start.setDate(start.getDate() - 1);
-              start.setHours(0);
-              start.setMinutes(0);
-              start.setSeconds(0);
-              end.setDate(end.getDate() - 1);
-              end.setHours(23);
-              end.setMinutes(59);
-              end.setSeconds(59);
-              picker.$emit('pick', [start, end]);
-            }
-          }, {
-            text: this.$t("dashboard.panel.recSevenDay"),
-            onClick(picker) {
-              const end = new Date();
-              const start = new Date();
-              start.setDate(start.getDate() - 7);
-              picker.$emit('pick', [start, end]);
-            }
-          }, {
-            text: this.$t("dashboard.panel.recOneMonth"),
-            onClick(picker) {
-              const end = new Date();
-              const start = new Date();
-              start.setDate(start.getDate() - 30);
-              picker.$emit('pick', [start, end]);
-            }
-          }, {
-            text: this.$t("dashboard.panel.curMonth"),
-            onClick(picker) {
-              const end = new Date();
-              const start = new Date();
-              start.setDate(1);
-              start.setHours(0);
-              start.setMinutes(0);
-              picker.$emit('pick', [start, end]);
-            }
-          }, {
-            text: this.$t("dashboard.panel.lastMonth"),
-            onClick(picker) {
-              const end = new Date();
-              const start = new Date();
-              start.setDate(1);
-              start.setMonth(start.getMonth() - 1);
-              end.setDate(0);
-              start.setStart();
-              end.setEnd();
-              picker.$emit('pick', [start, end]);
-            }
-          }]
-        },*/
         searchTime: [
           new Date(bus.computeTimezone(new Date().getTime())).setHours(new Date(bus.computeTimezone(new Date().getTime())).getHours() - 1),
           new Date(bus.computeTimezone(new Date().getTime()))
@@ -254,17 +173,13 @@
         searchLabel: {}, //搜索参数
         //---图表相关参数--start
         dataList: [], // 数据列表
-        //searchName: '', //  搜索名称
         filter: { // 过滤条件
-          //productId: 0,
           panelId: 0,
           start_time: '',
           end_time: '',
           searchName: ''
         },
         panelId: 0,
-        //removeModal: false, // 删除弹出
-        //deleteObj: {}, // 删除对象
         //---图表相关参数--end
       }
     },
@@ -457,8 +372,6 @@
       /*时间条件查询--end*/
       //公用操作
       jumpTo(data, id) {
-        //this.$store.state.assetData.moduleData = data
-        //this.$store.state.assetData.selectedData = id
         bus.$emit("menu-change", data);
         this.$router.push({
           path: "/" + data,

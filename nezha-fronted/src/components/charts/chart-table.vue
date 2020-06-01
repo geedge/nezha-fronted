@@ -1,5 +1,5 @@
 <style lang="scss">
-@import 'chart';
+@import './chart.scss';
 </style>
 <template>
   <div class="nz-chart-resize">

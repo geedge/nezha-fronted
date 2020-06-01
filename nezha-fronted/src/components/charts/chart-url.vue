@@ -1,10 +1,5 @@
-<style lang="scss" scoped>
-@import 'chart.scss';
-</style>
-<style>
-  .max-width-90{
-    max-width: 90px;
-  }
+<style lang="scss">
+@import './chart.scss';
 </style>
 <template>
   <div class="nz-chart-resize">
@@ -182,196 +177,50 @@ export default {
       }
 
     },
-    dragResize:function(e){
-      var diffWidth =20; //界面的宽度空白的地方的宽度
-      var chartBoxPadding = 22;
-      var targetDiv= document.getElementById('chartUrlDiv'+this.chartIndex); //e.target.parentNode.parentNode;.children[0]
-      var targetDivContainer= document.getElementById('listContainer'); //e.target.parentNode.parentNode;.children[0]
-      var maxWidth = targetDivContainer.offsetWidth-diffWidth;
-      var minWidth = maxWidth/12;
-      var stepWidth = maxWidth/12;
-      var stepHeight = 10;
-
-      //得到点击时该容器的宽高：
-      var targetDivHeight=targetDiv.offsetHeight;
-      var targetDivWidth=targetDiv.offsetWidth;
-      var startY=e.clientY;
-      var startX=e.clientX;
-      var _this=this;
-
-      document.onmousemove=function(e){
-        e.preventDefault();
-        //得到鼠标拖动的宽高距离：取绝对值
-        var distY=Math.abs(e.clientY-startY);
-        var distX=Math.abs(e.clientX-startX);
-
-        //往上方拖动：
-        if( e.clientY < startY){
-          targetDiv.style.height=targetDivHeight-distY+'px';
-          //heightTmp = targetDivHeight-distY;
-        }
-        if( e.clientX < startX){
-          targetDiv.style.width=targetDivWidth-distX+'px';
-          //widthTmp = targetDivWidth-distX;
-        }
-        //往下方拖动：
-        if (e.clientY > startY) {
-          targetDiv.style.height=(targetDivHeight+distY)+'px';
-          //heightTmp = targetDivHeight+distY;
-        }
-        if (e.clientX > startX) {
-          targetDiv.style.width=(targetDivWidth+distX)+'px';
-          //widthTmp = targetDivWidth+distX;
-        }
-
-        if(parseInt(targetDiv.style.height)<=_this.minHeight){
-          targetDiv.style.height=_this.minHeight+'px';
-          //heightTmp = _this.minHeight;
-        }
-
-        if(parseInt(targetDiv.style.width)>=maxWidth){
-          targetDiv.style.width=maxWidth+'px';
-          //widthTmp = maxWidth;
-        }
-        if(parseInt(targetDiv.style.width)<=minWidth){
-          targetDiv.style.width=minWidth+'px';
-          //widthTmp = minWidth;
-        }
-        //调整表格大小
-          let containerHeight = parseInt(targetDiv.style.height);
-          let containerWidth = parseInt(targetDiv.style.width);
-          const chartBox = document.getElementsByClassName('chartBox');
-          chartBox[_this.chartIndex].style.width = (containerWidth+chartBoxPadding)+'px';
-          //chartBox[_this.chartIndex].style.height = `${containerHeight}px`;
-          //表格的高度
-          const tableBox = document.getElementById('urlContainer'+_this.chartIndex);
-          tableBox.style.height = `${containerHeight-_this.titleHeight}px`;//-75-32+25
-      };
-
-      document.onmouseup=function(){
-        document.onmousemove=null;
-        document.onmouseup = null;
-        let targetDivHeightNew = parseInt(targetDiv.style.height);
-        //let targetDivHeightNew = heightTmp
-        let targetDivWidthNew = parseInt(targetDiv.style.width);
-        //let targetDivWidthNew = widthTmp;
-
-        let diffHeight =  Math.abs(targetDivHeight-targetDivHeightNew);
-        if(targetDivHeight>targetDivHeightNew){
-          let finalDiffHeight = Math.floor(diffHeight/stepHeight)*stepHeight;
-          targetDiv.style.height = (targetDivHeight-finalDiffHeight)+'px';
-        }
-        if(targetDivHeight<targetDivHeightNew){
-          let finalDiffHeight = Math.ceil(diffHeight/stepHeight)*stepHeight;
-          targetDiv.style.height = (targetDivHeight+finalDiffHeight)+'px';
-        }
-
-        var span = _this.data.span;
-        if(targetDivWidth>targetDivWidthNew){
-          span =  Math.floor((targetDivWidthNew*12)/maxWidth);
-          let finalWidth = Math.floor((targetDivWidthNew*12)/maxWidth)*stepWidth;
-          if((finalWidth)<minWidth){
-            targetDiv.style.width=minWidth+'px';
-            span = 1;
-          }else {
-            targetDiv.style.width = finalWidth+'px';
-          }
-        }
-        if(targetDivWidth<targetDivWidthNew){
-          span =  Math.ceil((targetDivWidthNew*12)/maxWidth);
-          let spanUnit = Math.ceil((targetDivWidthNew*12)/maxWidth);
-          let finalWidth = spanUnit*stepWidth;
-          if(finalWidth>maxWidth || spanUnit===12){
-            targetDiv.style.width=maxWidth+'px';
-            span = 12;
-          }else {
-            targetDiv.style.width = finalWidth+'px';
-          }
-        }
-        //调整表格大小
-        let containerHeight = parseInt(targetDiv.style.height);
-        let containerWidth = parseInt(targetDiv.style.width);
-
-        const chartBox = document.getElementsByClassName('chartBox');
-        chartBox[_this.chartIndex].style.width = (containerWidth+chartBoxPadding)+'px';
-        //chartBox[_this.chartIndex].style.height = `${containerHeight}px`;
-        //表格的高度
-        const tableBox = document.getElementById('urlContainer'+_this.chartIndex);
-        tableBox.style.height = `${containerHeight-_this.titleHeight}px`;
-
-        const modifyParams = {
-          id:_this.data.id,
-          span:span,
-          height:(containerHeight+_this.chartSpaceHeight),
-          prev:parseInt(_this.data.prev),
-          next:parseInt(_this.data.next),
-        };
-        targetDiv.style.height = (Math.round((containerHeight+_this.chartSpaceHeight)/10)*10-_this.chartSpaceHeight)+'px';//图表实际渲染高度，采用个位数字四舍五入
-        _this.$put('panel/'+  _this.panelIdInner+'/charts/modify',modifyParams).then(response => {
-          if (response.code === 200) {
-            //更新当前图表数据
-            _this.data.span= span;
-            _this.data.height= containerHeight+_this.chartSpaceHeight;
-            _this.$emit('on-drag-chart', _this.data);
-          }else {
-            if(response.msg){
-              _this.$message.error(response.msg);
-            }else if(response.error){
-              _this.$message.error(response.error);
-            }else {
-              _this.$message.error(response);
-            }
-          }
-        });
-
+    startLoading(area){
+      if(area==='screen'){
+        this.$refs['localLoadingScreen'+this.chartIndex].startLoading();
+      }else {
+        this.$refs['localLoading'+this.chartIndex].startLoading();
       }
     },
-      startLoading(area){
-        if(area==='screen'){
-          this.$refs['localLoadingScreen'+this.chartIndex].startLoading();
-        }else {
-          this.$refs['localLoading'+this.chartIndex].startLoading();
-        }
-      },
-      endLoading(area){
-        if(area==='screen'){
-          this.$refs['localLoadingScreen'+this.chartIndex].endLoading();
-        }else {
-          this.$refs['localLoading'+this.chartIndex].endLoading();
-        }
-      },
-      clearData(){
-      },
-      clearChart(){
-        this.data = {};
-      },
-      // 重新请求数据 刷新操作-local
-      refreshChart() {
-          this.dropdownMenuShow=false;
-          this.startLoading();
-          this.firstShow = false;
-          let iframe = document.querySelector('#urlContainer'+this.chartIndex);
-          iframe.src = '';
-          iframe.src = this.data.param.url;
-      },
-      // 编辑图表
-      editChart() {
-          this.dropdownMenuShow=false;
-          this.$emit('on-edit-chart-block', this.data.id);
-      },
-      // 删除该图表
-      removeChart() {
-          this.dropdownMenuShow=false;
-          this.$emit('on-remove-chart-block', this.data.id);
-      },
-      clickos() {
+    endLoading(area){
+      if(area==='screen'){
+        this.$refs['localLoadingScreen'+this.chartIndex].endLoading();
+      }else {
+        this.$refs['localLoading'+this.chartIndex].endLoading();
+      }
+    },
+    clearChart(){
+      this.data = {};
+    },
+    // 重新请求数据 刷新操作-local
+    refreshChart() {
         this.dropdownMenuShow=false;
-      },
-      // 全屏查看
-      showAllScreen() {
-        this.dropdownMenuShow=false;
-        this.screenModal = true;
-      },
+        this.startLoading();
+        this.firstShow = false;
+        let iframe = document.querySelector('#urlContainer'+this.chartIndex);
+        iframe.src = '';
+        iframe.src = this.data.param.url;
+    },
+    // 编辑图表
+    editChart() {
+      this.dropdownMenuShow=false;
+      this.$emit('on-edit-chart-block', this.data.id);
+    },
+    // 删除该图表
+    removeChart() {
+      this.dropdownMenuShow=false;
+      this.$emit('on-remove-chart-block', this.data.id);
+    },
+    clickos() {
+      this.dropdownMenuShow=false;
+    },
+    // 全屏查看
+    showAllScreen() {
+      this.dropdownMenuShow=false;
+      this.screenModal = true;
+    },
     duplicate(){
       this.dropdownMenuShow=false;
       const param = {id:this.data.id};
@@ -430,7 +279,7 @@ export default {
     },
   },
   mounted() {
-      this.firstLoad = false;
+    this.firstLoad = false;
   },
   beforeDestroy() {
     this.clearChart();

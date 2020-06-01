@@ -448,6 +448,7 @@
         this.$nextTick(() => {
           if (this.dataList.length > 0 ) {
             this.dataList.forEach((item,index) => {
+              
               this.$refs['editChart'+item.id][0].showLoad(item);//之后要实现
               this.setChartSize(item.span, index);//设置该图表宽度
               if(!item.isLoaded ){
@@ -589,6 +590,7 @@
               }
             }else {
               if (!isSearch && this.$refs['editChart'+item.id] && this.$refs['editChart'+item.id][0]) {
+                
                 this.$refs['editChart'+item.id][0].showLoad(item);
               }
               this.setChartSize(item, realIndex); // 设置该图表宽度
@@ -642,7 +644,6 @@
       getChartData(chartInfo, pos, filterType) {
         const chartItem = chartInfo;
         const index = pos; // 指标
-        //this.setChartSize(chartItem.span, index); // 设置该图表宽度
         if(chartItem.type === 'assetInfo'){
           this.getAssetInfoChartData(chartItem);
           return;
@@ -1090,8 +1091,39 @@
           this.$refs['editChart'+chartInfo.id][0].showLoad(chartInfo);
           this.$get('/asset/info?id='+this.additionalInfo.id).then(response=>{
             if(response.code == 200){
-              let data=response.data;
-              this.$refs['editChart'+chartInfo.id][0].setData(chartInfo, data, this.filter.panelId, this.filter);
+              let data={
+                Basic:{
+                  sn:'assetInfo Test',
+                  host:'192.168.40.42',
+                  host1:'192.168.40.42',
+                  host2:'192.168.40.42',
+                  host3:'192.168.40.42',
+                  host4:'192.168.40.42',
+                  host5:'192.168.40.42',
+                  host6:'192.168.40.42',
+                  host7:'192.168.40.42',
+                  host8:'192.168.40.42',
+                  host9:'192.168.40.42',
+                  host10:'192.168.40.42',
+                  pingStatus:1,
+                  pingRtt:80,
+                  cpuNum:'8',
+                  memery:'12GB',
+                  memery$_$free:'3GB'
+                },
+                Feature:{
+                  CPU:"Intel E500",
+                  Memory:"256GB",
+                  NetworkInterface:["eth0","eth1"],
+                  Disk:[{
+                    mount:"/",
+                    total:"256GB",
+                    free:"128GB",
+                    usageRate:"50%"
+                  }]
+                }
+              }
+              this.$refs['editChart'+chartInfo.id][0].setData(chartInfo, response.data, this.filter.panelId, this.filter);
             }else{
               this.$refs['editChart'+chartInfo.id][0].setData(chartInfo, {}, this.filter.panelId, this.filter, response.msg);
             }
@@ -1204,7 +1236,8 @@
           this.chartDataCacheGroup.set(duplicateChartId,duplicateChartData);
           this.$nextTick(() => {
             if (this.$refs['editChart'+duplicateChartId][0]) {
-                this.$refs['editChart'+duplicateChartId][0].showLoad(duplicateChart);//之后要实现
+              
+              this.$refs['editChart'+duplicateChartId][0].showLoad(duplicateChart);//之后要实现
             }
 
             let chartType = duplicateChart.type;
@@ -1287,7 +1320,7 @@
             if(chartType!=='url'){
               that.getChartDataForSearch(item,index);
             } else {
-              console.info(that.$refs['editChart'+item.id])
+              
               that.$refs['editChart'+item.id][0].showLoad(item);
             }
           }

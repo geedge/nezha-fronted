@@ -310,15 +310,6 @@
       },
       /*时间条件查询--end*/
       //公用操作
-      jumpTo(data, id) {
-        bus.$emit("menu-change", data);
-        this.$router.push({
-          path: "/" + data,
-          query: {
-            t: +new Date()
-          }
-        });
-      },
       getTableData(linkId) {
         this.$get('panel', {type: this.from, link: linkId}).then(response => {
           if (response.code === 200) {
@@ -397,9 +388,9 @@
           } else {
             _self.showTopBtn = false;
           }
-          if (scrollbarWrap.scrollHeight - scrollbarWrap.scrollTop - scrollbarWrap.offsetHeight < 20) {
+          /*if (scrollbarWrap.scrollHeight - scrollbarWrap.scrollTop - scrollbarWrap.offsetHeight < 20) {
             _self.$refs.chartList.pageDataList(true, _self.panelId);
-          }
+          }*/
         }
       },
       focusInput:function(){

@@ -1,5 +1,5 @@
 <style lang="scss">
-@import 'chart.scss';
+@import './chart.scss';
 </style>
 <style>
   .max-width-90{

@@ -200,7 +200,94 @@
       }
     }
   }
-  .line-chart-block, .chart-table, .chart-single-stat, .chart-url {
+  .chart-asset-info {
+    .chart-info-container {
+      padding-top: 6px;
+    }
+    .active-icon {
+      margin: 0;
+    }
+    .asset-info-content {
+      width: 100%;
+      height: calc(100% - 10px);
+    }
+    .asset-info-content-title {
+      background-image: linear-gradient(#f5f5f5, #e7e7e7);
+      font-size: 13px;
+      color: #505255;
+      padding-left: 2px;
+      height: 25px;
+      line-height: 25px;
+    }
+    .basic-content.shrink, .feature-content.shrink {
+      height: 0;
+      transform: scaleY(0);
+      opacity: 0;
+     }
+    .basic-content, .feature-content {
+      height: 100%;
+      opacity: 1;
+      transform-origin: top;
+      transition: all 0.2s linear;
+      width: 100%;
+      margin-bottom: 5px;
+      /*border-left: 1px solid rgb(235, 238, 245);
+      border-right: 1px solid rgb(235, 238, 245);*/
+      box-sizing: border-box;
+      .content-item>div {
+        display: inline-block;
+        box-sizing: border-box;
+      }
+      .content-item>div:not(.content-item-value-muti) {
+        padding: 0 3px 0 13px;
+      }
+      .content-item {
+        font-size: 13px;
+        line-height: 26px;
+        border-bottom: 1px solid rgb(235, 238, 245);
+        display: flex;
+        .content-item-key {
+          color: #666;
+          width: 35%;
+          height: 100%;
+        }
+        .content-item-value {
+          .item-value-sub {
+            padding: 0 3px 0 13px;
+            box-sizing: border-box;
+          }
+          .item-value-sub:not(:last-of-type) {
+            border-bottom: 1px solid rgb(235, 238, 245);
+          }
+          .nz-table {
+            th .cell {
+              height: 25px;
+              line-height: 25px;
+            }
+            td .cell {
+              min-height: 26px;
+              line-height: 26px;
+            }
+            .el-table__body tr:last-of-type td {
+              border: none;
+            }
+            .el-table__body tr td {
+              background-color: white;
+            }
+            .el-table__body tr:hover>td {
+              background-color: white;
+            }
+          }
+
+          border-left: 1px solid rgb(235, 238, 245);
+          color: #1a1a1a;
+          width: 65%;
+          height: 99%;
+        }
+      }
+    }
+  }
+  .line-chart-block, .chart-table, .chart-single-stat, .chart-url, .chart-asset-info {
     height: 100%;
     position: relative;
     background-color: white;
@@ -210,7 +297,8 @@
     .chartTitle {
       text-align: center;
       width: 100%;
-      line-height: 26px;
+      line-height: 30px;
+      height: 28px;
       padding: 1px 3px 0 3px;
       box-sizing: border-box;
       .nz-chart-top{
