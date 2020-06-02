@@ -1148,6 +1148,17 @@
               state: 1,
               tel: "xxxxxxxxxxx",
               vendor: "xxx"
+            },
+            Feature:{
+              CPU:"xxx",
+              Memory:"256GB",
+              NetworkInterface:["eth0", "eth1"],
+              Disk:[{
+                mount:"/",
+                total:"256GB",
+                free:"128GB",
+                usageRate:"50%"
+              }]
             }};
           this.$refs['editChart'+chartInfo.id][0].setData(chartInfo, data, this.filter.panelId, this.filter);
         }
