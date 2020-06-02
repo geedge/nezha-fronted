@@ -303,6 +303,7 @@
 
       // 设置数据, filter区分
       setData(chartItem, assetInfos, panelId, filter,area,errorMsg) {
+        this.resize(chartItem);
         if(errorMsg && errorMsg!==''){
           this.isError = true;
           this.errorContent = errorMsg;
