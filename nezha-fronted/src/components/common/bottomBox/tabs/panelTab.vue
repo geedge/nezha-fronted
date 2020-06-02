@@ -430,9 +430,11 @@
       },
       obj: {
         immediate: true,
-        handler(n) {
+        handler(n, o) {
           setTimeout(() => {
-            this.getTableData(n.id);
+            if (n && !o || n.id != o.id) {
+              this.getTableData(n.id);
+            }
           }, 500);
         }
       }

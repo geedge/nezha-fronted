@@ -197,7 +197,7 @@
       }
     }
   }
-  .chart-asset-info {
+  .chart-asset-info, .chart-project-info {
     .chart-info-container {
       padding-top: 6px;
     }
@@ -329,7 +329,7 @@
       }
     }
   }
-  .line-chart-block, .chart-table, .chart-single-stat, .chart-url, .chart-asset-info, .chart-alert-info {
+  .line-chart-block, .chart-table, .chart-single-stat, .chart-url, .chart-asset-info, .chart-alert-info, .chart-project-info {
     height: 100%;
     position: relative;
     background-color: white;

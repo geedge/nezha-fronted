@@ -25,6 +25,7 @@ const en = {
     search: 'Search', //'搜索'
     add: 'Create', //"新增"
     option: 'Operation', //"操作"
+    remark: "Description",
     clear: 'Clear', //"清除"
     name: 'Name', //'名称'
     cover: 'Override', //'覆盖'
@@ -793,6 +794,11 @@ const en = {
     }
   },
   project: {
+    chart: {
+      basicTitle: "Basic info",
+      alertStat: "Alert state",
+      endpointStat: "Endpoint state",
+    },
     project: {
       project: 'Project',//"系统"
       projectName: 'Project name',//"系统名称"

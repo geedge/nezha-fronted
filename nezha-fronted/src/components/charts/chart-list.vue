@@ -107,6 +107,14 @@
                     :editChartId="'editChartId' + item.id"
         ></chart-asset-info>
 
+        <chart-project-info v-if="item.type  === 'projectInfo'" :ref="'editChart'+item.id" :key="'inner' + item.id"
+                    @on-drag-chart="editChartForDrag"
+                    :panel-id="filter.panelId"
+                    :chart-index="index"
+                    :chart-data="item"
+                    :editChartId="'editChartId' + item.id"
+        ></chart-project-info>
+
         <chart-alert-list :ref="'editChart'+item.id"
                           :panel-id="filter.panelId"
                           :chart-index="index"
@@ -134,6 +142,7 @@
   import chartUrl from './chart-url';
   import chartSingleStat from './chart-single-stat';
   import chartAssetInfo from './chart-asset-info'
+  import chartProjectInfo from './chart-project-info'
   import draggable from 'vuedraggable'
   import chartDataFormat from "./chartDataFormat";
   import chartAlertList from './chart-alert-list'
@@ -146,6 +155,7 @@
     components: {
       chartAlertList,
       chartAssetInfo,
+      chartProjectInfo,
       lineChartBlock,
       chartTable,
       chartUrl,
@@ -649,6 +659,10 @@
           this.getAssetInfoChartData(chartItem);
           return;
         }
+        if(chartItem.type == 'projectInfo'){
+          this.getProjectInfoChartData(chartItem);
+          return;
+        }
         if(chartItem.type === 'alertList'){
           this.getAlertListChartData(chartItem,filterType);
           return;
@@ -1124,42 +1138,92 @@
                   }]
                 }
               }
-              this.$refs['editChart'+chartInfo.id][0].setData(chartInfo, response.data, this.filter.panelId, this.filter);
+              this.$refs['editChart'+chartInfo.id][0].setData(chartInfo, data, this.filter.panelId, this.filter);
             }else{
               this.$refs['editChart'+chartInfo.id][0].setData(chartInfo, {}, this.filter.panelId, this.filter, response.msg);
             }
           })
         }else {
-          let data = {Basic: {
-              alert:0,
-              assetType: "xxx",
-              cabinet: "xxx",
-              dataCenter: "xxx",
-              endpoint: 1,
-              host: "xxx.xxx.xxx.xxx",
-              id: -1,
-              model: "xxx",
-              pingLastReply: new Date(),
-              pingRtt: 0,
-              pingStatus: 1,
-              principal: "admin",
-              purchaseDate: null,
-              sn: "xxx",
-              state: 1,
-              tel: "xxxxxxxxxxx",
-              vendor: "xxx"
+          let data={
+            Basic:{
+              sn:'assetInfo Test',
+              host:'192.168.40.42',
+              host1:'192.168.40.42',
+              host2:'192.168.40.42',
+              host3:'192.168.40.42',
+              host4:'192.168.40.42',
+              host5:'192.168.40.42',
+              host6:'192.168.40.42',
+              host7:'192.168.40.42',
+              host8:'192.168.40.42',
+              host9:'192.168.40.42',
+              host10:'192.168.40.42',
+              pingStatus:1,
+              pingRtt:80,
+              cpuNum:'8',
+              memery:'12GB',
+              memery$_$free:'3GB'
             },
             Feature:{
-              CPU:"xxx",
+              CPU:"Intel E500",
               Memory:"256GB",
-              NetworkInterface:["eth0", "eth1"],
+              NetworkInterface:["eth0","eth1"],
               Disk:[{
                 mount:"/",
                 total:"256GB",
                 free:"128GB",
                 usageRate:"50%"
               }]
-            }};
+            }
+          }
+          this.$refs['editChart'+chartInfo.id][0].setData(chartInfo, data, this.filter.panelId, this.filter);
+        }
+      },
+      getProjectInfoChartData(chartInfo){
+        if(!this.isModel){
+          this.$refs['editChart'+chartInfo.id][0].showLoad(chartInfo);
+          this.$get('/project/info?id='+this.additionalInfo.id).then(response=>{
+            if(response.code == 200){
+              this.$refs['editChart'+chartInfo.id][0].setData(chartInfo, response.data, this.filter.panelId, this.filter);
+            }else{
+              this.$refs['editChart'+chartInfo.id][0].setData(chartInfo, {}, this.filter.panelId, this.filter, response.msg);
+            }
+          })
+        }else {
+          let data={
+            basic: {
+              id: 1,
+              name: "system",
+              remark: "描述信息",
+              alertStat: [1,2,3],
+            },
+            module: [
+              {
+                id: 1,
+                name: "kafka",
+                type: "http",
+                remark: "描述信息",
+                endpointStat: [3,23],
+                alertStat: [2,3,4],
+              },
+              {
+                id: 2,
+                name: "kafkakafkakafkakafkakafkakafkakafka",
+                type: "http",
+                remark: "描述信息",
+                endpointStat: [3,23],
+                alertStat: [2,0,4],
+              },
+              {
+                id: 3,
+                name: "kafkakafka",
+                type: "snmp",
+                remark: "描述信息",
+                endpointStat: [3,0],
+                alertStat: [2,3,4],
+              },
+            ]
+          };
           this.$refs['editChart'+chartInfo.id][0].setData(chartInfo, data, this.filter.panelId, this.filter);
         }
       },
