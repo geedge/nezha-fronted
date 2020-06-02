@@ -34,7 +34,7 @@
                   style="z-index:5000;padding-bottom:6px;"
           ></iframe><!--  style=" position: absolute; width: 100%; height: 100%; top: 0;left:0;"  :src="chart.url" v-scrollBar:char-url-preview-->
         </div>
-        <div style="position: relative;width: 100%;height: 100%;" v-if="showStatic">
+        <div style="position: absolute;width: 100%; top:calc(50% - 50px);text-align: center;" v-if="showStatic">
           <div  :id="'staticContainer'+chartIndex" class="center-content"></div>
         </div>
         <!--全屏-->
@@ -45,7 +45,7 @@
           <iframe :id="'urlContainerFull'+chartIndex"  frameborder="0" width="100%" height="100%" name="showHereFull" scrolling=auto v-if="!showStatic"
                   style="z-index:5000;padding-bottom:6px;"
           ></iframe><!--  style=" position: absolute; width: 100%; height: 100%; top: 0;left:0;"  :src="chart.url" v-scrollBar:char-url-preview-->
-          <div style="position: relative;width: 100%;height: 100%;" v-if="showStatic">
+          <div style="position: absolute;width: 100%; top:calc(50% - 100px);text-align: center;" v-if="showStatic">
             <div  :id="'staticContainerFull'+chartIndex" class="center-content"></div>
           </div>
           <loading  :ref="'localLoadingScreen'+chartIndex"></loading>
@@ -272,7 +272,7 @@ export default {
       let that = this;
       this.$nextTick(() => {
         let staticDiv = document.querySelector('#staticContainerFull'+this.chartIndex);
-        staticDiv.innerHTML=`<span>${that.data.param.url}</span><span>${that.$t('dashboard.panel.chartForm.typeVal.url.staticTip')}</span>`
+        staticDiv.innerHTML=`<div class="content-static-url">${that.data.param.url}</div><div class="content-static-tip">${that.$t('dashboard.panel.chartForm.typeVal.url.staticTip')}</div>`
         that.firstShow = true;
         that.endLoading('screen');
       });
