@@ -77,7 +77,7 @@
               </template>
             </el-table-column>
           </el-table>
-          <Pagination :pageObj="screenPageObj" :post-page-sizes="pageSizes" @pageNo='screenPageNo' @pageSize='screenPageSize' ref="Pagination" ></Pagination>
+          <Pagination :pageObj="screenPageObj" :post-page-sizes="pageSizes" @pageNo='screenPageNo' @pageSize='screenPageSize' ref="Pagination" :popper-append-to-body="false"></Pagination>
           <loading  :ref="'localLoadingScreen'+chartIndex"></loading>
         </el-dialog>
         <span class="vue-resizable-handle" @mousedown="startResize"></span>

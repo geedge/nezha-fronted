@@ -35,8 +35,11 @@
                   </div>
                   <div class="basic-content" :class="{'shrink':hideBasic}">
                     <template v-if="assetInfos.Basic && Object.keys(assetInfos.Basic).length>0">
-                      <div v-for="(item,index) in basicKey" :key="index" class="content-item hover-bg" :class="{'bg-grey':index % 2 == 1}">
-                        <div class="content-item-key">{{item.label}}</div><div
+                      <div v-for="(item,index) in basicKey" :key="index" class="content-item hover-bg">
+                        <div class="content-item-key item-tip" :id="'basicKey' + index">
+                          <span>{{item.label}}</span>
+                          <div class="item-tip-hide item-tip-key el-popover" :class="itemTip('basicKey', item.label, index, ready)">{{item.label}}</div>
+                        </div><div
                         class="content-item-value" v-if="item.prop == 'pingStatus'">
                           <div class="active-icon" :class="{'green':assetInfos.Basic[item.prop] == 1,'red':assetInfos.Basic[item.prop] != 1}"></div>
                           <span>{{assetInfos.Basic.pingRtt ? assetInfos.Basic.pingRtt + 'ms' : '&nbsp;'}}</span>
@@ -47,8 +50,9 @@
                         <div class="content-item-value" v-else-if="item.prop == 'state'">
                           {{assetInfos.Basic[item.prop] == 1?$t('asset.createAssetTab.inStock'):$t('asset.createAssetTab.outStock')}}
                         </div>
-                        <div class="content-item-value" v-else>
-                          {{assetInfos.Basic[item.prop] ? assetInfos.Basic[item.prop] : "&nbsp;"}}
+                        <div class="content-item-value item-tip" v-else :id="'basicValue' + index">
+                          <span>{{assetInfos.Basic[item.prop] ? assetInfos.Basic[item.prop] : "&nbsp;"}}</span>
+                          <div class="item-tip-hide item-tip-value el-popover" :class="itemTip('basicValue', assetInfos.Basic[item.prop], index, ready)">{{assetInfos.Basic[item.prop]}}</div>
                         </div>
                       </div>
                     </template>
@@ -60,9 +64,16 @@
                     <span>{{$t('asset.createAssetTab.featureTitle')}}</span>
                   </div>
                   <div class="feature-content" :class="{'shrink':hideFeature}">
-                    <div v-for="(value,key,index) in assetInfos.Feature" class="content-item" :class="{'bg-grey':index % 2 == 1,'hover-bg':Array.isArray(value) && value.length>0 &&typeof value[0] == 'string'}">
-                      <div class="content-item-key" >{{key}}</div><div
-                      class="content-item-value" v-if="typeof value == 'string'">{{value}}</div><div v-if="Array.isArray(value) && value.length>0" class="content-item-value content-item-value-muti">
+                    <div v-for="(value,key,index) in assetInfos.Feature" class="content-item item-tip">
+                      <div class="content-item-key item-tip" :id="'featureKey' + index">
+                        <span>{{key}}</span>
+                        <div class="item-tip-hide item-tip-key el-popover" :class="itemTip('featureKey', key, index, ready)">{{key}}</div>
+                      </div><div
+                      class="content-item-value item-tip" :id="'featureValue' + index" v-if="typeof value == 'string'">
+                        <span>{{value}}</span>
+                        <div class="item-tip-hide item-tip-value el-popover" :class="itemTip('featureValue', key, index, ready)">{{value}}</div>
+                      </div><div
+                      v-if="Array.isArray(value) && value.length>0" class="content-item-value content-item-value-muti">
                         <div v-if="typeof value[0] == 'string'" class="item-value-sub" v-for="(item,index) in value" :key="index">{{item}}</div>
                         <el-table
                           v-else
@@ -131,6 +142,7 @@
     },
     data() {
       return {
+        ready: false,
         data: {}, // 该图表信息,chartItem
         unit:{},
         isError:false,
@@ -222,6 +234,25 @@
           },
         ]
       };
+    },
+    computed: {
+      itemTip() {
+        return function(type, content, index, ready) {
+          let className = "";
+          if (ready) {
+            let cellDom = document.querySelector(`#${type}${index}`);
+            let spanDom = document.createElement("span");
+            spanDom.style.display = "inline-block";
+            spanDom.innerText = content;
+            cellDom.appendChild(spanDom);
+            if (cellDom.offsetWidth-16 < spanDom.offsetWidth) {
+              className = "item-tip-show";
+            }
+            cellDom.removeChild(spanDom);
+          }
+          return className;
+        }
+      },
     },
     methods: {
       startResize(e) {
@@ -330,6 +361,9 @@
       this.$nextTick(()=>{
         this.$refs.scrollbar.update();
       })
+      setTimeout(() => {
+        this.ready = true;
+      }, 300);
     },
     beforeDestroy() {
       this.clearChart();
