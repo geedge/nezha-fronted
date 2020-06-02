@@ -12,7 +12,7 @@
       layout="total, prev, pager, next, slot"
       :total="this.pageObj.total"
     >
-      <el-select v-model="pageSize" :placeholder="pageSize+$t('pageSize')" size="mini"  :popper-append-to-body="appendToBody" class="pagination-size-select" @change="size">
+      <el-select v-model="pageSize" :placeholder="pageSize+$t('pageSize')" size="mini"  :popper-append-to-body="appendToBody" class="pagination-size-select" @change="size" :popper-class="popClass" @visible-change="popperVisible">
         <el-option v-for="(item,index) in pageSizes" :key="item.value" :label="item.label" :value="item.value"></el-option>
       </el-select>
 
@@ -28,7 +28,8 @@ export default {
     pageObj:{},
     tableId:{},
     postPageSizes:{},
-    appendToBody:{default:true}
+    appendToBody:{default:true},
+    popClass:{}
   },
   data() {
     return {
@@ -50,6 +51,26 @@ export default {
     };
   },
   methods: {
+    popperVisible:function(visible){
+      console.log('fixed')
+      if(visible==true){
+        this.$nextTick(()=>{
+          if(this.popClass&&this.popClass==='out-popper-fix'){
+            let popDoms=document.querySelectorAll('.out-popper-fix');
+            popDoms.forEach(item=>{
+              item.style.bottom=item.style.top;
+              item.style.top='unset';
+
+              let icon=item.querySelector('.popper__arrow');
+              icon.style.bottom=icon.style.top;
+              icon.style.top='unset';
+              icon.style.transform='rotate(180deg)'
+
+            })
+          }
+        })
+      }
+    },
     background() {
       this.backgroundColor();
     },
@@ -116,6 +137,12 @@ export default {
       deep:true,
       handler(n,o){
         this.resetPageSizes();
+      }
+    },
+    popClass:{
+      immediate:true,
+      handler(n,o){
+        console.log(n)
       }
     }
   }

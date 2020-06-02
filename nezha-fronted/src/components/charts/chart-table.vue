@@ -54,7 +54,7 @@
                 </template>
               </el-table-column>
           </el-table>
-          <Pagination :pageObj="pageObj" @pageNo='pageNo' :post-page-sizes="pageSizes" @pageSize='pageSize' ref="Pagination" :append-to-body="false"></Pagination>
+          <Pagination :pageObj="pageObj" @pageNo='pageNo' :post-page-sizes="pageSizes" @pageSize='pageSize' ref="Pagination" :append-to-body="false" pop-class="out-popper-fix"></Pagination>
         </div>
         <!--全屏-->
         <el-dialog class="nz-dialog table-chart-dialog" :title="$t('dashboard.panel.view')"  :visible.sync="screenModal" width="96%"  @close="screenModal = false" >
