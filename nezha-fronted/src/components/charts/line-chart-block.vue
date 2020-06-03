@@ -42,7 +42,7 @@
         </div>
 
         <div class="line-area"  ref="lineChartArea"  :id="'lineChartArea'+chartIndex" v-show="firstShow" style="width:100%;"></div>
-
+        <div style="position: absolute;top:50%;left:50%;" v-show="noData">No data</div>
         <div class="legend-container" id="legendArea" ref="legendArea" v-show="firstShow" v-scrollBar:legend>
           <div v-for="(item, index) in legendList" :title="item.alias?item.alias:item.name"  @click="clickLegend(item.name,index)" class="legend-item" :class="{'ft-gr':isGrey[index]}" :key="'legend_' + item.name+'_'+index">
             <span class="legend-shape" :style="{background:(isGrey[index]?'#D3D3D3':bgColorList[index])}"></span>{{item.alias?item.alias:item.name}}
@@ -78,7 +78,7 @@
             </div>
           </div>
           <div class="line-area" ref="screenShowArea"  id="screenShowArea"  style="margin-top:0px;" @mouseenter="mouseEnterFullChart" @mouseleave="mouseLeaveFullChart"></div>
-
+          <div style="position: absolute;top:50%;left:50%;" v-show="noData">No data</div>
           <div class="legend-container legend-container-screen"  :id="'screenLegendArea'+chartIndex" @mouseenter="mouseEnterFullChart" @mouseleave="mouseLeaveFullChart" v-show="showLegend" v-scrollBar:legend>
             <div v-for="(item, index) in screenLegendList" :title="item.alias?item.alias:item.name"  @click="clickScreenLegend(item.name,index)" class="legend-item" :class="{'ft-gr':isGreyScreen[index]}"  :key="'legend_' + item.name+'_'+index">
               <span class="legend-shape" :style="{background:(isGreyScreen[index]?'#D3D3D3':bgColorList[index])}"></span>{{item.alias?item.alias:item.name}}
@@ -101,6 +101,7 @@
   import chartDataFormat from './chartDataFormat'
   import {randomcolor} from  '../common/js/radomcolor/randomcolor.js'
   import timePicker from '../common/timePicker'
+  import chartConfig from "../page/dashboard/overview/chartConfig";
   export default {
     name: 'lineChartBlock',
     components: {
@@ -133,6 +134,7 @@
     data() {
       return {
         data: {}, // 该图表信息,chartItem
+        noData:false,
         seriesItem: [], // 保存信息
         seriesItemScreen:[],
         images: '',
@@ -616,14 +618,27 @@
               show: true,
             },
             splitLine:{
-              show:true
+              show:true,
+              lineStyle: {
+                color: "#d9d9d9",
+                opacity: 0.8,
+                width: 1
+              }
+            },
+            axisTick: {
+              show: false
             },
             //boundaryGap:['20%', '0'],
           },
           yAxis: {
             type: 'value',
             splitLine:{
-              show:true
+              show:true,
+              lineStyle: {
+                color: "#d9d9d9",
+                opacity: 0.8,
+                width: 1
+              }
             },
             //去掉y轴--start
             axisLine:{
@@ -669,8 +684,17 @@
               }else {
                 self.echartStore.resize({height:(chartInfo.height-divHeight-self.$chartResizeTool.titleHeight-self.$chartResizeTool.chartBlankHeight)});
               }
-              self.echartStore.clear();
-              self.echartStore.setOption(option);//创建图表
+              if(dataArg&&dataArg.length>0){
+                self.echartStore.clear();
+                self.echartStore.setOption(option);//创建图表
+                self.noData=false;
+              }else{
+                self.noData=true;
+                option=chartConfig.getOption('noData')
+                self.echartStore.clear();
+                self.echartStore.setOption(option);//创建图表
+              }
+
               self.$refs['localLoading'+self.chartIndex].endLoading();
               self.firstShow = true; // 展示操作按键
             }, 100);
@@ -766,7 +790,15 @@
                 //console.log("11____00",sumHeight,divHeight,legendDiv)
               self.$refs.screenShowArea.style.height = `${sumHeight - divHeight - self.screenTitleHeight}px`;
               self.echartModalStore.resize({height: (sumHeight - divHeight - self.screenTitleHeight)});//图表的高度
-              self.echartModalStore.setOption(option);//显示全屏界面
+              if(dataArg&&dataArg.length>0){
+                self.echartModalStore.setOption(option);//显示全屏界面
+                self.noData=false;
+              }else{
+                self.noData=true;
+                option=chartConfig.getOption('noData')
+                self.echartModalStore.setOption(option);//显示全屏界面
+              }
+
             }, 100)
 
             this.echartModalStore.on('magictypechanged', function (params) {

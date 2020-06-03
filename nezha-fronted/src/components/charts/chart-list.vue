@@ -467,7 +467,7 @@
         this.$nextTick(() => {
           if (this.dataList.length > 0 ) {
             this.dataList.forEach((item,index) => {
-              
+
               this.$refs['editChart'+item.id][0].showLoad(item);//之后要实现
               this.setChartSize(item.span, index);//设置该图表宽度
               if(!item.isLoaded ){
@@ -609,7 +609,7 @@
               }
             }else {
               if (!isSearch && this.$refs['editChart'+item.id] && this.$refs['editChart'+item.id][0]) {
-                
+
                 this.$refs['editChart'+item.id][0].showLoad(item);
               }
               this.setChartSize(item, realIndex); // 设置该图表宽度
@@ -984,6 +984,10 @@
               smooth: 0.2,  //曲线变平滑
               showSymbol: false,
               data: [],
+              lineStyle: {
+                width: 1,
+                opacity: 0.9
+              },
               type: chartInfo.type,
             },
             //visible: true,
@@ -1320,7 +1324,7 @@
           this.chartDataCacheGroup.set(duplicateChartId,duplicateChartData);
           this.$nextTick(() => {
             if (this.$refs['editChart'+duplicateChartId][0]) {
-              
+
               this.$refs['editChart'+duplicateChartId][0].showLoad(duplicateChart);//之后要实现
             }
 
@@ -1404,7 +1408,7 @@
             if(chartType!=='url'){
               that.getChartDataForSearch(item,index);
             } else {
-              
+
               that.$refs['editChart'+item.id][0].showLoad(item);
             }
           }
