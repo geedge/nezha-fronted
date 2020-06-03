@@ -388,6 +388,7 @@
           } else {
             _self.showTopBtn = false;
           }
+          _self.$refs.chartList.loadChartData(scrollbarWrap.scrollTop);
           /*if (scrollbarWrap.scrollHeight - scrollbarWrap.scrollTop - scrollbarWrap.offsetHeight < 20) {
             _self.$refs.chartList.pageDataList(true, _self.panelId);
           }*/
@@ -432,7 +433,7 @@
         immediate: true,
         handler(n, o) {
           setTimeout(() => {
-            if ((n && !o) || n.id != o.id) {
+            if (n && n.id) {
               this.getTableData(n.id);
             }
           }, 500);

@@ -55,7 +55,7 @@
                  animation:150,
                  handle:'.chartTitle',
                }"  >
-      <div class="chartBox" v-for="(item, index) in dataList" :key="index" :id="'chart-' + item.id" :name="item.title">
+      <div class="chartBox" v-for="(item, index) in dataList" :key="item.id" :id="'chart-' + item.id" :name="item.title">
         <line-chart-block v-if="item.type === 'line' || item.type === 'bar' ||item.type == 'stackArea' || item.type === 4" :key="'inner' + item.id"
                           :ref="'editChart'+item.id"
                           @on-refresh-data="refreshChart"
@@ -184,14 +184,12 @@
         stepHeight: 50,
       };
     },
-    computed: {},
-    watch: {},
     methods: {
       change (event) {
         console.log('change', event)
       },
       start (event) {
-        console.log('start', event, this.dataList);
+        //console.log('start', event, this.dataList);
         event.item.querySelector('.chartTitle').style.background = '#d8dce1';
         let projectAndAssetFeatureInfos = event.item.querySelectorAll(".feature-content");
         if (projectAndAssetFeatureInfos && projectAndAssetFeatureInfos.length > 0) {
@@ -203,7 +201,7 @@
         this.dataListDragTmp = [...this.dataList];
       },
       end (event) {
-        console.info("end event:", event)
+        //console.info("end event:", event)
         let item = event.item;
         let oldIndex = event.oldIndex;
         let newIndex = event.newIndex;
@@ -271,7 +269,7 @@
             if(item.id===newPrevItem.id){
               prevItemIndexInTotal = index;
             }
-          })
+          });
           //console.log('从前往后移动：prev元素在总列表中之后的元素的index='+prevItemIndexInTotal)
           if(prevItemIndexInTotal<this.dataTotalListBak.length-1){//总列表中：移动之后的当前元素前面的元素之后有元素
             let nextItem = this.dataTotalListBak[prevItemIndexInTotal+1];
@@ -282,7 +280,6 @@
         }else {//oldIndex = newIndex
 
         }
-
         //更新图表prev和next
         const modifyParams = {
           id:newItem.id,
@@ -307,6 +304,7 @@
               }else{//移动到最后一个元素
                 this.dataTotalListBak.push(newItem);
               }
+              this.dataList = this.dataTotalListBak;
             }else {
               if(response.msg){
                 this.$message.error(response.msg);
@@ -318,19 +316,18 @@
             }
           });
         }
-
         let chartTitle = item.querySelector('.chartTitle');
         chartTitle.style.background = '';
       },
       move (event, orgin) {
-        console.log('move', event, orgin);
+        //console.log('move', event, orgin);
         let dragClass = document.querySelector('.drag-chart-class');//drag-chart-class:yellow chart-ghost:green  fallback-class choose-class:purple
-        console.log('move---class', dragClass);
+        //console.log('move---class', dragClass);
         //dragClass.style.opacity = 1;
         //dragClass.style.pointerEvents = 'auto';//设置此属性，end事件里newIndex为 列表长度
 
         let chartTitle = dragClass.querySelector('.chartTitle');
-        console.log('move-title',chartTitle);
+        //console.log('move-title',chartTitle);
         chartTitle.style.background = '#d8dce1';
 
       },
@@ -467,7 +464,7 @@
         this.$nextTick(() => {
           if (this.dataList.length > 0 ) {
             this.dataList.forEach((item,index) => {
-              
+
               this.$refs['editChart'+item.id][0].showLoad(item);//之后要实现
               this.setChartSize(item.span, index);//设置该图表宽度
               if(!item.isLoaded ){
@@ -582,7 +579,6 @@
       },
       loadChartData(scrollTop){
         if (this.dataList.length > 0 ) {
-          let chartListInViewport = [];
           this.dataList.forEach((item,index) => {
             if(!item.isLoaded){
               //获得当前显示在浏览器的图表，从后台获取数据
@@ -609,7 +605,7 @@
               }
             }else {
               if (!isSearch && this.$refs['editChart'+item.id] && this.$refs['editChart'+item.id][0]) {
-                
+
                 this.$refs['editChart'+item.id][0].showLoad(item);
               }
               this.setChartSize(item, realIndex); // 设置该图表宽度
@@ -1320,7 +1316,7 @@
           this.chartDataCacheGroup.set(duplicateChartId,duplicateChartData);
           this.$nextTick(() => {
             if (this.$refs['editChart'+duplicateChartId][0]) {
-              
+
               this.$refs['editChart'+duplicateChartId][0].showLoad(duplicateChart);//之后要实现
             }
 
@@ -1393,18 +1389,18 @@
           * 第一种情况   由于元素随页面向上滚动, 整个页面滚动的距离  大于 （元素距离页面顶部的距离 + 元素本身的高度 ）-> 超出
           * 第二种情况   由于元素随页面向下滚动, 整个页面滚动的距离  小于 （元素距离页面顶部的距离 - 浏览器可见区域高度 ）-> 超出
           * */
-          //console.log("___isInView____","元素距离页面顶部的距离mainOffsetTop="+mainOffsetTop)//不变
-          //console.log("___isInView____","元素高度mainHeight="+mainHeight)//不变
-          //console.log("___isInView____","scrollTop页面滚动的距离windowScrollTop="+windowScrollTop)//变
-          //console.log("___isInView____","浏览器可见区域高度windowHeight="+windowHeight)//不变
-          //console.log(item.title,(mainOffsetTop+mainHeight),"<",(windowScrollTop+windowHeight),((mainOffsetTop+mainHeight) < (windowScrollTop+windowHeight)))
+          /*console.log("___isInView____","元素距离页面顶部的距离mainOffsetTop="+mainOffsetTop)//不变
+          console.log("___isInView____","元素高度mainHeight="+mainHeight)//不变
+          console.log("___isInView____","scrollTop页面滚动的距离windowScrollTop="+windowScrollTop)//变
+          console.log("___isInView____","浏览器可见区域高度windowHeight="+windowHeight)//不变
+          console.log(item.title,(mainOffsetTop+mainHeight/3),"<",(windowScrollTop+windowHeight),((mainOffsetTop+mainHeight/3) < (windowScrollTop+windowHeight)))*/
           if((mainOffsetTop+mainHeight/3) < (windowScrollTop+windowHeight)){
             let chartType = item.type;
             item.isLoaded = true;
             if(chartType!=='url'){
               that.getChartDataForSearch(item,index);
             } else {
-              
+
               that.$refs['editChart'+item.id][0].showLoad(item);
             }
           }
