@@ -753,6 +753,10 @@
                                 smooth: 0.2,  //曲线变平滑
                                 showSymbol: false,
                                 data: [],
+                                lineStyle: {
+                                  width: 1,
+                                  opacity: 0.9
+                                },
                                 type: chartInfo.type,
                               },
                               metric_name: '',

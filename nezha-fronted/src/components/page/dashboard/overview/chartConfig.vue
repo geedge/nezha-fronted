@@ -88,6 +88,12 @@
         axisPointer: {//y轴上显示指针对应的值
           show: true,
         },
+        axisLine: {
+          show: false
+        },
+        axisTick: {
+          show: false
+        },
         splitLine:{
           show:true,
           lineStyle: {
@@ -106,6 +112,12 @@
             opacity: 0.8,
             width: 1
           }
+        },
+        axisLine: {
+          show: false
+        },
+        axisTick: {
+          show: false
         },
         axisLabel: {
           // formatter:null,
@@ -336,6 +348,9 @@
         splitLine:{
           show:true
         },
+        axisLine: {
+          show: false
+        },
         axisTick: {
           show: false
         },
@@ -345,6 +360,9 @@
         data: [1, 3, 5, 7, 9, 11, 13],
         splitLine:{
           show:true
+        },
+        axisLine: {
+          show: false
         },
         axisTick: {
           show: false
