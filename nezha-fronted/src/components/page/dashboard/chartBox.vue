@@ -989,6 +989,7 @@
         this.elements = [1];
         this.elementTarget = [];
         bus.chartAddInfo.metricTarget = [];
+        this.setIsOtherChart();
       },
       // 创建时打开,用于清空chart-tag数据
       initOpen() {
