@@ -21,7 +21,7 @@
             </span>
           </el-popover>
           <span class="el-dropdown-link chart-title" @click="dropdownMenuShow=!dropdownMenuShow">
-            <span class="chart-title-text">{{$t('asset.createAssetTab.assetInfo')}}</span>
+            <span class="chart-title-text">{{$t('project.chart.projectInfo')}}</span>
           </span>
         </div>
         <div class="mt-10 chart-info-container" v-cloak  v-show="firstShow" >
@@ -30,10 +30,10 @@
               <div style="padding: 0 15px">
                 <div class="basic-container">
                   <div class="basic-title asset-info-content-title" @click="hideElement('basic')">
-                    <span><i :class="{'el-icon-caret-right':hidebasic,'el-icon-caret-bottom':!hidebasic}"></i></span>
+                    <span><i :class="{'el-icon-caret-right':hideBasic,'el-icon-caret-bottom':!hideBasic}"></i></span>
                     <span>{{$t('project.chart.basicTitle')}}</span>
                   </div>
-                  <div class="basic-content" :class="{'shrink':hidebasic}">
+                  <div class="basic-content basic-content-project" :class="{'fold':hideBasic, 'unfold':!hideBasic}">
                     <template v-if="projectInfos.basic && Object.keys(projectInfos.basic).length>0">
                       <div v-for="(item,index) in basicKey" :key="index" class="content-item">
                         <div class="content-item-key item-tip" :id="'basicKey' + index">
@@ -57,11 +57,11 @@
                   </div>
                 </div>
                 <div class="feature-container" v-for="(module, mi) in projectInfos.module" :key="mi">
-                  <div class="feature-title asset-info-content-title" @click="hideElement(module.id)" >
-                    <span><i :class="{'el-icon-caret-right':showModuleId != module.id,'el-icon-caret-bottom':showModuleId == module.id}"></i></span>
+                  <div class="feature-title asset-info-content-title" @click.stop="hideElement(module.id)" >
+                    <span><i :class="{'el-icon-caret-right': showModuleIds.indexOf(module.id) == -1,'el-icon-caret-bottom': showModuleIds.indexOf(module.id) > -1}"></i></span>
                     <span>{{$t('project.module.module')}}：{{module.name}}</span>
                   </div>
-                  <div class="feature-content" :class="{'shrink':showModuleId != module.id}">
+                  <div class="feature-content feature-content-project" :class="{'fold': showModuleIds.indexOf(module.id) == -1, 'unfold': showModuleIds.indexOf(module.id) > -1}">
                     <div v-for="(item,index) in moduleKey" :key="index" class="content-item">
                       <div class="content-item-key item-tip" :id="'featureKey' + module.id + '-' + index">
                         <span>{{item.label}}</span>
@@ -140,8 +140,8 @@
           start_time: '',
           end_time: '',
         },
-        hidebasic:false,
-        showModuleId: 0,
+        hideBasic:false,
+        showModuleIds: [],
         firstShow: false, // 默认不显示操作按钮,
         caretShow:false,
         dragTitleShow:false,
@@ -238,17 +238,18 @@
       },
       hideElement:function(type){
         if(type ==  'basic'){
-          this.hidebasic=!this.hidebasic;
+          this.hideBasic=!this.hideBasic;
         }else{
-          if (this.showModuleId == type) {
-            this.showModuleId = 0;
+          let index = this.showModuleIds.indexOf(type);
+          if (index == -1) {
+            this.showModuleIds.push(type);
           } else {
-            this.showModuleId = type;
+            this.showModuleIds.splice(index, 1);
           }
         }
-        this.$nextTick(()=>{
+        setTimeout(()=>{
           this.$refs.scrollbar.update();
-        })
+        },400);
       },
       replaceSplit(key){
         if(key){

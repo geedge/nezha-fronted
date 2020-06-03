@@ -33,7 +33,7 @@
                     <span><i :class="{'el-icon-caret-right':hideBasic,'el-icon-caret-bottom':!hideBasic}"></i></span>
                     <span>{{$t('asset.createAssetTab.basicTitle')}}</span>
                   </div>
-                  <div class="basic-content" :class="{'shrink':hideBasic}">
+                  <div class="basic-content basic-content-asset" :class="{'fold':hideBasic, 'unfold':!hideBasic}">
                     <template v-if="assetInfos.Basic && Object.keys(assetInfos.Basic).length>0">
                       <div v-for="(item,index) in basicKey" :key="index" class="content-item hover-bg">
                         <div class="content-item-key item-tip" :id="'basicKey' + index">
@@ -63,7 +63,7 @@
                     <span><i :class="{'el-icon-caret-right':hideFeature,'el-icon-caret-bottom':!hideFeature}"></i></span>
                     <span>{{$t('asset.createAssetTab.featureTitle')}}</span>
                   </div>
-                  <div class="feature-content" :class="{'shrink':hideFeature}">
+                  <div class="feature-content feature-content-asset" :class="{'fold':hideFeature, 'unfold':!hideFeature}">
                     <div v-for="(value,key,index) in assetInfos.Feature" class="content-item item-tip">
                       <div class="content-item-key item-tip" :id="'featureKey' + index">
                         <span>{{key}}</span>
@@ -282,9 +282,9 @@
         }else{
           this.hideFeature=!this.hideFeature
         }
-        this.$nextTick(()=>{
+        setTimeout(()=>{
           this.$refs.scrollbar.update();
-        })
+        },400);
       },
       replaceSplit(key){
         if(key){

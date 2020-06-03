@@ -798,6 +798,7 @@ const en = {
       basicTitle: "Basic info",
       alertStat: "Alert state",
       endpointStat: "Endpoint state",
+      projectInfo: "Project information"
     },
     project: {
       project: 'Project',//"系统"

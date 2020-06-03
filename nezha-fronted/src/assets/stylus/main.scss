@@ -845,6 +845,104 @@ li{
     transform-origin: right;
   }
 }
+@keyframes unfold-200 {
+  0%{
+    visibility: hidden;
+    opacity: 0;
+    max-height: 0;
+  }
+  25%{
+    opacity: 0;
+    max-height: 50px;
+  }
+  50%{
+    opacity: 0;
+    max-height: 100px;
+  }
+  75%{
+    opacity: 0.4;
+    max-height: 150px;
+  }
+  100% {
+    visibility: visible;
+    opacity: 1;
+    max-height: 200px;
+  }
+}
+@keyframes fold-200 {
+  0% {
+    opacity: 1;
+    max-height: 200px;
+    visibility: visible;
+  }
+  25%{
+
+    opacity: 0.4;
+    max-height: 150px;
+  }
+  50%{
+    opacity: 0;
+    max-height: 100px;
+  }
+  75%{
+    opacity: 0;
+    max-height: 50px;
+  }
+  100% {
+    visibility: hidden;
+    opacity: 0;
+    max-height: 0;
+  }
+}
+@keyframes unfold-500 {
+  0%{
+    visibility: hidden;
+    opacity: 0;
+    max-height: 0;
+  }
+  25%{
+    opacity: 0;
+    max-height: 125px;
+  }
+  50%{
+    opacity: 0;
+    max-height: 250px;
+  }
+  75%{
+    opacity: 0.4;
+    max-height: 375px;
+  }
+  100% {
+    visibility: visible;
+    opacity: 1;
+    max-height: 500px;
+  }
+}
+@keyframes fold-500 {
+  0% {
+    opacity: 1;
+    max-height: 500px;
+    visibility: visible;
+  }
+  25%{
+
+    opacity: 0.4;
+    max-height: 375px;
+  }
+  50%{
+    opacity: 0;
+    max-height: 250px;
+  }
+  75%{
+    opacity: 0;
+    max-height: 125px;
+  }
+  100% {
+    visibility: hidden;
+    opacity: 0;
+    max-height: 0;
+  }
+}
 .right-box-enter-active {
   animation: slide-in-from-right 0.4s;
 }

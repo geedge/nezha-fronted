@@ -196,6 +196,7 @@
         this.dataListDragTmp = [...this.dataList];
       },
       end (event) {
+        console.info("end event:", event)
         let item = event.item;
         let oldIndex = event.oldIndex;
         let newIndex = event.newIndex;
