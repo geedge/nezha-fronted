@@ -68,9 +68,9 @@
                         <div class="item-tip-hide item-tip-key el-popover" :class="itemTip('featureKey' + module.id + '-', item.label, index, ready)">{{item.label}}</div>
                       </div>
                       <div class="content-item-value" v-if="item.prop == 'endpointStat'">
-                        <img src='../../assets/img/up.png' width="20" style="vertical-align: middle">
+                        <img src='../../assets/img/up.png' width="16" style="vertical-align: middle">
                         <span>{{projectInfos.basic.alertStat[0]}}</span>&nbsp;&nbsp;
-                        <img src='../../assets/img/down.png' width="20" style="vertical-align: middle">
+                        <img src='../../assets/img/down.png' width="16" style="vertical-align: middle">
                         <span>{{projectInfos.basic.alertStat[1]}}</span>&nbsp;&nbsp;
                       </div>
                       <div class="content-item-value" v-else-if="item.prop == 'alertStat'">
