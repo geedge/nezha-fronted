@@ -432,7 +432,7 @@
         immediate: true,
         handler(n, o) {
           setTimeout(() => {
-            if (n && !o || n.id != o.id) {
+            if ((n && !o) || n.id != o.id) {
               this.getTableData(n.id);
             }
           }, 500);

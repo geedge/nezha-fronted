@@ -209,7 +209,7 @@
       height: calc(100% - 10px);
     }
     .asset-info-content-title {
-      background-image: linear-gradient(#fafafa, #f0f0f0);
+      background-color: #efefef;
       font-size: 13px;
       color: #505255;
       padding-left: 2px;
@@ -224,6 +224,11 @@
       max-height: 0;
       visibility: hidden;
      }
+    .basic-content-project.init-no-animation {
+      opacity: 1;
+      max-height: 200px;
+      visibility: visible;
+    }
     .basic-content-project.fold, .feature-content-project.fold {
       animation-name: fold-200; //该动画定义在main.scss里
       animation-duration: 0.3s;
@@ -249,6 +254,9 @@
       visibility: visible;
     }
     .basic-content, .feature-content {
+      opacity: 0;
+      max-height: 0;
+      visibility: hidden;
       width: 100%;
       margin-bottom: 5px;
       box-sizing: border-box;

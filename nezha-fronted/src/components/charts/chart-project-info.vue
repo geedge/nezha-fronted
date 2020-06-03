@@ -33,7 +33,7 @@
                     <span><i :class="{'el-icon-caret-right':hideBasic,'el-icon-caret-bottom':!hideBasic}"></i></span>
                     <span>{{$t('project.chart.basicTitle')}}</span>
                   </div>
-                  <div class="basic-content basic-content-project" :class="{'fold':hideBasic, 'unfold':!hideBasic}">
+                  <div class="basic-content basic-content-project init-no-animation" ref="basic">
                     <template v-if="projectInfos.basic && Object.keys(projectInfos.basic).length>0">
                       <div v-for="(item,index) in basicKey" :key="index" class="content-item">
                         <div class="content-item-key item-tip" :id="'basicKey' + index">
@@ -61,7 +61,7 @@
                     <span><i :class="{'el-icon-caret-right': showModuleIds.indexOf(module.id) == -1,'el-icon-caret-bottom': showModuleIds.indexOf(module.id) > -1}"></i></span>
                     <span>{{$t('project.module.module')}}：{{module.name}}</span>
                   </div>
-                  <div class="feature-content feature-content-project" :class="{'fold': showModuleIds.indexOf(module.id) == -1, 'unfold': showModuleIds.indexOf(module.id) > -1}">
+                  <div class="feature-content feature-content-project" :ref="'module' + module.id">
                     <div v-for="(item,index) in moduleKey" :key="index" class="content-item">
                       <div class="content-item-key item-tip" :id="'featureKey' + module.id + '-' + index">
                         <span>{{item.label}}</span>
@@ -69,9 +69,9 @@
                       </div>
                       <div class="content-item-value" v-if="item.prop == 'endpointStat'">
                         <img src='../../assets/img/up.png' width="16" style="vertical-align: middle">
-                        <span>{{projectInfos.basic.alertStat[0]}}</span>&nbsp;&nbsp;
+                        <span>{{module.endpointStat[0]}}</span>&nbsp;&nbsp;
                         <img src='../../assets/img/down.png' width="16" style="vertical-align: middle">
-                        <span>{{projectInfos.basic.alertStat[1]}}</span>&nbsp;&nbsp;
+                        <span>{{module.endpointStat[1]}}</span>&nbsp;&nbsp;
                       </div>
                       <div class="content-item-value" v-else-if="item.prop == 'alertStat'">
                         <div class="active-icon dark-red"></div>
@@ -238,13 +238,24 @@
       },
       hideElement:function(type){
         if(type ==  'basic'){
-          this.hideBasic=!this.hideBasic;
-        }else{
-          let index = this.showModuleIds.indexOf(type);
-          if (index == -1) {
-            this.showModuleIds.push(type);
+          if (this.hideBasic) {
+            this.$refs.basic.classList.add("unfold");
+            this.$refs.basic.classList.remove("fold");
           } else {
-            this.showModuleIds.splice(index, 1);
+            this.$refs.basic.classList.add("fold");
+            this.$refs.basic.classList.remove("unfold");
+          }
+          this.hideBasic = !this.hideBasic;
+        }else{
+          let dom = this.$refs['module' + type][0];
+          if (dom.classList.contains("unfold")) {
+            dom.classList.remove("unfold");
+            dom.classList.add("fold");
+          } else if (dom.classList.contains("fold")) {
+            dom.classList.remove("fold");
+            dom.classList.add("unfold");
+          } else if (!dom.classList.contains("unfold") && !dom.classList.contains("fold")) {
+            dom.classList.add("unfold");
           }
         }
         setTimeout(()=>{

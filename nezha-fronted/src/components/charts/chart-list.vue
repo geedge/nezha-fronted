@@ -193,6 +193,13 @@
       start (event) {
         console.log('start', event, this.dataList);
         event.item.querySelector('.chartTitle').style.background = '#d8dce1';
+        let projectAndAssetFeatureInfos = event.item.querySelectorAll(".feature-content");
+        if (projectAndAssetFeatureInfos && projectAndAssetFeatureInfos.length > 0) {
+          projectAndAssetFeatureInfos.forEach(item => {
+            item.classList.remove("unfold");
+            item.classList.remove("fold");
+          });
+        }
         this.dataListDragTmp = [...this.dataList];
       },
       end (event) {
