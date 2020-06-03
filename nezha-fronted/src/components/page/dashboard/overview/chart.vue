@@ -5,6 +5,7 @@
     <div class="chart-header">{{chartTitle}}</div>
 
     <div class="chart-body" ref="chartBody" :id="chartId" ></div>
+    <div style="position: absolute;top:50%;left:50%;" v-show="noData">No data</div>
 
     <div class="legend-container legend-container-screen" id="legendArea" ref="legendArea" v-show="legend.length>0" v-scrollBar:legend>
       <div v-for="(item, index) in legend" :title="item.alias?item.alias:item.name"  @click="clickLegend(item.name,index)" class="legend-item" :class="{'ft-gr':item.isGray}" :key="'legend_' + item.name+'_'+index">
@@ -46,6 +47,7 @@
         chartId: this.name + '-'+this.guid()+'-'+new Date().getTime(),
         legend:[],
         colors:chartConfig.getBgColorList(),
+        noData:false,
       }
     },
     created() {
@@ -99,10 +101,19 @@
           }
         }
         // console.log(this.option)
-        this.$set(this.option,'series',this.series);
+        if(this.series&&this.series.length>0){
+          this.$set(this.option,'series',this.series);
+          this.noData=false;
+          this.chart.clear();
+          this.chart.setOption(this.option);
+        }else{
+          this.noData=true;
+          let option=chartConfig.getOption('noData');
+          this.chart.clear();
+          this.chart.setOption(option);
+        }
 
-        this.chart.clear();
-        this.chart.setOption(this.option);
+
         //坐标轴label鼠标悬浮提示
         if (this.axisTooltip) {
           let tooltipDom = document.querySelector(".axis-tooltip");

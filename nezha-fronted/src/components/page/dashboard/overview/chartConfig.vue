@@ -88,14 +88,36 @@
         axisPointer: {//y轴上显示指针对应的值
           show: true,
         },
+        axisLine: {
+          show: false
+        },
+        axisTick: {
+          show: false
+        },
         splitLine:{
-          show:false
+          show:true,
+          lineStyle: {
+            color: "#d9d9d9",
+            opacity: 0.8,
+            width: 1
+          }
         }
       },
       yAxis: {
         type: 'value',
         splitLine:{
-          show:true
+          show:true,
+          lineStyle: {
+            color: "#d9d9d9",
+            opacity: 0.8,
+            width: 1
+          }
+        },
+        axisLine: {
+          show: false
+        },
+        axisTick: {
+          show: false
         },
         axisLabel: {
           // formatter:null,
@@ -312,12 +334,58 @@
       useUTC: false,//使用本地时间
       series: [],
     };
+    const noDataOption={
+      grid: {
+        top: 30,
+        left: 0,
+        right: 30,
+        containLabel: true,
+        bottom:8,//156
+      },
+      xAxis: {
+        type: 'category',
+        data: createTempTimes(),
+        splitLine:{
+          show:true
+        },
+        axisLine: {
+          show: false
+        },
+        axisTick: {
+          show: false
+        },
+      },
+      yAxis: {
+        type: 'category',
+        data: [1, 3, 5, 7, 9, 11, 13],
+        splitLine:{
+          show:true
+        },
+        axisLine: {
+          show: false
+        },
+        axisTick: {
+          show: false
+        },
+      },
+      series: null,
+    };
+    function createTempTimes(){
+      let times=[];
+      for(let i=0;i<10;i++){
+        let time=new Date();
+        time.setMinutes(new Date().getMinutes()-(10-i)*5);
+        times.push(bus.timeFormate(time,'hh:mm'))
+      }
+      return times;
+    }
     const chartTypes={
       line:{name:'line',option:commonOption},
       overviewLine: {name: 'line', option: overviewLine},
       map:{name:'map',option:mapOptions},
       pie: {name: 'assetType', option: assetTypePie},
-      bar: {name: 'alertMessage', option: alertMessageBar}
+      bar: {name: 'alertMessage', option: alertMessageBar},
+      noData:{name:'noData',option:noDataOption},
     };
     export default {
       getOption:function(type){

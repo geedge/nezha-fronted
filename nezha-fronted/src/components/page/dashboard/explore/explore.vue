@@ -309,6 +309,10 @@ instance_cpu_time_ns{app="fox", proc="widget", rev="4d3a513", env="prod", job="c
                         showSymbol:false,
                         smooth: 0.2,  //曲线变平滑
                         data: [],
+                        lineStyle: {
+                          width: 1,
+                          opacity: 0.9
+                        },
                         type: 'line',
                       }
                       seriesItem.data = result.values.map((item) => {
@@ -337,14 +341,12 @@ instance_cpu_time_ns{app="fox", proc="widget", rev="4d3a513", env="prod", job="c
                     this.$refs['promql-'+promqlIndex][0].setError(response.data.error)
                   }
                 })
-                if(series.length>0){
+
                   this.$refs.exploreChart.setLegend(legend);
                   this.$refs.exploreChart.setRandomColors(series.length)
                   this.$refs.exploreChart.setSeries(series)
                   this.defaultChartVisible = true;
-                }else{
-                  // this.defaultChartVisible = false;
-                }
+
               }
 
               this.$refs.exploreChart.endLoading();
