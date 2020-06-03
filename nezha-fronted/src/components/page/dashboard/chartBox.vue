@@ -597,7 +597,7 @@
       addCharts(params) {
         let panelId;
         //先处理panel
-        if (this.showPanel&&this.showPanel.type) {
+        if (this.showPanel&&this.showPanel.type!="dashboard") {
           panelId = this.panelData[0].id;
         } else {
           panelId = this.autocompleteExist(this.panelName2);
