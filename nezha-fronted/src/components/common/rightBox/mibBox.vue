@@ -20,7 +20,7 @@
 
       <!-- begin--表单-->
       <el-scrollbar class="right-box-form-box">
-        <el-form class="right-box-form" :model="currentMib" label-position="top" :rules="rules" ref="mibForm">
+        <el-form class="right-box-form  right-box-form-left" :model="currentMib" label-position="right" label-width="120px" :rules="rules" ref="mibForm">
           <!--mib名称-->
           <!--<el-form-item :label='$t("overall.name")' prop="name">
             <el-input v-if="rightBox.isEdit" placeholder="" maxlength="64" show-word-limit v-model.trim="currentMib.name" size="small"></el-input>
@@ -54,7 +54,7 @@
             <el-input maxlength="512" rows="4" show-word-limit v-if="rightBox.isEdit" type="textarea" placeholder="" v-model.trim="currentMib.remark" size="small"></el-input>
             <div v-if="!rightBox.isEdit" class="right-box-form-content-txt">{{currentMib.remark}}</div>
           </el-form-item>
-          <el-form-item :label="$t('config.mib.mibFile')" prop="file" :rules="[{validator:checkMibFile,trigger:'change'}]" :class="{'add-required':!currentMib.id}">
+          <el-form-item :label="$t('config.mib.mibFiles')" prop="file" :rules="[{validator:checkMibFile,trigger:'change'}]" :class="{'add-required':!currentMib.id}">
             <el-upload drag v-if="rightBox.isEdit" :multiple="false" action="" :file-list="uploadFileList" :on-change="uploadChange"  :auto-upload="false" accept="" :on-remove="afterClearFile" ref="mibFileUpload" class="mib-upload right-box-form-row">
               <div slot="tip" class="el-upload__tip" >
                <!-- <span v-if="!currentMib.fileName">{{$t('config.mib.uploadTip')}}</span>

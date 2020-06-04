@@ -20,7 +20,7 @@
 
       <!-- begin--表单-->
       <el-scrollbar class="right-box-form-box">
-        <el-form class="right-box-form" :model="cabinet" ref="cabinetForm" :rules="rules">
+        <el-form class="right-box-form right-box-form-left" label-width="120px" label-position="right" :model="cabinet" ref="cabinetForm" :rules="rules">
           <el-form-item :label="this.$t('asset.createAssetTab.AddCabinetTab.name')" prop="name">
             <el-input size='mini' v-model="cabinet.name" v-if="rightBox.isEdit"/>
             <div class="right-box-form-content-txt" v-if="!rightBox.isEdit">{{cabinet.name}}</div>

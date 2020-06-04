@@ -20,7 +20,7 @@
 
       <!-- begin--表单-->
       <el-scrollbar class="right-box-form-box">
-        <el-form class="right-box-form" :model="endpoint" label-position="top" :rules="rules" ref="endPointForm">
+        <el-form class="right-box-form  right-box-form-left" :model="endpoint" label-position="right" label-width="120px" :rules="rules" ref="endPointForm">
           <!--project-->
           <el-form-item :label="$t('project.project.project')" prop="project.id">
             <el-select @change="((val) => {changeProject(val);})" value-key="id" popper-class="config-dropdown" v-model="endpoint.projectId" placeholder="" v-if="rightBox.isEdit" size="small">
@@ -137,7 +137,8 @@
           <el-form-item class="right-box-form-param" v-if="currentModule.type.toLowerCase() == 'http'">
             <template slot="label">
               <span>{{$t('project.endpoint.param')}}</span>
-              <div class="right-box-form-btns" v-if="rightBox.isEdit">
+            </template>
+              <div  v-if="rightBox.isEdit" style="text-align: right">
                 <button style="display: none;">第一个button会出现意料之外的hover样式，找不到原因，只好加个不可见的button规避问题</button>
                 <button type="button" id="edit-clear-all" @click="clearAllParam" class="nz-btn nz-btn-size-normal nz-btn-style-light">
                   <span><i class="el-icon-delete"></i></span>
@@ -146,7 +147,6 @@
                   <span><i style="font-size: 12px;" class="nz-icon nz-icon-create-square"></i></span>
                 </button>
               </div>
-            </template>
             <div v-if="rightBox.isEdit" class="param-box param-box-module">
               <el-scrollbar ref="paramBoxScrollbar" style="height: 100%">
                 <div class="param-box-row" v-for="(item, index) in endpoint.paramObj">

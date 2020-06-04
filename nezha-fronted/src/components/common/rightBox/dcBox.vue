@@ -20,7 +20,7 @@
 
       <!-- begin--表单-->
       <el-scrollbar class="right-box-form-box">
-        <el-form class="right-box-form" :model="currentDc" label-position="top" :rules="rules" ref="dcForm">
+        <el-form class="right-box-form right-box-form-left" label-width="120px" :model="currentDc" label-position="right" :rules="rules" ref="dcForm">
           <el-form-item :label='$t("overall.name")' prop="name">
             <el-input v-if="rightBox.isEdit" placeholder="" maxlength="64" show-word-limit v-model="currentDc.name" size="small"></el-input>
             <div v-if="!rightBox.isEdit" class="right-box-form-content-txt">{{currentDc.name}}</div>

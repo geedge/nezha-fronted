@@ -21,7 +21,7 @@
 
       <!-- begin--表单-->
       <el-scrollbar class="right-box-form-box">
-        <el-form class="right-box-form" :model="alertRule" label-position="top" :rules="rules" ref="alertRuleForm">
+        <el-form class="right-box-form right-box-form-left" :model="alertRule" label-position="right" label-width="120px" :rules="rules" ref="alertRuleForm">
           <!--alertName-->
           <el-form-item :label='$t("alert.config.name")' prop="alertName">
             <el-input v-if="rightBox.isEdit" placeholder="" maxlength="64" show-word-limit v-model="alertRule.alertName" size="small"></el-input>

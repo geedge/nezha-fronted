@@ -20,7 +20,7 @@
 
       <!-- begin--表单-->
       <el-scrollbar class="right-box-form-box">
-        <el-form class="right-box-form" :model="currentModel" label-position="top" :rules="rules" ref="modelForm">
+        <el-form class="right-box-form right-box-form-left" :model="currentModel" label-position="right" label-width="120px"  :rules="rules" ref="modelForm">
           <!--model名称-->
           <el-form-item :label='$t("overall.name")' prop="name">
             <el-input v-if="rightBox.isEdit" placeholder="" maxlength="64" show-word-limit v-model.trim="currentModel.name" size="small"></el-input>
@@ -69,9 +69,9 @@
                 </div>
               </template>
             </el-autocomplete>
-            <el-form-item :label="this.$t('asset.createAssetTab.AddCabinetTab.uSize')" prop="uSize">
-              <el-input v-model.number="currentModel.uSize" :max="47" size="small"></el-input>
-            </el-form-item>
+          </el-form-item>
+          <el-form-item :label="this.$t('asset.createAssetTab.AddCabinetTab.uSize')" prop="uSize">
+            <el-input v-model.number="currentModel.uSize" :max="47" size="small"></el-input>
           </el-form-item>
         </el-form>
       </el-scrollbar>
