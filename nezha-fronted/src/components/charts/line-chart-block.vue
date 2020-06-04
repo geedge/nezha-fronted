@@ -42,7 +42,7 @@
         </div>
 
         <div class="line-area"  ref="lineChartArea"  :id="'lineChartArea'+chartIndex" v-show="firstShow" style="width:100%;"></div>
-        <div style="position: absolute;top:50%;left:50%;" v-show="noData">No data</div>
+        <div class="chart-no-data" v-show="noData">No data</div>
         <div class="legend-container" id="legendArea" ref="legendArea" v-show="firstShow" v-scrollBar:legend>
           <div v-for="(item, index) in legendList" :title="item.alias?item.alias:item.name"  @click="clickLegend(item.name,index)" class="legend-item" :class="{'ft-gr':isGrey[index]}" :key="'legend_' + item.name+'_'+index">
             <span class="legend-shape" :style="{background:(isGrey[index]?'#D3D3D3':bgColorList[index])}"></span>{{item.alias?item.alias:item.name}}
@@ -78,7 +78,7 @@
             </div>
           </div>
           <div class="line-area" ref="screenShowArea"  id="screenShowArea"  style="margin-top:0px;" @mouseenter="mouseEnterFullChart" @mouseleave="mouseLeaveFullChart"></div>
-          <div style="position: absolute;top:50%;left:50%;" v-show="noData">No data</div>
+          <div class="chart-no-data" v-show="noData">No data</div>
           <div class="legend-container legend-container-screen"  :id="'screenLegendArea'+chartIndex" @mouseenter="mouseEnterFullChart" @mouseleave="mouseLeaveFullChart" v-show="showLegend" v-scrollBar:legend>
             <div v-for="(item, index) in screenLegendList" :title="item.alias?item.alias:item.name"  @click="clickScreenLegend(item.name,index)" class="legend-item" :class="{'ft-gr':isGreyScreen[index]}"  :key="'legend_' + item.name+'_'+index">
               <span class="legend-shape" :style="{background:(isGreyScreen[index]?'#D3D3D3':bgColorList[index])}"></span>{{item.alias?item.alias:item.name}}
@@ -589,6 +589,8 @@
               interval: '0',
               showMaxLabel:false,
               rotate: 0,
+              show:true,
+              fontSize: 10,
               formatter: function (value) {
                 value = bus.computeTimezone(value);
                 let t_date = new Date(value);
@@ -652,6 +654,8 @@
             },
             //去掉y轴--end
             axisLabel: {
+              show:true,
+              fontSize: 10,
               formatter: function(value,index){
                 let chartUnit=chartInfo.unit;
                 chartUnit=chartUnit?chartUnit:2;

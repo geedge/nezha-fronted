@@ -69,7 +69,8 @@ const cn = {
     reset: "重置",
     submit: "提交",
     noData:'没有数据',
-    tag: '标签'
+    tag: '标签',
+    syncChart:'同步图表',
   },
   webshell: {
     shellTitle: "本地 Shell",
@@ -339,7 +340,8 @@ const cn = {
     downloadSuccess: "下载成功",
     uploadSuccess: "上传成功",
     pressEnterToAdd: "回车添加新行",
-    resetSuccess: "重置成功"
+    resetSuccess: "重置成功",
+    syncSuccess:'同步成功',
   },
   asset: {
     asset: "资产",

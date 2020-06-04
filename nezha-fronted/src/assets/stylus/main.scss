@@ -2016,3 +2016,10 @@ li{
   pointer-events: none;
 }
 
+.chart-no-data{
+  position: absolute;
+  top:50%;
+  width:100%;
+  text-align:center;
+  color:#52545c;
+}
