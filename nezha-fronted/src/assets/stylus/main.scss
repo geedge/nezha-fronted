@@ -1589,6 +1589,12 @@ li{
 .nz-dialog {
   overflow: hidden;
 }
+.nz-dialog.chart-preview-dialog .el-dialog {
+  width: 85% !important;
+}
+.nz-dialog.chart-preview-dialog {
+  z-index: 3000 !important;
+}
 .nz-dialog .el-dialog, .el-message-box {
   border-radius: 5px !important;
 }

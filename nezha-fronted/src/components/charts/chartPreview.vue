@@ -251,7 +251,7 @@
           dailogBox.style.height = `${height}px`;
 
           const addChartBox = document.querySelector('.right-box-add-chart');
-          addChartBox.style.cssText =  'z-index:1500 !important';
+          //addChartBox.style.cssText =  'z-index:1500 !important';
           if(chartType==='table'){
             const chartDiv = document.getElementById(chartContainerId);
             chartDiv.style.height = `${height-this.chartSpaceHeight-this.titleHeight-25}px`;
