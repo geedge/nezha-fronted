@@ -43,6 +43,11 @@
                 class="nz-btn nz-btn-size-normal nz-btn-style-light ">
           <i class="nz-icon-create-square nz-icon"></i>
         </button>
+
+        <button @click="syncChart" :title="$t('overall.syncChart')" v-if="from == 'asset'||from == 'model'" style="margin-left: 20px;"
+                class="nz-btn nz-btn-size-normal nz-btn-style-light ">
+          <i class="nz-icon-sync nz-icon"></i>
+        </button>
       </div>
     </div>
 
@@ -411,7 +416,23 @@
       },
       clearInput:function(){
         this.$refs.queryPanel.focus();
-      }
+      },
+      syncChart:function(){
+        if(this.from=='asset'||this.from=='model'){
+          let param={
+            modelId:this.from=='model'?this.obj.id:null,
+            assetId:this.from=='asset'?this.obj.id:null,
+          }
+          this.$put('/model/syncChart',param).then(response=>{
+            if(response.code == 200){
+              this.$message({duration: 1000, type: 'success', message: this.$t("tip.syncSuccess")});
+            }else{
+              console.error(response.msg)
+              this.$message.error(response.msg)
+            }
+          })
+        }
+      },
     },
     mounted: function () {
       this.onScroll();

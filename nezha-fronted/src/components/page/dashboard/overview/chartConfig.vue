@@ -207,7 +207,8 @@
           show: false
         },
         axisLabel: {
-          fontSize: 13*window.devicePixelRatio
+          show:true,
+          fontSize: 10
         }
       },
       yAxis: {
@@ -220,13 +221,14 @@
         },
         data: [],
         axisLabel: {
+          show:true,
           formatter: function(value) {
             if (value.length > 12) {
               return value.substring(0, 9) + "...";
             }
             return value;
           },
-          fontSize: 12*window.devicePixelRatio
+          fontSize: 10
         },
         triggerEvent: true
       },

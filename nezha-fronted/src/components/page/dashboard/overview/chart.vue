@@ -5,7 +5,7 @@
     <div class="chart-header">{{chartTitle}}</div>
 
     <div class="chart-body" ref="chartBody" :id="chartId" ></div>
-    <div style="position: absolute;top:50%;left:50%;" v-show="noData">No data</div>
+    <div class="chart-no-data" v-show="noData">No data</div>
 
     <div class="legend-container legend-container-screen" id="legendArea" ref="legendArea" v-show="legend.length>0" v-scrollBar:legend>
       <div v-for="(item, index) in legend" :title="item.alias?item.alias:item.name"  @click="clickLegend(item.name,index)" class="legend-item" :class="{'ft-gr':item.isGray}" :key="'legend_' + item.name+'_'+index">

@@ -76,7 +76,8 @@ const en = {
     submit:'Submit',
     noData:'No data',
     tag: 'Tag',
-    placeHolder:'please enter'
+    placeHolder:'please enter',
+    syncChart:'Synchronize chart',
   },
   pageSize: '/page',
   webshell:{
@@ -358,6 +359,7 @@ const en = {
     uploadSuccess: 'Upload success',
     pressEnterToAdd: 'Press enter to add new line',
     resetSuccess:'Reset success',
+    syncSuccess:'Synchronize success'
   },
   asset:{
     asset: 'Asset',
