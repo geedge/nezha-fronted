@@ -355,7 +355,7 @@
       },
       formatThreshold:function(value,unit){
         let unitMethod=chartDataFormat.getUnit(unit)
-        if(unitMethod&&unit.compute){
+        if(unitMethod&&value){
           return unitMethod.compute(value,null,2);
         }else{
           return value
