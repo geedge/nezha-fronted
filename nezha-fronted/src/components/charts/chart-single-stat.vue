@@ -43,6 +43,7 @@
         <div class="mt-10 single-stat-container" v-cloak  v-show="firstShow" >
           <div :id="'chartContainer'+chartIndex"  ref="chartContainer" class="single-stat-content" >
             {{serieSingleStat}}
+            <div class="chart-no-data" v-show="noData">No data</div>
           </div>
         </div>
         <!--全屏-->
@@ -58,6 +59,7 @@
           <div class="single-stat-screen-container"  >
             <div id="chartScreenContainer"  ref="chartScreenContainer" class="single-stat-content" >
               {{serieSingleStat}}
+              <div class="chart-no-data" v-show="noData">No data</div>
             </div>
           </div>
           <loading  :ref="'localLoadingScreen'+chartIndex"></loading>
@@ -99,6 +101,7 @@ export default {
   data() {
     return {
       data: {}, // 该图表信息,chartItem
+      noData:false,
       unit:{},
       isError:false,
       errorContent:'',
@@ -388,6 +391,11 @@ export default {
         }else {
           this.isError = false;
           this.errorContent = '';
+        }
+        if(seriesItem){
+          this.noData=false;
+        }else{
+          this.noData=true;
         }
         if(area==='showFullScreen'){//全屏按时间查询
           this.data = chartItem;

@@ -342,6 +342,7 @@ const cn = {
     pressEnterToAdd: "回车添加新行",
     resetSuccess: "重置成功",
     syncSuccess:'同步成功',
+    syncTip:"此操作可能造成原有数据或图表被覆盖，确认同步吗？"
   },
   asset: {
     asset: "资产",
@@ -769,7 +770,10 @@ const cn = {
         module: "组件",
         asset: "设备"
       },
-      alertNum: "告警数量"
+      alertNum: "告警数量",
+      operator:'比较符',
+      threshold:'阈值',
+      unit:'单位'
     }
   },
   project: {

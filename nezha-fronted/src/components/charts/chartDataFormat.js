@@ -550,5 +550,7 @@ export default {
     }
     return units[index-1];
   },
-  short
+  formatData:function(value,unit){
+    return this.getUnit(unit).compute(value,null,2)
+  }
 }

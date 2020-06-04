@@ -66,6 +66,9 @@
               <template v-else-if="item.prop == 'alertNum'">
                 <span class="link" @click="queryMessage(scope.row)">{{scope.row.alertNum + ' ' + $t('overall.active')}}</span>
               </template>
+              <template v-else-if="item.prop == 'threshold'">
+                <span  >{{formatThreshold(scope.row[item.prop],scope.row.unit)}}</span>
+              </template>
               <template v-else-if="item.prop == 'receivers'">
                 <el-tag effect="dark" v-if="user.userName" :key="index" size="mini" v-for="(user, index) in scope.row[item.prop]" class="alert-rule-tag">{{user.userName}}</el-tag>
               </template>
@@ -112,6 +115,7 @@
 <script>
   var vm;
   import bus from '../../../libs/bus';
+  import chartDataFormat from "../../charts/chartDataFormat";
   export default {
     name: "alert-config",
     data() {
@@ -173,6 +177,9 @@
           type: '',
           linkObject: {id: '', name: ''},
           linkId: '',
+          operator:'',
+          threshold:'',
+          unit:2,
           expr: '',
           last: '',
           severity: '',
@@ -240,6 +247,14 @@
             show: true,
             width: 140
           }, */{
+            label: this.$t("alert.config.operator"),
+            prop: 'operator',
+            show: true,
+          }, {
+            label: this.$t("alert.config.threshold"),
+            prop: 'threshold',
+            show: true,
+          }, {
             label: this.$t("alert.config.for"),
             prop: 'last',
             show: true,
@@ -337,6 +352,14 @@
             }
           })
         });
+      },
+      formatThreshold:function(value,unit){
+        let unitMethod=chartDataFormat.getUnit(unit)
+        if(unitMethod&&unit.compute){
+          return unitMethod.compute(value,null,2);
+        }else{
+          return value
+        }
       },
       //asset弹框控制
       tabControl(data) {

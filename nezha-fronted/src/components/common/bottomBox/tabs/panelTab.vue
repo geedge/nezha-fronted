@@ -419,20 +419,26 @@
       },
       syncChart:function(){
         if(this.from=='asset'||this.from=='model'){
-          let param={
-            modelId:this.from=='model'?this.obj.id:null,
-            assetId:this.from=='asset'?this.obj.id:null,
-          }
-          this.$put('/model/syncChart',param).then(response=>{
-            if(response.code == 200){
-              this.$message({duration: 1000, type: 'success', message: this.$t("tip.syncSuccess")});
-              if(this.from == 'asset'){
-                this.Refresh();
-              }
-            }else{
-              console.error(response.msg)
-              this.$message.error(response.msg)
+          this.$confirm(this.$t("tip.syncTip"), {
+            confirmButtonText: this.$t("tip.yes"),
+            cancelButtonText: this.$t("tip.no"),
+            type: 'warning'
+          }).then(() => {
+            let param={
+              modelId:this.from=='model'?this.obj.id:null,
+              assetId:this.from=='asset'?this.obj.id:null,
             }
+            this.$put('/model/syncChart',param).then(response=>{
+              if(response.code == 200){
+                this.$message({duration: 1000, type: 'success', message: this.$t("tip.syncSuccess")});
+                if(this.from == 'asset'){
+                  this.Refresh();
+                }
+              }else{
+                console.error(response.msg)
+                this.$message.error(response.msg)
+              }
+            })
           })
         }
       },

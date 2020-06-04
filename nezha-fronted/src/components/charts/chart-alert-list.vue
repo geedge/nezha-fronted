@@ -110,7 +110,7 @@
                 <div v-else-if="item.prop == 'current'" class="too-long-split" >
                   <span v-if="!scope.row.current">-</span>
                   <el-popover v-else placement="right" trigger="hover">
-                    <span slot="reference">{{scope.row.current[1]}}</span>
+                    <span slot="reference">{{formatThreshold(scope.row.current[1],scope.row.alertRule.unit)}}</span>
                     <div>{{$unixTimeParseToString(scope.row.current[0])}}</div>
                   </el-popover>
                 </div>
@@ -262,10 +262,10 @@
           <div slot="title">
             {{$t("project.endpoint.dialogTitle")}}
             <div class="float-right panel-calendar dialog-tool" style="display: flex">
-              <pick-time :refresh-data-func="queryChartDate" :use-refresh="false" v-model="searchTime" style="height: 28px;" @unitChange="chartUnitChange"></pick-time>
+              <pick-time :refresh-data-func="queryChartDate" :use-refresh="false" :use-chart-unit="false" v-model="searchTime" style="height: 28px;" @unitChange="chartUnitChange"></pick-time>
             </div>
           </div>
-          <chart ref="messageChart" name="alertMessageChart" :unit="chartUnit"></chart>
+          <chart ref="messageChart" name="alertMessageChart" :unit="chartUnit" ></chart>
         </el-dialog>
         <element-set
           path="/alertList"
@@ -502,11 +502,20 @@ export default {
             return "";
           }
         },
+      formatThreshold:function(value,unit){
+        let unitMethod=chartDataFormat.getUnit(unit)
+        if(unitMethod&&unit.compute){
+          return unitMethod.compute(value,null,2);
+        }else{
+          return value
+        }
+      },
       detail(obj) {
         this.chartDatas = [];
         this.legend = [];
         this.graphShow = true;
         this.currentMsg = obj;
+        this.chartUnit=obj.alertRule.unit?obj.alertRule.unit:5;
         this.$nextTick(() => {
           this.queryChartDate();
         });

@@ -32,6 +32,29 @@
             <el-input maxlength="512" rows="4" show-word-limit v-if="rightBox.isEdit" type="textarea" placeholder="" v-model="alertRule.expr" size="small"></el-input>
             <div v-if="!rightBox.isEdit" class="right-box-form-content-txt">{{alertRule.expr}}</div>
           </el-form-item>
+          <!--operator-->
+          <el-form-item :label="$t('alert.config.operator')" prop="operator">
+            <el-select v-if="rightBox.isEdit" popper-class="config-dropdown" v-model="alertRule.operator" placeholder=""  size="small">
+              <el-option :id="'operator-'+item.key" v-for="item in operators" :key="item.value" :label="item.label" :value="item.value"></el-option>
+            </el-select>
+            <div v-if="!rightBox.isEdit" class="right-box-form-content-txt">{{alertRule.operator}}</div>
+          </el-form-item>
+          <!--threshold-->
+          <el-form-item :label="$t('alert.config.threshold')" prop="threshold">
+            <el-input v-if="rightBox.isEdit" type="text" placeholder="" v-model.number="alertRule.threshold" size="small">
+            </el-input>
+            <div v-if="!rightBox.isEdit" class="right-box-form-content-txt">{{alertRule.operator}}s</div>
+          </el-form-item>
+          <!--unit-->
+          <el-form-item :label="$t('alert.config.unit')" prop="unit">
+            <el-cascader filterable placeholder="" popper-class="no-style-class unit-popper-class" size="small" style="width: 100%"
+                         :options="unitOptions"
+                         :props="{ expandTrigger: 'click',emitPath:false }"
+                         :show-all-levels="false"
+                         v-model="alertRule.unit"
+            >
+            </el-cascader>
+          </el-form-item>
           <!--last-->
           <el-form-item :label="$t('alert.config.for')" prop="last">
             <el-input v-if="rightBox.isEdit" type="text" placeholder="" v-model.number="alertRule.last" size="small">
@@ -98,6 +121,8 @@
 </template>
 
 <script>
+  import chartDataFormat from "../../charts/chartDataFormat";
+
   export default {
     name: "alertConfigBox",
     props: {
@@ -124,6 +149,17 @@
           summary:[
             {required:true,message:this.$t('validate.required'),trigger:'blur'},
           ],
+          operator:[
+            {required:true,message:this.$t('validate.required'),trigger:'blur'},
+          ],
+          unit:[
+            {required:true,message:this.$t('validate.required'),trigger:'blur'},
+          ],
+          threshold:[
+            {required:true,message:this.$t('validate.required'),trigger:'blur'},
+            {type:'number',message:this.$t('validate.number')}
+          ],
+
           // description:[
           //   {required:true,message:this.$t('validate.required'),trigger:'blur'},
           // ],
@@ -145,6 +181,33 @@
             value: this.$t("alert.config.low")
           }
         ],
+        operators:[
+          {
+            label:'==',
+            value:'=='
+          },
+          {
+            label:'!=',
+            value:'!='
+          },
+          {
+            label:'>',
+            value:'>'
+          },
+          {
+            label:'<',
+            value:'<'
+          },
+          {
+            label:'>=',
+            value:'>='
+          },
+          {
+            label:'<=',
+            value:'<='
+          },
+        ],
+        unitOptions:chartDataFormat.unitOptions(),
         typeData: [
           {
             key: 1, //project
@@ -295,4 +358,9 @@
 
 <style scoped>
 
+</style>
+<style>
+  .unit-popper-class{
+    z-index: 2052 !important;
+  }
 </style>
