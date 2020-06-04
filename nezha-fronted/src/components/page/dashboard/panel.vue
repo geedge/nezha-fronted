@@ -593,7 +593,7 @@
     margin-top: 3px;
     text-align:left;
     border-radius:4px;
-    width:120px;
+    width:260px;
     height:24px;
     border:solid 1px  #d8dce1;
     white-space: nowrap;
@@ -602,7 +602,7 @@
   }
   .panel-list-title {
     min-height:24px;
-    width:100px;
+    width:236px;
     white-space: nowrap;
     overflow-x: hidden;
     text-overflow: ellipsis;

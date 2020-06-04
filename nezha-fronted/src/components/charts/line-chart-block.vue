@@ -1120,6 +1120,10 @@
                           showSymbol:false,
                           data: [],
                           type:this.data.type,
+                          lineStyle: {
+                            width: 1,
+                            opacity: 0.9
+                          },
                           //visible: true,
                           //threshold: null,
                         },

@@ -57,7 +57,7 @@
       </el-popover>
       <div slot="title" class="chart-title">
         <span class="nz-dialog-title chart-title-text">{{chart.title}}</span>
-        <div class="float-right panel-calendar dialog-tool"  v-if="chart.type!=='url'">
+        <div class="float-right panel-calendar dialog-tool"  v-if="chart.type!=='url' && chart.type !=='alertList'">
 
           <time-picker ref="calendarPanel" class="nz-dashboard-picker" style="margin-top: -12px;" @change="dateChange"></time-picker>
           <!--
@@ -129,7 +129,7 @@
       </template>
 
       <template v-if="chart.type === 'alertList'">
-        <chart-alert-list ref="alertListChart"></chart-alert-list>
+        <chart-alert-list ref="alertListChart" id="chartAlertListPreview"></chart-alert-list>
       </template>
 
       <loading  ref="loadingPreview"></loading>
@@ -236,6 +236,8 @@
           chartContainerId = 'chartUrlPreview';
         }else if (chartType === 'singleStat') {
           chartContainerId = 'chartSingleStatPreview';
+        }else if(chartType === 'alertList'){
+          chartContainerId = 'chartAlertListPreview';
         }
 
         //设置高度 chart-table
@@ -327,7 +329,7 @@
         });
       },
       getAlertListChartData:function(chartInfo,filterType){
-        this.$refs.alertListChart.getAlertList(filterType,true);
+        this.$refs.alertListChart.getAlertList(filterType,true,this.chart);
         this.$refs.loadingPreview.endLoading();
       },
       // 获取一个图表具体数据
@@ -406,6 +408,10 @@
                               showSymbol: false,
                               data: [],
                               type: chartItem.type,
+                              lineStyle: {
+                                width: 1,
+                                opacity: 0.9
+                              },
                             },
                             metric_name: '',
                           };
@@ -1112,6 +1118,10 @@
                           showSymbol:false,
                           data: [],
                           type:this.chart.type,
+                          lineStyle: {
+                            width: 1,
+                            opacity: 0.9
+                          },
                           //visible: true,
                           //threshold: null,
                         },

@@ -313,7 +313,11 @@ export default {
             type:chartItem.type ? chartItem.type : 'line',
             //visible: true,
             //threshold: null,
-            chartTitle:''
+            chartTitle:'',
+            lineStyle: {
+              width: 1,
+              opacity: 0.9
+            },
           },
           metric_name: '',
         };
