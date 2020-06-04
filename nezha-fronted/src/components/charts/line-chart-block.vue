@@ -793,7 +793,7 @@
               let legendDiv = document.getElementById('screenLegendArea'+self.chartIndex);
               let divHeight = legendDiv.offsetHeight;
               let screenHeight = document.documentElement.clientHeight || document.body.clientHeight;
-              let sumHeight = Math.round(screenHeight*0.99*0.8);//margin-top:1vh; dailog:80%
+              let sumHeight = Math.floor(screenHeight*0.99*0.8);//margin-top:1vh; dailog:80%
                 //console.log("11____00",sumHeight,divHeight,legendDiv)
               self.$refs.screenShowArea.style.height = `${sumHeight - divHeight - self.screenTitleHeight}px`;
               self.echartModalStore.resize({height: (sumHeight - divHeight - self.screenTitleHeight)});//图表的高度
@@ -1241,7 +1241,7 @@
         //设置高度
         this.$nextTick(() => {
           const chartBox = document.getElementById('lineChartDiv'+this.chartIndex);
-          let height = Math.round(chartItem.height/this.$chartResizeTool.stepHeight)*this.$chartResizeTool.stepHeight;//图表高度四舍五入
+          let height = Math.floor(chartItem.height/this.$chartResizeTool.stepHeight)*this.$chartResizeTool.stepHeight;//图表高度四舍五入
           if(height<this.$chartResizeTool.minHeight){
             height = this.$chartResizeTool.minHeight;
           }

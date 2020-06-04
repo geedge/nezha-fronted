@@ -1,8 +1,7 @@
 <style scoped>
   .chartBox {
     float:left;
-    padding: 0 10px;
-    margin: 10px 0;
+    padding: 20px 10px 0 10px;
     position:relative;
     box-sizing: border-box;
   }
@@ -1150,7 +1149,7 @@
                   }]
                 }
               }
-              this.$refs['editChart'+chartInfo.id][0].setData(chartInfo, data, this.filter.panelId, this.filter);
+              this.$refs['editChart'+chartInfo.id][0].setData(chartInfo, response.data, this.filter.panelId, this.filter);
             }else{
               this.$refs['editChart'+chartInfo.id][0].setData(chartInfo, {}, this.filter.panelId, this.filter, response.msg);
             }
