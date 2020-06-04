@@ -161,11 +161,6 @@
 .resize-shadow-active {
   background-color: #888;
 }
-.resize-box-url {
-  .vue-resizable-handle {
-    background-color: white;
-  }
-}
 .resize-box {
   .pagination {
     padding-top: 0;
@@ -358,6 +353,12 @@
           height: 99%;
         }
       }
+    }
+  }
+  .chart-url {
+    .url-container {
+      padding: 0 8px 8px 8px;
+      box-sizing: border-box;
     }
   }
   .line-chart-block, .chart-table, .chart-single-stat, .chart-url, .chart-asset-info, .chart-alert-info, .chart-project-info {
