@@ -426,6 +426,9 @@
           this.$put('/model/syncChart',param).then(response=>{
             if(response.code == 200){
               this.$message({duration: 1000, type: 'success', message: this.$t("tip.syncSuccess")});
+              if(this.from == 'asset'){
+                this.Refresh();
+              }
             }else{
               console.error(response.msg)
               this.$message.error(response.msg)

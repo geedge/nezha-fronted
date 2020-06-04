@@ -73,7 +73,7 @@
 
         <!-- begin--表单-->
         <el-scrollbar class="right-box-form-box" ref="scrollbar">
-          <el-form class="right-box-form" :model="chart"  :rules="rules" ref="chartForm">
+          <el-form class="right-box-form  right-box-form-left" :model="chart" label-width="120px" label-position="right"  :rules="rules" ref="chartForm">
             <el-form-item :label="$t('dashboard.panel.title')" prop="panel" v-if="!showPanel.type">
               <el-autocomplete
                 :fetch-suggestions="panelSuggestion"

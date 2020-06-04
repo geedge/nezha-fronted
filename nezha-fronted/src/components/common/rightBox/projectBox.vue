@@ -18,7 +18,7 @@
       <div class="right-box-title">{{rightBox.title}}</div>
       <!-- end--标题-->
       <el-scrollbar class="right-box-form-box">
-        <el-form class="right-box-form" :model="project" label-position="top" :rules="rules" ref="projectForm">
+        <el-form class="right-box-form right-box-form-left" :model="project" label-position="right" label-width="120px" :rules="rules" ref="projectForm">
           <el-form-item :label='$t("project.project.projectName")' prop="name">
             <el-input v-if="rightBox.isEdit" size="mini" maxlength="64" show-word-limit v-model="project.name"></el-input>
             <div v-if="!rightBox.isEdit" class="right-box-form-content-txt">{{project.name}}</div>

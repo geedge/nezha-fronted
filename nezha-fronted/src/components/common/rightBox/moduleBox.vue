@@ -20,7 +20,7 @@
 
       <!-- begin--表单-->
       <el-scrollbar class="right-box-form-box" ref="scrollbar">
-        <el-form class="right-box-form" :model="currentModule" label-position="top" :rules="rules" ref="moduleForm">
+        <el-form class="right-box-form right-box-form-left" :model="currentModule" label-position="right" label-width="120px" :rules="rules" ref="moduleForm">
           <el-form-item :label='$t("project.project.project")' prop="project">
             <el-select v-if="rightBox.isEdit" value-key="id" popper-class="config-dropdown" v-model="currentModule.project" placeholder="" size="small">
               <el-option :id="'module-project-'+item.id" v-for="item in projectList" :key="item.id" :label="item.name" :value="item"></el-option>

@@ -120,7 +120,7 @@
 
         <!-- begin--表单-->
         <el-scrollbar class="right-box-form-box">
-          <el-form class="right-box-form" :model="promServer" label-position="top" label-width="80px" :rules="rules"
+          <el-form class="right-box-form right-box-form-left" :model="promServer" label-position="right" label-width="120px" :rules="rules"
                    ref="promServerForm">
             <!--DC start-->
             <el-form-item :label="$t('config.dc.dc')" prop="idc.name">

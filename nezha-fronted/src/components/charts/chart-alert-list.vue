@@ -7,7 +7,7 @@
     <div class="resize-box resize-box-alert" ref="resizeBox">
       <div class="chart-alert-info" :id="'chartTableDiv'+chartIndex" v-show="divFirstShow" @mouseenter="caretShow=true" @mouseleave="caretShow=false">
         <loading :ref="'localLoading'+chartIndex"></loading>
-        <div class="clearfix chartTitle" :class="{'dragTitle':dragTitleShow}" :id="'chartTitle'+chartIndex">
+        <div class="clearfix chartTitle" :class="{'dragTitle':dragTitleShow}" :id="'chartTitle'+chartIndex" v-show="!isPreview">
           <el-popover
             v-if="isError"
             :close-delay=10
@@ -482,6 +482,12 @@ export default {
         handler(n,o){
           this.data=Object.assign({},n)
         }
+      },
+      panelId:{
+        immediate:true,
+        handler(n,o){
+          this.panelIdInner=n
+        }
       }
     },
     methods: {
@@ -584,7 +590,11 @@ export default {
                         type: "line",
                         symbol: 'none',  //去掉点
                         smooth: 0.2,  //曲线变平滑
-                        name: ''
+                        name: '',
+                        lineStyle: {
+                          width: 1,
+                          opacity: 0.9
+                        },
                       };
                       chartData.name += "{";
                       alias += "{";
@@ -626,15 +636,21 @@ export default {
           })
         }
       },
-      getAlertList: function (filterType,isPreview=false) {
+      getAlertList: function (filterType,isPreview=false,chartInfo) {
         this.resize();
         this.isPreview = isPreview;
         let queryParam={
           pageSize:this.pageObj.pageSize,
           pageNo:this.pageObj.pageNo,
         }
-        if(this.chartInfo&&this.chartInfo.param){ //按照粒度，project>module>endpoint  查询只传最细粒度
-          let param=this.chartInfo.param;
+        let chart=null;
+        if(chartInfo){
+          chart=Object.assign({},chartInfo)
+        }else{
+          chart=Object.assign({},this.chartInfo)
+        }
+        if(chart&&chart.param){ //按照粒度，project>module>endpoint  查询只传最细粒度
+          let param=chart.param;
           if(param.endpointId&&param.endpointId != ''){
             queryParam.endpointId=param.endpointId;
           }else{

@@ -513,6 +513,10 @@
                 smooth:0.2,  //曲线变平滑
                 data: [],
                 type:'line',
+                lineStyle: {
+                  width: 1,
+                  opacity: 0.9
+                },
               };
               if (response.data.result.length > 0) {
                 series.data=response.data.result[0].values.map((item)=>{
@@ -545,6 +549,10 @@
                 smooth:0.2,  //曲线变平滑
                 data: [],
                 type:'line',
+                lineStyle: {
+                  width: 1,
+                  opacity: 0.9
+                },
               };
               if (response.data.result.length > 0) {
                 series.data=response.data.result[0].values.map((item)=>{
