@@ -78,6 +78,7 @@
       <template v-if="chart.type==='line'||chart.type==='bar'||chart.type==='stackArea'">
         <div id="chartEchartPreview" @mouseenter="mouseEnterFullChart" @mouseleave="mouseLeaveFullChart">
           <div class="line-area" ref="screenShowArea"  id="screenShowArea"  style="margin-top:0px;"></div>
+          <div class="chart-no-data" v-show="noData">No data</div>
           <div class="legend-container legend-container-screen" id="screenLegendArea" ref="screenLegendArea" v-show="showLegend" v-scrollBar:legend>
             <div v-for="(item, index) in screenLegendList" :title="item.alias?item.alias:item.name"  @click="clickScreenLegend(item.name,index)" class="legend-item" :class="{'ft-gr':isGreyScreen[index]}"  :key="'legend_' + item.name+'_'+index">
               <span class="legend-shape" :style="{background:(isGreyScreen[index]?'#D3D3D3':bgColorList[index])}"></span>{{item.alias?item.alias:item.name}}
@@ -95,6 +96,7 @@
       display:table-cell;
       font-size:30px;">
             {{serieSingleStat}}
+            <div class="chart-no-data" v-show="noData">No data</div>
           </div>
         </div>
       </template>
@@ -144,6 +146,7 @@
   import {randomcolor} from  '../common/js/radomcolor/randomcolor.js'
   import timePicker from '../common/timePicker'
   import chartAlertList from './chart-alert-list'
+  import chartConfig from "../page/dashboard/overview/chartConfig";
 
   export default {
     name: 'chartPreview',
@@ -158,6 +161,7 @@
     data() {
       return {
         chart:{},
+        noData:false,
         //data: {}, // 该图表信息,chartItem
         dailogWidth:'80%',
         //seriesItem: [], // 保存信息
@@ -342,6 +346,7 @@
         const len = chartItem.elements.length;
         // 没有数据的设置提示信息暂无数据-针对每一个图
         if (len === 0) {
+          this.noData=true;
           this.$nextTick(() => {
             if (chartItem.type === 'table') {//表格
               this.setTableData([]);
@@ -392,8 +397,12 @@
                           let statistics = chartItem.param.statistics;
                           if(response.data.result[0].values){
                             singleStatRlt  = bus.getSingleStatRlt(statistics,response.data.result[0].values);
+                            this.noData=false
+                          }else{
+                            this.noData=true;
                           }
                         }else if(response.data.result.length > 1){
+                          this.noData=true;
                           singleStatRlt = this.$t("dashboard.panel.singleStatErrorTip");
                         }
                       }else {
@@ -500,6 +509,11 @@
                       this.setTableData(tableData);
                   } else if (chartItem.type === 'line' || chartItem.type === 'bar' || chartItem.type === 'stackArea' || chartItem.type === 4) {
                     if (series.length && chartItem.type === 4) {//曲线汇总
+                    }
+                    if(series.length<1){
+                      this.noData=true;
+                    }else{
+                      this.noData=false;
                     }
                     this.setData(chartItem, series, legend);
                   }else if(chartItem.type ==='singleStat'){
@@ -908,7 +922,12 @@
           let divHeight = this.$refs.screenLegendArea.offsetHeight;
           this.echartModalStore.resize({height:(chartInfo.height-this.chartSpaceHeight-divHeight-this.titleHeight)});
           this.echartModalStore.clear();
-          this.echartModalStore.setOption(option);//创建图表
+          if(dataArg.length<1){
+            this.echartModalStore.setOption(chartConfig.getOption('noData'))
+          }else{
+            this.echartModalStore.setOption(option);//创建图表
+          }
+
           this.$refs.loadingPreview.endLoading();
         });
         this.echartModalStore.on('magictypechanged', function (params) {

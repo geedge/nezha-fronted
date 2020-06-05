@@ -33,14 +33,14 @@
             <div v-if="!rightBox.isEdit" class="right-box-form-content-txt">{{alertRule.expr}}</div>
           </el-form-item>
           <!--operator-->
-          <el-form-item :label="$t('alert.config.operator')" prop="operator">
+          <el-form-item :label="$t('alert.config.operator')" prop="operator" style="width: 400px;display: inline-block;">
             <el-select v-if="rightBox.isEdit" popper-class="config-dropdown" v-model="alertRule.operator" placeholder=""  size="small">
               <el-option :id="'operator-'+item.key" v-for="item in operators" :key="item.value" :label="item.label" :value="item.value"></el-option>
             </el-select>
             <div v-if="!rightBox.isEdit" class="right-box-form-content-txt">{{alertRule.operator}}</div>
           </el-form-item>
           <!--threshold-->
-          <el-form-item :label="$t('alert.config.threshold')" prop="threshold">
+          <el-form-item :label="$t('alert.config.threshold')" prop="threshold" style="width: 415px;display: inline-block;">
             <el-input v-if="rightBox.isEdit" type="text" placeholder="" v-model.number="alertRule.threshold" size="small">
             </el-input>
             <div v-if="!rightBox.isEdit" class="right-box-form-content-txt">{{alertRule.operator}}s</div>
