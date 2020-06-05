@@ -6,22 +6,26 @@
         <div class="sub-list-tab-title">
           <template v-if="from == 'model'">{{obj.name}}</template>
           <template v-else-if="from == 'asset'">{{obj.host}}</template>
+          <template v-else-if="from == 'alertRule'">{{obj.alertName}}</template>
         </div><div class="sub-list-tab sub-list-tab-active" v-if="from == 'model'">{{$t("dashboard.panel.title")}}</div><template v-if="from == 'asset'"><div
           class="sub-list-tab sub-list-tab-active">{{$t("overall.detail")}}</div><div
           class="sub-list-tab" @click="changeTab('alertMessage')">{{$t("asset.tableTitle.alerts")}}</div><div
           class="sub-list-tab" @click="changeTab('endpoint')">{{$t("asset.tableTitle.modules")}}</div>
+        </template><template v-if="from == 'alertRule'"><div
+          class="sub-list-tab sub-list-tab-active">{{$t("overall.detail")}}</div><div
+          class="sub-list-tab" @click="changeTab('alertMessage')">{{$t("asset.tableTitle.alerts")}}</div>
         </template>
       </div>
       <div class="top-tool-right">
-        <div class="top-tool-search margin-r-20">
+        <div class="top-tool-search margin-r-20" v-if="from != 'alertRule'">
           <el-input ref="queryPanel" @clear="clearInput" id="queryPanel" @focus="focusInput"  @blur="blurInput" v-model="filter.searchName" class="query-input-inactive" size="mini" clearable   >
             <i slot="suffix" class="el-input__icon el-icon-search" @click="focusInput" style="float: right"></i>
           </el-input>
         </div>
-        <div class="panel-calendar margin-r-20" v-if="from != 'model'">
+        <div class="panel-calendar margin-r-20" v-if="from == 'asset'">
           <time-picker ref="calendarPanel" class="nz-dashboard-picker" @change="dateChange" style="height: 26px; margin-top: -1px;"></time-picker>
         </div>
-        <div class="nz-btn-group nz-btn-group-size-small nz-btn-group-light margin-r-20" style="height: 24px;" v-if="from != 'model'">
+        <div class="nz-btn-group nz-btn-group-size-small nz-btn-group-light margin-r-20" style="height: 24px;" v-if="from == 'asset'">
           <button style="border-right: 1px solid rgba(162,162,162,0.50);" type="button"
                   class="nz-btn nz-btn-size-normal nz-btn-style-light" @click="Refresh()">
             <i style="font-size: 12px" class="global-active-color nz-icon nz-icon-refresh"></i>
@@ -39,7 +43,7 @@
             </button>
           </el-popover>
         </div>
-        <button @click="toAddChart" :title="$t('overall.createChart')"
+        <button @click="toAddChart" :title="$t('overall.createChart')" v-if="from != 'alertRule'"
                 class="nz-btn nz-btn-size-normal nz-btn-style-light ">
           <i class="nz-icon-create-square nz-icon"></i>
         </button>
@@ -95,7 +99,7 @@
     <div class="table-list" id="tableList">
       <el-scrollbar class="el-scrollbar-large" style="height: 100%" ref="dashboardScrollbar">
         <div class="box-content">
-          <chart-list @on-edit-chart="editData" @on-refresh-time="refreshTime" @on-remove-chart="removeData"
+          <chart-list @on-edit-chart="editData" @on-refresh-time="refreshTime" @on-remove-chart="removeData" :draggable="draggable"
                       ref="chartList" :is-model="from == 'model'" :additional-info="obj"></chart-list>
         </div>
       </el-scrollbar>
@@ -116,7 +120,8 @@
     name: "panel",
     props: {
       from: String,
-      obj: Object
+      obj: Object,
+      draggable: {type: Boolean, default: true}
     },
     data() {
       return {
@@ -316,31 +321,35 @@
       /*时间条件查询--end*/
       //公用操作
       getTableData(linkId) {
-        this.$get('panel', {type: this.from, link: linkId}).then(response => {
-          if (response.code === 200) {
-            this.panelData = response.data.list;
-            if (this.panelData.length > 0) {
-              this.panelId = this.filter.panelId = this.panelData[0].id;
-              this.getData(this.filter);
-            }
-          }else {
-            if(response.msg){
-              console.error(response.msg);
-              this.$message.error(response.msg);
-            }else if(response.error){
-              console.error(response.error);
-              this.$message.error(response.error);
+        if (this.from == "alertRule") {
+
+        } else {
+          this.$get('panel', {type: this.from, link: linkId}).then(response => {
+            if (response.code === 200) {
+              this.panelData = response.data.list;
+              if (this.panelData.length > 0) {
+                this.panelId = this.filter.panelId = this.panelData[0].id;
+                this.getData(this.filter);
+              }
             }else {
-              console.error(response);
-              this.$message.error(response);
+              if(response.msg){
+                console.error(response.msg);
+                this.$message.error(response.msg);
+              }else if(response.error){
+                console.error(response.error);
+                this.$message.error(response.error);
+              }else {
+                console.error(response);
+                this.$message.error(response);
+              }
             }
-          }
-        }).catch((error) => {
-          if (error) {
-            console.error(error);
-            this.$message.error(error.toString());
-          }
-        });
+          }).catch((error) => {
+            if (error) {
+              console.error(error);
+              this.$message.error(error.toString());
+            }
+          });
+        }
       },
       //定期刷新
       selectInterval(val) {

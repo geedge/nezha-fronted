@@ -6,7 +6,7 @@
           <template v-if="from == 'asset'">{{obj.host}}</template>
           <template v-if="from == 'alertRule'">{{obj.alertName}}</template>
         </div><div
-        class="sub-list-tab" @click="changeTab(from == 'asset' ? 'panel' : 'detail')">{{$t("overall.detail")}}</div><div
+        class="sub-list-tab" @click="changeTab(from == 'asset' || from == 'alertRule' ? 'panel' : 'detail')">{{$t("overall.detail")}}</div><div
         class="sub-list-tab sub-list-tab-active">{{$t("asset.tableTitle.alerts")}}</div><div v-if="from == 'asset'"
         class="sub-list-tab" @click="changeTab('endpoint')">{{$t("asset.tableTitle.modules")}}</div>
       </div>

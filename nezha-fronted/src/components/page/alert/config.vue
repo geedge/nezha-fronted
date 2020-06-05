@@ -374,7 +374,7 @@
       },
       detail: function (u) {
         this.alertRuleForMessage = Object.assign({}, u);
-        this.targetTab = "detail";
+        this.targetTab = "panel";
         this.showSubList = true;
       },
       messageStyle(e) {

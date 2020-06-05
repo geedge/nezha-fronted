@@ -50,11 +50,12 @@
                  ghostClass:'chart-ghost',
                  chosenClass:'choose-class',
                  scroll:true,
+                 filter: '.drag-disabled',
                  scrollFn:function(offsetX,offsetY,originalEvent,touchEvt,hoverTargetEI){},
                  animation:150,
-                 handle:'.chartTitle',
+                 handle:'.chartTitle'
                }"  >
-      <div class="chartBox" v-for="(item, index) in dataList" :key="item.id" :id="'chart-' + item.id" :name="item.title">
+      <div class="chartBox" v-for="(item, index) in dataList" :key="item.id" :id="'chart-' + item.id" :name="item.title" :class="{'drag-disabled': !draggable}">
         <line-chart-block v-if="item.type === 'line' || item.type === 'bar' ||item.type == 'stackArea' || item.type === 4" :key="'inner' + item.id"
                           :ref="'editChart'+item.id"
                           @on-refresh-data="refreshChart"
@@ -150,7 +151,8 @@
     name: 'chartList',
     props: {
       isModel: {type: Boolean, default: false},
-      additionalInfo:{}
+      additionalInfo:{},
+      draggable: {type: Boolean, default: true}
     },
     components: {
       chartAlertList,
@@ -319,19 +321,14 @@
         let chartTitle = item.querySelector('.chartTitle');
         chartTitle.style.background = '';
       },
-      move (event, orgin) {
-        //console.log('move', event, orgin);
+      move(event, orgin) {
         let dragClass = document.querySelector('.drag-chart-class');//drag-chart-class:yellow chart-ghost:green  fallback-class choose-class:purple
-        //console.log('move---class', dragClass);
-        //dragClass.style.opacity = 1;
-        //dragClass.style.pointerEvents = 'auto';//设置此属性，end事件里newIndex为 列表长度
 
         let chartTitle = dragClass.querySelector('.chartTitle');
-        //console.log('move-title',chartTitle);
         chartTitle.style.background = '#d8dce1';
 
       },
-      choose(event ){
+      choose(event){
         console.log('choose', event);
         let chartTitle = event.item.querySelector('.chartTitle');
       },
@@ -529,6 +526,7 @@
       },
       // 获取panel详情数据,获取panel下所有chart列表
       getData(params) {
+        console.info(params)
         //param   目前没有用
         const param = {
           panelId: params.panelId,

@@ -164,6 +164,9 @@
   border: 1px solid #b7d0f7;
   box-shadow: 1px 1px 1px #d3e1f8;
 }
+.drag-disabled .el-dropdown-link {
+  cursor: default !important;
+}
 .resize-box {
   .pagination {
     padding-top: 0;
