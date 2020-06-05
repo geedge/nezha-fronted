@@ -523,6 +523,15 @@ export default {
         document.querySelector('.getTextWidth').remove();
         return Number('-'+(width+5));
       },
+      returnMarkArea:function(){
+        if(this.currentMsg){
+          if(this.currentMsg.alertRule.operator=='>'||this.currentMsg.alertRule.operator=='>='){
+            return[{yAxis:this.currentMsg.alertRule.threshold},{}]
+          }else{
+            return[{},{yAxis:this.currentMsg.alertRule.threshold}]
+          }
+        }
+      },
       detail(obj) {
         this.chartDatas = [];
         this.legend = [];
@@ -642,14 +651,7 @@ export default {
                             opacity:0.2
                           },
                           data:[
-                            [
-                              {
-                                yAxis: this.currentMsg.alertRule.threshold
-                              },
-                              {
-                                yAxis: this.currentMsg.alertRule.operator==">="||this.currentMsg.alertRule.operator=='>'?'max':'min'
-                              }
-                            ]
+                           this.returnMarkArea()
                           ]
                         }
                       };

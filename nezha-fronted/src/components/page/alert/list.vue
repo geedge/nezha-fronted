@@ -552,16 +552,7 @@
                           color:'#d64f40',
                           opacity:0.2
                         },
-                        data:[
-                          [
-                            {
-                              yAxis: this.currentMsg.alertRule.threshold
-                            },
-                            {
-                              yAxis: this.currentMsg.alertRule.operator==">="||this.currentMsg.alertRule.operator=='>'?'max':'min'
-                            }
-                          ]
-                        ]
+                        data:[this.returnMarkArea()]
                       }
                     };
                     if(this.currentMsg.alertRule.operator=='=='||this.currentMsg.alertRule.operator=='!='){
@@ -615,6 +606,15 @@
         width = document.querySelector('.getTextWidth').offsetWidth;
         document.querySelector('.getTextWidth').remove();
         return Number('-'+(width+5));
+      },
+      returnMarkArea:function(){
+        if(this.currentMsg){
+          if(this.currentMsg.alertRule.operator=='>'||this.currentMsg.alertRule.operator=='>='){
+            return[{yAxis:this.currentMsg.alertRule.threshold},{}]
+          }else{
+            return[{},{yAxis:this.currentMsg.alertRule.threshold}]
+          }
+        }
       },
       detail(obj) {
         this.chartDatas = [];
