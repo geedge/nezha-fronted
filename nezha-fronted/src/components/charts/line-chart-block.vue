@@ -5,7 +5,7 @@
   <div class="nz-chart-resize">
     <div class="resize-shadow" ref="resizeShadow"></div>
     <div class="resize-box resize-box-echarts" ref="resizeBox">
-      <div class="line-chart-block" :id="'lineChartDiv'+chartIndex" v-show="divFirstShow" @mouseenter="mouseEnterChart" @mouseleave="mouseLeaveChart">
+      <div class="line-chart-block" :id="'lineChartDiv'+chartIndex" @mouseenter="mouseEnterChart" @mouseleave="mouseLeaveChart">
         <loading :ref="'localLoading'+chartIndex"></loading>
         <div class="clearfix chartTitle" :id="'chartTitle'+chartIndex" >
           <el-popover
@@ -20,10 +20,10 @@
               <span class="panel-info-corner-inner"></span>
            </span>
           </el-popover>
-          <el-dropdown trigger="click" v-show="firstShow"   class="nz-chart-top" :key="'chartDropdown'+chartIndex"  v-clickoutside="clickos">
+          <el-dropdown trigger="click" class="nz-chart-top" :key="'chartDropdown'+chartIndex"  v-clickoutside="clickos">
             <el-dropdown-menu style="display: none"></el-dropdown-menu>
             <span class="el-dropdown-link chart-title" @click="dropdownMenuShow=!dropdownMenuShow">
-              <span class="chart-title-text">{{data.title}}</span>
+              <span class="chart-title-text">{{chartData.title}}</span>
               <span class="chart-title-icon"><i class="el-icon-caret-bottom el-icon--right"  :class="{'visible':caretShow,'hidden':!caretShow}"></i></span>
             </span>
             <ul slot="dropdown" v-show="dropdownMenuShow"  :id="'dropdownUl'+chartIndex" :class="{'el-dropdown-menu nz-chart-dropdown':!isExplore,'el-dropdown-menu nz-chart-dropdown-one':isExplore}"    style="position: absolute; top: 30px; left: calc(50% - 79px); transform-origin: center top; z-index: 1000;" >
@@ -1294,6 +1294,7 @@
     },
     mounted() {
       this.firstLoad = false;
+      console.info(this.chartData)
     },
     beforeDestroy() {
       this.clearChart();

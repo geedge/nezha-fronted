@@ -85,6 +85,7 @@
           @on-drag-chart="editChartForDrag"
           @on-edit-chart-block="editData"
           :panel-id="filter.panelId"
+          :chart-data="item"
           :chart-index="index"></chart-table>
 
         <chart-url v-if="item.type === 'url'" :ref="'editChart'+item.id" :key="'inner' + item.id"
@@ -1407,7 +1408,6 @@
             if(chartType!=='url'){
               that.getChartDataForSearch(item,index);
             } else {
-
               that.$refs['editChart'+item.id][0].showLoad(item);
             }
           }

@@ -5,13 +5,13 @@
   <div class="nz-chart-resize">
     <div class="resize-shadow" ref="resizeShadow"></div>
     <div class="resize-box resize-box-url" ref="resizeBox">
-      <div class="chart-url" :id="'chartUrlDiv'+chartIndex" v-show="divFirstShow" @mouseenter="caretShow=true" @mouseleave="caretShow=false" >
+      <div class="chart-url" :id="'chartUrlDiv'+chartIndex" @mouseenter="caretShow=true" @mouseleave="caretShow=false" >
         <loading  :ref="'localLoading'+chartIndex"></loading>
         <div class="clearfix chartTitle" :class="{'dragTitle':dragTitleShow}" :id="'chartTitle'+chartIndex">
-          <el-dropdown trigger="click" v-show="firstShow"   class="nz-chart-top" :key="'chartDropdown'+chartIndex"  v-clickoutside="clickos">
+          <el-dropdown trigger="click" class="nz-chart-top" :key="'chartDropdown'+chartIndex"  v-clickoutside="clickos">
             <el-dropdown-menu style="display: none"></el-dropdown-menu>
             <span class="el-dropdown-link chart-title" @click="dropdownMenuShow=!dropdownMenuShow">
-              <span class="chart-title-text">{{data.title}}</span>
+              <span class="chart-title-text">{{chartData.title}}</span>
               <span class="chart-title-icon"><i class="el-icon-caret-bottom el-icon--right"  :class="{'visible':caretShow,'hidden':!caretShow}"></i></span>
             </span>
             <ul slot="dropdown" v-show="dropdownMenuShow"  :id="'dropdownUl'+chartIndex"  class="el-dropdown-menu nz-chart-dropdown"  style="position: absolute; top: 30px; left: calc(50% - 79px); transform-origin: center top; z-index: 1000;" >
@@ -40,7 +40,7 @@
         <!--全屏-->
         <el-dialog class="nz-dialog table-chart-dialog" :title="$t('dashboard.panel.view')"  :visible.sync="screenModal" width="96%" @opened="initDialog"  @close="screenModal = false" >
           <div slot="title">
-            <span class="nz-dialog-title">{{data.title}}</span>
+            <span class="nz-dialog-title">{{chartData.title}}</span>
           </div>
           <iframe :id="'urlContainerFull'+chartIndex"  frameborder="0" width="100%" height="100%" name="showHereFull" scrolling=auto v-if="!showStatic"
                   style="z-index:5000;padding-bottom:6px;"
@@ -67,6 +67,9 @@ export default {
     'loading': loading,
   },
   props: {
+    chartData: {
+      type: Object
+    },
     chartData: {
       type: Object
     },

@@ -5,7 +5,7 @@
   <div class="nz-chart-resize">
     <div class="resize-shadow" ref="resizeShadow"></div>
     <div class="resize-box resize-box-project" ref="resizeBox">
-      <div class="chart-project-info" :id="'chartProjectInfoDiv'+chartIndex" v-show="divFirstShow" @mouseenter="caretShow=true" @mouseleave="caretShow=false">
+      <div class="chart-project-info" :id="'chartProjectInfoDiv'+chartIndex" @mouseenter="caretShow=true" @mouseleave="caretShow=false">
         <loading :ref="'localLoading'+chartIndex"></loading>
         <div class="clearfix chartTitle" :class="{'dragTitle':dragTitleShow}" :id="'chartTitle'+chartIndex">
           <el-popover
@@ -24,7 +24,7 @@
             <span class="chart-title-text">{{$t('project.chart.projectInfo')}}</span>
           </span>
         </div>
-        <div class="mt-10 chart-info-container" v-cloak  v-show="firstShow" >
+        <div class="mt-10 chart-info-container" v-cloak>
           <div :id="'chartContainer'+chartIndex"  ref="chartContainer" class="asset-info-content" >
             <el-scrollbar style="height: 100%;width:100%;" ref="scrollbar" class="el-scrollbar-normal">
               <div style="padding: 0 15px">
