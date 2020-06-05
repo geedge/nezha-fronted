@@ -157,9 +157,12 @@
   height: 100%;
   width: 100%;
   position: absolute;
+  box-sizing: border-box;
 }
 .resize-shadow-active {
-  background-color: #888;
+  background-color: #f5f9ff;
+  border: 1px solid #b7d0f7;
+  box-shadow: 1px 1px 1px #d3e1f8;
 }
 .resize-box {
   .pagination {

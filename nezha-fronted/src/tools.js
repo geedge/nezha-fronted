@@ -420,16 +420,18 @@ export const chartResizeTool = {
       //监听宽高的变化，变化量每达到step的50%时改变resize-shadow的尺寸并重绘resize-box内容
       let remainderWidth = (box.offsetWidth+chartBlankWidth-shadowNewWidth)%stepWidth; //宽的余数
       let remainderHeight = (box.offsetHeight+chartBlankHeight-shadowNewHeight)%stepHeight; //高的余数
+      console.info("shadowNewHeight", shadowNewHeight, "remainderHeight", box.offsetHeight+chartBlankHeight-shadowNewHeight)
       boxStepHandler(remainderWidth, remainderHeight);
     }
     function mouseupListener(e) {
       //将resize-box的宽高设为resize-shadow的宽高
       box.style.width = `${shadow.offsetWidth}px`;
-      box.style.height = `${shadow.offsetHeight}px`;
-      data.height = Math.floor(box.offsetHeight/stepHeight*stepHeight)+chartPaddingTop;
+      box.style.height = `${Math.round(shadow.offsetHeight/10)*10}px`;
+      data.height = Math.round((box.offsetHeight+chartPaddingTop)/stepHeight)*stepHeight;
       data.span = Math.round((box.offsetWidth+chartBlankWidth)/stepWidth);
       //请求后台，保存变更
       if (data.height != originalData.height || data.span != originalData.span) {
+
         originalData.height = data.height;
         originalData.span = data.span;
         vm.$put("panel/" + vm.panelIdInner + "/charts/modify", originalData);
@@ -460,15 +462,16 @@ export const chartResizeTool = {
       if (widthChange) {
         shadowNewWidth = shadow.offsetWidth;
       }
+      console.info(height)
       if (height > stepHeight/2) { //放大shadow高
         heightChange = true;
-        shadow.style.height = `${shadow.offsetHeight+stepHeight}px`;
+        shadow.style.height = `${Math.round(shadow.offsetHeight/10)*10+stepHeight}px`;
       } else if (height <= 0-(stepHeight/2)) { //缩小shadow高
         heightChange = true;
-        shadow.style.height = `${shadow.offsetHeight-stepHeight}px`;
+        shadow.style.height = `${Math.round(shadow.offsetHeight/10)*10-stepHeight}px`;
       }
       if (heightChange) {
-        shadowNewHeight = shadow.offsetHeight;
+        shadowNewHeight = shadow.offsetHeight+chartBlankHeight;
       }
 
       if (widthChange || heightChange) {
