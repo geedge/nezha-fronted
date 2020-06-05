@@ -648,7 +648,7 @@ export default {
                         markArea:{
                           itemStyle:{
                             color:'#d64f40',
-                            opacity:0.2
+                            opacity:0.1
                           },
                           data:[
                            this.returnMarkArea()
