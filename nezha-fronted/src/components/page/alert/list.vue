@@ -492,6 +492,7 @@
         }
       },
       queryChartDate() {
+        let $temp=this;
         let start = this.searchTime[0]?this.searchTime[0]:this.getTime(-1, 'h');
         let end = this.searchTime[1]?this.searchTime[1]:this.getTime(0, 'h')
         this.searchTime = [start, end];
@@ -528,7 +529,44 @@
                         width: 1,
                         opacity: 0.9
                       },
+                      markLine: {
+                        silent: true,
+                        symbol: ['circle', 'circle'],
+                        label: {
+                          distance: this.computeDistance(chartDataFormat.getUnit(this.currentMsg.alertRule.unit ? this.currentMsg.alertRule.unit : 2).compute(this.currentMsg.alertRule.threshold)),
+                          formatter: function (params) {
+                            return chartDataFormat.getUnit($temp.currentMsg.alertRule.unit ? $temp.currentMsg.alertRule.unit : 2).compute(params.value)
+                          }
+                        },
+                        lineStyle: {
+                          color:'#d64f40',
+                          width:2,
+                          type:'dotted'
+                        },
+                        data: [{
+                          yAxis: Number(this.currentMsg.alertRule.threshold)
+                        }, ]
+                      },
+                      markArea:{
+                        itemStyle:{
+                          color:'#d64f40',
+                          opacity:0.2
+                        },
+                        data:[
+                          [
+                            {
+                              yAxis: this.currentMsg.alertRule.threshold
+                            },
+                            {
+                              yAxis: this.currentMsg.alertRule.operator==">="||this.currentMsg.alertRule.operator=='>'?'max':'min'
+                            }
+                          ]
+                        ]
+                      }
                     };
+                    if(this.currentMsg.alertRule.operator=='=='||this.currentMsg.alertRule.operator=='!='){
+                      delete chartData.markArea;
+                    }
                     chartData.name += "{";
                     alias += "{";
                     Object.keys(queryData.metric).forEach((item, index) => {
@@ -567,6 +605,16 @@
             this.$refs.messageChart.endLoading();
           }
         })
+      },
+      computeDistance:function(str){
+        var width = 0;
+        var html = document.createElement('span');
+        html.innerText = str;
+        html.className = 'getTextWidth';
+        document.querySelector('body').appendChild(html);
+        width = document.querySelector('.getTextWidth').offsetWidth;
+        document.querySelector('.getTextWidth').remove();
+        return Number('-'+(width+5));
       },
       detail(obj) {
         this.chartDatas = [];
@@ -613,22 +661,32 @@
           }
         });
       },
-      promQueryParamConvert(obj) {
-        return "(" + obj.alertRule.expr + ") and (" + function(){
-          let q = "{";
-          for (let k in obj.labels) {
-            if (k != 'alertname' && k != 'severity') {
+      promQueryParamConvert(obj){
+        let result="(" + obj.alertRule.expr + ")";
+        if(obj.labels){
+          if(obj.labels.alertname){
+            delete obj.labels.alertname;
+          }
+          if(obj.labels.severity){
+            delete obj.labels.severity;
+          }
+        }
+        if(Object.keys(obj.labels).length>0){
+          result+=" and ("+function(){
+            let q = "{";
+            for (let k in obj.labels) {
               q += k;
               q += "=";
               q += ("'" + obj.labels[k] + "',");
+            };
+            if (q.length > 1) {
+              q = q.substring(0, q.length-1);
             }
-          };
-          if (q.length > 1) {
-            q = q.substring(0, q.length-1);
-          }
-          q += "}";
-          return q;
-        }() + ")";
+            q += "}";
+            return q;
+          }() + ")";
+        }
+        return result;
       },
       //asset弹框控制
       tabControl(data) {

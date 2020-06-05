@@ -513,6 +513,16 @@ export default {
           return value
         }
       },
+      computeDistance:function(str){
+        var width = 0;
+        var html = document.createElement('span');
+        html.innerText = str;
+        html.className = 'getTextWidth';
+        document.querySelector('body').appendChild(html);
+        width = document.querySelector('.getTextWidth').offsetWidth;
+        document.querySelector('.getTextWidth').remove();
+        return Number('-'+(width+5));
+      },
       detail(obj) {
         this.chartDatas = [];
         this.legend = [];
@@ -568,6 +578,7 @@ export default {
         })
       },
       queryChartDate() {
+        let $temp=this;
         let start = this.searchTime[0]?this.searchTime[0]:this.getTime(-1, 'h');
         let end = this.searchTime[1]?this.searchTime[1]:this.getTime(0, 'h')
         this.searchTime = [start, end];
@@ -607,6 +618,40 @@ export default {
                           width: 1,
                           opacity: 0.9
                         },
+                        markLine: {
+                          silent: true,
+                          symbol: ['circle', 'circle'],
+                          label: {
+                            distance: this.computeDistance(chartDataFormat.getUnit(this.currentMsg.alertRule.unit ? this.currentMsg.alertRule.unit : 2).compute(this.currentMsg.alertRule.threshold)),
+                            formatter: function (params) {
+                              return chartDataFormat.getUnit($temp.currentMsg.alertRule.unit ? $temp.currentMsg.alertRule.unit : 2).compute(params.value)
+                            }
+                          },
+                          lineStyle: {
+                            color:'#d64f40',
+                            width:2,
+                            type:'dotted'
+                          },
+                          data: [{
+                            yAxis: Number(this.currentMsg.alertRule.threshold)
+                          }, ]
+                        },
+                        markArea:{
+                          itemStyle:{
+                            color:'#d64f40',
+                            opacity:0.2
+                          },
+                          data:[
+                            [
+                              {
+                                yAxis: this.currentMsg.alertRule.threshold
+                              },
+                              {
+                                yAxis: this.currentMsg.alertRule.operator==">="||this.currentMsg.alertRule.operator=='>'?'max':'min'
+                              }
+                            ]
+                          ]
+                        }
                       };
                       chartData.name += "{";
                       alias += "{";
