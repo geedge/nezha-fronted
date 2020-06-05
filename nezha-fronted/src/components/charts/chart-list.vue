@@ -1330,9 +1330,9 @@
             let chartType = duplicateChart.type;
             if(chartType!=='url'){
               this.getChartDataForSearch(duplicateChart,chartNextIndex);
-            }else {
-              this.setChartSize(duplicateChart.span, chartNextIndex); // 设置该图表宽度
             }
+            this.setChartSize(duplicateChart, chartNextIndex); // 设置该图表宽度
+
           });
         }
       },
