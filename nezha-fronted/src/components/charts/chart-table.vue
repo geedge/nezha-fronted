@@ -230,7 +230,7 @@ export default {
     resize(chartItem) {
       let deHeight = this.$chartResizeTool.titleHeight+this.$chartResizeTool.chartTableBlankHeight;
       let container = document.querySelector('#chartTableDiv' + this.chartIndex + " .table-container");
-      container.style.height = `calc(100% - ${deHeight}px)`;
+      container.style.height = `calc(100% - ${deHeight*2}px)`;
       this.tableHeight = `calc(100% - ${this.$refs.Pagination.$el.offsetHeight}px)`;
       this.$nextTick(() => {
         container.querySelector(".el-table__body-wrapper")._ps_.update();
