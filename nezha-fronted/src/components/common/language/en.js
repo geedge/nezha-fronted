@@ -796,7 +796,11 @@ const en = {
       },
       operator:'Operator',
       threshold:'Threshold',
-      unit:'Unit'
+      unit:'Unit',
+      chart: {
+        alertRuleInfo: "Alert rule information",
+        alertNumTrend: "Alert num trend"
+      }
     }
   },
   project: {

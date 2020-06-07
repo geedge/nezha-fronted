@@ -99,7 +99,7 @@
     <div class="table-list" id="tableList">
       <el-scrollbar class="el-scrollbar-large" style="height: 100%" ref="dashboardScrollbar">
         <div class="box-content">
-          <chart-list @on-edit-chart="editData" @on-refresh-time="refreshTime" @on-remove-chart="removeData" :draggable="draggable"
+          <chart-list @on-edit-chart="editData" @on-refresh-time="refreshTime" @on-remove-chart="removeData" :draggable="draggable" :alertRuleDetail="alertRuleDetail"
                       ref="chartList" :is-model="from == 'model'" :additional-info="obj"></chart-list>
         </div>
       </el-scrollbar>
@@ -121,7 +121,8 @@
     props: {
       from: String,
       obj: Object,
-      draggable: {type: Boolean, default: true}
+      draggable: {type: Boolean, default: true},
+      alertRuleDetail: Array
     },
     data() {
       return {
@@ -302,6 +303,7 @@
           let startTimeTmp = bus.timeFormate(now.setHours(now.getHours() - 1), 'yyyy-MM-dd hh:mm:ss');
           params.start_time = startTimeTmp;
           params.end_time = endTimeTmp;
+          params.from = this.from;
         }
         if(this.$refs.chartList){
           this.$refs.chartList.initData(params);
@@ -322,7 +324,7 @@
       //公用操作
       getTableData(linkId) {
         if (this.from == "alertRule") {
-
+          this.getData(this.filter);
         } else {
           this.$get('panel', {type: this.from, link: linkId}).then(response => {
             if (response.code === 200) {

@@ -501,6 +501,7 @@
       },
       convertToDetail(obj) {
         let detail = [];
+        detail.push({label: "ID", value: obj.id});
         detail.push({label: this.$t("alert.alertName"), value: obj.alertName});
         detail.push({label: this.$t("alert.config.expr"), value: obj.expr});
         let type = "";

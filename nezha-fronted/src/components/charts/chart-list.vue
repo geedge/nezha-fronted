@@ -100,13 +100,22 @@
                      :chart-data="item"
                      :chart-index="index"></chart-url>
 
-        <chart-asset-info v-if="item.type  === 'assetInfo'" :ref="'editChart'+item.id" :key="'inner' + item.id"
+        <chart-asset-info v-if="item.type === 'assetInfo'" :ref="'editChart'+item.id" :key="'inner' + item.id"
                     @on-drag-chart="editChartForDrag"
                     :panel-id="filter.panelId"
                     :chart-index="index"
                     :chart-data="item"
                     :editChartId="'editChartId' + item.id"
         ></chart-asset-info>
+
+        <chart-alert-rule-info v-if="item.type === 'alertRuleInfo'" :ref="'editChart'+item.id" :key="'inner' + item.id"
+                    @on-drag-chart="editChartForDrag"
+                    :panel-id="filter.panelId"
+                    :chart-index="index"
+                    :chart-data="item"
+                    :detail="alertRuleDetail"
+                    :editChartId="'editChartId' + item.id"
+        ></chart-alert-rule-info>
 
         <chart-project-info v-if="item.type  === 'projectInfo'" :ref="'editChart'+item.id" :key="'inner' + item.id"
                     @on-drag-chart="editChartForDrag"
@@ -143,6 +152,7 @@
   import chartUrl from './chart-url';
   import chartSingleStat from './chart-single-stat';
   import chartAssetInfo from './chart-asset-info'
+  import chartAlertRuleInfo from './chart-alert-rule-info'
   import chartProjectInfo from './chart-project-info'
   import draggable from 'vuedraggable'
   import chartDataFormat from "./chartDataFormat";
@@ -152,7 +162,8 @@
     props: {
       isModel: {type: Boolean, default: false},
       additionalInfo:{},
-      draggable: {type: Boolean, default: true}
+      draggable: {type: Boolean, default: true},
+      alertRuleDetail: Array
     },
     components: {
       chartAlertList,
@@ -162,6 +173,7 @@
       chartTable,
       chartUrl,
       chartSingleStat,
+      chartAlertRuleInfo,
       draggable,
     },
     data() {
@@ -333,17 +345,17 @@
         let chartTitle = event.item.querySelector('.chartTitle');
       },
       clone(event){
-        console.log('clone',event );
+        //console.log('clone',event );
         let canvas = event.item.querySelector('canvas');
-        console.log('clone-canvas',canvas);
+        //console.log('clone-canvas',canvas);
         let canvasclone = event.clone.querySelector('canvas');
         canvasclone.style.border='solid 1px yellow';
-        console.log('clone-canvasclone',canvasclone);
+        //console.log('clone-canvasclone',canvasclone);
         if(canvas&&canvasclone){
           let ctx = canvas.getContext("2d");
           let image = new Image();
           image.src= canvas.toDataURL();
-          console.log('clone-image',image);
+          //console.log('clone-image',image);
           let ctxClone = canvasclone.getContext("2d");
           //ctxClone.drawImage(image,0,0);
           image.onload = function(){
@@ -526,13 +538,68 @@
       },
       // 获取panel详情数据,获取panel下所有chart列表
       getData(params) {
-        console.info(params)
         //param   目前没有用
         const param = {
           panelId: params.panelId,
           query: params.query,
+          from: params.from
         };
         if (!param.query) delete param.query;
+        //alert-rule单独处理
+        if (param.from == "alertRule") {
+          this.dataList = [];
+          this.dataList.push({
+            id: -10,
+            panelId: 0,
+            title: this.$t("alert.config.chart.alertRuleInfo"),
+            span: 4,
+            height: 350,
+            type: "alertRuleInfo",
+            prev: 0,
+            next: -9,
+            buildIn: 1
+          });
+          this.dataList.push({
+            id: -9,
+            panelId: 0,
+            title: this.$t("alert.config.chart.alertNumTrend"),
+            span: 4,
+            height: 350,
+            type: "line",
+            prev: -10,
+            next: -8,
+            buildIn: 1,
+            elements: [{
+              id: '',
+              expression: `nz_alert_nums{id="${this.alertRuleDetail[0].value}"}`,
+              type: ''
+            }]
+          });
+          this.dataList.push({
+            id: -8,
+            panelId: 0,
+            title: this.$t("dashboard.panel.chartForm.statistics"),
+            span: 4,
+            height: 350,
+            type: "bar",
+            prev: -9,
+            next: -1,
+            buildIn: 1,
+            elements: [{
+              id: '',
+              expression: "",
+              type: ''
+            }]
+          });
+          this.$nextTick(() => {
+            this.dataList.forEach((item,index) => {
+              this.setChartSize(item, index);//设置该图表宽度
+              let chartBox = document.getElementById('chart-' + item.id);
+              this.handleElementInViewport(chartBox, 0, item, index);
+            });
+          });
+          return;
+        }
         //根据panelId获得panel下的所有图表
         this.$get('panel/'+ params.panelId+'/charts').then(response => {
           if (response.code === 200) {
@@ -667,6 +734,10 @@
         }
         if(chartItem.type === 'alertList'){
           this.getAlertListChartData(chartItem,filterType);
+          return;
+        }
+        if(chartItem.type === 'alertRuleInfo'){
+          this.getAlertRuleChartData(chartItem);
           return;
         }
         if (this.isModel) {
@@ -1240,12 +1311,15 @@
       getAlertListChartData:function(chartInfo,filterType){
         this.$refs['editChart'+chartInfo.id][0].getAlertList(filterType);
       },
+      getAlertRuleChartData(chartInfo) {
+        this.$refs['editChart'+chartInfo.id][0].setData(chartInfo);
+      },
       // 设置图表的尺寸
       setChartSize(item, index) {
         this.$nextTick(() => {
           let chartBox = document.getElementById("chart-" + item.id);
           chartBox.style.width = `${(item.span / 12) * 100}%`;
-          chartBox.style.height = `${item.height}px`;
+          chartBox.style.height = `${Math.round(item.height/this.$chartResizeTool.stepHeight)*this.$chartResizeTool.stepHeight}px`;
         });
       },
       getNewTime(time, num) {

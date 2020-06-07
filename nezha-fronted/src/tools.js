@@ -420,7 +420,6 @@ export const chartResizeTool = {
       //监听宽高的变化，变化量每达到step的50%时改变resize-shadow的尺寸并重绘resize-box内容
       let remainderWidth = (box.offsetWidth+chartBlankWidth-shadowNewWidth)%stepWidth; //宽的余数
       let remainderHeight = (box.offsetHeight+chartBlankHeight-shadowNewHeight)%stepHeight; //高的余数
-      console.info("shadowNewHeight", shadowNewHeight, "remainderHeight", box.offsetHeight+chartBlankHeight-shadowNewHeight)
       boxStepHandler(remainderWidth, remainderHeight);
     }
     function mouseupListener(e) {
@@ -462,7 +461,6 @@ export const chartResizeTool = {
       if (widthChange) {
         shadowNewWidth = shadow.offsetWidth;
       }
-      console.info(height)
       if (height > stepHeight/2) { //放大shadow高
         heightChange = true;
         shadow.style.height = `${Math.round(shadow.offsetHeight/10)*10+stepHeight}px`;

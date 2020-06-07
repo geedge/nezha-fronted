@@ -12,8 +12,8 @@
       </div>
       <!--右侧内容-->
       <div class="overview-right slot-content" id="mainDisplay" slot="content-right">
-        <svg width="100%" height="100%" x="0" y="0" id="canvas">
-          <!--左侧菜单 图片列表-->
+        <!--<svg width="100%" height="100%" x="0" y="0" id="canvas">
+          &lt;!&ndash;左侧菜单 图片列表&ndash;&gt;
           <g id="menu">
             <g id="items">
               <g id="dc" class="menu-item-box">
@@ -48,12 +48,12 @@
             <line x1="220" y1="0" x2="220" y2="100%" style="stroke:#d9d9d9;stroke-width:1"></line>
           </g>
 
-          <!--数据区-->
+          &lt;!&ndash;数据区&ndash;&gt;
           <svg x="220" y="0" id="content" width="100%" height="100%">
             <rect x="1200" y="100" height="40" width="40" fill="#666" id="test"></rect>
           </svg>
 
-          <!--模板定义-->
+          &lt;!&ndash;模板定义&ndash;&gt;
           <defs>
             <svg id="dcTemplate" width="80" height="80" class="item-box">
               <svg x="10" y="5" viewBox="0 0 1024 1024" width="60" height="60"><rect x="0" y="0" height="100%" width="100%" fill="transparent"></rect><path d="M693.2 225.1h49.3v-49.3h-49.3v49.3z m-459.9 32.8h16.4v-115h-16.4v115z m98.5 246.4H134.7v16.4h197.1v-16.4zM216.8 800h32.9v-32.9h-32.9V800zM726 504.3h-32.9v16.4H726v-16.4z m0 262.8h-32.9V800H726v-32.9zM857.4 455v-98.6H559c-4.9-14-16-25.1-30-30v-19.2h312V93.7H184v213.5h312.1v19.2c-14 4.9-25.1 16-30 30H216.8V455H85.4v394.2h295.7V455H249.7v-65.7H466c4.9 14 16 25.1 30 30V455h-82.1v394.2H611V455h-82.1v-35.7c14-4.9 25.1-16 30-30h134.2V455h-49.3v394.2h131.4V455H726v-65.7h98.6V455h-16.4v394.2h131.4V455h-82.2z m-509.2 32.9v328.5h-230V487.9h230zM216.8 274.3V126.5h591.3v147.8H216.8z m361.4 213.6v328.5H446.8V487.9h131.4z m-65.7-98.6c-9.1 0-16.4-7.4-16.4-16.4 0-9.1 7.4-16.4 16.4-16.4s16.4 7.4 16.4 16.4c0 9.1-7.3 16.4-16.4 16.4z m230 98.6v328.5h-65.7V487.9h65.7z m164.2 328.5H841V487.9h65.7v328.5z m-16.4-49.3h-32.9V800h32.9v-32.9z m0-262.8h-32.9v16.4h32.9v-16.4z m-328.5 0h-98.6v16.4h98.6v-16.4zM496.1 800H529v-32.9h-32.9V800z" fill="#1782bb"></path></svg>
@@ -63,10 +63,10 @@
             </svg>
             <svg id="deviceTemplate" width="80" height="80" class="item-box">
               <svg x="10" y="5" viewBox="0 0 1024 1024" width="60" height="60"><rect x="0" y="0" height="100%" width="100%" fill="transparent"></rect><path d="M447.5 960.3l-321-110v-642l321 82z" fill="#37BBEF"></path><path d="M447.5 960.3l450-240v-600l-450 170z" fill="#2481BA"></path><path d="M126.5 208.3l321 82 450-170-344.4-56.6z" fill="#3ED6FF"></path><path d="M400.3 348.9v80l-239-60v-80l239 60z m-239 48.3l239 60v-10l-239-60v10z m0 23l239 60v-10l-239-60v10z m0 23l239 60v-10l-239-60v10z" fill="#D4F7FF"></path><path d="M175.7 308.4v34l210.2 53v-34zM175.7 363.4l210.2 53v-13.3l-210.2-53z" fill="#113B42"></path><path d="M447.5 894.1v-5.2l-174.4-55.3-1.2 4.8zM271.9 809.3L447.5 864v-5.3l-174.4-54.3zM271.9 780.1l175.6 53.7v-5.2l-174.4-53.4zM447.5 707.9l-174.4-49.3-1.2 4.8 175.6 49.7zM271.9 692.6l175.6 50.7v-5.2l-174.4-50.4zM271.9 750.9l175.6 52.7v-5.2l-174.4-52.3zM271.9 721.8l175.6 51.7v-5.3l-174.4-51.3z" fill="#0071BC"></path><path d="M379.5 540.8c-9.4-3.4-17 1.6-17 11.2s7.6 20.1 17 23.2 17-1.9 17-11.2-7.6-19.8-17-23.2zM379.5 603.6c-3.9-1.2-7 1-7 4.9s3.1 8.1 7 9.3 7-1 7-4.9c0-3.9-3.1-8-7-9.3z" fill="#FFFFFF"></path></svg>
-              <!--<circle v-for="(point, index) in menuItemConnectionPoint" :key="index" r="3" :cx="point.x" :cy="point.y" class="connection-point"></circle>-->
+              &lt;!&ndash;<circle v-for="(point, index) in menuItemConnectionPoint" :key="index" r="3" :cx="point.x" :cy="point.y" class="connection-point"></circle>&ndash;&gt;
             </svg>
           </defs>
-          <!--滤镜-->
+          &lt;!&ndash;滤镜&ndash;&gt;
           <filter id="menuItemHover">
             <feGaussianBlur in="SourceAlpha" stdDeviation="1"/>
             <feOffset dx="1" dy="1"/>
@@ -75,12 +75,29 @@
               <feMergeNode in="SourceGraphic"/>
             </feMerge>
           </filter>
-        </svg>
+        </svg>-->
+        <div style="margin: auto; width: 600px; height: 800px; background-color: white">
+           <div class="test">
+
+           </div>
+        </div>
       </div>
     </left-menu>
   </div>
 </template>
-
+<style>
+  .test {
+    width: 200px;
+    height: 200px;
+    background: radial-gradient( circle, transparent 99px, black 100px, transparent 101px ) no-repeat,
+    radial-gradient( circle, transparent 99px, black 100px, transparent 101px ) no-repeat,
+    radial-gradient( circle, transparent 99px, black 100px, transparent 101px ) no-repeat,
+    radial-gradient( circle, transparent 99px, black 100px, transparent 101px ) no-repeat,
+    radial-gradient( circle, transparent 99px, black 100px, transparent 101px ) no-repeat;
+    background-position: 0, 50px -125px, -142px 52px, 142px 52px, 50px 125px;
+    background-size: 100%, 100px 100%, 100% 100px, 100% 100px,100px 100%;
+  }
+</style>
 <script>
   var vm;
   import * as d3 from "d3";
@@ -212,7 +229,7 @@
       }
     },
     mounted() {
-      this.init();
+      //this.init();
     }
   }
 </script>
