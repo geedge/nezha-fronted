@@ -62,10 +62,11 @@ export default {
               item.style.top='unset';
 
               let icon=item.querySelector('.popper__arrow');
-              icon.style.bottom=icon.style.top;
-              icon.style.top='unset';
-              icon.style.transform='rotate(180deg)'
-
+              if(icon){
+                icon.style.bottom=icon.style.top;
+                icon.style.top='unset';
+                icon.style.transform='rotate(180deg)'
+              }
             })
           }
         })

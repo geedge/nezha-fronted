@@ -101,7 +101,7 @@
           }
         }
         // console.log(this.option)
-        if(this.series&&this.series.length>0){
+        if(this.series){
           this.$set(this.option,'series',this.series);
           this.noData=false;
           this.chart.clear();
