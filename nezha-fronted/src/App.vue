@@ -1,11 +1,9 @@
 <template>
-  <el-scrollbar class="app">
-    <div id="app">
-      <keep-alive>
-        <router-view style="height: 100%"/>
-      </keep-alive>
-    </div>
-  </el-scrollbar>
+  <div id="app">
+    <keep-alive>
+      <router-view style="height: 100%"/>
+    </keep-alive>
+  </div>
 </template>
 
 <script>
