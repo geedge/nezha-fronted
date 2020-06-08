@@ -5,29 +5,6 @@
         <div class="sidebar-title">{{$t('asset.asset')}}</div>
         <div class="sidebar-info" style="height: 90%">
           <el-scrollbar ref="leftScrollbar" style="height: 100%">
-          <!--<div class="sidebar-info-header">ALL</div>-->
-          <!--<el-checkbox :indeterminate="checkAllHandler" class="sidebar-info-item" v-model="checkAllFlag" @change="dcSelectAll" :true-label="1" :false-label="0">
-            <div class="sidebar-info-item-txt" style="font-weight: bold;">All</div>
-          </el-checkbox>
-          <el-checkbox-group v-model="checkList" size="small" @change="changeCheckBox">
-            <el-checkbox class="sidebar-info-item" :class="{'sidebar-info-item-active': indOf(checkList, item.id)}"
-                         v-for="(item,key) in checkListData" :key="key" :label=item.id>
-              <div class="sidebar-info-item-txt">
-                <el-popover v-if="item.name.length > 16" trigger="hover" placement="top-start" :content="item.name" >
-                  <span slot="reference">{{item.name}}</span>
-                </el-popover>
-                <span v-else>{{item.name}}</span>
-              </div>-->
-
-  <!--            <idc-config-box ref="idcConfigBox" :post-idc="item" placement="left" @after="getIDCOptionData" :button-class="'checkbox-edit'" :user-data="idcUserData">-->
-  <!--              <template v-slot:optionZone>-->
-  <!--                <span @click="closeAllPop">-->
-  <!--                  <i class="nz-icon nz-icon-edit" @click="getSingleIDCData(item.id,'edit')"></i>-->
-  <!--                </span>-->
-  <!--              </template>-->
-  <!--            </idc-config-box>-->
-            <!--</el-checkbox>
-          </el-checkbox-group>-->
           <el-collapse v-model="activeType" class="left-menu-bg">
             <el-collapse-item name="dataCenter" :title="$t('asset.left.dataCenter')">
               <el-checkbox-group v-model="checkList" size="small" @change="changeCheckBox">
@@ -897,6 +874,8 @@
         this.getSingleAsset();
         this.getAssetData();
         this.getIDCOptionData();
+        this.getAssetTypeData();
+        this.getVendorData();
       },
       closeAllPop:function(){
         this.$refs.idcConfigBox.forEach((item)=>{
