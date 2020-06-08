@@ -78,7 +78,7 @@
       <template v-if="chart.type==='line'||chart.type==='bar'||chart.type==='stackArea'">
         <div id="chartEchartPreview" @mouseenter="mouseEnterFullChart" @mouseleave="mouseLeaveFullChart">
           <div class="line-area" ref="screenShowArea"  id="screenShowArea"  style="margin-top:0px;"></div>
-          <div class="chart-no-data" v-show="noData">No data</div>
+          <div class="chart-no-data" v-show="noData">No Data</div>
           <div class="legend-container legend-container-screen" id="screenLegendArea" ref="screenLegendArea" v-show="showLegend" v-scrollBar:legend>
             <div v-for="(item, index) in screenLegendList" :title="item.alias?item.alias:item.name"  @click="clickScreenLegend(item.name,index)" class="legend-item" :class="{'ft-gr':isGreyScreen[index]}"  :key="'legend_' + item.name+'_'+index">
               <span class="legend-shape" :style="{background:(isGreyScreen[index]?'#D3D3D3':bgColorList[index])}"></span>{{item.alias?item.alias:item.name}}
@@ -96,7 +96,7 @@
       display:table-cell;
       font-size:30px;">
             {{serieSingleStat}}
-            <div class="chart-no-data" v-show="noData">No data</div>
+            <div class="chart-no-data" v-show="noData">No Data</div>
           </div>
         </div>
       </template>

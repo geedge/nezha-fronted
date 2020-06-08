@@ -127,7 +127,7 @@
             <span v-if="tabView">{{assetData.purchaseDate}}</span>
           </el-form-item>
           <!------------------------------------------impi---------------------------------------------->
-          <div v-if="assetType == 1">
+          <!--<div v-if="assetType == 1">
             <div class="right-box-sub-title">{{$t('asset.createAssetTab.impi.title')}}</div>
             <div class="line-100 right-box-line"></div>
             <el-form-item :label="$t('asset.createAssetTab.impi.host')" class="right-box-form-content" prop="impi.host">
@@ -138,7 +138,7 @@
               <el-input v-model="assetData.impi.port" size="small" v-if="!tabView"></el-input>
               <span v-if="tabView">{{assetData.impi.port}}</span>
             </el-form-item>
-          </div>
+          </div>-->
           <div class="right-box-sub-title">{{$t('asset.createAssetTab.location')}}</div>
           <div class="line-100 right-box-line"></div>
           <!------------------------------------------IDC---------------------------------------------->
