@@ -23,16 +23,31 @@
               </el-row>
               <el-dropdown-menu class="nz-dashboard-dropdown" slot="dropdown">
                 <el-dropdown-item>{{$t('dashboard.panel.createPanelTitleSec')}}</el-dropdown-item>
-                <el-dropdown-item v-for="item in panelData" :key="item.id+1"
-                                  :class="showPanel.id==item.id?'nz-dashboard-dropdown-bg':''" :command="item">
-                  <!--{{item.name}}-->
-                  <el-row  :gutter="10" class="panel-list-width" >
-                    <el-col :span="19" class="panel-list-item" :title="item.name">{{item.name}}</el-col>
-                    <el-col :span="2"><span class="panel-dropdown-btn panel-dropdown-btn-delete" @click.stop="del(item)"><i class="el-icon-delete"></i></span></el-col>
-                    <el-col :span="1">&nbsp;</el-col>
-                    <el-col :span="2"><span class="panel-dropdown-btn" @click.stop="toEdit(item)"><i class="nz-icon nz-icon-edit"></i></span></el-col>
-                  </el-row>
-                </el-dropdown-item>
+                <draggable v-model="panelData" @start="start" @end="end" :move="move" :key
+                           :scroll-sensitivity="150"
+                           :options="{
+                 group:{name:'chartGroup',pull:'false'},
+                 dragClass:'drag-chart-class',
+                 fallbackClass:'fallback-class',
+                 forceFallback:true,
+                 ghostClass:'chart-ghost',
+                 chosenClass:'choose-class',
+                 scroll:true,
+                 scrollFn:function(offsetX,offsetY,originalEvent,touchEvt,hoverTargetEI){},
+                 animation:150,
+                 handle:'.panelContent',
+               }"  >
+                  <el-dropdown-item v-for="item in panelData" :key="item.id+1"
+                                    :class="showPanel.id==item.id?'nz-dashboard-dropdown-bg':''" :command="item">
+                    <!--{{item.name}}-->
+                    <el-row  :gutter="10" class="panel-list-width panelContent" >
+                      <el-col :span="19" class="panel-list-item" :title="item.name">{{item.name}}</el-col>
+                      <el-col :span="2"><span class="panel-dropdown-btn panel-dropdown-btn-delete" @click.stop="del(item)"><i class="el-icon-delete"></i></span></el-col>
+                      <el-col :span="1">&nbsp;</el-col>
+                      <el-col :span="2"><span class="panel-dropdown-btn" @click.stop="toEdit(item)"><i class="nz-icon nz-icon-edit"></i></span></el-col>
+                    </el-row>
+                  </el-dropdown-item>
+                </draggable>
               </el-dropdown-menu>
             </el-dropdown>
           </div>
@@ -96,7 +111,7 @@
   import ChartList from '../../charts/chart-list';
   import bus from '../../../libs/bus';
   import timePicker from '../../common/timePicker'
-
+  import draggable from 'vuedraggable'
   export default {
     name: "panel",
     data() {
@@ -157,6 +172,8 @@
         },
         chartsData: [], //中间部分图表相关数据
         panelData: [],
+        panelDataDragTmp:[],
+        dataTotalListBak:[],
         searchMsg: { //给搜索框子组件传递的信息
           zheze_none: true,
           searchLabelList: [
@@ -186,7 +203,8 @@
     components: {
       'chart-box': ChartBox,
       'chart-list': ChartList,
-      'time-picker':timePicker
+      'time-picker':timePicker,
+      draggable,
     },
     methods: {
       //刷新
@@ -394,9 +412,10 @@
         });
       },
       getTableData: function (clearShowPanel) {
-        this.$get('panel?pageSize=-1').then(response => {
+        this.$get('panel?type=dashboard').then(response => {
           if (response.code === 200) {
             this.panelData = response.data.list;
+            this.dataTotalListBak=[...response.data.list]
             let isInitData = false;
             if (response.data.list.length > 0) {
               if (this.$store.state.showPanel.id !== 0 && this.$store.state.showPanel.name !== '') {
@@ -538,7 +557,149 @@
       },
       clearInput:function(){
         this.$refs.queryPanel.focus();
-      }
+      },
+      start (event) {
+        // console.log('start', event, this.panelData);
+
+        event.item.querySelector('.panelContent').style.background = '#d8dce1';
+        let projectAndAssetFeatureInfos = event.item.querySelectorAll(".feature-content");
+        if (projectAndAssetFeatureInfos && projectAndAssetFeatureInfos.length > 0) {
+          projectAndAssetFeatureInfos.forEach(item => {
+            item.classList.remove("unfold");
+            item.classList.remove("fold");
+          });
+        }
+        this.panelDataDragTmp = [...this.panelData];
+        console.log(this.panelDataDragTmp)
+      },
+      end (event) {
+        // console.info("end event:", event)
+        let item = event.item;
+        let oldIndex = event.oldIndex;
+        let newIndex = event.newIndex;
+        let newItem = this.panelData[newIndex];
+        //移动前，移动元素前后元素next及prev修改；移动后，移动元素前后元素next及prev修改--start
+        let len = this.panelDataDragTmp.length;//移动之前的元素列表
+        let endIndex = len-1;
+        if(oldIndex===0){//挪动之前为第一个元素
+          let oldNextItem = this.panelDataDragTmp[oldIndex+1];
+          let nextItem = this.panelData.find(item => item.id === oldNextItem.id);
+          nextItem.prev = 0;
+        }else if(oldIndex===endIndex){//挪动之前为最后一个元素
+          let oldPrevItem = this.panelDataDragTmp[oldIndex-1];
+          let prevItem = this.panelData.find(item => item.id === oldPrevItem.id);
+          prevItem.next = -1;
+        }else{//挪动之前为中间元素
+          let oldPrevItem = this.panelDataDragTmp[oldIndex-1];
+          let oldNextItem = this.panelDataDragTmp[oldIndex+1];
+          let nextItem = this.panelData.find(item => item.id === oldNextItem.id);
+          let prevItem = this.panelData.find(item => item.id === oldPrevItem.id);
+          prevItem.next = oldNextItem.id;
+          nextItem.prev = oldPrevItem.id;
+        }
+
+        if(newIndex===0){//挪动之后为第一个元素
+          let newNextItem = this.panelData[newIndex+1];
+          newNextItem.prev = newItem.id;
+        }else if(newIndex===endIndex){//挪动之后为最后一个元素
+          let newPrevItem = this.panelData[newIndex-1];
+          newPrevItem.next =newItem.id;
+        }else{//挪动之后为中间元素
+          let newPrevItem = this.panelData[newIndex-1];
+          let newNextItem = this.panelData[newIndex+1];
+          newPrevItem.next = newItem.id;
+          newNextItem.prev = newItem.id;
+        }
+        //移动前，移动元素前后元素next及prev修改；移动后，移动元素前后元素next及prev修改--end
+
+        //前台总列表中的顺序也得修改（dataTotalList及dataTotalListBak），后台接口也得调用
+        if(newIndex<oldIndex){//从后往前移动：
+          //console.log('从后往前移动：oldIndex='+oldIndex+',newIndex='+newIndex)
+          let newNextItem = this.panelData[newIndex+1];
+          newItem.next = newNextItem.id;
+
+          let nextItemIndexInTotal = -1;
+          this.dataTotalListBak.forEach((item,index)=>{
+            if(item.id===newNextItem.id){
+              nextItemIndexInTotal = index;
+            }
+          })
+          // console.log('从后往前移动：next元素在总列表中之前的元素的index='+nextItemIndexInTotal)
+          if(nextItemIndexInTotal>0){//总列表中：移动之后的当前元素后面的元素之前有元素
+            let prevItem = this.dataTotalListBak[nextItemIndexInTotal-1];
+            newItem.prev = prevItem.id;
+          }else{//之前无元素
+            newItem.prev = 0;
+          }
+        }else if(newIndex>oldIndex){//从前往后移动
+          //console.log('从前往后移动：oldIndex='+oldIndex+',newIndex='+newIndex)
+          let newPrevItem = this.panelData[newIndex-1];
+          newItem.prev = newPrevItem.id;
+
+          let prevItemIndexInTotal = -1;
+          this.dataTotalListBak.forEach((item,index)=>{
+            if(item.id===newPrevItem.id){
+              prevItemIndexInTotal = index;
+            }
+          });
+          //console.log('从前往后移动：prev元素在总列表中之后的元素的index='+prevItemIndexInTotal)
+          if(prevItemIndexInTotal<this.dataTotalListBak.length-1){//总列表中：移动之后的当前元素前面的元素之后有元素
+            let nextItem = this.dataTotalListBak[prevItemIndexInTotal+1];
+            newItem.next = nextItem.id;
+          }else{//之后无元素
+            newItem.next = -1;
+          }
+        }else {//oldIndex = newIndex
+
+        }
+        //更新图表prev和next
+        const modifyParams = {
+          id:newItem.id,
+          type:'dashboard',
+          prev:newItem.prev,
+          next:newItem.next,
+        };
+
+        if(this.panelData.length>1 && oldIndex !== newIndex){
+          this.$put('panel/modify',modifyParams).then(response => {
+            if (response.code === 200) {
+              //修改前台列表中元素的顺序
+              let curItem = this.dataTotalListBak.find((item,index)=>{return newItem.id===item.id});
+              let curIndex = this.dataTotalListBak.indexOf(curItem);
+              this.dataTotalListBak.splice(curIndex,1);
+
+              let nextItemTmp = this.dataTotalListBak.find((item)=>{return item.id===newItem.next});
+              if(nextItemTmp){
+                let nextIndex = this.dataTotalListBak.indexOf(nextItemTmp);
+                this.dataTotalListBak.splice(nextIndex,0,newItem);
+              }else{//移动到最后一个元素
+                this.dataTotalListBak.push(newItem);
+              }
+              this.panelData = this.dataTotalListBak;
+            }else {
+              if(response.msg){
+                this.$message.error(response.msg);
+              }else if(response.error){
+                this.$message.error(response.error);
+              }else {
+                this.$message.error(response);
+              }
+            }
+          });
+        }
+        let chartTitle = item.querySelector('.panelContent');
+        chartTitle.style.background = '';
+      },
+      move (event, orgin) {
+        // console.log('move', event, orgin);
+        let dragClass = document.querySelector('.drag-chart-class');//drag-chart-class:yellow chart-ghost:green  fallback-class choose-class:purple
+        // console.log('move---class', dragClass);
+        //dragClass.style.opacity = 1;
+        //dragClass.style.pointerEvents = 'auto';//设置此属性，end事件里newIndex为 列表长度
+        let panelContent = dragClass.querySelector('.panelContent');
+        panelContent.style.background = '#d8dce1';
+
+      },
     },
     created() {
       this.getTableData();

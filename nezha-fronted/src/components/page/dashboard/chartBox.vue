@@ -110,78 +110,52 @@
             </el-form-item>
 
             <div class="right-box-sub-title">{{$t('dashboard.panel.chartForm.option')}}</div>
-            <div class="line-100"></div>
+            <div class="line-100" style="margin-bottom: 20px;"></div>
 
             <!-- type unit start-->
-            <el-row :gutter="10" style="padding-top:20px">
-              <el-col :span="2" >
-                <div class="label-center" >{{$t('dashboard.panel.chartForm.type')}}</div>
-              </el-col>
-              <el-col :span="10" >
-                <div class="grid-content ">
-                  <el-form-item prop="type">
-                    <el-select class="right-box-row-with-btn" @change="chartTypeChange" value-key="chartType" popper-class="chart-box-dropdown-small" v-model="chart.type" placeholder="" size="mini">
-                      <el-option v-for="item in chartTypeList" :key="item.id" :label="item.name" :value="item.id">
-                        <span class="panel-dropdown-label-txt" >{{item.name}}</span>
-                      </el-option>
-                    </el-select>
-                  </el-form-item>
-                </div>
-              </el-col>
-              <el-col v-show="!isUrl&&!isAlert" :span="2" >
-                <div class="label-center" >{{$t('dashboard.panel.chartForm.unit')}}</div>
-              </el-col>
-              <el-col v-show="!isUrl&&!isAlert" :span="10">
-                <el-cascader filterable placeholder="" popper-class="dc-dropdown" size="mini"
-                             :options="unitOptions"
-                             :props="{ expandTrigger: 'hover',emitPath:false }"
-                             :show-all-levels="false"
-                             v-model="chart.unit"
-                             @change="unitSelected"
-                >
-                </el-cascader>
-              </el-col>
-            </el-row>
+            <el-form-item :label="$t('dashboard.panel.chartForm.type')" prop="type" class="half-form-item">
+              <el-select class="right-box-row-with-btn" @change="chartTypeChange" value-key="chartType" popper-class="chart-box-dropdown-small" v-model="chart.type" placeholder="" size="mini">
+                <el-option v-for="item in chartTypeList" :key="item.id" :label="item.name" :value="item.id">
+                  <span class="panel-dropdown-label-txt" >{{item.name}}</span>
+                </el-option>
+              </el-select>
+            </el-form-item>
+
+            <el-form-item :label="$t('dashboard.panel.chartForm.unit')" prop="unit" class="half-form-item" style="width: 415px;">
+              <el-cascader filterable placeholder="" popper-class="dc-dropdown" size="mini"  style="width: 100%"
+                           :options="unitOptions"
+                           :props="{ expandTrigger: 'hover',emitPath:false }"
+                           :show-all-levels="false"
+                           v-model="chart.unit"
+                           @change="unitSelected"
+              >
+              </el-cascader>
+            </el-form-item>
             <!--type unit end-->
 
-            <el-row :gutter="10">
-              <el-col :span="2" >
-                <div class="label-center"  >{{$t('dashboard.panel.chartForm.width')}}</div>
-              </el-col>
-              <el-col :span="10" >
-                <div class="grid-content ">
-                  <el-form-item prop="span">
-                    <el-select class="right-box-row-with-btn"  value-key="chartSpan" popper-class="chart-box-dropdown-mini" v-model="chart.span" placeholder="" size="mini">
-                      <el-option v-for="item in spanList" :key="item" :label="'span-' + item" :value="item">
-                        <span class="panel-dropdown-label-txt" > span-{{item}}</span>
-                      </el-option>
-                    </el-select>
-                  </el-form-item>
-                </div>
-              </el-col>
-              <el-col :span="2" >
-                <div class="label-center" >{{$t('dashboard.panel.chartForm.high')}}</div>
-              </el-col>
-              <el-col :span="10" >
-                <div class="grid-content" >
-                  <el-form-item prop="height">
-                    <!--                  <el-input label="" v-model="chart.height" placeholder="" size="mini"></el-input>-->
-                    <el-autocomplete
-                      v-model="chart.height"
-                      :fetch-suggestions="querySearch"
-                      placeholder=""
-                      size="mini"
-                      popper-class="popper-z-index no-style-class"
-                      @select="handleSelect">
-                      <template slot-scope="{ item }">
-                        <div class="name">{{ item }}</div>
-                      </template>
-                    </el-autocomplete>
-                    <span class="nz-input-append">px</span>
-                  </el-form-item>
-                </div>
-              </el-col>
-            </el-row>
+            <el-form-item :label="$t('dashboard.panel.chartForm.width')" prop="span" class="half-form-item">
+              <el-select class="right-box-row-with-btn"  value-key="chartSpan" popper-class="chart-box-dropdown-mini" v-model="chart.span" placeholder="" size="mini">
+                <el-option v-for="item in spanList" :key="item" :label="'span-' + item" :value="item">
+                  <span class="panel-dropdown-label-txt" > span-{{item}}</span>
+                </el-option>
+              </el-select>
+            </el-form-item>
+
+            <el-form-item :label="$t('dashboard.panel.chartForm.high')" prop="hight"  class="half-form-item" style="width: 415px;">
+              <el-autocomplete
+                v-model="chart.height"
+                :fetch-suggestions="querySearch"
+                placeholder=""
+                size="mini"
+                popper-class="popper-z-index no-style-class"
+                @select="handleSelect">
+                <template slot-scope="{ item }">
+                  <div class="name">{{ item }}</div>
+                </template>
+              </el-autocomplete>
+              <span class="nz-input-append">px</span>
+            </el-form-item>
+
 
             <el-form-item :label="$t('dashboard.panel.chartForm.sync')" v-if="showPanel.type && showPanel.type == 'model'">
               <el-switch class="exporter-switch" v-model="chart.sync" active-color="#ee9d3f" :active-value="1" :inactive-value="0"></el-switch>
@@ -191,8 +165,8 @@
               <el-input size="small" type="textarea" maxlength="1024" show-word-limit v-model="chart.param.url"></el-input>
             </el-form-item>
 
-            <el-form-item v-if="chart.type == 'line' || chart.type == 'bar' || chart.type == 'stackArea'" :label='$t("dashboard.panel.chartForm.threshold")' prop="param.threshold" >
-              <el-input size="small" type="input"  v-model="chart.param.threshold"></el-input>
+            <el-form-item v-if="chart.type == 'line' || chart.type == 'bar' || chart.type == 'stackArea'" :label='$t("dashboard.panel.chartForm.threshold")' prop="param.threshold"  class="half-form-item">
+              <el-input size="mini" type="input"  v-model="chart.param.threshold"></el-input>
             </el-form-item>
 
             <div v-if="!isUrl&&!isAlert" class="right-box-sub-title">{{$t('dashboard.panel.chartForm.metric')}}</div>

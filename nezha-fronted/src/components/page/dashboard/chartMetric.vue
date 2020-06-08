@@ -163,7 +163,7 @@
         <span class="label-center">{{$t('dashboard.panel.chartForm.metric')}}</span>
       </el-col>
 
-      <el-col :span="8">
+      <el-col :span="8" style="text-align: right;">
         <div class="nz-tab-chart-item-box">
           <div @click="clickTabelShow(1,'normal')" class="nz-tab-style nz-tab-chart-style-left" :class="{'nz-tab-style-light' : tableShow == 1}">
             <span>{{$t('dashboard.metric.normal')}}</span>
