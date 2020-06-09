@@ -22,7 +22,7 @@
             <i slot="suffix" class="el-input__icon el-icon-search" @click="focusInput" style="float: right"></i>
           </el-input>
         </div>
-        <div class="panel-calendar margin-r-20" v-if="from == 'asset'">
+        <!--<div class="panel-calendar margin-r-20" v-if="from == 'asset'">
           <time-picker ref="calendarPanel" class="nz-dashboard-picker" @change="dateChange" style="height: 26px; margin-top: -1px;"></time-picker>
         </div>
         <div class="nz-btn-group nz-btn-group-size-small nz-btn-group-light margin-r-20" style="height: 24px;" v-if="from == 'asset'">
@@ -42,7 +42,8 @@
               <i style="font-size: 12px" class="nz-icon nz-icon-arrow-down"></i>
             </button>
           </el-popover>
-        </div>
+        </div>-->
+        <pick-time :refresh-data-func="dateChange" v-model="searchTime" :use-chart-unit="false" v-if="from=='asset'"></pick-time>
         <button @click="toAddChart" :title="$t('overall.createChart')" v-if="from != 'alertRule'"
                 class="nz-btn nz-btn-size-normal nz-btn-style-light ">
           <i class="nz-icon-create-square nz-icon"></i>
@@ -64,7 +65,7 @@
           </el-input>
         </div>
 
-        <div class="panel-calendar margin-r-20">
+        <!--<div class="panel-calendar margin-r-20">
           <div class="block">
             <time-picker ref="calendarPanel" class="nz-dashboard-picker" @change="dateChange"></time-picker>
           </div>
@@ -87,7 +88,8 @@
             <i style="font-size: 12px" class="nz-icon nz-icon-arrow-down"></i>
           </button>
         </el-popover>
-        </div>
+        </div>-->
+        <pick-time :refresh-data-func="dateChange" v-model="searchTime" :use-chart-unit="false"></pick-time>
         <button @click="toAddChart" :title="$t('overall.createChart')"
                 class="nz-btn nz-btn-size-normal nz-btn-style-light ">
           <i class="nz-icon-create-square nz-icon"></i>
@@ -314,7 +316,7 @@
       /*时间条件查询--start*/
       // 选择日期变化
       dateChange(val) {
-        this.searchTime = [...val];
+        // this.searchTime = [...val];
         this.filter.start_time = bus.timeFormate(this.searchTime[0], 'yyyy-MM-dd hh:mm:ss');
         this.filter.end_time = bus.timeFormate(this.searchTime[1], 'yyyy-MM-dd hh:mm:ss');
         this.filter.panelId = this.panelId;

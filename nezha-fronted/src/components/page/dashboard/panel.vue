@@ -58,13 +58,13 @@
               </el-input>
             </div>
 
-            <div class="panel-calendar margin-r-20">
+            <!--<div class="panel-calendar margin-r-20">
               <div class="block">
                 <time-picker ref="calendarPanel" class="nz-dashboard-picker" @change="dateChange"></time-picker>
               </div>
-            </div>
+            </div>-->
 
-            <div class="nz-btn-group nz-btn-group-size-normal nz-btn-group-light margin-r-20">
+            <!--<div class="nz-btn-group nz-btn-group-size-normal nz-btn-group-light margin-r-20">
               <button style="border-right: 1px solid rgba(162,162,162,0.50);" type="button"
                       class="nz-btn nz-btn-size-normal nz-btn-style-light" @click="Refresh()">
                 <i style="font-size: 12px" class="global-active-color nz-icon nz-icon-refresh"></i>
@@ -81,7 +81,8 @@
                 <i style="font-size: 12px" class="nz-icon nz-icon-arrow-down"></i>
               </button>
             </el-popover>
-            </div>
+            </div>-->
+            <pick-time :refresh-data-func="dateChange" v-model="searchTime" :use-chart-unit="false"></pick-time>
             <button @click="toAddChart" :title="$t('overall.createChart')"
                     class="nz-btn nz-btn-size-normal nz-btn-style-light ">
               <i class="nz-icon-create-square nz-icon"></i>
@@ -112,6 +113,7 @@
   import bus from '../../../libs/bus';
   import timePicker from '../../common/timePicker'
   import draggable from 'vuedraggable'
+  import pickTime from "../../common/pickTime";
   export default {
     name: "panel",
     data() {
@@ -205,6 +207,7 @@
       'chart-list': ChartList,
       'time-picker':timePicker,
       draggable,
+      'pick-time':pickTime,
     },
     methods: {
       //刷新
@@ -379,9 +382,9 @@
       /*时间条件查询--start*/
       // 选择日期变化
       dateChange(val) {
-        if(val){
-          this.searchTime = [...val];
-        }
+        // if(val){
+        //   this.searchTime = [...val];
+        // }
         this.filter.start_time = bus.timeFormate(this.searchTime[0], 'yyyy-MM-dd hh:mm:ss');
         this.filter.end_time = bus.timeFormate(this.searchTime[1], 'yyyy-MM-dd hh:mm:ss');
         this.filter.panelId = this.showPanel.id;

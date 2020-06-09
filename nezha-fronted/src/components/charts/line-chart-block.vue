@@ -176,6 +176,7 @@
           '#f58220', '#c37e00', '#00ae9d', '#f26522', '#76becc',
           '#76624c', '#d71345', '#2468a2', '#ca8687', '#1b315e',
         ],
+        stackTotalColor:null,
         firstShow: false, // 默认不显示操作按钮,
         caretShow:false,
         dropdownMenuShow:false,
@@ -515,9 +516,13 @@
                 str += `</div>`;
               });
               if(self.data.type==='stackArea' || self.isStackArea){
+                if(!self.stackTotalColor||self.stackTotalColor==''){
+                  self.stackTotalColor=randomcolor();
+                }
                 sum = parseFloat(Number(sum).toFixed(2));
                 str +=`<div style="white-space:nowrap;overflow-x:hidden;text-overflow:ellipsis;display: flex; justify-content: space-between; min-width: 150px; max-width: 600px; line-height: 18px; font-size: 12px;">`;
-                str +=`<div style="line-height: 18px; font-size: 12px;padding-left:20px;">`
+                str +=`<div style="line-height: 18px; font-size: 12px;padding-left:0px;">`
+                str +=`<span style='display:inline-block;margin-right:5px;border-radius:10px;width:15px;height:5px;background-color: ${self.stackTotalColor};}'></span>`;
                 str +=self.$t("dashboard.panel.chartTotal");
                 str +=`</div>`;
                 str +=`<div style="padding-left: 10px;">`;
