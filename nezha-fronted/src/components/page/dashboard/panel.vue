@@ -226,7 +226,8 @@
         //this.$refs.searchInput.select();
         this.showPanel = val
         this.filter.panelId = this.showPanel.id;
-        let curTime = this.$refs.calendarPanel.getCurrentTime();
+        // let curTime = this.$refs.calendarPanel.getCurrentTime();
+        let curTime=this.searchTime;
         this.filter.start_time = bus.timeFormate(curTime[0], 'yyyy-MM-dd hh:mm:ss');
         this.filter.end_time = bus.timeFormate(curTime[1], 'yyyy-MM-dd hh:mm:ss');
         //this.$refs.chartList.initCurrentRecordNum();
