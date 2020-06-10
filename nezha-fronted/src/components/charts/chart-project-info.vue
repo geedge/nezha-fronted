@@ -248,6 +248,11 @@
           this.hideBasic = !this.hideBasic;
         }else{
           let dom = this.$refs['module' + type][0];
+          if (this.showModuleIds.indexOf(type) > -1) {
+            this.showModuleIds.splice(this.showModuleIds.indexOf(type), 1);
+          } else {
+            this.showModuleIds.push(type);
+          }
           if (dom.classList.contains("unfold")) {
             dom.classList.remove("unfold");
             dom.classList.add("fold");

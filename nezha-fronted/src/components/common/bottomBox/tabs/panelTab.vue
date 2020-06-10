@@ -22,27 +22,6 @@
             <i slot="suffix" class="el-input__icon el-icon-search" @click="focusInput" style="float: right"></i>
           </el-input>
         </div>
-        <!--<div class="panel-calendar margin-r-20" v-if="from == 'asset'">
-          <time-picker ref="calendarPanel" class="nz-dashboard-picker" @change="dateChange" style="height: 26px; margin-top: -1px;"></time-picker>
-        </div>
-        <div class="nz-btn-group nz-btn-group-size-small nz-btn-group-light margin-r-20" style="height: 24px;" v-if="from == 'asset'">
-          <button style="border-right: 1px solid rgba(162,162,162,0.50);" type="button"
-                  class="nz-btn nz-btn-size-normal nz-btn-style-light" @click="Refresh()">
-            <i style="font-size: 12px" class="global-active-color nz-icon nz-icon-refresh"></i>
-          </button><el-popover
-            v-model="visible" placement="bottom-start" width="200" trigger="click">
-            <ul class="popover_ul">
-              <li v-for="i in intervalList" :style="{color:interval==i.value?'#31749C':''}" :key="i.value+i.name"
-                  @click="selectInterval(i.value)">
-                {{i.name}}
-              </li>
-            </ul>
-            <button type="button" style="border-radius: 0 4px 4px 0"
-                    class="nz-btn nz-btn-size-normal nz-btn-style-light" slot="reference">
-              <i style="font-size: 12px" class="nz-icon nz-icon-arrow-down"></i>
-            </button>
-          </el-popover>
-        </div>-->
         <pick-time :refresh-data-func="dateChange" v-model="searchTime" :use-chart-unit="false" v-if="from=='asset'"></pick-time>
         <button @click="toAddChart" :title="$t('overall.createChart')" v-if="from != 'alertRule'"
                 class="nz-btn nz-btn-size-normal nz-btn-style-light ">
@@ -65,30 +44,6 @@
           </el-input>
         </div>
 
-        <!--<div class="panel-calendar margin-r-20">
-          <div class="block">
-            <time-picker ref="calendarPanel" class="nz-dashboard-picker" @change="dateChange"></time-picker>
-          </div>
-        </div>
-
-        <div class="nz-btn-group nz-btn-group-size-normal nz-btn-group-light margin-r-20">
-          <button style="border-right: 1px solid rgba(162,162,162,0.50);" type="button"
-                  class="nz-btn nz-btn-size-normal nz-btn-style-light" @click="Refresh()">
-            <i style="font-size: 12px" class="global-active-color nz-icon nz-icon-refresh"></i>
-          </button><el-popover
-          v-model="visible" placement="bottom-start" width="200" trigger="click">
-          <ul class="popover_ul">
-            <li v-for="i in intervalList" :style="{color:interval==i.value?'#31749C':''}" :key="i.value+i.name"
-                @click="selectInterval(i.value)">
-              {{i.name}}
-            </li>
-          </ul>
-          <button type="button" style="border-radius: 0 4px 4px 0"
-                  class="nz-btn nz-btn-size-normal nz-btn-style-light" slot="reference">
-            <i style="font-size: 12px" class="nz-icon nz-icon-arrow-down"></i>
-          </button>
-        </el-popover>
-        </div>-->
         <pick-time :refresh-data-func="dateChange" v-model="searchTime" :use-chart-unit="false"></pick-time>
         <button @click="toAddChart" :title="$t('overall.createChart')"
                 class="nz-btn nz-btn-size-normal nz-btn-style-light ">

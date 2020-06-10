@@ -28,12 +28,72 @@
           <div :id="'chartContainer'+chartIndex"  ref="chartContainer" class="asset-info-content" >
             <el-scrollbar style="height: 100%;width:100%;" ref="scrollbar" class="el-scrollbar-normal">
               <div style="padding: 0 15px">
-                <div class="basic-container">
-                  <div class="basic-title asset-info-content-title">
-                    <span>&nbsp;{{$t('asset.createAssetTab.basicTitle')}}</span>
+                <div v-if="detail.project && detail.project.length > 0" class="basic-container">
+                  <div class="basic-title asset-info-content-title" @click.stop="hideElement('project')">
+                    <span><i :class="{'el-icon-caret-right': unfold.indexOf('project') == -1,'el-icon-caret-bottom': unfold.indexOf('project') > -1}"></i></span>
+                    <span>&nbsp;{{$t('project.project.project')}}</span>
                   </div>
-                  <div class="basic-content basic-content-asset" :class="{'fold':hideBasic, 'unfold':!hideBasic}">
-                    <div v-for="(item, index) in detail" class="content-item hover-bg">
+                  <div class="basic-content basic-content-asset unfold" ref="project">
+                    <div v-for="(item, index) in detail.project" class="content-item hover-bg">
+                      <div class="content-item-key item-tip" :id="'project' + index">
+                        <span>{{item.name}}</span>
+                        <div class="item-tip-hide item-tip-key el-popover" :class="itemTip('project', item.name, index, ready)">{{item.name}}</div>
+                      </div><div class="content-item-value">
+                        <span>{{item.nums}}</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div v-if="detail.module && detail.module.length > 0" class="basic-container">
+                  <div class="basic-title asset-info-content-title" @click.stop="hideElement('module')">
+                    <span><i :class="{'el-icon-caret-right': unfold.indexOf('module') == -1,'el-icon-caret-bottom': unfold.indexOf('module') > -1}"></i></span>
+                    <span>&nbsp;{{$t('project.module.module')}}</span>
+                  </div>
+                  <div class="basic-content basic-content-asset" ref="module">
+                    <div v-for="(item, index) in detail.module" class="content-item hover-bg">
+                      <div class="content-item-key item-tip" :id="'module' + index">
+                        <span>{{item.name}}</span>
+                        <div class="item-tip-hide item-tip-key el-popover" :class="itemTip('module', item.name, index, ready)">{{item.name}}</div>
+                      </div><div class="content-item-value">
+                        <span>{{item.nums}}</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div v-if="detail.asset && detail.asset.length > 0" class="basic-container">
+                  <div class="basic-title asset-info-content-title" @click.stop="hideElement('asset')">
+                    <span><i :class="{'el-icon-caret-right': unfold.indexOf('asset') == -1,'el-icon-caret-bottom': unfold.indexOf('asset') > -1}"></i></span>
+                    <span>&nbsp;{{$t('asset.asset')}}</span>
+                  </div>
+                  <div class="basic-content basic-content-asset" ref="asset">
+                    <div v-for="(item, index) in detail.asset" class="content-item hover-bg">
+                      <div class="content-item-key item-tip" :id="'asset' + index">
+                        <span>{{item.name}}</span>
+                        <div class="item-tip-hide item-tip-key el-popover" :class="itemTip('asset', item.name, index, ready)">{{item.name}}</div>
+                      </div><div class="content-item-value">
+                        <span>{{item.nums}}</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div v-if="detail.endpoint && detail.endpoint.length > 0" class="basic-container">
+                  <div class="basic-title asset-info-content-title" @click.stop="hideElement('endpoint')">
+                    <span><i :class="{'el-icon-caret-right': unfold.indexOf('endpoint') == -1,'el-icon-caret-bottom': unfold.indexOf('endpoint') > -1}"></i></span>
+                    <span>&nbsp;{{$t('project.endpoint.endpoint')}}</span>
+                  </div>
+                  <div class="basic-content basic-content-asset" ref="endpoint">
+                    <div v-for="(item, index) in detail.endpoint" class="content-item hover-bg">
+                      <div class="content-item-key item-tip" :id="'endpoint' + index">
+                        <span>{{item.name}}</span>
+                        <div class="item-tip-hide item-tip-key el-popover" :class="itemTip('endpoint', item.name, index, ready)">{{item.name}}</div>
+                      </div><div class="content-item-value">
+                        <span>{{item.nums}}</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                    <!--<div v-for="(item, index) in detail" class="content-item hover-bg">
                       <div class="content-item-key item-tip" :id="'basicKey' + index">
                         <span>{{item.label}}</span>
                         <div class="item-tip-hide item-tip-key el-popover" :class="itemTip('basicKey', item.label, index, ready)">{{item.label}}</div>
@@ -41,9 +101,7 @@
                         <span>{{item.value ? item.value : "&nbsp;"}}</span>
                         <div class="item-tip-hide item-tip-value el-popover" :class="itemTip('basicValue', item.value, index, ready)">{{item.value}}</div>
                       </div>
-                    </div>
-                  </div>
-                </div>
+                    </div>-->
               </div>
             </el-scrollbar>
           </div>
@@ -81,13 +139,13 @@
         type: Number,
         default: 0,
       },
-      detail: Array
     },
     data() {
       return {
         ready: false,
         data: {}, // 该图表信息,chartItem
         unit:{},
+        detail: {},
         isError:false,
         errorContent:'',
         loading:Object,
@@ -100,8 +158,7 @@
           end_time: '',
           from: ''
         },
-        hideBasic:false,
-        hideFeature:false,
+        unfold: ["project"], //展开的列表 project、module、asset、endpoint
         firstShow: false, // 默认不显示操作按钮,
         caretShow:false,
         dragTitleShow:false,
@@ -153,10 +210,20 @@
         return labels;
       },
       hideElement:function(type){
-        if(type ==  'basic'){
-          this.hideBasic=!this.hideBasic;
-        }else{
-          this.hideFeature=!this.hideFeature
+        let dom = this.$refs[type];
+        if (this.unfold.indexOf(type) > -1) {
+          this.unfold.splice(this.unfold.indexOf(type), 1);
+        } else {
+          this.unfold.push(type);
+        }
+        if (dom.classList.contains("unfold")) {
+          dom.classList.remove("unfold");
+          dom.classList.add("fold");
+        } else if (dom.classList.contains("fold")) {
+          dom.classList.remove("fold");
+          dom.classList.add("unfold");
+        } else if (!dom.classList.contains("unfold") && !dom.classList.contains("fold")) {
+          dom.classList.add("unfold");
         }
         setTimeout(()=>{
           this.$refs.scrollbar.update();
@@ -209,17 +276,18 @@
       },
 
       // 设置数据, filter区分
-      setData(chartItem) {
+      setData(chartItem, data) {
         this.resize(chartItem);
         this.divFirstShow = true;
 
         this.firstShow = true; // 展示操作按键
 
         this.data = chartItem;
+        this.detail = data;
 
         this.$nextTick(()=>{
           this.$refs.scrollbar.update();
-        })
+        });
         this.endLoading();
       },
     },

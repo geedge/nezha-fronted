@@ -542,7 +542,47 @@
         const param = {
           panelId: params.panelId,
           query: params.query,
+          from: params.from
         };
+        //alert-rule单独处理
+        if (param.from == "alertRule") {
+          this.dataList = [];
+          this.dataList.push({
+            id: -10,
+            panelId: 0,
+            title: this.$t("dashboard.panel.chartForm.statistics"),
+            span: 4,
+            height: 350,
+            type: "alertRuleInfo",
+            prev: 0,
+            next: -9,
+            buildIn: 1
+          });
+          this.dataList.push({
+            id: -9,
+            panelId: 0,
+            title: this.$t("alert.config.chart.alertNumTrend"),
+            span: 4,
+            height: 350,
+            type: "line",
+            prev: -10,
+            next: -1,
+            buildIn: 1,
+            elements: [{
+              id: '',
+              expression: `nz_alert_nums{id="${this.alertRuleDetail[0].value}"}`,
+              type: ''
+            }]
+          });
+          this.$nextTick(() => {
+            this.dataList.forEach((item,index) => {
+              this.setChartSize(item, index);//设置该图表宽度
+              let chartBox = document.getElementById('chart-' + item.id);
+              this.handleElementInViewport(chartBox, 0, item, index);
+            });
+          });
+          return;
+        }
         if (!param.query) delete param.query;
         //根据panelId获得panel下的所有图表
         this.$get('panel/'+ params.panelId+'/charts').then(response => {
@@ -680,6 +720,11 @@
           this.getAlertListChartData(chartItem,filterType);
           return;
         }
+        if(chartItem.type === 'alertRuleInfo'){
+          this.getAlertRuleChartData(chartItem);
+          return;
+        }
+
         if (this.isModel) {
           this.modelStaticData(chartInfo, filterType);
         } else {
@@ -1251,6 +1296,14 @@
       getAlertListChartData:function(chartInfo,filterType){
         this.$refs['editChart'+chartInfo.id][0].getAlertList(filterType);
       },
+      getAlertRuleChartData(chartInfo) {
+        this.$get("alert/rule/stat?id=" + this.additionalInfo.id).then(response => {
+          if (response.code === 200) {
+            this.$refs['editChart'+chartInfo.id][0].setData(chartInfo, response.data);
+          }
+        });
+      },
+
       // 设置图表的尺寸
       setChartSize(item, index) {
         this.$nextTick(() => {
