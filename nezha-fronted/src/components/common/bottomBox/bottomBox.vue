@@ -39,8 +39,8 @@
       </template>
 
       <!-- model-panel/asset-detail/project-overview的panel-->
-      <panel-tab v-if="(from == 'model' || from == 'asset' || from == 'project' || from == 'alertRule') && targetTab == 'panel'" v-show="subResizeShow" :from="from" :obj="obj" ref="panelTab"
-                 @changeTab="changeTab" :targetTab.sync="targetTab" :alertRuleDetail="detail"></panel-tab>
+      <panel-tab v-if="(from == 'model' || from == 'asset' || from == 'project' || from == 'alertRule' || from == 'endpoint') && targetTab == 'panel'" v-show="subResizeShow" :from="from" :obj="obj" ref="panelTab"
+                 @changeTab="changeTab" :targetTab.sync="targetTab" :detail="detail"></panel-tab>
 
     </div>
   </span>

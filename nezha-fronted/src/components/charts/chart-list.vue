@@ -108,12 +108,21 @@
                     :editChartId="'editChartId' + item.id"
         ></chart-asset-info>
 
+        <chart-endpoint-info v-if="item.type === 'endpointInfo'" :ref="'editChart'+item.id" :key="'inner' + item.id"
+                    @on-drag-chart="editChartForDrag"
+                    :panel-id="filter.panelId"
+                    :chart-index="index"
+                    :chart-data="item"
+                    :detail="detail"
+                    :editChartId="'editChartId' + item.id"
+        ></chart-endpoint-info>
+
         <chart-alert-rule-info v-if="item.type === 'alertRuleInfo'" :ref="'editChart'+item.id" :key="'inner' + item.id"
                     @on-drag-chart="editChartForDrag"
                     :panel-id="filter.panelId"
                     :chart-index="index"
                     :chart-data="item"
-                    :detail="alertRuleDetail"
+                    :detail="detail"
                     :editChartId="'editChartId' + item.id"
         ></chart-alert-rule-info>
 
@@ -152,6 +161,7 @@
   import chartUrl from './chart-url';
   import chartSingleStat from './chart-single-stat';
   import chartAssetInfo from './chart-asset-info'
+  import chartEndpointInfo from './chart-endpoint-info'
   import chartAlertRuleInfo from './chart-alert-rule-info'
   import chartProjectInfo from './chart-project-info'
   import draggable from 'vuedraggable'
@@ -163,7 +173,7 @@
       isModel: {type: Boolean, default: false},
       additionalInfo:{},
       draggable: {type: Boolean, default: true},
-      alertRuleDetail: Array
+      detail: Array
     },
     components: {
       chartAlertList,
@@ -175,6 +185,7 @@
       chartSingleStat,
       chartAlertRuleInfo,
       draggable,
+      chartEndpointInfo
     },
     data() {
       return {
@@ -570,9 +581,54 @@
             buildIn: 1,
             elements: [{
               id: '',
-              expression: `nz_alert_nums{id="${this.alertRuleDetail[0].value}"}`,
+              expression: `nz_alert_nums{id="${this.detail[0].value}"}`,
               type: ''
             }]
+          });
+          this.$nextTick(() => {
+            this.dataList.forEach((item,index) => {
+              this.setChartSize(item, index);//设置该图表宽度
+              let chartBox = document.getElementById('chart-' + item.id);
+              this.handleElementInViewport(chartBox, 0, item, index);
+            });
+          });
+          return;
+        }
+        //endpoint单独处理
+        if (param.from == "endpoint") {
+          this.dataList = [];
+          this.dataList.push({
+            id: -10,
+            panelId: 0,
+            title: this.$t("project.chart.endpointInfo"),
+            span: 4,
+            height: 350,
+            type: "endpointInfo",
+            prev: 0,
+            next: -9,
+            buildIn: 1
+          });
+          this.dataList.push({
+            id: -9,
+            panelId: 0,
+            title: this.$t("asset.createAssetTab.assetInfo"),
+            span: 4,
+            height: 350,
+            type: "assetInfo",
+            prev: -10,
+            next: -8,
+            buildIn: 1
+          });
+          this.dataList.push({
+            id: -8,
+            panelId: 0,
+            title: this.$t("alert.alertList"),
+            span: 4,
+            height: 350,
+            type: "alertList",
+            prev: -9,
+            next: -1,
+            buildIn: 1
           });
           this.$nextTick(() => {
             this.dataList.forEach((item,index) => {
@@ -710,6 +766,10 @@
         const index = pos; // 指标
         if(chartItem.type === 'assetInfo'){
           this.getAssetInfoChartData(chartItem);
+          return;
+        }
+        if(chartItem.type === 'endpointInfo'){
+          this.getEndpointInfoChartData(chartItem);
           return;
         }
         if(chartItem.type == 'projectInfo'){
@@ -1167,43 +1227,43 @@
           }
         }
       },
+      getEndpointInfoChartData(chartInfo) {
+        let req = new Promise((resolve, reject) => {
+          this.$get('/alert/message?endpointId='+this.detail.id).then(response=>{
+            if(response.code == 200){
+              console.info(response)
+              resolve(response.data);
+            } else {
+              reject(false);
+            }
+          });
+        });
+        req.then(data => {
+          let alerts = [];
+          if (data && data.list) {
+            data.list.forEach(item => {
+              let index = -1;
+              let hasLabel = alerts.some((alert, i) => {
+                if (alert.label == item.alertRule.alertName) {
+                  index = i;
+                }
+                return alert.label == item.alertRule.alertName;
+              });
+              if (hasLabel) {
+                alerts[index].value++;
+              } else {
+                alerts.push({label: item.alertRule.alertName, value: 1});
+              }
+            });
+          }
+          this.$refs['editChart'+chartInfo.id][0].setData(chartInfo, this.detail, alerts);
+        });
+      },
       getAssetInfoChartData(chartInfo){
         if(!this.isModel){
           this.$refs['editChart'+chartInfo.id][0].showLoad(chartInfo);
           this.$get('/asset/info?id='+this.additionalInfo.id).then(response=>{
             if(response.code == 200){
-              let data={
-                Basic:{
-                  sn:'assetInfo Test',
-                  host:'192.168.40.42',
-                  host1:'192.168.40.42',
-                  host2:'192.168.40.42',
-                  host3:'192.168.40.42',
-                  host4:'192.168.40.42',
-                  host5:'192.168.40.42',
-                  host6:'192.168.40.42',
-                  host7:'192.168.40.42',
-                  host8:'192.168.40.42',
-                  host9:'192.168.40.42',
-                  host10:'192.168.40.42',
-                  pingStatus:1,
-                  pingRtt:80,
-                  cpuNum:'8',
-                  memery:'12GB',
-                  memery$_$free:'3GB'
-                },
-                Feature:{
-                  CPU:"Intel E500",
-                  Memory:"256GB",
-                  NetworkInterface:["eth0","eth1"],
-                  Disk:[{
-                    mount:"/",
-                    total:"256GB",
-                    free:"128GB",
-                    usageRate:"50%"
-                  }]
-                }
-              }
               this.$refs['editChart'+chartInfo.id][0].setData(chartInfo, response.data, this.filter.panelId, this.filter);
             }else{
               this.$refs['editChart'+chartInfo.id][0].setData(chartInfo, {}, this.filter.panelId, this.filter, response.msg);

@@ -7,6 +7,7 @@
           <template v-if="from == 'model'">{{obj.name}}</template>
           <template v-else-if="from == 'asset'">{{obj.host}}</template>
           <template v-else-if="from == 'alertRule'">{{obj.alertName}}</template>
+          <template v-else-if="from == 'endpoint'">{{$t("project.endpoint.endpointId")}}: {{obj.id}}</template>
         </div><div class="sub-list-tab sub-list-tab-active" v-if="from == 'model'">{{$t("dashboard.panel.title")}}</div><template v-if="from == 'asset'"><div
           class="sub-list-tab sub-list-tab-active">{{$t("overall.detail")}}</div><div
           class="sub-list-tab" @click="changeTab('alertMessage')">{{$t("asset.tableTitle.alerts")}}</div><div
@@ -14,16 +15,19 @@
         </template><template v-if="from == 'alertRule'"><div
           class="sub-list-tab sub-list-tab-active">{{$t("overall.detail")}}</div><div
           class="sub-list-tab" @click="changeTab('alertMessage')">{{$t("asset.tableTitle.alerts")}}</div>
+        </template><template v-if="from == 'endpoint'"><div
+          class="sub-list-tab sub-list-tab-active">{{$t("overall.detail")}}</div><div
+          class="sub-list-tab" @click="changeTab('endpointQuery')">{{$t("overall.query")}}</div>
         </template>
       </div>
       <div class="top-tool-right">
-        <div class="top-tool-search margin-r-20" v-if="from != 'alertRule'">
+        <div class="top-tool-search margin-r-20" v-if="from != 'alertRule' && from != 'endpoint'">
           <el-input ref="queryPanel" @clear="clearInput" id="queryPanel" @focus="focusInput"  @blur="blurInput" v-model="filter.searchName" class="query-input-inactive" size="mini" clearable   >
             <i slot="suffix" class="el-input__icon el-icon-search" @click="focusInput" style="float: right"></i>
           </el-input>
         </div>
         <pick-time :refresh-data-func="dateChange" v-model="searchTime" :use-chart-unit="false" v-if="from=='asset'"></pick-time>
-        <button @click="toAddChart" :title="$t('overall.createChart')" v-if="from != 'alertRule'"
+        <button @click="toAddChart" :title="$t('overall.createChart')" v-if="from != 'alertRule' && from != 'endpoint'"
                 class="nz-btn nz-btn-size-normal nz-btn-style-light ">
           <i class="nz-icon-create-square nz-icon"></i>
         </button>
@@ -56,7 +60,7 @@
     <div class="table-list" id="tableList">
       <el-scrollbar class="el-scrollbar-large" style="height: 100%" ref="dashboardScrollbar">
         <div class="box-content">
-          <chart-list @on-edit-chart="editData" @on-refresh-time="refreshTime" @on-remove-chart="removeData" :draggable="draggable" :alertRuleDetail="alertRuleDetail"
+          <chart-list @on-edit-chart="editData" @on-refresh-time="refreshTime" @on-remove-chart="removeData" :draggable="draggable" :detail="detail"
                       ref="chartList" :is-model="from == 'model'" :additional-info="obj"></chart-list>
         </div>
       </el-scrollbar>
@@ -79,7 +83,7 @@
       from: String,
       obj: Object,
       draggable: {type: Boolean, default: true},
-      alertRuleDetail: Array
+      detail: Array
     },
     data() {
       return {
@@ -280,7 +284,7 @@
       /*时间条件查询--end*/
       //公用操作
       getTableData(linkId) {
-        if (this.from == "alertRule") {
+        if (this.from == "alertRule" || this.from == "endpoint") {
           this.getData(this.filter);
         } else {
           this.$get('panel', {type: this.from, link: linkId}).then(response => {

@@ -15,9 +15,8 @@
     <div class="sub-top-tools">
       <div class="sub-list-tabs">
         <div class="sub-list-tab-title">{{$t("project.endpoint.endpointId")}}: {{currentEndpoint ? currentEndpoint.id : ''}}</div><div
-        class="sub-list-tab" @click="changeTab('detail')">{{$t("overall.detail")}}</div><div
-        class="sub-list-tab sub-list-tab-active">{{$t("overall.query")}}</div><div
-        class="sub-list-tab" v-if="from == 'endpoint'" @click="changeTab('assetDetail')">{{$t("project.endpoint.asset")}}</div>
+        class="sub-list-tab" @click="changeTab('panel')">{{$t("overall.detail")}}</div><div
+        class="sub-list-tab sub-list-tab-active">{{$t("overall.query")}}</div>
       </div>
       <div class="top-tool-right">
         <div class="top-tool-search margin-r-20">

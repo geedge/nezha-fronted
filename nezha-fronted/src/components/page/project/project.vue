@@ -25,23 +25,6 @@
       <div slot="content-left" class="slot-content">
       <el-scrollbar ref="leftScrollbar" style="height: 100%">
         <div class="sidebar-title too-long-split">{{$t('project.project.project')}}</div>
-        <!--<div class="sidebar-info">
-          <div
-            v-for="item in moduleList"
-            class="sidebar-info-item"
-            :class="{'sidebar-info-item-active': item.id == currentModule.id}"
-            @click="changeModule(item)"
-            :id="'project-module-'+item.id"
-          >
-            <div class="sidebar-info-item-txt">
-              <el-popover v-if="item.name.length > 16" trigger="hover" placement="top-start" :content="item.name" >
-                <span slot="reference">{{item.name}}</span>
-              </el-popover>
-              <span v-else>{{item.name}}</span>
-            </div>
-            <div v-show="item.buildIn != 1" class="hid-div side-bar-menu-edit" @click.stop="toEditModule(item)" :id="'project-module-edit-'+item.id" ><i class="nz-icon nz-icon-edit"></i></div>
-          </div>
-        </div>-->
         <div class="sidebar-info">
           <el-collapse v-model="currentProjectTitle" class="left-menu-bg" accordion style="padding-top:0px;" @change="projectChange" ref="projectLeft">
             <el-collapse-item v-for="(item,index) in projectList" :key="item.name+item.id+index" :name="item.name+'-'+item.id">
@@ -131,9 +114,9 @@
               </span>
               <template v-else-if="item.prop == 'type'">{{currentModule.type}}</template>
               <div v-else-if="item.prop == 'option'" class="content-right-options">
-                <span :title="$t('overall.query')" @click="showEndpoint(scope.row)" class="content-right-option" :id="'edp-query-'+scope.row.id"><i class="el-icon-search"></i></span>
-                &nbsp;
                 <span :title="$t('overall.view')" @click="detail(scope.row)" class="content-right-option" :id="'edp-detail-'+scope.row.id"><i class="nz-icon nz-icon-view"></i></span>
+                &nbsp;
+                <span :title="$t('overall.query')" @click="showEndpoint(scope.row)" class="content-right-option" :id="'edp-query-'+scope.row.id"><i class="el-icon-search"></i></span>
                 &nbsp;
                 <span :title="$t('overall.edit')" @click="toEditEndpoint(scope.row)" class="content-right-option" :id="'edp-edit-'+scope.row.id"><i class="nz-icon nz-icon-edit"></i></span>
               </div>
@@ -535,7 +518,7 @@
       //查看endpoint详情
       detail(endpoint) {
         this.curEndpoint = Object.assign({}, endpoint);
-        this.targetTab = "detail";
+        this.targetTab = "panel";
         this.showSubList = true;
       },
       initSnmpParam(module) {
