@@ -28,6 +28,7 @@
           <div :id="'chartContainer'+chartIndex"  ref="chartContainer" class="asset-info-content" >
             <el-scrollbar style="height: 100%;width:100%;" ref="scrollbar" class="el-scrollbar-normal">
               <div style="padding: 0 15px">
+                <div v-if="noData" class="chart-no-data">No Data</div>
                 <div v-if="detail.project && detail.project.length > 0" class="basic-container">
                   <div class="basic-title asset-info-content-title" @click.stop="hideElement('project')">
                     <span><i :class="{'el-icon-caret-right': unfold.indexOf('project') == -1,'el-icon-caret-bottom': unfold.indexOf('project') > -1}"></i></span>
@@ -186,6 +187,14 @@
           return className;
         }
       },
+      noData() {
+        let vm = this;
+        return !vm.detail || function() {
+          return Object.values(vm.detail).filter(v => {
+            return v && v.length > 0;
+          }).length == 0;
+        }();
+      }
     },
     methods: {
       startResize(e) {
@@ -226,7 +235,7 @@
           dom.classList.add("unfold");
         }
         setTimeout(()=>{
-          this.$refs.scrollbar.update();
+          this.$refs.scrollbar && this.$refs.scrollbar.update();
         },400);
       },
       replaceSplit(key){
