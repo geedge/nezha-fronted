@@ -50,7 +50,7 @@ export default new Router({
         },
         {
           path: 'test',
-          component: resolve => require(['../components/page/dashboard/overview/test.vue'],resolve)
+          component: resolve => require(['../components/page/dashboard/explore/editor.vue'],resolve)
         },
         {
           path: '/project',
