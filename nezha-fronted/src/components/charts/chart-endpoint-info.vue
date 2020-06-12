@@ -39,9 +39,11 @@
                       <div class="content-item-key item-tip" :id="'basicKey' + index">
                         <span>{{item.label}}</span>
                         <div class="item-tip-hide item-tip-key el-popover" :class="itemTip('basicKey', item.label, index, ready)">{{item.label}}</div>
-                      </div><div class="content-item-value item-tip" :id="'basicValue' + index">
-                        <span>{{item.value}}</span>
+                      </div><div v-if="item.label != $t('alert.list.state')" class="content-item-value item-tip" :id="'basicValue' + index">
+                        <span>{{item.value ? item.value : '&nbsp;'}}</span>
                         <div class="item-tip-hide item-tip-value el-popover" :class="itemTip('basicValue', item.value, index, ready)">{{item.value}}</div>
+                      </div><div v-else class="content-item-value item-tip" :id="'basicValue' + index">
+                        <span style="cursor: pointer;" @click="preview"><i class="nz-icon nz-icon-chart"></i></span>
                       </div>
                     </div>
                   </div>
@@ -68,6 +70,8 @@
         </div>
       </div>
     </div>
+    <!--preview -->
+    <chart-preview :panelId="panelId" ref="chartsPreview" ></chart-preview>
   </div>
 </template>
 
@@ -76,13 +80,16 @@
   import {Loading} from 'element-ui';
   import chartDataFormat from './chartDataFormat'
   import loading from "../common/loading";
-  import timePicker from '../common/timePicker'
+  import timePicker from '../common/timePicker';
+  import chartPreview from './chartPreview';
+
 
   export default {
     name: 'chartEndpointInfo',
     components: {
       'loading': loading,
-      'time-picker':timePicker
+      'time-picker': timePicker,
+      'chart-preview': chartPreview,
     },
     props: {
       // 看板id
@@ -105,11 +112,13 @@
         data: {}, // 该图表信息,chartItem
         unit:{},
         detail: [],
+        state: [],
         alerts: [],
         unfold: ["basic"],
         isError:false,
         errorContent:'',
         assetInfos:{},
+        showState: false,
 
         //toolbox: false,
         loading:Object,
@@ -192,6 +201,9 @@
           this.$refs.scrollbar && this.$refs.scrollbar.update();
         },400);
       },
+      preview() {
+        this.$refs.chartsPreview.show(this.data);
+      },
       replaceSplit(key){
         if(key){
           return key.replace(/\$_\$/g,' ')
@@ -239,18 +251,19 @@
       },
 
       // 设置数据, filter区分
-      setData(chartItem, data, alerts) {
+      setData(chartItem, endpointDetail, alerts) {
         this.resize(chartItem);
         this.divFirstShow = true;
 
         this.firstShow = true; // 展示操作按键
 
         this.data = chartItem;
-        this.detail = data;
+        this.detail = endpointDetail;
         this.alerts = alerts;
+        this.detail.push({label: this.$t("alert.list.state"), value: ""});
         this.$nextTick(()=>{
           this.$refs.scrollbar.update();
-        })
+        });
         this.endLoading();
       },
     },

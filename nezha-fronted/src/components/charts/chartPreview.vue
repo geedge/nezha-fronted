@@ -75,12 +75,12 @@
         </div>
       </div>
 
-      <template v-if="chart.type==='line'||chart.type==='bar'||chart.type==='stackArea'">
+      <template v-if="chart.type==='line'||chart.type==='bar'||chart.type==='stackArea' || chart.type == 'endpointInfo'">
         <div id="chartEchartPreview" @mouseenter="mouseEnterFullChart" @mouseleave="mouseLeaveFullChart">
-          <div class="line-area" ref="screenShowArea"  id="screenShowArea"  style="margin-top:0px;"></div>
+          <div class="line-area" ref="screenShowArea"  id="screenShowArea" style="margin-top:0px;"></div>
           <div class="chart-no-data" v-show="noData">No Data</div>
           <div class="legend-container legend-container-screen" id="screenLegendArea" ref="screenLegendArea" v-show="showLegend" v-scrollBar:legend>
-            <div v-for="(item, index) in screenLegendList" :title="item.alias?item.alias:item.name"  @click="clickScreenLegend(item.name,index)" class="legend-item" :class="{'ft-gr':isGreyScreen[index]}"  :key="'legend_' + item.name+'_'+index">
+            <div v-for="(item, index) in screenLegendList" :title="item.alias?item.alias:item.name" @click="clickScreenLegend(item.name,index)" class="legend-item" :class="{'ft-gr':isGreyScreen[index]}"  :key="'legend_' + item.name+'_'+index">
               <span class="legend-shape" :style="{background:(isGreyScreen[index]?'#D3D3D3':bgColorList[index])}"></span>{{item.alias?item.alias:item.name}}
               <br/>
             </div>
@@ -130,9 +130,7 @@
         </div>
       </template>
 
-      <template v-if="chart.type === 'alertList'">
-        <chart-alert-list ref="alertListChart" id="chartAlertListPreview"></chart-alert-list>
-      </template>
+      <chart-alert-list v-if="chart.type === 'alertList'" ref="alertListChart" id="chartAlertListPreview"></chart-alert-list>
 
       <loading  ref="loadingPreview"></loading>
     </el-dialog>
@@ -231,7 +229,7 @@
         if(chartType==='table'){
           this.tableShow = false;
           chartContainerId = 'chartTablePreview';
-        }else if (chartType === 'line' || chartType === 'bar' || chartType === 'stackArea' || chartType === 4) {
+        }else if (chartType === 'line' || chartType === 'bar' || chartType === 'stackArea' || chartType === 4 || chartType == "endpointInfo") {
           this.isGreyScreen=[];
           this.showLegend = false;
           chartContainerId = 'chartEchartPreview';
@@ -306,7 +304,7 @@
         let chartType= this.chart.type;
         if(chartType==='table'){
 
-        }else if (chartType === 'line' || chartType === 'bar' || chartType === 'stackArea' || chartType === 4) {
+        }else if (chartType === 'line' || chartType === 'bar' || chartType === 'stackArea' || chartType === 4 || chartType == "endpointInfo") {
           if(this.echartModalStore){
             this.echartModalStore.clear();
           }
@@ -350,7 +348,7 @@
           this.$nextTick(() => {
             if (chartItem.type === 'table') {//表格
               this.setTableData([]);
-            } else if (chartItem.type === 'line' || chartItem.type === 'bar' || chartItem.type === 'stackArea' || chartItem.type === 4) {
+            } else if (chartItem.type === 'line' || chartItem.type === 'bar' || chartItem.type === 'stackArea' || chartItem.type === 4 || chartItem.type === "endpointInfo") {
               this.setData(chartItem, []);
             }else if(chartItem.type ==='singleStat'){
               this.serieSingleStat = "";
@@ -424,7 +422,7 @@
                             },
                             metric_name: '',
                           };
-                          if (chartItem.type === 'stackArea') {
+                          if (chartItem.type === 'stackArea' || chartItem.type === "endpointInfo") {
                             seriesItem.theData.type = 'line';
                             seriesItem.theData.stack = chartItem.title;
                             seriesItem.theData.areaStyle = {"opacity": 0.3};
@@ -477,6 +475,7 @@
                               return [dpsItem[0] * 1000, dpsItem[1]];
                             });
                             series.push(seriesItem.theData);
+                            console.info(seriesItem.theData)
 
                           } else if (chartItem.elements && chartItem.elements[innerPos]) {
                             // 无数据提示
@@ -507,7 +506,7 @@
                 //if(this.$refs.editChart&&this.$refs.editChart[index]) {
                   if (chartItem.type === 'table') {//表格
                       this.setTableData(tableData);
-                  } else if (chartItem.type === 'line' || chartItem.type === 'bar' || chartItem.type === 'stackArea' || chartItem.type === 4) {
+                  } else if (chartItem.type === 'line' || chartItem.type === 'bar' || chartItem.type === 'stackArea' || chartItem.type === 4 || chartItem.type == "endpointInfo") {
                     if (series.length && chartItem.type === 4) {//曲线汇总
                     }
                     if(series.length<1){
@@ -515,7 +514,11 @@
                     }else{
                       this.noData=false;
                     }
-                    this.setData(chartItem, series, legend);
+                    let _chartItem = JSON.parse(JSON.stringify(chartItem));
+                    if (chartItem.type == "endpointInfo") {
+                      _chartItem.type = "line";
+                    }
+                    this.setData(_chartItem, series, legend);
                   }else if(chartItem.type ==='singleStat'){
                     if(Number(singleStatRlt)){
                       let singleStatTmp =parseFloat(Number(singleStatRlt).toFixed(2));

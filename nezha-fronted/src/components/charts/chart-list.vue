@@ -600,13 +600,17 @@
           this.dataList.push({
             id: -10,
             panelId: 0,
+            dataId: this.additionalInfo.id,
             title: this.$t("project.chart.endpointInfo"),
             span: 4,
             height: 350,
             type: "endpointInfo",
             prev: 0,
             next: -9,
-            buildIn: 1
+            buildIn: 1,
+            elements: [{
+              expression: `up{endpoint="${this.additionalInfo.id}"}`
+            }]
           });
           this.dataList.push({
             id: -9,
@@ -1228,17 +1232,59 @@
         }
       },
       getEndpointInfoChartData(chartInfo) {
-        let req = new Promise((resolve, reject) => {
-          this.$get('/alert/message?endpointId='+this.detail.id).then(response=>{
+        let endpointId = this.additionalInfo.id;
+        let alertMsg = new Promise((resolve, reject) => {
+          this.$get('/alert/message?endpointId='+endpointId).then(response=>{
             if(response.code == 200){
-              console.info(response)
               resolve(response.data);
             } else {
               reject(false);
             }
           });
         });
-        req.then(data => {
+        /*let endpointState = new Promise((resolve, reject) => {
+          let query = `up{endpoint="${endpointId}"}`;
+          this.$get('/prom/api/v1/query_range?query=' + query + "&start=" + this.$stringTimeParseToUnix(this.filter.start_time) + "&end=" + this.$stringTimeParseToUnix(this.filter.end_time) + '&step=' + bus.getStep(this.filter.start_time, this.filter.end_time)).then(response=>{
+            if(response.status == "success"){
+              resolve(response.data);
+            } else {
+              reject(false);
+            }
+          });
+        });*/
+        Promise.all([alertMsg]).then(result => {
+          //endpointInfo的告警信息
+          let alerts = [];
+          let data = result[0];
+          if (data.list) {
+            data.list.forEach(item => {
+              let index = -1;
+              let hasLabel = alerts.some((alert, i) => {
+                if (alert.label == item.alertRule.alertName) {
+                  index = i;
+                }
+                return alert.label == item.alertRule.alertName;
+              });
+              if (hasLabel) {
+                alerts[index].value++;
+              } else {
+                alerts.push({label: item.alertRule.alertName, value: 1});
+              }
+            });
+          }
+          this.$refs['editChart'+chartInfo.id][0].setData(chartInfo, this.detail, alerts);
+          //endpointInfo的state
+          /*data = result[1];
+          let state = [];
+          if (data.result && data.result[0] && data.result[0].values) {
+            state = data.result[0].values;
+          }
+
+          this.$refs['editChart'+chartInfo.id][0].setData(chartInfo, this.detail, alerts, state);*/
+        }, err => {
+
+        });
+        /*req.then(data => {
           let alerts = [];
           if (data && data.list) {
             data.list.forEach(item => {
@@ -1257,12 +1303,13 @@
             });
           }
           this.$refs['editChart'+chartInfo.id][0].setData(chartInfo, this.detail, alerts);
-        });
+        });*/
       },
       getAssetInfoChartData(chartInfo){
         if(!this.isModel){
           this.$refs['editChart'+chartInfo.id][0].showLoad(chartInfo);
-          this.$get('/asset/info?id='+this.additionalInfo.id).then(response=>{
+          let assetId = this.additionalInfo.assetId ? this.additionalInfo.assetId : this.additionalInfo.id;
+          this.$get('/asset/info?id=' + assetId).then(response=>{
             if(response.code == 200){
               this.$refs['editChart'+chartInfo.id][0].setData(chartInfo, response.data, this.filter.panelId, this.filter);
             }else{
