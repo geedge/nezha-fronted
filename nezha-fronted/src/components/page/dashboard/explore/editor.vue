@@ -80,12 +80,22 @@
         }else if(/^[=]/g.test(char)){
           if(operation=='insert'){
             let labelValuesReg=/\{((\w*?=.*?,{0,1})+?)\}/
-            let labelValues=labelValuesReg.exec(this.content)[0];
+            if(labelValuesReg.test(this.content)){
+              let labelValues=labelValuesReg.exec(this.content)[0]
+              if(labelValues){
+                let unCompleteInputReg=/\w*?=[^"|\s]/
+                if(unCompleteInputReg.test(labelValues)){
+                  let unCompleteInput=unCompleteInputReg.exec(labelValues)[0];
+                  unCompleteInput=unCompleteInput.substring(0,unCompleteInput.length-2)
+                  let values=this.labelValues.get(unCompleteInput);
+                  console.log('values',values)
 
+                  this.noStyleSuggestions={values:values}
+                  this.showSuggestions=this.deepClone(this.noStyleSuggestions);
 
-
-            console.log('labelValues',labelValues,'cursor',cursor);
-
+                }
+              }
+            }
           }else{
 
           }
@@ -151,6 +161,8 @@
           this.handleMetricClick(item)
         }else if(type == 'labels'){
           this.handleLabelClick(item)
+        }else if(type == 'values'){
+          this.handleValueClick(item);
         }
       },
       handleMetricClick:function(item){
@@ -169,6 +181,9 @@
            this.quill.setSelection(this.cursorIndex+1)
            this.changeSuggestions('value')
         })
+      },
+      handleValueClick:function(item){
+
       },
       toggleSelect:function(event){//上下键选择
         if(!this.storedSuggestions||this.storedSuggestions.length<1){
