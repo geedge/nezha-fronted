@@ -25,6 +25,7 @@
     cursor: se-resize;
     box-sizing: border-box;
     user-select: none;
+    z-index: 2000;
   }
   .vue-resizable-handle:after {
     border-right: 2px solid #555;
@@ -52,8 +53,8 @@
                  scroll:true,
                  filter: '.drag-disabled',
                  scrollFn:function(offsetX,offsetY,originalEvent,touchEvt,hoverTargetEI){},
-                 animation:150,
-                 handle:'.chartTitle'
+                 animation: 150,
+                 handle: '.chart-title'
                }"  >
       <div class="chartBox" v-for="(item, index) in dataList" :key="item.id" :id="'chart-' + item.id" :name="item.title" :class="{'drag-disabled': !draggable}">
         <line-chart-block v-if="item.type === 'line' || item.type === 'bar' ||item.type == 'stackArea' || item.type === 4" :key="'inner' + item.id"
@@ -79,15 +80,15 @@
                      :chart-index="index"></chart-single-stat>
 
         <chart-table v-if="item.type === 'table'" :ref="'editChart'+item.id" :key="'inner' + item.id"
-          @on-refresh-data="refreshChart"
-          @on-search-data="searchData"
-          @on-remove-chart-block="removeChart"
-          @on-duplicate-chart-block="duplicateChart"
-          @on-drag-chart="editChartForDrag"
-          @on-edit-chart-block="editData"
-          :panel-id="filter.panelId"
-          :chart-data="item"
-          :chart-index="index"></chart-table>
+                      @on-refresh-data="refreshChart"
+                      @on-search-data="searchData"
+                      @on-remove-chart-block="removeChart"
+                      @on-duplicate-chart-block="duplicateChart"
+                      @on-drag-chart="editChartForDrag"
+                      @on-edit-chart-block="editData"
+                      :panel-id="filter.panelId"
+                      :chart-data="item"
+                      :chart-index="index"></chart-table>
 
         <chart-url v-if="item.type === 'url'" :ref="'editChart'+item.id" :key="'inner' + item.id"
                      @on-refresh-data="refreshChart"
@@ -100,39 +101,46 @@
                      :chart-data="item"
                      :chart-index="index"></chart-url>
 
-        <chart-asset-info v-if="item.type === 'assetInfo'" :ref="'editChart'+item.id" :key="'inner' + item.id"
+        <!--<chart-asset-info v-if="item.type === 'assetInfo'" :ref="'editChart'+item.id" :key="'inner' + item.id"
                     @on-drag-chart="editChartForDrag"
                     :panel-id="filter.panelId"
                     :chart-index="index"
                     :chart-data="item"
                     :editChartId="'editChartId' + item.id"
-        ></chart-asset-info>
+        ></chart-asset-info>-->
+        <chart-detail v-if="item.type === 'assetInfo' || item.type == 'projectInfo' || item.type == 'endpointInfo' || item.type == 'alertRuleInfo'" :ref="'editChart'+item.id" :key="'inner' + item.id"
+                          :panel-id="filter.panelId"
+                          :chart-index="index"
+                          @on-refresh-data="refreshChart"
+                          :chart-data="item"
+                          :editChartId="'editChartId' + item.id"
+        ></chart-detail>
 
-        <chart-endpoint-info v-if="item.type === 'endpointInfo'" :ref="'editChart'+item.id" :key="'inner' + item.id"
+        <!--<chart-endpoint-info v-if="item.type === 'endpointInfo'" :ref="'editChart'+item.id" :key="'inner' + item.id"
                     @on-drag-chart="editChartForDrag"
                     :panel-id="filter.panelId"
                     :chart-index="index"
                     :chart-data="item"
                     :detail="detail"
                     :editChartId="'editChartId' + item.id"
-        ></chart-endpoint-info>
+        ></chart-endpoint-info>-->
 
-        <chart-alert-rule-info v-if="item.type === 'alertRuleInfo'" :ref="'editChart'+item.id" :key="'inner' + item.id"
+        <!--<chart-alert-rule-info v-if="item.type === 'alertRuleInfo'" :ref="'editChart'+item.id" :key="'inner' + item.id"
                     @on-drag-chart="editChartForDrag"
                     :panel-id="filter.panelId"
                     :chart-index="index"
                     :chart-data="item"
                     :detail="detail"
                     :editChartId="'editChartId' + item.id"
-        ></chart-alert-rule-info>
+        ></chart-alert-rule-info>-->
 
-        <chart-project-info v-if="item.type  === 'projectInfo'" :ref="'editChart'+item.id" :key="'inner' + item.id"
+        <!--<chart-project-info v-if="item.type  === 'projectInfo'" :ref="'editChart'+item.id" :key="'inner' + item.id"
                     @on-drag-chart="editChartForDrag"
                     :panel-id="filter.panelId"
                     :chart-index="index"
                     :chart-data="item"
                     :editChartId="'editChartId' + item.id"
-        ></chart-project-info>
+        ></chart-project-info>-->
 
         <chart-alert-list :ref="'editChart'+item.id"
                           :panel-id="filter.panelId"
@@ -160,7 +168,8 @@
   import chartTable from './chart-table';
   import chartUrl from './chart-url';
   import chartSingleStat from './chart-single-stat';
-  import chartAssetInfo from './chart-asset-info'
+  import chartAssetInfo from './chart-asset-info';
+  import chartDetail from './chart-detail';
   import chartEndpointInfo from './chart-endpoint-info'
   import chartAlertRuleInfo from './chart-alert-rule-info'
   import chartProjectInfo from './chart-project-info'
@@ -178,6 +187,7 @@
     components: {
       chartAlertList,
       chartAssetInfo,
+      chartDetail,
       chartProjectInfo,
       lineChartBlock,
       chartTable,
@@ -351,10 +361,6 @@
         chartTitle.style.background = '#d8dce1';
 
       },
-      choose(event){
-        console.log('choose', event);
-        let chartTitle = event.item.querySelector('.chartTitle');
-      },
       clone(event){
         //console.log('clone',event );
         let canvas = event.item.querySelector('canvas');
@@ -374,18 +380,6 @@
             ctxClone.drawImage(image,0,0);
           }
         }
-      },
-      add(event){
-        console.log('add',event );
-      },
-      update(event){
-        console.log('update',event );
-      },
-      remove(event){
-        console.log('remove',event );
-      },
-      sort(event){
-        console.log('sort',event );
       },
       dragPosition:function(e){
         console.log('===',e.clientY,e.clientX);
@@ -442,13 +436,6 @@
         this.currentRecordNum = 0;
       },
       cleanData(){
-        /*if (this.dataList.length > 0 ) {
-          this.dataList.forEach((item) => {
-            if (this.$refs['editChart'+item.id] && this.$refs['editChart'+item.id].length > 0) {
-              this.$refs['editChart'+item.id][0].clearData();
-            }
-          });
-        }*/
         this.dataList = [];
         this.chartDataCacheGroup.clear();
       },
@@ -549,7 +536,6 @@
       },
       // 获取panel详情数据,获取panel下所有chart列表
       getData(params) {
-        //param   目前没有用
         const param = {
           panelId: params.panelId,
           query: params.query,
@@ -567,7 +553,10 @@
             type: "alertRuleInfo",
             prev: 0,
             next: -9,
-            buildIn: 1
+            buildIn: 1,
+            draggable: false,
+            resizable: false,
+            editable: false,
           });
           this.dataList.push({
             id: -9,
@@ -610,7 +599,10 @@
             buildIn: 1,
             elements: [{
               expression: `up{endpoint="${this.additionalInfo.id}"}`
-            }]
+            }],
+            draggable: false,
+            resizable: false,
+            editable: false,
           });
           this.dataList.push({
             id: -9,
@@ -621,7 +613,10 @@
             type: "assetInfo",
             prev: -10,
             next: -8,
-            buildIn: 1
+            buildIn: 1,
+            draggable: false,
+            resizable: false,
+            editable: false,
           });
           this.dataList.push({
             id: -8,
@@ -643,6 +638,7 @@
           });
           return;
         }
+
         if (!param.query) delete param.query;
         //根据panelId获得panel下的所有图表
         this.$get('panel/'+ params.panelId+'/charts').then(response => {
@@ -675,6 +671,17 @@
               if (this.dataList.length > 0 ) {
                 this.dataList.forEach((item,index) => {
                   this.setChartSize(item, index);//设置该图表宽度
+                  if (param.from == "asset") {
+                    if (item.type == "assetInfo") {
+                      this.$set(item, "draggable", true);
+                      this.$set(item, "resizable", true);
+                    }
+                  } else if (param.from == "project") {
+                    if (item.type == "projectInfo") {
+                      this.$set(item, "draggable", true);
+                      this.$set(item, "resizable", true);
+                    }
+                  }
                   if(!item.isLoaded){
                     //获得当前显示在浏览器的图表，从后台获取数据
                     let chartBox = document.getElementById('chart-' + item.id);
@@ -914,7 +921,7 @@
                             dpsArr = Object.entries(queryItem.values);//[ ["0",[1577959830.781,"0"]], ["1",[1577959845.781,"0"]] ]
                             dpsArr = dpsArr.map(item => {
                               return [item[0], [item[1][0], Number(item[1][1])]]
-                            })
+                            });
                             // 判断是否有数据, && tagsArr.length > 0
                             if (dpsArr.length > 0 && this.$refs['editChart' + chartItem.id] && this.$refs['editChart' + chartItem.id].length > 0) {
                               tagsArr.forEach((tag, i) => {
@@ -1173,18 +1180,6 @@
               return [dpsItem[0] * 1000, dpsItem[1]];
             });
             series.push(seriesItem.theData);
-
-          } else if (chartInfo.elements && chartInfo.elements[0]) {
-            // 无数据提示
-            /*
-          const currentInfo = chartItem.elements[innerPos];
-          const errorMsg = `图表 ${chartItem.title} 中 ${currentInfo.metric},${currentInfo.tags} 无数据`;
-          this.$message.warning({
-            duration: 15,
-            content: errorMsg,
-            closable: true,
-          });
-          */
           }
         }
         if (this.$refs['editChart' + chartInfo.id] && this.$refs['editChart' + chartInfo.id].length > 0) {
@@ -1232,90 +1227,71 @@
         }
       },
       getEndpointInfoChartData(chartInfo) {
+        let vm = this;
+        let detail = [];
+        chartInfo.title = this.$t("project.chart.endpointInfo");
+        detail.push({title: this.$t("project.chart.basicTitle"), data: function() {
+          let data = {};
+          vm.detail.forEach(item => {
+            data[item.label] = item.value;
+          });
+          data[vm.$t("alert.list.state")] = "";
+          return data;
+        }()});
         let endpointId = this.additionalInfo.id;
         let alertMsg = new Promise((resolve, reject) => {
-          this.$get('/alert/message?endpointId='+endpointId).then(response=>{
-            if(response.code == 200){
-              resolve(response.data);
-            } else {
-              reject(false);
+          this.$get('/alert/message?endpointId=' + endpointId).then(response => {
+            if (response.code == 200) {
+              let alerts = {};
+              response.data && function () {
+                response.data.list.forEach(item => {
+                  let alertName = item.alertRule.alertName;
+                  let hasAlert = false;
+                  for (let alert in alerts) {
+                    if (alertName == alert) {
+                      hasAlert = true;
+                    }
+                  }
+                  if (hasAlert) {
+                    alerts[alertName]++;
+                  } else {
+                    alerts[alertName] = 1;
+                  }
+                });
+              }();
+              detail.push({title: this.$t("overall.alert"), data: alerts});
+              resolve(true);
             }
           });
         });
-        /*let endpointState = new Promise((resolve, reject) => {
-          let query = `up{endpoint="${endpointId}"}`;
-          this.$get('/prom/api/v1/query_range?query=' + query + "&start=" + this.$stringTimeParseToUnix(this.filter.start_time) + "&end=" + this.$stringTimeParseToUnix(this.filter.end_time) + '&step=' + bus.getStep(this.filter.start_time, this.filter.end_time)).then(response=>{
-            if(response.status == "success"){
-              resolve(response.data);
-            } else {
-              reject(false);
-            }
-          });
-        });*/
-        Promise.all([alertMsg]).then(result => {
-          //endpointInfo的告警信息
-          let alerts = [];
-          let data = result[0];
-          if (data.list) {
-            data.list.forEach(item => {
-              let index = -1;
-              let hasLabel = alerts.some((alert, i) => {
-                if (alert.label == item.alertRule.alertName) {
-                  index = i;
-                }
-                return alert.label == item.alertRule.alertName;
-              });
-              if (hasLabel) {
-                alerts[index].value++;
-              } else {
-                alerts.push({label: item.alertRule.alertName, value: 1});
-              }
-            });
-          }
-          this.$refs['editChart'+chartInfo.id][0].setData(chartInfo, this.detail, alerts);
-          //endpointInfo的state
-          /*data = result[1];
-          let state = [];
-          if (data.result && data.result[0] && data.result[0].values) {
-            state = data.result[0].values;
-          }
-
-          this.$refs['editChart'+chartInfo.id][0].setData(chartInfo, this.detail, alerts, state);*/
+        alertMsg.then(result => {
+          this.$refs['editChart'+chartInfo.id][0].setData(chartInfo, detail);
         }, err => {
 
         });
-        /*req.then(data => {
-          let alerts = [];
-          if (data && data.list) {
-            data.list.forEach(item => {
-              let index = -1;
-              let hasLabel = alerts.some((alert, i) => {
-                if (alert.label == item.alertRule.alertName) {
-                  index = i;
-                }
-                return alert.label == item.alertRule.alertName;
-              });
-              if (hasLabel) {
-                alerts[index].value++;
-              } else {
-                alerts.push({label: item.alertRule.alertName, value: 1});
-              }
-            });
-          }
-          this.$refs['editChart'+chartInfo.id][0].setData(chartInfo, this.detail, alerts);
-        });*/
       },
       getAssetInfoChartData(chartInfo){
+        let vm = this;
+        chartInfo.title = this.$t("asset.createAssetTab.assetInfo");
+        let detail = [];
         if(!this.isModel){
-          this.$refs['editChart'+chartInfo.id][0].showLoad(chartInfo);
+          this.$refs['editChart'+chartInfo.id][0].showLoad();
           let assetId = this.additionalInfo.assetId ? this.additionalInfo.assetId : this.additionalInfo.id;
           this.$get('/asset/info?id=' + assetId).then(response=>{
             if(response.code == 200){
-              this.$refs['editChart'+chartInfo.id][0].setData(chartInfo, response.data, this.filter.panelId, this.filter);
-            }else{
-              this.$refs['editChart'+chartInfo.id][0].setData(chartInfo, {}, this.filter.panelId, this.filter, response.msg);
+              response.data && function() {
+                response.data.Basic && detail.push({
+                  title: vm.$t('asset.createAssetTab.basicTitle'),
+                  data: response.data.Basic
+                });
+                response.data.Feature && detail.push({
+                  title: vm.$t('asset.createAssetTab.featureTitle'),
+                  data: response.data.Feature
+                });
+              }();
             }
-          })
+            this.$refs['editChart'+chartInfo.id][0].setData(chartInfo, detail, this.filter.panelId, this.filter);
+          });
         }else {
           let data={
             Basic:{
@@ -1353,62 +1329,112 @@
         }
       },
       getProjectInfoChartData(chartInfo){
+        let vm = this;
+        let detail = [];
         if(!this.isModel){
           this.$refs['editChart'+chartInfo.id][0].showLoad(chartInfo);
           this.$get('/project/info?id='+this.additionalInfo.id).then(response=>{
             if(response.code == 200){
-              this.$refs['editChart'+chartInfo.id][0].setData(chartInfo, response.data, this.filter.panelId, this.filter);
-            }else{
-              this.$refs['editChart'+chartInfo.id][0].setData(chartInfo, {}, this.filter.panelId, this.filter, response.msg);
+              response.data && function() {
+                response.data.basic && detail.push({
+                  title: vm.$t('project.chart.basicTitle'),
+                  data: response.data.basic
+                });
+                response.data.module && function() {
+                  response.data.module.forEach(d => {
+                    detail.push({
+                      title: `${vm.$t('project.module.module')}：${d.name}`,
+                      data: d
+                    });
+                  });
+                }();
+              }();
             }
+            this.$refs['editChart'+chartInfo.id][0].setData(chartInfo, detail, this.filter.panelId, this.filter, response.msg);
           })
         }else {
-          let data={
-            basic: {
+          detail.push({
+            title: "system",
+            data: {
               id: 1,
               name: "system",
               remark: "描述信息",
               alertStat: [1,2,3],
-            },
-            module: [
-              {
-                id: 1,
-                name: "kafka",
-                type: "http",
-                remark: "描述信息",
-                endpointStat: [3,23],
-                alertStat: [2,3,4],
-              },
-              {
-                id: 2,
-                name: "kafkakafkakafkakafkakafkakafkakafka",
-                type: "http",
-                remark: "描述信息",
-                endpointStat: [3,23],
-                alertStat: [2,0,4],
-              },
-              {
-                id: 3,
-                name: "kafkakafka",
-                type: "snmp",
-                remark: "描述信息",
-                endpointStat: [3,0],
-                alertStat: [2,3,4],
-              },
-            ]
-          };
-          this.$refs['editChart'+chartInfo.id][0].setData(chartInfo, data, this.filter.panelId, this.filter);
+            }
+          });
+          detail.push({
+            title: `${this.$t("project.module.module")}：kafka`,
+            data: {
+              id: 1,
+              name: "kafka",
+              type: "http",
+              remark: "描述信息",
+              endpointStat: [3,23],
+              alertStat: [2,3,4],
+            }
+          });
+          detail.push({
+            title: `${this.$t("project.module.module")}：kafkakafkakafkakafkakafkakafkakafka`,
+            data: {
+              id: 2,
+              name: "kafkakafkakafkakafkakafkakafkakafka",
+              type: "http",
+              remark: "描述信息",
+              endpointStat: [3,23],
+              alertStat: [2,0,4],
+            }
+          });
+          detail.push({
+            title: `${this.$t("project.module.module")}：kafkakafka`,
+            data: {
+              id: 3,
+              name: "kafkakafka",
+              type: "snmp",
+              remark: "描述信息",
+              endpointStat: [3,0],
+              alertStat: [2,3,4],
+            }
+          });
+          this.$refs['editChart'+chartInfo.id][0].setData(chartInfo, detail, this.filter.panelId, this.filter);
         }
       },
       getAlertListChartData:function(chartInfo,filterType){
         this.$refs['editChart'+chartInfo.id][0].getAlertList(filterType);
       },
       getAlertRuleChartData(chartInfo) {
-        this.$get("alert/rule/stat?id=" + this.additionalInfo.id).then(response => {
-          if (response.code === 200) {
-            this.$refs['editChart'+chartInfo.id][0].setData(chartInfo, response.data);
-          }
+        let vm = this;
+        let detail = [];
+        let req = new Promise((resolve, reject) => {
+          this.$get("alert/rule/stat?id=" + this.additionalInfo.id).then(response => {
+            if (response.code == 200) {
+              response.data && function () {
+                for (let type in response.data) {
+                  if (type == "project" && response.data.project.length > 0) {
+                    detail.push({title: vm.$t("project.project.project"), data: convert(response.data.project)});
+                  } else if (type == "module" && response.data.module.length > 0) {
+                    detail.push({title: vm.$t("project.module.module"), data: convert(response.data.module)});
+                  } else if (type == "asset" && response.data.asset.length > 0) {
+                    detail.push({title: vm.$t("asset.asset"), data: convert(response.data.asset)});
+                  } else if (type == "endpoint" && response.data.endpoint.length > 0) {
+                    detail.push({title: vm.$t("project.endpoint.endpoint"), data: convert(response.data.endpoint)});
+                  }
+                }
+              }();
+              resolve(true);
+            }
+          });
         });
+        req.then(result => {
+          this.$refs['editChart'+chartInfo.id][0].setData(chartInfo, detail);
+        }, err => {});
+
+        function convert(d) {
+          let data = {};
+          d.forEach(item => {
+            data[item.name] = item.nums;
+          });
+          return data;
+        }
       },
 
       // 设置图表的尺寸
@@ -1552,7 +1578,7 @@
           //1.元素距离页面顶部的距离
           var mainOffsetTop = ele.offsetTop;//offsetTop: 当前元素顶部距离最近父元素顶部的距离,和有没有滚动条没有关系。单位px，只读元素。
           //2.元素的高度
-          var mainHeight = itemHeight//ele.offsetHeight;//itemHeight;
+          var mainHeight = itemHeight;//ele.offsetHeight;//itemHeight;
           //3.页面滚动的距离
           var windowScrollTop = scrollTop;//document.documentElement.scrollTop || document.body.scrollTop;
           //4.浏览器可见区域的高度
@@ -1575,7 +1601,7 @@
             let chartType = item.type;
             item.isLoaded = true;
             if(chartType!=='url'){
-              that.getChartDataForSearch(item,index);
+              that.getChartDataForSearch(item, index);
             } else {
               that.$refs['editChart'+item.id][0].showLoad(item);
             }

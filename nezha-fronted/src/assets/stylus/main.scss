@@ -902,15 +902,19 @@ li{
   }
   25%{
     opacity: 0;
-    max-height: 125px;
+    max-height: 100px;
   }
   50%{
     opacity: 0;
-    max-height: 250px;
+    max-height: 200px;
   }
-  75%{
-    opacity: 0.4;
-    max-height: 375px;
+  66%{
+    opacity: 0.2;
+    max-height: 300px;
+  }
+  83%{
+    opacity: 0.5;
+    max-height: 400px;
   }
   100% {
     visibility: visible;
@@ -924,18 +928,21 @@ li{
     max-height: 500px;
     visibility: visible;
   }
-  25%{
-
-    opacity: 0.4;
-    max-height: 375px;
+  16% {
+    opacity: 0.5;
+    max-height: 400px;
+  }
+  33%{
+    opacity: 0.2;
+    max-height: 300px;
   }
   50%{
     opacity: 0;
-    max-height: 250px;
+    max-height: 200px;
   }
   75%{
     opacity: 0;
-    max-height: 125px;
+    max-height: 100px;
   }
   100% {
     visibility: hidden;
