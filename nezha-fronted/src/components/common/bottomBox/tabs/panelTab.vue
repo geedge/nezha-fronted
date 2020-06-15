@@ -83,7 +83,7 @@
       from: String,
       obj: Object,
       draggable: {type: Boolean, default: true},
-      detail: Array
+      detail: Object
     },
     data() {
       return {

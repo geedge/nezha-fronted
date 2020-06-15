@@ -502,10 +502,14 @@
         this.viewAsset = false;
       },
       convertToDetail(obj) {
-        let detail = [];
-        detail.push({label: "ID", value: obj.id});
+        let detail = {
+          id: obj.id,
+          alertName: obj.alertName,
+          expr: obj.expr
+        };
+        /*detail.push({label: "ID", value: obj.id});
         detail.push({label: this.$t("alert.alertName"), value: obj.alertName});
-        detail.push({label: this.$t("alert.config.expr"), value: obj.expr});
+        detail.push({label: this.$t("alert.config.expr"), value: obj.expr});*/
         let type = "";
         for (let i = 0; i < this.typeData.length; i++) {
           if (obj.type == this.typeData[i].key) {
@@ -513,21 +517,27 @@
             break;
           }
         }
-        detail.push({label: this.$t("alert.list.type"), value: type});
+        detail.type = type;
+        //detail.push({label: this.$t("alert.list.type"), value: type});
         let link = "";
         if (obj.type == 1 || obj.type == 2) {
           link = obj.linkObject.name;
         } else if (obj.type == 3) {
           link = obj.linkObject.host;
         }
-        detail.push({label: this.$t("alert.config.link"), value: link});
-        detail.push({label: this.$t("alert.config.for"), value: obj.last});
+        detail.link = link;
+        detail.last = obj.last;
+        /*detail.push({label: this.$t("alert.config.link"), value: link});
+        detail.push({label: this.$t("alert.config.for"), value: obj.last});*/
         let severity = this.severityData.filter((item, index) => {
           return obj.severity == item.key;
         })[0].value;
-        detail.push({label: this.$t("alert.severity"), value: severity});
+        detail.severity = severity;
+        detail.alertNum = obj.alertNum;
+        detail.description = obj.description;
+        /*detail.push({label: this.$t("alert.severity"), value: severity});
         detail.push({label: this.$t("alert.description"), value: obj.description});
-        detail.push({label: this.$t("alert.message"), value: obj.alertNum});
+        detail.push({label: this.$t("alert.message"), value: obj.alertNum});*/
         return detail;
       },
     },

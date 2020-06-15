@@ -101,13 +101,6 @@
                      :chart-data="item"
                      :chart-index="index"></chart-url>
 
-        <!--<chart-asset-info v-if="item.type === 'assetInfo'" :ref="'editChart'+item.id" :key="'inner' + item.id"
-                    @on-drag-chart="editChartForDrag"
-                    :panel-id="filter.panelId"
-                    :chart-index="index"
-                    :chart-data="item"
-                    :editChartId="'editChartId' + item.id"
-        ></chart-asset-info>-->
         <chart-detail v-if="item.type === 'assetInfo' || item.type == 'projectInfo' || item.type == 'endpointInfo' || item.type == 'alertRuleInfo'" :ref="'editChart'+item.id" :key="'inner' + item.id"
                           :panel-id="filter.panelId"
                           :chart-index="index"
@@ -115,32 +108,6 @@
                           :chart-data="item"
                           :editChartId="'editChartId' + item.id"
         ></chart-detail>
-
-        <!--<chart-endpoint-info v-if="item.type === 'endpointInfo'" :ref="'editChart'+item.id" :key="'inner' + item.id"
-                    @on-drag-chart="editChartForDrag"
-                    :panel-id="filter.panelId"
-                    :chart-index="index"
-                    :chart-data="item"
-                    :detail="detail"
-                    :editChartId="'editChartId' + item.id"
-        ></chart-endpoint-info>-->
-
-        <!--<chart-alert-rule-info v-if="item.type === 'alertRuleInfo'" :ref="'editChart'+item.id" :key="'inner' + item.id"
-                    @on-drag-chart="editChartForDrag"
-                    :panel-id="filter.panelId"
-                    :chart-index="index"
-                    :chart-data="item"
-                    :detail="detail"
-                    :editChartId="'editChartId' + item.id"
-        ></chart-alert-rule-info>-->
-
-        <!--<chart-project-info v-if="item.type  === 'projectInfo'" :ref="'editChart'+item.id" :key="'inner' + item.id"
-                    @on-drag-chart="editChartForDrag"
-                    :panel-id="filter.panelId"
-                    :chart-index="index"
-                    :chart-data="item"
-                    :editChartId="'editChartId' + item.id"
-        ></chart-project-info>-->
 
         <chart-alert-list :ref="'editChart'+item.id"
                           :panel-id="filter.panelId"
@@ -182,7 +149,7 @@
       isModel: {type: Boolean, default: false},
       additionalInfo:{},
       draggable: {type: Boolean, default: true},
-      detail: Array
+      detail: Object
     },
     components: {
       chartAlertList,
@@ -1234,14 +1201,8 @@
         let detail = [];
         this.$refs['editChart'+chartInfo.id][0].showLoad();
         chartInfo.title = this.$t("project.chart.endpointInfo");
-        detail.push({title: this.$t("project.chart.basicTitle"), data: function() {
-          let data = {};
-          vm.detail.forEach(item => {
-            data[item.label] = item.value;
-          });
-          data[vm.$t("alert.list.state")] = "";
-          return data;
-        }()});
+        this.$set(this.detail, "state", "");
+        detail.push({title: this.$t("project.chart.basicTitle"), data: this.detail});
         let endpointId = this.additionalInfo.id;
         let alertMsg = new Promise((resolve, reject) => {
           this.$get('/alert/message?endpointId=' + endpointId).then(response => {
@@ -1269,6 +1230,7 @@
           });
         });
         alertMsg.then(result => {
+          console.info(detail);
           this.$refs['editChart'+chartInfo.id][0].setData(chartInfo, detail);
         }, err => {
 
@@ -1399,6 +1361,7 @@
         }
       },
       getAlertListChartData:function(chartInfo,filterType){
+        this.$set(chartInfo, "param", {endpointId: this.additionalInfo.id});
         this.$refs['editChart'+chartInfo.id][0].getAlertList(filterType);
       },
       getAlertRuleChartData(chartInfo) {

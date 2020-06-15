@@ -654,14 +654,22 @@
         }
       },
       convertToDetail(obj) {
-        let detail = [];
-        detail.push({label: this.$t('project.project.project'), value: obj.project.name});
+        let detail = {
+          project: obj.project.name,
+          module: obj.module.name,
+          asset: obj.asset.host,
+          host: obj.host,
+          port: obj.port,
+          path: obj.path,
+          param: obj.param
+        };
+        /*detail.push({label: this.$t('project.project.project'), value: obj.project.name});
         detail.push({label: this.$t("project.module.module"), value: obj.module.name});
         detail.push({label: this.$t("asset.asset"), value: obj.asset.host});
         detail.push({label: this.$t("project.endpoint.host"), value: obj.host});
         detail.push({label: this.$t("project.endpoint.port"), value: obj.port});
         detail.push({label: this.$t("project.endpoint.path"), value: obj.path});
-        detail.push({label: this.$t("project.endpoint.param"), value: obj.param});
+        detail.push({label: this.$t("project.endpoint.param"), value: obj.param});*/
         return detail;
       },
       formatUpdateTime:function(date){

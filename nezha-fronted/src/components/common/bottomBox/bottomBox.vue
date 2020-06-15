@@ -72,7 +72,7 @@
       from: String, //来自哪个页面
       tabList: Array, //动态页签列表
       targetTab: String, //展示哪个页签
-      detail: Array, //对象详情内容
+      detail: Object, //对象详情内容
       detailList: Array, //多个对象详情内容
 
       assetDetail: Array, //endpoint页的asset详情

@@ -699,13 +699,14 @@ export default {
           pageSize:this.pageObj.pageSize,
           pageNo:this.pageObj.pageNo,
         }
-        let chart=null;
+        let chart;
         if(chartInfo){
           chart=Object.assign({},chartInfo)
         }else{
           chart=Object.assign({},this.chartInfo)
         }
-        if(chart&&chart.param){ //按照粒度，project>module>endpoint  查询只传最细粒度
+        console.info(chart)
+        if(chart && chart.param){ //按照粒度，project>module>endpoint  查询只传最细粒度
           let param=chart.param;
           if(param.endpointId&&param.endpointId != ''){
             queryParam.endpointId=param.endpointId;
@@ -729,7 +730,7 @@ export default {
             queryParam.state=param.state;
           }
         }
-
+        console.info(queryParam)
         this.startLoading(filterType);
         this.$get('/alert/message', queryParam).then(response => {
           if (response.code == 200) {
