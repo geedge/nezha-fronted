@@ -562,7 +562,7 @@
             id: -9,
             panelId: 0,
             title: this.$t("alert.config.chart.alertNumTrend"),
-            span: 4,
+            span: 8,
             height: 350,
             type: "line",
             prev: -10,
@@ -576,6 +576,7 @@
           });
           this.$nextTick(() => {
             this.dataList.forEach((item,index) => {
+              this.$set(item, "from", params.from);
               this.setChartSize(item, index);//设置该图表宽度
               let chartBox = document.getElementById('chart-' + item.id);
               this.handleElementInViewport(chartBox, 0, item, index);
@@ -631,6 +632,7 @@
           });
           this.$nextTick(() => {
             this.dataList.forEach((item,index) => {
+              this.$set(item, "from", params.from);
               this.setChartSize(item, index);//设置该图表宽度
               let chartBox = document.getElementById('chart-' + item.id);
               this.handleElementInViewport(chartBox, 0, item, index);
@@ -671,6 +673,7 @@
               if (this.dataList.length > 0 ) {
                 this.dataList.forEach((item,index) => {
                   this.setChartSize(item, index);//设置该图表宽度
+                  this.$set(item, "from", params.from);
                   if (param.from == "asset") {
                     if (item.type == "assetInfo") {
                       this.$set(item, "draggable", true);
@@ -1229,6 +1232,7 @@
       getEndpointInfoChartData(chartInfo) {
         let vm = this;
         let detail = [];
+        this.$refs['editChart'+chartInfo.id][0].showLoad();
         chartInfo.title = this.$t("project.chart.endpointInfo");
         detail.push({title: this.$t("project.chart.basicTitle"), data: function() {
           let data = {};
@@ -1293,39 +1297,33 @@
             this.$refs['editChart'+chartInfo.id][0].setData(chartInfo, detail, this.filter.panelId, this.filter);
           });
         }else {
-          let data={
-            Basic:{
-              sn:'assetInfo Test',
-              host:'192.168.40.42',
-              host1:'192.168.40.42',
-              host2:'192.168.40.42',
-              host3:'192.168.40.42',
-              host4:'192.168.40.42',
-              host5:'192.168.40.42',
-              host6:'192.168.40.42',
-              host7:'192.168.40.42',
-              host8:'192.168.40.42',
-              host9:'192.168.40.42',
-              host10:'192.168.40.42',
-              pingStatus:1,
-              pingRtt:80,
-              cpuNum:'8',
-              memery:'12GB',
-              memery$_$free:'3GB'
-            },
-            Feature:{
-              CPU:"Intel E500",
-              Memory:"256GB",
-              NetworkInterface:["eth0","eth1"],
-              Disk:[{
-                mount:"/",
-                total:"256GB",
-                free:"128GB",
-                usageRate:"50%"
+          detail.push({
+            title: vm.$t('asset.createAssetTab.basicTitle'),
+            data: {
+              sn: 'assetInfo Test',
+              host: '192.168.40.42',
+              pingStatus: 1,
+              pingRtt: 80,
+              cpuNum: '8',
+              memery: '12GB',
+              memery$_$free: '3GB'
+            }
+          });
+          detail.push({
+            title: vm.$t('asset.createAssetTab.featureTitle'),
+            data: {
+              CPU: "Intel E500",
+              Memory: "256GB",
+              NetworkInterface: ["eth0", "eth1"],
+              Disk: [{
+                mount: "/",
+                total: "256GB",
+                free: "128GB",
+                usageRate: "50%"
               }]
             }
-          }
-          this.$refs['editChart'+chartInfo.id][0].setData(chartInfo, data, this.filter.panelId, this.filter);
+          });
+          this.$refs['editChart'+chartInfo.id][0].setData(chartInfo, detail, this.filter.panelId, this.filter);
         }
       },
       getProjectInfoChartData(chartInfo){
@@ -1338,13 +1336,15 @@
               response.data && function() {
                 response.data.basic && detail.push({
                   title: vm.$t('project.chart.basicTitle'),
-                  data: response.data.basic
+                  data: response.data.basic,
+                  type: "project"
                 });
                 response.data.module && function() {
                   response.data.module.forEach(d => {
                     detail.push({
                       title: `${vm.$t('project.module.module')}：${d.name}`,
-                      data: d
+                      data: d,
+                      type: "module"
                     });
                   });
                 }();
@@ -1408,16 +1408,17 @@
           this.$get("alert/rule/stat?id=" + this.additionalInfo.id).then(response => {
             if (response.code == 200) {
               response.data && function () {
-                for (let type in response.data) {
-                  if (type == "project" && response.data.project.length > 0) {
-                    detail.push({title: vm.$t("project.project.project"), data: convert(response.data.project)});
-                  } else if (type == "module" && response.data.module.length > 0) {
-                    detail.push({title: vm.$t("project.module.module"), data: convert(response.data.module)});
-                  } else if (type == "asset" && response.data.asset.length > 0) {
-                    detail.push({title: vm.$t("asset.asset"), data: convert(response.data.asset)});
-                  } else if (type == "endpoint" && response.data.endpoint.length > 0) {
-                    detail.push({title: vm.$t("project.endpoint.endpoint"), data: convert(response.data.endpoint)});
-                  }
+                if (response.data.project && response.data.project.length > 0) {
+                  detail.push({title: vm.$t("project.project.project"), data: convert(response.data.project)});
+                }
+                if (response.data.module && response.data.module.length > 0) {
+                  detail.push({title: vm.$t("project.module.module"), data: convert(response.data.module)});
+                }
+                if (response.data.endpoint && response.data.endpoint.length > 0) {
+                  detail.push({title: vm.$t("project.endpoint.endpoint"), data: convert(response.data.endpoint)});
+                }
+                if (response.data.asset && response.data.asset.length > 0) {
+                  detail.push({title: vm.$t("asset.asset"), data: convert(response.data.asset)});
                 }
               }();
               resolve(true);

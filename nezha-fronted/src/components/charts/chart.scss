@@ -171,6 +171,18 @@
   .pagination {
     padding-top: 0;
   }
+  .success {
+    background-color: #50d050;
+    color: white;
+    padding: 2px 5px;
+    border-radius: 4px;
+  }
+  .danger {
+    background-color: #d64f40;
+    color: white;
+    padding:2px 5px;
+    border-radius: 4px;
+  }
   .chart-table, .chart-alert-info {
     width: 100%;
     .table-container {
