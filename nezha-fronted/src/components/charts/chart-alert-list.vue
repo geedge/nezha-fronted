@@ -7,7 +7,7 @@
     <div class="resize-box resize-box-alert" ref="resizeBox">
       <div class="chart-alert-info" :id="'chartTableDiv'+chartIndex" @mouseenter="caretShow=true" @mouseleave="caretShow=false">
         <loading :ref="'localLoading'+chartIndex"></loading>
-        <div class="clearfix chartTitle" :class="{'dragTitle':dragTitleShow}" :id="'chartTitle'+chartIndex" v-show="!isPreview">
+        <div class="clearfix chartTitle" :class="{'dragTitle':dragTitleShow, 'drag-disabled': !data.draggable}" :id="'chartTitle'+chartIndex" v-show="!isPreview">
           <el-popover
             v-if="isError"
             :close-delay=10
@@ -24,9 +24,9 @@
             <el-dropdown-menu style="display: none"></el-dropdown-menu>
             <span class="el-dropdown-link chart-title" @click="dropdownMenuShow=!dropdownMenuShow">
               <span class="chart-title-text">{{chartInfo.title}}</span>
-              <span class="chart-title-icon"><i class="el-icon-caret-bottom el-icon--right"  :class="{'visible':caretShow,'hidden':!caretShow}"></i></span>
+              <span class="chart-title-icon" v-if="data.editable"><i class="el-icon-caret-bottom el-icon--right"  :class="{'visible':caretShow,'hidden':!caretShow}"></i></span>
             </span>
-            <ul slot="dropdown" v-show="dropdownMenuShow"  :id="'dropdownUl'+chartIndex"  class="el-dropdown-menu nz-chart-dropdown"  style="position: absolute; top: 30px; left: calc(50% - 79px); transform-origin: center top; z-index: 1000;" >
+            <ul slot="dropdown" v-show="dropdownMenuShow" v-if="data.editable" :id="'dropdownUl'+chartIndex"  class="el-dropdown-menu nz-chart-dropdown"  style="position: absolute; top: 30px; left: calc(50% - 79px); transform-origin: center top; z-index: 1000;" >
               <li  @click="refreshChart"  class="el-dropdown-menu__item">
                 <i class="global-active-color el-icon-refresh-right" style="font-size: 16px;"></i><span>{{$t('dashboard.refresh')}}</span></li>
               <li  @click="editChart"  class="el-dropdown-menu__item">
@@ -275,7 +275,7 @@
           ref="elementset"
         ></element-set>
       </div>
-      <span class="vue-resizable-handle" @mousedown="startResize" v-if="!isPreview"></span>
+      <span class="vue-resizable-handle" @mousedown="startResize" v-if="!isPreview && data.resizable"></span>
     </div>
   </div>
 </template>

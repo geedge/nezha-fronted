@@ -537,7 +537,7 @@
             buildIn: 1,
             elements: [{
               id: '',
-              expression: `nz_alert_nums{id="${this.detail[0].value}"}`,
+              expression: `nz_alert_nums{id="${this.detail.id}"}`,
               type: ''
             }]
           });
@@ -595,7 +595,10 @@
             type: "alertList",
             prev: -9,
             next: -1,
-            buildIn: 1
+            buildIn: 1,
+            draggable: false,
+            resizable: false,
+            editable: false,
           });
           this.$nextTick(() => {
             this.dataList.forEach((item,index) => {
@@ -1248,10 +1251,12 @@
               response.data && function() {
                 response.data.Basic && detail.push({
                   title: vm.$t('asset.createAssetTab.basicTitle'),
+                  type: 'basic',
                   data: response.data.Basic
                 });
                 response.data.Feature && detail.push({
                   title: vm.$t('asset.createAssetTab.featureTitle'),
+                  type: 'feature',
                   data: response.data.Feature
                 });
               }();
@@ -1261,6 +1266,7 @@
         }else {
           detail.push({
             title: vm.$t('asset.createAssetTab.basicTitle'),
+            type: 'basic',
             data: {
               sn: 'assetInfo Test',
               host: '192.168.40.42',
@@ -1273,6 +1279,7 @@
           });
           detail.push({
             title: vm.$t('asset.createAssetTab.featureTitle'),
+            type: 'feature',
             data: {
               CPU: "Intel E500",
               Memory: "256GB",

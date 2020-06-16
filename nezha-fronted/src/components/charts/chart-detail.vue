@@ -5,7 +5,7 @@
   <div class="nz-chart-resize">
     <div class="resize-shadow" ref="resizeShadow"></div>
     <div class="resize-box" ref="resizeBox">
-      <div class="chart-container" :id="'chartContainerDiv' + chartIndex" @mouseenter="caretShow = true" @mouseleave="caretShow = false">
+      <div class="chart-container chart-detail" :id="'chartContainerDiv' + chartIndex" @mouseenter="caretShow = true" @mouseleave="caretShow = false">
         <loading :ref="'localLoading' + chartIndex"></loading>
         <div class="clearfix chart-title" :class="{'drag-disabled': !data.draggable}" :id="'chartTitle' + chartIndex">
           <el-popover
@@ -32,21 +32,32 @@
               <div class="chart-sub-content" :class="{'init-no-animation': index == 0, 'fold-500': show.indexOf(index) == -1, 'unfold-500': show.indexOf(index) > -1}">
                 <template v-for="(value, key, i) in item.data">
 
-                  <!-- endpoint-detail、asset的assetInfo的asset详情-->
-                  <div class="content-item" v-if="(data.from == 'endpoint' || data.from == 'asset') && data.type == 'assetInfo' && assetKey[key]">
+                  <!-- endpoint-detail、asset、model的assetInfo的asset详情-->
+                  <div class="content-item" v-if="(data.from == 'endpoint' || data.from == 'asset' || data.from == 'model') && data.type == 'assetInfo' && item.type == 'basic' && assetKey[key]">
                     <div class="content-item-key item-tip" :id="`key-${index}-${i}`">
                       <span>{{assetKey[key]}}</span>
                       <div class="item-tip-hide item-tip-key el-popover" :class="itemTip(`key-${index}`, key, i, ready)">{{assetKey[key]}}</div>
                     </div>
 
-                    <div class="content-item-value item-tip" :id="`value-${index}-${i}`" :class="{'content-item-value-muti': Array.isArray(value) && value.length > 0}">
+                    <div class="content-item-value item-tip" :id="`value-${index}-${i}`">
                       <span v-if="key == 'state'">{{value == 1 ? $t('asset.createAssetTab.inStock') : $t('asset.createAssetTab.outStock')}}</span>
                       <span v-else-if="key == 'alert'" class="as-button" :class="{'success': value <= 0, 'danger': value > 0}">{{value + ' ' + $t('overall.active')}}</span>
                       <template v-else-if="key == 'pingRtt'">
                         <div class="active-icon" :class="{'green': item.data.pingStatus == 1, 'red': item.data.pingStatus == 1 != 1}"></div>
                         <span>{{value ? value + 'ms' : ''}}</span>
                       </template>
-                      <template v-else-if="Array.isArray(value) && value.length>0">
+                      <span v-else-if="assetKey[key]">{{value ? value : "&nbsp;"}}</span>
+                    </div>
+                  </div>
+                  <!-- endpoint-detail、asset、model的assetInfo的feature-->
+                  <div class="content-item" v-if="(data.from == 'endpoint' || data.from == 'asset' || data.from == 'model') && data.type == 'assetInfo' && item.type == 'feature'">
+                    <div class="content-item-key item-tip" :id="`key-${index}-${i}`">
+                      <span>{{key}}</span>
+                      <div class="item-tip-hide item-tip-key el-popover" :class="itemTip(`key-${index}`, key, i, ready)">{{key}}</div>
+                    </div>
+
+                    <div class="content-item-value item-tip" :id="`value-${index}-${i}`" :class="{'content-item-value-muti': Array.isArray(value) && value.length > 0}">
+                      <template v-if="Array.isArray(value) && value.length>0">
                         <div v-if="typeof value[0] == 'string'" class="item-value-sub" v-for="(_item, _index) in value" :key="_index">{{_item}}</div>
                         <el-table
                           v-else
@@ -72,7 +83,7 @@
                           </el-table-column>
                         </el-table>
                       </template>
-                      <span v-else-if="assetKey[key]">{{value ? value : "&nbsp;"}}</span>
+                      <span v-else-if="key">{{value ? value : "&nbsp;"}}</span>
                     </div>
                   </div>
 
@@ -132,6 +143,17 @@
                   </div>
                   <!-- endpoint-detail的endpointInfo的alert详情-->
                   <div class="content-item" v-else-if="data.from == 'endpoint' && data.type == 'endpointInfo' && item.title == $t('overall.alert')">
+                    <div class="content-item-key item-tip" :id="`key-${index}-${i}`">
+                      <span>{{key}}</span>
+                      <div class="item-tip-hide item-tip-key el-popover" :class="itemTip(`key-${index}`, key, i, ready)">{{key}}</div>
+                    </div>
+                    <div class="content-item-value item-tip" :id="`value-${index}-${i}`">
+                      <span>{{value ? value : "&nbsp;"}}</span>
+                    </div>
+                  </div>
+
+                  <!-- alertRule-detail的详情-->
+                  <div class="content-item" v-else-if="data.from == 'alertRule' && data.type == 'alertRuleInfo'">
                     <div class="content-item-key item-tip" :id="`key-${index}-${i}`">
                       <span>{{key}}</span>
                       <div class="item-tip-hide item-tip-key el-popover" :class="itemTip(`key-${index}`, key, i, ready)">{{key}}</div>
@@ -346,6 +368,7 @@
       // 设置数据, filter区分
       setData(chartItem, detail, panelId, filter, area, errorMsg) {
         //this.resize(chartItem);
+        console.info(chartItem, detail)
         if(errorMsg && errorMsg !== ''){
           this.isError = true;
           this.errorContent = errorMsg;
