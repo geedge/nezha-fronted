@@ -135,11 +135,7 @@
   import chartTable from './chart-table';
   import chartUrl from './chart-url';
   import chartSingleStat from './chart-single-stat';
-  import chartAssetInfo from './chart-asset-info';
   import chartDetail from './chart-detail';
-  import chartEndpointInfo from './chart-endpoint-info'
-  import chartAlertRuleInfo from './chart-alert-rule-info'
-  import chartProjectInfo from './chart-project-info'
   import draggable from 'vuedraggable'
   import chartDataFormat from "./chartDataFormat";
   import chartAlertList from './chart-alert-list'
@@ -153,16 +149,12 @@
     },
     components: {
       chartAlertList,
-      chartAssetInfo,
       chartDetail,
-      chartProjectInfo,
       lineChartBlock,
       chartTable,
       chartUrl,
       chartSingleStat,
-      chartAlertRuleInfo,
       draggable,
-      chartEndpointInfo
     },
     data() {
       return {
