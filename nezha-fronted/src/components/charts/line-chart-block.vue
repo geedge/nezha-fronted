@@ -655,6 +655,7 @@
             axisLine:{
               show:false
             },
+            minInterval: 1,
             axisTick: {
               show: false,
             },
@@ -1082,6 +1083,7 @@
           }
           let step = bus.getStep(startTime,endTime);
           if (type === 'list') { // 普通模式,主控台使用
+            console.info(this.data);
             axiosArr = this.data.elements.map((ele) => {
               const filterItem = ele;
               let query = encodeURIComponent(filterItem.expression);

@@ -494,6 +494,7 @@
         }
       },
       // 获取panel详情数据,获取panel下所有chart列表
+
       getData(params) {
         const param = {
           panelId: params.panelId,
@@ -526,6 +527,7 @@
             type: "line",
             prev: -10,
             next: -1,
+            unit: 1,
             buildIn: 1,
             elements: [{
               id: '',
@@ -533,6 +535,8 @@
               type: ''
             }]
           });
+          this.$set(this.filter, "start_time", bus.timeFormate(new Date().getTime()-24*60*60*1000, "yyyy-MM-dd hh:mm:ss"));
+          this.$set(this.filter, "end_time", bus.timeFormate(new Date().getTime(), "yyyy-MM-dd hh:mm:ss"));
           this.$nextTick(() => {
             this.dataList.forEach((item,index) => {
               this.$set(item, "from", params.from);
@@ -741,6 +745,10 @@
         const chartItem = chartInfo;
         const index = pos; // 指标
         if(chartItem.type === 'assetInfo'){
+          if (chartItem.from != 'endpoint') {
+            this.$set(chartItem, "draggable", true);
+            this.$set(chartItem, "resizable", true);
+          }
           this.getAssetInfoChartData(chartItem);
           return;
         }
@@ -1225,7 +1233,6 @@
           });
         });
         alertMsg.then(result => {
-          console.info(detail);
           this.$refs['editChart'+chartInfo.id][0].setData(chartInfo, detail);
         }, err => {
 

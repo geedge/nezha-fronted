@@ -705,7 +705,6 @@ export default {
         }else{
           chart=Object.assign({},this.chartInfo)
         }
-        console.info(chart)
         if(chart && chart.param){ //按照粒度，project>module>endpoint  查询只传最细粒度
           let param=chart.param;
           if(param.endpointId&&param.endpointId != ''){
@@ -730,7 +729,6 @@ export default {
             queryParam.state=param.state;
           }
         }
-        console.info(queryParam)
         this.startLoading(filterType);
         this.$get('/alert/message', queryParam).then(response => {
           if (response.code == 200) {

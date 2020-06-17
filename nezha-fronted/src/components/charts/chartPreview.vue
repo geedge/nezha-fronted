@@ -229,7 +229,7 @@
         if(chartType==='table'){
           this.tableShow = false;
           chartContainerId = 'chartTablePreview';
-        }else if (chartType === 'line' || chartType === 'bar' || chartType === 'stackArea' || chartType === 4 || chartType == "endpointInfo") {
+        }else if (chartType === 'line' || chartType === 'bar' || chartType === 'stackArea' || chartType === 4) {
           this.isGreyScreen=[];
           this.showLegend = false;
           chartContainerId = 'chartEchartPreview';
@@ -422,10 +422,13 @@
                             },
                             metric_name: '',
                           };
-                          if (chartItem.type === 'stackArea' || chartItem.type === "endpointInfo") {
+                          if (chartItem.type === 'stackArea') {
                             seriesItem.theData.type = 'line';
                             seriesItem.theData.stack = chartItem.title;
                             seriesItem.theData.areaStyle = {"opacity": 0.3};
+                          }
+                          if (chartItem.type === "endpointInfo") {
+                            seriesItem.theData.type = 'line';
                           }
                           // 图表中每条线的名字,后半部分
                           let host = '';//up,
@@ -475,7 +478,6 @@
                               return [dpsItem[0] * 1000, dpsItem[1]];
                             });
                             series.push(seriesItem.theData);
-                            console.info(seriesItem.theData)
 
                           } else if (chartItem.elements && chartItem.elements[innerPos]) {
                             // 无数据提示
@@ -506,7 +508,7 @@
                 //if(this.$refs.editChart&&this.$refs.editChart[index]) {
                   if (chartItem.type === 'table') {//表格
                       this.setTableData(tableData);
-                  } else if (chartItem.type === 'line' || chartItem.type === 'bar' || chartItem.type === 'stackArea' || chartItem.type === 4 || chartItem.type == "endpointInfo") {
+                  } else if (chartItem.type === 'line' || chartItem.type === 'bar' || chartItem.type === 'stackArea' || chartItem.type === 4 || chartItem.from == "endpoint") {
                     if (series.length && chartItem.type === 4) {//曲线汇总
                     }
                     if(series.length<1){
@@ -515,7 +517,7 @@
                       this.noData=false;
                     }
                     let _chartItem = JSON.parse(JSON.stringify(chartItem));
-                    if (chartItem.type == "endpointInfo") {
+                    if (chartItem.from == "endpoint") {
                       _chartItem.type = "line";
                     }
                     this.setData(_chartItem, series, legend);
@@ -745,7 +747,12 @@
                 str += `<div style="white-space:nowrap;overflow-x:hidden;text-overflow:ellipsis;display: flex; justify-content: space-between; min-width: 150px; max-width: 600px; line-height: 18px; font-size: 12px;">`;
                 str += `<div style="max-width: 500px;white-space:nowrap;overflow-x:hidden;text-overflow:ellipsis;"><span style='display:inline-block;margin-right:5px;border-radius:10px;width:15px;height:5px;background-color: ${color};}'></span>${tip?(tip.alias?tip.alias:tip.name):item.seriesName}  </div>`;
                 str += `<div style="padding-left: 10px;">`;
-                str += chartDataFormat.getUnit(chartInfo.unit?chartInfo.unit:2).compute(val,null,2);
+                str += function(){
+                  if (chartInfo.from == 'endpoint') {
+                    return val == 1 ? "up" : "down";
+                  }
+                  return chartDataFormat.getUnit(chartInfo.unit?chartInfo.unit:2).compute(val,null,2);
+                }();
                 str += `</div>`;
                 str += `</div>`;
 
@@ -878,6 +885,7 @@
           },
           yAxis: {
             type: 'value',
+            minInterval: 1,
             splitLine:{
               show:true
             },
@@ -891,6 +899,13 @@
             //去掉y轴--end
             axisLabel: {
               formatter: function(value,index){
+                if (self.chart.from == 'endpoint') {
+                  if (value == 1) {
+                    return "up";
+                  } else {
+                    return "down";
+                  }
+                }
                 let chartUnit=chartInfo.unit;
                 chartUnit=chartUnit?chartUnit:2;
                 let unit=chartDataFormat.getUnit(chartUnit);
@@ -902,7 +917,6 @@
           useUTC: false,//使用本地时间
           series: dataArg
         };
-
         if(this.echartModalStore){
           this.echartModalStore.clear();
         }
@@ -912,12 +926,12 @@
         if(legend){
           this.screenLegendList = [];
           legend.forEach((item, i) => {
-            const legend = {
+            let _legend = {
               name:item.name,
               alias:item.alias,
               showText:this.formatLegend(chartWidth,item.alias?item.alias:item.name)
             };
-            this.screenLegendList.push(legend);
+            this.screenLegendList.push(_legend);
             this.isGreyScreen.push(false);
           });
         }
@@ -1080,9 +1094,11 @@
           this.tableShow = false;
           this.$refs.loadingPreview.startLoading();
           this.getChartData();
-        } else if (chartType === 'line' || chartType === 'bar' || chartType === 'stackArea' || chartType === 4) {
+        } else if (chartType === 'line' || chartType === 'bar' || chartType === 'stackArea' || chartType === 4 || this.chart.from == 'endpoint') {
           this.echartModalStore.clear();
-          this.showLegend = false;
+          if (this.chart.from != 'endpoint') {
+            this.showLegend = false;
+          }
           this.$refs.loadingPreview.startLoading();
           this.getQueryChart();
         }else if (chartType === 'singleStat') {
@@ -1111,7 +1127,7 @@
             return  this.$get('/prom/api/v1/query_range?query='+query+"&start="+this.$stringTimeParseToUnix(startTime)+"&end="+this.$stringTimeParseToUnix(endTime)+'&step='+step);
           });
           // 一个图表
-          axios.all(axiosArr).then((res) => {
+          axios.all(axiosArr).then(res => {
             if (res.length > 0) {
               const series = [];
               const legend = [];
@@ -1121,7 +1137,7 @@
                 visible: true,
                 threshold: null,
               };
-              if(!this.chart.type){
+              if(!this.chart.type || this.chart.from == 'endpoint'){
                 this.chart.type='line';
               }
               res.forEach((response,pos) => {
@@ -1211,7 +1227,7 @@
               this.setColor(legend.length);
               this.initChart(this.chart,series, this.$refs.screenShowArea,legend);
             }
-          }).catch((error) => {
+          }).catch(error => {
             if (error) {
               this.$message.error(error.toString());
             }

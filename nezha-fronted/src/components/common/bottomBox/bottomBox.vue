@@ -15,10 +15,10 @@
 
       <!------TAB区------>
       <!--通用详情-->
-      <common-detail-tab v-show="subResizeShow" :obj="obj" :from="from" :detail="detail" :targetTab.sync="targetTab"
+      <!--<common-detail-tab v-show="subResizeShow" :obj="obj" :from="from" :detail="detail" :targetTab.sync="targetTab"
                          v-if="targetTab == 'detail'"
                          @changeTab="changeTab"
-      ></common-detail-tab>
+      ></common-detail-tab>-->
       <!--机柜-->
       <cabinet-tab v-show="subResizeShow" v-if="from == 'dc' && targetTab == 'cabinet'" :obj="obj" @changeTab="changeTab"></cabinet-tab>
       <!--告警信息-->
@@ -26,17 +26,17 @@
       <!--asset页的endpoint列表-->
       <endpoint-tab v-show="subResizeShow" v-if="from == 'asset' && targetTab == 'endpoint'" :from="from" :obj="obj" @changeTab="changeTab"></endpoint-tab>
       <!--endpoint页的asset详情-->
-      <common-detail-tab v-show="subResizeShow" :obj="obj" :from="from" :detail="assetDetail" :targetTab.sync="targetTab"
+      <!--<common-detail-tab v-show="subResizeShow" :obj="obj" :from="from" :detail="assetDetail" :targetTab.sync="targetTab"
                          v-if="targetTab == 'assetDetail' && from == 'endpoint'"
-                         @changeTab="changeTab"></common-detail-tab>
+                         @changeTab="changeTab"></common-detail-tab>-->
       <!--endpoint-query-->
       <endpoint-query-tab v-show="subResizeShow" v-if="(from == 'endpoint' && targetTab == 'endpointQuery')" :from="from" :obj="obj" @changeTab="changeTab" ref="endpointQuery"></endpoint-query-tab>
 
       <!--alertMessage页的详情-->
-      <template v-if="from == 'alertMessage'">
+      <!--<template v-if="from == 'alertMessage'">
         <common-detail-tab v-show="subResizeShow" :from="from" :targetTab.sync="targetTab" v-for="(item, index) in tabList" :key="index" :detail="detailList[index]"
                            v-if="targetTab == item" @changeTab="changeTab"></common-detail-tab>
-      </template>
+      </template>-->
 
       <!-- model-panel/asset-detail/project-overview的panel-->
       <panel-tab v-if="(from == 'model' || from == 'asset' || from == 'project' || from == 'alertRule' || from == 'endpoint') && targetTab == 'panel'" v-show="subResizeShow" :from="from" :obj="obj" ref="panelTab"
@@ -75,7 +75,7 @@
       detail: Object, //对象详情内容
       detailList: Array, //多个对象详情内容
 
-      assetDetail: Array, //endpoint页的asset详情
+      assetDetail: Object, //endpoint页的asset详情
     },
     data() {
       return {}

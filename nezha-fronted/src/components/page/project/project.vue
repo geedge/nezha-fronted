@@ -196,7 +196,7 @@
       return {
         loading: false,
 
-        assetDetail: [], //asset详情
+        assetDetail: {}, //asset详情
         endpointDetail: [],
         targetTab: '',
         mainTableHeight: this.$tableHeight.normal, //主列表table高度
@@ -693,8 +693,31 @@
         }
       },
       assetConvertToDetail(obj) {
-        let detail = [];
-        detail.push({label: this.$t("asset.createAssetTab.sn"), value: obj.sn});
+        let detail = JSON.parse(JSON.stringify(obj));
+        detail.state = obj.state == 1 ? this.$t('asset.createAssetTab.inStock'): this.$t('asset.createAssetTab.notInStock');
+        detail.assetType = obj.model.type.value;
+        detail.vendorModel = obj.model.vendor.value + " " + obj.model.name;
+        detail.dataCenter = obj.idc ? obj.idc.name : "";
+        detail.location = obj.idc ? obj.idc.location : "";
+        detail.principal = obj.idc ? this.getPrincipalName(obj.idc.principal) : "";
+        detail.tel = obj.idc ? obj.idc.tel : "";
+        detail.cabinet = obj.cabinet ? obj.cabinet.name : "";
+        detail.uSize = obj.cabinet ? obj.cabinet.uSize : "";
+        detail.remark = obj.idc ? obj.idc.remark : "";
+        if (obj.accounts.length > 0) {
+          let account = obj.accounts[0];
+          detail.protocol = account.protocol;
+          detail.account = account.user;
+          let loginType = "";
+          if (account.authType == 1) {
+            loginType = this.$t('asset.createAssetTab.password');
+          } else if (account.authType == 2) {
+            loginType = this.$t('asset.createAssetTab.ssh');
+          }
+          detail.loginType = loginType;
+          detail.port = account.port;
+        }
+        /*detail.push({label: this.$t("asset.createAssetTab.sn"), value: obj.sn});
         detail.push({label: this.$t("asset.createAssetTab.host"), value: obj.host});
         detail.push({label: this.$t("asset.createAssetTab.state"), value: obj.state == 1 ? this.$t('asset.createAssetTab.inStock'): this.$t('asset.createAssetTab.notInStock')});
         detail.push({label: this.$t("asset.tableTitle.modules"), value: obj.endpointNum});
@@ -728,7 +751,7 @@
             detail.push({label: this.$t("asset.createAssetTab.account"), value: account.user});
           }
           detail.push({label: this.$t("asset.createAssetTab.port"), value: account.port});
-        }
+        }*/
         return detail;
       },
       getPrincipalName(data) {

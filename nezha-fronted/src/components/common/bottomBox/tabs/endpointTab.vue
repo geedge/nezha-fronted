@@ -19,7 +19,7 @@
           class="margin-l-20"
         >
           <template slot="optionZone">
-            <button @click.stop="toAdd" :title="$t('overall.createProject')" class="nz-btn nz-btn-size-normal nz-btn-style-light" id="project-create-project">
+            <button @click.stop="toAdd" :title="$t('overall.createEndpoint')" class="nz-btn nz-btn-size-normal nz-btn-style-light" id="project-create-project">
               <i class="nz-icon nz-icon-create-square"></i>
             </button>
           </template>

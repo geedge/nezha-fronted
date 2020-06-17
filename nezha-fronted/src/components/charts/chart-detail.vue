@@ -35,7 +35,7 @@
                   <!-- endpoint-detail、asset、model的assetInfo的asset详情-->
                   <div class="content-item" v-if="(data.from == 'endpoint' || data.from == 'asset' || data.from == 'model') && data.type == 'assetInfo' && item.type == 'basic' && assetKey[key]">
                     <div class="content-item-key item-tip" :id="`key-${index}-${i}`">
-                      <span>{{assetKey[key]}}</span>
+                      <span class="content-text">{{assetKey[key]}}</span>
                       <div class="item-tip-hide item-tip-key el-popover" :class="itemTip(`key-${index}`, key, i, ready)">{{assetKey[key]}}</div>
                     </div>
 
@@ -46,13 +46,16 @@
                         <div class="active-icon" :class="{'green': item.data.pingStatus == 1, 'red': item.data.pingStatus == 1 != 1}"></div>
                         <span>{{value ? value + 'ms' : ''}}</span>
                       </template>
-                      <span v-else-if="assetKey[key]">{{value ? value : "&nbsp;"}}</span>
+                      <template v-else-if="assetKey[key]">
+                        <span class="content-text">{{value ? value : "&nbsp;"}}</span>
+                        <div class="item-tip-hide item-tip-value el-popover" :class="itemTip(`value-${index}`, key, i, ready)">{{value}}</div>
+                      </template>
                     </div>
                   </div>
                   <!-- endpoint-detail、asset、model的assetInfo的feature-->
                   <div class="content-item" v-if="(data.from == 'endpoint' || data.from == 'asset' || data.from == 'model') && data.type == 'assetInfo' && item.type == 'feature'">
                     <div class="content-item-key item-tip" :id="`key-${index}-${i}`">
-                      <span>{{key}}</span>
+                      <span class="content-text">{{key}}</span>
                       <div class="item-tip-hide item-tip-key el-popover" :class="itemTip(`key-${index}`, key, i, ready)">{{key}}</div>
                     </div>
 
@@ -83,14 +86,17 @@
                           </el-table-column>
                         </el-table>
                       </template>
-                      <span v-else-if="key">{{value ? value : "&nbsp;"}}</span>
+                      <template v-else-if="key">
+                        <span class="content-text">{{value ? value : "&nbsp;"}}</span>
+                        <div class="item-tip-hide item-tip-value el-popover" :class="itemTip(`value-${index}`, key, i, ready)">{{value}}</div>
+                      </template>
                     </div>
                   </div>
 
                   <!-- project的projectInfo的project详情-->
                   <div class="content-item" v-else-if="data.from == 'project' && data.type == 'projectInfo' && projectKey[key]">
                     <div class="content-item-key item-tip" :id="`key-${index}-${i}`">
-                      <span>{{projectKey[key]}}</span>
+                      <span class="content-text">{{projectKey[key]}}</span>
                       <div class="item-tip-hide item-tip-key el-popover" :class="itemTip(`key-${index}`, key, i, ready)">{{projectKey[key]}}</div>
                     </div>
                     <div class="content-item-value item-tip" :id="`value-${index}-${i}`">
@@ -102,13 +108,16 @@
                         <div class="active-icon orange"></div>
                         <span>{{value[2]}}</span>
                       </template>
-                      <span v-else-if="projectKey[key]">{{value ? value : "&nbsp;"}}</span>
+                      <template v-else-if="projectKey[key]">
+                        <span class="content-text">{{value ? value : "&nbsp;"}}</span>
+                        <div class="item-tip-hide item-tip-value el-popover" :class="itemTip(`value-${index}`, key, i, ready)">{{value}}</div>
+                      </template>
                     </div>
                   </div>
                   <!-- project的projectInfo的module详情-->
                   <div class="content-item" v-else-if="data.from == 'project' && data.type == 'projectInfo' && moduleKey[key]">
                     <div class="content-item-key item-tip" :id="`key-${index}-${i}`">
-                      <span>{{moduleKey[key]}}</span>
+                      <span class="content-text">{{moduleKey[key]}}</span>
                       <div class="item-tip-hide item-tip-key el-popover" :class="itemTip(`key-${index}`, key, i, ready)">{{moduleKey[key]}}</div>
                     </div>
                     <div class="content-item-value item-tip" :id="`value-${index}-${i}`">
@@ -126,40 +135,48 @@
                         <img src='../../assets/img/down.png' width="16" style="vertical-align: middle">
                         <span>{{value[1]}}</span>&nbsp;&nbsp;
                       </template>
-                      <span v-else-if="moduleKey[key]">{{value ? value : "&nbsp;"}}</span>
+                      <template v-else-if="moduleKey[key]">
+                        <span class="content-text">{{value ? value : "&nbsp;"}}</span>
+                        <div class="item-tip-hide item-tip-value el-popover" :class="itemTip(`value-${index}`, key, i, ready)">{{value}}</div>
+                      </template>
                     </div>
                   </div>
 
                   <!-- endpoint-detail的endpointInfo的endpoint详情-->
                   <div class="content-item" v-else-if="data.from == 'endpoint' && data.type == 'endpointInfo' && endpointKey[key]">
                     <div class="content-item-key item-tip" :id="`key-${index}-${i}`">
-                      <span>{{endpointKey[key]}}</span>
+                      <span class="content-text">{{endpointKey[key]}}</span>
                       <div class="item-tip-hide item-tip-key el-popover" :class="itemTip(`key-${index}`, key, i, ready)">{{endpointKey[key]}}</div>
                     </div>
                     <div class="content-item-value item-tip" :id="`value-${index}-${i}`">
                       <template v-if="key == 'state'"><span style="cursor: pointer;" @click="preview"><i class="nz-icon nz-icon-chart"></i></span></template>
-                      <span v-else-if="endpointKey[key]">{{value ? value : "&nbsp;"}}</span>
+                      <template v-else-if="endpointKey[key]">
+                        <span class="content-text">{{value ? value : "&nbsp;"}}</span>
+                        <div class="item-tip-hide item-tip-value el-popover" :class="itemTip(`value-${index}`, key, i, ready)">{{value}}</div>
+                      </template>
                     </div>
                   </div>
                   <!-- endpoint-detail的endpointInfo的alert详情-->
                   <div class="content-item" v-else-if="data.from == 'endpoint' && data.type == 'endpointInfo' && item.title == $t('overall.alert')">
                     <div class="content-item-key item-tip" :id="`key-${index}-${i}`">
-                      <span>{{key}}</span>
+                      <span class="content-text">{{key}}</span>
                       <div class="item-tip-hide item-tip-key el-popover" :class="itemTip(`key-${index}`, key, i, ready)">{{key}}</div>
                     </div>
                     <div class="content-item-value item-tip" :id="`value-${index}-${i}`">
-                      <span>{{value ? value : "&nbsp;"}}</span>
+                      <span class="content-text">{{value ? value : "&nbsp;"}}</span>
+                      <div class="item-tip-hide item-tip-value el-popover" :class="itemTip(`value-${index}`, key, i, ready)">{{value}}</div>
                     </div>
                   </div>
 
                   <!-- alertRule-detail的详情-->
                   <div class="content-item" v-else-if="data.from == 'alertRule' && data.type == 'alertRuleInfo'">
                     <div class="content-item-key item-tip" :id="`key-${index}-${i}`">
-                      <span>{{key}}</span>
+                      <span class="content-text">{{key}}</span>
                       <div class="item-tip-hide item-tip-key el-popover" :class="itemTip(`key-${index}`, key, i, ready)">{{key}}</div>
                     </div>
                     <div class="content-item-value item-tip" :id="`value-${index}-${i}`">
-                      <span>{{value ? value : "&nbsp;"}}</span>
+                      <span class="content-text">{{value ? value : "&nbsp;"}}</span>
+                      <div class="item-tip-hide item-tip-value el-popover" :class="itemTip(`value-${index}`, key, i, ready)">{{value}}</div>
                     </div>
                   </div>
                 </template>
@@ -200,6 +217,15 @@
       chartIndex:{
         type: Number,
         default: 0,
+      }
+    },
+    watch: {
+      data: {
+        deep: true,
+        immediate: true,
+        handler(n) {
+          console.info(n)
+        }
       }
     },
     data() {
@@ -273,25 +299,26 @@
         },
       };
     },
-    methods: {
-      itemTip(type, content, index, ready) {
-        let className = "";
-        this.$nextTick(() => {
-          if (ready) {
-            let cellDom = document.querySelector(`#${type}-${index}`);
-            let spanDom = document.createElement("span");
-            spanDom.style.display = "inline-block";
-            spanDom.innerText = content;
-            cellDom.appendChild(spanDom);
-            if (cellDom.offsetWidth-16 < spanDom.offsetWidth) {
-              className = "item-tip-show";
+    computed: {
+      itemTip() {
+        return function(type, content, index, ready) {
+          let className = "item-tip-show";
+          this.$nextTick(() => {
+            if (ready) {
+              let cellDom = document.querySelector(`#${type}-${index}`);
+              let spanDom = document.querySelector(`#${type}-${index} .content-text`);
+              if (cellDom.offsetWidth - 16 <= spanDom.offsetWidth) {
+                document.querySelector(`#${type}-${index}>.el-popover`).classList.add(className);
+              } else {
+                document.querySelector(`#${type}-${index}>.el-popover`).classList.remove(className);
+              }
             }
-            cellDom.removeChild(spanDom);
-            return className;
-          }
-        });
-        return className;
+          });
+          return "";
+        }
       },
+    },
+    methods: {
       startResize(e) {
         let vm = this;
         this.$chartResizeTool.start(vm, this.data, e);
@@ -368,7 +395,6 @@
       // 设置数据, filter区分
       setData(chartItem, detail, panelId, filter, area, errorMsg) {
         //this.resize(chartItem);
-        console.info(chartItem, detail)
         if(errorMsg && errorMsg !== ''){
           this.isError = true;
           this.errorContent = errorMsg;

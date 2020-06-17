@@ -649,6 +649,9 @@
 
 </style>
 <style lang="scss">
+  .nz-dashboard-dropdown {
+    z-index: 3001 !important;
+  }
   .panel .top-tools input {
     background-color: $content-right-background-color;
   }
