@@ -219,15 +219,6 @@
         default: 0,
       }
     },
-    watch: {
-      data: {
-        deep: true,
-        immediate: true,
-        handler(n) {
-          console.info(n)
-        }
-      }
-    },
     data() {
       return {
         ready: false,

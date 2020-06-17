@@ -222,7 +222,7 @@
       show(chartInfo) {
         this.isError = false;
         this.searchTime = [new Date().setHours(new Date().getHours()-1),new Date()];
-        this.chart=chartInfo;
+        this.chart = JSON.parse(JSON.stringify(chartInfo));
 
         let chartType= chartInfo.type;
         let chartContainerId = 'chartEchartPreview';

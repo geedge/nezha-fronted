@@ -1200,11 +1200,224 @@
         }
       },
       getEndpointInfoChartData(chartInfo) {
-        let vm = this;
         let detail = [];
         this.$refs['editChart'+chartInfo.id][0].showLoad();
         chartInfo.title = this.$t("project.chart.endpointInfo");
-        this.$set(this.detail, "state", "");
+        let basicInfo = JSON.parse(JSON.stringify(this.detail));
+        let basicInfoReq = new Promise((resolve, reject) => {
+          let now = new Date();
+          let startTime = bus.timeFormate(now, 'yyyy-MM-dd hh:mm:ss');
+          let endTime = bus.timeFormate(now.setHours(now.getHours()-1), 'yyyy-MM-dd hh:mm:ss');
+          let step = bus.getStep(startTime,endTime);
+          this.$nextTick(() => {
+            let query = chartInfo.elements[0].expression;
+            this.$get('/prom/api/v1/query_range?query='+query+"&start="+this.$stringTimeParseToUnix(startTime)+"&end="+this.$stringTimeParseToUnix(endTime)+'&step='+step).then(response => {
+              if (response.status === 'success') {
+                if (response.data.result) {
+                  let series = {
+                    name: '',
+                    symbol: 'emptyCircle',  //去掉点
+                    symbolSize: [2, 2],
+                    smooth: 0.2,  //曲线变平滑
+                    showSymbol: false,
+                    data: [],
+                    type: "line",
+                    lineStyle: {
+                      width: 1,
+                      opacity: 0.9
+                    },
+                  };
+                  response.data.result.forEach((queryItem, resInnerPos) => {
+                    // 将秒改为毫秒
+                    series.data = queryItem.values.map((dpsItem, dpsIndex) => {
+                      return [dpsItem[0] * 1000, dpsItem[1]];
+                    });
+                  });
+                }
+              }
+            });
+            // 一个图表的所有element单独获取数据
+            /*axios.all(axiosArr).then((res) => {
+              if (res.length > 0) {
+                const series = [];
+                let singleStatRlt = '';
+                const legend = [];
+                const tableData = [];
+                const sumData = {
+                  name: 'sum',
+                  data: [],
+                  visible: true,
+                  threshold: null,
+                };
+                res.forEach((response, innerPos) => {
+                  if (response.status === 'success') {
+                    this.isError = false;
+                    this.errorContent = "";
+                    if (response.data.result) {
+                      if(chartItem.type==='singleStat'){
+                        if(response.data.result.length===1){
+                          let statistics = chartItem.param.statistics;
+                          if(response.data.result[0].values){
+                            singleStatRlt  = bus.getSingleStatRlt(statistics,response.data.result[0].values);
+                            this.noData=false
+                          }else{
+                            this.noData=true;
+                          }
+                        }else if(response.data.result.length > 1){
+                          this.noData=true;
+                          singleStatRlt = this.$t("dashboard.panel.singleStatErrorTip");
+                        }
+                      }else {
+                        // 循环处理每个elements下获取的数据列
+                        response.data.result.forEach((queryItem, resInnerPos) => {
+                          const seriesItem = {
+                            theData: {
+                              name: '',
+                              symbol: 'emptyCircle',  //去掉点
+                              symbolSize: [2, 2],
+                              smooth: 0.2,  //曲线变平滑
+                              showSymbol: false,
+                              data: [],
+                              type: chartItem.type,
+                              lineStyle: {
+                                width: 1,
+                                opacity: 0.9
+                              },
+                            },
+                            metric_name: '',
+                          };
+                          if (chartItem.type === 'stackArea') {
+                            seriesItem.theData.type = 'line';
+                            seriesItem.theData.stack = chartItem.title;
+                            seriesItem.theData.areaStyle = {"opacity": 0.3};
+                          }
+                          if (chartItem.type === "endpointInfo") {
+                            seriesItem.theData.type = 'line';
+                          }
+                          // 图表中每条线的名字,后半部分
+                          let host = '';//up,
+                          if (queryItem.metric.__name__) {
+                            host = `${queryItem.metric.__name__}{`;//up,
+                          }
+                          const tagsArr = Object.keys(queryItem.metric);//["__name__","asset","idc","instance","job","module","project"]
+                          // 设置时间-数据格式对
+                          const dpsArr = Object.entries(queryItem.values);//[ ["0",[1577959830.781,"0"]], ["1",[1577959845.781,"0"]] ]
+                          // 判断是否有数据, && tagsArr.length > 0
+                          if (dpsArr.length > 0) {
+                            tagsArr.forEach((tag, i) => {
+                              if (tag !== '__name__') {
+                                host += `${tag}="${queryItem.metric[tag]}",`;
+                              }
+                            });
+                            if (host.endsWith(',')) {
+                              host = host.substr(0, host.length - 1);
+                            }
+                            if (queryItem.metric.__name__) {
+                              host += "}";
+                            }
+                            if (!host || host === '') {
+                              host = chartItem.elements[innerPos].expression;
+                            }
+                            //处理legend别名
+                            let alias = this.dealLegendAlias(host, chartItem.elements[innerPos].legend);
+                            if (!alias || alias === '') {
+                              alias = host;
+                            }
+                            legend.push({name: host + resInnerPos, alias: alias});
+                            // 图表中每条线的名字,去掉最后的逗号与空格:metric名称,  标签1=a,标签2=c
+                            seriesItem.theData.name = host + resInnerPos;
+                            seriesItem.metric_name = seriesItem.theData.name;
+                            // 将秒改为毫秒
+                            //alert('table=='+JSON.stringify(queryItem))
+                            seriesItem.theData.data = queryItem.values.map((dpsItem, dpsIndex) => {
+                              let t_date = new Date(dpsItem[0] * 1000);
+                              let timeTmp = bus.timeFormate(t_date, 'yyyy-MM-dd hh:mm:ss');
+                              tableData.push({//表格数据
+                                // label: host.slice(host.indexOf('{') + 1,host.indexOf('}')),//label
+                                // metric: queryItem.metric.__name__?queryItem.metric.__name__:'',//metric列
+                                element: {element: host, alias: alias},
+                                time: timeTmp,//采集时间
+                                value: dpsItem[1],//数值
+                              });
+                              return [dpsItem[0] * 1000, dpsItem[1]];
+                            });
+                            series.push(seriesItem.theData);
+
+                          } else if (chartItem.elements && chartItem.elements[innerPos]) {
+                            // 无数据提示
+                            /!*
+                            const currentInfo = chartItem.elements[innerPos];
+                            const errorMsg = `图表 ${chartItem.title} 中 ${currentInfo.metric},${currentInfo.tags} 无数据`;
+                            this.$message.warning({
+                              duration: 15,
+                              content: errorMsg,
+                              closable: true,
+                            });
+                            *!/
+                          }
+                        });
+                      }
+                    }
+                  }else{
+                    this.isError = true;
+                    if(response.msg){
+                      this.errorContent = response.msg;
+                    }else if(response.error){
+                      this.errorContent = response.error;
+                    }else {
+                      this.errorContent = response;
+                    }
+                  }
+                });
+                //if(this.$refs.editChart&&this.$refs.editChart[index]) {
+                if (chartItem.type === 'table') {//表格
+                  this.setTableData(tableData);
+                } else if (chartItem.type === 'line' || chartItem.type === 'bar' || chartItem.type === 'stackArea' || chartItem.type === 4 || chartItem.from == "endpoint") {
+                  if (series.length && chartItem.type === 4) {//曲线汇总
+                  }
+                  if(series.length<1){
+                    this.noData=true;
+                  }else{
+                    this.noData=false;
+                  }
+                  let _chartItem = JSON.parse(JSON.stringify(chartItem));
+                  if (chartItem.from == "endpoint") {
+                    _chartItem.type = "line";
+                  }
+                  this.setData(_chartItem, series, legend);
+                }else if(chartItem.type ==='singleStat'){
+                  if(Number(singleStatRlt)){
+                    let singleStatTmp =parseFloat(Number(singleStatRlt).toFixed(2));
+                    this.serieSingleStat = chartDataFormat.getUnit(chartItem.unit?chartItem.unit:2).compute(singleStatTmp,null,2);
+                  }else {
+                    this.serieSingleStat =singleStatRlt;
+                  }
+                  this.$refs.loadingPreview.endLoading();
+                }
+                //}
+              } else {
+                const type = chartItem.type;
+                //if(this.$refs.editChart[index]) {
+                if (type === 'table') {
+                  this.setTableData([]);
+                } else if (type === 'line' || type === 'bar' || type === 'stackArea' || type === 4) {
+                  this.setData(chartItem, []);
+                }else if(chartItem.type ==='singleStat'){
+                  this.serieSingleStat = "";
+                  this.$refs.loadingPreview.endLoading();
+                }
+                //}
+              }
+            }).catch((error) => {
+              if (error) {
+                this.$message.error(error.toString());
+                console.error(error)
+              }
+            });*/
+          });
+        });
+
+
         detail.push({title: this.$t("project.chart.basicTitle"), data: this.detail});
         let endpointId = this.additionalInfo.id;
         let alertMsg = new Promise((resolve, reject) => {
