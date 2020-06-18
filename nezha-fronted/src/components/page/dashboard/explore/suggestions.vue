@@ -57,7 +57,6 @@
     },
   ];
   const funcs=[
-    ...operators,
     {
       insertText: 'abs',
       label: 'abs',
@@ -360,6 +359,13 @@
       documentation: 'The population standard variance of the values in the specified interval.',
     },
   ]
-    export default {
-    }
+  export default {
+    getOperators:function(){
+      return JSON.parse(JSON.stringify(operators));
+    },
+
+    getFunctions:function(){
+      return JSON.parse(JSON.stringify(funcs))
+    },
+  }
 </script>
