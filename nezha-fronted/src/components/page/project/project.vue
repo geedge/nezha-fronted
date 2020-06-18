@@ -105,7 +105,7 @@
             min-width="110px"
           >
             <template slot-scope="scope" :column="item" >
-              <span v-if="item.prop == 'asset' && scope.row[item.prop]" class="link" @click="viewAsset(scope.row)">{{scope.row[item.prop].host}}</span>
+              <span v-if="item.prop == 'asset' && scope.row[item.prop]" class="link" @click="detail(scope.row)">{{scope.row[item.prop].host}}</span>
               <span v-else-if="item.prop == 'param'">
                 <template v-if="scope.row.paramObj">
                   <span v-for="(p,i) in scope.row.paramObj">{{p.key}}={{p.value}}<span v-if="i < scope.row.paramObj.length-1">，</span></span>
