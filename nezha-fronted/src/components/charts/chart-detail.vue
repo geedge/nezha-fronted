@@ -149,7 +149,7 @@
                       <div class="item-tip-hide item-tip-key el-popover" :class="itemTip(`key-${index}`, key, i, ready)">{{endpointKey[key]}}</div>
                     </div>
                     <div class="content-item-value item-tip" :id="`value-${index}-${i}`">
-                      <template v-if="key == 'state'"><span style="cursor: pointer;" @click="preview"><i class="nz-icon nz-icon-chart"></i></span></template>
+                      <template v-if="key == 'state'"><div id="littleChart" style="cursor: pointer; height: 80px;" @click="preview"></div></template>
                       <template v-else-if="endpointKey[key]">
                         <span class="content-text">{{value ? value : "&nbsp;"}}</span>
                         <div class="item-tip-hide item-tip-value el-popover" :class="itemTip(`value-${index}`, key, i, ready)">{{value}}</div>
@@ -196,6 +196,7 @@
   import loading from "../common/loading";
   import timePicker from '../common/timePicker';
   import chartPreview from './chartPreview';
+  import echarts from 'echarts';
 
   export default {
     name: 'chartDetail',
@@ -400,11 +401,63 @@
         this.panelIdInner = panelId;
         this.data = chartItem;
         this.detail = detail;
+        if (this.detail[0] && this.detail[0].type && this.detail[0].type == "endpointInfo") { //endpointInfo的小图表
+          this.$nextTick(() => {
+            this.initChart(this.detail[0].data.stateSeries);
+          });
+        }
         this.$nextTick(() => {
           this.$refs.scrollbar.update();
         });
         this.endLoading();
       },
+      initChart(series) {
+        let vm = this;
+        let option = {
+          title:{
+            show: false,
+          },
+          tooltip: {
+            show: false
+          },
+          grid: {
+            left: 40
+          },
+          legend: {
+            show: false
+          },
+          xAxis: {
+            show: false,
+            type: 'time'
+          },
+          yAxis: {
+            type: 'value',
+            minInterval: 1,
+            splitLine: {
+              show: false
+            },
+            axisLabel: {
+              formatter: function (value, index) {
+                if (value == 1) {
+                  return "up";
+                } else {
+                  return "down";
+                }
+              }
+            },
+            axisTick: {
+              show: false
+            },
+            axisLine: {
+              show: false
+            }
+          },
+          useUTC: false,//使用本地时间
+          series: series
+        };
+        let chart = echarts.init(document.querySelector("#littleChart"));
+        chart.setOption(option);//创建图表
+      }
     },
     mounted() {
       this.firstLoad = false;
