@@ -42,6 +42,19 @@
                     <div class="content-item-value item-tip" :id="`value-${index}-${i}`">
                       <span v-if="key == 'state'">{{value == 1 ? $t('asset.createAssetTab.inStock') : $t('asset.createAssetTab.outStock')}}</span>
                       <span v-else-if="key == 'alert'" class="as-button" :class="{'success': value <= 0, 'danger': value > 0}">{{value + ' ' + $t('overall.active')}}</span>
+                      <div v-if="key == 'tags'" class="no-overflow">
+                        <template v-if="value && value.length > 0">
+                          <nz-alert-tag :label="tagItem.tag" type="normal" style="margin: 5px; vertical-align: middle;"
+                                        :cursor-point="false"
+                                        :key="tagItem.id"
+                                        v-for="(tagItem, tagIndex) in value">
+                            <div :id="`tag-${index}-${tagIndex}`" class="tag-value">
+                              <span class="content-text">{{tagItem.value}}</span>
+                            </div>
+                          </nz-alert-tag>
+                        </template>
+                        <template v-else>&nbsp;</template>
+                      </div>
                       <template v-else-if="key == 'pingRtt'">
                         <div class="active-icon" :class="{'green': item.data.pingStatus == 1, 'red': item.data.pingStatus == 1 != 1}"></div>
                         <span>{{value ? value + 'ms' : ''}}</span>
@@ -197,13 +210,15 @@
   import timePicker from '../common/timePicker';
   import chartPreview from './chartPreview';
   import echarts from 'echarts';
+  import nzAlertTag from '../page/alert/nzAlertTag';
 
   export default {
     name: 'chartDetail',
     components: {
       'loading': loading,
       'time-picker': timePicker,
-      'chart-preview': chartPreview
+      'chart-preview': chartPreview,
+      'nz-alert-tag': nzAlertTag
     },
     props: {
       // 看板id
@@ -262,7 +277,8 @@
           pingStatus: this.$t('asset.tableTitle.assetPing'),
           pingLastReply: this.$t('asset.tableTitle.lastReply'),
           endpoint: this.$t("asset.tableTitle.modules"),
-          alert: this.$t("asset.tableTitle.alerts")
+          alert: this.$t("asset.tableTitle.alerts"),
+          tags: this.$t("overall.tag")
         },
         projectKey: {
           id: "ID",
@@ -386,7 +402,6 @@
 
       // 设置数据, filter区分
       setData(chartItem, detail, panelId, filter, area, errorMsg) {
-        //this.resize(chartItem);
         if(errorMsg && errorMsg !== ''){
           this.isError = true;
           this.errorContent = errorMsg;
@@ -412,20 +427,11 @@
         this.endLoading();
       },
       initChart(series) {
-        let vm = this;
         let option = {
-          title:{
-            show: false,
-          },
-          tooltip: {
-            show: false
-          },
-          grid: {
-            left: 40
-          },
-          legend: {
-            show: false
-          },
+          title: {show: false},
+          tooltip: {show: false},
+          grid: {left: 40},
+          legend: {show: false},
           xAxis: {
             show: false,
             type: 'time'
@@ -433,9 +439,7 @@
           yAxis: {
             type: 'value',
             minInterval: 1,
-            splitLine: {
-              show: false
-            },
+            splitLine: {show: false},
             axisLabel: {
               formatter: function (value, index) {
                 if (value == 1) {
@@ -445,12 +449,8 @@
                 }
               }
             },
-            axisTick: {
-              show: false
-            },
-            axisLine: {
-              show: false
-            }
+            axisTick: {show: false},
+            axisLine: {show: false}
           },
           useUTC: false,//使用本地时间
           series: series
