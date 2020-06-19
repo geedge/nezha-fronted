@@ -155,20 +155,6 @@
                 </div>
               </el-scrollbar>
             </div>
-            <!--<div class="param-box param-box-module">
-              <el-scrollbar ref="paramBoxScrollbar" style="height: 100%">
-                <div class="param-box-row" v-for="(item, index) in assetData.tags">
-                  <el-form-item class="param-box-row-key" :rules="{required: true, message: $t('validate.required'), trigger: 'blur'}" :prop="'tags.' + index + '.tag'">
-                    <el-input placeholder="tag" size="mini" v-model="item.tag"></el-input>
-                  </el-form-item>
-                  <span class="param-box-row-eq">=</span>
-                  <el-form-item class="param-box-row-value" :rules="{required: true, message: $t('validate.required'), trigger: 'blur'}" :prop="'tags.' + index + '.value'">
-                    <el-input placeholder="value" size="mini" v-model="item.value"></el-input>
-                  </el-form-item>
-                  <span class="param-box-row-symbol" :id="'asset-tag-remove-param-'+index" @click="removeTag(index)"><i class="nz-icon nz-icon-minus-square"></i></span>
-                </div>
-              </el-scrollbar>
-            </div>-->
           </el-form-item>
           <!------------------------------------------impi---------------------------------------------->
           <!--<div v-if="assetType == 1">
@@ -202,7 +188,9 @@
             <el-form-item :label="$t('asset.createAssetTab.exporter')" class="exporter-label">
               <el-switch class="exporter-switch" v-model="assetData.exporter" active-color="#ee9d3f" active-value="1" inactive-value="0" :show="!exporterDisableSwitch"></el-switch>
             </el-form-item>
-            <div class="line-100 right-box-line" style="margin-top: -16px;"></div>
+          </template>
+          <template v-else>
+            <div style="height: 52px;"></div>
           </template>
         </el-form>
       </el-scrollbar>
