@@ -2,15 +2,19 @@
   <div class="metric-editor">
     <div :id="id" ref="editor"></div>
     <div class="metric-editor-popper" :style="{left:popperPos.left+'px'}">
-      <div class="metric-popper-main" >
+      <div class="metric-popper-main" v-show="Object.keys(showSuggestions).length>0">
           <el-scrollbar style="height: 100%" class="ps-scroll-small" ref="scroll">
             <div v-for="(key, index) in orders" >
               <div v-html="key" class="popper-group" v-show="showSuggestions[key]"></div>
-              <div class="popper-item" v-for="(item,i) in showSuggestions[key]" v-html="item.label" :key="item.insertText" :type="key" :value="item.insertText" @click.stop="handleItemClick(key,item,$event)"></div>
+              <div class="popper-item" v-for="(item,i) in showSuggestions[key]" v-html="item.label" :key="item.insertText" :type="key" :value="item.insertText" @click.stop="handleItemClick(key,item,$event)" @mouseover="itemHover(item)" @mouseout="itemOut(item)"></div>
             </div>
           </el-scrollbar>
       </div>
-      <div class="metric-popper-desc">xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx</div>
+      <div class="metric-popper-desc" v-if="Object.keys(showSuggestions).length>0&&showDescription && detailItem && detailItem.documentation">
+        <div><b>{{detailItem.insertText}}</b></div>
+        <hr/>
+        <div>{{detailItem.documentation}}</div>
+      </div>
     </div>
   </div>
 </template>
@@ -18,6 +22,7 @@
 <script>
   import 'quill/dist/quill.snow.css'
   import Quill from 'quill'
+  import Keyboard from 'quill/modules/keyboard'
   import suggestions from "./suggestions";
   export default {
     name: "editor",
@@ -35,7 +40,7 @@
         newExpressionIndex:0,
         editRange:{start:0,end:0},
         noStyleSuggestions:{},//存储最原始的item数据
-        orders:['history','operators','functions','metrics','labels','values'],
+        orders:['history','operators','functions','metrics','labels','values','range'],
         showSuggestions:{},//存储显示的item数据，包含mark样式
         storedSuggestions:[],//存储每个item的dom
         toggleSelectIndex:-1,
@@ -50,6 +55,8 @@
         },
         labelValues:{},
         tempStoreMetric:{},
+        showDescription:false,
+        detailItem:{}
       }
     },
     created(){
@@ -57,10 +64,10 @@
     },
     methods:{
       userChange:function(char,operation,newContent,oldContent){
-        this.dealSpecilChar(char,operation);
         this.changeSuggestions('type')
+        this.dealSpecilChar(char,operation);
 
-        if(this.pivotalCursorIndex>this.editRange.start && this.pivotalCursorIndex < this.editRange.end){
+        if(this.pivotalCursorIndex>this.editRange.start && this.pivotalCursorIndex <= this.editRange.end){
           if(this.pivotalCursorIndex!=0){
             console.log('pivotalCursorIndex',this.pivotalCursorIndex,'cursorIndex',this.cursorIndex)
             newContent=newContent.substring(this.pivotalCursorIndex,this.cursorIndex);
@@ -80,13 +87,15 @@
               this.changeSuggestions('label')
             }else if(char == '('){
               this.addDoubleChar(')')
+              this.queryTypeInfos()
             }else if(char == '['){
               this.addDoubleChar(']')
+              this.changeSuggestions('range')
             }
           }else{
             this.delDoubleChar(char);
           }
-        }else if(/^[=\"]/g.test(char)){
+        }else if(/^[(=|!=|=~|!~)\"]/g.test(char)){
           if(operation=='insert'){
             if(char == '"'){
               this.addDoubleChar('"');
@@ -122,75 +131,85 @@
           this.queryValues();
         }else if(type  == 'type'){
           this.packageTypeInfo();
+        }else if(type == 'range'){
+          this.noStyleSuggestions={range:suggestions.getRateRange()}
+          this.showSuggestions=this.deepClone(this.noStyleSuggestions)
         }
       },
       packageTypeInfo:function(){
-        let metricReg=/[a-zA-Z_]\w*?\b\{.*?\}/g
         let functionReg=/[a-zA-Z_]\w*?\(.*?\)/g
         if(functionReg.test(this.content)){
-          let tempIndex=this.cursorIndex;
-          let tempStart,tempChar=this.content.charAt(tempIndex-1);
+          functionReg.lastIndex=0;
+          let funcMatch=functionReg.exec(this.content);
+          let funcContent=funcMatch[0]
+          let funcReg=/\(.*\)/g
+          let match=funcReg.exec(funcContent);
 
-          //向前查找，找到边界
-          while(tempIndex>0&&/[a-zA-Z_]/.test(tempChar)){
-            tempIndex--;
-            tempChar=this.content.charAt(tempIndex);
-          }
+          let funcBody=match[0].substring(1,match[0].length-1);
 
-          this.editRange.start=tempIndex+1;
-          this.editRange.end=this.cursorIndex;
+          this.matchMetric(funcBody,funcMatch.index+match.index)
+          this.editRange.start=match.index+1;
+          this.editRange.end=match.index+funcBody.length
         }else{
-          if(metricReg.test(this.content)){
-            let match=this.globalMatch(metricReg,this.content)
-            if(match&&match.length>0){
-              let isInnerExpression=false;
-              let editExpression=null;
-              match.forEach(item=>{
-                let content=item[0];
-                let index=item.index;
-                let length=content.length;
-                if(index < this.cursorIndex && index+length>this.cursorIndex){ //判断是否在一个完整子表达式中
-                  isInnerExpression=true;
-                  editExpression=item;
+          this.matchMetric()
+        }
+      },
+      matchFuncBody:function(){
+        let functionReg=/[a-zA-Z_]\w*?\(.*\)/g
+
+      },
+      matchMetric:function(){
+        let metricReg=/[a-zA-Z_]\w*?\b\{.*?\}/g
+        if(metricReg.test(this.content)){
+          let match=this.globalMatch(metricReg,this.content)
+          if(match&&match.length>0){
+            let isInnerExpression=false;
+            let editExpression=null;
+            match.forEach(item=>{
+              let content=item[0];
+              let index=item.index
+              let length=content.length;
+              if(index < this.cursorIndex && index+length>this.cursorIndex){ //判断是否在一个完整子表达式中
+                isInnerExpression=true;
+                editExpression=item;
+              }
+            })
+            console.log('match',match,'isInnerExpress',isInnerExpression)
+            if(isInnerExpression&&editExpression){
+              let expression=editExpression[0];
+              let labelValuesReg=/\{((\w*?(=|!=|=~|!~).*?,{0,1})+?)\}/
+              if(labelValuesReg.test(expression)){
+                let match=labelValuesReg.exec(expression);
+                if(editExpression.index+match.index>this.cursorIndex){
+                  this.queryTypeInfos();
                 }
-              })
-              console.log('match',match,'isInnerExpress',isInnerExpression)
-              if(isInnerExpression&&editExpression){
-                let expression=editExpression[0];
-                let labelValuesReg=/\{((\w*?=.*?,{0,1})+?)\}/
-                if(labelValuesReg.test(expression)){
-                  let match=labelValuesReg.exec(expression);
-                  if(editExpression.index+match.index>this.cursorIndex){
-                    this.queryTypeInfos();
-                  }
-                }
-                this.editRange.start=editExpression.index;
-                this.editRange.end=editExpression.index+expression.length;
-              }else{
-                let tempIndex=this.cursorIndex;
-                let tempStart,tempChar=this.content.charAt(tempIndex-1);
+              }
+              this.editRange.start=editExpression.index
+              this.editRange.end=editExpression.index+expression.length
+            }else{
+              let tempIndex=this.cursorIndex;
+              let tempStart,tempChar=this.content.charAt(tempIndex-1);
 
-                //向前查找，找到边界
-                while(tempIndex>0&&/[a-zA-Z_]/.test(tempChar)){
-                  tempIndex--;
-                  tempChar=this.content.charAt(tempIndex);
-                }
-
-                this.editRange.start=tempIndex+1;
-                this.editRange.end=this.cursorIndex;
-
-                console.log('multi expression',this.editRange)
-
-                this.queryTypeInfos();
+              //向前查找，找到边界
+              while(tempIndex>0&&/[a-zA-Z_]/.test(tempChar)){
+                tempIndex--;
+                tempChar=this.content.charAt(tempIndex);
               }
 
+              this.editRange.start=tempIndex+1;
+              this.editRange.end=this.cursorIndex;
+
+              console.log('multi expression',this.editRange)
+
+              this.queryTypeInfos();
             }
-          }else{
-            console.log('mo match metric')
-            this.editRange.start=0;
-            this.editRange.end=this.cursorIndex;
-            this.queryTypeInfos();
+
           }
+        }else{
+          console.log('mo match metric')
+          this.editRange.start=0;
+          this.editRange.end=this.cursorIndex;
+          this.queryTypeInfos();
         }
       },
       queryTypeInfos:function(){
@@ -201,7 +220,7 @@
         this.showSuggestions=this.deepClone(this.noStyleSuggestions)
       },
       queryValues:function(){
-        let labelValuesReg=/\{((\w*?=.*?,{0,1})+?)\}/
+        let labelValuesReg=/\{((\w*?(=|!=|=~|!~).*?,{0,1})+?)\}/
         if(labelValuesReg.test(this.content)){
           let match=labelValuesReg.exec(this.content);
           let labelValues=match[0]
@@ -212,7 +231,7 @@
             let boundaryIndex=-1;
             while(tempCounter>=index){
               let char=this.content.charAt(tempCounter);
-              if(char=='='){
+              if(/(=|!)/.test(char)){
                 equalIndex=tempCounter;
               }
 
@@ -281,11 +300,9 @@
             this.noStyleSuggestions={labels:labels}
             this.showSuggestions=this.deepClone(this.noStyleSuggestions);
             console.log('change labels',this.showSuggestions)
-            this.storeSuggestions();
           }else{
             this.noStyleSuggestions={};
             this.showSuggestions=this.deepClone(this.noStyleSuggestions)
-            this.storeSuggestions();
           }
         })
       },
@@ -305,29 +322,48 @@
           this.handleValueClick(item);
         }else if(type == 'operators'){
           this.handleOperatorClick(item);
+        }else if(type == 'functions'){
+          this.handleFunctionClick(item);
+        }else if(type  == 'range'){
+          this.handleRangeClick(item);
         }
+      },
+      handleRangeClick:function(item){
+        this.quill.setSelection(this.pivotalCursorIndex,this.cursorIndex-this.pivotalCursorIndex,'api');
+        this.deleteTextInRange(this.pivotalCursorIndex,this.cursorIndex)
+        this.insertTextAtIndex(item.insertText,this.pivotalCursorIndex)
       },
       handleOperatorClick:function(item){
         this.deleteTextInRange(this.editRange.start,this.cursorIndex)
         this.insertTextAtIndex(item.insertText,this.editRange.start == 0?this.editRange.start-1:this.editRange.start);
+        this.cursorIndex=this.editRange.start
         this.quill.setSelection(this.cursorIndex+item.insertText.length);
         this.storeCursor().then(()=>{
-          this.insertTextAtIndex('(',this.cursorIndex,'user')
+          // this.insertTextAtIndex('()',this.cursorIndex,'user')
+          // this.quill.setSelection(this.cursorIndex+1)
+        })
+      },
+      handleFunctionClick:function(item){
+        this.deleteTextInRange(this.editRange.start,this.cursorIndex)
+        this.insertTextAtIndex(item.insertText,this.editRange.start == 0?this.editRange.start-1:this.editRange.start);
+        this.cursorIndex=this.editRange.start
+        this.quill.setSelection(this.cursorIndex+item.insertText.length);
+        this.storeCursor().then(()=>{
+          this.insertTextAtIndex('()',this.cursorIndex,'user')
           this.quill.setSelection(this.cursorIndex+1)
-          this.editRange.start=this.cursorIndex;
-          this.editRange.end=this.cursorIndex;
         })
       },
       handleMetricClick:function(item){
         this.deleteTextInRange(this.editRange.start,this.cursorIndex)
         this.$nextTick(()=>{
-          this.insertTextAtIndex(item.insertText,this.editRange.start==0?this.editRange.start-1:this.editRange.start);
+          this.insertTextAtIndex(item.insertText,this.editRange.start==0?this.editRange.start-1:this.editRange.start,'user');
+          this.quill.setSelection(this.editRange.start+item.insertText.length);
+          this.storeCursor()
         })
-        this.moveCursorToEnd();
       },
       handleLabelClick:function(item){
         this.quill.setSelection(this.pivotalCursorIndex,this.cursorIndex-this.pivotalCursorIndex,'api');
-        this.deleteTextInRange(this.pivotalCursorIndex,this.cursorIndex-this.pivotalCursorIndex)
+        this.deleteTextInRange(this.pivotalCursorIndex,this.cursorIndex)
         this.insertTextAtIndex(item.insertText+'',this.pivotalCursorIndex)
         this.storeCursor().then(()=>{
            this.insertTextAtIndex('=',null,'user')
@@ -338,7 +374,7 @@
       handleValueClick:function(item){
         let preChar=this.content.substring(this.pivotalCursorIndex-1,this.pivotalCursorIndex);
         this.quill.setSelection(this.pivotalCursorIndex,this.cursorIndex-this.pivotalCursorIndex,'api');
-        this.deleteTextInRange(this.pivotalCursorIndex,this.cursorIndex-this.pivotalCursorIndex)
+        this.deleteTextInRange(this.pivotalCursorIndex,this.cursorIndex)
         if(preChar == '='){
           this.insertTextAtIndex('"'+item.insertText+'"',this.pivotalCursorIndex)
         }else{
@@ -346,9 +382,6 @@
         }
       },
       toggleSelect:function(event){//上下键选择
-        if(!this.storedSuggestions||this.storedSuggestions.length<1){
-          this.storeSuggestions()
-        }
         if(event.code=='ArrowDown'||event.keyCode==40){
           if(this.toggleSelectIndex != -1){
             let oldSuggestion=this.storedSuggestions[this.toggleSelectIndex];
@@ -368,18 +401,51 @@
             this.moveScroll();
           }
         }
+        let item=this.findItemByToggleIndex();
+        if(item &&item.documentation){
+          this.showDescription=true;
+          this.detailItem=this.deepClone(item);
+        }else{
+          this.showDescription=false;
+          this.detailItem={};
+        }
       },
-      pickItem:function(event){//Tab键 获取选择
-        if(event.code=='Tab'||event.code=='Enter'||event.keyCode==13||event.keyCode==9){
-          let selectedItem=this.storedSuggestions[this.toggleSelectIndex];
-          if(selectedItem){
-            let type=selectedItem.getAttribute('type');
-            let insertText=selectedItem.getAttribute('value');
-            if(type == 'metrics'){
-              this.handleMetricClick({insertText:insertText})
+      findItemByToggleIndex:function(){
+        let selectedItem=this.storedSuggestions[this.toggleSelectIndex];
+        if(selectedItem){
+          let type=selectedItem.getAttribute('type');
+          let insertText=selectedItem.getAttribute('value');
+          let keys=Object.keys(this.noStyleSuggestions);
+          for(let i=0;i<keys.length;i++){
+            let items=this.noStyleSuggestions[keys[i]];
+            let item=items.find(t=>{
+              return t.insertText == insertText;
+            })
+            if(item){
+              return item;
+              break ;
             }
-
           }
+        }
+        return null;
+      },
+      pickItem:function(){//Tab键 获取选择
+        let selectedItem=this.storedSuggestions[this.toggleSelectIndex];
+        if(selectedItem){
+          let type=selectedItem.getAttribute('type');
+          let insertText=selectedItem.getAttribute('value');
+          if(type == 'metrics'){
+            this.handleMetricClick({insertText:insertText})
+          }else if(type == 'labels'){
+            this.handleLabelClick({insertText:insertText});
+          }else if(type=='values'){
+            this.handleValueClick({insertText:insertText});
+          }else if(type == 'operators'){
+            this.handleOperatorClick({insertText:insertText})
+          }else if(type == 'range'){
+            this.handleRangeClick({insertText:insertText})
+          }
+
         }
       },
 
@@ -410,7 +476,8 @@
         }
 
         this.showSuggestions=this.deepClone(suggestions)
-        this.storeSuggestions();
+        let scroll=this.$refs.scroll.wrap;
+        scroll.scrollTop=0;
       },
       storeSuggestions:function(){
           this.$nextTick(()=>{
@@ -427,7 +494,7 @@
         this.quill.insertText(index?index:this.cursorIndex,content,source)
       },
       deleteTextInRange(from,to){
-        this.quill.deleteText(from,to,'api')
+       return  this.quill.deleteText(from,to-from,'api')
       },
       setCursor:function(offset){
         this.$nextTick(()=>{
@@ -450,6 +517,7 @@
 
               if(/^[\{\(\[,="]$/g.test(char)){
                 $temp.pivotalCursorIndex=$temp.cursorIndex;
+                console.log('store pivotalCursorIndex',$temp.pivotalCursorIndex)
               }
               resolve();
             }
@@ -493,6 +561,27 @@
 
 
       },
+      itemHover:function(item){
+        if(item&&item.documentation){
+          this.showDescription=true;
+          this.detailItem=this.deepClone(item);
+        }
+      },
+      itemOut:function(item){
+        if(this.toggleSelectIndex != -1){
+          let tempItem=this.findItemByToggleIndex();
+          if(tempItem&&tempItem.documentation){
+            this.showDescription=true;
+            this.detailItem=this.deepClone(tempItem);
+          }else{
+            this.showDescription=false;
+            this.detailItem={};
+          }
+        }else{
+          this.showDescription=false;
+          this.detailItem={};
+        }
+      },
       getContent(from,to){
         let content=this.quill.getText(from,to);
         content=content.substring(0,content.length-1)
@@ -515,19 +604,23 @@
         document.addEventListener('keydown',function(event){
           console.log('keydown',event)
           $temp.toggleSelect(event);
-          $temp.pickItem(event)
         })
 
-        /*this.quill.keyboard.addBinding({
-          key:13,
+        this.quill.keyboard.addBinding({
+          key:'DOWN'
         },function(range,context){
-          console.log('quill binding',range,context)
+          return false;
+        })
+        this.quill.keyboard.addBinding({
+          key:'UP'
+        },function(range,context){
+          return false;
         })
 
-        this.quill.keyboard.addBinding({ key: 'tab' }, function(range) {
-          console.log('quill tab binding',range,context)
-          return false;
-        });*/
+        // this.quill.keyboard.addBinding({ key:'backspace'}, function(range,content) {
+        //   console.log('quill tab binding',range,content)
+        //   return false;
+        // });
       },
       deepClone:function(source){
         return JSON.parse(JSON.stringify(source))
@@ -559,8 +652,25 @@
 
     },
     mounted() {
-      this.quill = new Quill(this.$refs.editor, this.options);
       let $temp=this;
+      let bindings = { // quill默认的键只能通过这种方式覆盖
+        tab: {
+          key: 9,
+          handler: function(range,content) {
+            $temp.pickItem();
+          }
+        },
+        enter:{
+          key:13,
+          handler:function(range,content){
+            console.log('enter')
+            return false;
+          }
+        }
+      };
+      this.options.modules.keyboard={};
+      this.options.modules.keyboard.bindings=bindings;
+      this.quill = new Quill(this.$refs.editor, this.options);
       this.quill.on('text-change',function(delta, oldDelta, source){
         console.log('delta',delta,'oldDelta',oldDelta,'source',source)
         let char='',operation='';
@@ -598,12 +708,20 @@
         console.log('current content-->',$temp.content)
         $temp.getPosition();
       })
-      this.storeSuggestions();
       this.registerKeydown();
     },
     watch:{
       content:function(n,o){
-
+        let reg=/[a-zA-Z_]\w*?\b\{((\w*?)(=|!=|~=|!~)".*?",{0,1})+?\}/g;
+        console.log('watch match',this.globalMatch(reg,n))
+      },
+      showSuggestions:{
+        immediate:true,
+        deep:true,
+        handler(n,o){
+          this.toggleSelectIndex=-1;
+          this.storeSuggestions();
+        }
       }
     }
   }

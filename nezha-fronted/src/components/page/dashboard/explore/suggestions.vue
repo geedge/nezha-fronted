@@ -359,6 +359,29 @@
       documentation: 'The population standard variance of the values in the specified interval.',
     },
   ]
+
+  const rateRange=[
+    {
+      insertText:'1m',
+      label:'1m'
+    },
+    {
+      insertText:'5m',
+      label:'5m'
+    },
+    {
+      insertText:'10m',
+      label:'10m'
+    },
+    {
+      insertText:'30m',
+      label:'30m'
+    },
+    {
+      insertText:'1h',
+      label:'1h'
+    },
+  ]
   export default {
     getOperators:function(){
       return JSON.parse(JSON.stringify(operators));
@@ -367,5 +390,9 @@
     getFunctions:function(){
       return JSON.parse(JSON.stringify(funcs))
     },
+
+    getRateRange:function(){
+      return JSON.parse(JSON.stringify(rateRange))
+    }
   }
 </script>
