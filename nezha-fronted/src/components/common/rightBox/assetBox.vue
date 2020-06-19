@@ -137,7 +137,25 @@
                 </button>
               </div>
             </template>
-            <div class="param-box param-box-module">
+            <div class="tag-edit-box">
+              <div class="tag-edit-box-head">
+                <div>Tag</div>
+                <div>Value</div>
+                <div>Action</div>
+              </div>
+              <el-scrollbar ref="tagEditBoxScrollbar" style="height: calc(100% - 32px);">
+                <div class="tag-edit-box-body" v-for="(item, index) in assetData.tags">
+                  <el-form-item class="tag-edit tag-edit-tag" :rules="{required: true, message: $t('validate.required'), trigger: 'blur'}" :prop="'tags.' + index + '.tag'">
+                    <el-input placeholder="tag" size="mini" v-model="item.tag"></el-input>
+                  </el-form-item>
+                  <el-form-item class="tag-edit tag-edit-value" :rules="{required: true, message: $t('validate.required'), trigger: 'blur'}" :prop="'tags.' + index + '.value'">
+                    <el-input placeholder="value" size="mini" v-model="item.value"></el-input>
+                  </el-form-item>
+                  <div class="param-box-row-symbol" :id="'asset-tag-remove-'+index" @click="removeTag(index)"><i class="nz-icon nz-icon-minus-square"></i></div>
+                </div>
+              </el-scrollbar>
+            </div>
+            <!--<div class="param-box param-box-module">
               <el-scrollbar ref="paramBoxScrollbar" style="height: 100%">
                 <div class="param-box-row" v-for="(item, index) in assetData.tags">
                   <el-form-item class="param-box-row-key" :rules="{required: true, message: $t('validate.required'), trigger: 'blur'}" :prop="'tags.' + index + '.tag'">
@@ -150,7 +168,7 @@
                   <span class="param-box-row-symbol" :id="'asset-tag-remove-param-'+index" @click="removeTag(index)"><i class="nz-icon nz-icon-minus-square"></i></span>
                 </div>
               </el-scrollbar>
-            </div>
+            </div>-->
           </el-form-item>
           <!------------------------------------------impi---------------------------------------------->
           <!--<div v-if="assetType == 1">
@@ -504,11 +522,14 @@
       },
       addTag() {
         this.assetData.tags.push({tag: "", value: ""});
+        this.$nextTick(() => {
+          this.$refs.tagEditBoxScrollbar.update();
+        });
       },
       removeTag: function(index) {
         this.assetData.tags.splice(index, 1);
         this.$nextTick(() => {
-          this.$refs.paramBoxScrollbar.update();
+          this.$refs.tagEditBoxScrollbar.update();
         });
       },
       clickOutSide(data) {

@@ -1376,14 +1376,14 @@ li{
   margin-left: 10px;
 }
 /* start--param*/
-.param-box {
+.param-box, .tag-edit-box {
   border: 1px solid #DCDFE6;
   border-radius: 4px;
 }
 .param-box-endpoint {
   height: 325px;
 }
-.param-box-module {
+.param-box-module, .tag-edit-box {
   height: 140px;
 }
 .param-box-row {
@@ -2041,4 +2041,36 @@ li{
   color: #909399;
   font-family: NotoSans !important;
   font-size: 12px !important;
+}
+
+.tag-edit-box {
+  .tag-edit-box-head {
+    display: flex;
+    box-sizing: border-box;
+    >div {
+      font-size: 13px;
+      color: #0275b8;
+    }
+    >div:not(:last-of-type) {
+      width: calc(50% - 25px);
+      padding: 0 10px;
+    }
+    >div:last-of-type {
+      width: 50px;
+    }
+  }
+  .tag-edit-box-body {
+    display: flex;
+    box-sizing: border-box;
+    .tag-edit {
+      padding: 0 10px;
+    }
+    >div:not(:last-of-type) {
+      width: calc(50% - 25px);
+      padding: 0 10px;
+    }
+    >div:last-of-type {
+      width: 50px;
+    }
+  }
 }
