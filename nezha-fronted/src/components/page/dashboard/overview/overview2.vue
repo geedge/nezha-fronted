@@ -82,18 +82,6 @@
                 <span>{{$t("dashboard.overview.traffic")}}</span>
                 <span class="content-col-title-tools">
                   <time-picker ref="calendarPanel" class="nz-dashboard-picker" @change="dateChange"></time-picker>
-                  <!--<el-dropdown trigger="hover" :show-timeout="0" size="small" :hide-on-click="false" @command="selectDatacenter">
-                    <span class="content-col-title-tool">{{$t("dashboard.overview.dataCenter.dataCenter")}}&nbsp;<i class="el-icon-arrow-down"></i></span>
-                    <el-dropdown-menu slot="dropdown" class="el-dropdown-multi">
-                      <el-dropdown-item :class="{'dropdown-item-active': trendSearchParam.dc.indexOf(item.id) > -1}" :command="item" v-for="(item,index) in trafficDatacenterData" :key="index">{{item.name}}</el-dropdown-item>
-                    </el-dropdown-menu>
-                  </el-dropdown>
-                  <el-dropdown trigger="hover" :show-timeout="0" size="small" :hide-on-click="false" @command="selectTag">
-                    <span class="content-col-title-tool">{{$t("overall.tag")}}&nbsp;<i class="el-icon-arrow-down"></i></span>
-                    <el-dropdown-menu slot="dropdown" class="el-dropdown-multi">
-                      <el-dropdown-item :class="{'dropdown-item-active': trendSearchParam.tag.some(tag => {return item.name == tag.name && item.value == tag.value;})}" :command="item" v-for="(item,index) in trafficTagData" :key="index">{{item.name}}&nbsp;:&nbsp;{{item.value}}</el-dropdown-item>
-                    </el-dropdown-menu>
-                  </el-dropdown>-->
                   <span class="content-col-title-tool">
                     <el-cascader
                       :options="trafficData"
@@ -109,7 +97,6 @@
               </div>
               <div class="content-col-content">
                 <chart-box chart-type="overviewLine" ref="chartbox" :show-toolbox="false" name="trend" :unit="15" @is-loading="(isLoading)=>{this.trendLoading = isLoading}"></chart-box>
-<!--                <div class="no-data-tip" v-if="!trendLoading && ((!chartSeries[0] && !chartSeries[1]) || (chartSeries[0].data.length == 0 && chartSeries[1] && chartSeries[1].data.length == 0))">N/A</div>-->
                 <div class="chart-no-data" v-if="!trendLoading && ((!chartSeries[0] && !chartSeries[1]) || (chartSeries[0].data.length == 0 && chartSeries[1] && chartSeries[1].data.length == 0))">No Data</div>
               </div>
             </div>
@@ -117,8 +104,6 @@
               <div class="content-col-title">{{$t("dashboard.overview.dataCenter.dataCenter")}}</div>
               <div class="content-col-content">
                 <chart-box chart-type="map" :tooltip-formatter="mapTooltipFormatter" :map="map" ref="dataCenterMap" @is-loading="(isLoading)=>{this.mapLoading = isLoading}"></chart-box>
-<!--                <div class="no-data-tip" v-if="!mapLoading && (!map || !map.geoJson || !map.geoJson.geoJson)">N/A</div>-->
-<!--                <div class="chart-no-data" v-if="!mapLoading && (!map || !map.geoJson || !map.geoJson.geoJson)">No Data</div>-->
               </div>
             </div>
           </div>
@@ -909,8 +894,6 @@
         this.$get('idc/trafficSetting', {pageSize: -1}).then(response => {
           if (response.code === 200) {
             this.trafficData = this.convertTrafficData(response.data.list);
-
-            //console.info(this.trafficData)
           }
         });
       },
@@ -918,28 +901,14 @@
         let result = [];
         data.forEach(item => {
           let hasDc = result.some(dc => { //dc去重
-            if (dc.label == item.idc.name) {
+            if (item.idc && dc.label == item.idc.name) {
               return true;
             }
           });
-          if (!hasDc) {
+          if (item.idc && !hasDc) {
             result.push({label: item.idc.name, value: "$dc$::" + item.idc.name, level: 1});
           }
         });
-        /*data.forEach(item => {
-          let hasDc = result.some(dc => { //dc去重
-            if (dc.label == item.idc.name) {
-              handleTag(dc, item.tags);
-              return true;
-            }
-            return false;
-          });
-          if (!hasDc) {
-            let dc = {label: item.idc.name, value: "$dc$::" + item.idc.name, children: [], level: 1};
-            handleTag(dc, item.tags);
-            result.push(dc);
-          }
-        });*/
         function handleTag(dc, tagData) { // dc: cascader数据里的第一级；tagData: 原始数据中的tags
           if (tagData) {
             let tags = dc.children;
@@ -1386,7 +1355,6 @@
       }
     },
     mounted() {
-      this.initDate();
       this.initData();
       window.onresize = () => {
         setTimeout(() => {

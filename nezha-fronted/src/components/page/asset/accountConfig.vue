@@ -1,19 +1,7 @@
 <template>
-    <div>
+    <div style="height: 280px;">
       <el-form label-width="120px" class="" :model="account" :rules="rules" ref="accountForm">
-          <!--<div class="nz-btn-group float-left" style="padding-top: 4px;" v-show="isEdit">
-            <button type="button" @click="changeLoginType(1)" id="account-logintype-1"
-                    class="nz-btn nz-btn-size-small float-left"
-                    :class="{'nz-btn-disabled nz-btn-style-normal' : account.authType == 1, 'nz-btn-style-light' : account.authType == 2}">
-              <span>{{$t('asset.createAssetTab.password')}}</span>
-            </button>
-            <button type="button" @click="changeLoginType(2)" id="account-logintype-2"
-                    class="nz-btn nz-btn-size-small float-left"
-                    :class="{'nz-btn-disabled nz-btn-style-normal' : account.authType == 2, 'nz-btn-style-light' : account.authType == 1}">
-              <span>{{$t('asset.createAssetTab.ssh')}}</span>
-            </button>
-          </div>-->
-        <div class="nz-tab" v-show="isEdit">
+        <div class="nz-tab">
           <div class="nz-tab-item-box" @click="changeProtocolType('SSH')" id="account-logintype-1">
             <div class="nz-tab-item" :class="{'nz-tab-item-active' : account.protocol == 'SSH','unclickable':!isAllowedChangeProtocol&&account.protocol == 'TELNET'}">{{$t('asset.createAssetTab.sshProtocol')}}</div>
           </div>
@@ -21,15 +9,8 @@
             <div class="nz-tab-item" :class="{'nz-tab-item-active' : account.protocol == 'TELNET','unclickable':!isAllowedChangeProtocol&&account.protocol == 'SSH'}">{{$t('asset.createAssetTab.telnetProtocol')}}</div>
           </div>
         </div>
-        <el-form-item :label="$t('asset.createAssetTab.protocol')" size="mini" v-show="!isEdit">
-          <div class="right-box-form-content-txt" >{{account.protocol=='SSH'?$t('asset.createAssetTab.sshProtocol'):$t('asset.createAssetTab.telnetProtocol')}}</div>
-        </el-form-item>
-<!--        <el-form-item :label="$t('asset.createAssetTab.loginType')" size="mini" v-show="!isEdit">-->
-<!--          <div class="right-box-form-content-txt" >{{account.authType==1?$t('asset.createAssetTab.password'):$t('asset.createAssetTab.ssh')}}</div>-->
-<!--        </el-form-item>-->
         <el-form-item :label="$t('asset.createAssetTab.account')" prop="user">
-          <el-input autocomplete="new-password" size="small" v-model="account.user" v-show="isEdit"/>
-          <div class="right-box-form-content-txt" v-show="!isEdit">{{account.user}}</div>
+          <el-input autocomplete="new-password" size="small" v-model="account.user"/>
         </el-form-item>
         <el-form-item :label="$t('asset.createAssetTab.loginType')" prop="loginType" v-show="account.protocol == 'SSH'">
           <el-radio-group v-model="account.authType" size="small">
@@ -37,37 +18,16 @@
             <el-radio-button label="2">{{$t('asset.createAssetTab.ssh')}}</el-radio-button>
           </el-radio-group>
         </el-form-item>
-        <el-form-item :label="$t('asset.createAssetTab.password')" v-show="isEdit&&(account.authType==1 || account.protocol == 'TELNET')" >
+        <el-form-item :label="$t('asset.createAssetTab.password')" v-show="(account.authType==1 || account.protocol == 'TELNET')" >
           <el-input autocomplete="new-password" size="small" type="password" v-model="account.pwd"/>
         </el-form-item>
-        <el-form-item :label="this.$t('asset.createAssetTab.ssh')" v-show="isEdit&&(account.authType==2 && account.protocol == 'SSH')" prop="file">
-          <el-input  rows="4" type="textarea" placeholder="" v-model="account.privateKey" size="small"></el-input>
+        <el-form-item :label="this.$t('asset.createAssetTab.ssh')" v-show="(account.authType==2 && account.protocol == 'SSH')" prop="file">
+          <el-input rows="4" type="textarea" placeholder="" v-model="account.privateKey" size="small"></el-input>
         </el-form-item>
         <el-form-item :label="$t('asset.createAssetTab.port')" prop="port" style="display: inline-block">
-          <el-input size="small" v-model.number="account.port" v-show="isEdit"/>
-          <div class="right-box-form-content-txt" v-show="!isEdit">{{account.port}}</div>
+          <el-input size="small" v-model.number="account.port"/>
         </el-form-item>
       </el-form>
-
-      <!--<div class="telnet-option" v-show="isEdit && account.protocol=='TELNET'">
-        <div class="telnet-option_title clickable" @click="isShowTelnetOption"><div style="width: 100px;">login option</div><div class="telnet-option_spilt"></div><div style="width: 20px"><i style="font-size: 12px;"  :class="{'el-icon-arrow-left':!showTelnetOption,'el-icon-arrow-down':showTelnetOption}"></i></div></div>
-        <div v-show="isEdit && account.protocol=='TELNET' && showTelnetOption" class="auto-login-tip">
-          {{$t('asset.createAssetTab.userPwdIntroduce')}}
-        </div>
-        <el-form-item :label="$t('asset.createAssetTab.userTip')" v-show="isEdit && account.protocol=='TELNET' && showTelnetOption" >
-          <el-input type="text" size="small" v-model="account.userTip" />
-        </el-form-item>
-        <el-form-item :label="$t('asset.createAssetTab.passwordTip')" v-show="isEdit && account.protocol=='TELNET' && showTelnetOption">
-          <el-input type="text" size="small" v-model="account.passwordTip" />
-        </el-form-item>
-        <div v-show="isEdit && account.protocol=='TELNET' && showTelnetOption" class="auto-login-tip">
-          {{$t('asset.createAssetTab.reLoginPwdIntroduce')}}
-        </div>
-        <el-form-item :label="$t('asset.createAssetTab.reloginPasswordTip')" v-show="isEdit && account.protocol=='TELNET' && showTelnetOption">
-          <el-input type="text" size="small" v-model="account.reloginPasswordTip" />
-        </el-form-item>
-      </div>-->
-
     </div>
 </template>
 
@@ -77,7 +37,6 @@ export default {
     name: "accountConfig",
     props:{
       account:{type:Object},
-      isEdit:{type:Boolean,default:true},
       isAllowedChangeProtocol:{type:Boolean,default:true}
     },
     created() {
