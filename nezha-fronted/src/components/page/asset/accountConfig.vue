@@ -1,14 +1,26 @@
 <template>
-    <div style="height: 280px;">
+    <div>
       <el-form label-width="120px" class="" :model="account" :rules="rules" ref="accountForm">
         <div class="nz-tab">
           <div class="nz-tab-item-box" @click="changeProtocolType('SSH')" id="account-logintype-1">
-            <div class="nz-tab-item" :class="{'nz-tab-item-active' : account.protocol == 'SSH','unclickable':!isAllowedChangeProtocol&&account.protocol == 'TELNET'}">{{$t('asset.createAssetTab.sshProtocol')}}</div>
+            <div class="nz-tab-item" :class="{'nz-tab-item-active' : account.protocol == 'SSH', 'unclickable' : !isAllowedChangeProtocol && (account.protocol == 'TELNET' || account.protocol == 'SNMP')}">{{$t('asset.createAssetTab.sshProtocol')}}</div>
           </div>
-          <div @click="changeProtocolType('TELNET')" class="nz-tab-item-box">
-            <div class="nz-tab-item" :class="{'nz-tab-item-active' : account.protocol == 'TELNET','unclickable':!isAllowedChangeProtocol&&account.protocol == 'SSH'}">{{$t('asset.createAssetTab.telnetProtocol')}}</div>
+          <div @click="changeProtocolType('TELNET')" class="nz-tab-item-box" id="account-logintype-2">
+            <div class="nz-tab-item" :class="{'nz-tab-item-active' : account.protocol == 'TELNET', 'unclickable' : !isAllowedChangeProtocol && (account.protocol == 'SSH' || account.protocol == 'SNMP')}">{{$t('asset.createAssetTab.telnetProtocol')}}</div>
+          </div>
+          <div @click="changeProtocolType('SNMP')" class="nz-tab-item-box" id="account-logintype-3">
+            <div class="nz-tab-item" :class="{'nz-tab-item-active' : account.protocol == 'SNMP', 'unclickable' : !isAllowedChangeProtocol && (account.protocol == 'TELNET' || account.protocol == 'SSH')}">SNMP</div>
           </div>
         </div>
+        <template v-if="account.protocol == 'SSH'">
+
+        </template>
+        <template v-if="account.protocol == 'TELNET'">
+
+        </template>
+        <template v-if="account.protocol == 'SNMP'">
+
+        </template>
         <el-form-item :label="$t('asset.createAssetTab.account')" prop="user">
           <el-input autocomplete="new-password" size="small" v-model="account.user"/>
         </el-form-item>

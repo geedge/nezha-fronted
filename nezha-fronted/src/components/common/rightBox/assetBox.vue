@@ -435,11 +435,6 @@
         exporterDisableSwitch:false
       }
     },
-    /*computed: {
-      getData() {
-        return this.$store.state.assetData
-      }
-    },*/
     watch: {
       allModelUlData: {
         deep: true,
@@ -558,9 +553,9 @@
         let $temp=this;
         setTimeout(()=>{
           if(!this.locationInfo){
-            callback(new Error($temp.$t('validate.requiredIdc')))
+            callback(new Error($temp.$t('validate.required')))
           }else if(this.locationInfo && !this.locationInfo.idc){
-            callback(new Error($temp.$t('validate.requiredIdc')))
+            callback(new Error($temp.$t('validate.required')))
           }else{
             callback();
           }
@@ -620,54 +615,6 @@
             this.resetAsset();
           }
         });
-        /*if (data) {
-          this.pageObj.id = data;
-          this.$get('asset', this.pageObj).then(response => {
-            if (response.code === 200) {
-              this.obj = response.data.list[0];
-              this.assetViewData.assetType = response.data.list[0].model.type.value
-              this.assetViewData.vendor = response.data.list[0].model.vendor.value
-              this.assetViewData.model = response.data.list[0].model.name
-              this.modelSize=response.data.list[0].model.usize;
-              this.assetViewData.idcName = response.data.list[0].idc.name
-              this.assetViewData.cabinetName = response.data.list[0].cabinet == null ? '' : response.data.list[0].cabinet.name
-              let initLocationData={
-                idc:response.data.list[0].idc,
-                cabinet:response.data.list[0].cabinet,
-                u:[response.data.list[0].cabinetStart,response.data.list[0].cabinetEnd]
-              }
-              this.$refs.locationCascader.initComponet(initLocationData)
-              this.assetViewData.moduleNum = response.data.list[0].moduleNum
-              this.assetViewData.alertNum = response.data.list[0].alertNum
-              this.assetViewData.cabinetName = response.data.list[0].cabinet == null ? '' : response.data.list[0].cabinet.name
-              this.getCabinetOptionData(response.data.list[0].idc.id)
-              this.assetType = response.data.list[0].model.type.code
-              this.assetData.impi=response.data.list[0].impi?response.data.list[0].impi:{host:'',port:''};
-              this.assetData.sn = response.data.list[0].sn
-              this.assetData.host = response.data.list[0].host
-              this.assetData.state = response.data.list[0].state
-              this.assetData.idcId = response.data.list[0].idc.id
-              this.assetData.cabinetId = response.data.list[0].cabinet == null ? '' : response.data.list[0].cabinet.id
-              this.assetData.purchaseDate = response.data.list[0].purchaseDate
-              // this.assetData.accounts[0].id = response.data.list[0].accounts[0].id
-              // this.assetData.accounts[0].authType = response.data.list[0].accounts[0].authType
-              // this.assetData.accounts[0].user = response.data.list[0].accounts[0].user
-              // this.assetData.accounts[0].pwd = response.data.list[0].accounts[0].pwd
-              // this.assetData.accounts[0].port = response.data.list[0].accounts[0].port
-              // this.assetData.accounts[0].cert = response.data.list[0].accounts[0].privateKey
-              this.assetData.accounts=response.data.list[0].accounts[0]?response.data.list[0].accounts:[];
-              this.accountSwitch=this.assetData.accounts.length>0;
-              this.idcSelectedData.location = response.data.list[0].idc.location
-              this.idcSelectedData.principal = response.data.list[0].idc.principal
-              this.idcSelectedData.tel = response.data.list[0].idc.tel
-              this.cabinetSelectedData.uSize = response.data.list[0].cabinet == null ? '' : response.data.list[0].cabinet.uSize
-              this.cabinetSelectedData.remark = response.data.list[0].cabinet == null ? '' : response.data.list[0].cabinet.remark
-              this.getAllModelOptionData(this.assetType)
-            }
-          })
-        } else {
-          this.resetAsset();
-        }*/
       },
       openModuleBox(module) {
         this.module = module;
