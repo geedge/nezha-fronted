@@ -800,7 +800,8 @@ const en = {
       unit:'Unit',
       chart: {
         alertRuleInfo: "Alert rule information",
-        alertNumTrend: "Alert num trend"
+        alertNumTrend: "Alert num trend",
+        affectEntity: "Affect entity"
       }
     }
   },

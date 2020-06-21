@@ -774,7 +774,12 @@ const cn = {
       alertNum: "告警数量",
       operator:'比较符',
       threshold:'阈值',
-      unit:'单位'
+      unit:'单位',
+      chart: {
+        alertRuleInfo: "告警规则",
+        alertNumTrend: "告警数量趋势",
+        affectEntity: "影响"
+      }
     }
   },
   project: {
