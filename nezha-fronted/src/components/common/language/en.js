@@ -33,6 +33,7 @@ const en = {
     select: 'Select',//'选择'
     ok: 'Ok',//OK
     all: 'All',//'全选'
+    value: 'Value',
     other: 'Others',//"其他"
     detail: 'Detail', //详情
     query: 'Query', //查询
@@ -856,7 +857,7 @@ const en = {
       element: 'Element',
       value: 'Value',
       promExpr: 'Please input expression',
-      dialogTitle:'View', //endpoint 弹出dialog 标题,
+      dialogTitle:'History value', //endpoint 弹出dialog 标题,
       hideSameLabels:'Hide same labels',
       stateInfo_230009:'promserver unavailable',
       stateInfo_230010:'promserver can be used',

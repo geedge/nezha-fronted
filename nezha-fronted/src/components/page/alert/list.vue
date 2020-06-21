@@ -124,12 +124,14 @@
               <div v-else-if="item.prop == 'current'" class="too-long-split" >
                 <span v-if="!scope.row.current">-</span>
                 <el-popover v-else placement="right" trigger="hover">
-                  <span slot="reference">{{formatThreshold(scope.row.current[1],scope.row.alertRule.unit)}}</span>
+                  <div slot="reference">
+                    <span @click="detail(scope.row)" class="content-right-option" :id="'alert-list-detail-'+scope.row.id"><i class="nz-icon nz-icon-chart"></i></span>
+                    <span>{{formatThreshold(scope.row.current[1],scope.row.alertRule.unit)}}</span>
+                  </div>
                   <div>{{$unixTimeParseToString(scope.row.current[0])}}</div>
                 </el-popover>
               </div>
               <div v-else-if="item.prop == 'option'" class="content-right-options">
-                <span :title="$t('overall.view')" @click="detail(scope.row)" class="content-right-option" :id="'alert-list-detail-'+scope.row.id"><i class="nz-icon nz-icon-chart"></i></span>
                 <span :title="$t('overall.delete')" @click="toDeleteMessage(scope.row)" class="content-right-option" :id="'alert-list-delete-'+scope.row.id"><i  class="el-icon-delete"></i></span>
               </div>
               <span v-else-if="scope.row[item.prop]">{{scope.row[item.prop]}}</span>
@@ -279,17 +281,7 @@
             prop: 'alertRule',
             show: true,
             width: 180
-          }, /*{
-            label: this.$t("alert.list.type"),
-            prop: 'type',
-            show: true,
-            width: 100
           }, {
-            label: this.$t("alert.list.linked"),
-            prop: 'linkObject',
-            show: true,
-            width: 140
-          }, */{
             label: this.$t("alert.list.labels"),
             prop: 'labels',
             show: true,
@@ -321,7 +313,7 @@
             prop: 'endAt',
             show: true,
           }, {
-            label: this.$t('alert.list.current'),
+            label: this.$t('overall.value'),
             prop: 'current',
             show: true
           }, {
