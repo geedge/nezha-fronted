@@ -922,6 +922,34 @@ li{
     max-height: 500px;
   }
 }
+@keyframes unfold-600 {
+  0%{
+    visibility: hidden;
+    opacity: 0;
+    max-height: 0;
+  }
+  25%{
+    opacity: 0;
+    max-height: 120px;
+  }
+  50%{
+    opacity: 0;
+    max-height: 240px;
+  }
+  66%{
+    opacity: 0.2;
+    max-height: 360px;
+  }
+  83%{
+    opacity: 0.5;
+    max-height: 480px;
+  }
+  100% {
+    visibility: visible;
+    opacity: 1;
+    max-height: 600px;
+  }
+}
 @keyframes fold-500 {
   0% {
     opacity: 1;
@@ -943,6 +971,34 @@ li{
   75%{
     opacity: 0;
     max-height: 100px;
+  }
+  100% {
+    visibility: hidden;
+    opacity: 0;
+    max-height: 0;
+  }
+}
+@keyframes fold-600 {
+  0% {
+    opacity: 1;
+    max-height: 600px;
+    visibility: visible;
+  }
+  16% {
+    opacity: 0.5;
+    max-height: 480px;
+  }
+  33%{
+    opacity: 0.2;
+    max-height: 360px;
+  }
+  50%{
+    opacity: 0;
+    max-height: 240px;
+  }
+  75%{
+    opacity: 0;
+    max-height: 120px;
   }
   100% {
     visibility: hidden;

@@ -400,6 +400,14 @@
       max-height: 0;
       visibility: hidden;
     }
+    .fold-600 {
+      animation-name: fold-600; //该动画定义在main.scss里
+      animation-duration: 0.2s;
+      animation-iteration-count:1;
+      opacity: 0;
+      max-height: 0;
+      visibility: hidden;
+    }
     .fold-200 {
       animation-name: fold-200; //该动画定义在main.scss里
       animation-duration: 0.2s;
@@ -414,6 +422,14 @@
       animation-iteration-count:1;
       opacity: 1;
       max-height: 500px;
+      visibility: visible;
+    }
+    .unfold-600 {
+      animation-name: unfold-600;
+      animation-duration: 0.2s;
+      animation-iteration-count:1;
+      opacity: 1;
+      max-height: 600px;
       visibility: visible;
     }
     .unfold-200 {

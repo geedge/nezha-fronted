@@ -29,7 +29,7 @@
                 <span><i :class="{'el-icon-caret-right': show.indexOf(index) == -1,'el-icon-caret-bottom': show.indexOf(index) > -1}"></i></span>
                 <span>{{item.title}}</span>
               </div>
-              <div class="chart-sub-content" :class="{'init-no-animation': index == 0, 'fold-500': show.indexOf(index) == -1, 'unfold-500': show.indexOf(index) > -1}">
+              <div class="chart-sub-content" :class="{'init-no-animation': index == 0, 'fold-600': show.indexOf(index) == -1, 'unfold-600': show.indexOf(index) > -1}">
                 <template v-for="(value, key, i) in item.data">
 
                   <!-- endpoint-detail、asset、model的assetInfo的asset详情-->
@@ -42,9 +42,9 @@
                     <div class="content-item-value item-tip" :id="`value-${index}-${i}`">
                       <span v-if="key == 'state'">{{value == 1 ? $t('asset.createAssetTab.inStock') : $t('asset.createAssetTab.outStock')}}</span>
                       <span v-else-if="key == 'alert'" class="as-button" :class="{'success': value <= 0, 'danger': value > 0}">{{value + ' ' + $t('overall.active')}}</span>
-                      <div v-if="key == 'tags'" class="no-overflow">
+                      <div v-else-if="key == 'tags'" class="no-overflow" style="padding-bottom: 5px;">
                         <template v-if="value && value.length > 0">
-                          <nz-alert-tag :label="tagItem.tag" type="normal" style="margin: 5px; vertical-align: middle;"
+                          <nz-alert-tag :label="tagItem.tag" type="normal" style="margin: 5px 5px 0 0; vertical-align: middle;"
                                         :cursor-point="false"
                                         :key="tagItem.id"
                                         v-for="(tagItem, tagIndex) in value">
