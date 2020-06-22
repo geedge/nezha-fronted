@@ -10,7 +10,8 @@
             </el-dropdown>
           </div>
           <div class="inputBox">
-            <el-autocomplete :placeholder="$t('dashboard.metricPreview.inputTip')" :fetch-suggestions="filterInput" clearable @clear="clearExpression" :trigger-on-focus="false" v-model="expressionList[index]" @blur="expressionChange" style="width: 100%;height:36px"></el-autocomplete>
+<!--            <el-autocomplete :placeholder="$t('dashboard.metricPreview.inputTip')" :fetch-suggestions="filterInput" clearable @clear="clearExpression" :trigger-on-focus="false" v-model="expressionList[index]" @blur="expressionChange" style="width: 100%;height:36px"></el-autocomplete>-->
+            <editor :metric-list="metricStore" v-model="expressionList[index]" ref="editor" @on-enter="expressionChange" @on-blur="expressionChange"></editor>
             <div class="append-msg error" v-if="errorMsg"><span>{{errorMsg}}</span></div>
             <div class="append-msg error" v-if="appendMsg"><span>{{appendMsg}}</span></div>
           </div>
@@ -27,8 +28,12 @@
 </template>
 
 <script>
+  import editor from './editor'
     export default {
       name: "promqlInput",
+      components:{
+        'editor':editor
+      },
       props:{
         index:{type:Number},
         expressionList:{}
@@ -41,6 +46,7 @@
           cascaderValue:'',
           errorMsg:null,
           appendMsg:null,
+          editorValue:'',
         }
       },
       created() {
@@ -93,7 +99,7 @@
                   let values=[{label:item,value:item}];
                   metricMap.set(key,values);
                 }
-                this.metricStore.push({label:item,value:item})
+                this.metricStore.push({label:item,value:item,insertText:item})
               })
               for(let key of metricMap.keys()){
                 let option={
@@ -117,6 +123,7 @@
         },
         metricChange:function(value){
           this.expressionList[this.index]=value;
+          this.$refs.editor.setContent(value)
           this.dropDownVisible=false;
           this.$emit('change')
         },
@@ -137,6 +144,7 @@
             this.$refs.metricSelector.dropDownVisible=n;
           }
         },
+
       }
     }
 </script>

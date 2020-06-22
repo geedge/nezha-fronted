@@ -348,7 +348,6 @@ instance_cpu_time_ns{app="fox", proc="widget", rev="4d3a513", env="prod", job="c
                   this.defaultChartVisible = true;
 
               }
-
               this.$refs.exploreChart.endLoading();
             })
           }

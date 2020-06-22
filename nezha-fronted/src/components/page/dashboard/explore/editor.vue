@@ -1,8 +1,9 @@
 <template>
-  <div class="metric-editor">
-    <div :id="id" ref="editor"></div>
+  <div class="metric-editor" v-clickoutside="clickout">
+    <div :id="id" class="editor-core" ref="editor" ></div>
+    <span class="nz-input-append editor-clear" style="padding-top:8px;display: none" @click="clearContent"><i class="el-icon-circle-close"></i></span>
     <div class="metric-editor-popper" :style="{left:popperPos.left+'px'}">
-      <div class="metric-popper-main" v-show="Object.keys(showSuggestions).length>0">
+      <div class="metric-popper-main" v-show="showType&&Object.keys(showSuggestions).length>0">
           <el-scrollbar style="height: 100%" class="ps-scroll-small" ref="scroll">
             <div v-for="(key, index) in orders" >
               <div v-html="key" class="popper-group" v-show="showSuggestions[key]"></div>
@@ -10,7 +11,7 @@
             </div>
           </el-scrollbar>
       </div>
-      <div class="metric-popper-desc" v-if="Object.keys(showSuggestions).length>0&&showDescription && detailItem && detailItem.documentation">
+      <div class="metric-popper-desc" v-if="showType&&Object.keys(showSuggestions).length>0&&showDescription && detailItem && detailItem.documentation">
         <div><b>{{detailItem.insertText}}</b></div>
         <hr/>
         <div>{{detailItem.documentation}}</div>
@@ -22,12 +23,16 @@
 <script>
   import 'quill/dist/quill.snow.css'
   import Quill from 'quill'
-  import Keyboard from 'quill/modules/keyboard'
   import suggestions from "./suggestions";
   export default {
     name: "editor",
     props: {
-      value: Object
+      value: String,
+      metricList:{type:Array}
+    },
+    model:{
+      prop:'value',
+      event:'expression-change'
     },
     components:{
 
@@ -51,12 +56,14 @@
           modules: {
             toolbar: null
           },
-          placeholder: 'Insert text here ...'
+          placeholder: this.$t('dashboard.metricPreview.inputTip')
         },
         labelValues:{},
         tempStoreMetric:{},
+        showType:false,
         showDescription:false,
-        detailItem:{}
+        detailItem:{},
+
       }
     },
     created(){
@@ -67,14 +74,10 @@
         this.changeSuggestions('type')
         this.dealSpecilChar(char,operation);
 
-        if(this.pivotalCursorIndex>this.editRange.start && this.pivotalCursorIndex <= this.editRange.end){
           if(this.pivotalCursorIndex!=0){
             console.log('pivotalCursorIndex',this.pivotalCursorIndex,'cursorIndex',this.cursorIndex)
             newContent=newContent.substring(this.pivotalCursorIndex,this.cursorIndex);
           }
-        }else{
-          newContent=newContent.substring(this.editRange.start,this.editRange.end)
-        }
         this.filterItems(newContent);
       },
       dealSpecilChar:function(char,operation){
@@ -120,9 +123,17 @@
         if(/(\{\})|(\(\))|(\[\])|(\"\")/.test(temp)){
           this.quill.deleteText(this.cursorIndex,1,'api');
         }
-        if(leftChar == '{'){
-          this.pivotalCursorIndex=0;
+        let tempIndex=this.pivotalCursorIndex;
+        let tempStart,tempChar=this.content.charAt(tempIndex-1);
+
+        //向前查找，找到边界
+        while(!/[\{\(\[,= ]/.test(tempChar)&&tempIndex>0){
+          tempIndex--;
+          tempChar=this.content.charAt(tempIndex);
         }
+        this.pivotalCursorIndex=tempIndex+1;
+
+        console.log('after del double char',this.pivotalCursorIndex)
       },
       changeSuggestions:function(type){
         if(type == 'label'){
@@ -148,8 +159,6 @@
           let funcBody=match[0].substring(1,match[0].length-1);
 
           this.matchMetric(funcBody,funcMatch.index+match.index)
-          this.editRange.start=match.index+1;
-          this.editRange.end=match.index+funcBody.length
         }else{
           this.matchMetric()
         }
@@ -184,8 +193,6 @@
                   this.queryTypeInfos();
                 }
               }
-              this.editRange.start=editExpression.index
-              this.editRange.end=editExpression.index+expression.length
             }else{
               let tempIndex=this.cursorIndex;
               let tempStart,tempChar=this.content.charAt(tempIndex-1);
@@ -196,19 +203,12 @@
                 tempChar=this.content.charAt(tempIndex);
               }
 
-              this.editRange.start=tempIndex+1;
-              this.editRange.end=this.cursorIndex;
-
-              console.log('multi expression',this.editRange)
-
               this.queryTypeInfos();
             }
 
           }
         }else{
           console.log('mo match metric')
-          this.editRange.start=0;
-          this.editRange.end=this.cursorIndex;
           this.queryTypeInfos();
         }
       },
@@ -265,7 +265,21 @@
           this.queryTypeInfos();
           return;
         }
-        let metric=/([a-zA-Z_]\w*)\b(?=\{)/.exec(this.content)[0];
+
+        let metricReg=/([a-zA-Z_]\w*)\b\{.*?\}/g;
+        let editMetricExpression='';
+        let match=this.globalMatch(metricReg,this.content);
+        if(match&&match.length>0){
+          for(let i=0;i<match.length;i++){
+            let temp=match[i];
+            if(temp.index<this.cursorIndex && temp.index + temp[0].length > this.cursorIndex){
+              editMetricExpression=temp[0]
+              break;
+            }
+          }
+        }
+        console.log('query metric',editMetricExpression)
+        let metric=/([a-zA-Z_]\w*)\b(?=\{)/.exec(editMetricExpression)[0];
         let timeRange=this.getDefaultTimeRange();
         this.$get('/prom/api/v1/series?match[]={__name__="'+metric+'"}&start='+timeRange[0]+"&end="+timeRange[1]).then(response=>{
           if(response.status=='success'){
@@ -332,34 +346,34 @@
         this.quill.setSelection(this.pivotalCursorIndex,this.cursorIndex-this.pivotalCursorIndex,'api');
         this.deleteTextInRange(this.pivotalCursorIndex,this.cursorIndex)
         this.insertTextAtIndex(item.insertText,this.pivotalCursorIndex)
+        this.showType=false;
       },
       handleOperatorClick:function(item){
-        this.deleteTextInRange(this.editRange.start,this.cursorIndex)
-        this.insertTextAtIndex(item.insertText,this.editRange.start == 0?this.editRange.start-1:this.editRange.start);
-        this.cursorIndex=this.editRange.start
-        this.quill.setSelection(this.cursorIndex+item.insertText.length);
-        this.storeCursor().then(()=>{
-          // this.insertTextAtIndex('()',this.cursorIndex,'user')
-          // this.quill.setSelection(this.cursorIndex+1)
-        })
-      },
-      handleFunctionClick:function(item){
-        this.deleteTextInRange(this.editRange.start,this.cursorIndex)
-        this.insertTextAtIndex(item.insertText,this.editRange.start == 0?this.editRange.start-1:this.editRange.start);
-        this.cursorIndex=this.editRange.start
-        this.quill.setSelection(this.cursorIndex+item.insertText.length);
-        this.storeCursor().then(()=>{
-          this.insertTextAtIndex('()',this.cursorIndex,'user')
-          this.quill.setSelection(this.cursorIndex+1)
-        })
-      },
-      handleMetricClick:function(item){
-        this.deleteTextInRange(this.editRange.start,this.cursorIndex)
+        this.deleteTextInRange(this.pivotalCursorIndex,this.cursorIndex)
         this.$nextTick(()=>{
-          this.insertTextAtIndex(item.insertText,this.editRange.start==0?this.editRange.start-1:this.editRange.start,'user');
-          this.quill.setSelection(this.editRange.start+item.insertText.length);
+          this.insertTextAtIndex(item.insertText,this.pivotalCursorIndex,'user');
+          this.quill.setSelection(this.pivotalCursorIndex+item.insertText.length);
           this.storeCursor()
         })
+        this.showType=false;
+      },
+      handleFunctionClick:function(item){
+        this.deleteTextInRange(this.pivotalCursorIndex,this.cursorIndex)
+        this.$nextTick(()=>{
+          this.insertTextAtIndex(item.insertText,this.pivotalCursorIndex,'user');
+          this.quill.setSelection(this.pivotalCursorIndex+item.insertText.length);
+          this.storeCursor()
+        })
+        this.showType=false;
+      },
+      handleMetricClick:function(item){
+        this.deleteTextInRange(this.pivotalCursorIndex,this.cursorIndex)
+        this.$nextTick(()=>{
+          this.insertTextAtIndex(item.insertText,this.pivotalCursorIndex,'user');
+          this.quill.setSelection(this.pivotalCursorIndex+item.insertText.length);
+          this.storeCursor()
+        })
+        this.showType=false;
       },
       handleLabelClick:function(item){
         this.quill.setSelection(this.pivotalCursorIndex,this.cursorIndex-this.pivotalCursorIndex,'api');
@@ -370,6 +384,7 @@
            this.quill.setSelection(this.cursorIndex+1)
            this.changeSuggestions('value')
         })
+        this.showType=true;
       },
       handleValueClick:function(item){
         let preChar=this.content.substring(this.pivotalCursorIndex-1,this.pivotalCursorIndex);
@@ -380,6 +395,7 @@
         }else{
           this.insertTextAtIndex(item.insertText,this.pivotalCursorIndex)
         }
+        this.showType=false;
       },
       toggleSelect:function(event){//上下键选择
         if(event.code=='ArrowDown'||event.keyCode==40){
@@ -444,6 +460,8 @@
             this.handleOperatorClick({insertText:insertText})
           }else if(type == 'range'){
             this.handleRangeClick({insertText:insertText})
+          }else if(type == 'functions'){
+            this.handleFunctionClick({insertText:insertText})
           }
 
         }
@@ -476,6 +494,9 @@
         }
 
         this.showSuggestions=this.deepClone(suggestions)
+        if(Object.keys(this.showSuggestions).length>0){
+          this.showType=true;
+        }
         let scroll=this.$refs.scroll.wrap;
         scroll.scrollTop=0;
       },
@@ -486,9 +507,14 @@
             console.log('storedSuggestions->',suggestions)
           })
       },
+      setContent:function(value){
+        this.clearContent();
+        this.quill.setText(value);
+      },
       clearContent:function(){
         this.quill.deleteText(0,this.quill.getLength(),'api')
         this.cursorIndex=0;
+        this.pivotalCursorIndex=0;
       },
       insertTextAtIndex:function(content,index,source='api'){
         this.quill.insertText(index?index:this.cursorIndex,content,source)
@@ -515,7 +541,7 @@
               $temp.cursorIndex=range.index;
               console.log('current cursor-->',$temp.cursorIndex)
 
-              if(/^[\{\(\[,="]$/g.test(char)){
+              if(/^[\{\(\[,= "]$/g.test(char)){
                 $temp.pivotalCursorIndex=$temp.cursorIndex;
                 console.log('store pivotalCursorIndex',$temp.pivotalCursorIndex)
               }
@@ -560,6 +586,12 @@
         }
 
 
+      },
+      clickout:function(){
+        if(this.quill&&this.quill.hasFocus()){
+          this.$emit('on-blur')
+        }
+        this.showType=false
       },
       itemHover:function(item){
         if(item&&item.documentation){
@@ -636,16 +668,20 @@
         return result;
       },
       queryMetrics:function(){
-        this.$get('/prom/api/v1/label/__name__/values').then(response=>{
-          if(response.status == 'success'){
-            let metrics=response.data.map(item=>{
-              return {label:item,insertText:item};
-            })
+        if(this.metricList&&this.metricList.length>0){
+          this.tempStoreMetric=this.deepClone(this.metricList)
+        }else{
+          this.$get('/prom/api/v1/label/__name__/values').then(response=>{
+            if(response.status == 'success'){
+              let metrics=response.data.map(item=>{
+                return {label:item,insertText:item};
+              })
 
-            this.tempStoreMetric=this.deepClone(metrics);
-            this.queryTypeInfos();
-          }
-        })
+              this.tempStoreMetric=this.deepClone(metrics);
+              this.queryTypeInfos();
+            }
+          })
+        }
       },
     },
     computed: {
@@ -663,7 +699,9 @@
         enter:{
           key:13,
           handler:function(range,content){
-            console.log('enter')
+            $temp.showType=false;
+            $temp.quill.blur();
+            $temp.$emit('on-enter')
             return false;
           }
         }
@@ -671,6 +709,9 @@
       this.options.modules.keyboard={};
       this.options.modules.keyboard.bindings=bindings;
       this.quill = new Quill(this.$refs.editor, this.options);
+      this.quill.on('blur',function(){
+        console.log('quill blur')
+      })
       this.quill.on('text-change',function(delta, oldDelta, source){
         console.log('delta',delta,'oldDelta',oldDelta,'source',source)
         let char='',operation='';
@@ -712,8 +753,11 @@
     },
     watch:{
       content:function(n,o){
-        let reg=/[a-zA-Z_]\w*?\b\{((\w*?)(=|!=|~=|!~)".*?",{0,1})+?\}/g;
-        console.log('watch match',this.globalMatch(reg,n))
+        this.$emit('expression-change',n)
+        if(!n || n == ''){
+          this.cursorIndex=0;
+          this.pivotalCursorIndex=0;
+        }
       },
       showSuggestions:{
         immediate:true,
@@ -730,13 +774,16 @@
 <style scoped>
   .metric-editor{
     position: relative;
+    height: 36px;
   }
+
   .metric-editor-popper{
     position: absolute;
     height: 600px;
     padding: 10px;
     margin-top: 5px;
     overflow: hidden;
+    z-index:2001;
   }
   .metric-editor-popper .metric-popper-main{
     display: inline-block;
@@ -744,12 +791,13 @@
     border: 1px solid lightgrey;
     height: 100%;
     max-width: 66%;
-    min-width: 100px;
+    min-width: 200px;
     float: left;
     border-radius: 3px;
     box-shadow: 0 5px 10px 0 #dde4ed;
     color: #52545c;
     padding: 5px;
+    background-color: white;
   }
   .metric-editor-popper .metric-popper-desc{
     display: inline-block;
@@ -763,6 +811,7 @@
     box-shadow: 0 5px 10px 0 #dde4ed;
     color: #52545c;
     padding: 5px;
+    background-color: white;
   }
   .metric-editor-popper .popper-item{
     height: 20px;
@@ -787,6 +836,12 @@
   .toggle-bg{
     background-color:rgb(233, 237, 242) ;
   }
+  .editor-core:hover + .editor-clear{
+    display: inline-block !important;
+  }
+  .editor-clear:hover{
+    display: inline-block !important;
+  }
 </style>
 <style>
   mark{
@@ -796,4 +851,9 @@
     background: inherit;
     padding: 0;
   }
+   .ql-editor{
+    padding:10px 10px !important;
+     overflow: hidden;
+  }
+
 </style>
