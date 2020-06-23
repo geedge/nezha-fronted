@@ -21,7 +21,7 @@
         {{tabView == false && !pageObj.id ? $t('asset.createAssetTab.title') : ''}}
       </div>
 
-      <el-scrollbar class="right-box-form-box">
+      <el-scrollbar class="right-box-form-box" ref="scrollbar">
         <el-form ref="assetEditForm" :model="assetData" label-width="120px" class="right-box-form right-box-form-left" :rules="rules">
           <el-form-item :label="$t('asset.createAssetTab.sn')" prop="sn">
             <el-input size="small" v-if="!tabView" v-model="assetData.sn"/>
@@ -151,7 +151,7 @@
                   <el-form-item class="tag-edit tag-edit-value" :rules="{required: true, message: $t('validate.required'), trigger: 'blur'}" :prop="'tags.' + index + '.value'">
                     <el-input placeholder="value" size="mini" v-model="item.value"></el-input>
                   </el-form-item>
-                  <div class="param-box-row-symbol" :id="'asset-tag-remove-'+index" @click="removeTag(index)"><i class="nz-icon nz-icon-minus-square"></i></div>
+                  <div class="param-box-row-symbol" :id="'asset-tag-remove-'+index" @click.stop="removeTag(index)"><i class="nz-icon nz-icon-minus-square"></i></div>
                 </div>
               </el-scrollbar>
             </div>
@@ -176,21 +176,38 @@
             <location-cascader :disabled="assetData.modelId !=''?false:true" :default-model-u-size="modelSize" @change="setLocationData" :init-data="initLocationData" ref="locationCascader" :idc-option="IDCOptionData"></location-cascader>
           </el-form-item>
           <!--cli-->
-          <div class="right-box-sub-title">{{$t('asset.createAssetTab.cli')}}
-            <el-switch v-if="!tabView" style="float: right;" v-model="accountSwitch" active-color="#ee9d3f" :disabled="parseInt(assetData.exporter)===1"></el-switch>
+          <div class="right-box-sub-title">{{$t('config.account.account')}}
+            <!--<el-switch v-if="!tabView" style="float: right;" v-model="accountSwitch" active-color="#ee9d3f" :disabled="parseInt(assetData.exporter)===1"></el-switch>-->
           </div>
           <div class="line-100 right-box-line"></div>
-          <template v-if="accountSwitch">
+          <!--<template v-if="accountSwitch">
             <account-config-box v-for="(item,index) in assetData.accounts" :is-edit="!tabView" :account="item" :key="index" ref="accountConfigBox" @setValidateResult="setAccountValideResult" :is-allowed-change-protocol="changeProtocolSwitch" @protocol-type-change="protocolTypeChange"></account-config-box>
-          </template>
+          </template>-->
+          <div class="nz-tab" style="padding-left: 30px;">
+            <div class="nz-tab-item-box" v-for="(account, index) in assetData.accounts" :key="index" @click="changeProtocolType(account.protocol)" :id="`account-login-type-${index}`">
+              <div class="nz-tab-item" :class="{'nz-tab-item-active': accountType == account.protocol}" style="position: relative;">
+                <span>{{account.protocol}}</span>
+                <transition name="el-zoom-in-top">
+                  <div v-if="errorProtocol.indexOf(account.protocol) > -1" class="nz-tab-error el-form-item__error">Required</div>
+                </transition>
+              </div>&nbsp;
+              <span class="nz-tab-item-close" @click.stop="removeAccount(index)"><i class="el-icon-circle-close"></i></span>
+            </div>
+            <el-popover placement="right" width="70" trigger="click" :disabled="assetData.accounts.length == 3" v-model.sync="showAccountOp" popper-class="no-style-class">
+              <button slot="reference" id="add-type" type="button" class="nz-btn nz-btn-size-normal nz-btn-style-light float-right" :class="{'nz-btn-disabled': assetData.accounts.length == 3}">
+                <span><i style="font-size: 12px;" class="nz-icon nz-icon-create-square"></i></span>
+              </button>
+              <ul class="el-select-dropdown__list">
+                <li @click="addAccount(type)" v-for="(type, index) in selectableAccountTypes" :key="index" class="el-select-dropdown__item"><span>{{type}}</span></li>
+              </ul>
+            </el-popover>
+          </div>
+          <account-config-box v-for="(account,index) in assetData.accounts" :account="account" v-show="account.protocol == accountType" :key="index" ref="accountConfigBox" @setValidateResult="setAccountValideResult" @protocol-type-change="protocolTypeChange"></account-config-box>
 
-          <template v-if="!pageObj.id && !exporterDisableSwitch">
+          <template v-if="accountType == 'SSH'">
             <el-form-item :label="$t('asset.createAssetTab.exporter')" class="exporter-label">
               <el-switch class="exporter-switch" v-model="assetData.exporter" active-color="#ee9d3f" active-value="1" inactive-value="0" :show="!exporterDisableSwitch"></el-switch>
             </el-form-item>
-          </template>
-          <template v-else>
-            <div style="height: 52px;"></div>
           </template>
         </el-form>
       </el-scrollbar>
@@ -227,6 +244,8 @@
         firstShowModel: false,
         visible: '',
         vendorModelData: '',
+        showAccountOp: false,
+        errorProtocol: [], //校验不通过的account
         assetData: {
           id: '',
           sn: '',
@@ -241,7 +260,8 @@
             host:'',
             port:'',
           },
-          accounts: [{
+          accounts: [],
+          /*accounts: [{
             id: '',
             authType: 1,
             protocol:'SSH',
@@ -251,14 +271,15 @@
             userTip:"",
             passwordTip:'',
             reloginPasswordTip:''
-          }],
+          }],*/
           tags: [],
           exporter: 0
         },
+        selectableAccountTypes: ["SSH", "TELNET", "SNMP"],
         modelSize:1,
         initLocationData:null,
         locationInfo:null,
-        accountSwitch:false,//true 开启，false 关闭
+        //accountSwitch:false,//true 开启，false 关闭
         accountData: '',
         assetViewData: {
           assetType: '',
@@ -459,7 +480,20 @@
       'assetData.idcId': function(n, o) {
         this.addCabinetData.idcId = n;
       },
-      accountSwitch(n) {
+      'assetData.accounts': {
+        deep: true,
+        handler(n) {
+          let temp = ["SSH", "TELNET", "SNMP"];
+          n.forEach(item => {
+            let i = temp.indexOf(item.protocol);
+            if (i > -1) {
+              temp.splice(i, 1);
+            }
+          });
+          this.selectableAccountTypes = temp;
+        }
+      },
+      /*accountSwitch(n) {
         if (n) {
           if (!this.assetData.accounts[0]) {
             !this.assetData.accounts.push({
@@ -487,7 +521,7 @@
         }else{
           this.changeProtocolSwitch=true;
         }
-      },
+      },*/
       locationInfo:{
         deep:true,
         handler(n,o){
@@ -509,6 +543,64 @@
           this.$refs.tagEditBoxScrollbar.update();
         });
       },
+      addAccount(type) {
+        if (type == "SSH") {
+          this.assetData.accounts.push({
+            authType: 1,
+            protocol: "SSH",
+            port: 22,
+            params: {
+              user: "",
+              method: "password",
+              password: "",
+              key: "",
+              passwordKey: ""
+            }
+          });
+        } else if (type == "TELNET") {
+          this.assetData.accounts.push({
+            protocol: "TELNET",
+            port: 23,
+            params: {
+              user: "",
+              password: "",
+              userTip: "",
+              passwordTip: "",
+              reloginTip: ""
+            }
+          });
+        } else if (type == "SNMP") {
+          this.assetData.accounts.push({
+            protocol: "SNMP",
+            port: 161,
+            params: {
+              version:2,
+              community:"public",
+              security_name:"",
+              security_level:"",
+              auth_password:"",
+              priv_password:"",
+              auth_protocol:"",
+              priv_protocol:"",
+              context_name:""
+            }
+          });
+        }
+        this.accountType = type;
+        this.showAccountOp = false;
+        this.$nextTick(() => {
+          let sbWrap = this.$refs.scrollbar.$refs.wrap;
+          sbWrap.scrollTop = sbWrap.scrollHeight;
+        });
+      },
+      removeAccount(index) {
+        this.assetData.accounts.splice(index, 1);
+        if (this.assetData.accounts.length > 0) {
+          this.accountType = this.assetData.accounts[0].protocol;
+        } else {
+          this.accountType = "";
+        }
+      },
       removeTag: function(index) {
         this.assetData.tags.splice(index, 1);
         this.$nextTick(() => {
@@ -525,6 +617,7 @@
         this.getIDCOptionData();
         this.getVendorOptionData();
         this.getAssetTypeOptionData();
+        this.showAccountOp = false;
       },
       editQuit() {
         for (let i of this.assetTypeOptionData) {
@@ -595,8 +688,12 @@
             this.assetData.state = this.obj.state
             this.assetData.idcId = this.obj.idc.id;
             this.assetData.tags = this.obj.tags;
+            this.assetData.accounts = this.obj.accounts;
             this.assetData.cabinetId = this.obj.cabinet == null ? '' : this.obj.cabinet.id
             this.assetData.purchaseDate = this.obj.purchaseDate;
+            if (this.assetData.accounts && this.assetData.accounts.length > 0) {
+              this.accountType = this.assetData.accounts[0].protocol.toUpperCase();
+            }
             // this.assetData.accounts[0].id = this.obj.accounts[0].id
             // this.assetData.accounts[0].authType = this.obj.accounts[0].authType
             // this.assetData.accounts[0].user = this.obj.accounts[0].user
@@ -604,12 +701,12 @@
             // this.assetData.accounts[0].port = this.obj.accounts[0].port
             // this.assetData.accounts[0].cert = this.obj.accounts[0].privateKey
             this.assetData.accounts=this.obj.accounts[0]?this.obj.accounts:[];
-            this.accountSwitch=this.assetData.accounts.length>0;
+            //this.accountSwitch=this.assetData.accounts.length>0;
             this.idcSelectedData.location = this.obj.idc.location
             this.idcSelectedData.principal = this.obj.idc.principal
             this.idcSelectedData.tel = this.obj.idc.tel
             this.cabinetSelectedData.uSize = this.obj.cabinet == null ? '' : this.obj.cabinet.uSize
-            this.cabinetSelectedData.remark = this.obj.cabinet == null ? '' : this.obj.cabinet.remark
+            this.cabinetSelectedData.remark = this.obj.cabinet == null ? '' : this.obj.cabinet.remark;
             this.getAllModelOptionData(this.assetType);
           } else {
             this.resetAsset();
@@ -739,17 +836,7 @@
             port:'',
           },
           locationInfo:null,
-          accounts: [{
-            id: '',
-            authType: 1,
-            protocol: 'SSH',
-            user: '',
-            pwd: '',
-            port: '',
-            userTip:"",
-            passwordTip:'',
-            reloginPasswordTip:''
-          }],
+          accounts: [],
           tags: []
         };
         this.assetType = '';
@@ -790,12 +877,14 @@
             }
           }
 
-          if (!this.accountSwitch) {
+          /*if (!this.accountSwitch) {
             this.assetData.accounts = [];
-          }
+          }*/
 
-          if(this.$refs.accountConfigBox&&this.$refs.accountConfigBox.length>0){
-            this.$refs.accountConfigBox[0].validateAccount();
+          if(this.$refs.accountConfigBox && this.$refs.accountConfigBox.length > 0) {
+            this.$refs.accountConfigBox.forEach(box => {
+              box.validateAccount();
+            });
           }
 
           this.$refs.assetEditForm.validate((valid) => {
@@ -896,8 +985,14 @@
           })
         }
       },
-      setAccountValideResult:function(result){
-        this.accountValideResult=result;
+      setAccountValideResult(result, protocol) {
+        this.accountValideResult = result;
+        let index = this.errorProtocol.indexOf(protocol);
+        if (result) {
+          index != -1 ? this.errorProtocol.splice(index, 1) : "";
+        } else {
+          index == -1 ? this.errorProtocol.push(protocol) : "";
+        }
       },
       //新增型号弹框关闭后重置弹框内容
       resetVendor() {
@@ -981,6 +1076,13 @@
           });
 
         }
+      },
+      changeProtocolType(type) {
+        this.accountType = type;
+        this.$nextTick(() => {
+          let sbWrap = this.$refs.scrollbar.$refs.wrap;
+          sbWrap.scrollTop = sbWrap.scrollHeight;
+        });
       },
       deleteData(data, item) {
         this.$confirm(this.$t("tip.confirmDelete"), {

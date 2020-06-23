@@ -450,9 +450,9 @@ const en = {
       protocol:"Protocol",
       sshProtocol:"SSH",
       telnetProtocol:"Telnet",
-      userTip:"UserTip",//用户名提示
-      passwordTip:"PasswordTip",//密码提示
-      reloginPasswordTip:"Relogin",//密码提示
+      userTip:"User tip",//用户名提示
+      passwordTip:"Password tip",//密码提示
+      reloginPasswordTip:"Relogin tip",//密码提示
       userPwdIntroduce:'Please specify a user name and password so that the telenet login process can automatically log in',
       reLoginPwdIntroduce:'Please specify the password prompt so that the login process can run automatically',
       account:'User name',//'用户名'

@@ -28,8 +28,8 @@
     z-index: 2000;
   }
   .vue-resizable-handle:after {
-    border-right: 2px solid #555;
-    border-bottom: 2px solid #555;
+    border-right: 2px solid #acb6bf;
+    border-bottom: 2px solid #acb6bf;
     content: "";
     position: absolute;
     right: 3px;
