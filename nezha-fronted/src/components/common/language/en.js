@@ -250,7 +250,7 @@ const en = {
       contentTitle:'Nezha Management System',
       traffic: 'Traffic',
       asset:{
-        title:'Asset',
+        title:'Assets',
         assetType:'Asset type',
         modelStat:'Model',
         dcStat:'Data center',
@@ -272,16 +272,16 @@ const en = {
         },
       },
       project:{
-        project:'Project',
+        project:'Projects',
         name:'Name',
         module:'Module',
         endpoint:'Endpoint',
       },
       module: {
-        module: "Module",
+        module: "Modules",
       },
       endpoint: {
-        endpoint: "Endpoint",
+        endpoint: "Endpoints",
       },
       dataCenter:{
         dataCenter:'Data center',
@@ -289,7 +289,7 @@ const en = {
         promServer:'Prom server',
       },
       alert:{
-        alertMessage: 'Alert message',
+        alertMessage: 'Alert messages',
         level:'Level',
         alertRule:'Alert rule',
         ruleNum:'Rule num',
