@@ -277,6 +277,9 @@ li{
   border-bottom-right-radius: 0;
   border-top-right-radius: 0;
 }
+.gray-filter {
+  filter: opacity(50%);
+}
 .nz-btn-group .nz-btn:last-child:not(:first-child) {
   border-bottom-left-radius: 0;
   border-top-left-radius: 0;
