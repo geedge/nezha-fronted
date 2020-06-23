@@ -217,7 +217,10 @@ const en = {
       },
       view:'View',//'查看'
       confirm:'Ok',// OK
-      cancel:'Cancel'//'取消'
+      cancel:'Cancel',//'取消',
+      moreFirstTitle:'Showing only ',
+      moreSecondTitle:'time series. ',
+      moreThirdTitle:'Show all ',
     },
     metric:{
       name:'Metric name', //"指标名称"

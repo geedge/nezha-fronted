@@ -35,9 +35,27 @@
   position: absolute;
   padding-bottom:3px;
 }
+.more{
+  width: 100%;
+  font-size: 12px;
+  line-height: 1;
+  height: 14px;
+  color: #52545c;
+  text-align: center;
+  padding-top:5px ;
+  .el-icon-warning{
+    font-size: 14px;
+    color: #e6a23c;
+    margin-right: 3px;
+  }
+  .moreClick{
+    color: rgb(87, 148, 242);
+    cursor: pointer;
+  }
+}
 .legend-container-screen.legend-container {
   max-height: 80px;
-  min-height:20px;
+  min-height:25px;
 }
 .legend-item{
   text-overflow:ellipsis;

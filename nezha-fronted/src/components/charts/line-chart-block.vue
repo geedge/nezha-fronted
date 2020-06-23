@@ -40,11 +40,11 @@
             </ul>
           </el-dropdown>
         </div>
-
+        <div  v-if="seriesItem.length!==seriesItemArr.length" class="more"><i class="el-icon-warning"></i> {{$t('dashboard.panel.moreFirstTitle')}} {{seriesLength}}{{$t('dashboard.panel.moreSecondTitle')}}<span @click="loadMore" class="moreClick">{{$t('dashboard.panel.moreThirdTitle')}}{{seriesItem.length}}</span></div>
         <div class="line-area"  ref="lineChartArea"  :id="'lineChartArea'+chartIndex" v-show="firstShow" style="width:100%;"></div>
         <div class="chart-no-data" v-show="noData">No Data</div>
-        <div class="legend-container" id="legendArea" ref="legendArea" v-show="firstShow" v-scrollBar:legend>
-          <div v-for="(item, index) in legendList" :title="item.alias?item.alias:item.name"  @click="clickLegend(item.name,index)" class="legend-item" :class="{'ft-gr':isGrey[index]}" :key="'legend_' + item.name+'_'+index">
+        <div class='legend-container' id="legendArea" ref="legendArea" v-show="firstShow" v-scrollBar:legend>
+          <div v-for="(item, index) in legendListMore" :title="item.alias?item.alias:item.name"  @click="clickLegend(item.name,index)" class="legend-item" :class="{'ft-gr':isGrey[index]}" :key="'legend_' + item.name+'_'+index">
             <span class="legend-shape" :style="{background:(isGrey[index]?'#D3D3D3':bgColorList[index])}"></span>{{item.alias?item.alias:item.name}}
           </div>
         </div>
@@ -54,7 +54,7 @@
                    :title="$t('dashboard.panel.view')"
                    :visible.sync="screenModal"
                    width="90%"
-                   @close="screenModal = false"
+                   @close="screenModal = false;screenLegendListMore=[]"
                    style="margin-top: 1vh !important;"
                    @opened="initDialog">
           <el-popover
@@ -77,10 +77,11 @@
               <time-picker ref="calendarPanel" class="nz-dashboard-picker" style="margin-top: -12px;"  @change="dateChange"></time-picker>
             </div>
           </div>
+          <div v-if="seriesItemScreen.length!==seriesItemArrScreen.length" class="more"><i class="el-icon-warning"></i>{{$t('dashboard.panel.moreFirstTitle')}} {{seriesLength}}{{$t('dashboard.panel.moreSecondTitle')}} <span @click="loadScreenMore" class="moreClick">{{$t('dashboard.panel.moreThirdTitle')}}{{seriesItemScreen.length}}</span></div>
           <div class="line-area" ref="screenShowArea"  id="screenShowArea"  style="margin-top:0px;" @mouseenter="mouseEnterFullChart" @mouseleave="mouseLeaveFullChart"></div>
           <div class="chart-no-data" v-show="noData">No Data</div>
           <div class="legend-container legend-container-screen"  :id="'screenLegendArea'+chartIndex" @mouseenter="mouseEnterFullChart" @mouseleave="mouseLeaveFullChart" v-show="showLegend" v-scrollBar:legend>
-            <div v-for="(item, index) in screenLegendList" :title="item.alias?item.alias:item.name"  @click="clickScreenLegend(item.name,index)" class="legend-item" :class="{'ft-gr':isGreyScreen[index]}"  :key="'legend_' + item.name+'_'+index">
+            <div v-for="(item, index) in screenLegendListMore" :title="item.alias?item.alias:item.name"  @click="clickScreenLegend(item.name,index)" class="legend-item" :class="{'ft-gr':isGreyScreen[index]}"  :key="'legend_' + item.name+'_'+index">
               <span class="legend-shape" :style="{background:(isGreyScreen[index]?'#D3D3D3':bgColorList[index])}"></span>{{item.alias?item.alias:item.name}}
               <br/><!--bgColorList[index]-->
             </div>
@@ -136,7 +137,13 @@
         data: {}, // 该图表信息,chartItem
         noData:false,
         seriesItem: [], // 保存信息
+        seriesItemArr:[],// 初次加载的数据
+        seriesLength:20,
         seriesItemScreen:[],
+        seriesItemArrScreen:[],
+        legendListMore:[],
+        screenLegendListMore:[],
+        chartInfo:{},
         images: '',
         isStackArea:false,
         isError:false,
@@ -363,6 +370,7 @@
       },
       // chartSite用于区分是全屏显示还是局部显示
       initChart(chartInfo, dataArg, ele, chartSite,legend) {
+        this.chartInfo=chartInfo;
         const self = this;
         this.chartType = ''; // 图表类型
         if ( chartInfo.type === 4) {//line,bar
@@ -690,13 +698,15 @@
               this.isGrey.push(false);
             });
           }
+          this.legendListMore=this.legendList.filter((item,index)=>index<this.seriesLength);
           this.$nextTick(() => {
             setTimeout(function () {
               let divHeight = self.$refs.legendArea.offsetHeight;
+              let moreTilteHeight=(self.seriesItem.length==self.seriesItemArr.length)?0:20;
               if(!chartInfo.height){
-                self.echartStore.resize({height:(400-divHeight-self.$chartResizeTool.titleHeight-self.$chartResizeTool.chartBlankHeight)});
+                self.echartStore.resize({height:(400-divHeight-self.$chartResizeTool.titleHeight-self.$chartResizeTool.chartBlankHeight-moreTilteHeight)});
               }else {
-                self.echartStore.resize({height:(chartInfo.height-divHeight-self.$chartResizeTool.titleHeight-self.$chartResizeTool.chartBlankHeight)});
+                self.echartStore.resize({height:(chartInfo.height-divHeight-self.$chartResizeTool.titleHeight-self.$chartResizeTool.chartBlankHeight-moreTilteHeight)});
               }
               if(dataArg&&dataArg.length>0){
                 self.echartStore.clear();
@@ -789,6 +799,9 @@
               this.isGreyScreen.push(false);
             });
           }
+          if(this.screenLegendListMore.length!==this.screenLegendList.length){
+            this.screenLegendListMore=this.screenLegendList.filter((item,index)=>index<this.seriesLength);
+          }
           if(self.echartModalStore){
             self.echartModalStore.clear();
             option.title = {};
@@ -796,14 +809,21 @@
             self.$refs['localLoadingScreen'+self.chartIndex].endLoading();
           }
           this.$nextTick(() => {
+            let legendDiv = document.getElementById('screenLegendArea'+self.chartIndex);
+            let divHeight = legendDiv.offsetHeight;
+            let screenHeight = document.documentElement.clientHeight || document.body.clientHeight;
+            let sumHeight = Math.floor(screenHeight*0.99*0.8);//margin-top:1vh; dailog:80%
+            //console.log("11____00",sumHeight,divHeight,legendDiv)
+            self.$refs.screenShowArea.style.height = `${sumHeight - divHeight - self.screenTitleHeight}px`;
+            self.echartModalStore.resize({height: (sumHeight - divHeight - self.screenTitleHeight)});//图表的高度
             setTimeout(function () {
-              let legendDiv = document.getElementById('screenLegendArea'+self.chartIndex);
-              let divHeight = legendDiv.offsetHeight;
-              let screenHeight = document.documentElement.clientHeight || document.body.clientHeight;
-              let sumHeight = Math.floor(screenHeight*0.99*0.8);//margin-top:1vh; dailog:80%
-                //console.log("11____00",sumHeight,divHeight,legendDiv)
-              self.$refs.screenShowArea.style.height = `${sumHeight - divHeight - self.screenTitleHeight}px`;
-              self.echartModalStore.resize({height: (sumHeight - divHeight - self.screenTitleHeight)});//图表的高度
+              if(self.screenLegendListMore.length!==self.screenLegendList.length){
+                self.seriesItemArrScreen=self.seriesItemScreen.filter((item,index)=>index<self.seriesLength);
+
+              }else{
+                self.seriesItemArrScreen=self.seriesItemScreen
+              }
+              option.series=self.seriesItemArrScreen;
               if(dataArg&&dataArg.length>0){
                 self.echartModalStore.setOption(option);//显示全屏界面
                 self.noData=false;
@@ -812,8 +832,18 @@
                 option=chartConfig.getOption('noData')
                 self.echartModalStore.setOption(option);//显示全屏界面
               }
-
-            }, 100)
+              self.echartModalStore.on('finished', function () {
+                let legendDiv = document.getElementById('screenLegendArea'+self.chartIndex);
+                let divHeight = legendDiv.offsetHeight;
+                let screenHeight = document.documentElement.clientHeight || document.body.clientHeight;
+                let sumHeight = Math.floor(screenHeight*0.99*0.8);//margin-top:1vh; dailog:80%
+                //console.log("11____00",sumHeight,divHeight,legendDiv)
+                self.$refs.screenShowArea.style.height = `${sumHeight - divHeight - self.screenTitleHeight}px`;
+                self.echartModalStore.resize({height: (sumHeight - divHeight - self.screenTitleHeight-5)});//图表的高度
+                console.log(self.seriesItemScreen,self.seriesItemArrScreen);
+                self.echartModalStore.off('finished');
+              })
+            }, 100);
 
             this.echartModalStore.on('magictypechanged', function (params) {
               self.isStackArea = !self.isStackArea;
@@ -949,7 +979,17 @@
             this.oldSearchTime[0] = this.searchTime[0];
             this.oldSearchTime[1] = this.searchTime[1];
           }
-          this.initChart(chartItem, seriesItem, this.$refs.lineChartArea, 'local',legend);
+          this.seriesItem=seriesItem;
+          let seriesItemArr=seriesItem;
+          if(seriesItem.length>this.seriesLength){
+            seriesItemArr=seriesItem.filter((item,index)=>index<this.seriesLength); // 只查看前seriesLength条
+            this.seriesItemArr=seriesItemArr;
+            this.seriesItemArrScreen=seriesItemArr;
+
+          }else{
+            this.seriesItemArr=seriesItem
+          }
+          this.initChart(chartItem, seriesItemArr, this.$refs.lineChartArea, 'local',legend);
         }
 
       },
@@ -1019,6 +1059,7 @@
         this.isGreyScreen=[];
 
         this.seriesItemScreen = this.seriesItem;
+        // this.seriesItemScreen = this.seriesItem;
         /*
                 this.searchTime = [];
                 this.searchTime[0] = this.oldSearchTime[0];//将列表的查询时间复制给全屏的查询时间
@@ -1237,7 +1278,9 @@
                 }
               });
               this.setColor(legend.length);
-              this.initChart(this.data, series, this.$refs.screenShowArea, 'screen',legend);
+              this.seriesItemScreen=series;
+              // this.seriesItemArrScreen=series.filter((item,index)=>index<this.seriesLength);
+              this.initChart(this.data,series, this.$refs.screenShowArea, 'screen',legend);
             }
           }).catch((error) => {
             if (error) {
@@ -1306,6 +1349,39 @@
         return num.toFixed(2);
       },
       handleClose(){},
+      // 加载更多
+      loadMore(){
+        this.seriesItemArr=this.seriesItem;
+        this.legendListMore=this.legendList;
+        this.echartStore.setOption({
+          series:this.seriesItem
+        });
+        this.$nextTick(()=>{
+          let divHeight = this.$refs.legendArea.offsetHeight;
+          if(!this.chartInfo.height){
+            this.echartStore.resize({height:(400-divHeight-this.$chartResizeTool.titleHeight-this.$chartResizeTool.chartBlankHeight)});
+          }else {
+            this.echartStore.resize({height:(this.chartInfo.height-divHeight-this.$chartResizeTool.titleHeight-this.$chartResizeTool.chartBlankHeight)});
+          }
+        })
+      },
+      // 加载更多
+      loadScreenMore(){
+        this.seriesItemArrScreen=this.seriesItemScreen;
+        this.screenLegendListMore=this.screenLegendList;
+        this.echartModalStore.setOption({
+          series:this.seriesItemScreen
+        });
+        this.$nextTick(()=>{
+          let legendDiv = document.getElementById('screenLegendArea'+this.chartIndex);
+          let divHeight = legendDiv.offsetHeight;
+          let screenHeight = document.documentElement.clientHeight || document.body.clientHeight;
+          let sumHeight = Math.floor(screenHeight*0.99*0.8);//margin-top:1vh; dailog:80%
+          //console.log("11____00",sumHeight,divHeight,legendDiv)
+          this.$refs.screenShowArea.style.height = `${sumHeight - divHeight - this.screenTitleHeight}px`;
+          this.echartModalStore.resize({height: (sumHeight - divHeight - this.screenTitleHeight)});//图表的高度
+        })
+      }
     },
     mounted() {
       this.firstLoad = false;

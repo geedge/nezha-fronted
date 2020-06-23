@@ -205,7 +205,10 @@ const cn = {
       view: "查看",
       confirm: "Ok",
       cancel: "取消",
-      lastTwoDay: "最近2天"
+      lastTwoDay: "最近2天",
+      moreFirstTitle:'仅显示',
+      moreSecondTitle:'个时间序列。',
+      moreThirdTitle:'全部显示',
     },
     metric: {
       name: "指标名称",
@@ -839,7 +842,7 @@ const cn = {
       name: "名称",
       type: "类型",
       description: "描述"
-    }
+    },
   },
   el: {
     colorpicker: {
