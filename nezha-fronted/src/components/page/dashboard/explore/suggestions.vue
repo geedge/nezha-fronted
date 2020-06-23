@@ -57,6 +57,7 @@
     },
   ];
   const funcs=[
+    ...operators,
     {
       insertText: 'abs',
       label: 'abs',

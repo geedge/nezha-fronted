@@ -74,9 +74,6 @@
                     <template slot="optionZone">
                       <button @click.stop="tagShow('showAdd')" :title="$t('overall.createAsset')" class="nz-btn nz-btn-size-normal nz-btn-style-light" id="asset-create-asset">
                         <i class="nz-icon nz-icon-create-square"></i></button>
-                      <!--<div class="export-left-btn" @click.stop="tagShow('showAdd')">
-                        <i class="nz-icon nz-icon-create-square" :title="$t('overall.createAsset')" ></i>
-                      </div>-->
                     </template>
                   </export-excel>
                 </div>
@@ -122,7 +119,6 @@
                     <div v-if="item.prop=='state'">
                       <span>{{scope.row.state==1 ? $t('asset.createAssetTab.inStock') : $t('asset.createAssetTab.notInStock')}}</span>
                     </div>
-        <!--            :content="scope.row.pingRtt ? (scope.row.pingLastUpdate&&scope.row.pingLastUpdate!=''?(new Date(scope.row.pingLastUpdate).getHours()+':'+new Date(scope.row.pingLastUpdate).getMinutes()):'&#45;&#45;')+'['+ scope.row.pingRtt+'ms'+']':(scope.row.pingLastUpdate&&scope.row.pingLastUpdate!=''?(new Date(scope.row.pingLastUpdate).getHours()+':'+new Date(scope.row.pingLastUpdate).getMinutes()):'&#45;&#45;')+'[unreachable]'"-->
               <div v-if="item.prop == 'pingStatus'">
                 <el-popover
                   placement="right"
@@ -136,41 +132,15 @@
               </div>
               <template v-if="item.prop=='Module'">
                 <span class="link" @click="showEndpoint(scope.row)">{{scope.row.endpointNum}}</span>
-                <!--<template v-if="scope.row.moduleNum > 0" >
-                  <endpoint-status-pop :asset-id="scope.row.id" :ref="'endpointPop' + scope.row.id">
-                    <template v-slot:optionZone>
-                    <span class="clickable">{{scope.row.endpointNum}}</span>
-                  </template>
-                  </endpoint-status-pop>
-                  <module-list-pop :asset-id="scope.row.id + ''" @openModuleBox="openModuleBox" placement="left" :ref="'moduleListPop' + scope.row.id">
-                    <template v-slot:optionZone>
-  &lt;!&ndash;                    <button class="nz-btn nz-btn-size-normal nz-btn-style-light nz-btn-min-width-75">{{scope.row.moduleNum}}</button>&ndash;&gt;
-                        <span class="clickable">{{scope.row.moduleNum}}</span>
-                    </template>
-                  </module-list-pop>
-                </template>
-  &lt;!&ndash;              <button type="button" v-else class="nz-btn nz-btn-size-normal nz-btn-style-light nz-btn-min-width-75 nz-btn-disabled">{{scope.row.moduleNum}}</button>&ndash;&gt;
-                <span v-else class="unclickable">{{scope.row.endpointNum}}</span>-->
               </template>
               <template v-if="item.prop=='Alert'">
                 <span :id="'asset-alerts-'+scope.row.id" @click="jumpToAlertMsg(scope.row)" class="link">{{scope.row.alertNum + ' ' + $t('overall.active')}}</span>
               </template>
               <div v-if="item.prop=='dataCenter'">
-  <!--              <idc-config-box :post-idc="JSON.parse(JSON.stringify(scope.row.idc))" ref="idcConfigBox" :is-edit="false" placement="left"  @after="getAssetData(null, true)" :button-class="'checkbox-edit'" :user-data="idcUserData">-->
-  <!--                <template v-slot:optionZone>-->
-  <!--&lt;!&ndash;                  <span class="link" @click="closeAllPop">{{scope.row.idc.name}}</span>&ndash;&gt;-->
-  <!--                  <span class="clickable" @click="closeAllPop">{{scope.row.idc.name}}</span>-->
-  <!--                </template>-->
-  <!--              </idc-config-box>-->
                 <span  >{{scope.row.idc.name}}</span>
               </div>
               <template v-if="item.prop=='cabinet'">
-  <!--              <cabinet-config-box v-if="scope.row.cabinet&&scope.row.cabinet!='&#45;&#45;'" ref="cabinetConfigBox"  placement="left" :is-edit="false" :post-cabinet="JSON.parse(JSON.stringify(scope.row.cabinet))"  @after="getAssetData(null, true)" :post-idc-datas="IDCOptionData">-->
-  <!--&lt;!&ndash;                <span slot="optionZone" @click="closeAllPop" class="link">{{returnData(scope.row.cabinet)}}</span>&ndash;&gt;-->
-  <!--                <span class="clickable" slot="optionZone" @click="closeAllPop" >{{returnData(scope.row.cabinet).name}}</span>-->
-  <!--              </cabinet-config-box>-->
                 <span   v-if="scope.row.cabinet&&scope.row.cabinet!='--'">{{returnData(scope.row.cabinet).name}}</span>
-  <!--              <span v-else class="unclickable">{{returnData(scope.row.cabinet)}}</span>-->
                 <span v-else >{{returnData(scope.row.cabinet)}}</span>
               </template>
               <div v-if="item.prop=='model'">
@@ -201,9 +171,15 @@
                   class="el-icon-delete"></i>
                 </span>
                 &nbsp;
-                <span title="CLI" @click="cli(scope.row.id ,scope.row.host,scope.row.accounts)" class="content-right-option" :id="'asset-ssh-'+scope.row.id"><i
-                  class="nz-icon nz-icon-cli"></i>
-                </span>
+                <el-dropdown trigger="hover" @command="cli">
+                  <span title="CLI" class="content-right-option" :id="'asset-ssh-'+scope.row.id"><i
+                    class="nz-icon nz-icon-cli" :class="{'gray-filter': !scope.row.accounts || scope.row.accounts.length == 0}"></i>
+                  </span>
+                  <el-dropdown-menu slot="dropdown">
+                    <el-dropdown-item v-for="(account, index) in scope.row.accounts" :key="index" :command="[scope.row.id ,scope.row.host, account]">{{account.protocol}}</el-dropdown-item>
+                  </el-dropdown-menu>
+                </el-dropdown>
+
               </template>
             </template>
           </el-table-column>
@@ -584,20 +560,14 @@
         this.$store.commit('setHeaderTable', data);
         this.tablelable = data;
       },
-      cli(id,host,accounts){
-        let port = '';
-        let accountId = '';
-        if(accounts && accounts.length>0 && accounts[0].port){
-          port = accounts[0].port;
-          accountId = accounts[0].id;
-        }
+      cli([id,host,account]){
         const consoleParam = {
-          id:id,
-          host:host,
-          accountId:accountId,
-          port:port,
+          id: id,
+          host: host,
+          accountId: account.id,
+          port: account.port,
         }
-        this.$store.commit('addConsole',consoleParam);
+        this.$store.commit('addConsole', consoleParam);
         //this.$refs.webSsh.show(id,host,accountId,port);
       },
       jumpToAlertMsg(asset) {

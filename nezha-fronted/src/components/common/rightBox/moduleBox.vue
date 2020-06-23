@@ -42,7 +42,7 @@
           </div>
 
           <!-- snmp表单 -->
-          <template v-if="currentModule.type && currentModule.type == 'snmp'">
+          <span class="snmp-form" v-if="currentModule.type && currentModule.type == 'snmp'">
             <div class="right-box-sub-title">SNMP settings</div>
             <div class="line-100 right-box-line"></div>
 
@@ -232,7 +232,7 @@
                 </el-form-item>
               </el-col>
             </el-row>
-          </template>
+          </span>
 
           <div class="right-box-form-tip" v-if="rightBox.isEdit">
             {{$t('project.module.tip.defaultEndpointSet')}}

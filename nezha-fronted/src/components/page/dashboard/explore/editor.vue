@@ -4,7 +4,7 @@
     <span class="nz-input-append editor-clear" style="padding-top:8px;display: none" @click="clearContent"><i class="el-icon-circle-close"></i></span>
     <div class="metric-editor-popper" :style="{left:popperPos.left+'px'}">
       <div class="metric-popper-main" v-show="showType&&Object.keys(showSuggestions).length>0">
-          <el-scrollbar style="height: 100%" class="ps-scroll-small" ref="scroll">
+          <el-scrollbar style="height: 100%;width:100%" class="el-scrollbar-small" ref="scroll">
             <div v-for="(key, index) in orders" >
               <div v-html="key" class="popper-group" v-show="showSuggestions[key]"></div>
               <div class="popper-item" v-for="(item,i) in showSuggestions[key]" v-html="item.label" :key="item.insertText" :type="key" :value="item.insertText" @click.stop="handleItemClick(key,item,$event)" @mouseover="itemHover(item)" @mouseout="itemOut(item)"></div>
@@ -163,9 +163,31 @@
           this.matchMetric()
         }
       },
-      matchFuncBody:function(){
-        let functionReg=/[a-zA-Z_]\w*?\(.*\)/g
+      formatContent:function(){
 
+        let punctuationReg=/[\{\}\(\)\[\]]/g;
+        this.formatText(punctuationReg,{'color':'#ff7941'})
+
+        let labelKeyReg=/[a-z_]\w*(?=\s*(=|!=|=~|!~))/g
+        this.formatText(labelKeyReg,{'color':'#3274d9'})
+
+        let labelValueReg= /"(?:\\.|[^\\"])*"/g
+        this.formatText(labelValueReg,{'color':'#3eb15b'})
+
+        let metricReg= /([A-Za-z:][\w:]*)\b(?![\(\]{=!",])/g;
+        this.formatText(metricReg,{'color':'#52545c'})
+
+        let rangeReg=/(?<=\[)\b\d+[smdwy]\b(?=\])/ig
+        this.formatText(rangeReg,{'color':'#9954bb'})
+
+      },
+      formatText:function(pattern,style){
+        if(pattern.test(this.content)){
+          let matchs=this.globalMatch(pattern,this.content);
+          matchs.forEach(item=>{
+            this.quill.formatText(item.index,item[0].length,style,'silent')
+          })
+        }
       },
       matchMetric:function(){
         let metricReg=/[a-zA-Z_]\w*?\b\{.*?\}/g
@@ -215,7 +237,7 @@
       queryTypeInfos:function(){
         this.noStyleSuggestions={};
         this.$set(this.noStyleSuggestions,'metrics',this.tempStoreMetric)
-        this.$set(this.noStyleSuggestions,'operators',suggestions.getOperators())
+        // this.$set(this.noStyleSuggestions,'operators',suggestions.getOperators())
         this.$set(this.noStyleSuggestions,'functions',suggestions.getFunctions())
         this.showSuggestions=this.deepClone(this.noStyleSuggestions)
       },
@@ -670,6 +692,7 @@
       queryMetrics:function(){
         if(this.metricList&&this.metricList.length>0){
           this.tempStoreMetric=this.deepClone(this.metricList)
+          this.queryTypeInfos();
         }else{
           this.$get('/prom/api/v1/label/__name__/values').then(response=>{
             if(response.status == 'success'){
@@ -699,10 +722,14 @@
         enter:{
           key:13,
           handler:function(range,content){
-            $temp.showType=false;
-            $temp.quill.blur();
-            $temp.$emit('on-enter')
-            return false;
+            if(!$temp.showType){
+              $temp.showType=false;
+              $temp.quill.blur();
+              $temp.$emit('on-enter')
+              return false;
+            }else{
+              $temp.pickItem();
+            }
           }
         }
       };
@@ -713,41 +740,44 @@
         console.log('quill blur')
       })
       this.quill.on('text-change',function(delta, oldDelta, source){
-        console.log('delta',delta,'oldDelta',oldDelta,'source',source)
-        let char='',operation='';
-        let oldContent=oldDelta.ops[0].insert.substring(0,oldDelta.ops[0].insert.length-1);
-        if(delta.ops.length==1){
-          if(delta.ops[0].insert){
-            char=delta.ops[0].insert
-            operation='insert';
-          }else if(delta.ops[0].delete){
-            char=oldContent;
-            operation='delete';
+        if(source != 'silent'){
+          console.log('delta',delta,'oldDelta',oldDelta,'source',source)
+          let char='',operation='';
+          let oldContent=oldDelta.ops[0].insert.substring(0,oldDelta.ops[0].insert.length-1);
+          if(delta.ops.length==1){
+            if(delta.ops[0].insert){
+              char=delta.ops[0].insert
+              operation='insert';
+            }else if(delta.ops[0].delete){
+              char=oldContent;
+              operation='delete';
+            }else{
+              console.error('unknow operation')
+            }
           }else{
-            console.error('unknow operation')
+            if(delta.ops[1].insert){
+              char=delta.ops[1].insert
+              operation='insert';
+            }else if(delta.ops[1].delete){
+              char=oldContent.substring(delta.ops[0].retain,delta.ops[0].retain+delta.ops[1].delete);
+              operation='delete';
+            }else{
+              console.error('unknow operation')
+            }
           }
-        }else{
-          if(delta.ops[1].insert){
-            char=delta.ops[1].insert
-            operation='insert';
-          }else if(delta.ops[1].delete){
-            char=oldContent.substring(delta.ops[0].retain,delta.ops[0].retain+delta.ops[1].delete);
-            operation='delete';
-          }else{
-            console.error('unknow operation')
+          let promise=$temp.storeCursor(char);
+          if(source == 'user'){
+            console.log(delta,oldDelta,oldContent)
+            let newContent=$temp.getContent()
+            promise.then(()=>{ //存储完光标后再进行后面的操作
+              $temp.userChange(char,operation,newContent,oldContent)
+            })
           }
+          $temp.content=$temp.getContent();
+          console.log('current content-->',$temp.content)
+          $temp.getPosition();
+          $temp.formatContent();
         }
-        let promise=$temp.storeCursor(char);
-        if(source == 'user'){
-          console.log(delta,oldDelta,oldContent)
-          let newContent=$temp.getContent()
-          promise.then(()=>{ //存储完光标后再进行后面的操作
-            $temp.userChange(char,operation,newContent,oldContent)
-          })
-        }
-        $temp.content=$temp.getContent();
-        console.log('current content-->',$temp.content)
-        $temp.getPosition();
       })
       this.registerKeydown();
     },
@@ -790,7 +820,7 @@
     box-sizing: border-box;
     border: 1px solid lightgrey;
     height: 100%;
-    max-width: 66%;
+    /*max-width: 66%;*/
     min-width: 200px;
     float: left;
     border-radius: 3px;
@@ -798,6 +828,7 @@
     color: #52545c;
     padding: 5px;
     background-color: white;
+    overflow-x: hidden;
   }
   .metric-editor-popper .metric-popper-desc{
     display: inline-block;

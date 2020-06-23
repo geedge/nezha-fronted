@@ -286,7 +286,7 @@ instance_cpu_time_ns{app="fox", proc="widget", rev="4d3a513", env="prod", job="c
                 let step=bus.getStep(this.filterTime[0],this.filterTime[1]);
                 promqlInputIndexs.push(index);
                 queryExpression.push(item)
-                requestArr.push(axios.get('/prom/api/v1/query_range?query=' + item + '&start=' + this.$stringTimeParseToUnix(this.filterTime[0]) + '&end=' + this.$stringTimeParseToUnix(this.filterTime[1]) + '&step='+step))
+                requestArr.push(this.$get('/prom/api/v1/query_range?query=' + item + '&start=' + this.$stringTimeParseToUnix(this.filterTime[0]) + '&end=' + this.$stringTimeParseToUnix(this.filterTime[1]) + '&step='+step))
               }
             })
             if (requestArr.length > 0) {
@@ -299,8 +299,8 @@ instance_cpu_time_ns{app="fox", proc="widget", rev="4d3a513", env="prod", job="c
               if (res.length > 0) {
                 res.forEach((response, index) => {
                   let promqlIndex=promqlInputIndexs[index];
-                  if (response.data.status == 'success') {
-                    let data = response.data.data.result;
+                  if (response.data&&response.status == 'success') {
+                    let data = response.data.result;
                     data.forEach((result, i) => {
                       let seriesItem = {
                         name: '',
@@ -338,7 +338,7 @@ instance_cpu_time_ns{app="fox", proc="widget", rev="4d3a513", env="prod", job="c
                     this.$refs['promql-'+promqlIndex][0].setError('')
                   }else{
                     console.log(response)
-                    this.$refs['promql-'+promqlIndex][0].setError(response.data.error)
+                    this.$refs['promql-'+promqlIndex][0].setError(response.error)
                   }
                 })
 
@@ -360,7 +360,7 @@ instance_cpu_time_ns{app="fox", proc="widget", rev="4d3a513", env="prod", job="c
               let requestArr = [];
               this.expressions.forEach((item, index) => {
                 if (item != '') {
-                  requestArr.push(axios.get('/prom/api/v1/query?query=' + item))
+                  requestArr.push(this.$get('/prom/api/v1/query?query=' + item))
                 }
               })
               if (requestArr.length > 0) {
@@ -372,9 +372,10 @@ instance_cpu_time_ns{app="fox", proc="widget", rev="4d3a513", env="prod", job="c
                 if (res.length > 0) {
                   this.tableData = [];
                   this.tableLabels = [];
+                  console.log(111111111111111111111,res)
                   res.forEach((response, index) => {
-                    if (response.data.status == 'success') {
-                      let data = response.data.data.result;
+                    if (response.data&&response.status == 'success') {
+                      let data = response.data.result;
                       if (data) {
                         data.forEach((result, i) => {
                           let metrics = Object.assign({}, result.metric);

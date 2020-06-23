@@ -277,6 +277,9 @@ li{
   border-bottom-right-radius: 0;
   border-top-right-radius: 0;
 }
+.gray-filter {
+  filter: opacity(50%);
+}
 .nz-btn-group .nz-btn:last-child:not(:first-child) {
   border-bottom-left-radius: 0;
   border-top-left-radius: 0;
@@ -394,6 +397,7 @@ li{
   padding-bottom: 10px;
   color: #999;
   cursor: pointer;
+  display: inline-block;
 }
 .nz-tab-item-active {
   border-bottom: 3px solid $global-text-color-active;
@@ -401,7 +405,16 @@ li{
   cursor: default;
   font-weight: bold;
 }
-
+.nz-tab-item-close {
+  color: rgba(245, 108, 108, 0.6);
+  cursor: pointer;
+}
+.nz-tab-item-close:hover {
+  color: rgba(245, 108, 108, 1);
+}
+.nz-tab-error {
+  font-weight: normal;
+}
 /* end--nz-tab组件*/
 
 /* begin--二级页面tab*/
@@ -1070,6 +1083,11 @@ li{
 }
 .right-box-add-endpoint.right-box-add-endpoint-snmp {
   width: 850px;
+}
+.snmp-form {
+  .el-form-item__content {
+    margin-left: 10px !important;
+  }
 }
 /* begin--右侧弹框--顶部按钮*/
 .right-box-top-btns {
