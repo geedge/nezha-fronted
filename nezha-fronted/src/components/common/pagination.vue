@@ -1,22 +1,22 @@
 <template>
   <div class="pagination">
-    <el-pagination
-      ref="page"
-      @size-change="size"
-      @prev-click="prev"
-      @next-click="next"
-      @current-change="current"
-      :current-page="pageObj.pageNo"
-      :page-sizes="pageSizes?pageSizes:[20, 50, 100]"
-      :page-size="pageSize"
-      layout="total, prev, pager, next, slot"
-      :total="this.pageObj.total"
-    >
-      <el-select v-model="pageSize" :placeholder="pageSize+$t('pageSize')" size="mini"  :popper-append-to-body="appendToBody" class="pagination-size-select" @change="size" :popper-class="popClass" @visible-change="popperVisible">
-        <el-option v-for="(item,index) in pageSizes" :key="item.value" :label="item.label" :value="item.value"></el-option>
-      </el-select>
+      <el-pagination
+        ref="page"
+        @size-change="size"
+        @prev-click="prev"
+        @next-click="next"
+        @current-change="current"
+        :current-page="pageObj.pageNo"
+        :page-sizes="pageSizes?pageSizes:[20, 50, 100]"
+        :page-size="pageSize"
+        layout="total, prev, pager, next, slot"
+        :total="this.pageObj.total"
+      >
+        <el-select v-model="pageSize" :placeholder="pageSize+$t('pageSize')" size="mini"  :popper-append-to-body="appendToBody" class="pagination-size-select" @change="size" :popper-class="popClass" @visible-change="popperVisible">
+          <el-option v-for="(item,index) in pageSizes" :key="item.value" :label="item.label" :value="item.value"></el-option>
+        </el-select>
 
-    </el-pagination>
+      </el-pagination>
   </div>
 </template>
 
@@ -182,6 +182,7 @@ export default {
   .pagination .el-pagination {
     max-height: 42px;
     padding-right: 0;
+    overflow-x: hidden;
   }
   .pagination-size-select .el-input--mini .el-input__inner{
     height: 20px;
