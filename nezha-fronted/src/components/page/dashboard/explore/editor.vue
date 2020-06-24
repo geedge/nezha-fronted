@@ -81,6 +81,7 @@
         this.filterItems(newContent);
       },
       dealSpecilChar:function(char,operation){
+        console.log('specil char',char)
         if(/^[\{\(\[\,]$/g.test(char)){
           if(operation=='insert'){
             if(char == '{'||char==','){
@@ -177,9 +178,16 @@
         let metricReg= /([A-Za-z:][\w:]*)\b(?![\(\]{=!",])/g;
         this.formatText(metricReg,{'color':'#52545c'})
 
-        let rangeReg=/(?<=\[)\b\d+[smdwy]\b(?=\])/ig
-        this.formatText(rangeReg,{'color':'#9954bb'})
-
+        // let rangeReg=/(?<=\[)\b\d+[smdwy]\b(?=\])/ig
+        // this.formatText(rangeReg,{'color':'#9954bb'})
+        let rangeReg=/\[\b(\d+[smdwy])\b\]/ig
+        if(rangeReg.test(this.content)){
+          let matchs=this.globalMatch(rangeReg,this.content);
+          console.log('matchs',matchs)
+          matchs.forEach(item=>{
+            this.quill.formatText(item.index+1,item[1].length,{'color':'#9954bb'},'silent')
+          })
+        }
       },
       formatText:function(pattern,style){
         if(pattern.test(this.content)){
@@ -743,7 +751,12 @@
         if(source != 'silent'){
           console.log('delta',delta,'oldDelta',oldDelta,'source',source)
           let char='',operation='';
-          let oldContent=oldDelta.ops[0].insert.substring(0,oldDelta.ops[0].insert.length-1);
+          let oldContent='';
+          oldDelta.ops.forEach((item,index)=>{
+            if(index != oldDelta.ops.length-1){
+              oldContent+=item.insert;
+            }
+          })
           if(delta.ops.length==1){
             if(delta.ops[0].insert){
               char=delta.ops[0].insert
