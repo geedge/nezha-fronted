@@ -206,7 +206,7 @@ const cn = {
       confirm: "Ok",
       cancel: "取消",
       lastTwoDay: "最近2天",
-      moreTitle:'仅显示20个时间序列。',
+      moreTitle:'仅显示 20 个时间序列。',
       showAll:'全部显示 ',
     },
     metric: {

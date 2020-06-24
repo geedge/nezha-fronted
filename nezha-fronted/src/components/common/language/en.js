@@ -218,7 +218,7 @@ const en = {
       view:'View',//'查看'
       confirm:'Ok',// OK
       cancel:'Cancel',//'取消',
-      moreTitle:'Showing only20time series. ',
+      moreTitle:'Showing only 20 time series. ',
       showAll:'Show all ',
     },
     metric:{
