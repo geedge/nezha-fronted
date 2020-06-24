@@ -52,7 +52,6 @@ export default {
   },
   methods: {
     popperVisible:function(visible){
-      console.log('fixed')
       if(visible==true){
         this.$nextTick(()=>{
           if(this.popClass&&this.popClass==='out-popper-fix'){
@@ -143,7 +142,7 @@ export default {
     popClass:{
       immediate:true,
       handler(n,o){
-        console.log(n)
+        //console.log(n)
       }
     }
   }

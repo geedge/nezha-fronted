@@ -50,6 +50,9 @@
       <el-form-item :label="$t('project.module.community')" prop="params.community">
         <el-input size="small" v-model="account.params.community"/>
       </el-form-item>
+      <el-form-item :label="$t('project.module.contextName')" prop="params.contextName">
+        <el-input size="small" v-model="account.params.contextName"/>
+      </el-form-item>
       <el-form-item :label="$t('project.module.version')" prop="params.version">
         <el-radio-group v-model.number="account.params.version" size="small">
           <el-radio-button :label="2"></el-radio-button>
