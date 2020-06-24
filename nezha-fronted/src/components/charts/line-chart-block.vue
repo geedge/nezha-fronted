@@ -20,6 +20,20 @@
               <span class="panel-info-corner-inner"></span>
            </span>
           </el-popover>
+          <span class="moreTitle">
+            <el-popover
+              v-if="seriesItem.length!==seriesItemArr.length"
+              placement="top-start"
+              :close-delay=10
+              trigger="hover"
+              popper-class="chart-warring-popper">
+            <div class="moreTitle">{{$t('dashboard.panel.moreTitle')}}{{$t('dashboard.panel.showAll')}}{{seriesItem.length}}</div>
+            <span slot="reference" class="panel-info-corner panel-info-corner--error"  @click="loadMore">
+              <i class="nz-icon nz-icon-warning fa"></i>
+              <span class="panel-info-corner-inner"></span>
+           </span>
+          </el-popover>
+          </span>
           <el-dropdown trigger="click" class="nz-chart-top" :key="'chartDropdown'+chartIndex"  v-clickoutside="clickos">
             <el-dropdown-menu style="display: none"></el-dropdown-menu>
             <span class="el-dropdown-link chart-title" @click="dropdownMenuShow=!dropdownMenuShow">
@@ -40,7 +54,7 @@
             </ul>
           </el-dropdown>
         </div>
-        <div  v-if="seriesItem.length!==seriesItemArr.length" class="more"><i class="el-icon-warning"></i> {{$t('dashboard.panel.moreFirstTitle')}} {{seriesLength}}{{$t('dashboard.panel.moreSecondTitle')}}<span @click="loadMore" class="moreClick">{{$t('dashboard.panel.moreThirdTitle')}}{{seriesItem.length}}</span></div>
+        <!--<div  v-if="seriesItem.length!==seriesItemArr.length" class="more"><i class="el-icon-warning"></i> {{$t('dashboard.panel.moreFirstTitle')}} {{seriesLength}}{{$t('dashboard.panel.moreSecondTitle')}}<span @click="loadMore" class="moreClick">{{$t('dashboard.panel.moreThirdTitle')}}{{seriesItem.length}}</span></div>-->
         <div class="line-area"  ref="lineChartArea"  :id="'lineChartArea'+chartIndex" v-show="firstShow" style="width:100%;"></div>
         <div class="chart-no-data" v-show="noData">No Data</div>
         <div class='legend-container' id="legendArea" ref="legendArea" v-show="firstShow" v-scrollBar:legend>
@@ -69,6 +83,20 @@
                 <span class="panel-info-corner-inner"></span>
             </span>
           </el-popover>
+          <span class="moreTitle">
+            <el-popover
+              v-if="seriesItemScreen.length!==seriesItemArrScreen.length"
+              placement="top-start"
+              :close-delay=10
+              trigger="hover"
+              popper-class="chart-warring-popper">
+            <div class="moreTitle">{{$t('dashboard.panel.moreTitle')}}{{$t('dashboard.panel.showAll')}}{{seriesItemScreen.length}}</div>
+            <span slot="reference" class="panel-info-corner panel-info-corner--error"  @click="loadScreenMore">
+              <i class="nz-icon nz-icon-warning fa-model"></i>
+              <span class="panel-info-corner-inner"></span>
+           </span>
+          </el-popover>
+          </span>
           <div slot="title" >
             <span class="nz-dialog-title" v-show="!isExplore">{{data.title}}</span>
             <span class="nz-dialog-title" v-show="isExplore">&nbsp;</span>
@@ -77,7 +105,6 @@
               <time-picker ref="calendarPanel" class="nz-dashboard-picker" style="margin-top: -12px;"  @change="dateChange"></time-picker>
             </div>
           </div>
-          <div v-if="seriesItemScreen.length!==seriesItemArrScreen.length" class="more"><i class="el-icon-warning"></i>{{$t('dashboard.panel.moreFirstTitle')}} {{seriesLength}}{{$t('dashboard.panel.moreSecondTitle')}} <span @click="loadScreenMore" class="moreClick">{{$t('dashboard.panel.moreThirdTitle')}}{{seriesItemScreen.length}}</span></div>
           <div class="line-area" ref="screenShowArea"  id="screenShowArea"  style="margin-top:0px;" @mouseenter="mouseEnterFullChart" @mouseleave="mouseLeaveFullChart"></div>
           <div class="chart-no-data" v-show="noData">No Data</div>
           <div class="legend-container legend-container-screen"  :id="'screenLegendArea'+chartIndex" @mouseenter="mouseEnterFullChart" @mouseleave="mouseLeaveFullChart" v-show="showLegend" v-scrollBar:legend>
@@ -702,11 +729,10 @@
           this.$nextTick(() => {
             setTimeout(function () {
               let divHeight = self.$refs.legendArea.offsetHeight;
-              let moreTilteHeight=(self.seriesItem.length==self.seriesItemArr.length)?0:20;
               if(!chartInfo.height){
-                self.echartStore.resize({height:(400-divHeight-self.$chartResizeTool.titleHeight-self.$chartResizeTool.chartBlankHeight-moreTilteHeight)});
+                self.echartStore.resize({height:(400-divHeight-self.$chartResizeTool.titleHeight-self.$chartResizeTool.chartBlankHeight)});
               }else {
-                self.echartStore.resize({height:(chartInfo.height-divHeight-self.$chartResizeTool.titleHeight-self.$chartResizeTool.chartBlankHeight-moreTilteHeight)});
+                self.echartStore.resize({height:(chartInfo.height-divHeight-self.$chartResizeTool.titleHeight-self.$chartResizeTool.chartBlankHeight)});
               }
               if(dataArg&&dataArg.length>0){
                 self.echartStore.clear();
@@ -839,7 +865,7 @@
                 let sumHeight = Math.floor(screenHeight*0.99*0.8);//margin-top:1vh; dailog:80%
                 //console.log("11____00",sumHeight,divHeight,legendDiv)
                 self.$refs.screenShowArea.style.height = `${sumHeight - divHeight - self.screenTitleHeight}px`;
-                self.echartModalStore.resize({height: (sumHeight - divHeight - self.screenTitleHeight-5)});//图表的高度
+                self.echartModalStore.resize({height: (sumHeight - divHeight - self.screenTitleHeight)});//图表的高度
                 console.log(self.seriesItemScreen,self.seriesItemArrScreen);
                 self.echartModalStore.off('finished');
               })

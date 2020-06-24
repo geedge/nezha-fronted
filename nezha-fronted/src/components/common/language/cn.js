@@ -206,9 +206,8 @@ const cn = {
       confirm: "Ok",
       cancel: "取消",
       lastTwoDay: "最近2天",
-      moreFirstTitle:'仅显示',
-      moreSecondTitle:'个时间序列。',
-      moreThirdTitle:'全部显示',
+      moreTitle:'仅显示20个时间序列。',
+      showAll:'全部显示 ',
     },
     metric: {
       name: "指标名称",
