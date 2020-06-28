@@ -211,6 +211,7 @@
   import chartPreview from './chartPreview';
   import echarts from 'echarts';
   import nzAlertTag from '../page/alert/nzAlertTag';
+  import bus from '../../libs/bus';
 
   export default {
     name: 'chartDetail',
@@ -429,28 +430,46 @@
       initChart(series) {
         let option = {
           title: {show: false},
-          tooltip: {show: false},
           grid: {left: 40},
+          tooltip: {
+            show: true,
+            trigger: "axis",
+            extraCssText: 'z-index:3100;',
+            position: [0, '50%'],
+            formatter: function(param) {
+              let time = param[0].data[0];
+              time = bus.computeTimezone(time);
+              let date = new Date(time);
+              let hour = date.getHours();
+              hour = hour > 9 ? hour : "0" + hour; //加0补充为两位数字
+              let minute = date.getMinutes();
+              minute = minute > 9 ? minute : "0" + minute; //如果分钟小于10,则在前面加0补充为两位数字
+
+              let value = param[0].data[1];
+              if (value == "1") {
+                value = "up";
+              } else {
+                value = "down";
+              }
+              return [date.getFullYear(), date.getMonth() + 1, date.getDate()].join("/") + " " + [hour, minute].join(":") + "\n" + value;
+            }
+          },
           legend: {show: false},
           xAxis: {
             show: false,
             type: 'time'
           },
+          /*visualMap: {
+            show: false,
+            dimension: 1,
+            pieces: [],
+            outOfRange: {
+              color: 'green'
+            }
+          },*/
           yAxis: {
             type: 'value',
-            minInterval: 1,
-            splitLine: {show: false},
-            axisLabel: {
-              formatter: function (value, index) {
-                if (value == 1) {
-                  return "up";
-                } else {
-                  return "down";
-                }
-              }
-            },
-            axisTick: {show: false},
-            axisLine: {show: false}
+            show: false
           },
           useUTC: false,//使用本地时间
           series: series

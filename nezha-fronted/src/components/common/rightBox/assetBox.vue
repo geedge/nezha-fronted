@@ -576,13 +576,13 @@
             params: {
               version:2,
               community:"public",
-              security_name:"",
-              security_level:"",
-              auth_password:"",
-              priv_password:"",
-              auth_protocol:"",
-              priv_protocol:"",
-              context_name:""
+              securityName:"",
+              securityLevel:"",
+              password:"",
+              privPassword:"",
+              authProtocol:"",
+              privProtocol:"",
+              contextName:""
             }
           });
         }

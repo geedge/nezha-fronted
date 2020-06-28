@@ -25,7 +25,7 @@
     cursor: se-resize;
     box-sizing: border-box;
     user-select: none;
-    z-index: 2000;
+    z-index: 99;
   }
   .vue-resizable-handle:after {
     border-right: 2px solid #acb6bf;
@@ -551,6 +551,20 @@
         if (param.from == "endpoint") {
           this.dataList = [];
           this.dataList.push({
+            id: -8,
+            panelId: 0,
+            title: this.$t("alert.alertList"),
+            span: 12,
+            height: 350,
+            type: "alertList",
+            prev: -9,
+            next: -1,
+            buildIn: 1,
+            draggable: false,
+            resizable: false,
+            editable: false,
+          });
+          this.dataList.push({
             id: -10,
             panelId: 0,
             dataId: this.additionalInfo.id,
@@ -577,20 +591,6 @@
             type: "assetInfo",
             prev: -10,
             next: -8,
-            buildIn: 1,
-            draggable: false,
-            resizable: false,
-            editable: false,
-          });
-          this.dataList.push({
-            id: -8,
-            panelId: 0,
-            title: this.$t("alert.alertList"),
-            span: 4,
-            height: 350,
-            type: "alertList",
-            prev: -9,
-            next: -1,
             buildIn: 1,
             draggable: false,
             resizable: false,
@@ -1219,6 +1219,15 @@
                       width: 1,
                       opacity: 0.9
                     },
+                    itemStyle: {
+                      color: function(params) {
+                        if (params.data[1] == "1") {
+                          return "#50d050";
+                        } else {
+                          return "#d64f40";
+                        }
+                      }
+                    }
                   };
                   response.data.result.forEach((queryItem, resInnerPos) => {
                     // 将秒改为毫秒
