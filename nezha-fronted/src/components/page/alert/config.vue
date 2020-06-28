@@ -70,7 +70,7 @@
                 <span  >{{formatThreshold(scope.row[item.prop],scope.row.unit)}}</span>
               </template>
               <template v-else-if="item.prop == 'receivers'">
-                <el-tag effect="dark" v-if="user.userName" :key="index" size="mini" v-for="(user, index) in scope.row[item.prop]" class="alert-rule-tag">{{user.userName}}</el-tag>
+                <el-tag effect="dark" v-if="user.userName" :key="index" size="mini" v-for="(user, index) in scope.row[item.prop]" class="alert-rule-tag">{{user.userName}}&nbsp;</el-tag>
               </template>
               <span v-else-if="scope.row[item.prop]">{{scope.row[item.prop]}}</span>
               <template v-else>-</template>
