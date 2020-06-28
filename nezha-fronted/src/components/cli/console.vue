@@ -313,7 +313,7 @@ export default {
         cols:this.term.cols,//cols和rows在resizeConsole方法已经设置
         rows:this.term.rows,
       };
-      alert(JSON.stringify(winStyle));
+      // alert(JSON.stringify(winStyle));
       this.$post('terminal/resize',winStyle).then(response => {
         if (response.code === 200) {
           this.term.fit();
