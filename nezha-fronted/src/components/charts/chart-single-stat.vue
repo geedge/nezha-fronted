@@ -395,11 +395,12 @@ export default {
           this.isError = false;
           this.errorContent = '';
         }
-        if(seriesItem){
+        if(seriesItem||seriesItem == 0){ //0 为false
           this.noData=false;
         }else{
           this.noData=true;
         }
+
         if(area==='showFullScreen'){//全屏按时间查询
           this.data = chartItem;
           this.unit = chartDataFormat.getUnit(this.data.unit);
