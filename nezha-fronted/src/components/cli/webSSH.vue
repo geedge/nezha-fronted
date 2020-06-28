@@ -6,24 +6,23 @@
     <div id="shell-service-resize-mask"></div>
     <div id="shell-split" class="shell-split shell-iconfont" @mousedown="dragEagle" v-show="!isFullScreen">一</div>
     <div style='position: relative;'>
-      <el-menu  mode="horizontal" @select="handleSelect" style='position: absolute;left:0px;top:0px;border-top: 1px solid #DCDFE6;'>
-        <!--
+      <el-menu  mode="horizontal" @select="handleSelect" style='position: absolute;left:0px;top:0px;border-top: 1px solid #DCDFE6;' default-active="1-2">
         <el-submenu index="1"  style="width:40px;">
           <template slot="title" ><i class="el-icon-setting " style="position: absolute;left: 10px;top: 4px;"></i></template>
-          <el-submenu index="1-1">
-            <template slot="title">文字大小</template>
-            <el-menu-item index="1-1-1">最小</el-menu-item>
-            <el-menu-item index="1-1-2">小</el-menu-item>
-            <el-menu-item index="1-1-3">中</el-menu-item>
-            <el-menu-item index="1-1-4">大</el-menu-item>
-          </el-submenu>
-          <el-submenu index="1-2" >
-            <template slot="title">字体</template>
-            <el-menu-item index="1-2-1">Monosapace</el-menu-item>
-            <el-menu-item index="1-2-2">Courier New</el-menu-item>
-          </el-submenu>
-        </el-submenu>-->
-        <el-submenu index="2" style="width:50px;margin-left:40px;">
+          <!--<el-submenu index="1-1">-->
+            <!--<template slot="title">文字大小</template>-->
+            <el-menu-item @click="changeFontSize(12)" class="fontSet smallFont" index="1-1">A</el-menu-item>
+            <el-menu-item @click="changeFontSize(15)" class="fontSet middleFont" index="1-2">A</el-menu-item>
+            <el-menu-item @click="changeFontSize(20)" class="fontSet bigFont" index="1-3">A</el-menu-item>
+            <!--<el-menu-item class="fontSet" index="1-4">大</el-menu-item>-->
+          <!--</el-submenu>-->
+          <!--<el-submenu index="1-2" >-->
+            <!--<template slot="title">字体</template>-->
+            <!--<el-menu-item index="1-2-1">Monosapace</el-menu-item>-->
+            <!--<el-menu-item index="1-2-2">Courier New</el-menu-item>-->
+          <!--</el-submenu>-->
+        </el-submenu>
+        <el-submenu index="2" style="width:50px;">
           <template slot="title" ><i class="el-icon-upload console-title-icon" style="position: absolute;left: 10px;top: 4px;"></i></template>
           <el-menu-item index="2-1" @click="showUploadBox">
               <div>{{$t('webshell.upload')}}</div>
@@ -518,7 +517,7 @@
               targetDiv.style.height=height+'px';
             }
             if(parseInt(targetDiv.style.height)<=10){
-              targetDiv.style.height=10+'px';
+              targetDiv.style.height=20+'px';
             }
 
             _this.editableTabs.forEach((tab, index) => {
@@ -570,7 +569,14 @@
               this.$refs['console'+index][0].resize(targetDivHeight,width);
             });
           }
-        }
+        },
+      //改变黑窗口字体大小
+      changeFontSize(fontSize){
+        // this.$refs['console'+this.index].setFontSize(fontSize);
+        this.editableTabs.forEach((tab, index) => {
+          this.$refs['console'+index][0].setFontSize(fontSize);
+        });
+      }
     },
     watch: {
       '$store.state.consoleShow':function(val){

@@ -3,6 +3,7 @@
     height:270px;
     padding:5px 5px;
     background-color: black;
+    position: relative;
   }
 </style>
 <template>
@@ -300,6 +301,29 @@ export default {
       }
       this.conFinish = false;
     },
+    setFontSize(fontSize){
+      this.term.setOption('fontSize',fontSize);
+      const consoleBox = document.getElementById('ternimalContainer'+this.idIndex);
+      let width = document.body.clientWidth;//可视宽度
+      let height = parseInt(consoleBox.style.height);
+      if(height==null||!height){height=this.termimalHeight;}
+      const winStyle={
+        width:width,
+        height:height,
+        cols:this.term.cols,//cols和rows在resizeConsole方法已经设置
+        rows:this.term.rows,
+      };
+      alert(JSON.stringify(winStyle));
+      this.$post('terminal/resize',winStyle).then(response => {
+        if (response.code === 200) {
+          this.term.fit();
+          //this.term.scrollToBottom();
+        } else {
+          this.$message.error(response.msg);
+        }
+      });
+      // console.log(winStyle)
+    }
   },
   mounted () {
     this.create();
