@@ -145,6 +145,9 @@
 .fontSet{
   margin-left: 5px;
 }
+.el-menu--horizontal .el-menu .el-menu-item.menuActive{
+  color: #303133;
+}
 .smallFont{
   font-size: 12px;
 }

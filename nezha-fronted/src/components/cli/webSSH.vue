@@ -11,9 +11,9 @@
           <template slot="title" ><i class="el-icon-setting " style="position: absolute;left: 10px;top: 4px;"></i></template>
           <!--<el-submenu index="1-1">-->
             <!--<template slot="title">文字大小</template>-->
-            <el-menu-item @click="changeFontSize(12)" class="fontSet smallFont" index="1-1">A</el-menu-item>
-            <el-menu-item @click="changeFontSize(15)" class="fontSet middleFont" index="1-2">A</el-menu-item>
-            <el-menu-item @click="changeFontSize(20)" class="fontSet bigFont" index="1-3">A</el-menu-item>
+            <el-menu-item @click="changeFontSize(12)" :class="{fontSet:true,menuActive:fontSize==12, smallFont:true}" index="1-1">A</el-menu-item>
+            <el-menu-item @click="changeFontSize(15)" :class="{fontSet:true,menuActive:fontSize==15, middleFont:true}" index="1-2">A</el-menu-item>
+            <el-menu-item @click="changeFontSize(20)" :class="{fontSet:true,menuActive:fontSize==20, bigFont:true}" index="1-3">A</el-menu-item>
             <!--<el-menu-item class="fontSet" index="1-4">大</el-menu-item>-->
           <!--</el-submenu>-->
           <!--<el-submenu index="1-2" >-->
@@ -199,6 +199,8 @@
         downloadFile:{path: '',uuid: ''},
         downloadFileList:[],
         downloadResult:null,
+        // 字体大小
+        fontSize:15,
       }
     },
     methods: {
@@ -573,6 +575,7 @@
       //改变黑窗口字体大小
       changeFontSize(fontSize){
         // this.$refs['console'+this.index].setFontSize(fontSize);
+        this.fontSize=fontSize;
         this.editableTabs.forEach((tab, index) => {
           this.$refs['console'+index][0].setFontSize(fontSize);
         });
