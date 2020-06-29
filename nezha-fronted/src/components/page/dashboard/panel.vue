@@ -37,11 +37,11 @@
                  animation:150,
                  handle:'.panelContent',
                }"  >
-                  <el-dropdown-item v-for="item in panelData" :key="item.id+1"
+                  <el-dropdown-item v-for="item in panelData" :key="item.id+1" class="panel-title-li"
                                     :class="showPanel.id==item.id?'nz-dashboard-dropdown-bg':''" :command="item">
                     <!--{{item.name}}-->
                     <el-row  :gutter="10" class="panel-list-width" >
-                      <el-col :span="2" class="panelContent move-area"><i class="nz-icon nz-icon-move"></i></el-col>
+                      <el-col :span="2" class="panelContent move-area"><i class="nz-icon nz-icon-sort4"></i></el-col>
                       <el-col :span="17" class="panel-list-item" :title="item.name">{{item.name}}</el-col>
                       <el-col :span="1"><span class="panel-dropdown-btn panel-dropdown-btn-delete" @click.stop="del(item)"><i class="el-icon-delete"></i></span></el-col>
                       <el-col :span="1">&nbsp;</el-col>
@@ -976,6 +976,16 @@
 
   .nz-dashboard-dropdown .nz-icon-edit {
     font-size: 12px;
+  }
+  .panel-title-li{
+    .panel-dropdown-btn{
+      visibility: hidden;
+    }
+  }
+  .panel-title-li:hover{
+    .panel-dropdown-btn{
+      visibility: visible;
+    }
   }
 </style>
 
