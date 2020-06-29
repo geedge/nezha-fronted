@@ -7,8 +7,8 @@
   }
 </style>
 <template>
-    <div class="console" :id="'ternimalContainer'+idIndex">
-        <div  :id="'terminal'+idIndex" v-scrollBar:xterm></div>
+    <div class="console" :id="'ternimalContainer'+idIndex"  v-scrollBar:xterm>
+        <div :id="'terminal'+idIndex" ></div>
     </div>
 </template>
 <script>
@@ -70,6 +70,8 @@ export default {
       if(consoleWidth){//需要调整宽度???
         cols = consoleWidth/11;//目前字体，一个字母宽11
       }
+      //调整终端可视区域高度
+      document.getElementsByClassName('xterm-screen')[this.idIndex].style.height=`${consoleHeigt}px`;
       this.term.resize(parseInt(cols),(parseInt(rows)-this.minRow));
     },
     resizeServiceConsole(){
@@ -322,6 +324,11 @@ export default {
           this.$message.error(response.msg);
         }
       });
+      //调整终端可视区域高度
+      document.getElementsByClassName('xterm-screen')[this.idIndex].style.height=height+'px'
+      this.$nextTick(()=>{
+        this.term.resize(this.term.cols,this.term.rows);
+      })
       // console.log(winStyle)
     }
   },
