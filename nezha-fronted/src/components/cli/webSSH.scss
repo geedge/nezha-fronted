@@ -133,6 +133,9 @@
     /*display: block;*/
     /*height: 40px;*/
   }
+  .nz-icon-728bianjiqi_zitidaxiao{
+    top:0 !important;
+  }
 }
 .shell-service-max {
   height: 100% !important;
@@ -142,8 +145,14 @@
   background: black !important;
 }
 
+.fontSizeBox{
+  .el-menu--collapse .el-menu .el-submenu, .el-menu--popup{
+    min-width: 0;
+  }
+}
 .fontSet{
-  margin-left: 5px;
+  margin-left: 35px;
+  width: 60px;
 }
 .el-menu--horizontal .el-menu .el-menu-item.menuActive{
   color: #303133;

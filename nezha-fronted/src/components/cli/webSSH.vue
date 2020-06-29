@@ -7,8 +7,8 @@
     <div id="shell-split" class="shell-split shell-iconfont" @mousedown="dragEagle" v-show="!isFullScreen">一</div>
     <div style='position: relative;'>
       <el-menu  mode="horizontal" @select="handleSelect" style='position: absolute;left:0px;top:0px;border-top: 1px solid #DCDFE6;' default-active="1-2">
-        <el-submenu index="1"  style="width:40px;">
-          <template slot="title" ><i class="el-icon-setting " style="position: absolute;left: 10px;top: 4px;"></i></template>
+        <el-submenu index="1"  style="width:40px;" popper-class="fontSizeBox">
+          <template slot="title" ><i class="nz-icon nz-icon-728bianjiqi_zitidaxiao" style="position: absolute;left: 10px;top: 4px;"></i></template>
           <!--<el-submenu index="1-1">-->
             <!--<template slot="title">文字大小</template>-->
             <el-menu-item @click="changeFontSize(12)" :class="{fontSet:true,menuActive:fontSize==12, smallFont:true}" index="1-1">A</el-menu-item>
