@@ -37,7 +37,7 @@
                  animation:150,
                  handle:'.panelContent',
                }"  >
-                  <el-dropdown-item v-for="item in panelData" :key="item.id+1"
+                  <el-dropdown-item v-for="item in panelData" :key="item.id+1" class="panel-title-li"
                                     :class="showPanel.id==item.id?'nz-dashboard-dropdown-bg':''" :command="item">
                     <!--{{item.name}}-->
                     <el-row  :gutter="10" class="panel-list-width" >
@@ -976,6 +976,16 @@
 
   .nz-dashboard-dropdown .nz-icon-edit {
     font-size: 12px;
+  }
+  .panel-title-li{
+    .panel-dropdown-btn{
+      visibility: hidden;
+    }
+  }
+  .panel-title-li:hover{
+    .panel-dropdown-btn{
+      visibility: visible;
+    }
   }
 </style>
 
