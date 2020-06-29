@@ -72,7 +72,10 @@ export default {
       }
       //调整终端可视区域高度
       document.getElementsByClassName('xterm-screen')[this.idIndex].style.height=`${consoleHeigt}px`;
-      this.term.resize(parseInt(cols),(parseInt(rows)-this.minRow));
+      // this.term.resize(parseInt(cols),(parseInt(rows)-this.minRow));
+      this.$nextTick(()=>{// 解决进入全屏和退出全屏是底部隐藏
+        this.setFontSize(this.fontSize);
+      })
     },
     resizeServiceConsole(){
       const consoleBox = document.getElementById('ternimalContainer'+this.idIndex);
@@ -290,6 +293,9 @@ export default {
       this.term.attach(this.terminalSocket);
       this.term._initialized = true;
       this.term.fit();//自适应大小(使终端的尺寸和几何尺寸适合于终端容器的尺寸) 只是width
+      this.$nextTick(()=>{// 解决进入全屏和退出全屏是底部隐藏
+        this.setFontSize(this.fontSize);
+      })
     },
 
     closeSocket(){
