@@ -41,7 +41,7 @@
                                     :class="showPanel.id==item.id?'nz-dashboard-dropdown-bg':''" :command="item">
                     <!--{{item.name}}-->
                     <el-row  :gutter="10" class="panel-list-width" >
-                      <el-col :span="2" class="panelContent move-area"><i class="nz-icon nz-icon-move"></i></el-col>
+                      <el-col :span="2" class="panelContent move-area"><i class="nz-icon nz-icon-sort4"></i></el-col>
                       <el-col :span="17" class="panel-list-item" :title="item.name">{{item.name}}</el-col>
                       <el-col :span="1"><span class="panel-dropdown-btn panel-dropdown-btn-delete" @click.stop="del(item)"><i class="el-icon-delete"></i></span></el-col>
                       <el-col :span="1">&nbsp;</el-col>
