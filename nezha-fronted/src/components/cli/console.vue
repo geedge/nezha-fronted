@@ -134,6 +134,9 @@ export default {
           this.$message.error(response.msg);
         }
       });
+      this.$nextTick(()=>{// 解决进入全屏和退出全屏是底部隐藏
+        this.setFontSize(this.fontSize);
+      })
 
       /*
       window.addEventListener('resize',this.windowChange)
@@ -305,6 +308,7 @@ export default {
     },
     setFontSize(fontSize){
       this.term.setOption('fontSize',fontSize);
+      this.fontSize=fontSize;
       const consoleBox = document.getElementById('ternimalContainer'+this.idIndex);
       let width = document.body.clientWidth;//可视宽度
       let height = parseInt(consoleBox.style.height);
