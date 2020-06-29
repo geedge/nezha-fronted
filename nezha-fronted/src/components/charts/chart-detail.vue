@@ -163,7 +163,7 @@
                         <div class="item-tip-hide item-tip-key el-popover" :class="itemTip(`key-${index}`, key, i, ready)">{{endpointKey[key]}}</div>
                       </div>
                       <div class="content-item-value item-tip" :id="`value-${index}-${i}`">
-                        <template v-if="key == 'state'"><div id="littleChart" style="cursor: pointer; height: 80px;" @click="preview"></div></template>
+                        <template v-if="key == 'state'"><div id="littleChart" style="cursor: pointer; height: 26px; width: 60px;" @click="preview"></div></template>
                         <template v-else-if="endpointKey[key]">
                           <span class="content-text">{{value ? value : "&nbsp;"}}</span>
                           <div class="item-tip-hide item-tip-value el-popover" :class="itemTip(`value-${index}`, key, i, ready)">{{value}}</div>
@@ -432,12 +432,16 @@
       initChart(series) {
         let option = {
           title: {show: false},
-          grid: {left: 40},
+          grid: {top: 20, bottom: 20},
           tooltip: {
             show: true,
             trigger: "axis",
             extraCssText: 'z-index:3100;',
-            position: [0, '50%'],
+            position: [100, 1],
+            textStyle: {
+              fontSize: 12,
+            },
+            padding: 3,
             formatter: function(param) {
               let time = param[0].data[0];
               time = bus.computeTimezone(time);
@@ -461,19 +465,23 @@
             show: false,
             type: 'time'
           },
-          /*visualMap: {
-            show: false,
-            dimension: 1,
-            pieces: [],
-            outOfRange: {
-              color: 'green'
-            }
-          },*/
           yAxis: {
             type: 'value',
             show: false
           },
           useUTC: false,//使用本地时间
+          visualMap: {
+            show: false,
+            pieces: [{
+              gt: -0.5,
+              lt: 0.5,
+              color: '#d64f40'
+            }, {
+              gt: 0.6,
+              lt: 1.5,
+              color: '#50d050'
+            }]
+          },
           series: series
         };
         let chart = echarts.init(document.querySelector("#littleChart"));

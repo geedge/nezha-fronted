@@ -554,8 +554,8 @@
             id: -8,
             panelId: 0,
             title: this.$t("alert.alertList"),
-            span: 12,
-            height: 350,
+            span: 8,
+            height: 700,
             type: "alertList",
             prev: -9,
             next: -1,
@@ -606,7 +606,6 @@
           });
           return;
         }
-
         if (!param.query) delete param.query;
         //根据panelId获得panel下的所有图表
         this.$get('panel/'+ params.panelId+'/charts').then(response => {
@@ -650,6 +649,10 @@
                       this.$set(item, "draggable", true);
                       this.$set(item, "resizable", true);
                     }
+                  } else if (!param.from) {
+                    this.$set(item, "draggable", true);
+                    this.$set(item, "resizable", true);
+                    this.$set(item, "editable", true);
                   }
                   if(!item.isLoaded){
                     //获得当前显示在浏览器的图表，从后台获取数据
@@ -1210,16 +1213,15 @@
                   let series = {
                     name: '',
                     symbol: 'emptyCircle',  //去掉点
-                    symbolSize: 6,
+                    symbolSize: 4,
                     smooth: 0.2,  //曲线变平滑
-                    showSymbol: true,
+                    showSymbol: false,
                     data: [],
                     type: "line",
                     lineStyle: {
                       width: 1,
                       opacity: 0.9
                     },
-                    label: {show: true},
                     itemStyle: {
                       color: function(params) {
                         if (params.data[1] == "1") {
@@ -1420,12 +1422,12 @@
                 if (response.data.project && response.data.project.length > 0) {
                   detail.push({title: vm.$t("project.project.project"), data: convert(response.data.project)});
                 }
-                if (response.data.module && response.data.module.length > 0) {
+                /*if (response.data.module && response.data.module.length > 0) {
                   detail.push({title: vm.$t("project.module.module"), data: convert(response.data.module)});
                 }
                 if (response.data.endpoint && response.data.endpoint.length > 0) {
                   detail.push({title: vm.$t("project.endpoint.endpoint"), data: convert(response.data.endpoint)});
-                }
+                }*/
                 if (response.data.asset && response.data.asset.length > 0) {
                   detail.push({title: vm.$t("asset.asset"), data: convert(response.data.asset)});
                 }
@@ -1435,6 +1437,7 @@
           });
         });
         req.then(result => {
+          console.info(detail);
           this.$refs['editChart'+chartInfo.id][0].setData(chartInfo, detail);
         }, err => {});
 
