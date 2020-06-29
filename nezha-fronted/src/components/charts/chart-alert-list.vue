@@ -481,8 +481,6 @@ export default {
         immediate:true,
         handler(n,o){
           this.data=Object.assign({},n)
-          this.data.resizable=true;
-          this.data.editable=true;
         }
       },
       panelId:{
