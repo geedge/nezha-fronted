@@ -395,7 +395,7 @@ export default {
           this.isError = false;
           this.errorContent = '';
         }
-        if(seriesItem||seriesItem == 0){ //0 为false
+        if(seriesItem||seriesItem == 0 && seriesItem !=''){ //0 为false
           this.noData=false;
         }else{
           this.noData=true;
