@@ -1204,21 +1204,22 @@
           let step = bus.getStep(startTime, endTime);
           this.$nextTick(() => {
             let query = chartInfo.elements[0].expression;
-            this.$get('/prom/api/v1/query_range?query='+query+"&start="+this.$stringTimeParseToUnix(startTime)+"&end="+this.$stringTimeParseToUnix(endTime)+'&step='+step).then(response => {
+            this.$get('/prom/api/v1/query_range?query='+query+"&start="+this.$stringTimeParseToUnix(startTime)+"&end="+this.$stringTimeParseToUnix(endTime)+'&step=5m').then(response => {
               if (response.status === 'success') {
                 if (response.data.result) {
                   let series = {
                     name: '',
                     symbol: 'emptyCircle',  //去掉点
-                    symbolSize: [2, 2],
+                    symbolSize: 6,
                     smooth: 0.2,  //曲线变平滑
-                    showSymbol: false,
+                    showSymbol: true,
                     data: [],
                     type: "line",
                     lineStyle: {
                       width: 1,
                       opacity: 0.9
                     },
+                    label: {show: true},
                     itemStyle: {
                       color: function(params) {
                         if (params.data[1] == "1") {

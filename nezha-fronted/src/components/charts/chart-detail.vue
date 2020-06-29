@@ -24,176 +24,178 @@
         </div>
         <div ref="chartInfo" class="chart-info" :id="'chartInfoDiv' + chartIndex" v-cloak>
           <el-scrollbar style="height: 100%;width:100%;" ref="scrollbar" class="el-scrollbar-normal">
-            <div v-for="(item, index) in detail" :key="index" style="padding: 0 15px;">
+            <div v-for="(item, index) in detail" :key="index" class="chart-sub">
               <div class="chart-sub-title" @click="hideElement(index)">
                 <span><i :class="{'el-icon-caret-right': show.indexOf(index) == -1,'el-icon-caret-bottom': show.indexOf(index) > -1}"></i></span>
                 <span>{{item.title}}</span>
               </div>
-              <div class="chart-sub-content" :class="{'init-no-animation': index == 0, 'fold-600': show.indexOf(index) == -1, 'unfold-600': show.indexOf(index) > -1}">
-                <template v-for="(value, key, i) in item.data">
+              <el-collapse-transition>
+                <div class="chart-sub-content" v-show="show.indexOf(index) > -1">
+                  <template v-for="(value, key, i) in item.data">
 
-                  <!-- endpoint-detail、asset、model的assetInfo的asset详情-->
-                  <div class="content-item" v-if="(data.from == 'endpoint' || data.from == 'asset' || data.from == 'model') && data.type == 'assetInfo' && item.type == 'basic' && assetKey[key]">
-                    <div class="content-item-key item-tip" :id="`key-${index}-${i}`">
-                      <span class="content-text">{{assetKey[key]}}</span>
-                      <div class="item-tip-hide item-tip-key el-popover" :class="itemTip(`key-${index}`, key, i, ready)">{{assetKey[key]}}</div>
-                    </div>
-
-                    <div class="content-item-value item-tip" :id="`value-${index}-${i}`">
-                      <span v-if="key == 'state'">{{value == 1 ? $t('asset.createAssetTab.inStock') : $t('asset.createAssetTab.outStock')}}</span>
-                      <span v-else-if="key == 'alert'" class="as-button" :class="{'success': value <= 0, 'danger': value > 0}">{{value + ' ' + $t('overall.active')}}</span>
-                      <div v-else-if="key == 'tags'" class="no-overflow" style="padding-bottom: 5px;">
-                        <template v-if="value && value.length > 0">
-                          <nz-alert-tag :label="tagItem.tag" type="normal" style="margin: 5px 5px 0 0; vertical-align: middle;"
-                                        :cursor-point="false"
-                                        :key="tagItem.id"
-                                        v-for="(tagItem, tagIndex) in value">
-                            <div :id="`tag-${index}-${tagIndex}`" class="tag-value">
-                              <span class="content-text">{{tagItem.value}}</span>
-                            </div>
-                          </nz-alert-tag>
-                        </template>
-                        <template v-else>&nbsp;</template>
+                    <!-- endpoint-detail、asset、model的assetInfo的asset详情-->
+                    <div class="content-item" v-if="(data.from == 'endpoint' || data.from == 'asset' || data.from == 'model') && data.type == 'assetInfo' && item.type == 'basic' && assetKey[key]">
+                      <div class="content-item-key item-tip" :id="`key-${index}-${i}`">
+                        <span class="content-text">{{assetKey[key]}}</span>
+                        <div class="item-tip-hide item-tip-key el-popover" :class="itemTip(`key-${index}`, key, i, ready)">{{assetKey[key]}}</div>
                       </div>
-                      <template v-else-if="key == 'pingRtt'">
-                        <div class="active-icon" :class="{'green': item.data.pingStatus == 1, 'red': item.data.pingStatus == 1 != 1}"></div>
-                        <span>{{value ? value + 'ms' : ''}}</span>
-                      </template>
-                      <template v-else-if="assetKey[key]">
-                        <span class="content-text">{{value ? value : "&nbsp;"}}</span>
-                        <div class="item-tip-hide item-tip-value el-popover" :class="itemTip(`value-${index}`, key, i, ready)">{{value}}</div>
-                      </template>
-                    </div>
-                  </div>
-                  <!-- endpoint-detail、asset、model的assetInfo的feature-->
-                  <div class="content-item" v-if="(data.from == 'endpoint' || data.from == 'asset' || data.from == 'model') && data.type == 'assetInfo' && item.type == 'feature'">
-                    <div class="content-item-key item-tip" :id="`key-${index}-${i}`">
-                      <span class="content-text">{{key}}</span>
-                      <div class="item-tip-hide item-tip-key el-popover" :class="itemTip(`key-${index}`, key, i, ready)">{{key}}</div>
-                    </div>
 
-                    <div class="content-item-value item-tip" :id="`value-${index}-${i}`" :class="{'content-item-value-muti': Array.isArray(value) && value.length > 0}">
-                      <template v-if="Array.isArray(value) && value.length>0">
-                        <div v-if="typeof value[0] == 'string'" class="item-value-sub" v-for="(_item, _index) in value" :key="_index">{{_item}}</div>
-                        <el-table
-                          v-else
-                          class="nz-table asset-info-table"
-                          :data="value"
-                          tooltip-effect="light"
-                          height="100%"
-                          ref="dataTable"
-                          v-scrollBar:el-table="'small'"
-                        >
-                          <el-table-column
-                            :resizable="false"
-                            v-for="(_item, _index) in setLabels(value)"
-                            v-if="_item.show"
-                            :key="`col-${_index}`"
-                            :label="_item.label"
+                      <div class="content-item-value item-tip" :id="`value-${index}-${i}`">
+                        <span v-if="key == 'state'">{{value == 1 ? $t('asset.createAssetTab.inStock') : $t('asset.createAssetTab.outStock')}}</span>
+                        <span v-else-if="key == 'alert'" class="as-button" :class="{'success': value <= 0, 'danger': value > 0}">{{value + ' ' + $t('overall.active')}}</span>
+                        <div v-else-if="key == 'tags'" class="no-overflow" style="padding-bottom: 5px;">
+                          <template v-if="value && value.length > 0">
+                            <nz-alert-tag :label="tagItem.tag" type="normal" style="margin: 5px 5px 0 0; vertical-align: middle;"
+                                          :cursor-point="false"
+                                          :key="tagItem.id"
+                                          v-for="(tagItem, tagIndex) in value">
+                              <div :id="`tag-${index}-${tagIndex}`" class="tag-value">
+                                <span class="content-text">{{tagItem.value}}</span>
+                              </div>
+                            </nz-alert-tag>
+                          </template>
+                          <template v-else>&nbsp;</template>
+                        </div>
+                        <template v-else-if="key == 'pingRtt'">
+                          <div class="active-icon" :class="{'green': item.data.pingStatus == 1, 'red': item.data.pingStatus == 1 != 1}"></div>
+                          <span>{{value ? value + 'ms' : ''}}</span>
+                        </template>
+                        <template v-else-if="assetKey[key]">
+                          <span class="content-text">{{value ? value : "&nbsp;"}}</span>
+                          <div class="item-tip-hide item-tip-value el-popover" :class="itemTip(`value-${index}`, key, i, ready)">{{value}}</div>
+                        </template>
+                      </div>
+                    </div>
+                    <!-- endpoint-detail、asset、model的assetInfo的feature-->
+                    <div class="content-item" v-if="(data.from == 'endpoint' || data.from == 'asset' || data.from == 'model') && data.type == 'assetInfo' && item.type == 'feature'">
+                      <div class="content-item-key item-tip" :id="`key-${index}-${i}`">
+                        <span class="content-text">{{key}}</span>
+                        <div class="item-tip-hide item-tip-key el-popover" :class="itemTip(`key-${index}`, key, i, ready)">{{key}}</div>
+                      </div>
+
+                      <div class="content-item-value item-tip" :id="`value-${index}-${i}`" :class="{'content-item-value-muti': Array.isArray(value) && value.length > 0}">
+                        <template v-if="Array.isArray(value) && value.length>0">
+                          <div v-if="typeof value[0] == 'string'" class="item-value-sub" v-for="(_item, _index) in value" :key="_index">{{_item}}</div>
+                          <el-table
+                            v-else
+                            class="nz-table asset-info-table"
+                            :data="value"
+                            tooltip-effect="light"
+                            height="100%"
+                            ref="dataTable"
+                            v-scrollBar:el-table="'small'"
                           >
-                            <template slot-scope="scope" :column="_item">
-                              <template >
-                                <span v-html="scope.row[_item.prop]"></span>
+                            <el-table-column
+                              :resizable="false"
+                              v-for="(_item, _index) in setLabels(value)"
+                              v-if="_item.show"
+                              :key="`col-${_index}`"
+                              :label="_item.label"
+                            >
+                              <template slot-scope="scope" :column="_item">
+                                <template >
+                                  <span v-html="scope.row[_item.prop]"></span>
+                                </template>
                               </template>
-                            </template>
-                          </el-table-column>
-                        </el-table>
-                      </template>
-                      <template v-else-if="key">
-                        <span class="content-text">{{value ? value : "&nbsp;"}}</span>
-                        <div class="item-tip-hide item-tip-value el-popover" :class="itemTip(`value-${index}`, key, i, ready)">{{value}}</div>
-                      </template>
+                            </el-table-column>
+                          </el-table>
+                        </template>
+                        <template v-else-if="key">
+                          <span class="content-text">{{value ? value : "&nbsp;"}}</span>
+                          <div class="item-tip-hide item-tip-value el-popover" :class="itemTip(`value-${index}`, key, i, ready)">{{value}}</div>
+                        </template>
+                      </div>
                     </div>
-                  </div>
 
-                  <!-- project的projectInfo的project详情-->
-                  <div class="content-item" v-else-if="data.from == 'project' && data.type == 'projectInfo' && projectKey[key]">
-                    <div class="content-item-key item-tip" :id="`key-${index}-${i}`">
-                      <span class="content-text">{{projectKey[key]}}</span>
-                      <div class="item-tip-hide item-tip-key el-popover" :class="itemTip(`key-${index}`, key, i, ready)">{{projectKey[key]}}</div>
+                    <!-- project的projectInfo的project详情-->
+                    <div class="content-item" v-else-if="data.from == 'project' && data.type == 'projectInfo' && projectKey[key]">
+                      <div class="content-item-key item-tip" :id="`key-${index}-${i}`">
+                        <span class="content-text">{{projectKey[key]}}</span>
+                        <div class="item-tip-hide item-tip-key el-popover" :class="itemTip(`key-${index}`, key, i, ready)">{{projectKey[key]}}</div>
+                      </div>
+                      <div class="content-item-value item-tip" :id="`value-${index}-${i}`">
+                        <template v-if="key == 'alertStat'">
+                          <div class="active-icon dark-red"></div>
+                          <span>{{value[0]}}</span>&nbsp;&nbsp;
+                          <div class="active-icon red"></div>
+                          <span>{{value[1]}}</span>&nbsp;&nbsp;
+                          <div class="active-icon orange"></div>
+                          <span>{{value[2]}}</span>
+                        </template>
+                        <template v-else-if="projectKey[key]">
+                          <span class="content-text">{{value ? value : "&nbsp;"}}</span>
+                          <div class="item-tip-hide item-tip-value el-popover" :class="itemTip(`value-${index}`, key, i, ready)">{{value}}</div>
+                        </template>
+                      </div>
                     </div>
-                    <div class="content-item-value item-tip" :id="`value-${index}-${i}`">
-                      <template v-if="key == 'alertStat'">
-                        <div class="active-icon dark-red"></div>
-                        <span>{{value[0]}}</span>&nbsp;&nbsp;
-                        <div class="active-icon red"></div>
-                        <span>{{value[1]}}</span>&nbsp;&nbsp;
-                        <div class="active-icon orange"></div>
-                        <span>{{value[2]}}</span>
-                      </template>
-                      <template v-else-if="projectKey[key]">
-                        <span class="content-text">{{value ? value : "&nbsp;"}}</span>
-                        <div class="item-tip-hide item-tip-value el-popover" :class="itemTip(`value-${index}`, key, i, ready)">{{value}}</div>
-                      </template>
+                    <!-- project的projectInfo的module详情-->
+                    <div class="content-item" v-else-if="data.from == 'project' && data.type == 'projectInfo' && moduleKey[key]">
+                      <div class="content-item-key item-tip" :id="`key-${index}-${i}`">
+                        <span class="content-text">{{moduleKey[key]}}</span>
+                        <div class="item-tip-hide item-tip-key el-popover" :class="itemTip(`key-${index}`, key, i, ready)">{{moduleKey[key]}}</div>
+                      </div>
+                      <div class="content-item-value item-tip" :id="`value-${index}-${i}`">
+                        <template v-if="key == 'alertStat'">
+                          <div class="active-icon dark-red"></div>
+                          <span>{{value[0]}}</span>&nbsp;&nbsp;
+                          <div class="active-icon red"></div>
+                          <span>{{value[1]}}</span>&nbsp;&nbsp;
+                          <div class="active-icon orange"></div>
+                          <span>{{value[2]}}</span>
+                        </template>
+                        <template v-else-if="key == 'endpointStat'">
+                          <img src='../../assets/img/up.png' width="16" style="vertical-align: middle">
+                          <span>{{value[0]}}</span>&nbsp;&nbsp;
+                          <img src='../../assets/img/down.png' width="16" style="vertical-align: middle">
+                          <span>{{value[1]}}</span>&nbsp;&nbsp;
+                        </template>
+                        <template v-else-if="moduleKey[key]">
+                          <span class="content-text">{{value ? value : "&nbsp;"}}</span>
+                          <div class="item-tip-hide item-tip-value el-popover" :class="itemTip(`value-${index}`, key, i, ready)">{{value}}</div>
+                        </template>
+                      </div>
                     </div>
-                  </div>
-                  <!-- project的projectInfo的module详情-->
-                  <div class="content-item" v-else-if="data.from == 'project' && data.type == 'projectInfo' && moduleKey[key]">
-                    <div class="content-item-key item-tip" :id="`key-${index}-${i}`">
-                      <span class="content-text">{{moduleKey[key]}}</span>
-                      <div class="item-tip-hide item-tip-key el-popover" :class="itemTip(`key-${index}`, key, i, ready)">{{moduleKey[key]}}</div>
-                    </div>
-                    <div class="content-item-value item-tip" :id="`value-${index}-${i}`">
-                      <template v-if="key == 'alertStat'">
-                        <div class="active-icon dark-red"></div>
-                        <span>{{value[0]}}</span>&nbsp;&nbsp;
-                        <div class="active-icon red"></div>
-                        <span>{{value[1]}}</span>&nbsp;&nbsp;
-                        <div class="active-icon orange"></div>
-                        <span>{{value[2]}}</span>
-                      </template>
-                      <template v-else-if="key == 'endpointStat'">
-                        <img src='../../assets/img/up.png' width="16" style="vertical-align: middle">
-                        <span>{{value[0]}}</span>&nbsp;&nbsp;
-                        <img src='../../assets/img/down.png' width="16" style="vertical-align: middle">
-                        <span>{{value[1]}}</span>&nbsp;&nbsp;
-                      </template>
-                      <template v-else-if="moduleKey[key]">
-                        <span class="content-text">{{value ? value : "&nbsp;"}}</span>
-                        <div class="item-tip-hide item-tip-value el-popover" :class="itemTip(`value-${index}`, key, i, ready)">{{value}}</div>
-                      </template>
-                    </div>
-                  </div>
 
-                  <!-- endpoint-detail的endpointInfo的endpoint详情-->
-                  <div class="content-item" v-else-if="data.from == 'endpoint' && data.type == 'endpointInfo' && endpointKey[key]">
-                    <div class="content-item-key item-tip" :id="`key-${index}-${i}`">
-                      <span class="content-text">{{endpointKey[key]}}</span>
-                      <div class="item-tip-hide item-tip-key el-popover" :class="itemTip(`key-${index}`, key, i, ready)">{{endpointKey[key]}}</div>
+                    <!-- endpoint-detail的endpointInfo的endpoint详情-->
+                    <div class="content-item" v-else-if="data.from == 'endpoint' && data.type == 'endpointInfo' && endpointKey[key]">
+                      <div class="content-item-key item-tip" :id="`key-${index}-${i}`">
+                        <span class="content-text">{{endpointKey[key]}}</span>
+                        <div class="item-tip-hide item-tip-key el-popover" :class="itemTip(`key-${index}`, key, i, ready)">{{endpointKey[key]}}</div>
+                      </div>
+                      <div class="content-item-value item-tip" :id="`value-${index}-${i}`">
+                        <template v-if="key == 'state'"><div id="littleChart" style="cursor: pointer; height: 80px;" @click="preview"></div></template>
+                        <template v-else-if="endpointKey[key]">
+                          <span class="content-text">{{value ? value : "&nbsp;"}}</span>
+                          <div class="item-tip-hide item-tip-value el-popover" :class="itemTip(`value-${index}`, key, i, ready)">{{value}}</div>
+                        </template>
+                      </div>
                     </div>
-                    <div class="content-item-value item-tip" :id="`value-${index}-${i}`">
-                      <template v-if="key == 'state'"><div id="littleChart" style="cursor: pointer; height: 80px;" @click="preview"></div></template>
-                      <template v-else-if="endpointKey[key]">
+                    <!-- endpoint-detail的endpointInfo的alert详情-->
+                    <div class="content-item" v-else-if="data.from == 'endpoint' && data.type == 'endpointInfo' && item.title == $t('overall.alert')">
+                      <div class="content-item-key item-tip" :id="`key-${index}-${i}`">
+                        <span class="content-text">{{key}}</span>
+                        <div class="item-tip-hide item-tip-key el-popover" :class="itemTip(`key-${index}`, key, i, ready)">{{key}}</div>
+                      </div>
+                      <div class="content-item-value item-tip" :id="`value-${index}-${i}`">
                         <span class="content-text">{{value ? value : "&nbsp;"}}</span>
                         <div class="item-tip-hide item-tip-value el-popover" :class="itemTip(`value-${index}`, key, i, ready)">{{value}}</div>
-                      </template>
+                      </div>
                     </div>
-                  </div>
-                  <!-- endpoint-detail的endpointInfo的alert详情-->
-                  <div class="content-item" v-else-if="data.from == 'endpoint' && data.type == 'endpointInfo' && item.title == $t('overall.alert')">
-                    <div class="content-item-key item-tip" :id="`key-${index}-${i}`">
-                      <span class="content-text">{{key}}</span>
-                      <div class="item-tip-hide item-tip-key el-popover" :class="itemTip(`key-${index}`, key, i, ready)">{{key}}</div>
-                    </div>
-                    <div class="content-item-value item-tip" :id="`value-${index}-${i}`">
-                      <span class="content-text">{{value ? value : "&nbsp;"}}</span>
-                      <div class="item-tip-hide item-tip-value el-popover" :class="itemTip(`value-${index}`, key, i, ready)">{{value}}</div>
-                    </div>
-                  </div>
 
-                  <!-- alertRule-detail的详情-->
-                  <div class="content-item" v-else-if="data.from == 'alertRule' && data.type == 'alertRuleInfo'">
-                    <div class="content-item-key item-tip" :id="`key-${index}-${i}`">
-                      <span class="content-text">{{key}}</span>
-                      <div class="item-tip-hide item-tip-key el-popover" :class="itemTip(`key-${index}`, key, i, ready)">{{key}}</div>
+                    <!-- alertRule-detail的详情-->
+                    <div class="content-item" v-else-if="data.from == 'alertRule' && data.type == 'alertRuleInfo'">
+                      <div class="content-item-key item-tip" :id="`key-${index}-${i}`">
+                        <span class="content-text">{{key}}</span>
+                        <div class="item-tip-hide item-tip-key el-popover" :class="itemTip(`key-${index}`, key, i, ready)">{{key}}</div>
+                      </div>
+                      <div class="content-item-value item-tip" :id="`value-${index}-${i}`">
+                        <span class="content-text">{{value ? value : "&nbsp;"}}</span>
+                        <div class="item-tip-hide item-tip-value el-popover" :class="itemTip(`value-${index}`, key, i, ready)">{{value}}</div>
+                      </div>
                     </div>
-                    <div class="content-item-value item-tip" :id="`value-${index}-${i}`">
-                      <span class="content-text">{{value ? value : "&nbsp;"}}</span>
-                      <div class="item-tip-hide item-tip-value el-popover" :class="itemTip(`value-${index}`, key, i, ready)">{{value}}</div>
-                    </div>
-                  </div>
-                </template>
-              </div>
+                  </template>
+                </div>
+              </el-collapse-transition>
             </div>
           </el-scrollbar>
         </div>

@@ -298,6 +298,13 @@
     .active-icon {
       margin: 0;
     }
+    .chart-sub {
+      padding: 0 15px;
+      margin-bottom: 5px;
+      :last-of-type {
+        margin-bottom: 0;
+      }
+    }
     .chart-sub-title {
       background-color: #efefef;
       font-size: 13px;
@@ -308,11 +315,7 @@
       user-select: none;
     }
     .chart-sub-content {
-      opacity: 0;
-      max-height: 0;
-      visibility: hidden;
       width: 100%;
-      margin-bottom: 5px;
       box-sizing: border-box;
       .content-item>div {
         display: inline-block;
@@ -424,59 +427,6 @@
           height: 99%;
         }
       }
-    }
-    .init-no-animation {
-      opacity: 1;
-      max-height: 200px;
-      visibility: visible;
-    }
-    .fold-500 {
-      animation-name: fold-500; //该动画定义在main.scss里
-      animation-duration: 0.2s;
-      animation-iteration-count:1;
-      opacity: 0;
-      max-height: 0;
-      visibility: hidden;
-    }
-    .fold-600 {
-      animation-name: fold-600; //该动画定义在main.scss里
-      animation-duration: 0.2s;
-      animation-iteration-count:1;
-      opacity: 0;
-      max-height: 0;
-      visibility: hidden;
-    }
-    .fold-200 {
-      animation-name: fold-200; //该动画定义在main.scss里
-      animation-duration: 0.2s;
-      animation-iteration-count:1;
-      opacity: 0;
-      max-height: 0;
-      visibility: hidden;
-    }
-    .unfold-500 {
-      animation-name: unfold-500;
-      animation-duration: 0.2s;
-      animation-iteration-count:1;
-      opacity: 1;
-      max-height: 500px;
-      visibility: visible;
-    }
-    .unfold-600 {
-      animation-name: unfold-600;
-      animation-duration: 0.2s;
-      animation-iteration-count:1;
-      opacity: 1;
-      max-height: 600px;
-      visibility: visible;
-    }
-    .unfold-200 {
-      animation-name: unfold-200;
-      animation-duration: 0.2s;
-      animation-iteration-count:1;
-      opacity: 1;
-      max-height: 200px;
-      visibility: visible;
     }
   }
   .chart-url {
