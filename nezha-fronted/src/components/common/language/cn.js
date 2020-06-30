@@ -267,12 +267,19 @@ const cn = {
         module: "组件",
         endpoint: "Endpoint"
       },
+      module: {
+        module: "组件",
+      },
+      endpoint: {
+        endpoint: "Endpoints",
+      },
       dataCenter: {
         dataCenter: "数据中心",
         cabinet: "机柜",
         promServer: "prometheus 服务"
       },
       alert: {
+        alertMessage: '告警信息',
         level: "级别",
         alertRule: "告警规则",
         ruleNum: "规则数量",
