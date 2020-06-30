@@ -56,7 +56,7 @@
                  animation: 150,
                  handle: '.chart-title'
                }"  >
-      <div class="chartBox" v-for="(item, index) in dataList" :key="item.id" :id="'chart-' + item.id" :name="item.title" :class="{'drag-disabled': !draggable}">
+      <div v-for="(item, index) in dataList" :key="item.id" :id="'chart-' + item.id" :name="item.title" :class="{'drag-disabled': !draggable,'chartBox':true}" v-show="!item.isHide">
         <line-chart-block v-if="item.type === 'line' || item.type === 'bar' ||item.type == 'stackArea' || item.type === 4" :key="'inner' + item.id"
                           :ref="'editChart'+item.id"
                           @on-refresh-data="refreshChart"
@@ -68,7 +68,7 @@
                           :chart-index="index"
                           :chart-data="item"></line-chart-block>
 
-        <chart-single-stat v-if="item.type === 'singleStat'" :ref="'editChart'+item.id" :key="'inner' + item.id"
+        <chart-single-stat  v-if="item.type === 'singleStat'" :ref="'editChart'+item.id" :key="'inner' + item.id"
                      @on-refresh-data="refreshChart"
                      @on-search-data="searchData"
                      @on-remove-chart-block="removeChart"
@@ -79,7 +79,7 @@
                      :panel-id="filter.panelId"
                      :chart-index="index"></chart-single-stat>
 
-        <chart-table v-if="item.type === 'table'" :ref="'editChart'+item.id" :key="'inner' + item.id"
+        <chart-table  v-if="item.type === 'table'" :ref="'editChart'+item.id" :key="'inner' + item.id"
                       @on-refresh-data="refreshChart"
                       @on-search-data="searchData"
                       @on-remove-chart-block="removeChart"
@@ -90,7 +90,7 @@
                       :chart-data="item"
                       :chart-index="index"></chart-table>
 
-        <chart-url v-if="item.type === 'url'" :ref="'editChart'+item.id" :key="'inner' + item.id"
+        <chart-url  v-if="item.type === 'url'" :ref="'editChart'+item.id" :key="'inner' + item.id"
                      @on-refresh-data="refreshChart"
                      @on-search-data="searchData"
                      @on-remove-chart-block="removeChart"
@@ -101,7 +101,7 @@
                      :chart-data="item"
                      :chart-index="index"></chart-url>
 
-        <chart-detail v-if="item.type === 'assetInfo' || item.type == 'projectInfo' || item.type == 'endpointInfo' || item.type == 'alertRuleInfo'" :ref="'editChart'+item.id" :key="'inner' + item.id"
+        <chart-detail  v-if="item.type === 'assetInfo' || item.type == 'projectInfo' || item.type == 'endpointInfo' || item.type == 'alertRuleInfo'" :ref="'editChart'+item.id" :key="'inner' + item.id"
                           :panel-id="filter.panelId"
                           :chart-index="index"
                           @on-refresh-data="refreshChart"
@@ -109,7 +109,7 @@
                           :editChartId="'editChartId' + item.id"
         ></chart-detail>
 
-        <chart-alert-list :ref="'editChart'+item.id"
+        <chart-alert-list  :ref="'editChart'+item.id"
                           :panel-id="filter.panelId"
                           :chart-index="index"
                           v-if="item.type  === 'alertList'"
@@ -406,20 +406,25 @@
         this.getData(this.filter);
       },
       searchCharts(searchName){
-        this.dataList = [];
-        this.dataTotalList = [];
-
+        // this.dataList = [];
+        // this.dataTotalList = [];
         let chartListTmp = [];
         if(searchName && searchName.trim()!==''){
           this.dataTotalListBak.forEach((item)=>{
             if(item.title.indexOf(searchName)>-1){
               item.isLoaded = false;
+              item.isHide=false;
+              chartListTmp.push(item);
+            }else{
+              item.isLoaded = false;
+              item.isHide=true;
               chartListTmp.push(item);
             }
           });
         }else{
           this.dataTotalListBak.forEach((item)=>{
             item.isLoaded = false;
+            item.isHide=false;
             chartListTmp.push(item);
           });
         }
@@ -1454,8 +1459,10 @@
       setChartSize(item, index) {
         this.$nextTick(() => {
           let chartBox = document.getElementById("chart-" + item.id);
-          chartBox.style.width = `${(item.span / 12) * 100}%`;
-          chartBox.style.height = `${item.height}px`;
+          if(chartBox){
+            chartBox.style.width = `${(item.span / 12) * 100}%`;
+            chartBox.style.height = `${item.height}px`;
+          }
         });
       },
       getNewTime(time, num) {
