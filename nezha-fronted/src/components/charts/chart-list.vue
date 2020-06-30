@@ -1445,6 +1445,20 @@
           let data = {};
           d.forEach(item => {
             data[item.name] = item.nums;
+            !data._module_ ? (data._module_ = {}) : "";
+            if (item.module && item.module instanceof Array && item.module.length > 0) {
+              data._module_[item.name] = {};;
+              item.module.forEach(m => {
+                data._module_[item.name][m.name] = m.nums;
+                !data._module_[item.name]._endpoint_ ? (data._module_[item.name]._endpoint_ = {}) : "";
+                if (m.endpoint && m.endpoint instanceof Array && m.endpoint.length > 0) {
+                  data._module_[item.name]._endpoint_[m.name] = {};
+                  m.endpoint.forEach(e => {
+                    data._module_[item.name]._endpoint_[m.name][e.name] = e.nums;
+                  })
+                }
+              })
+            }
           });
           return data;
         }
