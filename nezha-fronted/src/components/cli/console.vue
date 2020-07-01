@@ -328,16 +328,16 @@ export default {
       document.getElementsByClassName('xterm-screen')[this.idIndex].style.height=height+'px'
       this.$nextTick(()=>{
         this.term.resize(this.term.cols,this.term.rows);
-      })
+      });
       // alert(JSON.stringify(winStyle));
-      // this.$post('terminal/resize',winStyle).then(response => {
-      //   if (response.code === 200) {
-      //     this.term.fit();
-      //     //this.term.scrollToBottom();
-      //   } else {
-      //     this.$message.error(response.msg);
-      //   }
-      // });
+      this.$post('terminal/resize',winStyle).then(response => {
+        if (response.code === 200) {
+          this.term.fit();
+          //this.term.scrollToBottom();
+        } else {
+          this.$message.error(response.msg);
+        }
+      });
 
       // console.log(winStyle)
     }
