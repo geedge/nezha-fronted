@@ -127,15 +127,17 @@
             <span v-if="tabView">{{assetData.purchaseDate}}</span>
           </el-form-item>
           <!--tag-->
+          <div class="right-box-sub-title">{{$t('overall.tag')}}
+            <div class="right-box-form-btns">
+            <button style="display: none;">第一个button会出现意料之外的hover样式，找不到原因，只好加个不可见的button规避问题</button>
+            <button id="module-add-param" type="button" @click="addTag">
+              <span><i style="font-size: 12px;" class="nz-icon nz-icon-create-square"></i></span>
+            </button>
+          </div></div>
+          <div class="line-100 right-box-line"></div>
           <el-form-item>
             <template slot="label">
-              <span>{{$t('overall.tag')}}</span>
-              <div class="right-box-form-btns">
-                <button style="display: none;">第一个button会出现意料之外的hover样式，找不到原因，只好加个不可见的button规避问题</button>
-                <button id="module-add-param" type="button" @click="addTag" class="nz-btn nz-btn-size-normal nz-btn-style-light">
-                  <span><i style="font-size: 12px;" class="nz-icon nz-icon-create-square"></i></span>
-                </button>
-              </div>
+              <span></span>
             </template>
             <div class="tag-edit-box">
               <div class="tag-edit-box-head">
@@ -178,6 +180,14 @@
           <!--cli-->
           <div class="right-box-sub-title">{{$t('config.account.account')}}
             <!--<el-switch v-if="!tabView" style="float: right;" v-model="accountSwitch" active-color="#ee9d3f" :disabled="parseInt(assetData.exporter)===1"></el-switch>-->
+            <el-popover placement="right" width="70" trigger="click" :disabled="assetData.accounts.length == 3" v-model.sync="showAccountOp" popper-class="no-style-class">
+              <button slot="reference" id="add-type" type="button" class="float-right" :class="{'nz-btn-disabled': assetData.accounts.length == 3}">
+                <span><i style="font-size: 12px;" class="nz-icon nz-icon-create-square"></i></span>
+              </button>
+              <ul class="el-select-dropdown__list">
+                <li @click="addAccount(type)" v-for="(type, index) in selectableAccountTypes" :key="index" class="el-select-dropdown__item"><span>{{type}}</span></li>
+              </ul>
+            </el-popover>
           </div>
           <div class="line-100 right-box-line"></div>
           <!--<template v-if="accountSwitch">
@@ -193,14 +203,6 @@
               </div>&nbsp;
               <span class="nz-tab-item-close" @click.stop="removeAccount(index)"><i class="el-icon-circle-close"></i></span>
             </div>
-            <el-popover placement="right" width="70" trigger="click" :disabled="assetData.accounts.length == 3" v-model.sync="showAccountOp" popper-class="no-style-class">
-              <button slot="reference" id="add-type" type="button" class="nz-btn nz-btn-size-normal nz-btn-style-light float-right" :class="{'nz-btn-disabled': assetData.accounts.length == 3}">
-                <span><i style="font-size: 12px;" class="nz-icon nz-icon-create-square"></i></span>
-              </button>
-              <ul class="el-select-dropdown__list">
-                <li @click="addAccount(type)" v-for="(type, index) in selectableAccountTypes" :key="index" class="el-select-dropdown__item"><span>{{type}}</span></li>
-              </ul>
-            </el-popover>
           </div>
           <account-config-box v-for="(account,index) in assetData.accounts" :account="account" v-show="account.protocol == accountType" :key="index" ref="accountConfigBox" @setValidateResult="setAccountValideResult" @protocol-type-change="protocolTypeChange"></account-config-box>
 
@@ -1438,5 +1440,15 @@
   }
   .cabinet-u-label .is-disabled-check:after{
     border-color: #C0C4CC !important;
+  }
+</style>
+<style scoped>
+  #module-add-param,#add-type{
+    background: #fff;
+    border: none;
+    cursor: pointer;
+    outline: none;
+    margin-right: 5px;
+
   }
 </style>
