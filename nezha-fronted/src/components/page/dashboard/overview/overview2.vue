@@ -1356,6 +1356,7 @@
     },
     mounted() {
       this.initData();
+      this.initDate();
       window.onresize = () => {
         setTimeout(() => {
           this.$parent.$parent.update();
