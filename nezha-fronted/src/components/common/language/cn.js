@@ -516,7 +516,7 @@ const cn = {
       device: "SN",
       host: "Host",
       assetState: "状态",
-      modules: "组件",
+      modules: "Endpoint",
       alerts: "告警信息",
       dataCenter: "DC",
       cabinet: "机柜",
