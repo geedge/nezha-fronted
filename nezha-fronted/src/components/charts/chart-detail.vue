@@ -163,7 +163,7 @@
                         <div class="item-tip-hide item-tip-key el-popover" :class="itemTip(`key-${index}`, key, i, ready)">{{endpointKey[key]}}</div>
                       </div>
                       <div class="content-item-value item-tip" :id="`value-${index}-${i}`">
-                        <template v-if="key == 'state'"><div id="littleChart" style="cursor: pointer; height: 26px; width: 60px;" @click="preview"></div></template>
+                        <template v-if="key == 'state'"><div id="littleChart" style="cursor: pointer; height: 26px; width: 100px;" @click="preview"></div></template>
                         <template v-else-if="endpointKey[key]">
                           <span class="content-text">{{value ? value : "&nbsp;"}}</span>
                           <div class="item-tip-hide item-tip-value el-popover" :class="itemTip(`value-${index}`, key, i, ready)">{{value}}</div>
@@ -183,15 +183,56 @@
                     </div>
 
                     <!-- alertRule-detail的详情-->
-                    <div class="content-item" v-else-if="data.from == 'alertRule' && data.type == 'alertRuleInfo'">
+                    <div class="content-item" v-else-if="data.from == 'alertRule' && data.type == 'alertRuleInfo' && key != '_module_'" @click="showDeep(`deep-${index}-${i}`)">
                       <div class="content-item-key item-tip" :id="`key-${index}-${i}`">
-                        <span class="content-text">{{key}}</span>
+                        <span class="content-text">
+                          <span><i v-if="item.data._module_[key]" :class="{'el-icon-caret-right': deepShow.indexOf(`deep-${index}-${i}`) == -1,'el-icon-caret-bottom': deepShow.indexOf(`deep-${index}-${i}`) > -1}"></i></span>
+                          <span>{{key}}</span>
+                          <!--<span v-if="item.data._module_[key]">{{Object.keys(item.data._module_[key]).length-1}}个module</span>-->
+                        </span>
                         <div class="item-tip-hide item-tip-key el-popover" :class="itemTip(`key-${index}`, key, i, ready)">{{key}}</div>
                       </div>
                       <div class="content-item-value item-tip" :id="`value-${index}-${i}`">
                         <span class="content-text">{{value ? value : "&nbsp;"}}</span>
-                        <div class="item-tip-hide item-tip-value el-popover" :class="itemTip(`value-${index}`, key, i, ready)">{{value}}</div>
                       </div>
+                      <!-- module -->
+                      <el-collapse-transition>
+                        <div class="chart-third-content" v-show="deepShow.indexOf(`deep-${index}-${i}`) > -1">
+                          <template v-for="(module, mProjectName, ti) in item.data._module_" v-if="mProjectName == key">
+                            <div class="content-item" @click.stop="showDeep(`deep-${index}-${i}-${ti}-${fi}`)" v-for="(moduleNum, moduleName, fi) in module" v-if="moduleName != '_endpoint_'">
+                              <div class="content-item-key item-tip deep" :id="`key-${index}-${i}-${ti}-${fi}`">
+                              <span class="content-text">
+                                <span><i v-if="module._endpoint_[moduleName]" :class="{'el-icon-caret-right': deepShow.indexOf(`deep-${index}-${i}-${ti}-${fi}`) == -1,'el-icon-caret-bottom': deepShow.indexOf(`deep-${index}-${i}-${ti}-${fi}`) > -1}"></i></span>
+                                <span>{{moduleName}}</span>
+                                <!--<span v-if="module._endpoint_[moduleName]">{{Object.keys(module._endpoint_[moduleName]).length-1}}个endpoint</span>-->
+                              </span>
+                                <div class="item-tip-hide item-tip-key el-popover" :class="itemTip(`key-${index}-${i}-${ti}`, moduleName, fi, ready)">{{moduleName}}</div>
+                              </div>
+                              <div class="content-item-value item-tip deep" :id="`value-${index}-${i}-${ti}-${fi}`">
+                                <span class="content-text">{{moduleNum ? moduleNum : "&nbsp;"}}</span>
+                              </div>
+                              <!-- endpoint -->
+                              <el-collapse-transition>
+                                <div class="chart-forth-content" v-show="deepShow.indexOf(`deep-${index}-${i}-${ti}-${fi}`) > -1">
+                                  <template v-if="eModuleName == moduleName" v-for="(endpoint, eModuleName, si) in module._endpoint_">
+                                    <div class="content-item" @click.stop v-for="(endpointNum, endpointName, ei) in endpoint">
+                                      <div class="content-item-key item-tip deepp" :id="`key-${index}-${i}-${ti}-${fi}-${si}-${ei}`">
+                                        <span class="content-text">
+                                          <span>{{endpointName}}</span>
+                                        </span>
+                                        <div class="item-tip-hide item-tip-key el-popover" :class="itemTip(`key-${index}-${i}-${ti}-${fi}-${si}`, endpointName, ei, ready)">{{endpointName}}</div>
+                                      </div>
+                                      <div class="content-item-value item-tip deepp" :id="`value-${index}-${i}-${ti}-${fi}-${si}-${ei}`">
+                                        <span class="content-text">{{endpointNum ? endpointNum : "&nbsp;"}}</span>
+                                      </div>
+                                    </div>
+                                  </template>
+                                </div>
+                              </el-collapse-transition>
+                            </div>
+                          </template>
+                        </div>
+                      </el-collapse-transition>
                     </div>
                   </template>
                 </div>
@@ -245,6 +286,7 @@
         detail: [], //展示的详情
         unit: {},
         show: [0], //控制展开/隐藏
+        deepShow: [], //控制二级/三级的展开/隐藏
         isError:false,
         errorContent:'',
         loading:Object,
@@ -360,6 +402,13 @@
           this.show.splice(this.show.indexOf(index), 1);
         } else {
           this.show.push(index);
+        }
+      },
+      showDeep(index) {
+        if (this.deepShow.indexOf(index) > -1) {
+          this.deepShow.splice(this.deepShow.indexOf(index), 1);
+        } else {
+          this.deepShow.push(index);
         }
       },
       startLoading(area){
