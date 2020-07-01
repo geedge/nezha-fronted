@@ -25,6 +25,7 @@ export default {
       type: Boolean,
       default: false,
     },
+    fontSize:{}
   },
   data () {
     return {
@@ -35,7 +36,6 @@ export default {
       topMenuHeight:30,
       dragHeigh:8,
       minRow:1,
-      fontSize:15,
       fontSpaceHeight:2,//一行高度=fontSize+fontSpaceHeight
       obj:{
         id:2
@@ -314,7 +314,6 @@ export default {
     },
     setFontSize(fontSize){
       this.term.setOption('fontSize',fontSize);
-      this.fontSize=fontSize;
       const consoleBox = document.getElementById('ternimalContainer'+this.idIndex);
       let width = document.body.clientWidth;//可视宽度
       let height = parseInt(consoleBox.style.height);
@@ -325,20 +324,21 @@ export default {
         cols:this.term.cols,//cols和rows在resizeConsole方法已经设置
         rows:this.term.rows,
       };
-      // alert(JSON.stringify(winStyle));
-      this.$post('terminal/resize',winStyle).then(response => {
-        if (response.code === 200) {
-          this.term.fit();
-          //this.term.scrollToBottom();
-        } else {
-          this.$message.error(response.msg);
-        }
-      });
       //调整终端可视区域高度
       document.getElementsByClassName('xterm-screen')[this.idIndex].style.height=height+'px'
       this.$nextTick(()=>{
         this.term.resize(this.term.cols,this.term.rows);
       })
+      // alert(JSON.stringify(winStyle));
+      // this.$post('terminal/resize',winStyle).then(response => {
+      //   if (response.code === 200) {
+      //     this.term.fit();
+      //     //this.term.scrollToBottom();
+      //   } else {
+      //     this.$message.error(response.msg);
+      //   }
+      // });
+
       // console.log(winStyle)
     }
   },

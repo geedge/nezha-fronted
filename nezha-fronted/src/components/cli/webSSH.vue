@@ -6,7 +6,7 @@
     <div id="shell-service-resize-mask"></div>
     <div id="shell-split" class="shell-split shell-iconfont" @mousedown="dragEagle" v-show="!isFullScreen">一</div>
     <div style='position: relative;'>
-      <el-menu  mode="horizontal" @select="handleSelect" style='position: absolute;left:0px;top:0px;border-top: 1px solid #DCDFE6;' default-active="1-2">
+      <el-menu  mode="horizontal" @select="handleSelect" style='position: absolute;left:0px;top:0px;border-top: 1px solid #DCDFE6;'>
         <el-submenu index="1"  style="width:40px;" popper-class="fontSizeBox">
           <template slot="title" ><i class="nz-icon nz-icon-728bianjiqi_zitidaxiao" style="position: absolute;left: 10px;top: 4px;"></i></template>
           <!--<el-submenu index="1-1">-->
@@ -51,7 +51,7 @@
                   style="margin-top: 0px;"></div>{{item.title}}
           </span>
 
-          <my-console :terminal="item.terminal"    @refreshConsoleTitle="refreshTabTitle" :ref="'console'+index"    @closeConsole="removeTab" :idIndex="index" :isFullScreen="isFullScreen"></my-console>
+          <my-console :terminal="item.terminal"    @refreshConsoleTitle="refreshTabTitle" :ref="'console'+index"    @closeConsole="removeTab" :idIndex="index" :isFullScreen="isFullScreen" :fontSize="fontSize"></my-console>
 
         </el-tab-pane>
         <el-tab-pane key="add" name="add">
@@ -175,6 +175,7 @@
     },
 
     data() {
+      let termFontSize=parseInt(localStorage.getItem("termFontSize"));
       return {
         consoleShow:false,
         isFullScreen:false,
@@ -200,7 +201,7 @@
         downloadFileList:[],
         downloadResult:null,
         // 字体大小
-        fontSize:15,
+        fontSize:termFontSize?termFontSize:15,
       }
     },
     methods: {
@@ -576,6 +577,7 @@
       changeFontSize(fontSize){
         // this.$refs['console'+this.index].setFontSize(fontSize);
         this.fontSize=fontSize;
+        localStorage.setItem("termFontSize", fontSize);
         this.editableTabs.forEach((tab, index) => {
           this.$refs['console'+index][0].setFontSize(fontSize);
         });
