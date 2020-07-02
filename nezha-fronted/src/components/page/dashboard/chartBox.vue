@@ -41,6 +41,7 @@
   .element-item {
     padding: 20px 0;
     border-bottom: 1px dashed #dfe7f2;
+    width: 100%;
   }
   /*metric样式--end*/
   .label-center{
@@ -180,7 +181,7 @@
               <alert-chart-param ref="alertParamBox" @on-enter-complate="getAlertParam"></alert-chart-param>
             </el-row>
 
-            <el-row v-if="!isUrl && !isSingleStat&&!isAlert" class="element-item" v-for="index of promqlKeys.length" :key="'ele' + index">
+            <el-row v-if="!isUrl && !isSingleStat&&!isAlert" class="element-item" style="" v-for="index of promqlKeys.length" :key="'ele' + index">
               <!--<chart-metric ref="chartTag"
                             :pointer="index"
                             :metric-list="metricList"
@@ -210,7 +211,7 @@
                   </el-popover>
                 </el-col>
                 <el-col style="width: calc(100% - 120px);">
-                  <el-input v-model="legends[index-1]" type="text" size="mini"></el-input>
+                  <el-input v-model="legends[index-1]" type="text" size="small"></el-input>
                 </el-col>
               </el-row>
             </el-row>

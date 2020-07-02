@@ -67,7 +67,7 @@
     </div>
     <button class="to-top" :class="{'to-top-is-hover': tableHover}" v-show="showTopBtn" @click="$toTop('el', $refs.dashboardScrollbar.wrap)" style="bottom: 0;"><i class="nz-icon nz-icon-top"></i></button>
 
-    <chart-box ref="addChartModal" :showPanel="showPanel" :panel-data="panelData" @on-create-success="createSuccess" @on-delete-success="delChartOk"></chart-box>
+    <chart-box v-if="rightBox.show" ref="addChartModal" :showPanel="showPanel" :panel-data="panelData" @on-create-success="createSuccess" @on-delete-success="delChartOk"></chart-box>
   </div>
 </template>
 
@@ -186,8 +186,9 @@
       },
       /*图表相关操作--start*/
       toAddChart: function () {
+        this.rightBox.show = true;
         this.$refs.addChartModal.setTitle(this.$t("dashboard.panel.createChartTitle"));
-        this.$refs.addChartModal.show(true);
+        //this.$refs.addChartModal.show(true);
         this.$refs.addChartModal.createData(this.panelId); //初始化创建图表需要的初始数据
       },
       // 切换tab

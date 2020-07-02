@@ -1,15 +1,15 @@
 <template>
-  <div class="metric-editor" v-clickoutside="clickout">
+  <div class="metric-editor" v-clickoutside="clickout" :class="{'metric-editor-rb': styleType == 2}">
     <div :id="id" class="editor-core" ref="editor" ></div>
-    <span class="nz-input-append editor-clear" style="padding-top:8px;display: none" @click="clearContent"><i class="el-icon-circle-close"></i></span>
+    <span class="nz-input-append editor-clear" style="display: none" @click="clearContent"><i class="el-icon-circle-close"></i></span>
     <div class="metric-editor-popper" :style="{left:popperPos.left+'px'}">
       <div class="metric-popper-main" v-show="showType&&Object.keys(showSuggestions).length>0">
-          <el-scrollbar style="height: 100%;width:100%" class="el-scrollbar-small" ref="scroll">
-            <div v-for="(key, index) in orders" >
-              <div v-html="key" class="popper-group" v-show="showSuggestions[key]"></div>
-              <div class="popper-item" v-for="(item,i) in showSuggestions[key]" v-html="item.label" :key="item.insertText" :type="key" :value="item.insertText" @click.stop="handleItemClick(key,item,$event)" @mouseover="itemHover(item)" @mouseout="itemOut(item)"></div>
-            </div>
-          </el-scrollbar>
+        <el-scrollbar style="height: 100%;width:100%" class="el-scrollbar-small" ref="scroll">
+          <div v-for="(key, index) in orders" >
+            <div v-html="key" class="popper-group" v-show="showSuggestions[key]"></div>
+            <div class="popper-item" v-for="(item,i) in showSuggestions[key]" v-html="item.label" :key="item.insertText" :type="key" :value="item.insertText" @click.stop="handleItemClick(key,item,$event)" @mouseover="itemHover(item)" @mouseout="itemOut(item)"></div>
+          </div>
+        </el-scrollbar>
       </div>
       <div class="metric-popper-desc" v-if="showType&&Object.keys(showSuggestions).length>0&&showDescription && detailItem && detailItem.documentation">
         <div><b>{{detailItem.insertText}}</b></div>
@@ -28,7 +28,8 @@
     name: "editor",
     props: {
       value: String,
-      metricList:{type:Array}
+      metricList:{type:Array},
+      styleType: Number
     },
     model:{
       prop:'value',
@@ -814,7 +815,7 @@
   }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
   .metric-editor{
     position: relative;
     height: 36px;
@@ -883,11 +884,14 @@
   .editor-core:hover + .editor-clear{
     display: inline-block !important;
   }
+  .editor-clear {
+    padding-top: 8px;
+  }
   .editor-clear:hover{
     display: inline-block !important;
   }
 </style>
-<style>
+<style lang="scss">
   mark{
     color: rgb(255, 133, 27);
     border-bottom: 1px solid rgb(255, 133, 27);
@@ -895,9 +899,28 @@
     background: inherit;
     padding: 0;
   }
-   .ql-editor{
-    padding:10px 10px !important;
-     overflow: hidden;
+  .ql-editor{
+    padding:10px !important;
+    overflow: hidden;
   }
+  .metric-editor.metric-editor-rb {
+    .editor-clear {
+      padding-top: 4px;
+    }
+    height: 32px;
+    .ql-container.ql-snow {
+      border-radius: 4px;
+      border: 1px solid #DCDFE6;
+      box-sizing: border-box;
+      .ql-editor {
+        padding: 6px 0 !important;
+        >p {
+          padding-left: 15px;
+          font-size: 12px;
+          color: rgb(96, 98, 102);
+        }
+      }
+    }
 
+  }
 </style>
