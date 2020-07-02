@@ -2,25 +2,37 @@
     <div class="promqlInput" :style="{height:(errorMsg || appendMsg)?'50px':'36px'}">
       <div class="query-row">
         <div class="query-input">
-          <div class="metricBtn">
-            <el-dropdown class="metric-selector" >
-              <el-dropdown-menu style="display: none"></el-dropdown-menu>
-              <el-button class="metric-btn nz-btn nz-btn-size-normal nz-btn-style-light" @click="toggleDropdown">Metric &nbsp;<i class="el-icon-arrow-down"></i></el-button>
-              <el-cascader-panel v-show="dropDownVisible" v-model="cascaderValue"  slot="dropdown" ref="metricSelector" :props="{emitPath:false}" :options="metricOptions"  @change="metricChange"></el-cascader-panel>
-            </el-dropdown>
-          </div>
-          <div class="inputBox" @click="dropDownVisible=false">
-<!--            <el-autocomplete :placeholder="$t('dashboard.metricPreview.inputTip')" :fetch-suggestions="filterInput" clearable @clear="clearExpression" :trigger-on-focus="false" v-model="expressionList[index]" @blur="expressionChange" style="width: 100%;height:36px"></el-autocomplete>-->
-            <editor :metric-list="metricStore" v-model="expressionList[index]" ref="editor" @on-enter="expressionChange" @on-blur="expressionChange" ></editor>
-            <div class="append-msg error" v-if="errorMsg"><span>{{errorMsg}}</span></div>
-            <div class="append-msg error" v-if="appendMsg"><span>{{appendMsg}}</span></div>
-          </div>
+          <template v-if="styleType == 1">
+            <div class="metricBtn" v-if="plugins.indexOf('metric') > -1">
+              <el-dropdown class="metric-selector" >
+                <el-dropdown-menu style="display: none"></el-dropdown-menu>
+                <el-button class="metric-btn nz-btn nz-btn-size-normal nz-btn-style-light" @click="toggleDropdown">Metric &nbsp;<i class="el-icon-arrow-down"></i></el-button>
+                <el-cascader-panel v-show="dropDownVisible" v-model="cascaderValue"  slot="dropdown" ref="metricSelector" :props="{emitPath:false}" :options="metricOptions"  @change="metricChange"></el-cascader-panel>
+              </el-dropdown>
+            </div>
+            <div class="inputBox" @click="dropDownVisible=false">
+              <!--            <el-autocomplete :placeholder="$t('dashboard.metricPreview.inputTip')" :fetch-suggestions="filterInput" clearable @clear="clearExpression" :trigger-on-focus="false" v-model="expressionList[index]" @blur="expressionChange" style="width: 100%;height:36px"></el-autocomplete>-->
+              <editor :metric-list="metricStore" v-model="expressionList[index]" ref="editor" @on-enter="expressionChange" @on-blur="expressionChange" ></editor>
+              <div class="append-msg error" v-if="errorMsg"><span>{{errorMsg}}</span></div>
+              <div class="append-msg error" v-if="appendMsg"><span>{{appendMsg}}</span></div>
+            </div>
+          </template>
+          <template v-if="styleType == 2">
+            <el-row v-if="plugins.indexOf('metric') > -1">
+              <el-col style="width: 120px; padding-right: 20px; text-align: right; color: #666">
+                Metric&nbsp;<i class="nz-icon nz-icon-info-normal" style="font-size: 12px; -webkit-transform:scale(0.75);display:inline-block;"></i>
+              </el-col>
+              <el-col style="width: calc(100% - 120px);">
+                <el-input v-model="legends[index-1]" type="text" size="mini"></el-input>
+              </el-col>
+            </el-row>
+          </template>
         </div>
       </div>
       <div style="margin-left: 5px">
         <div class="query-options nz-btn-group nz-btn-group-size-normal nz-btn-group-light">
-          <div class="option nz-btn nz-btn-size-normal nz-btn-style-light" @click="addExpression"><i class="el-icon-plus"></i></div>
-          <div class="option nz-btn nz-btn-size-normal nz-btn-style-light" @click="removeExpression"><i class="el-icon-minus"></i></div>
+          <div class="option nz-btn nz-btn-size-normal nz-btn-style-light" @click="addExpression" v-if="plugins.indexOf('add') > -1"><i class="el-icon-plus"></i></div>
+          <div class="option nz-btn nz-btn-size-normal nz-btn-style-light" @click="removeExpression" v-if="plugins.indexOf('remove') > -1"><i class="el-icon-minus"></i></div>
         </div>
       </div>
 
@@ -36,7 +48,9 @@
       },
       props:{
         index:{type:Number},
-        expressionList:{}
+        expressionList:{},
+        plugins: {type: Array},
+        styleType: Number
       },
       data(){
         return {

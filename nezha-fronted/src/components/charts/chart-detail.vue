@@ -390,6 +390,7 @@
             show:true,
           }
         });
+        console.info(labels)
         return labels;
       },
       replaceSplit(key){

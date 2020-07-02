@@ -75,13 +75,13 @@
         this.dealSpecilChar(char,operation);
 
           if(this.pivotalCursorIndex!=0){
-            console.log('pivotalCursorIndex',this.pivotalCursorIndex,'cursorIndex',this.cursorIndex)
+            //console.log('pivotalCursorIndex',this.pivotalCursorIndex,'cursorIndex',this.cursorIndex)
             newContent=newContent.substring(this.pivotalCursorIndex,this.cursorIndex);
           }
         this.filterItems(newContent);
       },
       dealSpecilChar:function(char,operation){
-        console.log('specil char',char)
+        //console.log('specil char',char)
         if(/^[\{\(\[\,]$/g.test(char)){
           if(operation=='insert'){
             if(char == '{'||char==','){
@@ -134,7 +134,7 @@
         }
         this.pivotalCursorIndex=tempIndex+1;
 
-        console.log('after del double char',this.pivotalCursorIndex)
+        //console.log('after del double char',this.pivotalCursorIndex)
       },
       changeSuggestions:function(type){
         if(type == 'label'){
@@ -183,7 +183,7 @@
         let rangeReg=/\[\b(\d+[smdwy])\b\]/ig
         if(rangeReg.test(this.content)){
           let matchs=this.globalMatch(rangeReg,this.content);
-          console.log('matchs',matchs)
+          //console.log('matchs',matchs)
           matchs.forEach(item=>{
             this.quill.formatText(item.index+1,item[1].length,{'color':'#9954bb'},'silent')
           })
@@ -213,7 +213,7 @@
                 editExpression=item;
               }
             })
-            console.log('match',match,'isInnerExpress',isInnerExpression)
+            //console.log('match',match,'isInnerExpress',isInnerExpression)
             if(isInnerExpression&&editExpression){
               let expression=editExpression[0];
               let labelValuesReg=/\{((\w*?(=|!=|=~|!~).*?,{0,1})+?)\}/
@@ -238,7 +238,7 @@
 
           }
         }else{
-          console.log('mo match metric')
+          //console.log('mo match metric')
           this.queryTypeInfos();
         }
       },
@@ -273,7 +273,7 @@
               tempCounter--;
             }
             let label=this.content.substring(boundaryIndex,equalIndex);
-            console.log('label',this.content.substring(boundaryIndex,equalIndex))
+            //console.log('label',this.content.substring(boundaryIndex,equalIndex))
 
             let values=this.labelValues.get(label);
 
@@ -308,7 +308,7 @@
             }
           }
         }
-        console.log('query metric',editMetricExpression)
+        //console.log('query metric',editMetricExpression)
         let metric=/([a-zA-Z_]\w*)\b(?=\{)/.exec(editMetricExpression)[0];
         let timeRange=this.getDefaultTimeRange();
         this.$get('/prom/api/v1/series?match[]={__name__="'+metric+'"}&start='+timeRange[0]+"&end="+timeRange[1]).then(response=>{
@@ -343,7 +343,7 @@
 
             this.noStyleSuggestions={labels:labels}
             this.showSuggestions=this.deepClone(this.noStyleSuggestions);
-            console.log('change labels',this.showSuggestions)
+            //console.log('change labels',this.showSuggestions)
           }else{
             this.noStyleSuggestions={};
             this.showSuggestions=this.deepClone(this.noStyleSuggestions)
@@ -357,7 +357,7 @@
         return[(start.getTime()/1000).toFixed(0),(end.getTime()/1000).toFixed(0)]
       },
       handleItemClick:function(type,item,event){
-        console.log(type,item,event)
+        //console.log(type,item,event)
         if(type=='metrics'){
           this.handleMetricClick(item)
         }else if(type == 'labels'){
@@ -504,7 +504,7 @@
           let typeValues=suggestions[key];
           typeValues=typeValues.filter(item=>{
             let index=item.insertText.toLowerCase().indexOf(input.toLowerCase());
-            console.log('index',index,'input',input)
+            //console.log('index',index,'input',input)
             if(index != -1){
               // console.log('item',item.label,'input',input)
               // item.label=item.label.replace(input,`<mark>${input}</mark>`);
@@ -534,7 +534,7 @@
           this.$nextTick(()=>{
             let suggestions=document.querySelectorAll('.popper-item');
             this.storedSuggestions=[...suggestions];
-            console.log('storedSuggestions->',suggestions)
+            //console.log('storedSuggestions->',suggestions)
           })
       },
       setContent:function(value){
@@ -566,14 +566,14 @@
         return new Promise(function(resolve,reject){
           $temp.$nextTick(()=>{
             let range=$temp.quill.getSelection();
-            console.log('range',range)
+            //console.log('range',range)
             if(range&&range.length == 0){
               $temp.cursorIndex=range.index;
-              console.log('current cursor-->',$temp.cursorIndex)
+              //console.log('current cursor-->',$temp.cursorIndex)
 
               if(/^[\{\(\[,= "]$/g.test(char)){
                 $temp.pivotalCursorIndex=$temp.cursorIndex;
-                console.log('store pivotalCursorIndex',$temp.pivotalCursorIndex)
+                //console.log('store pivotalCursorIndex',$temp.pivotalCursorIndex)
               }
               resolve();
             }
@@ -590,7 +590,7 @@
       },
       moveScroll:function(){
         let scroll=this.$refs.scroll.wrap;
-        console.log('scroll',scroll)
+        //console.log('scroll',scroll)
         if(scroll){
           let curScroll=scroll.scrollTop;//滚动条当前位置
           let scrollLen=scroll.scrollHeight;//滚动条总长
@@ -652,7 +652,7 @@
       getPosition:function(){
         this.$nextTick(()=>{
           this.popperPos=this.quill.getBounds(this.cursorIndex)
-          console.log('position:',this.popperPos)
+          //console.log('position:',this.popperPos)
         })
       },
       guid() {
@@ -664,7 +664,7 @@
       registerKeydown:function(){
         let $temp=this;
         document.addEventListener('keydown',function(event){
-          console.log('keydown',event)
+          //console.log('keydown',event)
           $temp.toggleSelect(event);
         })
 
@@ -745,11 +745,11 @@
       this.options.modules.keyboard.bindings=bindings;
       this.quill = new Quill(this.$refs.editor, this.options);
       this.quill.on('blur',function(){
-        console.log('quill blur')
+        //console.log('quill blur')
       })
       this.quill.on('text-change',function(delta, oldDelta, source){
         if(source != 'silent'){
-          console.log('delta',delta,'oldDelta',oldDelta,'source',source)
+          //console.log('delta',delta,'oldDelta',oldDelta,'source',source)
           let char='',operation='';
           let oldContent='';
           oldDelta.ops.forEach((item,index)=>{
@@ -780,14 +780,14 @@
           }
           let promise=$temp.storeCursor(char);
           if(source == 'user'){
-            console.log(delta,oldDelta,oldContent)
+            //console.log(delta,oldDelta,oldContent)
             let newContent=$temp.getContent()
             promise.then(()=>{ //存储完光标后再进行后面的操作
               $temp.userChange(char,operation,newContent,oldContent)
             })
           }
           $temp.content=$temp.getContent();
-          console.log('current content-->',$temp.content)
+          //console.log('current content-->',$temp.content)
           $temp.getPosition();
           $temp.formatContent();
         }

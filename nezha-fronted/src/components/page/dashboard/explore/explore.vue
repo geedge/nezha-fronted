@@ -35,6 +35,8 @@
                   :key="promqlKeys[index-1]"
                   :expression-list="expressions"
                   :index="index-1"
+                  :styleType="1"
+                  :plugins="['metric', 'add', 'remove']"
                   @change="expressionChange"
                   @addExpression="addExpression"
                   @removeExpression="removeExpression"

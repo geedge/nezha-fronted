@@ -104,7 +104,7 @@
     </left-menu>
 
     <panel-box :panel="panel" @reload="panelReload" @reloadForDel="panelReloadForDel" ref="panelBox"></panel-box>
-    <chart-box ref="addChartModal" :showPanel="showPanel" :panel-data="panelData" @reload="panelReload" @on-create-success="createSuccess" @on-delete-success="delChartOk" @reloadOnlyPanel="panelReloadOnlyPanel"></chart-box>
+    <chart-box v-if="rightBox.show" ref="addChartModal" :showPanel="showPanel" :panel-data="panelData" @reload="panelReload" @on-create-success="createSuccess" @on-delete-success="delChartOk" @reloadOnlyPanel="panelReloadOnlyPanel"></chart-box>
   </div>
 </template>
 
@@ -289,9 +289,11 @@
       },
       /*图表相关操作--start*/
       toAddChart: function () {
-        this.$refs.addChartModal.setTitle(this.$t("dashboard.panel.createChartTitle"));
-        this.$refs.addChartModal.show(true);
-        this.$refs.addChartModal.createData(this.showPanel.id); //初始化创建图表需要的初始数据
+        this.rightBox.show = true;
+        this.$nextTick(() => {
+          this.$refs.addChartModal.setTitle(this.$t("dashboard.panel.createChartTitle"));
+          this.$refs.addChartModal.createData(this.showPanel.id); //初始化创建图表需要的初始数据
+        });
       },
       scrollbarHeightHandler() {
         setTimeout(() => {
@@ -315,9 +317,11 @@
       },
       // 编辑图表信息,打开编辑弹窗
       editData(data) {
-        this.$refs.addChartModal.setTitle(this.$t("dashboard.panel.editChartTitle"));
-        this.$refs.addChartModal.show(true);
-        this.$refs.addChartModal.editData(data, this.showPanel.id);
+        this.rightBox.show = true;
+        this.$nextTick(() => {
+          this.$refs.addChartModal.setTitle(this.$t("dashboard.panel.editChartTitle"));
+          this.$refs.addChartModal.editData(data, this.showPanel.id);
+        });
       },
       // 移除图表:弹出确认框询问
       removeData(data,from) {
