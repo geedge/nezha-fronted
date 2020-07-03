@@ -686,7 +686,7 @@
       },
       // 更新图表
       updateCharts(params) {
-        this.$put('panel/' + this.panelId + '/charts', params).then(response2 => {
+        this.$put('panel/' + this.panelId + '/charts', params ? params : this.chart).then(response2 => {
           if (response2.code === 200) {
             this.esc();
             this.$message({duration: 1000, type: 'success', message: this.$t("tip.saveSuccess")});
@@ -812,7 +812,11 @@
               this.chart.elements.push({id: this.elementIds[i], expression: expr, type: "expert", legend: this.legends[i]});
             });
           }
-          this.addCharts();
+          if (this.chart.id) {
+            this.updateCharts();
+          } else {
+            this.addCharts();
+          }
         }else {
           this.$refs.chartForm.validate((valid) => {
             const params = {
