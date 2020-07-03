@@ -162,6 +162,61 @@
             </el-form>
           </div>
         </el-tab-pane>
+        <el-tab-pane :label="'link'" name="link"><!--$t('config.system.reset.reset')-->
+          <div class="linkBox" v-scrollBar>
+            <div class="linkTitle">
+              <span class="linkTitleHandle"></span>
+              <div class="linkTitleName">名称</div>
+              <div class="linkTitleUrl">URL</div>
+              <div class="linkTitleBtn">操作</div>
+            </div>
+            <!--linkAdd-->
+            <div class="linkContent linkAddBox">
+              <span class="linkTitleHandle"></span>
+              <el-form :inline="true"  :model="linkTemp"  label-width="180px" size="small" ref="resetForm" :rules="resetRules" :validate-on-rule-change="false" class="reset-form">
+                <el-form-item  prop="name">
+                  <el-input v-model="linkTemp.name"  class="linkName"/>
+                </el-form-item>
+                <el-form-item  prop="url">
+                  <el-input  v-model="linkTemp.url" class="linkUrl"/>
+                </el-form-item>
+                <el-form-item  prop="btn">
+                  <el-button class="linkBtn" >Add</el-button>
+                </el-form-item>
+              </el-form>
+            </div>
+            <!--linkEdit-->
+            <draggable v-model="link"
+                       :options="{group:'people',animation:150,ghostClass:'sortable-ghost',chosenClass:'chosenClass',scroll:true,scrollSensitivity:200}"
+                       @change="change"
+                       @start="start"
+                       @end="end"
+                       :move="move"
+                       handle=".handle"
+            >
+              <div v-for="(item,index) in link" class="linkContent">
+                <i class="nz-icon nz-icon-move handle"></i>
+                <el-form :inline="true"  :model="link[index]"  label-width="180px" size="small" ref="resetForm" :rules="resetRules" :validate-on-rule-change="false" class="reset-form" :key="index" v-if="item.isEdit">
+                <el-form-item  prop="name" class="linkName">
+                  <el-input v-model="item.name" width="140px" />
+                </el-form-item>
+                <el-form-item  prop="url" class="linkUrl">
+                  <el-input  v-model="item.url" width="460px" />
+                </el-form-item>
+                <el-form-item  prop="btn">
+                  <el-button class="linkBtn">Update</el-button>
+                  <el-button class="linkBtn">Cancel</el-button>
+                </el-form-item>
+              </el-form>
+                <div class="linkFormContent" v-else>
+                  <div class="linkTitleName">{{item.name}}</div>
+                  <div class="linkTitleUrl"><span class="linkTitleUrlContent">{{item.url}}</span><i class="nz-icon nz-icon-edit" @click="linkEdit(item)"></i></div>
+                  <div class="linkFormBtn"> <el-button class="linkBtn">Delete</el-button></div>
+                </div>
+              </div>
+            </draggable>
+          </div>
+        </el-tab-pane>
         <el-tab-pane :label="$t('config.system.reset.reset')" name="reset">
           <div class="system-config-form">
             <el-form :model="reset"  label-width="180px" size="small" ref="resetForm" :rules="resetRules" :validate-on-rule-change="false" class="reset-form">
@@ -202,9 +257,11 @@
     import {host} from '../../common/js/validate'
     import {uSize} from '../../common/js/validate'
     import bus from '../../../libs/bus';
+    import draggable from 'vuedraggable'
 
     export default {
         name: "system",
+        components:{draggable},
         data(){
           return {
             basic:{
@@ -323,6 +380,13 @@
               type:[],
               password:'',
             },
+            linkTemp:{
+              name:'',url:''
+            },
+            link:[],
+            linkRules:[
+
+            ],
             resetRules:{
               type:[{required:true,message:this.$t('validate.required'),trigger:'blur'},],
               password:[{required:true,message:this.$t('validate.required'),trigger:'blur'},],
@@ -341,20 +405,29 @@
                 value:'sysconfig',
               },
             ],
-            activeTab:'basic'
+            activeTab:'link'
           }
         },
         methods:{
           selectTab:function(tab){
             this.querySetInfo(tab.name)
           },
-          querySetInfo:function(type){
+          querySetInfo:function(type){ // 切换tab
             if(!type){
               console.error('type is required')
               return
             }
             if(type == 'reset'){
               return ;
+            }
+            if(type == 'link'){
+              // this.$get('link').then(response=>{
+              //   console.log(response)
+              // });
+              // console.log(response);
+              this.link=[{id:1,name:'000',url:'222',isEdit:false},
+                {id:2,name:'111',url:'https://www.baidu.com/s?wd=element&rsv_spt=1&rsv_iqid=0xbccc5b9a000f76e6&issp=1&f=3&rsv_bp=1&rsv_idx=2&ie=utf-8&rqlang=cn&tn=baiduhome_pg&rsv_enter=1&rsv_dl=ts_3&oq=%25E5%25A4%259A%25E8%25A1%258C%25E6%2596%2587%25E6%259C%25AC%25E7%259C%2581%25E7%2595%25A5%25E5%258F%25B7&rsv_btype=t&inputT=2473&rsv_t=fec3hB0PE04MDkxGHiV1k81e5C4DwS5dhZn7UD92ZSZqxpJC65PdHK%2BctV3yOy7QMxq2&rsv_pq=b35cdd7a0005aae6&rsv_sug3=73&rsv_sug1=58&rsv_sug7=100&rsv_sug2=0&prefixsug=ele&rsp=3&rsv_sug4=2473',isEdit:false},]
+              return
             }
             this.$get('sysConfig?type='+type).then(response=>{
               if(response.code == 200){
@@ -472,9 +545,38 @@
               }
             });
           },
+          // link 移动
+          change: function (evt) {
+            // console.log(evt)
+          },
+          //start ,end ,add,update, sort, remove 得到的都差不多
+          start: function (evt) {
+            // console.log(evt)
+          },
+          end: function (evt) {
+            console.log(evt);
+            console.log(this.link);
+            evt.item //可以知道拖动的本身
+            evt.to    // 可以知道拖动的目标列表
+            evt.from  // 可以知道之前的列表
+            evt.oldIndex  // 可以知道拖动前的位置
+            evt.newIndex  // 可以知道拖动后的位置
+          },
+          move: function (evt, originalEvent) {
+            // console.log(evt)
+            // console.log(originalEvent) //鼠标位置
+          },
+          // link add
+          // link edit
+          linkEdit(item){
+            let index=this.link.findIndex((item1)=>item.id==item1.id);
+            this.$set(this.link,index,{...this.link[index],isEdit:true});
+          },
+          // link update
+          // link del
         },
         mounted() {
-          this.querySetInfo('basic')
+          this.querySetInfo('basic');
         }
     }
 </script>
@@ -486,6 +588,71 @@
   .system-config-form{
     width: 61.8% !important;
     position: relative;
+  }
+  .linkBox{
+    position: relative;
+    width: 800px;
+  }
+
+  .linkTitle{
+    display: flex;
+    align-items:center;
+    border-bottom: 2px solid #dfe1e6;
+    color: #6b778c;
+    font-size: 12px;
+    height: 24px;
+    line-height: 24px;
+    font-weight: 600;
+  }
+  .handle{
+    cursor: move !important;
+    padding:0 5px;
+    line-height: 34px;
+  }
+  .linkBtn{
+    height: 28px;
+    line-height: 0px;
+    font-size: 12px;
+  }
+  .linkTitleHandle{
+    padding: 0 13px;
+  }
+  .linkContent{
+    display: flex;
+    padding: 5px 0px;
+    border-bottom: 1px solid #dfe1e6;
+    font-size: 13px;
+    line-height: 34px;
+  }
+  .linkFormContent{
+    display: flex;
+    line-height: 34px;
+  }
+  .linkTitleName{
+    width: 100px;
+    margin-right: 12px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    height: 31px;
+  }
+  .linkTitleUrl{
+    width: 460px;
+    margin-right: 12px;
+    height: 31px;
+  }
+  .linkTitleUrlContent{
+    display: inline-block;
+    width: 430px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    height: 31px;
+  }
+  .linkTitleUrl .nz-icon-edit{
+    font-size: 12px;
+    float: right;
+    cursor: pointer;
   }
 </style>
 <style>
@@ -517,5 +684,21 @@
   }
   .reset-form .el-checkbox-group{
     margin-left: -28px !important;
+  }
+  .linkBox .el-input--small .el-input__inner{
+    height: 28px;
+    line-height: 28px;
+  }
+  .linkName .el-input__inner{
+    width: 100px;
+  }
+  .linkUrl .el-input__inner{
+    width: 460px;
+  }
+  .linkBox .el-form-item--mini.el-form-item, .linkBox .el-form-item--small.el-form-item{
+    margin-bottom: 0px;
+  }
+  .linkBox .el-form--inline{
+    padding: 0;
   }
 </style>
