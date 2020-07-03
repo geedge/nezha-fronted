@@ -35,6 +35,8 @@
                   :key="promqlKeys[index-1]"
                   :expression-list="expressions"
                   :index="index-1"
+                  :styleType="1"
+                  :plugins="['metric-selector', 'metric-input', 'add', 'remove']"
                   @change="expressionChange"
                   @addExpression="addExpression"
                   @removeExpression="removeExpression"
@@ -191,7 +193,7 @@ instance_cpu_time_ns{app="fox", proc="widget", rev="4d3a513", env="prod", job="c
             </div>
 
         </div>
-        <chart-box ref="addChartModal" :panel-data="panelData" @on-create-success="createSuccess" :show-panel="{}"></chart-box>
+        <chart-box v-if="rightBox.show" ref="addChartModal" :panel-data="panelData" @on-create-success="createSuccess" :show-panel="{}"></chart-box>
         <element-set
           :allowed-all="true"
           v-clickoutside="elementsetHide"
@@ -225,6 +227,9 @@ instance_cpu_time_ns{app="fox", proc="widget", rev="4d3a513", env="prod", job="c
     },
     data() {
       return {
+        rightBox: { //面板弹出框相关
+          show: false,
+        },
         promqlCount: 1,
         promqlKeys: [],
         expressions: [''],
@@ -443,8 +448,9 @@ instance_cpu_time_ns{app="fox", proc="widget", rev="4d3a513", env="prod", job="c
         this.tableVisible = !this.tableVisible;
       },
       saveChart: function () {
+        this.rightBox.show = true;
         this.$refs.addChartModal.setTitle(this.$t("dashboard.panel.createChartTitle"));
-        this.$refs.addChartModal.show(true);
+        //this.$refs.addChartModal.show(true);
         let metricInfo = {};
         metricInfo.elements = [];
         // {"metric":"ALERTS_FOR_STATE","elements":[{"expression":"ALERTS_FOR_STATE{project='kafka',module='node_exporter'}","type":"normal"}]}

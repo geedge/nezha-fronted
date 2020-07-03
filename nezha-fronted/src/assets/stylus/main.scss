@@ -1779,7 +1779,7 @@ li{
   line-height: 25px !important;
 }
 
-.el-textarea textarea {
+.el-textarea:not(.not-fixed-height) textarea {
   height: 140px !important;
 }
 .nz-message .el-textarea textarea {

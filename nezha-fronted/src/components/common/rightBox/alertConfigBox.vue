@@ -28,10 +28,17 @@
             <div v-if="!rightBox.isEdit" class="right-box-form-content-txt">{{alertRule.alertName}}</div>
           </el-form-item>
           <!--expr-->
-          <el-form-item :label="$t('alert.config.expr')" prop="expr">
+          <!--<el-form-item :label="$t('alert.config.expr')" prop="expr">
             <el-input maxlength="512" rows="4" show-word-limit v-if="rightBox.isEdit" type="textarea" placeholder="" v-model="alertRule.expr" size="small"></el-input>
             <div v-if="!rightBox.isEdit" class="right-box-form-content-txt">{{alertRule.expr}}</div>
-          </el-form-item>
+          </el-form-item>-->
+          <promql-input
+            ref="promql"
+            :expression-list.sync="expressions"
+            :index="0"
+            :styleType="2"
+            :plugins="['metric-input']"
+          ></promql-input>
           <!--operator-->
           <el-form-item :label="$t('alert.config.operator')" prop="operator" style="width: 400px;display: inline-block;">
             <el-select v-if="rightBox.isEdit" popper-class="config-dropdown" v-model="alertRule.operator" placeholder=""  size="small">
@@ -122,14 +129,22 @@
 
 <script>
   import chartDataFormat from "../../charts/chartDataFormat";
-
+  import promqlInput from "../../page/dashboard/explore/promqlInput";
   export default {
     name: "alertConfigBox",
     props: {
       parentAlertRule: Object
     },
+    components: {
+      'promql-input': promqlInput,
+    },
     data() {
       return {
+        promqlCount: 1,
+        promqlKeys: [0],
+        expressions: [''],
+        legends: [''],
+
         alertRule: {id: '', receiverShow: [], receiver: ''},
         rightBox: {show: false, isEdit: false, title: ''},
         rules:{
@@ -235,6 +250,7 @@
         this.rightBox.isEdit = isEdit;
       },
       save: function() {
+        this.alertRule.expr = this.expressions[0];
         this.$refs.alertRuleForm.validate((valid) => {
           if (valid) {
             this.alertRule.receiver = this.alertRule.receiverShow.join(",");
@@ -340,6 +356,14 @@
             } else if (this.alertRule.type == 3) {
               this.getAssetList();
             }
+            this.expressions = [this.alertRule.expr];
+            this.$nextTick(() => {
+              this.expressions.forEach((ex, index) => {
+                if (ex) {
+                  this.$refs.promql.metricChange(ex);
+                }
+              });
+            });
           }
           if (this.rightBox.show) {
             if (this.rightBox.isEdit && this.alertRule.id) {

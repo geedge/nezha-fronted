@@ -1,15 +1,15 @@
 <template>
-  <div class="metric-editor" v-clickoutside="clickout">
+  <div class="metric-editor" v-clickoutside="clickout" :class="{'metric-editor-rb': styleType == 2}">
     <div :id="id" class="editor-core" ref="editor" ></div>
-    <span class="nz-input-append editor-clear" style="padding-top:8px;display: none" @click="clearContent"><i class="el-icon-circle-close"></i></span>
+    <span class="nz-input-append editor-clear" style="display: none" @click="clearContent"><i class="el-icon-circle-close"></i></span>
     <div class="metric-editor-popper" :style="{left:popperPos.left+'px'}">
       <div class="metric-popper-main" v-show="showType&&Object.keys(showSuggestions).length>0">
-          <el-scrollbar style="height: 100%;width:100%" class="el-scrollbar-small" ref="scroll">
-            <div v-for="(key, index) in orders" >
-              <div v-html="key" class="popper-group" v-show="showSuggestions[key]"></div>
-              <div class="popper-item" v-for="(item,i) in showSuggestions[key]" v-html="item.label" :key="item.insertText" :type="key" :value="item.insertText" @click.stop="handleItemClick(key,item,$event)" @mouseover="itemHover(item)" @mouseout="itemOut(item)"></div>
-            </div>
-          </el-scrollbar>
+        <el-scrollbar style="height: 100%;width:100%" class="el-scrollbar-small" ref="scroll">
+          <div v-for="(key, index) in orders" >
+            <div v-html="key" class="popper-group" v-show="showSuggestions[key]"></div>
+            <div class="popper-item" v-for="(item,i) in showSuggestions[key]" v-html="item.label" :key="item.insertText" :type="key" :value="item.insertText" @click.stop="handleItemClick(key,item,$event)" @mouseover="itemHover(item)" @mouseout="itemOut(item)"></div>
+          </div>
+        </el-scrollbar>
       </div>
       <div class="metric-popper-desc" v-if="showType&&Object.keys(showSuggestions).length>0&&showDescription && detailItem && detailItem.documentation">
         <div><b>{{detailItem.insertText}}</b></div>
@@ -28,7 +28,8 @@
     name: "editor",
     props: {
       value: String,
-      metricList:{type:Array}
+      metricList:{type:Array},
+      styleType: Number
     },
     model:{
       prop:'value',
@@ -75,13 +76,13 @@
         this.dealSpecilChar(char,operation);
 
           if(this.pivotalCursorIndex!=0){
-            console.log('pivotalCursorIndex',this.pivotalCursorIndex,'cursorIndex',this.cursorIndex)
+            //console.log('pivotalCursorIndex',this.pivotalCursorIndex,'cursorIndex',this.cursorIndex)
             newContent=newContent.substring(this.pivotalCursorIndex,this.cursorIndex);
           }
         this.filterItems(newContent);
       },
       dealSpecilChar:function(char,operation){
-        console.log('specil char',char)
+        //console.log('specil char',char)
         if(/^[\{\(\[\,]$/g.test(char)){
           if(operation=='insert'){
             if(char == '{'||char==','){
@@ -134,7 +135,7 @@
         }
         this.pivotalCursorIndex=tempIndex+1;
 
-        console.log('after del double char',this.pivotalCursorIndex)
+        //console.log('after del double char',this.pivotalCursorIndex)
       },
       changeSuggestions:function(type){
         if(type == 'label'){
@@ -183,7 +184,7 @@
         let rangeReg=/\[\b(\d+[smdwy])\b\]/ig
         if(rangeReg.test(this.content)){
           let matchs=this.globalMatch(rangeReg,this.content);
-          console.log('matchs',matchs)
+          //console.log('matchs',matchs)
           matchs.forEach(item=>{
             this.quill.formatText(item.index+1,item[1].length,{'color':'#9954bb'},'silent')
           })
@@ -213,7 +214,7 @@
                 editExpression=item;
               }
             })
-            console.log('match',match,'isInnerExpress',isInnerExpression)
+            //console.log('match',match,'isInnerExpress',isInnerExpression)
             if(isInnerExpression&&editExpression){
               let expression=editExpression[0];
               let labelValuesReg=/\{((\w*?(=|!=|=~|!~).*?,{0,1})+?)\}/
@@ -238,7 +239,7 @@
 
           }
         }else{
-          console.log('mo match metric')
+          //console.log('mo match metric')
           this.queryTypeInfos();
         }
       },
@@ -273,7 +274,7 @@
               tempCounter--;
             }
             let label=this.content.substring(boundaryIndex,equalIndex);
-            console.log('label',this.content.substring(boundaryIndex,equalIndex))
+            //console.log('label',this.content.substring(boundaryIndex,equalIndex))
 
             let values=this.labelValues.get(label);
 
@@ -308,7 +309,7 @@
             }
           }
         }
-        console.log('query metric',editMetricExpression)
+        //console.log('query metric',editMetricExpression)
         let metric=/([a-zA-Z_]\w*)\b(?=\{)/.exec(editMetricExpression)[0];
         let timeRange=this.getDefaultTimeRange();
         this.$get('/prom/api/v1/series?match[]={__name__="'+metric+'"}&start='+timeRange[0]+"&end="+timeRange[1]).then(response=>{
@@ -343,7 +344,7 @@
 
             this.noStyleSuggestions={labels:labels}
             this.showSuggestions=this.deepClone(this.noStyleSuggestions);
-            console.log('change labels',this.showSuggestions)
+            //console.log('change labels',this.showSuggestions)
           }else{
             this.noStyleSuggestions={};
             this.showSuggestions=this.deepClone(this.noStyleSuggestions)
@@ -357,7 +358,7 @@
         return[(start.getTime()/1000).toFixed(0),(end.getTime()/1000).toFixed(0)]
       },
       handleItemClick:function(type,item,event){
-        console.log(type,item,event)
+        //console.log(type,item,event)
         if(type=='metrics'){
           this.handleMetricClick(item)
         }else if(type == 'labels'){
@@ -504,7 +505,7 @@
           let typeValues=suggestions[key];
           typeValues=typeValues.filter(item=>{
             let index=item.insertText.toLowerCase().indexOf(input.toLowerCase());
-            console.log('index',index,'input',input)
+            //console.log('index',index,'input',input)
             if(index != -1){
               // console.log('item',item.label,'input',input)
               // item.label=item.label.replace(input,`<mark>${input}</mark>`);
@@ -534,7 +535,7 @@
           this.$nextTick(()=>{
             let suggestions=document.querySelectorAll('.popper-item');
             this.storedSuggestions=[...suggestions];
-            console.log('storedSuggestions->',suggestions)
+            //console.log('storedSuggestions->',suggestions)
           })
       },
       setContent:function(value){
@@ -566,14 +567,14 @@
         return new Promise(function(resolve,reject){
           $temp.$nextTick(()=>{
             let range=$temp.quill.getSelection();
-            console.log('range',range)
+            //console.log('range',range)
             if(range&&range.length == 0){
               $temp.cursorIndex=range.index;
-              console.log('current cursor-->',$temp.cursorIndex)
+              //console.log('current cursor-->',$temp.cursorIndex)
 
               if(/^[\{\(\[,= "]$/g.test(char)){
                 $temp.pivotalCursorIndex=$temp.cursorIndex;
-                console.log('store pivotalCursorIndex',$temp.pivotalCursorIndex)
+                //console.log('store pivotalCursorIndex',$temp.pivotalCursorIndex)
               }
               resolve();
             }
@@ -590,7 +591,7 @@
       },
       moveScroll:function(){
         let scroll=this.$refs.scroll.wrap;
-        console.log('scroll',scroll)
+        //console.log('scroll',scroll)
         if(scroll){
           let curScroll=scroll.scrollTop;//滚动条当前位置
           let scrollLen=scroll.scrollHeight;//滚动条总长
@@ -652,7 +653,7 @@
       getPosition:function(){
         this.$nextTick(()=>{
           this.popperPos=this.quill.getBounds(this.cursorIndex)
-          console.log('position:',this.popperPos)
+          //console.log('position:',this.popperPos)
         })
       },
       guid() {
@@ -664,7 +665,7 @@
       registerKeydown:function(){
         let $temp=this;
         document.addEventListener('keydown',function(event){
-          console.log('keydown',event)
+          //console.log('keydown',event)
           $temp.toggleSelect(event);
         })
 
@@ -745,11 +746,11 @@
       this.options.modules.keyboard.bindings=bindings;
       this.quill = new Quill(this.$refs.editor, this.options);
       this.quill.on('blur',function(){
-        console.log('quill blur')
+        //console.log('quill blur')
       })
       this.quill.on('text-change',function(delta, oldDelta, source){
         if(source != 'silent'){
-          console.log('delta',delta,'oldDelta',oldDelta,'source',source)
+          //console.log('delta',delta,'oldDelta',oldDelta,'source',source)
           let char='',operation='';
           let oldContent='';
           oldDelta.ops.forEach((item,index)=>{
@@ -780,14 +781,14 @@
           }
           let promise=$temp.storeCursor(char);
           if(source == 'user'){
-            console.log(delta,oldDelta,oldContent)
+            //console.log(delta,oldDelta,oldContent)
             let newContent=$temp.getContent()
             promise.then(()=>{ //存储完光标后再进行后面的操作
               $temp.userChange(char,operation,newContent,oldContent)
             })
           }
           $temp.content=$temp.getContent();
-          console.log('current content-->',$temp.content)
+          //console.log('current content-->',$temp.content)
           $temp.getPosition();
           $temp.formatContent();
         }
@@ -814,7 +815,7 @@
   }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
   .metric-editor{
     position: relative;
     height: 36px;
@@ -883,11 +884,14 @@
   .editor-core:hover + .editor-clear{
     display: inline-block !important;
   }
+  .editor-clear {
+    padding-top: 8px;
+  }
   .editor-clear:hover{
     display: inline-block !important;
   }
 </style>
-<style>
+<style lang="scss">
   mark{
     color: rgb(255, 133, 27);
     border-bottom: 1px solid rgb(255, 133, 27);
@@ -895,9 +899,28 @@
     background: inherit;
     padding: 0;
   }
-   .ql-editor{
-    padding:10px 10px !important;
-     overflow: hidden;
+  .ql-editor{
+    padding:10px !important;
+    overflow: hidden;
   }
+  .metric-editor.metric-editor-rb {
+    .editor-clear {
+      padding-top: 4px;
+    }
+    height: 32px;
+    .ql-container.ql-snow {
+      border-radius: 4px;
+      border: 1px solid #DCDFE6;
+      box-sizing: border-box;
+      .ql-editor {
+        padding: 6px 0 !important;
+        >p {
+          padding-left: 15px;
+          font-size: 12px;
+          color: rgb(96, 98, 102);
+        }
+      }
+    }
 
+  }
 </style>

@@ -41,6 +41,7 @@
   .element-item {
     padding: 20px 0;
     border-bottom: 1px dashed #dfe7f2;
+    width: 100%;
   }
   /*metric样式--end*/
   .label-center{
@@ -169,7 +170,10 @@
               <el-input size="mini" type="input"  v-model="chart.param.threshold"></el-input>
             </el-form-item>
 
-            <div v-if="!isUrl&&!isAlert" class="right-box-sub-title">{{$t('dashboard.panel.chartForm.metric')}}</div>
+            <div v-if="!isUrl&&!isAlert" class="right-box-sub-title">
+              <span>{{$t('alert.config.expr')}}</span>
+              <span class="float-right" @click="addExpression"><i style="font-size: 16px; cursor: pointer;" class="nz-icon nz-icon-create-square"></i></span>
+            </div>
             <div v-if="isAlert" class="right-box-sub-title">{{$t('dashboard.panel.chartForm.alertParam.param')}}</div>
             <div v-if="!isUrl" class="line-100"></div>
 
@@ -177,8 +181,8 @@
               <alert-chart-param ref="alertParamBox" @on-enter-complate="getAlertParam"></alert-chart-param>
             </el-row>
 
-            <el-row v-if="!isUrl && !isSingleStat&&!isAlert" class="element-item" v-for="(elem, index) in elements" :key="'ele' + index">
-              <chart-metric ref="chartTag"
+            <el-row v-if="!isUrl && !isSingleStat&&!isAlert" class="element-item" style="" v-for="index of promqlKeys.length" :key="'ele' + index">
+              <!--<chart-metric ref="chartTag"
                             :pointer="index"
                             :metric-list="metricList"
                             :metricCascaderList="metricCascaderList"
@@ -187,7 +191,29 @@
                             @on-delete-target="deleteTarget"
                             @sub-save-ok="subOk"
                             @on-add-target-success="getTarget"
-              ></chart-metric>
+              ></chart-metric>-->
+              <promql-input
+                :ref="'promql-'+(index-1)"
+                :id="promqlKeys[index-1]"
+                :key="promqlKeys[index-1]"
+                :expression-list.sync="expressions"
+                :index="index-1"
+                :styleType="2"
+                :plugins="['metric-selector', 'metric-input', 'remove']"
+                @change="expressionChange"
+                @removeExpression="removeExpression"
+              ></promql-input>
+              <el-row>
+                <el-col style="width: 120px; padding-right: 20px; text-align: right; color: #666">
+                  {{$t('dashboard.panel.chartForm.legend')}}&nbsp;
+                  <el-popover :content="$t('dashboard.panel.chartForm.legendTip')" placement="top" width="150" trigger="hover">
+                    <i slot="reference" class="nz-icon nz-icon-info-normal" style="font-size: 12px; -webkit-transform:scale(0.75);display:inline-block;" @mouseover="rz"></i>
+                  </el-popover>
+                </el-col>
+                <el-col style="width: calc(100% - 120px);">
+                  <el-input v-model="legends[index-1]" type="text" size="small"></el-input>
+                </el-col>
+              </el-row>
             </el-row>
 
             <el-row v-if="isSingleStat" class="element-item" v-for="(elem, index) in elements" :key="'ele' + index">
@@ -220,9 +246,9 @@
               </el-row>
             </el-form-item>
 -->
-            <button v-if="!isUrl && !isSingleStat&& !isAlert" type="button" @click="addTarget" class="nz-btn nz-btn-size-normal nz-btn-style-light" style="margin-left: 1px;">
+            <!--<button v-if="!isUrl && !isSingleStat&& !isAlert" type="button" @click="addTarget" class="nz-btn nz-btn-size-normal nz-btn-style-light" style="margin-left: 1px;">
               <span class="top-tool-btn-txt">{{$t('dashboard.panel.chartForm.addMetric')}}</span>
-            </button>
+            </button>-->
           </el-form>
         </el-scrollbar>
 
@@ -250,19 +276,36 @@
   import ChartMetric from "./chartMetric";
   import chartDataFormat from '../../charts/chartDataFormat';
   import chartPreview from '../../charts/chartPreview';
+  import {getUUID, resetZIndex} from "../../common/js/common";
   import alertChartParam from "./alertChartParam";
+  import promqlInput from "./explore/promqlInput";
+  var rz = {
+    methods: {
+      rz(e) {
+        resetZIndex(e);
+      }
+    }
+  }
   export default {
     name: "chartBox",
     props: {
       panelData: Array,
       showPanel: Object
     },
+    mixins: [rz],
     data() {
       return {
         rightBox: {
           show: false,
           title: this.$t('dashboard.panel.createChartTitle'),
         },
+
+        promqlCount: 1,
+        promqlKeys: [],
+        elementIds: [],
+        expressions: [],
+        legends: [],
+
         editInfo: {},
         chart: {
           id:'',
@@ -275,12 +318,7 @@
             url:'',
             threshold:'',
           },
-          elements:{
-            id: '',
-            expression: '',
-            type: '',
-            legend:'',
-          },
+          elements:[],
           panel: '',
           sync: 0
         },
@@ -352,20 +390,21 @@
     components:{
       'chart-metric':ChartMetric,
       'chart-preview':chartPreview,
-      'alert-chart-param':alertChartParam
+      'alert-chart-param':alertChartParam,
+      'promql-input': promqlInput,
     },
     mounted() {
-
+      if(this.showPanel){
+        this.panelName2 = this.showPanel.name;
+      }
+      this.rightBox.show = true;
+      this.isUrl = false;
+      this.isSingleStat = false;
+      this.$nextTick(() => {
+        this.initElements();
+      });
     },
     methods: {
-      show(show) {
-        if(this.showPanel){
-          this.panelName2 = this.showPanel.name;
-        }
-        this.rightBox.show = show;
-        this.isUrl = false;
-        this.isSingleStat = false;
-      },
       clickos() {
         this.esc();
       },
@@ -414,6 +453,25 @@
       },
       setUnit:function(unit){
         this.$set(this.chart,'unit',Number.parseInt(unit))
+      },
+      expressionChange: function () {
+
+      },
+      addExpression() {
+        this.expressions.push('');
+        this.legends.push('');
+        this.promqlKeys.push(getUUID());
+        this.elementIds.push("");
+        this.promqlCount++;
+      },
+      removeExpression: function (index) {
+        if (this.promqlCount > 1) {
+          this.expressions.splice(index, 1);
+          this.legends.splice(index, 1);
+          this.promqlKeys.splice(index, 1);
+          this.elementIds.splice(index, 1);
+          this.promqlCount--;
+        }
       },
       save() {
         this.$refs['chartForm'].validate((valid) => {
@@ -471,13 +529,17 @@
 
       /*关闭弹框*/
       esc() {
-        if (this.rightBox.show) {
+        this.rightBox.show = false;
+        setTimeout(() => {
+          this.$parent.rightBox.show = false;
+        }, 200);
+        /*if (this.rightBox.show) {
           this.rightBox.show = false;
           //this.editParamBox.show = false;
           this.$refs.chartForm.resetFields();//清空表单
           this.panelName2 = '';
           this.chart.id='';//不清除，再次打开创建图表，会显示删除按钮
-        }
+        }*/
       },
 
       /*metric部分相关方法--begin*/
@@ -597,7 +659,7 @@
         let interval = setInterval(() => {
           if (panelId) {
             this.panelId = panelId;
-            this.$post('panel/' + this.panelId + '/charts', params).then(response => {
+            this.$post('panel/' + this.panelId + '/charts', params ? params : this.chart).then(response => {
               if (response.code === 200) {
                 this.esc();
                 this.$message({duration: 1000, type: 'success', message: this.$t("tip.saveSuccess")});
@@ -624,7 +686,7 @@
       },
       // 更新图表
       updateCharts(params) {
-        this.$put('panel/' + this.panelId + '/charts', params).then(response2 => {
+        this.$put('panel/' + this.panelId + '/charts', params ? params : this.chart).then(response2 => {
           if (response2.code === 200) {
             this.esc();
             this.$message({duration: 1000, type: 'success', message: this.$t("tip.saveSuccess")});
@@ -736,13 +798,24 @@
       confirmAdd() {
         this.elementTarget = []; // 初始化清空参数
         if(this.chart.type!=='url'){
-          if(this.chart.type == 'alertList'){
+          /*if(this.chart.type == 'alertList'){
             this.$refs.alertParamBox.saveParam();
           }else{
             this.$refs.chartTag.forEach((item, index) => {//循环指标列表
               // 触发每个tag组件内部进行校验
               item.saveTarget(index);
             });
+          }*/
+          if (this.expressions[0]) {
+            this.chart.elements = [];
+            this.expressions.forEach((expr, i) => {
+              this.chart.elements.push({id: this.elementIds[i], expression: expr, type: "expert", legend: this.legends[i]});
+            });
+          }
+          if (this.chart.id) {
+            this.updateCharts();
+          } else {
+            this.addCharts();
           }
         }else {
           this.$refs.chartForm.validate((valid) => {
@@ -898,13 +971,14 @@
         this.chart.height = data.height+'';
         this.chart.type = data.type;
         this.chart.unit=data.unit;
+        this.chart.elements = data.elements;
         if(this.chart.type==='url'){
           this.chart.param.url = data.param.url;
           this.setIsUrl();
-          this.elements = [1];
+          //this.elements = [1];
         }else if(this.chart.type==='singleStat'){
           this.setIsSingleStat();
-          this.elements = [];
+          /*this.elements = [];
           bus.chartAddInfo.metricTarget = [];
           data.elements.forEach((item, index) => {
             this.elements.push(index);
@@ -915,11 +989,11 @@
             cSet.forEach((item, index) => {
               item.setMdata(data.elements[index],data.param.statistics);
             });
-          });
+          });*/
         }else if(this.chart.type==='alertLine'){
           this.chart.param=data.param;
           this.setIsAlertList();
-          this.elements=[1];
+          //this.elements=[1];
         }else{
           if((this.chart.type==='line'||this.chart.type==='bar'||this.chart.type==='stackArea')&&data.param){
             this.chart.param.threshold=data.param.threshold;
@@ -929,7 +1003,7 @@
           this.setIsOtherChart();
           //this.getSuggestMetric();//获得指标列表
           // 指标
-          this.elements = [];
+          /*this.elements = [];
           bus.chartAddInfo.metricTarget = [];
           data.elements.forEach((item, index) => {
             this.elements.push(index);
@@ -947,7 +1021,7 @@
                 item.setMdata(data.elements[index]);
               });
             }
-          });
+          });*/
         }
       },
 
@@ -1087,7 +1161,24 @@
         //this.$refs.chartForm.validate();
       },
       //preview--end
-
+      initElements() {
+        if (!this.chart.elements || this.chart.elements.length == 0) {
+          this.chart.elements = [{expression: "", legend: "", type: "expert"}];
+        }
+        this.chart.elements.forEach(element => {
+          this.promqlKeys.push(getUUID());
+          this.expressions.push(element.expression);
+          this.legends.push(element.legend);
+          this.elementIds.push(element.id);
+        });
+        this.$nextTick(() => {
+          this.expressions.forEach((ex, index) => {
+            if (ex) {
+              this.$refs[`promql-${index}`][0].metricChange(ex);
+            }
+          });
+        });
+      },
     },
     created() {
       this.getSuggestMetric();
