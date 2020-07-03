@@ -37,9 +37,7 @@
             :expression-list.sync="expressions"
             :index="0"
             :styleType="2"
-            :plugins="['metric']"
-            @change="expressionChange"
-            @removeExpression="removeExpression"
+            :plugins="['metric-input']"
           ></promql-input>
           <!--operator-->
           <el-form-item :label="$t('alert.config.operator')" prop="operator" style="width: 400px;display: inline-block;">
@@ -142,7 +140,11 @@
     },
     data() {
       return {
-        expressions: [],
+        promqlCount: 1,
+        promqlKeys: [0],
+        expressions: [''],
+        legends: [''],
+
         alertRule: {id: '', receiverShow: [], receiver: ''},
         rightBox: {show: false, isEdit: false, title: ''},
         rules:{
@@ -248,6 +250,7 @@
         this.rightBox.isEdit = isEdit;
       },
       save: function() {
+        this.alertRule.expr = this.expressions[0];
         this.$refs.alertRuleForm.validate((valid) => {
           if (valid) {
             this.alertRule.receiver = this.alertRule.receiverShow.join(",");
@@ -353,6 +356,14 @@
             } else if (this.alertRule.type == 3) {
               this.getAssetList();
             }
+            this.expressions = [this.alertRule.expr];
+            this.$nextTick(() => {
+              this.expressions.forEach((ex, index) => {
+                if (ex) {
+                  this.$refs.promql.metricChange(ex);
+                }
+              });
+            });
           }
           if (this.rightBox.show) {
             if (this.rightBox.isEdit && this.alertRule.id) {

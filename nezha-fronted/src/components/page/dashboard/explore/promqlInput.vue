@@ -20,16 +20,17 @@
           </template>
           <!--right-box里的样式-->
           <template v-if="styleType == 2">
-            <el-row v-if="plugins.indexOf('metric') > -1" style="width: 100%;">
+            <el-row v-if="plugins.indexOf('metric-input') > -1 || plugins.indexOf('metric-selector') > -1" style="width: 100%;">
               <el-col style="width: 120px; padding-right: 20px; text-align: right; color: #666">
-                <el-dropdown class="metric-selector">
+                <el-dropdown class="metric-selector" v-if="plugins.indexOf('metric-selector') > -1">
                   <el-dropdown-menu style="display: none"></el-dropdown-menu>
                   <span style="cursor: pointer;" @click="toggleDropdown">Metric&nbsp;<i class="el-icon-arrow-down" style="font-size: 14px; -webkit-transform:scale(0.75);display:inline-block;"></i></span>
                   <el-cascader-panel v-show="dropDownVisible" v-model="cascaderValue" style="text-align: left;" slot="dropdown" ref="metricSelector" :props="{emitPath:false}" :options="metricOptions"  @change="metricChange"></el-cascader-panel>
                 </el-dropdown>
+                <label style="line-height: 30px;" v-else>{{$t("alert.config.expr")}}</label>
               </el-col>
               <el-col style="width: calc(100% - 120px);">
-                <div class="input-box" @click="dropDownVisible=false">
+                <div class="input-box" @click="dropDownVisible=false" v-if="plugins.indexOf('metric-input') > -1">
                   <editor :styleType="styleType" :metric-list="metricStore" v-model="expressionList[index]" ref="editor" @on-enter="expressionChange" @on-blur="expressionChange" ></editor>
                   <div class="append-msg error" v-if="errorMsg"><span>{{errorMsg}}</span></div>
                   <div class="append-msg error" v-if="appendMsg"><span>{{appendMsg}}</span></div>
@@ -47,7 +48,7 @@
       </div>
       <div v-if="styleType == 2">
         <div class="option" @click="addExpression" v-if="plugins.indexOf('add') > -1"><i class="el-icon-plus"></i></div>
-        <div class="option" @click="removeExpression" v-if="plugins.indexOf('remove') > -1"><i class="el-icon-minus"></i></div>
+        <div class="option" style="margin-left: 5px; line-height: 32px;" @click="removeExpression" v-if="plugins.indexOf('remove') > -1"><i class="el-icon-minus"></i></div>
       </div>
     </div>
 </template>

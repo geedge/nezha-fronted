@@ -199,7 +199,7 @@
                 :expression-list.sync="expressions"
                 :index="index-1"
                 :styleType="2"
-                :plugins="['metric', 'remove']"
+                :plugins="['metric-selector', 'metric-input', 'remove']"
                 @change="expressionChange"
                 @removeExpression="removeExpression"
               ></promql-input>
