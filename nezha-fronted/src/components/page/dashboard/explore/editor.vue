@@ -1,6 +1,6 @@
 <template>
   <div class="metric-editor" v-clickoutside="clickout" :class="{'metric-editor-rb': styleType == 2}">
-    <div :id="id" class="editor-core" ref="editor" ></div>
+    <div :id="id" class="editor-core" ref="editor" :style="{height: styleType == 2 ? 'auto' : ''}"></div>
     <span class="nz-input-append editor-clear" style="display: none" @click="clearContent"><i class="el-icon-circle-close"></i></span>
     <div class="metric-editor-popper" :style="{left:popperPos.left+'px'}">
       <div class="metric-popper-main" v-show="showType&&Object.keys(showSuggestions).length>0">
@@ -71,6 +71,9 @@
       this.queryMetrics();
     },
     methods:{
+      test() {
+        console.info(1)
+      },
       userChange:function(char,operation,newContent,oldContent){
         this.changeSuggestions('type')
         this.dealSpecilChar(char,operation);
@@ -792,7 +795,10 @@
           $temp.getPosition();
           $temp.formatContent();
         }
-      })
+        //监听文本区域的高度
+        let lineHeight = 16;
+
+      });
       this.registerKeydown();
     },
     watch:{
@@ -904,18 +910,20 @@
     overflow: hidden;
   }
   .metric-editor.metric-editor-rb {
+    min-height: 32px;
+    border-radius: 4px;
+    height: auto;
+    border: 1px solid #DCDFE6;
+    box-sizing: border-box;
     .editor-clear {
       padding-top: 4px;
     }
-    height: 32px;
     .ql-container.ql-snow {
-      border-radius: 4px;
-      border: 1px solid #DCDFE6;
-      box-sizing: border-box;
+      border: none;
       .ql-editor {
-        padding: 6px 0 !important;
+        padding: 5px 0 !important;
         >p {
-          padding-left: 15px;
+          padding: 0 26px 0 15px;
           font-size: 12px;
           color: rgb(96, 98, 102);
         }

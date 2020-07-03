@@ -377,7 +377,7 @@ instance_cpu_time_ns{app="fox", proc="widget", rev="4d3a513", env="prod", job="c
                 if (res.length > 0) {
                   this.tableData = [];
                   this.tableLabels = [];
-                  console.log(111111111111111111111,res)
+                  //console.log(111111111111111111111,res)
                   res.forEach((response, index) => {
                     if (response.data&&response.status == 'success') {
                       let data = response.data.result;

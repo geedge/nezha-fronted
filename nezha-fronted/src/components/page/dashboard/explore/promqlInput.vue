@@ -1,17 +1,17 @@
 <template>
-    <div class="promqlInput" :style="{height:(errorMsg || appendMsg)?'50px':'36px'}">
+    <div class="promqlInput" :style="{height:(errorMsg || appendMsg)?'50px':'auto'}">
       <div class="query-row">
         <div class="query-input">
           <!--explore页面的样式-->
           <template v-if="styleType == 1">
-            <div class="metric-btn" v-if="plugins.indexOf('metric') > -1">
-              <el-dropdown class="metric-selector" >
+            <div class="metric-btn" v-if="plugins.indexOf('metric-selector') > -1">
+              <el-dropdown class="metric-selector">
                 <el-dropdown-menu style="display: none"></el-dropdown-menu>
                 <el-button class="metric-btn nz-btn nz-btn-size-normal nz-btn-style-light" @click="toggleDropdown">Metric &nbsp;<i class="el-icon-arrow-down"></i></el-button>
                 <el-cascader-panel v-show="dropDownVisible" v-model="cascaderValue"  slot="dropdown" ref="metricSelector" :props="{emitPath:false}" :options="metricOptions"  @change="metricChange"></el-cascader-panel>
               </el-dropdown>
             </div>
-            <div class="input-box" @click="dropDownVisible=false">
+            <div class="input-box" @click="dropDownVisible=false" v-if="plugins.indexOf('metric-input') > -1">
               <!--            <el-autocomplete :placeholder="$t('dashboard.metricPreview.inputTip')" :fetch-suggestions="filterInput" clearable @clear="clearExpression" :trigger-on-focus="false" v-model="expressionList[index]" @blur="expressionChange" style="width: 100%;height:36px"></el-autocomplete>-->
               <editor :styleType="styleType" :metric-list="metricStore" v-model="expressionList[index]" ref="editor" @on-enter="expressionChange" @on-blur="expressionChange" ></editor>
               <div class="append-msg error" v-if="errorMsg"><span>{{errorMsg}}</span></div>
@@ -29,7 +29,7 @@
                 </el-dropdown>
                 <label style="line-height: 30px;" v-else>{{$t("alert.config.expr")}}</label>
               </el-col>
-              <el-col style="width: calc(100% - 120px);">
+              <el-col style="width: calc(100% - 120px); height: 100%;">
                 <div class="input-box" @click="dropDownVisible=false" v-if="plugins.indexOf('metric-input') > -1">
                   <editor :styleType="styleType" :metric-list="metricStore" v-model="expressionList[index]" ref="editor" @on-enter="expressionChange" @on-blur="expressionChange" ></editor>
                   <div class="append-msg error" v-if="errorMsg"><span>{{errorMsg}}</span></div>
@@ -183,7 +183,7 @@
     height: 36px;
     width: 100%;
     display: flex;
-    margin-bottom: 10px;
+    margin-bottom: 18px;
   }
   .promqlInput .query-row{
     width: 100%;
@@ -223,6 +223,7 @@
   }
   .query-input .input-box{
     width: 100%;
+    height: 100%;
   }
   .metric-btn{
     height: 36px !important;
