@@ -416,7 +416,7 @@
               item.isHide=false;
               chartListTmp.push(item);
             }else{
-              item.isLoaded = false;
+              item.isLoaded = true;
               item.isHide=true;
               chartListTmp.push(item);
             }

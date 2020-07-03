@@ -224,6 +224,7 @@
           this.toAdd();
           return false;
         }
+        this.filter.searchName='';
         //this.$refs.searchInput.select();
         this.showPanel = val
         this.filter.panelId = this.showPanel.id;
