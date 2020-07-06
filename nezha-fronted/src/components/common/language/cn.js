@@ -19,6 +19,7 @@ const cn = {
     search: "搜索",
     add: "新增",
     option: "操作",
+    remark: "描述",
     clearAll: "清空",
     clear: "清除",
     name: "名称",
