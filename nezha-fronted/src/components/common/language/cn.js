@@ -343,6 +343,7 @@ const cn = {
     no: "否",
     deleteSuccess: "删除成功",
     saveSuccess: "保存成功",
+    addSuccess: "添加成功",
     duplicateSuccess: '复制成功', //"复制成功"
     coverSuccess: "覆盖成功",
     refreshLater: "请稍后刷新",
@@ -722,6 +723,16 @@ const cn = {
         filter: "用户过滤器",
         map: "LDAP属性映射",
         active: "启用LDAP认证"
+      },
+      link: {
+        link:'Link',
+        name: "名称",
+        url: "URL",
+        operation: "操作",
+        add: "添加",
+        update: "更新",
+        del: "删除",
+        nameMaxLength:"长度应小于64"
       },
       reset: {
         reset: "重置",

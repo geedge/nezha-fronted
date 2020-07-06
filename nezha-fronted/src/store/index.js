@@ -40,6 +40,7 @@ const store = new Vuex.Store({
     isAddConsole:false,//是否增加窗口
     consoleParam:{},//新开console窗口参数
     leftMenuStat:false, //0展开状态，1隐藏状态
+    linkData:[],//导航数据
   },
   getters: {
   },
@@ -114,7 +115,10 @@ const store = new Vuex.Store({
     },
     setLeftMenuStat:function(state,data){
       state.leftMenuStat=data
-    }
+    },
+    setLinkData:function(state,data){
+      state.linkData=data
+    },
   },
   actions: {
   }

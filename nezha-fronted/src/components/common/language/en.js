@@ -354,6 +354,7 @@ const en = {
     no: "No",//No
     deleteSuccess: 'Delete success',//"删除成功"
     saveSuccess: 'Save success', //"保存成功"
+    addSuccess: 'Add success', //"保存成功"
     duplicateSuccess: 'Duplicate success', //"复制成功"
     coverSuccess: 'Override success',//'覆盖成功'
     refreshLater:'Refresh later',//'请稍后刷新'
@@ -736,6 +737,16 @@ const en = {
         filter:'User filter',
         map:'LDAP Field Mapping',
         active:'LDAP Authentication'
+      },
+      link: {
+        link:'Link',
+        name: "Name",
+        url: "URL",
+        operation: "Operation",
+        add: "Add",
+        update: "Update",
+        del: "Delete",
+        nameMaxLength:'The length should be less than 64',
       },
       reset:{
         reset:'Reset',

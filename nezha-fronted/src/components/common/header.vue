@@ -7,6 +7,18 @@
       active="1"
       unique-opened
     >
+      <el-submenu :index="'-3'" popper-class="nz-submenu" class="icon-menu-item">
+        <template slot="title">
+          <i class="nz-icon-navmore nz-icon"></i>
+        </template>
+        <template v-for="(item, index) in $store.state.linkData">
+          <el-menu-item :index="'0-' + index">
+            <div>
+              <span><a :href='item.url' class="nz-a" target="_blank" :title="item.url">{{item.name}}</a></span>
+            </div>
+          </el-menu-item>
+        </template>
+      </el-submenu>
       <el-submenu :index="'-1'" class="icon-menu-item" popper-class="display-none">
         <div slot="title" class="el-submenu__title" @click="cli()" >
           <i class="nz-icon nz-icon-cli"></i>
@@ -492,12 +504,22 @@
         console.info(this.activeIndex)
         //this.$router.go(-1);
       },
+      getLinkData(){
+        console.log('aaa');
+        this.$get('link').then(response=>{
+          console.log(response);
+          // this.linkData=response.data;
+          this.$store.commit('setLinkData',response.data);
+          console.log(this.$store)
+        });
+      },
     },
     mounted() {
       this.$i18n.locale = this.language;
       this.getUserData();
       this.getAssetData();
       this.getProjectList();
+      this.getLinkData();
       // 刷新后有高亮
       let activePath = this.$route.path.slice(1);
       this.activeIndex = activePath;
@@ -513,7 +535,7 @@
       if (window.history && window.history.pushState) {
         history.pushState(null, null, document.URL);
         window.addEventListener('popstate', this.cancel, false);
-      }
+      };
     },
     computed: {
       projectListReloadWatch() {
@@ -551,7 +573,7 @@
       currentProjectWatch(n,o){
         this.currentProject=n;
         this.activeItemIndex=n.id;
-      }
+      },
     },
     destroyed() {
       window.removeEventListener('popstate', this.cancel, false);
@@ -740,6 +762,10 @@
 <style scoped>
   .menu-create-title {
     font-size: 14px;
+  }
+  a.nz-a{
+    color: inherit;
+    text-decoration:none;
   }
   .header {
     position: relative;
