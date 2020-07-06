@@ -560,7 +560,7 @@ const cn = {
       accountList: "用户列表",
       account: "用户",
       language: "语言",
-      receiver: "用户组",
+      receiver: "接收人",
       createTime: "创建时间",
       enable: "可用",
       option: "操作",
