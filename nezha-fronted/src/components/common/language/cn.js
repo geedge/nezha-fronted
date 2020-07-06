@@ -35,7 +35,7 @@ const cn = {
     unavailable: "不可用",
     available: "可用",
     createChart: "新增图表",
-    createProject: "新增项目",
+    createProject: "新增业务系统",
     createAsset: "新增资产",
     createAlertRule: "新增告警规则",
     createAccount: "新增用户名",
@@ -263,7 +263,7 @@ const cn = {
         }
       },
       project: {
-        project: "项目",
+        project: "业务系统",
         name: "名称",
         module: "组件",
         endpoint: "Endpoint"
