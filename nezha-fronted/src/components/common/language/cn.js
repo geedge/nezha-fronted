@@ -27,6 +27,7 @@ const cn = {
     signOut: "登出",
     select: "选择",
     ok: "Ok",
+    entity: "实体",
     all: "全选",
     value: "值",
     other: "其他",

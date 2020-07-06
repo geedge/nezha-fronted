@@ -206,7 +206,7 @@
           </div>
           <account-config-box v-for="(account,index) in assetData.accounts" :account="account" v-show="account.protocol == accountType" :key="index" ref="accountConfigBox" @setValidateResult="setAccountValideResult" @protocol-type-change="protocolTypeChange"></account-config-box>
 
-          <template v-if="accountType == 'SSH'">
+          <template v-if="accountType == 'SSH' && !assetData.id">
             <el-form-item :label="$t('asset.createAssetTab.exporter')" class="exporter-label">
               <el-switch class="exporter-switch" v-model="assetData.exporter" active-color="#ee9d3f" active-value="1" inactive-value="0" :show="!exporterDisableSwitch"></el-switch>
             </el-form-item>
@@ -415,7 +415,6 @@
         modelClickData: '',
         popState: true,
         obj: null,
-        addUnitShow: false,
         rules: {
           sn: [
             {required: true, message: this.$t('validate.required'), trigger: 'blur'}
@@ -677,21 +676,22 @@
               idc:this.obj.idc,
               cabinet:this.obj.cabinet,
               u:[this.obj.cabinetStart,this.obj.cabinetEnd]
-            }
-            this.$refs.locationCascader.initComponet(initLocationData)
-            this.assetViewData.moduleNum = this.obj.moduleNum
-            this.assetViewData.alertNum = this.obj.alertNum
-            this.assetViewData.cabinetName = this.obj.cabinet == null ? '' : this.obj.cabinet.name
-            this.getCabinetOptionData(this.obj.idc.id)
-            this.assetType = this.obj.model.type.code
+            };
+            this.$refs.locationCascader.initComponet(initLocationData);
+            this.assetViewData.moduleNum = this.obj.moduleNum;
+            this.assetViewData.alertNum = this.obj.alertNum;
+            this.assetViewData.cabinetName = this.obj.cabinet == null ? '' : this.obj.cabinet.name;
+            this.getCabinetOptionData(this.obj.idc.id);
+            this.assetType = this.obj.model.type.code;
             this.assetData.impi=this.obj.impi?this.obj.impi:{host:'',port:''};
-            this.assetData.sn = this.obj.sn
-            this.assetData.host = this.obj.host
-            this.assetData.state = this.obj.state
+            this.assetData.sn = this.obj.sn;
+            this.assetData.host = this.obj.host;
+            this.assetData.state = this.obj.state;
             this.assetData.idcId = this.obj.idc.id;
+            this.assetData.id = this.obj.id;
             this.assetData.tags = this.obj.tags;
             this.assetData.accounts = this.obj.accounts;
-            this.assetData.cabinetId = this.obj.cabinet == null ? '' : this.obj.cabinet.id
+            this.assetData.cabinetId = this.obj.cabinet == null ? '' : this.obj.cabinet.id;
             this.assetData.purchaseDate = this.obj.purchaseDate;
             if (this.assetData.accounts && this.assetData.accounts.length > 0) {
               this.accountType = this.assetData.accounts[0].protocol.toUpperCase();
@@ -737,6 +737,7 @@
           if (response.code === 200) {
             this.IDCOptionData = response.data.list;
             this.markOptionData(this.IDCOptionData);
+            console.info(this.IDCOptionData)
             if (isUpdate) {
               this.$store.commit('assetDcListChange');
               this.$emit('refreshData');
@@ -1232,11 +1233,6 @@
           })
         });
       },
-      tabControl(data) {
-        if (data === 'close') {
-          this.addUnitShow = false
-        }
-      },
       editing() {
       },
       getSingleIDCData(data, item, itemData) {
@@ -1405,9 +1401,13 @@
     },
     mounted() {
       this.getUserData()
-      this.getIDCOptionData();
       this.getVendorOptionData();
       this.getAssetTypeOptionData();
+      this.showAccountOp = false;
+      this.$nextTick(() => {
+        this.getIDCOptionData();
+      });
+      this.showAccountOp = false;
       window.onresize = () => {
         this.tableHeight = document.documentElement.clientHeight - 200;
       }

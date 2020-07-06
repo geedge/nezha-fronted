@@ -512,7 +512,7 @@
           this.dataList.push({
             id: -10,
             panelId: 0,
-            title: this.$t("dashboard.panel.chartForm.statistics"),
+            title: this.$t("alert.config.chart.affectEntity"),
             span: 4,
             height: 350,
             type: "alertRuleInfo",
@@ -1425,7 +1425,7 @@
             if (response.code == 200) {
               response.data && function () {
                 if (response.data.project && response.data.project.length > 0) {
-                  detail.push({title: vm.$t("project.project.project"), data: convert(response.data.project)});
+                  detail.push({title: vm.$t("overall.entity"), data: convert(response.data.project)});
                 }
                 /*if (response.data.module && response.data.module.length > 0) {
                   detail.push({title: vm.$t("project.module.module"), data: convert(response.data.module)});

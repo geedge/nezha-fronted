@@ -85,8 +85,7 @@
         oldUChecked:[],
       }
     },
-    created(){
-      this.queryIdcInfos();
+    mounted(){
     },
     methods:{
       toggleDropdown:function(){
@@ -366,11 +365,8 @@
         }
       }
     },
-    mounted() {
-    },
     computed:{
       inputShowInfo:function(){
-        console.log(this.selectedData)
         let idcName=this.selectedData.idc?this.selectedData.idc.name+'/':'';
 
         let cabinetName=this.selectedData.cabinet?this.selectedData.cabinet.name+'/':'';
@@ -394,6 +390,13 @@
         deep:true,
         handler(n,o){
           this.$emit('change',n);
+        }
+      },
+      idcOption: {
+        deep: true,
+        immediate: true,
+        handler(n, o) {
+          this.queryIdcInfos();
         }
       }
     }
