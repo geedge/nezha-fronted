@@ -36,7 +36,7 @@ const cn = {
     unavailable: "不可用",
     available: "可用",
     createChart: "新增图表",
-    createProject: "新增项目",
+    createProject: "新增业务系统",
     createAsset: "新增资产",
     createAlertRule: "新增告警规则",
     createAccount: "新增用户名",
@@ -140,6 +140,9 @@ const cn = {
           },
           singleStat:{
             label:"SingleStat"
+          },
+          alertList:{
+            label:"告警列表"
           }
         },
         statisticsVal:{
@@ -161,6 +164,7 @@ const cn = {
         legendTip: "使用名称或表达式控制时间序列的名称。例如{{hostname}将替换为标签主机名的标签值。",
         option: "操作",
         alertParam:{
+          param:'参数',
           select:'选择',
           alertRule:'告警规则',
           level:'级别',
@@ -264,7 +268,7 @@ const cn = {
         }
       },
       project: {
-        project: "项目",
+        project: "业务系统",
         name: "名称",
         module: "组件",
         endpoint: "Endpoint"
@@ -345,6 +349,7 @@ const cn = {
     no: "否",
     deleteSuccess: "删除成功",
     saveSuccess: "保存成功",
+    addSuccess: "添加成功",
     duplicateSuccess: '复制成功', //"复制成功"
     coverSuccess: "覆盖成功",
     refreshLater: "请稍后刷新",
@@ -556,7 +561,7 @@ const cn = {
       accountList: "用户列表",
       account: "用户",
       language: "语言",
-      receiver: "用户组",
+      receiver: "接收人",
       createTime: "创建时间",
       enable: "可用",
       option: "操作",
@@ -724,6 +729,16 @@ const cn = {
         filter: "用户过滤器",
         map: "LDAP属性映射",
         active: "启用LDAP认证"
+      },
+      link: {
+        link:'Link',
+        name: "名称",
+        url: "URL",
+        operation: "操作",
+        add: "添加",
+        update: "更新",
+        del: "删除",
+        nameMaxLength:"长度应小于64"
       },
       reset: {
         reset: "重置",
