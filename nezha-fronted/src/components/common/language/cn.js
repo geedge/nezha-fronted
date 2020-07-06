@@ -19,6 +19,7 @@ const cn = {
     search: "搜索",
     add: "新增",
     option: "操作",
+    remark: "描述",
     clearAll: "清空",
     clear: "清除",
     name: "名称",
@@ -34,7 +35,7 @@ const cn = {
     unavailable: "不可用",
     available: "可用",
     createChart: "新增图表",
-    createProject: "新增项目",
+    createProject: "新增业务系统",
     createAsset: "新增资产",
     createAlertRule: "新增告警规则",
     createAccount: "新增用户名",
@@ -138,6 +139,9 @@ const cn = {
           },
           singleStat:{
             label:"SingleStat"
+          },
+          alertList:{
+            label:"告警列表"
           }
         },
         statisticsVal:{
@@ -159,6 +163,7 @@ const cn = {
         legendTip: "使用名称或表达式控制时间序列的名称。例如{{hostname}将替换为标签主机名的标签值。",
         option: "操作",
         alertParam:{
+          param:'参数',
           select:'选择',
           alertRule:'告警规则',
           level:'级别',
@@ -262,7 +267,7 @@ const cn = {
         }
       },
       project: {
-        project: "项目",
+        project: "业务系统",
         name: "名称",
         module: "组件",
         endpoint: "Endpoint"
@@ -803,6 +808,13 @@ const cn = {
     }
   },
   project: {
+    chart: {
+      basicTitle: "基础信息",
+      alertStat: "告警状态",
+      endpointStat: "Endpoint状态",
+      projectInfo: "业务系统信息",
+      endpointInfo: "Endpoint信息"
+    },
     project: {
       project: "系统",
       projectName: "系统名称",
