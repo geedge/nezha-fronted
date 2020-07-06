@@ -792,6 +792,13 @@ const cn = {
     }
   },
   project: {
+    chart: {
+      basicTitle: "基础信息",
+      alertStat: "告警状态",
+      endpointStat: "Endpoint状态",
+      projectInfo: "业务系统信息",
+      endpointInfo: "Endpoint信息"
+    },
     project: {
       project: "系统",
       projectName: "系统名称",
