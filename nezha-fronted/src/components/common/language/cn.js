@@ -139,6 +139,9 @@ const cn = {
           },
           singleStat:{
             label:"SingleStat"
+          },
+          alertList:{
+            label:"告警列表"
           }
         },
         statisticsVal:{
