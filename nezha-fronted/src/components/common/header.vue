@@ -13,9 +13,7 @@
         </template>
         <template v-for="(item, index) in $store.state.linkData">
           <el-menu-item :index="'0-' + index">
-            <div>
-              <span><a :href='item.url' class="nz-a" target="_blank" :title="item.url">{{item.name}}</a></span>
-            </div>
+              <span class="linkTitle"><a :href='item.url' class="nz-a" target="_blank" :title="item.name">{{item.name}}</a></span>
           </el-menu-item>
         </template>
       </el-submenu>
@@ -761,6 +759,9 @@
     align-items: center;
     height: 18px !important;
   }
+  .nz-icon-navmore{
+    font-size: 18px;
+  }
 </style>
 
 <style scoped>
@@ -862,6 +863,24 @@
     width: 50%;
     float: right;
     border-bottom-right-radius: 8px;
+  }
+  .linkTitle{
+    display: inline-block;
+    width: 200px;
+    font-size: 15px;
+    color: #444444;
+  }
+  .linkTitle:hover{
+    background-color: #eee;
+  }
+  .linkTitle>a{
+    display: inline-block;
+    width: 150px;
+    padding-left: 35px;
+    padding-right: 15px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
 </style>
 <style>
