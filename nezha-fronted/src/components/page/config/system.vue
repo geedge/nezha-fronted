@@ -181,7 +181,7 @@
                   <el-input  v-model="linkTemp.url" class="linkUrl"/>
                 </el-form-item>
                 <el-form-item  prop="btn">
-                  <el-button class="linkBtn nz-btn nz-btn-size-normal nz-btn-style-light nz-btn-min-width-75" @click="linkAdd">Add</el-button>
+                  <i class="nz-icon-create-square nz-icon" @click="linkAdd"></i>
                 </el-form-item>
               </el-form>
             </div>
@@ -211,16 +211,18 @@
                   </el-form-item>
                 </el-form>
                   <div class="linkFormContent" v-else>
-                    <div class="linkTitleName">{{item.name}}</div>
+                    <div class="linkTitleName" :title="item.name">{{item.name}}</div>
                     <div class="linkTitleUrl">
-                      <span class="linkTitleUrlContent" @click="openUrl(item)">
+                      <span class="linkTitleUrlContent" @click="openUrl(item)" @dblclick.stop="linkEdit(item)">
                         <!--<el-tooltip class="item" effect="dark" :content="item.url" placement="top" popper-class="linkUrlTip">-->
                         <span>{{item.url}}</span>
                         <!--</el-tooltip>-->
                       </span>
-                      <i class="nz-icon nz-icon-edit" @click="linkEdit(item)" v-if="item.buildIn=='0'"></i>
+                      <i class="nz-icon nz-icon-edit" @click.stop="linkEdit(item)" v-if="item.buildIn=='0'"></i>
                     </div>
-                    <div class="linkFormBtn"> <el-button class="linkBtn nz-btn nz-btn-size-normal nz-btn-style-light nz-btn-min-width-75" @click="linkDel(item)" v-if="item.buildIn=='0'">Delete</el-button></div>
+                    <div class="linkFormBtn">
+                      <i class="nz-icon nz-icon-delete" @click="linkDel(item)" v-if="item.buildIn=='0'"></i>
+                    </div>
                   </div>
                 </div>
               </draggable>
@@ -676,7 +678,7 @@
           },
           //openUrl 跳转页面
           openUrl(item){
-            window.open(item.url)
+            // window.open(item.url)
           }
         },
         mounted() {
@@ -768,13 +770,21 @@
     cursor: pointer;
     outline: none;
   }
-  .linkTitleUrlContent:hover{
-    text-decoration:underline;
+  .nz-icon-delete{
+    cursor: pointer;
+    color: #ee6723;
   }
+  /*.linkTitleUrlContent:hover{*/
+    /*text-decoration:underline;*/
+  /*}*/
   .linkTitleUrl .nz-icon-edit{
     font-size: 12px;
     float: right;
     cursor: pointer;
+  }
+  .nz-icon-create-square{
+    cursor: pointer;
+    color: #333333;
   }
   /deep/ .el-form-item--small .el-form-item__error{
     padding-top: 0px;
