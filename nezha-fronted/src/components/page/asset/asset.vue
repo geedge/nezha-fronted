@@ -176,7 +176,7 @@
                     class="nz-icon nz-icon-cli" :class="{'gray-filter': !scope.row.accounts || scope.row.accounts.length == 0}"></i>
                   </span>
                   <el-dropdown-menu slot="dropdown">
-                    <el-dropdown-item v-for="(account, index) in scope.row.accounts" :key="index" :command="[scope.row.id ,scope.row.host, account]">{{account.protocol}}</el-dropdown-item>
+                    <el-dropdown-item v-for="(account, index) in scope.row.accounts" v-if="account && account.protocol != 'SNMP'" :key="index" :command="[scope.row.id ,scope.row.host, account]">{{account.protocol}}</el-dropdown-item>
                   </el-dropdown-menu>
                 </el-dropdown>
 
@@ -207,7 +207,7 @@
     </div>
     </left-menu>
 
-    <asset-box :edit-unit-show='editUnitShow' @refreshData="flushData" @sendStateData="tabControl"
+    <asset-box :edit-unit-show='editUnitShow' @refreshData="flushData" @sendStateData="tabControl" v-if="rightBox.show"
                      ref="assetEditUnit"></asset-box>
     <element-set
       v-if="showElementSet"
@@ -424,7 +424,6 @@
         unitDisable: '',
         modelClickData: '',
         obj: null,
-        addUnitShow: false,
         editUnitShow: false,
         flag: false,
         checkAllFlag: false,
@@ -706,9 +705,9 @@
       },
       tabControl(data) {
         if (data === 'close') {
-          this.addUnitShow = false
-          this.editUnitShow = false
-          this.$refs['assetEditUnit'].tabView = false
+          this.editUnitShow = false;
+          this.$refs['assetEditUnit'].tabView = false;
+          this.rightBox.show = false;
         }
       },
       indOf(a, b) {
@@ -729,17 +728,21 @@
       },
       tagShow(data, id, type) {
         if (data === 'showAdd') {
-          //this.addUnitShow = true;
-          this.editUnitShow = true;
-          this.$refs['assetEditUnit'].show();
-          this.$refs['assetEditUnit'].accountSwitch=false;
-          this.$refs['assetEditUnit'].getAssetData('');
-          this.$refs['assetEditUnit'].resetAsset();
+          this.rightBox.show = true;
+          this.$nextTick(() => {
+            this.editUnitShow = true;
+            this.$refs['assetEditUnit'].accountSwitch=false;
+            this.$refs['assetEditUnit'].getAssetData('');
+            this.$refs['assetEditUnit'].resetAsset();
+          });
         }
         if (data === 'showEdit') {
-          this.editUnitShow = true;
-          this.$refs['assetEditUnit'].show();
-          this.$refs['assetEditUnit'].getAssetData(id)
+          this.rightBox.show = true;
+          this.$nextTick(() => {
+            this.editUnitShow = true;
+            this.$refs['assetEditUnit'].accountSwitch=false;
+            this.$refs['assetEditUnit'].getAssetData(id)
+          });
         }
         if (data === 'showView') {
           this.alertMsgAsset = Object.assign({}, id);

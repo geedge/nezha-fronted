@@ -32,6 +32,7 @@ const en = {
     signOut: 'Logout',//'登出'
     select: 'Select',//'选择'
     ok: 'Ok',//OK
+    entity: 'Entity',
     all: 'All',//'全选'
     value: 'Value',
     other: 'Others',//"其他"

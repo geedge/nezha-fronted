@@ -98,8 +98,8 @@
     <alert-config-box :parentAlertRule="alertRule" @reload="getTableData" ref="alertConfigBox"></alert-config-box>
     <project-box :project="viewProjectData" ref="projectBox" @reload="getTableData"></project-box>
     <module-box :module="viewModuleData" @reload="getTableData" ref="moduleBox"></module-box>
-    <asset-box :edit-unit-show='viewAsset' @refreshData="getTableData" @sendStateData="tabControl"
-               ref="assetEditUnit"></asset-box>
+    <!--<asset-box :edit-unit-show='viewAsset' @refreshData="getTableData" @sendStateData="tabControl" v-if="assetBoxShow"
+               ref="assetEditUnit"></asset-box>-->
     <element-set
       v-if="showElementSet"
       @close="elementsetHide"
@@ -359,13 +359,6 @@
           return unitMethod.compute(value,null,2);
         }else{
           return value
-        }
-      },
-      //asset弹框控制
-      tabControl(data) {
-        if (data === 'close') {
-          this.viewAsset = false
-          this.$refs['assetEditUnit'].tabView = false
         }
       },
       toAdd: function () {

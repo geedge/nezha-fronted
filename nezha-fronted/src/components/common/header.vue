@@ -157,7 +157,7 @@
                       ref="addEndpointBox"></add-endpoint-box>
     <!--<asset-add-unit :add-unit-show='addUnitShow' @refreshData="refreshAsset" ref="assetAddUnit"
                     @sendStateData="closeAsset"></asset-add-unit>-->
-    <asset-box :edit-unit-show='addUnitShow' @refreshData="refreshAsset" @sendStateData="closeAsset"
+    <asset-box :edit-unit-show='addUnitShow' @refreshData="refreshAsset" @sendStateData="closeAsset" v-if="assetBoxShow"
                ref="assetAddUnit"></asset-box>
     <dc-box ref="dcBox" :dc="currentDc" :user-data="userDatas" @reload="getAssetData"></dc-box>
     <alert-config-box :parentAlertRule="alertRule" @reload="" ref="alertConfigBox"></alert-config-box>
@@ -263,6 +263,7 @@
         },
         IDCOptionData: [],
         addUnitShow: false,
+        assetBoxShow: false,
         userDatas:[],
         showChangePwd:false,
       }
@@ -270,6 +271,7 @@
     methods: {
       closeAsset() {
         this.addUnitShow = false;
+        this.assetBoxShow = false;
       },
       refreshAsset(flag) {
         if (flag && this.$route.path == "/asset") {
@@ -333,9 +335,11 @@
         } else if (item.type == 5) {
           this.$refs.alertConfigBox.show(true, true);
         } else if (item.type == 4) {
-          this.addUnitShow = true;
-          this.$refs.assetAddUnit.show();
-          this.$refs.assetAddUnit.resetAsset();
+          this.assetBoxShow = true;
+          this.$nextTick(() => {
+            this.addUnitShow = true;
+            this.$refs.assetAddUnit.resetAsset();
+          });
         } else if (item.type == 6) {
           this.currentDc = {
             id: '',

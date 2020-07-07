@@ -107,7 +107,7 @@
       <chart ref="endpointChart" :unit="chartUnit"></chart>
     </el-dialog>
 
-    <chart-box ref="addChartModal" :panel-data="panelData" @on-create-success="createSuccess" @reloadOnlyPanel="getPanelData" @reload="getPanelData" :show-panel="{}"></chart-box>
+    <chart-box v-if="rightBox.show" ref="addChartModal" :panel-data="panelData" @on-create-success="createSuccess" @reloadOnlyPanel="getPanelData" @reload="getPanelData" :show-panel="{}"></chart-box>
   </span>
 </template>
 
@@ -155,7 +155,8 @@
         panelData: [], //chart-box的panel下拉框数据,
         hideSameLabels: true,
         sameLabels:['instance','module','project','asset','endpoint','datacenter'],
-        chartUnit:5
+        chartUnit:5,
+        rightBox: {show: false}
       }
     },
     methods: {
@@ -163,22 +164,25 @@
         this.$emit('changeTab', tab);
       },
       saveChart() { //新增chart
-        this.$refs.addChartModal.setTitle(this.$t("dashboard.panel.createChartTitle"));
-        this.$refs.addChartModal.show(true);
-        let metricInfo = {};
-        metricInfo.elements = [];
-        //console.info("aaa", this.selectedEndpoints)
-        for(let i = 0; i < this.selectedEndpoints.length; i++) {
-          let type = 'expert';
-          // if (this.selectedEndpoints[i].type == '1') {
-          //   type = 'expert';
-          // } else if (this.selectedEndpoints[i].type == '2') {
-          //   type = 'normal';
-          // }
-          metricInfo.elements.push({expression: this.selectedEndpoints[i].element, type: type});
-        }
-        this.$refs.addChartModal.createData(-1, metricInfo);
-        this.$refs.addChartModal.setUnit(this.chartUnit)
+        this.rightBox.show = true;
+        this.$nextTick(() => {
+          this.$refs.addChartModal.setTitle(this.$t("dashboard.panel.createChartTitle"));
+          this.$refs.addChartModal.show(true);
+          let metricInfo = {};
+          metricInfo.elements = [];
+          //console.info("aaa", this.selectedEndpoints)
+          for(let i = 0; i < this.selectedEndpoints.length; i++) {
+            let type = 'expert';
+            // if (this.selectedEndpoints[i].type == '1') {
+            //   type = 'expert';
+            // } else if (this.selectedEndpoints[i].type == '2') {
+            //   type = 'normal';
+            // }
+            metricInfo.elements.push({expression: this.selectedEndpoints[i].element, type: type});
+          }
+          this.$refs.addChartModal.createData(-1, metricInfo);
+          this.$refs.addChartModal.setUnit(this.chartUnit)
+        });
       },
       dropdownHandler(show) {
         if (show) {
