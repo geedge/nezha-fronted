@@ -162,18 +162,18 @@
             </el-form>
           </div>
         </el-tab-pane>
-        <el-tab-pane :label="'link'" name="link"><!--$t('config.system.reset.reset')-->
-          <div class="linkBox" v-scrollBar>
+        <el-tab-pane :label="$t('config.system.link.link')" name="link"><!--$t('config.system.reset.reset')-->
+          <div class="linkBox" >
             <div class="linkTitle">
               <span class="linkTitleHandle"></span>
-              <div class="linkTitleName">名称</div>
-              <div class="linkTitleUrl">URL</div>
-              <div class="linkTitleBtn">操作</div>
+              <div class="linkTitleName">{{$t('config.system.link.name')}}</div>
+              <div class="linkTitleUrl">{{$t('config.system.link.url')}}</div>
+              <div class="linkTitleBtn">{{$t('config.system.link.operation')}}</div>
             </div>
             <!--linkAdd-->
             <div class="linkContent linkAddBox">
               <span class="linkTitleHandle"></span>
-              <el-form :inline="true"  :model="linkTemp"  label-width="180px" size="small" ref="resetForm" :rules="resetRules" :validate-on-rule-change="false" class="reset-form">
+              <el-form :inline="true"  :model="linkTemp"  label-width="180px" size="small" ref="linkTempForm" :rules="linkRules" :validate-on-rule-change="false" class="reset-form">
                 <el-form-item  prop="name">
                   <el-input v-model="linkTemp.name"  class="linkName"/>
                 </el-form-item>
@@ -181,40 +181,50 @@
                   <el-input  v-model="linkTemp.url" class="linkUrl"/>
                 </el-form-item>
                 <el-form-item  prop="btn">
-                  <el-button class="linkBtn" >Add</el-button>
+                  <el-button class="linkBtn nz-btn nz-btn-size-normal nz-btn-style-light nz-btn-min-width-75" @click="linkAdd">Add</el-button>
                 </el-form-item>
               </el-form>
             </div>
             <!--linkEdit-->
-            <draggable v-model="link"
-                       :options="{group:'people',animation:150,ghostClass:'sortable-ghost',chosenClass:'chosenClass',scroll:true,scrollSensitivity:200}"
-                       @change="change"
-                       @start="start"
-                       @end="end"
-                       :move="move"
-                       handle=".handle"
-            >
-              <div v-for="(item,index) in link" class="linkContent">
-                <i class="nz-icon nz-icon-move handle"></i>
-                <el-form :inline="true"  :model="link[index]"  label-width="180px" size="small" ref="resetForm" :rules="resetRules" :validate-on-rule-change="false" class="reset-form" :key="index" v-if="item.isEdit">
-                <el-form-item  prop="name" class="linkName">
-                  <el-input v-model="item.name" width="140px" />
-                </el-form-item>
-                <el-form-item  prop="url" class="linkUrl">
-                  <el-input  v-model="item.url" width="460px" />
-                </el-form-item>
-                <el-form-item  prop="btn">
-                  <el-button class="linkBtn">Update</el-button>
-                  <el-button class="linkBtn">Cancel</el-button>
-                </el-form-item>
-              </el-form>
-                <div class="linkFormContent" v-else>
-                  <div class="linkTitleName">{{item.name}}</div>
-                  <div class="linkTitleUrl"><span class="linkTitleUrlContent">{{item.url}}</span><i class="nz-icon nz-icon-edit" @click="linkEdit(item)"></i></div>
-                  <div class="linkFormBtn"> <el-button class="linkBtn">Delete</el-button></div>
+            <div  class="scrollBox"
+                  v-scrollBar>
+              <draggable v-model="link"
+                         :options="{group:'people',animation:150,ghostClass:'sortable-ghost',chosenClass:'chosenClass',scroll:true,scrollSensitivity:200}"
+                         @change="change"
+                         @start="start"
+                         @end="end"
+                         :move="move"
+                         handle=".handle"
+              >
+                <div v-for="(item,index) in link" class="linkContent" :id="'linkDiv'+item.id">
+                  <i class="nz-icon nz-icon-sort4 handle"></i>
+                  <el-form :inline="true"  :model="link[index]" :ref="'linkForm'+item.id" label-width="180px" size="small" ref="resetForm" :rules="linkRules" :validate-on-rule-change="false" class="reset-form" :key="index" v-if="item.isEdit" >
+                  <el-form-item  prop="name" class="linkName">
+                    <el-input v-model="item.name" width="140px" />
+                  </el-form-item>
+                  <el-form-item  prop="url" class="linkUrl">
+                    <el-input  v-model="item.url" width="460px" />
+                  </el-form-item>
+                  <el-form-item  prop="btn">
+                    <el-button type="primary" class="linkBtn nz-btn nz-btn-size-normal nz-btn-style-normal nz-btn-min-width-75" @click="linkUpdate(item)">Update</el-button>
+                    <el-button class="linkBtn nz-btn nz-btn-size-normal nz-btn-style-light nz-btn-min-width-75" @click="linkCancel(item)">Cancel</el-button>
+                  </el-form-item>
+                </el-form>
+                  <div class="linkFormContent" v-else>
+                    <div class="linkTitleName">{{item.name}}</div>
+                    <div class="linkTitleUrl">
+                      <span class="linkTitleUrlContent" @click="openUrl(item)">
+                        <!--<el-tooltip class="item" effect="dark" :content="item.url" placement="top" popper-class="linkUrlTip">-->
+                        <span>{{item.url}}</span>
+                        <!--</el-tooltip>-->
+                      </span>
+                      <i class="nz-icon nz-icon-edit" @click="linkEdit(item)" v-if="item.buildIn=='0'"></i>
+                    </div>
+                    <div class="linkFormBtn"> <el-button class="linkBtn nz-btn nz-btn-size-normal nz-btn-style-light nz-btn-min-width-75" @click="linkDel(item)" v-if="item.buildIn=='0'">Delete</el-button></div>
+                  </div>
                 </div>
-              </div>
-            </draggable>
+              </draggable>
+            </div>
           </div>
         </el-tab-pane>
         <el-tab-pane :label="$t('config.system.reset.reset')" name="reset">
@@ -384,9 +394,16 @@
               name:'',url:''
             },
             link:[],
-            linkRules:[
-
-            ],
+            linkReserved:[],
+            linkRules:{
+              name:[
+                { required: true, message: this.$t('validate.required'), trigger: 'blur' },
+                { max: 64, message: this.$t('config.system.link.nameMaxLength'), trigger: 'blur' }
+                ],
+              url:[
+                { required: true, message: this.$t('validate.required'), trigger: 'blur' },
+              ]
+            },
             resetRules:{
               type:[{required:true,message:this.$t('validate.required'),trigger:'blur'},],
               password:[{required:true,message:this.$t('validate.required'),trigger:'blur'},],
@@ -405,7 +422,7 @@
                 value:'sysconfig',
               },
             ],
-            activeTab:'link'
+            activeTab:'basic'
           }
         },
         methods:{
@@ -421,12 +438,7 @@
               return ;
             }
             if(type == 'link'){
-              // this.$get('link').then(response=>{
-              //   console.log(response)
-              // });
-              // console.log(response);
-              this.link=[{id:1,name:'000',url:'222',isEdit:false},
-                {id:2,name:'111',url:'https://www.baidu.com/s?wd=element&rsv_spt=1&rsv_iqid=0xbccc5b9a000f76e6&issp=1&f=3&rsv_bp=1&rsv_idx=2&ie=utf-8&rqlang=cn&tn=baiduhome_pg&rsv_enter=1&rsv_dl=ts_3&oq=%25E5%25A4%259A%25E8%25A1%258C%25E6%2596%2587%25E6%259C%25AC%25E7%259C%2581%25E7%2595%25A5%25E5%258F%25B7&rsv_btype=t&inputT=2473&rsv_t=fec3hB0PE04MDkxGHiV1k81e5C4DwS5dhZn7UD92ZSZqxpJC65PdHK%2BctV3yOy7QMxq2&rsv_pq=b35cdd7a0005aae6&rsv_sug3=73&rsv_sug1=58&rsv_sug7=100&rsv_sug2=0&prefixsug=ele&rsp=3&rsv_sug4=2473',isEdit:false},]
+              this.getLinkData();
               return
             }
             this.$get('sysConfig?type='+type).then(response=>{
@@ -555,25 +567,117 @@
           },
           end: function (evt) {
             console.log(evt);
-            console.log(this.link);
-            evt.item //可以知道拖动的本身
-            evt.to    // 可以知道拖动的目标列表
-            evt.from  // 可以知道之前的列表
-            evt.oldIndex  // 可以知道拖动前的位置
-            evt.newIndex  // 可以知道拖动后的位置
+            console.log(this.link,this.linkReserved);
+            let length=this.link.length;
+            if(evt.newIndex==evt.oldIndex){ // 如果没有移动返回
+              return
+            }
+            let parmas={
+              id:this.link[evt.newIndex].id,
+              prev:0,
+              next:-1
+            }
+            if(evt.newIndex==length-1){
+              parmas.prev=this.link[evt.newIndex-1].id;
+            }else if(evt.newIndex==0){
+              parmas.next=this.link[evt.newIndex+1].id;
+            }else{
+              parmas.prev=this.link[evt.newIndex-1].id;
+              parmas.next=this.link[evt.newIndex+1].id;
+            }
+            console.log(parmas)
+            this.$put('/link/modify',parmas).then((response)=>{
+              console.log(response);
+              this.$store.commit('setLinkData',this.link);
+            })
           },
           move: function (evt, originalEvent) {
             // console.log(evt)
             // console.log(originalEvent) //鼠标位置
           },
+          getLinkData(){
+            this.linkTemp={name:'',url:''};
+            this.$refs['linkTempForm'].clearValidate();
+            this.$get('/link').then(response=>{
+              console.log(response);
+              this.link=response.data;
+              this.linkReserved=[...this.link];
+            });
+          },
           // link add
+          linkAdd(){
+            this.$refs['linkTempForm'].validate((valid) => {
+              if (valid) {
+                this.$post('/link',this.linkTemp).then(response=>{//新增link
+                  if(response.code == 200){
+                    this.linkTemp={name:'',url:''};
+                    this.linkAddCallBack();
+                    this.$message({duration: 2000, type: 'success', message: this.$t("tip.addSuccess")});
+                  }else{
+                    this.$message.error(response.msg);
+                  }
+                })
+              } else {
+                return false;
+              }
+            });
+          },
+          linkAddCallBack(){
+            this.$get('/link').then(response=>{
+              this.link.push(response.data[response.data.length-1]);
+              this.linkReserved.push(response.data[response.data.length-1]);
+              this.$store.commit('setLinkData',this.link);
+            });
+          },
           // link edit
           linkEdit(item){
             let index=this.link.findIndex((item1)=>item.id==item1.id);
             this.$set(this.link,index,{...this.link[index],isEdit:true});
           },
           // link update
+          linkUpdate(item){
+            console.log(this.$refs['linkForm'+item.id]);
+            this.$refs['linkForm'+item.id][0].validate((valid) => {
+              if (valid) {
+                this.$put('/link',item).then(response=>{
+                  if(response.code == 200){
+                    let index=this.link.findIndex((item1)=>item.id==item1.id);
+                    this.$set(this.link,index,{...this.link[index],isEdit:false});
+                    this.linkReserved=this.link;
+                    this.$store.commit('setLinkData',this.link);
+                    this.$message({duration: 2000, type: 'success', message: this.$t("tip.saveSuccess")});
+                  }else{
+                    this.$message.error(response.msg);
+                  }
+                })
+              } else {
+                return false;
+              }
+            });
+          },
+          // link cancel
+          linkCancel(item){
+            let index=this.link.findIndex((item1)=>item.id==item1.id);
+            let indexReserved=this.linkReserved.findIndex((item1)=>item.id==item1.id);
+            this.$set(this.link,index,{...this.linkReserved[indexReserved],isEdit:false});
+          },
           // link del
+          linkDel(item){
+            this.$delete('/link?ids='+item.id).then((response)=>{
+              if(response.code == 200){
+                this.link=this.link.filter((item1)=>item.id!==item1.id);
+                this.linkReserved=this.linkReserved.filter((item1)=>item.id!==item1.id);
+                this.$store.commit('setLinkData',this.link);
+                this.$message({duration: 2000, type: 'success', message: this.$t("tip.deleteSuccess")});
+              }else{
+                this.$message.error(response.msg);
+              }
+            });
+          },
+          //openUrl 跳转页面
+          openUrl(item){
+            window.open(item.url)
+          }
         },
         mounted() {
           this.querySetInfo('basic');
@@ -590,10 +694,14 @@
     position: relative;
   }
   .linkBox{
-    position: relative;
+    height: calc(100vh - 100px);
     width: 800px;
   }
-
+  .scrollBox{
+    position: relative;
+    height: calc(100vh - 200px);
+    margin-bottom: 20px;
+  }
   .linkTitle{
     display: flex;
     align-items:center;
@@ -617,12 +725,21 @@
   .linkTitleHandle{
     padding: 0 13px;
   }
-  .linkContent{
+  .linkAddBox{
     display: flex;
-    padding: 5px 0px;
+    padding: 10px 0px;
     border-bottom: 1px solid #dfe1e6;
     font-size: 13px;
     line-height: 34px;
+  }
+  .linkContent{
+    display: flex;
+    padding: 10px 0px;
+    font-size: 13px;
+    line-height: 34px;
+  }
+  .linkContent:not(:last-child){
+    border-bottom: 1px solid #dfe1e6;
   }
   .linkFormContent{
     display: flex;
@@ -637,7 +754,7 @@
     height: 31px;
   }
   .linkTitleUrl{
-    width: 460px;
+    width: 462px;
     margin-right: 12px;
     height: 31px;
   }
@@ -648,11 +765,22 @@
     text-overflow: ellipsis;
     white-space: nowrap;
     height: 31px;
+    cursor: pointer;
+    outline: none;
+  }
+  .linkTitleUrlContent:hover{
+    text-decoration:underline;
   }
   .linkTitleUrl .nz-icon-edit{
     font-size: 12px;
     float: right;
     cursor: pointer;
+  }
+  /deep/ .el-form-item--small .el-form-item__error{
+    padding-top: 0px;
+  }
+  .linkUrlTip{
+    width: 430px;
   }
 </style>
 <style>

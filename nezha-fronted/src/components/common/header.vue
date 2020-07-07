@@ -13,9 +13,7 @@
         </template>
         <template v-for="(item, index) in $store.state.linkData">
           <el-menu-item :index="'0-' + index">
-            <div>
-              <span><a :href='item.url' class="nz-a" target="_blank" :title="item.url">{{item.name}}</a></span>
-            </div>
+              <span class="linkTitle"><a :href='item.url' class="nz-a" target="_blank" :title="item.url">{{item.name}}</a></span>
           </el-menu-item>
         </template>
       </el-submenu>
@@ -858,6 +856,20 @@
     width: 50%;
     float: right;
     border-bottom-right-radius: 8px;
+  }
+  .linkTitle{
+    display: inline-block;
+    width: 100%;
+    font-size: 15px;
+    color: #444444;
+  }
+  .linkTitle:hover{
+    background-color: #eee;
+  }
+  .linkTitle>a{
+    display: inline-block;
+    width: 100%;
+    padding-left: 35px;
   }
 </style>
 <style>
