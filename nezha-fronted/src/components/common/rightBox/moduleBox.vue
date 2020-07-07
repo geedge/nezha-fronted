@@ -692,7 +692,7 @@
         immediate: true,
         deep: true,
         handler(n, o) {
-          if (n.type && n.type.toLowerCase() == 'snmp') {
+          if (!n.id && n.type && n.type.toLowerCase() == 'snmp') {
             n.port = 161;
             this.expandedWalkData = [];
             this.$nextTick(() => {
@@ -701,6 +701,8 @@
             for (let i = 0; i < n.walk.length; i++) {
               this.expandedWalkData.push(n.walk[i].substring(0, n.walk[i].lastIndexOf(".")));
             }
+          } else if (!n.id && n.type && n.type.toLowerCase() == 'http') {
+            n.port = 9100;
           }
         }
       },

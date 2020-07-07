@@ -379,6 +379,16 @@
           box-sizing: border-box;
           height: 26px;
         }
+        .item-tip.deep:nth-of-type(2) {
+          padding-left: 13px;
+          box-sizing: border-box;
+          height: 26px;
+        }
+        .item-tip.deepp:last-of-type {
+          padding-left: 13px;
+          box-sizing: border-box;
+          height: 26px;
+        }
         .tag-value:hover .item-tip-show {
           display: block;
         }

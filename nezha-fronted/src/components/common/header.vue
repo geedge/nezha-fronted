@@ -509,12 +509,12 @@
         //this.$router.go(-1);
       },
       getLinkData(){
-        console.log('aaa');
+        //console.log('aaa');
         this.$get('link').then(response=>{
-          console.log(response);
+          //console.log(response);
           // this.linkData=response.data;
           this.$store.commit('setLinkData',response.data);
-          console.log(this.$store)
+          //console.log(this.$store)
         });
       },
     },
