@@ -629,6 +629,7 @@
               this.link.push(response.data[response.data.length-1]);
               this.linkReserved.push(response.data[response.data.length-1]);
               this.$store.commit('setLinkData',this.link);
+              console.log('1111111');
             });
           },
           // link edit
@@ -650,7 +651,7 @@
                   if(response.code == 200){
                     let index=this.link.findIndex((item1)=>item.id==item1.id);
                     this.$set(this.link,index,{...this.link[index],isEdit:false});
-                    this.linkReserved=this.link;
+                    this.linkReserved=[...this.link];
                     this.$store.commit('setLinkData',this.link);
                     this.$message({duration: 2000, type: 'success', message: this.$t("tip.saveSuccess")});
                   }else{
