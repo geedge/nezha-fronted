@@ -641,7 +641,12 @@
             console.log(this.$refs['linkForm'+item.id]);
             this.$refs['linkForm'+item.id][0].validate((valid) => {
               if (valid) {
-                this.$put('/link',item).then(response=>{
+                let params={
+                  id:item.id,
+                  name:item.name,
+                  url:item.url,
+                };
+                this.$put('/link',params).then(response=>{
                   if(response.code == 200){
                     let index=this.link.findIndex((item1)=>item.id==item1.id);
                     this.$set(this.link,index,{...this.link[index],isEdit:false});
