@@ -218,9 +218,9 @@
                         <span>{{item.url}}</span>
                         <!--</el-tooltip>-->
                       </span>
-                      <i class="nz-icon nz-icon-edit" @click.stop="linkEdit(item)" v-if="item.buildIn=='0'"></i>
                     </div>
                     <div class="linkFormBtn">
+                      <i class="nz-icon nz-icon-edit" @click.stop="linkEdit(item)" v-if="item.buildIn=='0'"></i>
                       <i class="nz-icon nz-icon-delete" @click="linkDel(item)" v-if="item.buildIn=='0'"></i>
                     </div>
                   </div>
@@ -762,7 +762,7 @@
   }
   .linkTitleUrlContent{
     display: inline-block;
-    width: 430px;
+    width: 460px;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -770,16 +770,16 @@
     cursor: pointer;
     outline: none;
   }
-  .nz-icon-delete{
+  .linkFormBtn .nz-icon-delete{
     cursor: pointer;
     color: #ee6723;
+    margin-left: 10px;
   }
   /*.linkTitleUrlContent:hover{*/
     /*text-decoration:underline;*/
   /*}*/
-  .linkTitleUrl .nz-icon-edit{
-    font-size: 12px;
-    float: right;
+  .linkFormBtn .nz-icon-edit{
+    font-size: 14px;
     cursor: pointer;
   }
   .nz-icon-create-square{

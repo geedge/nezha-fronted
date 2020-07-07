@@ -759,6 +759,9 @@
     align-items: center;
     height: 18px !important;
   }
+  .nz-icon-navmore{
+    font-size: 18px;
+  }
 </style>
 
 <style scoped>
