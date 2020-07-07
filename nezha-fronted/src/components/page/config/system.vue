@@ -56,7 +56,7 @@
                 <el-input v-model.number="basic.scrape_interval" ></el-input><span class="nz-input-append">s</span>
               </el-form-item>
               <el-form-item :label="$t('config.system.basic.storageRetention')" prop="storage_local_retention">
-                <el-input v-model.number="basic.storage_local_retention" ></el-input><span class="nz-input-append">h</span>
+                <el-input v-model.number="basic.storage_local_retention" ></el-input><span class="nz-input-append">d</span>
               </el-form-item>
               <el-form-item :label="$t('config.system.basic.timezone')" prop="timezone">
 <!--                <el-input v-model.number="basic.timezone" ></el-input>-->
