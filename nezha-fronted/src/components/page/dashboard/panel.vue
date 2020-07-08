@@ -226,7 +226,7 @@
         }
         this.filter.searchName='';
         //this.$refs.searchInput.select();
-        this.showPanel = val
+        this.showPanel = val;
         this.filter.panelId = this.showPanel.id;
         // let curTime = this.$refs.calendarPanel.getCurrentTime();
         let curTime=this.searchTime;
@@ -429,15 +429,13 @@
             let isInitData = false;
             if (response.data.list.length > 0) {
               if (this.$store.state.showPanel.id !== 0 && this.$store.state.showPanel.name !== '') {
-                this.showPanel.name = this.$store.state.showPanel.name;
-                this.showPanel.id = this.$store.state.showPanel.id;
+                this.showPanel = this.$store.state.showPanel;
               }
               if (clearShowPanel) {
                 this.showPanel.id = '';
               }
-              if (this.showPanel.id === '') {
-                this.showPanel.id = response.data.list[0].id;
-                this.showPanel.name = response.data.list[0].name;
+              if (!this.showPanel.id) {
+                this.showPanel = response.data.list[0];
                 this.filter.panelId = this.showPanel.id;
                 this.getData(this.filter);
                 isInitData = true;
@@ -453,7 +451,7 @@
             }
             this.$store.state.showPanel.id = 0;
             this.$store.state.showPanel.name = '';
-
+            this.$store.state.showPanel.type = 'dashboard';
           }else {
             if(response.msg){
               this.$message.error(response.msg);
@@ -580,7 +578,7 @@
           });
         }
         this.panelDataDragTmp = [...this.panelData];
-        console.log(this.panelDataDragTmp)
+        //console.log(this.panelDataDragTmp)
       },
       end (event) {
         // console.info("end event:", event)

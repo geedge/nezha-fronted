@@ -494,77 +494,88 @@
       queryAlertTrendData() {
         this.$refs.chartbox.startLoading();
         this.chartSeries = [];
-
-        this.$get('/prom/api/v1/query_range', this.trendParamHandle('rx')).then(response=>{
-          if(response.status == 'success'){
-            if(response.data.result){
-              let series={
-                name: 'RX',
-                symbol:'none',  //去掉点
-                smooth:0.2,  //曲线变平滑
-                data: [],
-                type:'line',
-                lineStyle: {
-                  width: 1,
-                  opacity: 0.9
-                },
-              };
-              if (response.data.result.length > 0) {
-                series.data=response.data.result[0].values.map((item)=>{
-                  return [item[0]*1000,item[1]];
-                });
+        let rxPromise = new Promise((resolve, reject) => {
+          this.$get('/prom/api/v1/query_range', this.trendParamHandle('rx')).then(response=>{
+            if(response.status == 'success'){
+              if(response.data.result){
+                let series={
+                  name: 'RX',
+                  symbol:'none',  //去掉点
+                  smooth:0.2,  //曲线变平滑
+                  data: [],
+                  type:'line',
+                  lineStyle: {
+                    width: 1,
+                    opacity: 0.9
+                  },
+                };
+                if (response.data.result.length > 0) {
+                  series.data=response.data.result[0].values.map((item)=>{
+                    return [item[0]*1000,item[1]];
+                  });
+                }
+                this.chartSeries.push(series);
+                if (this.chartSeries.length == 2) {
+                  this.$refs.chartbox.modifyOption("tooltip", "backgroundColor", "rgba(221,228,237,1)");
+                  this.$refs.chartbox.modifyOption("tooltip", "textStyle", {color: "#000"});
+                  this.$refs.chartbox.modifyOption("grid", "top", 30);
+                  this.$refs.chartbox.modifyOption("grid", "left", 0);
+                  this.$refs.chartbox.modifyOption("grid", "right", 30);
+                  this.$refs.chartbox.modifyOption("grid", "bottom", 8);
+                  this.$refs.chartbox.modifyOption("grid", "containLabel", true);
+                  this.$refs.chartbox.setSeries(this.chartSeries);
+                }
               }
-              this.chartSeries.push(series);
-              if (this.chartSeries.length == 2) {
-                this.$refs.chartbox.modifyOption("tooltip", "backgroundColor", "rgba(221,228,237,1)");
-                this.$refs.chartbox.modifyOption("tooltip", "textStyle", {color: "#000"});
-                this.$refs.chartbox.modifyOption("grid", "top", 30);
-                this.$refs.chartbox.modifyOption("grid", "left", 0);
-                this.$refs.chartbox.modifyOption("grid", "right", 30);
-                this.$refs.chartbox.modifyOption("grid", "bottom", 8);
-                this.$refs.chartbox.modifyOption("grid", "containLabel", true);
-                this.$refs.chartbox.setSeries(this.chartSeries);
-                this.$refs.chartbox.endLoading();
-              }
+              resolve(true);
+            }else{
+              console.error(response);
+              resolve(false);
             }
-          }else{
-            console.error(response)
-          }
+          });
         });
-        this.$get('/prom/api/v1/query_range', this.trendParamHandle('tx')).then(response=>{
-          if(response.status == 'success'){
-            if(response.data.result){
-              let series={
-                name: 'TX',
-                symbol:'none',  //去掉点
-                smooth:0.2,  //曲线变平滑
-                data: [],
-                type:'line',
-                lineStyle: {
-                  width: 1,
-                  opacity: 0.9
-                },
-              };
-              if (response.data.result.length > 0) {
-                series.data=response.data.result[0].values.map((item)=>{
-                  return [item[0]*1000,item[1]];
-                });
+        let txPromise = new Promise((resolve, reject) => {
+          this.$get('/prom/api/v1/query_range', this.trendParamHandle('tx')).then(response=>{
+            if(response.status == 'success'){
+              if(response.data.result){
+                let series={
+                  name: 'TX',
+                  symbol:'none',  //去掉点
+                  smooth:0.2,  //曲线变平滑
+                  data: [],
+                  type:'line',
+                  lineStyle: {
+                    width: 1,
+                    opacity: 0.9
+                  },
+                };
+                if (response.data.result.length > 0) {
+                  series.data=response.data.result[0].values.map((item)=>{
+                    return [item[0]*1000,item[1]];
+                  });
+                }
+                this.chartSeries.push(series);
+                if (this.chartSeries.length == 2) {
+                  this.$refs.chartbox.modifyOption("tooltip", "backgroundColor", "rgba(221,228,237,1)");
+                  this.$refs.chartbox.modifyOption("tooltip", "textStyle", {color: "#000"});
+                  this.$refs.chartbox.modifyOption("grid", "top", 30);
+                  this.$refs.chartbox.modifyOption("grid", "left", 0);
+                  this.$refs.chartbox.modifyOption("grid", "right", 30);
+                  this.$refs.chartbox.modifyOption("grid", "bottom", 8);
+                  this.$refs.chartbox.setSeries(this.chartSeries);
+                  //this.$refs.chartbox.endLoading();
+                }
               }
-              this.chartSeries.push(series);
-              if (this.chartSeries.length == 2) {
-                this.$refs.chartbox.modifyOption("tooltip", "backgroundColor", "rgba(221,228,237,1)");
-                this.$refs.chartbox.modifyOption("tooltip", "textStyle", {color: "#000"});
-                this.$refs.chartbox.modifyOption("grid", "top", 30);
-                this.$refs.chartbox.modifyOption("grid", "left", 0);
-                this.$refs.chartbox.modifyOption("grid", "right", 30);
-                this.$refs.chartbox.modifyOption("grid", "bottom", 8);
-                this.$refs.chartbox.setSeries(this.chartSeries);
-                this.$refs.chartbox.endLoading();
-              }
+              resolve(true);
+            }else{
+              console.error(response)
+              resolve(false);
             }
-          }else{
-            console.error(response)
-          }
+          });
+        });
+        Promise.all([rxPromise, txPromise]).then(resolve => {
+          this.$refs.chartbox.endLoading();
+        }, reject => {
+          this.$refs.chartbox.endLoading();
         });
       },
       trendParamHandle(t) {

@@ -276,7 +276,7 @@
             prop: 'endAt',
             show: true,
           }, {
-            label: this.$t('alert.list.current'),
+            label: this.$t('overall.value'),
             prop: 'current',
             show: true
           }, {

@@ -33,7 +33,8 @@ const store = new Vuex.Store({
     },
     showPanel:{
       id:0,
-      name:''
+      name:'',
+      type: "dashboard"
     },
     consoleShow:false,//是否显示console窗口
     consoleCount:0,//当前console窗口数

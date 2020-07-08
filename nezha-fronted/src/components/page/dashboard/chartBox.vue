@@ -394,13 +394,13 @@
       'promql-input': promqlInput,
     },
     mounted() {
-      if(this.showPanel){
-        this.panelName2 = this.showPanel.name;
-      }
       this.rightBox.show = true;
       this.isUrl = false;
       this.isSingleStat = false;
       this.$nextTick(() => {
+        if(this.showPanel){
+          this.panelName2 = this.showPanel.name;
+        }
         this.initElements();
       });
     },

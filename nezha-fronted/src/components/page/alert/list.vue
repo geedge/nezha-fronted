@@ -69,9 +69,10 @@
           >
             <template slot-scope="scope" :column="item">
               <template v-if="item.prop == 'alertRule'">
-                <div class="link too-long-split"
+                <!--<div class="link too-long-split"
                    @click="viewRule(scope.row[item.prop].id)" :id="'view-rule-'+scope.row[item.prop].id"
-                   v-if="scope.row[item.prop].alertName">{{scope.row[item.prop].alertName}}</div>
+                   v-if="scope.row[item.prop].alertName">{{scope.row[item.prop].alertName}}</div>-->
+                <span class="too-long-split"v-if="scope.row[item.prop].alertName">{{scope.row[item.prop].alertName}}</span>
                 <template v-else>-</template>
               </template>
               <!--<div v-else-if="item.prop == 'type'" class="content-right-options">

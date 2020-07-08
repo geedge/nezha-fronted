@@ -75,30 +75,34 @@
 
                       <div class="content-item-value item-tip" :id="`value-${index}-${i}`" :class="{'content-item-value-muti': Array.isArray(value) && value.length > 0}">
                         <template v-if="Array.isArray(value) && value.length>0">
-                          <div v-if="typeof value[0] == 'string'" class="item-value-sub" v-for="(_item, _index) in value" :key="_index">{{_item}}</div>
-                          <el-table
-                            v-else
-                            class="nz-table asset-info-table"
-                            :data="value"
-                            tooltip-effect="light"
-                            height="100%"
-                            ref="dataTable"
-                            v-scrollBar:el-table="'small'"
-                          >
-                            <el-table-column
-                              :resizable="false"
-                              v-for="(_item, _index) in setLabels(value)"
-                              v-if="_item.show"
-                              :key="`col-${_index}`"
-                              :label="_item.label"
+                          <template v-if="typeof value[0] == 'string'">
+                            <div class="item-value-sub" v-for="(_item, _index) in value" :key="_index">{{_item}}</div>
+                          </template>
+                          <template v-else>
+                            <el-table
+                              class="nz-table asset-info-table"
+                              :data="value"
+                              tooltip-effect="light"
+                              height="100%"
+                              ref="dataTable"
+                              v-scrollBar:el-table="'small'"
                             >
-                              <template slot-scope="scope" :column="_item">
-                                <template >
-                                  <span v-html="scope.row[_item.prop]"></span>
+                              <el-table-column
+                                :resizable="false"
+                                v-for="(_item, _index) in setLabels(value)"
+                                v-if="_item.show"
+                                :key="`col-${_index}`"
+                                :label="_item.label"
+                              >
+                                <template slot-scope="scope" :column="_item">
+                                  <template >
+                                    <span v-html="scope.row[_item.prop]"></span>
+                                  </template>
                                 </template>
-                              </template>
-                            </el-table-column>
-                          </el-table>
+                              </el-table-column>
+                            </el-table>
+                          </template>
+
                         </template>
                         <template v-else-if="key">
                           <span class="content-text">{{value ? value : "&nbsp;"}}</span>
@@ -201,11 +205,11 @@
                           <template v-for="(module, mProjectName, ti) in item.data._module_" v-if="mProjectName == key">
                             <div class="content-item" @click.stop="showDeep(`deep-${index}-${i}-${ti}-${fi}`)" v-for="(moduleNum, moduleName, fi) in module" v-if="moduleName != '_endpoint_'">
                               <div class="content-item-key item-tip deep" :id="`key-${index}-${i}-${ti}-${fi}`">
-                              <span class="content-text">
-                                <span><i v-if="module._endpoint_[moduleName]" :class="{'el-icon-caret-right': deepShow.indexOf(`deep-${index}-${i}-${ti}-${fi}`) == -1,'el-icon-caret-bottom': deepShow.indexOf(`deep-${index}-${i}-${ti}-${fi}`) > -1}"></i></span>
-                                <span>{{moduleName}}</span>
-                                <!--<span v-if="module._endpoint_[moduleName]">{{Object.keys(module._endpoint_[moduleName]).length-1}}个endpoint</span>-->
-                              </span>
+                                <span class="content-text">
+                                  <span><i v-if="module._endpoint_[moduleName]" :class="{'el-icon-caret-right': deepShow.indexOf(`deep-${index}-${i}-${ti}-${fi}`) == -1,'el-icon-caret-bottom': deepShow.indexOf(`deep-${index}-${i}-${ti}-${fi}`) > -1}"></i></span>
+                                  <span>{{moduleName}}</span>
+                                  <!--<span v-if="module._endpoint_[moduleName]">{{Object.keys(module._endpoint_[moduleName]).length-1}}个endpoint</span>-->
+                                </span>
                                 <div class="item-tip-hide item-tip-key el-popover" :class="itemTip(`key-${index}-${i}-${ti}`, moduleName, fi, ready)">{{moduleName}}</div>
                               </div>
                               <div class="content-item-value item-tip deep" :id="`value-${index}-${i}-${ti}-${fi}`">
@@ -377,20 +381,15 @@
         this.$chartResizeTool.start(vm, this.data, e);
       },
       setLabels:function(source){
-        let labels=[];
-        source.forEach(item=>{
-          labels=labels.concat(Object.keys(item))
-        })
-        labels=Array.from(new Set(labels));
-
-        labels=labels.map(item=>{
+        let labels = Object.keys(source[0]);
+        labels = labels.map(item=>{
           return{
             label:this.replaceSplit(item),
             prop:item,
             show:true,
           }
         });
-        console.info(labels)
+        console.info(labels);
         return labels;
       },
       replaceSplit(key){
