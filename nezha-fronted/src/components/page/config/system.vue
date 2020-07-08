@@ -568,8 +568,6 @@
             // console.log(evt)
           },
           end: function (evt) {
-            console.log(evt);
-            console.log(this.link,this.linkReserved);
             let length=this.link.length;
             if(evt.newIndex==evt.oldIndex){ // 如果没有移动返回
               return
@@ -587,9 +585,7 @@
               parmas.prev=this.link[evt.newIndex-1].id;
               parmas.next=this.link[evt.newIndex+1].id;
             }
-            console.log(parmas)
             this.$put('/link/modify',parmas).then((response)=>{
-              console.log(response);
               this.$store.commit('setLinkData',this.link);
             })
           },
@@ -601,7 +597,6 @@
             this.linkTemp={name:'',url:''};
             this.$refs['linkTempForm'].clearValidate();
             this.$get('/link').then(response=>{
-              console.log(response);
               this.link=response.data;
               this.linkReserved=[...this.link];
             });
@@ -629,7 +624,6 @@
               this.link.push(response.data[response.data.length-1]);
               this.linkReserved.push(response.data[response.data.length-1]);
               this.$store.commit('setLinkData',this.link);
-              console.log('1111111');
             });
           },
           // link edit
@@ -639,7 +633,6 @@
           },
           // link update
           linkUpdate(item){
-            console.log(this.$refs['linkForm'+item.id]);
             this.$refs['linkForm'+item.id][0].validate((valid) => {
               if (valid) {
                 let params={

@@ -1,7 +1,7 @@
 <template>
   <div class="chart-room" @mouseenter="mouseEnterChart" @mouseleave="mouseLeaveChart" ref="chartRoom">
     <loading  ref="loading"></loading>
-
+    <div class="showMore" v-if="legendAll.length !== legend.length"><i class="nz-icon nz-icon-jinggao"></i>{{$t("dashboard.panel.moreTitle")}} <span class="moreChart" @click="showMore">{{$t("dashboard.panel.showAll")+legendAll.length}}</span></div>
     <div class="chart-header">{{chartTitle}}</div>
 
     <div class="chart-body" ref="chartBody" :id="chartId" ></div>
@@ -44,10 +44,13 @@
       return {
         chart:null,
         option:null,
+        optionSeriesAll:null,
         chartId: this.name + '-'+this.guid()+'-'+new Date().getTime(),
         legend:[],
+        legendAll:[],
         colors:chartConfig.getBgColorList(),
         noData:false,
+        dataSize:20,
       }
     },
     created() {
@@ -64,7 +67,8 @@
         this.$set(this.option[target],name,obj)
       },
       setLegend:function(legend){
-        this.legend=legend;
+        this.legendAll=legend;
+        this.legend=legend.filter((item,index)=>index<this.dataSize);
         this.resize();
       },
       setSeries:function(series){
@@ -103,8 +107,11 @@
         // console.log(this.option)
         if(this.series){
           this.$set(this.option,'series',this.series);
+          console.log(this.series,'11111');
           this.noData=false;
           this.chart.clear();
+          this.optionSeriesAll=[...this.option.series];
+          this.option.series=this.option.series.filter((item,index)=>index<this.dataSize);
           this.chart.setOption(this.option);
         }else{
           this.noData=true;
@@ -323,7 +330,15 @@
         if(this.chart) {
           this.chart.clear();
         }
-      }
+      },
+      showMore(){// 显示更多
+        this.legend=this.legendAll;
+        let option={
+          series:this.optionSeriesAll
+        };
+        this.chart.setOption(option);
+        this.chart.resize()
+      },
     },
     mounted() {
       this.chart=echarts.init(document.getElementById(this.chartId));
@@ -343,6 +358,23 @@
  @import "../../../charts/chart.scss";
 </style>-->
 <style scoped>
+  .showMore{
+    text-align: center;
+    font-size: 12px;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1;
+  }
+  .nz-icon-jinggao{
+    color: rgb(255, 133, 27);
+    margin-right: 5px;
+    font-size: 14px;
+  }
+  .moreChart{
+    color: rgb(87, 148, 242);
+    cursor: pointer;
+  }
   .chart-room{
     width: 100%;
     height: 100%;
