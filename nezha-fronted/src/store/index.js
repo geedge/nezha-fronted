@@ -43,6 +43,9 @@ const store = new Vuex.Store({
     linkData:[],//导航数据
   },
   getters: {
+    getlinkData(state){
+      return state.linkData
+    }
   },
   mutations: {
     setProject(state, project) {

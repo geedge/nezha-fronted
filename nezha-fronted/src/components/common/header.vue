@@ -11,7 +11,7 @@
         <template slot="title">
           <i class="nz-icon-navmore nz-icon"></i>
         </template>
-        <template v-for="(item, index) in $store.state.linkData">
+        <template v-for="(item, index) in linkData">
           <el-menu-item :index="'0-' + index">
               <span class="linkTitle"><a :href='item.url' class="nz-a" target="_blank" :title="item.name">{{item.name}}</a></span>
           </el-menu-item>
@@ -551,6 +551,9 @@
       },
       currentProjectWatch(){
         return this.$store.state.currentProject;
+      },
+      linkData(){
+        return this.$store.getters.getlinkData
       }
     },
     watch: {
