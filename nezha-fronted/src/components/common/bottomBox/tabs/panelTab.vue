@@ -67,7 +67,7 @@
     </div>
     <button class="to-top" :class="{'to-top-is-hover': tableHover}" v-show="showTopBtn" @click="$toTop('el', $refs.dashboardScrollbar.wrap)" style="bottom: 0;"><i class="nz-icon nz-icon-top"></i></button>
 
-    <chart-box v-if="rightBox.show" ref="addChartModal" :showPanel="showPanel" :panel-data="panelData" @on-create-success="createSuccess" @on-delete-success="delChartOk"></chart-box>
+    <chart-box @close="rightBox.show = false" v-if="rightBox.show" ref="addChartModal" :showPanel="showPanel" :panel-data="panelData" @on-create-success="createSuccess" @on-delete-success="delChartOk"></chart-box>
   </div>
 </template>
 
@@ -217,9 +217,11 @@
       },
       // 编辑图表信息,打开编辑弹窗
       editData(data) {
-        this.$refs.addChartModal.setTitle(this.$t("dashboard.panel.editChartTitle"));
-        this.$refs.addChartModal.show(true);
-        this.$refs.addChartModal.editData(data, this.panelId);
+        this.rightBox.show = true;
+        this.$nextTick(() => {
+          this.$refs.addChartModal.setTitle(this.$t("dashboard.panel.editChartTitle"));
+          this.$refs.addChartModal.editData(data, this.panelId);
+        });
       },
       // 移除图表:弹出确认框询问
       removeData(data,from) {

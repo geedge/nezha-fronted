@@ -46,11 +46,11 @@
                 </div>
                 <template v-else>
                   <div v-for="module in getProjectModule(item.id)" class="sidebar-info-sub-item" :class="{'sidebar-info-item-active': module.id == currentModule.id}" @click="changeModule(module)" :id="'project-module-'+module.id">
-                    <el-popover v-if="module.name.length > 16" trigger="hover" placement="top-start" :content="module.name" >
-                      <span slot="reference">{{module.name}}</span>
-                    </el-popover>
-                    <span v-else>{{module.name}}</span>
-                    <div v-show="module.buildIn != 1" class="hid-div side-bar-menu-edit sub-side-bar-menu-edit" @click.stop="toEditModule(module)" :id="'project-module-edit-'+module.id" ><i class="nz-icon nz-icon-edit"></i></div>
+                    <div :id="`module-${module.id}`" class="item-tip">
+                      <div class="item-tip-hide item-tip-key el-popover" :class="itemTip(module.id, module.name, ready)">{{module.name}}</div>
+                      <span class="too-long-split" style="width: 120px;">{{module.name}}</span>
+                      <div v-show="module.buildIn != 1" class="hid-div side-bar-menu-edit sub-side-bar-menu-edit" @click.stop="toEditModule(module)" :id="'project-module-edit-'+module.id" ><i class="nz-icon nz-icon-edit"></i></div>
+                    </div>
                   </div>
                 </template>
               </div>
@@ -195,7 +195,7 @@
       vm = this;
       return {
         loading: false,
-
+        ready: false,
         assetDetail: {}, //asset详情
         endpointDetail: [],
         targetTab: '',
@@ -782,10 +782,9 @@
       if (pageSize) {
         this.endpointPageObj.pageSize = pageSize
       }
-      //this.detailProjectInfo();
-      // setTimeout(()=>{
-      //   this.getEndpointTableData();
-      // }, 200);
+      setTimeout(() => {
+        this.ready = true;
+      }, 300);
       this.$nextTick(() => {
         //绑定滚动条事件，控制top按钮
         let el = this.$refs.endpointTable.$el.querySelector(".el-table__body-wrapper");
@@ -829,6 +828,23 @@
       },
       moduleListReloadWatch() {
         return this.$store.state.moduleListChange;
+      },
+      itemTip() {
+        return function(id, content, ready) {
+          let className = "item-tip-show";
+          this.$nextTick(() => {
+            if (ready) {
+              let cellDom = document.querySelector(`#module-${id}`);
+              let spanDom = document.querySelector(`#module-${id}>span`);
+              if (cellDom.offsetWidth - 16 <= spanDom.offsetWidth) {
+                document.querySelector(`#module-${id}>.el-popover`).classList.add(className);
+              } else {
+                document.querySelector(`#module-${id}>.el-popover`).classList.remove(className);
+              }
+            }
+          });
+          return "";
+        }
       },
     },
     watch: {
@@ -1070,6 +1086,17 @@
   }
   .sub-side-bar-menu-edit{
     margin-right: 18px;
+  }
+
+  .item-tip-hide {
+    display: none;
+    position: absolute;
+    bottom: 34px;
+    min-width: 50px;
+    white-space: normal;
+  }
+  .item-tip:hover>.item-tip-show {
+    display: block;
   }
 </style>
 <style>

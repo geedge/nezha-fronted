@@ -193,7 +193,7 @@ instance_cpu_time_ns{app="fox", proc="widget", rev="4d3a513", env="prod", job="c
             </div>
 
         </div>
-        <chart-box v-if="rightBox.show" ref="addChartModal" :panel-data="panelData" @on-create-success="createSuccess" :show-panel="{}"></chart-box>
+        <chart-box v-if="rightBox.show" ref="addChartModal" @close="handleBox(false)" :panel-data="panelData" @on-create-success="createSuccess" :show-panel="{}"></chart-box>
         <element-set
           :allowed-all="true"
           v-clickoutside="elementsetHide"
@@ -447,22 +447,35 @@ instance_cpu_time_ns{app="fox", proc="widget", rev="4d3a513", env="prod", job="c
       changeTableVisible: function () {
         this.tableVisible = !this.tableVisible;
       },
+      handleBox(show) {
+        this.rightBox.show = show;
+      },
       saveChart: function () {
         this.rightBox.show = true;
-        this.$refs.addChartModal.setTitle(this.$t("dashboard.panel.createChartTitle"));
-        //this.$refs.addChartModal.show(true);
-        let metricInfo = {};
-        metricInfo.elements = [];
-        // {"metric":"ALERTS_FOR_STATE","elements":[{"expression":"ALERTS_FOR_STATE{project='kafka',module='node_exporter'}","type":"normal"}]}
-        for (let i = 0; i < this.expressions.length; i++) {
-          if (this.expressions[i] != '') {
-            let type = 'expert';
-            metricInfo.metric = this.expressions[i];
-            metricInfo.elements.push({expression: this.expressions[i], type: type});
+        this.$nextTick(() => {
+          this.$refs.addChartModal.setTitle(this.$t("dashboard.panel.createChartTitle"));
+          let chart = {
+            id:'',
+            title: '',
+            type:'line',
+            span:12,
+            height:'400',
+            unit: this.chartUnit,
+            param:{
+              url:'',
+              threshold:'',
+            },
+            elements:[],
+            panel: '',
+            sync: 0
+          };
+          for (let i = 0; i < this.expressions.length; i++) {
+            if (this.expressions[i] !=  '') {
+              chart.elements.push({chartId: "", expression: this.expressions[i], type: 'expert'});
+            }
           }
-        }
-        this.$refs.addChartModal.createData(-1, metricInfo);
-        this.$refs.addChartModal.setUnit(this.chartUnit)
+          this.$refs.addChartModal.editData(chart);
+        });
       },
       createSuccess(type, response, param, panel) { //添加chart成功
         this.$confirm(this.$t("dashboard.metric.goPanelTip"), this.$t("tip.saveSuccess"), {

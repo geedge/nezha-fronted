@@ -104,7 +104,7 @@
     </left-menu>
 
     <panel-box :panel="panel" @reload="panelReload" @reloadForDel="panelReloadForDel" ref="panelBox"></panel-box>
-    <chart-box v-if="rightBox.show" ref="addChartModal" :showPanel="showPanel" :panel-data="panelData" @reload="panelReload" @on-create-success="createSuccess" @on-delete-success="delChartOk" @reloadOnlyPanel="panelReloadOnlyPanel"></chart-box>
+    <chart-box @close="rightBox.show = false" v-if="rightBox.show" ref="addChartModal" :showPanel="showPanel" :panel-data="panelData" @reload="panelReload" @on-create-success="createSuccess" @on-delete-success="delChartOk" @reloadOnlyPanel="panelReloadOnlyPanel"></chart-box>
   </div>
 </template>
 

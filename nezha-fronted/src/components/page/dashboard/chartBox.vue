@@ -172,7 +172,7 @@
 
             <div v-if="!isUrl&&!isAlert" class="right-box-sub-title">
               <span>{{$t('alert.config.expr')}}</span>
-              <span class="float-right" @click="addExpression"><i style="font-size: 16px; cursor: pointer;" class="nz-icon nz-icon-create-square"></i></span>
+              <span v-if="!isSingleStat" class="float-right" @click="addExpression"><i style="font-size: 16px; cursor: pointer;" class="nz-icon nz-icon-create-square"></i></span>
             </div>
             <div v-if="isAlert" class="right-box-sub-title">{{$t('dashboard.panel.chartForm.alertParam.param')}}</div>
             <div v-if="!isUrl" class="line-100"></div>
@@ -181,7 +181,7 @@
               <alert-chart-param ref="alertParamBox" @on-enter-complate="getAlertParam"></alert-chart-param>
             </el-row>
 
-            <el-row v-if="!isUrl && !isSingleStat&&!isAlert" class="element-item" style="" v-for="index of promqlKeys.length" :key="'ele' + index">
+            <el-row v-if="!isUrl &&!isAlert" class="element-item" style="" v-for="index of promqlKeys.length" :key="'ele' + index">
               <!--<chart-metric ref="chartTag"
                             :pointer="index"
                             :metric-list="metricList"
@@ -204,51 +204,31 @@
                 @removeExpression="removeExpression"
               ></promql-input>
               <el-row>
-                <el-col style="width: 120px; padding-right: 20px; text-align: right; color: #666">
-                  {{$t('dashboard.panel.chartForm.legend')}}&nbsp;
-                  <el-popover :content="$t('dashboard.panel.chartForm.legendTip')" placement="top" width="150" trigger="hover">
-                    <i slot="reference" class="nz-icon nz-icon-info-normal" style="font-size: 12px; -webkit-transform:scale(0.75);display:inline-block;" @mouseover="rz"></i>
-                  </el-popover>
-                </el-col>
-                <el-col style="width: calc(100% - 120px);">
-                  <el-input v-model="legends[index-1]" type="text" size="small"></el-input>
-                </el-col>
+                <template v-if="chart.type != 'singleStat'">
+                  <el-col style="width: 120px; padding-right: 20px; text-align: right; color: #666">
+                    {{$t('dashboard.panel.chartForm.legend')}}&nbsp;
+                    <el-popover :content="$t('dashboard.panel.chartForm.legendTip')" placement="top" width="150" trigger="hover">
+                      <i slot="reference" class="nz-icon nz-icon-info-normal" style="font-size: 12px; -webkit-transform:scale(0.75);display:inline-block;" @mouseover="rz"></i>
+                    </el-popover>
+                  </el-col>
+                  <el-col style="width: calc(100% - 120px);">
+                    <el-input v-model="legends[index-1]" type="text" size="small"></el-input>
+                  </el-col>
+                </template>
+                <template v-else>
+                  <el-col style="width: 120px; padding-right: 20px; text-align: right; color: #666">
+                    {{$t('dashboard.panel.chartForm.statistics')}}&nbsp;
+                  </el-col>
+                  <el-col style="width: calc(100% - 120px);">
+                    <el-select popper-class="chart-box-dropdown-mini" v-model="statistics" placeholder="" size="small">
+                      <el-option v-for="item in statisticsList" :key="item.id" :label="item.name" :value="item.id">
+                        <span class="panel-dropdown-label-txt" >{{item.name}}</span>
+                      </el-option>
+                    </el-select>
+                  </el-col>
+                </template>
               </el-row>
             </el-row>
-
-            <el-row v-if="isSingleStat" class="element-item" v-for="(elem, index) in elements" :key="'ele' + index">
-              <chart-metric ref="chartTag"
-                            :has-legend="false"
-                            :is-single-stat="true"
-                            :pointer="index"
-                            :metric-list="metricList"
-                            :metricCascaderList="metricCascaderList"
-                            :metricAllData="metricAllData"
-                            :count-total="elements.length"
-                            @on-delete-target="deleteTarget"
-                            @sub-save-ok="subOk"
-                            @on-add-target-success="getTarget"
-              ></chart-metric>
-            </el-row>
-<!--
-            <el-form-item prop="param.statistics" v-show="isSingleStat">
-              <el-row :gutter="4">
-                <el-col :span="4">
-                  {{$t('dashboard.panel.chartForm.statistics')}}&nbsp;
-                </el-col>
-                <el-col :span="20">
-                  <el-select class="right-box-row-with-btn" popper-class="chart-box-dropdown-mini" v-model="chart.param.statistics" placeholder="" size="small">
-                    <el-option v-for="item in statisticsList" :key="item.id" :label="item.name" :value="item.id">
-                      <span class="panel-dropdown-label-txt" >{{item.name}}</span>
-                    </el-option>
-                  </el-select>
-                </el-col>
-              </el-row>
-            </el-form-item>
--->
-            <!--<button v-if="!isUrl && !isSingleStat&& !isAlert" type="button" @click="addTarget" class="nz-btn nz-btn-size-normal nz-btn-style-light" style="margin-left: 1px;">
-              <span class="top-tool-btn-txt">{{$t('dashboard.panel.chartForm.addMetric')}}</span>
-            </button>-->
           </el-form>
         </el-scrollbar>
 
@@ -299,12 +279,46 @@
           show: false,
           title: this.$t('dashboard.panel.createChartTitle'),
         },
-
+        statisticsList:[
+          {
+            id:"min",
+            name:this.$t("dashboard.panel.chartForm.statisticsVal.min")
+          },
+          {
+            id:"max",
+            name:this.$t("dashboard.panel.chartForm.statisticsVal.max")
+          },
+          {
+            id:"average",
+            name:this.$t("dashboard.panel.chartForm.statisticsVal.average")
+          },
+          {
+            id:"total",
+            name:this.$t("dashboard.panel.chartForm.statisticsVal.total")
+          },
+          {
+            id:"first",
+            name:this.$t("dashboard.panel.chartForm.statisticsVal.first")
+          },
+          {
+            id:"last",
+            name:this.$t("dashboard.panel.chartForm.statisticsVal.last")
+          },
+          {
+            id:"range",
+            name:this.$t("dashboard.panel.chartForm.statisticsVal.range")
+          },
+          {
+            id:"different",
+            name:this.$t("dashboard.panel.chartForm.statisticsVal.different")
+          },
+        ],
         promqlCount: 1,
         promqlKeys: [],
         elementIds: [],
         expressions: [],
         legends: [],
+        statistics: "",
 
         editInfo: {},
         chart: {
@@ -531,15 +545,8 @@
       esc() {
         this.rightBox.show = false;
         setTimeout(() => {
-          this.$parent.rightBox.show = false;
+          this.$emit("close");
         }, 200);
-        /*if (this.rightBox.show) {
-          this.rightBox.show = false;
-          //this.editParamBox.show = false;
-          this.$refs.chartForm.resetFields();//清空表单
-          this.panelName2 = '';
-          this.chart.id='';//不清除，再次打开创建图表，会显示删除按钮
-        }*/
       },
 
       /*metric部分相关方法--begin*/
@@ -721,10 +728,14 @@
               sync: this.chart.sync
             };
             if(this.chart.type === 'singleStat'){
-              params.param.statistics=target.statistics;
+              params.param.statistics=this.statistics;
+            } else {
+              delete params.param.statistics;
             }
             if(this.chart.type==='line'||this.chart.type==='bar'||this.chart.type==='stackArea'){
               params.param.threshold=this.chart.param.threshold;
+            } else {
+              delete params.param.threshold;
             }
             //生成指标数组
             const elements = [];
@@ -806,6 +817,11 @@
               item.saveTarget(index);
             });
           }*/
+          if(this.chart.type == 'singleStat'){
+            this.$set(this.chart.param, "statistics", this.statistics);
+          } else {
+            delete this.chart.param.statistics;
+          }
           if (this.expressions[0]) {
             this.chart.elements = [];
             this.expressions.forEach((expr, i) => {
@@ -921,9 +937,7 @@
             });
 
           } else {
-            console.log(this.$refs)
             this.$nextTick(() => {
-
               this.$refs.chartTag[0].setMdata(elementInfo.elements[0]);
             });
           }
@@ -956,11 +970,16 @@
       // 编辑chart时使用, set_tdata
       editData(data, panelId) {
         //alert('data='+JSON.stringify(data)+"=="+panelId);
-        this.panelId = panelId;
-        let temp = this.panelData.filter((item) => {
-          return item.id == panelId;
-        });
-        this.panelName2 = temp[0].name;
+        if (!panelId) {
+          this.panelId = 0;
+          this.panelName2 = "";
+        } else {
+          this.panelId = panelId;
+          let temp = this.panelData.filter((item) => {
+            return item.id == panelId;
+          });
+          this.panelName2 = temp[0].name;
+        }
         this.isedit = true;
         //this.chartModal = true;
         this.editInfo = data;
@@ -976,27 +995,14 @@
           this.chart.param.url = data.param.url;
           this.setIsUrl();
           //this.elements = [1];
-        }else if(this.chart.type==='singleStat'){
-          this.setIsSingleStat();
-          /*this.elements = [];
-          bus.chartAddInfo.metricTarget = [];
-          data.elements.forEach((item, index) => {
-            this.elements.push(index);
-          });
-          this.$nextTick(() => {
-            const cSet = this.$refs.chartTag;
-            // 派发charttag数据
-            cSet.forEach((item, index) => {
-              item.setMdata(data.elements[index],data.param.statistics);
-            });
-          });*/
         }else if(this.chart.type==='alertLine'){
           this.chart.param=data.param;
           this.setIsAlertList();
           //this.elements=[1];
         }else{
-          if((this.chart.type==='line'||this.chart.type==='bar'||this.chart.type==='stackArea')&&data.param){
+          if((this.chart.type==='line'||this.chart.type==='bar'||this.chart.type==='stackArea'||this.chart.type==='singleStat')&&data.param){
             this.chart.param.threshold=data.param.threshold;
+            this.chart.param.statistics = this.statistics = data.param.statistics;
           }else{
             this.chart.param.threshold='';
           }
@@ -1077,16 +1083,11 @@
               item.setNotSingleStat();
             });
           }*/
-        }else if(chartType==='singleStat'){
-          this.elements = [1];
-          this.setIsSingleStat();
-          /*if(this.$refs.chartTag){
-            this.$refs.chartTag.forEach((item, index) => {
-              item.setSingleStat();
-            });
-          }*/
         }else if(chartType === 'alertList'){
           this.setIsAlertList();
+        }else if(chartType === 'singleStat'){
+          this.setIsSingleStat();
+          this.resetElements();
         }else {
           this.setIsOtherChart();
           if(chartType === 'bar'||chartType === 'line'||chartType === 'stackArea'){
@@ -1098,6 +1099,12 @@
             });
           }*/
         }
+      },
+      resetElements() {
+        this.promqlKeys = [""];
+        this.expressions = [""];
+        this.legends = [];
+        this.elementIds = [];
       },
       /*panel搜索建议*/
       panelSuggestion(queryString, callback) {

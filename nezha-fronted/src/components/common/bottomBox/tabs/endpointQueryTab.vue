@@ -107,7 +107,7 @@
       <chart ref="endpointChart" :unit="chartUnit"></chart>
     </el-dialog>
 
-    <chart-box v-if="rightBox.show" ref="addChartModal" :panel-data="panelData" @on-create-success="createSuccess" @reloadOnlyPanel="getPanelData" @reload="getPanelData" :show-panel="{}"></chart-box>
+    <chart-box v-if="rightBox.show" @close="rightBox.show = false" ref="addChartModal" :panel-data="panelData" @on-create-success="createSuccess" @reloadOnlyPanel="getPanelData" @reload="getPanelData" :show-panel="{}"></chart-box>
   </span>
 </template>
 
@@ -167,21 +167,27 @@
         this.rightBox.show = true;
         this.$nextTick(() => {
           this.$refs.addChartModal.setTitle(this.$t("dashboard.panel.createChartTitle"));
-          this.$refs.addChartModal.show(true);
-          let metricInfo = {};
-          metricInfo.elements = [];
-          //console.info("aaa", this.selectedEndpoints)
-          for(let i = 0; i < this.selectedEndpoints.length; i++) {
-            let type = 'expert';
-            // if (this.selectedEndpoints[i].type == '1') {
-            //   type = 'expert';
-            // } else if (this.selectedEndpoints[i].type == '2') {
-            //   type = 'normal';
-            // }
-            metricInfo.elements.push({expression: this.selectedEndpoints[i].element, type: type});
+          let chart = {
+            id:'',
+            title: '',
+            type:'line',
+            span:12,
+            height:'400',
+            unit: this.chartUnit,
+            param:{
+              url:'',
+              threshold:'',
+            },
+            elements:[],
+            panel: '',
+            sync: 0
+          };
+          for (let i = 0; i < this.selectedEndpoints.length; i++) {
+            if (this.selectedEndpoints[i] && this.selectedEndpoints[i].element !=  '') {
+              chart.elements.push({chartId: "", expression: this.selectedEndpoints[i].element, type: 'expert'});
+            }
           }
-          this.$refs.addChartModal.createData(-1, metricInfo);
-          this.$refs.addChartModal.setUnit(this.chartUnit)
+          this.$refs.addChartModal.editData(chart);
         });
       },
       dropdownHandler(show) {
