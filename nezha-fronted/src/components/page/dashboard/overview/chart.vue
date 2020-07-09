@@ -107,11 +107,12 @@
         // console.log(this.option)
         if(this.series){
           this.$set(this.option,'series',this.series);
-          console.log(this.series,'11111');
           this.noData=false;
           this.chart.clear();
           this.optionSeriesAll=[...this.option.series];
-          this.option.series=this.option.series.filter((item,index)=>index<this.dataSize);
+          if(this.option.series instanceof Array){
+            this.option.series=this.option.series.filter((item,index)=>index<this.dataSize);
+          }
           this.chart.setOption(this.option);
         }else{
           this.noData=true;
