@@ -349,7 +349,7 @@
             if (chartItem.type === 'table') {//表格
               this.setTableData([]);
             } else if (chartItem.type === 'line' || chartItem.type === 'bar' || chartItem.type === 'stackArea' || chartItem.type === 4 || chartItem.type === "endpointInfo") {
-              this.setData(chartItem, []);
+              this.setData(chartItem, [], []);
             }else if(chartItem.type ==='singleStat'){
               this.serieSingleStat = "";
               this.$refs.loadingPreview.endLoading();

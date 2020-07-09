@@ -421,10 +421,17 @@
           }
         }
       },
-      getProjectList:function(){
+      getProjectList:function(reload){
         this.$get('project',{pageSize:-1}).then(response=>{
           if(response.code == 200){
             this.projectList=response.data.list;
+            if (reload) {
+              if (this.projectList.length > 0) {
+                this.currentProject = this.projectList[0];
+              } else {
+                this.currentProject = {};
+              }
+            }
           }
         })
       },
@@ -856,7 +863,7 @@
         }
       },
       projectListChange:function(n,o){
-        this.getProjectList();
+        this.getProjectList(true);
       },
       currentProject(n, o) {
         // this.getModuleList();
