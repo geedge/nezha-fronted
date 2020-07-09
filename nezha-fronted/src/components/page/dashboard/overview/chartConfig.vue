@@ -193,7 +193,6 @@
         top: 30,
         left: 0,
         right: 30,
-        containLabel: true,
         bottom:8
       },
       series: [],
@@ -221,14 +220,15 @@
         },
         data: [],
         axisLabel: {
-          show:true,
+          show: true,
           formatter: function(value) {
-            if (value.length > 12) {
-              return value.substring(0, 9) + "...";
+            if (value.length > 33) {
+              return value.substring(0, 30) + "...";
             }
             return value;
           },
-          fontSize: 10
+          align: 'left',
+          margin: 200,
         },
         triggerEvent: true
       },
