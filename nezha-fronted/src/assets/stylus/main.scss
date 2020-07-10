@@ -369,7 +369,7 @@ li{
   margin-bottom:10px;
   font-size: 14px;
 }
- .nz-tab-style-light {
+.nz-tab-style-light {
   border-bottom: 3px solid $global-text-color-active;
   color: #333;
   cursor: default;
@@ -377,9 +377,9 @@ li{
   font-weight: 600;
   letter-spacing: 0;
 }
- .nz-tab-style-light-right{
+.nz-tab-style-light-right{
   margin-left:30px;
- }
+}
 
 /* begin--nz-tab组件*/
 .nz-tab {
@@ -635,7 +635,7 @@ li{
   align-content: center;
 }
 .has-sub-popper {
- color: red;
+  color: red;
 }
 .main-list {
   height: 100%;
@@ -1019,23 +1019,24 @@ li{
     max-height: 0;
   }
 }
-.right-box-enter-active {
-  animation: slide-in-from-right 0.4s;
+.right-box-enter-active, .right-box-leave-active {
+  transition: transform 0.6s;
 }
-.right-box-leave-active {
-  animation: slide-out-to-right 0.4s;
+.right-box-enter,.right-box-leave-to  {
+  transform: translateX(100%);
 }
-.right-box-580-enter-active {
-  animation: slide-in-from-right-580 0.4s;
+.right-box-580-enter-active,.right-box-580-leave-active {
+  transition: transform 0.6s;
 }
-.right-box-580-leave-active {
-  animation: slide-out-to-right-580 0.4s;
+.right-box-580-enter,.right-box-580-leave-to {
+  transform: translateX(100%);
 }
-.right-box-840-enter-active {
-  animation: slide-in-from-right-840 0.4s;
+
+.right-box-840-enter-active,.right-box-840-leave-active {
+  transition: transform 0.6s;
 }
-.right-box-840-leave-active {
-  animation: slide-out-to-right-840 0.4s;
+.right-box-840-enter,.right-box-840-leave-to {
+  transform: translateX(100%);
 }
 /* end--右弹框滑入滑出动画*/
 
@@ -1900,10 +1901,10 @@ li{
 .nz-table .el-table__fixed, .nz-table .el-table__fixed-right {
   height: 100% !important;
 }
- .nz-table .el-table__fixed-body-wrapper {
-   height: calc(100% - 33px) !important;
- }
-  .ant-table-scroll {
+.nz-table .el-table__fixed-body-wrapper {
+  height: calc(100% - 33px) !important;
+}
+.ant-table-scroll {
   max-height: unset !important;
   height: 100%;
 }
