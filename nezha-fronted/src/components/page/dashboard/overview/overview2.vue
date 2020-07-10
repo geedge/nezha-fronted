@@ -815,8 +815,6 @@
             let seriesData = [];
             let categoryData = [];
             response.data.list.forEach(item => {
-              //seriesData.push(item.nums);
-              //categoryData.push(item.alertName);
               seriesData.splice(0, 0, item.nums);
               categoryData.splice(0, 0, item.alertName);
             });
@@ -831,7 +829,7 @@
             this.$refs.ruleMessage.modifyOption("tooltip", "backgroundColor", "rgba(221,228,237,1)");
             this.$refs.ruleMessage.modifyOption("tooltip", "textStyle", {color: "#000"});
             this.$refs.ruleMessage.modifyOption("grid", "top", 30);
-            this.$refs.ruleMessage.modifyOption("grid", "left", 0);
+            this.$refs.ruleMessage.modifyOption("grid", "left", 200);
             this.$refs.ruleMessage.modifyOption("grid", "right", 30);
             this.$refs.ruleMessage.modifyOption("grid", "bottom", 8);
             this.$refs.ruleMessage.setSeries(this.messageByRuleSeries);
@@ -846,8 +844,6 @@
             let seriesData = [];
             let categoryData = [];
             response.data.list.forEach(item => {
-              /*seriesData.push(item.nums);
-              categoryData.push(item.host);*/
               seriesData.splice(0, 0, item.nums);
               categoryData.splice(0, 0, item.host);
             });
@@ -862,7 +858,7 @@
             this.$refs.assetMessage.modifyOption("tooltip", "backgroundColor", "rgba(221,228,237,1)");
             this.$refs.assetMessage.modifyOption("tooltip", "textStyle", {color: "#000"});
             this.$refs.assetMessage.modifyOption("grid", "top", 30);
-            this.$refs.assetMessage.modifyOption("grid", "left", 0);
+            this.$refs.assetMessage.modifyOption("grid", "left", 200);
             this.$refs.assetMessage.modifyOption("grid", "right", 30);
             this.$refs.assetMessage.modifyOption("grid", "bottom", 8);
             this.$refs.assetMessage.setSeries(this.messageByAssetSeries);
@@ -877,8 +873,6 @@
             let seriesData = [];
             let categoryData = [];
             response.data.list.forEach(item => {
-              /*seriesData.push(item.nums);
-              categoryData.push(item.module);*/
               seriesData.splice(0, 0, item.nums);
               categoryData.splice(0, 0, item.module);
             });
@@ -893,7 +887,7 @@
             this.$refs.moduleMessage.modifyOption("tooltip", "backgroundColor", "rgba(221,228,237,1)");
             this.$refs.moduleMessage.modifyOption("tooltip", "textStyle", {color: "#000"});
             this.$refs.moduleMessage.modifyOption("grid", "top", 30);
-            this.$refs.moduleMessage.modifyOption("grid", "left", 0);
+            this.$refs.moduleMessage.modifyOption("grid", "left", 200);
             this.$refs.moduleMessage.modifyOption("grid", "right", 30);
             this.$refs.moduleMessage.modifyOption("grid", "bottom", 8);
             this.$refs.moduleMessage.setSeries(this.messageByModuleSeries);

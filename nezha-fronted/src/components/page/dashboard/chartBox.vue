@@ -196,7 +196,7 @@
                 :ref="'promql-'+(index-1)"
                 :id="promqlKeys[index-1]"
                 :key="promqlKeys[index-1]"
-                :expression-list.sync="expressions"
+                :expression-list="expressions"
                 :index="index-1"
                 :styleType="2"
                 :plugins="['metric-selector', 'metric-input', 'remove']"
@@ -485,6 +485,14 @@
           this.promqlKeys.splice(index, 1);
           this.elementIds.splice(index, 1);
           this.promqlCount--;
+
+          this.$nextTick(() => {
+            this.expressions.forEach((ex, index) => {
+              if (ex) {
+                this.$refs[`promql-${index}`][0].metricChange(ex);
+              }
+            });
+          });
         }
       },
       save() {
@@ -1131,9 +1139,68 @@
           if(this.chart.type == 'alertList'){
             this.$refs.alertParamBox.saveParam('preview');
           }else{
-            this.$refs.chartTag.forEach((item, index) => {//循环指标列表
+            /*this.$refs.chartTag.forEach((item, index) => {//循环指标列表
               // 触发每个tag组件内部进行校验
               item.saveTarget(index,'preview');
+            });*/
+            this.$refs.chartForm.validate((valid) => {
+              const params = {
+                // productId: this.productId,
+                //panelId: this.panelId,
+                title: this.chart.title,//this.chart
+                span: this.chart.span,
+                height: this.chart.height,
+                type: this.chart.type,
+                unit:this.chart.unit,
+                param:{
+
+                },
+                sync: this.chart.sync
+              };
+              if(this.chart.type === 'singleStat'){
+                params.param.statistics=this.statistics;
+              } else {
+                delete params.param.statistics;
+              }
+              if(this.chart.type==='line'||this.chart.type==='bar'||this.chart.type==='stackArea'){
+                params.param.threshold=this.chart.param.threshold;
+              } else {
+                delete params.param.threshold;
+              }
+              //生成指标数组
+              const elements = [];
+              this.expressions.forEach((expr, index) => {
+                elements.push({
+                  expression: expr,
+                  type: 'expert',
+                  legend: this.legends[index],
+                });
+              });
+              console.info(elements)
+              /*this.elementTarget.forEach((elem,index) => {
+                if(elem.type==='normal'){
+                  const metricStr = bus.tagsToString(elem.metric,elem.selectedTagList);
+                  elements.push({
+                    //id:index+1,
+                    //metric: elem.metric,//指标名称
+                    expression: metricStr,//指标对应Label及Value组成的表达式字符串
+                    type:elem.type,//指标类型
+                    legend:elem.legend,//配置的legend
+                  });
+                }else if(elem.type==='expert'){
+                  elements.push({
+                    //id:index+1,
+                    //metric: elem.metric,//指标名称
+                    expression: elem.expression,//指标对应Label及Value组成的表达式字符串
+                    type:elem.type,//指标类型
+                    legend:elem.legend,//配置的legend
+                  });
+                }
+              });*/
+              params.elements = elements;
+              if (valid) {
+                this.$refs.chartsPreview.show(params);
+              }
             });
           }
         }else {
@@ -1170,7 +1237,7 @@
       //preview--end
       initElements() {
         if (!this.chart.elements || this.chart.elements.length == 0) {
-          this.chart.elements = [{expression: "", legend: "", type: "expert"}];
+          this.chart.elements = [{expression: "", legend: "", type: "expert", id: ""}];
         }
         this.chart.elements.forEach(element => {
           this.promqlKeys.push(getUUID());
