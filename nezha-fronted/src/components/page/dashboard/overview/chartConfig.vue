@@ -282,9 +282,9 @@
             let t_date = new Date(value);
             let hhmm = [t_date.getHours(), t_date.getMinutes() < 10 ? "0" + t_date.getMinutes() : t_date.getMinutes()].join(':');
             let mmdd = [t_date.getMonth() + 1, t_date.getDate() < 10 ? "0" + t_date.getDate() : t_date.getDate()].join('/');
-            if (value-now < 1000*60*60*24) {
+            if (now-value < 1000*60*60*24) {
               return hhmm;
-            } else if (value-now >= 1000*60*60*24 && value-now < 1000*60*60*24*30) {
+            } else if (now-value >= 1000*60*60*24 && now-value < 1000*60*60*24*30) {
               return mmdd + " " + hhmm;
             } else {
               return mmdd;
