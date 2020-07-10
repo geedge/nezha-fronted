@@ -80,6 +80,11 @@ const en = {
     tag: 'Tag',
     placeHolder:'please enter',
     syncChart:'Synchronize chart',
+    toolBox:{
+      zoom:'Area scaling',
+      back:'Area scaling restore',
+      stack:'Show stack chart'
+    }
   },
   pageSize: '/page',
   webshell:{

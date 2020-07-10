@@ -55,6 +55,22 @@
         </el-menu-item>
       </el-submenu>
 
+      <el-submenu index="3" popper-class="nz-submenu">
+        <template slot="title">
+          <div v-if="assetData.length == 0">{{$t('overall.asset')}}</div>
+          <div v-else @click="jumpTo('asset')" :class="{'menu-active' : activeIndex == 'asset'}">{{$t('overall.asset')}}</div>
+        </template>
+        <template>
+          <el-menu-item v-if="assetData.length == 0" index="3-0"><div @click="createBox({type: 6})"><i class="nz-icon nz-icon-create-square header-dropdown-add"></i>&nbsp;&nbsp;{{$t("overall.createDatacenter")}}</div></el-menu-item>
+          <template v-else>
+            <el-menu-item :index="'3-' + index" v-for="(item, index) in assetData" :key="index">
+              <div @mouseenter="hoverItemIndex = '3-' + index" @mouseleave="hoverItemIndex = ''" @click="jumpToAsset(item.id)" >
+                <span class="too-long-split" style="width: 130px;">{{item.name}}</span>
+              </div>
+            </el-menu-item>
+          </template>
+        </template>
+      </el-submenu>
       <el-submenu index="2" popper-class="nz-submenu">
         <template slot="title">
           <div v-if="projectData.length == 0">{{$t('overall.project')}}</div>
@@ -67,22 +83,6 @@
               <div @mouseenter="hoverItemIndex = '2-' + index" @mouseleave="hoverItemIndex = ''" @click="jumpToProject(item)" >
                 <span class="too-long-split" style="width: 135px;">{{item.name}}</span>
                 <div v-show="hoverItemIndex == '2-' + index && item.buildIn != 1" @click.stop="toEditProject(item)" class="menu-edit"><i class="nz-icon nz-icon-edit"></i></div>
-              </div>
-            </el-menu-item>
-          </template>
-        </template>
-      </el-submenu>
-      <el-submenu index="3" popper-class="nz-submenu">
-        <template slot="title">
-          <div v-if="assetData.length == 0">{{$t('overall.asset')}}</div>
-          <div v-else @click="jumpTo('asset')" :class="{'menu-active' : activeIndex == 'asset'}">{{$t('overall.asset')}}</div>
-        </template>
-        <template>
-          <el-menu-item v-if="assetData.length == 0" index="3-0"><div @click="createBox({type: 6})"><i class="nz-icon nz-icon-create-square header-dropdown-add"></i>&nbsp;&nbsp;{{$t("overall.createDatacenter")}}</div></el-menu-item>
-          <template v-else>
-            <el-menu-item :index="'3-' + index" v-for="(item, index) in assetData" :key="index">
-              <div @mouseenter="hoverItemIndex = '3-' + index" @mouseleave="hoverItemIndex = ''" @click="jumpToAsset(item.id)" >
-                <span class="too-long-split" style="width: 130px;">{{item.name}}</span>
               </div>
             </el-menu-item>
           </template>
