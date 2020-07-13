@@ -1,6 +1,12 @@
 <script>
     import chartDataFormat from "../../../charts/chartDataFormat";
     import bus from '../../../../libs/bus';
+    import vm from '../../../../main'
+    window.onload=function(){
+      commonOption.toolbox.feature.dataZoom.title.zoom=vm.$i18n.t('overall.toolBox.zoom')
+      commonOption.toolbox.feature.dataZoom.title.back=vm.$i18n.t('overall.toolBox.back')
+      commonOption.toolbox.feature.magicType.title.stack=vm.$i18n.t('overall.toolBox.stack')
+    }
     let bgColorList=['#b3424a','#7bbfea', '#f05b72', '#596032', '#bd6758',
       '#cd9a5b', '#918597', '#70a19f', '#005344', '#FF00FF',
       '#f7acbc', '#5f5d46', '#66ffff', '#ccFF66', '#f47920',
@@ -30,16 +36,20 @@
       toolbox:{
         show:false,
         top:'0',
-        showTitle:false,
+        showTitle:true,
         tooltip:{
           show:false,
         },
         feature:{
           dataZoom:{
-            yAxisIndex:false
+            yAxisIndex:false,
+            title:{
+
+            }
           },
           magicType:{
-            type:['stack']
+            type:['stack'],
+            title:{}
           },
           // restore: {},
         }
@@ -144,10 +154,11 @@
             show: true
           },
         } ,
-        itemStyle:{
-          // areaColor:'lightgrey', //设置默认状态下地图颜色
-
-        },
+        // itemStyle:{
+        //   areaColor:'#ff0000', //设置默认状态下地图颜色
+        //   color:'#ffff00'
+        //
+        // },
         emphasis:{
           itemStyle: {
             areaColor:'white'
@@ -282,9 +293,9 @@
             let t_date = new Date(value);
             let hhmm = [t_date.getHours(), t_date.getMinutes() < 10 ? "0" + t_date.getMinutes() : t_date.getMinutes()].join(':');
             let mmdd = [t_date.getMonth() + 1, t_date.getDate() < 10 ? "0" + t_date.getDate() : t_date.getDate()].join('/');
-            if (value-now < 1000*60*60*24) {
+            if (now-value < 1000*60*60*24) {
               return hhmm;
-            } else if (value-now >= 1000*60*60*24 && value-now < 1000*60*60*24*30) {
+            } else if (now-value >= 1000*60*60*24 && now-value < 1000*60*60*24*30) {
               return mmdd + " " + hhmm;
             } else {
               return mmdd;
@@ -398,6 +409,7 @@
       },
       getBgColorList:function(){
         return Object.assign([],bgColorList)
-      }
+      },
+
     }
 </script>

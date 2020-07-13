@@ -74,6 +74,10 @@ const cn = {
     noData:'没有数据',
     tag: '标签',
     syncChart:'同步图表',
+    toolBox:{
+      zoom:'区域缩放',
+      back:'区域缩放还原'
+    }
   },
   webshell: {
     shellTitle: "本地 Shell",

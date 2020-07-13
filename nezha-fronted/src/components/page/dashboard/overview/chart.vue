@@ -89,6 +89,34 @@
           this.option=chartConfig.getOption(this.chartType);
         }
 
+        if(this.chartType == 'map'){
+          let geoObj=JSON.parse(this.map.geoJson.geoJson)
+          geoObj.features.forEach(item=>{
+            if(this.option.geo.regions){
+              this.option.geo.regions.push({
+                name:item.properties.name,
+                itemStyle: {
+                  normal: {
+                    areaColor: randomcolor()
+                  }
+                }
+
+              })
+            }else{
+              this.option.geo.regions=[{
+                name:item.properties.name,
+                itemStyle: {
+                  normal: {
+                    // areaColor: item.properties.stroke
+                    areaColor: randomcolor()
+                  }
+                }
+
+              }]
+            }
+          })
+        }
+
         this.modifyOption('tooltip','position',this.defaultTooltipPosition)
 
         if (this.tooltipFormatter) {

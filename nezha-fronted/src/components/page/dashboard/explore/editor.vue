@@ -64,7 +64,9 @@
         showType:false,
         showDescription:false,
         detailItem:{},
-
+        formatTimer:null,
+        userChangeTimer:null,
+        keyDownTimer:null,
       }
     },
     created(){
@@ -78,14 +80,14 @@
         this.changeSuggestions('type')
         this.dealSpecilChar(char,operation);
 
-          if(this.pivotalCursorIndex!=0){
-            //console.log('pivotalCursorIndex',this.pivotalCursorIndex,'cursorIndex',this.cursorIndex)
-            newContent=newContent.substring(this.pivotalCursorIndex,this.cursorIndex);
-          }
+        if(this.pivotalCursorIndex!=0){
+          //console.log('pivotalCursorIndex',this.pivotalCursorIndex,'cursorIndex',this.cursorIndex)
+          newContent=newContent.substring(this.pivotalCursorIndex,this.cursorIndex);
+        }
         this.filterItems(newContent);
       },
       dealSpecilChar:function(char,operation){
-        //console.log('specil char',char)
+        // console.log('specil char',char)
         if(/^[\{\(\[\,]$/g.test(char)){
           if(operation=='insert'){
             if(char == '{'||char==','){
@@ -136,7 +138,8 @@
           tempIndex--;
           tempChar=this.content.charAt(tempIndex);
         }
-        this.pivotalCursorIndex=tempIndex+1;
+        // console.log('tempIndex =====',tempIndex)
+        this.pivotalCursorIndex=tempIndex==0?-1:tempIndex+1;
 
         //console.log('after del double char',this.pivotalCursorIndex)
       },
@@ -536,7 +539,7 @@
       },
       storeSuggestions:function(){
           this.$nextTick(()=>{
-            let suggestions=document.querySelectorAll('.popper-item');
+            let suggestions=this.$el.querySelectorAll('.popper-item');
             this.storedSuggestions=[...suggestions];
             //console.log('storedSuggestions->',suggestions)
           })
@@ -667,7 +670,7 @@
       },
       registerKeydown:function(){
         let $temp=this;
-        document.addEventListener('keydown',function(event){
+        $temp.$el.addEventListener('keydown',function(event){
           //console.log('keydown',event)
           $temp.toggleSelect(event);
         })
@@ -748,12 +751,19 @@
       this.options.modules.keyboard={};
       this.options.modules.keyboard.bindings=bindings;
       this.quill = new Quill(this.$refs.editor, this.options);
-      this.quill.on('blur',function(){
-        //console.log('quill blur')
+      $temp.$el.addEventListener('paste', function(even) {
+        let text='';
+        setTimeout(()=>{
+          text=$temp.getContent();
+        },100)//此值必须小于userChangeTimer的值
+        setTimeout(()=>{
+          $temp.setContent(text);
+          $temp.quill.setSelection($temp.cursorIndex+text.length);
+        },300)//此值必须大于userChangeTimer的值
       })
       this.quill.on('text-change',function(delta, oldDelta, source){
         if(source != 'silent'){
-          //console.log('delta',delta,'oldDelta',oldDelta,'source',source)
+          // console.log('delta',delta,'oldDelta',oldDelta,'source',source)
           let char='',operation='';
           let oldContent='';
           oldDelta.ops.forEach((item,index)=>{
@@ -785,15 +795,19 @@
           let promise=$temp.storeCursor(char);
           if(source == 'user'){
             //console.log(delta,oldDelta,oldContent)
-            let newContent=$temp.getContent()
-            promise.then(()=>{ //存储完光标后再进行后面的操作
-              $temp.userChange(char,operation,newContent,oldContent)
-            })
+            clearTimeout($temp.userChangeTimer)
+            $temp.userChangeTimer=setTimeout(()=>{
+              let newContent=$temp.getContent()
+              promise.then(()=>{ //存储完光标后再进行后面的操作
+                  $temp.userChange(char,operation,newContent,oldContent)
+              })
+            },200)
           }
           $temp.content=$temp.getContent();
           //console.log('current content-->',$temp.content)
           $temp.getPosition();
-          $temp.formatContent();
+          clearTimeout($temp.formatTimer)
+          $temp.formatTimer=setTimeout($temp.formatContent,300)
         }
         //监听文本区域的高度
         let lineHeight = 16;
