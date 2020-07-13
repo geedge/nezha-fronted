@@ -37,6 +37,7 @@ const cn = {
     available: "可用",
     createChart: "新增图表",
     createProject: "新增业务系统",
+    createEndpoint:'新增Endpoint',
     createAsset: "新增资产",
     createAlertRule: "新增告警规则",
     createAccount: "新增用户名",
@@ -74,9 +75,11 @@ const cn = {
     noData:'没有数据',
     tag: '标签',
     syncChart:'同步图表',
+    placeHolder: "请输入",
     toolBox:{
       zoom:'区域缩放',
-      back:'区域缩放还原'
+      back:'区域缩放还原',
+      stack: "查看堆叠图",
     }
   },
   webshell: {

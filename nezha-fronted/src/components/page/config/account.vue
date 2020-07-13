@@ -237,7 +237,7 @@
         },
         pageObj: { //分页对象
           pageNo: 1,
-          pageSize: 20,
+          pageSize: 50,
           total: 0
         },
         tableTitle: [ //原table列
