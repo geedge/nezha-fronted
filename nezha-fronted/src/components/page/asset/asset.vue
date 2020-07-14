@@ -134,7 +134,11 @@
                 <span class="link" @click="showEndpoint(scope.row)">{{scope.row.endpointNum}}</span>
               </template>
               <template v-if="item.prop=='Alert'">
-                <span :id="'asset-alerts-'+scope.row.id" @click="jumpToAlertMsg(scope.row)" class="link">{{scope.row.alertNum + ' ' + $t('overall.active')}}</span>
+                <span :id="'asset-alerts-'+scope.row.id" @click="jumpToAlertMsg(scope.row)" class="link">
+                  {{(scope.row.alertNum < 99 ? scope.row.alertNum : 99)}}
+                  <sup class="linkSup" v-if="scope.row.alertNum > 99">+</sup>
+                  {{' ' + $t('overall.active')}}
+                </span>
               </template>
               <div v-if="item.prop=='dataCenter'">
                 <span  >{{scope.row.idc.name}}</span>
@@ -1025,5 +1029,16 @@
   }
   .tab-input-square-high {
     border: 1px solid #1166bb;
+  }
+  /deep/ .el-table .cell.el-tooltip{
+    min-width: 88px;
+  }
+  .linkSup{
+    position: absolute;
+    top: -15px;
+    left: 17px;
+  }
+  .link{
+    position: relative;
   }
 </style>
