@@ -244,7 +244,7 @@ instance_cpu_time_ns{app="fox", proc="widget", rev="4d3a513", env="prod", job="c
         tableVisible: true,
         pageObj: {
           pageNo: 1,
-          pageSize: 20,
+          pageSize: 50,
           total: 0
         },
         dropCol: [],

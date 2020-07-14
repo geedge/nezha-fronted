@@ -187,7 +187,7 @@
         },
         pageObj: {
           pageNo: 1,
-          pageSize: 20,
+          pageSize: 50,
           total: 0
         },
         tableTitle: [

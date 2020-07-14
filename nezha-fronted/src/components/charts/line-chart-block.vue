@@ -703,7 +703,7 @@
                 chartUnit=chartUnit?chartUnit:2;
                 let unit=chartDataFormat.getUnit(chartUnit);
                 //console.info(value, chartUnit, unit.compute(value,index))
-                return unit.compute(value,index,2);
+                return unit.compute(value,index);
               },
             },
             //boundaryGap:[0,0.2]
