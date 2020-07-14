@@ -118,71 +118,7 @@
     </div>
     </left-menu>
     <transition name="right-box">
-      <div class="right-box right-box-account" v-if="rightBox.show" v-clickoutside="clickos">
-        <!-- begin--顶部按钮-->
-        <div class="right-box-top-btns">
-          <button type="button" v-if="user.userId != '' && rightBox.isEdit" @click="del(user)"
-                  class="nz-btn nz-btn-size-normal nz-btn-size-alien nz-btn-style-light nz-btn-min-width-82"
-                  id="account-edit-del">
-            <span class="right-box-top-btn-icon"><i class="el-icon-delete"></i></span>
-            <span class="right-box-top-btn-txt">{{$t('overall.delete')}}</span>
-          </button>
-          <button v-if="!rightBox.isEdit" type="button" @click="saveOrToEdit"
-                  class="nz-btn nz-btn-size-normal nz-btn-size-alien nz-btn-style-light nz-btn-min-width-82"
-                  id="account-edit-edit">
-            <span class="right-box-top-btn-icon"><i class="nz-icon nz-icon-edit"></i></span>
-            <span class="right-box-top-btn-txt">{{$t('overall.edit')}}</span>
-          </button>
-        </div>
-        <!-- end--顶部按钮-->
-
-        <!-- begin--标题-->
-        <div class="right-box-title">{{rightBox.title}}</div>
-        <!-- end--标题-->
-
-        <!-- begin--表单-->
-        <el-scrollbar class="right-box-form-box">
-          <el-form class="right-box-form" :model="user" label-position="top" :rules="rules" ref="accountForm">
-            <!--username-->
-            <el-form-item :label="$t('config.account.account')" prop="username">
-              <el-input autocomplete="new-password" v-if="rightBox.isEdit" type="text" placeholder=""
-                        v-model="user.username" maxlength="64" show-word-limit size="small"></el-input>
-              <div v-if="!rightBox.isEdit" class="right-box-form-content-txt">{{user.username}}</div>
-            </el-form-item>
-            <!--password-->
-            <el-form-item :label="$t('config.account.password')" prop="password" v-if="rightBox.isEdit &&!user.userId">
-              <el-input autocomplete="new-password" type="password" placeholder="" v-model="user.password"
-                        maxlength="16" show-word-limit size="small"></el-input>
-            </el-form-item>
-            <!--email-->
-            <el-form-item label="E-mail" prop="email">
-              <el-input v-if="rightBox.isEdit" type="text" placeholder="" v-model="user.email" size="small"></el-input>
-              <div v-if="!rightBox.isEdit" class="right-box-form-content-txt">{{user.email}}</div>
-            </el-form-item>
-            <!--enable-->
-            <el-form-item :label="$t('config.account.enable')">
-              <el-switch v-model="user.status" active-color="#ee9d3f" :disabled="!rightBox.isEdit || isCurrentUser(user.username)" active-value="1"
-                         inactive-value="0">
-              </el-switch>
-            </el-form-item>
-            <el-form-item :label="$t('config.account.createTime')" v-if="!rightBox.isEdit">
-              <div class="right-box-form-content-txt">{{user.createTime}}</div>
-            </el-form-item>
-          </el-form>
-        </el-scrollbar>
-        <!-- end--表单-->
-        <!--底部按钮-->
-        <div class="right-box-bottom-btns">
-          <button @click="esc" id="account-esc"
-                  class="nz-btn nz-btn-size-normal nz-btn-style-light nz-btn-min-width-100">
-            <span>{{$t('overall.cancel')}}</span>
-          </button>
-          <button v-if="rightBox.isEdit" @click="saveOrToEdit" id="account-save"
-                  class="nz-btn nz-btn-size-normal nz-btn-style-normal nz-btn-min-width-100">
-            <span>{{$t('overall.save')}}</span>
-          </button>
-        </div>
-      </div>
+      <account-box v-if="rightBox.show" :user="user" @close="closeRightBox"></account-box>
     </transition>
     <!-- 自定义table列 -->
     <element-set
@@ -195,12 +131,15 @@
   </div>
 </template>
 <script>
-  var vm;
   import bus from '../../../libs/bus';
+  import accountBox from '../../common/rightBox/accountBox';
+
   export default {
     name: "account",
+    components: {
+      'account-box': accountBox
+    },
     data() {
-      vm = this;
       return {
         loading: false,
         //底部上滑框相关
@@ -208,7 +147,7 @@
         mainTableHeight: this.$tableHeight.normal, //主列表table高度
         showSubList: false, //是否展示二级列表
         targetTab: '', //展示二级列表中的哪个页签
-        showElementSet: false, //控制自定义列的弹框
+        showElementSet: false, //控制自定义列弹框
         inTransform: false, //搜索框相关，搜索条件下拉框是否在transform里
         mainResizeShow: true, //dom高度改变时部分内容是否展示
         subResizeShow: true, //二级列表拖动时，用于控制主列表内容展示
@@ -223,10 +162,8 @@
         showTopBtn: false, //是否显示回到顶部按钮
         rightBox: { //弹出框相关
           show: false,
-          isEdit: false, //false查看，true编辑
-          title: ''
         },
-        user: {
+        blankUser: {
           userId: '',
           username: '',
           email: '',
@@ -276,44 +213,7 @@
         ],
         tablelable: [], //实际显示的列
         dropCol: [], //用于element-set组件显示
-        rules: { //表单校验规则
-          username: [
-            {required: true, message: this.$t('validate.required'), trigger: 'blur'}
-          ],
-          password: [
-            {required: true, message: this.$t('validate.required'), trigger: 'blur'}
-          ],
-          email: [
-            {required: true, message: this.$t('validate.required'), trigger: 'blur'},
-            {type: 'email', message: this.$t('validate.email')}
-          ]
-        },
         tableData: [],
-        receiverData: [{
-          id: '1',
-          name: 'group1',
-          description: '小组1desc'
-        }, {
-          id: '2',
-          name: 'group2',
-          description: '小组2desc'
-        }, {
-          id: '3',
-          name: '小组3',
-          description: '小组3desc'
-        }, {
-          id: '4',
-          name: '小组4',
-          description: '小组4desc'
-        }, {
-          id: '5',
-          name: '小组啊小组5',
-          description: '小组5desc'
-        }, {
-          id: '6',
-          name: '小组6',
-          description: '小组6desc'
-        }],
         searchMsg: { //给搜索框子组件传递的信息
           zheze_none: true,
           searchLabelList: [{
@@ -330,14 +230,17 @@
     methods: {
       // 全屏
       fullScreen() {
+        let vm = this;
         this.$bottomBoxWindow.fullScreen(vm);
       },
       // 退出全屏
       exitFullScreen() {
+        let vm = this;
         this.$bottomBoxWindow.exitFullScreen(vm);
       },
       // 鼠标拖动二级列表
       listResize(e) {
+        let vm = this;
         this.$bottomBoxWindow.listResize(vm, e);
       },
       jumpTo(data, id) {
@@ -388,38 +291,21 @@
         this.$store.commit('setHeaderTable', data);
         this.tablelable = data;
       },
+      closeRightBox(refresh) {
+        this.rightBox.show = false;
+        if (refresh) {
+          this.getTableData();
+        }
+      },
       clickos() {
         this.rightBox.show = false;
       },
-      edit: function (u) {
-        this.user = Object.assign({}, u);
-        this.rightBox.isEdit = true;
-        this.rightBox.title = this.$t("config.account.editAccount") + "  ID：" + u.userId;
+      edit(u) {
+        this.user = JSON.parse(JSON.stringify(u));
         this.rightBox.show = true;
       },
-      del: function (u) {
-        this.$confirm(this.$t("tip.confirmDelete"), {
-          confirmButtonText: this.$t("tip.yes"),
-          cancelButtonText: this.$t("tip.no"),
-          type: 'warning'
-        }).then(() => {
-          this.$delete("sys/user/delete?userIds=" + u.userId).then(response => {
-            if (response.code === 200) {
-              this.$message({duration: 1000, type: 'success', message: this.$t("tip.deleteSuccess")});
-              this.rightBox.show = false;
-              this.getTableData();
-            } else {
-              this.$message.error(response.msg);
-            }
-          });
-        });
-
-      },
-      detail: function (u) {
-        this.user = Object.assign({}, u);
-        /*this.rightBox.isEdit = false;
-        this.rightBox.title = this.$t("config.account.account") + "  ID：" + u.userId;
-        this.rightBox.show = true;*/
+      detail(u) {
+        this.user = JSON.parse(JSON.stringify(u));
         this.targetTab = "detail";
         this.showSubList = true;
       },
@@ -438,10 +324,8 @@
           }
         })
       },
-      toAdd: function () {
+      toAdd() {
         this.cleanUser();
-        this.rightBox.isEdit = true;
-        this.rightBox.title = this.$t("config.account.createAccount");
         this.rightBox.show = true;
       },
       tabSave: function () {
@@ -535,22 +419,8 @@
         this.blurEditReceiver();
         //TODO 请求后台，删除用户组
       },
-      initReceiverData: function () {
-        for (let i = 0; i < this.receiverData.length; i++) {
-          this.$set(this.receiverData[i], 'oldName', this.receiverData[i].name);
-          this.$set(this.receiverData[i], 'isEdit', false);
-        }
-      },
       esc: function () {
         this.rightBox.show = false;
-      },
-      updateReceiverName: function (item) {
-        //TODO 请求接口改名
-        let code = 200;
-        //this.$set(item, 'errorMessage', 'err');
-        item.errorMessage = '';
-        item.oldName = item.name;
-        return code;
       },
       cleanUser: function () {
         this.user = {
@@ -572,7 +442,7 @@
         localStorage.setItem('nz-pageSize-' + localStorage.getItem('nz-username') + '-' + this.tableId, val);
         this.getTableData();
       },
-      search: function (searchObj) {
+      search(searchObj) {
         this.searchLabel = {};
         this.pageObj.pageNo = 1;
         for (let item in searchObj) {
@@ -609,7 +479,6 @@
       }
 
       this.getTableData();
-      this.initReceiverData();
       this.$nextTick(() => {
         //绑定滚动条事件，控制top按钮
         let el = this.$refs.accountTable.$el.querySelector(".el-table__body-wrapper");
