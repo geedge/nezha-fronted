@@ -80,85 +80,89 @@
             <div class="pagination-top pagination-top-hide display-none"></div>
           </div>
 
-          <el-table
-            class="nz-table"
-            :height="mainTableHeight"
-            style="width: 100%;"
-            :data="tableData"
-            v-scrollBar:el-table="'large'"
-            v-show="mainResizeShow"
-            border
-            v-loading="loading"
-            tooltip-effect="light"
-            ref="assetTable"
-            :cell-class-name="messageStyle"
-          >
-            <el-table-column
-              :resizable="false"
-              v-for="(item, index) in tablelable"
-              v-if="item.show"
-              :width="item.width"
-              :key="`col_${index}`"
-              :label="item.label"
-              :fixed="item.fixed"
-              :show-overflow-tooltip="item.prop != 'Alert' || item.prop != 'Module'"
-              min-width="110px"
-              :class-name="item.prop == 'option' ? 'content-right-options' : ''"
-            >
-              <template slot-scope="scope" :column="item">
-                <div v-if="item.prop=='ID'">
-                  <span>{{scope.row.id}}</span>
-                </div>
-                <div v-if="item.prop=='assetType'">
-                  <span>{{scope.row.model.type.value}}</span>
-                </div>
-                <template v-if="item.prop=='SN'">{{scope.row.sn}}</template>
-                <div v-if="item.prop=='HOST'">
-                  <span>{{scope.row.host}}</span>
-                </div>
-                <div v-if="item.prop=='state'">
-                  <span>{{scope.row.state==1 ? $t('asset.createAssetTab.inStock') : $t('asset.createAssetTab.notInStock')}}</span>
-                </div>
-                <div v-if="item.prop == 'pingStatus'">
-                  <el-popover
-                    placement="right"
-                    width="200"
-                    trigger="hover"
-                    :content="formatPingTime(scope.row.pingLastUpdate)">
-                    <div slot="reference" style="width: 20px">
-                      <div :class="{'active-icon green':scope.row.pingState == 1,'active-icon red':scope.row.pingState == 0}"></div><span>{{scope.row.pingRtt?scope.row.pingRtt+'ms':''}}</span>
+              <el-table
+                class="nz-table"
+                :height="mainTableHeight"
+                style="width: 100%;"
+                :data="tableData"
+                v-scrollBar:el-table="'large'"
+                v-show="mainResizeShow"
+                border
+                v-loading="loading"
+                tooltip-effect="light"
+                ref="assetTable"
+                :cell-class-name="messageStyle"
+              >
+                <el-table-column
+                  :resizable="false"
+                  v-for="(item, index) in tablelable"
+                  v-if="item.show"
+                  :width="item.width"
+                  :key="`col_${index}`"
+                  :label="item.label"
+                  :fixed="item.fixed"
+                  :show-overflow-tooltip="item.prop != 'Alert' || item.prop != 'Module'"
+                  min-width="110px"
+                  :class-name="item.prop == 'option' ? 'content-right-options' : ''"
+                >
+                  <template slot-scope="scope" :column="item">
+                    <div v-if="item.prop=='ID'">
+                      <span>{{scope.row.id}}</span>
                     </div>
-                  </el-popover>
-                </div>
-                <template v-if="item.prop=='Module'">
-                  <span class="link" @click="showEndpoint(scope.row)">{{scope.row.endpointNum}}</span>
-                </template>
-                <template v-if="item.prop=='Alert'">
-                  <span :id="'asset-alerts-'+scope.row.id" @click="jumpToAlertMsg(scope.row)" class="link">{{scope.row.alertNum + ' ' + $t('overall.active')}}</span>
-                </template>
-                <div v-if="item.prop=='dataCenter'">
-                  <span  >{{scope.row.idc.name}}</span>
-                </div>
-                <template v-if="item.prop=='cabinet'">
-                  <span   v-if="scope.row.cabinet&&scope.row.cabinet!='--'">{{returnData(scope.row.cabinet).name}}</span>
-                  <span v-else >{{returnData(scope.row.cabinet)}}</span>
-                </template>
-                <div v-if="item.prop=='model'">
-                  <span>{{scope.row.model.name}}</span>
-                </div>
-                <div v-if="item.prop=='vendor'">
-                  <span>{{scope.row.model.vendor.value}}</span>
-                </div>
-                <div v-if="item.prop=='purchaseDate'">
-                  <span>{{returnData(scope.row.purchaseDate)}}</span>
-                </div>
-                <div v-if="item.prop=='principal'">
-                  <span>{{getPrincipalName(scope.row.idc.principal)}}</span>
-                </div>
-                <div v-if="item.prop=='tel'">
-                  <span>{{scope.row.idc.tel}}</span>
-                </div>
-                <template v-if="item.prop == 'option'">
+                    <div v-if="item.prop=='assetType'">
+                      <span>{{scope.row.model.type.value}}</span>
+                    </div>
+                    <template v-if="item.prop=='SN'">{{scope.row.sn}}</template>
+                    <div v-if="item.prop=='HOST'">
+                      <span>{{scope.row.host}}</span>
+                    </div>
+                    <div v-if="item.prop=='state'">
+                      <span>{{scope.row.state==1 ? $t('asset.createAssetTab.inStock') : $t('asset.createAssetTab.notInStock')}}</span>
+                    </div>
+              <div v-if="item.prop == 'pingStatus'">
+                <el-popover
+                  placement="right"
+                  width="200"
+                  trigger="hover"
+                  :content="formatPingTime(scope.row.pingLastUpdate)">
+                  <div slot="reference" style="width: 20px">
+                    <div :class="{'active-icon green':scope.row.pingState == 1,'active-icon red':scope.row.pingState == 0}"></div><span>{{scope.row.pingRtt?scope.row.pingRtt+'ms':''}}</span>
+                  </div>
+                </el-popover>
+              </div>
+              <template v-if="item.prop=='Module'">
+                <span class="link" @click="showEndpoint(scope.row)">{{scope.row.endpointNum}}</span>
+              </template>
+              <template v-if="item.prop=='Alert'">
+                <span :id="'asset-alerts-'+scope.row.id" @click="jumpToAlertMsg(scope.row)" class="link">
+                  {{(scope.row.alertNum < 99 ? scope.row.alertNum : 99)}}
+                  <sup class="linkSup" v-if="scope.row.alertNum > 99">+</sup>
+                  {{' ' + $t('overall.active')}}
+                </span>
+              </template>
+              <div v-if="item.prop=='dataCenter'">
+                <span  >{{scope.row.idc.name}}</span>
+              </div>
+              <template v-if="item.prop=='cabinet'">
+                <span   v-if="scope.row.cabinet&&scope.row.cabinet!='--'">{{returnData(scope.row.cabinet).name}}</span>
+                <span v-else >{{returnData(scope.row.cabinet)}}</span>
+              </template>
+              <div v-if="item.prop=='model'">
+                <span>{{scope.row.model.name}}</span>
+              </div>
+              <div v-if="item.prop=='vendor'">
+                <span>{{scope.row.model.vendor.value}}</span>
+              </div>
+              <div v-if="item.prop=='purchaseDate'">
+                <span>{{returnData(scope.row.purchaseDate)}}</span>
+              </div>
+              <div v-if="item.prop=='principal'">
+                <span>{{getPrincipalName(scope.row.idc.principal)}}</span>
+              </div>
+              <div v-if="item.prop=='tel'">
+                <span>{{scope.row.idc.tel}}</span>
+              </div>
+              <template v-if="item.prop == 'option'">
                 <span :title="$t('overall.view')" @click.stop="tagShow('showView',scope.row)" class="content-right-option" :id="'asset-detail-'+scope.row.id"><i
                   class="el-icon-view"></i>
                 </span>
@@ -1027,5 +1031,16 @@
   }
   .tab-input-square-high {
     border: 1px solid #1166bb;
+  }
+  /deep/ .el-table .cell.el-tooltip{
+    min-width: 88px;
+  }
+  .linkSup{
+    position: absolute;
+    top: -15px;
+    left: 17px;
+  }
+  .link{
+    position: relative;
   }
 </style>
