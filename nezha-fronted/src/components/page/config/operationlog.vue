@@ -351,7 +351,7 @@
       propTitle(prop){
         switch(prop){
           case 'id': return 'sl.id';
-          case 'username': return 'sl.username';
+          case 'username': return 'su.username';
           case 'ip': return 'sl.ip';
           case 'operation': return 'sl.operation';
           case 'type': return 'sl.type';
