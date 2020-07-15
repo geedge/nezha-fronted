@@ -244,14 +244,17 @@
     methods: {
       // 全屏
       fullScreen() {
+        let vm = this;
         this.$bottomBoxWindow.fullScreen(vm);
       },
       // 退出全屏
       exitFullScreen() {
+        let vm = this;
         this.$bottomBoxWindow.exitFullScreen(vm);
       },
       // 鼠标拖动二级列表
       listResize(e) {
+        let vm = this;
         this.$bottomBoxWindow.listResize(vm, e);
       },
       convertToDetail(obj) {
