@@ -40,7 +40,7 @@
             <div class="top-tool-search">
               <search-input ref="searchInput" :searchMsg="searchMsg" @search="search" :inTransform="inTransform"></search-input>
             </div>
-            <button type="button" @click="toAdd" :title="$t('overall.createPrometheusServer')"
+            <button type="button" @click="add" :title="$t('overall.createPrometheusServer')"
                     class="nz-btn nz-btn-size-normal nz-btn-style-light margin-l-20" id="prom-add">
               <i class="nz-icon-create-square nz-icon"></i>
             </button>
@@ -68,7 +68,7 @@
               <div v-else-if="item.prop == 'option'" class="content-right-options">
                 <span :title="$t('overall.view')" @click="detail(scope.row)" class="content-right-option" :id="'prom-detail-'+scope.row.id"><i class="nz-icon nz-icon-view"></i></span>
                 &nbsp;
-                <span :title="$t('overall.edit')" @click="toEdit(scope.row)" class="content-right-option" :id="'prom-edit-'+scope.row.id"><i class="nz-icon nz-icon-edit"></i></span>
+                <span :title="$t('overall.edit')" @click="edit(scope.row)" class="content-right-option" :id="'prom-edit-'+scope.row.id"><i class="nz-icon nz-icon-edit"></i></span>
                 &nbsp;
                 <span :title="$t('overall.delete')" @click="del(scope.row)" class="content-right-option" :id="'prom-del-'+scope.row.id"><i class="el-icon-delete"></i></span>
               </div>
@@ -96,85 +96,7 @@
     </div>
     </left-menu>
     <transition name="right-box">
-      <div class="right-box right-box-prom" v-if="rightBox.show" v-clickoutside="clickos">
-        <!-- begin--顶部按钮-->
-        <div class="right-box-top-btns">
-          <button type="button" v-if="rightBox.isEdit && promServer.id != ''" @click="del(promServer)"
-                  id="prom-edit-del"
-                  class="nz-btn nz-btn-size-normal nz-btn-size-alien nz-btn-style-light nz-btn-min-width-82">
-            <span class="right-box-top-btn-icon"><i class="el-icon-delete"></i></span>
-            <span class="right-box-top-btn-txt">{{$t('overall.delete')}}</span>
-          </button>
-          <button v-if="!rightBox.isEdit" type="button" @click="saveOrToEdit"
-                  class="nz-btn nz-btn-size-normal nz-btn-size-alien nz-btn-style-light nz-btn-min-width-82"
-                  id="prom-edit-save">
-            <span class="right-box-top-btn-icon"><i class="nz-icon nz-icon-edit"></i></span>
-            <span class="right-box-top-btn-txt">{{$t('overall.edit')}}</span>
-          </button>
-        </div>
-        <!-- end--顶部按钮-->
-
-        <!-- begin--标题-->
-        <div class="right-box-title">{{rightBox.title}}</div>
-        <!-- end--标题-->
-
-        <!-- begin--表单-->
-        <el-scrollbar class="right-box-form-box">
-          <el-form class="right-box-form right-box-form-left" :model="promServer" label-position="right" label-width="120px" :rules="rules"
-                   ref="promServerForm">
-            <!--DC start-->
-            <el-form-item :label="$t('config.dc.dc')" prop="idc.name">
-              <div class="right-box-form-content">
-                <el-select  value-key="id" popper-class="config-dropdown"
-                            v-model="promServer.idc" placeholder="" v-if="rightBox.isEdit" size="small">
-                  <el-option @click.native="blurEditIdc()" v-for="item in idcData" :key="item.id" :label="item.name"
-                             :value="item" :id="'prom-edit-idc-op-'+item.id">
-                    <span class="config-dropdown-label-txt">{{item.name}}</span>
-                  </el-option>
-                </el-select>
-                <div class="right-box-form-content-txt" v-if="!rightBox.isEdit">{{promServer.idc.name}}</div>
-              </div>
-            </el-form-item>
-            <!--DC end-->
-
-            <!--host-->
-            <el-form-item label="Host" prop="host">
-              <el-input type="text" v-if="rightBox.isEdit" placeholder="" v-model="promServer.host"
-                        size="small"></el-input>
-              <div v-if="!rightBox.isEdit" class="right-box-form-content-txt">{{promServer.host}}</div>
-            </el-form-item>
-            <!--Port-->
-            <el-form-item label="Port" prop="port">
-              <el-input type="text" v-if="rightBox.isEdit" placeholder="" v-model.number="promServer.port"
-                        size="small"></el-input>
-              <div v-if="!rightBox.isEdit" class="right-box-form-content-txt">{{promServer.port}}</div>
-            </el-form-item>
-            <!--type-->
-            <el-form-item :label="$t('config.promServer.type')" prop="type">
-              <el-select popper-class="config-dropdown" v-model="promServer.type" placeholder="" v-if="rightBox.isEdit"
-                         size="small">
-                <el-option v-for="item in typeData" :key="item.key" :label="item.value" :value="item.key"
-                           :id="'prom-edit-type-op-'+item.key"></el-option>
-              </el-select>
-              <div v-for="item in typeData" v-if="!rightBox.isEdit && item.key == promServer.type"
-                   :id="'prom-edit-type-op-del-'+item.key" class="right-box-form-content-txt">{{item.value}}
-              </div>
-            </el-form-item>
-          </el-form>
-        </el-scrollbar>
-        <!-- end--表单-->
-
-        <!--底部按钮-->
-        <div class="right-box-bottom-btns">
-          <button @click="esc" id="prom-esc" class="nz-btn nz-btn-size-normal nz-btn-style-light nz-btn-min-width-100">
-            <span>{{$t('overall.cancel')}}</span>
-          </button>
-          <button v-if="rightBox.isEdit" @click="saveOrToEdit" id="prom-save"
-                  class="nz-btn nz-btn-size-normal nz-btn-style-normal nz-btn-min-width-100">
-            <span>{{$t('overall.save')}}</span>
-          </button>
-        </div>
-      </div>
+      <prom-server-box v-if="rightBox.show" :prom-server="promServer" @close="closeRightBox"></prom-server-box>
     </transition>
     <element-set
       v-clickoutside="elementsetHide"
@@ -187,14 +109,15 @@
 
 </template>
 <script>
-  import {host} from '../../common/js/validate';
-  import {port} from '../../common/js/validate';
   import bus from '../../../libs/bus';
-  var vm;
+  import promServerBox from '../../common/rightBox/promServerBox';
+
   export default {
-    name: "prom",
+    name: "promServer",
+    components: {
+      'prom-server-box': promServerBox
+    },
     data() {
-      vm = this;
       return {
         //底部上滑框相关
         mainTableHeight: this.$tableHeight.normal, //主列表table高度
@@ -215,8 +138,6 @@
         showTopBtn: false,
         rightBox: { //弹出框相关
           show: false,
-          isEdit: false, //false查看，true编辑
-          title: ''
         },
         loading: false,
         promServer: {
@@ -225,21 +146,11 @@
           port: 9090,
           idc: {id: '', name: '', location: ''}
         },
-        rules: {
-          'idc.name': [
-            {required: true, message: this.$t('validate.required'), trigger: 'change'}
-          ],
-          host: [
-            {required: true, message: this.$t('validate.required'), trigger: 'blur'},
-            {validator: host, trigger: 'blur'}
-          ],
-          port: [
-            {validator: port, trigger: 'blur'},
-            {required: true, message: this.$t('validate.required')}
-          ],
-          type: [
-            {required: true, message: this.$t('validate.required'), trigger: 'change'},
-          ]
+        blankPromServer: {
+          id: '',
+          host: '',
+          port: 9090,
+          idc: {id: '', name: '', location: ''}
         },
         pageObj: {
           pageNo: 1,
@@ -286,16 +197,7 @@
         tablelable: [],
         dropCol: [],
         tableData: [],
-        idcData: [],
-        typeData: [
-          {
-            key: 1,
-            value: 'Global'
-          }, {
-            key: 2,
-            value: 'Per-Datacenter'
-          }
-        ],
+        dcData: [],
         searchMsg: { //给搜索框子组件传递的信息
           zheze_none: true,
           searchLabelList: [{
@@ -331,28 +233,6 @@
           }],
         },
         searchLabel: {}, //搜索参数
-        idcSelectedData: {
-          id: '',
-          name: '',
-          location: '',
-          principal: '',
-          tel: ''
-        },
-        addIdcData: {
-          id: '',
-          name: '',
-          location: '',
-          principal: '',
-          tel: ''
-        },
-        popIdcData: {
-          id: '',
-          name: '',
-          location: '',
-          principal: '',
-          tel: ''
-        },
-        idcUserData: '',
       }
     },
     methods: {
@@ -374,7 +254,7 @@
         detail.push({label: "Host", value: obj.host});
         detail.push({label: "Port", value: obj.port});
         let type = "";
-        for (let i = 0; i < this.typeData.length; i++) {
+        for (let i = 0; i < this.$CONSTANTS.promServer.typeOption.length; i++) {
           if (obj.key == this.typeData[i].type) {
             type = this.typeData[i].value;
             break;
@@ -422,13 +302,12 @@
       clickos() {
         this.rightBox.show = false;
       },
-      toEdit: function (u) {
-        this.promServer = Object.assign({}, u);
-        this.rightBox.isEdit = true;
-        this.rightBox.title = this.$t("config.promServer.editProm") + "  ID：" + u.id;
+      edit(u) {
+        this.promServer = JSON.parse(JSON.stringify(u));
         this.rightBox.show = true;
       },
-      del: function (u) {
+      /*删除*/
+      del(u) {
         this.$confirm(this.$t("tip.confirmDelete"), {
           confirmButtonText: this.$t("tip.yes"),
           cancelButtonText: this.$t("tip.no"),
@@ -438,135 +317,28 @@
             if (response.code === 200) {
               this.$message({duration: 1000, type: 'success', message: this.$t("tip.deleteSuccess")});
               this.getTableData();
-              this.rightBox.show = false;
-            } else {
-              this.$message.error(response.msg);
-            }
-          })
-        });
-      },
-      detail: function (u) {
-        this.promServer = Object.assign({}, u);
-        /*this.rightBox.isEdit = false;
-        this.rightBox.title = "Prometheus Server ID：" + u.id;
-        this.rightBox.show = true;*/
-        this.targetTab = "detail";
-        this.showSubList = true;
-      },
-      toAdd: function () {
-        this.cleanPromServer();
-        this.rightBox.isEdit = true;
-        this.rightBox.title = this.$t("config.promServer.createProm");
-        this.rightBox.show = true;
-      },
-      save: function () {
-        this.$refs.promServerForm.validate((valid => {
-          if (valid) {
-            if (this.promServer.id) {
-              this.$put('promServer', this.promServer).then(response => {
-                if (response.code === 200) {
-                  this.$message({duration: 1000, type: 'success', message: this.$t("tip.saveSuccess")});
-                  this.getTableData();
-                  this.rightBox.isEdit = false;
-                  this.esc();
-                } else {
-                  this.$message.error(response.msg);
-                }
-              });
-            } else {
-              this.$post('promServer', this.promServer).then(response => {
-                if (response.code === 200) {
-                  this.$message({duration: 1000, type: 'success', message: this.$t("tip.saveSuccess")});
-                  this.getTableData();
-                  this.rightBox.isEdit = false;
-                  this.esc();
-                } else {
-                  this.$message.error(response.msg);
-                }
-              });
-            }
-          } else {
-            return false;
-          }
-        }))
-      },
-      saveOrToEdit: function () {
-        if (!this.rightBox.isEdit) {
-          this.toEdit(this.promServer);
-        } else {
-          this.save();
-        }
-      },
-      toEditIdc: function (item) {
-        if (!item.isEdit) {
-          //如果不在编辑状态，那么其他项如果有改动，则还原改动，最后开始编辑
-          this.blurEditIdc();
-          item.isEdit = true;
-        } else {
-          //如果已在编辑状态，判断name是否有变更，有变更则发请求
-          if (item.name != item.oldName) {
-            this.$put('idc', item).then(response => {
-              if (response.code === 200) {
-                item.errorMessage = '';
-                item.oldName = item.name;
-                item.isEdit = false;
-                this.getIdcData();
-              } else {
-                this.$set(item, 'errorMessage', response.msg);
-              }
-            })
-          } else {
-            item.errorMessage = '';
-            item.isEdit = false;
-          }
-        }
-      },
-      blurEditIdc: function () {
-        for (var i = 0; i < this.idcData.length; i++) {
-          if (this.idcData[i].isEdit) {
-            this.idcData[i].name = this.idcData[i].oldName;
-            this.idcData[i].isEdit = false;
-
-            this.idcData[i].errorMessage = '';
-            break;
-          }
-        }
-      },
-      toDelIdc: function (item) {
-        this.blurEditIdc();
-        this.$confirm(this.$t("tip.confirmDelete"), {
-          confirmButtonText: this.$t("tip.yes"),
-          cancelButtonText: this.$t("tip.no"),
-          type: 'warning'
-        }).then(() => {
-          this.$delete("idc?ids=" + item.id).then(response => {
-            if (response.code === 200) {
-              this.$message({duration: 1000, type: 'success', message: this.$t("tip.deleteSuccess")});
-              this.getTableData();
-              this.getIdcData();
             } else {
               this.$message.error(response.msg);
             }
           });
         });
       },
-      getIdcData: function () {
-        this.$get('idc', this.pageObj).then(response => {
-          if (response.code === 200) {
-            this.idcData = response.data.list;
-            for (var i = 0; i < this.idcData.length; i++) {
-              this.$set(this.idcData[i], 'oldName', this.idcData[i].name);
-              this.$set(this.idcData[i], 'isEdit', false);
-              this.$set(this.idcData[i], this.idcData[i].name, false)
-            }
-            this.getTableData();
-          }
-        })
-
+      detail(u) {
+        this.promServer = JSON.parse(JSON.stringify(u));
+        this.targetTab = "detail";
+        this.showSubList = true;
       },
-      esc: function () {
+      add() {
+        this.cleanPromServer();
+        this.rightBox.show = true;
+      },
+      closeRightBox(refresh) {
         this.rightBox.show = false;
+        if (refresh) {
+          this.getTableData();
+        }
       },
+
       jumpTo(data, id) {
         bus.$emit("menu-change", data);
         this.$router.push({
@@ -576,7 +348,7 @@
           }
         });
       },
-      getTableData: function () {
+      getTableData() {
         this.tableData = [];
         this.$set(this.searchLabel, "pageNo", this.pageObj.pageNo);
         this.$set(this.searchLabel, "pageSize", this.pageObj.pageSize);
@@ -584,10 +356,10 @@
         this.$get('promServer', this.searchLabel).then(response => {
           this.loading = false;
           if (response.code === 200) {
-            for (var i = 0; i < response.data.list.length; i++) {
-              for (var j = 0; j < this.idcData.length; j++) {
-                if (response.data.list[i].idcId == this.idcData[j].id) {
-                  response.data.list[i].idc = Object.assign({}, this.idcData[j]);
+            for (let i = 0; i < response.data.list.length; i++) {
+              for (let j = 0; j < this.dcData.length; j++) {
+                if (response.data.list[i].idcId == this.dcData[j].id) {
+                  response.data.list[i].idc = this.dcData[j];
                   break;
                 }
               }
@@ -597,14 +369,8 @@
           }
         })
       },
-      cleanPromServer: function () {
-        this.promServer = {
-          id: '',
-          host: '',
-          port: 9090,
-          idcId: '',
-          idc: {id: '', name: '', location: ''}
-        }
+      cleanPromServer() {
+        this.promServer = JSON.parse(JSON.stringify(this.blankPromServer));
       },
       pageNo(val) {
         this.pageObj.pageNo = val;
@@ -615,7 +381,7 @@
         localStorage.setItem('nz-pageSize-' + localStorage.getItem('nz-username') + '-' + this.tableId, val);
         this.getTableData();
       },
-      search: function (searchObj) {
+      search(searchObj) {
         this.pageObj.pageNo = 1;
         this.searchLabel = {};
         for (let item in searchObj) {
@@ -625,86 +391,29 @@
         }
         this.getTableData();
       },
-      addNewData(type) {
-        if (type === 'IDC') {
-          this.$post('idc', this.addIdcData).then(res => {
-            if (res.code === 200) {
-              const h = this.$createElement;
-              this.$notify({
-                message: h('i', {style: 'color: teal'}, '添加成功'),
-                duration: 2000
-              });
-              this.getIdcData()
-            } else {
-              const h = this.$createElement;
-              this.$notify({
-                message: h('i', {style: 'color: teal'}, res.msg),
-                duration: 2000
-              });
+      //获取dc数据
+      getDcData() {
+        return new Promise(resolve => {
+          this.$get('idc').then(response => {
+            if (response.code === 200) {
+              this.dcData = response.data.list;
             }
-          })
-        }
-      },
-      getSingleIDCData(data, item) {
-        if (item !== 'edit') {
-          this.idcSelectedData = '';
-          this.idcData.forEach(item => {
-            if (item.id === data) {
-              this.idcSelectedData = item
-            }
+            resolve();
           });
-        } else {
-          this.idcData.forEach(item => {
-            if (item.id === data) {
-              this.popIdcData.name = item.name
-              this.popIdcData.location = item.location
-              this.popIdcData.principal = item.principal
-              this.popIdcData.tel = item.tel
-            }
-          });
-        }
-      },
-      getUserData() {
-        this.$get('sys/user/list').then(response => {
-
-          if (response.code === 200) {
-            this.idcUserData = response.data.list
-          }
-        })
-      },
-      editData(data, id, item) {
-        item.id = id;
-        this.$put(data, item).then(res => {
-          if (res.code === 200) {
-            const h = this.$createElement;
-            this.$notify({
-              message: h('i', {style: 'color: teal'}, '修改成功'),
-              duration: 2000
-            })
-          } else {
-            const h = this.$createElement;
-            this.$notify({
-              message: h('i', {style: 'color: teal'}, res.msg),
-              duration: 2000
-            })
-          }
-        })
-      },
-      closeAllPop: function () {
-        this.$refs.idcConfigBox.forEach((item) => {
-          item.show(false)
-        })
+        });
       },
     },
     mounted: function () {
+      //初始化数据
+      Promise.all([this.getDcData()]).then(response => {
+        this.getTableData();
+      });
       //是否存在分页缓存
       let pageSize = localStorage.getItem('nz-pageSize-' + localStorage.getItem('nz-username') + '-' + this.tableId);
       if (pageSize != 'undefined' && pageSize != null) {
         this.pageObj.pageSize = pageSize
       }
 
-      this.getIdcData();
-      this.getUserData();
       this.$nextTick(() => {
         //绑定滚动条事件，控制top按钮
         let el = this.$refs.promTable.$el.querySelector(".el-table__body-wrapper");
@@ -733,9 +442,6 @@
     },
 
     watch: {
-      'promServer.idc': function (n, o) {
-        this.promServer.idcId = n.id;
-      },
       promServer: {
         deep: true,
         handler(n) {

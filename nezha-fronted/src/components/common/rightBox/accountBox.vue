@@ -99,7 +99,7 @@
 
       /*保存*/
       save() {
-        this.$refs.accountForm.validate((valid) => {
+        this.$refs.accountForm.validate(valid => {
           if (valid) {
             if (this.editUser.userId) {
               this.$put('sys/user/update', this.editUser).then(response => {

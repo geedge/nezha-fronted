@@ -42,7 +42,7 @@
             <div class="top-tool-search">
               <search-input ref="searchInput" :searchMsg="searchMsg" @search="search" :inTransform="inTransform"></search-input>
             </div>
-            <button type="button" @click="toAdd" :title="$t('overall.createAccount')"
+            <button type="button" @click="add" :title="$t('overall.createAccount')"
                     class="nz-btn nz-btn-size-normal nz-btn-style-light margin-l-20" id="account-add">
               <i class="nz-icon-create-square nz-icon"></i>
             </button>
@@ -163,7 +163,7 @@
         rightBox: { //弹出框相关
           show: false,
         },
-        blankUser: {
+        blankUser: { //空白对象
           userId: '',
           username: '',
           email: '',
@@ -321,42 +321,20 @@
           }
         })
       },
-      toAdd() {
+      add() {
         this.cleanUser();
         this.rightBox.show = true;
       },
-      save() {
-        this.$refs.accountForm.validate((valid) => {
-          if (valid) {
-            if (this.user.userId) {
-              this.$put('sys/user/update', this.user).then(response => {
-                if (response.code === 200) {
-                  this.rightBox.show = false;
-                  this.$message({duration: 1000, type: 'success', message: this.$t("tip.saveSuccess")});
-                } else {
-                  this.$message.error(response.msg);
-                }
-                this.getTableData();
-              });
-            } else {
-              this.$post('sys/user/save', this.user).then(response => {
-                if (response.code === 200) {
-                  this.rightBox.show = false;
-                  this.$message({duration: 1000, type: 'success', message: this.$t("tip.saveSuccess")});
-                  this.getTableData();
-                } else {
-                  this.$message.error(response.msg);
-                }
-              });
-            }
-          } else {
-            return false;
-          }
-        })
-      },
       statusChange(user) {
-        this.user = user;
-        this.save();
+        this.$put('sys/user/update', user).then(response => {
+          if (response.code === 200) {
+            this.rightBox.show = false;
+            this.$message({duration: 1000, type: 'success', message: this.$t("tip.saveSuccess")});
+          } else {
+            this.$message.error(response.msg);
+          }
+          this.getTableData();
+        });
       },
       jumpTo(data, id) {
         this.$router.push({
@@ -370,15 +348,7 @@
         this.rightBox.show = false;
       },
       cleanUser() {
-        this.user = {
-          userId: '',
-          username: '',
-          email: '',
-          status: '1',
-          createTime: '',
-          receiver: [],
-          lang: 'en'
-        }
+        this.user = JSON.parse(JSON.stringify(this.blankUser));
       },
       pageNo(val) {
         this.pageObj.pageNo = val;
