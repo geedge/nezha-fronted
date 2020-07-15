@@ -94,7 +94,9 @@
           v-show="mainResizeShow"
           ref="endpointTable"
           v-loading="loading"
-          style="width: 100%;">
+          style="width: 100%;"
+          @sort-change="tableDataSort"
+        >
           <el-table-column
             :resizable="false"
             v-for="(item, index) in tablelable"
@@ -103,6 +105,8 @@
             :key="`col-${index}`"
             :label="item.label"
             min-width="110px"
+            :sortable="sortableShow(item.prop)"
+            :prop="propTitle(item.prop)"
           >
             <template slot-scope="scope" :column="item" >
               <span v-if="item.prop == 'asset' && scope.row[item.prop]" class="link" @click="detail(scope.row)">{{scope.row[item.prop].host}}</span>
@@ -578,12 +582,19 @@
       },*/
       //搜索
       endpointSearch: function(searchObj) {
+        let orderBy='';
+        if(this.endpointSearchLabel.orderBy){
+          orderBy=this.endpointSearchLabel.orderBy
+        }
         this.endpointSearchLabel = {};
         this.endpointPageObj.pageNo = 1;
         for (let item in searchObj) {
           if (searchObj[item]) {
             this.$set(this.endpointSearchLabel, item, searchObj[item]);
           }
+        }
+        if(orderBy){
+          this.$set(this.endpointSearchLabel, 'orderBy', orderBy);
         }
         this.getEndpointTableData();
       },
@@ -774,6 +785,39 @@
             this.userData = response.data.list
           }
         })
+      },
+      //是否需要排序
+      sortableShow(prop){
+        switch(prop){
+          case 'id':
+          case 'asset':
+          case 'port':
+          case 'path':
+            return'custom';
+          default : return false;
+        }
+      },
+      // prop字段
+      propTitle(prop){
+        switch(prop){
+          case 'id': return'e.id';
+          case 'asset': return'a.host';
+          case 'port': return'e.port';
+          case 'path': return'e.path';
+          default : return prop;
+        }
+      },
+      // 数据排序
+      tableDataSort(item){
+        let orderBy='';
+        if(item.order==='ascending'){
+          orderBy=item.prop;
+        }
+        if(item.order==='descending'){
+          orderBy='-'+item.prop;
+        }
+        this.$set(this.endpointSearchLabel, "orderBy", orderBy);
+        this.getEndpointTableData();
       }
     },
     created() {

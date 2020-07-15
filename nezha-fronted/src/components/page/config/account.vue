@@ -59,7 +59,8 @@
           :height="mainTableHeight"
           v-loading="loading"
           v-scrollBar:el-table="'large'"
-          style="width: 100%;">
+          style="width: 100%;"
+          @sort-change="tableDataSort">
           <el-table-column
             :resizable="false"
             v-for="(item, index) in tablelable"
@@ -67,6 +68,8 @@
             :width="item.width"
             :key="`col-${index}`"
             :label="item.label"
+            :sortable="item.prop!='option'&&item.prop!='status'?'custom':false"
+            :prop="item.prop"
           >
             <template slot-scope="scope" :column="item">
               <div v-if="item.prop == 'option'" class="content-right-options">
@@ -367,6 +370,18 @@
             this.$set(this.searchLabel, item, searchObj[item]);
           }
         }
+        this.getTableData();
+      },
+      // 数据排序
+      tableDataSort(item){
+        let orderBy='';
+        if(item.order==='ascending'){
+          orderBy=item.prop;
+        }
+        if(item.order==='descending'){
+          orderBy='-'+item.prop;
+        }
+        this.$set(this.searchLabel, "orderBy", orderBy);
         this.getTableData();
       },
     },

@@ -53,7 +53,8 @@
         v-scrollBar:el-table="'large'"
         v-loading="loading"
         :cell-class-name="messageStyle"
-        style="width: 100%;">
+        style="width: 100%;"
+        @sort-change="tableDataSort">
         <el-table-column
           :resizable="false"
           v-for="(item, index) in tablelable"
@@ -61,6 +62,8 @@
           :width="item.width"
           :key="`col-${index}`"
           :label="item.label"
+          :sortable="sortableShow(item.prop)"
+          :prop="propTitle(item.prop)"
         >
           <template slot-scope="scope" :column="item">
             <span v-if="item.prop == 'lang'">
@@ -333,6 +336,10 @@
         this.getTableData();
       },
       search: function (searchObj) {
+        let orderBy='';
+        if(this.searchLabel.orderBy){
+          orderBy=this.searchLabel.orderBy
+        }
         this.searchLabel = {};
         this.pageObj.pageNo = 1;
         for (let item in searchObj) {
@@ -340,8 +347,50 @@
             this.$set(this.searchLabel, item, searchObj[item]);
           }
         }
+        if(orderBy){
+          this.$set(this.searchLabel, 'orderBy', orderBy);
+        }
         this.getTableData();
-      }
+      },
+      //是否需要排序
+      sortableShow(prop){
+        switch(prop){
+          case 'id':
+          case 'host':
+          case 'port':
+          case 'protocol':
+          case 'user':
+          case 'cmd':
+          case 'time':
+            return'custom';
+          default : return false;
+        }
+      },
+      // prop字段
+      propTitle(prop){
+        switch(prop){
+          case 'id': return 'id';
+          case 'host': return 'host';
+          case 'port': return 'port';
+          case 'protocol': return 'protocol';
+          case 'user': return 'user';
+          case 'cmd': return 'cmd';
+          case 'time': return 'time';
+          default : return prop;
+        }
+      },
+      // 数据排序
+      tableDataSort(item){
+        let orderBy='';
+        if(item.order==='ascending'){
+          orderBy=item.prop;
+        }
+        if(item.order==='descending'){
+          orderBy='-'+item.prop;
+        }
+        this.$set(this.searchLabel, "orderBy", orderBy);
+        this.getTableData();
+      },
     },
     computed: {
       isCurrentUser() {

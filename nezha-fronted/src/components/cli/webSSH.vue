@@ -2,10 +2,19 @@
   @import './webSSH.scss';
 </style>
 <template>
-  <div id="shell-service"  data-yunlog-scope="popup" :class="{'shell-service-max': isFullScreen}" v-show="consoleShow">
+  <el-drawer
+    :visible.sync="consoleShow"
+    direction="btt"
+    :close-on-press-escape="false"
+    :modal="false"
+    :withHeader="false"
+  >
+    <div id="shell-service"  data-yunlog-scope="popup" :class="{'shell-service-max': isFullScreen,'shell-service':true}">
     <div id="shell-service-resize-mask"></div>
     <div id="shell-split" class="shell-split shell-iconfont" @mousedown="dragEagle" v-show="!isFullScreen">一</div>
     <div style='position: relative;'>
+      <!--el-drawer 打开后会对第一个未隐藏的元素聚焦 所以添加一隐藏的input 防止聚焦-->
+      <input style='width: 0;height: 0;opacity: 0;display: inherit;' />
       <el-menu  mode="horizontal" @select="handleSelect" style='position: absolute;left:0px;top:0px;border-top: 1px solid #DCDFE6;'>
         <el-submenu index="1"  style="width:40px;" popper-class="fontSizeBox">
           <template slot="title" ><i class="nz-icon nz-icon-728bianjiqi_zitidaxiao" style="position: absolute;left: 10px;top: 4px;"></i></template>
@@ -162,6 +171,7 @@
       </el-dialog>
     </div>
   </div>
+  </el-drawer>
 </template>
 
 <script>
@@ -581,7 +591,7 @@
         this.editableTabs.forEach((tab, index) => {
           this.$refs['console'+index][0].setFontSize(fontSize);
         });
-      }
+      },
     },
     watch: {
       '$store.state.consoleShow':function(val){
@@ -618,4 +628,6 @@
     },
   }
 </script>
+<style scoped>
 
+</style>

@@ -54,9 +54,10 @@
             </button>
           </div>
         </div>
-        <el-table :data="tableData" border :height="$tableHeight.normal" style="width: 100%;" ref="mibTable" class="nz-table mib-table" v-scrollBar:el-table="'large'" v-loading="loading">
+        <el-table :data="tableData" border :height="$tableHeight.normal" style="width: 100%;" ref="mibTable" class="nz-table mib-table" v-scrollBar:el-table="'large'" v-loading="loading" @sort-change="tableDataSort">
           <el-table-column :resizable="false" v-for="(item, index) in tablelable" v-if="item.show" :width="item.width" :class-name="item.prop == 'modelsDetail'?'detail-column':''"
-                           :key="`col-${index}`" :label="item.label">
+                           :key="`col-${index}`" :label="item.label" :sortable="sortableShow(item.prop)"
+                           :prop="propTitle(item.prop)">
             <template slot-scope="scope" :column="item">
               <template v-if="item.prop == 'updateUser'" >{{scope.row[item.prop].name}}</template>
               <template v-else-if="item.prop == 'fileName' && scope.row[item.prop]" >
@@ -317,12 +318,19 @@
         this.getTableData();
       },
       search: function (searchObj) {
+        let orderBy='';
+        if(this.searchLabel.orderBy){
+          orderBy=this.searchLabel.orderBy
+        }
         this.pageObj.pageNo = 1;
         this.searchLabel = {};
         for (let item in searchObj) {
           if (searchObj[item]) {
             this.$set(this.searchLabel, item, searchObj[item]);
           }
+        }
+        if(orderBy){
+          this.$set(this.searchLabel, 'orderBy', orderBy);
         }
         this.getTableData();
       },
@@ -360,7 +368,40 @@
           file:null,
         };
         this.$refs.mibBox.clearData();
-      }
+      },
+      //是否需要排序
+      sortableShow(prop){
+        switch(prop){
+          case 'id':
+          case 'name':
+          case 'filename':
+          case 'updateAt':
+            return'custom';
+          default : return false;
+        }
+      },
+      // prop字段
+      propTitle(prop){
+        switch(prop){
+          case 'id': return'sm.id';
+          case 'name': return'sm.name';
+          case 'filename': return'sm.file_name';
+          case 'updateAt': return'sm.update_at';
+          default : return prop;
+        }
+      },
+      // 数据排序
+      tableDataSort(item){
+        let orderBy='';
+        if(item.order==='ascending'){
+          orderBy=item.prop;
+        }
+        if(item.order==='descending'){
+          orderBy='-'+item.prop;
+        }
+        this.$set(this.searchLabel, "orderBy", orderBy);
+        this.getTableData();
+      },
     },
     mounted: function () {
       //是否存在分页缓存

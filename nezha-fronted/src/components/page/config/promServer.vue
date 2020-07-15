@@ -48,9 +48,15 @@
           <div class="pagination-top pagination-top-hide display-none"></div>
         </div>
         <el-table :data="tableData" border v-show="mainResizeShow" :height="mainTableHeight" style="width: 100%;"
-                  v-loading="loading" ref="promTable" class="nz-table" v-scrollBar:el-table="'large'">
-          <el-table-column :resizable="false" v-for="(item, index) in tablelable" v-if="item.show" :width="item.width"
-                           :key="`col-${index}`" :label="item.label">
+                  v-loading="loading" ref="promTable" class="nz-table" v-scrollBar:el-table="'large'"
+                  @sort-change="tableDataSort">
+          <el-table-column :resizable="false" v-for="(item, index) in tablelable"
+                           v-if="item.show"
+                           :width="item.width"
+                           :key="`col-${index}`"
+                           :label="item.label"
+                           :sortable="sortableShow(item.prop)"
+                           :prop="propTitle(item.prop)">
             <template slot-scope="scope" :column="item">
               <span v-if="item.prop == 'idc'" >{{scope.row[item.prop]?scope.row[item.prop].name:'-'}}</span>
 
@@ -382,12 +388,19 @@
         this.getTableData();
       },
       search(searchObj) {
+        let orderBy='';
+        if(this.searchLabel.orderBy){
+          orderBy=this.searchLabel.orderBy
+        }
         this.pageObj.pageNo = 1;
         this.searchLabel = {};
         for (let item in searchObj) {
           if (searchObj[item]) {
             this.$set(this.searchLabel, item, searchObj[item]);
           }
+        }
+        if(orderBy){
+          this.$set(this.searchLabel, 'orderBy', orderBy);
         }
         this.getTableData();
       },
@@ -401,6 +414,41 @@
             resolve();
           });
         });
+      },
+      //是否需要排序
+      sortableShow(prop){
+        switch(prop){
+          case 'id':
+          case 'idc':
+          case 'host':
+          case 'port':
+          case 'type':
+            return'custom';
+          default : return false;
+        }
+      },
+      // prop字段
+      propTitle(prop){
+        switch(prop){
+          case 'id': return'id';
+          case 'idc': return'idc_id';
+          case 'host': return'host';
+          case 'port': return'port';
+          case 'type': return'type';
+          default : return prop;
+        }
+      },
+      // 数据排序
+      tableDataSort(item){
+        let orderBy='';
+        if(item.order==='ascending'){
+          orderBy=item.prop;
+        }
+        if(item.order==='descending'){
+          orderBy='-'+item.prop;
+        }
+        this.$set(this.searchLabel, "orderBy", orderBy);
+        this.getTableData();
       },
     },
     mounted: function () {

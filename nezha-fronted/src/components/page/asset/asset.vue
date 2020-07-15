@@ -92,6 +92,7 @@
                 tooltip-effect="light"
                 ref="assetTable"
                 :cell-class-name="messageStyle"
+                @sort-change="tableDataSort"
               >
                 <el-table-column
                   :resizable="false"
@@ -104,6 +105,8 @@
                   :show-overflow-tooltip="item.prop != 'Alert' || item.prop != 'Module'"
                   min-width="110px"
                   :class-name="item.prop == 'option' ? 'content-right-options' : ''"
+                  :sortable="sortableShow(item.prop)"
+                  :prop="propTitle(item.prop)"
                 >
                   <template slot-scope="scope" :column="item">
                     <div v-if="item.prop=='ID'">
@@ -865,12 +868,19 @@
         })
       },
       search(searchObj) {
+        let orderBy='';
+        if(this.searchLabel.orderBy){
+          orderBy=this.searchLabel.orderBy
+        }
         this.searchLabel = {};
         this.pageObj.pageNo = 1;
         for (let item in searchObj) {
           if (searchObj[item]) {
             this.$set(this.searchLabel, item, searchObj[item]);
           }
+        }
+        if(orderBy){
+          this.$set(this.searchLabel, 'orderBy', orderBy);
         }
         this.getAssetData();
       },
@@ -950,6 +960,39 @@
         let seconds=time.getSeconds() > 9 ? time.getSeconds():('0'+time.getSeconds());
         return this.$t('asset.assetStatPre')+year+ds+month+ds+day+' '+hours+ts+minutes+ts+seconds;
 
+      },
+      //是否需要排序
+      sortableShow(prop){
+        switch(prop){
+          case 'ID':
+          case 'HOST':
+          case 'SN':
+          case 'purchaseDate':
+            return'custom';
+          default : return false;
+        }
+      },
+      // prop字段
+      propTitle(prop){
+        switch(prop){
+          case 'ID': return'ass.id';
+          case 'HOST': return'ass.host';
+          case 'SN': return'ass.sn';
+          case 'purchaseDate': return'ass.purchase_date';
+          default : return prop;
+        }
+      },
+      // 数据排序
+      tableDataSort(item){
+        let orderBy='';
+        if(item.order==='ascending'){
+          orderBy=item.prop;
+        }
+        if(item.order==='descending'){
+          orderBy='-'+item.prop;
+        }
+        this.$set(this.searchLabel, "orderBy", orderBy);
+        this.getAssetData();
       }
     },
     created() {

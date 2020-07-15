@@ -49,7 +49,8 @@
           v-loading="loading"
           :cell-class-name="labelsClassName"
           @selection-change="selectChange"
-          style="width: 100%;">
+          style="width: 100%;"
+          @sort-change="tableDataSort">
           <el-table-column
             :resizable="false"
             type="selection"
@@ -66,6 +67,8 @@
             :label="item.label"
             :show-overflow-tooltip="item.prop != 'labels'"
             min-width="110px"
+            :sortable="sortableShow(item.prop)"
+            :prop="propTitle(item.prop)"
           >
             <template slot-scope="scope" :column="item">
               <template v-if="item.prop == 'alertRule'">
@@ -836,6 +839,10 @@
         this.getAlertList();
       },
       search: function (searchObj) {
+        let orderBy='';
+        if(this.searchLabel.orderBy){
+          orderBy=this.searchLabel.orderBy
+        }
         this.searchLabel = {};
         this.pageObj.pageNo = 1;
         for (let item in searchObj) {
@@ -846,6 +853,9 @@
               this.$set(this.searchLabel, item, searchObj[item]);
             }
           }
+        }
+        if(orderBy){
+          this.$set(this.searchLabel, 'orderBy', orderBy);
         }
         this.getAlertList();
       },
@@ -895,6 +905,40 @@
         this.$refs.projectBox.show(false, false);
         this.$refs.moduleBox.show(false, false);
         this.viewAssetState = false;
+      },
+      //是否需要排序
+      sortableShow(prop){
+        switch(prop){
+          case 'alertRule':
+          case 'severity':
+          case 'startAt':
+          case 'endAt':
+            return'custom';
+          default : return false;
+        }
+      },
+      // prop字段
+      propTitle(prop){
+        switch(prop){
+          case 'alertRule': return'ar.alert_name';
+          case 'severity': return'am.severity';
+          case 'startAt': return'am.start_at';
+          case 'endAt': return'am.end_at';
+          default : return prop;
+        }
+      },
+      // 数据排序
+      tableDataSort(item){
+        let orderBy='';
+        if(item.order==='ascending'){
+          orderBy=item.prop;
+        }
+        if(item.order==='descending'){
+          orderBy='-'+item.prop;
+        }
+        this.pageObj.orderBy=orderBy;
+        this.$set(this.searchLabel, "orderBy", orderBy);
+        this.getAlertList();
       }
     },
     watch: {
