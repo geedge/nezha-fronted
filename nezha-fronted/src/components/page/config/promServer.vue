@@ -338,7 +338,7 @@
         this.showSubList = true;
       },
       add() {
-        this.cleanPromServer();
+        this.promServer = this.newPromServer();
         this.rightBox.show = true;
       },
       closeRightBox(refresh) {
@@ -378,8 +378,8 @@
           }
         })
       },
-      cleanPromServer() {
-        this.promServer = JSON.parse(JSON.stringify(this.blankPromServer));
+      newPromServer() {
+        return JSON.parse(JSON.stringify(this.blankPromServer));
       },
       pageNo(val) {
         this.pageObj.pageNo = val;
@@ -443,12 +443,12 @@
       },
       // 数据排序
       tableDataSort(item){
-        let orderBy='';
-        if(item.order==='ascending'){
-          orderBy=item.prop;
+        let orderBy = '';
+        if(item.order === 'ascending') {
+          orderBy = item.prop;
         }
-        if(item.order==='descending'){
-          orderBy='-'+item.prop;
+        if(item.order === 'descending') {
+          orderBy = '-' + item.prop;
         }
         this.$set(this.searchLabel, "orderBy", orderBy);
         this.getTableData();

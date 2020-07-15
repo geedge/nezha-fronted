@@ -143,12 +143,13 @@
         :table-title="tableTitle"
         ref="elementset"
       ></element-set>
-      <dc-box ref="dcBox" :dc="currentDc" :user-data="userData" @reload="getTableData"></dc-box>
+      <transition name="right-box">
+        <dc-box ref="dcBox" :dc="currentDc" :user-data="userData" @reload="getTableData"></dc-box>
+      </transition>
       <traffic-setting-box :dc-obj="currentDc" ref="trafficBox"></traffic-setting-box>
     </div>
 </template>
 <script>
-  var vm;
   import bus from '../../../libs/bus';
   import trafficSettingBox from "../../common/rightBox/trafficSetting/trafficSettingBox";
   export default {
@@ -157,7 +158,6 @@
       'traffic-setting-box':trafficSettingBox,
     },
     data() {
-      vm = this;
       return {
         /*二级列表相关*/
         targetTab: '', //展示二级列表中的哪个页签
@@ -177,7 +177,8 @@
         showTopBtn: false,
         mainTableHeight: this.$tableHeight.normal, //主列表table高度
         loading: false,
-        currentDc: {
+        dc: {},
+        blankDc: {
           id: '',
           name: '',
           location: '',
@@ -321,22 +322,23 @@
         if (!tempDc.area) {
           this.$set(tempDc, 'area', {id: '', name: ''});
         }
-        //this.currentDc = tempDc;
-        //this.$refs.dcBox.show(true, false);
         this.cabinetDc = tempDc;
         this.targetTab = "detail";
         this.showSubList = true;
       },
       // 全屏
       fullScreen() {
+        let vm = this;
         this.$bottomBoxWindow.fullScreen(vm);
       },
       // 退出全屏
       exitFullScreen() {
+        let vm = this;
         this.$bottomBoxWindow.exitFullScreen(vm);
       },
       // 鼠标拖动二级列表
       listResize(e) {
+        let vm = this;
         this.$bottomBoxWindow.listResize(vm, e);
       },
       convertToDetail(obj) {
@@ -358,19 +360,12 @@
         detail.push({label: this.$t("asset.createAssetTab.principal"), value: principal});
         return detail;
       },
-      toAdd() {
-        this.currentDc = {
-          id: '',
-            name: '',
-            location: '',
-            tel: '',
-            principal: '',
-            area: {
-            id: '',
-              name: ''
-          }
-        },
-        this.$refs.dcBox.show(true, true);
+      add() {
+        this.dc = this.newDc();
+        this.rightBox.show = true;
+      },
+      newDc() {
+        return JSON.parse(JSON.stringify(this.blankDc));
       },
       del: function (u) {
         this.$confirm(this.$t("tip.confirmDelete"), {
@@ -401,11 +396,14 @@
         })
       },
       getUserData() {
-        this.$get('sys/user/list', {pageSize: -1, pageNo: 1}).then(response => {
-          if (response.code === 200) {
-            this.userData = response.data.list;
-          }
-        })
+        return new Promise(resolve => {
+          this.$get('sys/user/list', {pageSize: -1, pageNo: 1}).then(response => {
+            if (response.code === 200) {
+              this.userData = response.data.list;
+            }
+            resolve();
+          });
+        });
       },
       pageNo(val) {
         this.pageObj.pageNo = val;
@@ -416,10 +414,10 @@
         this.pageObj.pageSize = val;
         this.getTableData();
       },
-      search: function (searchObj) {
-        let orderBy='';
-        if(this.searchLabel.orderBy){
-          orderBy=this.searchLabel.orderBy
+      search(searchObj) {
+        let orderBy = '';
+        if(this.searchLabel.orderBy) {
+          orderBy = this.searchLabel.orderBy;
         }
         this.searchLabel = {};
         this.pageObj.pageNo = 1;
@@ -433,20 +431,14 @@
         }
         this.getTableData();
       },
-      showCabinet:function(dc){
-        //this.currentShowDc=dc;
-        //this.tabShow=2;
+      showCabinet(dc) {
         this.targetTab = 'cabinet';
         this.cabinetDc = JSON.parse(JSON.stringify(dc));
         this.showSubList = true;
-        //this.cabSearchLabel={idcId:this.currentShowDc.id};
-        //this.getCabinetDatas();
-        /*let temp=this;
-        setTimeout(function(){temp.$refs.cabSearchInput.clear_input();},100)*/
       },
       //是否需要排序
-      sortableShow(prop){
-        switch(prop){
+      sortableShow(prop) {
+        switch(prop) {
           case 'id':
           case 'name':
           case 'area':
@@ -465,12 +457,12 @@
       },
       // 数据排序
       tableDataSort(item){
-        let orderBy='';
-        if(item.order==='ascending'){
-          orderBy=item.prop;
+        let orderBy = '';
+        if(item.order === 'ascending'){
+          orderBy = item.prop;
         }
-        if(item.order==='descending'){
-          orderBy='-'+item.prop;
+        if(item.order === 'descending'){
+          orderBy = '-' + item.prop;
         }
         this.$set(this.searchLabel, "orderBy", orderBy);
         this.getTableData();

@@ -1,21 +1,16 @@
 <template>
-  <transition name="right-box">
-    <div class="right-box right-box-dc" v-if="rightBox.show" v-clickoutside="clickos">
+  <div class="right-box right-box-dc" v-clickoutside="clickos">
       <!-- begin--顶部按钮-->
       <div class="right-box-top-btns">
-        <button id="dc-del" type="button" v-if="currentDc.id != '' && rightBox.isEdit" @click="del" class="nz-btn nz-btn-size-normal nz-btn-size-alien nz-btn-style-light nz-btn-min-width-82">
+        <button id="dc-del" type="button" v-if="currentDc.id" @click="del" class="nz-btn nz-btn-size-normal nz-btn-size-alien nz-btn-style-light">
           <span class="right-box-top-btn-icon"><i class="el-icon-delete"></i></span>
           <span class="right-box-top-btn-txt">{{$t('overall.delete')}}</span>
-        </button>
-        <button v-if="!rightBox.isEdit" id="dc-save" type="button" @click="saveOrToEdit" class="nz-btn nz-btn-size-normal nz-btn-size-alien nz-btn-style-light nz-btn-min-width-82">
-          <span class="right-box-top-btn-icon"><i class="nz-icon nz-icon-edit"></i></span>
-          <span class="right-box-top-btn-txt">{{$t('overall.edit')}}</span>
         </button>
       </div>
       <!-- end--顶部按钮-->
 
       <!-- begin--标题-->
-      <div class="right-box-title">{{rightBox.title}}</div>
+      <div class="right-box-title">{{}}</div>
       <!-- end--标题-->
 
       <!-- begin--表单-->
@@ -73,12 +68,9 @@
       </div>
 
     </div>
-  </transition>
 </template>
 
 <script>
-  import {noSpecialChar} from "../js/validate";
-
   export default {
     name: "dcBox",
     props: {

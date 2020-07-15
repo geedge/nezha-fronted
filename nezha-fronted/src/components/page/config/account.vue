@@ -325,7 +325,7 @@
         })
       },
       add() {
-        this.cleanUser();
+        this.user = this.newUser();
         this.rightBox.show = true;
       },
       statusChange(user) {
@@ -350,8 +350,8 @@
       esc() {
         this.rightBox.show = false;
       },
-      cleanUser() {
-        this.user = JSON.parse(JSON.stringify(this.blankUser));
+      newUser() {
+        return JSON.parse(JSON.stringify(this.blankUser));
       },
       pageNo(val) {
         this.pageObj.pageNo = val;
@@ -374,12 +374,12 @@
       },
       // 数据排序
       tableDataSort(item){
-        let orderBy='';
-        if(item.order==='ascending'){
-          orderBy=item.prop;
+        let orderBy = '';
+        if(item.order === 'ascending') {
+          orderBy = item.prop;
         }
-        if(item.order==='descending'){
-          orderBy='-'+item.prop;
+        if(item.order === 'descending') {
+          orderBy = '-' + item.prop;
         }
         this.$set(this.searchLabel, "orderBy", orderBy);
         this.getTableData();
