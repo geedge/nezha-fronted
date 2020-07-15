@@ -1,5 +1,5 @@
 <template>
-  <div class="panel" :class="{'sub-list': from != 'project'}">
+  <div class="panel">
     <!--model和asset的工具栏-->
     <div class="sub-top-tools" v-if="from != 'project'">
       <div class="sub-list-tabs">

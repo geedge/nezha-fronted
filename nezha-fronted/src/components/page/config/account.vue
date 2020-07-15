@@ -297,9 +297,6 @@
           this.getTableData();
         }
       },
-      clickos() {
-        this.rightBox.show = false;
-      },
       edit(u) {
         this.user = JSON.parse(JSON.stringify(u));
         this.rightBox.show = true;
@@ -328,18 +325,7 @@
         this.cleanUser();
         this.rightBox.show = true;
       },
-      tabSave: function () {
-        this.$put('sys/user/update', this.user).then(response => {
-          if (response.code === 200) {
-            this.rightBox.show = false;
-            this.$message({duration: 1000, type: 'success', message: this.$t("tip.saveSuccess")});
-          } else {
-            this.$message.error(response.msg);
-          }
-          this.getTableData();
-        });
-      },
-      save: function () {
+      save() {
         this.$refs.accountForm.validate((valid) => {
           if (valid) {
             if (this.user.userId) {
@@ -368,17 +354,9 @@
           }
         })
       },
-      saveOrToEdit: function () {
-        if (!this.rightBox.isEdit) {
-          this.rightBox.isEdit = true;
-          this.rightBox.title = this.$t("config.account.editAccount") + "  ID：" + this.user.userId;
-        } else {
-          this.save();
-        }
-      },
-      statusChange: function (user) {
+      statusChange(user) {
         this.user = user;
-        this.tabSave();
+        this.save();
       },
       jumpTo(data, id) {
         this.$router.push({
@@ -388,41 +366,10 @@
           }
         });
       },
-      toEditReceiver: function (item) {
-        if (!item.isEdit) {
-          //如果不在编辑状态，那么其他项如果有改动，则还原改动，最后开始编辑
-          this.blurEditReceiver();
-          item.isEdit = true;
-        } else {
-          //如果已在编辑状态，判断name是否有变更，有变更则发请求
-          if (item.name != item.oldName) {
-            if (this.updateReceiverName(item) == 200) {
-              item.isEdit = false;
-            }
-          } else {
-            item.errorMessage = '';
-            item.isEdit = false;
-          }
-        }
-      },
-      blurEditReceiver: function () {
-        for (let i = 0; i < this.receiverData.length; i++) {
-          if (this.receiverData[i].isEdit) {
-            this.receiverData[i].name = this.receiverData[i].oldName;
-            this.receiverData[i].isEdit = false;
-            this.receiverData[i].errorMessage = '';
-            break;
-          }
-        }
-      },
-      toDelReceiver: function (item) {
-        this.blurEditReceiver();
-        //TODO 请求后台，删除用户组
-      },
-      esc: function () {
+      esc() {
         this.rightBox.show = false;
       },
-      cleanUser: function () {
+      cleanUser() {
         this.user = {
           userId: '',
           username: '',

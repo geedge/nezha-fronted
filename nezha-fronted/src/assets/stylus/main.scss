@@ -211,7 +211,7 @@ li{
 .nz-btn.nz-btn-size-normal.nz-btn-size-alien { //弹框顶部异形按钮
   height: 40px;
   font-size: 12px;
-  padding: 4px 8px;
+  padding: 4px 35px;
   border-radius: 0 0 10px 10px;
 }
 .nz-btn.nz-btn-size-small.nz-btn-size-alien { //弹框顶部异形按钮
@@ -645,7 +645,7 @@ li{
   height: calc(50% - 4px);
 }
 .sub-list {
-  height: calc(50% - 4px);
+  height: calc(100% - 9px);
   position: relative;
 }
 .main-and-sub-transition {

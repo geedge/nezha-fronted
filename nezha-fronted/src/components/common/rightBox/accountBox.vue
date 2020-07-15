@@ -2,7 +2,7 @@
   <div class="right-box right-box-account" v-clickoutside="clickos">
     <!-- begin--顶部按钮-->
     <div class="right-box-top-btns">
-      <button type="button" v-if="editUser.userId" @click="del()"
+      <button type="button" v-if="editUser.userId" @click="del"
               class="nz-btn nz-btn-size-normal nz-btn-size-alien nz-btn-style-light"
               id="account-edit-del">
         <span class="right-box-top-btn-icon"><i class="el-icon-delete"></i></span>
@@ -72,9 +72,6 @@
     },
     data() {
       return {
-        rightBox: {
-          title: '',
-        },
         rules: { //表单校验规则
           username: [
             {required: true, message: this.$t('validate.required'), trigger: 'blur'}
@@ -149,6 +146,7 @@
       },
     },
     watch: {
+      //将prop里的user转为组件内部对象
       user: {
         immediate: true,
         deep: true,
