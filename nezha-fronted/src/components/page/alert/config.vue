@@ -40,7 +40,9 @@
           v-scrollBar:el-table="'large'"
           v-loading="loading"
           :cell-class-name="messageStyle"
-          style="width: 100%;">
+          style="width: 100%;"
+          @sort-change="tableDataSort"
+        >
           <el-table-column
             :resizable="false"
             v-for="(item, index) in tablelable"
@@ -50,7 +52,8 @@
             :label="item.label"
             show-overflow-tooltip
             min-width="110px"
-
+            :sortable="sortableShow(item.prop)"
+            :prop="propTitle(item.prop)"
           >
             <template slot-scope="scope" :column="item">
               <div v-if="item.prop == 'option'" class="content-right-options">
@@ -434,12 +437,19 @@
         this.getTableData();
       },
       search: function (searchObj) {
+        let orderBy='';
+        if(this.searchLabel.orderBy){
+          orderBy=this.searchLabel.orderBy
+        }
         this.searchLabel = {};
         this.pageObj.pageNo = 1;
         for (let item in searchObj) {
           if (searchObj[item]) {
             this.$set(this.searchLabel, item, searchObj[item]);
           }
+        }
+        if(orderBy){
+          this.$set(this.searchLabel, 'orderBy', orderBy);
         }
         this.getTableData();
       },
@@ -532,6 +542,39 @@
         detail.push({label: this.$t("alert.description"), value: obj.description});
         detail.push({label: this.$t("alert.message"), value: obj.alertNum});*/
         return detail;
+      },
+      //是否需要排序
+      sortableShow(prop){
+        switch(prop){
+          case 'id':
+          case 'alertName':
+          case 'threshold':
+          case 'severity':
+            return'custom';
+          default : return false;
+        }
+      },
+      // prop字段
+      propTitle(prop){
+        switch(prop){
+          case 'id': return'ar.id';
+          case 'alertName': return'ar.alert_name';
+          case 'threshold': return'ar.threshold';
+          case 'severity': return'ar.severity';
+          default : return prop;
+        }
+      },
+      // 数据排序
+      tableDataSort(item){
+        let orderBy='';
+        if(item.order==='ascending'){
+          orderBy=item.prop;
+        }
+        if(item.order==='descending'){
+          orderBy='-'+item.prop;
+        }
+        this.$set(this.searchLabel, "orderBy", orderBy);
+        this.getTableData();
       },
     },
     watch: {

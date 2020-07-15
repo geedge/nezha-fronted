@@ -61,7 +61,8 @@
             ref="dcTable"
             v-loading="loading"
             :cell-class-name="assetStatClassName"
-            style="width: 100%;">
+            style="width: 100%;"
+            @sort-change="tableDataSort">
             <el-table-column
               :resizable="false"
               show-overflow-tooltip
@@ -70,6 +71,8 @@
               :width="item.width"
               :key="`col-${index}`"
               :label="item.label"
+              :sortable="sortableShow(item.prop)"
+              :prop="propTitle(item.prop)"
             >
               <template slot-scope="scope" :column="item">
                 <div v-if="item.prop == 'option'" class="content-right-options">
@@ -414,12 +417,19 @@
         this.getTableData();
       },
       search: function (searchObj) {
+        let orderBy='';
+        if(this.searchLabel.orderBy){
+          orderBy=this.searchLabel.orderBy
+        }
         this.searchLabel = {};
         this.pageObj.pageNo = 1;
         for (let item in searchObj) {
           if (searchObj[item]) {
             this.$set(this.searchLabel, item, searchObj[item]);
           }
+        }
+        if(orderBy){
+          this.$set(this.searchLabel, 'orderBy', orderBy);
         }
         this.getTableData();
       },
@@ -433,6 +443,37 @@
         //this.getCabinetDatas();
         /*let temp=this;
         setTimeout(function(){temp.$refs.cabSearchInput.clear_input();},100)*/
+      },
+      //是否需要排序
+      sortableShow(prop){
+        switch(prop){
+          case 'id':
+          case 'name':
+          case 'area':
+            return'custom';
+          default : return false;
+        }
+      },
+      // prop字段
+      propTitle(prop){
+        switch(prop){
+          case 'id': return'i.id';
+          case 'name': return'i.name';
+          case 'area': return'sa.name';
+          default : return prop;
+        }
+      },
+      // 数据排序
+      tableDataSort(item){
+        let orderBy='';
+        if(item.order==='ascending'){
+          orderBy=item.prop;
+        }
+        if(item.order==='descending'){
+          orderBy='-'+item.prop;
+        }
+        this.$set(this.searchLabel, "orderBy", orderBy);
+        this.getTableData();
       },
     },
     watch: {

@@ -47,10 +47,26 @@
           </div>
           <div class="pagination-top pagination-top-hide display-none"></div>
         </div>
-        <el-table :data="tableData" border style="width: 100%;" ref="modelTable" class="nz-table" v-scrollBar:el-table="'large'"
-                  v-loading="loading" :cell-class-name="assetStatClassName" v-show="mainResizeShow" :height="mainTableHeight">
-          <el-table-column :resizable="false" v-for="(item, index) in tablelable" v-if="item.show" :width="item.width"
-                           :key="`col-${index}`" :label="item.label">
+        <el-table :data="tableData"
+                  border style="width: 100%;"
+                  ref="modelTable"
+                  class="nz-table"
+                  v-scrollBar
+                  :el-table="'large'"
+                  v-loading="loading"
+                  :cell-class-name="assetStatClassName"
+                  v-show="mainResizeShow"
+                  :height="mainTableHeight"
+                  @sort-change="tableDataSort"
+        >
+          <el-table-column :resizable="false"
+                           v-for="(item, index) in tablelable"
+                           v-if="item.show"
+                           :width="item.width"
+                           :key="`col-${index}`"
+                           :label="item.label"
+                           :sortable="sortableShow(item.prop)"
+                           :prop="propTitle(item.prop)">
             <template slot-scope="scope" :column="item">
               <template v-if="item.prop == 'vendor'" >{{scope.row[item.prop].value}}</template>
               <template v-else-if="item.prop == 'type'" >{{scope.row[item.prop].value}}</template>
@@ -319,12 +335,19 @@
         this.getTableData();
       },
       search: function (searchObj) {
+        let orderBy='';
+        if(this.searchLabel.orderBy){
+          orderBy=this.searchLabel.orderBy
+        }
         this.pageObj.pageNo = 1;
         this.searchLabel = {};
         for (let item in searchObj) {
           if (searchObj[item]) {
             this.$set(this.searchLabel, item, searchObj[item]);
           }
+        }
+        if(orderBy){
+          this.$set(this.searchLabel, 'orderBy', orderBy);
         }
         this.getTableData();
       },
@@ -340,7 +363,40 @@
           typeCode: '',
           uSize:1,
         };
-      }
+      },
+      //是否需要排序
+      sortableShow(prop){
+        switch(prop){
+          case 'id':
+          case 'name':
+          case 'type':
+          case 'vendor':
+            return'custom';
+          default : return false;
+        }
+      },
+      // prop字段
+      propTitle(prop){
+        switch(prop){
+          case 'id': return'mo.id';
+          case 'name': return'mo.name';
+          case 'type': return'dict1.value';
+          case 'vendor': return'dict.value';
+          default : return prop;
+        }
+      },
+      // 数据排序
+      tableDataSort(item){
+        let orderBy='';
+        if(item.order==='ascending'){
+          orderBy=item.prop;
+        }
+        if(item.order==='descending'){
+          orderBy='-'+item.prop;
+        }
+        this.$set(this.searchLabel, "orderBy", orderBy);
+        this.getTableData();
+      },
     },
     mounted: function () {
       //是否存在分页缓存
