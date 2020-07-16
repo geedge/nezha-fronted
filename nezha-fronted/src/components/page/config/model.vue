@@ -380,7 +380,7 @@
         switch(prop){
           case 'id': return'mo.id';
           case 'name': return'mo.name';
-          case 'type': return'dict1.value';
+          case 'type': return'dictt.value';
           case 'vendor': return'dict.value';
           default : return prop;
         }

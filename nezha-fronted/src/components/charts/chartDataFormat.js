@@ -3,7 +3,9 @@
 * index:yAxis 默认第二个参数 y轴的位置
 * type:自定义参数，用于区分是y轴调用还是tooltip调用,以设置不同精度  type =1 y轴调用 type=2 tooltip调用
 * */
-function none(value,index){
+import {parse} from "echarts/extension-src/dataTool/gexf";
+
+function none(value, index){
   return value;
 }
 function short(value,index,type=1){
@@ -255,6 +257,16 @@ function days(value,index,type=1){
 * unitIndex：不需要传递，用于递归获取units中的单位
 * */
 function asciiCompute(num,ascii,units,dot=2,unitIndex=0){
+  num=Number(num)
+  let carry=0;
+  if(num > 0){
+    let log=Math.log(num)/Math.log(ascii)
+    carry = parseInt(log)
+    num = num / Math.pow(ascii,carry)
+  }
+  return num.toFixed(dot) +' '+units[carry];
+}
+function asciiCompute2(num,ascii,units,dot=2,unitIndex=0){
   num=Number(num)
   let quotient=num / ascii;
   if(unitIndex <= units.length-1){
