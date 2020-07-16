@@ -4,158 +4,163 @@
   }
 </style>
 <template>
-    <div class="dc" >
-      <left-menu >
-        <div slot="content-left" class="slot-content">
-        <div class="sidebar-title">{{$t('overall.config')}}</div>
-        <div class="sidebar-info">
-          <div class="sidebar-info-item sidebar-info-top" @click="jumpTo('account')" id="prom-jump-account">
-            {{$t('config.account.account')}}
-          </div>
-          <div class="sidebar-info-item" @click="jumpTo('promServer')" id="account-jump-promserver">
-            {{$t('config.promServer.promServerList')}}
-          </div>
-          <div class="sidebar-info-item sidebar-info-item-active"  id="dc-jump-dc">
-            {{$t('config.dc.dc')}}
-          </div>
-          <div class="sidebar-info-item" @click="jumpTo('model')" id="dc-jump-model">
-            {{$t('config.model.model')}}
-          </div>
-          <div class="sidebar-info-item" @click="jumpTo('mib')" id="dc-jump-mib">
-            {{$t('config.mib.mib')}}
-          </div>
-          <div class="sidebar-info-item" @click="jumpTo('system')" id="dc-jump-system">
-            {{$t('config.system.system')}}
-          </div>
-          <div class="sidebar-info-item" @click="jumpTo('terminallog')" id="dc-jump-terminallog">
-            {{$t('config.terminallog.terminallog')}}
-          </div>
-          <div class="sidebar-info-item" @click="jumpTo('operationlog')" id="account-jump-operation">
-            {{$t('config.operationlog.operationlog')}}
-          </div>
+  <div class="dc" >
+    <left-menu >
+      <div slot="content-left" class="slot-content">
+      <div class="sidebar-title">{{$t('overall.config')}}</div>
+      <div class="sidebar-info">
+        <div class="sidebar-info-item sidebar-info-top" @click="jumpTo('account')" id="prom-jump-account">
+          {{$t('config.account.account')}}
+        </div>
+        <div class="sidebar-info-item" @click="jumpTo('promServer')" id="account-jump-promserver">
+          {{$t('config.promServer.promServerList')}}
+        </div>
+        <div class="sidebar-info-item sidebar-info-item-active"  id="dc-jump-dc">
+          {{$t('config.dc.dc')}}
+        </div>
+        <div class="sidebar-info-item" @click="jumpTo('model')" id="dc-jump-model">
+          {{$t('config.model.model')}}
+        </div>
+        <div class="sidebar-info-item" @click="jumpTo('mib')" id="dc-jump-mib">
+          {{$t('config.mib.mib')}}
+        </div>
+        <div class="sidebar-info-item" @click="jumpTo('system')" id="dc-jump-system">
+          {{$t('config.system.system')}}
+        </div>
+        <div class="sidebar-info-item" @click="jumpTo('terminallog')" id="dc-jump-terminallog">
+          {{$t('config.terminallog.terminallog')}}
+        </div>
+        <div class="sidebar-info-item" @click="jumpTo('operationlog')" id="account-jump-operation">
+          {{$t('config.operationlog.operationlog')}}
         </div>
       </div>
-      <!--dc table start-->
-      <div slot="content-right" class="slot-content">
-        <div class="main-list main-and-sub-transition" :class="{'main-list-with-sub': showSubList}">
-          <div class="top-tools" v-show="mainResizeShow">
-            <div class="top-tool-main-right" :class="{'top-tool-main-right-to-left': showSubList}">
-              <div class="top-tool-search">
-                <search-input ref="searchInput" :searchMsg="searchMsg" @search="search" :inTransform="inTransform"></search-input>
-              </div>
-              <button type="button" @click="toAdd" :title="$t('overall.createDatacenter')"
-                      class="nz-btn nz-btn-size-normal nz-btn-style-light margin-l-20" id="dc-add">
-                <i class="nz-icon-create-square nz-icon"></i>
-              </button>
+    </div>
+    <!--dc table start-->
+    <div slot="content-right" class="slot-content">
+      <div class="main-list main-and-sub-transition" :class="{'main-list-with-sub': showSubList}">
+        <div class="top-tools" v-show="mainResizeShow">
+          <div class="top-tool-main-right" :class="{'top-tool-main-right-to-left': showSubList}">
+            <div class="top-tool-search">
+              <search-input ref="searchInput" :searchMsg="searchMsg" @search="search" :inTransform="inTransform"></search-input>
             </div>
-            <div class="pagination-top pagination-top-hide display-none"></div>
+            <button type="button" @click="add" :title="$t('overall.createDatacenter')"
+                    class="nz-btn nz-btn-size-normal nz-btn-style-light margin-l-20" id="dc-add">
+              <i class="nz-icon-create-square nz-icon"></i>
+            </button>
           </div>
-          <el-table
-            class="nz-table"
-            :data="tableData"
-            border
-            tooltip-effect="light"
-            v-show="mainResizeShow"
-            v-scrollBar:el-table="'large'"
-            :height="mainTableHeight"
-            ref="dcTable"
-            v-loading="loading"
-            :cell-class-name="assetStatClassName"
-            style="width: 100%;"
-            @sort-change="tableDataSort">
-            <el-table-column
-              :resizable="false"
-              show-overflow-tooltip
-              v-for="(item, index) in tablelable"
-              v-if="item.show"
-              :width="item.width"
-              :key="`col-${index}`"
-              :label="item.label"
-              :sortable="sortableShow(item.prop)"
-              :prop="propTitle(item.prop)"
-            >
-              <template slot-scope="scope" :column="item">
-                <div v-if="item.prop == 'option'" class="content-right-options">
-                  <!--<span :title="$t('overall.view')" @click="detail(scope.row)" class="content-right-option" :id="'dc-detail-'+scope.row.id"><i class="nz-icon nz-icon-view"></i></span>
-                  &nbsp;-->
-                  <span :title="$t('overall.edit')" @click="edit(scope.row)" class="content-right-option" :id="'dc-edit-'+scope.row.id"><i class="nz-icon nz-icon-edit"></i></span>
-                  &nbsp;
-                  <span :title="$t('overall.delete')" @click="del(scope.row)" class="content-right-option" :id="'dc-del-'+scope.row.id"><i class="el-icon-delete"></i></span>
-                  &nbsp;
-                  <span :title="$t('config.dc.traffic.title')" @click="configTraffic(scope.row)" class="content-right-option" :id="'dc-setting-'+scope.row.id" ><i class="el-icon-setting"></i></span>
-                </div>
-                <template v-else-if="item.prop == 'principal'">
-                  <template v-if="scope.row.principal">
-                    <template v-for="item in userData">
-                      <template v-if="scope.row.principal == item.userId">{{item.username}}</template>
-                    </template>
+          <div class="pagination-top pagination-top-hide display-none"></div>
+        </div>
+        <el-table
+          class="nz-table"
+          :data="tableData"
+          border
+          tooltip-effect="light"
+          v-show="mainResizeShow"
+          v-scrollBar:el-table="'large'"
+          :height="mainTableHeight"
+          ref="dcTable"
+          v-loading="loading"
+          :cell-class-name="assetStatClassName"
+          style="width: 100%;"
+          @sort-change="tableDataSort">
+          <el-table-column
+            :resizable="false"
+            show-overflow-tooltip
+            v-for="(item, index) in tablelable"
+            v-if="item.show"
+            :width="item.width"
+            :key="`col-${index}`"
+            :label="item.label"
+            :sortable="sortableShow(item.prop)"
+            :prop="propTitle(item.prop)"
+          >
+            <template slot-scope="scope" :column="item">
+              <div v-if="item.prop == 'option'" class="content-right-options">
+                <!--<span :title="$t('overall.view')" @click="detail(scope.row)" class="content-right-option" :id="'dc-detail-'+scope.row.id"><i class="nz-icon nz-icon-view"></i></span>
+                &nbsp;-->
+                <span :title="$t('overall.edit')" @click="edit(scope.row)" class="content-right-option" :id="'dc-edit-'+scope.row.id"><i class="nz-icon nz-icon-edit"></i></span>
+                &nbsp;
+                <span :title="$t('overall.delete')" @click="del(scope.row)" class="content-right-option" :id="'dc-del-'+scope.row.id"><i class="el-icon-delete"></i></span>
+                &nbsp;
+                <span :title="$t('config.dc.traffic.title')" @click="configTraffic(scope.row)" class="content-right-option" :id="'dc-setting-'+scope.row.id" ><i class="el-icon-setting"></i></span>
+              </div>
+              <template v-else-if="item.prop == 'principal'">
+                <template v-if="scope.row.principal">
+                  <template v-for="item in userData">
+                    <template v-if="scope.row.principal == item.userId">{{item.username}}</template>
                   </template>
-                  <template v-else>-</template>
                 </template>
-                <template v-else-if="item.prop == 'area'">
-                  <template v-if="scope.row.area">{{scope.row.area.name}}</template>
-                  <template v-else>-</template>
-                </template>
-                <template v-else-if="item.prop == 'assetStat' && scope.row.assetStat">
-                  <el-popover
-                    placement="top"
-                    trigger="hover"
-                    :content="$t('overall.result.total') + '：' + scope.row.assetStat.total + '，' + $t('asset.createAssetTab.inStock') + '：' + scope.row.assetStat.inStock + '，' + $t('asset.createAssetTab.notInStock') + '：' + scope.row.assetStat.outStock">
-                    <div slot="reference" class="dc-asset-states">
-                      <span class="dc-asset-state dc-asset-state-total">{{scope.row.assetStat.total}}</span>
-                      <span class="dc-asset-state dc-asset-state-in">{{scope.row.assetStat.inStock}}</span>
-                      <span class="dc-asset-state dc-asset-state-out">{{scope.row.assetStat.outStock}}</span>
-                    </div>
-                  </el-popover>
-
-                </template >
-                <template v-else-if="item.prop == 'cabinetNum'">
-                  <span class="link" @click="showCabinet(scope.row)">{{scope.row[item.prop]}}</span>
-                </template>
-                <template v-else-if="scope.row[item.prop]">{{scope.row[item.prop]}}</template>
                 <template v-else>-</template>
               </template>
-            </el-table-column>
-            <el-table-column width="28" :resizable="false">
-              <template slot="header" slot-scope="scope">
-                <span @click.stop="elementsetShow('shezhi',$event)" class="nz-table-gear">
-                  <i class="nz-icon nz-icon-gear"></i>
-                </span>
+              <template v-else-if="item.prop == 'area'">
+                <template v-if="scope.row.area">{{scope.row.area.name}}</template>
+                <template v-else>-</template>
               </template>
-              <template v-slot="scope">
-                <button v-if="scope.$index == 0" class="to-top" :style="{top: toTopBtnTop}" :class="{'to-top-is-hover': tableHover}" v-show="showTopBtn && mainResizeShow" @click="$toTop('ps', 0)"><i class="nz-icon nz-icon-top"></i></button>
+              <template v-else-if="item.prop == 'assetStat' && scope.row.assetStat">
+                <el-popover
+                  placement="top"
+                  trigger="hover"
+                  :content="$t('overall.result.total') + '：' + scope.row.assetStat.total + '，' + $t('asset.createAssetTab.inStock') + '：' + scope.row.assetStat.inStock + '，' + $t('asset.createAssetTab.notInStock') + '：' + scope.row.assetStat.outStock">
+                  <div slot="reference" class="dc-asset-states">
+                    <span class="dc-asset-state dc-asset-state-total">{{scope.row.assetStat.total}}</span>
+                    <span class="dc-asset-state dc-asset-state-in">{{scope.row.assetStat.inStock}}</span>
+                    <span class="dc-asset-state dc-asset-state-out">{{scope.row.assetStat.outStock}}</span>
+                  </div>
+                </el-popover>
+
+              </template >
+              <template v-else-if="item.prop == 'cabinetNum'">
+                <span class="link" @click="showCabinet(scope.row)">{{scope.row[item.prop]}}</span>
               </template>
-            </el-table-column>
-          </el-table>
-          <div class="pagination-bottom" v-show="!showSubList">
-            <Pagination :tableId="tableId" :pageObj="pageObj" @pageNo='pageNo' @pageSize='pageSize' ref="Pagination"></Pagination>
-          </div>
+              <template v-else-if="scope.row[item.prop]">{{scope.row[item.prop]}}</template>
+              <template v-else>-</template>
+            </template>
+          </el-table-column>
+          <el-table-column width="28" :resizable="false">
+            <template slot="header" slot-scope="scope">
+              <span @click.stop="elementsetShow('shezhi',$event)" class="nz-table-gear">
+                <i class="nz-icon nz-icon-gear"></i>
+              </span>
+            </template>
+            <template v-slot="scope">
+              <button v-if="scope.$index == 0" class="to-top" :style="{top: toTopBtnTop}" :class="{'to-top-is-hover': tableHover}" v-show="showTopBtn && mainResizeShow" @click="$toTop('ps', 0)"><i class="nz-icon nz-icon-top"></i></button>
+            </template>
+          </el-table-column>
+        </el-table>
+        <div class="pagination-bottom" v-show="!showSubList">
+          <Pagination :tableId="tableId" :pageObj="pageObj" @pageNo='pageNo' @pageSize='pageSize' ref="Pagination"></Pagination>
         </div>
-        <bottom-box v-if="showSubList" :show-sub-list="showSubList" :subResizeShow="subResizeShow" :obj="cabinetDc" :isFullScreen="isFullScreen" :from="'dc'" :targetTab.sync="targetTab" :detail="dcDetail"
-                     @closeSubList="showSubList = false" @fullScreen="fullScreen" @exitFullScreen="exitFullScreen" @listResize="listResize" ></bottom-box>
       </div>
-      </left-menu>
-      <!--dc table end-->
-      <element-set
-        v-clickoutside="elementsetHide"
-        :dropCol="dropCol"
-        @tablelable="tablelabelEmit"
-        :table-title="tableTitle"
-        ref="elementset"
-      ></element-set>
-      <transition name="right-box">
-        <dc-box ref="dcBox" :dc="currentDc" :user-data="userData" @reload="getTableData"></dc-box>
-      </transition>
-      <traffic-setting-box :dc-obj="currentDc" ref="trafficBox"></traffic-setting-box>
+      <bottom-box v-if="showSubList" :show-sub-list="showSubList" :subResizeShow="subResizeShow" :obj="dc" :isFullScreen="isFullScreen" :from="'dc'" :targetTab.sync="targetTab" :detail="dcDetail"
+                   @closeSubList="showSubList = false" @fullScreen="fullScreen" @exitFullScreen="exitFullScreen" @listResize="listResize" ></bottom-box>
     </div>
+    </left-menu>
+    <!--dc table end-->
+    <element-set
+      v-clickoutside="elementsetHide"
+      :dropCol="dropCol"
+      @tablelable="tablelabelEmit"
+      :table-title="tableTitle"
+      ref="elementset"
+    ></element-set>
+
+    <transition name="right-box">
+      <dc-box @close="closeDcBox" :dc="dc" :user-data="userData" @reload="getTableData" v-if="rightBox.dc.show"></dc-box>
+    </transition>
+    <transition name="right-box">
+      <traffic-setting-box @close="closeTrafficBox" :dc="dc" ref="trafficBox" v-if="rightBox.trafficSetting.show"></traffic-setting-box>
+    </transition>
+  </div>
 </template>
 <script>
   import bus from '../../../libs/bus';
+  import dcBox from "../../common/rightBox/dcBox"; //dc弹框
   import trafficSettingBox from "../../common/rightBox/trafficSetting/trafficSettingBox";
   export default {
     name: "dc",
     components:{
-      'traffic-setting-box':trafficSettingBox,
+      'traffic-setting-box': trafficSettingBox,
+      'dc-box': dcBox
     },
     data() {
       return {
@@ -166,7 +171,6 @@
         subResizeShow: true,
         isFullScreen: false,
         showSubList: false, //是否展示二级列表
-        cabinetDc: {}, // 用在二级cabinet列表页里
         dcDetail: [], //dc的详情信息，包含标题
 
         toTopBtnTop: this.$tableHeight.toTopBtnTop, //to-top按钮的top属性
@@ -185,9 +189,13 @@
           tel: '',
           principal: '',
           area: {
-            id: '',
+            id: 0,
             name: ''
           }
+        },
+        rightBox: {
+          dc: {show: false},
+          trafficSetting: {show: false}
         },
         pageObj: {
           pageNo: 1,
@@ -301,28 +309,22 @@
           }
         });
       },
-      edit: function (u) {
-        let tempDc = JSON.parse(JSON.stringify(u));
-        if (!tempDc.area) {
-          this.$set(tempDc, 'area', {id: '', name: ''});
+      edit(u) {
+        this.dc = JSON.parse(JSON.stringify(u));
+        if (!this.dc.area) {
+          this.$set(this.dc, 'area', {id: '', name: ''});
         }
-        this.currentDc = tempDc;
-        this.$refs.dcBox.show(true, true);
+        this.rightBox.dc.show = true;
       },
-      configTraffic: function (u) {
-        let tempDc = JSON.parse(JSON.stringify(u));
-        this.currentDc = tempDc;
-        setTimeout(()=>{
-
-          this.$refs.trafficBox.show(true, true);
-        },200)
+      configTraffic(u) {
+        this.dc = JSON.parse(JSON.stringify(u));
+        this.rightBox.trafficSetting.show = true;
       },
-      detail(obj) {
-        let tempDc = JSON.parse(JSON.stringify(obj));
-        if (!tempDc.area) {
-          this.$set(tempDc, 'area', {id: '', name: ''});
+      detail(u) {
+        this.dc = JSON.parse(JSON.stringify(u));
+        if (!this.dc.area) {
+          this.$set(this.dc, 'area', {id: '', name: ''});
         }
-        this.cabinetDc = tempDc;
         this.targetTab = "detail";
         this.showSubList = true;
       },
@@ -362,12 +364,24 @@
       },
       add() {
         this.dc = this.newDc();
-        this.rightBox.show = true;
+        this.rightBox.dc.show = true;
       },
       newDc() {
         return JSON.parse(JSON.stringify(this.blankDc));
       },
-      del: function (u) {
+      closeDcBox(refresh) {
+        this.rightBox.dc.show = false;
+        if (refresh) {
+          this.getTableData();
+        }
+      },
+      closeTrafficBox(refresh) {
+        this.rightBox.trafficSetting.show = false;
+        if (refresh) {
+          this.getTableData();
+        }
+      },
+      del(u) {
         this.$confirm(this.$t("tip.confirmDelete"), {
           confirmButtonText: this.$t("tip.yes"),
           cancelButtonText: this.$t("tip.no"),
@@ -383,7 +397,7 @@
           });
         });
       },
-      getTableData: function () {
+      getTableData() {
         this.$set(this.searchLabel, "pageNo", this.pageObj.pageNo);
         this.$set(this.searchLabel, "pageSize", this.pageObj.pageSize);
         this.loading = true;
@@ -433,7 +447,7 @@
       },
       showCabinet(dc) {
         this.targetTab = 'cabinet';
-        this.cabinetDc = JSON.parse(JSON.stringify(dc));
+        this.dc = JSON.parse(JSON.stringify(dc));
         this.showSubList = true;
       },
       //是否需要排序
@@ -469,10 +483,12 @@
       },
     },
     watch: {
-      cabinetDc: {
+      dc: {
         deep: true,
         handler(n) {
-          this.dcDetail = this.convertToDetail(n);
+          if (n.id) {
+            this.dcDetail = this.convertToDetail(n);
+          }
         }
       },
       showSubList(n) {

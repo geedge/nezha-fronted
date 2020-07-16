@@ -308,9 +308,6 @@
         this.$store.commit('setHeaderTable', data);
         this.tablelable = data;
       },
-      clickos() {
-        this.rightBox.show = false;
-      },
       edit(u) {
         this.promServer = JSON.parse(JSON.stringify(u));
         this.rightBox.show = true;

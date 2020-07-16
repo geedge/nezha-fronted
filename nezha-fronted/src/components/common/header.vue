@@ -159,7 +159,6 @@
                     @sendStateData="closeAsset"></asset-add-unit>-->
     <asset-box :edit-unit-show='addUnitShow' @refreshData="refreshAsset" @sendStateData="closeAsset" v-if="assetBoxShow"
                ref="assetAddUnit"></asset-box>
-    <dc-box ref="dcBox" :dc="currentDc" :user-data="userDatas" @reload="getAssetData"></dc-box>
     <alert-config-box :parentAlertRule="alertRule" @reload="" ref="alertConfigBox"></alert-config-box>
     <change-password :cur-user="username" :show-dialog="showChangePwd" @click="showPwdDialog" @dialogClosed="dialogClosed"></change-password>
   </div>
@@ -186,7 +185,6 @@
           id:'',
           name: ''
         },
-        currentDc: {},
         projectData: [], //顶部菜单project列表中的数据
         editProject: {id: '', name: '', remark: ''}, //新增/编辑的project
         currentProject: {id: '', name: '', remark: ''}, //module/endpoint弹框用来回显project
@@ -218,11 +216,6 @@
           receiver: '',
         },
         createMenu: [ //新增按钮内容
-          /*{
-            label: this.$t('dashboard.panel.title'),
-            url: 'panel',
-            type: 0
-          },*/
           {
             label: this.$t('project.project.project'),
             url: 'project',
@@ -248,11 +241,6 @@
             url: 'alertConfig',
             type: 5
           },
-          // {
-          //   label: this.$t('config.dc.dc'),
-          //   url: 'dc',
-          //   type: 6
-          // }
         ],
         addIdcData: {
           id: '',
@@ -340,19 +328,6 @@
             this.addUnitShow = true;
             this.$refs.assetAddUnit.resetAsset();
           });
-        } else if (item.type == 6) {
-          this.currentDc = {
-            id: '',
-            name: '',
-            location: '',
-            tel: '',
-            principal: '',
-            area: {
-              id: '',
-              name: ''
-            }
-          },
-          this.$refs.dcBox.show(true, true);
         }
       },
       jumpToAsset(id) {

@@ -1,40 +1,29 @@
 <template>
-  <transition name="right-box">
-    <div class="right-box right-box-project" v-if="rightBox.show" v-clickoutside="clickos" >
-      <!-- begin--顶部按钮-->
-      <div class="right-box-top-btns">
+  <div class="right-box right-box-project" v-clickoutside="clickOutside" >
 
-        <button v-if="!rightBox.isEdit" id="project-edit" type="button" @click="saveOrToEdit" class="nz-btn nz-btn-size-normal nz-btn-size-alien nz-btn-style-light nz-btn-min-width-82">
-          <span class="right-box-top-btn-icon"><i class="nz-icon nz-icon-edit"></i></span>
-          <span class="right-box-top-btn-txt">{{$t('overall.edit')}}</span>
-        </button>
-      </div>
-      <!-- end--顶部按钮-->
+    <!-- begin--标题-->
+    <div class="right-box-title">{{$t('config.dc.traffic.title')}}</div>
+    <!-- end--标题-->
+    <el-scrollbar class="right-box-form-box">
+      <el-form class="right-box-form" :model="traffic" label-width="100px" label-position="left" ref="trafficForm">
+        <el-form-item :label="$t('config.dc.dc')" size="small">
+          <el-input :disabled="true" v-model="dc.name"></el-input>
+        </el-form-item>
+        <traffic-setting-tab ref="trafficSetting" :post-asset-list="assetList" v-for="(item,index) in traffic.setting" :index="index" :asset-setting="item" :key="uuids[index]" :id="uuids[index]" @delSelf="delAssetSetting" :validate-repeat-func="valiateRepeatFunc"></traffic-setting-tab>
+        <button @click="addAssetSetting" class="nz-btn nz-btn-size-normal nz-btn-style-light nz-btn-min-width-100" style="margin:5px 1px">{{$t('config.dc.traffic.add')}}</button>
+      </el-form>
+    </el-scrollbar>
 
-      <!-- begin--标题-->
-      <div class="right-box-title">{{rightBox.title}}</div>
-      <!-- end--标题-->
-      <el-scrollbar class="right-box-form-box">
-        <el-form class="right-box-form" :model="traffic" label-width="100px" label-position="left" :rules="rules" ref="trafficForm">
-          <el-form-item :label="$t('config.dc.dc')" size="small">
-            <el-input :disabled="true" v-model="dcObj.name"></el-input>
-          </el-form-item>
-          <traffic-setting-tab ref="trafficSetting" :post-asset-list="assetList" v-for="(item,index) in traffic.setting" :index="index" :asset-setting="item" :key="uuids[index]" :id="uuids[index]" @delSelf="delAssetSetting" :validate-repeat-func="valiateRepeatFunc"></traffic-setting-tab>
-          <button @click="addAssetSetting" class="nz-btn nz-btn-size-normal nz-btn-style-light nz-btn-min-width-100" style="margin:5px 1px">{{$t('config.dc.traffic.add')}}</button>
-        </el-form>
-      </el-scrollbar>
-
-      <!--底部按钮-->
-      <div class="right-box-bottom-btns">
-        <button @click="esc" id="project-esc" class="nz-btn nz-btn-size-normal nz-btn-style-light nz-btn-min-width-100">
-          <span>{{$t('overall.cancel')}}</span>
-        </button>
-        <button v-if="rightBox.isEdit" @click="saveOrToEdit" id="project-save" class="nz-btn nz-btn-size-normal nz-btn-style-normal nz-btn-min-width-100">
-          <span>{{$t('overall.save')}}</span>
-        </button>
-      </div>
+    <!--底部按钮-->
+    <div class="right-box-bottom-btns">
+      <button @click="esc" id="project-esc" class="nz-btn nz-btn-size-normal nz-btn-style-light nz-btn-min-width-100">
+        <span>{{$t('overall.cancel')}}</span>
+      </button>
+      <button @click="save" id="project-save" class="nz-btn nz-btn-size-normal nz-btn-style-normal nz-btn-min-width-100">
+        <span>{{$t('overall.save')}}</span>
+      </button>
     </div>
-  </transition>
+  </div>
 </template>
 
 <script>
@@ -47,20 +36,17 @@
       'traffic-setting-tab':trafficSettingTab
     },
     props:{
-      dcObj:{
-        type:Object,
-        required:true
+      dc:{
+        type: Object,
+        required: true
       },
+    },
+    mounted() {
+      this.queryTrafficSettings();
     },
     data(){
       return{
         assetList:[],
-        rightBox: {
-          show: false,
-          title: this.$t('config.dc.traffic.title'),
-          isCreate: false,
-          isEdit:false
-        },
         uuids:[],
         traffic:{
           idcId:'',
@@ -90,11 +76,7 @@
             }
           ]
         },
-        rules:{}
       }
-    },
-    created() {
-
     },
     methods:{
       addAssetSetting:function(){
@@ -178,19 +160,14 @@
         this.uuids.splice(index,1);
         this.traffic.setting.splice(index,1)
       },
-      show(show,isEdit) {
-        this.rightBox.show = show;
-        this.rightBox.isEdit=isEdit;
-        this.queryTrafficSettings();
-      },
 
-      clickos() {
-        this.esc();
+      clickOutside() {
+        this.esc(false);
       },
 
       /*关闭弹框*/
-      esc() {
-        this.rightBox.show = false;
+      esc(refresh) {
+        this.$emit("close", refresh);
       },
       /*保存*/
       save() {
@@ -198,9 +175,9 @@
         if (valid) {
           //拆解数据
           let result={
-            idcId:this.dcObj.id,
+            idcId: this.dc.id,
             setting:[],
-          }
+          };
           this.traffic.setting.forEach(assetSetting=>{
             assetSetting.configs.forEach(config=>{
               let settingItem={
@@ -213,15 +190,15 @@
                 ifindex:config.ifindex,
                 ifdescr:config.ifdescr,
                 tags:config.tags,
-              }
+              };
               result.setting.push(settingItem);
             })
           })
 
-          this.$put('/idc/trafficSetting',result).then(response=>{
+          this.$put('/idc/trafficSetting', result).then(response=>{
             if(response.code == 200){
               this.$message({duration: 1000, type: 'success', message: this.$t("tip.saveSuccess")});
-              this.rightBox.show = false;
+              this.esc(false);
             }else{
               console.error(response.msg)
               this.$message.error(response.msg);
@@ -232,16 +209,8 @@
           return false;
         }
       },
-      saveOrToEdit: function() {
-        if (!this.rightBox.isEdit) {
-          this.rightBox.isEdit = true;
-          this.rightBox.title = this.$t("project.project.editProject") + "  ID：" + this.project.id;
-        } else {
-          this.save();
-        }
-      },
       queryTrafficSettings:function(){
-        this.$get('/idc/trafficSetting?id='+this.dcObj.id).then(response=>{
+        this.$get('/idc/trafficSetting?id='+this.dc.id).then(response=>{
             if(response.code == 200){
               let list=response.data.list;
               if(list.length>0){
@@ -256,7 +225,7 @@
                   }
                 })
                 this.traffic={
-                  idcId:this.dcObj.id,
+                  idcId:this.dc.id,
                   setting:[],
                 }
                 let keys=map.keys();
@@ -331,11 +300,11 @@
             }
         })
       },
-      queryAssetList:function(){
-        let queryParams={
+      queryAssetList() {
+        let queryParams = {
           pageSize:-1,
-          idcId:this.dcObj.id,
-        }
+          idcId:this.dc.id,
+        };
         this.assetList=[];
         this.$get('/asset',queryParams).then(response=>{
           if(response.code == 200){
@@ -352,7 +321,7 @@
       },
     },
     watch:{
-      dcObj:{
+      dc:{
         immediate:true,
         deep:true,
         handler(){

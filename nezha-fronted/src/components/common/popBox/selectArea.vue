@@ -1,16 +1,6 @@
 <template>
   <el-popover :placement="placement" width="487" ref="selectAreaPopBox" v-model="popBox.show" popper-class="nz-pop nz-pop-select-area" transition="slide">
     <div>
-      <!-- begin--顶部按钮-->
-      <!--<div class="pop-top-btns">
-        <button type="button" @click="esc" class="nz-btn nz-btn-size-alien nz-btn-size-small nz-btn-style-light nz-btn-min-width-35" id="dc-esc">
-          <span class="pop-top-btn-icon"><i class="el-icon-close"></i></span>
-          <span class="pop-top-btn-txt">{{$t('overall.esc')}}</span>
-        </button>
-      </div>-->
-      <!-- end--顶部按钮-->
-
-      <!--<div class="pop-title">{{$t('config.dc.selectArea')}}</div>-->
       <div class="pop-item-wider">
         <el-scrollbar class="select-area-tree">
           <el-tree
@@ -28,9 +18,6 @@
           </el-tree>
         </el-scrollbar>
       </div>
-      <!--<div class="">
-        <button class="float-right nz-btn nz-btn-size-small nz-btn-style-normal nz-btn-min-width-60" type="button" @click="selectArea">{{$t('overall.ok')}}</button>
-      </div>-->
     </div>
     <div slot="reference">
       <slot name="trigger">
@@ -48,12 +35,15 @@
         areaData: {type: Array},
         currentArea: {type: Number}
       },
-      created() {
-      },
       mounted() {
-        this.$nextTick(() => {
+        /*this.$nextTick(() => {
+          console.info(this.$refs)
           this.$refs.areaTree.setCurrentKey(this.currentArea);
-        });
+        });*/
+        setTimeout(() => {
+          console.info(this.$refs)
+          this.$refs.areaTree.setCurrentKey(this.currentArea);
+        }, 100);
       },
       data(){
         return {
@@ -87,8 +77,6 @@
           }
         }
       },
-      watch:{
-      }
     }
 </script>
 

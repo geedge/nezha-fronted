@@ -1,5 +1,5 @@
 <template>
-  <div class="right-box right-box-account" v-clickoutside="clickos">
+  <div class="right-box right-box-account" v-clickoutside="clickOutside">
     <!-- begin--顶部按钮-->
     <div class="right-box-top-btns">
       <button type="button" v-if="editUser.userId" @click="del"
@@ -88,15 +88,13 @@
       }
     },
     methods: {
-      clickos() {
-        this.esc(false);
-      },
-
       /*关闭弹框*/
       esc(refresh) {
         this.$emit("close", refresh);
       },
-
+      clickOutside() {
+        this.esc(false);
+      },
       /*保存*/
       save() {
         this.$refs.accountForm.validate(valid => {
@@ -108,7 +106,6 @@
                   this.esc(true);
                 } else {
                   this.$message.error(response.msg);
-                  this.esc(false);
                 }
               });
             } else {
@@ -118,7 +115,6 @@
                   this.esc(true);
                 } else {
                   this.$message.error(response.msg);
-                  this.esc(false);
                 }
               });
             }
@@ -155,8 +151,5 @@
         }
       }
     },
-    mounted() {
-
-    }
   }
 </script>

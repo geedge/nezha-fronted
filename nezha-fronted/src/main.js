@@ -39,9 +39,7 @@ import dcConfigBox from "./components/common/popBox/dcConfig"; //idc配置弹框
 import panelBox from "./components/common/rightBox/panelBox"; //面板弹框组件
 import moduleListPop from "./components/page/asset/moduleListPop"; //面板弹框组件
 import cabinetConfigBox from "./components/common/popBox/cabinetConfig"; //面板弹框组件
-import dcBox from "./components/common/rightBox/dcBox"; //dc弹框
 import modelBox from "./components/common/rightBox/modelBox"; //model弹框
-import selectArea from "./components/common/popBox/selectArea"; //dc弹框
 import bottomBox from "./components/common/bottomBox/bottomBox"; //上滑框
 import "perfect-scrollbar/css/perfect-scrollbar.css";
 import loading from "./components/common/loading";
@@ -64,9 +62,7 @@ Vue.component("idc-config-box", dcConfigBox);
 Vue.component("panel-box", panelBox);
 Vue.component("module-list-pop", moduleListPop);
 Vue.component("cabinet-config-box", cabinetConfigBox);
-Vue.component("dc-box", dcBox);
 Vue.component("model-box", modelBox);
-Vue.component("select-area", selectArea);
 Vue.component('loading',loading);
 Vue.component('bottom-box', bottomBox);
 Vue.component('mib-box',mibBox);
