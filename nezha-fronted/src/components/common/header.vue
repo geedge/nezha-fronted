@@ -764,6 +764,7 @@
   }
   .nz-icon-navmore{
     font-size: 18px;
+    line-height: 51.5px;
   }
 </style>
 
