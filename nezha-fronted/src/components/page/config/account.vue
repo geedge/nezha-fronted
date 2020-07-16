@@ -68,7 +68,6 @@
             :width="item.width"
             :key="`col-${index}`"
             :label="item.label"
-            :sortable="item.prop!='option'&&item.prop!='status'?'custom':false"
             :prop="item.prop"
           >
             <template slot-scope="scope" :column="item">
