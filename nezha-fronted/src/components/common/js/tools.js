@@ -484,4 +484,8 @@ export const chartResizeTool = {
       }
     }
   }
+};
+
+export function blankPromise() {
+  return new Promise(resolve => {resolve();});
 }

@@ -19,7 +19,8 @@ import plTable from 'pl-table'
 import 'pl-table/themes/index.css'
 
 import {post, get, put, del} from './http.js'
-import {toTop, clickoutside, scrollBar, bottomBoxWindow, stringTimeParseToUnix, unixTimeParseToString, chartResizeTool} from './components/common/js/tools.js'
+import {toTop, clickoutside, scrollBar, bottomBoxWindow, stringTimeParseToUnix, unixTimeParseToString, chartResizeTool} from './components/common/js/tools.js';
+import * as tools from './components/common/js/tools.js';
 import * as constants from './components/common/js/constants.js'
 
 
@@ -75,6 +76,7 @@ Vue.prototype.$get = get;
 Vue.prototype.$put = put;
 Vue.prototype.$delete = del;
 Vue.prototype.$CONSTANTS = constants;
+Vue.prototype.$TOOLS = tools;
 Vue.prototype.$toTop = toTop; //toTop置顶按钮方法
 Vue.prototype.$bottomBoxWindow = bottomBoxWindow; //底部上滑框控制
 Vue.prototype.$stringTimeParseToUnix = stringTimeParseToUnix;
