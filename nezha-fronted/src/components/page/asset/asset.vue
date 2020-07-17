@@ -11,11 +11,12 @@
                   <el-checkbox class="sidebar-info-item" :class="{'sidebar-info-item-active': indOf(checkList, item.id)}"
                                v-for="(item,key) in checkListData" :key="key" :label=item.id>
                     <div class="sidebar-info-item-txt">
-                      <el-popover v-if="item.name.length > 16" trigger="hover" placement="top-start" :content="item.name" >
+                      <el-popover v-if="item.name.length > 14" trigger="hover" placement="top-start" :content="item.name" >
                         <span slot="reference">{{item.name}}</span>
                       </el-popover>
                       <span v-else>{{item.name}}</span>
                     </div>
+                    <el-badge class="mark" :value="item.total" max="99"/>
                   </el-checkbox>
                 </el-checkbox-group>
               </el-collapse-item>
@@ -23,11 +24,12 @@
                 <el-checkbox-group v-model="assetTypeCheckList" size="small" @change="changeAssetTypeCheckBox">
                   <el-checkbox class="sidebar-info-item" :class="{'sidebar-info-item-active': indOf(assetTypeCheckList, item.id)}" v-for="(item,key) in assetTypeCheckListData" :key="key" :label=item.id>
                     <div class="sidebar-info-item-txt">
-                      <el-popover v-if="item.value.length > 16" trigger="hover" placement="top-start" :content="item.value" >
-                        <span slot="reference">{{item.value}}</span>
+                      <el-popover v-if="item.name.length > 14" trigger="hover" placement="top-start" :content="item.name" >
+                        <span slot="reference">{{item.name}}</span>
                       </el-popover>
-                      <span v-else>{{item.value}}</span>
+                      <span v-else>{{item.name}}</span>
                     </div>
+                    <el-badge class="mark" :value="item.total" max="99"/>
                   </el-checkbox>
                 </el-checkbox-group>
               </el-collapse-item>
@@ -35,11 +37,12 @@
                 <el-checkbox-group v-model="vendorCheckList" size="small" @change="changeVendorCheckBox">
                   <el-checkbox class="sidebar-info-item" :class="{'sidebar-info-item-active': indOf(vendorCheckList, item.id)}" v-for="(item,key) in vendorCheckListData" :key="key" :label=item.id>
                     <div class="sidebar-info-item-txt">
-                      <el-popover v-if="item.value.length > 16" trigger="hover" placement="top-start" :content="item.value" >
-                        <span slot="reference">{{item.value}}</span>
+                      <el-popover v-if="item.name.length > 14" trigger="hover" placement="top-start" :content="item.name" >
+                        <span slot="reference">{{item.name}}</span>
                       </el-popover>
-                      <span v-else>{{item.value}}</span>
+                      <span v-else>{{item.name}}</span>
                     </div>
+                    <el-badge class="mark" :value="item.total" max="99"/>
                   </el-checkbox>
                 </el-checkbox-group>
               </el-collapse-item>
@@ -52,6 +55,7 @@
                       </el-popover>
                       <span v-else>{{item.label}}</span>
                     </div>
+                    <el-badge class="mark" :value="item.total" max="99"/>
                   </el-checkbox>
                 </el-checkbox-group>
               </el-collapse-item>
@@ -464,7 +468,7 @@
       getFlushData: {
         handler(newVal, oldVal) {
           if (newVal === true) {
-            this.getIDCOptionData();
+            this.getLeftMenuList();
             this.getAssetData()
           }
         }
@@ -601,28 +605,15 @@
           this.$refs.assetEditUnit.getIDCOptionData();
         }
       },
-      getIDCOptionData() {
-        this.$get('idc').then(response => {
-          if (response.code === 200) {
-            this.checkListData = this.IDCOptionData = response.data.list;
-            this.markOptionData(this.IDCOptionData)
-          }
-        })
-      },
-      getAssetTypeData:function(){
-        this.$get('sys/dict/all?type=assetType').then(response => {
-          if (response.code === 200) {
-            this.assetTypeCheckListData = response.data
-          }
-        })
-      },
-      getVendorData:function(){
-        this.$get('sys/dict/all?type=vendor').then(response => {
-          if (response.code === 200) {
-            this.vendorCheckListData = response.data
-          }
-        })
-      },
+      // getIDCOptionData() {
+      //   this.$get('idc').then(response => {
+      //     if (response.code === 200) {
+      //       // console.log(response.data);
+      //       // this.checkListData = this.IDCOptionData = response.data.list;
+      //       // this.markOptionData(this.IDCOptionData)
+      //     }
+      //   })
+      // },
       getPingData:function(){
         this.pingCheckListData=[
           {label:'up',value:1},
@@ -665,7 +656,7 @@
             if (res.code === 200) {
               const h = this.$createElement;
               this.$message({duration: 2000, type: 'success', message: this.$t("tip.saveSuccess")});
-              this.getIDCOptionData()
+              this.getLeftMenuList()
               this.getAssetData()
             } else {
               this.$message.error(res.msg);
@@ -683,7 +674,7 @@
             if (response.code === 200) {
               this.$message({duration: 2000, type: 'success', message: this.$t("tip.deleteSuccess")});
               this.getAssetData();
-              this.getIDCOptionData();
+              this.getLeftMenuList();
             } else {
               this.$message.error(response.msg);
             }
@@ -855,9 +846,6 @@
       flushData() {
         this.getSingleAsset();
         this.getAssetData();
-        this.getIDCOptionData();
-        this.getAssetTypeData();
-        this.getVendorData();
       },
       closeAllPop:function(){
         this.$refs.idcConfigBox.forEach((item)=>{
@@ -993,7 +981,28 @@
         }
         this.$set(this.searchLabel, "orderBy", orderBy);
         this.getAssetData();
-      }
+      },
+      // 获取左侧菜单数据
+      getLeftMenuList(){
+        this.$get('asset/filter').then(response => {
+          if (response.code === 200) {
+            console.log(response.data);
+            //dc
+            this.checkListData = this.IDCOptionData = response.data.dc;
+            this.markOptionData(this.IDCOptionData);
+            // AssetType
+            this.assetTypeCheckListData = response.data.assetType;
+            // vendor
+            this.vendorCheckListData = response.data.vendor;
+            // ping
+            this.pingCheckListData= response.data.ping.map(item=>{
+              item.label=item.name;
+              item.value=item.status;
+              return item
+            })
+          }
+        })
+      },
     },
     created() {
       this.getUserData();
@@ -1001,6 +1010,7 @@
       this.getPingData();
     },
     mounted() {
+      this.getLeftMenuList()//获取左侧菜单列表
       //是否存在分页缓存
       let pageSize = localStorage.getItem('nz-pageSize-' + localStorage.getItem('nz-username') + '-' + this.tableId);
       if (pageSize != 'undefined' && pageSize != null) {
@@ -1086,4 +1096,15 @@
   .link{
     position: relative;
   }
+  /deep/ .el-badge__content{
+    width: 15px;
+  }
+  .mark{
+    vertical-align: middle;
+    display: inline-flex;
+  }
+  /*/deep/ .sidebar-info-item .el-checkbox__label{*/
+    /*padding-right: 15px;*/
+    /*width: calc(100% - 32px);*/
+  /*}*/
 </style>
