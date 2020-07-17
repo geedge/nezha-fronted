@@ -792,7 +792,7 @@
           case 'id':
           case 'asset':
           case 'port':
-          case 'path':
+          // case 'path':
             return'custom';
           default : return false;
         }
@@ -803,7 +803,7 @@
           case 'id': return'e.id';
           case 'asset': return'a.host';
           case 'port': return'e.port';
-          case 'path': return'e.path';
+          // case 'path': return'e.path';
           default : return prop;
         }
       },
