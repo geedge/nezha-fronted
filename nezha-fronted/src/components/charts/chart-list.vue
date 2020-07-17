@@ -1298,10 +1298,10 @@
                   type: 'basic',
                   data: response.data.Basic
                 });
-                response.data.Feature && detail.push({
+                response.data.Attribute && detail.push({
                   title: vm.$t('asset.createAssetTab.featureTitle'),
-                  type: 'feature',
-                  data: response.data.Feature
+                  type: 'attribute',
+                  data: response.data.Attribute
                 });
               }();
             }

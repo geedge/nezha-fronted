@@ -244,7 +244,7 @@
                   break;
                 }
               }
-              this.getTableData(this.obj.id); //删除相关图表后，刷新面板数据
+              // this.getTableData(this.obj.id); //删除相关图表后，刷新面板数据
             } else {
               console.error(response.msg);
               this.$message.error(response.msg);

@@ -1,5 +1,5 @@
 <template>
-  <el-popover :placement="placement" width="487" ref="selectAreaPopBox" v-model="popBox.show" popper-class="nz-pop nz-pop-select-area" transition="slide">
+  <el-popover :placement="placement" width="698" ref="selectAreaPopBox" v-model="popBox.show" popper-class="nz-pop nz-pop-select-area" transition="slide">
     <div>
       <div class="pop-item-wider">
         <el-scrollbar class="select-area-tree">
@@ -36,14 +36,7 @@
         currentArea: {type: Number}
       },
       mounted() {
-        /*this.$nextTick(() => {
-          console.info(this.$refs)
-          this.$refs.areaTree.setCurrentKey(this.currentArea);
-        });*/
-        setTimeout(() => {
-          console.info(this.$refs)
-          this.$refs.areaTree.setCurrentKey(this.currentArea);
-        }, 100);
+        this.$refs.areaTree.setCurrentKey(this.currentArea);
       },
       data(){
         return {

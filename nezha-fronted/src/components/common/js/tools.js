@@ -241,7 +241,7 @@ export const bottomBoxWindow = {
           vm.mainResizeShow = true;
         }
       }
-      if(parseInt(subListDom.offsetHeight) <= 100){
+      if(parseInt(subListDom.style.height) <= 100){
         if (vm.subResizeShow) {
           vm.subResizeShow = false;
         }
