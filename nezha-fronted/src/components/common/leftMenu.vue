@@ -76,8 +76,10 @@
 
   .left-slot .bottom-icon{
     position:absolute;
-    bottom: 15px;
-    left: 0px;
+    width: 36px;
+    height: 36px;
+    right: 0;
+    bottom: 30px;
   }
   .left-slot .bottom-icon i{
     visibility: hidden;
