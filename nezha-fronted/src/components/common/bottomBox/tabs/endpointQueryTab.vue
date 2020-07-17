@@ -56,9 +56,8 @@
     <div class="table-header-inner" @click="clearSelectedMetrics"><span><i style="font-size: 12px;margin-left: 2px;" class="nz-icon nz-icon-close " :class="{'control-icon-unchecked':selectedEndpoints.length<1,'control-icon-checked':selectedEndpoints.length>0}"></i></span></div>
     <pl-table :row-height="28" use-virtual :datas="tableData" border :empty-text="$t('config.mib.noData')" :header-cell-class-name="cellClass" :style="{height: $tableHeight.noPagination}"
               class="nz-table endpoint-query-table" style="width: 100%;" v-loading="loading" v-scrollBar:el-table="'large'" :pagination-show="false" ref="endpointQueryTable"
-              @selection-change="selectChange" v-if="tableShow">
+              @selection-change="selectChange" v-if="tableShow" :border="true">
       <pl-table-column
-        :resizable="false"
         type="selection"
         width="39"
         align="center"
@@ -66,6 +65,8 @@
       </pl-table-column>
       <pl-table-column
         prop="element"
+        :resizable="true"
+        min-width="1800"
         :label="$t('project.endpoint.element')">
         <template v-slot="scope">
           <el-popover trigger="click" placement="right" v-if="typeof scope.row.metricTip != 'undefined' && scope.row.metricTip != null">
@@ -86,7 +87,7 @@
         :resizable="false"
         prop="value"
         :label="$t('project.endpoint.value')"
-        width="180">
+        min-width="180">
       </pl-table-column>
     </pl-table>
     <button class="to-top" v-show="showTopBtn" :class="{'to-top-is-hover': tableHover}" @click="$toTop('ps', 1)"><i class="nz-icon nz-icon-top"></i></button>
