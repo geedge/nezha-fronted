@@ -67,7 +67,7 @@
                       </div>
                     </div>
                     <!-- endpoint-detail、asset、model的assetInfo的feature-->
-                    <div class="content-item" v-if="(data.from == 'endpoint' || data.from == 'asset' || data.from == 'model') && data.type == 'assetInfo' && item.type == 'feature'">
+                    <div class="content-item" v-if="(data.from == 'endpoint' || data.from == 'asset' || data.from == 'model') && data.type == 'assetInfo' && item.type == 'attribute'">
                       <div class="content-item-key item-tip" :id="`key-${index}-${i}`">
                         <span class="content-text">{{key}}</span>
                         <div class="item-tip-hide item-tip-key el-popover" :class="itemTip(`key-${index}`, key, i, ready)">{{key}}</div>

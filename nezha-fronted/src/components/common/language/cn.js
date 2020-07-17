@@ -458,7 +458,7 @@ const cn = {
       reLoginPwdIntroduce: "请指定密码提示以便RELOGIN登录过程可自动运行",
       exporter: "Exporter",
       basicTitle:'基础信息',
-      featureTitle:'特征'
+      featureTitle:'属性'
     },
     editAssetTab: {
       title: "新增资产",
