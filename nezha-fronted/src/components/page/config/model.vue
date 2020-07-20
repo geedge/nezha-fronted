@@ -40,7 +40,7 @@
             <div class="top-tool-search">
               <search-input :searchMsg="searchMsg" @search="search" :inTransform="inTransform"></search-input>
             </div>
-            <button @click="toAdd" class="nz-btn nz-btn-size-normal nz-btn-style-light  margin-l-20"  :title="$t('overall.createModel')"
+            <button @click="add" class="nz-btn nz-btn-size-normal nz-btn-style-light margin-l-20"  :title="$t('overall.createModel')"
                     id="model-add">
                       <i class="nz-icon-create-square nz-icon"></i>
             </button>
@@ -84,7 +84,7 @@
               </template>
               <div v-else-if="item.prop == 'option'" class="content-right-options">
                 <span :title="$t('dashboard.panel.title')" @click="panel(scope.row)" class="content-right-option" :id="'model-panel-'+scope.row.id"><i class="nz-icon nz-icon-template"></i></span>
-                <span :title="$t('overall.edit')" @click="toEdit(scope.row)" class="content-right-option" :id="'model-edit-'+scope.row.id"><i class="nz-icon nz-icon-edit"></i></span>
+                <span :title="$t('overall.edit')" @click="edit(scope.row)" class="content-right-option" :id="'model-edit-'+scope.row.id"><i class="nz-icon nz-icon-edit"></i></span>
                 <span :title="$t('overall.delete')" @click="del(scope.row)" class="content-right-option" :id="'model-del-'+scope.row.id"><i class="el-icon-delete"></i></span>
               </div>
               <template v-else-if="scope.row[item.prop]">{{scope.row[item.prop]}}</template>
@@ -117,17 +117,17 @@
       @tablelable="tablelabelEmit"
       ref="elementset"
     ></element-set>
-    <model-box ref="modelBox" :model="model" @reload="getTableData"></model-box>
+    <transition name="right-box">
+      <model-box v-if="rightBox.show" ref="modelBox" :model="model" @close="closeRightBox" @reload="getTableData"></model-box>
+    </transition>
   </div>
 
 </template>
 <script>
   import bus from '../../../libs/bus';
-  var vm;
   export default {
     name: "model",
     data() {
-      vm = this;
       return {
         /*二级列表相关*/
         targetTab: '', //展示二级列表中的哪个页签
@@ -144,8 +144,9 @@
 
         toTopBtnTop: this.$tableHeight.toTopBtnTop, //to-top按钮的top属性
         tableHover: false, //控制滚动条和top按钮同时出现
-
-        model: {
+        rightBox: {show: false},
+        model: {},
+        blankModel: {
           id: '',
           name: '',
           vendor: {id: '', value: '', code: '', type: ''},
@@ -250,9 +251,6 @@
         this.$store.commit('setHeaderTable', data);
         this.tablelable = data;
       },
-      clickos() {
-        this.rightBox.show = false;
-      },
       panel(obj) {
         this.showSubList = true;
         this.modelForPanel = obj;
@@ -260,21 +258,24 @@
       },
       // 全屏
       fullScreen() {
+        let vm = this;
         this.$bottomBoxWindow.fullScreen(vm);
       },
       // 退出全屏
       exitFullScreen() {
+        let vm = this;
         this.$bottomBoxWindow.exitFullScreen(vm);
       },
       // 鼠标拖动二级列表
       listResize(e) {
+        let vm = this;
         this.$bottomBoxWindow.listResize(vm, e);
       },
-      toEdit: function (u) {
+      edit(u) {
         this.model = Object.assign({}, u);
-        this.$refs.modelBox.show(true, true);
+        this.rightBox.show = true;
       },
-      del: function (u) {
+      del(u) {
         this.$confirm(this.$t("tip.confirmDelete"), {
           confirmButtonText: this.$t("tip.yes"),
           cancelButtonText: this.$t("tip.no"),
@@ -284,23 +285,24 @@
             if (response.code === 200) {
               this.$message({duration: 1000, type: 'success', message: this.$t("tip.deleteSuccess")});
               this.getTableData();
-              this.rightBox.show = false;
             } else {
               this.$message.error(response.msg);
             }
           })
         });
       },
-      detail: function (u) {
-        this.model = Object.assign({}, u);
-        this.$refs.modelBox.show(true, false);
+      add() {
+        this.model = this.newModel();
+        this.rightBox.show = true;
       },
-      toAdd: function () {
-        this.cleanModel();
-        this.$refs.modelBox.show(true, true);
+      newModel() {
+        return JSON.parse(JSON.stringify(this.blankModel));
       },
-      esc: function () {
+      closeRightBox(refresh) {
         this.rightBox.show = false;
+        if (refresh) {
+          this.getTableData();
+        }
       },
       jumpTo(data, id) {
         bus.$emit("menu-change", data);
@@ -311,7 +313,7 @@
           }
         });
       },
-      getTableData: function () {
+      getTableData() {
         this.tableData = [];
         this.$set(this.searchLabel, "pageNo", this.pageObj.pageNo);
         this.$set(this.searchLabel, "pageSize", this.pageObj.pageSize);
@@ -334,10 +336,10 @@
         localStorage.setItem('nz-pageSize-' + localStorage.getItem('nz-username') + '-' + this.tableId, val);
         this.getTableData();
       },
-      search: function (searchObj) {
-        let orderBy='';
-        if(this.searchLabel.orderBy){
-          orderBy=this.searchLabel.orderBy
+      search(searchObj) {
+        let orderBy = '';
+        if(this.searchLabel.orderBy) {
+          orderBy = this.searchLabel.orderBy
         }
         this.pageObj.pageNo = 1;
         this.searchLabel = {};
@@ -346,26 +348,13 @@
             this.$set(this.searchLabel, item, searchObj[item]);
           }
         }
-        if(orderBy){
+        if(orderBy) {
           this.$set(this.searchLabel, 'orderBy', orderBy);
         }
         this.getTableData();
       },
-      cleanModel() {
-        this.model = {
-          id: '',
-          name: '',
-          vendor: {id: '', value: '', code: '', type: ''},
-          type: {id: '', value: '', code: '', type: ''},
-          assetStat: {total: '', inStock: '', outStock: ''},
-          remark: '',
-          vendorCode: '',
-          typeCode: '',
-          uSize:1,
-        };
-      },
       //是否需要排序
-      sortableShow(prop){
+      sortableShow(prop) {
         switch(prop){
           case 'id':
           case 'name':
@@ -376,7 +365,7 @@
         }
       },
       // prop字段
-      propTitle(prop){
+      propTitle(prop) {
         switch(prop){
           case 'id': return'mo.id';
           case 'name': return'mo.name';
@@ -386,7 +375,7 @@
         }
       },
       // 数据排序
-      tableDataSort(item){
+      tableDataSort(item) {
         let orderBy='';
         if(item.order==='ascending'){
           orderBy=item.prop;
@@ -398,7 +387,7 @@
         this.getTableData();
       },
     },
-    mounted: function () {
+    mounted() {
       //是否存在分页缓存
       let pageSize = localStorage.getItem('nz-pageSize-' + localStorage.getItem('nz-username') + '-' + this.tableId);
       if (pageSize != 'undefined' && pageSize != null) {
@@ -434,6 +423,7 @@
     },
     watch: {
       showSubList(n) {
+        let vm = this;
         this.$bottomBoxWindow.showSubListWatch(vm, n);
       },
     }
