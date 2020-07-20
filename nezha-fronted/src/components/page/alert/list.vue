@@ -909,6 +909,8 @@
       //是否需要排序
       sortableShow(prop){
         switch(prop){
+          case 'id':
+          case 'state':
           case 'alertRule':
           case 'severity':
           case 'startAt':
@@ -920,6 +922,8 @@
       // prop字段
       propTitle(prop){
         switch(prop){
+          case 'id': return'am.id';
+          case 'state': return'am.state';
           case 'alertRule': return'ar.alert_name';
           case 'severity': return'am.severity';
           case 'startAt': return'am.start_at';

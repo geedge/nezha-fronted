@@ -16,8 +16,8 @@
                       </el-popover>
                       <span v-else>{{item.name}}</span>
                     </div>
-                    <el-tooltip :content="item.total" placement="top" effect="light" :disabled="item.total<99">
-                      <el-badge class="mark" :value="item.total" max="99"/>
+                    <el-tooltip :content="''+item.total" placement="top" effect="light" :disabled="item.total<99">
+                      <el-badge class="mark" :value="item.total" :max="99"/>
                     </el-tooltip>
                   </el-checkbox>
                 </el-checkbox-group>
@@ -31,8 +31,8 @@
                       </el-popover>
                       <span v-else>{{item.name}}</span>
                     </div>
-                    <el-tooltip :content="item.total" placement="top" effect="light" :disabled="item.total<99">
-                      <el-badge class="mark" :value="item.total" max="99"/>
+                    <el-tooltip :content="''+item.total" placement="top" effect="light" :disabled="item.total<99">
+                      <el-badge class="mark" :value="item.total" :max="99"/>
                     </el-tooltip>
                   </el-checkbox>
                 </el-checkbox-group>
@@ -46,8 +46,8 @@
                       </el-popover>
                       <span v-else>{{item.name}}</span>
                     </div>
-                    <el-tooltip :content="item.total" placement="top" effect="light" :disabled="item.total<99">
-                      <el-badge class="mark" :value="item.total" max="99"/>
+                    <el-tooltip :content="''+item.total" placement="top" effect="light" :disabled="item.total<99">
+                      <el-badge class="mark" :value="item.total" :max="99"/>
                     </el-tooltip>
                   </el-checkbox>
                 </el-checkbox-group>
@@ -61,8 +61,8 @@
                       </el-popover>
                       <span v-else>{{item.label}}</span>
                     </div>
-                    <el-tooltip :content="item.total" placement="top" effect="light" :disabled="item.total<99">
-                      <el-badge class="mark" :value="item.total" max="99"/>
+                    <el-tooltip :content="''+item.total" placement="top" effect="light" :disabled="item.total<99">
+                      <el-badge class="mark" :value="item.total" :max="99"/>
                     </el-tooltip>
                   </el-checkbox>
                 </el-checkbox-group>
@@ -97,7 +97,8 @@
                 :height="mainTableHeight"
                 style="width: 100%;"
                 :data="tableData"
-                v-scrollBar:el-table="'large'"
+                v-scrollBar
+                :el-table="'large'"
                 v-show="mainResizeShow"
                 border
                 v-loading="loading"
