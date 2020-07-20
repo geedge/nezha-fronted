@@ -16,7 +16,9 @@
                       </el-popover>
                       <span v-else>{{item.name}}</span>
                     </div>
-                    <el-badge class="mark" :value="item.total" max="99"/>
+                    <el-tooltip :content="item.total" placement="top" effect="light" :disabled="item.total<99">
+                      <el-badge class="mark" :value="item.total" max="99"/>
+                    </el-tooltip>
                   </el-checkbox>
                 </el-checkbox-group>
               </el-collapse-item>
@@ -29,7 +31,9 @@
                       </el-popover>
                       <span v-else>{{item.name}}</span>
                     </div>
-                    <el-badge class="mark" :value="item.total" max="99"/>
+                    <el-tooltip :content="item.total" placement="top" effect="light" :disabled="item.total<99">
+                      <el-badge class="mark" :value="item.total" max="99"/>
+                    </el-tooltip>
                   </el-checkbox>
                 </el-checkbox-group>
               </el-collapse-item>
@@ -42,7 +46,9 @@
                       </el-popover>
                       <span v-else>{{item.name}}</span>
                     </div>
-                    <el-badge class="mark" :value="item.total" max="99"/>
+                    <el-tooltip :content="item.total" placement="top" effect="light" :disabled="item.total<99">
+                      <el-badge class="mark" :value="item.total" max="99"/>
+                    </el-tooltip>
                   </el-checkbox>
                 </el-checkbox-group>
               </el-collapse-item>
@@ -55,7 +61,9 @@
                       </el-popover>
                       <span v-else>{{item.label}}</span>
                     </div>
-                    <el-badge class="mark" :value="item.total" max="99"/>
+                    <el-tooltip :content="item.total" placement="top" effect="light" :disabled="item.total<99">
+                      <el-badge class="mark" :value="item.total" max="99"/>
+                    </el-tooltip>
                   </el-checkbox>
                 </el-checkbox-group>
               </el-collapse-item>
@@ -141,11 +149,13 @@
                 <span class="link" @click="showEndpoint(scope.row)">{{scope.row.endpointNum}}</span>
               </template>
               <template v-if="item.prop=='Alert'">
-                <span :id="'asset-alerts-'+scope.row.id" @click="jumpToAlertMsg(scope.row)" class="link">
-                  {{(scope.row.alertNum < 99 ? scope.row.alertNum : 99)}}
-                  <sup class="linkSup" v-if="scope.row.alertNum > 99">+</sup>
-                  {{' ' + $t('overall.active')}}
-                </span>
+                <el-tooltip :content="scope.row.alertNum+' '+$t('overall.active')" placement="top" effect="light" :disabled=" scope.row.alertNum < 99">
+                  <span :id="'asset-alerts-'+scope.row.id" @click="jumpToAlertMsg(scope.row)" class="link">
+                    {{(scope.row.alertNum < 99 ? scope.row.alertNum : 99)}}
+                      <sup class="linkSup" v-if="scope.row.alertNum > 99">+</sup>
+                    {{' ' + $t('overall.active')}}
+                  </span>
+                </el-tooltip>
               </template>
               <div v-if="item.prop=='dataCenter'">
                 <span  >{{scope.row.idc.name}}</span>
