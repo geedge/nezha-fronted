@@ -395,7 +395,8 @@ export default {
           this.isError = false;
           this.errorContent = '';
         }
-        if(seriesItem||seriesItem == 0 && seriesItem !=''){ //0 为false
+        console.log('seriesItem','' == 0)
+        if(seriesItem||(typeof seriesItem == 'number'&&seriesItem == 0) ||(typeof seriesItem=='string'&& seriesItem !='')){ //0 为false
           this.noData=false;
         }else{
           this.noData=true;
