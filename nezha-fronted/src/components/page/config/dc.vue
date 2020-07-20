@@ -492,6 +492,7 @@
         }
       },
       showSubList(n) {
+        let vm = this;
         this.$bottomBoxWindow.showSubListWatch(vm, n);
       }
     },
