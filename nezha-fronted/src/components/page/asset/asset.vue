@@ -97,8 +97,7 @@
                 :height="mainTableHeight"
                 style="width: 100%;"
                 :data="tableData"
-                v-scrollBar
-                :el-table="'large'"
+                v-scrollBar:el-table="'large'"
                 v-show="mainResizeShow"
                 border
                 v-loading="loading"
