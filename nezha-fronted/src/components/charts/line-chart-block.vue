@@ -443,13 +443,20 @@
           toolbox:{
             show:false,
             top:'0',
-            showTitle:false,
+            showTitle:true,
             feature:{
               dataZoom:{
-                yAxisIndex:false
+                yAxisIndex:false,
+                title:{
+                  zoom:self.$t('overall.toolBox.zoom'),
+                  back:self.$t('overall.toolBox.back'),
+                }
               },
               magicType:{
                 type:['stack'],
+                title:{
+                  stack:self.$t('overall.toolBox.stack')
+                },
                 iconStyle:{
                   borderColor:stackIconBorderColor,
                 },
@@ -752,17 +759,30 @@
             window.addEventListener('resize', function () {
               self.echartStore.resize();
             });
-
             this.echartStore.on('magictypechanged', function (params) {
                 self.isStackArea = !self.isStackArea;
                 if(self.isStackArea){
                   this.setOption({
                     toolbox:{
                       feature:{
+                        dataZoom:{
+                          yAxisIndex:false,
+                          title:{
+                            zoom:self.$t('overall.toolBox.zoom'),
+                            back:self.$t('overall.toolBox.back'),
+                          }
+                        },
                         magicType:{
+                          type:['stack'],
+                          title:{
+                            stack:self.$t('overall.toolBox.stack')
+                          },
                           iconStyle:{
                             borderColor:'#7e7e7e',
                           },
+                          emphasis:{
+                            borderColor:stackIconChooseBorderColor,
+                          }
                         },
                       }
                     },
@@ -877,12 +897,27 @@
                 this.setOption({
                   toolbox:{
                     feature:{
+                      dataZoom:{
+                        yAxisIndex:false,
+                        title:{
+                          zoom:self.$t('overall.toolBox.zoom'),
+                          back:self.$t('overall.toolBox.back'),
+                        }
+                      },
                       magicType:{
+                        type:['stack'],
+                        title:{
+                          stack:self.$t('overall.toolBox.stack')
+                        },
                         iconStyle:{
                           borderColor:'#7e7e7e',
                         },
+                        emphasis:{
+                          borderColor:stackIconChooseBorderColor,
+                        }
                       },
                     }
+
                   },
                   tooltip: {
                     formatter:function(params){
