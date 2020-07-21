@@ -638,7 +638,7 @@
         })
       },
       messageStyle(e) {
-        if (e.column.label == this.$t("asset.tableTitle.alerts")) {
+        if (e.column.label == 'Alerts') {
           if (e.row.alertNum > 0) {
             return 'danger';
           } else {
