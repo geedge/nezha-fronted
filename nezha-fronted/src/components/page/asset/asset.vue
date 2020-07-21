@@ -997,7 +997,6 @@
       getLeftMenuList(){
         this.$get('asset/filter').then(response => {
           if (response.code === 200) {
-            console.log(response.data);
             //dc
             this.checkListData = this.IDCOptionData = response.data.dc;
             this.markOptionData(this.IDCOptionData);

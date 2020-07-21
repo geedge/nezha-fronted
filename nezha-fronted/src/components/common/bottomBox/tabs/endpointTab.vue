@@ -34,7 +34,9 @@
       :height="$tableHeight.noPagination"
       v-scrollBar:el-table="'large'"
       ref="endpointTable"
-      style="width: 100%;">
+      style="width: 100%;"
+      @sort-change="tableDataSort"
+    >
       <el-table-column
         :resizable="false"
         v-for="(item, index) in tablelable"
@@ -43,6 +45,8 @@
         :key="`col-${index}`"
         :label="item.label"
         min-width="110px"
+        :sortable="sortableShow(item.prop)"
+        :prop="propTitle(item.prop)"
       >
         <template slot-scope="scope" :column="item">
           <span v-if="item.prop == 'asset' && scope.row[item.prop]" class="link" @click="">{{scope.row[item.prop].host}}</span>
@@ -113,7 +117,9 @@
         showTopBtn: false, //top按钮是否显示
         toTopBtnTop: this.$tableHeight.toTopBtnTop, //to-top按钮的top属性
         tableHover: false, //控制滚动条和top按钮同时出现
+        endpointSearchLabel:{
 
+        },
         loading: false,
         tableTitle: [
           {
@@ -201,7 +207,9 @@
       },
       getTableData() {
         this.loading = true;
-        this.$get('/endpoint?assetId=' + this.asset.id + 'pageSize=-1').then(response => {
+        this.$set(this.endpointSearchLabel, "assetId", this.asset.id);
+        this.$set(this.endpointSearchLabel, "pageSize", '-1');
+        this.$get('/endpoint',this.endpointSearchLabel).then(response => {
           this.loading = false;
           if (response.code === 200) {
             this.tableData = response.data.list;
@@ -240,6 +248,20 @@
             this.$set(this.searchLabel, item, searchObj[item]);
           }
         }*/
+        let orderBy='';
+        if(this.searchLabel.orderBy){
+          orderBy=this.searchLabel.orderBy
+        }
+        this.searchLabel={};
+        this.pageObj.pageNo = 1;
+        for (let item in searchObj) {
+          if (searchObj[item]) {
+            this.$set(this.searchLabel, item, searchObj[item]);
+          }
+        }
+        if(orderBy){
+          this.$set(this.searchLabel, 'orderBy', orderBy);
+        }
         this.getTableData();
       },
       closeSubList() {
@@ -321,6 +343,39 @@
           }
         }
       },
+      //是否需要排序
+      sortableShow(prop){
+        switch(prop){
+          case 'id':
+          case 'asset':
+          case 'port':
+            // case 'path':
+            return 'custom';
+          default : return false;
+        }
+      },
+      // prop字段
+      propTitle(prop){
+        switch(prop){
+          case 'id': return'e.id';
+          case 'asset': return'a.host';
+          case 'port': return'e.port';
+          // case 'path': return'e.path';
+          default : return prop;
+        }
+      },
+      // 数据排序
+      tableDataSort(item){
+        let orderBy='';
+        if(item.order==='ascending'){
+          orderBy=item.prop;
+        }
+        if(item.order==='descending'){
+          orderBy='-'+item.prop;
+        }
+        this.$set(this.endpointSearchLabel, "orderBy", orderBy);
+        this.getTableData();
+      },
     },
     watch: {
       obj: {
@@ -329,7 +384,9 @@
         handler(n) {
           if (n) {
             this.asset = JSON.parse(JSON.stringify(n));
-            this.getTableData();
+            this.$nextTick(()=>{
+              this.getTableData();
+            })
           }
         }
       }

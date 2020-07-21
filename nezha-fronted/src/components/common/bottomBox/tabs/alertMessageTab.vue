@@ -36,7 +36,9 @@
       :height="$tableHeight.openSubList.subList"
       :cell-class-name="labelsClassName"
       @selection-change="selectChange"
-      style="width: 100%;">
+      style="width: 100%;"
+      @sort-change="tableDataSort"
+    >
       <el-table-column
         :resizable="false"
         type="selection"
@@ -53,6 +55,8 @@
         :label="item.label"
         :show-overflow-tooltip="item.prop != 'labels'"
         min-width="110px"
+        :sortable="sortableShow(item.prop)"
+        :prop="propTitle(item.prop)"
       >
         <template slot-scope="scope" :column="item">
           <template v-if="item.prop == 'alertRule'">
@@ -698,6 +702,10 @@
       },
       search: function (searchObj) {
         this.searchLabel = {};
+        let orderBy='';
+        if(this.searchLabel.orderBy){
+          orderBy=this.searchLabel.orderBy
+        }
         if (this.from == "alertRule") {
           this.searchLabel.ruleId = this.obj.id;
         } else if (this.from == "asset") {
@@ -708,6 +716,9 @@
           if (searchObj[item]) {
             this.$set(this.searchLabel, item, searchObj[item]);
           }
+        }
+        if(orderBy){
+          this.$set(this.searchLabel, 'orderBy', orderBy);
         }
         this.getAlertList();
       },
@@ -721,7 +732,44 @@
           this.viewAssetState = false
           this.$refs['assetEditUnit'].tabView = false
         }
-      }
+      },
+      //是否需要排序
+      sortableShow(prop){
+        switch(prop){
+          case 'id':
+          case 'state':
+          case 'alertRule':
+          case 'severity':
+          case 'startAt':
+          case 'endAt':
+            return'custom';
+          default : return false;
+        }
+      },
+      // prop字段
+      propTitle(prop){
+        switch(prop){
+          case 'id': return'am.id';
+          case 'state': return'am.state';
+          case 'alertRule': return'ar.alert_name';
+          case 'severity': return'am.severity';
+          case 'startAt': return'am.start_at';
+          case 'endAt': return'am.end_at';
+          default : return prop;
+        }
+      },
+      // 数据排序
+      tableDataSort(item){
+        let orderBy='';
+        if(item.order==='ascending'){
+          orderBy=item.prop;
+        }
+        if(item.order==='descending'){
+          orderBy='-'+item.prop;
+        }
+        this.$set(this.searchLabel, "orderBy", orderBy);
+        this.getAlertList();
+      },
     },
     watch: {
       obj: {

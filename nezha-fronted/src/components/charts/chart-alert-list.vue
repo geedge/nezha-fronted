@@ -57,7 +57,10 @@
             v-scrollBar:el-table="'normal'"
             :cell-class-name="labelsClassName"
             @selection-change="selectChange"
-            style="width: 100%;">
+            style="width: 100%;"
+            @sort-change="tableDataSort"
+            v-loading="loading"
+          >
             <el-table-column
               :resizable="false"
               type="selection"
@@ -73,6 +76,8 @@
               :label="item.label"
               :show-overflow-tooltip="item.prop != 'labels'"
               min-width="110px"
+              :sortable="sortableShow(item.prop)"
+              :prop="propTitle(item.prop)"
             >
               <template slot-scope="scope" :column="item">
                 <template v-if="item.prop == 'alertRule'">
@@ -158,7 +163,9 @@
             v-scrollBar:el-table="'large'"
             :cell-class-name="labelsClassName"
             @selection-change="selectChange"
-            style="width: 100%;">
+            style="width: 100%;"
+
+          >
             <el-table-column
               :resizable="false"
               type="selection"
@@ -327,6 +334,7 @@ export default {
           pageSize: 50,
           total: 0
         },
+        loading:false,// 表格数据加载loading
         screenPageObj:{
           pageNo: 1,
           pageSize: 50,
@@ -361,6 +369,7 @@ export default {
         divFirstShow:false,
         searchTime: [new Date().setHours(new Date().getHours() - 1), new Date()],//全屏显示的时间
         oldSearchTime: [],
+        searchLabel:{},
         tableTitle: [
           {
             label: 'ID',
@@ -694,6 +703,7 @@ export default {
       },
       getAlertList: function (filterType,isPreview=false,chartInfo) {
         this.resize();
+        this.loading=true;
         this.isPreview = isPreview;
         let queryParam={
           pageSize:this.pageObj.pageSize,
@@ -729,6 +739,9 @@ export default {
             queryParam.state=param.state;
           }
         }
+        if(this.searchLabel.orderBy){
+          queryParam.orderBy=this.searchLabel.orderBy;
+        }
         this.startLoading(filterType);
         this.$get('/alert/message', queryParam).then(response => {
           if (response.code == 200) {
@@ -759,6 +772,7 @@ export default {
             this.divFirstShow = true;
 
             this.firstShow = true; // 展示操作按键
+            this.loading=false;
             this.endLoading(filterType);
           }else{
             this.isError = true;
@@ -809,7 +823,6 @@ export default {
       },
       elementsetHide() {
         //悬浮点击空白隐藏
-        console.log(11112)
         this.$refs.elementset.elementsetHide();
       },
       tablelabelEmit(data) {
@@ -947,6 +960,43 @@ export default {
         setData(chartItem, seriesItem, panelId, filter,area,errorMsg) {
           console.info(chartItem,title)
         },
+      //是否需要排序
+      sortableShow(prop){
+        switch(prop){
+          case 'id':
+          case 'state':
+          case 'alertRule':
+          case 'severity':
+          case 'startAt':
+          case 'endAt':
+            return'custom';
+          default : return false;
+        }
+      },
+      // prop字段
+      propTitle(prop){
+        switch(prop){
+          case 'id': return'am.id';
+          case 'state': return'am.state';
+          case 'alertRule': return'ar.alert_name';
+          case 'severity': return'am.severity';
+          case 'startAt': return'am.start_at';
+          case 'endAt': return'am.end_at';
+          default : return prop;
+        }
+      },
+      // 数据排序
+      tableDataSort(item){
+        let orderBy='';
+        if(item.order==='ascending'){
+          orderBy=item.prop;
+        }
+        if(item.order==='descending'){
+          orderBy='-'+item.prop;
+        }
+        this.$set(this.searchLabel, "orderBy", orderBy);
+        this.getAlertList();
+      },
 
     },
     mounted() {
