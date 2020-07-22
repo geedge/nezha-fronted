@@ -745,7 +745,8 @@ const cn = {
         add: "添加",
         update: "更新",
         del: "删除",
-        nameMaxLength:"长度应小于64"
+        nameMaxLength:"长度应小于64",
+        uriRequired:'请填写正确的网址'
       },
       reset: {
         reset: "重置",

@@ -753,6 +753,7 @@ const en = {
         update: "Update",
         del: "Delete",
         nameMaxLength:'The length should be less than 64',
+        uriRequired:'Please fill in the correct url'
       },
       reset:{
         reset:'Reset',

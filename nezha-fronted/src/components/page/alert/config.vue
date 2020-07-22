@@ -374,7 +374,7 @@
         this.showSubList = true;
       },
       messageStyle(e) {
-        if (e.column.label == this.$t("alert.message")) {
+        if (e.column.label == 'Message' || e.column.label == this.$t('alert.message')) {
           if (e.row.alertNum > 0) {
             return 'danger';
           } else {
