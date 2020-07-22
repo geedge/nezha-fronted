@@ -65,7 +65,7 @@
           <!--last-->
           <el-form-item :label="$t('alert.config.for')" prop="last">
             <el-input v-if="rightBox.isEdit" type="text" placeholder="" v-model.number="alertRule.last" size="small">
-              <template slot="append">second</template>
+              <template slot="append">{{$t('alert.config.second')}}</template>
             </el-input>
             <div v-if="!rightBox.isEdit" class="right-box-form-content-txt">{{alertRule.last}}s</div>
           </el-form-item>

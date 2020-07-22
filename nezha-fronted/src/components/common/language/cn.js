@@ -139,7 +139,7 @@ const cn = {
             label: "表格"
           },
           stackArea: {
-            label: "面积图"
+            label: "堆叠区域图"
           },
           url: {
             label: "URL",
@@ -703,7 +703,9 @@ const cn = {
         systemName: "系统名称",
         curUrl: "网站URL",
         timezone: "时区",
-        defaultCabinetUsize: "机柜默认U位"
+        defaultCabinetUsize: "机柜默认U位",
+        second:'秒',
+        day:'天'
       },
       email: {
         email: "邮件",
@@ -791,7 +793,8 @@ const cn = {
       name: "名称",
       receiver: "用户组",
       expr: "表达式",
-      for: "For (s)",
+      for: "持续(秒)",
+      second:'秒',
       link: "关联",
       option: "操作",
       alertConfig: "告警规则",

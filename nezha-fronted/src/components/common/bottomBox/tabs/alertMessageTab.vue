@@ -92,11 +92,11 @@
             <span v-else>-</span>
           </div>-->
           <template v-else-if="item.prop == 'labels'">
-            <nz-alert-tag :label="key" type="info" style="margin: 5px;"
+            <nz-alert-tag :label="item.label" :type="tagType(item.label)" style="margin: 5px;"
                           :cursor-point="false"
-                          :key="key"
-                          v-if="key != 'alertname' && key != 'severity'"
-                          v-for="(value, key) in scope.row.labels">{{value}}</nz-alert-tag>
+                          :key="item.label"
+                          v-if="item.label != 'alertname' && item.label != 'severity'"
+                          v-for="item in labelsSort(scope.row.labels)">{{item.value}}</nz-alert-tag>
             <!--<el-tag v-if="key != 'alertname' && key != 'severity'"
                     :key="key"
                     type="info"
@@ -362,6 +362,15 @@
       }
     },
     computed: {
+      tagType() {
+        return (key) => {
+          if (key == 'asset' || key == 'module' || key == 'project' || key == 'datacenter' || key == 'endpoint') {
+            return "normal";
+          } else {
+            return "info";
+          }
+        }
+      },
       tagValue() {
         return (key, value) => {
           if (key == 'type') {
@@ -378,6 +387,21 @@
       }
     },
     methods: {
+      labelsSort:function(obj){
+        let buildIn=['asset','endpoint','module','project','datacenter']
+        let labels=JSON.parse(JSON.stringify(obj));
+        let result=[];
+        for(let key of buildIn){
+          if(key in labels){
+            result.push({label:key,value:labels[key]})
+            delete labels[key]
+          }
+        }
+        Object.keys(labels).sort().forEach(key=>{
+          result.push({label:key,value:labels[key]})
+        })
+        return result;
+      },
       elementsetShow(s, e) {
         this.showElementSet = true;
         this.$nextTick(() => {

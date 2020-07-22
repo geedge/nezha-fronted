@@ -100,11 +100,11 @@
                 <span v-if="scope.row[item.prop] == 'low'"><i class="el-icon-arrow-down"></i>&nbsp;{{severityData[2].value}}</span>
               </span>
                 <template v-else-if="item.prop == 'labels'">
-                  <nz-alert-tag :label="key" :type="tagType(key)" style="margin: 5px;"
-                                :cursor-point="tagType(key) == 'info' ? false : true"
-                                :key="key"
-                                v-if="key != 'alertname' && key != 'severity'"
-                                v-for="(value, key) in scope.row.labels">{{value}}</nz-alert-tag>
+                  <nz-alert-tag :label="item.label" :type="tagType(item.label)" style="margin: 5px;"
+                                :cursor-point="tagType(item.label) == 'info' ? false : true"
+                                :key="item.label"
+                                v-if="item.label != 'alertname' && item.label != 'severity'"
+                                v-for="item in labelsSort(scope.row.labels)">{{item.value}}</nz-alert-tag>
                 </template>
                 <div v-else-if="item.prop == 'state'">
                 <span class="">
@@ -203,11 +203,11 @@
               <span v-if="scope.row[item.prop] == 'low'"><i class="el-icon-arrow-down"></i>&nbsp;{{severityData[2].value}}</span>
             </span>
                 <template v-else-if="item.prop == 'labels'">
-                  <nz-alert-tag :label="key" :type="tagType(key)" style="margin: 5px;"
-                                :cursor-point="tagType(key) == 'info' ? false : true"
-                                :key="key"
-                                v-if="key != 'alertname' && key != 'severity'"
-                                v-for="(value, key) in scope.row.labels">{{value}}</nz-alert-tag>
+                  <nz-alert-tag :label="item.label" :type="tagType(item.label)" style="margin: 5px;"
+                                :cursor-point="tagType(item.label) == 'info' ? false : true"
+                                :key="item.label"
+                                v-if="item.label != 'alertname' && item.label != 'severity'"
+                                v-for="item in labelsSort(scope.row.labels)">{{item.value}}</nz-alert-tag>
                 </template>
                 <div v-else-if="item.prop == 'state'">
               <span class="">
@@ -503,6 +503,21 @@ export default {
       startResize(e) {
         let vm = this;
         this.$chartResizeTool.start(vm, this.data, e);
+      },
+      labelsSort:function(obj){
+        let buildIn=['asset','endpoint','module','project','datacenter']
+        let labels=JSON.parse(JSON.stringify(obj));
+        let result=[];
+        for(let key of buildIn){
+          if(key in labels){
+            result.push({label:key,value:labels[key]})
+            delete labels[key]
+          }
+        }
+        Object.keys(labels).sort().forEach(key=>{
+          result.push({label:key,value:labels[key]})
+        })
+        return result;
       },
         labelsClassName(row) {
           if (row.column.label == this.$t("alert.list.labels")) {

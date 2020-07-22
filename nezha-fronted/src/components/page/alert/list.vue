@@ -107,11 +107,11 @@
               </div>-->
               <template v-else-if="item.prop == 'labels'">
 <!--                <nz-alert-tag :label="key" :type="tagType(key)" style="margin: 5px;" @click="showTagDetail(scope.row, key)"-->
-                <nz-alert-tag :label="key" :type="tagType(key)" style="margin: 5px;"
-                              :cursor-point="tagType(key) == 'info' ? false : true"
-                              :key="key"
-                              v-if="key != 'alertname' && key != 'severity'"
-                              v-for="(value, key) in scope.row.labels">{{value}}</nz-alert-tag>
+                <nz-alert-tag :label="item.label" :type="tagType(item.label)" style="margin: 5px;"
+                              :cursor-point="tagType(item.label) == 'info' ? false : true"
+                              :key="item.label"
+                              v-if="item.label != 'alertname' && item.label != 'severity'"
+                              v-for="item in labelsSort(scope.row.labels)">{{item.value}}</nz-alert-tag>
                 <!--<el-tag @click="showTagDetail(scope.row, key)"
                         :key="key"
                         :class="{'link': key == 'asset' || key == 'endpoint' || key == 'project' || key == 'module' || key == 'datacenter'}"
@@ -443,6 +443,21 @@
       }
     },
     methods: {
+      labelsSort:function(obj){
+        let buildIn=['asset','endpoint','module','project','datacenter']
+        let labels=JSON.parse(JSON.stringify(obj));
+        let result=[];
+        for(let key of buildIn){
+          if(key in labels){
+            result.push({label:key,value:labels[key]})
+            delete labels[key]
+          }
+        }
+        Object.keys(labels).sort().forEach(key=>{
+          result.push({label:key,value:labels[key]})
+        })
+        return result;
+      },
       elementsetShow(s, e) {
         var eventfixed = {
           shezhi: 0,

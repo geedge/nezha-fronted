@@ -53,10 +53,10 @@
                 <el-input v-model="basic.node_exporter_target_path"></el-input>
               </el-form-item>
               <el-form-item :label="$t('config.system.basic.scrapeInterval')" prop="scrape_interval">
-                <el-input v-model.number="basic.scrape_interval" ></el-input><span class="nz-input-append">s</span>
+                <el-input v-model.number="basic.scrape_interval" ></el-input><span class="nz-input-append">{{$t('config.system.basic.second')}}</span>
               </el-form-item>
               <el-form-item :label="$t('config.system.basic.storageRetention')" prop="storage_local_retention">
-                <el-input v-model.number="basic.storage_local_retention" ></el-input><span class="nz-input-append">d</span>
+                <el-input v-model.number="basic.storage_local_retention" ></el-input><span class="nz-input-append">{{$t('config.system.basic.day')}}</span>
               </el-form-item>
               <el-form-item :label="$t('config.system.basic.timezone')" prop="timezone">
 <!--                <el-input v-model.number="basic.timezone" ></el-input>-->

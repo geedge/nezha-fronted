@@ -710,7 +710,9 @@ const en = {
         systemName:'System name',
         curUrl:'Current site URL',
         timezone:'Timezone',
-        defaultCabinetUsize:'Cabinet U Size'
+        defaultCabinetUsize:'Cabinet U Size',
+        second:'second',
+        day:'day'
       },
       email:{
         email:'Email',
@@ -801,6 +803,7 @@ const en = {
       receiver: 'Receiver',//"用户组"
       expr: 'Expression',//"表达式"
       for: "Duration (s)",//For (s)
+      second:'second',
       link: 'Link',//'关联'
       option: 'Operation',//"操作"
       alertConfig: 'Alert rule',//"告警规则"
