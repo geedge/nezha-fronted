@@ -185,77 +185,76 @@ export const bottomBoxWindow = {
   // 鼠标拖动二级列表
   listResize(vm, e) {
     window.resizing = true;
-    let mainListDom = document.querySelector(".main-list-with-sub"); //主列表
+    let mainListDom = document.querySelector(".main-list"); //主列表
+    let subBoxDom = document.querySelector(".sub-box"); //副列表
     let subListDom = document.querySelector(".sub-list"); //副列表
     let contentRightDom = document.querySelector(".content-right"); //右侧内容区
+    let resizeBarHeight = 9; //resize横条高度
+    let minHeight = 15; //主、副列表最小高度限制为15
+    let contentHideHeight = 100; //主、副列表高度低于100时隐藏内容
+    let mainModalDom = document.querySelector(".main-modal"); //主列表遮罩
+    let resizeModalDom = document.querySelector(".resize-modal"); //副列表遮罩
+    let resizeBarDom = document.querySelector(".sub-list-resize"); //副列表遮罩
+
     let contentRightHeight = contentRightDom.offsetHeight;//可视高度
-    //得到点击时俩dom的初始高度：
-    let mainInitialHeight = mainListDom.offsetHeight;
-    let subInitialHeight = subListDom.offsetHeight;
+    //点击时俩dom的初始高度：
+    let subInitialHeight = subListDom.offsetHeight+resizeBarHeight;
+
+    mainModalDom.style.display = "block";
+    resizeModalDom.style.height = `${subInitialHeight}px`;
+    resizeModalDom.style.display = "block";
+    resizeBarDom.style.display = "none";
+    let resizeModalEndHeight;
     //点击时鼠标的Y轴位置
     let mouseInitialY = e.clientY;
 
     document.onmousemove = (e) => {
       window.resizing = true;
-      mainListDom.classList.remove('main-and-sub-transition');
-      subListDom.classList.remove('main-and-sub-transition');
       e.preventDefault();
       //得到鼠标拖动的距离
-      let mouseMoveY = Math.abs(e.clientY - mouseInitialY);
+      let mouseMoveY = e.clientY-mouseInitialY;
+      resizeModalEndHeight = subInitialHeight-mouseMoveY;
+      resizeModalDom.style.height = `${resizeModalEndHeight}px`;
 
-      //往上方拖动：
-      if (e.clientY < mouseInitialY) {
-        vm.toTopBtnTop = mainInitialHeight-mouseMoveY+20+'px';
-        mainListDom.style.height = mainInitialHeight-mouseMoveY+'px';
-        subListDom.style.height = subInitialHeight+mouseMoveY+'px';
+      // 主、副列表最小高度限制
+      if(resizeModalEndHeight > contentRightHeight-minHeight){
+        resizeModalDom.style.height = `${contentRightHeight-minHeight}px`;
       }
-      //往下方拖动：
-      if (e.clientY > mouseInitialY) {
-        vm.toTopBtnTop = mainInitialHeight+mouseMoveY+20+'px';
-        mainListDom.style.height = mainInitialHeight+mouseMoveY+'px';
-        subListDom.style.height = subInitialHeight-mouseMoveY+'px';
-      }
-
-      // 主、副列表最小高度限制为15px; 23是因为拖动区域有8的高度
-      if(parseInt(mainListDom.style.height) > contentRightHeight-23){
-        vm.toTopBtnTop = contentRightHeight+5+'px';
-        mainListDom.style.height = contentRightHeight-23+'px';
-      }
-      if(parseInt(mainListDom.style.height) <= 15){
-        vm.toTopBtnTop = '35px';
-        mainListDom.style.height = '15px';
-      }
-      if(parseInt(subListDom.style.height) > contentRightHeight-23){
-        subListDom.style.height = contentRightHeight-23+'px';
-      }
-      if(parseInt(subListDom.style.height) <= 15){
-        subListDom.style.height = '15px';
-      }
-      //当主副列表可视区域小于一定值时，不展示内容
-      if(parseInt(mainListDom.style.height) <= 100){
-        if (vm.mainResizeShow) {
-          vm.mainResizeShow = false;
-        }
-      } else {
-        if (!vm.mainResizeShow) {
-          vm.mainResizeShow = true;
-        }
-      }
-      if(parseInt(subListDom.style.height) <= 100){
-        if (vm.subResizeShow) {
-          vm.subResizeShow = false;
-        }
-      } else {
-        if (!vm.subResizeShow) {
-          vm.subResizeShow = true;
-        }
+      if(resizeModalEndHeight < minHeight){
+        resizeModalDom.style.height = `${minHeight}px`;
       }
     };
     document.onmouseup = () => {
       window.resizing = false;
-      mainListDom.classList.add('main-and-sub-transition');
-      subListDom.classList.add('main-and-sub-transition');
+      mainListDom.style.height = `${contentRightHeight-resizeModalEndHeight}px`;
+      subBoxDom.style.height = `${resizeModalEndHeight}px`;
+      subListDom.style.height = `${resizeModalEndHeight-resizeBarHeight}px`;
+      resizeModalDom.style.display = "none";
+      mainModalDom.style.display = "none";
+      resizeBarDom.style.display = "";
+
+      //当主副列表可视区域小于一定值时，不展示内容
+      if(contentRightHeight-resizeModalEndHeight <= contentHideHeight){
+        if (vm.bottomBox.mainResizeShow) {
+          vm.bottomBox.mainResizeShow = false;
+        }
+      } else {
+        if (!vm.bottomBox.mainResizeShow) {
+          vm.bottomBox.mainResizeShow = true;
+        }
+      }
+      if(resizeModalEndHeight < contentHideHeight){
+        if (vm.bottomBox.subResizeShow) {
+          vm.bottomBox.subResizeShow = false;
+        }
+      } else {
+        if (!vm.bottomBox.subResizeShow) {
+          vm.bottomBox.subResizeShow = true;
+        }
+      }
+
       document.onmousemove = null;
+      document.onmouseup = null;
     }
   },
   exitFullScreen(vm) {
@@ -263,17 +262,17 @@ export const bottomBoxWindow = {
     let contentRightDom = document.querySelector(".content-right"); //右侧内容区
     let contentRightHeight = contentRightDom.offsetHeight;//可视高度
     //主列表
-    document.querySelector(".main-list-with-sub").style.height = vm.mainListHeight ? vm.mainListHeight + 'px' : 'calc(50% - 4px)';
+    document.querySelector(".main-list-with-sub").style.height = vm.bottomBox.mainListHeight ? vm.bottomBox.mainListHeight + 'px' : 'calc(50% - 4px)';
 
     //副列表
-    document.querySelector(".sub-list").style.height = vm.mainListHeight ? contentRightHeight-vm.mainListHeight-9 + 'px' : 'calc(50% - 4px)';
+    document.querySelector(".sub-list").style.height = vm.bottomBox.mainListHeight ? contentRightHeight-vm.bottomBox.mainListHeight-9 + 'px' : 'calc(50% - 4px)';
     setTimeout(() => {
-      vm.isFullScreen = false;
+      vm.bottomBox.isFullScreen = false;
       if (document.querySelector(".main-list-with-sub").offsetHeight >= 100) {
         vm.mainResizeShow = true;
       }
       if (document.querySelector(".sub-list").offsetHeight >= 100) {
-        vm.subResizeShow = true;
+        vm.bottomBox.subResizeShow = true;
       }
       window.resizing = false;
     }, 210);
@@ -282,21 +281,21 @@ export const bottomBoxWindow = {
     window.resizing = true;
     let contentRightDom = document.querySelector(".content-right"); //右侧内容区
     let contentRightHeight = contentRightDom.offsetHeight;//可视高度
-    vm.isFullScreen = true;
+    vm.bottomBox.isFullScreen = true;
     //主列表
-    vm.mainListHeight = document.querySelector(".main-list-with-sub").offsetHeight; //记录全屏前主列表的高度
+    vm.bottomBox.mainListHeight = document.querySelector(".main-list-with-sub").offsetHeight; //记录全屏前主列表的高度
     document.querySelector(".main-list-with-sub").style.height = '0';
-    vm.mainResizeShow = false;
+    vm.bottomBox.mainResizeShow = false;
     //副列表
     document.querySelector(".sub-list").style.height = contentRightHeight + 'px';
     window.resizing = false;
   },
   showSubListWatch(vm, n) {
-    vm.inTransform = n;
+    vm.bottomBox.inTransform = n;
     if (!n) {
       vm.mainTableHeight = vm.$tableHeight.normal; //重置table的高度
-      vm.toTopBtnTop = vm.$tableHeight.toTopBtnTop;
-      vm.isFullScreen = false;
+      vm.tools.toTopBtnTop = vm.$tableHeight.toTopBtnTop;
+      vm.bottomBox.isFullScreen = false;
       //移动分页组件的位置
       let paginationTop = document.querySelector(".pagination-top");
       let paginationBottom = document.querySelector(".pagination-bottom");
@@ -313,13 +312,13 @@ export const bottomBoxWindow = {
       }, 210);
 
       // 主列表恢复全屏
-      vm.mainResizeShow = vm.subResizeShow = true;
+      vm.bottomBox.mainResizeShow = vm.bottomBox.subResizeShow = true;
       document.querySelector('.main-list').style.height = "";
       //副列表高度清空
-      document.querySelector(".sub-list").style.height = '';
+      document.querySelector(".sub-list").style.height = "";
     } else {
       vm.mainTableHeight = vm.$tableHeight.openSubList.mainList; //重置table高度
-      vm.toTopBtnTop = vm.$tableHeight.openSubList.toTopBtnTop;
+      vm.tools.toTopBtnTop = vm.$tableHeight.openSubList.toTopBtnTop;
       //移动分页组件的位置
       let paginationTop = document.querySelector(".pagination-top");
       paginationTop.appendChild(document.querySelector(".pagination-bottom").removeChild(document.querySelector(".pagination")));

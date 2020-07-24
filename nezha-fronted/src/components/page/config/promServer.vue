@@ -34,11 +34,12 @@
       </div>
     </div>
     <div slot="content-right"class="slot-content">
-      <div class="main-list main-and-sub-transition" :class="{'main-list-with-sub': showSubList}">
-        <div class="top-tools" v-show="mainResizeShow">
-          <div class="top-tool-main-right" :class="{'top-tool-main-right-to-left': showSubList}">
+      <div class="main-list" :class="{'main-list-with-sub': bottomBox.showSubList}">
+        <div class="main-modal"></div>
+        <div class="top-tools" v-show="bottomBox.mainResizeShow">
+          <div class="top-tool-main-right" :class="{'top-tool-main-right-to-left': bottomBox.showSubList}">
             <div class="top-tool-search">
-              <search-input ref="searchInput" :searchMsg="searchMsg" @search="search" :inTransform="inTransform"></search-input>
+              <search-input ref="searchInput" :searchMsg="searchMsg" @search="search" :inTransform="bottomBox.inTransform"></search-input>
             </div>
             <button type="button" @click="add" :title="$t('overall.createPrometheusServer')"
                     class="nz-btn nz-btn-size-normal nz-btn-style-light margin-l-20" id="prom-add">
@@ -47,10 +48,10 @@
           </div>
           <div class="pagination-top pagination-top-hide display-none"></div>
         </div>
-        <el-table :data="tableData" border v-show="mainResizeShow" :height="mainTableHeight" style="width: 100%;"
-                  v-loading="loading" ref="promTable" class="nz-table" v-scrollBar:el-table="'large'"
+        <el-table :data="tableData" border v-show="bottomBox.mainResizeShow" :height="mainTableHeight" style="width: 100%;"
+                  v-loading="tools.loading" ref="promTable" class="nz-table" v-scrollBar:el-table="'large'"
                   @sort-change="tableDataSort">
-          <el-table-column :resizable="false" v-for="(item, index) in tablelable"
+          <el-table-column :resizable="false" v-for="(item, index) in tools.tablelable"
                            v-if="item.show"
                            :width="item.width"
                            :key="`col-${index}`"
@@ -89,25 +90,28 @@
               </span>
             </template>
             <template v-slot="scope">
-              <button v-if="scope.$index == 0" class="to-top" :style="{top: toTopBtnTop}" :class="{'to-top-is-hover': tableHover}" v-show="showTopBtn && mainResizeShow" @click="$toTop('ps', 0)"><i class="nz-icon nz-icon-top"></i></button>
+              <button v-if="scope.$index == 0" class="to-top" :style="{top: tools.toTopBtnTop}" :class="{'to-top-is-hover': tools.tableHover}" v-show="tools.showTopBtn && bottomBox.mainResizeShow" @click="$toTop('ps', 0)"><i class="nz-icon nz-icon-top"></i></button>
             </template>
           </el-table-column>
         </el-table>
-        <div class="pagination-bottom" v-show="!showSubList">
+        <div class="pagination-bottom" v-show="!bottomBox.showSubList">
           <Pagination :tableId="tableId" :pageObj="pageObj" @pageNo='pageNo' @pageSize='pageSize' ref="Pagination"></Pagination>
         </div>
       </div>
-      <bottom-box v-if="showSubList" :show-sub-list="showSubList" :subResizeShow="subResizeShow" :obj="promServer" :isFullScreen="isFullScreen" :from="'promServer'" :targetTab.sync="targetTab" :detail="promDetail"
-                  @closeSubList="showSubList = false" @fullScreen="fullScreen" @exitFullScreen="exitFullScreen" @listResize="listResize" ></bottom-box>
+      <transition name="el-zoom-in-bottom">
+        <bottom-box v-if="bottomBox.showSubList" :sub-resize-show="bottomBox.subResizeShow" :obj="bottomBox.promServer" :is-full-screen="bottomBox.isFullScreen" :from="'promServer'" :target-tab.sync="bottomBox.targetTab" :detail="bottomBox.promDetail"
+                    @closeSubList="bottomBox.showSubList = false" @fullScreen="fullScreen" @exitFullScreen="exitFullScreen" @listResize="listResize" ></bottom-box>
+      </transition>
     </div>
     </left-menu>
     <transition name="right-box">
       <prom-server-box v-if="rightBox.show" :prom-server="promServer" @close="closeRightBox"></prom-server-box>
     </transition>
     <element-set
+      v-if="tools.showElementSet"
       v-clickoutside="elementsetHide"
       :table-title="tableTitle"
-      :dropCol="dropCol"
+      :dropCol="tools.dropCol"
       @tablelable="tablelabelEmit"
       ref="elementset"
     ></element-set>
@@ -125,33 +129,38 @@
     },
     data() {
       return {
-        //底部上滑框相关
+        //侧滑
+        rightBox: {
+          show: false,
+        },
+        /*二级页面相关*/
+        bottomBox: {
+          promDetail: {},
+          promServer: {},
+          mainResizeShow: true, //dom高度改变时是否展示|隐藏
+          subResizeShow: true,
+          isFullScreen: false, //全屏状态
+          showSubList: false, //是否显示二级列表
+          targetTab: '', //显示二级列表中的哪个页签
+          inTransform: false, //搜索框相关，搜索条件下拉框是否在transform里
+        },
         mainTableHeight: this.$tableHeight.normal, //主列表table高度
-        showSubList: false, //是否展示二级列表
-        targetTab: '', //展示二级列表中的哪个页签
-        showElementSet: false, //控制自定义列的弹框
-        inTransform: false, //搜索框相关，搜索条件下拉框是否在transform里
-        mainResizeShow: true, //dom高度改变时部分内容是否展示
-        subResizeShow: true,
-        isFullScreen: false,
-        promDetail: [],
-        //底部上滑框相关end
-
-        toTopBtnTop: this.$tableHeight.toTopBtnTop, //to-top按钮的top属性
-        tableHover: false, //控制滚动条和top按钮同时出现
+        /*工具参数*/
+        tools: {
+          loading: false, //是否显示table加载动画
+          toTopBtnTop: this.$tableHeight.toTopBtnTop, //to-top按钮的top属性
+          tableHover: false, //控制滚动条和top按钮同时出现
+          showElementSet: false, //自定义列弹框是否显示
+          showTopBtn: false, //显示To top按钮
+          tablelable: [], //从缓存中加载的table header
+          dropCol: [], //自定义列工具的数据
+        },
 
         tableId: 'promTable', //需要分页的table的id，用于记录每页数量
-        showTopBtn: false,
         rightBox: { //弹出框相关
           show: false,
         },
-        loading: false,
-        promServer: {
-          id: '',
-          host: '',
-          port: 9090,
-          idc: {id: '', name: '', location: ''}
-        },
+        promServer: {},
         blankPromServer: {
           id: '',
           host: '',
@@ -186,7 +195,7 @@
             prop: 'type',
             show: true,
           }, {
-            label: this.$t('asset.createAssetTab.state'),
+            label: this.$t('asset.state'),
             prop: 'status',
             show: true
           }, {
@@ -200,8 +209,6 @@
             width: 120
           }
         ],
-        tablelable: [],
-        dropCol: [],
         tableData: [],
         dcData: [],
         searchMsg: { //给搜索框子组件传递的信息
@@ -263,15 +270,15 @@
         detail.push({label: "Host", value: obj.host});
         detail.push({label: "Port", value: obj.port});
         let type = "";
-        for (let i = 0; i < this.$CONSTANTS.promServer.typeOption.length; i++) {
-          if (obj.key == this.typeData[i].type) {
-            type = this.typeData[i].value;
+        for (let i = 0; i < this.$CONSTANTS.promServer.typeData.length; i++) {
+          if (obj.value == this.typeData[i].type) {
+            type = this.typeData[i].label;
             break;
           }
         }
         detail.push({label: this.$t('config.promServer.type'), value: type});
         detail.push({
-          label: this.$t('asset.createAssetTab.state'),
+          label: this.$t('asset.state'),
           value: obj.status,
           type: 'status',
           msg: this.$t('asset.assetStatPre')+(obj.checkTime ? obj.checkTime : this.$t('asset.assetStatDown'))
@@ -279,13 +286,14 @@
         return detail;
       },
       elementsetShow(s, e) {
+        this.tools.showElementSet = true;
         var eventfixed = {
           shezhi: 0,
           screen: 0
         };
         eventfixed[s] = 1;
         e.preventDefault();
-        this.$store.commit('setHeaderTable', this.tablelable);
+        this.$store.commit('setHeaderTable', this.tools.tablelable);
         this.$store.commit('setEventfixed', eventfixed);
         const h = document.documentElement.clientHeight;
         const w = document.documentElement.clientWidth;
@@ -306,7 +314,7 @@
       tablelabelEmit(data) {
         //获取子组件传过来的参数
         this.$store.commit('setHeaderTable', data);
-        this.tablelable = data;
+        this.tools.tablelable = data;
       },
       edit(u) {
         this.promServer = JSON.parse(JSON.stringify(u));
@@ -330,9 +338,9 @@
         });
       },
       detail(u) {
-        this.promServer = JSON.parse(JSON.stringify(u));
-        this.targetTab = "detail";
-        this.showSubList = true;
+        this.bottomBox.promServer = JSON.parse(JSON.stringify(u));
+        this.bottomBox.targetTab = "detail";
+        this.bottomBox.showSubList = true;
       },
       add() {
         this.promServer = this.newPromServer();
@@ -468,35 +476,35 @@
         if (el._ps_) {
           el.addEventListener("ps-scroll-y", () => {
             if (el._ps_.scrollbarYTop > 50) {
-              this.showTopBtn = true;
+              this.bottomBox.showTopBtn = true;
             } else {
-              this.showTopBtn = false;
+              this.bottomBox.showTopBtn = false;
             }
           });
           el.addEventListener("mouseenter", () => {
-            this.tableHover = true;
+            this.tools.tableHover = true;
           });
           el.addEventListener("mouseleave", () => {
-            this.tableHover = false;
+            this.tools.tableHover = false;
           });
         }
       });
-      this.tablelable = localStorage.getItem("nz-tableTitle-" + localStorage.getItem("nz-username") + "-" + this.$route.path)
+      this.tools.tablelable = localStorage.getItem("nz-tableTitle-" + localStorage.getItem("nz-username") + "-" + this.$route.path)
         ? JSON.parse(localStorage.getItem("nz-tableTitle-" + localStorage.getItem("nz-username") + "-" + this.$route.path))
         : this.tableTitle;
-      this.dropCol = localStorage.getItem("nz-tableTitle-" + localStorage.getItem("nz-username") + "-" + this.$route.path)
+      this.tools.dropCol = localStorage.getItem("nz-tableTitle-" + localStorage.getItem("nz-username") + "-" + this.$route.path)
         ? JSON.parse(localStorage.getItem("nz-tableTitle-" + localStorage.getItem("nz-username") + "-" + this.$route.path))
         : this.tableTitle;
     },
 
     watch: {
-      promServer: {
+      'bottomBox.promServer': {
         deep: true,
         handler(n) {
-          this.promDetail = this.convertToDetail(n);
+          this.bottomBox.promDetail = this.convertToDetail(n);
         }
       },
-      showSubList(n) {
+      'bottomBox.showSubList': function(n) {
         let vm = this;
         this.$bottomBoxWindow.showSubListWatch(vm, n);
       }

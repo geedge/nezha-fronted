@@ -23,21 +23,21 @@
 
       <div class="pop-item-wider">
         <el-form class="right-box-form" :model="idc" label-position="left" label-width="150px"  :rules="rules" ref="idcForm">
-          <el-form-item :label="$t('asset.createAssetTab.dcName')" prop="name">
+          <el-form-item :label="$t('asset.dcName')" prop="name">
             <el-input type="text"  placeholder="" v-model="idc.name" size="mini" maxlength="64" v-if="popBox.isEdit"></el-input>
             <div class="right-box-form-content-txt" v-if="!popBox.isEdit">{{idc.name}}</div>
           </el-form-item>
-          <el-form-item :label="$t('asset.createAssetTab.location')" prop="location">
+          <el-form-item :label="$t('asset.location')" prop="location">
             <el-input type="text"  placeholder="" v-model="idc.location" size="mini" v-if="popBox.isEdit"></el-input>
             <div class="right-box-form-content-txt" v-if="!popBox.isEdit">{{idc.location}}</div>
           </el-form-item>
-          <el-form-item :label="$t('asset.createAssetTab.principal')" prop="principal">
+          <el-form-item :label="$t('asset.principal')" prop="principal">
             <el-select v-model="idc.principal" clearable size="mini" placeholder="" v-if="popBox.isEdit" popper-class="dc-dropdown">
               <el-option v-for="item in principals" :key="item.id" :label="item.username" :value="item.userId"></el-option>
             </el-select>
             <div class="right-box-form-content-txt" v-if="!popBox.isEdit">{{idc.principal}}</div>
           </el-form-item>
-          <el-form-item :label="$t('asset.createAssetTab.tel')" prop="tel" >
+          <el-form-item :label="$t('asset.tel')" prop="tel" >
             <el-input type="text"  placeholder="" v-model="idc.tel" size="mini" v-if="popBox.isEdit"></el-input>
             <div class="right-box-form-content-txt" v-if="!popBox.isEdit">{{idc.tel}}</div>
           </el-form-item>
@@ -164,7 +164,7 @@
         toEdit:function(u){
           this.idc = Object.assign({}, u);
           this.popBox.isEdit = true;
-          this.title = this.$t('asset.createAssetTab.editIdcTab.title') + "  ID：" + this.idc.id
+          this.title = this.$t('asset.editIdcTab.title') + "  ID：" + this.idc.id
           this.popBox.show = true;
         },
         show:function(isShow,isEdit){
@@ -212,11 +212,11 @@
           deep: true,
           handler(n, o) {
             if (n && n.id) {
-              this.title = this.popBox.isEdit?this.$t('asset.createAssetTab.editIdcTab.title') + "  ID：" + n.id:this.$t('asset.createAssetTab.dc') + "  ID：" + n.id;
+              this.title = this.popBox.isEdit?this.$t('asset.editIdcTab.title') + "  ID：" + n.id:this.$t('asset.dc') + "  ID：" + n.id;
               this.idc=n;
 
             } else {
-              this.title = this.$t('asset.createAssetTab.AddIdcTab.title');
+              this.title = this.$t('asset.AddIdcTab.title');
               this.resetData();
             }
           }

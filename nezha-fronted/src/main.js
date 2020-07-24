@@ -32,8 +32,6 @@ import projectBox from './components/common/rightBox/projectBox'; //project弹�
 import moduleBox from './components/common/rightBox/moduleBox'; //module弹框组件
 import editEndpointBox from './components/common/rightBox/editEndpointBox'; //endpoint弹框组件
 import addEndpointBox from './components/common/rightBox/addEndpointBox'; //endpoint弹框组件
-import assetAddUnit from "./components/page/asset/assetAddUnit"; //资产添加组件
-import assetEditUnit from "./components/page/asset/assetEditUnit"; //资产添加组件
 import assetBox from "./components/common/rightBox/assetBox"; //资产添加组件
 import alertConfigBox from "./components/common/rightBox/alertConfigBox"; //告警规则弹框组件
 import dcConfigBox from "./components/common/popBox/dcConfig"; //idc配置弹框组件
@@ -56,8 +54,6 @@ Vue.component("module-box", moduleBox);
 Vue.component("edit-endpoint-box", editEndpointBox);
 Vue.component("add-endpoint-box", addEndpointBox);
 Vue.component("asset-box", assetBox);
-Vue.component("assetAddUnit", assetAddUnit);
-Vue.component("assetEditUnit", assetEditUnit);
 Vue.component("alert-config-box", alertConfigBox);
 Vue.component("idc-config-box", dcConfigBox);
 Vue.component("panel-box", panelBox);

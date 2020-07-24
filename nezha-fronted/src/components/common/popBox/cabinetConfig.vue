@@ -17,19 +17,19 @@
         <div class="pop-title">{{title}}</div>
         <!--表单内容-->
         <el-form class="pop-item-wider" :model="cabinet" ref="cabinetForm" :rules="rules">
-          <el-form-item :label="this.$t('asset.createAssetTab.AddCabinetTab.name')" prop="name">
+          <el-form-item :label="this.$t('asset.name')" prop="name">
             <el-input size='mini' v-model="cabinet.name" v-if="popBox.isEdit"/>
             <div class="right-box-form-content-txt" v-if="!popBox.isEdit">{{cabinet.name}}</div>
           </el-form-item>
-          <el-form-item :label="this.$t('asset.createAssetTab.AddCabinetTab.uSize')" prop="uSize">
+          <el-form-item :label="this.$t('asset.uSize')" prop="uSize">
             <div :class="{'right-box-form-content-txt':!popBox.isEdit}" >{{cabinet.uSize}}</div>
             <el-slider v-model.number="cabinet.uSize" :max="47" v-if="popBox.isEdit"></el-slider>
           </el-form-item>
-          <el-form-item :label="this.$t('asset.createAssetTab.AddCabinetTab.remark')">
+          <el-form-item :label="this.$t('asset.remark')">
             <el-input size='mini' v-model="cabinet.remark" type="textarea" :rows="2" v-if="popBox.isEdit"/>
             <div class="right-box-form-content-txt" v-if="!popBox.isEdit">{{cabinet.remark}}</div>
           </el-form-item>
-          <el-form-item :label="this.$t('asset.createAssetTab.AddCabinetTab.DC')" prop="idcId">
+          <el-form-item :label="this.$t('asset.DC')" prop="idcId">
             <el-select size='mini' v-model="cabinet.idcId" clearable style="width: 100%;" placeholder="" v-if="popBox.isEdit">
               <el-option v-for="item in idcDatas" :key="item.key" :label="item.name" :value="item.id">
                 <span>{{ item.name }}</span>
@@ -145,7 +145,7 @@ export default {
     toEdit:function(u){
       this.cabinet = Object.assign({}, u);
       this.popBox.isEdit = true;
-      this.title = this.$t('asset.createAssetTab.editCabinetTab.title') + "  ID：" + this.cabinet.id;
+      this.title = this.$t('asset.editCabinetTab.title') + "  ID：" + this.cabinet.id;
       this.popBox.show = true;
     },
     getIdcDatas:function(){
@@ -198,10 +198,10 @@ export default {
       deep: true,
       handler(n, o) {
         if (n && n.id) {
-          this.title =this.popBox.isEdit? this.$t('asset.createAssetTab.editCabinetTab.title') + "  ID：" + n.id : this.$t('asset.createAssetTab.cabinet') + "  ID：" + n.id;
+          this.title =this.popBox.isEdit? this.$t('asset.editCabinetTab.title') + "  ID：" + n.id : this.$t('asset.cabinet') + "  ID：" + n.id;
           this.cabinet=n;
         } else {
-          this.title = this.$t('asset.createAssetTab.AddCabinetTab.title');
+          this.title = this.$t('asset.title');
           this.resetData();
         }
       }

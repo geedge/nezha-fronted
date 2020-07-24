@@ -21,19 +21,19 @@
       <!-- begin--表单-->
       <el-scrollbar class="right-box-form-box">
         <el-form class="right-box-form right-box-form-left" label-width="120px" label-position="right" :model="cabinet" ref="cabinetForm" :rules="rules">
-          <el-form-item :label="this.$t('asset.createAssetTab.AddCabinetTab.name')" prop="name">
+          <el-form-item :label="$t('asset.name')" prop="name">
             <el-input size='mini' v-model="cabinet.name" v-if="rightBox.isEdit"/>
             <div class="right-box-form-content-txt" v-if="!rightBox.isEdit">{{cabinet.name}}</div>
           </el-form-item>
-          <el-form-item :label="this.$t('asset.createAssetTab.AddCabinetTab.DC')" prop="idcId">
+          <el-form-item :label="$t('asset.DC')" prop="idcId">
             <el-input size='mini' v-model="curIdc.name" v-if="rightBox.isEdit" disabled/>
             <div class="right-box-form-content-txt" v-if="!rightBox.isEdit">{{idc?idc.name:''}}</div>
           </el-form-item>
-          <el-form-item :label="this.$t('asset.createAssetTab.AddCabinetTab.uSize')" prop="uSize">
+          <el-form-item :label="$t('asset.uSize')" prop="uSize">
             <el-input v-model.number="cabinet.uSize" :max="47" ></el-input>
 <!--            <el-slider v-model.number="cabinet.uSize" :max="47" v-if="rightBox.isEdit"></el-slider>-->
           </el-form-item>
-          <el-form-item :label="this.$t('config.dc.remark')">
+          <el-form-item :label="$t('config.dc.remark')">
             <el-input size='mini' v-model="cabinet.remark" type="textarea" :rows="2" v-if="rightBox.isEdit"/>
             <div class="right-box-form-content-txt" v-if="!rightBox.isEdit">{{cabinet.remark}}</div>
           </el-form-item>
@@ -196,7 +196,7 @@
           deep:true,
           immediate:true,
           handler:function(n,o){
-            this.rightBox.title=n&&n.id?this.$t('asset.createAssetTab.editCabinetTab.title') + "  ID：" + n.id : this.$t('asset.createAssetTab.cabinet');
+            this.rightBox.title = n && n.id ? this.$t('asset.title') + "  ID：" + n.id : this.$t('asset.cabinet');
           }
         }
       }

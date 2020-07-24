@@ -40,7 +40,7 @@
         <!--type-->
         <el-form-item :label="$t('config.promServer.type')" prop="type">
           <el-select popper-class="config-dropdown" v-model="editPromServer.type" placeholder="" size="small">
-            <el-option v-for="item in $CONSTANTS.promServer.typeOption" :key="item.key" :label="item.value" :value="item.key" :id="'prom-edit-type-op-'+item.key"></el-option>
+            <el-option v-for="item in $CONSTANTS.promServer.typeData" :key="item.value" :label="item.label" :value="item.value" :id="'prom-edit-type-op-'+item.value"></el-option>
           </el-select>
         </el-form-item>
       </el-form>

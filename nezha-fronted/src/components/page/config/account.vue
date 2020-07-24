@@ -35,12 +35,13 @@
     </div>
     <div slot="content-right" class="slot-content">
       <!-- 主页面 -->
-      <div class="main-list main-and-sub-transition" :class="{'main-list-with-sub': showSubList}">
+      <div class="main-list" :class="{'main-list-with-sub': bottomBox.showSubList}">
         <!-- 顶部工具栏 -->
-        <div class="top-tools" v-show="mainResizeShow">
-          <div class="top-tool-main-right" :class="{'top-tool-main-right-to-left': showSubList}">
+        <div class="main-modal"></div>
+        <div class="top-tools" v-show="bottomBox.mainResizeShow">
+          <div class="top-tool-main-right" :class="{'top-tool-main-right-to-left': bottomBox.showSubList}">
             <div class="top-tool-search">
-              <search-input ref="searchInput" :searchMsg="searchMsg" @search="search" :inTransform="inTransform"></search-input>
+              <search-input ref="searchInput" :searchMsg="searchMsg" @search="search" :inTransform="bottomBox.inTransform"></search-input>
             </div>
             <button type="button" @click="add" :title="$t('overall.createAccount')"
                     class="nz-btn nz-btn-size-normal nz-btn-style-light margin-l-20" id="account-add">
@@ -54,16 +55,16 @@
           class="nz-table"
           :data="tableData"
           border
-          v-show="mainResizeShow"
+          v-show="bottomBox.mainResizeShow"
           ref="accountTable"
           :height="mainTableHeight"
-          v-loading="loading"
+          v-loading="tools.loading"
           v-scrollBar:el-table="'large'"
           style="width: 100%;"
           @sort-change="tableDataSort">
           <el-table-column
             :resizable="false"
-            v-for="(item, index) in tablelable"
+            v-for="(item, index) in tools.tablelable"
             v-if="item.show"
             :width="item.width"
             :key="`col-${index}`"
@@ -106,17 +107,19 @@
               </span>
             </template>
             <template v-slot="scope">
-              <button v-if="scope.$index == 0" class="to-top" :style="{top: toTopBtnTop}" :class="{'to-top-is-hover': tableHover}" v-show="showTopBtn && mainResizeShow" @click="$toTop('ps', 0)"><i class="nz-icon nz-icon-top"></i></button>
+              <button v-if="scope.$index == 0" class="to-top" :style="{top: tools.toTopBtnTop}" :class="{'to-top-is-hover': tools.tableHover}" v-show="tools.showTopBtn && bottomBox.mainResizeShow" @click="$toTop('ps', 0)"><i class="nz-icon nz-icon-top"></i></button>
             </template>
           </el-table-column>
         </el-table>
-        <div class="pagination-bottom" v-show="!showSubList">
+        <div class="pagination-bottom" v-show="!bottomBox.showSubList">
           <Pagination :tableId="tableId" :pageObj="pageObj" @pageNo='pageNo' @pageSize='pageSize' ref="Pagination"></Pagination>
         </div>
       </div>
       <!-- 底部上滑框 -->
-      <bottom-box v-if="showSubList" :show-sub-list="showSubList" :subResizeShow="subResizeShow" :obj="user" :isFullScreen="isFullScreen" :from="'account'" :targetTab.sync="targetTab" :detail="userDetail"
-                  @closeSubList="showSubList = false" @fullScreen="fullScreen" @exitFullScreen="exitFullScreen" @listResize="listResize" ></bottom-box>
+      <transition name="el-zoom-in-bottom">
+        <bottom-box v-if="bottomBox.showSubList" :sub-resize-show="bottomBox.subResizeShow" :obj="bottomBox.user" :is-full-screen="bottomBox.isFullScreen" :from="'account'" :target-tab.sync="bottomBox.targetTab" :detail="bottomBox.userDetail"
+                    @closeSubList="bottomBox.showSubList = false" @fullScreen="fullScreen" @exitFullScreen="exitFullScreen" @listResize="listResize" ></bottom-box>
+      </transition>
     </div>
     </left-menu>
     <transition name="right-box">
@@ -124,8 +127,9 @@
     </transition>
     <!-- 自定义table列 -->
     <element-set
+      v-if="tools.showElementSet"
       v-clickoutside="elementsetHide"
-      :dropCol="dropCol"
+      :dropCol="tools.dropCol"
       @tablelable="tablelabelEmit"
       :table-title="tableTitle"
       ref="elementset"
@@ -143,28 +147,37 @@
     },
     data() {
       return {
-        loading: false,
-        //底部上滑框相关
-        mainListHeight: '', //主列表高度
-        mainTableHeight: this.$tableHeight.normal, //主列表table高度
-        showSubList: false, //是否展示二级列表
-        targetTab: '', //展示二级列表中的哪个页签
-        showElementSet: false, //控制自定义列弹框
-        inTransform: false, //搜索框相关，搜索条件下拉框是否在transform里
-        mainResizeShow: true, //dom高度改变时部分内容是否展示
-        subResizeShow: true, //二级列表拖动时，用于控制主列表内容展示
-        isFullScreen: false, //是否全屏
-        userDetail: [],
-        //底部上滑框相关end
-
-        toTopBtnTop: this.$tableHeight.toTopBtnTop, //to-top按钮的top属性
-        tableHover: false, //控制滚动条和top按钮同时出现
-
-        tableId: 'accountTable', //需要分页的table的id，用于记录每页数量
-        showTopBtn: false, //是否显示回到顶部按钮
-        rightBox: { //弹出框相关
+        //侧滑
+        rightBox: {
           show: false,
         },
+        /*二级页面相关*/
+        bottomBox: {
+          userDetail: {},
+          user: {},
+          mainResizeShow: true, //dom高度改变时是否展示|隐藏
+          subResizeShow: true,
+          isFullScreen: false, //全屏状态
+          showSubList: false, //是否显示二级列表
+          targetTab: '', //显示二级列表中的哪个页签
+          inTransform: false, //搜索框相关，搜索条件下拉框是否在transform里
+        },
+
+        /*工具参数*/
+        tools: {
+          loading: false, //是否显示table加载动画
+          toTopBtnTop: this.$tableHeight.toTopBtnTop, //to-top按钮的top属性
+          tableHover: false, //控制滚动条和top按钮同时出现
+          showElementSet: false, //自定义列弹框是否显示
+          showTopBtn: false, //显示To top按钮
+          tablelable: [], //从缓存中加载的table header
+          dropCol: [], //自定义列工具的数据
+        },
+        mainTableHeight: this.$tableHeight.normal, //主列表table高度
+
+        user: {},
+
+        tableId: 'accountTable', //需要分页的table的id，用于记录每页数量
         blankUser: { //空白对象
           userId: '',
           username: '',
@@ -193,11 +206,7 @@
             label: 'E-mail',
             prop: 'email',
             show: true,
-          }, /*{
-          label: this.$t('config.account.receiver'),
-          prop: 'receiver',
-          show: false,
-        }, */{
+          }, {
             label: this.$t('config.account.createTime'),
             prop: 'createTime',
             show: true,
@@ -213,8 +222,6 @@
             width: 120
           }
         ],
-        tablelable: [], //实际显示的列
-        dropCol: [], //用于element-set组件显示
         tableData: [],
         searchMsg: { //给搜索框子组件传递的信息
           zheze_none: true,
@@ -264,13 +271,14 @@
         return detail;
       },
       elementsetShow(s, e) {
+        this.tools.showElementSet = true;
         var eventfixed = {
           shezhi: 0,
           screen: 0
         };
         eventfixed[s] = 1;
         e.preventDefault();
-        this.$store.commit('setHeaderTable', this.tablelable);
+        this.$store.commit('setHeaderTable', this.tools.tablelable);
         this.$store.commit('setEventfixed', eventfixed);
         const h = document.documentElement.clientHeight;
         const w = document.documentElement.clientWidth;
@@ -291,7 +299,7 @@
       tablelabelEmit(data) {
         //获取子组件传过来的参数
         this.$store.commit('setHeaderTable', data);
-        this.tablelable = data;
+        this.tools.tablelable = data;
       },
       closeRightBox(refresh) {
         this.rightBox.show = false;
@@ -304,16 +312,16 @@
         this.rightBox.show = true;
       },
       detail(u) {
-        this.user = JSON.parse(JSON.stringify(u));
-        this.targetTab = "detail";
-        this.showSubList = true;
+        this.bottomBox.user = JSON.parse(JSON.stringify(u));
+        this.bottomBox.targetTab = "detail";
+        this.bottomBox.showSubList = true;
       },
-      getTableData: function () {
+      getTableData() {
         this.$set(this.searchLabel, "pageNo", this.pageObj.pageNo);
         this.$set(this.searchLabel, "pageSize", this.pageObj.pageSize);
-        this.loading = true;
+        this.tools.loading = true;
         this.$get('sys/user/list', this.searchLabel).then(response => {
-          this.loading = false;
+          this.tools.loading = false;
           if (response.code === 200) {
             for (let i = 0; i < response.data.list.length; i++) {
               response.data.list[i].status = response.data.list[i].status + "";
@@ -392,13 +400,13 @@
       }
     },
     watch: {
-      user: {
+      'bottomBox.user': {
         deep: true,
         handler(n) {
-          this.userDetail = this.convertToDetail(n);
+          this.bottomBox.userDetail = this.convertToDetail(n);
         }
       },
-      showSubList(n) {
+      'bottomBox.showSubList': function(n) {
         let vm = this;
         this.$bottomBoxWindow.showSubListWatch(vm, n);
       }
@@ -417,23 +425,23 @@
         if (el._ps_) {
           el.addEventListener("ps-scroll-y", () => {
             if (el._ps_.scrollbarYTop > 50) {
-              this.showTopBtn = true;
+              this.tools.showTopBtn = true;
             } else {
-              this.showTopBtn = false;
+              this.tools.showTopBtn = false;
             }
           });
           el.addEventListener("mouseenter", () => {
-            this.tableHover = true;
+            this.tools.tableHover = true;
           });
           el.addEventListener("mouseleave", () => {
-            this.tableHover = false;
+            this.tools.tableHover = false;
           });
         }
       });
-      this.tablelable = localStorage.getItem("nz-tableTitle-" + localStorage.getItem("nz-username") + "-" + this.$route.path)
+      this.tools.tablelable = localStorage.getItem("nz-tableTitle-" + localStorage.getItem("nz-username") + "-" + this.$route.path)
         ? JSON.parse(localStorage.getItem("nz-tableTitle-" + localStorage.getItem("nz-username") + "-" + this.$route.path))
         : this.tableTitle;
-      this.dropCol = localStorage.getItem("nz-tableTitle-" + localStorage.getItem("nz-username") + "-" + this.$route.path)
+      this.tools.dropCol = localStorage.getItem("nz-tableTitle-" + localStorage.getItem("nz-username") + "-" + this.$route.path)
         ? JSON.parse(localStorage.getItem("nz-tableTitle-" + localStorage.getItem("nz-username") + "-" + this.$route.path))
         : this.tableTitle;
     }

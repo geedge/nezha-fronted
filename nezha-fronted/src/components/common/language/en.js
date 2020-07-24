@@ -375,18 +375,50 @@ const en = {
   asset:{
     asset: 'Asset',
     assets: 'Assets',//'资产'
-    EditAsset:'Edit asset',//'编辑资产'
+    editAsset: 'Edit asset',//'编辑资产'
+    createAsset: 'New asset',//'编辑资产'
+    host: "Host",
+    state: 'State',//'状态'
     pingActive: 'active',//可ping通
-    assetStatPre:'Last reply:',
-    assetStatDown:'Never',
-    pingInactive:'inactive',
+    assetStatPre: 'Last reply:',
+    assetStatDown: 'Never',
+    remark:'Description',//'描述'
+    cli:'CLI account',//'CLI账号'
+    loginType:'Login type',//'登录类型'
+    password:'Password',//'密码'
+    ssh:'SSH key',//'SSH-Key'
+    protocol:"Protocol",
+    sshProtocol:"SSH",
+    telnetProtocol:"Telnet",
+    userTip:"User tip",//用户名提示
+    passwordTip:"Password tip",//密码提示
+    reloginPasswordTip:"Relogin tip",//密码提示
+    userPwdIntroduce:'Please specify a user name and password so that the telenet login process can automatically log in',
+    reLoginPwdIntroduce:'Please specify the password prompt so that the login process can run automatically',
+    account:'User name',//'用户名'
+    port:'Port',//'端口'
+    upload:'Upload',//'上传'
+    clickToUpload:'Upload',//'上传'
+    clickToCover:'Cover',//'覆盖'
+    sshKeyWasConfig:'SSH-KEY configured',//'SSH-KEY已配置'
+    exporter:'Exporter',
+    pingInactive: 'inactive',
+    assetInfo: 'Asset information',//'资产信息'
+    vendorModel: 'Vendor/Model',//'厂商/型号'
+    purchaseDate: 'Purchase date',//'购买日期'
+    location: 'Location',//'地区'
+    sn: "SN",
+    inStock: 'In stock',//'在库'
+    notInStock: 'Not in stock',//'出库'
+    assetType:'Asset type',//'资产类型'
+    principal:'Administrator',//'负责人'
+    tel:'Telephone', //'电话'
     left:{
       dataCenter:'Data center',
-      assetType:'Asset type',
       vendor:'Vendor',
       ping:'Ping',
     },
-    createAssetTab:{
+    /*createAsset:{
       title:'New asset',//'新增资产'
       sn:'SN',//SN
       host:'Host',//'Host'
@@ -394,7 +426,7 @@ const en = {
       selectTip:'Please select',//'请选择'
       inStock: 'In stock',//'在库'
       notInStock: 'Not in stock',//'出库'
-      assetInfo:'Asset information',//'资产信息'
+
       assetType:'Asset type',//'资产类型'
       impi:{
         title:'IPMI',
@@ -406,7 +438,7 @@ const en = {
         addAssetType:'New asset type',//'新增资产类型'
         existAssetType:'Existed asset type'//'已存在的资产类型'
       },
-      vendorModel:'Vendor/Model',//'厂商/型号'
+
       vendorTab:{
         vendor:'Vendor/Model',//'厂商/型号'
         vendorName:'New vendor',//'新厂商'
@@ -414,7 +446,7 @@ const en = {
         modelName:'New model',//'新型号'
         existModel:'Existed model'//'已有型号'
       },
-      purchaseDate:'Purchase date',//'购买日期'
+
       dataSelectTip:'Please select date',//'请选择日期'
       dc:'DC',
       dcName:'Data Center name',//'DC名称'
@@ -432,7 +464,7 @@ const en = {
         principal:'Administrator',//'负责人'
         tel:'Telephone'//'电话'
       },
-      location:'Location',//'地区'
+
       principal:'Administrator',//'负责人'
       tel:'Telephone',//'电话'
       cabinet: 'Cabinet',//'机柜'
@@ -473,7 +505,7 @@ const en = {
       exporter:'Exporter',
       basicTitle:'Basic info',
       featureTitle:'Attribute',
-    },
+    },*/
     editAssetTab:{
       title:'New asset',//'新增资产'
       sn:'SN',//SN

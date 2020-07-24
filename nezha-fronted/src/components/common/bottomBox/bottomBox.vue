@@ -1,9 +1,11 @@
 <template>
-  <div style="height: 50%">
+  <div class="sub-box">
+    <div class="resize-modal">
+      <div class="sub-list-resize-copy">一</div>
+    </div>
     <!-- 副列表 -->
-    <div @mousedown="listResize" class="sub-list-resize" v-if="showSubList && !isFullScreen">一</div>
+    <div @mousedown="listResize" class="sub-list-resize" v-if="!isFullScreen">一</div>
     <div class="sub-list">
-      <!--<div class="sub-list main-and-sub-transition" v-if="showSubList">-->
         <!--窗口大小控制-->
       <div class="sub-list-window-control">
         <!--退出全屏-->
@@ -67,7 +69,6 @@
     },
     props: {
       isFullScreen: false, //是否全屏
-      showSubList: Boolean, //是否显示
       subResizeShow: Boolean, //resize时，用v-show="subResizeShow"控制页面内容是否显示
       obj: Object, //关联的实体对象
       from: String, //来自哪个页面
@@ -84,29 +85,42 @@
     methods: {
       exitFullScreen() {
         this.$emit("exitFullScreen");
-        this.$nextTick(this.afterResize());
+        this.$nextTick(() => {this.afterResize()});
       },
       fullScreen() {
         this.$emit("fullScreen");
-        this.$nextTick(this.afterResize());
+        this.$nextTick(() => {this.afterResize()});
       },
       closeSubList() {
         this.$emit("closeSubList");
       },
       listResize(e) {
         this.$emit('listResize', e);
-        this.$nextTick(this.afterResize());
+        this.$nextTick(() => {this.afterResize()});
       },
       changeTab(tab) {
         this.$emit('update:targetTab', tab);
       },
       afterResize() {
+        let vm = this;
+
         if (this.from == 'endpoint' && this.targetTab == 'endpointQuery') {
           this.$refs.endpointQuery.tableReload();
         }
-        if (this.targetTab == 'panel') {
-          setTimeout(() => {this.$refs.panelTab.$refs.dashboardScrollbar.update();}, 400);
-        }
+
+        //刷新滚动条
+        let intervalFunc = setInterval(function(){
+          if (!window.resizing) {
+            let pss = document.querySelectorAll(".el-table__body-wrapper");
+            if (pss) {
+              pss.forEach(ps => {
+                ps._ps_ && ps._ps_.update();
+              });
+            }
+            vm.$refs.panelTab.$refs.dashboardScrollbar.update();
+            clearInterval(intervalFunc);
+          }
+        }, 500);
       }
     }
   }

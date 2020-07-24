@@ -590,7 +590,7 @@
           this.dataList.push({
             id: -9,
             panelId: 0,
-            title: this.$t("asset.createAssetTab.assetInfo"),
+            title: this.$t("asset.assetInfo"),
             span: 4,
             height: 350,
             type: "assetInfo",
@@ -765,6 +765,7 @@
           return;
         }
         if(chartItem.type == 'projectInfo'){
+          chartItem.title = this.$t("project.chart.projectInfo");
           this.getProjectInfoChartData(chartItem);
           return;
         }
@@ -1285,7 +1286,7 @@
       },
       getAssetInfoChartData(chartInfo){
         let vm = this;
-        chartInfo.title = this.$t("asset.createAssetTab.assetInfo");
+        chartInfo.title = this.$t("asset.assetInfo");
         let detail = [];
         if(!this.isModel){
           this.$refs['editChart'+chartInfo.id][0].showLoad();
@@ -1294,12 +1295,12 @@
             if(response.code == 200){
               response.data && function() {
                 response.data.Basic && detail.push({
-                  title: vm.$t('asset.createAssetTab.basicTitle'),
+                  title: vm.$t('asset.basicTitle'),
                   type: 'basic',
                   data: response.data.Basic
                 });
                 response.data.Attribute && detail.push({
-                  title: vm.$t('asset.createAssetTab.featureTitle'),
+                  title: vm.$t('asset.featureTitle'),
                   type: 'attribute',
                   data: response.data.Attribute
                 });
@@ -1309,7 +1310,7 @@
           });
         }else {
           detail.push({
-            title: vm.$t('asset.createAssetTab.basicTitle'),
+            title: vm.$t('asset.basicTitle'),
             type: 'basic',
             data: {
               sn: 'assetInfo Test',
@@ -1322,7 +1323,7 @@
             }
           });
           detail.push({
-            title: vm.$t('asset.createAssetTab.featureTitle'),
+            title: vm.$t('asset.featureTitle'),
             type: 'feature',
             data: {
               CPU: "Intel E500",

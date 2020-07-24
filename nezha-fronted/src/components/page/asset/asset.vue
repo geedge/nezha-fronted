@@ -7,9 +7,9 @@
           <el-scrollbar ref="leftScrollbar" style="height: 100%">
             <el-collapse v-model="activeType" class="left-menu-bg">
               <el-collapse-item name="dataCenter" :title="$t('asset.left.dataCenter')">
-                <el-checkbox-group v-model="checkList" size="small" @change="changeCheckBox">
-                  <el-checkbox class="sidebar-info-item" :class="{'sidebar-info-item-active': indOf(checkList, item.id)}"
-                               v-for="(item,key) in checkListData" :key="key" :label=item.id>
+                <el-checkbox-group v-model="dcCheckList" size="small" @change="changeCheckBox">
+                  <el-checkbox class="sidebar-info-item" :class="{'sidebar-info-item-active': indOf(dcCheckList, item.id)}"
+                               v-for="(item,key) in dcData" :key="key" :label=item.id>
                     <div class="sidebar-info-item-txt">
                       <el-popover v-if="item.name.length > 14" trigger="hover" placement="top-start" :content="item.name" >
                         <span slot="reference">{{item.name}}</span>
@@ -22,9 +22,9 @@
                   </el-checkbox>
                 </el-checkbox-group>
               </el-collapse-item>
-              <el-collapse-item name="assetType" :title="$t('asset.left.assetType')">
+              <el-collapse-item name="assetType" :title="$t('asset.assetType')">
                 <el-checkbox-group v-model="assetTypeCheckList" size="small" @change="changeAssetTypeCheckBox">
-                  <el-checkbox class="sidebar-info-item" :class="{'sidebar-info-item-active': indOf(assetTypeCheckList, item.id)}" v-for="(item,key) in assetTypeCheckListData" :key="key" :label=item.id>
+                  <el-checkbox class="sidebar-info-item" :class="{'sidebar-info-item-active': indOf(assetTypeCheckList, item.id)}" v-for="(item, key) in assetTypeData" :key="key" :label=item.id>
                     <div class="sidebar-info-item-txt">
                       <el-popover v-if="item.name.length > 14" trigger="hover" placement="top-start" :content="item.name" >
                         <span slot="reference">{{item.name}}</span>
@@ -39,7 +39,7 @@
               </el-collapse-item>
               <el-collapse-item name="vendor" :title="$t('asset.left.vendor')">
                 <el-checkbox-group v-model="vendorCheckList" size="small" @change="changeVendorCheckBox">
-                  <el-checkbox class="sidebar-info-item" :class="{'sidebar-info-item-active': indOf(vendorCheckList, item.id)}" v-for="(item,key) in vendorCheckListData" :key="key" :label=item.id>
+                  <el-checkbox class="sidebar-info-item" :class="{'sidebar-info-item-active': indOf(vendorCheckList, item.id)}" v-for="(item, key) in vendorData" :key="key" :label=item.id>
                     <div class="sidebar-info-item-txt">
                       <el-popover v-if="item.name.length > 14" trigger="hover" placement="top-start" :content="item.name" >
                         <span slot="reference">{{item.name}}</span>
@@ -54,12 +54,12 @@
               </el-collapse-item>
               <el-collapse-item name="ping" :title="$t('asset.left.ping')">
                 <el-checkbox-group v-model="pingCheckList" size="small" @change="changePingCheckBox">
-                  <el-checkbox class="sidebar-info-item" :class="{'sidebar-info-item-active': indOf(pingCheckList, item.value)}" v-for="(item,key) in pingCheckListData" :key="key" :label=item.value>
+                  <el-checkbox class="sidebar-info-item" :class="{'sidebar-info-item-active': indOf(pingCheckList, item.key)}" v-for="(item, index) in pingData" :key="index" :label="item.value">
                     <div class="sidebar-info-item-txt">
-                      <el-popover v-if="item.label.length > 16" trigger="hover" placement="top-start" :content="item.label" >
-                        <span slot="reference">{{item.label}}</span>
+                      <el-popover v-if="item.value.length > 16" trigger="hover" placement="top-start" :content="item.value" >
+                        <span slot="reference">{{item.value}}</span>
                       </el-popover>
-                      <span v-else>{{item.label}}</span>
+                      <span v-else>{{item.value}}</span>
                     </div>
                     <el-tooltip :content="''+item.total" placement="top" effect="light" :disabled="item.total<99">
                       <el-badge class="mark" :value="item.total" :max="99"/>
@@ -72,19 +72,20 @@
         </div>
       </div>
       <div slot="content-right" class="slot-content">
-        <div class="main-list" :class="{'main-list-with-sub': showSubList}">
-          <div class="top-tools" v-show="mainResizeShow">
-            <div class="top-tool-main-right" :class="{'top-tool-main-right-to-left': showSubList}">
-              <div class="top-tool-search margin-r-20"><search-input :searchMsg="searchMsg" @search="search" :inTransform="inTransform"></search-input></div>
+        <div class="main-list" :class="{'main-list-with-sub': bottomBox.showSubList}">
+          <div class="main-modal"></div>
+          <div class="top-tools" v-show="bottomBox.mainResizeShow">
+            <div class="top-tool-main-right" :class="{'top-tool-main-right-to-left': bottomBox.showSubList}">
+              <div class="top-tool-search margin-r-20"><search-input :searchMsg="searchMsg" @search="search" :inTransform="bottomBox.inTransform"></search-input></div>
               <export-excel
                 export-file-name="asset"
                 export-url="/asset/export"
                 import-url="/asset/import"
                 :params="searchLabel"
-                @afterImport="getAssetData"
+                @afterImport="getTableData"
               >
                 <template slot="optionZone">
-                  <button @click.stop="tagShow('showAdd')" :title="$t('overall.createAsset')" class="nz-btn nz-btn-size-normal nz-btn-style-light" id="asset-create-asset">
+                  <button @click.stop="add" :title="$t('overall.createAsset')" class="nz-btn nz-btn-size-normal nz-btn-style-light" id="asset-create-asset">
                     <i class="nz-icon nz-icon-create-square"></i></button>
                 </template>
               </export-excel>
@@ -98,9 +99,9 @@
                 style="width: 100%;"
                 :data="tableData"
                 v-scrollBar:el-table="'large'"
-                v-show="mainResizeShow"
+                v-show="bottomBox.mainResizeShow"
                 border
-                v-loading="loading"
+                v-loading="tools.loading"
                 tooltip-effect="light"
                 ref="assetTable"
                 :cell-class-name="messageStyle"
@@ -108,7 +109,7 @@
               >
                 <el-table-column
                   :resizable="false"
-                  v-for="(item, index) in tablelable"
+                  v-for="(item, index) in tools.tablelable"
                   v-if="item.show"
                   :width="item.width"
                   :key="`col_${index}`"
@@ -132,7 +133,7 @@
                       <span>{{scope.row.host}}</span>
                     </div>
                     <div v-if="item.prop=='state'">
-                      <span>{{scope.row.state==1 ? $t('asset.createAssetTab.inStock') : $t('asset.createAssetTab.notInStock')}}</span>
+                      <span>{{scope.row.state==1 ? $t('asset.inStock') : $t('asset.notInStock')}}</span>
                     </div>
               <div v-if="item.prop == 'pingStatus'">
                 <el-popover
@@ -161,7 +162,7 @@
                 <span  >{{scope.row.idc.name}}</span>
               </div>
               <template v-if="item.prop=='cabinet'">
-                <span   v-if="scope.row.cabinet&&scope.row.cabinet!='--'">{{returnData(scope.row.cabinet).name}}</span>
+                <span v-if="scope.row.cabinet && scope.row.cabinet != '--'">{{returnData(scope.row.cabinet).name}}</span>
                 <span v-else >{{returnData(scope.row.cabinet)}}</span>
               </template>
               <div v-if="item.prop=='model'">
@@ -180,15 +181,15 @@
                 <span>{{scope.row.idc.tel}}</span>
               </div>
               <template v-if="item.prop == 'option'">
-                <span :title="$t('overall.view')" @click.stop="tagShow('showView',scope.row)" class="content-right-option" :id="'asset-detail-'+scope.row.id"><i
+                <span :title="$t('overall.view')" @click.stop="detail(scope.row)" class="content-right-option" :id="'asset-detail-'+scope.row.id"><i
                   class="el-icon-view"></i>
                 </span>
                   &nbsp;
-                  <span :title="$t('overall.edit')" @click.stop="tagShow('showEdit',scope.row)" class="content-right-option" :id="'asset-edit-'+scope.row.id"><i
+                  <span :title="$t('overall.edit')" @click.stop="edit(scope.row)" class="content-right-option" :id="'asset-edit-'+scope.row.id"><i
                     class="nz-icon nz-icon-edit"></i>
                 </span>
                   &nbsp;
-                  <span :title="$t('overall.delete')" @click.stop="deleteData('asset',scope.row.id)" class="content-right-option" :id="'asset-del-'+scope.row.id"><i
+                  <span :title="$t('overall.delete')" @click.stop="del(scope.row)" class="content-right-option" :id="'asset-del-'+scope.row.id"><i
                     class="el-icon-delete"></i>
                 </span>
                   &nbsp;
@@ -211,37 +212,37 @@
               </span>
               </template>
               <template v-slot="scope">
-                <button v-if="scope.$index == 0" class="to-top" :style="{top: toTopBtnTop}" :class="{'to-top-is-hover': tableHover}" v-show="showTopBtn && mainResizeShow" @click="$toTop('ps', 0)"><i class="nz-icon nz-icon-top"></i></button>
+                <button v-if="scope.$index == 0" class="to-top" :style="{top: tools.toTopBtnTop}" :class="{'to-top-is-hover': tools.tableHover}" v-show="tools.showTopBtn && bottomBox.mainResizeShow" @click="$toTop('ps', 0)"><i class="nz-icon nz-icon-top"></i></button>
               </template>
             </el-table-column>
           </el-table>
-          <div class="pagination-bottom" v-show="!showSubList">
+          <div class="pagination-bottom" v-show="!bottomBox.showSubList">
             <Pagination :tableId="tableId" :pageObj="pageObj" @pageNo='pageNo' @pageSize='pageSize' ref="Pagination"></Pagination>
           </div>
         </div>
         <transition name="el-zoom-in-bottom">
-          <bottom-box v-if="showSubList" :show-sub-list="showSubList" :subResizeShow="subResizeShow" :obj="alertMsgAsset" :isFullScreen="isFullScreen" :from="'asset'" :targetTab.sync="targetTab" :detail="assetDetail"
-                      @reload="getAssetData"
-                      @closeSubList="showSubList = false"
+          <bottom-box v-if="bottomBox.showSubList" :sub-resize-show="bottomBox.subResizeShow" :obj="bottomBox.asset" :isFullScreen="bottomBox.isFullScreen" :from="'asset'" :targetTab.sync="bottomBox.targetTab" :detail="bottomBox.assetDetail"
+                      @reload="getTableData"
+                      @closeSubList="bottomBox.showSubList = false"
                       @fullScreen="fullScreen"
                       @exitFullScreen="exitFullScreen"
                       @listResize="listResize" ></bottom-box>
         </transition>
       </div>
     </left-menu>
-
-    <asset-box :edit-unit-show='editUnitShow' @refreshData="flushData" @sendStateData="tabControl" v-if="rightBox.show"
-               ref="assetEditUnit"></asset-box>
+    <transition name="right-box">
+      <asset-box v-if="rightBox.show" :asset="asset" @refresh="flushData" ref="assetBox" @close="closeRightBox"></asset-box>
+    </transition>
     <element-set
-      v-if="showElementSet"
+      v-if="tools.showElementSet"
       @close="elementsetHide"
       v-clickoutside="elementsetHide"
-      :drop-col="dropCol"
+      :drop-col="tools.dropCol"
       :table-title="tableTitle"
       @tablelable="tablelabelEmit"
       ref="elementset"
     ></element-set>
-    <module-box :module="module" @reload="getAssetData" ref="moduleBox"></module-box>
+
   </div>
 </template>
 
@@ -249,7 +250,6 @@
   import bus from "../../../libs/bus";
   import exportXLSX from "../../common/exportXLSX";
   import endpointStatusPop from "./endpointStatusPop";
-  var vm;
   export default {
     name: "asset",
     components:{
@@ -257,24 +257,54 @@
       'endpoint-status-pop':endpointStatusPop,
     },
     data() {
-      vm = this;
       return {
-        loading: false,
+        //侧滑
+        rightBox: {
+          show: false,
+        },
         /*二级页面相关*/
-        assetDetail: {}, //asset详情
-        alertMsgAsset: {}, //告警信息对应的asset对象
-        showElementSet: false, //控制自定义列的弹框
-        inTransform: false, //搜索框相关，搜索条件下拉框是否在transform里
-        mainResizeShow: true, //dom高度改变时部分内容是否展示
-        subResizeShow: true,
-        isFullScreen: false,
-        mainTableHeight: this.$tableHeight.normal, //主列表table高度
-        showSubList: false, //是否展示二级列表
-        targetTab: '', //展示二级列表中的哪个页签
+        bottomBox: {
+          assetDetail: {}, //asset详情
+          asset: {}, //告警信息对应的asset对象
+          mainResizeShow: true, //dom高度改变时是否展示|隐藏
+          subResizeShow: true,
+          isFullScreen: false, //全屏状态
+          showSubList: false, //是否显示二级列表
+          targetTab: '', //显示二级列表中的哪个页签
+          inTransform: false, //搜索框相关，搜索条件下拉框是否在transform里
+        },
 
-        toTopBtnTop: this.$tableHeight.toTopBtnTop, //to-top按钮的top属性
-        tableHover: false, //控制滚动条和top按钮同时出现
-        showElementSet: false, //自定义列弹框是否显示
+        mainTableHeight: this.$tableHeight.normal, //主列表table高度
+
+        /*工具参数*/
+        tools: {
+          loading: false, //是否显示table加载动画
+          toTopBtnTop: this.$tableHeight.toTopBtnTop, //to-top按钮的top属性
+          tableHover: false, //控制滚动条和top按钮同时出现
+          showElementSet: false, //自定义列弹框是否显示
+          showTopBtn: false, //显示To top按钮
+          tablelable: [], //从缓存中加载的table header
+          dropCol: [], //自定义列工具的数据
+        },
+        asset: {},
+        blankAsset: {
+          id: '',
+          sn: '',
+          host: '',
+          state: '',
+          purchaseDate: '',
+          idcId: '',
+          cabinetId: '',
+          modelId: '',
+          model: {type: {code: ""}},
+          assetType: '',
+          impi:{
+            host:'',
+            port:'',
+          },
+          tags: [],
+          accounts: [],
+        },
         tableId: 'assetTable', //需要分页的table的id，用于记录每页数量
         searchMsg: { //给搜索框子组件传递的信息
           zheze_none: true,
@@ -298,7 +328,7 @@
             disabled: false
           },{
             id: 22,
-            name: this.$t("asset.createAssetTab.state"),
+            name: this.$t("asset.state"),
             type: 'select',
             label: 'assetState',
             disabled: false
@@ -310,15 +340,10 @@
             disabled: false
           }],
         },
-        showTopBtn: false,
+
         searchLabel: {}, //搜索参数
-        activeType:'dataCenter',
-        checkList: [],
-        assetTypeCheckList:[],
-        vendorCheckList:[],
-        pingCheckList:[],
-        tablelable: [],
-        dropCol: [],
+        activeType: 'dataCenter',
+
         tableTitle: [
           {
             label: this.$t("asset.tableTitle.host"),
@@ -396,15 +421,16 @@
             fixed:'right'
           }],
         tableData: [],
-        checkListData: [],
-        assetTypeCheckListData:[],
-        vendorCheckListData:[],
-        pingCheckListData:[],
-        IDCData: '',
-        IDCOptionData: [],
-        cabinetData: '',
-        cabinetOptionData: [],
-        input: '',
+
+        dcData: [],
+        dcCheckList: [],
+        assetTypeData: [],
+        assetTypeCheckList: [],
+        vendorData: [],
+        vendorCheckList: [],
+        pingData: this.$CONSTANTS.asset.pingData,
+        pingCheckList: [],
+
         pageObj: {
           id: '',
           pageNo: 1,
@@ -413,46 +439,9 @@
           idcId: '',
           idcIds: ''
         },
-        tabShow: false,
-        tabView: true,
-        tagType: 'add',
-        module: {},
-        form: {
-          name: ''
-        },
-        rightBox: { //弹出框相关
-          show: false,
-          isEdit: false, //false查看，true编辑
-          title: ''
-        },
-        assetType: '',
-        idcSelectedData: {
-          id: '',
-          name: '',
-          location: '',
-          principal: '',
-          tel: ''
-        },
-        addIdcData: {
-          id: '',
-          name: '',
-          popName: '',
-          location: '',
-          principal: '',
-          tel: ''
-        },
-        idcUserData: [],
-        modelCount: '',
-        isResourceShow: 0,
-        unitDisable: '',
-        modelClickData: '',
-        obj: null,
-        editUnitShow: false,
-        flag: false,
-        checkAllFlag: false,
-        checkAllHandler: false,
+
         assetClick: false,
-        assetPingSwitch:localStorage.getItem('nz-sys-asset-ping-switch'),
+        assetPingSwitch: localStorage.getItem('nz-sys-asset-ping-switch'),
       }
     },
     computed: {
@@ -467,7 +456,7 @@
       getData: {
         handler(newVal) {
           if (newVal.type == 1) {
-            this.activeType='dataCenter'
+            this.activeType = 'dataCenter';
             this.checkList = newVal.selectedData;
             this.assetClick = false;
           }
@@ -478,12 +467,14 @@
       getFlushData: {
         handler(newVal, oldVal) {
           if (newVal === true) {
-            this.getLeftMenuList();
-            this.getAssetData()
+            this.getDcData();
+            this.getTableData()
+            /*this.getLeftMenuList();
+            this.getAssetData()*/
           }
         }
       },
-      checkList(n, o) {
+      dcCheckList(n, o) {
         setTimeout(()=>{
           if (n.length > 0 ) {
             this.pageObj.idcIds = n.join(',');
@@ -492,30 +483,37 @@
           }
           if (this.assetClick) {
             this.$store.state.assetData = {selectedData: n, step: this.$store.state.assetData.step+1, type: 0};
-          } else {
-            this.getSingleAsset();
           }
-          this.getAssetData();
+          this.getTableData();
         }, 50);
       },
-      showSubList(n) {
+      'bottomBox.showSubList': function(n) {
+        let vm = this;
         this.$bottomBoxWindow.showSubListWatch(vm, n);
       },
-      alertMsgAsset: {
+      'bottomBox.asset': {
         deep: true,
         handler(n) {
-          this.assetDetail = this.convertToDetail(n);
+          if (n.id) {
+            this.bottomBox.assetDetail = this.convertToDetail(n);
+            if (n.model.id) {
+              n.modelId = n.model.id;
+            }
+          }
         }
       },
     },
     methods: {
       fullScreen() {
+        let vm = this;
         this.$bottomBoxWindow.fullScreen(vm);
       },
       exitFullScreen() {
+        let vm = this;
         this.$bottomBoxWindow.exitFullScreen(vm);
       },
       listResize(e) {
+        let vm = this;
         this.$bottomBoxWindow.listResize(vm, e);
       },
       dcSelectAll(val) { //DC全选
@@ -528,29 +526,10 @@
             }
             this.$store.commit('assetAllIdChange',this.checkListData)
           }
-          this.checkAllHandler = false;
         }
-      },
-      openModuleBox(module) {
-        if (module.param) {
-          try {
-            let tempObj = JSON.parse(module.param);
-            this.$set(module, 'paramObj', []);
-            for (let k in tempObj) {
-              module.paramObj.push({key: k, value: tempObj[k]});
-            }
-          } catch (err) {
-            console.info(module, err);
-          }
-        }
-        this.module = module;
-        this.$refs.moduleBox.show(true);
-      },
-      getAssetModuleList(id) {
-        this.$refs['moduleListPop' + id][0].getModuleList();
       },
       elementsetShow(s, e) {
-        this.showElementSet = true;
+        this.tools.showElementSet = true;
         this.$nextTick(() => {
           var eventfixed = {
             shezhi: 0,
@@ -558,7 +537,7 @@
           };
           eventfixed[s] = 1;
           e.preventDefault();
-          this.$store.commit('setHeaderTable', this.tablelable);
+          this.$store.commit('setHeaderTable', this.tools.tablelable);
           this.$store.commit('setEventfixed', eventfixed);
           const h = document.documentElement.clientHeight;
           const w = document.documentElement.clientWidth;
@@ -575,12 +554,12 @@
       },
       elementsetHide() {
         //悬浮点击空白隐藏
-        this.$refs.elementset.elementsetHide();
+        this.tools.showElementSet = false;
       },
       tablelabelEmit(data) {
         //获取子组件传过来的参数
         this.$store.commit('setHeaderTable', data);
-        this.tablelable = data;
+        this.tools.tablelable = data;
       },
       cli([id,host,account]){
         const consoleParam = {
@@ -588,54 +567,64 @@
           host: host,
           accountId: account.id,
           port: account.port,
-        }
+        };
         this.$store.commit('addConsole', consoleParam);
-        //this.$refs.webSsh.show(id,host,accountId,port);
       },
       jumpToAlertMsg(asset) {
-        this.targetTab = 'alertMessage';
-        this.alertMsgAsset = JSON.parse(JSON.stringify(asset));
-        this.showSubList = true;
-        /*this.$nextTick(() => {
-          this.$store.commit("assetForAlertListChange", this.$store.state.assetForAlertList+1);
-        });*/
+        this.bottomBox.targetTab = 'alertMessage';
+        this.bottomBox.asset = JSON.parse(JSON.stringify(asset));
+        this.bottomBox.showSubList = true;
       },
-      getAssetData(data, flushRightBoxDc) {
+      getTableData() {
         this.searchLabel = Object.assign(this.searchLabel, this.pageObj);
-        this.loading = true;
+        this.tools.loading = true;
         this.$get('asset', this.searchLabel).then(response => {
-          this.loading = false;
+          this.tools.loading = false;
           if (response.code === 200) {
             this.tableData = response.data.list;
             this.pageObj.total = response.data.total
           }
         });
-        if (flushRightBoxDc) {
-          this.$refs.assetAddUnit.getIDCOptionData();
-          this.$refs.assetEditUnit.getIDCOptionData();
-        }
       },
-      // getIDCOptionData() {
-      //   this.$get('idc').then(response => {
-      //     if (response.code === 200) {
-      //       // console.log(response.data);
-      //       // this.checkListData = this.IDCOptionData = response.data.list;
-      //       // this.markOptionData(this.IDCOptionData)
-      //     }
-      //   })
-      // },
-      getPingData:function(){
-        this.pingCheckListData=[
-          {label:'up',value:1},
-          {label:'down',value:0},
-        ]
+      getDcData() {
+        return new Promise(resolve => {
+          this.$get('idc').then(response => {
+            if (response.code === 200) {
+              this.dcData = response.data.list;
+            }
+            resolve(this.dcData);
+          });
+        });
+      },
+      getAssetTypeData() {
+        return new Promise(resolve => {
+          this.$get('sys/dict/all?type=assetType').then(response => {
+            if (response.code === 200) {
+              this.assetTypeData = response.data;
+            }
+            resolve(this.assetTypeData);
+          });
+        });
+      },
+      getVendorData() {
+        return new Promise(resolve => {
+          this.$get('sys/dict/all?type=vendor').then(response => {
+            if (response.code === 200) {
+              this.vendorData = response.data;
+            }
+            resolve(this.vendorData);
+          });
+        });
       },
       getUserData() {
-        this.$get('sys/user/list').then(response => {
-          if (response.code === 200) {
-            this.idcUserData = response.data.list
-          }
-        })
+        return new Promise(resolve => {
+          this.$get('sys/user/list').then(response => {
+            if (response.code === 200) {
+              this.userData = response.data.list;
+            }
+            resolve(this.userData);
+          });
+        });
       },
       messageStyle(e) {
         if (e.column.label == 'Alerts' || e.column.label == this.$t("asset.tableTitle.alerts")) {
@@ -647,18 +636,30 @@
         }
         return '';
       },
-      editData(data, item) {
-        if (data === 'idc') {
-          item.name = this.addIdcData.popName
-        }
-        this.$put(data, item).then(res => {
-          if (res.code === 200) {
-            this.$message({duration: 2000, type: 'success', message: this.$t("tip.saveSuccess")});
-            this.getAssetData();
-          } else {
-            this.$message.error(res.msg);
-          }
-        })
+      edit(asset) {
+        this.asset = JSON.parse(JSON.stringify(asset));
+        this.rightBox.show = true;
+      },
+      detail(asset) {
+        this.bottomBox.asset = JSON.parse(JSON.stringify(asset));
+        this.bottomBox.targetTab = "panel";
+        this.bottomBox.showSubList = true;
+      },
+      del(asset) {
+        this.$confirm(this.$t("tip.confirmDelete"), {
+          confirmButtonText: this.$t("tip.yes"),
+          cancelButtonText: this.$t("tip.no"),
+          type: 'warning'
+        }).then(() => {
+          this.$delete("asset?ids=" + asset.id).then(response => {
+            if (response.code === 200) {
+              this.$message({duration: 2000, type: 'success', message: this.$t("tip.deleteSuccess")});
+              this.getTableData();
+            } else {
+              this.$message.error(response.msg);
+            }
+          })
+        });
       },
       addNewData(type) {
         if (type === 'IDC') {
@@ -666,8 +667,10 @@
             if (res.code === 200) {
               const h = this.$createElement;
               this.$message({duration: 2000, type: 'success', message: this.$t("tip.saveSuccess")});
-              this.getLeftMenuList()
-              this.getAssetData()
+              this.getDcData()
+              this.getTableData()
+              /*this.getLeftMenuList()
+              this.getAssetData()*/
             } else {
               this.$message.error(res.msg);
             }
@@ -683,8 +686,10 @@
           this.$delete(data + "?ids=" + item).then(response => {
             if (response.code === 200) {
               this.$message({duration: 2000, type: 'success', message: this.$t("tip.deleteSuccess")});
-              this.getAssetData();
-              this.getLeftMenuList();
+              this.getTableData();
+              this.getDcData();
+              /*this.getAssetData();
+              this.getLeftMenuList();*/
             } else {
               this.$message.error(response.msg);
             }
@@ -732,115 +737,68 @@
         }
       },
       showEndpoint(asset) {
-        this.alertMsgAsset = Object.assign({}, asset);
-        this.targetTab = "endpoint";
-        this.showSubList = true;
+        this.bottomBox.asset = Object.assign({}, asset);
+        this.bottomBox.targetTab = "endpoint";
+        this.bottomBox.showSubList = true;
       },
-      tagShow(data, id, type) {
-        if (data === 'showAdd') {
-          this.rightBox.show = true;
-          this.$nextTick(() => {
-            this.editUnitShow = true;
-            this.$refs['assetEditUnit'].accountSwitch=false;
-            this.$refs['assetEditUnit'].getAssetData('');
-            this.$refs['assetEditUnit'].resetAsset();
-          });
-        }
-        if (data === 'showEdit') {
-          this.rightBox.show = true;
-          this.$nextTick(() => {
-            this.editUnitShow = true;
-            this.$refs['assetEditUnit'].accountSwitch=false;
-            this.$refs['assetEditUnit'].getAssetData(id)
-          });
-        }
-        if (data === 'showView') {
-          this.alertMsgAsset = Object.assign({}, id);
-          this.targetTab = "panel";
-          this.showSubList = true;
-          /*this.editUnitShow = true
-          this.$refs['assetEditUnit'].getAssetData(id)
-          this.$refs['assetEditUnit'].tabView = true*/
+      add() {
+        this.asset = this.newAsset();
+        this.rightBox.show = true;
+      },
+      newAsset() {
+        return JSON.parse(JSON.stringify(this.blankAsset));
+      },
+      closeRightBox(refresh) {
+        this.rightBox.show = false;
+        if (refresh) {
+          this.getTableData();
         }
       },
-      editing() {
-
-      },
-      getSingleIDCData(data, item) {
-        if (item !== 'edit') {
-          this.idcSelectedData = '';
-          this.IDCOptionData.forEach(item => {
-            if (item.id === data) {
-              this.idcSelectedData = item
-            }
-          });
-          return
-        } else {
-          this.IDCOptionData.forEach(item => {
-            if (item.id === data) {
-              this.addIdcData.id = item.id;
-              this.addIdcData.name = item.name;
-              this.addIdcData.popName = item.name;
-              this.addIdcData.location = item.location;
-              this.addIdcData.principal = item.principal;
-              this.addIdcData.tel = item.tel;
-            }
-          });
-        }
-      },
-
       changeCheckBox() {
         this.assetClick = true;
-        this.getSingleAsset();
       },
-      changeAssetTypeCheckBox:function(){
+      changeAssetTypeCheckBox() {
         if(this.assetTypeCheckList && this.assetTypeCheckList.length > 0){
-          let assetTypeIds=this.assetTypeCheckList.join(',');
+          let assetTypeIds = this.assetTypeCheckList.join(',');
           this.pageObj.typeIds=assetTypeIds;
         }else{
           this.pageObj.typeIds='';
         }
-        this.getAssetData();
+        this.getTableData();
       },
-      changeVendorCheckBox:function(){
+      changeVendorCheckBox() {
         if(this.vendorCheckList && this.vendorCheckList.length > 0){
-          let vendorIds=this.vendorCheckList.join(',');
-          this.pageObj.vendorIds=vendorIds;
+          let vendorIds = this.vendorCheckList.join(',');
+          this.pageObj.vendorIds = vendorIds;
 
         }else{
-          this.pageObj.vendorIds='';
+          this.pageObj.vendorIds = '';
         }
-        this.getAssetData();
+        this.getTableData();
       },
-      changePingCheckBox:function(){
+      changePingCheckBox() {
         if(this.pingCheckList && this.pingCheckList.length > 0){
-          let pingStates=this.pingCheckList.join(',');
-          this.pageObj.pingStates=pingStates;
+          let pingStates = this.pingCheckList.join(',');
+          this.pageObj.pingStates = pingStates;
         }else{
-          this.pageObj.pingStates='';
+          this.pageObj.pingStates = '';
         }
-        this.getAssetData();
-      },
-      getSingleAsset() {
-        let checkedCount = this.checkList.length;
-        let allCount = this.checkListData.length;
-        this.checkAllFlag = ((checkedCount == allCount) && allCount > 0);
-        this.checkAllHandler = checkedCount > 0 && checkedCount < allCount;
+        this.getTableData();
       },
       pageNo(val) {
         this.pageObj.pageNo = val;
-        this.getAssetData()
+        this.getTableData()
       }
       ,
       pageSize(val) {
         this.pageObj.pageSize = val;
         localStorage.setItem('nz-pageSize-' + localStorage.getItem('nz-username') + '-' + this.tableId, val);
-        this.getAssetData();
+        this.getTableData();
       },
       getPrincipalName(data) {
-        for (let item in this.idcUserData) {
-          if (this.idcUserData[item].userId === data) {
-            return this.idcUserData[item].username
+        for (let item in this.userData) {
+          if (this.userData[item].userId === data) {
+            return this.userData[item].username
           }
         }
       },
@@ -854,21 +812,22 @@
         }
       },
       flushData() {
-        this.getSingleAsset();
-        this.getAssetData();
+        Promise.all([this.getVendorData(), this.getAssetTypeData(), this.getDcData()]).then(response => {
+          this.getTableData();
+        });
       },
       closeAllPop:function(){
-        this.$refs.idcConfigBox.forEach((item)=>{
-          item.show(false)
-        })
-        this.$refs.cabinetConfigBox.forEach((item)=>{
-          item.show(false)
-        })
+        this.$refs.idcConfigBox.forEach((item) => {
+          item.show(false);
+        });
+        this.$refs.cabinetConfigBox.forEach((item) => {
+          item.show(false);
+        });
       },
       search(searchObj) {
-        let orderBy='';
+        let orderBy = '';
         if(this.searchLabel.orderBy){
-          orderBy=this.searchLabel.orderBy
+          orderBy = this.searchLabel.orderBy
         }
         this.searchLabel = {};
         this.pageObj.pageNo = 1;
@@ -880,11 +839,11 @@
         if(orderBy){
           this.$set(this.searchLabel, 'orderBy', orderBy);
         }
-        this.getAssetData();
+        this.getTableData();
       },
       convertToDetail(obj) {
         let detail = JSON.parse(JSON.stringify(obj));
-        detail.state = obj.state == 1 ? this.$t('asset.createAssetTab.inStock'): this.$t('asset.createAssetTab.notInStock');
+        detail.state = obj.state == 1 ? this.$t('asset.inStock'): this.$t('asset.notInStock');
         detail.assetType = obj.model.type.value;
         detail.vendorModel = obj.model.vendor.value + " " + obj.model.name;
         detail.dataCenter = obj.idc ? obj.idc.name : "";
@@ -894,53 +853,20 @@
         detail.cabinet = obj.cabinet ? obj.cabinet.name : "";
         detail.uSize = obj.cabinet ? obj.cabinet.uSize : "";
         detail.remark = obj.idc ? obj.idc.remark : "";
-        if (obj.accounts.length > 0) {
+        if (obj.accounts && obj.accounts.length > 0) {
           let account = obj.accounts[0];
           detail.protocol = account.protocol;
           detail.account = account.user;
           let loginType = "";
           if (account.authType == 1) {
-            loginType = this.$t('asset.createAssetTab.password');
+            loginType = this.$t('asset.password');
           } else if (account.authType == 2) {
-            loginType = this.$t('asset.createAssetTab.ssh');
+            loginType = this.$t('asset.ssh');
           }
           detail.loginType = loginType;
           detail.port = account.port;
         }
 
-        /*detail.push({label: this.$t("asset.createAssetTab.sn"), value: obj.sn});
-        detail.push({label: this.$t("asset.createAssetTab.host"), value: obj.host});
-        detail.push({label: this.$t("asset.createAssetTab.state"), value: obj.state == 1 ? this.$t('asset.createAssetTab.inStock'): this.$t('asset.createAssetTab.notInStock')});
-        detail.push({label: this.$t("asset.tableTitle.modules"), value: obj.endpointNum});
-        detail.push({label: this.$t("asset.tableTitle.alerts"), value: obj.alertNum});
-        detail.push({label: this.$t("asset.createAssetTab.assetType"), value: obj.model.type.value});
-        detail.push({label: this.$t("asset.createAssetTab.vendorModel"), value: obj.model.vendor.value + " " + obj.model.name});
-        detail.push({label: this.$t("asset.createAssetTab.purchaseDate"), value: obj.purchaseDate});
-        detail.push({label: this.$t("asset.createAssetTab.dcName"), value: obj.idc ? obj.idc.name : ""});
-        detail.push({label: this.$t("asset.createAssetTab.location"), value: obj.idc ? obj.idc.location : ""});
-        detail.push({label: this.$t("asset.createAssetTab.principal"), value: obj.idc ? this.getPrincipalName(obj.idc.principal) : ""});
-        detail.push({label: this.$t("asset.createAssetTab.tel"), value: obj.idc ? obj.idc.tel : ""});
-        detail.push({label: this.$t("asset.createAssetTab.cabinet"), value: obj.cabinet ? obj.cabinet.name : ""});
-        detail.push({label: this.$t("asset.editAssetTab.uSize"), value: obj.cabinet ? obj.cabinet.uSize : ""});
-        detail.push({label: this.$t("asset.editAssetTab.remark"), value: obj.idc ? obj.idc.remark : ""});
-        if (obj.accounts.length > 0) {
-          let account = obj.accounts[0];
-          if (account.protocol == 'SSH') {
-            detail.push({label: this.$t("asset.createAssetTab.protocol"), value: 'SSH'});
-            detail.push({label: this.$t("asset.createAssetTab.account"), value: account.user});
-            let loginType = "";
-            if (account.authType == 1) {
-              loginType = this.$t('asset.createAssetTab.password');
-            } else if (account.authType == 2) {
-              loginType = this.$t('asset.createAssetTab.ssh');
-            }
-            detail.push({label: this.$t("asset.createAssetTab.loginType"), value: loginType});
-          } else if (account.protocol == 'TELNET') {
-            detail.push({label: this.$t("asset.createAssetTab.protocol"), value: 'TELNET'});
-            detail.push({label: this.$t("asset.createAssetTab.account"), value: account.user});
-          }
-          detail.push({label: this.$t("asset.createAssetTab.port"), value: account.port});
-        }*/
         return detail;
       },
       formatPingTime:function(str){
@@ -990,9 +916,11 @@
           orderBy='-'+item.prop;
         }
         this.$set(this.searchLabel, "orderBy", orderBy);
-        this.getAssetData();
+        this.getTableData();
+      /*}
+        this.getAssetData();*/
       },
-      // 获取左侧菜单数据
+      /*// 获取左侧菜单数据
       getLeftMenuList(){
         this.$get('asset/filter').then(response => {
           if (response.code === 200) {
@@ -1011,7 +939,7 @@
             })
           }
         })
-      },
+      },*/
     },
     created() {
       this.getUserData();
@@ -1019,7 +947,11 @@
       this.getPingData();
     },
     mounted() {
-      this.getLeftMenuList()//获取左侧菜单列表
+      //初始化数据
+      Promise.all([this.getVendorData(), this.getAssetTypeData(), this.getUserData(), this.getDcData()]).then(response => {
+        this.getTableData();
+      });
+      // this.getLeftMenuList()//获取左侧菜单列表
       //是否存在分页缓存
       let pageSize = localStorage.getItem('nz-pageSize-' + localStorage.getItem('nz-username') + '-' + this.tableId);
       if (pageSize != 'undefined' && pageSize != null) {
@@ -1036,42 +968,41 @@
         if (el._ps_) {
           el.addEventListener("ps-scroll-y", () => {
             if (el._ps_.scrollbarYTop > 50) {
-              this.showTopBtn = true;
+              this.tools.showTopBtn = true;
             } else {
-              this.showTopBtn = false;
+              this.tools.showTopBtn = false;
             }
           });
           el.addEventListener("mouseenter", () => {
-            this.tableHover = true;
+            this.tools.tableHover = true;
           });
           el.addEventListener("mouseleave", () => {
-            this.tableHover = false;
+            this.tools.tableHover = false;
           });
         }
         //resize时刷新左侧列表滚动条
-        let _this = this;
+        let vm = this;
         window.onresize = function () {
-          _this.$refs.leftScrollbar.update();
+          vm.$refs.leftScrollbar.update();
           el._ps_.update();
         };
       });
       let localStorageTitle = localStorage.getItem("nz-tableTitle-" + localStorage.getItem("nz-username") + "-" + this.$route.path);
-      this.tablelable = localStorageTitle ? JSON.parse(localStorageTitle) : this.tableTitle;
-      // this.assetPingSwit
+      this.tools.tablelable = localStorageTitle ? JSON.parse(localStorageTitle) : this.tableTitle;
 
       if (this.assetPingSwitch == 'off') {
 
-        for (let i in this.tablelable) {
-          let label = this.tablelable[i];
+        for (let i in this.tools.tablelable) {
+          let label = this.tools.tablelable[i];
 
           if (label.prop == 'pingStatus') {
-            this.tablelable.splice(i, 1);
-            console.log(this.tablelable)
+            this.tools.tablelable.splice(i, 1);
+            //console.log(this.tools.tablelable)
             break;
           }
         }
       }
-      this.dropCol = localStorageTitle ? JSON.parse(localStorageTitle) : this.tableTitle;
+      this.tools.dropCol = localStorageTitle ? JSON.parse(localStorageTitle) : this.tableTitle;
     },
     destroyed() {
       window.onresize = null;

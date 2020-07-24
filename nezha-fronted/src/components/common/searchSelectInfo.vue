@@ -42,10 +42,10 @@
     assetState: [ //资产入库/出库状态
       {
         value: 1,
-        label: i18n.t('asset.createAssetTab.inStock')
+        label: i18n.t('asset.inStock')
       }, {
         value: 2,
-        label: i18n.t('asset.createAssetTab.notInStock')
+        label: i18n.t('asset.notInStock')
       }
     ],
     pingStatus:[

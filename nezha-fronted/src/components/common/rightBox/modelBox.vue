@@ -65,7 +65,7 @@
             </template>
           </el-autocomplete>
         </el-form-item>
-        <el-form-item :label="this.$t('asset.createAssetTab.AddCabinetTab.uSize')" prop="usize">
+        <el-form-item :label="$t('asset.uSize')" prop="usize">
           <el-input v-model.number="editModel.usize" :max="47" size="small"></el-input>
         </el-form-item>
       </el-form>
@@ -73,7 +73,7 @@
 
     <!--底部按钮-->
     <div class="right-box-bottom-btns">
-      <button @click="esc" id="model-box-esc" class="nz-btn nz-btn-size-normal nz-btn-style-light nz-btn-min-width-100">
+      <button @click="esc(false)" id="model-box-esc" class="nz-btn nz-btn-size-normal nz-btn-style-light nz-btn-min-width-100">
         <span>{{$t('overall.cancel')}}</span>
       </button>
       <button @click="save" id="model-box-save" class="nz-btn nz-btn-size-normal nz-btn-style-normal nz-btn-min-width-100">
@@ -84,8 +84,6 @@
 </template>
 
 <script>
-  import {noSpecialChar} from "../js/validate";
-
   export default {
     name: "modelBox",
     props: {

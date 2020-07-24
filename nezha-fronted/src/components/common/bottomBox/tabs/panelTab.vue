@@ -66,8 +66,9 @@
       </el-scrollbar>
     </div>
     <button class="to-top" :class="{'to-top-is-hover': tableHover}" v-show="showTopBtn" @click="$toTop('el', $refs.dashboardScrollbar.wrap)" style="bottom: 0;"><i class="nz-icon nz-icon-top"></i></button>
-
-    <chart-box @close="rightBox.show = false" v-if="rightBox.show" ref="addChartModal" :showPanel="showPanel" :panel-data="panelData" @on-create-success="createSuccess" @on-delete-success="delChartOk"></chart-box>
+    <transition name="right-box">
+      <chart-box @close="closeRightBox" v-if="rightBox.show" ref="addChartModal" :showPanel="showPanel" :panel-data="panelData" @on-create-success="createSuccess" @on-delete-success="delChartOk"></chart-box>
+    </transition>
   </div>
 </template>
 
@@ -173,7 +174,7 @@
     },
     methods: {
       //刷新
-      Refresh() {
+      refresh() {
         this.getTableData(this.obj.id);
       },
       refreshTime(st, et) {
@@ -194,6 +195,12 @@
       // 切换tab
       changeTab(tab) {
         this.$emit('changeTab', tab);
+      },
+      closeRightBox(refresh) {
+        this.rightBox.show = false;
+        if (refresh) {
+          this.refresh();
+        }
       },
       scrollbarHeightHandler() {
         setTimeout(() => {
@@ -407,7 +414,7 @@
               if(response.code == 200){
                 this.$message({duration: 1000, type: 'success', message: this.$t("tip.syncSuccess")});
                 if(this.from == 'asset'){
-                  this.Refresh();
+                  this.refresh();
                 }
               }else{
                 console.error(response.msg)

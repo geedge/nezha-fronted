@@ -41,7 +41,7 @@
                       </div>
 
                       <div class="content-item-value item-tip" :id="`value-${index}-${i}`">
-                        <span v-if="key == 'state'">{{value == 1 ? $t('asset.createAssetTab.inStock') : $t('asset.createAssetTab.outStock')}}</span>
+                        <span v-if="key == 'state'">{{value == 1 ? $t('asset.inStock') : $t('asset.outStock')}}</span>
                         <span v-else-if="key == 'alert'" class="as-button" :class="{'success': value <= 0, 'danger': value > 0}">{{value + ' ' + $t('overall.active')}}</span>
                         <div v-else-if="key == 'tags'" class="no-overflow" style="padding-bottom: 5px;">
                           <template v-if="value && value.length > 0">

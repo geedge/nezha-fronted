@@ -34,11 +34,12 @@
       </div>
     </div>
     <div slot="content-right" class="slot-content">
-      <div class="main-list main-and-sub-transition" :class="{'main-list-with-sub': showSubList}">
-        <div class="top-tools" v-show="mainResizeShow">
-          <div class="top-tool-main-right" :class="{'top-tool-main-right-to-left': showSubList}">
+      <div class="main-list" :class="{'main-list-with-sub': bottomBox.showSubList}">
+        <div class="main-modal"></div>
+        <div class="top-tools" v-show="bottomBox.mainResizeShow">
+          <div class="top-tool-main-right" :class="{'top-tool-main-right-to-left': bottomBox.showSubList}">
             <div class="top-tool-search">
-              <search-input :searchMsg="searchMsg" @search="search" :inTransform="inTransform"></search-input>
+              <search-input :searchMsg="searchMsg" @search="search" :bottomBox.inTransform="bottomBox.inTransform"></search-input>
             </div>
             <button @click="add" class="nz-btn nz-btn-size-normal nz-btn-style-light margin-l-20"  :title="$t('overall.createModel')"
                     id="model-add">
@@ -53,14 +54,14 @@
                   class="nz-table"
                   v-scrollBar
                   :el-table="'large'"
-                  v-loading="loading"
+                  v-loading="tools.loading"
                   :cell-class-name="assetStatClassName"
-                  v-show="mainResizeShow"
+                  v-show="bottomBox.mainResizeShow"
                   :height="mainTableHeight"
                   @sort-change="tableDataSort"
         >
           <el-table-column :resizable="false"
-                           v-for="(item, index) in tablelable"
+                           v-for="(item, index) in tools.tablelable"
                            v-if="item.show"
                            :width="item.width"
                            :key="`col-${index}`"
@@ -74,7 +75,7 @@
                 <el-popover
                   placement="top"
                   trigger="hover"
-                  :content="$t('overall.result.total') + '：' + scope.row.assetStat.total + '，' + $t('asset.createAssetTab.inStock') + '：' + scope.row.assetStat.inStock + '，' + $t('asset.createAssetTab.notInStock') + '：' + scope.row.assetStat.outStock">
+                  :content="$t('overall.result.total') + '：' + scope.row.assetStat.total + '，' + $t('asset.inStock') + '：' + scope.row.assetStat.inStock + '，' + $t('asset.notInStock') + '：' + scope.row.assetStat.outStock">
                     <div slot="reference" class="dc-asset-states">
                       <span class="dc-asset-state dc-asset-state-total">{{scope.row.assetStat.total}}</span>
                       <span class="dc-asset-state dc-asset-state-in">{{scope.row.assetStat.inStock}}</span>
@@ -98,23 +99,26 @@
               </span>
             </template>
             <template v-slot="scope">
-              <button v-if="scope.$index == 0" class="to-top" :style="{top: toTopBtnTop}" :class="{'to-top-is-hover': tableHover}" v-show="showTopBtn" @click="$toTop('ps', 0)"><i class="nz-icon nz-icon-top"></i></button>
+              <button v-if="scope.$index == 0" class="to-top" :style="{top: tools.toTopBtnTop}" :class="{'to-top-is-hover': tools.tableHover}" v-show="tools.showTopBtn" @click="$toTop('ps', 0)"><i class="nz-icon nz-icon-top"></i></button>
             </template>
           </el-table-column>
         </el-table>
-        <div class="pagination-bottom" v-show="!showSubList">
+        <div class="pagination-bottom" v-show="!bottomBox.showSubList">
           <Pagination :tableId="tableId" :pageObj="pageObj" @pageNo='pageNo' @pageSize='pageSize' ref="Pagination"></Pagination>
         </div>
       </div>
-      <bottom-box v-if="showSubList" :show-sub-list="showSubList" :subResizeShow="subResizeShow" :isFullScreen="isFullScreen" from="model" :targetTab.sync="targetTab" :obj="modelForPanel"
-                  @closeSubList="showSubList = false" @fullScreen="fullScreen" @exitFullScreen="exitFullScreen" @listResize="listResize" ref="panelBox"></bottom-box>
+      <transition name="el-zoom-in-bottom">
+        <bottom-box v-if="bottomBox.showSubList" :sub-resize-show="bottomBox.subResizeShow" :is-fullscreen="bottomBox.isFullScreen" from="model" :target-tab.sync="bottomBox.targetTab" :obj="bottomBox.model"
+                    @closeSubList="bottomBox.showSubList = false" @fullScreen="fullScreen" @exitFullScreen="exitFullScreen" @listResize="listResize" ref="panelBox"></bottom-box>
+      </transition>
     </div>
     </left-menu>
     <element-set
+      v-if="tools.showElementSet"
       v-clickoutside="elementsetHide"
       :table-title="tableTitle"
-      :dropCol="dropCol"
-      @tablelable="tablelabelEmit"
+      :dropCol="tools.dropCol"
+      @tools.tablelable="tablelabelEmit"
       ref="elementset"
     ></element-set>
     <transition name="right-box">
@@ -129,22 +133,32 @@
     name: "model",
     data() {
       return {
-        /*二级列表相关*/
-        targetTab: '', //展示二级列表中的哪个页签
-        inTransform: false, //搜索框相关，搜索条件下拉框是否在transform里
-        mainResizeShow: true, //dom高度改变时部分内容是否展示
-        subResizeShow: true,
-        isFullScreen: false,
-        showSubList: false, //是否展示二级列表
+        /*二级页面相关*/
+        bottomBox: {
+          modelDetail: {}, //asset详情
+          model: {}, //告警信息对应的asset对象
+          mainResizeShow: true, //dom高度改变时是否展示|隐藏
+          subResizeShow: true,
+          isFullScreen: false, //全屏状态
+          showSubList: false, //是否显示二级列表
+          targetTab: '', //显示二级列表中的哪个页签
+          inTransform: false, //搜索框相关，搜索条件下拉框是否在transform里
+        },
         mainTableHeight: this.$tableHeight.normal, //主列表table高度
-        modelForPanel: {},
-
+        /*工具参数*/
+        tools: {
+          loading: false, //是否显示table加载动画
+          toTopBtnTop: this.$tableHeight.toTopBtnTop, //to-top按钮的top属性
+          tableHover: false, //控制滚动条和top按钮同时出现
+          showElementSet: false, //自定义列弹框是否显示
+          showTopBtn: false, //显示To top按钮
+          tablelable: [], //从缓存中加载的table header
+          dropCol: [], //自定义列工具的数据
+        },
         tableId: 'modelTable', //需要分页的table的id，用于记录每页数量
-        showTopBtn: false,
 
-        toTopBtnTop: this.$tableHeight.toTopBtnTop, //to-top按钮的top属性
-        tableHover: false, //控制滚动条和top按钮同时出现
         rightBox: {show: false},
+        
         model: {},
         blankModel: {
           id: '',
@@ -162,7 +176,6 @@
           pageSize: 50,
           total: 0
         },
-        loading: false,
         tableTitle: [
           {
             label: 'ID',
@@ -192,8 +205,6 @@
             width: 120
           }
         ],
-        tablelable: [],
-        dropCol: [],
         tableData: [],
         searchMsg: { //给搜索框子组件传递的信息
           zheze_none: true,
@@ -216,25 +227,28 @@
     },
     methods: {
       elementsetShow(s, e) {
-        var eventfixed = {
-          shezhi: 0,
-          screen: 0
-        };
-        eventfixed[s] = 1;
-        e.preventDefault();
-        this.$store.commit('setHeaderTable', this.tablelable);
-        this.$store.commit('setEventfixed', eventfixed);
-        const h = document.documentElement.clientHeight;
-        const w = document.documentElement.clientWidth;
-        const dw = this.$refs.elementset.$el.offsetWidth;
-        const dh = this.$refs.elementset.$el.offsetHeight;
-        let positionx =
-          e.clientX + dw <= w - 10 ? e.clientX + 14 : e.clientX + 14 - dw;
-        let positiony =
-          e.clientY + dh <= h - 10
-            ? e.clientY + 20
-            : e.clientY + 20 - (e.clientY + dh - h);
-        this.$store.commit('setPosition', {positionx, positiony});
+        this.tools.showElementSet = true;
+        this.$nextTick(() => {
+          let eventfixed = {
+            shezhi: 0,
+            screen: 0
+          };
+          eventfixed[s] = 1;
+          e.preventDefault();
+          this.$store.commit('setHeaderTable', this.tools.tablelable);
+          this.$store.commit('setEventfixed', eventfixed);
+          const h = document.documentElement.clientHeight;
+          const w = document.documentElement.clientWidth;
+          const dw = this.$refs.elementset.$el.offsetWidth;
+          const dh = this.$refs.elementset.$el.offsetHeight;
+          let positionx =
+            e.clientX + dw <= w - 10 ? e.clientX + 14 : e.clientX + 14 - dw;
+          let positiony =
+            e.clientY + dh <= h - 10
+              ? e.clientY + 20
+              : e.clientY + 20 - (e.clientY + dh - h);
+          this.$store.commit('setPosition', {positionx, positiony});
+        });
       },
       elementsetHide() {
         //悬浮点击空白隐藏
@@ -249,12 +263,12 @@
       tablelabelEmit(data) {
         //获取子组件传过来的参数
         this.$store.commit('setHeaderTable', data);
-        this.tablelable = data;
+        this.tools.tablelable = data;
       },
       panel(obj) {
-        this.showSubList = true;
-        this.modelForPanel = obj;
-        this.targetTab = "panel";
+        this.bottomBox.showSubList = true;
+        this.bottomBox.model = obj;
+        this.bottomBox.targetTab = "panel";
       },
       // 全屏
       fullScreen() {
@@ -318,9 +332,9 @@
         this.$set(this.searchLabel, "pageNo", this.pageObj.pageNo);
         this.$set(this.searchLabel, "pageSize", this.pageObj.pageSize);
         this.$set(this.searchLabel, "stat", 1);
-        this.loading = true;
+        this.tools.loading = true;
         this.$get('model', this.searchLabel).then(response => {
-          this.loading = false;
+          this.tools.loading = false;
           if (response.code === 200) {
             this.tableData = response.data.list;
             this.pageObj.total = response.data.total
@@ -401,31 +415,32 @@
         if (el._ps_) {
           el.addEventListener("ps-scroll-y", () => {
             if (el._ps_.scrollbarYTop > 50) {
-              this.showTopBtn = true;
+              this.tools.showTopBtn = true;
             } else {
-              this.showTopBtn = false;
+              this.tools.showTopBtn = false;
             }
           });
           el.addEventListener("mouseenter", () => {
-            this.tableHover = true;
+            this.tools.tableHover = true;
           });
           el.addEventListener("mouseleave", () => {
-            this.tableHover = false;
+            this.tools.tableHover = false;
           });
         }
       });
-      this.tablelable = localStorage.getItem("nz-tableTitle-" + localStorage.getItem("nz-username") + "-" + this.$route.path)
+      this.tools.tablelable = localStorage.getItem("nz-tableTitle-" + localStorage.getItem("nz-username") + "-" + this.$route.path)
         ? JSON.parse(localStorage.getItem("nz-tableTitle-" + localStorage.getItem("nz-username") + "-" + this.$route.path))
         : this.tableTitle;
-      this.dropCol = localStorage.getItem("nz-tableTitle-" + localStorage.getItem("nz-username") + "-" + this.$route.path)
+      this.tools.dropCol = localStorage.getItem("nz-tableTitle-" + localStorage.getItem("nz-username") + "-" + this.$route.path)
         ? JSON.parse(localStorage.getItem("nz-tableTitle-" + localStorage.getItem("nz-username") + "-" + this.$route.path))
         : this.tableTitle;
     },
     watch: {
-      showSubList(n) {
+      'bottomBox.showSubList': function(n) {
         let vm = this;
         this.$bottomBoxWindow.showSubListWatch(vm, n);
       },
     }
   }
 </script>
+`

@@ -63,10 +63,10 @@
     <!--endpoint-->
     <div slot="content-right" class="slot-content" v-show="pageType ==  'endpoint'">
       <!-- 主列表 -->
-      <div class="main-list main-and-sub-transition" :class="{'main-list-with-sub': showSubList}">
-        <div class="top-tools" v-show="mainResizeShow">
-          <!--<div class="pagination-top"></div>-->
-          <div class="top-tool-main-right" :class="{'top-tool-main-right-to-left': showSubList}">
+      <div class="main-list" :class="{'main-list-with-sub': bottomBox.showSubList}">
+        <div class="main-modal"></div>
+        <div class="top-tools" v-show="bottomBox.mainResizeShow">
+          <div class="top-tool-main-right" :class="{'top-tool-main-right-to-left': bottomBox.showSubList}">
             <div class="top-tool-search"><search-input :searchMsg="endpointSearchMsg" @search="endpointSearch" ref="projectSearch"></search-input></div>
             <export-excel
               export-file-name="endpoint"
@@ -91,15 +91,15 @@
           class="nz-table endpoint-table"
           :height="mainTableHeight"
           v-scrollBar:el-table="'large'"
-          v-show="mainResizeShow"
+          v-show="bottomBox.mainResizeShow"
           ref="endpointTable"
-          v-loading="loading"
+          v-loading="tools.loading"
           style="width: 100%;"
           @sort-change="tableDataSort"
         >
           <el-table-column
             :resizable="false"
-            v-for="(item, index) in tablelable"
+            v-for="(item, index) in tools.tablelable"
             v-if="item.show"
             :width="item.width"
             :key="`col-${index}`"
@@ -147,36 +147,36 @@
               </span>
             </template>
             <template v-slot="scope">
-              <button v-if="scope.$index == 0" class="to-top" :style="{top: toTopBtnTop}" :class="{'to-top-is-hover': tableHover}" v-show="showTopBtn && mainResizeShow" @click="$toTop('ps', 0)"><i class="nz-icon nz-icon-top"></i></button>
+              <button v-if="scope.$index == 0" class="to-top" :style="{top: tools.toTopBtnTop}" :class="{'to-top-is-hover': tools.tableHover}" v-show="tools.showTopBtn && bottomBox.mainResizeShow" @click="$toTop('ps', 0)"><i class="nz-icon nz-icon-top"></i></button>
             </template>
           </el-table-column>
         </el-table>
-        <div class="pagination-bottom" v-show="!showSubList">
+        <div class="pagination-bottom" v-show="!bottomBox.showSubList">
           <Pagination :tableId="tableId" v-cloak :pageObj="endpointPageObj" @pageNo='endpointPageNo' @pageSize='endpointPageSize' ref="endpointPagination"></Pagination>
         </div>
       </div>
-      <bottom-box v-if="showSubList" :show-sub-list="showSubList" :subResizeShow="subResizeShow" :isFullScreen="isFullScreen"
-                  :from="'endpoint'" :targetTab.sync="targetTab" :detail="endpointDetail" :obj="curEndpoint" :assetDetail="assetDetail"
-                  @closeSubList="showSubList = false" @fullScreen="fullScreen" @exitFullScreen="exitFullScreen" @listResize="listResize" ></bottom-box>
+      <transition name="el-zoom-in-bottom">
+        <bottom-box v-if="bottomBox.showSubList" :sub-resize-show="bottomBox.subResizeShow" :is-full-screen="bottomBox.isFullScreen"
+                    :from="'endpoint'" :target-tab.sync="bottomBox.targetTab" :detail="bottomBox.endpointDetail" :obj="currentEndpoint" :asset-detail="bottomBox.assetDetail"
+                    @closeSubList="bottomBox.showSubList = false" @fullScreen="fullScreen" @exitFullScreen="exitFullScreen" @listResize="listResize" ></bottom-box>
+      </transition>
     </div>
     <div slot="content-right" class="slot-content" v-show="pageType == 'project'">
       <panel-tab from="project" :obj="currentProject" targetTab.sync="panel"></panel-tab>
     </div>
     </left-menu>
-
     <element-set
+      v-if="tools.showElementSet"
       v-clickoutside="elementsetHide"
       :table-title="endpointTableTitle"
-      :dropCol="dropCol"
+      :drop-col="tools.dropCol"
       @tablelable="tablelabelEmit"
       ref="elementset"
     ></element-set>
 
-    <module-box :currentProject="currentProject" :module="editModule" @reload="getAllModuleList" ref="moduleBox"></module-box>
+    <module-box :current-project="currentProject" :module="editModule" @reload="getAllModuleList" ref="moduleBox"></module-box>
     <edit-endpoint-box :project="currentProject" :module="currentModule" :post-endpoint="editEndpoint" @reload="getEndpointTableData" ref="editEndpointBox"></edit-endpoint-box>
-    <add-endpoint-box :currentProject="endpointEditInfos.project" :currentModule="endpointEditInfos.module" @reload="getEndpointTableData" ref="addEndpointBox"></add-endpoint-box>
-    <!--<asset-box :edit-unit-show='viewAssetState' @refreshData="getEndpointTableData" @sendStateData="tabControl"
-               ref="assetEditUnit"></asset-box>-->
+    <add-endpoint-box :current-project="endpointEditInfos.project" :current-module="endpointEditInfos.module" @reload="getEndpointTableData" ref="addEndpointBox"></add-endpoint-box>
   </div>
 </template>
 
@@ -187,7 +187,6 @@
   import bus from '../../../libs/bus'
   import panelTab from '../../common/bottomBox/tabs/panelTab'
 
-  var vm;
   export default {
     name: "project2",
     components: {
@@ -196,28 +195,41 @@
       'panel-tab': panelTab
     },
     data() {
-      vm = this;
       return {
-        loading: false,
-        ready: false,
-        assetDetail: {}, //asset详情
-        endpointDetail: [],
-        targetTab: '',
+        /*二级页面相关*/
+        bottomBox: {
+          endpoint: {}, //asset详情
+          endpointDetail: [],
+          mainResizeShow: true, //dom高度改变时部分内容是否展示
+          subResizeShow: true,
+          isFullScreen: false, //是否是全屏，用来控制拖动条是否展示,
+          showSubList: false,
+          targetTab: '',
+        },
+        
         mainTableHeight: this.$tableHeight.normal, //主列表table高度
-        toTopBtnTop: this.$tableHeight.toTopBtnTop, //to-top按钮的top属性
-        isFullScreen: false, //是否是全屏，用来控制拖动条是否展示
+        ready: false,
+
+        /*工具参数*/
+        tools: {
+          loading: false, //是否显示table加载动画
+          toTopBtnTop: this.$tableHeight.toTopBtnTop, //to-top按钮的top属性
+          tableHover: false, //控制滚动条和top按钮同时出现
+          showElementSet: false, //自定义列弹框是否显示
+          showTopBtn: false, //显示To top按钮
+          tablelable: [], //从缓存中加载的table header
+          dropCol: [], //自定义列工具的数据
+        },
+        
+        
         tableId: 'projectTable', //需要分页的table的id，用于记录每页数量
-        mainResizeShow: true, //dom高度改变时部分内容是否展示
-        subResizeShow: true,
-        mainListHeight: '', //主列表dom的高度
-        showSubList: false,
+
         endpointEditInfos:{
           project:null,
           module:null,
         },
         userData: [],
-        showTopBtn: false, //主列表top按钮
-        tableHover: false, //控制滚动条和top按钮同时出现
+
         editEndpoint: {id: '', host: '', port: '', param: '', path: '', asset: {}, project: {}, module: {}, moduleId: '', assetId: '', paramObj: []},
         endpointTableTitle: [
           {
@@ -272,9 +284,8 @@
           pageSize: 50,
           total:0
         },
-        curEndpoint: {},
-        tablelable: [],
-        dropCol: [],
+        currentEndpoint: {},
+
         currentProjectTitle:'',
         moduleList: [],
         projectList: [],
@@ -299,21 +310,22 @@
             disabled: false
           }],
         },
-        /*viewAssetState:false,*/
-        selectedEndpoints:[],//选中的metric{label='value'}
       }
     },
     methods: {
       // 全屏
       fullScreen() {
+        let vm = this;
         this.$bottomBoxWindow.fullScreen(vm);
       },
       // 退出全屏
       exitFullScreen() {
+        let vm = this;
         this.$bottomBoxWindow.exitFullScreen(vm);
       },
       // 鼠标拖动二级列表
       listResize(e) {
+        let vm = this;
         this.$bottomBoxWindow.listResize(vm, e);
       },
       elementsetShow(s, e) {
@@ -323,7 +335,7 @@
         };
         eventfixed[s] = 1;
         e.preventDefault();
-        this.$store.commit('setHeaderTable', this.tablelable);
+        this.$store.commit('setHeaderTable', this.tools.tablelable);
         this.$store.commit('setEventfixed', eventfixed);
         const h = document.documentElement.clientHeight;
         const w = document.documentElement.clientWidth;
@@ -339,12 +351,12 @@
       },
       elementsetHide() {
         //悬浮点击空白隐藏
-        this.$refs.elementset.elementsetHide();
+        this.tools.showElementSet = false;
       },
       tablelabelEmit(data) {
         //获取子组件传过来的参数
         this.$store.commit('setHeaderTable', data);
-        this.tablelable = data;
+        this.tools.tablelable = data;
       },
       getEndpointTableData() {
         if(this.currentModule&&this.currentModule.id){
@@ -352,9 +364,9 @@
           this.endpointSearchLabel.moduleId = this.currentModule.id;
           this.$set(this.endpointSearchLabel, 'pageNo', this.endpointPageObj.pageNo);
           this.$set(this.endpointSearchLabel, 'pageSize', this.endpointPageObj.pageSize);
-          this.loading = true;
+          this.tools.loading = true;
           this.$get('endpoint', this.endpointSearchLabel).then(response => {
-            this.loading = false;
+            this.tools.loading = false;
             if (response.code === 200) {
               for (let i = 0; i < response.data.list.length; i++) {
                 try {
@@ -501,9 +513,8 @@
         this.currentModule = module;
         this.endpointSearchLabel = {moduleId: ''};
         this.$refs.projectSearch.clearSearch();
-        this.showSubList = false;
-        this.selectedEndpoints=[];
-        this.currentProject={};
+        this.bottomBox.showSubList = false;
+        this.currentProject = {};
       },
 
       //弹出endpoint编辑页
@@ -528,9 +539,9 @@
 
       //查看endpoint详情
       detail(endpoint) {
-        this.curEndpoint = Object.assign({}, endpoint);
-        this.targetTab = "panel";
-        this.showSubList = true;
+        this.currentEndpoint = Object.assign({}, endpoint);
+        this.bottomBox.targetTab = "panel";
+        this.bottomBox.showSubList = true;
       },
       initSnmpParam(module) {
         this.$set(module, 'walk', []);
@@ -649,17 +660,17 @@
         return year + "-" + month + "-" + day + " " + hours + ":" + minutes + ":" + seconds;
       },
       viewAsset(endpoint) {
-        this.curEndpoint = Object.assign({}, endpoint);
-        this.targetTab = 'assetDetail';
-        this.showSubList = true;
+        this.currentEndpoint = Object.assign({}, endpoint);
+        this.bottomBox.targetTab = 'assetDetail';
+        this.bottomBox.showSubList = true;
         /*this.viewAssetState=true;
         this.$refs.assetEditUnit.getAssetData(id);
         this.$refs.assetEditUnit.tabView=true;*/
       },
       showEndpoint(endpoint) {
-        this.curEndpoint = Object.assign({}, endpoint);
-        this.targetTab = 'endpointQuery';
-        this.showSubList = true;
+        this.currentEndpoint = Object.assign({}, endpoint);
+        this.bottomBox.targetTab = 'endpointQuery';
+        this.bottomBox.showSubList = true;
       },
       getStateContent:function(row){
         if(row){
@@ -712,7 +723,7 @@
       },
       assetConvertToDetail(obj) {
         let detail = JSON.parse(JSON.stringify(obj));
-        detail.state = obj.state == 1 ? this.$t('asset.createAssetTab.inStock'): this.$t('asset.createAssetTab.notInStock');
+        detail.state = obj.state == 1 ? this.$t('asset.inStock'): this.$t('asset.notInStock');
         detail.assetType = obj.model.type.value;
         detail.vendorModel = obj.model.vendor.value + " " + obj.model.name;
         detail.dataCenter = obj.idc ? obj.idc.name : "";
@@ -728,47 +739,47 @@
           detail.account = account.user;
           let loginType = "";
           if (account.authType == 1) {
-            loginType = this.$t('asset.createAssetTab.password');
+            loginType = this.$t('asset.password');
           } else if (account.authType == 2) {
-            loginType = this.$t('asset.createAssetTab.ssh');
+            loginType = this.$t('asset.ssh');
           }
           detail.loginType = loginType;
           detail.port = account.port;
         }
-        /*detail.push({label: this.$t("asset.createAssetTab.sn"), value: obj.sn});
-        detail.push({label: this.$t("asset.createAssetTab.host"), value: obj.host});
-        detail.push({label: this.$t("asset.createAssetTab.state"), value: obj.state == 1 ? this.$t('asset.createAssetTab.inStock'): this.$t('asset.createAssetTab.notInStock')});
+        /*detail.push({label: this.$t("asset.sn"), value: obj.sn});
+        detail.push({label: this.$t("asset.host"), value: obj.host});
+        detail.push({label: this.$t("asset.state"), value: obj.state == 1 ? this.$t('asset.inStock'): this.$t('asset.notInStock')});
         detail.push({label: this.$t("asset.tableTitle.modules"), value: obj.endpointNum});
         detail.push({label: this.$t("asset.tableTitle.alerts"), value: obj.alertNum});
-        detail.push({label: this.$t("asset.createAssetTab.assetType"), value: obj.model.type.value});
-        detail.push({label: this.$t("asset.createAssetTab.vendorModel"), value: obj.model.vendor.value + " " + obj.model.name});
-        detail.push({label: this.$t("asset.createAssetTab.assetType"), value: obj.model.type.value});
-        detail.push({label: this.$t("asset.createAssetTab.purchaseDate"), value: obj.purchaseDate});
-        detail.push({label: this.$t("asset.createAssetTab.dcName"), value: obj.idc ? obj.idc.name : ""});
-        detail.push({label: this.$t("asset.createAssetTab.location"), value: obj.idc ? obj.idc.location : ""});
-        detail.push({label: this.$t("asset.createAssetTab.principal"), value: obj.idc ? this.getPrincipalName(obj.idc.principal) : ""});
-        detail.push({label: this.$t("asset.createAssetTab.location"), value: obj.idc ? obj.idc.location : ""});
-        detail.push({label: this.$t("asset.createAssetTab.tel"), value: obj.idc ? obj.idc.tel : ""});
-        detail.push({label: this.$t("asset.createAssetTab.cabinet"), value: obj.cabinet ? obj.cabinet.name : ""});
+        detail.push({label: this.$t("asset.assetType"), value: obj.model.type.value});
+        detail.push({label: this.$t("asset.vendorModel"), value: obj.model.vendor.value + " " + obj.model.name});
+        detail.push({label: this.$t("asset.assetType"), value: obj.model.type.value});
+        detail.push({label: this.$t("asset.purchaseDate"), value: obj.purchaseDate});
+        detail.push({label: this.$t("asset.dcName"), value: obj.idc ? obj.idc.name : ""});
+        detail.push({label: this.$t("asset.location"), value: obj.idc ? obj.idc.location : ""});
+        detail.push({label: this.$t("asset.principal"), value: obj.idc ? this.getPrincipalName(obj.idc.principal) : ""});
+        detail.push({label: this.$t("asset.location"), value: obj.idc ? obj.idc.location : ""});
+        detail.push({label: this.$t("asset.tel"), value: obj.idc ? obj.idc.tel : ""});
+        detail.push({label: this.$t("asset.cabinet"), value: obj.cabinet ? obj.cabinet.name : ""});
         detail.push({label: this.$t("asset.editAssetTab.uSize"), value: obj.cabinet ? obj.cabinet.uSize : ""});
         detail.push({label: this.$t("asset.editAssetTab.remark"), value: obj.idc ? obj.idc.remark : ""});
         if (obj.accounts.length > 0) {
           let account = obj.accounts[0];
           if (account.protocol == 'SSH') {
-            detail.push({label: this.$t("asset.createAssetTab.protocol"), value: 'SSH'});
-            detail.push({label: this.$t("asset.createAssetTab.account"), value: account.user});
+            detail.push({label: this.$t("asset.protocol"), value: 'SSH'});
+            detail.push({label: this.$t("asset.account"), value: account.user});
             let loginType = "";
             if (account.authType == 1) {
-              loginType = this.$t('asset.createAssetTab.password');
+              loginType = this.$t('asset.password');
             } else if (account.authType == 2) {
-              loginType = this.$t('asset.createAssetTab.ssh');
+              loginType = this.$t('asset.ssh');
             }
-            detail.push({label: this.$t("asset.createAssetTab.loginType"), value: loginType});
+            detail.push({label: this.$t("asset.loginType"), value: loginType});
           } else if (account.protocol == 'TELNET') {
-            detail.push({label: this.$t("asset.createAssetTab.protocol"), value: 'TELNET'});
-            detail.push({label: this.$t("asset.createAssetTab.account"), value: account.user});
+            detail.push({label: this.$t("asset.protocol"), value: 'TELNET'});
+            detail.push({label: this.$t("asset.account"), value: account.user});
           }
-          detail.push({label: this.$t("asset.createAssetTab.port"), value: account.port});
+          detail.push({label: this.$t("asset.port"), value: account.port});
         }*/
         return detail;
       },
@@ -842,17 +853,17 @@
         if (el._ps_) {
           el.addEventListener("ps-scroll-y", () => {
             if (el._ps_.scrollbarYTop > 50) {
-              this.showTopBtn = true;
+              this.tools.showTopBtn = true;
             } else {
-              this.showTopBtn = false;
+              this.tools.showTopBtn = false;
             }
           });
 
           el.addEventListener("mouseenter", () => {
-            this.tableHover = true;
+            this.tools.tableHover = true;
           });
           el.addEventListener("mouseleave", () => {
-            this.tableHover = false;
+            this.tools.tableHover = false;
           });
         }
       });
@@ -862,10 +873,10 @@
         _this.$refs.leftScrollbar.update();
       }
 
-      this.tablelable = localStorage.getItem("nz-tableTitle-" + localStorage.getItem("nz-username") + "-" + this.$route.path)
+      this.tools.tablelable = localStorage.getItem("nz-tableTitle-" + localStorage.getItem("nz-username") + "-" + this.$route.path)
         ? JSON.parse(localStorage.getItem("nz-tableTitle-" + localStorage.getItem("nz-username") + "-" + this.$route.path))
         : this.endpointTableTitle;
-      this.dropCol = localStorage.getItem("nz-tableTitle-" + localStorage.getItem("nz-username") + "-" + this.$route.path)
+      this.tools.dropCol = localStorage.getItem("nz-tableTitle-" + localStorage.getItem("nz-username") + "-" + this.$route.path)
         ? JSON.parse(localStorage.getItem("nz-tableTitle-" + localStorage.getItem("nz-username") + "-" + this.$route.path))
         : this.endpointTableTitle;
 
@@ -925,16 +936,17 @@
         // this.getModuleList(this.currentProject.id);
         this.getAllModuleList();
       },
-      showSubList(n) {
+      "bottomBox.showSubList": function(n) {
+        let vm = this;
         this.$bottomBoxWindow.showSubListWatch(vm, n);
       },
-      curEndpoint: {
+      currentEndpoint: {
         deep: true,
         handler(n) {
-          this.endpointDetail = this.convertToDetail(n);
+          this.bottomBox.endpointDetail = this.convertToDetail(n);
           this.$get('asset', {id: n.assetId}).then(response => {
             if (response.code === 200) {
-              this.assetDetail = this.assetConvertToDetail(response.data.list[0]);
+              this.bottomBox.assetDetail = this.assetConvertToDetail(response.data.list[0]);
             }
           });
         }

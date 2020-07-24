@@ -193,7 +193,9 @@ instance_cpu_time_ns{app="fox", proc="widget", rev="4d3a513", env="prod", job="c
             </div>
 
         </div>
-        <chart-box v-if="rightBox.show" ref="addChartModal" @close="handleBox(false)" :panel-data="panelData" @on-create-success="createSuccess" :show-panel="{}"></chart-box>
+        <transition name="right-box">
+          <chart-box v-if="rightBox.show" ref="addChartModal" @close="handleBox(false)" :panel-data="panelData" @on-create-success="createSuccess" :show-panel="{}"></chart-box>
+        </transition>
         <element-set
           :allowed-all="true"
           v-clickoutside="elementsetHide"

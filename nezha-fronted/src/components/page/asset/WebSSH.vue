@@ -45,7 +45,6 @@
                         :on-change="handleChange"
                         :auto-upload="false"
                 >
-                   <!-- <el-button size="small" type="primary">{{$t('asset.createAssetTab.clickToUpload')}}</el-button>-->
                   <i class="el-icon-upload"></i>
                   <div class="el-upload__text">{{$t('overall.dragFileTip')}}，{{$t('overall.or')}}&nbsp;<em>{{$t('overall.clickUpload')}}</em></div>
                 </el-upload>

@@ -48,14 +48,14 @@
             <div class="top-tool-search">
               <search-input :searchMsg="searchMsg" @search="search"></search-input>
             </div>
-            <button @click="toAdd" class="nz-btn nz-btn-size-normal nz-btn-style-light  margin-l-20"  :title="$t('overall.createMib')"
+            <button @click="add" class="nz-btn nz-btn-size-normal nz-btn-style-light  margin-l-20"  :title="$t('overall.createMib')"
                     id="mib-add">
               <i class="nz-icon-create-square nz-icon"></i>
             </button>
           </div>
         </div>
-        <el-table :data="tableData" border :height="$tableHeight.normal" style="width: 100%;" ref="mibTable" class="nz-table mib-table" v-scrollBar:el-table="'large'" v-loading="loading" @sort-change="tableDataSort">
-          <el-table-column :resizable="false" v-for="(item, index) in tablelable" v-if="item.show" :width="item.width" :class-name="item.prop == 'modelsDetail'?'detail-column':''"
+        <el-table :data="tableData" border :height="$tableHeight.normal" style="width: 100%;" ref="mibTable" class="nz-table mib-table" v-scrollBar:el-table="'large'" v-loading="tools.loading" @sort-change="tableDataSort">
+          <el-table-column :resizable="false" v-for="(item, index) in tools.tablelable" v-if="item.show" :width="item.width" :class-name="item.prop == 'modelsDetail'?'detail-column':''"
                            :key="`col-${index}`" :label="item.label" :sortable="sortableShow(item.prop)"
                            :prop="propTitle(item.prop)">
             <template slot-scope="scope" :column="item">
@@ -92,9 +92,9 @@
                 </div>
               </template>
               <div v-else-if="item.prop == 'option'" class="content-right-options">
-                <span :title="$t('overall.download')" @click="downloadMib(scope.row.id)" class="content-right-option" :id="'mib-download-'+scope.row.id"><i class="el-icon-download"></i></span>
+                <span :title="$t('overall.download')" @click="downloadMib(scope.row)" class="content-right-option" :id="'mib-download-'+scope.row.id"><i class="el-icon-download"></i></span>
                 &nbsp;
-                <span :title="$t('overall.edit')" @click="toEdit(scope.row)" class="content-right-option" :id="'mib-edit-'+scope.row.id"><i class="nz-icon nz-icon-edit"></i></span>
+                <span :title="$t('overall.edit')" @click="edit(scope.row)" class="content-right-option" :id="'mib-edit-'+scope.row.id"><i class="nz-icon nz-icon-edit"></i></span>
                 &nbsp;
                 <span :title="$t('overall.delete')" @click="del(scope.row)" class="content-right-option" :id="'mib-del-'+scope.row.id"><i class="el-icon-delete"></i></span>
               </div>
@@ -109,23 +109,26 @@
               </span>
             </template>
             <template v-slot="scope">
-              <button v-if="scope.$index == 0" class="to-top" :style="{top: toTopBtnTop}" :class="{'to-top-is-hover': tableHover}" v-show="showTopBtn" @click="$toTop('ps', 0)"><i class="nz-icon nz-icon-top"></i></button>
+              <button v-if="scope.$index == 0" class="to-top" :style="{top: tools.toTopBtnTop}" :class="{'to-top-is-hover': tools.tableHover}" v-show="tools.showTopBtn" @click="$toTop('ps', 0)"><i class="nz-icon nz-icon-top"></i></button>
             </template>
           </el-table-column>
         </el-table>
         <Pagination :tableId="tableId" :pageObj="pageObj" @pageNo='pageNo' @pageSize='pageSize' ref="Pagination"></Pagination>
       </template>
-      <mib-browser :showTab="showTab" v-if="showTab == 'browser'" @toFileTab="showTab = 'file'"></mib-browser>
+      <mib-browser :show-tab="showTab" v-if="showTab == 'browser'" @toFileTab="showTab = 'file'"></mib-browser>
     </div>
     </left-menu>
     <element-set
+      v-if="tools.showElementSet"
       v-clickoutside="elementsetHide"
       :table-title="tableTitle"
-      :dropCol="dropCol"
+      :dropCol="tools.dropCol"
       @tablelable="tablelabelEmit"
       ref="elementset"
     ></element-set>
-    <mib-box ref="mibBox" :mib="mib" @reload="getTableData" @after="getTableData()"></mib-box>
+    <transition name="right-box">
+      <mib-box v-if="rightBox.show" ref="mibBox" :mib="mib" @reload="getTableData" @close="closeRightBox"></mib-box>
+    </transition>
   </div>
 
 </template>
@@ -142,14 +145,19 @@
     data() {
       return {
         showTab: 'file', //file/browser
-        loading: false,
-
-        toTopBtnTop: this.$tableHeight.toTopBtnTop, //to-top按钮的top属性
-        tableHover: false, //控制滚动条和top按钮同时出现
-
+        rightBox: {show: false},
+        tools: {
+          loading: false, //是否显示table加载动画
+          toTopBtnTop: this.$tableHeight.toTopBtnTop, //to-top按钮的top属性
+          tableHover: false, //控制滚动条和top按钮同时出现
+          showElementSet: false, //自定义列弹框是否显示
+          showTopBtn: false, //显示To top按钮
+          tablelable: [], //从缓存中加载的table header
+          dropCol: [], //自定义列工具的数据
+        },
         tableId: 'mibTable', //需要分页的table的id，用于记录每页数量
-        showTopBtn: false,
-        mib: {
+        mib: {},
+        blankMib: {
           id: null,
           name: '',
           remark:'',
@@ -198,8 +206,6 @@
             width: 120
           }
         ],
-        tablelable: [],
-        dropCol: [],
         tableData: [],
         searchMsg: { //给搜索框子组件传递的信息
           zheze_none: true,
@@ -222,25 +228,28 @@
     },
     methods: {
       elementsetShow(s, e) {
-        var eventfixed = {
-          shezhi: 0,
-          screen: 0
-        };
-        eventfixed[s] = 1;
-        e.preventDefault();
-        this.$store.commit('setHeaderTable', this.tablelable);
-        this.$store.commit('setEventfixed', eventfixed);
-        const h = document.documentElement.clientHeight;
-        const w = document.documentElement.clientWidth;
-        const dw = this.$refs.elementset.$el.offsetWidth;
-        const dh = this.$refs.elementset.$el.offsetHeight;
-        let positionx =
-          e.clientX + dw <= w - 10 ? e.clientX + 14 : e.clientX + 14 - dw;
-        let positiony =
-          e.clientY + dh <= h - 10
-            ? e.clientY + 20
-            : e.clientY + 20 - (e.clientY + dh - h);
-        this.$store.commit('setPosition', {positionx, positiony});
+        this.tools.showElementSet = true;
+        this.$nextTick(() => {
+          var eventfixed = {
+            shezhi: 0,
+            screen: 0
+          };
+          eventfixed[s] = 1;
+          e.preventDefault();
+          this.$store.commit('setHeaderTable', this.tools.tablelable);
+          this.$store.commit('setEventfixed', eventfixed);
+          const h = document.documentElement.clientHeight;
+          const w = document.documentElement.clientWidth;
+          const dw = this.$refs.elementset.$el.offsetWidth;
+          const dh = this.$refs.elementset.$el.offsetHeight;
+          let positionx =
+            e.clientX + dw <= w - 10 ? e.clientX + 14 : e.clientX + 14 - dw;
+          let positiony =
+            e.clientY + dh <= h - 10
+              ? e.clientY + 20
+              : e.clientY + 20 - (e.clientY + dh - h);
+          this.$store.commit('setPosition', {positionx, positiony});
+        });
       },
       elementsetHide() {
         //悬浮点击空白隐藏
@@ -249,16 +258,22 @@
       tablelabelEmit(data) {
         //获取子组件传过来的参数
         this.$store.commit('setHeaderTable', data);
-        this.tablelable = data;
+        this.tools.tablelable = data;
       },
-      clickos() {
+      clickOutside() {
         this.rightBox.show = false;
       },
-      toEdit: function (u) {
-        this.mib = Object.assign({}, u);
-        this.$refs.mibBox.show(true, true);
+      edit(u) {
+        this.mib = JSON.parse(JSON.stringify(u));
+        this.rightBox.show = true;
       },
-      del: function (u) {
+      closeRightBox(refresh) {
+        this.rightBox.show = false;
+        if (refresh) {
+          this.getTableData();
+        }
+      },
+      del(u) {
         this.$confirm(this.$t("tip.confirmDelete"), {
           confirmButtonText: this.$t("tip.yes"),
           cancelButtonText: this.$t("tip.no"),
@@ -268,23 +283,18 @@
             if (response.code === 200) {
               this.$message({duration: 1000, type: 'success', message: this.$t("tip.deleteSuccess")});
               this.getTableData();
-              this.rightBox.show = false;
             } else {
               this.$message.error(response.msg);
             }
           })
         });
       },
-      detail: function (u) {
-        this.mib = Object.assign({}, u);
-        this.$refs.mibBox.show(true, false);
+      add() {
+        this.mib = this.newMib();
+        this.rightBox.show = true;
       },
-      toAdd: function () {
-        this.cleanMib();
-        this.$refs.mibBox.show(true, true);
-      },
-      esc: function () {
-        this.rightBox.show = false;
+      newMib() {
+        return JSON.parse(JSON.stringify(this.blankMib));
       },
       jumpTo(data, id) {
         bus.$emit("menu-change", data);
@@ -295,13 +305,13 @@
           }
         });
       },
-      getTableData: function () {
+      getTableData() {
         this.tableData = [];
         this.$set(this.searchLabel, "pageNo", this.pageObj.pageNo);
         this.$set(this.searchLabel, "pageSize", this.pageObj.pageSize);
-        this.loading = true;
+        this.tools.loading = true;
         this.$get('mib', this.searchLabel).then(response => {
-          this.loading = false;
+          this.tools.loading = false;
           if (response.code === 200) {
             this.tableData = response.data.list;
             this.pageObj.total = response.data.total
@@ -317,7 +327,7 @@
         localStorage.setItem('nz-pageSize-' + localStorage.getItem('nz-username') + '-' + this.tableId, val);
         this.getTableData();
       },
-      search: function (searchObj) {
+      search(searchObj) {
         let orderBy='';
         if(this.searchLabel.orderBy){
           orderBy=this.searchLabel.orderBy
@@ -334,8 +344,8 @@
         }
         this.getTableData();
       },
-      downloadMib:function(mibId){
-        axios.get('/mib/download?id='+mibId,{responseType: 'blob'}).then(data=>{
+      downloadMib(mib) {
+        axios.get('/mib/download?id='+mib.id,{responseType: 'blob'}).then(data=>{
           let fileName = new Date().getTime()+'.txt';
           let disposition=data.headers['content-disposition'];
           if(disposition){
@@ -357,17 +367,6 @@
             window.URL.revokeObjectURL(link.href);
           }
         })
-      },
-      cleanMib() {
-        this.mib = {
-          id: null,
-          name: '',
-          remark:'',
-          file:'',
-          models:'',
-          file:null,
-        };
-        this.$refs.mibBox.clearData();
       },
       //是否需要排序
       sortableShow(prop){
@@ -403,7 +402,7 @@
         this.getTableData();
       },
     },
-    mounted: function () {
+    mounted() {
       //是否存在分页缓存
       let pageSize = localStorage.getItem('nz-pageSize-' + localStorage.getItem('nz-username') + '-' + this.tableId);
       if (pageSize != 'undefined' && pageSize != null) {
@@ -417,38 +416,31 @@
         if (el._ps_) {
           el.addEventListener("ps-scroll-y", () => {
             if (el._ps_.scrollbarYTop > 50) {
-              this.showTopBtn = true;
+              this.tools.showTopBtn = true;
             } else {
-              this.showTopBtn = false;
+              this.tools.showTopBtn = false;
             }
           });
           el.addEventListener("mouseenter", () => {
-            this.tableHover = true;
+            this.tools.tableHover = true;
           });
           el.addEventListener("mouseleave", () => {
-            this.tableHover = false;
+            this.tools.tableHover = false;
           });
         }
       });
-      this.tablelable = localStorage.getItem("nz-tableTitle-" + localStorage.getItem("nz-username") + "-" + this.$route.path)
+      this.tools.tablelable = localStorage.getItem("nz-tableTitle-" + localStorage.getItem("nz-username") + "-" + this.$route.path)
         ? JSON.parse(localStorage.getItem("nz-tableTitle-" + localStorage.getItem("nz-username") + "-" + this.$route.path))
         : this.tableTitle;
-      this.dropCol = localStorage.getItem("nz-tableTitle-" + localStorage.getItem("nz-username") + "-" + this.$route.path)
+      this.tools.dropCol = localStorage.getItem("nz-tableTitle-" + localStorage.getItem("nz-username") + "-" + this.$route.path)
         ? JSON.parse(localStorage.getItem("nz-tableTitle-" + localStorage.getItem("nz-username") + "-" + this.$route.path))
         : this.tableTitle;
     },
-    watch: {
-
-    }
   }
 </script>
 <style >
   .mib-table .el-divider--horizontal{
     margin:2px 0 !important;
-  }
-  .mib-table td .cell{
-    /*min-height: 60px !important;*/
-    /*padding-bottom: 3px;*/
   }
   .mib-table td .cell .detail-item-content{
     height: 20px;

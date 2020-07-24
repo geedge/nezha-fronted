@@ -1,4 +1,3 @@
-
 <style scoped>
   .el-row {
     margin-bottom: 20px;
@@ -54,198 +53,196 @@
   }
 </style>
 <template key="chartBox">
-  <div v-clickoutside="clickos">
+  <div v-clickoutside="clickOutside">
     <panel-box :panel="panel" @reload="panelReload" ref="panelBox2" v-if="!showPanel.type"></panel-box>
 
-    <transition name="right-box">
-      <div class="right-box right-box-add-chart z-top right-box-chart" v-if="rightBox.show" >
-        <!-- begin--顶部按钮-->
-        <div class="right-box-top-btns">
-          <button id="chart-box-delete" type="button" v-if="chart.id != ''" @click="del(chart)" class="nz-btn nz-btn-size-normal nz-btn-size-alien nz-btn-style-light nz-btn-min-width-82">
-            <span class="right-box-top-btn-icon"><i class="el-icon-delete"></i></span>
-            <span class="right-box-top-btn-txt">{{$t('overall.delete')}}</span>
-          </button>
-        </div>
-        <!-- end--顶部按钮-->
-
-        <!-- begin--标题-->
-        <div class="right-box-title">{{rightBox.title}}</div>
-        <!-- end--标题-->
-
-        <!-- begin--表单-->
-        <el-scrollbar class="right-box-form-box" ref="scrollbar">
-          <el-form class="right-box-form  right-box-form-left" :model="chart" label-width="120px" label-position="right"  :rules="rules" ref="chartForm">
-            <el-form-item :label="$t('dashboard.panel.title')" prop="panel" v-if="!showPanel.type">
-              <el-autocomplete
-                :fetch-suggestions="panelSuggestion"
-                v-model.trim="panelName2"
-                placeholder=""
-                size="small"
-                value-key="name"
-                v-if="!chart.id"
-                popper-class="chart-box-autocomplete no-style-class"
-              >
-              </el-autocomplete>
-              <el-input size="small" v-if="chart.id" readonly="readonly" :value="panelName2"></el-input>
-              <!--<el-select popper-class="chart-box-dropdown"
-                         v-model="panelId" placeholder="" v-if="rightBox.show" size="small">
-                <el-option v-for="item in panelData" :key="item.id" :label="item.name"
-                           :value="item.id" :id="'chart-box-panel-'+item.id">
-                  <span class="config-dropdown-label-txt">{{item.name}}</span>
-                  <div class="config-dropdown-label-icons">
-                  <span class="config-dropdown-btn config-dropdown-btn-delete" @click.stop="deletePanel(item)"
-                        :id="'chart-box-panel-op-del-'+item.id"><i class="el-icon-delete"></i></span>
-                    <span class="config-dropdown-btn" @click.stop="editPanel(item)"
-                          :id="'chart-box-panel-op-edit-'+item.id"><i class="nz-icon nz-icon-edit"></i></span>
-                  </div>
-                </el-option>
-              </el-select>
-
-              <div class="right-box-row-btn" v-if="rightBox.show" @click="toAddPanel">
-                <i class="el-icon-plus" id="chart-box-panel-plus"></i>
-              </div>-->
-
-            </el-form-item>
-            <el-form-item :label='$t("dashboard.panel.chartForm.chartName")' prop="title">
-              <el-input size="small" maxlength="64" show-word-limit v-model="chart.title"></el-input>
-            </el-form-item>
-
-            <div class="right-box-sub-title">{{$t('dashboard.panel.chartForm.option')}}</div>
-            <div class="line-100" style="margin-bottom: 20px;"></div>
-
-            <!-- type unit start-->
-            <el-form-item :label="$t('dashboard.panel.chartForm.type')" prop="type" class="half-form-item">
-              <el-select class="right-box-row-with-btn" @change="chartTypeChange" value-key="chartType" popper-class="chart-box-dropdown-small" v-model="chart.type" placeholder="" size="mini">
-                <el-option v-for="item in chartTypeList" :key="item.id" :label="item.name" :value="item.id">
-                  <span class="panel-dropdown-label-txt" >{{item.name}}</span>
-                </el-option>
-              </el-select>
-            </el-form-item>
-
-            <el-form-item :label="$t('dashboard.panel.chartForm.unit')" prop="unit" class="half-form-item" style="width: 415px;">
-              <el-cascader filterable placeholder="" popper-class="dc-dropdown" size="mini"  style="width: 100%"
-                           :options="unitOptions"
-                           :props="{ expandTrigger: 'hover',emitPath:false }"
-                           :show-all-levels="false"
-                           v-model="chart.unit"
-                           @change="unitSelected"
-              >
-              </el-cascader>
-            </el-form-item>
-            <!--type unit end-->
-
-            <el-form-item :label="$t('dashboard.panel.chartForm.width')" prop="span" class="half-form-item">
-              <el-select class="right-box-row-with-btn"  value-key="chartSpan" popper-class="chart-box-dropdown-mini" v-model="chart.span" placeholder="" size="mini">
-                <el-option v-for="item in spanList" :key="item" :label="'span-' + item" :value="item">
-                  <span class="panel-dropdown-label-txt" > span-{{item}}</span>
-                </el-option>
-              </el-select>
-            </el-form-item>
-
-            <el-form-item :label="$t('dashboard.panel.chartForm.high')" prop="hight"  class="half-form-item" style="width: 415px;">
-              <el-autocomplete
-                v-model="chart.height"
-                :fetch-suggestions="querySearch"
-                placeholder=""
-                size="mini"
-                popper-class="popper-z-index no-style-class"
-                @select="handleSelect">
-                <template slot-scope="{ item }">
-                  <div class="name">{{ item }}</div>
-                </template>
-              </el-autocomplete>
-              <span class="nz-input-append">px</span>
-            </el-form-item>
-
-
-            <el-form-item :label="$t('dashboard.panel.chartForm.sync')" v-if="showPanel.type && showPanel.type == 'model'">
-              <el-switch class="exporter-switch" v-model="chart.sync" active-color="#ee9d3f" :active-value="1" :inactive-value="0"></el-switch>
-            </el-form-item>
-
-            <el-form-item v-if="isUrl" :label='$t("dashboard.panel.chartForm.url")' prop="param.url" :rules="{ required: true,  message: $t('validate.required'), trigger: 'blur' }">
-              <el-input size="small" type="textarea" maxlength="1024" show-word-limit v-model="chart.param.url"></el-input>
-            </el-form-item>
-
-            <el-form-item v-if="chart.type == 'line' || chart.type == 'bar' || chart.type == 'stackArea'" :label='$t("dashboard.panel.chartForm.threshold")' prop="param.threshold"  class="half-form-item">
-              <el-input size="mini" type="input"  v-model="chart.param.threshold"></el-input>
-            </el-form-item>
-
-            <div v-if="!isUrl&&!isAlert" class="right-box-sub-title">
-              <span>{{$t('alert.config.expr')}}</span>
-              <span v-if="!isSingleStat" class="float-right" @click="addExpression"><i style="font-size: 16px; cursor: pointer;" class="nz-icon nz-icon-create-square"></i></span>
-            </div>
-            <div v-if="isAlert" class="right-box-sub-title">{{$t('dashboard.panel.chartForm.alertParam.param')}}</div>
-            <div v-if="!isUrl" class="line-100"></div>
-
-            <el-row v-if="isAlert" class="element-item">
-              <alert-chart-param ref="alertParamBox" @on-enter-complate="getAlertParam"></alert-chart-param>
-            </el-row>
-
-            <el-row v-if="!isUrl &&!isAlert" class="element-item" style="" v-for="index of promqlKeys.length" :key="'ele' + index">
-              <!--<chart-metric ref="chartTag"
-                            :pointer="index"
-                            :metric-list="metricList"
-                            :metricCascaderList="metricCascaderList"
-                            :metricAllData="metricAllData"
-                            :count-total="elements.length"
-                            @on-delete-target="deleteTarget"
-                            @sub-save-ok="subOk"
-                            @on-add-target-success="getTarget"
-              ></chart-metric>-->
-              <promql-input
-                :ref="'promql-'+(index-1)"
-                :id="promqlKeys[index-1]"
-                :key="promqlKeys[index-1]"
-                :expression-list="expressions"
-                :index="index-1"
-                :styleType="2"
-                :plugins="['metric-selector', 'metric-input', 'remove']"
-                @change="expressionChange"
-                @removeExpression="removeExpression"
-              ></promql-input>
-              <el-row>
-                <template v-if="chart.type != 'singleStat'">
-                  <el-col style="width: 120px; padding-right: 20px; text-align: right; color: #666">
-                    {{$t('dashboard.panel.chartForm.legend')}}&nbsp;
-                    <el-popover :content="$t('dashboard.panel.chartForm.legendTip')" placement="top" width="150" trigger="hover">
-                      <i slot="reference" class="nz-icon nz-icon-info-normal" style="font-size: 12px; -webkit-transform:scale(0.75);display:inline-block;" @mouseover="rz"></i>
-                    </el-popover>
-                  </el-col>
-                  <el-col style="width: calc(100% - 120px);">
-                    <el-input v-model="legends[index-1]" type="text" size="small"></el-input>
-                  </el-col>
-                </template>
-                <template v-else>
-                  <el-col style="width: 120px; padding-right: 20px; text-align: right; color: #666">
-                    {{$t('dashboard.panel.chartForm.statistics')}}&nbsp;
-                  </el-col>
-                  <el-col style="width: calc(100% - 120px);">
-                    <el-select popper-class="chart-box-dropdown-mini" v-model="statistics" placeholder="" size="small">
-                      <el-option v-for="item in statisticsList" :key="item.id" :label="item.name" :value="item.id">
-                        <span class="panel-dropdown-label-txt" >{{item.name}}</span>
-                      </el-option>
-                    </el-select>
-                  </el-col>
-                </template>
-              </el-row>
-            </el-row>
-          </el-form>
-        </el-scrollbar>
-
-        <!--底部按钮-->
-        <div class="right-box-bottom-btns">
-          <button @click="esc" id="chart-box-esc" class="nz-btn nz-btn-size-normal nz-btn-style-light nz-btn-min-width-100">
-            <span>{{$t('overall.cancel')}}</span>
-          </button>
-          <button @click="preview" id="chart-box-preview" class="nz-btn nz-btn-size-normal nz-btn-style-normal nz-btn-min-width-100">
-            <span>{{$t('overall.preview')}}</span>
-          </button>
-          <button @click="confirmAdd" id="chart-box-save" class="nz-btn nz-btn-size-normal nz-btn-style-normal nz-btn-min-width-100">
-            <span>{{$t('overall.save')}}</span>
-          </button>
-        </div>
+    <div class="right-box right-box-add-chart z-top right-box-chart">
+      <!-- begin--顶部按钮-->
+      <div class="right-box-top-btns">
+        <button id="chart-box-delete" type="button" v-if="chart.id" @click="del(chart)" class="nz-btn nz-btn-size-normal nz-btn-size-alien nz-btn-style-light nz-btn-min-width-82">
+          <span class="right-box-top-btn-icon"><i class="el-icon-delete"></i></span>
+          <span class="right-box-top-btn-txt">{{$t('overall.delete')}}</span>
+        </button>
       </div>
-    </transition>
+      <!-- end--顶部按钮-->
+
+      <!-- begin--标题-->
+      <div class="right-box-title">{{rightBox.title}}</div>
+      <!-- end--标题-->
+
+      <!-- begin--表单-->
+      <el-scrollbar class="right-box-form-box" ref="scrollbar">
+        <el-form class="right-box-form  right-box-form-left" :model="chart" label-width="120px" label-position="right"  :rules="rules" ref="chartForm">
+          <el-form-item :label="$t('dashboard.panel.title')" prop="panel" v-if="!showPanel.type">
+            <el-autocomplete
+              :fetch-suggestions="panelSuggestion"
+              v-model.trim="panelName2"
+              placeholder=""
+              size="small"
+              value-key="name"
+              v-if="!chart.id"
+              popper-class="chart-box-autocomplete no-style-class"
+            >
+            </el-autocomplete>
+            <el-input size="small" v-if="chart.id" readonly="readonly" :value="panelName2"></el-input>
+            <!--<el-select popper-class="chart-box-dropdown"
+                       v-model="panelId" placeholder="" v-if="rightBox.show" size="small">
+              <el-option v-for="item in panelData" :key="item.id" :label="item.name"
+                         :value="item.id" :id="'chart-box-panel-'+item.id">
+                <span class="config-dropdown-label-txt">{{item.name}}</span>
+                <div class="config-dropdown-label-icons">
+                <span class="config-dropdown-btn config-dropdown-btn-delete" @click.stop="deletePanel(item)"
+                      :id="'chart-box-panel-op-del-'+item.id"><i class="el-icon-delete"></i></span>
+                  <span class="config-dropdown-btn" @click.stop="editPanel(item)"
+                        :id="'chart-box-panel-op-edit-'+item.id"><i class="nz-icon nz-icon-edit"></i></span>
+                </div>
+              </el-option>
+            </el-select>
+
+            <div class="right-box-row-btn" v-if="rightBox.show" @click="toAddPanel">
+              <i class="el-icon-plus" id="chart-box-panel-plus"></i>
+            </div>-->
+
+          </el-form-item>
+          <el-form-item :label='$t("dashboard.panel.chartForm.chartName")' prop="title">
+            <el-input size="small" maxlength="64" show-word-limit v-model="chart.title"></el-input>
+          </el-form-item>
+
+          <div class="right-box-sub-title">{{$t('dashboard.panel.chartForm.option')}}</div>
+          <div class="line-100" style="margin-bottom: 20px;"></div>
+
+          <!-- type unit start-->
+          <el-form-item :label="$t('dashboard.panel.chartForm.type')" prop="type" class="half-form-item">
+            <el-select class="right-box-row-with-btn" @change="chartTypeChange" value-key="chartType" popper-class="chart-box-dropdown-small" v-model="chart.type" placeholder="" size="mini">
+              <el-option v-for="item in chartTypeList" :key="item.id" :label="item.name" :value="item.id">
+                <span class="panel-dropdown-label-txt" >{{item.name}}</span>
+              </el-option>
+            </el-select>
+          </el-form-item>
+
+          <el-form-item :label="$t('dashboard.panel.chartForm.unit')" prop="unit" class="half-form-item" style="width: 415px;">
+            <el-cascader filterable placeholder="" popper-class="dc-dropdown" size="mini"  style="width: 100%"
+                         :options="unitOptions"
+                         :props="{ expandTrigger: 'hover',emitPath:false }"
+                         :show-all-levels="false"
+                         v-model="chart.unit"
+                         @change="unitSelected"
+            >
+            </el-cascader>
+          </el-form-item>
+          <!--type unit end-->
+
+          <el-form-item :label="$t('dashboard.panel.chartForm.width')" prop="span" class="half-form-item">
+            <el-select class="right-box-row-with-btn"  value-key="chartSpan" popper-class="chart-box-dropdown-mini" v-model="chart.span" placeholder="" size="mini">
+              <el-option v-for="item in spanList" :key="item" :label="'span-' + item" :value="item">
+                <span class="panel-dropdown-label-txt" > span-{{item}}</span>
+              </el-option>
+            </el-select>
+          </el-form-item>
+
+          <el-form-item :label="$t('dashboard.panel.chartForm.high')" prop="hight"  class="half-form-item" style="width: 415px;">
+            <el-autocomplete
+              v-model="chart.height"
+              :fetch-suggestions="querySearch"
+              placeholder=""
+              size="mini"
+              popper-class="popper-z-index no-style-class"
+              @select="handleSelect">
+              <template slot-scope="{ item }">
+                <div class="name">{{ item }}</div>
+              </template>
+            </el-autocomplete>
+            <span class="nz-input-append">px</span>
+          </el-form-item>
+
+
+          <el-form-item :label="$t('dashboard.panel.chartForm.sync')" v-if="showPanel.type && showPanel.type == 'model'">
+            <el-switch class="exporter-switch" v-model="chart.sync" active-color="#ee9d3f" :active-value="1" :inactive-value="0"></el-switch>
+          </el-form-item>
+
+          <el-form-item v-if="isUrl" :label='$t("dashboard.panel.chartForm.url")' prop="param.url" :rules="{ required: true,  message: $t('validate.required'), trigger: 'blur' }">
+            <el-input size="small" type="textarea" maxlength="1024" show-word-limit v-model="chart.param.url"></el-input>
+          </el-form-item>
+
+          <el-form-item v-if="chart.type == 'line' || chart.type == 'bar' || chart.type == 'stackArea'" :label='$t("dashboard.panel.chartForm.threshold")' prop="param.threshold"  class="half-form-item">
+            <el-input size="mini" type="input"  v-model="chart.param.threshold"></el-input>
+          </el-form-item>
+
+          <div v-if="!isUrl&&!isAlert" class="right-box-sub-title">
+            <span>{{$t('alert.config.expr')}}</span>
+            <span v-if="!isSingleStat" class="float-right" @click="addExpression"><i style="font-size: 16px; cursor: pointer;" class="nz-icon nz-icon-create-square"></i></span>
+          </div>
+          <div v-if="isAlert" class="right-box-sub-title">{{$t('dashboard.panel.chartForm.alertParam.param')}}</div>
+          <div v-if="!isUrl" class="line-100"></div>
+
+          <el-row v-if="isAlert" class="element-item">
+            <alert-chart-param ref="alertParamBox" @on-enter-complate="getAlertParam"></alert-chart-param>
+          </el-row>
+
+          <el-row v-if="!isUrl &&!isAlert" class="element-item" style="" v-for="index of promqlKeys.length" :key="'ele' + index">
+            <!--<chart-metric ref="chartTag"
+                          :pointer="index"
+                          :metric-list="metricList"
+                          :metricCascaderList="metricCascaderList"
+                          :metricAllData="metricAllData"
+                          :count-total="elements.length"
+                          @on-delete-target="deleteTarget"
+                          @sub-save-ok="subOk"
+                          @on-add-target-success="getTarget"
+            ></chart-metric>-->
+            <promql-input
+              :ref="'promql-'+(index-1)"
+              :id="promqlKeys[index-1]"
+              :key="promqlKeys[index-1]"
+              :expression-list="expressions"
+              :index="index-1"
+              :styleType="2"
+              :plugins="['metric-selector', 'metric-input', 'remove']"
+              @change="expressionChange"
+              @removeExpression="removeExpression"
+            ></promql-input>
+            <el-row>
+              <template v-if="chart.type != 'singleStat'">
+                <el-col style="width: 120px; padding-right: 20px; text-align: right; color: #666">
+                  {{$t('dashboard.panel.chartForm.legend')}}&nbsp;
+                  <el-popover :content="$t('dashboard.panel.chartForm.legendTip')" placement="top" width="150" trigger="hover">
+                    <i slot="reference" class="nz-icon nz-icon-info-normal" style="font-size: 12px; -webkit-transform:scale(0.75);display:inline-block;" @mouseover="rz"></i>
+                  </el-popover>
+                </el-col>
+                <el-col style="width: calc(100% - 120px);">
+                  <el-input v-model="legends[index-1]" type="text" size="small"></el-input>
+                </el-col>
+              </template>
+              <template v-else>
+                <el-col style="width: 120px; padding-right: 20px; text-align: right; color: #666">
+                  {{$t('dashboard.panel.chartForm.statistics')}}&nbsp;
+                </el-col>
+                <el-col style="width: calc(100% - 120px);">
+                  <el-select popper-class="chart-box-dropdown-mini" v-model="statistics" placeholder="" size="small">
+                    <el-option v-for="item in statisticsList" :key="item.id" :label="item.name" :value="item.id">
+                      <span class="panel-dropdown-label-txt" >{{item.name}}</span>
+                    </el-option>
+                  </el-select>
+                </el-col>
+              </template>
+            </el-row>
+          </el-row>
+        </el-form>
+      </el-scrollbar>
+
+      <!--底部按钮-->
+      <div class="right-box-bottom-btns">
+        <button @click="esc" id="chart-box-esc" class="nz-btn nz-btn-size-normal nz-btn-style-light nz-btn-min-width-100">
+          <span>{{$t('overall.cancel')}}</span>
+        </button>
+        <button @click="preview" id="chart-box-preview" class="nz-btn nz-btn-size-normal nz-btn-style-normal nz-btn-min-width-100">
+          <span>{{$t('overall.preview')}}</span>
+        </button>
+        <button @click="confirmAdd" id="chart-box-save" class="nz-btn nz-btn-size-normal nz-btn-style-normal nz-btn-min-width-100">
+          <span>{{$t('overall.save')}}</span>
+        </button>
+      </div>
+    </div>
     <!--preview -->
     <chart-preview :panelId="panelId" ref="chartsPreview" ></chart-preview>
   </div>
@@ -275,10 +272,7 @@
     mixins: [rz],
     data() {
       return {
-        rightBox: {
-          show: false,
-          title: this.$t('dashboard.panel.createChartTitle'),
-        },
+        rightBox: {title: ""},
         statisticsList:[
           {
             id:"min",
@@ -408,7 +402,6 @@
       'promql-input': promqlInput,
     },
     mounted() {
-      this.rightBox.show = true;
       this.isUrl = false;
       this.isSingleStat = false;
       this.$nextTick(() => {
@@ -419,7 +412,7 @@
       });
     },
     methods: {
-      clickos() {
+      clickOutside() {
         this.esc();
       },
       toAddPanel() {
@@ -551,10 +544,7 @@
 
       /*关闭弹框*/
       esc() {
-        this.rightBox.show = false;
-        setTimeout(() => {
-          this.$emit("close");
-        }, 200);
+        this.$emit("close");
       },
 
       /*metric部分相关方法--begin*/

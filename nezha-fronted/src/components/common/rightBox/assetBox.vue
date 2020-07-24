@@ -1,232 +1,165 @@
 <template>
-  <transition name="right-box">
-    <div class="right-box right-box-add-asset" v-if="editUnitShow" @click="editQuit" id="asset-edit-quit" v-clickoutside="clickos">
-      <!--顶部按钮-->
-      <div class="right-box-top-btns">
-        <button v-if="!tabView && pageObj.id" type="button" @click="deleteData('asset', pageObj.id)" id="asset-edit-del"
-                class="nz-btn nz-btn-size-normal nz-btn-size-alien nz-btn-style-light nz-btn-min-width-82">
-          <span class="right-box-top-btn-icon"><i class="el-icon-delete"></i></span>
-          <span class="right-box-top-btn-txt">{{$t('overall.delete')}}</span>
-        </button>
-        <button v-if="tabView" id="asset-edit-edit" type="button" @click="tabView=false"
-                class="nz-btn nz-btn-size-normal nz-btn-size-alien nz-btn-style-light nz-btn-min-width-82">
-          <span class="right-box-top-btn-icon"><i class="nz-icon nz-icon-edit"></i></span>
-          <span class="right-box-top-btn-txt">{{$t('overall.edit')}}</span>
-        </button>
-      </div>
+  <div class="right-box right-box-asset" v-clickoutside="clickOutside">
+    <!--顶部按钮-->
+    <div class="right-box-top-btns">
+      <button v-if="editAsset.id" type="button" @click="del" id="asset-edit-del"
+              class="nz-btn nz-btn-size-normal nz-btn-size-alien nz-btn-style-light nz-btn-min-width-82">
+        <span class="right-box-top-btn-icon"><i class="el-icon-delete"></i></span>
+        <span class="right-box-top-btn-txt">{{$t('overall.delete')}}</span>
+      </button>
+    </div>
 
-      <div class="right-box-title">
-        {{tabView == true ? $t('asset.asset') : ''}}
-        {{tabView == false && pageObj.id ? $t('asset.EditAsset') : ''}}
-        {{tabView == false && !pageObj.id ? $t('asset.createAssetTab.title') : ''}}
-      </div>
+    <div class="right-box-title">{{editAsset.id ? ($t("asset.editAsset") + "  ID：" + editAsset.id) : $t("asset.createAsset")}}</div>
 
-      <el-scrollbar class="right-box-form-box" ref="scrollbar">
-        <el-form ref="assetEditForm" :model="assetData" label-width="120px" class="right-box-form right-box-form-left" :rules="rules">
-          <el-form-item :label="$t('asset.createAssetTab.sn')" prop="sn">
-            <el-input size="small" v-if="!tabView" v-model="assetData.sn"/>
-            <el-popover trigger="hover" placement="bottom-start" :content="assetData.sn" >
-              <span slot="reference" class="sidebar-info-item-txt" style="margin-bottom: -14px; display: block;" v-if="tabView">{{assetData.sn}}</span>
-            </el-popover>
-          </el-form-item>
-          <el-form-item :label="$t('asset.createAssetTab.host')" prop="host">
-            <el-input size="small" v-if="!tabView" v-model="assetData.host"/>
-            <span v-if="tabView">{{assetData.host}}</span>
-          </el-form-item>
-          <el-form-item :label="$t('asset.createAssetTab.state')">
-            <div v-if="!tabView" class="select-style">
-              <el-select size="small" v-model="assetData.state" placeholder="" popper-class="asset-dropdown" >
-                <el-option
-                  :id="'asset-edit-state-op-'+item.value"
-                  v-for="item in assetStateOption"
-                  :key="item.value"
-                  :label="item.label"
-                  :value="item.value">
-                </el-option>
-              </el-select>
-            </div>
-            <span v-if="tabView">{{assetData.state==1 ? $t('asset.createAssetTab.inStock'): $t('asset.createAssetTab.notInStock')}}</span>
-          </el-form-item>
-          <el-form-item :label="$t('asset.tableTitle.modules')" v-if="tabView">
-            <div v-if="assetViewData.moduleNum > 0" >
-              <module-list-pop :asset-id="obj.id + ''" @openModuleBox="openModuleBox" placement="left" :ref="'moduleListPop' + obj.id">
-                <template v-slot:optionZone>
-                  <button class="nz-btn nz-btn-size-normal nz-btn-style-light nz-btn-min-width-75">{{assetViewData.moduleNum}}</button>
-                </template>
-              </module-list-pop>
-            </div>
-            <button type="button" v-else class="nz-btn nz-btn-size-normal nz-btn-style-light nz-btn-min-width-75 nz-btn-disabled">{{assetViewData.moduleNum}}</button>
-          </el-form-item>
-          <el-form-item :label="$t('asset.tableTitle.alerts')" v-if="tabView">
-            <button type="button" v-if="assetViewData.alertNum > 0" id="'asset-alerts-'+scope.row.id" @click="jumpToAlertMsg(obj.id)" class="nz-btn nz-btn-size-normal nz-btn-style-light nz-btn-min-width-75">{{assetViewData.alertNum}}</button>
-            <button type="button" v-else class="nz-btn nz-btn-size-normal nz-btn-style-light nz-btn-min-width-75 nz-btn-disabled">{{assetViewData.alertNum}}</button>
-          </el-form-item>
-          <div class="right-box-sub-title">{{$t('asset.createAssetTab.assetInfo')}}</div>
-          <div class="line-100 right-box-line"></div>
-          <!------------------------------------------资产类型---------------------------------------------->
-          <el-form-item :label="$t('asset.createAssetTab.assetType')" class="right-box-form-content" prop="assetType">
-            <el-select popper-class="asset-dropdown" size="small" v-if="!tabView" v-model="assetType" clearable @visible-change="cancelEdit"
-                       @change="getAllModelOptionData()">
+    <el-scrollbar class="right-box-form-box" ref="scrollbar">
+      <el-form ref="assetEditForm" :model="editAsset" label-width="120px" class="right-box-form right-box-form-left" :rules="rules">
+        <el-form-item :label="$t('asset.sn')" prop="sn">
+          <el-input size="small" v-model="editAsset.sn"/>
+        </el-form-item>
+        <el-form-item :label="$t('asset.host')" prop="host">
+          <el-input size="small" v-model="editAsset.host"/>
+        </el-form-item>
+        <el-form-item :label="$t('asset.state')">
+          <div class="select-style">
+            <el-select size="small" v-model="editAsset.state" placeholder="" popper-class="asset-dropdown" >
               <el-option
-                :id="'asset-edit-type-op-'+item.id"
-                v-for="item in assetTypeOptionData"
-                :key="item.id"
-                :value="item.code"
-                :label="item.value"
-              >
-                <span class="asset-dropdown-label-txt" v-if="!item.isEdit">{{ item.value }}</span>
-                <span class="asset-dropdown-label-input" v-if="item.isEdit" @click.stop="editing(item)">
-                  <el-input type="text" v-model="item.value" size="small"/>
-                </span>
-                <div class="asset-dropdown-label-icons">
-                  <span class="asset-dropdown-btn asset-dropdown-btn-delete" @click.stop="delOptionData(item)" :id="'asset-edit-type-op-del-'+item.id">
-                    <i class="el-icon-delete"></i>
-                  </span>
-                  <span class="asset-dropdown-btn" @click.stop="editOptionData(item,'type')" :id="'asset-edit-type-op-edit-'+item.id">
-                    <i class="nz-icon nz-icon-edit" v-if="!item.isEdit"></i>
-                    <i class="el-icon-check" v-if="item.isEdit"
-                       @click="editData('sys/dict/update',item)"></i>
-                  </span>
-                </div>
+                :id="'asset-edit-state-op-'+item.value"
+                v-for="item in $CONSTANTS.asset.stateData"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value">
               </el-option>
             </el-select>
-            <span v-if="tabView">{{assetViewData.assetType}}</span>
-          </el-form-item>
-          <!------------------------------------------厂商/型号---------------------------------------------->
-          <el-form-item :label="$t('asset.createAssetTab.vendorModel')" class="right-box-form-content" prop="modelId">
-            <template v-if="!tabView">
-              <el-cascader
-                :options="vendorTypeOptionData"
-                :key="isResourceShow"
-                :props="{emitPath:false}"
-                :disabled="this.assetType!=''?false:true"
-                v-model="assetData.modelId"
-                clearable
-                size="small"
-                placeholder=""
-                class="right-box-row-with-btn"
-                @change="modelChange"
-              >
-              </el-cascader>
-              <div class="right-box-row-btn" v-if="!tabView" @click="addVendor"><i class="el-icon-plus"></i>
-              </div>
-            </template>
-            <span v-if="tabView">{{assetViewData.vendor}}   {{assetViewData.model}}</span>
-          </el-form-item>
-          <el-form-item :label="$t('asset.createAssetTab.purchaseDate')">
-            <div class="select-style" v-if="!tabView">
-              <el-date-picker
-                size="small"
-                v-model="assetData.purchaseDate"
-                value-format="yyyy-MM-dd"
-                type="date"
-                style="width: 100%"
-                placeholder="">
-              </el-date-picker>
+          </div>
+        </el-form-item>
+        <div class="right-box-sub-title">{{$t('asset.assetInfo')}}</div>
+        <div class="line-100 right-box-line"></div>
+        <!------------------------------------------资产类型---------------------------------------------->
+        <el-form-item :label="$t('asset.assetType')" class="right-box-form-content" prop="model.type.code">
+          <el-select popper-class="asset-dropdown" size="small" v-model="editAsset.model.type.code" @change="getVendorAndModelOptionData(editAsset.model.type.code)">
+            <el-option
+              :id="'asset-edit-type-op-'+item.id"
+              v-for="item in assetTypeData"
+              :key="item.id"
+              :value="item.code"
+              :label="item.value"
+            >
+            </el-option>
+          </el-select>
+        </el-form-item>
+        <!------------------------------------------厂商/型号---------------------------------------------->
+        <el-form-item :label="$t('asset.vendorModel')" class="right-box-form-content" prop="modelId">
+          <el-cascader
+            :options="vendorAndModelOptionData"
+            :props="{emitPath: false}"
+            :disabled="editAsset.model.type.code ? false : true"
+            v-model="editAsset.modelId"
+            clearable
+            size="small"
+            placeholder=""
+            class="right-box-row-with-btn"
+            @change="modelChange"
+          >
+          </el-cascader>
+          <div class="right-box-row-btn" @click="addVendor(editAsset.model.type.code)"><i class="el-icon-plus"></i></div>
+        </el-form-item>
+        <el-form-item :label="$t('asset.purchaseDate')">
+          <div class="select-style">
+            <el-date-picker
+              size="small"
+              v-model="editAsset.purchaseDate"
+              value-format="yyyy-MM-dd"
+              type="date"
+              style="width: 100%"
+              placeholder="">
+            </el-date-picker>
+          </div>
+        </el-form-item>
+        <!--tag-->
+        <div class="right-box-sub-title">{{$t('overall.tag')}}
+          <div class="right-box-form-btns">
+          <button style="display: none;">第一个button会出现意料之外的hover样式，找不到原因，只好加个不可见的button规避问题</button>
+          <button id="module-add-param" type="button" @click="addTag">
+            <span><i style="font-size: 12px;" class="nz-icon nz-icon-create-square"></i></span>
+          </button>
+        </div></div>
+        <div class="line-100 right-box-line"></div>
+        <el-form-item>
+          <template slot="label">
+            <span></span>
+          </template>
+          <div class="tag-edit-box">
+            <div class="tag-edit-box-head">
+              <div>Tag</div>
+              <div>Value</div>
+              <div>Action</div>
             </div>
-            <span v-if="tabView">{{assetData.purchaseDate}}</span>
-          </el-form-item>
-          <!--tag-->
-          <div class="right-box-sub-title">{{$t('overall.tag')}}
-            <div class="right-box-form-btns">
-            <button style="display: none;">第一个button会出现意料之外的hover样式，找不到原因，只好加个不可见的button规避问题</button>
-            <button id="module-add-param" type="button" @click="addTag">
+            <el-scrollbar ref="tagEditBoxScrollbar" style="height: calc(100% - 32px);">
+              <div class="tag-edit-box-body" v-for="(item, index) in editAsset.tags">
+                <el-form-item class="tag-edit tag-edit-tag" :rules="{required: true, message: $t('validate.required'), trigger: 'blur'}" :prop="'tags.' + index + '.tag'">
+                  <el-input placeholder="tag" size="mini" v-model="item.tag"></el-input>
+                </el-form-item>
+                <el-form-item class="tag-edit tag-edit-value" :rules="{required: true, message: $t('validate.required'), trigger: 'blur'}" :prop="'tags.' + index + '.value'">
+                  <el-input placeholder="value" size="mini" v-model="item.value"></el-input>
+                </el-form-item>
+                <div class="param-box-row-symbol" :id="'asset-tag-remove-'+index" @click.stop="removeTag(index)"><i class="nz-icon nz-icon-minus-square"></i></div>
+              </div>
+            </el-scrollbar>
+          </div>
+        </el-form-item>
+
+        <div class="right-box-sub-title">{{$t('asset.location')}}</div>
+        <div class="line-100 right-box-line"></div>
+        <!------------------------------------------IDC---------------------------------------------->
+        <el-form-item :label="$t('asset.location')" prop="locationInfo" :rules="[{validator:locationValidator, trigger:'blur'}]">
+          <location-cascader :disabled="editAsset.modelId ? false : true" :default-model-u-size="modelSize" @change="setLocationData" ref="locationCascader" :idc-option="dcData"></location-cascader>
+        </el-form-item>
+        <!--cli-->
+        <div class="right-box-sub-title">{{$t('config.account.account')}}
+          <el-popover placement="right" width="70" trigger="click" :disabled="editAsset.accounts.length == 3" v-model.sync="showAccountOp" popper-class="no-style-class">
+            <button slot="reference" id="add-type" type="button" class="float-right" :class="{'nz-btn-disabled': editAsset.accounts.length == 3}">
               <span><i style="font-size: 12px;" class="nz-icon nz-icon-create-square"></i></span>
             </button>
-          </div></div>
-          <div class="line-100 right-box-line"></div>
-          <el-form-item>
-            <template slot="label">
-              <span></span>
-            </template>
-            <div class="tag-edit-box">
-              <div class="tag-edit-box-head">
-                <div>Tag</div>
-                <div>Value</div>
-                <div>Action</div>
-              </div>
-              <el-scrollbar ref="tagEditBoxScrollbar" style="height: calc(100% - 32px);">
-                <div class="tag-edit-box-body" v-for="(item, index) in assetData.tags">
-                  <el-form-item class="tag-edit tag-edit-tag" :rules="{required: true, message: $t('validate.required'), trigger: 'blur'}" :prop="'tags.' + index + '.tag'">
-                    <el-input placeholder="tag" size="mini" v-model="item.tag"></el-input>
-                  </el-form-item>
-                  <el-form-item class="tag-edit tag-edit-value" :rules="{required: true, message: $t('validate.required'), trigger: 'blur'}" :prop="'tags.' + index + '.value'">
-                    <el-input placeholder="value" size="mini" v-model="item.value"></el-input>
-                  </el-form-item>
-                  <div class="param-box-row-symbol" :id="'asset-tag-remove-'+index" @click.stop="removeTag(index)"><i class="nz-icon nz-icon-minus-square"></i></div>
-                </div>
-              </el-scrollbar>
-            </div>
-          </el-form-item>
-          <!------------------------------------------impi---------------------------------------------->
-          <!--<div v-if="assetType == 1">
-            <div class="right-box-sub-title">{{$t('asset.createAssetTab.impi.title')}}</div>
-            <div class="line-100 right-box-line"></div>
-            <el-form-item :label="$t('asset.createAssetTab.impi.host')" class="right-box-form-content" prop="impi.host">
-              <el-input v-model="assetData.impi.host" size="small" v-if="!tabView"></el-input>
-              <span v-if="tabView">{{assetData.impi.host}}</span>
-            </el-form-item>
-            <el-form-item :label="$t('asset.createAssetTab.impi.port')" class="right-box-form-content" prop="impi.port">
-              <el-input v-model="assetData.impi.port" size="small" v-if="!tabView"></el-input>
-              <span v-if="tabView">{{assetData.impi.port}}</span>
-            </el-form-item>
-          </div>-->
-          <div class="right-box-sub-title">{{$t('asset.createAssetTab.location')}}</div>
-          <div class="line-100 right-box-line"></div>
-          <!------------------------------------------IDC---------------------------------------------->
-          <el-form-item :label="$t('asset.createAssetTab.location')" prop="locationInfo" :rules="[{validator:locationValidator,trigger:'blur'}]">
-            <location-cascader :disabled="assetData.modelId !=''?false:true" :default-model-u-size="modelSize" @change="setLocationData" :init-data="initLocationData" ref="locationCascader" :idc-option="IDCOptionData"></location-cascader>
-          </el-form-item>
-          <!--cli-->
-          <div class="right-box-sub-title">{{$t('config.account.account')}}
-            <!--<el-switch v-if="!tabView" style="float: right;" v-model="accountSwitch" active-color="#ee9d3f" :disabled="parseInt(assetData.exporter)===1"></el-switch>-->
-            <el-popover placement="right" width="70" trigger="click" :disabled="assetData.accounts.length == 3" v-model.sync="showAccountOp" popper-class="no-style-class">
-              <button slot="reference" id="add-type" type="button" class="float-right" :class="{'nz-btn-disabled': assetData.accounts.length == 3}">
-                <span><i style="font-size: 12px;" class="nz-icon nz-icon-create-square"></i></span>
-              </button>
-              <ul class="el-select-dropdown__list">
-                <li @click="addAccount(type)" v-for="(type, index) in selectableAccountTypes" :key="index" class="el-select-dropdown__item"><span>{{type}}</span></li>
-              </ul>
-            </el-popover>
+            <ul class="el-select-dropdown__list">
+              <li @click="addAccount(type)" v-for="(type, index) in selectableAccountTypes" :key="index" class="el-select-dropdown__item"><span>{{type}}</span></li>
+            </ul>
+          </el-popover>
+        </div>
+        <div class="line-100 right-box-line"></div>
+        <div class="nz-tab" style="padding-left: 30px;">
+          <div class="nz-tab-item-box" v-for="(account, index) in editAsset.accounts" :key="index" @click="changeProtocolType(account.protocol)" :id="`account-login-type-${index}`">
+            <div class="nz-tab-item" :class="{'nz-tab-item-active': accountType == account.protocol}" style="position: relative;">
+              <span>{{account.protocol}}</span>
+              <transition name="el-zoom-in-top">
+                <div v-if="errorProtocol.indexOf(account.protocol) > -1" class="nz-tab-error el-form-item__error">Required</div>
+              </transition>
+            </div>&nbsp;
+            <span class="nz-tab-item-close" @click.stop="removeAccount(index)"><i class="el-icon-circle-close"></i></span>
           </div>
-          <div class="line-100 right-box-line"></div>
-          <!--<template v-if="accountSwitch">
-            <account-config-box v-for="(item,index) in assetData.accounts" :is-edit="!tabView" :account="item" :key="index" ref="accountConfigBox" @setValidateResult="setAccountValideResult" :is-allowed-change-protocol="changeProtocolSwitch" @protocol-type-change="protocolTypeChange"></account-config-box>
-          </template>-->
-          <div class="nz-tab" style="padding-left: 30px;">
-            <div class="nz-tab-item-box" v-for="(account, index) in assetData.accounts" :key="index" @click="changeProtocolType(account.protocol)" :id="`account-login-type-${index}`">
-              <div class="nz-tab-item" :class="{'nz-tab-item-active': accountType == account.protocol}" style="position: relative;">
-                <span>{{account.protocol}}</span>
-                <transition name="el-zoom-in-top">
-                  <div v-if="errorProtocol.indexOf(account.protocol) > -1" class="nz-tab-error el-form-item__error">Required</div>
-                </transition>
-              </div>&nbsp;
-              <span class="nz-tab-item-close" @click.stop="removeAccount(index)"><i class="el-icon-circle-close"></i></span>
-            </div>
-          </div>
-          <account-config-box v-for="(account,index) in assetData.accounts" :account="account" v-show="account.protocol == accountType" :key="index" ref="accountConfigBox" @setValidateResult="setAccountValideResult" @protocol-type-change="protocolTypeChange"></account-config-box>
+        </div>
+        <account-config-box v-for="(account,index) in editAsset.accounts" :account="account" v-show="account.protocol == accountType" :key="index" ref="accountConfigBox" @setValidateResult="setAccountValidResult" @protocol-type-change="protocolTypeChange"></account-config-box>
 
-          <template v-if="accountType == 'SSH' && !assetData.id">
-            <el-form-item :label="$t('asset.createAssetTab.exporter')" class="exporter-label">
-              <el-switch class="exporter-switch" v-model="assetData.exporter" active-color="#ee9d3f" active-value="1" inactive-value="0" :show="!exporterDisableSwitch"></el-switch>
-            </el-form-item>
-          </template>
-        </el-form>
-      </el-scrollbar>
+        <template v-if="accountType == 'SSH' && !editAsset.id">
+          <el-form-item :label="$t('asset.exporter')" class="exporter-label">
+            <el-switch class="exporter-switch" v-model="editAsset.exporter" active-color="#ee9d3f" active-value="1" inactive-value="0" :show="!exporterDisableSwitch"></el-switch>
+          </el-form-item>
+        </template>
+      </el-form>
+    </el-scrollbar>
 
-      <!--底部按钮-->
-      <div class="right-box-bottom-btns">
-        <button @click.stop="sendStateData('close')" class="nz-btn nz-btn-size-normal nz-btn-style-light nz-btn-min-width-100" id="asset-edit-cancel">
-          <span>{{$t('overall.cancel')}}</span>
-        </button>
-        <button v-if="!tabView" @click.stop="editData('asset')" class="nz-btn nz-btn-size-normal nz-btn-style-normal nz-btn-min-width-100" id="asset-edit-save">
-          <span>{{$t('overall.save')}}</span>
-        </button>
-      </div>
-      <module-box :module="module" @reload="refreshTabData" ref="moduleBox"></module-box>
-      <model-box v-if="firstShowModel" ref="modelBox" :model="model" @reload="getAllModelOptionData"></model-box>
+    <!--底部按钮-->
+    <div class="right-box-bottom-btns">
+      <button @click="esc(false)" class="nz-btn nz-btn-size-normal nz-btn-style-light nz-btn-min-width-100" id="asset-edit-cancel">
+        <span>{{$t('overall.cancel')}}</span>
+      </button>
+      <button @click="save" class="nz-btn nz-btn-size-normal nz-btn-style-normal nz-btn-min-width-100" id="asset-edit-save">
+        <span>{{$t('overall.save')}}</span>
+      </button>
     </div>
-  </transition>
+    <transition name="right-box">
+      <model-box v-if="rightBox.model.show" ref="modelBox" @reload="modelReload" :model="model" @close="closeRightBox"></model-box>
+    </transition>
+  </div>
 </template>
 
 <script>
@@ -235,117 +168,35 @@
   import {port} from '../js/validate'
   import locationCascader from "./locationCascader";
   export default {
-    name: "assetEditUnit",
-    props: ["editUnitShow", "editUnitId"],
+    name: "assetBox",
+    props: {
+      asset: Object
+    },
     components:{
       'account-config-box': accountConfig,
       'location-cascader':locationCascader,
     },
     data() {
       return {
-        firstShowModel: false,
-        visible: '',
-        vendorModelData: '',
+        editAsset: {},
+
+        rightBox: {model: {show: false}},
+        modelData: [],
+        dcData: [],
+        assetTypeData: [],
+        cabinetData: [],
+        vendorAndModelOptionData: [], //厂商型号下拉框选择数据
+
         showAccountOp: false,
         errorProtocol: [], //校验不通过的account
-        assetData: {
-          id: '',
-          sn: '',
-          host: '',
-          state: '',
-          purchaseDate: '',
-          idcId: '',
-          cabinetId: '',
-          modelId: '',
-          assetType: '',
-          impi:{
-            host:'',
-            port:'',
-          },
-          accounts: [],
-          /*accounts: [{
-            id: '',
-            authType: 1,
-            protocol:'SSH',
-            user: '',
-            pwd: '',
-            port: '',
-            userTip:"",
-            passwordTip:'',
-            reloginPasswordTip:''
-          }],*/
-          tags: [],
-          exporter: 0
-        },
         selectableAccountTypes: ["SSH", "TELNET", "SNMP"],
-        modelSize:1,
-        initLocationData:null,
-        locationInfo:null,
-        //accountSwitch:false,//true 开启，false 关闭
-        accountData: '',
-        assetViewData: {
-          assetType: '',
-          vendor: '',
-          model: '',
-          moduleNum: '',
-          alertNum: '',
-          idcName: '',
-          cabinetName: ''
-        },
-        assetStateOption: [
-          {
-            value: 1,
-            label: this.$t('asset.createAssetTab.inStock')
-          }, {
-            value: 2,
-            label: this.$t('asset.createAssetTab.notInStock')
-          }],
-        cabinetModelData: '',
-        checkList: [],
-        assetTypeOptionData: [],
-        vendorTypeData: '',
-        vendorTypeOptionData: [],
-        vendorUlData: '',
-        modelUlData: '',
-        vendorCode: '',
-        IDCData: '',
-        IDCOptionData: [],
-        cabinetData: '',
-        cabinetOptionData: [],
-        input: '',
-        pageObj: {
-          id: '',
-          pageNo: 1,
-          pageSize: 50,
-          total: 0,
-          idcId: '',
-          idcIds: ''
-        },
-        tableHeight: document.documentElement.clientHeight - 200,
-        tabView: false,
-        assetType: '',
-        assetTypeData: {
-          type: 'assetType',
-          value: '',
-        },
-        addVendorData: {
-          type: 'vendor',
-          value: '',
-        },
-        addNewModelData: {
-          name: '',
-          vendorCode: '',
-          typeCode: ''
-        },
+
+        modelSize: 1,
+        locationInfo: null,
+
         accountType: '',
-        idcSelectedData: {
-          id: '',
-          name: '',
-          location: '',
-          principal: '',
-          tel: ''
-        },
-        model: {
+        model: {},
+        blankModel: {
           id: '',
           name: '',
           vendor: {id: '', value: '', code: '', type: ''},
@@ -355,66 +206,13 @@
           vendorCode: '',
           typeCode: ''
         },
-        addIdcData: {
-          id: '',
-          name: '',
-          location: '',
-          principal: '',
-          tel: ''
-        },
-        popIdcData: {
-          id: '',
-          name: '',
-          location: '',
-          principal: '',
-          tel: ''
-        },
-        idcUserData: '',
+        userData: [], //用户（人）信息
         cabinetSelectedData: {
           name: '',
           uSize: 0,
           remark: '',
           idcId: '',
         },
-        addCabinetData: {
-          name: '',
-          popName: '',
-          uSize: 0,
-          remark: '',
-          idcId: '',
-        },
-        popCabinetData: {
-          name: '',
-          uSize: 0,
-          remark: '',
-          idcId: '',
-        },
-        addCabIDCData: {
-          id: '',
-          name: '',
-          location: '',
-          principal: '',
-          tel: ''
-        },
-        popTypeVisible: false,
-        popCompVisible: false,
-        popIDCVisible: false,
-        popCabinetVisible: false,
-
-        editPopTypeVisible: false,
-        editPopVendorVisible: false,
-        editPopIDCVisible: false,
-        editPopCabinetVisible: false,
-        vendorCount: '',
-        modelCount: '',
-        allModelUlData: '',
-        tempData: '',
-        tempModelData: [],
-        isResourceShow: 0,
-        unitDisable: '',
-        modelClickData: '',
-        popState: true,
-        obj: null,
         rules: {
           sn: [
             {required: true, message: this.$t('validate.required'), trigger: 'blur'}
@@ -426,7 +224,7 @@
           modelId: [
             {required: true, message: this.$t('validate.required'), trigger: 'change'}
           ],
-          assetType: [
+          "model.type.code": [
             {required: true, message: this.$t('validate.required'), trigger: 'change'}
           ],
           idcId: [
@@ -451,37 +249,27 @@
           ]
         },
         formData:null,
-        module:{},
-        accountValideResult:true,
-        changeProtocolSwitch:true,
-        exporterDisableSwitch:false
+        accountValidResult: true,
+        changeProtocolSwitch: true,
+        exporterDisableSwitch: false
       }
     },
     watch: {
-      allModelUlData: {
+      asset: {
         deep: true,
         immediate: true,
-        handler(newVal) {
-          if (newVal) {
-            this.getConnectData();
-            if (this.pageObj.id != '') {
-              this.assetData.modelId = [this.obj.model.vendor.code, this.obj.model.id];
-            }
+        handler(n) {
+          this.editAsset = JSON.parse(JSON.stringify(n));
+          if (!this.editAsset.accounts) {
+            this.$set(this.editAsset, "accounts", []);
+          } else {
+            this.editAsset.accounts.length > 0 && (this.accountType = this.editAsset.accounts[0].protocol);
           }
+          console.info(n)
+          this.getVendorAndModelOptionData(n.model.type.code);
         }
       },
-      assetType(newVal) {
-        this.assetData.assetType = newVal;
-        if (newVal == '') {
-          this.popState = true
-        } else {
-          this.popState = false
-        }
-      },
-      'assetData.idcId': function(n, o) {
-        this.addCabinetData.idcId = n;
-      },
-      'assetData.accounts': {
+      'editAsset.accounts': {
         deep: true,
         handler(n) {
           let temp = ["SSH", "TELNET", "SNMP"];
@@ -494,59 +282,98 @@
           this.selectableAccountTypes = temp;
         }
       },
-      /*accountSwitch(n) {
-        if (n) {
-          if (!this.assetData.accounts[0]) {
-            !this.assetData.accounts.push({
-              id: '',
-              user:"",
-              authType:1,
-              protocol:'SSH',
-              pwd:"",
-              port:'',
-              privateKey:'',
-              userTip:"",
-              passwordTip:'',
-              reloginPasswordTip:''
-            });
-          }
-        }
-      },
-      'assetData.exporter':function(n,o){
-        if(parseInt(n) === 1){
-          this.accountSwitch=true;
-          this.changeProtocolSwitch=false;
-          for(let account of this.assetData.accounts){
-            account.protocol='SSH';
-          }
-        }else{
-          this.changeProtocolSwitch=true;
-        }
-      },*/
-      locationInfo:{
-        deep:true,
-        handler(n,o){
-        }
-      }
     },
     methods: {
-      clickos() {
-        this.sendStateData('close');
+      clickOutside() {
+        this.esc(false);
       },
-      cancelEdit(data) {
-        if (data === false) {
-          this.getAssetTypeOptionData();
+      /*关闭弹框*/
+      esc(refresh) {
+        this.$emit("close", refresh);
+      },
+      modelReload() {
+
+      },
+      //关闭model侧滑框
+      closeRightBox(refresh) {
+        this.rightBox.model.show = false;
+        if (refresh) { //新增修改型号后刷新相关数据
+          this.getVendorData();
+          this.getModelData(this.editAsset.model.type.code);
         }
       },
+      getVendorData() {
+        return new Promise(resolve => {
+          this.$get('sys/dict/all?type=vendor').then(response => {
+            if (response.code === 200) {
+              this.vendorData = response.data;
+            }
+            resolve(this.vendorData);
+          });
+        });
+      },
+      getModelData(assetType) {
+        return new Promise(resolve => {
+          let url = assetType ? ('model?typeCode=' + assetType) : 'model';
+          this.$get(url).then(response => {
+            if (response.code === 200) {
+              this.modelData = response.data.list;
+            }
+            resolve(this.modelData);
+          });
+        });
+      },
+      //组织符合cascader的数据格式
+      getVendorAndModelOptionData(assetType) {
+        let request = this.getModelData(assetType);
+        request.then(response => {
+          let resultData = [];
+          let modelData = response;
+          for (let i = 0; i < modelData.length; i++) {
+            if (!modelData[i].vendor) {
+              continue;
+            }
+            let obj = {};
+            obj.id = modelData[i].vendor.id;
+            obj.code = modelData[i].vendor.code;
+            obj.value = modelData[i].vendor.code;
+            obj.label = modelData[i].vendor.value;
+            obj.children = [];
+            resultData.push(obj);
+          }
+          let result = [];
+          let obj1 = {};
+          for (let i = 0; i < resultData.length; i++) {
+            if (!obj1[resultData[i].id]) {
+              result.push(resultData[i]);
+              obj1[resultData[i].id] = true;
+            }
+          }
+          for (let x = 0; x < result.length; x++) {
+            for (let y = 0; y < modelData.length; y++) {
+              if (!modelData[y].vendor) {
+                continue;
+              }
+              if (result[x].code === modelData[y].vendor.code) {
+                let obj2 = {};
+                obj2.value = modelData[y].id;
+                obj2.label = modelData[y].name;
+                result[x].children.push(obj2);
+              }
+            }
+          }
+          this.vendorAndModelOptionData = result;
+        });
+      },
       addTag() {
-        this.assetData.tags.push({tag: "", value: ""});
+        this.editAsset.tags.push({tag: "", value: ""});
         this.$nextTick(() => {
           this.$refs.tagEditBoxScrollbar.update();
         });
       },
       addAccount(type) {
         if (type == "SSH") {
-          this.assetData.accounts.push({
+          this.editAsset.accounts.push({
             authType: 1,
             protocol: "SSH",
             port: 22,
@@ -559,7 +386,7 @@
             }
           });
         } else if (type == "TELNET") {
-          this.assetData.accounts.push({
+          this.editAsset.accounts.push({
             protocol: "TELNET",
             port: 23,
             params: {
@@ -571,7 +398,7 @@
             }
           });
         } else if (type == "SNMP") {
-          this.assetData.accounts.push({
+          this.editAsset.accounts.push({
             protocol: "SNMP",
             port: 161,
             params: {
@@ -595,53 +422,21 @@
         });
       },
       removeAccount(index) {
-        this.assetData.accounts.splice(index, 1);
-        if (this.assetData.accounts.length > 0) {
-          this.accountType = this.assetData.accounts[0].protocol;
+        this.editAsset.accounts.splice(index, 1);
+        if (this.editAsset.accounts.length > 0) {
+          this.accountType = this.editAsset.accounts[0].protocol;
         } else {
           this.accountType = "";
         }
       },
-      removeTag: function(index) {
-        this.assetData.tags.splice(index, 1);
+      removeTag(index) {
+        this.editAsset.tags.splice(index, 1);
         this.$nextTick(() => {
           this.$refs.tagEditBoxScrollbar.update();
         });
       },
-      clickOutSide(data) {
-        if (data) {
-          this.editQuit();
-          this.modelCount = '';
-        }
-      },
-      show() {
-        this.getIDCOptionData();
-        this.getVendorOptionData();
-        this.getAssetTypeOptionData();
-        this.showAccountOp = false;
-      },
-      editQuit() {
-        for (let i of this.assetTypeOptionData) {
-          if (i.isEdit === true) {
-            i.isEdit = false;
-            this.getAssetTypeOptionData();
-          }
-        }
-        for (let i of this.vendorUlData) {
-          if (i.isEdit === true) {
-            i.isEdit = false;
-            this.getVendorOptionData();
-          }
-        }
-        for (let i of this.modelUlData) {
-          if (i.isEdit === true) {
-            i.isEdit = false;
-            this.getModelOptionData(this.assetType, this.vendorCode);
-          }
-        }
-      },
-      setLocationData:function(data){
-        this.locationInfo=data;
+      setLocationData(data) {
+        this.locationInfo = data;
       },
       locationValidator:function(rule, value, callback){
         let $temp=this;
@@ -653,343 +448,76 @@
           }else{
             callback();
           }
-        },100)
+        }, 100)
       },
-      modelChange:function(ids){
-        let model=this.allModelUlData.find((item,index)=>{
-          return ids==item.id;
+      modelChange(modelId) {
+        let model = this.modelData.find((item, index)=>{
+          return modelId == item.id;
         });
-        this.modelSize=model.usize;
+        this.modelSize = model.usize;
       },
-      getAssetData(data) {
-        this.$nextTick(() => {
-          if (data) {
-            this.pageObj.id = data.id;
-            this.obj = JSON.parse(JSON.stringify(data));
-            this.assetViewData.assetType = this.obj.model.type.value
-            this.assetViewData.vendor = this.obj.model.vendor.value
-            this.assetViewData.model = this.obj.model.name
-            this.modelSize=this.obj.model.usize;
-            this.assetViewData.idcName = this.obj.idc.name
-            this.assetViewData.cabinetName = this.obj.cabinet == null ? '' : this.obj.cabinet.name
-            let initLocationData={
-              idc:this.obj.idc,
-              cabinet:this.obj.cabinet,
-              u:[this.obj.cabinetStart,this.obj.cabinetEnd]
-            };
-            this.$refs.locationCascader.initComponet(initLocationData);
-            this.assetViewData.moduleNum = this.obj.moduleNum;
-            this.assetViewData.alertNum = this.obj.alertNum;
-            this.assetViewData.cabinetName = this.obj.cabinet == null ? '' : this.obj.cabinet.name;
-            this.getCabinetOptionData(this.obj.idc.id);
-            this.assetType = this.obj.model.type.code;
-            this.assetData.impi=this.obj.impi?this.obj.impi:{host:'',port:''};
-            this.assetData.sn = this.obj.sn;
-            this.assetData.host = this.obj.host;
-            this.assetData.state = this.obj.state;
-            this.assetData.idcId = this.obj.idc.id;
-            this.assetData.id = this.obj.id;
-            this.assetData.tags = this.obj.tags;
-            this.assetData.accounts = this.obj.accounts;
-            this.assetData.cabinetId = this.obj.cabinet == null ? '' : this.obj.cabinet.id;
-            this.assetData.purchaseDate = this.obj.purchaseDate;
-            if (this.assetData.accounts && this.assetData.accounts.length > 0) {
-              this.accountType = this.assetData.accounts[0].protocol.toUpperCase();
+      getDcData() {
+        return new Promise(resolve => {
+          this.$get('idc').then(response => {
+            if (response.code === 200) {
+              this.dcData = response.data.list;
             }
-            // this.assetData.accounts[0].id = this.obj.accounts[0].id
-            // this.assetData.accounts[0].authType = this.obj.accounts[0].authType
-            // this.assetData.accounts[0].user = this.obj.accounts[0].user
-            // this.assetData.accounts[0].pwd = this.obj.accounts[0].pwd
-            // this.assetData.accounts[0].port = this.obj.accounts[0].port
-            // this.assetData.accounts[0].cert = this.obj.accounts[0].privateKey
-            this.assetData.accounts=this.obj.accounts[0]?this.obj.accounts:[];
-            //this.accountSwitch=this.assetData.accounts.length>0;
-            this.idcSelectedData.location = this.obj.idc.location
-            this.idcSelectedData.principal = this.obj.idc.principal
-            this.idcSelectedData.tel = this.obj.idc.tel
-            this.cabinetSelectedData.uSize = this.obj.cabinet == null ? '' : this.obj.cabinet.uSize
-            this.cabinetSelectedData.remark = this.obj.cabinet == null ? '' : this.obj.cabinet.remark;
-            this.getAllModelOptionData(this.assetType);
-          } else {
-            this.resetAsset();
-          }
+            resolve(this.dcData);
+          });
         });
-      },
-      openModuleBox(module) {
-        this.module = module;
-        this.$refs.moduleBox.show(true);
-        this.$refs['moduleListPop' + this.obj.id].show(false);
-      },
-      refreshTabData:function(){
-        this.$emit('refreshData', 'true');
-      },
-      jumpToAlertMsg(assetId) {
-        this.$store.commit('assetForAlertListChange', assetId);
-        this.$router.push({
-          path: "/alertList",
-          query: {
-            t: +new Date()
-          }
-        });
-      },
-      getIDCOptionData(isUpdate) {
-        this.$get('idc').then(response => {
-          if (response.code === 200) {
-            this.IDCOptionData = response.data.list;
-            this.markOptionData(this.IDCOptionData);
-            console.info(this.IDCOptionData)
-            if (isUpdate) {
-              this.$store.commit('assetDcListChange');
-              this.$emit('refreshData');
-            }
-          }
-        })
       },
       getUserData() {
-        this.$get('sys/user/list').then(response => {
-          if (response.code === 200) {
-            this.idcUserData = response.data.list
-          }
-        })
-      },
-      getCabinetOptionData(data) {
-        this.$get('cabinet?idcId=' + data).then(response => {
-          if (response.code === 200) {
-            this.cabinetOptionData = response.data.list;
-            this.markOptionData(this.cabinetOptionData)
-            for (let i = 0; i < this.cabinetOptionData.length; i++) {
-              this.$set(this.cabinetOptionData[i], 'children', this.IDCOptionData)
+        return new Promise(resolve => {
+          this.$get('sys/user/list').then(response => {
+            if (response.code === 200) {
+              this.userData = response.data.list
             }
-          }
-        })
+            resolve(this.userData);
+          });
+        });
       },
-      getAssetTypeOptionData() {
-        this.$get('sys/dict/all?type=assetType').then(response => {
-          if (response.code === 200) {
-            this.assetTypeOptionData = response.data
-            this.markOptionData(this.assetTypeOptionData)
-          }
-        })
+      getCabinetData(id) {
+        return new Promise(resolve => {
+          this.$get('cabinet?idcId=' + id).then(response => {
+            if (response.code === 200) {
+              this.cabinetData = response.data.list;
+              for (let i = 0; i < this.cabinetData.length; i++) {
+                this.$set(this.cabinetData[i], 'children', this.dcData)
+              }
+            }
+            resolve(this.cabinetData);
+          });
+        });
       },
-      getVendorOptionData() {
-        this.$get('sys/dict/all?type=vendor').then(response => {
-          if (response.code === 200) {
-            this.vendorUlData = response.data;
-            this.markOptionData(this.vendorUlData);
-          }
-        })
+      getAssetTypeData() {
+        return new Promise(resolve => {
+          this.$get('sys/dict/all?type=assetType').then(response => {
+            if (response.code === 200) {
+              this.assetTypeData = response.data;
+            }
+            resolve(this.assetTypeData);
+          });
+        });
       },
-      getModelOptionData(assetType, vendorCode) {
-        this.$get('model?typeCode=' + assetType + '&vendorCode=' + vendorCode).then(response => {
-          if (response.code === 200) {
-            this.modelUlData = response.data.list;
-            this.markOptionData(this.modelUlData);
-          }
-        })
+      newModel() {
+        return JSON.parse(JSON.stringify(this.blankModel));
       },
-      getAllModelOptionData(data) {
-        this.assetData.assetType = this.assetType;
-        this.$get('model?typeCode=' + this.assetType + '&pageNo=1&pageSize=-1').then(response => {
-          if (response.code === 200) {
-            this.allModelUlData = response.data.list
-          }
-        })
-      },
-      addVendor() {
-        this.model = {
-          id: '',
-          name: '',
-          vendor: {id: '', value: '', code: '', type: ''},
-          type: {id: '', value: '', code: '', type: ''},
-          assetStat: {total: '', inStock: '', outStock: ''},
-          remark: '',
-          vendorCode: '',
-          typeCode: ''
-        };
-        if (this.assetType) {
+      addVendor(assetType) {
+        this.model = this.newModel();
+        if (assetType) {
           //model侧滑弹出时，自动选好assetType
-          for (let i = 0; i < this.assetTypeOptionData.length; i++) {
-            if (this.assetTypeOptionData[i].code == this.assetType) {
-              this.model.type.code = this.assetType;
-              this.model.type.value = this.assetTypeOptionData[i].value;
+          for (let i = 0; i < this.assetTypeData.length; i++) {
+            if (this.assetTypeData[i].code == assetType) {
+              this.model.type.code = assetType;
+              this.model.type.value = this.assetTypeData[i].value;
               break;
             }
           }
         }
-        this.firstShowModel = true;
-        this.$nextTick(() => {
-          this.$refs.modelBox.show(true, true);
-        });
-
+        this.rightBox.model.show = true;
       },
-      resetAsset() {
-        this.pageObj.id = '';
-        this.assetData = {
-          id: '',
-          sn: '',
-          host: '',
-          state: '',
-          purchaseDate: '',
-          idcId: '',
-          cabinetId: '',
-          modelId: '',
-          assetType: '',
-          impi:{
-            host:'',
-            port:'',
-          },
-          locationInfo:null,
-          accounts: [],
-          tags: []
-        };
-        this.assetType = '';
-        this.idcSelectedData = {
-          id: '',
-            name: '',
-            location: '',
-            principal: '',
-            tel: ''
-        }
-      },
-      editData(data, item, mark) {
-        let obj = {
-          id: '',
-          type: '',
-          value: '',
-          code: ''
-        };
-        let idcData = {
-          id: '',
-          name: '',
-          location: '',
-          principal: '',
-          tel: ''
-        };
-
-        if (data === 'asset') {
-          if(this.locationInfo){
-            if(this.locationInfo.idc){
-              this.assetData.idcId=this.locationInfo.idc.id;
-            }
-            if(this.locationInfo.cabinet){
-              this.assetData.cabinetId=this.locationInfo.cabinet.id;
-            }
-            if(this.locationInfo.u&&this.locationInfo.u.length>0){
-              this.assetData.cabinetStart=this.locationInfo.u[0];
-              this.assetData.cabinetEnd=this.locationInfo.u[1];
-            }
-          }
-
-          /*if (!this.accountSwitch) {
-            this.assetData.accounts = [];
-          }*/
-
-          if(this.$refs.accountConfigBox && this.$refs.accountConfigBox.length > 0) {
-            this.$refs.accountConfigBox.forEach(box => {
-              box.validateAccount();
-            });
-          }
-
-          this.$refs.assetEditForm.validate((valid) => {
-            if (valid&&this.accountValideResult) {
-              if (this.pageObj.id) {
-                this.assetData.id=this.pageObj.id;
-                let reqData = JSON.parse(JSON.stringify(this.assetData));
-                if (typeof reqData.modelId == "object") {
-                  reqData.modelId = reqData.modelId[1];
-                }
-                this.$put('asset', reqData).then(res => {
-                  if (res.code === 200) {
-                    this.$message({duration: 2000, type: 'success', message: this.$t("tip.saveSuccess")});
-                    this.pageObj.id = '';
-                    this.$emit('refreshData', 'true');
-                    this.sendStateData('close');
-                  } else {
-                    this.$message.error(res.msg);
-                  }
-                });
-              } else {
-                if(this.$refs.accountConfigBox&&this.$refs.accountConfigBox.length>0){
-                  this.$refs.accountConfigBox[0].validateAccount();
-                }
-                this.$post('asset', this.assetData).then(res => {
-                  if (res.code === 200) {
-                    this.$message({duration: 2000, type: 'success', message: this.$t("tip.saveSuccess")});
-                    this.$emit('refreshData', 'true');
-                    this.sendStateData('close');
-                  } else {
-                    this.$message.error(res.msg);
-                  }
-                });
-              }
-            } else {
-              return false;
-            }
-          });
-
-        } else {
-          if (data === 'model') {
-            item.vendorCode = this.vendorCode
-            item.typeCode = this.assetType
-          }
-          if (data === 'vendor') {
-            obj.id = item.id
-            obj.code = item.code
-            obj.type = item.type
-            obj.value = item.label
-            data = 'sys/dict/update'
-            item = obj
-          }
-          if (data === 'cabinet') {
-            let v = true;
-            this.$refs.cabEditForm[0].validate((valid) => {
-              if (valid) {
-                item.name = this.popCabinetData.name;
-                item.uSize = this.popCabinetData.uSize;
-                item.remark = this.popCabinetData.remark;
-                item.idcId = this.popCabinetData.idcId;
-              } else {
-                v = false;
-              }
-            });
-            if (!v) {
-              return false;
-            }
-          }
-          if (data === 'idc') {
-            idcData.id = item.id
-            idcData.name = this.popIdcData.name
-            idcData.location = this.popIdcData.location
-            idcData.principal = this.popIdcData.principal
-            idcData.tel = this.popIdcData.tel
-            item = idcData
-          }
-          if (mark === 'CabIDC') {
-            idcData.id = item.id;
-            idcData.name = this.addCabIDCData.name;
-            idcData.location = this.addCabIDCData.location;
-            idcData.principal = this.addCabIDCData.principal;
-            idcData.tel = this.addCabIDCData.tel;
-            item = idcData;
-          }
-          this.$put(data, item).then(res => {
-            if (res.code === 200) {
-              this.$message({duration: 2000, type: 'success', message: this.$t("tip.saveSuccess")});
-              this.getIDCOptionData(true);
-              if (data === 'cabinet') {
-                this.getCabinetOptionData(item.idcId);
-              }
-              this.getAllModelOptionData();
-              this.getAssetTypeOptionData();
-              this.$emit('refreshData', 'true')
-            } else {
-              this.$message.error(res.msg);
-            }
-          })
-        }
-      },
-      setAccountValideResult(result, protocol) {
-        this.accountValideResult = result;
+      setAccountValidResult(result, protocol) {
+        this.accountValidResult = result;
         let index = this.errorProtocol.indexOf(protocol);
         if (result) {
           index != -1 ? this.errorProtocol.splice(index, 1) : "";
@@ -997,88 +525,21 @@
           index == -1 ? this.errorProtocol.push(protocol) : "";
         }
       },
-      //新增型号弹框关闭后重置弹框内容
-      resetVendor() {
-        this.addVendorData.value = '';
-        this.vendorCode = '';
-        this.vendorCount = '';
-        this.modelUlData = [];
-        this.addNewModelData = {
-          name: '',
-          vendorCode: '',
-          typeCode: ''
-        }
-      },
-      addNewData(type) {
-        if (type === 'IDC') {
-          const h = this.$createElement;
-          this.$post('idc', this.addIdcData).then(res => {
-            if (res.code === 200) {
-              const h = this.$createElement;
-              this.$message({duration: 2000, type: 'success', message: this.$t("tip.saveSuccess")});
-              this.getIDCOptionData()
-              this.getAssetData()
+      del() {
+        this.$confirm(this.$t("tip.confirmDelete"), {
+          confirmButtonText: this.$t("tip.yes"),
+          cancelButtonText: this.$t("tip.no"),
+          type: 'warning'
+        }).then(() => {
+          this.$delete("asset?ids=" + this.editAsset.id).then(response => {
+            if (response.code === 200) {
+              this.$message({duration: 2000, type: 'success', message: this.$t("tip.deleteSuccess")});
+              this.esc(true);
             } else {
-              this.$message.error(res.msg);
+              this.$message.error(response.msg);
             }
           })
-        }
-        if (type === 'assetType') {
-          this.$post('sys/dict/save', this.assetTypeData).then(res => {
-            const h = this.$createElement;
-            if (res.code === 200) {
-              this.getAssetTypeOptionData();
-              this.$message({duration: 2000, type: 'success', message: this.$t("tip.saveSuccess")});
-            } else {
-              this.$message.error(res.msg);
-            }
-          })
-        }
-        if (type === 'vendor') {
-          const h = this.$createElement;
-          this.$post('sys/dict/save', this.addVendorData).then(res => {
-            if (res.code === 200) {
-              this.$message({duration: 2000, type: 'success', message: this.$t("tip.saveSuccess")});
-              this.getVendorOptionData()
-            } else {
-              this.$message.error(res.msg);
-            }
-          })
-        }
-        if (type === 'model') {
-          this.addNewModelData.typeCode = this.assetType
-          this.addNewModelData.vendorCode = this.vendorCode
-          this.$post('model', this.addNewModelData).then(res => {
-            const h = this.$createElement;
-            if (res.code === 200) {
-              this.getModelOptionData(this.assetType, this.vendorCode)
-              this.$message({duration: 2000, type: 'success', message: this.$t("tip.saveSuccess")});
-              this.getAllModelOptionData(this.assetType)
-            } else {
-              this.$message.error(res.msg);
-            }
-          })
-        }
-        if (type === 'cabinet') {
-          this.$refs.cabAddForm.validate((valid) => {
-            if (valid) {
-              this.addCabinetData.idcId = this.assetData.idcId
-              this.$post('cabinet', this.addCabinetData).then(res => {
-                const h = this.$createElement;
-                if (res.code === 200) {
-                  this.$message({duration: 2000, type: 'success', message: this.$t("tip.saveSuccess")});
-                  this.getCabinetOptionData(this.addCabinetData.idcId);
-                  this.editPopoverClose('cabinet');
-                } else {
-                  this.$message.error(res.msg);
-                }
-              });
-            } else {
-              return false;
-            }
-          });
-
-        }
+        });
       },
       changeProtocolType(type) {
         this.accountType = type;
@@ -1087,330 +548,68 @@
           sbWrap.scrollTop = sbWrap.scrollHeight;
         });
       },
-      deleteData(data, item) {
-        this.$confirm(this.$t("tip.confirmDelete"), {
-          confirmButtonText: this.$t("tip.yes"),
-          cancelButtonText: this.$t("tip.no"),
-          type: 'warning'
-        }).then(() => {
-          this.$delete(data + "?ids=" + item).then(response => {
-            if (response.code === 200) {
-              this.$message({duration: 2000, type: 'success', message: this.$t("tip.deleteSuccess")});
-              this.getAssetData();
-              this.getIDCOptionData(true);
-              this.getVendorOptionData();
-              this.getCabinetOptionData(this.assetData.idcId);
-              this.getAllModelOptionData(this.assetType);
-              this.getModelOptionData(this.assetType, this.vendorCode);
-              if (data == 'asset') {
-                this.sendStateData('close');
-              }
-            } else {
-              this.$message.error(response.msg);
-            }
-          })
-        });
-      },
-      markOptionData(data) {
-        data.forEach(item => {
-          this.$set(item, 'isEdit', false);
-          this.$set(item, 'oldName', item.value);
-          this.$set(item, 'modelOldName', item.name);
-          this.$set(item, item.name, false);
-          this.$set(item, item.id, false);
-          this.$set(item, item.id + item.name, false);
-          this.$set(item, item.name + item.id, false);
-        })
-      },
-      getConnectData() {
-        this.isResourceShow += 1;
-        let resultData = [];
-        let modelData = this.allModelUlData;
-        for (let i = 0; i < modelData.length; i++) {
+      save() {
+        if(this.locationInfo) {
+          if(this.locationInfo.idc){
+            this.editAsset.idcId = this.locationInfo.idc.id;
+          }
+          if(this.locationInfo.cabinet) {
+            this.editAsset.cabinetId = this.locationInfo.cabinet.id;
+          }
+          if(this.locationInfo.u && this.locationInfo.u.length > 0) {
+            this.editAsset.cabinetStart = this.locationInfo.u[0];
+            this.editAsset.cabinetEnd = this.locationInfo.u[1];
+          }
+        }
 
-          if (!modelData[i].vendor) {
-            continue;
-          }
-          let obj = {};
-          obj.id = modelData[i].vendor.id;
-          obj.code = modelData[i].vendor.code;
-          obj.value = modelData[i].vendor.code;
-          obj.label = modelData[i].vendor.value;
-          obj.children = [];
-          resultData.push(obj);
+        if(this.$refs.accountConfigBox && this.$refs.accountConfigBox.length > 0) {
+          this.$refs.accountConfigBox.forEach(box => {
+            box.validateAccount();
+          });
         }
-        let result = [];
-        let obj1 = {};
-        for (let i = 0; i < resultData.length; i++) {
-          if (!obj1[resultData[i].id]) {
-            result.push(resultData[i]);
-            obj1[resultData[i].id] = true;
-          }
-        }
-        for (let x = 0; x < result.length; x++) {
-          for (let y = 0; y < modelData.length; y++) {
-            if (!modelData[y].vendor) {
-              continue;
-            }
-            if (result[x].code === modelData[y].vendor.code) {
-              let obj2 = {}
-              obj2.value = modelData[y].id
-              obj2.label = modelData[y].name
-              result[x].children.push(obj2)
-            }
-          }
-        }
-        this.vendorTypeOptionData = result
-      },
-      editVendorOptionData(item, data, index) {
-        this.vendorCount = index
-        if (!item.isEdit) {
-          item.isEdit = true;
-        } else {
-          if (item.name !== item.oldName) {
-            item.isEdit = false;
-          } else {
-            item.isEdit = false;
-          }
-        }
-        if (data === 'vendor') {
-          for (let i = 0; i < this.vendorUlData.length; i++) {
-            const element = this.vendorUlData[i];
-            if (item.id !== element.id) {
-              element.isEdit = false
-              element.value = element.oldName
-            }
-          }
-        }
-      },
-      editOptionData(item, data, index) {
-        this.modelCount = index;
-        if (!item.isEdit) {
-          item.isEdit = true;
-        } else {
-          if (item.name !== item.oldName) {
-            item.isEdit = false;
-          } else {
-            item.isEdit = false;
-          }
-        }
-        if (data === 'type') {
-          for (let i = 0; i < this.assetTypeOptionData.length; i++) {
-            let element = this.assetTypeOptionData[i];
-            if (item.id !== element.id) {
-              element.isEdit = false
-              element.value = element.oldName
-            }
-          }
-        }
-        if (data === 'model') {
-          for (let i = 0; i < this.modelUlData.length; i++) {
-            let element = this.modelUlData[i];
-            if (item.id !== element.id) {
-              element.isEdit = false
-              element.value = element.modelOldName
-            }
-          }
-        }
-      },
-      delOptionData(data) {
-        this.$confirm(this.$t("tip.confirmDelete"), {
-          confirmButtonText: this.$t("tip.yes"),
-          cancelButtonText: this.$t("tip.no"),
-          type: 'warning'
-        }).then(() => {
-          this.$delete("/sys/dict/delete?ids=" + data.id).then(response => {
-            if (response.code === 200) {
-              this.$message({duration: 2000, type: 'success', message: this.$t("tip.deleteSuccess")});
-              this.getAssetData();
-              this.getAssetTypeOptionData();
-              this.getVendorOptionData();
-              this.getAllModelOptionData(this.assetType);
-              this.getModelOptionData(this.assetType, this.vendorCode);
+        this.$refs.assetEditForm.validate((valid) => {
+          if (valid && this.accountValidResult) {
+            if (this.editAsset.id) {
+              this.$put('asset', this.editAsset).then(res => {
+                if (res.code === 200) {
+                  this.$message({duration: 2000, type: 'success', message: this.$t("tip.saveSuccess")});
+                  this.esc(true);
+                } else {
+                  this.$message.error(res.msg);
+                }
+              });
             } else {
-              this.$message.error(response.msg);
+              if(this.$refs.accountConfigBox && this.$refs.accountConfigBox.length > 0){
+                this.$refs.accountConfigBox[0].validateAccount();
+              }
+              this.$post('asset', this.editAsset).then(res => {
+                if (res.code === 200) {
+                  this.$message({duration: 2000, type: 'success', message: this.$t("tip.saveSuccess")});
+                  this.esc(true);
+                } else {
+                  this.$message.error(res.msg);
+                }
+              });
             }
-          })
+          } else {
+            return false;
+          }
         });
       },
-      editing() {
-      },
-      getSingleIDCData(data, item, itemData) {
-        if (item !== 'edit') {
-          this.idcSelectedData = '';
-          this.IDCOptionData.forEach(item => {
-            if (item.id === data) {
-              this.idcSelectedData = item;
-            }
-          });
-          this.getCabinetOptionData(this.assetData.idcId);
-          this.assetData.cabinetId = '';
-          this.cabinetSelectedData.uSize = '';
-          this.cabinetSelectedData.remark = null
-        } else {
-          this.clickFlush('idc', itemData);
-          this.IDCOptionData.forEach(item => {
-            if (item.id === data) {
-              this.popIdcData.id = item.id;
-              this.popIdcData.name = item.name;
-              this.popIdcData.location = item.location;
-              this.popIdcData.principal = item.principal;
-              this.popIdcData.tel = item.tel;
-              this.addCabIDCData.name = item.name;
-              this.addCabIDCData.location = item.location;
-              this.addCabIDCData.principal = item.principal;
-              this.addCabIDCData.tel = item.tel;
-            }
-          });
-        }
-      },
-      getSingleCabinetData(data, type, item) {
-        if (type !== 'edit') {
-          this.cabinetSelectedData.uSize = 0;
-          this.cabinetSelectedData.remark = null
-          this.cabinetOptionData.forEach(items => {
-            if (items.id === data) {
-              this.cabinetSelectedData.uSize = items.uSize
-              this.cabinetSelectedData.remark = items.remark
-            }
-          })
-        } else {
-          this.clickFlush('cabinet', item)
-          item[item.name] = !item[item.name]
-          this.cabinetOptionData.forEach(items => {
-            if (items.id === data) {
-              this.popCabinetData.name = items.name;
-              this.popCabinetData.uSize = items.uSize;
-              this.popCabinetData.remark = items.remark;
-              this.popCabinetData.idcId = items.idcId;
-            }
-          })
-        }
-      },
-      getSingleAsset(data) {
-        this.pageObj.idcIds = data.join(',')
-        this.getAssetData()
-      },
-      getLidata(index, item) {
-        this.vendorCount = index;
-        this.vendorCode = item.code;
-        this.getModelOptionData(this.assetType, this.vendorCode)
-      },
-      pageNo(val) {
-        this.pageObj.pageNo = val;
-        this.getAssetData()
-      },
-      pageSize(val) {
-        this.pageObj.pageSize = val;
-        this.getAssetData()
-      },
-      clickState(index, item, data) {
-        if (data === 'type') {
-          this.modelCount = index;
-          this.tempData = item;
-        }
-        if (data === 'model') {
-          this.modelCount = index;
-          this.modelClickData = item.id
-        }
-      },
-      transferData(data) {
-        if (data === 'type') {
-          this.assetType = this.tempData.code
-          this.popTypeVisible = false
-          this.tempData = ''
-        }
-        if (data === 'model') {
-          this.assetData.modelId = [this.vendorCode, this.modelClickData]
-          this.popCompVisible = false
-          this.tempData = ''
-        }
-      },
-      editPopoverClose(data) {
-        if (data === 'type') {
-          this.modelCount = ''
-          this.editPopTypeVisible = !this.editPopTypeVisible
-        }
-        if (data === 'vendor') {
-          this.vendorCount = ''
-          this.modelCount = ''
-          this.editPopVendorVisible = !this.editPopVendorVisible
-        }
-        if (data === 'idc') {
-          this.editPopIDCVisible = !this.editPopIDCVisible
-        }
-        if (data === 'cabinet') {
-          this.editPopCabinetVisible = !this.editPopCabinetVisible
-        }
-      },
-      getPrincipalName(data) {
-        for (let item in this.idcUserData) {
-          if (this.idcUserData[item].userId === data) {
-            return this.idcUserData[item].username
-          }
-        }
-      },
-      returnData(data) {
-        if (data && data !== '--') {
-          return data.name;
-        } else if (data === '--') {
-          return '-';
-        } else {
-          return "-";
-        }
-      },
-      sendStateData(data) {
-        this.$emit('sendStateData', 'close')
-      },
-      flushData() {
-        this.getAssetData();
-      },
-      clickFlush(type, itemData) {
-        if (type === 'idc') {
-          for (let i = 0; i < this.IDCOptionData.length; i++) {
-            const element = this.IDCOptionData[i];
-            if (element.id === itemData.id) {
-              setTimeout(() => {
-                element[element.name] = true;
-              }, 100)
-            } else {
-              element[element.name] = false
-            }
-          }
-        }
-        if (type === 'cabinet') {
-          for (let i = 0; i < this.cabinetOptionData.length; i++) {
-            const element = this.cabinetOptionData[i];
-            if (element.id === itemData.id) {
-              setTimeout(() => {
-                element[element.name] = true;
-              }, 100)
-            } else {
-              element[element.name] = false
-            }
-          }
-        }
-      },
-      protocolTypeChange:function(protocol){
+      protocolTypeChange(protocol) {
         if(protocol == 'TELNET'){
-          this.exporterDisableSwitch=true;
+          this.exporterDisableSwitch = true;
         }else{
-          this.exporterDisableSwitch=false;
+          this.exporterDisableSwitch = false;
         }
       }
     },
     mounted() {
-      this.getUserData()
-      this.getVendorOptionData();
-      this.getAssetTypeOptionData();
+      this.getUserData();
+      this.getVendorData();
+      this.getAssetTypeData();
+      this.getDcData();
       this.showAccountOp = false;
-      this.$nextTick(() => {
-        this.getIDCOptionData();
-      });
-      this.showAccountOp = false;
-      window.onresize = () => {
-        this.tableHeight = document.documentElement.clientHeight - 200;
-      }
     }
   }
 </script>

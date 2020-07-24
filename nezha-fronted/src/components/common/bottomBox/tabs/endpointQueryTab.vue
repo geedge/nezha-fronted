@@ -107,8 +107,9 @@
       </div>
       <chart ref="endpointChart" :unit="chartUnit"></chart>
     </el-dialog>
-
-    <chart-box v-if="rightBox.show" @close="rightBox.show = false" ref="addChartModal" :panel-data="panelData" @on-create-success="createSuccess" @reloadOnlyPanel="getPanelData" @reload="getPanelData" :show-panel="{}"></chart-box>
+    <transition name="right-box">
+      <chart-box v-if="rightBox.show" @close="rightBox.show = false" ref="addChartModal" :panel-data="panelData" @on-create-success="createSuccess" @reloadOnlyPanel="getPanelData" @reload="getPanelData" :show-panel="{}"></chart-box>
+    </transition>
   </span>
 </template>
 
@@ -219,7 +220,7 @@
         });
       },
       tableReload() {
-        var table = this.$refs.endpointQueryTable;
+        let table = this.$refs.endpointQueryTable;
         internal = setInterval(() => {
           if (!window.resizing) {
             table.setHeight();

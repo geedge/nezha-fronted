@@ -13,7 +13,7 @@ li{
   list-style-type:none ;
 }
 .content-box {
-  height: calc(100% - 53px);
+  height: calc(100% - 50px);
 }
 
 .nz-icon-gear:before {
@@ -643,20 +643,51 @@ li{
   position: relative;
 }
 .main-list.main-list-with-sub {
-  height: calc(50% - 4px);
+  height: 50%;
+}
+.sub-box {
+  height: 50%;
+  position: relative;
 }
 .sub-list {
   height: calc(100% - 9px);
-  position: relative;
+  position: absolute;
+  width: 100%;
+  z-index: 1;
+  top: 9px;
 }
 .main-and-sub-transition {
   transition: .4s height;
 }
-.sub-list-resize {
+.main-modal {
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  display: none;
+  z-index: 100;
+}
+.resize-modal {
+  width: 100%;
+  opacity: 0.6;
+  background-color: #f5f9ff;
+  border: 1px solid #a7d0f7;
+  box-sizing: border-box;
+  position: fixed;
   margin: 0 -6px;
+  cursor: ns-resize;
+  display: none;
+  z-index: 20;
+  vertical-align: bottom;
+  bottom: 0;
+}
+.sub-list-resize, .sub-list-resize-copy {
   border-top: 1px solid #aaa;
   background-color: #eaeaea;
   height: 9px;
+  margin-left: -6px;
+  width: calc(100% + 12px);
+  position: absolute;
+  z-index: 1;
   box-sizing: border-box;
   user-select: none;
   color: #5f6368;
@@ -665,6 +696,11 @@ li{
   justify-content: center;
   cursor: ns-resize;
 }
+.sub-list-resize-copy {
+  border-top: 1px solid #a7d0f7;
+  margin-left: 0;
+  width: calc(100% - 198px);
+}
 .sub-list-window-control {
   display: flex;
   align-items: center;
@@ -672,7 +708,7 @@ li{
   position: absolute;
   right: 0;
   top: 5px;
-  z-index: 1;
+  z-index: 2;
 }
 .window-control-btn {
   cursor: pointer;
@@ -848,8 +884,6 @@ li{
   }
 }
 @keyframes slide-out-to-right {
-  /*from {right: 0px}
-  to {right: -550px}*/
   from {
     transform: scaleX(1);
     transform-origin: right;
@@ -859,15 +893,6 @@ li{
     transform-origin: right;
   }
 }
-/*.right-box-enter-active{
-  transition: transform 0.4s;
-}
-.right-box-leave-active {
-  transition: transform 0.4s;
-}
-.right-box-enter, .right-box-leave-to  {
-  transform: translateX(100%);
-}*/
 .right-box-enter-active, .right-box-leave-active  {
   transform: scaleX(1);
   opacity: 1;
@@ -879,25 +904,6 @@ li{
 .right-box-enter, .right-box-leave-active {
   opacity: 0;
   transform: scaleX(0);
-}
-.right-box-580-enter-active{
-  transition: transform 0.4s;
-}
-.right-box-580-leave-active {
-  transition: transform 0.4s;
-}
-.right-box-580-enter,.right-box-580-leave-to {
-  transform: translateX(100%);
-}
-
-.right-box-840-enter-active{
-  transition: transform 0.4s;
-}
-.right-box-840-leave-active {
-  transition: transform 0.4s;
-}
-.right-box-840-enter,.right-box-840-leave-to {
-  transform: translateX(100%);
 }
 /* end--右弹框滑入滑出动画*/
 
@@ -933,7 +939,7 @@ li{
 
 /*此处自定义弹框尺寸，不同功能可能需要的尺寸不一样，需自行添加*/
 .right-box-account, .right-box-prom, .right-box-alert-config, .right-box-project, .right-box-module, .right-box-cabinet,
-.right-box-edit-endpoint, .right-box-panel, .right-box-dc, .right-box-model,.right-box-mib, .right-box-add-asset, .right-box-add-chart {
+.right-box-edit-endpoint, .right-box-panel, .right-box-dc, .right-box-model, .right-box-mib, .right-box-asset, .right-box-add-chart {
   width: 850px;
 }
 .right-box-chart .el-input__inner, .right-box-chart input {

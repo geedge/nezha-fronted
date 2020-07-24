@@ -2,7 +2,7 @@
   <span>
     <div class="sub-top-tools">
       <div class="sub-list-tabs">
-        <div class="sub-list-tab-title">{{$t("asset.createAssetTab.dcName")}}：{{obj.name}}</div><div
+        <div class="sub-list-tab-title">{{$t("asset.dcName")}}：{{obj.name}}</div><div
         class="sub-list-tab" @click="changeTab('detail')">{{$t("overall.detail")}}</div><div
         class="sub-list-tab sub-list-tab-active">{{$t("config.dc.cabinets")}}</div>
       </div>
@@ -44,7 +44,7 @@
               placement="top-start"
               offset="-100"
               trigger="hover"
-              :content="$t('overall.result.total') + '：' + scope.row.assetStat.total + '，' + $t('asset.createAssetTab.inStock') + '：' + scope.row.assetStat.inStock + '，' + $t('asset.createAssetTab.notInStock') + '：' + scope.row.assetStat.outStock">
+              :content="$t('overall.result.total') + '：' + scope.row.assetStat.total + '，' + $t('asset.inStock') + '：' + scope.row.assetStat.inStock + '，' + $t('asset.notInStock') + '：' + scope.row.assetStat.outStock">
               <div slot="reference" class="dc-asset-states">
                 <span class="dc-asset-state dc-asset-state-total">{{scope.row.assetStat.total}}</span>
                 <span class="dc-asset-state dc-asset-state-in">{{scope.row.assetStat.inStock}}</span>
@@ -113,7 +113,7 @@
             show:true
           },
           {
-            label:this.$t('asset.createAssetTab.uSize'),
+            label:this.$t('asset.uSize'),
             prop:'uSize',
             show:true
           },
@@ -151,7 +151,7 @@
             },
             {
               id:12,
-              name:this.$t('asset.createAssetTab.uSize'),
+              name:this.$t('asset.uSize'),
               label:'uSize',
               disabled: false
             },

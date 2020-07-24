@@ -37,11 +37,12 @@
     </div>
     <!--dc table start-->
     <div slot="content-right" class="slot-content">
-      <div class="main-list main-and-sub-transition" :class="{'main-list-with-sub': showSubList}">
-        <div class="top-tools" v-show="mainResizeShow">
-          <div class="top-tool-main-right" :class="{'top-tool-main-right-to-left': showSubList}">
+      <div class="main-list" :class="{'main-list-with-sub': bottomBox.showSubList}">
+        <div class="main-modal"></div>
+        <div class="top-tools" v-show="bottomBox.mainResizeShow">
+          <div class="top-tool-main-right" :class="{'top-tool-main-right-to-left': bottomBox.showSubList}">
             <div class="top-tool-search">
-              <search-input ref="searchInput" :searchMsg="searchMsg" @search="search" :inTransform="inTransform"></search-input>
+              <search-input ref="searchInput" :searchMsg="searchMsg" @search="search" :inTransform="bottomBox.inTransform"></search-input>
             </div>
             <button type="button" @click="add" :title="$t('overall.createDatacenter')"
                     class="nz-btn nz-btn-size-normal nz-btn-style-light margin-l-20" id="dc-add">
@@ -55,18 +56,18 @@
           :data="tableData"
           border
           tooltip-effect="light"
-          v-show="mainResizeShow"
+          v-show="bottomBox.mainResizeShow"
           v-scrollBar:el-table="'large'"
           :height="mainTableHeight"
           ref="dcTable"
-          v-loading="loading"
+          v-loading="tools.loading"
           :cell-class-name="assetStatClassName"
           style="width: 100%;"
           @sort-change="tableDataSort">
           <el-table-column
             :resizable="false"
             show-overflow-tooltip
-            v-for="(item, index) in tablelable"
+            v-for="(item, index) in tools.tablelable"
             v-if="item.show"
             :width="item.width"
             :key="`col-${index}`"
@@ -100,7 +101,7 @@
                 <el-popover
                   placement="top"
                   trigger="hover"
-                  :content="$t('overall.result.total') + '：' + scope.row.assetStat.total + '，' + $t('asset.createAssetTab.inStock') + '：' + scope.row.assetStat.inStock + '，' + $t('asset.createAssetTab.notInStock') + '：' + scope.row.assetStat.outStock">
+                  :content="$t('overall.result.total') + '：' + scope.row.assetStat.total + '，' + $t('asset.inStock') + '：' + scope.row.assetStat.inStock + '，' + $t('asset.notInStock') + '：' + scope.row.assetStat.outStock">
                   <div slot="reference" class="dc-asset-states">
                     <span class="dc-asset-state dc-asset-state-total">{{scope.row.assetStat.total}}</span>
                     <span class="dc-asset-state dc-asset-state-in">{{scope.row.assetStat.inStock}}</span>
@@ -123,22 +124,25 @@
               </span>
             </template>
             <template v-slot="scope">
-              <button v-if="scope.$index == 0" class="to-top" :style="{top: toTopBtnTop}" :class="{'to-top-is-hover': tableHover}" v-show="showTopBtn && mainResizeShow" @click="$toTop('ps', 0)"><i class="nz-icon nz-icon-top"></i></button>
+              <button v-if="scope.$index == 0" class="to-top" :style="{top: tools.toTopBtnTop}" :class="{'to-top-is-hover': tools.tableHover}" v-show="tools.showTopBtn && bottomBox.mainResizeShow" @click="$toTop('ps', 0)"><i class="nz-icon nz-icon-top"></i></button>
             </template>
           </el-table-column>
         </el-table>
-        <div class="pagination-bottom" v-show="!showSubList">
+        <div class="pagination-bottom" v-show="!bottomBox.showSubList">
           <Pagination :tableId="tableId" :pageObj="pageObj" @pageNo='pageNo' @pageSize='pageSize' ref="Pagination"></Pagination>
         </div>
       </div>
-      <bottom-box v-if="showSubList" :show-sub-list="showSubList" :subResizeShow="subResizeShow" :obj="dc" :isFullScreen="isFullScreen" :from="'dc'" :targetTab.sync="targetTab" :detail="dcDetail"
-                   @closeSubList="showSubList = false" @fullScreen="fullScreen" @exitFullScreen="exitFullScreen" @listResize="listResize" ></bottom-box>
+      <transition name="el-zoom-in-bottom">
+        <bottom-box v-if="bottomBox.showSubList" :sub-resize-show="bottomBox.subResizeShow" :obj="bottomBox.dc" :is-full-screen="bottomBox.isFullScreen" :from="'dc'" :target-bab.sync="bottomBox.targetTab" :detail="bottomBox.dcDetail"
+                     @closeSubList="bottomBox.showSubList = false" @fullScreen="fullScreen" @exitFullScreen="exitFullScreen" @listResize="listResize" ></bottom-box>
+      </transition>
     </div>
     </left-menu>
     <!--dc table end-->
     <element-set
+      v-if="tools.showElementSet"
       v-clickoutside="elementsetHide"
-      :dropCol="dropCol"
+      :dropCol="tools.dropCol"
       @tablelable="tablelabelEmit"
       :table-title="tableTitle"
       ref="elementset"
@@ -164,23 +168,29 @@
     },
     data() {
       return {
-        /*二级列表相关*/
-        targetTab: '', //展示二级列表中的哪个页签
-        inTransform: false, //搜索框相关，搜索条件下拉框是否在transform里
-        mainResizeShow: true, //dom高度改变时部分内容是否展示
-        subResizeShow: true,
-        isFullScreen: false,
-        showSubList: false, //是否展示二级列表
-        dcDetail: [], //dc的详情信息，包含标题
-
-        toTopBtnTop: this.$tableHeight.toTopBtnTop, //to-top按钮的top属性
-        tableHover: false, //控制滚动条和top按钮同时出现
-
-        showElementSet: false, //控制自定义列的弹框
-        tableId: 'dcTable', //需要分页的table的id，用于记录每页数量
-        showTopBtn: false,
+        /*二级页面相关*/
+        bottomBox: {
+          dcDetail: {},
+          dc: {},
+          mainResizeShow: true, //dom高度改变时是否展示|隐藏
+          subResizeShow: true,
+          isFullScreen: false, //全屏状态
+          showSubList: false, //是否显示二级列表
+          targetTab: '', //显示二级列表中的哪个页签
+          inTransform: false, //搜索框相关，搜索条件下拉框是否在transform里
+        },
         mainTableHeight: this.$tableHeight.normal, //主列表table高度
-        loading: false,
+        /*工具参数*/
+        tools: {
+          loading: false, //是否显示table加载动画
+          toTopBtnTop: this.$tableHeight.toTopBtnTop, //to-top按钮的top属性
+          tableHover: false, //控制滚动条和top按钮同时出现
+          showElementSet: false, //自定义列弹框是否显示
+          showTopBtn: false, //显示To top按钮
+          tablelable: [], //从缓存中加载的table header
+          dropCol: [], //自定义列工具的数据
+        },
+        tableId: 'dcTable', //需要分页的table的id，用于记录每页数量
         dc: {},
         blankDc: {
           id: '',
@@ -217,7 +227,7 @@
             prop: 'area',
             show: true
           }, {
-            label: this.$t("asset.createAssetTab.location"),
+            label: this.$t("asset.location"),
             prop: 'location',
             show: true,
           }, {
@@ -229,11 +239,11 @@
             prop: 'assetStat',
             show: true,
           }, {
-            label: this.$t('asset.createAssetTab.tel'),
+            label: this.$t('asset.tel'),
             prop: 'tel',
             show: true,
           }, {
-            label: this.$t('asset.createAssetTab.principal'),
+            label: this.$t('asset.principal'),
             prop: 'principal',
             show: true
           }, {
@@ -243,8 +253,6 @@
             width: 120
           }
         ],
-        tablelable: [],
-        dropCol: [],
         tableData: [],
         userData: [],
         searchMsg: { //给搜索框子组件传递的信息
@@ -258,20 +266,19 @@
           }],
         },
         searchLabel: {}, //搜索参数
-        tabShow:1, // 控制显示一级页面和二级页面 1 dc 2cabinet
-        cabinetDatas:[],//显示的机柜信息
-
+        tabShow: 1, // 控制显示一级页面和二级页面 1 dc 2cabinet
       }
     },
     methods: {
       elementsetShow(s, e) {
+        this.tools.showElementSet = true;
         var eventfixed = {
           shezhi: 0,
           screen: 0
         };
         eventfixed[s] = 1;
         e.preventDefault();
-        this.$store.commit('setHeaderTable', this.tablelable);
+        this.$store.commit('setHeaderTable', this.tools.tablelable);
         this.$store.commit('setEventfixed', eventfixed);
         const h = document.documentElement.clientHeight;
         const w = document.documentElement.clientWidth;
@@ -298,7 +305,7 @@
       tablelabelEmit(data) {
         //获取子组件传过来的参数
         this.$store.commit('setHeaderTable', data);
-        this.tablelable = data;
+        this.tools.tablelable = data;
       },
       jumpTo(data, id) {
         bus.$emit("menu-change", data);
@@ -321,12 +328,12 @@
         this.rightBox.trafficSetting.show = true;
       },
       detail(u) {
-        this.dc = JSON.parse(JSON.stringify(u));
-        if (!this.dc.area) {
-          this.$set(this.dc, 'area', {id: '', name: ''});
+        this.bottomBox.dc = JSON.parse(JSON.stringify(u));
+        if (!this.bottomBox.dc.area) {
+          this.$set(this.bottomBox.dc, 'area', {id: '', name: ''});
         }
-        this.targetTab = "detail";
-        this.showSubList = true;
+        this.bottomBox.targetTab = "detail";
+        this.bottomBox.showSubList = true;
       },
       // 全屏
       fullScreen() {
@@ -347,11 +354,11 @@
         let detail = [];
         detail.push({label: this.$t("overall.name"), value: obj.name});
         detail.push({label: this.$t("config.dc.area"), value: obj.area.name});
-        detail.push({label: this.$t("asset.createAssetTab.location"), value: obj.location});
+        detail.push({label: this.$t("asset.location"), value: obj.location});
         detail.push({label: this.$t("config.dc.cabinetNum"), value: obj.cabinetNum});
-        let assets = this.$t('overall.result.total') + ' ' + obj.assetStat.total + '，' + this.$t('asset.createAssetTab.inStock') + ' ' + obj.assetStat.inStock + '，' + this.$t('asset.createAssetTab.notInStock') + ' ' + obj.assetStat.outStock;
+        let assets = this.$t('overall.result.total') + ' ' + obj.assetStat.total + '，' + this.$t('asset.inStock') + ' ' + obj.assetStat.inStock + '，' + this.$t('asset.notInStock') + ' ' + obj.assetStat.outStock;
         detail.push({label: this.$t("config.dc.assets"), value: assets});
-        detail.push({label: this.$t("asset.createAssetTab.tel"), value: obj.tel});
+        detail.push({label: this.$t("asset.tel"), value: obj.tel});
         let principal = '';
         for (let i = 0; i < this.userData.length; i++) {
           if (this.userData[i].userId == obj.principal) {
@@ -359,7 +366,7 @@
             break;
           }
         }
-        detail.push({label: this.$t("asset.createAssetTab.principal"), value: principal});
+        detail.push({label: this.$t("asset.principal"), value: principal});
         return detail;
       },
       add() {
@@ -400,9 +407,9 @@
       getTableData() {
         this.$set(this.searchLabel, "pageNo", this.pageObj.pageNo);
         this.$set(this.searchLabel, "pageSize", this.pageObj.pageSize);
-        this.loading = true;
+        this.tools.loading = true;
         this.$get('idc', this.searchLabel).then(response => {
-          this.loading = false;
+          this.tools.loading = false;
           if (response.code === 200) {
             this.tableData = response.data.list;
             this.pageObj.total = response.data.total
@@ -446,9 +453,9 @@
         this.getTableData();
       },
       showCabinet(dc) {
-        this.targetTab = 'cabinet';
-        this.dc = JSON.parse(JSON.stringify(dc));
-        this.showSubList = true;
+        this.bottomBox.targetTab = 'cabinet';
+        this.bottomBox.dc = JSON.parse(JSON.stringify(dc));
+        this.bottomBox.showSubList = true;
       },
       //是否需要排序
       sortableShow(prop) {
@@ -483,15 +490,15 @@
       },
     },
     watch: {
-      dc: {
+      'bottomBox.dc': {
         deep: true,
         handler(n) {
           if (n.id) {
-            this.dcDetail = this.convertToDetail(n);
+            this.bottomBox.dcDetail = this.convertToDetail(n);
           }
         }
       },
-      showSubList(n) {
+      'bottomBox.showSubList': function(n) {
         let vm = this;
         this.$bottomBoxWindow.showSubListWatch(vm, n);
       }
@@ -512,16 +519,16 @@
         if (el._ps_) {
           el.addEventListener("ps-scroll-y", () => {
             if (el._ps_.scrollbarYTop > 100) {
-              this.showTopBtn = true;
+              this.bottomBox.showTopBtn = true;
             } else {
-              this.showTopBtn = false;
+              this.bottomBox.showTopBtn = false;
             }
           });
           el.addEventListener("mouseenter", () => {
-            this.tableHover = true;
+            this.tools.tableHover = true;
           });
           el.addEventListener("mouseleave", () => {
-            this.tableHover = false;
+            this.tools.tableHover = false;
           });
           window.onresize = function() {
             el._ps_.update();
@@ -529,10 +536,10 @@
         }
       });
 
-      this.tablelable = localStorage.getItem("nz-tableTitle-" + localStorage.getItem("nz-username") + "-" + this.$route.path)
+      this.tools.tablelable = localStorage.getItem("nz-tableTitle-" + localStorage.getItem("nz-username") + "-" + this.$route.path)
         ? JSON.parse(localStorage.getItem("nz-tableTitle-" + localStorage.getItem("nz-username") + "-" + this.$route.path))
         : this.tableTitle;
-      this.dropCol = localStorage.getItem("nz-tableTitle-" + localStorage.getItem("nz-username") + "-" + this.$route.path)
+      this.tools.dropCol = localStorage.getItem("nz-tableTitle-" + localStorage.getItem("nz-username") + "-" + this.$route.path)
         ? JSON.parse(localStorage.getItem("nz-tableTitle-" + localStorage.getItem("nz-username") + "-" + this.$route.path))
         : this.tableTitle;
     }

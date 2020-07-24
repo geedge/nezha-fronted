@@ -1,5 +1,5 @@
 <template>
-  <span class="sub-list">
+  <span>
     <div class="sub-top-tools">
       <div class="sub-list-tabs">
         <div class="sub-list-tab-title">

@@ -10,7 +10,7 @@
       <!-- end--顶部按钮-->
 
       <!-- begin--标题-->
-      <div class="right-box-title">{{editDc.id ? ($t("asset.createAssetTab.editIdcTab.title") + "  ID：" + editDc.id) : $t("asset.createAssetTab.AddIdcTab.title")}}</div>
+      <div class="right-box-title">{{editDc.id ? ($t("asset.editIdcTab.title") + "  ID：" + editDc.id) : $t("asset.AddIdcTab.title")}}</div>
       <!-- end--标题-->
 
       <!-- begin--表单-->
@@ -19,13 +19,13 @@
           <el-form-item :label='$t("overall.name")' prop="name">
             <el-input placeholder="" maxlength="64" show-word-limit v-model="editDc.name" size="small"></el-input>
           </el-form-item>
-          <el-form-item :label='$t("asset.createAssetTab.location")' prop="location">
+          <el-form-item :label='$t("asset.location")' prop="location">
             <el-input placeholder="" v-model="editDc.location" size="small"></el-input>
           </el-form-item>
-          <el-form-item :label='$t("asset.createAssetTab.tel")' prop="tel">
+          <el-form-item :label='$t("asset.tel")' prop="tel">
             <el-input placeholder="" v-model="editDc.tel" size="small"></el-input>
           </el-form-item>
-          <el-form-item :label='$t("asset.createAssetTab.principal")' prop="principal">
+          <el-form-item :label='$t("asset.principal")' prop="principal">
             <el-select value-key="id" popper-class="config-dropdown" v-model="editDc.principal" placeholder="" size="small">
               <el-option @click.native="" v-for="item in userData" :key="item.userId" :label="item.username" :value="item.userId" :id="'dc-principal-op-'+item.userId">
                 <span>{{item.username}}</span>

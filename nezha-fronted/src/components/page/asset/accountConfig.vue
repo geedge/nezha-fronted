@@ -1,50 +1,50 @@
 <template>
   <el-form label-width="120px" :model="account" :rules="rules" ref="accountForm" style="margin-top: 20px;">
     <template v-if="account.protocol == 'SSH'">
-      <el-form-item :label="$t('asset.createAssetTab.account')" prop="params.user">
+      <el-form-item :label="$t('asset.account')" prop="params.user">
         <el-input autocomplete="new-password" size="small" v-model="account.params.user"/>
       </el-form-item>
-      <el-form-item :label="$t('asset.createAssetTab.loginType')" prop="params.method">
+      <el-form-item :label="$t('asset.loginType')" prop="params.method">
         <el-radio-group v-model="account.params.method" size="small">
-          <el-radio-button label="password">{{$t('asset.createAssetTab.password')}}</el-radio-button>
-          <el-radio-button label="key">{{$t('asset.createAssetTab.ssh')}}</el-radio-button>
+          <el-radio-button label="password">{{$t('asset.password')}}</el-radio-button>
+          <el-radio-button label="key">{{$t('asset.ssh')}}</el-radio-button>
         </el-radio-group>
       </el-form-item>
-      <el-form-item :label="$t('asset.createAssetTab.password')" v-if="account.params.method == 'password'">
+      <el-form-item :label="$t('asset.password')" v-if="account.params.method == 'password'">
         <el-input autocomplete="new-password" size="small" type="password" v-model="account.params.password"/>
       </el-form-item>
-      <el-form-item :label="$t('asset.createAssetTab.ssh')" v-if="account.params.method == 'key'" prop="file">
+      <el-form-item :label="$t('asset.ssh')" v-if="account.params.method == 'key'" prop="file">
         <el-input rows="4" type="textarea" placeholder="" v-model="account.params.key" size="small"></el-input>
       </el-form-item>
-      <el-form-item :label="$t('asset.createAssetTab.password')" v-if="account.params.method == 'key'">
+      <el-form-item :label="$t('asset.password')" v-if="account.params.method == 'key'">
         <el-input autocomplete="new-password" size="small" type="password" v-model="account.params.passwordKey"/>
       </el-form-item>
-      <el-form-item :label="$t('asset.createAssetTab.port')" prop="port" style="display: inline-block">
+      <el-form-item :label="$t('asset.port')" prop="port" style="display: inline-block">
         <el-input size="small" v-model.number="account.port"/>
       </el-form-item>
     </template>
     <template v-if="account.protocol == 'TELNET'">
-      <el-form-item :label="$t('asset.createAssetTab.account')" prop="params.user">
+      <el-form-item :label="$t('asset.account')" prop="params.user">
         <el-input autocomplete="new-password" size="small" v-model="account.params.user"/>
       </el-form-item>
-      <el-form-item :label="$t('asset.createAssetTab.userTip')" prop="userTip">
+      <el-form-item :label="$t('asset.userTip')" prop="userTip">
         <el-input autocomplete="new-password" size="small" v-model="account.params.userTip"/>
       </el-form-item>
-      <el-form-item :label="$t('asset.createAssetTab.password')">
+      <el-form-item :label="$t('asset.password')">
         <el-input autocomplete="new-password" size="small" type="password" v-model="account.params.password"/>
       </el-form-item>
-      <el-form-item :label="this.$t('asset.createAssetTab.passwordTip')">
+      <el-form-item :label="this.$t('asset.passwordTip')">
         <el-input size="small" v-model="account.params.passwordTip"/>
       </el-form-item>
-      <el-form-item :label="$t('asset.createAssetTab.reloginPasswordTip')" prop="reloginTip">
+      <el-form-item :label="$t('asset.reloginPasswordTip')" prop="reloginTip">
         <el-input size="small" v-model="account.params.reloginTip"/>
       </el-form-item>
-      <el-form-item :label="$t('asset.createAssetTab.port')" prop="port" style="display: inline-block">
+      <el-form-item :label="$t('asset.port')" prop="port" style="display: inline-block">
         <el-input size="small" v-model.number="account.port"/>
       </el-form-item>
     </template>
     <template v-if="account.protocol == 'SNMP'">
-      <el-form-item :label="$t('asset.createAssetTab.port')" prop="port">
+      <el-form-item :label="$t('asset.port')" prop="port">
         <el-input size="small" v-model.number="account.port"/>
       </el-form-item>
       <el-form-item :label="$t('project.module.community')" prop="params.community">
@@ -61,7 +61,7 @@
       </el-form-item>
       <!--SNMP V3 setting-->
       <template v-if="account.params.version == 3">
-        <el-form-item :label="$t('asset.createAssetTab.account')" prop="params.user">
+        <el-form-item :label="$t('asset.account')" prop="params.user">
           <el-input size="small" v-model="account.params.user"/>
         </el-form-item>
         <el-form-item :label="$t('project.module.securityLevel')" prop="params.securityLevel">

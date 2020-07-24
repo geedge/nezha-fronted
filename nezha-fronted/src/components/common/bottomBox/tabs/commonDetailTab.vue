@@ -3,7 +3,7 @@
     <div class="sub-top-tools">
       <div class="sub-list-tabs">
         <div class="sub-list-tab-title">
-          <template v-if="from == 'dc'">{{$t("asset.createAssetTab.dcName")}}：{{obj.name}}</template>
+          <template v-if="from == 'dc'">{{$t("asset.dcName")}}：{{obj.name}}</template>
           <template v-else-if="from == 'account'">{{$t("config.account.account")}}：{{obj.username}}</template>
           <template v-else-if="from == 'promServer'">ID：{{obj.id}}</template>
           <template v-else-if="from == 'alertRule'">{{$t("alert.alertName")}}：{{obj.alertName}}</template>
