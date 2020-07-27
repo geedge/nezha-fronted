@@ -1,8 +1,8 @@
 <template>
- <span class="nz-alert-tag" :class="['nz-alert-tag_' + type]" :style="{cursor: cursorPoint ? 'pointer' : 'default'}" @click="$emit('click')">
+  <span class="nz-alert-tag" :class="['nz-alert-tag_' + type]" :style="{cursor: cursorPoint ? 'pointer' : 'default'}" @click="$emit('click')">
    <span class="nz-alert-tag__label">{{label}}</span>
    <span class="nz-alert-tag__content"><slot></slot></span>
- </span>
+  </span>
 </template>
 
 <script>

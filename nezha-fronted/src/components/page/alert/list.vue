@@ -2,6 +2,9 @@
   .list {
     height: 100%;
   }
+  .too-long-split{
+    cursor: pointer;
+  }
 </style>
 <style lang="scss">
   @import '../../charts/chart';
@@ -50,7 +53,8 @@
           :cell-class-name="labelsClassName"
           @selection-change="selectChange"
           style="width: 100%;"
-          @sort-change="tableDataSort">
+          @sort-change="tableDataSort"
+        >
           <el-table-column
             :resizable="false"
             type="selection"
@@ -63,19 +67,26 @@
             v-for="(item, index) in tablelable"
             v-if="item.show"
             :width="item.width"
+            :minWidth="item.minWidth"
             :key="`col-${index}`"
             :label="item.label"
             :show-overflow-tooltip="item.prop != 'labels'"
             min-width="110px"
             :sortable="sortableShow(item.prop)"
             :prop="propTitle(item.prop)"
+            :sort-orders="['ascending', 'descending']"
           >
             <template slot-scope="scope" :column="item">
               <template v-if="item.prop == 'alertRule'">
                 <!--<div class="link too-long-split"
                    @click="viewRule(scope.row[item.prop].id)" :id="'view-rule-'+scope.row[item.prop].id"
                    v-if="scope.row[item.prop].alertName">{{scope.row[item.prop].alertName}}</div>-->
-                <span class="too-long-split"v-if="scope.row[item.prop].alertName">{{scope.row[item.prop].alertName}}</span>
+                  <span class="too-long-split" v-if="scope.row[item.prop].alertName" @mouseover="alertMessagehover(scope.row,scope.$index)">
+                    <el-tooltip placement="right" effect="light">
+                      <alertRuleInfo slot="content" :id="scope.row.alertRule.id" :severityData="severityData" :messageLoad="scope.row.loading"></alertRuleInfo>
+                      <span>{{scope.row[item.prop].alertName}}</span>
+                    </el-tooltip>
+                  </span>
                 <template v-else>-</template>
               </template>
               <!--<div v-else-if="item.prop == 'type'" class="content-right-options">
@@ -107,11 +118,31 @@
               </div>-->
               <template v-else-if="item.prop == 'labels'">
 <!--                <nz-alert-tag :label="key" :type="tagType(key)" style="margin: 5px;" @click="showTagDetail(scope.row, key)"-->
-                <nz-alert-tag :label="item.label" :type="tagType(item.label)" style="margin: 5px;"
-                              :cursor-point="tagType(item.label) == 'info' ? false : true"
-                              :key="item.label"
-                              v-if="item.label != 'alertname' && item.label != 'severity'"
-                              v-for="item in labelsSort(scope.row.labels)">{{item.value}}</nz-alert-tag>
+                  <el-tooltip
+                    v-for="item in labelsSort(scope.row.labels)"
+                    placement="right"
+                    effect="light"
+                    :disabled="labelToolTipDis(item.label)"
+                    :key="item.label"
+                  >
+                  <alertLabel
+                    v-if="!labelToolTipDis(item.label)"
+                    slot="content"
+                    :id="scope.row[item.label].id"
+                    :type="item.label"
+                    :labelLoading="scope.row[item.label].loading"
+                  ></alertLabel>
+                   <span @mouseover="labelHover(scope.row,scope.$index,item.label)">
+                     <nz-alert-tag
+                       :label="item.label" :type="tagType(item.label)" style="margin: 5px;"
+                       :cursor-point="tagType(item.label) == 'info' ? false : true"
+                       :key="item.label"
+                       v-if="item.label != 'alertname' && item.label != 'severity'"
+                     >
+                       {{item.value}}
+                     </nz-alert-tag>
+                   </span>
+                </el-tooltip>
                 <!--<el-tag @click="showTagDetail(scope.row, key)"
                         :key="key"
                         :class="{'link': key == 'asset' || key == 'endpoint' || key == 'project' || key == 'module' || key == 'datacenter'}"
@@ -228,13 +259,16 @@
   import nzAlertTag from './nzAlertTag';
   import chart from '../../page/dashboard/overview/chart'
   import chartDataFormat from "../../charts/chartDataFormat";
-
+  import alertRuleInfo from '../../common/alert/alertRuleInfo'
+  import alertLabel from '../../common/alert/alertLabel'
   var vm;
   export default {
     name: "alertList",
     components: {
       'nz-alert-tag': nzAlertTag,
-      'chart': chart
+      'chart': chart,
+      'alertRuleInfo':alertRuleInfo,
+      'alertLabel':alertLabel,
     },
     data() {
       vm = this;
@@ -289,20 +323,20 @@
             label: this.$t("alert.list.labels"),
             prop: 'labels',
             show: true,
-            width: 200
+            width:250,
           }, {
             label: this.$t("alert.severity"),
             prop: 'severity',
             show: true,
-            width: 100
+            width: 100,
           }, {
             label: this.$t('alert.summary'),
             prop: 'summary',
-            show: true
+            show: true,
           }, {
             label: this.$t('alert.description'),
             prop: 'description',
-            show: true
+            show: true,
           }, {
             label: this.$t('alert.list.state'),
             prop: 'state',
@@ -312,14 +346,17 @@
             label: this.$t("alert.startAt"),
             prop: 'startAt',
             show: true,
+            width: 150
           }, {
             label: this.$t('alert.endAt'),
             prop: 'endAt',
             show: true,
+            width: 150
           }, {
             label: this.$t('overall.value'),
             prop: 'current',
-            show: true
+            show: true,
+            width: 100
           }, {
             label: this.$t('overall.option'),
             prop: 'option',
@@ -958,6 +995,29 @@
         this.pageObj.orderBy=orderBy;
         this.$set(this.searchLabel, "orderBy", orderBy);
         this.getAlertList();
+      },
+      // label tooltip是否显示
+      labelToolTipDis(labelType){
+        switch(labelType){
+          case 'asset':
+          case 'module':
+          case 'project':
+            return false;
+          default: return true;
+        }
+      },
+      // alertNmae鼠标划入
+      alertMessagehover(item,index){
+        item.loading=true;
+        this.$set(this.tableData,index,item);
+      },
+      // label 鼠标划入
+      labelHover(item,index,type){
+        if(this.labelToolTipDis(type)){
+          return
+        }
+        item[type].loading=true;
+        this.$set(this.tableData,index,item);
       }
     },
     watch: {
