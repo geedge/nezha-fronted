@@ -4,6 +4,10 @@
   }
   .too-long-split{
     cursor: pointer;
+    vertical-align: bottom;
+  }
+  span.el-tooltip {
+    display: inline-block;
   }
 </style>
 <style lang="scss">
@@ -116,7 +120,7 @@
                       :id="'link-obj-'+scope.row['type']+'-'+scope.row[item.prop].id">{{scope.row[item.prop].host}}</span>
                 <span v-else>-</span>
               </div>-->
-              <template v-else-if="item.prop == 'labels'">
+              <template v-else-if="item.prop == 'labels'" class="labels">
 <!--                <nz-alert-tag :label="key" :type="tagType(key)" style="margin: 5px;" @click="showTagDetail(scope.row, key)"-->
                   <el-tooltip
                     v-for="item in labelsSort(scope.row.labels)"
@@ -134,7 +138,7 @@
                   ></alertLabel>
                    <span @mouseover="labelHover(scope.row,scope.$index,item.label)">
                      <nz-alert-tag
-                       :label="item.label" :type="tagType(item.label)" style="margin: 5px;"
+                       :label="item.label" :type="tagType(item.label)" style="margin: 5px 0 5px 5px;"
                        :cursor-point="tagType(item.label) == 'info' ? false : true"
                        :key="item.label"
                        v-if="item.label != 'alertname' && item.label != 'severity'"
