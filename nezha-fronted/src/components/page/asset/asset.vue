@@ -54,14 +54,11 @@
               </el-collapse-item>
               <el-collapse-item name="ping" :title="$t('asset.left.ping')">
                 <el-checkbox-group v-model="pingCheckList" size="small" @change="changePingCheckBox">
-                  <el-checkbox class="sidebar-info-item" :class="{'sidebar-info-item-active': indOf(pingCheckList, item.key)}" v-for="(item, index) in pingData" :key="index" :label="item.value">
+                  <el-checkbox class="sidebar-info-item" :class="{'sidebar-info-item-active': indOf(pingCheckList, item.key)}" v-for="(item, index) in pingData" :key="index" :label="item.label">
                     <div class="sidebar-info-item-txt">
-                      <el-popover v-if="item.value.length > 16" trigger="hover" placement="top-start" :content="item.value" >
-                        <span slot="reference">{{item.value}}</span>
-                      </el-popover>
-                      <span v-else>{{item.value}}</span>
+                      <span>{{item.label}}</span>
                     </div>
-                    <el-tooltip :content="''+item.total" placement="top" effect="light" :disabled="item.total<99">
+                    <el-tooltip :content="''+item.total" placement="top" effect="light" :disabled="item.total < 99">
                       <el-badge class="mark" :value="item.total" :max="99"/>
                     </el-tooltip>
                   </el-checkbox>
@@ -428,7 +425,7 @@
         assetTypeCheckList: [],
         vendorData: [],
         vendorCheckList: [],
-        pingData: this.$CONSTANTS.asset.pingData,
+        pingData: [],
         pingCheckList: [],
 
         pageObj: {
@@ -661,41 +658,6 @@
           })
         });
       },
-      addNewData(type) {
-        if (type === 'IDC') {
-          this.$post('idc', this.addIdcData).then(res => {
-            if (res.code === 200) {
-              const h = this.$createElement;
-              this.$message({duration: 2000, type: 'success', message: this.$t("tip.saveSuccess")});
-              this.getDcData()
-              this.getTableData()
-              /*this.getLeftMenuList()
-              this.getAssetData()*/
-            } else {
-              this.$message.error(res.msg);
-            }
-          })
-        }
-      },
-      deleteData(data, item) {
-        this.$confirm(this.$t("tip.assetConfirmDelete"), {
-          confirmButtonText: this.$t("tip.yes"),
-          cancelButtonText: this.$t("tip.no"),
-          type: 'warning'
-        }).then(() => {
-          this.$delete(data + "?ids=" + item).then(response => {
-            if (response.code === 200) {
-              this.$message({duration: 2000, type: 'success', message: this.$t("tip.deleteSuccess")});
-              this.getTableData();
-              this.getDcData();
-              /*this.getAssetData();
-              this.getLeftMenuList();*/
-            } else {
-              this.$message.error(response.msg);
-            }
-          })
-        });
-      },
       markOptionData(data) {
         data.forEach(item => {
           this.$set(item, 'isEdit', false);
@@ -704,26 +666,6 @@
           this.$set(item, item.id, false)
           this.$set(item, item.id + item.name, false)
         })
-      },
-      editOptionData(item) {
-        if (!item.isEdit) {
-          item.isEdit = true;
-        } else {
-          if (item.name !== item.oldName) {
-            item.isEdit = false;
-          } else {
-            item.isEdit = false;
-          }
-        }
-      },
-      delOptionData(data) {
-      },
-      tabControl(data) {
-        if (data === 'close') {
-          this.editUnitShow = false;
-          this.$refs['assetEditUnit'].tabView = false;
-          this.rightBox.show = false;
-        }
       },
       indOf(a, b) {
         let c = [];
@@ -920,38 +862,37 @@
       /*}
         this.getAssetData();*/
       },
-      /*// 获取左侧菜单数据
+      // 获取左侧菜单数据
       getLeftMenuList(){
-        this.$get('asset/filter').then(response => {
-          if (response.code === 200) {
-            //dc
-            this.checkListData = this.IDCOptionData = response.data.dc;
-            this.markOptionData(this.IDCOptionData);
-            // AssetType
-            this.assetTypeCheckListData = response.data.assetType;
-            // vendor
-            this.vendorCheckListData = response.data.vendor;
-            // ping
-            this.pingCheckListData= response.data.ping.map(item=>{
-              item.label=item.name;
-              item.value=item.status;
-              return item
-            })
-          }
-        })
-      },*/
-    },
-    created() {
-      this.getUserData();
-      this.flushData();
-      this.getPingData();
+        return new Promise(resolve => {
+          this.$get('asset/filter').then(response => {
+            if (response.code === 200) {
+              //dc
+              this.dcData = response.data.dc;
+              // AssetType
+              this.assetTypeData = response.data.assetType;
+              // vendor
+              this.vendorData = response.data.vendor;
+              // ping
+              this.pingData = response.data.ping.map(item => {
+                item.label = item.name;
+                item.value = item.status;
+                return item;
+              });
+            }
+            resolve();
+          });
+        });
+      },
     },
     mounted() {
       //初始化数据
-      Promise.all([this.getVendorData(), this.getAssetTypeData(), this.getUserData(), this.getDcData()]).then(response => {
+      /*Promise.all([this.getVendorData(), this.getAssetTypeData(), this.getUserData(), this.getDcData()]).then(response => {
+        this.getTableData();
+      });*/
+      this.getLeftMenuList().then(() => {
         this.getTableData();
       });
-      // this.getLeftMenuList()//获取左侧菜单列表
       //是否存在分页缓存
       let pageSize = localStorage.getItem('nz-pageSize-' + localStorage.getItem('nz-username') + '-' + this.tableId);
       if (pageSize != 'undefined' && pageSize != null) {

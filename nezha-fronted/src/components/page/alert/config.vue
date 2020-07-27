@@ -103,7 +103,7 @@
     </div>
     </left-menu>
     <transition name="right-box">
-      <alert-config-box v-if="rightBox.show" :alert-rule="alertRule" @close="closeRightBox" ref="alertConfigBox"></alert-config-box>
+      <alert-config-box  :alert-rule="alertRule" @close="closeRightBox" ref="alertConfigBox"></alert-config-box>
     </transition>
     <element-set
       v-if="tools.showElementSet"
@@ -124,10 +124,6 @@
     name: "alert-config",
     data() {
       return {
-        //侧滑
-        rightBox: {
-          show: false,
-        },
         /*二级页面相关*/
         bottomBox: {
           ruleDetail: {},
@@ -333,10 +329,9 @@
       },
       edit(u) {
         this.alertRule = JSON.parse(JSON.stringify(u));
-        this.rightBox.show = true;
+        this.$refs.alertConfigBox.show();
       },
       closeRightBox(refresh) {
-        this.rightBox.show = false;
         if (refresh) {
           this.getTableData();
         }
@@ -367,7 +362,7 @@
       },
       add() {
         this.alertRule = this.newAlertRule();
-        this.rightBox.show = true;
+        this.$refs.alertConfigBox.show();
       },
       newAlertRule() {
         return JSON.parse(JSON.stringify(this.blankAlertRule));

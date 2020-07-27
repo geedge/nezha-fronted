@@ -18,6 +18,7 @@
             size="mini"
             value-key="host"
             style="width: 100%;"
+            @input="assetChange"
           >
             <template slot-scope="{ item }">
               <div>{{ item.host }}</div>
@@ -83,7 +84,7 @@
                     <div class="mib-browser-ad-search-label">{{$t('login.password')}}</div>
                   </el-col>
                   <el-col :span="17">
-                    <el-input class="input-x-mini-24" v-model.trim="searchParamPop.auth.password"></el-input>
+                    <el-input type="password" class="input-x-mini-24" v-model.trim="searchParamPop.auth.password"></el-input>
                   </el-col>
                 </el-row>
 
@@ -116,7 +117,7 @@
                     <div class="mib-browser-ad-search-label">{{$t('project.module.privPassword')}}</div>
                   </el-col>
                   <el-col :span="17">
-                    <el-input class="input-x-mini-24" v-model.trim="searchParamPop.auth.privPassword"></el-input>
+                    <el-input type="password" class="input-x-mini-24" v-model.trim="searchParamPop.auth.privPassword"></el-input>
                   </el-col>
                 </el-row>
               </template>
@@ -316,6 +317,7 @@
         assetData: [],
 
         typeData: ["OctetString", "Integer", "OID", "Gauge", "Counter32", "IpAddress", "TimeTicks", "Counter64", "UnsignedInteger", "BITS", "Float", "DateAndTime"],
+        assetInputTimer:null,
       }
     },
     computed: {
@@ -449,6 +451,55 @@
       /*清空result table*/
       clearResult() {
         this.resultData = [];
+      },
+      resetSearchParam:function(){
+        this.searchParamPop={
+          host: '',
+            port: 161,
+            oid: '',
+            operation: 'get',
+            version: 2,
+            community: 'public',
+            auth: {
+            username: '',
+              password: '',
+              securityLevel: '',
+              authProtocol: '',
+              privProtocol: '',
+              privPassword: ''
+          }
+        }
+      },
+      assetChange:function(value){
+        clearTimeout(this.assetInputTimer)
+        this.assetInputTimer=setTimeout(()=>{
+          this.resetSearchParam();
+          let asset=this.assetData.find(item=>{
+            return item.host == value
+          })
+
+          if(asset&&asset.accounts&&asset.accounts.length>0){
+            let snmpAccount=asset.accounts.find(item=>{
+              return item.protocol == 'SNMP'
+            })
+
+            if(snmpAccount){
+              console.log(snmpAccount)
+              this.searchParamPop.port=snmpAccount.port;
+              this.searchParamPop.community=snmpAccount.params.community;
+              this.searchParamPop.version=snmpAccount.params.version;
+              if(this.searchParamPop.version == 3){
+                this.searchParamPop.auth.username=snmpAccount.params.user;
+                this.searchParamPop.auth.securityLevel=snmpAccount.params.securityLevel;
+                this.searchParamPop.auth.password=snmpAccount.params.password;
+                this.searchParamPop.auth.authProtocol=snmpAccount.params.authProtocol;
+                if(this.searchParamPop.auth.securityLevel=='authPriv')
+                this.searchParamPop.auth.privProtocol=snmpAccount.params.privProtocol;
+                this.searchParamPop.auth.privPassword=snmpAccount.params.privPassword;
+              }
+            }
+          }
+        },200)
       },
       assetSuggestion(queryString, callback) {
         let data = [];
