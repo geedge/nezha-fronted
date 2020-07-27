@@ -944,7 +944,6 @@
     created() {
       this.getUserData();
       this.flushData();
-      this.getPingData();
     },
     mounted() {
       //初始化数据
