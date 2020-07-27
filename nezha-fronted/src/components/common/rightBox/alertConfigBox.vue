@@ -1,8 +1,8 @@
 <template>
-  <div class="right-box right-box-alert-config" v-clickoutside="clickOutside">
+  <div class="right-box right-box-alert-config" v-clickoutside="clickOutside" v-if="rightBox.show">
     <!-- begin--顶部按钮-->
     <div class="right-box-top-btns">
-      <button type="button" v-if="alertRule.id" id="alert-box-del" @click="del" class="nz-btn nz-btn-size-normal nz-btn-size-alien nz-btn-style-light">
+      <button type="button" v-if="editAlertRule&&editAlertRule.id" id="alert-box-del" @click="del" class="nz-btn nz-btn-size-normal nz-btn-size-alien nz-btn-style-light">
         <span class="right-box-top-btn-icon"><i class="el-icon-delete"></i></span>
         <span class="right-box-top-btn-txt">{{$t('overall.delete')}}</span>
       </button>
@@ -121,6 +121,9 @@
     },
     data() {
       return {
+        rightBox:{
+          show:false
+        },
         promqlCount: 1,
         promqlKeys: [0],
         expressions: [''],
@@ -214,11 +217,16 @@
       }
     },
     methods: {
+      show:function(){
+        this.rightBox.show=true;
+      },
       clickOutside() {
         this.esc(false);
+        this.rightBox.show=false;
       },
       esc(refresh) {
         this.$emit("close", refresh);
+        this.rightBox.show=false;
       },
       save() {
         this.editAlertRule.expr = this.expressions[0];
@@ -279,11 +287,10 @@
     watch: {
       alertRule: {
         deep: true,
-        immediate: true,
         handler(n, o) {
           console.info(n)
           this.editAlertRule = JSON.parse(JSON.stringify(n));
-          if (this.editAlertRule.id) {
+          if (this.editAlertRule&&this.editAlertRule.id) {
             this.expressions = [this.editAlertRule.expr];
             this.$nextTick(() => {
               this.expressions.forEach((ex, index) => {

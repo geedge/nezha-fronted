@@ -203,7 +203,7 @@
           assetId: ''
         },
         alertRule: {
-          id: '',
+          id: null,
           alertName: '',
           type: '',
           linkObject: {id: '', name: ''},
