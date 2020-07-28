@@ -47,6 +47,7 @@
         min-width="110px"
         :sortable="sortableShow(item.prop)"
         :prop="propTitle(item.prop)"
+        :sort-orders="['ascending', 'descending']"
       >
         <template slot-scope="scope" :column="item">
           <span v-if="item.prop == 'asset' && scope.row[item.prop]" class="link" @click="">{{scope.row[item.prop].host}}</span>

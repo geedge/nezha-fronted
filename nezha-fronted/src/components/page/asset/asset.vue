@@ -117,6 +117,7 @@
                   :class-name="item.prop == 'option' ? 'content-right-options' : ''"
                   :sortable="sortableShow(item.prop)"
                   :prop="propTitle(item.prop)"
+                  :sort-orders="['ascending', 'descending']"
                 >
                   <template slot-scope="scope" :column="item">
                     <div v-if="item.prop=='ID'">

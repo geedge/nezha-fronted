@@ -25,7 +25,7 @@
     </div>
     <div class="alertLabelBox">
       <div class="alertLabelTitle">Description</div>
-      <div class="alertLabelValue">{{alertLabelData?alertLabelData.remark:''}}</div>
+      <div class="alertLabelValue">{{alertLabelData?(alertLabelData.remark?alertLabelData.remark:'-'):''}}</div>
     </div>
   </div>
   <div class="alertLabelInfo" v-if="type==='project'">
@@ -39,7 +39,7 @@
     </div>
     <div class="alertLabelBox">
       <div class="alertLabelTitle">Description</div>
-      <div class="alertLabelValue">{{alertLabelData?alertLabelData.remark:''}}</div>
+      <div class="alertLabelValue">{{alertLabelData?(alertLabelData.remark?alertLabelData.remark:'-'):''}}</div>
     </div>
   </div>
   </span>
@@ -93,7 +93,7 @@
     data() {
       return {
         alertLabelData:null,
-        loading:module
+        loading:true
       }
     },
     components:{
