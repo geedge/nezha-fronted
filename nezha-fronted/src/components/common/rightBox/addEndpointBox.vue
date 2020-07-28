@@ -1,229 +1,226 @@
 <template>
-  <transition name="right-box">
-    <div class="right-box right-box-add-endpoint" :class="{'right-box-add-endpoint-snmp': currentModuleCopy.type && currentModuleCopy.type.toLowerCase() == 'snmp'}" v-if="rightBox.show" @mousedown="showEditParamBox(false)" v-clickoutside="clickos">
-      <!-- begin--顶部按钮-->
-      <div class="right-box-top-btns">
-      </div>
-      <!-- end--顶部按钮-->
+  <div class="right-box right-box-add-endpoint" :class="{'right-box-add-endpoint-snmp': currentModuleCopy.type && currentModuleCopy.type.toLowerCase() == 'snmp'}" @mousedown="showEditParamBox(false)" v-clickoutside="clickOutside">
+    <!-- begin--顶部按钮-->
+    <div class="right-box-top-btns"></div>
+    <!-- end--顶部按钮-->
 
-      <!-- begin--标题-->
-      <div class="right-box-title">{{rightBox.title}}</div>
-      <!-- end--标题-->
+    <!-- begin--标题-->
+    <div class="right-box-title">{{$t("overall.createEndpoint")}}</div>
+    <!-- end--标题-->
 
-      <!-- begin--表单-->
-      <el-scrollbar class="right-box-form-box">
-        <el-form class="right-box-form right-box-form-left" label-position="right" label-width="120px" ref="addEndpointForm" :model="endpointForm" :rules="rules">
-          <!--project-->
-          <el-form-item :label='$t("project.project.project")' prop="projectId">
-            <el-select @change="((val) => {changeProject(val)})" value-key="id" popper-class="config-dropdown" v-model="currentProjectCopy" placeholder="" size="small">
-              <el-option v-for="item in projectList" :key="item.id" :label="item.name" :value="item" :id="'project-'+item.id"></el-option>
-            </el-select>
-          </el-form-item>
-          <!--module-->
-          <el-form-item :label='$t("project.module.module")' prop="moduleId">
-            <el-select @change="((val) => {changeModule(val)})" value-key="id" popper-class="config-dropdown" v-model="currentModuleCopy" placeholder="" size="small">
-              <el-option v-for="item in moduleList" :key="item.id" :label="item.name" :value="item" :id="'module-'+item.id"></el-option>
-            </el-select>
-          </el-form-item>
-          <!--asset和endpoint-->
-          <div class="right-box-form-row right-child-boxes">
-            <div class="right-child-box assets-box">
-              <!--begin--标题-->
-              <div class="right-child-box-title">{{$t('asset.asset')}}</div>
-              <!--end--标题-->
-              <!--begin--搜索框-->
-              <div style="display: inline-block">
-                <div class="nz-btn-group nz-btn-group-size-small nz-btn-group-light endpoint-asset-search">
-                  <button id="search-asset-drop" type="button" class="nz-btn nz-btn-size-small nz-btn-style-light nz-btn-style-square nz-input-group-prepend" @click="assetSearch.dropdownShow = !assetSearch.dropdownShow">
-                    <span class="endpoint-asset-label-txt">{{assetSearch.label}}</span>
-                    <span>
-                      <i v-if="assetSearch.dropdownShow" class="el-icon-caret-top"></i>
-                      <i v-if="!assetSearch.dropdownShow" class="el-icon-caret-bottom"></i>
-                    </span>
-                  </button><el-input style="width: 100px;" class="input-x-mini-24 nz-input-group-middle" placeholder="" v-model="assetSearch.text"></el-input><button
-                  type="button" class="nz-btn nz-btn-size-small nz-btn-style-light nz-btn-style-square nz-input-group-append" id="search-asset"><i @click="searchAsset" class="el-icon-search"></i></button>
+    <!-- begin--表单-->
+    <el-scrollbar class="right-box-form-box">
+      <el-form class="right-box-form right-box-form-left" label-position="right" label-width="120px" ref="addEndpoint" :model="endpoint" :rules="rules">
+        <!--project-->
+        <el-form-item :label='$t("project.project.project")' prop="projectId">
+          <el-select @change="((val) => {changeProject(val)})" value-key="id" popper-class="config-dropdown" v-model="currentProjectCopy" placeholder="" size="small">
+            <el-option v-for="item in projectList" :key="item.id" :label="item.name" :value="item" :id="'project-'+item.id"></el-option>
+          </el-select>
+        </el-form-item>
+        <!--module-->
+        <el-form-item :label='$t("project.module.module")' prop="moduleId">
+          <el-select @change="((val) => {changeModule(val)})" value-key="id" popper-class="config-dropdown" v-model="currentModuleCopy" placeholder="" size="small">
+            <el-option v-for="item in moduleList" :key="item.id" :label="item.name" :value="item" :id="'module-'+item.id"></el-option>
+          </el-select>
+        </el-form-item>
+        <!--asset和endpoint-->
+        <div class="right-box-form-row right-child-boxes">
+          <div class="right-child-box assets-box">
+            <!--begin--标题-->
+            <div class="right-child-box-title">{{$t('asset.asset')}}</div>
+            <!--end--标题-->
+            <!--begin--搜索框-->
+            <div style="display: inline-block">
+              <div class="nz-btn-group nz-btn-group-size-small nz-btn-group-light endpoint-asset-search">
+                <button id="search-asset-drop" type="button" class="nz-btn nz-btn-size-small nz-btn-style-light nz-btn-style-square nz-input-group-prepend" @click="assetSearch.dropdownShow = !assetSearch.dropdownShow">
+                  <span class="endpoint-asset-label-txt">{{assetSearch.label}}</span>
+                  <span>
+                    <i v-if="assetSearch.dropdownShow" class="el-icon-caret-top"></i>
+                    <i v-if="!assetSearch.dropdownShow" class="el-icon-caret-bottom"></i>
+                  </span>
+                </button><el-input style="width: 100px;" class="input-x-mini-24 nz-input-group-middle" placeholder="" v-model="assetSearch.text"></el-input><button
+                type="button" class="nz-btn nz-btn-size-small nz-btn-style-light nz-btn-style-square nz-input-group-append" id="search-asset"><i @click="searchAsset" class="el-icon-search"></i></button>
 
-                  <div class="endpoint-asset-search-dropdown" v-if="assetSearch.dropdownShow">
-                    <div @click="dropdownSelect('IP')" class="endpoint-asset-search-dropdown-item" id="search-asset-ip">IP</div>
-                    <div @click="dropdownSelect('SN')" class="endpoint-asset-search-dropdown-item" id="search-asset-sn">SN</div>
-                  </div>
+                <div class="endpoint-asset-search-dropdown" v-if="assetSearch.dropdownShow">
+                  <div @click="dropdownSelect('IP')" class="endpoint-asset-search-dropdown-item" id="search-asset-ip">IP</div>
+                  <div @click="dropdownSelect('SN')" class="endpoint-asset-search-dropdown-item" id="search-asset-sn">SN</div>
                 </div>
               </div>
-              <!--end--搜索框-->
-
-              <!-- begin--table-->
-              <div class="endpoint-sub-table">
-                <div class="endpoint-sub-table-head">
-                  <div class="endpoint-sub-table-col">IP</div>
-                  <div class="endpoint-sub-table-col">SN</div>
-                </div>
-                <div class="line-100"></div>
-                <div class="endpoint-sub-table-body">
-                  <el-scrollbar style="height: 100%" ref="assetScrollbar">
-                    <div @click="selectAsset(item, index)" :data="item.id" v-for="item,index in assetList" class="endpoint-sub-table-row" :id="'select-asset-'+item.id">
-                      <div :id="index" @click.stop v-if="!currentModuleCopy.id" class="endpoint-sub-table-body-dialog"></div>
-                      <div class="endpoint-sub-table-col">{{item.host}}</div>
-                      <el-popover trigger="hover" placement="right-start" :content="item.sn" >
-                        <div slot="reference" class="endpoint-sub-table-col">{{item.sn}}</div>
-                      </el-popover>
-                    </div>
-                  </el-scrollbar>
-                </div>
-              </div>
-              <!--end--table-->
             </div>
-            <!--右侧endpoint列表-->
-            <div class="right-child-box endpoints-box" :class="{'endpoints-box-snmp': currentModuleCopy.type && currentModuleCopy.type.toLowerCase() == 'snmp'}">
-              <!--module-->
-              <div class="endpoints-box-module-info">
-                <div class="title">{{$t('project.endpoint.moduleParameter')}}:</div>
-                <el-input class="module-info module-info-port input-x-mini-22" :class="{'module-info-port-snmp': currentModuleCopy.type && currentModuleCopy.type.toLowerCase() == 'snmp'}" v-model="currentModuleCopy.port"></el-input>
-                <el-popover
-                  placement="bottom"
-                  width="200"
-                  trigger="hover"
-                  v-if="currentModuleCopy.type && currentModuleCopy.type.toLowerCase() == 'http'"
+            <!--end--搜索框-->
+
+            <!-- begin--table-->
+            <div class="endpoint-sub-table">
+              <div class="endpoint-sub-table-head">
+                <div class="endpoint-sub-table-col">IP</div>
+                <div class="endpoint-sub-table-col">SN</div>
+              </div>
+              <div class="line-100"></div>
+              <div class="endpoint-sub-table-body">
+                <el-scrollbar style="height: 100%" ref="assetScrollbar">
+                  <div @click="selectAsset(item, index)" :data="item.id" v-for="item,index in assetList" class="endpoint-sub-table-row" :id="'select-asset-'+item.id">
+                    <div :id="index" @click.stop v-if="!currentModuleCopy.id" class="endpoint-sub-table-body-dialog"></div>
+                    <div class="endpoint-sub-table-col">{{item.host}}</div>
+                    <el-popover trigger="hover" placement="right-start" :content="item.sn" >
+                      <div slot="reference" class="endpoint-sub-table-col">{{item.sn}}</div>
+                    </el-popover>
+                  </div>
+                </el-scrollbar>
+              </div>
+            </div>
+            <!--end--table-->
+          </div>
+          <!--右侧endpoint列表-->
+          <div class="right-child-box endpoints-box" :class="{'endpoints-box-snmp': currentModuleCopy.type && currentModuleCopy.type.toLowerCase() == 'snmp'}">
+            <!--module-->
+            <div class="endpoints-box-module-info">
+              <div class="title">{{$t('project.endpoint.moduleParameter')}}:</div>
+              <el-input class="module-info module-info-port input-x-mini-22" :class="{'module-info-port-snmp': currentModuleCopy.type && currentModuleCopy.type.toLowerCase() == 'snmp'}" v-model="currentModuleCopy.port"></el-input>
+              <el-popover
+                placement="bottom"
+                width="200"
+                trigger="hover"
+                v-if="currentModuleCopy.type && currentModuleCopy.type.toLowerCase() == 'http'"
+              >
+                <div class="endpoint-param-pop">
+                  <div v-for="item,index in currentModuleCopy.paramObj">{{item.key}}={{item.value}}</div>
+                </div>
+                <el-input id="edit-param" @click.native.stop="showEditParamBox(true, currentModuleCopy, 1, $event)" slot="reference" disabled class="module-info module-info-param input-x-mini-22" v-model="currentModuleCopy.param"></el-input>
+              </el-popover>
+              <el-input v-if="currentModuleCopy.type && currentModuleCopy.type.toLowerCase() == 'http'" class="module-info module-info-path input-x-mini-22" v-model="currentModuleCopy.path"></el-input>
+              <button type="button" id="cover-param" @click="coverEndpoint" class="nz-btn nz-btn-size-small nz-btn-style-light module-info module-info-cover"><i class="nz-icon nz-icon-override"></i></button>
+            </div>
+            <!--endpoints-->
+            <div class="endpoints-box-endpoints" :style="{borderColor: endpointTouch ? paramBorderColor : '#dcdfe6'}">
+              <el-table
+                :data="endpointList"
+                ref="endpointTable"
+                style="width: 100%;border-radius: 4px;"
+                v-scrollBar:el-table
+                height="calc(100% - 36px)"
+                :row-class-name="setRowIndex"
+                empty-text=" ">
+                <el-table-column
+                  type="selection"
+                  width="25"
+                  style="padding: 0 1px;">
+                </el-table-column>
+                <el-table-column
+                  label-class-name="endpoints-box-endpoints-title"
+                  v-for="(title, index) in endpointTableTitle"
+                  v-if="title.show"
+                  :width="title.width"
+                  :key="`col-${index}`"
+                  :label="title.label"
                 >
-                  <div class="endpoint-param-pop">
-                    <div v-for="item,index in currentModuleCopy.paramObj">{{item.key}}={{item.value}}</div>
-                  </div>
-                  <el-input id="edit-param" @click.native.stop="showEditParamBox(true, currentModuleCopy, 1, $event)" slot="reference" disabled class="module-info module-info-param input-x-mini-22" v-model="currentModuleCopy.param"></el-input>
-                </el-popover>
-                <el-input v-if="currentModuleCopy.type && currentModuleCopy.type.toLowerCase() == 'http'" class="module-info module-info-path input-x-mini-22" v-model="currentModuleCopy.path"></el-input>
-                <button type="button" id="cover-param" @click="coverEndpoint" class="nz-btn nz-btn-size-small nz-btn-style-light module-info module-info-cover"><i class="nz-icon nz-icon-override"></i></button>
-              </div>
-              <!--endpoints-->
-              <div class="endpoints-box-endpoints" :style="{borderColor: endpointTouch ? paramBorderColor : '#dcdfe6'}">
-                <el-table
-                  :data="endpointList"
-                  ref="endpointTable"
-                  style="width: 100%;border-radius: 4px;"
-                  v-scrollBar:el-table
-                  height="calc(100% - 36px)"
-                  :row-class-name="setRowIndex"
-                  empty-text=" ">
-                  <el-table-column
-                    type="selection"
-                    width="25"
-                    style="padding: 0 1px;">
-                  </el-table-column>
-                  <el-table-column
-                    label-class-name="endpoints-box-endpoints-title"
-                    v-for="(title, index) in endpointTableTitle"
-                    v-if="title.show"
-                    :width="title.width"
-                    :key="`col-${index}`"
-                    :label="title.label"
-                  >
-                    <template slot-scope="scope" :column="title">
-                      <span v-if="title.prop == 'asset' && scope.row[title.prop]">{{scope.row[title.prop].host}}</span>
-                      <span v-else-if="title.prop == 'param'">
-                        <el-popover
-                          v-if="!scope.row.isEdit"
-                          placement="bottom"
-                          width="200"
-                          trigger="hover"
-                        >
-                          <div class="endpoint-param-pop">
-                            <div v-for="p in scope.row.paramObj">{{p.key}}={{p.value}}</div>
-                          </div>
-                          <span slot="reference">
-                            <span @mousedown.stop>{{scope.row.param.length > 8 ? scope.row.param.substring(0, 8) + '...' : scope.row.param}}</span>
-                          </span>
-                        </el-popover>
-                        <span @mousedown.stop v-else @click.stop="showEditParamBox(true, scope.row, 2, $event)">
-                          <el-form-item :prop="'endpointList[' + scope.row.index + '].param'" :rules="{required: false, message: $t('validate.required'), trigger: 'blur'}">
-                            <el-input readonly class="endpoint-info endpoint-info-param input-x-mini-22" v-model="scope.row.param"></el-input>
-                          </el-form-item>
+                  <template slot-scope="scope" :column="title">
+                    <span v-if="title.prop == 'asset' && scope.row[title.prop]">{{scope.row[title.prop].host}}</span>
+                    <span v-else-if="title.prop == 'param'">
+                      <el-popover
+                        v-if="!scope.row.isEdit"
+                        placement="bottom"
+                        width="200"
+                        trigger="hover"
+                      >
+                        <div class="endpoint-param-pop">
+                          <div v-for="p in scope.row.paramObj">{{p.key}}={{p.value}}</div>
+                        </div>
+                        <span slot="reference">
+                          <span @mousedown.stop>{{scope.row.param.length > 8 ? scope.row.param.substring(0, 8) + '...' : scope.row.param}}</span>
                         </span>
+                      </el-popover>
+                      <span @mousedown.stop v-else @click.stop="showEditParamBox(true, scope.row, 2, $event)">
+                        <el-form-item :prop="'endpointList[' + scope.row.index + '].param'" :rules="{required: false, message: $t('validate.required'), trigger: 'blur'}">
+                          <el-input readonly class="endpoint-info endpoint-info-param input-x-mini-22" v-model="scope.row.param"></el-input>
+                        </el-form-item>
                       </span>
-                      <span v-else-if="title.prop == 'path'">
-                        <el-popover
-                          placement="bottom"
-                          width="100"
-                          trigger="hover"
-                          :content="scope.row[title.prop]"
-                          v-if="!scope.row.isEdit"
-                        >
-                          <span slot="reference" >
-                            <span>{{scope.row.path.length > 5 ? scope.row.path.substring(0, 5) + '...' : scope.row.path}}</span>
-                          </span>
-                        </el-popover>
-                        <span @mousedown.stop v-else>
-                          <el-form-item :prop="'endpointList[' + scope.row.index + '].path'" :rules="{required: true, message: $t('validate.required'), trigger: 'blur'}">
-                            <el-input class="endpoint-info input-x-mini-22" v-model="scope.row.path"></el-input>
-                          </el-form-item>
+                    </span>
+                    <span v-else-if="title.prop == 'path'">
+                      <el-popover
+                        placement="bottom"
+                        width="100"
+                        trigger="hover"
+                        :content="scope.row[title.prop]"
+                        v-if="!scope.row.isEdit"
+                      >
+                        <span slot="reference" >
+                          <span>{{scope.row.path.length > 5 ? scope.row.path.substring(0, 5) + '...' : scope.row.path}}</span>
                         </span>
+                      </el-popover>
+                      <span @mousedown.stop v-else>
+                        <el-form-item :prop="'endpointList[' + scope.row.index + '].path'" :rules="{required: true, message: $t('validate.required'), trigger: 'blur'}">
+                          <el-input class="endpoint-info input-x-mini-22" v-model="scope.row.path"></el-input>
+                        </el-form-item>
                       </span>
-                      <span v-else-if="title.prop == 'port'">
-                        <span v-if="!scope.row.isEdit">{{scope.row.port}}</span>
-                        <span @mousedown.stop v-else>
-                          <el-form-item :prop="'endpointList[' + scope.row.index + '].port'" :rules="{required: true, message: $t('validate.required'), trigger: 'blur'}">
-                            <el-input class="endpoint-info input-x-mini-22" v-model="scope.row.port"></el-input>
-                          </el-form-item>
-                        </span>
+                    </span>
+                    <span v-else-if="title.prop == 'port'">
+                      <span v-if="!scope.row.isEdit">{{scope.row.port}}</span>
+                      <span @mousedown.stop v-else>
+                        <el-form-item :prop="'endpointList[' + scope.row.index + '].port'" :rules="{required: true, message: $t('validate.required'), trigger: 'blur'}">
+                          <el-input class="endpoint-info input-x-mini-22" v-model="scope.row.port"></el-input>
+                        </el-form-item>
                       </span>
-                      <span v-else-if="title.prop == 'host'">
-                        <span v-if="!scope.row.isEdit">{{scope.row.host}}</span>
-                        <span @mousedown.stop v-else>
-                          <el-form-item :prop="'endpointList[' + scope.row.index + '].host'" :rules="{required: true, message: $t('validate.required'), trigger: 'blur'}">
-                            <el-input class="endpoint-info input-x-mini-22" v-model="scope.row.host"></el-input>
-                          </el-form-item>
-                        </span>
+                    </span>
+                    <span v-else-if="title.prop == 'host'">
+                      <span v-if="!scope.row.isEdit">{{scope.row.host}}</span>
+                      <span @mousedown.stop v-else>
+                        <el-form-item :prop="'endpointList[' + scope.row.index + '].host'" :rules="{required: true, message: $t('validate.required'), trigger: 'blur'}">
+                          <el-input class="endpoint-info input-x-mini-22" v-model="scope.row.host"></el-input>
+                        </el-form-item>
                       </span>
-                    </template>
-                  </el-table-column>
-                  <el-table-column label="" width="56">
-                    <template slot-scope="scope" :column="title">
-                      <div>
-                        <span :id="'ep-asset-toedit-'+scope.row.assetId" v-if="!scope.row.isEdit" class="endpoint-box-row-symbol" @mousedown.stop @click="toEditEndpoint(scope.row)"><i class="el-icon-edit-outline"></i></span>
-                        <span :id="'ep-asset-edit-'+scope.row.assetId" v-else class="endpoint-box-row-symbol" @mousedown.stop @click="editEndpoint(scope.row)"><i class="el-icon-check"></i></span>
-                        <span :id="'ep-asset-remove-'+scope.row.assetId" class="endpoint-box-row-symbol" @click="removeEndpoint(scope.row)"><i class="nz-icon nz-icon-minus-square"></i></span>
-                      </div>
-                    </template>
-                  </el-table-column>
-                </el-table>
-                <div class="el-form-item__error" :style="{opacity: endpointTouch && this.endpointList.length == 0 ? '1' : '0'}" style="left: unset; transition: all .2s">{{$t('validate.required')}}</div>
-                <div>
-                  <button id="clear-select-asset" type="button" @click="clearSelection" class="nz-btn nz-btn-size-normal nz-btn-style-light endpoints-clear-btn">{{$t('overall.clear')}}</button>
-                  <span style="display: inline-block; font-size: 14px; float: right;line-height: 35px;padding-right: 15px;">All: {{this.endpointList.length}}</span>
-                </div>
+                    </span>
+                  </template>
+                </el-table-column>
+                <el-table-column label="" width="56">
+                  <template slot-scope="scope" :column="title">
+                    <div>
+                      <span :id="'ep-asset-toedit-'+scope.row.assetId" v-if="!scope.row.isEdit" class="endpoint-box-row-symbol" @mousedown.stop @click="toEditEndpoint(scope.row)"><i class="el-icon-edit-outline"></i></span>
+                      <span :id="'ep-asset-edit-'+scope.row.assetId" v-else class="endpoint-box-row-symbol" @mousedown.stop @click="editEndpoint(scope.row)"><i class="el-icon-check"></i></span>
+                      <span :id="'ep-asset-remove-'+scope.row.assetId" class="endpoint-box-row-symbol" @click="removeEndpoint(scope.row)"><i class="nz-icon nz-icon-minus-square"></i></span>
+                    </div>
+                  </template>
+                </el-table-column>
+              </el-table>
+              <div class="el-form-item__error" :style="{opacity: endpointTouch && this.endpointList.length == 0 ? '1' : '0'}" style="left: unset; transition: all .2s">{{$t('validate.required')}}</div>
+              <div>
+                <button id="clear-select-asset" type="button" @click="clearSelection" class="nz-btn nz-btn-size-normal nz-btn-style-light endpoints-clear-btn">{{$t('overall.clear')}}</button>
+                <span style="display: inline-block; font-size: 14px; float: right;line-height: 35px;padding-right: 15px;">All: {{this.endpointList.length}}</span>
               </div>
             </div>
-          </div>
-        </el-form>
-
-      </el-scrollbar>
-
-      <!--底部按钮-->
-      <div class="right-box-bottom-btns">
-        <button @click="esc" id="ep-esc" class="nz-btn nz-btn-size-normal nz-btn-style-light nz-btn-min-width-100">
-          <span>{{$t('overall.cancel')}}</span>
-        </button>
-        <button @click="save" id="ep-add" class="nz-btn nz-btn-size-normal nz-btn-style-normal nz-btn-min-width-100">
-          <span>{{$t('overall.save')}}</span>
-        </button>
-      </div>
-
-      <!--start--param编辑框-->
-      <transition name="right-sub-box">
-        <div @mousedown.stop class="right-sub-box" v-if="editParamBox.show" :style="'top: ' + editParamBox.top + 'px; left: ' + editParamBox.left + 'px;'">
-          <div class="param-box">
-            <div class="param-box-row" v-for="(item, index) in tempParamObj">
-              <el-input placeholder="key" class="param-box-row-key input-x-mini-22" v-model="item.key"></el-input>
-              <span class="param-box-row-eq">=</span>
-              <el-input placeholder="value" class="param-box-row-value input-x-mini-22" v-model="item.value"></el-input>
-              <span class="param-box-row-symbol" :id="'remove-param-'+index" @click="removeParam(index)"><i class="nz-icon nz-icon-minus-square"></i></span>
-            </div>
-          </div>
-          <div style="width: 100%; text-align: center; height: 25px;">
-            <el-button @click="addParam" id="add-param" style="height: 18px; line-height: 18px; padding-top: 0; padding-bottom: 0;" size="mini"><i class="el-icon-plus"></i></el-button>
           </div>
         </div>
-      </transition>
-      <!--end--param编辑框-->
+      </el-form>
+
+    </el-scrollbar>
+
+    <!--底部按钮-->
+    <div class="right-box-bottom-btns">
+      <button @click="esc" id="ep-esc" class="nz-btn nz-btn-size-normal nz-btn-style-light nz-btn-min-width-100">
+        <span>{{$t('overall.cancel')}}</span>
+      </button>
+      <button @click="save" id="ep-add" class="nz-btn nz-btn-size-normal nz-btn-style-normal nz-btn-min-width-100">
+        <span>{{$t('overall.save')}}</span>
+      </button>
     </div>
-  </transition>
+
+    <!--start--param编辑框-->
+    <transition name="right-sub-box">
+      <div @mousedown.stop class="right-sub-box" v-if="editParamBox.show" :style="'top: ' + editParamBox.top + 'px; left: ' + editParamBox.left + 'px;'">
+        <div class="param-box">
+          <div class="param-box-row" v-for="(item, index) in tempParamObj">
+            <el-input placeholder="key" class="param-box-row-key input-x-mini-22" v-model="item.key"></el-input>
+            <span class="param-box-row-eq">=</span>
+            <el-input placeholder="value" class="param-box-row-value input-x-mini-22" v-model="item.value"></el-input>
+            <span class="param-box-row-symbol" :id="'remove-param-'+index" @click="removeParam(index)"><i class="nz-icon nz-icon-minus-square"></i></span>
+          </div>
+        </div>
+        <div style="width: 100%; text-align: center; height: 25px;">
+          <el-button @click="addParam" id="add-param" style="height: 18px; line-height: 18px; padding-top: 0; padding-bottom: 0;" size="mini"><i class="el-icon-plus"></i></el-button>
+        </div>
+      </div>
+    </transition>
+    <!--end--param编辑框-->
+  </div>
 </template>
 
 <script>
@@ -245,7 +242,7 @@
         },
         paramBorderColor: '#dcdfe6',
         endpointTouch: false,
-        endpointForm: {projectId: '', moduleId: '', endpointList: []},
+        endpoint: {projectId: '', moduleId: '', endpointList: []},
         currentModuleCopy: {},
         currentProjectCopy: {id: ''},
         tempParamObj: [],
@@ -292,12 +289,6 @@
       }
     },
     methods: {
-      show(show) {
-        this.rightBox.show = show;
-        this.currentModuleCopy = JSON.parse(JSON.stringify(this.currentModule)); //打开弹框时将currentModule还原
-        this.endpointForm = {projectId: '', moduleId: '', endpointList:[]}
-      },
-
       //子弹框控制  obj: module或endpoint对象  type:1module2endpoint
       showEditParamBox(show, obj, type, e) {
         if (show) {
@@ -341,15 +332,13 @@
         this.editParamBox.show = show;
       },
 
-      clickos() {
-        this.esc();
+      clickOutside() {
+        this.esc(false);
       },
 
       /*关闭弹框*/
-      esc() {
-        this.rightBox.show = false;
-        this.editParamBox.show = false;
-        this.endpointTouch = false;
+      esc(refresh) {
+        this.$emit("close", refresh);
       },
 
       // 新增param
@@ -375,7 +364,7 @@
         this.tempEndpoint2 = JSON.parse(JSON.stringify(endpoint));
       },
       editEndpoint(endpoint) {
-        this.$refs.addEndpointForm.validate((valid) => {
+        this.$refs.addEndpoint.validate((valid) => {
           if (valid) {
             endpoint.isEdit = false;
             this.tempEndpoint2 = {};
@@ -444,8 +433,8 @@
 
       changeProject(project) {
         this.currentModuleCopy = {};
-        this.endpointForm.moduleId = '';
-        this.endpointForm.projectId = project.id;
+        this.endpoint.moduleId = '';
+        this.endpoint.projectId = project.id;
         this.editParamBox.show = false;
         this.tempParamObj = [];
         this.endpointList = [];
@@ -454,7 +443,7 @@
       },
 
       changeModule(module) {
-        this.endpointForm.moduleId = module.id;
+        this.endpoint.moduleId = module.id;
         this.editParamBox.show = false;
         this.tempParamObj = [];
       },
@@ -484,8 +473,8 @@
         });
         this.assetList.splice(index, 1);
         this.endpointTouch = true;
-        this.endpointForm.projectId = this.currentProjectCopy.id;
-        this.endpointForm.moduleId = this.currentModuleCopy.id;
+        this.endpoint.projectId = this.currentProjectCopy.id;
+        this.endpoint.moduleId = this.currentModuleCopy.id;
         this.$refs.assetScrollbar.update();
       },
 
@@ -525,11 +514,11 @@
 
       //保存endpoint
       save() {
-        this.endpointForm.projectId = this.currentProjectCopy.id;
-        this.endpointForm.moduleId = this.currentModuleCopy.id;
+        this.endpoint.projectId = this.currentProjectCopy.id;
+        this.endpoint.moduleId = this.currentModuleCopy.id;
         if (this.endpointList.length == 0) {
           this.endpointTouch = true;
-          this.$refs.addEndpointForm.validate();
+          this.$refs.addEndpoint.validate();
           return false;
         }
         //对endpointList进行处理，避免携带过多无用数据
@@ -538,13 +527,12 @@
           let endpoint = {moduleId: item.moduleId, assetId: item.assetId, port: item.port, param: item.param, path: item.path, host: item.host};
           endpointList.push(endpoint);
         });
-        this.$refs.addEndpointForm.validate((valid) => {
+        this.$refs.addEndpoint.validate((valid) => {
           if (valid) {
             this.$post('endpoint', endpointList).then(response => {
               if (response.code === 200) {
                 this.$message({duration: 1000, type: 'success', message: this.$t("tip.saveSuccess")});
-                this.esc();
-                this.$emit("reload");
+                this.esc(true);
               } else {
                 this.$message.error(response.msg);
               }
@@ -578,8 +566,7 @@
           this.$delete("endpoint?ids=" + this.endpoint.id).then(response => {
             if (response.code === 200) {
               this.$message({duration: 1000, type: 'success', message: this.$t("tip.deleteSuccess")});
-              this.$emit('reload');
-              this.rightBox.show = false;
+              this.esc(true);
             } else {
               this.$message.error(response.msg);
             }
@@ -602,21 +589,13 @@
         row.index = rowIndex;
       }
     },
-    computed: {
-      projectListReloadWatch() {
-        return this.$store.state.projectListChange;
-      },
-      moduleListReloadWatch() {
-        return this.$store.state.moduleListChange;
-      },
-    },
     created() {
       this.getProjectList();
       this.getAssetList();
     },
     watch: {
       endpointList(n, o) {
-        this.endpointForm.endpointList = n;
+        this.endpoint.endpointList = n;
         if (n.length > 0) {
           this.paramBorderColor = '#dcdfe6';
         } else {
@@ -624,16 +603,19 @@
         }
 
       },
-      currentProject(n, o) {
-        this.currentProjectCopy=Object.assign({},n);
-        this.endpointForm.projectId = n.id;
-        this.getModuleList(n.id);
+      currentProject: {
+        immediate: true,
+        handler(n, o) {
+          this.currentProjectCopy = Object.assign({}, n);
+          this.endpoint.projectId = n.id;
+          this.getModuleList(n.id);
+        }
       },
       currentModule: {
         immediate: true,
         handler(n, o) {
           if(n) {
-            this.endpointForm.moduleId = n.id;
+            this.endpoint.moduleId = n.id;
             this.currentModuleCopy = JSON.parse(JSON.stringify(n));
 
           }
@@ -651,12 +633,6 @@
           }
         }
       },
-      projectListReloadWatch(n, o) {
-        this.getProjectList();
-      },
-      moduleListReloadWatch(n, o) {
-        this.getModuleList(this.currentProjectCopy.id);
-      }
     }
   }
 </script>

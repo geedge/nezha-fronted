@@ -1,308 +1,293 @@
 <template>
-  <transition name="right-box">
-    <div class="right-box right-box-module" v-if="rightBox.show" v-clickoutside="clickos">
-      <!-- begin--顶部按钮-->
-      <div class="right-box-top-btns">
-        <button id="module-del" type="button" v-if="currentModule.id != '' && rightBox.isEdit" @click="del" class="nz-btn nz-btn-size-normal nz-btn-size-alien nz-btn-style-light nz-btn-min-width-82">
-          <span class="right-box-top-btn-icon"><i class="el-icon-delete"></i></span>
-          <span class="right-box-top-btn-txt">{{$t('overall.delete')}}</span>
-        </button>
-        <button v-if="!rightBox.isEdit && currentModule.buildIn != 1" id="module-save" type="button" @click="saveOrToEdit" class="nz-btn nz-btn-size-normal nz-btn-size-alien nz-btn-style-light nz-btn-min-width-82">
-          <span class="right-box-top-btn-icon"><i class="nz-icon nz-icon-edit"></i></span>
-          <span class="right-box-top-btn-txt">{{$t('overall.edit')}}</span>
-        </button>
-      </div>
-      <!-- end--顶部按钮-->
+  <div class="right-box right-box-module" v-clickoutside="clickOutside">
+    <!-- begin--顶部按钮-->
+    <div class="right-box-top-btns">
+      <button id="module-del" type="button" v-if="editModule.id" @click="del" class="nz-btn nz-btn-size-normal nz-btn-size-alien nz-btn-style-light">
+        <span class="right-box-top-btn-icon"><i class="el-icon-delete"></i></span>
+        <span class="right-box-top-btn-txt">{{$t('overall.delete')}}</span>
+      </button>
+    </div>
+    <!-- end--顶部按钮-->
 
-      <!-- begin--标题-->
-      <div class="right-box-title">{{rightBox.title}}</div>
-      <!-- end--标题-->
+    <!-- begin--标题-->
+    <div class="right-box-title">{{editModule.id ? $t("project.module.editModule") + "  ID：" + editModule.id : $t("project.module.createModule")}}</div>
+    <!-- end--标题-->
 
-      <!-- begin--表单-->
-      <el-scrollbar class="right-box-form-box" ref="scrollbar">
-        <el-form class="right-box-form right-box-form-left" :model="currentModule" label-position="right" label-width="120px" :rules="rules" ref="moduleForm">
-          <el-form-item :label='$t("project.project.project")' prop="project">
-            <el-select v-if="rightBox.isEdit" value-key="id" popper-class="config-dropdown" v-model="currentModule.project" placeholder="" size="small">
-              <el-option :id="'module-project-'+item.id" v-for="item in projectList" :key="item.id" :label="item.name" :value="item"></el-option>
-            </el-select>
-            <div v-if="!rightBox.isEdit && currentModule.project" class="right-box-form-content-txt">{{currentModule.project.name}}</div>
-          </el-form-item>
-          <el-form-item :label='$t("project.module.moduleName")' prop="name">
-            <el-input v-if="rightBox.isEdit" placeholder="" maxlength="64" show-word-limit v-model="currentModule.name" size="small"></el-input>
-            <div v-if="!rightBox.isEdit" class="right-box-form-content-txt">{{currentModule.name}}</div>
-          </el-form-item>
+    <!-- begin--表单-->
+    <el-scrollbar class="right-box-form-box" ref="scrollbar">
+      <el-form class="right-box-form right-box-form-left" :model="editModule" label-position="right" label-width="120px" :rules="rules" ref="moduleForm">
+        <el-form-item :label='$t("project.project.project")' prop="project">
+          <el-select value-key="id" popper-class="config-dropdown" v-model="editModule.project" placeholder="" size="small">
+            <el-option :id="'module-project-'+item.id" v-for="item in projectList" :key="item.id" :label="item.name" :value="item"></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item :label='$t("project.module.moduleName")' prop="name">
+          <el-input placeholder="" maxlength="64" show-word-limit v-model="editModule.name" size="small"></el-input>
+        </el-form-item>
 
-          <div class="nz-tab module-box-type">
-            <div class="nz-tab-item-box" @click="changeType('http')" id="module-type-1">
-              <div class="nz-tab-item" :class="{'nz-tab-item-active' : currentModule.type.toLowerCase() == 'http', 'unclickable': currentModule.id}">HTTP</div>
-            </div>
-            <div @click="changeType('snmp')" class="nz-tab-item-box" id="module-type-2">
-              <div class="nz-tab-item" :class="{'nz-tab-item-active' : currentModule.type.toLowerCase() == 'snmp', 'unclickable': currentModule.id}">SNMP</div>
-            </div>
+        <div class="nz-tab module-box-type">
+          <div class="nz-tab-item-box" @click="changeType('http')" id="module-type-1">
+            <div class="nz-tab-item" :class="{'nz-tab-item-active' : editModule.type.toLowerCase() == 'http', 'unclickable': editModule.id}">HTTP</div>
           </div>
+          <div @click="changeType('snmp')" class="nz-tab-item-box" id="module-type-2">
+            <div class="nz-tab-item" :class="{'nz-tab-item-active' : editModule.type.toLowerCase() == 'snmp', 'unclickable': editModule.id}">SNMP</div>
+          </div>
+        </div>
 
-          <!-- snmp表单 -->
-          <span class="snmp-form" v-if="currentModule.type && currentModule.type == 'snmp'">
-            <div class="right-box-sub-title">SNMP settings</div>
-            <div class="line-100 right-box-line"></div>
+        <!-- snmp表单 -->
+        <span class="snmp-form" v-if="editModule.type && editModule.type == 'snmp'">
+          <div class="right-box-sub-title">SNMP settings</div>
+          <div class="line-100 right-box-line"></div>
 
+          <el-row>
+            <el-col :span="6">
+              <div class="sub-label sub-label-required">{{$t('project.module.walk')}}</div>
+            </el-col>
+            <el-col :span="18">
+              <el-form-item prop="walk">
+                <select-walk ref="selectWalk" :walkData="walkData" :expandedWalk="expandedWalkData" :placement="'bottom-start'" @selectWalk="selectWalk" :currentWalk="editModule.walk">
+                  <template v-slot:trigger>
+                    <div class="el-cascader">
+                      <div class="el-input">
+                        <input type="text" readonly="readonly" autocomplete="off" class="el-input__inner" aria-expanded="false">
+                      </div>
+                      <div class="el-cascader__tags">
+                        <el-scrollbar style="height: 100%;" ref="walkScrollbar">
+                          <span class="el-tag el-tag--info el-tag--small el-tag--light" v-for="item in editModule.walk">
+                            <span v-html="mibName(item)"></span>
+                            <div class="walk-close-box" @click.stop="removeWalk(item)">
+                              <i class="el-tag__close el-icon-close walk-close"></i>
+                            </div>
+                          </span>
+                        </el-scrollbar>
+                      </div>
+                    </div>
+                  </template>
+                </select-walk>
+              </el-form-item>
+            </el-col>
+          </el-row>
+
+          <el-row>
+            <el-col :span="6">
+              <div class="sub-label">{{$t('project.module.version')}}</div>
+            </el-col>
+            <el-col :span="18">
+              <el-form-item prop="version">
+                <el-radio-group v-model.number="editModule.version" size="small">
+                  <el-radio-button :label="2"></el-radio-button>
+                  <el-radio-button :label="3"></el-radio-button>
+                </el-radio-group>
+              </el-form-item>
+            </el-col>
+          </el-row>
+
+          <el-row>
+            <el-col :span="6">
+              <div class="sub-label">{{$t('project.module.maxRepetitions')}}</div>
+            </el-col>
+            <el-col :span="18">
+              <el-form-item prop="max_repetitions">
+                <el-input v-model.number="editModule.max_repetitions" size="small"></el-input>
+              </el-form-item>
+            </el-col>
+          </el-row>
+
+          <el-row>
+            <el-col :span="6">
+              <div class="sub-label">{{$t('project.module.retries')}}</div>
+            </el-col>
+            <el-col :span="18">
+              <el-form-item prop="retries">
+                <el-input v-model.number="editModule.retries" size="small"></el-input>
+              </el-form-item>
+            </el-col>
+          </el-row>
+
+          <el-row>
+            <el-col :span="6">
+              <div class="sub-label">{{$t('project.module.timeout')}}</div>
+            </el-col>
+            <el-col :span="18">
+              <el-form-item prop="timeout">
+                <el-input v-model.number="editModule.timeout" size="small">
+                  <template slot="append">second</template>
+                </el-input>
+              </el-form-item>
+            </el-col>
+          </el-row>
+
+          <el-row>
+            <el-col :span="1">&nbsp;</el-col>
+            <el-col :span="23">
+              <div class="right-box-sub-title">Auth</div>
+              <div class="line-100 right-box-line"></div>
+            </el-col>
+          </el-row>
+
+          <el-row>
+            <el-col :span="6">
+              <div class="sub-label sub-label-required">{{$t('project.module.community')}}</div>
+            </el-col>
+            <el-col :span="18">
+              <el-form-item prop="community">
+                <el-input v-model.trim="editModule.community" maxlength="64" show-word-limit size="small"></el-input>
+              </el-form-item>
+            </el-col>
+          </el-row>
+
+          <!--SNMP V3 setting-->
+          <template v-if="editModule.version == 3">
             <el-row>
               <el-col :span="6">
-                <div class="sub-label sub-label-required">{{$t('project.module.walk')}}</div>
+                <div class="sub-label sub-label-required">{{$t('login.username')}}</div>
               </el-col>
               <el-col :span="18">
-                <el-form-item prop="walk">
-                  <select-walk ref="selectWalk" :walkData="walkData" :expandedWalk="expandedWalkData" :placement="'bottom-start'" @selectWalk="selectWalk" :currentWalk="currentModule.walk">
-                    <template v-slot:trigger>
-                      <div class="el-cascader">
-                        <div class="el-input">
-                          <input type="text" readonly="readonly" autocomplete="off" class="el-input__inner" aria-expanded="false">
-                        </div>
-                        <div class="el-cascader__tags">
-                          <el-scrollbar style="height: 100%;" ref="walkScrollbar">
-                            <span class="el-tag el-tag--info el-tag--small el-tag--light" v-for="item in currentModule.walk">
-                              <span v-html="mibName(item)"></span>
-                              <div class="walk-close-box" @click.stop="removeWalk(item)">
-                                <i class="el-tag__close el-icon-close walk-close"></i>
-                              </div>
-                            </span>
-                          </el-scrollbar>
-                        </div>
-                      </div>
-                    </template>
-                  </select-walk>
+                <el-form-item prop="username">
+                  <el-input v-model.trim="editModule.username" maxlength="64" show-word-limit size="small"></el-input>
                 </el-form-item>
               </el-col>
             </el-row>
 
             <el-row>
               <el-col :span="6">
-                <div class="sub-label">{{$t('project.module.version')}}</div>
+                <div class="sub-label">{{$t('project.module.securityLevel')}}</div>
               </el-col>
               <el-col :span="18">
-                <el-form-item prop="version">
-                  <el-radio-group v-model.number="currentModule.version" size="small">
-                    <el-radio-button :label="2"></el-radio-button>
-                    <el-radio-button :label="3"></el-radio-button>
+                <el-form-item prop="security_level">
+                  <el-radio-group v-model="editModule.security_level" size="small" @change="updateScrollbar">
+                    <el-radio-button label="noAuthNoPriv"></el-radio-button>
+                    <el-radio-button label="authNoPriv"></el-radio-button>
+                    <el-radio-button label="authPriv"></el-radio-button>
                   </el-radio-group>
                 </el-form-item>
               </el-col>
             </el-row>
 
-            <el-row>
+            <el-row v-if="editModule.security_level == 'authNoPriv' || editModule.security_level == 'authPriv'">
               <el-col :span="6">
-                <div class="sub-label">{{$t('project.module.maxRepetitions')}}</div>
+                <div class="sub-label sub-label-required">{{$t('login.password')}}</div>
               </el-col>
               <el-col :span="18">
-                <el-form-item prop="max_repetitions">
-                  <el-input v-model.number="currentModule.max_repetitions" size="small"></el-input>
+                <el-form-item prop="password">
+                  <el-input v-model.trim="editModule.password" maxlength="64" show-word-limit size="small"></el-input>
                 </el-form-item>
               </el-col>
             </el-row>
 
-            <el-row>
+            <el-row class="same-label-width" v-if="editModule.security_level == 'authNoPriv' || editModule.security_level == 'authPriv'">
               <el-col :span="6">
-                <div class="sub-label">{{$t('project.module.retries')}}</div>
+                <div class="sub-label">{{$t('project.module.authProtocol')}}</div>
               </el-col>
               <el-col :span="18">
-                <el-form-item prop="retries">
-                  <el-input v-model.number="currentModule.retries" size="small"></el-input>
+                <el-form-item prop="auth_protocol">
+                  <el-radio-group v-model="editModule.auth_protocol" size="small">
+                    <el-radio-button label="MD5"></el-radio-button>
+                    <el-radio-button label="SHA"></el-radio-button>
+                  </el-radio-group>
                 </el-form-item>
               </el-col>
             </el-row>
 
-            <el-row>
+            <el-row class="same-label-width" v-if="editModule.security_level == 'authPriv'">
               <el-col :span="6">
-                <div class="sub-label">{{$t('project.module.timeout')}}</div>
+                <div class="sub-label">{{$t('project.module.privProtocol')}}</div>
               </el-col>
               <el-col :span="18">
-                <el-form-item prop="timeout">
-                  <el-input v-model.number="currentModule.timeout" size="small">
-                    <template slot="append">second</template>
-                  </el-input>
+                <el-form-item prop="priv_protocol">
+                  <el-radio-group v-model="editModule.priv_protocol" size="small">
+                    <el-radio-button label="DES"></el-radio-button>
+                    <el-radio-button label="AES"></el-radio-button>
+                  </el-radio-group>
                 </el-form-item>
               </el-col>
             </el-row>
 
-            <el-row>
-              <el-col :span="1">&nbsp;</el-col>
-              <el-col :span="23">
-                <div class="right-box-sub-title">Auth</div>
-                <div class="line-100 right-box-line"></div>
-              </el-col>
-            </el-row>
-
-            <el-row>
+            <el-row v-if="editModule.security_level == 'authPriv'">
               <el-col :span="6">
-                <div class="sub-label sub-label-required">{{$t('project.module.community')}}</div>
+                <div class="sub-label sub-label-required">{{$t('project.module.privPassword')}}</div>
               </el-col>
               <el-col :span="18">
-                <el-form-item prop="community">
-                  <el-input v-model.trim="currentModule.community" maxlength="64" show-word-limit size="small"></el-input>
+                <el-form-item prop="priv_password">
+                  <el-input v-model.trim="editModule.priv_password" maxlength="64" show-word-limit size="small"></el-input>
                 </el-form-item>
               </el-col>
             </el-row>
+          </template>
 
-            <!--SNMP V3 setting-->
-            <template v-if="currentModule.version == 3">
-              <el-row>
-                <el-col :span="6">
-                  <div class="sub-label sub-label-required">{{$t('login.username')}}</div>
-                </el-col>
-                <el-col :span="18">
-                  <el-form-item prop="username">
-                    <el-input v-model.trim="currentModule.username" maxlength="64" show-word-limit size="small"></el-input>
-                  </el-form-item>
-                </el-col>
-              </el-row>
+          <el-row>
+            <el-col :span="6">
+              <div class="sub-label">{{$t('project.module.contextName')}}</div>
+            </el-col>
+            <el-col :span="18">
+              <el-form-item prop="context_name">
+                <el-input v-model.trim="editModule.context_name" maxlength="64" show-word-limit size="small"></el-input>
+              </el-form-item>
+            </el-col>
+          </el-row>
+        </span>
 
-              <el-row>
-                <el-col :span="6">
-                  <div class="sub-label">{{$t('project.module.securityLevel')}}</div>
-                </el-col>
-                <el-col :span="18">
-                  <el-form-item prop="security_level">
-                    <el-radio-group v-model="currentModule.security_level" size="small" @change="updateScrollbar">
-                      <el-radio-button label="noAuthNoPriv"></el-radio-button>
-                      <el-radio-button label="authNoPriv"></el-radio-button>
-                      <el-radio-button label="authPriv"></el-radio-button>
-                    </el-radio-group>
-                  </el-form-item>
-                </el-col>
-              </el-row>
+        <div class="right-box-form-tip">
+          {{$t('project.module.tip.defaultEndpointSet')}}
+          <div class="line-100"></div>
+          {{$t('project.module.tip.relation')}}
+        </div>
 
-              <el-row v-if="currentModule.security_level == 'authNoPriv' || currentModule.security_level == 'authPriv'">
-                <el-col :span="6">
-                  <div class="sub-label sub-label-required">{{$t('login.password')}}</div>
-                </el-col>
-                <el-col :span="18">
-                  <el-form-item prop="password">
-                    <el-input v-model.trim="currentModule.password" maxlength="64" show-word-limit size="small"></el-input>
-                  </el-form-item>
-                </el-col>
-              </el-row>
+        <el-form-item :label='$t("project.endpoint.port")' prop="port" >
+          <el-input placeholder="" v-model.number="editModule.port" size="small"></el-input>
+        </el-form-item>
 
-              <el-row class="same-label-width" v-if="currentModule.security_level == 'authNoPriv' || currentModule.security_level == 'authPriv'">
-                <el-col :span="6">
-                  <div class="sub-label">{{$t('project.module.authProtocol')}}</div>
-                </el-col>
-                <el-col :span="18">
-                  <el-form-item prop="auth_protocol">
-                    <el-radio-group v-model="currentModule.auth_protocol" size="small">
-                      <el-radio-button label="MD5"></el-radio-button>
-                      <el-radio-button label="SHA"></el-radio-button>
-                    </el-radio-group>
-                  </el-form-item>
-                </el-col>
-              </el-row>
+        <el-form-item v-if="editModule.type && editModule.type.toLowerCase() == 'http'" :label='$t("project.endpoint.path")' prop="path">
+          <el-input placeholder="" v-model="editModule.path" size="small"></el-input>
+        </el-form-item>
 
-              <el-row class="same-label-width" v-if="currentModule.security_level == 'authPriv'">
-                <el-col :span="6">
-                  <div class="sub-label">{{$t('project.module.privProtocol')}}</div>
-                </el-col>
-                <el-col :span="18">
-                  <el-form-item prop="priv_protocol">
-                    <el-radio-group v-model="currentModule.priv_protocol" size="small">
-                      <el-radio-button label="DES"></el-radio-button>
-                      <el-radio-button label="AES"></el-radio-button>
-                    </el-radio-group>
-                  </el-form-item>
-                </el-col>
-              </el-row>
+        <el-form-item class="right-box-form-param" v-if="editModule.type.toLowerCase() == 'http'">
+          <template slot="label">
+            <span>{{$t('project.endpoint.param')}}</span>
+            <div class="right-box-form-btns">
+              <button style="display: none;">第一个button会出现意料之外的hover样式，找不到原因，只好加个不可见的button规避问题</button>
+              <button id="module-clear-all" type="button" @click="clearAllParam" class="nz-btn nz-btn-size-normal nz-btn-style-light">
+                <span><i class="el-icon-delete"></i></span>
+              </button>
+              <button id="module-add-param" type="button" @click="addParam" class="nz-btn nz-btn-size-normal nz-btn-style-light">
+                <span><i style="font-size: 12px;" class="nz-icon nz-icon-create-square"></i></span>
+              </button>
+            </div>
+          </template>
 
-              <el-row v-if="currentModule.security_level == 'authPriv'">
-                <el-col :span="6">
-                  <div class="sub-label sub-label-required">{{$t('project.module.privPassword')}}</div>
-                </el-col>
-                <el-col :span="18">
-                  <el-form-item prop="priv_password">
-                    <el-input v-model.trim="currentModule.priv_password" maxlength="64" show-word-limit size="small"></el-input>
-                  </el-form-item>
-                </el-col>
-              </el-row>
-            </template>
-
-            <el-row>
-              <el-col :span="6">
-                <div class="sub-label">{{$t('project.module.contextName')}}</div>
-              </el-col>
-              <el-col :span="18">
-                <el-form-item prop="context_name">
-                  <el-input v-model.trim="currentModule.context_name" maxlength="64" show-word-limit size="small"></el-input>
+          <div class="param-box param-box-module">
+            <el-scrollbar ref="paramBoxScrollbar" style="height: 100%">
+              <div class="param-box-row" v-for="(item, index) in editModule.paramObj">
+                <el-form-item class="param-box-row-key" :rules="{required: true, message: $t('validate.required'), trigger: 'blur'}" :prop="'paramObj.' + index + '.key'">
+                  <el-input placeholder="key" size="mini" v-model="item.key"></el-input>
                 </el-form-item>
-              </el-col>
-            </el-row>
-          </span>
-
-          <div class="right-box-form-tip" v-if="rightBox.isEdit">
-            {{$t('project.module.tip.defaultEndpointSet')}}
-            <div class="line-100"></div>
-            {{$t('project.module.tip.relation')}}
-          </div>
-
-          <el-form-item :label='$t("project.endpoint.port")' prop="port" >
-            <el-input v-if="rightBox.isEdit" placeholder="" v-model.number="currentModule.port" size="small"></el-input>
-            <div v-if="!rightBox.isEdit" class="right-box-form-content-txt">{{currentModule.port}}</div>
-          </el-form-item>
-
-          <el-form-item v-if="currentModule.type && currentModule.type.toLowerCase() == 'http'" :label='$t("project.endpoint.path")' prop="path">
-            <el-input v-if="rightBox.isEdit" placeholder="" v-model="currentModule.path" size="small"></el-input>
-            <div v-if="!rightBox.isEdit" class="right-box-form-content-txt">{{currentModule.path}}</div>
-          </el-form-item>
-
-          <el-form-item class="right-box-form-param" v-if="currentModule.type.toLowerCase() == 'http'">
-            <template slot="label">
-              <span>{{$t('project.endpoint.param')}}</span>
-              <div class="right-box-form-btns" v-if="rightBox.isEdit">
-                <button style="display: none;">第一个button会出现意料之外的hover样式，找不到原因，只好加个不可见的button规避问题</button>
-                <button id="module-clear-all" type="button" @click="clearAllParam" class="nz-btn nz-btn-size-normal nz-btn-style-light">
-                  <span><i class="el-icon-delete"></i></span>
-                </button>
-                <button id="module-add-param" type="button" @click="addParam" class="nz-btn nz-btn-size-normal nz-btn-style-light">
-                  <span><i style="font-size: 12px;" class="nz-icon nz-icon-create-square"></i></span>
-                </button>
+                <span class="param-box-row-eq">=</span>
+                <el-form-item class="param-box-row-value" :rules="{required: true, message: $t('validate.required'), trigger: 'blur'}" :prop="'paramObj.' + index + '.value'">
+                  <el-input placeholder="value" size="mini" v-model="item.value"></el-input>
+                </el-form-item>
+                <span class="param-box-row-symbol" :id="'moduel-remove-param-'+index" @click="removeParam(index)"><i class="nz-icon nz-icon-minus-square"></i></span>
               </div>
-            </template>
+            </el-scrollbar>
+          </div>
+        </el-form-item>
 
-            <div v-if="rightBox.isEdit" class="param-box param-box-module">
-              <el-scrollbar ref="paramBoxScrollbar" style="height: 100%">
-                <div class="param-box-row" v-for="(item, index) in currentModule.paramObj">
-                  <el-form-item class="param-box-row-key" :rules="{required: true, message: $t('validate.required'), trigger: 'blur'}" :prop="'paramObj.' + index + '.key'">
-                    <el-input placeholder="key" size="mini" v-model="item.key"></el-input>
-                  </el-form-item>
-                  <span class="param-box-row-eq">=</span>
-                  <el-form-item class="param-box-row-value" :rules="{required: true, message: $t('validate.required'), trigger: 'blur'}" :prop="'paramObj.' + index + '.value'">
-                    <el-input placeholder="value" size="mini" v-model="item.value"></el-input>
-                  </el-form-item>
-                  <span class="param-box-row-symbol" :id="'moduel-remove-param-'+index" @click="removeParam(index)"><i class="nz-icon nz-icon-minus-square"></i></span>
-                </div>
-              </el-scrollbar>
-            </div>
-            <div v-for="(item, index) in currentModule.paramObj" v-if="!rightBox.isEdit">
-              <div  class="right-box-form-content-txt">{{item.key}}={{item.value}}</div>
-            </div>
+        <el-form-item :label='$t("project.module.description")' prop="remark">
+          <el-input type="textarea" placeholder="" maxlength="1024" show-word-limit v-model="editModule.remark" size="small"></el-input>
+        </el-form-item>
 
-          </el-form-item>
+      </el-form>
+    </el-scrollbar>
 
-          <el-form-item :label='$t("project.module.description")' prop="remark">
-            <el-input v-if="rightBox.isEdit" type="textarea" placeholder="" maxlength="1024" show-word-limit v-model="currentModule.remark" size="small"></el-input>
-            <div v-if="!rightBox.isEdit" class="right-box-form-content-txt">{{currentModule.remark}}</div>
-          </el-form-item>
-
-        </el-form>
-      </el-scrollbar>
-
-      <!--底部按钮-->
-      <div class="right-box-bottom-btns">
-        <button @click="esc" id="module-box-esc" class="nz-btn nz-btn-size-normal nz-btn-style-light nz-btn-min-width-100">
-          <span>{{$t('overall.cancel')}}</span>
-        </button>
-        <button v-if="rightBox.isEdit" @click="saveOrToEdit" id="module-box-save" class="nz-btn nz-btn-size-normal nz-btn-style-normal nz-btn-min-width-100">
-          <span>{{$t('overall.save')}}</span>
-        </button>
-      </div>
+    <!--底部按钮-->
+    <div class="right-box-bottom-btns">
+      <button @click="esc" id="module-box-esc" class="nz-btn nz-btn-size-normal nz-btn-style-light nz-btn-min-width-100">
+        <span>{{$t('overall.cancel')}}</span>
+      </button>
+      <button @click="save" id="module-box-save" class="nz-btn nz-btn-size-normal nz-btn-style-normal nz-btn-min-width-100">
+        <span>{{$t('overall.save')}}</span>
+      </button>
     </div>
-  </transition>
+  </div>
 </template>
 
 <script>
@@ -322,12 +307,7 @@
       return {
         walkData: [],
         expandedWalkData: [],
-        currentModule: {},
-        rightBox: {
-          show: false,
-          title: '',
-          isEdit:false
-        },
+        editModule: {},
         rules: {
           name: [
             {required: true, message: this.$t('validate.required'), trigger: 'blur'},
@@ -339,9 +319,6 @@
           port: [
             {validator:port, trigger: 'blur'},
           ],
-          /*walk: [
-            {required: true, message: this.$t('validate.required'), trigger: 'blur'}
-          ],*/
           username: [
             {required: true, message: this.$t('validate.required'), trigger: 'blur'}
           ],
@@ -366,10 +343,10 @@
     },
     methods: {
       selectWalk(walk) {
-        if (this.currentModule.walk.indexOf(walk) != -1) {
-          this.currentModule.walk.splice(this.currentModule.walk.indexOf(walk), 1);
+        if (this.editModule.walk.indexOf(walk) != -1) {
+          this.editModule.walk.splice(this.editModule.walk.indexOf(walk), 1);
         } else {
-          this.currentModule.walk.push(walk);
+          this.editModule.walk.push(walk);
         }
 
         this.$refs.walkScrollbar.update();
@@ -418,13 +395,15 @@
       },
 
       removeWalk(walk) {
-        this.currentModule.walk.splice(this.currentModule.walk.indexOf(walk), 1);
+        this.editModule.walk.splice(this.editModule.walk.indexOf(walk), 1);
         this.$refs.selectWalk.$refs.walkTree.setChecked(walk, false);
       },
 
       initWalk() {
         this.$nextTick(() => {
-          this.$refs.selectWalk.show();
+          if (this.$refs.selectWalk) {
+            this.$refs.selectWalk.show();
+          }
         })
       },
 
@@ -451,24 +430,19 @@
         }
       },
 
-      show(show, isEdit) {
-        this.rightBox.show = show;
-        this.rightBox.isEdit = isEdit;
-      },
-
       /*关闭弹框*/
-      esc() {
-        this.rightBox.show = false;
+      esc(refresh) {
+        this.$emit("close", refresh);
       },
 
-      clickos() {
-        this.esc();
+      clickOutside() {
+        this.esc(false);
       },
       changeType(type) {
-        if (this.currentModule.id) {
+        if (this.editModule.id) {
           return;
         }
-        this.currentModule.type = type;
+        this.editModule.type = type;
         this.updateScrollbar();
       },
       //转化snmpParam属性
@@ -523,34 +497,33 @@
       },
       /*保存*/
       save() {
-        this.currentModule.param = this.paramToJson(this.currentModule.paramObj);
+        this.editModule.param = this.paramToJson(this.editModule.paramObj);
         this.$refs.moduleForm.validate((valid) => {
           if (valid) {
-            if (this.currentModule.type.toLowerCase() == 'snmp') {
-              this.parseSnmpParam(this.currentModule);
+            if (this.editModule.type.toLowerCase() == 'snmp') {
+              this.parseSnmpParam(this.editModule);
             } else {
-              if (this.currentModule.snmpParam) {
-                this.currentModule.snmpParam = "";
+              if (this.editModule.snmpParam) {
+                this.editModule.snmpParam = "";
               }
             }
-            this.currentModule.projectId = this.currentModule.project.id;
-            if (this.currentModule.id) {
-              this.$put('module', this.currentModule).then(response => {
+            this.editModule.projectId = this.editModule.project.id;
+            if (this.editModule.id) {
+              this.$put('module', this.editModule).then(response => {
                 if (response.code === 200) {
                   this.$message({duration: 1000, type: 'success', message: this.$t("tip.saveSuccess")});
-                  this.$store.commit('moduleListChange');
-                  this.rightBox.show = false;
-                  this.$emit('reload');
+                  //this.$store.commit('moduleListChange');
+                  this.esc(true);
                 } else {
                   this.$message.error(response.msg);
                 }
               });
             } else {
-              this.$post('module', this.currentModule).then(response => {
+              this.$post('module', this.editModule).then(response => {
                 if (response.code === 200) {
                   this.$message({duration: 1000, type: 'success', message: this.$t("tip.saveSuccess")});
-                  this.$store.commit('moduleListChange');
-                  this.rightBox.show = false;
+                  //this.$store.commit('moduleListChange');
+                  this.esc(true);
                 } else {
                   this.$message.error(response.msg);
                 }
@@ -561,14 +534,6 @@
           }
         });
       },
-      saveOrToEdit: function() {
-        if (!this.rightBox.isEdit) {
-          this.rightBox.isEdit = true;
-          this.rightBox.title = this.$t("project.module.editModule") + "  ID：" + this.currentModule.id;
-        } else {
-          this.save();
-        }
-      },
       /*删除*/
       del() {
         this.$confirm(this.$t("tip.confirmDelete"), {
@@ -576,11 +541,11 @@
           cancelButtonText: this.$t("tip.no"),
           type: 'warning'
         }).then(() => {
-          this.$delete("module?ids=" + this.currentModule.id).then(response => {
+          this.$delete("module?ids=" + this.editModule.id).then(response => {
             if (response.code === 200) {
               this.$message({duration: 1000, type: 'success', message: this.$t("tip.deleteSuccess")});
-              this.rightBox.show = false;
-              this.$store.commit('moduleListChange');
+              //this.$store.commit('moduleListChange');
+              this.esc(true);
             } else {
               this.$message.error(response.msg);
             }
@@ -589,50 +554,40 @@
       },
 
       /*获取project列表*/
-      getProjectList: function() {
+      getProjectList() {
         this.$get('project', {pageSize: -1, pageNo: 1}).then(response => {
           if (response.code === 200) {
             this.projectList = response.data.list;
-            if (this.currentProject && this.currentProject.id) {
-              /*for (let i = 0; i < this.projectList.length; i++) {
-                if (this.projectList[i].id == this.currentProject.id) {
-                  this.currentProject = this.projectList[i];
-                  break;
-                }
-              }*/
-            } else {
-
-            }
           }
         });
       },
 
       // 清除param
-      clearAllParam: function() {
-        this.currentModule.paramObj = [];
+      clearAllParam() {
+        this.editModule.paramObj = [];
         this.$nextTick(() => {
           this.$refs.paramBoxScrollbar.update();
         });
       },
 
       // 新增param
-      addParam: function() {
-        this.currentModule.paramObj.push({key: '', value: ''});
+      addParam() {
+        this.editModule.paramObj.push({key: '', value: ''});
         this.$nextTick(() => {
           this.$refs.paramBoxScrollbar.update();
         });
       },
 
       // 移除单个param
-      removeParam: function(index) {
-        this.currentModule.paramObj.splice(index, 1);
+      removeParam(index) {
+        this.editModule.paramObj.splice(index, 1);
         this.$nextTick(() => {
           this.$refs.paramBoxScrollbar.update();
         });
       },
 
       //将param转为json字符串格式
-      paramToJson: function(param) {
+      paramToJson(param) {
         let tempParam = {};
         for (let i = 0; i < param.length; i++) {
           eval('tempParam["' + param[i].key + '"]="' + param[i].value + '"');
@@ -655,9 +610,6 @@
       this.getProjectList();
     },
     computed: {
-      projectListReloadWatch() {
-        return this.$store.state.projectListChange;
-      },
       mibName() {
         return (value) => {
           return this.getMibName(this.walkData, value);
@@ -669,26 +621,10 @@
         immediate: true,
         deep: true,
         handler(n, o) {
-          this.currentModule = JSON.parse(JSON.stringify(n));
-          if (n && n.id) {
-            this.rightBox.title =this.rightBox.isEdit? this.$t("project.module.editModule") + "  ID：" + n.id : this.$t("project.module.module") + "  ID：" + n.id ;
-            if (n.snmpParam) {
-              this.reparseSnmpParam(this.currentModule);
-            }
-
-          } else if (n) {
-            this.rightBox.title = this.$t("project.module.createModule");
-            if (!n.type) {
-              n.type = 'http';
-            } else if (n.type.toLowerCase() == 'snmp') {
-              if (n.snmpParam) {
-                this.reparseSnmpParam(this.currentModule);
-              }
-            }
-          }
+          this.editModule = JSON.parse(JSON.stringify(n));
         }
       },
-      currentModule: {
+      editModule: {
         immediate: true,
         deep: true,
         handler(n, o) {
@@ -706,9 +642,6 @@
           }
         }
       },
-      projectListReloadWatch(n, o) {
-        this.getProjectList();
-      }
     }
   }
 </script>

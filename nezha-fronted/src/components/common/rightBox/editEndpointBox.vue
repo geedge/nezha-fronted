@@ -1,206 +1,119 @@
 <template>
-  <transition name="right-box">
-    <div class="right-box right-box-edit-endpoint" v-if="rightBox.show" v-clickoutside="clickos">
-      <!-- begin--顶部按钮-->
-      <div class="right-box-top-btns">
-        <button id="edit-ep-del" type="button" v-if="rightBox.isEdit && endpoint.id != ''" @click="del" class="nz-btn nz-btn-size-normal nz-btn-size-alien nz-btn-style-light nz-btn-min-width-82">
-          <span class="right-box-top-btn-icon"><i class="el-icon-delete"></i></span>
-          <span class="right-box-top-btn-txt">{{$t('overall.delete')}}</span>
-        </button>
-        <button id="edit-ep-edit" v-if="!rightBox.isEdit" type="button" @click="toEdit(true)" class="nz-btn nz-btn-size-normal nz-btn-size-alien nz-btn-style-light nz-btn-min-width-82">
-          <span class="right-box-top-btn-icon"><i class="nz-icon nz-icon-edit"></i></span>
-          <span class="right-box-top-btn-txt">{{$t('overall.edit')}}</span>
-        </button>
-      </div>
-      <!-- end--顶部按钮-->
-
-      <!-- begin--标题-->
-      <div class="right-box-title">{{rightBox.title}}</div>
-      <!-- end--标题-->
-
-      <!-- begin--表单-->
-      <el-scrollbar class="right-box-form-box">
-        <el-form class="right-box-form  right-box-form-left" :model="endpoint" label-position="right" label-width="120px" :rules="rules" ref="endPointForm">
-          <!--project-->
-          <el-form-item :label="$t('project.project.project')" prop="project.id">
-            <el-select @change="((val) => {changeProject(val);})" value-key="id" popper-class="config-dropdown" v-model="endpoint.projectId" placeholder="" v-if="rightBox.isEdit" size="small">
-              <el-option :id="'edit-project-'+item.id" v-for="item in projectList" :key="item.id" :label="item.name" :value="item.id"></el-option>
-            </el-select>
-            <div v-if="!rightBox.isEdit" class="right-box-form-content-txt">{{endpoint.project.name}}</div>
-          </el-form-item>
-          <!--module-->
-          <el-form-item :label="$t('project.module.module')" prop="module.id">
-            <el-select @change="((val) => {changeModule(val);})" value-key="id" popper-class="config-dropdown" v-model="endpoint.moduleId" placeholder="" v-if="rightBox.isEdit" size="small">
-              <el-option :id="'edit-module-'+item.id" v-for="item in moduleList" :key="item.id" :label="item.name" :value="item.id"></el-option>
-            </el-select>
-            <div v-if="!rightBox.isEdit" class="right-box-form-content-txt">{{endpoint.module.name}}</div>
-          </el-form-item>
-          <!--asset-->
-          <el-form-item :label="$t('asset.asset')" prop="assetId">
-            <el-autocomplete
-              :fetch-suggestions="assetSuggestion"
-              v-model.trim="endpoint.asset.host"
-              placeholder=""
-              @select="selectAsset"
-              @change.native="inputAsset"
-              size="small"
-              value-key="host"
-              popper-class="no-style-class"
-              style="width: 100%;"
-            >
-            </el-autocomplete>
-              <!--<el-input class="right-box-row-with-btn" readonly v-if="rightBox.isEdit && endpoint.asset" placeholder="" :value="endpoint.asset.host" size="small"></el-input>
-              <el-input class="right-box-row-with-btn" readonly v-if="rightBox.isEdit && !endpoint.asset" placeholder="" value="" size="small"></el-input>
-              <el-popover placement="left" width="400" v-model="subBox.show" popper-class="nz-pop">
-                <div class="pop-window-assetType-content">
-                  &lt;!&ndash; begin&#45;&#45;顶部按钮&ndash;&gt;
-                  <div class="pop-top-btns">
-                    <button type="button" @click="subEsc" class="nz-btn nz-btn-size-alien nz-btn-size-small nz-btn-style-light nz-btn-min-width-35" id="edit-ep-subesc">
-                      <span class="pop-top-btn-icon"><i class="el-icon-close"></i></span>
-                      <span class="pop-top-btn-txt">{{$t('overall.esc')}}</span>
-                    </button>
-                  </div>
-                  &lt;!&ndash; end&#45;&#45;顶部按钮&ndash;&gt;
-                  &lt;!&ndash;begin&#45;&#45;标题&ndash;&gt;
-                  <div class="pop-title">{{subBox.title}}</div>
-                  &lt;!&ndash;end&#45;&#45;标题&ndash;&gt;
-                  &lt;!&ndash;&ndash;&gt;
-                  <div class="pop-item-wider " >
-                    &lt;!&ndash; begin&#45;&#45;搜索框&ndash;&gt;
-                    <div class="nz-btn-group nz-btn-group-size-small nz-btn-group-light endpoint-asset-search">
-                      <button type="button" class="nz-btn nz-btn-size-small nz-btn-style-light nz-btn-style-square nz-input-group-prepend" @click="assetSearch.dropdownShow = !assetSearch.dropdownShow">
-                        <span class="endpoint-asset-label-txt">{{assetSearch.label}}</span>
-                        <span>
-                          <i v-if="assetSearch.dropdownShow" class="el-icon-caret-top"></i>
-                          <i v-if="!assetSearch.dropdownShow" class="el-icon-caret-bottom"></i>
-                        </span>
-                      </button><div class="endpoint-asset-search-input">
-                        <el-input class="input-x-mini-22 nz-input-group-middle" placeholder="" v-model="assetSearch.text"></el-input>
-                      </div><button type="button" class="nz-btn nz-btn-size-small nz-btn-style-light nz-btn-style-square nz-input-group-append" >
-                        <i @click="searchAsset" class="el-icon-search" id="edit-ep-search-asset"></i>
-                      </button>
-
-                      <div class="endpoint-asset-search-dropdown" v-if="assetSearch.dropdownShow">
-                        <div @click="dropdownSelect('IP')" class="endpoint-asset-search-dropdown-item" id="edit-ep-search-ip">IP</div>
-                        <div @click="dropdownSelect('SN')" class="endpoint-asset-search-dropdown-item" id="edit-ep-search-sn">SN</div>
-                      </div>
-                    </div>
-                    &lt;!&ndash; end&#45;&#45;搜索框&ndash;&gt;
-                    &lt;!&ndash; begin&#45;&#45;table&ndash;&gt;
-                    <div class="endpoint-sub-table">
-                      <div class="endpoint-sub-table-head">
-                        <div class="endpoint-sub-table-col">IP</div>
-                        <div class="endpoint-sub-table-col">SN</div>
-                      </div>
-                      <div class="line-100"></div>
-                      <div class="endpoint-sub-table-body">
-                        <div v-if="selectedAsset.id != ''" :data="selectedAsset.id" class="endpoint-sub-table-row endpoint-sub-table-row-selected">
-                          <div class="endpoint-sub-table-col">{{selectedAsset.host}}</div>
-                          <div class="endpoint-sub-table-col">{{selectedAsset.sn}}</div>
-                        </div>
-                        <div v-else class="endpoint-sub-table-row"></div>
-                        <div id="edit-select-asset" @click="selectAsset(item)" :data="item.id" v-for="item in assetList" class="endpoint-sub-table-row" :class="{'endpoint-sub-table-row-active': item.id == selectedAsset.id}">
-                          <div class="endpoint-sub-table-col">{{item.host}}</div>
-                          <div class="endpoint-sub-table-col">{{item.sn}}</div>
-                        </div>
-                      </div>
-                      <div class="endpoint-sub-table-paginate">
-                        <div class="endpoint-sub-table-paginate-all">All:&nbsp;{{assetPageObj.total}}</div>
-                        <el-pagination background :pager-count="5" layout="prev, pager, next" @current-change="(currentPage) => {getAssetList(currentPage)}" :total="assetPageObj.total"></el-pagination>
-                      </div>
-                    </div>
-                    &lt;!&ndash; end&#45;&#45;table&ndash;&gt;
-                  </div>
-                </div>
-                <div slot="reference" @click.prevent="" class="right-box-row-btn" v-if="rightBox.isEdit">
-                  <span class="el-icon-more"></span>
-                </div>
-              </el-popover>
-              <div v-if="!rightBox.isEdit" class="right-box-form-content-txt">{{endpoint.host}}</div>-->
-          </el-form-item>
-          <!--host-->
-          <el-form-item :label="$t('project.endpoint.host')" prop="host">
-            <el-input v-if="rightBox.isEdit" placeholder="" v-model="endpoint.host" size="small"></el-input>
-            <div v-if="!rightBox.isEdit" class="right-box-form-content-txt">{{endpoint.host}}</div>
-          </el-form-item>
-          <!--port-->
-          <el-form-item :label="$t('project.endpoint.port')" prop="port">
-            <el-input v-if="rightBox.isEdit" placeholder="" v-model="endpoint.port" size="small"></el-input>
-            <div v-if="!rightBox.isEdit" class="right-box-form-content-txt">{{endpoint.port}}</div>
-          </el-form-item>
-          <!--path-->
-          <el-form-item :label="$t('project.endpoint.path')" prop="path" v-if="currentModule.type.toLowerCase() == 'http'">
-            <el-input v-if="rightBox.isEdit" placeholder="" v-model="endpoint.path" size="small"></el-input>
-            <div v-if="!rightBox.isEdit" class="right-box-form-content-txt">{{endpoint.path}}</div>
-          </el-form-item>
-          <!--param-->
-          <el-form-item class="right-box-form-param" v-if="currentModule.type.toLowerCase() == 'http'">
-            <template slot="label">
-              <span>{{$t('project.endpoint.param')}}</span>
-            </template>
-              <div  v-if="rightBox.isEdit" style="text-align: right">
-                <button style="display: none;">第一个button会出现意料之外的hover样式，找不到原因，只好加个不可见的button规避问题</button>
-                <button type="button" id="edit-clear-all" @click="clearAllParam" class="nz-btn nz-btn-size-normal nz-btn-style-light">
-                  <span><i class="el-icon-delete"></i></span>
-                </button>
-                <button type="button" id="edit-add-param" @click="addParam" class="nz-btn nz-btn-size-normal nz-btn-style-light">
-                  <span><i style="font-size: 12px;" class="nz-icon nz-icon-create-square"></i></span>
-                </button>
-              </div>
-            <div v-if="rightBox.isEdit" class="param-box param-box-module">
-              <el-scrollbar ref="paramBoxScrollbar" style="height: 100%">
-                <div class="param-box-row" v-for="(item, index) in endpoint.paramObj">
-                  <el-form-item class="param-box-row-key" :rules="{required: true, message: $t('validate.required'), trigger: 'blur'}" :prop="'paramObj.' + index + '.key'">
-                    <el-input placeholder="key" size="mini" v-model="item.key"></el-input>
-                  </el-form-item>
-                  <span class="param-box-row-eq">=</span>
-                  <el-form-item class="param-box-row-value" :rules="{required: true, message: $t('validate.required'), trigger: 'blur'}" :prop="'paramObj.' + index + '.value'">
-                    <el-input placeholder="value" size="mini" v-model="item.value"></el-input>
-                  </el-form-item>
-                  <span class="param-box-row-symbol" @click="removeParam(index)"><i class="nz-icon nz-icon-minus-square"></i></span>
-                </div>
-              </el-scrollbar>
-            </div>
-            <div v-else v-for="(item, index) in endpoint.paramObj" v-if="!rightBox.isEdit">
-              <div  class="right-box-form-content-txt">{{item.key}}={{item.value}}</div>
-            </div>
-
-          </el-form-item>
-        </el-form>
-      </el-scrollbar>
-
-      <!-- end--表单-->
-
-      <!--底部按钮-->
-      <div class="right-box-bottom-btns">
-        <button @click="esc" id="ep-edit-esc" class="nz-btn nz-btn-size-normal nz-btn-style-light nz-btn-min-width-100">
-          <span>{{$t('overall.cancel')}}</span>
-        </button>
-        <button v-if="rightBox.isEdit" @click="save" id="ep-edit-save" class="nz-btn nz-btn-size-normal nz-btn-style-normal nz-btn-min-width-100">
-          <span>{{$t('overall.save')}}</span>
-        </button>
-      </div>
-
+  <div class="right-box right-box-edit-endpoint" v-clickoutside="clickOutside">
+    <!-- begin--顶部按钮-->
+    <div class="right-box-top-btns">
+      <button id="edit-ep-del" type="button" v-if="editEndpoint.id" @click="del" class="nz-btn nz-btn-size-normal nz-btn-size-alien nz-btn-style-light ">
+        <span class="right-box-top-btn-icon"><i class="el-icon-delete"></i></span>
+        <span class="right-box-top-btn-txt">{{$t('overall.delete')}}</span>
+      </button>
     </div>
-  </transition>
+    <!-- end--顶部按钮-->
+
+    <!-- begin--标题-->
+    <div class="right-box-title">{{$t("project.endpoint.editEndpoint") + "  ID：" + editEndpoint.id}}</div>
+    <!-- end--标题-->
+
+    <!-- begin--表单-->
+    <el-scrollbar class="right-box-form-box">
+      <el-form class="right-box-form  right-box-form-left" :model="editEndpoint" label-position="right" label-width="120px" :rules="rules" ref="endpointForm">
+        <!--project-->
+        <el-form-item :label="$t('project.project.project')" prop="project.id">
+          <el-select @change="((val) => {changeProject(val);})" value-key="id" popper-class="config-dropdown" v-model="editEndpoint.projectId" placeholder="" size="small">
+            <el-option :id="'edit-project-'+item.id" v-for="item in projectList" :key="item.id" :label="item.name" :value="item.id"></el-option>
+          </el-select>
+        </el-form-item>
+        <!--module-->
+        <el-form-item :label="$t('project.module.module')" prop="module.id">
+          <el-select @change="((val) => {changeModule(val);})" value-key="id" popper-class="config-dropdown" v-model="editEndpoint.moduleId" placeholder="" size="small">
+            <el-option :id="'edit-module-'+item.id" v-for="item in moduleList" :key="item.id" :label="item.name" :value="item.id"></el-option>
+          </el-select>
+        </el-form-item>
+        <!--asset-->
+        <el-form-item :label="$t('asset.asset')" prop="assetId">
+          <el-autocomplete
+            :fetch-suggestions="assetSuggestion"
+            v-model.trim="editEndpoint.asset.host"
+            placeholder=""
+            @select="selectAsset"
+            @change.native="inputAsset"
+            size="small"
+            value-key="host"
+            popper-class="no-style-class"
+            style="width: 100%;"
+          >
+          </el-autocomplete>
+        </el-form-item>
+        <!--host-->
+        <el-form-item :label="$t('project.endpoint.host')" prop="host">
+          <el-input placeholder="" v-model="editEndpoint.host" size="small"></el-input>
+        </el-form-item>
+        <!--port-->
+        <el-form-item :label="$t('project.endpoint.port')" prop="port">
+          <el-input placeholder="" v-model="editEndpoint.port" size="small"></el-input>
+        </el-form-item>
+        <!--path-->
+        <el-form-item :label="$t('project.endpoint.path')" prop="path" v-if="editEndpoint.module.type.toLowerCase() == 'http'">
+          <el-input placeholder="" v-model="editEndpoint.path" size="small"></el-input>
+        </el-form-item>
+        <!--param-->
+        <el-form-item class="right-box-form-param" v-if="editEndpoint.module.type.toLowerCase() == 'http'">
+          <template slot="label">
+            <span>{{$t('project.endpoint.param')}}</span>
+          </template>
+          <div style="text-align: right">
+            <button style="display: none;">第一个button会出现意料之外的hover样式，找不到原因，只好加个不可见的button规避问题</button>
+            <button type="button" id="edit-clear-all" @click="clearAllParam" class="nz-btn nz-btn-size-normal nz-btn-style-light">
+              <span><i class="el-icon-delete"></i></span>
+            </button>
+            <button type="button" id="edit-add-param" @click="addParam" class="nz-btn nz-btn-size-normal nz-btn-style-light">
+              <span><i style="font-size: 12px;" class="nz-icon nz-icon-create-square"></i></span>
+            </button>
+          </div>
+          <div class="param-box param-box-module">
+            <el-scrollbar ref="paramBoxScrollbar" style="height: 100%">
+              <div class="param-box-row" v-for="(item, index) in editEndpoint.paramObj">
+                <el-form-item class="param-box-row-key" :rules="{required: true, message: $t('validate.required'), trigger: 'blur'}" :prop="'paramObj.' + index + '.key'">
+                  <el-input placeholder="key" size="mini" v-model="item.key"></el-input>
+                </el-form-item>
+                <span class="param-box-row-eq">=</span>
+                <el-form-item class="param-box-row-value" :rules="{required: true, message: $t('validate.required'), trigger: 'blur'}" :prop="'paramObj.' + index + '.value'">
+                  <el-input placeholder="value" size="mini" v-model="item.value"></el-input>
+                </el-form-item>
+                <span class="param-box-row-symbol" @click="removeParam(index)"><i class="nz-icon nz-icon-minus-square"></i></span>
+              </div>
+            </el-scrollbar>
+          </div>
+        </el-form-item>
+      </el-form>
+    </el-scrollbar>
+
+    <!-- end--表单-->
+
+    <!--底部按钮-->
+    <div class="right-box-bottom-btns">
+      <button @click="esc" id="ep-edit-esc" class="nz-btn nz-btn-size-normal nz-btn-style-light nz-btn-min-width-100">
+        <span>{{$t('overall.cancel')}}</span>
+      </button>
+      <button @click="save" id="ep-edit-save" class="nz-btn nz-btn-size-normal nz-btn-style-normal nz-btn-min-width-100">
+        <span>{{$t('overall.save')}}</span>
+      </button>
+    </div>
+  </div>
 </template>
 
 <script>
   export default {
     name: "endpointBox",
     props: {
-      postEndpoint: Object,
+      endpoint: Object,
     },
     data() {
       return {
-        endpoint:null,
-        rightBox: {show: false, title: '',isEdit: false},
+        editEndpoint: {},
         subBox: {show: false, title: this.$t("overall.asset")}, //asset子弹框
         assetSearch: {host: '', sn: '', text: '', label: 'IP', dropdownShow: false}, //侧滑框中asset的搜索相关
         assetPageObj: {pageNo: 1, pageSize: 11, total: 0},
         selectedAsset: {id: '', host: '', sn: ''}, //endpoint侧滑框中选中的asset
-        currentProject: null,
-        currentModule: null,
         projectList: [],
         moduleList: [],
         assetList: [],
@@ -224,34 +137,14 @@
       }
     },
     methods: {
-      show(show) {
-        this.rightBox.show = show;
-      },
-
-      toEdit(show, id) {
-        this.rightBox.isEdit = show;
-        this.rightBox.show = true;
-        this.$nextTick(()=>{
-          if (show) {
-            this.rightBox.title = this.$t("project.endpoint.editEndpoint") + "  ID：" + id;
-            this.currentProject=this.projectList.find(item=>{return item.id == this.endpoint.projectId})
-            this.getModuleList(this.endpoint.projectId,true)
-          } else {
-            this.rightBox.title = this.$t("project.endpoint.endpoint") + "  ID：" + id;
-          }
-        });
-      },
-
       //endpoint弹框中asset子弹框控制
       showSubBox(show) {
         this.subBox.show = show;
       },
 
       /*关闭弹框*/
-      esc() {
-        this.rightBox.show = false;
-        this.subBox.show = false;
-        this.$emit("close");
+      esc(refresh) {
+        this.$emit("close", refresh);
       },
 
       /*关闭子弹框*/
@@ -259,8 +152,8 @@
         this.subBox.show = false;
       },
 
-      clickos() {
-        this.esc();
+      clickOutside() {
+        this.esc(false);
       },
 
       // 清除param
@@ -303,29 +196,33 @@
 
       /*获取project列表*/
       getProjectList() {
-        this.$get('project', {pageSize: -1, pageNo: 1}).then(response => {
-          if (response.code === 200) {
-            this.projectList = response.data.list;
-            if ((!this.currentProject || !this.currentProject.id) && this.projectList.length > 0) {
-              this.currentProject = this.projectList[0];
+        return new Promise(resolve => {
+          this.$get('project', {pageSize: -1, pageNo: 1}).then(response => {
+            if (response.code === 200) {
+              this.projectList = response.data.list;
+              if (!this.editEndpoint.projectId && this.projectList.length > 0) {
+                this.editEndpoint.projectId = this.projectList[0].id;
+              }
             }
-          }
+            resolve();
+          });
         });
       },
 
       //project下拉框点击事件
       changeProject(projectId) {
-        this.currentModule = {id: '', name: '', project: {},type:'', port: '', path: '', param: '', paramObj: []};
         this.getModuleList(projectId);
-        this.endpoint.moduleId='';
+        this.editEndpoint.projectId = projectId;
+        this.editEndpoint.moduleId = '';
       },
 
       //project下拉框点击事件
       changeModule(moduleId) {
-        this.currentModule = this.moduleList.find(item=>{return item.id ==  this.endpoint.moduleId});
-        this.endpoint.port = this.currentModule.port;
-        this.endpoint.path = this.currentModule.path;
-        this.endpoint.paramObj = this.currentModule.paramObj;
+        let newModule = this.moduleList.find(item => {return item.id == this.endpoint.moduleId});
+        this.editEndpoint.moduleId = moduleId;
+        this.editEndpoint.port = newModule.port;
+        this.editEndpoint.path = newModule.path;
+        this.editEndpoint.paramObj = newModule.paramObj;
       },
 
       // 获取endpoint弹框中的asset子弹框里asset列表数据
@@ -359,26 +256,26 @@
       // endpoint弹框中的asset子弹框里asset选择事件
       selectAsset(obj) {
         this.selectedAsset = obj;
-        this.endpoint.host = obj.host;
-        this.endpoint.assetId = obj.id;
-        this.$refs.endPointForm.validate();
+        this.editEndpoint.host = obj.host;
+        this.editEndpoint.assetId = obj.id;
+        this.$refs.endpointForm.validate();
       },
       inputAsset(e) {
-        this.endpoint.assetId = "";
+        this.editEndpoint.assetId = "";
         let host = e.target.value;
         if (host) {
           for (let i = 0; i < this.assetList.length; i++) {
             if (host == this.assetList[i].host) {
-              this.endpoint.assetId = this.assetList[i].id;
+              this.editEndpoint.assetId = this.assetList[i].id;
               this.selectedAsset = this.assetList[i];
-              this.endpoint.host = host;
+              this.editEndpoint.host = host;
               break;
             }
           }
         }
       },
       // 获取endpoint弹框中module下拉框数据
-      getModuleList(projectId,setCurModule=false) {
+      getModuleList(projectId, setCurModule = false) {
         this.$get('module', {projectId: projectId}).then(response => {
           if (response.code === 200) {
             for (let i = 0; i < response.data.list.length; i++) {
@@ -394,7 +291,7 @@
             }
             this.moduleList = response.data.list;
             if(setCurModule){
-              this.currentModule=this.moduleList.find(item=>{return item.id == this.endpoint.moduleId});
+              this.editEndpoint.moduleId = this.moduleList.find(item => {return item.id == this.editEndpoint.moduleId}).id;
             }
           }
         });
@@ -402,18 +299,15 @@
 
       //保存endpoint
       save() {
-        this.$refs.endPointForm.validate((valide=>{
+        this.$refs.endpointForm.validate((valide=>{
           if(valide){
-            this.endpoint.moduleId = this.currentModule.id;
-            this.endpoint.projectId = this.currentProject.id;
-            this.endpoint.param = this.paramToJson(this.endpoint.paramObj);
+            this.editEndpoint.param = this.paramToJson(this.editEndpoint.paramObj);
             let requestData = [];
-            requestData.push(this.endpoint);
+            requestData.push(this.editEndpoint);
             this.$put('endpoint', requestData).then(response => {
               if (response.code === 200) {
                 this.$message({duration: 1000, type: 'success', message: this.$t("tip.saveSuccess")});
-                this.esc();
-                this.$emit("reload");
+                this.esc(true);
               } else {
                 this.$message.error(response.msg);
               }
@@ -422,7 +316,6 @@
             return false;
           }
         }))
-
       },
 
       //删除endpoint
@@ -432,11 +325,10 @@
           cancelButtonText: this.$t("tip.no"),
           type: 'warning'
         }).then(() => {
-          this.$delete("endpoint?ids=" + this.endpoint.id).then(response => {
+          this.$delete("endpoint?ids=" + this.editEndpoint.id).then(response => {
             if (response.code === 200) {
               this.$message({duration: 1000, type: 'success', message: this.$t("tip.deleteSuccess")});
-              this.$emit('reload');
-              this.rightBox.show = false;
+              this.esc(true);
             } else {
               this.$message.error(response.msg);
             }
@@ -463,33 +355,19 @@
         callback(data);
       },
     },
-    created() {
-      this.getProjectList();
+    mounted() {
+      this.getProjectList().then(response => {
+        this.getModuleList(this.editEndpoint.projectId);
+      });
       this.getAssetList();
     },
-    computed: {
-      projectListReloadWatch() {
-        return this.$store.state.projectListChange;
-      },
-      moduleListReloadWatch() {
-        return this.$store.state.moduleListChange;
-      },
-    },
-    mounted() {
-      // setTimeout(()=>{this.getModuleList(this.currentProject.id);}, 100);
-    },
     watch: {
-      projectListReloadWatch(n, o) {
-        this.getProjectList();
-      },
-      moduleListReloadWatch(n, o) {
-        this.getModuleList(this.currentProject.id);
-      },
-      postEndpoint:{
-        immediate:true,
-        deep:true,
-        handler(n,o){
-          this.endpoint=Object.assign({},n)
+      endpoint:{
+        immediate: true,
+        deep: true,
+        handler(n, o) {
+          console.info(n)
+          this.editEndpoint = JSON.parse(JSON.stringify(n));
         },
       },
     }
