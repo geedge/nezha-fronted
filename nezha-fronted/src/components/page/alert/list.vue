@@ -26,175 +26,176 @@
       </div>
     </div>
     <div slot="content-right" class="slot-content">
-      <div class="main-list main-and-sub-transition" :class="{'main-list-with-sub': showSubList}">
-        <div class="top-tools" v-show="mainResizeShow">
-          <div class="top-tool-main-right" :class="{'top-tool-main-right-to-left': showSubList}">
-            <div class="top-tool-search">
-              <search-input :searchMsg="searchMsg" @search="search" :inTransform="inTransform"></search-input>
-            </div>
-            <button type="button" @click="showExportDialog" :title="$t('overall.exportExcelLower')"
-                    class="nz-btn nz-btn-size-normal nz-btn-style-light margin-l-20" id="alert-list-export">
-              <i class="el-icon-download"></i>
-            </button>
-          </div>
-          <div class="pagination-top pagination-top-hide display-none"></div>
-        </div>
-        <transition name="el-zoom-in-bottom">
-          <div class="el-popover alert-clean-pop" @click="toDeleteMessage(false)" v-if="deleteBox.ids.length > 0">
-            <i style="cursor: pointer" class="el-icon-delete"></i>
-          </div>
-        </transition>
-        <el-table
-          class="nz-table"
-          :data="tableData"
-          border
-          v-show="mainResizeShow"
-          ref="alertListTable"
-          tooltip-effect="light"
-          :height="mainTableHeight"
-          v-scrollBar:el-table="'large'"
-          v-loading="loading"
-          :cell-class-name="labelsClassName"
-          @selection-change="selectChange"
-          style="width: 100%;"
-          @sort-change="tableDataSort"
-        >
-          <el-table-column
-            :resizable="false"
-            type="selection"
-            width="38"
-            align="center"
-          >
-          </el-table-column>
-          <el-table-column
-            :resizable="false"
-            v-for="(item, index) in tablelable"
-            v-if="item.show"
-            :width="item.width"
-            :minWidth="item.minWidth"
-            :key="`col-${index}`"
-            :label="item.label"
-            :show-overflow-tooltip="item.prop != 'labels'"
-            min-width="110px"
-            :sortable="sortableShow(item.prop)"
-            :prop="propTitle(item.prop)"
-            :sort-orders="['ascending', 'descending']"
-          >
-            <template slot-scope="scope" :column="item">
-              <template v-if="item.prop == 'alertRule'">
-                <!--<div class="link too-long-split"
-                   @click="viewRule(scope.row[item.prop].id)" :id="'view-rule-'+scope.row[item.prop].id"
-                   v-if="scope.row[item.prop].alertName">{{scope.row[item.prop].alertName}}</div>-->
-                  <span class="too-long-split" v-if="scope.row[item.prop].alertName" @mouseover="alertMessagehover(scope.row,scope.$index)">
-                    <el-tooltip placement="right" effect="light">
-                      <alertRuleInfo slot="content" :id="scope.row.alertRule.id" :severityData="severityData" :messageLoad="scope.row.loading"></alertRuleInfo>
-                      <span>{{scope.row[item.prop].alertName}}</span>
-                    </el-tooltip>
-                  </span>
-                <template v-else>-</template>
-              </template>
-              <!--<div v-else-if="item.prop == 'type'" class="content-right-options">
-                <span v-if="scope.row[item.prop] == 1">Project</span>
-                <span v-if="scope.row[item.prop] == 2">Module</span>
-                <span v-if="scope.row[item.prop] == 3">Device</span>
-              </div>-->
-              <template v-else-if="item.prop == 'summary'">
-                <template v-if="scope.row[item.prop]">{{scope.row[item.prop]}}</template>
-                <template v-else>-</template>
-              </template>
-              <template v-else-if="item.prop == 'description'">
-                <template v-if="scope.row[item.prop]">{{scope.row[item.prop]}}</template>
-                <span v-else>-</span>
-              </template>
-              <span v-else-if="item.prop == 'severity'">
-                <span v-if="scope.row[item.prop] == 'high'"><i class="el-icon-arrow-up"></i>&nbsp;{{severityData[1].value}}</span>
-                <span style="padding-left: 18px;" v-if="scope.row[item.prop] == 'medium'">{{severityData[0].value}}</span>
-                <span v-if="scope.row[item.prop] == 'low'"><i class="el-icon-arrow-down"></i>&nbsp;{{severityData[2].value}}</span>
-              </span>
-              <!--<div v-else-if="item.prop == 'linkObject'">
-                <span v-if="(scope.row['type'] == 1 || scope.row['type'] == 2) && scope.row[item.prop]" class="link too-long-split"
-                      @click="viewAlertType(scope.row['type'],scope.row[item.prop])" style="max-width: 125px;"
-                      :id="'link-obj-'+scope.row['type']+'-'+scope.row[item.prop].id">{{scope.row[item.prop].name}}</span>
-                <span v-else-if="scope.row['type'] == 3 && scope.row[item.prop]" class="link"
-                      @click="viewAlertType(scope.row['type'],scope.row[item.prop].id)"
-                      :id="'link-obj-'+scope.row['type']+'-'+scope.row[item.prop].id">{{scope.row[item.prop].host}}</span>
-                <span v-else>-</span>
-              </div>-->
-              <template v-else-if="item.prop == 'labels'" class="labels">
-<!--                <nz-alert-tag :label="key" :type="tagType(key)" style="margin: 5px;" @click="showTagDetail(scope.row, key)"-->
-                  <el-tooltip
-                    v-for="item in labelsSort(scope.row.labels)"
-                    placement="right"
-                    effect="light"
-                    :disabled="labelToolTipDis(item.label)"
-                    :key="item.label"
-                  >
-                  <alertLabel
-                    v-if="!labelToolTipDis(item.label)"
-                    slot="content"
-                    :id="scope.row[item.label].id"
-                    :type="item.label"
-                    :labelLoading="scope.row[item.label].loading"
-                  ></alertLabel>
-                   <span @mouseover="labelHover(scope.row,scope.$index,item.label)">
-                     <nz-alert-tag
-                       :label="item.label" :type="tagType(item.label)" style="margin: 5px 0 5px 5px;"
-                       :cursor-point="tagType(item.label) == 'info' ? false : true"
-                       :key="item.label"
-                       v-if="item.label != 'alertname' && item.label != 'severity'"
-                     >
-                       {{item.value}}
-                     </nz-alert-tag>
-                   </span>
-                </el-tooltip>
-                <!--<el-tag @click="showTagDetail(scope.row, key)"
-                        :key="key"
-                        :class="{'link': key == 'asset' || key == 'endpoint' || key == 'project' || key == 'module' || key == 'datacenter'}"
-                        v-if="key != 'alertname' && key != 'severity'"
-                        :type="tagType(key)"
-                        size="mini" v-for="(value, key) in scope.row.labels" class="alert-message-tag">{{tagValue(key, value)}}</el-tag>-->
-              </template>
-              <div v-else-if="item.prop == 'state'">
-                <span class="">
-                  {{scope.row['state'] == 1 ? "Pending" : ""}}
-                  {{scope.row['state'] == 2 ? "Expired" : ""}}
-                </span>
-              </div>
-              <div v-else-if="item.prop == 'current'" class="too-long-split" >
-                <span v-if="!scope.row.current">-</span>
-                <el-popover v-else placement="right" trigger="hover">
-                  <div slot="reference">
-                    <span @click="detail(scope.row)" class="content-right-option" :id="'alert-list-detail-'+scope.row.id"><i class="nz-icon nz-icon-chart"></i></span>
-                    <span>{{formatThreshold(scope.row.current[1],scope.row.alertRule.unit)}}</span>
-                  </div>
-                  <div>{{$unixTimeParseToString(scope.row.current[0])}}</div>
-                </el-popover>
-              </div>
-              <div v-else-if="item.prop == 'option'" class="content-right-options">
-                <span :title="$t('overall.delete')" @click="toDeleteMessage(scope.row)" class="content-right-option" :id="'alert-list-delete-'+scope.row.id"><i  class="el-icon-delete"></i></span>
-              </div>
-              <span v-else-if="scope.row[item.prop]">{{scope.row[item.prop]}}</span>
-              <template v-else>-</template>
-            </template>
-          </el-table-column>
+      <!--<div class="main-list main-and-sub-transition" :class="{'main-list-with-sub': showSubList}">-->
+        <!--<div class="top-tools" v-show="mainResizeShow">-->
+          <!--<div class="top-tool-main-right" :class="{'top-tool-main-right-to-left': showSubList}">-->
+            <!--<div class="top-tool-search">-->
+              <!--<search-input :searchMsg="searchMsg" @search="search" :inTransform="inTransform"></search-input>-->
+            <!--</div>-->
+            <!--<button type="button" @click="showExportDialog" :title="$t('overall.exportExcelLower')"-->
+                    <!--class="nz-btn nz-btn-size-normal nz-btn-style-light margin-l-20" id="alert-list-export">-->
+              <!--<i class="el-icon-download"></i>-->
+            <!--</button>-->
+          <!--</div>-->
+          <!--<div class="pagination-top pagination-top-hide display-none"></div>-->
+        <!--</div>-->
+        <!--<transition name="el-zoom-in-bottom">-->
+          <!--<div class="el-popover alert-clean-pop" @click="toDeleteMessage(false)" v-if="deleteBox.ids.length > 0">-->
+            <!--<i style="cursor: pointer" class="el-icon-delete"></i>-->
+          <!--</div>-->
+        <!--</transition>-->
+        <!--<el-table-->
+          <!--class="nz-table"-->
+          <!--:data="tableData"-->
+          <!--border-->
+          <!--v-show="mainResizeShow"-->
+          <!--ref="alertListTable"-->
+          <!--tooltip-effect="light"-->
+          <!--:height="mainTableHeight"-->
+          <!--v-scrollBar:el-table="'large'"-->
+          <!--v-loading="loading"-->
+          <!--:cell-class-name="labelsClassName"-->
+          <!--@selection-change="selectChange"-->
+          <!--style="width: 100%;"-->
+          <!--@sort-change="tableDataSort"-->
+        <!--&gt;-->
+          <!--<el-table-column-->
+            <!--:resizable="false"-->
+            <!--type="selection"-->
+            <!--width="38"-->
+            <!--align="center"-->
+          <!--&gt;-->
+          <!--</el-table-column>-->
+          <!--<el-table-column-->
+            <!--:resizable="false"-->
+            <!--v-for="(item, index) in tablelable"-->
+            <!--v-if="item.show"-->
+            <!--:width="item.width"-->
+            <!--:minWidth="item.minWidth"-->
+            <!--:key="`col-${index}`"-->
+            <!--:label="item.label"-->
+            <!--:show-overflow-tooltip="item.prop != 'labels'"-->
+            <!--min-width="110px"-->
+            <!--:sortable="sortableShow(item.prop)"-->
+            <!--:prop="propTitle(item.prop)"-->
+            <!--:sort-orders="['ascending', 'descending']"-->
+          <!--&gt;-->
+            <!--<template slot-scope="scope" :column="item">-->
+              <!--<template v-if="item.prop == 'alertRule'">-->
+                <!--&lt;!&ndash;<div class="link too-long-split"-->
+                   <!--@click="viewRule(scope.row[item.prop].id)" :id="'view-rule-'+scope.row[item.prop].id"-->
+                   <!--v-if="scope.row[item.prop].alertName">{{scope.row[item.prop].alertName}}</div>&ndash;&gt;-->
+                  <!--<span class="too-long-split" v-if="scope.row[item.prop].alertName" @mouseover="alertMessagehover(scope.row,scope.$index)">-->
+                    <!--<el-tooltip placement="right" effect="light">-->
+                      <!--<alertRuleInfo slot="content" :id="scope.row.alertRule.id" :severityData="severityData" :messageLoad="scope.row.loading"></alertRuleInfo>-->
+                      <!--<span>{{scope.row[item.prop].alertName}}</span>-->
+                    <!--</el-tooltip>-->
+                  <!--</span>-->
+                <!--<template v-else>-</template>-->
+              <!--</template>-->
+              <!--&lt;!&ndash;<div v-else-if="item.prop == 'type'" class="content-right-options">-->
+                <!--<span v-if="scope.row[item.prop] == 1">Project</span>-->
+                <!--<span v-if="scope.row[item.prop] == 2">Module</span>-->
+                <!--<span v-if="scope.row[item.prop] == 3">Device</span>-->
+              <!--</div>&ndash;&gt;-->
+              <!--<template v-else-if="item.prop == 'summary'">-->
+                <!--<template v-if="scope.row[item.prop]">{{scope.row[item.prop]}}</template>-->
+                <!--<template v-else>-</template>-->
+              <!--</template>-->
+              <!--<template v-else-if="item.prop == 'description'">-->
+                <!--<template v-if="scope.row[item.prop]">{{scope.row[item.prop]}}</template>-->
+                <!--<span v-else>-</span>-->
+              <!--</template>-->
+              <!--<span v-else-if="item.prop == 'severity'">-->
+                <!--<span v-if="scope.row[item.prop] == 'high'"><i class="el-icon-arrow-up"></i>&nbsp;{{severityData[1].value}}</span>-->
+                <!--<span style="padding-left: 18px;" v-if="scope.row[item.prop] == 'medium'">{{severityData[0].value}}</span>-->
+                <!--<span v-if="scope.row[item.prop] == 'low'"><i class="el-icon-arrow-down"></i>&nbsp;{{severityData[2].value}}</span>-->
+              <!--</span>-->
+              <!--&lt;!&ndash;<div v-else-if="item.prop == 'linkObject'">-->
+                <!--<span v-if="(scope.row['type'] == 1 || scope.row['type'] == 2) && scope.row[item.prop]" class="link too-long-split"-->
+                      <!--@click="viewAlertType(scope.row['type'],scope.row[item.prop])" style="max-width: 125px;"-->
+                      <!--:id="'link-obj-'+scope.row['type']+'-'+scope.row[item.prop].id">{{scope.row[item.prop].name}}</span>-->
+                <!--<span v-else-if="scope.row['type'] == 3 && scope.row[item.prop]" class="link"-->
+                      <!--@click="viewAlertType(scope.row['type'],scope.row[item.prop].id)"-->
+                      <!--:id="'link-obj-'+scope.row['type']+'-'+scope.row[item.prop].id">{{scope.row[item.prop].host}}</span>-->
+                <!--<span v-else>-</span>-->
+              <!--</div>&ndash;&gt;-->
+              <!--<template v-else-if="item.prop == 'labels'" class="labels">-->
+<!--&lt;!&ndash;                <nz-alert-tag :label="key" :type="tagType(key)" style="margin: 5px;" @click="showTagDetail(scope.row, key)"&ndash;&gt;-->
+                  <!--<el-tooltip-->
+                    <!--v-for="item in labelsSort(scope.row.labels)"-->
+                    <!--placement="right"-->
+                    <!--effect="light"-->
+                    <!--:disabled="labelToolTipDis(item.label)"-->
+                    <!--:key="item.label"-->
+                  <!--&gt;-->
+                  <!--<alertLabel-->
+                    <!--v-if="!labelToolTipDis(item.label)"-->
+                    <!--slot="content"-->
+                    <!--:id="scope.row[item.label].id"-->
+                    <!--:type="item.label"-->
+                    <!--:labelLoading="scope.row[item.label].loading"-->
+                  <!--&gt;</alertLabel>-->
+                   <!--<span @mouseover="labelHover(scope.row,scope.$index,item.label)">-->
+                     <!--<nz-alert-tag-->
+                       <!--:label="item.label" :type="tagType(item.label)" style="margin: 5px 0 5px 5px;"-->
+                       <!--:cursor-point="tagType(item.label) == 'info' ? false : true"-->
+                       <!--:key="item.label"-->
+                       <!--v-if="item.label != 'alertname' && item.label != 'severity'"-->
+                     <!--&gt;-->
+                       <!--{{item.value}}-->
+                     <!--</nz-alert-tag>-->
+                   <!--</span>-->
+                <!--</el-tooltip>-->
+                <!--&lt;!&ndash;<el-tag @click="showTagDetail(scope.row, key)"-->
+                        <!--:key="key"-->
+                        <!--:class="{'link': key == 'asset' || key == 'endpoint' || key == 'project' || key == 'module' || key == 'datacenter'}"-->
+                        <!--v-if="key != 'alertname' && key != 'severity'"-->
+                        <!--:type="tagType(key)"-->
+                        <!--size="mini" v-for="(value, key) in scope.row.labels" class="alert-message-tag">{{tagValue(key, value)}}</el-tag>&ndash;&gt;-->
+              <!--</template>-->
+              <!--<div v-else-if="item.prop == 'state'">-->
+                <!--<span class="">-->
+                  <!--{{scope.row['state'] == 1 ? "Pending" : ""}}-->
+                  <!--{{scope.row['state'] == 2 ? "Expired" : ""}}-->
+                <!--</span>-->
+              <!--</div>-->
+              <!--<div v-else-if="item.prop == 'current'" class="too-long-split" >-->
+                <!--<span v-if="!scope.row.current">-</span>-->
+                <!--<el-popover v-else placement="right" trigger="hover">-->
+                  <!--<div slot="reference">-->
+                    <!--<span @click="detail(scope.row)" class="content-right-option" :id="'alert-list-detail-'+scope.row.id"><i class="nz-icon nz-icon-chart"></i></span>-->
+                    <!--<span>{{formatThreshold(scope.row.current[1],scope.row.alertRule.unit)}}</span>-->
+                  <!--</div>-->
+                  <!--<div>{{$unixTimeParseToString(scope.row.current[0])}}</div>-->
+                <!--</el-popover>-->
+              <!--</div>-->
+              <!--<div v-else-if="item.prop == 'option'" class="content-right-options">-->
+                <!--<span :title="$t('overall.delete')" @click="toDeleteMessage(scope.row)" class="content-right-option" :id="'alert-list-delete-'+scope.row.id"><i  class="el-icon-delete"></i></span>-->
+              <!--</div>-->
+              <!--<span v-else-if="scope.row[item.prop]">{{scope.row[item.prop]}}</span>-->
+              <!--<template v-else>-</template>-->
+            <!--</template>-->
+          <!--</el-table-column>-->
 
-          <el-table-column width="28" :resizable="false">
-            <template slot="header" slot-scope="scope">
-              <span @click.stop="elementsetShow('shezhi',$event)" class="nz-table-gear">
-                <i class="nz-icon nz-icon-gear"></i>
-              </span>
-            </template>
-            <template v-slot="scope">
-              <button v-if="scope.$index == 0" class="to-top" :style="{top: toTopBtnTop}" :class="{'to-top-is-hover': tableHover}" v-show="showTopBtn && mainResizeShow" @click="$toTop('ps', 0)"><i class="nz-icon nz-icon-top"></i></button>
-            </template>
-          </el-table-column>
-        </el-table>
-        <div class="pagination-bottom" v-show="!showSubList">
-          <Pagination :tableId="tableId" :pageObj="pageObj" @pageNo='pageNo' @pageSize='pageSize' ref="Pagination"></Pagination>
-        </div>
-      </div>
-      <bottom-box v-if="showSubList" :show-sub-list="showSubList" :subResizeShow="subResizeShow" :isFullScreen="isFullScreen" :from="'alertMessage'" :targetTab.sync="targetTab" :detailList="tabDetailList"
-                  @closeSubList="showSubList = false" @fullScreen="fullScreen" @exitFullScreen="exitFullScreen" @listResize="listResize" :tabList="tabList"></bottom-box>
+          <!--<el-table-column width="28" :resizable="false">-->
+            <!--<template slot="header" slot-scope="scope">-->
+              <!--<span @click.stop="elementsetShow('shezhi',$event)" class="nz-table-gear">-->
+                <!--<i class="nz-icon nz-icon-gear"></i>-->
+              <!--</span>-->
+            <!--</template>-->
+            <!--<template v-slot="scope">-->
+              <!--<button v-if="scope.$index == 0" class="to-top" :style="{top: toTopBtnTop}" :class="{'to-top-is-hover': tableHover}" v-show="showTopBtn && mainResizeShow" @click="$toTop('ps', 0)"><i class="nz-icon nz-icon-top"></i></button>-->
+            <!--</template>-->
+          <!--</el-table-column>-->
+        <!--</el-table>-->
+        <!--<div class="pagination-bottom" v-show="!showSubList">-->
+          <!--<Pagination :tableId="tableId" :pageObj="pageObj" @pageNo='pageNo' @pageSize='pageSize' ref="Pagination"></Pagination>-->
+        <!--</div>-->
+      <!--</div>-->
+      <!--<bottom-box v-if="showSubList" :show-sub-list="showSubList" :subResizeShow="subResizeShow" :isFullScreen="isFullScreen" :from="'alertMessage'" :targetTab.sync="targetTab" :detailList="tabDetailList"-->
+                  <!--@closeSubList="showSubList = false" @fullScreen="fullScreen" @exitFullScreen="exitFullScreen" @listResize="listResize" :tabList="tabList"></bottom-box>-->
+      <alertMessage></alertMessage>
     </div>
     </left-menu>
     <!--<alert-config-box :parentAlertRule="viewRuleData" @reload="getAlertList" ref="alertConfigBox"></alert-config-box>
@@ -265,6 +266,7 @@
   import chartDataFormat from "../../charts/chartDataFormat";
   import alertRuleInfo from '../../common/alert/alertRuleInfo'
   import alertLabel from '../../common/alert/alertLabel'
+  import alertMessage from './alertMessage'
   var vm;
   export default {
     name: "alertList",
@@ -273,6 +275,7 @@
       'chart': chart,
       'alertRuleInfo':alertRuleInfo,
       'alertLabel':alertLabel,
+      'alertMessage':alertMessage,
     },
     data() {
       vm = this;
@@ -1037,25 +1040,25 @@
       }
 
       this.getAlertList();
-      this.$nextTick(() => {
-        //绑定滚动条事件，控制top按钮
-        let el = this.$refs.alertListTable.$el.querySelector(".el-table__body-wrapper");
-        if (el._ps_) {
-          el.addEventListener("ps-scroll-y", () => {
-            if (el._ps_.scrollbarYTop > 50) {
-              this.showTopBtn = true;
-            } else {
-              this.showTopBtn = false;
-            }
-          });
-          el.addEventListener("mouseenter", () => {
-            this.tableHover = true;
-          });
-          el.addEventListener("mouseleave", () => {
-            this.tableHover = false;
-          });
-        }
-      });
+      // this.$nextTick(() => {
+      //   //绑定滚动条事件，控制top按钮
+      //   let el = this.$refs.alertListTable.$el.querySelector(".el-table__body-wrapper");
+      //   if (el._ps_) {
+      //     el.addEventListener("ps-scroll-y", () => {
+      //       if (el._ps_.scrollbarYTop > 50) {
+      //         this.showTopBtn = true;
+      //       } else {
+      //         this.showTopBtn = false;
+      //       }
+      //     });
+      //     el.addEventListener("mouseenter", () => {
+      //       this.tableHover = true;
+      //     });
+      //     el.addEventListener("mouseleave", () => {
+      //       this.tableHover = false;
+      //     });
+      //   }
+      // });
       this.tablelable = localStorage.getItem("nz-tableTitle-" + localStorage.getItem("nz-username") + "-" + this.$route.path)
         ? JSON.parse(localStorage.getItem("nz-tableTitle-" + localStorage.getItem("nz-username") + "-" + this.$route.path))
         : this.tableTitle;

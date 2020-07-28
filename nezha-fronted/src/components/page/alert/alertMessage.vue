@@ -5,13 +5,16 @@
   .too-long-split{
     cursor: pointer;
   }
+  .content{
+    height: 100%;
+  }
 </style>
 <style lang="scss">
   @import '../../charts/chart';
 </style>
 <template>
   <div class="list">
-    <div slot="content-right" class="slot-content">
+    <div class="content">
       <div class="main-list main-and-sub-transition" :class="{'main-list-with-sub': showSubList}">
         <div class="top-tools" v-show="mainResizeShow">
           <div class="top-tool-main-right" :class="{'top-tool-main-right-to-left': showSubList}">
@@ -71,28 +74,9 @@
                 <!--<div class="link too-long-split"
                    @click="viewRule(scope.row[item.prop].id)" :id="'view-rule-'+scope.row[item.prop].id"
                    v-if="scope.row[item.prop].alertName">{{scope.row[item.prop].alertName}}</div>-->
-
-                <span class="too-long-split" v-if="scope.row[item.prop].alertName">
+                <span class="too-long-split" v-if="scope.row[item.prop].alertName" @mouseover="alertMessagehover(scope.row,scope.$index)">
                     <el-tooltip placement="right" effect="light">
-                      <alertRuleInfo slot="content" :alertRuleData="scope.row.alertRule" :severityData="severityData"></alertRuleInfo>
-                      <!--<div class="alertRuleInfo" slot="content">-->
-                      <!--<div class="alertRuleBox">-->
-                      <!--<div class="alertRuleTitle">ID</div>-->
-                      <!--<div class="alertRuleValue">{{scope.row.alertRule.id}}</div>-->
-                      <!--</div>-->
-                      <!--<div class="alertRuleBox">-->
-                      <!--<div class="alertRuleTitle">Expression</div>-->
-                      <!--<div class="alertRuleValue">{{scope.row.alertRule.id}}</div>-->
-                      <!--</div>-->
-                      <!--<div class="alertRuleBox">-->
-                      <!--<div class="alertRuleTitle">Level</div>-->
-                      <!--<div class="alertRuleValue">-->
-                      <!--<span v-if="scope.row.alertRule.severity == 'high'"><i class="el-icon-arrow-up"></i>&nbsp;{{severityData[1].value}}</span>-->
-                      <!--<span style="padding-left: 18px;" v-if="scope.row.alertRule.severity == 'medium'">{{severityData[0].value}}</span>-->
-                      <!--<span><i class="el-icon-arrow-down"></i>&nbsp;{{severityData[2].value}}</span>-->
-                      <!--</div>-->
-                      <!--</div>-->
-                      <!--</div>-->
+                      <alertRuleInfo slot="content" :id="scope.row.alertRule.id" :severityData="severityData" :messageLoad="scope.row.loading"></alertRuleInfo>
                       <span>{{scope.row[item.prop].alertName}}</span>
                     </el-tooltip>
                   </span>
@@ -125,7 +109,7 @@
                       :id="'link-obj-'+scope.row['type']+'-'+scope.row[item.prop].id">{{scope.row[item.prop].host}}</span>
                 <span v-else>-</span>
               </div>-->
-              <template v-else-if="item.prop == 'labels'">
+              <template v-else-if="item.prop == 'labels'" class="labels">
                 <!--                <nz-alert-tag :label="key" :type="tagType(key)" style="margin: 5px;" @click="showTagDetail(scope.row, key)"-->
                 <el-tooltip
                   v-for="item in labelsSort(scope.row.labels)"
@@ -134,15 +118,23 @@
                   :disabled="labelToolTipDis(item.label)"
                   :key="item.label"
                 >
-                  <alertLabel v-if="!labelToolTipDis(item.label)" slot="content" :alertLabelData="scope.row[item.label]" :type="item.label"></alertLabel>
-                  <nz-alert-tag
-                    :label="item.label" :type="tagType(item.label)" style="margin: 5px;"
-                    :cursor-point="tagType(item.label) == 'info' ? false : true"
-                    :key="item.label"
-                    v-if="item.label != 'alertname' && item.label != 'severity'"
-                  >
-                    {{item.value}}
-                  </nz-alert-tag>
+                  <alertLabel
+                    v-if="!labelToolTipDis(item.label)"
+                    slot="content"
+                    :id="scope.row[item.label].id"
+                    :type="item.label"
+                    :labelLoading="scope.row[item.label].loading"
+                  ></alertLabel>
+                  <span @mouseover="labelHover(scope.row,scope.$index,item.label)">
+                     <nz-alert-tag
+                       :label="item.label" :type="tagType(item.label)" style="margin: 5px 0 5px 5px;"
+                       :cursor-point="tagType(item.label) == 'info' ? false : true"
+                       :key="item.label"
+                       v-if="item.label != 'alertname' && item.label != 'severity'"
+                     >
+                       {{item.value}}
+                     </nz-alert-tag>
+                   </span>
                 </el-tooltip>
                 <!--<el-tag @click="showTagDetail(scope.row, key)"
                         :key="key"
@@ -339,12 +331,12 @@
             label: this.$t("alert.startAt"),
             prop: 'startAt',
             show: true,
-            width: 100
+            width: 150
           }, {
             label: this.$t('alert.endAt'),
             prop: 'endAt',
             show: true,
-            width: 100
+            width: 150
           }, {
             label: this.$t('overall.value'),
             prop: 'current',
@@ -998,6 +990,19 @@
             return false;
           default: return true;
         }
+      },
+      // alertNmae鼠标划入
+      alertMessagehover(item,index){
+        item.loading=true;
+        this.$set(this.tableData,index,item);
+      },
+      // label 鼠标划入
+      labelHover(item,index,type){
+        if(this.labelToolTipDis(type)){
+          return
+        }
+        item[type].loading=true;
+        this.$set(this.tableData,index,item);
       }
     },
     watch: {
