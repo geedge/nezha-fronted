@@ -418,6 +418,7 @@ const en = {
       vendor:'Vendor',
       ping:'Ping',
     },
+    featureTitle:'Attribute',
     /*createAsset:{
       title:'New asset',//'新增资产'
       sn:'SN',//SN
