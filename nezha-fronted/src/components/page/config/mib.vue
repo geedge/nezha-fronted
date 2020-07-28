@@ -57,7 +57,8 @@
         <el-table :data="tableData" border :height="$tableHeight.normal" style="width: 100%;" ref="mibTable" class="nz-table mib-table" v-scrollBar:el-table="'large'" v-loading="tools.loading" @sort-change="tableDataSort">
           <el-table-column :resizable="false" v-for="(item, index) in tools.tablelable" v-if="item.show" :width="item.width" :class-name="item.prop == 'modelsDetail'?'detail-column':''"
                            :key="`col-${index}`" :label="item.label" :sortable="sortableShow(item.prop)"
-                           :prop="propTitle(item.prop)">
+                           :prop="propTitle(item.prop)"
+                           :sort-orders="['ascending', 'descending']">
             <template slot-scope="scope" :column="item">
               <template v-if="item.prop == 'updateUser'" >{{scope.row[item.prop].name}}</template>
               <template v-else-if="item.prop == 'fileName' && scope.row[item.prop]" >

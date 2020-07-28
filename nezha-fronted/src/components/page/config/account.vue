@@ -70,6 +70,7 @@
             :key="`col-${index}`"
             :label="item.label"
             :prop="item.prop"
+            :sort-orders="['ascending', 'descending']"
           >
             <template slot-scope="scope" :column="item">
               <div v-if="item.prop == 'option'" class="content-right-options">

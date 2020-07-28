@@ -57,7 +57,8 @@
                            :key="`col-${index}`"
                            :label="item.label"
                            :sortable="sortableShow(item.prop)"
-                           :prop="propTitle(item.prop)">
+                           :prop="propTitle(item.prop)"
+                           :sort-orders="['ascending', 'descending']">
             <template slot-scope="scope" :column="item">
               <span v-if="item.prop == 'idc'" >{{scope.row[item.prop]?scope.row[item.prop].name:'-'}}</span>
 
