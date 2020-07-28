@@ -20,37 +20,41 @@
       <div class="alertLabelBox">
         <div class="alertLabelTitle">Ping</div>
         <div class="alertLabelValue">
-          <div v-if="alertLabelData" :class="{'active-icon green':alertLabelData.pingState == 1,'active-icon red':alertLabelData.pingState == 0}"></div>
+          <div v-if="alertLabelData" :class="{'active-icon green':alertLabelData.pingStatus == 1,'active-icon red':alertLabelData.pingStatus == 0}"></div>
           <span v-if="alertLabelData">{{alertLabelData.pingRtt?alertLabelData.pingRtt+'ms':''}}</span>
         </div>
       </div>
       <div class="alertLabelBox">
-        <div class="alertLabelTitle">Type</div>
-        <div class="alertLabelValue">{{alertLabelData?alertLabelData.model.type.value:''}}</div>
+        <div class="alertLabelTitle">Asset Type</div>
+        <div class="alertLabelValue">{{alertLabelData?alertLabelData.assetType:''}}</div>
       </div>
       <div class="alertLabelBox">
         <div class="alertLabelTitle">Vendor</div>
-        <div class="alertLabelValue">{{alertLabelData?alertLabelData.model.vendor.name:''}}</div>
+        <div class="alertLabelValue">{{alertLabelData?alertLabelData.vendor:''}}</div>
       </div>
       <div class="alertLabelBox">
         <div class="alertLabelTitle">Model</div>
-        <div class="alertLabelValue">{{alertLabelData?alertLabelData.model.name:''}}</div>
+        <div class="alertLabelValue">{{alertLabelData?alertLabelData.model:''}}</div>
       </div>
       <div class="alertLabelBox">
-        <div class="alertLabelTitle">PurchaseDate</div>
-        <div class="alertLabelValue">{{alertLabelData?alertLabelData.createAt:''}}</div>
+        <div class="alertLabelTitle">PingLastReply</div>
+        <div class="alertLabelValue">{{alertLabelData?alertLabelData.pingLastReply:''}}</div>
       </div>
       <div class="alertLabelBox">
         <div class="alertLabelTitle">Alert</div>
-        <div class="alertLabelValue"><sapn v-if="alertLabelData" :class="{danger:alertLabelData.alertNum>0,success:alertLabelData.alertNum<=0}">{{alertLabelData.alertNum + alertActiveStr()}}</sapn></div>
+        <div class="alertLabelValue"><sapn v-if="alertLabelData" :class="{danger:alertLabelData.alert>0,success:alertLabelData.alert<=0}">{{alertLabelData.alert + alertActiveStr()}}</sapn></div>
       </div>
       <div class="alertLabelBox">
-        <div class="alertLabelTitle">Dc</div>
-        <div class="alertLabelValue">{{alertLabelData?alertLabelData.idc.name:''}}</div>
+        <div class="alertLabelTitle">DC</div>
+        <div class="alertLabelValue">{{alertLabelData?alertLabelData.dataCenter:''}}</div>
       </div>
       <div class="alertLabelBox">
         <div class="alertLabelTitle">Endpoint</div>
-        <div class="alertLabelValue">{{alertLabelData?alertLabelData.endpointNum:''}}</div>
+        <div class="alertLabelValue">{{alertLabelData?alertLabelData.endpoint:''}}</div>
+      </div>
+      <div class="alertLabelBox">
+        <div class="alertLabelTitle">Administrator</div>
+        <div class="alertLabelValue">{{alertLabelData?alertLabelData.principal:''}}</div>
       </div>
   </div>
 
@@ -105,20 +109,20 @@
     watch:{
       labelLoading(){
         if(this.type==='asset'){
-          this.$get('/asset?id='+this.id).then((res)=>{
+          this.$get('/asset/info?id='+this.id).then((res)=>{
             if(res.msg==='success'){
               this.loading=false;
-              this.alertLabelData=res.data.list[0];
+              this.alertLabelData=res.data.Basic;
             } else{
               this.$message.error(res.msg);
             }
           })
         }
         if(this.type==='project'){
-          this.$get('/project?id='+this.id).then((res)=>{
+          this.$get('/project/info?id='+this.id).then((res)=>{
             if(res.msg==='success'){
               this.loading=false;
-              this.alertLabelData=res.data.list[0];
+              this.alertLabelData=res.data.basic;
             } else{
               this.$message.error(res.msg);
             }
@@ -156,7 +160,7 @@
         } else {
           return vm.$t('asset.notInStock')
         }
-      }
+      },
     },
     mounted(){
       // console.log(vm.$t('overall.exportAll'));

@@ -891,6 +891,7 @@
       /*Promise.all([this.getVendorData(), this.getAssetTypeData(), this.getUserData(), this.getDcData()]).then(response => {
         this.getTableData();
       });*/
+      this.getUserData();
       this.getLeftMenuList().then(() => {
         this.getTableData();
       });

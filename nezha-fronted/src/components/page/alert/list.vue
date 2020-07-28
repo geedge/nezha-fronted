@@ -2,7 +2,7 @@
   .list {
     height: 100%;
   }
-  .too-long-split{
+  /deep/ .too-long-split{
     cursor: pointer;
     vertical-align: bottom;
   }

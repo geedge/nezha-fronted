@@ -371,6 +371,7 @@ const cn = {
   asset: {
     asset: "资产",
     EditAsset: "编辑资产",
+    assetType:'资产类型',//'资产类型'
     createAssetTab: {
       title: "新增资产",
       sn: "SN",
