@@ -242,6 +242,7 @@ const cn = {
       title: "探索",
       inputTip:'输入PromQL查询语句',
       runQuery:'查询',
+      historyTip:'{hour}小时内查询了{time}次',
     },
     refresh: "刷新",
     edit: "编辑",

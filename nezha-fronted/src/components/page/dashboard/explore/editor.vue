@@ -29,7 +29,8 @@
     props: {
       value: String,
       metricList:{type:Array},
-      styleType: Number
+      styleType: Number,
+      historyParam:Object
     },
     model:{
       prop:'value',
@@ -66,16 +67,12 @@
         detailItem:{},
         formatTimer:null,
         userChangeTimer:null,
-        keyDownTimer:null,
       }
     },
     created(){
       this.queryMetrics();
     },
     methods:{
-      test() {
-        console.info(1)
-      },
       userChange:function(char,operation,newContent,oldContent){
         this.changeSuggestions('type')
         this.dealSpecilChar(char,operation);
@@ -86,7 +83,7 @@
         }
         this.filterItems(newContent);
       },
-      dealSpecilChar:function(char,operation){
+      dealSpecilChar:function(char,operation){//控制括号的成对添加和删除
         // console.log('specil char',char)
         if(/^[\{\(\[\,]$/g.test(char)){
           if(operation=='insert'){
@@ -251,6 +248,15 @@
       },
       queryTypeInfos:function(){
         this.noStyleSuggestions={};
+        if(this.historyParam&&this.historyParam.useHistory){
+          let username=sessionStorage.getItem("nz-username");
+          let historyJson=localStorage.getItem(this.historyParam.key);
+          if(historyJson && historyJson != 'undefined' && historyJson != ''){
+            let historyObj=JSON.parse(historyJson);
+            let history = historyObj[username];
+            this.$set(this.noStyleSuggestions,'history',history);
+          }
+        }
         this.$set(this.noStyleSuggestions,'metrics',this.tempStoreMetric)
         // this.$set(this.noStyleSuggestions,'operators',suggestions.getOperators())
         this.$set(this.noStyleSuggestions,'functions',suggestions.getFunctions())
@@ -377,7 +383,18 @@
           this.handleFunctionClick(item);
         }else if(type  == 'range'){
           this.handleRangeClick(item);
+        }else if(type == 'history'){
+          this.handleHistoryClick(item)
         }
+      },
+      handleHistoryClick:function(item){
+        this.setContent(item.insertText);
+
+        this.showType=false;
+        this.quill.blur();
+        this.$nextTick(()=>{
+          this.$emit('on-blur');
+        })
       },
       handleRangeClick:function(item){
         this.quill.setSelection(this.pivotalCursorIndex,this.cursorIndex-this.pivotalCursorIndex,'api');
@@ -499,12 +516,14 @@
             this.handleRangeClick({insertText:insertText})
           }else if(type == 'functions'){
             this.handleFunctionClick({insertText:insertText})
+          }else if(type ==  'history'){
+            this.handleHistoryClick({insertText:insertText})
           }
 
         }
       },
 
-      filterItems:function(input){
+      filterItems:function(input){ //过滤下拉选显示
         let suggestions=this.deepClone(this.noStyleSuggestions)
 
         for(let key in suggestions){

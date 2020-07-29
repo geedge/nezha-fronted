@@ -36,6 +36,7 @@
                   :expression-list="expressions"
                   :index="index-1"
                   :styleType="1"
+                  :history-param="historyParam"
                   :plugins="['metric-selector', 'metric-input', 'add', 'remove']"
                   @change="expressionChange"
                   @addExpression="addExpression"
@@ -236,7 +237,7 @@ instance_cpu_time_ns{app="fox", proc="widget", rev="4d3a513", env="prod", job="c
         promqlKeys: [],
         expressions: [''],
         filterTime: [
-          bus.timeFormate(new Date(bus.computeTimezone(new Date().getTime())).setMinutes(new Date(bus.computeTimezone(new Date().getTime())).getMinutes() - 5),'yyyy-MM-dd hh:mm:ss'),
+          bus.timeFormate(new Date(bus.computeTimezone(new Date().getTime())).setHours(new Date(bus.computeTimezone(new Date().getTime())).getHours() - 1),'yyyy-MM-dd hh:mm:ss'),
           bus.timeFormate(new Date(bus.computeTimezone(new Date().getTime())),'yyyy-MM-dd hh:mm:ss')
         ],
         showIntroduce: true,
@@ -257,6 +258,7 @@ instance_cpu_time_ns{app="fox", proc="widget", rev="4d3a513", env="prod", job="c
         saveDisabled: true,
         panelData: [],
         chartUnit:0,
+        historyParam:{useHistory:true,key:'expore-history'}
       }
     },
     created() {
@@ -426,9 +428,89 @@ instance_cpu_time_ns{app="fox", proc="widget", rev="4d3a513", env="prod", job="c
           }, 200)
       },
       expressionChange: function () {
+        console.log(this.filterTime)
         if (this.expressions && this.expressions.length >= 1) {
           this.queryTableData();
           this.queryChartData()
+          this.storeHistory();
+        }
+      },
+      storeHistory:function(){
+        let expire=24;
+        let historyJson=localStorage.getItem(this.historyParam.key);
+        let expressions=this.expressions.filter(item=>{
+          return item&&item != '';
+        })
+        let username=sessionStorage.getItem("nz-username");
+        if(historyJson && historyJson != 'undefined' && historyJson != ''){
+          let historyObj=JSON.parse(historyJson);
+          let history = historyObj[username];
+          if(history){
+            //过滤过期表达式
+            history=history.filter(item=>{
+              return item.time + item.expire >= new Date().getTime();
+            })
+            let repeat=history.filter(item=>{
+              return expressions.includes(item.insertText)
+            })
+            let old=history.filter(item=>{
+              return !expressions.includes(item.insertText)
+            })
+
+            let freshExpression=expressions.filter(item=>{
+              let find=history.find(t=>{return t.insertText == item});
+              return !find
+            })
+
+            repeat=repeat.map(item=>{
+              item.time=new Date().getTime();
+              item.num+=1;
+              item.documentation=this.$t('dashboard.metricPreview.historyTip',{time:item.num,hour:24});
+              return item;
+            })
+
+            let fresh=freshExpression.map(item=>{
+              return{
+                label:item,
+                insertText:item,
+                documentation:this.$t('dashboard.metricPreview.historyTip',{time:1,hour:24}),
+                num:1,
+                time:new Date().getTime(),
+                expire:expire * 60 * 60 * 1000
+              }
+            })
+
+            historyObj[username]=fresh.concat(repeat).concat(old);
+          }else{
+            let history=expressions.map(item=>{
+              return {
+                label:item,
+                insertText:item,
+                documentation:this.$t('dashboard.metricPreview.historyTip',{time:1,hour:24}),
+                num:1,
+                time:new Date().getTime(),
+                expire:expire * 60 * 60 * 1000
+              }
+            })
+            historyObj[username]=history;
+          }
+          localStorage.setItem(this.historyParam.key,JSON.stringify(historyObj))
+        }else{
+          let history=expressions.map(item=>{
+            return {
+              label:item,
+              insertText:item,
+              documentation:this.$t('dashboard.metricPreview.historyTip',{time:1,hour:24}),
+              num:1,
+              time:new Date().getTime(),
+              expire:expire * 60 * 60 * 1000
+            }
+          })
+          if(history&&history.length>0){
+            let stored={};
+            stored[username]=history;
+            localStorage.setItem(this.historyParam.key,JSON.stringify(stored))
+          }
         }
       },
       addExpression: function (index) {

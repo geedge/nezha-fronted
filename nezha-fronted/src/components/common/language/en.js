@@ -247,6 +247,7 @@ const en = {
       title:'Explore',
       inputTip:'Enter a PromQL query',
       runQuery:'Run query',
+      historyTip:'Queried {time} times in the last {hour}h',
     },
     refresh:'Refresh',//'刷新'
     edit:'Edit',//'编辑'
