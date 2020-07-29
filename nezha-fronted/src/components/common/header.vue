@@ -9,7 +9,7 @@
     >
       <el-submenu :index="'-3'" popper-class="nz-submenu" class="icon-menu-item">
         <template slot="title">
-          <i class="nz-icon-navmore nz-icon"></i>
+          <i class="nz-icon-navmore nz-icon" style="font-size: 17px;"></i>
         </template>
         <template v-for="(item, index) in linkData">
           <el-menu-item :index="'0-' + index">
@@ -18,7 +18,7 @@
         </template>
       </el-submenu>
       <el-submenu :index="'-1'" class="icon-menu-item" popper-class="display-none">
-        <div slot="title" class="el-submenu__title" @click="cli()" >
+        <div slot="title" class="el-submenu__title" @click="cli" >
           <i class="nz-icon nz-icon-cli"></i>
           <div class="right-tip" v-show="$store.state.consoleCount>0">{{$store.state.consoleCount<=10?$store.state.consoleCount:'10+'}}</div>
         </div>
@@ -150,16 +150,12 @@
       </el-submenu>
     </el-menu>
 
-    <panel-box :panel="editPanel" @reload="panelListReload" @reloadForDel="" ref="panelBox"></panel-box>
-    <project-box :project="editProject" ref="projectBox"></project-box>
-    <module-box :currentProject="currentProject" :module="editModule" @reload="" ref="moduleBox"></module-box>
-    <add-endpoint-box :currentProject="currentProject" :currentModule="currentModule" @reload=""
+    <project-box v-if="rightBox.project.show" :project="editProject" ref="projectBox"></project-box>
+    <module-box v-if="rightBox.module.show" :currentProject="currentProject" :module="editModule" @reload="" ref="moduleBox"></module-box>
+    <add-endpoint-box v-if="rightBox.endpoint.show" :currentProject="currentProject" :currentModule="currentModule" @reload=""
                       ref="addEndpointBox"></add-endpoint-box>
-    <!--<asset-add-unit :add-unit-show='addUnitShow' @refreshData="refreshAsset" ref="assetAddUnit"
-                    @sendStateData="closeAsset"></asset-add-unit>-->
-    <asset-box :edit-unit-show='addUnitShow' @refreshData="refreshAsset" @sendStateData="closeAsset" v-if="assetBoxShow"
-               ref="assetAddUnit"></asset-box>
-    <alert-config-box :parentAlertRule="alertRule" @reload="" ref="alertConfigBox"></alert-config-box>
+    <asset-box v-if="rightBox.asset.show" :edit-unit-show='addUnitShow' @refreshData="refreshAsset" @sendStateData="closeAsset" ref="assetAddUnit"></asset-box>
+    <alert-config-box v-if="rightBox.alertRule.show" :parentAlertRule="alertRule" @reload="" ref="alertConfigBox"></alert-config-box>
     <change-password :cur-user="username" :show-dialog="showChangePwd" @click="showPwdDialog" @dialogClosed="dialogClosed"></change-password>
   </div>
 </template>
@@ -174,6 +170,13 @@
     },
     data() {
       return {
+        rightBox: {
+          project: {show: false},
+          module: {show: false},
+          endpoint: {show: false},
+          asset: {show: false},
+          alertRule: {show: false},
+        },
         username: sessionStorage.getItem("nz-username"),
         language: localStorage.getItem("nz-language") ? localStorage.getItem("nz-language") : 'en',
         assetData: [],
@@ -181,10 +184,6 @@
         activeItemIndex:'',
         activeItemIndexes: [],
         hoverItemIndex: '',
-        editPanel:{//新增or编辑的panel
-          id:'',
-          name: ''
-        },
         projectData: [], //顶部菜单project列表中的数据
         editProject: {id: '', name: '', remark: ''}, //新增/编辑的project
         currentProject: {id: '', name: '', remark: ''}, //module/endpoint弹框用来回显project
@@ -257,15 +256,6 @@
       }
     },
     methods: {
-      closeAsset() {
-        this.addUnitShow = false;
-        this.assetBoxShow = false;
-      },
-      refreshAsset(flag) {
-        if (flag && this.$route.path == "/asset") {
-          window.location.reload();
-        }
-      },
       cli(){
         this.$store.commit('openConsole');
       },
@@ -284,14 +274,11 @@
       },
 
       createBox(item) {
-        if (item.type == 0) {
-          this.$refs.panelBox.show(true);
-          this.editPanel = {id: '', name: ''};
-        }else  if (item.type == 1) {
-          this.$refs.projectBox.show(true,true);
+        if (item.type == 1) {
+          this.rightBox.project.show = true;
           this.editProject = {id: '', name: '', remark: ''};
         } else if (item.type == 2) {
-          this.$refs.moduleBox.show(true,true);
+          this.rightBox.module.show = true;
           this.editModule = {
             id: '',
             name: '',
@@ -437,8 +424,8 @@
         })
       },
       toEditProject(p) {
-        this.$refs.projectBox.show(true,true);
         this.editProject = Object.assign({}, p);
+        this.rightBox.project.show = true;
       },
       indOf(a, b) {
         let c = [];

@@ -26,10 +26,10 @@
       <el-scrollbar ref="leftScrollbar" style="height: 100%">
         <div class="sidebar-title too-long-split">{{$t('project.project.project')}}</div>
         <div class="sidebar-info">
-          <el-collapse v-model="currentProjectTitle" class="left-menu-bg" accordion style="padding-top:0px;" @change="projectChange" ref="projectLeft">
+          <el-collapse v-model="currentProjectTitle" class="left-menu-bg" accordion style="padding-top: 0px;" ref="projectLeft">
             <el-collapse-item v-for="(item,index) in projectList" :key="item.name+item.id+index" :name="item.name+'-'+item.id">
               <template slot="title">
-                <div class="sidebar-info-item" :class="{'sidebar-info-item-active': item.id==currentProject.id}" @click="detailProjectInfo($event,item)" :id="'project-module-'+item.id">
+                <div class="sidebar-info-item" :class="{'sidebar-info-item-active': item.id == currentProject.id}" @click="detailProject($event,item)" :id="'project-module-'+item.id">
                   <div class="sidebar-info-item-txt">
                     <el-popover v-if="item.name.length > 14" trigger="hover" placement="top-start" :content="item.name" popper-class="transparent-pop">
                       <span slot="reference" class="">
@@ -41,15 +41,15 @@
                 </div>
               </template>
               <div class="sidebar-info sub-sidebar-info" >
-                <div v-if="getProjectModule(item.id).length == 0" class="sidebar-info-item sidebar-info-item-add" @click="toAddModule">
+                <div v-if="getProjectModule(item.id).length == 0" class="sidebar-info-item sidebar-info-item-add" @click="addModule">
                   <i class="nz-icon nz-icon-create-square"></i>
                 </div>
                 <template v-else>
-                  <div v-for="module in getProjectModule(item.id)" class="sidebar-info-sub-item" :class="{'sidebar-info-item-active': module.id == currentModule.id}" @click="changeModule(module)" :id="'project-module-'+module.id">
+                  <div v-for="module in getProjectModule(item.id)" class="sidebar-info-sub-item" :class="{'sidebar-info-item-active': module.id == currentModule.id}" @click="changeModule(item, module)" :id="'project-module-'+module.id">
                     <div :id="`module-${module.id}`" class="item-tip">
                       <div class="item-tip-hide item-tip-key el-popover" :class="itemTip(module.id, module.name, ready)">{{module.name}}</div>
                       <span class="too-long-split" style="width: 120px;">{{module.name}}</span>
-                      <div v-show="module.buildIn != 1" class="hid-div side-bar-menu-edit sub-side-bar-menu-edit" @click.stop="toEditModule(module)" :id="'project-module-edit-'+module.id" ><i class="nz-icon nz-icon-edit"></i></div>
+                      <div v-show="module.buildIn != 1" class="hid-div side-bar-menu-edit sub-side-bar-menu-edit" @click.stop="editModule(module)" :id="'project-module-edit-'+module.id" ><i class="nz-icon nz-icon-edit"></i></div>
                     </div>
                   </div>
                 </template>
@@ -77,7 +77,7 @@
               class="margin-l-20"
             >
               <template slot="optionZone">
-                <button @click.stop="toCreateEndpoint" :title="$t('overall.createEndpoint')" class="nz-btn nz-btn-size-normal nz-btn-style-light" id="project-create-project">
+                <button @click.stop="addEndpoint" :title="$t('overall.createEndpoint')" class="nz-btn nz-btn-size-normal nz-btn-style-light" id="project-create-project">
                   <i class="nz-icon nz-icon-create-square"></i>
                 </button>
               </template>
@@ -110,7 +110,7 @@
             :sort-orders="['ascending', 'descending']"
           >
             <template slot-scope="scope" :column="item" >
-              <span v-if="item.prop == 'asset' && scope.row[item.prop]" class="link" @click="detail(scope.row)">{{scope.row[item.prop].host}}</span>
+              <span v-if="item.prop == 'asset' && scope.row[item.prop]" class="link" @click="detailEndpoint(scope.row)">{{scope.row[item.prop].host}}</span>
               <span v-else-if="item.prop == 'param'">
                 <template v-if="scope.row.paramObj">
                   <span v-for="(p,i) in scope.row.paramObj">{{p.key}}={{p.value}}<span v-if="i < scope.row.paramObj.length-1">，</span></span>
@@ -119,13 +119,12 @@
               </span>
               <template v-else-if="item.prop == 'type'">{{currentModule.type}}</template>
               <div v-else-if="item.prop == 'option'" class="content-right-options">
-                <span :title="$t('overall.view')" @click="detail(scope.row)" class="content-right-option" :id="'edp-detail-'+scope.row.id"><i class="nz-icon nz-icon-view"></i></span>
+                <span :title="$t('overall.view')" @click="detailEndpoint(scope.row)" class="content-right-option" :id="'edp-detail-'+scope.row.id"><i class="nz-icon nz-icon-view"></i></span>
                 &nbsp;
-                <span :title="$t('overall.query')" @click="showEndpoint(scope.row)" class="content-right-option" :id="'edp-query-'+scope.row.id"><i class="el-icon-search"></i></span>
+                <span :title="$t('overall.query')" @click="query(scope.row)" class="content-right-option" :id="'edp-query-'+scope.row.id"><i class="el-icon-search"></i></span>
                 &nbsp;
-                <span :title="$t('overall.edit')" @click="toEditEndpoint(scope.row)" class="content-right-option" :id="'edp-edit-'+scope.row.id"><i class="nz-icon nz-icon-edit"></i></span>
+                <span :title="$t('overall.edit')" @click="editEndpoint(scope.row)" class="content-right-option" :id="'edp-edit-'+scope.row.id"><i class="nz-icon nz-icon-edit"></i></span>
               </div>
-<!--              <span v-else-if="item.prop == 'lastUpdate'">{{dateFormat(scope.row.lastUpdate)}}</span>-->
               <span v-else-if="item.prop == 'state'" >
                 <el-popover placement="right" width="50" trigger="hover" :popper-class="scope.row.state == '1'?'small-pop':''">
                   <div slot="reference" style="width: 20px">
@@ -158,7 +157,7 @@
       </div>
       <transition name="el-zoom-in-bottom">
         <bottom-box v-if="bottomBox.showSubList" :sub-resize-show="bottomBox.subResizeShow" :is-full-screen="bottomBox.isFullScreen"
-                    :from="'endpoint'" :target-tab.sync="bottomBox.targetTab" :detail="bottomBox.endpointDetail" :obj="currentEndpoint" :asset-detail="bottomBox.assetDetail"
+                    :from="'endpoint'" :target-tab.sync="bottomBox.targetTab" :detail="bottomBox.endpointDetail" :obj="endpoint" :asset-detail="bottomBox.assetDetail"
                     @closeSubList="bottomBox.showSubList = false" @fullScreen="fullScreen" @exitFullScreen="exitFullScreen" @listResize="listResize" ></bottom-box>
       </transition>
     </div>
@@ -174,18 +173,21 @@
       @tablelable="tablelabelEmit"
       ref="elementset"
     ></element-set>
-
-    <module-box :current-project="currentProject" :module="editModule" @reload="getAllModuleList" ref="moduleBox"></module-box>
-    <edit-endpoint-box :project="currentProject" :module="currentModule" :post-endpoint="editEndpoint" @reload="getEndpointTableData" ref="editEndpointBox"></edit-endpoint-box>
-    <add-endpoint-box :current-project="endpointEditInfos.project" :current-module="endpointEditInfos.module" @reload="getEndpointTableData" ref="addEndpointBox"></add-endpoint-box>
+    <transition name="right-box">
+      <module-box v-if="rightBox.module.show" :current-project="currentProject" :module="module" @close="closeModuleRightBox" ref="moduleBox"></module-box>
+    </transition>
+    <transition name="right-box">
+      <add-endpoint-box v-if="rightBox.addEndpoint.show" :current-project="currentProject" :current-module="currentModule" @close="closeAddEndpointRightBox" ref="addEndpointBox"></add-endpoint-box>
+    </transition>
+    <transition name="right-box">
+      <edit-endpoint-box v-if="rightBox.editEndpoint.show" :project="currentProject" :module="currentModule" :endpoint="endpoint" @close="closeEditEndpointRightBox" ref="editEndpointBox"></edit-endpoint-box>
+    </transition>
   </div>
 </template>
 
 <script>
   import exportXLSX from "../../common/exportXLSX";
   import loading from "../../common/loading";
-  import chartDataFormat from "../../charts/chartDataFormat";
-  import bus from '../../../libs/bus'
   import panelTab from '../../common/bottomBox/tabs/panelTab'
 
   export default {
@@ -197,6 +199,11 @@
     },
     data() {
       return {
+        rightBox: {
+          module: {show: false},
+          addEndpoint: {show: false},
+          editEndpoint: {show: false},
+        },
         /*二级页面相关*/
         bottomBox: {
           endpoint: {}, //asset详情
@@ -207,7 +214,7 @@
           showSubList: false,
           targetTab: '',
         },
-        
+
         mainTableHeight: this.$tableHeight.normal, //主列表table高度
         ready: false,
 
@@ -221,17 +228,17 @@
           tablelable: [], //从缓存中加载的table header
           dropCol: [], //自定义列工具的数据
         },
-        
-        
+
+
         tableId: 'projectTable', //需要分页的table的id，用于记录每页数量
 
-        endpointEditInfos:{
+        endpoint:{
           project:null,
           module:null,
         },
         userData: [],
 
-        editEndpoint: {id: '', host: '', port: '', param: '', path: '', asset: {}, project: {}, module: {}, moduleId: '', assetId: '', paramObj: []},
+        endpoint: {id: '', host: '', port: '', param: '', path: '', asset: {}, project: {}, module: {}, moduleId: '', assetId: '', paramObj: []},
         endpointTableTitle: [
           {
             label: this.$t("project.endpoint.endpointId"),
@@ -285,15 +292,16 @@
           pageSize: 50,
           total:0
         },
-        currentEndpoint: {},
+        endpoint: {},
 
         currentProjectTitle:'',
         moduleList: [],
         projectList: [],
         pageType:'',//project endpoint
         currentProject: {id: '', name: '', remark: ''}, //endpoint弹框、module列表用来回显project
-        editModule: {id: '', type: '', name: '', project: {}, port: '', path: '', param: '', paramObj: [], snmpParam: ''}, //编辑的module
-        currentModule: {id: '', type: '', name: '', project: {}, port: '', path: '', param: '', paramObj: [], snmpParam: ''}, //endpoint弹框用来回显module
+        module: {}, //编辑的module
+        blankModule: {id: '', type: '', name: '', project: {}, port: '', path: '', param: '', paramObj: [], snmpParam: ''}, //空白module
+        currentModule: {id: '', type: '', name: '', project: {}, port: '', path: '', param: '', paramObj: [], snmpParam: ''}, //用来回显的module
         endpointSearchLabel: {moduleId: ''}, //endpoint搜索参数
         endpointSearchMsg: { //给搜索框子组件传递的信息
           zheze_none: true,
@@ -438,10 +446,10 @@
           }
         }
       },
-      getProjectList:function(reload){
+      getProjectList(reload) {
         this.$get('project',{pageSize:-1}).then(response=>{
           if(response.code == 200){
-            this.projectList=response.data.list;
+            this.projectList = response.data.list;
             if (reload) {
               if (this.projectList.length > 0) {
                 this.currentProject = this.projectList[0];
@@ -452,41 +460,42 @@
           }
         })
       },
-      getProjectModule:function(projectId){
-        //return [];
-        let moduleList=Object.assign([],this.moduleList);
-        return moduleList.filter((item,index)=>{
-          return item.project.id==projectId;
+      getProjectModule(projectId) {
+        let moduleList = JSON.parse(JSON.stringify(this.moduleList));
+        return moduleList.filter((item,index) => {
+          return item.project.id == projectId;
         })
       },
-      projectChange:function(){
-        //展开后为避免左侧无数据，显示对应project的第一个module下的endpoint
-        // let currentProjectId=this.currentProjectTitle&&this.cuurentProjectTitle != ""?this.currentProjectTitle.split('-')[this.currentProjectTitle.split('-').length -1]:"";
-        // if(currentProjectId != ''){
-        //   currentProjectId=Number.parseInt(currentProjectId);
-        //   let moduleList=this.getProjectModule(currentProjectId);
-        //   this.currentModule=moduleList[0];
-        //   this.currentProject=this.projectList.find((item)=>{
-        //     return item.id == currentProjectId
-        //   })
-        //   this.getEndpointTableData();
-        //   // this.$store.commit('setProject',null)
-        // }
-      },
-      detailProjectInfo:function(event,project){
+      detailProject(event, project) {
         this.pageType = 'project';
-        if(event){
-          if(project){
-            this.currentProject=project;
-            // this.$store.commit('setProject',this.currentProject)
+        if(event) {
+          if(project) {
+            this.currentProject = project;
           }
-          // this.$refs.projectLeft.setActiveNames([]);
-        }else{
-          this.currentProjectTitle=this.currentProject.name+"-"+this.currentProject.id
+        } else {
+          this.currentProjectTitle = this.currentProject.name + "-" + this.currentProject.id;
         }
-        this.currentModule={};
+        this.currentModule = {};
       },
-      getAllModuleList:function(){
+      closeModuleRightBox(refresh) {
+        this.rightBox.module.show = false;
+        if (refresh) {
+          this.getAllModuleList();
+        }
+      },
+      closeAddEndpointRightBox(refresh) {
+        this.rightBox.addEndpoint.show = false;
+        if (refresh) {
+          this.getEndpointTableData();
+        }
+      },
+      closeEditEndpointRightBox(refresh) {
+        this.rightBox.editEndpoint.show = false;
+        if (refresh) {
+          this.getEndpointTableData();
+        }
+      },
+      getAllModuleList() {
         this.$get('module', { pageSize: -1, pageNo: 1}).then(response => {
           if (response.code === 200) {
             this.moduleList = response.data.list;
@@ -501,46 +510,39 @@
                 //console.error(response.data.list[i], err);
               }
             }
-            // if (this.moduleList.length > 0) {
-            //   this.currentModule = this.moduleList[0];
-            // } else {
-            //   this.currentModule = {id: '', name: '', project: {}, port: '', path: '', param: '', paramObj: []};
-            // }
           }
         });
       },
       //左侧module列表选中切换
-      changeModule(module) {
+      changeModule(project, module) {
         this.currentModule = module;
         this.endpointSearchLabel = {moduleId: ''};
         this.$refs.projectSearch.clearSearch();
         this.bottomBox.showSubList = false;
-        this.currentProject = {};
+        this.currentProject = project;
       },
 
       //弹出endpoint编辑页
-      toEditEndpoint(endpoint) {
-        this.editEndpoint = JSON.parse(JSON.stringify(endpoint));
-        this.$set(this.editEndpoint,'projectId',this.currentModule.project.id)
-        this.$set(this.editEndpoint,'moduleId',this.currentModule.id)
+      editEndpoint(endpoint) {
+        this.endpoint = JSON.parse(JSON.stringify(endpoint));
+        this.$set(this.endpoint,'projectId',this.currentModule.project.id)
+        this.$set(this.endpoint,'moduleId',this.currentModule.id)
 
-        this.rightBoxHandler(3);
-        this.$refs.editEndpointBox.toEdit(true, this.editEndpoint.id);
-        if (!this.editEndpoint.paramObj) {
-          this.$set(this.editEndpoint, 'paramObj', []);
+        this.rightBox.editEndpoint.show = true;
+        if (!this.endpoint.paramObj) {
+          this.$set(this.endpoint, 'paramObj', []);
         }
       },
 
-      toCreateEndpoint() {
-        this.endpointEditInfos.project=Object.assign({},this.currentModule.project);
-        this.endpointEditInfos.module=Object.assign({},this.currentModule)
-        this.$refs.addEndpointBox.show(true);
-        this.$refs.addEndpointBox.clearEndpoints();
+      addEndpoint() {
+        this.endpoint.project = Object.assign({},this.currentModule.project);
+        this.endpoint.module = Object.assign({},this.currentModule);
+        this.rightBox.addEndpoint.show = true;
       },
 
       //查看endpoint详情
-      detail(endpoint) {
-        this.currentEndpoint = Object.assign({}, endpoint);
+      detailEndpoint(endpoint) {
+        this.endpoint = Object.assign({}, endpoint);
         this.bottomBox.targetTab = "panel";
         this.bottomBox.showSubList = true;
       },
@@ -560,40 +562,36 @@
         this.$set(module, 'context_name', '');
       },
       //弹出module编辑页
-      toEditModule(module) {
+      editModule(module) {
         this.currentModule = JSON.parse(JSON.stringify(module));
         if (!this.currentModule.paramObj) {
           this.$set(this.currentModule, 'paramObj', []);
         }
-        this.editModule = JSON.parse(JSON.stringify(module));
-        if (!this.editModule.paramObj) {
-          this.$set(this.editModule, 'paramObj', []);
+        this.module = JSON.parse(JSON.stringify(module));
+        if (!this.module.paramObj) {
+          this.$set(this.module, 'paramObj', []);
         }
-        if (this.editModule.snmpParam) {
-          this.initSnmpParam(this.editModule);
+        if (this.module.snmpParam) {
+          this.initSnmpParam(this.module);
         }
-        this.rightBoxHandler(2);
+        this.rightBox.module.show = true;
         this.$nextTick(() => {
           this.$refs.moduleBox.initWalk();
         });
       },
-      toAddModule() {
-        this.editModule = {id: '', type: '', name: '', project: this.currentProject, port: '', path: '', param: '', paramObj: [], snmpParam: ''};
-        this.rightBoxHandler(2);
+      addModule() {
+        this.module = this.newModule();
+        this.rightBox.module.show = true;
         this.$nextTick(() => {
           this.$refs.moduleBox.initWalk();
         });
+      },
+      newModule() {
+        return JSON.parse(JSON.stringify(this.blankModule));
       },
 
-      //asset弹框控制
-      /*tabControl(data) {
-        if (data === 'close') {
-          this.viewAssetState = false
-          this.$refs['assetEditUnit'].tabView = false
-        }
-      },*/
       //搜索
-      endpointSearch: function(searchObj) {
+      endpointSearch(searchObj) {
         let orderBy='';
         if(this.endpointSearchLabel.orderBy){
           orderBy=this.endpointSearchLabel.orderBy
@@ -611,41 +609,6 @@
         this.getEndpointTableData();
       },
 
-      //控制弹框状态 type  1:project; 2:module; 3:editEndponit; 4:addEndpoint;
-      rightBoxHandler(type) {
-        if (type == 1) {
-          this.$refs.projectBox.show(true);
-
-          if (this.$refs.moduleBox) {
-            this.$refs.moduleBox.show(false);
-          }
-          if (this.$refs.editEndpointBox) {
-            this.$refs.editEndpointBox.show(false);
-          }
-          //this.$refs.addEndpointBox.show(false);
-        } else if (type == 2) {
-          this.$refs.moduleBox.show(true,true);
-
-          if (this.$refs.projectBox) {
-            this.$refs.projectBox.show(false);
-          }
-          if (this.$refs.editEndpointBox) {
-            this.$refs.editEndpointBox.show(false);
-          }
-          //this.$refs.addEndpointBox.show(false);
-        } else if (type == 3) {
-          this.$refs.editEndpointBox.show(true);
-          if (this.$refs.projectBox) {
-            this.$refs.projectBox.show(false);
-          }
-          if (this.$refs.moduleBox) {
-            this.$refs.moduleBox.show(false);
-          }
-          //this.$refs.addEndpointBox.show(false);
-        } else if (type == 4) {
-        }
-      },
-
       dateFormat(time) {
         if (!time) {
           return '-';
@@ -661,15 +624,15 @@
         return year + "-" + month + "-" + day + " " + hours + ":" + minutes + ":" + seconds;
       },
       viewAsset(endpoint) {
-        this.currentEndpoint = Object.assign({}, endpoint);
+        this.endpoint = Object.assign({}, endpoint);
         this.bottomBox.targetTab = 'assetDetail';
         this.bottomBox.showSubList = true;
         /*this.viewAssetState=true;
         this.$refs.assetEditUnit.getAssetData(id);
         this.$refs.assetEditUnit.tabView=true;*/
       },
-      showEndpoint(endpoint) {
-        this.currentEndpoint = Object.assign({}, endpoint);
+      query(endpoint) {
+        this.endpoint = Object.assign({}, endpoint);
         this.bottomBox.targetTab = 'endpointQuery';
         this.bottomBox.showSubList = true;
       },
@@ -915,7 +878,7 @@
         immediate:true,
         handler(n, o) {
           this.currentProject = Object.assign({}, n);
-          this.detailProjectInfo();
+          this.detailProject();
         }
       },
       projectListChange:function(n,o){
@@ -941,7 +904,7 @@
         let vm = this;
         this.$bottomBoxWindow.showSubListWatch(vm, n);
       },
-      currentEndpoint: {
+      endpoint: {
         deep: true,
         handler(n) {
           this.bottomBox.endpointDetail = this.convertToDetail(n);
