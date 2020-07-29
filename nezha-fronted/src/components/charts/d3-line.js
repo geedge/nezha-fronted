@@ -24,11 +24,17 @@ export function D3LineChart(selector,option){
     tooltipFormatter:option.tooltipFormatter,
 
     init:function(){
+      let $self=this;
       //定义画布
       this.svg=d3.select(this.selector)
         .append('svg')
         .attr('width',this.width)
         .attr('height',this.height)
+        .on('mouseover',function(){
+          if ($self.tooltip) $self.tooltip.style('display', null);
+          if ($self.tooltipLine) $self.tooltipLine.attr('stroke', 'orange');
+          $self.svg.style('cursor','crosshair')
+        })
         .on('mousemove', drawTooltip)
         .on('mouseout', removeTooltip);
 
@@ -48,7 +54,6 @@ export function D3LineChart(selector,option){
 
       this.createZoom()
 
-      let $self=this;
       let oldToolVal=null;
       function removeTooltip() {
         if ($self.tooltip) $self.tooltip.style('display', 'none');
@@ -57,21 +62,23 @@ export function D3LineChart(selector,option){
       function drawTipLine(time){
         if ($self.currentTransform)
           $self.tooltipLine
-            .attr('stroke', 'black')
+            .style('stroke-width','1')
             .attr("clip-path", "url(#clip)")
             .attr('x1', $self.currentTransform.applyX($self.xScale(time)))
             .attr('x2', $self.currentTransform.applyX($self.xScale(time)))
             .attr('y1', $self._head_height)
             .attr('y2', $self.height - $self._foot_height);
         else
-
           $self.tooltipLine
-            .attr('stroke', 'black')
+            .style('stroke-width','1')
             .attr("clip-path", "url(#clip)")
             .attr('x1', $self.xScale(time))
             .attr('x2', $self.xScale(time))
             .attr('y1', $self._head_height)
             .attr('y2', $self.height - $self._foot_height);
+      }
+      function drawLineDot(){
+
       }
       function drawTooltip(){
         var x=d3.mouse($self.svg.node())[0];
@@ -83,10 +90,9 @@ export function D3LineChart(selector,option){
         else
           var time = $self.xScale.invert(d3.mouse($self.svg.node())[0]);
 
-        // drawTipLine(time)
+        drawTipLine(time)
 
         $self.tooltip.html(d3.timeFormat('%Y-%m-%d %H:%M:%S')(time))
-          .style('display', 'block')
           .style('left', d3.event.pageX + 20 + 'px')
           .style('top', d3.event.pageY - 20 + 'px')
           .selectAll()
@@ -124,6 +130,8 @@ export function D3LineChart(selector,option){
                         .append('div')
                         .attr('style',"position: absolute; background-color: rgba(221,228,237,1);border-color:rgba(221,228,237,1); padding: 5px; display: none; left: 983px; top: 89px;")
       this.tooltipLine = this.svg.append('line');
+
+      this.dotBox = this.svg.append('g')
 
       this.minMax=getMinMax(this.datas);
 
@@ -506,7 +514,7 @@ function CrystalLineObject(chart) {
       })
 
     //添加系列的小圆点
-   /* this.group.selectAll("circle")
+    /*this.group.selectAll("circle")
       .data(arr)
       .enter()
       .append("circle")
@@ -517,7 +525,7 @@ function CrystalLineObject(chart) {
       .attr("cy", function(d) {
         return yScale(d[1]);
       })
-      .attr("r", 5)
+      .attr("r", 2)
       .attr("fill", lineColor[id]);*/
     this.oldData = arr;
   };
