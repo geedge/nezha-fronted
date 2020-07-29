@@ -254,6 +254,9 @@
           if(historyJson && historyJson != 'undefined' && historyJson != ''){
             let historyObj=JSON.parse(historyJson);
             let history = historyObj[username];
+            history=history.filter(item=>{
+              return item.time + item.expire >= new Date().getTime();
+            })
             this.$set(this.noStyleSuggestions,'history',history);
           }
         }
