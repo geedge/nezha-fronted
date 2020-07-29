@@ -42,7 +42,9 @@
       </div>
       <div class="alertLabelBox">
         <div class="alertLabelTitle">Alert</div>
-        <div class="alertLabelValue"><sapn v-if="alertLabelData" :class="{danger:alertLabelData.alert>0,success:alertLabelData.alert<=0}">{{alertLabelData.alert + alertActiveStr()}}</sapn></div>
+        <div class="alertLabelValue">
+          <span v-if="alertLabelData" :class="{danger:alertLabelData.alert>0,success:alertLabelData.alert<=0}">{{alertLabelData.alert + alertActiveStr()}}</span>
+        </div>
       </div>
       <div class="alertLabelBox">
         <div class="alertLabelTitle">DC</div>
@@ -58,39 +60,39 @@
       </div>
   </div>
 
-  <div class="alertLabelInfo" v-if="type==='module'" v-loading="loading">
-    <div class="alertLabelBox">
-      <div class="alertLabelTitle">ID</div>
-      <div class="alertLabelValue">{{alertLabelData?alertLabelData.id:''}}</div>
+    <div class="alertLabelInfo" v-if="type==='module'" v-loading="loading">
+      <div class="alertLabelBox">
+        <div class="alertLabelTitle">ID</div>
+        <div class="alertLabelValue">{{alertLabelData?alertLabelData.id:''}}</div>
+      </div>
+      <div class="alertLabelBox">
+        <div class="alertLabelTitle">Name</div>
+        <div class="alertLabelValue">{{alertLabelData?alertLabelData.name:''}}</div>
+      </div>
+      <div class="alertLabelBox">
+        <div class="alertLabelTitle">Project</div>
+        <div class="alertLabelValue">{{alertLabelData?alertLabelData.project.name:''}}</div>
+      </div>
+      <div class="alertLabelBox">
+        <div class="alertLabelTitle">Description</div>
+        <div class="alertLabelValue">{{alertLabelData?(alertLabelData.remark?alertLabelData.remark:'-'):''}}</div>
+      </div>
     </div>
-    <div class="alertLabelBox">
-      <div class="alertLabelTitle">Name</div>
-      <div class="alertLabelValue">{{alertLabelData?alertLabelData.name:''}}</div>
-    </div>
-    <div class="alertLabelBox">
-      <div class="alertLabelTitle">Project</div>
-      <div class="alertLabelValue">{{alertLabelData?alertLabelData.project.name:''}}</div>
-    </div>
-    <div class="alertLabelBox">
-      <div class="alertLabelTitle">Description</div>
-      <div class="alertLabelValue">{{alertLabelData?(alertLabelData.remark?alertLabelData.remark:'-'):''}}</div>
-    </div>
-  </div>
 
-  <div class="alertLabelInfo" v-if="type==='project'" v-loading="loading">
-    <div class="alertLabelBox">
-      <div class="alertLabelTitle">ID</div>
-      <div class="alertLabelValue">{{alertLabelData?alertLabelData.id:''}}</div>
+    <div class="alertLabelInfo" v-if="type==='project'" v-loading="loading">
+      <div class="alertLabelBox">
+        <div class="alertLabelTitle">ID</div>
+        <div class="alertLabelValue">{{alertLabelData?alertLabelData.id:''}}</div>
+      </div>
+      <div class="alertLabelBox">
+        <div class="alertLabelTitle">Name</div>
+        <div class="alertLabelValue">{{alertLabelData?alertLabelData.name:''}}</div>
+      </div>
+      <div class="alertLabelBox">
+        <div class="alertLabelTitle">Description</div>
+        <div class="alertLabelValue">{{alertLabelData?(alertLabelData.remark?alertLabelData.remark:'-'):''}}</div>
+      </div>
     </div>
-    <div class="alertLabelBox">
-      <div class="alertLabelTitle">Name</div>
-      <div class="alertLabelValue">{{alertLabelData?alertLabelData.name:''}}</div>
-    </div>
-    <div class="alertLabelBox">
-      <div class="alertLabelTitle">Description</div>
-      <div class="alertLabelValue">{{alertLabelData?(alertLabelData.remark?alertLabelData.remark:'-'):''}}</div>
-    </div>
-  </div>
   </span>
 </template>
 

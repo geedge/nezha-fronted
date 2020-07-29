@@ -8,6 +8,9 @@
   .content{
     height: 100%;
   }
+  .el-tooltip{
+    display: inline-block;
+  }
 </style>
 <style lang="scss">
   @import '../../charts/chart';
@@ -115,11 +118,11 @@
                   v-for="item in labelsSort(scope.row.labels)"
                   placement="right"
                   effect="light"
-                  :disabled="labelToolTipDis(item.label)"
+                  :disabled="!(item.label === 'asset' ||item.label === 'module' || item.label === 'project')"
                   :key="item.label"
                 >
                   <alertLabel
-                    v-if="!labelToolTipDis(item.label)"
+                    v-if="item.label === 'asset' ||item.label === 'module' || item.label === 'project'"
                     slot="content"
                     :id="scope.row[item.label].id"
                     :type="item.label"
