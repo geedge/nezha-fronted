@@ -1517,6 +1517,7 @@
     .localStorage_list_box .list_box_title i{
         position: absolute;
         right: 10px;
+        top: 5px;
     }
     .localStorage_list_box .list_box_content{
         text-align: left;
