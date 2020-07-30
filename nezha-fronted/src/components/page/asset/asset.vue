@@ -443,34 +443,19 @@
       }
     },
     computed: {
-      getData() {
-        return this.$store.state.assetData
+      assetListChange() {
+        return this.$store.state.assetListChange;
       },
-      getFlushData() {
-        return this.$store.state.flushDataSign
-      }
+      currentAssetChange() {
+        return this.$store.state.currentAsset;
+      },
     },
     watch: {
-      getData: {
-        handler(newVal) {
-          if (newVal.type == 1) {
-            this.activeType = 'dataCenter';
-            this.checkList = newVal.selectedData;
-            this.assetClick = false;
-          }
-        },
-        immediate: true,
-        deep: true,
+      assetListChange(n) {
+        this.getTableData();
       },
-      getFlushData: {
-        handler(newVal, oldVal) {
-          if (newVal === true) {
-            this.getDcData();
-            this.getTableData()
-            /*this.getLeftMenuList();
-            this.getAssetData()*/
-          }
-        }
+      currentAssetChange(n) {
+        this.dcCheckList = [n.id];
       },
       dcCheckList(n, o) {
         setTimeout(()=>{
@@ -524,6 +509,17 @@
             }
             this.$store.commit('assetAllIdChange',this.checkListData)
           }
+        }
+      },
+      indOf(a, b) {
+        let c = [];
+        for (let i = 0; i < a.length; i++) {
+          c.push(a[i]);
+        }
+        if (c.indexOf(b) > -1) {
+          return true;
+        } else {
+          return false;
         }
       },
       elementsetShow(s, e) {

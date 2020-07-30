@@ -45,7 +45,7 @@
                       <el-col :span="17" class="panel-list-item" :title="item.name">{{item.name}}</el-col>
                       <el-col :span="1"><span class="panel-dropdown-btn panel-dropdown-btn-delete" @click.stop="del(item)"><i class="el-icon-delete"></i></span></el-col>
                       <el-col :span="1">&nbsp;</el-col>
-                      <el-col :span="1"><span class="panel-dropdown-btn" @click.stop="toEdit(item)"><i class="nz-icon nz-icon-edit"></i></span></el-col>
+                      <el-col :span="1"><span class="panel-dropdown-btn" @click.stop="edit(item)"><i class="nz-icon nz-icon-edit"></i></span></el-col>
                     </el-row>
                   </el-dropdown-item>
                 </draggable>
@@ -59,32 +59,8 @@
               </el-input>
             </div>
 
-            <!--<div class="panel-calendar margin-r-20">
-              <div class="block">
-                <time-picker ref="calendarPanel" class="nz-dashboard-picker" @change="dateChange"></time-picker>
-              </div>
-            </div>-->
-
-            <!--<div class="nz-btn-group nz-btn-group-size-normal nz-btn-group-light margin-r-20">
-              <button style="border-right: 1px solid rgba(162,162,162,0.50);" type="button"
-                      class="nz-btn nz-btn-size-normal nz-btn-style-light" @click="Refresh()">
-                <i style="font-size: 12px" class="global-active-color nz-icon nz-icon-refresh"></i>
-              </button><el-popover
-              v-model="visible" placement="bottom-start" width="200" trigger="click">
-              <ul class="popover_ul">
-                <li v-for="i in intervalList" :style="{color:interval==i.value?'#31749C':''}" :key="i.value+i.name"
-                    @click="selectInterval(i.value)">
-                  {{i.name}}
-                </li>
-              </ul>
-              <button type="button" style="border-radius: 0 4px 4px 0"
-                      class="nz-btn nz-btn-size-normal nz-btn-style-light" slot="reference">
-                <i style="font-size: 12px" class="nz-icon nz-icon-arrow-down"></i>
-              </button>
-            </el-popover>
-            </div>-->
             <pick-time :refresh-data-func="dateChange" v-model="searchTime" :use-chart-unit="false"></pick-time>
-            <button @click="toAddChart" :title="$t('overall.createChart')"
+            <button @click="addChart" :title="$t('overall.createChart')"
                     class="nz-btn nz-btn-size-normal nz-btn-style-light ">
               <i class="nz-icon-create-square nz-icon"></i>
             </button>
@@ -94,7 +70,7 @@
       <div class="table-list" id="tableList">
         <el-scrollbar class="el-scrollbar-large" style="height: 100%" ref="dashboardScrollbar">
           <div class="box-content">
-            <chart-list @on-edit-chart="editData" @on-refresh-time="refreshTime" @on-remove-chart="removeData"
+            <chart-list @on-edit-chart="editChart" @on-refresh-time="refreshTime" @on-remove-chart="delChart"
                         ref="chartList"></chart-list>
           </div>
         </el-scrollbar>
@@ -103,8 +79,12 @@
     </div>
     </left-menu>
 
-    <panel-box :panel="panel" @reload="panelReload" @reloadForDel="panelReloadForDel" ref="panelBox"></panel-box>
-    <chart-box @close="rightBox.show = false" v-if="rightBox.show" ref="addChartModal" :showPanel="showPanel" :panel-data="panelData" @reload="panelReload" @on-create-success="createSuccess" @on-delete-success="delChartOk" @reloadOnlyPanel="panelReloadOnlyPanel"></chart-box>
+    <transition name="right-box">
+      <chart-box @close="closeChartBox" :chart="chart" v-if="rightBox.chart.show" ref="addChartModal" :show-panel="showPanel" :panel-data="panelData" @reload="panelReload" @on-create-success="createSuccess" @on-delete-success="delChartOk" @reloadOnlyPanel="panelReloadOnlyPanel"></chart-box>
+    </transition>
+    <transition name="right-box">
+      <panel-box v-if="closePanelBox" :panel="panel" @reload="panelReload" @reloadForDel="panelReloadForDel" ref="panelBox"></panel-box>
+    </transition>
   </div>
 </template>
 
@@ -122,8 +102,8 @@
         showTopBtn: false, //top按钮
         visible: false,
         rightBox: { //面板弹出框相关
-          show: false,
-          title: this.$t('dashboard.panel.createPanelTitle')
+          chart: {show: false},
+          panel: {show: false},
         },
         tableHover: false,
         searchTime: [
@@ -156,17 +136,21 @@
           id: '',
           name: ''
         },
-        chart: {
-          id: '',
+        chart: {},
+        blankChart: {
+          id:'',
           title: '',
-          type: 'line',
-          span: 12,
-          height: 400,
-          elements: {
-            id: '',
-            expression: '',
-            type: ''
-          }
+          type:'line',
+          span:12,
+          height:'400',
+          unit:2,
+          param:{
+            url:'',
+            threshold:'',
+          },
+          elements:[],
+          panel: '',
+          sync: 0
         },
         pageObj: {
           pageNo: 1,
@@ -237,7 +221,7 @@
         this.getData(this.filter);
 
       },
-      del: function (u) {
+      del(u) {
         this.$confirm(this.$t("tip.confirmDelete"), {
           confirmButtonText: this.$t("tip.yes"),
           cancelButtonText: this.$t("tip.no"),
@@ -254,19 +238,18 @@
                 this.showPanel.id = '';
               }
               this.getTableData();
-              this.rightBox.show = false;
             } else {
               this.$message.error(response.msg);
             }
           })
         });
       },
-      toEdit: function (u) {
+      edit(u) {
         this.panel = Object.assign({}, u);
         this.$refs.panelBox.setTitle(this.$t("dashboard.panel.editPanelTitle"));
         this.$refs.panelBox.show(true);
       },
-      toAdd: function () {
+      toAdd() {
         this.$refs.panelBox.show(true);
         this.panel = {
           id: '',
@@ -289,12 +272,12 @@
         this.getTableData();
       },
       /*图表相关操作--start*/
-      toAddChart: function () {
-        this.rightBox.show = true;
-        this.$nextTick(() => {
-          this.$refs.addChartModal.setTitle(this.$t("dashboard.panel.createChartTitle"));
-          this.$refs.addChartModal.createData(this.showPanel.id); //初始化创建图表需要的初始数据
-        });
+      addChart() {
+        this.chart = this.newChart();
+        this.rightBox.chart.show = true;
+      },
+      newChart() {
+        return JSON.parse(JSON.stringify(this.blankChart));
       },
       scrollbarHeightHandler() {
         setTimeout(() => {
@@ -317,15 +300,27 @@
         }, 100);
       },
       // 编辑图表信息,打开编辑弹窗
-      editData(data) {
-        this.rightBox.show = true;
-        this.$nextTick(() => {
-          this.$refs.addChartModal.setTitle(this.$t("dashboard.panel.editChartTitle"));
-          this.$refs.addChartModal.editData(data, this.showPanel.id);
-        });
+      editChart(data) {
+        if (!data.param) {
+          data.param = {url: '', threshold: '',};
+        }
+        this.chart = JSON.parse(JSON.stringify(data));
+        this.rightBox.chart.show = true;
+      },
+      closeChartBox(refresh) {
+        this.rightBox.chart.show = false;
+        if (refresh) {
+
+        }
+      },
+      closePanelBox(refresh) {
+        this.rightBox.panel.show = false;
+        if (refresh) {
+
+        }
       },
       // 移除图表:弹出确认框询问
-      removeData(data,from) {
+      delChart(data,from) {
         this.$confirm(this.$t("tip.confirmDelete"), {
           confirmButtonText: this.$t("tip.yes"),
           cancelButtonText: this.$t("tip.no"),
@@ -358,16 +353,6 @@
       },
       // 图表创建成功，回调panel页面，进行图表的刷新
       createSuccess(msg, data, params) {
-        /*
-   if (data && data.code === 200) {
-
-     if (msg === 'create') {
-       //this.$message.success('添加成功');
-     } else {
-       //this.$message.success('编辑成功');
-     }
-    }
-     */
         this.filter.panelId = this.showPanel.id;
         this.getData(this.filter);
       },
@@ -389,9 +374,6 @@
       /*时间条件查询--start*/
       // 选择日期变化
       dateChange(val) {
-        // if(val){
-        //   this.searchTime = [...val];
-        // }
         this.filter.start_time = bus.timeFormate(this.searchTime[0], 'yyyy-MM-dd hh:mm:ss');
         this.filter.end_time = bus.timeFormate(this.searchTime[1], 'yyyy-MM-dd hh:mm:ss');
         this.filter.panelId = this.showPanel.id;
@@ -505,28 +487,7 @@
         this.pageObj.pageSize = val;
         this.getTableData();
       },
-      // search: function (searchObj) {
-      //   this.searchLabel = {};
-      //   let containTitle = false;
-      //   for (let item in searchObj) {
-      //     if (searchObj[item]) {
-      //       this.$set(this.searchLabel, item, searchObj[item]);
-      //       if (item === 'name') {
-      //         this.filter.searchName = searchObj[item]; //此处就一个条件
-      //         containTitle = true;
-      //       }
-      //     }
-      //   }
-      //   if (!containTitle) {
-      //     this.filter.searchName = '';
-      //   }
-      //   this.filter.panelId = this.showPanel.id;
-      //   this.getData(this.filter);
-      // },
       search:function(){
-        //this.filter.panelId=this.showPanel.id;
-        //this.getData(this.filter);
-
         if(this.$refs.chartList){
           this.$refs.chartList.searchCharts(this.filter.searchName);
         }
@@ -548,13 +509,13 @@
           //}
         },300);
       },
-      focusInput:function(){
+      focusInput() {
         let classVal=document.getElementById('queryPanel').parentElement.getAttribute("class");
         classVal=classVal.replace('query-input-inactive','query-input-active');
         document.getElementById('queryPanel').parentElement.setAttribute("class",classVal );
         this.$refs.queryPanel.focus();
       },
-      blurInput:function(){
+      blurInput() {
         if(!this.filter.searchName || this.filter.searchName == ''){
           setTimeout(function(){
             let classVal=document.getElementById('queryPanel').parentElement.getAttribute("class");
@@ -563,7 +524,7 @@
           },100)
         }
       },
-      clearInput:function(){
+      clearInput() {
         this.$refs.queryPanel.focus();
       },
       start (event) {

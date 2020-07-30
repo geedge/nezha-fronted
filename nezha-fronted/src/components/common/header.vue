@@ -64,7 +64,7 @@
           <el-menu-item v-if="assetData.length == 0" index="3-0"><div @click="createBox({type: 6})"><i class="nz-icon nz-icon-create-square header-dropdown-add"></i>&nbsp;&nbsp;{{$t("overall.createDatacenter")}}</div></el-menu-item>
           <template v-else>
             <el-menu-item :index="'3-' + index" v-for="(item, index) in assetData" :key="index">
-              <div @mouseenter="hoverItemIndex = '3-' + index" @mouseleave="hoverItemIndex = ''" @click="jumpToAsset(item.id)" >
+              <div @mouseenter="hoverItemIndex = '3-' + index" @mouseleave="hoverItemIndex = ''" @click="jumpToAsset(item)" :class="{'menu-item-active': activeIndex == 'asset' && activeItemIndex == item.id}">
                 <span class="too-long-split" style="width: 130px;">{{item.name}}</span>
               </div>
             </el-menu-item>
@@ -80,7 +80,7 @@
           <el-menu-item v-if="projectData.length == 0" index="2-0"><div @click="createBox({type: 1})"><i class="nz-icon nz-icon-create-square header-dropdown-add"></i>&nbsp;&nbsp;{{$t("overall.createProject")}}</div></el-menu-item>
           <template v-else>
             <el-menu-item :index="'2-' + index" v-for="(item, index) in projectData" :key="index">
-              <div @mouseenter="hoverItemIndex = '2-' + index" @mouseleave="hoverItemIndex = ''" @click="jumpToProject(item)" >
+              <div @mouseenter="hoverItemIndex = '2-' + index" @mouseleave="hoverItemIndex = ''" @click="jumpToProject(item)" :class="{'menu-item-active': activeIndex == 'project' && activeItemIndex == item.id}">
                 <span class="too-long-split" style="width: 135px;">{{item.name}}</span>
                 <div v-show="hoverItemIndex == '2-' + index && item.buildIn != 1" @click.stop="toEditProject(item)" class="menu-edit"><i class="nz-icon nz-icon-edit"></i></div>
               </div>
@@ -150,12 +150,21 @@
       </el-submenu>
     </el-menu>
 
-    <project-box v-if="rightBox.project.show" :project="editProject" ref="projectBox"></project-box>
-    <module-box v-if="rightBox.module.show" :currentProject="currentProject" :module="editModule" @reload="" ref="moduleBox"></module-box>
-    <add-endpoint-box v-if="rightBox.endpoint.show" :currentProject="currentProject" :currentModule="currentModule" @reload=""
-                      ref="addEndpointBox"></add-endpoint-box>
-    <asset-box v-if="rightBox.asset.show" :edit-unit-show='addUnitShow' @refreshData="refreshAsset" @sendStateData="closeAsset" ref="assetAddUnit"></asset-box>
-    <alert-config-box v-if="rightBox.alertRule.show" :parentAlertRule="alertRule" @reload="" ref="alertConfigBox"></alert-config-box>
+    <transition name="right-box">
+      <project-box v-if="rightBox.project.show" :project="editProject" ref="projectBox" @close="closeProjectRightBox"></project-box>
+    </transition>
+    <transition name="right-box">
+      <module-box v-if="rightBox.module.show" :currentProject="currentProject" :module="editModule" @close="closeModuleRightBox" ref="moduleBox"></module-box>
+    </transition>
+    <transition name="right-box">
+      <add-endpoint-box v-if="rightBox.endpoint.show" :currentProject="currentProject" :currentModule="currentModule" @close="closeEndpointRightBox" ref="addEndpointBox"></add-endpoint-box>
+    </transition>
+    <transition name="right-box">
+      <asset-box v-if="rightBox.asset.show" :asset="editAsset" @close="closeAssetRightBox" ref="assetAddUnit"></asset-box>
+    </transition>
+    <transition name="right-box">
+      <alert-config-box v-if="rightBox.alertRule.show" :alert-rule="editAlertRule" @close="closeAlertRuleRightBox" ref="alertConfigBox"></alert-config-box>
+    </transition>
     <change-password :cur-user="username" :show-dialog="showChangePwd" @click="showPwdDialog" @dialogClosed="dialogClosed"></change-password>
   </div>
 </template>
@@ -170,6 +179,18 @@
     },
     data() {
       return {
+        username: sessionStorage.getItem("nz-username"),
+        language: localStorage.getItem("nz-language") ? localStorage.getItem("nz-language") : 'en',
+
+        //顶部菜单相关
+        activeIndex: '',
+        activeItemIndex: '',
+        activeItemIndexes: [],
+        hoverItemIndex: '',
+
+        assetData: [], //顶部菜单asset的下拉内容
+
+        //add侧滑相关
         rightBox: {
           project: {show: false},
           module: {show: false},
@@ -177,13 +198,6 @@
           asset: {show: false},
           alertRule: {show: false},
         },
-        username: sessionStorage.getItem("nz-username"),
-        language: localStorage.getItem("nz-language") ? localStorage.getItem("nz-language") : 'en',
-        assetData: [],
-        activeIndex:'',
-        activeItemIndex:'',
-        activeItemIndexes: [],
-        hoverItemIndex: '',
         projectData: [], //顶部菜单project列表中的数据
         editProject: {id: '', name: '', remark: ''}, //新增/编辑的project
         currentProject: {id: '', name: '', remark: ''}, //module/endpoint弹框用来回显project
@@ -201,12 +215,28 @@
           moduleId: '',
           assetId: ''
         },
-        alertRule: {
-          id: null,
+        editAsset: {
+          id: '',
+          sn: '',
+          host: '',
+          state: '',
+          purchaseDate: '',
+          idcId: '',
+          cabinetId: '',
+          modelId: '',
+          model: {type: {code: ""}},
+          assetType: '',
+          impi:{
+            host:'',
+            port:'',
+          },
+          tags: [],
+          accounts: [],
+        },
+        editAlertRule: {
+          id: "",
           alertName: '',
           type: '',
-          linkObject: {id: '', name: ''},
-          linkId: '',
           expr: '',
           last: '',
           severity: '',
@@ -241,17 +271,6 @@
             type: 5
           },
         ],
-        addIdcData: {
-          id: '',
-          name: '',
-          location: '',
-          principal: '',
-          tel: ''
-        },
-        IDCOptionData: [],
-        addUnitShow: false,
-        assetBoxShow: false,
-        userDatas:[],
         showChangePwd:false,
       }
     },
@@ -272,7 +291,11 @@
         });
         this.activeIndex = data;
       },
-
+      getLinkData(){
+        this.$get('link').then(response=>{
+          this.$store.commit('setLinkData', response.data);
+        });
+      },
       createBox(item) {
         if (item.type == 1) {
           this.rightBox.project.show = true;
@@ -305,81 +328,23 @@
             context_name: ''
           };
         } else if (item.type == 3) {
-          this.$refs.addEndpointBox.show(true);
-          this.$refs.addEndpointBox.clearEndpoints();
-        } else if (item.type == 5) {
-          this.$refs.alertConfigBox.show(true, true);
+          this.rightBox.endpoint.show = true;
         } else if (item.type == 4) {
-          this.assetBoxShow = true;
-          this.$nextTick(() => {
-            this.addUnitShow = true;
-            this.$refs.assetAddUnit.resetAsset();
-          });
+          this.rightBox.asset.show = true;
+        } else if (item.type == 5) {
+          this.rightBox.alertRule.show = true;
         }
       },
-      jumpToAsset(id) {
-        let index = this.indOf(this.activeItemIndexes, id);
-        this.activeItemIndexes=[];//2020-02-25 修改为单选
-        this.activeItemIndexes.push(id);
-        this.$store.state.assetData = {selectedData: this.activeItemIndexes, step: this.$store.state.assetData.step+1, type: 1};
+      jumpToAsset(asset) {
+        this.activeItemIndex = asset.id;
+        this.$store.commit('currentAssetChange', asset);
         this.jumpTo('asset');
       },
       jumpToProject(p) {
         this.currentProject = p;
-        this.$store.commit('setProject', p);
+        this.$store.commit('currentProjectChange', p);
         this.activeItemIndex = p.id;
         this.jumpTo('project');
-      },
-      getIDCOptionData(data) {
-        this.$get('idc?id=' + data).then(response => {
-          if (response.code === 200) {
-            this.addIdcData = response.data.list[0];
-            this.clickFlush(this.addIdcData)
-          }
-        })
-      },
-      editData(data, Id) {
-        let idcData = {
-          id: '',
-          name: '',
-          location: '',
-          principal: '',
-          tel: ''
-        }
-        if (data === 'idc') {
-          idcData.id = Id
-          idcData.name = this.addIdcData.name
-          idcData.location = this.addIdcData.location
-          idcData.principal = this.addIdcData.principal
-          idcData.tel = this.addIdcData.tel
-        }
-        this.$put(data, idcData).then(res => {
-          const h = this.$createElement;
-          if (res.code === 200) {
-            this.$notify({
-              message: h('i', {style: 'color: teal'}, '修改成功'),
-              duration: 2000
-            })
-            this.$store.state.flushDataSign = true
-          } else {
-            this.$notify({
-              message: h('i', {style: 'color: teal'}, res.msg),
-              duration: 2000
-            })
-          }
-        })
-      },
-      clickFlush(itemData) {
-        for (let i = 0; i < this.assetData.length; i++) {
-          const element = this.assetData[i];
-          if (element.id === itemData.id) {
-            setTimeout(() => {
-              element[element.name] = true;
-            }, 100)
-          } else {
-            element[element.name] = false
-          }
-        }
       },
       getAssetData() {
         this.$get('idc', {pageSize:-1}).then(response => {
@@ -398,11 +363,6 @@
           window.location.reload();
         }
       },
-      closeAllPop:function(){
-        this.$refs.idcConfigBox.forEach((item)=>{
-          item.show(false)
-        })
-      },
       getProjectList() {
         this.$get('project', {pageSize:-1}).then(response => {
           if (response.code == 200) {
@@ -418,37 +378,48 @@
             if (!flag && this.projectData.length > 0) {
               this.currentProject = this.projectData[0];
               this.activeItemIndex = this.currentProject.id;
-              this.$store.commit('setProject', this.currentProject);
+              this.$store.commit('currentProjectChange', this.currentProject);
             }
           }
         })
+      },
+      closeProjectRightBox(refresh) {
+        this.rightBox.project.show = false;
+        if (refresh) {
+          this.$store.commit("projectListChange");
+        }
+      },
+      closeModuleRightBox(refresh) {
+        this.rightBox.module.show = false;
+        if (refresh) {
+          this.$store.commit("moduleListChange");
+        }
+      },
+      closeEndpointRightBox(refresh) {
+        this.rightBox.endpoint.show = false;
+        if (refresh) {
+          this.$store.commit("endpointListChange");
+        }
+      },
+      closeAssetRightBox(refresh) {
+        this.rightBox.asset.show = false;
+        if (refresh) {
+          this.$store.commit("assetListChange");
+        }
+      },
+      closeAlertRuleRightBox(refresh) {
+        this.rightBox.alertRule.show = false;
+        if (refresh) {
+          this.$store.commit("alertConfigListChange");
+        }
       },
       toEditProject(p) {
         this.editProject = Object.assign({}, p);
         this.rightBox.project.show = true;
       },
-      indOf(a, b) {
-        let c = [];
-        for (let i = 0; i < a.length; i++) {
-          c.push(a[i]);
-        }
-        return c.indexOf(b);
-      },
-      panelListReload(){
-        if(this.$route.path==='/panel'){
-          this.$store.commit('panelListChange',true);//新增panel之后,且当前页面为panel页面，则更新panel列表
-        }
-      },
       logout() {
         this.$get('logout');
         this.jumpTo('login');
-      },
-      getUserData() {
-        this.$get('sys/user/list').then(response => {
-          if (response.code === 200) {
-            this.userDatas = response.data.list
-          }
-        })
       },
       refreshLang() {
         this.language = localStorage.getItem("nz-language");
@@ -457,30 +428,18 @@
           window.location.reload();
         });
       },
-      showPwdDialog:function(){
-        this.showChangePwd=true;
+      showPwdDialog() {
+        this.showChangePwd = true;
       },
-      dialogClosed:function(){
-        this.showChangePwd=false;
+      dialogClosed() {
+        this.showChangePwd = false;
       },
-      cancel: function() {
+      cancel() {
         this.activeIndex = this.$route.path.slice(1, this.$route.path.length);
-        console.info(this.activeIndex)
-        //this.$router.go(-1);
-      },
-      getLinkData(){
-        //console.log('aaa');
-        this.$get('link').then(response=>{
-          //console.log(response);
-          // this.linkData=response.data;
-          this.$store.commit('setLinkData',response.data);
-          //console.log(this.$store)
-        });
       },
     },
     mounted() {
       this.$i18n.locale = this.language;
-      this.getUserData();
       this.getAssetData();
       this.getProjectList();
       this.getLinkData();
@@ -499,47 +458,37 @@
       if (window.history && window.history.pushState) {
         history.pushState(null, null, document.URL);
         window.addEventListener('popstate', this.cancel, false);
-      };
+      }
     },
     computed: {
-      projectListReloadWatch() {
+      projectListChange() {
         return this.$store.state.projectListChange;
       },
-      getIdcData() {
-        return this.$store.state.assetDcList;
+      dcListChange() {
+        return this.$store.state.dcListChange;
       },
-      getAssetDcData() {
-        return this.$store.state.assetData;
-      },
-      currentProjectWatch(){
+      currentProjectChange(){
         return this.$store.state.currentProject;
       },
       linkData(){
-        return this.$store.getters.getlinkData
+        return this.$store.getters.getLinkData;
       }
     },
     watch: {
-      getAssetDcData: {
-        handler(newVal) {
-          if (newVal.type == 0) {
-            this.activeItemIndexes = newVal.selectedData;
-          }
-        },
-        deep: true,
-        immediate: true
-      },
-      getIdcData: {
-        handler(newVal, oldVal) {
-          this.getAssetData()
-        },
-        deep: true,
-      },
-      projectListReloadWatch(n, o) {
+      projectListChange(n) {
         this.getProjectList();
       },
-      currentProjectWatch(n,o){
-        this.currentProject=n;
-        this.activeItemIndex=n.id;
+      dcListChange(n) {
+        console.info(n)
+        this.getAssetData();
+      },
+      currentProjectChange(n, o) {
+        if (n.id != this.currentProject.id) {
+          this.currentProject = this.projectData.find(p => {
+            return p.id == n.id;
+          });
+          this.activeItemIndex = n.id;
+        }
       },
     },
     destroyed() {

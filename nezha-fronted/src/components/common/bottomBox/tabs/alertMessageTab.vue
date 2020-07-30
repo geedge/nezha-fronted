@@ -145,9 +145,6 @@
     ></alertMessageTable>
     <Pagination :tableId="tableId" :pageObj="pageObj" @pageNo='pageNo' @pageSize='pageSize' ref="Pagination"></Pagination>
 
-    <project-box :project="viewProjectData" ref="projectBox" @reload="getAlertList"></project-box>
-    <module-box :module="viewModuleData" @reload="getAlertList" ref="moduleBox"></module-box>
-    <asset-box :edit-unit-show='viewAssetState' @refreshData="getAlertList" @sendStateData="tabControl" ref="assetEditUnit"></asset-box>
     <element-set
       v-if="showElementSet"
       v-clickoutside="elementsetHide"
@@ -367,9 +364,6 @@
           }
         ],
         tableData: [],
-        viewProjectData: {id: '', name: '', remark: ''},
-        viewModuleData: {id: '', name: '', project: {}, port: '', path: '', param: '', paramObj: []},
-        viewAssetState: false,
       }
     },
     computed: {
@@ -692,30 +686,6 @@
         localStorage.setItem('nz-pageSize-' + localStorage.getItem('nz-username') + '-' + this.tableId, val);
         this.getAlertList();
       },
-      viewAlertType(type, typeObj) {
-        this.closeViews();
-        switch (type) {
-          case 1:
-            this.viewProjectData = JSON.parse(JSON.stringify(typeObj));
-            this.$refs.projectBox.show(true);
-            break;
-          case 2:
-            let tempObj = JSON.parse(typeObj.param)
-            this.$set(typeObj, 'paramObj', []);
-            for (let k in tempObj) {
-              typeObj.paramObj.push({key: k, value: tempObj[k]});
-            }
-            this.viewModuleData = JSON.parse(JSON.stringify(typeObj));
-
-            this.$refs.moduleBox.show(true);
-            break;
-          case 3:
-            this.viewAssetState = true;
-            this.$refs.assetEditUnit.getAssetData(typeObj);
-            this.$refs.assetEditUnit.tabView = true;
-            break;
-        }
-      },
       labelsClassName(row) {
         if (row.column.label == this.$t("alert.list.labels")) {
           return "alert-message-list-labels";
@@ -730,12 +700,7 @@
           }
         })
       },
-      closeViews: function () {
-        this.$refs.projectBox.show(false, false);
-        this.$refs.moduleBox.show(false, false);
-        this.viewAssetState = false;
-      },
-      search: function (searchObj) {
+      search(searchObj) {
         this.searchLabel = {};
         let orderBy='';
         if(this.searchLabel.orderBy){
@@ -756,17 +721,6 @@
           this.$set(this.searchLabel, 'orderBy', orderBy);
         }
         this.getAlertList();
-      },
-      closeSubList() {
-        this.$emit("closeSubList");
-        this.tableData = [];
-      },
-      //asset弹框控制
-      tabControl(data) {
-        if (data === 'close') {
-          this.viewAssetState = false
-          this.$refs['assetEditUnit'].tabView = false
-        }
       },
       //是否需要排序
       sortableShow(prop){

@@ -641,6 +641,7 @@ li{
 .main-list {
   height: 100%;
   position: relative;
+  z-index: 0;
 }
 .main-list.main-list-with-sub {
   height: 50%;

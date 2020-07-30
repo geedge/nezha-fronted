@@ -10,7 +10,7 @@
       <!-- end--顶部按钮-->
 
       <!-- begin--标题-->
-      <div class="right-box-title">{{editDc.id ? ($t("asset.editIdcTab.title") + "  ID：" + editDc.id) : $t("asset.AddIdcTab.title")}}</div>
+      <div class="right-box-title">{{editDc.id ? ($t("config.dc.editDc") + "  ID：" + editDc.id) : $t("config.dc.createDc")}}</div>
       <!-- end--标题-->
 
       <!-- begin--表单-->

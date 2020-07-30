@@ -96,19 +96,20 @@
                :title="$t('project.endpoint.dialogTitle')"
                :visible.sync="graphShow"
                width="90%"
+               :modal-append-to-body="false"
                id="viewGraphDialog"
                @close="dialogClose">
       <div slot="title">
         {{$t("project.endpoint.dialogTitle")}}
         <div class="float-right panel-calendar dialog-tool" style="display: flex">
           <pick-time :refresh-data-func="queryChartDate" :use-refresh="false" v-model="searchTime" style="height: 28px;" @unitChange="chartUnitChange"></pick-time>
-           <button class="nz-btn nz-btn-size-large nz-btn-style-normal nz-btn-min-width-82" @click="saveChart">{{$t('dashboard.metric.saveChart')}}</button>
+          <button class="nz-btn nz-btn-size-large nz-btn-style-normal nz-btn-min-width-82" @click="saveChart">{{$t('dashboard.metric.saveChart')}}</button>
         </div>
       </div>
       <chart ref="endpointChart" :unit="chartUnit"></chart>
     </el-dialog>
     <transition name="right-box">
-      <chart-box v-if="rightBox.show" @close="rightBox.show = false" ref="addChartModal" :panel-data="panelData" @on-create-success="createSuccess" @reloadOnlyPanel="getPanelData" @reload="getPanelData" :show-panel="{}"></chart-box>
+      <chart-box v-if="rightBox.show" @close="rightBox.show = false" :chart="chart" ref="addChartModal" :panel-data="panelData" @on-create-success="createSuccess" @reloadOnlyPanel="getPanelData" @reload="getPanelData" :show-panel="{}"></chart-box>
     </transition>
   </span>
 </template>
@@ -137,6 +138,7 @@
     data() {
       let temp = this;
       return {
+        chart: {},
         tableShow: true,
         tableHover: false,
         dropdownShow: false,
@@ -168,7 +170,6 @@
       saveChart() { //新增chart
         this.rightBox.show = true;
         this.$nextTick(() => {
-          this.$refs.addChartModal.setTitle(this.$t("dashboard.panel.createChartTitle"));
           let chart = {
             id:'',
             title: '',
@@ -176,9 +177,9 @@
             span:12,
             height:'400',
             unit: this.chartUnit,
-            param:{
+            param: {
               url:'',
-              threshold:'',
+              threshold: '',
             },
             elements:[],
             panel: '',
@@ -189,7 +190,7 @@
               chart.elements.push({chartId: "", expression: this.selectedEndpoints[i].element, type: 'expert'});
             }
           }
-          this.$refs.addChartModal.editData(chart);
+          this.chart = chart;
         });
       },
       dropdownHandler(show) {

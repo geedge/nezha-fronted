@@ -242,18 +242,12 @@
         this.$refs.addEndpointBox.show(true);
         this.$refs.addEndpointBox.clearEndpoints();
       },
-      search: function (searchObj) {
-        /*this.searchLabel = {idcId: this.currentDc.id, pageNo: 1, pageSize: -1};
-        for (let item in searchObj) {
-          if (searchObj[item]) {
-            this.$set(this.searchLabel, item, searchObj[item]);
-          }
-        }*/
-        let orderBy='';
+      search(searchObj) {
+        let orderBy = '';
         if(this.searchLabel.orderBy){
           orderBy=this.searchLabel.orderBy
         }
-        this.searchLabel={};
+        this.searchLabel = {};
         this.pageObj.pageNo = 1;
         for (let item in searchObj) {
           if (searchObj[item]) {
@@ -264,10 +258,6 @@
           this.$set(this.searchLabel, 'orderBy', orderBy);
         }
         this.getTableData();
-      },
-      closeSubList() {
-        this.tableData = [];
-        this.$emit("closeSubList");
       },
       elementsetShow(s, e) {
         var eventfixed = {

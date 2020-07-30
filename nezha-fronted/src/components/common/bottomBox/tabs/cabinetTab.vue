@@ -10,7 +10,7 @@
         <div class="top-tool-search">
           <search-input :searchMsg="searchMsg" @search="search"></search-input>
         </div>
-        <button type="button" @click="toAddCabinet" :title="$t('overall.createCabinet')"
+        <button type="button" @click="add" :title="$t('overall.createCabinet')"
                 class="nz-btn nz-btn-size-normal nz-btn-style-light float-right margin-l-20" id="cab-add">
           <i class="nz-icon-create-square nz-icon"></i>
         </button>
@@ -36,8 +36,8 @@
       >
         <template slot-scope="scope" :column="item">
           <div v-if="item.prop == 'option'" class="content-right-options">
-            <span :title="$t('overall.edit')" @click="editCabinet(scope.row)" class="content-right-option" :id="'dc-edit-'+scope.row.id"><i class="nz-icon nz-icon-edit"></i></span>
-            <span :title="$t('overall.delete')" @click="delCabinet(scope.row)" class="content-right-option" :id="'dc-del-'+scope.row.id"><i class="el-icon-delete"></i></span>
+            <span :title="$t('overall.edit')" @click="edit(scope.row)" class="content-right-option" :id="'dc-edit-'+scope.row.id"><i class="nz-icon nz-icon-edit"></i></span>
+            <span :title="$t('overall.delete')" @click="del(scope.row)" class="content-right-option" :id="'dc-del-'+scope.row.id"><i class="el-icon-delete"></i></span>
           </div>
           <template v-else-if="item.prop == 'assetStat'">
             <el-popover
@@ -72,7 +72,9 @@
         </template>
       </el-table-column>
     </el-table>
-    <cabinet-box :cur-cabinet="currentCabinet" :cur-idc="currentDc" ref="cabinetEditBox" @after="getCabinetList"></cabinet-box>
+    <transition name="right-box">
+      <cabinet-box v-if="rightBox.show" :cabinet="cabinet" :current-dc="currentDc" ref="cabinetEditBox" @close="closeRightBox"></cabinet-box>
+    </transition>
     <button class="to-top" v-show="showTopBtn" @click="$('ps', 1)"><i class="nz-icon nz-icon-top"></i></button>
   </span>
 </template>
@@ -89,7 +91,8 @@
     },
     data() {
       return {
-        currentCabinet: {
+        cabinet: {},
+        blankCabinet: {
           id:'',
           idcId:'',
           name:'',
@@ -97,6 +100,7 @@
           seq:'',
           uSize:1
         },
+        rightBox: {show: false},
         showTopBtn: false, //top按钮是否显示
         loading: false,
         currentDc: {},
@@ -173,16 +177,24 @@
       changeTab(tab) {
         this.$emit('changeTab', tab);
       },
-      toAddCabinet:function(){
-        this.$refs.cabinetEditBox.show(true,true);
-        this.$refs.cabinetEditBox.reset();
+      add() {
+        this.cabinet = this.newCabinet();
+        this.rightBox.show = true;
       },
-      editCabinet(cabinet) {
-        this.currentCabinet = JSON.parse(JSON.stringify(cabinet));
-        console.info(this.$refs.cabinetEditBox)
-        this.$refs.cabinetEditBox.show(true, true);
+      closeRightBox(refresh) {
+        this.rightBox.show = false;
+        if (refresh) {
+          this.getTableData();
+        }
       },
-      getCabinetList() {
+      newCabinet() {
+        return JSON.parse(JSON.stringify(this.blankCabinet));
+      },
+      edit(cabinet) {
+        this.cabinet = JSON.parse(JSON.stringify(cabinet));
+        this.rightBox.show = true;
+      },
+      getTableData() {
         this.tableData = [];
         this.loading = true;
         this.$set(this.searchLabel, "pageNo", 1);
@@ -194,18 +206,14 @@
           }
         });
       },
-      search: function (searchObj) {
+      search(searchObj) {
         this.searchLabel = {idcId: this.currentDc.id, pageNo: 1, pageSize: -1};
         for (let item in searchObj) {
           if (searchObj[item]) {
             this.$set(this.searchLabel, item, searchObj[item]);
           }
         }
-        this.getCabinetList();
-      },
-      closeSubList() {
-        this.$emit("closeSubList");
-        this.tableData = [];
+        this.getTableData();
       },
       assetStatClassName(param) {
         if (param.column.label == this.$t("config.model.assets") || param.column.label == this.$t("alert.alert")) {
@@ -213,7 +221,7 @@
         }
         return "";
       },
-      delCabinet:function(cabinet){
+      del:function(cabinet){
         this.$confirm(this.$t("tip.confirmDelete"), {
           confirmButtonText: this.$t("tip.yes"),
           cancelButtonText: this.$t("tip.no"),
@@ -222,7 +230,7 @@
           this.$delete('/cabinet?ids='+cabinet.id).then(response=>{
             if(response.code ==  200){
               this.$message({duration: 2000, type: 'success', message: this.$t("tip.saveSuccess")});
-              this.getCabinetList();
+              this.getTableData();
             }else{
               this.$message.error(response.msg);
             }
@@ -238,7 +246,7 @@
           if (n) {
             this.currentDc = JSON.parse(JSON.stringify(n));
             this.searchLabel = {idcId: this.currentDc.id};
-            this.getCabinetList();
+            this.getTableData();
           }
         }
       }

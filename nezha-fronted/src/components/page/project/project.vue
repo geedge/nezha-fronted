@@ -368,8 +368,8 @@
         this.tools.tablelable = data;
       },
       getEndpointTableData() {
-        if(this.currentModule&&this.currentModule.id){
-          this.pageType='endpoint'
+        if(this.currentModule && this.currentModule.id) {
+          this.pageType = 'endpoint';
           this.endpointSearchLabel.moduleId = this.currentModule.id;
           this.$set(this.endpointSearchLabel, 'pageNo', this.endpointPageObj.pageNo);
           this.$set(this.endpointSearchLabel, 'pageSize', this.endpointPageObj.pageSize);
@@ -404,59 +404,10 @@
         this.getEndpointTableData();
       },
 
-      // 获取左侧module列表数据
-      getModuleList() {
-        //若currentProject不存在（如页面刷新了），默认取project列表的第一个
-        if (this.currentProject && this.currentProject.id) {
-          this.$get('module', {projectId: this.currentProject.id, pageSize: -1, pageNo: 1}).then(response => {
-            if (response.code === 200) {
-              this.moduleList = response.data.list;
-              for (let i = 0; i < this.moduleList.length; i++) {
-                try {
-                  let tempObj = JSON.parse(this.moduleList[i].param);
-                  this.$set(this.moduleList[i], 'paramObj', []);
-                  for (let k in tempObj) {
-                    this.moduleList[i].paramObj.push({key: k, value: tempObj[k]});
-                  }
-                } catch (err) {
-                  //console.error(response.data.list[i], err);
-                }
-              }
-              if (this.moduleList.length > 0) {
-                this.currentModule = this.moduleList[0];
-              } else {
-                this.currentModule = {id: '', name: '', project: {}, port: '', path: '', param: '', paramObj: []};
-              }
-            }
-          });
-        } else {
-          if (this.projectList && this.projectList.length > 0) {
-            this.$store.commit('setProject', this.projectList[0]);
-          } else {
-            this.$get('project', {pageSize: -1, pageNo: 1}).then(response => {
-              if (response.code == 200) {
-                this.projectList = response.data.list;
-                if (this.projectList.length > 0) {
-                  this.getModuleList();
-                } else {
-                  return;
-                }
-              }
-            });
-          }
-        }
-      },
-      getProjectList(reload) {
-        this.$get('project',{pageSize:-1}).then(response=>{
+      getProjectList() {
+        this.$get('project', {pageSize:-1}).then(response=>{
           if(response.code == 200){
             this.projectList = response.data.list;
-            if (reload) {
-              if (this.projectList.length > 0) {
-                this.currentProject = this.projectList[0];
-              } else {
-                this.currentProject = {};
-              }
-            }
           }
         })
       },
@@ -473,14 +424,14 @@
             this.currentProject = project;
           }
         } else {
-          this.currentProjectTitle = this.currentProject.name + "-" + this.currentProject.id;
+          this.currentProjectTitle = project.id + "";
         }
         this.currentModule = {};
       },
       closeModuleRightBox(refresh) {
         this.rightBox.module.show = false;
         if (refresh) {
-          this.getAllModuleList();
+          this.getModuleList();
         }
       },
       closeAddEndpointRightBox(refresh) {
@@ -495,7 +446,7 @@
           this.getEndpointTableData();
         }
       },
-      getAllModuleList() {
+      getModuleList() {
         this.$get('module', { pageSize: -1, pageNo: 1}).then(response => {
           if (response.code === 200) {
             this.moduleList = response.data.list;
@@ -656,13 +607,6 @@
           path: obj.path,
           param: obj.param
         };
-        /*detail.push({label: this.$t('project.project.project'), value: obj.project.name});
-        detail.push({label: this.$t("project.module.module"), value: obj.module.name});
-        detail.push({label: this.$t("asset.asset"), value: obj.asset.host});
-        detail.push({label: this.$t("project.endpoint.host"), value: obj.host});
-        detail.push({label: this.$t("project.endpoint.port"), value: obj.port});
-        detail.push({label: this.$t("project.endpoint.path"), value: obj.path});
-        detail.push({label: this.$t("project.endpoint.param"), value: obj.param});*/
         return detail;
       },
       formatUpdateTime:function(date){
@@ -672,8 +616,8 @@
 
         return hours+':'+minutes;
       },
-      getStateErrorMsg:function(row){
-        let errCodes=[230009,230010,230011];
+      getStateErrorMsg(row) {
+        let errCodes = [230009, 230010, 230011];
         if(row){
           if(row.state == 0){
             if(errCodes.find((item)=>{return row.stateInfo.code == item})){
@@ -697,6 +641,7 @@
         detail.cabinet = obj.cabinet ? obj.cabinet.name : "";
         detail.uSize = obj.cabinet ? obj.cabinet.uSize : "";
         detail.remark = obj.idc ? obj.idc.remark : "";
+        !obj.accounts && (obj.accounts = []);
         if (obj.accounts.length > 0) {
           let account = obj.accounts[0];
           detail.protocol = account.protocol;
@@ -710,41 +655,6 @@
           detail.loginType = loginType;
           detail.port = account.port;
         }
-        /*detail.push({label: this.$t("asset.sn"), value: obj.sn});
-        detail.push({label: this.$t("asset.host"), value: obj.host});
-        detail.push({label: this.$t("asset.state"), value: obj.state == 1 ? this.$t('asset.inStock'): this.$t('asset.notInStock')});
-        detail.push({label: this.$t("asset.tableTitle.modules"), value: obj.endpointNum});
-        detail.push({label: this.$t("asset.tableTitle.alerts"), value: obj.alertNum});
-        detail.push({label: this.$t("asset.assetType"), value: obj.model.type.value});
-        detail.push({label: this.$t("asset.vendorModel"), value: obj.model.vendor.value + " " + obj.model.name});
-        detail.push({label: this.$t("asset.assetType"), value: obj.model.type.value});
-        detail.push({label: this.$t("asset.purchaseDate"), value: obj.purchaseDate});
-        detail.push({label: this.$t("asset.dcName"), value: obj.idc ? obj.idc.name : ""});
-        detail.push({label: this.$t("asset.location"), value: obj.idc ? obj.idc.location : ""});
-        detail.push({label: this.$t("asset.principal"), value: obj.idc ? this.getPrincipalName(obj.idc.principal) : ""});
-        detail.push({label: this.$t("asset.location"), value: obj.idc ? obj.idc.location : ""});
-        detail.push({label: this.$t("asset.tel"), value: obj.idc ? obj.idc.tel : ""});
-        detail.push({label: this.$t("asset.cabinet"), value: obj.cabinet ? obj.cabinet.name : ""});
-        detail.push({label: this.$t("asset.editAssetTab.uSize"), value: obj.cabinet ? obj.cabinet.uSize : ""});
-        detail.push({label: this.$t("asset.editAssetTab.remark"), value: obj.idc ? obj.idc.remark : ""});
-        if (obj.accounts.length > 0) {
-          let account = obj.accounts[0];
-          if (account.protocol == 'SSH') {
-            detail.push({label: this.$t("asset.protocol"), value: 'SSH'});
-            detail.push({label: this.$t("asset.account"), value: account.user});
-            let loginType = "";
-            if (account.authType == 1) {
-              loginType = this.$t('asset.password');
-            } else if (account.authType == 2) {
-              loginType = this.$t('asset.ssh');
-            }
-            detail.push({label: this.$t("asset.loginType"), value: loginType});
-          } else if (account.protocol == 'TELNET') {
-            detail.push({label: this.$t("asset.protocol"), value: 'TELNET'});
-            detail.push({label: this.$t("asset.account"), value: account.user});
-          }
-          detail.push({label: this.$t("asset.port"), value: account.port});
-        }*/
         return detail;
       },
       getPrincipalName(data) {
@@ -797,8 +707,7 @@
     },
     created() {
       this.currentProject = this.$store.state.currentProject;
-      // this.getModuleList();
-      this.getAllModuleList();
+      this.getModuleList();
       this.getUserData();
       this.getProjectList();
     },
@@ -832,9 +741,9 @@
         }
       });
       //resize时刷新左侧列表滚动条
-      let _this = this;
+      let vm = this;
       window.onresize = function() {
-        _this.$refs.leftScrollbar.update();
+        vm.$refs.leftScrollbar.update();
       }
 
       this.tools.tablelable = localStorage.getItem("nz-tableTitle-" + localStorage.getItem("nz-username") + "-" + this.$route.path)
@@ -846,14 +755,17 @@
 
     },
     computed: {
-      currentProjectChange() {
-        return this.$store.state.currentProject;
-      },
-      projectListChange(){
+      projectListChange() {
         return this.$store.state.projectListChange;
       },
-      moduleListReloadWatch() {
+      moduleListChange() {
         return this.$store.state.moduleListChange;
+      },
+      endpointListChange() {
+        return this.$store.state.endpointListChange;
+      },
+      currentProjectChange() {
+        return this.$store.state.currentProject;
       },
       itemTip() {
         return function(id, content, ready) {
@@ -874,19 +786,28 @@
       },
     },
     watch: {
-      currentProjectChange:{
+      projectListChange(n) {
+        this.getProjectList();
+      },
+      moduleListChange(n) {
+        this.getModuleList();
+      },
+      endpointListChange(n) {
+        this.getEndpointTableData();
+      },
+      currentProjectChange: {
         immediate:true,
         handler(n, o) {
-          this.currentProject = Object.assign({}, n);
-          this.detailProject();
-        }
-      },
-      projectListChange:function(n,o){
-        this.getProjectList(true);
+          if (n.id != this.currentProject.id) {
+            this.currentProject = this.projectList.find(p => {
+              return p.id == n.id;
+            });
+            this.detailProject(null, this.currentProject);
+          }
+        },
       },
       currentProject(n, o) {
-        // this.getModuleList();
-        // this.$store.commit('setProject',n)
+        this.$store.commit("currentProjectChange", Object.assign({}, n));
       },
       currentModule(n, o) {
         this.endpointPageObj.pageNo = 1;
@@ -896,10 +817,7 @@
           this.endpointTableData = [];
         }
       },
-      moduleListReloadWatch(n, o) {
-        // this.getModuleList(this.currentProject.id);
-        this.getAllModuleList();
-      },
+      
       "bottomBox.showSubList": function(n) {
         let vm = this;
         this.$bottomBoxWindow.showSubListWatch(vm, n);

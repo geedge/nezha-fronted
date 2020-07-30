@@ -133,7 +133,7 @@
         </div>
       </div>
       <transition name="el-zoom-in-bottom">
-        <bottom-box v-if="bottomBox.showSubList" :sub-resize-show="bottomBox.subResizeShow" :obj="bottomBox.dc" :is-full-screen="bottomBox.isFullScreen" :from="'dc'" :target-bab.sync="bottomBox.targetTab" :detail="bottomBox.dcDetail"
+        <bottom-box v-if="bottomBox.showSubList" :sub-resize-show="bottomBox.subResizeShow" :obj="bottomBox.dc" :is-full-screen="bottomBox.isFullScreen" :from="'dc'" :target-tab.sync="bottomBox.targetTab" :detail="bottomBox.dcDetail"
                      @closeSubList="bottomBox.showSubList = false" @fullScreen="fullScreen" @exitFullScreen="exitFullScreen" @listResize="listResize" ></bottom-box>
       </transition>
     </div>
@@ -351,7 +351,9 @@
         this.$bottomBoxWindow.listResize(vm, e);
       },
       convertToDetail(obj) {
-        let detail = [];
+        let detail = JSON.parse(JSON.stringify(obj));
+        return detail;
+        /*let detail = [];
         detail.push({label: this.$t("overall.name"), value: obj.name});
         detail.push({label: this.$t("config.dc.area"), value: obj.area.name});
         detail.push({label: this.$t("asset.location"), value: obj.location});
@@ -367,7 +369,7 @@
           }
         }
         detail.push({label: this.$t("asset.principal"), value: principal});
-        return detail;
+        return detail;*/
       },
       add() {
         this.dc = this.newDc();
@@ -380,6 +382,7 @@
         this.rightBox.dc.show = false;
         if (refresh) {
           this.getTableData();
+          this.$store.commit("dcListChange");
         }
       },
       closeTrafficBox(refresh) {
@@ -398,6 +401,7 @@
             if (response.code === 200) {
               this.$message({duration: 1000, type: 'success', message: this.$t("tip.deleteSuccess")});
               this.getTableData();
+              this.$store.commit("dcListChange");
             } else {
               this.$message.error(response.msg);
             }
