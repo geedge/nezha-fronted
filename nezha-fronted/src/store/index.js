@@ -9,19 +9,23 @@ const store = new Vuex.Store({
       step: 0,
       type: -1  //0: asset  1: header
     },
-    assetDcList: 0, //监听此值，改变则刷新dc列表
+    
     assetForAlertList: 0, //asset页跳转alertList时传递的assetId
-    currentProject: {
-      id: '',
-      name: '',
-      remark: ''
-    },
+
     assetItemId:''  ,   //复选框ID
     assetAllId:[]  ,   //复选框allID
+
+    dcList: 0, //监听此值，改变则刷新dc列表
+    /* 监听对象变化，用于顶部菜单与底部内容的同步 */
+    currentProject: {id: "", name: "", remark: ""},
+    currentAsset: {id: ""},
     projectListChange: 0,
     moduleListChange: 0,
-    flushDataSign: false,
-    panelListReload:false,
+    endpointListChange: 0,
+    assetListChange: 0,
+    dcListChange: 0,
+    alertConfigListChange: 0,
+
     eventfixed: {
       shezhi: 0,
       screen: 0
@@ -44,29 +48,38 @@ const store = new Vuex.Store({
     linkData:[],//导航数据
   },
   getters: {
-    getlinkData(state){
+    getLinkData(state){
       return state.linkData
     }
   },
   mutations: {
-    setProject(state, project) {
-      state.currentProject = Object.assign({}, project);
-    },
-    projectRightBoxShow(state, show) {
-      state.projectBoxShow = show;
-    },
+    /* 监听对象变化，用于顶部菜单与底部内容的同步 */
     projectListChange(state) {
-      state.projectListChange = state.projectListChange + 1;
+      state.projectListChange++;
     },
     moduleListChange(state) {
-      state.moduleListChange = state.moduleListChange + 1;
+      state.moduleListChange++;
     },
-    panelListChange(state,status){
-      state.panelListReload = status;
+    endpointListChange(state) {
+      state.endpointListChange++;
     },
-    assetDcListChange(state) {
-      state.assetDcList++;
+    assetListChange(state) {
+      state.assetListChange++;
     },
+    alertConfigListChange(state) {
+      state.alertConfigListChange++;
+    },
+    dcListChange(state) {
+      state.dcListChange++;
+    },
+    currentProjectChange(state, project) {
+      state.currentProject = project;
+    },
+    currentAssetChange(state, asset) {
+      state.currentAsset = asset;
+    },
+
+
     setHeaderTable(state, data) { //设置table头部
       state.tablelable = data;
     },
@@ -118,10 +131,10 @@ const store = new Vuex.Store({
       state.consoleShow=false;
     },
     setLeftMenuStat:function(state,data){
-      state.leftMenuStat=data
+      state.leftMenuStat = data;
     },
     setLinkData:function(state,data){
-      state.linkData=data
+      state.linkData = data;
     },
   },
   actions: {

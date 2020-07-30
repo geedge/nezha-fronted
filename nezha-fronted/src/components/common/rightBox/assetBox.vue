@@ -259,14 +259,23 @@
         deep: true,
         immediate: true,
         handler(n) {
+          //console.info(n);
           this.editAsset = JSON.parse(JSON.stringify(n));
           if (!this.editAsset.accounts) {
             this.$set(this.editAsset, "accounts", []);
           } else {
             this.editAsset.accounts.length > 0 && (this.accountType = this.editAsset.accounts[0].protocol);
           }
-          console.info(n)
-          this.getVendorAndModelOptionData(n.model.type.code);
+          this.$set(this.editAsset, "modelId", n.model.id);
+          let initLocationData={
+            idc: n.idc,
+            cabinet: n.cabinet,
+            u: [n.cabinetStart, n.cabinetEnd]
+          };
+          this.$nextTick(() => {
+            this.$refs.locationCascader.initComponet(initLocationData);
+            this.getVendorAndModelOptionData(n.model.type.code);
+          });
         }
       },
       'editAsset.accounts': {

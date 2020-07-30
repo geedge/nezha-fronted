@@ -83,25 +83,12 @@
             <span style="padding-left: 18px;" v-if="scope.row[item.prop] == 'medium'">{{severityData[0].value}}</span>
             <span v-if="scope.row[item.prop] == 'low'"><i class="el-icon-arrow-down"></i>&nbsp;{{severityData[2].value}}</span>
           </span>
-          <!--<div v-else-if="item.prop == 'linkObject'">
-            <span v-if="(scope.row['type'] == 1 || scope.row['type'] == 2) && scope.row[item.prop]" class="link too-long-split"
-                  @click="viewAlertType(scope.row['type'],scope.row[item.prop])" style="max-width: 125px;"
-                  :id="'link-obj-'+scope.row['type']+'-'+scope.row[item.prop].id">{{scope.row[item.prop].name}}</span>
-            <span v-else-if="scope.row['type'] == 3 && scope.row[item.prop]" :class="{'link': from == 'alertRule'}"
-                  @click="viewAlertType(scope.row['type'],scope.row[item.prop].id)"
-                  :id="'link-obj-'+scope.row['type']+'-'+scope.row[item.prop].id">{{scope.row[item.prop].host}}</span>
-            <span v-else>-</span>
-          </div>-->
           <template v-else-if="item.prop == 'labels'">
             <nz-alert-tag :label="item.label" :type="tagType(item.label)" style="margin: 5px;"
                           :cursor-point="false"
                           :key="item.label"
                           v-if="item.label != 'alertname' && item.label != 'severity'"
                           v-for="item in labelsSort(scope.row.labels)">{{item.value}}</nz-alert-tag>
-            <!--<el-tag v-if="key != 'alertname' && key != 'severity'"
-                    :key="key"
-                    type="info"
-                    size="mini" v-for="(value, key) in scope.row.labels" class="alert-message-tag">{{tagValue(key, value)}}</el-tag>-->
           </template>
           <div v-else-if="item.prop == 'state'">
             <span class="">
@@ -137,9 +124,6 @@
     </el-table>
     <Pagination :tableId="tableId" :pageObj="pageObj" @pageNo='pageNo' @pageSize='pageSize' ref="Pagination"></Pagination>
 
-    <project-box :project="viewProjectData" ref="projectBox" @reload="getAlertList"></project-box>
-    <module-box :module="viewModuleData" @reload="getAlertList" ref="moduleBox"></module-box>
-    <asset-box :edit-unit-show='viewAssetState' @refreshData="getAlertList" @sendStateData="tabControl" ref="assetEditUnit"></asset-box>
     <element-set
       v-if="showElementSet"
       v-clickoutside="elementsetHide"
@@ -357,9 +341,6 @@
           }
         ],
         tableData: [],
-        viewProjectData: {id: '', name: '', remark: ''},
-        viewModuleData: {id: '', name: '', project: {}, port: '', path: '', param: '', paramObj: []},
-        viewAssetState: false,
       }
     },
     computed: {
@@ -682,30 +663,6 @@
         localStorage.setItem('nz-pageSize-' + localStorage.getItem('nz-username') + '-' + this.tableId, val);
         this.getAlertList();
       },
-      viewAlertType(type, typeObj) {
-        this.closeViews();
-        switch (type) {
-          case 1:
-            this.viewProjectData = JSON.parse(JSON.stringify(typeObj));
-            this.$refs.projectBox.show(true);
-            break;
-          case 2:
-            let tempObj = JSON.parse(typeObj.param)
-            this.$set(typeObj, 'paramObj', []);
-            for (let k in tempObj) {
-              typeObj.paramObj.push({key: k, value: tempObj[k]});
-            }
-            this.viewModuleData = JSON.parse(JSON.stringify(typeObj));
-
-            this.$refs.moduleBox.show(true);
-            break;
-          case 3:
-            this.viewAssetState = true;
-            this.$refs.assetEditUnit.getAssetData(typeObj);
-            this.$refs.assetEditUnit.tabView = true;
-            break;
-        }
-      },
       labelsClassName(row) {
         if (row.column.label == this.$t("alert.list.labels")) {
           return "alert-message-list-labels";
@@ -720,12 +677,7 @@
           }
         })
       },
-      closeViews: function () {
-        this.$refs.projectBox.show(false, false);
-        this.$refs.moduleBox.show(false, false);
-        this.viewAssetState = false;
-      },
-      search: function (searchObj) {
+      search(searchObj) {
         this.searchLabel = {};
         let orderBy='';
         if(this.searchLabel.orderBy){
@@ -746,17 +698,6 @@
           this.$set(this.searchLabel, 'orderBy', orderBy);
         }
         this.getAlertList();
-      },
-      closeSubList() {
-        this.$emit("closeSubList");
-        this.tableData = [];
-      },
-      //asset弹框控制
-      tabControl(data) {
-        if (data === 'close') {
-          this.viewAssetState = false
-          this.$refs['assetEditUnit'].tabView = false
-        }
       },
       //是否需要排序
       sortableShow(prop){

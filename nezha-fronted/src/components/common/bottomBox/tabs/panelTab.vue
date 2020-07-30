@@ -27,7 +27,7 @@
           </el-input>
         </div>
         <pick-time :refresh-data-func="dateChange" v-model="searchTime" :use-chart-unit="false" v-if="from=='asset'"></pick-time>
-        <button @click="toAddChart" :title="$t('overall.createChart')" v-if="from != 'alertRule' && from != 'endpoint'"
+        <button @click="addChart" :title="$t('overall.createChart')" v-if="from != 'alertRule' && from != 'endpoint'"
                 class="nz-btn nz-btn-size-normal nz-btn-style-light ">
           <i class="nz-icon-create-square nz-icon"></i>
         </button>
@@ -49,7 +49,7 @@
         </div>
 
         <pick-time :refresh-data-func="dateChange" v-model="searchTime" :use-chart-unit="false"></pick-time>
-        <button @click="toAddChart" :title="$t('overall.createChart')"
+        <button @click="addChart" :title="$t('overall.createChart')"
                 class="nz-btn nz-btn-size-normal nz-btn-style-light ">
           <i class="nz-icon-create-square nz-icon"></i>
         </button>
@@ -60,14 +60,14 @@
     <div class="table-list" id="tableList">
       <el-scrollbar class="el-scrollbar-large" style="height: 100%" ref="dashboardScrollbar">
         <div class="box-content">
-          <chart-list @on-edit-chart="editData" @on-refresh-time="refreshTime" @on-remove-chart="removeData" :draggable="draggable" :detail="detail"
+          <chart-list @on-edit-chart="editChart" @on-refresh-time="refreshTime" @on-remove-chart="delChart" :draggable="draggable" :detail="detail"
                       ref="chartList" :is-model="from == 'model'" :additional-info="obj"></chart-list>
         </div>
       </el-scrollbar>
     </div>
     <button class="to-top" :class="{'to-top-is-hover': tableHover}" v-show="showTopBtn" @click="$toTop('el', $refs.dashboardScrollbar.wrap)" style="bottom: 0;"><i class="nz-icon nz-icon-top"></i></button>
     <transition name="right-box">
-      <chart-box @close="closeRightBox" v-if="rightBox.show" ref="addChartModal" :showPanel="showPanel" :panel-data="panelData" @on-create-success="createSuccess" @on-delete-success="delChartOk"></chart-box>
+      <chart-box @close="closeRightBox" :chart="chart" v-if="rightBox.show" ref="addChartModal" :show-panel="showPanel" :panel-data="panelData" @on-create-success="createSuccess" @on-delete-success="delChartOk"></chart-box>
     </transition>
   </div>
 </template>
@@ -92,7 +92,6 @@
         visible: false,
         rightBox: { //面板弹出框相关
           show: false,
-          title: this.$t('dashboard.panel.createPanelTitle')
         },
         tableHover: false,
         searchTime: [
@@ -121,17 +120,21 @@
           id: '',
           name: ''
         },
-        chart: {
-          id: '',
+        chart: {},
+        blankChart: {
+          id:'',
           title: '',
-          type: 'line',
-          span: 12,
-          height: 400,
-          elements: {
-            id: '',
-            expression: '',
-            type: ''
-          }
+          type:'line',
+          span:12,
+          height:'400',
+          unit:2,
+          param:{
+            url:'',
+            threshold:'',
+          },
+          elements:[],
+          panel: '',
+          sync: 0
         },
         pageObj: {
           pageNo: 1,
@@ -161,7 +164,6 @@
           type: this.from,
           id: ''
         },
-        panelId: 0,
         //removeModal: false, // 删除弹出
         //deleteObj: {}, // 删除对象
         //---图表相关参数--end
@@ -182,15 +184,16 @@
         const endTime = bus.timeFormate(et, 'yyyy-MM-dd hh:mm');
         this.searchTime = [startTime, endTime];
       },
-      panelReloadForDel: function () {
+      panelReloadForDel() {
         this.getTableData(this.obj.id);
       },
       /*图表相关操作--start*/
-      toAddChart: function () {
+      addChart() {
+        this.chart = this.newChart();
         this.rightBox.show = true;
-        this.$refs.addChartModal.setTitle(this.$t("dashboard.panel.createChartTitle"));
-        //this.$refs.addChartModal.show(true);
-        this.$refs.addChartModal.createData(this.panelId); //初始化创建图表需要的初始数据
+      },
+      newChart() {
+        return JSON.parse(JSON.stringify(this.blankChart));
       },
       // 切换tab
       changeTab(tab) {
@@ -223,21 +226,21 @@
         }, 100);
       },
       // 编辑图表信息,打开编辑弹窗
-      editData(data) {
+      editChart(data) {
+        if (!data.param) {
+          data.param = {url: '', threshold: '',};
+        }
+        this.chart = JSON.parse(JSON.stringify(data));
         this.rightBox.show = true;
-        this.$nextTick(() => {
-          this.$refs.addChartModal.setTitle(this.$t("dashboard.panel.editChartTitle"));
-          this.$refs.addChartModal.editData(data, this.panelId);
-        });
       },
       // 移除图表:弹出确认框询问
-      removeData(data,from) {
+      delChart(data,from) {
         this.$confirm(this.$t("tip.confirmDelete"), {
           confirmButtonText: this.$t("tip.yes"),
           cancelButtonText: this.$t("tip.no"),
           type: 'warning'
         }).then(() => {
-          this.$delete("panel/" + this.panelId + "/charts?ids=" + data.id).then(response => {
+          this.$delete("panel/" + this.showPanel.id + "/charts?ids=" + data.id).then(response => {
             if (response.code === 200) {
               this.$message({
                 duration: 2000,
@@ -288,7 +291,7 @@
         // this.searchTime = [...val];
         this.filter.start_time = bus.timeFormate(this.searchTime[0], 'yyyy-MM-dd hh:mm:ss');
         this.filter.end_time = bus.timeFormate(this.searchTime[1], 'yyyy-MM-dd hh:mm:ss');
-        this.filter.panelId = this.panelId;
+        this.filter.panelId = this.showPanel.id;
         this.getData(this.filter);
       },
       /*时间条件查询--end*/
@@ -301,7 +304,7 @@
             if (response.code === 200) {
               this.panelData = response.data.list;
               if (this.panelData.length > 0) {
-                this.panelId = this.filter.panelId = this.panelData[0].id;
+                this.showPanel.id = this.filter.panelId = this.panelData[0].id;
                 this.getData(this.filter);
               }
             }else {

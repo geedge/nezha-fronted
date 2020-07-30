@@ -117,7 +117,7 @@
                 ps._ps_ && ps._ps_.update();
               });
             }
-            vm.$refs.panelTab.$refs.dashboardScrollbar.update();
+            vm.$refs.panelTab && vm.$refs.panelTab.$refs.dashboardScrollbar.update();
             clearInterval(intervalFunc);
           }
         }, 500);

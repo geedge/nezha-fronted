@@ -53,195 +53,168 @@
   }
 </style>
 <template key="chartBox">
-  <div v-clickoutside="clickOutside">
-    <panel-box :panel="panel" @reload="panelReload" ref="panelBox2" v-if="!showPanel.type"></panel-box>
+  <div v-clickoutside="clickOutside" class="right-box right-box-add-chart z-top right-box-chart">
+    <transition name="right-box">
+      <panel-box :panel="panel" @reload="panelReload" ref="panelBox2" v-if="!showPanel.type"></panel-box>
+    </transition>
 
-    <div class="right-box right-box-add-chart z-top right-box-chart">
-      <!-- begin--顶部按钮-->
-      <div class="right-box-top-btns">
-        <button id="chart-box-delete" type="button" v-if="chart.id" @click="del(chart)" class="nz-btn nz-btn-size-normal nz-btn-size-alien nz-btn-style-light nz-btn-min-width-82">
-          <span class="right-box-top-btn-icon"><i class="el-icon-delete"></i></span>
-          <span class="right-box-top-btn-txt">{{$t('overall.delete')}}</span>
-        </button>
-      </div>
-      <!-- end--顶部按钮-->
+    <!-- begin--顶部按钮-->
+    <div class="right-box-top-btns">
+      <button id="chart-box-delete" type="button" v-if="editChart.id" @click="del" class="nz-btn nz-btn-size-normal nz-btn-size-alien nz-btn-style-light nz-btn-min-width-82">
+        <span class="right-box-top-btn-icon"><i class="el-icon-delete"></i></span>
+        <span class="right-box-top-btn-txt">{{$t('overall.delete')}}</span>
+      </button>
+    </div>
+    <!-- end--顶部按钮-->
 
-      <!-- begin--标题-->
-      <div class="right-box-title">{{rightBox.title}}</div>
-      <!-- end--标题-->
+    <!-- begin--标题-->
+    <div class="right-box-title">{{editChart.id ? $t("dashboard.panel.editChartTitle") : $t("dashboard.panel.createChartTitle")}}</div>
+    <!-- end--标题-->
 
-      <!-- begin--表单-->
-      <el-scrollbar class="right-box-form-box" ref="scrollbar">
-        <el-form class="right-box-form  right-box-form-left" :model="chart" label-width="120px" label-position="right"  :rules="rules" ref="chartForm">
-          <el-form-item :label="$t('dashboard.panel.title')" prop="panel" v-if="!showPanel.type">
-            <el-autocomplete
-              :fetch-suggestions="panelSuggestion"
-              v-model.trim="panelName2"
-              placeholder=""
-              size="small"
-              value-key="name"
-              v-if="!chart.id"
-              popper-class="chart-box-autocomplete no-style-class"
-            >
-            </el-autocomplete>
-            <el-input size="small" v-if="chart.id" readonly="readonly" :value="panelName2"></el-input>
-            <!--<el-select popper-class="chart-box-dropdown"
-                       v-model="panelId" placeholder="" v-if="rightBox.show" size="small">
-              <el-option v-for="item in panelData" :key="item.id" :label="item.name"
-                         :value="item.id" :id="'chart-box-panel-'+item.id">
-                <span class="config-dropdown-label-txt">{{item.name}}</span>
-                <div class="config-dropdown-label-icons">
-                <span class="config-dropdown-btn config-dropdown-btn-delete" @click.stop="deletePanel(item)"
-                      :id="'chart-box-panel-op-del-'+item.id"><i class="el-icon-delete"></i></span>
-                  <span class="config-dropdown-btn" @click.stop="editPanel(item)"
-                        :id="'chart-box-panel-op-edit-'+item.id"><i class="nz-icon nz-icon-edit"></i></span>
-                </div>
-              </el-option>
-            </el-select>
+    <!-- begin--表单-->
+    <el-scrollbar class="right-box-form-box" ref="scrollbar">
+      <el-form class="right-box-form  right-box-form-left" :model="editChart" label-width="120px" label-position="right" :rules="rules" ref="chartForm">
+        <!--<el-form-item :label="$t('dashboard.panel.title')" prop="panel" v-if="!showPanel.type">
+          <el-autocomplete
+            :fetch-suggestions="panelSuggestion"
+            v-model.trim="panelName2"
+            placeholder=""
+            size="small"
+            value-key="name"
+            v-if="!editChart.id"
+            popper-class="chart-box-autocomplete no-style-class"
+          >
+          </el-autocomplete>
+          <el-input size="small" v-if="editChart.id" readonly="readonly" :value="panelName2"></el-input>
 
-            <div class="right-box-row-btn" v-if="rightBox.show" @click="toAddPanel">
-              <i class="el-icon-plus" id="chart-box-panel-plus"></i>
-            </div>-->
+        </el-form-item>-->
+        <el-form-item :label='$t("dashboard.panel.chartForm.chartName")' prop="title">
+          <el-input size="small" maxlength="64" show-word-limit v-model="editChart.title"></el-input>
+        </el-form-item>
 
-          </el-form-item>
-          <el-form-item :label='$t("dashboard.panel.chartForm.chartName")' prop="title">
-            <el-input size="small" maxlength="64" show-word-limit v-model="chart.title"></el-input>
-          </el-form-item>
+        <div class="right-box-sub-title">{{$t('dashboard.panel.chartForm.option')}}</div>
+        <div class="line-100" style="margin-bottom: 20px;"></div>
 
-          <div class="right-box-sub-title">{{$t('dashboard.panel.chartForm.option')}}</div>
-          <div class="line-100" style="margin-bottom: 20px;"></div>
+        <!-- type unit start-->
+        <el-form-item :label="$t('dashboard.panel.chartForm.type')" prop="type" class="half-form-item">
+          <el-select class="right-box-row-with-btn" @change="chartTypeChange" value-key="chartType" popper-class="chart-box-dropdown-small" v-model="editChart.type" placeholder="" size="mini">
+            <el-option v-for="item in chartTypeList" :key="item.id" :label="item.name" :value="item.id">
+              <span class="panel-dropdown-label-txt" >{{item.name}}</span>
+            </el-option>
+          </el-select>
+        </el-form-item>
 
-          <!-- type unit start-->
-          <el-form-item :label="$t('dashboard.panel.chartForm.type')" prop="type" class="half-form-item">
-            <el-select class="right-box-row-with-btn" @change="chartTypeChange" value-key="chartType" popper-class="chart-box-dropdown-small" v-model="chart.type" placeholder="" size="mini">
-              <el-option v-for="item in chartTypeList" :key="item.id" :label="item.name" :value="item.id">
-                <span class="panel-dropdown-label-txt" >{{item.name}}</span>
-              </el-option>
-            </el-select>
-          </el-form-item>
+        <el-form-item :label="$t('dashboard.panel.chartForm.unit')" prop="unit" class="half-form-item" style="width: 415px;">
+          <el-cascader filterable placeholder="" popper-class="dc-dropdown" size="mini"  style="width: 100%"
+                       :options="unitOptions"
+                       :props="{ expandTrigger: 'hover',emitPath:false }"
+                       :show-all-levels="false"
+                       v-model="editChart.unit"
+                       @change="unitSelected"
+          >
+          </el-cascader>
+        </el-form-item>
+        <!--type unit end-->
 
-          <el-form-item :label="$t('dashboard.panel.chartForm.unit')" prop="unit" class="half-form-item" style="width: 415px;">
-            <el-cascader filterable placeholder="" popper-class="dc-dropdown" size="mini"  style="width: 100%"
-                         :options="unitOptions"
-                         :props="{ expandTrigger: 'hover',emitPath:false }"
-                         :show-all-levels="false"
-                         v-model="chart.unit"
-                         @change="unitSelected"
-            >
-            </el-cascader>
-          </el-form-item>
-          <!--type unit end-->
+        <el-form-item :label="$t('dashboard.panel.chartForm.width')" prop="span" class="half-form-item">
+          <el-select class="right-box-row-with-btn"  value-key="chartSpan" popper-class="chart-box-dropdown-mini" v-model="chart.span" placeholder="" size="mini">
+            <el-option v-for="item in spanList" :key="item" :label="'span-' + item" :value="item">
+              <span class="panel-dropdown-label-txt" > span-{{item}}</span>
+            </el-option>
+          </el-select>
+        </el-form-item>
 
-          <el-form-item :label="$t('dashboard.panel.chartForm.width')" prop="span" class="half-form-item">
-            <el-select class="right-box-row-with-btn"  value-key="chartSpan" popper-class="chart-box-dropdown-mini" v-model="chart.span" placeholder="" size="mini">
-              <el-option v-for="item in spanList" :key="item" :label="'span-' + item" :value="item">
-                <span class="panel-dropdown-label-txt" > span-{{item}}</span>
-              </el-option>
-            </el-select>
-          </el-form-item>
-
-          <el-form-item :label="$t('dashboard.panel.chartForm.high')" prop="hight"  class="half-form-item" style="width: 415px;">
-            <el-autocomplete
-              v-model="chart.height"
-              :fetch-suggestions="querySearch"
-              placeholder=""
-              size="mini"
-              popper-class="popper-z-index no-style-class"
-              @select="handleSelect">
-              <template slot-scope="{ item }">
-                <div class="name">{{ item }}</div>
-              </template>
-            </el-autocomplete>
-            <span class="nz-input-append">px</span>
-          </el-form-item>
+        <el-form-item :label="$t('dashboard.panel.chartForm.high')" prop="hight"  class="half-form-item" style="width: 415px;">
+          <el-autocomplete
+            v-model="editChart.height"
+            :fetch-suggestions="querySearch"
+            placeholder=""
+            size="mini"
+            popper-class="popper-z-index no-style-class"
+            @select="handleSelect">
+            <template slot-scope="{ item }">
+              <div class="name">{{ item }}</div>
+            </template>
+          </el-autocomplete>
+          <span class="nz-input-append">px</span>
+        </el-form-item>
 
 
-          <el-form-item :label="$t('dashboard.panel.chartForm.sync')" v-if="showPanel.type && showPanel.type == 'model'">
-            <el-switch class="exporter-switch" v-model="chart.sync" active-color="#ee9d3f" :active-value="1" :inactive-value="0"></el-switch>
-          </el-form-item>
+        <el-form-item :label="$t('dashboard.panel.chartForm.sync')" v-if="showPanel.type && showPanel.type == 'model'">
+          <el-switch class="exporter-switch" v-model="chart.sync" active-color="#ee9d3f" :active-value="1" :inactive-value="0"></el-switch>
+        </el-form-item>
 
-          <el-form-item v-if="isUrl" :label='$t("dashboard.panel.chartForm.url")' prop="param.url" :rules="{ required: true,  message: $t('validate.required'), trigger: 'blur' }">
-            <el-input size="small" type="textarea" maxlength="1024" show-word-limit v-model="chart.param.url"></el-input>
-          </el-form-item>
+        <el-form-item v-if="isUrl" :label='$t("dashboard.panel.chartForm.url")' prop="param.url" :rules="{ required: true,  message: $t('validate.required'), trigger: 'blur' }">
+          <el-input size="small" type="textarea" maxlength="1024" show-word-limit v-model="editChart.param.url"></el-input>
+        </el-form-item>
 
-          <el-form-item v-if="chart.type == 'line' || chart.type == 'bar' || chart.type == 'stackArea'" :label='$t("dashboard.panel.chartForm.threshold")' prop="param.threshold"  class="half-form-item">
-            <el-input size="mini" type="input"  v-model="chart.param.threshold"></el-input>
-          </el-form-item>
+        <el-form-item v-if="editChart.type == 'line' || editChart.type == 'bar' || editChart.type == 'stackArea'" :label='$t("dashboard.panel.chartForm.threshold")' prop="param.threshold"  class="half-form-item">
+          <el-input size="mini" type="input" v-model="editChart.param.threshold"></el-input>
+        </el-form-item>
 
-          <div v-if="!isUrl&&!isAlert" class="right-box-sub-title">
-            <span>{{$t('alert.config.expr')}}</span>
-            <span v-if="!isSingleStat" class="float-right" @click="addExpression"><i style="font-size: 16px; cursor: pointer;" class="nz-icon nz-icon-create-square"></i></span>
-          </div>
-          <div v-if="isAlert" class="right-box-sub-title">{{$t('dashboard.panel.chartForm.alertParam.param')}}</div>
-          <div v-if="!isUrl" class="line-100"></div>
+        <div v-if="!isUrl&&!isAlert" class="right-box-sub-title">
+          <span>{{$t('alert.config.expr')}}</span>
+          <span v-if="!isSingleStat" class="float-right" @click="addExpression"><i style="font-size: 16px; cursor: pointer;" class="nz-icon nz-icon-create-square"></i></span>
+        </div>
+        <div v-if="isAlert" class="right-box-sub-title">{{$t('dashboard.panel.chartForm.alertParam.param')}}</div>
+        <div v-if="!isUrl" class="line-100"></div>
 
-          <el-row v-if="isAlert" class="element-item">
-            <alert-chart-param ref="alertParamBox" @on-enter-complate="getAlertParam"></alert-chart-param>
+        <el-row v-if="isAlert" class="element-item">
+          <alert-chart-param ref="alertParamBox" @on-enter-complate="getAlertParam"></alert-chart-param>
+        </el-row>
+
+        <el-row v-if="!isUrl &&!isAlert" class="element-item" style="" v-for="index of promqlKeys.length" :key="'ele' + index">
+          <promql-input
+            :ref="'promql-'+(index-1)"
+            :id="promqlKeys[index-1]"
+            :key="promqlKeys[index-1]"
+            :expression-list="expressions"
+            :index="index-1"
+            :styleType="2"
+            :plugins="['metric-selector', 'metric-input', 'remove']"
+            @change="expressionChange"
+            @removeExpression="removeExpression"
+          ></promql-input>
+          <el-row>
+            <template v-if="editChart.type != 'singleStat'">
+              <el-col style="width: 120px; padding-right: 20px; text-align: right; color: #666">
+                {{$t('dashboard.panel.chartForm.legend')}}&nbsp;
+                <el-popover :content="$t('dashboard.panel.chartForm.legendTip')" placement="top" width="150" trigger="hover">
+                  <i slot="reference" class="nz-icon nz-icon-info-normal" style="font-size: 12px; -webkit-transform:scale(0.75);display:inline-block;" @mouseover="rz"></i>
+                </el-popover>
+              </el-col>
+              <el-col style="width: calc(100% - 120px);">
+                <el-input v-model="legends[index-1]" type="text" size="small"></el-input>
+              </el-col>
+            </template>
+            <template v-else>
+              <el-col style="width: 120px; padding-right: 20px; text-align: right; color: #666">
+                {{$t('dashboard.panel.chartForm.statistics')}}&nbsp;
+              </el-col>
+              <el-col style="width: calc(100% - 120px);">
+                <el-select popper-class="chart-box-dropdown-mini" v-model="statistics" placeholder="" size="small">
+                  <el-option v-for="item in statisticsList" :key="item.id" :label="item.name" :value="item.id">
+                    <span class="panel-dropdown-label-txt" >{{item.name}}</span>
+                  </el-option>
+                </el-select>
+              </el-col>
+            </template>
           </el-row>
+        </el-row>
+      </el-form>
+    </el-scrollbar>
 
-          <el-row v-if="!isUrl &&!isAlert" class="element-item" style="" v-for="index of promqlKeys.length" :key="'ele' + index">
-            <!--<chart-metric ref="chartTag"
-                          :pointer="index"
-                          :metric-list="metricList"
-                          :metricCascaderList="metricCascaderList"
-                          :metricAllData="metricAllData"
-                          :count-total="elements.length"
-                          @on-delete-target="deleteTarget"
-                          @sub-save-ok="subOk"
-                          @on-add-target-success="getTarget"
-            ></chart-metric>-->
-            <promql-input
-              :ref="'promql-'+(index-1)"
-              :id="promqlKeys[index-1]"
-              :key="promqlKeys[index-1]"
-              :expression-list="expressions"
-              :index="index-1"
-              :styleType="2"
-              :plugins="['metric-selector', 'metric-input', 'remove']"
-              @change="expressionChange"
-              @removeExpression="removeExpression"
-            ></promql-input>
-            <el-row>
-              <template v-if="chart.type != 'singleStat'">
-                <el-col style="width: 120px; padding-right: 20px; text-align: right; color: #666">
-                  {{$t('dashboard.panel.chartForm.legend')}}&nbsp;
-                  <el-popover :content="$t('dashboard.panel.chartForm.legendTip')" placement="top" width="150" trigger="hover">
-                    <i slot="reference" class="nz-icon nz-icon-info-normal" style="font-size: 12px; -webkit-transform:scale(0.75);display:inline-block;" @mouseover="rz"></i>
-                  </el-popover>
-                </el-col>
-                <el-col style="width: calc(100% - 120px);">
-                  <el-input v-model="legends[index-1]" type="text" size="small"></el-input>
-                </el-col>
-              </template>
-              <template v-else>
-                <el-col style="width: 120px; padding-right: 20px; text-align: right; color: #666">
-                  {{$t('dashboard.panel.chartForm.statistics')}}&nbsp;
-                </el-col>
-                <el-col style="width: calc(100% - 120px);">
-                  <el-select popper-class="chart-box-dropdown-mini" v-model="statistics" placeholder="" size="small">
-                    <el-option v-for="item in statisticsList" :key="item.id" :label="item.name" :value="item.id">
-                      <span class="panel-dropdown-label-txt" >{{item.name}}</span>
-                    </el-option>
-                  </el-select>
-                </el-col>
-              </template>
-            </el-row>
-          </el-row>
-        </el-form>
-      </el-scrollbar>
-
-      <!--底部按钮-->
-      <div class="right-box-bottom-btns">
-        <button @click="esc" id="chart-box-esc" class="nz-btn nz-btn-size-normal nz-btn-style-light nz-btn-min-width-100">
-          <span>{{$t('overall.cancel')}}</span>
-        </button>
-        <button @click="preview" id="chart-box-preview" class="nz-btn nz-btn-size-normal nz-btn-style-normal nz-btn-min-width-100">
-          <span>{{$t('overall.preview')}}</span>
-        </button>
-        <button @click="confirmAdd" id="chart-box-save" class="nz-btn nz-btn-size-normal nz-btn-style-normal nz-btn-min-width-100">
-          <span>{{$t('overall.save')}}</span>
-        </button>
-      </div>
+    <!--底部按钮-->
+    <div class="right-box-bottom-btns">
+      <button @click="esc" id="chart-box-esc" class="nz-btn nz-btn-size-normal nz-btn-style-light nz-btn-min-width-100">
+        <span>{{$t('overall.cancel')}}</span>
+      </button>
+      <button @click="preview" id="chart-box-preview" class="nz-btn nz-btn-size-normal nz-btn-style-normal nz-btn-min-width-100">
+        <span>{{$t('overall.preview')}}</span>
+      </button>
+      <button @click="confirmAdd" id="chart-box-save" class="nz-btn nz-btn-size-normal nz-btn-style-normal nz-btn-min-width-100">
+        <span>{{$t('overall.save')}}</span>
+      </button>
     </div>
     <!--preview -->
     <chart-preview :panelId="panelId" ref="chartsPreview" ></chart-preview>
@@ -262,17 +235,19 @@
         resetZIndex(e);
       }
     }
-  }
+  };
   export default {
     name: "chartBox",
     props: {
       panelData: Array,
-      showPanel: Object
+      showPanel: Object,
+      chart: Object
     },
     mixins: [rz],
     data() {
       return {
-        rightBox: {title: ""},
+        editChart: {},
+
         statisticsList:[
           {
             id:"min",
@@ -307,6 +282,7 @@
             name:this.$t("dashboard.panel.chartForm.statisticsVal.different")
           },
         ],
+
         promqlCount: 1,
         promqlKeys: [],
         elementIds: [],
@@ -315,21 +291,6 @@
         statistics: "",
 
         editInfo: {},
-        chart: {
-          id:'',
-          title: '',
-          type:'line',
-          span:12,
-          height:'400',
-          unit:2,
-          param:{
-            url:'',
-            threshold:'',
-          },
-          elements:[],
-          panel: '',
-          sync: 0
-        },
         isUrl:false,
         isSingleStat:false,
         isAlert:false,
@@ -413,7 +374,7 @@
     },
     methods: {
       clickOutside() {
-        this.esc();
+        this.esc(false);
       },
       toAddPanel() {
         this.$refs.panelBox2.show(true);
@@ -455,11 +416,8 @@
         this.panel = Object.assign({}, panel);
         this.$refs.panelBox2.setTitle(this.$t("dashboard.panel.editPanelTitle"));
       },
-      setTitle(title) {
-        this.rightBox.title = title;
-      },
-      setUnit:function(unit){
-        this.$set(this.chart,'unit',Number.parseInt(unit))
+      setUnit(unit) {
+        this.$set(this.editChart,'unit',Number.parseInt(unit))
       },
       expressionChange: function () {
 
@@ -471,8 +429,8 @@
         this.elementIds.push("");
         this.promqlCount++;
       },
-      removeExpression: function (index) {
-        if (this.promqlCount > 1) {
+      removeExpression(index) {
+        if (this.promqlCount > 0) {
           this.expressions.splice(index, 1);
           this.legends.splice(index, 1);
           this.promqlKeys.splice(index, 1);
@@ -491,20 +449,20 @@
       save() {
         this.$refs['chartForm'].validate((valid) => {
           if (valid) {
-            if (this.chart.id) {//修改
-              this.$put('panel/'+this.chart.id+'/charts').then(response => {
+            if (this.editChart.id) {//修改
+              this.$put('panel/'+this.editChart.id+'/charts').then(response => {
                 if (response.code === 200) {
-                  this.esc();
                   this.$message({duration: 1000, type: 'success', message: this.$t("tip.saveSuccess")});
+                  this.esc(true);
                 } else {
                   this.$message.error(response.msg);
                 }
               });
             } else {//新增
-              this.$post('panel/charts', this.chart).then(response => {
+              this.$post('panel/charts', this.editChart).then(response => {
                 if (response.code === 200) {
-                  this.esc();
                   this.$message({duration: 1000, type: 'success', message: this.$t("tip.saveSuccess")});
+                  this.esc(true);
                 } else {
                   this.$message.error(response.msg);
                 }
@@ -516,24 +474,20 @@
           }
         });
       },
-      del: function(u) {
-        let cloneChart=JSON.parse(JSON.stringify(u))
+      del(u) {
         this.$confirm(this.$t("tip.confirmDelete"), {
           confirmButtonText: this.$t("tip.yes"),
           cancelButtonText: this.$t("tip.no"),
           type: 'warning'
         }).then(() => {
-          this.$delete("panel/"+this.panelId+"/charts?ids="+cloneChart.id).then(response => {
+          this.$delete("panel/" + this.panelId + "/charts?ids=" + u.id).then(response => {
             if (response.code === 200) {
               if(this.$refs.chartForm){
                 this.$refs.chartForm.resetFields();//清空表单
                 this.panelName2 = '';
               }
-              this.esc();
               this.$message({duration: 1000, type: 'success', message: this.$t("tip.deleteSuccess")});
-              //this.getTableData();//删除相关图表后，刷新面板数据---调用panel的方法刷新
-              this.chart.id='';//不清除，再次打开创建图表，会显示删除按钮
-              this.$emit('on-delete-success');
+              this.esc(true);
             } else {
               this.$message.error(response.msg);
             }
@@ -543,8 +497,8 @@
       //----------------------------------
 
       /*关闭弹框*/
-      esc() {
-        this.$emit("close");
+      esc(refresh) {
+        this.$emit("close", refresh);
       },
 
       /*metric部分相关方法--begin*/
@@ -664,7 +618,7 @@
         let interval = setInterval(() => {
           if (panelId) {
             this.panelId = panelId;
-            this.$post('panel/' + this.panelId + '/charts', params ? params : this.chart).then(response => {
+            this.$post('panel/' + this.panelId + '/charts', params ? params : this.editChart).then(response => {
               if (response.code === 200) {
                 this.esc();
                 this.$message({duration: 1000, type: 'success', message: this.$t("tip.saveSuccess")});
@@ -691,7 +645,7 @@
       },
       // 更新图表
       updateCharts(params) {
-        this.$put('panel/' + this.panelId + '/charts', params ? params : this.chart).then(response2 => {
+        this.$put('panel/' + this.panelId + '/charts', params ? params : this.editChart).then(response2 => {
           if (response2.code === 200) {
             this.esc();
             this.$message({duration: 1000, type: 'success', message: this.$t("tip.saveSuccess")});
@@ -715,23 +669,23 @@
             const params = {
               // productId: this.productId,
               //panelId: this.panelId,
-              title: this.chart.title,//this.chart
-              span: this.chart.span,
-              height: this.chart.height,
-              type: this.chart.type,
-              unit:this.chart.unit,
+              title: this.editChart.title,//this.editChart
+              span: this.editChart.span,
+              height: this.editChart.height,
+              type: this.editChart.type,
+              unit:this.editChart.unit,
               param:{
 
               },
-              sync: this.chart.sync
+              sync: this.editChart.sync
             };
-            if(this.chart.type === 'singleStat'){
+            if(this.editChart.type === 'singleStat'){
               params.param.statistics=this.statistics;
             } else {
               delete params.param.statistics;
             }
-            if(this.chart.type==='line'||this.chart.type==='bar'||this.chart.type==='stackArea'){
-              params.param.threshold=this.chart.param.threshold;
+            if(this.editChart.type==='line'||this.editChart.type==='bar'||this.editChart.type==='stackArea'){
+              params.param.threshold=this.editChart.param.threshold;
             } else {
               delete params.param.threshold;
             }
@@ -761,12 +715,12 @@
             if (valid) {
               if(optType==='preview') {
                 if (this.isedit) {
-                  params.id = this.chart.id;
+                  params.id = this.editChart.id;
                 }
                 this.$refs.chartsPreview.show(params);
               }else{
                 if (this.isedit) {
-                  params.id = this.chart.id;
+                  params.id = this.editChart.id;
                   this.updateCharts(params);
                 } else {
                   this.addCharts(params);
@@ -779,23 +733,23 @@
       getAlertParam:function(param,opType){
         this.$refs.chartForm.validate((valid) => {
           const params = {
-            title: this.chart.title,//this.chart
-            span: this.chart.span,
-            height: this.chart.height,
-            type: this.chart.type,
-            unit:this.chart.unit,
+            title: this.editChart.title,//this.editChart
+            span: this.editChart.span,
+            height: this.editChart.height,
+            type: this.editChart.type,
+            unit:this.editChart.unit,
             param:param,
-            sync: this.chart.sync
+            sync: this.editChart.sync
           };
           if (valid) {
             if(opType==='preview') {
               if (this.isedit) {
-                params.id = this.chart.id;
+                params.id = this.editChart.id;
               }
               this.$refs.chartsPreview.show(params);
             }else{
               if (this.isedit) {
-                params.id = this.chart.id;
+                params.id = this.editChart.id;
                 this.updateCharts(params);
               } else {
                 this.addCharts(params);
@@ -806,8 +760,8 @@
       },
       confirmAdd() {
         this.elementTarget = []; // 初始化清空参数
-        if(this.chart.type!=='url'){
-          /*if(this.chart.type == 'alertList'){
+        if(this.editChart.type!=='url'){
+          /*if(this.editChart.type == 'alertList'){
             this.$refs.alertParamBox.saveParam();
           }else{
             this.$refs.chartTag.forEach((item, index) => {//循环指标列表
@@ -815,18 +769,18 @@
               item.saveTarget(index);
             });
           }*/
-          if(this.chart.type == 'singleStat'){
-            this.$set(this.chart.param, "statistics", this.statistics);
+          if(this.editChart.type == 'singleStat'){
+            this.$set(this.editChart.param, "statistics", this.statistics);
           } else {
-            delete this.chart.param.statistics;
+            delete this.editChart.param.statistics;
           }
           if (this.expressions[0]) {
-            this.chart.elements = [];
+            this.editChart.elements = [];
             this.expressions.forEach((expr, i) => {
-              this.chart.elements.push({id: this.elementIds[i], expression: expr, type: "expert", legend: this.legends[i]});
+              this.editChart.elements.push({id: this.elementIds[i], expression: expr, type: "expert", legend: this.legends[i]});
             });
           }
-          if (this.chart.id) {
+          if (this.editChart.id) {
             this.updateCharts();
           } else {
             this.addCharts();
@@ -834,21 +788,21 @@
         }else {
           this.$refs.chartForm.validate((valid) => {
             const params = {
-              title: this.chart.title,//this.chart
-              span: this.chart.span,
-              height: this.chart.height,
-              type: this.chart.type,
-              unit:this.chart.unit,
+              title: this.editChart.title,//this.editChart
+              span: this.editChart.span,
+              height: this.editChart.height,
+              type: this.editChart.type,
+              unit:this.editChart.unit,
               param:{
-                url:this.chart.param.url,
+                url:this.editChart.param.url,
               },
-              sync: this.chart.sync
+              sync: this.editChart.sync
             };
 
             if (valid) {
               params.elements = [];
               if (this.isedit) {
-                params.id = this.chart.id;
+                params.id = this.editChart.id;
                 this.updateCharts(params);
               } else {
                 this.addCharts(params);
@@ -942,7 +896,7 @@
         }
         this.isedit = false;
         this.initInfo(); // 初始化图表信息
-        //this.chartModal = true;//????控制弹出框显示和隐藏的，不需要了
+        //this.editChartModal = true;//????控制弹出框显示和隐藏的，不需要了
         this.initOpen(); // 获取metric, productId数据
       },
       setIsUrl(){
@@ -967,7 +921,6 @@
       },
       // 编辑chart时使用, set_tdata
       editData(data, panelId) {
-        //alert('data='+JSON.stringify(data)+"=="+panelId);
         if (!panelId) {
           this.panelId = 0;
           this.panelName2 = "";
@@ -979,30 +932,29 @@
           this.panelName2 = temp[0].name;
         }
         this.isedit = true;
-        //this.chartModal = true;
         this.editInfo = data;
         // 图表信息获取
-        this.chart.id = data.id;
-        this.chart.title = data.title;
-        this.chart.span = data.span;
-        this.chart.height = data.height+'';
-        this.chart.type = data.type;
-        this.chart.unit=data.unit;
-        this.chart.elements = data.elements;
-        if(this.chart.type==='url'){
-          this.chart.param.url = data.param.url;
+        this.editChart.id = data.id;
+        this.editChart.title = data.title;
+        this.editChart.span = data.span;
+        this.editChart.height = data.height+'';
+        this.editChart.type = data.type;
+        this.editChart.unit=data.unit;
+        this.editChart.elements = data.elements;
+        if(this.editChart.type==='url'){
+          this.editChart.param.url = data.param.url;
           this.setIsUrl();
           //this.elements = [1];
-        }else if(this.chart.type==='alertLine'){
-          this.chart.param=data.param;
+        }else if(this.editChart.type==='alertLine'){
+          this.editChart.param = data.param;
           this.setIsAlertList();
           //this.elements=[1];
         }else{
-          if((this.chart.type==='line'||this.chart.type==='bar'||this.chart.type==='stackArea'||this.chart.type==='singleStat')&&data.param){
-            this.chart.param.threshold=data.param.threshold;
-            this.chart.param.statistics = this.statistics = data.param.statistics;
+          if((this.editChart.type==='line'||this.editChart.type==='bar'||this.editChart.type==='stackArea'||this.editChart.type==='singleStat')&&data.param){
+            this.editChart.param.threshold=data.param.threshold;
+            this.editChart.param.statistics = this.statistics = data.param.statistics;
           }else{
-            this.chart.param.threshold='';
+            this.editChart.param.threshold='';
           }
           this.setIsOtherChart();
           //this.getSuggestMetric();//获得指标列表
@@ -1013,7 +965,7 @@
             this.elements.push(index);
           });
           this.$nextTick(() => {
-            if(this.chart.type==='alertList'){
+            if(this.editChart.type==='alertList'){
               this.setIsAlertList();
               this.$nextTick(()=>{
                 this.$refs.alertParamBox.setData(data);
@@ -1031,13 +983,14 @@
 
       // 初始化信息
       initInfo() {
-        this.chart.title = '';
-        this.chart.type = 'line';
-        this.chart.span = 12;
-        this.chart.height = 400+'';
-        this.chart.unit=2;
-        this.chart.param.url='';
-        this.chart.param.threshold='';
+        this.editChart.title = '';
+        this.editChart.type = 'line';
+        this.editChart.span = 12;
+        this.editChart.height = 400+'';
+        this.editChart.unit=2;
+        !this.editChart.param && (this.$set(this.editChart, "param", []));
+        this.editChart.param.url='';
+        this.editChart.param.threshold='';
         this.elements = [1];
         this.elementTarget = [];
         bus.chartAddInfo.metricTarget = [];
@@ -1066,14 +1019,14 @@
         };
       },
       handleSelect:function(item){
-        this.chart.height=item;
+        this.editChart.height=item;
       },
       unitSelected:function(value){
-        //this.chart.unit=value[value.length-1];
+        //this.editChart.unit=value[value.length-1];
       },
       chartTypeChange(){
-        let chartType = this.chart.type;
-        this.chart.param.url='';
+        let chartType = this.editChart.type;
+        this.editChart.param.url='';
         if(chartType==='url'){
           this.setIsUrl();
           /*if(this.$refs.chartTag){
@@ -1089,7 +1042,7 @@
         }else {
           this.setIsOtherChart();
           if(chartType === 'bar'||chartType === 'line'||chartType === 'stackArea'){
-            this.chart.param={threshold:''}
+            this.editChart.param={threshold:''}
           }
           /*if(this.$refs.chartTag){
             this.$refs.chartTag.forEach((item, index) => {
@@ -1125,8 +1078,8 @@
         //验证图表数据是否合法？？，合法了再显示预览窗口
         this.elementTarget = []; // 初始化清空参数
         this.alertParams={};
-        if(this.chart.type!=='url'){
-          if(this.chart.type == 'alertList'){
+        if(this.editChart.type!=='url'){
+          if(this.editChart.type == 'alertList'){
             this.$refs.alertParamBox.saveParam('preview');
           }else{
             /*this.$refs.chartTag.forEach((item, index) => {//循环指标列表
@@ -1137,23 +1090,23 @@
               const params = {
                 // productId: this.productId,
                 //panelId: this.panelId,
-                title: this.chart.title,//this.chart
-                span: this.chart.span,
-                height: this.chart.height,
-                type: this.chart.type,
-                unit:this.chart.unit,
+                title: this.editChart.title,//this.editChart
+                span: this.editChart.span,
+                height: this.editChart.height,
+                type: this.editChart.type,
+                unit:this.editChart.unit,
                 param:{
 
                 },
-                sync: this.chart.sync
+                sync: this.editChart.sync
               };
-              if(this.chart.type === 'singleStat'){
+              if(this.editChart.type === 'singleStat'){
                 params.param.statistics=this.statistics;
               } else {
                 delete params.param.statistics;
               }
-              if(this.chart.type==='line'||this.chart.type==='bar'||this.chart.type==='stackArea'){
-                params.param.threshold=this.chart.param.threshold;
+              if(this.editChart.type==='line'||this.editChart.type==='bar'||this.editChart.type==='stackArea'){
+                params.param.threshold=this.editChart.param.threshold;
               } else {
                 delete params.param.threshold;
               }
@@ -1196,24 +1149,24 @@
         }else {
           this.$refs.chartForm.validate((valid) => {
             const params = {
-              title: this.chart.title,//this.chart
-              span: this.chart.span,
-              height: this.chart.height,
-              type: this.chart.type,
-              unit:this.chart.unit,
+              title: this.editChart.title,//this.editChart
+              span: this.editChart.span,
+              height: this.editChart.height,
+              type: this.editChart.type,
+              unit:this.editChart.unit,
               param:{
-                url:this.chart.param.url,
+                url:this.editChart.param.url,
               }
             };
 
             if (valid) {
               if (this.isedit) {
-                params.id = this.chart.id;
+                params.id = this.editChart.id;
               }
               this.$refs.chartsPreview.show(params);
               /*
                 if (this.isedit) {
-                  params.id = this.chart.id;
+                  params.id = this.editChart.id;
                   this.updateCharts(params);
                 } else {
                   this.addCharts(params);
@@ -1226,10 +1179,10 @@
       },
       //preview--end
       initElements() {
-        if (!this.chart.elements || this.chart.elements.length == 0) {
-          this.chart.elements = [{expression: "", legend: "", type: "expert", id: ""}];
+        if (!this.editChart.elements || this.editChart.elements.length == 0) {
+          this.editChart.elements = [{expression: "", legend: "", type: "expert", id: ""}];
         }
-        this.chart.elements.forEach(element => {
+        this.editChart.elements.forEach(element => {
           this.promqlKeys.push(getUUID());
           this.expressions.push(element.expression);
           this.legends.push(element.legend);
@@ -1248,7 +1201,19 @@
       this.getSuggestMetric();
     },
     watch: {
-      panelData: {
+      chart: {
+        deep: true,
+        immediate: true,
+        handler(n) {
+          this.editChart = JSON.parse(JSON.stringify(n));
+          if (n.id) {
+            this.editData(this.editChart, this.showPanel.id);
+          } else {
+            this.createData(this.showPanel.id);
+          }
+        }
+      },
+      /*panelData: {
         deep: true,
         immediate: true,
         handler(n, o) {
@@ -1267,7 +1232,7 @@
             }
           }
         }
-      }
+      }*/
     },
     beforeDestroy() {
       if(this.$refs.chartTag){
