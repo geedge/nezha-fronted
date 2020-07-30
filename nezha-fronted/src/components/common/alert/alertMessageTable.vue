@@ -83,7 +83,7 @@
           <template v-else-if="item.prop == 'labels'" class="labels">
             <el-tooltip
               v-for="item in labelsSort(scope.row.labels)"
-              placement="right"
+              :placement="scope.$index==0?'right-start':(scope.$index==tableData.length-1?'right-end':'right')"
               effect="light"
               :disabled="!(item.label === 'asset' ||item.label === 'module' || item.label === 'project')"
               :key="item.label"
@@ -940,5 +940,11 @@
   }
   .tabelH100{
     height: 100% !important;
+  }
+  /deep/.too-long-split{
+    vertical-align: bottom;
+  }
+  /deep/.el-tooltip{
+    display: inline-block;
   }
 </style>
