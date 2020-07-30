@@ -8,12 +8,12 @@
               <el-dropdown class="metric-selector">
                 <el-dropdown-menu style="display: none"></el-dropdown-menu>
                 <el-button class="metric-btn nz-btn nz-btn-size-normal nz-btn-style-light" @click="toggleDropdown">Metric &nbsp;<i class="el-icon-arrow-down"></i></el-button>
-                <el-cascader-panel v-show="dropDownVisible" v-model="cascaderValue"  slot="dropdown" ref="metricSelector" :props="{emitPath:false}" :options="metricOptions"  @change="metricChange"></el-cascader-panel>
+                <el-cascader-panel v-show="dropDownVisible" v-model="cascaderValue"  slot="dropdown" ref="metricSelector" :props="{emitPath:false}" :options="metricOptions"  @change="metricChange" ></el-cascader-panel>
               </el-dropdown>
             </div>
             <div class="input-box" @click="dropDownVisible=false" v-if="plugins.indexOf('metric-input') > -1">
               <!--            <el-autocomplete :placeholder="$t('dashboard.metricPreview.inputTip')" :fetch-suggestions="filterInput" clearable @clear="clearExpression" :trigger-on-focus="false" v-model="expressionList[index]" @blur="expressionChange" style="width: 100%;height:36px"></el-autocomplete>-->
-              <editor :styleType="styleType" :metric-list="metricStore" v-model="expressionList[index]" ref="editor" @on-enter="expressionChange" @on-blur="expressionChange" ></editor>
+              <editor :styleType="styleType" :metric-list="metricStore" :history-param="historyParam" v-model="expressionList[index]" ref="editor" @on-enter="expressionChange" @on-blur="expressionChange" ></editor>
               <div class="append-msg error" v-if="errorMsg"><span>{{errorMsg}}</span></div>
               <div class="append-msg error" v-if="appendMsg"><span>{{appendMsg}}</span></div>
             </div>
@@ -31,7 +31,7 @@
               </el-col>
               <el-col style="width: calc(100% - 120px); height: 100%;">
                 <div class="input-box" @click="dropDownVisible=false" v-if="plugins.indexOf('metric-input') > -1">
-                  <editor :styleType="styleType" :metric-list="metricStore" v-model="expressionList[index]" ref="editor" @on-enter="expressionChange" @on-blur="expressionChange" ></editor>
+                  <editor :styleType="styleType" :metric-list="metricStore" :historyParam="historyParam" v-model="expressionList[index]" ref="editor" @on-enter="expressionChange" @on-blur="expressionChange" ></editor>
                   <div class="append-msg error" v-if="errorMsg"><span>{{errorMsg}}</span></div>
                   <div class="append-msg error" v-if="appendMsg"><span>{{appendMsg}}</span></div>
                 </div>
@@ -64,7 +64,8 @@
         index:{type:Number},
         expressionList:{},
         plugins: {type: Array},
-        styleType: Number
+        styleType: Number,
+        historyParam:{type:Object}
       },
       data(){
         return {
@@ -79,7 +80,6 @@
       },
       created() {
         this.queryMetrics();
-
       },
       methods:{
         clearExpression:function(){
@@ -170,6 +170,10 @@
         dropDownVisible:function(n,o){
           if(this.$refs.metricSelector){
             this.$refs.metricSelector.dropDownVisible=n;
+            console.log(this.cascaderValue)
+            if(!this.expressionList[this.index]||this.expressionList[this.index] == ''){
+              this.cascaderValue="";
+            }
           }
         },
 
