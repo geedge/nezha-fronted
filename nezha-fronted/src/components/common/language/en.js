@@ -409,6 +409,7 @@ const en = {
     purchaseDate: 'Purchase date',//'购买日期'
     location: 'Location',//'地区'
     sn: "SN",
+    uSize: 'U size',
     inStock: 'In stock',//'在库'
     notInStock: 'Not in stock',//'出库'
     assetType:'Asset type',//'资产类型'
@@ -643,6 +644,9 @@ const en = {
       assets: "Assets",
       remark:'Remark',
       cabinets: "Cabinets",
+      createDc: 'Create data center',
+      editDc: 'Edit data center',
+      editCabinet: 'Edit cabinet',
       traffic:{
         title:'Traffic Setting',
         add:'Add',

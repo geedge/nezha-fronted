@@ -10,7 +10,7 @@
     <!-- end--顶部按钮-->
 
     <!-- begin--标题-->
-    <div class="right-box-title">{{editCabinet.id ? $t("asset.editCabinet") + " ID: " + editCabinet.id : $t("overall.createCabinet")}}</div>
+    <div class="right-box-title">{{editCabinet.id ? $t("config.dc.editCabinet") + " ID: " + editCabinet.id : $t("overall.createCabinet")}}</div>
     <!-- end--标题-->
 
     <!-- begin--表单-->
