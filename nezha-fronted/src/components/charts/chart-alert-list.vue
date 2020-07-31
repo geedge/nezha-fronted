@@ -41,104 +41,16 @@
           </el-dropdown>
         </div>
         <div class="mt-10 table-container" v-cloak  v-show="firstShow || isPreview">
-          <transition name="el-zoom-in-bottom">
-            <div class="el-popover alert-clean-pop" @click="toDeleteMessage(false)" v-if="deleteBox.ids.length > 0" :style="{'top':isPreview?'-30px':'10px'}">
-              <i style="cursor: pointer" class="el-icon-delete"></i>
-            </div>
-          </transition>
-          <el-table
-            :id="'tableContainer'+chartIndex"
-            class="nz-table"
-            :data="storedTableData"
-            border
-            :height="tableHeight"
+          <alertMessageTable
+            :tableData="storedScreanTableData"
+            :loading="loading"
+            :tableHeight="tableHeight"
+            :tableId="''"
+            :projectAlertId="'tableContainer'+chartIndex"
+            @tableDataSort="tableDataSort"
+            @deleteMessage="deleteMessage"
             ref="alertListTable"
-            tooltip-effect="light"
-            v-scrollBar:el-table="'normal'"
-            :cell-class-name="labelsClassName"
-            @selection-change="selectChange"
-            style="width: 100%;"
-            @sort-change="tableDataSort"
-            v-loading="loading"
-          >
-            <el-table-column
-              :resizable="false"
-              type="selection"
-              width="38"
-              align="center"
-            ></el-table-column>
-            <el-table-column
-              :resizable="false"
-              v-for="(item, index) in tablelable"
-              v-if="item.show"
-              :width="item.width"
-              :key="`col-${index}`"
-              :label="item.label"
-              :show-overflow-tooltip="item.prop != 'labels'"
-              min-width="110px"
-              :sortable="sortableShow(item.prop)"
-              :prop="propTitle(item.prop)"
-              :sort-orders="['ascending', 'descending']"
-            >
-              <template slot-scope="scope" :column="item">
-                <template v-if="item.prop == 'alertRule'">
-                  <div class="too-long-split"
-                       @click="" :id="'view-rule-'+scope.row[item.prop].id"
-                       v-if="scope.row[item.prop].alertName">{{scope.row[item.prop].alertName}}</div>
-                  <template v-else>-</template>
-                </template>
-                <template v-else-if="item.prop == 'summary'">
-                  <template v-if="scope.row[item.prop]">{{scope.row[item.prop]}}</template>
-                  <template v-else>-</template>
-                </template>
-                <template v-else-if="item.prop == 'description'">
-                  <template v-if="scope.row[item.prop]">{{scope.row[item.prop]}}</template>
-                  <span v-else>-</span>
-                </template>
-                <span v-else-if="item.prop == 'severity'">
-                <span v-if="scope.row[item.prop] == 'high'"><i class="el-icon-arrow-up"></i>&nbsp;{{severityData[1].value}}</span>
-                <span style="padding-left: 18px;" v-if="scope.row[item.prop] == 'medium'">{{severityData[0].value}}</span>
-                <span v-if="scope.row[item.prop] == 'low'"><i class="el-icon-arrow-down"></i>&nbsp;{{severityData[2].value}}</span>
-              </span>
-                <template v-else-if="item.prop == 'labels'">
-                  <nz-alert-tag :label="item.label" :type="tagType(item.label)" style="margin: 5px;"
-                                :cursor-point="tagType(item.label) == 'info' ? false : true"
-                                :key="item.label"
-                                v-if="item.label != 'alertname' && item.label != 'severity'"
-                                v-for="item in labelsSort(scope.row.labels)">{{item.value}}</nz-alert-tag>
-                </template>
-                <div v-else-if="item.prop == 'state'">
-                <span class="">
-                  {{scope.row['state'] == 1 ? "Pending" : ""}}
-                  {{scope.row['state'] == 2 ? "Expired" : ""}}
-                </span>
-                </div>
-                <div v-else-if="item.prop == 'current'" class="too-long-split" >
-                  <span v-if="!scope.row.current">-</span>
-                  <el-popover v-else placement="right" trigger="hover">
-                    <span slot="reference">{{formatThreshold(scope.row.current[1],scope.row.alertRule.unit)}}</span>
-                    <div>{{$unixTimeParseToString(scope.row.current[0])}}</div>
-                  </el-popover>
-                </div>
-                <div v-else-if="item.prop == 'option'" class="content-right-options">
-                  <span :title="$t('overall.view')" @click="detail(scope.row)" class="content-right-option" :id="'alert-list-detail-'+scope.row.id"><i class="nz-icon nz-icon-chart"></i></span>
-                  <span :title="$t('overall.delete')" @click="toDeleteMessage(scope.row)" class="content-right-option" :id="'alert-list-delete-'+scope.row.id"><i  class="el-icon-delete"></i></span>
-                </div>
-                <span v-else-if="scope.row[item.prop]">{{scope.row[item.prop]}}</span>
-                <template v-else>-</template>
-              </template>
-            </el-table-column>
-            <el-table-column width="28" :resizable="false" v-if="!isPreview">
-              <template slot="header" slot-scope="scope">
-              <span @click.stop="elementsetShow('shezhi',$event)" class="nz-table-gear" >
-                <i class="nz-icon nz-icon-gear"></i>
-              </span>
-              </template>
-              <template v-slot="scope">
-                <button v-if="scope.$index == 0" class="to-top" :style="{top: toTopBtnTop}" :class="{'to-top-is-hover': tableHover}" v-show="showTopBtn && mainResizeShow" @click="$toTop('ps', 0)"><i class="nz-icon nz-icon-top"></i></button>
-              </template>
-            </el-table-column>
-          </el-table>
+          ></alertMessageTable>
           <Pagination :pageObj="pageObj" @pageNo='pageNo'  @pageSize='pageSize' ref="Pagination" :append-to-body="false" pop-class="out-popper-fix"></Pagination>
         </div>
         <!--全屏-->
@@ -148,100 +60,16 @@
             <div class="float-right panel-calendar dialog-tool">
             </div>
           </div>
-          <transition name="el-zoom-in-bottom">
-            <div class="el-popover alert-clean-pop" @click="toDeleteMessage(false)" v-if="deleteBox.ids.length > 0">
-              <i style="cursor: pointer" class="el-icon-delete"></i>
-            </div>
-          </transition>
-          <el-table
-            :id="'tableContainer'+chartIndex"
-            class="nz-table"
-            :data="storedScreanTableData"
-            border
-            height="95%"
+          <alertMessageTable
+            :tableData="storedScreanTableData"
+            :loading="loading"
+            :tableHeight="'95%'"
+            :tableId="''"
+            :projectAlertId="'tableContainer'+chartIndex"
+            @tableDataSort="tableDataSort"
+            @deleteMessage="deleteMessage"
             ref="alertListScreenTable"
-            tooltip-effect="light"
-            v-scrollBar:el-table="'large'"
-            :cell-class-name="labelsClassName"
-            @selection-change="selectChange"
-            style="width: 100%;"
-
-          >
-            <el-table-column
-              :resizable="false"
-              type="selection"
-              width="38"
-              align="center"
-            ></el-table-column>
-            <el-table-column
-              :resizable="false"
-              v-for="(item, index) in tablelable"
-              v-if="item.show"
-              :width="item.width"
-              :key="`col-${index}`"
-              :label="item.label"
-              :show-overflow-tooltip="item.prop != 'labels'"
-              min-width="110px"
-            >
-              <template slot-scope="scope" :column="item">
-                <template v-if="item.prop == 'alertRule'">
-                  <div class="too-long-split"
-                       @click="" :id="'view-rule-'+scope.row[item.prop].id"
-                       v-if="scope.row[item.prop].alertName">{{scope.row[item.prop].alertName}}</div>
-                  <template v-else>-</template>
-                </template>
-                <template v-else-if="item.prop == 'summary'">
-                  <template v-if="scope.row[item.prop]">{{scope.row[item.prop]}}</template>
-                  <template v-else>-</template>
-                </template>
-                <template v-else-if="item.prop == 'description'">
-                  <template v-if="scope.row[item.prop]">{{scope.row[item.prop]}}</template>
-                  <span v-else>-</span>
-                </template>
-                <span v-else-if="item.prop == 'severity'">
-              <span v-if="scope.row[item.prop] == 'high'"><i class="el-icon-arrow-up"></i>&nbsp;{{severityData[1].value}}</span>
-              <span style="padding-left: 18px;" v-if="scope.row[item.prop] == 'medium'">{{severityData[0].value}}</span>
-              <span v-if="scope.row[item.prop] == 'low'"><i class="el-icon-arrow-down"></i>&nbsp;{{severityData[2].value}}</span>
-            </span>
-                <template v-else-if="item.prop == 'labels'">
-                  <nz-alert-tag :label="item.label" :type="tagType(item.label)" style="margin: 5px;"
-                                :cursor-point="tagType(item.label) == 'info' ? false : true"
-                                :key="item.label"
-                                v-if="item.label != 'alertname' && item.label != 'severity'"
-                                v-for="item in labelsSort(scope.row.labels)">{{item.value}}</nz-alert-tag>
-                </template>
-                <div v-else-if="item.prop == 'state'">
-              <span class="">
-                {{scope.row['state'] == 1 ? "Pending" : ""}}
-                {{scope.row['state'] == 2 ? "Expired" : ""}}
-              </span>
-                </div>
-                <div v-else-if="item.prop == 'current'" class="too-long-split" >
-                  <span v-if="!scope.row.current">-</span>
-                  <el-popover v-else placement="right" trigger="hover">
-                    <span slot="reference">{{scope.row.current[1]}}</span>
-                    <div>{{$unixTimeParseToString(scope.row.current[0])}}</div>
-                  </el-popover>
-                </div>
-                <div v-else-if="item.prop == 'option'" class="content-right-options">
-                  <span :title="$t('overall.view')" @click="detail(scope.row)" class="content-right-option" :id="'alert-list-detail-'+scope.row.id"><i class="nz-icon nz-icon-chart"></i></span>
-                  <span :title="$t('overall.delete')" @click="toDeleteMessage(scope.row)" class="content-right-option" :id="'alert-list-delete-'+scope.row.id"><i  class="el-icon-delete"></i></span>
-                </div>
-                <span v-else-if="scope.row[item.prop]">{{scope.row[item.prop]}}</span>
-                <template v-else>-</template>
-              </template>
-            </el-table-column>
-            <el-table-column width="28" :resizable="false">
-              <template slot="header" slot-scope="scope">
-            <span @click.stop="elementsetShow('shezhi',$event)" class="nz-table-gear">
-              <i class="nz-icon nz-icon-gear"></i>
-            </span>
-              </template>
-              <template v-slot="scope">
-                <button v-if="scope.$index == 0" class="to-top" :style="{top: toTopBtnTop}" :class="{'to-top-is-hover': tableHover}" v-show="showTopBtn && mainResizeShow" @click="$toTop('ps', 0)"><i class="nz-icon nz-icon-top"></i></button>
-              </template>
-            </el-table-column>
-          </el-table>
+          ></alertMessageTable>
           <Pagination :pageObj="screenPageObj"  @pageNo='screenPageNo' @pageSize='screenPageSize' ref="Pagination" ></Pagination>
           <loading  :ref="'localLoadingScreen'+chartIndex"></loading>
         </el-dialog>
@@ -298,6 +126,7 @@ import nzAlertTag from "../page/alert/nzAlertTag";
 import axios from "axios";
 import pickTime from "../common/pickTime";
 import chart from "../page/dashboard/overview/chart";
+import alertMessageTable from '@/components/common/alert/alertMessageTable.vue'
 export default {
   name: 'chartTable',
   components: {
@@ -306,6 +135,7 @@ export default {
     'nz-alert-tag':nzAlertTag,
     'chart':chart,
     'pick-time':pickTime,
+    'alertMessageTable':alertMessageTable
   },
   props: {
     // 看板id
@@ -505,28 +335,6 @@ export default {
         let vm = this;
         this.$chartResizeTool.start(vm, this.data, e);
       },
-      labelsSort:function(obj){
-        let buildIn=['asset','endpoint','module','project','datacenter']
-        let labels=JSON.parse(JSON.stringify(obj));
-        let result=[];
-        for(let key of buildIn){
-          if(key in labels){
-            result.push({label:key,value:labels[key]})
-            delete labels[key]
-          }
-        }
-        Object.keys(labels).sort().forEach(key=>{
-          result.push({label:key,value:labels[key]})
-        })
-        return result;
-      },
-        labelsClassName(row) {
-          if (row.column.label == this.$t("alert.list.labels")) {
-            return "alert-message-list-labels";
-          } else {
-            return "";
-          }
-        },
       formatThreshold:function(value,unit){
         let unitMethod=chartDataFormat.getUnit(unit)
         if(unitMethod&&value){
@@ -574,13 +382,7 @@ export default {
       screenDialogClose:function(){
         this.screenModal = false
         this.deleteBox.ids=[];
-        this.$refs.alertListScreenTable.clearSelection();
-      },
-      toDeleteMessage(obj) {
-        if (obj) {
-          this.deleteBox.ids = obj.id + "";
-        }
-        this.deleteBox.show = true;
+        this.$refs.alertListScreenTable.$refs.alertListTable.clearSelection();
       },
       selectChange(s) {
         let ids = [];
@@ -590,8 +392,8 @@ export default {
         });
         this.deleteBox.ids = ids.join(",");
       },
-      deleteMessage() {
-        this.$put("alert/message", this.deleteBox).then(res => {
+      deleteMessage(deleltebox) {
+        this.$put("alert/message", deleltebox).then(res => {
           if (res.code === 200) {
             this.$message({duration: 2000, type: 'success', message: this.$t("tip.deleteSuccess")});
             this.deleteBox.show = false;
@@ -970,7 +772,7 @@ export default {
             this.storedScreanTableData = this.storedTableData
             this.screenModal = true;
             this.deleteBox.ids=[];
-            this.$refs.alertListTable.clearSelection();
+            this.$refs.alertListTable.$refs.alertListTable.clearSelection();
         },
         // 设置数据, filter区分
         setData(chartItem, seriesItem, panelId, filter,area,errorMsg) {

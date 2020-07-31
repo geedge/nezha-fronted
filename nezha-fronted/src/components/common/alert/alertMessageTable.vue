@@ -2,7 +2,12 @@
   @import '../../charts/chart';
 </style>
 <template>
-  <div class="content">
+  <div class="content relative-position">
+    <transition name="el-zoom-in-bottom">
+      <div class="el-popover alert-clean-pop" @click="toDeleteMessage(false)" v-if="deleteBox.ids.length > 0">
+        <i style="cursor: pointer" class="el-icon-delete"></i>
+      </div>
+    </transition>
     <!--表格-->
     <el-table
       class="nz-table tabelH100"
@@ -18,6 +23,7 @@
       @selection-change="selectChange"
       style="width: 100%;height: 100%"
       @sort-change="tableDataSort"
+      :id="projectAlertId"
     >
       <el-table-column
         :resizable="false"
@@ -224,7 +230,8 @@
       tableData:{},
       loading:{},
       tableHeight:{},
-      tableId:{}
+      tableId:{},
+      projectAlertId:{}
     },
     data() {
       vm = this;
@@ -618,8 +625,10 @@
         this.deleteBox.show = true;
       },
       deleteMessage() {
-        this.$emit('deleteMessage',this.deleteBox);
+        // this.$emit('deleteMessage',this.deleteBox);
+        console.log(this.deleteBox);
         this.deleteBox.show = false;
+        // this.deleteBox.ids=[];
       },
       selectChange(s) {
         let ids = [];
@@ -946,5 +955,8 @@
   }
   /deep/.el-tooltip{
     display: inline-block;
+  }
+  /deep/.alert-clean-pop.el-popover{
+    top: -30px;
   }
 </style>

@@ -1,96 +1,96 @@
 <template>
   <span>
-    <div class="alertLabelInfo" v-if="type==='asset'" v-loading="loading">
-      <div class="alertLabelBox">
-        <div class="alertLabelTitle">ID</div>
-        <div class="alertLabelValue">{{alertLabelData?alertLabelData.id:''}}</div>
+    <div class="alert-label-info" v-if="type==='asset'" v-loading="loading">
+      <div class="alert-label-box">
+        <div class="alert-label-title">ID</div>
+        <div class="alert-label-value">{{alertLabelData?alertLabelData.id:''}}</div>
       </div>
-      <div class="alertLabelBox">
-        <div class="alertLabelTitle">SN</div>
-        <div class="alertLabelValue">{{alertLabelData?alertLabelData.sn:''}}</div>
+      <div class="alert-label-box">
+        <div class="alert-label-title">SN</div>
+        <div class="alert-label-value">{{alertLabelData?alertLabelData.sn:''}}</div>
       </div>
-      <div class="alertLabelBox">
-        <div class="alertLabelTitle">Host</div>
-        <div class="alertLabelValue">{{alertLabelData?alertLabelData.host:''}}</div>
+      <div class="alert-label-box">
+        <div class="alert-label-title">Host</div>
+        <div class="alert-label-value">{{alertLabelData?alertLabelData.host:''}}</div>
       </div>
-      <div class="alertLabelBox">
-        <div class="alertLabelTitle">State</div>
-        <div class="alertLabelValue">{{alertLabelData?(alertStateStr(alertLabelData.state)):''}}</div>
+      <div class="alert-label-box">
+        <div class="alert-label-title">State</div>
+        <div class="alert-label-value">{{alertLabelData?(alertStateStr(alertLabelData.state)):''}}</div>
       </div>
-      <div class="alertLabelBox">
-        <div class="alertLabelTitle">Ping</div>
-        <div class="alertLabelValue">
+      <div class="alert-label-box">
+        <div class="alert-label-title">Ping</div>
+        <div class="alert-label-value">
           <div v-if="alertLabelData" :class="{'active-icon green':alertLabelData.pingStatus == 1,'active-icon red':alertLabelData.pingStatus == 0}"></div>
           <span v-if="alertLabelData">{{alertLabelData.pingRtt?alertLabelData.pingRtt+'ms':''}}</span>
         </div>
       </div>
-      <div class="alertLabelBox">
-        <div class="alertLabelTitle">Asset Type</div>
-        <div class="alertLabelValue">{{alertLabelData?alertLabelData.assetType:''}}</div>
+      <div class="alert-label-box">
+        <div class="alert-label-title">Asset Type</div>
+        <div class="alert-label-value">{{alertLabelData?alertLabelData.assetType:''}}</div>
       </div>
-      <div class="alertLabelBox">
-        <div class="alertLabelTitle">Vendor</div>
-        <div class="alertLabelValue">{{alertLabelData?alertLabelData.vendor:''}}</div>
+      <div class="alert-label-box">
+        <div class="alert-label-title">Vendor</div>
+        <div class="alert-label-value">{{alertLabelData?alertLabelData.vendor:''}}</div>
       </div>
-      <div class="alertLabelBox">
-        <div class="alertLabelTitle">Model</div>
-        <div class="alertLabelValue">{{alertLabelData?alertLabelData.model:''}}</div>
+      <div class="alert-label-box">
+        <div class="alert-label-title">Model</div>
+        <div class="alert-label-value">{{alertLabelData?alertLabelData.model:''}}</div>
       </div>
-      <div class="alertLabelBox">
-        <div class="alertLabelTitle">PingLastReply</div>
-        <div class="alertLabelValue">{{alertLabelData?alertLabelData.pingLastReply:''}}</div>
+      <div class="alert-label-box">
+        <div class="alert-label-title">PingLastReply</div>
+        <div class="alert-label-value">{{alertLabelData?alertLabelData.pingLastReply:''}}</div>
       </div>
-      <div class="alertLabelBox">
-        <div class="alertLabelTitle">Alert</div>
-        <div class="alertLabelValue">
+      <div class="alert-label-box">
+        <div class="alert-label-title">Alert</div>
+        <div class="alert-label-value">
           <span v-if="alertLabelData" :class="{danger:alertLabelData.alert>0,success:alertLabelData.alert<=0}">{{alertLabelData.alert + alertActiveStr()}}</span>
         </div>
       </div>
-      <div class="alertLabelBox">
-        <div class="alertLabelTitle">DC</div>
-        <div class="alertLabelValue">{{alertLabelData?alertLabelData.dataCenter:''}}</div>
+      <div class="alert-label-box">
+        <div class="alert-label-title">DC</div>
+        <div class="alert-label-value">{{alertLabelData?alertLabelData.dataCenter:''}}</div>
       </div>
-      <div class="alertLabelBox">
-        <div class="alertLabelTitle">Endpoint</div>
-        <div class="alertLabelValue">{{alertLabelData?alertLabelData.endpoint:''}}</div>
+      <div class="alert-label-box">
+        <div class="alert-label-title">Endpoint</div>
+        <div class="alert-label-value">{{alertLabelData?alertLabelData.endpoint:''}}</div>
       </div>
-      <div class="alertLabelBox">
-        <div class="alertLabelTitle">Administrator</div>
-        <div class="alertLabelValue">{{alertLabelData?alertLabelData.principal:''}}</div>
+      <div class="alert-label-box">
+        <div class="alert-label-title">Administrator</div>
+        <div class="alert-label-value">{{alertLabelData?alertLabelData.principal:''}}</div>
       </div>
   </div>
 
-    <div class="alertLabelInfo" v-if="type==='module'" v-loading="loading">
-      <div class="alertLabelBox">
-        <div class="alertLabelTitle">ID</div>
-        <div class="alertLabelValue">{{alertLabelData?alertLabelData.id:''}}</div>
+    <div class="alert-label-info" v-if="type==='module'" v-loading="loading">
+      <div class="alert-label-box">
+        <div class="alert-label-title">ID</div>
+        <div class="alert-label-value">{{alertLabelData?alertLabelData.id:''}}</div>
       </div>
-      <div class="alertLabelBox">
-        <div class="alertLabelTitle">Name</div>
-        <div class="alertLabelValue">{{alertLabelData?alertLabelData.name:''}}</div>
+      <div class="alert-label-box">
+        <div class="alert-label-title">Name</div>
+        <div class="alert-label-value">{{alertLabelData?alertLabelData.name:''}}</div>
       </div>
-      <div class="alertLabelBox">
-        <div class="alertLabelTitle">Project</div>
-        <div class="alertLabelValue">{{alertLabelData?alertLabelData.project.name:''}}</div>
+      <div class="alert-label-box">
+        <div class="alert-label-title">Project</div>
+        <div class="alert-label-value">{{alertLabelData?alertLabelData.project.name:''}}</div>
       </div>
-      <div class="alertLabelBox">
-        <div class="alertLabelTitle">Description</div>
-        <div class="alertLabelValue">{{alertLabelData?(alertLabelData.remark?alertLabelData.remark:'-'):''}}</div>
+      <div class="alert-label-box">
+        <div class="alert-label-title">Description</div>
+        <div class="alert-label-value">{{alertLabelData?(alertLabelData.remark?alertLabelData.remark:'-'):''}}</div>
       </div>
     </div>
 
-    <div class="alertLabelInfo" v-if="type==='project'" v-loading="loading">
-      <div class="alertLabelBox">
-        <div class="alertLabelTitle">ID</div>
-        <div class="alertLabelValue">{{alertLabelData?alertLabelData.id:''}}</div>
+    <div class="alert-label-info" v-if="type==='project'" v-loading="loading">
+      <div class="alert-label-box">
+        <div class="alert-label-title">ID</div>
+        <div class="alert-label-value">{{alertLabelData?alertLabelData.id:''}}</div>
       </div>
-      <div class="alertLabelBox">
-        <div class="alertLabelTitle">Name</div>
-        <div class="alertLabelValue">{{alertLabelData?alertLabelData.name:''}}</div>
+      <div class="alert-label-box">
+        <div class="alert-label-title">Name</div>
+        <div class="alert-label-value">{{alertLabelData?alertLabelData.name:''}}</div>
       </div>
-      <div class="alertLabelBox">
-        <div class="alertLabelTitle">Description</div>
-        <div class="alertLabelValue">{{alertLabelData?(alertLabelData.remark?alertLabelData.remark:'-'):''}}</div>
+      <div class="alert-label-box">
+        <div class="alert-label-title">Description</div>
+        <div class="alert-label-value">{{alertLabelData?(alertLabelData.remark?alertLabelData.remark:'-'):''}}</div>
       </div>
     </div>
   </span>
@@ -172,25 +172,25 @@
 </script>
 
 <style scoped>
-  .alertLabelInfo{
+  .alert-label-info{
     border: 1px solid #ebeef5;
     border-bottom: none;
     font-size: 13px;
     line-height: 26px;
   }
-  .alertLabelBox{
+  .alert-label-box{
     display: flex;
     justify-content:space-between;
     border-bottom: 1px solid #ebeef5;
   }
-  .alertLabelTitle{
+  .alert-label-title{
     text-align: left;
     width: 90px;
     border-right: 1px solid #ebeef5;
     color: #666;
     padding: 0 3px 0 13px;
   }
-  .alertLabelValue{
+  .alert-label-value{
     text-align: left;
     width: 150px;
     color: #1a1a1a;
