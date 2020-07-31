@@ -404,6 +404,7 @@
         });
       },
       getTableData: function (clearShowPanel) {
+
         this.$get('panel?type=dashboard').then(response => {
           if (response.code === 200) {
             this.panelData = response.data.list;
@@ -421,6 +422,8 @@
                 this.filter.panelId = this.showPanel.id;
                 this.getData(this.filter);
                 isInitData = true;
+              }else{
+                this.showPanel=response.data.list.find(item=>{return item.id == this.showPanel.id})
               }
               this.filter.panelId = this.showPanel.id;
             } else {
