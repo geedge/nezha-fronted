@@ -555,6 +555,8 @@
         this.showSuggestions=this.deepClone(suggestions)
         if(Object.keys(this.showSuggestions).length>0){
           this.showType=true;
+        }else{
+          this.showType=false
         }
         let scroll=this.$refs.scroll.wrap;
         scroll.scrollTop=0;
