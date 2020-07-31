@@ -625,10 +625,10 @@
         this.deleteBox.show = true;
       },
       deleteMessage() {
-        // this.$emit('deleteMessage',this.deleteBox);
+        this.$emit('deleteMessage',this.deleteBox);
         console.log(this.deleteBox);
         this.deleteBox.show = false;
-        // this.deleteBox.ids=[];
+        this.deleteBox.ids=[];
       },
       selectChange(s) {
         let ids = [];
