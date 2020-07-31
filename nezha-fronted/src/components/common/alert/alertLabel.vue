@@ -101,9 +101,6 @@
     name:"alertLabel",
     props:{
       id:{},
-      severityData:{
-        type:Array
-      },
       type:{},
       labelLoading:{},
       that:{}

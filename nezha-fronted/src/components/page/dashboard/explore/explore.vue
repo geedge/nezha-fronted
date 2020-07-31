@@ -195,7 +195,7 @@ instance_cpu_time_ns{app="fox", proc="widget", rev="4d3a513", env="prod", job="c
 
         </div>
         <transition name="right-box">
-          <chart-box v-if="rightBox.show" ref="addChartModal" @close="handleBox(false)" :panel-data="panelData" @on-create-success="createSuccess" :show-panel="{}"></chart-box>
+          <chart-box v-if="rightBox.show" :chart="chart" ref="addChartModal" @close="handleBox(false)" :panel-data="panelData" @on-create-success="createSuccess" :show-panel="{id: -1, name: ''}"></chart-box>
         </transition>
         <element-set
           :allowed-all="true"
@@ -258,7 +258,8 @@ instance_cpu_time_ns{app="fox", proc="widget", rev="4d3a513", env="prod", job="c
         saveDisabled: true,
         panelData: [],
         chartUnit:0,
-        historyParam:{useHistory:true,key:'expore-history'}
+        historyParam:{useHistory:true,key:'expore-history'},
+        chart: {},
       }
     },
     created() {
@@ -534,42 +535,37 @@ instance_cpu_time_ns{app="fox", proc="widget", rev="4d3a513", env="prod", job="c
       handleBox(show) {
         this.rightBox.show = show;
       },
-      saveChart: function () {
-        this.rightBox.show = true;
-        this.$nextTick(() => {
-          this.$refs.addChartModal.setTitle(this.$t("dashboard.panel.createChartTitle"));
-          let chart = {
-            id:'',
-            title: '',
-            type:'line',
-            span:12,
-            height:'400',
-            unit: this.chartUnit,
-            param:{
-              url:'',
-              threshold:'',
-            },
-            elements:[],
-            panel: '',
-            sync: 0
-          };
-          for (let i = 0; i < this.expressions.length; i++) {
-            if (this.expressions[i] !=  '') {
-              chart.elements.push({chartId: "", expression: this.expressions[i], type: 'expert'});
-            }
-          }
-          this.$refs.addChartModal.editData(chart);
+      saveChart() {
+        let chart = {
+          id:'',
+          title: '',
+          type:'line',
+          span:12,
+          height:'400',
+          unit: this.chartUnit,
+          param:{
+            url:'',
+            threshold:'',
+          },
+          elements:[],
+          panel: '',
+          sync: 0
+        };
+        this.expressions.forEach((exp) => {
+          chart.elements.push({expression: exp, legend: "", type: "expert", id: ""});
         });
+        this.chart = chart;
+        this.rightBox.show = true;
       },
       createSuccess(type, response, param, panel) { //添加chart成功
+        console.info(response, param, panel);
         this.$confirm(this.$t("dashboard.metric.goPanelTip"), this.$t("tip.saveSuccess"), {
           confirmButtonText: this.$t("tip.yes"),
           cancelButtonText: this.$t("tip.no"),
           type: 'success'
         }).then(() => {
           bus.$emit("menu-change", 'panel');
-          this.$store.state.showPanel.id = panel.id;
-          this.$store.state.showPanel.name = panel.name;
+          this.$store.commit("panelShowPanelChange", panel);
           this.$router.push({
             path: "/panel",
             query: {

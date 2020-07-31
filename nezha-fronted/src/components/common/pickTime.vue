@@ -9,12 +9,12 @@
         </button>
         <el-popover v-model="visible" placement="bottom-start" :width="50" trigger="click" popper-class="interval-refresh-popover" >
           <ul class="popover_ul">
-            <li v-for="i in intervalList" :style="{color:interval==i.value?'#31749C':''}" :key="i.value+i.name" @click="selectInterval(i)">
-              {{i.name}}
+            <li v-for="i in $CONSTANTS.intervalList" :style="{color:interval == i.value ? '#31749C' : ''}" :key="i.value + i.label" @click="selectInterval(i)">
+              {{i.label}}
             </li>
           </ul>
           <button type="button" style="border-radius: 0 4px 4px 0;" class="nz-btn nz-btn-size-normal nz-btn-style-light" slot="reference">
-            <span class="nz-btn nz-btn-text">{{interval.value != -1?interval.name:''}}&nbsp</span><i style="font-size: 12px" class="nz-icon nz-icon-arrow-down"></i>
+            <span class="nz-btn nz-btn-text">{{interval.value != -1 ? interval.label : ''}}&nbsp</span><i style="font-size: 12px" class="nz-icon nz-icon-arrow-down"></i>
           </button>
         </el-popover>
       </div>
@@ -58,25 +58,6 @@
         searchTime:[],
         visible: false,
         intervalTimer: null,
-        intervalList: [{
-          value: -1,
-          name: this.$t("dashboard.panel.refreshInterval.never"),
-        }, {
-          value: 30,
-          name: '30s',
-        }, {
-          value: 60,
-          name: '1m',
-        }, {
-          value: 300,
-          name: '5m',
-        }, {
-          value: 900,
-          name: '15m',
-        }, {
-          value: 1800,
-          name: '30m',
-        }],
         interval: -1,
         unit:2,
       }

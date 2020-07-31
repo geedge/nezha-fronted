@@ -74,10 +74,10 @@
     <!-- begin--表单-->
     <el-scrollbar class="right-box-form-box" ref="scrollbar">
       <el-form class="right-box-form  right-box-form-left" :model="editChart" label-width="120px" label-position="right" :rules="rules" ref="chartForm">
-        <!--<el-form-item :label="$t('dashboard.panel.title')" prop="panel" v-if="!showPanel.type">
+        <el-form-item :label="$t('dashboard.panel.title')" prop="panelName" v-if="showPanel.type == 'dashboard'">
           <el-autocomplete
             :fetch-suggestions="panelSuggestion"
-            v-model.trim="panelName2"
+            v-model.trim="editChart.panelName"
             placeholder=""
             size="small"
             value-key="name"
@@ -85,9 +85,9 @@
             popper-class="chart-box-autocomplete no-style-class"
           >
           </el-autocomplete>
-          <el-input size="small" v-if="editChart.id" readonly="readonly" :value="panelName2"></el-input>
+          <el-input size="small" v-if="editChart.id" readonly="readonly" :value="editChart.panelName"></el-input>
 
-        </el-form-item>-->
+        </el-form-item>
         <el-form-item :label='$t("dashboard.panel.chartForm.chartName")' prop="title">
           <el-input size="small" maxlength="64" show-word-limit v-model="editChart.title"></el-input>
         </el-form-item>
@@ -248,40 +248,7 @@
       return {
         editChart: {},
 
-        statisticsList:[
-          {
-            id:"min",
-            name:this.$t("dashboard.panel.chartForm.statisticsVal.min")
-          },
-          {
-            id:"max",
-            name:this.$t("dashboard.panel.chartForm.statisticsVal.max")
-          },
-          {
-            id:"average",
-            name:this.$t("dashboard.panel.chartForm.statisticsVal.average")
-          },
-          {
-            id:"total",
-            name:this.$t("dashboard.panel.chartForm.statisticsVal.total")
-          },
-          {
-            id:"first",
-            name:this.$t("dashboard.panel.chartForm.statisticsVal.first")
-          },
-          {
-            id:"last",
-            name:this.$t("dashboard.panel.chartForm.statisticsVal.last")
-          },
-          {
-            id:"range",
-            name:this.$t("dashboard.panel.chartForm.statisticsVal.range")
-          },
-          {
-            id:"different",
-            name:this.$t("dashboard.panel.chartForm.statisticsVal.different")
-          },
-        ],
+        statisticsList: this.$CONSTANTS.statisticsList,
 
         promqlCount: 1,
         promqlKeys: [],
@@ -295,6 +262,9 @@
         isSingleStat:false,
         isAlert:false,
         rules: {
+          panelName: [
+            {required: true,  message: this.$t('validate.required'),  trigger: 'change'}
+          ],
           title: [
             {required: true,  message: this.$t('validate.required'),  trigger: 'blur'}
           ],
@@ -366,9 +336,6 @@
       this.isUrl = false;
       this.isSingleStat = false;
       this.$nextTick(() => {
-        if(this.showPanel){
-          this.panelName2 = this.showPanel.name;
-        }
         this.initElements();
       });
     },
@@ -592,16 +559,18 @@
       addCharts(params) {
         let panelId;
         //先处理panel
-        if (this.showPanel&&this.showPanel.type!="dashboard") {
+        if (this.panelId) {
+          panelId = this.panelId;
+        } else if (this.showPanel && this.showPanel.type != "dashboard") {
           panelId = this.panelData[0].id;
         } else {
-          panelId = this.autocompleteExist(this.panelName2);
+          panelId = this.autocompleteExist(this.editChart.panelName);
           if (!panelId) {
-            this.$post('panel', {name: this.panelName2}).then(response => {
+            this.$post('panel', {name: this.editChart.panelName}).then(response => {
               if (response.code === 200) {
                 this.$emit("reloadOnlyPanel");
                 this.$store.commit('panelListChange', true);
-                panelId = this.autocompleteExist(this.panelName2);
+                panelId = this.autocompleteExist(this.editChart.panelName);
               } else {
                 if(response.msg){
                   this.$message.error(response.msg);
@@ -623,9 +592,8 @@
                 this.esc();
                 this.$message({duration: 1000, type: 'success', message: this.$t("tip.saveSuccess")});
                 this.$refs.chartForm.resetFields();//清空表单
-                this.panelName2 = '';
                 let panel = this.panelData.find(p => p.id === this.panelId);
-                this.$emit('on-create-success', 'create', response.data,params, panel);
+                this.$emit('on-create-success', 'create', response.data, params, panel);
               } else {
                 if(response.msg){
                   this.$message.error(response.msg);
@@ -868,7 +836,8 @@
       // 创建打开
       createData(panelId, elementInfo) {
         if (panelId == -1) {
-          this.panelId = this.panelData[0].id;
+          let p = this.panelData[0];
+          this.editChart.panelName = p.name;
         } else {
           this.panelId = panelId;
         }
@@ -1206,6 +1175,7 @@
         immediate: true,
         handler(n) {
           this.editChart = JSON.parse(JSON.stringify(n));
+          this.$set(this.editChart, "panelName", this.showPanel.name);
           if (n.id) {
             this.editData(this.editChart, this.showPanel.id);
           } else {
@@ -1213,6 +1183,15 @@
           }
         }
       },
+      editChart: {
+        deep: true,
+        handler(n) {
+          let panel = this.panelData.find(p => {
+            return p.name == n.panelName;
+          });
+          this.panelId = panel.id;
+        }
+      }
       /*panelData: {
         deep: true,
         immediate: true,

@@ -57,10 +57,10 @@
         <!--severity-->
         <el-form-item :label="$t('alert.severity')" prop="severity">
           <el-select popper-class="config-dropdown" v-model="editAlertRule.severity" placeholder=""  size="small">
-            <el-option :id="'alert-severity-'+item.key" v-for="item in severityData" :key="item.key" :label="item.value" :value="item.key">
-              <template v-if="!item.isEdit">{{item.value}}</template>
+            <el-option :id="'alert-severity-'+item.value" v-for="item in $CONSTANTS.alertMessage.severityData" :key="item.value" :label="item.label" :value="item.value">
+              <template v-if="!item.isEdit">{{item.label}}</template>
               <span class="config-dropdown-label-input" v-if="item.isEdit" @click.stop>
-                <el-input type="text" v-model="item.name" size="mini"></el-input>
+                <el-input type="text" v-model="item.value" size="mini"></el-input>
               </span>
             </el-option>
           </el-select>
@@ -155,20 +155,6 @@
             {type:'number',message:this.$t('validate.number')}
           ],
         },
-        severityData: [
-          {
-            key: 'medium',
-            value: this.$t("alert.config.medium")
-          },
-          {
-            key: 'high',
-            value: this.$t("alert.config.high")
-          },
-          {
-            key: 'low',
-            value: this.$t("alert.config.low")
-          }
-        ],
         operators:[
           {
             label:'==',
@@ -196,20 +182,7 @@
           },
         ],
         unitOptions: chartDataFormat.unitOptions(),
-        typeData: [
-          {
-            key: 1, //project
-            value: this.$t('alert.config.typeOption.project')
-          },
-          {
-            key: 2, //module
-            value: this.$t('alert.config.typeOption.module')
-          },
-          {
-            key: 3, //asset
-            value: this.$t('alert.config.typeOption.asset')
-          }
-        ],
+
         userData: [],
       }
     },

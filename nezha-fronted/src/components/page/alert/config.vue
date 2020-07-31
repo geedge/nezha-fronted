@@ -64,9 +64,9 @@
                   <span :title="$t('overall.delete')" @click="del(scope.row)" class="content-right-option" :id="'alert-del-'+scope.row.id"><i  class="el-icon-delete"></i></span>
                 </div>
                 <span v-else-if="item.prop == 'severity'">
-                <span v-if="scope.row[item.prop] == 'high'"><i class="el-icon-arrow-up"></i>&nbsp;{{severityData[1].value}}</span>
-                <span style="padding-left: 18px;" v-if="scope.row[item.prop] == 'medium'">{{severityData[0].value}}</span>
-                <span v-if="scope.row[item.prop] == 'low'"><i class="el-icon-arrow-down"></i>&nbsp;{{severityData[2].value}}</span>
+                <span v-if="scope.row[item.prop] == 'high'"><i class="el-icon-arrow-up"></i>&nbsp;{{$CONSTANTS.alertMessage.severityData.find(s => {return s.key == 'high'})}}</span>
+                <span style="padding-left: 18px;" v-if="scope.row[item.prop] == 'medium'">{{$CONSTANTS.alertMessage.severityData.find(s => {return s.key == 'medium'})}}</span>
+                <span v-if="scope.row[item.prop] == 'low'"><i class="el-icon-arrow-down"></i>&nbsp;{{$CONSTANTS.alertMessage.severityData.find(s => {return s.key == 'low'})}}</span>
               </span>
                 <template v-else-if="item.prop == 'alertNum'">
                   <span class="link" @click="queryMessage(scope.row)">{{scope.row.alertNum + ' ' + $t('overall.active')}}</span>
@@ -202,34 +202,6 @@
           pageSize: 50,
           total: 0
         },
-        severityData: [
-          {
-            key: 'medium',
-            value: this.$t("alert.config.medium")
-          },
-          {
-            key: 'high',
-            value: this.$t("alert.config.high")
-          },
-          {
-            key: 'low',
-            value: this.$t("alert.config.low")
-          }
-        ],
-        typeData: [
-          {
-            key: 1,
-            value: this.$t('alert.config.typeOption.project')
-          },
-          {
-            key: 2,
-            value: this.$t('alert.config.typeOption.module')
-          },
-          {
-            key: 3,
-            value: this.$t('alert.config.typeOption.asset')
-          }
-        ],
         tableTitle: [
           {
             label: 'ID',
@@ -504,9 +476,9 @@
           expr: obj.expr
         };
         let type = "";
-        for (let i = 0; i < this.typeData.length; i++) {
-          if (obj.type == this.typeData[i].key) {
-            type = this.typeData[i].value;
+        for (let i = 0; i < this.$CONSTANTS.alertMessage.typeData.length; i++) {
+          if (obj.type == this.$CONSTANTS.alertMessage.typeData[i].value) {
+            type = this.$CONSTANTS.alertMessage.typeData[i].label;
             break;
           }
         }
@@ -519,9 +491,7 @@
         }
         detail.link = link;
         detail.last = obj.last;
-        let severity = this.severityData.filter((item, index) => {
-          return obj.severity == item.key;
-        })[0].value;
+        let severity = this.$CONSTANTS.alertMessage.severityData.find(s => {return s.key == obj.severity});
         detail.severity = severity;
         detail.alertNum = obj.alertNum;
         detail.description = obj.description;

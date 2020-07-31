@@ -36,8 +36,8 @@ const store = new Vuex.Store({
       event_positionx: -200
     },
     showPanel:{
-      id:0,
-      name:'',
+      id: 0,
+      name: '',
       type: "dashboard"
     },
     consoleShow:false,//是否显示console窗口
@@ -79,6 +79,10 @@ const store = new Vuex.Store({
       state.currentAsset = asset;
     },
 
+    panelShowPanelChange(state, panel) { //用来panel页控制初始panel的
+      state.showPanel.id = panel.id;
+      state.showPanel.name = panel.name;
+    },
 
     setHeaderTable(state, data) { //设置table头部
       state.tablelable = data;

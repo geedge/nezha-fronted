@@ -228,7 +228,7 @@
     name: "endpointBox",
     props: {
       currentProject: Object,
-      currentModule: Object
+      currentModule: Object,
     },
     data() {
       return {

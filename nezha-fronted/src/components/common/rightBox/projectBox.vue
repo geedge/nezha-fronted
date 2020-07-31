@@ -43,12 +43,6 @@
     },
     data() {
       return {
-        rightBox: {
-          show: false,
-          title: '',
-          isCreate: false,
-          isEdit:false
-        },
         editProject: {},
         rules: {
           name: [

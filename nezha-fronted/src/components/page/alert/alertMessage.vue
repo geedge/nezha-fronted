@@ -79,7 +79,7 @@
                    v-if="scope.row[item.prop].alertName">{{scope.row[item.prop].alertName}}</div>-->
                 <span class="too-long-split" v-if="scope.row[item.prop].alertName" @mouseover="alertMessagehover(scope.row,scope.$index)">
                     <el-tooltip placement="right" effect="light">
-                      <alertRuleInfo slot="content" :id="scope.row.alertRule.id" :severityData="severityData" :messageLoad="scope.row.loading"></alertRuleInfo>
+                      <alertRuleInfo slot="content" :id="scope.row.alertRule.id" :messageLoad="scope.row.loading"></alertRuleInfo>
                       <span>{{scope.row[item.prop].alertName}}</span>
                     </el-tooltip>
                   </span>
@@ -99,9 +99,9 @@
                 <span v-else>-</span>
               </template>
               <span v-else-if="item.prop == 'severity'">
-                <span v-if="scope.row[item.prop] == 'high'"><i class="el-icon-arrow-up"></i>&nbsp;{{severityData[1].value}}</span>
-                <span style="padding-left: 18px;" v-if="scope.row[item.prop] == 'medium'">{{severityData[0].value}}</span>
-                <span v-if="scope.row[item.prop] == 'low'"><i class="el-icon-arrow-down"></i>&nbsp;{{severityData[2].value}}</span>
+                <span v-if="scope.row[item.prop] == 'high'"><i class="el-icon-arrow-up"></i>&nbsp;{{$CONSTANTS.alertMessage.severityData.find(s => {return s.key == 'high'})}}</span>
+                <span style="padding-left: 18px;" v-if="scope.row[item.prop] == 'medium'">{{$CONSTANTS.alertMessage.severityData.find(s => {return s.key == 'medium'})}}</span>
+                <span v-if="scope.row[item.prop] == 'low'"><i class="el-icon-arrow-down"></i>&nbsp;{{$CONSTANTS.alertMessage.severityData.find(s => {return s.key == 'low'})}}</span>
               </span>
               <!--<div v-else-if="item.prop == 'linkObject'">
                 <span v-if="(scope.row['type'] == 1 || scope.row['type'] == 2) && scope.row[item.prop]" class="link too-long-split"
@@ -409,20 +409,6 @@
         },
         tablelable: [],
         dropCol: [],
-        severityData: [
-          {
-            key: 'medium',
-            value: this.$t("alert.config.medium")
-          },
-          {
-            key: 'high',
-            value: this.$t("alert.config.high")
-          },
-          {
-            key: 'low',
-            value: this.$t("alert.config.low")
-          }
-        ],
         tableData: [],
         viewRuleData: {
           id: '',

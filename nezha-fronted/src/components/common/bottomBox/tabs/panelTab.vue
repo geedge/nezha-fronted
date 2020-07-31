@@ -99,22 +99,6 @@
           new Date(bus.computeTimezone(new Date().getTime()))
         ],
         intervalTimer: null,
-        intervalList: [{
-          value: 0,
-          name: this.$t("dashboard.panel.refreshInterval.never"),
-        }, {
-          value: 60,
-          name: this.$t("dashboard.panel.refreshInterval.oneMinute"),
-        }, {
-          value: 180,
-          name: this.$t("dashboard.panel.refreshInterval.threeMinutes"),
-        }, {
-          value: 300,
-          name: this.$t("dashboard.panel.refreshInterval.fiveMinutes"),
-        }, {
-          value: 600,
-          name: this.$t("dashboard.panel.refreshInterval.tenMinutes"),
-        }],
         interval: 0,
         panel: { //新增panel
           id: '',

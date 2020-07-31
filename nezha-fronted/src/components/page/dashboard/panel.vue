@@ -111,22 +111,6 @@
           new Date(bus.computeTimezone(new Date().getTime()))
         ],
         intervalTimer: null,
-        intervalList: [{
-          value: 0,
-          name: this.$t("dashboard.panel.refreshInterval.never"),
-        }, {
-          value: 60,
-          name: this.$t("dashboard.panel.refreshInterval.oneMinute"),
-        }, {
-          value: 180,
-          name: this.$t("dashboard.panel.refreshInterval.threeMinutes"),
-        }, {
-          value: 300,
-          name: this.$t("dashboard.panel.refreshInterval.fiveMinutes"),
-        }, {
-          value: 600,
-          name: this.$t("dashboard.panel.refreshInterval.tenMinutes"),
-        }],
         interval: 0,
         showPanel: { //panel下拉列表
           id: '',
@@ -352,8 +336,8 @@
         this.getData(this.filter);
       },
       // 图表创建成功，回调panel页面，进行图表的刷新
-      createSuccess(msg, data, params) {
-        this.filter.panelId = this.showPanel.id;
+      createSuccess(msg, data, params, panel) {
+        this.filter.panelId = this.panel.id;
         this.getData(this.filter);
       },
       // 获取数据,用在子页面
@@ -411,8 +395,8 @@
             this.dataTotalListBak=[...response.data.list]
             let isInitData = false;
             if (response.data.list.length > 0) {
-              if (this.$store.state.showPanel.id !== 0 && this.$store.state.showPanel.name !== '') {
-                this.showPanel = this.$store.state.showPanel;
+              if (this.$store.state.showPanel.id > 0 && this.$store.state.showPanel.name) {
+                this.showPanel = JSON.parse(JSON.stringify(this.$store.state.showPanel));
               }
               if (clearShowPanel) {
                 this.showPanel.id = '';
@@ -688,7 +672,7 @@
     computed: {
       refreshPanel() {
         return this.$store.state.panelListReload;
-      }
+      },
     },
     watch: {
       refreshPanel(n, o) {
@@ -702,7 +686,7 @@
         setTimeout(function(){
           temp.search();
         },1000)
-      }
+      },
     }
   }
 </script>

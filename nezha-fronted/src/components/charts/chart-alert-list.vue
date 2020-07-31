@@ -269,20 +269,6 @@ export default {
         toTopBtnTop: this.$tableHeight.toTopBtnTop, //to-top按钮的top属性
         tableHover: false, //控制滚动条和top按钮同时出现
         showTopBtn: false,
-        severityData: [
-          {
-            key: 'medium',
-            value: this.$t("alert.config.medium")
-          },
-          {
-            key: 'high',
-            value: this.$t("alert.config.high")
-          },
-          {
-            key: 'low',
-            value: this.$t("alert.config.low")
-          }
-        ],
         graphShow: false,
         chartDatas: [],
         chartUnit:5,

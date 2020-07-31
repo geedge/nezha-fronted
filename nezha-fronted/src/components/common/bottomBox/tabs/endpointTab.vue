@@ -14,12 +14,13 @@
         <export-excel
           export-file-name="endpoint"
           export-url="/endpoint/export"
+          import-url="/endpoint/import"
           :params="searchLabel"
           @afterImport="getTableData"
           class="margin-l-20"
         >
           <template slot="optionZone">
-            <button @click.stop="toAdd" :title="$t('overall.createEndpoint')" class="nz-btn nz-btn-size-normal nz-btn-style-light" id="project-create-project">
+            <button @click.stop="add" :title="$t('overall.createEndpoint')" class="nz-btn nz-btn-size-normal nz-btn-style-light" id="project-create-project">
               <i class="nz-icon nz-icon-create-square"></i>
             </button>
           </template>
@@ -93,8 +94,12 @@
       :path="'/assetEndpoint'"
       ref="elementset"
     ></element-set>
-    <add-endpoint-box :currentProject="currentProject" :module="currentModule" @reload="getTableData" ref="addEndpointBox"></add-endpoint-box>
-    <edit-endpoint-box @close="closeEditEndpoint" v-if="editBoxShow" :currentProject="endpoint.project" :currentModule="endpoint.module" :endpoint="endpoint" @reload="getTableData" ref="editEndpointBox"></edit-endpoint-box>
+    <transition name="right-box">
+      <add-endpoint-box v-if="rightBox.add.show" :current-project="currentProject" :current-module="currentModule" @close="closeRightBox" ref="addEndpointBox"></add-endpoint-box>
+    </transition>
+    <transition name="right-box">
+      <edit-endpoint-box v-if="rightBox.edit.show" :current-project="currentProject" :current-module="currentModule" :endpoint="endpoint" @close="closeRightBox" ref="editEndpointBox"></edit-endpoint-box>
+    </transition>
   </span>
 </template>
 
@@ -110,11 +115,12 @@
     },
     data() {
       return {
-        showAddBox: false,
-        editBoxShow: false,
+        rightBox: {
+          add: {show: false},
+          edit: {show: false},
+        },
         endpoint: {}, //用来查看详情和编辑的对象
-        endpointDetail: {}, //用来查看详情的对象
-        asset: {}, //对应props的obj
+        //asset: {}, //对应props的obj
         showTopBtn: false, //top按钮是否显示
         toTopBtnTop: this.$tableHeight.toTopBtnTop, //to-top按钮的top属性
         tableHover: false, //控制滚动条和top按钮同时出现
@@ -218,14 +224,12 @@
           }
         });
       },
-      query(endpoint) {
-
-      },
-      detail(endpoint) {
-
-      },
-      closeEditEndpoint() {
-        this.editBoxShow = false;
+      closeRightBox(refresh) {
+        this.rightBox.add.show = false;
+        this.rightBox.edit.show = false;
+        if (refresh) {
+          this.getTableData();
+        }
       },
       toEdit(endpoint) {
         this.endpoint = JSON.parse(JSON.stringify(endpoint));
@@ -238,9 +242,8 @@
           this.$refs.editEndpointBox.toEdit(true, this.endpoint.id);
         });
       },
-      toAdd() {
-        this.$refs.addEndpointBox.show(true);
-        this.$refs.addEndpointBox.clearEndpoints();
+      add() {
+        this.rightBox.add.show = true;
       },
       search(searchObj) {
         let orderBy = '';

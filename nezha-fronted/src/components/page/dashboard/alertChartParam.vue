@@ -36,7 +36,6 @@
 
     },
     data(){
-      let $temp=this;
       return{
         parameters:{
           select:[],
@@ -51,30 +50,8 @@
           // lazyLoad:$temp.lazyLoadFunc,
         },
         alertRules:[],
-        levels:[
-          {
-            value: 'medium',
-            label: $temp.$t("alert.config.medium")
-          },
-          {
-            value: 'high',
-            label: $temp.$t("alert.config.high")
-          },
-          {
-            value: 'low',
-            label: $temp.$t("alert.config.low")
-          }
-        ],
-        states:[
-          {
-            value: '1',
-            label:$temp.$t('alert.list.pending')
-          },
-          {
-            value: '2',
-            label:$temp.$t('alert.list.expired')
-          }
-        ],
+        levels: this.$CONSTANTS.alertMessage.levels,
+        states: this.$CONSTANTS.alertMessage.states,
       }
     },
     created() {

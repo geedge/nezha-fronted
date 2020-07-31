@@ -158,9 +158,6 @@
         },
 
         tableId: 'promTable', //需要分页的table的id，用于记录每页数量
-        rightBox: { //弹出框相关
-          show: false,
-        },
         promServer: {},
         blankPromServer: {
           id: '',
@@ -272,8 +269,8 @@
         detail.push({label: "Port", value: obj.port});
         let type = "";
         for (let i = 0; i < this.$CONSTANTS.promServer.typeData.length; i++) {
-          if (obj.value == this.typeData[i].type) {
-            type = this.typeData[i].label;
+          if (obj.value == this.$CONSTANTS.promServer.typeData[i].type) {
+            type = this.$CONSTANTS.promServer.typeData[i].label;
             break;
           }
         }

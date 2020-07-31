@@ -15,9 +15,9 @@
     <div class="alert-rule-box">
       <div class="alert-rule-title">Level</div>
       <div class="alert-rule-value">
-        <span v-if="alertRuleData && alertRuleData.severity === 'high'"><i class="el-icon-arrow-up"></i>&nbsp;{{severityData[1].value}}</span>
-        <span style="padding-left: 18px;" v-if="alertRuleData && alertRuleData.severity === 'medium'">{{severityData[0].value}}</span>
-        <span v-if="alertRuleData && alertRuleData.severity === 'low'"><i class="el-icon-arrow-down"></i>&nbsp;{{severityData[2].value}}</span>
+        <span v-if="alertRuleData && alertRuleData.severity === 'high'"><i class="el-icon-arrow-up"></i>&nbsp;{{$CONSTANTS.alertMessage.severityData.find(s => {return s.key == 'high'})}}</span>
+        <span style="padding-left: 18px;" v-if="alertRuleData && alertRuleData.severity === 'medium'">{{$CONSTANTS.alertMessage.severityData.find(s => {return s.key == 'medium'})}}</span>
+        <span v-if="alertRuleData && alertRuleData.severity === 'low'"><i class="el-icon-arrow-down"></i>&nbsp;{{$CONSTANTS.alertMessage.severityData.find(s => {return s.key == 'low'})}}</span>
       </div>
     </div>
   </div>
@@ -29,9 +29,6 @@
 		name:"alert-rule-info",
     props:{
 		  id:{},
-      severityData:{
-        type:Array
-      },
       messageLoad:{},
     },
     watch:{

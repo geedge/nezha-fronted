@@ -288,20 +288,6 @@
         },
         tablelable: [],
         dropCol: [],
-        severityData: [
-          {
-            key: 'medium',
-            value: this.$t("alert.config.medium")
-          },
-          {
-            key: 'high',
-            value: this.$t("alert.config.high")
-          },
-          {
-            key: 'low',
-            value: this.$t("alert.config.low")
-          }
-        ],
         tableData: [],
         viewRuleData: {
           id: '',

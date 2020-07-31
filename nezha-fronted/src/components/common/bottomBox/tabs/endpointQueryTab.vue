@@ -168,30 +168,28 @@
         this.$emit('changeTab', tab);
       },
       saveChart() { //新增chart
-        this.rightBox.show = true;
-        this.$nextTick(() => {
-          let chart = {
-            id:'',
-            title: '',
-            type:'line',
-            span:12,
-            height:'400',
-            unit: this.chartUnit,
-            param: {
-              url:'',
-              threshold: '',
-            },
-            elements:[],
-            panel: '',
-            sync: 0
-          };
-          for (let i = 0; i < this.selectedEndpoints.length; i++) {
-            if (this.selectedEndpoints[i] && this.selectedEndpoints[i].element !=  '') {
-              chart.elements.push({chartId: "", expression: this.selectedEndpoints[i].element, type: 'expert'});
-            }
+        let chart = {
+          id:'',
+          title: '',
+          type:'line',
+          span:12,
+          height:'400',
+          unit: this.chartUnit,
+          param: {
+            url:'',
+            threshold: '',
+          },
+          elements:[],
+          panel: '',
+          sync: 0
+        };
+        for (let i = 0; i < this.selectedEndpoints.length; i++) {
+          if (this.selectedEndpoints[i] && this.selectedEndpoints[i].element !=  '') {
+            chart.elements.push({chartId: "", expression: this.selectedEndpoints[i].element, type: 'expert'});
           }
-          this.chart = chart;
-        });
+        }
+        this.chart = chart;
+        this.rightBox.show = true;
       },
       dropdownHandler(show) {
         if (show) {
