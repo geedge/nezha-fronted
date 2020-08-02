@@ -1,6 +1,6 @@
 <template>
   <div class="header">
-    <div class="logo link" @click="jumpTo('overview')"><img height="45" src="../../assets/img/logo.png"/></div>
+    <div class="logo link" @click="jumpTo('overview', 'dashboards')"><img height="45" src="../../assets/img/logo.png"/></div>
     <el-menu
       class="nz-menu float-right"
       mode="horizontal"
@@ -40,25 +40,25 @@
       </el-menu-item>
       <el-submenu index="1" popper-class="nz-submenu">
         <template slot="title">
-          <div @click="jumpTo('overview')" :class ="(activeIndex == 'overview' ||activeIndex == 'panel' || activeIndex == 'explore') ? 'menu-active' :'' " >
+          <div @click="jumpTo('overview', 'dashboards')" :class ="(activeIndex == 'overview' ||activeIndex == 'panel' || activeIndex == 'explore') ? 'menu-active' :'' " >
             {{$t('overall.dashboard')}}
           </div>
         </template>
         <el-menu-item index="1-0">
-          <div @click="jumpTo('overview')" :class="{'menu-item-active' :activeIndex == 'overview'}" >{{$t('dashboard.overview.title')}}</div>
+          <div @click="jumpTo('overview', 'dashboards')" :class="{'menu-item-active' :activeIndex == 'overview'}" >{{$t('dashboard.overview.title')}}</div>
         </el-menu-item>
         <el-menu-item index="1-1">
-          <div @click="jumpTo('panel')" :class="{'menu-item-active' :activeIndex == 'panel'}" >{{$t('dashboard.panel.title')}}</div>
+          <div @click="jumpTo('panel', 'dashboards')" :class="{'menu-item-active' :activeIndex == 'panel'}" >{{$t('dashboard.panel.title')}}</div>
         </el-menu-item>
         <el-menu-item index="1-2">
-          <div @click="jumpTo('explore')" :class="{'menu-item-active' :activeIndex == 'explore'}">{{$t('dashboard.metricPreview.title')}}</div>
+          <div @click="jumpTo('explore', 'dashboards')" :class="{'menu-item-active' :activeIndex == 'explore'}">{{$t('dashboard.metricPreview.title')}}</div>
         </el-menu-item>
       </el-submenu>
 
       <el-submenu index="3" popper-class="nz-submenu">
         <template slot="title">
           <div v-if="assetData.length == 0">{{$t('overall.asset')}}</div>
-          <div v-else @click="jumpTo('asset')" :class="{'menu-active' : activeIndex == 'asset'}">{{$t('overall.asset')}}</div>
+          <div v-else @click="jumpTo('asset', 3)" :class="{'menu-active' : activeIndex == 'asset'}">{{$t('overall.asset')}}</div>
         </template>
         <template>
           <el-menu-item v-if="assetData.length == 0" index="3-0"><div @click="createBox({type: 6})"><i class="nz-icon nz-icon-create-square header-dropdown-add"></i>&nbsp;&nbsp;{{$t("overall.createDatacenter")}}</div></el-menu-item>
@@ -74,7 +74,7 @@
       <el-submenu index="2" popper-class="nz-submenu">
         <template slot="title">
           <div v-if="projectData.length == 0">{{$t('overall.project')}}</div>
-          <div v-else @click="jumpToProject(projectData[0], 0)" :class ="activeIndex == 'project' ? 'menu-active' :''" >{{$t('overall.project')}}</div>
+          <div v-else @click="jumpToProject(projectData[0])" :class ="activeIndex == 'project' ? 'menu-active' :''" >{{$t('overall.project')}}</div>
         </template>
         <template>
           <el-menu-item v-if="projectData.length == 0" index="2-0"><div @click="createBox({type: 1})"><i class="nz-icon nz-icon-create-square header-dropdown-add"></i>&nbsp;&nbsp;{{$t("overall.createProject")}}</div></el-menu-item>
@@ -88,44 +88,44 @@
           </template>
         </template>
       </el-submenu>
-      <el-submenu index="4-0" popper-class="nz-submenu">
+      <el-submenu index="4" popper-class="nz-submenu">
         <template slot="title">
-          <div @click="jumpTo('alertList')" :class ="activeIndex == 'alertList' || activeIndex == 'alertConfig' ? 'menu-active' :''">{{$t('overall.alert')}}</div>
+          <div @click="jumpTo('alertList', 'alerts')" :class ="activeIndex == 'alertList' || activeIndex == 'alertConfig' ? 'menu-active' :''">{{$t('overall.alert')}}</div>
         </template>
         <el-menu-item index="4-1">
-          <div @click="jumpTo('alertList')" :class ="activeIndex == 'alertList' ? 'menu-item-active' :''">{{$t('alert.message')}}</div>
+          <div @click="jumpTo('alertList', 'alerts')" :class ="activeIndex == 'alertList' ? 'menu-item-active' :''">{{$t('alert.message')}}</div>
         </el-menu-item>
         <el-menu-item index="4-2">
-          <div @click="jumpTo('alertConfig')" :class ="activeIndex == 'alertConfig' ? 'menu-item-active' :''">{{$t('alert.rule')}}</div>
+          <div @click="jumpTo('alertConfig', 'alerts')" :class ="activeIndex == 'alertConfig' ? 'menu-item-active' :''">{{$t('alert.rule')}}</div>
         </el-menu-item>
       </el-submenu>
       <el-submenu index="5" popper-class="nz-submenu">
         <template slot="title">
-          <div @click="jumpTo('account')" :class ="activeIndex == 'account' || activeIndex == 'promServer' || activeIndex == 'dc' || activeIndex == 'model' || activeIndex == 'mib' || activeIndex == 'system' || activeIndex == 'terminallog' || activeIndex == 'operationlog' ? 'menu-active' :''">{{$t('overall.config')}}</div>
+          <div @click="jumpTo('account', 'settings')" :class ="activeIndex == 'account' || activeIndex == 'promServer' || activeIndex == 'dc' || activeIndex == 'model' || activeIndex == 'mib' || activeIndex == 'system' || activeIndex == 'terminallog' || activeIndex == 'operationlog' ? 'menu-active' :''">{{$t('overall.config')}}</div>
         </template>
         <el-menu-item index="5-0">
-          <div @click="jumpTo('account')" :class="{'menu-item-active' :(activeIndex == 'account' )}">{{$t('config.account.account')}}</div>
+          <div @click="jumpTo('account', 'settings')" :class="{'menu-item-active' :(activeIndex == 'account' )}">{{$t('config.account.account')}}</div>
         </el-menu-item>
         <el-menu-item index="5-1">
-          <div @click="jumpTo('promServer')" :class="{'menu-item-active' :(activeIndex == 'promServer' )}">{{$t('config.promServer.promServerList')}}</div>
+          <div @click="jumpTo('promServer', 'settings')" :class="{'menu-item-active' :(activeIndex == 'promServer' )}">{{$t('config.promServer.promServerList')}}</div>
         </el-menu-item>
         <el-menu-item index="5-2">
-          <div @click="jumpTo('dc')" :class="{'menu-item-active' :(activeIndex == 'dc' )}">{{$t('config.dc.dc')}}</div>
+          <div @click="jumpTo('dc', 'settings')" :class="{'menu-item-active' :(activeIndex == 'dc' )}">{{$t('config.dc.dc')}}</div>
         </el-menu-item>
         <el-menu-item index="5-3">
-          <div @click="jumpTo('model')" :class="{'menu-item-active' :(activeIndex == 'model' )}">{{$t('config.model.model')}}</div>
+          <div @click="jumpTo('model', 'settings')" :class="{'menu-item-active' :(activeIndex == 'model' )}">{{$t('config.model.model')}}</div>
         </el-menu-item>
         <el-menu-item index="5-4">
-          <div @click="jumpTo('mib')" :class="{'menu-item-active' :(activeIndex == 'mib' )}">{{$t('config.mib.mib')}}</div>
+          <div @click="jumpTo('mib', 'settings')" :class="{'menu-item-active' :(activeIndex == 'mib' )}">{{$t('config.mib.mib')}}</div>
         </el-menu-item>
         <el-menu-item index="5-5">
-          <div @click="jumpTo('system')" :class="{'menu-item-active' :(activeIndex == 'system' )}">{{$t('config.system.system')}}</div>
+          <div @click="jumpTo('system', 'settings')" :class="{'menu-item-active' :(activeIndex == 'system' )}">{{$t('config.system.system')}}</div>
         </el-menu-item>
         <el-menu-item index="5-6">
-          <div @click="jumpTo('terminallog')" :class="{'menu-item-active' :(activeIndex == 'terminallog' )}">{{$t('config.terminallog.terminallog')}}</div>
+          <div @click="jumpTo('terminallog', 'settings')" :class="{'menu-item-active' :(activeIndex == 'terminallog' )}">{{$t('config.terminallog.terminallog')}}</div>
         </el-menu-item>
         <el-menu-item index="5-7">
-          <div @click="jumpTo('operationlog')" :class="{'menu-item-active' :(activeIndex == 'operationlog' )}">{{$t('config.operationlog.operationlog')}}</div>
+          <div @click="jumpTo('operationlog', 'settings')" :class="{'menu-item-active' :(activeIndex == 'operationlog' )}">{{$t('config.operationlog.operationlog')}}</div>
         </el-menu-item>
       </el-submenu>
       <el-submenu index="6" popper-class="nz-submenu">
@@ -278,7 +278,11 @@
       cli(){
         this.$store.commit('openConsole');
       },
-      jumpTo(data) {
+      jumpTo(data, parentMenu) {
+        localStorage.setItem("nz-parent-menu", parentMenu);
+        localStorage.setItem("nz-menu", "/" + data);
+        bus.$emit("parent-menu-change", parentMenu);
+        bus.$emit("menu-change", "/" + data);
         if (data != "asset") {
           this.activeItemIndexes = [];
           this.$store.state.assetData = {selectedData: [], step: 0, type: -1};
@@ -338,13 +342,13 @@
       jumpToAsset(asset) {
         this.activeItemIndex = asset.id;
         this.$store.commit('currentAssetChange', asset);
-        this.jumpTo('asset');
+        this.jumpTo('asset', "assets");
       },
       jumpToProject(p) {
         this.currentProject = p;
         this.$store.commit('currentProjectChange', p);
         this.activeItemIndex = p.id;
-        this.jumpTo('project');
+        this.jumpTo('project', 'projects');
       },
       getAssetData() {
         this.$get('idc', {pageSize:-1}).then(response => {
@@ -418,6 +422,7 @@
         this.rightBox.project.show = true;
       },
       logout() {
+        localStorage.setItem("nz-parent-menu", "dashboards");
         this.$get('logout');
         this.jumpTo('login');
       },
@@ -446,9 +451,11 @@
       // 刷新后有高亮
       let activePath = this.$route.path.slice(1);
       this.activeIndex = activePath;
-      bus.$on("menu-change", (menu) => {
-        this.activeIndex = menu;
+
+      bus.$on("menu-change", menu => {
+        this.activeIndex = menu.split("/")[1];
       });
+
       bus.$on('login', () => {
         this.username = sessionStorage.getItem("nz-username");
         this.refreshLang();
@@ -472,14 +479,13 @@
       },
       linkData(){
         return this.$store.getters.getLinkData;
-      }
+      },
     },
     watch: {
       projectListChange(n) {
         this.getProjectList();
       },
       dcListChange(n) {
-        console.info(n)
         this.getAssetData();
       },
       currentProjectChange(n, o) {

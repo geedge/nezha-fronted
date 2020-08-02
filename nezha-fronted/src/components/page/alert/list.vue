@@ -18,53 +18,33 @@
 </style>
 <template>
   <div class="list">
-    <left-menu >
-      <div slot="content-left" class="slot-content">
-      <div class="sidebar-title">{{$t('alert.alert')}}</div>
-      <div class="sidebar-info">
-        <div class="sidebar-info-item sidebar-info-top sidebar-info-item-active">{{$t('alert.alertList')}}</div>
-        <div class="sidebar-info-item" @click="jumpTo('alertConfig')" id="alert-jump-config">
-          {{$t('alert.alertConfig')}}
+    <div class="main-list main-and-sub-transition" :class="{'main-list-with-sub': showSubList}">
+      <div class="top-tools" v-show="mainResizeShow">
+        <div class="top-tool-main-right" :class="{'top-tool-main-right-to-left': showSubList}">
+          <div class="top-tool-search">
+            <search-input :searchMsg="searchMsg" @search="search" :inTransform="inTransform"></search-input>
+          </div>
+          <button type="button" @click="showExportDialog" :title="$t('overall.exportExcelLower')"
+                  class="nz-btn nz-btn-size-normal nz-btn-style-light margin-l-20" id="alert-list-export">
+            <i class="el-icon-download"></i>
+          </button>
         </div>
+        <div class="pagination-top pagination-top-hide display-none"></div>
+      </div>
+      <alertMessageTable
+        :tableData="tableData"
+        :loading="loading"
+        :tableHeight="mainTableHeight"
+        :tableId="tableId"
+        @tableDataSort="tableDataSort"
+        @deleteMessage="deleteMessage"
+      ></alertMessageTable>
+      <div class="pagination-bottom" v-show="!showSubList">
+        <Pagination :tableId="tableId" :pageObj="pageObj" @pageNo='pageNo' @pageSize='pageSize' ref="Pagination"></Pagination>
       </div>
     </div>
-      <div slot="content-right" class="slot-content">
-        <div class="main-list main-and-sub-transition" :class="{'main-list-with-sub': showSubList}">
-          <div class="top-tools" v-show="mainResizeShow">
-            <div class="top-tool-main-right" :class="{'top-tool-main-right-to-left': showSubList}">
-              <div class="top-tool-search">
-                <search-input :searchMsg="searchMsg" @search="search" :inTransform="inTransform"></search-input>
-              </div>
-              <button type="button" @click="showExportDialog" :title="$t('overall.exportExcelLower')"
-                      class="nz-btn nz-btn-size-normal nz-btn-style-light margin-l-20" id="alert-list-export">
-                <i class="el-icon-download"></i>
-              </button>
-            </div>
-            <div class="pagination-top pagination-top-hide display-none"></div>
-          </div>
-          <alertMessageTable
-            :tableData="tableData"
-            :loading="loading"
-            :tableHeight="mainTableHeight"
-            :tableId="tableId"
-            @tableDataSort="tableDataSort"
-            @deleteMessage="deleteMessage"
-          ></alertMessageTable>
-          <div class="pagination-bottom" v-show="!showSubList">
-            <Pagination :tableId="tableId" :pageObj="pageObj" @pageNo='pageNo' @pageSize='pageSize' ref="Pagination"></Pagination>
-          </div>
-        </div>
-        <bottom-box v-if="showSubList" :show-sub-list="showSubList" :subResizeShow="subResizeShow" :isFullScreen="isFullScreen" :from="'alertMessage'" :targetTab.sync="targetTab" :detailList="tabDetailList"
-                    @closeSubList="showSubList = false" @fullScreen="fullScreen" @exitFullScreen="exitFullScreen" @listResize="listResize" :tabList="tabList"></bottom-box>
-      </div>
-    </left-menu>
-    <!--<alert-config-box :parentAlertRule="viewRuleData" @reload="getAlertList" ref="alertConfigBox"></alert-config-box>
-    <project-box :project="viewProjectData" ref="projectBox" @reload="getAlertList"></project-box>
-    <module-box :module="viewModuleData" @reload="getAlertList" ref="moduleBox"></module-box>-->
-    <!--<asset-edit-unit :edit-unit-show='viewAssetState' @refreshData="getAlertList" @sendStateData="tabControl"
-                     ref="assetEditUnit"></asset-edit-unit>-->
-    <!--<asset-box :edit-unit-show='viewAssetState' @refreshData="getAlertList" @sendStateData="tabControl"
-               ref="assetEditUnit"></asset-box>-->
+    <bottom-box v-if="showSubList" :show-sub-list="showSubList" :subResizeShow="subResizeShow" :isFullScreen="isFullScreen" :from="'alertMessage'" :targetTab.sync="targetTab" :detailList="tabDetailList"
+                @closeSubList="showSubList = false" @fullScreen="fullScreen" @exitFullScreen="exitFullScreen" @listResize="listResize" :tabList="tabList"></bottom-box>
     <element-set
       v-clickoutside="elementsetHide"
       :table-title="tableTitle"
@@ -127,7 +107,6 @@
   import alertRuleInfo from '../../common/alert/alertRuleInfo'
   import alertLabel from '../../common/alert/alertLabel'
   import alertMessageTable from '@/components/common/alert/alertMessageTable.vue'
-  var vm;
   export default {
     name: "alertList",
     components: {
@@ -138,7 +117,6 @@
       'alertMessageTable':alertMessageTable,
     },
     data() {
-      vm = this;
       return {
         loading: false,
         /*二级列表相关*/

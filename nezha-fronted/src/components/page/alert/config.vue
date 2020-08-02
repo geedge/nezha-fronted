@@ -5,103 +5,90 @@
 </style>
 <template>
   <div class="config">
-    <left-menu >
-      <div slot="content-left" class="slot-content">
-        <div class="sidebar-title">{{$t('alert.alert')}}</div>
-        <div class="sidebar-info">
-          <div class="sidebar-info-item sidebar-info-top" @click="jumpTo('alertList')" id="alert-jump-alertlist">
-            {{$t('alert.alertList')}}
+    <div class="main-list" :class="{'main-list-with-sub': bottomBox.showSubList}">
+      <div class="main-modal"></div>
+      <div class="top-tools" v-show="bottomBox.mainResizeShow">
+        <div class="top-tool-main-right" :class="{'top-tool-main-right-to-left': bottomBox.showSubList}">
+          <div class="top-tool-search float-right">
+            <search-input :searchMsg="searchMsg" @search="search" :bottomBox.inTransform="bottomBox.inTransform"></search-input>
           </div>
-          <div class="sidebar-info-item sidebar-info-item-active">{{$t('alert.alertConfig')}}</div>
+          <button id="alert-add" @click="add"  :title="$t('overall.createAlertRule')"
+                  class="nz-btn nz-btn-size-normal nz-btn-style-light margin-l-20">
+            <i class="nz-icon-create-square nz-icon"></i>
+          </button>
         </div>
+        <div class="pagination-top pagination-top-hide display-none"></div>
       </div>
-      <div slot="content-right" class="slot-content">
-        <div class="main-list" :class="{'main-list-with-sub': bottomBox.showSubList}">
-          <div class="main-modal"></div>
-          <div class="top-tools" v-show="bottomBox.mainResizeShow">
-            <div class="top-tool-main-right" :class="{'top-tool-main-right-to-left': bottomBox.showSubList}">
-              <div class="top-tool-search float-right">
-                <search-input :searchMsg="searchMsg" @search="search" :bottomBox.inTransform="bottomBox.inTransform"></search-input>
-              </div>
-              <button id="alert-add" @click="add"  :title="$t('overall.createAlertRule')"
-                      class="nz-btn nz-btn-size-normal nz-btn-style-light margin-l-20">
-                <i class="nz-icon-create-square nz-icon"></i>
-              </button>
+      <el-table
+        class="nz-table"
+        :data="tableData"
+        border
+        v-show="bottomBox.mainResizeShow"
+        ref="alertRuleTable"
+        tooltip-effect="light"
+        :height="mainTableHeight"
+        v-scrollBar:el-table="'large'"
+        v-loading="tools.loading"
+        :cell-class-name="messageStyle"
+        style="width: 100%;"
+        @sort-change="tableDataSort"
+      >
+        <el-table-column
+          :resizable="false"
+          v-for="(item, index) in tools.tablelable"
+          v-if="item.show"
+          :width="item.width"
+          :key="`col-${index}`"
+          :label="item.label"
+          show-overflow-tooltip
+          min-width="110px"
+          :sort-orders="['ascending', 'descending']"
+          :sortable="sortableShow(item.prop)"
+          :prop="propTitle(item.prop)"
+        >
+          <template slot-scope="scope" :column="item">
+            <div v-if="item.prop == 'option'" class="content-right-options">
+              <span :title="$t('overall.view')" @click="detail(scope.row)" class="content-right-option" :id="'alert-detail-'+scope.row.id"><i class="nz-icon nz-icon-view"></i></span>&nbsp;
+              <span v-if="scope.row.buildIn != 1" :title="$t('overall.edit')" @click="edit(scope.row)" class="content-right-option" :id="'alert-edit-'+scope.row.id"><i class="nz-icon nz-icon-edit"></i></span>&nbsp;
+              <span :title="$t('overall.delete')" @click="del(scope.row)" class="content-right-option" :id="'alert-del-'+scope.row.id"><i  class="el-icon-delete"></i></span>
             </div>
-            <div class="pagination-top pagination-top-hide display-none"></div>
-          </div>
-          <el-table
-            class="nz-table"
-            :data="tableData"
-            border
-            v-show="bottomBox.mainResizeShow"
-            ref="alertRuleTable"
-            tooltip-effect="light"
-            :height="mainTableHeight"
-            v-scrollBar:el-table="'large'"
-            v-loading="tools.loading"
-            :cell-class-name="messageStyle"
-            style="width: 100%;"
-            @sort-change="tableDataSort"
-          >
-            <el-table-column
-              :resizable="false"
-              v-for="(item, index) in tools.tablelable"
-              v-if="item.show"
-              :width="item.width"
-              :key="`col-${index}`"
-              :label="item.label"
-              show-overflow-tooltip
-              min-width="110px"
-              :sort-orders="['ascending', 'descending']"
-              :sortable="sortableShow(item.prop)"
-              :prop="propTitle(item.prop)"
-            >
-              <template slot-scope="scope" :column="item">
-                <div v-if="item.prop == 'option'" class="content-right-options">
-                  <span :title="$t('overall.view')" @click="detail(scope.row)" class="content-right-option" :id="'alert-detail-'+scope.row.id"><i class="nz-icon nz-icon-view"></i></span>&nbsp;
-                  <span v-if="scope.row.buildIn != 1" :title="$t('overall.edit')" @click="edit(scope.row)" class="content-right-option" :id="'alert-edit-'+scope.row.id"><i class="nz-icon nz-icon-edit"></i></span>&nbsp;
-                  <span :title="$t('overall.delete')" @click="del(scope.row)" class="content-right-option" :id="'alert-del-'+scope.row.id"><i  class="el-icon-delete"></i></span>
-                </div>
-                <span v-else-if="item.prop == 'severity'">
-                <span v-if="scope.row[item.prop] == 'high'"><i class="el-icon-arrow-up"></i>&nbsp;{{$CONSTANTS.alertMessage.severityData.find(s => {return s.key == 'high'})}}</span>
-                <span style="padding-left: 18px;" v-if="scope.row[item.prop] == 'medium'">{{$CONSTANTS.alertMessage.severityData.find(s => {return s.key == 'medium'})}}</span>
-                <span v-if="scope.row[item.prop] == 'low'"><i class="el-icon-arrow-down"></i>&nbsp;{{$CONSTANTS.alertMessage.severityData.find(s => {return s.key == 'low'})}}</span>
-              </span>
-                <template v-else-if="item.prop == 'alertNum'">
-                  <span class="link" @click="queryMessage(scope.row)">{{scope.row.alertNum + ' ' + $t('overall.active')}}</span>
-                </template>
-                <template v-else-if="item.prop == 'threshold'">
-                  <span  >{{formatThreshold(scope.row[item.prop],scope.row.unit)}}</span>
-                </template>
-                <template v-else-if="item.prop == 'receivers'">
-                  <el-tag effect="dark" v-if="user.userName" :key="index" size="mini" v-for="(user, index) in scope.row[item.prop]" class="alert-rule-tag">{{user.userName}}&nbsp;</el-tag>
-                </template>
-                <span v-else-if="scope.row[item.prop]">{{scope.row[item.prop]}}</span>
-                <template v-else>-</template>
-              </template>
-            </el-table-column>
-            <el-table-column width="28" :resizable="false">
-              <template slot="header" slot-scope="scope">
-              <span @click.stop="elementsetShow('shezhi',$event)" class="nz-table-gear">
-                <i class="nz-icon nz-icon-gear"></i>
-              </span>
-              </template>
-              <template v-slot="scope">
-                <button v-if="scope.$index == 0" class="to-top" :style="{top: tools.toTopBtnTop}" :class="{'to-top-is-hover': tools.tableHover}" v-show="tools.showTopBtn && bottomBox.mainResizeShow" @click="$toTop('ps', 0)"><i class="nz-icon nz-icon-top"></i></button>
-              </template>
-            </el-table-column>
-          </el-table>
-          <div class="pagination-bottom" v-show="!bottomBox.showSubList">
-            <Pagination :tableId="tableId" :pageObj="pageObj" @pageNo='pageNo' @pageSize='pageSize' ref="Pagination"></Pagination>
-          </div>
-        </div>
-        <transition name="el-zoom-in-bottom">
-          <bottom-box v-if="bottomBox.showSubList" :sub-resize-show="bottomBox.subResizeShow" :obj="bottomBox.alertRule" :is-full-screen="bottomBox.isFullScreen" :from="'alertRule'" :target-tab.sync="bottomBox.targetTab" :detail="bottomBox.ruleDetail"
-                      @closeSubList="bottomBox.showSubList = false" @fullScreen="fullScreen" @exitFullScreen="exitFullScreen" @listResize="listResize" ></bottom-box>
-        </transition>
+            <span v-else-if="item.prop == 'severity'">
+            <span v-if="scope.row[item.prop] == 'high'"><i class="el-icon-arrow-up"></i>&nbsp;{{$CONSTANTS.alertMessage.severityData.find(s => {return s.key == 'high'})}}</span>
+            <span style="padding-left: 18px;" v-if="scope.row[item.prop] == 'medium'">{{$CONSTANTS.alertMessage.severityData.find(s => {return s.key == 'medium'})}}</span>
+            <span v-if="scope.row[item.prop] == 'low'"><i class="el-icon-arrow-down"></i>&nbsp;{{$CONSTANTS.alertMessage.severityData.find(s => {return s.key == 'low'})}}</span>
+          </span>
+            <template v-else-if="item.prop == 'alertNum'">
+              <span class="link" @click="queryMessage(scope.row)">{{scope.row.alertNum + ' ' + $t('overall.active')}}</span>
+            </template>
+            <template v-else-if="item.prop == 'threshold'">
+              <span  >{{formatThreshold(scope.row[item.prop],scope.row.unit)}}</span>
+            </template>
+            <template v-else-if="item.prop == 'receivers'">
+              <el-tag effect="dark" v-if="user.userName" :key="index" size="mini" v-for="(user, index) in scope.row[item.prop]" class="alert-rule-tag">{{user.userName}}&nbsp;</el-tag>
+            </template>
+            <span v-else-if="scope.row[item.prop]">{{scope.row[item.prop]}}</span>
+            <template v-else>-</template>
+          </template>
+        </el-table-column>
+        <el-table-column width="28" :resizable="false">
+          <template slot="header" slot-scope="scope">
+          <span @click.stop="elementsetShow('shezhi',$event)" class="nz-table-gear">
+            <i class="nz-icon nz-icon-gear"></i>
+          </span>
+          </template>
+          <template v-slot="scope">
+            <button v-if="scope.$index == 0" class="to-top" :style="{top: tools.toTopBtnTop}" :class="{'to-top-is-hover': tools.tableHover}" v-show="tools.showTopBtn && bottomBox.mainResizeShow" @click="$toTop('ps', 0)"><i class="nz-icon nz-icon-top"></i></button>
+          </template>
+        </el-table-column>
+      </el-table>
+      <div class="pagination-bottom" v-show="!bottomBox.showSubList">
+        <Pagination :tableId="tableId" :pageObj="pageObj" @pageNo='pageNo' @pageSize='pageSize' ref="Pagination"></Pagination>
       </div>
-    </left-menu>
+    </div>
+    <transition name="el-zoom-in-bottom">
+      <bottom-box v-if="bottomBox.showSubList" :sub-resize-show="bottomBox.subResizeShow" :obj="bottomBox.alertRule" :is-full-screen="bottomBox.isFullScreen" :from="'alertRule'" :target-tab.sync="bottomBox.targetTab" :detail="bottomBox.ruleDetail"
+                  @closeSubList="bottomBox.showSubList = false" @fullScreen="fullScreen" @exitFullScreen="exitFullScreen" @listResize="listResize" ></bottom-box>
+    </transition>
     <transition name="right-box">
       <alert-config-box v-if="rightBox.show" :alert-rule="alertRule" @close="closeRightBox" ref="alertConfigBox"></alert-config-box>
     </transition>

@@ -20,49 +20,7 @@
 </style>
 <template>
   <div class="project">
-
-    <left-menu >
-      <div slot="content-left" class="slot-content">
-      <el-scrollbar ref="leftScrollbar" style="height: 100%">
-        <div class="sidebar-title too-long-split">{{$t('project.project.project')}}</div>
-        <div class="sidebar-info">
-          <el-collapse v-model="currentProjectTitle" class="left-menu-bg" accordion style="padding-top: 0px;" ref="projectLeft">
-            <el-collapse-item v-for="(item,index) in projectList" :key="item.name+item.id+index" :name="item.name+'-'+item.id">
-              <template slot="title">
-                <div class="sidebar-info-item" :class="{'sidebar-info-item-active': item.id == currentProject.id}" @click="detailProject($event,item)" :id="'project-module-'+item.id">
-                  <div class="sidebar-info-item-txt">
-                    <el-popover v-if="item.name.length > 14" trigger="hover" placement="top-start" :content="item.name" popper-class="transparent-pop">
-                      <span slot="reference" class="">
-                        {{item.name}}
-                      </span>
-                    </el-popover>
-                    <span v-else>{{item.name}}</span>
-                  </div>
-                </div>
-              </template>
-              <div class="sidebar-info sub-sidebar-info" >
-                <div v-if="getProjectModule(item.id).length == 0" class="sidebar-info-item sidebar-info-item-add" @click="addModule">
-                  <i class="nz-icon nz-icon-create-square"></i>
-                </div>
-                <template v-else>
-                  <div v-for="module in getProjectModule(item.id)" class="sidebar-info-sub-item" :class="{'sidebar-info-item-active': module.id == currentModule.id}" @click="changeModule(item, module)" :id="'project-module-'+module.id">
-                    <div :id="`module-${module.id}`" class="item-tip">
-                      <div class="item-tip-hide item-tip-key el-popover" :class="itemTip(module.id, module.name, ready)">{{module.name}}</div>
-                      <span class="too-long-split" style="width: 120px;">{{module.name}}</span>
-                      <div v-show="module.buildIn != 1" class="hid-div side-bar-menu-edit sub-side-bar-menu-edit" @click.stop="editModule(module)" :id="'project-module-edit-'+module.id" ><i class="nz-icon nz-icon-edit"></i></div>
-                    </div>
-                  </div>
-                </template>
-              </div>
-            </el-collapse-item>
-          </el-collapse>
-        </div>
-      </el-scrollbar>
-    </div>
-
-    <!--endpoint-->
-    <div slot="content-right" class="slot-content" v-show="pageType ==  'endpoint'">
-      <!-- 主列表 -->
+    <template v-show="pageType == 'endpoint'">
       <div class="main-list" :class="{'main-list-with-sub': bottomBox.showSubList}">
         <div class="main-modal"></div>
         <div class="top-tools" v-show="bottomBox.mainResizeShow">
@@ -112,11 +70,11 @@
             <template slot-scope="scope" :column="item" >
               <span v-if="item.prop == 'asset' && scope.row[item.prop]" class="link" @click="detailEndpoint(scope.row)">{{scope.row[item.prop].host}}</span>
               <span v-else-if="item.prop == 'param'">
-                <template v-if="scope.row.paramObj">
-                  <span v-for="(p,i) in scope.row.paramObj">{{p.key}}={{p.value}}<span v-if="i < scope.row.paramObj.length-1">，</span></span>
-                </template>
-                <template v-else>-</template>
-              </span>
+              <template v-if="scope.row.paramObj">
+                <span v-for="(p,i) in scope.row.paramObj">{{p.key}}={{p.value}}<span v-if="i < scope.row.paramObj.length-1">，</span></span>
+              </template>
+              <template v-else>-</template>
+            </span>
               <template v-else-if="item.prop == 'type'">{{currentModule.type}}</template>
               <div v-else-if="item.prop == 'option'" class="content-right-options">
                 <span :title="$t('overall.view')" @click="detailEndpoint(scope.row)" class="content-right-option" :id="'edp-detail-'+scope.row.id"><i class="nz-icon nz-icon-view"></i></span>
@@ -126,25 +84,25 @@
                 <span :title="$t('overall.edit')" @click="editEndpoint(scope.row)" class="content-right-option" :id="'edp-edit-'+scope.row.id"><i class="nz-icon nz-icon-edit"></i></span>
               </div>
               <span v-else-if="item.prop == 'state'" >
-                <el-popover placement="right" width="50" trigger="hover" :popper-class="scope.row.state == '1'?'small-pop':''">
-                  <div slot="reference" style="width: 20px">
-                    <div :class="{'active-icon green':scope.row.state == '1','active-icon red':scope.row.state == '0'}"></div>
-                  </div>
-                  <div >
-                    <div v-if="scope.row.state == '1'">up</div>
-                    <div v-else>down:<br/>{{getStateErrorMsg(scope.row)}}</div>
-                  </div>
-                </el-popover>
-              </span>
+              <el-popover placement="right" width="50" trigger="hover" :popper-class="scope.row.state == '1'?'small-pop':''">
+                <div slot="reference" style="width: 20px">
+                  <div :class="{'active-icon green':scope.row.state == '1','active-icon red':scope.row.state == '0'}"></div>
+                </div>
+                <div >
+                  <div v-if="scope.row.state == '1'">up</div>
+                  <div v-else>down:<br/>{{getStateErrorMsg(scope.row)}}</div>
+                </div>
+              </el-popover>
+            </span>
               <span v-else-if="scope.row[item.prop]">{{scope.row[item.prop]}}</span>
               <template v-else>-</template>
             </template>
           </el-table-column>
           <el-table-column width="28" :resizable="false">
             <template slot="header" slot-scope="scope">
-              <span @click.stop="elementsetShow('shezhi',$event)" class="nz-table-gear">
-                <i class="nz-icon nz-icon-gear"></i>
-              </span>
+            <span @click.stop="elementsetShow('shezhi',$event)" class="nz-table-gear">
+              <i class="nz-icon nz-icon-gear"></i>
+            </span>
             </template>
             <template v-slot="scope">
               <button v-if="scope.$index == 0" class="to-top" :style="{top: tools.toTopBtnTop}" :class="{'to-top-is-hover': tools.tableHover}" v-show="tools.showTopBtn && bottomBox.mainResizeShow" @click="$toTop('ps', 0)"><i class="nz-icon nz-icon-top"></i></button>
@@ -155,16 +113,16 @@
           <Pagination :tableId="tableId" v-cloak :pageObj="endpointPageObj" @pageNo='endpointPageNo' @pageSize='endpointPageSize' ref="endpointPagination"></Pagination>
         </div>
       </div>
-      <transition name="el-zoom-in-bottom">
-        <bottom-box v-if="bottomBox.showSubList" :sub-resize-show="bottomBox.subResizeShow" :is-full-screen="bottomBox.isFullScreen"
-                    :from="'endpoint'" :target-tab.sync="bottomBox.targetTab" :detail="bottomBox.endpointDetail" :obj="endpoint" :asset-detail="bottomBox.assetDetail"
-                    @closeSubList="bottomBox.showSubList = false" @fullScreen="fullScreen" @exitFullScreen="exitFullScreen" @listResize="listResize" ></bottom-box>
-      </transition>
-    </div>
-    <div slot="content-right" class="slot-content" v-show="pageType == 'project'">
+    </template>
+    <template v-show="pageType == 'project'">
       <panel-tab from="project" :obj="currentProject" targetTab.sync="panel"></panel-tab>
-    </div>
-    </left-menu>
+    </template>
+    <transition name="el-zoom-in-bottom">
+      <bottom-box v-if="bottomBox.showSubList" :sub-resize-show="bottomBox.subResizeShow" :is-full-screen="bottomBox.isFullScreen"
+                  :from="'endpoint'" :target-tab.sync="bottomBox.targetTab" :detail="bottomBox.endpointDetail" :obj="endpoint" :asset-detail="bottomBox.assetDetail"
+                  @closeSubList="bottomBox.showSubList = false" @fullScreen="fullScreen" @exitFullScreen="exitFullScreen" @listResize="listResize" ></bottom-box>
+    </transition>
+
     <element-set
       v-if="tools.showElementSet"
       v-clickoutside="elementsetHide"
@@ -189,6 +147,7 @@
   import exportXLSX from "../../common/exportXLSX";
   import loading from "../../common/loading";
   import panelTab from '../../common/bottomBox/tabs/panelTab'
+  import bus from '../../../libs/bus'
 
   export default {
     name: "project2",
@@ -720,6 +679,9 @@
       setTimeout(() => {
         this.ready = true;
       }, 300);
+      bus.$on("project-pageType", pageType => {
+        this.pageType = pageType;
+      });
       this.$nextTick(() => {
         //绑定滚动条事件，控制top按钮
         let el = this.$refs.endpointTable.$el.querySelector(".el-table__body-wrapper");
@@ -764,9 +726,9 @@
       endpointListChange() {
         return this.$store.state.endpointListChange;
       },
-      currentProjectChange() {
+      /*currentProjectChange() {
         return this.$store.state.currentProject;
-      },
+      },*/
       itemTip() {
         return function(id, content, ready) {
           let className = "item-tip-show";
@@ -795,7 +757,7 @@
       endpointListChange(n) {
         this.getEndpointTableData();
       },
-      currentProjectChange: {
+      /*currentProjectChange: {
         immediate:true,
         handler(n, o) {
           if (n.id != this.currentProject.id) {
@@ -805,7 +767,7 @@
             this.detailProject(null, this.currentProject);
           }
         },
-      },
+      },*/
       currentProject(n, o) {
         this.$store.commit("currentProjectChange", Object.assign({}, n));
       },

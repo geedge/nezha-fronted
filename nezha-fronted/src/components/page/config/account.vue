@@ -5,124 +5,93 @@
 </style>
 <template>
   <div class="account">
-    <left-menu >
-    <div slot="content-left" class="slot-content">
-      <div class="sidebar-title">{{$t('overall.config')}}</div>
-      <div class="sidebar-info">
-        <div class="sidebar-info-item sidebar-info-top sidebar-info-item-active">{{$t('config.account.account')}}</div>
-        <div class="sidebar-info-item" @click="jumpTo('promServer')" id="account-jump-promserver">
-          {{$t('config.promServer.promServerList')}}
-        </div>
-        <div class="sidebar-info-item" @click="jumpTo('dc')" id="account-jump-dc">
-          {{$t('config.dc.dc')}}
-        </div>
-        <div class="sidebar-info-item" @click="jumpTo('model')" id="account-jump-model">
-          {{$t('config.model.model')}}
-        </div>
-        <div class="sidebar-info-item" @click="jumpTo('mib')" id="account-jump-mib">
-          {{$t('config.mib.mib')}}
-        </div>
-        <div class="sidebar-info-item" @click="jumpTo('system')" id="account-jump-system">
-          {{$t('config.system.system')}}
-        </div>
-        <div class="sidebar-info-item" @click="jumpTo('terminallog')" id="account-jump-terminallog">
-          {{$t('config.terminallog.terminallog')}}
-        </div>
-        <div class="sidebar-info-item" @click="jumpTo('operationlog')" id="account-jump-operation">
-          {{$t('config.operationlog.operationlog')}}
-        </div>
-      </div>
-    </div>
-    <div slot="content-right" class="slot-content">
-      <!-- 主页面 -->
-      <div class="main-list" :class="{'main-list-with-sub': bottomBox.showSubList}">
-        <!-- 顶部工具栏 -->
-        <div class="main-modal"></div>
-        <div class="top-tools" v-show="bottomBox.mainResizeShow">
-          <div class="top-tool-main-right" :class="{'top-tool-main-right-to-left': bottomBox.showSubList}">
-            <div class="top-tool-search">
-              <search-input ref="searchInput" :searchMsg="searchMsg" @search="search" :inTransform="bottomBox.inTransform"></search-input>
-            </div>
-            <button type="button" @click="add" :title="$t('overall.createAccount')"
-                    class="nz-btn nz-btn-size-normal nz-btn-style-light margin-l-20" id="account-add">
-              <i class="nz-icon-create-square nz-icon"></i>
-            </button>
+    <!-- 主页面 -->
+    <div class="main-list" :class="{'main-list-with-sub': bottomBox.showSubList}">
+      <!-- 顶部工具栏 -->
+      <div class="main-modal"></div>
+      <div class="top-tools" v-show="bottomBox.mainResizeShow">
+        <div class="top-tool-main-right" :class="{'top-tool-main-right-to-left': bottomBox.showSubList}">
+          <div class="top-tool-search">
+            <search-input ref="searchInput" :searchMsg="searchMsg" @search="search" :inTransform="bottomBox.inTransform"></search-input>
           </div>
-          <!-- 顶部分页组件，当打开底部上滑框时出现 -->
-          <div class="pagination-top pagination-top-hide display-none"></div>
+          <button type="button" @click="add" :title="$t('overall.createAccount')"
+                  class="nz-btn nz-btn-size-normal nz-btn-style-light margin-l-20" id="account-add">
+            <i class="nz-icon-create-square nz-icon"></i>
+          </button>
         </div>
-        <el-table
-          class="nz-table"
-          :data="tableData"
-          border
-          v-show="bottomBox.mainResizeShow"
-          ref="accountTable"
-          :height="mainTableHeight"
-          v-loading="tools.loading"
-          v-scrollBar:el-table="'large'"
-          style="width: 100%;"
-          @sort-change="tableDataSort">
-          <el-table-column
-            :resizable="false"
-            v-for="(item, index) in tools.tablelable"
-            v-if="item.show"
-            :width="item.width"
-            :key="`col-${index}`"
-            :label="item.label"
-            :prop="item.prop"
-            :sort-orders="['ascending', 'descending']"
-          >
-            <template slot-scope="scope" :column="item">
-              <div v-if="item.prop == 'option'" class="content-right-options">
-                <span :title="$t('overall.view')" @click="detail(scope.row)" class="content-right-option" :id="'account-detail-'+scope.row.id"><i class="nz-icon nz-icon-view"></i></span>
-                &nbsp;
-                <span :title="$t('overall.edit')" @click="edit(scope.row)" class="content-right-option" :id="'account-edit-'+scope.row.id"><i class="nz-icon nz-icon-edit"></i></span>
-                &nbsp;
-                <span :title="$t('overall.delete')" @click="del(scope.row)" class="content-right-option" :id="'account-del-'+scope.row.id"><i class="el-icon-delete"></i></span>
-              </div>
-              <span v-else-if="item.prop == 'lang'">
-                              {{scope.row[item.prop] == 'en' ? 'English' : ''}}
-                              {{scope.row[item.prop] == 'zh' ? '中文' : ''}}
-                              {{scope.row[item.prop] == 'ru' ? 'русский' : ''}}
-                          </span>
-              <span v-else-if="item.prop == 'receiver'">
-                              <template v-for="rec in scope.row[item.prop]">{{rec.name}}&nbsp;&nbsp;</template>
-                          </span>
-              <span v-else-if="item.prop == 'status'">
-                              <el-switch
-                                v-model="scope.row.status"
-                                active-value="1"
-                                inactive-value="0"
-                                active-color="#ee9d3f"
-                                :disabled="isCurrentUser(scope.row.username)"
-                                @change="(val)=>{statusChange(scope.row)}">
-                              </el-switch>
-                          </span>
-              <span v-else>{{scope.row[item.prop]}}</span>
-            </template>
-          </el-table-column>
-          <el-table-column width="28">
-            <template slot="header" slot-scope="scope" :resizable="false">
-              <span @click.stop="elementsetShow('shezhi',$event)" class="nz-table-gear">
-                <i class="nz-icon nz-icon-gear"></i>
-              </span>
-            </template>
-            <template v-slot="scope">
-              <button v-if="scope.$index == 0" class="to-top" :style="{top: tools.toTopBtnTop}" :class="{'to-top-is-hover': tools.tableHover}" v-show="tools.showTopBtn && bottomBox.mainResizeShow" @click="$toTop('ps', 0)"><i class="nz-icon nz-icon-top"></i></button>
-            </template>
-          </el-table-column>
-        </el-table>
-        <div class="pagination-bottom" v-show="!bottomBox.showSubList">
-          <Pagination :tableId="tableId" :pageObj="pageObj" @pageNo='pageNo' @pageSize='pageSize' ref="Pagination"></Pagination>
-        </div>
+        <!-- 顶部分页组件，当打开底部上滑框时出现 -->
+        <div class="pagination-top pagination-top-hide display-none"></div>
       </div>
-      <!-- 底部上滑框 -->
-      <transition name="el-zoom-in-bottom">
-        <bottom-box v-if="bottomBox.showSubList" :sub-resize-show="bottomBox.subResizeShow" :obj="bottomBox.user" :is-full-screen="bottomBox.isFullScreen" :from="'account'" :target-tab.sync="bottomBox.targetTab" :detail="bottomBox.userDetail"
-                    @closeSubList="bottomBox.showSubList = false" @fullScreen="fullScreen" @exitFullScreen="exitFullScreen" @listResize="listResize" ></bottom-box>
-      </transition>
+      <el-table
+        class="nz-table"
+        :data="tableData"
+        border
+        v-show="bottomBox.mainResizeShow"
+        ref="accountTable"
+        :height="mainTableHeight"
+        v-loading="tools.loading"
+        v-scrollBar:el-table="'large'"
+        style="width: 100%;"
+        @sort-change="tableDataSort">
+        <el-table-column
+          :resizable="false"
+          v-for="(item, index) in tools.tablelable"
+          v-if="item.show"
+          :width="item.width"
+          :key="`col-${index}`"
+          :label="item.label"
+          :prop="item.prop"
+          :sort-orders="['ascending', 'descending']"
+        >
+          <template slot-scope="scope" :column="item">
+            <div v-if="item.prop == 'option'" class="content-right-options">
+              <span :title="$t('overall.view')" @click="detail(scope.row)" class="content-right-option" :id="'account-detail-'+scope.row.id"><i class="nz-icon nz-icon-view"></i></span>
+              &nbsp;
+              <span :title="$t('overall.edit')" @click="edit(scope.row)" class="content-right-option" :id="'account-edit-'+scope.row.id"><i class="nz-icon nz-icon-edit"></i></span>
+              &nbsp;
+              <span :title="$t('overall.delete')" @click="del(scope.row)" class="content-right-option" :id="'account-del-'+scope.row.id"><i class="el-icon-delete"></i></span>
+            </div>
+            <span v-else-if="item.prop == 'lang'">
+                            {{scope.row[item.prop] == 'en' ? 'English' : ''}}
+                            {{scope.row[item.prop] == 'zh' ? '中文' : ''}}
+                            {{scope.row[item.prop] == 'ru' ? 'русский' : ''}}
+                        </span>
+            <span v-else-if="item.prop == 'receiver'">
+                            <template v-for="rec in scope.row[item.prop]">{{rec.name}}&nbsp;&nbsp;</template>
+                        </span>
+            <span v-else-if="item.prop == 'status'">
+                            <el-switch
+                              v-model="scope.row.status"
+                              active-value="1"
+                              inactive-value="0"
+                              active-color="#ee9d3f"
+                              :disabled="isCurrentUser(scope.row.username)"
+                              @change="(val)=>{statusChange(scope.row)}">
+                            </el-switch>
+                        </span>
+            <span v-else>{{scope.row[item.prop]}}</span>
+          </template>
+        </el-table-column>
+        <el-table-column width="28">
+          <template slot="header" slot-scope="scope" :resizable="false">
+            <span @click.stop="elementsetShow('shezhi',$event)" class="nz-table-gear">
+              <i class="nz-icon nz-icon-gear"></i>
+            </span>
+          </template>
+          <template v-slot="scope">
+            <button v-if="scope.$index == 0" class="to-top" :style="{top: tools.toTopBtnTop}" :class="{'to-top-is-hover': tools.tableHover}" v-show="tools.showTopBtn && bottomBox.mainResizeShow" @click="$toTop('ps', 0)"><i class="nz-icon nz-icon-top"></i></button>
+          </template>
+        </el-table-column>
+      </el-table>
+      <div class="pagination-bottom" v-show="!bottomBox.showSubList">
+        <Pagination :tableId="tableId" :pageObj="pageObj" @pageNo='pageNo' @pageSize='pageSize' ref="Pagination"></Pagination>
+      </div>
     </div>
-    </left-menu>
+    <!-- 底部上滑框 -->
+    <transition name="el-zoom-in-bottom">
+      <bottom-box v-if="bottomBox.showSubList" :sub-resize-show="bottomBox.subResizeShow" :obj="bottomBox.user" :is-full-screen="bottomBox.isFullScreen" :from="'account'" :target-tab.sync="bottomBox.targetTab" :detail="bottomBox.userDetail"
+                  @closeSubList="bottomBox.showSubList = false" @fullScreen="fullScreen" @exitFullScreen="exitFullScreen" @listResize="listResize" ></bottom-box>
+    </transition>
     <transition name="right-box">
       <account-box v-if="rightBox.show" :user="user" @close="closeRightBox"></account-box>
     </transition>
@@ -253,15 +222,6 @@
         let vm = this;
         this.$bottomBoxWindow.listResize(vm, e);
       },
-      jumpTo(data, id) {
-        bus.$emit("menu-change", data);
-        this.$router.push({
-          path: "/" + data,
-          query: {
-            t: +new Date()
-          }
-        });
-      },
       convertToDetail(obj) {
         let detail = [];
         detail.push({label: this.$t("config.account.account"), value: obj.username});
@@ -345,14 +305,6 @@
             this.$message.error(response.msg);
           }
           this.getTableData();
-        });
-      },
-      jumpTo(data, id) {
-        this.$router.push({
-          path: "/" + data,
-          query: {
-            t: +new Date()
-          }
         });
       },
       esc() {

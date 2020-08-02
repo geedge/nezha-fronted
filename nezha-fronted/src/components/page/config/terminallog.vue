@@ -5,93 +5,60 @@
 </style>
 <template>
   <div class="terminallog">
-    <left-menu >
-      <div slot="content-left" class="slot-content">
-      <div class="sidebar-title">{{$t('overall.config')}}</div>
-      <div class="sidebar-info">
-        <div class="sidebar-info-item sidebar-info-top" @click="jumpTo('account')" id="prom-jump-account">
-          {{$t('config.account.account')}}
-        </div>
-        <div class="sidebar-info-item" @click="jumpTo('promServer')" id="account-jump-promserver">
-          {{$t('config.promServer.promServerList')}}
-        </div>
-        <div class="sidebar-info-item" @click="jumpTo('dc')" id="terminallog-jump-dc">
-          {{$t('config.dc.dc')}}
-        </div>
-        <div class="sidebar-info-item" @click="jumpTo('model')" id="terminallog-jump-model">
-          {{$t('config.model.model')}}
-        </div>
-        <div class="sidebar-info-item" @click="jumpTo('mib')" id="terminal-jump-mib">
-          {{$t('config.mib.mib')}}
-        </div>
-        <div class="sidebar-info-item" @click="jumpTo('system')" id="terminal-jump-system">
-          {{$t('config.system.system')}}
-        </div>
-        <div class="sidebar-info-item sidebar-info-item-active" @click="jumpTo('terminallog')" id="terminallog-jump-terminallog">
-          {{$t('config.terminallog.terminallog')}}
-        </div>
-        <div class="sidebar-info-item" @click="jumpTo('operationlog')" id="terminallog-jump-operation">
-          {{$t('config.operationlog.operationlog')}}
+    <div class="top-tools">
+      <div></div>
+      <div>
+        <div class="top-tool-search float-right">
+          <search-input :searchMsg="searchMsg" @search="search"></search-input>
         </div>
       </div>
     </div>
-    <div slot="content-right" class="slot-content">
-      <div class="top-tools">
-        <div></div>
-        <div>
-          <div class="top-tool-search float-right">
-            <search-input :searchMsg="searchMsg" @search="search"></search-input>
-          </div>
-        </div>
-      </div>
-      <el-table
-        class="nz-table"
-        :data="tableData"
-        border
-        ref="terminalLogTable"
-        :height="$tableHeight.normal"
-        v-scrollBar:el-table="'large'"
-        v-loading="loading"
-        :cell-class-name="messageStyle"
-        style="width: 100%;"
-        @sort-change="tableDataSort">
-        <el-table-column
-          :resizable="false"
-          v-for="(item, index) in tablelable"
-          v-if="item.show"
-          :width="item.width"
-          :key="`col-${index}`"
-          :label="item.label"
-          :sortable="sortableShow(item.prop)"
-          :prop="propTitle(item.prop)"
-          :sort-orders="['ascending', 'descending']"
-        >
-          <template slot-scope="scope" :column="item">
-            <span v-if="item.prop == 'lang'">
-                            {{scope.row[item.prop] == 'en' ? 'English' : ''}}
-                            {{scope.row[item.prop] == 'zh' ? '中文' : ''}}
-                            {{scope.row[item.prop] == 'ru' ? 'русский' : ''}}
-                        </span>
-            <template v-else-if="item.prop == 'status'">
-              <span>{{scope.row.status==='1' ? $t("config.terminallog.success") : $t("config.terminallog.fail")}}</span>
-            </template>
-            <span v-else>{{scope.row[item.prop]}}</span>
+    <el-table
+      class="nz-table"
+      :data="tableData"
+      border
+      ref="terminalLogTable"
+      :height="$tableHeight.normal"
+      v-scrollBar:el-table="'large'"
+      v-loading="loading"
+      :cell-class-name="messageStyle"
+      style="width: 100%;"
+      @sort-change="tableDataSort">
+      <el-table-column
+        :resizable="false"
+        v-for="(item, index) in tablelable"
+        v-if="item.show"
+        :width="item.width"
+        :key="`col-${index}`"
+        :label="item.label"
+        :sortable="sortableShow(item.prop)"
+        :prop="propTitle(item.prop)"
+        :sort-orders="['ascending', 'descending']"
+      >
+        <template slot-scope="scope" :column="item">
+          <span v-if="item.prop == 'lang'">
+                          {{scope.row[item.prop] == 'en' ? 'English' : ''}}
+                          {{scope.row[item.prop] == 'zh' ? '中文' : ''}}
+                          {{scope.row[item.prop] == 'ru' ? 'русский' : ''}}
+                      </span>
+          <template v-else-if="item.prop == 'status'">
+            <span>{{scope.row.status==='1' ? $t("config.terminallog.success") : $t("config.terminallog.fail")}}</span>
           </template>
-        </el-table-column>
-        <el-table-column width="28">
-          <template slot="header" slot-scope="scope">
-            <span @click.stop="elementsetShow('shezhi',$event)" class="nz-table-gear">
-              <i class="nz-icon nz-icon-gear"></i>
-            </span>
-          </template>
-          <template v-slot="scope">
-            <button v-if="scope.$index == 0" class="to-top" :style="{top: toTopBtnTop}" :class="{'to-top-is-hover': tableHover}" v-show="showTopBtn" @click="$toTop('ps', 0)"><i class="nz-icon nz-icon-top"></i></button>
-          </template>
-        </el-table-column>
-      </el-table>
-      <Pagination :tableId="tableId" :pageObj="pageObj" @pageNo='pageNo' @pageSize='pageSize' ref="Pagination"></Pagination>
-    </div>
-    </left-menu>
+          <span v-else>{{scope.row[item.prop]}}</span>
+        </template>
+      </el-table-column>
+      <el-table-column width="28">
+        <template slot="header" slot-scope="scope">
+          <span @click.stop="elementsetShow('shezhi',$event)" class="nz-table-gear">
+            <i class="nz-icon nz-icon-gear"></i>
+          </span>
+        </template>
+        <template v-slot="scope">
+          <button v-if="scope.$index == 0" class="to-top" :style="{top: toTopBtnTop}" :class="{'to-top-is-hover': tableHover}" v-show="showTopBtn" @click="$toTop('ps', 0)"><i class="nz-icon nz-icon-top"></i></button>
+        </template>
+      </el-table-column>
+    </el-table>
+    <Pagination :tableId="tableId" :pageObj="pageObj" @pageNo='pageNo' @pageSize='pageSize' ref="Pagination"></Pagination>
     <element-set
       v-clickoutside="elementsetHide"
       :dropCol="dropCol"

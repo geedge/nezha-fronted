@@ -1,47 +1,37 @@
 <template>
   <div class="explore">
-    <left-menu>
-      <div slot="content-left" class="slot-content">
-        <div class="sidebar-title">{{$t('dashboard.title')}}</div>
-        <div class="sidebar-info">
-          <div class="sidebar-info-item " @click="jumpTo('overview')">{{$t('dashboard.overview.title')}}</div>
-          <div class="sidebar-info-item" @click="jumpTo('panel')">{{$t('dashboard.panel.title')}}</div>
-          <div class="sidebar-info-item sidebar-info-item-active">{{$t('dashboard.metricPreview.title')}}</div>
+    <div class="main-list main-and-sub-transition">
+        <!-- 顶部工具栏 -->
+        <div class="top-tools" style="z-index: 1">
+          <div class="top-tool-main-right">
+            <pick-time :refresh-data-func="expressionChange" v-model="filterTime" @unitChange="chartUnitChange">
+              <template slot="added-text">{{$t('dashboard.metricPreview.runQuery')}}</template>
+            </pick-time>
+            <button :disabled="saveDisabled" type="button" @click="saveChart"
+                    class="nz-btn nz-btn-size-large nz-btn-style-normal nz-btn-min-width-120"
+                    :class="{'nz-btn-disabled btn-disabled-cursor-not-allowed' : saveDisabled}">
+              {{$t('dashboard.metric.saveChart')}}
+            </button>
+          </div>
         </div>
-      </div>
-      <div slot="content-right" class="slot-content">
-        <div class="main-list main-and-sub-transition">
-            <!-- 顶部工具栏 -->
-            <div class="top-tools" style="z-index: 1">
-              <div class="top-tool-main-right">
-                <pick-time :refresh-data-func="expressionChange" v-model="filterTime" @unitChange="chartUnitChange">
-                  <template slot="added-text">{{$t('dashboard.metricPreview.runQuery')}}</template>
-                </pick-time>
-                <button :disabled="saveDisabled" type="button" @click="saveChart"
-                        class="nz-btn nz-btn-size-large nz-btn-style-normal nz-btn-min-width-120"
-                        :class="{'nz-btn-disabled btn-disabled-cursor-not-allowed' : saveDisabled}">
-                  {{$t('dashboard.metric.saveChart')}}
-                </button>
-              </div>
-            </div>
-            <div style="height: calc(100% - 50px);width: 100%;" >
-              <el-scrollbar style="height: 100%" class="el-scrollbar-large">
-              <div class="expression-room right-margin" style="padding-top: 5px">
-                <!--坑，这个index居然是从1开始-->
-                <promql-input
-                  v-for="index of promqlKeys.length"
-                  :ref="'promql-'+(index-1)"
-                  :id="promqlKeys[index-1]"
-                  :key="promqlKeys[index-1]"
-                  :expression-list="expressions"
-                  :index="index-1"
-                  :styleType="1"
-                  :history-param="historyParam"
-                  :plugins="['metric-selector', 'metric-input', 'add', 'remove']"
-                  @change="expressionChange"
-                  @addExpression="addExpression"
-                  @removeExpression="removeExpression"
-                ></promql-input>
+        <div style="height: calc(100% - 50px);width: 100%;" >
+          <el-scrollbar style="height: 100%" class="el-scrollbar-large">
+          <div class="expression-room right-margin" style="padding-top: 5px">
+            <!--坑，这个index居然是从1开始-->
+            <promql-input
+              v-for="index of promqlKeys.length"
+              :ref="'promql-'+(index-1)"
+              :id="promqlKeys[index-1]"
+              :key="promqlKeys[index-1]"
+              :expression-list="expressions"
+              :index="index-1"
+              :styleType="1"
+              :history-param="historyParam"
+              :plugins="['metric-selector', 'metric-input', 'add', 'remove']"
+              @change="expressionChange"
+              @addExpression="addExpression"
+              @removeExpression="removeExpression"
+            ></promql-input>
 <!--                <promql-input-plus-->
 <!--                  v-for="index of promqlKeys.length"-->
 <!--                  :ref="'promql-plus'+(index-1)"-->
@@ -52,161 +42,159 @@
 <!--                  @addExpression="addExpression"-->
 <!--                  @removeExpression="removeExpression"-->
 <!--                ></promql-input-plus>-->
-              </div>
-              <div class="chart-view right-margin" v-show="!showIntroduce"
-                   :class="{'shrink-view':!chartVisible || !defaultChartVisible}" style="position:relative;">
-                <div class="view-title" @click="changeChartVisible" style="position:absolute;z-index: 1000"><i class="el-icon-caret-top" ></i>&nbsp;graph</div>
-                <div class="chart-room">
-                  <chart ref="exploreChart" :unit="chartUnit"></chart>
-                </div>
-              </div>
-              <div class="table-view right-margin" v-show="!showIntroduce"
-                   :class="{'shrink-view':!tableVisible || !defaultTableVisible}">
-                <div class="view-title" @click="changeTableVisible"><i class="el-icon-caret-top"></i>&nbsp;table</div>
-                <div class="table-room">
-                  <el-table class="nz-table explore-table"
-                            :data="tableData"
-                            border
-                            ref="exploreTable"
-                            tooltip-effect="light"
-                            v-scrollBar:el-table="'large'"
-                            v-loading="tableLoading"
-                            style="width: 100%;">
-                    <el-table-column
-                      :resizable="false"
-                      v-for="(item, index) in showTableLabels"
-                      v-if="item.show"
-                      :key="`col-${index}`"
-                      :label="item.label"
-                      :prop="item.prop"
-                      show-overflow-tooltip
-                      min-width="110px"
-                    ></el-table-column>
-                    <el-table-column width="28" v-if="showTableLabels.length>0">
-                      <template slot="header" slot-scope="scope" :resizable="false">
-                      <span @click.stop="elementsetShow('shezhi',$event)" class="nz-table-gear">
-                        <i class="nz-icon nz-icon-gear"></i>
-                      </span>
-                      </template>
-                    </el-table-column>
-                  </el-table>
-                  <pagination :page-obj="pageObj" @pageNo='pageNo' @pageSize='pageSize' ref="Pagination"
-                              :append-to-body="false"></pagination>
-                </div>
-              </div>
-              <div class="introduce-view right-margin" v-show="showIntroduce">
-                <div class="info-room">
-                  <div class="col-md-9 doc-content">
-                    <h1 class="page-header">Query examples<a class="header-anchor" href="https://prometheus.io/docs/prometheus/latest/querying/examples/" target="_blank"><i style="font-size: 16px;" class="nz-icon nz-icon-link1"></i></a></h1>
-                    <div class="content-divider"></div>
-                    <h2 >
-                      Simple time series selection
-                    </h2>
+          </div>
+          <div class="chart-view right-margin" v-show="!showIntroduce"
+               :class="{'shrink-view':!chartVisible || !defaultChartVisible}" style="position:relative;">
+            <div class="view-title" @click="changeChartVisible" style="position:absolute;z-index: 1000"><i class="el-icon-caret-top" ></i>&nbsp;graph</div>
+            <div class="chart-room">
+              <chart ref="exploreChart" :unit="chartUnit"></chart>
+            </div>
+          </div>
+          <div class="table-view right-margin" v-show="!showIntroduce"
+               :class="{'shrink-view':!tableVisible || !defaultTableVisible}">
+            <div class="view-title" @click="changeTableVisible"><i class="el-icon-caret-top"></i>&nbsp;table</div>
+            <div class="table-room">
+              <el-table class="nz-table explore-table"
+                        :data="tableData"
+                        border
+                        ref="exploreTable"
+                        tooltip-effect="light"
+                        v-scrollBar:el-table="'large'"
+                        v-loading="tableLoading"
+                        style="width: 100%;">
+                <el-table-column
+                  :resizable="false"
+                  v-for="(item, index) in showTableLabels"
+                  v-if="item.show"
+                  :key="`col-${index}`"
+                  :label="item.label"
+                  :prop="item.prop"
+                  show-overflow-tooltip
+                  min-width="110px"
+                ></el-table-column>
+                <el-table-column width="28" v-if="showTableLabels.length>0">
+                  <template slot="header" slot-scope="scope" :resizable="false">
+                  <span @click.stop="elementsetShow('shezhi',$event)" class="nz-table-gear">
+                    <i class="nz-icon nz-icon-gear"></i>
+                  </span>
+                  </template>
+                </el-table-column>
+              </el-table>
+              <pagination :page-obj="pageObj" @pageNo='pageNo' @pageSize='pageSize' ref="Pagination"
+                          :append-to-body="false"></pagination>
+            </div>
+          </div>
+          <div class="introduce-view right-margin" v-show="showIntroduce">
+            <div class="info-room">
+              <div class="col-md-9 doc-content">
+                <h1 class="page-header">Query examples<a class="header-anchor" href="https://prometheus.io/docs/prometheus/latest/querying/examples/" target="_blank"><i style="font-size: 16px;" class="nz-icon nz-icon-link1"></i></a></h1>
+                <div class="content-divider"></div>
+                <h2 >
+                  Simple time series selection
+                </h2>
 
-                    <p>Return all time series with the metric <code>http_requests_total</code>:</p>
+                <p>Return all time series with the metric <code>http_requests_total</code>:</p>
 
-                    <pre><code>http_requests_total</code></pre>
+                <pre><code>http_requests_total</code></pre>
 
-                    <p>Return all time series with the metric <code>http_requests_total</code> and the given<code>job</code> and <code>handler</code> labels:</p>
+                <p>Return all time series with the metric <code>http_requests_total</code> and the given<code>job</code> and <code>handler</code> labels:</p>
 
-                    <pre><code>http_requests_total{job="apiserver", handler="/api/comments"}</code></pre>
+                <pre><code>http_requests_total{job="apiserver", handler="/api/comments"}</code></pre>
 
-                    <p>Return a whole range of time (in this case 5 minutes) for the same vector,
-                      making it a range vector:</p>
+                <p>Return a whole range of time (in this case 5 minutes) for the same vector,
+                  making it a range vector:</p>
 
-                    <pre><code>http_requests_total{job="apiserver", handler="/api/comments"}[5m]</code></pre>
+                <pre><code>http_requests_total{job="apiserver", handler="/api/comments"}[5m]</code></pre>
 
-                    <p>Note that an expression resulting in a range vector cannot be graphed directly,
-                      but viewed in the tabular ("Console") view of the expression browser.</p>
+                <p>Note that an expression resulting in a range vector cannot be graphed directly,
+                  but viewed in the tabular ("Console") view of the expression browser.</p>
 
-                    <p>Using regular expressions, you could select time series only for jobs whose
-                      name match a certain pattern, in this case, all jobs that end with <code>server</code>:</p>
+                <p>Using regular expressions, you could select time series only for jobs whose
+                  name match a certain pattern, in this case, all jobs that end with <code>server</code>:</p>
 
-                    <pre><code>http_requests_total{job=~".*server"}</code></pre>
+                <pre><code>http_requests_total{job=~".*server"}</code></pre>
 
-                    <p>All regular expressions in Prometheus use RE2 syntax.</p>
+                <p>All regular expressions in Prometheus use RE2 syntax.</p>
 
-                    <p>To select all HTTP status codes except 4xx ones, you could run:</p>
+                <p>To select all HTTP status codes except 4xx ones, you could run:</p>
 
-                    <pre><code>http_requests_total{status!~"4.."}</code></pre>
+                <pre><code>http_requests_total{status!~"4.."}</code></pre>
 
-                    <h2 >
-                      Subquery
-                    </h2>
+                <h2 >
+                  Subquery
+                </h2>
 
-                    <p>Return the 5-minute rate of the <code>http_requests_total</code> metric for the past 30 minutes, with a resolution of 1 minute.</p>
+                <p>Return the 5-minute rate of the <code>http_requests_total</code> metric for the past 30 minutes, with a resolution of 1 minute.</p>
 
-                    <pre><code>rate(http_requests_total[5m])[30m:1m]</code></pre>
+                <pre><code>rate(http_requests_total[5m])[30m:1m]</code></pre>
 
-                    <p>This is an example of a nested subquery. The subquery for the <code>deriv</code> function uses the default resolution. Note that using subqueries unnecessarily is unwise.</p>
+                <p>This is an example of a nested subquery. The subquery for the <code>deriv</code> function uses the default resolution. Note that using subqueries unnecessarily is unwise.</p>
 
-                    <pre><code>max_over_time(deriv(rate(distance_covered_total[5s])[30s:5s])[10m:])</code></pre>
+                <pre><code>max_over_time(deriv(rate(distance_covered_total[5s])[30s:5s])[10m:])</code></pre>
 
-                    <h2 >
-                      Using functions, operators, etc.
-                    </h2>
+                <h2 >
+                  Using functions, operators, etc.
+                </h2>
 
-                    <p>Return the per-second rate for all time series with the <code>http_requests_total</code>
-                      metric name, as measured over the last 5 minutes:</p>
+                <p>Return the per-second rate for all time series with the <code>http_requests_total</code>
+                  metric name, as measured over the last 5 minutes:</p>
 
-                    <pre><code>rate(http_requests_total[5m])</code></pre>
+                <pre><code>rate(http_requests_total[5m])</code></pre>
 
-                    <p>Assuming that the <code>http_requests_total</code> time series all have the labels <code>job</code>
-                      (fanout by job name) and <code>instance</code> (fanout by instance of the job), we might
-                      want to sum over the rate of all instances, so we get fewer output time series,
-                      but still preserve the <code>job</code> dimension:</p>
+                <p>Assuming that the <code>http_requests_total</code> time series all have the labels <code>job</code>
+                  (fanout by job name) and <code>instance</code> (fanout by instance of the job), we might
+                  want to sum over the rate of all instances, so we get fewer output time series,
+                  but still preserve the <code>job</code> dimension:</p>
 
-                    <pre><code>sum by (job) (rate(http_requests_total[5m]))</code></pre>
+                <pre><code>sum by (job) (rate(http_requests_total[5m]))</code></pre>
 
-                    <p>If we have two different metrics with the same dimensional labels, we can apply
-                      binary operators to them and elements on both sides with the same label set
-                      will get matched and propagated to the output. For example, this expression
-                      returns the unused memory in MiB for every instance (on a fictional cluster
-                      scheduler exposing these metrics about the instances it runs):</p>
+                <p>If we have two different metrics with the same dimensional labels, we can apply
+                  binary operators to them and elements on both sides with the same label set
+                  will get matched and propagated to the output. For example, this expression
+                  returns the unused memory in MiB for every instance (on a fictional cluster
+                  scheduler exposing these metrics about the instances it runs):</p>
 
-                    <pre><code>(instance_memory_limit_bytes - instance_memory_usage_bytes) / 1024 / 1024</code></pre>
+                <pre><code>(instance_memory_limit_bytes - instance_memory_usage_bytes) / 1024 / 1024</code></pre>
 
-                    <p>The same expression, but summed by application, could be written like this:</p>
+                <p>The same expression, but summed by application, could be written like this:</p>
 
-                    <pre><code>sum by (app, proc) (instance_memory_limit_bytes - instance_memory_usage_bytes) / 1024 / 1024</code></pre>
+                <pre><code>sum by (app, proc) (instance_memory_limit_bytes - instance_memory_usage_bytes) / 1024 / 1024</code></pre>
 
-                    <p>If the same fictional cluster scheduler exposed CPU usage metrics like the following for every instance:</p>
+                <p>If the same fictional cluster scheduler exposed CPU usage metrics like the following for every instance:</p>
 
-                    <pre><code>instance_cpu_time_ns{app="lion", proc="web", rev="34d0f99", env="prod", job="cluster-manager"}
+                <pre><code>instance_cpu_time_ns{app="lion", proc="web", rev="34d0f99", env="prod", job="cluster-manager"}
 instance_cpu_time_ns{app="elephant", proc="worker", rev="34d0f99", env="prod", job="cluster-manager"}
 instance_cpu_time_ns{app="turtle", proc="api", rev="4d3a513", env="prod", job="cluster-manager"}
 instance_cpu_time_ns{app="fox", proc="widget", rev="4d3a513", env="prod", job="cluster-manager"}
 ...
 </code></pre>
 
-                    <p>...we could get the top 3 CPU users grouped by application (<code>app</code>) and process type (<code>proc</code>) like this:</p>
+                <p>...we could get the top 3 CPU users grouped by application (<code>app</code>) and process type (<code>proc</code>) like this:</p>
 
-                    <pre><code>topk(3, sum by (app, proc) (rate(instance_cpu_time_ns[5m])))</code></pre>
+                <pre><code>topk(3, sum by (app, proc) (rate(instance_cpu_time_ns[5m])))</code></pre>
 
-                    <p>Assuming this metric contains one time series per running instance, you could count the number of running instances per application like this:</p>
+                <p>Assuming this metric contains one time series per running instance, you could count the number of running instances per application like this:</p>
 
-                    <pre><code>count by (app) (instance_cpu_time_ns)</code></pre>
+                <pre><code>count by (app) (instance_cpu_time_ns)</code></pre>
 
-                  </div>
-                </div>
               </div>
-          </el-scrollbar>
             </div>
-
+          </div>
+      </el-scrollbar>
         </div>
-        <transition name="right-box">
-          <chart-box v-if="rightBox.show" :chart="chart" ref="addChartModal" @close="handleBox(false)" :panel-data="panelData" @on-create-success="createSuccess" :show-panel="{id: -1, name: ''}"></chart-box>
-        </transition>
-        <element-set
-          :allowed-all="true"
-          v-clickoutside="elementsetHide"
-          :dropCol="dropCol"
-          @tablelable="tablelabelEmit"
-          :table-title="tableLabels"
-          ref="elementset"
-        ></element-set>
-      </div>
-    </left-menu>
+
+    </div>
+    <transition name="right-box">
+      <chart-box v-if="rightBox.show" :chart="chart" ref="addChartModal" @close="handleBox(false)" :panel-data="panelData" @on-create-success="createSuccess" :show-panel="{id: -1, name: ''}"></chart-box>
+    </transition>
+    <element-set
+      :allowed-all="true"
+      v-clickoutside="elementsetHide"
+      :dropCol="dropCol"
+      @tablelable="tablelabelEmit"
+      :table-title="tableLabels"
+      ref="elementset"
+    ></element-set>
   </div>
 </template>
 
