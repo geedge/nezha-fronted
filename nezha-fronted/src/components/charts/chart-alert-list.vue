@@ -172,6 +172,7 @@ export default {
           total: 0
         },
         storedTableData:[],
+        requestIndex:0,
         storedScreanTableData:[],
         images: '',
         //toolbox: false,
@@ -566,7 +567,12 @@ export default {
                       }
                     });
                   }
-                  this.$set(item, "current", current);
+                  this.requestIndex+=1;
+                  item.current=current;
+                  if(this.requestIndex===this.tableData.length){
+                    this.$set(item, "current", current);
+                    this.requestIndex=0;
+                  }
                 });
               }
             });

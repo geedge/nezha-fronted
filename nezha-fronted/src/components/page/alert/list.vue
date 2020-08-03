@@ -289,6 +289,7 @@
         tablelable: [],
         dropCol: [],
         tableData: [],
+        requestIndex:0,
         viewRuleData: {
           id: '',
           alertName: '',
@@ -554,7 +555,12 @@
                 }else{
                   current=[null,null]
                 }
-                this.$set(item, "current", current);
+                this.requestIndex+=1;
+                item.current=current;
+                if(this.requestIndex===this.tableData.length){
+                  this.$set(item, "current", current);
+                  this.requestIndex=0;
+                }
               });
             });
             this.deleteBox.ids='';

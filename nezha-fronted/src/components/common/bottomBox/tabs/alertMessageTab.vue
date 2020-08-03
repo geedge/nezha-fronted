@@ -114,7 +114,7 @@
         searchTime: [new Date().setHours(new Date().getHours() - 1), new Date()],
         currentMsg: {},
         chartUnit: 5,
-
+        requestIndex:0,
         defaultSearchValue: this.obj.alertNum ? 1 : 0,
         showElementSet: false,
         tableId: 'alertListTable', //需要分页的table的id，用于记录每页数量
@@ -496,7 +496,12 @@
                       }
                     });
                   }
-                  this.$set(item, "current", current);
+                  this.requestIndex+=1;
+                  item.current=current;
+                  if(this.requestIndex===this.tableData.length){
+                    this.$set(item, "current", current);
+                    this.requestIndex=0;
+                  }
                 });
               });
               this.pageObj.total = response.data.total;
