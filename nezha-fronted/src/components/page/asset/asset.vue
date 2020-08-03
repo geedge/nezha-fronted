@@ -349,15 +349,6 @@
           }],
         tableData: [],
 
-        /*dcData: [],
-        dcCheckList: [],
-        assetTypeData: [],
-        assetTypeCheckList: [],
-        vendorData: [],
-        vendorCheckList: [],
-        pingData: [],
-        pingCheckList: [],*/
-
         pageObj: {
           id: '',
           pageNo: 1,
@@ -370,30 +361,14 @@
         assetPingSwitch: localStorage.getItem('nz-sys-asset-ping-switch'),
       }
     },
-    computed: {
-      assetListChange() {
-        return this.$store.state.assetListChange;
-      },
-      currentAssetChange() {
-        return this.$store.state.currentAsset;
-      },
-    },
     watch: {
-      assetListChange(n) {
-        this.getTableData();
-      },
-      currentAssetChange(n) {
-        this.dcCheckList = [n.id];
-      },
-      dcCheckList(n, o) {
-        setTimeout(()=>{
-          if (n.length > 0 ) {
-            this.pageObj.idcIds = n.join(',');
-          } else {
-            this.pageObj.idcIds = '';
-          }
+      currentDcListChange: {
+        deep: true,
+        immediate: true,
+        handler(n) {
+          this.pageObj.idcIds = n.join(",");
           this.getTableData();
-        }, 50);
+        }
       },
       'bottomBox.showSubList': function(n) {
         let vm = this;
@@ -494,36 +469,6 @@
           }
         });
       },
-      /*getDcData() {
-        return new Promise(resolve => {
-          this.$get('idc').then(response => {
-            if (response.code === 200) {
-              this.dcData = response.data.list;
-            }
-            resolve(this.dcData);
-          });
-        });
-      },
-      getAssetTypeData() {
-        return new Promise(resolve => {
-          this.$get('sys/dict/all?type=assetType').then(response => {
-            if (response.code === 200) {
-              this.assetTypeData = response.data;
-            }
-            resolve(this.assetTypeData);
-          });
-        });
-      },
-      getVendorData() {
-        return new Promise(resolve => {
-          this.$get('sys/dict/all?type=vendor').then(response => {
-            if (response.code === 200) {
-              this.vendorData = response.data;
-            }
-            resolve(this.vendorData);
-          });
-        });
-      },*/
       getUserData() {
         return new Promise(resolve => {
           this.$get('sys/user/list').then(response => {
@@ -596,39 +541,10 @@
           this.getTableData();
         }
       },
-      /*changeAssetTypeCheckBox() {
-        if(this.assetTypeCheckList && this.assetTypeCheckList.length > 0){
-          let assetTypeIds = this.assetTypeCheckList.join(',');
-          this.pageObj.typeIds=assetTypeIds;
-        }else{
-          this.pageObj.typeIds='';
-        }
-        this.getTableData();
-      },
-      changeVendorCheckBox() {
-        if(this.vendorCheckList && this.vendorCheckList.length > 0){
-          let vendorIds = this.vendorCheckList.join(',');
-          this.pageObj.vendorIds = vendorIds;
-
-        }else{
-          this.pageObj.vendorIds = '';
-        }
-        this.getTableData();
-      },
-      changePingCheckBox() {
-        if(this.pingCheckList && this.pingCheckList.length > 0){
-          let pingStates = this.pingCheckList.join(',');
-          this.pageObj.pingStates = pingStates;
-        }else{
-          this.pageObj.pingStates = '';
-        }
-        this.getTableData();
-      },*/
       pageNo(val) {
         this.pageObj.pageNo = val;
         this.getTableData()
-      }
-      ,
+      },
       pageSize(val) {
         this.pageObj.pageSize = val;
         localStorage.setItem('nz-pageSize-' + localStorage.getItem('nz-username') + '-' + this.tableId, val);
@@ -779,7 +695,19 @@
           });
         });
       },
+      initEvent() {
+        bus.$on("asset-filter-change", (column, content) => {
+          this.pageObj[column] = content;
+          this.getTableData();
+        });
+      }
     },
+    computed: {
+      currentDcListChange() {
+        return this.$store.state.currentDcList;
+      }
+    },
+
     mounted() {
       //初始化数据
       this.getUserData();
@@ -789,12 +717,8 @@
       if (pageSize != 'undefined' && pageSize != null) {
         this.pageObj.pageSize = pageSize
       }
+      this.initEvent();
       this.$nextTick(() => {
-        /*//左侧dc列表初始选中状态
-        if (this.$store.state.assetData.selectedData.length > 0) {
-          this.checkList = [];
-          this.checkList = this.$store.state.assetData.selectedData;
-        }*/
         //绑定滚动条事件，控制top按钮
         let el = this.$refs.assetTable.$el.querySelector(".el-table__body-wrapper");
         if (el._ps_) {
@@ -834,10 +758,7 @@
           }
         }
       }
-      bus.$on("asset-filter-change", (column, content) => {
-        this.pageObj[column] = content;
-        this.getTableData();
-      });
+
       this.tools.dropCol = localStorageTitle ? JSON.parse(localStorageTitle) : this.tableTitle;
     },
     destroyed() {

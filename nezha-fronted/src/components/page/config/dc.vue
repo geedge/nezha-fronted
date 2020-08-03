@@ -349,7 +349,7 @@
         this.rightBox.dc.show = false;
         if (refresh) {
           this.getTableData();
-          this.$store.commit("dcListChange");
+          bus.$emit("dc-list-change");
         }
       },
       closeTrafficBox(refresh) {
@@ -459,6 +459,12 @@
         this.$set(this.searchLabel, "orderBy", orderBy);
         this.getTableData();
       },
+
+      initEvent() {
+        bus.$on("dc-list-change", () => {
+          this.getTableData();
+        });
+      }
     },
     watch: {
       'bottomBox.dc': {

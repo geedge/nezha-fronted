@@ -517,16 +517,16 @@
         this.$set(this.searchLabel, "orderBy", orderBy);
         this.getTableData();
       },
-    },
-    computed: {
-      alertConfigListChange() {
-        return this.$store.state.alertConfigListChange;
-      },
+      initEvent() {
+        bus.$on("alert-rule-list-change", () => {
+          this.getTableData();
+        });
+        bus.$on("dc-list-change", () => {
+          this.getTableData();
+        });
+      }
     },
     watch: {
-      alertConfigListChange(n) {
-        this.getTableData();
-      },
       'bottomBox.showSubList': function(n) {
         let vm = this;
         this.$bottomBoxWindow.showSubListWatch(vm, n);
@@ -547,6 +547,7 @@
       if (pageSize != 'undefined' && pageSize != null) {
         this.pageObj.pageSize = pageSize
       }
+      this.initEvent();
 
       this.getTableData();
       this.$nextTick(() => {

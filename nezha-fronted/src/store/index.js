@@ -4,12 +4,6 @@ import Vuex from 'vuex'
 Vue.use(Vuex)
 const store = new Vuex.Store({
   state: {
-    assetData:{
-      selectedData: [],
-      step: 0,
-      type: -1  //0: asset  1: header
-    },
-    
     assetForAlertList: 0, //asset页跳转alertList时传递的assetId
 
     assetItemId:''  ,   //复选框ID
@@ -20,6 +14,7 @@ const store = new Vuex.Store({
     currentProject: {id: "", name: "", remark: ""},
     currentModule: {id: ""},
     currentAsset: {id: ""},
+    currentDcList: [],
     projectListChange: 0,
     moduleListChange: 0,
     endpointListChange: 0,
@@ -75,8 +70,8 @@ const store = new Vuex.Store({
     currentProjectChange(state, project) {
       state.currentProject = project;
     },
-    currentModuleChange(state, module) {
-      state.currentModule = module;
+    currentDcListChange(state, dcList) {
+      state.currentDcList = dcList;
     },
     currentAssetChange(state, asset) {
       state.currentAsset = asset;

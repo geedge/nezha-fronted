@@ -131,9 +131,7 @@
       @tablelable="tablelabelEmit"
       ref="elementset"
     ></element-set>
-    <transition name="right-box">
-      <module-box v-if="rightBox.module.show" :current-project="currentProject" :module="module" @close="closeModuleRightBox" ref="moduleBox"></module-box>
-    </transition>
+
     <transition name="right-box">
       <add-endpoint-box v-if="rightBox.addEndpoint.show" :current-project="currentProject" :current-module="currentModule" @close="closeAddEndpointRightBox" ref="addEndpointBox"></add-endpoint-box>
     </transition>
@@ -384,12 +382,6 @@
         }
         this.currentModule = {};
       },
-      closeModuleRightBox(refresh) {
-        this.rightBox.module.show = false;
-        if (refresh) {
-          this.getModuleList();
-        }
-      },
       closeAddEndpointRightBox(refresh) {
         this.rightBox.addEndpoint.show = false;
         if (refresh) {
@@ -452,39 +444,6 @@
         this.endpoint = Object.assign({}, endpoint);
         this.bottomBox.targetTab = "panel";
         this.bottomBox.showSubList = true;
-      },
-      initSnmpParam(module) {
-        this.$set(module, 'walk', []);
-        this.$set(module, 'version', '');
-        this.$set(module, 'max_repetitions', '');
-        this.$set(module, 'retries', '');
-        this.$set(module, 'timeout', '');
-        this.$set(module, 'community', '');
-        this.$set(module, 'username', '');
-        this.$set(module, 'security_level', '');
-        this.$set(module, 'password', '');
-        this.$set(module, 'auth_protocol', '');
-        this.$set(module, 'priv_protocol', '');
-        this.$set(module, 'priv_password', '');
-        this.$set(module, 'context_name', '');
-      },
-      //弹出module编辑页
-      editModule(module) {
-        this.currentModule = JSON.parse(JSON.stringify(module));
-        if (!this.currentModule.paramObj) {
-          this.$set(this.currentModule, 'paramObj', []);
-        }
-        this.module = JSON.parse(JSON.stringify(module));
-        if (!this.module.paramObj) {
-          this.$set(this.module, 'paramObj', []);
-        }
-        if (this.module.snmpParam) {
-          this.initSnmpParam(this.module);
-        }
-        this.rightBox.module.show = true;
-        this.$nextTick(() => {
-          this.$refs.moduleBox.initWalk();
-        });
       },
       addModule() {
         this.module = this.newModule();
@@ -659,6 +618,26 @@
         }
         this.$set(this.endpointSearchLabel, "orderBy", orderBy);
         this.getEndpointTableData();
+      },
+      initEvent() {
+        bus.$on("project-page-type", pageType => {
+          this.pageType = pageType;
+        });
+        bus.$on("current-project-change", project => {
+          this.currentProject = project;
+        });
+        bus.$on("current-module-change", module => {
+          this.currentModule = module;
+        });
+        bus.$on("project-list-change", () => {
+          this.getProjectList();
+        });
+        bus.$on("module-list-change", menu => {
+          this.getModuleList();
+        });
+        bus.$on("endpoint-list-change", menu => {
+          this.getEndpointTableData();
+        });
       }
     },
     created() {
@@ -676,15 +655,9 @@
       setTimeout(() => {
         this.ready = true;
       }, 300);
-      bus.$on("project-page-type", pageType => {
-        this.pageType = pageType;
-      });
-      bus.$on("current-project-change", project => {
-        this.currentProject = project;
-      });
-      bus.$on("current-module-change", module => {
-        this.currentModule = module;
-      });
+
+      this.initEvent();
+
       //resize时刷新左侧列表滚动条
       let vm = this;
       window.onresize = function() {
@@ -699,21 +672,6 @@
         : this.endpointTableTitle;
     },
     computed: {
-      projectListChange() {
-        return this.$store.state.projectListChange;
-      },
-      moduleListChange() {
-        return this.$store.state.moduleListChange;
-      },
-      endpointListChange() {
-        return this.$store.state.endpointListChange;
-      },
-      currentProjectChange() {
-        return this.$store.state.currentProject;
-      },
-      currentModuleChange() {
-        return this.$store.state.currentModule;
-      },
       itemTip() {
         return function(id, content, ready) {
           let className = "item-tip-show";
@@ -733,15 +691,6 @@
       },
     },
     watch: {
-      projectListChange(n) {
-        this.getProjectList();
-      },
-      moduleListChange(n) {
-        this.getModuleList();
-      },
-      endpointListChange(n) {
-        this.getEndpointTableData();
-      },
       pageType(n) {
         if (n == 'endpoint') {
           this.$nextTick(() => {
@@ -774,7 +723,7 @@
           this.endpointTableData = [];
         }
       },
-      
+
       "bottomBox.showSubList": function(n) {
         let vm = this;
         this.$bottomBoxWindow.showSubListWatch(vm, n);

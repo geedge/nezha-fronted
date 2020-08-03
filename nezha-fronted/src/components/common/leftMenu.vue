@@ -116,6 +116,10 @@
     </div><div class="content-right right-slot" :class="{'right-slot-open': isShrink}">
       <router-view/>
     </div>
+
+    <transition name="right-box">
+      <module-box v-if="rightBox.module.show" :current-project="currentProject" :module="module" @close="closeModuleRightBox" ref="moduleBox"></module-box>
+    </transition>
   </div>
 </template>
 
@@ -143,6 +147,7 @@
           blankModule: {id: '', type: '', name: '', project: {}, port: '', path: '', param: '', paramObj: [], snmpParam: ''}, //空白module
           currentModule: {id: '', type: '', name: '', project: {}, port: '', path: '', param: '', paramObj: [], snmpParam: ''}, //用来回显的module
           ready: false,
+          rightBox: {module: {show: false}},
 
           //asset相关
           activeType: 'dataCenter',
@@ -208,12 +213,6 @@
             return "";
           }
         },
-        projectListChange() {
-          return this.$store.state.projectListChange;
-        },
-        moduleListChange() {
-          return this.$store.state.moduleListChange;
-        },
         currentProjectChange() {
           return this.$store.state.currentProject;
         },
@@ -225,15 +224,6 @@
           handler(n) {
             this.active = n;
           }
-        },
-        projectListChange(n) {
-          this.getProjectList();
-        },
-        moduleListChange(n) {
-          this.getModuleList();
-        },
-        endpointListChange(n) {
-          this.getEndpointTableData();
         },
         currentProjectChange: {
           immediate: true,
@@ -247,13 +237,14 @@
           },
         },
         dcCheckList(n, o) {
-          setTimeout(() => {
+          this.$store.commit("currentDcListChange", n);
+        /*  setTimeout(() => {
             if (n.length > 0 ) {
               bus.$emit("asset-filter-change", "idcIds", n.join(','));
             } else {
               bus.$emit("asset-filter-change", "idcIds", "");
             }
-          }, 100);
+          }, 100);*/
         },
         currentProject(n, o) {
           bus.$emit("current-project-change", n); //告知project.vue
@@ -261,12 +252,6 @@
       },
       mounted() {
         Promise.all([this.getProjectList(), this.getModuleList(), this.getLeftMenuList()]).then(response => {
-          /*//左侧dc列表初始选中状态
-          if (this.$store.state.assetData.selectedData.length > 0) {
-            this.checkList = [];
-            this.checkList = this.$store.state.assetData.selectedData;
-          }*/
-
           let cacheParentMenu = localStorage.getItem('nz-parent-menu');
           let cacheMenu = localStorage.getItem('nz-menu');
           if (cacheParentMenu) {
@@ -281,16 +266,7 @@
               this.active = this.menus[this.parentMenu].menu[0].route;
             }
           }
-          bus.$on("parent-menu-change", parentMenu => {
-            this.parentMenu = parentMenu;
-          });
-          bus.$on("menu-change", menu => {
-            this.active = menu;
-          });
-          bus.$on("header-dc-change", dcId => {
-            this.dcCheckList = [dcId];
-            bus.$emit("asset-filter-change", "idcIds", dcId);
-          });
+          this.initEvent(); //注册监听事件
 
           setTimeout(() => {
             this.ready = true;
@@ -354,6 +330,41 @@
             this.$refs.moduleBox.initWalk();
           });*/
         },
+        //弹出module编辑页
+        editModule(module) {
+          this.module = JSON.parse(JSON.stringify(module));
+          if (!this.module.paramObj) {
+            this.$set(this.module, 'paramObj', []);
+          }
+          if (this.module.snmpParam) {
+            this.initSnmpParam(this.module);
+          }
+          this.rightBox.module.show = true;
+          this.$nextTick(() => {
+            this.$refs.moduleBox.initWalk();
+          });
+        },
+        closeModuleRightBox(refresh) {
+          this.rightBox.module.show = false;
+          if (refresh) {
+            this.getModuleList();
+          }
+        },
+        initSnmpParam(module) {
+          this.$set(module, 'walk', []);
+          this.$set(module, 'version', '');
+          this.$set(module, 'max_repetitions', '');
+          this.$set(module, 'retries', '');
+          this.$set(module, 'timeout', '');
+          this.$set(module, 'community', '');
+          this.$set(module, 'username', '');
+          this.$set(module, 'security_level', '');
+          this.$set(module, 'password', '');
+          this.$set(module, 'auth_protocol', '');
+          this.$set(module, 'priv_protocol', '');
+          this.$set(module, 'priv_password', '');
+          this.$set(module, 'context_name', '');
+        },
         changeCurrentProject(project) {
           localStorage.setItem("nz-current-project", project.id);
           this.$store.commit("currentProjectChange", project);
@@ -371,6 +382,24 @@
           this.changeCurrentModule({id: ""});
         },
 
+        initEvent() {
+          bus.$on("parent-menu-change", parentMenu => {
+            this.parentMenu = parentMenu;
+          });
+          bus.$on("menu-change", menu => {
+            this.active = menu;
+          });
+          bus.$on("header-dc-change", dcId => {
+            this.dcCheckList = [dcId];
+            bus.$emit("asset-filter-change", "idcIds", dcId);
+          });
+          bus.$on("project-list-change", () => {
+            this.getProjectList();
+          });
+          bus.$on("module-list-change", menu => {
+            this.getModuleList();
+          });
+        },
         // 获取asset左侧菜单数据
         getLeftMenuList(){
           return new Promise(resolve => {
