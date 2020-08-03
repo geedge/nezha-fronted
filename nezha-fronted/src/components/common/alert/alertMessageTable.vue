@@ -2,7 +2,7 @@
   @import '../../charts/chart';
 </style>
 <template>
-  <div class="content relative-position">
+  <div :class="{'contentTable':!projectAlertId,'relative-position':true,'contentProject':projectAlertId}">
     <transition name="el-zoom-in-bottom">
       <div class="el-popover alert-clean-pop" @click="toDeleteMessage(false)" v-if="deleteBox.ids.length > 0">
         <i style="cursor: pointer" class="el-icon-delete"></i>
@@ -937,8 +937,12 @@
   /deep/.active-icon{
     margin-top: 0;
   }
-  .content{
+  .contentTable{
     height: calc(100% - 105px)
+  }
+  .contentProject{
+    height: calc(100% - 60px);
+    margin-bottom: 15px;
   }
   .tabelH100{
     height: 100% !important;
