@@ -51,8 +51,10 @@
             <!--<div class="link too-long-split"
                @click="viewRule(scope.row[item.prop].id)" :id="'view-rule-'+scope.row[item.prop].id"
                v-if="scope.row[item.prop].alertName">{{scope.row[item.prop].alertName}}</div>-->
-            <span class="too-long-split" v-if="scope.row[item.prop].alertName" @mouseover="alertMessagehover(scope.row,scope.$index)">
-                    <el-tooltip placement="right" effect="light">
+            <span class="too-long-split pointer" v-if="scope.row[item.prop].alertName" @mouseover="alertMessagehover(scope.row,scope.$index)">
+                    <el-tooltip
+                      :placement="scope.$index==0?'right-start':(scope.$index==tableData.length-1?'right-end':'right')"
+                      effect="light">
                       <alertRuleInfo slot="content" :id="scope.row.alertRule.id" :messageLoad="scope.row.loading"></alertRuleInfo>
                       <span>{{scope.row[item.prop].alertName}}</span>
                     </el-tooltip>
@@ -73,9 +75,9 @@
             <span v-else>-</span>
           </template>
           <span v-else-if="item.prop == 'severity'">
-                <span v-if="scope.row[item.prop] == 'high'"><i class="el-icon-arrow-up"></i>&nbsp;{{$CONSTANTS.alertMessage.severityData.find(s => {return s.key == 'high'})}}</span>
-                <span style="padding-left: 18px;" v-if="scope.row[item.prop] == 'medium'">{{$CONSTANTS.alertMessage.severityData.find(s => {return s.key == 'medium'})}}</span>
-                <span v-if="scope.row[item.prop] == 'low'"><i class="el-icon-arrow-down"></i>&nbsp;{{$CONSTANTS.alertMessage.severityData.find(s => {return s.key == 'low'})}}</span>
+                <span v-if="scope.row[item.prop] == 'high'"><i class="el-icon-arrow-up"></i>&nbsp;{{returnSeverityLabel(scope.row[item.prop])}}</span>
+                <span style="padding-left: 18px;" v-if="scope.row[item.prop] == 'medium'">{{returnSeverityLabel(scope.row[item.prop])}}</span>
+                <span v-if="scope.row[item.prop] == 'low'"><i class="el-icon-arrow-down"></i>&nbsp;{{returnSeverityLabel(scope.row[item.prop])}}</span>
               </span>
           <!--<div v-else-if="item.prop == 'linkObject'">
             <span v-if="(scope.row['type'] == 1 || scope.row['type'] == 2) && scope.row[item.prop]" class="link too-long-split"
@@ -125,11 +127,11 @@
                   {{scope.row['state'] == 2 ? "Expired" : ""}}
                 </span>
           </div>
-          <div v-else-if="item.prop == 'current'" class="too-long-split" >
+          <div v-else-if="item.prop == 'current'" class="too-long-split pointer" @click="detail(scope.row)">
             <span v-if="!scope.row.current">-</span>
             <el-popover v-else placement="right" trigger="hover">
               <div slot="reference">
-                <span @click="detail(scope.row)" class="content-right-option" :id="'alert-list-detail-'+scope.row.id"><i class="nz-icon nz-icon-chart"></i></span>
+                <span class="content-right-option" :id="'alert-list-detail-'+scope.row.id"><i class="nz-icon nz-icon-chart"></i></span>
                 <span>{{formatThreshold(scope.row.current[1],scope.row.alertRule.unit)}}</span>
               </div>
               <div>{{$unixTimeParseToString(scope.row.current[0])}}</div>
@@ -555,6 +557,7 @@
         }
       },
       detail(obj) {
+        if(!obj.current){return}
         this.chartDatas = [];
         this.legend = [];
         this.graphShow = true;
@@ -845,6 +848,10 @@
         }
         item[type].loading=true;
         this.$set(this.tableData,index,item);// 调用父组件
+      },
+      // Severity Label
+      returnSeverityLabel(key){
+        return this.$CONSTANTS.alertMessage.severityData.find(s => {return s.value == key}).label
       }
     },
     watch: {
@@ -944,5 +951,8 @@
   }
   /deep/.alert-clean-pop.el-popover{
     top: -30px;
+  }
+  .pointer{
+    cursor: pointer;
   }
 </style>
