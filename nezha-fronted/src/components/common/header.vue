@@ -58,7 +58,7 @@
       <el-submenu index="3" popper-class="nz-submenu">
         <template slot="title">
           <div v-if="assetData.length == 0">{{$t('overall.asset')}}</div>
-          <div v-else @click="jumpTo('asset', 3)" :class="{'menu-active' : activeIndex == 'asset'}">{{$t('overall.asset')}}</div>
+          <div v-else @click="jumpToAsset(assetData[0])" :class="{'menu-active' : activeIndex == 'asset'}">{{$t('overall.asset')}}</div>
         </template>
         <template>
           <el-menu-item v-if="assetData.length == 0" index="3-0"><div @click="createBox({type: 6})"><i class="nz-icon nz-icon-create-square header-dropdown-add"></i>&nbsp;&nbsp;{{$t("overall.createDatacenter")}}</div></el-menu-item>
@@ -339,14 +339,18 @@
           this.rightBox.alertRule.show = true;
         }
       },
-      jumpToAsset(asset) {
-        this.activeItemIndex = asset.id;
-        this.$store.commit('currentAssetChange', asset);
+      jumpToAsset(dc) {
+        this.activeItemIndex = dc.id;
+        bus.$emit("header-dc-change", dc.id); //发送给leftMenu
         this.jumpTo('asset', "assets");
       },
       jumpToProject(p) {
         this.currentProject = p;
+
         this.$store.commit('currentProjectChange', p);
+        bus.$emit("project-page-type", 'project');
+        localStorage.setItem('nz-current-project', p.id);
+
         this.activeItemIndex = p.id;
         this.jumpTo('project', 'projects');
       },

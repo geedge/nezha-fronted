@@ -1,233 +1,162 @@
 <template>
   <div class="asset" ref="asset">
-    <left-menu >
-      <div slot="content-left" class="slot-content">
-        <div class="sidebar-title">{{$t('asset.asset')}}</div>
-        <div class="sidebar-info" style="height: 90%">
-          <el-scrollbar ref="leftScrollbar" style="height: 100%">
-            <el-collapse v-model="activeType" class="left-menu-bg">
-              <el-collapse-item name="dataCenter" :title="$t('asset.left.dataCenter')">
-                <el-checkbox-group v-model="dcCheckList" size="small" @change="changeCheckBox">
-                  <el-checkbox class="sidebar-info-item" :class="{'sidebar-info-item-active': indOf(dcCheckList, item.id)}"
-                               v-for="(item,key) in dcData" :key="key" :label=item.id>
-                    <div class="sidebar-info-item-txt">
-                      <el-popover v-if="item.name.length > 14" trigger="hover" placement="top-start" :content="item.name" >
-                        <span slot="reference">{{item.name}}</span>
-                      </el-popover>
-                      <span v-else>{{item.name}}</span>
-                    </div>
-                    <el-tooltip :content="''+item.total" placement="top" effect="light" :disabled="item.total<99">
-                      <el-badge class="mark" :value="item.total" :max="99"/>
-                    </el-tooltip>
-                  </el-checkbox>
-                </el-checkbox-group>
-              </el-collapse-item>
-              <el-collapse-item name="assetType" :title="$t('asset.assetType')">
-                <el-checkbox-group v-model="assetTypeCheckList" size="small" @change="changeAssetTypeCheckBox">
-                  <el-checkbox class="sidebar-info-item" :class="{'sidebar-info-item-active': indOf(assetTypeCheckList, item.id)}" v-for="(item, key) in assetTypeData" :key="key" :label=item.id>
-                    <div class="sidebar-info-item-txt">
-                      <el-popover v-if="item.name.length > 14" trigger="hover" placement="top-start" :content="item.name" >
-                        <span slot="reference">{{item.name}}</span>
-                      </el-popover>
-                      <span v-else>{{item.name}}</span>
-                    </div>
-                    <el-tooltip :content="''+item.total" placement="top" effect="light" :disabled="item.total<99">
-                      <el-badge class="mark" :value="item.total" :max="99"/>
-                    </el-tooltip>
-                  </el-checkbox>
-                </el-checkbox-group>
-              </el-collapse-item>
-              <el-collapse-item name="vendor" :title="$t('asset.left.vendor')">
-                <el-checkbox-group v-model="vendorCheckList" size="small" @change="changeVendorCheckBox">
-                  <el-checkbox class="sidebar-info-item" :class="{'sidebar-info-item-active': indOf(vendorCheckList, item.id)}" v-for="(item, key) in vendorData" :key="key" :label=item.id>
-                    <div class="sidebar-info-item-txt">
-                      <el-popover v-if="item.name.length > 14" trigger="hover" placement="top-start" :content="item.name" >
-                        <span slot="reference">{{item.name}}</span>
-                      </el-popover>
-                      <span v-else>{{item.name}}</span>
-                    </div>
-                    <el-tooltip :content="''+item.total" placement="top" effect="light" :disabled="item.total<99">
-                      <el-badge class="mark" :value="item.total" :max="99"/>
-                    </el-tooltip>
-                  </el-checkbox>
-                </el-checkbox-group>
-              </el-collapse-item>
-              <el-collapse-item name="ping" :title="$t('asset.left.ping')">
-                <el-checkbox-group v-model="pingCheckList" size="small" @change="changePingCheckBox">
-                  <el-checkbox class="sidebar-info-item" :class="{'sidebar-info-item-active': indOf(pingCheckList, item.key)}" v-for="(item, index) in pingData" :key="index" :label="item.label">
-                    <div class="sidebar-info-item-txt">
-                      <span>{{item.label}}</span>
-                    </div>
-                    <el-tooltip :content="''+item.total" placement="top" effect="light" :disabled="item.total < 99">
-                      <el-badge class="mark" :value="item.total" :max="99"/>
-                    </el-tooltip>
-                  </el-checkbox>
-                </el-checkbox-group>
-              </el-collapse-item>
-            </el-collapse>
-          </el-scrollbar>
+    <div class="main-list" :class="{'main-list-with-sub': bottomBox.showSubList}">
+      <div class="main-modal"></div>
+      <div class="top-tools" v-show="bottomBox.mainResizeShow">
+        <div class="top-tool-main-right" :class="{'top-tool-main-right-to-left': bottomBox.showSubList}">
+          <div class="top-tool-search margin-r-20"><search-input :searchMsg="searchMsg" @search="search" :inTransform="bottomBox.inTransform"></search-input></div>
+          <export-excel
+            export-file-name="asset"
+            export-url="/asset/export"
+            import-url="/asset/import"
+            :params="searchLabel"
+            @afterImport="getTableData"
+          >
+            <template slot="optionZone">
+              <button @click.stop="add" :title="$t('overall.createAsset')" class="nz-btn nz-btn-size-normal nz-btn-style-light" id="asset-create-asset">
+                <i class="nz-icon nz-icon-create-square"></i></button>
+            </template>
+          </export-excel>
         </div>
+        <div class="pagination-top pagination-top-hide display-none"></div>
       </div>
-      <div slot="content-right" class="slot-content">
-        <div class="main-list" :class="{'main-list-with-sub': bottomBox.showSubList}">
-          <div class="main-modal"></div>
-          <div class="top-tools" v-show="bottomBox.mainResizeShow">
-            <div class="top-tool-main-right" :class="{'top-tool-main-right-to-left': bottomBox.showSubList}">
-              <div class="top-tool-search margin-r-20"><search-input :searchMsg="searchMsg" @search="search" :inTransform="bottomBox.inTransform"></search-input></div>
-              <export-excel
-                export-file-name="asset"
-                export-url="/asset/export"
-                import-url="/asset/import"
-                :params="searchLabel"
-                @afterImport="getTableData"
-              >
-                <template slot="optionZone">
-                  <button @click.stop="add" :title="$t('overall.createAsset')" class="nz-btn nz-btn-size-normal nz-btn-style-light" id="asset-create-asset">
-                    <i class="nz-icon nz-icon-create-square"></i></button>
-                </template>
-              </export-excel>
+
+      <el-table
+        class="nz-table"
+        :height="mainTableHeight"
+        style="width: 100%;"
+        :data="tableData"
+        v-scrollBar:el-table="'large'"
+        v-show="bottomBox.mainResizeShow"
+        border
+        v-loading="tools.loading"
+        tooltip-effect="light"
+        ref="assetTable"
+        :cell-class-name="messageStyle"
+        @sort-change="tableDataSort"
+      >
+        <el-table-column
+          :resizable="false"
+          v-for="(item, index) in tools.tablelable"
+          v-if="item.show"
+          :width="item.width"
+          :key="`col_${index}`"
+          :label="item.label"
+          :fixed="item.fixed"
+          :show-overflow-tooltip="item.prop != 'Alert' || item.prop != 'Module'"
+          min-width="110px"
+          :class-name="item.prop == 'option' ? 'content-right-options' : ''"
+          :sortable="sortableShow(item.prop)"
+          :prop="propTitle(item.prop)"
+          :sort-orders="['ascending', 'descending']"
+        >
+          <template slot-scope="scope" :column="item">
+            <div v-if="item.prop=='ID'">
+              <span>{{scope.row.id}}</span>
             </div>
-            <div class="pagination-top pagination-top-hide display-none"></div>
+            <div v-if="item.prop=='assetType'">
+              <span>{{scope.row.model.type.value}}</span>
+            </div>
+            <template v-if="item.prop=='SN'">{{scope.row.sn}}</template>
+            <div v-if="item.prop=='HOST'">
+              <span>{{scope.row.host}}</span>
+            </div>
+            <div v-if="item.prop=='state'">
+              <span>{{scope.row.state==1 ? $t('asset.inStock') : $t('asset.notInStock')}}</span>
+            </div>
+          <div v-if="item.prop == 'pingStatus'">
+            <el-popover
+              placement="right"
+              width="200"
+              trigger="hover"
+              :content="formatPingTime(scope.row.pingLastUpdate)">
+              <div slot="reference" style="width: 20px">
+                <div :class="{'active-icon green':scope.row.pingState == 1,'active-icon red':scope.row.pingState == 0}"></div><span>{{scope.row.pingRtt?scope.row.pingRtt+'ms':''}}</span>
+              </div>
+            </el-popover>
           </div>
-
-              <el-table
-                class="nz-table"
-                :height="mainTableHeight"
-                style="width: 100%;"
-                :data="tableData"
-                v-scrollBar:el-table="'large'"
-                v-show="bottomBox.mainResizeShow"
-                border
-                v-loading="tools.loading"
-                tooltip-effect="light"
-                ref="assetTable"
-                :cell-class-name="messageStyle"
-                @sort-change="tableDataSort"
-              >
-                <el-table-column
-                  :resizable="false"
-                  v-for="(item, index) in tools.tablelable"
-                  v-if="item.show"
-                  :width="item.width"
-                  :key="`col_${index}`"
-                  :label="item.label"
-                  :fixed="item.fixed"
-                  :show-overflow-tooltip="item.prop != 'Alert' || item.prop != 'Module'"
-                  min-width="110px"
-                  :class-name="item.prop == 'option' ? 'content-right-options' : ''"
-                  :sortable="sortableShow(item.prop)"
-                  :prop="propTitle(item.prop)"
-                  :sort-orders="['ascending', 'descending']"
-                >
-                  <template slot-scope="scope" :column="item">
-                    <div v-if="item.prop=='ID'">
-                      <span>{{scope.row.id}}</span>
-                    </div>
-                    <div v-if="item.prop=='assetType'">
-                      <span>{{scope.row.model.type.value}}</span>
-                    </div>
-                    <template v-if="item.prop=='SN'">{{scope.row.sn}}</template>
-                    <div v-if="item.prop=='HOST'">
-                      <span>{{scope.row.host}}</span>
-                    </div>
-                    <div v-if="item.prop=='state'">
-                      <span>{{scope.row.state==1 ? $t('asset.inStock') : $t('asset.notInStock')}}</span>
-                    </div>
-              <div v-if="item.prop == 'pingStatus'">
-                <el-popover
-                  placement="right"
-                  width="200"
-                  trigger="hover"
-                  :content="formatPingTime(scope.row.pingLastUpdate)">
-                  <div slot="reference" style="width: 20px">
-                    <div :class="{'active-icon green':scope.row.pingState == 1,'active-icon red':scope.row.pingState == 0}"></div><span>{{scope.row.pingRtt?scope.row.pingRtt+'ms':''}}</span>
-                  </div>
-                </el-popover>
-              </div>
-              <template v-if="item.prop=='Module'">
-                <span class="link" @click="showEndpoint(scope.row)">{{scope.row.endpointNum}}</span>
-              </template>
-              <template v-if="item.prop=='Alert'">
-                <el-tooltip :content="scope.row.alertNum+' '+$t('overall.active')" placement="top" effect="light" :disabled=" scope.row.alertNum < 99">
-                  <span :id="'asset-alerts-'+scope.row.id" @click="jumpToAlertMsg(scope.row)" class="link">
-                    {{(scope.row.alertNum < 99 ? scope.row.alertNum : 99)}}
-                      <sup class="linkSup" v-if="scope.row.alertNum > 99">+</sup>
-                    {{' ' + $t('overall.active')}}
-                  </span>
-                </el-tooltip>
-              </template>
-              <div v-if="item.prop=='dataCenter'">
-                <span  >{{scope.row.idc.name}}</span>
-              </div>
-              <template v-if="item.prop=='cabinet'">
-                <span v-if="scope.row.cabinet && scope.row.cabinet != '--'">{{returnData(scope.row.cabinet).name}}</span>
-                <span v-else >{{returnData(scope.row.cabinet)}}</span>
-              </template>
-              <div v-if="item.prop=='model'">
-                <span>{{scope.row.model.name}}</span>
-              </div>
-              <div v-if="item.prop=='vendor'">
-                <span>{{scope.row.model.vendor.value}}</span>
-              </div>
-              <div v-if="item.prop=='purchaseDate'">
-                <span>{{returnData(scope.row.purchaseDate)}}</span>
-              </div>
-              <div v-if="item.prop=='principal'">
-                <span>{{getPrincipalName(scope.row.idc.principal)}}</span>
-              </div>
-              <div v-if="item.prop=='tel'">
-                <span>{{scope.row.idc.tel}}</span>
-              </div>
-              <template v-if="item.prop == 'option'">
-                <span :title="$t('overall.view')" @click.stop="detail(scope.row)" class="content-right-option" :id="'asset-detail-'+scope.row.id"><i
-                  class="el-icon-view"></i>
-                </span>
-                  &nbsp;
-                  <span :title="$t('overall.edit')" @click.stop="edit(scope.row)" class="content-right-option" :id="'asset-edit-'+scope.row.id"><i
-                    class="nz-icon nz-icon-edit"></i>
-                </span>
-                  &nbsp;
-                  <span :title="$t('overall.delete')" @click.stop="del(scope.row)" class="content-right-option" :id="'asset-del-'+scope.row.id"><i
-                    class="el-icon-delete"></i>
-                </span>
-                  &nbsp;
-                  <el-dropdown trigger="hover" @command="cli">
-                  <span title="CLI" class="content-right-option" :id="'asset-ssh-'+scope.row.id"><i
-                    class="nz-icon nz-icon-cli" :class="{'gray-filter': !scope.row.accounts || scope.row.accounts.length == 0}"></i>
-                  </span>
-                    <el-dropdown-menu slot="dropdown">
-                      <el-dropdown-item v-for="(account, index) in scope.row.accounts" v-if="account && account.protocol != 'SNMP'" :key="index" :command="[scope.row.id ,scope.row.host, account]">{{account.protocol}}</el-dropdown-item>
-                    </el-dropdown-menu>
-                  </el-dropdown>
-
-                </template>
-              </template>
-            </el-table-column>
-            <el-table-column width="28" fixed="right" :resizable="false">
-              <template slot="header" slot-scope="scope">
-              <span @click.stop="elementsetShow('shezhi',$event)" class="nz-table-gear">
-                <i class="nz-icon nz-icon-gear"></i>
+          <template v-if="item.prop=='Module'">
+            <span class="link" @click="showEndpoint(scope.row)">{{scope.row.endpointNum}}</span>
+          </template>
+          <template v-if="item.prop=='Alert'">
+            <el-tooltip :content="scope.row.alertNum+' '+$t('overall.active')" placement="top" effect="light" :disabled=" scope.row.alertNum < 99">
+              <span :id="'asset-alerts-'+scope.row.id" @click="jumpToAlertMsg(scope.row)" class="link">
+                {{(scope.row.alertNum < 99 ? scope.row.alertNum : 99)}}
+                  <sup class="linkSup" v-if="scope.row.alertNum > 99">+</sup>
+                {{' ' + $t('overall.active')}}
               </span>
-              </template>
-              <template v-slot="scope">
-                <button v-if="scope.$index == 0" class="to-top" :style="{top: tools.toTopBtnTop}" :class="{'to-top-is-hover': tools.tableHover}" v-show="tools.showTopBtn && bottomBox.mainResizeShow" @click="$toTop('ps', 0)"><i class="nz-icon nz-icon-top"></i></button>
-              </template>
-            </el-table-column>
-          </el-table>
-          <div class="pagination-bottom" v-show="!bottomBox.showSubList">
-            <Pagination :tableId="tableId" :pageObj="pageObj" @pageNo='pageNo' @pageSize='pageSize' ref="Pagination"></Pagination>
+            </el-tooltip>
+          </template>
+          <div v-if="item.prop=='dataCenter'">
+            <span  >{{scope.row.idc.name}}</span>
           </div>
-        </div>
-        <transition name="el-zoom-in-bottom">
-          <bottom-box v-if="bottomBox.showSubList" :sub-resize-show="bottomBox.subResizeShow" :obj="bottomBox.asset" :isFullScreen="bottomBox.isFullScreen" :from="'asset'" :targetTab.sync="bottomBox.targetTab" :detail="bottomBox.assetDetail"
-                      @reload="getTableData"
-                      @closeSubList="bottomBox.showSubList = false"
-                      @fullScreen="fullScreen"
-                      @exitFullScreen="exitFullScreen"
-                      @listResize="listResize" ></bottom-box>
-        </transition>
+          <template v-if="item.prop=='cabinet'">
+            <span v-if="scope.row.cabinet && scope.row.cabinet != '--'">{{returnData(scope.row.cabinet).name}}</span>
+            <span v-else >{{returnData(scope.row.cabinet)}}</span>
+          </template>
+          <div v-if="item.prop=='model'">
+            <span>{{scope.row.model.name}}</span>
+          </div>
+          <div v-if="item.prop=='vendor'">
+            <span>{{scope.row.model.vendor.value}}</span>
+          </div>
+          <div v-if="item.prop=='purchaseDate'">
+            <span>{{returnData(scope.row.purchaseDate)}}</span>
+          </div>
+          <div v-if="item.prop=='principal'">
+            <span>{{getPrincipalName(scope.row.idc.principal)}}</span>
+          </div>
+          <div v-if="item.prop=='tel'">
+            <span>{{scope.row.idc.tel}}</span>
+          </div>
+          <template v-if="item.prop == 'option'">
+            <span :title="$t('overall.view')" @click.stop="detail(scope.row)" class="content-right-option" :id="'asset-detail-'+scope.row.id"><i
+              class="el-icon-view"></i>
+            </span>
+              &nbsp;
+              <span :title="$t('overall.edit')" @click.stop="edit(scope.row)" class="content-right-option" :id="'asset-edit-'+scope.row.id"><i
+                class="nz-icon nz-icon-edit"></i>
+            </span>
+              &nbsp;
+              <span :title="$t('overall.delete')" @click.stop="del(scope.row)" class="content-right-option" :id="'asset-del-'+scope.row.id"><i
+                class="el-icon-delete"></i>
+            </span>
+              &nbsp;
+              <el-dropdown trigger="hover" @command="cli">
+              <span title="CLI" class="content-right-option" :id="'asset-ssh-'+scope.row.id"><i
+                class="nz-icon nz-icon-cli" :class="{'gray-filter': !scope.row.accounts || scope.row.accounts.length == 0}"></i>
+              </span>
+                <el-dropdown-menu slot="dropdown">
+                  <el-dropdown-item v-for="(account, index) in scope.row.accounts" v-if="account && account.protocol != 'SNMP'" :key="index" :command="[scope.row.id ,scope.row.host, account]">{{account.protocol}}</el-dropdown-item>
+                </el-dropdown-menu>
+              </el-dropdown>
+
+            </template>
+          </template>
+        </el-table-column>
+        <el-table-column width="28" fixed="right" :resizable="false">
+          <template slot="header" slot-scope="scope">
+          <span @click.stop="elementsetShow('shezhi',$event)" class="nz-table-gear">
+            <i class="nz-icon nz-icon-gear"></i>
+          </span>
+          </template>
+          <template v-slot="scope">
+            <button v-if="scope.$index == 0" class="to-top" :style="{top: tools.toTopBtnTop}" :class="{'to-top-is-hover': tools.tableHover}" v-show="tools.showTopBtn && bottomBox.mainResizeShow" @click="$toTop('ps', 0)"><i class="nz-icon nz-icon-top"></i></button>
+          </template>
+        </el-table-column>
+      </el-table>
+      <div class="pagination-bottom" v-show="!bottomBox.showSubList">
+        <Pagination :tableId="tableId" :pageObj="pageObj" @pageNo='pageNo' @pageSize='pageSize' ref="Pagination"></Pagination>
       </div>
-    </left-menu>
+    </div>
+    <transition name="el-zoom-in-bottom">
+      <bottom-box v-if="bottomBox.showSubList" :sub-resize-show="bottomBox.subResizeShow" :obj="bottomBox.asset" :isFullScreen="bottomBox.isFullScreen" :from="'asset'" :targetTab.sync="bottomBox.targetTab" :detail="bottomBox.assetDetail"
+                  @reload="getTableData"
+                  @closeSubList="bottomBox.showSubList = false"
+                  @fullScreen="fullScreen"
+                  @exitFullScreen="exitFullScreen"
+                  @listResize="listResize" ></bottom-box>
+    </transition>
     <transition name="right-box">
       <asset-box v-if="rightBox.show" :asset="asset" @refresh="flushData" ref="assetBox" @close="closeRightBox"></asset-box>
     </transition>
@@ -420,14 +349,14 @@
           }],
         tableData: [],
 
-        dcData: [],
+        /*dcData: [],
         dcCheckList: [],
         assetTypeData: [],
         assetTypeCheckList: [],
         vendorData: [],
         vendorCheckList: [],
         pingData: [],
-        pingCheckList: [],
+        pingCheckList: [],*/
 
         pageObj: {
           id: '',
@@ -438,7 +367,6 @@
           idcIds: ''
         },
 
-        assetClick: false,
         assetPingSwitch: localStorage.getItem('nz-sys-asset-ping-switch'),
       }
     },
@@ -463,9 +391,6 @@
             this.pageObj.idcIds = n.join(',');
           } else {
             this.pageObj.idcIds = '';
-          }
-          if (this.assetClick) {
-            this.$store.state.assetData = {selectedData: n, step: this.$store.state.assetData.step+1, type: 0};
           }
           this.getTableData();
         }, 50);
@@ -509,17 +434,6 @@
             }
             this.$store.commit('assetAllIdChange',this.checkListData)
           }
-        }
-      },
-      indOf(a, b) {
-        let c = [];
-        for (let i = 0; i < a.length; i++) {
-          c.push(a[i]);
-        }
-        if (c.indexOf(b) > -1) {
-          return true;
-        } else {
-          return false;
         }
       },
       elementsetShow(s, e) {
@@ -580,7 +494,7 @@
           }
         });
       },
-      getDcData() {
+      /*getDcData() {
         return new Promise(resolve => {
           this.$get('idc').then(response => {
             if (response.code === 200) {
@@ -609,7 +523,7 @@
             resolve(this.vendorData);
           });
         });
-      },
+      },*/
       getUserData() {
         return new Promise(resolve => {
           this.$get('sys/user/list').then(response => {
@@ -664,17 +578,6 @@
           this.$set(item, item.id + item.name, false)
         })
       },
-      indOf(a, b) {
-        let c = [];
-        for (let i = 0; i < a.length; i++) {
-          c.push(a[i]);
-        }
-        if (c.indexOf(b) > -1) {
-          return true;
-        } else {
-          return false;
-        }
-      },
       showEndpoint(asset) {
         this.bottomBox.asset = Object.assign({}, asset);
         this.bottomBox.targetTab = "endpoint";
@@ -693,10 +596,7 @@
           this.getTableData();
         }
       },
-      changeCheckBox() {
-        this.assetClick = true;
-      },
-      changeAssetTypeCheckBox() {
+      /*changeAssetTypeCheckBox() {
         if(this.assetTypeCheckList && this.assetTypeCheckList.length > 0){
           let assetTypeIds = this.assetTypeCheckList.join(',');
           this.pageObj.typeIds=assetTypeIds;
@@ -723,7 +623,7 @@
           this.pageObj.pingStates = '';
         }
         this.getTableData();
-      },
+      },*/
       pageNo(val) {
         this.pageObj.pageNo = val;
         this.getTableData()
@@ -751,11 +651,11 @@
         }
       },
       flushData() {
-        Promise.all([this.getVendorData(), this.getAssetTypeData(), this.getDcData()]).then(response => {
+        Promise.all([this.getLeftMenuList()]).then(response => {
           this.getTableData();
         });
       },
-      closeAllPop:function(){
+      closeAllPop() {
         this.$refs.idcConfigBox.forEach((item) => {
           item.show(false);
         });
@@ -856,8 +756,6 @@
         }
         this.$set(this.searchLabel, "orderBy", orderBy);
         this.getTableData();
-      /*}
-        this.getAssetData();*/
       },
       // 获取左侧菜单数据
       getLeftMenuList(){
@@ -884,24 +782,19 @@
     },
     mounted() {
       //初始化数据
-      /*Promise.all([this.getVendorData(), this.getAssetTypeData(), this.getUserData(), this.getDcData()]).then(response => {
-        this.getTableData();
-      });*/
       this.getUserData();
-      this.getLeftMenuList().then(() => {
-        this.getTableData();
-      });
+      this.getTableData();
       //是否存在分页缓存
       let pageSize = localStorage.getItem('nz-pageSize-' + localStorage.getItem('nz-username') + '-' + this.tableId);
       if (pageSize != 'undefined' && pageSize != null) {
         this.pageObj.pageSize = pageSize
       }
       this.$nextTick(() => {
-        //左侧dc列表初始选中状态
+        /*//左侧dc列表初始选中状态
         if (this.$store.state.assetData.selectedData.length > 0) {
           this.checkList = [];
           this.checkList = this.$store.state.assetData.selectedData;
-        }
+        }*/
         //绑定滚动条事件，控制top按钮
         let el = this.$refs.assetTable.$el.querySelector(".el-table__body-wrapper");
         if (el._ps_) {
@@ -941,6 +834,10 @@
           }
         }
       }
+      bus.$on("asset-filter-change", (column, content) => {
+        this.pageObj[column] = content;
+        this.getTableData();
+      });
       this.tools.dropCol = localStorageTitle ? JSON.parse(localStorageTitle) : this.tableTitle;
     },
     destroyed() {
@@ -953,17 +850,6 @@
   .asset {
     height: 100%;
   }
-  .tab-input-square {
-    border: 1px solid #606266;
-    height: 22px;
-    width: 50px;
-    border-radius: 3px;
-    text-align: center;
-    line-height: 20px;
-  }
-  .tab-input-square-high {
-    border: 1px solid #1166bb;
-  }
   /deep/ .el-table .cell.el-tooltip{
     min-width: 88px;
   }
@@ -975,9 +861,7 @@
   .link{
     position: relative;
   }
-  /deep/ .el-badge__content{
-    width: 15px;
-  }
+
   .mark{
     vertical-align: middle;
     display: inline-flex;

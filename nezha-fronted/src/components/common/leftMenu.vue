@@ -1,48 +1,113 @@
 <template>
   <div class="content">
     <div class="content-left left-slot" :class="{'left-slot-shrink': isShrink}">
-      <div class="sidebar-title too-long-split">{{menus[parentMenu].title}}</div>
-      <div class="sidebar-info">
-        <template v-if="parentMenu == 'projects'">
-          <el-collapse v-model="currentProjectTitle" class="left-menu-bg" accordion style="padding-top: 0px;" ref="projectLeft">
-            <el-collapse-item v-for="(item,index) in projectList" :key="item.name+item.id+index" :name="item.name+'-'+item.id">
-              <template slot="title">
-                <div class="sidebar-info-item" :class="{'sidebar-info-item-active': item.id == currentProject.id}" @click="detailProject($event, item)" :id="'project-module-'+item.id">
-                  <div class="sidebar-info-item-txt">
-                    <el-popover v-if="item.name.length > 14" trigger="hover" placement="top-start" :content="item.name" popper-class="transparent-pop">
+      <div class="sidebar-title too-long-split">
+        <template v-if="parentMenu == 'projects'">{{$t("overall.project")}}</template>
+        <template v-else-if="parentMenu == 'assets'">{{$t("overall.asset")}}</template>
+        <template v-else>{{menus[parentMenu].title}}</template>
+      </div>
+      <div class="sidebar-info" style="height: 90%">
+        <el-scrollbar style="height: 100%;">
+          <template v-if="parentMenu == 'projects'">
+            <el-collapse v-model="currentProject.id + ''" class="left-menu-bg" accordion style="padding-top: 0;" ref="projectLeft">
+              <el-collapse-item v-for="(item, index) in projectList" :key="item.id" :name="item.id + ''">
+                <template slot="title">
+                  <div class="sidebar-info-item-project sidebar-info-item" :class="{'sidebar-info-item-active': item.id == currentProject.id}" @click="detailProject(item)" :id="'project-module-'+item.id">
+                    <div class="sidebar-info-item-txt">
+                      <el-popover v-if="item.name.length > 14" trigger="hover" placement="top-start" :content="item.name" popper-class="transparent-pop">
                       <span slot="reference" class="">
                         {{item.name}}
                       </span>
-                    </el-popover>
-                    <span v-else>{{item.name}}</span>
-                  </div>
-                </div>
-              </template>
-              <div class="sidebar-info sub-sidebar-info" >
-                <div v-if="getProjectModule(item.id).length == 0" class="sidebar-info-item sidebar-info-item-add" @click="addModule">
-                  <i class="nz-icon nz-icon-create-square"></i>
-                </div>
-                <template v-else>
-                  <div v-for="module in getProjectModule(item.id)" class="sidebar-info-sub-item" :class="{'sidebar-info-item-active': module.id == currentModule.id}" @click="changeModule(item, module)" :id="'project-module-'+module.id">
-                    <div :id="`module-${module.id}`" class="item-tip">
-                      <div class="item-tip-hide item-tip-key el-popover" :class="itemTip(module.id, module.name, ready)">{{module.name}}</div>
-                      <span class="too-long-split" style="width: 120px;">{{module.name}}</span>
-                      <div v-show="module.buildIn != 1" class="hid-div side-bar-menu-edit sub-side-bar-menu-edit" @click.stop="editModule(module)" :id="'project-module-edit-'+module.id" ><i class="nz-icon nz-icon-edit"></i></div>
+                      </el-popover>
+                      <span v-else>{{item.name}}</span>
                     </div>
                   </div>
                 </template>
-              </div>
-            </el-collapse-item>
-          </el-collapse>
-        </template>
-        <template v-else-if="parentMenu == 'assets'">
-
-        </template>
-        <template v-else>
-          <div v-for="menu in menus[parentMenu].menu" class="sidebar-info-item" :class="{'sidebar-info-item-active': menu.route == active}" @click="jumpTo(menu.route)">
-            {{menu.name}}
-          </div>
-        </template>
+                <div class="sidebar-info sub-sidebar-info" >
+                  <div v-if="getProjectModule(item.id).length == 0" class="sidebar-info-item sidebar-info-item-add" @click="addModule">
+                    <i class="nz-icon nz-icon-create-square"></i>
+                  </div>
+                  <template v-else>
+                    <div v-for="module in getProjectModule(item.id)" class="sidebar-info-sub-item" :class="{'sidebar-info-item-active': module.id == currentModule.id}" @click="changeModule(item, module)" :id="'project-module-'+module.id">
+                      <div :id="`module-${module.id}`" class="item-tip">
+                        <div class="item-tip-hide item-tip-key el-popover" :class="itemTip(module.id, module.name, ready)">{{module.name}}</div>
+                        <span class="too-long-split" style="width: 120px;">{{module.name}}</span>
+                        <div v-show="module.buildIn != 1" class="hid-div side-bar-menu-edit sub-side-bar-menu-edit" @click.stop="editModule(module)" :id="'project-module-edit-'+module.id" ><i class="nz-icon nz-icon-edit"></i></div>
+                      </div>
+                    </div>
+                  </template>
+                </div>
+              </el-collapse-item>
+            </el-collapse>
+          </template>
+          <template v-else-if="parentMenu == 'assets'">
+            <el-collapse v-model="activeType" class="left-menu-bg">
+              <el-collapse-item name="dataCenter" :title="$t('asset.left.dataCenter')">
+                <el-checkbox-group v-model="dcCheckList" size="small">
+                  <el-checkbox class="sidebar-info-item sidebar-info-item-asset" :class="{'sidebar-info-item-active': indOf(dcCheckList, item.id)}"
+                               v-for="(item,key) in dcData" :key="key" :label=item.id>
+                    <div class="sidebar-info-item-txt">
+                      <el-popover v-if="item.name.length > 14" trigger="hover" placement="top-start" :content="item.name" >
+                        <span slot="reference">{{item.name}}</span>
+                      </el-popover>
+                      <span v-else>{{item.name}}</span>
+                    </div>
+                    <el-tooltip :content="''+item.total" placement="top" effect="light" :disabled="item.total<99">
+                      <el-badge class="mark" :value="item.total" :max="99"/>
+                    </el-tooltip>
+                  </el-checkbox>
+                </el-checkbox-group>
+              </el-collapse-item>
+              <el-collapse-item name="assetType" :title="$t('asset.assetType')">
+                <el-checkbox-group v-model="assetTypeCheckList" size="small" @change="changeAssetTypeCheckBox">
+                  <el-checkbox class="sidebar-info-item" :class="{'sidebar-info-item-active': indOf(assetTypeCheckList, item.id)}" v-for="(item, key) in assetTypeData" :key="key" :label=item.id>
+                    <div class="sidebar-info-item-txt">
+                      <el-popover v-if="item.name.length > 14" trigger="hover" placement="top-start" :content="item.name" >
+                        <span slot="reference">{{item.name}}</span>
+                      </el-popover>
+                      <span v-else>{{item.name}}</span>
+                    </div>
+                    <el-tooltip :content="''+item.total" placement="top" effect="light" :disabled="item.total<99">
+                      <el-badge class="mark" :value="item.total" :max="99"/>
+                    </el-tooltip>
+                  </el-checkbox>
+                </el-checkbox-group>
+              </el-collapse-item>
+              <el-collapse-item name="vendor" :title="$t('asset.left.vendor')">
+                <el-checkbox-group v-model="vendorCheckList" size="small" @change="changeVendorCheckBox">
+                  <el-checkbox class="sidebar-info-item" :class="{'sidebar-info-item-active': indOf(vendorCheckList, item.id)}" v-for="(item, key) in vendorData" :key="key" :label=item.id>
+                    <div class="sidebar-info-item-txt">
+                      <el-popover v-if="item.name.length > 14" trigger="hover" placement="top-start" :content="item.name" >
+                        <span slot="reference">{{item.name}}</span>
+                      </el-popover>
+                      <span v-else>{{item.name}}</span>
+                    </div>
+                    <el-tooltip :content="''+item.total" placement="top" effect="light" :disabled="item.total<99">
+                      <el-badge class="mark" :value="item.total" :max="99"/>
+                    </el-tooltip>
+                  </el-checkbox>
+                </el-checkbox-group>
+              </el-collapse-item>
+              <el-collapse-item name="ping" :title="$t('asset.left.ping')">
+                <el-checkbox-group v-model="pingCheckList" size="small" @change="changePingCheckBox">
+                  <el-checkbox class="sidebar-info-item" :class="{'sidebar-info-item-active': indOf(pingCheckList, item.key)}" v-for="(item, index) in pingData" :key="index" :label="item.label">
+                    <div class="sidebar-info-item-txt">
+                      <span>{{item.label}}</span>
+                    </div>
+                    <el-tooltip :content="''+item.total" placement="top" effect="light" :disabled="item.total < 99">
+                      <el-badge class="mark" :value="item.total" :max="99"/>
+                    </el-tooltip>
+                  </el-checkbox>
+                </el-checkbox-group>
+              </el-collapse-item>
+            </el-collapse>
+          </template>
+          <template v-else>
+            <div v-for="menu in menus[parentMenu].menu" class="sidebar-info-item" :class="{'sidebar-info-item-active': menu.route == active}" @click="jumpTo(menu.route)">
+              {{menu.name}}
+            </div>
+          </template>
+        </el-scrollbar>
       </div>
       <div @click="toggleStat" class="bottom-icon">
         <div class="bottom-divider"></div>
@@ -66,15 +131,29 @@
         return{
           isShrink: localStorage.getItem('nz-left-menu-shrink') == 'true',
           parentMenu: "dashboards",
-          active: "overview",
+          active: "/overview",
 
+          //project相关
           projectList: [],
           moduleList: [],
+          showProjectPanel: true,
           currentProjectTitle: '',
           currentProject: {id: '', name: '', remark: ''}, //endpoint弹框、module列表用来回显project
           module: {}, //编辑的module
           blankModule: {id: '', type: '', name: '', project: {}, port: '', path: '', param: '', paramObj: [], snmpParam: ''}, //空白module
           currentModule: {id: '', type: '', name: '', project: {}, port: '', path: '', param: '', paramObj: [], snmpParam: ''}, //用来回显的module
+          ready: false,
+
+          //asset相关
+          activeType: 'dataCenter',
+          dcData: [],
+          dcCheckList: [],
+          assetTypeData: [],
+          assetTypeCheckList: [],
+          vendorData: [],
+          vendorCheckList: [],
+          pingData: [],
+          pingCheckList: [],
 
           menus: {
             settings: {
@@ -160,24 +239,34 @@
           immediate: true,
           handler(n, o) {
             if (n && n.id != this.currentProject.id) {
-              this.currentProject = this.projectList.find(p => {
-                return p.id == n.id;
-              });
-              if (this.currentProject && this.currentProject.id) {
-                this.detailProject(null, this.currentProject);
+              this.currentProject = n;
+              if (this.currentProject && this.currentProject.id && this.showProjectPanel) {
+                this.detailProject(this.currentProject);
               }
             }
           },
         },
-        currentProject(n, o) {
-          bus.$emit("current-project-change", n);
+        dcCheckList(n, o) {
+          setTimeout(() => {
+            if (n.length > 0 ) {
+              bus.$emit("asset-filter-change", "idcIds", n.join(','));
+            } else {
+              bus.$emit("asset-filter-change", "idcIds", "");
+            }
+          }, 100);
         },
-        currentModule(n, o) {
-          bus.$emit("current-module-change", n);
+        currentProject(n, o) {
+          bus.$emit("current-project-change", n); //告知project.vue
         },
       },
       mounted() {
-        Promise.all([this.getProjectList(), this.getModuleList()]).then(response => {
+        Promise.all([this.getProjectList(), this.getModuleList(), this.getLeftMenuList()]).then(response => {
+          /*//左侧dc列表初始选中状态
+          if (this.$store.state.assetData.selectedData.length > 0) {
+            this.checkList = [];
+            this.checkList = this.$store.state.assetData.selectedData;
+          }*/
+
           let cacheParentMenu = localStorage.getItem('nz-parent-menu');
           let cacheMenu = localStorage.getItem('nz-menu');
           if (cacheParentMenu) {
@@ -188,11 +277,7 @@
           if (cacheMenu) {
             this.active = cacheMenu;
           } else {
-            if (this.parentMenu == 'projects') {
-              this.projectList.length > 0 && (this.active = this.projectList[0].name)
-            } else if (this.parentMenu == 'assets') {
-
-            } else {
+            if (this.parentMenu != 'projects' && this.parentMenu != 'assets') {
               this.active = this.menus[this.parentMenu].menu[0].route;
             }
           }
@@ -202,6 +287,14 @@
           bus.$on("menu-change", menu => {
             this.active = menu;
           });
+          bus.$on("header-dc-change", dcId => {
+            this.dcCheckList = [dcId];
+            bus.$emit("asset-filter-change", "idcIds", dcId);
+          });
+
+          setTimeout(() => {
+            this.ready = true;
+          }, 300);
         });
       },
       methods: {
@@ -247,28 +340,104 @@
             });
           });
         },
-        //左侧module列表选中切换
+        //左侧module列表选中切换，与project.vue同步
         changeModule(project, module) {
-          this.currentModule = module;
+          this.showProjectPanel = false;
+          this.changeCurrentProject(project);
+          this.changeCurrentModule(module);
+          bus.$emit("project-page-type", "endpoint");  //告知project.vue
+        },
+        addModule() {
+          /*this.module = this.newModule();
+          this.rightBox.module.show = true;
+          this.$nextTick(() => {
+            this.$refs.moduleBox.initWalk();
+          });*/
+        },
+        changeCurrentProject(project) {
+          localStorage.setItem("nz-current-project", project.id);
+          this.$store.commit("currentProjectChange", project);
           this.currentProject = project;
         },
-        detailProject(event, project) {
-          bus.$emit("project-pageType", "project");
-          if(event) {
-            if(project) {
-              this.currentProject = project;
-            }
-          } else {
-            this.currentProjectTitle = project.id + "";
-          }
-          this.currentModule = {};
+        changeCurrentModule(module) {
+          bus.$emit("current-module-change", module);  //告知project.vue
+          this.currentModule = module;
+        },
+        //与header.vue同步
+        detailProject(project) {
+          this.showProjectPanel = true;
+          this.changeCurrentProject(project);
+          bus.$emit("project-page-type", "project");  //告知project.vue
+          this.changeCurrentModule({id: ""});
         },
 
-
+        // 获取asset左侧菜单数据
+        getLeftMenuList(){
+          return new Promise(resolve => {
+            this.$get('asset/filter').then(response => {
+              if (response.code === 200) {
+                //dc
+                this.dcData = response.data.dc;
+                // AssetType
+                this.assetTypeData = response.data.assetType;
+                // vendor
+                this.vendorData = response.data.vendor;
+                // ping
+                this.pingData = response.data.ping.map(item => {
+                  item.label = item.name;
+                  item.value = item.status;
+                  return item;
+                });
+              }
+              resolve();
+            });
+          });
+        },
+        changeCheckBox() {
+          this.assetClick = true;
+        },
+        changeAssetTypeCheckBox() {
+          if(this.assetTypeCheckList && this.assetTypeCheckList.length > 0){
+            let assetTypeIds = this.assetTypeCheckList.join(',');
+            bus.$emit("asset-filter-change", "typeIds", assetTypeIds);
+          }else{
+            bus.$emit("asset-filter-change", "typeIds", "");
+            this.pageObj.typeIds='';
+          }
+          this.getTableData();
+        },
+        changeVendorCheckBox() {
+          if(this.vendorCheckList && this.vendorCheckList.length > 0){
+            let vendorIds = this.vendorCheckList.join(',');
+            bus.$emit("asset-filter-change", "vendorIds", vendorIds);
+          }else{
+            bus.$emit("asset-filter-change", "vendorIds", "");
+          }
+          this.getTableData();
+        },
+        changePingCheckBox() {
+          if(this.pingCheckList && this.pingCheckList.length > 0){
+            let pingStates = this.pingCheckList.join(',');
+            bus.$emit("asset-filter-change", "pingStates", pingStates);
+          }else{
+            bus.$emit("asset-filter-change", "pingStates", "");
+          }
+        },
+        indOf(a, b) {
+          let c = [];
+          for (let i = 0; i < a.length; i++) {
+            c.push(a[i]);
+          }
+          if (c.indexOf(b) > -1) {
+            return true;
+          } else {
+            return false;
+          }
+        },
         jumpTo(route) {
           bus.$emit("menu-change", route);
           localStorage.setItem('nz-parent-menu', this.parentMenu);
-          localStorage.setItem('menu-change', route);
+          localStorage.setItem('nz-menu-change', route);
           this.$router.push({
             path: route,
             query: {
@@ -319,6 +488,42 @@
     transition: opacity 200ms;
   }
 
+
+  .item-tip-hide {
+    display: none;
+    position: absolute;
+    bottom: 34px;
+    min-width: 50px;
+    white-space: normal;
+  }
+  .item-tip:hover>.item-tip-show {
+    display: block;
+  }
+  .hid-div{
+    visibility: hidden;
+  }
+  .sidebar-info-sub-item:hover .hid-div{
+    visibility: visible;
+  }
+
+  .sub-sidebar-info{
+    padding-top: 10px !important;
+    padding-left: 10px;
+    box-sizing: border-box;
+  }
+  .sub-side-bar-menu-edit{
+    margin-right: 18px;
+  }
+
+  .sidebar-info-item-project.sidebar-info-item{
+    margin:0 !important;
+  }
+  .sidebar-info-item-asset .sidebar-info-item-txt{
+    vertical-align: text-top;
+  }
+  /deep/ .el-badge__content{
+    min-width: 15px;
+  }
   .left-slot .bottom-icon{
     position:absolute;
     width: 36px;
@@ -330,7 +535,7 @@
     visibility: hidden;
   }
   .left-slot:hover{
-    i{
+    .bottom-icon i{
       visibility: visible;
     }
   }

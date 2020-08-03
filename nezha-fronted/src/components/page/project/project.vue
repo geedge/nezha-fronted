@@ -20,7 +20,7 @@
 </style>
 <template>
   <div class="project">
-    <template v-show="pageType == 'endpoint'">
+    <template v-if="pageType == 'endpoint'">
       <div class="main-list" :class="{'main-list-with-sub': bottomBox.showSubList}">
         <div class="main-modal"></div>
         <div class="top-tools" v-show="bottomBox.mainResizeShow">
@@ -114,7 +114,7 @@
         </div>
       </div>
     </template>
-    <template v-show="pageType == 'project'">
+    <template v-else-if="pageType == 'project'">
       <panel-tab from="project" :obj="currentProject" targetTab.sync="panel"></panel-tab>
     </template>
     <transition name="el-zoom-in-bottom">
@@ -256,7 +256,7 @@
         currentProjectTitle:'',
         moduleList: [],
         projectList: [],
-        pageType:'',//project endpoint
+        pageType: 'project', //project endpoint
         currentProject: {id: '', name: '', remark: ''}, //endpoint弹框、module列表用来回显project
         module: {}, //编辑的module
         blankModule: {id: '', type: '', name: '', project: {}, port: '', path: '', param: '', paramObj: [], snmpParam: ''}, //空白module
@@ -376,13 +376,10 @@
           return item.project.id == projectId;
         })
       },
-      detailProject(event, project) {
+      detailProject(project) {
         this.pageType = 'project';
-        if(event) {
-          if(project) {
-            this.currentProject = project;
-          }
-        } else {
+        if(project) {
+          this.currentProject = project;
           this.currentProjectTitle = project.id + "";
         }
         this.currentModule = {};
@@ -679,34 +676,20 @@
       setTimeout(() => {
         this.ready = true;
       }, 300);
-      bus.$on("project-pageType", pageType => {
+      bus.$on("project-page-type", pageType => {
         this.pageType = pageType;
       });
-      this.$nextTick(() => {
-        //绑定滚动条事件，控制top按钮
-        let el = this.$refs.endpointTable.$el.querySelector(".el-table__body-wrapper");
-        if (el._ps_) {
-          el.addEventListener("ps-scroll-y", () => {
-            if (el._ps_.scrollbarYTop > 50) {
-              this.tools.showTopBtn = true;
-            } else {
-              this.tools.showTopBtn = false;
-            }
-          });
-
-          el.addEventListener("mouseenter", () => {
-            this.tools.tableHover = true;
-          });
-          el.addEventListener("mouseleave", () => {
-            this.tools.tableHover = false;
-          });
-        }
+      bus.$on("current-project-change", project => {
+        this.currentProject = project;
+      });
+      bus.$on("current-module-change", module => {
+        this.currentModule = module;
       });
       //resize时刷新左侧列表滚动条
       let vm = this;
       window.onresize = function() {
         vm.$refs.leftScrollbar.update();
-      }
+      };
 
       this.tools.tablelable = localStorage.getItem("nz-tableTitle-" + localStorage.getItem("nz-username") + "-" + this.$route.path)
         ? JSON.parse(localStorage.getItem("nz-tableTitle-" + localStorage.getItem("nz-username") + "-" + this.$route.path))
@@ -714,7 +697,6 @@
       this.tools.dropCol = localStorage.getItem("nz-tableTitle-" + localStorage.getItem("nz-username") + "-" + this.$route.path)
         ? JSON.parse(localStorage.getItem("nz-tableTitle-" + localStorage.getItem("nz-username") + "-" + this.$route.path))
         : this.endpointTableTitle;
-
     },
     computed: {
       projectListChange() {
@@ -726,9 +708,12 @@
       endpointListChange() {
         return this.$store.state.endpointListChange;
       },
-      /*currentProjectChange() {
+      currentProjectChange() {
         return this.$store.state.currentProject;
-      },*/
+      },
+      currentModuleChange() {
+        return this.$store.state.currentModule;
+      },
       itemTip() {
         return function(id, content, ready) {
           let className = "item-tip-show";
@@ -757,19 +742,29 @@
       endpointListChange(n) {
         this.getEndpointTableData();
       },
-      /*currentProjectChange: {
-        immediate:true,
-        handler(n, o) {
-          if (n.id != this.currentProject.id) {
-            this.currentProject = this.projectList.find(p => {
-              return p.id == n.id;
-            });
-            this.detailProject(null, this.currentProject);
-          }
-        },
-      },*/
-      currentProject(n, o) {
-        this.$store.commit("currentProjectChange", Object.assign({}, n));
+      pageType(n) {
+        if (n == 'endpoint') {
+          this.$nextTick(() => {
+            //绑定滚动条事件，控制top按钮
+            let el = this.$refs.endpointTable.$el.querySelector(".el-table__body-wrapper");
+            if (el._ps_) {
+              el.addEventListener("ps-scroll-y", () => {
+                if (el._ps_.scrollbarYTop > 50) {
+                  this.tools.showTopBtn = true;
+                } else {
+                  this.tools.showTopBtn = false;
+                }
+              });
+
+              el.addEventListener("mouseenter", () => {
+                this.tools.tableHover = true;
+              });
+              el.addEventListener("mouseleave", () => {
+                this.tools.tableHover = false;
+              });
+            }
+          });
+        }
       },
       currentModule(n, o) {
         this.endpointPageObj.pageNo = 1;
@@ -986,14 +981,6 @@
   /* end--table*/
 
   /* end--子弹框*/
-  .sub-sidebar-info{
-    padding-top: 0px !important;
-    padding-left: 10px;
-    box-sizing: border-box;
-  }
-  .sub-side-bar-menu-edit{
-    margin-right: 18px;
-  }
 
   .item-tip-hide {
     display: none;
@@ -1071,21 +1058,9 @@
     height: 26px;
     line-height: 26px;
   }
-/* 左侧列表dc 编辑按钮影藏样式*/
-  .hid-div{
-    visibility: hidden;
-  }
-  .sidebar-info-item:hover .hid-div{
-    visibility: visible;
-  }
-  .sidebar-info-sub-item:hover .hid-div{
-    visibility: visible;
-  }
   .metric-tip-icon{
     vertical-align: middle;
-    /*color: #3971BA;*/
     transform: scale(0.6);
-    /*-webkit-transform-origin: left top;*/
     display:inline-block;
   }
   .metirc-tip-list{
@@ -1104,8 +1079,5 @@
   }
   .control-icon-checked{
     color:#666;
-  }
-  .project .sidebar-info-item{
-    margin:0px !important;
   }
 </style>

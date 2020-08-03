@@ -18,6 +18,7 @@ const store = new Vuex.Store({
     dcList: 0, //监听此值，改变则刷新dc列表
     /* 监听对象变化，用于顶部菜单与底部内容的同步 */
     currentProject: {id: "", name: "", remark: ""},
+    currentModule: {id: ""},
     currentAsset: {id: ""},
     projectListChange: 0,
     moduleListChange: 0,
@@ -73,6 +74,9 @@ const store = new Vuex.Store({
     },
     currentProjectChange(state, project) {
       state.currentProject = project;
+    },
+    currentModuleChange(state, module) {
+      state.currentModule = module;
     },
     currentAssetChange(state, asset) {
       state.currentAsset = asset;
