@@ -53,9 +53,9 @@
               <span :title="$t('overall.delete')" @click="del(scope.row)" class="content-right-option" :id="'alert-del-'+scope.row.id"><i  class="el-icon-delete"></i></span>
             </div>
             <span v-else-if="item.prop == 'severity'">
-            <span v-if="scope.row[item.prop] == 'high'"><i class="el-icon-arrow-up"></i>&nbsp;{{$CONSTANTS.alertMessage.severityData.find(s => {return s.key == 'high'})}}</span>
-            <span style="padding-left: 18px;" v-if="scope.row[item.prop] == 'medium'">{{$CONSTANTS.alertMessage.severityData.find(s => {return s.key == 'medium'})}}</span>
-            <span v-if="scope.row[item.prop] == 'low'"><i class="el-icon-arrow-down"></i>&nbsp;{{$CONSTANTS.alertMessage.severityData.find(s => {return s.key == 'low'})}}</span>
+            <span v-if="scope.row[item.prop] == 'high'"><i class="el-icon-arrow-up"></i>&nbsp;{{$CONSTANTS.alertMessage.severityData.find(s => {return s.value == 'high'}).label}}</span>
+            <span style="padding-left: 18px;" v-if="scope.row[item.prop] == 'medium'">{{$CONSTANTS.alertMessage.severityData.find(s => {return s.value == 'medium'}).label}}</span>
+            <span v-if="scope.row[item.prop] == 'low'"><i class="el-icon-arrow-down"></i>&nbsp;{{$CONSTANTS.alertMessage.severityData.find(s => {return s.value == 'low'}).label}}</span>
           </span>
             <template v-else-if="item.prop == 'alertNum'">
               <span class="link" @click="queryMessage(scope.row)">{{scope.row.alertNum + ' ' + $t('overall.active')}}</span>
@@ -478,7 +478,7 @@
         }
         detail.link = link;
         detail.last = obj.last;
-        let severity = this.$CONSTANTS.alertMessage.severityData.find(s => {return s.key == obj.severity});
+        let severity = this.$CONSTANTS.alertMessage.severityData.find(s => {return s.value == obj.severity});
         detail.severity = severity;
         detail.alertNum = obj.alertNum;
         detail.description = obj.description;

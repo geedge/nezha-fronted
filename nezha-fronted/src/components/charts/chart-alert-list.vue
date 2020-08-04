@@ -43,7 +43,7 @@
         <div class="mt-10 table-container" v-cloak  v-show="firstShow || isPreview">
           <alertMessageTable
             :tableData="storedScreanTableData"
-            :loading="loading"
+            :loading="loadingTable"
             :tableHeight="tableHeight"
             :tableId="''"
             :projectAlertId="'tableContainer'+chartIndex"
