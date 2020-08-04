@@ -18,11 +18,11 @@
 </style>
 <template>
   <div class="list">
-    <div class="main-list main-and-sub-transition" :class="{'main-list-with-sub': showSubList}">
-      <div class="top-tools" v-show="mainResizeShow">
-        <div class="top-tool-main-right" :class="{'top-tool-main-right-to-left': showSubList}">
+    <div class="main-list main-and-sub-transition" :class="{'main-list-with-sub': bottomBox.showSubList}">
+      <div class="top-tools" v-show="bottomBox.mainResizeShow">
+        <div class="top-tool-main-right" :class="{'top-tool-main-right-to-left': bottomBox.showSubList}">
           <div class="top-tool-search">
-            <search-input :searchMsg="searchMsg" @search="search" :inTransform="inTransform"></search-input>
+            <search-input :searchMsg="searchMsg" @search="search" :bottomBox.inTransform="bottomBox.inTransform"></search-input>
           </div>
           <button type="button" @click="showExportDialog" :title="$t('overall.exportExcelLower')"
                   class="nz-btn nz-btn-size-normal nz-btn-style-light margin-l-20" id="alert-list-export">
@@ -33,19 +33,19 @@
       </div>
       <alertMessageTable
         :tableData="tableData"
-        :loading="loading"
+        :loading="tools.loading"
         :tableHeight="mainTableHeight"
         :tableId="tableId"
         @tableDataSort="tableDataSort"
         @deleteMessage="deleteMessage"
         :from="'alertMessage'"
       ></alertMessageTable>
-      <div class="pagination-bottom" v-show="!showSubList">
+      <div class="pagination-bottom" v-show="!bottomBox.showSubList">
         <Pagination :tableId="tableId" :pageObj="pageObj" @pageNo='pageNo' @pageSize='pageSize' ref="Pagination"></Pagination>
       </div>
     </div>
-    <bottom-box v-if="showSubList" :show-sub-list="showSubList" :subResizeShow="subResizeShow" :isFullScreen="isFullScreen" :from="'alertMessage'" :targetTab.sync="targetTab" :detailList="tabDetailList"
-                @closeSubList="showSubList = false" @fullScreen="fullScreen" @exitFullScreen="exitFullScreen" @listResize="listResize" :tabList="tabList"></bottom-box>
+    <bottom-box v-if="bottomBox.showSubList" :show-sub-list="bottomBox.showSubList" :sub-resize-show="bottomBox.subResizeShow" :is-full-screen="bottomBox.isFullScreen" :from="'alertMessage'" :target-tab.sync="bottomBox.targetTab" :detailList="tabDetailList"
+                @closeSubList="bottomBox.showSubList = false" @fullScreen="fullScreen" @exitFullScreen="exitFullScreen" @listResize="listResize" :tabList="tabList"></bottom-box>
     <!--导出-->
     <div class="export-xlsx">
       <el-dialog :visible.sync="importBox.show" :title="importBox.title" :modal-append-to-body='false' :show-close="true" width="300px" @close="closeDialog" class="nz-dialog">
@@ -100,7 +100,7 @@
   import chartDataFormat from "../../charts/chartDataFormat";
   import alertRuleInfo from '../../common/alert/alertRuleInfo'
   import alertLabel from '../../common/alert/alertLabel'
-  import alertMessageTable from '@/components/common/alert/alertMessageTable.vue'
+  import alertMessageTable from '../../common/alert/alertMessageTable.vue'
   export default {
     name: "alertList",
     components: {
@@ -112,20 +112,28 @@
     },
     data() {
       return {
-        loading: false,
         /*二级列表相关*/
-        tabList: [], //二级列表的标签
-        tabDetailList: [], //多个详情
-        targetTab: '', //展示二级列表中的哪个页签
-        inTransform: false, //搜索框相关，搜索条件下拉框是否在transform里
-        mainResizeShow: true, //dom高度改变时部分内容是否展示
-        subResizeShow: true,
-        isFullScreen: false,
-        showSubList: false, //是否展示二级列表
         mainTableHeight: this.$tableHeight.normal, //主列表table高度
-
-        toTopBtnTop: this.$tableHeight.toTopBtnTop, //to-top按钮的top属性
-        tableHover: false, //控制滚动条和top按钮同时出现
+        /*二级页面相关*/
+        bottomBox: {
+          tabList: [], //二级列表的标签
+          tabDetailList: [], //多个详情
+          mainResizeShow: true, //dom高度改变时是否展示|隐藏
+          subResizeShow: true,
+          isFullScreen: false, //全屏状态
+          showSubList: false, //是否显示二级列表
+          targetTab: '', //显示二级列表中的哪个页签
+          inTransform: false, //搜索框相关，搜索条件下拉框是否在transform里
+        },
+        /*工具参数*/
+        tools: {
+          loading: false, //是否显示table加载动画
+          toTopBtnTop: this.$tableHeight.toTopBtnTop, //to-top按钮的top属性
+          tableHover: false, //控制滚动条和top按钮同时出现
+          showTopBtn: false, //显示To top按钮
+          showCustomTableTitle: false, //自定义列弹框是否显示
+          customTableTitle: [], //自定义列工具的数据
+        },
 
         //导出相关
         importBox: {show: false, title:this.$t('overall.exportExcel')},
@@ -141,7 +149,6 @@
         chartUnit: 5,
 
         tableId: 'alertListTable', //需要分页的table的id，用于记录每页数量
-        showTopBtn: false,
         pageObj: {
           pageNo: 1,
           pageSize: 50,
@@ -258,8 +265,6 @@
         searchLabel: { //搜索参数
 
         },
-        tablelable: [],
-        dropCol: [],
         tableData: [],
         requestIndex:0,
         viewRuleData: {
@@ -320,11 +325,6 @@
           result.push({label:key,value:labels[key]})
         })
         return result;
-      },
-      tablelabelEmit(data) {
-        //获取子组件传过来的参数
-        this.$store.commit('setHeaderTable', data);
-        this.tablelable = data;
       },
       chartUnitChange:function(unit){
         this.chartUnit=unit;
@@ -481,9 +481,9 @@
       getAlertList: function () {
         this.$set(this.searchLabel, "pageNo", this.pageObj.pageNo);
         this.$set(this.searchLabel, "pageSize", this.pageObj.pageSize);
-        this.loading = true;
+        this.tools.loading = true;
         this.$get('alert/message', this.searchLabel).then(response => {
-          this.loading = false;
+          this.tools.loading = false;
           if (response.code == 200) {
             this.tableData = response.data.list;
             this.tableData.forEach((item) => {
@@ -638,14 +638,17 @@
       },
       // 全屏
       fullScreen() {
+        let vm = this;
         this.$bottomBoxWindow.fullScreen(vm);
       },
       // 退出全屏
       exitFullScreen() {
+        let vm = this;
         this.$bottomBoxWindow.exitFullScreen(vm);
       },
       // 鼠标拖动二级列表
       listResize(e) {
+        let vm = this;
         this.$bottomBoxWindow.listResize(vm, e);
       },
       showTagDetail(data, key) {
@@ -662,10 +665,10 @@
               detailList.push(data[item]);
             }
           }
-          this.showSubList = true;
+          this.bottomBox.showSubList = true;
           this.tabList = labelList;
           /*this.tabDetailList = detailList;
-          this.targetTab = key;*/
+          this.bottomBox.targetTab = key;*/
         }
       },
       labelsClassName(row) {
@@ -674,17 +677,6 @@
         } else {
           return "";
         }
-      },
-      jumpTo(data, id) {
-        bus.$emit("menu-change", data);
-        this.$store.state.assetData.moduleData = data
-        this.$store.state.assetData.selectedData = id
-        this.$router.push({
-          path: "/" + data,
-          query: {
-            t: +new Date()
-          }
-        });
       },
       pageNo(val) {
         this.pageObj.pageNo = val;
@@ -695,7 +687,7 @@
         localStorage.setItem('nz-pageSize-' + localStorage.getItem('nz-username') + '-' + this.tableId, val);
         this.getAlertList();
       },
-      search: function (searchObj) {
+      search(searchObj) {
         let orderBy='';
         if(this.searchLabel.orderBy){
           orderBy=this.searchLabel.orderBy
@@ -831,6 +823,10 @@
       },
     },
     mounted() {
+      //初始化表头
+      this.tools.customTableTitle = localStorage.getItem("nz-tableTitle-" + localStorage.getItem("nz-username") + "-" + this.$route.path)
+        ? JSON.parse(localStorage.getItem("nz-tableTitle-" + localStorage.getItem("nz-username") + "-" + this.$route.path))
+        : this.tableTitle;
       //是否存在分页缓存
       let pageSize = localStorage.getItem('nz-pageSize-' + localStorage.getItem('nz-username') + '-' + this.tableId);
       if (pageSize != 'undefined' && pageSize != null) {
@@ -844,25 +840,19 @@
         if (el._ps_) {
           el.addEventListener("ps-scroll-y", () => {
             if (el._ps_.scrollbarYTop > 50) {
-              this.showTopBtn = true;
+              this.tools.showTopBtn = true;
             } else {
-              this.showTopBtn = false;
+              this.tools.showTopBtn = false;
             }
           });
           el.addEventListener("mouseenter", () => {
-            this.tableHover = true;
+            this.tools.tableHover = true;
           });
           el.addEventListener("mouseleave", () => {
-            this.tableHover = false;
+            this.tools.tableHover = false;
           });
         }
       });
-      this.tablelable = localStorage.getItem("nz-tableTitle-" + localStorage.getItem("nz-username") + "-" + this.$route.path)
-        ? JSON.parse(localStorage.getItem("nz-tableTitle-" + localStorage.getItem("nz-username") + "-" + this.$route.path))
-        : this.tableTitle;
-      this.dropCol = localStorage.getItem("nz-tableTitle-" + localStorage.getItem("nz-username") + "-" + this.$route.path)
-        ? JSON.parse(localStorage.getItem("nz-tableTitle-" + localStorage.getItem("nz-username") + "-" + this.$route.path))
-        : this.tableTitle;
     }
   }
 </script>

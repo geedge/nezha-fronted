@@ -13,13 +13,23 @@
         </div>
       </div>
     </div>
+    <!-- 自定义table列 -->
+    <transition name="el-zoom-in-top">
+      <element-set
+        v-if="tools.showCustomTableTitle"
+        @close="tools.showCustomTableTitle = false"
+        :custom-table-title.sync="tools.customTableTitle"
+        :original-table-title="tableTitle"
+        ref="customTableTitle"
+      ></element-set>
+    </transition>
     <el-table
       class="nz-table"
       :data="tableData"
       border
       ref="operationLogTable"
       :height="$tableHeight.normal"
-      v-loading="loading"
+      v-loading="tools.loading"
       v-scrollBar:el-table="'large'"
       :cell-class-name="messageStyle"
       style="width: 100%;"
@@ -27,7 +37,7 @@
     >
       <el-table-column
         :resizable="false"
-        v-for="(item, index) in tablelable"
+        v-for="(item, index) in tools.customTableTitle"
         v-if="item.show"
         :width="item.width"
         :key="`col-${index}`"
@@ -45,23 +55,16 @@
       </el-table-column>
       <el-table-column width="28">
         <template slot="header" slot-scope="scope">
-          <span @click.stop="elementsetShow('shezhi',$event)" class="nz-table-gear">
+          <span @mousedown.stop="!tools.showCustomTableTitle && (tools.showCustomTableTitle = true)" class="nz-table-gear">
             <i class="nz-icon nz-icon-gear"></i>
           </span>
         </template>
         <template v-slot="scope">
-          <button v-if="scope.$index == 0" class="to-top" :style="{top: toTopBtnTop}" :class="{'to-top-is-hover': tableHover}" v-show="showTopBtn" @click="$toTop('ps', 0)"><i class="nz-icon nz-icon-top"></i></button>
+          <button v-if="scope.$index == 0" class="to-top" :style="{top: tools.toTopBtnTop}" :class="{'to-top-is-hover': tools.tableHover}" v-show="tools.showTopBtn" @click="$toTop('ps', 0)"><i class="nz-icon nz-icon-top"></i></button>
         </template>
       </el-table-column>
     </el-table>
     <Pagination :tableId="tableId" :pageObj="pageObj" @pageNo='pageNo' @pageSize='pageSize' ref="Pagination"></Pagination>
-    <element-set
-      v-clickoutside="elementsetHide"
-      :dropCol="dropCol"
-      @tablelable="tablelabelEmit"
-      :table-title="tableTitle"
-      ref="elementset"
-    ></element-set>
   </div>
 </template>
 <script>
@@ -70,16 +73,10 @@
     name: "oparetionlog",
     data() {
       return {
-        loading: false,
         tableId: 'operationLogTable', //需要分页的table的id，用于记录每页数量
-        showTopBtn: false,
-        toTopBtnTop: this.$tableHeight.toTopBtnTop, //to-top按钮的top属性
-        tableHover: false, //控制滚动条和top按钮同时出现
 
         rightBox: { //弹出框相关
           show: false,
-          isEdit: false, //false查看，true编辑
-          title: ''
         },
         rightBoxResize: { //resize弹出框相关
           show: false,
@@ -95,6 +92,15 @@
           show: false,
           isAdd: false, //false，true：resize
           title: ''
+        },
+        /*工具参数*/
+        tools: {
+          loading: false, //是否显示table加载动画
+          toTopBtnTop: this.$tableHeight.toTopBtnTop, //to-top按钮的top属性
+          tableHover: false, //控制滚动条和top按钮同时出现
+          showTopBtn: false, //显示To top按钮
+          showCustomTableTitle: false, //自定义列弹框是否显示
+          customTableTitle: [], //自定义列工具的数据
         },
         pageObj: {
           pageNo: 1,
@@ -163,8 +169,6 @@
             show: false,
           },
         ],
-        tablelable: [],
-        dropCol: [],
         tableData: [],
         searchMsg: { //给搜索框子组件传递的信息
           zheze_none: true,
@@ -194,36 +198,6 @@
       }
     },
     methods: {
-      elementsetShow(s, e) {
-        var eventfixed = {
-          shezhi: 0,
-          screen: 0
-        };
-        eventfixed[s] = 1;
-        e.preventDefault();
-        this.$store.commit('setHeaderTable', this.tablelable);
-        this.$store.commit('setEventfixed', eventfixed);
-        const h = document.documentElement.clientHeight;
-        const w = document.documentElement.clientWidth;
-        const dw = this.$refs.elementset.$el.offsetWidth;
-        const dh = this.$refs.elementset.$el.offsetHeight;
-        let positionx =
-          e.clientX + dw <= w - 10 ? e.clientX + 14 : e.clientX + 14 - dw;
-        let positiony =
-          e.clientY + dh <= h - 10
-            ? e.clientY + 20
-            : e.clientY + 20 - (e.clientY + dh - h);
-        this.$store.commit('setPosition', {positionx, positiony});
-      },
-      elementsetHide() {
-        //悬浮点击空白隐藏
-        this.$refs.elementset.elementsetHide();
-      },
-      tablelabelEmit(data) {
-        //获取子组件传过来的参数
-        this.$store.commit('setHeaderTable', data);
-        this.tablelable = data;
-      },
       messageStyle(e) {
         if (e.column.label == this.$t('config.operationlog.state')) {
           if (e.row.state == 'success') {
@@ -237,43 +211,14 @@
       getTableData: function () {
         this.$set(this.searchLabel, "pageNo", this.pageObj.pageNo);
         this.$set(this.searchLabel, "pageSize", this.pageObj.pageSize);
-        this.loading = true;
+        this.tools.loading = true;
         this.$get('sys/log/list', this.searchLabel).then(response => {
-          this.loading = false;
+          this.tools.loading = false;
           if (response.code === 200) {
-            // for (let i = 0; i < response.data.list.length; i++) {
-            //   response.data.list[i].status = response.data.list[i].status + "";
-            // }
             this.tableData = response.data.list;
             this.pageObj.total = response.data.total
           }
         })
-      },
-      jumpTo(data, id) {
-        bus.$emit("menu-change", data);
-        this.$router.push({
-          path: "/" + data,
-          query: {
-            t: +new Date()
-          }
-        });
-      },
-      toEditReceiver: function (item) {
-        if (!item.isEdit) {
-          //如果不在编辑状态，那么其他项如果有改动，则还原改动，最后开始编辑
-          this.blurEditReceiver();
-          item.isEdit = true;
-        } else {
-          //如果已在编辑状态，判断name是否有变更，有变更则发请求
-          if (item.name != item.oldName) {
-            if (this.updateReceiverName(item) == 200) {
-              item.isEdit = false;
-            }
-          } else {
-            item.errorMessage = '';
-            item.isEdit = false;
-          }
-        }
       },
       pageNo(val) {
         this.pageObj.pageNo = val;
@@ -285,9 +230,9 @@
         this.getTableData();
       },
       search: function (searchObj) {
-        let orderBy='';
+        let orderBy = '';
         if(this.searchLabel.orderBy){
-          orderBy=this.searchLabel.orderBy
+          orderBy = this.searchLabel.orderBy
         }
         this.searchLabel = {};
         this.pageObj.pageNo = 1;
@@ -349,6 +294,10 @@
       }
     },
     mounted() {
+      //初始化表头
+      this.tools.customTableTitle = localStorage.getItem("nz-tableTitle-" + localStorage.getItem("nz-username") + "-" + this.$route.path)
+        ? JSON.parse(localStorage.getItem("nz-tableTitle-" + localStorage.getItem("nz-username") + "-" + this.$route.path))
+        : this.tableTitle;
       //是否存在分页缓存
       let pageSize = localStorage.getItem('nz-pageSize-' + localStorage.getItem('nz-username') + '-' + this.tableId);
       if (pageSize && pageSize != 'undefined') {
@@ -362,25 +311,19 @@
         if (el._ps_) {
           el.addEventListener("ps-scroll-y", () => {
             if (el._ps_.scrollbarYTop > 50) {
-              this.showTopBtn = true;
+              this.tools.showTopBtn = true;
             } else {
-              this.showTopBtn = false;
+              this.tools.showTopBtn = false;
             }
           });
           el.addEventListener("mouseenter", () => {
-            this.tableHover = true;
+            this.tools.tableHover = true;
           });
           el.addEventListener("mouseleave", () => {
-            this.tableHover = false;
+            this.tools.tableHover = false;
           });
         }
       });
-      this.tablelable = localStorage.getItem("nz-tableTitle-" + localStorage.getItem("nz-username") + "-" + this.$route.path)
-        ? JSON.parse(localStorage.getItem("nz-tableTitle-" + localStorage.getItem("nz-username") + "-" + this.$route.path))
-        : this.tableTitle;
-      this.dropCol = localStorage.getItem("nz-tableTitle-" + localStorage.getItem("nz-username") + "-" + this.$route.path)
-        ? JSON.parse(localStorage.getItem("nz-tableTitle-" + localStorage.getItem("nz-username") + "-" + this.$route.path))
-        : this.tableTitle;
     }
   }
 </script>

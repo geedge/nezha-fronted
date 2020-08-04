@@ -58,7 +58,7 @@
       <el-submenu index="3" popper-class="nz-submenu">
         <template slot="title">
           <div v-if="assetData.length == 0">{{$t('overall.asset')}}</div>
-          <div v-else @click="jumpToAsset(assetData[0])" :class="{'menu-active' : activeIndex == 'asset'}">{{$t('overall.asset')}}</div>
+          <div v-else @click="jumpToAsset()" :class="{'menu-active' : activeIndex == 'asset'}">{{$t('overall.asset')}}</div>
         </template>
         <template>
           <el-menu-item v-if="assetData.length == 0" index="3-0"><div @click="createBox({type: 6})"><i class="nz-icon nz-icon-create-square header-dropdown-add"></i>&nbsp;&nbsp;{{$t("overall.createDatacenter")}}</div></el-menu-item>
@@ -366,15 +366,16 @@
         }
       },
       jumpToAsset(dc) {
-        this.activeItemIndex = dc.id;
-        bus.$emit("header-dc-change", dc.id); //发送给leftMenu，顶部dc条件改变了
+        if (dc) {
+          this.activeItemIndex = dc.id;
+          bus.$emit("header-dc-change", dc.id); //发送给leftMenu，顶部dc条件改变了
+        }
         this.jumpTo("asset", "assets");
       },
       jumpToProject(p) {
         this.currentProject = p;
         this.$store.commit('currentProjectChange', p);
         bus.$emit("project-page-type", 'project');
-        localStorage.setItem('nz-current-project', p.id);
 
         this.activeItemIndex = p.id;
         this.jumpTo('project', 'projects');
@@ -499,7 +500,7 @@
           this.refreshLang();
           this.activeIndex = 'overview';
         });
-        bus.$on("dc-list-change", () => {
+        bus.$on("dc-list-change", () => { //dc.vue增删改dc时刷新顶部菜单dc列表
           this.getAssetData();
         });
         bus.$on("current-project-change", project => {
@@ -514,6 +515,7 @@
     },
     mounted() {
       this.$i18n.locale = this.language;
+      this.initEvent();
       this.getAssetData();
       this.getUserData();
       this.getProjectList();

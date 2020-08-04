@@ -20,7 +20,16 @@
         </div>
         <div class="pagination-top pagination-top-hide display-none"></div>
       </div>
-
+      <!-- 自定义table列 -->
+      <transition name="el-zoom-in-top">
+        <element-set
+          v-if="tools.showCustomTableTitle"
+          @close="tools.showCustomTableTitle = false"
+          :custom-table-title.sync="tools.customTableTitle"
+          :original-table-title="tableTitle"
+          ref="customTableTitle"
+        ></element-set>
+      </transition>
       <el-table
         class="nz-table"
         :height="mainTableHeight"
@@ -37,7 +46,7 @@
       >
         <el-table-column
           :resizable="false"
-          v-for="(item, index) in tools.tablelable"
+          v-for="(item, index) in tools.customTableTitle"
           v-if="item.show"
           :width="item.width"
           :key="`col_${index}`"
@@ -136,7 +145,7 @@
         </el-table-column>
         <el-table-column width="28" fixed="right" :resizable="false">
           <template slot="header" slot-scope="scope">
-          <span @click.stop="elementsetShow('shezhi',$event)" class="nz-table-gear">
+          <span @mousedown.stop="!tools.showCustomTableTitle && (tools.showCustomTableTitle = true)" class="nz-table-gear">
             <i class="nz-icon nz-icon-gear"></i>
           </span>
           </template>
@@ -160,16 +169,6 @@
     <transition name="right-box">
       <asset-box v-if="rightBox.show" :asset="asset" @refresh="flushData" ref="assetBox" @close="closeRightBox"></asset-box>
     </transition>
-    <element-set
-      v-if="tools.showElementSet"
-      @close="elementsetHide"
-      v-clickoutside="elementsetHide"
-      :drop-col="tools.dropCol"
-      :table-title="tableTitle"
-      @tablelable="tablelabelEmit"
-      ref="elementset"
-    ></element-set>
-
   </div>
 </template>
 
@@ -208,10 +207,9 @@
           loading: false, //是否显示table加载动画
           toTopBtnTop: this.$tableHeight.toTopBtnTop, //to-top按钮的top属性
           tableHover: false, //控制滚动条和top按钮同时出现
-          showElementSet: false, //自定义列弹框是否显示
           showTopBtn: false, //显示To top按钮
-          tablelable: [], //从缓存中加载的table header
-          dropCol: [], //自定义列工具的数据
+          showCustomTableTitle: false, //自定义列弹框是否显示
+          customTableTitle: [], //自定义列工具的数据
         },
         asset: {},
         blankAsset: {
@@ -362,14 +360,6 @@
       }
     },
     watch: {
-      currentDcListChange: {
-        deep: true,
-        immediate: true,
-        handler(n) {
-          this.pageObj.idcIds = n.join(",");
-          this.getTableData();
-        }
-      },
       'bottomBox.showSubList': function(n) {
         let vm = this;
         this.$bottomBoxWindow.showSubListWatch(vm, n);
@@ -398,51 +388,6 @@
       listResize(e) {
         let vm = this;
         this.$bottomBoxWindow.listResize(vm, e);
-      },
-      dcSelectAll(val) { //DC全选
-        if (this.checkListData.length > 0) {
-          this.checkList = [];
-          if (val) {
-            for (let i = 0; i < this.checkListData.length; i++) {
-              this.checkList.push(this.checkListData[i].id);
-              this.$store.commit('assetItemIdChange',this.checkListData[i].id)
-            }
-            this.$store.commit('assetAllIdChange',this.checkListData)
-          }
-        }
-      },
-      elementsetShow(s, e) {
-        this.tools.showElementSet = true;
-        this.$nextTick(() => {
-          var eventfixed = {
-            shezhi: 0,
-            screen: 0
-          };
-          eventfixed[s] = 1;
-          e.preventDefault();
-          this.$store.commit('setHeaderTable', this.tools.tablelable);
-          this.$store.commit('setEventfixed', eventfixed);
-          const h = document.documentElement.clientHeight;
-          const w = document.documentElement.clientWidth;
-          const dw = this.$refs.elementset.$el.offsetWidth;
-          const dh = this.$refs.elementset.$el.offsetHeight;
-          let positionx =
-            e.clientX + dw <= w - 10 ? e.clientX + 14 : e.clientX + 14 - dw;
-          let positiony =
-            e.clientY + dh <= h - 10
-              ? e.clientY + 20
-              : e.clientY + 20 - (e.clientY + dh - h);
-          this.$store.commit('setPosition', { positionx, positiony });
-        });
-      },
-      elementsetHide() {
-        //悬浮点击空白隐藏
-        this.tools.showElementSet = false;
-      },
-      tablelabelEmit(data) {
-        //获取子组件传过来的参数
-        this.$store.commit('setHeaderTable', data);
-        this.tools.tablelable = data;
       },
       cli([id,host,account]){
         const consoleParam = {
@@ -718,13 +663,22 @@
         });
       }
     },
-    computed: {
-      currentDcListChange() {
-        return this.$store.state.currentDcList;
-      }
-    },
 
     mounted() {
+      //初始化表头
+      let tableTitle = localStorage.getItem("nz-tableTitle-" + localStorage.getItem("nz-username") + "-" + this.$route.path)
+        ? JSON.parse(localStorage.getItem("nz-tableTitle-" + localStorage.getItem("nz-username") + "-" + this.$route.path))
+        : this.tableTitle;
+      if (this.assetPingSwitch == 'off') {
+        for (let i in tableTitle) {
+          let label = tableTitle[i];
+          if (label.prop == 'pingStatus') {
+            tableTitle.splice(i, 1);
+            break;
+          }
+        }
+      }
+      this.tools.customTableTitle = tableTitle;
       //初始化数据
       this.getUserData();
       this.getTableData();
@@ -759,23 +713,6 @@
           el._ps_.update();
         };
       });
-      let localStorageTitle = localStorage.getItem("nz-tableTitle-" + localStorage.getItem("nz-username") + "-" + this.$route.path);
-      this.tools.tablelable = localStorageTitle ? JSON.parse(localStorageTitle) : this.tableTitle;
-
-      if (this.assetPingSwitch == 'off') {
-
-        for (let i in this.tools.tablelable) {
-          let label = this.tools.tablelable[i];
-
-          if (label.prop == 'pingStatus') {
-            this.tools.tablelable.splice(i, 1);
-            //console.log(this.tools.tablelable)
-            break;
-          }
-        }
-      }
-
-      this.tools.dropCol = localStorageTitle ? JSON.parse(localStorageTitle) : this.tableTitle;
     },
     destroyed() {
       window.onresize = null;

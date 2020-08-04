@@ -1,28 +1,14 @@
 <template>
-  <div
-    class="pop-elementset"
-    :style="{opacity:(eventfixedVal.shezhi==1),left:(eventfixedVal.shezhi==1 ? event_positionx : -2000)+'px',top:(event_positiony)+'px'}"
-  >
-    <!--<div class="pop-top-btns">
-      <button type="button" @click="shezhiControl('ok')" class="nz-btn nz-btn-size-alien nz-btn-size-small nz-btn-style-light nz-btn-min-width-35" id="element-set-ok">
-        <span class="pop-top-btn-icon"><i class="nz-icon nz-icon-edit"></i></span>
-        <span class="pop-top-btn-txt">{{$t('overall.save')}}</span>
-      </button>
-      <button type="button" @click="shezhiControl('cancel')" class="nz-btn nz-btn-size-alien nz-btn-size-small nz-btn-style-light nz-btn-min-width-35" id="element-set-esc">
-        <span class="pop-top-btn-icon"><i class="el-icon-close"></i></span>
-        <span class="pop-top-btn-txt">{{$t('overall.esc')}}</span>
-      </button>
-    </div>-->
+  <div class="pop-custom" v-clickoutside="esc">
     <div class="pop-title">{{$t('overall.select')}}</div>
-    <div class="pop-box elementset-labels">
+    <div class="pop-box custom-labels">
       <el-scrollbar style="height: 100%;">
         <div
-          v-for="(item,index) in dropColRes"
+          v-for="(item,index) in custom"
           :key="index"
-          class="elementset-label"
-          :class="!allowedAll&&(index==0 || index == 1) ? 'elementset-label-disabled' : ''"
-          :title="item.visibility == 'disabled' ? other.inDevelopment : ''"
-          @click="addcol(item,index)"
+          class="custom-label"
+          :class="!allowedAll && (index==0 || index == 1) ? 'custom-label-disabled' : ''"
+          @click="handler(item,index)"
           :id="'element-set-el-'+index"
         >
           <i class="el-icon-check" v-if="!allowedAll&&(index==0||index==1||item.visibility=='disabled')"></i>
@@ -31,140 +17,100 @@
         </div>
       </el-scrollbar>
     </div>
-    <div class="elementset-bottom-btns">
-      <button v-if="isCancel" type="button" @click="dropAll(false)" class="nz-btn nz-btn-size-small nz-btn-style-light nz-btn-min-width-35 is-cancel">
+    <div class="custom-bottom-btns">
+      <button v-if="isCancel" type="button" @click="batchHandler(false)" class="nz-btn nz-btn-size-small nz-btn-style-light nz-btn-min-width-35 is-cancel">
         <span class="top-tool-btn-txt">{{$t('overall.clear')}}</span>
       </button>
-      <button v-if="!isCancel" type="button" @click="dropAll(true)" class="nz-btn nz-btn-size-small nz-btn-style-light nz-btn-min-width-35">
+      <button v-if="!isCancel" type="button" @click="batchHandler(true)" class="nz-btn nz-btn-size-small nz-btn-style-light nz-btn-min-width-35">
         <span class="top-tool-btn-txt">{{$t('overall.all')}}</span>
       </button>
       <div>
-        <button type="button" @click="shezhiControl('cancel')" class="nz-btn nz-btn-size-small nz-btn-style-light nz-btn-min-width-35">
+        <button type="button" @click="esc" class="nz-btn nz-btn-size-small nz-btn-style-light nz-btn-min-width-35">
           <span class="top-tool-btn-txt">{{$t('overall.esc')}}</span>
         </button>
-        <button type="button" @click="shezhiControl('ok')" class="nz-btn nz-btn-size-small nz-btn-style-normal nz-btn-min-width-35">
+        <button type="button" @click="save" class="nz-btn nz-btn-size-small nz-btn-style-normal nz-btn-min-width-35">
           <span class="top-tool-btn-txt">{{$t('overall.save')}}</span>
         </button>
       </div>
-      <!--<button type="button" @click="dropAll(false)" class="nz-btn nz-btn-size-normal nz-btn-style-light">
-        <span class="top-tool-btn-txt">{{$t('overall.cancel')}}</span>
-      </button>-->
     </div>
   </div>
 </template>
 
 <script>
 export default {
-  // props: ["dropCol","tableTitle","path"],
   props:{
-    dropCol:{},
-    tableTitle:{},
-    path:{},
-    allowedAll:{default:false},
+    customTableTitle: Array, //自定义的title
+    originalTableTitle: Array, //原始title
+    path: String,
+    allowedAll: {default: false},
   },
   data() {
     return {
-      other: this.$t("overall.other"),
-      event_positiony: 0,
-      event_positionx: 0,
-      eventfixedVal: {},
-      dropColRes: JSON.parse(JSON.stringify(this.dropCol)),
-      titles: JSON.parse(JSON.stringify(this.tableTitle))
+      custom: [],
     };
   },
-  mounted() {},
   created() {
-    let localStorageTitle=JSON.parse(localStorage.getItem("nz-tableTitle-" + localStorage.getItem("nz-username") + "-" + this.$route.path));
-    if(localStorageTitle){
-      for(let title of this.titles){
-        for(let lsTitle of localStorageTitle){
-          if(lsTitle.prop === title.prop){
-            lsTitle.label=title.label;
+    let localStorageTitle = JSON.parse(localStorage.getItem("nz-tableTitle-" + localStorage.getItem("nz-username") + "-" + this.$route.path));
+    if (localStorageTitle ){
+      for (let title of this.originalTableTitle) {
+        for (let lsTitle of localStorageTitle) {
+          if (lsTitle.prop === title.prop){
+            lsTitle.label = title.label;
           }
         }
       }
-      localStorage.setItem("nz-tableTitle-" + localStorage.getItem("nz-username") + "-" + this.$route.path,JSON.stringify(localStorageTitle))
+      localStorage.setItem("nz-tableTitle-" + localStorage.getItem("nz-username") + "-" + this.$route.path, JSON.stringify(localStorageTitle))
     }
 
   },
   watch: {
-    dropCol: {
+    customTableTitle: {
       immediate: true,
       deep: true,
-      handler(data) {
-        this.dropColRes = JSON.parse(JSON.stringify(data));
+      handler(n) {
+        this.custom = JSON.parse(JSON.stringify(n));
       },
     },
-    position: {
-      //监听设置icon的显示位置
-      handler(data) {
-        this.event_positiony = data.positiony;
-        this.event_positionx = data.positionx;
-      },
-      immediate: true
-    },
-    eventfixed: {
-      handler(data) {
-        if (data)
-        this.eventfixedVal = data;
-      },
-      immediate: true
-    }
   },
   methods: {
     //悬浮点击空白隐藏
-    elementsetHide() {
-      this.eventfixedVal.shezhi = 0;
+    esc() {
       this.$emit('close');
     },
-    //点击全选all或者cancel按钮
-    dropAll(state) {
-      for (let index = 0; index < this.dropColRes.length; index++) {
+    //全选all true 或者全取消cancel false按钮
+    batchHandler(state) {
+      for (let index = 0; index < this.custom.length; index++) {
         if (index == 0 || index == 1) {
-          this.dropColRes[index].show = true;
+          this.custom[index].show = true;
         } else {
-          this.dropColRes[index].show = state;
+          this.custom[index].show = state;
         }
       }
     },
-    //下拉选项选择
-    addcol(val, index) {
-      if (!this.allowedAll&&(index == 0 || index == 1)) {
-        this.dropColRes[index].show = true;
+    //单选
+    handler(val, index) {
+      if (!this.allowedAll && (index == 0 || index == 1)) {
+        this.custom[index].show = true;
       } else {
-        this.dropColRes[index].show = !this.dropColRes[index].show;
+        this.custom[index].show = !this.custom[index].show;
       }
     },
     //点击第二个cancel
-    shezhiControl(t) {
-      if (t == "ok") {
-        this.$emit("tablelable", JSON.parse(JSON.stringify(this.dropColRes)));
-        localStorage.setItem(
-          "nz-tableTitle-" + localStorage.getItem("nz-username") + "-" + ((typeof this.path != 'undefined') ? this.path : this.$route.path),
-          JSON.stringify(this.tablelable)
-        );
-      } else {
-        this.dropColRes = JSON.parse(JSON.stringify(this.tablelable));
-      }
-
-      this.elementsetHide();
+    save() {
+      this.$emit('update:customTableTitle', this.custom);
+      localStorage.setItem(
+        "nz-tableTitle-" + localStorage.getItem("nz-username") + "-" + ((typeof this.path != 'undefined') ? this.path : this.$route.path),
+        JSON.stringify(this.custom)
+      );
+      this.esc();
     },
   },
   computed: {
-    eventfixed() {
-      return this.$store.state.eventfixed;
-    },
-    position() {
-      return this.$store.state.position;
-    },
-    tablelable() {
-      return this.$store.state.tablelable;
-    },
     //点击all是否是全部取消选中，true为是
     isCancel() {
       let isCancel = true;
-      for (let i = 0; i < this.dropColRes.length; i++) {
-        if (!this.dropColRes[i].show) {
+      for (let i = 0; i < this.custom.length; i++) {
+        if (!this.custom[i].show) {
           isCancel = false;
           break;
         }
@@ -175,45 +121,47 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
-.pop-elementset {
+<style lang="scss">
+.pop-custom {
   padding: 0 12px 12px 12px;
   border: 1px solid #EBEEF5;
   box-shadow: $pop-box-shadow;
-  position: fixed;
-  top: 0;
-  left: 10px;
+  position: absolute;
+  top: 83px;
+  right: 0;
   width: 200px;
   color: #606266;
   background: #fff;
   border-radius: 4px;
   z-index: 999999;
 }
-
-.elementset-labels {
+.relative-position .pop-custom {
+  top: 33px;
+}
+.custom-labels {
   margin-top: 12px;
   width: 100%;
   height: 300px;
 }
-.elementset-labels i {
+.custom-labels i {
   color: #04b330;
   font-size: 14px;
   position: absolute;
   left: 5px;
   top: 6px;
 }
-.elementset-label {
+.custom-label {
   padding: 2px 0 2px 25px;
   position: relative;
   cursor: default;
   font-size: 14px;
 }
-.elementset-label-disabled {
+.custom-label-disabled {
   cursor: not-allowed;
   background: #f1f3f4;
   opacity: 0.7;
 }
-.elementset-bottom-btns {
+.custom-bottom-btns {
   margin-top: 7px;
   display: flex;
   justify-content: space-between;

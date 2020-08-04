@@ -20,6 +20,16 @@
         </div>
         <div class="pagination-top pagination-top-hide display-none"></div>
       </div>
+      <!-- 自定义table列 -->
+      <transition name="el-zoom-in-top">
+        <element-set
+          v-if="tools.showCustomTableTitle"
+          @close="tools.showCustomTableTitle = false"
+          :custom-table-title.sync="tools.customTableTitle"
+          :original-table-title="tableTitle"
+          ref="customTableTitle"
+        ></element-set>
+      </transition>
       <el-table
         class="nz-table"
         :data="tableData"
@@ -36,7 +46,7 @@
         <el-table-column
           :resizable="false"
           show-overflow-tooltip
-          v-for="(item, index) in tools.tablelable"
+          v-for="(item, index) in tools.customTableTitle"
           v-if="item.show"
           :width="item.width"
           :key="`col-${index}`"
@@ -46,8 +56,6 @@
         >
           <template slot-scope="scope" :column="item">
             <div v-if="item.prop == 'option'" class="content-right-options">
-              <!--<span :title="$t('overall.view')" @click="detail(scope.row)" class="content-right-option" :id="'dc-detail-'+scope.row.id"><i class="nz-icon nz-icon-view"></i></span>
-              &nbsp;-->
               <span :title="$t('overall.edit')" @click="edit(scope.row)" class="content-right-option" :id="'dc-edit-'+scope.row.id"><i class="nz-icon nz-icon-edit"></i></span>
               &nbsp;
               <span :title="$t('overall.delete')" @click="del(scope.row)" class="content-right-option" :id="'dc-del-'+scope.row.id"><i class="el-icon-delete"></i></span>
@@ -88,7 +96,7 @@
         </el-table-column>
         <el-table-column width="28" :resizable="false">
           <template slot="header" slot-scope="scope">
-            <span @click.stop="elementsetShow('shezhi',$event)" class="nz-table-gear">
+            <span @mousedown.stop="!tools.showCustomTableTitle && (tools.showCustomTableTitle = true)" class="nz-table-gear">
               <i class="nz-icon nz-icon-gear"></i>
             </span>
           </template>
@@ -106,15 +114,6 @@
       </transition>
     </div>
     <!--dc table end-->
-    <element-set
-      v-if="tools.showElementSet"
-      v-clickoutside="elementsetHide"
-      :dropCol="tools.dropCol"
-      @tablelable="tablelabelEmit"
-      :table-title="tableTitle"
-      ref="elementset"
-    ></element-set>
-
     <transition name="right-box">
       <dc-box @close="closeDcBox" :dc="dc" :user-data="userData" @reload="getTableData" v-if="rightBox.dc.show"></dc-box>
     </transition>
@@ -152,10 +151,9 @@
           loading: false, //是否显示table加载动画
           toTopBtnTop: this.$tableHeight.toTopBtnTop, //to-top按钮的top属性
           tableHover: false, //控制滚动条和top按钮同时出现
-          showElementSet: false, //自定义列弹框是否显示
           showTopBtn: false, //显示To top按钮
-          tablelable: [], //从缓存中加载的table header
-          dropCol: [], //自定义列工具的数据
+          showCustomTableTitle: false, //自定义列弹框是否显示
+          customTableTitle: [], //自定义列工具的数据
         },
         tableId: 'dcTable', //需要分页的table的id，用于记录每页数量
         dc: {},
@@ -237,42 +235,11 @@
       }
     },
     methods: {
-      elementsetShow(s, e) {
-        this.tools.showElementSet = true;
-        var eventfixed = {
-          shezhi: 0,
-          screen: 0
-        };
-        eventfixed[s] = 1;
-        e.preventDefault();
-        this.$store.commit('setHeaderTable', this.tools.tablelable);
-        this.$store.commit('setEventfixed', eventfixed);
-        const h = document.documentElement.clientHeight;
-        const w = document.documentElement.clientWidth;
-        const dw = this.$refs.elementset.$el.offsetWidth;
-        const dh = this.$refs.elementset.$el.offsetHeight;
-        let positionx =
-          e.clientX + dw <= w - 10 ? e.clientX + 14 : e.clientX + 14 - dw;
-        let positiony =
-          e.clientY + dh <= h - 10
-            ? e.clientY + 20
-            : e.clientY + 20 - (e.clientY + dh - h);
-        this.$store.commit('setPosition', {positionx, positiony});
-      },
-      elementsetHide() {
-        //悬浮点击空白隐藏
-        this.$refs.elementset.elementsetHide();
-      },
       assetStatClassName(param) {
         if (param.column.label == this.$t("config.dc.assets")) {
           return "asset-state";
         }
         return "";
-      },
-      tablelabelEmit(data) {
-        //获取子组件传过来的参数
-        this.$store.commit('setHeaderTable', data);
-        this.tools.tablelable = data;
       },
       jumpTo(data, id) {
         bus.$emit("menu-change", data);
@@ -368,7 +335,7 @@
             if (response.code === 200) {
               this.$message({duration: 1000, type: 'success', message: this.$t("tip.deleteSuccess")});
               this.getTableData();
-              this.$store.commit("dcListChange");
+              bus.$emit("dc-list-change");
             } else {
               this.$message.error(response.msg);
             }
@@ -484,6 +451,10 @@
       window.onresize = null;
     },
     mounted() {
+      //初始化表头
+      this.tools.customTableTitle = localStorage.getItem("nz-tableTitle-" + localStorage.getItem("nz-username") + "-" + this.$route.path)
+        ? JSON.parse(localStorage.getItem("nz-tableTitle-" + localStorage.getItem("nz-username") + "-" + this.$route.path))
+        : this.tableTitle;
       //是否存在分页缓存
       let pageSize = localStorage.getItem('nz-pageSize-' + localStorage.getItem('nz-username') + '-' + this.tableId);
       if (pageSize != 'undefined' && pageSize != null) {
@@ -512,13 +483,6 @@
           };
         }
       });
-
-      this.tools.tablelable = localStorage.getItem("nz-tableTitle-" + localStorage.getItem("nz-username") + "-" + this.$route.path)
-        ? JSON.parse(localStorage.getItem("nz-tableTitle-" + localStorage.getItem("nz-username") + "-" + this.$route.path))
-        : this.tableTitle;
-      this.tools.dropCol = localStorage.getItem("nz-tableTitle-" + localStorage.getItem("nz-username") + "-" + this.$route.path)
-        ? JSON.parse(localStorage.getItem("nz-tableTitle-" + localStorage.getItem("nz-username") + "-" + this.$route.path))
-        : this.tableTitle;
     }
   }
 </script>

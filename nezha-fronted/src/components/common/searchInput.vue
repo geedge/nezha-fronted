@@ -222,11 +222,6 @@
                 downBool:false
             }
         },
-        computed: {
-            alertListAssetId() {
-              return this.$store.state.assetForAlertList;
-            }
-        },
         watch: {
           defaultValue: {
             immediate: true,
@@ -348,100 +343,6 @@
                   }
               }
           },
-          /*alertListAssetId: {
-            immediate: true,
-            handler(newData, oldData) {
-              if (newData && this.$route.path == '/alertList') {
-                setTimeout(()=>{
-                  //
-                  //1.条件名alertType
-                  //
-                  this.searchLabelList.splice(2, 1);
-                  this.select_list.push({
-                    name: this.$t('alert.list.type'),
-                    id: 3,
-                    type: 'select',
-                    label: 'alertType',
-                    disabled: false
-                  });
-                  //
-                  //2.条件值asset
-                  //
-                  this.select_list.forEach(val => {
-                    if (val.label == 'alertType') {
-                      val.val = this.$t('alert.config.typeOption.asset');
-                      val.valnum = 3;
-                      //alertList页type选择asset时，可以搜索asset
-                      if (this.$route.path == '/alertList' && val.label == 'alertType' && val.valnum == 3) {
-                        for (let i = 0; i < this.searchLabelList.length; i++) {
-                          if (this.searchLabelList[i].label == 'asset') {
-                            this.searchLabelList[i].disabled = false;
-                            break;
-                          }
-                        }
-                      } else if (this.$route.path == '/alertList' && val.label == 'alertType' && val.valnum != 3) {
-                        let ind = -1;
-                        for (let i = 0; i < this.searchLabelList.length; i++) {
-                          if (this.searchLabelList[i].label == 'asset') {
-                            this.searchLabelList[i].disabled = true;
-                            break;
-                          }
-                        }
-                        for (let i = 0; i < this.select_list.length; i++) {
-                          if (this.select_list[i].label == 'asset') {
-                            ind = i;
-                            break;
-                          }
-                        }
-                        if (ind >= 0) {
-                          this.close_selcet_list(ind);
-                        }
-                      }
-                    }
-                  });
-                  //
-                  //3.条件名asset
-                  //
-                  //this.input_list = false;
-                  this.searchLabelList.splice(3, 1);
-                  this.select_list.push({
-                    name: this.$t('asset.asset'),
-                    id: 11,
-                    type: 'asset',
-                    label: 'asset',
-                    disabled: false
-                  });
-
-                  //
-                  //4.条件值：指定的asset
-                  setTimeout(()=>{
-                    let assetHost = '';
-                    for (let i = 0; i < this.assetSelect.length; i++) {
-                      if (this.assetSelect[i].id == newData) {
-                        assetHost = this.assetSelect[i].host;
-                      }
-                    }
-                    this.select_list.forEach(val => {
-                      if (val.label == 'asset') {
-                        val.val = assetHost;
-                        val.valnum = newData;
-                      }
-                    });
-                    this.input_sreach = '';
-                    this.sreach_num = this.select_list.length;
-                    this.change_sreach_show = false;
-                    this.input_list = true;
-                    //
-                    //5.点击搜索
-                    //
-                    this.select();
-                  }, 50);
-
-                }, 100);
-                this.$store.commit('assetForAlertListChange', '');
-              }
-            }
-          }*/
         },
         props:['searchMsg','defaultItem','defaultValue','inTransform'],
         methods: {
