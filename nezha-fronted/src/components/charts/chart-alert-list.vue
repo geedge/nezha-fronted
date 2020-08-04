@@ -51,6 +51,7 @@
             @deleteMessage="deleteMessage"
             ref="alertListTable"
             :form="'chartList'"
+            :fromPath="'/alertList'"
           ></alertMessageTable>
           <Pagination :pageObj="pageObj" @pageNo='pageNo'  @pageSize='pageSize' ref="Pagination" :append-to-body="false" pop-class="out-popper-fix"></Pagination>
         </div>
@@ -71,6 +72,7 @@
             @deleteMessage="deleteMessage"
             ref="alertListScreenTable"
             :form="'chartList'"
+            :fromPath="'/alertList'"
           ></alertMessageTable>
           <Pagination :pageObj="screenPageObj"  @pageNo='screenPageNo' @pageSize='screenPageSize' ref="Pagination" ></Pagination>
           <loading  :ref="'localLoadingScreen'+chartIndex"></loading>

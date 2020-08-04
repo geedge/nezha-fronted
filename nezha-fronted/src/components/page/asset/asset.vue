@@ -646,7 +646,15 @@
           case 'ID':
           case 'HOST':
           case 'SN':
+          case 'assetType':
           case 'purchaseDate':
+          case 'state':
+          case 'pingStatus':
+          case 'dataCenter':
+          case 'cabinet':
+          case 'Module':
+          case 'vendor':
+          case 'principal':
             return'custom';
           default : return false;
         }
@@ -657,7 +665,15 @@
           case 'ID': return'ass.id';
           case 'HOST': return'ass.host';
           case 'SN': return'ass.sn';
+          case 'assetType': return 'sdtt.value';
           case 'purchaseDate': return'ass.purchase_date';
+          case 'state': return 'ass.state';
+          case 'pingStatus': return 'assp.rtt';
+          case 'dataCenter': return 'idc.name';
+          case 'cabinet': return 'cab.name';
+          case 'Module': return 'mo.name';
+          case 'vendor': return 'sdt.value';
+          case 'principal': return 'su.username';
           default : return prop;
         }
       },

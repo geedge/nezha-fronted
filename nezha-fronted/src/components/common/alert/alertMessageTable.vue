@@ -159,12 +159,13 @@
     <!--<弹窗>-->
     <!--删除弹窗-->
     <element-set
-      v-clickoutside="elementsetHide"
-      :table-title="tableTitle"
-      :dropCol="dropCol"
-      @tablelable="tablelabelEmit"
-      ref="elementset"
-    ></element-set>
+    v-clickoutside="elementsetHide"
+    :table-title="tableTitle"
+    :dropCol="dropCol"
+    @tablelable="tablelabelEmit"
+    ref="elementset"
+    :path="this.fromPath"
+  ></element-set>
     <!--导出-->
     <div class="export-xlsx">
       <el-dialog :visible.sync="importBox.show" :title="importBox.title" :modal-append-to-body='false' :show-close="true" width="300px" @close="closeDialog" class="nz-dialog">
@@ -234,7 +235,8 @@
       tableHeight:{},
       tableId:{},
       projectAlertId:{},
-      from:{}
+      from:{},
+      fromPath:{},
     },
     data() {
       vm = this;
@@ -859,6 +861,9 @@
       showSubList(n) {
         this.$bottomBoxWindow.showSubListWatch(vm, n);
       },
+      from(n){
+        console.log(n)
+      },
     },
     mounted() {
       //是否存在分页缓存
@@ -887,22 +892,25 @@
           });
         }
       });
-      if(this.from=='alertMessage'  || this.from=='chartList'){
+      if(this.from=='alertMessage'){
         this.tablelable = localStorage.getItem("nz-tableTitle-" + localStorage.getItem("nz-username") + "-" + this.$route.path)
           ? JSON.parse(localStorage.getItem("nz-tableTitle-" + localStorage.getItem("nz-username") + "-" + this.$route.path))
           : this.tableTitle;
         this.dropCol = localStorage.getItem("nz-tableTitle-" + localStorage.getItem("nz-username") + "-" + this.$route.path)
           ? JSON.parse(localStorage.getItem("nz-tableTitle-" + localStorage.getItem("nz-username") + "-" + this.$route.path))
           : this.tableTitle;
+        console.log(1);
       }
-      if(this.from=='alertMessageTab'){
+      if(this.from=='alertMessageTab'  || this.from=='chartList'){
         this.tablelable = localStorage.getItem("nz-tableTitle-" + localStorage.getItem("nz-username") + "-/alertList")
           ? JSON.parse(localStorage.getItem("nz-tableTitle-" + localStorage.getItem("nz-username") + "-/alertList"))
           : this.tableTitle;
         this.dropCol = localStorage.getItem("nz-tableTitle-" + localStorage.getItem("nz-username") + "-/alertList")
           ? JSON.parse(localStorage.getItem("nz-tableTitle-" + localStorage.getItem("nz-username") + "-/alertList"))
           : this.tableTitle;
+        console.log(2);
       }
+      console.log( this.tableTitle,this.fromPath,this.form,this.tablelable);
     }
   }
 

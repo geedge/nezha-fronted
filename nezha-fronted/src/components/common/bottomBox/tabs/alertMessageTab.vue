@@ -28,18 +28,19 @@
       @tableDataSort="tableDataSort"
       @deleteMessage="deleteMessage"
       :from="'alertMessageTab'"
+      :fromPath="'/alertList'"
     ></alertMessageTable>
     <Pagination :tableId="tableId" :pageObj="pageObj" @pageNo='pageNo' @pageSize='pageSize' ref="Pagination"></Pagination>
-    <element-set
-      v-if="showElementSet"
-      v-clickoutside="elementsetHide"
-      :table-title="tableTitle"
-      :dropCol="dropCol"
-      :path="'/alertList'"
-      @close="elementsetHide"
-      @tablelable="tablelabelEmit"
-      ref="elementset"
-    ></element-set>
+    <!--<element-set-->
+      <!--v-if="showElementSet"-->
+      <!--v-clickoutside="elementsetHide"-->
+      <!--:table-title="tableTitle"-->
+      <!--:dropCol="dropCol"-->
+      <!--:path="'/alertList'"-->
+      <!--@close="elementsetHide"-->
+      <!--@tablelable="tablelabelEmit"-->
+      <!--ref="elementset"-->
+    <!--&gt;</element-set>-->
     <!--导出-->
     <div class="export-xlsx">
       <el-dialog :visible.sync="importBox.show" :title="importBox.title" :modal-append-to-body='false' :show-close="true" width="300px" @close="importBox.show = false" class="nz-dialog">
