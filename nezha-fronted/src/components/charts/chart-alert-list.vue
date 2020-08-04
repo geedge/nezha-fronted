@@ -62,7 +62,7 @@
           </div>
           <alertMessageTable
             :tableData="storedScreanTableData"
-            :loading="loading"
+            :loading="loadingTable"
             :tableHeight="'95%'"
             :tableId="''"
             :projectAlertId="'tableContainer'+chartIndex"
@@ -165,7 +165,7 @@ export default {
           pageSize: 50,
           total: 0
         },
-        loading:false,// 表格数据加载loading
+        loadingTable:false,// 表格数据加载loading
         screenPageObj:{
           pageNo: 1,
           pageSize: 50,
@@ -508,7 +508,7 @@ export default {
       },
       getAlertList: function (filterType,isPreview=false,chartInfo) {
         this.resize();
-        this.loading=true;
+        this.loadingTable=true;
         this.isPreview = isPreview;
         let queryParam={
           pageSize:this.pageObj.pageSize,
@@ -582,7 +582,7 @@ export default {
             this.divFirstShow = true;
 
             this.firstShow = true; // 展示操作按键
-            this.loading=false;
+            this.loadingTable=false;
             this.endLoading(filterType);
           }else{
             this.isError = true;
