@@ -27,9 +27,9 @@
       :tableId="tableId"
       @tableDataSort="tableDataSort"
       @deleteMessage="deleteMessage"
+      :from="'alertMessageTab'"
     ></alertMessageTable>
     <Pagination :tableId="tableId" :pageObj="pageObj" @pageNo='pageNo' @pageSize='pageSize' ref="Pagination"></Pagination>
-
     <element-set
       v-if="showElementSet"
       v-clickoutside="elementsetHide"
@@ -510,7 +510,6 @@
         }, 1000);
       },
       promQueryParamConvert(obj) {
-        console.log(obj)
         return "(" + obj.alertRule.expr + ") and (" + function(){
           let q = "{";
           for (let k in obj.labels) {
@@ -645,6 +644,8 @@
       this.dropCol = localStorage.getItem("nz-tableTitle-" + localStorage.getItem("nz-username") + "-/alertList")
         ? JSON.parse(localStorage.getItem("nz-tableTitle-" + localStorage.getItem("nz-username") + "-/alertList"))
         : this.tableTitle;
+      console.log( this.tablelable);
+      console.log( this.dropCol)
     }
   }
 </script>

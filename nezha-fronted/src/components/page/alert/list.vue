@@ -38,6 +38,7 @@
         :tableId="tableId"
         @tableDataSort="tableDataSort"
         @deleteMessage="deleteMessage"
+        :form="'chartList'"
       ></alertMessageTable>
       <div class="pagination-bottom" v-show="!showSubList">
         <Pagination :tableId="tableId" :pageObj="pageObj" @pageNo='pageNo' @pageSize='pageSize' ref="Pagination"></Pagination>
