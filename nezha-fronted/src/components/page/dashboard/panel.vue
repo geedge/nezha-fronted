@@ -1,83 +1,71 @@
 <template>
   <div class="panel">
-    <left-menu >
-      <div slot="content-left" class="slot-content">
-      <div class="sidebar-title">{{$t('dashboard.title')}}</div>
-      <div class="sidebar-info">
-        <div class="sidebar-info-item " @click="jumpTo('overview')">{{$t('dashboard.overview.title')}}</div>
-        <div class="sidebar-info-item sidebar-info-top sidebar-info-item-active">{{$t('dashboard.panel.title')}}</div>
-        <div class="sidebar-info-item" @click="jumpTo('explore')">{{$t('dashboard.metricPreview.title')}}</div>
+    <div class="top-tools">
+      <div class="top-tool-main-left" v-if="panelData.length == 0" style="margin-left: 10px;">
+        <button @click="toAdd" class="nz-btn nz-btn-style-light nz-btn-size-small"><i class="nz-icon nz-icon-create-square"></i>&nbsp;&nbsp;{{$t("dashboard.panel.createPanelTitleSec")}}</button>
       </div>
-    </div>
-    <div slot="content-right" class="slot-content">
-      <div class="top-tools">
-        <div class="top-tool-main-left" v-if="panelData.length == 0" style="margin-left: 10px;">
-          <button @click="toAdd" class="nz-btn nz-btn-style-light nz-btn-size-small"><i class="nz-icon nz-icon-create-square"></i>&nbsp;&nbsp;{{$t("dashboard.panel.createPanelTitleSec")}}</button>
+      <template v-else>
+        <div class="top-tool-main-left">
+          <el-dropdown @command="panelChange" class="panel-dropdown-title" trigger="click" placement="bottom-start" v-scrollBar:el-dropdown>
+            <el-row @click.native="scrollbarHeightHandler" :gutter="10" class="el-dropdown-link" style="">
+              <el-col :span="21" class="panel-list-title" :title="showPanel.name">{{showPanel.name}}</el-col>
+              <el-col :span="3" style="padding-left:0px !important;"><i class="el-icon-arrow-down el-icon--right"></i></el-col>
+            </el-row>
+            <el-dropdown-menu class="nz-dashboard-dropdown" slot="dropdown">
+              <el-dropdown-item>{{$t('dashboard.panel.createPanelTitleSec')}}</el-dropdown-item>
+              <draggable v-model="panelData" @start="start" @end="end" :move="move" :key
+                         :scroll-sensitivity="150"
+                         :options="{
+               group:{name:'chartGroup',pull:'false'},
+               dragClass:'drag-chart-class',
+               fallbackClass:'fallback-class',
+               forceFallback:true,
+               ghostClass:'chart-ghost',
+               chosenClass:'choose-class',
+               scroll:true,
+               scrollFn:function(offsetX,offsetY,originalEvent,touchEvt,hoverTargetEI){},
+               animation:150,
+               handle:'.panelContent',
+             }"  >
+                <el-dropdown-item v-for="item in panelData" :key="item.id+1" class="panel-title-li"
+                                  :class="showPanel.id==item.id?'nz-dashboard-dropdown-bg':''" :command="item">
+                  <!--{{item.name}}-->
+                  <el-row  :gutter="10" class="panel-list-width" >
+                    <el-col :span="2" class="panelContent move-area"><i class="nz-icon nz-icon-sort4"></i></el-col>
+                    <el-col :span="17" class="panel-list-item" :title="item.name">{{item.name}}</el-col>
+                    <el-col :span="1"><span class="panel-dropdown-btn panel-dropdown-btn-delete" @click.stop="del(item)"><i class="el-icon-delete"></i></span></el-col>
+                    <el-col :span="1">&nbsp;</el-col>
+                    <el-col :span="1"><span class="panel-dropdown-btn" @click.stop="edit(item)"><i class="nz-icon nz-icon-edit"></i></span></el-col>
+                  </el-row>
+                </el-dropdown-item>
+              </draggable>
+            </el-dropdown-menu>
+          </el-dropdown>
         </div>
-        <template v-else>
-          <div class="top-tool-main-left">
-            <el-dropdown @command="panelChange" class="panel-dropdown-title" trigger="click" placement="bottom-start" v-scrollBar:el-dropdown>
-              <el-row @click.native="scrollbarHeightHandler" :gutter="10" class="el-dropdown-link" style="">
-                <el-col :span="21" class="panel-list-title" :title="showPanel.name">{{showPanel.name}}</el-col>
-                <el-col :span="3" style="padding-left:0px !important;"><i class="el-icon-arrow-down el-icon--right"></i></el-col>
-              </el-row>
-              <el-dropdown-menu class="nz-dashboard-dropdown" slot="dropdown">
-                <el-dropdown-item>{{$t('dashboard.panel.createPanelTitleSec')}}</el-dropdown-item>
-                <draggable v-model="panelData" @start="start" @end="end" :move="move" :key
-                           :scroll-sensitivity="150"
-                           :options="{
-                 group:{name:'chartGroup',pull:'false'},
-                 dragClass:'drag-chart-class',
-                 fallbackClass:'fallback-class',
-                 forceFallback:true,
-                 ghostClass:'chart-ghost',
-                 chosenClass:'choose-class',
-                 scroll:true,
-                 scrollFn:function(offsetX,offsetY,originalEvent,touchEvt,hoverTargetEI){},
-                 animation:150,
-                 handle:'.panelContent',
-               }"  >
-                  <el-dropdown-item v-for="item in panelData" :key="item.id+1" class="panel-title-li"
-                                    :class="showPanel.id==item.id?'nz-dashboard-dropdown-bg':''" :command="item">
-                    <!--{{item.name}}-->
-                    <el-row  :gutter="10" class="panel-list-width" >
-                      <el-col :span="2" class="panelContent move-area"><i class="nz-icon nz-icon-sort4"></i></el-col>
-                      <el-col :span="17" class="panel-list-item" :title="item.name">{{item.name}}</el-col>
-                      <el-col :span="1"><span class="panel-dropdown-btn panel-dropdown-btn-delete" @click.stop="del(item)"><i class="el-icon-delete"></i></span></el-col>
-                      <el-col :span="1">&nbsp;</el-col>
-                      <el-col :span="1"><span class="panel-dropdown-btn" @click.stop="edit(item)"><i class="nz-icon nz-icon-edit"></i></span></el-col>
-                    </el-row>
-                  </el-dropdown-item>
-                </draggable>
-              </el-dropdown-menu>
-            </el-dropdown>
+        <div class="top-tool-main-right">
+          <div class="top-tool-search relative-position margin-r-20">
+            <el-input ref="queryPanel" @clear="clearInput" id="queryPanel" @focus="focusInput"  @blur="blurInput" v-model="filter.searchName" class="query-input-inactive" size="mini" clearable   >
+              <i slot="suffix" class="el-input__icon el-icon-search" @click="focusInput" style="float: right"></i>
+            </el-input>
           </div>
-          <div class="top-tool-main-right">
-            <div class="top-tool-search relative-position margin-r-20">
-              <el-input ref="queryPanel" @clear="clearInput" id="queryPanel" @focus="focusInput"  @blur="blurInput" v-model="filter.searchName" class="query-input-inactive" size="mini" clearable   >
-                <i slot="suffix" class="el-input__icon el-icon-search" @click="focusInput" style="float: right"></i>
-              </el-input>
-            </div>
 
-            <pick-time :refresh-data-func="dateChange" v-model="searchTime" :use-chart-unit="false"></pick-time>
-            <button @click="addChart" :title="$t('overall.createChart')"
-                    class="nz-btn nz-btn-size-normal nz-btn-style-light ">
-              <i class="nz-icon-create-square nz-icon"></i>
-            </button>
-          </div>
-        </template>
-      </div>
-      <div class="table-list" id="tableList">
-        <el-scrollbar class="el-scrollbar-large" style="height: 100%" ref="dashboardScrollbar">
-          <div class="box-content">
-            <chart-list @on-edit-chart="editChart" @on-refresh-time="refreshTime" @on-remove-chart="delChart"
-                        ref="chartList"></chart-list>
-          </div>
-        </el-scrollbar>
-      </div>
-      <button class="to-top" :class="{'to-top-is-hover': tableHover}" v-show="showTopBtn" @click="$toTop('el', $refs.dashboardScrollbar.wrap)" style="bottom: 0;"><i class="nz-icon nz-icon-top"></i></button>
+          <pick-time :refresh-data-func="dateChange" v-model="searchTime" :use-chart-unit="false"></pick-time>
+          <button @click="addChart" :title="$t('overall.createChart')"
+                  class="nz-btn nz-btn-size-normal nz-btn-style-light ">
+            <i class="nz-icon-create-square nz-icon"></i>
+          </button>
+        </div>
+      </template>
     </div>
-    </left-menu>
+    <div class="table-list" id="tableList">
+      <el-scrollbar class="el-scrollbar-large" style="height: 100%" ref="dashboardScrollbar">
+        <div class="box-content">
+          <chart-list @on-edit-chart="editChart" @on-refresh-time="refreshTime" @on-remove-chart="delChart"
+                      ref="chartList"></chart-list>
+        </div>
+      </el-scrollbar>
+    </div>
+    <button class="to-top" :class="{'to-top-is-hover': tableHover}" v-show="showTopBtn" @click="$toTop('el', $refs.dashboardScrollbar.wrap)" style="bottom: 0;"><i class="nz-icon nz-icon-top"></i></button>
 
     <transition name="right-box">
       <chart-box @close="closeChartBox" :chart="chart" v-if="rightBox.chart.show" ref="addChartModal" :show-panel="showPanel" :panel-data="panelData" @reload="panelReload" @on-create-success="createSuccess" @on-delete-success="delChartOk" @reloadOnlyPanel="panelReloadOnlyPanel"></chart-box>

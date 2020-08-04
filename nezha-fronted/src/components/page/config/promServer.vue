@@ -5,106 +5,75 @@
 </style>
 <template>
   <div class="prom">
-    <left-menu >
-    <div slot="content-left" class="slot-content">
-      <div class="sidebar-title">{{$t('overall.config')}}</div>
-      <div class="sidebar-info">
-        <div class="sidebar-info-item sidebar-info-top" @click="jumpTo('account')" id="prom-jump-account">
-          {{$t('config.account.account')}}
-        </div>
-        <div class="sidebar-info-item sidebar-info-item-active">{{$t('config.promServer.promServerList')}}</div>
-        <div class="sidebar-info-item" @click="jumpTo('dc')" id="prom-jump-dc">
-          {{$t('config.dc.dc')}}
-        </div>
-        <div class="sidebar-info-item" @click="jumpTo('model')" id="prom-jump-model">
-          {{$t('config.model.model')}}
-        </div>
-        <div class="sidebar-info-item" @click="jumpTo('mib')" id="prom-jump-mib">
-          {{$t('config.mib.mib')}}
-        </div>
-        <div class="sidebar-info-item" @click="jumpTo('system')" id="prom-jump-system">
-          {{$t('config.system.system')}}
-        </div>
-        <div class="sidebar-info-item" @click="jumpTo('terminallog')" id="prom-jump-terminallog">
-          {{$t('config.terminallog.terminallog')}}
-        </div>
-        <div class="sidebar-info-item" @click="jumpTo('operationlog')" id="account-jump-operation">
-          {{$t('config.operationlog.operationlog')}}
-        </div>
-      </div>
-    </div>
-    <div slot="content-right"class="slot-content">
-      <div class="main-list" :class="{'main-list-with-sub': bottomBox.showSubList}">
-        <div class="main-modal"></div>
-        <div class="top-tools" v-show="bottomBox.mainResizeShow">
-          <div class="top-tool-main-right" :class="{'top-tool-main-right-to-left': bottomBox.showSubList}">
-            <div class="top-tool-search">
-              <search-input ref="searchInput" :searchMsg="searchMsg" @search="search" :inTransform="bottomBox.inTransform"></search-input>
-            </div>
-            <button type="button" @click="add" :title="$t('overall.createPrometheusServer')"
-                    class="nz-btn nz-btn-size-normal nz-btn-style-light margin-l-20" id="prom-add">
-              <i class="nz-icon-create-square nz-icon"></i>
-            </button>
+    <div class="main-list" :class="{'main-list-with-sub': bottomBox.showSubList}">
+      <div class="main-modal"></div>
+      <div class="top-tools" v-show="bottomBox.mainResizeShow">
+        <div class="top-tool-main-right" :class="{'top-tool-main-right-to-left': bottomBox.showSubList}">
+          <div class="top-tool-search">
+            <search-input ref="searchInput" :searchMsg="searchMsg" @search="search" :inTransform="bottomBox.inTransform"></search-input>
           </div>
-          <div class="pagination-top pagination-top-hide display-none"></div>
+          <button type="button" @click="add" :title="$t('overall.createPrometheusServer')"
+                  class="nz-btn nz-btn-size-normal nz-btn-style-light margin-l-20" id="prom-add">
+            <i class="nz-icon-create-square nz-icon"></i>
+          </button>
         </div>
-        <el-table :data="tableData" border v-show="bottomBox.mainResizeShow" :height="mainTableHeight" style="width: 100%;"
-                  v-loading="tools.loading" ref="promTable" class="nz-table" v-scrollBar:el-table="'large'"
-                  @sort-change="tableDataSort">
-          <el-table-column :resizable="false" v-for="(item, index) in tools.tablelable"
-                           v-if="item.show"
-                           :width="item.width"
-                           :key="`col-${index}`"
-                           :label="item.label"
-                           :sortable="sortableShow(item.prop)"
-                           :prop="propTitle(item.prop)"
-                           :sort-orders="['ascending', 'descending']">
-            <template slot-scope="scope" :column="item">
-              <span v-if="item.prop == 'idc'" >{{scope.row[item.prop]?scope.row[item.prop].name:'-'}}</span>
-
-              <span v-else-if="item.prop == 'type'">
-                  {{scope.row[item.prop] == '1' ? 'Global' : ''}}
-                  {{scope.row[item.prop] == '2' ? 'Per-Datacenter' : ''}}
-              </span>
-              <span v-else-if="item.prop == 'status'">
-                <el-popover placement="right" width="200" trigger="hover" :content="$t('asset.assetStatPre')+(scope.row.checkTime?scope.row.checkTime:$t('asset.assetStatDown'))">
-                  <div slot="reference" style="width: 20px">
-                    <div :class="{'active-icon green':scope.row[item.prop] == '1','active-icon red':scope.row[item.prop] == '0' || scope.row[item.prop] == '-1' || scope.row[item.prop] == '-2'}"></div>
-                  </div>
-                </el-popover>
-              </span>
-              <div v-else-if="item.prop == 'option'" class="content-right-options">
-                <span :title="$t('overall.view')" @click="detail(scope.row)" class="content-right-option" :id="'prom-detail-'+scope.row.id"><i class="nz-icon nz-icon-view"></i></span>
-                &nbsp;
-                <span :title="$t('overall.edit')" @click="edit(scope.row)" class="content-right-option" :id="'prom-edit-'+scope.row.id"><i class="nz-icon nz-icon-edit"></i></span>
-                &nbsp;
-                <span :title="$t('overall.delete')" @click="del(scope.row)" class="content-right-option" :id="'prom-del-'+scope.row.id"><i class="el-icon-delete"></i></span>
-              </div>
-              <span v-else-if="scope.row[item.prop]">{{scope.row[item.prop]}}</span>
-              <template v-else>-</template>
-            </template>
-          </el-table-column>
-          <el-table-column width="28" :resizable="false">
-            <template slot="header" slot-scope="scope">
-              <span @click.stop="elementsetShow('shezhi',$event)" class="nz-table-gear">
-                <i class="nz-icon nz-icon-gear"></i>
-              </span>
-            </template>
-            <template v-slot="scope">
-              <button v-if="scope.$index == 0" class="to-top" :style="{top: tools.toTopBtnTop}" :class="{'to-top-is-hover': tools.tableHover}" v-show="tools.showTopBtn && bottomBox.mainResizeShow" @click="$toTop('ps', 0)"><i class="nz-icon nz-icon-top"></i></button>
-            </template>
-          </el-table-column>
-        </el-table>
-        <div class="pagination-bottom" v-show="!bottomBox.showSubList">
-          <Pagination :tableId="tableId" :pageObj="pageObj" @pageNo='pageNo' @pageSize='pageSize' ref="Pagination"></Pagination>
-        </div>
+        <div class="pagination-top pagination-top-hide display-none"></div>
       </div>
-      <transition name="el-zoom-in-bottom">
-        <bottom-box v-if="bottomBox.showSubList" :sub-resize-show="bottomBox.subResizeShow" :obj="bottomBox.promServer" :is-full-screen="bottomBox.isFullScreen" :from="'promServer'" :target-tab.sync="bottomBox.targetTab" :detail="bottomBox.promDetail"
-                    @closeSubList="bottomBox.showSubList = false" @fullScreen="fullScreen" @exitFullScreen="exitFullScreen" @listResize="listResize" ></bottom-box>
-      </transition>
+      <el-table :data="tableData" border v-show="bottomBox.mainResizeShow" :height="mainTableHeight" style="width: 100%;"
+                v-loading="tools.loading" ref="promTable" class="nz-table" v-scrollBar:el-table="'large'"
+                @sort-change="tableDataSort">
+        <el-table-column :resizable="false" v-for="(item, index) in tools.tablelable"
+                         v-if="item.show"
+                         :width="item.width"
+                         :key="`col-${index}`"
+                         :label="item.label"
+                         :sortable="sortableShow(item.prop)"
+                         :prop="propTitle(item.prop)"
+                         :sort-orders="['ascending', 'descending']">
+          <template slot-scope="scope" :column="item">
+            <span v-if="item.prop == 'idc'" >{{scope.row[item.prop]?scope.row[item.prop].name:'-'}}</span>
+
+            <span v-else-if="item.prop == 'type'">
+                {{scope.row[item.prop] == '1' ? 'Global' : ''}}
+                {{scope.row[item.prop] == '2' ? 'Per-Datacenter' : ''}}
+            </span>
+            <span v-else-if="item.prop == 'status'">
+              <el-popover placement="right" width="200" trigger="hover" :content="$t('asset.assetStatPre')+(scope.row.checkTime?scope.row.checkTime:$t('asset.assetStatDown'))">
+                <div slot="reference" style="width: 20px">
+                  <div :class="{'active-icon green':scope.row[item.prop] == '1','active-icon red':scope.row[item.prop] == '0' || scope.row[item.prop] == '-1' || scope.row[item.prop] == '-2'}"></div>
+                </div>
+              </el-popover>
+            </span>
+            <div v-else-if="item.prop == 'option'" class="content-right-options">
+              <span :title="$t('overall.view')" @click="detail(scope.row)" class="content-right-option" :id="'prom-detail-'+scope.row.id"><i class="nz-icon nz-icon-view"></i></span>
+              &nbsp;
+              <span :title="$t('overall.edit')" @click="edit(scope.row)" class="content-right-option" :id="'prom-edit-'+scope.row.id"><i class="nz-icon nz-icon-edit"></i></span>
+              &nbsp;
+              <span :title="$t('overall.delete')" @click="del(scope.row)" class="content-right-option" :id="'prom-del-'+scope.row.id"><i class="el-icon-delete"></i></span>
+            </div>
+            <span v-else-if="scope.row[item.prop]">{{scope.row[item.prop]}}</span>
+            <template v-else>-</template>
+          </template>
+        </el-table-column>
+        <el-table-column width="28" :resizable="false">
+          <template slot="header" slot-scope="scope">
+            <span @click.stop="elementsetShow('shezhi',$event)" class="nz-table-gear">
+              <i class="nz-icon nz-icon-gear"></i>
+            </span>
+          </template>
+          <template v-slot="scope">
+            <button v-if="scope.$index == 0" class="to-top" :style="{top: tools.toTopBtnTop}" :class="{'to-top-is-hover': tools.tableHover}" v-show="tools.showTopBtn && bottomBox.mainResizeShow" @click="$toTop('ps', 0)"><i class="nz-icon nz-icon-top"></i></button>
+          </template>
+        </el-table-column>
+      </el-table>
+      <div class="pagination-bottom" v-show="!bottomBox.showSubList">
+        <Pagination :tableId="tableId" :pageObj="pageObj" @pageNo='pageNo' @pageSize='pageSize' ref="Pagination"></Pagination>
+      </div>
     </div>
-    </left-menu>
+    <transition name="el-zoom-in-bottom">
+      <bottom-box v-if="bottomBox.showSubList" :sub-resize-show="bottomBox.subResizeShow" :obj="bottomBox.promServer" :is-full-screen="bottomBox.isFullScreen" :from="'promServer'" :target-tab.sync="bottomBox.targetTab" :detail="bottomBox.promDetail"
+                  @closeSubList="bottomBox.showSubList = false" @fullScreen="fullScreen" @exitFullScreen="exitFullScreen" @listResize="listResize" ></bottom-box>
+    </transition>
     <transition name="right-box">
       <prom-server-box v-if="rightBox.show" :prom-server="promServer" @close="closeRightBox"></prom-server-box>
     </transition>

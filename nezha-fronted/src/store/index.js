@@ -4,12 +4,6 @@ import Vuex from 'vuex'
 Vue.use(Vuex)
 const store = new Vuex.Store({
   state: {
-    assetData:{
-      selectedData: [],
-      step: 0,
-      type: -1  //0: asset  1: header
-    },
-    
     assetForAlertList: 0, //asset页跳转alertList时传递的assetId
 
     assetItemId:''  ,   //复选框ID
@@ -18,7 +12,9 @@ const store = new Vuex.Store({
     dcList: 0, //监听此值，改变则刷新dc列表
     /* 监听对象变化，用于顶部菜单与底部内容的同步 */
     currentProject: {id: "", name: "", remark: ""},
+    currentModule: {id: ""},
     currentAsset: {id: ""},
+    currentDcList: [],
     projectListChange: 0,
     moduleListChange: 0,
     endpointListChange: 0,
@@ -44,7 +40,6 @@ const store = new Vuex.Store({
     consoleCount:0,//当前console窗口数
     isAddConsole:false,//是否增加窗口
     consoleParam:{},//新开console窗口参数
-    leftMenuStat:false, //0展开状态，1隐藏状态
     linkData:[],//导航数据
   },
   getters: {
@@ -74,6 +69,9 @@ const store = new Vuex.Store({
     },
     currentProjectChange(state, project) {
       state.currentProject = project;
+    },
+    currentDcListChange(state, dcList) {
+      state.currentDcList = dcList;
     },
     currentAssetChange(state, asset) {
       state.currentAsset = asset;
@@ -134,10 +132,7 @@ const store = new Vuex.Store({
     minConsole(state){//最小化窗口
       state.consoleShow=false;
     },
-    setLeftMenuStat:function(state,data){
-      state.leftMenuStat = data;
-    },
-    setLinkData:function(state,data){
+    setLinkData(state, data) {
       state.linkData = data;
     },
   },

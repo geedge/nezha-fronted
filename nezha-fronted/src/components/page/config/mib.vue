@@ -5,120 +5,89 @@
 </style>
 <template>
   <div class="mib">
-    <left-menu >
-      <div slot="content-left" class="slot-content">
-      <div class="sidebar-title">{{$t('overall.config')}}</div>
-      <div class="sidebar-info">
-        <div class="sidebar-info-item sidebar-info-top" @click="jumpTo('account')" id="mib-jump-account">
-          {{$t('config.account.account')}}
+    <template v-if="showTab == 'file'">
+      <div class="top-tools">
+        <div class="nz-tab top-tool-main-right top-tool-main-right-to-left" style="width: 300px">
+          <div class="nz-tab-item-box" id="module-type-1">
+            <div class="nz-tab-item nz-tab-item-active">{{$t("config.mib.mibFiles")}}</div>
+          </div>
+          <div @click="showTab = 'browser'" class="nz-tab-item-box" id="module-type-2">
+            <div class="nz-tab-item">{{$t("config.mib.mibBrowser")}}</div>
+          </div>
         </div>
-        <div class="sidebar-info-item" @click="jumpTo('promServer')" id="mib-jump-prom">{{$t('config.promServer.promServerList')}}</div>
-        <div class="sidebar-info-item" @click="jumpTo('dc')" id="mib-jump-dc">
-          {{$t('config.dc.dc')}}
-        </div>
-        <div class="sidebar-info-item " id="mib-jump-model" @click="jumpTo('model')">
-          {{$t('config.model.model')}}
-        </div>
-        <div class="sidebar-info-item sidebar-info-item-active" id="mib-jump-mib">
-          {{$t('config.mib.mib')}}
-        </div>
-        <div class="sidebar-info-item" @click="jumpTo('system')" id="mib-jump-system">
-          {{$t('config.system.system')}}
-        </div>
-        <div class="sidebar-info-item" @click="jumpTo('terminallog')" id="mib-jump-terminallog">
-          {{$t('config.terminallog.terminallog')}}
-        </div>
-        <div class="sidebar-info-item" @click="jumpTo('operationlog')" id="account-jump-operation">
-          {{$t('config.operationlog.operationlog')}}
+        <div class="top-tool-main-right">
+          <div class="top-tool-search">
+            <search-input :searchMsg="searchMsg" @search="search"></search-input>
+          </div>
+          <button @click="add" class="nz-btn nz-btn-size-normal nz-btn-style-light  margin-l-20"  :title="$t('overall.createMib')"
+                  id="mib-add">
+            <i class="nz-icon-create-square nz-icon"></i>
+          </button>
         </div>
       </div>
-    </div>
-    <div slot="content-right" class="slot-content">
-      <template v-if="showTab == 'file'">
-        <div class="top-tools">
-          <div class="nz-tab top-tool-main-right top-tool-main-right-to-left" style="width: 300px">
-            <div class="nz-tab-item-box" id="module-type-1">
-              <div class="nz-tab-item nz-tab-item-active">{{$t("config.mib.mibFiles")}}</div>
-            </div>
-            <div @click="showTab = 'browser'" class="nz-tab-item-box" id="module-type-2">
-              <div class="nz-tab-item">{{$t("config.mib.mibBrowser")}}</div>
-            </div>
-          </div>
-          <div class="top-tool-main-right">
-            <div class="top-tool-search">
-              <search-input :searchMsg="searchMsg" @search="search"></search-input>
-            </div>
-            <button @click="add" class="nz-btn nz-btn-size-normal nz-btn-style-light  margin-l-20"  :title="$t('overall.createMib')"
-                    id="mib-add">
-              <i class="nz-icon-create-square nz-icon"></i>
-            </button>
-          </div>
-        </div>
-        <el-table :data="tableData" border :height="$tableHeight.normal" style="width: 100%;" ref="mibTable" class="nz-table mib-table" v-scrollBar:el-table="'large'" v-loading="tools.loading" @sort-change="tableDataSort">
-          <el-table-column :resizable="false" v-for="(item, index) in tools.tablelable" v-if="item.show" :width="item.width" :class-name="item.prop == 'modelsDetail'?'detail-column':''"
-                           :key="`col-${index}`" :label="item.label" :sortable="sortableShow(item.prop)"
-                           :prop="propTitle(item.prop)"
-                           :sort-orders="['ascending', 'descending']">
-            <template slot-scope="scope" :column="item">
-              <template v-if="item.prop == 'updateUser'" >{{scope.row[item.prop].name}}</template>
-              <template v-else-if="item.prop == 'fileName' && scope.row[item.prop]" >
-                <span class="link" @click="downloadMib(scope.row.id)">{{scope.row[item.prop]}}</span>
-              </template>
-              <template v-else-if="item.prop == 'modelsDetail' && scope.row['modelsDetail'] && scope.row['modelsDetail'].length >0" >
-                <div style="height: 100%">
-                  <el-scrollbar style="height: 100%">
-                    <div v-for="(n,i) in scope.row['modelsDetail']" :key="n.name+'-'+n.id+'-'+i" class="detail-item-content">
-                      <el-popover trigger="hover" placement="top" >
+      <el-table :data="tableData" border :height="$tableHeight.normal" style="width: 100%;" ref="mibTable" class="nz-table mib-table" v-scrollBar:el-table="'large'" v-loading="tools.loading" @sort-change="tableDataSort">
+        <el-table-column :resizable="false" v-for="(item, index) in tools.tablelable" v-if="item.show" :width="item.width" :class-name="item.prop == 'modelsDetail'?'detail-column':''"
+                         :key="`col-${index}`" :label="item.label" :sortable="sortableShow(item.prop)"
+                         :prop="propTitle(item.prop)"
+                         :sort-orders="['ascending', 'descending']">
+          <template slot-scope="scope" :column="item">
+            <template v-if="item.prop == 'updateUser'" >{{scope.row[item.prop].name}}</template>
+            <template v-else-if="item.prop == 'fileName' && scope.row[item.prop]" >
+              <span class="link" @click="downloadMib(scope.row.id)">{{scope.row[item.prop]}}</span>
+            </template>
+            <template v-else-if="item.prop == 'modelsDetail' && scope.row['modelsDetail'] && scope.row['modelsDetail'].length >0" >
+              <div style="height: 100%">
+                <el-scrollbar style="height: 100%">
+                  <div v-for="(n,i) in scope.row['modelsDetail']" :key="n.name+'-'+n.id+'-'+i" class="detail-item-content">
+                    <el-popover trigger="hover" placement="top" >
+                      <div>
                         <div>
-                          <div>
-                            <span>{{$t('overall.name')}}:</span>
-                            <span>{{n.name}}</span>
-                          </div>
-                          <div>
-                            <span>{{$t('config.mib.vendor')}}:</span>
-                            <span>{{n.vendor}}</span>
-                          </div>
-                          <div>
-                            <span>{{$t('config.mib.type')}}:</span>
-                            <span>{{n.type}}</span>
-                          </div>
+                          <span>{{$t('overall.name')}}:</span>
+                          <span>{{n.name}}</span>
                         </div>
-                        <template slot="reference">
-                          <div  class="detail-item-content" v-if="i < scope.row['modelsDetail'].length-1">{{n.name}},</div>
-                          <div  class="detail-item-content" v-else>{{n.name}}</div>
-                        </template>
-                      </el-popover>
-                    </div>
-                  </el-scrollbar>
-                </div>
-              </template>
-              <div v-else-if="item.prop == 'option'" class="content-right-options">
-                <span :title="$t('overall.download')" @click="downloadMib(scope.row)" class="content-right-option" :id="'mib-download-'+scope.row.id"><i class="el-icon-download"></i></span>
-                &nbsp;
-                <span :title="$t('overall.edit')" @click="edit(scope.row)" class="content-right-option" :id="'mib-edit-'+scope.row.id"><i class="nz-icon nz-icon-edit"></i></span>
-                &nbsp;
-                <span :title="$t('overall.delete')" @click="del(scope.row)" class="content-right-option" :id="'mib-del-'+scope.row.id"><i class="el-icon-delete"></i></span>
+                        <div>
+                          <span>{{$t('config.mib.vendor')}}:</span>
+                          <span>{{n.vendor}}</span>
+                        </div>
+                        <div>
+                          <span>{{$t('config.mib.type')}}:</span>
+                          <span>{{n.type}}</span>
+                        </div>
+                      </div>
+                      <template slot="reference">
+                        <div  class="detail-item-content" v-if="i < scope.row['modelsDetail'].length-1">{{n.name}},</div>
+                        <div  class="detail-item-content" v-else>{{n.name}}</div>
+                      </template>
+                    </el-popover>
+                  </div>
+                </el-scrollbar>
               </div>
-              <template v-else-if="scope.row[item.prop]">{{scope.row[item.prop]}}</template>
-              <template v-else>-</template>
             </template>
-          </el-table-column>
-          <el-table-column :resizable="false" width="28">
-            <template slot="header" slot-scope="scope">
-              <span @click.stop="elementsetShow('shezhi',$event)" class="nz-table-gear">
-                <i class="nz-icon nz-icon-gear"></i>
-              </span>
-            </template>
-            <template v-slot="scope">
-              <button v-if="scope.$index == 0" class="to-top" :style="{top: tools.toTopBtnTop}" :class="{'to-top-is-hover': tools.tableHover}" v-show="tools.showTopBtn" @click="$toTop('ps', 0)"><i class="nz-icon nz-icon-top"></i></button>
-            </template>
-          </el-table-column>
-        </el-table>
-        <Pagination :tableId="tableId" :pageObj="pageObj" @pageNo='pageNo' @pageSize='pageSize' ref="Pagination"></Pagination>
-      </template>
-      <mib-browser :show-tab="showTab" v-if="showTab == 'browser'" @toFileTab="showTab = 'file'"></mib-browser>
-    </div>
-    </left-menu>
+            <div v-else-if="item.prop == 'option'" class="content-right-options">
+              <span :title="$t('overall.download')" @click="downloadMib(scope.row)" class="content-right-option" :id="'mib-download-'+scope.row.id"><i class="el-icon-download"></i></span>
+              &nbsp;
+              <span :title="$t('overall.edit')" @click="edit(scope.row)" class="content-right-option" :id="'mib-edit-'+scope.row.id"><i class="nz-icon nz-icon-edit"></i></span>
+              &nbsp;
+              <span :title="$t('overall.delete')" @click="del(scope.row)" class="content-right-option" :id="'mib-del-'+scope.row.id"><i class="el-icon-delete"></i></span>
+            </div>
+            <template v-else-if="scope.row[item.prop]">{{scope.row[item.prop]}}</template>
+            <template v-else>-</template>
+          </template>
+        </el-table-column>
+        <el-table-column :resizable="false" width="28">
+          <template slot="header" slot-scope="scope">
+            <span @click.stop="elementsetShow('shezhi',$event)" class="nz-table-gear">
+              <i class="nz-icon nz-icon-gear"></i>
+            </span>
+          </template>
+          <template v-slot="scope">
+            <button v-if="scope.$index == 0" class="to-top" :style="{top: tools.toTopBtnTop}" :class="{'to-top-is-hover': tools.tableHover}" v-show="tools.showTopBtn" @click="$toTop('ps', 0)"><i class="nz-icon nz-icon-top"></i></button>
+          </template>
+        </el-table-column>
+      </el-table>
+      <Pagination :tableId="tableId" :pageObj="pageObj" @pageNo='pageNo' @pageSize='pageSize' ref="Pagination"></Pagination>
+    </template>
+    <mib-browser :show-tab="showTab" v-if="showTab == 'browser'" @toFileTab="showTab = 'file'"></mib-browser>
     <element-set
       v-if="tools.showElementSet"
       v-clickoutside="elementsetHide"

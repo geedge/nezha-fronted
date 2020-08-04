@@ -45,11 +45,11 @@ export default new Router({
           component: resolve => require(['../components/page/dashboard/explore/explore.vue'], resolve),
         },
         {
-          path: 'overview',
+          path: '/overview',
           component: resolve => require(['../components/page/dashboard/overview/overview2.vue'],resolve)
         },
         {
-          path: 'test',
+          path: '/test',
           component: resolve => require(['../components/charts/d3-line-chart2'],resolve)
         },
         {

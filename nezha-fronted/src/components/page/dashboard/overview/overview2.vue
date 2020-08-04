@@ -1,184 +1,170 @@
 <template>
   <div class="overview">
-    <!--左侧菜单栏-->
-    <left-menu>
-      <div slot="content-left" class="overview-left slot-content">
-        <div class="sidebar-title">{{$t('dashboard.title')}}</div>
-        <div class="sidebar-info">
-          <div class="sidebar-info-item sidebar-info-item-active" >{{$t('dashboard.overview.title')}}</div>
-          <div class="sidebar-info-item sidebar-info-top " @click="jumpTo('panel')">{{$t('dashboard.panel.title')}}</div>
-          <div class="sidebar-info-item" @click="jumpTo('explore')">{{$t('dashboard.metricPreview.title')}}</div>
+    <!--标题-->
+    <div class="overview-content-header">
+      <div class="header-title" :class="{'hide-div':!isFullScreen}">{{systemName&&systemName != 'undefined'&&systemName != null?systemName: $t('dashboard.overview.contentTitle')}}</div>
+      <div class="header-tool">
+        <div class="tool-container">
+          <div class="time">{{sysTime}}</div>
+          <div class="date">
+            <div class="week">{{sysWeek}}</div>
+            <div class="sys-date">{{sysDate}}</div>
+          </div>
+          <div class="operation" @click="switchFullScreen" ><span ><i class="nz-icon screen-icon" :class="{'nz-icon-maxview':!isFullScreen,'nz-icon-exit-full-screen':isFullScreen}"></i></span></div>
         </div>
       </div>
-      <!--右侧内容-->
-      <div class="overview-right slot-content" id="mainDisplay" slot="content-right">
-        <!--标题-->
-        <div class="overview-content-header">
-          <div class="header-title" :class="{'hide-div':!isFullScreen}">{{systemName&&systemName != 'undefined'&&systemName != null?systemName: $t('dashboard.overview.contentTitle')}}</div>
-          <div class="header-tool">
-            <div class="tool-container">
-              <div class="time">{{sysTime}}</div>
-              <div class="date">
-                <div class="week">{{sysWeek}}</div>
-                <div class="sys-date">{{sysDate}}</div>
-              </div>
-              <div class="operation" @click="switchFullScreen" ><span ><i class="nz-icon screen-icon" :class="{'nz-icon-maxview':!isFullScreen,'nz-icon-exit-full-screen':isFullScreen}"></i></span></div>
+    </div>
+    <!--内容-->
+    <div class="overview-content">
+      <!--第一行-->
+      <div class="content-row-box">
+        <div class="content-col-box">
+          <div class="content-col-title">{{$t("dashboard.overview.asset.title")}}</div>
+          <div class="content-col-content" v-loading="assetLoading">
+            <div class="content-col-content-num">
+              <vue-countup :start-value="0" :end-value="(assetData ? assetData.totalStat.total  : '') | numberFormat" :decimals="(assetData ? assetData.totalStat.total  : 0) < 1000 ? 0 : 1"></vue-countup>
+              <span class="overview-row-unit">{{(assetData ? assetData.totalStat.total  : '') | unitFormat}}</span>
             </div>
           </div>
         </div>
-        <!--内容-->
-        <div class="overview-content">
-          <!--第一行-->
-          <div class="content-row-box">
-            <div class="content-col-box">
-              <div class="content-col-title">{{$t("dashboard.overview.asset.title")}}</div>
-              <div class="content-col-content" v-loading="assetLoading">
-                <div class="content-col-content-num">
-                  <vue-countup :start-value="0" :end-value="(assetData ? assetData.totalStat.total  : '') | numberFormat" :decimals="(assetData ? assetData.totalStat.total  : 0) < 1000 ? 0 : 1"></vue-countup>
-                  <span class="overview-row-unit">{{(assetData ? assetData.totalStat.total  : '') | unitFormat}}</span>
-                </div>
-              </div>
-            </div>
-            <div class="content-col-box">
-              <div class="content-col-title">{{$t("dashboard.overview.project.project")}}</div>
-              <div class="content-col-content" v-loading="projectLoading">
-                <div class="content-col-content-num">
-                  <vue-countup :start-value="0" :end-value="(projectData ? projectData.projectStat.length : '') | numberFormat" :decimals="(projectData ? projectData.projectStat.length : 0) < 1000 ? 0 : 1"></vue-countup>
-                  <span class="overview-row-unit">{{(projectData ? projectData.projectStat.length  : '') | unitFormat}}</span>
-                </div>
-              </div>
-            </div>
-            <div class="content-col-box">
-              <div class="content-col-title">{{$t("dashboard.overview.module.module")}}</div>
-              <div class="content-col-content" v-loading="moduleLoading">
-                <div class="content-col-content-num">
-                  <vue-countup :start-value="0" :end-value="(moduleData ? moduleData.moduleStat.length : '') | numberFormat" :decimals="(moduleData ? moduleData.moduleStat.length : 0) < 1000 ? 0 : 1"></vue-countup>
-                  <span class="overview-row-unit">{{(moduleData ? moduleData.moduleStat.length  : '') | unitFormat}}</span>
-                </div>
-              </div>
-            </div>
-            <div class="content-col-box">
-              <div class="content-col-title">{{$t("dashboard.overview.endpoint.endpoint")}}</div>
-              <div class="content-col-content" v-loading="endpointLoading">
-                <div class="content-col-content-num">
-                  <vue-countup :start-value="0" :end-value="(endpointData ? endpointData.total : '') | numberFormat" :decimals="(endpointData ? endpointData.total : 0) < 1000 ? 0 : 1"></vue-countup>
-                  <span class="overview-row-unit">{{(endpointData ? endpointData.total : '') | unitFormat}}</span>
-                </div>
-              </div>
-            </div>
-            <div class="content-col-box">
-              <div class="content-col-title">{{$t("dashboard.overview.alert.alertMessage")}}</div>
-              <div class="content-col-content" v-loading="alertMessageLoading">
-                <div class="content-col-content-num"><vue-countup :start-value="0" :end-value="(alertMessageData ? alertMessageData.alertMessageTotal : '') | numberFormat" :decimals="(alertMessageData ? alertMessageData.alertMessageTotal : 0) < 1000 ? 0 : 1"></vue-countup></div>
-                <span class="overview-row-unit">{{(alertMessageData ? alertMessageData.alertMessageTotal : '') | unitFormat}}</span>
-                <span>{{$t("dashboard.overview.alert.ruleNum")}}&nbsp;:&nbsp;{{(alertRuleData ? alertRuleData.alertRuleTotal : "") | numberFormat}}</span>
-              </div>
+        <div class="content-col-box">
+          <div class="content-col-title">{{$t("dashboard.overview.project.project")}}</div>
+          <div class="content-col-content" v-loading="projectLoading">
+            <div class="content-col-content-num">
+              <vue-countup :start-value="0" :end-value="(projectData ? projectData.projectStat.length : '') | numberFormat" :decimals="(projectData ? projectData.projectStat.length : 0) < 1000 ? 0 : 1"></vue-countup>
+              <span class="overview-row-unit">{{(projectData ? projectData.projectStat.length  : '') | unitFormat}}</span>
             </div>
           </div>
-          <!--第二行-->
-          <div class="content-row-box">
-            <div class="content-col-box">
-              <div class="content-col-title">
-                <span>{{$t("dashboard.overview.traffic")}}</span>
-                <span class="content-col-title-tools">
-                  <time-picker ref="calendarPanel" class="nz-dashboard-picker" @change="dateChange"></time-picker>
-                  <span class="content-col-title-tool">
-                    <el-cascader
-                      :options="trafficData"
-                      :props="{multiple: true}"
-                      clearable
-                      collapse-tags
-                      placeholder=""
-                      popper-class="trend-cascader"
-                      v-model="trendSearchParam.select"
-                    ></el-cascader>
-                  </span>
-                </span>
-              </div>
-              <div class="content-col-content">
-                <chart-box chart-type="overviewLine" ref="chartbox" :show-toolbox="false" name="trend" :unit="15" @is-loading="(isLoading)=>{this.trendLoading = isLoading}"></chart-box>
-                <div class="chart-no-data" v-if="!trendLoading && ((!chartSeries[0] && !chartSeries[1]) || (chartSeries[0].data.length == 0 && chartSeries[1] && chartSeries[1].data.length == 0))">No Data</div>
-              </div>
-            </div>
-            <div class="content-col-box">
-              <div class="content-col-title">{{$t("dashboard.overview.dataCenter.dataCenter")}}</div>
-              <div class="content-col-content">
-                <chart-box chart-type="map" :tooltip-formatter="mapTooltipFormatter" :map="map" ref="dataCenterMap" @is-loading="(isLoading)=>{this.mapLoading = isLoading}"></chart-box>
-              </div>
+        </div>
+        <div class="content-col-box">
+          <div class="content-col-title">{{$t("dashboard.overview.module.module")}}</div>
+          <div class="content-col-content" v-loading="moduleLoading">
+            <div class="content-col-content-num">
+              <vue-countup :start-value="0" :end-value="(moduleData ? moduleData.moduleStat.length : '') | numberFormat" :decimals="(moduleData ? moduleData.moduleStat.length : 0) < 1000 ? 0 : 1"></vue-countup>
+              <span class="overview-row-unit">{{(moduleData ? moduleData.moduleStat.length  : '') | unitFormat}}</span>
             </div>
           </div>
-          <!--第三行-->
-          <div class="content-row-box">
-            <!--第一个图-->
-            <div class="content-col-box">
-              <div class="content-col-title">
-                <span>{{$t("dashboard.overview.asset.assetType")}}</span>
-              </div>
-              <div class="content-col-content">
-                <chart-box chart-type="pie" ref="assetTypePie" :show-toolbox="false" name="assetTypePie" :tooltip-formatter="assetTypeFormatter" @is-loading="(isLoading)=>{this.assetTypeLoading = isLoading}"></chart-box>
+        </div>
+        <div class="content-col-box">
+          <div class="content-col-title">{{$t("dashboard.overview.endpoint.endpoint")}}</div>
+          <div class="content-col-content" v-loading="endpointLoading">
+            <div class="content-col-content-num">
+              <vue-countup :start-value="0" :end-value="(endpointData ? endpointData.total : '') | numberFormat" :decimals="(endpointData ? endpointData.total : 0) < 1000 ? 0 : 1"></vue-countup>
+              <span class="overview-row-unit">{{(endpointData ? endpointData.total : '') | unitFormat}}</span>
+            </div>
+          </div>
+        </div>
+        <div class="content-col-box">
+          <div class="content-col-title">{{$t("dashboard.overview.alert.alertMessage")}}</div>
+          <div class="content-col-content" v-loading="alertMessageLoading">
+            <div class="content-col-content-num"><vue-countup :start-value="0" :end-value="(alertMessageData ? alertMessageData.alertMessageTotal : '') | numberFormat" :decimals="(alertMessageData ? alertMessageData.alertMessageTotal : 0) < 1000 ? 0 : 1"></vue-countup></div>
+            <span class="overview-row-unit">{{(alertMessageData ? alertMessageData.alertMessageTotal : '') | unitFormat}}</span>
+            <span>{{$t("dashboard.overview.alert.ruleNum")}}&nbsp;:&nbsp;{{(alertRuleData ? alertRuleData.alertRuleTotal : "") | numberFormat}}</span>
+          </div>
+        </div>
+      </div>
+      <!--第二行-->
+      <div class="content-row-box">
+        <div class="content-col-box">
+          <div class="content-col-title">
+            <span>{{$t("dashboard.overview.traffic")}}</span>
+            <span class="content-col-title-tools">
+              <time-picker ref="calendarPanel" class="nz-dashboard-picker" @change="dateChange"></time-picker>
+              <span class="content-col-title-tool">
+                <el-cascader
+                  :options="trafficData"
+                  :props="{multiple: true}"
+                  clearable
+                  collapse-tags
+                  placeholder=""
+                  popper-class="trend-cascader"
+                  v-model="trendSearchParam.select"
+                ></el-cascader>
+              </span>
+            </span>
+          </div>
+          <div class="content-col-content">
+            <chart-box chart-type="overviewLine" ref="chartbox" :show-toolbox="false" name="trend" :unit="15" @is-loading="(isLoading)=>{this.trendLoading = isLoading}"></chart-box>
+            <div class="chart-no-data" v-if="!trendLoading && ((!chartSeries[0] && !chartSeries[1]) || (chartSeries[0].data.length == 0 && chartSeries[1] && chartSeries[1].data.length == 0))">No Data</div>
+          </div>
+        </div>
+        <div class="content-col-box">
+          <div class="content-col-title">{{$t("dashboard.overview.dataCenter.dataCenter")}}</div>
+          <div class="content-col-content">
+            <chart-box chart-type="map" :tooltip-formatter="mapTooltipFormatter" :map="map" ref="dataCenterMap" @is-loading="(isLoading)=>{this.mapLoading = isLoading}"></chart-box>
+          </div>
+        </div>
+      </div>
+      <!--第三行-->
+      <div class="content-row-box">
+        <!--第一个图-->
+        <div class="content-col-box">
+          <div class="content-col-title">
+            <span>{{$t("dashboard.overview.asset.assetType")}}</span>
+          </div>
+          <div class="content-col-content">
+            <chart-box chart-type="pie" ref="assetTypePie" :show-toolbox="false" name="assetTypePie" :tooltip-formatter="assetTypeFormatter" @is-loading="(isLoading)=>{this.assetTypeLoading = isLoading}"></chart-box>
 <!--                <div class="no-data-tip" v-if="!assetTypeLoading && assetData.typeStat && assetData.typeStat.length == 0">N/A</div>-->
 <!--                <div class="chart-no-data"v-if="!assetTypeLoading && assetData.typeStat && assetData.typeStat.length == 0">No Data</div>-->
-              </div>
-            </div>
-            <!--第二个图-->
-            <div class="content-col-box">
-              <div class="content-col-title">
-                <span>{{$t("dashboard.overview.alert.alertRuleTopN")}}</span>
-                <!--<el-dropdown trigger="hover" :show-timeout="0" size="small">
-                  <span>Top&nbsp;{{topFilter.rule}}<i class="el-icon-arrow-down el-icon&#45;&#45;right"></i></span>
-                  <el-dropdown-menu slot="dropdown">
-                    <el-dropdown-item v-for="(item,index) in topFilter.optionals" :key="index" @click.native="topNChange('rule', item)">{{item}}</el-dropdown-item>
-                  </el-dropdown-menu>
-                </el-dropdown>-->
-              </div>
-              <div class="content-col-content">
-                <chart-box axis-tooltip="y" chart-type="bar" ref="ruleMessage" :tooltip-formatter="simpleFormatter" :show-toolbox="false" name="ruleMessage" @is-loading="(isLoading)=>{this.ruleMessageLoading = isLoading}"></chart-box>
+          </div>
+        </div>
+        <!--第二个图-->
+        <div class="content-col-box">
+          <div class="content-col-title">
+            <span>{{$t("dashboard.overview.alert.alertRuleTopN")}}</span>
+            <!--<el-dropdown trigger="hover" :show-timeout="0" size="small">
+              <span>Top&nbsp;{{topFilter.rule}}<i class="el-icon-arrow-down el-icon&#45;&#45;right"></i></span>
+              <el-dropdown-menu slot="dropdown">
+                <el-dropdown-item v-for="(item,index) in topFilter.optionals" :key="index" @click.native="topNChange('rule', item)">{{item}}</el-dropdown-item>
+              </el-dropdown-menu>
+            </el-dropdown>-->
+          </div>
+          <div class="content-col-content">
+            <chart-box axis-tooltip="y" chart-type="bar" ref="ruleMessage" :tooltip-formatter="simpleFormatter" :show-toolbox="false" name="ruleMessage" @is-loading="(isLoading)=>{this.ruleMessageLoading = isLoading}"></chart-box>
 <!--                <div class="no-data-tip" v-if="!ruleMessageLoading && ((!messageByRuleSeries.data && !messageByRuleSeries.category) || (messageByRuleSeries.data.length == 0 && messageByRuleSeries.category.length == 0))">N/A</div>-->
 <!--                <div class="chart-no-data" v-if="!ruleMessageLoading && ((!messageByRuleSeries.data && !messageByRuleSeries.category) || (messageByRuleSeries.data.length == 0 && messageByRuleSeries.category.length == 0))">No Data</div>-->
-              </div>
-            </div>
-            <!--第三个图-->
-            <div class="content-col-box">
-              <div class="content-col-title">
-                <span>
-                  <span v-if="alertMessageShow == 'asset'">{{$t("dashboard.overview.alert.assetTopN")}}</span>
-                  <span v-if="alertMessageShow == 'module'">{{$t("dashboard.overview.alert.moduleTopN")}}</span>
-                  <span class="dropdown-btn" @mouseenter="alertMessageDropdownHandler(true)" @mouseleave="alertMessageDropdownHandler(false)">
-                    <i class="el-icon-arrow-down"></i>
-                    <transition name="el-zoom-in-top">
-                      <ul class="el-dropdown-menu el-popper el-dropdown-menu--mini" v-if="bottom3DropdownShow">
-                        <li @click="alertMessageChange('asset')" class="el-dropdown-menu__item dropdown-content" style="padding: 0 15px;">{{$t("dashboard.overview.asset.title")}}</li>
-                        <li @click="alertMessageChange('module')" class="el-dropdown-menu__item dropdown-content" style="padding: 0 15px;">{{$t("dashboard.overview.module.module")}}</li>
-                      </ul>
-                    </transition>
-                  </span>
-                </span>
-                <!--<el-dropdown trigger="hover" v-if="alertMessageShow == 'asset'" :show-timeout="0" size="small">
-                  <span>Top&nbsp;{{topFilter.asset}}<i class="el-icon-arrow-down el-icon&#45;&#45;right"></i></span>
-                  <el-dropdown-menu slot="dropdown">
-                    <el-dropdown-item v-for="(item,index) in topFilter.optionals" :key="index" @click.native="topNChange('asset', item)">{{item}}</el-dropdown-item>
-                  </el-dropdown-menu>
-                </el-dropdown>
-                <el-dropdown trigger="hover" v-if="alertMessageShow == 'module'" :show-timeout="0" size="small">
-                  <span>Top&nbsp;{{topFilter.module}}<i class="el-icon-arrow-down el-icon&#45;&#45;right"></i></span>
-                  <el-dropdown-menu slot="dropdown">
-                    <el-dropdown-item v-for="(item,index) in topFilter.optionals" :key="index" @click.native="topNChange('module', item)">{{item}}</el-dropdown-item>
-                  </el-dropdown-menu>
-                </el-dropdown>-->
-              </div>
-              <div class="content-col-content">
-                <chart-box axis-tooltip="y" v-show="alertMessageShow == 'asset'" :tooltip-formatter="simpleFormatter" chart-type="bar" ref="assetMessage" name="assetMessage" :show-toolbox="false" @is-loading="(isLoading)=>{this.assetMessageLoading = isLoading}"></chart-box>
-                <chart-box axis-tooltip="y" v-show="alertMessageShow == 'module'" :tooltip-formatter="simpleFormatter" chart-type="bar" ref="moduleMessage" name="moduleMessage" :show-toolbox="false" @is-loading="(isLoading)=>{this.moduleMessageLoading = isLoading}"></chart-box>
+          </div>
+        </div>
+        <!--第三个图-->
+        <div class="content-col-box">
+          <div class="content-col-title">
+            <span>
+              <span v-if="alertMessageShow == 'asset'">{{$t("dashboard.overview.alert.assetTopN")}}</span>
+              <span v-if="alertMessageShow == 'module'">{{$t("dashboard.overview.alert.moduleTopN")}}</span>
+              <span class="dropdown-btn" @mouseenter="alertMessageDropdownHandler(true)" @mouseleave="alertMessageDropdownHandler(false)">
+                <i class="el-icon-arrow-down"></i>
+                <transition name="el-zoom-in-top">
+                  <ul class="el-dropdown-menu el-popper el-dropdown-menu--mini" v-if="bottom3DropdownShow">
+                    <li @click="alertMessageChange('asset')" class="el-dropdown-menu__item dropdown-content" style="padding: 0 15px;">{{$t("dashboard.overview.asset.title")}}</li>
+                    <li @click="alertMessageChange('module')" class="el-dropdown-menu__item dropdown-content" style="padding: 0 15px;">{{$t("dashboard.overview.module.module")}}</li>
+                  </ul>
+                </transition>
+              </span>
+            </span>
+            <!--<el-dropdown trigger="hover" v-if="alertMessageShow == 'asset'" :show-timeout="0" size="small">
+              <span>Top&nbsp;{{topFilter.asset}}<i class="el-icon-arrow-down el-icon&#45;&#45;right"></i></span>
+              <el-dropdown-menu slot="dropdown">
+                <el-dropdown-item v-for="(item,index) in topFilter.optionals" :key="index" @click.native="topNChange('asset', item)">{{item}}</el-dropdown-item>
+              </el-dropdown-menu>
+            </el-dropdown>
+            <el-dropdown trigger="hover" v-if="alertMessageShow == 'module'" :show-timeout="0" size="small">
+              <span>Top&nbsp;{{topFilter.module}}<i class="el-icon-arrow-down el-icon&#45;&#45;right"></i></span>
+              <el-dropdown-menu slot="dropdown">
+                <el-dropdown-item v-for="(item,index) in topFilter.optionals" :key="index" @click.native="topNChange('module', item)">{{item}}</el-dropdown-item>
+              </el-dropdown-menu>
+            </el-dropdown>-->
+          </div>
+          <div class="content-col-content">
+            <chart-box axis-tooltip="y" v-show="alertMessageShow == 'asset'" :tooltip-formatter="simpleFormatter" chart-type="bar" ref="assetMessage" name="assetMessage" :show-toolbox="false" @is-loading="(isLoading)=>{this.assetMessageLoading = isLoading}"></chart-box>
+            <chart-box axis-tooltip="y" v-show="alertMessageShow == 'module'" :tooltip-formatter="simpleFormatter" chart-type="bar" ref="moduleMessage" name="moduleMessage" :show-toolbox="false" @is-loading="(isLoading)=>{this.moduleMessageLoading = isLoading}"></chart-box>
 <!--                <div class="no-data-tip" v-show="alertMessageShow == 'asset'" v-if="!assetMessageLoading && ((!messageByAssetSeries.data && !messageByAssetSeries.category) || (messageByAssetSeries.data.length == 0 && messageByAssetSeries.category.length == 0))">N/A</div>-->
 <!--                <div class="no-data-tip" v-show="alertMessageShow == 'module'" v-if="!moduleMessageLoading && ((!messageByModuleSeries.data && !messageByModuleSeries.category) || (messageByModuleSeries.data.length == 0 && messageByModuleSeries.category.length == 0))">N/A</div>-->
 <!--                <div class="chart-no-data" v-show="alertMessageShow == 'asset'" v-if="!assetMessageLoading && ((!messageByAssetSeries.data && !messageByAssetSeries.category) || (messageByAssetSeries.data.length == 0 && messageByAssetSeries.category.length == 0))">No Data</div>-->
 <!--                <div class="chart-no-data" v-show="alertMessageShow == 'module'" v-if="!moduleMessageLoading && ((!messageByModuleSeries.data && !messageByModuleSeries.category) || (messageByModuleSeries.data.length == 0 && messageByModuleSeries.category.length == 0))">No Data</div>-->
-              </div>
-            </div>
           </div>
         </div>
       </div>
-    </left-menu>
+    </div>
     <div class="axis-tooltip el-popover"></div>
     <!--用于assetType饼图label-->
     <img src='../../../../assets/img/up.png' id="upPic" style="display: none;">
