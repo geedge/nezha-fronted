@@ -72,7 +72,15 @@
             <template v-else>-</template>
           </span>
           <template v-else-if="item.prop == 'type'">{{scope.row.module.type}}</template>
-          <div v-else-if="item.prop == 'option'">-</div>
+          <div v-else-if="item.prop == 'option'">&nbsp;
+                <span
+                  :title="$t('overall.edit')"
+                  @click="editEndpoint(scope.row)"
+                  class="content-right-option"
+                  :id="'edp-edit-'+scope.row.id">
+                  <i class="nz-icon nz-icon-edit"></i>
+                </span>
+          </div>
           <span v-else-if="item.prop == 'lastUpdate'">{{dateFormat(scope.row.lastUpdate)}}</span>
           <span v-else-if="item.prop == 'state'" >
             <el-popover placement="right" trigger="hover" :content="getStateContent(scope.row)" popper-class="small-pop">
@@ -103,11 +111,15 @@
     <transition name="right-box">
       <edit-endpoint-box v-if="rightBox.edit.show" :current-project="currentProject" :current-module="currentModule" :endpoint="endpoint" @close="closeRightBox" ref="editEndpointBox"></edit-endpoint-box>
     </transition>
+    <transition name="right-box">
+      <edit-endpoint-box v-if="rightBox.editEndpoint.show" :project="currentProject" :module="currentModule" :endpoint="endpoint" @close="closeEditEndpointRightBox" ref="editEndpointBox"></edit-endpoint-box>
+    </transition>
   </span>
 </template>
 
 <script>
   import exportXLSX from "../../exportXLSX";
+  import bus from '@/libs/bus'
   export default {
     name: "endpointTab",
     components: {
@@ -121,6 +133,7 @@
         rightBox: {
           add: {show: false},
           edit: {show: false},
+          editEndpoint: {show: false},
         },
         /*工具参数*/
         tools: {
@@ -243,11 +256,28 @@
         if (!this.endpoint.paramObj) {
           this.$set(this.endpoint, 'paramObj', []);
         }
-        this.editBoxShow = true;
+        this.rightBox.edit = true;
         this.$nextTick(() => {
           this.$refs.editEndpointBox.show(true);
           this.$refs.editEndpointBox.toEdit(true, this.endpoint.id);
         });
+      },
+      editEndpoint(endpoint) {
+        console.log(endpoint);
+        this.endpoint = JSON.parse(JSON.stringify(endpoint));
+        this.$set(this.endpoint,'projectId',this.endpoint.project.id);
+        this.$set(this.endpoint,'moduleId',this.endpoint.moduleId);
+
+        this.rightBox.editEndpoint.show = true;
+        if (!this.endpoint.paramObj) {
+          this.$set(this.endpoint, 'paramObj', []);
+        }
+      },
+      closeEditEndpointRightBox(refresh) {
+        this.rightBox.editEndpoint.show = false;
+        if (refresh) {
+          this.getTableData();
+        }
       },
       add() {
         this.rightBox.add.show = true;
@@ -313,6 +343,17 @@
             }
           }
         }
+      },
+      initEvent() {
+        bus.$on("current-project-change", project => {
+          this.currentProject = project;
+        });
+        bus.$on("current-module-change", module => {
+          this.currentModule = module;
+        });
+        // bus.$on("endpoint-list-change", menu => {
+        //   this.getEndpointTableData();
+        // });
       },
       //是否需要排序
       sortableShow(prop){
@@ -393,6 +434,7 @@
           });
         }
       });
+      this.initEvent();
     }
   }
 </script>

@@ -97,7 +97,7 @@
                 :type="item.label"
                 :labelLoading="scope.row[item.label].loading"
               ></alertLabel>
-              <span @mouseover="labelHover(scope.row,scope.$index,item.label)">
+              <span @mouseover="labelHover(scope.row,scope.$index,item.label)" >
                      <nz-alert-tag
                        :label="item.label" :type="tagType(item.label)" style="margin: 5px 0 5px 5px;"
                        :cursor-point="tagType(item.label) == 'info' ? false : true"
@@ -107,7 +107,6 @@
                        {{item.value}}
                      </nz-alert-tag>
               </span>
-              <p v-if="i%3 == 2" ></p>
             </el-tooltip>
           </template>
           <div v-else-if="item.prop == 'state'">
