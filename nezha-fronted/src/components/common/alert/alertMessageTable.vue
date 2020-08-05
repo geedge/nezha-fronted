@@ -275,6 +275,7 @@
             prop: 'labels',
             show: true,
             NotSet:true,
+            minWidth:350
           }, {
             label: this.$t("alert.severity"),
             prop: 'severity',
