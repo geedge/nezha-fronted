@@ -35,6 +35,7 @@
           :custom-table-title.sync="tools.customTableTitle"
           :original-table-title="tableTitle"
           ref="customTableTitle"
+          :path="'/project'"
         ></element-set>
       </transition>
     <el-table
