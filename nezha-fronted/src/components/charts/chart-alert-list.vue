@@ -42,7 +42,7 @@
         </div>
         <div class="mt-10 table-container" v-cloak  v-show="firstShow || isPreview">
           <alertMessageTable
-            :tableData="storedScreanTableData"
+            :tableData="storedTableData"
             :loading="loadingTable"
             :tableHeight="tableHeight"
             :tableId="''"
@@ -105,13 +105,6 @@
           </div>
           <chart ref="messageChart" name="alertMessageChart" :unit="chartUnit" ></chart>
         </el-dialog>
-        <element-set
-          path="/alertList"
-          :table-title="tableTitle"
-          :dropCol="dropCol"
-          @tablelable="tablelabelEmit"
-          ref="elementset"
-        ></element-set>
       </div>
       <span class="vue-resizable-handle" @mousedown="startResize" v-if="!isPreview && data.resizable"></span>
     </div>

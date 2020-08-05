@@ -795,11 +795,22 @@
       showSubList(n) {
         this.$bottomBoxWindow.showSubListWatch(vm, n);
       },
+      // loading(n){
+      //
+      // },
+      loading:{
+        handler:function(n,o){
+          console.log(n);
+          this.tools.loading=n;
+        },
+        immediate: true,
+        deep:true,
+      }
     },
     mounted() {
       //初始化表头
-      this.tools.customTableTitle = localStorage.getItem("nz-tableTitle-" + localStorage.getItem("nz-username") + "-" + this.$route.path)
-        ? JSON.parse(localStorage.getItem("nz-tableTitle-" + localStorage.getItem("nz-username") + "-" + this.$route.path))
+      this.tools.customTableTitle = localStorage.getItem("nz-tableTitle-" + localStorage.getItem("nz-username") + "-" + '/alertList')
+        ? JSON.parse(localStorage.getItem("nz-tableTitle-" + localStorage.getItem("nz-username") + "-" + '/alertList'))
         : this.tableTitle;
       //是否存在分页缓存
       let pageSize = localStorage.getItem('nz-pageSize-' + localStorage.getItem('nz-username') + '-' + this.tableId);

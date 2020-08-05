@@ -468,7 +468,6 @@
         this.$set(this.searchLabel, "pageSize", this.pageObj.pageSize);
         setTimeout(() => {
           this.$get('alert/message', this.searchLabel).then(response => {
-            this.loading = false;
             if (response.code == 200) {
               this.tableData = response.data.list;
               this.tableData.forEach((item) => {
@@ -494,6 +493,7 @@
                 });
               });
               this.pageObj.total = response.data.total;
+              this.loading = false;
             }
           });
         }, 1000);
