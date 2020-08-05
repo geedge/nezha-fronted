@@ -552,6 +552,9 @@
           case 'id':
           case 'asset':
           case 'port':
+          case 'project':
+          case 'module':
+          case 'type':
           // case 'path':
             return'custom';
           default : return false;
@@ -563,6 +566,9 @@
           case 'id': return'e.id';
           case 'asset': return'a.host';
           case 'port': return'e.port';
+          case 'project': return'p.name';
+          case 'module': return'm.name';
+          case 'type':  return'm.type';
           // case 'path': return'e.path';
           default : return prop;
         }
