@@ -637,6 +637,9 @@
           } else if (!n.id && n.type && n.type.toLowerCase() == 'http') {
             n.port = 9100;
           }
+          if (!n.type) {
+            n.type = 'http';
+          }
         }
       },
     }

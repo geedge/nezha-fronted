@@ -498,8 +498,8 @@
           }
         }
       },
-      // 获取panel详情数据,获取panel下所有chart列表
 
+      // 获取panel详情数据,获取panel下所有chart列表
       getData(params) {
         const param = {
           panelId: params.panelId,

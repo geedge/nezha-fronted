@@ -375,6 +375,7 @@
         });
       },
       addTag() {
+        !this.editAsset.tags && (this.$set(this.editAsset, "tags", []));
         this.editAsset.tags.push({tag: "", value: ""});
         this.$nextTick(() => {
           this.$refs.tagEditBoxScrollbar.update();

@@ -325,7 +325,7 @@
       },
       // 图表创建成功，回调panel页面，进行图表的刷新
       createSuccess(msg, data, params, panel) {
-        this.filter.panelId = this.panel.id;
+        this.filter.panelId = this.showPanel.id;
         this.getData(this.filter);
       },
       // 获取数据,用在子页面
@@ -375,8 +375,7 @@
           }
         });
       },
-      getTableData: function (clearShowPanel) {
-
+      getTableData(clearShowPanel) {
         this.$get('panel?type=dashboard').then(response => {
           if (response.code === 200) {
             this.panelData = response.data.list;
@@ -648,7 +647,7 @@
     created() {
       this.getTableData();
     },
-    mounted: function () {
+    mounted() {
       this.onScroll();
       document.querySelector("#tableList").addEventListener("mouseenter", () => {
         this.tableHover = true;
@@ -657,19 +656,8 @@
         this.tableHover = false;
       });
     },
-    computed: {
-      refreshPanel() {
-        return this.$store.state.panelListReload;
-      },
-    },
     watch: {
-      refreshPanel(n, o) {
-        if (n) {
-          this.getTableData();
-          this.$store.commit('panelListChange', false);
-        }
-      },
-      'filter.searchName':function(n,o){
+      'filter.searchName': function(n,o){
         let temp=this;
         setTimeout(function(){
           temp.search();

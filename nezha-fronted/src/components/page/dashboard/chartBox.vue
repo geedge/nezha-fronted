@@ -311,7 +311,6 @@
         //productId: 0,//不需要这个参数，可以删除
         panelId: 0,
         panelName: '',
-        panelName2: '',
         selectFirstPanel: false,
         metricList: [], // metric列表
         metricCascaderList:[],//metric级联列表
@@ -333,8 +332,6 @@
       'promql-input': promqlInput,
     },
     mounted() {
-      this.isUrl = false;
-      this.isSingleStat = false;
       this.$nextTick(() => {
         this.initElements();
       });
@@ -451,7 +448,6 @@
             if (response.code === 200) {
               if(this.$refs.chartForm){
                 this.$refs.chartForm.resetFields();//清空表单
-                this.panelName2 = '';
               }
               this.$message({duration: 1000, type: 'success', message: this.$t("tip.deleteSuccess")});
               this.esc(true);
@@ -618,7 +614,6 @@
             this.esc();
             this.$message({duration: 1000, type: 'success', message: this.$t("tip.saveSuccess")});
             this.$refs.chartForm.resetFields();//清空表单
-            this.panelName2 = '';
             this.$emit('on-create-success', 'update', response2.data, params);
           } else {
             if(response2.msg){
@@ -871,7 +866,7 @@
       setIsUrl(){
         this.isUrl = true;
         this.isSingleStat = false;
-        this.isAlert=false;
+        this.isAlert = false;
       },
       setIsSingleStat(){
         this.isUrl = false;
@@ -892,13 +887,11 @@
       editData(data, panelId) {
         if (!panelId) {
           this.panelId = 0;
-          this.panelName2 = "";
         } else {
           this.panelId = panelId;
           let temp = this.panelData.filter((item) => {
             return item.id == panelId;
           });
-          this.panelName2 = temp[0].name;
         }
         this.isedit = true;
         this.editInfo = data;
@@ -1088,27 +1081,7 @@
                   legend: this.legends[index],
                 });
               });
-              console.info(elements)
-              /*this.elementTarget.forEach((elem,index) => {
-                if(elem.type==='normal'){
-                  const metricStr = bus.tagsToString(elem.metric,elem.selectedTagList);
-                  elements.push({
-                    //id:index+1,
-                    //metric: elem.metric,//指标名称
-                    expression: metricStr,//指标对应Label及Value组成的表达式字符串
-                    type:elem.type,//指标类型
-                    legend:elem.legend,//配置的legend
-                  });
-                }else if(elem.type==='expert'){
-                  elements.push({
-                    //id:index+1,
-                    //metric: elem.metric,//指标名称
-                    expression: elem.expression,//指标对应Label及Value组成的表达式字符串
-                    type:elem.type,//指标类型
-                    legend:elem.legend,//配置的legend
-                  });
-                }
-              });*/
+              //console.info(elements)
               params.elements = elements;
               if (valid) {
                 this.$refs.chartsPreview.show(params);
@@ -1133,18 +1106,9 @@
                 params.id = this.editChart.id;
               }
               this.$refs.chartsPreview.show(params);
-              /*
-                if (this.isedit) {
-                  params.id = this.editChart.id;
-                  this.updateCharts(params);
-                } else {
-                  this.addCharts(params);
-                }
-              */
             }
           });
         }
-        //this.$refs.chartForm.validate();
       },
       //preview--end
       initElements() {
@@ -1175,7 +1139,20 @@
         immediate: true,
         handler(n) {
           this.editChart = JSON.parse(JSON.stringify(n));
+          if (n.type === 'url') {
+            this.setIsUrl();
+          } else if(n.type === 'alertList'){
+            this.setIsAlertList();
+          } else if(n.type === 'singleStat'){
+            this.setIsSingleStat();
+            this.resetElements();
+          } else {
+            this.setIsOtherChart();
+          }
           this.$set(this.editChart, "panelName", this.showPanel.name);
+          if (this.showPanel.id) {
+            this.panelId = this.showPanel.id;
+          }
           if (n.id) {
             this.editData(this.editChart, this.showPanel.id);
           } else {
@@ -1185,11 +1162,12 @@
       },
       editChart: {
         deep: true,
+        immediate: true,
         handler(n) {
           let panel = this.panelData.find(p => {
             return p.name == n.panelName;
           });
-          this.panelId = panel.id;
+          panel && (this.panelId = panel.id);
         }
       }
       /*panelData: {

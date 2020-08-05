@@ -267,13 +267,13 @@ export const bottomBoxWindow = {
     //副列表
     document.querySelector(".sub-list").style.height = vm.bottomBox.mainListHeight ? contentRightHeight-vm.bottomBox.mainListHeight-9 + 'px' : 'calc(50% - 4px)';
     setTimeout(() => {
-      vm.bottomBox.isFullScreen = false;
       if (document.querySelector(".main-list-with-sub").offsetHeight >= 100) {
-        vm.mainResizeShow = true;
+        vm.bottomBox.mainResizeShow = true;
       }
       if (document.querySelector(".sub-list").offsetHeight >= 100) {
         vm.bottomBox.subResizeShow = true;
       }
+      vm.bottomBox.isFullScreen = false;
       window.resizing = false;
     }, 210);
   },
