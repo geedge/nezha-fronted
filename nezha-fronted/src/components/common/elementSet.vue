@@ -3,11 +3,12 @@
     <div class="pop-title">{{$t('overall.select')}}</div>
     <div class="pop-box custom-labels">
       <el-scrollbar style="height: 100%;">
+        <!--NotSet 为true不可设置-->
         <div
           v-for="(item,index) in custom"
           :key="index"
           class="custom-label"
-          :class="!allowedAll && (index==0 || index == 1) ? 'custom-label-disabled' : ''"
+          :class="!allowedAll && (index==0 || index == 1 || item.NotSet) ? 'custom-label-disabled' : ''"
           @click="handler(item,index)"
           :id="'element-set-el-'+index"
         >
@@ -80,7 +81,7 @@ export default {
     //全选all true 或者全取消cancel false按钮
     batchHandler(state) {
       for (let index = 0; index < this.custom.length; index++) {
-        if (index == 0 || index == 1) {
+        if (index == 0 || index == 1 || this.custom[index].NotSet) {
           this.custom[index].show = true;
         } else {
           this.custom[index].show = state;
@@ -89,7 +90,7 @@ export default {
     },
     //单选
     handler(val, index) {
-      if (!this.allowedAll && (index == 0 || index == 1)) {
+      if (!this.allowedAll && (index == 0 || index == 1 || val.NotSet)) {
         this.custom[index].show = true;
       } else {
         this.custom[index].show = !this.custom[index].show;

@@ -84,7 +84,7 @@
               </span>
           <template v-else-if="item.prop == 'labels'" class="labels">
             <el-tooltip
-              v-for="item in labelsSort(scope.row.labels)"
+              v-for="(item,i) in labelsSort(scope.row.labels)"
               :placement="scope.$index==0?'right-start':(scope.$index==tableData.length-1?'right-end':'right')"
               effect="light"
               :disabled="!(item.label === 'asset' ||item.label === 'module' || item.label === 'project')"
@@ -106,7 +106,8 @@
                      >
                        {{item.value}}
                      </nz-alert-tag>
-                   </span>
+              </span>
+              <p v-if="i%3 == 2" ></p>
             </el-tooltip>
           </template>
           <div v-else-if="item.prop == 'state'">
@@ -274,7 +275,7 @@
             label: this.$t("alert.list.labels"),
             prop: 'labels',
             show: true,
-            width:350,
+            NotSet:true,
           }, {
             label: this.$t("alert.severity"),
             prop: 'severity',
