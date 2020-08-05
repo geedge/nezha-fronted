@@ -236,19 +236,16 @@
             }
           },
         },
-        dcCheckList(n, o) {
-          this.$store.commit("currentDcListChange", n);
-        /*  setTimeout(() => {
-            if (n.length > 0 ) {
-              bus.$emit("asset-filter-change", "idcIds", n.join(','));
-            } else {
-              bus.$emit("asset-filter-change", "idcIds", "");
-            }
-          }, 100);*/
-        },
         currentProject(n, o) {
           bus.$emit("current-project-change", n); //告知project.vue
         },
+        dcCheckList: {
+          deep: true,
+          immediate: true,
+          handler(n) {
+            bus.$emit("asset-filter-change", "idcIds", n.join(","));
+          }
+        }
       },
       mounted() {
         Promise.all([this.getProjectList(), this.getModuleList(), this.getLeftMenuList()]).then(response => {
@@ -324,11 +321,14 @@
           bus.$emit("project-page-type", "endpoint");  //告知project.vue
         },
         addModule() {
-          /*this.module = this.newModule();
+          this.module = this.newModule();
           this.rightBox.module.show = true;
           this.$nextTick(() => {
             this.$refs.moduleBox.initWalk();
-          });*/
+          });
+        },
+        newModule() {
+          return JSON.parse(JSON.stringify(this.blankModule));
         },
         //弹出module编辑页
         editModule(module) {
@@ -433,7 +433,6 @@
             bus.$emit("asset-filter-change", "typeIds", "");
             this.pageObj.typeIds='';
           }
-          this.getTableData();
         },
         changeVendorCheckBox() {
           if(this.vendorCheckList && this.vendorCheckList.length > 0){
@@ -442,7 +441,6 @@
           }else{
             bus.$emit("asset-filter-change", "vendorIds", "");
           }
-          this.getTableData();
         },
         changePingCheckBox() {
           if(this.pingCheckList && this.pingCheckList.length > 0){

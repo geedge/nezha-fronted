@@ -27,10 +27,20 @@
         </export-excel>
       </div>
     </div>
+    <!-- 自定义table列 -->
+      <transition name="el-zoom-in-top">
+        <element-set
+          v-if="tools.showCustomTableTitle"
+          @close="tools.showCustomTableTitle = false"
+          :custom-table-title.sync="tools.customTableTitle"
+          :original-table-title="tableTitle"
+          ref="customTableTitle"
+        ></element-set>
+      </transition>
     <el-table
       :data="tableData"
       border
-      v-loading="loading"
+      v-loading="tools.loading"
       class="nz-table endpoint-table"
       :height="$tableHeight.noPagination"
       v-scrollBar:el-table="'large'"
@@ -40,7 +50,7 @@
     >
       <el-table-column
         :resizable="false"
-        v-for="(item, index) in tablelable"
+        v-for="(item, index) in tools.customTableTitle"
         v-if="item.show"
         :width="item.width"
         :key="`col-${index}`"
@@ -76,24 +86,16 @@
       </el-table-column>
       <el-table-column width="28" :resizable="false">
         <template slot="header" slot-scope="scope">
-          <span @click.stop="elementsetShow('shezhi',$event)" class="nz-table-gear">
+          <span @mousedown.stop="!tools.showCustomTableTitle && (tools.showCustomTableTitle = true)" class="nz-table-gear">
             <i class="nz-icon nz-icon-gear"></i>
           </span>
         </template>
         <template v-slot="scope">
-          <button v-if="scope.$index == 0" class="to-top" :style="{top: toTopBtnTop}" :class="{'to-top-is-hover': tableHover}" v-show="showTopBtn" @click="$toTop('ps', 1)"><i class="nz-icon nz-icon-top"></i></button>
+          <button v-if="scope.$index == 0" class="to-top" :style="{top: tools.toTopBtnTop}" :class="{'to-top-is-hover': tools.tableHover}" v-show="tools.showTopBtn" @click="$toTop('ps', 1)"><i class="nz-icon nz-icon-top"></i></button>
         </template>
       </el-table-column>
     </el-table>
 
-    <element-set
-      v-clickoutside="elementsetHide"
-      :table-title="tableTitle"
-      :dropCol="dropCol"
-      @tablelable="tablelabelEmit"
-      :path="'/assetEndpoint'"
-      ref="elementset"
-    ></element-set>
     <transition name="right-box">
       <add-endpoint-box v-if="rightBox.add.show" :current-project="currentProject" :current-module="currentModule" @close="closeRightBox" ref="addEndpointBox"></add-endpoint-box>
     </transition>
@@ -119,15 +121,19 @@
           add: {show: false},
           edit: {show: false},
         },
+        /*工具参数*/
+        tools: {
+          loading: false, //是否显示table加载动画
+          toTopBtnTop: this.$tableHeight.toTopBtnTop, //to-top按钮的top属性
+          tableHover: false, //控制滚动条和top按钮同时出现
+          showTopBtn: false, //显示To top按钮
+          showCustomTableTitle: false, //自定义列弹框是否显示
+          customTableTitle: [], //自定义列工具的数据
+        },
         endpoint: {}, //用来查看详情和编辑的对象
-        //asset: {}, //对应props的obj
-        showTopBtn: false, //top按钮是否显示
-        toTopBtnTop: this.$tableHeight.toTopBtnTop, //to-top按钮的top属性
-        tableHover: false, //控制滚动条和top按钮同时出现
         endpointSearchLabel:{
 
         },
-        loading: false,
         tableTitle: [
           {
             label: this.$t("project.endpoint.endpointId"),
@@ -213,11 +219,11 @@
         this.$emit('changeTab', tab);
       },
       getTableData() {
-        this.loading = true;
+        this.tools.loading = true;
         this.$set(this.endpointSearchLabel, "assetId", this.asset.id);
         this.$set(this.endpointSearchLabel, "pageSize", '-1');
         this.$get('/endpoint',this.endpointSearchLabel).then(response => {
-          this.loading = false;
+          this.tools.loading = false;
           if (response.code === 200) {
             this.tableData = response.data.list;
             this.$emit("reload");
@@ -261,36 +267,6 @@
           this.$set(this.searchLabel, 'orderBy', orderBy);
         }
         this.getTableData();
-      },
-      elementsetShow(s, e) {
-        var eventfixed = {
-          shezhi: 0,
-          screen: 0
-        };
-        eventfixed[s] = 1;
-        e.preventDefault();
-        this.$store.commit('setHeaderTable', this.tablelable);
-        this.$store.commit('setEventfixed', eventfixed);
-        const h = document.documentElement.clientHeight;
-        const w = document.documentElement.clientWidth;
-        const dw = this.$refs.elementset.$el.offsetWidth;
-        const dh = this.$refs.elementset.$el.offsetHeight;
-        let positionx =
-          e.clientX + dw <= w - 10 ? e.clientX + 14 : e.clientX + 14 - dw;
-        let positiony =
-          e.clientY + dh <= h - 10
-            ? e.clientY + 20
-            : e.clientY + 20 - (e.clientY + dh - h);
-        this.$store.commit('setPosition', { positionx, positiony });
-      },
-      elementsetHide() {
-        //悬浮点击空白隐藏
-        this.$refs.elementset.elementsetHide();
-      },
-      tablelabelEmit(data) {
-        //获取子组件传过来的参数
-        this.$store.commit('setHeaderTable', data);
-        this.tablelable = data;
       },
       dateFormat(time) {
         if (!time) {
@@ -386,11 +362,9 @@
       }
     },
     mounted() {
-      this.tablelable = localStorage.getItem("nz-tableTitle-" + localStorage.getItem("nz-username") + "-/assetEndpoint")
-        ? JSON.parse(localStorage.getItem("nz-tableTitle-" + localStorage.getItem("nz-username") + "-/assetEndpoint"))
-        : this.tableTitle;
-      this.dropCol = localStorage.getItem("nz-tableTitle-" + localStorage.getItem("nz-username") + "-/assetEndpoint")
-        ? JSON.parse(localStorage.getItem("nz-tableTitle-" + localStorage.getItem("nz-username") + "-/assetEndpoint"))
+      //初始化表头
+      this.tools.customTableTitle = localStorage.getItem("nz-tableTitle-" + localStorage.getItem("nz-username") + "-/project")
+        ? JSON.parse(localStorage.getItem("nz-tableTitle-" + localStorage.getItem("nz-username") + "-/project"))
         : this.tableTitle;
 
       this.$nextTick(() => {
@@ -399,16 +373,16 @@
         if (el._ps_) {
           el.addEventListener("ps-scroll-y", () => {
             if (el._ps_.scrollbarYTop > 50) {
-              this.showTopBtn = true;
+              this.tools.showTopBtn = true;
             } else {
-              this.showTopBtn = false;
+              this.tools.showTopBtn = false;
             }
           });
           el.addEventListener("mouseenter", () => {
-            this.tableHover = true;
+            this.tools.tableHover = true;
           });
           el.addEventListener("mouseleave", () => {
-            this.tableHover = false;
+            this.tools.tableHover = false;
           });
         }
       });

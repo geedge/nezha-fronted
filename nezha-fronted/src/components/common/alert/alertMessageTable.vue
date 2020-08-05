@@ -8,17 +8,28 @@
         <i style="cursor: pointer" class="el-icon-delete"></i>
       </div>
     </transition>
+    <!-- 自定义table列 -->
+    <transition name="el-zoom-in-top">
+      <element-set
+        v-if="tools.showCustomTableTitle"
+        @close="tools.showCustomTableTitle = false"
+        :custom-table-title.sync="tools.customTableTitle"
+        :original-table-title="tableTitle"
+        ref="customTableTitle"
+        :path="'/alertList'"
+      ></element-set>
+    </transition>
     <!--表格-->
     <el-table
       class="nz-table tabelH100"
       :data="tableData"
       border
-      v-show="mainResizeShow"
+      v-show="bottomBox.mainResizeShow"
       ref="alertListTable"
       tooltip-effect="light"
       :height="tableHeight"
       v-scrollBar:el-table="'large'"
-      v-loading="loading"
+      v-loading="tools.loading"
       :cell-class-name="labelsClassName"
       @selection-change="selectChange"
       style="width: 100%;height: 100%"
@@ -34,7 +45,7 @@
       </el-table-column>
       <el-table-column
         :resizable="false"
-        v-for="(item, index) in tablelable"
+        v-for="(item, index) in tools.customTableTitle"
         v-if="item.show"
         :width="item.width"
         :minWidth="item.minWidth"
@@ -48,9 +59,6 @@
       >
         <template slot-scope="scope" :column="item">
           <template v-if="item.prop == 'alertRule'">
-            <!--<div class="link too-long-split"
-               @click="viewRule(scope.row[item.prop].id)" :id="'view-rule-'+scope.row[item.prop].id"
-               v-if="scope.row[item.prop].alertName">{{scope.row[item.prop].alertName}}</div>-->
             <span class="too-long-split pointer" v-if="scope.row[item.prop].alertName" @mouseover="alertMessagehover(scope.row,scope.$index)">
                     <el-tooltip
                       :placement="scope.$index==0?'right-start':(scope.$index==tableData.length-1?'right-end':'right')"
@@ -61,11 +69,6 @@
                   </span>
             <template v-else>-</template>
           </template>
-          <!--<div v-else-if="item.prop == 'type'" class="content-right-options">
-            <span v-if="scope.row[item.prop] == 1">Project</span>
-            <span v-if="scope.row[item.prop] == 2">Module</span>
-            <span v-if="scope.row[item.prop] == 3">Device</span>
-          </div>-->
           <template v-else-if="item.prop == 'summary'">
             <template v-if="scope.row[item.prop]">{{scope.row[item.prop]}}</template>
             <template v-else>-</template>
@@ -79,15 +82,6 @@
                 <span style="padding-left: 18px;" v-if="scope.row[item.prop] == 'medium'">{{returnSeverityLabel(scope.row[item.prop])}}</span>
                 <span v-if="scope.row[item.prop] == 'low'"><i class="el-icon-arrow-down"></i>&nbsp;{{returnSeverityLabel(scope.row[item.prop])}}</span>
               </span>
-          <!--<div v-else-if="item.prop == 'linkObject'">
-            <span v-if="(scope.row['type'] == 1 || scope.row['type'] == 2) && scope.row[item.prop]" class="link too-long-split"
-                  @click="viewAlertType(scope.row['type'],scope.row[item.prop])" style="max-width: 125px;"
-                  :id="'link-obj-'+scope.row['type']+'-'+scope.row[item.prop].id">{{scope.row[item.prop].name}}</span>
-            <span v-else-if="scope.row['type'] == 3 && scope.row[item.prop]" class="link"
-                  @click="viewAlertType(scope.row['type'],scope.row[item.prop].id)"
-                  :id="'link-obj-'+scope.row['type']+'-'+scope.row[item.prop].id">{{scope.row[item.prop].host}}</span>
-            <span v-else>-</span>
-          </div>-->
           <template v-else-if="item.prop == 'labels'" class="labels">
             <el-tooltip
               v-for="item in labelsSort(scope.row.labels)"
@@ -114,12 +108,6 @@
                      </nz-alert-tag>
                    </span>
             </el-tooltip>
-            <!--<el-tag @click="showTagDetail(scope.row, key)"
-                    :key="key"
-                    :class="{'link': key == 'asset' || key == 'endpoint' || key == 'project' || key == 'module' || key == 'datacenter'}"
-                    v-if="key != 'alertname' && key != 'severity'"
-                    :type="tagType(key)"
-                    size="mini" v-for="(value, key) in scope.row.labels" class="alert-message-tag">{{tagValue(key, value)}}</el-tag>-->
           </template>
           <div v-else-if="item.prop == 'state'">
                 <span class="">
@@ -147,25 +135,17 @@
 
       <el-table-column width="28" :resizable="false">
         <template slot="header" slot-scope="scope">
-              <span @click.stop="elementsetShow('shezhi',$event)" class="nz-table-gear">
-                <i class="nz-icon nz-icon-gear"></i>
-              </span>
+          <span @mousedown.stop="!tools.showCustomTableTitle && (tools.showCustomTableTitle = true)" class="nz-table-gear">
+            <i class="nz-icon nz-icon-gear"></i>
+          </span>
         </template>
         <template v-slot="scope">
-          <button v-if="scope.$index == 0" class="to-top" :style="{top: toTopBtnTop}" :class="{'to-top-is-hover': tableHover}" v-show="showTopBtn && mainResizeShow" @click="$toTop('ps', 0)"><i class="nz-icon nz-icon-top"></i></button>
+          <button v-if="scope.$index == 0" class="to-top" :style="{top: tools.toTopBtnTop}" :class="{'to-top-is-hover': tools.tableHover}" v-show="tools.showTopBtn && tools.mainResizeShow" @click="$toTop('ps', 0)"><i class="nz-icon nz-icon-top"></i></button>
         </template>
       </el-table-column>
     </el-table>
     <!--<弹窗>-->
     <!--删除弹窗-->
-    <element-set
-    v-clickoutside="elementsetHide"
-    :table-title="tableTitle"
-    :dropCol="dropCol"
-    @tablelable="tablelabelEmit"
-    ref="elementset"
-    :path="this.fromPath"
-  ></element-set>
     <!--导出-->
     <div class="export-xlsx">
       <el-dialog :visible.sync="importBox.show" :title="importBox.title" :modal-append-to-body='false' :show-close="true" width="300px" @close="closeDialog" class="nz-dialog">
@@ -235,8 +215,6 @@
       tableHeight:{},
       tableId:{},
       projectAlertId:{},
-      from:{},
-      fromPath:{},
     },
     data() {
       vm = this;
@@ -244,16 +222,25 @@
         /*二级列表相关*/
         tabList: [], //二级列表的标签
         tabDetailList: [], //多个详情
-        targetTab: '', //展示二级列表中的哪个页签
-        inTransform: false, //搜索框相关，搜索条件下拉框是否在transform里
-        mainResizeShow: true, //dom高度改变时部分内容是否展示
-        subResizeShow: true,
-        isFullScreen: false,
-        showSubList: false, //是否展示二级列表
-        mainTableHeight: this.$tableHeight.normal, //主列表table高度
-
-        toTopBtnTop: this.$tableHeight.toTopBtnTop, //to-top按钮的top属性
-        tableHover: false, //控制滚动条和top按钮同时出现
+        bottomBox: {
+          tabList: [], //二级列表的标签
+          tabDetailList: [], //多个详情
+          mainResizeShow: true, //dom高度改变时是否展示|隐藏
+          subResizeShow: true,
+          isFullScreen: false, //全屏状态
+          showSubList: false, //是否显示二级列表
+          targetTab: '', //显示二级列表中的哪个页签
+          inTransform: false, //搜索框相关，搜索条件下拉框是否在transform里
+        },
+        /*工具参数*/
+        tools: {
+          loading: false, //是否显示table加载动画
+          toTopBtnTop: this.$tableHeight.toTopBtnTop, //to-top按钮的top属性
+          tableHover: false, //控制滚动条和top按钮同时出现
+          showTopBtn: false, //显示To top按钮
+          showCustomTableTitle: false, //自定义列弹框是否显示
+          customTableTitle: [], //自定义列工具的数据
+        },
 
         //导出相关
         importBox: {show: false, title:this.$t('overall.exportExcel')},
@@ -267,7 +254,6 @@
         searchTime: [new Date().setHours(new Date().getHours() - 1), new Date()],
         currentMsg: {},
         chartUnit: 5,
-        showTopBtn: false,
         pageObj: {
           pageNo: 1,
           pageSize: 50,
@@ -329,8 +315,6 @@
             width: 90
           }
         ],
-        tablelable: [],
-        dropCol: [],
         viewRuleData: {
           id: '',
           alertName: '',
@@ -390,36 +374,6 @@
         })
         return result;
       },
-      elementsetShow(s, e) {
-        var eventfixed = {
-          shezhi: 0,
-          screen: 0
-        };
-        eventfixed[s] = 1;
-        e.preventDefault();
-        this.$store.commit('setHeaderTable', this.tablelable);
-        this.$store.commit('setEventfixed', eventfixed);
-        const h = document.documentElement.clientHeight;
-        const w = document.documentElement.clientWidth;
-        const dw = this.$refs.elementset.$el.offsetWidth;
-        const dh = this.$refs.elementset.$el.offsetHeight;
-        let positionx =
-          e.clientX + dw <= w - 10 ? e.clientX + 14 : e.clientX + 14 - dw;
-        let positiony =
-          e.clientY + dh <= h - 10
-            ? e.clientY + 20
-            : e.clientY + 20 - (e.clientY + dh - h);
-        this.$store.commit('setPosition', {positionx, positiony});
-      },
-      elementsetHide() {
-        //悬浮点击空白隐藏
-        this.$refs.elementset.elementsetHide();
-      },
-      tablelabelEmit(data) {
-        //获取子组件传过来的参数
-        this.$store.commit('setHeaderTable', data);
-        this.tablelable = data;
-      },
       chartUnitChange:function(unit){
         this.chartUnit=unit;
         this.$nextTick(()=>{
@@ -435,7 +389,7 @@
         }
       },
       queryChartDate() {
-        let $temp=this;
+        let $temp = this;
         let start = this.searchTime[0]?this.searchTime[0]:this.getTime(-1, 'h');
         let end = this.searchTime[1]?this.searchTime[1]:this.getTime(0, 'h');
         this.searchTime = [start, end];
@@ -618,7 +572,7 @@
       },
       deleteMessage() {
         this.$emit('deleteMessage',this.deleteBox);
-        console.log(this.deleteBox);
+        //console.log(this.deleteBox);
         this.deleteBox.show = false;
         this.deleteBox.ids=[];
       },
@@ -695,14 +649,17 @@
       },
       // 全屏
       fullScreen() {
+        let vm = this;
         this.$bottomBoxWindow.fullScreen(vm);
       },
       // 退出全屏
       exitFullScreen() {
+        let vm = this;
         this.$bottomBoxWindow.exitFullScreen(vm);
       },
       // 鼠标拖动二级列表
       listResize(e) {
+        let vm = this;
         this.$bottomBoxWindow.listResize(vm, e);
       },
       showTagDetail(data, key) {
@@ -719,10 +676,8 @@
               detailList.push(data[item]);
             }
           }
-          this.showSubList = true;
+          this.bottomBox.showSubList = true;
           this.tabList = labelList;
-          /*this.tabDetailList = detailList;
-          this.targetTab = key;*/
         }
       },
       labelsClassName(row) {
@@ -732,18 +687,7 @@
           return "";
         }
       },
-      jumpTo(data, id) {
-        bus.$emit("menu-change", data);
-        this.$store.state.assetData.moduleData = data
-        this.$store.state.assetData.selectedData = id
-        this.$router.push({
-          path: "/" + data,
-          query: {
-            t: +new Date()
-          }
-        });
-      },
-      viewRule: function (id) {
+      viewRule(id) {
         this.closeViews();
         this.$get('alert/rule', {"id": id}).then(response => {
           if (response.code == 200) {
@@ -817,16 +761,6 @@
       },
       // 数据排序
       tableDataSort(item){
-        // let orderBy='';
-        // if(item.order==='ascending'){
-        //   orderBy=item.prop;
-        // }
-        // if(item.order==='descending'){
-        //   orderBy='-'+item.prop;
-        // }
-        // this.pageObj.orderBy=orderBy;
-        // this.$set(this.searchLabel, "orderBy", orderBy);
-        // this.getAlertList();
         this.$emit('tableDataSort',item);
       },
       // label tooltip是否显示
@@ -863,6 +797,10 @@
       },
     },
     mounted() {
+      //初始化表头
+      this.tools.customTableTitle = localStorage.getItem("nz-tableTitle-" + localStorage.getItem("nz-username") + "-" + this.$route.path)
+        ? JSON.parse(localStorage.getItem("nz-tableTitle-" + localStorage.getItem("nz-username") + "-" + this.$route.path))
+        : this.tableTitle;
       //是否存在分页缓存
       let pageSize = localStorage.getItem('nz-pageSize-' + localStorage.getItem('nz-username') + '-' + this.tableId);
       if (pageSize != 'undefined' && pageSize != null) {
@@ -876,20 +814,20 @@
         if (el._ps_) {
           el.addEventListener("ps-scroll-y", () => {
             if (el._ps_.scrollbarYTop > 50) {
-              this.showTopBtn = true;
+              this.tools.showTopBtn = true;
             } else {
-              this.showTopBtn = false;
+              this.tools.showTopBtn = false;
             }
           });
           el.addEventListener("mouseenter", () => {
-            this.tableHover = true;
+            this.tools.tableHover = true;
           });
           el.addEventListener("mouseleave", () => {
-            this.tableHover = false;
+            this.tools.tableHover = false;
           });
         }
       });
-      if(this.from=='alertMessage'){
+      /*if(this.from=='alertMessage'){
         this.tablelable = localStorage.getItem("nz-tableTitle-" + localStorage.getItem("nz-username") + "-" + this.$route.path)
           ? JSON.parse(localStorage.getItem("nz-tableTitle-" + localStorage.getItem("nz-username") + "-" + this.$route.path))
           : this.tableTitle;
@@ -907,7 +845,7 @@
           : this.tableTitle;
         console.log(2);
       }
-      console.log( this.tableTitle,this.fromPath,this.form,this.tablelable);
+      console.log( this.tableTitle,this.fromPath,this.form,this.tablelable);*/
     }
   }
 

@@ -71,8 +71,6 @@
             @tableDataSort="tableDataSort"
             @deleteMessage="deleteMessage"
             ref="alertListScreenTable"
-            :form="'chartList'"
-            :fromPath="'/alertList'"
           ></alertMessageTable>
           <Pagination :pageObj="screenPageObj"  @pageNo='screenPageNo' @pageSize='screenPageSize' ref="Pagination" ></Pagination>
           <loading  :ref="'localLoadingScreen'+chartIndex"></loading>

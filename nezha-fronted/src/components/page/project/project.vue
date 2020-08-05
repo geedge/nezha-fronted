@@ -43,6 +43,16 @@
           </div>
           <div class="pagination-top pagination-top-hide display-none"></div>
         </div>
+        <!-- 自定义table列 -->
+        <transition name="el-zoom-in-top">
+          <element-set
+            v-if="tools.showCustomTableTitle"
+            @close="tools.showCustomTableTitle = false"
+            :custom-table-title.sync="tools.customTableTitle"
+            :original-table-title="tableTitle"
+            ref="customTableTitle"
+          ></element-set>
+        </transition>
         <el-table
           :data="endpointTableData"
           border
@@ -57,7 +67,7 @@
         >
           <el-table-column
             :resizable="false"
-            v-for="(item, index) in tools.tablelable"
+            v-for="(item, index) in tools.customTableTitle"
             v-if="item.show"
             :width="item.width"
             :key="`col-${index}`"
@@ -100,7 +110,7 @@
           </el-table-column>
           <el-table-column width="28" :resizable="false">
             <template slot="header" slot-scope="scope">
-            <span @click.stop="elementsetShow('shezhi',$event)" class="nz-table-gear">
+            <span @mousedown.stop="!tools.showCustomTableTitle && (tools.showCustomTableTitle = true)" class="nz-table-gear">
               <i class="nz-icon nz-icon-gear"></i>
             </span>
             </template>
@@ -117,21 +127,12 @@
     <template v-else-if="pageType == 'project'">
       <panel-tab from="project" :obj="currentProject" targetTab.sync="panel"></panel-tab>
     </template>
+
     <transition name="el-zoom-in-bottom">
       <bottom-box v-if="bottomBox.showSubList" :sub-resize-show="bottomBox.subResizeShow" :is-full-screen="bottomBox.isFullScreen"
                   :from="'endpoint'" :target-tab.sync="bottomBox.targetTab" :detail="bottomBox.endpointDetail" :obj="endpoint" :asset-detail="bottomBox.assetDetail"
                   @closeSubList="bottomBox.showSubList = false" @fullScreen="fullScreen" @exitFullScreen="exitFullScreen" @listResize="listResize" ></bottom-box>
     </transition>
-
-    <element-set
-      v-if="tools.showElementSet"
-      v-clickoutside="elementsetHide"
-      :table-title="endpointTableTitle"
-      :drop-col="tools.dropCol"
-      @tablelable="tablelabelEmit"
-      ref="elementset"
-    ></element-set>
-
     <transition name="right-box">
       <add-endpoint-box v-if="rightBox.addEndpoint.show" :current-project="currentProject" :current-module="currentModule" @close="closeAddEndpointRightBox" ref="addEndpointBox"></add-endpoint-box>
     </transition>
@@ -180,23 +181,17 @@
           loading: false, //是否显示table加载动画
           toTopBtnTop: this.$tableHeight.toTopBtnTop, //to-top按钮的top属性
           tableHover: false, //控制滚动条和top按钮同时出现
-          showElementSet: false, //自定义列弹框是否显示
           showTopBtn: false, //显示To top按钮
-          tablelable: [], //从缓存中加载的table header
-          dropCol: [], //自定义列工具的数据
+          showCustomTableTitle: false, //自定义列弹框是否显示
+          customTableTitle: [], //自定义列工具的数据
         },
 
 
         tableId: 'projectTable', //需要分页的table的id，用于记录每页数量
-
-        endpoint:{
-          project:null,
-          module:null,
-        },
         userData: [],
 
         endpoint: {id: '', host: '', port: '', param: '', path: '', asset: {}, project: {}, module: {}, moduleId: '', assetId: '', paramObj: []},
-        endpointTableTitle: [
+        tableTitle: [
           {
             label: this.$t("project.endpoint.endpointId"),
             prop: 'id',
@@ -249,7 +244,6 @@
           pageSize: 50,
           total:0
         },
-        endpoint: {},
 
         currentProjectTitle:'',
         moduleList: [],
@@ -293,36 +287,6 @@
       listResize(e) {
         let vm = this;
         this.$bottomBoxWindow.listResize(vm, e);
-      },
-      elementsetShow(s, e) {
-        var eventfixed = {
-          shezhi: 0,
-          screen: 0
-        };
-        eventfixed[s] = 1;
-        e.preventDefault();
-        this.$store.commit('setHeaderTable', this.tools.tablelable);
-        this.$store.commit('setEventfixed', eventfixed);
-        const h = document.documentElement.clientHeight;
-        const w = document.documentElement.clientWidth;
-        const dw = this.$refs.elementset.$el.offsetWidth;
-        const dh = this.$refs.elementset.$el.offsetHeight;
-        let positionx =
-          e.clientX + dw <= w - 10 ? e.clientX + 14 : e.clientX + 14 - dw;
-        let positiony =
-          e.clientY + dh <= h - 10
-            ? e.clientY + 20
-            : e.clientY + 20 - (e.clientY + dh - h);
-        this.$store.commit('setPosition', { positionx, positiony });
-      },
-      elementsetHide() {
-        //悬浮点击空白隐藏
-        this.tools.showElementSet = false;
-      },
-      tablelabelEmit(data) {
-        //获取子组件传过来的参数
-        this.$store.commit('setHeaderTable', data);
-        this.tools.tablelable = data;
       },
       getEndpointTableData() {
         if(this.currentModule && this.currentModule.id) {
@@ -493,9 +457,6 @@
         this.endpoint = Object.assign({}, endpoint);
         this.bottomBox.targetTab = 'assetDetail';
         this.bottomBox.showSubList = true;
-        /*this.viewAssetState=true;
-        this.$refs.assetEditUnit.getAssetData(id);
-        this.$refs.assetEditUnit.tabView=true;*/
       },
       query(endpoint) {
         this.endpoint = Object.assign({}, endpoint);
@@ -507,7 +468,6 @@
           if(row.state == 1){
             return 'up';
           }else{
-            // return 'down'+'['+this.getStateErrorMsg(row)+']';
             return `down:${this.getStateErrorMsg(row)}`
           }
         }
@@ -647,6 +607,10 @@
       this.getProjectList();
     },
     mounted() {
+      //初始化表头
+      this.tools.customTableTitle = localStorage.getItem("nz-tableTitle-" + localStorage.getItem("nz-username") + "-" + this.$route.path)
+        ? JSON.parse(localStorage.getItem("nz-tableTitle-" + localStorage.getItem("nz-username") + "-" + this.$route.path))
+        : this.tableTitle;
       //是否存在分页缓存
       let pageSize = localStorage.getItem('nz-pageSize-' + localStorage.getItem('nz-username') + '-' + this.tableId);
       if (pageSize) {
@@ -663,13 +627,6 @@
       window.onresize = function() {
         vm.$refs.leftScrollbar.update();
       };
-
-      this.tools.tablelable = localStorage.getItem("nz-tableTitle-" + localStorage.getItem("nz-username") + "-" + this.$route.path)
-        ? JSON.parse(localStorage.getItem("nz-tableTitle-" + localStorage.getItem("nz-username") + "-" + this.$route.path))
-        : this.endpointTableTitle;
-      this.tools.dropCol = localStorage.getItem("nz-tableTitle-" + localStorage.getItem("nz-username") + "-" + this.$route.path)
-        ? JSON.parse(localStorage.getItem("nz-tableTitle-" + localStorage.getItem("nz-username") + "-" + this.$route.path))
-        : this.endpointTableTitle;
     },
     computed: {
       itemTip() {
