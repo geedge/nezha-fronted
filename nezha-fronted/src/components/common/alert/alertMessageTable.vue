@@ -861,9 +861,6 @@
       showSubList(n) {
         this.$bottomBoxWindow.showSubListWatch(vm, n);
       },
-      from(n){
-        console.log(n)
-      },
     },
     mounted() {
       //是否存在分页缓存

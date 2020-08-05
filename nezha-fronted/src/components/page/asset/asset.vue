@@ -652,7 +652,7 @@
           case 'pingStatus':
           case 'dataCenter':
           case 'cabinet':
-          case 'Module':
+          case 'model':
           case 'vendor':
           case 'principal':
             return'custom';
@@ -671,7 +671,7 @@
           case 'pingStatus': return 'assp.rtt';
           case 'dataCenter': return 'idc.name';
           case 'cabinet': return 'cab.name';
-          case 'Module': return 'mo.name';
+          case 'model': return 'mo.name';
           case 'vendor': return 'sdt.value';
           case 'principal': return 'su.username';
           default : return prop;
