@@ -308,7 +308,7 @@
             label: this.$t("asset.tableTitle.alerts"),
             prop: 'Alert',
             show: true,
-            width: 80
+            width: 100
           }, {
             label: this.$t("asset.tableTitle.dataCenter"),
             prop: 'dataCenter',
