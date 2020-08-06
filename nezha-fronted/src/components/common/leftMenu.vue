@@ -223,7 +223,6 @@
           immediate: true,
           handler(n) {
             this.active = n;
-            console.log(n)
           }
         },
         currentProjectChange: {
@@ -257,7 +256,6 @@
           } else {
             this.parentMenu = "dashboards";
           }
-          console.log(cacheMenu)
           if (cacheMenu) {
             this.active = cacheMenu;
           } else {

@@ -394,14 +394,12 @@
         this.promqlCount++;
       },
       removeExpression(index) {
-        console.log(this.promqlCount)
-        if (this.promqlCount > 0) {
+        if (this.promqlCount > 1) {
           this.expressions.splice(index, 1);
           this.legends.splice(index, 1);
           this.promqlKeys.splice(index, 1);
           this.elementIds.splice(index, 1);
           this.promqlCount--;
-
           this.$nextTick(() => {
             this.expressions.forEach((ex, index) => {
               if (ex) {
@@ -578,7 +576,6 @@
             });
           }
         }
-        console.log('save chart',params)
 
         let intervalTime = 1; //设置3秒超时
         let interval = setInterval(() => {
@@ -696,7 +693,6 @@
       },
       getAlertParam:function(param,opType){
         this.$refs.chartForm.validate((valid) => {
-          console.log('valid',valid,param,opType)
           const params = {
             title: this.editChart.title,//this.editChart
             span: this.editChart.span,
@@ -1122,11 +1118,14 @@
           this.editChart.elements = [{expression: "", legend: "", type: "expert", id: ""}];
         }
         this.editChart.elements.forEach(element => {
-          this.promqlKeys.push(getUUID());
-          this.expressions.push(element.expression);
-          this.legends.push(element.legend);
-          this.elementIds.push(element.id);
+          if(element&&element!=''){
+            this.promqlKeys.push(getUUID());
+            this.expressions.push(element.expression);
+            this.legends.push(element.legend);
+            this.elementIds.push(element.id);
+          }
         });
+        this.promqlCount=this.editChart.elements.length;
         this.$nextTick(() => {
           this.expressions.forEach((ex, index) => {
             if (ex) {

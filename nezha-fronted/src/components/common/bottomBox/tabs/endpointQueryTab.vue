@@ -169,7 +169,6 @@
       },
       saveChart() { //新增chart
         let chart = {
-          id:'',
           title: '',
           type:'line',
           span:12,
