@@ -1145,7 +1145,6 @@
             this.setIsAlertList();
           } else if(n.type === 'singleStat'){
             this.setIsSingleStat();
-            this.resetElements();
           } else {
             this.setIsOtherChart();
           }
