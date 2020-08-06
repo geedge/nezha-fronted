@@ -635,8 +635,6 @@
       this.dropCol = localStorage.getItem("nz-tableTitle-" + localStorage.getItem("nz-username") + "-/alertList")
         ? JSON.parse(localStorage.getItem("nz-tableTitle-" + localStorage.getItem("nz-username") + "-/alertList"))
         : this.tableTitle;
-      console.log( this.tablelable);
-      console.log( this.dropCol)
     }
   }
 </script>

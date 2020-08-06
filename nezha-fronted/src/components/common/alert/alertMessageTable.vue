@@ -799,12 +799,8 @@
       showSubList(n) {
         this.$bottomBoxWindow.showSubListWatch(vm, n);
       },
-      // loading(n){
-      //
-      // },
       loading:{
         handler:function(n,o){
-          console.log(n);
           this.tools.loading=n;
         },
         immediate: true,
