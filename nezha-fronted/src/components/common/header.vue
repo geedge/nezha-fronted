@@ -370,7 +370,7 @@
       },
       jumpToProject(p) {
         this.currentProject = p;
-
+        this.$store.commit("currentProjectChange", p);
         this.activeItemIndex = p.id;
         this.jumpTo('/project');
       },
