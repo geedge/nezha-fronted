@@ -179,8 +179,12 @@
                   let moduleData=module.get('data');
                   let endpoints=module.get('endpoints');
                   endpoints=endpoints.map(item=>{
-                    return{label:item.asset.host,value:item.id}
-                  })
+                    return {label: item.asset.host, value: item.id}
+                  });
+                  /*//测试代码
+                  for (let i = 1; i < 16; i++) {
+                    endpoints.push({label: '114.51.41.' + i, value: i+8887});
+                  }*/
                   if(!option.children){
                     option.children=[];
                   }
@@ -192,7 +196,7 @@
                 }
               })
               this.options.push(option)
-            })
+            });
           }else{
             console.error(response.msg)
             this.$message.error(response.msg)
@@ -236,5 +240,8 @@
 <style>
   .alert-form-pop{
     z-index:3000 !important;
+  }
+  .alert-form-pop .el-cascader-panel {
+    max-height: 350px;
   }
 </style>
