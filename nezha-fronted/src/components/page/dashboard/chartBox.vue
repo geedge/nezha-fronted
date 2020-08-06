@@ -74,7 +74,7 @@
     <!-- begin--表单-->
     <el-scrollbar class="right-box-form-box" ref="scrollbar">
       <el-form class="right-box-form  right-box-form-left" :model="editChart" label-width="120px" label-position="right" :rules="rules" ref="chartForm">
-        <el-form-item :label="$t('dashboard.panel.title')" prop="panelName" v-if="showPanel.type == 'dashboard'">
+        <el-form-item :label="$t('dashboard.panel.title')" prop="panelName" v-if="showPanel.type != 'dashboard'">
           <el-autocomplete
             :fetch-suggestions="panelSuggestion"
             v-model.trim="editChart.panelName"
@@ -117,7 +117,7 @@
         <!--type unit end-->
 
         <el-form-item :label="$t('dashboard.panel.chartForm.width')" prop="span" class="half-form-item">
-          <el-select class="right-box-row-with-btn"  value-key="chartSpan" popper-class="chart-box-dropdown-mini" v-model="chart.span" placeholder="" size="mini">
+          <el-select class="right-box-row-with-btn"  value-key="chartSpan" popper-class="chart-box-dropdown-mini" v-model="editChart.span" placeholder="" size="mini">
             <el-option v-for="item in spanList" :key="item" :label="'span-' + item" :value="item">
               <span class="panel-dropdown-label-txt" > span-{{item}}</span>
             </el-option>
@@ -141,7 +141,7 @@
 
 
         <el-form-item :label="$t('dashboard.panel.chartForm.sync')" v-if="showPanel.type && showPanel.type == 'model'">
-          <el-switch class="exporter-switch" v-model="chart.sync" active-color="#ee9d3f" :active-value="1" :inactive-value="0"></el-switch>
+          <el-switch class="exporter-switch" v-model="editChart.sync" active-color="#ee9d3f" :active-value="1" :inactive-value="0"></el-switch>
         </el-form-item>
 
         <el-form-item v-if="isUrl" :label='$t("dashboard.panel.chartForm.url")' prop="param.url" :rules="{ required: true,  message: $t('validate.required'), trigger: 'blur' }">
@@ -193,8 +193,8 @@
               </el-col>
               <el-col style="width: calc(100% - 120px);">
                 <el-select popper-class="chart-box-dropdown-mini" v-model="statistics" placeholder="" size="small">
-                  <el-option v-for="item in statisticsList" :key="item.id" :label="item.name" :value="item.id">
-                    <span class="panel-dropdown-label-txt" >{{item.name}}</span>
+                  <el-option v-for="item in statisticsList" :key="item.value" :label="item.label" :value="item.value">
+                    <span class="panel-dropdown-label-txt" >{{item.label}}</span>
                   </el-option>
                 </el-select>
               </el-col>
@@ -394,13 +394,12 @@
         this.promqlCount++;
       },
       removeExpression(index) {
-        if (this.promqlCount > 0) {
+        if (this.promqlCount > 1) {
           this.expressions.splice(index, 1);
           this.legends.splice(index, 1);
           this.promqlKeys.splice(index, 1);
           this.elementIds.splice(index, 1);
           this.promqlCount--;
-
           this.$nextTick(() => {
             this.expressions.forEach((ex, index) => {
               if (ex) {
@@ -578,7 +577,6 @@
           }
         }
 
-
         let intervalTime = 1; //设置3秒超时
         let interval = setInterval(() => {
           if (panelId) {
@@ -702,7 +700,7 @@
             type: this.editChart.type,
             unit:this.editChart.unit,
             param:param,
-            sync: this.editChart.sync
+            sync: this.editChart.sync,
           };
           if (valid) {
             if(opType==='preview') {
@@ -732,6 +730,10 @@
               item.saveTarget(index);
             });
           }*/
+          if(this.editChart.type == 'alertList'){
+            this.$refs.alertParamBox.saveParam();
+            return ;
+          }
           if(this.editChart.type == 'singleStat'){
             this.$set(this.editChart.param, "statistics", this.statistics);
           } else {
@@ -907,9 +909,12 @@
           this.editChart.param.url = data.param.url;
           this.setIsUrl();
           //this.elements = [1];
-        }else if(this.editChart.type==='alertLine'){
+        }else if(this.editChart.type==='alertList'){
           this.editChart.param = data.param;
           this.setIsAlertList();
+          this.$nextTick(()=>{
+            this.$refs.alertParamBox.setData(data)
+          })
           //this.elements=[1];
         }else{
           if((this.editChart.type==='line'||this.editChart.type==='bar'||this.editChart.type==='stackArea'||this.editChart.type==='singleStat')&&data.param){
@@ -1116,11 +1121,14 @@
           this.editChart.elements = [{expression: "", legend: "", type: "expert", id: ""}];
         }
         this.editChart.elements.forEach(element => {
-          this.promqlKeys.push(getUUID());
-          this.expressions.push(element.expression);
-          this.legends.push(element.legend);
-          this.elementIds.push(element.id);
+          if(element&&element!=''){
+            this.promqlKeys.push(getUUID());
+            this.expressions.push(element.expression);
+            this.legends.push(element.legend);
+            this.elementIds.push(element.id);
+          }
         });
+        this.promqlCount=this.editChart.elements.length;
         this.$nextTick(() => {
           this.expressions.forEach((ex, index) => {
             if (ex) {

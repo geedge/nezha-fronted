@@ -2,14 +2,7 @@
   @import './webSSH.scss';
 </style>
 <template>
-  <el-drawer
-    :visible.sync="consoleShow"
-    direction="btt"
-    :close-on-press-escape="false"
-    :modal="false"
-    :withHeader="false"
-  >
-    <div id="shell-service"  data-yunlog-scope="popup" :class="{'shell-service-max': isFullScreen,'shell-service':true}">
+    <div id="shell-service"  data-yunlog-scope="popup" :class="{'shell-service-max': isFullScreen,'shell-service':true}" v-show="consoleShow">
     <div id="shell-service-resize-mask"></div>
     <div id="shell-split" class="shell-split shell-iconfont" @mousedown="dragEagle" v-show="!isFullScreen">一</div>
     <div style='position: relative;'>
@@ -171,7 +164,6 @@
       </el-dialog>
     </div>
   </div>
-  </el-drawer>
 </template>
 
 <script>

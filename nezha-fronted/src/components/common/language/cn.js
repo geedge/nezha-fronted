@@ -80,6 +80,7 @@ const cn = {
       zoom:'区域缩放',
       back:'区域缩放还原',
       stack: "查看堆叠图",
+      stackBack:'返回原始图'
     }
   },
   webshell: {

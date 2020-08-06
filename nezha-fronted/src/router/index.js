@@ -48,10 +48,10 @@ export default new Router({
           path: '/overview',
           component: resolve => require(['../components/page/dashboard/overview/overview2.vue'],resolve)
         },
-        {
+        /*{
           path: '/test',
-          component: resolve => require(['../components/charts/d3-line-chart2'],resolve)
-        },
+          component: resolve => require(['../components/charts/d3/d3-line-chart2'],resolve)
+        },*/
         {
           path: '/project',
           component: resolve => require(['../components/page/project/project.vue'], resolve),

@@ -8,11 +8,13 @@ import {parse} from "echarts/extension-src/dataTool/gexf";
 function none(value, index){
   return value;
 }
-function short(value,index,type=1){
+function short(value,index,type=1,dot){
   if(type == 1){
-    return asciiCompute(value,1000,['','K','Mil','Bil'],0)
+    return asciiCompute(value,1000,['','K','Mil','Bil','Til','Quadrillion','Quintillion'],0)
+  }else if(type == -1){
+    return asciiCompute(value,1000,['','K','Mil','Bil','Til','Quadrillion','Quintillion'],dot)
   }else{
-    return asciiCompute(value,1000,['','K','Mil','Bil'],2)
+    return asciiCompute(value,1000,['','K','Mil','Bil','Til','Quadrillion','Quintillion'],2)
   }
 
 }
@@ -32,217 +34,273 @@ function localFormat(value,index){
   if (num) { result = num + result; }
   return result;
 }
-function bits(value,index,type=1){
+function bits(value,index,type=1,dot=0){
   if(type == 1){
     return asciiCompute(value,1024,['b','B','KB','MB','GB','TB','PB','EB','ZB','YB'],0)
+  }else if(type == -1){
+    return asciiCompute(value,1024,['b','B','KB','MB','GB','TB','PB','EB','ZB','YB'],dot)
   }else{
     return asciiCompute(value,1024,['b','B','KB','MB','GB','TB','PB','EB','ZB','YB'],2)
   }
 }
-function bytes(value,index,type=1){
+function bytes(value,index,type=1,dot){
   if(type == 1){
     return asciiCompute(value,1024,['B','KB','MB','GB','TB','PB','EB','ZB','YB'],0)
+  }else if(type == -1){
+    return asciiCompute(value,1024,['B','KB','MB','GB','TB','PB','EB','ZB','YB'],dot)
   }else{
     return asciiCompute(value,1024,['B','KB','MB','GB','TB','PB','EB','ZB','YB'],2)
   }
 
 }
-function kilobytes(value,index,type=1){
+function kilobytes(value,index,type=1,dot){
   if(type == 1){
     return asciiCompute(value,1024,['KB','MB','GB','TB','PB','EB','ZB','YB'],0)
+  }else if(type == -1){
+    return asciiCompute(value,1024,['KB','MB','GB','TB','PB','EB','ZB','YB'],dot)
   }else{
     return asciiCompute(value,1024,['KB','MB','GB','TB','PB','EB','ZB','YB'],2)
   }
 
 }
-function megabytes(value,index,type=1){
+function megabytes(value,index,type=1,dot){
   if(type == 1){
     return asciiCompute(value,1024,['MB','GB','TB','PB','EB','ZB','YB'],0)
+  }else if(type == -1){
+    return asciiCompute(value,1024,['MB','GB','TB','PB','EB','ZB','YB'],dot)
   }else{
     return asciiCompute(value,1024,['MB','GB','TB','PB','EB','ZB','YB'],2)
   }
 
 }
-function gigabytes(value,index,type=1){
+function gigabytes(value,index,type=1,dot){
   if(type == 1){
     return asciiCompute(value,1024,['GB','TB','PB','EB','ZB','YB'],0)
+  }else if(type == -1){
+    return asciiCompute(value,1024,['GB','TB','PB','EB','ZB','YB'],dot)
   }else{
     return asciiCompute(value,1024,['GB','TB','PB','EB','ZB','YB'],2)
   }
 }
-function terabytes(value,index,type=1){
+function terabytes(value,index,type=1,dot){
   if(type == 1){
     return asciiCompute(value,1024,['TB','PB','EB','ZB','YB'],0)
+  }else if(type == -1){
+    return asciiCompute(value,1024,['TB','PB','EB','ZB','YB'],dot)
   }else{
     return asciiCompute(value,1024,['TB','PB','EB','ZB','YB'],2)
   }
 }
-function petabytes(value,index,type=1){
+function petabytes(value,index,type=1,dot){
   if(type == 1){
     return asciiCompute(value,1024,['PB','EB','ZB','YB'],0)
+  }else if(type == -1){
+    return asciiCompute(value,1024,['PB','EB','ZB','YB'],dot)
   }else{
     return asciiCompute(value,1024,['PB','EB','ZB','YB'],2)
   }
 }
-function packetsSec(value,index,type=1){
+function packetsSec(value,index,type=1,dot){
   if(type == 1){
     return asciiCompute(value,1000,['pps','Kpps','Mpps','Gpps','Tpps','Ppps','Epps','Zpps','Ypps'],1)
+  }else if(type == -1){
+    return asciiCompute(value,1000,['pps','Kpps','Mpps','Gpps','Tpps','Ppps','Epps','Zpps','Ypps'],dot)
   }else{
     return asciiCompute(value,1000,['pps','Kpps','Mpps','Gpps','Tpps','Ppps','Epps','Zpps','Ypps'],2)
   }
 }
-function bitsSec(value,index,type=1){
+function bitsSec(value,index,type=1,dot){
   if(type == 1){
     return asciiCompute(value,1000,['bps','Kbps','Mbps','Gbps','Tbps','Pbps','Epps','Zpps','Ypps'],1)
+  }else if(type == -1){
+    return asciiCompute(value,1000,['bps','Kbps','Mbps','Gbps','Tbps','Pbps','Epps','Zpps','Ypps'],dot)
   }else{
     return asciiCompute(value,1000,['bps','Kbps','Mbps','Gbps','Tbps','Pbps','Epps','Zpps','Ypps'],2)
   }
 }
-function bytesSec(value,index,type=1){
+function bytesSec(value,index,type=1,dot){
   if(type == 1){
     return asciiCompute(value,1000,['Bs','KBs','MBs','GBs','TBs','PBs','EBs','ZBs','YBs'],1)
+  }else if(type == -1){
+    return asciiCompute(value,1000,['Bs','KBs','MBs','GBs','TBs','PBs','EBs','ZBs','YBs'],dot)
   }else{
     return asciiCompute(value,1000,['Bs','KBs','MBs','GBs','TBs','PBs','EBs','ZBs','YBs'],2)
   }
 }
-function kilobytesSec(value,index,type=1){
+function kilobytesSec(value,index,type=1,dot){
   if(type == 1){
     return asciiCompute(value,1000,['KBs','MBs','GBs','TBs','PBs','EBs','ZBs','YBs'],1)
+  }else if(type == -1){
+    return asciiCompute(value,1000,['KBs','MBs','GBs','TBs','PBs','EBs','ZBs','YBs'],dot)
   }else{
     return asciiCompute(value,1000,['KBs','MBs','GBs','TBs','PBs','EBs','ZBs','YBs'],1)
   }
 }
-function kilobitsSec(value,index,type=1){
+function kilobitsSec(value,index,type=1,dot){
   if(type == 1){
     return asciiCompute(value,1000,['Kbps','Mbps','Gbps','Tbps','Pbps','Ebps','Zbps','Ybps'],1)
+  }else if(type == -1){
+    return asciiCompute(value,1000,['Kbps','Mbps','Gbps','Tbps','Pbps','Ebps','Zbps','Ybps'],dot)
   }else{
     return asciiCompute(value,1000,['Kbps','Mbps','Gbps','Tbps','Pbps','Ebps','Zbps','Ybps'],2)
   }
 
 }
-function megabytesSec(value,index,type=1){
+function megabytesSec(value,index,type=1,dot){
   if(type == 1){
     return asciiCompute(value,1000,['MBs','GBs','TBs','PBs','EBs','ZBs','YBs'],1)
+  }else if(type == -1){
+    return asciiCompute(value,1000,['MBs','GBs','TBs','PBs','EBs','ZBs','YBs'],dot)
   }else{
     return asciiCompute(value,1000,['MBs','GBs','TBs','PBs','EBs','ZBs','YBs'],2)
   }
 
 }
-function megabitsSec(value,index,type=1){
+function megabitsSec(value,index,type=1,dot){
   if(type == 1){
     return asciiCompute(value,1000,['Mbps','Gbps','Tbps','Pbps','Ebps','Zbps','Ybps'],1)
+  }else if(type == -1){
+    return asciiCompute(value,1000,['Mbps','Gbps','Tbps','Pbps','Ebps','Zbps','Ybps'],dot)
   }else{
     return asciiCompute(value,1000,['Mbps','Gbps','Tbps','Pbps','Ebps','Zbps','Ybps'],2)
   }
 
 }
-function gigabytesSec(value,index,type=1){
+function gigabytesSec(value,index,type=1,dot){
   if(type == 1){
     return asciiCompute(value,1000,['GBs','TBs','PBs','EBs','ZBs','YBs'],1)
+  }else if(type == -1){
+    return asciiCompute(value,1000,['GBs','TBs','PBs','EBs','ZBs','YBs'],dot)
   }else{
     return asciiCompute(value,1000,['GBs','TBs','PBs','EBs','ZBs','YBs'],2)
   }
 
 }
-function gigabitsSec(value,index,type=1){
+function gigabitsSec(value,index,type=1,dot){
   if(type == 1){
     return asciiCompute(value,1000,['Gbps','Tbps','Pbps','Ebps','Zbps','Ybps'],1)
+  }else if(type == -1){
+    return asciiCompute(value,1000,['Gbps','Tbps','Pbps','Ebps','Zbps','Ybps'],dot)
   }else{
     return asciiCompute(value,1000,['Gbps','Tbps','Pbps','Ebps','Zbps','Ybps'],2)
   }
 
 }
-function terabytesSec(value,index,type=1){
+function terabytesSec(value,index,type=1,dot){
   if(type == 1){
     return asciiCompute(value,1000,['TBs','PBs','EBs','ZBs','YBs'],1)
+  }else if(type == -1){
+    return asciiCompute(value,1000,['TBs','PBs','EBs','ZBs','YBs'],dot)
   }else{
     return asciiCompute(value,1000,['TBs','PBs','EBs','ZBs','YBs'],2)
   }
 
 }
-function terabitsSec(value,index,type=1){
+function terabitsSec(value,index,type=1,dot){
   if(type == 1){
     return asciiCompute(value,1000,['Tbps','Pbps','Ebps','Zbps','Ybps'],1)
+  }else if(type == -1){
+    return asciiCompute(value,1000,['Tbps','Pbps','Ebps','Zbps','Ybps'],dot)
   }else{
     return asciiCompute(value,1000,['Tbps','Pbps','Ebps','Zbps','Ybps'],2)
   }
 
 }
-function petabytesSec(value,index,type=1){
+function petabytesSec(value,index,type=1,dot){
   if(type == 1){
     return asciiCompute(value,1000,['PBs','EBs','ZBs','YBs'],1)
+  }else if(type == -1){
+    return asciiCompute(value,1000,['PBs','EBs','ZBs','YBs'],dot)
   }else{
     return asciiCompute(value,1000,['PBs','EBs','ZBs','YBs'],2)
   }
 
 }
-function petabitsSec(value,index,type=1){
+function petabitsSec(value,index,type=1,dot){
   if(type == 1){
     return asciiCompute(value,1000,['Pbps','Ebps','Zbps','Ybps'],1)
+  }else if(type == -1){
+    return asciiCompute(value,1000,['Pbps','Ebps','Zbps','Ybps'],dot)
   }else{
     return asciiCompute(value,1000,['Pbps','Ebps','Zbps','Ybps'],2)
   }
 
 }
-function Hertz(value,index,type=1){
+function Hertz(value,index,type=1,dot){
   if(type == 1){
     return asciiCompute(value,1000,['Hz','KHz','MHz','GHz','THz','PHz','EHz','ZHz','YHz'],1);
+  }else if(type == -1){
+    return asciiCompute(value,1000,['Hz','KHz','MHz','GHz','THz','PHz','EHz','ZHz','YHz'],dot);
   }else{
     return asciiCompute(value,1000,['Hz','KHz','MHz','GHz','THz','PHz','EHz','ZHz','YHz'],2);
   }
 
 }
-function nanoseconds(value,index,type=1){
+function nanoseconds(value,index,type=1,dot){
   if(type == 1){
     return timeCompute(value,'ns');
+  }else if(type == -1){
+    return timeCompute(value,'ns',dot);
   }else{
     return timeCompute(value,'ns',2);
   }
 
 }
-function microseconds(value,index,type=1){
+function microseconds(value,index,type=1,dot){
   if(type == 1){
     return timeCompute(value,'us')
+  }else if(type == -1){
+    return timeCompute(value,'us',dot)
   }else{
     return timeCompute(value,'us',2)
   }
 
 }
-function milliseconds(value,index,type=1){
+function milliseconds(value,index,type=1,dot){
   if(type == 1){
     return timeCompute(value,'ms')
+  }else if(type == -1){
+    return timeCompute(value,'ms',dot)
   }else{
     return timeCompute(value,'ms',2)
   }
 
 }
-function seconds(value,index,type=1){
+function seconds(value,index,type=1,dot){
   if(type == 1){
     return timeCompute(value,'s');
+  }else if(type == -1){
+    return timeCompute(value,'s',dot);
   }else{
     return timeCompute(value,'s',2);
   }
 
 }
-function minutes(value,index,type=1){
+function minutes(value,index,type=1,dot){
   if(type == 1){
     return timeCompute(value,'m');
+  }else if(type == -1){
+    return timeCompute(value,'m',dot);
   }else{
     return timeCompute(value,'m',2);
   }
 
 }
-function hours(value,index,type=1){
+function hours(value,index,type=1,dot){
   if(type == 1){
     return timeCompute(value,'h');
+  }else if(type == -1){
+    return timeCompute(value,'h',dot);
   }else{
     return timeCompute(value,'h',2);
   }
 
 }
-function days(value,index,type=1){
+function days(value,index,type=1,dot){
   if(type == 1){
     return timeCompute(value,'day');
+  }else if(type == -1){
+    return timeCompute(value,'day',dot);
   }else{
     return timeCompute(value,'day',3);
   }
@@ -254,9 +312,8 @@ function days(value,index,type=1){
 * ascii:进制，比如数据为1024
 * units：单位列表
 * dot：保留的小数位，
-* unitIndex：不需要传递，用于递归获取units中的单位
 * */
-function asciiCompute(num,ascii,units,dot=2,unitIndex=0){
+function asciiCompute(num,ascii,units,dot=2){
   num=Number(num)
   let carry=0;
   if(num > 0){
@@ -264,7 +321,11 @@ function asciiCompute(num,ascii,units,dot=2,unitIndex=0){
     carry = parseInt(log)
     num = num / Math.pow(ascii,carry)
   }
-  return num.toFixed(dot) +' '+units[carry];
+  if(Number.isInteger(num)){
+    return num +' '+units[carry];
+  }else{
+    return num.toFixed(dot) +' '+units[carry];
+  }
 }
 function asciiCompute2(num,ascii,units,dot=2,unitIndex=0){
   num=Number(num)

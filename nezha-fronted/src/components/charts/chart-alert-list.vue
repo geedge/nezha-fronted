@@ -2,7 +2,7 @@
   @import './chart.scss';
 </style>
 <template>
-  <div class="nz-chart-resize">
+  <div class="nz-chart-resize" :id="id">
     <div class="resize-shadow" ref="resizeShadow"></div>
     <div class="resize-box resize-box-alert" ref="resizeBox">
       <div class="chart-alert-info" :id="'chartTableDiv'+chartIndex" @mouseenter="caretShow=true" @mouseleave="caretShow=false">
@@ -146,7 +146,8 @@ export default {
       type: Number,
       default: 0,
     },
-    chartInfo:{}
+    chartInfo:{},
+    id:''
   },
   data() {
     return {

@@ -402,7 +402,7 @@
             });
           });
         },
-        
+
         //asset左侧菜单4个事件
         changeCheckBox() {
           this.assetClick = true;
@@ -413,7 +413,6 @@
             bus.$emit("asset-filter-change", "typeIds", assetTypeIds);
           }else{
             bus.$emit("asset-filter-change", "typeIds", "");
-            this.pageObj.typeIds='';
           }
         },
         changeVendorCheckBox() {
@@ -432,7 +431,7 @@
             bus.$emit("asset-filter-change", "pingStates", "");
           }
         },
-        
+
         indOf(a, b) {
           let c = [];
           for (let i = 0; i < a.length; i++) {
