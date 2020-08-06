@@ -2,13 +2,13 @@
   <div class="content">
     <div class="content-left left-slot" :class="{'left-slot-shrink': isShrink}">
       <div class="sidebar-title too-long-split">
-        <template v-if="parentMenu == 'projects'">{{$t("overall.project")}}</template>
-        <template v-else-if="parentMenu == 'assets'">{{$t("overall.asset")}}</template>
-        <template v-else>{{menus[parentMenu].title}}</template>
+        <template v-if="parentMenu == '/project'">{{$t("overall.project")}}</template>
+        <template v-else-if="parentMenu == '/asset'">{{$t("overall.asset")}}</template>
+        <template v-else>{{$CONSTANTS.staticMenus[parentMenu].title}}</template>
       </div>
       <div class="sidebar-info" style="height: 90%">
         <el-scrollbar style="height: 100%;">
-          <template v-if="parentMenu == 'projects'">
+          <template v-if="parentMenu == '/project'">
             <el-collapse class="left-menu-bg" accordion style="padding-top: 0;" ref="projectLeft">
               <el-collapse-item v-for="(item, index) in projectList" :key="item.id" :name="item.id + ''">
                 <template slot="title">
@@ -40,7 +40,7 @@
               </el-collapse-item>
             </el-collapse>
           </template>
-          <template v-else-if="parentMenu == 'assets'">
+          <template v-else-if="parentMenu == '/asset'">
             <el-collapse v-model="activeType" class="left-menu-bg">
               <el-collapse-item name="dataCenter" :title="$t('asset.left.dataCenter')">
                 <el-checkbox-group v-model="dcCheckList" size="small">
@@ -103,7 +103,7 @@
             </el-collapse>
           </template>
           <template v-else>
-            <div v-for="menu in menus[parentMenu].menu" class="sidebar-info-item" :class="{'sidebar-info-item-active': menu.route == active}" @click="jumpTo(menu.route)">
+            <div v-for="menu in $CONSTANTS.staticMenus[parentMenu].menu" class="sidebar-info-item" :class="{'sidebar-info-item-active': menu.route == route}" @click="jumpTo(menu.route)">
               {{menu.name}}
             </div>
           </template>
@@ -135,7 +135,7 @@
         return{
           isShrink: localStorage.getItem('nz-left-menu-shrink') == 'true',
           parentMenu: "dashboards",
-          active: "/overview",
+          //active: "/overview",
 
           //project相关
           projectList: [],
@@ -159,37 +159,6 @@
           vendorCheckList: [],
           pingData: [],
           pingCheckList: [],
-
-          menus: {
-            settings: {
-              title: this.$t('overall.config'),
-              menu: [
-                {route: '/account', name: this.$t('config.account.account')},
-                {route: '/promServer', name: this.$t('config.promServer.promServerList')},
-                {route: '/dc', name: this.$t('config.dc.dc')},
-                {route: '/model', name: this.$t('config.model.model')},
-                {route: '/mib', name: this.$t('config.mib.mib')},
-                {route: '/system', name: this.$t('config.system.system')},
-                {route: '/terminallog', name: this.$t('config.terminallog.terminallog')},
-                {route: '/operationlog', name: this.$t('config.operationlog.operationlog')},
-              ],
-            },
-            alerts: {
-              title: this.$t('alert.alert'),
-              menu: [
-                {route: '/alertList', name: this.$t('alert.alertList')},
-                {route: '/alertConfig', name: this.$t('alert.alertConfig')},
-              ],
-            },
-            dashboards: {
-              title: this.$t('dashboard.title'),
-              menu: [
-                {route: '/overview', name: this.$t('dashboard.overview.title')},
-                {route: '/panel', name: this.$t('dashboard.panel.title')},
-                {route: '/explore', name: this.$t('dashboard.metricPreview.title')},
-              ],
-            },
-          }
         }
       },
       computed: {
@@ -222,7 +191,7 @@
           deep: true,
           immediate: true,
           handler(n) {
-            this.active = n;
+            this.parentMenu = this.getParentMenu(n);
           }
         },
         currentProjectChange: {
@@ -249,22 +218,7 @@
       },
       mounted() {
         Promise.all([this.getProjectList(), this.getModuleList(), this.getLeftMenuList()]).then(response => {
-          let cacheParentMenu = localStorage.getItem('nz-parent-menu');
-          let cacheMenu = localStorage.getItem('nz-menu');
-          if (cacheParentMenu) {
-            this.parentMenu = cacheParentMenu;
-          } else {
-            this.parentMenu = "dashboards";
-          }
-          if (cacheMenu) {
-            this.active = cacheMenu;
-          } else {
-            if (this.parentMenu != 'projects' && this.parentMenu != 'assets') {
-              this.active = this.menus[this.parentMenu].menu[0].route;
-            }
-          }
           this.initEvent(); //注册监听事件
-
           setTimeout(() => {
             this.ready = true;
           }, 300);
@@ -277,6 +231,26 @@
           if (this.resizeFunc) {
             this.resizeFunc();
           }
+        },
+        //根据route获取父菜单，
+        getParentMenu(route) {
+          let parentMenu = "";
+          let end = false;
+          if (route != '/project' && route != '/asset') {
+            for (let r in this.$CONSTANTS.staticMenus) {
+              if (!end) {
+                this.$CONSTANTS.staticMenus[r].menu.forEach(menu => {
+                  if (route == menu.route) {
+                    parentMenu = r
+                    end = true;
+                  }
+                });
+              }
+            }
+          } else {
+            parentMenu = route;
+          }
+          return parentMenu;
         },
         getProjectList() {
           return new Promise(resolve => {
@@ -366,8 +340,8 @@
           this.$set(module, 'context_name', '');
         },
         changeCurrentProject(project) {
-          localStorage.setItem("nz-current-project", project.id);
-          this.$store.commit("currentProjectChange", project);
+          /*localStorage.setItem("nz-current-project", project.id);
+          this.$store.commit("currentProjectChange", project);*/
           this.currentProject = project;
         },
         changeCurrentModule(module) {
@@ -383,15 +357,21 @@
         },
 
         initEvent() {
-          bus.$on("parent-menu-change", parentMenu => {
+          /*bus.$on("parent-menu-change", parentMenu => {
             this.parentMenu = parentMenu;
           });
           bus.$on("menu-change", menu => {
             this.active = menu;
-          });
+          });*/
           bus.$on("header-dc-change", dcId => {
             this.dcCheckList = [dcId];
             bus.$emit("asset-filter-change", "idcIds", dcId);
+          });
+          bus.$on("clear-asset-filter", dcId => {
+            this.dcCheckList = [];
+            this.assetTypeCheckList = [];
+            this.vendorCheckList = [];
+            this.pingCheckList = [];
           });
           bus.$on("project-list-change", () => {
             this.getProjectList();
@@ -422,6 +402,8 @@
             });
           });
         },
+        
+        //asset左侧菜单4个事件
         changeCheckBox() {
           this.assetClick = true;
         },
@@ -450,6 +432,7 @@
             bus.$emit("asset-filter-change", "pingStates", "");
           }
         },
+        
         indOf(a, b) {
           let c = [];
           for (let i = 0; i < a.length; i++) {
@@ -462,9 +445,9 @@
           }
         },
         jumpTo(route) {
-          bus.$emit("menu-change", route);
+          /*bus.$emit("menu-change", route);
           localStorage.setItem('nz-parent-menu', this.parentMenu);
-          localStorage.setItem('nz-menu-change', route);
+          localStorage.setItem('nz-menu-change', route);*/
           this.$router.push({
             path: route,
             query: {

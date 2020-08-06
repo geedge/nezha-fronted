@@ -1,6 +1,6 @@
 <template>
   <div class="header">
-    <div class="logo link" @click="jumpTo('overview', 'dashboards')"><img height="45" src="../../assets/img/logo.png"/></div>
+    <div class="logo link" @click="jumpTo('/overview')"><img height="45" src="../../assets/img/logo.png"/></div>
     <el-menu
       class="nz-menu float-right"
       mode="horizontal"
@@ -40,31 +40,31 @@
       </el-menu-item>
       <el-submenu index="1" popper-class="nz-submenu">
         <template slot="title">
-          <div @click="jumpTo('overview', 'dashboards')" :class ="(activeIndex == 'overview' ||activeIndex == 'panel' || activeIndex == 'explore') ? 'menu-active' :'' " >
+          <div @click="jumpTo('/overview')" :class ="(route == '/overview' ||route == '/panel' || route == '/explore') ? 'menu-active' :'' " >
             {{$t('overall.dashboard')}}
           </div>
         </template>
         <el-menu-item index="1-0">
-          <div @click="jumpTo('overview', 'dashboards')" :class="{'menu-item-active' :activeIndex == 'overview'}" >{{$t('dashboard.overview.title')}}</div>
+          <div @click="jumpTo('/overview')" :class="{'menu-item-active' :route == '/overview'}" >{{$t('dashboard.overview.title')}}</div>
         </el-menu-item>
         <el-menu-item index="1-1">
-          <div @click="jumpTo('panel', 'dashboards')" :class="{'menu-item-active' :activeIndex == 'panel'}" >{{$t('dashboard.panel.title')}}</div>
+          <div @click="jumpTo('/panel')" :class="{'menu-item-active' :route == '/panel'}" >{{$t('dashboard.panel.title')}}</div>
         </el-menu-item>
         <el-menu-item index="1-2">
-          <div @click="jumpTo('explore', 'dashboards')" :class="{'menu-item-active' :activeIndex == 'explore'}">{{$t('dashboard.metricPreview.title')}}</div>
+          <div @click="jumpTo('/explore')" :class="{'menu-item-active' :route == '/explore'}">{{$t('dashboard.metricPreview.title')}}</div>
         </el-menu-item>
       </el-submenu>
 
       <el-submenu index="3" popper-class="nz-submenu">
         <template slot="title">
           <div v-if="assetData.length == 0">{{$t('overall.asset')}}</div>
-          <div v-else @click="jumpToAsset()" :class="{'menu-active' : activeIndex == 'asset'}">{{$t('overall.asset')}}</div>
+          <div v-else @click="jumpToAsset()" :class="{'menu-active' : route == '/asset'}">{{$t('overall.asset')}}</div>
         </template>
         <template>
           <el-menu-item v-if="assetData.length == 0" index="3-0"><div @click="createBox({type: 6})"><i class="nz-icon nz-icon-create-square header-dropdown-add"></i>&nbsp;&nbsp;{{$t("overall.createDatacenter")}}</div></el-menu-item>
           <template v-else>
             <el-menu-item :index="'3-' + index" v-for="(item, index) in assetData" :key="index">
-              <div @mouseenter="hoverItemIndex = '3-' + index" @mouseleave="hoverItemIndex = ''" @click="jumpToAsset(item)" :class="{'menu-item-active': activeIndex == 'asset' && activeItemIndex == item.id}">
+              <div @mouseenter="hoverItemIndex = '3-' + index" @mouseleave="hoverItemIndex = ''" @click="jumpToAsset(item)" :class="{'menu-item-active': route == '/asset' && activeItemIndex == item.id}">
                 <span class="too-long-split" style="width: 130px;">{{item.name}}</span>
               </div>
             </el-menu-item>
@@ -74,13 +74,13 @@
       <el-submenu index="2" popper-class="nz-submenu">
         <template slot="title">
           <div v-if="projectData.length == 0">{{$t('overall.project')}}</div>
-          <div v-else @click="jumpToProject(projectData[0])" :class ="activeIndex == 'project' ? 'menu-active' :''" >{{$t('overall.project')}}</div>
+          <div v-else @click="jumpToProject(projectData[0])" :class ="route == '/project' ? 'menu-active' :''" >{{$t('overall.project')}}</div>
         </template>
         <template>
           <el-menu-item v-if="projectData.length == 0" index="2-0"><div @click="createBox({type: 1})"><i class="nz-icon nz-icon-create-square header-dropdown-add"></i>&nbsp;&nbsp;{{$t("overall.createProject")}}</div></el-menu-item>
           <template v-else>
             <el-menu-item :index="'2-' + index" v-for="(item, index) in projectData" :key="index">
-              <div @mouseenter="hoverItemIndex = '2-' + index" @mouseleave="hoverItemIndex = ''" @click="jumpToProject(item)" :class="{'menu-item-active': activeIndex == 'project' && activeItemIndex == item.id}">
+              <div @mouseenter="hoverItemIndex = '2-' + index" @mouseleave="hoverItemIndex = ''" @click="jumpToProject(item)" :class="{'menu-item-active': route == '/project' && activeItemIndex == item.id}">
                 <span class="too-long-split" style="width: 135px;">{{item.name}}</span>
                 <div v-show="hoverItemIndex == '2-' + index && item.buildIn != 1" @click.stop="toEditProject(item)" class="menu-edit"><i class="nz-icon nz-icon-edit"></i></div>
               </div>
@@ -90,42 +90,42 @@
       </el-submenu>
       <el-submenu index="4" popper-class="nz-submenu">
         <template slot="title">
-          <div @click="jumpTo('alertList', 'alerts')" :class ="activeIndex == 'alertList' || activeIndex == 'alertConfig' ? 'menu-active' :''">{{$t('overall.alert')}}</div>
+          <div @click="jumpTo('/alertList')" :class ="route == '/alertList' || route == '/alertConfig' ? 'menu-active' : ''">{{$t('overall.alert')}}</div>
         </template>
         <el-menu-item index="4-1">
-          <div @click="jumpTo('alertList', 'alerts')" :class ="activeIndex == 'alertList' ? 'menu-item-active' :''">{{$t('alert.message')}}</div>
+          <div @click="jumpTo('/alertList')" :class ="route == '/alertList' ? 'menu-item-active' : ''">{{$t('alert.message')}}</div>
         </el-menu-item>
         <el-menu-item index="4-2">
-          <div @click="jumpTo('alertConfig', 'alerts')" :class ="activeIndex == 'alertConfig' ? 'menu-item-active' :''">{{$t('alert.rule')}}</div>
+          <div @click="jumpTo('/alertConfig')" :class ="route == '/alertConfig' ? 'menu-item-active' : ''">{{$t('alert.rule')}}</div>
         </el-menu-item>
       </el-submenu>
       <el-submenu index="5" popper-class="nz-submenu">
         <template slot="title">
-          <div @click="jumpTo('account', 'settings')" :class ="activeIndex == 'account' || activeIndex == 'promServer' || activeIndex == 'dc' || activeIndex == 'model' || activeIndex == 'mib' || activeIndex == 'system' || activeIndex == 'terminallog' || activeIndex == 'operationlog' ? 'menu-active' :''">{{$t('overall.config')}}</div>
+          <div @click="jumpTo('/account')" :class ="route == '/account' || route == '/promServer' || route == '/dc' || route == '/model' || route == '/mib' || route == '/system' || route == '/terminallog' || route == '/operationlog' ? 'menu-active' : ''">{{$t('overall.config')}}</div>
         </template>
         <el-menu-item index="5-0">
-          <div @click="jumpTo('account', 'settings')" :class="{'menu-item-active' :(activeIndex == 'account' )}">{{$t('config.account.account')}}</div>
+          <div @click="jumpTo('/account')" :class="{'menu-item-active' :(route == '/account' )}">{{$t('config.account.account')}}</div>
         </el-menu-item>
         <el-menu-item index="5-1">
-          <div @click="jumpTo('promServer', 'settings')" :class="{'menu-item-active' :(activeIndex == 'promServer' )}">{{$t('config.promServer.promServerList')}}</div>
+          <div @click="jumpTo('/promServer')" :class="{'menu-item-active' :(route == '/promServer' )}">{{$t('config.promServer.promServerList')}}</div>
         </el-menu-item>
         <el-menu-item index="5-2">
-          <div @click="jumpTo('dc', 'settings')" :class="{'menu-item-active' :(activeIndex == 'dc' )}">{{$t('config.dc.dc')}}</div>
+          <div @click="jumpTo('/dc')" :class="{'menu-item-active' :(route == '/dc' )}">{{$t('config.dc.dc')}}</div>
         </el-menu-item>
         <el-menu-item index="5-3">
-          <div @click="jumpTo('model', 'settings')" :class="{'menu-item-active' :(activeIndex == 'model' )}">{{$t('config.model.model')}}</div>
+          <div @click="jumpTo('/model')" :class="{'menu-item-active' :(route == '/model' )}">{{$t('config.model.model')}}</div>
         </el-menu-item>
         <el-menu-item index="5-4">
-          <div @click="jumpTo('mib', 'settings')" :class="{'menu-item-active' :(activeIndex == 'mib' )}">{{$t('config.mib.mib')}}</div>
+          <div @click="jumpTo('/mib')" :class="{'menu-item-active' :(route == '/mib' )}">{{$t('config.mib.mib')}}</div>
         </el-menu-item>
         <el-menu-item index="5-5">
-          <div @click="jumpTo('system', 'settings')" :class="{'menu-item-active' :(activeIndex == 'system' )}">{{$t('config.system.system')}}</div>
+          <div @click="jumpTo('/system')" :class="{'menu-item-active' :(route == '/system' )}">{{$t('config.system.system')}}</div>
         </el-menu-item>
         <el-menu-item index="5-6">
-          <div @click="jumpTo('terminallog', 'settings')" :class="{'menu-item-active' :(activeIndex == 'terminallog' )}">{{$t('config.terminallog.terminallog')}}</div>
+          <div @click="jumpTo('/terminallog')" :class="{'menu-item-active' :(route == '/terminallog' )}">{{$t('config.terminallog.terminallog')}}</div>
         </el-menu-item>
         <el-menu-item index="5-7">
-          <div @click="jumpTo('operationlog', 'settings')" :class="{'menu-item-active' :(activeIndex == 'operationlog' )}">{{$t('config.operationlog.operationlog')}}</div>
+          <div @click="jumpTo('/operationlog')" :class="{'menu-item-active' :(route == '/operationlog' )}">{{$t('config.operationlog.operationlog')}}</div>
         </el-menu-item>
       </el-submenu>
       <el-submenu index="6" popper-class="nz-submenu">
@@ -188,7 +188,7 @@
         language: localStorage.getItem("nz-language") ? localStorage.getItem("nz-language") : 'en',
 
         //顶部菜单相关
-        activeIndex: '',
+        /*activeIndex: '',*/
         activeItemIndex: '',
         activeItemIndexes: [],
         hoverItemIndex: '',
@@ -301,23 +301,16 @@
        * @param route 路由地址
        * @param parentMenu 菜单大类
        * */
-      jumpTo(route, parentMenu) {
-        //通知leftMenu菜单改变了；使用localStorage缓存使得页面重新加载时leftMenu可以取到菜单
-        bus.$emit("parent-menu-change", parentMenu);
-        bus.$emit("menu-change", "/" + route);
-        localStorage.setItem("nz-parent-menu", parentMenu);
-        localStorage.setItem("nz-menu", "/" + route);
-
-        if (route != "asset") {
+      jumpTo(route) {
+        if (route != "/asset") {
           this.activeItemIndexes = [];
         }
         this.$router.push({
-          path: "/" + route,
+          path: route,
           query: {
             t: +new Date()
           }
         });
-        this.activeIndex = route;
       },
       getLinkData(){
         this.$get('link').then(response=>{
@@ -369,16 +362,17 @@
         if (dc) {
           this.activeItemIndex = dc.id;
           bus.$emit("header-dc-change", dc.id); //发送给leftMenu，顶部dc条件改变了
+        } else {
+          this.activeItemIndex = "";
+          bus.$emit("clear-asset-filter"); //清除leftMenu左侧菜单过滤条件
         }
-        this.jumpTo("asset", "assets");
+        this.jumpTo("/asset");
       },
       jumpToProject(p) {
         this.currentProject = p;
-        this.$store.commit('currentProjectChange', p);
-        bus.$emit("project-page-type", 'project');
 
         this.activeItemIndex = p.id;
-        this.jumpTo('project', 'projects');
+        this.jumpTo('/project');
       },
       getAssetData() {
         this.$get('idc', {pageSize:-1}).then(response => {
@@ -472,7 +466,7 @@
       logout() {
         localStorage.setItem("nz-parent-menu", "dashboards");
         this.$get('logout');
-        this.jumpTo('login');
+        this.jumpTo('/login');
       },
       refreshLang() {
         this.language = localStorage.getItem("nz-language");
@@ -488,17 +482,13 @@
         this.showChangePwd = false;
       },
       cancel() {
-        this.activeIndex = this.$route.path.slice(1, this.$route.path.length);
+        this.jumpTo(this.$route.path.slice(1, this.$route.path.length));
       },
 
       initEvent() {
-        bus.$on("menu-change", menu => {
-          this.activeIndex = menu.split("/")[1];
-        });
         bus.$on('login', () => {
           this.username = sessionStorage.getItem("nz-username");
           this.refreshLang();
-          this.activeIndex = 'overview';
         });
         bus.$on("dc-list-change", () => { //dc.vue增删改dc时刷新顶部菜单dc列表
           this.getAssetData();
@@ -521,13 +511,16 @@
       this.getProjectList();
       this.getLinkData();
       // 刷新后有高亮
-      let activePath = this.$route.path.slice(1);
-      this.activeIndex = activePath;
+      /*let activePath = this.$route.path.slice(1);
+      this.activeIndex = activePath;*/
     },
     computed: {
       linkData(){
         return this.$store.getters.getLinkData;
       },
+      route() {
+        return this.$route.path;
+      }
     },
     destroyed() {
       window.removeEventListener('popstate', this.cancel, false);
