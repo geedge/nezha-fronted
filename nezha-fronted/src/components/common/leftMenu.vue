@@ -223,6 +223,7 @@
           immediate: true,
           handler(n) {
             this.active = n;
+            console.log(n)
           }
         },
         currentProjectChange: {
@@ -256,6 +257,7 @@
           } else {
             this.parentMenu = "dashboards";
           }
+          console.log(cacheMenu)
           if (cacheMenu) {
             this.active = cacheMenu;
           } else {
@@ -463,7 +465,7 @@
         jumpTo(route) {
           bus.$emit("menu-change", route);
           localStorage.setItem('nz-parent-menu', this.parentMenu);
-          localStorage.setItem('nz-menu-change', route);
+          localStorage.setItem('nz-menu', route);
           this.$router.push({
             path: route,
             query: {

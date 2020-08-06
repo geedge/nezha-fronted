@@ -83,7 +83,8 @@ const en = {
     toolBox:{
       zoom:'Area scaling',
       back:'Area scaling restore',
-      stack:'Show stack chart'
+      stack:'Show stack chart',
+      stackBack:'Back to original chart'
     }
   },
   pageSize: '/page',
