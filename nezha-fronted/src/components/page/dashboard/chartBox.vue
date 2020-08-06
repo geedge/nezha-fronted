@@ -117,7 +117,7 @@
         <!--type unit end-->
 
         <el-form-item :label="$t('dashboard.panel.chartForm.width')" prop="span" class="half-form-item">
-          <el-select class="right-box-row-with-btn"  value-key="chartSpan" popper-class="chart-box-dropdown-mini" v-model="chart.span" placeholder="" size="mini">
+          <el-select class="right-box-row-with-btn"  value-key="chartSpan" popper-class="chart-box-dropdown-mini" v-model="editChart.span" placeholder="" size="mini">
             <el-option v-for="item in spanList" :key="item" :label="'span-' + item" :value="item">
               <span class="panel-dropdown-label-txt" > span-{{item}}</span>
             </el-option>
@@ -141,7 +141,7 @@
 
 
         <el-form-item :label="$t('dashboard.panel.chartForm.sync')" v-if="showPanel.type && showPanel.type == 'model'">
-          <el-switch class="exporter-switch" v-model="chart.sync" active-color="#ee9d3f" :active-value="1" :inactive-value="0"></el-switch>
+          <el-switch class="exporter-switch" v-model="editChart.sync" active-color="#ee9d3f" :active-value="1" :inactive-value="0"></el-switch>
         </el-form-item>
 
         <el-form-item v-if="isUrl" :label='$t("dashboard.panel.chartForm.url")' prop="param.url" :rules="{ required: true,  message: $t('validate.required'), trigger: 'blur' }">
@@ -193,8 +193,8 @@
               </el-col>
               <el-col style="width: calc(100% - 120px);">
                 <el-select popper-class="chart-box-dropdown-mini" v-model="statistics" placeholder="" size="small">
-                  <el-option v-for="item in statisticsList" :key="item.id" :label="item.name" :value="item.id">
-                    <span class="panel-dropdown-label-txt" >{{item.name}}</span>
+                  <el-option v-for="item in statisticsList" :key="item.value" :label="item.label" :value="item.value">
+                    <span class="panel-dropdown-label-txt" >{{item.label}}</span>
                   </el-option>
                 </el-select>
               </el-col>
@@ -577,7 +577,7 @@
             });
           }
         }
-
+        console.log('save chart',params)
 
         let intervalTime = 1; //设置3秒超时
         let interval = setInterval(() => {
@@ -695,6 +695,7 @@
       },
       getAlertParam:function(param,opType){
         this.$refs.chartForm.validate((valid) => {
+          console.log('valid',valid,param,opType)
           const params = {
             title: this.editChart.title,//this.editChart
             span: this.editChart.span,
@@ -702,7 +703,7 @@
             type: this.editChart.type,
             unit:this.editChart.unit,
             param:param,
-            sync: this.editChart.sync
+            sync: this.editChart.sync,
           };
           if (valid) {
             if(opType==='preview') {
@@ -732,6 +733,10 @@
               item.saveTarget(index);
             });
           }*/
+          if(this.editChart.type == 'alertList'){
+            this.$refs.alertParamBox.saveParam();
+            return ;
+          }
           if(this.editChart.type == 'singleStat'){
             this.$set(this.editChart.param, "statistics", this.statistics);
           } else {
@@ -1112,6 +1117,7 @@
       },
       //preview--end
       initElements() {
+        console.log('statisticsList',this.statisticsList)
         if (!this.editChart.elements || this.editChart.elements.length == 0) {
           this.editChart.elements = [{expression: "", legend: "", type: "expert", id: ""}];
         }

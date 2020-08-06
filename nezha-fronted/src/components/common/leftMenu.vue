@@ -431,7 +431,6 @@
             bus.$emit("asset-filter-change", "typeIds", assetTypeIds);
           }else{
             bus.$emit("asset-filter-change", "typeIds", "");
-            this.pageObj.typeIds='';
           }
         },
         changeVendorCheckBox() {

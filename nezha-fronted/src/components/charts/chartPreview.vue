@@ -130,7 +130,7 @@
         </div>
       </template>
 
-      <chart-alert-list v-if="chart.type === 'alertList'" ref="alertListChart" id="chartAlertListPreview"></chart-alert-list>
+      <chart-alert-list v-if="chart.type === 'alertList'" ref="alertListChart" id="chartAlertListPreview" :chart-info="chart"></chart-alert-list>
 
       <loading  ref="loadingPreview"></loading>
     </el-dialog>
@@ -242,6 +242,7 @@
           chartContainerId = 'chartAlertListPreview';
         }
 
+        console.log('previewChart',this.chart,chartContainerId)
         //设置高度 chart-table
         this.$nextTick(() => {
           //const chartBox = document.getElementById('chartPreviewDailog');
@@ -263,6 +264,7 @@
             tableBox.style.height = `${height-this.titleHeight-this.pageHeight-25}px`;//-75-32+25
           }else{
             const chartDiv = document.getElementById(chartContainerId);
+            console.log('container div',chartDiv)
             chartDiv.style.height = `${height-this.chartSpaceHeight-this.titleHeight-15}px`;
           }
         });
