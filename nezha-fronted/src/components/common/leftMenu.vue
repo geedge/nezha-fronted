@@ -9,7 +9,7 @@
       <div class="sidebar-info" style="height: 90%">
         <el-scrollbar style="height: 100%;">
           <template v-if="parentMenu == 'projects'">
-            <el-collapse v-model="currentProject.id + ''" class="left-menu-bg" accordion style="padding-top: 0;" ref="projectLeft">
+            <el-collapse class="left-menu-bg" accordion style="padding-top: 0;" ref="projectLeft">
               <el-collapse-item v-for="(item, index) in projectList" :key="item.id" :name="item.id + ''">
                 <template slot="title">
                   <div class="sidebar-info-item-project sidebar-info-item" :class="{'sidebar-info-item-active': item.id == currentProject.id}" @click="detailProject(item)" :id="'project-module-'+item.id">
