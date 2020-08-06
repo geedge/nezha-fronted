@@ -665,12 +665,12 @@
     position: relative;
   }
   .linkBox{
-    height: calc(100vh - 100px);
+    max-height: calc(100vh - 300px);
     width: 800px;
   }
   .scrollBox{
     position: relative;
-    height: calc(100vh - 200px);
+    height: 600px;
     margin-bottom: 20px;
   }
   .linkTitle{
