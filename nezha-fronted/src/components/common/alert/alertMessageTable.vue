@@ -275,7 +275,7 @@
             prop: 'labels',
             show: true,
             NotSet:true,
-            minWidth:350
+            minWidth:200
           }, {
             label: this.$t("alert.severity"),
             prop: 'severity',
@@ -285,10 +285,12 @@
             label: this.$t('alert.summary'),
             prop: 'summary',
             show: true,
+            minWidth:200
           }, {
             label: this.$t('alert.description'),
             prop: 'description',
             show: true,
+            minWidth:200
           }, {
             label: this.$t('alert.list.state'),
             prop: 'state',
