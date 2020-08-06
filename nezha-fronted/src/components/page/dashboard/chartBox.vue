@@ -74,7 +74,7 @@
     <!-- begin--表单-->
     <el-scrollbar class="right-box-form-box" ref="scrollbar">
       <el-form class="right-box-form  right-box-form-left" :model="editChart" label-width="120px" label-position="right" :rules="rules" ref="chartForm">
-        <el-form-item :label="$t('dashboard.panel.title')" prop="panelName" v-if="showPanel.type == 'dashboard'">
+        <el-form-item :label="$t('dashboard.panel.title')" prop="panelName" v-if="showPanel.type != 'dashboard'">
           <el-autocomplete
             :fetch-suggestions="panelSuggestion"
             v-model.trim="editChart.panelName"
@@ -394,6 +394,7 @@
         this.promqlCount++;
       },
       removeExpression(index) {
+        console.log(this.promqlCount)
         if (this.promqlCount > 0) {
           this.expressions.splice(index, 1);
           this.legends.splice(index, 1);
@@ -1117,7 +1118,6 @@
       },
       //preview--end
       initElements() {
-        console.log('statisticsList',this.statisticsList)
         if (!this.editChart.elements || this.editChart.elements.length == 0) {
           this.editChart.elements = [{expression: "", legend: "", type: "expert", id: ""}];
         }
