@@ -239,6 +239,17 @@
         this.$get('/endpoint',this.endpointSearchLabel).then(response => {
           this.tools.loading = false;
           if (response.code === 200) {
+            for (let i = 0; i < response.data.list.length; i++) {
+              try {
+                let tempObj = JSON.parse(response.data.list[i].param);
+                response.data.list[i].paramObj = [];
+                for (let k in tempObj) {
+                  response.data.list[i].paramObj.push({key: k, value: tempObj[k]})
+                }
+              } catch (err) {
+                //console.error(response.data.list[i], err);
+              }
+            }
             this.tableData = response.data.list;
             this.$emit("reload");
           }
