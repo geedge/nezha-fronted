@@ -93,7 +93,6 @@
         this.$emit('on-enter-complate',param,opType);
       },
       setData:function(responseData){
-        console.log(responseData)
         if(responseData&&responseData.param){
           let param=responseData.param;
           let projectId=param.projectId;
@@ -118,7 +117,6 @@
             state:param.state
           }
 
-          console.log(this.parameters)
         }
       },
       queryOptionsData:function(){

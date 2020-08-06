@@ -909,9 +909,12 @@
           this.editChart.param.url = data.param.url;
           this.setIsUrl();
           //this.elements = [1];
-        }else if(this.editChart.type==='alertLine'){
+        }else if(this.editChart.type==='alertList'){
           this.editChart.param = data.param;
           this.setIsAlertList();
+          this.$nextTick(()=>{
+            this.$refs.alertParamBox.setData(data)
+          })
           //this.elements=[1];
         }else{
           if((this.editChart.type==='line'||this.editChart.type==='bar'||this.editChart.type==='stackArea'||this.editChart.type==='singleStat')&&data.param){
