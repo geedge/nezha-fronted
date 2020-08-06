@@ -54,17 +54,28 @@
                :class="{'shrink-view':!tableVisible || !defaultTableVisible}">
             <div class="view-title" @click="changeTableVisible"><i class="el-icon-caret-top"></i>&nbsp;table</div>
             <div class="table-room">
+              <!-- 自定义table列 -->
+              <transition name="el-zoom-in-top">
+                <element-set
+                  class="pop-custom-explore"
+                  v-if="tools.showCustomTableTitle"
+                  @close="tools.showCustomTableTitle = false"
+                  :custom-table-title.sync="tools.customTableTitle"
+                  :original-table-title="tableTitle"
+                  ref="customTableTitle"
+                ></element-set>
+              </transition>
               <el-table class="nz-table explore-table"
                         :data="tableData"
                         border
                         ref="exploreTable"
                         tooltip-effect="light"
                         v-scrollBar:el-table="'large'"
-                        v-loading="tableLoading"
+                        v-loading="tools.loading"
                         style="width: 100%;">
                 <el-table-column
                   :resizable="false"
-                  v-for="(item, index) in showTableLabels"
+                  v-for="(item, index) in tools.customTableTitle"
                   v-if="item.show"
                   :key="`col-${index}`"
                   :label="item.label"
@@ -72,9 +83,9 @@
                   show-overflow-tooltip
                   min-width="110px"
                 ></el-table-column>
-                <el-table-column width="28" v-if="showTableLabels.length>0">
+                <el-table-column width="28" v-if="tools.customTableTitle.length>0">
                   <template slot="header" slot-scope="scope" :resizable="false">
-                  <span @click.stop="elementsetShow('shezhi',$event)" class="nz-table-gear">
+                  <span @mousedown.stop="!tools.showCustomTableTitle && (tools.showCustomTableTitle = true)" class="nz-table-gear">
                     <i class="nz-icon nz-icon-gear"></i>
                   </span>
                   </template>
@@ -187,14 +198,6 @@ instance_cpu_time_ns{app="fox", proc="widget", rev="4d3a513", env="prod", job="c
     <transition name="right-box">
       <chart-box v-if="rightBox.show" :chart="chart" ref="addChartModal" @close="handleBox(false)" :panel-data="panelData" @on-create-success="createSuccess" :show-panel="{id: -1, name: '', type: 'dashboard'}"></chart-box>
     </transition>
-    <element-set
-      :allowed-all="true"
-      v-clickoutside="elementsetHide"
-      :dropCol="dropCol"
-      @tablelable="tablelabelEmit"
-      :table-title="tableLabels"
-      ref="elementset"
-    ></element-set>
   </div>
 </template>
 
@@ -212,7 +215,6 @@ instance_cpu_time_ns{app="fox", proc="widget", rev="4d3a513", env="prod", job="c
     name: "explore",
     components: {
       'promql-input': promqlInput,
-      // 'promql-input-plus':promqlInputPlus,
       'chart': chart,
       'chart-box': chartBox,
     },
@@ -228,6 +230,14 @@ instance_cpu_time_ns{app="fox", proc="widget", rev="4d3a513", env="prod", job="c
           bus.timeFormate(new Date(bus.computeTimezone(new Date().getTime())).setHours(new Date(bus.computeTimezone(new Date().getTime())).getHours() - 1),'yyyy-MM-dd hh:mm:ss'),
           bus.timeFormate(new Date(bus.computeTimezone(new Date().getTime())),'yyyy-MM-dd hh:mm:ss')
         ],
+
+        /*工具参数*/
+        tools: {
+          loading: false, //是否显示table加载动画
+          showCustomTableTitle: false, //自定义列弹框是否显示
+          customTableTitle: [], //自定义列工具的数据
+        },
+        tableTitle: [],
         showIntroduce: true,
         defaultChartVisible: true,
         defaultTableVisible: true,
@@ -238,11 +248,7 @@ instance_cpu_time_ns{app="fox", proc="widget", rev="4d3a513", env="prod", job="c
           pageSize: 50,
           total: 0
         },
-        dropCol: [],
         tableData: [],
-        tableLabels: [],
-        showTableLabels: [],
-        tableLoading: false,
         saveDisabled: true,
         panelData: [],
         chartUnit:0,
@@ -352,7 +358,7 @@ instance_cpu_time_ns{app="fox", proc="widget", rev="4d3a513", env="prod", job="c
         }, 200)
       },
       queryTableData: function () {
-        this.tableLoading = true,
+        this.tools.loading = true,
           setTimeout(() => {
             if (this.expressions.length > 0) {
               let requestArr = [];
@@ -369,7 +375,7 @@ instance_cpu_time_ns{app="fox", proc="widget", rev="4d3a513", env="prod", job="c
                 let tLabels = [];
                 if (res.length > 0) {
                   this.tableData = [];
-                  this.tableLabels = [];
+                  this.tableTitle = [];
                   //console.log(111111111111111111111,res)
                   res.forEach((response, index) => {
                     if (response.data&&response.status == 'success') {
@@ -403,21 +409,20 @@ instance_cpu_time_ns{app="fox", proc="widget", rev="4d3a513", env="prod", job="c
                     this.storedTableData = Object.assign([], tData);
                     this.pageObj.total = this.storedTableData.length;
                     this.tableData = this.filterShowData(this.storedTableData, this.pageObj);
-                    this.tableLabels = Object.assign([], tLabels);
-                    this.showTableLabels = Object.assign([], tLabels);
-                    this.dropCol = Object.assign([], tLabels);
+                    this.tableTitle = Object.assign([], tLabels);
+                    this.tools.customTableTitle = Object.assign([], tLabels);
                     this.defaultTableVisible = true;
                   }else{
                     // this.defaultTableVisible = false;
                   }
                 }
-                this.tableLoading = false;
+                this.tools.loading = false;
               })
             }
           }, 200)
       },
       expressionChange: function () {
-        console.log(this.filterTime)
+        //console.log(this.filterTime)
         if (this.expressions && this.expressions.length >= 1) {
           this.queryTableData();
           this.queryChartData()
@@ -569,36 +574,6 @@ instance_cpu_time_ns{app="fox", proc="widget", rev="4d3a513", env="prod", job="c
           }
         });
       },
-      elementsetShow(s, e) {
-        var eventfixed = {
-          shezhi: 0,
-          screen: 0
-        };
-        eventfixed[s] = 1;
-        e.preventDefault();
-        this.$store.commit('setEventfixed', eventfixed);
-        const h = document.documentElement.clientHeight;
-        const w = document.documentElement.clientWidth;
-        const dw = this.$refs.elementset.$el.offsetWidth;
-        const dh = this.$refs.elementset.$el.offsetHeight;
-        let positionx =
-          e.clientX + dw <= w - 10 ? e.clientX + 14 : e.clientX + 14 - dw;
-        let positiony =
-          e.clientY + dh <= h - 10
-            ? e.clientY + 20
-            : e.clientY + 20 - (e.clientY + dh - h + 30);
-        this.$store.commit('setPosition', {positionx, positiony});
-      },
-      elementsetHide() {
-        //悬浮点击空白隐藏
-        this.$refs.elementset.elementsetHide();
-      },
-      tablelabelEmit(data) {
-        //获取子组件传过来的参数
-        this.$store.commit('setHeaderTable', data);
-        console.log(data)
-        this.showTableLabels = data;
-      },
       jumpTo(data, id) {
         bus.$emit("menu-change", data);
         this.$router.push({
@@ -608,8 +583,6 @@ instance_cpu_time_ns{app="fox", proc="widget", rev="4d3a513", env="prod", job="c
           }
         });
       },
-    },
-    mounted() {
     },
     watch: {
       promqlCount: function (n, o) {
@@ -671,7 +644,9 @@ instance_cpu_time_ns{app="fox", proc="widget", rev="4d3a513", env="prod", job="c
     }
 
   }
-
+  .table-room {
+    position: relative;
+  }
   .explore .view-title {
     font-weight: 500;
     margin-right: 8px;

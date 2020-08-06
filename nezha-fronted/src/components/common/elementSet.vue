@@ -136,6 +136,9 @@ export default {
   border-radius: 4px;
   z-index: 999999;
 }
+.pop-custom-explore {
+  top: 33px;
+}
 .relative-position .pop-custom {
   top: 33px;
 }

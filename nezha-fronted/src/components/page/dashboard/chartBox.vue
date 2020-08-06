@@ -874,7 +874,7 @@
         this.isAlert=false;
       },
       setIsAlertList(){
-        this.isAlert=true;
+        this.isAlert = true;
         this.isUrl = false;
         this.isSingleStat = false;
       },
