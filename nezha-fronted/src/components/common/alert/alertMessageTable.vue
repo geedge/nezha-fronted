@@ -405,95 +405,97 @@
         }else{
           step='30m';
         }
-        this.$refs.messageChart.startLoading();
-        let axiosArr=[];
-        let paramStr = JSON.stringify(this.promQueryParamConvert(this.currentMsg));
-        axiosArr.push(axios.get("/prom/api/v1/query_range?query="+paramStr.substring(1, paramStr.length-1).replace(/\+/g, "%2B").replace(/ /g, "%20").replace(/\\/g, "")+"&start="+this.$stringTimeParseToUnix(start)+"&end="+this.$stringTimeParseToUnix(end)+"&step="+step));
-        this.legend = [];
-        this.chartDatas = [];
-        axios.all(axiosArr).then(res =>{
-          try {
-            res.forEach((response, promIndex) => {
-              if (response.status == 200) {
-                if (response.data.status == 'success') {
-                  let queryData = response.data.data.result[0];
-                  if (queryData) {
-                    let chartData = {
-                      type: "line",
-                      symbol: 'none',  //去掉点
-                      smooth: 0.2,  //曲线变平滑
-                      name: '',
-                      lineStyle: {
-                        width: 1,
-                        opacity: 0.9
-                      },
-                      markLine: {
-                        silent: true,
-                        symbol: ['circle', 'circle'],
-                        label: {
-                          distance: this.computeDistance(chartDataFormat.getUnit(this.currentMsg.alertRule.unit ? this.currentMsg.alertRule.unit : 2).compute(this.currentMsg.alertRule.threshold)),
-                          formatter: function (params) {
-                            return chartDataFormat.getUnit($temp.currentMsg.alertRule.unit ? $temp.currentMsg.alertRule.unit : 2).compute(params.value)
-                          }
-                        },
-                        lineStyle: {
-                          color:'#d64f40',
-                          width:2,
-                          type:'dotted'
-                        },
-                        data: [{
-                          yAxis: Number(this.currentMsg.alertRule.threshold)
-                        }, ]
-                      },
-                      markArea:{
-                        itemStyle:{
-                          color:'#d64f40',
-                          opacity:0.1
-                        },
-                        data:[this.returnMarkArea()]
-                      }
-                    };
-                    if(this.currentMsg.alertRule.operator=='=='||this.currentMsg.alertRule.operator=='!='){
-                      delete chartData.markArea;
-                    }
-                    chartData.name += "{";
-                    alias += "{";
-                    Object.keys(queryData.metric).forEach((item, index) => {
-                      let label = item;
-                      let value = queryData.metric[label];
-                      chartData.name += label + "='" + value + "',";
-                    });
-                    chartData.name = chartData.name.charAt(chartData.name.length - 1) == "," ? chartData.name.substr(0, chartData.name.length - 1) : chartData.name;
-                    chartData.name += "}";
-                    let alias = chartData.name;
-                    let legend = {
-                      name: chartData.name,
-                      alias: alias,
-                      isGray: false
-                    }
-                    this.legend.push(legend);
-                    chartData.data = queryData.values.map((dpsItem, dpsIndex) => {
-                      return [bus.computeTimezone(dpsItem[0]) * 1000, parseFloat(dpsItem[1]).toFixed(2)];
-                    });
-                    this.chartDatas.push(chartData);
-                  }
-                } else {
-                  this.$message.error(response.data.error)
-                  console.error(response.data)
-                }
-              }
-            });
-            this.$nextTick(() => {
-              this.$refs.messageChart.setRandomColors(this.chartDatas.length);
-              this.$refs.messageChart.setLegend(this.legend);
-              this.$refs.messageChart.setSeries(this.chartDatas);
-              this.$refs.messageChart.endLoading();
-            });
-          } catch(err) {
-            this.$message.error(err);
-            this.$refs.messageChart.endLoading();
-          }
-        })
+       if(this.$refs.messageChart){
+         this.$refs.messageChart.startLoading();
+         let axiosArr=[];
+         let paramStr = JSON.stringify(this.promQueryParamConvert(this.currentMsg));
+         axiosArr.push(axios.get("/prom/api/v1/query_range?query="+paramStr.substring(1, paramStr.length-1).replace(/\+/g, "%2B").replace(/ /g, "%20").replace(/\\/g, "")+"&start="+this.$stringTimeParseToUnix(start)+"&end="+this.$stringTimeParseToUnix(end)+"&step="+step));
+         this.legend = [];
+         this.chartDatas = [];
+         axios.all(axiosArr).then(res =>{
+           try {
+             res.forEach((response, promIndex) => {
+               if (response.status == 200) {
+                 if (response.data.status == 'success') {
+                   let queryData = response.data.data.result[0];
+                   if (queryData) {
+                     let chartData = {
+                       type: "line",
+                       symbol: 'none',  //去掉点
+                       smooth: 0.2,  //曲线变平滑
+                       name: '',
+                       lineStyle: {
+                         width: 1,
+                         opacity: 0.9
+                       },
+                       markLine: {
+                         silent: true,
+                         symbol: ['circle', 'circle'],
+                         label: {
+                           distance: this.computeDistance(chartDataFormat.getUnit(this.currentMsg.alertRule.unit ? this.currentMsg.alertRule.unit : 2).compute(this.currentMsg.alertRule.threshold)),
+                           formatter: function (params) {
+                             return chartDataFormat.getUnit($temp.currentMsg.alertRule.unit ? $temp.currentMsg.alertRule.unit : 2).compute(params.value)
+                           }
+                         },
+                         lineStyle: {
+                           color:'#d64f40',
+                           width:2,
+                           type:'dotted'
+                         },
+                         data: [{
+                           yAxis: Number(this.currentMsg.alertRule.threshold)
+                         }, ]
+                       },
+                       markArea:{
+                         itemStyle:{
+                           color:'#d64f40',
+                           opacity:0.1
+                         },
+                         data:[this.returnMarkArea()]
+                       }
+                     };
+                     if(this.currentMsg.alertRule.operator=='=='||this.currentMsg.alertRule.operator=='!='){
+                       delete chartData.markArea;
+                     }
+                     chartData.name += "{";
+                     alias += "{";
+                     Object.keys(queryData.metric).forEach((item, index) => {
+                       let label = item;
+                       let value = queryData.metric[label];
+                       chartData.name += label + "='" + value + "',";
+                     });
+                     chartData.name = chartData.name.charAt(chartData.name.length - 1) == "," ? chartData.name.substr(0, chartData.name.length - 1) : chartData.name;
+                     chartData.name += "}";
+                     let alias = chartData.name;
+                     let legend = {
+                       name: chartData.name,
+                       alias: alias,
+                       isGray: false
+                     }
+                     this.legend.push(legend);
+                     chartData.data = queryData.values.map((dpsItem, dpsIndex) => {
+                       return [bus.computeTimezone(dpsItem[0]) * 1000, parseFloat(dpsItem[1]).toFixed(2)];
+                     });
+                     this.chartDatas.push(chartData);
+                   }
+                 } else {
+                   this.$message.error(response.data.error)
+                   console.error(response.data)
+                 }
+               }
+             });
+             this.$nextTick(() => {
+               this.$refs.messageChart.setRandomColors(this.chartDatas.length);
+               this.$refs.messageChart.setLegend(this.legend);
+               this.$refs.messageChart.setSeries(this.chartDatas);
+               this.$refs.messageChart.endLoading();
+             });
+           } catch(err) {
+             this.$message.error(err);
+             this.$refs.messageChart.endLoading();
+           }
+         })
+       }
       },
       computeDistance:function(str){
         var width = 0;
@@ -572,10 +574,11 @@
         this.deleteBox.show = true;
       },
       deleteMessage() {
-        this.$emit('deleteMessage',this.deleteBox);
+        this.$emit('deleteMessage',this.deleteBox,()=>{
+          this.deleteBox.ids=[];
+        });
         //console.log(this.deleteBox);
         this.deleteBox.show = false;
-        this.deleteBox.ids=[];
       },
       selectChange(s) {
         let ids = [];
@@ -920,7 +923,7 @@
     display: inline-block;
   }
   /deep/.alert-clean-pop.el-popover{
-    top: -30px;
+    top: -30px !important;
   }
   .pointer{
     cursor: pointer;

@@ -374,13 +374,14 @@ export default {
         });
         this.deleteBox.ids = ids.join(",");
       },
-      deleteMessage(deleltebox) {
+      deleteMessage(deleltebox,cb) {
         this.$put("alert/message", deleltebox).then(res => {
           if (res.code === 200) {
             this.$message({duration: 2000, type: 'success', message: this.$t("tip.deleteSuccess")});
             this.deleteBox.show = false;
             this.deleteBox.ids="";
             this.getAlertList();
+            cb();
           } else {
             this.$message.error(res.msg);
           }
@@ -564,7 +565,7 @@ export default {
                   }
                   this.requestIndex+=1;
                   item.current=current;
-                  if(this.requestIndex===this.tableData.length){
+                    if(this.requestIndex===this.storedTableData.length){
                     this.$set(item, "current", current);
                     this.requestIndex=0;
                   }

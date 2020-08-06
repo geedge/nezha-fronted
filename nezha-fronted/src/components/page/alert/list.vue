@@ -59,35 +59,35 @@
       </el-dialog>
     </div>
     <!--export-->
-    <div class="export-xlsx">
-      <el-dialog :visible.sync="deleteBox.show" :title="$t('overall.delete')" :modal-append-to-body='false' :show-close="true" width="300px" @close="closeDialog" class="nz-message">
-        <div class="upload-body">
-          <el-input type="textarea" :placeholder="$t('alert.description')" v-model="deleteBox.remark"></el-input>
-          <div style="text-align: right; margin-top: 10px;">
-            <button @click="closeDialog" class="el-button el-button--default el-button--small">
-              <span>{{$t('tip.no')}}</span>
-            </button>
-            <button @click="deleteMessage" class="el-button el-button--default el-button--small el-button--primary">
-              <span>{{$t('tip.yes')}}</span>
-            </button>
-          </div>
-        </div>
-      </el-dialog>
-    </div>
-    <el-dialog class="line-chart-block-modal nz-dialog endpoint-dialog"
-               :title="$t('overall.detail')"
-               :visible.sync="graphShow"
-               width="90%"
-               id="viewGraphDialog"
-               @close="dialogClose">
-      <div slot="title">
-        {{$t("project.endpoint.dialogTitle")}}
-        <div class="float-right panel-calendar dialog-tool" style="display: flex">
-          <pick-time :refresh-data-func="queryChartDate" :use-refresh="false" :use-chart-unit="false" v-model="searchTime" style="height: 28px;" @unitChange="chartUnitChange"></pick-time>
-        </div>
-      </div>
-      <chart ref="messageChart" name="alertMessageChart" :unit="chartUnit"></chart>
-    </el-dialog>
+    <!--<div class="export-xlsx">-->
+      <!--<el-dialog :visible.sync="deleteBox.show" :title="$t('overall.delete')" :modal-append-to-body='false' :show-close="true" width="300px" @close="closeDialog" class="nz-message">-->
+        <!--<div class="upload-body">-->
+          <!--<el-input type="textarea" :placeholder="$t('alert.description')" v-model="deleteBox.remark"></el-input>-->
+          <!--<div style="text-align: right; margin-top: 10px;">-->
+            <!--<button @click="closeDialog" class="el-button el-button&#45;&#45;default el-button&#45;&#45;small">-->
+              <!--<span>{{$t('tip.no')}}</span>-->
+            <!--</button>-->
+            <!--<button @click="deleteMessage" class="el-button el-button&#45;&#45;default el-button&#45;&#45;small el-button&#45;&#45;primary">-->
+              <!--<span>{{$t('tip.yes')}}</span>-->
+            <!--</button>-->
+          <!--</div>-->
+        <!--</div>-->
+      <!--</el-dialog>-->
+    <!--</div>-->
+    <!--<el-dialog class="line-chart-block-modal nz-dialog endpoint-dialog"-->
+               <!--:title="$t('overall.detail')"-->
+               <!--:visible.sync="graphShow"-->
+               <!--width="90%"-->
+               <!--id="viewGraphDialog"-->
+               <!--@close="dialogClose">-->
+      <!--<div slot="title">-->
+        <!--{{$t("project.endpoint.dialogTitle")}}-->
+        <!--<div class="float-right panel-calendar dialog-tool" style="display: flex">-->
+          <!--<pick-time :refresh-data-func="queryChartDate" :use-refresh="false" :use-chart-unit="false" v-model="searchTime" style="height: 28px;" @unitChange="chartUnitChange"></pick-time>-->
+        <!--</div>-->
+      <!--</div>-->
+      <!--<chart ref="messageChart" name="alertMessageChart" :unit="chartUnit"></chart>-->
+    <!--</el-dialog>-->
   </div>
 
 </template>
@@ -554,11 +554,12 @@
         }
         this.deleteBox.show = true;
       },
-      deleteMessage(deleteBox) {
+      deleteMessage(deleteBox,cb) {
         this.$put("alert/message", deleteBox).then(res => {
           if (res.code === 200) {
             this.$message({duration: 2000, type: 'success', message: this.$t("tip.deleteSuccess")});
             this.getAlertList();
+            cb();
           } else {
             this.$message.error(res.msg);
           }
@@ -833,25 +834,25 @@
       }
 
       this.getAlertList();
-      this.$nextTick(() => {
-        //绑定滚动条事件，控制top按钮
-        let el = this.$refs.alertListTable.$el.querySelector(".el-table__body-wrapper");
-        if (el._ps_) {
-          el.addEventListener("ps-scroll-y", () => {
-            if (el._ps_.scrollbarYTop > 50) {
-              this.tools.showTopBtn = true;
-            } else {
-              this.tools.showTopBtn = false;
-            }
-          });
-          el.addEventListener("mouseenter", () => {
-            this.tools.tableHover = true;
-          });
-          el.addEventListener("mouseleave", () => {
-            this.tools.tableHover = false;
-          });
-        }
-      });
+      // this.$nextTick(() => {
+      //   //绑定滚动条事件，控制top按钮
+      //   let el = this.$refs.alertListTable.$el.querySelector(".el-table__body-wrapper");
+      //   if (el._ps_) {
+      //     el.addEventListener("ps-scroll-y", () => {
+      //       if (el._ps_.scrollbarYTop > 50) {
+      //         this.tools.showTopBtn = true;
+      //       } else {
+      //         this.tools.showTopBtn = false;
+      //       }
+      //     });
+      //     el.addEventListener("mouseenter", () => {
+      //       this.tools.tableHover = true;
+      //     });
+      //     el.addEventListener("mouseleave", () => {
+      //       this.tools.tableHover = false;
+      //     });
+      //   }
+      // });
     }
   }
 </script>

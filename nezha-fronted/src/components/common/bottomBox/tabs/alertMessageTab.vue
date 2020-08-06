@@ -59,20 +59,20 @@
       </el-dialog>
     </div>
 
-    <el-dialog class="line-chart-block-modal nz-dialog endpoint-dialog"
-               :title="$t('overall.detail')"
-               :visible.sync="graphShow"
-               width="90%"
-               id="viewGraphDialog"
-               @close="dialogClose">
-      <div slot="title">
-        {{$t("project.endpoint.dialogTitle")}}
-        <div class="float-right panel-calendar dialog-tool" style="display: flex">
-          <pick-time :refresh-data-func="queryChartDate" :use-refresh="false" v-model="searchTime" style="height: 28px;" @unitChange="chartUnitChange"></pick-time>
-        </div>
-      </div>
-      <chart ref="messageChart" :unit="chartUnit"></chart>
-    </el-dialog>
+    <!--<el-dialog class="line-chart-block-modal nz-dialog endpoint-dialog"-->
+               <!--:title="$t('overall.detail')"-->
+               <!--:visible.sync="graphShow"-->
+               <!--width="90%"-->
+               <!--id="viewGraphDialog"-->
+               <!--@close="dialogClose">-->
+      <!--<div slot="title">-->
+        <!--{{$t("project.endpoint.dialogTitle")}}-->
+        <!--<div class="float-right panel-calendar dialog-tool" style="display: flex">-->
+          <!--<pick-time :refresh-data-func="queryChartDate" :use-refresh="false" v-model="searchTime" style="height: 28px;" @unitChange="chartUnitChange"></pick-time>-->
+        <!--</div>-->
+      <!--</div>-->
+      <!--<chart ref="messageChart" :unit="chartUnit"></chart>-->
+    <!--</el-dialog>-->
   </span>
 </template>
 
@@ -291,11 +291,13 @@
       changeTab(tab) {
         this.$emit('changeTab', tab);
       },
-      deleteMessage(deleteBox) {
+      deleteMessage(deleteBox,cb) {
+        console.log(deleteBox)
         this.$put("alert/message", deleteBox).then(res => {
           if (res.code === 200) {
             this.$message({duration: 2000, type: 'success', message: this.$t("tip.deleteSuccess")});
             this.getAlertList();
+            cb();
           } else {
             this.$message.error(res.msg);
           }
