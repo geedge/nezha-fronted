@@ -74,7 +74,7 @@
     <!-- begin--表单-->
     <el-scrollbar class="right-box-form-box" ref="scrollbar">
       <el-form class="right-box-form  right-box-form-left" :model="editChart" label-width="120px" label-position="right" :rules="rules" ref="chartForm">
-        <el-form-item :label="$t('dashboard.panel.title')" prop="panelName" v-if="showPanel.type != 'dashboard'">
+        <el-form-item :label="$t('dashboard.panel.title')" prop="panelName" v-if="showPanel.type != 'dashboard' && showPanel.type != 'project' && showPanel.type != 'asset' && showPanel.type != 'model'">
           <el-autocomplete
             :fetch-suggestions="panelSuggestion"
             v-model.trim="editChart.panelName"
@@ -1156,6 +1156,7 @@
           } else {
             this.setIsOtherChart();
           }
+          //console.info(this.showPanel);
           this.$set(this.editChart, "panelName", this.showPanel.name);
           if (this.showPanel.id) {
             this.panelId = this.showPanel.id;
@@ -1171,6 +1172,7 @@
         deep: true,
         immediate: true,
         handler(n) {
+          //console.info(n)
           let panel = this.panelData.find(p => {
             return p.name == n.panelName;
           });
