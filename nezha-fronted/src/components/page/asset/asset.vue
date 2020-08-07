@@ -281,7 +281,7 @@
             label: this.$t("asset.tableTitle.id"),
             prop: 'ID',
             show: true,
-            width: 110
+            // width: 110
           }, {
             label: this.$t("asset.tableTitle.assetType"),
             prop: 'assetType',

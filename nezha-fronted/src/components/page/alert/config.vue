@@ -199,7 +199,7 @@
             label: this.$t("alert.alertName"),
             prop: 'alertName',
             show: true,
-            width: 120
+            // width: 120
           }, {
             label: this.$t("alert.config.expr"),
             prop: 'expr',
