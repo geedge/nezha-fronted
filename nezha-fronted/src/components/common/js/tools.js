@@ -491,7 +491,6 @@ export const tableSet = {
   sortableShow(prop,from){
     switch(prop){
       case 'id':
-      case 'state': if(from === 'project' || from=== 'endpointTab'){return false}
       case 'alertRule':
       case 'severity':
       case 'startAt':
@@ -527,6 +526,8 @@ export const tableSet = {
       case 'cmd':
       case 'alertName':
       case 'threshold':
+      case 'idc':
+      case 'state': if(from === 'project' || from === 'endpointTab' || from === 'operationlog'){return false}
         return'custom';
       default : return false;
     }
