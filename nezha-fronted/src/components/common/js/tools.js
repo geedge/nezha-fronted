@@ -485,6 +485,211 @@ export const chartResizeTool = {
   }
 };
 
+//table 方法
+export const tableSet = {
+  //是否需要排序
+  sortableShow(prop,from){
+    switch(prop){
+      // alert
+      case 'id':
+      case 'state': if(from === 'project' || from=== 'endpointTab'){return false}
+      case 'alertRule':
+      case 'severity':
+      case 'startAt':
+      case 'endAt':
+      // asset
+      case 'ID':
+      case 'HOST':
+      case 'SN':
+      case 'assetType':
+      case 'purchaseDate':
+      // case 'state':
+      case 'pingStatus':
+      case 'dataCenter':
+      case 'cabinet':
+      case 'model':
+      // case 'vendor':
+      case 'principal':
+      // project
+      // case 'id':
+      case 'asset':
+      case 'port':
+      case 'project':
+      case 'module':
+      case 'type':
+      // dc
+      // case 'id':
+      case 'name':
+      case 'area':
+      //endpointTab
+      // case 'id':
+      // case 'asset':
+      // case 'port':
+      // case 'project':
+      // case 'module':
+      // case 'type':
+        // model
+      // case 'id':
+      // case 'name':
+      // case 'type':
+      case 'vendor':
+        // promServer
+      // case 'id':
+      // case 'name':
+      // case 'type':
+      // case 'vendor':
+        // mib
+      // case 'id':
+      // case 'name':
+      case 'filename':
+      case 'updateAt':
+        // operationlog
+      // case 'id':
+      case 'username':
+      case 'ip':
+      case 'operation':
+      // case 'type':
+      case 'createDate':
+      case 'time':
+        // temrminallog
+      // case 'id':
+      case 'host':
+      // case 'port':
+      case 'protocol':
+      case 'user':
+      case 'cmd':
+      // case 'time':
+        //config
+      // case 'id':
+      case 'alertName':
+      case 'threshold':
+      // case 'severity':
+        return'custom';
+      default : return false;
+    }
+  },
+  // prop字段
+  propTitle(prop,from){
+    switch(from){
+      case 'asset':
+        switch(prop){
+          case 'ID': return'ass.id';
+          case 'HOST': return'ass.host';
+          case 'SN': return'ass.sn';
+          case 'assetType': return 'sdtt.value';
+          case 'purchaseDate': return'ass.purchase_date';
+          case 'state': return 'ass.state';
+          case 'pingStatus': return 'assp.rtt';
+          case 'dataCenter': return 'idc.name';
+          case 'cabinet': return 'cab.name';
+          case 'model': return 'mo.name';
+          case 'vendor': return 'sdt.value';
+          case 'principal': return 'su.username';
+          default : return prop;
+        }
+        
+      case 'alertMessage':
+        switch(prop){
+          case 'id': return'am.id';
+          case 'state': return'am.state';
+          case 'alertRule': return'ar.alert_name';
+          case 'severity': return'am.severity';
+          case 'startAt': return'am.start_at';
+          case 'endAt': return'am.end_at';
+          default : return prop;
+        }
+        
+      case 'project':
+        switch(prop){
+        case 'id': return'e.id';
+        case 'asset': return'a.host';
+        case 'port': return'e.port';
+        case 'project': return'p.name';
+        case 'module': return'm.name';
+        case 'type':  return'm.type';
+        // case 'path': return'e.path';
+        default : return prop;
+      }
+      
+      case 'dc':
+        switch(prop){
+          case 'id': return'i.id';
+          case 'name': return'i.name';
+          case 'area': return'sa.name';
+          default : return prop;
+        }
+        
+      case 'endpointTab':
+        switch(prop){
+          case 'id': return'e.id';
+          case 'asset': return'a.host';
+          case 'port': return'e.port';
+          case 'project': return'p.name';
+          case 'module': return'm.name';
+          case 'type':  return'm.type';
+          // case 'path': return'e.path';
+          default : return prop;
+        }
+      case 'model':
+        switch(prop){
+          case 'id': return'mo.id';
+          case 'name': return'mo.name';
+          case 'type': return'dictt.value';
+          case 'vendor': return'dict.value';
+          default : return prop;
+        }
+      case 'promServer':
+        switch(prop){
+          case 'id': return'id';
+          case 'idc': return'idc_id';
+          case 'host': return'host';
+          case 'port': return'port';
+          case 'type': return'type';
+          default : return prop;
+        }
+      case 'mib':
+        switch(prop){
+          case 'id': return'sm.id';
+          case 'name': return'sm.name';
+          case 'filename': return'sm.file_name';
+          case 'updateAt': return'sm.update_at';
+          default : return prop;
+        }
+      case 'operationlog':
+        switch(prop){
+          case 'id': return 'sl.id';
+          case 'username': return 'su.username';
+          case 'ip': return 'sl.ip';
+          case 'operation': return 'sl.operation';
+          case 'type': return 'sl.type';
+          case 'createDate': return 'sl.create_date';
+          case 'time': return 'sl.time';
+          default : return prop;
+        }
+      case 'temrminallog':
+        switch(prop){
+          case 'id': return 'id';
+          case 'host': return 'host';
+          case 'port': return 'port';
+          case 'protocol': return 'protocol';
+          case 'user': return 'user';
+          case 'cmd': return 'cmd';
+          case 'time': return 'time';
+          default : return prop;
+        }
+      case 'alertRules':
+        switch(prop){
+          case 'id': return'ar.id';
+          case 'alertName': return'ar.alert_name';
+          case 'threshold': return'ar.threshold';
+          case 'severity': return'ar.severity';
+          default : return prop;
+        }
+      default: break;
+    }
+  },
+}
+
 export function blankPromise() {
   return new Promise(resolve => {resolve();});
 }

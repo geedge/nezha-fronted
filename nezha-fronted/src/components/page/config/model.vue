@@ -47,8 +47,8 @@
                          :width="item.width"
                          :key="`col-${index}`"
                          :label="item.label"
-                         :sortable="sortableShow(item.prop)"
-                         :prop="propTitle(item.prop)"
+                         :sortable="$tableSet.sortableShow(item.prop,'model')"
+                         :prop="$tableSet.propTitle(item.prop,'model')"
                          :sort-orders="['ascending', 'descending']">
           <template slot-scope="scope" :column="item">
             <template v-if="item.prop == 'vendor'" >{{scope.row[item.prop].value}}</template>
@@ -304,27 +304,6 @@
           this.$set(this.searchLabel, 'orderBy', orderBy);
         }
         this.getTableData();
-      },
-      //是否需要排序
-      sortableShow(prop) {
-        switch(prop){
-          case 'id':
-          case 'name':
-          case 'type':
-          case 'vendor':
-            return'custom';
-          default : return false;
-        }
-      },
-      // prop字段
-      propTitle(prop) {
-        switch(prop){
-          case 'id': return'mo.id';
-          case 'name': return'mo.name';
-          case 'type': return'dictt.value';
-          case 'vendor': return'dict.value';
-          default : return prop;
-        }
       },
       // 数据排序
       tableDataSort(item) {

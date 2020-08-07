@@ -41,8 +41,8 @@
         :width="item.width"
         :key="`col-${index}`"
         :label="item.label"
-        :sortable="sortableShow(item.prop)"
-        :prop="propTitle(item.prop)"
+        :sortable="$tableSet.sortableShow(item.prop,'temrminallog')"
+        :prop="$tableSet.propTitle(item.prop,'temrminallog')"
         :sort-orders="['ascending', 'descending']"
       >
         <template slot-scope="scope" :column="item">
@@ -270,33 +270,6 @@
           this.$set(this.searchLabel, 'orderBy', orderBy);
         }
         this.getTableData();
-      },
-      //是否需要排序
-      sortableShow(prop){
-        switch(prop){
-          case 'id':
-          case 'host':
-          case 'port':
-          case 'protocol':
-          case 'user':
-          case 'cmd':
-          case 'time':
-            return'custom';
-          default : return false;
-        }
-      },
-      // prop字段
-      propTitle(prop){
-        switch(prop){
-          case 'id': return 'id';
-          case 'host': return 'host';
-          case 'port': return 'port';
-          case 'protocol': return 'protocol';
-          case 'user': return 'user';
-          case 'cmd': return 'cmd';
-          case 'time': return 'time';
-          default : return prop;
-        }
       },
       // 数据排序
       tableDataSort(item){

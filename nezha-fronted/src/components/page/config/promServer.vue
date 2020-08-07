@@ -37,8 +37,8 @@
                          :width="item.width"
                          :key="`col-${index}`"
                          :label="item.label"
-                         :sortable="sortableShow(item.prop)"
-                         :prop="propTitle(item.prop)"
+                         :sortable="$tableSet.sortableShow(item.prop,'promServer')"
+                         :prop="$tableSet.propTitle(item.prop,'promServer')"
                          :sort-orders="['ascending', 'descending']">
           <template slot-scope="scope" :column="item">
             <span v-if="item.prop == 'idc'" >{{scope.row[item.prop]?scope.row[item.prop].name:'-'}}</span>
@@ -359,29 +359,6 @@
             resolve();
           });
         });
-      },
-      //是否需要排序
-      sortableShow(prop){
-        switch(prop){
-          case 'id':
-          case 'idc':
-          case 'host':
-          case 'port':
-          case 'type':
-            return'custom';
-          default : return false;
-        }
-      },
-      // prop字段
-      propTitle(prop){
-        switch(prop){
-          case 'id': return'id';
-          case 'idc': return'idc_id';
-          case 'host': return'host';
-          case 'port': return'port';
-          case 'type': return'type';
-          default : return prop;
-        }
       },
       // 数据排序
       tableDataSort(item){

@@ -42,8 +42,8 @@
         :width="item.width"
         :key="`col-${index}`"
         :label="item.label"
-        :sortable="sortableShow(item.prop)"
-        :prop="propTitle(item.prop)"
+        :sortable="$tableSet.sortableShow(item.prop,'operationlog')"
+        :prop="$tableSet.propTitle(item.prop,'operationlog')"
         :sort-orders="['ascending', 'descending']"
       >
         <template slot-scope="scope" :column="item">
@@ -245,33 +245,6 @@
           this.$set(this.searchLabel, 'orderBy', orderBy);
         }
         this.getTableData();
-      },
-      //是否需要排序
-      sortableShow(prop){
-        switch(prop){
-          case 'id':
-          case 'username':
-          case 'ip':
-          case 'operation':
-          case 'type':
-          case 'createDate':
-          case 'time':
-            return'custom';
-          default : return false;
-        }
-      },
-      // prop字段
-      propTitle(prop){
-        switch(prop){
-          case 'id': return 'sl.id';
-          case 'username': return 'su.username';
-          case 'ip': return 'sl.ip';
-          case 'operation': return 'sl.operation';
-          case 'type': return 'sl.type';
-          case 'createDate': return 'sl.create_date';
-          case 'time': return 'sl.time';
-          default : return prop;
-        }
       },
       // 数据排序
       tableDataSort(item){

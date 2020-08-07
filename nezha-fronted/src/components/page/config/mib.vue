@@ -37,8 +37,8 @@
       </transition>
       <el-table :data="tableData" border :height="$tableHeight.normal" style="width: 100%;" ref="mibTable" class="nz-table mib-table" v-scrollBar:el-table="'large'" v-loading="tools.loading" @sort-change="tableDataSort">
         <el-table-column :resizable="false" v-for="(item, index) in tools.customTableTitle" v-if="item.show" :width="item.width" :class-name="item.prop == 'modelsDetail'?'detail-column':''"
-                         :key="`col-${index}`" :label="item.label" :sortable="sortableShow(item.prop)"
-                         :prop="propTitle(item.prop)"
+                         :key="`col-${index}`" :label="item.label" :sortable="$tableSet.sortableShow(item.prop,'mib')"
+                         :prop="$tableSet.propTitle(item.prop,'mib')"
                          :sort-orders="['ascending', 'descending']">
           <template slot-scope="scope" :column="item">
             <template v-if="item.prop == 'updateUser'" >{{scope.row[item.prop].name}}</template>
@@ -305,27 +305,6 @@
             window.URL.revokeObjectURL(link.href);
           }
         })
-      },
-      //是否需要排序
-      sortableShow(prop){
-        switch(prop){
-          case 'id':
-          case 'name':
-          case 'filename':
-          case 'updateAt':
-            return'custom';
-          default : return false;
-        }
-      },
-      // prop字段
-      propTitle(prop){
-        switch(prop){
-          case 'id': return'sm.id';
-          case 'name': return'sm.name';
-          case 'filename': return'sm.file_name';
-          case 'updateAt': return'sm.update_at';
-          default : return prop;
-        }
       },
       // 数据排序
       tableDataSort(item){

@@ -19,7 +19,7 @@ import plTable from 'pl-table'
 import 'pl-table/themes/index.css'
 
 import {post, get, put, del} from './http.js'
-import {toTop, clickoutside, scrollBar, bottomBoxWindow, stringTimeParseToUnix, unixTimeParseToString, chartResizeTool} from './components/common/js/tools.js';
+import {toTop, clickoutside, scrollBar, bottomBoxWindow, stringTimeParseToUnix, unixTimeParseToString, chartResizeTool, tableSet} from './components/common/js/tools.js';
 import * as tools from './components/common/js/tools.js';
 import * as constants from './components/common/js/constants.js'
 
@@ -76,6 +76,7 @@ Vue.prototype.$bottomBoxWindow = bottomBoxWindow; //底部上滑框控制
 Vue.prototype.$stringTimeParseToUnix = stringTimeParseToUnix;
 Vue.prototype.$unixTimeParseToString = unixTimeParseToString;
 Vue.prototype.$chartResizeTool = chartResizeTool;
+Vue.prototype.$tableSet = tableSet;
 Vue.prototype.$tableHeight = { //列表页表格的高度
   normal: 'calc(100% - 100px)',  //常规高度，特例在下方定义
   openSubList: { //打开二级列表后的高度

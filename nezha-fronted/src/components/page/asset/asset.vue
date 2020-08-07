@@ -55,8 +55,8 @@
           :show-overflow-tooltip="item.prop != 'Alert' || item.prop != 'Module'"
           min-width="110px"
           :class-name="item.prop == 'option' ? 'content-right-options' : ''"
-          :sortable="sortableShow(item.prop)"
-          :prop="propTitle(item.prop)"
+          :sortable="$tableSet.sortableShow(item.prop,'asset')"
+          :prop="$tableSet.propTitle(item.prop,'asset')"
           :sort-orders="['ascending', 'descending']"
         >
           <template slot-scope="scope" :column="item">
@@ -584,43 +584,6 @@
         let seconds=time.getSeconds() > 9 ? time.getSeconds():('0'+time.getSeconds());
         return this.$t('asset.assetStatPre')+year+ds+month+ds+day+' '+hours+ts+minutes+ts+seconds;
 
-      },
-      //是否需要排序
-      sortableShow(prop){
-        switch(prop){
-          case 'ID':
-          case 'HOST':
-          case 'SN':
-          case 'assetType':
-          case 'purchaseDate':
-          case 'state':
-          case 'pingStatus':
-          case 'dataCenter':
-          case 'cabinet':
-          case 'model':
-          case 'vendor':
-          case 'principal':
-            return'custom';
-          default : return false;
-        }
-      },
-      // prop字段
-      propTitle(prop){
-        switch(prop){
-          case 'ID': return'ass.id';
-          case 'HOST': return'ass.host';
-          case 'SN': return'ass.sn';
-          case 'assetType': return 'sdtt.value';
-          case 'purchaseDate': return'ass.purchase_date';
-          case 'state': return 'ass.state';
-          case 'pingStatus': return 'assp.rtt';
-          case 'dataCenter': return 'idc.name';
-          case 'cabinet': return 'cab.name';
-          case 'model': return 'mo.name';
-          case 'vendor': return 'sdt.value';
-          case 'principal': return 'su.username';
-          default : return prop;
-        }
       },
       // 数据排序
       tableDataSort(item){

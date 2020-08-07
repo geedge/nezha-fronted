@@ -767,31 +767,6 @@ export default {
         setData(chartItem, seriesItem, panelId, filter,area,errorMsg) {
           console.info(chartItem,title)
         },
-      //是否需要排序
-      sortableShow(prop){
-        switch(prop){
-          case 'id':
-          case 'state':
-          case 'alertRule':
-          case 'severity':
-          case 'startAt':
-          case 'endAt':
-            return'custom';
-          default : return false;
-        }
-      },
-      // prop字段
-      propTitle(prop){
-        switch(prop){
-          case 'id': return'am.id';
-          case 'state': return'am.state';
-          case 'alertRule': return'ar.alert_name';
-          case 'severity': return'am.severity';
-          case 'startAt': return'am.start_at';
-          case 'endAt': return'am.end_at';
-          default : return prop;
-        }
-      },
       // 数据排序
       tableDataSort(item){
         let orderBy='';

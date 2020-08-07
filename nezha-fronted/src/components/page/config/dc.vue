@@ -51,8 +51,8 @@
           :width="item.width"
           :key="`col-${index}`"
           :label="item.label"
-          :sortable="sortableShow(item.prop)"
-          :prop="propTitle(item.prop)"
+          :sortable="$tableSet.sortableShow(item.prop,'dc')"
+          :prop="$tableSet.propTitle(item.prop,'dc')"
         >
           <template slot-scope="scope" :column="item">
             <div v-if="item.prop == 'option'" class="content-right-options">
@@ -394,25 +394,6 @@
         this.bottomBox.targetTab = 'cabinet';
         this.bottomBox.dc = JSON.parse(JSON.stringify(dc));
         this.bottomBox.showSubList = true;
-      },
-      //是否需要排序
-      sortableShow(prop) {
-        switch(prop) {
-          case 'id':
-          case 'name':
-          case 'area':
-            return'custom';
-          default : return false;
-        }
-      },
-      // prop字段
-      propTitle(prop){
-        switch(prop){
-          case 'id': return'i.id';
-          case 'name': return'i.name';
-          case 'area': return'sa.name';
-          default : return prop;
-        }
       },
       // 数据排序
       tableDataSort(item){

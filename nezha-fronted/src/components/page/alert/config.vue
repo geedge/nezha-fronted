@@ -53,8 +53,8 @@
           show-overflow-tooltip
           min-width="110px"
           :sort-orders="['ascending', 'descending']"
-          :sortable="sortableShow(item.prop)"
-          :prop="propTitle(item.prop)"
+          :sortable="$tableSet.sortableShow(item.prop,'alertRules')"
+          :prop="$tableSet.propTitle(item.prop,'alertRules')"
         >
           <template slot-scope="scope" :column="item">
             <div v-if="item.prop == 'option'" class="content-right-options">
@@ -449,27 +449,6 @@
         detail.alertNum = obj.alertNum;
         detail.description = obj.description;
         return detail;
-      },
-      //是否需要排序
-      sortableShow(prop){
-        switch(prop){
-          case 'id':
-          case 'alertName':
-          case 'threshold':
-          case 'severity':
-            return'custom';
-          default : return false;
-        }
-      },
-      // prop字段
-      propTitle(prop){
-        switch(prop){
-          case 'id': return'ar.id';
-          case 'alertName': return'ar.alert_name';
-          case 'threshold': return'ar.threshold';
-          case 'severity': return'ar.severity';
-          default : return prop;
-        }
       },
       // 数据排序
       tableDataSort(item){

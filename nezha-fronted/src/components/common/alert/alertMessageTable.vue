@@ -53,8 +53,8 @@
         :label="item.label"
         :show-overflow-tooltip="item.prop != 'labels'"
         min-width="110px"
-        :sortable="sortableShow(item.prop)"
-        :prop="propTitle(item.prop)"
+        :sortable="$tableSet.sortableShow(item.prop,'alertMessage')"
+        :prop="$tableSet.propTitle(item.prop,'alertMessage')"
         :sort-orders="['ascending', 'descending']"
       >
         <template slot-scope="scope" :column="item">
@@ -739,31 +739,6 @@
         this.$refs.projectBox.show(false, false);
         this.$refs.moduleBox.show(false, false);
         this.viewAssetState = false;
-      },
-      //是否需要排序
-      sortableShow(prop){
-        switch(prop){
-          case 'id':
-          case 'state':
-          case 'alertRule':
-          case 'severity':
-          case 'startAt':
-          case 'endAt':
-            return'custom';
-          default : return false;
-        }
-      },
-      // prop字段
-      propTitle(prop){
-        switch(prop){
-          case 'id': return'am.id';
-          case 'state': return'am.state';
-          case 'alertRule': return'ar.alert_name';
-          case 'severity': return'am.severity';
-          case 'startAt': return'am.start_at';
-          case 'endAt': return'am.end_at';
-          default : return prop;
-        }
       },
       // 数据排序
       tableDataSort(item){
