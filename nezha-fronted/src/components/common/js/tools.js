@@ -490,80 +490,43 @@ export const tableSet = {
   //是否需要排序
   sortableShow(prop,from){
     switch(prop){
-      // alert
       case 'id':
       case 'state': if(from === 'project' || from=== 'endpointTab'){return false}
       case 'alertRule':
       case 'severity':
       case 'startAt':
       case 'endAt':
-      // asset
       case 'ID':
       case 'HOST':
       case 'SN':
       case 'assetType':
       case 'purchaseDate':
-      // case 'state':
       case 'pingStatus':
       case 'dataCenter':
       case 'cabinet':
       case 'model':
-      // case 'vendor':
       case 'principal':
-      // project
-      // case 'id':
       case 'asset':
       case 'port':
       case 'project':
       case 'module':
       case 'type':
-      // dc
-      // case 'id':
       case 'name':
       case 'area':
-      //endpointTab
-      // case 'id':
-      // case 'asset':
-      // case 'port':
-      // case 'project':
-      // case 'module':
-      // case 'type':
-        // model
-      // case 'id':
-      // case 'name':
-      // case 'type':
       case 'vendor':
-        // promServer
-      // case 'id':
-      // case 'name':
-      // case 'type':
-      // case 'vendor':
-        // mib
-      // case 'id':
-      // case 'name':
       case 'filename':
       case 'updateAt':
-        // operationlog
-      // case 'id':
       case 'username':
       case 'ip':
       case 'operation':
-      // case 'type':
       case 'createDate':
       case 'time':
-        // temrminallog
-      // case 'id':
       case 'host':
-      // case 'port':
       case 'protocol':
       case 'user':
       case 'cmd':
-      // case 'time':
-        //config
-      // case 'id':
       case 'alertName':
       case 'threshold':
-      // case 'severity':
         return'custom';
       default : return false;
     }
