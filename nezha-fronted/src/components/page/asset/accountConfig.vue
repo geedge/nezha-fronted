@@ -1,8 +1,8 @@
 <template>
   <el-form label-width="120px" :model="account" :rules="rules" ref="accountForm" style="margin-top: 20px;">
     <template v-if="account.protocol == 'SSH'">
-      <el-form-item :label="$t('asset.account')" prop="params.user">
-        <el-input autocomplete="new-password" size="small" v-model="account.params.user"/>
+      <el-form-item :label="$t('asset.account')" prop="params.username">
+        <el-input autocomplete="new-password" size="small" v-model="account.params.username"/>
       </el-form-item>
       <el-form-item :label="$t('asset.loginType')" prop="params.method">
         <el-radio-group v-model="account.params.method" size="small">
@@ -24,8 +24,8 @@
       </el-form-item>
     </template>
     <template v-if="account.protocol == 'TELNET'">
-      <el-form-item :label="$t('asset.account')" prop="params.user">
-        <el-input autocomplete="new-password" size="small" v-model="account.params.user"/>
+      <el-form-item :label="$t('asset.account')" prop="params.username">
+        <el-input autocomplete="new-password" size="small" v-model="account.params.username"/>
       </el-form-item>
       <el-form-item :label="$t('asset.userTip')" prop="userTip">
         <el-input autocomplete="new-password" size="small" v-model="account.params.userTip"/>
@@ -61,8 +61,8 @@
       </el-form-item>
       <!--SNMP V3 setting-->
       <template v-if="account.params.version == 3">
-        <el-form-item :label="$t('asset.account')" prop="params.user">
-          <el-input size="small" v-model="account.params.user"/>
+        <el-form-item :label="$t('asset.account')" prop="params.username">
+          <el-input size="small" v-model="account.params.username"/>
         </el-form-item>
         <el-form-item :label="$t('project.module.securityLevel')" prop="params.securityLevel">
           <el-radio-group v-model="account.params.securityLevel" size="small">
@@ -105,7 +105,7 @@ export default {
     data(){
       return {
         rules:{
-          "params.user": [
+          "params.username": [
             { required: true, message: this.$t('validate.required'), trigger: 'blur'}
           ],
           port: [
