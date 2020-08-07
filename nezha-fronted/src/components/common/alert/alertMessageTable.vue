@@ -280,7 +280,7 @@
             label: this.$t("alert.severity"),
             prop: 'severity',
             show: true,
-            width: 100,
+            width: 110,
           }, {
             label: this.$t('alert.summary'),
             prop: 'summary',

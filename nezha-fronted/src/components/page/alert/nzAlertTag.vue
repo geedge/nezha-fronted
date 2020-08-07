@@ -49,7 +49,7 @@
   border-radius: 0 3px 3px 0;
   padding: 0 4px;
   min-width: 36px;
-  max-width: 100px;
+  max-width: 115px;
   text-align: center;
   text-overflow: ellipsis;
   white-space: nowrap;
