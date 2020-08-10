@@ -110,7 +110,7 @@
         ></chart-detail>
 
         <chart-alert-list  :ref="'editChart'+item.id"
-                          :panel-id="filter.panelId"
+                           :panel-id="filter.panelId"
                           :chart-index="index"
                           v-if="item.type  === 'alertList'"
                           :editChartId="'editChartId' + item.id"
@@ -122,6 +122,20 @@
                           @on-drag-chart="editChartForDrag"
                           @on-edit-chart-block="editData"
         ></chart-alert-list>
+        <vis-network
+          v-if="item.type === 'topology'"
+          @on-refresh-data="refreshChart"
+          @on-search-data="searchData"
+          @on-remove-chart-block="removeChart"
+          @on-duplicate-chart-block="duplicateChart"
+          @on-drag-chart="editChartForDrag"
+          @on-edit-chart-block="editData"
+          :panel-id="filter.panelId"
+          :chart-data="item"
+          :chart-index="index"
+        >
+
+        </vis-network>
       </div>
    </draggable>
     <el-row v-if="dataList.length === 0"  class="noData"></el-row>
@@ -139,6 +153,7 @@
   import draggable from 'vuedraggable'
   import chartDataFormat from "./chartDataFormat";
   import chartAlertList from './chart-alert-list'
+  import visNetwork from './visNetwork'
   export default {
     name: 'chartList',
     props: {
@@ -155,6 +170,7 @@
       chartUrl,
       chartSingleStat,
       draggable,
+      visNetwork,
     },
     data() {
       return {
@@ -639,6 +655,23 @@
             }
 
             this.dataList = [...this.dataTotalList];
+            this.dataList.push({ // 拓扑图
+              id: -10,
+              panelId: 0,
+              title: this.$t("alert.config.chart.alertNumTrend"),
+              span: 8,
+              height: 350,
+              type: "topology",
+              prev: -11,
+              next: -1,
+              unit: 1,
+              buildIn: 1,
+              elements: [{
+                id: '',
+                expression: `nz_alert_nums{id="${3333}"}`,
+                type: ''
+              }]
+            });
             this.$nextTick(() => {
               if (this.dataList.length > 0 ) {
                 this.dataList.forEach((item,index) => {
