@@ -527,8 +527,13 @@ export const tableSet = {
       case 'alertName':
       case 'threshold':
       case 'idc':
-      case 'state': if(from === 'project' || from === 'endpointTab' || from === 'operationlog'){return false}
         return'custom';
+      case 'state':
+        if(from === 'project' || from === 'endpointTab' || from === 'operationlog'){
+          return false
+        }else{
+          return'custom'
+        }
       default : return false;
     }
   },
