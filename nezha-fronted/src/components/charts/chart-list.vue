@@ -660,7 +660,7 @@
               panelId: 0,
               title: this.$t("alert.config.chart.alertNumTrend"),
               span: 8,
-              height: 350,
+              height: 800,
               type: "topology",
               prev: -11,
               next: -1,

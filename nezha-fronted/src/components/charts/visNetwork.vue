@@ -1,5 +1,5 @@
 <template>
-    <div class="nz-chart-resize">
+    <div class="nz-chart-resize" v-clickoutside="networkPopClose">
     <div class="resize-shadow" ref="resizeShadow"></div>
     <div class="resize-box resize-box-table" ref="resizeBox">
       <div class="chart-table" :id="'chartTableDiv'+chartIndex" @mouseenter="caretShow=true" @mouseleave="caretShow=false">
@@ -38,9 +38,27 @@
           </el-dropdown>
         </div>
         <div class="mt-10 table-container">
-          <div id="network_id" class="network"></div>
-          <button @click="addModel">add model</button>
-          <button @click="addLine">add line</button>
+          <div class="network">
+            <!--图拓扑图-->
+            <div id="network_id" ref="visNetwork" :class="{'cursorMove': cursorMove}"></div>
+            <!--拓扑图工具-->
+            <div
+              id="networkPop"
+              class="networkPop"
+              :style="{'top':networkPopTop,'left':networkPopLeft}"
+              v-show="networkPopShow"
+              >
+              <i class="nz-icon nz-icon-edit" @click.stop="nodeEdit"></i>
+              <i class="nz-icon nz-icon-delete" @click="nodeDel"></i>
+              <div class="btmTriangle"></div>
+            </div>
+            <!--图谱图右侧-->
+            <div class="networkContent">33333</div>
+          </div>
+          <button @click="addModelShow" v-show="!selectNodeTitle">add model</button>
+          <button @click="addLineTitleShow" v-show="!selectNodeTitle">add line</button>
+          <button @click="lineDel" v-show="!selectNodeTitle">remove line</button>
+          <span v-show="selectNodeTitle">请选择两个节点 <button @click="closeAddLine">取消</button></span>
         </div>
         <!--全屏-->
         <el-dialog class="nz-dialog table-chart-dialog" :title="$t('dashboard.panel.view')"  :visible.sync="screenModal" width="96%"  @close="screenModal = false" >
@@ -50,12 +68,21 @@
               <time-picker ref="calendarPanel" class="nz-dashboard-picker" style="margin-top: -12px;" @change="dateChange"></time-picker>
             </div>
           </div>
-          1111111111
+          <div id="network_id2" ref="visNetwork"></div>
           <loading  :ref="'localLoadingScreen'+chartIndex"></loading>
         </el-dialog>
         <span class="vue-resizable-handle" @mousedown="startResize"></span>
       </div>
+
     </div>
+      <el-dialog
+        :visible.sync="addNodeShow">
+        <add-model @addModel="addModel" :nodeData="nodeData"></add-model>
+      </el-dialog>
+      <el-dialog
+        :visible.sync="addLineShow">
+        <add-line @addLine="addLine" @lineDel="lineDel" :selectNode="NodeArr" :lineData="lineData"></add-line>
+      </el-dialog>
   </div>
 </template>
 
@@ -67,11 +94,15 @@
   import chartDataFormat from './chartDataFormat'
   import loading from "../common/loading";
   import timePicker from '../common/timePicker'
+  import addNode from './addNode'
+  import addLine from './addLine'
   export default {
     name: 'home',
     components: {
       'loading': loading,
-      'time-picker':timePicker
+      'time-picker':timePicker,
+      'add-model':addNode,
+      'add-line':addLine,
     },
     props:{
       chartIndex:{
@@ -83,6 +114,12 @@
       },
     },
     watch:{
+      NodeArr(n){
+        if(n.length==2){
+          this.addLineShow=true;
+          this.selectNodeTitle=false;
+        }
+      }
     },
     data () {
       return {
@@ -129,6 +166,7 @@
         dragTitleShow:false,
         dropdownMenuShow:false,
         divFirstShow:false,
+        selectNodeTitle:false,
         columns: [
           {
             title:'Element',
@@ -150,39 +188,46 @@
         searchTime: [new Date().setHours(new Date().getHours() - 1), new Date()],//全屏显示的时间
         oldSearchTime: [],
 
-
+        // 拓扑图工具
+        networkPopTop:0,
+        networkPopLeft:0,
+        networkPopShow:false,
+        addNodeShow:false,
+        addLineShow:false,
+        cursorMove:false,
+        NodeArr:[],
+        selNodeId:'',
+        lineData:{},
+        nodeData:{},
+        //viewsCenter
+        viewsCenter:{
+          x:0,y:0
+        },
         // 拓扑图数据
-
         nodes:[],
         edges:[],
         // network:null,
         container:null,
         nodesArray:[
-          { id: 0, label: "model",
-            image: 'https://ss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=1906469856,4113625838&fm=26&gp=0.jpg', shape:'image',shapeProperties:{useImageSize:false},
-            chosen:{
-              node:(values, id, selected, hovering)=>{
-                console.log(values, id, selected, hovering);
-              }
-            },
-            physics:false,
-            x:0,y:0
+          { id: 1, label: "model",
+            image: 'https://ss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=1906469856,4113625838&fm=26&gp=0.jpg',
+            shape:'image',shapeProperties:{useImageSize:false},
+            x:0,y:0,
           },
-          {id: 1, label: "model", x:0,y:10, physics:false,image: png, shape:'image',shapeProperties:{useImageSize:false}},
-          {id: 2, label: "model", x:10,y:20, physics:false,image: png, shape:'image',shapeProperties:{useImageSize:false}},
-          {id: 3, label: "model", x:10,y:30, physics:false,image: png, shape:'image',shapeProperties:{useImageSize:false}},
-          {id: 4, label: "model", x:0,y:40, physics:false,image: png, shape:'image',shapeProperties:{useImageSize:false}},
-          {id: 5, label: "model", x:0,y:50, physics:false,image: png, shape:'image',shapeProperties:{useImageSize:false}},
-          {id: 6, label: "model", x:10,y:50, physics:false,image: png, shape:'image',shapeProperties:{useImageSize:false}},
+          {id: 2, label: "model", x:-254,y:-59, image: png, shape:'image',shapeProperties:{useImageSize:false}},
+          {id: 3, label: "model", x:114,y:-36, image: png, shape:'image',shapeProperties:{useImageSize:false}},
+          {id: 4, label: "model", x:-126,y:54, image: png, shape:'image',shapeProperties:{useImageSize:false}},
+          {id: 5, label: "model", x:125,y:67, image: png, shape:'image',shapeProperties:{useImageSize:false}},
+          {id: 6, label: "model", x:-211,y:0, image: png, shape:'image',shapeProperties:{useImageSize:false}},
+          {id: 7, label: "model", x:200,y:100, image: png, shape:'image',shapeProperties:{useImageSize:false}},
         ],
-
         edgesArray:[
-          {id: 0,from: 1, to: 0,label:"hahah",arrows:'from;to'},
-          {id: 1,from: 2, to: 0},
-          {id: 2,from: 4, to: 3},
-          {id: 3,from: 3, to: 0},
-          {id: 4,from: 3, to: 5},
-          {id: 5,from: 0, to: 6},
+          {id: 0,from: 2, to: 1,label:"hahah",arrows:'from;to', color: {color:'red',highlight:'red',hover:'red',opacity:1.0},},
+          {id: 1,from: 3, to: 1,label:"hahah",arrows:'from'},
+          {id: 2,from: 5, to: 4,label:"hahah",arrows:'to'},
+          {id: 3,from: 4, to: 1,label:"hahah",arrows:'from;to'},
+          {id: 4,from: 4, to: 6,label:"hahah",arrows:'from;to'},
+          {id: 5,from: 1, to: 7,label:"hahah",arrows:'from;to'},
         ],
         options:{},
         data:{}
@@ -193,17 +238,20 @@
     methods:{
 
       //拓扑图方法
-      init(){
+      init(type){
         let this_ = this;
         this_.nodes = new Vis.DataSet(this_.nodesArray);
         this_.edges = new Vis.DataSet(this_.edgesArray);
         this_.container = document.getElementById('network_id');
+        this_.containermodal = document.getElementById('network_id2');
+        this_.networkPop = document.getElementById('networkPop');
         this_.data = {
           nodes: this_.nodes,
           edges: this_.edges
         };
         this_.options = {
           autoResize: true,
+          clickToUse:true,
           groups:{
             useDefaultGroups: true,
             myGroupId:{
@@ -212,18 +260,26 @@
           },
           nodes: {
             shape: 'dot',
-            size: 30,
+            size: 40,
             font: {
-              size: 32,
+              size: 16,
             },
-            borderWidth: 2
+            borderWidth: 2,
+            // chosen:{
+            //   node:(values, id, selected, hovering)=>{
+            //     console.log(values, id, selected, hovering);
+            //    if(hovering){
+            //      this_.cursorMove=true;
+            //    }
+            //   }
+            // }
           },
 
           edges: {
             width: 2,
             smooth:{  //设置两个节点之前的连线的状态
               enabled: false  //默认是true，设置为false之后，两个节点之前的连线始终为直线，不会出现贝塞尔曲线
-            }
+            },
           },
           layout:{
             randomSeed: 666,
@@ -242,13 +298,13 @@
 
           interaction:{
             dragNodes: true, //是否能拖动节点
-            dragView: false, //是否能拖动画布
+            dragView: true, //是否能拖动画布
             hover: true, //鼠标移过后加粗该节点和连接线
             multiselect: false, //按 ctrl 多选
             selectable: true, //是否可以点击选择
             selectConnectedEdges: false, //选择节点后是否显示连接线
             hoverConnectedEdges: true, //鼠标滑动节点后是否显示连接线
-            zoomView: true, //是否能缩放画布
+            zoomView: false, //是否能缩放画布
             navigationButtons:true,
           },
 
@@ -256,9 +312,28 @@
             enabled: false,
           },
         };
-        this_.network = new Vis.Network(this_.container, this_.data, this_.options);
+        if(type==='modal'){
+          this_.network = new Vis.Network(this_.container, this_.data, this_.options);
+          this_.network.moveTo({
+            position: this_.viewsCenter,
+            scale: 1,
+            offset: {x:0, y:0},
+          })
+        }
+        if(type=== 'screenModal'){
+          if(!this_.networkScreenModal){
+            this_.networkScreenModal= new Vis.Network(this_.containermodal, this_.data, this_.options);
+          }else{
+            this_.nodes = new Vis.DataSet(this_.nodesArray);
+            this_.edges = new Vis.DataSet(this_.edgesArray);
+            this_.networkScreenModal.setData({
+              nodes:this_.nodes,
+              edges: this_.edges
+            });
+          };
+        }
+        this_.containerCanvas=document.querySelectorAll("#network_id canvas")[0];
       },
-
       resetAllNodes() {
         let this_ = this;
         this_.nodes.clear();
@@ -286,44 +361,76 @@
           nodes:this_.nodes,
           edges: this_.edges
         });
+        this_.network.moveTo({
+          position: this_.viewsCenter,
+          scale: 1,
+          offset: {x:0, y:0},
+        })
       },
-      addModel(){ // 添加model
-        console.log(this.network);
-        let model={
-          id: 7,
-          label: "model",
-          group: 0,
-          image: 'https://ss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=1906469856,4113625838&fm=26&gp=0.jpg',
-          shape:'image',
-          shapeProperties:{useImageSize:false},
-          chosen:{
-              node:(values, id, selected, hovering)=>{
-                console.log(values, id, selected, hovering);
-              }
-          },
-          x:-100,
-          y:-100,
-          physics:false,
-        };
+      addModel(model){ // 添加model
+        this.addNodeShow=false;
+        if(!model){return}
+        model={...model,...this.network.DOMtoCanvas({x:model.x,y:model.y})};
+        if(!model.image){
+          model.image=png
+        }
         this.nodesArray.push(model);
-        // this.resetAllNodes();
+
         this.setNetworkData(this.nodesArray,this.edgesArray);
       },
-      addLine(){ // 添加line
-        let edges= {id: 7,from: 7, to: 0,label:"hahah",arrows:'from;to'};
+      addModelShow(){ // 显示添加节点弹窗
+        this.addNodeShow=true;
+      },
+      addLine(edges){ // 添加line
+        this.addLineShow=false;
+        console.log(edges);
+        if(!edges){return}
+        edges.from=this.NodeArr[0];
+        edges.to=this.NodeArr[1];
         this.edgesArray.push(edges);
         this.setNetworkData(this.nodesArray,this.edgesArray);
+        this.NodeArr=[];
       },
-
+      addLineTitleShow(){ // 显示添加线弹窗
+        // this.addLineShow=true;
+        this.selectNodeTitle=true;
+      },
+      closeAddLine(){
+        this.selectNodeTitle=false;
+        this.NodeArr=[];
+      },
       setNodePosition(selId){ // 移动节点后 设置节点坐标
         let position = this.network.getPositions([selId]);
         let selItem = this.nodesArray.find((item)=>item.id===selId);
-        console.log(selItem);
+        this.nodeData = selItem;
         selItem.x=position[selId].x;
         selItem.y=position[selId].y;
       },
-
-
+      setPopPosition(selId,params){//设置节点工具栏位置
+        let position=this.network.canvasToDOM(this.network.getPositions(params.nodes)[selId]);
+        this.networkPop.style.top = position.y - 70 +'px';
+        this.networkPop.style.left = position.x - 30 +'px';
+        this.networkPopShow=true;
+      },
+      networkPopClose(){//关闭节点工具栏
+        this.networkPopShow=false;
+      },
+      //工具栏
+      nodeDel(){
+        console.log(this.selNodeId)
+        this.nodesArray=this.nodesArray.filter((item)=>item.id!==this.selNodeId);
+        this.edgesArray=this.edgesArray.filter((item)=>item.from!==this.selNodeId || this.to!==this.selNodeId);
+        this.setNetworkData(this.nodesArray, this.edgesArray);
+      },
+      nodeEdit(){
+        console.log('edit')
+      },
+      lineDel(){
+        if(!this.lineData.id){return}
+        this.edgesArray=this.edgesArray.filter((item)=>item.id!==this.lineData.id);
+        console.log(this.lineData.id);
+        this.setNetworkData(this.nodesArray, this.edgesArray);
+      },
       // 其他
       filterShowData(source,pageObj){
         return source.slice((pageObj.pageNo-1)*pageObj.pageSize,pageObj.pageNo*pageObj.pageSize)
@@ -441,6 +548,9 @@
 
         this.seriesItemScreen = this.seriesItem;
         this.screenModal = true;
+        this.$nextTick(()=>{
+          this.init('screenModal');
+        })
       },
       // 设置数据, filter区分
       setData(chartItem, seriesItem, panelId, filter,area,errorMsg) {
@@ -540,22 +650,61 @@
     mounted(){
       this.firstLoad = false;
       setTimeout(()=>{
-        let this_=this
-        this.init();
+        let this_=this;
+        this.init('modal');
         this.network.on("click", function (params) {
           // params.event = "[original event]";
           // document.getElementById('eventSpan').innerHTML = '<h2>Click event:</h2>' + JSON.stringify(params, null, 4);
-          console.log('click event, getNodeAt returns: ' + this.getNodeAt(params.pointer.DOM),params);
+          console.log(params);
+          let selId=params.nodes[0];
+          this_.networkPopClose();
+          if(selId){
+            this_.selNodeId=selId;
+            this_.cursorMove=true;
+            this_.nodeData=this_.nodesArray.find((item)=>item.id==selId);
+            this_.setPopPosition(selId,params);
+            if(this_.selectNodeTitle){
+              this_.NodeArr.push(selId);
+              this_.network.selectNodes(this_.NodeArr,true)
+            }
+          }
         });
-        this.network.on("dragEnd", function (params) {
+
+        this.network.on("selectEdge", function (params) {
+          this_.lineData.id=params.edges[0];
+          console.log(this_.lineData.id);
+        });
+
+        this.network.on("dragStart", function (params) {//节点移动开始
           // params.event = "[original event]";
           // document.getElementById('eventSpan').innerHTML = '<h2>Click event:</h2>' + JSON.stringify(params, null, 4);
-          console.log('click event, getNodeAt returns: ' + this.getNodeAt(params.pointer.DOM),params);
-          console.log( this_.network.getPositions());
-          let selId=params.nodes[0];
-          this_.setNodePosition(selId)
+          // console.log('click event, getNodeAt returns: ' + this.getNodeAt(params.pointer.DOM),params);
+          // console.log( this_.network.getPositions());
+          this_.networkPopShow=false;
         });
-      })
+
+        this.network.on("dragging", function (params,event) {//节点移动中
+
+        });
+
+        this.network.on("dragEnd", function (params) {//节点移动结束
+          this_.viewsCenter=this_.network.getViewPosition();
+          let selId=params.nodes[0];
+          if(selId){
+            this_.setPopPosition(selId,params)
+            this_.setNodePosition(selId)
+          }
+        });
+        this.network.on("hoverNode", function (params) {//hoverNode
+          this_.cursorMove=true;
+          console.log(params);
+        });
+        this.network.on("blurNode", function (params) {//blurNode
+          this_.cursorMove=false;
+          // console.log(params);
+        });
+      });
+
     }
 
   }
@@ -569,6 +718,62 @@
     height: calc(100% - 30px);
   }
   .network{
+    display: flex;
     height: calc(100% - 30px);
+    position: relative;
+  }
+  .networkPop{
+    position: absolute;
+    z-index: 10;
+    border: 1px solid #e6e6e6;
+    border-radius: 5px;
+    height: 32px;
+    background: #fff;
+    padding: 0 3px;
+    line-height: 32px;
+  }
+  .btmTriangle{
+    position: absolute;
+    width: 0;
+    height: 0;
+    border-width: 10px;
+    border-style: solid;
+    border-color:#e6e6e6 transparent transparent transparent;
+    bottom: -20px;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+  .btmTriangle:after{
+    content: '';
+    display:block;
+    width:0;
+    height:0;
+    border-width: 10px;
+    border-style:solid;
+    border-color:#fff transparent  transparent transparent;
+    position:absolute;
+    bottom: -7px;
+    left: -9px;
+  }
+  #network_id{
+    width: 60%;
+  }
+  .cursorMove{
+    cursor: move;
+  }
+  #network_id2{
+    height: 100%;
+  }
+  .networkContent{
+    width: 40%;
+  }
+  .nz-icon-delete{
+    cursor: pointer;
+    color: #ee6723;
+    margin-left: 10px;
+  }
+  .nz-icon-edit{
+    font-size: 14px;
+    cursor: pointer;
   }
 </style>
