@@ -1,5 +1,12 @@
 <template>
   <div class="content">
+    <div class="editTopology">
+      <!--<button @click="addModelShow" v-show="!selectNodeTitle">add model</button>-->
+      <!--<button @click="addLineTitleShow" v-show="!selectNodeTitle">add line</button>-->
+      <!--<button @click="lineDel" v-show="!selectNodeTitle">remove line</button>-->
+      <span>Module element :<span class="editTopologyAdd">Add</span><span class="editTopologyRemove">Remove</span></span>
+      <span>Line :<span class="editTopologyAdd">Add</span><span class="editTopologyRemove">Remove</span></span>
+    </div>
     <div class="network"  v-clickoutside="networkPopClose">
       <!--图拓扑图-->
       <div id="network_id" ref="visNetwork" :class="{'cursorMove': cursorMove}"></div>
@@ -10,16 +17,18 @@
         :style="{'top':networkPopTop,'left':networkPopLeft}"
         v-show="networkPopShow"
       >
-        <i class="nz-icon nz-icon-edit" @click.stop="nodeEdit"></i>
-        <i class="nz-icon nz-icon-delete" @click="nodeDel"></i>
-        <div class="btmTriangle"></div>
+        <i class="nz-icon nz-icon-hexagonBorder"  v-for="item in popData"  :style="{top:item.top,left:item.left}">
+          <i class="nz-icon nz-icon-liubianxing"></i>
+          <i :class="[item.className,{'nz-icon':item.className},'noMove']"></i>
+        </i>
+        <!--<i class="nz-icon nz-icon-delete" @click="nodeDel"></i>-->
       </div>
+      <!--拓扑图选中-->
+      <div></div>
+      <div></div>
       <!--图谱图右侧-->
       <!--<div class="networkContent">33333</div>-->
     </div>
-    <button @click="addModelShow" v-show="!selectNodeTitle">add model</button>
-    <button @click="addLineTitleShow" v-show="!selectNodeTitle">add line</button>
-    <button @click="lineDel" v-show="!selectNodeTitle">remove line</button>
     <span v-show="selectNodeTitle">请选择两个节点 <button @click="closeAddLine">取消</button></span>
     <transition name="right-box">
       <add-model  v-if="addNodeShow" @addModel="addModel" :nodeData="nodeData" @close="addNodeShow=false" @del="nodeDel"></add-model>
@@ -95,6 +104,14 @@
           y:'',
           image:'',
         },
+        popData:[
+          {top:'-20px', left:'-17px',className:'nz-icon-chart',id:'1'},
+          {top:'-20px', left:'28px',className:'nz-icon-chart',id:'2'},
+          {top:'18px',  left:'52px',className:'nz-icon-chart',id:'3'},
+          {top:'56px', left:'28px',className:'',id:'4'},
+          {top:'56px', left:'-17px',className:'nz-icon-chart',id:'5'},
+          {top:'18px', left:'-38px',className:'nz-icon-chart',id:'6'},
+        ],
         //viewsCenter
         viewsCenter:{
           x:0,y:0
@@ -132,18 +149,10 @@
           nodes: {
             shape: 'dot',
             size: 40,
-            font: {
-              size: 16,
-            },
             borderWidth: 2,
-            // chosen:{
-            //   node:(values, id, selected, hovering)=>{
-            //     console.log(values, id, selected, hovering);
-            //    if(hovering){
-            //      this_.cursorMove=true;
-            //    }
-            //   }
-            // }
+            font:{
+              size:'20',
+            },
           },
 
           edges: {
@@ -389,6 +398,10 @@
   .content{
     height: 100%;
   }
+  .editTopology{
+    width: 100%;
+    height: 28px;
+  }
   .network{
     display: flex;
     height: calc(100% - 30px);
@@ -397,12 +410,41 @@
   .networkPop{
     position: absolute;
     z-index: 10;
-    border: 1px solid #e6e6e6;
+    /*border: 1px solid #e6e6e6;*/
     border-radius: 5px;
     height: 32px;
-    background: #fff;
+    /*background: #fff;*/
     padding: 0 3px;
     line-height: 32px;
+  }
+  .networkPop .nz-icon-hexagonBorder{
+    position: absolute;
+    font-size: 48px;
+    color: #84d5c2;
+  }
+  .networkPop  .nz-icon-liubianxing{
+    color:#e2f3ef;
+    font-size: 41px;
+    position: absolute;
+    top: 0;
+    left: 3px;
+  }
+  .noMove{
+    position: absolute;
+    top: -2px;
+    left: 12px;
+    font-size: 24px;
+    color: #27c09c;
+  }
+  .networkPop .nz-icon-hexagonBorder:hover{
+    transform: scale(1.2);
+  }
+  .networkPop .nz-icon-hexagonBorder:hover .nz-icon-liubianxing{
+    transform: scale(1.1);
+    left: 4px;
+  }
+  .networkPop .nz-icon-hexagonBorder:hover .noMove{
+    transform: scale(1.1);
   }
   .btmTriangle{
     position: absolute;
@@ -448,5 +490,13 @@
   .nz-icon-edit{
     font-size: 14px;
     cursor: pointer;
+  }
+  .editTopology{
+    color: #1a1a1a;
+    font-size: 18px;
+    font-weight: bold;
+  }
+  .editTopologyAdd{
+    color: #1989fa;
   }
 </style>

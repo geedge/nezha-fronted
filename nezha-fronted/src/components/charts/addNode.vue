@@ -27,7 +27,48 @@
         <el-form-item label="image">
           <el-input v-model="form.image"></el-input>
         </el-form-item>
-
+        <!--<div  class="right-box-sub-title">-->
+          <!--<span>{{$t('alert.config.expr')}}</span>-->
+          <!--<span class="float-right" @click="addExpression"><i style="font-size: 16px; cursor: pointer;" class="nz-icon nz-icon-create-square"></i></span>-->
+        <!--</div>-->
+        <!--<el-row class="element-item" style="" v-for="index of promqlKeys.length" :key="'ele' + index">-->
+          <!--<promql-input-->
+            <!--:ref="'promql-'+(index-1)"-->
+            <!--:id="promqlKeys[index-1]"-->
+            <!--:key="promqlKeys[index-1]"-->
+            <!--:expression-list="expressions"-->
+            <!--:index="index-1"-->
+            <!--:styleType="2"-->
+            <!--:plugins="['metric-selector', 'metric-input', 'remove']"-->
+            <!--@change="expressionChange"-->
+            <!--@removeExpression="removeExpression"-->
+          <!--&gt;</promql-input>-->
+          <!--<el-row>-->
+            <!--<template v-if="editChart.type != 'singleStat'">-->
+              <!--<el-col style="width: 120px; padding-right: 20px; text-align: right; color: #666">-->
+                <!--{{$t('dashboard.panel.chartForm.legend')}}&nbsp;-->
+                <!--<el-popover :content="$t('dashboard.panel.chartForm.legendTip')" placement="top" width="150" trigger="hover">-->
+                  <!--<i slot="reference" class="nz-icon nz-icon-info-normal" style="font-size: 12px; -webkit-transform:scale(0.75);display:inline-block;" @mouseover="rz"></i>-->
+                <!--</el-popover>-->
+              <!--</el-col>-->
+              <!--<el-col style="width: calc(100% - 120px);">-->
+                <!--<el-input v-model="legends[index-1]" type="text" size="small"></el-input>-->
+              <!--</el-col>-->
+            <!--</template>-->
+            <!--<template v-else>-->
+              <!--<el-col style="width: 120px; padding-right: 20px; text-align: right; color: #666">-->
+                <!--{{$t('dashboard.panel.chartForm.statistics')}}&nbsp;-->
+              <!--</el-col>-->
+              <!--<el-col style="width: calc(100% - 120px);">-->
+                <!--<el-select popper-class="chart-box-dropdown-mini" v-model="statistics" placeholder="" size="small">-->
+                  <!--<el-option v-for="item in statisticsList" :key="item.value" :label="item.label" :value="item.value">-->
+                    <!--<span class="panel-dropdown-label-txt" >{{item.label}}</span>-->
+                  <!--</el-option>-->
+                <!--</el-select>-->
+              <!--</el-col>-->
+            <!--</template>-->
+          <!--</el-row>-->
+        <!--</el-row>-->
       </el-form>
     </el-scrollbar>
 
@@ -46,8 +87,12 @@
 </template>
 
 <script>
+  // import promqlInput from "@compotents/page/dashboard/explore/promqlInput";
 	export default {
 		name:"addNode",
+    components:{
+      // 'promql-input': promqlInput,
+    },
     props:{
       nodeData:{}
     },
@@ -69,13 +114,41 @@
           modelId:'',
           label:'',
           image:'',
-        }
+        },
+        promqlKeys:[],
+        expressions: [],
       }
     },
     methods:{
       onSubmit(){
         let model=Object.assign({id:this.form.modelId,shape:'image',shapeProperties:{useImageSize:false}},{...this.form});
         this.$emit('addModel',model)
+      },
+      expressionChange: function () {
+
+      },
+      addExpression() {
+        this.expressions.push('');
+        this.legends.push('');
+        this.promqlKeys.push(getUUID());
+        this.elementIds.push("");
+        this.promqlCount++;
+      },
+      removeExpression(index) {
+        if (this.promqlCount > 1) {
+          this.expressions.splice(index, 1);
+          this.legends.splice(index, 1);
+          this.promqlKeys.splice(index, 1);
+          this.elementIds.splice(index, 1);
+          this.promqlCount--;
+          this.$nextTick(() => {
+            this.expressions.forEach((ex, index) => {
+              if (ex) {
+                this.$refs[`promql-${index}`][0].metricChange(ex);
+              }
+            });
+          });
+        }
       },
       /*关闭弹框*/
       esc(refresh) {
@@ -211,6 +284,61 @@
     margin: 6px 0 0 7px;
   }
   /* end--table*/
+
+
+  .el-row {
+    margin-bottom: 20px;
+  }
+  .el-row:last-child  {
+    margin-bottom: 0;
+  }
+  .el-col {
+    border-radius: 4px;
+  }
+  .bg-purple {
+    background: white;
+  }
+  .grid-content {
+    border-radius: 4px;
+    min-height: 36px;
+  }
+
+  .common-float-left {
+    float: left;
+    display:inline-block;
+  }
+
+  .el-inner {
+    width: 200px;
+    border-top-width: 0px;
+    border-left-width: 0px;
+    border-right-width: 0px;
+    border-bottom-width: 10px;
+    border-color:red;
+    /*outline: medium;*/
+  }
+
+  .element-bottom-border {
+    padding-bottom: 5px;
+    border-bottom: 1px solid #dfe7f2;
+    margin-top: 15px;
+  }
+  /*metric样式--begin*/
+  .element-item {
+    padding: 20px 0;
+    border-bottom: 1px dashed #dfe7f2;
+    width: 100%;
+  }
+  /*metric样式--end*/
+  .label-center{
+    vertical-align: middle;
+    line-height: 34px;
+  }
+
+  .z-top {
+    z-index: 2900;
+  }
+
 </style>
 
 <style lang="scss">
