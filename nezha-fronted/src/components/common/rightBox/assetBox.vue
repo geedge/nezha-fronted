@@ -313,7 +313,7 @@
       },
       getVendorData() {
         return new Promise(resolve => {
-          this.$get('sys/dict/all?type=vendor').then(response => {
+          this.$get('sys/dict/all?type=vendor&pageSize=-1').then(response => {
             if (response.code === 200) {
               this.vendorData = response.data;
             }
@@ -323,7 +323,7 @@
       },
       getModelData(assetType) {
         return new Promise(resolve => {
-          let url = assetType ? ('model?typeCode=' + assetType) : 'model';
+          let url = assetType ? ('model?typeCode=' + assetType+'&pageSize=-1') : 'model?pageSize=-1';
           this.$get(url).then(response => {
             if (response.code === 200) {
               this.modelData = response.data.list;
@@ -501,7 +501,7 @@
       },
       getAssetTypeData() {
         return new Promise(resolve => {
-          this.$get('sys/dict/all?type=assetType').then(response => {
+          this.$get('sys/dict/all?type=assetType&pageSize=-1').then(response => {
             if (response.code === 200) {
               this.assetTypeData = response.data;
             }

@@ -238,7 +238,7 @@
       },
       saveType(item) {
         return new Promise(resolve => {
-          if (this.editingType) {
+          if (this.editingType) { //下拉选中的编辑
             let temp = Object.assign({}, item);
             temp.value = this.editingType;
             this.$post('sys/dict/update', temp).then(response => {
@@ -250,6 +250,17 @@
                 }
                 this.$emit("reload");
                 this.$message({duration: 1000, type: 'success', message: this.$t("tip.saveSuccess")});
+              } else {
+                this.$message.error(response.msg);
+              }
+            });
+          }else{
+            this.$post('sys/dict/save', item).then(response => {
+              if (response.code === 200) {
+                this.editModel.typeCode=response.data.dictEntity.code;
+                this.$emit("reload");
+                this.$message({duration: 1000, type: 'success', message: this.$t("tip.saveSuccess")});
+                resolve();
               } else {
                 this.$message.error(response.msg);
               }
@@ -283,11 +294,7 @@
           } else {
             this.$post('sys/dict/save', item).then(response => {
               if (response.code === 200) {
-                item.value = this.editingVendor;
-                item.isEdit = false;
-                if (this.editModel.vendor.id == item.id) {
-                  this.editModel.vendor.value = item.value;
-                }
+                this.editModel.vendorCode=response.data.dictEntity.code;
                 this.$emit("reload");
                 this.$message({duration: 1000, type: 'success', message: this.$t("tip.saveSuccess")});
                 resolve();
@@ -316,7 +323,7 @@
         });
       },
       getVendorData() {
-        this.$get('sys/dict/all?type=vendor').then(response => {
+        this.$get('sys/dict/all?type=vendor&pageSize=-1').then(response => {
           if (response.code === 200) {
             this.vendorData = response.data.map((item) => {
               item.isEdit = false;
@@ -326,7 +333,7 @@
         });
       },
       getTypeData() {
-        this.$get('sys/dict/all?type=assetType').then(response => {
+        this.$get('sys/dict/all?type=assetType&pageSize=-1').then(response => {
           if (response.code === 200) {
             this.typeData = response.data.map((item) => {
               item.isEdit = false;
