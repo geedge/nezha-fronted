@@ -38,17 +38,17 @@
           </el-dropdown>
         </div>
         <div class="mt-10 table-container">
-          <topology :nodesArray="nodesArray" :edgesArray="edgesArray" @setTopologyData="setTopologyData"></topology>
+          <topology :nodesArray="nodesArray" :edgesArray="edgesArray" @setTopologyData="setTopologyData" :isFullScreen="false" ref="topology"></topology>
         </div>
         <!--全屏-->
-        <el-dialog class="nz-dialog table-chart-dialog" :title="$t('dashboard.panel.view')"  :visible.sync="screenModal" width="96%"  @close="screenModal = false" >
+        <el-dialog class="nz-dialog table-chart-dialog" :title="$t('dashboard.panel.view')"  :visible.sync="screenModal" width="96%"  @close="exitFull">
           <div slot="title">
             <!--<span class="nz-dialog-title">{{data.title}}</span>-->
             <div class="float-right panel-calendar dialog-tool">
               <time-picker ref="calendarPanel" class="nz-dashboard-picker" style="margin-top: -12px;" @change="dateChange"></time-picker>
             </div>
           </div>
-          33333
+          <topology :nodesArray="nodesArray" :edgesArray="edgesArray" @setTopologyData="setTopologyData" :isFullScreen="true" ref="topologyFull"></topology>
           <loading  :ref="'localLoadingScreen'+chartIndex"></loading>
         </el-dialog>
         <span class="vue-resizable-handle" @mousedown="startResize"></span>
@@ -151,22 +151,22 @@
           { id: 1, label: "model",
             image: 'https://ss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=1906469856,4113625838&fm=26&gp=0.jpg',
             shape:'image',shapeProperties:{useImageSize:false},
-            x:0,y:0,
+            x:1,y:-63,
           },
-          {id: 2, label: "model", x:-254,y:-59, image: png, shape:'image',shapeProperties:{useImageSize:false}},
-          {id: 3, label: "model", x:114,y:-36, image: png, shape:'image',shapeProperties:{useImageSize:false}},
-          {id: 4, label: "model", x:-126,y:54, image: png, shape:'image',shapeProperties:{useImageSize:false}},
-          {id: 5, label: "model", x:125,y:67, image: png, shape:'image',shapeProperties:{useImageSize:false}},
-          {id: 6, label: "model", x:-211,y:0, image: png, shape:'image',shapeProperties:{useImageSize:false}},
-          {id: 7, label: "model", x:200,y:100, image: png, shape:'image',shapeProperties:{useImageSize:false}},
+          {id: 2, label: "model", x:-236,y:-163, image: png, shape:'image',shapeProperties:{useImageSize:false}},
+          {id: 3, label: "model", x:-346,y:-155, image: png, shape:'image',shapeProperties:{useImageSize:false}},
+          {id: 4, label: "model", x:-129,y:169, image: png, shape:'image',shapeProperties:{useImageSize:false}},
+          {id: 5, label: "model", x:-388,y:35, image: png, shape:'image',shapeProperties:{useImageSize:false}},
+          {id: 6, label: "model", x:-345,y:-53, image: png, shape:'image',shapeProperties:{useImageSize:false}},
+          {id: 7, label: "model", x:316,y:22, image: png, shape:'image',shapeProperties:{useImageSize:false}},
         ],
         edgesArray:[
-          {id: 0,from: 2, to: 1,label:"hahah",arrows:'from;to', color: {color:'red',highlight:'red',hover:'red',opacity:1.0},},
-          {id: 1,from: 3, to: 1,label:"hahah",arrows:'from'},
-          {id: 2,from: 5, to: 4,label:"hahah",arrows:'to'},
-          {id: 3,from: 4, to: 1,label:"hahah",arrows:'from;to'},
-          {id: 4,from: 4, to: 6,label:"hahah",arrows:'from;to'},
-          {id: 5,from: 1, to: 7,label:"hahah",arrows:'from;to'},
+          {id: 0,from: 2, to: 1,label:"hahah",arrows:'from;to', color: {color:'#ff4500',highlight:'#ff4500',hover:'#ff4500',opacity:1.0}},
+          {id: 1,from: 3, to: 1,label:"hahah",arrows:'from',smooth:true, color: {color:'#1e90ff',highlight:'#1e90ff',hover:'#1e90ff',opacity:1.0}},
+          {id: 2,from: 5, to: 4,label:"hahah",arrows:'to',smooth:true, color: {color:'#1e90ff',highlight:'#1e90ff',hover:'#1e90ff',opacity:1.0}},
+          {id: 3,from: 4, to: 1,label:"hahah",arrows:'from;to',smooth:true, color: {color:'#1e90ff',highlight:'#1e90ff',hover:'#1e90ff',opacity:1.0}},
+          {id: 4,from: 4, to: 6,label:"hahah",arrows:'from;to',smooth:true, color: {color:'#1e90ff',highlight:'#1e90ff',hover:'#1e90ff',opacity:1.0}},
+          {id: 5,from: 1, to: 7,label:"hahah",arrows:'from;to',smooth:true, color: {color:'#1e90ff',highlight:'#1e90ff',hover:'#1e90ff',opacity:1.0}},
         ],
       }
 
@@ -290,9 +290,11 @@
 
         this.seriesItemScreen = this.seriesItem;
         this.screenModal = true;
-        this.$nextTick(()=>{
-          this.init('screenModal');
-        })
+        if(this.$refs.topologyFull){
+          setTimeout(()=>{
+            this.$refs.topologyFull.resetAllNodes();
+          })
+        }
       },
       // 设置数据, filter区分
       setData(chartItem, seriesItem, panelId, filter,area,errorMsg) {
@@ -387,13 +389,15 @@
         return num;
       },
       // 设置拓扑图数据
-      setTopologyData(nodesArr,edgesArr,callback){
+      setTopologyData(nodesArr,edgesArr){
         this.nodesArray=nodesArr;
         this.edgesArray=edgesArr;
-        if(callback){
-          callback(this.nodesArray,this.edgesArray);
-        }
       },
+      //退出全屏
+      exitFull(){
+        this.screenModal = false;
+        this.$refs.topology.resetAllNodes()
+      }
     },
 
     mounted(){

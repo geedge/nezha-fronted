@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="content">
     <div class="network"  v-clickoutside="networkPopClose">
       <!--图拓扑图-->
       <div id="network_id" ref="visNetwork" :class="{'cursorMove': cursorMove}"></div>
@@ -15,20 +15,18 @@
         <div class="btmTriangle"></div>
       </div>
       <!--图谱图右侧-->
-      <div class="networkContent">33333</div>
+      <!--<div class="networkContent">33333</div>-->
     </div>
     <button @click="addModelShow" v-show="!selectNodeTitle">add model</button>
     <button @click="addLineTitleShow" v-show="!selectNodeTitle">add line</button>
     <button @click="lineDel" v-show="!selectNodeTitle">remove line</button>
     <span v-show="selectNodeTitle">请选择两个节点 <button @click="closeAddLine">取消</button></span>
-    <el-dialog
-      :visible.sync="addNodeShow">
-      <add-model @addModel="addModel" :nodeData="nodeData"></add-model>
-    </el-dialog>
-    <el-dialog
-      :visible.sync="addLineShow">
-      <add-line @addLine="addLine" @lineDel="lineDel" :selectNode="NodeArr" :lineData="lineData"></add-line>
-    </el-dialog>
+    <transition name="right-box">
+      <add-model  v-if="addNodeShow" @addModel="addModel" :nodeData="nodeData" @close="addNodeShow=false" @del="nodeDel"></add-model>
+    </transition>
+    <transition name="right-box">
+      <add-line  v-if="addLineShow" @addLine="addLine" @lineDel="lineDel" :selectNode="NodeArr" :lineData="lineData" :isAdd="isLineAdd" @close="addLineShow=false" @del="lineDel"></add-line>
+    </transition>
   </div>
 </template>
 
@@ -50,12 +48,23 @@
       edgesArray:{
         type:Array
       },
+      isFullScreen:{
+        type:Boolean,
+      },
     },
     watch:{
       NodeArr(n){
         if(n.length==2){
+          this.lineData={
+            arrows:'',
+            label:'',
+            color:'#1e90ff',
+            lineId:'',
+            id:'',
+          }
           this.addLineShow=true;
           this.selectNodeTitle=false;
+          this.isLineAdd=true;
         }
       }
     },
@@ -71,8 +80,21 @@
         cursorMove:false,
         NodeArr:[],
         selNodeId:'',
-        lineData:{},
-        nodeData:{},
+        lineData:{
+          arrows:'',
+          label:'',
+          color:'#1e90ff',
+          lineId:'',
+          id:'',
+        },
+        isLineAdd:true,
+        nodeData:{
+          modelId:'',
+          label:'',
+          x:'',
+          y:'',
+          image:'',
+        },
         //viewsCenter
         viewsCenter:{
           x:0,y:0
@@ -92,7 +114,7 @@
         let this_ = this;
         this_.nodes = new Vis.DataSet(this_.nodesArray);
         this_.edges = new Vis.DataSet(this_.edgesArray);
-        this_.container = document.getElementById('network_id');
+        this_.container = this.$refs.visNetwork;
         this_.networkPop = document.getElementById('networkPop');
         this_.data = {
           nodes: this_.nodes,
@@ -127,8 +149,12 @@
           edges: {
             width: 2,
             smooth:{  //设置两个节点之前的连线的状态
-              enabled: false  //默认是true，设置为false之后，两个节点之前的连线始终为直线，不会出现贝塞尔曲线
+              enabled: true,//默认是true，设置为false之后，两个节点之前的连线始终为直线，不会出现贝塞尔曲线
+              roundness:0.5,
+              type: "curvedCW",
             },
+            selfReferenceSize:10,
+
           },
           layout:{
             randomSeed: 666,
@@ -164,22 +190,26 @@
         this_.network = new Vis.Network(this_.container, this_.data, this_.options);
         this_.network.moveTo({
           position: this_.viewsCenter,
-          scale: 1,
+          scale: this_.isFullScreen?1.5:1,
           offset: {x:0, y:0},
-        })
+        });
+        if(this_.isFullScreen) {
+          console.log(this_.viewsCenter)
+        }
         this_.containerCanvas=document.querySelectorAll("#network_id canvas")[0];
       },
       resetAllNodes() {
-        let this_ = this;
-        this_.nodes.clear();
-        this_.edges.clear();
-        this_.nodes.add(this_.nodesArray);
-        this_.edges.add(this_.edgesArray);
-        this_.data = {
-          nodes: this_.nodes,
-          edges: this_.edges
-        };
-        this_.network = new Vis.Network(this_.container, this_.data, this_.options);
+        // let this_ = this;
+        // this_.nodes.clear();
+        // this_.edges.clear();
+        // this_.nodes.add(this_.nodesArray);
+        // this_.edges.add(this_.edgesArray);
+        // this_.data = {
+        //   nodes: this_.nodes,
+        //   edges: this_.edges
+        // };
+        // this_.network = new Vis.Network(this_.container, this_.data, this_.options);
+        this.setNetworkData(this.nodesArray,this.edgesArray);
       },
       resetAllNodesStabilize() {
         let this_ = this;
@@ -196,32 +226,53 @@
         });
         this_.network.moveTo({
           position: this_.viewsCenter,
-          scale: 1,
+          scale: this_.isFullScreen?1.5:1,
           offset: {x:0, y:0},
-        })
+        });
+        console.log( this.nodes,this.edges);
+        if(this_.isFullScreen) {
+          console.log(this_.viewsCenter)
+        }
       },
       addModel(model){ // 添加model
         this.addNodeShow=false;
         if(!model){return}
-        model={...model,...this.network.DOMtoCanvas({x:model.x,y:model.y})};
+        model={...model,...this.network.DOMtoCanvas({x:40,y:40})};
         if(!model.image){
           model.image=png
         }
         let nodesArray=[...this.nodesArray];
         nodesArray.push(model);
-        this.$emit("setTopologyData",nodesArray,this.edgesArray,this.setNetworkData);
+        this.$emit("setTopologyData",nodesArray,this.edgesArray);
+        this.setNetworkData(nodesArray,this.edgesArray);
       },
       addModelShow(){ // 显示添加节点弹窗
         this.addNodeShow=true;
+        this.nodeData={
+          modelId:'',
+          label:'',
+          x:'',
+          y:'',
+          image:'',
+        }
       },
-      addLine(edges){ // 添加line
+      addLine(edges){ // 添加或者編輯line
         this.addLineShow=false;
         console.log(edges);
         if(!edges){return}
-        edges.from=this.NodeArr[0];
-        edges.to=this.NodeArr[1];
-        let edgesArray =[...this.edgesArray].push(edges);
-        this.$emit("setTopologyData",this.nodesArray,edgesArray,this.setNetworkData);
+        let edgesArray =[...this.edgesArray];
+       if(!this.isLineAdd){
+         console.log(edgesArray.find(item=>item.id ===edges.id));
+         edges={...edgesArray.find(item=>item.id===edges.id),...edges};
+         edgesArray=edgesArray.filter(item=>item.id!==edges.id);
+       }else{
+         edges.from=this.NodeArr[0];
+         edges.to=this.NodeArr[1];
+       }
+       edgesArray.push(edges);
+       console.log(edgesArray,edges);
+        this.$emit("setTopologyData",this.nodesArray,edgesArray);
+        this.setNetworkData(this.nodesArray,edgesArray);
         this.NodeArr=[];
       },
       addLineTitleShow(){ // 显示添加线弹窗
@@ -238,6 +289,7 @@
         this.nodeData = selItem;
         selItem.x=position[selId].x;
         selItem.y=position[selId].y;
+        console.log(this.nodesArray);
         this.$emit("setTopologyData",this.nodesArray,this.edgesArray);
       },
       setPopPosition(selId,params){//设置节点工具栏位置
@@ -248,82 +300,95 @@
       },
       networkPopClose(){//关闭节点工具栏
         this.networkPopShow=false;
+        this.network.unselectAll();
       },
       //工具栏
       nodeDel(){
         let nodesArray=this.nodesArray.filter((item)=>item.id!==this.selNodeId);
         let edgesArray=this.edgesArray.filter((item)=>item.from!==this.selNodeId || this.to!==this.selNodeId);
-        this.$emit('setTopologyData',nodesArray, edgesArray,this.setNetworkData);
+        this.$emit('setTopologyData',nodesArray, edgesArray);
+        this.setNetworkData(nodesArray, edgesArray);
         this.networkPopClose();
       },
       nodeEdit(){
-        console.log('edit')
+        this.addNodeShow=true;
+        this.nodeData={
+          modelId:'',
+          label:'',
+          image:'',
+        }
       },
       lineDel(){
         if(!this.lineData.id){return}
         let edgesArray=this.edgesArray.filter((item)=>item.id!==this.lineData.id);
-        this.$emit('setTopologyData',this.nodesArray, edgesArray,this.setNetworkData);
+        this.$emit('setTopologyData',this.nodesArray, edgesArray);
+        this.setNetworkData(this.nodesArray,edgesArray);
       },
     },
     mounted(){
-      setTimeout(()=>{
-        let this_=this;
-        this.init('modal');
-        this.network.on("click", function (params) {
-          let selId=params.nodes[0];
-          this_.networkPopClose();
-          if(selId){
-            this_.selNodeId=selId;
-            this_.cursorMove=true;
-            this_.nodeData=this_.nodesArray.find((item)=>item.id==selId);
-            this_.setPopPosition(selId,params);
-            if(this_.selectNodeTitle){
-              this_.NodeArr.push(selId);
-              this_.network.selectNodes(this_.NodeArr,true)
-            }
-          }
-        });
+       setTimeout(()=>{
+         let this_=this;
+         this.init('modal');
+         this.network.on("click", function (params) {
+           let selId=params.nodes[0];
+           this_.networkPopClose();
+           if(selId){
+             this_.selNodeId=selId;
+             this_.cursorMove=true;
+             this_.nodeData=this_.nodesArray.find((item)=>item.id==selId);
+             this_.setPopPosition(selId,params);
+             if(this_.selectNodeTitle){
+               this_.NodeArr.push(selId);
+               this_.network.selectNodes(this_.NodeArr,true)
+             }
+           }
+         });
 
-        this.network.on("selectEdge", function (params) {
-          this_.lineData.id=params.edges[0];
-          console.log(this_.lineData.id);
-        });
+         this.network.on("selectEdge", function (params) { // 选择边
+           this_.lineData=this_.edgesArray.find((item)=>item.id===params.edges[0]);
+           this_.lineData.color=this_.lineData.color.color;
+           this_.addLineShow=true;
+           this_.isLineAdd=false;
+           console.log(this_.lineData)
+         });
 
-        this.network.on("dragStart", function (params) {//节点移动开始
-          // params.event = "[original event]";
-          // document.getElementById('eventSpan').innerHTML = '<h2>Click event:</h2>' + JSON.stringify(params, null, 4);
-          // console.log('click event, getNodeAt returns: ' + this.getNodeAt(params.pointer.DOM),params);
-          // console.log( this_.network.getPositions());
-          this_.networkPopShow=false;
-        });
+         this.network.on("dragStart", function (params) {//节点移动开始
+           // params.event = "[original event]";
+           // document.getElementById('eventSpan').innerHTML = '<h2>Click event:</h2>' + JSON.stringify(params, null, 4);
+           // console.log('click event, getNodeAt returns: ' + this.getNodeAt(params.pointer.DOM),params);
+           // console.log( this_.network.getPositions());
+           this_.networkPopShow=false;
+         });
 
-        this.network.on("dragging", function (params,event) {//节点移动中
+         this.network.on("dragging", function (params,event) {//节点移动中
 
-        });
+         });
 
-        this.network.on("dragEnd", function (params) {//节点移动结束
-          this_.viewsCenter=this_.network.getViewPosition();
-          let selId=params.nodes[0];
-          if(selId){
-            this_.setPopPosition(selId,params)
-            this_.setNodePosition(selId)
-          }
-        });
-        this.network.on("hoverNode", function (params) {//hoverNode
-          this_.cursorMove=true;
-          console.log(params);
-        });
-        this.network.on("blurNode", function (params) {//blurNode
-          this_.cursorMove=false;
-          // console.log(params);
-        });
-      });
+         this.network.on("dragEnd", function (params) {//节点移动结束
+           this_.viewsCenter=this_.network.getViewPosition();
+           let selId=params.nodes[0];
+           if(selId){
+             this_.setPopPosition(selId,params);
+             this_.setNodePosition(selId)
+           }
+         });
 
+         this.network.on("hoverNode", function (params) {//hoverNode
+           this_.cursorMove=true;
+         });
+
+         this.network.on("blurNode", function (params) {//blurNode
+           this_.cursorMove=false;
+         });
+       })
     }
 	}
 </script>
 
 <style scoped>
+  .content{
+    height: 100%;
+  }
   .network{
     display: flex;
     height: calc(100% - 30px);
@@ -363,7 +428,8 @@
     left: -9px;
   }
   #network_id{
-    width: 60%;
+    width: 90%;
+    height: 100%;
   }
   .cursorMove{
     cursor: move;
