@@ -17,13 +17,48 @@
                 <span class="panel-info-corner-inner"></span>
             </span>
           </el-popover>
-          <i class="nz-icon nz-icon-edit"></i>
-          <i class="nz-icon nz-icon-zoomin"></i>
-          <i class="nz-icon nz-icon-exit-full-screen"></i>
+          <el-dropdown trigger="click" class="nz-chart-top" :key="'chartDropdown'+chartIndex"  v-clickoutside="clickos">
+            <el-dropdown-menu style="display: none"></el-dropdown-menu>
+            <span class="el-dropdown-link chart-title" @click="dropdownMenuShow=!dropdownMenuShow">
+              <span></span>
+              <span>
+                <span class="chart-title-text">{{chartData.title}}</span>
+                <span class="chart-title-icon"><i class="el-icon-caret-bottom el-icon--right"  :class="{'visible':caretShow,'hidden':!caretShow}"></i></span>
+              </span>
+              <span>
+                <i class="nz-icon nz-icon-edit float-right"></i>
+                <i class="nz-icon nz-icon-zoomin float-right"></i>
+                <i class="nz-icon nz-icon-exit-full-screen float-right"></i>
+              </span>
+            </span>
+            <ul slot="dropdown" v-show="dropdownMenuShow"  :id="'dropdownUl'+chartIndex"  class="el-dropdown-menu nz-chart-dropdown"  style="position: absolute; top: 30px; left: calc(50% - 79px); transform-origin: center top; z-index: 1000;" >
+              <li  @click="refreshChart"  class="el-dropdown-menu__item">
+                <i class="global-active-color el-icon-refresh-right" style="font-size: 16px;"></i><span>{{$t('dashboard.refresh')}}</span></li>
+              <li  @click="editChart"  class="el-dropdown-menu__item">
+                <i class="nz-icon nz-icon-edit" style="font-size: 14px; margin-right: 11px; margin-left: 1px;"></i>{{$t('dashboard.edit')}}</li>
+              <li  @click="removeChart"  class="el-dropdown-menu__item">
+                <i class="el-icon-delete" style="font-size: 16px;"></i>{{$t('dashboard.delete')}}</li>
+              <li  @click="showAllScreen"  class="el-dropdown-menu__item">
+                <i class="el-icon-full-screen" style="font-size: 16px;"></i>{{$t('dashboard.screen')}}</li>
+              <li  @click="duplicate"  class="el-dropdown-menu__item">
+                <i class="el-icon-copy-document" style="font-size: 16px;"></i>{{$t('dashboard.duplicate')}}</li>
+            </ul>
+          </el-dropdown>
         </div>
         <div class="mt-10 table-container">
           <topology :nodesArray="nodesArray" :edgesArray="edgesArray" @setTopologyData="setTopologyData" :isFullScreen="false" ref="topology"></topology>
         </div>
+        <!--全屏-->
+        <el-dialog class="nz-dialog table-chart-dialog" :title="$t('dashboard.panel.view')"  :visible.sync="screenModal" width="96%"  @close="exitFull">
+          <div slot="title">
+            <!--<span class="nz-dialog-title">{{data.title}}</span>-->
+            <div class="float-right panel-calendar dialog-tool">
+              <time-picker ref="calendarPanel" class="nz-dashboard-picker" style="margin-top: -12px;" @change="dateChange"></time-picker>
+            </div>
+          </div>
+          <topology :nodesArray="nodesArray" :edgesArray="edgesArray" @setTopologyData="setTopologyData" :isFullScreen="true" ref="topologyFull"></topology>
+          <loading  :ref="'localLoadingScreen'+chartIndex"></loading>
+        </el-dialog>
         <span class="vue-resizable-handle" @mousedown="startResize"></span>
       </div>
 
@@ -57,11 +92,67 @@
     },
     data () {
       return {
+        //其他
+        tableHeight: 0,
+        data: {}, // 该图表信息,chartItem
+        unit:{},
         isError:false,
+        errorContent:'',
+        pageSizes:[50,100,200],
+        pageObj: {
+          pageNo: 1,
+          pageSize: 50,
+          total: 0
+        },
+        screenPageObj:{
+          pageNo: 1,
+          pageSize: 50,
+          total: 0
+        },
+        storedTableData:[],
+        storedScreanTableData:[],
+        seriesItem: [], // 保存信息
+        seriesItemScreen:[],//全屏数据
+        images: '',
+        loading:Object,
+        items: {
+          metric_name: [], // 每条数据列名称
+          xAxis: [],
+          theData: [], // series数据组
+        },
+        panelIdInner: '', // 看板id=panelId,原写作chart,由set_data获取
+        firstLoad: true, // 是否第一次加载
+        chartType: 'table', // 图表类型
+        screenModal: false,
+        // 查询数据使用
+        filter: {
+          start_time: '',
+          end_time: '',
+        },
+        stableFilter: {}, // 保存数据使用,初始化起止时间,单图or多图等
+        firstShow: false, // 默认不显示操作按钮,
         caretShow:false,
         dragTitleShow:false,
         dropdownMenuShow:false,
         divFirstShow:false,
+        columns: [
+          {
+            title:'Element',
+            key:'element',
+            sortable: true
+          }
+          , {
+            title: '采集时间',
+            key: 'time',
+            width: 160,
+            render: (h, params) => h('span', bus.timeFormate(params.row.time, 'yyyy-MM-dd hh:mm:ss')),
+          }, {
+            title: '数值',
+            key: 'value',
+            width: 160,
+            sortable: true,
+            render: (h, params) => h('span', this.getNumStr(params.row.value)),
+          }],
         searchTime: [new Date().setHours(new Date().getHours() - 1), new Date()],//全屏显示的时间
         oldSearchTime: [],
         nodesArray:[
@@ -213,6 +304,54 @@
           })
         }
       },
+      // 设置数据, filter区分
+      setData(chartItem, seriesItem, panelId, filter,area,errorMsg) {
+        if(errorMsg && errorMsg!==''){
+          this.isError = true;
+          this.errorContent = errorMsg;
+        }else {
+          this.isError = false;
+          this.errorContent = '';
+        }
+        if(area==='showFullScreen'){//全屏按时间查询
+          this.data = chartItem;
+          this.unit = chartDataFormat.getUnit(this.data.unit);
+          this.searchTime[0] = filter.start_time;//将列表的查询时间复制给全屏的查询时间
+          this.searchTime[1] = filter.end_time;
+          // this.seriesItemScreen = seriesItem;
+          this.storedScreanTableData=seriesItem;
+          this.storedScreanTableData=Object.assign([],this.storedScreanTableData.reverse());
+          this.screenPageObj.total=this.storedScreanTableData.length;
+          this.seriesItemScreen=this.filterShowData(this.storedScreanTableData,this.screenPageObj);
+          this.endLoading('screen');
+        } else{
+          //设置高度 chart-table
+          this.divFirstShow = true;
+          this.$nextTick(() => {
+            this.resize(chartItem);
+          });
+          this.firstShow = true; // 展示操作按键
+
+          this.panelIdInner = panelId;
+          this.data = chartItem;
+          this.unit = chartDataFormat.getUnit(this.data.unit);
+          this.storedTableData =seriesItem;
+          this.storedScreanTableData=seriesItem;
+          this.storedTableData=Object.assign([],this.storedTableData.reverse());
+          this.storedScreanTableData=Object.assign([],this.storedScreanTableData.reverse());
+          this.pageObj.total=this.storedTableData.length;
+          this.screenPageObj.total=this.storedScreanTableData.length;
+          this.seriesItem=this.filterShowData(this.storedTableData,this.pageObj);
+          this.seriesItemScreen =this.filterShowData(this.storedScreanTableData,this.screenPageObj)
+          if (filter) { // 保存数据,用于同步时间
+            this.searchTime[0] = filter.start_time;//将列表的查询时间复制给全屏的查询时间
+            this.searchTime[1] = filter.end_time;
+            this.oldSearchTime[0] = this.searchTime[0];
+            this.oldSearchTime[1] = this.searchTime[1];
+          }
+          this.endLoading();
+        }
+      },
       dealLegendAlias:function(legend,expression){
         if(/\{\{.+\}\}/.test(expression)){
           let labelValue=expression.replace(/(\{\{.+?\}\})/g,function(i){
@@ -262,8 +401,8 @@
         this.nodesArray=nodesArr;
         this.edgesArray=edgesArr;
       },
-      //重置拓扑图数据
-      resetAllNodes(){
+      //退出全屏
+      exitFull(){
         this.screenModal = false;
         this.$refs.topology.resetAllNodes()
       }
@@ -288,5 +427,9 @@
   }
   .resize-box .vis-network .text-right{
     text-align: right;
+  }
+  .resize-box .vis-network .chartTitle .chart-title{
+    justify-content: space-between;
+    align-items: stretch;
   }
 </style>

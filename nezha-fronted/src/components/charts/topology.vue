@@ -4,8 +4,16 @@
       <!--<button @click="addModelShow" v-show="!selectNodeTitle">add model</button>-->
       <!--<button @click="addLineTitleShow" v-show="!selectNodeTitle">add line</button>-->
       <!--<button @click="lineDel" v-show="!selectNodeTitle">remove line</button>-->
-      <span>Module element :<span class="editTopologyAdd">Add</span><span class="editTopologyRemove">Remove</span></span>
-      <span>Line :<span class="editTopologyAdd">Add</span><span class="editTopologyRemove">Remove</span></span>
+      <span class="editTopologyModule">
+        Module element :
+        <span class="editTopologyAdd" @click="addModelShow">Add</span>
+        <span class="editTopologyRemove" @click="nodeDel">Remove</span>
+      </span>
+      <span class="editTopologyLine">
+        Line :
+        <span class="editTopologyAdd" @click="addLineTitleShow">Add</span>
+        <span class="editTopologyRemove" @click="lineDel">Remove</span>
+      </span>
     </div>
     <div class="network"  v-clickoutside="networkPopClose">
       <!--图拓扑图-->
@@ -17,7 +25,7 @@
         :style="{'top':networkPopTop,'left':networkPopLeft}"
         v-show="networkPopShow"
       >
-        <i class="nz-icon nz-icon-hexagonBorder"  v-for="item in popData"  :style="{top:item.top,left:item.left}">
+        <i class="nz-icon nz-icon-hexagonBorder"  v-for="item in popData"  :style="{top:item.top,left:item.left}" @click="popClick(item.id)">
           <i class="nz-icon nz-icon-liubianxing"></i>
           <i :class="[item.className,{'nz-icon':item.className},'noMove']"></i>
         </i>
@@ -31,7 +39,7 @@
     </div>
     <span v-show="selectNodeTitle">请选择两个节点 <button @click="closeAddLine">取消</button></span>
     <transition name="right-box">
-      <add-model  v-if="addNodeShow" @addModel="addModel" :nodeData="nodeData" @close="addNodeShow=false" @del="nodeDel"></add-model>
+      <add-model  v-if="addNodeShow" @addModel="addModel" :nodeData="nodeData" @close="addNodeShow=false" @del="nodeDel" :isAdd="isNodeAdd"></add-model>
     </transition>
     <transition name="right-box">
       <add-line  v-if="addLineShow" @addLine="addLine" @lineDel="lineDel" :selectNode="NodeArr" :lineData="lineData" :isAdd="isLineAdd" @close="addLineShow=false" @del="lineDel"></add-line>
@@ -97,6 +105,7 @@
           id:'',
         },
         isLineAdd:true,
+        isNodeAdd:true,
         nodeData:{
           modelId:'',
           label:'',
@@ -105,7 +114,7 @@
           image:'',
         },
         popData:[
-          {top:'-20px', left:'-17px',className:'nz-icon-chart',id:'1'},
+          {top:'-20px', left:'-17px',className:'nz-icon-edit',id:'edit'},
           {top:'-20px', left:'28px',className:'nz-icon-chart',id:'2'},
           {top:'18px',  left:'52px',className:'nz-icon-chart',id:'3'},
           {top:'56px', left:'28px',className:'',id:'4'},
@@ -151,7 +160,7 @@
             size: 40,
             borderWidth: 2,
             font:{
-              size:'20',
+              size:20,
             },
           },
 
@@ -162,7 +171,7 @@
               roundness:0.5,
               type: "curvedCW",
             },
-            selfReferenceSize:10,
+            selfReferenceSize:40,
 
           },
           layout:{
@@ -208,16 +217,6 @@
         this_.containerCanvas=document.querySelectorAll("#network_id canvas")[0];
       },
       resetAllNodes() {
-        // let this_ = this;
-        // this_.nodes.clear();
-        // this_.edges.clear();
-        // this_.nodes.add(this_.nodesArray);
-        // this_.edges.add(this_.edgesArray);
-        // this_.data = {
-        //   nodes: this_.nodes,
-        //   edges: this_.edges
-        // };
-        // this_.network = new Vis.Network(this_.container, this_.data, this_.options);
         this.setNetworkData(this.nodesArray,this.edgesArray);
       },
       resetAllNodesStabilize() {
@@ -246,17 +245,24 @@
       addModel(model){ // 添加model
         this.addNodeShow=false;
         if(!model){return}
-        model={...model,...this.network.DOMtoCanvas({x:40,y:40})};
         if(!model.image){
           model.image=png
         }
         let nodesArray=[...this.nodesArray];
+        if(!this.isNodeAdd){
+          console.log(nodesArray.find(item=>item.id ===model.id));
+          model={...nodesArray.find(item=>item.id===model.id),...model};
+          nodesArray=nodesArray.filter(item=>item.id!==model.id);
+        }else{
+          model={...model,...this.network.DOMtoCanvas({x:40,y:40})};
+        }
         nodesArray.push(model);
         this.$emit("setTopologyData",nodesArray,this.edgesArray);
         this.setNetworkData(nodesArray,this.edgesArray);
       },
       addModelShow(){ // 显示添加节点弹窗
         this.addNodeShow=true;
+        this.isNodeAdd=true;
         this.nodeData={
           modelId:'',
           label:'',
@@ -321,11 +327,7 @@
       },
       nodeEdit(){
         this.addNodeShow=true;
-        this.nodeData={
-          modelId:'',
-          label:'',
-          image:'',
-        }
+        this.isNodeAdd=false;
       },
       lineDel(){
         if(!this.lineData.id){return}
@@ -333,6 +335,15 @@
         this.$emit('setTopologyData',this.nodesArray, edgesArray);
         this.setNetworkData(this.nodesArray,edgesArray);
       },
+
+      // 工具的点击 对应的操作
+      popClick(id){
+        if(id=='edit'){
+          this.nodeEdit()
+        }
+
+      },
+
     },
     mounted(){
        setTimeout(()=>{
@@ -362,10 +373,6 @@
          });
 
          this.network.on("dragStart", function (params) {//节点移动开始
-           // params.event = "[original event]";
-           // document.getElementById('eventSpan').innerHTML = '<h2>Click event:</h2>' + JSON.stringify(params, null, 4);
-           // console.log('click event, getNodeAt returns: ' + this.getNodeAt(params.pointer.DOM),params);
-           // console.log( this_.network.getPositions());
            this_.networkPopShow=false;
          });
 
@@ -429,11 +436,11 @@
     top: 0;
     left: 3px;
   }
-  .noMove{
+  .nz-icon.noMove{
     position: absolute;
-    top: -2px;
-    left: 12px;
-    font-size: 24px;
+    top: 0px;
+    left: 14px;
+    font-size: 20px;
     color: #27c09c;
   }
   .networkPop .nz-icon-hexagonBorder:hover{
@@ -496,7 +503,15 @@
     font-size: 18px;
     font-weight: bold;
   }
-  .editTopologyAdd{
+  .editTopologyModule{
+    margin-left: 30px;
+  }
+  .editTopologyLine{
+    margin-left: 130px;
+  }
+  .editTopologyAdd,.editTopologyRemove{
     color: #1989fa;
+    margin-left: 30px;
+    cursor: pointer;
   }
 </style>
