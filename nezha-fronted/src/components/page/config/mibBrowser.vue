@@ -489,7 +489,7 @@
               this.searchParamPop.community=snmpAccount.params.community;
               this.searchParamPop.version=snmpAccount.params.version;
               if(this.searchParamPop.version == 3){
-                this.searchParamPop.auth.username=snmpAccount.params.user;
+                this.searchParamPop.auth.username=snmpAccount.params.username;
                 this.searchParamPop.auth.securityLevel=snmpAccount.params.securityLevel;
                 this.searchParamPop.auth.password=snmpAccount.params.password;
                 this.searchParamPop.auth.authProtocol=snmpAccount.params.authProtocol;
