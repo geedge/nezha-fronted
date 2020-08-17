@@ -8,11 +8,11 @@
           v-for="(item,index) in custom"
           :key="index"
           class="custom-label"
-          :class="!allowedAll && (index==0 || index == 1 || item.NotSet) ? 'custom-label-disabled' : ''"
+          :class="!allowedAll&&!item.allowed && (index==0 || index == 1 || item.NotSet) ? 'custom-label-disabled' : ''"
           @click="handler(item,index)"
           :id="'element-set-el-'+index"
         >
-          <i class="el-icon-check" v-if="!allowedAll&&(index==0||index==1||item.visibility=='disabled')"></i>
+          <i class="el-icon-check" v-if="!allowedAll&&!item.allowed&&(index==0||index==1||item.visibility=='disabled')"></i>
           <i v-else class="el-icon-check" v-show="item.show"></i>
           <span>{{item.label}}</span>
         </div>
@@ -90,7 +90,7 @@ export default {
     },
     //单选
     handler(val, index) {
-      if (!this.allowedAll && (index == 0 || index == 1 || val.NotSet)) {
+      if (!this.allowedAll&&!val.allowed && (index == 0 || index == 1 || val.NotSet)) {
         this.custom[index].show = true;
       } else {
         this.custom[index].show = !this.custom[index].show;
