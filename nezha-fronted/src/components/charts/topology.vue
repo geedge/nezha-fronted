@@ -17,36 +17,40 @@
       <span class="editTopologyLineCancel" v-show="selectNodeTitle">Please select two nodes  <span class="editTopologyCancel" @click="closeAddLine">Cancel</span></span>
     </div>
     <div class="network"  v-clickoutside="networkPopClose">
-      <!--图拓扑图-->
-      <div id="network_id" ref="visNetwork" :class="{'cursorMove': cursorMove}"></div>
-      <!--拓扑图工具-->
-      <div
-        id="networkPop"
-        class="networkPop"
-        :style="{'top':networkPopTop,'left':networkPopLeft}"
-        v-show="networkPopShow"
-      >
-        <i class="nz-icon nz-icon-hexagonBorder"  v-for="item in popData"  :style="{top:item.top,left:item.left}" @click="popClick(item.id)">
-          <i class="nz-icon nz-icon-liubianxing"></i>
-          <i :class="[item.className,{'nz-icon':item.className},'noMove']"></i>
+        <!--图拓扑图-->
+        <div id="network_id" ref="visNetwork" :class="{'cursorMove': cursorMove}"></div>
+        <!--拓扑图工具-->
+        <div
+          id="networkPop"
+          class="networkPop"
+          :style="{'top':networkPopTop,'left':networkPopLeft}"
+          v-show="networkPopShow"
+        >
+          <i class="nz-icon nz-icon-hexagonBorder"  v-for="item in popData"  :style="{top:item.top,left:item.left}" @click="popClick(item.id)">
+            <i class="nz-icon nz-icon-liubianxing"></i>
+            <i :class="[item.className,{'nz-icon':item.className},'noMove']"></i>
+          </i>
+          <!--<i class="nz-icon nz-icon-delete" @click="nodeDel"></i>-->
+        </div>
+        <!--拓扑图选中-->
+        <div class="selNode" id="nodeArr1" v-show="NodeArr[0]&&NodeArrShow">
+          <div class="selNodeTop"></div>
+          <div class="selNodeRight"></div>
+          <div class="selNodeBottom"></div>
+          <div class="selNodeLeft"></div>
+        </div>
+        <div class="selNode" id="nodeArr2" v-show="NodeArr[1]&&NodeArrShow">
+          <div class="selNodeTop"></div>
+          <div class="selNodeRight"></div>
+          <div class="selNodeBottom"></div>
+          <div class="selNodeLeft"></div>
+        </div>
+        <!--图谱图右侧-->
+        <!--<div class="networkContent">33333</div>-->
+        <!--model上的图标-->
+        <i class="nz-icon nz-icon-shuidi" v-show="item.show" v-for="(item,index) in modelTop" :style="{top:(item.y-80)+'px',left:(item.x-26)+'px'}">
+          <i class="nz-icon nz-icon-model"></i>
         </i>
-        <!--<i class="nz-icon nz-icon-delete" @click="nodeDel"></i>-->
-      </div>
-      <!--拓扑图选中-->
-      <div class="selNode" id="nodeArr1" v-show="NodeArr[0]&&NodeArrShow">
-        <div class="selNodeTop"></div>
-        <div class="selNodeRight"></div>
-        <div class="selNodeBottom"></div>
-        <div class="selNodeLeft"></div>
-      </div>
-      <div class="selNode" id="nodeArr2" v-show="NodeArr[1]&&NodeArrShow">
-        <div class="selNodeTop"></div>
-        <div class="selNodeRight"></div>
-        <div class="selNodeBottom"></div>
-        <div class="selNodeLeft"></div>
-      </div>
-      <!--图谱图右侧-->
-      <!--<div class="networkContent">33333</div>-->
     </div>
     <transition name="right-box">
       <add-model  v-if="addNodeShow" @addModel="addModel" :nodeData="nodeData" @close="addNodeShow=false" @del="nodeDel" :isAdd="isNodeAdd"></add-model>
@@ -103,6 +107,7 @@
     },
     data(){
 		  return {
+        fangdaX:1,
         selectNodeTitle:false,
         // 拓扑图工具
         networkPopTop:0,
@@ -138,6 +143,7 @@
           {top:'56px', left:'-17px',className:'nz-icon-chart',id:'5'},
           {top:'18px', left:'-38px',className:'nz-icon-chart',id:'6'},
         ],
+        modelTop:[],
         //viewsCenter
         viewsCenter:{
           x:0,y:0
@@ -231,6 +237,7 @@
           console.log(this_.viewsCenter)
         }
         this_.containerCanvas=document.querySelectorAll("#network_id canvas")[0];
+        this_.modelTopUpdate();
       },
       resetAllNodes() {
         this.setNetworkData(this.nodesArray,this.edgesArray);
@@ -250,13 +257,16 @@
         });
         this_.network.moveTo({
           position: this_.viewsCenter,
-          scale: this_.isFullScreen?1.5:1,
+          scale: this_.isFullScreen?1.5:this.fangdaX,
           offset: {x:0, y:0},
         });
         console.log( this.nodes,this.edges);
         if(this_.isFullScreen) {
           console.log(this_.viewsCenter)
         }
+        this.$nextTick(()=>{
+          this_.modelTopUpdate();
+        })
       },
       addModel(model){ // 添加model
         this.addNodeShow=false;
@@ -266,7 +276,6 @@
         }
         let nodesArray=[...this.nodesArray];
         if(!this.isNodeAdd){
-          console.log(nodesArray.find(item=>item.id ===model.id));
           model={...nodesArray.find(item=>item.id===model.id),...model};
           nodesArray=nodesArray.filter(item=>item.id!==model.id);
         }else{
@@ -299,6 +308,7 @@
        }else{
          edges.from=this.NodeArr[0];
          edges.to=this.NodeArr[1];
+         edges.dashes=[15,15];
        }
        edgesArray.push(edges);
        console.log(edgesArray,edges);
@@ -330,8 +340,8 @@
       },
       setPopPosition(selId,params){//设置节点工具栏位置
         let position=this.network.canvasToDOM(this.network.getPositions(params.nodes)[selId]);
-        this.networkPop.style.top = position.y - 70 +'px';
-        this.networkPop.style.left = position.x - 30 +'px';
+        this.networkPop.style.top = position.y - 85 +'px';
+        this.networkPop.style.left = position.x - 32 +'px';
         if(!this.isFullScreen&&this.NodeArr.length==0){
           this.networkPopShow=true;
         }
@@ -367,7 +377,23 @@
         }
 
       },
-
+      fangda(){
+        this.fangdaX+=0.3
+        document.getElementById('vis-content').style.transform='scale('+this.fangdaX+')';
+        this.setNetworkData(this.nodesArray,this.edgesArray);
+      },
+      modelTopUpdate(){
+        this.modelTop=[];
+        this.nodesArray.forEach((item)=>{
+          let position=this.network.canvasToDOM({x:item.x,y:item.y})
+          this.modelTop.push({
+            show:true,
+            x:position.x,
+            y:position.y,
+            id:item.id,
+          })
+        })
+      }
     },
     mounted(){
        setTimeout(()=>{
@@ -406,6 +432,15 @@
          this.network.on("dragStart", function (params) {//节点移动开始
            this_.networkPopShow=false;
            this_.NodeArrShow=false;
+           let selId=params.nodes[0];
+           if(selId){
+             this_.modelTop.find(item=>item.id===selId).show=false;
+           }
+           if(!selId){
+             this_.modelTop.forEach(item=>{
+               item.show=false;
+             })
+           }
          });
 
          this.network.on("dragging", function (params,event) {//节点移动中
@@ -422,6 +457,7 @@
            if(this_.NodeArr.length>0){
              this_.NodeArrShow=true;
            }
+           this_.modelTopUpdate();
          });
 
          this.network.on("hoverNode", function (params) {//hoverNode
@@ -448,6 +484,7 @@
     display: flex;
     height: calc(100% - 30px);
     position: relative;
+    overflow: hidden;
   }
   .networkPop{
     position: absolute;
@@ -586,5 +623,17 @@
     position: absolute;
     left: -60px;
     top: -60px;
+  }
+  .nz-icon-shuidi{
+    position: absolute;
+    font-size: 48px;
+    color: rgba(132,213,194,0.5);
+  }
+  .nz-icon-model{
+    color: #23bf9a;
+    position: absolute;
+    top: 14px;
+    left: 15px;
+    font-size: 18px;
   }
 </style>
