@@ -4,16 +4,17 @@
       <!--<button @click="addModelShow" v-show="!selectNodeTitle">add model</button>-->
       <!--<button @click="addLineTitleShow" v-show="!selectNodeTitle">add line</button>-->
       <!--<button @click="lineDel" v-show="!selectNodeTitle">remove line</button>-->
-      <span class="editTopologyModule">
+      <span v-show="!selectNodeTitle" class="editTopologyModule">
         Module element :
         <span class="editTopologyAdd" @click="addModelShow">Add</span>
         <span class="editTopologyRemove" @click="nodeDel">Remove</span>
       </span>
-      <span class="editTopologyLine">
+      <span v-show="!selectNodeTitle" class="editTopologyLine">
         Line :
         <span class="editTopologyAdd" @click="addLineTitleShow">Add</span>
         <span class="editTopologyRemove" @click="lineDel">Remove</span>
       </span>
+      <span class="editTopologyLineCancel" v-show="selectNodeTitle">Please select two nodes  <span class="editTopologyCancel" @click="closeAddLine">Cancel</span></span>
     </div>
     <div class="network"  v-clickoutside="networkPopClose">
       <!--图拓扑图-->
@@ -32,17 +33,16 @@
         <!--<i class="nz-icon nz-icon-delete" @click="nodeDel"></i>-->
       </div>
       <!--拓扑图选中-->
-      <div></div>
-      <div></div>
+      <div class="selNode" id="nodeArr1" v-show="NodeArr[1]&&NodeArrShow"></div>
+      <div class="selNode" id="nodeArr2" v-show="NodeArr[2]&&NodeArrShow"></div>
       <!--图谱图右侧-->
       <!--<div class="networkContent">33333</div>-->
     </div>
-    <span v-show="selectNodeTitle">请选择两个节点 <button @click="closeAddLine">取消</button></span>
     <transition name="right-box">
       <add-model  v-if="addNodeShow" @addModel="addModel" :nodeData="nodeData" @close="addNodeShow=false" @del="nodeDel" :isAdd="isNodeAdd"></add-model>
     </transition>
     <transition name="right-box">
-      <add-line  v-if="addLineShow" @addLine="addLine" @lineDel="lineDel" :selectNode="NodeArr" :lineData="lineData" :isAdd="isLineAdd" @close="addLineShow=false" @del="lineDel"></add-line>
+      <add-line  v-if="addLineShow" @addLine="addLine" @lineDel="lineDel" :selectNode="NodeArr" :lineData="lineData" :isAdd="isLineAdd" @close="closeAddLine" @del="lineDel"></add-line>
     </transition>
   </div>
 </template>
@@ -94,6 +94,7 @@
         networkPopShow:false,
         addNodeShow:false,
         addLineShow:false,
+        NodeArrShow:false,
         cursorMove:false,
         NodeArr:[],
         selNodeId:'',
@@ -172,7 +173,6 @@
               type: "curvedCW",
             },
             selfReferenceSize:40,
-
           },
           layout:{
             randomSeed: 666,
@@ -289,14 +289,19 @@
         this.$emit("setTopologyData",this.nodesArray,edgesArray);
         this.setNetworkData(this.nodesArray,edgesArray);
         this.NodeArr=[];
+        this.NodeArrShow=false;
       },
       addLineTitleShow(){ // 显示添加线弹窗
         // this.addLineShow=true;
         this.selectNodeTitle=true;
+        this.NodeArrShow=true;
       },
       closeAddLine(){
         this.selectNodeTitle=false;
+        this.addLineShow=false;
         this.NodeArr=[];
+        this.NodeArrShow=false;
+        this.network.unselectAll();
       },
       setNodePosition(selId){ // 移动节点后 设置节点坐标
         let position = this.network.getPositions([selId]);
@@ -311,7 +316,9 @@
         let position=this.network.canvasToDOM(this.network.getPositions(params.nodes)[selId]);
         this.networkPop.style.top = position.y - 70 +'px';
         this.networkPop.style.left = position.x - 30 +'px';
-        this.networkPopShow=true;
+        if(!this.isFullScreen){
+          this.networkPopShow=true;
+        }
       },
       networkPopClose(){//关闭节点工具栏
         this.networkPopShow=false;
@@ -356,11 +363,12 @@
              this_.selNodeId=selId;
              this_.cursorMove=true;
              this_.nodeData=this_.nodesArray.find((item)=>item.id==selId);
-             this_.setPopPosition(selId,params);
              if(this_.selectNodeTitle){
                this_.NodeArr.push(selId);
-               this_.network.selectNodes(this_.NodeArr,true)
+               this_.network.selectNodes(this_.NodeArr,true);
+               return
              }
+             this_.setPopPosition(selId,params);
            }
          });
 
@@ -374,6 +382,7 @@
 
          this.network.on("dragStart", function (params) {//节点移动开始
            this_.networkPopShow=false;
+           this_.NodeArrShow=false;
          });
 
          this.network.on("dragging", function (params,event) {//节点移动中
@@ -386,6 +395,9 @@
            if(selId){
              this_.setPopPosition(selId,params);
              this_.setNodePosition(selId)
+           }
+           if(this_.NodeArr.length>0){
+             this_.NodeArrShow=true;
            }
          });
 
@@ -431,10 +443,10 @@
   }
   .networkPop  .nz-icon-liubianxing{
     color:#e2f3ef;
-    font-size: 41px;
+    font-size: 44px;
     position: absolute;
     top: 0;
-    left: 3px;
+    left: 2px;
   }
   .nz-icon.noMove{
     position: absolute;
@@ -449,6 +461,7 @@
   .networkPop .nz-icon-hexagonBorder:hover .nz-icon-liubianxing{
     transform: scale(1.1);
     left: 4px;
+    font-size: 41px;
   }
   .networkPop .nz-icon-hexagonBorder:hover .noMove{
     transform: scale(1.1);
@@ -503,13 +516,13 @@
     font-size: 18px;
     font-weight: bold;
   }
-  .editTopologyModule{
+  .editTopologyModule,.editTopologyLineCancel{
     margin-left: 30px;
   }
   .editTopologyLine{
     margin-left: 130px;
   }
-  .editTopologyAdd,.editTopologyRemove{
+  .editTopologyAdd,.editTopologyRemove,.editTopologyCancel{
     color: #1989fa;
     margin-left: 30px;
     cursor: pointer;
