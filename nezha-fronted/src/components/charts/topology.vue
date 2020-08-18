@@ -33,8 +33,18 @@
         <!--<i class="nz-icon nz-icon-delete" @click="nodeDel"></i>-->
       </div>
       <!--拓扑图选中-->
-      <div class="selNode" id="nodeArr1" v-show="NodeArr[1]&&NodeArrShow"></div>
-      <div class="selNode" id="nodeArr2" v-show="NodeArr[2]&&NodeArrShow"></div>
+      <div class="selNode" id="nodeArr1" v-show="NodeArr[0]&&NodeArrShow">
+        <div class="selNodeTop"></div>
+        <div class="selNodeRight"></div>
+        <div class="selNodeBottom"></div>
+        <div class="selNodeLeft"></div>
+      </div>
+      <div class="selNode" id="nodeArr2" v-show="NodeArr[1]&&NodeArrShow">
+        <div class="selNodeTop"></div>
+        <div class="selNodeRight"></div>
+        <div class="selNodeBottom"></div>
+        <div class="selNodeLeft"></div>
+      </div>
       <!--图谱图右侧-->
       <!--<div class="networkContent">33333</div>-->
     </div>
@@ -83,6 +93,12 @@
           this.selectNodeTitle=false;
           this.isLineAdd=true;
         }
+        this.NodeArr.forEach((id,index)=>{
+          let selNode = this.nodesArray.find(item=>item.id===id);
+          let position=this.network.canvasToDOM({x:selNode.x,y:selNode.y});
+          document.getElementById('nodeArr'+(index+1)).style.top=position.y+'px';
+          document.getElementById('nodeArr'+(index+1)).style.left=position.x+'px';
+        })
       }
     },
     data(){
@@ -316,9 +332,10 @@
         let position=this.network.canvasToDOM(this.network.getPositions(params.nodes)[selId]);
         this.networkPop.style.top = position.y - 70 +'px';
         this.networkPop.style.left = position.x - 30 +'px';
-        if(!this.isFullScreen){
+        if(!this.isFullScreen&&this.NodeArr.length==0){
           this.networkPopShow=true;
         }
+        this.NodeArr=[...this.NodeArr]
       },
       networkPopClose(){//关闭节点工具栏
         this.networkPopShow=false;
@@ -363,6 +380,12 @@
              this_.selNodeId=selId;
              this_.cursorMove=true;
              this_.nodeData=this_.nodesArray.find((item)=>item.id==selId);
+             console.log(this_.NodeArr.indexOf(selId));
+             if(this_.NodeArr.indexOf(selId)!==-1){
+                let index = this_.NodeArr.indexOf(selId);
+                this_.NodeArr=this_.NodeArr.filter((item,i)=> i != index);
+                return
+             }
              if(this_.selectNodeTitle){
                this_.NodeArr.push(selId);
                this_.network.selectNodes(this_.NodeArr,true);
@@ -526,5 +549,42 @@
     color: #1989fa;
     margin-left: 30px;
     cursor: pointer;
+  }
+  .selNode{
+    position: absolute;
+    width: 0;
+    height: 0;
+  }
+  .selNodeTop {
+    width: 120px;
+    height: 0;
+    border-top: 4px dashed yellow;
+    position: absolute;
+    left: -60px;
+    top: -60px;
+  }
+  .selNodeRight {
+    width: 0px;
+    height: 120px;
+    border-right: 4px dashed yellow;
+    position: absolute;
+    left: 60px;
+    top: -60px;
+  }
+  .selNodeBottom {
+    width: 120px;
+    height: 0;
+    border-bottom: 4px dashed yellow;
+    position: absolute;
+    left: -60px;
+    top: 60px;
+  }
+  .selNodeLeft {
+    width: 0px;
+    height: 120px;
+    border-left: 4px dashed yellow;
+    position: absolute;
+    left: -60px;
+    top: -60px;
   }
 </style>
