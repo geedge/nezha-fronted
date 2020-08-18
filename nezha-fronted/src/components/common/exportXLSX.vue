@@ -153,6 +153,8 @@
               this.$emit('afterImport')
               this.importBox.type=3;
               this.importBox.width='600px';
+            }else{
+              this.$message.error(response.msg);
             }
           })
         }

@@ -280,7 +280,8 @@
           {
             label: this.$t("asset.tableTitle.id"),
             prop: 'ID',
-            show: true,
+            show: false,
+            allowed:true,
             // width: 110
           }, {
             label: this.$t("asset.tableTitle.assetType"),

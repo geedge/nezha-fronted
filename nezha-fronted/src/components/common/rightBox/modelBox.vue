@@ -259,7 +259,7 @@
               if (response.code === 200) {
                 this.editModel.typeCode=response.data.dictEntity.code;
                 this.$emit("reload");
-                this.$message({duration: 1000, type: 'success', message: this.$t("tip.saveSuccess")});
+                // this.$message({duration: 1000, type: 'success', message: this.$t("tip.saveSuccess")});
                 resolve();
               } else {
                 this.$message.error(response.msg);
@@ -296,7 +296,7 @@
               if (response.code === 200) {
                 this.editModel.vendorCode=response.data.dictEntity.code;
                 this.$emit("reload");
-                this.$message({duration: 1000, type: 'success', message: this.$t("tip.saveSuccess")});
+                // this.$message({duration: 1000, type: 'success', message: this.$t("tip.saveSuccess")});
                 resolve();
               } else {
                 this.$message.error(response.msg);
