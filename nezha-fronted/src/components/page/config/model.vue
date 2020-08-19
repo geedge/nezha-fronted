@@ -33,8 +33,7 @@
                 border style="width: 100%;"
                 ref="modelTable"
                 class="nz-table"
-                v-scrollBar
-                :el-table="'large'"
+                v-scrollBar:el-table="'large'"
                 v-loading="tools.loading"
                 :cell-class-name="assetStatClassName"
                 v-show="bottomBox.mainResizeShow"
