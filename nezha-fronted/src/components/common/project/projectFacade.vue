@@ -18,13 +18,14 @@
         <div>123</div>
         <div>456</div>
       </div>
-      <vis-network
-        :panel-id="item.id"
-        :chart-data="item"
-        :chart-index="0"
-        class="facade-content"
-      >
-      </vis-network>
+      <div  class="facade-content">
+        <vis-network
+          :panel-id="item.id"
+          :chart-data="item"
+          :chart-index="0"
+        >
+        </vis-network>
+      </div>
     </div>
   </div>
 </template>
@@ -139,5 +140,6 @@
   .facade-content{
     flex: 1;
     min-height: 800px;
+    width: 80%;
   }
 </style>
