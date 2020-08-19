@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="8px" height="32px" viewBox="0 0 8 32" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 52.5 (67469) - http://www.bohemiancoding.com/sketch -->
+    <title>矩形</title>
+    <desc>Created with Sketch.</desc>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="画板" transform="translate(-114.000000, -46.000000)" fill="#2D88FA">
+            <path d="M114,46 L114,46 C118.418278,46 122,49.581722 122,54 L122,70 C122,74.418278 118.418278,78 114,78 L114,46 Z" id="矩形"></path>
+        </g>
+    </g>
+</svg>

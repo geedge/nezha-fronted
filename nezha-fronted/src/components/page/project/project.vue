@@ -125,7 +125,8 @@
       </div>
     </template>
     <template v-else-if="pageType == 'project'">
-      <panel-tab from="project" :obj="currentProject" targetTab.sync="panel"></panel-tab>
+      <!--<panel-tab from="project" :obj="currentProject" targetTab.sync="panel"></panel-tab>-->
+      <facade />
     </template>
 
     <transition name="el-zoom-in-bottom">
@@ -147,13 +148,14 @@
   import loading from "../../common/loading";
   import panelTab from '../../common/bottomBox/tabs/panelTab'
   import bus from '../../../libs/bus'
-
+  import facade from '@/components/common/project/projectFacade'
   export default {
     name: "project2",
     components: {
       'export-excel':exportXLSX,
       'loading': loading,
-      'panel-tab': panelTab
+      'panel-tab': panelTab,
+      facade,
     },
     data() {
       return {

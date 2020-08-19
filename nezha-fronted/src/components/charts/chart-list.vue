@@ -153,7 +153,7 @@
   import draggable from 'vuedraggable'
   import chartDataFormat from "./chartDataFormat";
   import chartAlertList from './chart-alert-list'
-  import visNetwork from './visNetwork'
+  // import visNetwork from './visNetwork'
   export default {
     name: 'chartList',
     props: {
@@ -170,7 +170,7 @@
       chartUrl,
       chartSingleStat,
       draggable,
-      visNetwork,
+      // visNetwork,
     },
     data() {
       return {
@@ -655,23 +655,23 @@
             }
 
             this.dataList = [...this.dataTotalList];
-            this.dataList.push({ // 拓扑图
-              id: -10,
-              panelId: 0,
-              title: this.$t("alert.config.chart.alertNumTrend"),
-              span: 8,
-              height: 800,
-              type: "topology",
-              prev: -11,
-              next: -1,
-              unit: 1,
-              buildIn: 1,
-              elements: [{
-                id: '',
-                expression: `nz_alert_nums{id="${3333}"}`,
-                type: ''
-              }]
-            });
+            // this.dataList.push({ // 拓扑图
+            //   id: -10,
+            //   panelId: 0,
+            //   title: this.$t("alert.config.chart.alertNumTrend"),
+            //   span: 8,
+            //   height: 800,
+            //   type: "topology",
+            //   prev: -11,
+            //   next: -1,
+            //   unit: 1,
+            //   buildIn: 1,
+            //   elements: [{
+            //     id: '',
+            //     expression: `nz_alert_nums{id="${3333}"}`,
+            //     type: ''
+            //   }]
+            // });
             this.$nextTick(() => {
               if (this.dataList.length > 0 ) {
                 this.dataList.forEach((item,index) => {
