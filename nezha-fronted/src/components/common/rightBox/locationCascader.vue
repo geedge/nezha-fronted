@@ -143,6 +143,7 @@
         if(!cabinet){
           return ;
         }
+        console.log('load u',cabinet,isInit)
         this.selectedData.cabinet=cabinet;
         this.selectedData.u=null;
         let cabinetUKey='cabinet-'+this.selectedData.idc.id+'-'+cabinet.id
@@ -152,6 +153,10 @@
         this.occupyU=[];
         if(this.uInfos.has(cabinetUKey)&&this.uInfos.get(cabinetUKey)&&this.uInfos.get(cabinetUKey).length>0){
           this.showUInfos=this.uInfos.get(cabinetUKey);
+          let occupyU=this.showUInfos.filter(item =>{
+            return item.occupy==true
+          })
+          this.occupyU=occupyU.map(item=>{return item.value})
         }else{
           let us=[];
           this.$get('cabinet/u?id='+cabinet.id).then(response=>{
@@ -207,7 +212,6 @@
             let min=oldUCheckCopy[0];
             let max=oldUCheckCopy[oldUCheckCopy.length-1];
             if(unCheckValue != min && unCheckValue != max){ //非连续取消选中
-              debugger
               // 需要留下连续的 且 满足defaultModelUsize的u位
               if(unCheckValue - min >= this.defaultModelUSize){ //上方满足条件
                 this.clearUChecked();
@@ -234,16 +238,20 @@
             }
           }
         }else{
+          console.log('选中操作')
           let checkValues=this.findUnoccupyU(data);
           let checkValue=data[data.length-1]; //当前选中的u
+          console.log('选中的',checkValues,'default usize',this.defaultModelUSize)
           if(checkValues.length < this.defaultModelUSize){ //如果小于model 规定的大小，需要自动选择
             let suitU=this.findSuitableU(checkValue);
+            console.log('u size 不够，需要补充,合适u位',suitU)
             if(suitU.length>0){ //有合适的u位
               while(this.uChecked.length - this.occupyU.length < this.defaultModelUSize){
                 let popU=suitU.splice(0,1)[0]
                 this.uChecked.push(popU);
               }
             }else{
+              console.log('u size 不够，取消当前选中')
               this.uChecked.splice(this.uChecked.length-1,1);
             }
           }else{//至少已经选择了defaultCabinetUsize 个u ，这里需要处理不连续选择的情况

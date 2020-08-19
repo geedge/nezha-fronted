@@ -469,9 +469,10 @@
   .content .left-slot{
     position: relative;
     background-color: $left-menu-bgcolor;
-    transition: transform 200ms;
+    transition: transform 200ms, opacity 200ms;
     transform: scaleX(1);
     transform-origin: left;
+    opacity: 1;
     /*border-bottom: 1px solid #eeeeee;*/
     /*transition: all 100ms;*/
   }
@@ -483,14 +484,10 @@
     margin-left: -177px;
   }
   .content .left-slot-shrink{
-    /*width: 25px;*/
     transform: scaleX(0.12);
+    opacity: 0;
     .bottom-icon .bottom-divider{
       width: 0px;
-    }
-    .slot-content{
-      /*visibility: hidden;*/
-      opacity: 0;
     }
   }
   .slot-content {
@@ -561,15 +558,9 @@
     visibility: hidden;
   }
   .content .left-slot-shrink:hover{
-    /*width: 200px;*/
     transform: scaleX(1);
-    /*padding: 0px 0px 0px 15px;
-    position: absolute;*/
     z-index: 100;
-    .slot-content{
-      /*visibility: visible;*/
-      opacity: 1;
-    }
+    opacity: 1;
     .bottom-icon{
       z-index: 101;
     }
