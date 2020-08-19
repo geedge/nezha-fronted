@@ -15,18 +15,36 @@
 
     <!-- begin--表单-->
     <el-scrollbar class="right-box-form-box">
-      <el-form ref="form" :model="form" label-width="120px">
-        <el-form-item label="Id">
-          <el-input v-model="form.modelId"></el-input>
+      <el-form ref="form" :model="form" label-width="160px" :rules="rules">
+        <el-form-item label="Module Name" prop="modelId">
+          <el-select v-model="form.modelId" placeholder=""  popper-class="asset-dropdown">
+            <el-option
+              v-for="item in nodesArray"
+              :key="item.id"
+              :label="item.label"
+              :value="item.id">
+            </el-option>
+          </el-select>
         </el-form-item>
 
-        <el-form-item label="Label">
-          <el-input v-model="form.label"></el-input>
+        <el-form-item label="Label" prop="imgId">
+          <el-select v-model="form.imgId" placeholder=""  popper-class="asset-dropdown">
+            <el-option
+              v-for="item in iconArray"
+              :key="item.id"
+              :label="item.label"
+              :value="item.id">
+              <span style="float: left">
+                <img :src="item.image" />
+              </span>
+              <span style="float: right; color: #8492a6; font-size: 13px">{{ item.label }}</span>
+            </el-option>
+          </el-select>
         </el-form-item>
 
-        <el-form-item label="image">
-          <el-input v-model="form.image"></el-input>
-        </el-form-item>
+        <!--<el-form-item label="image">-->
+          <!--<el-input v-model="form.image"></el-input>-->
+        <!--</el-form-item>-->
         <!--<div  class="right-box-sub-title">-->
           <!--<span>{{$t('alert.config.expr')}}</span>-->
           <!--<span class="float-right" @click="addExpression"><i style="font-size: 16px; cursor: pointer;" class="nz-icon nz-icon-create-square"></i></span>-->
@@ -88,6 +106,12 @@
 
 <script>
   // import promqlInput from "@compotents/page/dashboard/explore/promqlInput";
+  import  a from './a.png'
+  import  b from './b.png'
+  import  c from './c.png'
+  import  d from './d.png'
+  import  e from './e.png'
+  import  f from './f.png'
 	export default {
 		name:"addNode",
     components:{
@@ -112,17 +136,60 @@
 		  return{
         form:{
           modelId:'',
-          label:'',
-          image:'',
+          imgId:'',
         },
         promqlKeys:[],
         expressions: [],
+        rules:{
+          modelId:[
+            { required: true, message: '请选择module', trigger: 'blur' },
+          ],
+          imgId:[
+            { required: true, message: '请选择module', trigger: 'blur' },
+          ],
+        },
+        nodesArray:[
+          { id: 1, label: "model1",
+            image: 'https://ss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=1906469856,4113625838&fm=26&gp=0.jpg',
+            shape:'image',shapeProperties:{useImageSize:false},
+            x:1,y:-63,
+          },
+          {id: 2, label: "model2", },
+          {id: 3, label: "model3",},
+          {id: 4, label: "model4", },
+          {id: 5, label: "model5",},
+          {id: 6, label: "model6",},
+          {id: 7, label: "model7",},
+
+          {id: 9, label: "model9", },
+          {id: 10, label: "model10", },
+          {id: 11, label: "model11",},
+          {id: 12, label: "model12",},
+          {id: 13, label: "model13",},
+          {id: 14, label: "model14",},
+        ],
+        iconArray:[
+          {id:1,image:a,label:'model1',},
+          {id:2,image:b,label:'model2',},
+          {id:3,image:c,label:'model3',},
+          {id:4,image:d,label:'model4',},
+          {id:5,image:e,label:'model5',},
+          {id:6,image:f,label:'model6',},
+          // {id:7,img:'./a.png',label:'model',},
+        ],
       }
     },
     methods:{
       onSubmit(){
-        let model=Object.assign({id:this.form.modelId,shape:'image',shapeProperties:{useImageSize:false}},{...this.form});
-        this.$emit('addModel',model)
+        this.$refs['form'].validate((valid) => {
+          if (valid) {
+            let module=this.nodesArray.find(item=>item.id===this.form.modelId);
+            let img=this.iconArray.find(item=>item.id===this.form.imgId);
+            let model=Object.assign({...this.form},{...module},{...img},{id:this.form.modelId,shape:'image',shapeProperties:{useImageSize:false}},);
+            this.$emit('addModel',model)
+          }
+        });
+
       },
       expressionChange: function () {
 

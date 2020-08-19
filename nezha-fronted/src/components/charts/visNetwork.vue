@@ -67,7 +67,12 @@
 </template>
 
 <script>
-  import  png from './a.png'
+  import  a from './a.png'
+  import  b from './b.png'
+  import  c from './c.png'
+  import  d from './d.png'
+  import  e from './e.png'
+  import  f from './f.png'
   import bus from '../../libs/bus';
   import {Loading} from 'element-ui';
   import chartDataFormat from './chartDataFormat'
@@ -160,13 +165,15 @@
             image: 'https://ss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=1906469856,4113625838&fm=26&gp=0.jpg',
             shape:'image',shapeProperties:{useImageSize:false},
             x:1,y:-63,
+            imgId:0,
+            scaling:{min:0.5,max:10,}
           },
-          {id: 2, label: "model", x:-236,y:-163, image: png, shape:'image',shapeProperties:{useImageSize:false}},
-          {id: 3, label: "model", x:-346,y:-155, image: png, shape:'image',shapeProperties:{useImageSize:false}},
-          {id: 4, label: "model", x:-129,y:169, image: png, shape:'image',shapeProperties:{useImageSize:false}},
-          {id: 5, label: "model", x:-388,y:35, image: png, shape:'image',shapeProperties:{useImageSize:false}},
-          {id: 6, label: "model", x:-345,y:-53, image: png, shape:'image',shapeProperties:{useImageSize:false}},
-          {id: 7, label: "model", x:316,y:22, image: png, shape:'image',shapeProperties:{useImageSize:false}},
+          {id: 2, imgId:1, scaling:{min:0.5,max:10,}, label: "model", x:-236,y:-163, image: a, shape:'image',shapeProperties:{useImageSize:false}},
+          {id: 3, imgId:2, scaling:{min:0.5,max:10,}, label: "model", x:-346,y:-155, image: b, shape:'image',shapeProperties:{useImageSize:false}},
+          {id: 4, imgId:3, scaling:{min:0.5,max:10,}, label: "model", x:-129,y:169, image: c, shape:'image',shapeProperties:{useImageSize:false}},
+          {id: 5, imgId:4, scaling:{min:0.5,max:10,}, label: "model", x:-388,y:35, image: d, shape:'image',shapeProperties:{useImageSize:false}},
+          {id: 6, imgId:5, scaling:{min:0.5,max:10,}, label: "model", x:-345,y:-53, image: e, shape:'image',shapeProperties:{useImageSize:false}},
+          {id: 7, imgId:6, scaling:{min:0.5,max:10,}, label: "model", x:316,y:22, image: f, shape:'image',shapeProperties:{useImageSize:false}},
         ],
         edgesArray:[
           {id: 0,from: 2, to: 1, dashes:[15,15],label:"hahah",arrows:'from;to', color: {color:'#ff4500',highlight:'#ff4500',hover:'#ff4500',opacity:1.0}},

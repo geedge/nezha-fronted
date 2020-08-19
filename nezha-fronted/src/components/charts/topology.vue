@@ -1,9 +1,6 @@
 <template>
   <div class="content">
     <div class="editTopology">
-      <!--<button @click="addModelShow" v-show="!selectNodeTitle">add model</button>-->
-      <!--<button @click="addLineTitleShow" v-show="!selectNodeTitle">add line</button>-->
-      <!--<button @click="lineDel" v-show="!selectNodeTitle">remove line</button>-->
       <span v-show="!selectNodeTitle" class="editTopologyModule">
         Module element :
         <span class="editTopologyAdd" @click="addModelShow">Add</span>
@@ -23,7 +20,7 @@
         <div
           id="networkPop"
           class="networkPop"
-          :style="{'top':networkPopTop,'left':networkPopLeft}"
+          :style="{transform:'scale('+zoom+')'}"
           v-show="networkPopShow"
         >
           <i class="nz-icon nz-icon-hexagonBorder"  v-for="item in popData"  :style="{top:item.top,left:item.left}" @click="popClick(item.id)">
@@ -33,13 +30,13 @@
           <!--<i class="nz-icon nz-icon-delete" @click="nodeDel"></i>-->
         </div>
         <!--拓扑图选中-->
-        <div class="selNode" id="nodeArr1" v-show="NodeArr[0]&&NodeArrShow">
+        <div class="selNode" id="nodeArr1" v-show="NodeArr[0]&&NodeArrShow" :style="{transform:'scale('+zoom+')'}">
           <div class="selNodeTop"></div>
           <div class="selNodeRight"></div>
           <div class="selNodeBottom"></div>
           <div class="selNodeLeft"></div>
         </div>
-        <div class="selNode" id="nodeArr2" v-show="NodeArr[1]&&NodeArrShow">
+        <div class="selNode" id="nodeArr2" v-show="NodeArr[1]&&NodeArrShow" :style="{transform:'scale('+zoom+')'}">
           <div class="selNodeTop"></div>
           <div class="selNodeRight"></div>
           <div class="selNodeBottom"></div>
@@ -48,7 +45,14 @@
         <!--图谱图右侧-->
         <!--<div class="networkContent">33333</div>-->
         <!--model上的图标-->
-        <i class="nz-icon nz-icon-shuidi" v-show="item.show" v-for="(item,index) in modelTop" :style="{top:(item.y-80)+'px',left:(item.x-26)+'px'}">
+        <i class="nz-icon nz-icon-shuidi"
+           v-show="item.show"
+           v-for="(item,index) in modelTop"
+           :style="{top:(item.y- 80 + 5*(10-zoom*10))+'px',left:(item.x-26)+'px',transform:'scale('+zoom+')'}"
+           :ref="'modelTopId'+index"
+           @mousedown="modelTopMouseDown(item,index)"
+           @mouseup="modelTopMouseUp(item,index)"
+        >
           <i class="nz-icon nz-icon-model"></i>
         </i>
     </div>
@@ -97,17 +101,13 @@
           this.selectNodeTitle=false;
           this.isLineAdd=true;
         }
-        this.NodeArr.forEach((id,index)=>{
-          let selNode = this.nodesArray.find(item=>item.id===id);
-          let position=this.network.canvasToDOM({x:selNode.x,y:selNode.y});
-          document.getElementById('nodeArr'+(index+1)).style.top=position.y+'px';
-          document.getElementById('nodeArr'+(index+1)).style.left=position.x+'px';
-        })
+       this.selNodeArrUpdate()
       }
     },
     data(){
 		  return {
-        fangdaX:1,
+        zoom:1,
+        domScale:1,
         selectNodeTitle:false,
         // 拓扑图工具
         networkPopTop:0,
@@ -219,7 +219,7 @@
             selectable: true, //是否可以点击选择
             selectConnectedEdges: false, //选择节点后是否显示连接线
             hoverConnectedEdges: true, //鼠标滑动节点后是否显示连接线
-            zoomView: false, //是否能缩放画布
+            zoomView: true, //是否能缩放画布
             navigationButtons:true,
           },
 
@@ -238,6 +238,8 @@
         }
         this_.containerCanvas=document.querySelectorAll("#network_id canvas")[0];
         this_.modelTopUpdate();
+        this_.zoom=this_.network.canvasToDOM({x:0,y:1}).y-this_.network.canvasToDOM({x:0,y:0}).y;
+        console.log(this_.zoom);
       },
       resetAllNodes() {
         this.setNetworkData(this.nodesArray,this.edgesArray);
@@ -257,7 +259,7 @@
         });
         this_.network.moveTo({
           position: this_.viewsCenter,
-          scale: this_.isFullScreen?1.5:this.fangdaX,
+          scale: this_.isFullScreen?1.5:1,
           offset: {x:0, y:0},
         });
         console.log( this.nodes,this.edges);
@@ -271,9 +273,6 @@
       addModel(model){ // 添加model
         this.addNodeShow=false;
         if(!model){return}
-        if(!model.image){
-          model.image=png
-        }
         let nodesArray=[...this.nodesArray];
         if(!this.isNodeAdd){
           model={...nodesArray.find(item=>item.id===model.id),...model};
@@ -339,9 +338,11 @@
         this.$emit("setTopologyData",this.nodesArray,this.edgesArray);
       },
       setPopPosition(selId,params){//设置节点工具栏位置
-        let position=this.network.canvasToDOM(this.network.getPositions(params.nodes)[selId]);
-        this.networkPop.style.top = position.y - 85 +'px';
-        this.networkPop.style.left = position.x - 32 +'px';
+        console.log(selId);
+        if(!selId){return}
+        let position=this.network.canvasToDOM(this.network.getPositions([selId])[selId]);
+        this.networkPop.style.top = position.y - 85 + 7*(10-this.zoom*10)+'px';
+        this.networkPop.style.left = position.x - 32*this.zoom - 5*(1-this.zoom*1) +'px';
         if(!this.isFullScreen&&this.NodeArr.length==0){
           this.networkPopShow=true;
         }
@@ -349,6 +350,7 @@
       },
       networkPopClose(){//关闭节点工具栏
         this.networkPopShow=false;
+        this.selNodeId=''
         this.network.unselectAll();
       },
       //工具栏
@@ -377,15 +379,11 @@
         }
 
       },
-      fangda(){
-        this.fangdaX+=0.3
-        document.getElementById('vis-content').style.transform='scale('+this.fangdaX+')';
-        this.setNetworkData(this.nodesArray,this.edgesArray);
-      },
-      modelTopUpdate(){
+      modelTopUpdate(){//model上的图标 实时更新
         this.modelTop=[];
         this.nodesArray.forEach((item)=>{
-          let position=this.network.canvasToDOM({x:item.x,y:item.y})
+          let position=this.network.canvasToDOM({x:item.x,y:item.y});
+          if(item.id===1){console.log(position)};
           this.modelTop.push({
             show:true,
             x:position.x,
@@ -393,6 +391,25 @@
             id:item.id,
           })
         })
+      },
+      selNodeArrUpdate(){// 选中狂位置更新
+        this.NodeArr.forEach((id,index)=>{
+          let selNode = this.nodesArray.find(item=>item.id===id);
+          let position=this.network.canvasToDOM({x:selNode.x,y:selNode.y});
+          document.getElementById('nodeArr'+(index+1)).style.top=position.y+'px';
+          document.getElementById('nodeArr'+(index+1)).style.left=position.x+'px';
+        })
+      },
+      modelTopMouseDown(item,index){
+        console.log(this.$refs['modelTopId'+index]);
+       this.$refs['modelTopId'+index][0].addEventListener('mousemove',this.modelTopMouseMove)
+      },
+      modelTopMouseUp(item,index){
+        console.log(this.$refs['modelTopId'+index]);
+        this.$refs['modelTopId'+index][0].removeEventListener('mousemove',this.modelTopMouseMove);
+      },
+      modelTopMouseMove(e){
+        console.log(e)
       }
     },
     mounted(){
@@ -458,6 +475,7 @@
              this_.NodeArrShow=true;
            }
            this_.modelTopUpdate();
+           this_.selNodeArrUpdate();
          });
 
          this.network.on("hoverNode", function (params) {//hoverNode
@@ -466,6 +484,18 @@
 
          this.network.on("blurNode", function (params) {//blurNode
            this_.cursorMove=false;
+         });
+
+         this.network.on("zoom", function (params) {//检测缩放
+           // this_.zoom=Math.round(params.scale*100)/100-0.1;
+           this_.zoom=params.scale;
+           // console.log(this_.nodesArray);
+           // console.log(this_.network.getPositions());
+           this_.modelTopUpdate();
+           this_.selNodeArrUpdate();
+           this_.setPopPosition(this_.selNodeId);
+           console.log(this_.zoom);
+           return false
          });
        })
     }
@@ -630,7 +660,7 @@
     color: rgba(132,213,194,0.5);
   }
   .nz-icon-model{
-    color: #23bf9a;
+    color: #23BF9A;
     position: absolute;
     top: 14px;
     left: 15px;
