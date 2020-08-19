@@ -126,7 +126,7 @@
     </template>
     <template v-else-if="pageType == 'project'">
       <!--<panel-tab from="project" :obj="currentProject" targetTab.sync="panel"></panel-tab>-->
-      <facade />
+      <facade :obj="currentProject" targetTab.sync="panel"/>
     </template>
 
     <transition name="el-zoom-in-bottom">
