@@ -178,7 +178,9 @@
       }
     },
     mounted(){
-		  console.log(this.obj);
+		  if(this.obj.id){
+        this.getProjectData(this.obj);
+      }
     },
     methods:{
 		  getProjectData(n){
@@ -187,14 +189,18 @@
         this.$get('project/info', {id:n.id}).then(response => {
           if (response.code === 200) {
             this.projectInfo={...this.projectInfo,...response.data.basic,moduleMum:response.data.module.length}
-            this.projectInfo.loading=false;
+           this.$nextTick(()=>{
+             this.projectInfo.loading=false;
+           })
           }
         });
 
         //获取所有asset
         this.alertData.loading=true;
         setTimeout(()=>{
-          this.alertData.loading=false;
+          this.$nextTick(()=>{
+            this.alertData.loading=false;
+          })
         },300)
       },
       focusInput() {

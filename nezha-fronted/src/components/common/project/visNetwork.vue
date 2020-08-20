@@ -96,6 +96,7 @@
           {id: 5,from: 1, to: 7, dashes:[15,15],label:"hahah",arrows:'from;to',smooth:true, color: {color:'#1e90ff',highlight:'#1e90ff',hover:'#1e90ff',opacity:1.0}},
         ],
         dragTitleShow:false,
+        dropdownMenuShow:false,
       }
 
     },

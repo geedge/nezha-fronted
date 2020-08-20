@@ -606,7 +606,7 @@
       //resize时刷新左侧列表滚动条
       let vm = this;
       window.onresize = function() {
-        vm.$refs.leftScrollbar.update();
+        // vm.$refs.leftScrollbar.update();
       };
     },
     computed: {

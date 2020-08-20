@@ -524,6 +524,17 @@
            }
            return false
          });
+         this.network.on("resize", function (params) {//检测resize
+           console.log(1111);
+           setTimeout(()=>{
+             this_.modelTopUpdate();
+             this_.selNodeArrUpdate();
+             if(this_.networkPopShow){
+               this_.setPopPosition(this_.selNodeId);
+             }
+           })
+           return false
+         });
        })
     }
 	}
