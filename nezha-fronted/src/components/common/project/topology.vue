@@ -1,61 +1,68 @@
 <template>
   <div class="content">
-    <div class="editTopology">
-      <span v-show="!selectNodeTitle" class="editTopologyModule">
+    <div class="edit-topology" >
+      <span v-show="!selectNodeTitle&&editVisNetwork" class="edit-topology-module">
         Module element :
-        <span class="editTopologyAdd" @click="addModelShow">Add</span>
-        <span class="editTopologyRemove" @click="nodeDel">Remove</span>
+        <span class="edit-topology-add" @click="addModelShow">Add</span>
+        <span class="edit-topology-remove" @click="nodeDel">Remove</span>
       </span>
-      <span v-show="!selectNodeTitle" class="editTopologyLine">
+      <span v-show="!selectNodeTitle&&editVisNetwork" class="edit-topologyLine">
         Line :
-        <span class="editTopologyAdd" @click="addLineTitleShow">Add</span>
-        <span class="editTopologyRemove" @click="lineDel">Remove</span>
+        <span class="edit-topology-add" @click="addLineTitleShow">Add</span>
+        <span class="edit-topology-remove" @click="lineDel">Remove</span>
       </span>
-      <span class="editTopologyLineCancel" v-show="selectNodeTitle">Please select two nodes  <span class="editTopologyCancel" @click="closeAddLine">Cancel</span></span>
+      <span class="edit-topology-line-cancel" v-show="selectNodeTitle&&editVisNetwork">Please select two nodes  <span class="edit-topologyCancel" @click="closeAddLine">Cancel</span></span>
     </div>
     <div class="network" ref="network"  v-clickoutside="networkPopClose" @mousedown="(e)=>{modelTopMouseDown(e)}" @mouseup="(e)=>modelTopMouseUp(e)">
-        <!--图拓扑图-->
-        <div id="network_id" ref="visNetwork" :class="{'cursorMove': cursorMove}"></div>
-        <!--拓扑图工具-->
-        <div
-          id="networkPop"
-          class="networkPop"
-          :style="{transform:'scale('+zoom+')'}"
-          v-show="networkPopShow"
-        >
-          <i class="nz-icon nz-icon-hexagonBorder"  v-for="item in popData"  :style="{top:item.top,left:item.left}" @click="popClick(item.id)">
-            <i class="nz-icon nz-icon-liubianxing"></i>
-            <i :class="[item.className,{'nz-icon':item.className},'noMove']"></i>
-          </i>
-          <!--<i class="nz-icon nz-icon-delete" @click="nodeDel"></i>-->
-        </div>
-        <!--拓扑图选中-->
-        <div class="selNode" id="nodeArr1" v-show="NodeArr[0]&&NodeArrShow" :style="{transform:'scale('+zoom+')'}">
-          <div class="selNodeTop"></div>
-          <div class="selNodeRight"></div>
-          <div class="selNodeBottom"></div>
-          <div class="selNodeLeft"></div>
-        </div>
-        <div class="selNode" id="nodeArr2" v-show="NodeArr[1]&&NodeArrShow" :style="{transform:'scale('+zoom+')'}">
-          <div class="selNodeTop"></div>
-          <div class="selNodeRight"></div>
-          <div class="selNodeBottom"></div>
-          <div class="selNodeLeft"></div>
-        </div>
-        <!--图谱图右侧-->
-        <!--<div class="networkContent">33333</div>-->
-        <!--model上的图标-->
-        <i class="nz-icon nz-icon-shuidi"
-           v-show="item.show"
-           v-for="(item,index) in modelTop"
-           :style="{top:(item.y- 80 + 5*(10-zoom*10))+'px',left:(item.x-26)+'px',transform:'scale('+zoom+')'}"
-           :ref="'modelTopId'+index"
-           @mousedown="modelTopClick(item,index)"
-        >
-          <!--@mousedown="(e)=>modelTopMouseDown(item,index,e)"-->
-          <!--@mouseup="modelTopMouseUp(item,index)"-->
-          <i class="nz-icon nz-icon-model"></i>
+      <!--拓扑图-->
+      <div id="network_id" ref="visNetwork" :class="{'cursorMove': cursorMove}"></div>
+      <!--空拓扑图-->
+      <div class="network-null" v-if="nodesArray.length===0">
+        <i class="nz-icon nz-icon-add-node" @click="addModelShow"></i>
+        <img  src="./emptyData.png" width="303px" height="184px"/>
+      </div>
+      <!--拓扑图工具-->
+      <div
+        id="network-pop"
+        class="network-pop"
+        :style="{transform:'scale('+zoom+')'}"
+        v-show="networkPopShow"
+      >
+        <i class="nz-icon nz-icon-hexagonBorder"  v-for="item in popData"  :style="{top:item.top,left:item.left}" @click="popClick(item.id)">
+          <i class="nz-icon nz-icon-liubianxing"></i>
+          <i :class="[item.className,{'nz-icon':item.className},'noMove']"></i>
         </i>
+        <!--<i class="nz-icon nz-icon-delete" @click="nodeDel"></i>-->
+      </div>
+      <!--拓扑图选中-->
+      <div class="sel-node" id="nodeArr1" v-show="NodeArr[0]&&NodeArrShow" :style="{transform:'scale('+zoom+')'}">
+        <div class="sel-node-top"></div>
+        <div class="sel-node-right"></div>
+        <div class="sel-node-bottom"></div>
+        <div class="sel-node-left"></div>
+      </div>
+      <div class="sel-node" id="nodeArr2" v-show="NodeArr[1]&&NodeArrShow" :style="{transform:'scale('+zoom+')'}">
+        <div class="sel-node-top"></div>
+        <div class="sel-node-right"></div>
+        <div class="sel-node-bottom"></div>
+        <div class="sel-node-left"></div>
+      </div>
+      <!--图谱图右侧-->
+      <!--<div class="networkContent">33333</div>-->
+      <!--model上的图标-->
+      <i class="nz-icon nz-icon-shuidi"
+         v-show="item.show"
+         v-for="(item,index) in modelTop"
+         :style="{top:(item.y- 80 + 5*(10-zoom*10))+'px',left:(item.x-26)+'px',transform:'scale('+zoom+')'}"
+         :ref="'modelTopId'+index"
+         @mousedown="modelTopClick(item,index)"
+      >
+        <!--@mousedown="(e)=>modelTopMouseDown(item,index,e)"-->
+        <!--@mouseup="modelTopMouseUp(item,index)"-->
+        <i class="nz-icon nz-icon-model"></i>
+      </i>
+      <!--悬浮network部分-->
+
     </div>
     <transition name="right-box">
       <add-model  v-if="addNodeShow" @addModel="addModel" :nodeData="nodeData" @close="addNodeShow=false" @del="nodeDel" :isAdd="isNodeAdd"></add-model>
@@ -86,6 +93,9 @@
       isFullScreen:{
         type:Boolean,
       },
+      editVisNetwork:{
+        type:Boolean,
+      }
     },
     watch:{
       NodeArr(n){
@@ -102,6 +112,13 @@
           this.isLineAdd=true;
         }
        this.selNodeArrUpdate()
+      },
+      editVisNetwork(n){
+        if(!n){
+          this.NodeArr=[];
+          this.selNodeId='';
+          this.selectNodeTitle=false;
+        }
       }
     },
     data(){
@@ -166,7 +183,7 @@
         this_.nodes = new Vis.DataSet(this_.nodesArray);
         this_.edges = new Vis.DataSet(this_.edgesArray);
         this_.container = this.$refs.visNetwork;
-        this_.networkPop = document.getElementById('networkPop');
+        this_.networkPop = document.getElementById('network-pop');
         this_.data = {
           nodes: this_.nodes,
           edges: this_.edges
@@ -339,11 +356,12 @@
       },
       networkPopClose(){//关闭节点工具栏
         this.networkPopShow=false;
-        this.selNodeId=''
+        // this.selNodeId=''
         this.network.unselectAll();
       },
       //工具栏
       nodeDel(){
+        console.log(this.selNodeId);
         let nodesArray=this.nodesArray.filter((item)=>item.id!==this.selNodeId);
         let edgesArray=this.edgesArray.filter((item)=>item.from!==this.selNodeId || this.to!==this.selNodeId);
         this.$emit('setTopologyData',nodesArray, edgesArray);
@@ -389,6 +407,7 @@
         })
       },
       modelTopMouseDown(e){
+        if(!this.index){return};
         this.relativeModelTop={
           x:e.clientX-(parseFloat(this.$refs['modelTopId'+this.index][0].style.left)),
           y:e.clientY-(parseFloat(this.$refs['modelTopId'+this.index][0].style.top)),
@@ -544,7 +563,7 @@
   .content{
     height: 100%;
   }
-  .editTopology{
+  .edit-topology{
     width: 100%;
     height: 28px;
   }
@@ -554,7 +573,7 @@
     position: relative;
     overflow: hidden;
   }
-  .networkPop{
+  .network-pop{
     position: absolute;
     z-index: 10;
     /*border: 1px solid #e6e6e6;*/
@@ -564,12 +583,12 @@
     padding: 0 3px;
     line-height: 32px;
   }
-  .networkPop .nz-icon-hexagonBorder{
+  .network-pop .nz-icon-hexagonBorder{
     position: absolute;
     font-size: 48px;
     color: #84d5c2;
   }
-  .networkPop  .nz-icon-liubianxing{
+  .network-pop  .nz-icon-liubianxing{
     color:#e2f3ef;
     font-size: 44px;
     position: absolute;
@@ -583,15 +602,15 @@
     font-size: 20px;
     color: #27c09c;
   }
-  .networkPop .nz-icon-hexagonBorder:hover{
+  .network-pop .nz-icon-hexagonBorder:hover{
     transform: scale(1.2);
   }
-  .networkPop .nz-icon-hexagonBorder:hover .nz-icon-liubianxing{
+  .network-pop .nz-icon-hexagonBorder:hover .nz-icon-liubianxing{
     transform: scale(1.1);
     left: 4px;
     font-size: 41px;
   }
-  .networkPop .nz-icon-hexagonBorder:hover .noMove{
+  .network-pop .nz-icon-hexagonBorder:hover .noMove{
     transform: scale(1.1);
   }
   .btmTriangle{
@@ -617,9 +636,26 @@
     bottom: -7px;
     left: -9px;
   }
-  #network_id{
-    width: 90%;
+  #network_id,.network-null{
+    width: 100%;
     height: 100%;
+  }
+  .network-null{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+  }
+  .network-null .nz-icon-add-node{
+    color: #23BF9A;
+    font-size: 50px;
+    margin-bottom: 24px;
+    cursor: pointer;
+  }
+  .network-null .nz-icon-emptypage{
+    color: #23BF9A;
+    font-size: 24px;
   }
   .cursorMove{
     cursor: move;
@@ -639,28 +675,29 @@
     font-size: 14px;
     cursor: pointer;
   }
-  .editTopology{
+  .edit-topology{
     color: #1a1a1a;
     font-size: 18px;
     font-weight: bold;
+    height: 28px;
   }
-  .editTopologyModule,.editTopologyLineCancel{
+  .edit-topology-module,.edit-topology-line-cancel{
     margin-left: 30px;
   }
-  .editTopologyLine{
+  .edit-topologyLine{
     margin-left: 130px;
   }
-  .editTopologyAdd,.editTopologyRemove,.editTopologyCancel{
+  .edit-topology-add,.edit-topology-remove,.edit-topologyCancel{
     color: #1989fa;
     margin-left: 30px;
     cursor: pointer;
   }
-  .selNode{
+  .sel-node{
     position: absolute;
     width: 0;
     height: 0;
   }
-  .selNodeTop {
+  .sel-node-top {
     width: 120px;
     height: 0;
     border-top: 4px dashed yellow;
@@ -668,7 +705,7 @@
     left: -60px;
     top: -60px;
   }
-  .selNodeRight {
+  .sel-node-right {
     width: 0px;
     height: 120px;
     border-right: 4px dashed yellow;
@@ -676,7 +713,7 @@
     left: 60px;
     top: -60px;
   }
-  .selNodeBottom {
+  .sel-node-bottom {
     width: 120px;
     height: 0;
     border-bottom: 4px dashed yellow;
@@ -684,7 +721,7 @@
     left: -60px;
     top: 60px;
   }
-  .selNodeLeft {
+  .sel-node-left {
     width: 0px;
     height: 120px;
     border-left: 4px dashed yellow;
