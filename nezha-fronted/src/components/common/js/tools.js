@@ -368,6 +368,7 @@ export const chartResizeTool = {
   containerBlankWidth: 25, //容器空白占位宽度（#listContainer的padding）
   titleHeight: 28, //标题dom高度
   stepHeight: 50, //单元高度
+  timeouter:null,
   stepWidth(containerWidth) { //单元宽度，参数为容器总宽度
     return (containerWidth-this.containerBlankWidth)/12;
   },
@@ -379,6 +380,7 @@ export const chartResizeTool = {
     return height-this.chartBlankHeight;
   },
   start(vm, originalData, event) {
+    let $self=this;
     let data = JSON.parse(JSON.stringify(originalData)); //将初始对象复制，后续操作使用复制对象
     let shadow = vm.$refs.resizeShadow; //缩放时底部阴影dom
     if (!shadow) {
@@ -472,15 +474,19 @@ export const chartResizeTool = {
       }
 
       if (widthChange || heightChange) {
-        //step时chart重绘
-        if (box.classList.contains("resize-box-echarts")) { //echarts类型
-          vm.echartStore.resize({width: shadow.offsetWidth-16, height: shadow.offsetHeight-titleHeight-vm.$refs.legendArea.offsetHeight});
-        }
+        clearTimeout($self.timeouter)
+        $self.timeouter=setTimeout(()=>{
+          //step时chart重绘
+          if (box.classList.contains("resize-box-echarts")) { //echarts类型
+            vm.echartStore.resize({width: shadow.offsetWidth-16, height: shadow.offsetHeight-titleHeight-vm.$refs.legendArea.offsetHeight});
+          }
+        },500)
         //chart外层宽高调整
         let outerBox = document.getElementById(`chart-${data.id}`);
         outerBox.style.height = `${shadow.offsetHeight+chartPaddingTop}px`;
         outerBox.style.width = `${parseFloat(shadow.style.width.split("px")[0])+chartBlankWidth}px`;
       }
+
     }
   }
 };
@@ -556,7 +562,7 @@ export const tableSet = {
           case 'principal': return 'su.username';
           default : return prop;
         }
-        
+
       case 'alertMessage':
         switch(prop){
           case 'id': return'am.id';
@@ -567,7 +573,7 @@ export const tableSet = {
           case 'endAt': return'am.end_at';
           default : return prop;
         }
-        
+
       case 'project':
         switch(prop){
         case 'id': return'e.id';
@@ -579,7 +585,7 @@ export const tableSet = {
         // case 'path': return'e.path';
         default : return prop;
       }
-      
+
       case 'dc':
         switch(prop){
           case 'id': return'i.id';
@@ -587,7 +593,7 @@ export const tableSet = {
           case 'area': return'sa.name';
           default : return prop;
         }
-        
+
       case 'endpointTab':
         switch(prop){
           case 'id': return'e.id';
