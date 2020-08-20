@@ -46,7 +46,7 @@ export default {
   },
   methods: {
     login() {
-      if (this.validateLogin()) {
+      if (this.validateLogin()&&(this.$route.path=='/'||this.$route.path=='/login')) {
         this.$post('sys/login', (this.loginData)).then(res => {
           if (res.code == 200) {
             //登录成功，记录用户名、token和lang

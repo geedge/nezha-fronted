@@ -257,7 +257,7 @@
             history=history.filter(item=>{
               return item.time + item.expire >= new Date().getTime();
             })
-            this.$set(this.noStyleSuggestions,'history',history);
+            this.$set(this.noStyleSuggestions,'history',history.slice(0,10));
           }
         }
         this.$set(this.noStyleSuggestions,'metrics',this.tempStoreMetric)
