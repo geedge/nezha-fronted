@@ -2,15 +2,18 @@
   <div class="right-box right-box-edit-endpoint" v-clickoutside="clickOutside">
     <!-- begin--顶部按钮-->
     <div class="right-box-top-btns">
-      <button id="edit-ep-del" type="button" @click="del" class="nz-btn nz-btn-size-normal nz-btn-size-alien nz-btn-style-light ">
-        <span class="right-box-top-btn-icon"><i class="el-icon-delete"></i></span>
-        <span class="right-box-top-btn-txt">{{$t('overall.delete')}}</span>
-      </button>
+      <!--<button id="edit-ep-del" type="button" @click="del" class="nz-btn nz-btn-size-normal nz-btn-size-alien nz-btn-style-light ">-->
+        <!--<span class="right-box-top-btn-icon"><i class="el-icon-delete"></i></span>-->
+        <!--<span class="right-box-top-btn-txt">{{$t('overall.delete')}}</span>-->
+      <!--</button>-->
     </div>
     <!-- end--顶部按钮-->
 
     <!-- begin--标题-->
-    <div class="right-box-title">{{$t("project.endpoint.editEndpoint") + "  ID：" + nodeData.id}}</div>
+    <div class="right-box-title">
+      <!--{{$t("project.endpoint.editEndpoint") + "  ID：" + nodeData.id}}-->
+      Add Module
+    </div>
     <!-- end--标题-->
 
     <!-- begin--表单-->
@@ -19,9 +22,9 @@
         <el-form-item label="Module Name" prop="modelId">
           <el-select v-model="form.modelId" placeholder=""  popper-class="asset-dropdown">
             <el-option
-              v-for="item in nodesArray"
+              v-for="item in moduleDataS.module"
               :key="item.id"
-              :label="item.label"
+              :label="item.name"
               :value="item.id">
             </el-option>
           </el-select>
@@ -41,10 +44,6 @@
             </el-option>
           </el-select>
         </el-form-item>
-
-        <!--<el-form-item label="image">-->
-          <!--<el-input v-model="form.image"></el-input>-->
-        <!--</el-form-item>-->
         <!--<div  class="right-box-sub-title">-->
           <!--<span>{{$t('alert.config.expr')}}</span>-->
           <!--<span class="float-right" @click="addExpression"><i style="font-size: 16px; cursor: pointer;" class="nz-icon nz-icon-create-square"></i></span>-->
@@ -62,7 +61,7 @@
             <!--@removeExpression="removeExpression"-->
           <!--&gt;</promql-input>-->
           <!--<el-row>-->
-            <!--<template v-if="editChart.type != 'singleStat'">-->
+            <!--<template>-->
               <!--<el-col style="width: 120px; padding-right: 20px; text-align: right; color: #666">-->
                 <!--{{$t('dashboard.panel.chartForm.legend')}}&nbsp;-->
                 <!--<el-popover :content="$t('dashboard.panel.chartForm.legendTip')" placement="top" width="150" trigger="hover">-->
@@ -71,18 +70,6 @@
               <!--</el-col>-->
               <!--<el-col style="width: calc(100% - 120px);">-->
                 <!--<el-input v-model="legends[index-1]" type="text" size="small"></el-input>-->
-              <!--</el-col>-->
-            <!--</template>-->
-            <!--<template v-else>-->
-              <!--<el-col style="width: 120px; padding-right: 20px; text-align: right; color: #666">-->
-                <!--{{$t('dashboard.panel.chartForm.statistics')}}&nbsp;-->
-              <!--</el-col>-->
-              <!--<el-col style="width: calc(100% - 120px);">-->
-                <!--<el-select popper-class="chart-box-dropdown-mini" v-model="statistics" placeholder="" size="small">-->
-                  <!--<el-option v-for="item in statisticsList" :key="item.value" :label="item.label" :value="item.value">-->
-                    <!--<span class="panel-dropdown-label-txt" >{{item.label}}</span>-->
-                  <!--</el-option>-->
-                <!--</el-select>-->
               <!--</el-col>-->
             <!--</template>-->
           <!--</el-row>-->
@@ -105,20 +92,29 @@
 </template>
 
 <script>
-  // import promqlInput from "@compotents/page/dashboard/explore/promqlInput";
+  import promqlInput from "@/components/page/dashboard/explore/promqlInput";
+  import {getUUID,resetZIndex} from "@/components/common/js/common";
   import  a from './a.png'
   import  b from './b.png'
   import  c from './c.png'
   import  d from './d.png'
   import  e from './e.png'
   import  f from './f.png'
+  var rz = {
+    methods: {
+      rz(e) {
+        resetZIndex(e);
+      }
+    }
+  };
 	export default {
 		name:"addNode",
     components:{
-      // 'promql-input': promqlInput,
+      'promql-input': promqlInput,
     },
     props:{
-      nodeData:{}
+      nodeData:{},
+      moduleDataS:{}
     },
     watch:{
       nodeData:{
@@ -130,6 +126,13 @@
        },
        immediate: true,
        deep: true,
+      },
+      moduleDataS:{
+        handler(n){
+          console.log(n)
+        },
+        immediate: true,
+        deep: true,
       }
     },
     data(){
@@ -140,6 +143,9 @@
         },
         promqlKeys:[],
         expressions: [],
+        promqlCount:0,
+        elementIds:[],
+        legends:[],
         rules:{
           modelId:[
             { required: true, message: '请选择module', trigger: 'blur' },
@@ -169,12 +175,12 @@
           {id: 14, label: "model14",},
         ],
         iconArray:[
-          {id:1,image:a,label:'model1',},
-          {id:2,image:b,label:'model2',},
-          {id:3,image:c,label:'model3',},
-          {id:4,image:d,label:'model4',},
-          {id:5,image:e,label:'model5',},
-          {id:6,image:f,label:'model6',},
+          {id:1,image:a},
+          {id:2,image:b},
+          {id:3,image:c},
+          {id:4,image:d},
+          {id:5,image:e},
+          {id:6,image:f},
           // {id:7,img:'./a.png',label:'model',},
         ],
       }
@@ -183,9 +189,10 @@
       onSubmit(){
         this.$refs['form'].validate((valid) => {
           if (valid) {
-            let module=this.nodesArray.find(item=>item.id===this.form.modelId);
+            let module=this.moduleDataS.module.find(item=>item.id===this.form.modelId);
             let img=this.iconArray.find(item=>item.id===this.form.imgId);
             let model=Object.assign({...this.form},{...module},{...img},{id:this.form.modelId,shape:'image',shapeProperties:{useImageSize:false}},);
+            model.label=model.name
             this.$emit('addModel',model)
           }
         });
@@ -405,7 +412,10 @@
   .z-top {
     z-index: 2900;
   }
-
+  .right-box-title{
+    font-weight: bold;
+    font-size: 24px;
+  }
 </style>
 
 <style lang="scss">

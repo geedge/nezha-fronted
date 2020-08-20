@@ -82,6 +82,7 @@
           :panel-id="item.id"
           :chart-data="item"
           :chart-index="0"
+          :allModuleInfo="allModuleInfo"
         >
         </vis-network>
       </div>
@@ -174,7 +175,8 @@
             pending:40,
             other:10,
           }
-        }
+        },
+        allModuleInfo:[]
       }
     },
     mounted(){
@@ -188,7 +190,8 @@
         this.projectInfo.loading=true;
         this.$get('project/info', {id:n.id}).then(response => {
           if (response.code === 200) {
-            this.projectInfo={...this.projectInfo,...response.data.basic,moduleMum:response.data.module.length}
+            this.projectInfo={...this.projectInfo,...response.data.basic,moduleMum:response.data.module.length};
+            this.allModuleInfo=response.data;
            this.$nextTick(()=>{
              this.projectInfo.loading=false;
            })
@@ -267,7 +270,7 @@
   .facade-content{
     flex: 1;
     min-height: 800px;
-    width: 80%;
+    width: calc(100% - 20px);
   }
   .label{
     padding: 0 15px;

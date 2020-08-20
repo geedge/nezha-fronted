@@ -11,6 +11,9 @@
         <span class="edit-topology-add" @click="addLineTitleShow">Add</span>
         <span class="edit-topology-remove" @click="lineDel">Remove</span>
       </span>
+      <span v-show="!selectNodeTitle&&editVisNetwork" class="edit-topologyLine">
+        <el-button>save</el-button>
+      </span>
       <span class="edit-topology-line-cancel" v-show="selectNodeTitle&&editVisNetwork">Please select two nodes  <span class="edit-topologyCancel" @click="closeAddLine">Cancel</span></span>
     </div>
     <div class="network" ref="network"  v-clickoutside="networkPopClose" @mousedown="(e)=>{modelTopMouseDown(e)}" @mouseup="(e)=>modelTopMouseUp(e)">
@@ -62,10 +65,13 @@
         <i class="nz-icon nz-icon-model"></i>
       </i>
       <!--悬浮network部分-->
+      <div class="network-info">
+        123
+      </div>
 
     </div>
     <transition name="right-box">
-      <add-model  v-if="addNodeShow" @addModel="addModel" :nodeData="nodeData" @close="addNodeShow=false" @del="nodeDel" :isAdd="isNodeAdd"></add-model>
+      <add-model  v-if="addNodeShow" @addModel="addModel" :nodeData="nodeData" @close="addNodeShow=false" @del="nodeDel" :isAdd="isNodeAdd" :moduleDataS="allModuleInfos"></add-model>
     </transition>
     <transition name="right-box">
       <add-line  v-if="addLineShow" @addLine="addLine" @lineDel="lineDel" :selectNode="NodeArr" :lineData="lineData" :isAdd="isLineAdd" @close="closeAddLine" @del="lineDel"></add-line>
@@ -95,7 +101,8 @@
       },
       editVisNetwork:{
         type:Boolean,
-      }
+      },
+      allModuleInfo:{}
     },
     watch:{
       NodeArr(n){
@@ -119,10 +126,18 @@
           this.selNodeId='';
           this.selectNodeTitle=false;
         }
+      },
+      allModuleInfo:{
+        immediate: true,
+        deep: true,
+        handler(n){
+          this.allModuleInfos={...n}
+        },
       }
     },
     data(){
 		  return {
+        allModuleInfos:[],
         relativeModelTop:{},
         index:'',
         zoom:1,
@@ -398,7 +413,7 @@
           })
         })
       },
-      selNodeArrUpdate(){// 选中狂位置更新
+      selNodeArrUpdate(){// 选中框位置更新
         this.NodeArr.forEach((id,index)=>{
           let selNode = this.nodesArray.find(item=>item.id===id);
           let position=this.network.canvasToDOM({x:selNode.x,y:selNode.y});
@@ -472,10 +487,10 @@
          });
 
          this.network.on("selectEdge", function (params) { // 选择边
-           this_.lineData=this_.edgesArray.find((item)=>item.id===params.edges[0]);
-           this_.lineData.color=this_.lineData.color.color;
-           this_.addLineShow=true;
-           this_.isLineAdd=false;
+           // this_.lineData=this_.edgesArray.find((item)=>item.id===params.edges[0]);
+           // this_.lineData.color=this_.lineData.color.color;
+           // this_.addLineShow=true;
+           // this_.isLineAdd=false;
          });
 
          this.network.on("dragStart", function (params) {//节点移动开始
@@ -740,5 +755,10 @@
     top: 14px;
     left: 15px;
     font-size: 18px;
+  }
+  .network-info{
+    position: absolute;
+    right: 0;
+    top: 0;
   }
 </style>

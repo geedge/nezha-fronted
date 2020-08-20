@@ -31,7 +31,17 @@
             </span>
         </div>
         <div class="vis-network-content">
-          <topology :editVisNetwork="editVisNetwork" :nodesArray="nodesArray" :edgesArray="edgesArray" @setTopologyData="setTopologyData" :isFullScreen="false" ref="topology"></topology>
+          <topology
+            :editVisNetwork="editVisNetwork"
+            :nodesArray="nodesArray"
+            :edgesArray="edgesArray"
+            @setTopologyData="setTopologyData"
+            :isFullScreen="false"
+            ref="topology"
+            :allModuleInfo="allModuleInfo"
+          >
+
+          </topology>
         </div>
       </div>
 
@@ -67,6 +77,7 @@
       chartData: {
         type: Object
       },
+      allModuleInfo:{}
     },
     data () {
       return {
