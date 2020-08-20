@@ -71,7 +71,7 @@
 
     </div>
     <transition name="right-box">
-      <add-model  v-if="addNodeShow" @addModel="addModel" :nodeData="nodeData" @close="addNodeShow=false" @del="nodeDel" :isAdd="isNodeAdd" :moduleDataS="allModuleInfos"></add-model>
+      <add-model  v-if="addNodeShow" @addModel="addModel" :nodeData="nodeData" @close="addNodeShow=false" @del="nodeDel" :isAdd="isNodeAdd" :moduleDataS="moduleDataS"></add-model>
     </transition>
     <transition name="right-box">
       <add-line  v-if="addLineShow" @addLine="addLine" @lineDel="lineDel" :selectNode="NodeArr" :lineData="lineData" :isAdd="isLineAdd" @close="closeAddLine" @del="lineDel"></add-line>
@@ -132,13 +132,22 @@
         deep: true,
         handler(n){
           this.allModuleInfos={...n}
+          this.arrayDiff();
         },
-      }
+      },
+      // nodesArray:{
+      //   immediate: true,
+      //   deep: true,
+      //   handler(n){
+      //    this.setNetworkData(n,this.edgesArray);
+      //   },
+      // },
     },
     data(){
 		  return {
         allModuleInfos:[],
         relativeModelTop:{},
+        moduleDataS:[],
         index:'',
         zoom:1,
         domScale:1,
@@ -309,6 +318,7 @@
         nodesArray.push(model);
         this.$emit("setTopologyData",nodesArray,this.edgesArray);
         this.setNetworkData(nodesArray,this.edgesArray);
+        this.arrayDiff();
       },
       addModelShow(){ // 显示添加节点弹窗
         this.addNodeShow=true;
@@ -459,6 +469,14 @@
         this.index=index;
         this.selNodeId=item.id;
         this.setPopPosition(this.selNodeId);
+      },
+      // 数组取差集
+      arrayDiff(){
+        // this.moduleDataS=this.allModuleInfos-this.nodesArray
+        this.moduleDataS=this.allModuleInfos;
+        this.nodesArray.forEach((item)=>{
+          this.moduleDataS.module=this.moduleDataS.module.filter((item1)=> item.id!==item1.id)
+        })
       }
     },
     mounted(){

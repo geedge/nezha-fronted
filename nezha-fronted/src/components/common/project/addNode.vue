@@ -18,7 +18,7 @@
 
     <!-- begin--表单-->
     <el-scrollbar class="right-box-form-box">
-      <el-form ref="form" :model="form" label-width="160px" :rules="rules">
+      <el-form class="right-box-form  right-box-form-left" ref="form" :model="form" label-width="160px" :rules="rules">
         <el-form-item label="Module Name" prop="modelId">
           <el-select v-model="form.modelId" placeholder=""  popper-class="asset-dropdown">
             <el-option
@@ -37,10 +37,10 @@
               :key="item.id"
               :label="item.label"
               :value="item.id">
-              <span style="float: left">
+              <span style="float: left;width: 50%">
                 <img :src="item.image" />
               </span>
-              <span style="float: right; color: #8492a6; font-size: 13px">{{ item.label }}</span>
+              <span style="float: right; color: #8492a6; font-size: 13px">{{ item.imageName }}</span>
             </el-option>
           </el-select>
         </el-form-item>
@@ -175,12 +175,12 @@
           {id: 14, label: "model14",},
         ],
         iconArray:[
-          {id:1,image:a},
-          {id:2,image:b},
-          {id:3,image:c},
-          {id:4,image:d},
-          {id:5,image:e},
-          {id:6,image:f},
+          {id:1,image:a,imageName:"module1"},
+          {id:2,image:b,imageName:"module1"},
+          {id:3,image:c,imageName:"module1"},
+          {id:4,image:d,imageName:"module1"},
+          {id:5,image:e,imageName:"module1"},
+          {id:6,image:f,imageName:"module1"},
           // {id:7,img:'./a.png',label:'model',},
         ],
       }
@@ -411,10 +411,6 @@
 
   .z-top {
     z-index: 2900;
-  }
-  .right-box-title{
-    font-weight: bold;
-    font-size: 24px;
   }
 </style>
 

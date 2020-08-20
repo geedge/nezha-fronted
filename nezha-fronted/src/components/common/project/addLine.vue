@@ -2,38 +2,50 @@
   <div class="right-box right-box-edit-endpoint">
     <!-- begin--顶部按钮-->
     <div class="right-box-top-btns">
-      <button id="edit-ep-del" type="button" @click="del" class="nz-btn nz-btn-size-normal nz-btn-size-alien nz-btn-style-light ">
-        <span class="right-box-top-btn-icon"><i class="el-icon-delete"></i></span>
-        <span class="right-box-top-btn-txt">{{$t('overall.delete')}}</span>
-      </button>
+      <!--<button id="edit-ep-del" type="button" @click="del" class="nz-btn nz-btn-size-normal nz-btn-size-alien nz-btn-style-light ">-->
+        <!--<span class="right-box-top-btn-icon"><i class="el-icon-delete"></i></span>-->
+        <!--<span class="right-box-top-btn-txt">{{$t('overall.delete')}}</span>-->
+      <!--</button>-->
     </div>
     <!-- end--顶部按钮-->
 
     <!-- begin--标题-->
-    <div class="right-box-title">{{$t("project.endpoint.editEndpoint") + "  ID：" + lineData.id}}</div>
+    <div class="right-box-title">Add Line</div>
     <!-- end--标题-->
 
     <!-- begin--表单-->
     <el-scrollbar class="right-box-form-box">
       <el-form ref="form" :model="form" label-width="120px" :rules="rules">
-        <el-form-item label="Id">
-          <el-input v-model="form.lineId"></el-input>
+        <el-form-item label="Line Name" prop="lineName" class="line-name">
+          <el-input v-model="form.lineName"></el-input>
         </el-form-item>
-        <el-form-item label="箭头方向" prop="arrows">
-          <el-select v-model="form.arrows" placeholder="请选择活动区域">
-            <el-option label="from" value="from"></el-option>
-            <el-option label="to" value="to"></el-option>
-            <el-option label="from;to" value="from;to"></el-option>
+        <el-form-item label="箭头方向" prop="arrows" @change="iconChange" class="arrows">
+          <el-select v-model="form.arrows" placeholder="">
+            <div slot="prefix">
+              <img v-if="form.arrows=='from'" src="./leftArrow.png" />
+              <img v-if="form.arrows=='to'" src="./rightArrow.png" />
+              <img v-if="form.arrows=='from;to'" src="./LRArrow.png" />
+              <img v-if="form.arrows=='0'" src="./noArrow.png" />
+            </div>
+            <el-option label="from" value="from"><img src="./leftArrow.png" /></el-option>
+            <el-option label="to" value="to"><img src="./rightArrow.png" /></el-option>
+            <el-option label="from;to" value="from;to"><img src="./LRArrow.png" /></el-option>
+            <el-option label="" value="0"><img src="./noArrow.png" /></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="color">
-          <el-color-picker
-            v-model="form.color"
-            :predefine="predefineColors">
-          </el-color-picker>
-        </el-form-item>
-        <el-form-item label="Label">
-          <el-input v-model="form.label"></el-input>
+        <el-form-item label="color" class="color">
+          <div class="color-show" @click="colorPickerClick">
+            <div class="color-show-left" :style="{background:form.color}"></div>
+            <span> {{form.color}}</span>
+          </div>
+          <div class="color-content">
+            <el-color-picker
+              v-model="form.color"
+              :predefine="predefineColors"
+              ref="colorPicker"
+            >
+            </el-color-picker>
+          </div>
         </el-form-item>
       </el-form>
     </el-scrollbar>
@@ -63,7 +75,6 @@
         handler(n){
           this.form={
             arrows:n.arrows,
-            label:n.label,
             color:n.color,
             lineId:n.id,
           }
@@ -78,6 +89,7 @@
           arrows:'',
           label:'',
           color:'#1e90ff',
+          lineName:'',
           lineId:'',
         },
         predefineColors: [
@@ -91,15 +103,23 @@
         ],
         rules:{
           arrows: [
-            { required: true, message: '请输入活动名称', trigger: 'change' },
+            { required: true, message: '', trigger: 'change' },
+          ],
+          lineName: [
+            { required: true, message: '', trigger: 'change' },
           ],
         }
       }
     },
     methods:{
       onSubmit(){
-        let model=Object.assign({id:this.form.lineId},{...this.form},{color: {color:this.form.color,highlight:this.form.color,hover:this.form.color,opacity:1.0}});
-        this.$emit('addLine',model)
+
+        this.$refs['form'].validate((valid) => {
+          if (valid) {
+            let model=Object.assign({id:Math.random()*100},{...this.form},{color: {color:this.form.color,highlight:this.form.color,hover:this.form.color,opacity:1.0}});
+            this.$emit('addLine',model);
+          }
+        });
       },
       /*关闭弹框*/
       esc(refresh) {
@@ -111,13 +131,76 @@
       del(){
         this.$emit('del');
         this.esc();
-      }
+      },
+      colorPickerClick(){
+        console.log(this.$refs['colorPicker']);
+        this.$refs['colorPicker'].showPicker=true;
+      },
+      iconChange (val) {
+        // el-select实际上是两层div包裹的input
+        this.addModel.icon = val;
+        // 获取当前el-select标签第一层div
+        const dom = this.$refs['select_icon'].$el;
+        // 创建需要添加到其中的标签 并填充内容
+        const svgDom = document.createElement('span'); // ('<svg-icon ref="iconRef" icon-class="' + val + '" style="float: left;width: 3%;height: 30px;border: 1px solid #dcdfe6;border-right:none;" />');
+        svgDom.setAttribute('class', 'el-input__prefix');
+        svgDom.innerHTML = '<span class="el-input__prefix-inner"><i class="el-input__icon el-icon-search is-reverse"><img src="a.png" /></i></span>';
+        // 将创建的标签添加到父节点(第二层div)
+        dom.children[0].appendChild(svgDom);
+        // 得到el-select中的input标签
+        const inputDom = dom.children[0].children[0];
+        inputDom.setAttribute('style', 'padding-left: 30px;');
+        // 将添加的标签放到input前面
+        dom.children[0].insertBefore(svgDom, inputDom);
+      },
     },
 
   }
 </script>
 
 <style scoped>
+  .color-content{
+    height: 0;
+    width: 0;
+    overflow: hidden;
+    position: absolute;
+    top: 0;
+    left: 140px;
+  }
+  .color{
+    position: relative;
+  }
+  .color-show{
+    border: 1px solid #E7EAED;
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+    width: calc(100% - 30px);
+  }
+  .color-show-left{
+    width: 18px;
+    height: 18px;
+    border: 1px solid #E7EAED;
+    border-radius: 5px;
+    margin: 0 5px;
+  }
+  .line-name{
+    width: calc(100% - 30px);
+  }
+  .arrows{
+
+  }
+  .arrows /deep/ .el-input.el-input--prefix.el-input--suffix{
+    border: 1px solid #DCDFE6;
+    height: 41px;
+    width: calc(100% - 30px);
+  }
+  .arrows /deep/ .el-input__inner{
+    display: none;
+  }
+  /deep/ .el-select{
+    width: 262px;
+  }
   .nz-btn-edit-ok{
     position: absolute;
     bottom: 0;

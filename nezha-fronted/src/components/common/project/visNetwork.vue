@@ -39,6 +39,7 @@
             :isFullScreen="false"
             ref="topology"
             :allModuleInfo="allModuleInfo"
+            v-loading="topologyLoading"
           >
 
           </topology>
@@ -50,15 +51,6 @@
 </template>
 
 <script>
-  import  a from './a.png'
-  import  b from './b.png'
-  import  c from './c.png'
-  import  d from './d.png'
-  import  e from './e.png'
-  import  f from './f.png'
-  import bus from '@/libs/bus';
-  import {Loading} from 'element-ui';
-  import chartDataFormat from '@/components/charts/chartDataFormat'
   import loading from "@/components/common/loading";
   import timePicker from '@/components/common/timePicker';
   import topology from './topology'
@@ -79,38 +71,25 @@
       },
       allModuleInfo:{}
     },
+    watch:{
+      allModuleInfo:{
+        immediate: true,
+        deep: true,
+        handler(n){
+          this.getNetworkData(n);
+        },
+      }
+    },
     data () {
       return {
         //其他
         isError:false,
-        // nodesArray:[
-        //   { id: 1, label: "model",
-        //     image: 'https://ss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=1906469856,4113625838&fm=26&gp=0.jpg',
-        //     shape:'image',shapeProperties:{useImageSize:false},
-        //     x:1,y:-63,
-        //     imgId:0,
-        //     scaling:{min:0.5,max:10,}
-        //   },
-        //   {id: 2, imgId:1, scaling:{min:0.5,max:10,}, label: "model", x:-236,y:-163, image: a, shape:'image',shapeProperties:{useImageSize:false}},
-        //   {id: 3, imgId:2, scaling:{min:0.5,max:10,}, label: "model", x:-346,y:-155, image: b, shape:'image',shapeProperties:{useImageSize:false}},
-        //   {id: 4, imgId:3, scaling:{min:0.5,max:10,}, label: "model", x:-129,y:169, image: c, shape:'image',shapeProperties:{useImageSize:false}},
-        //   {id: 5, imgId:4, scaling:{min:0.5,max:10,}, label: "model", x:-388,y:35, image: d, shape:'image',shapeProperties:{useImageSize:false}},
-        //   {id: 6, imgId:5, scaling:{min:0.5,max:10,}, label: "model", x:-345,y:-53, image: e, shape:'image',shapeProperties:{useImageSize:false}},
-        //   {id: 7, imgId:6, scaling:{min:0.5,max:10,}, label: "model", x:316,y:22, image: f, shape:'image',shapeProperties:{useImageSize:false}},
-        // ],
-        // edgesArray:[
-        //   {id: 0,from: 2, to: 1, dashes:[15,15],label:"hahah",arrows:'from;to', color: {color:'#ff4500',highlight:'#ff4500',hover:'#ff4500',opacity:1.0}},
-        //   {id: 1,from: 3, to: 1, dashes:[15,15],label:"hahah",arrows:'from',smooth:true, color: {color:'#1e90ff',highlight:'#1e90ff',hover:'#1e90ff',opacity:1.0}},
-        //   {id: 2,from: 5, to: 4, dashes:[15,15],label:"hahah",arrows:'to',smooth:true, color: {color:'#1e90ff',highlight:'#1e90ff',hover:'#1e90ff',opacity:1.0}},
-        //   {id: 3,from: 4, to: 1, dashes:[15,15],label:"hahah",arrows:'from;to',smooth:true, color: {color:'#1e90ff',highlight:'#1e90ff',hover:'#1e90ff',opacity:1.0}},
-        //   {id: 4,from: 4, to: 6, dashes:[15,15],label:"hahah",arrows:'from;to',smooth:true, color: {color:'#1e90ff',highlight:'#1e90ff',hover:'#1e90ff',opacity:1.0}},
-        //   {id: 5,from: 1, to: 7, dashes:[15,15],label:"hahah",arrows:'from;to',smooth:true, color: {color:'#1e90ff',highlight:'#1e90ff',hover:'#1e90ff',opacity:1.0}},
-        // ],
         nodesArray:[],
         edgesArray:[],
         dragTitleShow:false,
         dropdownMenuShow:false,
         editVisNetwork:false,
+        topologyLoading:false,
       }
 
     },
@@ -121,6 +100,17 @@
         this.nodesArray=nodesArr;
         this.edgesArray=edgesArr;
       },
+      getNetworkData(n){
+        this.topologyLoading=true;
+        setTimeout(()=>{
+          this.edgesArray=[];
+          this.nodesArray=[];
+          setTimeout(()=>{
+            this.topologyLoading=false;
+            this.$refs['topology'].setNetworkData( this.edgesArray,this.nodesArray);
+          },1000)
+        },500)
+      }
     },
 
     mounted(){
