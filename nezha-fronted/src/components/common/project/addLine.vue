@@ -1,67 +1,73 @@
 <template>
-  <div class="right-box right-box-edit-endpoint">
-    <!-- begin--顶部按钮-->
-    <div class="right-box-top-btns">
-      <!--<button id="edit-ep-del" type="button" @click="del" class="nz-btn nz-btn-size-normal nz-btn-size-alien nz-btn-style-light ">-->
+  <!--<div class="mc" @click.self="clickOutside">-->
+    <div class="right-box right-box-edit-endpoint">
+      <!-- begin--顶部按钮-->
+      <div class="right-box-top-btns">
+        <!--<button id="edit-ep-del" type="button" @click="del" class="nz-btn nz-btn-size-normal nz-btn-size-alien nz-btn-style-light ">-->
         <!--<span class="right-box-top-btn-icon"><i class="el-icon-delete"></i></span>-->
         <!--<span class="right-box-top-btn-txt">{{$t('overall.delete')}}</span>-->
-      <!--</button>-->
-    </div>
-    <!-- end--顶部按钮-->
+        <!--</button>-->
+      </div>
+      <!-- end--顶部按钮-->
 
-    <!-- begin--标题-->
-    <div class="right-box-title">Add Line</div>
-    <!-- end--标题-->
+      <!-- begin--标题-->
+      <div class="right-box-title">Add Line</div>
+      <!-- end--标题-->
 
-    <!-- begin--表单-->
-    <el-scrollbar class="right-box-form-box">
-      <el-form ref="form" :model="form" label-width="120px" :rules="rules">
-        <el-form-item label="Line Name" prop="lineName" class="line-name">
-          <el-input v-model="form.lineName"></el-input>
-        </el-form-item>
-        <el-form-item label="箭头方向" prop="arrows" @change="iconChange" class="arrows">
-          <el-select v-model="form.arrows" placeholder="">
-            <div slot="prefix">
-              <img v-if="form.arrows=='from'" src="./leftArrow.png" />
-              <img v-if="form.arrows=='to'" src="./rightArrow.png" />
-              <img v-if="form.arrows=='from;to'" src="./LRArrow.png" />
-              <img v-if="form.arrows=='0'" src="./noArrow.png" />
+      <!-- begin--表单-->
+      <el-scrollbar class="right-box-form-box">
+        <el-form ref="form" :model="form" label-width="120px" :rules="rules">
+          <el-form-item label="Line Name" prop="lineName" class="line-name">
+            <el-input v-model="form.lineName"></el-input>
+          </el-form-item>
+          <el-row class="form-title">Option</el-row>
+          <el-form-item label="width" prop="width" class="line-name">
+            <el-input v-model="form.width"></el-input>
+          </el-form-item>
+          <el-form-item label="箭头方向" prop="arrows" @change="iconChange" class="arrows">
+            <el-select v-model="form.arrows" placeholder="" :popper-append-to-body="false">
+              <div slot="prefix">
+                <img v-if="form.arrows=='from'" src="./leftArrow.png" />
+                <img v-if="form.arrows=='to'" src="./rightArrow.png" />
+                <img v-if="form.arrows=='from;to'" src="./LRArrow.png" />
+                <img v-if="form.arrows=='0'" src="./noArrow.png" />
+              </div>
+              <el-option label="from" value="from"><img src="./leftArrow.png" /></el-option>
+              <el-option label="to" value="to"><img src="./rightArrow.png" /></el-option>
+              <el-option label="from;to" value="from;to"><img src="./LRArrow.png" /></el-option>
+              <el-option label="" value="0"><img src="./noArrow.png" /></el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item label="color" class="color">
+            <div class="color-show" @click="colorPickerClick">
+              <div class="color-show-left" :style="{background:form.color}"></div>
+              <span> {{form.color}}</span>
             </div>
-            <el-option label="from" value="from"><img src="./leftArrow.png" /></el-option>
-            <el-option label="to" value="to"><img src="./rightArrow.png" /></el-option>
-            <el-option label="from;to" value="from;to"><img src="./LRArrow.png" /></el-option>
-            <el-option label="" value="0"><img src="./noArrow.png" /></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="color" class="color">
-          <div class="color-show" @click="colorPickerClick">
-            <div class="color-show-left" :style="{background:form.color}"></div>
-            <span> {{form.color}}</span>
-          </div>
-          <div class="color-content">
-            <el-color-picker
-              v-model="form.color"
-              :predefine="predefineColors"
-              ref="colorPicker"
-            >
-            </el-color-picker>
-          </div>
-        </el-form-item>
-      </el-form>
-    </el-scrollbar>
+            <div class="color-content" ref="color-content">
+              <el-color-picker
+                v-model="form.color"
+                :predefine="predefineColors"
+                ref="colorPicker"
+              >
+              </el-color-picker>
+            </div>
+          </el-form-item>
+        </el-form>
+      </el-scrollbar>
 
-    <!-- end--表单-->
+      <!-- end--表单-->
 
-    <!--底部按钮-->
-    <div class="right-box-bottom-btns">
-      <button @click="esc" id="ep-edit-esc" class="nz-btn nz-btn-size-normal nz-btn-style-light nz-btn-min-width-100">
-        <span>{{$t('overall.cancel')}}</span>
-      </button>
-      <button @click="onSubmit" id="ep-edit-save" class="nz-btn nz-btn-size-normal nz-btn-style-normal nz-btn-min-width-100">
-        <span>{{$t('overall.save')}}</span>
-      </button>
+      <!--底部按钮-->
+      <div class="right-box-bottom-btns">
+        <button @click="esc" id="ep-edit-esc" class="nz-btn nz-btn-size-normal nz-btn-style-light nz-btn-min-width-100">
+          <span>{{$t('overall.cancel')}}</span>
+        </button>
+        <button @click="onSubmit" id="ep-edit-save" class="nz-btn nz-btn-size-normal nz-btn-style-normal nz-btn-min-width-100">
+          <span>{{$t('overall.save')}}</span>
+        </button>
+      </div>
     </div>
-  </div>
+  <!--</div>-->
 </template>
 
 <script>
@@ -91,6 +97,7 @@
           color:'#1e90ff',
           lineName:'',
           lineId:'',
+          width:''
         },
         predefineColors: [
           '#ff4500',
@@ -117,6 +124,7 @@
         this.$refs['form'].validate((valid) => {
           if (valid) {
             let model=Object.assign({id:Math.random()*100},{...this.form},{color: {color:this.form.color,highlight:this.form.color,hover:this.form.color,opacity:1.0}});
+            model.width = parseInt(model.width) || 4;
             this.$emit('addLine',model);
           }
         });
@@ -133,7 +141,6 @@
         this.esc();
       },
       colorPickerClick(){
-        console.log(this.$refs['colorPicker']);
         this.$refs['colorPicker'].showPicker=true;
       },
       iconChange (val) {
@@ -159,6 +166,13 @@
 </script>
 
 <style scoped>
+  /*.mc{*/
+    /*position: fixed;*/
+    /*width: 100vw;*/
+    /*height: 100vh;*/
+    /*top: 0;*/
+    /*left: 0;*/
+  /*}*/
   .color-content{
     height: 0;
     width: 0;
@@ -187,8 +201,16 @@
   .line-name{
     width: calc(100% - 30px);
   }
-  .arrows{
-
+  .form-title{
+    font-size: 14px;
+    color: #333333;
+    padding-left: 28px;
+    margin-bottom: 15px;
+  }
+  /deep/ .el-form-item__label{
+    font-size: 14px;
+    color: #666666;
+    opacity: 0.6;
   }
   .arrows /deep/ .el-input.el-input--prefix.el-input--suffix{
     border: 1px solid #DCDFE6;

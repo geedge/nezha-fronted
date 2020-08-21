@@ -71,10 +71,27 @@
 
     </div>
     <transition name="right-box">
-      <add-model  v-if="addNodeShow" @addModel="addModel" :nodeData="nodeData" @close="addNodeShow=false" @del="nodeDel" :isAdd="isNodeAdd" :moduleDataS="moduleDataS"></add-model>
+      <add-model
+        v-if="addNodeShow"
+        @addModel="addModel"
+        :nodeData="nodeData"
+        @close="addNodeShow=false"
+        @del="nodeDel"
+        :isAdd="isNodeAdd"
+        :moduleDataS="moduleDataS"
+      ></add-model>
     </transition>
     <transition name="right-box">
-      <add-line  v-if="addLineShow" @addLine="addLine" @lineDel="lineDel" :selectNode="NodeArr" :lineData="lineData" :isAdd="isLineAdd" @close="closeAddLine" @del="lineDel"></add-line>
+      <add-line
+        v-if="addLineShow"
+        @addLine="addLine"
+        @lineDel="lineDel"
+        :selectNode="NodeArr"
+        :lineData="lineData"
+        :isAdd="isLineAdd"
+        @close="closeAddLine"
+        @del="lineDel"
+      ></add-line>
     </transition>
   </div>
 </template>
@@ -318,7 +335,9 @@
         nodesArray.push(model);
         this.$emit("setTopologyData",nodesArray,this.edgesArray);
         this.setNetworkData(nodesArray,this.edgesArray);
-        this.arrayDiff();
+       this.$nextTick(()=>{
+         this.arrayDiff();
+       })
       },
       addModelShow(){ // 显示添加节点弹窗
         this.addNodeShow=true;
@@ -495,7 +514,7 @@
                 this_.NodeArr=this_.NodeArr.filter((item,i)=> i != index);
                 return
              }
-             if(this_.selectNodeTitle){
+             if(this_.selectNodeTitle&&this_.NodeArrShow){
                this_.NodeArr.push(selId);
                this_.network.selectNodes(this_.NodeArr,true);
                return
@@ -505,7 +524,7 @@
          });
 
          this.network.on("selectEdge", function (params) { // 选择边
-           // this_.lineData=this_.edgesArray.find((item)=>item.id===params.edges[0]);
+           this_.lineData=this_.edgesArray.find((item)=>item.id===params.edges[0]);
            // this_.lineData.color=this_.lineData.color.color;
            // this_.addLineShow=true;
            // this_.isLineAdd=false;

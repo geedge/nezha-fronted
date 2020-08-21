@@ -40,7 +40,7 @@
         </div>
         <div class="facade-top-right" v-loading="alertData.loading">
           <div class="facade-top-title">
-            <span class="label">{{alertData.title}}:</span>
+            <span class="label">{{alertData.title}}</span>
             {{alertData.sssObj.total}}
           </div>
           <div class="facade-top-right-content">
