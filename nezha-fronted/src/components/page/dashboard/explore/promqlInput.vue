@@ -46,7 +46,7 @@
           <div class="option nz-btn nz-btn-size-normal nz-btn-style-light" @click="removeExpression" v-if="plugins.indexOf('remove') > -1"><i class="el-icon-minus"></i></div>
         </div>
       </div>
-      <div v-if="styleType == 2">
+      <div v-if="styleType == 2&&showRemove">
         <div class="option" @click="addExpression" v-if="plugins.indexOf('add') > -1"><i class="el-icon-plus"></i></div>
         <div class="option" style="margin-left: 5px; line-height: 32px;" @click="removeExpression" v-if="plugins.indexOf('remove') > -1"><i class="el-icon-minus"></i></div>
       </div>
@@ -65,7 +65,8 @@
         expressionList:{},
         plugins: {type: Array},
         styleType: Number,
-        historyParam:{type:Object}
+        historyParam:{type:Object},
+        showRemove:{type:Boolean,default:true}
       },
       data(){
         return {

@@ -12,7 +12,7 @@
         <span class="edit-topology-remove" @click="lineDel">Remove</span>
       </span>
       <span v-show="!selectNodeTitle&&editVisNetwork" class="edit-topologyLine">
-        <el-button @click="saveTopology">save</el-button>
+        <el-button @click="saveTopology" class="saveTopology">save</el-button>
       </span>
       <span class="edit-topology-line-cancel" v-show="selectNodeTitle&&editVisNetwork">Please select two nodes  <span class="edit-topologyCancel" @click="closeAddLine">Cancel</span></span>
     </div>
@@ -287,7 +287,7 @@
 
           interaction:{
             dragNodes: true, //是否能拖动节点
-            dragView: true, //是否能拖动画布
+            dragView: false, //是否能拖动画布
             hover: true, //鼠标移过后加粗该节点和连接线
             multiselect: false, //按 ctrl 多选
             selectable: true, //是否可以点击选择
@@ -825,5 +825,12 @@
     position: absolute;
     right: 0;
     top: 0;
+  }
+  .saveTopology{
+    background: #FA901C;
+    border-radius: 4px;
+    font-size: 14px;
+    color: #FFFFFF;
+    padding: 4px 14px;
   }
 </style>

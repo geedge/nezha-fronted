@@ -20,7 +20,7 @@
     <el-scrollbar class="right-box-form-box">
       <el-form class="right-box-form  right-box-form-left" ref="form" :model="form" label-width="160px" :rules="rules">
         <el-form-item label="Module Name" prop="moduleId">
-          <el-select v-model="form.moduleId" placeholder=""  popper-class="asset-dropdown">
+          <el-select v-model="form.moduleId" placeholder=""  popper-class="asset-dropdown" size="small">
             <el-option
               v-for="item in moduleDataS.module"
               :key="item.id"
@@ -31,7 +31,7 @@
         </el-form-item>
 
         <el-form-item label="Label" prop="iconId">
-          <el-select v-model="form.iconId" placeholder=""  popper-class="asset-dropdown">
+          <el-select v-model="form.iconId" placeholder=""  popper-class="asset-dropdown" size="small">
             <el-option
               v-for="item in iconArray"
               :key="item.id"
@@ -44,39 +44,63 @@
             </el-option>
           </el-select>
         </el-form-item>
-        <!--<div  class="right-box-sub-title">-->
-          <!--<span>{{$t('alert.config.expr')}}</span>-->
-          <!--<span class="float-right" @click="addExpression"><i style="font-size: 16px; cursor: pointer;" class="nz-icon nz-icon-create-square"></i></span>-->
-        <!--</div>-->
-        <!--<el-row class="element-item" style="" v-for="index of promqlKeys.length" :key="'ele' + index">-->
-          <!--<promql-input-->
-            <!--:ref="'promql-'+(index-1)"-->
-            <!--:id="promqlKeys[index-1]"-->
-            <!--:key="promqlKeys[index-1]"-->
-            <!--:expression-list="expressions"-->
-            <!--:index="index-1"-->
-            <!--:styleType="2"-->
-            <!--:plugins="['metric-selector', 'metric-input', 'remove']"-->
-            <!--@change="expressionChange"-->
-            <!--@removeExpression="removeExpression"-->
-          <!--&gt;</promql-input>-->
-          <!--<el-row>-->
-            <!--<template>-->
-              <!--<el-col style="width: 120px; padding-right: 20px; text-align: right; color: #666">-->
-                <!--{{$t('dashboard.panel.chartForm.legend')}}&nbsp;-->
-                <!--<el-popover :content="$t('dashboard.panel.chartForm.legendTip')" placement="top" width="150" trigger="hover">-->
-                  <!--<i slot="reference" class="nz-icon nz-icon-info-normal" style="font-size: 12px; -webkit-transform:scale(0.75);display:inline-block;" @mouseover="rz"></i>-->
-                <!--</el-popover>-->
-              <!--</el-col>-->
-              <!--<el-col style="width: calc(100% - 120px);">-->
-                <!--<el-input v-model="legends[index-1]" type="text" size="small"></el-input>-->
-              <!--</el-col>-->
-            <!--</template>-->
-          <!--</el-row>-->
-        <!--</el-row>-->
+        <div  class="right-box-sub-title">
+          <span>{{$t('alert.config.expr')}}</span>
+          <span class="float-right" @click="addExpression"><i style="font-size: 16px; cursor: pointer;" class="nz-icon nz-icon-create-square"></i></span>
+        </div>
+        <el-row class="element-item" style="" v-for="index of promqlKeys.length" :key="'ele' + index">
+          <el-row>
+            <template>
+              <el-col style="width: 120px; padding-right: 20px; text-align: right; color: #666">
+                Name
+              </el-col>
+              <el-col style="width: calc(100% - 140px);">
+                <el-input v-model="name[index-1]" type="text" size="small"></el-input>
+              </el-col>
+              <el-col  style="width: 20px"> <i class="el-icon-minus" @click="removeExpression(index-1)"></i></el-col>
+            </template>
+          </el-row>
+          <el-row>
+            <el-col style="width: 120px; padding-right: 20px; text-align: right; color: #666">
+              Unit
+            </el-col>
+            <el-col style="width: calc(100% - 120px);">
+              <el-cascader filterable placeholder="" popper-class="no-style-class unit-popper-class" size="small" style="width: 100%"
+                            :options="unitOptions"
+                            :props="{ expandTrigger: 'click',emitPath:false }"
+                            :show-all-levels="false"
+                            v-model="unit[index-1]"
+            ></el-cascader>
+            </el-col>
+          </el-row>
+          <promql-input
+            :ref="'promql-'+(index-1)"
+            :id="promqlKeys[index-1]"
+            :key="promqlKeys[index-1]"
+            :expression-list="expressions"
+            :index="index-1"
+            :styleType="2"
+            :plugins="['metric-selector', 'metric-input', 'remove']"
+            @change="expressionChange"
+            @removeExpression="removeExpression"
+            :showRemove="false"
+          ></promql-input>
+          <el-row>
+            <template>
+              <el-col style="width: 120px; padding-right: 20px; text-align: right; color: #666">
+                {{$t('dashboard.panel.chartForm.legend')}}&nbsp;
+                <el-popover :content="$t('dashboard.panel.chartForm.legendTip')" placement="top" width="150" trigger="hover">
+                  <i slot="reference" class="nz-icon nz-icon-info-normal" style="font-size: 12px; -webkit-transform:scale(0.75);display:inline-block;" @mouseover="rz"></i>
+                </el-popover>
+              </el-col>
+              <el-col style="width: calc(100% - 120px);">
+                <el-input v-model="legends[index-1]" type="text" size="small"></el-input>
+              </el-col>
+            </template>
+          </el-row>
+        </el-row>
       </el-form>
     </el-scrollbar>
-
     <!-- end--表单-->
 
     <!--底部按钮-->
@@ -93,6 +117,7 @@
 
 <script>
   import promqlInput from "@/components/page/dashboard/explore/promqlInput";
+  import chartDataFormat from "@/components/charts/chartDataFormat";
   import {getUUID,resetZIndex} from "@/components/common/js/common";
   import  a from './a.png'
   import  b from './b.png'
@@ -116,6 +141,7 @@
       nodeData:{},
       moduleDataS:{}
     },
+    mixins: [rz],
     watch:{
       nodeData:{
         handler(n){
@@ -141,11 +167,14 @@
           moduleId:'',
           iconId:'',
         },
+        unitOptions: chartDataFormat.unitOptions(),
         promqlKeys:[],
         expressions: [],
         promqlCount:0,
         elementIds:[],
         legends:[],
+        name:[],
+        unit:[],
         rules:{
           moduleId:[
             { required: true, message: '请选择module', trigger: 'blur' },
@@ -154,26 +183,6 @@
             { required: true, message: '请选择icon', trigger: 'blur' },
           ],
         },
-        nodesArray:[
-          { id: 1, label: "model1",
-            image: 'https://ss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=1906469856,4113625838&fm=26&gp=0.jpg',
-            shape:'image',shapeProperties:{useImageSize:false},
-            x:1,y:-63,
-          },
-          {id: 2, label: "model2", },
-          {id: 3, label: "model3",},
-          {id: 4, label: "model4", },
-          {id: 5, label: "model5",},
-          {id: 6, label: "model6",},
-          {id: 7, label: "model7",},
-
-          {id: 9, label: "model9", },
-          {id: 10, label: "model10", },
-          {id: 11, label: "model11",},
-          {id: 12, label: "model12",},
-          {id: 13, label: "model13",},
-          {id: 14, label: "model14",},
-        ],
         iconArray:[
           {id:1,image:a,imageName:"module1"},
           {id:2,image:b,imageName:"module1"},
@@ -185,6 +194,9 @@
         ],
       }
     },
+    mounted(){
+      this.addExpression()
+    },
     methods:{
       onSubmit(){
         this.$refs['form'].validate((valid) => {
@@ -192,8 +204,18 @@
             let module=this.moduleDataS.module.find(item=>item.id===this.form.moduleId);
             let img=this.iconArray.find(item=>item.id===this.form.iconId);
             let model=Object.assign({...this.form},{...module},{...img},{id:this.form.moduleId,shape:'image',shapeProperties:{useImageSize:false}},);
-            model.label=model.name
-            this.$emit('addModel',model)
+            model.label=model.name;
+            console.log(this.promqlKeys,this.expressions,this.promqlCount,this.legends,this.name,this.unit);
+            model.expressions=[];
+            this.promqlKeys.forEach((item,index)=>{
+              model.expressions.push({
+                "name": this.name[index],
+                "unit": this.unit[index],
+                "metric": this.expressions[index],
+                "legend": this.legends[index],
+              })
+            });
+            this.$emit('addModel',model);
           }
         });
 
@@ -204,6 +226,8 @@
       addExpression() {
         this.expressions.push('');
         this.legends.push('');
+        this.name.push('');
+        this.unit.push('');
         this.promqlKeys.push(getUUID());
         this.elementIds.push("");
         this.promqlCount++;
@@ -212,6 +236,8 @@
         if (this.promqlCount > 1) {
           this.expressions.splice(index, 1);
           this.legends.splice(index, 1);
+          this.name.splice(index, 1);
+          this.unit.splice(index, 1);
           this.promqlKeys.splice(index, 1);
           this.elementIds.splice(index, 1);
           this.promqlCount--;
@@ -241,6 +267,10 @@
 </script>
 
 <style scoped>
+  .el-icon-minus{
+    vertical-align: middle;
+    margin-left: 5px;
+  }
   .nz-btn-edit-ok{
     position: absolute;
     bottom: 0;
