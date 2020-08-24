@@ -231,6 +231,7 @@
         let nodes=[...this.nodesArray];
         let edges=[...this.edgesArray];
         console.log(nodes,edges);
+        this.editVisNetwork=false;
       },
       //拓扑图方法
       init(type){
