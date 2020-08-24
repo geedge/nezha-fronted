@@ -379,6 +379,9 @@
           bus.$on("module-list-change", menu => {
             this.getModuleList();
           });
+          bus.$on('asset-list-change',()=>{
+            this.getLeftMenuList();
+          })
         },
         // 获取asset左侧菜单数据
         getLeftMenuList(){

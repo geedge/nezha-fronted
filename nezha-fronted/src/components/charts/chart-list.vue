@@ -1328,7 +1328,7 @@
             if(response.code == 200){
               response.data && function() {
                 response.data.Basic && detail.push({
-                  title: vm.$t('asset.basicTitle'),
+                  title: vm.$t('project.chart.basicTitle'),
                   type: 'basic',
                   data: response.data.Basic
                 });
@@ -1343,7 +1343,7 @@
           });
         }else {
           detail.push({
-            title: vm.$t('asset.basicTitle'),
+            title: vm.$t('project.chart.basicTitle'),
             type: 'basic',
             data: {
               sn: 'assetInfo Test',
