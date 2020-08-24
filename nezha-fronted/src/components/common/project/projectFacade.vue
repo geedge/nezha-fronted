@@ -9,7 +9,6 @@
               <i slot="suffix" class="el-input__icon el-icon-search" @click="focusInput" style="float: right"></i>
             </el-input>
           </div>
-
           <pick-time :refresh-data-func="dateChange" v-model="searchTime" :use-chart-unit="false"></pick-time>
         </div>
       </template>
@@ -187,5 +186,6 @@
     flex: 1;
     min-height: 800px;
     width: calc(100% - 20px);
+    min-width: 1190px;
   }
 </style>

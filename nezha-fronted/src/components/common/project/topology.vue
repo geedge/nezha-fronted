@@ -66,7 +66,11 @@
       </i>
       <!--悬浮network部分-->
       <div class="network-info">
-        <div v-if="popDataShow.main">123</div>
+        <div  v-if="popDataShow.main">
+          <popDataMain :moduleId="this.selNodeId" :projectId="this.allModuleInfo.basic.id"></popDataMain>
+        </div>
+        <div v-if="popDataShow.total">total</div>
+        <div v-if="popDataShow.info">info</div>
       </div>
 
     </div>
@@ -93,6 +97,18 @@
         @del="lineDel"
       ></add-line>
     </transition>
+    <!--endpoint-->
+    <transition name="right-box">
+      <div v-if="popDataShow.endpoint">endpoint</div>
+    </transition>
+    <!--endpoint-->
+    <transition name="right-box">
+      <div v-if="popDataShow.asset">asset</div>
+    </transition>
+    <!--alert-->
+    <transition name="right-box">
+      <div v-if="popDataShow.alert">alert</div>
+    </transition>
   </div>
 </template>
 
@@ -100,11 +116,13 @@
   import Vis from 'vis'
   import addNode from './addNode'
   import addLine from './addLine'
+  import popDataMain from './popData/popDataMain'
 	export default {
 		name:"topology",
     components: {
       'add-model':addNode,
       'add-line':addLine,
+      'popDataMain':popDataMain,
     },
     props:{
       nodesArray:{
@@ -475,25 +493,7 @@
         this.$refs['network'].removeEventListener('mousemove',this.modelTopMouseMove);
       },
       modelTopMouseMove(e){
-        let position={
-          x:e.clientX-this.relativeModelTop.x,
-          y:e.clientY-this.relativeModelTop.y
-        };
-        this.$refs['modelTopId'+this.index][0].style.top=position.y+'px';
-        this.$refs['modelTopId'+this.index][0].style.left=position.x+'px';
-        // {top:(item.y- 80 + 5*(10-zoom*10))+'px',left:(item.x-26)+'px'
-        let cancvs=this.network.DOMtoCanvas({
-          x:position.x+26,
-          y:position.y+80-(50*(1-this.zoom)),
-        });
-        this.network.moveNode(this.selNodeId,cancvs.x,cancvs.y);
-        let selItem = this.nodesArray.find((item)=>item.id===this.selNodeId);
-        selItem.x=cancvs.x;
-        selItem.y=cancvs.y;
-        this.$emit("setTopologyData",this.nodesArray,this.edgesArray);
-        if(this.networkPopShow){
-          this.setPopPosition(this.selNodeId);
-        }
+
       },
       modelTopClick(item,index){
         this.index=index;
@@ -521,7 +521,7 @@
           alert:false,
           main:false,
         };
-        if(key){
+        if(key&&!this.editVisNetwork){
           this.popDataShow[key]=true;
         }
       },
@@ -658,6 +658,7 @@
     /*background: #fff;*/
     padding: 0 3px;
     line-height: 32px;
+
   }
   .network-pop .nz-icon-hexagonBorder{
     position: absolute;

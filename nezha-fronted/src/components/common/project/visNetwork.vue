@@ -24,7 +24,7 @@
                 <!--<span class="chart-title-icon"><i class="el-icon-caret-bottom el-icon&#45;&#45;right"  :class="{'visible':caretShow,'hidden':!caretShow}"></i></span>-->
               </span>
               <span>
-                <i class="nz-icon nz-icon-edit float-right" @click="editVisNetwork=!editVisNetwork"></i>
+                <i class="nz-icon nz-icon-edit float-right" @click="editVisNetworkChange(!editVisNetwork)"></i>
                 <!--<i class="nz-icon nz-icon-zoomin float-right"></i>-->
                 <!--<i class="nz-icon nz-icon-exit-full-screen float-right"></i>-->
               </span>
@@ -32,7 +32,7 @@
         </div>
         <div class="vis-network-content">
           <!--project主要信息-->
-          <div class="facade-top" v-if="!editVisNetwork&&nodesArray.length">
+          <div class="facade-top" v-if="!editVisNetwork">
             <div class="facade-top-left" v-loading="projectInfo.loading">
               <div class="facade-top-title">
                 {{projectInfo.title}}
@@ -163,6 +163,7 @@
     },
     data () {
       return {
+        firstLoad:false,
         //其他
         isError:false,
         nodesArray:[],
@@ -193,6 +194,9 @@
       },
       editVisNetworkChange(flag){
         this.editVisNetwork=flag;
+        if(flag){
+          this.$refs.topology.popDataShowUpdate();
+        }
       }
     },
 
