@@ -35,7 +35,7 @@
           :custom-table-title.sync="tools.customTableTitle"
           :original-table-title="tableTitle"
           ref="customTableTitle"
-          :path="'/project'"
+          :path="'/projectBottom'"
         ></element-set>
       </transition>
     <el-table
@@ -395,8 +395,8 @@
     },
     mounted() {
       //初始化表头
-      this.tools.customTableTitle = localStorage.getItem("nz-tableTitle-" + localStorage.getItem("nz-username") + "-/project")
-        ? JSON.parse(localStorage.getItem("nz-tableTitle-" + localStorage.getItem("nz-username") + "-/project"))
+      this.tools.customTableTitle = localStorage.getItem("nz-tableTitle-" + localStorage.getItem("nz-username") + "-/projectBottom")
+        ? JSON.parse(localStorage.getItem("nz-tableTitle-" + localStorage.getItem("nz-username") + "-/projectBottom"))
         : this.tableTitle;
 
       this.$nextTick(() => {
