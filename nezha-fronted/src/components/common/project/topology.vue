@@ -12,7 +12,7 @@
         <span class="edit-topology-remove" @click="lineDel">Remove</span>
       </span>
       <span v-show="!selectNodeTitle&&editVisNetwork" class="edit-topologyLine">
-        <el-button>save</el-button>
+        <el-button @click="saveTopology">save</el-button>
       </span>
       <span class="edit-topology-line-cancel" v-show="selectNodeTitle&&editVisNetwork">Please select two nodes  <span class="edit-topologyCancel" @click="closeAddLine">Cancel</span></span>
     </div>
@@ -66,7 +66,7 @@
       </i>
       <!--悬浮network部分-->
       <div class="network-info">
-        123
+        <div v-if="popDataShow.main">123</div>
       </div>
 
     </div>
@@ -203,6 +203,15 @@
           {top:'56px', left:'-17px',className:'nz-icon-info-normal',id:'5'},
           {top:'18px', left:'-38px',className:'nz-icon-gaojing',id:'6'},
         ],
+        popDataShow:{
+          endpoint:false,
+          asset:false,
+          total:false,
+          other:false,
+          info:false,
+          alert:false,
+          main:false,
+        },
         modelTop:[],
         //viewsCenter
         viewsCenter:{
@@ -217,7 +226,12 @@
         data:{}
       }
     },
-    methods:{
+    methods:{// 保存拓扑图数据
+      saveTopology(){
+        let nodes=[...this.nodesArray];
+        let edges=[...this.edgesArray];
+        console.log(nodes,edges);
+      },
       //拓扑图方法
       init(type){
         let this_ = this;
@@ -426,10 +440,7 @@
 
       // 工具的点击 对应的操作
       popClick(id){
-        if(id=='edit'){
-          this.nodeEdit()
-        }
-
+        this.popDataShowUpdate();
       },
       modelTopUpdate(){//model上的图标 实时更新
         this.modelTop=[];
@@ -452,7 +463,8 @@
         })
       },
       modelTopMouseDown(e){
-        if(!this.index){return};
+        console.log(e);
+        if(!this.index&&this.index!==0){return};
         this.relativeModelTop={
           x:e.clientX-(parseFloat(this.$refs['modelTopId'+this.index][0].style.left)),
           y:e.clientY-(parseFloat(this.$refs['modelTopId'+this.index][0].style.top)),
@@ -488,7 +500,9 @@
       modelTopClick(item,index){
         this.index=index;
         this.selNodeId=item.id;
-        this.setPopPosition(this.selNodeId);
+        if(this.selNodeId&&this.networkPopShow){
+          this.setPopPosition(this.selNodeId);
+        }
       },
       // 数组取差集
       arrayDiff(){
@@ -497,7 +511,23 @@
         this.nodesArray.forEach((item)=>{
           this.moduleDataS.module=this.moduleDataS.module.filter((item1)=> item.id!==item1.id)
         })
-      }
+      },
+      //工具栏点击后显示对应内容
+      popDataShowUpdate(key){
+        this.popDataShow={
+          endpoint:false,
+          asset:false,
+          total:false,
+          other:false,
+          info:false,
+          alert:false,
+          main:false,
+        };
+        if(key){
+          this.popDataShow[key]=true;
+        }
+        console.log(this.popDataShow);
+      },
     },
     mounted(){
        setTimeout(()=>{
@@ -521,6 +551,7 @@
                return
              }
              this_.setPopPosition(selId,params);
+             this_.popDataShowUpdate('main');
            }
          });
 

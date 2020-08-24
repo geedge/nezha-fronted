@@ -19,8 +19,8 @@
     <!-- begin--表单-->
     <el-scrollbar class="right-box-form-box">
       <el-form class="right-box-form  right-box-form-left" ref="form" :model="form" label-width="160px" :rules="rules">
-        <el-form-item label="Module Name" prop="modelId">
-          <el-select v-model="form.modelId" placeholder=""  popper-class="asset-dropdown">
+        <el-form-item label="Module Name" prop="moduleId">
+          <el-select v-model="form.moduleId" placeholder=""  popper-class="asset-dropdown">
             <el-option
               v-for="item in moduleDataS.module"
               :key="item.id"
@@ -30,8 +30,8 @@
           </el-select>
         </el-form-item>
 
-        <el-form-item label="Label" prop="imgId">
-          <el-select v-model="form.imgId" placeholder=""  popper-class="asset-dropdown">
+        <el-form-item label="Label" prop="iconId">
+          <el-select v-model="form.iconId" placeholder=""  popper-class="asset-dropdown">
             <el-option
               v-for="item in iconArray"
               :key="item.id"
@@ -122,7 +122,7 @@
          for(let key in this.form){
            this.form[key]=n[key]
          }
-         this.form.modelId=n.id;
+         this.form.moduleId=n.id;
        },
        immediate: true,
        deep: true,
@@ -138,8 +138,8 @@
     data(){
 		  return{
         form:{
-          modelId:'',
-          imgId:'',
+          moduleId:'',
+          iconId:'',
         },
         promqlKeys:[],
         expressions: [],
@@ -147,11 +147,11 @@
         elementIds:[],
         legends:[],
         rules:{
-          modelId:[
+          moduleId:[
             { required: true, message: '请选择module', trigger: 'blur' },
           ],
-          imgId:[
-            { required: true, message: '请选择module', trigger: 'blur' },
+          iconId:[
+            { required: true, message: '请选择icon', trigger: 'blur' },
           ],
         },
         nodesArray:[
@@ -189,9 +189,9 @@
       onSubmit(){
         this.$refs['form'].validate((valid) => {
           if (valid) {
-            let module=this.moduleDataS.module.find(item=>item.id===this.form.modelId);
-            let img=this.iconArray.find(item=>item.id===this.form.imgId);
-            let model=Object.assign({...this.form},{...module},{...img},{id:this.form.modelId,shape:'image',shapeProperties:{useImageSize:false}},);
+            let module=this.moduleDataS.module.find(item=>item.id===this.form.moduleId);
+            let img=this.iconArray.find(item=>item.id===this.form.iconId);
+            let model=Object.assign({...this.form},{...module},{...img},{id:this.form.moduleId,shape:'image',shapeProperties:{useImageSize:false}},);
             model.label=model.name
             this.$emit('addModel',model)
           }
