@@ -65,6 +65,7 @@
                 v-model="form.color"
                 :predefine="predefineColors"
                 ref="colorPicker"
+                @active-change="colorChange"
               >
               </el-color-picker>
             </div>
@@ -166,6 +167,18 @@
       colorPickerClick(){
         this.$refs['colorPicker'].showPicker=true;
       },
+      colorChange(val){
+        this.form.color=this.colorRGBtoHex(val)
+      },
+      colorRGBtoHex(color) {
+        let rgb = color.split(',');
+        let r = parseInt(rgb[0].split('(')[1]);
+        let g = parseInt(rgb[1]);
+        let b = parseInt(rgb[2].split(')')[0]);
+        let hex = "#" + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
+        return hex;
+      }
+
     },
 
   }
