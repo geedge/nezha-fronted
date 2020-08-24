@@ -283,6 +283,7 @@
         this.getTableData();
       },
       downloadMib(mib) {
+        console.info(mib)
         axios.get('/mib/download?id='+mib.id,{responseType: 'blob'}).then(data=>{
           let fileName = new Date().getTime()+'.txt';
           let disposition=data.headers['content-disposition'];
