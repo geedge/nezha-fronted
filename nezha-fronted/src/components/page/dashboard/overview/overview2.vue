@@ -1073,7 +1073,7 @@
         return document.isFullScreen || document.mozIsFullScreen || document.webkitIsFullScreen;
       },
       fullScreen:function(){
-        let container=document.getElementById('mainDisplay');
+        let container = document.querySelector(".overview-content");
         let fullScreenFunc=container.requestFullscreen||container.mozRequestFullScreen||container.webkitRequestFullscreen||container.msRequestFullscreen;
         fullScreenFunc.call(container);
         this.isFullScreen = true;
