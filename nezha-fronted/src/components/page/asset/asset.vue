@@ -454,6 +454,7 @@
             if (response.code === 200) {
               this.$message({duration: 2000, type: 'success', message: this.$t("tip.deleteSuccess")});
               this.getTableData();
+              bus.$emit('asset-list-change')
             } else {
               this.$message.error(response.msg);
             }
@@ -485,6 +486,7 @@
         this.rightBox.show = false;
         if (refresh) {
           this.getTableData();
+          bus.$emit('asset-list-change')
         }
       },
       pageNo(val) {
