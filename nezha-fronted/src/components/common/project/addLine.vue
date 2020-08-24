@@ -1,5 +1,5 @@
 <template>
-  <!--<div class="mc" @click.self="clickOutside">-->
+  <div class="mc" @click.self="clickOutside">
     <div class="right-box right-box-edit-endpoint">
       <!-- begin--顶部按钮-->
       <div class="right-box-top-btns">
@@ -24,7 +24,24 @@
           <el-form-item label="width" prop="width" class="line-name">
             <el-input v-model="form.width"></el-input>
           </el-form-item>
-          <el-form-item label="箭头方向" prop="arrows" @change="iconChange" class="arrows">
+          <el-form-item label="roundness"  class="line-name">
+            <el-input v-model="form.roundness"></el-input>
+          </el-form-item>
+          <el-form-item label="type" class="line-name">
+            <el-select v-model="form.type" placeholder="" :popper-append-to-body="false">
+              <!--'dynamic', 'continuous', 'discrete', 'diagonalCross', 'straightCross', 'horizontal', 'vertical', 'curvedCW', 'curvedCCW', 'cubicBezier'-->
+              <el-option label="dynamic" value="dynamic"></el-option>
+              <el-option label="continuous" value="continuous"></el-option>
+              <el-option label="discrete" value="discrete"></el-option>
+              <el-option label="diagonalCross" value="diagonalCross"></el-option>
+              <el-option label="straightCross" value="straightCross"></el-option>
+              <el-option label="horizontal" value="horizontal"></el-option>
+              <el-option label="vertical" value="vertical"></el-option>
+              <el-option label="curvedCW" value="curvedCW"></el-option>
+              <el-option label="cubicBezier" value="cubicBezier"></el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item label="箭头方向" prop="arrows" class="arrows">
             <el-select v-model="form.arrows" placeholder="" :popper-append-to-body="false">
               <div slot="prefix">
                 <img v-if="form.arrows=='from'" src="./leftArrow.png" />
@@ -67,7 +84,7 @@
         </button>
       </div>
     </div>
-  <!--</div>-->
+  </div>
 </template>
 
 <script>
@@ -97,7 +114,9 @@
           color:'#1e90ff',
           lineName:'',
           lineId:'',
-          width:''
+          width:'',
+          type:'',
+          roundness:'',
         },
         predefineColors: [
           '#ff4500',
@@ -123,8 +142,12 @@
 
         this.$refs['form'].validate((valid) => {
           if (valid) {
-            let model=Object.assign({id:Math.random()*100},{...this.form},{color: {color:this.form.color,highlight:this.form.color,hover:this.form.color,opacity:1.0}});
+            let model=Object.assign({id:undefined},{...this.form},{color: {color:this.form.color,highlight:this.form.color,hover:this.form.color,opacity:1.0}});
             model.width = parseInt(model.width) || 4;
+            model.smooth={
+              roundness:model.roundness,
+              type:model.type ,
+            };
             this.$emit('addLine',model);
           }
         });
@@ -143,36 +166,19 @@
       colorPickerClick(){
         this.$refs['colorPicker'].showPicker=true;
       },
-      iconChange (val) {
-        // el-select实际上是两层div包裹的input
-        this.addModel.icon = val;
-        // 获取当前el-select标签第一层div
-        const dom = this.$refs['select_icon'].$el;
-        // 创建需要添加到其中的标签 并填充内容
-        const svgDom = document.createElement('span'); // ('<svg-icon ref="iconRef" icon-class="' + val + '" style="float: left;width: 3%;height: 30px;border: 1px solid #dcdfe6;border-right:none;" />');
-        svgDom.setAttribute('class', 'el-input__prefix');
-        svgDom.innerHTML = '<span class="el-input__prefix-inner"><i class="el-input__icon el-icon-search is-reverse"><img src="a.png" /></i></span>';
-        // 将创建的标签添加到父节点(第二层div)
-        dom.children[0].appendChild(svgDom);
-        // 得到el-select中的input标签
-        const inputDom = dom.children[0].children[0];
-        inputDom.setAttribute('style', 'padding-left: 30px;');
-        // 将添加的标签放到input前面
-        dom.children[0].insertBefore(svgDom, inputDom);
-      },
     },
 
   }
 </script>
 
 <style scoped>
-  /*.mc{*/
-    /*position: fixed;*/
-    /*width: 100vw;*/
-    /*height: 100vh;*/
-    /*top: 0;*/
-    /*left: 0;*/
-  /*}*/
+  .mc{
+    position: fixed;
+    width: 100vw;
+    height: 100vh;
+    top: 0;
+    left: 0;
+  }
   .color-content{
     height: 0;
     width: 0;

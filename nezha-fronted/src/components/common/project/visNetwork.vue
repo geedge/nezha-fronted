@@ -40,6 +40,7 @@
             ref="topology"
             :allModuleInfo="allModuleInfo"
             v-loading="topologyLoading"
+            @editVisNetworkChange="editVisNetworkChange"
           >
 
           </topology>
@@ -110,6 +111,9 @@
             this.$refs['topology'].setNetworkData( this.edgesArray,this.nodesArray);
           },1000)
         },500)
+      },
+      editVisNetworkChange(flag){
+        this.editVisNetwork=flag;
       }
     },
 

@@ -196,12 +196,12 @@
           image:'',
         },
         popData:[
-          {top:'-20px', left:'-17px',className:'nz-icon-edit',id:'edit'},
-          {top:'-20px', left:'28px',className:'nz-icon-chart',id:'2'},
+          {top:'-20px', left:'-17px',className:'nz-icon-endpoint',id:'1'},
+          {top:'-20px', left:'28px',className:'nz-icon-shujuku',id:'2'},
           {top:'18px',  left:'52px',className:'nz-icon-chart',id:'3'},
           {top:'56px', left:'28px',className:'',id:'4'},
-          {top:'56px', left:'-17px',className:'nz-icon-chart',id:'5'},
-          {top:'18px', left:'-38px',className:'nz-icon-chart',id:'6'},
+          {top:'56px', left:'-17px',className:'nz-icon-info-normal',id:'5'},
+          {top:'18px', left:'-38px',className:'nz-icon-gaojing',id:'6'},
         ],
         modelTop:[],
         //viewsCenter
@@ -330,13 +330,14 @@
           model={...nodesArray.find(item=>item.id===model.id),...model};
           nodesArray=nodesArray.filter(item=>item.id!==model.id);
         }else{
-          model={...model,...this.network.DOMtoCanvas({x:40,y:40})};
+          model={...model,...this.network.DOMtoCanvas({x:80,y:100})};
         }
         nodesArray.push(model);
         this.$emit("setTopologyData",nodesArray,this.edgesArray);
         this.setNetworkData(nodesArray,this.edgesArray);
        this.$nextTick(()=>{
          this.arrayDiff();
+         this.$emit('editVisNetworkChange',true);
        })
       },
       addModelShow(){ // 显示添加节点弹窗
@@ -388,12 +389,12 @@
         selItem.y=position[selId].y;
         this.$emit("setTopologyData",this.nodesArray,this.edgesArray);
       },
-      setPopPosition(selId,params){//设置节点工具栏位置
+      setPopPosition(selId){//设置节点工具栏位置以及是否显示
         if(!selId){return}
         let position=this.network.canvasToDOM(this.network.getPositions([selId])[selId]);
         this.networkPop.style.top = position.y - 85 + 7*(10-this.zoom*10)+'px';
         this.networkPop.style.left = position.x - 32*this.zoom - 5*(1-this.zoom*1) +'px';
-        if(!this.isFullScreen&&this.NodeArr.length==0){
+        if(!this.isFullScreen&&this.NodeArr.length==0&&!this.editVisNetwork){
           this.networkPopShow=true;
         }
         this.NodeArr=[...this.NodeArr]
@@ -464,25 +465,25 @@
         this.$refs['network'].removeEventListener('mousemove',this.modelTopMouseMove);
       },
       modelTopMouseMove(e){
-        // let position={
-        //   x:e.clientX-this.relativeModelTop.x,
-        //   y:e.clientY-this.relativeModelTop.y
-        // };
-        // this.$refs['modelTopId'+this.index][0].style.top=position.y+'px';
-        // this.$refs['modelTopId'+this.index][0].style.left=position.x+'px';
-        // // {top:(item.y- 80 + 5*(10-zoom*10))+'px',left:(item.x-26)+'px'
-        // let cancvs=this.network.DOMtoCanvas({
-        //   x:position.x+26,
-        //   y:position.y+80-(50*(1-this.zoom)),
-        // });
-        // this.network.moveNode(this.selNodeId,cancvs.x,cancvs.y);
-        // let selItem = this.nodesArray.find((item)=>item.id===this.selNodeId);
-        // selItem.x=cancvs.x;
-        // selItem.y=cancvs.y;
-        // this.$emit("setTopologyData",this.nodesArray,this.edgesArray);
-        // if(this.networkPopShow){
-        //   this.setPopPosition(this.selNodeId);
-        // }
+        let position={
+          x:e.clientX-this.relativeModelTop.x,
+          y:e.clientY-this.relativeModelTop.y
+        };
+        this.$refs['modelTopId'+this.index][0].style.top=position.y+'px';
+        this.$refs['modelTopId'+this.index][0].style.left=position.x+'px';
+        // {top:(item.y- 80 + 5*(10-zoom*10))+'px',left:(item.x-26)+'px'
+        let cancvs=this.network.DOMtoCanvas({
+          x:position.x+26,
+          y:position.y+80-(50*(1-this.zoom)),
+        });
+        this.network.moveNode(this.selNodeId,cancvs.x,cancvs.y);
+        let selItem = this.nodesArray.find((item)=>item.id===this.selNodeId);
+        selItem.x=cancvs.x;
+        selItem.y=cancvs.y;
+        this.$emit("setTopologyData",this.nodesArray,this.edgesArray);
+        if(this.networkPopShow){
+          this.setPopPosition(this.selNodeId);
+        }
       },
       modelTopClick(item,index){
         this.index=index;
@@ -531,12 +532,11 @@
          });
 
          this.network.on("dragStart", function (params) {//节点移动开始
-           // this_.networkPopShow=false;
            this_.NodeArrShow=false;
-           // let selId=params.nodes[0];
-           // if(selId){
-           //   this_.modelTop.find(item=>item.id===selId).show=false;
-           // }
+           let selId=params.nodes[0];
+           if(selId){
+             this_.selNodeId=selId
+           }
            // if(!selId){
            //   this_.modelTop.forEach(item=>{
            //     item.show=false;
@@ -547,11 +547,10 @@
          this.network.on("dragging", function (params,event) {//节点移动中
            this_.viewsCenter=this_.network.getViewPosition();
            let selId=params.nodes[0];
-           if(selId){
-             this_.setNodePosition(selId)
-           }
            if(this_.selNodeId){
-             this_.selNodeId=selId;
+             this_.setNodePosition(this_.selNodeId)
+           }
+           if(this_.selNodeId&&this_.networkPopShow){
              this_.setPopPosition(this_.selNodeId);
            }
            if(this_.NodeArr.length>0){
@@ -563,12 +562,10 @@
 
          this.network.on("dragEnd", function (params) {//节点移动结束
            this_.viewsCenter=this_.network.getViewPosition();
-           let selId=params.nodes[0];
-           if(selId){
-             this_.setNodePosition(selId)
-           }
            if(this_.selNodeId){
-             this_.selNodeId=selId;
+             this_.setNodePosition(this_.selNodeId)
+           }
+           if(this_.selNodeId&&this_.networkPopShow){
              this_.setPopPosition(this_.selNodeId);
            }
            if(this_.NodeArr.length>0){
