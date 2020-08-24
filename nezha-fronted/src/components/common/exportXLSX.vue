@@ -177,48 +177,37 @@
       },
       downloadTemplate:function(){
         let language=localStorage.getItem('nz-language-' + localStorage.getItem('nz-username')) || 'en'; //初始未选择默认 en 英文
-        let fileName=this.exportFileName+'-'+'template'+'.xlsx';
-        let xmlHttp = new XMLHttpRequest();
-        xmlHttp.responseType = "blob";
-        xmlHttp.onload=function(){
-          if(this.status === 200){
-            let blob=this.response;
-            let reader = new FileReader();
-            reader.readAsDataURL(blob); // 转换为base64，可以直接放入a标签href
-            reader.onload = function(e) {
-              // 转换完成后创建a标签下载
-              let a = document.createElement('a');
-              a.download = fileName;
-              a.href = e.target.result;
-              document.body.appendChild(a);
-              a.click();
-              a.remove();
-            }
-          }
+        let fileName=this.exportFileName+'-'+'template-'+this.getTimeString()+'.xlsx';
+
+        let url=null;
+        if (this.importUrl.indexOf("asset") > -1) {
+          url = "/asset/template";
+        } /*else if (this.importUrl.indexOf("endpoint") > -1) {
+          url = "/endpoint/template";
+        }*/
+
+        let param={language:language}
+        if(!url){
+          console.error('no interface support')
         }
-        xmlHttp.open("GET",'/static/template/'+language+'/'+fileName,true);
-        xmlHttp.send();
+        this.exportExcel(url,param,fileName)
       },
       formatJson(filterVal, jsonData) {
         return jsonData.map(v => filterVal.map(j => v[j]))
       },
       exportCur:function(){
-        this.exportExcel();
+        this.exportExcel(this.exportUrl,this.params,this.exportFileName+'-'+this.getTimeString()+'.xlsx');
         this.closeDialog();
       },
       exportAll:function(){
         let params=JSON.parse(JSON.stringify(this.params));
         params.pageSize=-1;
-        this.exportExcel(params);
+        this.exportExcel(this.exportUrl,params,this.exportFileName+'-'+this.getTimeString()+'.xlsx');
         this.closeDialog();
       },
-      exportExcel:function(params){
+      exportExcel:function(url,params,fileName){
         let temp=this;
-        if(!params){
-          params=temp.params;
-        }
-        axios.get(this.exportUrl,{responseType:'blob',params:params}).then(res=>{
-          let fileName=temp.exportFileName+'-'+temp.getTimeString()+'.xlsx';
+        axios.get(url,{responseType:'blob',params:params}).then(res=>{
           if(window.navigator.msSaveOrOpenBlob){
             // 兼容ie11
             let blobObject = new Blob([res.data]);
@@ -255,7 +244,6 @@
         let hours=this.formatNum(date.getHours());
         let minutes=this.formatNum(date.getMinutes());
         let seconds=this.formatNum(date.getSeconds());
-        console.log(day)
         return year + split + month + split + day + ' ' + hours + split + minutes + split + seconds;
       },
       formatNum:function(num){
