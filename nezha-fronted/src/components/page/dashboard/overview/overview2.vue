@@ -1,5 +1,5 @@
 <template>
-  <div class="overview">
+  <div class="overview" style="background-color: #f9f9f9;">
     <!--标题-->
     <div class="overview-content-header">
       <div class="header-title" :class="{'hide-div':!isFullScreen}">{{systemName&&systemName != 'undefined'&&systemName != null?systemName: $t('dashboard.overview.contentTitle')}}</div>
@@ -1073,7 +1073,7 @@
         return document.isFullScreen || document.mozIsFullScreen || document.webkitIsFullScreen;
       },
       fullScreen:function(){
-        let container = document.querySelector(".overview-content");
+        let container = document.querySelector(".overview");
         let fullScreenFunc=container.requestFullscreen||container.mozRequestFullScreen||container.webkitRequestFullscreen||container.msRequestFullscreen;
         fullScreenFunc.call(container);
         this.isFullScreen = true;
