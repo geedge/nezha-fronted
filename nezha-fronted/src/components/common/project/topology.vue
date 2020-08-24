@@ -231,7 +231,7 @@
         let nodes=[...this.nodesArray];
         let edges=[...this.edgesArray];
         console.log(nodes,edges);
-        this.editVisNetwork=false;
+        this.$emit('editVisNetworkChange',false);
       },
       //拓扑图方法
       init(type){
@@ -288,7 +288,7 @@
 
           interaction:{
             dragNodes: true, //是否能拖动节点
-            dragView: false, //是否能拖动画布
+            dragView: true, //是否能拖动画布
             hover: true, //鼠标移过后加粗该节点和连接线
             multiselect: false, //按 ctrl 多选
             selectable: true, //是否可以点击选择
@@ -305,12 +305,11 @@
         this_.network = new Vis.Network(this_.container, this_.data, this_.options);
         this_.network.moveTo({
           position: this_.viewsCenter,
-          scale: this_.isFullScreen?1.5:1,
+          scale: this_.zoom,
           offset: {x:0, y:0},
         });
         this_.containerCanvas=document.querySelectorAll("#network_id canvas")[0];
         this_.modelTopUpdate();
-        this_.zoom=this_.network.canvasToDOM({x:0,y:1}).y-this_.network.canvasToDOM({x:0,y:0}).y;
       },
       resetAllNodes() {
         this.setNetworkData(this.nodesArray,this.edgesArray);
@@ -330,7 +329,7 @@
         });
         this_.network.moveTo({
           position: this_.viewsCenter,
-          scale: this_.isFullScreen?1.5:1,
+          scale: this_.zoom,
           offset: {x:0, y:0},
         });
         this.$nextTick(()=>{
@@ -421,7 +420,6 @@
       },
       //工具栏
       nodeDel(){
-        console.log(this.selNodeId);
         let nodesArray=this.nodesArray.filter((item)=>item.id!==this.selNodeId);
         let edgesArray=this.edgesArray.filter((item)=>item.from!==this.selNodeId || this.to!==this.selNodeId);
         this.$emit('setTopologyData',nodesArray, edgesArray);
@@ -464,7 +462,6 @@
         })
       },
       modelTopMouseDown(e){
-        console.log(e);
         if(!this.index&&this.index!==0){return};
         this.relativeModelTop={
           x:e.clientX-(parseFloat(this.$refs['modelTopId'+this.index][0].style.left)),
@@ -527,7 +524,6 @@
         if(key){
           this.popDataShow[key]=true;
         }
-        console.log(this.popDataShow);
       },
     },
     mounted(){
@@ -625,7 +621,6 @@
            return false
          });
          this.network.on("resize", function (params) {//检测resize
-           console.log(1111);
            setTimeout(()=>{
              this_.modelTopUpdate();
              this_.selNodeArrUpdate();

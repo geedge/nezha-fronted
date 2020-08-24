@@ -185,10 +185,10 @@
         this.topologyLoading=true;
         // this.$get('/project/topo',{projectId:n.id}).then(res=>{
         //   console.log(res);
-        //   setTimeout(()=>{
-        //     this.topologyLoading=false;
-        //     this.$refs['topology'].setNetworkData( this.edgesArray,this.nodesArray);
-        //   })
+          setTimeout(()=>{
+            this.topologyLoading=false;
+            this.$refs['topology'].setNetworkData( this.edgesArray,this.nodesArray);
+          },500)
         // })
       },
       editVisNetworkChange(flag){

@@ -70,6 +70,61 @@
               </el-color-picker>
             </div>
           </el-form-item>
+          <div  class="right-box-sub-title">
+            <span>{{$t('alert.config.expr')}}</span>
+            <span class="float-right" @click="addExpression"><i style="font-size: 16px; cursor: pointer;" class="nz-icon nz-icon-create-square"></i></span>
+          </div>
+          <el-row class="element-item" style="" v-for="index of promqlKeys.length" :key="'ele' + index">
+            <el-row>
+              <template>
+                <el-col style="width: 120px; padding-right: 20px; text-align: right; color: #666">
+                  Name
+                </el-col>
+                <el-col style="width: calc(100% - 140px);">
+                  <el-input v-model="name[index-1]" type="text" size="small"></el-input>
+                </el-col>
+                <el-col  style="width: 20px"> <i class="el-icon-minus" @click="removeExpression(index-1)"></i></el-col>
+              </template>
+            </el-row>
+            <el-row>
+              <el-col style="width: 120px; padding-right: 20px; text-align: right; color: #666">
+                Unit
+              </el-col>
+              <el-col style="width: calc(100% - 120px);">
+                <el-cascader filterable placeholder="" popper-class="no-style-class unit-popper-class" size="small" style="width: 100%"
+                             :options="unitOptions"
+                             :props="{ expandTrigger: 'click',emitPath:false }"
+                             :show-all-levels="false"
+                             v-model="unit[index-1]"
+                ></el-cascader>
+              </el-col>
+            </el-row>
+            <promql-input
+              :ref="'promql-'+(index-1)"
+              :id="promqlKeys[index-1]"
+              :key="promqlKeys[index-1]"
+              :expression-list="expressions"
+              :index="index-1"
+              :styleType="2"
+              :plugins="['metric-selector', 'metric-input', 'remove']"
+              @change="expressionChange"
+              @removeExpression="removeExpression"
+              :showRemove="false"
+            ></promql-input>
+            <el-row>
+              <template>
+                <el-col style="width: 120px; padding-right: 20px; text-align: right; color: #666">
+                  {{$t('dashboard.panel.chartForm.legend')}}&nbsp;
+                  <el-popover :content="$t('dashboard.panel.chartForm.legendTip')" placement="top" width="150" trigger="hover">
+                    <i slot="reference" class="nz-icon nz-icon-info-normal" style="font-size: 12px; -webkit-transform:scale(0.75);display:inline-block;" @mouseover="rz"></i>
+                  </el-popover>
+                </el-col>
+                <el-col style="width: calc(100% - 120px);">
+                  <el-input v-model="legends[index-1]" type="text" size="small"></el-input>
+                </el-col>
+              </template>
+            </el-row>
+          </el-row>
         </el-form>
       </el-scrollbar>
 
@@ -89,11 +144,25 @@
 </template>
 
 <script>
+  import promqlInput from "@/components/page/dashboard/explore/promqlInput";
+  import chartDataFormat from "@/components/charts/chartDataFormat";
+  import {getUUID,resetZIndex} from "@/components/common/js/common";
+  var rz = {
+    methods: {
+      rz(e) {
+        resetZIndex(e);
+      }
+    }
+  };
   export default {
     name:"addLine",
     props:{
       lineData:{},
     },
+    components:{
+      'promql-input': promqlInput,
+    },
+    mixins: [rz],
     watch:{
       lineData:{
         handler(n){
@@ -128,6 +197,14 @@
           '#1e90ff',
           '#c71585',
         ],
+        unitOptions: chartDataFormat.unitOptions(),
+        promqlKeys:[],
+        expressions: [],
+        promqlCount:0,
+        elementIds:[],
+        legends:[],
+        name:[],
+        unit:[],
         rules:{
           arrows: [
             { required: true, message: '', trigger: 'change' },
@@ -138,9 +215,11 @@
         }
       }
     },
+    mounted(){
+      this.addExpression();
+    },
     methods:{
       onSubmit(){
-
         this.$refs['form'].validate((valid) => {
           if (valid) {
             let model=Object.assign({id:undefined},{...this.form},{color: {color:this.form.color,highlight:this.form.color,hover:this.form.color,opacity:1.0}});
@@ -149,9 +228,48 @@
               roundness:model.roundness,
               type:model.type ,
             };
+            model.expressions=[];
+            this.promqlKeys.forEach((item,index)=>{
+              model.expressions.push({
+                "name": this.name[index],
+                "unit": this.unit[index],
+                "metric": this.expressions[index],
+                "legend": this.legends[index],
+              })
+            });
             this.$emit('addLine',model);
           }
         });
+      },
+      expressionChange: function () {
+
+      },
+      addExpression() {
+        this.expressions.push('');
+        this.legends.push('');
+        this.name.push('');
+        this.unit.push('');
+        this.promqlKeys.push(getUUID());
+        this.elementIds.push("");
+        this.promqlCount++;
+      },
+      removeExpression(index) {
+        if (this.promqlCount > 1) {
+          this.expressions.splice(index, 1);
+          this.legends.splice(index, 1);
+          this.name.splice(index, 1);
+          this.unit.splice(index, 1);
+          this.promqlKeys.splice(index, 1);
+          this.elementIds.splice(index, 1);
+          this.promqlCount--;
+          this.$nextTick(() => {
+            this.expressions.forEach((ex, index) => {
+              if (ex) {
+                this.$refs[`promql-${index}`][0].metricChange(ex);
+              }
+            });
+          });
+        }
       },
       /*关闭弹框*/
       esc(refresh) {

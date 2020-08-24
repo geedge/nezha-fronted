@@ -30,7 +30,7 @@
           </el-select>
         </el-form-item>
 
-        <el-form-item label="Label" prop="iconId">
+        <el-form-item label="Icon" prop="iconId">
           <el-select v-model="form.iconId" placeholder=""  popper-class="asset-dropdown" size="small">
             <el-option
               v-for="item in iconArray"
