@@ -211,6 +211,9 @@
   @import './chart.scss';
 </style>
 <style scoped>
+  .nz-icon-edit{
+    margin-right: 5px;
+  }
   .table-container{
     height: calc(100% - 30px);
   }

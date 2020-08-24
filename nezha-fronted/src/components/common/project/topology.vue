@@ -69,8 +69,12 @@
         <div  v-if="popDataShow.main">
           <popDataMain :moduleId="this.selNodeId" :projectId="this.allModuleInfo.basic.id"></popDataMain>
         </div>
-        <div v-if="popDataShow.total">total</div>
-        <div v-if="popDataShow.info">info</div>
+        <div v-if="popDataShow.total">
+          total
+        </div>
+        <div v-if="popDataShow.info">
+          <popDataInfo :moduleId="this.selNodeId" :projectId="this.allModuleInfo.basic.id"></popDataInfo>
+        </div>
       </div>
 
     </div>
@@ -117,12 +121,14 @@
   import addNode from './addNode'
   import addLine from './addLine'
   import popDataMain from './popData/popDataMain'
+  import popDataInfo from './popData/popDataInfo'
 	export default {
 		name:"topology",
     components: {
       'add-model':addNode,
       'add-line':addLine,
       'popDataMain':popDataMain,
+      'popDataInfo':popDataInfo,
     },
     props:{
       nodesArray:{
@@ -214,12 +220,12 @@
           image:'',
         },
         popData:[
-          {top:'-20px', left:'-17px',className:'nz-icon-endpoint',id:'1'},
-          {top:'-20px', left:'28px',className:'nz-icon-shujuku',id:'2'},
-          {top:'18px',  left:'52px',className:'nz-icon-chart',id:'3'},
-          {top:'56px', left:'28px',className:'',id:'4'},
-          {top:'56px', left:'-17px',className:'nz-icon-info-normal',id:'5'},
-          {top:'18px', left:'-38px',className:'nz-icon-gaojing',id:'6'},
+          {top:'-20px', left:'-17px',className:'nz-icon-endpoint',id:'endpoint'},
+          {top:'-20px', left:'28px',className:'nz-icon-shujuku',id:'asset'},
+          {top:'18px',  left:'52px',className:'nz-icon-chart',id:'total'},
+          {top:'56px', left:'28px',className:'',id:'other'},
+          {top:'56px', left:'-17px',className:'nz-icon-info-normal',id:'info'},
+          {top:'18px', left:'-38px',className:'nz-icon-gaojing',id:'alert'},
         ],
         popDataShow:{
           endpoint:false,
@@ -457,7 +463,7 @@
 
       // 工具的点击 对应的操作
       popClick(id){
-        this.popDataShowUpdate();
+        this.popDataShowUpdate(id);
       },
       modelTopUpdate(){//model上的图标 实时更新
         this.modelTop=[];
@@ -498,8 +504,9 @@
       modelTopClick(item,index){
         this.index=index;
         this.selNodeId=item.id;
-        if(this.selNodeId&&this.networkPopShow){
+        if(this.selNodeId){
           this.setPopPosition(this.selNodeId);
+          this.popDataShowUpdate('main')
         }
       },
       // 数组取差集
