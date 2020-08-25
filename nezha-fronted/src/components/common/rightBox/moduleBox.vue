@@ -618,6 +618,7 @@
         immediate: true,
         deep: true,
         handler(n, o) {
+          console.log('post module',n)
           this.editModule = JSON.parse(JSON.stringify(n));
         }
       },
@@ -636,6 +637,8 @@
             }
           } else if (!n.id && n.type && n.type.toLowerCase() == 'http') {
             n.port = 9100;
+          }else{
+            this.reparseSnmpParam(n)
           }
           if (!n.type) {
             n.type = 'http';
