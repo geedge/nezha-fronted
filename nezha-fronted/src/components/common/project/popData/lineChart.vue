@@ -1,6 +1,11 @@
 <style lang="scss">
   @import './chart.scss';
 </style>
+<style scoped>
+  .resize-box{
+    border: none;
+  }
+</style>
 <template>
   <div class="nz-chart-resize">
     <div class="resize-shadow" ref="resizeShadow"></div>
@@ -733,7 +738,7 @@
               if(!chartInfo.height){
                 self.echartStore.resize({height:228});
               }else {
-                self.echartStore.resize({height:228});
+                self.echartStore.resize({height:(chartInfo.height-divHeight-this.$chartResizeTool.titleHeight-this.$chartResizeTool.chartBlankHeight)});
               }
               if(dataArg&&dataArg.length>0){
                 self.echartStore.clear();
@@ -1415,7 +1420,7 @@
         this.$nextTick(()=>{
           let divHeight = this.$refs.legendArea.offsetHeight;
           if(!this.chartInfo.height){
-            this.echartStore.resize({height:(400-divHeight-this.$chartResizeTool.titleHeight-this.$chartResizeTool.chartBlankHeight)});
+            this.echartStore.resize({height:228});
           }else {
             this.echartStore.resize({height:(this.chartInfo.height-divHeight-this.$chartResizeTool.titleHeight-this.$chartResizeTool.chartBlankHeight)});
           }

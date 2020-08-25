@@ -1,22 +1,24 @@
 <template>
-  <div>
-    <div v-for="(item, index) in dataList" :key="item.id" :id="'chart-' + item.id" :name="item.title"  v-show="!item.isHide" class="chart">
-      <lineChars
-        v-if="item.type === 'line' || item.type === 'bar' ||item.type == 'stackArea' || item.type === 4"
-        :key="'inner' + item.id"
-        :ref="'editChart'+item.id"
-        @on-refresh-data="refreshChart"
-        @on-remove-chart-block="removeChart"
-        :panel-id="index"
-        :chart-index="index"
-        :chart-data="item"
-        v-loading="item.loading"
-        @loadingFalse="loadingFalse"
-      >
-
-      </lineChars>
+  <div
+      v-scrollBar:chart-box
+      class="chart-box"
+    >
+      <div v-for="(item, index) in dataList" :key="item.id" :id="'chart-' + item.id" :name="item.title"  v-show="!item.isHide" class="chart">
+        <lineChars
+          v-if="item.type === 'line' || item.type === 'bar' ||item.type == 'stackArea' || item.type === 4"
+          :key="'inner' + item.id"
+          :ref="'editChart'+item.id"
+          @on-refresh-data="refreshChart"
+          @on-remove-chart-block="removeChart"
+          :panel-id="index"
+          :chart-index="index"
+          :chart-data="item"
+          v-loading="item.loading"
+          @loadingFalse="loadingFalse"
+        >
+        </lineChars>
+      </div>
     </div>
-  </div>
 </template>
 
 <script>
@@ -712,5 +714,14 @@
   .chart{
     width: 500px;
     height: 300px;
+    border: 1px solid #FFFFFF;
+    box-shadow: 1px 2px 4px 0 rgba(0,0,0,0.12), -1px 1px 9px -1px rgba(205,205,205,0.77);
+    margin-bottom: 15px;
+  }
+  .chart-box{
+    /*padding-left: 600px;*/
+    position: relative;
+    height: calc(100vh - 100px);
+    padding: 3px 15px 300px 15px;
   }
 </style>
