@@ -60,7 +60,10 @@
         arr.forEach(item1=>{
           this.getData(item1, '', '');
         })
-      })
+      });
+      this.$set(this.filter, "start_time", bus.timeFormate(new Date().getTime()-60*60*1000, "yyyy-MM-dd hh:mm:ss"));
+      this.$set(this.filter, "end_time", bus.timeFormate(new Date().getTime(), "yyyy-MM-dd hh:mm:ss"));
+      this.$set(this.filter, "panelId", this.projectId);
     },
     methods:{
 		  //刷新图表
@@ -80,12 +83,10 @@
       },
       //获取图表数据
 		  getData(chartInfo, pos, filterType){
-        this.$set(this.filter, "start_time", bus.timeFormate(new Date().getTime()-24*60*60*1000, "yyyy-MM-dd hh:mm:ss"));
-        this.$set(this.filter, "end_time", bus.timeFormate(new Date().getTime(), "yyyy-MM-dd hh:mm:ss"));
-        this.$set(this.filter, "panelId", this.projectId);
-        let startTime =  bus.timeFormate(new Date().getTime()-24*60*60*1000, "yyyy-MM-dd hh:mm:ss");
-        let endTime = bus.timeFormate(new Date().getTime(), "yyyy-MM-dd hh:mm:ss");
+        let startTime =  this.filter.start_time
+        let endTime = this.filter.end_time;
         let step = bus.getStep(startTime, endTime);
+        chartInfo.loading=true;
         const chartItem = chartInfo;
         this.$nextTick(() => {
           const axiosArr = chartItem.elements.map((ele) => {

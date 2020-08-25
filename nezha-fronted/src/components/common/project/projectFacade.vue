@@ -1,18 +1,18 @@
 <template>
-  <div style="background: #F9F9F9;height: 100%">
-    <div class="top-tools">
-      <!--时间选择-->
-      <template>
-        <div class="top-tool-main-right">
-          <div class="top-tool-search relative-position margin-r-20">
-            <el-input ref="queryPanel" @clear="clearInput" id="queryPanel" @focus="focusInput"  @blur="blurInput" v-model="filter.searchName" class="query-input-inactive" size="mini" clearable   >
-              <i slot="suffix" class="el-input__icon el-icon-search" @click="focusInput" style="float: right"></i>
-            </el-input>
-          </div>
-          <pick-time :refresh-data-func="dateChange" v-model="searchTime" :use-chart-unit="false"></pick-time>
-        </div>
-      </template>
-    </div>
+  <div style="background: #F9F9F9;height: 100%;padding-top: 15px">
+    <!--<div class="top-tools">-->
+      <!--&lt;!&ndash;时间选择&ndash;&gt;-->
+      <!--<template>-->
+        <!--<div class="top-tool-main-right">-->
+          <!--<div class="top-tool-search relative-position margin-r-20">-->
+            <!--<el-input ref="queryPanel" @clear="clearInput" id="queryPanel" @focus="focusInput"  @blur="blurInput" v-model="filter.searchName" class="query-input-inactive" size="mini" clearable   >-->
+              <!--<i slot="suffix" class="el-input__icon el-icon-search" @click="focusInput" style="float: right"></i>-->
+            <!--</el-input>-->
+          <!--</div>-->
+          <!--<pick-time :refresh-data-func="dateChange" v-model="searchTime" :use-chart-unit="false"></pick-time>-->
+        <!--</div>-->
+      <!--</template>-->
+    <!--</div>-->
     <div class="project-facade">
       <div  class="facade-content">
         <!--拓扑图盒子-->
@@ -122,7 +122,10 @@
     mounted(){
 		  if(this.obj.id){
         this.getProjectData(this.obj);
-      }
+      };
+      this.$set(this.filter, "start_time", bus.timeFormate(new Date().getTime()-60*60*1000, "yyyy-MM-dd hh:mm:ss"));
+      this.$set(this.filter, "end_time", bus.timeFormate(new Date().getTime(), "yyyy-MM-dd hh:mm:ss"));
+      this.$set(this.filter, "panelId", this.projectId);
     },
     methods:{
 		  getProjectData(n){
@@ -150,7 +153,7 @@
         let classVal=document.getElementById('queryPanel').parentElement.getAttribute("class");
         classVal=classVal.replace('query-input-inactive','query-input-active');
         document.getElementById('queryPanel').parentElement.setAttribute("class",classVal );
-        this.$refs.queryPanel.focus();
+        // this.$refs.queryPanel.focus();
       },
       blurInput() {
         if(!this.filter.searchName || this.filter.searchName == ''){
@@ -160,6 +163,7 @@
             document.getElementById('queryPanel').parentElement.setAttribute("class",classVal );
           },100)
         }
+        console.log(this.filter);
       },
       clearInput() {
         this.$refs.queryPanel.focus();

@@ -18,11 +18,20 @@ const store = new Vuex.Store({
     isAddConsole: false,//是否增加窗口
     consoleParam: {},//新开console窗口参数
     linkData: [],//导航数据
+    projectFilter:{
+      panelId: 0,
+      start_time: '',
+      end_time: '',
+      searchName: ''
+    }
   },
   getters: {
     getLinkData(state){
       return state.linkData
-    }
+    },
+    getProjectFilter(state){
+      return state.projectFilter
+    },
   },
   mutations: {
     /* 监听对象变化，用于顶部菜单与底部内容的同步 */
@@ -72,6 +81,9 @@ const store = new Vuex.Store({
     },
     setLinkData(state, data) {
       state.linkData = data;
+    },
+    setProjectFilter(state, data) {
+      state.projectFilter = data;
     },
   },
   actions: {
