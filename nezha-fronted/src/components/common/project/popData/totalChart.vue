@@ -1,6 +1,6 @@
 <template>
   <div
-      v-scrollBar:chart-box
+      v-scrollBar
       class="chart-box"
     >
       <div v-for="(item, index) in dataList" :key="item.id" :id="'chart-' + item.id" :name="item.title"  v-show="!item.isHide" class="chart">
