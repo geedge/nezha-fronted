@@ -211,6 +211,9 @@
   @import './chart.scss';
 </style>
 <style scoped>
+  .facade-top /deep/.active-icon{
+    margin-top: 0;
+  }
   .nz-icon-edit{
     margin-right: 5px;
   }

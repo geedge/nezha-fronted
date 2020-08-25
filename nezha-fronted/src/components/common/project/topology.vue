@@ -1,6 +1,6 @@
 <template>
   <div class="content">
-    <div class="edit-topology" >
+    <div class="edit-topology" v-if="editVisNetwork">
       <span v-show="!selectNodeTitle&&editVisNetwork" class="edit-topology-module">
         Module element :
         <span class="edit-topology-add" @click="addModelShow">Add</span>
@@ -70,7 +70,7 @@
           <popDataMain :moduleId="this.selNodeId" :projectId="this.allModuleInfo.basic.id"></popDataMain>
         </div>
         <div v-if="popDataShow.total">
-          total
+          <total-chart :moduleId="this.selNodeId" :projectId="this.allModuleInfo.basic.id" :nodesArray="nodesArray"></total-chart>
         </div>
         <div v-if="popDataShow.info">
           <popDataInfo :moduleId="this.selNodeId" :projectId="this.allModuleInfo.basic.id"></popDataInfo>
@@ -122,9 +122,11 @@
   import addLine from './addLine'
   import popDataMain from './popData/Main'
   import popDataInfo from './popData/Info'
+  import TotalChart from "./popData/totalChart";
 	export default {
 		name:"topology",
     components: {
+      TotalChart,
       'add-model':addNode,
       'add-line':addLine,
       'popDataMain':popDataMain,
@@ -449,6 +451,7 @@
         this.$emit('setTopologyData',nodesArray, edgesArray);
         this.setNetworkData(nodesArray, edgesArray);
         this.networkPopClose();
+        this.arrayDiff();
       },
       nodeEdit(){
         this.addNodeShow=true;
@@ -512,7 +515,7 @@
       // 数组取差集
       arrayDiff(){
         // this.moduleDataS=this.allModuleInfos-this.nodesArray
-        this.moduleDataS=this.allModuleInfos;
+        this.moduleDataS={...this.allModuleInfos};
         this.nodesArray.forEach((item)=>{
           this.moduleDataS.module=this.moduleDataS.module.filter((item1)=> item.id!==item1.id)
         })
