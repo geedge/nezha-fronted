@@ -43,7 +43,7 @@
           <template slot-scope="scope" :column="item">
             <template v-if="item.prop == 'updateUser'" >{{scope.row[item.prop].name}}</template>
             <template v-else-if="item.prop == 'fileName' && scope.row[item.prop]" >
-              <span class="link" @click="downloadMib(scope.row.id)">{{scope.row[item.prop]}}</span>
+              <span class="link" @click="downloadMib(scope.row)">{{scope.row[item.prop]}}</span>
             </template>
             <template v-else-if="item.prop == 'modelsDetail' && scope.row['modelsDetail'] && scope.row['modelsDetail'].length >0" >
               <div style="height: 100%">
