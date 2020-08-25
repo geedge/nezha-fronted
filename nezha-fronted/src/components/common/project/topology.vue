@@ -120,8 +120,8 @@
   import Vis from 'vis'
   import addNode from './addNode'
   import addLine from './addLine'
-  import popDataMain from './popData/popDataMain'
-  import popDataInfo from './popData/popDataInfo'
+  import popDataMain from './popData/Main'
+  import popDataInfo from './popData/Info'
 	export default {
 		name:"topology",
     components: {

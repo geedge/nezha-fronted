@@ -172,6 +172,11 @@
       draggable,
       // visNetwork,
     },
+    watch:{
+      dataList(n){
+        console.log(n);
+      }
+    },
     data() {
       return {
         filter: {},
