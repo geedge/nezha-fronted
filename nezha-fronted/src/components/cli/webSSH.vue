@@ -169,6 +169,7 @@
 <script>
   import Console from './console'
   import uuidv1 from "uuid/v1";
+  import axios from 'axios'
 
   export default {
     name: 'webSSH',
@@ -417,14 +418,14 @@
       },
       download(){
         this.downloadFile.uuid = this.currentUuid;
-        this.$post('terminal/download',this.downloadFile,{responseType:'blob'}).then(res => {
+        axios.post('terminal/download',this.downloadFile,{responseType:'blob'}).then(res => {
           let fileName= this.downloadFile.path.substring(this.downloadFile.path.lastIndexOf('/')+1);
           if(window.navigator.msSaveOrOpenBlob){
             // 兼容ie11
-            let blobObject = new Blob([res]);
+            let blobObject = new Blob([res.data]);
             window.navigator.msSaveOrOpenBlob(blobObject, fileName);
           }else{
-            let url = URL.createObjectURL(new Blob([res]));
+            let url = URL.createObjectURL(new Blob([res.data]));
             let a = document.createElement('a');
             document.body.appendChild(a); //此处增加了将创建的添加到body当中
             a.href = url;
