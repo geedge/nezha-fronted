@@ -1,6 +1,6 @@
 <template>
   <div class="info-content">
-    <div class="info-box">
+    <div class="info-box" v-loading="loading">
       <div class="info-box-title">module info</div>
       <div class="info-box-content">
         <div class="content-box">
@@ -46,6 +46,7 @@
     watch:{},
     data(){
       return{
+        loading:true,
         moduleInfo:{
           project:{name:''},
           name:'',
@@ -58,7 +59,9 @@
       }
     },
     mounted(){
+      this.loading=true;
       this.$get('/module',{id:this.moduleId}).then(res=>{
+        this.loading=false;
         this.moduleInfo=res.data.list[0];
         console.log(this.moduleInfo,this.projectId);
       })
