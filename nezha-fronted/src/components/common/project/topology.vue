@@ -149,14 +149,14 @@
     },
     watch:{
       NodeArr(n){
-        if(n.length==2){
+        if(n.length===2){
           this.lineData={
             arrows:'',
             label:'',
             color:'#1e90ff',
             lineId:'',
             id:'',
-          }
+          };
           this.addLineShow=true;
           this.selectNodeTitle=false;
           this.isLineAdd=true;
@@ -174,7 +174,7 @@
         immediate: true,
         deep: true,
         handler(n){
-          this.allModuleInfos={...n}
+          this.allModuleInfos={...n};
           this.arrayDiff();
         },
       },
@@ -260,7 +260,7 @@
         this.$emit('editVisNetworkChange',false);
       },
       //拓扑图方法
-      init(type){
+      init(){
         let this_ = this;
         this_.nodes = new Vis.DataSet(this_.nodesArray);
         this_.edges = new Vis.DataSet(this_.edgesArray);
@@ -433,8 +433,8 @@
         if(!selId){return}
         let position=this.network.canvasToDOM(this.network.getPositions([selId])[selId]);
         this.networkPop.style.top = position.y - 85 + 7*(10-this.zoom*10)+'px';
-        this.networkPop.style.left = position.x - 32*this.zoom - 5*(1-this.zoom*1) +'px';
-        if(!this.isFullScreen&&this.NodeArr.length==0&&!this.editVisNetwork){
+        this.networkPop.style.left = position.x - 32*this.zoom - 5*(1-this.zoom) +'px';
+        if(!this.isFullScreen&&this.NodeArr.length===0&&!this.editVisNetwork){
           this.networkPopShow=true;
         }
         this.NodeArr=[...this.NodeArr]
@@ -442,7 +442,9 @@
       networkPopClose(){//关闭节点工具栏
         this.networkPopShow=false;
         // this.selNodeId=''
-        this.network.unselectAll();
+        if(this.network){
+          this.network.unselectAll();
+        }
       },
       //工具栏
       nodeDel(){
@@ -453,10 +455,10 @@
         this.networkPopClose();
         this.arrayDiff();
       },
-      nodeEdit(){
-        this.addNodeShow=true;
-        this.isNodeAdd=false;
-      },
+      // nodeEdit(){
+      //   this.addNodeShow=true;
+      //   this.isNodeAdd=false;
+      // },
       lineDel(){
         if(!this.lineData.id){return}
         let edgesArray=this.edgesArray.filter((item)=>item.id!==this.lineData.id);
@@ -489,14 +491,14 @@
         })
       },
       modelTopMouseDown(e){
-        if(!this.index&&this.index!==0){return};
+        if(!this.index&&this.index!==0){return}
         this.relativeModelTop={
           x:e.clientX-(parseFloat(this.$refs['modelTopId'+this.index][0].style.left)),
           y:e.clientY-(parseFloat(this.$refs['modelTopId'+this.index][0].style.top)),
         };
         this.$refs['network'].addEventListener('mousemove',this.modelTopMouseMove);
       },
-      modelTopMouseUp(e){
+      modelTopMouseUp(){
         this.index='';
         this.relativeModelTop={};
         this.$refs['network'].removeEventListener('mousemove',this.modelTopMouseMove);
@@ -540,17 +542,20 @@
        setTimeout(()=>{
          let this_=this;
          this.init('modal');
-         this.network.on("click", function (params) {
-           let selId=params.nodes[0];
+         this.network.on("click", function () {
            this_.networkPopClose();
+         });
+
+         this.network.on("selectNode", function (params) {
+           let selId=params.nodes[0];
            if(selId){
              this_.selNodeId=selId;
              this_.cursorMove=true;
-             this_.nodeData=this_.nodesArray.find((item)=>item.id==selId);
+             this_.nodeData=this_.nodesArray.find((item)=>item.id===selId);
              if(this_.NodeArr.indexOf(selId)!==-1){
-                let index = this_.NodeArr.indexOf(selId);
-                this_.NodeArr=this_.NodeArr.filter((item,i)=> i != index);
-                return
+               let index = this_.NodeArr.indexOf(selId);
+               this_.NodeArr=this_.NodeArr.filter((item,i)=> i !== index);
+               return
              }
              if(this_.selectNodeTitle&&this_.NodeArrShow){
                this_.NodeArr.push(selId);
