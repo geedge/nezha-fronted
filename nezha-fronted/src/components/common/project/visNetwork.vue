@@ -45,52 +45,52 @@
                 <span><span class="label">Description :</span>{{projectInfo.remark?projectInfo.remark:'--'}}</span>
               </div>
               <div>
-            <span>
-              <span class="label">Alert state :</span>
-              <div class="active-icon" style="background: #B7464A 100%;"></div>{{projectInfo.alertStat[0]}}
-              <div class="active-icon" style="background: #E64E4E 100%;"></div>{{projectInfo.alertStat[1]}}
-              <div class="active-icon" style="background: #F7B500 100%;"></div>{{projectInfo.alertStat[2]}}
-            </span>
+            <!--<span>-->
+              <!--<span class="label">Alert state :</span>-->
+              <!--<div class="active-icon" style="background: #B7464A 100%;"></div>{{projectInfo.alertStat[0]}}-->
+              <!--<div class="active-icon" style="background: #E64E4E 100%;"></div>{{projectInfo.alertStat[1]}}-->
+              <!--<div class="active-icon" style="background: #F7B500 100%;"></div>{{projectInfo.alertStat[2]}}-->
+            <!--</span>-->
               </div>
               <div>
                 <span><span class="label">Module Mum :</span>{{projectInfo.moduleMum}}</span>
               </div>
             </div>
-            <div class="facade-top-right" v-loading="alertData.loading">
+            <div class="facade-top-right" v-loading="projectInfo.loading">
               <div class="facade-top-title">
-                <span class="label">{{alertData.title}}</span>
-                {{alertData.sssObj.total}}
+                <span class="label">Alert :</span>
+                {{total}}
               </div>
               <div class="facade-top-right-content">
                 <div>
                   <el-progress
                     type="circle"
-                    :percentage="(alertData.sssObj.pending/alertData.sssObj.total)*100"
+                    :percentage="(projectInfo.alertStat[0]/total)*100"
                     :show-text="false"
                     :width="40"
                     color="#F5A390"
                   ></el-progress>
-                  <div class="align--center">{{alertData.sssObj.pending}}</div>
+                  <div class="align--center">{{projectInfo.alertStat[0]}}</div>
                 </div>
                 <div>
                   <el-progress
                     type="circle"
-                    :percentage="(alertData.sssObj.stop/alertData.sssObj.total)*100"
+                    :percentage="(projectInfo.alertStat[1]/total)*100"
                     :show-text="false"
                     :width="40"
                     color="#F6B977"
                   ></el-progress>
-                  <div class="align--center">{{alertData.sssObj.stop}}</div>
+                  <div class="align--center">{{projectInfo.alertStat[1]}}</div>
                 </div>
                 <div>
                   <el-progress
                     type="circle"
-                    :percentage="(alertData.sssObj.other/alertData.sssObj.total)*100"
+                    :percentage="(projectInfo.alertStat[2]/total)*100"
                     :show-text="false"
                     :width="40"
                     color="#EBD066"
                   ></el-progress>
-                  <div class="align--center">{{alertData.sssObj.other}}</div>
+                  <div class="align--center">{{projectInfo.alertStat[2]}}</div>
                 </div>
               </div>
             </div>
@@ -116,6 +116,12 @@
 </template>
 
 <script>
+  import  a from './image/a.png'
+  import  b from './image/b.png'
+  import  c from './image/c.png'
+  import  d from './image/d.png'
+  import  e from './image/e.png'
+  import  f from './image/f.png'
   import loading from "@/components/common/loading";
   import timePicker from '@/components/common/timePicker';
   import topology from './topology'
@@ -136,7 +142,6 @@
       },
       allModuleInfo:{},
       projectInfo:{},
-      alertData:{}
     },
     watch:{
       // allModuleInfo:{
@@ -150,6 +155,7 @@
         immediate: true,
         handler(n){
           this.getNetworkData(n);
+          this.total=this.projectInfo.alertStat[0]+this.projectInfo.alertStat[1]+this.projectInfo.alertStat[2]
         },
       },
       // alertData:{
@@ -171,6 +177,7 @@
         dropdownMenuShow:false,
         editVisNetwork:false,
         topologyLoading:false,
+        total:1,
       }
 
     },
@@ -186,13 +193,48 @@
         console.log(n);
         this.$get('/project/topo',{projectId:n.id}).then(res=>{
           console.log(res);
-          setTimeout(()=>{
-            this.topologyLoading=false;
+          if(res.data.topo){
+            this.nodesArray=this.formatNodesArr(res.data.topo.nodes);
+            this.edgesArray=this.formatEdgesArr(res.data.topo.lines);
+            console.log(this.nodesArray,this.edgesArray)
+          }else{
             this.nodesArray=[];
             this.edgesArray=[];
-            this.$refs['topology'].setNetworkData( this.edgesArray,this.nodesArray);
+          }
+          setTimeout(()=>{
+            this.topologyLoading=false;
+            this.$refs['topology'].setData();
           },500)
         })
+      },
+      formatNodesArr(arr){
+        let arr1=[];
+        if(!arr){return arr1}
+        arr.forEach((item)=>{
+          item.shape='image';
+          item.id=item.moduleId;
+          switch(item.iconId){
+            case 1: item.image=a;break;
+            case 2: item.image=b;break;
+            case 3: item.image=c;break;
+            case 4: item.image=d;break;
+            case 5: item.image=e;break;
+            case 6: item.image=f;break;
+            default: item.image=a;
+          }
+        });
+        return arr
+      },
+      formatEdgesArr(arr){
+        let arr1=[];
+        if(!arr){return arr1}
+        arr.forEach((item)=>{
+          item.dashes=[15,15];
+          item.from=item.source;
+          item.to=item.target;
+
+        });
+        return arr
       },
       editVisNetworkChange(flag){
         this.editVisNetwork=flag;

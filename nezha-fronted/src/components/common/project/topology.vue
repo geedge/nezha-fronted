@@ -259,7 +259,7 @@
         let nodes=this.formatNodes([...this.nodesArray]);
         let edges=this.formatEdges([...this.edgesArray]);
         console.log(nodes,edges,this.nodesArray,this.edgesArray);
-        this.$put('/project/topo',{topo:JSON.stringify({nodes,edges}),projectId:this.allModuleInfo.basic.id});
+        this.$put('/project/topo',{topo:JSON.stringify({nodes:nodes,lines:edges}),projectId:this.allModuleInfo.basic.id});
         this.$emit('editVisNetworkChange',false);
       },
       formatNodes(arr){
@@ -380,6 +380,9 @@
         this_.resetAllNodes();
         this_.network.stabilize();
       },
+      setData(){
+        this.setNetworkData(this.nodesArray,this.edgesArray);
+      },
       setNetworkData(nodes,edges){//动态设置拓扑图数据
         let this_ = this;
         this.nodes = new Vis.DataSet(nodes);
@@ -410,10 +413,10 @@
         nodesArray.push(model);
         this.$emit("setTopologyData",nodesArray,this.edgesArray);
         this.setNetworkData(nodesArray,this.edgesArray);
-       this.$nextTick(()=>{
-         this.arrayDiff();
-         this.$emit('editVisNetworkChange',true);
-       })
+        this.$nextTick(()=>{
+          this.arrayDiff();
+          this.$emit('editVisNetworkChange',true);
+        })
       },
       addModelShow(){ // 显示添加节点弹窗
         this.addNodeShow=true;

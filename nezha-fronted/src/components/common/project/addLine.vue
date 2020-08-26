@@ -18,31 +18,31 @@
       <el-scrollbar class="right-box-form-box">
         <el-form ref="form" :model="form" label-width="120px" :rules="rules">
           <el-form-item label="Line Name" prop="lineName" class="line-name">
-            <el-input v-model="form.lineName"></el-input>
+            <el-input v-model="form.lineName" type="small"></el-input>
           </el-form-item>
           <el-row class="form-title">Option</el-row>
           <el-form-item label="width" prop="width" class="line-name">
-            <el-input v-model="form.width"></el-input>
+            <el-input v-model="form.width" type="small"></el-input>
           </el-form-item>
-          <el-form-item label="roundness"  class="line-name">
-            <el-input v-model="form.roundness"></el-input>
-          </el-form-item>
-          <el-form-item label="type" class="line-name">
-            <el-select v-model="form.type" placeholder="" :popper-append-to-body="false">
-              <!--'dynamic', 'continuous', 'discrete', 'diagonalCross', 'straightCross', 'horizontal', 'vertical', 'curvedCW', 'curvedCCW', 'cubicBezier'-->
-              <el-option label="dynamic" value="dynamic"></el-option>
-              <el-option label="continuous" value="continuous"></el-option>
-              <el-option label="discrete" value="discrete"></el-option>
-              <el-option label="diagonalCross" value="diagonalCross"></el-option>
-              <el-option label="straightCross" value="straightCross"></el-option>
-              <el-option label="horizontal" value="horizontal"></el-option>
-              <el-option label="vertical" value="vertical"></el-option>
-              <el-option label="curvedCW" value="curvedCW"></el-option>
-              <el-option label="cubicBezier" value="cubicBezier"></el-option>
-            </el-select>
-          </el-form-item>
+          <!--<el-form-item label="roundness"  class="line-name">-->
+            <!--<el-input v-model="form.roundness"></el-input>-->
+          <!--</el-form-item>-->
+          <!--<el-form-item label="type" class="line-name">-->
+            <!--<el-select v-model="form.type" placeholder="" :popper-append-to-body="false">-->
+              <!--&lt;!&ndash;'dynamic', 'continuous', 'discrete', 'diagonalCross', 'straightCross', 'horizontal', 'vertical', 'curvedCW', 'curvedCCW', 'cubicBezier'&ndash;&gt;-->
+              <!--<el-option label="dynamic" value="dynamic"></el-option>-->
+              <!--<el-option label="continuous" value="continuous"></el-option>-->
+              <!--<el-option label="discrete" value="discrete"></el-option>-->
+              <!--<el-option label="diagonalCross" value="diagonalCross"></el-option>-->
+              <!--<el-option label="straightCross" value="straightCross"></el-option>-->
+              <!--<el-option label="horizontal" value="horizontal"></el-option>-->
+              <!--<el-option label="vertical" value="vertical"></el-option>-->
+              <!--<el-option label="curvedCW" value="curvedCW"></el-option>-->
+              <!--<el-option label="cubicBezier" value="cubicBezier"></el-option>-->
+            <!--</el-select>-->
+          <!--</el-form-item>-->
           <el-form-item label="箭头方向" prop="arrows" class="arrows">
-            <el-select v-model="form.arrows" placeholder="" :popper-append-to-body="false">
+            <el-select v-model="form.arrows" placeholder="" :popper-append-to-body="false" type="small">
               <div slot="prefix">
                 <img v-if="form.arrows=='from'" src="./image/leftArrow.png" />
                 <img v-if="form.arrows=='to'" src="./image/rightArrow.png" />
