@@ -107,11 +107,11 @@
     </transition>
     <!--endpoint-->
     <transition name="right-box">
-      <div v-if="popDataShow.asset">asset</div>
+      <div v-if="popDataShow.asset" :moduleId="this.selNodeId" :projectId="this.allModuleInfo.basic.id">asset</div>
     </transition>
     <!--alert-->
     <transition name="right-box">
-      <div v-if="popDataShow.alert">alert</div>
+      <alertTable v-if="popDataShow.alert" :moduleId="this.selNodeId" :projectId="this.allModuleInfo.basic.id" @close="popDataShowUpdate">alert</alertTable>
     </transition>
   </div>
 </template>
@@ -123,10 +123,12 @@
   import popDataMain from './popData/Main'
   import popDataInfo from './popData/Info'
   import TotalChart from "./popData/totalChart";
+  import alertTable from "./popData/alertTable";
 	export default {
 		name:"topology",
     components: {
       TotalChart,
+      alertTable,
       'add-model':addNode,
       'add-line':addLine,
       'popDataMain':popDataMain,

@@ -309,6 +309,7 @@
     height: 100vh;
     top: 0;
     left: 0;
+    z-index: 11;
   }
   .color-content{
     height: 0;
