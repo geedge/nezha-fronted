@@ -129,12 +129,12 @@
   import promqlInput from "@/components/page/dashboard/explore/promqlInput";
   import chartDataFormat from "@/components/charts/chartDataFormat";
   import {getUUID,resetZIndex} from "@/components/common/js/common";
-  import  a from './a.png'
-  import  b from './b.png'
-  import  c from './c.png'
-  import  d from './d.png'
-  import  e from './e.png'
-  import  f from './f.png'
+  import  a from './image/a.png'
+  import  b from './image/b.png'
+  import  c from './image/c.png'
+  import  d from './image/d.png'
+  import  e from './image/e.png'
+  import  f from './image/f.png'
   var rz = {
     methods: {
       rz(e) {
@@ -283,15 +283,17 @@
           this.$message.error('上传头像图片大小不能超过 2MB!');
         }
         console.log(file);
-        this.getBase64(file).then(res => {
-          const params = res.split(',')
-          console.log(params, 'params')
-          if (params.length > 0) {
-            this.strimagebase64 = params[1]
-            console.log(this.strimagebase64);
-          }
-        });
-        return isJPG && isLt2M;
+        if(isJPG && isLt2M){
+          this.getBase64(file).then(res => {
+            const params = res.split(',')
+            console.log(params, 'params')
+            if (params.length > 0) {
+              this.strimagebase64 = params[1]
+              console.log(this.strimagebase64);
+            }
+          });
+        }
+        return false;
       },
       handleAvatarSuccess(file){
 
@@ -328,6 +330,10 @@
 </script>
 
 <style scoped>
+  /deep/ .avatar-uploader{
+    display: inline-block;
+    color: #1989fa;
+  }
   /deep/.right-box-form .icon  .el-select{
     width: 60%;
   }

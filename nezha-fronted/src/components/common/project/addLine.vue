@@ -44,15 +44,15 @@
           <el-form-item label="箭头方向" prop="arrows" class="arrows">
             <el-select v-model="form.arrows" placeholder="" :popper-append-to-body="false">
               <div slot="prefix">
-                <img v-if="form.arrows=='from'" src="./leftArrow.png" />
-                <img v-if="form.arrows=='to'" src="./rightArrow.png" />
-                <img v-if="form.arrows=='from;to'" src="./LRArrow.png" />
-                <img v-if="form.arrows=='0'" src="./noArrow.png" />
+                <img v-if="form.arrows=='from'" src="./image/leftArrow.png" />
+                <img v-if="form.arrows=='to'" src="./image/rightArrow.png" />
+                <img v-if="form.arrows=='from;to'" src="./image/LRArrow.png" />
+                <img v-if="form.arrows=='0'" src="./image/noArrow.png" />
               </div>
-              <el-option label="from" value="from"><img src="./leftArrow.png" /></el-option>
-              <el-option label="to" value="to"><img src="./rightArrow.png" /></el-option>
-              <el-option label="from;to" value="from;to"><img src="./LRArrow.png" /></el-option>
-              <el-option label="" value="0"><img src="./noArrow.png" /></el-option>
+              <el-option label="from" value="from"><img src="./image/leftArrow.png" /></el-option>
+              <el-option label="to" value="to"><img src="./image/rightArrow.png" /></el-option>
+              <el-option label="from;to" value="from;to"><img src="./image/LRArrow.png" /></el-option>
+              <el-option label="" value="0"><img src="./image/noArrow.png" /></el-option>
             </el-select>
           </el-form-item>
           <el-form-item label="color" class="color">

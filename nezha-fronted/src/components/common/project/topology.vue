@@ -22,7 +22,7 @@
       <!--空拓扑图-->
       <div class="network-null" v-if="nodesArray.length===0">
         <i class="nz-icon nz-icon-add-node" @click="addModelShow"></i>
-        <img  src="./emptyData.png" width="303px" height="184px"/>
+        <img src="./image/emptyData.png" width="303px" height="184px"/>
       </div>
       <!--拓扑图工具-->
       <div
