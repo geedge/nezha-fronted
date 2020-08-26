@@ -256,10 +256,43 @@
     },
     methods:{// 保存拓扑图数据
       saveTopology(){
-        let nodes=[...this.nodesArray];
-        let edges=[...this.edgesArray];
-        console.log(nodes,edges);
+        let nodes=this.formatNodes([...this.nodesArray]);
+        let edges=this.formatEdges([...this.edgesArray]);
+        console.log(nodes,edges,this.nodesArray,this.edgesArray);
+        this.$put('/project/topo',{topo:JSON.stringify({nodes,edges}),projectId:this.allModuleInfo.basic.id});
         this.$emit('editVisNetworkChange',false);
+      },
+      formatNodes(arr){
+        let arr1=[];
+        arr.forEach(item=>{
+          let obj={
+            "x": item.x,
+            "y": item.y,
+            "moduleId": item.moduleId,
+            "label":item.label,
+            "iconId": item.iconId,
+            "expressions": item.expressions
+          };
+          arr1.push(obj)
+        });
+        return arr1
+      },
+      formatEdges(arr){
+        let arr1=[];
+        arr.forEach(item=>{
+          let obj={
+            "name": item.lineName,
+            "width": item.width,
+            "arrows": item.arrows,
+            "color": item.color,
+            "source": item.from,
+            "target": item.to,
+            "smooth": item.smooth,
+            "expressions": item.expressions,
+          };
+          arr1.push(obj)
+        });
+        return arr1
       },
       //拓扑图方法
       init(){

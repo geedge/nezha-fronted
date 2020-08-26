@@ -1,6 +1,6 @@
 <template>
-  <div class="mc" @click.self="clickOutside">
-    <div class="right-box right-box-project-alert">
+  <!--<div class="mc" @click.self="clickOutside">-->
+    <div class="right-box right-box-project-alert" v-clickoutside="clickOutside">
       <!-- begin--顶部按钮-->
       <div class="right-box-top-btns">
         <!--<button id="edit-ep-del" type="button" @click="del" class="nz-btn nz-btn-size-normal nz-btn-size-alien nz-btn-style-light ">-->
@@ -147,7 +147,7 @@
         <Pagination :pageObj="pageObj" @pageNo='pageNo' @pageSize='pageSize' ref="Pagination"></Pagination>
       </div>
     </div>
-  </div>
+  <!--</div>-->
 </template>
 
 <script>

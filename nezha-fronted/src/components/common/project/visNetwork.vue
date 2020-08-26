@@ -139,27 +139,26 @@
       alertData:{}
     },
     watch:{
-      allModuleInfo:{
-        immediate: true,
-        deep: true,
-        handler(n){
-          this.getNetworkData(n);
-        },
-      },
+      // allModuleInfo:{
+      //   immediate: true,
+      //   deep: true,
+      //   handler(n){
+      //     this.getNetworkData(n);
+      //   },
+      // },
       projectInfo:{
         immediate: true,
-        deep: true,
         handler(n){
           this.getNetworkData(n);
         },
       },
-      alertData:{
-        immediate: true,
-        deep: true,
-        handler(n){
-          this.getNetworkData(n);
-        },
-      },
+      // alertData:{
+      //   immediate: true,
+      //   deep: true,
+      //   handler(n){
+      //     this.getNetworkData(n);
+      //   },
+      // },
     },
     data () {
       return {
@@ -184,13 +183,16 @@
       },
       getNetworkData(n){
         this.topologyLoading=true;
-        // this.$get('/project/topo',{projectId:n.id}).then(res=>{
-        //   console.log(res);
+        console.log(n);
+        this.$get('/project/topo',{projectId:n.id}).then(res=>{
+          console.log(res);
           setTimeout(()=>{
             this.topologyLoading=false;
+            this.nodesArray=[];
+            this.edgesArray=[];
             this.$refs['topology'].setNetworkData( this.edgesArray,this.nodesArray);
           },500)
-        // })
+        })
       },
       editVisNetworkChange(flag){
         this.editVisNetwork=flag;

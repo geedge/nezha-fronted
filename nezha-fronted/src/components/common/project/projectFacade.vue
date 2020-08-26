@@ -133,11 +133,9 @@
         this.projectInfo.loading=true;
         this.$get('project/info', {id:n.id}).then(response => {
           if (response.code === 200) {
+            this.projectInfo.loading=false;
             this.projectInfo={...this.projectInfo,...response.data.basic,moduleMum:response.data.module.length};
             this.allModuleInfo=response.data;
-           this.$nextTick(()=>{
-             this.projectInfo.loading=false;
-           })
           }
         });
 
