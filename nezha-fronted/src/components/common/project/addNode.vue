@@ -30,7 +30,7 @@
           </el-select>
         </el-form-item>
 
-        <el-form-item label="Icon" prop="iconId">
+        <el-form-item label="Icon" prop="iconId" class="icon">
           <el-select v-model="form.iconId" placeholder=""  popper-class="asset-dropdown" size="small">
             <el-option
               v-for="item in iconArray"
@@ -43,6 +43,16 @@
               <span style="float: right; color: #8492a6; font-size: 13px">{{ item.imageName }}</span>
             </el-option>
           </el-select>
+          <el-upload
+            class="avatar-uploader"
+            action=" "
+            :show-file-list="false"
+            :on-success="handleAvatarSuccess"
+            :before-upload="beforeAvatarUpload"
+            @change="onChange"
+          >
+           上传文件
+          </el-upload>
         </el-form-item>
         <div  class="right-box-sub-title">
           <span>{{$t('alert.config.expr')}}</span>
@@ -260,6 +270,57 @@
       del(){
         this.$emit('del');
         this.esc();
+      },
+      beforeAvatarUpload(file){
+        const isJPG = file.type === 'image/jpeg';
+
+        const isLt2M = file.size / 1024 / 1024 < 2;
+
+        if (!isJPG) {
+          this.$message.error('上传头像图片只能是 JPG 格式!');
+        }
+        if (!isLt2M) {
+          this.$message.error('上传头像图片大小不能超过 2MB!');
+        }
+        console.log(file);
+        this.getBase64(file).then(res => {
+          const params = res.split(',')
+          console.log(params, 'params')
+          if (params.length > 0) {
+            this.strimagebase64 = params[1]
+            console.log(this.strimagebase64);
+          }
+        });
+        return isJPG && isLt2M;
+      },
+      handleAvatarSuccess(file){
+
+      },
+      onChange(file,fileList){
+        this.getBase64(file.raw).then(res => {
+          const params = res.split(',')
+          console.log(params, 'params')
+          if (params.length > 0) {
+            this.strimagebase64 = params[1]
+          }
+        });
+      },
+      getBase64(file) {
+
+        return new Promise(function(resolve, reject) {
+          const reader = new FileReader()
+          let imgResult = ''
+          reader.readAsDataURL(file)
+          reader.onload = function() {
+            imgResult = reader.result
+          }
+          reader.onerror = function(error) {
+            reject(error)
+          }
+          reader.onloadend = function() {
+            resolve(imgResult)
+          }
+        })
       }
     },
 
@@ -267,6 +328,9 @@
 </script>
 
 <style scoped>
+  /deep/.right-box-form .icon  .el-select{
+    width: 60%;
+  }
   .el-icon-minus{
     vertical-align: middle;
     margin-left: 5px;
