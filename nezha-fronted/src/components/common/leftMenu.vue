@@ -208,11 +208,6 @@
         currentProject(n, o) {
           bus.$emit("current-project-change", n); //告知project.vue
         },
-        parentMenu(n,o){
-         if(n === '/asset'){
-           this.getLeftMenuList()
-         }
-        },
         dcCheckList: {
           deep: true,
           immediate: true,
@@ -385,6 +380,9 @@
             this.getModuleList();
           });
           bus.$on('asset-list-change',()=>{
+            this.getLeftMenuList();
+          })
+          bus.$on('asset-property-change',()=>{
             this.getLeftMenuList();
           })
         },
