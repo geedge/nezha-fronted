@@ -36,7 +36,7 @@
         <div class="line-100 right-box-line"></div>
         <!------------------------------------------资产类型---------------------------------------------->
         <el-form-item :label="$t('asset.assetType')" class="right-box-form-content" prop="model.type.code">
-          <el-select popper-class="asset-dropdown" size="small" v-model="editAsset.model.type.code" @change="getVendorAndModelOptionData(editAsset.model.type.code)">
+          <el-select popper-class="asset-dropdown" size="small" v-model="editAsset.model.type.code" @change="getVendorAndModelOptionData(editAsset.model.type.code,$event)">
             <el-option
               :id="'asset-edit-type-op-'+item.id"
               v-for="item in assetTypeData"
@@ -333,7 +333,10 @@
         });
       },
       //组织符合cascader的数据格式
-      getVendorAndModelOptionData(assetType) {
+      getVendorAndModelOptionData(assetType,event) {
+        if(event){
+          this.editAsset.modelId='';
+        }
         let request = this.getModelData(assetType);
         request.then(response => {
           let resultData = [];
