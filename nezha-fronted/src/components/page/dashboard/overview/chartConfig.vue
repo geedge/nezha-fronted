@@ -15,15 +15,16 @@
       '#f58220', '#c37e00', '#00ae9d', '#f26522', '#76becc',
       '#76624c', '#d71345', '#2468a2', '#ca8687', '#1b315e',
     ];
-    let overviewBgColor = ['#d64f40', '#ffdb28', '#7bfc95', '#77baf4',
+    let overviewBgColor =
+      ['#d64f40', '#ffdb28', '#7bfc95', '#77baf4',
       '#ac958f', '', '', '', '', '', '', '', '', '', '', ];
 /*    let pieColor = ["#0c69ff","#59f747","#2eeab8","#b5ed8e",
       "#205299","#ffd6c6","#a0ffdf","#9be524",
       "#8abafc","#d181e8","#d88d50","#cce8ff",
       "#161ef9"];*/
 
-    let pieColor = ['#d64f40', '#e66f60', '#f68f80', '#f6afa0',
-      '#ffdb28', '#ffeb38', '#fffb48', '#ffffbb'];
+    let pieColor = ["#ECCD82", "#99CEB9", "#EEA694", "#8EA8DF", "#92C9DF"];/*['#d64f40', '#e66f60', '#f68f80', '#f6afa0',
+      '#ffdb28', '#ffeb38', '#fffb48', '#ffffbb'];*/
 
     const commonOption={
       title:{
@@ -185,10 +186,11 @@
         show: false,
       },
       color: pieColor,
-      legend: {
-        show: false,
+      grid: {
+        top: "top",
+        left: "left"
       },
-      grid: {},
+      legend: {},
       series: [],
       tooltip : {}
     };

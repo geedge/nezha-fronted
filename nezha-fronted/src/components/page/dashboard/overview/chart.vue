@@ -71,7 +71,7 @@
         this.legend=legend.filter((item,index)=>index<this.dataSize);
         this.resize();
       },
-      setSeries:function(series){
+      setSeries:function(series, legend, legendData){
         if(!this.chart){
           this.chart = echarts.init(document.getElementById(this.chartId));
         }
@@ -86,7 +86,16 @@
 
         }
         if(!this.option){
-          this.option=chartConfig.getOption(this.chartType);
+          this.option = chartConfig.getOption(this.chartType);
+        }
+        if (legend && legendData) {
+          legend.formatter = function(name) {
+            let type = legendData.find(item => {
+              return item[0] == name;
+            });
+            return `${name} (${type[1]}%)`;
+          }
+          this.$set(this.option, "legend", legend);
         }
 
         if(this.chartType == 'map'){
