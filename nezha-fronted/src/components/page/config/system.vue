@@ -1,5 +1,5 @@
 <template>
-  <div class="system">
+  <div class="system" v-scroll-bar>
     <el-tabs type="border-card" @tab-click="selectTab" v-model="activeTab" class="system-tabs" >
       <el-tab-pane :label="$t('config.system.basic.basic')" name="basic">
         <div class="system-config-form">
@@ -659,13 +659,14 @@
 <style scoped>
   .system{
     height: 100%;
+    position: relative;
   }
   .system-config-form{
     width: 61.8% !important;
     position: relative;
   }
   .linkBox{
-    max-height: calc(100vh - 300px);
+    max-height: 800px;
     width: 800px;
   }
   .scrollBox{

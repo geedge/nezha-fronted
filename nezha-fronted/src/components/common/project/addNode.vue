@@ -1,5 +1,6 @@
 <template>
-  <div class="right-box right-box-edit-endpoint" v-clickoutside="clickOutside">
+  <div class="mc" @click.self="clickOutside">
+    <div class="right-box right-box-edit-endpoint">
     <!-- begin--顶部按钮-->
     <div class="right-box-top-btns">
       <!--<button id="edit-ep-del" type="button" @click="del" class="nz-btn nz-btn-size-normal nz-btn-size-alien nz-btn-style-light ">-->
@@ -127,6 +128,7 @@
       </button>
     </div>
   </div>
+  </div>
 </template>
 
 <script>
@@ -211,7 +213,7 @@
       this.addNodeInit()
     },
     methods:{
-      addNodeInit(){
+      addNodeInit(selImageId){
         this.$get('/project/topo/icon').then(res=>{
           this.iconArray=res.data.list;
           this.iconArray.forEach((item,index)=>{
@@ -222,6 +224,9 @@
               if(index===this.iconArray.length-1){
                 setTimeout(()=>{
                   this.iconArray=[...this.iconArray];
+                  if(selImageId){
+                    this.form.iconId=selImageId;
+                  }
                 })
               }
             })
@@ -334,9 +339,8 @@
         form.append("name", fileName.substring(0, fileName.lastIndexOf(".")));
         this.$post('/project/topo/icon',form,{'Content-Type': 'multipart/form-data'}).then(res => {
           if(res.code ==  200 ){
-            this.form.iconId=res.data.id;
             this.$message({duration: 2000, type: 'success', message: this.$t("tip.saveSuccess")});
-            this.addNodeInit();
+            this.addNodeInit(res.data.id);
           }else{
             this.$message.error(res.msg);
           }
@@ -348,6 +352,14 @@
 </script>
 
 <style scoped>
+  .mc{
+    position: fixed;
+    width: 100vw;
+    height: 100vh;
+    top: 0;
+    left: 0;
+    z-index: 11;
+  }
   /deep/ .avatar-uploader{
     display: inline-block;
     color: #1989fa;

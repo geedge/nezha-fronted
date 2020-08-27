@@ -211,6 +211,7 @@
             },500)
           }
           this.$refs['topology'].viewsCenter={x:0,y:0};
+          this.$refs['topology'].zoom=1;
         })
       },
       formatNodesArr(arr){
