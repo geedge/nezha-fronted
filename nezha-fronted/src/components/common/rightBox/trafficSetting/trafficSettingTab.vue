@@ -263,21 +263,21 @@
           {
             label:'ifIndex',
             prop:'ifindex',
-            width:90,
+            width:100,
             required:true,
             errRows:[],
           },
           {
             label:'ifDescr',
             prop:'ifdescr',
-            width:100,
+            width:250,
             required:false,
             errRows:[],
           },
           {
             label:this.$t('config.dc.traffic.direction'),
             prop:'direction',
-            width:100,
+            width:200,
             required:true,
             errRows:[],
           },
@@ -644,6 +644,7 @@
     margin-bottom: 5px;
     height: 20px;
     line-height: 20px;
+    justify-content: flex-end;
   }
   .tab-tags-item .tag-item-key{
     border:1px solid #409eff;;
