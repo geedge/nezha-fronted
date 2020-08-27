@@ -84,6 +84,7 @@
 </template>
 
 <script>
+  import bus from "../../../libs/bus";
   export default {
     name: "modelBox",
     props: {
@@ -176,6 +177,7 @@
                 this.$put('model', this.editModel).then(response => {
                   if (response.code === 200) {
                     this.$message({duration: 1000, type: 'success', message: this.$t("tip.saveSuccess")});
+                    bus.$emit('asset-property-change')
                     this.esc(true);
                   } else {
                     this.$message.error(response.msg);
@@ -185,6 +187,7 @@
                 this.$post('model', this.editModel).then(response => {
                   if (response.code === 200) {
                     this.$message({duration: 1000, type: 'success', message: this.$t("tip.saveSuccess")});
+                    bus.$emit('asset-property-change')
                     this.esc(true);
                   } else {
                     this.$message.error(response.msg);
@@ -225,6 +228,7 @@
               this.$message({duration: 1000, type: 'success', message: this.$t("tip.deleteSuccess")});
               this.getTypeData();
               this.$emit("reload");
+              bus.$emit('asset-property-change')
             } else {
               this.$message.error(response.msg);
             }
@@ -249,6 +253,7 @@
                   this.editModel.type.value = item.value;
                 }
                 this.$emit("reload");
+                bus.$emit('asset-property-change')
                 this.$message({duration: 1000, type: 'success', message: this.$t("tip.saveSuccess")});
               } else {
                 this.$message.error(response.msg);
@@ -259,6 +264,7 @@
               if (response.code === 200) {
                 this.editModel.typeCode=response.data.dictEntity.code;
                 this.$emit("reload");
+                bus.$emit('asset-property-change')
                 // this.$message({duration: 1000, type: 'success', message: this.$t("tip.saveSuccess")});
                 resolve();
               } else {
@@ -286,6 +292,7 @@
                   this.editModel.vendor.value = item.value;
                 }
                 this.$emit("reload");
+                bus.$emit('asset-property-change')
                 this.$message({duration: 1000, type: 'success', message: this.$t("tip.saveSuccess")});
               } else {
                 this.$message.error(response.msg);
@@ -296,6 +303,7 @@
               if (response.code === 200) {
                 this.editModel.vendorCode=response.data.dictEntity.code;
                 this.$emit("reload");
+                bus.$emit('asset-property-change')
                 // this.$message({duration: 1000, type: 'success', message: this.$t("tip.saveSuccess")});
                 resolve();
               } else {
@@ -316,6 +324,7 @@
               this.$message({duration: 1000, type: 'success', message: this.$t("tip.deleteSuccess")});
               this.getVendorData();
               this.$emit("reload");
+              bus.$emit('asset-property-change')
             } else {
               this.$message.error(response.msg);
             }

@@ -382,6 +382,9 @@
           bus.$on('asset-list-change',()=>{
             this.getLeftMenuList();
           })
+          bus.$on('asset-property-change',()=>{
+            this.getLeftMenuList();
+          })
         },
         // 获取asset左侧菜单数据
         getLeftMenuList(){
