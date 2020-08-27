@@ -11,7 +11,7 @@
       <!-- end--顶部按钮-->
 
       <!-- begin--标题-->
-      <div class="right-box-title">alert List</div>
+      <div class="right-box-title">Alert list</div>
       <!-- end--标题-->
 
       <!-- begin--表格-->

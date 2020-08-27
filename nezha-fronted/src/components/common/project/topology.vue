@@ -106,9 +106,9 @@
     <transition name="right-box">
       <div v-if="popDataShow.endpoint">endpoint</div>
     </transition>
-    <!--endpoint-->
+    <!--asset-->
     <transition name="right-box">
-      <div v-if="popDataShow.asset" :moduleId="this.selNodeId" :projectId="this.allModuleInfo.basic.id">asset</div>
+      <assetTable v-if="popDataShow.asset" :moduleId="this.selNodeId" :projectId="this.allModuleInfo.basic.id" @close="popDataShowUpdate">alert</assetTable>
     </transition>
     <!--alert-->
     <transition name="right-box">
@@ -125,11 +125,13 @@
   import popDataInfo from './popData/Info'
   import TotalChart from "./popData/totalChart";
   import alertTable from "./popData/alertTable";
+  import assetTable from "./popData/assetTable";
 	export default {
 		name:"topology",
     components: {
       TotalChart,
       alertTable,
+      assetTable,
       'add-model':addNode,
       'add-line':addLine,
       'popDataMain':popDataMain,
@@ -331,7 +333,7 @@
             size: 40,
             borderWidth: 2,
             font:{
-              size:20,
+              size:16,
             },
           },
 
@@ -675,6 +677,13 @@
          });
 
          this.network.on("blurNode", function (params) {//blurNode
+           this_.cursorMove=false;
+         });
+         this.network.on("hoverEdge", function (params) {//hoverNode
+           this_.cursorMove=true;
+         });
+
+         this.network.on("blurEdge", function (params) {//blurNode
            this_.cursorMove=false;
          });
 

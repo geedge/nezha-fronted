@@ -766,6 +766,7 @@ li{
 }
 .nz-table.el-table--border td, .el-table--border th, .nz-table .el-table__body-wrapper .el-table--border.is-scrolling-left~.el-table__fixed {
   border-right: none;
+  background: #f9f9f9;
 }
 .nz-table .el-table__body {
   width: 100% !important;
