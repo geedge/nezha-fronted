@@ -90,7 +90,7 @@
               </el-collapse-item>
               <el-collapse-item name="ping" :title="$t('asset.left.ping')">
                 <el-checkbox-group v-model="pingCheckList" size="small" @change="changePingCheckBox">
-                  <el-checkbox class="sidebar-info-item" :class="{'sidebar-info-item-active': indOf(pingCheckList, item.key)}" v-for="(item, index) in pingData" :key="index" :label="item.label">
+                  <el-checkbox class="sidebar-info-item" :class="{'sidebar-info-item-active': indOf(pingCheckList, item.key)}" v-for="(item, index) in pingData" :key="index" :label="item.value">
                     <div class="sidebar-info-item-txt">
                       <span>{{item.label}}</span>
                     </div>
