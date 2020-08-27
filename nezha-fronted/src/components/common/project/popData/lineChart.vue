@@ -708,7 +708,6 @@
                 let chartUnit=chartInfo.unit;
                 chartUnit=chartUnit?chartUnit:2;
                 let unit=chartDataFormat.getUnit(chartUnit);
-                //console.info(value, chartUnit, unit.compute(value,index))
                 return unit.compute(value,index);
               },
             },
@@ -858,7 +857,6 @@
             let divHeight = legendDiv.offsetHeight;
             let screenHeight = document.documentElement.clientHeight || document.body.clientHeight;
             let sumHeight = Math.floor(screenHeight*0.99*0.8);//margin-top:1vh; dailog:80%
-            //console.log("11____00",sumHeight,divHeight,legendDiv)
             self.$refs.screenShowArea.style.height = `${sumHeight - divHeight - self.screenTitleHeight}px`;
             self.echartModalStore.resize({height: (sumHeight - divHeight - self.screenTitleHeight)});//图表的高度
             setTimeout(function () {
@@ -882,10 +880,8 @@
                 let divHeight = legendDiv.offsetHeight;
                 let screenHeight = document.documentElement.clientHeight || document.body.clientHeight;
                 let sumHeight = Math.floor(screenHeight*0.99*0.8);//margin-top:1vh; dailog:80%
-                //console.log("11____00",sumHeight,divHeight,legendDiv)
                 self.$refs.screenShowArea.style.height = `${sumHeight - divHeight - self.screenTitleHeight}px`;
                 self.echartModalStore.resize({height: (sumHeight - divHeight - self.screenTitleHeight)});//图表的高度
-                console.log(self.seriesItemScreen,self.seriesItemArrScreen);
                 self.echartModalStore.off('finished');
               })
             }, 100);
@@ -1185,7 +1181,6 @@
           }
           let step = bus.getStep(startTime,endTime);
           if (type === 'list') { // 普通模式,主控台使用
-            console.info(this.data);
             axiosArr = this.data.elements.map((ele) => {
               const filterItem = ele;
               let query = encodeURIComponent(filterItem.expression);
@@ -1438,7 +1433,6 @@
           let divHeight = legendDiv.offsetHeight;
           let screenHeight = document.documentElement.clientHeight || document.body.clientHeight;
           let sumHeight = Math.floor(screenHeight*0.99*0.8);//margin-top:1vh; dailog:80%
-          //console.log("11____00",sumHeight,divHeight,legendDiv)
           this.$refs.screenShowArea.style.height = `${sumHeight - divHeight - this.screenTitleHeight}px`;
           this.echartModalStore.resize({height: (sumHeight - divHeight - this.screenTitleHeight)});//图表的高度
         })

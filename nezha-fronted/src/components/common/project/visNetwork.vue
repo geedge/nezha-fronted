@@ -24,7 +24,7 @@
                 <!--<span class="chart-title-icon"><i class="el-icon-caret-bottom el-icon&#45;&#45;right"  :class="{'visible':caretShow,'hidden':!caretShow}"></i></span>-->
               </span>
               <span>
-                <i class="nz-icon nz-icon-edit float-right" @click="editVisNetworkChange(!editVisNetwork)"></i>
+                <i class="nz-icon nz-icon-edit float-right" @click="editVisNetworkChange(true)"></i>
                 <!--<i class="nz-icon nz-icon-zoomin float-right"></i>-->
                 <!--<i class="nz-icon nz-icon-exit-full-screen float-right"></i>-->
               </span>
@@ -44,14 +44,14 @@
               <div>
                 <span><span class="label">Description :</span>{{projectInfo.remark?projectInfo.remark:'--'}}</span>
               </div>
-              <div>
-            <!--<span>-->
-              <!--<span class="label">Alert state :</span>-->
-              <!--<div class="active-icon" style="background: #B7464A 100%;"></div>{{projectInfo.alertStat[0]}}-->
-              <!--<div class="active-icon" style="background: #E64E4E 100%;"></div>{{projectInfo.alertStat[1]}}-->
-              <!--<div class="active-icon" style="background: #F7B500 100%;"></div>{{projectInfo.alertStat[2]}}-->
-            <!--</span>-->
-              </div>
+              <!--<div>-->
+                <!--<span>-->
+                  <!--<span class="label">Alert state :</span>-->
+                  <!--<div class="active-icon" style="background: #B7464A 100%;"></div>{{projectInfo.alertStat[0]}}-->
+                  <!--<div class="active-icon" style="background: #E64E4E 100%;"></div>{{projectInfo.alertStat[1]}}-->
+                  <!--<div class="active-icon" style="background: #F7B500 100%;"></div>{{projectInfo.alertStat[2]}}-->
+                <!--</span>-->
+              <!--</div>-->
               <div>
                 <span><span class="label">Module Mum :</span>{{projectInfo.moduleMum}}</span>
               </div>
@@ -172,7 +172,9 @@
         //其他
         isError:false,
         nodesArray:[],
+        nodesArrayOther:[],
         edgesArray:[],
+        edgesArrayOther:[],
         dragTitleShow:false,
         dropdownMenuShow:false,
         editVisNetwork:false,
@@ -190,38 +192,43 @@
       },
       getNetworkData(n){
         this.topologyLoading=true;
-        console.log(n);
+        this.editVisNetwork=false;
         this.$get('/project/topo',{projectId:n.id}).then(res=>{
-          console.log(res);
           if(res.data.topo){
-            this.nodesArray=this.formatNodesArr(res.data.topo.nodes);
-            this.edgesArray=this.formatEdgesArr(res.data.topo.lines);
-            console.log(this.nodesArray,this.edgesArray)
+            this.nodesArray=[];
+            this.edgesArray=[];
+            this.nodesArrayOther=this.formatNodesArr(res.data.topo.nodes);
+            this.edgesArrayOther=this.formatEdgesArr(res.data.topo.lines);
           }else{
             this.nodesArray=[];
             this.edgesArray=[];
+            setTimeout(()=>{
+              this.topologyLoading=false;
+              this.$refs['topology'].setData();
+            },500)
           }
-          setTimeout(()=>{
-            this.topologyLoading=false;
-            this.$refs['topology'].setData();
-          },500)
+          this.$refs['topology'].viewsCenter={x:0,y:0};
         })
       },
       formatNodesArr(arr){
         let arr1=[];
         if(!arr){return arr1}
-        arr.forEach((item)=>{
+        arr.forEach((item,index)=>{
           item.shape='image';
           item.id=item.moduleId;
-          switch(item.iconId){
-            case 1: item.image=a;break;
-            case 2: item.image=b;break;
-            case 3: item.image=c;break;
-            case 4: item.image=d;break;
-            case 5: item.image=e;break;
-            case 6: item.image=f;break;
-            default: item.image=a;
-          }
+          this.dealImg(`/project/topo/icon/${item.iconId}`).then((data)=>{
+            item.image=data;
+            if(index===arr.length-1){
+              setTimeout(()=>{
+                this.nodesArray=[...this.nodesArrayOther];
+                this.edgesArray=[...this.edgesArrayOther];
+                setTimeout(()=>{
+                  this.topologyLoading=false;
+                  this.$refs['topology'].setData();
+                },500)
+              })
+            }
+          })
         });
         return arr
       },
@@ -232,9 +239,27 @@
           item.dashes=[15,15];
           item.from=item.source;
           item.to=item.target;
-
         });
         return arr
+      },
+      dealImg(url) {
+        // 处理后端传过来的图片流乱码问题
+        if (url) {
+          return new Promise((resolve,reject)=>{
+            this.$axios
+              .get(url, {
+                responseType: "arraybuffer"
+              })
+              .then(res => {
+                return ("data:image/jpeg;base64," +btoa(new Uint8Array(res.data).reduce((data, byte) => data + String.fromCharCode(byte), "")));
+              })
+              .then(data => {
+                resolve(data)
+              })
+              .catch(err => {
+              });
+          })
+        }
       },
       editVisNetworkChange(flag){
         this.editVisNetwork=flag;

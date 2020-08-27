@@ -32,13 +32,17 @@
 
         <el-form-item label="Icon" prop="iconId" class="icon">
           <el-select v-model="form.iconId" placeholder=""  popper-class="asset-dropdown" size="small">
+            <div slot="prefix" class="sel-image">
+              <img v-if="form.iconId" :src="selImage.image" style="height: 28px"/>
+              <span v-if="form.iconId" class="sel-image-name">{{selImage.imageName}}</span>
+            </div>
             <el-option
               v-for="item in iconArray"
               :key="item.id"
               :label="item.label"
               :value="item.id">
               <span style="float: left;width: 50%">
-                <img :src="item.image" />
+                <img :src="item.image" style="width: 24px;height: 32px"/>
               </span>
               <span style="float: right; color: #8492a6; font-size: 13px">{{ item.imageName }}</span>
             </el-option>
@@ -49,7 +53,7 @@
             :show-file-list="false"
             :on-success="handleAvatarSuccess"
             :before-upload="beforeAvatarUpload"
-            @change="onChange"
+            :auto-upload="true"
           >
            上传文件
           </el-upload>
@@ -129,12 +133,6 @@
   import promqlInput from "@/components/page/dashboard/explore/promqlInput";
   import chartDataFormat from "@/components/charts/chartDataFormat";
   import {getUUID,resetZIndex} from "@/components/common/js/common";
-  import  a from './image/a.png'
-  import  b from './image/b.png'
-  import  c from './image/c.png'
-  import  d from './image/d.png'
-  import  e from './image/e.png'
-  import  f from './image/f.png'
   var rz = {
     methods: {
       rz(e) {
@@ -149,7 +147,7 @@
     },
     props:{
       nodeData:{},
-      moduleDataS:{}
+      moduleDataS:{},
     },
     mixins: [rz],
     watch:{
@@ -165,7 +163,16 @@
       },
       moduleDataS:{
         handler(n){
-          console.log(n)
+          // console.log(n)
+        },
+        immediate: true,
+        deep: true,
+      },
+      'form.iconId':{
+        handler(n){
+          if(n){
+            this.selImage=this.iconArray.find(item=>item.id===n)
+          }
         },
         immediate: true,
         deep: true,
@@ -177,6 +184,9 @@
           moduleId:'',
           iconId:'',
         },
+        selImage:'',
+        file:'',
+        uploadFileList:[],
         unitOptions: chartDataFormat.unitOptions(),
         promqlKeys:[],
         expressions: [],
@@ -193,21 +203,50 @@
             { required: true, message: '请选择icon', trigger: 'blur' },
           ],
         },
-        iconArray:[
-          {id:1,image:a,imageName:"module1"},
-          {id:2,image:b,imageName:"module1"},
-          {id:3,image:c,imageName:"module1"},
-          {id:4,image:d,imageName:"module1"},
-          {id:5,image:e,imageName:"module1"},
-          {id:6,image:f,imageName:"module1"},
-          // {id:7,img:'./a.png',label:'model',},
-        ],
+        iconArray:[],
       }
     },
     mounted(){
-      this.addExpression()
+      // this.addExpression();
+      this.addNodeInit()
     },
     methods:{
+      addNodeInit(){
+        this.$get('/project/topo/icon').then(res=>{
+          this.iconArray=res.data.list;
+          this.iconArray.forEach((item,index)=>{
+            item.imageName=item.name;
+            delete item.name;
+            this.dealImg(`/project/topo/icon/${item.id}`).then((data)=>{
+              item.image=data;
+              if(index===this.iconArray.length-1){
+                setTimeout(()=>{
+                  this.iconArray=[...this.iconArray];
+                })
+              }
+            })
+          });
+        })
+      },
+      dealImg(url) {
+        // 处理后端传过来的图片流乱码问题
+        if (url) {
+          return new Promise((resolve,reject)=>{
+            this.$axios
+              .get(url, {
+                responseType: "arraybuffer"
+              })
+              .then(res => {
+                return ("data:image/jpeg;base64," +btoa(new Uint8Array(res.data).reduce((data, byte) => data + String.fromCharCode(byte), "")));
+              })
+              .then(data => {
+                resolve(data)
+              })
+              .catch(err => {
+              });
+          })
+        }
+      },
       onSubmit(){
         this.$refs['form'].validate((valid) => {
           if (valid) {
@@ -215,7 +254,6 @@
             let img=this.iconArray.find(item=>item.id===this.form.iconId);
             let model=Object.assign({...this.form},{...module},{...img},{id:this.form.moduleId,shape:'image',shapeProperties:{useImageSize:false}},);
             model.label=model.name;
-            console.log(this.promqlKeys,this.expressions,this.promqlCount,this.legends,this.name,this.unit);
             model.expressions=[];
             this.promqlKeys.forEach((item,index)=>{
               model.expressions.push({
@@ -243,7 +281,7 @@
         this.promqlCount++;
       },
       removeExpression(index) {
-        if (this.promqlCount > 1) {
+        if (this.promqlCount >= 1) {
           this.expressions.splice(index, 1);
           this.legends.splice(index, 1);
           this.name.splice(index, 1);
@@ -272,58 +310,38 @@
         this.esc();
       },
       beforeAvatarUpload(file){
-        const isJPG = file.type === 'image/jpeg';
+        let isJPG = (file.type === 'image/jpeg' || file.type === 'image/png');
 
         const isLt2M = file.size / 1024 / 1024 < 2;
 
         if (!isJPG) {
-          this.$message.error('上传头像图片只能是 JPG 格式!');
+          this.$message.error('上传图片只能是 JPG/png 格式!');
         }
         if (!isLt2M) {
-          this.$message.error('上传头像图片大小不能超过 2MB!');
+          this.$message.error('上传图片大小不能超过 2MB!');
         }
-        console.log(file);
-        if(isJPG && isLt2M){
-          this.getBase64(file).then(res => {
-            const params = res.split(',')
-            console.log(params, 'params')
-            if (params.length > 0) {
-              this.strimagebase64 = params[1]
-              console.log(this.strimagebase64);
-            }
-          });
-        }
+        this.file=file;
+        this.upload();
         return false;
       },
-      handleAvatarSuccess(file){
-
+      handleAvatarSuccess(file,res){
+        console.log(res);
       },
-      onChange(file,fileList){
-        this.getBase64(file.raw).then(res => {
-          const params = res.split(',')
-          console.log(params, 'params')
-          if (params.length > 0) {
-            this.strimagebase64 = params[1]
-          }
-        });
-      },
-      getBase64(file) {
-
-        return new Promise(function(resolve, reject) {
-          const reader = new FileReader()
-          let imgResult = ''
-          reader.readAsDataURL(file)
-          reader.onload = function() {
-            imgResult = reader.result
-          }
-          reader.onerror = function(error) {
-            reject(error)
-          }
-          reader.onloadend = function() {
-            resolve(imgResult)
+      upload() {
+        let form = new FormData();
+        form.append("file",this.file);
+        let fileName=this.file.name;
+        form.append("name", fileName.substring(0, fileName.lastIndexOf(".")));
+        this.$post('/project/topo/icon',form,{'Content-Type': 'multipart/form-data'}).then(res => {
+          if(res.code ==  200 ){
+            this.form.iconId=res.data.id;
+            this.$message({duration: 2000, type: 'success', message: this.$t("tip.saveSuccess")});
+            this.addNodeInit();
+          }else{
+            this.$message.error(res.msg);
           }
         })
-      }
+      },
     },
 
 	}
@@ -341,6 +359,19 @@
     vertical-align: middle;
     margin-left: 5px;
   }
+  .sel-image{
+    height: 28px;
+    line-height: 28px;
+    width: 300px;
+    text-align: left;
+  }
+  .sel-image-name{
+    float: right;
+    display: inline-block;
+    height: 28px;
+    line-height: 28px;
+    color: #333333;
+  }
   .nz-btn-edit-ok{
     position: absolute;
     bottom: 0;
@@ -351,7 +382,18 @@
     bottom: 0;
     left:0;
   }
-
+  .icon /deep/ .el-input.el-input--prefix.el-input--suffix{
+    border: 1px solid #DCDFE6;
+    height: 28px;
+    width: calc(100% - 30px);
+  }
+  .icon /deep/ .el-input__inner{
+    display: none;
+  }
+  .icon /deep/ .el-input__prefix{
+    height: 28px;
+    line-height: 28px;
+  }
   /* begin--搜索框*/
   .endpoint-asset-search {
     display: inline-block;
@@ -462,6 +504,7 @@
 
   .el-row {
     margin-bottom: 20px;
+    line-height: 32px;
   }
   .el-row:last-child  {
     margin-bottom: 0;
@@ -511,68 +554,5 @@
 
   .z-top {
     z-index: 2900;
-  }
-</style>
-
-<style lang="scss">
-  .right-box-edit-endpoint .el-pagination__total {
-    float: left;
-  }
-  right-box-edit-endpoint .pagination {
-    padding-top: 12px;
-    text-align: center;
-  }
-
-  .endpoint-sub-table-paginate .el-pager li, .endpoint-sub-table-paginate .el-pagination .btn-next, .endpoint-sub-table-paginate .el-pagination .btn-prev {
-    font-size: 13px;
-    min-width: 20px !important;
-    -webkit-box-sizing: border-box;
-    box-sizing: border-box;
-    text-align: center;
-    border: 1px solid rgba(154,154,154,0.20);
-    border-radius: 2px;
-    border-radius: 2px;
-  }
-  .endpoint-sub-table-paginate  .el-pagination.is-background .el-pager li:not(.disabled).active {
-    color: white !important;
-  }
-  .endpoint-sub-table-paginate .el-pagination.is-background .el-pager li:not(.disabled):hover {
-    color: #666;
-  }
-  .right-box-edit-endpoint .el-pagination .el-pager li.btn-quicknext, .right-box-edit-endpoint .el-pager li.btn-quickprev {
-    line-height: 20px;
-  }
-  .right-box-edit-endpoint .el-pagination .el-pager .more::before {
-    line-height: 20px;
-  }
-  .right-box-edit-endpoint .el-pager li.number{
-    font-family: NotoSansSC-Regular;
-    color: #666666;
-    letter-spacing: 0;
-    font-weight:normal;
-  }
-  .right-box-edit-endpoint .el-pager li.number.active{
-    font-family: NotoSansSC-Regular;
-    color: #FFFFFF;
-    letter-spacing: 0;
-  }
-
-  .endpoint-sub-table-paginate .el-pagination.is-background .el-pager li:not(.disabled).active {
-    background-color: $global-text-color-active;
-    border-radius: 2px;
-    border-radius: 2px;
-  }
-  .right-box-edit-endpoint .el-pager li:hover, .right-box-edit-endpoint .el-pagination .btn-next:hover, .right-box-edit-endpoint .el-pagination .btn-prev:hover {
-    font-family: NotoSansSC-Regular;
-    color: #666666;
-    letter-spacing: 0;
-    font-weight:normal;
-  }
-  .right-box-edit-endpoint .el-pagination__sizes .el-input .el-input__inner, .right-box-edit-endpoint .el-pagination__editor.el-input .el-input__inner{
-    height: 20px;
-    border-color: rgba(154,154,154,0.20);
-  }
-  .right-box-edit-endpoint .el-pagination__sizes .el-input .el-input__inner:hover{
-    border-color: rgba(154,154,154,0.20);
   }
 </style>

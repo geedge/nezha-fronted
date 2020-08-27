@@ -16,13 +16,13 @@
 
       <!-- begin--表单-->
       <el-scrollbar class="right-box-form-box">
-        <el-form ref="form" :model="form" label-width="120px" :rules="rules">
+        <el-form class="right-box-form  right-box-form-left" ref="form" :model="form" label-width="120px" :rules="rules">
           <el-form-item label="Line Name" prop="lineName" class="line-name">
-            <el-input v-model="form.lineName" type="small"></el-input>
+            <el-input v-model="form.lineName"  size="small"></el-input>
           </el-form-item>
           <el-row class="form-title">Option</el-row>
           <el-form-item label="width" prop="width" class="line-name">
-            <el-input v-model="form.width" type="small"></el-input>
+            <el-input v-model="form.width"  size="small"></el-input>
           </el-form-item>
           <!--<el-form-item label="roundness"  class="line-name">-->
             <!--<el-input v-model="form.roundness"></el-input>-->
@@ -42,7 +42,7 @@
             <!--</el-select>-->
           <!--</el-form-item>-->
           <el-form-item label="箭头方向" prop="arrows" class="arrows">
-            <el-select v-model="form.arrows" placeholder="" :popper-append-to-body="false" type="small">
+            <el-select v-model="form.arrows" placeholder="" :popper-append-to-body="false"  size="small">
               <div slot="prefix">
                 <img v-if="form.arrows=='from'" src="./image/leftArrow.png" />
                 <img v-if="form.arrows=='to'" src="./image/rightArrow.png" />
@@ -216,7 +216,7 @@
       }
     },
     mounted(){
-      this.addExpression();
+      // this.addExpression();
     },
     methods:{
       onSubmit(){
@@ -225,8 +225,8 @@
             let model=Object.assign({id:undefined},{...this.form},{color: {color:this.form.color,highlight:this.form.color,hover:this.form.color,opacity:1.0}});
             model.width = parseInt(model.width) || 4;
             model.smooth={
-              roundness:model.roundness,
-              type:model.type ,
+              roundness:(Math.random()*8 +1)/10 ,//获取0.1-0.9之间的随机数
+              type:'curvedCW',
             };
             model.expressions=[];
             this.promqlKeys.forEach((item,index)=>{
@@ -254,7 +254,7 @@
         this.promqlCount++;
       },
       removeExpression(index) {
-        if (this.promqlCount > 1) {
+        if (this.promqlCount >= 1) {
           this.expressions.splice(index, 1);
           this.legends.splice(index, 1);
           this.name.splice(index, 1);
@@ -328,6 +328,7 @@
     display: flex;
     align-items: center;
     width: calc(100% - 30px);
+    height: 30px;
   }
   .color-show-left{
     width: 18px;
@@ -352,14 +353,25 @@
   }
   .arrows /deep/ .el-input.el-input--prefix.el-input--suffix{
     border: 1px solid #DCDFE6;
-    height: 41px;
+    height: 28px;
     width: calc(100% - 30px);
   }
   .arrows /deep/ .el-input__inner{
     display: none;
   }
+  .arrows /deep/ .el-input__prefix{
+    height: 28px;
+    line-height: 28px;
+  }
   /deep/ .el-select{
     width: 262px;
+  }
+  .el-row {
+    margin-bottom: 20px;
+    line-height: 32px;
+  }
+  .el-row:last-child  {
+    margin-bottom: 0;
   }
   .nz-btn-edit-ok{
     position: absolute;
@@ -478,68 +490,5 @@
     margin: 6px 0 0 7px;
   }
   /* end--table*/
-</style>
-
-<style lang="scss">
-  .right-box-edit-endpoint .el-pagination__total {
-    float: left;
-  }
-  right-box-edit-endpoint .pagination {
-    padding-top: 12px;
-    text-align: center;
-  }
-
-  .endpoint-sub-table-paginate .el-pager li, .endpoint-sub-table-paginate .el-pagination .btn-next, .endpoint-sub-table-paginate .el-pagination .btn-prev {
-    font-size: 13px;
-    min-width: 20px !important;
-    -webkit-box-sizing: border-box;
-    box-sizing: border-box;
-    text-align: center;
-    border: 1px solid rgba(154,154,154,0.20);
-    border-radius: 2px;
-    border-radius: 2px;
-  }
-  .endpoint-sub-table-paginate  .el-pagination.is-background .el-pager li:not(.disabled).active {
-    color: white !important;
-  }
-  .endpoint-sub-table-paginate .el-pagination.is-background .el-pager li:not(.disabled):hover {
-    color: #666;
-  }
-  .right-box-edit-endpoint .el-pagination .el-pager li.btn-quicknext, .right-box-edit-endpoint .el-pager li.btn-quickprev {
-    line-height: 20px;
-  }
-  .right-box-edit-endpoint .el-pagination .el-pager .more::before {
-    line-height: 20px;
-  }
-  .right-box-edit-endpoint .el-pager li.number{
-    font-family: NotoSansSC-Regular;
-    color: #666666;
-    letter-spacing: 0;
-    font-weight:normal;
-  }
-  .right-box-edit-endpoint .el-pager li.number.active{
-    font-family: NotoSansSC-Regular;
-    color: #FFFFFF;
-    letter-spacing: 0;
-  }
-
-  .endpoint-sub-table-paginate .el-pagination.is-background .el-pager li:not(.disabled).active {
-    background-color: $global-text-color-active;
-    border-radius: 2px;
-    border-radius: 2px;
-  }
-  .right-box-edit-endpoint .el-pager li:hover, .right-box-edit-endpoint .el-pagination .btn-next:hover, .right-box-edit-endpoint .el-pagination .btn-prev:hover {
-    font-family: NotoSansSC-Regular;
-    color: #666666;
-    letter-spacing: 0;
-    font-weight:normal;
-  }
-  .right-box-edit-endpoint .el-pagination__sizes .el-input .el-input__inner, .right-box-edit-endpoint .el-pagination__editor.el-input .el-input__inner{
-    height: 20px;
-    border-color: rgba(154,154,154,0.20);
-  }
-  .right-box-edit-endpoint .el-pagination__sizes .el-input .el-input__inner:hover{
-    border-color: rgba(154,154,154,0.20);
-  }
 </style>
 

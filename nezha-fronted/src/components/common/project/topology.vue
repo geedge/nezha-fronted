@@ -87,6 +87,7 @@
         @del="nodeDel"
         :isAdd="isNodeAdd"
         :moduleDataS="moduleDataS"
+        :projectName="allModuleInfo.basic"
       ></add-model>
     </transition>
     <transition name="right-box">
@@ -258,8 +259,19 @@
       saveTopology(){
         let nodes=this.formatNodes([...this.nodesArray]);
         let edges=this.formatEdges([...this.edgesArray]);
-        console.log(nodes,edges,this.nodesArray,this.edgesArray);
-        this.$put('/project/topo',{topo:JSON.stringify({nodes:nodes,lines:edges}),projectId:this.allModuleInfo.basic.id});
+        this.$put('/project/topo',{topo:JSON.stringify({nodes:nodes,lines:edges}),projectId:this.allModuleInfo.basic.id}).then(res=>{
+          if(res.code==200){
+            this.$message({
+              message: this.$t("tip.saveSuccess"),
+              type: 'success'
+            });
+          }
+        }).catch(res=>{
+          this.$message({
+            message: res.msg,
+            type: 'error'
+          });
+        });
         this.$emit('editVisNetworkChange',false);
       },
       formatNodes(arr){
@@ -398,6 +410,8 @@
         });
         this.$nextTick(()=>{
           this_.modelTopUpdate();
+          this_.arrayDiff();
+          this_.popDataShowUpdate();
         })
       },
       addModel(model){ // 添加model

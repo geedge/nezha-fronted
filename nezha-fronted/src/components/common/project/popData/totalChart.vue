@@ -703,7 +703,6 @@
       },
       // 关闭loading状态
       loadingFalse(item){
-        console.log(item);
         this.$set(this.dataList[item.id],'loading',false);
       },
     },
