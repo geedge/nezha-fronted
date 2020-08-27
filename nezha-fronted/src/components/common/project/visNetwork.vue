@@ -65,32 +65,32 @@
                 <div>
                   <el-progress
                     type="circle"
-                    :percentage="(projectInfo.alertStat[0]/total)*100"
+                    :percentage="projectInfo.alertStat[0]?(projectInfo.alertStat[0]/total)*100:0"
                     :show-text="false"
                     :width="40"
                     color="#F5A390"
                   ></el-progress>
-                  <div class="align--center">{{projectInfo.alertStat[0]}}</div>
+                  <div class="align--center">{{projectInfo.alertStat[0] || 0}}</div>
                 </div>
                 <div>
                   <el-progress
                     type="circle"
-                    :percentage="(projectInfo.alertStat[1]/total)*100"
+                    :percentage="projectInfo.alertStat[1]?(projectInfo.alertStat[1]/total)*100:0"
                     :show-text="false"
                     :width="40"
                     color="#F6B977"
                   ></el-progress>
-                  <div class="align--center">{{projectInfo.alertStat[1]}}</div>
+                  <div class="align--center">{{projectInfo.alertStat[1] || 0}}</div>
                 </div>
                 <div>
                   <el-progress
                     type="circle"
-                    :percentage="(projectInfo.alertStat[2]/total)*100"
+                    :percentage="projectInfo.alertStat[2]?(projectInfo.alertStat[2]/total)*100:0"
                     :show-text="false"
                     :width="40"
                     color="#EBD066"
                   ></el-progress>
-                  <div class="align--center">{{projectInfo.alertStat[2]}}</div>
+                  <div class="align--center">{{projectInfo.alertStat[2] || 0}}</div>
                 </div>
               </div>
             </div>
@@ -155,7 +155,10 @@
         immediate: true,
         handler(n){
           this.getNetworkData(n);
-          this.total=this.projectInfo.alertStat[0]+this.projectInfo.alertStat[1]+this.projectInfo.alertStat[2]
+          this.total=this.projectInfo.alertStat[0]+this.projectInfo.alertStat[1]+this.projectInfo.alertStat[2];
+          if(!this.total){
+            this.total=0;
+          }
         },
       },
       // alertData:{
@@ -212,7 +215,10 @@
       },
       formatNodesArr(arr){
         let arr1=[];
-        if(!arr){return arr1}
+        if(!arr || arr.length==0){
+          this.topologyLoading=false;
+          return arr1
+        }
         arr.forEach((item,index)=>{
           item.shape='image';
           item.id=item.moduleId;
