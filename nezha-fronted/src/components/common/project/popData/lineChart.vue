@@ -1388,6 +1388,11 @@
         }
 
       },
+      getNewTime(time, num) {
+        const date = new Date(time);
+        const newDate = new Date(parseInt(date.getTime(), 10) + num);
+        return bus.timeFormate(newDate, 'yyyy-MM-dd hh:mm:ss');
+      },
       // 获取格式
       getNumStr(num) {
         if (num >= 1000) {

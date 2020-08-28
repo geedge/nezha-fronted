@@ -104,7 +104,7 @@
     </transition>
     <!--endpoint-->
     <transition name="right-box">
-      <div v-if="popDataShow.endpoint">endpoint</div>
+      <endpointTable v-if="popDataShow.endpoint"  :moduleId="this.selNodeId" :projectId="this.allModuleInfo.basic.id" @close="popDataShowUpdate">endpoint</endpointTable>
     </transition>
     <!--asset-->
     <transition name="right-box">
@@ -126,12 +126,14 @@
   import TotalChart from "./popData/totalChart";
   import alertTable from "./popData/alertTable";
   import assetTable from "./popData/assetTable";
+  import endpointTable from "./popData/endpointTable";
 	export default {
 		name:"topology",
     components: {
       TotalChart,
       alertTable,
       assetTable,
+      endpointTable,
       'add-model':addNode,
       'add-line':addLine,
       'popDataMain':popDataMain,

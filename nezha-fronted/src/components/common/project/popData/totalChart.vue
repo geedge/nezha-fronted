@@ -63,8 +63,6 @@
           this.getData(item1, '', '');
         })
       });
-      this.$set(this.filter, "start_time", bus.timeFormate(new Date().getTime()-60*60*1000, "yyyy-MM-dd hh:mm:ss"));
-      this.$set(this.filter, "end_time", bus.timeFormate(new Date().getTime(), "yyyy-MM-dd hh:mm:ss"));
       this.$set(this.filter, "panelId", this.projectId);
     },
     methods:{
@@ -85,7 +83,9 @@
       },
       //获取图表数据
 		  getData(chartInfo, pos, filterType){
-        let startTime =  this.filter.start_time
+        this.$set(this.filter, "start_time", bus.timeFormate(new Date().getTime()-60*60*1000, "yyyy-MM-dd hh:mm:ss"));
+        this.$set(this.filter, "end_time", bus.timeFormate(new Date().getTime(), "yyyy-MM-dd hh:mm:ss"));
+        let startTime =  this.filter.start_time;
         let endTime = this.filter.end_time;
         let step = bus.getStep(startTime, endTime);
         chartInfo.loading=true;
