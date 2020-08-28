@@ -19,47 +19,64 @@
       <!--第一行-->
       <div class="content-row-box">
         <div class="content-col-box">
-          <div class="content-col-title">{{$t("dashboard.overview.asset.title")}}</div>
           <div class="content-col-content" v-loading="assetLoading">
-            <div class="content-col-content-num">
-              <vue-countup :start-value="0" :end-value="(assetData ? assetData.totalStat.total  : '') | numberFormat" :decimals="(assetData ? assetData.totalStat.total  : 0) < 1000 ? 0 : 1"></vue-countup>
-              <span class="overview-row-unit">{{(assetData ? assetData.totalStat.total  : '') | unitFormat}}</span>
+            <div class="content-col-content-icon"><i class="nz-icon nz-icon-overview-asset"></i></div>
+            <div class="content-num-box">
+              <div class="content-col-content-num">
+                <vue-countup :start-value="0" :end-value="(assetData ? assetData.totalStat.total  : '') | numberFormat" :decimals="(assetData ? assetData.totalStat.total  : 0) < 1000 ? 0 : 1"></vue-countup>
+                <span class="overview-row-unit">{{(assetData ? assetData.totalStat.total  : '') | unitFormat}}</span>
+              </div>
+              <div class="content-col-content-title">{{$t("dashboard.overview.asset.title")}}</div>
             </div>
           </div>
         </div>
         <div class="content-col-box">
-          <div class="content-col-title">{{$t("dashboard.overview.project.project")}}</div>
           <div class="content-col-content" v-loading="projectLoading">
-            <div class="content-col-content-num">
-              <vue-countup :start-value="0" :end-value="(projectData ? projectData.projectStat.length : '') | numberFormat" :decimals="(projectData ? projectData.projectStat.length : 0) < 1000 ? 0 : 1"></vue-countup>
-              <span class="overview-row-unit">{{(projectData ? projectData.projectStat.length  : '') | unitFormat}}</span>
+            <div class="content-col-content-icon"><i class="nz-icon nz-icon-overview-project"></i></div>
+            <div class="content-num-box">
+              <div class="content-col-content-num">
+                <vue-countup :start-value="0" :end-value="(projectData ? projectData.projectStat.length : '') | numberFormat" :decimals="(projectData ? projectData.projectStat.length : 0) < 1000 ? 0 : 1"></vue-countup>
+                <span class="overview-row-unit">{{(projectData ? projectData.projectStat.length  : '') | unitFormat}}</span>
+              </div>
+              <div class="content-col-content-title">{{$t("dashboard.overview.project.project")}}</div>
             </div>
           </div>
         </div>
         <div class="content-col-box">
-          <div class="content-col-title">{{$t("dashboard.overview.module.module")}}</div>
           <div class="content-col-content" v-loading="moduleLoading">
-            <div class="content-col-content-num">
-              <vue-countup :start-value="0" :end-value="(moduleData ? moduleData.moduleStat.length : '') | numberFormat" :decimals="(moduleData ? moduleData.moduleStat.length : 0) < 1000 ? 0 : 1"></vue-countup>
-              <span class="overview-row-unit">{{(moduleData ? moduleData.moduleStat.length  : '') | unitFormat}}</span>
+            <div class="content-col-content-icon"><i class="nz-icon nz-icon-overview-module"></i></div>
+            <div class="content-num-box">
+              <div class="content-col-content-num">
+                <vue-countup :start-value="0" :end-value="(moduleData ? moduleData.moduleStat.length : '') | numberFormat" :decimals="(moduleData ? moduleData.moduleStat.length : 0) < 1000 ? 0 : 1"></vue-countup>
+                <span class="overview-row-unit">{{(moduleData ? moduleData.moduleStat.length  : '') | unitFormat}}</span>
+              </div>
+              <div class="content-col-content-title">{{$t("dashboard.overview.module.module")}}</div>
             </div>
           </div>
         </div>
         <div class="content-col-box">
-          <div class="content-col-title">{{$t("dashboard.overview.endpoint.endpoint")}}</div>
           <div class="content-col-content" v-loading="endpointLoading">
-            <div class="content-col-content-num">
-              <vue-countup :start-value="0" :end-value="(endpointData ? endpointData.total : '') | numberFormat" :decimals="(endpointData ? endpointData.total : 0) < 1000 ? 0 : 1"></vue-countup>
-              <span class="overview-row-unit">{{(endpointData ? endpointData.total : '') | unitFormat}}</span>
+            <div class="content-col-content-icon"><i class="nz-icon nz-icon-overview-endpoint"></i></div>
+            <div class="content-num-box">
+              <div class="content-col-content-num">
+                <vue-countup :start-value="0" :end-value="(endpointData ? endpointData.total : '') | numberFormat" :decimals="(endpointData ? endpointData.total : 0) < 1000 ? 0 : 1"></vue-countup>
+                <span class="overview-row-unit">{{(endpointData ? endpointData.total : '') | unitFormat}}</span>
+              </div>
+              <div class="content-col-content-title">{{$t("dashboard.overview.endpoint.endpoint")}}</div>
             </div>
           </div>
         </div>
         <div class="content-col-box">
-          <div class="content-col-title">{{$t("dashboard.overview.alert.alertMessage")}}</div>
           <div class="content-col-content" v-loading="alertMessageLoading">
-            <div class="content-col-content-num"><vue-countup :start-value="0" :end-value="(alertMessageData ? alertMessageData.alertMessageTotal : '') | numberFormat" :decimals="(alertMessageData ? alertMessageData.alertMessageTotal : 0) < 1000 ? 0 : 1"></vue-countup></div>
-            <span class="overview-row-unit">{{(alertMessageData ? alertMessageData.alertMessageTotal : '') | unitFormat}}</span>
-            <span>{{$t("dashboard.overview.alert.ruleNum")}}&nbsp;:&nbsp;{{(alertRuleData ? alertRuleData.alertRuleTotal : "") | numberFormat}}</span>
+            <div class="content-col-content-icon"><i class="nz-icon nz-icon-overview-alert"></i></div>
+            <div class="content-num-box">
+              <div class="content-col-content-num">
+                <vue-countup :start-value="0" :end-value="(alertMessageData ? alertMessageData.alertMessageTotal : '') | numberFormat" :decimals="(alertMessageData ? alertMessageData.alertMessageTotal : 0) < 1000 ? 0 : 1"></vue-countup>
+                <span class="overview-row-unit">{{(alertMessageData ? alertMessageData.alertMessageTotal : '') | unitFormat}}</span>
+              </div>
+              <div class="content-col-content-title">{{$t("dashboard.overview.asset.title")}}</div>
+            </div>
+            <div class="content-alert-num">{{$t("dashboard.overview.alert.ruleNum")}}&nbsp;:&nbsp;{{(alertRuleData ? alertRuleData.alertRuleTotal : "") | numberFormat}}</div>
           </div>
         </div>
       </div>
@@ -71,6 +88,10 @@
             <span class="content-col-title-tools">
               <time-picker ref="calendarPanel" class="nz-dashboard-picker" @change="dateChange"></time-picker>
               <span class="content-col-title-tool">
+                <div class="diy-content">
+                  <span>Data center</span>
+                  <i class="el-input__icon el-icon-arrow-down"></i>
+                </div>
                 <el-cascader
                   :options="trafficData"
                   :props="{multiple: true}"
@@ -303,133 +324,82 @@
             /*饼图*/
             let legendData = [];
             let typeSeriesData = [];
-            //let modelSeriesData = [];
+
+            let vm = this;
+            let assetTotalCount = function() {
+              let count = 0;
+              vm.assetData.typeStat.forEach(item => {
+                count += item.total;
+              });
+              return count;
+            }();
+
             this.assetData.typeStat.forEach(item => {
-              legendData.push(item.name);
+              legendData.push([item.name, (item.total*100/assetTotalCount).toFixed(2)]);
               typeSeriesData.push({name: item.name, value: item.total, up: item.pingUp, down: item.pingDown});
             });
-            /*for (let i = 0; i < 4; i++) {
-              legendData.push("type" + i);
-              typeSeriesData.push({name: "type" + i, value: (i+1)*10, up: (i+1)*5, down: (i+1)*5});
-            }*/
-            /*this.assetData.modelStat.forEach(item => {
-              legendData.push(item.name);
-              modelSeriesData.push({name: item.name, value: item.total});
-            });*/
             let series = [{
               name: 'Type',
               data: typeSeriesData.sort((a, b) => {return a.value > b.value ? -1 : 1}),
               type: 'pie',
+              radius: ["58%", "75%"],
+              center: ["40%", "50%"],
               minAngle: 15,
               itemStyle: {
                 borderColor: "#fff",
                 borderWidth: 1,
               },
-              label: {
-                borderWidth: 1,
-                borderColor: "#cfcfcf",
-                borderRadius: 4,
-                formatter: function(param) {
-                  return ['{title|' + param.name + ' (' + param.percent + '%)}',
-                          '{hr|}',
-                          '{block5|}{upPic|}{block3|}{upNum|' + param.data.up + '}{block15|}{downPic|}{block3|}{downNum|' + param.data.down + '}{block15|}']
-                    .join("\n");
-                },
-                rich: {
-                  title: {
-                    align: 'center',
-                    color: "#333",
-                    height: 20*window.devicePixelRatio,
-                    padding: [0, 8, 0, 8]
-                  },
-                  hr: {
-                    width: '100%',
-                    borderWidth: 0.5,
-                    height: 0,
-                    borderColor: "#cfcfcf"
-                  },
-                  block3: {
-                    width: 3*window.devicePixelRatio,
-                    align: 'left'
-                  },
-                  block5: {
-                    width: 5*window.devicePixelRatio,
-                    align: 'left'
-                  },
-                  block15: {
-                    width: 15*window.devicePixelRatio,
-                    align: 'left'
-                  },
-                  upPic: {
-                    backgroundColor: {
-                      image: document.getElementById("upPic")
-                    },
-                    height: 15*window.devicePixelRatio,
-                    align: 'left',
-                    width: 15*window.devicePixelRatio,
-                  },
-                  upNum: {
-                    color: "#333",
-                    height: 20*window.devicePixelRatio,
-                    align: 'left',
-                    //width: 35*window.devicePixelRatio,
-                    lineHeight: 18*window.devicePixelRatio,
-                  },
-                  downPic: {
-                    backgroundColor: {
-                      image: document.getElementById("downPic")
-                    },
-                    height: 15*window.devicePixelRatio,
-                    align: 'left',
-                    width: 15*window.devicePixelRatio
-                  },
-                  downNum: {
-                    color: "#333",
-                    height: 20*window.devicePixelRatio,
-                    align: 'left',
-                    //width: 43*window.devicePixelRatio,
-                    lineHeight: 18*window.devicePixelRatio,
-                  }
-                }
-              },
-              labelLine: {
-                show: true
-              },
-              //left: '25%'
-            }, /*{
-              name: 'Model',
-              radius: ['65%', '80%'],
-              data: modelSeriesData,
-              type: 'pie',
-              left: '25%',
-              label: {
+              label: {show: false},
+              tooltip: {
+                backgroundColor: "rgba(255, 255, 255, 0.66)",
+                extraCssText: "box-shadow: 1px 2px 8px 0 rgba(0, 0, 0, 0.24);",
+                textStyle: {color: "#333333"},
+                renderMode: 'html',
                 formatter: function(params) {
-                  if (params.name.length > 12) {
-                    return params.name.substring(0, 9) + "...";
-                  }
-                  return params.name;
+                  return `
+                  <div class="overview-tooltip-box">
+                    <div class="tooltip-item"><div class="item-status red"></div>${params.data.down}</div>
+                    <div class="tooltip-item"><div class="item-status green"></div>${params.data.up}</div>
+                  </div>`;
                 }
-              }
-            }*/];
-            /*this.$refs.assetTypePie.modifyOption('legend','show', true);
-            this.$refs.assetTypePie.modifyOption('legend','orient', "vertical");
-            this.$refs.assetTypePie.modifyOption('legend','data', legendData);
-            this.$refs.assetTypePie.modifyOption('legend','left', 40);
-            this.$refs.assetTypePie.modifyOption('legend','top', 40);
-            this.$refs.assetTypePie.modifyOption('legend','formatter', function(name) {
-              if (name.length > 12) {
-                return name.substring(0, 9) + "...";
-              }
-              return name;
-            });*/
-            this.$refs.assetTypePie.modifyOption("tooltip", "backgroundColor", "rgba(221,228,237,1)");
-            this.$refs.assetTypePie.modifyOption("tooltip", "textStyle", {color: "#000"});
-            this.$refs.assetTypePie.modifyOption("grid", "top", 30);
-            this.$refs.assetTypePie.modifyOption("grid", "left", 0);
-            this.$refs.assetTypePie.modifyOption("grid", "right", 30);
-            this.$refs.assetTypePie.modifyOption("grid", "bottom", 8);
-            this.$refs.assetTypePie.modifyOption("grid", "containLabel", true);
-            this.$refs.assetTypePie.setSeries(series);
+              },
+              label: {
+                normal: {
+                  show: false,
+                  position: 'center',
+                  formatter: function(param){ // 设置圆饼图中间文字排版
+                    return ['{name|' + param.name + '}',
+                      '{percent|(' + param.percent + '%)}']
+                      .join("\n");
+                  },
+                  rich: {
+                    name: {
+                      textAlign: 'center',
+                      color: "#333",
+                      fontSize: 19,
+                      padding: 10
+                    },
+                    percent: {
+                      textAlign: 'center',
+                      color: "#333",
+                      fontSize: 12,
+                      padding: 10
+                    }
+                  }
+                },
+                emphasis: {
+                  show: true, //文字至于中间时，这里需为true
+                },
+              },
+            }];
+            let legend = {
+              show: true,
+              orient: "vertical",
+              top: "30%",
+              right: 25,
+              icon: "circle",
+            };
+            this.$refs.assetTypePie.setSeries(series, legend, legendData);
             this.$refs.assetTypePie.endLoading();
           }
         })
@@ -502,12 +472,13 @@
                 }
                 this.chartSeries.push(series);
                 if (this.chartSeries.length == 2) {
-                  this.$refs.chartbox.modifyOption("tooltip", "backgroundColor", "rgba(221,228,237,1)");
+                  this.$refs.chartbox.modifyOption("tooltip", "backgroundColor", "rgba(255, 255, 255, 0.66)");
+                  this.$refs.chartbox.modifyOption("tooltip", "extraCssText", "box-shadow: 1px 2px 8px 0 rgba(0, 0, 0, 0.24);");
                   this.$refs.chartbox.modifyOption("tooltip", "textStyle", {color: "#000"});
-                  this.$refs.chartbox.modifyOption("grid", "top", 30);
-                  this.$refs.chartbox.modifyOption("grid", "left", 0);
-                  this.$refs.chartbox.modifyOption("grid", "right", 30);
-                  this.$refs.chartbox.modifyOption("grid", "bottom", 8);
+                  this.$refs.chartbox.modifyOption("grid", "top", 40);
+                  this.$refs.chartbox.modifyOption("grid", "left", 10);
+                  this.$refs.chartbox.modifyOption("grid", "right", 40);
+                  this.$refs.chartbox.modifyOption("grid", "bottom", 18);
                   this.$refs.chartbox.modifyOption("grid", "containLabel", true);
                   this.$refs.chartbox.setSeries(this.chartSeries);
                 }
@@ -541,14 +512,14 @@
                 }
                 this.chartSeries.push(series);
                 if (this.chartSeries.length == 2) {
-                  this.$refs.chartbox.modifyOption("tooltip", "backgroundColor", "rgba(221,228,237,1)");
+                  this.$refs.chartbox.modifyOption("tooltip", "backgroundColor", "rgba(255, 255, 255, 0.66)");
+                  this.$refs.chartbox.modifyOption("tooltip", "extraCssText", "box-shadow: 1px 2px 8px 0 rgba(0, 0, 0, 0.24);");
                   this.$refs.chartbox.modifyOption("tooltip", "textStyle", {color: "#000"});
-                  this.$refs.chartbox.modifyOption("grid", "top", 30);
-                  this.$refs.chartbox.modifyOption("grid", "left", 0);
-                  this.$refs.chartbox.modifyOption("grid", "right", 30);
-                  this.$refs.chartbox.modifyOption("grid", "bottom", 8);
+                  this.$refs.chartbox.modifyOption("grid", "top", 40);
+                  this.$refs.chartbox.modifyOption("grid", "left", 10);
+                  this.$refs.chartbox.modifyOption("grid", "right", 40);
+                  this.$refs.chartbox.modifyOption("grid", "bottom", 18);
                   this.$refs.chartbox.setSeries(this.chartSeries);
-                  //this.$refs.chartbox.endLoading();
                 }
               }
               resolve(true);
@@ -1362,7 +1333,7 @@
 
 <style lang="scss">
   @import "./overview2.scss";
-  .tooltip{
+  /*.tooltip{
     padding:5px;
     min-width: 500px;
     background-color: rgba(221,228,237,1);
@@ -1384,7 +1355,7 @@
     text-align: left;
     border: 1px solid #b9b9bf;
     display: table-cell;
-    padding:0px 5px ;
+    padding:0 5px ;
     color: black;
   }
   .flex-box{
@@ -1394,5 +1365,5 @@
   .column-box{
     flex-direction: column;
     justify-content: space-between !important;
-  }
+  }*/
 </style>
