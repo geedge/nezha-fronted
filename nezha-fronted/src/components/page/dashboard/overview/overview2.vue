@@ -129,7 +129,30 @@
 <!--                <div class="chart-no-data"v-if="!assetTypeLoading && assetData.typeStat && assetData.typeStat.length == 0">No Data</div>-->
           </div>
         </div>
+
         <!--第二个图-->
+        <div class="content-col-box">
+          <div class="content-col-title">
+            <span>
+              <span v-if="alertMessageShow == 'asset'">{{$t("dashboard.overview.alert.assetTopN")}}</span>
+              <span v-if="alertMessageShow == 'module'">{{$t("dashboard.overview.alert.moduleTopN")}}</span>
+              <!--<span class="dropdown-btn" @mouseenter="alertMessageDropdownHandler(true)" @mouseleave="alertMessageDropdownHandler(false)">
+                <i class="el-icon-arrow-down"></i>
+                <transition name="el-zoom-in-top">
+                  <ul class="el-dropdown-menu el-popper el-dropdown-menu&#45;&#45;mini" v-if="bottom3DropdownShow">
+                    <li @click="alertMessageChange('asset')" class="el-dropdown-menu__item dropdown-content" style="padding: 0 15px;">{{$t("dashboard.overview.asset.title")}}</li>
+                    <li @click="alertMessageChange('module')" class="el-dropdown-menu__item dropdown-content" style="padding: 0 15px;">{{$t("dashboard.overview.module.module")}}</li>
+                  </ul>
+                </transition>
+              </span>-->
+            </span>
+          </div>
+          <div class="content-col-content">
+            <chart-box axis-tooltip="x" v-show="alertMessageShow == 'asset'" :tooltip-formatter="simpleFormatter" chart-type="assetBar" ref="assetMessage" name="assetMessage" :show-toolbox="false" @is-loading="(isLoading)=>{this.assetMessageLoading = isLoading}"></chart-box>
+            <chart-box axis-tooltip="y" v-show="alertMessageShow == 'module'" :tooltip-formatter="simpleFormatter" chart-type="bar" ref="moduleMessage" name="moduleMessage" :show-toolbox="false" @is-loading="(isLoading)=>{this.moduleMessageLoading = isLoading}"></chart-box>
+          </div>
+        </div>
+        <!--第三个图-->
         <div class="content-col-box">
           <div class="content-col-title">
             <span>{{$t("dashboard.overview.alert.alertRuleTopN")}}</span>
@@ -141,47 +164,9 @@
             </el-dropdown>-->
           </div>
           <div class="content-col-content">
-            <chart-box axis-tooltip="y" chart-type="bar" ref="ruleMessage" :tooltip-formatter="simpleFormatter" :show-toolbox="false" name="ruleMessage" @is-loading="(isLoading)=>{this.ruleMessageLoading = isLoading}"></chart-box>
-<!--                <div class="no-data-tip" v-if="!ruleMessageLoading && ((!messageByRuleSeries.data && !messageByRuleSeries.category) || (messageByRuleSeries.data.length == 0 && messageByRuleSeries.category.length == 0))">N/A</div>-->
-<!--                <div class="chart-no-data" v-if="!ruleMessageLoading && ((!messageByRuleSeries.data && !messageByRuleSeries.category) || (messageByRuleSeries.data.length == 0 && messageByRuleSeries.category.length == 0))">No Data</div>-->
-          </div>
-        </div>
-        <!--第三个图-->
-        <div class="content-col-box">
-          <div class="content-col-title">
-            <span>
-              <span v-if="alertMessageShow == 'asset'">{{$t("dashboard.overview.alert.assetTopN")}}</span>
-              <span v-if="alertMessageShow == 'module'">{{$t("dashboard.overview.alert.moduleTopN")}}</span>
-              <span class="dropdown-btn" @mouseenter="alertMessageDropdownHandler(true)" @mouseleave="alertMessageDropdownHandler(false)">
-                <i class="el-icon-arrow-down"></i>
-                <transition name="el-zoom-in-top">
-                  <ul class="el-dropdown-menu el-popper el-dropdown-menu--mini" v-if="bottom3DropdownShow">
-                    <li @click="alertMessageChange('asset')" class="el-dropdown-menu__item dropdown-content" style="padding: 0 15px;">{{$t("dashboard.overview.asset.title")}}</li>
-                    <li @click="alertMessageChange('module')" class="el-dropdown-menu__item dropdown-content" style="padding: 0 15px;">{{$t("dashboard.overview.module.module")}}</li>
-                  </ul>
-                </transition>
-              </span>
-            </span>
-            <!--<el-dropdown trigger="hover" v-if="alertMessageShow == 'asset'" :show-timeout="0" size="small">
-              <span>Top&nbsp;{{topFilter.asset}}<i class="el-icon-arrow-down el-icon&#45;&#45;right"></i></span>
-              <el-dropdown-menu slot="dropdown">
-                <el-dropdown-item v-for="(item,index) in topFilter.optionals" :key="index" @click.native="topNChange('asset', item)">{{item}}</el-dropdown-item>
-              </el-dropdown-menu>
-            </el-dropdown>
-            <el-dropdown trigger="hover" v-if="alertMessageShow == 'module'" :show-timeout="0" size="small">
-              <span>Top&nbsp;{{topFilter.module}}<i class="el-icon-arrow-down el-icon&#45;&#45;right"></i></span>
-              <el-dropdown-menu slot="dropdown">
-                <el-dropdown-item v-for="(item,index) in topFilter.optionals" :key="index" @click.native="topNChange('module', item)">{{item}}</el-dropdown-item>
-              </el-dropdown-menu>
-            </el-dropdown>-->
-          </div>
-          <div class="content-col-content">
-            <chart-box axis-tooltip="y" v-show="alertMessageShow == 'asset'" :tooltip-formatter="simpleFormatter" chart-type="bar" ref="assetMessage" name="assetMessage" :show-toolbox="false" @is-loading="(isLoading)=>{this.assetMessageLoading = isLoading}"></chart-box>
-            <chart-box axis-tooltip="y" v-show="alertMessageShow == 'module'" :tooltip-formatter="simpleFormatter" chart-type="bar" ref="moduleMessage" name="moduleMessage" :show-toolbox="false" @is-loading="(isLoading)=>{this.moduleMessageLoading = isLoading}"></chart-box>
-<!--                <div class="no-data-tip" v-show="alertMessageShow == 'asset'" v-if="!assetMessageLoading && ((!messageByAssetSeries.data && !messageByAssetSeries.category) || (messageByAssetSeries.data.length == 0 && messageByAssetSeries.category.length == 0))">N/A</div>-->
-<!--                <div class="no-data-tip" v-show="alertMessageShow == 'module'" v-if="!moduleMessageLoading && ((!messageByModuleSeries.data && !messageByModuleSeries.category) || (messageByModuleSeries.data.length == 0 && messageByModuleSeries.category.length == 0))">N/A</div>-->
-<!--                <div class="chart-no-data" v-show="alertMessageShow == 'asset'" v-if="!assetMessageLoading && ((!messageByAssetSeries.data && !messageByAssetSeries.category) || (messageByAssetSeries.data.length == 0 && messageByAssetSeries.category.length == 0))">No Data</div>-->
-<!--                <div class="chart-no-data" v-show="alertMessageShow == 'module'" v-if="!moduleMessageLoading && ((!messageByModuleSeries.data && !messageByModuleSeries.category) || (messageByModuleSeries.data.length == 0 && messageByModuleSeries.category.length == 0))">No Data</div>-->
+            <chart-box axis-tooltip="y" chart-type="ruleBar" ref="ruleMessage" :tooltip-formatter="simpleFormatter" :show-toolbox="false" name="ruleMessage" @is-loading="(isLoading)=>{this.ruleMessageLoading = isLoading}"></chart-box>
+            <!--                <div class="no-data-tip" v-if="!ruleMessageLoading && ((!messageByRuleSeries.data && !messageByRuleSeries.category) || (messageByRuleSeries.data.length == 0 && messageByRuleSeries.category.length == 0))">N/A</div>-->
+            <!--                <div class="chart-no-data" v-if="!ruleMessageLoading && ((!messageByRuleSeries.data && !messageByRuleSeries.category) || (messageByRuleSeries.data.length == 0 && messageByRuleSeries.category.length == 0))">No Data</div>-->
           </div>
         </div>
       </div>
@@ -779,16 +764,20 @@
               name: 'alertStatByRule',
               data: seriesData,
               type: 'bar',
-              barMaxWidth: 30,
+              barMaxWidth: 20,
+              itemStyle: {
+                color: function(params) {
+                  let colorList = ["#ECCD82", "#99CEB9"];;
+                  if(params.dataIndex % 2 == 0){
+                    return colorList[0]
+                  }else{
+                    return colorList[1]
+                  }
+                },
+              },
               category: categoryData, //自定义，用来判断N/A是否显示
             };
             this.$refs.ruleMessage.modifyOption('yAxis', 'data', categoryData);
-            this.$refs.ruleMessage.modifyOption("tooltip", "backgroundColor", "rgba(221,228,237,1)");
-            this.$refs.ruleMessage.modifyOption("tooltip", "textStyle", {color: "#000"});
-            this.$refs.ruleMessage.modifyOption("grid", "top", 30);
-            this.$refs.ruleMessage.modifyOption("grid", "left", 200);
-            this.$refs.ruleMessage.modifyOption("grid", "right", 30);
-            this.$refs.ruleMessage.modifyOption("grid", "bottom", 8);
             this.$refs.ruleMessage.setSeries(this.messageByRuleSeries);
             this.$refs.ruleMessage.endLoading();
           }
@@ -809,15 +798,19 @@
               data: seriesData,
               type: 'bar',
               barMaxWidth: 30,
-              category: categoryData
+              category: categoryData,
+              itemStyle: {
+                color: function(params) {
+                  let colorList = ["#ECCD82", "#99CEB9"];;
+                  if(params.dataIndex % 2 == 0){
+                    return colorList[0]
+                  }else{
+                    return colorList[1]
+                  }
+                },
+              },
             };
-            this.$refs.assetMessage.modifyOption('yAxis', 'data', categoryData);
-            this.$refs.assetMessage.modifyOption("tooltip", "backgroundColor", "rgba(221,228,237,1)");
-            this.$refs.assetMessage.modifyOption("tooltip", "textStyle", {color: "#000"});
-            this.$refs.assetMessage.modifyOption("grid", "top", 30);
-            this.$refs.assetMessage.modifyOption("grid", "left", 200);
-            this.$refs.assetMessage.modifyOption("grid", "right", 30);
-            this.$refs.assetMessage.modifyOption("grid", "bottom", 8);
+            this.$refs.assetMessage.modifyOption('xAxis', 'data', categoryData);
             this.$refs.assetMessage.setSeries(this.messageByAssetSeries);
             this.$refs.assetMessage.endLoading();
           }
@@ -840,13 +833,7 @@
               barMaxWidth: 30,
               category: categoryData
             };
-            this.$refs.moduleMessage.modifyOption('yAxis', 'data', categoryData);
-            this.$refs.moduleMessage.modifyOption("tooltip", "backgroundColor", "rgba(221,228,237,1)");
-            this.$refs.moduleMessage.modifyOption("tooltip", "textStyle", {color: "#000"});
-            this.$refs.moduleMessage.modifyOption("grid", "top", 30);
-            this.$refs.moduleMessage.modifyOption("grid", "left", 200);
-            this.$refs.moduleMessage.modifyOption("grid", "right", 30);
-            this.$refs.moduleMessage.modifyOption("grid", "bottom", 8);
+            this.$refs.moduleMessage.modifyOption('xAxis', 'data', categoryData);
             this.$refs.moduleMessage.setSeries(this.messageByModuleSeries);
             this.$refs.moduleMessage.endLoading();
           }
