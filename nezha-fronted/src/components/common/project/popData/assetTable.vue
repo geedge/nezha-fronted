@@ -178,6 +178,7 @@
       }
     },
     mounted(){
+      this.getTableTitle();
       this.getAssetList();
     },
     methods:{
@@ -256,6 +257,11 @@
         let seconds=time.getSeconds() > 9 ? time.getSeconds():('0'+time.getSeconds());
         return this.$t('asset.assetStatPre')+year+ds+month+ds+day+' '+hours+ts+minutes+ts+seconds;
 
+      },
+      getTableTitle(){
+        if(localStorage.getItem('nz-sys-asset-ping-switch')==='off'){
+          this.tableTitle=this.tableTitle.filter(item=>item.prop!=='pingStatus');
+        }
       },
     },
 
