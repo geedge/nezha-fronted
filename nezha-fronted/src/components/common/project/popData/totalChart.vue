@@ -701,6 +701,11 @@
           }
         }
       },
+      getNewTime(time, num) {
+        const date = new Date(time);
+        const newDate = new Date(parseInt(date.getTime(), 10) + num);
+        return bus.timeFormate(newDate, 'yyyy-MM-dd hh:mm:ss');
+      },
       // 关闭loading状态
       loadingFalse(item){
         this.$set(this.dataList[item.id],'loading',false);
