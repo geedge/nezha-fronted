@@ -32,7 +32,7 @@
         </el-form-item>
 
         <el-form-item label="Icon" prop="iconId" class="icon">
-          <el-select v-model="form.iconId" placeholder=""  popper-class="asset-dropdown" size="small">
+          <el-select v-model="form.iconId" placeholder=""  popper-class="asset-dropdown" size="small" :loading="imgageLoading">
             <div slot="prefix" class="sel-image">
               <img v-if="form.iconId" :src="selImage.image" style="height: 28px"/>
               <span v-if="form.iconId" class="sel-image-name">{{selImage.imageName}}</span>
@@ -173,6 +173,7 @@
       'form.iconId':{
         handler(n){
           if(n){
+            console.log(n);
             this.selImage=this.iconArray.find(item=>item.id===n)
           }
         },
@@ -197,6 +198,7 @@
         legends:[],
         name:[],
         unit:[],
+        imgageLoading:false,
         rules:{
           moduleId:[
             { required: true, message: '请选择module', trigger: 'blur' },
@@ -215,6 +217,7 @@
     methods:{
       addNodeInit(selImageId){
         this.$get('/project/topo/icon').then(res=>{
+          this.imgageLoading=true;
           this.iconArray=res.data.list;
           this.iconArray.forEach((item,index)=>{
             item.imageName=item.name;
@@ -224,10 +227,11 @@
               if(index===this.iconArray.length-1){
                 setTimeout(()=>{
                   this.iconArray=[...this.iconArray];
+                  this.imgageLoading=false;
                   if(selImageId){
                     this.form.iconId=selImageId;
                   }
-                })
+                },100)
               }
             })
           });
