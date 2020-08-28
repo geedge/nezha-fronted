@@ -262,6 +262,19 @@
         return this.$t('asset.assetStatPre')+year+ds+month+ds+day+' '+hours+ts+minutes+ts+seconds;
 
       },
+      getStateErrorMsg(row) {
+        let errCodes = [230009, 230010, 230011];
+        if(row){
+          if(row.state == 0){
+            if(errCodes.find((item)=>{return row.stateInfo.code == item})){
+              return this.$t('project.endpoint.stateInfo_'+row.stateInfo.code)
+            }else{
+              return row.stateInfo.msg;
+              this.$message.error('state code error');
+            }
+          }
+        }
+      },
     },
 
   }
