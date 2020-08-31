@@ -224,6 +224,7 @@
   }
   .chart-table, .chart-alert-info {
     width: 100%;
+    overflow-x: hidden;
     .table-container {
       padding: 0 6px;
       box-sizing: border-box;
