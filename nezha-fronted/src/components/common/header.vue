@@ -7,7 +7,7 @@
       active="1"
       unique-opened
     >
-      <el-submenu :index="'-3'" popper-class="nz-submenu" class="icon-menu-item">
+      <el-submenu :index="'-3'" popper-class="nz-submenu" class="icon-menu-item" :disabled="!linkData||linkData.length <1" >
         <template slot="title">
           <i class="nz-icon-navmore nz-icon" style="font-size: 17px;"></i>
         </template>
@@ -219,7 +219,7 @@
         projectData: [], //顶部菜单project列表中的数据
         editProject: {id: '', name: '', remark: ''}, //新增/编辑的project
         currentProject: {id: '', name: '', remark: ''}, //module/endpoint弹框用来回显project
-        editModule: {id: '', type: 'http', name: '', project: {}, port: '', path: '', param: '', paramObj: []}, //新增/编辑的module
+        editModule: { type: 'http', name: '', project: {}, port: 9100, path: '', param: '', paramObj: []}, //新增/编辑的module
         currentModule: {id: '', name: '', project: {}, port: '', path: '', param: '', paramObj: []}, //endpoint弹框用来回显module，此处固定为空对象
         editEndpoint: { //新增/编辑的endpoint
           id: '',
@@ -324,13 +324,12 @@
         } else if (item.type == 2) {
           this.rightBox.module.show = true;
           this.editModule = {
-            id: '',
             name: '',
             project: this.$store.state.currentProject,
-            port: '',
+            port: 9100,
             path: '',
             param: '',
-            type: '',
+            type: 'http',
             paramObj: [],
             snmpParam: '',
             //snmp setting 下划线命名是因为业务需求
