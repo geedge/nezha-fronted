@@ -32,10 +32,56 @@ export const staticMenus = {
 };
 
 export const promServer = {
-  typeData: [
-    {value: 1, label: 'Global'},
-    {value: 2, label: 'Per-Datacenter'}
-  ],
+  theData:[
+    {
+      label:'Federation',
+      value:'federation',
+      children:[
+        {
+          label:'Global',
+          value:1,
+          text:'Global',
+        },
+        {
+          label:'Per-datacenter',
+          value:2,
+          text:'Per-datacenter',
+        }
+      ]
+    },
+    {
+      label:'Thanos',
+      value:'Thanos',
+      children:[
+        {
+          label:'query',
+          value:3,
+          text:'Thanos-query'
+        },
+        {
+          label:'rule',
+          value:4,
+          text:'Thanos-rule'
+        },
+        {
+          label:'sidecar',
+          value:5,
+          text:'Thanos-sidecar'
+        },
+        {
+          label:'store',
+          value:6,
+          text:'Thanos-store'
+        },
+        {
+          label:'compactor',
+          value:7,
+          text:'Thanos-compactor'
+        }
+      ]
+    }
+  ]
+
 };
 
 export const asset = {
