@@ -3,10 +3,10 @@
     <div class="right-box right-box-edit-endpoint">
       <!-- begin--顶部按钮-->
       <div class="right-box-top-btns">
-        <!--<button id="edit-ep-del" type="button" @click="del" class="nz-btn nz-btn-size-normal nz-btn-size-alien nz-btn-style-light ">-->
-        <!--<span class="right-box-top-btn-icon"><i class="el-icon-delete"></i></span>-->
-        <!--<span class="right-box-top-btn-txt">{{$t('overall.delete')}}</span>-->
-        <!--</button>-->
+        <button id="edit-ep-del" type="button" @click="del" class="nz-btn nz-btn-size-normal nz-btn-size-alien nz-btn-style-light ">
+        <span class="right-box-top-btn-icon"><i class="el-icon-delete"></i></span>
+        <span class="right-box-top-btn-txt">{{$t('overall.delete')}}</span>
+        </button>
       </div>
       <!-- end--顶部按钮-->
 
