@@ -44,8 +44,9 @@
             <span v-if="item.prop == 'idc'" >{{scope.row[item.prop]?scope.row[item.prop].name:'-'}}</span>
 
             <span v-else-if="item.prop == 'type'">
-                {{scope.row[item.prop] == '1' ? 'Global' : ''}}
-                {{scope.row[item.prop] == '2' ? 'Per-Datacenter' : ''}}
+                <!--{{scope.row[item.prop] == '1' ? 'Global' : ''}}
+                {{scope.row[item.prop] == '2' ? 'Per-Datacenter' : ''}}-->
+              {{findServerType(scope.row[item.prop]).text}}
             </span>
             <span v-else-if="item.prop == 'status'">
               <el-popover placement="right" width="200" trigger="hover" :content="$t('asset.assetStatPre')+(scope.row.checkTime?scope.row.checkTime:$t('asset.assetStatDown'))">
@@ -214,6 +215,7 @@
           }],
         },
         searchLabel: {}, //搜索参数
+        promServerType:null,
       }
     },
     methods: {
@@ -372,6 +374,17 @@
         this.$set(this.searchLabel, "orderBy", orderBy);
         this.getTableData();
       },
+      findServerType(type){
+        if(!this.promServerType){
+          this.promServerType=[];
+          this.$CONSTANTS.promServer.theData.forEach(item=>{
+            this.promServerType=this.promServerType.concat(item.children)
+          })
+        }
+        return this.promServerType.find(item=>{
+          return item.value == type
+        })
+      }
     },
     mounted() {
       //初始化数据

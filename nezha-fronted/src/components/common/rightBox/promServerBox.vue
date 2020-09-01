@@ -39,9 +39,15 @@
         </el-form-item>
         <!--type-->
         <el-form-item :label="$t('config.promServer.type')" prop="type">
-          <el-select popper-class="config-dropdown" v-model="editPromServer.type" placeholder="" size="small">
-            <el-option v-for="item in $CONSTANTS.promServer.typeData" :key="item.value" :label="item.label" :value="item.value" :id="'prom-edit-type-op-'+item.value"></el-option>
-          </el-select>
+          <el-cascader
+            style="width: 100%"
+            v-model="editPromServer.type"
+            placeholder=""
+            size="small"
+            popper-class="config-dropdown"
+            :options="$CONSTANTS.promServer.theData"
+            :props="{ multiple: false, checkStrictly: false ,emitPath:false}"
+            clearable></el-cascader>
         </el-form-item>
       </el-form>
     </el-scrollbar>
