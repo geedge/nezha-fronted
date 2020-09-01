@@ -223,6 +223,7 @@
         this.$refs['form'].validate((valid) => {
           if (valid) {
             let model=Object.assign({id:undefined},{...this.form},{color: {color:this.form.color,highlight:this.form.color,hover:this.form.color,opacity:1.0}});
+            model.label=this.form.lineName;
             model.width = parseInt(model.width) || 4;
             model.smooth={
               roundness:(Math.random()*8 +1)/10 ,//获取0.1-0.9之间的随机数

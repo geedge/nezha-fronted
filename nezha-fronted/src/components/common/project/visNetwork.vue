@@ -210,7 +210,9 @@
               this.$refs['topology'].setData();
             },500)
           }
+          // res.data.topo.viewsCenter?res.data.topo.viewsCenter:
           this.$refs['topology'].viewsCenter={x:0,y:0};
+          // res.data.topo.zoom?res.data.topo.zoom:
           this.$refs['topology'].zoom=1;
         })
       },
@@ -246,6 +248,7 @@
           item.dashes=[15,15];
           item.from=item.source;
           item.to=item.target;
+          item.label=item.name;
         });
         return arr
       },

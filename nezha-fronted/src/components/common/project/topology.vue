@@ -70,7 +70,7 @@
           <popDataMain :moduleId="this.selNodeId" :projectId="this.allModuleInfo.basic.id"></popDataMain>
         </div>
         <div v-if="popDataShow.total">
-          <total-chart :moduleId="this.selNodeId" :projectId="this.allModuleInfo.basic.id" :nodesArray="nodesArray"></total-chart>
+          <total-chart :moduleId="this.totalId" :projectId="this.allModuleInfo.basic.id" :nodesArray="totalArray"></total-chart>
         </div>
         <div v-if="popDataShow.info">
           <popDataInfo :moduleId="this.selNodeId" :projectId="this.allModuleInfo.basic.id"></popDataInfo>
@@ -195,6 +195,8 @@
     },
     data(){
 		  return {
+        totalId:'',
+        totalArray:[],
         allModuleInfos:[],
         relativeModelTop:{},
         moduleDataS:[],
@@ -263,7 +265,7 @@
       saveTopology(){
         let nodes=this.formatNodes([...this.nodesArray]);
         let edges=this.formatEdges([...this.edgesArray]);
-        this.$put('/project/topo',{topo:JSON.stringify({nodes:nodes,lines:edges}),projectId:this.allModuleInfo.basic.id}).then(res=>{
+        this.$put('/project/topo',{topo:JSON.stringify({nodes:nodes,lines:edges,viewsCenter:this.viewsCenter,zoom:this.zoom}),projectId:this.allModuleInfo.basic.id}).then(res=>{
           if(res.code==200){
             this.$message({
               message: this.$t("tip.saveSuccess"),
@@ -505,7 +507,9 @@
       //工具栏
       nodeDel(){
         let nodesArray=this.nodesArray.filter((item)=>item.id!==this.selNodeId);
-        let edgesArray=this.edgesArray.filter((item)=>item.from!==this.selNodeId || this.to!==this.selNodeId);
+        let edgesArray=this.edgesArray.filter((item)=>!(item.from===this.selNodeId || item.to===this.selNodeId));
+        console.log(edgesArray,"edgesArray");
+        this.selNodeId='';
         this.$emit('setTopologyData',nodesArray, edgesArray);
         this.setNetworkData(nodesArray, edgesArray);
         this.networkPopClose();
@@ -524,6 +528,7 @@
 
       // 工具的点击 对应的操作
       popClick(id){
+        this.lineData='';
         this.popDataShowUpdate(id);
       },
       modelTopUpdate(){//model上的图标 实时更新
@@ -590,6 +595,14 @@
           main:false,
         };
         if(key&&!this.editVisNetwork){
+          if(key==='total'&&this.selNodeId){
+            this.totalId=this.selNodeId
+            this.totalArray=this.nodesArray;
+          }
+          if(key==='total'&&this.lineData){
+            this.totalId=this.lineData.id;
+            this.totalArray=this.edgesArray;
+          }
           this.popDataShow[key]=true;
         }
       },
@@ -624,7 +637,14 @@
          });
 
          this.network.on("selectEdge", function (params) { // 选择边
+           this_.selNodeId='';
            this_.lineData=this_.edgesArray.find((item)=>item.id===params.edges[0]);
+           console.log(this_.lineData);
+          if(this_.lineData.expressions&&this_.lineData.expressions.length){
+            this_.popDataShowUpdate('total')
+          }else{
+            this_.popDataShowUpdate()
+          }
            // this_.lineData.color=this_.lineData.color.color;
            // this_.addLineShow=true;
            // this_.isLineAdd=false;
