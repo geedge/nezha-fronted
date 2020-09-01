@@ -76,6 +76,11 @@
           <popDataInfo :moduleId="this.selNodeId" :projectId="this.allModuleInfo.basic.id"></popDataInfo>
         </div>
       </div>
+      <!--拓扑图的放大缩小-->
+      <!--<div class="network-zoom">-->
+        <!--<div @click='zoomChange(0.1)'><i class="nz-icon nz-icon-hexagonBorder zoom-icon"></i></div>-->
+        <!--<div @click='zoomChange(-0.1)'><i class="nz-icon nz-icon-hexagonBorder zoom-icon"></i></div>-->
+      <!--</div>-->
 
     </div>
     <transition name="right-box">
@@ -596,7 +601,7 @@
         };
         if(key&&!this.editVisNetwork){
           if(key==='total'&&this.selNodeId){
-            this.totalId=this.selNodeId
+            this.totalId=this.selNodeId;
             this.totalArray=this.nodesArray;
           }
           if(key==='total'&&this.lineData){
@@ -606,6 +611,23 @@
           this.popDataShow[key]=true;
         }
       },
+      //拓扑图放大缩小
+      zoomChange(num){
+        this.zoom+=num;
+        if(this.zoom<0){//每次缩小0.1 保证缩放大于0
+          this.zoom=0.01;
+        }
+        this.network.moveTo({
+          position: this.viewsCenter,
+          scale: this.zoom,
+          offset: {x:0, y:0},
+        });
+        this.$nextTick(()=>{
+          this.modelTopUpdate();
+          this.setPopPosition(this.selNodeId);
+          this.popDataShowUpdate();
+        })
+      }
     },
     mounted(){
        setTimeout(()=>{
@@ -927,5 +949,13 @@
     font-size: 14px;
     color: #FFFFFF;
     padding: 4px 14px;
+  }
+  .network-zoom{
+    position: absolute;
+    bottom: 15px;
+    right: 15px;
+  }
+  .zoom-icon{
+    font-size: 42px;
   }
 </style>

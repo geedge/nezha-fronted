@@ -5,11 +5,11 @@
       <div class="main-box-content">
         <div class="content-box">
           <span class="content-title"><i class="el-icon-upload2 colorFFF bg23BF9A"></i>up</span>
-          <span class="float-right">123</span>
+          <span class="float-right">{{moduleInfo.assetStat.up}}</span>
         </div>
         <div class="content-box">
           <span class="content-title"><i class="el-icon-download colorFFF bgEC7F66"></i>down</span>
-          <span class="float-right">123</span>
+          <span class="float-right">{{moduleInfo.assetStat.down}}</span>
         </div>
       </div>
     </div>
@@ -19,11 +19,11 @@
       <div class="main-box-content">
         <div class="content-box">
           <span class="content-title"><i class="el-icon-upload2 colorFFF bg23BF9A"></i>up</span>
-          <span class="float-right">123</span>
+          <span class="float-right">{{moduleInfo.endpointStat.up}}</span>
         </div>
         <div class="content-box">
           <span class="content-title"><i class="el-icon-download colorFFF bgEC7F66"></i>down</span>
-          <span class="float-right">123</span>
+          <span class="float-right">{{moduleInfo.endpointStat.down}}</span>
         </div>
       </div>
     </div>
@@ -32,16 +32,16 @@
       <div class="main-box-title">alert message</div>
       <div class="main-box-content">
         <div class="content-box">
-          <span class="content-title"><i class="nz-icon nz-icon-jiantou-top colorFFF bg23BF9A"></i>up</span>
-          <span class="float-right">123</span>
+          <span class="content-title"><i class="nz-icon nz-icon-jiantou-top colorFFF bg23BF9A"></i>high</span>
+          <span class="float-right">{{moduleInfo.alertStat.high}}</span>
         </div>
         <div class="content-box">
-          <span class="content-title"><i class="nz-icon nz-icon-jiantou-right colorFFF bg3C92F1"></i>down</span>
-          <span class="float-right">123</span>
+          <span class="content-title"><i class="nz-icon nz-icon-jiantou-right colorFFF bg3C92F1"></i>medium</span>
+          <span class="float-right">{{moduleInfo.alertStat.medium}}</span>
         </div>
         <div class="content-box">
-          <span class="content-title"><i class="nz-icon nz-icon-jiantou-down colorFFF bgEC7F66"></i>down</span>
-          <span class="float-right">123</span>
+          <span class="content-title"><i class="nz-icon nz-icon-jiantou-down colorFFF bgEC7F66"></i>low</span>
+          <span class="float-right">{{moduleInfo.alertStat.low}}</span>
         </div>
       </div>
     </div>
@@ -55,16 +55,41 @@
 		  moduleId:{},
       projectId:{},
     },
-    watch:{},
+    watch:{
+      moduleId(n){
+        this.init();
+      }
+    },
     data(){
 		  return{
-
+        moduleInfo:{
+          alertStat:{
+            high:0,
+            low:0,
+            medium:0,
+          },
+          assetStat:{
+            down:0,
+            up:0,
+          },
+          endpointStat:{
+            down:0,
+            up:0,
+          },
+        }
       }
     },
     mounted(){
-		  console.log(this.moduleId,this.projectId)
+		  this.init()
     },
-    methods:{},
+    methods:{
+		  init(){
+		    console.log(111);
+        this.$get('/module/stat',{id:this.moduleId}).then(res=>{
+          this.moduleInfo=res.data;
+        })
+      }
+    },
   }
 </script>
 

@@ -13,7 +13,11 @@
         </div>
         <div class="content-box">
           <span class="content-title">Tag</span>
-          <span class="content-text">{{moduleInfo.type}}</span>
+          <!--{{moduleInfo.type}}-->
+          <span class="content-text">
+            <span :class="{'module-type':true,'module-type-select':moduleInfo.type==='http'}">HTTP</span>
+            <span :class="{'module-type':true,'module-type-select':moduleInfo.type==='snmp'}">SNMP</span>
+          </span>
         </div>
         <div class="content-box">
           <span class="content-title">Port</span>
@@ -100,6 +104,8 @@
   }
   .content-box{
     padding: 0 12px;
+    height: 29px;
+    line-height: 24px;
   }
   .info-box-content .content-box:not(:last-child){
     border-bottom: 1px solid rgba(205,205,205,0.77);
@@ -118,5 +124,29 @@
     font-size: 12px;
     display: inline-block;
     padding: 3px 5px;
+  }
+  .module-type{
+    border: 1px solid #DCDCDC;
+    text-align: center;
+    width: 44px;
+    display: inline-block;
+    height: 20px;
+    margin: 0 auto;
+    line-height: 20px;
+  }
+  .module-type:first-child{
+    border-right-color:rgba(255,140,14,0.54);
+    border-radius: 4px 0 0 4px;
+    margin-right: -4px;
+    border-right: none;
+  }
+  .module-type:last-child{
+    border-left-color:rgba(255,140,14,0.54);
+    border-radius: 0 4px 4px 0;
+    z-index: -1;
+  }
+  .module-type-select{
+    border-color:rgba(255,140,14,0.54);
+    color: rgba(255,140,14,0.54);
   }
 </style>
