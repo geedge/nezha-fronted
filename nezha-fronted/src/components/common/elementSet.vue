@@ -91,7 +91,7 @@ export default {
     //单选
     handler(val, index) {
       if (!this.allowedAll&&!val.allowed && (index == 0 || index == 1 || val.NotSet)) {
-        this.custom[index].show = true;
+        // this.custom[index].show = true;
       } else {
         this.custom[index].show = !this.custom[index].show;
       }

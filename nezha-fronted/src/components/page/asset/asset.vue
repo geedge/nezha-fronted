@@ -376,6 +376,16 @@
           }
         }
       },
+      'tools.customTableTitle':{
+        deep:true,
+        immediate:true,
+        handler(n,o){
+          let pingTitle=n.find(item=>{return item.prop=='pingStatus'})
+          if(pingTitle){
+            this.dispatchEvent('asset-ping-switch-change',pingTitle.show)
+          }
+        }
+      }
     },
     methods: {
       fullScreen() {
@@ -627,6 +637,11 @@
           this.pageObj[column] = content;
           this.getTableData();
         });
+      },
+      dispatchEvent(event,param){
+        this.$nextTick(()=>{
+          bus.$emit(event,param)
+        })
       }
     },
 
@@ -635,11 +650,23 @@
       let tableTitle = localStorage.getItem("nz-tableTitle-" + localStorage.getItem("nz-username") + "-" + this.$route.path)
         ? JSON.parse(localStorage.getItem("nz-tableTitle-" + localStorage.getItem("nz-username") + "-" + this.$route.path))
         : this.tableTitle;
+
       if (this.assetPingSwitch == 'off') {
+        this.dispatchEvent('asset-ping-switch-change',false)
         for (let i in tableTitle) {
           let label = tableTitle[i];
           if (label.prop == 'pingStatus') {
-            tableTitle.splice(i, 1);
+            label.show=false;
+            label.NotSet=true;
+            break;
+          }
+        }
+      }else{
+        for (let i in tableTitle) {
+          let label = tableTitle[i];
+          if (label.prop == 'pingStatus') {
+            label.show=true;
+            label.NotSet=false;
             break;
           }
         }

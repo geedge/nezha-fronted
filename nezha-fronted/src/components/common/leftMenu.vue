@@ -88,7 +88,7 @@
                   </el-checkbox>
                 </el-checkbox-group>
               </el-collapse-item>
-              <el-collapse-item name="ping" :title="$t('asset.left.ping')">
+              <el-collapse-item name="ping" :title="$t('asset.left.ping')" v-if="assetPingSwitch">
                 <el-checkbox-group v-model="pingCheckList" size="small" @change="changePingCheckBox">
                   <el-checkbox class="sidebar-info-item" :class="{'sidebar-info-item-active': indOf(pingCheckList, item.key)}" v-for="(item, index) in pingData" :key="index" :label="item.value">
                     <div class="sidebar-info-item-txt">
@@ -159,6 +159,7 @@
           vendorCheckList: [],
           pingData: [],
           pingCheckList: [],
+          assetPingSwitch:true,
         }
       },
       computed: {
@@ -216,9 +217,11 @@
           }
         }
       },
+      created() {
+        this.initEvent(); //注册监听事件
+      },
       mounted() {
         Promise.all([this.getProjectList(), this.getModuleList(), this.getLeftMenuList()]).then(response => {
-          this.initEvent(); //注册监听事件
           setTimeout(() => {
             this.ready = true;
           }, 300);
@@ -384,6 +387,10 @@
           })
           bus.$on('asset-property-change',()=>{
             this.getLeftMenuList();
+          })
+
+          bus.$on('asset-ping-switch-change',(isOpen)=>{
+            this.assetPingSwitch = isOpen
           })
         },
         // 获取asset左侧菜单数据

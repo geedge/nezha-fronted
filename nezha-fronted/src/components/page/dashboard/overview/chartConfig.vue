@@ -194,22 +194,25 @@
       series: [],
       tooltip : {}
     };
-    const alertMessageBar = {
+    const alertMessageBarByRule = {
       title: {
         show: false,
       },
-      color: overviewBgColor,
       legend: {
         show: false,
       },
       grid: {
-        top: 30,
-        left: 0,
+        top: 60,
+        left: 80,
         right: 30,
-        bottom:8
+        bottom: 60,
       },
       series: [],
-      tooltip : {},
+      tooltip : {
+        backgroundColor: "rgba(255, 255, 255, 0.66)",
+        extraCssText: "box-shadow: 1px 2px 8px 0 rgba(0, 0, 0, 0.24);",
+        textStyle: {color: "#333"}
+      },
       xAxis: {
         type: 'value',
         axisLine: {
@@ -220,7 +223,7 @@
         },
         axisLabel: {
           show:true,
-          fontSize: 10
+          fontSize: 14
         }
       },
       yAxis: {
@@ -234,18 +237,82 @@
         data: [],
         axisLabel: {
           show: true,
+          fontSize: 14,
           formatter: function(value) {
-            if (value.length > 33) {
-              return value.substring(0, 30) + "...";
+            if (value.length > 10) {
+              return value.substring(0, 6) + "...";
             }
             return value;
           },
-          align: 'left',
-          margin: 200,
         },
         triggerEvent: true
       },
     };
+    const alertMessageBarByAsset = {
+      title: {
+        show: false,
+      },
+      color: function(params) {
+        //首先定义一个数组
+        let colorList = [pieColor[0], pieColor[1]];;
+        if(params.dataIndex % 2 == 0){
+          return colorList[0]
+        }else{
+          return colorList[1]
+        }
+      },
+      legend: {
+        show: false,
+      },
+      grid: {
+        top: 60,
+        left: 80,
+        right: 30,
+        bottom: 60,
+      },
+      series: [],
+      tooltip : {
+        backgroundColor: "rgba(255, 255, 255, 0.66)",
+        extraCssText: "box-shadow: 1px 2px 8px 0 rgba(0, 0, 0, 0.24);",
+        textStyle: {color: "#333"}
+      },
+      yAxis: {
+        type: 'value',
+        axisLine: {
+          show: false
+        },
+        axisTick: {
+          show: false
+        },
+        axisLabel: {
+          show:true,
+          fontSize: 14
+        }
+      },
+      xAxis: {
+        type: 'category',
+        axisLine: {
+          show: false
+        },
+        axisTick: {
+          show: false
+        },
+        data: [],
+        axisLabel: {
+          show: true,
+          fontSize: 12,
+          formatter: function(value) {
+            let r = value;
+            if (r.length > 4) {
+              r = value.substring(0, 3) + "...";
+            }
+            return r.split("").join("\n");
+          },
+        },
+        triggerEvent: true
+      },
+    };
+
     const overviewLine = {
       title:{
         show: false,
@@ -399,7 +466,9 @@
       overviewLine: {name: 'line', option: overviewLine},
       map:{name:'map',option:mapOptions},
       pie: {name: 'assetType', option: assetTypePie},
-      bar: {name: 'alertMessage', option: alertMessageBar},
+      bar: {name: 'alertMessage', option: alertMessageBarByAsset},
+      ruleBar: {name: 'ruleMessage', option: alertMessageBarByRule},
+      assetBar: {name: 'assetMessage', option: alertMessageBarByAsset},
       noData:{name:'noData',option:noDataOption},
     };
     export default {

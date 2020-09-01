@@ -56,7 +56,7 @@
     created() {
       this.option=chartConfig.getOption(this.chartType);
       if(this.showToolbox == false){
-        this.option.grid.top=10;
+        //this.option.grid.top = 10;
       }
     },
     methods:{
@@ -157,7 +157,6 @@
           this.chart.clear();
           this.chart.setOption(option);
         }
-
 
         //坐标轴label鼠标悬浮提示
         if (this.axisTooltip) {
