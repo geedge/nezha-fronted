@@ -166,11 +166,24 @@
     watch:{
       lineData:{
         handler(n){
+          console.log(n);
           this.form={
             arrows:n.arrows,
             color:n.color,
             lineId:n.id,
-          }
+            width:n.width,
+            lineName:n.label,
+          };
+         if( n.expressions){
+           n.expressions.forEach((item,index)=>{
+             this.addExpression();
+             this.name[index]=item.name;
+             this.unit[index]=item.unit;
+             this.expressions[index]=item.metric;
+             this.legends[index]=item.legend;
+           })
+         }
+
         },
         immediate: true,
         deep: true,
@@ -217,18 +230,25 @@
     },
     mounted(){
       // this.addExpression();
+      console.log(this.lineData,this.$refs['promql-'+(0)]);
+      if( this.lineData.expressions){
+        this.lineData.expressions.forEach((item,index)=>{
+          console.log(this.$refs['promql-'+(index)],'promql-'+( index));
+        })
+      }
     },
     methods:{
       onSubmit(){
         this.$refs['form'].validate((valid) => {
           if (valid) {
-            let model=Object.assign({id:undefined},{...this.form},{color: {color:this.form.color,highlight:this.form.color,hover:this.form.color,opacity:1.0}});
+            let model=Object.assign({id:this.form.lineId?this.form.lineId:undefined},{...this.form},{color: {color:this.form.color,highlight:this.form.color,hover:this.form.color,opacity:1.0}});
             model.label=this.form.lineName;
             model.width = parseInt(model.width) || 4;
             model.smooth={
               roundness:(Math.random()*8 +1)/10 ,//获取0.1-0.9之间的随机数
               type:'curvedCW',
             };
+            console.log(this.expressions);
             model.expressions=[];
             this.promqlKeys.forEach((item,index)=>{
               model.expressions.push({
@@ -238,6 +258,7 @@
                 "legend": this.legends[index],
               })
             });
+            console.log(model);
             this.$emit('addLine',model);
           }
         });

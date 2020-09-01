@@ -13,7 +13,7 @@
       </span>
       <span v-show="!selectNodeTitle&&editVisNetwork" class="edit-topologyLine">
         <el-button @click="saveTopology" class="saveTopology">save</el-button>
-        <el-button @click="cancelTopology" class="saveTopology">cancel</el-button>
+        <el-button @click="cancelTopology" class="cancelTopology">cancel</el-button>
       </span>
       <span class="edit-topology-line-cancel" v-show="selectNodeTitle&&editVisNetwork">Please select two nodes  <span class="edit-topologyCancel" @click="closeAddLine">Cancel</span></span>
     </div>
@@ -308,7 +308,7 @@
         let arr1=[];
         arr.forEach(item=>{
           let obj={
-            "name": item.lineName,
+            "name": item.label,
             "width": item.width,
             "arrows": item.arrows,
             "color": item.color,
@@ -462,6 +462,7 @@
         this.addLineShow=false;
         if(!edges){return}
         let edgesArray =[...this.edgesArray];
+        console.log(edgesArray,edges);
        if(!this.isLineAdd){
          edges={...edgesArray.find(item=>item.id===edges.id),...edges};
          edgesArray=edgesArray.filter(item=>item.id!==edges.id);
@@ -524,10 +525,10 @@
         this.networkPopClose();
         this.arrayDiff();
       },
-      // nodeEdit(){
-      //   this.addNodeShow=true;
-      //   this.isNodeAdd=false;
-      // },
+      nodeEdit(){
+        this.addNodeShow=true;
+        this.isNodeAdd=false;
+      },
       lineDel(){
         if(!this.lineData.id){return}
         let edgesArray=this.edgesArray.filter((item)=>item.id!==this.lineData.id);
@@ -641,7 +642,7 @@
            this_.networkPopClose();
          });
 
-         this.network.on("selectNode", function (params) {
+         this.network.on("selectNode", function (params) { //选择节点
            let selId=params.nodes[0];
            if(selId){
              this_.selNodeId=selId;
@@ -657,6 +658,9 @@
                this_.network.selectNodes(this_.NodeArr,true);
                return
              }
+             if(this_.NodeArr.length===0){
+               this_.nodeEdit();
+             }
              this_.setPopPosition(selId,params);
              this_.popDataShowUpdate('main');
            }
@@ -671,9 +675,14 @@
           }else{
             this_.popDataShowUpdate()
           }
+          if(this_.editVisNetwork){
+            this_.lineData.color=this_.lineData.color.color?this_.lineData.color.color:this_.lineData.color;
+            console.log(this_.lineData);
+            this_.addLineShow=true;
+            this_.isLineAdd=false;
+          }
            // this_.lineData.color=this_.lineData.color.color;
            // this_.addLineShow=true;
-           // this_.isLineAdd=false;
          });
 
          this.network.on("dragStart", function (params) {//节点移动开始
@@ -948,10 +957,17 @@
     top: 0;
   }
   .saveTopology{
-    background: #FA901C;
+    background-image: linear-gradient(180deg, #F5B93E 0%, #EE9D3F 100%);
     border-radius: 4px;
     font-size: 14px;
     color: #FFFFFF;
+    padding: 4px 14px;
+  }
+  .cancelTopology{
+    background-image: linear-gradient(180deg, #F0F0F0 0%, #D8D8D8 99%);
+    border-radius: 4px;
+    font-size: 14px;
+    color: #333333;
     padding: 4px 14px;
   }
   .network-zoom{
