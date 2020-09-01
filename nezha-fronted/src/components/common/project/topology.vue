@@ -13,6 +13,7 @@
       </span>
       <span v-show="!selectNodeTitle&&editVisNetwork" class="edit-topologyLine">
         <el-button @click="saveTopology" class="saveTopology">save</el-button>
+        <el-button @click="cancelTopology" class="saveTopology">cancel</el-button>
       </span>
       <span class="edit-topology-line-cancel" v-show="selectNodeTitle&&editVisNetwork">Please select two nodes  <span class="edit-topologyCancel" @click="closeAddLine">Cancel</span></span>
     </div>
@@ -284,6 +285,9 @@
           });
         });
         this.$emit('editVisNetworkChange',false);
+      },
+      cancelTopology(){
+        this.$emit('reload');
       },
       formatNodes(arr){
         let arr1=[];

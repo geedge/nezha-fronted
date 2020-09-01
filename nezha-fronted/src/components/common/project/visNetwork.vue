@@ -106,6 +106,7 @@
             :allModuleInfo="allModuleInfo"
             v-loading="topologyLoading"
             @editVisNetworkChange="editVisNetworkChange"
+            @reload="reload"
           >
           </topology>
         </div>
@@ -197,6 +198,29 @@
         this.topologyLoading=true;
         this.editVisNetwork=false;
         this.$get('/project/topo',{projectId:n.id}).then(res=>{
+          if(res.data.topo&&res.data.topo.nodes.length>0){
+            this.nodesArray=[];
+            this.edgesArray=[];
+            this.nodesArrayOther=this.formatNodesArr(res.data.topo.nodes);
+            this.edgesArrayOther=this.formatEdgesArr(res.data.topo.lines);
+          }else{
+            this.nodesArray=[];
+            this.edgesArray=[];
+            setTimeout(()=>{
+              this.topologyLoading=false;
+              this.$refs['topology'].setData();
+            },500)
+          }
+          // res.data.topo.viewsCenter?res.data.topo.viewsCenter:
+          this.$refs['topology'].viewsCenter={x:0,y:0};
+          // res.data.topo.zoom?res.data.topo.zoom:
+          this.$refs['topology'].zoom=1;
+        })
+      },
+      reload(){
+        this.topologyLoading=true;
+        this.editVisNetwork=false;
+        this.$get('/project/topo',{projectId:this.projectInfo.id}).then(res=>{
           if(res.data.topo&&res.data.topo.nodes.length>0){
             this.nodesArray=[];
             this.edgesArray=[];
