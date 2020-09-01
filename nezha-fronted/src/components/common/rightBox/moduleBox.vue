@@ -215,7 +215,7 @@
             </el-row>
           </template>
 
-          <el-row>
+          <el-row v-if="editModule.version == 3">
             <el-col :span="6">
               <div class="sub-label">{{$t('project.module.contextName')}}</div>
             </el-col>
@@ -443,6 +443,11 @@
           return;
         }
         this.editModule.type = type;
+        if(type == 'http'){
+          this.editModule.port = 9100
+        }else{
+          this.editModule.port= 161
+        }
         this.updateScrollbar();
       },
       //转化snmpParam属性
@@ -474,6 +479,9 @@
       },
       //回显时解析snmpParam
       reparseSnmpParam(module) {
+        if(!module.snmpParam){
+          return;
+        }
         let snmpObj = JSON.parse(module.snmpParam);
         module.walk = snmpObj.walk;
         module.version = snmpObj.version;
@@ -618,30 +626,15 @@
         immediate: true,
         deep: true,
         handler(n, o) {
-          console.log('post module',n)
           this.editModule = JSON.parse(JSON.stringify(n));
-        }
-      },
-      editModule: {
-        immediate: true,
-        deep: true,
-        handler(n, o) {
-          if (!n.id && n.type && n.type.toLowerCase() == 'snmp') {
-            n.port = 161;
-            this.expandedWalkData = [];
-            this.$nextTick(() => {
-              this.$refs.selectWalk.show();
-            });
-            for (let i = 0; i < n.walk.length; i++) {
-              this.expandedWalkData.push(n.walk[i].substring(0, n.walk[i].lastIndexOf(".")));
-            }
-          } else if (!n.id && n.type && n.type.toLowerCase() == 'http') {
-            n.port = 9100;
+          if(n.id){
+            this.reparseSnmpParam(this.editModule)
           }else{
-            this.reparseSnmpParam(n)
-          }
-          if (!n.type) {
-            n.type = 'http';
+            if(n.type&&n.type.toLowerCase() == 'snmp'){
+              for (let i = 0; i < this.editModule.walk.length; i++) {
+                this.expandedWalkData.push(this.editModule.walk[i].substring(0, this.editModule.walk[i].lastIndexOf(".")));
+              }
+            }
           }
         }
       },
