@@ -831,7 +831,7 @@
             let startTime = '';
             let endTime = '';
             if (filterType === 'refresh') {//刷新
-              const now = new Date();
+              const now = new Date(bus.computeTimezone(new Date().getTime()));
               const origin = new Date(this.filter.end_time);
               const numInterval = now.getTime() - origin.getTime();
               if (numInterval >= 60000) {//大于1分钟，则start、end均往后移numInterval，否则时间不变

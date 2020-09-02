@@ -49,7 +49,7 @@
   }
 
   .z-top {
-    z-index: 2900;
+    /*z-index: 2900;*/
   }
 </style>
 <template key="chartBox">
