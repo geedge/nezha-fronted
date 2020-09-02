@@ -2,11 +2,11 @@
   <div class="mc" @click.self="clickOutside">
     <div class="right-box right-box-edit-endpoint">
     <!-- begin--顶部按钮-->
-    <div class="right-box-top-btns">
-      <!--<button id="edit-ep-del" type="button" @click="del" class="nz-btn nz-btn-size-normal nz-btn-size-alien nz-btn-style-light ">-->
-        <!--<span class="right-box-top-btn-icon"><i class="el-icon-delete"></i></span>-->
-        <!--<span class="right-box-top-btn-txt">{{$t('overall.delete')}}</span>-->
-      <!--</button>-->
+    <div class="right-box-top-btns" v-if="nodeData.id">
+      <button id="edit-ep-del" type="button" @click="del" class="nz-btn nz-btn-size-normal nz-btn-size-alien nz-btn-style-light ">
+        <span class="right-box-top-btn-icon"><i class="el-icon-delete"></i></span>
+        <span class="right-box-top-btn-txt">{{$t('overall.delete')}}</span>
+      </button>
     </div>
     <!-- end--顶部按钮-->
 
@@ -155,10 +155,16 @@
     watch:{
       nodeData:{
         handler(n){
-         for(let key in this.form){
-           this.form[key]=n[key]
-         }
          this.form.moduleId=n.id;
+          if( n.expressions){
+            n.expressions.forEach((item,index)=>{
+              this.addExpression();
+              this.name[index]=item.name;
+              this.unit[index]=item.unit;
+              this.expressions[index]=item.metric;
+              this.legends[index]=item.legend;
+            })
+          }
        },
        immediate: true,
        deep: true,
@@ -212,7 +218,12 @@
     },
     mounted(){
       // this.addExpression();
-      this.addNodeInit()
+      this.addNodeInit();
+      if( this.nodeData.expressions){
+        this.nodeData.expressions.forEach((item,index)=>{
+          this.$refs['promql-'+(index)][0].metricChange(this.expressions[index]);
+        })
+      }
     },
     methods:{
       addNodeInit(selImageId){
@@ -228,8 +239,8 @@
                 setTimeout(()=>{
                   this.iconArray=[...this.iconArray];
                   this.imgageLoading=false;
-                  if(selImageId){
-                    this.form.iconId=selImageId;
+                  if(selImageId || this.nodeData.iconId){
+                    this.form.iconId=selImageId || this.nodeData.iconId;
                   }
                 },100)
               }

@@ -4,12 +4,12 @@
       <span v-show="!selectNodeTitle&&editVisNetwork" class="edit-topology-module">
         Module element :
         <span class="edit-topology-add" @click="addModelShow">Add</span>
-        <span class="edit-topology-remove" @click="nodeDel">Remove</span>
+        <!--<span class="edit-topology-remove" @click="nodeDel">Remove</span>-->
       </span>
       <span v-show="!selectNodeTitle&&editVisNetwork" class="edit-topologyLine">
         Line :
         <span class="edit-topology-add" @click="addLineTitleShow">Add</span>
-        <span class="edit-topology-remove" @click="lineDel">Remove</span>
+        <!--<span class="edit-topology-remove" @click="lineDel">Remove</span>-->
       </span>
       <span v-show="!selectNodeTitle&&editVisNetwork" class="edit-topologyLine">
         <el-button @click="saveTopology" class="saveTopology">save</el-button>
@@ -284,6 +284,7 @@
             type: 'error'
           });
         });
+        // this.$put('/project/topo',{topo:'{}',projectId:this.allModuleInfo.basic.id});
         this.$emit('editVisNetworkChange',false);
       },
       cancelTopology(){
@@ -353,7 +354,7 @@
           edges: {
             width: 2,
             smooth:{  //设置两个节点之前的连线的状态
-              enabled: true,//默认是true，设置为false之后，两个节点之前的连线始终为直线，不会出现贝塞尔曲线
+              enabled: false,//默认是true，设置为false之后，两个节点之前的连线始终为直线，不会出现贝塞尔曲线
               roundness:0.5,
               type: "curvedCW",
             },
@@ -456,6 +457,7 @@
           x:'',
           y:'',
           image:'',
+          id:'',
         }
       },
       addLine(edges){ // 添加或者編輯line
@@ -658,7 +660,7 @@
                this_.network.selectNodes(this_.NodeArr,true);
                return
              }
-             if(this_.NodeArr.length===0){
+             if(this_.NodeArr.length===0&&this_.editVisNetwork){
                this_.nodeEdit();
              }
              this_.setPopPosition(selId,params);
@@ -677,7 +679,6 @@
           }
           if(this_.editVisNetwork){
             this_.lineData.color=this_.lineData.color.color?this_.lineData.color.color:this_.lineData.color;
-            console.log(this_.lineData);
             this_.addLineShow=true;
             this_.isLineAdd=false;
           }
@@ -895,7 +896,7 @@
     margin-left: 30px;
   }
   .edit-topologyLine{
-    margin-left: 130px;
+    margin-left: 60px;
   }
   .edit-topology-add,.edit-topology-remove,.edit-topologyCancel{
     color: #1989fa;

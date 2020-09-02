@@ -2,7 +2,7 @@
   <div class="mc" @click.self="clickOutside">
     <div class="right-box right-box-edit-endpoint">
       <!-- begin--顶部按钮-->
-      <div class="right-box-top-btns">
+      <div class="right-box-top-btns" v-if="lineData.id">
         <button id="edit-ep-del" type="button" @click="del" class="nz-btn nz-btn-size-normal nz-btn-size-alien nz-btn-style-light ">
         <span class="right-box-top-btn-icon"><i class="el-icon-delete"></i></span>
         <span class="right-box-top-btn-txt">{{$t('overall.delete')}}</span>
@@ -234,6 +234,8 @@
       if( this.lineData.expressions){
         this.lineData.expressions.forEach((item,index)=>{
           console.log(this.$refs['promql-'+(index)],'promql-'+( index));
+          console.log(this.expressions[index]);
+          this.$refs['promql-'+(index)][0].metricChange(this.expressions[index]);
         })
       }
     },

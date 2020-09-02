@@ -198,7 +198,7 @@
         this.topologyLoading=true;
         this.editVisNetwork=false;
         this.$get('/project/topo',{projectId:n.id}).then(res=>{
-          if(res.data.topo&&res.data.topo.nodes.length>0){
+          if(res.data.topo&&res.data.topo.nodes&&res.data.topo.nodes.length>0){
             this.nodesArray=[];
             this.edgesArray=[];
             this.nodesArrayOther=this.formatNodesArr(res.data.topo.nodes);
@@ -221,7 +221,7 @@
         this.topologyLoading=true;
         this.editVisNetwork=false;
         this.$get('/project/topo',{projectId:this.projectInfo.id}).then(res=>{
-          if(res.data.topo&&res.data.topo.nodes.length>0){
+          if(res.data.topo&&res.data.topo.nodes&&res.data.topo.nodes.length>0){
             this.nodesArray=[];
             this.edgesArray=[];
             this.nodesArrayOther=this.formatNodesArr(res.data.topo.nodes);
