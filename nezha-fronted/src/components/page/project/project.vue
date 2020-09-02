@@ -126,7 +126,7 @@
     </template>
     <template v-else-if="pageType == 'project'">
       <!--<panel-tab from="project" :obj="currentProject" targetTab.sync="panel"></panel-tab>-->
-      <facade :obj="currentProject" targetTab.sync="panel"/>
+      <facade :obj="currentProject" targetTab.sync="panel" ref="facade"/>
     </template>
 
     <transition name="el-zoom-in-bottom">
@@ -138,7 +138,7 @@
       <add-endpoint-box v-if="rightBox.addEndpoint.show" :current-project="currentProject" :current-module="currentModule" @close="closeAddEndpointRightBox" ref="addEndpointBox"></add-endpoint-box>
     </transition>
     <transition name="right-box">
-      <edit-endpoint-box v-if="rightBox.editEndpoint.show" :project="currentProject" :module="currentModule" :endpoint="endpoint" @close="closeEditEndpointRightBox" ref="editEndpointBox"></edit-endpoint-box>
+      <edit-endpoint-box v-if="rightBox.editEndpoint.show" :project="currentProject" :module="currentModule" :endpoint="endpoint" @close="closeEditEndpointRightBox" ref="editEndpointBox" @visNetworkReload="visNetworkReload"></edit-endpoint-box>
     </transition>
   </div>
 </template>
@@ -547,6 +547,10 @@
             this.userData = response.data.list
           }
         })
+      },
+      //刷新拓扑图
+      visNetworkReload(){
+        this.$refs['facade'].$refs['visNetwork'].reload()
       },
       // 数据排序
       tableDataSort(item){

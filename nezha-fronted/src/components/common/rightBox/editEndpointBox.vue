@@ -308,6 +308,7 @@
               if (response.code === 200) {
                 this.$message({duration: 1000, type: 'success', message: this.$t("tip.saveSuccess")});
                 this.esc(true);
+                this.$emit('visNetworkReload');
               } else {
                 this.$message.error(response.msg);
               }
@@ -328,6 +329,7 @@
           this.$delete("endpoint?ids=" + this.editEndpoint.id).then(response => {
             if (response.code === 200) {
               this.$message({duration: 1000, type: 'success', message: this.$t("tip.deleteSuccess")});
+              this.$emit('visNetworkReload');
               this.esc(true);
             } else {
               this.$message.error(response.msg);

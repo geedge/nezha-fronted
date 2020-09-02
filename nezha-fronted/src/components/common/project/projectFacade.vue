@@ -23,6 +23,7 @@
           :allModuleInfo="allModuleInfo"
           :projectInfo="projectInfo"
           :alertData="alertData"
+          ref="visNetwork"
         >
         </vis-network>
       </div>
@@ -161,7 +162,6 @@
             document.getElementById('queryPanel').parentElement.setAttribute("class",classVal );
           },100)
         }
-        console.log(this.filter);
       },
       clearInput() {
         this.$refs.queryPanel.focus();
@@ -171,7 +171,6 @@
         this.filter.end_time = bus.timeFormate(this.searchTime[1], 'yyyy-MM-dd hh:mm:ss');
         this.filter.panelId = this.showPanel.id;
         // this.getData(this.filter);
-        console.log(this.filter)
       },
     }
 	}
