@@ -205,7 +205,10 @@
         showLegend:true,
         tableShow:true,
         urlShow:true,
-        searchTime: [new Date().setHours(new Date().getHours()-1),new Date()],
+        searchTime: [
+          new Date(bus.computeTimezone(new Date().getTime())).setHours(new Date(bus.computeTimezone(new Date().getTime())).getHours() - 1),
+          new Date(bus.computeTimezone(new Date().getTime()))
+        ],
         //oldSearchTime:[],
         minHeight:200,
         chartSpaceHeight:5,//top-border: 1,bottom-border: 1,padding-bottome:3
@@ -221,7 +224,10 @@
       // 全屏查看
       show(chartInfo) {
         this.isError = false;
-        this.searchTime = [new Date().setHours(new Date().getHours()-1),new Date()];
+        this.searchTime = [
+          new Date(bus.computeTimezone(new Date().getTime())).setHours(new Date(bus.computeTimezone(new Date().getTime())).getHours() - 1),
+          new Date(bus.computeTimezone(new Date().getTime()))
+        ];
         this.chart = JSON.parse(JSON.stringify(chartInfo));
 
         let chartType= chartInfo.type;
@@ -242,7 +248,6 @@
           chartContainerId = 'chartAlertListPreview';
         }
 
-        console.log('previewChart',this.chart,chartContainerId)
         //设置高度 chart-table
         this.$nextTick(() => {
           //const chartBox = document.getElementById('chartPreviewDailog');
@@ -264,7 +269,6 @@
             tableBox.style.height = `${height-this.titleHeight-this.pageHeight-25}px`;//-75-32+25
           }else{
             const chartDiv = document.getElementById(chartContainerId);
-            console.log('container div',chartDiv)
             chartDiv.style.height = `${height-this.chartSpaceHeight-this.titleHeight-15}px`;
           }
         });
@@ -361,7 +365,7 @@
           let startTime = bus.timeFormate(this.searchTime[0], 'yyyy-MM-dd hh:mm:ss');
           let endTime = bus.timeFormate(this.searchTime[1], 'yyyy-MM-dd hh:mm:ss');
           if(!startTime || !endTime){//如果时间为空，则默认取最近1小时
-            let now = new Date();
+            let now = new Date(bus.computeTimezone(new Date().getTime()));
             startTime = bus.timeFormate(now, 'yyyy-MM-dd hh:mm:ss');
             endTime = bus.timeFormate(now.setHours(now.getHours()-1), 'yyyy-MM-dd hh:mm:ss');
             this.searchTime[0] = startTime;
