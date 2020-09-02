@@ -849,6 +849,7 @@
               startTime = this.filter.start_time;
               endTime = this.filter.end_time;
             }
+
             let step = bus.getStep(startTime, endTime);
             this.$nextTick(() => {
               const axiosArr = chartItem.elements.map((ele) => {

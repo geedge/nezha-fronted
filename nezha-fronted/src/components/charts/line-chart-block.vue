@@ -539,7 +539,7 @@
                 let tip=legend[item.seriesIndex];
                 let color = self.bgColorList[item.seriesIndex];
                 if(i===0){
-                  let value=bus.computeTimezone(item.data[0]);
+                  let value=item.data[0];
                   let t_date = new Date(value);
                   str += [t_date.getFullYear(), t_date.getMonth() + 1, t_date.getDate()].join('-') + " "
                     + [t_date.getHours(), t_date.getMinutes(),t_date.getSeconds()].join(':');
@@ -640,7 +640,7 @@
               show:true,
               fontSize: 10,
               formatter: function (value) {
-                value = bus.computeTimezone(value);
+                value = value;
                 let t_date = new Date(value);
                 let hour = t_date.getHours();
                 hour=hour>9?hour:"0"+hour; //加0补充为两位数字
@@ -793,7 +793,7 @@
                         params.forEach((item, i) => {let tip=legend[item.seriesIndex];
                           let color = self.bgColorList[item.seriesIndex];
                           if(i===0){
-                            let value=bus.computeTimezone(item.data[0]);
+                            let value=item.data[0];
                             let t_date = new Date(value);
                             str += [t_date.getFullYear(), t_date.getMonth() + 1, t_date.getDate()].join('-') + " "
                               + [t_date.getHours(), t_date.getMinutes(),t_date.getSeconds()].join(':');
@@ -926,7 +926,7 @@
                       params.forEach((item, i) => {let tip=legend[item.seriesIndex];
                         let color = self.bgColorList[item.seriesIndex];
                         if(i===0){
-                          let value=bus.computeTimezone(item.data[0]);
+                          let value=item.data[0];
                           let t_date = new Date(value);
                           str += [t_date.getFullYear(), t_date.getMonth() + 1, t_date.getDate()].join('-') + " "
                             + [t_date.getHours(), t_date.getMinutes(),t_date.getSeconds()].join(':');
