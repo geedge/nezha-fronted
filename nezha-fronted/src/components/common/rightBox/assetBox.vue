@@ -267,6 +267,7 @@
             this.editAsset.accounts.length > 0 && (this.accountType = this.editAsset.accounts[0].protocol);
           }
           this.$set(this.editAsset, "modelId", n.model.id);
+          this.modelSize = n.model.usize;
           let initLocationData={
             idc: n.idc,
             cabinet: n.cabinet,
