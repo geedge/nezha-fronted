@@ -44,7 +44,6 @@
             v-model="editPromServer.type"
             placeholder=""
             size="small"
-            popper-class="config-dropdown"
             :options="$CONSTANTS.promServer.theData"
             :props="{ multiple: false, checkStrictly: false ,emitPath:false}"
             clearable></el-cascader>
