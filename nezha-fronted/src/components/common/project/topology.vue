@@ -2,21 +2,22 @@
   <div class="content">
     <div class="edit-topology" v-if="editVisNetwork">
       <span v-show="!selectNodeTitle&&editVisNetwork" class="edit-topology-module">
-        Module element :
-        <span class="edit-topology-add" @click="addModelShow">Add</span>
+        {{$t('project.topology.module')}} :
+        <span class="edit-topology-add" @click="addModelShow">{{$t('project.topology.add')}}</span>
         <!--<span class="edit-topology-remove" @click="nodeDel">Remove</span>-->
       </span>
       <span v-show="!selectNodeTitle&&editVisNetwork" class="edit-topologyLine">
-        Line :
-        <span class="edit-topology-add" @click="addLineTitleShow">Add</span>
+        {{$t('project.topology.line')}} :
+        <span class="edit-topology-add" @click="addLineTitleShow">{{$t('project.topology.add')}}</span>
         <!--<span class="edit-topology-remove" @click="lineDel">Remove</span>-->
       </span>
       <span v-show="!selectNodeTitle&&editVisNetwork" class="edit-topologyLine">
-        <el-button @click="saveTopology" class="saveTopology">save</el-button>
-        <el-button @click="cancelTopology" class="cancelTopology">cancel</el-button>
+        <el-button @click="saveTopology" class="saveTopology">{{$t('project.topology.save')}}</el-button>
+        <el-button @click="cancelTopology" class="cancelTopology">{{$t('project.topology.cancel')}}</el-button>
       </span>
-      <span class="edit-topology-line-cancel" v-show="selectNodeTitle&&editVisNetwork">Please select two nodes  <span class="edit-topologyCancel" @click="closeAddLine">Cancel</span></span>
+      <span class="edit-topology-line-cancel" v-show="selectNodeTitle&&editVisNetwork"> {{$t('project.topology.selTwoNode')}} <span class="edit-topologyCancel" @click="closeAddLine">{{$t('project.topology.cancel')}}</span></span>
     </div>
+    <div class="edit-topology" v-else></div>
     <div class="network" ref="network"  v-clickoutside="networkPopClose" @mousedown="(e)=>{modelTopMouseDown(e)}" @mouseup="(e)=>modelTopMouseUp(e)">
       <!--拓扑图-->
       <div id="network_id" ref="visNetwork" :class="{'cursorMove': cursorMove}"></div>
@@ -57,7 +58,7 @@
       <i class="nz-icon nz-icon-shuidi"
          v-show="item.show"
          v-for="(item,index) in modelTop"
-         :style="{top:(item.y- 80 + 5*(10-zoom*10))+'px',left:(item.x-26)+'px',transform:'scale('+zoom+')'}"
+         :style="{top:(item.y- 80 + 5*(10-zoom*10))+'px',left:(item.x-26 + 5*(1-zoom*1))+'px',transform:'scale('+zoom+')'}"
          :ref="'modelTopId'+index"
          @mousedown="modelTopClick(item,index)"
       >
@@ -89,7 +90,7 @@
         v-if="addNodeShow"
         @addModel="addModel"
         :nodeData="nodeData"
-        @close="addNodeShow=false"
+        @close="closeAddNode"
         @del="nodeDel"
         :isAdd="isNodeAdd"
         :moduleDataS="moduleDataS"
@@ -359,6 +360,7 @@
               type: "curvedCW",
             },
             selfReferenceSize:40,
+            arrowStrikethrough:false,
           },
           layout:{
             randomSeed: 666,
@@ -464,7 +466,6 @@
         this.addLineShow=false;
         if(!edges){return}
         let edgesArray =[...this.edgesArray];
-        console.log(edgesArray,edges);
        if(!this.isLineAdd){
          edges={...edgesArray.find(item=>item.id===edges.id),...edges};
          edgesArray=edgesArray.filter(item=>item.id!==edges.id);
@@ -490,6 +491,10 @@
         this.NodeArr=[];
         this.NodeArrShow=false;
         this.network.unselectAll();
+      },
+      closeAddNode(){
+        this.addNodeShow=false;
+        this.arrayDiff();
       },
       setNodePosition(selId){ // 移动节点后 设置节点坐标
         let position = this.network.getPositions([selId]);
@@ -520,7 +525,6 @@
       nodeDel(){
         let nodesArray=this.nodesArray.filter((item)=>item.id!==this.selNodeId);
         let edgesArray=this.edgesArray.filter((item)=>!(item.from===this.selNodeId || item.to===this.selNodeId));
-        console.log(edgesArray,"edgesArray");
         this.selNodeId='';
         this.$emit('setTopologyData',nodesArray, edgesArray);
         this.setNetworkData(nodesArray, edgesArray);
@@ -528,6 +532,7 @@
         this.arrayDiff();
       },
       nodeEdit(){
+        this.moduleDataS.module.push(this.allModuleInfos.module.find(item=>item.id===this.selNodeId));
         this.addNodeShow=true;
         this.isNodeAdd=false;
       },
@@ -642,6 +647,7 @@
          this.init('modal');
          this.network.on("click", function () {
            this_.networkPopClose();
+           this_.popDataShowUpdate();
          });
 
          this.network.on("selectNode", function (params) { //选择节点
@@ -671,7 +677,6 @@
          this.network.on("selectEdge", function (params) { // 选择边
            this_.selNodeId='';
            this_.lineData=this_.edgesArray.find((item)=>item.id===params.edges[0]);
-           console.log(this_.lineData);
           if(this_.lineData.expressions&&this_.lineData.expressions.length){
             this_.popDataShowUpdate('total')
           }else{
@@ -820,6 +825,8 @@
     transform: scale(1.1);
     left: 4px;
     font-size: 41px;
+    color: #D7FAF1;
+    top: -1px;
   }
   .network-pop .nz-icon-hexagonBorder:hover .noMove{
     transform: scale(1.1);
@@ -944,6 +951,9 @@
     position: absolute;
     font-size: 48px;
     color: rgba(132,213,194,0.5);
+    border-radius: 50%;
+    height: 60px;
+    width: 38px;
   }
   .nz-icon-model{
     color: #23BF9A;

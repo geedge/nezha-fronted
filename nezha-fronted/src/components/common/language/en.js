@@ -932,7 +932,25 @@ const en = {
       name: 'Name',//'名称'
       type: 'Type',//'类型'
       description: 'Description'//'描述'
-    }
+    },
+    topology:{
+      line:'Line',
+      module:'Module element',
+      add:'Add',
+      selTwoNode:'Please select two module',
+      save:'save',
+      cancel:'cancel',
+      addLine:'Add Line',
+      lineName:'Line Name',
+      width:'width',
+      option:'Option',
+      arrows:'Arrows',
+      color:'Color',
+      chartName:'Name',
+      unit:'Unit',
+      addModule:'Add Module',
+      
+    },
   },
   ...enLocale
 }

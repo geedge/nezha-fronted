@@ -67,7 +67,7 @@
           <el-row>
             <template>
               <el-col style="width: 120px; padding-right: 20px; text-align: right; color: #666">
-                Name
+                {{$t('project.topology.chartName')}}
               </el-col>
               <el-col style="width: calc(100% - 140px);">
                 <el-input v-model="name[index-1]" type="text" size="small"></el-input>
@@ -77,7 +77,7 @@
           </el-row>
           <el-row>
             <el-col style="width: 120px; padding-right: 20px; text-align: right; color: #666">
-              Unit
+              {{$t('project.topology.unit')}}
             </el-col>
             <el-col style="width: calc(100% - 120px);">
               <el-cascader filterable placeholder="" popper-class="no-style-class unit-popper-class" size="small" style="width: 100%"
@@ -179,7 +179,6 @@
       'form.iconId':{
         handler(n){
           if(n){
-            console.log(n);
             this.selImage=this.iconArray.find(item=>item.id===n)
           }
         },

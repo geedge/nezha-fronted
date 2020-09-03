@@ -38,8 +38,8 @@
                 {{projectInfo.title}}
               </div>
               <div>
-                <span><span class="label">Id :</span>{{projectInfo.id}}</span>
-                <span><span class="label special">Name :</span>{{projectInfo.name}}</span>
+                <!--<span><span class="label">Id :</span>{{projectInfo.id}}</span>-->
+                <span><span class="label">Name :</span>{{projectInfo.name}}</span>
               </div>
               <div>
                 <span><span class="label">Description :</span>{{projectInfo.remark?projectInfo.remark:'--'}}</span>
@@ -211,10 +211,8 @@
               this.$refs['topology'].setData();
             },500)
           }
-          // res.data.topo.viewsCenter?res.data.topo.viewsCenter:
-          this.$refs['topology'].viewsCenter={x:0,y:0};
-          // res.data.topo.zoom?res.data.topo.zoom:
-          this.$refs['topology'].zoom=1;
+          this.$refs['topology'].viewsCenter=res.data.topo.viewsCenter?res.data.topo.viewsCenter:{x:0,y:0};
+          this.$refs['topology'].zoom=res.data.topo.zoom?res.data.topo.zoom:1;
         })
       },
       reload(){
@@ -299,6 +297,9 @@
         this.editVisNetwork=flag;
         if(flag){
           this.$refs.topology.popDataShowUpdate();
+        }
+        if(!flag){
+          // this.reload();
         }
       }
     },

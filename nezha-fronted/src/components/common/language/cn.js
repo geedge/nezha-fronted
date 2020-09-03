@@ -887,6 +887,24 @@ const cn = {
       type: "类型",
       description: "描述"
     },
+    topology:{
+      line:'线',
+      module:'组件',
+      add:'添加',
+      selTwoNode:'请选择两个组件',
+      save:'保存',
+      cancel:'取消',
+      addLine:'添加连线',
+      lineName:'连线名称',
+      width:'宽度',
+      option:'设置',
+      arrows:'箭头方向',
+      color:'颜色',
+      chartName:'图表名称',
+      unit:'单位',
+      addModule:'添加组件',
+      
+    },
   },
   el: {
     colorpicker: {

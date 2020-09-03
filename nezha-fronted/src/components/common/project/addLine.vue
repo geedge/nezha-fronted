@@ -11,17 +11,17 @@
       <!-- end--顶部按钮-->
 
       <!-- begin--标题-->
-      <div class="right-box-title">Add Line</div>
+      <div class="right-box-title">{{$t('project.topology.addLine')}}</div>
       <!-- end--标题-->
 
       <!-- begin--表单-->
       <el-scrollbar class="right-box-form-box">
         <el-form class="right-box-form  right-box-form-left" ref="form" :model="form" label-width="120px" :rules="rules">
-          <el-form-item label="Line Name" prop="lineName" class="line-name">
+          <el-form-item :label="$t('project.topology.lineName')" prop="lineName" class="line-name">
             <el-input v-model="form.lineName"  size="small"></el-input>
           </el-form-item>
-          <el-row class="form-title">Option</el-row>
-          <el-form-item label="width" prop="width" class="line-name">
+          <el-row class="form-title">{{$t('project.topology.option')}}</el-row>
+          <el-form-item :label="$t('project.topology.width')" prop="width" class="line-name">
             <el-input v-model="form.width"  size="small"></el-input>
           </el-form-item>
           <!--<el-form-item label="roundness"  class="line-name">-->
@@ -41,7 +41,7 @@
               <!--<el-option label="cubicBezier" value="cubicBezier"></el-option>-->
             <!--</el-select>-->
           <!--</el-form-item>-->
-          <el-form-item label="箭头方向" prop="arrows" class="arrows">
+          <el-form-item :label="$t('project.topology.arrows')" prop="arrows" class="arrows">
             <el-select v-model="form.arrows" placeholder="" :popper-append-to-body="false"  size="small">
               <div slot="prefix">
                 <img v-if="form.arrows=='from'" src="./image/leftArrow.png" />
@@ -55,7 +55,7 @@
               <el-option label="" value="0"><img src="./image/noArrow.png" /></el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="color" class="color">
+          <el-form-item :label="$t('project.topology.color')" class="color">
             <div class="color-show" @click="colorPickerClick">
               <div class="color-show-left" :style="{background:form.color}"></div>
               <span> {{form.color}}</span>
@@ -78,7 +78,7 @@
             <el-row>
               <template>
                 <el-col style="width: 120px; padding-right: 20px; text-align: right; color: #666">
-                  Name
+                  {{$t('project.topology.chartName')}}
                 </el-col>
                 <el-col style="width: calc(100% - 140px);">
                   <el-input v-model="name[index-1]" type="text" size="small"></el-input>
@@ -88,7 +88,7 @@
             </el-row>
             <el-row>
               <el-col style="width: 120px; padding-right: 20px; text-align: right; color: #666">
-                Unit
+                {{$t('project.topology.unit')}}
               </el-col>
               <el-col style="width: calc(100% - 120px);">
                 <el-cascader filterable placeholder="" popper-class="no-style-class unit-popper-class" size="small" style="width: 100%"
@@ -166,7 +166,6 @@
     watch:{
       lineData:{
         handler(n){
-          console.log(n);
           this.form={
             arrows:n.arrows,
             color:n.color,
@@ -230,11 +229,8 @@
     },
     mounted(){
       // this.addExpression();
-      console.log(this.lineData,this.$refs['promql-'+(0)]);
       if( this.lineData.expressions){
         this.lineData.expressions.forEach((item,index)=>{
-          console.log(this.$refs['promql-'+(index)],'promql-'+( index));
-          console.log(this.expressions[index]);
           this.$refs['promql-'+(index)][0].metricChange(this.expressions[index]);
         })
       }
@@ -250,7 +246,6 @@
               roundness:(Math.random()*8 +1)/10 ,//获取0.1-0.9之间的随机数
               type:'curvedCW',
             };
-            console.log(this.expressions);
             model.expressions=[];
             this.promqlKeys.forEach((item,index)=>{
               model.expressions.push({
@@ -260,7 +255,6 @@
                 "legend": this.legends[index],
               })
             });
-            console.log(model);
             this.$emit('addLine',model);
           }
         });

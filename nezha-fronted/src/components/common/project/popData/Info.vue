@@ -67,7 +67,6 @@
       this.$get('/module',{id:this.moduleId}).then(res=>{
         this.loading=false;
         this.moduleInfo=res.data.list[0];
-        console.log(this.moduleInfo,this.projectId);
       })
     },
     methods:{},
