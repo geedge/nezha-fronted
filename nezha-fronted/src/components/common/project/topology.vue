@@ -58,7 +58,7 @@
       <i class="nz-icon nz-icon-shuidi"
          v-show="item.show"
          v-for="(item,index) in modelTop"
-         :style="{top:(item.y- 80 + 5*(10-zoom*10))+'px',left:(item.x-26 + 5*(1-zoom*1))+'px',transform:'scale('+zoom+')'}"
+         :style="{top:(item.y- 80 + 5*(10-zoom*10))+'px',left:(item.x-26 + 5*(1-zoom))+'px',transform:'scale('+zoom+')'}"
          :ref="'modelTopId'+index"
          @mousedown="modelTopClick(item,index)"
       >
@@ -273,7 +273,7 @@
         let nodes=this.formatNodes([...this.nodesArray]);
         let edges=this.formatEdges([...this.edgesArray]);
         this.$put('/project/topo',{topo:JSON.stringify({nodes:nodes,lines:edges,viewsCenter:this.viewsCenter,zoom:this.zoom}),projectId:this.allModuleInfo.basic.id}).then(res=>{
-          if(res.code==200){
+          if(res.code===200){
             this.$message({
               message: this.$t("tip.saveSuccess"),
               type: 'success'
@@ -602,6 +602,7 @@
       },
       //工具栏点击后显示对应内容
       popDataShowUpdate(key){
+        // console.log(key);
         this.popDataShow={
           endpoint:false,
           asset:false,
@@ -612,6 +613,7 @@
           main:false,
         };
         if(key&&!this.editVisNetwork){
+          // console.log(this.lineData);
           if(key==='total'&&this.selNodeId){
             this.totalId=this.selNodeId;
             this.totalArray=this.nodesArray;
@@ -620,7 +622,9 @@
             this.totalId=this.lineData.id;
             this.totalArray=this.edgesArray;
           }
-          this.popDataShow[key]=true;
+          this.$nextTick(()=>{
+            this.popDataShow[key]=true;
+          })
         }
       },
       //拓扑图放大缩小
@@ -645,9 +649,12 @@
        setTimeout(()=>{
          let this_=this;
          this.init('modal');
-         this.network.on("click", function () {
+         this.network.on("click", function (params) {
+           console.log(params);
            this_.networkPopClose();
-           this_.popDataShowUpdate();
+           if(!params.edges.length&&!params.nodes.length){
+             this_.popDataShowUpdate();
+           }
          });
 
          this.network.on("selectNode", function (params) { //选择节点
@@ -677,15 +684,18 @@
          this.network.on("selectEdge", function (params) { // 选择边
            this_.selNodeId='';
            this_.lineData=this_.edgesArray.find((item)=>item.id===params.edges[0]);
-          if(this_.lineData.expressions&&this_.lineData.expressions.length){
-            this_.popDataShowUpdate('total')
-          }else{
-            this_.popDataShowUpdate()
-          }
           if(this_.editVisNetwork){
             this_.lineData.color=this_.lineData.color.color?this_.lineData.color.color:this_.lineData.color;
             this_.addLineShow=true;
             this_.isLineAdd=false;
+          }
+          if(!this_.editVisNetwork){
+            console.log(this_.lineData);
+            if(this_.lineData.expressions&&this_.lineData.expressions.length){
+              this_.popDataShowUpdate('total')
+            }else{
+              this_.popDataShowUpdate()
+            }
           }
            // this_.lineData.color=this_.lineData.color.color;
            // this_.addLineShow=true;
@@ -704,9 +714,9 @@
            // }
          });
 
-         this.network.on("dragging", function (params,event) {//节点移动中
+         this.network.on("dragging", function () {//节点移动中
            this_.viewsCenter=this_.network.getViewPosition();
-           let selId=params.nodes[0];
+           // let selId=params.nodes[0];
            if(this_.selNodeId){
              this_.setNodePosition(this_.selNodeId)
            }
@@ -720,7 +730,7 @@
            this_.selNodeArrUpdate();
          });
 
-         this.network.on("dragEnd", function (params) {//节点移动结束
+         this.network.on("dragEnd", function () {//节点移动结束
            this_.viewsCenter=this_.network.getViewPosition();
            if(this_.selNodeId){
              this_.setNodePosition(this_.selNodeId)
@@ -735,18 +745,18 @@
            this_.selNodeArrUpdate();
          });
 
-         this.network.on("hoverNode", function (params) {//hoverNode
+         this.network.on("hoverNode", function () {//hoverNode
            this_.cursorMove=true;
          });
 
-         this.network.on("blurNode", function (params) {//blurNode
+         this.network.on("blurNode", function () {//blurNode
            this_.cursorMove=false;
          });
-         this.network.on("hoverEdge", function (params) {//hoverNode
+         this.network.on("hoverEdge", function () {//hoverNode
            this_.cursorMove=true;
          });
 
-         this.network.on("blurEdge", function (params) {//blurNode
+         this.network.on("blurEdge", function () {//blurNode
            this_.cursorMove=false;
          });
 
@@ -759,14 +769,14 @@
            }
            return false
          });
-         this.network.on("resize", function (params) {//检测resize
+         this.network.on("resize", function () {//检测resize
            setTimeout(()=>{
              this_.modelTopUpdate();
              this_.selNodeArrUpdate();
              if(this_.networkPopShow){
                this_.setPopPosition(this_.selNodeId);
              }
-           })
+           });
            return false
          });
        })
@@ -813,7 +823,7 @@
   }
   .nz-icon.noMove{
     position: absolute;
-    top: 0px;
+    top: 0;
     left: 14px;
     font-size: 20px;
     color: #27c09c;
@@ -831,29 +841,29 @@
   .network-pop .nz-icon-hexagonBorder:hover .noMove{
     transform: scale(1.1);
   }
-  .btmTriangle{
-    position: absolute;
-    width: 0;
-    height: 0;
-    border-width: 10px;
-    border-style: solid;
-    border-color:#e6e6e6 transparent transparent transparent;
-    bottom: -20px;
-    left: 50%;
-    transform: translateX(-50%);
-  }
-  .btmTriangle:after{
-    content: '';
-    display:block;
-    width:0;
-    height:0;
-    border-width: 10px;
-    border-style:solid;
-    border-color:#fff transparent  transparent transparent;
-    position:absolute;
-    bottom: -7px;
-    left: -9px;
-  }
+  /*.btmTriangle{*/
+    /*position: absolute;*/
+    /*width: 0;*/
+    /*height: 0;*/
+    /*border-width: 10px;*/
+    /*border-style: solid;*/
+    /*border-color:#e6e6e6 transparent transparent transparent;*/
+    /*bottom: -20px;*/
+    /*left: 50%;*/
+    /*transform: translateX(-50%);*/
+  /*}*/
+  /*.btmTriangle:after{*/
+    /*content: '';*/
+    /*display:block;*/
+    /*width:0;*/
+    /*height:0;*/
+    /*border-width: 10px;*/
+    /*border-style:solid;*/
+    /*border-color:#fff transparent  transparent transparent;*/
+    /*position:absolute;*/
+    /*bottom: -7px;*/
+    /*left: -9px;*/
+  /*}*/
   #network_id,.network-null{
     width: 100%;
     height: 100%;
@@ -870,10 +880,6 @@
     font-size: 50px;
     margin-bottom: 24px;
     cursor: pointer;
-  }
-  .network-null .nz-icon-emptypage{
-    color: #23BF9A;
-    font-size: 24px;
   }
   .cursorMove{
     cursor: move;
@@ -924,7 +930,7 @@
     top: -60px;
   }
   .sel-node-right {
-    width: 0px;
+    width: 0;
     height: 120px;
     border-right: 4px dashed yellow;
     position: absolute;
@@ -940,7 +946,7 @@
     top: 60px;
   }
   .sel-node-left {
-    width: 0px;
+    width: 0;
     height: 120px;
     border-left: 4px dashed yellow;
     position: absolute;

@@ -520,6 +520,7 @@
               this.$put('module', this.editModule).then(response => {
                 if (response.code === 200) {
                   this.$message({duration: 1000, type: 'success', message: this.$t("tip.saveSuccess")});
+                  this.$store.commit('setReloadFacade');
                   this.esc(true);
                 } else {
                   this.$message.error(response.msg);
@@ -529,6 +530,7 @@
               this.$post('module', this.editModule).then(response => {
                 if (response.code === 200) {
                   this.$message({duration: 1000, type: 'success', message: this.$t("tip.saveSuccess")});
+                  this.$store.commit('setReloadFacade');
                   this.esc(true);
                 } else {
                   this.$message.error(response.msg);
@@ -550,6 +552,7 @@
           this.$delete("module?ids=" + this.editModule.id).then(response => {
             if (response.code === 200) {
               this.$message({duration: 1000, type: 'success', message: this.$t("tip.deleteSuccess")});
+              this.$store.commit('setReloadFacade');
               this.esc(true);
             } else {
               this.$message.error(response.msg);

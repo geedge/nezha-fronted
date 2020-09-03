@@ -232,10 +232,8 @@
               this.$refs['topology'].setData();
             },500)
           }
-          // res.data.topo.viewsCenter?res.data.topo.viewsCenter:
-          this.$refs['topology'].viewsCenter={x:0,y:0};
-          // res.data.topo.zoom?res.data.topo.zoom:
-          this.$refs['topology'].zoom=1;
+          this.$refs['topology'].viewsCenter=res.data.topo.viewsCenter?res.data.topo.viewsCenter:{x:0,y:0};
+          this.$refs['topology'].zoom=res.data.topo.zoom?res.data.topo.zoom:1;
         })
       },
       formatNodesArr(arr){
@@ -247,6 +245,9 @@
         arr.forEach((item,index)=>{
           item.shape='image';
           item.id=item.moduleId;
+          if(this.allModuleInfo.module){
+            item.label=this.allModuleInfo.module.find(item1=>item1.id===item.id).name;
+          }
           this.dealImg(`/project/topo/icon/${item.iconId}`).then((data)=>{
             item.image=data;
             if(index===arr.length-1){
@@ -267,7 +268,7 @@
         let arr1=[];
         if(!arr){return arr1}
         arr.forEach((item)=>{
-          item.dashes=[15,15];
+          item.dashes=[5,5];
           item.from=item.source;
           item.to=item.target;
           item.label=item.name;

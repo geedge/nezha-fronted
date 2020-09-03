@@ -7,7 +7,7 @@ const store = new Vuex.Store({
     /* 监听对象变化，用于顶部菜单与底部内容的同步 */
     currentProject: {id: "", name: "", remark: ""},
     projectListChange: 0,
-
+    reloadFacade:true,//重新加载project
     showPanel:{
       id: 0,
       name: '',
@@ -31,6 +31,9 @@ const store = new Vuex.Store({
     },
     getProjectFilter(state){
       return state.projectFilter
+    },
+    getReloadFacade(state){
+      return state.reloadFacade
     },
   },
   mutations: {
@@ -84,6 +87,12 @@ const store = new Vuex.Store({
     },
     setProjectFilter(state, data) {
       state.projectFilter = data;
+    },
+    setReloadFacade(state){
+      state.reloadFacade=false;
+      setTimeout(()=>{
+        state.reloadFacade=true;
+      })
     },
   },
   actions: {

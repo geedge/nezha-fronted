@@ -126,7 +126,7 @@
     </template>
     <template v-else-if="pageType == 'project'">
       <!--<panel-tab from="project" :obj="currentProject" targetTab.sync="panel"></panel-tab>-->
-      <facade :obj="currentProject" targetTab.sync="panel" ref="facade"/>
+      <facade :obj="currentProject" targetTab.sync="panel" ref="facade" v-if="reloadFacade"/>
     </template>
 
     <transition name="el-zoom-in-bottom">
@@ -138,7 +138,7 @@
       <add-endpoint-box v-if="rightBox.addEndpoint.show" :current-project="currentProject" :current-module="currentModule" @close="closeAddEndpointRightBox" ref="addEndpointBox"></add-endpoint-box>
     </transition>
     <transition name="right-box">
-      <edit-endpoint-box v-if="rightBox.editEndpoint.show" :project="currentProject" :module="currentModule" :endpoint="endpoint" @close="closeEditEndpointRightBox" ref="editEndpointBox" @visNetworkReload="visNetworkReload"></edit-endpoint-box>
+      <edit-endpoint-box v-if="rightBox.editEndpoint.show" :project="currentProject" :module="currentModule" :endpoint="endpoint" @close="closeEditEndpointRightBox" ref="editEndpointBox"></edit-endpoint-box>
     </transition>
   </div>
 </template>
@@ -630,6 +630,9 @@
           });
           return "";
         }
+      },
+      reloadFacade(){
+        return this.$store.getters.getReloadFacade
       },
     },
     watch: {
