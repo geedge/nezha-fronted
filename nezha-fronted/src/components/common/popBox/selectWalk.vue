@@ -56,7 +56,7 @@
       },
       data() {
         return {
-          popBox: {show: false},
+          popBox: {show: true},
           tempWalk: {detailShow: false, objectID: ''},
           detailPopPosition: {top: "0", left: "0"}
         }
