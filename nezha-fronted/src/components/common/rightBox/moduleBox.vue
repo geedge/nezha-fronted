@@ -170,7 +170,7 @@
               </el-col>
               <el-col :span="18">
                 <el-form-item prop="password">
-                  <el-input v-model.trim="editModule.password" maxlength="64" show-word-limit size="small"></el-input>
+                  <el-input v-model.trim="editModule.password" type="password" show-password maxlength="64" show-word-limit size="small"></el-input>
                 </el-form-item>
               </el-col>
             </el-row>
@@ -209,7 +209,7 @@
               </el-col>
               <el-col :span="18">
                 <el-form-item prop="priv_password">
-                  <el-input v-model.trim="editModule.priv_password" maxlength="64" show-word-limit size="small"></el-input>
+                  <el-input v-model.trim="editModule.priv_password" type="password" show-password maxlength="64" show-word-limit size="small"></el-input>
                 </el-form-item>
               </el-col>
             </el-row>
@@ -446,6 +446,9 @@
         if(type == 'http'){
           this.editModule.port = 9100
         }else{
+          this.$nextTick(()=>{
+            this.$refs.selectWalk.show();
+          })
           this.editModule.port= 161
         }
         this.updateScrollbar();
@@ -634,6 +637,7 @@
             this.reparseSnmpParam(this.editModule)
           }else{
             if(n.type&&n.type.toLowerCase() == 'snmp'){
+              this.$refs.selectWalk.show();
               for (let i = 0; i < this.editModule.walk.length; i++) {
                 this.expandedWalkData.push(this.editModule.walk[i].substring(0, this.editModule.walk[i].lastIndexOf(".")));
               }
