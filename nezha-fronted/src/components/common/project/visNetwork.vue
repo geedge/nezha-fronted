@@ -298,7 +298,7 @@
       editVisNetworkChange(flag){
         this.editVisNetwork=flag;
         if(flag){
-          this.$refs.topology.popDataShowUpdate();
+          this.$refs.topology.popDataShowUpdate('',true);
         }
         if(!flag){
           // this.reload();

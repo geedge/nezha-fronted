@@ -359,8 +359,20 @@
               roundness:0.5,
               type: "curvedCW",
             },
+            // font:{
+            //   align:'bottom',
+            //   vadjust:10,
+            // },
             selfReferenceSize:40,
             arrowStrikethrough:false,
+            // chosen:{
+            //   edge:(values, id, selected, hovering)=>{
+            //     values.middleArrow=true;
+            //     values.middleArrowScale=1;
+            //     values.middleArrowType='circle';
+            //     console.log(id, selected, hovering);
+            //   },
+            // },
           },
           layout:{
             randomSeed: 666,
