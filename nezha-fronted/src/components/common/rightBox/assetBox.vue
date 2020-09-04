@@ -349,7 +349,7 @@
             let obj = {};
             obj.id = modelData[i].vendor.id;
             obj.code = modelData[i].vendor.code;
-            obj.value = modelData[i].vendor.code;
+            obj.value ='vendor-'+ modelData[i].vendor.code;
             obj.label = modelData[i].vendor.value;
             obj.children = [];
             resultData.push(obj);
@@ -376,6 +376,7 @@
             }
           }
           this.vendorAndModelOptionData = result;
+          console.log('model/vender',this.vendorAndModelOptionData)
         });
       },
       addTag() {
@@ -465,6 +466,7 @@
         }, 100)
       },
       modelChange(modelId) {
+        console.log('model ',this.editAsset.modelId)
         let model = this.modelData.find((item, index)=>{
           return modelId == item.id;
         });
