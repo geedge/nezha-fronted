@@ -54,29 +54,29 @@ export const promServer = {
       value:'Thanos',
       children:[
         {
-          label:'query',
+          label:'Query',
           value:3,
-          text:'Thanos-query'
+          text:'Thanos-Query'
         },
         {
-          label:'rule',
+          label:'Rule',
           value:4,
-          text:'Thanos-rule'
+          text:'Thanos-Rule'
         },
         {
-          label:'sidecar',
+          label:'Sidecar',
           value:5,
-          text:'Thanos-sidecar'
+          text:'Thanos-Sidecar'
         },
         {
-          label:'store',
+          label:'Store',
           value:6,
-          text:'Thanos-store'
+          text:'Thanos-Store'
         },
         {
-          label:'compactor',
+          label:'Compactor',
           value:7,
-          text:'Thanos-compactor'
+          text:'Thanos-Compactor'
         }
       ]
     }
