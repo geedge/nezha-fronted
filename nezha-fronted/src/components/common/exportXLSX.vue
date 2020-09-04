@@ -176,8 +176,8 @@
         this.importFile=null;
       },
       downloadTemplate:function(){
-        let language=localStorage.getItem('nz-language-' + localStorage.getItem('nz-username')) || 'en'; //初始未选择默认 en 英文
-        let fileName=this.exportFileName+'-'+'template-'+this.getTimeString()+'.xlsx';
+        let language=localStorage.getItem('nz-language') || 'en'; //初始未选择默认 en 英文
+        let fileName=this.exportFileName+'-'+this.$t('overall.template')+'-'+this.getTimeString()+'.xlsx';
 
         let url=null;
         if (this.importUrl.indexOf("asset") > -1) {
@@ -196,12 +196,16 @@
         return jsonData.map(v => filterVal.map(j => v[j]))
       },
       exportCur:function(){
-        this.exportExcel(this.exportUrl,this.params,this.exportFileName+'-'+this.getTimeString()+'.xlsx');
+        let params=Object.assign({},this.params);
+        params.language=localStorage.getItem('nz-language') || 'en';
+        this.exportExcel(this.exportUrl,params,this.exportFileName+'-'+this.getTimeString()+'.xlsx');
         this.closeDialog();
       },
       exportAll:function(){
         let params=JSON.parse(JSON.stringify(this.params));
         params.pageSize=-1;
+        params.language=localStorage.getItem('nz-language') || 'en';
+
         this.exportExcel(this.exportUrl,params,this.exportFileName+'-'+this.getTimeString()+'.xlsx');
         this.closeDialog();
       },
