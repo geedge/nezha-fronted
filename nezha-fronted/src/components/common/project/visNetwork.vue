@@ -118,12 +118,6 @@
 </template>
 
 <script>
-  import  a from './image/a.png'
-  import  b from './image/b.png'
-  import  c from './image/c.png'
-  import  d from './image/d.png'
-  import  e from './image/e.png'
-  import  f from './image/f.png'
   import loading from "@/components/common/loading";
   import timePicker from '@/components/common/timePicker';
   import topology from './topology'

@@ -359,20 +359,20 @@
               roundness:0.5,
               type: "curvedCW",
             },
-            // font:{
-            //   align:'bottom',
-            //   vadjust:10,
-            // },
+            font:{
+              align:'bottom',
+              vadjust:10,
+            },
             selfReferenceSize:40,
             arrowStrikethrough:false,
-            // chosen:{
-            //   edge:(values, id, selected, hovering)=>{
-            //     values.middleArrow=true;
-            //     values.middleArrowScale=1;
-            //     values.middleArrowType='circle';
-            //     console.log(id, selected, hovering);
-            //   },
-            // },
+            chosen:{
+              edge:(values, id, selected, hovering)=>{
+                values.middleArrow=true;
+                values.middleArrowScale=1;
+                values.middleArrowType='circle';
+                console.log(id, selected, hovering);
+              },
+            },
           },
           layout:{
             randomSeed: 666,
@@ -594,7 +594,25 @@
         this.$refs['network'].removeEventListener('mousemove',this.modelTopMouseMove);
       },
       modelTopMouseMove(e){
-
+        let position={
+          x:e.clientX-this.relativeModelTop.x,
+          y:e.clientY-this.relativeModelTop.y
+        };
+        this.$refs['modelTopId'+this.index][0].style.top=position.y+'px';
+        this.$refs['modelTopId'+this.index][0].style.left=position.x+'px';
+        // {top:(item.y- 80 + 5*(10-zoom*10))+'px',left:(item.x-26)+'px'
+        let cancvs=this.network.DOMtoCanvas({
+          x:position.x+26-5*(1-this.zoom),
+          y:position.y+80-(50*(1-this.zoom)),
+        });
+        this.network.moveNode(this.selNodeId,cancvs.x,cancvs.y);
+        let selItem = this.nodesArray.find((item)=>item.id===this.selNodeId);
+        selItem.x=cancvs.x;
+        selItem.y=cancvs.y;
+        this.$emit("setTopologyData",this.nodesArray,this.edgesArray);
+        if(this.networkPopShow){
+          this.setPopPosition(this.selNodeId);
+        }
       },
       modelTopClick(item,index){
         this.index=index;
@@ -939,7 +957,7 @@
   .sel-node-top {
     width: 120px;
     height: 0;
-    border-top: 4px dashed yellow;
+    border-top: 4px dashed #FF8C0A;
     position: absolute;
     left: -60px;
     top: -60px;
@@ -947,7 +965,7 @@
   .sel-node-right {
     width: 0;
     height: 120px;
-    border-right: 4px dashed yellow;
+    border-right: 4px dashed #FF8C0A;
     position: absolute;
     left: 60px;
     top: -60px;
@@ -955,7 +973,7 @@
   .sel-node-bottom {
     width: 120px;
     height: 0;
-    border-bottom: 4px dashed yellow;
+    border-bottom: 4px dashed #FF8C0A;
     position: absolute;
     left: -60px;
     top: 60px;
@@ -963,7 +981,7 @@
   .sel-node-left {
     width: 0;
     height: 120px;
-    border-left: 4px dashed yellow;
+    border-left: 4px dashed #FF8C0A;
     position: absolute;
     left: -60px;
     top: -60px;
