@@ -5,6 +5,12 @@
   .resize-box{
     border: none;
   }
+  .project-chart-title{
+    text-align: center;
+  }
+  .nz-chart-dropdown{
+    height: 75px;
+  }
 </style>
 <template>
   <div class="nz-chart-resize">
@@ -12,7 +18,7 @@
     <div class="resize-box resize-box-echarts" ref="resizeBox">
       <div class="line-chart-block" :id="'lineChartDiv'+chartIndex" @mouseenter="mouseEnterChart" @mouseleave="mouseLeaveChart">
         <loading :ref="'localLoading'+chartIndex"></loading>
-        <div class="clearfix chartTitle" :class="{'drag-disabled': this.filter.from == 'alertRule'}" :id="'chartTitle'+chartIndex" >
+        <div class="clearfix project-chart-title" :class="{'drag-disabled': this.filter.from == 'alertRule'}" :id="'chartTitle'+chartIndex" >
           <el-popover
             v-if="isError"
             placement="top-start"
@@ -41,7 +47,7 @@
           </span>
           <el-dropdown trigger="click" class="nz-chart-top" :key="'chartDropdown'+chartIndex"  v-clickoutside="clickos">
             <el-dropdown-menu style="display: none"></el-dropdown-menu>
-            <span class="el-dropdown-link chart-title" @click="dropdownMenuShow=!dropdownMenuShow">
+            <span class="el-dropdown-link" @click="dropdownMenuShow=!dropdownMenuShow">
               <span class="chart-title-text">{{chartData.title}}</span>
               <span class="chart-title-icon" v-if="filter.from != 'alertRule'"><i class="el-icon-caret-bottom el-icon--right" :class="{'visible':caretShow,'hidden':!caretShow}"></i></span>
             </span>

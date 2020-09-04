@@ -4,7 +4,7 @@
     <div class="resize-box resize-box-table" ref="resizeBox">
       <div class="vis-network" :id="'chartTableDiv'+chartIndex" @mouseenter="caretShow=true" @mouseleave="caretShow=false">
         <loading :ref="'localLoading'+chartIndex"></loading>
-        <div class="clearfix chartTitle text-right" :class="{'dragTitle':dragTitleShow}" :id="'chartTitle'+chartIndex">
+        <div class="clearfix text-right" :class="{'dragTitle':dragTitleShow}" :id="'chartTitle'+chartIndex">
           <el-popover
             v-if="isError"
             :close-delay=10
@@ -23,11 +23,12 @@
                 <!--<span class="chart-title-text">{{chartData.title}}</span>-->
                 <!--<span class="chart-title-icon"><i class="el-icon-caret-bottom el-icon&#45;&#45;right"  :class="{'visible':caretShow,'hidden':!caretShow}"></i></span>-->
               </span>
-              <span>
-                <i class="nz-icon nz-icon-edit float-right" @click="editVisNetworkChange(true)"></i>
+              <div style="height: 24px">
+                <i class="nz-icon nz-icon-edit float-right"  @click="editVisNetworkChange(true)" v-show="!editVisNetwork"></i>
+                <i class="nz-icon nz-icon-refresh float-right"  @click="reload" v-show="!editVisNetwork"></i>
                 <!--<i class="nz-icon nz-icon-zoomin float-right"></i>-->
                 <!--<i class="nz-icon nz-icon-exit-full-screen float-right"></i>-->
-              </span>
+              </div>
             </span>
         </div>
         <div class="vis-network-content">
@@ -321,6 +322,10 @@
   }
   .nz-icon-edit{
     margin-right: 5px;
+  }
+  .vis-network .nz-icon-refresh{
+    margin-right: 15px;
+    color: #ee9d3f;
   }
   .table-container{
     height: calc(100% - 30px);

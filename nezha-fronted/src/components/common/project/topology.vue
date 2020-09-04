@@ -601,7 +601,7 @@
         })
       },
       //工具栏点击后显示对应内容
-      popDataShowUpdate(key){
+      popDataShowUpdate(key,flag){//key 显示对应的弹窗 flag是否不显示工具栏
         // console.log(key);
         this.popDataShow={
           endpoint:false,
@@ -625,6 +625,9 @@
           this.$nextTick(()=>{
             this.popDataShow[key]=true;
           })
+        }
+        if(this.selNodeId&&!flag){
+          this.setPopPosition(this.selNodeId);
         }
       },
       //拓扑图放大缩小
@@ -653,7 +656,7 @@
            console.log(params);
            this_.networkPopClose();
            if(!params.edges.length&&!params.nodes.length){
-             this_.popDataShowUpdate();
+             this_.popDataShowUpdate('',true);
            }
          });
 

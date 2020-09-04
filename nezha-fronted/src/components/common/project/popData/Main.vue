@@ -1,7 +1,7 @@
 <template>
   <div class="main-content">
     <div class="main-box">
-      <div class="main-box-title">Asset</div>
+      <div class="main-box-title">Assets</div>
       <div class="main-box-content">
         <div class="content-box">
           <span class="content-title"><i class="el-icon-upload2 colorFFF bg23BF9A"></i>up</span>
@@ -15,7 +15,7 @@
     </div>
 
     <div class="main-box">
-      <div class="main-box-title">Endpoint</div>
+      <div class="main-box-title">Endpoints</div>
       <div class="main-box-content">
         <div class="content-box">
           <span class="content-title"><i class="el-icon-upload2 colorFFF bg23BF9A"></i>up</span>
@@ -29,7 +29,7 @@
     </div>
 
     <div class="main-box">
-      <div class="main-box-title">Alert message</div>
+      <div class="main-box-title">Alert messages</div>
       <div class="main-box-content">
         <div class="content-box">
           <span class="content-title"><i class="nz-icon nz-icon-jiantou-top colorFFF bg23BF9A"></i>high</span>
