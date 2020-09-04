@@ -24,6 +24,8 @@
   import bus from "../../../../libs/bus";
   import EleResize from "../../../common/js/divResize";
   import {randomcolor} from "../../../common/js/radomcolor/randomcolor";
+  //import * as mapGeoJson from "../../../common/js/world";
+
   export default {
     name: "chart",
     components:{
@@ -73,12 +75,12 @@
       },
       setSeries:function(series, legend, legendData){
         if(!this.chart){
-          this.chart = echarts.init(document.getElementById(this.chartId));
+          this.chartInit();
         }
         this.series = series;
         if(this.chartType == 'map'){
           if(this.map){
-            echarts.registerMap(this.map.name,this.map.geoJson);
+            echarts.registerMap(this.map.name, this.map.geoJson);
             chartConfig.setMap(this.map.name);
           }else{
             console.error('map chart need map data');
@@ -99,31 +101,55 @@
         }
 
         if(this.chartType == 'map'){
-          let geoObj=JSON.parse(this.map.geoJson.geoJson)
+          let geoObj = this.map.geoJson.geoJson;
           geoObj.features.forEach(item=>{
             if(this.option.geo.regions){
               this.option.geo.regions.push({
                 name:item.properties.name,
                 itemStyle: {
                   normal: {
-                    areaColor: randomcolor()
+                    areaColor: "white"
                   }
                 }
-
               })
             }else{
               this.option.geo.regions=[{
                 name:item.properties.name,
                 itemStyle: {
                   normal: {
-                    // areaColor: item.properties.stroke
-                    areaColor: randomcolor()
+                    areaColor: "white"
                   }
                 }
-
               }]
             }
-          })
+          });
+          //let timer = setTimeout(()=>{}, 0);
+          //地图拖动、缩放时动态读取地图数据
+          /*this.chart.on("georoam", params => {
+            //console.info(this.map.geoJson.geoJson.features[0]);
+            clearTimeout(timer);
+            timer = setTimeout(() => {  //延时触发，0.6秒无操作再更新地图数据
+              let dx = params.dx; //拖动x位移
+              let dy = params.dy; //拖动y位移
+              if (dx || dy) {
+                let option = this.chart.getOption();
+                let center = option.geo[0].center; //拖动后的中心点
+                let newJson = mapGeoJson.getProvinceJson(center);
+                this.map.geoJson.geoJson = newJson;
+                //console.info(this.map.geoJson.geoJson.features.length);
+                //this.clearChart();
+                //this.chartInit();
+                //echarts.registerMap(this.map.name, this.map.geoJson);
+              }
+
+              //this.chart.setOption(option, true);
+              //console.info(this.map.geoJson.geoJson.features.length);
+            }, 600);
+          });*/
+          /*this.chart.on("click", params => {
+            let option = this.chart.getOption();
+            console.info(option.geo[0].center);
+          });*/
         }
 
         this.modifyOption('tooltip','position',this.defaultTooltipPosition)
@@ -376,9 +402,12 @@
         this.chart.setOption(option);
         this.chart.resize()
       },
+      chartInit() {
+        this.chart=echarts.init(document.getElementById(this.chartId));
+      }
     },
     mounted() {
-      this.chart=echarts.init(document.getElementById(this.chartId));
+      this.chartInit();
       EleResize.on(this.$el,this.resize);
     },
     watch:{

@@ -50,6 +50,7 @@ const cn = {
     changePwd: "修改密码",
     createCabinet: "创建机柜",
     createModel: "创建模型",
+    createModule: "创建模块",
     createMib: "创建MIB",
     exportExcel: "导出",
     importExcel: "导入",
