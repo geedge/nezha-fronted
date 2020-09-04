@@ -114,7 +114,7 @@ const cn = {
       selectPanelTitle: "选择面板",
       createPanelTitleSec: "新增面板",
       editPanelTitle: "面板",
-      singleStatErrorTip:'Only queries that return single series/table is supported',
+      singleStatErrorTip:'仅支持返回单个系列/表的查询',
       panelForm: {
         panelName: "面板名称",
         panelId: "ID"
@@ -304,7 +304,8 @@ const cn = {
         top: "Top",
         chart: {
           chartTitle: "告警趋势"
-        }
+        },
+        moduleTopN: "根据模块列出Top10告警信息"
       },
       mapTooltip: {
         asset: "资产",
@@ -372,97 +373,7 @@ const cn = {
   },
   asset: {
     asset: "资产",
-    EditAsset: "编辑资产",
     assetType:'资产类型',//'资产类型'
-    createAssetTab: {
-      title: "新增资产",
-      sn: "SN",
-      host: "主机",
-      state: "状态",
-      selectTip: "请选择",
-      inStock: "在库",
-      notInStock: "出库",
-      assetInfo: "资产信息",
-      assetType: "资产类型",
-      assetTypeTab: {
-        assetType: "资产类型",
-        addAssetType: "新增资产类型",
-        existAssetType: "已存在的资产类型"
-      },
-      vendor: "厂商/型号",
-      vendorTab: {
-        vendor: "厂商/型号",
-        vendorName: "新厂商",
-        existVendor: "已有厂商",
-        modelName: "新型号",
-        existModel: "已有型号"
-      },
-      purchaseDate: "购买日期",
-      dataSelectTip: "请选择日期",
-      dc: "DC",
-      dcName: "DC名称",
-      AddIdcTab: {
-        title: "新增DC",
-        dcName: "DC名称",
-        location: "地区",
-        principal: "负责人",
-        tel: "电话"
-      },
-      editIdcTab: {
-        title: "编辑DC",
-        dcName: "DC名称",
-        location: "地区",
-        principal: "负责人",
-        tel: "电话"
-      },
-      location: "地区",
-      principal: "负责人",
-      tel: "电话",
-      cabinet: "机柜",
-      AddCabinetTab: {
-        title: "新增机柜",
-        name: "名称",
-        uSize: "U位",
-        remark: "描述",
-        DC: "DC"
-      },
-      editCabinetTab: {
-        title: "编辑机柜",
-        name: "名称",
-        uSize: "U位",
-        remark: "描述",
-        DC: "DC"
-      },
-      uSize: "U位",
-      remark: "描述",
-      cli: "CLI账号",
-      loginType: "登录类型",
-      password: "密码",
-      ssh: "SSH-Key",
-      account: "用户名",
-      port: "端口",
-      upload: "上传",
-      clickToUpload: "上传",
-      clickToCover: "覆盖",
-      sshKeyWasConfig: "SSH-KEY已配置",
-      impi: {
-        title: "IPMI",
-        host: "主机",
-        port: "端口"
-      },
-      vendorModel: "厂商/模型",
-      protocol: "协议",
-      sshProtocol: "SSH",
-      telnetProtocol: "Telnet",
-      userTip: "用户名提示",
-      passwordTip: "密码提示",
-      reloginPasswordTip: "RELOGIN提示",
-      userPwdIntroduce: "请指定用户名和密码提示以便TELNET登录过程可自动运行",
-      reLoginPwdIntroduce: "请指定密码提示以便RELOGIN登录过程可自动运行",
-      exporter: "Exporter",
-      basicTitle:'基础信息',
-      featureTitle:'属性'
-    },
     editAssetTab: {
       title: "新增资产",
       sn: "SN",
@@ -563,7 +474,42 @@ const cn = {
       assetType: "资产类型",
       vendor: "厂商",
       ping: "Ping"
-    }
+    },
+    editAsset: "编辑资产",
+    createAsset: "新增资产",
+    host: "Host",
+    state: "状态",
+    remark: "描述",
+    cli: "CLI账号",
+    loginType: "登录类型",
+    password: "密码",
+    ssh: "SSH key",
+    protocol: "协议",
+    sshProtocol: "SSH",
+    telnetProtocol: "Telnet",
+    userTip: "用户名提示",
+    passwordTip: "密码提示",
+    reloginPasswordTip: "RELOGIN提示",
+    userPwdIntroduce: "请指定用户名和密码提示以便TELNET登录过程可自动运行",
+    reLoginPwdIntroduce: "请指定密码提示以便RELOGIN登录过程可自动运行",
+    account: "用户名",
+    port: "端口",
+    upload: "上传",
+    clickToUpload: "上传",
+    clickToCover: "覆盖",
+    sshKeyWasConfig: "SSH-KEY已配置",
+    exporter: "Exporter",
+    assetInfo: "资产信息",
+    vendorModel: "厂商/模型",
+    purchaseDate: "购买日期",
+    location: "地区",
+    sn: "SN",
+    uSize: "U位",
+    inStock: "在库",
+    notInStock: "出库",
+    principal: "负责人",
+    tel: "电话",
+    featureTitle: "属性"
   },
   config: {
     config: "设置",
@@ -640,7 +586,10 @@ const cn = {
         add:'添加',
         direction:'方向',
         tags:'标签'
-      }
+      },
+      createDc: "新建数据中心",
+      editDc: "编辑数据中心",
+      editCabinet: "编辑机柜"
     },
     model: {
       model: "资产模型",
@@ -673,7 +622,8 @@ const cn = {
         delete:'delete',
         reset:'reset',
         unknown:'unknown'
-      }
+      },
+      response: "响应"
     },
     mib: {
       mib: "SNMP MIB",
@@ -903,7 +853,7 @@ const cn = {
       chartName:'图表名称',
       unit:'单位',
       addModule:'添加组件',
-      
+
     },
   },
   el: {

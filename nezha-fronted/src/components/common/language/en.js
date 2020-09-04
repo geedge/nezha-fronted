@@ -422,94 +422,6 @@ const en = {
       ping:'Ping',
     },
     featureTitle:'Attribute',
-    /*createAsset:{
-      title:'New asset',//'新增资产'
-      sn:'SN',//SN
-      host:'Host',//'Host'
-      state:'State',//'状态'
-      selectTip:'Please select',//'请选择'
-      inStock: 'In stock',//'在库'
-      notInStock: 'Not in stock',//'出库'
-
-      assetType:'Asset type',//'资产类型'
-      impi:{
-        title:'IPMI',
-        host:'Host',
-        port:'Port',
-      },
-      assetTypeTab:{
-        assetType:'Asset type',//'资产类型'
-        addAssetType:'New asset type',//'新增资产类型'
-        existAssetType:'Existed asset type'//'已存在的资产类型'
-      },
-
-      vendorTab:{
-        vendor:'Vendor/Model',//'厂商/型号'
-        vendorName:'New vendor',//'新厂商'
-        existVendor:'Existed vendor',//'已有厂商'
-        modelName:'New model',//'新型号'
-        existModel:'Existed model'//'已有型号'
-      },
-
-      dataSelectTip:'Please select date',//'请选择日期'
-      dc:'DC',
-      dcName:'Data Center name',//'DC名称'
-      AddIdcTab:{
-        title:'New Data Center',//'新增DC'
-        dcName:'Data Center name',//'DC名称'
-        location:'Location',//'地区'
-        principal:'Administrator',//'负责人'
-        tel:'Telephone'//'电话'
-      },
-      editIdcTab:{
-        title:'Edit Data Center',//'编辑DC'
-        dcName:'Data Center name',//'DC名称'
-        location:'Location',//'地区'
-        principal:'Administrator',//'负责人'
-        tel:'Telephone'//'电话'
-      },
-
-      principal:'Administrator',//'负责人'
-      tel:'Telephone',//'电话'
-      cabinet: 'Cabinet',//'机柜'
-      AddCabinetTab:{
-        title:'New cabinet',//'新增机柜'
-        name:'Name',//'名称'
-        uSize:'U size',//'U位'
-        remark:'Description',//'描述'
-        DC:'DC',
-      },
-      editCabinetTab:{
-        title:'Edit cabinet',//'编辑机柜'
-        name:'Name',//'名称'
-        uSize:'U size',//'U位'
-        remark:'Description',//'描述'
-        DC:'DC',
-      },
-      uSize:'U size',//'U位'
-      remark:'Description',//'描述'
-      cli:'CLI account',//'CLI账号'
-      loginType:'Login type',//'登录类型'
-      password:'Password',//'密码'
-      ssh:'SSH key',//'SSH-Key'
-      protocol:"Protocol",
-      sshProtocol:"SSH",
-      telnetProtocol:"Telnet",
-      userTip:"User tip",//用户名提示
-      passwordTip:"Password tip",//密码提示
-      reloginPasswordTip:"Relogin tip",//密码提示
-      userPwdIntroduce:'Please specify a user name and password so that the telenet login process can automatically log in',
-      reLoginPwdIntroduce:'Please specify the password prompt so that the login process can run automatically',
-      account:'User name',//'用户名'
-      port:'Port',//'端口'
-      upload:'Upload',//'上传'
-      clickToUpload:'Upload',//'上传'
-      clickToCover:'Cover',//'覆盖'
-      sshKeyWasConfig:'SSH-KEY configured',//'SSH-KEY已配置'
-      exporter:'Exporter',
-      basicTitle:'Basic info',
-      featureTitle:'Attribute',
-    },*/
     editAssetTab:{
       title:'New asset',//'新增资产'
       sn:'SN',//SN
@@ -949,7 +861,7 @@ const en = {
       chartName:'Name',
       unit:'Unit',
       addModule:'Add Module',
-      
+
     },
   },
   ...enLocale
