@@ -21,73 +21,68 @@
             <el-input v-model="form.lineName"  size="small"></el-input>
           </el-form-item>
           <el-row class="form-title">{{$t('project.topology.option')}}</el-row>
-          <el-form-item :label="$t('project.topology.width')" prop="width" class="line-name">
-            <el-input v-model="form.width"  size="small"></el-input>
-          </el-form-item>
-          <!--<el-form-item label="roundness"  class="line-name">-->
-            <!--<el-input v-model="form.roundness"></el-input>-->
-          <!--</el-form-item>-->
-          <!--<el-form-item label="type" class="line-name">-->
-            <!--<el-select v-model="form.type" placeholder="" :popper-append-to-body="false">-->
-              <!--&lt;!&ndash;'dynamic', 'continuous', 'discrete', 'diagonalCross', 'straightCross', 'horizontal', 'vertical', 'curvedCW', 'curvedCCW', 'cubicBezier'&ndash;&gt;-->
-              <!--<el-option label="dynamic" value="dynamic"></el-option>-->
-              <!--<el-option label="continuous" value="continuous"></el-option>-->
-              <!--<el-option label="discrete" value="discrete"></el-option>-->
-              <!--<el-option label="diagonalCross" value="diagonalCross"></el-option>-->
-              <!--<el-option label="straightCross" value="straightCross"></el-option>-->
-              <!--<el-option label="horizontal" value="horizontal"></el-option>-->
-              <!--<el-option label="vertical" value="vertical"></el-option>-->
-              <!--<el-option label="curvedCW" value="curvedCW"></el-option>-->
-              <!--<el-option label="cubicBezier" value="cubicBezier"></el-option>-->
-            <!--</el-select>-->
-          <!--</el-form-item>-->
-          <el-form-item :label="$t('project.topology.arrows')" prop="arrows" class="arrows">
-            <el-select v-model="form.arrows" placeholder="" :popper-append-to-body="false"  size="small">
-              <div slot="prefix">
-                <img v-if="form.arrows=='from'" src="./image/leftArrow.png" />
-                <img v-if="form.arrows=='to'" src="./image/rightArrow.png" />
-                <img v-if="form.arrows=='from;to'" src="./image/LRArrow.png" />
-                <img v-if="form.arrows=='0'" src="./image/noArrow.png" />
+          <div class="line-option">
+            <el-form-item :label="$t('project.topology.width')" prop="width" class="line-width">
+              <el-input v-model="form.width"  size="small"></el-input>
+            </el-form-item>
+            <el-form-item :label="$t('project.topology.arrows')" prop="arrows" class="arrows">
+              <el-select v-model="form.arrows" placeholder="" :popper-append-to-body="false"  size="small">
+                <div slot="prefix">
+                  <img v-if="form.arrows=='from'" src="./image/leftArrow.png" />
+                  <img v-if="form.arrows=='to'" src="./image/rightArrow.png" />
+                  <img v-if="form.arrows=='from;to'" src="./image/LRArrow.png" />
+                  <img v-if="form.arrows=='0'" src="./image/noArrow.png" />
+                </div>
+                <el-option label="from" value="from"><img src="./image/leftArrow.png" /></el-option>
+                <el-option label="to" value="to"><img src="./image/rightArrow.png" /></el-option>
+                <el-option label="from;to" value="from;to"><img src="./image/LRArrow.png" /></el-option>
+                <el-option label="" value="0"><img src="./image/noArrow.png" /></el-option>
+              </el-select>
+            </el-form-item>
+            <el-form-item :label="$t('project.topology.color')" class="color">
+              <div class="color-show" @click="colorPickerClick" v-clickoutside="colorOut">
+                <div class="color-show-left" :style="{background:form.color}"></div>
+                <span> {{form.color}}</span>
+                <span class="color-arrows">
+                  <i class="nz-icon nz-icon-arrow-down" v-show="!showPicker"></i>
+                  <i class="nz-icon nz-icon-arrow-up" v-show="showPicker"></i>
+                </span>
               </div>
-              <el-option label="from" value="from"><img src="./image/leftArrow.png" /></el-option>
-              <el-option label="to" value="to"><img src="./image/rightArrow.png" /></el-option>
-              <el-option label="from;to" value="from;to"><img src="./image/LRArrow.png" /></el-option>
-              <el-option label="" value="0"><img src="./image/noArrow.png" /></el-option>
-            </el-select>
-          </el-form-item>
-          <el-form-item :label="$t('project.topology.color')" class="color">
-            <div class="color-show" @click="colorPickerClick">
-              <div class="color-show-left" :style="{background:form.color}"></div>
-              <span> {{form.color}}</span>
-            </div>
-            <div class="color-content" ref="color-content">
-              <el-color-picker
-                v-model="form.color"
-                :predefine="predefineColors"
-                ref="colorPicker"
-                @active-change="colorChange"
-              >
-              </el-color-picker>
-            </div>
-          </el-form-item>
+              <div class="color-content" ref="color-content">
+                <el-color-picker
+                  v-model="form.color"
+                  :predefine="predefineColors"
+                  ref="colorPicker"
+                  @active-change="colorChange"
+                >
+                </el-color-picker>
+              </div>
+            </el-form-item>
+          </div>
           <div  class="right-box-sub-title">
             <span>{{$t('alert.config.expr')}}</span>
             <span class="float-right" @click="addExpression"><i style="font-size: 16px; cursor: pointer;" class="nz-icon nz-icon-create-square"></i></span>
           </div>
-          <el-row class="element-item" style="" v-for="index of promqlKeys.length" :key="'ele' + index">
+          <el-row class="element-item expr" style="" v-for="index of promqlKeys.length" :key="'ele' + index">
+            <el-form-item  :rules="{required: true,message: '名称不能为空', trigger: 'blur'}" :prop="'name.' + index">
+              <el-row>
+                <template>
+                  <el-col class="expr-title" style="">
+                    {{$t('project.topology.chartName')}}
+                  </el-col>
+                  <el-col style="width: calc(100% - 140px);">
+                    <el-input
+                      v-model="form.name[index]"
+                      type="text"
+                      size="small"
+                    ></el-input>
+                  </el-col>
+                  <el-col  style="width: 20px"> <i class="el-icon-minus" @click="removeExpression(index-1)"></i></el-col>
+                </template>
+              </el-row>
+            </el-form-item>
             <el-row>
-              <template>
-                <el-col style="width: 120px; padding-right: 20px; text-align: right; color: #666">
-                  {{$t('project.topology.chartName')}}
-                </el-col>
-                <el-col style="width: calc(100% - 140px);">
-                  <el-input v-model="name[index-1]" type="text" size="small"></el-input>
-                </el-col>
-                <el-col  style="width: 20px"> <i class="el-icon-minus" @click="removeExpression(index-1)"></i></el-col>
-              </template>
-            </el-row>
-            <el-row>
-              <el-col style="width: 120px; padding-right: 20px; text-align: right; color: #666">
+              <el-col class="expr-title">
                 {{$t('project.topology.unit')}}
               </el-col>
               <el-col style="width: calc(100% - 120px);">
@@ -110,10 +105,11 @@
               @change="expressionChange"
               @removeExpression="removeExpression"
               :showRemove="false"
+              :projectRightBox="true"
             ></promql-input>
             <el-row>
               <template>
-                <el-col style="width: 120px; padding-right: 20px; text-align: right; color: #666">
+                <el-col class="expr-title">
                   {{$t('dashboard.panel.chartForm.legend')}}&nbsp;
                   <el-popover :content="$t('dashboard.panel.chartForm.legendTip')" placement="top" width="150" trigger="hover">
                     <i slot="reference" class="nz-icon nz-icon-info-normal" style="font-size: 12px; -webkit-transform:scale(0.75);display:inline-block;" @mouseover="rz"></i>
@@ -172,11 +168,12 @@
             lineId:n.id,
             width:n.width,
             lineName:n.label,
+            name:[],
           };
          if( n.expressions){
            n.expressions.forEach((item,index)=>{
              this.addExpression();
-             this.name[index]=item.name;
+             this.form.name[index]=item.name;
              this.unit[index]=item.unit;
              this.expressions[index]=item.metric;
              this.legends[index]=item.legend;
@@ -191,7 +188,7 @@
     data(){
       return{
         form:{
-          arrows:'',
+          arrows:'0',
           label:'',
           color:'#1e90ff',
           lineName:'',
@@ -199,6 +196,7 @@
           width:'',
           type:'',
           roundness:'',
+          name:[],
         },
         predefineColors: [
           '#ff4500',
@@ -209,18 +207,18 @@
           '#1e90ff',
           '#c71585',
         ],
+        showPicker:false,
         unitOptions: chartDataFormat.unitOptions(),
         promqlKeys:[],
         expressions: [],
         promqlCount:0,
         elementIds:[],
         legends:[],
-        name:[],
         unit:[],
         rules:{
-          arrows: [
-            { required: true, message: '', trigger: 'change' },
-          ],
+          // arrows: [
+          //   { required: true, message: '', trigger: 'change' },
+          // ],
           lineName: [
             { required: true, message: '', trigger: 'change' },
           ],
@@ -249,7 +247,7 @@
             model.expressions=[];
             this.promqlKeys.forEach((item,index)=>{
               model.expressions.push({
-                "name": this.name[index],
+                "name": this.form.name[index],
                 "unit": this.unit[index],
                 "metric": this.expressions[index],
                 "legend": this.legends[index],
@@ -265,7 +263,7 @@
       addExpression() {
         this.expressions.push('');
         this.legends.push('');
-        this.name.push('');
+        this.form.name.push('');
         this.unit.push('');
         this.promqlKeys.push(getUUID());
         this.elementIds.push("");
@@ -275,7 +273,7 @@
         if (this.promqlCount >= 1) {
           this.expressions.splice(index, 1);
           this.legends.splice(index, 1);
-          this.name.splice(index, 1);
+          this.form.name.splice(index, 1);
           this.unit.splice(index, 1);
           this.promqlKeys.splice(index, 1);
           this.elementIds.splice(index, 1);
@@ -301,6 +299,7 @@
         this.esc();
       },
       colorPickerClick(){
+        this.showPicker=true;
         this.$refs['colorPicker'].showPicker=true;
       },
       colorChange(val){
@@ -313,6 +312,9 @@
         let b = parseInt(rgb[2].split(')')[0]);
         let hex = "#" + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
         return hex;
+      },
+      colorOut(){
+        this.showPicker=false;
       }
 
     },
@@ -345,7 +347,7 @@
     border-radius: 5px;
     display: flex;
     align-items: center;
-    width: calc(100% - 30px);
+    width: calc(100% - 60px);
     height: 30px;
   }
   .color-show-left{
@@ -372,7 +374,7 @@
   .arrows /deep/ .el-input.el-input--prefix.el-input--suffix{
     border: 1px solid #DCDFE6;
     height: 28px;
-    width: calc(100% - 30px);
+    width: calc(100% - 60px);
   }
   .arrows /deep/ .el-input__inner{
     display: none;
@@ -383,6 +385,52 @@
   }
   /deep/ .el-select{
     width: 262px;
+  }
+  .line-option{
+    display: flex;
+    flex-wrap: wrap;
+  }
+  .line-option > div{
+    width: 50%;
+  }
+  .line-option .line-width .el-input{
+    width: clac(100% - 60px);
+  }
+  /deep/ .el-select .el-input .el-select__caret{
+    vertical-align: middle;
+  }
+  .color-arrows{
+    color: #C0C4CC;
+    position: absolute;
+    right: 65px;
+  }
+  .color-arrows .nz-icon{
+    font-size: 14px;
+  }
+  .element-item{
+    padding: 20px 0;
+    border-bottom: 1px dashed #dfe7f2;
+    width: 100%;
+  }
+  .element-item.expr /deep/ .el-form-item__content{
+    position: relative;
+    margin-left: 0 !important;
+  }
+  .element-item.expr /deep/ .el-form-item__content .el-row{
+    margin-bottom: 0;
+  }
+  .element-item.expr /deep/ .el-form-item__content .el-form-item__error{
+   left: 120px;
+  }
+  .expr-title{
+    width: 120px;
+    padding-right: 20px;
+    text-align: right;
+    color: #666;
+    opacity: 0.6;
+    font-size: 14px;
+    letter-spacing: 0;
+    line-height: 22px;
   }
   .el-row {
     margin-bottom: 20px;

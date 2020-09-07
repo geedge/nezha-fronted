@@ -855,7 +855,7 @@ const en = {
       cancel:'cancel',
       addLine:'Add Line',
       lineName:'Line Name',
-      width:'width',
+      width:'thickness',
       option:'Option',
       arrows:'Arrows',
       color:'Color',

@@ -24,7 +24,7 @@
               <el-col style="width: 120px; padding-right: 20px; text-align: right; color: #666">
                 <el-dropdown class="metric-selector" v-if="plugins.indexOf('metric-selector') > -1">
                   <el-dropdown-menu style="display: none"></el-dropdown-menu>
-                  <span style="cursor: pointer;" @click="toggleDropdown">Metric&nbsp;<i class="el-icon-arrow-down" style="font-size: 14px; -webkit-transform:scale(0.75);display:inline-block;"></i></span>
+                  <span :class="{'expr-title':projectRightBox}" style="cursor: pointer;" @click="toggleDropdown">Metric&nbsp;<i class="el-icon-arrow-down" style="font-size: 14px; -webkit-transform:scale(0.75);display:inline-block;"></i></span>
                   <el-cascader-panel v-show="dropDownVisible" v-model="cascaderValue" style="text-align: left;" slot="dropdown" ref="metricSelector" :props="{emitPath:false}" :options="metricOptions"  @change="metricChange"></el-cascader-panel>
                 </el-dropdown>
                 <label style="line-height: 30px;" v-else>{{$t("alert.config.expr")}}</label>
@@ -66,7 +66,8 @@
         plugins: {type: Array},
         styleType: Number,
         historyParam:{type:Object},
-        showRemove:{type:Boolean,default:true}
+        showRemove:{type:Boolean,default:true},
+        projectRightBox:{type:Boolean,default:false}
       },
       data(){
         return {
@@ -244,6 +245,16 @@
     position: absolute;
     z-index: 2100;
     background-color: #FFF;
+  }
+  .expr-title{
+    width: 120px;
+    padding-right: 20px;
+    text-align: right;
+    color: #666;
+    opacity: 0.6;
+    font-size: 14px;
+    letter-spacing: 0;
+    line-height: 22px;
   }
 </style>
 <style>

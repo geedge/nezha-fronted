@@ -165,10 +165,12 @@
       NodeArr(n){
         if(n.length===2){
           this.lineData={
-            arrows:'',
+            arrows:'0',
             label:'',
             color:'#1e90ff',
             lineId:'',
+            width:'1',
+            dashed:'[5,5]',
             id:'',
           };
           this.addLineShow=true;
@@ -634,7 +636,6 @@
       },
       //工具栏点击后显示对应内容
       popDataShowUpdate(key,flag){//key 显示对应的弹窗 flag是否不显示工具栏
-        // console.log(key);
         this.popDataShow={
           endpoint:false,
           asset:false,
@@ -645,7 +646,6 @@
           main:false,
         };
         if(key&&!this.editVisNetwork){
-          // console.log(this.lineData);
           if(key==='total'&&this.selNodeId){
             this.totalId=this.selNodeId;
             this.totalArray=this.nodesArray;
@@ -685,7 +685,6 @@
          let this_=this;
          this.init('modal');
          this.network.on("click", function (params) {
-           console.log(params);
            this_.networkPopClose();
            if(!params.edges.length&&!params.nodes.length){
              this_.popDataShowUpdate('',true);
@@ -725,7 +724,6 @@
             this_.isLineAdd=false;
           }
           if(!this_.editVisNetwork){
-            console.log(this_.lineData);
             if(this_.lineData.expressions&&this_.lineData.expressions.length){
               this_.popDataShowUpdate('total')
             }else{
@@ -816,7 +814,6 @@
 
            setTimeout(()=>{
              this_.zoom=this_.network.canvasToDOM({x:0,y:1}).y-this_.network.canvasToDOM({x:0,y:0}).y;
-             console.log(this_.zoom);
              this_.modelTopUpdate();
              this_.selNodeArrUpdate();
              if(this_.networkPopShow){
