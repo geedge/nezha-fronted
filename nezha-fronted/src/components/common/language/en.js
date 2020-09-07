@@ -856,6 +856,7 @@ const en = {
       addLine:'Add Line',
       lineName:'Line Name',
       width:'thickness',
+      dashes:'Dotted line',
       option:'Option',
       arrows:'Arrows',
       color:'Color',

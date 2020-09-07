@@ -37,7 +37,7 @@
                 </el-option>
               </el-select>
             </el-form-item>
-            <el-form-item :label="$t('project.topology.width')" prop="width" class="line-width">
+            <el-form-item :label="$t('project.topology.dashes')" prop="width" class="line-width">
               <el-select v-model="form.dashes" placeholder="" :popper-append-to-body="false"  size="small">
                 <div slot="prefix">
                   {{form.dashes}}
