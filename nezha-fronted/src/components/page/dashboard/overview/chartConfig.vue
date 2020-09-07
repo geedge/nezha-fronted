@@ -139,36 +139,32 @@
     };
     const mapOptions={
       geo:{
-        map:'',
-
-        roam:'scale',//鼠标是否可以控制缩放
-        scaleLimit:{
-          min:0.7,
-          max:1.5
-        },
-        // center:[],//当前视角的中心点，用经纬度表示
+        map: '',
+        roam: true,//鼠标是否可以控制缩放
+        center: [67.45, 48],//当前视角的中心点，用经纬度表示
+        //center: [-127.45, -48],//当前视角的中心点，用经纬度表示
+        zoom: 6,
         label: { //控制显示地图名称
           normal: {
-            show: true
+            show: false
           },
           emphasis: {
-            show: true
+            show: false
           },
-        } ,
-        // itemStyle:{
-        //   areaColor:'#ff0000', //设置默认状态下地图颜色
-        //   color:'#ffff00'
-        //
-        // },
+        },
         emphasis:{
           itemStyle: {
-            areaColor:'white'
+            areaColor:'lightgray'
           }
         },
         left:0,
         top:0,
         right:0,
         bottom:0,
+        scaleLimit: {
+          min: 3,
+          max: 15
+        }
       },
       tooltip : {
         trigger: 'item',
@@ -180,6 +176,7 @@
         borderWidth: 1,
         padding: 0,
       },
+      backgroundColor: "#BDE3FD"
     };
     const assetTypePie = {
       title: {
@@ -237,10 +234,10 @@
         data: [],
         axisLabel: {
           show: true,
-          fontSize: 14,
+          fontSize: 12,
           formatter: function(value) {
             if (value.length > 10) {
-              return value.substring(0, 6) + "...";
+              return value.substring(0, 8) + "...";
             }
             return value;
           },

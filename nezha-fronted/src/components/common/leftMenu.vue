@@ -24,7 +24,7 @@
                   </div>
                 </template>
                 <div class="sidebar-info sub-sidebar-info" >
-                  <div v-if="getProjectModule(item.id).length == 0" class="sidebar-info-item sidebar-info-item-add" @click="addModule">
+                  <div v-if="getProjectModule(item.id).length == 0" class="sidebar-info-item sidebar-info-item-add" @click="addModule" :title="$t('overall.createModule')">
                     <i class="nz-icon nz-icon-create-square"></i>
                   </div>
                   <template v-else>

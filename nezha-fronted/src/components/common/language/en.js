@@ -52,6 +52,7 @@ const en = {
     createDatacenter:'Create Data Center',
     createCabinet:'Create cabinet',
     createModel:'Create model',
+    createModule: 'Create module',
     createMib:'Create MIB',
     exportExcel:'Export',
     importExcel:'Import',
