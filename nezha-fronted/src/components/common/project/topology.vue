@@ -228,6 +228,7 @@
           lineId:'',
           id:'',
         },
+        hoverEdge:false,
         isLineAdd:true,
         isNodeAdd:true,
         nodeData:{
@@ -367,10 +368,11 @@
             arrowStrikethrough:false,
             chosen:{
               edge:(values, id, selected, hovering)=>{
-                values.middleArrow=true;
-                values.middleArrowScale=1;
-                values.middleArrowType='circle';
-                console.log(id, selected, hovering);
+                if(this_.hoverEdge){
+                  values.middleArrow=true;
+                  values.middleArrowScale=1;
+                  values.middleArrowType='circle';
+                }
               },
             },
           },
@@ -734,6 +736,14 @@
            // this_.addLineShow=true;
          });
 
+         this.network.on("hoverEdge", function () { // 悬停边
+           this_.hoverEdge=true;
+         });
+
+         this.network.on("blurEdge", function () { // 边失去焦点
+           this_.hoverEdge=false;
+         });
+
          this.network.on("dragStart", function (params) {//节点移动开始
            this_.NodeArrShow=false;
            let selId=params.nodes[0];
@@ -802,8 +812,11 @@
            }
            return false
          });
-         this.network.on("resize", function () {//检测resize
+         this.network.on("resize", function (params,a) {//检测resize
+
            setTimeout(()=>{
+             this_.zoom=this_.network.canvasToDOM({x:0,y:1}).y-this_.network.canvasToDOM({x:0,y:0}).y;
+             console.log(this_.zoom);
              this_.modelTopUpdate();
              this_.selNodeArrUpdate();
              if(this_.networkPopShow){
