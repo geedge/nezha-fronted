@@ -208,6 +208,7 @@
           }
           this.$refs['topology'].viewsCenter=res.data.topo.viewsCenter?res.data.topo.viewsCenter:{x:0,y:0};
           this.$refs['topology'].zoom=res.data.topo.zoom?res.data.topo.zoom:1;
+          this.$refs['topology'].selNodeId='';
         })
       },
       reload(){
@@ -229,6 +230,7 @@
           }
           this.$refs['topology'].viewsCenter=res.data.topo.viewsCenter?res.data.topo.viewsCenter:{x:0,y:0};
           this.$refs['topology'].zoom=res.data.topo.zoom?res.data.topo.zoom:1;
+          this.$refs['topology'].selNodeId='';
         })
       },
       formatNodesArr(arr){
@@ -263,7 +265,6 @@
         let arr1=[];
         if(!arr){return arr1}
         arr.forEach((item)=>{
-          item.dashes=[5,5];
           item.from=item.source;
           item.to=item.target;
           item.label=item.name;

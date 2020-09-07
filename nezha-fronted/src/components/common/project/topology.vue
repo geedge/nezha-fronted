@@ -165,10 +165,12 @@
       NodeArr(n){
         if(n.length===2){
           this.lineData={
-            arrows:'',
+            arrows:'0',
             label:'',
             color:'#1e90ff',
             lineId:'',
+            width:'1',
+            dashes:false,
             id:'',
           };
           this.addLineShow=true;
@@ -227,7 +229,9 @@
           color:'#1e90ff',
           lineId:'',
           id:'',
+          dashes:[],
         },
+        hoverEdge:false,
         isLineAdd:true,
         isNodeAdd:true,
         nodeData:{
@@ -318,6 +322,7 @@
             "target": item.to,
             "smooth": item.smooth,
             "expressions": item.expressions,
+            "dashes":item.dashes,
           };
           arr1.push(obj)
         });
@@ -367,10 +372,11 @@
             arrowStrikethrough:false,
             chosen:{
               edge:(values, id, selected, hovering)=>{
-                values.middleArrow=true;
-                values.middleArrowScale=1;
-                values.middleArrowType='circle';
-                console.log(id, selected, hovering);
+                if(this_.hoverEdge){
+                  values.middleArrow=true;
+                  values.middleArrowScale=1;
+                  values.middleArrowType='circle';
+                }
               },
             },
           },
@@ -484,7 +490,6 @@
        }else{
          edges.from=this.NodeArr[0];
          edges.to=this.NodeArr[1];
-         edges.dashes=[15,15];
        }
        edgesArray.push(edges);
         this.$emit("setTopologyData",this.nodesArray,edgesArray);
@@ -632,7 +637,6 @@
       },
       //工具栏点击后显示对应内容
       popDataShowUpdate(key,flag){//key 显示对应的弹窗 flag是否不显示工具栏
-        // console.log(key);
         this.popDataShow={
           endpoint:false,
           asset:false,
@@ -643,7 +647,6 @@
           main:false,
         };
         if(key&&!this.editVisNetwork){
-          // console.log(this.lineData);
           if(key==='total'&&this.selNodeId){
             this.totalId=this.selNodeId;
             this.totalArray=this.nodesArray;
@@ -683,7 +686,6 @@
          let this_=this;
          this.init('modal');
          this.network.on("click", function (params) {
-           console.log(params);
            this_.networkPopClose();
            if(!params.edges.length&&!params.nodes.length){
              this_.popDataShowUpdate('',true);
@@ -723,7 +725,6 @@
             this_.isLineAdd=false;
           }
           if(!this_.editVisNetwork){
-            console.log(this_.lineData);
             if(this_.lineData.expressions&&this_.lineData.expressions.length){
               this_.popDataShowUpdate('total')
             }else{
@@ -732,6 +733,14 @@
           }
            // this_.lineData.color=this_.lineData.color.color;
            // this_.addLineShow=true;
+         });
+
+         this.network.on("hoverEdge", function () { // 悬停边
+           this_.hoverEdge=true;
+         });
+
+         this.network.on("blurEdge", function () { // 边失去焦点
+           this_.hoverEdge=false;
          });
 
          this.network.on("dragStart", function (params) {//节点移动开始
@@ -802,8 +811,10 @@
            }
            return false
          });
-         this.network.on("resize", function () {//检测resize
+         this.network.on("resize", function (params,a) {//检测resize
+
            setTimeout(()=>{
+             this_.zoom=this_.network.canvasToDOM({x:0,y:1}).y-this_.network.canvasToDOM({x:0,y:0}).y;
              this_.modelTopUpdate();
              this_.selNodeArrUpdate();
              if(this_.networkPopShow){

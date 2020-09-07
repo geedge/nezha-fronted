@@ -63,29 +63,35 @@
           <span>{{$t('alert.config.expr')}}</span>
           <span class="float-right" @click="addExpression"><i style="font-size: 16px; cursor: pointer;" class="nz-icon nz-icon-create-square"></i></span>
         </div>
-        <el-row class="element-item" style="" v-for="index of promqlKeys.length" :key="'ele' + index">
+        <el-row class="element-item expr" style="" v-for="index of promqlKeys.length" :key="'ele' + index">
+          <el-form-item  :rules="{required: true,message: '名称不能为空', trigger: 'blur'}" :prop="'name.' + (index-1)">
+            <el-row>
+              <template>
+                <el-col class="expr-title" style="">
+                  {{$t('project.topology.chartName')}}
+                </el-col>
+                <el-col style="width: calc(100% - 140px);">
+                  <el-input
+                    v-model="form.name[index-1]"
+                    type="text"
+                    size="small"
+                  ></el-input>
+                </el-col>
+                <el-col  style="width: 20px"> <i class="el-icon-minus" @click="removeExpression(index-1)"></i></el-col>
+              </template>
+            </el-row>
+          </el-form-item>
           <el-row>
-            <template>
-              <el-col style="width: 120px; padding-right: 20px; text-align: right; color: #666">
-                {{$t('project.topology.chartName')}}
-              </el-col>
-              <el-col style="width: calc(100% - 140px);">
-                <el-input v-model="name[index-1]" type="text" size="small"></el-input>
-              </el-col>
-              <el-col  style="width: 20px"> <i class="el-icon-minus" @click="removeExpression(index-1)"></i></el-col>
-            </template>
-          </el-row>
-          <el-row>
-            <el-col style="width: 120px; padding-right: 20px; text-align: right; color: #666">
+            <el-col class="expr-title">
               {{$t('project.topology.unit')}}
             </el-col>
             <el-col style="width: calc(100% - 120px);">
               <el-cascader filterable placeholder="" popper-class="no-style-class unit-popper-class" size="small" style="width: 100%"
-                            :options="unitOptions"
-                            :props="{ expandTrigger: 'click',emitPath:false }"
-                            :show-all-levels="false"
-                            v-model="unit[index-1]"
-            ></el-cascader>
+                           :options="unitOptions"
+                           :props="{ expandTrigger: 'click',emitPath:false }"
+                           :show-all-levels="false"
+                           v-model="unit[index-1]"
+              ></el-cascader>
             </el-col>
           </el-row>
           <promql-input
@@ -99,10 +105,11 @@
             @change="expressionChange"
             @removeExpression="removeExpression"
             :showRemove="false"
+            :projectRightBox="true"
           ></promql-input>
           <el-row>
             <template>
-              <el-col style="width: 120px; padding-right: 20px; text-align: right; color: #666">
+              <el-col class="expr-title">
                 {{$t('dashboard.panel.chartForm.legend')}}&nbsp;
                 <el-popover :content="$t('dashboard.panel.chartForm.legendTip')" placement="top" width="150" trigger="hover">
                   <i slot="reference" class="nz-icon nz-icon-info-normal" style="font-size: 12px; -webkit-transform:scale(0.75);display:inline-block;" @mouseover="rz"></i>
@@ -159,7 +166,7 @@
           if( n.expressions){
             n.expressions.forEach((item,index)=>{
               this.addExpression();
-              this.name[index]=item.name;
+              this.form.name[index]=item.name;
               this.unit[index]=item.unit;
               this.expressions[index]=item.metric;
               this.legends[index]=item.legend;
@@ -191,6 +198,7 @@
         form:{
           moduleId:'',
           iconId:'',
+          name:[],
         },
         selImage:'',
         file:'',
@@ -201,7 +209,6 @@
         promqlCount:0,
         elementIds:[],
         legends:[],
-        name:[],
         unit:[],
         imgageLoading:false,
         rules:{
@@ -276,12 +283,13 @@
             model.expressions=[];
             this.promqlKeys.forEach((item,index)=>{
               model.expressions.push({
-                "name": this.name[index],
+                "name": this.form.name[index],
                 "unit": this.unit[index],
                 "metric": this.expressions[index],
                 "legend": this.legends[index],
               })
             });
+            console.log(this.form.name,this.unit,model);
             this.$emit('addModel',model);
           }
         });
@@ -293,7 +301,7 @@
       addExpression() {
         this.expressions.push('');
         this.legends.push('');
-        this.name.push('');
+        this.form.name.push('');
         this.unit.push('');
         this.promqlKeys.push(getUUID());
         this.elementIds.push("");
@@ -303,7 +311,7 @@
         if (this.promqlCount >= 1) {
           this.expressions.splice(index, 1);
           this.legends.splice(index, 1);
-          this.name.splice(index, 1);
+          this.form.name.splice(index, 1);
           this.unit.splice(index, 1);
           this.promqlKeys.splice(index, 1);
           this.elementIds.splice(index, 1);
@@ -377,6 +385,7 @@
   /deep/ .avatar-uploader{
     display: inline-block;
     color: #1989fa;
+    vertical-align: top;
   }
   /deep/.right-box-form .icon  .el-select{
     width: 60%;
@@ -411,7 +420,7 @@
   .icon /deep/ .el-input.el-input--prefix.el-input--suffix{
     border: 1px solid #DCDFE6;
     height: 28px;
-    width: calc(100% - 30px);
+    width: calc(100% - 10px);
   }
   .icon /deep/ .el-input__inner{
     display: none;
@@ -419,6 +428,25 @@
   .icon /deep/ .el-input__prefix{
     height: 28px;
     line-height: 28px;
+  }
+  .element-item.expr /deep/ .el-form-item__content{
+    position: relative;
+    margin-left: 0 !important;
+  }
+  .element-item.expr /deep/ .el-form-item__content .el-row{
+    margin-bottom: 0;
+  }
+  .element-item.expr /deep/ .el-form-item__content .el-form-item__error{
+    left: 120px;
+  }
+  .expr-title{
+    width: 120px;
+    padding-right: 20px;
+    text-align: right;
+    color: #666;
+    font-size: 14px;
+    letter-spacing: 0;
+    line-height: 22px;
   }
   /* begin--搜索框*/
   .endpoint-asset-search {

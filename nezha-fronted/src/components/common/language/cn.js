@@ -848,6 +848,7 @@ const cn = {
       addLine:'添加连线',
       lineName:'连线名称',
       width:'宽度',
+      dashes:'虚线',
       option:'设置',
       arrows:'箭头方向',
       color:'颜色',
