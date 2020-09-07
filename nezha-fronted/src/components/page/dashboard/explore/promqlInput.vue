@@ -251,7 +251,6 @@
     padding-right: 20px;
     text-align: right;
     color: #666;
-    opacity: 0.6;
     font-size: 14px;
     letter-spacing: 0;
     line-height: 22px;

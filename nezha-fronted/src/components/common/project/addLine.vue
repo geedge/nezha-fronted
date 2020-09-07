@@ -64,7 +64,7 @@
             <span class="float-right" @click="addExpression"><i style="font-size: 16px; cursor: pointer;" class="nz-icon nz-icon-create-square"></i></span>
           </div>
           <el-row class="element-item expr" style="" v-for="index of promqlKeys.length" :key="'ele' + index">
-            <el-form-item  :rules="{required: true,message: '名称不能为空', trigger: 'blur'}" :prop="'name.' + index">
+            <el-form-item  :rules="{required: true,message: '名称不能为空', trigger: 'blur'}" :prop="'name.' + (index-1)">
               <el-row>
                 <template>
                   <el-col class="expr-title" style="">
@@ -72,7 +72,7 @@
                   </el-col>
                   <el-col style="width: calc(100% - 140px);">
                     <el-input
-                      v-model="form.name[index]"
+                      v-model="form.name[index-1]"
                       type="text"
                       size="small"
                     ></el-input>
@@ -369,7 +369,6 @@
   /deep/ .el-form-item__label{
     font-size: 14px;
     color: #666666;
-    opacity: 0.6;
   }
   .arrows /deep/ .el-input.el-input--prefix.el-input--suffix{
     border: 1px solid #DCDFE6;
@@ -427,7 +426,6 @@
     padding-right: 20px;
     text-align: right;
     color: #666;
-    opacity: 0.6;
     font-size: 14px;
     letter-spacing: 0;
     line-height: 22px;
