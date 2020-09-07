@@ -358,6 +358,10 @@
 <style scoped>
   .right-box-project-alert{
     width: 1220px;
+    padding-right: 30px;
+  }
+  .right-box-title{
+    font-weight: bold;
   }
   .mc{
     position: fixed;
