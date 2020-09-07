@@ -185,7 +185,7 @@
   import bus from '../../../../libs/bus';
   import timePicker from '../../../common/timePicker';
   import VueCountUp from 'vue-countupjs';
-  import * as world from "../../../common/js/world";
+  //import * as world from "../../../common/js/world";
 
   var timeout; //第三行第三个图的dropdown下拉菜单timeout
   export default {
