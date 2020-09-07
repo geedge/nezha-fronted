@@ -22,21 +22,65 @@
           </el-form-item>
           <el-row class="form-title">{{$t('project.topology.option')}}</el-row>
           <div class="line-option">
+            <!--<el-form-item :label="$t('project.topology.width')" prop="width" class="line-width">-->
+              <!--<el-input v-model="form.width"  size="small"></el-input>-->
+            <!--</el-form-item>-->
             <el-form-item :label="$t('project.topology.width')" prop="width" class="line-width">
-              <el-input v-model="form.width"  size="small"></el-input>
+              <el-select v-model="form.width" placeholder="" :popper-append-to-body="false"  size="small">
+                <div slot="prefix">
+                  <div :style="{height:0,width:'80%',borderTop:form.width+'px'+' solid' +' #899FB7'}"></div>
+                </div>
+                <el-option v-for="(item,index) in widthOption" :label="item+'px'" :value="item" :key="index">
+                  <div class="width-option">
+                    <span style="marginRight:5px">{{item}}px</span><div class="width-option-line" :style="{height:0,width:'80%',borderTop:item+'px solid #899FB7'}"></div>
+                  </div>
+                </el-option>
+              </el-select>
             </el-form-item>
             <el-form-item :label="$t('project.topology.arrows')" prop="arrows" class="arrows">
               <el-select v-model="form.arrows" placeholder="" :popper-append-to-body="false"  size="small">
                 <div slot="prefix">
-                  <img v-if="form.arrows=='from'" src="./image/leftArrow.png" />
-                  <img v-if="form.arrows=='to'" src="./image/rightArrow.png" />
-                  <img v-if="form.arrows=='from;to'" src="./image/LRArrow.png" />
-                  <img v-if="form.arrows=='0'" src="./image/noArrow.png" />
+                  <div class="width-option">
+                    <div v-if='form.arrows==="from"' class="width-option-line" :style="{height:0,width:'80%',borderTop:'1px solid #899FB7'}">
+                      <i class="nz-icon nz-icon-caret-right position-right" style="top: -15px;"></i>
+                    </div>
+                    <div  v-if='form.arrows==="to"' class="width-option-line" :style="{height:0,width:'80%',borderTop:'1px solid #899FB7'}">
+                      <i class="nz-icon nz-icon-caret-left position-left" style="top: -15px;"></i>
+                    </div>
+                    <div v-if='form.arrows==="from;to"' class="width-option-line" :style="{height:0,width:'80%',borderTop:'1px solid #899FB7'}">
+                      <i class="nz-icon nz-icon-caret-left position-left" style="top: -15px;"></i>
+                      <i class="nz-icon nz-icon-caret-right position-right" style="top: -15px;"></i>
+                    </div>
+                    <div v-if='form.arrows==="0"' class="width-option-line" :style="{height:0,width:'80%',borderTop:'1px solid #899FB7'}"></div>
+                  </div>
                 </div>
-                <el-option label="from" value="from"><img src="./image/leftArrow.png" /></el-option>
-                <el-option label="to" value="to"><img src="./image/rightArrow.png" /></el-option>
-                <el-option label="from;to" value="from;to"><img src="./image/LRArrow.png" /></el-option>
-                <el-option label="" value="0"><img src="./image/noArrow.png" /></el-option>
+                <el-option label="from" value="from">
+                  <div class="width-option">
+                    <div class="width-option-line" :style="{height:0,width:'80%',borderTop:'1px solid #899FB7'}">
+                      <i class="nz-icon nz-icon-caret-right position-right"></i>
+                    </div>
+                  </div>
+                </el-option>
+                <el-option label="to" value="to">
+                  <div class="width-option">
+                    <div class="width-option-line" :style="{height:0,width:'80%',borderTop:'1px solid #899FB7'}">
+                      <i class="nz-icon nz-icon-caret-left position-left"></i>
+                    </div>
+                  </div>
+                </el-option>
+                <el-option label="from;to" value="from;to">
+                  <div class="width-option">
+                    <div class="width-option-line" :style="{height:0,width:'80%',borderTop:'1px solid #899FB7'}">
+                      <i class="nz-icon nz-icon-caret-left position-left"></i>
+                      <i class="nz-icon nz-icon-caret-right position-right"></i>
+                    </div>
+                  </div>
+                </el-option>
+                <el-option label="" value="0">
+                  <div class="width-option">
+                    <div class="width-option-line" :style="{height:0,width:'80%',borderTop:'1px solid #899FB7'}"></div>
+                  </div>
+                </el-option>
               </el-select>
             </el-form-item>
             <el-form-item :label="$t('project.topology.color')" class="color">
@@ -214,6 +258,7 @@
         promqlCount:0,
         elementIds:[],
         legends:[],
+        widthOption:['1','2','3','4'],
         unit:[],
         rules:{
           // arrows: [
@@ -370,17 +415,30 @@
     font-size: 14px;
     color: #666666;
   }
-  .arrows /deep/ .el-input.el-input--prefix.el-input--suffix{
+  .arrows /deep/ .el-input.el-input--prefix.el-input--suffix,.line-width /deep/ .el-input.el-input--prefix.el-input--suffix{
     border: 1px solid #DCDFE6;
     height: 28px;
-    width: calc(100% - 60px);
+    width: calc(100% - 32px);
   }
-  .arrows /deep/ .el-input__inner{
+  .arrows /deep/ .el-input__inner,.line-width /deep/ .el-input__inner{
     display: none;
   }
-  .arrows /deep/ .el-input__prefix{
+  .arrows /deep/ .el-input__prefix,.line-width /deep/ .el-input__prefix{
     height: 28px;
     line-height: 28px;
+    color: #899FB7;
+  }
+  .arrows /deep/ .el-input__prefix > div{
+    width: 100%;
+    height: 100%;
+  }
+  .line-width /deep/ .el-input__prefix{
+    width: 100%;
+    display: flex;
+    align-items: center;
+  }
+  .line-width /deep/ .el-input__prefix > div{
+    width: 100%;
   }
   /deep/ .el-select{
     width: 262px;
@@ -395,16 +453,38 @@
   .line-option .line-width .el-input{
     width: clac(100% - 60px);
   }
-  /deep/ .el-select .el-input .el-select__caret{
-    vertical-align: middle;
+  /deep/ .el-input--small .el-input__icon{
+    line-height: 28px;
+  }
+  .width-option-line{
+    position: relative;
+    color: #899FB7;
+  }
+  .position-left{
+    position: absolute;
+    left:-4px ;
+    top: -18px;
+  }
+  .position-right{
+    position: absolute;
+    right: -4px;
+    top: -18px;
+  }
+  /deep/ .el-select-dropdown__item.selected .width-option-line {
+    border-color: #ee9d3f !important;
+    color: #ee9d3f !important;
+  }
+  /deep/ .el-dropdown-menu__item:focus .width-option-line, .el-dropdown-menu__item:not(.is-disabled):hover .width-option-line, .el-select-dropdown.is-multiple .el-select-dropdown__item.selected.hover .width-option-line, .el-select-dropdown__item.hover .width-option-line, .el-select-dropdown__item:hover .width-option-line{
+    border-color: #ee9d3f !important;
+    color: #ee9d3f !important;
   }
   .color-arrows{
     color: #C0C4CC;
     position: absolute;
-    right: 65px;
+    right: 70px;
   }
   .color-arrows .nz-icon{
-    font-size: 14px;
+    font-size: 12px;
   }
   .element-item{
     padding: 20px 0;
@@ -429,6 +509,13 @@
     font-size: 14px;
     letter-spacing: 0;
     line-height: 22px;
+  }
+  .width-option{
+    width: 195px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
   }
   .el-row {
     margin-bottom: 20px;
