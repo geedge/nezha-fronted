@@ -94,10 +94,7 @@
           show: false,
         },
         tableHover: false,
-        searchTime: [
-          new Date(bus.computeTimezone(new Date().getTime())).setHours(new Date(bus.computeTimezone(new Date().getTime())).getHours() - 1),
-          new Date(bus.computeTimezone(new Date().getTime()))
-        ],
+        searchTime: bug.getTimezontDateRange(),
         intervalTimer: null,
         interval: 0,
         panel: { //新增panel
@@ -256,9 +253,9 @@
       // 获取数据,用在子页面
       getData(params) {
         if (params.start_time === '' || params.end_time === '') {
-          let now = new Date();
-          let endTimeTmp = bus.timeFormate(now, 'yyyy-MM-dd hh:mm:ss');
-          let startTimeTmp = bus.timeFormate(now.setHours(now.getHours() - 1), 'yyyy-MM-dd hh:mm:ss');
+          let now = bus.getTimezontDateRange();
+          let endTimeTmp = bus.timeFormate(now[1].getTime(), 'yyyy-MM-dd hh:mm:ss');
+          let startTimeTmp = bus.timeFormate(now[0].getTime(), 'yyyy-MM-dd hh:mm:ss');
           params.start_time = startTimeTmp;
           params.end_time = endTimeTmp;
           params.from = this.from;

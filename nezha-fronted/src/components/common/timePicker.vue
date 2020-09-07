@@ -130,8 +130,8 @@ export default {
       isPopoverDisabled:false,
       isCustom:false,
       searchTime:[
-        bus.timeFormate(new Date(bus.computeTimezone(new Date().getTime())).setHours(new Date(bus.computeTimezone(new Date().getTime())).getHours() - 1),'yyyy-MM-dd hh:mm:ss'),
-        bus.timeFormate(new Date(bus.computeTimezone(new Date().getTime())),'yyyy-MM-dd hh:mm:ss')
+        bus.timeFormate(bus.getOffsetTimezoneData(-1),'yyyy-MM-dd hh:mm:ss'),
+        bus.timeFormate(bus.getOffsetTimezoneData(),'yyyy-MM-dd hh:mm:ss')
       ],
       showTime: {
         id: 4,

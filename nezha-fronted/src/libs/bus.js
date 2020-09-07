@@ -267,6 +267,15 @@ export default new Vue({
         return sourceTime;
       }
     },
+    getTimezontDateRange:function(offset=-1){
+      return [
+        new Date(new Date(this.computeTimezone(new Date().getTime())).setHours(new Date(this.computeTimezone(new Date().getTime())).getHours() + offset)),
+        new Date(this.computeTimezone(new Date().getTime()))
+      ]
+    },
+    getOffsetTimezoneData(offset=0){
+      return new Date(this.computeTimezone(new Date().getTime())).setHours(new Date(this.computeTimezone(new Date().getTime())).getHours() + offset)
+    },
     debounce(fn, delay) {
       // 记录上一次的延时器
       var timer = null;
