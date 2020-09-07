@@ -94,7 +94,7 @@
           show: false,
         },
         tableHover: false,
-        searchTime: bug.getTimezontDateRange(),
+        searchTime: bus.getTimezontDateRange(),
         intervalTimer: null,
         interval: 0,
         panel: { //新增panel
