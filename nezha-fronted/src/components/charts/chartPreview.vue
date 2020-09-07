@@ -205,10 +205,7 @@
         showLegend:true,
         tableShow:true,
         urlShow:true,
-        searchTime: [
-          new Date(bus.computeTimezone(new Date().getTime())).setHours(new Date(bus.computeTimezone(new Date().getTime())).getHours() - 1),
-          new Date(bus.computeTimezone(new Date().getTime()))
-        ],
+        searchTime: bus.getTimezontDateRange(),
         //oldSearchTime:[],
         minHeight:200,
         chartSpaceHeight:5,//top-border: 1,bottom-border: 1,padding-bottome:3
@@ -224,10 +221,7 @@
       // 全屏查看
       show(chartInfo) {
         this.isError = false;
-        this.searchTime = [
-          new Date(bus.computeTimezone(new Date().getTime())).setHours(new Date(bus.computeTimezone(new Date().getTime())).getHours() - 1),
-          new Date(bus.computeTimezone(new Date().getTime()))
-        ];
+        this.searchTime = bus.getTimezontDateRange();
         this.chart = JSON.parse(JSON.stringify(chartInfo));
 
         let chartType= chartInfo.type;

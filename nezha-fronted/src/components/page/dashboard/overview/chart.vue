@@ -334,7 +334,7 @@
         let str = `<div>`;
         params.forEach((item, i) => {
           if(i===0){
-            let value=bus.computeTimezone(item.data[0])
+            let value=item.data[0]
             let t_date = new Date(value);
             str += [t_date.getFullYear(), t_date.getMonth() + 1, t_date.getDate()].join('-') + " "
               + [t_date.getHours(), t_date.getMinutes(),t_date.getSeconds()].join(':');

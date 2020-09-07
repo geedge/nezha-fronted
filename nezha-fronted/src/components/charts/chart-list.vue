@@ -846,6 +846,7 @@
               endTime = this.filter.end_time;
               //this.$parent.refreshTime(startTime,endTime);全屏查询，不更新panel列表的时间条件
             } else {
+              console.log('页面进入',this.filter)
               startTime = this.filter.start_time;
               endTime = this.filter.end_time;
             }
