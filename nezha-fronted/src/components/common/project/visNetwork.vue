@@ -265,7 +265,6 @@
         let arr1=[];
         if(!arr){return arr1}
         arr.forEach((item)=>{
-          item.dashes=[5,5];
           item.from=item.source;
           item.to=item.target;
           item.label=item.name;

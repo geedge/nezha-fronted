@@ -170,7 +170,7 @@
             color:'#1e90ff',
             lineId:'',
             width:'1',
-            dashed:'[5,5]',
+            dashes:false,
             id:'',
           };
           this.addLineShow=true;
@@ -229,6 +229,7 @@
           color:'#1e90ff',
           lineId:'',
           id:'',
+          dashes:[],
         },
         hoverEdge:false,
         isLineAdd:true,
@@ -321,6 +322,7 @@
             "target": item.to,
             "smooth": item.smooth,
             "expressions": item.expressions,
+            "dashes":item.dashes,
           };
           arr1.push(obj)
         });
@@ -488,7 +490,6 @@
        }else{
          edges.from=this.NodeArr[0];
          edges.to=this.NodeArr[1];
-         edges.dashes=[15,15];
        }
        edgesArray.push(edges);
         this.$emit("setTopologyData",this.nodesArray,edgesArray);

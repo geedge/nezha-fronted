@@ -37,6 +37,16 @@
                 </el-option>
               </el-select>
             </el-form-item>
+            <el-form-item :label="$t('project.topology.width')" prop="width" class="line-width">
+              <el-select v-model="form.dashes" placeholder="" :popper-append-to-body="false"  size="small">
+                <div slot="prefix">
+                  {{form.dashes}}
+                </div>
+                <el-option v-for="(item,index) in dashesOption" :label="item+'px'" :value="item" :key="index">
+
+                </el-option>
+              </el-select>
+            </el-form-item>
             <el-form-item :label="$t('project.topology.arrows')" prop="arrows" class="arrows">
               <el-select v-model="form.arrows" placeholder="" :popper-append-to-body="false"  size="small">
                 <div slot="prefix">
@@ -213,6 +223,7 @@
             width:n.width,
             lineName:n.label,
             name:[],
+            dashes:!n.dashes?n.dashes:JSON.stringify(n.dashes),
           };
          if( n.expressions){
            n.expressions.forEach((item,index)=>{
@@ -241,6 +252,7 @@
           type:'',
           roundness:'',
           name:[],
+          dashes:''
         },
         predefineColors: [
           '#ff4500',
@@ -259,6 +271,7 @@
         elementIds:[],
         legends:[],
         widthOption:['1','2','3','4'],
+        dashesOption:[false,'[3,3]','[9,9]','[15,15]','[21,21]'],
         unit:[],
         rules:{
           // arrows: [
@@ -289,6 +302,7 @@
               roundness:(Math.random()*8 +1)/10 ,//获取0.1-0.9之间的随机数
               type:'curvedCW',
             };
+            model.dashes=!model.dashes?model.dashes:JSON.parse(model.dashes);
             model.expressions=[];
             this.promqlKeys.forEach((item,index)=>{
               model.expressions.push({
