@@ -10,7 +10,7 @@
       <div class="top-tools" v-show="bottomBox.mainResizeShow">
         <div class="top-tool-main-right" :class="{'top-tool-main-right-to-left': bottomBox.showSubList}">
           <div class="top-tool-search float-right">
-            <search-input :searchMsg="searchMsg" @search="search" :bottomBox.inTransform="bottomBox.inTransform"></search-input>
+            <search-input :searchMsg="searchMsg" @search="search" :inTransform="bottomBox.inTransform"></search-input>
           </div>
           <button id="alert-add" @click="add"  :title="$t('overall.createAlertRule')"
                   class="nz-btn nz-btn-size-normal nz-btn-style-light margin-l-20">
