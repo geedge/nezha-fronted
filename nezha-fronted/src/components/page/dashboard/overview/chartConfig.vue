@@ -171,11 +171,11 @@
         trigger: 'item',
         type:'cross',
         alwaysShowContent: false,
-        // backgroundColor: 'rgba(0,0,0,0.7)',
-        borderColor:'#ffffff',
+        backgroundColor: 'rgba(255,255,255,0.7)',
+        /*borderColor:'#ffffff',
         borderRadius: 4,
         borderWidth: 1,
-        padding: 0,
+        padding: 0,*/
       },
       backgroundColor: "#BDE3FD"
     };

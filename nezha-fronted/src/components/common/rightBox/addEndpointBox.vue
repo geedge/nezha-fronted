@@ -10,7 +10,7 @@
 
     <!-- begin--表单-->
     <el-scrollbar class="right-box-form-box">
-      <el-form class="right-box-form right-box-form-left" label-position="right" label-width="120px" ref="addEndpoint" :model="endpoint" :rules="rules">
+      <el-form class="right-box-form right-box-form-left" label-position="right" ref="addEndpoint" :model="endpoint" :rules="rules">
         <!--project-->
         <el-form-item :label='$t("project.project.project")' prop="projectId">
           <el-select @change="((val) => {changeProject(val)})" value-key="id" popper-class="config-dropdown" v-model="currentProjectCopy" placeholder="" size="small">
