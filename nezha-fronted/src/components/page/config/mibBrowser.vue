@@ -405,6 +405,9 @@
         if (this.loading) {
           return;
         }
+
+        this.popShow();this.popHide()  //再调用一次，对数据赋值
+
         /*处理snmpset*/
         if (!set) {
           if (this.searchParam.operation == 'set') {
