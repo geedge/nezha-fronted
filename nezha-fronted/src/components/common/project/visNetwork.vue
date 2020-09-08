@@ -373,7 +373,7 @@
   }
   .facade-top .facade-top-right{
     width: 5%;
-    min-width: 120px;
+    min-width: 100px;
   }
   .facade-top-right-content{
     display: flex;

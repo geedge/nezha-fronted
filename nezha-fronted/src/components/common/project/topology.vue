@@ -632,7 +632,9 @@
         // this.moduleDataS=this.allModuleInfos-this.nodesArray
         this.moduleDataS={...this.allModuleInfos};
         this.nodesArray.forEach((item)=>{
-          this.moduleDataS.module=this.moduleDataS.module.filter((item1)=> item.id!==item1.id)
+          if(this.moduleDataS.module){
+            this.moduleDataS.module=this.moduleDataS.module.filter((item1)=> item.id!==item1.id)
+          }
         })
       },
       //工具栏点击后显示对应内容
