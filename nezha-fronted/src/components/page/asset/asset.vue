@@ -59,6 +59,10 @@
           :prop="$tableSet.propTitle(item.prop,'asset')"
           :sort-orders="['ascending', 'descending']"
         >
+          <template slot-scope="scope" slot="header">
+            <span v-if="item.type == 'tag'"><span>{{item.label}}</span><span style="color:orange;">&nbsp;[Tag]</span></span>
+            <span v-else><span>{{item.label}}</span></span>
+          </template>
           <template slot-scope="scope" :column="item">
             <div v-if="item.prop=='ID'">
               <span>{{scope.row.id}}</span>
@@ -118,6 +122,9 @@
           <div v-if="item.prop=='tel'">
             <span>{{scope.row.idc.tel}}</span>
           </div>
+          <template v-if="item.prop == 'tags'">
+            <span>{{filterTags(scope)}}</span>
+          </template>
           <template v-if="item.prop == 'option'">
             <span :title="$t('overall.view')" @click.stop="detail(scope.row)" class="content-right-option" :id="'asset-detail-'+scope.row.id"><i
               class="el-icon-view"></i>
@@ -358,6 +365,7 @@
         },
 
         assetPingSwitch: localStorage.getItem('nz-sys-asset-ping-switch'),
+        tagKeys:[],
       }
     },
     watch: {
@@ -497,6 +505,7 @@
         if (refresh) {
           this.getTableData();
           bus.$emit('asset-list-change')
+          this.loadKeys();
         }
       },
       pageNo(val) {
@@ -642,6 +651,47 @@
         this.$nextTick(()=>{
           bus.$emit(event,param)
         })
+      },
+      loadKeys:function(){
+        this.$get('/asset/tagKey').then(res=>{
+          if(res.code == 200){
+            this.tagKeys = res.data.list.map(item=>{
+              return {label:item,prop:'tags',show:false,allowed: true,type:'tag'}
+
+            })
+            this.resetTableTitle()
+          }
+        })
+      },
+      resetTableTitle:function(){
+        let title = this.tools.customTableTitle;
+
+        let tableTitle = title.slice(0,this.tableTitle.length);
+
+        let tagTitle = title.slice(this.tableTitle.length,title.length);
+
+        let $self=this;
+        let newTags = this.tagKeys.filter(item=>{ return !tagTitle.find(t =>{return item.label == t.label})})
+        let keepTags = tagTitle.filter(item=>{ return $self.tagKeys.find(t =>{return item.label == t.label})})
+
+        let result = tableTitle.concat([{label:'Tag',show:false,NotSet:true,type:'title',prop:'table-tag'}])
+
+        result = result.concat(keepTags).concat(newTags)
+
+        this.tools.customTableTitle = JSON.parse(JSON.stringify(result))
+
+      },
+      filterTags:function(scope){
+        console.log(scope)
+        let tag=scope.column.label.split(' [Tag]')[0]
+        let tagVals=scope.row.tags
+        if(tagVals){
+          console.log('tags',tagVals,tag)
+          let showTag=tagVals.find(item=>{return item.tag == tag})
+          if(showTag){
+            return showTag.value
+          }
+        }
       }
     },
 
@@ -672,6 +722,11 @@
         }
       }
       this.tools.customTableTitle = tableTitle;
+
+      this.loadKeys();
+
+      console.log('load end')
+
       //初始化数据
       this.getUserData();
       this.getTableData();
