@@ -28,7 +28,9 @@
             <el-form-item :label="$t('project.topology.width')" prop="width" class="line-width">
               <el-select v-model="form.width" placeholder="" :popper-append-to-body="false"  size="small">
                 <div slot="prefix">
-                  <div :style="{height:0,width:'80%',borderTop:form.width+'px'+' solid' +' #899FB7'}"></div>
+                  <div class="width-option">
+                    <div :style="{height:0,width:'80%',borderTop:form.width+'px'+' solid' +' #899FB7'}"></div>
+                  </div>
                 </div>
                 <el-option v-for="(item,index) in widthOption" :label="item+'px'" :value="item" :key="index">
                   <div class="width-option">
@@ -37,13 +39,43 @@
                 </el-option>
               </el-select>
             </el-form-item>
-            <el-form-item :label="$t('project.topology.dashes')" prop="width" class="line-width">
+            <el-form-item :label="$t('project.topology.dashes')" prop="dashes" class="line-width">
               <el-select v-model="form.dashes" placeholder="" :popper-append-to-body="false"  size="small">
                 <div slot="prefix">
-                  {{form.dashes}}
+                  <div class="width-option">
+                    <div class="width-option-line" v-if="!form.dashes" :style="{height:0,width:'80%',borderTop:'1px solid #899FB7'}"></div>
+                    <div class="dashes-box" v-if="form.dashes">
+                      <div class="width-option-line"
+                           v-for="count in dashesCount(form.dashes)"
+                           :key="count"
+                           :style="{
+                           height:0,
+                           width:dashesWidth(form.dashes)+'px',
+                           borderTop:'1px solid #899FB7',
+                           display:'inline-block'
+                         }">
+
+                      </div>
+                    </div>
+                  </div>
                 </div>
                 <el-option v-for="(item,index) in dashesOption" :label="item+'px'" :value="item" :key="index">
+                  <div class="width-option">
+                    <div class="width-option-line" v-if="!item" :style="{height:0,width:'80%',borderTop:'1px solid #899FB7'}"></div>
+                    <div class="dashes-box" v-if="item">
+                      <div class="width-option-line"
+                           v-for="count in dashesCount(item)"
+                           :key="count"
+                           :style="{
+                           height:0,
+                           width:dashesWidth(item)+'px',
+                           borderTop:'1px solid #899FB7',
+                           display:'inline-block'
+                         }">
 
+                      </div>
+                    </div>
+                  </div>
                 </el-option>
               </el-select>
             </el-form-item>
@@ -374,6 +406,17 @@
       },
       colorOut(){
         this.showPicker=false;
+      },
+      //返回dashes的第一項
+      dashesWidth(item){
+        return JSON.parse(item)[0]
+      },
+      // 返回應該遍历的次数
+      dashesCount(item){
+        if(!item){
+          return 0;
+        }
+        return Math.floor(190/this.dashesWidth(item)/2);
       }
 
     },
@@ -406,7 +449,7 @@
     border-radius: 5px;
     display: flex;
     align-items: center;
-    width: calc(100% - 60px);
+    width: calc(100% - 32px);
     height: 30px;
   }
   .color-show-left{
@@ -455,7 +498,7 @@
     width: 100%;
   }
   /deep/ .el-select{
-    width: 262px;
+    width: 100%;
   }
   .line-option{
     display: flex;
@@ -495,7 +538,7 @@
   .color-arrows{
     color: #C0C4CC;
     position: absolute;
-    right: 70px;
+    right: 42px;
   }
   .color-arrows .nz-icon{
     font-size: 12px;
@@ -525,11 +568,20 @@
     line-height: 22px;
   }
   .width-option{
-    width: 195px;
+    width: 217px;
     display: flex;
     align-items: center;
     justify-content: center;
     height: 100%;
+    overflow: hidden;
+  }
+  .dashes-box{
+    height:100%;
+    width:80%;
+    overflow: hidden;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
   }
   .el-row {
     margin-bottom: 20px;

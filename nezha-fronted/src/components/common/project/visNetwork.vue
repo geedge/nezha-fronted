@@ -59,39 +59,33 @@
             </div>
             <div class="facade-top-right" v-loading="projectInfo.loading">
               <div class="facade-top-title">
-                <span class="label">Alert :</span>
+                <span class="label" style="padding-left: 0;">Alert :</span>
                 {{total}}
               </div>
               <div class="facade-top-right-content">
                 <div>
-                  <el-progress
-                    type="circle"
-                    :percentage="projectInfo.alertStat[0]?(projectInfo.alertStat[0]/total)*100:0"
-                    :show-text="false"
-                    :width="40"
-                    color="#F5A390"
-                  ></el-progress>
-                  <div class="align--center">{{projectInfo.alertStat[0] || 0}}</div>
+                  <div class="content-high-title">
+                    {{returnSeverityLabel('high')}}
+                  </div>
+                  <div>
+                    {{projectInfo.alertStat[0] || 0}}
+                  </div>
                 </div>
                 <div>
-                  <el-progress
-                    type="circle"
-                    :percentage="projectInfo.alertStat[1]?(projectInfo.alertStat[1]/total)*100:0"
-                    :show-text="false"
-                    :width="40"
-                    color="#F6B977"
-                  ></el-progress>
-                  <div class="align--center">{{projectInfo.alertStat[1] || 0}}</div>
+                  <div class="content-medium-title">
+                    {{returnSeverityLabel('medium')}}
+                  </div>
+                  <div>
+                    {{projectInfo.alertStat[1] || 0}}
+                  </div>
                 </div>
                 <div>
-                  <el-progress
-                    type="circle"
-                    :percentage="projectInfo.alertStat[2]?(projectInfo.alertStat[2]/total)*100:0"
-                    :show-text="false"
-                    :width="40"
-                    color="#EBD066"
-                  ></el-progress>
-                  <div class="align--center">{{projectInfo.alertStat[2] || 0}}</div>
+                  <div class="content-low-title">
+                    {{returnSeverityLabel('low')}}
+                  </div>
+                  <div>
+                    {{projectInfo.alertStat[2] || 0}}
+                  </div>
                 </div>
               </div>
             </div>
@@ -290,6 +284,10 @@
           })
         }
       },
+      // Severity Label
+      returnSeverityLabel(key){
+        return this.$CONSTANTS.alertMessage.severityData.find(s => {return s.value == key}).label
+      },
       editVisNetworkChange(flag){
         this.editVisNetwork=flag;
         if(flag){
@@ -374,15 +372,70 @@
     margin-left: 30px;
   }
   .facade-top .facade-top-right{
-    width: 12%;
-    min-width: 280px;
+    width: 5%;
+    min-width: 120px;
   }
   .facade-top-right-content{
     display: flex;
     justify-content: space-around;
     justify-items: center;
+    flex-direction: column;
     height: calc(100% - 30px);
-    align-items:center;
+    align-items:flex-start;
+  }
+  .facade-top-right-content > div{
+    width: 80px;
+    height: 22px;
+    display: flex;
+    justify-content: space-between;
+    color: #fff;
+    text-align: center;
+  }
+  .facade-top-right-content > div > div:last-child{
+    text-align: center;
+    border-radius: 0 4px 4px 0;
+    flex: 1;
+    height: calc(100% - 2px);
+  }
+  .content-high-title{
+    background: #F2866E;
+    border-radius: 4px 0 0 4px;
+    width: 44px;
+    height: 100%;
+  }
+  .content-high-title + div{
+    border: 1px solid #F4907A;
+    font-size: 12px;
+    color: #F4907A;
+  }
+
+  .content-medium-title{
+    background: #F89984;
+    border-radius: 4px 0 0 4px;
+    width: 54px;
+    height: 100%;
+  }
+  .content-medium-title + div{
+    border: 1px solid #F9A28F;
+    font-size: 12px;
+    color: #F9A28F;
+  }
+
+  .content-low-title{
+    background: #F7BA78;
+    border-radius: 4px 0 0 4px;
+    width: 44px;
+    height: 100%;
+  }
+  .content-low-title + div{
+    border: 1px solid #F7BA78;
+    font-size: 12px;
+    color: #F7BA78;
+  }
+
+
+  .right-content-high{
+    border: 1px solid ;
   }
   .align--center{
     text-align: center;

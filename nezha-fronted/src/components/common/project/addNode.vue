@@ -289,7 +289,6 @@
                 "legend": this.legends[index],
               })
             });
-            console.log(this.form.name,this.unit,model);
             this.$emit('addModel',model);
           }
         });

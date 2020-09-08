@@ -1000,7 +1000,7 @@
   .nz-icon-shuidi{
     position: absolute;
     font-size: 48px;
-    color: rgba(132,213,194,0.5);
+    color: rgba(190,233,222,0.45);
     border-radius: 50%;
     height: 60px;
     width: 38px;
@@ -1008,7 +1008,7 @@
   .nz-icon-model{
     color: #23BF9A;
     position: absolute;
-    top: 14px;
+    top: 17px;
     left: 15px;
     font-size: 18px;
   }
