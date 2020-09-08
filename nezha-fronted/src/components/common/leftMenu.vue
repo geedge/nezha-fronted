@@ -108,7 +108,7 @@
             <el-collapse v-model="activeTag" class="left-menu-bg">
               <el-collapse-item :name="item.key" :title="item.key" v-for="item in tagData">
                 <el-checkbox-group v-model="tagCheckList" size="small" >
-                  <el-checkbox class="sidebar-info-item"  v-for="tag in item.values" :key="tag.value" :label="tag.value" @change="changeTagCheckBox(item,tag.value)">
+                  <el-checkbox class="sidebar-info-item"  v-for="tag in item.values" :key="item.key+'-'+tag.value" :label="item.key+'-'+tag.value" @change="changeTagCheckBox(item,tag.value)">
                     <div class="sidebar-info-item-txt">
                       <el-popover v-if="tag.value.length > 14" trigger="hover" placement="top-start" :content="tag.value" >
                         <span slot="reference">{{tag.value}}</span>
@@ -475,7 +475,6 @@
           }
         },
         changeTagCheckBox(tag,value){
-          console.log(tag,value,this.tagCheckList)
           let checked=this.tagCheckMap[tag.key];
           if(!checked){
             checked=[];
