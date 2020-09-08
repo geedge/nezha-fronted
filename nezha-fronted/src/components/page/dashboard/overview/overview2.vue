@@ -1335,14 +1335,15 @@
 
 <style lang="scss">
   @import "./overview2.scss";
-  /*.tooltip{
-    padding:5px;
+  .tooltip{
+    padding: 5px;
     min-width: 500px;
-    background-color: rgba(221,228,237,1);
+    background-color: rgba(255, 255, 255, 0.7);
+    box-shadow: 1px 2px 8px 0 rgba(0, 0, 0, 0.24);
   }
   .tooltip-table{
-    border-spacing: 0px;
-    border-collapse:collapse;
+    border-spacing: 0;
+    border-collapse: collapse;
   }
   .tooltip-table tr{
     display: table-row;
@@ -1355,9 +1356,9 @@
     text-overflow: ellipsis;
     vertical-align: middle;
     text-align: left;
-    border: 1px solid #b9b9bf;
+    border: 1px solid #ccc;
     display: table-cell;
-    padding:0 5px ;
+    padding: 0 5px ;
     color: black;
   }
   .flex-box{
@@ -1367,5 +1368,5 @@
   .column-box{
     flex-direction: column;
     justify-content: space-between !important;
-  }*/
+  }
 </style>

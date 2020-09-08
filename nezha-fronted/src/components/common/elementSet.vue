@@ -8,14 +8,17 @@
           v-for="(item,index) in custom"
           :key="index"
           class="custom-label"
-          :class="!allowedAll&&!item.allowed && (index==0 || index == 1 || item.NotSet) ? 'custom-label-disabled' : ''"
           @click="handler(item,index)"
           :id="'element-set-el-'+index"
+          :class="{'custom-title orange-font':item.type == 'title','custom-label-disabled':!allowedAll&&!item.allowed && (index==0 || index == 1 || item.NotSet)}"
         >
           <i class="el-icon-check" v-if="!allowedAll&&!item.allowed&&(index==0||index==1||item.visibility=='disabled')"></i>
           <i v-else class="el-icon-check" v-show="item.show"></i>
           <span>{{item.label}}</span>
         </div>
+
+
+
       </el-scrollbar>
     </div>
     <div class="custom-bottom-btns">
@@ -159,6 +162,9 @@ export default {
   position: relative;
   cursor: default;
   font-size: 14px;
+}
+.custom-title{
+  padding: 2px 0 2px 2px;
 }
 .custom-label-disabled {
   cursor: not-allowed;

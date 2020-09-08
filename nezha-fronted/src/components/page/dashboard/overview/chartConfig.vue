@@ -139,6 +139,7 @@
     };
     const mapOptions={
       geo:{
+        itemStyle: {areaColor: "white"},
         map: '',
         roam: true,//鼠标是否可以控制缩放
         center: [67.45, 48],//当前视角的中心点，用经纬度表示
@@ -154,7 +155,7 @@
         },
         emphasis:{
           itemStyle: {
-            areaColor:'lightgray'
+            areaColor:'white'
           }
         },
         left:0,
@@ -162,19 +163,19 @@
         right:0,
         bottom:0,
         scaleLimit: {
-          min: 3,
-          max: 15
+          min: 4,
+          max: 8
         }
       },
       tooltip : {
         trigger: 'item',
         type:'cross',
         alwaysShowContent: false,
-        // backgroundColor: 'rgba(0,0,0,0.7)',
-        borderColor:'#ffffff',
+        backgroundColor: 'rgba(255,255,255,0.7)',
+        /*borderColor:'#ffffff',
         borderRadius: 4,
         borderWidth: 1,
-        padding: 0,
+        padding: 0,*/
       },
       backgroundColor: "#BDE3FD"
     };

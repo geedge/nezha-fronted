@@ -96,11 +96,11 @@
             </div>
             <el-scrollbar ref="tagEditBoxScrollbar" style="height: calc(100% - 32px);">
               <div class="tag-edit-box-body" v-for="(item, index) in editAsset.tags">
-                <el-form-item class="tag-edit tag-edit-tag" :rules="{required: true, message: $t('validate.required'), trigger: 'blur'}" :prop="'tags.' + index + '.tag'">
-                  <el-input placeholder="tag" size="mini" v-model="item.tag"></el-input>
+                <el-form-item class="tag-edit tag-edit-tag" :rules="{required: true, message: $t('validate.required'), trigger: 'change'}" :prop="'tags.' + index + '.tag'">
+                  <el-autocomplete placeholder="tag" size="mini" v-model="item.tag" :fetch-suggestions="filterKey" @blur="loadValues(item)" @select="loadValues" popper-class="no-style-class"></el-autocomplete>
                 </el-form-item>
-                <el-form-item class="tag-edit tag-edit-value" :rules="{required: true, message: $t('validate.required'), trigger: 'blur'}" :prop="'tags.' + index + '.value'">
-                  <el-input placeholder="value" size="mini" v-model="item.value"></el-input>
+                <el-form-item class="tag-edit tag-edit-value" :rules="{required: true, message: $t('validate.required'), trigger: 'change'}" :prop="'tags.' + index + '.value'">
+                  <el-autocomplete placeholder="value" size="mini" v-model="item.value" :fetch-suggestions="filterValue" popper-class="no-style-class"></el-autocomplete>
                 </el-form-item>
                 <div class="param-box-row-symbol" :id="'asset-tag-remove-'+index" @click.stop="removeTag(index)"><i class="nz-icon nz-icon-minus-square"></i></div>
               </div>
@@ -251,7 +251,10 @@
         formData:null,
         accountValidResult: true,
         changeProtocolSwitch: true,
-        exporterDisableSwitch: false
+        exporterDisableSwitch: false,
+        tagKeys:[],
+        tagValues:[],
+        tagValuesCache:new Map(),
       }
     },
     watch: {
@@ -618,13 +621,61 @@
         }else{
           this.exporterDisableSwitch = false;
         }
-      }
+      },
+      loadKeys:function(){
+        this.$get('/asset/tagKey').then(res=>{
+          if(res.code == 200){
+            this.tagKeys = res.data.list.map(item=>{
+                return {value:item}
+              })
+          }
+        })
+      },
+      loadValues:function(tag){
+        let tagVal=tag.tag && tag.tag!=''?tag.tag:tag.value
+        if(!tagVal || tagVal ==''){this.tagValues=[]; return; }
+
+        let value = this.tagValuesCache.get(tagVal)
+        if(!value){
+          value = [];
+          this.$get('/asset/tagValue?key='+tagVal).then(res => {
+            if(res.code == 200){
+              value = res.data.list.map(item=>{
+                return {value:item}
+              })
+
+              this.tagValues=Object.assign([],value)
+              this.tagValuesCache.set(tag.tag,Object.assign([],value))
+            }
+          })
+        }else{
+          this.tagValues=Object.assign([],value)
+        }
+      },
+      filterKey:function(input,callback){
+        if(!input || input == ''){
+          callback(this.tagKeys)
+        }else{
+          let result=this.tagKeys.filter(item=>{return item.value.toLowerCase().indexOf(input.toLowerCase()) != -1})
+          callback(result)
+        }
+      },
+      filterValue:function(input,callback){
+        console.log(this.tagValues)
+        if(!input || input == ''){
+          callback(this.tagValues)
+        }else{
+          let result=this.tagValues.filter(item=>{return item.value.toLowerCase().indexOf(input.toLowerCase()) != -1})
+          callback(result)
+        }
+      },
     },
     mounted() {
       this.getUserData();
       this.getVendorData();
       this.getAssetTypeData();
       this.getDcData();
+      this.loadKeys();
       this.showAccountOp = false;
     }
   }

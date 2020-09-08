@@ -101,6 +101,28 @@
                 </el-checkbox-group>
               </el-collapse-item>
             </el-collapse>
+            <!--tag 过滤-->
+            <div class="sidebar-title too-long-split orange-font">
+              Tag
+            </div>
+            <el-collapse v-model="activeTag" class="left-menu-bg">
+              <el-collapse-item :name="item.key" :title="item.key" v-for="item in tagData">
+                <el-checkbox-group v-model="tagCheckList" size="small" >
+                  <el-checkbox class="sidebar-info-item"  v-for="tag in item.values" :key="item.key+'-'+tag.value" :label="item.key+'-'+tag.value" @change="changeTagCheckBox(item,tag.value)">
+                    <div class="sidebar-info-item-txt">
+                      <el-popover v-if="tag.value.length > 14" trigger="hover" placement="top-start" :content="tag.value" >
+                        <span slot="reference">{{tag.value}}</span>
+                      </el-popover>
+                      <span v-else>{{tag.value}}</span>
+                    </div>
+                    <el-tooltip :content="''+tag.total" placement="top" effect="light" :disabled="tag.total<99">
+                      <el-badge class="mark" :value="tag.total" :max="99"/>
+                    </el-tooltip>
+                  </el-checkbox>
+                </el-checkbox-group>
+              </el-collapse-item>
+            </el-collapse>
+
           </template>
           <template v-else>
             <div v-for="menu in $CONSTANTS.staticMenus[parentMenu].menu" class="sidebar-info-item" :class="{'sidebar-info-item-active': menu.route == route}" @click="jumpTo(menu.route)">
@@ -151,6 +173,7 @@
 
           //asset相关
           activeType: 'dataCenter',
+          activeTag:'',
           dcData: [],
           dcCheckList: [],
           assetTypeData: [],
@@ -159,6 +182,10 @@
           vendorCheckList: [],
           pingData: [],
           pingCheckList: [],
+          tagData:[],
+          tagCheckList:[],
+          tagCheckMap:{},
+          lastCheckSize:0,
           assetPingSwitch:true,
         }
       },
@@ -183,9 +210,9 @@
             return "";
           }
         },
-        currentProjectChange() {
-          return this.$store.state.currentProject;
-        },
+        checkedTagCount(){
+          return this.tagCheckList.length;
+        }
       },
       watch: {
         route: {
@@ -410,6 +437,9 @@
                   item.value = item.status;
                   return item;
                 });
+
+                this.tagData = response.data.tag
+
               }
               resolve();
             });
@@ -444,7 +474,34 @@
             bus.$emit("asset-filter-change", "pingStates", "");
           }
         },
+        changeTagCheckBox(tag,value){
+          let checked=this.tagCheckMap[tag.key];
+          if(!checked){
+            checked=[];
+          }
+          if(this.lastCheckSize < this.tagCheckList.length){
+            checked.push(value)
+          }else{
+            let index=checked.findIndex(item=>{
+              return item == value
+            })
+            checked.splice(index,1)
+          }
 
+          if(checked.length>0){
+            this.tagCheckMap[tag.key] = checked;
+          }else{
+            if(this.tagCheckMap[tag.key]){
+              delete this.tagCheckMap[tag.key]
+            }
+          }
+          this.lastCheckSize = this.tagCheckList.length;
+          if(Object.keys(this.tagCheckMap).length > 0){
+            bus.$emit("asset-filter-change", "tags", JSON.stringify(this.tagCheckMap));
+          }else{
+            bus.$emit("asset-filter-change", "tags", '');
+          }
+        },
         indOf(a, b) {
           let c = [];
           for (let i = 0; i < a.length; i++) {

@@ -101,7 +101,20 @@
         }
 
         if(this.chartType == 'map'){
+          this.option.geo.regions = [];
+
           let geoObj = this.map.geoJson.geoJson;
+          geoObj.features.forEach(item=>{
+            if (item.properties.NAME_0 == "Kazakhstan") {
+              this.option.geo.regions.push({
+                name: item.properties.NAME_1,
+                itemStyle: {areaColor: "#eee"},
+                label: {show: true}
+              });
+            }
+          });
+          console.info(this.option.geo)
+          /*let geoObj = this.map.geoJson.geoJson;
           geoObj.features.forEach(item=>{
             if(this.option.geo.regions){
               this.option.geo.regions.push({
@@ -122,7 +135,7 @@
                 }
               }]
             }
-          });
+          });*/
           //let timer = setTimeout(()=>{}, 0);
           //地图拖动、缩放时动态读取地图数据
           /*this.chart.on("georoam", params => {
