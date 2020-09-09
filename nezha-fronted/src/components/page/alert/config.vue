@@ -12,10 +12,21 @@
           <div class="top-tool-search float-right">
             <search-input :searchMsg="searchMsg" @search="search" :inTransform="bottomBox.inTransform"></search-input>
           </div>
-          <button id="alert-add" @click="add"  :title="$t('overall.createAlertRule')"
-                  class="nz-btn nz-btn-size-normal nz-btn-style-light margin-l-20">
-            <i class="nz-icon-create-square nz-icon"></i>
-          </button>
+          <export-excel
+            export-file-name="AlertRule"
+            export-url="/alert/rule/export"
+            import-url="/alert/rule/import"
+            :params="searchLabel"
+            @afterImport="getTableData"
+            class="margin-l-20"
+          >
+            <template slot="optionZone">
+              <button id="alert-add" @click="add"  :title="$t('overall.createAlertRule')"
+                      class="nz-btn nz-btn-size-normal nz-btn-style-light">
+                <i class="nz-icon-create-square nz-icon"></i>
+              </button>
+            </template>
+          </export-excel>
         </div>
         <div class="pagination-top pagination-top-hide display-none"></div>
       </div>
@@ -107,9 +118,13 @@
 </template>
 <script>
   import bus from '../../../libs/bus';
+  import exportXLSX from "../../common/exportXLSX";
   import chartDataFormat from "../../charts/chartDataFormat";
   export default {
     name: "alert-config",
+    components: {
+      'export-excel': exportXLSX,
+    },
     data() {
       return {
         //侧滑
