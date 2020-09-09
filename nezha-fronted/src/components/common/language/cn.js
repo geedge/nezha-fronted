@@ -855,7 +855,13 @@ const cn = {
       chartName:'图表名称',
       unit:'单位',
       addModule:'添加组件',
-
+      edit:'编辑',
+      refresh:'刷新',
+      endpoint:'Endpoint Table',
+      asset:'资产信息',
+      total:'图表',
+      info:'组件信息',
+      alert:'告警信息',
     },
   },
   el: {

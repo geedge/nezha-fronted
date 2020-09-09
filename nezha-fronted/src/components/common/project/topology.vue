@@ -33,7 +33,7 @@
         :style="{transform:'scale('+zoom+')'}"
         v-show="networkPopShow"
       >
-        <i class="nz-icon nz-icon-hexagonBorder"  v-for="item in popData"  :style="{top:item.top,left:item.left}" @click="popClick(item.id)">
+        <i class="nz-icon nz-icon-hexagonBorder"  v-for="item in popData"  :style="{top:item.top,left:item.left}" @click="popClick(item.id)" :title="item.title">
           <i class="nz-icon nz-icon-liubianxing"></i>
           <i :class="[item.className,{'nz-icon':item.className},'noMove']"></i>
         </i>
@@ -242,12 +242,12 @@
           image:'',
         },
         popData:[
-          {top:'-20px', left:'-17px',className:'nz-icon-endpoint',id:'endpoint'},
-          {top:'-20px', left:'28px',className:'nz-icon-shujuku',id:'asset'},
-          {top:'18px',  left:'52px',className:'nz-icon-chart',id:'total'},
-          {top:'56px', left:'28px',className:'',id:'other'},
-          {top:'56px', left:'-17px',className:'nz-icon-info-normal',id:'info'},
-          {top:'18px', left:'-38px',className:'nz-icon-gaojing',id:'alert'},
+          {top:'-20px', left:'-17px',className:'nz-icon-endpoint',id:'endpoint',title:this.$t('project.topology.endpoint')},
+          {top:'-20px', left:'28px',className:'nz-icon-shujuku',id:'asset',title:this.$t('project.topology.asset')},
+          {top:'18px',  left:'52px',className:'nz-icon-chart',id:'total',title:this.$t('project.topology.total')},
+          {top:'56px', left:'28px',className:'',id:'other',title:''},
+          {top:'56px', left:'-17px',className:'nz-icon-info-normal',id:'info',title:this.$t('project.topology.info')},
+          {top:'18px', left:'-38px',className:'nz-icon-gaojing',id:'alert',title:this.$t('project.topology.alert')},
         ],
         popDataShow:{
           endpoint:false,
@@ -269,7 +269,8 @@
         // network:null,
         container:null,
         options:{},
-        data:{}
+        data:{},
+        timeInterval:'',
       }
     },
     methods:{// 保存拓扑图数据
@@ -361,8 +362,8 @@
             width: 2,
             smooth:{  //设置两个节点之前的连线的状态
               enabled: false,//默认是true，设置为false之后，两个节点之前的连线始终为直线，不会出现贝塞尔曲线
-              roundness:0.5,
-              type: "curvedCW",
+              roundness:1,
+              type: "dynamic",
             },
             font:{
               align:'bottom',
@@ -431,7 +432,7 @@
       setData(){
         this.setNetworkData(this.nodesArray,this.edgesArray);
       },
-      setNetworkData(nodes,edges){//动态设置拓扑图数据
+      setNetworkData(nodes,edges,flag){//动态设置拓扑图数据
         let this_ = this;
         this.nodes = new Vis.DataSet(nodes);
         this.edges = new Vis.DataSet(edges);
@@ -444,11 +445,13 @@
           scale: this_.zoom,
           offset: {x:0, y:0},
         });
-        this.$nextTick(()=>{
-          this_.modelTopUpdate();
-          this_.arrayDiff();
-          this_.popDataShowUpdate();
-        })
+        if(!flag){
+          this.$nextTick(()=>{
+            this_.modelTopUpdate();
+            this_.arrayDiff();
+            this_.popDataShowUpdate();
+          })
+        }
       },
       addModel(model){ // 添加model
         this.addNodeShow=false;
@@ -681,9 +684,41 @@
           this.setPopPosition(this.selNodeId);
           this.popDataShowUpdate();
         })
+      },
+      qqq(){
+        let nodesArray=[...this.nodesArray];
+        let edgesArray=[...this.edgesArray];
+        this.edgesArray.forEach((item)=>{
+         if(item.dataFlow==='right'&&item.dashes){
+           if(item.dashes[0]!==0){
+             item.dashes[0]--;
+           }else if(item.dashes[1]!==0){
+             item.dashes[1]--;
+           }else{
+             item.dashes[0]=item.dashes[2];
+             item.dashes[1]=item.dashes[2];
+           }
+         }else if(item.dataFlow==='left'&&item.dashes){
+           if(item.dashes[1]!==item.dashes[2]){
+             item.dashes[1]++;
+           }else if(item.dashes[0]!==item.dashes[2]){
+             item.dashes[0]++;
+           }else{
+             item.dashes[0]=0;
+             item.dashes[1]=0;
+           }
+         }
+        });
+        this.selNodeId='';
+        this.$emit('setTopologyData',nodesArray, edgesArray);
+        this.setNetworkData(nodesArray, edgesArray,true);
       }
     },
     mounted(){
+      // this.timeInterval=setInterval(()=>{
+      //   this.qqq();
+      //   console.log(123);
+      // },300);
        setTimeout(()=>{
          let this_=this;
          this.init('modal');
@@ -721,6 +756,7 @@
          this.network.on("selectEdge", function (params) { // 选择边
            this_.selNodeId='';
            this_.lineData=this_.edgesArray.find((item)=>item.id===params.edges[0]);
+           console.log(this_.lineData);
           if(this_.editVisNetwork){
             this_.lineData.color=this_.lineData.color.color?this_.lineData.color.color:this_.lineData.color;
             this_.addLineShow=true;
@@ -739,10 +775,12 @@
 
          this.network.on("hoverEdge", function () { // 悬停边
            this_.hoverEdge=true;
+           this_.cursorMove=true;
          });
 
          this.network.on("blurEdge", function () { // 边失去焦点
            this_.hoverEdge=false;
+           this_.cursorMove=false;
          });
 
          this.network.on("dragStart", function (params) {//节点移动开始
@@ -796,13 +834,6 @@
          this.network.on("blurNode", function () {//blurNode
            this_.cursorMove=false;
          });
-         this.network.on("hoverEdge", function () {//hoverNode
-           this_.cursorMove=true;
-         });
-
-         this.network.on("blurEdge", function () {//blurNode
-           this_.cursorMove=false;
-         });
 
          this.network.on("zoom", function (params) {//检测缩放
            this_.zoom=params.scale;
@@ -813,6 +844,7 @@
            }
            return false
          });
+
          this.network.on("resize", function (params,a) {//检测resize
 
            setTimeout(()=>{

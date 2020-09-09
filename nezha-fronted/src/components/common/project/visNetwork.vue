@@ -24,8 +24,8 @@
                 <!--<span class="chart-title-icon"><i class="el-icon-caret-bottom el-icon&#45;&#45;right"  :class="{'visible':caretShow,'hidden':!caretShow}"></i></span>-->
               </span>
               <div style="height: 24px">
-                <i class="nz-icon nz-icon-edit float-right"  @click="editVisNetworkChange(true)" v-show="!editVisNetwork"></i>
-                <i class="nz-icon nz-icon-refresh float-right"  @click="reload" v-show="!editVisNetwork"></i>
+                <i class="nz-icon nz-icon-edit float-right"  @click="editVisNetworkChange(true)" v-show="!editVisNetwork" :title="$t('project.topology.edit')"></i>
+                <i class="nz-icon nz-icon-refresh float-right"  @click="reload" v-show="!editVisNetwork" :title="$t('project.topology.refresh')"></i>
                 <!--<i class="nz-icon nz-icon-zoomin float-right"></i>-->
                 <!--<i class="nz-icon nz-icon-exit-full-screen float-right"></i>-->
               </div>
@@ -261,10 +261,18 @@
       formatEdgesArr(arr){
         let arr1=[];
         if(!arr){return arr1}
-        arr.forEach((item)=>{
+        arr.forEach((item,index)=>{
           item.from=item.source;
           item.to=item.target;
           item.label=item.name;
+          item.dashes=(item.dashes?(new Array(100).fill(item.dashes[0])):item.dashes);
+          if(index%2==0&&item.dashes){
+            item.dataFlow='left';
+            item.dashes[0]=0;
+            item.dashes[1]=0;
+          } else if(index%2==1&&item.dashes){
+            item.dataFlow='right'
+          }
         });
         return arr
       },

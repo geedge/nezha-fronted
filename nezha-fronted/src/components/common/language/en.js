@@ -863,7 +863,13 @@ const en = {
       chartName:'Name',
       unit:'Unit',
       addModule:'Add Module',
-
+      edit:'edit',
+      refresh:'refresh',
+      endpoint:'Endpoint',
+      asset:'Asset',
+      total:'Chart',
+      info:'Module Info',
+      alert:'Alert Message',
     },
   },
   ...enLocale

@@ -1,14 +1,14 @@
 <template>
   <div class="info-content">
     <div class="info-box" v-loading="loading">
-      <div class="info-box-title">module info</div>
+      <div class="info-box-title">Module info</div>
       <div class="info-box-content">
         <div class="content-box">
-          <span class="content-title">project</span>
+          <span class="content-title">Project</span>
           <span class="content-text">{{moduleInfo.project.name}}</span>
         </div>
         <div class="content-box">
-          <span class="content-title">module name</span>
+          <span class="content-title">Module name</span>
           <span class="content-text">{{moduleInfo.name}}</span>
         </div>
         <div class="content-box">
