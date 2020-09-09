@@ -73,8 +73,8 @@
         this.interval = val;
         if (val && val.value != -1) {
           const start = new Date(this.searchTime[1]);
-          const now = new Date();
-          const interval = Math.floor((now.getTime() - start.getTime()) / 1000); //计算当前结束时间到现在的间隔（秒）
+          const now = bus.getOffsetTimezoneData();
+          const interval = Math.floor((now - start.getTime()) / 1000); //计算当前结束时间到现在的间隔（秒）
           if (interval >= 60) { //如果结束时间到现在超过30s，则
             this.getIntervalData(interval);
           }
