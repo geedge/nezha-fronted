@@ -14,6 +14,21 @@
       <div class="right-box-title">Alert messages</div>
       <!-- end--标题-->
 
+      <!-- begin搜素框-->
+      <div class="top-tools">
+        <div class="top-tool-main-right" :class="{'top-tool-main-right-to-left': false}">
+          <div class="top-tool-search">
+            <search-input :searchMsg="searchMsg" @search="search" :bottomBox.inTransform="true"></search-input>
+          </div>
+          <!--<button type="button" @click="showExportDialog" :title="$t('overall.exportExcelLower')"-->
+                  <!--class="nz-btn nz-btn-size-normal nz-btn-style-light margin-l-20" id="alert-list-export">-->
+            <!--<i class="el-icon-download"></i>-->
+          <!--</button>-->
+        </div>
+        <div class="pagination-top pagination-top-hide display-none"></div>
+      </div>
+      <!-- end搜素框-->
+
       <!-- begin--表格-->
       <el-scrollbar class="right-box-form-box">
         <el-table
@@ -235,6 +250,58 @@
             width: 150
           },
         ],
+        searchMsg: { //给搜索框子组件传递的信息
+          zheze_none: true,
+          searchLabelList: [{
+            id: 1,
+            name: this.$t('alert.alertName'),
+            type: 'input',
+            label: 'alertName',
+            disabled: false
+          }, /*{
+            id: 3,
+            name: this.$t('alert.list.type'),
+            type: 'select',
+            label: 'alertType',
+            disabled: false
+          }, */{
+            id: 20,
+            name: this.$t('alert.severity'),
+            type: 'selectString',
+            label: 'severity',
+            disabled: false
+          }, {
+            id: 21,
+            name: this.$t('asset.asset'),
+            type: 'asset',
+            label: 'asset',
+            disabled: false
+          }, {
+            id:22,
+            name: this.$t('project.project.project'),
+            type: 'project',
+            label: 'project',
+            disabled: false
+          }, {
+            id:23,
+            name: this.$t('project.module.module'),
+            type: 'module',
+            label: 'module',
+            disabled: false
+          }, {
+            id:24,
+            name: this.$t('project.endpoint.endpoint'),
+            type: 'input',
+            label: 'endpointId',
+            disabled: false
+          }, {
+            id:25,
+            name: this.$t('alert.list.state'),
+            type: 'select',
+            label: 'alertMessageState',
+            disabled: false
+          }],
+        },
         tableData:[],
         loading:false,
         tableHeight:'100%',
@@ -350,6 +417,30 @@
       clickOutside() {
         this.esc(false);
       },
+      search(searchObj) {
+        let orderBy='';
+        if(this.searchLabel.orderBy){
+          orderBy=this.searchLabel.orderBy
+        }
+        this.searchLabel = {};
+        this.pageObj.pageNo = 1;
+        for (let item in searchObj) {
+          if (searchObj[item]) {
+            if (item == "alertMessageState") {
+              this.$set(this.searchLabel, "state", searchObj[item]);
+            } else{
+              this.$set(this.searchLabel, item, searchObj[item]);
+            }
+          }
+        }
+        if(orderBy){
+          this.$set(this.searchLabel, 'orderBy', orderBy);
+        }
+        this.getAlertList();
+      },
+      showExportDialog() {
+        this.importBox.show = true;
+      },
     },
 
   }
@@ -370,6 +461,12 @@
     top: 0;
     left: 0;
     z-index: 11;
+  }
+  .top-tools{
+    float: right;
+  }
+  /deep/ .top-tools>div{
+    margin-top: 3px;
   }
   /* end--table*/
 </style>

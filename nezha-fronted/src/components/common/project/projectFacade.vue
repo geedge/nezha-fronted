@@ -100,9 +100,9 @@
           new Date(bus.computeTimezone(new Date().getTime()))
         ],
         projectInfo:{
-		      title:'Project information',
-          id:'1',
-          remark:'系统内置project，展示系统基础信息',
+		      title:'',
+          id:'',
+          remark:'',
           alertStat:[1,2,3],
           moduleMum:6,
           loading:true,
