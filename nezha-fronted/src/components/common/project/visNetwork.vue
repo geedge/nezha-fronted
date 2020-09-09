@@ -116,14 +116,14 @@
   import loading from "@/components/common/loading";
   import timePicker from '@/components/common/timePicker';
   import topology from './topology'
-  import other from './other'
+  // import other from './other'
   export default {
     name: 'visNetwork',
     components: {
       'loading': loading,
       'time-picker':timePicker,
       'topology':topology,
-      other
+      // other
     },
     props:{
       chartIndex:{
