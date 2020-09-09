@@ -36,7 +36,7 @@
           <div class="facade-top" v-if="!editVisNetwork">
             <div class="facade-top-left" v-loading="projectInfo.loading">
               <div class="facade-top-title">
-                {{projectInfo.title}}
+                Project information
               </div>
               <div>
                 <!--<span><span class="label">Id :</span>{{projectInfo.id}}</span>-->
@@ -57,7 +57,7 @@
                 <span><span class="label">Module Mum :</span>{{projectInfo.moduleMum}}</span>
               </div>
             </div>
-            <div class="facade-top-right" v-loading="projectInfo.loading">
+            <div class="facade-top-right" v-loading="projectInfo.loading" style="padding: 20px 20px 0 20px;height: calc(100% - 20px);">
               <div class="facade-top-title">
                 <span class="label" style="padding-left: 0;">Alert :</span>
                 {{total}}
@@ -79,7 +79,7 @@
                     {{projectInfo.alertStat[1] || 0}}
                   </div>
                 </div>
-                <div>
+                <div style="margin-bottom: 20px;">
                   <div class="content-low-title">
                     {{returnSeverityLabel('low')}}
                   </div>
@@ -104,6 +104,7 @@
             @reload="reload"
           >
           </topology>
+          <!--<other />-->
         </div>
       </div>
 
@@ -115,12 +116,14 @@
   import loading from "@/components/common/loading";
   import timePicker from '@/components/common/timePicker';
   import topology from './topology'
+  import other from './other'
   export default {
     name: 'visNetwork',
     components: {
       'loading': loading,
       'time-picker':timePicker,
       'topology':topology,
+      other
     },
     props:{
       chartIndex:{
@@ -390,6 +393,7 @@
     justify-content: space-between;
     color: #fff;
     text-align: center;
+    margin-bottom: 5px;
   }
   .facade-top-right-content > div > div:last-child{
     text-align: center;
