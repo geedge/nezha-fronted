@@ -133,6 +133,8 @@
           url = "/asset/cancelImport";
         } else if (this.importUrl.indexOf("endpoint") > -1) {
           url = "/endpoint/cancelImport";
+        } else if (this.importUrl.indexOf("rule") > -1) {
+          url = "/alert/rule/cancelImport";
         }
         this.$delete(url + '?seq='+this.importResult.seq).then(response=>{
           if(response.code ==  200 ){
@@ -182,9 +184,9 @@
         let url=null;
         if (this.importUrl.indexOf("asset") > -1) {
           url = "/asset/template";
-        } /*else if (this.importUrl.indexOf("endpoint") > -1) {
-          url = "/endpoint/template";
-        }*/
+        } else if (this.importUrl.indexOf("rule") > -1) {
+          url = "/alert/rule/template";
+        }
 
         let param={language:language}
         if(!url){
