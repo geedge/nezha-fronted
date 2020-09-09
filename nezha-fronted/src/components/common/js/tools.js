@@ -292,6 +292,7 @@ export const bottomBoxWindow = {
   },
   showSubListWatch(vm, n) {
     vm.bottomBox.inTransform = n;
+    console.info(vm.bottomBox.inTransform)
     if (!n) {
       vm.mainTableHeight = vm.$tableHeight.normal; //重置table的高度
       vm.tools.toTopBtnTop = vm.$tableHeight.toTopBtnTop;

@@ -170,7 +170,7 @@
         name: "index",
         data() {
             return {
-                selectDom: {top: '', tempTop: ''}, // 选择弹框的位置
+                selectDom: {top: '', tempTop: '', show: true}, // 选择弹框的位置
                 clearSearchShow: false,
                 select_conditionsName:'',
                 selectInfoList: searchSelectInfo,
@@ -265,12 +265,12 @@
               listsV.forEach((item, index) => {
                 item.style.display = "none";
               });
-              if (n) {
+              /*if (n) {
                 this.selectDom.tempTop = this.selectDom.top;
                 this.selectDom.top = '36px';
               } else {
                 this.selectDom.top = this.selectDom.tempTop;
-              }
+              }*/
               setTimeout(() => {
                 listsK.forEach((item, index) => {
                   item.style.display = "";
@@ -1179,12 +1179,14 @@
             getSelectPosition(e) {
               let inputListDom = this.getDomFromParents(e.target, 'input-center-box', 0);
               if (inputListDom) {
-                if (this.inTransform) {
-                  this.selectDom.top = "36px";
-                } else {
-                  let position = inputListDom.getBoundingClientRect();
-                  this.selectDom.top = position.top+36+'px';
-                }
+                this.$nextTick(() => {
+                  if (this.inTransform) {
+                    //this.selectDom.top = "36px";
+                  } else {
+                    let position = inputListDom.getBoundingClientRect();
+                    this.selectDom.top = position.top+36+'px';
+                  }
+                });
               }
             },
             /*递归向上获取指定class的dom*/
@@ -1221,6 +1223,10 @@
                 })
 
             },
+          close_search(e) {
+              this.selectDom.show = false;
+
+          }
         },
         mounted() {
             /*this.defaultItem ? this.select_list.push({name:this.defaultItem,label:this.defaultItem}) : '';
@@ -1525,7 +1531,7 @@
         box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         overflow-y: auto;
         z-index: 9999;
-        right: 139px;
+        /*right: 139px;*/
     }
     .select_info_list ul li{
         padding: 5px 10px;
