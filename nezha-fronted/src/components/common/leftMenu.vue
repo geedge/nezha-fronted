@@ -212,6 +212,9 @@
         },
         checkedTagCount(){
           return this.tagCheckList.length;
+        },
+        currentProjectChange() {
+          return this.$store.state.currentProject;
         }
       },
       watch: {
@@ -564,13 +567,18 @@
     transition: opacity 200ms;
   }
 
-
+  .item-tip {
+    position: relative;
+  }
   .item-tip-hide {
     display: none;
     position: absolute;
-    bottom: 34px;
+    bottom: 30px;
     min-width: 50px;
     white-space: normal;
+  }
+  .sidebar-info-sub-item:first-of-type .item-tip-hide {
+    bottom: -50px;
   }
   .item-tip:hover>.item-tip-show {
     display: block;
