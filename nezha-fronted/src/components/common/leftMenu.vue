@@ -212,6 +212,9 @@
         },
         checkedTagCount(){
           return this.tagCheckList.length;
+        },
+        currentProjectChange() {
+          return this.$store.state.currentProject;
         }
       },
       watch: {
