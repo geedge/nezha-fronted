@@ -23,8 +23,8 @@
                 <!--<span class="chart-title-text">{{chartData.title}}</span>-->
                 <!--<span class="chart-title-icon"><i class="el-icon-caret-bottom el-icon&#45;&#45;right"  :class="{'visible':caretShow,'hidden':!caretShow}"></i></span>-->
               </span>
-              <div style="height: 24px">
-                <i class="nz-icon nz-icon-edit float-right"  @click="editVisNetworkChange(true)" v-show="!editVisNetwork" :title="$t('project.topology.edit')"></i>
+              <div style="height: 34px">
+                <i class="nz-icon nz-icon-edit float-right "  @click="editVisNetworkChange(true)" v-show="!editVisNetwork" :title="$t('project.topology.edit')"></i>
                 <i class="nz-icon nz-icon-refresh float-right"  @click="reload" v-show="!editVisNetwork" :title="$t('project.topology.refresh')"></i>
                 <!--<i class="nz-icon nz-icon-zoomin float-right"></i>-->
                 <!--<i class="nz-icon nz-icon-exit-full-screen float-right"></i>-->
@@ -325,10 +325,12 @@
     margin-top: 0;
   }
   .nz-icon-edit{
-    margin-right: 5px;
+    margin-right: 12px;
+    margin-top: 10px;
   }
   .vis-network .nz-icon-refresh{
-    margin-right: 15px;
+    margin-right: 12px;
+    margin-top: 10px;
     color: #ee9d3f;
   }
   .table-container{
