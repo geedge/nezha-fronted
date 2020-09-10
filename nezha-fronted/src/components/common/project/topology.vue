@@ -30,10 +30,10 @@
       <div
         id="network-pop"
         class="network-pop"
-        :style="{transform:'scale('+zoom+')'}"
+        :style="{transform:'scale('+zoom+')',width:'0',height:'0'}"
         v-show="networkPopShow"
       >
-        <i v-if="networkPopShow" :class="{'nz-icon':true,'nz-icon-hexagonBorder':true,selpop:selpopIs(item)}"  v-for="item in popData"  :style="{top:item.top,left:item.left}" @click="popClick(item.id)" :title="item.title">
+        <i v-if="networkPopShow" :class="{'nz-icon':true,'nz-icon-hexagonBorder':true,'selpop':selpopIs(item)}"  v-for="item in popData"  :style="{top:item.top,left:item.left}" @click="popClick(item.id)" :title="item.title">
           <i class="nz-icon nz-icon-liubianxing"></i>
           <i :class="[item.className,{'nz-icon':item.className},'noMove']"></i>
         </i>
@@ -691,7 +691,9 @@
         if(item.id==='other'){
           flag=false;
         }
-        if(item.id==='total'&&this.nodeData.expressions&&this.nodeData.expressions.length){
+        console.log(this.nodeData);
+        this.nodeData=this.nodesArray.find((item)=>item.id===this.selNodeId);
+        if(item.id==='total'&&(!this.nodeData.expressions || this.nodeData.expressions.length===0)){
           flag=false;
         }
         return flag
@@ -926,10 +928,10 @@
     left: 4px;
     font-size: 41px;
     color: #D7FAF1;
-    top: -1px;
+    top: 0;
   }
   .network-pop .selpop:hover .noMove{
-    transform: scale(1.1);
+    transform: scale(1.2);
   }
   /*.btmTriangle{*/
     /*position: absolute;*/
