@@ -14,6 +14,21 @@
       <div class="right-box-title">Endpoint</div>
       <!-- end--标题-->
 
+      <!-- begin搜素框-->
+      <div class="top-tools">
+        <div class="top-tool-main-right" :class="{'top-tool-main-right-to-left': false}">
+          <div class="top-tool-search">
+            <search-input :searchMsg="searchMsg" @search="search" :bottomBox.inTransform="true"></search-input>
+          </div>
+          <!--<button type="button" @click="showExportDialog" :title="$t('overall.exportExcelLower')"-->
+          <!--class="nz-btn nz-btn-size-normal nz-btn-style-light margin-l-20" id="alert-list-export">-->
+          <!--<i class="el-icon-download"></i>-->
+          <!--</button>-->
+        </div>
+        <div class="pagination-top pagination-top-hide display-none"></div>
+      </div>
+      <!-- end搜素框-->
+
       <!-- begin--表格-->
       <el-scrollbar class="right-box-form-box">
         <el-table
@@ -163,6 +178,22 @@
           //   show: true,
           // },
         ],
+        searchMsg: { //给搜索框子组件传递的信息
+          zheze_none: true,
+          searchLabelList: [{
+            id: 1,
+            name: "ID",
+            type: 'input',
+            label: 'id',
+            disabled: false
+          }, {
+            id: 11,
+            name: this.$t('asset.asset'),
+            type: 'asset',
+            label: 'asset',
+            disabled: false
+          }],
+        },
         tableData:[],
         loading:false,
         tableHeight:'100%',
@@ -275,6 +306,27 @@
           }
         }
       },
+      search(searchObj) {
+        let orderBy='';
+        if(this.searchLabel.orderBy){
+          orderBy=this.searchLabel.orderBy
+        }
+        this.searchLabel = {};
+        this.pageObj.pageNo = 1;
+        for (let item in searchObj) {
+          if (searchObj[item]) {
+            if (item == "alertMessageState") {
+              this.$set(this.searchLabel, "state", searchObj[item]);
+            } else{
+              this.$set(this.searchLabel, item, searchObj[item]);
+            }
+          }
+        }
+        if(orderBy){
+          this.$set(this.searchLabel, 'orderBy', orderBy);
+        }
+        this.getEndpointList();
+      },
     },
 
   }
@@ -298,6 +350,12 @@
   }
   /deep/.resize-box .danger{
     background-color: #f9f9f9 !important;
+  }
+  .top-tools{
+    float: right;
+  }
+  /deep/ .top-tools>div{
+    margin-top: 6px;
   }
   /* end--table*/
 </style>

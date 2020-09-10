@@ -256,6 +256,7 @@
             lineName:n.label,
             name:[],
             dashes:!n.dashes?n.dashes:JSON.stringify(n.dashes),
+            // dashes:!n.dashes?n.dashes:JSON.stringify([n.dashes[2],n.dashes[2]]),
           };
          if( n.expressions){
            n.expressions.forEach((item,index)=>{

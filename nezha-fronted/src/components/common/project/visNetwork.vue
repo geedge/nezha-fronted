@@ -265,14 +265,14 @@
           item.from=item.source;
           item.to=item.target;
           item.label=item.name;
-          item.dashes=(item.dashes?(new Array(100).fill(item.dashes[0])):item.dashes);
-          if(index%2==0&&item.dashes){
-            item.dataFlow='left';
-            item.dashes[0]=0;
-            item.dashes[1]=0;
-          } else if(index%2==1&&item.dashes){
-            item.dataFlow='right'
-          }
+          // item.dashes=(item.dashes?(new Array(100).fill(item.dashes[0])):item.dashes);
+          // if(index%2==0&&item.dashes){
+          //   item.dataFlow='left';
+          //   item.dashes[0]=0;
+          //   item.dashes[1]=0;
+          // } else if(index%2==1&&item.dashes){
+          //   item.dataFlow='right'
+          // }
         });
         return arr
       },

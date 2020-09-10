@@ -466,7 +466,10 @@
     float: right;
   }
   /deep/ .top-tools>div{
-    margin-top: 3px;
+    margin-top: 6px;
+  }
+  /deep/.el-tooltip{
+    display: inline-block;
   }
   /* end--table*/
 </style>
