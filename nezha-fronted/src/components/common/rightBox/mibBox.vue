@@ -3,7 +3,7 @@
     <!-- begin--顶部按钮-->
     <div class="right-box-top-btns">
       <button id="mib-del" type="button" v-if="editMib.id" @click="del" class="nz-btn nz-btn-size-normal nz-btn-size-alien nz-btn-style-light">
-        <span class="right-box-top-btn-icon"><i class="el-icon-delete"></i></span>
+        <span class="right-box-top-btn-icon"><i class="nz-icon nz-icon-delete"></i></span>
         <span class="right-box-top-btn-txt">{{$t('overall.delete')}}</span>
       </button>
     </div>
@@ -39,7 +39,7 @@
               <span v-if="editMib.fileName">{{editMib.fileName}}</span>
               <span v-if="uploadErrorMsg" style="color: #F56C6C"><br>{{uploadErrorMsg}}</span>
             </div>
-            <i class="el-icon-upload"></i>
+            <i class="nz-icon nz-icon-upload"></i>
             <div class="el-upload__text">{{$t('overall.dragFileTip')}}，{{$t('overall.or')}}&nbsp;<em>{{$t('overall.clickUpload')}}</em></div>
           </el-upload>
         </el-form-item>

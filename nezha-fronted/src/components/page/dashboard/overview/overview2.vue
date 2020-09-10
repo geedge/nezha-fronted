@@ -90,7 +90,7 @@
               <span class="content-col-title-tool">
                 <div class="diy-content">
                   <span>Data center</span>
-                  <i class="el-input__icon el-icon-arrow-down"></i>
+                  <i class="el-input__icon nz-icon nz-icon-arrow-down"></i>
                 </div>
                 <el-cascader
                   :options="trafficData"
@@ -137,7 +137,7 @@
               <span v-if="alertMessageShow == 'asset'">{{$t("dashboard.overview.alert.assetTopN")}}</span>
               <span v-if="alertMessageShow == 'module'">{{$t("dashboard.overview.alert.moduleTopN")}}</span>
               <!--<span class="dropdown-btn" @mouseenter="alertMessageDropdownHandler(true)" @mouseleave="alertMessageDropdownHandler(false)">
-                <i class="el-icon-arrow-down"></i>
+                <i class="nz-icon nz-icon-arrow-down"></i>
                 <transition name="el-zoom-in-top">
                   <ul class="el-dropdown-menu el-popper el-dropdown-menu&#45;&#45;mini" v-if="bottom3DropdownShow">
                     <li @click="alertMessageChange('asset')" class="el-dropdown-menu__item dropdown-content" style="padding: 0 15px;">{{$t("dashboard.overview.asset.title")}}</li>
@@ -157,7 +157,7 @@
           <div class="content-col-title">
             <span>{{$t("dashboard.overview.alert.alertRuleTopN")}}</span>
             <!--<el-dropdown trigger="hover" :show-timeout="0" size="small">
-              <span>Top&nbsp;{{topFilter.rule}}<i class="el-icon-arrow-down el-icon&#45;&#45;right"></i></span>
+              <span>Top&nbsp;{{topFilter.rule}}<i class="nz-icon nz-icon-arrow-down el-icon&#45;&#45;right"></i></span>
               <el-dropdown-menu slot="dropdown">
                 <el-dropdown-item v-for="(item,index) in topFilter.optionals" :key="index" @click.native="topNChange('rule', item)">{{item}}</el-dropdown-item>
               </el-dropdown-menu>

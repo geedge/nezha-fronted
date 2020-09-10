@@ -21,7 +21,7 @@
       <div class="top-tool-right">
         <div class="top-tool-search margin-r-20">
           <el-input ref="elementQuery" @clear="clearInput" id="elementQuery" @focus="focusInput"  @blur="blurInput" v-model="queryExpression" class="query-input-inactive" size="mini" clearable  :placeholder="$t('project.endpoint.promExpr')" >
-            <i slot="suffix" class="el-input__icon el-icon-search" style="float:right" @click="focusInput"></i>
+            <i slot="suffix" class="el-input__icon nz-icon nz-icon-search" style="float:right" @click="focusInput"></i>
           </el-input>
         </div>
         <div class="margin-r-20 nz-btn-group nz-btn-group-size-small nz-btn-group-light">
@@ -42,7 +42,7 @@
           <button class="nz-btn nz-btn-size-normal nz-btn-style-light" @click="viewGraph">
             <i class="nz-icon nz-icon-chart"  :class="{'control-icon-unchecked':selectedEndpoints.length<1,'control-icon-checked':selectedEndpoints.length>0}"></i>
           </button><button @mouseenter="dropdownHandler(true)" @mouseleave="dropdownHandler(false)" class="nz-btn nz-btn-size-normal nz-btn-style-light export-dropdown-btn" id="browser-go">
-            <i class="el-icon-arrow-down"></i>
+            <i class="nz-icon nz-icon-arrow-down"></i>
             <transition name="el-zoom-in-top">
               <div v-if="dropdownShow" class="endpoint-query-dropdown el-popover">
                 <span style="padding-top: 2px">{{$t('project.endpoint.hideSameLabels')}}</span>

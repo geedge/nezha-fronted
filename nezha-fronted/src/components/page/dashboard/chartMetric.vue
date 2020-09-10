@@ -179,7 +179,7 @@
       <el-form-item class="right-box-form-content" prop="expression" :rules="{ required: true,  message:$t('validate.required'), trigger: 'blur' }"><!--expression和metric的验证只能有一个，不能同时存在？？:rules="{ required: true, type: 'string', message: '', trigger: 'change' }"-->
         <el-input size="mini"  @input="changeExpression" :class="{'right-box-row-with-btn': countTotal > 1, 'full-width': countTotal <= 1}" ref="metricExpression" type="textarea" rows="7" maxlength="1024" show-word-limit v-model="elementInfo.expression" :placeholder="this.$t('dashboard.metric.expertTip')" ></el-input>
         <div @click="deleteTarget" class="right-box-row-btn" v-if="countTotal > 1" style="vertical-align: top">
-          <i class="el-icon-minus"></i>
+          <i class="nz-icon nz-icon-minus"></i>
         </div>
       </el-form-item>
     </template>
@@ -197,7 +197,7 @@
         </el-cascader>
         <span v-if="metricShowList.text" class="error-info-text">{{metricShowList.text}}</span>
         <div @click="deleteTarget" class="right-box-row-btn" v-if="countTotal > 1">
-          <i class="el-icon-minus"></i>
+          <i class="nz-icon nz-icon-minus"></i>
         </div>
       </el-form-item>
     </template>

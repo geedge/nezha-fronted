@@ -4,11 +4,11 @@
       <div class="main-box-title">Assets</div>
       <div class="main-box-content">
         <div class="content-box">
-          <span class="content-title"><i class="el-icon-upload2 colorFFF bg23BF9A"></i>up</span>
+          <span class="content-title"><i class="nz-icon nz-icon-upload1 colorFFF bg23BF9A"></i>up</span>
           <span class="float-right">{{moduleInfo.assetStat.up}}</span>
         </div>
         <div class="content-box">
-          <span class="content-title"><i class="el-icon-download colorFFF bgEC7F66"></i>down</span>
+          <span class="content-title"><i class="nz-icon nz-icon-download colorFFF bgEC7F66"></i>down</span>
           <span class="float-right">{{moduleInfo.assetStat.down}}</span>
         </div>
       </div>
@@ -18,11 +18,11 @@
       <div class="main-box-title">Endpoints</div>
       <div class="main-box-content">
         <div class="content-box">
-          <span class="content-title"><i class="el-icon-upload2 colorFFF bg23BF9A"></i>up</span>
+          <span class="content-title"><i class="nz-icon nz-icon-upload1 colorFFF bg23BF9A"></i>up</span>
           <span class="float-right">{{moduleInfo.endpointStat.up}}</span>
         </div>
         <div class="content-box">
-          <span class="content-title"><i class="el-icon-download colorFFF bgEC7F66"></i>down</span>
+          <span class="content-title"><i class="nz-icon nz-icon-download colorFFF bgEC7F66"></i>down</span>
           <span class="float-right">{{moduleInfo.endpointStat.down}}</span>
         </div>
       </div>

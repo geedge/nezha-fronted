@@ -7,11 +7,11 @@
           <el-input placeholder="key" class="param-box-row-key" size="mini" v-model="item.key"></el-input>
           <span class="param-box-row-eq">=</span>
           <el-input placeholder="value" class="param-box-row-value" size="mini" v-model="item.value"></el-input>
-          <span class="param-box-row-symbol" @click="removeParam(index)"><i class="el-icon-minus"></i></span>
+          <span class="param-box-row-symbol" @click="removeParam(index)"><i class="nz-icon nz-icon-minus"></i></span>
         </div>
       </div>
       <div style="width: 100%; text-align: center; height: 25px;">
-        <el-button @click="addParam" style="height: 18px; line-height: 18px; padding-top: 0; padding-bottom: 0;" size="mini"><i class="el-icon-plus"></i></el-button>
+        <el-button @click="addParam" style="height: 18px; line-height: 18px; padding-top: 0; padding-bottom: 0;" size="mini"><i class="nz-icon nz-icon-plus"></i></el-button>
       </div>
     </div>
   </transition>

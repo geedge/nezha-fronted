@@ -2,18 +2,18 @@
   <div class="export-xlsx">
     <div class="nz-btn-group nz-btn-group-size-normal nz-btn-group-light">
       <slot name="optionZone"></slot><button @mouseenter="exportMenuHandler(true)" @mouseleave="exportMenuHandler(false)" class="nz-btn nz-btn-size-normal nz-btn-style-light export-dropdown-btn" id="browser-go">
-        <i class="el-icon-arrow-down"></i>
+        <i class="nz-icon nz-icon-arrow-down"></i>
         <transition name="el-zoom-in-top">
           <ul class="el-dropdown-menu el-popper el-dropdown-menu--mini export-dropdown" v-show="exportShow">
-            <li @click="showImportBox(1)" class="el-dropdown-menu__item dropdown-content"><i class="el-icon-upload2"></i>import</li>
-            <li @click="showImportBox(2)" class="el-dropdown-menu__item dropdown-content"><i class="el-icon-download"></i>export</li>
+            <li @click="showImportBox(1)" class="el-dropdown-menu__item dropdown-content"><i class="nz-icon nz-icon-upload1"></i>import</li>
+            <li @click="showImportBox(2)" class="el-dropdown-menu__item dropdown-content"><i class="nz-icon nz-icon-download"></i>export</li>
           </ul>
         </transition>
       </button>
       <!--<el-dropdown split-button type="primary" size="mini" class="dropdownBtn">
         <slot name="optionZone" class="option-button"></slot><el-dropdown-menu slot="dropdown">
-          <el-dropdown-item @click.native="showImportBox(1)" class="dropdown-content"><i class="el-icon-upload2"></i>{{$t('overall.importExcelLower')}}</el-dropdown-item>
-          <el-dropdown-item @click.native="showImportBox(2)" class="dropdown-content"><i class="el-icon-download"></i>{{$t('overall.exportExcelLower')}}</el-dropdown-item>
+          <el-dropdown-item @click.native="showImportBox(1)" class="dropdown-content"><i class="nz-icon nz-icon-upload1"></i>{{$t('overall.importExcelLower')}}</el-dropdown-item>
+          <el-dropdown-item @click.native="showImportBox(2)" class="dropdown-content"><i class="nz-icon nz-icon-download"></i>{{$t('overall.exportExcelLower')}}</el-dropdown-item>
         </el-dropdown-menu>
       </el-dropdown>-->
     </div>
@@ -23,7 +23,7 @@
         <div class="upload-body">
           <el-upload drag class="upload-demo" ref="uploadExcel"  action="" :file-list="importFileList" :on-change="importChange"  :auto-upload="false" accept=".xlsx,.xls">
             <div slot="tip" class="el-upload__tip" >{{$t('overall.importTip')}}</div>
-            <i class="el-icon-upload"></i>
+            <i class="nz-icon nz-icon-upload"></i>
             <div class="el-upload__text">{{$t('overall.dragFileTip')}}，{{$t('overall.or')}}&nbsp;<em>{{$t('overall.clickUpload')}}</em></div>
             <!--<button type="button" class="nz-btn nz-btn-size-normal nz-btn-style-normal">
               <span class="top-tool-btn-txt" >{{$t('overall.upload')}}</span>

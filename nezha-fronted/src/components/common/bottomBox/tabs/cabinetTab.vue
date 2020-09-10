@@ -37,7 +37,7 @@
         <template slot-scope="scope" :column="item">
           <div v-if="item.prop == 'option'" class="content-right-options">
             <span :title="$t('overall.edit')" @click="edit(scope.row)" class="content-right-option" :id="'dc-edit-'+scope.row.id"><i class="nz-icon nz-icon-edit"></i></span>
-            <span :title="$t('overall.delete')" @click="del(scope.row)" class="content-right-option" :id="'dc-del-'+scope.row.id"><i class="el-icon-delete"></i></span>
+            <span :title="$t('overall.delete')" @click="del(scope.row)" class="content-right-option" :id="'dc-del-'+scope.row.id"><i class="nz-icon nz-icon-delete"></i></span>
           </div>
           <template v-else-if="item.prop == 'assetStat'">
             <el-popover

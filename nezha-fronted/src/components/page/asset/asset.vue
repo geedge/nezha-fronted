@@ -127,7 +127,7 @@
           </template>
           <template v-if="item.prop == 'option'">
             <span :title="$t('overall.view')" @click.stop="detail(scope.row)" class="content-right-option" :id="'asset-detail-'+scope.row.id"><i
-              class="el-icon-view"></i>
+              class="nz-icon nz-icon-view"></i>
             </span>
               &nbsp;
               <span :title="$t('overall.edit')" @click.stop="edit(scope.row)" class="content-right-option" :id="'asset-edit-'+scope.row.id"><i
@@ -135,7 +135,7 @@
             </span>
               &nbsp;
               <span :title="$t('overall.delete')" @click.stop="del(scope.row)" class="content-right-option" :id="'asset-del-'+scope.row.id"><i
-                class="el-icon-delete"></i>
+                class="nz-icon nz-icon-delete"></i>
             </span>
               &nbsp;
               <el-dropdown trigger="hover" @command="cli">

@@ -2,7 +2,7 @@
   <div class="location" >
     <div @click="toggleDropdown">
       <el-input :placeholder="$t('overall.select')" size="small" style="position: relative" :value="inputShowInfo"  :readonly="true" :disabled="disabled">
-        <i slot="suffix" class="el-select__caret el-input__icon el-icon-arrow-down" style="font-size: 14px" :class="{'reverse':dropDownVisible == true}"></i>
+        <i slot="suffix" class="el-select__caret el-input__icon nz-icon nz-icon-arrow-down" style="font-size: 14px" :class="{'reverse':dropDownVisible == true}"></i>
       </el-input>
     </div>
     <div class="dropdown" :class="{'dropdown-active':dropDownVisible == true}" >

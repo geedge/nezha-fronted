@@ -9,7 +9,7 @@
           <el-dropdown @command="panelChange" class="panel-dropdown-title" trigger="click" placement="bottom-start" v-scrollBar:el-dropdown>
             <el-row @click.native="scrollbarHeightHandler" :gutter="10" class="el-dropdown-link" style="">
               <el-col :span="21" class="panel-list-title" :title="showPanel.name">{{showPanel.name}}</el-col>
-              <el-col :span="3" style="padding-left:0px !important;"><i class="el-icon-arrow-down el-icon--right"></i></el-col>
+              <el-col :span="3" style="padding-left:0px !important;"><i class="nz-icon nz-icon-arrow-down"></i></el-col>
             </el-row>
             <el-dropdown-menu class="nz-dashboard-dropdown" slot="dropdown">
               <el-dropdown-item>{{$t('dashboard.panel.createPanelTitleSec')}}</el-dropdown-item>
@@ -33,7 +33,7 @@
                   <el-row  :gutter="10" class="panel-list-width" >
                     <el-col :span="2" class="panelContent move-area"><i class="nz-icon nz-icon-sort4"></i></el-col>
                     <el-col :span="17" class="panel-list-item" :title="item.name">{{item.name}}</el-col>
-                    <el-col :span="1"><span class="panel-dropdown-btn panel-dropdown-btn-delete" @click.stop="del(item)"><i class="el-icon-delete"></i></span></el-col>
+                    <el-col :span="1"><span class="panel-dropdown-btn panel-dropdown-btn-delete" @click.stop="del(item)"><i class="nz-icon nz-icon-delete"></i></span></el-col>
                     <el-col :span="1">&nbsp;</el-col>
                     <el-col :span="1"><span class="panel-dropdown-btn" @click.stop="edit(item)"><i class="nz-icon nz-icon-edit"></i></span></el-col>
                   </el-row>
@@ -45,7 +45,7 @@
         <div class="top-tool-main-right">
           <div class="top-tool-search relative-position margin-r-20">
             <el-input ref="queryPanel" @clear="clearInput" id="queryPanel" @focus="focusInput"  @blur="blurInput" v-model="filter.searchName" class="query-input-inactive" size="mini" clearable   >
-              <i slot="suffix" class="el-input__icon el-icon-search" @click="focusInput" style="float: right"></i>
+              <i slot="suffix" class="el-input__icon nz-icon nz-icon-search" @click="focusInput" style="float: right"></i>
             </el-input>
           </div>
 
@@ -692,7 +692,6 @@
   }
   .panel-list-title {
     min-height:24px;
-    width:236px;
     white-space: nowrap;
     overflow-x: hidden;
     text-overflow: ellipsis;
@@ -711,19 +710,19 @@
     margin-right: 6px;
   }
 
-  .content-right-option .el-icon-delete {
+  .content-right-option .nz-icon-delete {
     color: #F98D9A;
   }
 
-  .content-right-option .el-icon-delete:hover {
+  .content-right-option .nz-icon-delete:hover {
     color: #D96D7A;
   }
 
-  .content-right-option .el-icon-view {
+  .content-right-option .nz-icon-view {
     color: #60BEFF;
   }
 
-  .content-right-option .el-icon-view:hover {
+  .content-right-option .nz-icon-view:hover {
     color: #409EFF;
   }
 

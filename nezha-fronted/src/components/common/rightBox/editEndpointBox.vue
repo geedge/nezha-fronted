@@ -3,7 +3,7 @@
     <!-- begin--顶部按钮-->
     <div class="right-box-top-btns">
       <button id="edit-ep-del" type="button" v-if="editEndpoint.id" @click="del" class="nz-btn nz-btn-size-normal nz-btn-size-alien nz-btn-style-light ">
-        <span class="right-box-top-btn-icon"><i class="el-icon-delete"></i></span>
+        <span class="right-box-top-btn-icon"><i class="nz-icon nz-icon-delete"></i></span>
         <span class="right-box-top-btn-txt">{{$t('overall.delete')}}</span>
       </button>
     </div>
@@ -63,7 +63,7 @@
           <div style="text-align: right">
             <button style="display: none;">第一个button会出现意料之外的hover样式，找不到原因，只好加个不可见的button规避问题</button>
             <button type="button" id="edit-clear-all" @click="clearAllParam" class="nz-btn nz-btn-size-normal nz-btn-style-light">
-              <span><i class="el-icon-delete"></i></span>
+              <span><i class="nz-icon nz-icon-delete"></i></span>
             </button>
             <button type="button" id="edit-add-param" @click="addParam" class="nz-btn nz-btn-size-normal nz-btn-style-light">
               <span><i style="font-size: 12px;" class="nz-icon nz-icon-create-square"></i></span>

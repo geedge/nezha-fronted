@@ -3,11 +3,11 @@
         <div class="search-input-all input-position" @click="stop_click">
 <!--            历史记录-->
             <div class="search-history">
-                <i class="el-icon-time" @click="look_history" id="search-view-history"></i>
+                <i class="nz-icon nz-icon-time" @click="look_history" id="search-view-history"></i>
                 <div :class="localStorage_display?'localStorage_list_box none':'localStorage_list_box'">
                     <div class="list_box_title">
                         <span>{{$t('search.recentSearch')}}</span>
-                        <i class="el-icon-close" @click="localStorage_display=!localStorage_display" id="search-close-history"></i>
+                        <i class="nz-icon nz-icon-close" @click="localStorage_display=!localStorage_display" id="search-close-history"></i>
                     </div>
                     <div class="list_box_content" v-if="history_once.length>0">
                         <ul>
@@ -35,7 +35,7 @@
                         </div>
                         <div class="select_content" v-if="val.val && ind!=sreach_num">
                             <span>{{val.valString ? val.valString : val.val}}</span>
-                            <i class="el-icon-close" @click="close_selcet_list(ind,$event)"></i>
+                            <i class="nz-icon nz-icon-close" @click="close_selcet_list(ind,$event)"></i>
                         </div>
                         <div v-else-if="!change_sreach_show && ind==sreach_num && val.id!==7 " class="select_input">
                             <input type="text" autocomplete="off" id="sreach_input" v-model="input_sreach" @keyup="enter(val.name, $event)" @click="stop_click">
@@ -144,7 +144,7 @@
               </el-scrollbar>
             </div>
             <div v-show="clearSearchShow" class="clear-search" @click="clear_input">
-                <i class="el-icon-circle-close"></i>
+                <i class="nz-icon nz-icon-circle-close"></i>
             </div>
             <div :class="input_list?'input_list none':'input_list'" :style="'top:' + selectDom.top" @click="stop_click" id="input_list">
                 <ul>
@@ -157,9 +157,9 @@
                 </ul>
             </div>
         </div>
-        <button @click="select" type="button" class="nz-btn nz-btn-size-normal nz-btn-style-light float-right" id="search-input-search"><i class="el-icon-search"></i></button>
+        <button @click="select" type="button" class="nz-btn nz-btn-size-normal nz-btn-style-light float-right" id="search-input-search"><i class="nz-icon nz-icon-search"></i></button>
         <!--<div class="new-search-btn" @click="select">
-            <i class="el-icon-search"></i>
+            <i class="nz-icon nz-icon-search"></i>
         </div>-->
     </div>
 </template>
@@ -193,7 +193,7 @@
                 input_sreach: '',
                 sreach_num: 0,
                 searchLabelList: [ //下拉列表里的选项
-                    {id: 0, name: this.$t('search.searchTip'), icon: 'el-icon-search'},
+                    {id: 0, name: this.$t('search.searchTip'), icon: 'nz-icon nz-icon-search'},
                 ],
                 bool: false,
                 no_condition: '',
@@ -913,7 +913,7 @@
                 this.no_condition = ''
                 this.input_sreach = ''
                 this.select_list = []
-                this.searchLabelList = [{id: 0, name: 'Press Enter or click to search', icon: 'el-icon-search'},]
+                this.searchLabelList = [{id: 0, name: 'Press Enter or click to search', icon: 'nz-icon nz-icon-search'},]
                 JSON.parse(JSON.stringify(this.searchMsg.searchLabelList)).forEach(val => {
                     this.searchLabelList.push(val)
                 })

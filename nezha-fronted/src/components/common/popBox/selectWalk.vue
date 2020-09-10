@@ -22,7 +22,7 @@
           :default-checked-keys="currentWalk"
         >
           <div slot-scope="{node, data}" class="walk-tree-item" :class="getClass(data.objectID)">
-            <span v-if="!data.type"><i class="el-icon-reading"></i></span>
+            <span v-if="!data.type"><i class="nz-icon nz-icon-reading"></i></span>
             <span v-else>
               <i v-if="data.type.toUpperCase() == 'IDENTIFIER'" class="el-icon-folder-opened"></i>
               <i v-if="data.type.toUpperCase() == 'OBJECT' && data.subTree.length > 0" class="el-icon-folder-opened"></i>

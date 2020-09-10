@@ -7,7 +7,7 @@
             <div class="metric-btn" v-if="plugins.indexOf('metric-selector') > -1">
               <el-dropdown class="metric-selector">
                 <el-dropdown-menu style="display: none"></el-dropdown-menu>
-                <el-button class="metric-btn nz-btn nz-btn-size-normal nz-btn-style-light" @click="toggleDropdown">Metric &nbsp;<i class="el-icon-arrow-down"></i></el-button>
+                <el-button class="metric-btn nz-btn nz-btn-size-normal nz-btn-style-light" @click="toggleDropdown">Metric &nbsp;<i class="nz-icon nz-icon-arrow-down"></i></el-button>
                 <el-cascader-panel v-show="dropDownVisible" v-model="cascaderValue"  slot="dropdown" ref="metricSelector" :props="{emitPath:false}" :options="metricOptions"  @change="metricChange" ></el-cascader-panel>
               </el-dropdown>
             </div>
@@ -24,7 +24,7 @@
               <el-col style="width: 120px; padding-right: 20px; text-align: right; color: #666">
                 <el-dropdown class="metric-selector" v-if="plugins.indexOf('metric-selector') > -1">
                   <el-dropdown-menu style="display: none"></el-dropdown-menu>
-                  <span :class="{'expr-title':projectRightBox}" style="cursor: pointer;" @click="toggleDropdown">Metric&nbsp;<i class="el-icon-arrow-down" style="font-size: 14px; -webkit-transform:scale(0.75);display:inline-block;"></i></span>
+                  <span :class="{'expr-title':projectRightBox}" style="cursor: pointer;" @click="toggleDropdown">Metric&nbsp;<i class="nz-icon nz-icon-arrow-down" style="font-size: 14px; -webkit-transform:scale(0.75);display:inline-block;"></i></span>
                   <el-cascader-panel v-show="dropDownVisible" v-model="cascaderValue" style="text-align: left;" slot="dropdown" ref="metricSelector" :props="{emitPath:false}" :options="metricOptions"  @change="metricChange"></el-cascader-panel>
                 </el-dropdown>
                 <label style="line-height: 30px;" v-else>{{$t("alert.config.expr")}}</label>
@@ -42,13 +42,13 @@
       </div>
       <div v-if="styleType == 1">
         <div class="query-options nz-btn-group nz-btn-group-size-normal nz-btn-group-light">
-          <div class="option nz-btn nz-btn-size-normal nz-btn-style-light" @click="addExpression" v-if="plugins.indexOf('add') > -1"><i class="el-icon-plus"></i></div>
-          <div class="option nz-btn nz-btn-size-normal nz-btn-style-light" @click="removeExpression" v-if="plugins.indexOf('remove') > -1"><i class="el-icon-minus"></i></div>
+          <div class="option nz-btn nz-btn-size-normal nz-btn-style-light" @click="addExpression" v-if="plugins.indexOf('add') > -1"><i class="nz-icon nz-icon-plus"></i></div>
+          <div class="option nz-btn nz-btn-size-normal nz-btn-style-light" @click="removeExpression" v-if="plugins.indexOf('remove') > -1"><i class="nz-icon nz-icon-minus"></i></div>
         </div>
       </div>
       <div v-if="styleType == 2&&showRemove">
-        <div class="option" @click="addExpression" v-if="plugins.indexOf('add') > -1"><i class="el-icon-plus"></i></div>
-        <div class="option" style="margin-left: 5px; line-height: 32px;" @click="removeExpression" v-if="plugins.indexOf('remove') > -1"><i class="el-icon-minus"></i></div>
+        <div class="option" @click="addExpression" v-if="plugins.indexOf('add') > -1"><i class="nz-icon nz-icon-plus"></i></div>
+        <div class="option" style="margin-left: 5px; line-height: 32px;" @click="removeExpression" v-if="plugins.indexOf('remove') > -1"><i class="nz-icon nz-icon-minus"></i></div>
       </div>
     </div>
 </template>

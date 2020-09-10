@@ -45,7 +45,7 @@
                         :on-change="handleChange"
                         :auto-upload="false"
                 >
-                  <i class="el-icon-upload"></i>
+                  <i class="nz-icon nz-icon-upload"></i>
                   <div class="el-upload__text">{{$t('overall.dragFileTip')}}，{{$t('overall.or')}}&nbsp;<em>{{$t('overall.clickUpload')}}</em></div>
                 </el-upload>
             </div>

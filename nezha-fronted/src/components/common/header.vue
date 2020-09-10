@@ -130,7 +130,7 @@
       </el-submenu>
       <el-submenu index="6" popper-class="nz-submenu">
         <template slot="title">
-          <div class='nz-user'>{{username}}<i class="el-icon-arrow-down"></i></div>
+          <div class='nz-user'>{{username}}<i class="nz-icon nz-icon-arrow-down"></i></div>
         </template>
         <el-menu-item index="6-0">
           <div :style="language=='en'?'color:#f90':''" @click="changeLocal('en')">English</div>
@@ -559,7 +559,7 @@
   .el-submenu__title{
     font-size: 16px;
   }
-  .el-submenu__title .el-icon-arrow-down ,.el-submenu__title>.nz-user{
+  .el-submenu__title .nz-icon-arrow-down ,.el-submenu__title>.nz-user{
     font-size: 14px;
   }
   .nz-submenu .el-menu--popup {
@@ -660,7 +660,7 @@
     margin-top:-4px;
     margin-bottom:6px;
   }
-  .el-submenu__icon-arrow .el-icon-arrow-down{
+  .el-submenu__icon-arrow .nz-icon-arrow-down{
     display: none;
   }
   .el-menu--horizontal.nz-submenu {
@@ -732,7 +732,7 @@
     padding-top: 12px;
   }
 
-  .menu-create .el-icon-plus {
+  .menu-create .nz-icon-plus {
     font-size: 12px;
     line-height: 12px;
   }

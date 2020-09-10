@@ -3,7 +3,7 @@
     <!-- begin--顶部按钮-->
     <div class="right-box-top-btns">
       <button id="module-del" type="button" v-if="editModule.id" @click="del" class="nz-btn nz-btn-size-normal nz-btn-size-alien nz-btn-style-light">
-        <span class="right-box-top-btn-icon"><i class="el-icon-delete"></i></span>
+        <span class="right-box-top-btn-icon"><i class="nz-icon nz-icon-delete"></i></span>
         <span class="right-box-top-btn-txt">{{$t('overall.delete')}}</span>
       </button>
     </div>
@@ -56,7 +56,7 @@
                           <span class="el-tag el-tag--info el-tag--small el-tag--light" v-for="item in editModule.walk">
                             <span v-html="mibName(item)"></span>
                             <div class="walk-close-box" @click.stop="removeWalk(item)">
-                              <i class="el-tag__close el-icon-close walk-close"></i>
+                              <i class="el-tag__close nz-icon nz-icon-close walk-close"></i>
                             </div>
                           </span>
                         </el-scrollbar>
@@ -247,7 +247,7 @@
             <div class="right-box-form-btns">
               <button style="display: none;">第一个button会出现意料之外的hover样式，找不到原因，只好加个不可见的button规避问题</button>
               <button id="module-clear-all" type="button" @click="clearAllParam" class="nz-btn nz-btn-size-normal nz-btn-style-light">
-                <span><i class="el-icon-delete"></i></span>
+                <span><i class="nz-icon nz-icon-delete"></i></span>
               </button>
               <button id="module-add-param" type="button" @click="addParam" class="nz-btn nz-btn-size-normal nz-btn-style-light">
                 <span><i style="font-size: 12px;" class="nz-icon nz-icon-create-square"></i></span>

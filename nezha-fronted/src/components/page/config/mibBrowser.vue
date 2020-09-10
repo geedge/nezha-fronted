@@ -29,7 +29,7 @@
           <el-input size="mini" v-model="searchParam.oid" placeholder="OID"></el-input>
         </div>
         <div class="nz-btn-group nz-btn-group-size-normal nz-btn-group-light margin-l-20 mib-browser-btn-group">
-          <!--<div class="el-popover mib-browser-ad-tip" v-show="searchParam.version != 2 || searchParam.port != 161 || searchParam.community != 'public'"><i class="el-icon-more"></i></div>-->
+          <!--<div class="el-popover mib-browser-ad-tip" v-show="searchParam.version != 2 || searchParam.port != 161 || searchParam.community != 'public'"><i class="nz-icon nz-icon-more"></i></div>-->
           <el-select class="nz-input-group-left input-x-mini-24 operation" v-model="searchParam.operation">
             <el-option v-for="item in operationData" :key="item" :value="item"></el-option>
           </el-select><el-popover trigger="click" placement="bottom" @show="popShow" @hide="popHide">
@@ -123,7 +123,7 @@
               </template>
             </div>
             <button slot="reference" @click="advancedShow = true" class="nz-btn nz-btn-size-normal nz-btn-style-light" id="browser-advanced">
-              <i class="el-icon-more"></i>
+              <i class="nz-icon nz-icon-more"></i>
             </button>
           </el-popover><button :class="{'nz-btn-disabled': loading}"
             @click="search(false)" class="nz-btn nz-btn-size-normal nz-btn-style-light" id="browser-go">Go
@@ -158,7 +158,7 @@
             v-loading="treeLoading"
           >
             <div slot-scope="{node, data}" class="walk-tree-item">
-              <span v-if="!data.type"><i class="el-icon-reading"></i></span>
+              <span v-if="!data.type"><i class="nz-icon nz-icon-reading"></i></span>
               <span v-else>
                 <i v-if="data.type.toUpperCase() == 'IDENTIFIER'" class="el-icon-folder-opened"></i>
                 <i v-if="data.type.toUpperCase() == 'OBJECT' && data.subTree.length > 0" class="el-icon-folder-opened"></i>
@@ -215,8 +215,8 @@
         <div class="mib-browser-table-title">
           <span>Result table</span>
           <span>
-            <span @click="exportXlsx" class="mib-browser-table-op" :class="{'mib-browser-table-op-light': resultData.length == 0}" :title="$t('overall.exportExcel')"><i class="el-icon-download"></i></span>
-            <span @click="clearResult" class="mib-browser-table-op" :title="$t('overall.clear')"><i class="el-icon-close"></i></span>
+            <span @click="exportXlsx" class="mib-browser-table-op" :class="{'mib-browser-table-op-light': resultData.length == 0}" :title="$t('overall.exportExcel')"><i class="nz-icon nz-icon-download"></i></span>
+            <span @click="clearResult" class="mib-browser-table-op" :title="$t('overall.clear')"><i class="nz-icon nz-icon-close"></i></span>
           </span>
         </div>
         <pl-table :row-height="28" use-virtual :datas="resultData" border :empty-text="$t('config.mib.noData')" ref="resultTable"

@@ -23,7 +23,7 @@
       <div class="top-tool-right">
         <div class="top-tool-search margin-r-20" v-if="from != 'alertRule' && from != 'endpoint'">
           <el-input ref="queryPanel" @clear="clearInput" id="queryPanel" @focus="focusInput"  @blur="blurInput" v-model="filter.searchName" class="query-input-inactive" size="mini" clearable   >
-            <i slot="suffix" class="el-input__icon el-icon-search" @click="focusInput" style="float: right"></i>
+            <i slot="suffix" class="el-input__icon nz-icon nz-icon-search" @click="focusInput" style="float: right"></i>
           </el-input>
         </div>
         <pick-time :refresh-data-func="dateChange" v-model="searchTime" :use-chart-unit="false" v-if="from=='asset'"></pick-time>
@@ -44,7 +44,7 @@
       <div class="top-tool-main-right">
         <div class="top-tool-search relative-position margin-r-20">
           <el-input ref="queryPanel" @clear="clearInput" id="queryPanel2" @focus="focusInput"  @blur="blurInput" v-model="filter.searchName" class="query-input-inactive" size="mini" clearable   >
-            <i slot="suffix" class="el-input__icon el-icon-search" @click="focusInput" style="float: right"></i>
+            <i slot="suffix" class="el-input__icon nz-icon nz-icon-search" @click="focusInput" style="float: right"></i>
           </el-input>
         </div>
 
@@ -486,19 +486,19 @@
     margin-right: 6px;
   }
 
-  .content-right-option .el-icon-delete {
+  .content-right-option .nz-icon-delete {
     color: #F98D9A;
   }
 
-  .content-right-option .el-icon-delete:hover {
+  .content-right-option .nz-icon-delete:hover {
     color: #D96D7A;
   }
 
-  .content-right-option .el-icon-view {
+  .content-right-option .nz-icon-view {
     color: #60BEFF;
   }
 
-  .content-right-option .el-icon-view:hover {
+  .content-right-option .nz-icon-view:hover {
     color: #409EFF;
   }
 

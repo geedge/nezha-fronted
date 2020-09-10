@@ -3,7 +3,7 @@
       <!-- begin--顶部按钮-->
       <div class="right-box-top-btns">
         <button id="dc-del" type="button" v-if="editDc.id" @click="del" class="nz-btn nz-btn-size-normal nz-btn-size-alien nz-btn-style-light">
-          <span class="right-box-top-btn-icon"><i class="el-icon-delete"></i></span>
+          <span class="right-box-top-btn-icon"><i class="nz-icon nz-icon-delete"></i></span>
           <span class="right-box-top-btn-txt">{{$t('overall.delete')}}</span>
         </button>
       </div>

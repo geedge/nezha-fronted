@@ -4,7 +4,7 @@
       <!-- begin--顶部按钮-->
       <div class="right-box-top-btns">
         <!--<button id="edit-ep-del" type="button" @click="del" class="nz-btn nz-btn-size-normal nz-btn-size-alien nz-btn-style-light ">-->
-        <!--<span class="right-box-top-btn-icon"><i class="el-icon-delete"></i></span>-->
+        <!--<span class="right-box-top-btn-icon"><i class="nz-icon nz-icon-delete"></i></span>-->
         <!--<span class="right-box-top-btn-txt">{{$t('overall.delete')}}</span>-->
         <!--</button>-->
       </div>
@@ -22,7 +22,7 @@
           </div>
           <!--<button type="button" @click="showExportDialog" :title="$t('overall.exportExcelLower')"-->
           <!--class="nz-btn nz-btn-size-normal nz-btn-style-light margin-l-20" id="alert-list-export">-->
-          <!--<i class="el-icon-download"></i>-->
+          <!--<i class="nz-icon nz-icon-download"></i>-->
           <!--</button>-->
         </div>
         <div class="pagination-top pagination-top-hide display-none"></div>
@@ -66,7 +66,7 @@
               <div v-else-if="item.prop == 'option'" class="content-right-options">
                 <span :title="$t('overall.view')" @click="detailEndpoint(scope.row)" class="content-right-option" :id="'edp-detail-'+scope.row.id"><i class="nz-icon nz-icon-view"></i></span>
                 &nbsp;
-                <span :title="$t('overall.query')" @click="query(scope.row)" class="content-right-option" :id="'edp-query-'+scope.row.id"><i class="el-icon-search"></i></span>
+                <span :title="$t('overall.query')" @click="query(scope.row)" class="content-right-option" :id="'edp-query-'+scope.row.id"><i class="nz-icon nz-icon-search"></i></span>
                 &nbsp;
                 <span :title="$t('overall.edit')" @click="editEndpoint(scope.row)" class="content-right-option" :id="'edp-edit-'+scope.row.id"><i class="nz-icon nz-icon-edit"></i></span>
               </div>

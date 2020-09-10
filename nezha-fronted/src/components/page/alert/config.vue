@@ -71,12 +71,12 @@
             <div v-if="item.prop == 'option'" class="content-right-options">
               <span :title="$t('overall.view')" @click="detail(scope.row)" class="content-right-option" :id="'alert-detail-'+scope.row.id"><i class="nz-icon nz-icon-view"></i></span>&nbsp;
               <span v-if="scope.row.buildIn != 1" :title="$t('overall.edit')" @click="edit(scope.row)" class="content-right-option" :id="'alert-edit-'+scope.row.id"><i class="nz-icon nz-icon-edit"></i></span>&nbsp;
-              <span :title="$t('overall.delete')" @click="del(scope.row)" class="content-right-option" :id="'alert-del-'+scope.row.id"><i  class="el-icon-delete"></i></span>
+              <span :title="$t('overall.delete')" @click="del(scope.row)" class="content-right-option" :id="'alert-del-'+scope.row.id"><i  class="nz-icon nz-icon-delete"></i></span>
             </div>
             <span v-else-if="item.prop == 'severity'">
-            <span v-if="scope.row[item.prop] == 'high'"><i class="el-icon-arrow-up"></i>&nbsp;{{$CONSTANTS.alertMessage.severityData.find(s => {return s.value == 'high'}).label}}</span>
+            <span v-if="scope.row[item.prop] == 'high'"><i class="nz-icon nz-icon-arrow-up"></i>&nbsp;{{$CONSTANTS.alertMessage.severityData.find(s => {return s.value == 'high'}).label}}</span>
             <span style="padding-left: 18px;" v-if="scope.row[item.prop] == 'medium'">{{$CONSTANTS.alertMessage.severityData.find(s => {return s.value == 'medium'}).label}}</span>
-            <span v-if="scope.row[item.prop] == 'low'"><i class="el-icon-arrow-down"></i>&nbsp;{{$CONSTANTS.alertMessage.severityData.find(s => {return s.value == 'low'}).label}}</span>
+            <span v-if="scope.row[item.prop] == 'low'"><i class="nz-icon nz-icon-arrow-down"></i>&nbsp;{{$CONSTANTS.alertMessage.severityData.find(s => {return s.value == 'low'}).label}}</span>
           </span>
             <template v-else-if="item.prop == 'alertNum'">
               <span class="link" @click="queryMessage(scope.row)">{{scope.row.alertNum + ' ' + $t('overall.active')}}</span>

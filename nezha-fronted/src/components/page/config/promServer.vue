@@ -60,7 +60,7 @@
               &nbsp;
               <span :title="$t('overall.edit')" @click="edit(scope.row)" class="content-right-option" :id="'prom-edit-'+scope.row.id"><i class="nz-icon nz-icon-edit"></i></span>
               &nbsp;
-              <span :title="$t('overall.delete')" @click="del(scope.row)" class="content-right-option" :id="'prom-del-'+scope.row.id"><i class="el-icon-delete"></i></span>
+              <span :title="$t('overall.delete')" @click="del(scope.row)" class="content-right-option" :id="'prom-del-'+scope.row.id"><i class="nz-icon nz-icon-delete"></i></span>
             </div>
             <span v-else-if="scope.row[item.prop]">{{scope.row[item.prop]}}</span>
             <template v-else>-</template>

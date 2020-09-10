@@ -544,7 +544,7 @@ li{
 .content-right-option i {
   font-size: 12px;
 }
-.content-right-option .el-icon-delete {
+.content-right-option .nz-icon-delete {
   color: #ee6723;
 }
 .content-right-option .nz-icon-view {
@@ -597,6 +597,7 @@ li{
 }
 .top-tool-main-left>.panel-dropdown-title {
   margin-top: -2px;
+  overflow: hidden;
 }
 /*.top-tool-main-right>.nz-btn, .top-tool-main-right-to-left>.nz-btn, .top-tool-main-right>.nz-btn-group, .top-tool-main-right>.panel-calendar {
   margin-top: -2px;
@@ -1483,7 +1484,7 @@ li{
 .nz-submenu .el-menu--popup .el-menu-item .menu-item-active{
   color:$global-text-color-active !important;
 }
-//.el-icon-setting:before {
+//.nz-icon-setting:before {
 //  content: "\E6CA";
 //  color: #BA3939;
 //}

@@ -59,7 +59,7 @@
               &nbsp;
               <span :title="$t('overall.edit')" @click="edit(scope.row)" class="content-right-option" :id="'account-edit-'+scope.row.id"><i class="nz-icon nz-icon-edit"></i></span>
               &nbsp;
-              <span :title="$t('overall.delete')" @click="del(scope.row)" class="content-right-option" :id="'account-del-'+scope.row.id"><i class="el-icon-delete"></i></span>
+              <span :title="$t('overall.delete')" @click="del(scope.row)" class="content-right-option" :id="'account-del-'+scope.row.id"><i class="nz-icon nz-icon-delete"></i></span>
             </div>
             <span v-else-if="item.prop == 'lang'">
                             {{scope.row[item.prop] == 'en' ? 'English' : ''}}

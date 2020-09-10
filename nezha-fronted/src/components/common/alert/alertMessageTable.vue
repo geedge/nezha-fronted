@@ -5,7 +5,7 @@
   <div :class="{'contentTable':!projectAlertId,'relative-position':true,'contentProject':projectAlertId}">
     <transition name="el-zoom-in-bottom">
       <div class="el-popover alert-clean-pop" @click="toDeleteMessage(false)" v-if="deleteBox.ids.length > 0">
-        <i style="cursor: pointer" class="el-icon-delete"></i>
+        <i style="cursor: pointer" class="nz-icon nz-icon-delete"></i>
       </div>
     </transition>
     <!-- 自定义table列 -->
@@ -78,9 +78,9 @@
             <span v-else>-</span>
           </template>
           <span v-else-if="item.prop == 'severity'">
-                <span v-if="scope.row[item.prop] == 'high'"><i class="el-icon-arrow-up"></i>&nbsp;{{returnSeverityLabel(scope.row[item.prop])}}</span>
+                <span v-if="scope.row[item.prop] == 'high'"><i class="nz-icon nz-icon-arrow-up"></i>&nbsp;{{returnSeverityLabel(scope.row[item.prop])}}</span>
                 <span style="padding-left: 18px;" v-if="scope.row[item.prop] == 'medium'">{{returnSeverityLabel(scope.row[item.prop])}}</span>
-                <span v-if="scope.row[item.prop] == 'low'"><i class="el-icon-arrow-down"></i>&nbsp;{{returnSeverityLabel(scope.row[item.prop])}}</span>
+                <span v-if="scope.row[item.prop] == 'low'"><i class="nz-icon nz-icon-arrow-down"></i>&nbsp;{{returnSeverityLabel(scope.row[item.prop])}}</span>
               </span>
           <template v-else-if="item.prop == 'labels'" class="labels">
             <el-tooltip
@@ -126,7 +126,7 @@
             </el-popover>
           </div>
           <div v-else-if="item.prop == 'option'" class="content-right-options">
-            <span :title="$t('overall.delete')" @click="toDeleteMessage(scope.row)" class="content-right-option" :id="'alert-list-delete-'+scope.row.id"><i  class="el-icon-delete"></i></span>
+            <span :title="$t('overall.delete')" @click="toDeleteMessage(scope.row)" class="content-right-option" :id="'alert-list-delete-'+scope.row.id"><i  class="nz-icon nz-icon-delete"></i></span>
           </div>
           <span v-else-if="scope.row[item.prop]">{{scope.row[item.prop]}}</span>
           <template v-else>-</template>

@@ -35,11 +35,11 @@
                 <button id="search-asset-drop" type="button" class="nz-btn nz-btn-size-small nz-btn-style-light nz-btn-style-square nz-input-group-prepend" @click="assetSearch.dropdownShow = !assetSearch.dropdownShow">
                   <span class="endpoint-asset-label-txt">{{assetSearch.label}}</span>
                   <span>
-                    <i v-if="assetSearch.dropdownShow" class="el-icon-caret-top"></i>
-                    <i v-if="!assetSearch.dropdownShow" class="el-icon-caret-bottom"></i>
+                    <i v-if="assetSearch.dropdownShow" class="nz-icon nz-icon-caret-top"></i>
+                    <i v-if="!assetSearch.dropdownShow" class="nz-icon nz-icon-caret-bottom"></i>
                   </span>
                 </button><el-input style="width: 100px;" class="input-x-mini-24 nz-input-group-middle" placeholder="" v-model="assetSearch.text"></el-input><button
-                type="button" class="nz-btn nz-btn-size-small nz-btn-style-light nz-btn-style-square nz-input-group-append" id="search-asset"><i @click="searchAsset" class="el-icon-search"></i></button>
+                type="button" class="nz-btn nz-btn-size-small nz-btn-style-light nz-btn-style-square nz-input-group-append" id="search-asset"><i @click="searchAsset" class="nz-icon nz-icon-search"></i></button>
 
                 <div class="endpoint-asset-search-dropdown" v-if="assetSearch.dropdownShow">
                   <div @click="dropdownSelect('IP')" class="endpoint-asset-search-dropdown-item" id="search-asset-ip">IP</div>
@@ -175,7 +175,7 @@
                   <template slot-scope="scope" :column="title">
                     <div>
                       <span :id="'ep-asset-toedit-'+scope.row.assetId" v-if="!scope.row.isEdit" class="endpoint-box-row-symbol" @mousedown.stop @click="toEditEndpoint(scope.row)"><i class="el-icon-edit-outline"></i></span>
-                      <span :id="'ep-asset-edit-'+scope.row.assetId" v-else class="endpoint-box-row-symbol" @mousedown.stop @click="editEndpoint(scope.row)"><i class="el-icon-check"></i></span>
+                      <span :id="'ep-asset-edit-'+scope.row.assetId" v-else class="endpoint-box-row-symbol" @mousedown.stop @click="editEndpoint(scope.row)"><i class="nz-icon nz-icon-check"></i></span>
                       <span :id="'ep-asset-remove-'+scope.row.assetId" class="endpoint-box-row-symbol" @click="removeEndpoint(scope.row)"><i class="nz-icon nz-icon-minus-square"></i></span>
                     </div>
                   </template>
@@ -215,7 +215,7 @@
           </div>
         </div>
         <div style="width: 100%; text-align: center; height: 25px;">
-          <el-button @click="addParam" id="add-param" style="height: 18px; line-height: 18px; padding-top: 0; padding-bottom: 0;" size="mini"><i class="el-icon-plus"></i></el-button>
+          <el-button @click="addParam" id="add-param" style="height: 18px; line-height: 18px; padding-top: 0; padding-bottom: 0;" size="mini"><i class="nz-icon nz-icon-plus"></i></el-button>
         </div>
       </div>
     </transition>

@@ -89,7 +89,7 @@
               <div v-else-if="item.prop == 'option'" class="content-right-options">
                 <span :title="$t('overall.view')" @click="detailEndpoint(scope.row)" class="content-right-option" :id="'edp-detail-'+scope.row.id"><i class="nz-icon nz-icon-view"></i></span>
                 &nbsp;
-                <span :title="$t('overall.query')" @click="query(scope.row)" class="content-right-option" :id="'edp-query-'+scope.row.id"><i class="el-icon-search"></i></span>
+                <span :title="$t('overall.query')" @click="query(scope.row)" class="content-right-option" :id="'edp-query-'+scope.row.id"><i class="nz-icon nz-icon-search"></i></span>
                 &nbsp;
                 <span :title="$t('overall.edit')" @click="editEndpoint(scope.row)" class="content-right-option" :id="'edp-edit-'+scope.row.id"><i class="nz-icon nz-icon-edit"></i></span>
               </div>
@@ -700,16 +700,16 @@
     display: inline-block;
     margin-right: 6px;
   }
-  .content-right-option .el-icon-delete {
+  .content-right-option .nz-icon-delete {
     color: #F98D9A;
   }
-  .content-right-option .el-icon-delete:hover {
+  .content-right-option .nz-icon-delete:hover {
     color: #D96D7A;
   }
-  .content-right-option .el-icon-view {
+  .content-right-option .nz-icon-view {
     color: #60BEFF;
   }
-  .content-right-option .el-icon-view:hover {
+  .content-right-option .nz-icon-view:hover {
     color: #409EFF;
   }
   /* start--param*/

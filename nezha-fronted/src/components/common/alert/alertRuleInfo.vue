@@ -15,9 +15,9 @@
     <div class="alert-rule-box">
       <div class="alert-rule-title">Level</div>
       <div class="alert-rule-value">
-        <span v-if="alertRuleData && alertRuleData.severity === 'high'"><i class="el-icon-arrow-up"></i>&nbsp;{{$CONSTANTS.alertMessage.severityData.find(s => {return s.value == 'high'}).label}}</span>
+        <span v-if="alertRuleData && alertRuleData.severity === 'high'"><i class="nz-icon nz-icon-arrow-up"></i>&nbsp;{{$CONSTANTS.alertMessage.severityData.find(s => {return s.value == 'high'}).label}}</span>
         <span style="padding-left: 18px;" v-if="alertRuleData && alertRuleData.severity === 'medium'">{{$CONSTANTS.alertMessage.severityData.find(s => {return s.value == 'medium'}).label}}</span>
-        <span v-if="alertRuleData && alertRuleData.severity === 'low'"><i class="el-icon-arrow-down"></i>&nbsp;{{$CONSTANTS.alertMessage.severityData.find(s => {return s.value == 'low'}).label}}</span>
+        <span v-if="alertRuleData && alertRuleData.severity === 'low'"><i class="nz-icon nz-icon-arrow-down"></i>&nbsp;{{$CONSTANTS.alertMessage.severityData.find(s => {return s.value == 'low'}).label}}</span>
       </div>
     </div>
   </div>

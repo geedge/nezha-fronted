@@ -4,7 +4,7 @@
     <div class="right-box-top-btns">
       <button v-if="editAsset.id" type="button" @click="del" id="asset-edit-del"
               class="nz-btn nz-btn-size-normal nz-btn-size-alien nz-btn-style-light nz-btn-min-width-82">
-        <span class="right-box-top-btn-icon"><i class="el-icon-delete"></i></span>
+        <span class="right-box-top-btn-icon"><i class="nz-icon nz-icon-delete"></i></span>
         <span class="right-box-top-btn-txt">{{$t('overall.delete')}}</span>
       </button>
     </div>
@@ -61,7 +61,7 @@
             @change="modelChange"
           >
           </el-cascader>
-          <div class="right-box-row-btn" @click="addVendor(editAsset.model.type.code)"><i class="el-icon-plus"></i></div>
+          <div class="right-box-row-btn" @click="addVendor(editAsset.model.type.code)"><i class="nz-icon nz-icon-plus"></i></div>
         </el-form-item>
         <el-form-item :label="$t('asset.purchaseDate')">
           <div class="select-style">
@@ -134,7 +134,7 @@
                 <div v-if="errorProtocol.indexOf(account.protocol) > -1" class="nz-tab-error el-form-item__error">Required</div>
               </transition>
             </div>&nbsp;
-            <span class="nz-tab-item-close" @click.stop="removeAccount(index)"><i class="el-icon-circle-close"></i></span>
+            <span class="nz-tab-item-close" @click.stop="removeAccount(index)"><i class="nz-icon nz-icon-circle-close"></i></span>
           </div>
         </div>
         <account-config-box v-for="(account,index) in editAsset.accounts" :account="account" v-show="account.protocol == accountType" :key="index" ref="accountConfigBox" @setValidateResult="setAccountValidResult" @protocol-type-change="protocolTypeChange"></account-config-box>

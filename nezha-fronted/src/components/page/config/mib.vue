@@ -74,11 +74,11 @@
               </div>
             </template>
             <div v-else-if="item.prop == 'option'" class="content-right-options">
-              <span :title="$t('overall.download')" @click="downloadMib(scope.row)" class="content-right-option" :id="'mib-download-'+scope.row.id"><i class="el-icon-download"></i></span>
+              <span :title="$t('overall.download')" @click="downloadMib(scope.row)" class="content-right-option" :id="'mib-download-'+scope.row.id"><i class="nz-icon nz-icon-download"></i></span>
               &nbsp;
               <span :title="$t('overall.edit')" @click="edit(scope.row)" class="content-right-option" :id="'mib-edit-'+scope.row.id"><i class="nz-icon nz-icon-edit"></i></span>
               &nbsp;
-              <span :title="$t('overall.delete')" @click="del(scope.row)" class="content-right-option" :id="'mib-del-'+scope.row.id"><i class="el-icon-delete"></i></span>
+              <span :title="$t('overall.delete')" @click="del(scope.row)" class="content-right-option" :id="'mib-del-'+scope.row.id"><i class="nz-icon nz-icon-delete"></i></span>
             </div>
             <template v-else-if="scope.row[item.prop]">{{scope.row[item.prop]}}</template>
             <template v-else>-</template>

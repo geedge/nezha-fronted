@@ -38,7 +38,7 @@
             <el-dropdown-menu style="display: none"></el-dropdown-menu>
             <span class="el-dropdown-link chart-title" @click="dropdownMenuShow=!dropdownMenuShow">
               <span class="chart-title-text">{{chartData.title}}</span>
-              <span class="chart-title-icon" v-if="filter.from != 'alertRule'"><i class="el-icon-caret-bottom el-icon--right" :class="{'visible':caretShow,'hidden':!caretShow}"></i></span>
+              <span class="chart-title-icon" v-if="filter.from != 'alertRule'"><i class="nz-icon nz-icon-caret-bottom el-icon--right" :class="{'visible':caretShow,'hidden':!caretShow}"></i></span>
             </span>
             <ul v-if="filter.from != 'alertRule'" slot="dropdown" v-show="dropdownMenuShow"  :id="'dropdownUl'+chartIndex" :class="{'el-dropdown-menu nz-chart-dropdown':!isExplore,'el-dropdown-menu nz-chart-dropdown-one':isExplore}"    style="position: absolute; top: 30px; left: calc(50% - 79px); transform-origin: center top; z-index: 1000;" >
               <li v-show="!isExplore"  @click="refreshChart"  class="el-dropdown-menu__item">
@@ -46,7 +46,7 @@
               <li v-show="!isExplore" @click="editChart"  class="el-dropdown-menu__item">
                 <i class="nz-icon nz-icon-edit" style="font-size: 14px; margin-right: 11px; margin-left: 1px;"></i>{{$t('dashboard.edit')}}</li>
               <li v-show="!isExplore" @click="removeChart"  class="el-dropdown-menu__item">
-                <i class="el-icon-delete" style="font-size: 16px;"></i>{{$t('dashboard.delete')}}</li>
+                <i class="nz-icon nz-icon-delete" style="font-size: 16px;"></i>{{$t('dashboard.delete')}}</li>
               <li  @click="showAllScreen"  class="el-dropdown-menu__item">
                 <i class="el-icon-full-screen" style="font-size: 16px;"></i>{{$t('dashboard.screen')}}</li>
               <li  v-show="!isExplore" @click="duplicate"  class="el-dropdown-menu__item">

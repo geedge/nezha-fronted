@@ -63,13 +63,13 @@
                       <el-option v-for="(item,index) in topNFilter.tops" :label="item.label" :value="item.value" :key="item.value+index"></el-option>
                     </el-select>-->
                     <el-dropdown trigger="click">
-                      <span class="clickable">{{topNFilter.options.find((item)=>{return item.value==topNFilter.default})['label']}}<i class="el-icon-arrow-down el-icon--right"></i></span>
+                      <span class="clickable">{{topNFilter.options.find((item)=>{return item.value==topNFilter.default})['label']}}<i class="nz-icon nz-icon-arrow-down"></i></span>
                       <el-dropdown-menu slot="dropdown">
                         <el-dropdown-item v-for="(item,index) in topNFilter.options" :key="item.value+index" @click.native="()=>{topNFilter.default=item.value;topNChange();}">{{item.label}}</el-dropdown-item>
                       </el-dropdown-menu>
                     </el-dropdown>
                     <el-dropdown trigger="click">
-                      <span class="clickable">{{topNFilter.tops.find((item)=>{return item.value==topNFilter.defaultTop})['label']}}<i class="el-icon-arrow-down el-icon--right"></i></span>
+                      <span class="clickable">{{topNFilter.tops.find((item)=>{return item.value==topNFilter.defaultTop})['label']}}<i class="nz-icon nz-icon-arrow-down"></i></span>
                       <el-dropdown-menu slot="dropdown">
                         <el-dropdown-item v-for="(item,index) in topNFilter.tops" :key="item.value+index" @click.native="()=>{topNFilter.defaultTop=item.value;topNChange();}">{{item.label}}</el-dropdown-item>
                       </el-dropdown-menu>
@@ -971,7 +971,7 @@
                 h('span',
                   {
                     domProps: {
-                      innerHTML: column.label+'<i class="el-icon-arrow-down el-icon--right"></i>'
+                      innerHTML: column.label+'<i class="nz-icon nz-icon-arrow-down"></i>'
                     }
                   }
                 ),

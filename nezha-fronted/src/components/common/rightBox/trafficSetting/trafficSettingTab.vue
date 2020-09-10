@@ -108,10 +108,10 @@
             </template>
           </div>
           <button slot="reference"  class="nz-btn nz-btn-size-normal nz-btn-style-light" id="snmp-advanced">
-            <i class="el-icon-more"></i>
+            <i class="nz-icon nz-icon-more"></i>
           </button>
         </el-popover>
-        <div class="right-box-row-btn" @click="delSelf"><i class="el-icon-minus"></i></div>
+        <div class="right-box-row-btn" @click="delSelf"><i class="nz-icon nz-icon-minus"></i></div>
         <div>
           <span style="color:#F56C6C;font-size: 12px;" v-if="hostRepeat">{{$t('validate.repeat')}}</span>
           <span style="color:#F56C6C;font-size: 12px;" v-if="hostInvalid">{{$t('validate.host')}}</span>
@@ -222,12 +222,12 @@
           </el-table-column>
           <el-table-column label="" :width="30">
             <template slot-scope="scope">
-              <el-button @click.stop="delTabRow(scope.$index,scope.row)" :disabled="assetSetting.host == null" style="width: 18px;height: 18px; line-height: 18px; padding:0;" size="mini"><i class="el-icon-minus"></i></el-button>
+              <el-button @click.stop="delTabRow(scope.$index,scope.row)" :disabled="assetSetting.host == null" style="width: 18px;height: 18px; line-height: 18px; padding:0;" size="mini"><i class="nz-icon nz-icon-minus"></i></el-button>
             </template>
           </el-table-column>
         </el-table>
         <div class="add-btn">
-          <el-button @click="addTabRow"  style="height: 18px; line-height: 18px; padding-top: 0; padding-bottom: 0;" size="mini"><i class="el-icon-plus"></i></el-button>
+          <el-button @click="addTabRow"  style="height: 18px; line-height: 18px; padding-top: 0; padding-bottom: 0;" size="mini"><i class="nz-icon nz-icon-plus"></i></el-button>
         </div>
       </div>
       <sub-box ref="subBox" @after="refreshTabFunc"></sub-box>

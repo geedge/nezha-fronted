@@ -9,7 +9,7 @@
             <span class="pop-top-btn-txt" v-else>{{$t('overall.edit')}}</span>
           </button>
           <button type="button" @click="esc" class="nz-btn nz-btn-size-alien nz-btn-size-small nz-btn-style-light nz-btn-min-width-35" id="cabinet-esc" >
-            <span class="pop-top-btn-icon"><i class="el-icon-close"></i></span>
+            <span class="pop-top-btn-icon"><i class="nz-icon nz-icon-close"></i></span>
             <span class="pop-top-btn-txt">{{$t('overall.esc')}}</span>
           </button>
         </div>
@@ -42,7 +42,7 @@
     </div>
     <span :class="buttonClass" @click.prevent.stop="" slot="reference" :id="'cabinet-edit-'+Math.random().toString(36).slice(-8)">
       <slot name="optionZone">
-        <i class="el-icon-plus" id="cabinet-plus"></i>
+        <i class="nz-icon nz-icon-plus" id="cabinet-plus"></i>
       </slot>
     </span>
   </el-popover>

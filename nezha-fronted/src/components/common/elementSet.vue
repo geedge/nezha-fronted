@@ -12,8 +12,8 @@
           :id="'element-set-el-'+index"
           :class="{'custom-title orange-font':item.type == 'title','custom-label-disabled':!allowedAll&&!item.allowed && (index==0 || index == 1 || item.NotSet)}"
         >
-          <i class="el-icon-check" v-if="!allowedAll&&!item.allowed&&(index==0||index==1||item.visibility=='disabled')"></i>
-          <i v-else class="el-icon-check" v-show="item.show"></i>
+          <i class="nz-icon nz-icon-check" v-if="!allowedAll&&!item.allowed&&(index==0||index==1||item.visibility=='disabled')"></i>
+          <i v-else class="nz-icon nz-icon-check" v-show="item.show"></i>
           <span>{{item.label}}</span>
         </div>
 

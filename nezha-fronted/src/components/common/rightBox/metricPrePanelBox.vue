@@ -7,7 +7,7 @@
           <span class="top-tool-btn-txt">{{$t('overall.save')}}</span>
         </button>
         <button type="button" @click="esc" class="nz-btn nz-btn-size-normal nz-btn-style-light nz-btn-style-square">
-          <span class="top-tool-btn-txt"><i class="el-icon-close"></i></span>
+          <span class="top-tool-btn-txt"><i class="nz-icon nz-icon-close"></i></span>
         </button>
       </div>
       <!-- end--顶部按钮-->

@@ -3,7 +3,7 @@
       <div class="pop-box-title">
         <div class="pop-top-btns">
           <button type="button" @click="esc" class="nz-btn nz-btn-size-alien nz-btn-size-small nz-btn-style-light nz-btn-min-width-35" id="dc-esc">
-            <span class="pop-top-btn-icon"><i class="el-icon-close"></i></span>
+            <span class="pop-top-btn-icon"><i class="nz-icon nz-icon-close"></i></span>
             <span class="pop-top-btn-txt">{{$t('overall.esc')}}</span>
           </button>
         </div>

@@ -19,7 +19,7 @@
     height:24px;
     border:solid 1px  #d8dce1;
     white-space: nowrap;
-    overflow-x: hidden;
+    overflow: hidden;
     text-overflow: ellipsis;
   }
   .el-dropdown-link {
@@ -97,9 +97,9 @@
           <el-col :span="24" class="calendar-popover-text">{{searchTime[1]}}</el-col>
         </el-row>
         <div  class="el-dropdown-link" slot="reference">
-          <i class="el-icon-time" style="width:20px;"></i>
+          <i class="nz-icon nz-icon-time" style="width:20px;"></i>
           <span class="panel-list-title" id="timePickerContent">{{showTime.text}}</span>
-          <i class="el-icon-arrow-down el-icon--right"  style="padding-left:0px !important;width:20px;"></i>
+          <i class="nz-icon nz-icon-arrow-down"  style="padding-left:0px !important;width:20px;"></i>
         </div>
       </el-popover>
       <el-dropdown-menu class="nz-dashboard-dropdown" slot="dropdown">

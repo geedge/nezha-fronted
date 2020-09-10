@@ -21,7 +21,7 @@
               <span></span>
               <span>
                 <!--<span class="chart-title-text">{{chartData.title}}</span>-->
-                <!--<span class="chart-title-icon"><i class="el-icon-caret-bottom el-icon&#45;&#45;right"  :class="{'visible':caretShow,'hidden':!caretShow}"></i></span>-->
+                <!--<span class="chart-title-icon"><i class="nz-icon nz-icon-caret-bottom el-icon&#45;&#45;right"  :class="{'visible':caretShow,'hidden':!caretShow}"></i></span>-->
               </span>
               <div style="height: 34px">
                 <i class="nz-icon nz-icon-edit float-right "  @click="editVisNetworkChange(true)" v-show="!editVisNetwork" :title="$t('project.topology.edit')"></i>

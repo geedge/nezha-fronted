@@ -13,8 +13,8 @@
         </el-scrollbar>
       </div>
       <div class="add-btn">
-        <el-button @click="addTags" id="add-param" style="height: 18px; line-height: 18px; padding-top: 0; padding-bottom: 0;" size="mini"><i class="el-icon-plus"></i></el-button>
-        <el-button @click="showEditTagsBox(false)"  style="height: 18px; line-height: 18px; padding-top: 0; padding-bottom: 0;" size="mini"><i class="el-icon-check"></i></el-button>
+        <el-button @click="addTags" id="add-param" style="height: 18px; line-height: 18px; padding-top: 0; padding-bottom: 0;" size="mini"><i class="nz-icon nz-icon-plus"></i></el-button>
+        <el-button @click="showEditTagsBox(false)"  style="height: 18px; line-height: 18px; padding-top: 0; padding-bottom: 0;" size="mini"><i class="nz-icon nz-icon-check"></i></el-button>
       </div>
     </div>
   </transition>

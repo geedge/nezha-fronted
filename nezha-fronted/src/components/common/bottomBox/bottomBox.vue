@@ -13,7 +13,7 @@
         <!--全屏-->
         <div class="window-control-btn" v-if="!isFullScreen" @click="fullScreen"><i class="el-icon-full-screen"></i></div>
         <!--关闭-->
-        <div class="window-control-btn" @click="closeSubList"><i class="el-icon-close"></i></div>
+        <div class="window-control-btn" @click="closeSubList"><i class="nz-icon nz-icon-close"></i></div>
       </div>
 
         <!------TAB区------>

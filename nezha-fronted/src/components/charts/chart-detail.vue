@@ -26,7 +26,7 @@
           <el-scrollbar style="height: 100%;width:100%;" ref="scrollbar" class="el-scrollbar-normal">
             <div v-for="(item, index) in detail" :key="index" class="chart-sub">
               <div class="chart-sub-title" @click="hideElement(index)">
-                <span><i :class="{'el-icon-caret-right': show.indexOf(index) == -1,'el-icon-caret-bottom': show.indexOf(index) > -1}"></i></span>
+                <span><i :class="{'nz-icon nz-icon-caret-right': show.indexOf(index) == -1,'nz-icon nz-icon-caret-bottom': show.indexOf(index) > -1}"></i></span>
                 <span>{{item.title}}</span>
               </div>
               <el-collapse-transition>
@@ -190,7 +190,7 @@
                     <div class="content-item" v-else-if="data.from == 'alertRule' && data.type == 'alertRuleInfo' && key != '_module_'" @click="showDeep(`deep-${index}-${i}`)">
                       <div class="content-item-key item-tip" :id="`key-${index}-${i}`">
                         <span class="content-text">
-                          <span><i v-if="item.data._module_[key]" :class="{'el-icon-caret-right': deepShow.indexOf(`deep-${index}-${i}`) == -1,'el-icon-caret-bottom': deepShow.indexOf(`deep-${index}-${i}`) > -1}"></i></span>
+                          <span><i v-if="item.data._module_[key]" :class="{'nz-icon nz-icon-caret-right': deepShow.indexOf(`deep-${index}-${i}`) == -1,'nz-icon nz-icon-caret-bottom': deepShow.indexOf(`deep-${index}-${i}`) > -1}"></i></span>
                           <span>{{key}}</span>
                           <!--<span v-if="item.data._module_[key]">{{Object.keys(item.data._module_[key]).length-1}}个module</span>-->
                         </span>
@@ -206,7 +206,7 @@
                             <div class="content-item" @click.stop="showDeep(`deep-${index}-${i}-${ti}-${fi}`)" v-for="(moduleNum, moduleName, fi) in module" v-if="moduleName != '_endpoint_'">
                               <div class="content-item-key item-tip deep" :id="`key-${index}-${i}-${ti}-${fi}`">
                                 <span class="content-text">
-                                  <span><i v-if="module._endpoint_[moduleName]" :class="{'el-icon-caret-right': deepShow.indexOf(`deep-${index}-${i}-${ti}-${fi}`) == -1,'el-icon-caret-bottom': deepShow.indexOf(`deep-${index}-${i}-${ti}-${fi}`) > -1}"></i></span>
+                                  <span><i v-if="module._endpoint_[moduleName]" :class="{'nz-icon nz-icon-caret-right': deepShow.indexOf(`deep-${index}-${i}-${ti}-${fi}`) == -1,'nz-icon nz-icon-caret-bottom': deepShow.indexOf(`deep-${index}-${i}-${ti}-${fi}`) > -1}"></i></span>
                                   <span>{{moduleName}}</span>
                                   <!--<span v-if="module._endpoint_[moduleName]">{{Object.keys(module._endpoint_[moduleName]).length-1}}个endpoint</span>-->
                                 </span>

@@ -5,7 +5,7 @@
       <button type="button" v-if="editUser.userId" @click="del"
               class="nz-btn nz-btn-size-normal nz-btn-size-alien nz-btn-style-light"
               id="account-edit-del">
-        <span class="right-box-top-btn-icon"><i class="el-icon-delete"></i></span>
+        <span class="right-box-top-btn-icon"><i class="nz-icon nz-icon-delete"></i></span>
         <span class="right-box-top-btn-txt">{{$t('overall.delete')}}</span>
       </button>
     </div>

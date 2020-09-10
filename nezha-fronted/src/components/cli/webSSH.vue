@@ -25,7 +25,7 @@
           <!--</el-submenu>-->
         </el-submenu>
         <el-submenu index="2" style="width:50px;">
-          <template slot="title" ><i class="el-icon-upload console-title-icon" style="position: absolute;left: 10px;top: 4px;"></i></template>
+          <template slot="title" ><i class="nz-icon nz-icon-upload console-title-icon" style="position: absolute;left: 10px;top: 4px;"></i></template>
           <el-menu-item index="2-1" @click="showUploadBox">
               <div>{{$t('webshell.upload')}}</div>
           </el-menu-item>
@@ -60,17 +60,17 @@
           <span slot="label" style="padding:8px;font-size:20px;font-weight:bold;">+</span>
         </el-tab-pane>
       </el-tabs>
-      <i style='right:70px;' @click="minScreen" class="el-icon-minus console-title-icon"></i>
+      <i style='right:70px;' @click="minScreen" class="nz-icon nz-icon-minus console-title-icon"></i>
       <i style='right:38px;' v-if="!isFullScreen" @click="fullScreen" class="el-icon-full-screen console-title-icon"></i>
       <i style='right:38px;' v-else @click="exitFullScreen" class="nz-icon nz-icon-exit-full-screen console-title-icon"></i>
-      <i style='right:8px;' @click="closeConsole" class="el-icon-close console-title-icon"></i>
+      <i style='right:8px;' @click="closeConsole" class="nz-icon nz-icon-close console-title-icon"></i>
       <!--
-      <i style='right:103px;' @click="minScreen" class="el-icon-minus console-title-icon"></i>
+      <i style='right:103px;' @click="minScreen" class="nz-icon nz-icon-minus console-title-icon"></i>
       <i style='right:70px;;' @click="fullScreen" class="el-icon-full-screen console-title-icon"></i>
       <i style='right:38px;' class="el-icon-copy-document console-title-icon" ></i>
-      <i style='right:8px;' @click="closeConsole" class="el-icon-close console-title-icon"></i>
+      <i style='right:8px;' @click="closeConsole" class="nz-icon nz-icon-close console-title-icon"></i>
       -->
-      <!--el-icon-setting  el-icon-minus  el-icon-full-screen  el-icon-copy-document-->
+      <!--nz-icon-setting  nz-icon nz-icon-minus  el-icon-full-screen  el-icon-copy-document-->
     </div>
 
     <div >
@@ -85,7 +85,7 @@
                            :file-list="uploadFileList"
                            :on-change="handleChange"
                            :auto-upload="false" >
-                  <i class="el-icon-upload"></i>
+                  <i class="nz-icon nz-icon-upload"></i>
                   <div class="el-upload__text">{{$t('overall.dragFileTip')}}，{{$t('overall.or')}}&nbsp;<em>{{$t('overall.clickUpload')}}</em></div>
                   <!--<button type="button" class="nz-btn nz-btn-size-normal nz-btn-style-normal">
                     <span class="top-tool-btn-txt" >{{$t('webshell.fileSelect')}}</span>

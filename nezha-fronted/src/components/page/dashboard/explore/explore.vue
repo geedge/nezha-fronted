@@ -45,14 +45,14 @@
           </div>
           <div class="chart-view right-margin" v-show="!showIntroduce"
                :class="{'shrink-view':!chartVisible || !defaultChartVisible}" style="position:relative;">
-            <div class="view-title" @click="changeChartVisible" style="position:absolute;z-index: 1000"><i class="el-icon-caret-top" ></i>&nbsp;graph</div>
+            <div class="view-title" @click="changeChartVisible" style="position:absolute;z-index: 1000"><i class="nz-icon nz-icon-caret-top" ></i>&nbsp;graph</div>
             <div class="chart-room">
               <chart ref="exploreChart" :unit="chartUnit"></chart>
             </div>
           </div>
           <div class="table-view right-margin" v-show="!showIntroduce"
                :class="{'shrink-view':!tableVisible || !defaultTableVisible}">
-            <div class="view-title" @click="changeTableVisible"><i class="el-icon-caret-top"></i>&nbsp;table</div>
+            <div class="view-title" @click="changeTableVisible"><i class="nz-icon nz-icon-caret-top"></i>&nbsp;table</div>
             <div class="table-room">
               <!-- 自定义table列 -->
               <transition name="el-zoom-in-top">

@@ -4,7 +4,7 @@
       <!-- begin--顶部按钮-->
       <div class="right-box-top-btns">
         <!--<button id="edit-ep-del" type="button" @click="del" class="nz-btn nz-btn-size-normal nz-btn-size-alien nz-btn-style-light ">-->
-        <!--<span class="right-box-top-btn-icon"><i class="el-icon-delete"></i></span>-->
+        <!--<span class="right-box-top-btn-icon"><i class="nz-icon nz-icon-delete"></i></span>-->
         <!--<span class="right-box-top-btn-txt">{{$t('overall.delete')}}</span>-->
         <!--</button>-->
       </div>
@@ -22,7 +22,7 @@
           </div>
           <!--<button type="button" @click="showExportDialog" :title="$t('overall.exportExcelLower')"-->
                   <!--class="nz-btn nz-btn-size-normal nz-btn-style-light margin-l-20" id="alert-list-export">-->
-            <!--<i class="el-icon-download"></i>-->
+            <!--<i class="nz-icon nz-icon-download"></i>-->
           <!--</button>-->
         </div>
         <div class="pagination-top pagination-top-hide display-none"></div>
@@ -88,9 +88,9 @@
                 <span v-else>-</span>
               </template>
               <span v-else-if="item.prop == 'severity'">
-                <span v-if="scope.row[item.prop] == 'high'"><i class="el-icon-arrow-up"></i>&nbsp;{{returnSeverityLabel(scope.row[item.prop])}}</span>
+                <span v-if="scope.row[item.prop] == 'high'"><i class="nz-icon nz-icon-arrow-up"></i>&nbsp;{{returnSeverityLabel(scope.row[item.prop])}}</span>
                 <span style="padding-left: 18px;" v-if="scope.row[item.prop] == 'medium'">{{returnSeverityLabel(scope.row[item.prop])}}</span>
-                <span v-if="scope.row[item.prop] == 'low'"><i class="el-icon-arrow-down"></i>&nbsp;{{returnSeverityLabel(scope.row[item.prop])}}</span>
+                <span v-if="scope.row[item.prop] == 'low'"><i class="nz-icon nz-icon-arrow-down"></i>&nbsp;{{returnSeverityLabel(scope.row[item.prop])}}</span>
               </span>
               <template v-else-if="item.prop == 'labels'" class="labels">
                 <el-tooltip
@@ -136,7 +136,7 @@
                 </el-popover>
               </div>
               <div v-else-if="item.prop == 'option'" class="content-right-options">
-                <span :title="$t('overall.delete')" @click="toDeleteMessage(scope.row)" class="content-right-option" :id="'alert-list-delete-'+scope.row.id"><i  class="el-icon-delete"></i></span>
+                <span :title="$t('overall.delete')" @click="toDeleteMessage(scope.row)" class="content-right-option" :id="'alert-list-delete-'+scope.row.id"><i  class="nz-icon nz-icon-delete"></i></span>
               </div>
               <span v-else-if="scope.row[item.prop]">{{scope.row[item.prop]}}</span>
               <template v-else>-</template>
