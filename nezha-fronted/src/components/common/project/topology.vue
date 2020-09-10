@@ -33,7 +33,7 @@
         :style="{transform:'scale('+zoom+')'}"
         v-show="networkPopShow"
       >
-        <i class="nz-icon nz-icon-hexagonBorder"  v-for="item in popData"  :style="{top:item.top,left:item.left}" @click="popClick(item.id)" :title="item.title">
+        <i v-if="networkPopShow" :class="{'nz-icon':true,'nz-icon-hexagonBorder':true,selpop:selpopIs(item)}"  v-for="item in popData"  :style="{top:item.top,left:item.left}" @click="popClick(item.id)" :title="item.title">
           <i class="nz-icon nz-icon-liubianxing"></i>
           <i :class="[item.className,{'nz-icon':item.className},'noMove']"></i>
         </i>
@@ -627,7 +627,8 @@
         this.selNodeId=item.id;
         if(this.selNodeId){
           this.setPopPosition(this.selNodeId);
-          this.popDataShowUpdate('main')
+          this.popDataShowUpdate('main');
+          this.network.selectNodes([this.selNodeId]);
         }
       },
       // 数组取差集
@@ -685,6 +686,16 @@
           this.popDataShowUpdate();
         })
       },
+      selpopIs(item){
+        let flag=true;
+        if(item.id==='other'){
+          flag=false;
+        }
+        if(item.id==='total'&&this.nodeData.expressions&&this.nodeData.expressions.length){
+          flag=false;
+        }
+        return flag
+      },
       qqq(){
         let nodesArray=[...this.nodesArray];
         let edgesArray=[...this.edgesArray];
@@ -735,6 +746,7 @@
              this_.selNodeId=selId;
              this_.cursorMove=true;
              this_.nodeData=this_.nodesArray.find((item)=>item.id===selId);
+             console.log( this_.nodeData,123123);
              if(this_.NodeArr.indexOf(selId)!==-1){
                let index = this_.NodeArr.indexOf(selId);
                this_.NodeArr=this_.NodeArr.filter((item,i)=> i !== index);
@@ -906,17 +918,17 @@
     font-size: 20px;
     color: #27c09c;
   }
-  .network-pop .nz-icon-hexagonBorder:hover{
+  .network-pop .selpop:hover{
     transform: scale(1.2);
   }
-  .network-pop .nz-icon-hexagonBorder:hover .nz-icon-liubianxing{
+  .network-pop .selpop:hover .nz-icon-liubianxing{
     transform: scale(1.1);
     left: 4px;
     font-size: 41px;
     color: #D7FAF1;
     top: -1px;
   }
-  .network-pop .nz-icon-hexagonBorder:hover .noMove{
+  .network-pop .selpop:hover .noMove{
     transform: scale(1.1);
   }
   /*.btmTriangle{*/
