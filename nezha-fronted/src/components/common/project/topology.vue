@@ -23,7 +23,7 @@
       <div id="network_id" ref="visNetwork" :class="{'cursorMove': cursorMove}"></div>
       <!--空拓扑图-->
       <div class="network-null" v-if="nodesArray.length===0">
-        <i class="nz-icon nz-icon-add-node" @click="addModelShow"></i>
+        <i class="nz-icon nz-icon-create-square" @click="addModelShow"></i>
         <img src="./image/emptyData.png" width="303px" height="184px"/>
       </div>
       <!--拓扑图工具-->
@@ -912,6 +912,7 @@
     position: absolute;
     top: 0;
     left: 2px;
+    transform: scale(1.02);
   }
   .nz-icon.noMove{
     position: absolute;
@@ -967,7 +968,7 @@
     align-items: center;
     position: absolute;
   }
-  .network-null .nz-icon-add-node{
+  .network-null .nz-icon-create-square{
     color: #23BF9A;
     font-size: 50px;
     margin-bottom: 24px;
