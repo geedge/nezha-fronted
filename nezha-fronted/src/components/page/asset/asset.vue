@@ -60,7 +60,7 @@
           :sort-orders="['ascending', 'descending']"
         >
           <template slot-scope="scope" slot="header">
-            <span v-if="item.type == 'tag'"><span>{{item.label}}</span><span style="color:orange;">&nbsp;[Tag]</span></span>
+            <span v-if="item.type == 'tag'" style="display: flex; width: 100%; align-items: center; flex-wrap: nowrap;"><span style="max-width: calc(100% - 40px); min-width: 20px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;">{{item.label}}</span><span style="color:orange; width: 40px;">&nbsp;[Tag]</span></span>
             <span v-else><span>{{item.label}}</span></span>
           </template>
           <template slot-scope="scope" :column="item">
