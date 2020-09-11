@@ -1321,15 +1321,15 @@
     mounted() {
       this.initData();
       this.initDate();
-      window.onresize = () => {
+      /*window.onresize = () => {
         setTimeout(() => {
           this.$parent.$parent.update();
         }, 100);
-      }
+      }*/
     },
-    destroyed() {
+    /*destroyed() {
       window.onresize = null;
-    }
+    }*/
   }
 </script>
 

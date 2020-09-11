@@ -142,9 +142,8 @@
         itemStyle: {areaColor: "white"},
         map: '',
         roam: true,//鼠标是否可以控制缩放
-        center: [67.45, 48],//当前视角的中心点，用经纬度表示
-        //center: [-127.45, -48],//当前视角的中心点，用经纬度表示
-        zoom: 6,
+        //center: [67.45, 48],//当前视角的中心点，用经纬度表示
+        //zoom: 5,
         label: { //控制显示地图名称
           normal: {
             show: false
@@ -165,7 +164,8 @@
         scaleLimit: {
           min: 4,
           max: 8
-        }
+        },
+        aspectScale: 1
       },
       tooltip : {
         trigger: 'item',
