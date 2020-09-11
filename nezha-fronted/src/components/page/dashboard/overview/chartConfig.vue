@@ -23,7 +23,7 @@
       "#8abafc","#d181e8","#d88d50","#cce8ff",
       "#161ef9"];*/
 
-    let pieColor = ["#ECCD82", "#99CEB9", "#EEA694", "#8EA8DF", "#92C9DF"];/*['#d64f40', '#e66f60', '#f68f80', '#f6afa0',
+    let pieColor = ["#FAd4ab", "#d0e8d0", "#EEA694", "#9fb5e4", "#92C9DF"];/*['#d64f40', '#e66f60', '#f68f80', '#f6afa0',
       '#ffdb28', '#ffeb38', '#fffb48', '#ffffbb'];*/
 
     const commonOption={
@@ -201,7 +201,7 @@
       },
       grid: {
         top: 60,
-        left: 80,
+        left: 100,
         right: 30,
         bottom: 60,
       },
@@ -237,8 +237,8 @@
           show: true,
           fontSize: 12,
           formatter: function(value) {
-            if (value.length > 10) {
-              return value.substring(0, 8) + "...";
+            if (value.length > 15) {
+              return value.substring(0, 11) + "...";
             }
             return value;
           },
@@ -249,15 +249,6 @@
     const alertMessageBarByAsset = {
       title: {
         show: false,
-      },
-      color: function(params) {
-        //首先定义一个数组
-        let colorList = [pieColor[0], pieColor[1]];;
-        if(params.dataIndex % 2 == 0){
-          return colorList[0]
-        }else{
-          return colorList[1]
-        }
       },
       legend: {
         show: false,
