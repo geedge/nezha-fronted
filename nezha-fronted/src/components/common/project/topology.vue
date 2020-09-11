@@ -908,9 +908,10 @@
     color:#e2f3ef;
     font-size: 44px;
     position: absolute;
-    top: 0;
+    top: 1px;
     left: 2px;
     transform: scale(1.02);
+    z-index: -1;
   }
   .nz-icon.noMove{
     position: absolute;
