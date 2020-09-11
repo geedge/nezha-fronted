@@ -7,7 +7,7 @@
       <template v-else>
         <div class="top-tool-main-left">
           <el-dropdown @command="panelChange" class="panel-dropdown-title" trigger="click" placement="bottom-start" v-scrollBar:el-dropdown>
-            <el-row @click.native="scrollbarHeightHandler" :gutter="10" class="el-dropdown-link" style="">
+            <el-row @click.native="scrollbarHeightHandler" :gutter="10" class="el-dropdown-link" style="padding-right: 5px">
               <el-col :span="21" class="panel-list-title" :title="showPanel.name">{{showPanel.name}}</el-col>
               <el-col :span="3" style="padding-left:0px !important;"><i class="nz-icon nz-icon-arrow-down"></i></el-col>
             </el-row>
