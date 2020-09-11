@@ -60,7 +60,7 @@
           :sort-orders="['ascending', 'descending']"
         >
           <template slot-scope="scope" slot="header">
-            <span v-if="item.type == 'tag'"><span>{{item.label}}</span><span style="color:orange;">&nbsp;[Tag]</span></span>
+            <span v-if="item.type == 'tag'" class="tag-header" :title="item.label"><span class="tag-value">{{item.label}}</span><span class="tag-mark">&nbsp;[Tag]</span></span>
             <span v-else><span>{{item.label}}</span></span>
           </template>
           <template slot-scope="scope" :column="item">
@@ -787,6 +787,15 @@
   .mark{
     vertical-align: middle;
     display: inline-flex;
+  }
+  .tag-header{
+    display: flex; width: 100%; align-items: center; flex-wrap: nowrap;
+    .tag-value{
+      max-width: calc(100% - 40px); min-width: 20px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;
+    }
+    .tag-mark{
+      color:orange; width: 40px;
+    }
   }
   /*/deep/ .sidebar-info-item .el-checkbox__label{*/
     /*padding-right: 15px;*/
