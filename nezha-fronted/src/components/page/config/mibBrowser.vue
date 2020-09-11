@@ -215,7 +215,7 @@
         <div class="mib-browser-table-title">
           <span>Result table</span>
           <span>
-            <span @click="exportXlsx" class="mib-browser-table-op" :class="{'mib-browser-table-op-light': resultData.length == 0}" :title="$t('overall.exportExcel')"><i class="nz-icon nz-icon-download"></i></span>
+            <span @click="exportXlsx" class="mib-browser-table-op" :class="{'mib-browser-table-op-light': resultData.length == 0}" :title="$t('overall.exportExcel')"><i class="nz-icon nz-icon-download1"></i></span>
             <span @click="clearResult" class="mib-browser-table-op" :title="$t('overall.clear')"><i class="nz-icon nz-icon-close"></i></span>
           </span>
         </div>

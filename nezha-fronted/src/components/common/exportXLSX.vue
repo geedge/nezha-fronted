@@ -1,19 +1,19 @@
 <template>
   <div class="export-xlsx">
     <div class="nz-btn-group nz-btn-group-size-normal nz-btn-group-light">
-      <slot name="optionZone"></slot><button @mouseenter="exportMenuHandler(true)" @mouseleave="exportMenuHandler(false)" class="nz-btn nz-btn-size-normal nz-btn-style-light export-dropdown-btn" id="browser-go">
+      <slot name="optionZone"></slot><button @mouseenter="exportMenuHandler(true)" @mouseleave="exportMenuHandler(false)" class="nz-btn nz-btn-size-normal nz-btn-style-light export-dropdown-btn" id="browser-go" style="padding: 0">
         <i class="nz-icon nz-icon-arrow-down"></i>
         <transition name="el-zoom-in-top">
           <ul class="el-dropdown-menu el-popper el-dropdown-menu--mini export-dropdown" v-show="exportShow">
-            <li @click="showImportBox(1)" class="el-dropdown-menu__item dropdown-content"><i class="nz-icon nz-icon-upload1"></i>import</li>
-            <li @click="showImportBox(2)" class="el-dropdown-menu__item dropdown-content"><i class="nz-icon nz-icon-download"></i>export</li>
+            <li @click="showImportBox(1)" class="el-dropdown-menu__item dropdown-content"><i class="nz-icon nz-icon-upload"></i>import</li>
+            <li @click="showImportBox(2)" class="el-dropdown-menu__item dropdown-content"><i class="nz-icon nz-icon-download1"></i>export</li>
           </ul>
         </transition>
       </button>
       <!--<el-dropdown split-button type="primary" size="mini" class="dropdownBtn">
         <slot name="optionZone" class="option-button"></slot><el-dropdown-menu slot="dropdown">
           <el-dropdown-item @click.native="showImportBox(1)" class="dropdown-content"><i class="nz-icon nz-icon-upload1"></i>{{$t('overall.importExcelLower')}}</el-dropdown-item>
-          <el-dropdown-item @click.native="showImportBox(2)" class="dropdown-content"><i class="nz-icon nz-icon-download"></i>{{$t('overall.exportExcelLower')}}</el-dropdown-item>
+          <el-dropdown-item @click.native="showImportBox(2)" class="dropdown-content"><i class="nz-icon nz-icon-download1"></i>{{$t('overall.exportExcelLower')}}</el-dropdown-item>
         </el-dropdown-menu>
       </el-dropdown>-->
     </div>

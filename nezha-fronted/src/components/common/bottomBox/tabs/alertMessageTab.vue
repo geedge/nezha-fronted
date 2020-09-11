@@ -16,7 +16,7 @@
         </div>
         <button type="button" @click="importBox.show = true" :title="$t('overall.exportExcelLower')"
             class="nz-btn nz-btn-size-normal nz-btn-style-light margin-l-20" id="alert-list-export">
-          <i class="nz-icon nz-icon-download"></i>
+          <i class="nz-icon nz-icon-download1"></i>
         </button>
       </div>
     </div>

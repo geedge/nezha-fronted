@@ -74,7 +74,7 @@
               </div>
             </template>
             <div v-else-if="item.prop == 'option'" class="content-right-options">
-              <span :title="$t('overall.download')" @click="downloadMib(scope.row)" class="content-right-option" :id="'mib-download-'+scope.row.id"><i class="nz-icon nz-icon-download"></i></span>
+              <span :title="$t('overall.download')" @click="downloadMib(scope.row)" class="content-right-option" :id="'mib-download-'+scope.row.id"><i class="nz-icon nz-icon-download1"></i></span>
               &nbsp;
               <span :title="$t('overall.edit')" @click="edit(scope.row)" class="content-right-option" :id="'mib-edit-'+scope.row.id"><i class="nz-icon nz-icon-edit"></i></span>
               &nbsp;
