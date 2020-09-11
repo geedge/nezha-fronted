@@ -58,7 +58,7 @@
       <i class="nz-icon nz-icon-shuidi"
          v-show="item.show"
          v-for="(item,index) in modelTop"
-         :style="{top:(item.y- 80 + 5*(10-zoom*10))+'px',left:(item.x-26 + 5*(1-zoom))+'px',transform:'scale('+zoom+')'}"
+         :style="{top:(item.y- 80 + 49*(1-zoom*1))+'px',left:(item.x- 26 + 6*(1-zoom))+'px',transform:'scale('+zoom+')'}"
          :ref="'modelTopId'+index"
          @mousedown="modelTopClick(item,index)"
       >
@@ -351,7 +351,7 @@
           },
           nodes: {
             shape: 'dot',
-            size: 40,
+            size: 30,
             borderWidth: 2,
             font:{
               size:16,
@@ -527,7 +527,7 @@
       setPopPosition(selId){//设置节点工具栏位置以及是否显示
         if(!selId){return}
         let position=this.network.canvasToDOM(this.network.getPositions([selId])[selId]);
-        this.networkPop.style.top = position.y - 85 + 7*(10-this.zoom*10)+'px';
+        this.networkPop.style.top = position.y - 85 + 85*(1-this.zoom*1)+'px';
         this.networkPop.style.left = position.x - 32*this.zoom - 5*(1-this.zoom) +'px';
         if(!this.isFullScreen&&this.NodeArr.length===0&&!this.editVisNetwork){
           this.networkPopShow=true;
@@ -665,8 +665,9 @@
             this.popDataShow[key]=true;
           })
         }
-        if(this.selNodeId&&!flag){
-          this.setPopPosition(this.selNodeId);
+        if(key==='asset' || key==='alert' || key==='endpoint'){
+          this.networkPopShow=false;
+          // this.setPopPosition(this.selNodeId);
         }
       },
       //拓扑图放大缩小
@@ -691,7 +692,6 @@
         if(item.id==='other'){
           flag=false;
         }
-        console.log(this.nodeData);
         this.nodeData=this.nodesArray.find((item)=>item.id===this.selNodeId);
         if(item.id==='total'&&(!this.nodeData.expressions || this.nodeData.expressions.length===0)){
           flag=false;
@@ -748,7 +748,6 @@
              this_.selNodeId=selId;
              this_.cursorMove=true;
              this_.nodeData=this_.nodesArray.find((item)=>item.id===selId);
-             console.log( this_.nodeData,123123);
              if(this_.NodeArr.indexOf(selId)!==-1){
                let index = this_.NodeArr.indexOf(selId);
                this_.NodeArr=this_.NodeArr.filter((item,i)=> i !== index);
@@ -770,7 +769,6 @@
          this.network.on("selectEdge", function (params) { // 选择边
            this_.selNodeId='';
            this_.lineData=this_.edgesArray.find((item)=>item.id===params.edges[0]);
-           console.log(this_.lineData);
           if(this_.editVisNetwork){
             this_.lineData.color=this_.lineData.color.color?this_.lineData.color.color:this_.lineData.color;
             this_.addLineShow=true;
@@ -892,7 +890,7 @@
   }
   .network-pop{
     position: absolute;
-    z-index: 10;
+    z-index: 0;
     /*border: 1px solid #e6e6e6;*/
     border-radius: 5px;
     height: 32px;

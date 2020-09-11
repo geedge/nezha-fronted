@@ -1492,6 +1492,9 @@
         color: rgba(0,0,0,0.85);
         display: flex;
     }
+    .selectinfo_box .select_content .nz-icon-close{
+      font-size: 12px;
+    }
     .selectinfo_box .select_content>span {
       max-width: 100px;
       display: inline-block;

@@ -725,7 +725,7 @@
   .chart-box{
     /*padding-left: 600px;*/
     position: relative;
-    height: calc(100vh - 100px);
-    padding: 3px 15px 100px 15px;
+    max-height: calc(100vh - 100px);
+    padding: 3px 15px 50px 15px;
   }
 </style>
