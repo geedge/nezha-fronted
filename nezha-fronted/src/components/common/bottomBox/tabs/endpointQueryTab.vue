@@ -109,7 +109,7 @@
       <chart ref="endpointChart" :unit="chartUnit"></chart>
     </el-dialog>
     <transition name="right-box">
-      <chart-box v-if="rightBox.show" @close="rightBox.show = false" :chart="chart" ref="addChartModal" :panel-data="panelData" @on-create-success="createSuccess" @reloadOnlyPanel="getPanelData" @reload="getPanelData" :show-panel="{}"></chart-box>
+      <chart-box v-if="rightBox.show" @close="rightBox.show = false" :chart="chart" ref="addChartModal" :panel-data="panelData" @on-create-success="createSuccess" @reloadOnlyPanel="getPanelData" @reload="getPanelData" :show-panel="{}" box-class="save-chart-box"></chart-box>
     </transition>
   </span>
 </template>
