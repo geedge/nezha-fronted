@@ -360,6 +360,7 @@
       jumpToAsset(dc) {
         if (dc) {
           this.activeItemIndex = dc.id;
+          this.$store.commit('setCurrentDc',dc.id)
           bus.$emit("header-dc-change", dc.id); //发送给leftMenu，顶部dc条件改变了
         } else {
           this.activeItemIndex = "";

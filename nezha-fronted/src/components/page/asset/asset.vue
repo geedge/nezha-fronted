@@ -368,6 +368,11 @@
         tagKeys:[],
       }
     },
+    computed:{
+      headerCurrentDc:function(){
+        return this.$store.state.currentDc;
+      }
+    },
     watch: {
       'bottomBox.showSubList': function(n) {
         let vm = this;
@@ -682,11 +687,9 @@
 
       },
       filterTags:function(scope){
-        console.log(scope)
         let tag=scope.column.label.split(' [Tag]')[0]
         let tagVals=scope.row.tags
         if(tagVals){
-          console.log('tags',tagVals,tag)
           let showTag=tagVals.find(item=>{return item.tag == tag})
           if(showTag){
             return showTag.value
@@ -729,6 +732,9 @@
 
       //初始化数据
       this.getUserData();
+
+      this.pageObj.idcId=this.headerCurrentDc;
+
       this.getTableData();
       //是否存在分页缓存
       let pageSize = localStorage.getItem('nz-pageSize-' + localStorage.getItem('nz-username') + '-' + this.tableId);
