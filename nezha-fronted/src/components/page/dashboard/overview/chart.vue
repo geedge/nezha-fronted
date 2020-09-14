@@ -1,5 +1,5 @@
 <template>
-  <div class="chart-room" @mouseenter="mouseEnterChart" @mouseleave="mouseLeaveChart" ref="chartRoom">
+  <div class="chart-room" @mouseenter="mouseEnterChart" @mouseleave="mouseLeaveChart" ref="chartRoom" :style="{overflow: chartType == 'map' ? 'hidden' : ''}" :id="chartType == 'map' ? 'map' : ''">
     <loading  ref="loading"></loading>
     <div class="showMore" v-if="legendAll.length !== legend.length"><i class="nz-icon nz-icon-jinggao"></i>{{$t("dashboard.panel.moreTitle")}} <span class="moreChart" @click="showMore">{{$t("dashboard.panel.showAll")+legendAll.length}}</span></div>
     <div class="chart-header">{{chartTitle}}</div>
@@ -113,56 +113,28 @@
               });
             }
           });
-          console.info(this.option.geo)
-          /*let geoObj = this.map.geoJson.geoJson;
-          geoObj.features.forEach(item=>{
-            if(this.option.geo.regions){
-              this.option.geo.regions.push({
-                name:item.properties.name,
-                itemStyle: {
-                  normal: {
-                    areaColor: "white"
-                  }
-                }
-              })
-            }else{
-              this.option.geo.regions=[{
-                name:item.properties.name,
-                itemStyle: {
-                  normal: {
-                    areaColor: "white"
-                  }
-                }
-              }]
-            }
-          });*/
-          //let timer = setTimeout(()=>{}, 0);
-          //地图拖动、缩放时动态读取地图数据
-          /*this.chart.on("georoam", params => {
-            //console.info(this.map.geoJson.geoJson.features[0]);
-            clearTimeout(timer);
-            timer = setTimeout(() => {  //延时触发，0.6秒无操作再更新地图数据
-              let dx = params.dx; //拖动x位移
-              let dy = params.dy; //拖动y位移
-              if (dx || dy) {
-                let option = this.chart.getOption();
-                let center = option.geo[0].center; //拖动后的中心点
-                let newJson = mapGeoJson.getProvinceJson(center);
-                this.map.geoJson.geoJson = newJson;
-                //console.info(this.map.geoJson.geoJson.features.length);
-                //this.clearChart();
-                //this.chartInit();
-                //echarts.registerMap(this.map.name, this.map.geoJson);
-              }
 
-              //this.chart.setOption(option, true);
-              //console.info(this.map.geoJson.geoJson.features.length);
-            }, 600);
-          });*/
-          /*this.chart.on("click", params => {
-            let option = this.chart.getOption();
-            console.info(option.geo[0].center);
-          });*/
+          let mapRoom = document.querySelector("#map");
+          let roomWidth = mapRoom.offsetWidth;
+          let roomHeight = mapRoom.offsetHeight;
+
+          let windowWidth = window.innerWidth;
+          let windowHeight = window.innerHeight;
+
+          let scaleWidth = roomWidth/1200;
+          let scaleHeight = roomHeight/700;
+
+          let kazCenter = [67.45, 44];
+          if (windowWidth > 2000) {
+            this.option.geo.center = kazCenter;
+            this.option.geo.zoom = 6;
+          } else if (windowWidth > 1600) {
+            this.option.geo.center = [kazCenter[0]*1.15, kazCenter[1]*0.93];
+            this.option.geo.zoom = 5;
+          } else {
+            this.option.geo.center = [kazCenter[0]*1.15*1.15, kazCenter[1]*0.93*0.93];
+            this.option.geo.zoom = 4;
+          }
         }
 
         this.modifyOption('tooltip','position',this.defaultTooltipPosition)
@@ -218,28 +190,18 @@
         }
         this.resize();
       },
-      resizeChart:function(width,height){
-        if(this.chart){
-          this.chart.resize({width:width,height:height});
-        }
-      },
-      resize:function(){
+      resize() {
         this.$nextTick(() => {
           if(this.chart){
-            //let height=this.$el.clientHeight;
-            //console.info(this.$el.clientHeight)
-            let height = this.$el.clientHeight-document.querySelector("#legendArea").offsetHeight;
-            //console.info(document.querySelector("#legendArea").offsetHeight)
-            /*for (let i in document.querySelector("#legendArea")) {
-              console.info(i, document.querySelector("#legendArea")[i])
-            }*/
-            let width=this.$el.clientWidth;
-            /*if(this.chartTitle){
-              height = height - 20;
+            let height;
+            let width;
+            if (this.chartType == "map") {
+              height = 700;
+              width = 1200;
+            } else {
+              height = this.$el.clientHeight - document.querySelector("#legendArea").offsetHeight;
+              width=this.$el.clientWidth;
             }
-            if(this.legend && this.legend.length>0){
-              height = height - 80;
-            }*/
             this.chart.resize({width:width,height:height});
           }
         });
@@ -421,7 +383,7 @@
     },
     mounted() {
       this.chartInit();
-      EleResize.on(this.$el,this.resize);
+      EleResize.on(this.$el, this.resize, this.chartType);
     },
     watch:{
 

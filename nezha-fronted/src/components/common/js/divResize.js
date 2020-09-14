@@ -81,10 +81,12 @@ if (document.attachEvent) {//ie9-10
       ele.__resizeTrigger__ = obj;
       obj.__resizeElement__ = ele;
     }
-    handlers.push({
-      handler: handler,
-      context: context
-    });
+    if (context != "map") {
+      handlers.push({
+        handler: handler,
+        context: context
+      });
+    }
   };
   EleResize.off = function (ele, handler, context) {
     var handlers = ele.__z_resizeListeners;

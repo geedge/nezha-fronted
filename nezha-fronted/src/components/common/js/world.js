@@ -7,7 +7,7 @@ const coordinateSpanByZoom = { //各缩放比例下map显示范围的经纬度�
 export const worldData = jsonData["world"];
 const worldDataDecode = decode(worldData);
 
-export function getProvinceJson(coordinate) { //根据中心点坐标，动态返回四周的省份信息。
+/*export function getProvinceJson(coordinate) { //根据中心点坐标，动态返回四周的省份信息。
   //同时间只显示自身和周围共9块省级区划
   //console.info(coordinate);
   let countryNames = getCountries(coordinate, scale);
@@ -24,16 +24,12 @@ export function getProvinceJson(coordinate) { //根据中心点坐标，动态�
   });
   //console.info(JSON.stringify(newWorldData.features[newWorldData.features.length-1]));
   return newWorldData;
-}
-function getCountries(coordinate, currentScale) { //根据参数当前中心坐标、当前缩放比，得出需要显示省级区划的小块内的国家
+}*/
+/*function getCountries(coordinate, currentScale) { //根据参数当前中心坐标、当前缩放比，得出需要显示省级区划的小块内的国家
   let x = coordinateSpanByZoom[currentScale][0];
   let y = coordinateSpanByZoom[currentScale][1];
   let rangeX = [coordinate[0] < (-180+x) ? -180 : (Math.floor(coordinate[0]/x)-1)*x, (Math.floor(coordinate[0]/x)+1)*x];
   let rangeY = [coordinate[1] < (-90+y) ? -90 : (Math.floor(coordinate[1]/y)-1)*y, (Math.floor(coordinate[1]/y)+1)*y];
-/*
-  let rangeX = [coordinate[0] < (-180+x) ? -180 : (coordinate[0]/x-1)*x, (coordinate[0]/x+1)*x];
-  let rangeY = [coordinate[1] < (-90+y) ? -90 : (coordinate[1]/y-1)*y, (coordinate[1]/y+1)*y];
-*/
   //console.info(rangeX, rangeY);
   let countries = [];
   for (let country in jsonData.countryCoordinates) { //jsonData.countryCoordinates是各国首都坐标数据
@@ -45,7 +41,7 @@ function getCountries(coordinate, currentScale) { //根据参数当前中心坐�
     }
   }
   return countries;
-}
+}*/
 
 function decode(json) {
   if (!json.UTF8Encoding) {

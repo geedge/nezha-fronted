@@ -782,7 +782,7 @@
               barMaxWidth: 15,
               itemStyle: {
                 color: function(params) {
-                  let colorList = ["#ECCD82", "#99CEB9"];;
+                  let colorList =  ["#FAd4ab", "#d0e8d0"];
                   if(params.dataIndex % 2 == 0){
                     return colorList[0]
                   }else{
@@ -816,7 +816,7 @@
               category: categoryData,
               itemStyle: {
                 color: function(params) {
-                  let colorList = ["#ECCD82", "#99CEB9"];;
+                  let colorList = ["#FAd4ab", "#d0e8d0"];;
                   if(params.dataIndex % 2 == 0){
                     return colorList[0]
                   }else{
@@ -1321,15 +1321,15 @@
     mounted() {
       this.initData();
       this.initDate();
-      window.onresize = () => {
+      /*window.onresize = () => {
         setTimeout(() => {
           this.$parent.$parent.update();
         }, 100);
-      }
+      }*/
     },
-    destroyed() {
+    /*destroyed() {
       window.onresize = null;
-    }
+    }*/
   }
 </script>
 
