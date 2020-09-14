@@ -4,7 +4,7 @@
       <div class="main-box-title">Assets</div>
       <div class="main-box-content">
         <div class="content-box">
-          <span class="content-title"><i class="nz-icon nz-icon-arrow-up1 colorFFF bg23BF9A"></i>up</span>
+          <span class="content-title"><i class="nz-icon nz-icon-arrow-up2 colorFFF bg23BF9A"></i>up</span>
           <span class="float-right">{{moduleInfo.assetStat.up}}</span>
         </div>
         <div class="content-box">
@@ -18,7 +18,7 @@
       <div class="main-box-title">Endpoints</div>
       <div class="main-box-content">
         <div class="content-box">
-          <span class="content-title"><i class="nz-icon nz-icon-arrow-up1 colorFFF bg23BF9A"></i>up</span>
+          <span class="content-title"><i class="nz-icon nz-icon-arrow-up2 colorFFF bg23BF9A"></i>up</span>
           <span class="float-right">{{moduleInfo.endpointStat.up}}</span>
         </div>
         <div class="content-box">
