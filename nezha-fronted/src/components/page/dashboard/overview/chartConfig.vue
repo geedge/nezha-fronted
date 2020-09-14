@@ -208,7 +208,6 @@
       series: [],
       tooltip : {
         backgroundColor: "rgba(255, 255, 255, 0.66)",
-        extraCssText: "box-shadow: 1px 2px 8px 0 rgba(0, 0, 0, 0.24);",
         textStyle: {color: "#333"}
       },
       xAxis: {
