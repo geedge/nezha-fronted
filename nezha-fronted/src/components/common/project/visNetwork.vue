@@ -264,7 +264,8 @@
         arr.forEach((item,index)=>{
           item.from=item.source;
           item.to=item.target;
-          item.label=item.name;
+          item.label='';
+          item.title='title';
           // item.dashes=(item.dashes?(new Array(100).fill(item.dashes[0])):item.dashes);
           // if(index%2==0&&item.dashes){
           //   item.dataFlow='left';
@@ -356,7 +357,7 @@
     height: calc(16% - 40px);
     font-size: 12px;
     position: absolute;
-    top: 15px;
+    top: 5px;
     left: 15px;
     z-index: 10;
   }
@@ -455,7 +456,7 @@
     text-align: center;
   }
   .label{
-    padding: 0 15px;
+    padding: 0 15px 0 0;
   }
 
 </style>

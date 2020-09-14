@@ -83,7 +83,9 @@
         <!--<div @click='zoomChange(0.1)'><i class="nz-icon nz-icon-hexagonBorder zoom-icon"></i></div>-->
         <!--<div @click='zoomChange(-0.1)'><i class="nz-icon nz-icon-hexagonBorder zoom-icon"></i></div>-->
       <!--</div>-->
-
+      <expression-info
+      v-if="expressionsInfoShow"
+      ></expression-info>
     </div>
     <transition name="right-box">
       <add-model
@@ -125,7 +127,7 @@
 </template>
 
 <script>
-  import Vis from 'vis'
+  import Vis from 'vis-network/dist/vis-network.js'
   import addNode from './addNode'
   import addLine from './addLine'
   import popDataMain from './popData/Main'
@@ -134,9 +136,11 @@
   import alertTable from "./popData/alertTable";
   import assetTable from "./popData/assetTable";
   import endpointTable from "./popData/endpointTable";
+  import ExpressionInfo from "./popData/expressionInfo";
 	export default {
 		name:"topology",
     components: {
+      ExpressionInfo,
       TotalChart,
       alertTable,
       assetTable,
@@ -204,6 +208,7 @@
     },
     data(){
 		  return {
+		    canvas:'',
         totalId:'',
         totalArray:[],
         allModuleInfos:[],
@@ -243,7 +248,7 @@
         },
         popData:[
           {top:'-20px', left:'-17px',className:'nz-icon-endpoint',id:'endpoint',title:this.$t('project.topology.endpoint')},
-          {top:'-20px', left:'28px',className:'nz-icon-shujuku',id:'asset',title:this.$t('project.topology.asset')},
+          {top:'-20px', left:'28px',className:'nz-icon-asset',id:'asset',title:this.$t('project.topology.asset')},
           {top:'18px',  left:'52px',className:'nz-icon-chart',id:'total',title:this.$t('project.topology.total')},
           {top:'56px', left:'28px',className:'',id:'other',title:''},
           {top:'56px', left:'-17px',className:'nz-icon-info-normal',id:'info',title:this.$t('project.topology.info')},
@@ -271,6 +276,7 @@
         options:{},
         data:{},
         timeInterval:'',
+        expressionsInfoShow:false,
       }
     },
     methods:{// 保存拓扑图数据
@@ -342,7 +348,7 @@
         };
         this_.options = {
           autoResize: true,
-          clickToUse:true,
+          clickToUse:false,
           groups:{
             useDefaultGroups: true,
             myGroupId:{
@@ -356,6 +362,11 @@
             font:{
               size:16,
             },
+            // chosen:{
+            //   node:(values, id, selected, hovering)=>{
+            //     console.log(values);
+            //   }
+            // },
           },
 
           edges: {
@@ -377,8 +388,13 @@
                   values.middleArrow=true;
                   values.middleArrowScale=1;
                   values.middleArrowType='circle';
+                  this_.expressionsInfoShow=true;
+                  console.log(values);
                 }
               },
+              // label:(values, id, selected, hovering)=>{
+              //   console.log(values,2222);
+              // },
             },
           },
           layout:{
@@ -420,6 +436,7 @@
         });
         this_.containerCanvas=document.querySelectorAll("#network_id canvas")[0];
         this_.modelTopUpdate();
+        this_.canvas=document.getElementsByTagName('canvas')[0];
       },
       resetAllNodes() {
         this.setNetworkData(this.nodesArray,this.edgesArray);
@@ -785,14 +802,16 @@
            // this_.addLineShow=true;
          });
 
-         this.network.on("hoverEdge", function () { // 悬停边
+         this.network.on("hoverEdge", function (params,a) { // 悬停边
            this_.hoverEdge=true;
            this_.cursorMove=true;
+           console.log(params,a);
          });
 
          this.network.on("blurEdge", function () { // 边失去焦点
            this_.hoverEdge=false;
            this_.cursorMove=false;
+           this_.expressionsInfoShow=false;
          });
 
          this.network.on("dragStart", function (params) {//节点移动开始
@@ -841,6 +860,7 @@
 
          this.network.on("hoverNode", function () {//hoverNode
            this_.cursorMove=true;
+           console.log(123123123);
          });
 
          this.network.on("blurNode", function () {//blurNode

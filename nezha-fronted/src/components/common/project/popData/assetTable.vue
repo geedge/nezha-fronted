@@ -66,6 +66,7 @@
               <div v-if="item.prop=='assetType'">
                 <span>{{scope.row.model.type.value}}</span>
               </div>
+              <template v-if="item.prop=='SN'">{{scope.row.sn}}</template>
               <div v-if="item.prop=='state'">
                 <span>{{scope.row.state==1 ? $t('asset.inStock') : $t('asset.notInStock')}}</span>
               </div>
@@ -165,6 +166,12 @@
             show: true,
             width: 130,
             fixed:'left'
+          },
+          {
+            label: this.$t("asset.tableTitle.device"),
+            prop: 'SN',
+            show: true,
+            width: 130
           },
            {
             label: this.$t("asset.tableTitle.assetType"),
