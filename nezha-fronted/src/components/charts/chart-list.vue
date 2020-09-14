@@ -174,7 +174,6 @@
     },
     watch:{
       dataList(n){
-        console.log(n);
       }
     },
     data() {
@@ -846,7 +845,6 @@
               endTime = this.filter.end_time;
               //this.$parent.refreshTime(startTime,endTime);全屏查询，不更新panel列表的时间条件
             } else {
-              console.log('页面进入',this.filter)
               startTime = this.filter.start_time;
               endTime = this.filter.end_time;
             }
@@ -965,9 +963,10 @@
                               if (!alias || alias === '') {
                                 alias = host;
                               }
-                              legend.push({name: host + resIndex, alias: alias});
+                              legend.push({name: host+"-"+chartItem.elements[innerPos].id+"-" + resIndex, alias: alias});
                               // 图表中每条线的名字,去掉最后的逗号与空格:metric名称,  标签1=a,标签2=c
-                              seriesItem.theData.name = host + resIndex;
+
+                              seriesItem.theData.name = host +"-"+chartItem.elements[innerPos].id+"-"+ resIndex;
                               //alert(seriesItem.theData.name);
                               seriesItem.metric_name = seriesItem.theData.name;
                               // 将秒改为毫秒
