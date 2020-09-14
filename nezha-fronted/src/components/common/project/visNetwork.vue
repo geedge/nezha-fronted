@@ -104,7 +104,18 @@
             @reload="reload"
           >
           </topology>
-          <!--<other />-->
+          <!--<cytoscape-->
+            <!--:editVisNetwork="editVisNetwork"-->
+            <!--:nodesArray="nodesArray"-->
+            <!--:edgesArray="edgesArray"-->
+            <!--@setTopologyData="setTopologyData"-->
+            <!--:isFullScreen="false"-->
+            <!--ref="topology"-->
+            <!--:allModuleInfo="allModuleInfo"-->
+            <!--v-loading="topologyLoading"-->
+            <!--@editVisNetworkChange="editVisNetworkChange"-->
+            <!--@reload="reload"-->
+          <!--/>-->
         </div>
       </div>
 
@@ -116,6 +127,7 @@
   import loading from "@/components/common/loading";
   import timePicker from '@/components/common/timePicker';
   import topology from './topology'
+  import cytoscape from './cytoscape'
   // import other from './other'
   export default {
     name: 'visNetwork',
@@ -123,6 +135,7 @@
       'loading': loading,
       'time-picker':timePicker,
       'topology':topology,
+      cytoscape,
       // other
     },
     props:{
@@ -415,7 +428,7 @@
   .content-high-title{
     background: #F2866E;
     border-radius: 4px 0 0 4px;
-    width: 44px;
+    width: 54px;
     height: 100%;
   }
   .content-high-title + div{
@@ -439,7 +452,7 @@
   .content-low-title{
     background: #F7BA78;
     border-radius: 4px 0 0 4px;
-    width: 44px;
+    width: 54px;
     height: 100%;
   }
   .content-low-title + div{
