@@ -319,6 +319,7 @@ instance_cpu_time_ns{app="fox", proc="widget", rev="4d3a513", env="prod", job="c
                         },
                         type: 'line',
                       }
+                      let legendName="";
                       seriesItem.data = result.values.map((item) => {
                         return [item[0] * 1000, item[1]];
                       })
@@ -330,13 +331,14 @@ instance_cpu_time_ns{app="fox", proc="widget", rev="4d3a513", env="prod", job="c
                         for (let key in metric) {
                           seriesItem.name += key + "=" + '"' + metric[key] + '",';
                         }
-                        seriesItem.name = seriesItem.name.substr(0, seriesItem.name.length - 1);
-                        seriesItem.name += "}";
+                        legendName = seriesItem.name.substr(0, seriesItem.name.length - 1);
+                        legendName += "}"
                       }else{
-                        seriesItem.name=queryExpression[index]
+                        legendName=queryExpression[index]
                       }
+                      seriesItem.name=legendName+"-"+index;
                       series.push(seriesItem);
-                      legend.push({name: seriesItem.name, alias: null, isGray: false});
+                      legend.push({name: seriesItem.name, alias: legendName, isGray: false});
                     })
 
                     this.$refs['promql-'+promqlIndex][0].setError('')
