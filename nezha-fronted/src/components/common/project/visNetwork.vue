@@ -17,7 +17,7 @@
                 <span class="panel-info-corner-inner"></span>
             </span>
           </el-popover>
-          <span class="el-dropdown-link chart-title" @click="dropdownMenuShow=!dropdownMenuShow">
+          <span class="el-dropdown-link chart-title" @click.stop="dropdownMenuShow=!dropdownMenuShow">
               <span></span>
               <span>
                 <!--<span class="chart-title-text">{{chartData.title}}</span>-->

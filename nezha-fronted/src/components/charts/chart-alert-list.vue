@@ -22,9 +22,9 @@
           </el-popover>
           <el-dropdown trigger="click" v-show="!isPreview" class="nz-chart-top" :key="'chartDropdown'+chartIndex"  v-clickoutside="clickos">
             <el-dropdown-menu style="display: none"></el-dropdown-menu>
-            <span class="el-dropdown-link chart-title" @click="dropdownMenuShow=!dropdownMenuShow">
+            <span class="el-dropdown-link chart-title" @click.stop="dropdownMenuShow=!dropdownMenuShow">
               <span class="chart-title-text">{{chartInfo.title}}</span>
-              <span class="chart-title-icon" v-if="data.editable"><i class="nz-icon nz-icon-caret-bottom el-icon--right"  :class="{'visible':caretShow,'hidden':!caretShow}"></i></span>
+              <span class="chart-title-icon" v-if="data.editable"><i class="nz-icon nz-icon-caret-bottom  "  :class="{'visible':caretShow,'hidden':!caretShow}"></i></span>
             </span>
             <ul slot="dropdown" v-show="dropdownMenuShow" v-if="data.editable" :id="'dropdownUl'+chartIndex"  class="el-dropdown-menu nz-chart-dropdown"  style="position: absolute; top: 30px; left: calc(50% - 79px); transform-origin: center top; z-index: 1000;" >
               <li  @click="refreshChart"  class="el-dropdown-menu__item">
