@@ -51,9 +51,12 @@
   .z-top {
     /*z-index: 2900;*/
   }
+  .save-chart-box{
+    z-index: 2900;
+  }
 </style>
 <template key="chartBox">
-  <div v-clickoutside="clickOutside" class="right-box right-box-add-chart z-top right-box-chart">
+  <div v-clickoutside="clickOutside" class="right-box right-box-add-chart z-top right-box-chart" :class="boxClass">
     <transition name="right-box">
       <panel-box :panel="panel" @reload="panelReload" ref="panelBox2" v-if="!showPanel.type"></panel-box>
     </transition>
@@ -239,6 +242,7 @@
   export default {
     name: "chartBox",
     props: {
+      boxClass:String,
       panelData: Array,
       showPanel: Object,
       chart: Object
