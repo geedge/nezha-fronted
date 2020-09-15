@@ -361,7 +361,8 @@
             // model.label=this.form.lineName;
             model.name=this.form.lineName;
             model.width = parseInt(model.width) || 4;
-            if(this.form.type==='dynamic'){
+            console.log(this.form.type);
+            if(!this.form.type){
               model.smooth={
                 enabled:false,
               };

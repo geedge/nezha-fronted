@@ -1,15 +1,14 @@
 <template>
   <div class="expressionInfo" :style="{top:expressionsInfoPosition.y+'px',left:expressionsInfoPosition.x+'px'}" v-if="expressionsData.length">
     <el-tooltip v-model="show" class="item" effect="light" content="Right Bottom 提示文字" placement="right-start" >
-      <div slot="content">
-        <div v-if="total>10">
-          {{$t('dashboard.panel.moreTitleOther')}}{{$t('dashboard.panel.showAllOther')}}{{total}}
+      <div slot="content" style="padding: 5px;min-width: 150px;max-width: 260px">
+        <div v-if="total>10" class="more-title-other">
+          {{$t('dashboard.panel.moreTitleOther')}}{{$t('dashboard.panel.showAllOther')}} {{ total}}
         </div>
         <div  v-for="(item,index) in expressionsData" class="expressions-box">
-          <span>{{item.name}}</span>
+          <span class="expressions-box-title">{{item.name}}</span>
           <div v-for="item1 in item.value" class="expressions-metric">
-            {{item.legend?item.legend:item.metric}}:
-            {{dataFormat(item.unit,item1.value[0])}}
+            {{item.legend?item.legend:item.metric }} : {{ dataFormat(item.unit,item1.value[1])}}
           </div>
           <div v-if="item.value.length===0">
            NoData
@@ -79,15 +78,21 @@
 </script>
 
 <style scoped>
-.expressionInfo{
-  position: absolute;
-  transform: translateX(20px);
-  min-height: 20px;
-  max-height: 200px;
-  overflow: hidden;
-  padding: 10px;
-}
+  .expressionInfo{
+    position: absolute;
+    transform: translateX(20px);
+    min-height: 20px;
+    max-height: 200px;
+    overflow: hidden;
+  }
+  .more-title-other{
+    margin-bottom: 5px;
+  }
   .expressions-box{
     min-width: 100px;
+  }
+  .expressions-box-title{
+    margin-bottom: 5px;
+    display: inline-block;
   }
 </style>

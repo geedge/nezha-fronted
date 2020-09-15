@@ -340,7 +340,10 @@
             "source": item.from,
             "target": item.to,
             "smooth": item.smooth,
-            "expressions": item.expressions,
+            "expressions": item.expressions.map((item)=>{
+              delete item.value;
+              return item
+            }),
             "dashes":item.dashes,
           };
           arr1.push(obj)

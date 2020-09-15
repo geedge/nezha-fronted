@@ -285,10 +285,10 @@
           item.to=item.target;
           item.label='';
           item.title='title';
-          item.expressions.forEach((item,index)=>{
-            this.$get('/prom/api/v1/query?query=' + item.metric).then(res=>{
+          item.expressions.forEach((item1,index)=>{
+            this.$get('/prom/api/v1/query?query=' + item1.metric).then(res=>{
               // item.value=res.data.result[0].value;i
-              item.value=res.data.result;
+              item1.value=res.data.result;
               console.log(res);
             });
           })
