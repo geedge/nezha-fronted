@@ -222,7 +222,9 @@ const cn = {
       cancel: "取消",
       lastTwoDay: "最近2天",
       moreTitle:'仅显示 20 个时间序列。',
+      moreTitleOther:'仅显示 10 条数据。',
       showAll:'全部显示 ',
+      showAllOther:'全部数据 ',
     },
     metric: {
       name: "指标名称",
@@ -862,6 +864,10 @@ const cn = {
       total:'图表',
       info:'组件信息',
       alert:'告警信息',
+      lineType:'线型',
+      straight:'直线',
+      curve:'曲线',
+      requiredName:'名称不能为空'
     },
   },
   el: {

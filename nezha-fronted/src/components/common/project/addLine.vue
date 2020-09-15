@@ -144,37 +144,32 @@
                 </el-color-picker>
               </div>
             </el-form-item>
-            <el-form-item :label="'线型'" prop="type" class="type">
+            <el-form-item :label="$t('project.topology.lineType')" prop="type" class="type">
               <el-select v-model="form.type" placeholder="" :popper-append-to-body="false"  size="small">
-                <el-option label="dynamic" value="dynamic">
-                  dynamic
+                <el-option :label="$t('project.topology.straight')" :value="false">
+                  {{$t('project.topology.straight')}}
                 </el-option>
-                <el-option label="continuous" value="continuous">
-                  continuous
+                <!--<el-option label="continuous" value="continuous">-->
+                  <!--continuous-->
+                <!--</el-option>-->
+                <!--<el-option label="discrete" value="discrete">-->
+                  <!--discrete-->
+                <!--</el-option>-->
+                <!--<el-option label="diagonalCross" value="diagonalCross">-->
+                  <!--diagonalCross-->
+                <!--</el-option>-->
+                <!--<el-option label="straightCross" value="straightCross">-->
+                  <!--straightCross-->
+                <!--</el-option>-->
+                <!--<el-option label="horizontal" value="horizontal">-->
+                  <!--horizontal-->
+                <!--</el-option>-->
+                <!--<el-option label="vertical" value="vertical">-->
+                  <!--vertical-->
+                <!--</el-option>-->
+                <el-option :label="$t('project.topology.curve')" value="curvedCW">
+                  {{$t('project.topology.curve')}}
                 </el-option>
-                <el-option label="discrete" value="discrete">
-                  discrete
-                </el-option>
-                <el-option label="diagonalCross" value="diagonalCross">
-                  diagonalCross
-                </el-option>
-                <el-option label="diagonalCross" value="diagonalCross">
-                  diagonalCross
-                </el-option>
-                <el-option label="straightCross" value="straightCross">
-                  straightCross
-                </el-option>
-                <el-option label="horizontal" value="horizontal">
-                  horizontal
-                </el-option>
-                <el-option label="vertical" value="vertical">
-                  vertical
-                </el-option>
-                <el-option label="curvedCW" value="curvedCW">
-                  curvedCW
-                </el-option>
-
-
               </el-select>
             </el-form-item>
           </div>
@@ -183,7 +178,7 @@
             <span class="float-right" @click="addExpression"><i style="font-size: 16px; cursor: pointer;" class="nz-icon nz-icon-create-square"></i></span>
           </div>
           <el-row class="element-item expr" style="" v-for="index of promqlKeys.length" :key="'ele' + index">
-            <el-form-item  :rules="{required: true,message: '名称不能为空', trigger: 'blur'}" :prop="'name.' + (index-1)">
+            <el-form-item  :rules="{required: true, message:$t('project.topology.requiredName'), trigger: 'blur'}" :prop="'name.' + (index-1)">
               <el-row>
                 <template>
                   <el-col class="expr-title" style="">
@@ -289,7 +284,7 @@
             lineName:n.name,
             name:[],
             dashes:!n.dashes?n.dashes:JSON.stringify(n.dashes),
-            type:n.smooth.type,
+            type:n.smooth.type?n.smooth.type:false,
             // dashes:!n.dashes?n.dashes:JSON.stringify([n.dashes[2],n.dashes[2]]),
           };
          if( n.expressions){
@@ -366,10 +361,16 @@
             // model.label=this.form.lineName;
             model.name=this.form.lineName;
             model.width = parseInt(model.width) || 4;
-            model.smooth={
-              roundness:(Math.random()*8 +1)/10 ,//获取0.1-0.9之间的随机数
-              type:this.form.type,
-            };
+            if(this.form.type==='dynamic'){
+              model.smooth={
+                enabled:false,
+              };
+            } else{
+              model.smooth={
+                roundness:0.5 ,// (Math.random()*8 +1)/10 获取0.1-0.9之间的随机数
+                type:this.form.type,
+              };
+            }
             model.dashes=!model.dashes?model.dashes:JSON.parse(model.dashes);
             model.expressions=[];
             this.promqlKeys.forEach((item,index)=>{
@@ -391,7 +392,7 @@
         this.expressions.push('');
         this.legends.push('');
         this.form.name.push('');
-        this.unit.push('');
+        this.unit.push(1);
         this.promqlKeys.push(getUUID());
         this.elementIds.push("");
         this.promqlCount++;
@@ -618,6 +619,12 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
+  }
+  .type /deep/ .el-input--suffix{
+    width: calc(100% - 30px);
+  }
+  .type /deep/ .el-scrollbar__view.el-select-dropdown__list{
+    width: 256px;
   }
   .el-row {
     margin-bottom: 20px;

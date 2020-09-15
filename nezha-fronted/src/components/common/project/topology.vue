@@ -179,6 +179,7 @@
             width:'1',
             dashes:false,
             id:'',
+            smooth:{},
           };
           this.addLineShow=true;
           this.selectNodeTitle=false;
@@ -244,6 +245,7 @@
           lineId:'',
           id:'',
           dashes:[],
+          smooth:{},
         },
         hoverEdge:false,
         isLineAdd:true,

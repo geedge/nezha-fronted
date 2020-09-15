@@ -108,7 +108,7 @@
             </template>
           </div>
           <button slot="reference"  class="nz-btn nz-btn-size-normal nz-btn-style-light" id="snmp-advanced">
-            <i class="nz-icon nz-icon-more"></i>
+            <i class="el-icon-more"></i>
           </button>
         </el-popover>
         <div class="right-box-row-btn" @click="delSelf"><i class="nz-icon nz-icon-minus"></i></div>

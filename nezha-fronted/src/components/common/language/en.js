@@ -227,7 +227,9 @@ const en = {
       confirm:'Ok',// OK
       cancel:'Cancel',//'取消',
       moreTitle:'Showing only 20 time series. ',
+      moreTitleOther:'Showing only 10 the data. ',
       showAll:'Show all ',
+      showAllOther:'All Data',
     },
     metric:{
       name:'Metric name', //"指标名称"
@@ -856,10 +858,10 @@ const en = {
       addLine:'Add Line',
       lineName:'Line Name',
       width:'thickness',
-      dashes:'Dotted line',
+      dashes:'dotted line',
       option:'Option',
-      arrows:'Arrows',
-      color:'Color',
+      arrows:'arrows',
+      color:'color',
       chartName:'Name',
       unit:'Unit',
       addModule:'Add Module',
@@ -870,6 +872,10 @@ const en = {
       total:'Chart',
       info:'Module Info',
       alert:'Alert Message',
+      lineType:'linetype',
+      straight:'straight',
+      curve:'curve',
+      requiredName:'The name of the required'
     },
   },
   ...enLocale

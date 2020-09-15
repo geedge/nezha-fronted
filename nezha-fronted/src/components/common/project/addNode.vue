@@ -301,7 +301,7 @@
         this.expressions.push('');
         this.legends.push('');
         this.form.name.push('');
-        this.unit.push('');
+        this.unit.push(1);
         this.promqlKeys.push(getUUID());
         this.elementIds.push("");
         this.promqlCount++;

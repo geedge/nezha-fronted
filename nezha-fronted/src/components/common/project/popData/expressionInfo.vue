@@ -2,9 +2,12 @@
   <div class="expressionInfo" :style="{top:expressionsInfoPosition.y+'px',left:expressionsInfoPosition.x+'px'}" v-if="expressionsData.length">
     <el-tooltip v-model="show" class="item" effect="light" content="Right Bottom 提示文字" placement="right-start" >
       <div slot="content">
-        <div  v-for="(item,index) in expressionsData">
-          {{item.name}}
-          <div v-for="item1 in item.value">
+        <div v-if="total>10">
+          {{$t('dashboard.panel.moreTitleOther')}}{{$t('dashboard.panel.showAllOther')}}{{total}}
+        </div>
+        <div  v-for="(item,index) in expressionsData" class="expressions-box">
+          <span>{{item.name}}</span>
+          <div v-for="item1 in item.value" class="expressions-metric">
             {{item.legend?item.legend:item.metric}}:
             {{dataFormat(item.unit,item1.value[0])}}
           </div>
@@ -44,6 +47,7 @@
 		  return{
         expressionsData:[],
         show:true,
+        total:0,
       }
     },
     mounted(){
@@ -52,17 +56,18 @@
       if(arr.length===0){return};
       console.log(arr);
       arr.forEach((item,i)=>{
-        if(index<21){
+        if(index<11){
           this.expressionsData.push({...item,value:[]})
         }
         item.value.forEach((item1,j)=>{
           index++;
-          if(index<21){
+          if(index<11){
             console.log();
             this.expressionsData[i].value.push(item1)
           }
         })
       });
+      this.total=index;
       console.log(this.expressionsData);
     },
     methods:{
@@ -80,5 +85,9 @@
   min-height: 20px;
   max-height: 200px;
   overflow: hidden;
+  padding: 10px;
 }
+  .expressions-box{
+    min-width: 100px;
+  }
 </style>
