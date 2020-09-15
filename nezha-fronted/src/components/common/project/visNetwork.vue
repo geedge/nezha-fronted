@@ -338,7 +338,7 @@
         }
       },
       dateChange(val) {
-        if(editVisNetwork)  {
+        if(this.editVisNetwork)  {
           return
         }
         this.reload();
