@@ -172,6 +172,7 @@
         type:'cross',
         alwaysShowContent: false,
         backgroundColor: 'rgba(255,255,255,0.7)',
+        confine:true,
         /*borderColor:'#ffffff',
         borderRadius: 4,
         borderWidth: 1,

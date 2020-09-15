@@ -6,6 +6,7 @@ const store = new Vuex.Store({
   state: {
     /* 监听对象变化，用于顶部菜单与底部内容的同步 */
     currentProject: {id: "", name: "", remark: ""},
+    currentDc:null,
     projectListChange: 0,
     reloadFacade:true,//重新加载project
     showPanel:{
@@ -94,6 +95,9 @@ const store = new Vuex.Store({
         state.reloadFacade=true;
       })
     },
+    setCurrentDc(state,data){
+      state.currentDc = data
+    }
   },
   actions: {
   }

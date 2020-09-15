@@ -241,7 +241,7 @@
         },
         dcCheckList: {
           deep: true,
-          immediate: true,
+          immediate:true,
           handler(n) {
             bus.$emit("asset-filter-change", "idcIds", n.join(","));
           }
@@ -398,7 +398,7 @@
           });*/
           bus.$on("header-dc-change", dcId => {
             this.dcCheckList = [dcId];
-            bus.$emit("asset-filter-change", "idcIds", dcId);
+            // bus.$emit("asset-filter-change", "idcIds", dcId);
           });
           bus.$on("clear-asset-filter", dcId => {
             this.dcCheckList = [];
