@@ -29,7 +29,7 @@
           <el-input size="mini" v-model="searchParam.oid" placeholder="OID"></el-input>
         </div>
         <div class="nz-btn-group nz-btn-group-size-normal nz-btn-group-light margin-l-20 mib-browser-btn-group">
-          <!--<div class="el-popover mib-browser-ad-tip" v-show="searchParam.version != 2 || searchParam.port != 161 || searchParam.community != 'public'"><i class="nz-icon nz-icon-more"></i></div>-->
+          <!--<div class="el-popover mib-browser-ad-tip" v-show="searchParam.version != 2 || searchParam.port != 161 || searchParam.community != 'public'"><i class="el-icon-more"></i></div>-->
           <el-select class="nz-input-group-left input-x-mini-24 operation" v-model="searchParam.operation">
             <el-option v-for="item in operationData" :key="item" :value="item"></el-option>
           </el-select><el-popover trigger="click" placement="bottom" @show="popShow" @hide="popHide">
@@ -123,7 +123,7 @@
               </template>
             </div>
             <button slot="reference" @click="advancedShow = true" class="nz-btn nz-btn-size-normal nz-btn-style-light" id="browser-advanced">
-              <i class="nz-icon nz-icon-more"></i>
+              <i class="el-icon-more"></i>
             </button>
           </el-popover><button :class="{'nz-btn-disabled': loading}"
             @click="search(false)" class="nz-btn nz-btn-size-normal nz-btn-style-light" id="browser-go">Go
