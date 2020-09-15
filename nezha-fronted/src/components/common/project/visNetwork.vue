@@ -4,7 +4,7 @@
     <div class="resize-box resize-box-table" ref="resizeBox">
       <div class="vis-network" :id="'chartTableDiv'+chartIndex" @mouseenter="caretShow=true" @mouseleave="caretShow=false">
         <loading :ref="'localLoading'+chartIndex"></loading>
-        <div class="clearfix text-right" :class="{'dragTitle':dragTitleShow}" :id="'chartTitle'+chartIndex">
+        <div class="clearfix text-right edit-visnetwork" :class="{'dragTitle':dragTitleShow}" :id="'chartTitle'+chartIndex">
           <el-popover
             v-if="isError"
             :close-delay=10
@@ -25,7 +25,7 @@
               </span>
               <div style="height: 34px">
                 <i class="nz-icon nz-icon-edit float-right "  @click="editVisNetworkChange(true)" v-show="!editVisNetwork" :title="$t('project.topology.edit')"></i>
-                <i class="nz-icon nz-icon-refresh float-right"  @click="reload" v-show="!editVisNetwork" :title="$t('project.topology.refresh')"></i>
+                <pick-time v-show="!editVisNetwork" :showTimePicker="false" class="float-right pickTime" :refresh-data-func="dateChange" v-model="searchTime" :use-chart-unit="false"></pick-time>
                 <!--<i class="nz-icon nz-icon-zoomin float-right"></i>-->
                 <!--<i class="nz-icon nz-icon-exit-full-screen float-right"></i>-->
               </div>
@@ -128,6 +128,7 @@
   import timePicker from '@/components/common/timePicker';
   import topology from './topology'
   import cytoscape from './cytoscape'
+  import bus from '@/libs/bus';
   // import other from './other'
   export default {
     name: 'visNetwork',
@@ -160,10 +161,12 @@
       projectInfo:{
         immediate: true,
         handler(n){
-          this.getNetworkData(n);
-          this.total=this.projectInfo.alertStat[0]+this.projectInfo.alertStat[1]+this.projectInfo.alertStat[2];
-          if(!this.total){
-            this.total=0;
+          if(n.id){
+            this.getNetworkData(n);
+            this.total=this.projectInfo.alertStat[0]+this.projectInfo.alertStat[1]+this.projectInfo.alertStat[2];
+            if(!this.total){
+              this.total=0;
+            }
           }
         },
       },
@@ -189,6 +192,8 @@
         editVisNetwork:false,
         topologyLoading:false,
         total:1,
+        searchTime: bus.getTimezontDateRange(),
+        screenX:window.screen.width,
       }
 
     },
@@ -217,7 +222,7 @@
             },500)
           }
           this.$refs['topology'].viewsCenter=res.data.topo.viewsCenter?res.data.topo.viewsCenter:{x:0,y:0};
-          this.$refs['topology'].zoom=res.data.topo.zoom?res.data.topo.zoom:1;
+          this.$refs['topology'].zoom=res.data.topo.zoom?(res.data.topo.zoom*this.screenX/1920):1;
           this.$refs['topology'].selNodeId='';
         })
       },
@@ -239,7 +244,7 @@
             },500)
           }
           this.$refs['topology'].viewsCenter=res.data.topo.viewsCenter?res.data.topo.viewsCenter:{x:0,y:0};
-          this.$refs['topology'].zoom=res.data.topo.zoom?res.data.topo.zoom:1;
+          this.$refs['topology'].zoom=res.data.topo.zoom?(res.data.topo.zoom*this.screenX/1920):1;
           this.$refs['topology'].selNodeId='';
         })
       },
@@ -275,10 +280,19 @@
         let arr1=[];
         if(!arr){return arr1}
         arr.forEach((item,index)=>{
+          console.log(item);
           item.from=item.source;
           item.to=item.target;
           item.label='';
           item.title='title';
+          item.expressions.forEach((item,index)=>{
+            this.$get('/prom/api/v1/query?query=' + item.metric).then(res=>{
+              // item.value=res.data.result[0].value;i
+              item.value=res.data.result;
+              console.log(res);
+            });
+          })
+
           // item.dashes=(item.dashes?(new Array(100).fill(item.dashes[0])):item.dashes);
           // if(index%2==0&&item.dashes){
           //   item.dataFlow='left';
@@ -288,6 +302,7 @@
           //   item.dataFlow='right'
           // }
         });
+        console.log(arr);
         return arr
       },
       dealImg(url) {
@@ -321,7 +336,13 @@
         if(!flag){
           // this.reload();
         }
-      }
+      },
+      dateChange(val) {
+        if(editVisNetwork)  {
+          return
+        }
+        this.reload();
+      },
     },
 
     mounted(){
@@ -335,6 +356,9 @@
   @import './chart.scss';
 </style>
 <style scoped>
+  .pickTime{
+    margin-top: 10px;
+  }
   .facade-top /deep/.active-icon{
     margin-top: 0;
   }
@@ -471,5 +495,10 @@
   .label{
     padding: 0 15px 0 0;
   }
-
+  .edit-visnetwork{
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    z-index: 1;
+  }
 </style>

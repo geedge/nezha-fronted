@@ -84,7 +84,10 @@
         <!--<div @click='zoomChange(-0.1)'><i class="nz-icon nz-icon-hexagonBorder zoom-icon"></i></div>-->
       <!--</div>-->
       <expression-info
-      v-if="expressionsInfoShow"
+        v-if="expressionsInfoShow&&!editVisNetwork"
+        :lineId="lineId"
+        :edgesArray="edgesArray"
+        :expressionsInfoPosition="expressionsInfoPosition"
       ></expression-info>
     </div>
     <transition name="right-box">
@@ -208,11 +211,17 @@
     },
     data(){
 		  return {
+        screenX:window.screen.width,
+        lineId:'',
 		    canvas:'',
         totalId:'',
         totalArray:[],
         allModuleInfos:[],
         relativeModelTop:{},
+        expressionsInfoPosition:{
+          x:0,
+          y:0,
+        },
         moduleDataS:[],
         index:'',
         zoom:1,
@@ -283,12 +292,13 @@
       saveTopology(){
         let nodes=this.formatNodes([...this.nodesArray]);
         let edges=this.formatEdges([...this.edgesArray]);
-        this.$put('/project/topo',{topo:JSON.stringify({nodes:nodes,lines:edges,viewsCenter:this.viewsCenter,zoom:this.zoom}),projectId:this.allModuleInfo.basic.id}).then(res=>{
+        this.$put('/project/topo',{topo:JSON.stringify({nodes:nodes,lines:edges,viewsCenter:this.viewsCenter,zoom:(this.zoom*1920/this.screenX)}),projectId:this.allModuleInfo.basic.id}).then(res=>{
           if(res.code===200){
             this.$message({
               message: this.$t("tip.saveSuccess"),
               type: 'success'
             });
+            this.$emit('reload');
           }
         }).catch(res=>{
           this.$message({
@@ -321,7 +331,7 @@
         let arr1=[];
         arr.forEach(item=>{
           let obj={
-            "name": item.label,
+            "name": item.name,
             "width": item.width,
             "arrows": item.arrows,
             "color": item.color,
@@ -372,7 +382,7 @@
           edges: {
             width: 2,
             smooth:{  //设置两个节点之前的连线的状态
-              enabled: false,//默认是true，设置为false之后，两个节点之前的连线始终为直线，不会出现贝塞尔曲线
+              enabled: true,//默认是true，设置为false之后，两个节点之前的连线始终为直线，不会出现贝塞尔曲线
               roundness:1,
               type: "dynamic",
             },
@@ -384,12 +394,13 @@
             arrowStrikethrough:false,
             chosen:{
               edge:(values, id, selected, hovering)=>{
+                // console.log(values, id, selected, hovering);
                 if(this_.hoverEdge){
                   values.middleArrow=true;
                   values.middleArrowScale=1;
                   values.middleArrowType='circle';
                   this_.expressionsInfoShow=true;
-                  console.log(values);
+                  // console.log(values);
                 }
               },
               // label:(values, id, selected, hovering)=>{
@@ -639,6 +650,13 @@
           this.setPopPosition(this.selNodeId);
         }
       },
+      modelTopMouseMoveEdge(e){
+        let position={
+          x:e.layerX,
+          y:e.layerY,
+        };
+        this.expressionsInfoPosition=position;
+      },
       modelTopClick(item,index){
         this.index=index;
         this.selNodeId=item.id;
@@ -802,16 +820,21 @@
            // this_.addLineShow=true;
          });
 
-         this.network.on("hoverEdge", function (params,a) { // 悬停边
+         this.network.on("hoverEdge", function (params) { // 悬停边
            this_.hoverEdge=true;
            this_.cursorMove=true;
-           console.log(params,a);
+           this_.lineId=params.edge;
+           this_.$refs['network'].addEventListener('mousemove',this_.modelTopMouseMoveEdge);
+           // console.log(params,'hoverEdge');
          });
 
-         this.network.on("blurEdge", function () { // 边失去焦点
+         this.network.on("blurEdge", function (params) { // 边失去焦点
            this_.hoverEdge=false;
            this_.cursorMove=false;
            this_.expressionsInfoShow=false;
+           this_.lineId='';
+           this_.$refs['network'].removeEventListener('mousemove',this_.modelTopMouseMoveEdge);
+           // console.log(params,'blurEdge');
          });
 
          this.network.on("dragStart", function (params) {//节点移动开始
@@ -860,7 +883,7 @@
 
          this.network.on("hoverNode", function () {//hoverNode
            this_.cursorMove=true;
-           console.log(123123123);
+           // console.log(123123123);
          });
 
          this.network.on("blurNode", function () {//blurNode
@@ -1016,6 +1039,10 @@
     font-size: 18px;
     font-weight: bold;
     height: 28px;
+    position: absolute;
+    top: 15px;
+    width: calc(100% - 160px);
+    z-index: 10;
   }
   .edit-topology-module,.edit-topology-line-cancel{
     margin-left: 30px;
@@ -1083,7 +1110,7 @@
   .network-info{
     position: absolute;
     right: 0;
-    top: 0;
+    top: 50px;
   }
   .saveTopology{
     background-image: linear-gradient(180deg, #F5B93E 0%, #EE9D3F 100%);
@@ -1106,5 +1133,8 @@
   }
   .zoom-icon{
     font-size: 42px;
+  }
+  #network_id /deep/ .vis-network{
+    outline: none;
   }
 </style>

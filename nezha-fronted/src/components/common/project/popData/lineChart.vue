@@ -739,7 +739,7 @@
           this.legendListMore=this.legendList.filter((item,index)=>index<this.seriesLength);
           this.$nextTick(() => {
             setTimeout(function () {
-              let divHeight = self.$refs.legendArea.offsetHeight;
+              let divHeight = 111;
               if(!chartInfo.height){
                 self.echartStore.resize({height:228});
               }else {

@@ -1,6 +1,6 @@
 <template>
   <div class="interval-refresh ">
-    <time-picker ref="timePicker" class="time-picker" @change="dateChange"></time-picker>
+    <time-picker v-if="showTimePicker" ref="timePicker" class="time-picker" @change="dateChange"></time-picker>
     <chart-unit v-model="unit" v-if="useChartUnit"></chart-unit>
       <div class="nz-btn-group nz-btn-group-size-normal nz-btn-group-light margin-r-20" v-show="useRefresh" style="height: 24px;line-height: 24px;vertical-align: middle;">
         <button style="border-right: 1px solid rgba(162,162,162,0.50);" type="button" class="nz-btn nz-btn-size-normal nz-btn-style-light" @click="refreshDataFunc">
@@ -51,6 +51,10 @@
       useChartUnit:{
         type:Boolean,
         default:true,
+      },
+      showTimePicker:{
+        type:Boolean,
+        default:true,
       }
     },
     data(){
@@ -71,6 +75,13 @@
         this.visible = false;
         clearInterval(this.intervalTimer);
         this.interval = val;
+        if(!this.showTimePicker){
+          this.intervalTimer = setInterval(() => {
+            this.$emit('change',this.searchTime)
+            this.refreshDataFunc();
+          }, val.value * 1000);
+          return
+        }
         if (val && val.value != -1) {
           const start = new Date(this.searchTime[1]);
           const now = bus.getOffsetTimezoneData();

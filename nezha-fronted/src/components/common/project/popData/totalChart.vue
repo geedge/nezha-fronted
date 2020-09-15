@@ -630,7 +630,7 @@
                       filter: this.filter,
                       filterType: filterType,
                       errorMsg: errorMsg,
-                    }
+                    };
                     this.chartDataCacheGroup.set(chartInfo.id, chartData);
                     if (chartItem.type === 'table') {//表格
                       if (filterType === 'showFullScreen') {//全屏查询
@@ -727,5 +727,6 @@
     position: relative;
     max-height: calc(100vh - 100px);
     padding: 3px 15px 50px 15px;
+    z-index: 0;
   }
 </style>

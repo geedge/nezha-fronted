@@ -144,6 +144,39 @@
                 </el-color-picker>
               </div>
             </el-form-item>
+            <el-form-item :label="'线型'" prop="type" class="type">
+              <el-select v-model="form.type" placeholder="" :popper-append-to-body="false"  size="small">
+                <el-option label="dynamic" value="dynamic">
+                  dynamic
+                </el-option>
+                <el-option label="continuous" value="continuous">
+                  continuous
+                </el-option>
+                <el-option label="discrete" value="discrete">
+                  discrete
+                </el-option>
+                <el-option label="diagonalCross" value="diagonalCross">
+                  diagonalCross
+                </el-option>
+                <el-option label="diagonalCross" value="diagonalCross">
+                  diagonalCross
+                </el-option>
+                <el-option label="straightCross" value="straightCross">
+                  straightCross
+                </el-option>
+                <el-option label="horizontal" value="horizontal">
+                  horizontal
+                </el-option>
+                <el-option label="vertical" value="vertical">
+                  vertical
+                </el-option>
+                <el-option label="curvedCW" value="curvedCW">
+                  curvedCW
+                </el-option>
+
+
+              </el-select>
+            </el-form-item>
           </div>
           <div  class="right-box-sub-title">
             <span>{{$t('alert.config.expr')}}</span>
@@ -253,9 +286,10 @@
             color:n.color,
             lineId:n.id,
             width:n.width,
-            lineName:n.label,
+            lineName:n.name,
             name:[],
             dashes:!n.dashes?n.dashes:JSON.stringify(n.dashes),
+            type:n.smooth.type,
             // dashes:!n.dashes?n.dashes:JSON.stringify([n.dashes[2],n.dashes[2]]),
           };
          if( n.expressions){
@@ -329,11 +363,12 @@
         this.$refs['form'].validate((valid) => {
           if (valid) {
             let model=Object.assign({id:this.form.lineId?this.form.lineId:undefined},{...this.form},{color: {color:this.form.color,highlight:this.form.color,hover:this.form.color,opacity:1.0}});
-            model.label=this.form.lineName;
+            // model.label=this.form.lineName;
+            model.name=this.form.lineName;
             model.width = parseInt(model.width) || 4;
             model.smooth={
               roundness:(Math.random()*8 +1)/10 ,//获取0.1-0.9之间的随机数
-              type:'curvedCW',
+              type:this.form.type,
             };
             model.dashes=!model.dashes?model.dashes:JSON.parse(model.dashes);
             model.expressions=[];
