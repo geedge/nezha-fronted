@@ -7,7 +7,7 @@
             <el-input placeholder="key" class="param-box-row-key input-x-mini-22" v-model="item.key" @input="validateInput(item.key,index)" :class="{'input-error':inputKeyErr[index]}"></el-input>
             <span class="param-box-row-eq">=</span>
             <el-input placeholder="value" class="param-box-row-value input-x-mini-22" v-model="item.value"></el-input>
-            <span class="param-box-row-symbol" :id="'remove-param-'+index" @click="removeTags(index)"><i class="nz-icon nz-icon-minus-square"></i></span>
+            <span class="param-box-row-symbol" :id="'remove-param-'+index" @click="removeTags(index)"><i class="nz-icon nz-icon-shanchu1"></i></span>
             <span style="color: #F56C6C;font-size: 12px;" v-if="inputKeyErr[index]">{{$t('validate.key')}}</span>
           </div>
         </el-scrollbar>

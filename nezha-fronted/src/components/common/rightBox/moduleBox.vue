@@ -265,7 +265,7 @@
                 <el-form-item class="param-box-row-value" :rules="{required: true, message: $t('validate.required'), trigger: 'blur'}" :prop="'paramObj.' + index + '.value'">
                   <el-input placeholder="value" size="mini" v-model="item.value"></el-input>
                 </el-form-item>
-                <span class="param-box-row-symbol" :id="'moduel-remove-param-'+index" @click="removeParam(index)"><i class="nz-icon nz-icon-minus-square"></i></span>
+                <span class="param-box-row-symbol" :id="'moduel-remove-param-'+index" @click="removeParam(index)"><i class="nz-icon nz-icon-shanchu1"></i></span>
               </div>
             </el-scrollbar>
           </div>

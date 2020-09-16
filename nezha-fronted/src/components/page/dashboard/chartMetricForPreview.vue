@@ -256,7 +256,7 @@
                   </el-select>
                 </el-col>
               <!--
-              <span class="symbol-delete" @click="deleteMetricLabel(item,index)"><i class="nz-icon nz-icon-minus-square"></i></span>
+              <span class="symbol-delete" @click="deleteMetricLabel(item,index)"><i class="nz-icon nz-icon-shanchu1"></i></span>
               -->
                 </el-row>
             </el-form-item>

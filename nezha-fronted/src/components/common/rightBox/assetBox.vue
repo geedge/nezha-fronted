@@ -102,7 +102,7 @@
                 <el-form-item class="tag-edit tag-edit-value" :rules="{required: true, message: $t('validate.required'), trigger: 'change'}" :prop="'tags.' + index + '.value'">
                   <el-autocomplete placeholder="value" size="mini" v-model="item.value" :fetch-suggestions="filterValue" popper-class="no-style-class"></el-autocomplete>
                 </el-form-item>
-                <div class="param-box-row-symbol" :id="'asset-tag-remove-'+index" @click.stop="removeTag(index)"><i class="nz-icon nz-icon-minus-square"></i></div>
+                <div class="param-box-row-symbol" :id="'asset-tag-remove-'+index" @click.stop="removeTag(index)"><i class="nz-icon nz-icon-shanchu1"></i></div>
               </div>
             </el-scrollbar>
           </div>

@@ -176,7 +176,7 @@
                     <div>
                       <span :id="'ep-asset-toedit-'+scope.row.assetId" v-if="!scope.row.isEdit" class="endpoint-box-row-symbol" @mousedown.stop @click="toEditEndpoint(scope.row)"><i class="el-icon-edit-outline"></i></span>
                       <span :id="'ep-asset-edit-'+scope.row.assetId" v-else class="endpoint-box-row-symbol" @mousedown.stop @click="editEndpoint(scope.row)"><i class="nz-icon nz-icon-check"></i></span>
-                      <span :id="'ep-asset-remove-'+scope.row.assetId" class="endpoint-box-row-symbol" @click="removeEndpoint(scope.row)"><i class="nz-icon nz-icon-minus-square"></i></span>
+                      <span :id="'ep-asset-remove-'+scope.row.assetId" class="endpoint-box-row-symbol" @click="removeEndpoint(scope.row)"><i class="nz-icon nz-icon-shanchu1"></i></span>
                     </div>
                   </template>
                 </el-table-column>
@@ -211,7 +211,7 @@
             <el-input placeholder="key" class="param-box-row-key input-x-mini-22" v-model="item.key"></el-input>
             <span class="param-box-row-eq">=</span>
             <el-input placeholder="value" class="param-box-row-value input-x-mini-22" v-model="item.value"></el-input>
-            <span class="param-box-row-symbol" :id="'remove-param-'+index" @click="removeParam(index)"><i class="nz-icon nz-icon-minus-square"></i></span>
+            <span class="param-box-row-symbol" :id="'remove-param-'+index" @click="removeParam(index)"><i class="nz-icon nz-icon-shanchu1"></i></span>
           </div>
         </div>
         <div style="width: 100%; text-align: center; height: 25px;">
@@ -638,7 +638,7 @@
 </script>
 
 <style scoped>
-  .nz-icon.nz-icon-minus-square {
+  .nz-icon.nz-icon-shanchu1 {
     font-size: 14px;
   }
   /* start--param*/
