@@ -106,7 +106,7 @@
               Tag
             </div>
             <el-collapse v-model="activeTag" class="left-menu-bg">
-              <el-collapse-item :name="item.key" :title="item.key" v-for="item in tagData">
+              <el-collapse-item :name="item.key" :title="item.key" v-for="item in tagData" :key="item.key">
                 <el-checkbox-group v-model="tagCheckList" size="small" >
                   <el-checkbox class="sidebar-info-item"  v-for="tag in item.values" :key="item.key+'-'+tag.value" :label="item.key+'-'+tag.value" @change="changeTagCheckBox(item,tag.value)">
                     <div class="sidebar-info-item-txt">
@@ -413,7 +413,76 @@
             this.getModuleList();
           });
           bus.$on('asset-list-change',()=>{
-            this.getLeftMenuList();
+            let dcData=JSON.parse(JSON.stringify(this.dcData))
+            let assetTypeData=JSON.parse(JSON.stringify(this.assetTypeData))
+            let vendorData=JSON.parse(JSON.stringify(this.vendorData))
+            let pingData=JSON.parse(JSON.stringify(this.pingData))
+            let tagData=JSON.parse(JSON.stringify(this.tagData))
+
+            this.getLeftMenuList().then(()=>{
+              let result=[];
+              let dcDiff=this.compareAssetLeftMenu(dcData,this.dcData,"idcIds")
+              if(dcDiff.length>0){
+                let temp =this.dcCheckList.filter(item=>{
+                  return !dcDiff.find((t,i)=>{return item == t.id})
+                })
+                result.push({key:"idcIds",value:temp.join(',')})
+
+                this.dcCheckList=temp;
+              }
+
+              let typeDiff=this.compareAssetLeftMenu(assetTypeData,this.assetTypeData,'typeIds')
+              if(typeDiff.length>0){
+                this.assetTypeCheckList=this.assetTypeCheckList.filter(item=>{
+                  return !typeDiff.find(t=>{return item == t.id})
+                })
+                result.push({key:'typeIds',value:this.assetTypeCheckList.join(',')})
+              }
+
+              let vendorDiff=this.compareAssetLeftMenu(vendorData,this.vendorData,'vendorIds')
+              if(vendorDiff.length>0){
+                this.vendorCheckList=this.vendorCheckList.filter(item=>{
+                  return !vendorDiff.find(t=>{return item == t.id})
+                })
+                result.push({key:'vendorIds',value:this.vendorCheckList.join(',')})
+              }
+
+              let pingDiff=this.compareAssetLeftMenu(pingData,this.pingData,'pingStates')
+              if(pingDiff.length>0){
+                this.pingCheckList=this.pingCheckList.filter(item=>{
+                  return !pingDiff.find(t=>{return item == t.value})
+                })
+                result.push({key:'pingStates',value:this.pingCheckList.join(',')})
+              }
+
+              let tagDiff=this.compareAssetLeftMenu(tagData,this.tagData,"tags")
+              if(tagDiff.length>0){
+                let $self=this;
+                tagDiff.forEach(item=>{
+                  let key=item.key;
+                  let values=item.values;
+
+                  let checkedVals=$self.tagCheckMap[key];
+                  if(checkedVals&&checkedVals.length>0){
+                    $self.tagCheckList=$self.tagCheckList.filter(t=>{return !values.find(r=>{return key+"-"+r.value == t})})
+                    $self.lastCheckSize = $self.lastCheckSize - values.length;
+                    checkedVals=checkedVals.filter(t=>{return !values.find(r=>{return r.value == t;})})
+                    if(checkedVals.length>0){
+                      $self.tagCheckMap[key]=checkedVals;
+                    }else{
+                      delete $self.tagCheckMap[key]
+                    }
+
+                  }
+                })
+                if(Object.keys($self.tagCheckMap).length > 0){
+                  result.push({key:'tags',value:JSON.stringify($self.tagCheckMap)})
+          }     else{
+                  result.push({key:'tags',value:''})
+                }
+              }
+              bus.$emit("asset-filter-change", "multiParam", result);
+            });
           })
           bus.$on('asset-property-change',()=>{
             this.getLeftMenuList();
@@ -448,7 +517,35 @@
             });
           });
         },
+        compareAssetLeftMenu:function(src,dist,key){
+          let result=src.filter(item=>{
+             if(key == 'pingStates'){
+               return !dist.find(t=>{return t.name == item.name})
+             }
+             if(key == 'tags'){
+               let tag=dist.find(t=>{
+                 return t.key == item.key
+               })
+               if(tag){
+                 let srcValues=item.values;
+                 let distValues=tag.values
 
+                 let vals=srcValues.filter(t=>{
+                   return distValues.find(r=>{
+                     return r.value == t.value;
+                   })
+                 })
+
+                 return !vals || vals.length < 1;
+               }else{
+                 return true;
+               }
+             }
+             return !dist.find(t=>{return item.id == t.id;})
+          })
+
+          return result
+        },
         //asset左侧菜单4个事件
         changeCheckBox() {
           this.assetClick = true;
