@@ -292,6 +292,7 @@
     },
     methods:{// 保存拓扑图数据
       saveTopology(){
+        this.$emit('topologyLoad');
         let nodes=this.formatNodes([...this.nodesArray]);
         let edges=this.formatEdges([...this.edgesArray]);
         this.$put('/project/topo',{topo:JSON.stringify({nodes:nodes,lines:edges,viewsCenter:this.viewsCenter,zoom:(this.zoom*1920/this.screenX)}),projectId:this.allModuleInfo.basic.id}).then(res=>{
@@ -660,6 +661,12 @@
           x:e.layerX,
           y:e.layerY,
         };
+        console.log();
+        if(e.path[0].nodeName!=='CANVAS'){
+          this.expressionsInfoShow=false;
+          this.$refs['network'].removeEventListener('mousemove',this.modelTopMouseMoveEdge);
+          return
+        }
         this.expressionsInfoPosition=position;
       },
       modelTopClick(item,index){
@@ -816,6 +823,7 @@
           }
           if(!this_.editVisNetwork){
             if(this_.lineData.expressions&&this_.lineData.expressions.length){
+              this_.expressionsInfoShow=false;
               this_.popDataShowUpdate('total')
             }else{
               this_.popDataShowUpdate()

@@ -102,6 +102,7 @@
             v-loading="topologyLoading"
             @editVisNetworkChange="editVisNetworkChange"
             @reload="reload"
+            @topologyLoad="topologyLoad"
           >
           </topology>
           <!--<cytoscape-->
@@ -343,6 +344,9 @@
         }
         this.reload();
       },
+      topologyLoad(){
+        this.topologyLoading=true;
+      }
     },
 
     mounted(){

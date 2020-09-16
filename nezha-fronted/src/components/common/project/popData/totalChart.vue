@@ -55,6 +55,7 @@
       let arr=[];
       item.expressions.forEach((item1,index)=>{
         let obj={...item,elements:[{...item1,expression:item1.metric,}],isHide:false,type:'line',title:item1.name,id:index,loading:true};
+        obj.unit=item1.unit;
         arr.push(obj)
       });
       this.dataList=arr;
