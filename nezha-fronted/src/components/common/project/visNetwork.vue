@@ -54,7 +54,7 @@
                 <!--</span>-->
               <!--</div>-->
               <div>
-                <span><span class="label">Module Mum :</span>{{projectInfo.moduleMum}}</span>
+                <span><span class="label">Module Num :</span>{{projectInfo.moduleMum}}</span>
               </div>
             </div>
             <div class="facade-top-right" v-loading="projectInfo.loading" style="padding: 20px 20px 0 20px;height: calc(100% - 20px);">
