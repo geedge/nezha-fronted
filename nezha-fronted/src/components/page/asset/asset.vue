@@ -174,7 +174,7 @@
                   @listResize="listResize" ></bottom-box>
     </transition>
     <transition name="right-box">
-      <asset-box v-if="rightBox.show" :asset="asset" @refresh="getTableData" ref="assetBox" @close="closeRightBox"></asset-box>
+      <asset-box v-if="rightBox.show" :asset="asset" @refresh="flushData" ref="assetBox" @close="closeRightBox"></asset-box>
     </transition>
   </div>
 </template>
@@ -538,6 +538,11 @@
           return "--";
         }
       },
+      flushData() {
+        Promise.all([this.getLeftMenuList()]).then(response => {
+          this.getTableData();
+        });
+      },
       closeAllPop() {
         this.$refs.idcConfigBox.forEach((item) => {
           item.show(false);
@@ -619,18 +624,31 @@
         this.$set(this.searchLabel, "orderBy", orderBy);
         this.getTableData();
       },
+      // 获取左侧菜单数据
+      getLeftMenuList(){
+        return new Promise(resolve => {
+          this.$get('asset/filter').then(response => {
+            if (response.code === 200) {
+              //dc
+              this.dcData = response.data.dc;
+              // AssetType
+              this.assetTypeData = response.data.assetType;
+              // vendor
+              this.vendorData = response.data.vendor;
+              // ping
+              this.pingData = response.data.ping.map(item => {
+                item.label = item.name;
+                item.value = item.status;
+                return item;
+              });
+            }
+            resolve();
+          });
+        });
+      },
       initEvent() {
         bus.$on("asset-filter-change", (column, content) => {
-          if(column == 'multiParam'){
-            let $self=this;
-            if(content instanceof Array && content.length>0){
-              content.forEach(item=>{
-                $self.pageObj[item.key] = item.value;
-              })
-            }
-          }else{
-            this.pageObj[column] = content;
-          }
+          this.pageObj[column] = content;
           this.getTableData();
         });
       },
