@@ -50,10 +50,20 @@
           </div>
 
           <pick-time :refresh-data-func="dateChange" v-model="searchTime" :use-chart-unit="false"></pick-time>
-          <button @click="addChart" :title="$t('overall.createChart')"
-                  class="nz-btn nz-btn-size-normal nz-btn-style-light ">
-            <i class="nz-icon-create-square nz-icon"></i>
-          </button>
+          <export-excel
+            export-file-name="chart"
+            export-url="/panel/export"
+            import-url="/panel/import"
+            :params="filter"
+            @afterImport="Refresh"
+          >
+            <template slot="optionZone">
+              <button @click="addChart" :title="$t('overall.createChart')"
+                      class="nz-btn nz-btn-size-normal nz-btn-style-light ">
+                <i class="nz-icon-create-square nz-icon"></i>
+              </button>
+            </template>
+          </export-excel>
         </div>
       </template>
     </div>
@@ -83,6 +93,7 @@
   import timePicker from '../../common/timePicker'
   import draggable from 'vuedraggable'
   import pickTime from "../../common/pickTime";
+  import exportXLSX from "../../common/exportXLSX";
   export default {
     name: "panel",
     data() {
@@ -162,6 +173,7 @@
       'time-picker':timePicker,
       draggable,
       'pick-time':pickTime,
+      'export-excel':exportXLSX,
     },
     methods: {
       //刷新
