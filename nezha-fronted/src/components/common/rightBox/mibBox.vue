@@ -288,5 +288,12 @@
   /deep/ .el-upload-list {
     height: 40px;
   }
+  .el-upload .nz-icon-upload{
+    font-size: 67px;
+    color: #c0c4cc;
+    margin: 40px 0 16px;
+    line-height: 50px;
+    display: inline-block;
+  }
   /*去除上传文件动画end*/
 </style>

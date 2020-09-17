@@ -58,7 +58,7 @@
       <i class="nz-icon nz-icon-shuidi"
          v-show="item.show"
          v-for="(item,index) in modelTop"
-         :style="{top:(item.y- 80 + 49*(1-zoom*1))+'px',left:(item.x- 26 + 6*(1-zoom))+'px',transform:'scale('+zoom+')'}"
+         :style="{top:(item.y- 80 + 49*(1-zoom))+'px',left:(item.x- 26 + 6*(1-zoom))+'px',transform:'scale('+zoom+')'}"
          :ref="'modelTopId'+index"
          @mousedown="modelTopClick(item,index)"
       >
@@ -471,7 +471,7 @@
         this.nodes = new Vis.DataSet(nodes);
         this.edges = new Vis.DataSet(edges);
         this.network.setData({
-          nodes:this_.nodes,
+          nodes: this_.nodes,
           edges: this_.edges
         });
         this_.network.moveTo({
@@ -561,7 +561,7 @@
       setPopPosition(selId){//设置节点工具栏位置以及是否显示
         if(!selId){return}
         let position=this.network.canvasToDOM(this.network.getPositions([selId])[selId]);
-        this.networkPop.style.top = position.y - 85 + 85*(1-this.zoom*1)+'px';
+        this.networkPop.style.top = position.y - 85 + 85*(1-this.zoom)+'px';
         this.networkPop.style.left = position.x - 32*this.zoom - 5*(1-this.zoom) +'px';
         if(!this.isFullScreen&&this.NodeArr.length===0&&!this.editVisNetwork){
           this.networkPopShow=true;
@@ -913,8 +913,7 @@
            return false
          });
 
-         this.network.on("resize", function (params,a) {//检测resize
-
+         this.network.on("resize", function (params) {//检测resize
            setTimeout(()=>{
              this_.zoom=this_.network.canvasToDOM({x:0,y:1}).y-this_.network.canvasToDOM({x:0,y:0}).y;
              this_.modelTopUpdate();

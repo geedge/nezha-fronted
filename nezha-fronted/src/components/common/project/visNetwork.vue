@@ -24,7 +24,9 @@
                 <!--<span class="chart-title-icon"><i class="nz-icon nz-icon-caret-bottom el-icon&#45;&#45;right"  :class="{'visible':caretShow,'hidden':!caretShow}"></i></span>-->
               </span>
               <div style="height: 34px">
-                <i class="nz-icon nz-icon-edit float-right "  @click="editVisNetworkChange(true)" v-show="!editVisNetwork" :title="$t('project.topology.edit')"></i>
+                <button style="border-right: 1px solid rgba(162,162,162,0.50);margin-right: 12px" type="button" class="nz-btn nz-btn-size-normal nz-btn-style-light float-right pickTime" @click="editVisNetworkChange(true)" v-show="!editVisNetwork">
+                  <i class="nz-icon nz-icon-edit"   :title="$t('project.topology.edit')"></i>
+                </button>
                 <pick-time v-show="!editVisNetwork" :showTimePicker="false" class="float-right pickTime" :refresh-data-func="dateChange" v-model="searchTime" :use-chart-unit="false"></pick-time>
                 <!--<i class="nz-icon nz-icon-zoomin float-right"></i>-->
                 <!--<i class="nz-icon nz-icon-exit-full-screen float-right"></i>-->
@@ -251,7 +253,7 @@
       },
       formatNodesArr(arr){
         let arr1=[];
-        if(!arr || arr.length==0){
+        if(!arr || arr.length===0){
           this.topologyLoading=false;
           return arr1
         }
@@ -280,12 +282,13 @@
       formatEdgesArr(arr){
         let arr1=[];
         if(!arr){return arr1}
-        arr.forEach((item,index)=>{
+        arr.forEach((item)=>{
           console.log(item);
           item.from=item.source;
           item.to=item.target;
           item.label='';
           item.title='title';
+          console.log(item.expressions);
           item.expressions.forEach((item1,index)=>{
             this.$get('/prom/api/v1/query?query=' + item1.metric).then(res=>{
               // item.value=res.data.result[0].value;i
@@ -309,7 +312,7 @@
       dealImg(url) {
         // 处理后端传过来的图片流乱码问题
         if (url) {
-          return new Promise((resolve,reject)=>{
+          return new Promise((resolve)=>{
             this.$axios
               .get(url, {
                 responseType: "arraybuffer"
@@ -338,7 +341,7 @@
           // this.reload();
         }
       },
-      dateChange(val) {
+      dateChange() {
         if(this.editVisNetwork)  {
           return
         }
@@ -366,10 +369,10 @@
   .facade-top /deep/.active-icon{
     margin-top: 0;
   }
-  .nz-icon-edit{
-    margin-right: 12px;
-    margin-top: 10px;
-  }
+  /*.nz-icon-edit{*/
+    /*margin-right: 12px;*/
+    /*margin-top: 10px;*/
+  /*}*/
   .vis-network .nz-icon-refresh{
     margin-right: 12px;
     margin-top: 10px;

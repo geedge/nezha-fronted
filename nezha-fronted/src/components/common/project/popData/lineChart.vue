@@ -11,6 +11,9 @@
   .nz-chart-dropdown{
     height: 75px;
   }
+  .legend-item{
+    max-width: 100%;
+  }
 </style>
 <template>
   <div class="nz-chart-resize">
@@ -555,7 +558,7 @@
                   val = Number(item.data[1]);
                 }
                 sum +=val;
-                str += `<div style="white-space:nowrap;overflow-x:hidden;text-overflow:ellipsis;display: flex; justify-content: space-between; min-width: 150px; max-width: 600px; line-height: 18px; font-size: 12px;">`;
+                str += `<div style="white-space:nowrap;overflow-x:hidden;text-overflow:ellipsis;display: flex; justify-content: space-between; min-width: 150px; max-width: 200px; line-height: 18px; font-size: 12px;">`;
                 str += `<div style="max-width: 500px;white-space:nowrap;overflow-x:hidden;text-overflow:ellipsis;"><span style='display:inline-block;margin-right:5px;border-radius:10px;width:15px;height:5px;background-color: ${color};}'></span>${tip?(tip.alias?tip.alias:tip.name):item.seriesName}  </div>`;
                 str += `<div style="padding-left: 10px;">`;
                 str += chartDataFormat.getUnit(chartInfo.unit?chartInfo.unit:2).compute(val,null,2);
