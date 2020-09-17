@@ -20,7 +20,7 @@
       <div class="content-row-box">
         <div class="content-col-box">
           <div class="content-col-content" v-loading="assetLoading">
-            <div class="content-col-content-icon"><i class="nz-icon nz-icon-overview-asset"></i></div>
+            <div class="content-col-content-icon"><i class="nz-icon nz-icon-asset"></i></div>
             <div class="content-num-box">
               <div class="content-col-content-num">
                 <vue-countup :start-value="0" :end-value="(assetData ? assetData.totalStat.total  : '') | numberFormat" :decimals="(assetData ? assetData.totalStat.total  : 0) < 1000 ? 0 : 1"></vue-countup>
@@ -32,7 +32,7 @@
         </div>
         <div class="content-col-box">
           <div class="content-col-content" v-loading="projectLoading">
-            <div class="content-col-content-icon"><i class="nz-icon nz-icon-overview-project"></i></div>
+            <div class="content-col-content-icon"><i class="nz-icon nz-icon-project"></i></div>
             <div class="content-num-box">
               <div class="content-col-content-num">
                 <vue-countup :start-value="0" :end-value="(projectData ? projectData.projectStat.length : '') | numberFormat" :decimals="(projectData ? projectData.projectStat.length : 0) < 1000 ? 0 : 1"></vue-countup>
