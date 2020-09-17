@@ -211,7 +211,7 @@
         </div>
         <div class="line-100" style="margin-bottom: 20px;" v-if="editChart.type == 'singleStat'"></div>
         <el-form-item :label="$t('dashboard.panel.chartForm.type')" prop="span" v-if="editChart.type == 'singleStat'">
-          <el-radio-group v-model="editChart.param.valueMapping.type" fill="#FA901C" size="small" class="val-mapping-type"  @change="valueMappingChange">
+          <el-radio-group v-model="editChart.param.valueMapping.type" fill="#FA901C" text-color="#FA901C" size="small" class="val-mapping-type"  @change="valueMappingChange">
             <el-radio-button label="value" border class="no-fill">{{$t('dashboard.panel.chartForm.valMapping.value')}}</el-radio-button>
             <el-radio-button label="range" border class="no-fill">{{$t('dashboard.panel.chartForm.valMapping.range')}}</el-radio-button>
           </el-radio-group>
@@ -1054,6 +1054,14 @@
         }else if(chartType === 'singleStat'){
           this.setIsSingleStat();
           this.resetElements();
+          this.statistics='',
+          this.editChart.param={
+            statistics:'',
+            valueMapping:{
+              type:'value',
+              mapping:[{text:'',value:''}]
+            }
+          }
         }else {
           this.setIsOtherChart();
           if(chartType === 'bar'||chartType === 'line'||chartType === 'stackArea'){
@@ -1287,7 +1295,6 @@
   }
   .val-mapping-type .no-fill span{
     background-color: unset !important;
-    color: #FA901C !important;
   }
 </style>
 
