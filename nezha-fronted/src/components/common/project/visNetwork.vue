@@ -27,7 +27,7 @@
                 <button style="border-right: 1px solid rgba(162,162,162,0.50);margin-right: 12px" type="button" class="nz-btn nz-btn-size-normal nz-btn-style-light float-right pickTime" @click="editVisNetworkChange(true)" v-show="!editVisNetwork">
                   <i class="nz-icon nz-icon-edit"   :title="$t('project.topology.edit')"></i>
                 </button>
-                <pick-time v-show="!editVisNetwork" :showTimePicker="false" class="float-right pickTime" :refresh-data-func="dateChange" v-model="searchTime" :use-chart-unit="false"></pick-time>
+                <pick-time v-show="!editVisNetwork" :showTimePicker="false" class="float-right pickTime" :refresh-data-func="dateChange" v-model="searchTime" :use-chart-unit="false" ref="pickTime"></pick-time>
                 <!--<i class="nz-icon nz-icon-zoomin float-right"></i>-->
                 <!--<i class="nz-icon nz-icon-exit-full-screen float-right"></i>-->
               </div>
@@ -354,6 +354,9 @@
 
     mounted(){
       this.firstLoad = false;
+    },
+    beforeDestroy(){
+      this.$refs['pickTime'].selectInterval();
     }
 
   }

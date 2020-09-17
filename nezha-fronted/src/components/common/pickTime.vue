@@ -75,7 +75,7 @@
         this.visible = false;
         clearInterval(this.intervalTimer);
         this.interval = val;
-        if(!this.showTimePicker){
+        if(!this.showTimePicker&&val && val.value != -1){
           this.intervalTimer = setInterval(() => {
             this.$emit('change',this.searchTime)
             this.refreshDataFunc();

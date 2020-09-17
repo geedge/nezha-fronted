@@ -21,15 +21,15 @@
         </div>
         <div class="content-box">
           <span class="content-title">Port</span>
-          <span class="content-text">{{moduleInfo.port}}</span>
+          <span class="content-text">{{moduleInfo.port?moduleInfo.port:'--'}}</span>
         </div>
         <div class="content-box">
           <span class="content-title">Path</span>
-          <span class="content-text">{{moduleInfo.path}}</span>
+          <span class="content-text">{{moduleInfo.path?moduleInfo.path:'--'}}</span>
         </div>
         <div class="content-box">
           <span class="content-title">Parameter</span>
-          <span class="content-text">{{moduleInfo.seq}}</span>
+          <span class="content-text">{{moduleInfo.seq?moduleInfo.seq:'--'}}</span>
         </div>
         <div class="content-box">
           <span class="content-title">Descripsion</span>
