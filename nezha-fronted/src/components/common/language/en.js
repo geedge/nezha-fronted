@@ -184,6 +184,14 @@ const en = {
           alertRule:'Alert rule',
           level:'Level',
           state:'State'
+        },
+        valMapping:{
+          name:'Value mapping',
+          from:'From',
+          to:'To',
+          text:'Text',
+          value:'Value',
+          range:'Range',
         }
       },
       chartTableColumn:{

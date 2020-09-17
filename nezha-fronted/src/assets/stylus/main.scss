@@ -1252,6 +1252,20 @@ li{
   display: inline-block;
   width: 400px;
 }
+.right-box-form .one-third-form-item-left{
+  display: inline-block;
+  width: 247px;
+}
+.right-box-form .one-third-form-item-right{
+  display: inline-block;
+  width: 148px;
+  .el-form-item__label{
+    width: 20px !important;
+  }
+  .el-form-item__content{
+    margin-left: 20px !important;
+  }
+}
 .right-box-form>.el-form-item {
   margin-bottom: 18px;
 }

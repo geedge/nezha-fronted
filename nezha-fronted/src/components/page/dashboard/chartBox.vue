@@ -204,6 +204,48 @@
             </template>
           </el-row>
         </el-row>
+        <!--value mapping start-->
+        <div  class="right-box-sub-title" v-if="editChart.type == 'singleStat'">
+          <span>{{$t('dashboard.panel.chartForm.valMapping.name')}}</span>
+          <span  class="float-right" @click="addMapping"><i style="font-size: 16px; cursor: pointer;" class="nz-icon nz-icon-create-square"></i></span>
+        </div>
+        <div class="line-100" style="margin-bottom: 20px;" v-if="editChart.type == 'singleStat'"></div>
+        <el-form-item :label="$t('dashboard.panel.chartForm.type')" prop="span" v-if="editChart.type == 'singleStat'">
+          <el-radio-group v-model="editChart.param.valueMapping.type" fill="#FA901C" size="small" class="val-mapping-type"  @change="valueMappingChange">
+            <el-radio-button label="value" border class="no-fill">{{$t('dashboard.panel.chartForm.valMapping.value')}}</el-radio-button>
+            <el-radio-button label="range" border class="no-fill">{{$t('dashboard.panel.chartForm.valMapping.range')}}</el-radio-button>
+          </el-radio-group>
+        </el-form-item>
+        <template v-if="editChart.type == 'singleStat'&&editChart.param.valueMapping.type == 'value'">
+          <template  v-for="(mapping,index) in editChart.param.valueMapping.mapping">
+            <el-form-item :label="$t('dashboard.panel.chartForm.valMapping.value')" prop="span" class="half-form-item" >
+              <el-input size="mini" type="input" v-model="mapping.value"></el-input>
+            </el-form-item>
+            <el-form-item :label="$t('dashboard.panel.chartForm.valMapping.text')" prop="span" class="half-form-item" style="width: 415px;">
+              <el-input size="mini" type="input" v-model="mapping.text" style="display: inline-block;width:calc(100% - 21px);"></el-input>
+              <div  @click="delMapping(index)" style="display: inline-block"><i class="nz-icon nz-icon-minus"></i></div>
+            </el-form-item>
+          </template>
+        </template>
+        <template v-if="editChart.type == 'singleStat'&&editChart.param.valueMapping.type == 'range'">
+          <template  v-for="(mapping,index) in editChart.param.valueMapping.mapping">
+            <div class="half-form-item">
+              <el-form-item :label="$t('dashboard.panel.chartForm.valMapping.from')" prop="span" class="one-third-form-item-left" >
+                <el-input size="mini" type="input" v-model="mapping.from"></el-input>
+              </el-form-item>
+              <el-form-item :label="$t('dashboard.panel.chartForm.valMapping.to')" prop="span" class="one-third-form-item-right" >
+                <el-input size="mini" type="input" v-model="mapping.to"></el-input>
+              </el-form-item>
+            </div>
+            <el-form-item :label="$t('dashboard.panel.chartForm.valMapping.text')" prop="span" class="half-form-item" style="width: 415px;">
+              <el-input size="mini" type="input" v-model="mapping.text" style="display: inline-block;width:calc(100% - 21px);" ></el-input>
+              <div @click="delMapping(index)" style="display: inline-block"><i class="nz-icon nz-icon-minus"></i></div>
+            </el-form-item>
+          </template>
+        </template>
+
+        <!--value mapping end-->
+
       </el-form>
     </el-scrollbar>
 
@@ -959,9 +1001,11 @@
         this.editChart.span = 12;
         this.editChart.height = 400+'';
         this.editChart.unit=2;
-        !this.editChart.param && (this.$set(this.editChart, "param", []));
-        this.editChart.param.url='';
-        this.editChart.param.threshold='';
+        let param = {};
+        param.url='';
+        param.threshold='';
+        param.valueMapping={type:'text',mapping:[{value:'',text:''}]};
+        this.$set(this.editChart, "param", param);
         this.elements = [1];
         this.elementTarget = [];
         bus.chartAddInfo.metricTarget = [];
@@ -1141,6 +1185,23 @@
           });
         });
       },
+      valueMappingChange:function(value){
+        if(this.editChart.param.valueMapping.type == 'value'){
+          this.editChart.param.valueMapping.mapping =[{text:'',value:''}];
+        }else{
+          this.editChart.param.valueMapping.mapping =[{from:'',to:'',text:''}];
+        }
+      },
+      addMapping:function(){
+        if(this.editChart.param.valueMapping.type == 'value'){
+          this.editChart.param.valueMapping.mapping .push({text:'',value:''});
+        }else{
+          this.editChart.param.valueMapping.mapping .push({from:'',to:'',text:''});
+        }
+      },
+      delMapping:function(index){
+        this.editChart.param.valueMapping.mapping.splice(index,1)
+      }
     },
     created() {
       this.getSuggestMetric();
@@ -1176,7 +1237,7 @@
         deep: true,
         immediate: true,
         handler(n) {
-          //console.info(n)
+          console.info((JSON.parse(JSON.stringify(n))))
           let panel = this.panelData.find(p => {
             return p.name == n.panelName;
           });
@@ -1223,6 +1284,10 @@
   }
   .chart-box-autocomplete {
     z-index: 3000 !important;
+  }
+  .val-mapping-type .no-fill span{
+    background-color: unset !important;
+    color: #FA901C !important;
   }
 </style>
 
