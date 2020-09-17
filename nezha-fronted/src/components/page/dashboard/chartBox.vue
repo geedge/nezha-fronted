@@ -324,29 +324,29 @@
             name:this.$t("dashboard.panel.chartForm.typeVal.line.label")
           },
           {
-            id:"bar",
-            name:this.$t("dashboard.panel.chartForm.typeVal.bar.label")
-          },
-          {
-            id:"table",
-            name:this.$t("dashboard.panel.chartForm.typeVal.table.label")
-          },
-          {
             id:'stackArea',
             name:this.$t("dashboard.panel.chartForm.typeVal.stackArea.label")
           },
           {
-            id:'url',
-            name:this.$t("dashboard.panel.chartForm.typeVal.url.label")
+            id:"bar",
+            name:this.$t("dashboard.panel.chartForm.typeVal.bar.label")
           },
           {
             id:'singleStat',
             name:this.$t("dashboard.panel.chartForm.typeVal.singleStat.label")
           },
           {
+            id:"table",
+            name:this.$t("dashboard.panel.chartForm.typeVal.table.label")
+          },
+          {
             id:'alertList',
             name:this.$t("dashboard.panel.chartForm.typeVal.alertList.label")
-          }
+          },
+          {
+            id:'url',
+            name:this.$t("dashboard.panel.chartForm.typeVal.url.label")
+          },
         ],
         elements: [1], // 指标部分 tarNum
         elementTarget: [], // 本地保存数据
@@ -1225,6 +1225,7 @@
           } else if(n.type === 'alertList'){
             this.setIsAlertList();
           } else if(n.type === 'singleStat'){
+            n.param&&!n.param.valueMapping&&this.$set(this.editChart.param,'valueMapping',{type:'value',mapping:[{text:'',value:''}]})
             this.setIsSingleStat();
           } else {
             this.setIsOtherChart();
