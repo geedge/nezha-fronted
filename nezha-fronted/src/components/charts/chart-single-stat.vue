@@ -426,7 +426,19 @@ export default {
           this.unit = chartDataFormat.getUnit(this.data.unit);
           if(Number(seriesItem)){
             let singleStatTmp =parseFloat(Number(seriesItem).toFixed(2));//parseFloat ：如果没有小数点，或者小数点后都是零，parseFloat() 会返回整数。
-            this.serieSingleStat = chartDataFormat.getUnit(chartItem.unit?chartItem.unit:2).compute(singleStatTmp,null,2);
+            if(chartItem.param.valueMapping && chartItem.param.valueMapping.type){
+              let type=chartItem.param.valueMapping.type;
+              let mappings=chartItem.param.valueMapping.mapping?chartItem.param.valueMapping.mapping:[];
+              let mapping;
+              if(type == 'value'){
+                mapping=mappings.find(item=>{return item.value == singleStatTmp})
+              }else{
+                mapping=mappings.find(item=>{return item.from <= singleStatTmp&& item.to >= singleStatTmp});
+              }
+              this.serieSingleStat = mapping?mapping.text:chartDataFormat.getUnit(chartItem.unit?chartItem.unit:2).compute(singleStatTmp,null,2);
+            }else{
+              this.serieSingleStat = chartDataFormat.getUnit(chartItem.unit?chartItem.unit:2).compute(singleStatTmp,null,2);
+            }
           }else {
             this.serieSingleStat =seriesItem;
           }
