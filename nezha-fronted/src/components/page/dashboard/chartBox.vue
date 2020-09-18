@@ -1125,11 +1125,13 @@
               };
               if(this.editChart.type === 'singleStat'){
                 params.param.statistics=this.statistics;
+                params.param.valueMapping=this.editChart.param.valueMapping;
               } else {
                 delete params.param.statistics;
               }
               if(this.editChart.type==='line'||this.editChart.type==='bar'||this.editChart.type==='stackArea'){
                 params.param.threshold=this.editChart.param.threshold;
+                params.param.legendValue=this.editChart.param.legendValue;
               } else {
                 delete params.param.threshold;
               }

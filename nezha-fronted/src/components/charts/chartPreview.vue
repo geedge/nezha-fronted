@@ -79,12 +79,41 @@
         <div id="chartEchartPreview" @mouseenter="mouseEnterFullChart" @mouseleave="mouseLeaveFullChart">
           <div class="line-area" ref="screenShowArea"  id="screenShowArea" style="margin-top:0px;"></div>
           <div class="chart-no-data" v-show="noData">No Data</div>
-          <div class="legend-container legend-container-screen" id="screenLegendArea" ref="screenLegendArea" v-show="showLegend" v-scrollBar:legend>
-            <div v-for="(item, index) in screenLegendList" :title="item.alias?item.alias:item.name" @click="clickScreenLegend(item.name,index)" class="legend-item" :class="{'ft-gr':isGreyScreen[index]}"  :key="'legend_' + item.name+'_'+index">
-              <span class="legend-shape" :style="{background:(isGreyScreen[index]?'#D3D3D3':bgColorList[index])}"></span>{{item.alias?item.alias:item.name}}
-              <br/>
+
+          <template v-if="!hasLegendOptions">
+            <div class="legend-container legend-container-screen" ref="screenLegendArea"  @mouseenter="mouseEnterFullChart" @mouseleave="mouseLeaveFullChart" v-show="showLegend" v-scrollBar:legend>
+              <div v-for="(item, index) in screenLegendList" :title="item.alias?item.alias:item.name"  @click="clickScreenLegend(item.name,index)" class="legend-item" :class="{'ft-gr':isGreyScreen[index]}"  :key="'legend_' + item.name+'_'+index">
+                <span class="legend-shape" :style="{background:(isGreyScreen[index]?'#D3D3D3':item.color)}"></span>{{item.alias?item.alias:item.name}}
+                <br/><!--bgColorList[index]-->
+              </div>
             </div>
-          </div>
+          </template>
+          <template v-else>
+            <div class="legend-container legend-container-screen" ref="screenLegendArea" @mouseenter="mouseEnterFullChart" @mouseleave="mouseLeaveFullChart" v-show="showLegend" v-scrollBar:legend>
+              <table style="width: 100%">
+                <th style="max-width: 100%"></th>
+                <template v-for="legendOption in screenLegendOptions">
+                  <th v-if="legendOption.value == 'on'" class="option-th">
+                    <span @click="legendValueSort(legendOption,screenLegendList,screenLegendOptions)">{{legendOption.option}}</span>
+                    <span ><i style="font-size: 12px !important;" :class="{'nz-icon nz-icon-arrow-down':legendOption.sort =='asc','nz-icon nz-icon-arrow-up':legendOption.sort=='desc'}" ></i></span>
+                  </th>
+                </template>
+                <tbody>
+                <tr  v-for="(item, index) in screenLegendList" :key="'legend_' + item.name+'_'+index">
+                  <td>
+                    <div :title="item.alias?item.alias:item.name"  @click="clickScreenLegend(item.name,index)" class="legend-item" :class="{'ft-gr':isGreyScreen[index]}" >
+                      <span class="legend-shape" :style="{background:(isGreyScreen[index]?'#D3D3D3':item.color)}"></span>{{item.alias?item.alias:item.name}}
+                    </div>
+                  </td>
+                  <template v-for="legendOption in screenLegendOptions">
+                    <td v-if="legendOption.value == 'on'">{{formatLegendData(item[legendOption.option])}}</td>
+                  </template>
+                </tr>
+                </tbody>
+              </table>
+            </div>
+          </template>
+
         </div>
       </template>
 
@@ -212,6 +241,8 @@
         titleHeight:58,
         legendHeight:80,
         pageHeight:40,
+        hasLegendOptions:false,
+        screenLegendOptions:[],
       };
     },
     computed: {
@@ -266,7 +297,6 @@
             chartDiv.style.height = `${height-this.chartSpaceHeight-this.titleHeight-15}px`;
           }
         });
-        this.setSize(chartInfo.span); // 设置该图表宽度
 
         this.screenModal = true;
 
@@ -320,15 +350,6 @@
           this.urlShow = true;
           this.setLoadFrame();
         }
-      },
-      // 设置图表的宽度
-      setSize(size) {
-        this.$nextTick(() => {
-          const listContainer = document.getElementById('listContainer');
-          //chartBox.style.width = `${(size / 12) * 100}%`;
-          let containerWidth= listContainer.clientWidth;
-          this.dailogWidth = `${containerWidth*(size / 12)}px`;
-        });
       },
       getAlertListChartData:function(chartInfo,filterType){
         this.$refs.alertListChart.getAlertList(filterType,true,this.chart);
@@ -524,7 +545,19 @@
                   }else if(chartItem.type ==='singleStat'){
                     if(Number(singleStatRlt)){
                       let singleStatTmp =parseFloat(Number(singleStatRlt).toFixed(2));
-                      this.serieSingleStat = chartDataFormat.getUnit(chartItem.unit?chartItem.unit:2).compute(singleStatTmp,null,2);
+                      if(chartItem.param.valueMapping && chartItem.param.valueMapping.type){
+                        let type=chartItem.param.valueMapping.type;
+                        let mappings=chartItem.param.valueMapping.mapping?chartItem.param.valueMapping.mapping:[];
+                        let mapping;
+                        if(type == 'value'){
+                          mapping=mappings.find(item=>{return item.value == singleStatTmp})
+                        }else{
+                          mapping=mappings.find(item=>{return item.from <= singleStatTmp&& item.to >= singleStatTmp});
+                        }
+                        this.serieSingleStat = mapping?mapping.text:chartDataFormat.getUnit(chartItem.unit?chartItem.unit:2).compute(singleStatTmp,null,2);
+                      }else{
+                        this.serieSingleStat = chartDataFormat.getUnit(chartItem.unit?chartItem.unit:2).compute(singleStatTmp,null,2);
+                      }
                     }else {
                       this.serieSingleStat =singleStatRlt;
                     }
@@ -773,78 +806,15 @@
               },
           },
           legend: {
-            type:'scroll',
-            height:80,
             show:false,
-            icon:"roundRect",
-            itemHeight:5,
-            itemWidth:15,
-            formatter:function(name){
-              //console.log('==========='+name);
-              if(!name){
-                return '';
-              }
-              //计算宽度
-              var span = document.createElement("span");
-              var result = {};
-              result.width = span.offsetWidth;
-              result.height = span.offsetHeight;
-              span.style.visibility = "hidden";
-              span.style.fontSize = 14;
-              span.style.fontFamily = "Arial";
-              span.style.display = "inline-block";
-              document.body.appendChild(span);
-              if(typeof span.textContent != "undefined"){
-                span.textContent = name;
-              }else{
-                span.innerText = name;
-              }
-              var txtWidth = parseFloat(window.getComputedStyle(span).width) - result.width;
-              document.body.removeChild(span);
-
-              if(txtWidth < chartWidth){
-                return name;
-              }else {
-                var charNum = `${(chartWidth-100)/(txtWidth/name.length)}`;
-                return name.slice(0,charNum)+'...';
-              }
-            },
-            tooltip:{
-              show:true,
-              formatter:function(params){
-                //alert(params.length);
-                //alert(JSON.stringify(params));
-
-                return `<div  style='width:100%;display:block;word-break:break-all;word-wrap:break-word;white-space:normal'> ${params.name}</div>`;
-              },
-            },
-            data: legend,
-            orient:'vertical',
-            x:'center',
-            y:'bottom',
-            //top:'5%',
-            //bottom:0
           },
           grid: {
             top: 30,
             left: 0,
             right: 30,
             containLabel: true,
-            bottom:8,//156
-          },/*
-          dataZoom: [{
-            type: 'slider',
-            show:true,
-            xAxisIndex: [0],
-            start: 0,
-            end: 100,
-            height:25,
-            bottom:10,//96
-            left:40,
-            right:48,
-          }
-          ],*/
-
+            bottom: 8,//156
+          },
           xAxis: {
             type: 'time',
             // boundaryGap: false,//line-false; bar-true;
@@ -929,11 +899,15 @@
             let _legend = {
               name:item.name,
               alias:item.alias,
+              color:item.color,
               showText:this.formatLegend(chartWidth,item.alias?item.alias:item.name)
             };
             this.screenLegendList.push(_legend);
             this.isGreyScreen.push(false);
           });
+        }
+        if(this.hasLegendOptions){
+          this.computeLegendData(this.screenLegendList,dataArg,'screen');
         }
         this.$nextTick(() => {
           let divHeight = this.$refs.screenLegendArea.offsetHeight;
@@ -1031,11 +1005,16 @@
       // 设置数据
       setData(chartItem, seriesItem,legend) {
           this.setColor(legend.length);
+          legend.forEach((t,i)=>{t.color = this.bgColorList[i]})
           this.legend = legend;
           //this.data = chartItem;
           //this.seriesItem = seriesItem;
           this.seriesItemScreen = seriesItem;
-
+          this.hasLegendOptions=this.findLegendOptions()
+          if(this.hasLegendOptions){
+            let sortedOptionKeys=['min','max','avg','last','total']
+            this.screenLegendOptions=sortedOptionKeys.map(item=>{ return {option:item,sort:'',value:chartItem.param.legendValue[item]}})
+          }
           this.initChart(chartItem, seriesItem, this.$refs.screenShowArea,legend);
       },
       // 设置数据
@@ -1264,6 +1243,125 @@
         this.screenModal = false;
         this.clearChart();
       },
+      findLegendOptions:function(){
+        if((!this.chart.param.legendValue) || Object.keys(this.chart.param.legendValue)<1) return false;
+        let legendOptions= this.chart.param.legendValue;
+        let onVal=Object.keys(legendOptions).find(item=>{return legendOptions[item] == 'on'});
+
+        return onVal;
+      },
+      computeLegendData:function(legend,dataArr){
+        let options=this.screenLegendOptions;
+        let keys=options.filter(item=>{return item.value == 'on'}).map(item=>{return item.option});
+        let $self=this;
+        keys.forEach(item=>{
+          switch (item) {
+            case 'min':
+              $self.legendMinValue(legend,dataArr);
+              break;
+            case 'max':
+              $self.legendMaxValue(legend,dataArr);
+              break;
+            case 'avg':
+              $self.legendAvgValue(legend,dataArr);
+              break;
+            case 'last':
+              $self.legendLastValue(legend,dataArr);
+              break;
+            case 'total':
+              $self.legendTotalValue(legend,dataArr);
+              break;
+          }
+        })
+      },
+      legendMinValue:function(legend,dataArr){
+        return new Promise(resolve => {
+          legend.forEach(item=>{
+            let data=dataArr.find(t=>t.name == item.name)
+            if(data&&data.data){
+              let copy=JSON.parse(JSON.stringify(data.data));
+              let min =copy.sort((x,y)=>{return parseFloat(x[1]) - parseFloat(y[1])})[0][1]
+              item['min']=parseFloat(min)
+            }
+          })
+
+          resolve();
+        })
+      },
+      legendMaxValue:function(legend,dataArr){
+        return new Promise(resolve => {
+          legend.forEach(item=>{
+            let data=dataArr.find(t=>t.name == item.name)
+            if(data&&data.data){
+              let copy=JSON.parse(JSON.stringify(data.data));
+              let max =copy.sort((x,y)=>{return parseFloat(y[1]) - parseFloat(x[1])})[0][1]
+              item['max']=parseFloat(max)
+            }
+          })
+          resolve();
+        })
+      },
+      legendAvgValue:function(legend,dataArr){
+        return new Promise(resolve => {
+          legend.forEach(item=>{
+            let data=dataArr.find(t=>t.name == item.name)
+            if(data&&data.data){
+              let copy=JSON.parse(JSON.stringify(data.data));
+              copy = copy.map(t=>parseFloat(t[1]))
+              let sum = eval(copy.join('+'));
+              let avg = sum / copy.length;
+
+              item['avg'] = avg;
+            }
+          })
+          resolve();
+        })
+      },
+      legendLastValue:function(legend,dataArr){
+        return new Promise(resolve => {
+          legend.forEach(item=>{
+            let data=dataArr.find(t=>t.name == item.name)
+            if(data&&data.data){
+              let copy=JSON.parse(JSON.stringify(data.data));
+              let last =copy.sort((x,y)=>{return parseFloat(y[0]) - parseFloat(x[0])})[0][1]
+              item['last']=parseFloat(last)
+            }
+          })
+          resolve();
+        })
+      },
+      legendTotalValue:function(legend,dataArr){
+        return new Promise(resolve => {
+          legend.forEach(item=>{
+            let data=dataArr.find(t=>t.name == item.name)
+            if(data&&data.data){
+              let copy=JSON.parse(JSON.stringify(data.data));
+              copy = copy.map(t=>parseFloat(t[1]))
+              let sum = eval(copy.join('+'));
+
+              item['total'] = sum;
+            }
+          })
+          resolve();
+        })
+      },
+      formatLegendData:function(data){
+        return chartDataFormat.getUnit(this.chart.unit).compute(data,null,2)
+      },
+      legendValueSort:function(option,legend,options){
+        options.forEach(item=>{
+          if(item.option != option.option){
+            item.sort='';
+          }
+        })
+        if(!option.sort || option.sort == 'asc'){
+          legend.sort((x,y)=>x[option.option] - y[option.option])
+          option.sort = 'desc'
+        }else{
+          legend.sort((x,y)=>y[option.option] - x[option.option])
+          option.sort = 'asc'
+        }
+      }
     },
     mounted() {
 

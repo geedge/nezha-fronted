@@ -210,6 +210,9 @@
       exportAll:function(){
         let params=JSON.parse(JSON.stringify(this.params));
         params.pageSize=-1;
+        if (this.importUrl.indexOf('panel') > -1){
+          delete params.panelId
+        }
         params.language=localStorage.getItem('nz-language') || 'en';
 
         this.exportExcel(this.exportUrl,params,this.exportFileName+'-'+this.getTimeString()+'.xlsx');
