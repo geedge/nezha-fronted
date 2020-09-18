@@ -35,7 +35,7 @@
         </el-form-item>
         <!--threshold-->
         <el-form-item :label="$t('alert.config.threshold')" prop="threshold" style="width: 415px;display: inline-block;">
-          <el-input type="text" placeholder="" v-model.number="editAlertRule.threshold" size="small">
+          <el-input type="text" placeholder="" v-model="editAlertRule.threshold" size="small">
           </el-input>
         </el-form-item>
         <!--unit-->
@@ -152,7 +152,6 @@
           ],
           threshold:[
             {required:true,message:this.$t('validate.required'),trigger:'blur'},
-            {type:'number',message:this.$t('validate.number')}
           ],
         },
         operators:[
