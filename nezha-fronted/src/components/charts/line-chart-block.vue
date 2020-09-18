@@ -67,9 +67,9 @@
         <template v-else>
           <div class='legend-container'  ref="legendArea" v-show="firstShow" v-scrollBar:legend>
             <table style="width: 100%">
-              <th style="max-width: 100%"></th>
+              <th style="width: 100%"></th>
               <template v-for="legendOption in legendOptions">
-                <th v-if="legendOption.value == 'on'" class="option-th">
+                <th v-if="legendOption.value == 'on'" class="option-th legend-option-cell" >
                   <span @click="legendValueSort(legendOption,legendListMore,legendOptions)">{{legendOption.option}}</span>
                   <span ><i style="font-size: 12px !important;" :class="{'nz-icon nz-icon-arrow-down':legendOption.sort =='asc','nz-icon nz-icon-arrow-up':legendOption.sort=='desc'}" ></i></span>
                 </th>
@@ -82,7 +82,7 @@
                     </div>
                   </td>
                   <template v-for="legendOption in legendOptions">
-                    <td v-if="legendOption.value == 'on'">{{formatLegendData(item[legendOption.option])}}</td>
+                    <td v-if="legendOption.value == 'on'" class="legend-option-cell">{{formatLegendData(item[legendOption.option])}}</td>
                   </template>
                 </tr>
               </tbody>
@@ -145,9 +145,9 @@
           <template v-else>
             <div class="legend-container legend-container-screen"  :id="'screenLegendArea'+chartIndex" @mouseenter="mouseEnterFullChart" @mouseleave="mouseLeaveFullChart" v-show="showLegend" v-scrollBar:legend>
               <table style="width: 100%">
-                <th style="max-width: 100%"></th>
+                <th style="width: 100%"></th>
                 <template v-for="legendOption in screenLegendOptions">
-                  <th v-if="legendOption.value == 'on'" class="option-th">
+                  <th v-if="legendOption.value == 'on'" class="option-th legend-option-cell" >
                     <span @click="legendValueSort(legendOption,screenLegendListMore,screenLegendOptions)">{{legendOption.option}}</span>
                     <span ><i style="font-size: 12px !important;" :class="{'nz-icon nz-icon-arrow-down':legendOption.sort =='asc','nz-icon nz-icon-arrow-up':legendOption.sort=='desc'}" ></i></span>
                   </th>
@@ -160,7 +160,7 @@
                     </div>
                   </td>
                   <template v-for="legendOption in screenLegendOptions">
-                    <td v-if="legendOption.value == 'on'">{{formatLegendData(item[legendOption.option])}}</td>
+                    <td v-if="legendOption.value == 'on'" class="legend-option-cell">{{formatLegendData(item[legendOption.option])}}</td>
                   </template>
                 </tr>
                 </tbody>
