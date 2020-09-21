@@ -141,6 +141,7 @@
         this.$delete(url + '?seq='+this.importResult.seq).then(response=>{
           if(response.code ==  200 ){
             this.$message({duration: 2000, type: 'success', message: this.$t("tip.saveSuccess")});
+            this.$emit('afterImport')
           }else{
             this.$message.error(response.msg);
           }
