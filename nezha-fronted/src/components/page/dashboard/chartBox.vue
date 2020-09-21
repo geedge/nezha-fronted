@@ -1254,6 +1254,7 @@
             this.setIsSingleStat();
           } else {
             this.setIsOtherChart();
+            n.param&&!n.param.legendValue&&this.$set(this.editChart.param,'legendValue',{min:'off',max:'off',avg:'off',last:'off',total:'off'})
           }
           //console.info(this.showPanel);
           this.$set(this.editChart, "panelName", this.showPanel.name);
