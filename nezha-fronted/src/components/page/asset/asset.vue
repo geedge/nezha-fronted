@@ -430,6 +430,9 @@
       getTableData() {
         this.searchLabel = Object.assign(this.searchLabel, this.pageObj);
         this.tools.loading = true;
+        if(this.searchLabel.tags && this.searchLabel.tags!=''){
+          this.searchLabel.tags=encodeURIComponent(this.searchLabel.tags)
+        }
         this.$get('asset', this.searchLabel).then(response => {
           this.tools.loading = false;
           if (response.code === 200) {
