@@ -390,7 +390,7 @@
         },
         heightSuggestions:['300','400','500','600'],
         unitOptions:chartDataFormat.unitOptions(),
-        sortedOptionKeys:[{key:'min',label:'Min'},{key:'max',label:'Max'},{key:'avg',label:'Avg'},{key:'last',label:'Current'},{key:'total',label:'Total'}]
+        sortedOptionKeys:[{key:'min',label:'Min'},{key:'max',label:'Max'},{key:'avg',label:'Avg'},{key:'last',label:'Last'},{key:'total',label:'Total'}]
       }
     },
     components:{
