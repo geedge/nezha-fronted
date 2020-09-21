@@ -192,7 +192,8 @@ const en = {
           text:'Text',
           value:'Value',
           range:'Range',
-        }
+        },
+        legendValue:'Legend option'
       },
       chartTableColumn:{
         metric:'Metric', //'指标'

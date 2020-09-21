@@ -178,7 +178,16 @@ const cn = {
           alertRule:'告警规则',
           level:'级别',
           state:'状态'
-        }
+        },
+        valMapping:{
+          name:'Value mapping',
+          from:'From',
+          to:'To',
+          text:'Text',
+          value:'Value',
+          range:'Range',
+        },
+        legendValue:'Legend option'
       },
       chartTableColumn: {
         metric: "指标",
