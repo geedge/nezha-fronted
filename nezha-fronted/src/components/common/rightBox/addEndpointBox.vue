@@ -30,12 +30,12 @@
             <div class="right-child-box-title">{{$t('asset.asset')}}</div>
             <!--end--标题-->
             <!--begin--搜索框-->
-            <div style="display: inline-block">
+            <div style="float: right;padding: 9px 0px 0px 0px;">
               <div class="nz-btn-group nz-btn-group-size-small nz-btn-group-light endpoint-asset-search">
                 <button id="search-asset-drop" type="button" class="nz-btn nz-btn-size-small nz-btn-style-light nz-btn-style-square nz-input-group-prepend" @click="assetSearch.dropdownShow = !assetSearch.dropdownShow">
                   <span class="endpoint-asset-label-txt">{{assetSearch.label}}</span>
                   <span>
-                    <i v-if="assetSearch.dropdownShow" class="nz-icon nz-icon-caret-top"></i>
+                    <i v-if="assetSearch.dropdownShow" class="nz-icon nz-icon-caret-up"></i>
                     <i v-if="!assetSearch.dropdownShow" class="nz-icon nz-icon-caret-bottom"></i>
                   </span>
                 </button><el-input style="width: 100px;" class="input-x-mini-24 nz-input-group-middle" placeholder="" v-model="assetSearch.text"></el-input><button
