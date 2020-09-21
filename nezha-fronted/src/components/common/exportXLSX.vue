@@ -162,6 +162,8 @@
               this.$message.error(response.msg);
             }
           })
+        }else{
+          this.$message.error(this.$t('tip.noImportFile'));
         }
       },
       exportMenuHandler(show) {

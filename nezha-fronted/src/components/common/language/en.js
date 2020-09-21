@@ -381,10 +381,11 @@ const en = {
     testSuccess:'Test success',
     downloadSuccess : 'Download success',
     uploadSuccess: 'Upload success',
-    pressEnterToAdd: 'Press enter to add new此操作可能造成原有数据或图表被覆盖，确认同步吗？ line',
+    pressEnterToAdd: 'Press enter to add new line',
     resetSuccess:'Reset success',
     syncSuccess:'Synchronize success',
     syncTip:'This operation may cause the original data or chart to be overwritten. Are you sure to synchronize?',
+    noImportFile:'No import file found'
   },
   asset:{
     asset: 'Asset',
