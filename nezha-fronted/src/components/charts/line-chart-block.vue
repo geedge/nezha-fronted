@@ -765,6 +765,11 @@
                 let chartUnit=chartInfo.unit;
                 chartUnit=chartUnit?chartUnit:2;
                 let unit=chartDataFormat.getUnit(chartUnit);
+                console.log(unit);
+                let flag=JSON.stringify(value).length>JSON.stringify(chartDataFormat.Interval(maxValue,copies,unit.type)).length;
+                if(dot===0&&flag){
+                  dot=1;
+                }
                 return unit.compute(value,index,-1,dot);
               },
             },

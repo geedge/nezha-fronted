@@ -638,27 +638,10 @@ export default {
   formatDatas:function(value,type,flow='ceil',ascii){
     let pow=0;
     if(type ==='Time'){
-      if(value>1 && ascii!==1){
-        while(value>ascii){
-          pow++;
-          value=value/ascii
-        }
-    
-        if(flow==='ceil'){
-          let length=JSON.stringify(Math.ceil(value)).length;
-          value=value/Math.pow(10,length-1);
-          return Math.ceil(value)*Math.pow(ascii,pow)*Math.pow(10,length-1);
-        }else if(flow==='floor'){
-          let length=JSON.stringify(Math.floor(value)).length;
-          value=value/Math.pow(10,length-1);
-          return Math.floor(value)*Math.pow(ascii,pow)*Math.pow(10,length-1);
-        }
-      }else{
         return value
-      }
     }
     
-    if(type==='Data' || type==='DataRate'){
+    if(type==='Data'){
      if(value>1){
        while(value>1000){
          pow++;
@@ -679,7 +662,7 @@ export default {
      }
     }
   
-    if(type==='Misc'){
+    if(type==='Misc' || type==='DataRate'){
       if(value>1){
         while(value>1000){
           pow++;
@@ -718,16 +701,16 @@ export default {
     }
   },
   Interval:function(value,copies,type){
-    // if(type==='Data' || type==='DataRate' || type==='Misc'){
-    //   let interVal=value/copies;
-    //   interVal = interVal || 1;
-    //   console.log(interVal);
-    //   return interVal
-    // }
-    // return 1;
-    let interVal=value/copies;
-    interVal = interVal || 1;
-    console.log(interVal);
-    return interVal
+    if(type==='Data' || type==='DataRate' || type==='Misc'){
+      let interVal=value/copies;
+      interVal = interVal || 1;
+      console.log(interVal);
+      return interVal
+    }
+    return 1;
+    // let interVal=value/copies;
+    // interVal = interVal || 1;
+    // console.log(interVal);
+    // return interVal
   }
 }
