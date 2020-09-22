@@ -638,7 +638,7 @@
         let value = this.tagValuesCache.get(tagVal)
         if(!value){
           value = [];
-          this.$get('/asset/tagValue?key='+tagVal).then(res => {
+          this.$get('/asset/tagValue',{key:encodeURIComponent(tagVal)}).then(res => {
             if(res.code == 200){
               value = res.data.list.map(item=>{
                 return {value:item}
