@@ -5,11 +5,11 @@
         <div v-if="total>10" class="more-title-other">
           {{$t('dashboard.panel.moreTitleOther')}}{{$t('dashboard.panel.showAllOther')}} {{ total}}
         </div>
-        <div  v-for="(item,index) in expressionsData" class="expressions-box">
+        <div  v-for="(item,index) in expressionsData" class="expressions-box" :key="index">
           <span class="expressions-box-title">{{item.name}}</span>
           <div class="expressions-box-content"  v-if="item.value.length!==0">
-            <div v-for="item1 in item.value" class="expressions-metric" :key="index">
-              <span class="expressions-box-label">{{legendFormat(item.metric,item.legend)}} :</span>
+            <div v-for="(item1,index2) in item.value" class="expressions-metric" :key="index2">
+              <span class="expressions-box-label">{{legendFormat(item.metric,item.legend,item1.metric)}} :</span>
               <span class="expressions-box-value">{{ dataFormat(item.unit,item1.value[1])}}</span>
             </div>
           </div>
@@ -56,7 +56,6 @@
       let index=0;
       let arr=this.edgesArray.find(item=>item.id===this.lineId).expressions;
       if(arr.length===0){return};
-      console.log(arr);
       arr.forEach((item,i)=>{
         if(index<11){
           this.expressionsData.push({...item,value:[]})
@@ -65,19 +64,17 @@
         item.value.forEach((item1,j)=>{
           index++;
           if(index<11){
-            console.log();
             this.expressionsData[i].value.push(item1)
           }
         })
       });
       this.total=index;
-      console.log(this.expressionsData);
     },
     methods:{
       dataFormat(unit,value){
         return chartDataFormat.getUnit(unit?unit:2).compute(value)
       },
-      legendFormat:function(legend,expression){
+      legendFormat:function(legend,expression,metric){
         if(/\{\{.+\}\}/.test(expression)&&expression){
           let labelValue=expression.replace(/(\{\{.+?\}\})/g,function(i){
             let label=i.substr(i.indexOf('{{')+2,i.indexOf('}}')-i.indexOf('{{')-2);
@@ -89,6 +86,9 @@
             }
             return value?value:label;
           });
+          if(Object.keys(metric).length>0){
+            labelValue=metric[labelValue]
+          }
           return labelValue
         }else{
           return expression?expression:legend;
