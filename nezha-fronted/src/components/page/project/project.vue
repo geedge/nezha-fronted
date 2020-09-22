@@ -696,7 +696,7 @@
   .project {
     height: 100%;
   }
-  .content-right-option {
+/*  .content-right-option {
     cursor: pointer;
     display: inline-block;
     margin-right: 6px;
@@ -712,7 +712,7 @@
   }
   .content-right-option .nz-icon-view:hover {
     color: #409EFF;
-  }
+  }*/
   /* start--param*/
   .param-btn {
     float: right;
