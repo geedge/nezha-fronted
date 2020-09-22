@@ -85,6 +85,7 @@
             size="small"
             value-key="name"
             v-if="!editChart.id"
+            @input="inputPanel"
             popper-class="chart-box-autocomplete no-style-class"
           >
           </el-autocomplete>
@@ -376,6 +377,7 @@
         // 是否为编辑已有信息
         isedit: false,
         //productId: 0,//不需要这个参数，可以删除
+        isInputPanel:false,
         panelId: 0,
         panelName: '',
         selectFirstPanel: false,
@@ -1103,19 +1105,26 @@
         this.legends = [];
         this.elementIds = [];
       },
+      inputPanel:function(){
+        this.isInputPanel=true;
+      },
       /*panel搜索建议*/
       panelSuggestion(queryString, callback) {
-        let data = [];
-        if (!queryString) {
-          data = this.panelData;
-        } else {
-          for (let i = 0; i < this.panelData.length; i++) {
-            if (this.panelData[i].name.toLowerCase().indexOf(queryString.toLowerCase()) != -1) {
-              data.push(this.panelData[i]);
-            }
-          }
-        }
-        callback(data);
+       if(!this.isInputPanel){
+         callback(JSON.parse(JSON.stringify(this.panelData)));
+       }else{
+         let data = [];
+         if (!queryString) {
+           data = this.panelData;
+         } else {
+           for (let i = 0; i < this.panelData.length; i++) {
+             if (this.panelData[i].name.toLowerCase().indexOf(queryString.toLowerCase()) != -1) {
+               data.push(this.panelData[i]);
+             }
+           }
+         }
+         callback(data);
+       }
       },
 
       //preview -start
@@ -1272,7 +1281,7 @@
         deep: true,
         immediate: true,
         handler(n) {
-          console.info((JSON.parse(JSON.stringify(n))))
+          // console.info((JSON.parse(JSON.stringify(n))))
           let panel = this.panelData.find(p => {
             return p.name == n.panelName;
           });
