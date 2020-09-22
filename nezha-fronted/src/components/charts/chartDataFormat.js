@@ -700,8 +700,7 @@ export default {
       case 10: return 5;
     }
   },
-  Interval:function(value,copies,type){
-    console.log(value,'Interval');
+  Interval:function(value,copies,type,interValType){
     if(value<1024&&type==='Data'){
       let interVal=value/copies;
       return interVal
@@ -721,7 +720,6 @@ export default {
         interVal=Math.ceil(interVal)*Math.pow(1024,pow);
       }
       interVal = interVal || 1;
-      console.log(interVal);
       return interVal
     }
     if(type==='DataRate' || type==='Misc'){
@@ -737,6 +735,9 @@ export default {
       interVal = interVal || 1;
       console.log(interVal);
       return interVal
+    }
+    if(interValType==='max'){
+      return value
     }
     return 1;
     // let interVal=value/copies;

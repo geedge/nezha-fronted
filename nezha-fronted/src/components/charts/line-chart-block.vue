@@ -496,16 +496,17 @@
         console.log(chartInfo, dataArg, chartSite,legend);
         let maxValue=0;
         let minValue=0;
-        if(chartInfo.type==='line' && chartInfo.unit &&dataArg.length>0){
+        if(chartInfo.unit &&dataArg.length>0){
           maxValue=dataArg[0].data[0][1];
           minValue=dataArg[0].data[0][1];
           for(let j = 0; j < dataArg.length ; j++){
             for (let i = 0; i < dataArg[j].data.length - 1; i++) {
-              maxValue = (maxValue < dataArg[j].data[i+1][1] ? dataArg[j].data[i+1][1] : maxValue);
-              minValue = (minValue > dataArg[j].data[i+1][1] ? dataArg[j].data[i+1][1] : minValue);
+              maxValue = (maxValue < Number(dataArg[j].data[i+1][1]) ? Number(dataArg[j].data[i+1][1]) : maxValue);
+              minValue = (minValue > Number(dataArg[j].data[i+1][1]) ? Number(dataArg[j].data[i+1][1]) : minValue);
             }
           }
         }
+        console.log(maxValue,'increase(mysql_global_status_bytes_sent[1h])');
         let chartUnit=chartInfo.unit?chartInfo.unit:2;
         let unit=chartDataFormat.getUnit(chartUnit);
         maxValue=chartDataFormat.formatDatas(maxValue,unit.type,'ceil',unit.ascii);
@@ -752,8 +753,8 @@
             axisLine:{
               show:false
             },
-            minInterval: chartDataFormat.Interval(maxValue,copies,unit.type),
-            maxInterval: chartDataFormat.Interval(maxValue,copies,unit.type),
+            minInterval: chartDataFormat.Interval(maxValue,copies,unit.type,'min'),
+            maxInterval: chartDataFormat.Interval(maxValue,copies,unit.type,'max'),
             axisTick: {
               show: false,
             },
