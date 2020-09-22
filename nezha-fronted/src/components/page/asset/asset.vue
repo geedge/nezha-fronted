@@ -140,7 +140,7 @@
               &nbsp;
               <el-dropdown trigger="hover" @command="cli">
               <span title="CLI" class="content-right-option" :id="'asset-ssh-'+scope.row.id"><i
-                class="nz-icon nz-icon-cli" :class="{'gray-filter': !scope.row.accounts || scope.row.accounts.length == 0}"></i>
+                class="nz-icon nz-icon-cli" :class="{'gray-filter': !scope.row.accounts || scope.row.accounts.length == 0 || (scope.row.accounts.length==1&&scope.row.accounts.find(t=>t.protocol == 'SNMP'))}"></i>
               </span>
                 <el-dropdown-menu slot="dropdown">
                   <el-dropdown-item v-for="(account, index) in scope.row.accounts" v-if="account && account.protocol != 'SNMP'" :key="index" :command="[scope.row.id ,scope.row.host, account]">{{account.protocol}}</el-dropdown-item>
