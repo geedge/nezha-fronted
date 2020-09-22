@@ -8,12 +8,8 @@
         <div  v-for="(item,index) in expressionsData" class="expressions-box">
           <span class="expressions-box-title">{{item.name}}</span>
           <div class="expressions-box-content"  v-if="item.value.length!==0">
-            <div class="expressions-metric">
-              <span class="expressions-box-label" style="font-weight: bold">Key</span>
-              <span class="expressions-box-value" style="font-weight: bold">Value</span>
-            </div>
-            <div v-for="item1 in item.value" class="expressions-metric">
-              <span class="expressions-box-label">{{legendFormat(item.metric,item.legend,item1.metric)}}</span>
+            <div v-for="item1 in item.value" class="expressions-metric" :key="index">
+              <span class="expressions-box-label">{{legendFormat(item.metric,item.legend)}} :</span>
               <span class="expressions-box-value">{{ dataFormat(item.unit,item1.value[1])}}</span>
             </div>
           </div>
@@ -81,8 +77,7 @@
       dataFormat(unit,value){
         return chartDataFormat.getUnit(unit?unit:2).compute(value)
       },
-      legendFormat:function(legend,expression,metric){
-        console.log(metric)
+      legendFormat:function(legend,expression){
         if(/\{\{.+\}\}/.test(expression)&&expression){
           let labelValue=expression.replace(/(\{\{.+?\}\})/g,function(i){
             let label=i.substr(i.indexOf('{{')+2,i.indexOf('}}')-i.indexOf('{{')-2);
@@ -94,7 +89,7 @@
             }
             return value?value:label;
           });
-          return metric[labelValue]?metric[labelValue]:labelValue
+          return labelValue
         }else{
           return expression?expression:legend;
         }
