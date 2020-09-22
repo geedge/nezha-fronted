@@ -454,7 +454,6 @@
       },
       // chartSite用于区分是全屏显示还是局部显示
       initChart(chartInfo, dataArg, ele, chartSite,legend) {
-        console.log(dataArg);
         this.chartInfo=chartInfo;
         const self = this;
         this.chartType = ''; // 图表类型
@@ -493,7 +492,6 @@
         };
         let stackIconBorderColor = (chartInfo.type==='stackArea'?'#53a3cb':'#7e7e7e');
         let stackIconChooseBorderColor = (chartInfo.type==='stackArea'?'#7e7e7e':'#53a3cb');
-        console.log(chartInfo, dataArg, chartSite,legend);
         let maxValue=0;
         let minValue=0;
         if(chartInfo.unit &&dataArg.length>0){
@@ -506,7 +504,6 @@
             }
           }
         }
-        console.log(maxValue,'increase(mysql_global_status_bytes_sent[1h])');
         let chartUnit=chartInfo.unit?chartInfo.unit:2;
         let unit=chartDataFormat.getUnit(chartUnit);
         maxValue=chartDataFormat.formatDatas(maxValue,unit.type,'ceil',unit.ascii);
@@ -529,12 +526,11 @@
           dot++;
         }
         let copies=chartDataFormat.copies(oldValue,unit.type);
-        console.log(oldValue,copies,maxValue);
+        // console.log(oldValue,copies,maxValue);
         let oldDot=2;
         if(maxValue<=1){
           oldDot=dot>6?6:dot;
         }
-        console.log(maxValue,copies,'123123');
         var option = {
           title:{
             show:false,
@@ -766,7 +762,7 @@
                 let chartUnit=chartInfo.unit;
                 chartUnit=chartUnit?chartUnit:2;
                 let unit=chartDataFormat.getUnit(chartUnit);
-                console.log(unit);
+                // console.log(unit);
                 let flag=JSON.stringify(value).length>JSON.stringify(chartDataFormat.Interval(maxValue,copies,unit.type)).length;
                 if(dot===0&&flag){
                   dot=1;
@@ -782,7 +778,7 @@
 
         // params.series = dataArg;
         if (chartSite === 'local') { // 本地显示
-          console.log(legend,'legend');
+          // console.log(legend,'legend');
           if(legend){
             this.legendList = [];
             legend.forEach((item, i) => {
@@ -1454,7 +1450,7 @@
         this.divFirstShow = true;
       },
       dealLegendAlias:function(legend,expression){
-        console.log(legend,expression,'123123');
+        // console.log(legend,expression,'123123');
         if(/\{\{.+\}\}/.test(expression)){
           let labelValue=expression.replace(/(\{\{.+?\}\})/g,function(i){
             let label=i.substr(i.indexOf('{{')+2,i.indexOf('}}')-i.indexOf('{{')-2);

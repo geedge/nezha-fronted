@@ -12,7 +12,6 @@ function short(value,index,type=1,dot){
   if(type == 1){
     return asciiCompute(value,1000,[' ','K','Mil','Bil','Til','Quadrillion','Quintillion'],0)
   }else if(type == -1){
-    console.log(value);
     return asciiCompute(value,1000,[' ','K','Mil','Bil','Til','Quadrillion','Quintillion'],dot)
   }else{
     return asciiCompute(value,1000,[' ','K','Mil','Bil','Til','Quadrillion','Quintillion'],2)
@@ -689,7 +688,7 @@ export default {
   copies:function(value){
     switch(parseInt(value)){
       case 1: return 5;
-      case 2: return 2;
+      case 2: return 4;
       case 3: return 3;
       case 4: return 4;
       case 5: return 5;
@@ -733,7 +732,6 @@ export default {
         interVal=Math.ceil(interVal)*Math.pow(1000,pow);
       }
       interVal = interVal || 1;
-      console.log(interVal);
       return interVal
     }
     if(interValType==='max'){
