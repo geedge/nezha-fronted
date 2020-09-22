@@ -87,7 +87,16 @@
             return value?value:label;
           });
           if(Object.keys(metric).length>0){
-            labelValue=metric[labelValue]
+            let arr=labelValue.split(' ');
+            console.log(arr);
+            labelValue='';
+            arr.forEach((item)=>{
+              if(metric[item]){
+                labelValue+=metric[item] + ' '
+              }else{
+                labelValue+=item + ' '
+              }
+            });
           }
           return labelValue
         }else{
