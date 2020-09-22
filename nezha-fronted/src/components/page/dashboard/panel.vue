@@ -55,7 +55,7 @@
             export-url="/panel/export"
             import-url="/panel/import"
             :params="filter"
-            @afterImport="Refresh"
+            @afterImport="dateChange"
           >
             <template slot="optionZone">
               <button @click="addChart" :title="$t('overall.createChart')"

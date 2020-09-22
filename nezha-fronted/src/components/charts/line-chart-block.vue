@@ -57,11 +57,38 @@
         <!--<div  v-if="seriesItem.length!==seriesItemArr.length" class="more"><i class="el-icon-warning"></i> {{$t('dashboard.panel.moreFirstTitle')}} {{seriesLength}}{{$t('dashboard.panel.moreSecondTitle')}}<span @click="loadMore" class="moreClick">{{$t('dashboard.panel.moreThirdTitle')}}{{seriesItem.length}}</span></div>-->
         <div class="line-area"  ref="lineChartArea"  :id="'lineChartArea'+chartIndex" v-show="firstShow" style="width:100%;"></div>
         <div class="chart-no-data" v-show="noData">No Data</div>
-        <div class='legend-container' id="legendArea" ref="legendArea" v-show="firstShow" v-scrollBar:legend>
-          <div v-for="(item, index) in legendListMore" :title="item.alias?item.alias:item.name"  @click="clickLegend(item.name,index)" class="legend-item" :class="{'ft-gr':isGrey[index]}" :key="'legend_' + item.name+'_'+index">
-            <span class="legend-shape" :style="{background:(isGrey[index]?'#D3D3D3':bgColorList[index])}"></span>{{item.alias?item.alias:item.name}}
+        <template v-if="!hasLegendOptions">
+          <div class='legend-container'  ref="legendArea" v-show="firstShow" v-scrollBar:legend>
+            <div v-for="(item, index) in legendListMore" :title="item.alias?item.alias:item.name"  @click="clickLegend(item.name,index)" class="legend-item" :class="{'ft-gr':isGrey[index]}" :key="'legend_' + item.name+'_'+index">
+              <span class="legend-shape" :style="{background:(isGrey[index]?'#D3D3D3':item.color)}"></span>{{item.alias?item.alias:item.name}}
+            </div>
           </div>
-        </div>
+        </template>
+        <template v-else>
+          <div class='legend-container'  ref="legendArea" v-show="firstShow" v-scrollBar:legend>
+            <table style="width: 100%">
+              <th style="width: 100%"></th>
+              <template v-for="legendOption in legendOptions">
+                <th v-if="legendOption.value == 'on'" class="option-th legend-option-cell" >
+                  <span @click="legendValueSort(legendOption,legendListMore,legendOptions)">{{legendOption.option}}</span>
+                  <span ><i style="font-size: 12px !important;" :class="{'nz-icon nz-icon-arrow-down':legendOption.sort =='asc','nz-icon nz-icon-arrow-up':legendOption.sort=='desc'}" ></i></span>
+                </th>
+              </template>
+              <tbody>
+                <tr  v-for="(item, index) in legendListMore" :key="'legend_' + item.name+'_'+index">
+                  <td>
+                    <div :title="item.alias?item.alias:item.name"  @click="clickLegend(item.name,index)" class="legend-item" :class="{'ft-gr':isGrey[index]}" >
+                      <span class="legend-shape" :style="{background:(isGrey[index]?'#D3D3D3':item.color)}"></span>{{item.alias?item.alias:item.name}}
+                    </div>
+                  </td>
+                  <template v-for="legendOption in legendOptions">
+                    <td v-if="legendOption.value == 'on'" class="legend-option-cell">{{formatLegendData(item[legendOption.option])}}</td>
+                  </template>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </template>
         <!--
         <Modal title="查看" v-model="screenModal" width="96%" class="line-chart-block-modal">-->
         <el-dialog class="line-chart-block-modal nz-dialog"
@@ -107,12 +134,39 @@
           </div>
           <div class="line-area" ref="screenShowArea"  id="screenShowArea"  style="margin-top:0px;" @mouseenter="mouseEnterFullChart" @mouseleave="mouseLeaveFullChart"></div>
           <div class="chart-no-data" v-show="noData">No Data</div>
-          <div class="legend-container legend-container-screen"  :id="'screenLegendArea'+chartIndex" @mouseenter="mouseEnterFullChart" @mouseleave="mouseLeaveFullChart" v-show="showLegend" v-scrollBar:legend>
-            <div v-for="(item, index) in screenLegendListMore" :title="item.alias?item.alias:item.name"  @click="clickScreenLegend(item.name,index)" class="legend-item" :class="{'ft-gr':isGreyScreen[index]}"  :key="'legend_' + item.name+'_'+index">
-              <span class="legend-shape" :style="{background:(isGreyScreen[index]?'#D3D3D3':bgColorList[index])}"></span>{{item.alias?item.alias:item.name}}
-              <br/><!--bgColorList[index]-->
+          <template v-if="!hasLegendOptions">
+            <div class="legend-container legend-container-screen"  :id="'screenLegendArea'+chartIndex" @mouseenter="mouseEnterFullChart" @mouseleave="mouseLeaveFullChart" v-show="showLegend" v-scrollBar:legend>
+              <div v-for="(item, index) in screenLegendListMore" :title="item.alias?item.alias:item.name"  @click="clickScreenLegend(item.name,index)" class="legend-item" :class="{'ft-gr':isGreyScreen[index]}"  :key="'legend_' + item.name+'_'+index">
+                <span class="legend-shape" :style="{background:(isGreyScreen[index]?'#D3D3D3':item.color)}"></span>{{item.alias?item.alias:item.name}}
+                <br/><!--bgColorList[index]-->
+              </div>
             </div>
-          </div>
+          </template>
+          <template v-else>
+            <div class="legend-container legend-container-screen"  :id="'screenLegendArea'+chartIndex" @mouseenter="mouseEnterFullChart" @mouseleave="mouseLeaveFullChart" v-show="showLegend" v-scrollBar:legend>
+              <table style="width: 100%">
+                <th style="width: 100%"></th>
+                <template v-for="legendOption in screenLegendOptions">
+                  <th v-if="legendOption.value == 'on'" class="option-th legend-option-cell" >
+                    <span @click="legendValueSort(legendOption,screenLegendListMore,screenLegendOptions)">{{legendOption.option}}</span>
+                    <span ><i style="font-size: 12px !important;" :class="{'nz-icon nz-icon-arrow-down':legendOption.sort =='asc','nz-icon nz-icon-arrow-up':legendOption.sort=='desc'}" ></i></span>
+                  </th>
+                </template>
+                <tbody>
+                <tr  v-for="(item, index) in screenLegendListMore" :key="'legend_' + item.name+'_'+index">
+                  <td>
+                    <div :title="item.alias?item.alias:item.name"  @click="clickScreenLegend(item.name,index)" class="legend-item" :class="{'ft-gr':isGreyScreen[index]}" >
+                      <span class="legend-shape" :style="{background:(isGreyScreen[index]?'#D3D3D3':item.color)}"></span>{{item.alias?item.alias:item.name}}
+                    </div>
+                  </td>
+                  <template v-for="legendOption in screenLegendOptions">
+                    <td v-if="legendOption.value == 'on'" class="legend-option-cell">{{formatLegendData(item[legendOption.option])}}</td>
+                  </template>
+                </tr>
+                </tbody>
+              </table>
+            </div>
+          </template>
 
           <loading  :ref="'localLoadingScreen'+chartIndex"></loading>
         </el-dialog>
@@ -217,7 +271,10 @@
         showLegend:true,
         searchTime:[new Date().setHours(new Date().getHours()-1),new Date()],
         oldSearchTime:[],
-        screenTitleHeight:58
+        screenTitleHeight:58,
+        hasLegendOptions:false,
+        legendOptions:[],
+        screenLegendOptions:[],
       };
     },
     watch: {},
@@ -268,10 +325,11 @@
         }
       },
       clickLegend(legendName,index){
+        console.log('cur index',index,legendName)
         //点击图表某一个legend，图表只显示当前点击的曲线或柱状图，其它隐藏，再次点击已选中的legend ，显示全部
         let curIsGrey=this.isGrey[index];
         if(this.echartStore){
-          this.legendList.forEach((item,i)=>{
+          this.legendListMore.forEach((item,i)=>{
             let isGrey = this.isGrey[i];
             if(index != i){
               if(!curIsGrey && !isGrey){
@@ -318,7 +376,7 @@
         //点击图表某一个legend，图表只显示当前点击的曲线或柱状图，其它隐藏，再次点击已选中的legend ，显示全部
         let curIsGrey=this.isGreyScreen[index];
         if(this.echartModalStore){
-          this.screenLegendList.forEach((item,i)=>{
+          this.screenLegendListMore.forEach((item,i)=>{
             let isGrey = this.isGreyScreen[i];
             if(index != i){
               if(!curIsGrey && !isGrey){
@@ -404,6 +462,7 @@
         if ( chartInfo.type === 4) {//line,bar
           this.chartType = 'line';
         }
+        console.log('chartData',chartInfo,legend,dataArg)
         let minTime = null;
         let maxTime = null;
         if(dataArg.length>0 && dataArg[0].data
@@ -620,51 +679,7 @@
             },
           },
           legend: {
-            type:'scroll',
-            height:80,
             show:false,
-            icon:"roundRect",
-            itemHeight:5,
-            itemWidth:15,
-            formatter:function(name){
-              if(!name){
-                return '';
-              }
-              //计算宽度
-              var span = document.createElement("span");
-              var result = {};
-              result.width = span.offsetWidth;
-              result.height = span.offsetHeight;
-              span.style.visibility = "hidden";
-              span.style.fontSize = 14;
-              span.style.fontFamily = "Arial";
-              span.style.display = "inline-block";
-              document.body.appendChild(span);
-              if(typeof span.textContent != "undefined"){
-                span.textContent = name;
-              }else{
-                span.innerText = name;
-              }
-              var txtWidth = parseFloat(window.getComputedStyle(span).width) - result.width;
-              document.body.removeChild(span);
-
-              if(txtWidth < chartWidth){
-                return name;
-              }else {
-                var charNum = `${(chartWidth-100)/(txtWidth/name.length)}`;
-                return name.slice(0,charNum)+'...';
-              }
-            },
-            tooltip:{
-              show:true,
-              formatter:function(params){
-                return `<div  style='width:100%;display:block;word-break:break-all;word-wrap:break-word;white-space:normal'> ${params.name}</div>`;
-              },
-            },
-            data: legend,
-            orient:'vertical',
-            x:'center',
-            y:'bottom',
           },
           grid: {
             top: 30,
@@ -773,6 +788,7 @@
               const legend = {
                 name:item.name,
                 alias:item.alias,
+                color:item.color,
                 showText:this.formatLegend(chartWidth,item.name)
               };
               this.legendList.push(legend);
@@ -780,6 +796,9 @@
             });
           }
           this.legendListMore=this.legendList.filter((item,index)=>index<this.seriesLength);
+          if(this.hasLegendOptions){
+            this.computeLegendData(this.legendListMore,dataArg,'local');
+          }
           this.$nextTick(() => {
             setTimeout(function () {
               let divHeight = self.$refs.legendArea.offsetHeight;
@@ -886,6 +905,7 @@
               const legend = {
                 name:item.name,
                 alias:item.alias,
+                color:item.color,
                 showText:this.formatLegend(chartWidth,item.name)
               };
               this.screenLegendList.push(legend);
@@ -894,6 +914,9 @@
           }
           if(this.screenLegendListMore.length!==this.screenLegendList.length){
             this.screenLegendListMore=this.screenLegendList.filter((item,index)=>index<this.seriesLength);
+          }
+          if(this.hasLegendOptions){
+            this.computeLegendData(this.screenLegendListMore,dataArg,'screen');
           }
           if(self.echartModalStore){
             self.echartModalStore.clear();
@@ -1052,6 +1075,7 @@
       // 设置数据, filter区分
       setData(chartItem, seriesItem, panelId, filter,legend,area,errorMsg) {
         this.setColor(legend.length);
+        legend.forEach((t,i)=>{t.color = this.bgColorList[i]})
         this.filter.from = filter.from;
         if(errorMsg && errorMsg!==''){
           this.isError = true;
@@ -1080,6 +1104,13 @@
           this.seriesItem = seriesItem;
           this.seriesItemScreen = seriesItem;
 
+          this.hasLegendOptions=this.findLegendOptions()
+          if(this.hasLegendOptions){
+            let sortedOptionKeys=['min','max','avg','last','total']
+            this.legendOptions=sortedOptionKeys.map(item=>{ return {option:item,sort:'',value:chartItem.param.legendValue[item]}})
+            this.screenLegendOptions=sortedOptionKeys.map(item=>{ return {option:item,sort:'',value:chartItem.param.legendValue[item]}})
+          }
+
           if (filter) { // 保存数据,用于同步时间
             this.stableFilter = filter;
             this.searchTime[0] = filter.start_time;
@@ -1097,6 +1128,7 @@
           }else{
             this.seriesItemArr=seriesItem
           }
+
           this.initChart(chartItem, seriesItemArr, this.$refs.lineChartArea, 'local',legend);
         }
 
@@ -1465,6 +1497,9 @@
         this.echartStore.setOption({
           series:this.seriesItem
         });
+        if(this.hasLegendOptions){
+          this.computeLegendData(this.legendListMore,this.seriesItemArr,'local')
+        }
         this.$nextTick(()=>{
           let divHeight = this.$refs.legendArea.offsetHeight;
           if(!this.chartInfo.height){
@@ -1481,6 +1516,9 @@
         this.echartModalStore.setOption({
           series:this.seriesItemScreen
         });
+        if(this.hasLegendOptions){
+          this.computeLegendData(this.screenLegendListMore,this.seriesItemArrScreen,'screen')
+        }
         this.$nextTick(()=>{
           let legendDiv = document.getElementById('screenLegendArea'+this.chartIndex);
           let divHeight = legendDiv.offsetHeight;
@@ -1490,6 +1528,125 @@
           this.$refs.screenShowArea.style.height = `${sumHeight - divHeight - this.screenTitleHeight}px`;
           this.echartModalStore.resize({height: (sumHeight - divHeight - this.screenTitleHeight)});//图表的高度
         })
+      },
+      findLegendOptions:function(){
+        if((!this.data.param.legendValue) || Object.keys(this.data.param.legendValue)<1) return false;
+        let legendOptions= this.data.param.legendValue;
+        let onVal=Object.keys(legendOptions).find(item=>{return legendOptions[item] == 'on'});
+
+        return onVal;
+      },
+      computeLegendData:function(legend,dataArr,where){
+        let options=where =='local'?this.legendOptions:this.screenLegendOptions;
+        let keys=options.filter(item=>{return item.value == 'on'}).map(item=>{return item.option});
+        let $self=this;
+        keys.forEach(item=>{
+          switch (item) {
+            case 'min':
+              $self.legendMinValue(legend,dataArr);
+              break;
+            case 'max':
+              $self.legendMaxValue(legend,dataArr);
+              break;
+            case 'avg':
+              $self.legendAvgValue(legend,dataArr);
+              break;
+            case 'last':
+              $self.legendLastValue(legend,dataArr);
+              break;
+            case 'total':
+              $self.legendTotalValue(legend,dataArr);
+              break;
+          }
+        })
+      },
+      legendMinValue:function(legend,dataArr){
+        return new Promise(resolve => {
+          legend.forEach(item=>{
+            let data=dataArr.find(t=>t.name == item.name)
+            if(data&&data.data){
+              let copy=JSON.parse(JSON.stringify(data.data));
+              let min =copy.sort((x,y)=>{return parseFloat(x[1]) - parseFloat(y[1])})[0][1]
+              item['min']=parseFloat(min)
+            }
+          })
+
+          resolve();
+        })
+      },
+      legendMaxValue:function(legend,dataArr){
+        return new Promise(resolve => {
+          legend.forEach(item=>{
+            let data=dataArr.find(t=>t.name == item.name)
+            if(data&&data.data){
+              let copy=JSON.parse(JSON.stringify(data.data));
+              let max =copy.sort((x,y)=>{return parseFloat(y[1]) - parseFloat(x[1])})[0][1]
+              item['max']=parseFloat(max)
+            }
+          })
+          resolve();
+        })
+      },
+      legendAvgValue:function(legend,dataArr){
+        return new Promise(resolve => {
+          legend.forEach(item=>{
+            let data=dataArr.find(t=>t.name == item.name)
+            if(data&&data.data){
+              let copy=JSON.parse(JSON.stringify(data.data));
+              copy = copy.map(t=>parseFloat(t[1]))
+              let sum = eval(copy.join('+'));
+              let avg = sum / copy.length;
+
+              item['avg'] = avg;
+            }
+          })
+          resolve();
+        })
+      },
+      legendLastValue:function(legend,dataArr){
+        return new Promise(resolve => {
+          legend.forEach(item=>{
+            let data=dataArr.find(t=>t.name == item.name)
+            if(data&&data.data){
+              let copy=JSON.parse(JSON.stringify(data.data));
+              let last =copy.sort((x,y)=>{return parseFloat(y[0]) - parseFloat(x[0])})[0][1]
+              item['last']=parseFloat(last)
+            }
+          })
+          resolve();
+        })
+      },
+      legendTotalValue:function(legend,dataArr){
+        return new Promise(resolve => {
+          legend.forEach(item=>{
+            let data=dataArr.find(t=>t.name == item.name)
+            if(data&&data.data){
+              let copy=JSON.parse(JSON.stringify(data.data));
+              copy = copy.map(t=>parseFloat(t[1]))
+              let sum = eval(copy.join('+'));
+
+              item['total'] = sum;
+            }
+          })
+          resolve();
+        })
+      },
+      formatLegendData:function(data){
+        return chartDataFormat.getUnit(this.chartInfo.unit).compute(data,null,2)
+      },
+      legendValueSort:function(option,legend,options){
+        options.forEach(item=>{
+          if(item.option != option.option){
+            item.sort='';
+          }
+        })
+        if(!option.sort || option.sort == 'asc'){
+          legend.sort((x,y)=>x[option.option] - y[option.option])
+          option.sort = 'desc'
+        }else{
+          legend.sort((x,y)=>y[option.option] - x[option.option])
+          option.sort = 'asc'
+        }
       }
     },
     mounted() {

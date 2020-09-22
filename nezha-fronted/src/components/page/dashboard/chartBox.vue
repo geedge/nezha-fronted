@@ -245,6 +245,27 @@
         </template>
 
         <!--value mapping end-->
+        <template v-if="editChart.type == 'line' || editChart.type == 'bar' || editChart.type == 'stackArea'">
+          <div  class="right-box-sub-title" >
+            <span>{{$t('dashboard.panel.chartForm.legendValue')}}</span>
+          </div>
+          <div class="line-100" style="margin-bottom: 20px;" ></div>
+          <div style="display: flex;">
+            <span style="margin-left: 50px;"></span>
+            <template v-for="item in sortedOptionKeys">
+              <div style="flex: 1">
+                <span style="margin-right: 10px;">{{item.label}}</span>
+                <el-switch
+                  v-model="editChart.param.legendValue[item.key]"
+                  active-value="on"
+                  inactive-value="off"
+                  active-color="#ee9d3f"
+                  @change="">
+                </el-switch>
+              </div>
+            </template>
+          </div>
+        </template>
 
       </el-form>
     </el-scrollbar>
@@ -369,6 +390,7 @@
         },
         heightSuggestions:['300','400','500','600'],
         unitOptions:chartDataFormat.unitOptions(),
+        sortedOptionKeys:[{key:'min',label:'Min'},{key:'max',label:'Max'},{key:'avg',label:'Avg'},{key:'last',label:'Last'},{key:'total',label:'Total'}]
       }
     },
     components:{
@@ -1005,6 +1027,7 @@
         param.url='';
         param.threshold='';
         param.valueMapping={type:'text',mapping:[{value:'',text:''}]};
+        param.legendValue={min:'off',max:'off',avg:'off',last:'off',total:'off'}
         this.$set(this.editChart, "param", param);
         this.elements = [1];
         this.elementTarget = [];
@@ -1125,11 +1148,13 @@
               };
               if(this.editChart.type === 'singleStat'){
                 params.param.statistics=this.statistics;
+                params.param.valueMapping=this.editChart.param.valueMapping;
               } else {
                 delete params.param.statistics;
               }
               if(this.editChart.type==='line'||this.editChart.type==='bar'||this.editChart.type==='stackArea'){
                 params.param.threshold=this.editChart.param.threshold;
+                params.param.legendValue=this.editChart.param.legendValue;
               } else {
                 delete params.param.threshold;
               }
@@ -1229,6 +1254,7 @@
             this.setIsSingleStat();
           } else {
             this.setIsOtherChart();
+            n.param&&!n.param.legendValue&&this.$set(this.editChart.param,'legendValue',{min:'off',max:'off',avg:'off',last:'off',total:'off'})
           }
           //console.info(this.showPanel);
           this.$set(this.editChart, "panelName", this.showPanel.name);

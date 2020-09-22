@@ -573,6 +573,7 @@
         });
         bus.$on("current-module-change", module => {
           this.currentModule = module;
+          this.bottomBox.showSubList=false;
         });
         bus.$on("project-list-change", () => {
           this.getProjectList();

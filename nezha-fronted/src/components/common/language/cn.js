@@ -178,7 +178,16 @@ const cn = {
           alertRule:'告警规则',
           level:'级别',
           state:'状态'
-        }
+        },
+        valMapping:{
+          name:'Value mapping',
+          from:'From',
+          to:'To',
+          text:'Text',
+          value:'Value',
+          range:'Range',
+        },
+        legendValue:'Legend option'
       },
       chartTableColumn: {
         metric: "指标",
@@ -372,7 +381,8 @@ const cn = {
     pressEnterToAdd: "回车添加新行",
     resetSuccess: "重置成功",
     syncSuccess:'同步成功',
-    syncTip:"此操作可能造成原有数据或图表被覆盖，确认同步吗？"
+    syncTip:"此操作可能造成原有数据或图表被覆盖，确认同步吗？",
+    noImportFile:'没有可导入的文件'
   },
   asset: {
     asset: "资产",

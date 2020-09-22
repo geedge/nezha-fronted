@@ -431,7 +431,7 @@ let unitOptions=[
       {
         value:4,
         compute:percent02,
-        label:'percent(0.0-0.1)'
+        label:'percent(0.0-1.0)'
       },
       {
         value:5,

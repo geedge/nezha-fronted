@@ -18,7 +18,7 @@
       </el-dropdown>-->
     </div>
 
-    <el-dialog :visible.sync="importBox.show" :title="importBox.title" :modal-append-to-body='false' :show-close="true" :width="importBox.width" @close="closeDialog" class="nz-dialog" :close-on-click-modal="importBox.type!=3">
+    <el-dialog :visible.sync="importBox.show" :title="importBox.title" modal-append-to-body append-to-body :modal-append-to-body='false' :show-close="true" :width="importBox.width" @close="closeDialog" class="nz-dialog" :close-on-click-modal="importBox.type!=3">
       <div v-if="importBox.type==1">
         <div class="upload-body">
           <el-upload drag class="upload-demo" ref="uploadExcel"  action="" :file-list="importFileList" :on-change="importChange"  :auto-upload="false" accept=".xlsx,.xls">
@@ -141,6 +141,7 @@
         this.$delete(url + '?seq='+this.importResult.seq).then(response=>{
           if(response.code ==  200 ){
             this.$message({duration: 2000, type: 'success', message: this.$t("tip.saveSuccess")});
+            this.$emit('afterImport')
           }else{
             this.$message.error(response.msg);
           }
@@ -161,6 +162,8 @@
               this.$message.error(response.msg);
             }
           })
+        }else{
+          this.$message.error(this.$t('tip.noImportFile'));
         }
       },
       exportMenuHandler(show) {
@@ -210,6 +213,9 @@
       exportAll:function(){
         let params=JSON.parse(JSON.stringify(this.params));
         params.pageSize=-1;
+        if (this.importUrl.indexOf('panel') > -1){
+          delete params.panelId
+        }
         params.language=localStorage.getItem('nz-language') || 'en';
 
         this.exportExcel(this.exportUrl,params,this.exportFileName+'-'+this.getTimeString()+'.xlsx');
