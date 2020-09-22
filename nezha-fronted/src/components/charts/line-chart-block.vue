@@ -325,7 +325,6 @@
         }
       },
       clickLegend(legendName,index){
-        console.log('cur index',index,legendName)
         //点击图表某一个legend，图表只显示当前点击的曲线或柱状图，其它隐藏，再次点击已选中的legend ，显示全部
         let curIsGrey=this.isGrey[index];
         if(this.echartStore){
@@ -462,7 +461,6 @@
         if ( chartInfo.type === 4) {//line,bar
           this.chartType = 'line';
         }
-        console.log('chartData',chartInfo,legend,dataArg)
         let minTime = null;
         let maxTime = null;
         if(dataArg.length>0 && dataArg[0].data
@@ -953,7 +951,6 @@
                 //console.log("11____00",sumHeight,divHeight,legendDiv)
                 self.$refs.screenShowArea.style.height = `${sumHeight - divHeight - self.screenTitleHeight}px`;
                 self.echartModalStore.resize({height: (sumHeight - divHeight - self.screenTitleHeight)});//图表的高度
-                console.log(self.seriesItemScreen,self.seriesItemArrScreen);
                 self.echartModalStore.off('finished');
               })
             }, 100);
@@ -1261,7 +1258,6 @@
           }
           let step = bus.getStep(startTime,endTime);
           if (type === 'list') { // 普通模式,主控台使用
-            console.info(this.data);
             axiosArr = this.data.elements.map((ele) => {
               const filterItem = ele;
               let query = encodeURIComponent(filterItem.expression);
@@ -1527,7 +1523,7 @@
         })
       },
       findLegendOptions:function(){
-        if((!this.data.param.legendValue) || Object.keys(this.data.param.legendValue)<1) return false;
+        if(!this.data.param||!this.data.param.legendValue || Object.keys(this.data.param.legendValue)<1) return false;
         let legendOptions= this.data.param.legendValue;
         let onVal=Object.keys(legendOptions).find(item=>{return legendOptions[item] == 'on'});
 
