@@ -511,7 +511,6 @@
         maxValue=chartDataFormat.formatDatas(maxValue,unit.type,'ceil',unit.ascii);
         minValue=chartDataFormat.formatDatas(minValue,unit.type,'floor',unit.ascii);
         let oldValue=maxValue;
-        console.log(maxValue,'123123');
         let dot=0;
         if(maxValue==1){
           dot++;
@@ -528,13 +527,13 @@
           maxValue=Math.ceil(oldValue)/Math.pow(10,dot);
           dot++;
         }
-        let copies=chartDataFormat.copies(oldValue);
+        let copies=chartDataFormat.copies(oldValue,unit.type);
         console.log(oldValue,copies,maxValue);
         let oldDot=2;
         if(maxValue<=1){
           oldDot=dot>6?6:dot;
         }
-        // console.log(unit.compute(maxValue),unit.compute(minValue));
+        console.log(maxValue,copies,'123123');
         var option = {
           title:{
             show:false,
@@ -754,6 +753,7 @@
               show:false
             },
             minInterval: chartDataFormat.Interval(maxValue,copies,unit.type),
+            maxInterval: chartDataFormat.Interval(maxValue,copies,unit.type),
             axisTick: {
               show: false,
             },

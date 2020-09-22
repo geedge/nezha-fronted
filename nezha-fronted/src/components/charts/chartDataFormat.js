@@ -643,9 +643,9 @@ export default {
     
     if(type==='Data'){
      if(value>1){
-       while(value>1000){
+       while(value>1024){
          pow++;
-         value=value/1000
+         value=value/1024
        }
   
        if(flow==='ceil'){
@@ -701,8 +701,39 @@ export default {
     }
   },
   Interval:function(value,copies,type){
-    if(type==='Data' || type==='DataRate' || type==='Misc'){
+    console.log(value,'Interval');
+    if(value<1024&&type==='Data'){
       let interVal=value/copies;
+      return interVal
+    }
+    if(value<1000&&(type==='DataRate' || type==='Misc')){
+      let interVal=value/copies;
+      return interVal
+    }
+    if(type==='Data'){
+      let interVal=value/copies;
+      let pow=0;
+      if(interVal){
+        while(interVal>1024){
+          pow++;
+          interVal=interVal/1024;
+        }
+        interVal=Math.ceil(interVal)*Math.pow(1024,pow);
+      }
+      interVal = interVal || 1;
+      console.log(interVal);
+      return interVal
+    }
+    if(type==='DataRate' || type==='Misc'){
+      let interVal=value/copies;
+      let pow=0;
+      if(interVal){
+        while(interVal>1000){
+          pow++;
+          interVal=interVal/1000;
+        }
+        interVal=Math.ceil(interVal)*Math.pow(1000,pow);
+      }
       interVal = interVal || 1;
       console.log(interVal);
       return interVal
