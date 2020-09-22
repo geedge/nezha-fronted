@@ -443,6 +443,46 @@
         };
         let stackIconBorderColor = (chartInfo.type==='stackArea'?'#53a3cb':'#7e7e7e');
         let stackIconChooseBorderColor = (chartInfo.type==='stackArea'?'#7e7e7e':'#53a3cb');
+        let maxValue=0;
+        let minValue=0;
+        if(chartInfo.type==='line' && chartInfo.unit &&dataArg.length>0){
+          maxValue=dataArg[0].data[0][1];
+          minValue=dataArg[0].data[0][1];
+          for(let j = 0; j < dataArg.length ; j++){
+            for (let i = 0; i < dataArg[j].data.length - 1; i++) {
+              maxValue = (maxValue < dataArg[j].data[i+1][1] ? dataArg[j].data[i+1][1] : maxValue);
+              minValue = (minValue > dataArg[j].data[i+1][1] ? dataArg[j].data[i+1][1] : minValue);
+            }
+          }
+        }
+        let chartUnit=chartInfo.unit?chartInfo.unit:2;
+        let unit=chartDataFormat.getUnit(chartUnit);
+        maxValue=chartDataFormat.formatDatas(maxValue,unit.type,'ceil',unit.ascii);
+        minValue=chartDataFormat.formatDatas(minValue,unit.type,'floor',unit.ascii);
+        let oldValue=maxValue;
+        console.log(maxValue,'123123');
+        let dot=0;
+        if(maxValue==1){
+          dot++;
+        }
+        if(oldValue>10){
+          while(oldValue>10){
+            oldValue=oldValue/10;
+          }
+        }else if(oldValue<1&&maxValue!==0){
+          while(oldValue<1&&oldValue>0){
+            oldValue=oldValue*10;
+            dot++;
+          }
+          maxValue=Math.ceil(oldValue)/Math.pow(10,dot);
+          dot++;
+        }
+        let copies=chartDataFormat.copies(oldValue);
+        console.log(oldValue,copies,maxValue);
+        let oldDot=2;
+        if(maxValue<=1){
+          oldDot=dot>6?6:dot;
+        }
         var option = {
           title:{
             show:false,
@@ -705,7 +745,7 @@
             axisLine:{
               show:false
             },
-            minInterval: 1,
+            minInterval: chartDataFormat.Interval(maxValue,copies,unit.type),
             axisTick: {
               show: false,
             },

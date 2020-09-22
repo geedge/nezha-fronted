@@ -496,9 +496,9 @@
         let stackIconBorderColor = (chartInfo.type==='stackArea'?'#53a3cb':'#7e7e7e');
         let stackIconChooseBorderColor = (chartInfo.type==='stackArea'?'#7e7e7e':'#53a3cb');
         console.log(chartInfo, dataArg, chartSite,legend);
-        let maxValue='';
-        let minValue='';
-        if(chartInfo.type==='line' && chartInfo.unit){
+        let maxValue=0;
+        let minValue=0;
+        if(chartInfo.type==='line' && chartInfo.unit &&dataArg.length>0){
           maxValue=dataArg[0].data[0][1];
           minValue=dataArg[0].data[0][1];
           for(let j = 0; j < dataArg.length ; j++){
@@ -510,8 +510,8 @@
         }
         let chartUnit=chartInfo.unit?chartInfo.unit:2;
         let unit=chartDataFormat.getUnit(chartUnit);
-        maxValue=chartDataFormat.formatDatas(maxValue,unit.type,'ceil');
-        minValue=chartDataFormat.formatDatas(minValue,unit.type,'floor');
+        maxValue=chartDataFormat.formatDatas(maxValue,unit.type,'ceil',unit.ascii);
+        minValue=chartDataFormat.formatDatas(minValue,unit.type,'floor',unit.ascii);
         let oldValue=maxValue;
         console.log(maxValue,'123123');
         let dot=0;
@@ -531,7 +531,7 @@
           dot++;
         }
         let copies=chartDataFormat.copies(oldValue);
-        console.log(oldValue,copies,maxValue)
+        console.log(oldValue,copies,maxValue);
         let oldDot=2;
         if(maxValue<=1){
           oldDot=dot>6?6:dot;
@@ -767,9 +767,6 @@
                 let chartUnit=chartInfo.unit;
                 chartUnit=chartUnit?chartUnit:2;
                 let unit=chartDataFormat.getUnit(chartUnit);
-                console.log(value);
-                // console.log(value,unit,unit.compute(value,index),123);
-                //console.info(value, chartUnit, unit.compute(value,index))
                 return unit.compute(value,index,-1,dot);
               },
             },

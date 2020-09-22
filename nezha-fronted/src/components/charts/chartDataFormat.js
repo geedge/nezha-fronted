@@ -559,42 +559,50 @@ let unitOptions=[
       {
         value:26,
         compute:Hertz,
-        label:'Hertz (1/s)'
+        label:'Hertz (1/s)',
+        ascii:1,
       },
       {
         value:27,
         compute:nanoseconds,
-        label:'nanoseconds (ns)'
+        label:'nanoseconds (ns)',
+        ascii:1000,
       },
       {
         value:28,
         compute:microseconds,
-        label:'microseconds (us)'
+        label:'microseconds (us)',
+        ascii:1000,
       },
       {
         value:29,
         compute:milliseconds,
-        label:'milliseconds (ms)'
+        label:'milliseconds (ms)',
+        ascii:60,
       },
       {
         value:30,
         compute:seconds,
-        label:'seconds (s)'
+        label:'seconds (s)',
+        ascii:60,
       },
       {
         value:31,
         compute:minutes,
-        label:'minutes (m)'
+        label:'minutes (m)',
+        ascii:60,
       },
       {
         value:32,
         compute:hours,
-        label:'hours (h)'
+        label:'hours (h)',
+        ascii:24,
       },
       {
         value:33,
         compute:days,
-        label:'days (d)'
+        label:'days (d)',
+        ascii:7,
       },
     ]
   }//Time end
@@ -627,10 +635,27 @@ export default {
   formatData:function(value,unit){
     return this.getUnit(unit).compute(value,null,2)
   },
-  formatDatas:function(value,type,flow='ceil'){
+  formatDatas:function(value,type,flow='ceil',ascii){
     let pow=0;
     if(type ==='Time'){
-      return value
+      if(value>1 && ascii!==1){
+        while(value>ascii){
+          pow++;
+          value=value/ascii
+        }
+    
+        if(flow==='ceil'){
+          let length=JSON.stringify(Math.ceil(value)).length;
+          value=value/Math.pow(10,length-1);
+          return Math.ceil(value)*Math.pow(ascii,pow)*Math.pow(10,length-1);
+        }else if(flow==='floor'){
+          let length=JSON.stringify(Math.floor(value)).length;
+          value=value/Math.pow(10,length-1);
+          return Math.floor(value)*Math.pow(ascii,pow)*Math.pow(10,length-1);
+        }
+      }else{
+        return value
+      }
     }
     
     if(type==='Data' || type==='DataRate'){
@@ -693,12 +718,16 @@ export default {
     }
   },
   Interval:function(value,copies,type){
-    if(type==='Data' || type==='DataRate' || type==='Misc'){
-      let interVal=value/copies;
-      interVal = interVal || 1;
-      console.log(interVal);
-      return interVal
-    }
-    return 1;
+    // if(type==='Data' || type==='DataRate' || type==='Misc'){
+    //   let interVal=value/copies;
+    //   interVal = interVal || 1;
+    //   console.log(interVal);
+    //   return interVal
+    // }
+    // return 1;
+    let interVal=value/copies;
+    interVal = interVal || 1;
+    console.log(interVal);
+    return interVal
   }
 }
