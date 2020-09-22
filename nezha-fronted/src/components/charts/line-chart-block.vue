@@ -397,6 +397,7 @@
       },
       // chartSite用于区分是全屏显示还是局部显示
       initChart(chartInfo, dataArg, ele, chartSite,legend) {
+        console.log(dataArg);
         this.chartInfo=chartInfo;
         const self = this;
         this.chartType = ''; // 图表类型
@@ -404,7 +405,7 @@
           this.chartType = 'line';
         }
         let minTime = null;
-        let maxTime = null
+        let maxTime = null;
         if(dataArg.length>0 && dataArg[0].data
           && dataArg[0].data.length>0 && dataArg[0].data[0].length>0){
           let len = dataArg[0].data.length-1;
@@ -435,6 +436,48 @@
         };
         let stackIconBorderColor = (chartInfo.type==='stackArea'?'#53a3cb':'#7e7e7e');
         let stackIconChooseBorderColor = (chartInfo.type==='stackArea'?'#7e7e7e':'#53a3cb');
+        console.log(chartInfo, dataArg, chartSite,legend);
+        let maxValue='';
+        let minValue='';
+        if(chartInfo.type==='line' && chartInfo.unit){
+          maxValue=dataArg[0].data[0][1];
+          minValue=dataArg[0].data[0][1];
+          for(let j = 0; j < dataArg.length ; j++){
+            for (let i = 0; i < dataArg[j].data.length - 1; i++) {
+              maxValue = (maxValue < dataArg[j].data[i+1][1] ? dataArg[j].data[i+1][1] : maxValue);
+              minValue = (minValue > dataArg[j].data[i+1][1] ? dataArg[j].data[i+1][1] : minValue);
+            }
+          }
+        }
+        let chartUnit=chartInfo.unit?chartInfo.unit:2;
+        let unit=chartDataFormat.getUnit(chartUnit);
+        maxValue=chartDataFormat.formatDatas(maxValue,unit.type,'ceil');
+        minValue=chartDataFormat.formatDatas(minValue,unit.type,'floor');
+        let oldValue=maxValue;
+        console.log(maxValue,'123123');
+        let dot=0;
+        if(maxValue==1){
+          dot++;
+        }
+        if(oldValue>10){
+          while(oldValue>10){
+            oldValue=oldValue/10;
+          }
+        }else if(oldValue<1&&maxValue!==0){
+          while(oldValue<1&&oldValue>0){
+            oldValue=oldValue*10;
+            dot++;
+          }
+          maxValue=Math.ceil(oldValue)/Math.pow(10,dot);
+          dot++;
+        }
+        let copies=chartDataFormat.copies(oldValue);
+        console.log(oldValue,copies,maxValue)
+        let oldDot=2;
+        if(maxValue<=1){
+          oldDot=dot>6?6:dot;
+        }
+        // console.log(unit.compute(maxValue),unit.compute(minValue));
         var option = {
           title:{
             show:false,
@@ -532,7 +575,6 @@
             formatter:function(params){
               //display:inline-block;white-space:nowrap;overflow-x:hidden;text-overflow:ellipsis;
               let str = `<div>`;
-
               //let str = `<div  style='white-space:nowrap;overflow-x:hidden;text-overflow:ellipsis;min-width:150px;max-width:600px;display:inline-block;line-height: 18px;font-size:12px;font-family: Roboto,Helvetica Neue,Arial,sans-serif;'>`;
               let sum = 0;
               params.forEach((item, i) => {
@@ -553,7 +595,7 @@
                 str += `<div style="white-space:nowrap;overflow-x:hidden;text-overflow:ellipsis;display: flex; justify-content: space-between; min-width: 150px; max-width: 600px; line-height: 18px; font-size: 12px;">`;
                 str += `<div style="max-width: 500px;white-space:nowrap;overflow-x:hidden;text-overflow:ellipsis;"><span style='display:inline-block;margin-right:5px;border-radius:10px;width:15px;height:5px;background-color: ${color};}'></span>${tip?(tip.alias?tip.alias:tip.name):item.seriesName}  </div>`;
                 str += `<div style="padding-left: 10px;">`;
-                str += chartDataFormat.getUnit(chartInfo.unit?chartInfo.unit:2).compute(val,null,2);
+                str += chartDataFormat.getUnit(chartInfo.unit?chartInfo.unit:2).compute(val,null,-1,oldDot);
                 str += `</div>`;
                 str += `</div>`;
               });
@@ -693,11 +735,12 @@
                 width: 1
               }
             },
+            // maxInterval:{},
             //去掉y轴--start
             axisLine:{
               show:false
             },
-            minInterval: 1,
+            minInterval: chartDataFormat.Interval(maxValue,copies,unit.type),
             axisTick: {
               show: false,
             },
@@ -709,8 +752,10 @@
                 let chartUnit=chartInfo.unit;
                 chartUnit=chartUnit?chartUnit:2;
                 let unit=chartDataFormat.getUnit(chartUnit);
+                console.log(value);
+                // console.log(value,unit,unit.compute(value,index),123);
                 //console.info(value, chartUnit, unit.compute(value,index))
-                return unit.compute(value,index);
+                return unit.compute(value,index,-1,dot);
               },
             },
             //boundaryGap:[0,0.2]
@@ -718,8 +763,10 @@
           useUTC: false,//使用本地时间
           series: dataArg
         };
+
         // params.series = dataArg;
         if (chartSite === 'local') { // 本地显示
+          console.log(legend,'legend');
           if(legend){
             this.legendList = [];
             legend.forEach((item, i) => {
@@ -1376,6 +1423,7 @@
         this.divFirstShow = true;
       },
       dealLegendAlias:function(legend,expression){
+        console.log(legend,expression,'123123');
         if(/\{\{.+\}\}/.test(expression)){
           let labelValue=expression.replace(/(\{\{.+?\}\})/g,function(i){
             let label=i.substr(i.indexOf('{{')+2,i.indexOf('}}')-i.indexOf('{{')-2);

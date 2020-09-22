@@ -10,11 +10,12 @@ function none(value, index){
 }
 function short(value,index,type=1,dot){
   if(type == 1){
-    return asciiCompute(value,1000,['','K','Mil','Bil','Til','Quadrillion','Quintillion'],0)
+    return asciiCompute(value,1000,[' ','K','Mil','Bil','Til','Quadrillion','Quintillion'],0)
   }else if(type == -1){
-    return asciiCompute(value,1000,['','K','Mil','Bil','Til','Quadrillion','Quintillion'],dot)
+    console.log(value);
+    return asciiCompute(value,1000,[' ','K','Mil','Bil','Til','Quadrillion','Quintillion'],dot)
   }else{
-    return asciiCompute(value,1000,['','K','Mil','Bil','Til','Quadrillion','Quintillion'],2)
+    return asciiCompute(value,1000,[' ','K','Mil','Bil','Til','Quadrillion','Quintillion'],2)
   }
 
 }
@@ -316,7 +317,7 @@ function days(value,index,type=1,dot){
 function asciiCompute(num,ascii,units,dot=2){
   num=Number(num)
   let carry=0;
-  if(num > 0){
+  if(num > 1){
     let log=Math.log(num)/Math.log(ascii)
     carry = parseInt(log)
     num = num / Math.pow(ascii,carry)
@@ -446,37 +447,37 @@ let unitOptions=[
       {
         value:6,
         compute:bits,
-        label:'bits'
+        label:'bits',
       },
       {
         value:7,
         compute:bytes,
-        label:'bytes'
+        label:'bytes',
       },
       {
         value:8,
         compute:kilobytes,
-        label:'kilobytes'
+        label:'kilobytes',
       },
       {
         value:9,
         compute:megabytes,
-        label:'megabytes'
+        label:'megabytes',
       },
       {
         value:10,
         compute:gigabytes,
-        label:'gigabytes'
+        label:'gigabytes',
       },
       {
         value:11,
         compute:terabytes,
-        label:'terabytes'
+        label:'terabytes',
       },
       {
         value:12,
         compute:petabytes,
-        label:'petabytes'
+        label:'petabytes',
       }
     ]
   },//Data end
@@ -487,47 +488,47 @@ let unitOptions=[
       {
         value:13,
         compute:packetsSec,
-        label:'packets/sec'
+        label:'packets/sec',
       },
       {
         value:14,
         compute:bitsSec,
-        label:'bits/sec'
+        label:'bits/sec',
       },
       {
         value:15,
         compute:bytesSec,
-        label:'bytes/sec'
+        label:'bytes/sec',
       },
       {
         value:16,
         compute:kilobytesSec,
-        label:'kilobytes/sec'
+        label:'kilobytes/sec',
       },
       {
         value:17,
         compute:kilobitsSec,
-        label:'kilobits/sec'
+        label:'kilobits/sec',
       },
       {
         value:18,
         compute:megabytesSec,
-        label:'megabytes/sec'
+        label:'megabytes/sec',
       },
       {
         value:19,
         compute:megabitsSec,
-        label:'megabits/sec'
+        label:'megabits/sec',
       },
       {
         value:20,
         compute:gigabytesSec,
-        label:'gigabytes/sec'
+        label:'gigabytes/sec',
       },
       {
         value:21,
         compute:gigabitsSec,
-        label:'gigabits/sec'
+        label:'gigabits/sec',
       },
       {
         value:22,
@@ -617,7 +618,7 @@ export default {
     if(units.length < 1){
       unitOptions.forEach((item,index)=>{
         item.children.forEach((n,i)=>{
-          units.push(n);
+          units.push({...n,type:item.label});
         })
       })
     }
@@ -625,5 +626,79 @@ export default {
   },
   formatData:function(value,unit){
     return this.getUnit(unit).compute(value,null,2)
+  },
+  formatDatas:function(value,type,flow='ceil'){
+    let pow=0;
+    if(type ==='Time'){
+      return value
+    }
+    
+    if(type==='Data' || type==='DataRate'){
+     if(value>1){
+       while(value>1000){
+         pow++;
+         value=value/1000
+       }
+  
+       if(flow==='ceil'){
+         let length=JSON.stringify(Math.ceil(value)).length;
+         value=value/Math.pow(10,length-1);
+         return Math.ceil(value)*Math.pow(1024,pow)*Math.pow(10,length-1);
+       }else if(flow==='floor'){
+         let length=JSON.stringify(Math.floor(value)).length;
+         value=value/Math.pow(10,length-1);
+         return Math.floor(value)*Math.pow(1024,pow)*Math.pow(10,length-1);
+       }
+     }else{
+       return value
+     }
+    }
+  
+    if(type==='Misc'){
+      if(value>1){
+        while(value>1000){
+          pow++;
+          value=value/1000
+        }
+      
+        if(flow==='ceil'){
+          let length=JSON.stringify(Math.ceil(value)).length;
+          value=value/Math.pow(10,length-1);
+          return Math.ceil(value)*Math.pow(1000,pow)*Math.pow(10,length-1);
+        }else if(flow==='floor'){
+          let length=JSON.stringify(Math.floor(value)).length;
+          value=value/Math.pow(10,length-1);
+          return Math.floor(value)*Math.pow(1000,pow)*Math.pow(10,length-1);
+        }
+      }else{
+        return value
+      }
+    }
+    
+    return value;
+    
+  },
+  copies:function(value){
+    switch(parseInt(value)){
+      case 1: return 5;
+      case 2: return 2;
+      case 3: return 3;
+      case 4: return 4;
+      case 5: return 5;
+      case 6: return 3;
+      case 7: return 7;
+      case 8: return 8;
+      case 9: return 3;
+      case 10: return 5;
+    }
+  },
+  Interval:function(value,copies,type){
+    if(type==='Data' || type==='DataRate' || type==='Misc'){
+      let interVal=value/copies;
+      interVal = interVal || 1;
+      console.log(interVal);
+      return interVal
+    }
+    return 1;
   }
 }
