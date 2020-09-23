@@ -26,11 +26,12 @@ function percent01(value,index){
   return `${len} %`;
 }
 function percent02(value,index){
+  value=value*100;
   let len=JSON.stringify(value);
-  if(len.length>5){
+  if(len.length>5&&value<100){
     len=len.slice(0,5);
   }
-  return `${len * 100 } %`;
+  return `${len} %`;
 }
 function localFormat(value,index){
   let num = (value || 0).toString();
@@ -644,6 +645,14 @@ export default {
   },
   formatDatas:function(value,type,flow='ceil',ascii){
     let pow=0;
+    if(value<1&&value!=0){
+      while(value<1){
+        pow++;
+        value=value*10;
+        console.log(value);
+      }
+      return Math.floor(value+1)/Math.pow(10,pow);
+    }
     if(type ==='Time'){
         return value
     }
