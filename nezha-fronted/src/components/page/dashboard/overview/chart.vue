@@ -74,6 +74,12 @@
         this.legend=legend.filter((item,index)=>index<this.dataSize);
         this.resize();
       },
+      getOption:function(){
+        return this.chart.getOption();
+      },
+      setOption:function(option){
+        this.chart.setOption(option)
+      },
       setSeries:function(series, legend, legendData){
         if(!this.chart){
           this.chartInit();
