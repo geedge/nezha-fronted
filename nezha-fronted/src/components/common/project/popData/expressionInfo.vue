@@ -9,8 +9,14 @@
           <span class="expressions-box-title">{{item.name}}</span>
           <div class="expressions-box-content"  v-if="item.value.length!==0">
             <div v-for="(item1,index2) in item.value" class="expressions-metric" :key="index2">
-              <span class="expressions-box-label">{{legendFormat(item.metric,item.legend,item1.metric)}} :</span>
-              <span class="expressions-box-value">{{ dataFormat(item.unit,item1.value[1])}}</span>
+              <div v-if="item1.metric">
+                <span class="expressions-box-label">{{legendFormat(item.metric,item.legend,item1.metric)}} :</span>
+                <span class="expressions-box-value">{{ dataFormat(item.unit,item1)}}</span>
+              </div>
+              <div v-if="!item1.metric&&index2%2">
+                <span class="expressions-box-label">{{legendFormat(item.metric,item.legend,item1.metric)}} :</span>
+                <span class="expressions-box-value">{{ dataFormat(item.unit,item1)}}</span>
+              </div>
             </div>
           </div>
           <div v-if="item.value.length===0" class="expressions-box-content">
@@ -69,9 +75,16 @@
         })
       });
       this.total=index;
+      console.log(this.expressionsData);
     },
     methods:{
       dataFormat(unit,value){
+        console.log(value);
+        if(value.value){
+          value=value.value[1]
+        }else{
+          value=value
+        }
         return chartDataFormat.getUnit(unit?unit:2).compute(value)
       },
       legendFormat:function(legend,expression,metric){
