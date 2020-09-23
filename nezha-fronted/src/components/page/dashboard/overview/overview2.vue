@@ -19,7 +19,7 @@
       <!--第一行-->
       <div class="content-row-box">
         <div class="content-col-box">
-          <div class="content-col-content" v-loading="assetLoading">
+          <div class="content-col-content" v-loading="assetLoading" @click="jumpTo('asset')">
             <div class="content-col-content-icon"><i class="nz-icon nz-icon-overview-project"></i></div>
             <div class="content-num-box">
               <div class="content-col-content-num">
@@ -67,7 +67,7 @@
           </div>
         </div>
         <div class="content-col-box">
-          <div class="content-col-content" v-loading="alertMessageLoading">
+          <div class="content-col-content" v-loading="alertMessageLoading" @click="jumpTo('alertList')">
             <div class="content-col-content-icon"><i class="nz-icon nz-icon-overview-alert"></i></div>
             <div class="content-num-box">
               <div class="content-col-content-num">
@@ -1135,7 +1135,9 @@
       },
       /*header 时间处理end*/
       jumpTo(data, id) {
-        bus.$emit("menu-change", data);
+        if(data=='asset'){
+          bus.$emit("clear-asset-filter"); //清除leftMenu左侧菜单过滤条件
+        }
         this.$router.push({
           path: "/" + data,
           query: {
