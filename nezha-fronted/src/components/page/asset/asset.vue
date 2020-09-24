@@ -43,6 +43,7 @@
         ref="assetTable"
         :cell-class-name="messageStyle"
         @sort-change="tableDataSort"
+        @row-dblclick="detail"
       >
         <el-table-column
           :resizable="false"

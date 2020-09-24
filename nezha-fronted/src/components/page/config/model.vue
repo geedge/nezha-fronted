@@ -39,6 +39,7 @@
                 v-show="bottomBox.mainResizeShow"
                 :height="mainTableHeight"
                 @sort-change="tableDataSort"
+                @row-dblclick="panel"
       >
         <el-table-column :resizable="false"
                          v-for="(item, index) in tools.customTableTitle"
@@ -128,7 +129,7 @@
         tableId: 'modelTable', //需要分页的table的id，用于记录每页数量
 
         rightBox: {show: false},
-        
+
         model: {},
         blankModel: {
           id: '',
