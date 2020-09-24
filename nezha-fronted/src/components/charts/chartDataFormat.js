@@ -651,6 +651,7 @@ export default {
         value=value*10;
         console.log(value);
       }
+      console.log( Math.floor(value+1)/Math.pow(10,pow));
       return Math.floor(value+1)/Math.pow(10,pow);
     }
     if(type ==='Time'){
@@ -711,7 +712,7 @@ export default {
       case 5: return 5;
       case 6: return 3;
       case 7: return 7;
-      case 8: return 8;
+      case 8: return 4;
       case 9: return 3;
       case 10: return 5;
     }

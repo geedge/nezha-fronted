@@ -1688,7 +1688,7 @@
             oldValue=oldValue*10;
             dot++;
           }
-          maxValue=Math.ceil(oldValue)/Math.pow(10,dot);
+          maxValue=Math.floor(oldValue)/Math.pow(10,dot);
           dot++;
         }
         let copies=chartDataFormat.copies(oldValue,unit.type);
