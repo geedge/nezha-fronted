@@ -19,7 +19,7 @@
       <!--第一行-->
       <div class="content-row-box">
         <div class="content-col-box">
-          <div class="content-col-content" v-loading="assetLoading" @click="jumpTo('asset')">
+          <div class="content-col-content clickable" v-loading="assetLoading" @click="jumpTo('asset')">
             <div class="content-col-content-icon"><i class="nz-icon nz-icon-overview-project"></i></div>
             <div class="content-num-box">
               <div class="content-col-content-num">
@@ -67,7 +67,7 @@
           </div>
         </div>
         <div class="content-col-box">
-          <div class="content-col-content" v-loading="alertMessageLoading" @click="jumpTo('alertList')">
+          <div class="content-col-content clickable" v-loading="alertMessageLoading" @click="jumpTo('alertList')">
             <div class="content-col-content-icon"><i class="nz-icon nz-icon-overview-alert"></i></div>
             <div class="content-num-box">
               <div class="content-col-content-num">
