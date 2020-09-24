@@ -56,8 +56,8 @@
               </el-popover>
             </span>
             <div v-else-if="item.prop == 'option'" class="content-right-options">
-              <span :title="$t('overall.view')" @click="detail(scope.row)" class="content-right-option" :id="'prom-detail-'+scope.row.id"><i class="nz-icon nz-icon-view"></i></span>
-              &nbsp;
+              <!--<span :title="$t('overall.view')" @click="detail(scope.row)" class="content-right-option" :id="'prom-detail-'+scope.row.id"><i class="nz-icon nz-icon-view"></i></span>
+              &nbsp;-->
               <span :title="$t('overall.edit')" @click="edit(scope.row)" class="content-right-option" :id="'prom-edit-'+scope.row.id"><i class="nz-icon nz-icon-edit"></i></span>
               &nbsp;
               <span :title="$t('overall.delete')" @click="del(scope.row)" class="content-right-option" :id="'prom-del-'+scope.row.id"><i class="nz-icon nz-icon-delete"></i></span>

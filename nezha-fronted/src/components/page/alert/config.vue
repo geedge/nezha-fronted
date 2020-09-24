@@ -53,6 +53,7 @@
         :cell-class-name="messageStyle"
         style="width: 100%;"
         @sort-change="tableDataSort"
+        @row-dblclick="detail"
       >
         <el-table-column
           :resizable="false"

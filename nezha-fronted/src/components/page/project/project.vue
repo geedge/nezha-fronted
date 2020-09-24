@@ -64,6 +64,7 @@
           v-loading="tools.loading"
           style="width: 100%;"
           @sort-change="tableDataSort"
+          @row-dblclick="detailEndpoint"
         >
           <el-table-column
             :resizable="false"
