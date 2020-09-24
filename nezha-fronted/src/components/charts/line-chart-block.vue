@@ -490,47 +490,23 @@
 
           }
         };
+
         let stackIconBorderColor = (chartInfo.type==='stackArea'?'#53a3cb':'#7e7e7e');
         let stackIconChooseBorderColor = (chartInfo.type==='stackArea'?'#7e7e7e':'#53a3cb');
-        let maxValue=0;
-        let minValue=0;
         if(chartInfo.unit &&dataArg.length>0){
           maxValue=dataArg[0].data[0][1];
           minValue=dataArg[0].data[0][1];
           for(let j = 0; j < dataArg.length ; j++){
-            for (let i = 0; i < dataArg[j].data.length - 1; i++) {
-              maxValue = (maxValue < Number(dataArg[j].data[i+1][1]) ? Number(dataArg[j].data[i+1][1]) : maxValue);
-              minValue = (minValue > Number(dataArg[j].data[i+1][1]) ? Number(dataArg[j].data[i+1][1]) : minValue);
-            }
+            dataArg[j].showAllSymbol=false;
           }
         }
-        let chartUnit=chartInfo.unit?chartInfo.unit:2;
-        let unit=chartDataFormat.getUnit(chartUnit);
-        maxValue=chartDataFormat.formatDatas(maxValue,unit.type,'ceil',unit.ascii);
-        minValue=chartDataFormat.formatDatas(minValue,unit.type,'floor',unit.ascii);
-        let oldValue=maxValue;
-        let dot=0;
-        if(maxValue==1){
-          dot++;
-        }
-        if(oldValue>10){
-          while(oldValue>10){
-            oldValue=oldValue/10;
-          }
-        }else if(oldValue<1&&maxValue!==0){
-          while(oldValue<1&&oldValue>0){
-            oldValue=oldValue*10;
-            dot++;
-          }
-          maxValue=Math.ceil(oldValue)/Math.pow(10,dot);
-          dot++;
-        }
-        let copies=chartDataFormat.copies(oldValue,unit.type);
-        // console.log(oldValue,copies,maxValue);
-        let oldDot=2;
-        if(maxValue<=1){
-          oldDot=dot>6?6:dot;
-        }
+        let maxValueCopies = this.getMaxValue(dataArg,chartInfo);
+        let maxValue=maxValueCopies.maxValue;
+        let minValue=maxValueCopies.minValue;
+        let dot=maxValueCopies.dot;
+        let copies=maxValueCopies.copies;
+        let unit=maxValueCopies.unit;
+        let oldDot=maxValueCopies.oldDot;
         var option = {
           title:{
             show:false,
@@ -607,8 +583,16 @@
                   }
                   return [x,y];
                 }else {//preview page
-                  x = pointX - boxWidth;
-                  y = pointY+10;
+                  if(pointX<(viewWidth/2)){//说明鼠标在左边放不下提示框
+                    x=pointX+10;
+                  }else{
+                    x = pointX - boxWidth;
+                  }
+                  if(pointY<(viewHeight/2)){//说明鼠标上面放不下提示框
+                    y = pointY+10;
+                  }else {
+                    y = pointY-boxHeight;
+                  }
                   return [x,y];
                 }
               }else {
@@ -684,6 +668,8 @@
           },
           xAxis: {
             type: 'time',
+            animation:false,
+            showAllSymbol:false,
             axisLabel: {
               interval: '0',
               showMaxLabel:false,
@@ -778,7 +764,6 @@
 
         // params.series = dataArg;
         if (chartSite === 'local') { // 本地显示
-          // console.log(legend,'legend');
           if(legend){
             this.legendList = [];
             legend.forEach((item, i) => {
@@ -1489,8 +1474,23 @@
       loadMore(){
         this.seriesItemArr=this.seriesItem;
         this.legendListMore=this.legendList;
+        console.log(this.seriesItem,'irate(mysql_global_status_commands_total[5m])>0');
+        console.log(this.data);
+        let chartInfo=this.data;
+        let dataArg=this.seriesItem;
+        let maxValueCopies = this.getMaxValue(dataArg,chartInfo);
+        let maxValue=maxValueCopies.maxValue;
+        let minValue=maxValueCopies.minValue;
+        let dot=maxValueCopies.dot;
+        let copies=maxValueCopies.copies;
+        let unit=maxValueCopies.unit;
+        let oldDot=maxValueCopies.oldDot;
         this.echartStore.setOption({
-          series:this.seriesItem
+          series:this.seriesItem,
+          yAxis:{
+            minInterval: chartDataFormat.Interval(maxValue,copies,unit.type,'min'),
+            maxInterval: chartDataFormat.Interval(maxValue,copies,unit.type,'max'),
+          }
         });
         if(this.hasLegendOptions){
           this.computeLegendData(this.legendListMore,this.seriesItemArr,'local')
@@ -1508,8 +1508,22 @@
       loadScreenMore(){
         this.seriesItemArrScreen=this.seriesItemScreen;
         this.screenLegendListMore=this.screenLegendList;
+        let chartInfo=this.data;
+        let dataArg=this.seriesItem;
+
+        let maxValueCopies = this.getMaxValue(dataArg,chartInfo);
+        let maxValue=maxValueCopies.maxValue;
+        let minValue=maxValueCopies.minValue;
+        let dot=maxValueCopies.dot;
+        let copies=maxValueCopies.copies;
+        let unit=maxValueCopies.unit;
+        let oldDot=maxValueCopies.oldDot;
         this.echartModalStore.setOption({
-          series:this.seriesItemScreen
+          series:this.seriesItemScreen,
+          yAxis:{
+            minInterval: chartDataFormat.Interval(maxValue,copies,unit.type,'min'),
+            maxInterval: chartDataFormat.Interval(maxValue,copies,unit.type,'max'),
+          }
         });
         if(this.hasLegendOptions){
           this.computeLegendData(this.screenLegendListMore,this.seriesItemArrScreen,'screen')
@@ -1641,6 +1655,55 @@
         }else{
           legend.sort((x,y)=>y[option.option] - x[option.option])
           option.sort = 'asc'
+        }
+      },
+      getMaxValue(dataArg,chartInfo){
+        let maxValue=0;
+        let minValue=0;
+        if(chartInfo.unit &&dataArg.length>0){
+          maxValue=dataArg[0].data[0][1];
+          minValue=dataArg[0].data[0][1];
+          for(let j = 0; j < dataArg.length ; j++){
+            for (let i = 0; i < dataArg[j].data.length - 1; i++) {
+              maxValue = (maxValue < Number(dataArg[j].data[i+1][1]) ? Number(dataArg[j].data[i+1][1]) : maxValue);
+              minValue = (minValue > Number(dataArg[j].data[i+1][1]) ? Number(dataArg[j].data[i+1][1]) : minValue);
+            }
+          }
+        }
+        let chartUnit=chartInfo.unit?chartInfo.unit:2;
+        let unit=chartDataFormat.getUnit(chartUnit);
+        maxValue=chartDataFormat.formatDatas(maxValue,unit.type,'ceil',unit.ascii);
+        minValue=chartDataFormat.formatDatas(minValue,unit.type,'floor',unit.ascii);
+        let oldValue=maxValue;
+        let dot=0;
+        if(maxValue==1){
+          dot++;
+        }
+        if(oldValue>10){
+          while(oldValue>10){
+            oldValue=oldValue/10;
+          }
+        }else if(oldValue<1&&maxValue!==0){
+          while(oldValue<1&&oldValue>0){
+            oldValue=oldValue*10;
+            dot++;
+          }
+          maxValue=Math.ceil(oldValue)/Math.pow(10,dot);
+          dot++;
+        }
+        let copies=chartDataFormat.copies(oldValue,unit.type);
+        // console.log(oldValue,copies,maxValue);
+        let oldDot=2;
+        if(maxValue<=1){
+          oldDot=dot>6?6:dot;
+        }
+        return {
+          maxValue,
+          dot,
+          copies,
+          minValue,
+          unit,
+          oldDot
         }
       }
     },
