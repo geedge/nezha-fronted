@@ -79,10 +79,11 @@
         </div>
       </div>
       <!--拓扑图的放大缩小-->
-      <!--<div class="network-zoom">-->
-        <!--<div @click='zoomChange(0.1)'><i class="nz-icon nz-icon-hexagonBorder zoom-icon"></i></div>-->
-        <!--<div @click='zoomChange(-0.1)'><i class="nz-icon nz-icon-hexagonBorder zoom-icon"></i></div>-->
-      <!--</div>-->
+      <div class="right-bottom-zoom">
+        <div class="zoom-option" style="border-bottom: 1px solid #c5c8cb;" @click="zoomChange(0.1)"><span><i class="nz-icon nz-icon-enlarge"></i></span></div>
+        <div class="zoom-option" @click="zoomChange(-0.1)"><span><i class="nz-icon nz-icon-narrow"></i></span></div>
+        <div></div>
+      </div>
       <expression-info
         v-if="expressionsInfoShow&&!editVisNetwork"
         :lineId="lineId"
@@ -1142,9 +1143,23 @@
     position: absolute;
     bottom: 15px;
     right: 15px;
+    opacity: 0.42;
+    background: #FFFFFF;
+    border: 1px solid #E7EAED;
+    box-shadow: -1px 1px 9px -1px rgba(205,205,205,0.77);
   }
   .zoom-icon{
-    font-size: 42px;
+    font-size: 24px;
+    color: #999999;
+  }
+  .network-zoom .zoom-box:first-child{
+    border-bottom: 1px solid rgba(0,0,0,0.7);
+    border-radius: 4px 4px 0 0;
+    padding: 5px;
+  }
+  .network-zoom .zoom-box:last-child{
+    border-radius:  0 0 4px 4px;
+    padding: 5px;
   }
   #network_id /deep/ .vis-network{
     outline: none;
