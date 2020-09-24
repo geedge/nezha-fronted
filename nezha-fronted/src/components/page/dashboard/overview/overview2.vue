@@ -1154,9 +1154,12 @@
         let geo=this.$refs.dataCenterMap.getOption().geo;
         if(geo&&geo.length>0){
           let zoom=geo[0].zoom
-          this.$refs.dataCenterMap.setOption({geo:{zoom:zoom+val}})
+          let limit=geo[0].scaleLimit;
+          let value=zoom+val;
+          if(value<=limit.max && value>=limit.min ){
+            this.$refs.dataCenterMap.setOption({geo:{zoom:value}})
+          }
         }
-        console.log(geo)
       },
       trendTool(type, param1, param2, param3) {
         if (type == 'difference') { //两个数组的差集
