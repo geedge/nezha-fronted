@@ -6,13 +6,19 @@
       </div>
       <template v-else>
         <div class="top-tool-main-left">
-          <el-dropdown @command="panelChange" class="panel-dropdown-title" trigger="click" placement="bottom-start" v-scrollBar:el-dropdown>
+          <el-dropdown @command="panelChange" class="panel-dropdown-title" trigger="click" placement="bottom-start" v-scrollBar:el-dropdown >
             <el-row @click.native="scrollbarHeightHandler" :gutter="10" class="el-dropdown-link" style="padding-right: 5px">
               <el-col :span="21" class="panel-list-title" :title="showPanel.name">{{showPanel.name}}</el-col>
               <el-col :span="3" style="padding-left:0px !important;"><i class="nz-icon nz-icon-arrow-down"></i></el-col>
             </el-row>
             <el-dropdown-menu class="nz-dashboard-dropdown" slot="dropdown">
-              <el-dropdown-item>{{$t('dashboard.panel.createPanelTitleSec')}}</el-dropdown-item>
+              <!--<el-dropdown-item>{{$t('dashboard.panel.createPanelTitleSec')}}</el-dropdown-item>-->
+              <el-dropdown-item >
+                <el-row class="panel-list-width" :gutter="10" >
+                  <el-col :span="21"><el-input size="mini" v-model="filterPanel"  @click.native.stop="filterPanelFocus($event)" @input="filterPanelFunc" clearable :placeholder="$t('overall.search')"></el-input></el-col>
+                  <el-col :span="3"><span :title='$t("dashboard.panel.createPanelTitleSec")' @click="toAdd"><i class="nz-icon nz-icon-plus"></i></span></el-col>
+                </el-row>
+              </el-dropdown-item>
               <draggable v-model="panelData" @start="start" @end="end" :move="move" :key
                          :scroll-sensitivity="150"
                          :options="{
@@ -27,7 +33,7 @@
                animation:150,
                handle:'.panelContent',
              }"  >
-                <el-dropdown-item v-for="item in panelData" :key="item.id+1" class="panel-title-li"
+                <el-dropdown-item v-for="item in showPanelList" :key="item.id+1" class="panel-title-li"
                                   :class="showPanel.id==item.id?'nz-dashboard-dropdown-bg':''" :command="item">
                   <!--{{item.name}}-->
                   <el-row  :gutter="10" class="panel-list-width" >
@@ -164,6 +170,8 @@
           searchName: ''
         },
         panelId: 0,
+        filterPanel:'',
+        showPanelList:[],
         //---图表相关参数--end
       }
     },
@@ -186,7 +194,6 @@
       //面板相关操作
       panelChange(val) {
         if (!val) {
-          this.toAdd();
           return false;
         }
         this.filter.searchName='';
@@ -375,6 +382,7 @@
         this.$get('panel').then(response => {
           if (response.code === 200) {
             this.panelData = response.data.list;
+            this.showPanelList = this.panelData;
             for (let i = 0; i < this.panelData.length; i++) {
               if (this.panelData[i].id == this.showPanel.id) {
                 this.showPanel.name = this.panelData[i].name;
@@ -388,6 +396,7 @@
         this.$get('panel?type=dashboard').then(response => {
           if (response.code === 200) {
             this.panelData = response.data.list;
+            this.showPanelList = this.panelData;
             this.dataTotalListBak=[...response.data.list]
             let isInitData = false;
             if (response.data.list.length > 0) {
@@ -652,6 +661,18 @@
         panelContent.style.background = '#d8dce1';
 
       },
+      filterPanelFocus:function(e){
+        e.stopPropagation();
+      },
+      filterPanelFunc:function(){
+        let $self=this;
+        if($self.filterPanel&&$self.filterPanel.trim() != ''){
+          this.showPanelList=this.panelData.filter(item=>item.name.toLowerCase().indexOf($self.filterPanel.toLowerCase()) != -1)
+        }else{
+          this.showPanelList = this.panelData;
+        }
+
+      }
     },
     created() {
       this.getTableData();
@@ -686,6 +707,7 @@
 
   .panel-list-width {
     width:240px;
+    overflow: hidden;
   }
 
   .panel-dropdown-title {

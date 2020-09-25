@@ -136,7 +136,7 @@
         <div style="display: inline-block;float: right;margin-right:15px;"><i style="font-size: 24px;" :class="{'nz-icon nz-icon-push-pin-line': isShrink, 'nz-icon nz-icon-push-pin-fill': !isShrink}" :style="{color : !isShrink ? '#EE9D3F' : ''}"></i></div>
       </div>
     </div><div class="content-right right-slot" :class="{'right-slot-open': isShrink}">
-      <router-view/>
+      <router-view v-if="isRouterAlive"/>
     </div>
 
     <transition name="right-box">
@@ -187,6 +187,7 @@
           tagCheckMap:{},
           lastCheckSize:0,
           assetPingSwitch:true,
+          isRouterAlive: true
         }
       },
       computed: {
@@ -619,15 +620,19 @@
           }
         },
         jumpTo(route) {
-          /*bus.$emit("menu-change", route);
-          localStorage.setItem('nz-parent-menu', this.parentMenu);
-          localStorage.setItem('nz-menu-change', route);*/
+          if(route == this.route){
+            this.reload();
+          }
           this.$router.push({
             path: route,
             query: {
               t: +new Date()
             }
           });
+        },
+        reload () {
+          this.isRouterAlive = false
+          this.$nextTick(() => (this.isRouterAlive = true))
         }
       },
     }
