@@ -180,10 +180,12 @@
   import echarts from 'echarts';
   import bus from '../../libs/bus';
   import loading from "../common/loading";
-  import chartDataFormat from './chartDataFormat'
-  import {randomcolor} from  '../common/js/radomcolor/randomcolor.js'
-  import timePicker from '../common/timePicker'
+  import chartDataFormat from './chartDataFormat';
+  import {randomcolor} from  '../common/js/radomcolor/randomcolor.js';
+  import timePicker from '../common/timePicker';
   import chartConfig from "../page/dashboard/overview/chartConfig";
+  import {getChart, setChart} from "../common/js/common";
+
   export default {
     name: 'lineChartBlock',
     components: {
@@ -211,7 +213,8 @@
       isExplore:{
         type:Boolean,
         default:false,
-      }
+      },
+      tempDom: Object
     },
     data() {
       return {
@@ -288,8 +291,8 @@
       },
       mouseEnterChart(){
         this.caretShow=true;
-        if (this.echartStore) {
-          this.echartStore.setOption({
+        if (getChart(this.chartIndex)) {
+          getChart(this.chartIndex).setOption({
             toolbox: {
               show:true,
             }
@@ -298,8 +301,8 @@
       },
       mouseLeaveChart(){
         this.caretShow=false;
-        if (this.echartStore) {
-          this.echartStore.setOption({
+        if (getChart(this.chartIndex)) {
+          getChart(this.chartIndex).setOption({
             toolbox: {
               show:false,
             }
@@ -327,28 +330,28 @@
       clickLegend(legendName,index){
         //点击图表某一个legend，图表只显示当前点击的曲线或柱状图，其它隐藏，再次点击已选中的legend ，显示全部
         let curIsGrey=this.isGrey[index];
-        if(this.echartStore){
+        if(getChart(this.chartIndex)){
           this.legendListMore.forEach((item,i)=>{
             let isGrey = this.isGrey[i];
             if(index != i){
               if(!curIsGrey && !isGrey){
-                this.echartStore.dispatchAction({
+                getChart(this.chartIndex).dispatchAction({
                   type: 'legendUnSelect',
                   name: item.name
                 });
               }else if(!curIsGrey && isGrey){
-                this.echartStore.dispatchAction({
+                getChart(this.chartIndex).dispatchAction({
                   type: 'legendSelect',
                   name: item.name
                 });
               }else{
-                this.echartStore.dispatchAction({
+                getChart(this.chartIndex).dispatchAction({
                   type: 'legendUnSelect',
                   name: item.name
                 });
               }
             }else {
-              this.echartStore.dispatchAction({
+              getChart(this.chartIndex).dispatchAction({
                 type: 'legendSelect',
                 name: item.name
               });
@@ -419,8 +422,8 @@
         }
       },
       clearData(){
-        if(this.echartStore){
-          this.echartStore.clear();
+        if(getChart(this.chartIndex)){
+          getChart(this.chartIndex).clear();
         }
       },
       formatLegend(chartWidth,name){
@@ -428,7 +431,7 @@
           return '';
         }
         //计算宽度
-        var span = document.createElement("span");
+        /*var span = document.createElement("span");
         var result = {};
         result.width = span.offsetWidth;
         result.height = span.offsetHeight;
@@ -443,12 +446,14 @@
           span.innerText = name;
         }
         var txtWidth = parseFloat(window.getComputedStyle(span).width) - result.width;
-        document.body.removeChild(span);
-
+        document.body.removeChild(span);*/
+        let span = document.querySelector(".temp-dom");
+        span.textContent = name;
+        let txtWidth = parseFloat(window.getComputedStyle(span).width) - this.tempDom.width;
         if(txtWidth < chartWidth){
           return name;
         }else {
-          var charNum = `${(chartWidth-100)/(txtWidth/name.length)}`;
+          let charNum = `${(chartWidth-100)/(txtWidth/name.length)}`;
           return name.slice(0,charNum)+'...';
         }
       },
@@ -469,7 +474,8 @@
           maxTime = dataArg[0].data[len][0];
         }
         if (chartSite === 'local') {
-          this.echartStore = echarts.init(ele);
+          setChart(this.chartIndex, echarts.init(ele));
+          //getChart(this.chartIndex) = echarts.init(ele);
           //chartId='lineChartArea';
         }else if (chartSite === 'screen') {
           this.echartModalStore = echarts.init(ele);
@@ -785,19 +791,19 @@
             setTimeout(function () {
               let divHeight = self.$refs.legendArea.offsetHeight;
               if(!chartInfo.height){
-                self.echartStore.resize({height:(400-divHeight-self.$chartResizeTool.titleHeight-self.$chartResizeTool.chartBlankHeight)});
+                getChart(self.chartIndex).resize({height:(400-divHeight-self.$chartResizeTool.titleHeight-self.$chartResizeTool.chartBlankHeight)});
               }else {
-                self.echartStore.resize({height:(chartInfo.height-divHeight-self.$chartResizeTool.titleHeight-self.$chartResizeTool.chartBlankHeight)});
+                getChart(self.chartIndex).resize({height:(chartInfo.height-divHeight-self.$chartResizeTool.titleHeight-self.$chartResizeTool.chartBlankHeight)});
               }
               if(dataArg&&dataArg.length>0){
-                self.echartStore.clear();
-                self.echartStore.setOption(option);//创建图表
+                getChart(self.chartIndex).clear();
+                getChart(self.chartIndex).setOption(option);//创建图表
                 self.noData=false;
               }else{
                 self.noData=true;
                 option=chartConfig.getOption('noData')
-                self.echartStore.clear();
-                self.echartStore.setOption(option);//创建图表
+                getChart(self.chartIndex).clear();
+                getChart(self.chartIndex).setOption(option);//创建图表
               }
 
               self.$refs['localLoading'+self.chartIndex].endLoading();
@@ -805,9 +811,9 @@
             }, 100);
 
             window.addEventListener('resize', function () {
-              self.echartStore.resize();
+              getChart(self.chartIndex).resize();
             });
-            this.echartStore.on('magictypechanged', function (params) {
+            getChart(this.chartIndex).on('magictypechanged', function (params) {
                 self.isStackArea = !self.isStackArea;
                 if(self.isStackArea){
                   this.setOption({
@@ -1119,8 +1125,8 @@
         chartBox.style.height = `${this.$chartResizeTool.calculateHeight(chartItem.height)}px`;
       },
       clearChart(){
-        if(this.echartStore){
-          this.echartStore.clear();
+        if(getChart(this.chartIndex)){
+          getChart(this.chartIndex).clear();
         }
         if(this.echartModalStore){
           this.echartModalStore.clear();
@@ -1485,7 +1491,7 @@
         let copies=maxValueCopies.copies;
         let unit=maxValueCopies.unit;
         let oldDot=maxValueCopies.oldDot;
-        this.echartStore.setOption({
+        getChart(this.chartIndex).setOption({
           series:this.seriesItem,
           yAxis:{
             minInterval: chartDataFormat.Interval(maxValue,copies,unit.type,'min'),
@@ -1498,9 +1504,9 @@
         this.$nextTick(()=>{
           let divHeight = this.$refs.legendArea.offsetHeight;
           if(!this.chartInfo.height){
-            this.echartStore.resize({height:(400-divHeight-this.$chartResizeTool.titleHeight-this.$chartResizeTool.chartBlankHeight)});
+            getChart(this.chartIndex).resize({height:(400-divHeight-this.$chartResizeTool.titleHeight-this.$chartResizeTool.chartBlankHeight)});
           }else {
-            this.echartStore.resize({height:(this.chartInfo.height-divHeight-this.$chartResizeTool.titleHeight-this.$chartResizeTool.chartBlankHeight)});
+            getChart(this.chartIndex).resize({height:(this.chartInfo.height-divHeight-this.$chartResizeTool.titleHeight-this.$chartResizeTool.chartBlankHeight)});
           }
         })
       },

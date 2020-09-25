@@ -15,3 +15,13 @@ export function getUUID(){
 
   return (S4() + S4() + "-" + S4() + "-" + S4() + "-" + S4() + "-" + S4() + S4() + S4());
 }
+
+const chartCache = {};
+
+export function getChart(key) {
+  return chartCache[`chart${key}`];
+}
+
+export function setChart(key, value) {
+  chartCache[`chart${key}`] = value;
+}

@@ -38,9 +38,18 @@
     height: 5px;
     box-sizing: inherit;
   }
+
+  .temp-dom {
+    visibility: hidden;
+    font-size: 14px;
+    position: fixed;
+  }
 </style>
 <template>
   <div class="list-width"  id="listContainer"><!--v-drag-->
+
+    <span class="temp-dom"></span>
+
     <draggable v-model="dataList" @start="start" @end="end" :move="move" :key
                :scroll-sensitivity="150"
                :options="{
@@ -58,7 +67,7 @@
                }"  >
       <div v-for="(item, index) in dataList" :key="item.id" :id="'chart-' + item.id" :name="item.title" :class="{'drag-disabled': !draggable,'chartBox':true}" v-show="!item.isHide">
         <line-chart-block v-if="item.type === 'line' || item.type === 'bar' ||item.type == 'stackArea' || item.type === 4" :key="'inner' + item.id"
-                          :ref="'editChart'+item.id"
+                          :ref="'editChart'+item.id" :temp-dom="tempDom"
                           @on-refresh-data="refreshChart"
                           @on-remove-chart-block="removeChart"
                           @on-duplicate-chart-block="duplicateChart"
@@ -162,6 +171,7 @@
       draggable: {type: Boolean, default: true},
       detail: Object
     },
+
     components: {
       chartAlertList,
       chartDetail,
@@ -196,11 +206,14 @@
         dragging: null,
         chartDataCacheGroup:new Map,//图表数据缓存，用于查询：id:{}
         stepHeight: 50,
+
+        tempDom: {height: "", width: ""},
       };
     },
     methods: {
-      change (event) {
-        console.log('change', event)
+      tempDomInit() {
+        let span = document.querySelector(".temp-dom");
+        this.tempDom.width = span.offsetWidth;
       },
       start (event) {
         //console.log('start', event, this.dataList);
@@ -898,6 +911,7 @@
                                   width: 1,
                                   opacity: 0.9
                                 },
+                                animation: false,
                                 type: chartInfo.type,
                               },
                               metric_name: '',
@@ -1682,6 +1696,9 @@
           }
         }, 100);
       },
+    },
+    mounted() {
+      this.tempDomInit();
     },
   };
 
