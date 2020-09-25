@@ -1119,14 +1119,10 @@
         }
       },
       computeDistance:function(str){
-        var width = 0;
-        var html = document.createElement('span');
-        html.innerText = str;
-        html.className = 'getTextWidth';
-        document.querySelector('body').appendChild(html);
-        width = document.querySelector('.getTextWidth').offsetWidth;
-        document.querySelector('.getTextWidth').remove();
-        return Number('-'+(width+5));
+        let span = document.querySelector(".temp-dom");
+        span.textContent = str;
+        let txtWidth = parseFloat(window.getComputedStyle(span).width);
+        return Number('-'+(txtWidth+5));
       },
       modelStaticData(chartInfo, filterType) {
         let series = [];

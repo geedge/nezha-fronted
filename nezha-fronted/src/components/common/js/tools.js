@@ -103,13 +103,13 @@ export const scrollBar = {
     const { arg } = binding;
     if (arg === "el-table") {
       el = el.querySelector(".el-table__body-wrapper");
-      !el && console.warn("未发现className为el-table__body-wrapper的dom");
+      //!el && console.warn("未发现className为el-table__body-wrapper的dom");
     } else if (arg === "el-dropdown") {
       el = document.querySelector(".el-dropdown-menu");
-      !el && console.warn("未发现className为el-dropdown-menu的dom");
+      //!el && console.warn("未发现className为el-dropdown-menu的dom");
     } else if (arg == "legend") {
       el = el.querySelector(".legend-container");
-      !el && console.warn("未发现className为legend-container的dom");
+      //!el && console.warn("未发现className为legend-container的dom");
     }
 
     // 启用x轴后不让原生滚动条出来作乱
@@ -117,11 +117,11 @@ export const scrollBar = {
       vnode.context.$nextTick(() => {
         if (arg === "xterm") {
           el = el.querySelector(".xterm-viewport");
-          !el && console.warn("未发现className为xterm-viewport的dom");
+          //!el && console.warn("未发现className为xterm-viewport的dom");
         }
         if(arg==="metric-label-cascader"){
           el = el.querySelector(".el-cascader__tags");
-          !el && console.warn("未发现className为el-cascader__tags的dom");
+          //!el && console.warn("未发现className为el-cascader__tags的dom");
         }
         el.classList.add("ps");
         el.addEventListener("ps-scroll-y", () => {
@@ -134,30 +134,30 @@ export const scrollBar = {
         el_scrollBar(el);
       });
 
-      const rules = ["fixed", "absolute", "relative"];
+      /*const rules = ["fixed", "absolute", "relative"];
       if (!rules.includes(window.getComputedStyle(el, null).position)) {
         console.error(
           `perfect-scrollbar所在的容器的position属性必须是以下之一：${rules.join(
             "、"
           )}`
         );
-      }
+      }*/
     }
   },
   componentUpdated(el, binding, vnode, oldVnode) {
     const { arg, value } = binding;
     if (arg === "el-table") {
       el = el.querySelector(".el-table__body-wrapper");
-      !el && console.warn("未发现className为el-table__body-wrapper的dom");
+      //!el && console.warn("未发现className为el-table__body-wrapper的dom");
     } else if (arg === "el-dropdown") {
       el = document.querySelector(".el-dropdown-menu");
-      !el && console.warn("未发现className为el-dropdown-menu的dom");
+      //!el && console.warn("未发现className为el-dropdown-menu的dom");
     }else if (arg === "xterm") {
       el = el.querySelector(".xterm-viewport");
-      !el && console.warn("未发现className为xterm-viewport的dom");
+      //!el && console.warn("未发现className为xterm-viewport的dom");
     }else if(arg==="metric-label-cascader"){
       el = el.querySelector(".el-cascader__tags");
-      !el && console.warn("未发现className为el-cascader__tags的dom");
+      //!el && console.warn("未发现className为el-cascader__tags的dom");
     }
     setTimeout(() => {
       el.classList.add("ps");
@@ -201,8 +201,7 @@ export const bottomBoxWindow = {
     let subInitialHeight = subListDom.offsetHeight+resizeBarHeight;
 
     mainModalDom.style.display = "block";
-    resizeModalDom.style.height = `${subInitialHeight}px`;
-    resizeModalDom.style.display = "block";
+    resizeModalDom.style.cssText = `height: ${subInitialHeight}px; display: block;`;
     resizeBarDom.style.display = "none";
     let resizeModalEndHeight;
     //点击时鼠标的Y轴位置
@@ -292,7 +291,6 @@ export const bottomBoxWindow = {
   },
   showSubListWatch(vm, n) {
     vm.bottomBox.inTransform = n;
-    console.info(vm.bottomBox.inTransform)
     if (!n) {
       vm.mainTableHeight = vm.$tableHeight.normal; //重置table的高度
       vm.tools.toTopBtnTop = vm.$tableHeight.toTopBtnTop;

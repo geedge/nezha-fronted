@@ -433,22 +433,6 @@
           return '';
         }
         //计算宽度
-        /*var span = document.createElement("span");
-        var result = {};
-        result.width = span.offsetWidth;
-        result.height = span.offsetHeight;
-        span.style.visibility = "hidden";
-        span.style.fontSize = 14;
-        span.style.fontFamily = "Arial";
-        span.style.display = "inline-block";
-        document.body.appendChild(span);
-        if(typeof span.textContent != "undefined"){
-          span.textContent = name;
-        }else{
-          span.innerText = name;
-        }
-        var txtWidth = parseFloat(window.getComputedStyle(span).width) - result.width;
-        document.body.removeChild(span);*/
         let span = document.querySelector(".temp-dom");
         span.textContent = name;
         let txtWidth = parseFloat(window.getComputedStyle(span).width) - this.tempDom.width;
@@ -618,9 +602,7 @@
               }
             },
             formatter:function(params){
-              //display:inline-block;white-space:nowrap;overflow-x:hidden;text-overflow:ellipsis;
               let str = `<div>`;
-              //let str = `<div  style='white-space:nowrap;overflow-x:hidden;text-overflow:ellipsis;min-width:150px;max-width:600px;display:inline-block;line-height: 18px;font-size:12px;font-family: Roboto,Helvetica Neue,Arial,sans-serif;'>`;
               let sum = 0;
               params.forEach((item, i) => {
                 let tip=legend[item.seriesIndex];
@@ -1031,23 +1013,9 @@
           return '';
         }
         //计算宽度
-        var span = document.createElement("span");
-        var result = {};
-        result.width = span.offsetWidth;
-        result.height = span.offsetHeight;
-        span.style.visibility = "hidden";
-        span.style.fontSize = 14;
-        span.style.fontFamily = "Arial";
-        span.style.display = "inline-block";
-        document.body.appendChild(span);
-        if(typeof span.textContent != "undefined"){
-          span.textContent = str;
-        }else{
-          span.innerText = str;
-        }
-        var txtWidth = parseFloat(window.getComputedStyle(span).width) - result.width;
-        document.body.removeChild(span);
-
+        let span = document.querySelector(".temp-dom");
+        span.textContent = name;
+        let txtWidth = parseFloat(window.getComputedStyle(span).width) - this.tempDom.width;
         if(txtWidth < chartWidth){
           return str;
         }else {
@@ -1418,14 +1386,10 @@
         });
       },
       computeDistance:function(str){
-        var width = 0;
-        var html = document.createElement('span');
-        html.innerText = str;
-        html.className = 'getTextWidth';
-        document.querySelector('body').appendChild(html);
-        width = document.querySelector('.getTextWidth').offsetWidth;
-        document.querySelector('.getTextWidth').remove();
-        return Number('-'+(width+5));
+        let span = document.querySelector(".temp-dom");
+        span.textContent = str;
+        let txtWidth = parseFloat(window.getComputedStyle(span).width);
+        return Number('-'+(txtWidth+5));
       },
       showLoad(chartItem) {
         //设置高度
@@ -1482,8 +1446,8 @@
       loadMore(){
         this.seriesItemArr=this.seriesItem;
         this.legendListMore=this.legendList;
-        console.log(this.seriesItem,'irate(mysql_global_status_commands_total[5m])>0');
-        console.log(this.data);
+        //console.log(this.seriesItem,'irate(mysql_global_status_commands_total[5m])>0');
+        //console.log(this.data);
         let chartInfo=this.data;
         let dataArg=this.seriesItem;
         let maxValueCopies = this.getMaxValue(dataArg,chartInfo);
