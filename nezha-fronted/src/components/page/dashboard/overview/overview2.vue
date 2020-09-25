@@ -19,7 +19,7 @@
       <!--第一行-->
       <div class="content-row-box">
         <div class="content-col-box">
-          <div class="content-col-content" v-loading="assetLoading" @click="jumpTo('asset')">
+          <div class="content-col-content clickable" v-loading="assetLoading" @click="jumpTo('asset')">
             <div class="content-col-content-icon"><i class="nz-icon nz-icon-overview-project"></i></div>
             <div class="content-num-box">
               <div class="content-col-content-num">
@@ -67,7 +67,7 @@
           </div>
         </div>
         <div class="content-col-box">
-          <div class="content-col-content" v-loading="alertMessageLoading" @click="jumpTo('alertList')">
+          <div class="content-col-content clickable" v-loading="alertMessageLoading" @click="jumpTo('alertList')">
             <div class="content-col-content-icon"><i class="nz-icon nz-icon-overview-alert"></i></div>
             <div class="content-num-box">
               <div class="content-col-content-num">
@@ -1154,9 +1154,12 @@
         let geo=this.$refs.dataCenterMap.getOption().geo;
         if(geo&&geo.length>0){
           let zoom=geo[0].zoom
-          this.$refs.dataCenterMap.setOption({geo:{zoom:zoom+val}})
+          let limit=geo[0].scaleLimit;
+          let value=zoom+val;
+          if(value<=limit.max && value>=limit.min ){
+            this.$refs.dataCenterMap.setOption({geo:{zoom:value}})
+          }
         }
-        console.log(geo)
       },
       trendTool(type, param1, param2, param3) {
         if (type == 'difference') { //两个数组的差集
