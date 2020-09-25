@@ -236,8 +236,12 @@
             }
           },
         },
-        currentProject(n, o) {
-          bus.$emit("current-project-change", n); //告知project.vue
+        currentProject: {
+          immediate: true,
+          deep: true,
+          handler(n, o) {
+            bus.$emit("current-project-change", n); //告知project.vue
+          },
         },
         dcCheckList: {
           deep: true,
@@ -373,8 +377,9 @@
           this.$set(module, 'context_name', '');
         },
         changeCurrentProject(project) {
-          /*localStorage.setItem("nz-current-project", project.id);
-          this.$store.commit("currentProjectChange", project);*/
+
+          // localStorage.setItem("nz-current-project", project.id);
+          this.$store.commit("currentProjectChange", project);
           this.currentProject = project;
         },
         changeCurrentModule(module) {
