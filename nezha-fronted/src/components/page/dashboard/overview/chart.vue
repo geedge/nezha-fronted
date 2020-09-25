@@ -153,6 +153,13 @@
         }
 
         if(this.chartType == 'line'){
+          let maxValueCopies = this.getMaxValue(this.series,{unit:this.unit});
+          let maxValue=maxValueCopies.maxValue;
+          let copies=maxValueCopies.copies;
+          let unit=maxValueCopies.unit;
+          this.option.yAxis.minInterval=chartDataFormat.Interval(maxValue,copies,unit.type,'min')
+          this.option.yAxis.maxInterval=chartDataFormat.Interval(maxValue,copies,unit.type,'max')
+
           if(this.yAxisFormatter){
             this.option.yAxis.axisLabel.formatter=this.yAxisFormatter;
           }else{
@@ -346,8 +353,19 @@
         return alias;
       },
       defaultYAxisFormatter:function(value,index){
-        let unit=chartDataFormat.getUnit(this.unit);
-        return unit.compute(value,index);
+        let maxValueCopies = this.getMaxValue(this.series,{unit:this.unit});
+        let maxValue=maxValueCopies.maxValue;
+        let copies=maxValueCopies.copies;
+        let dot=maxValueCopies.dot;
+        let chartUnit=this.unit;
+        chartUnit=chartUnit?chartUnit:2;
+        let unit=chartDataFormat.getUnit(chartUnit);
+        // console.log(unit);
+        let flag=JSON.stringify(value).length>JSON.stringify(chartDataFormat.Interval(maxValue,copies,unit.type)).length;
+        if(dot===0&&flag){
+          dot=1;
+        }
+        return unit.compute(value,index,-1,dot);
       },
       setRandomColors:function(num){//当线条过多，默认颜色数量不够时须使用此方法,num 颜色的数量，通常传递series的length即可
         let colors=[];
@@ -388,6 +406,55 @@
       },
       chartInit() {
         this.chart=echarts.init(document.getElementById(this.chartId));
+      },
+      getMaxValue(dataArg,chartInfo){
+        let maxValue=0;
+        let minValue=0;
+        if(chartInfo.unit &&dataArg.length>0){
+          maxValue=dataArg[0].data[0][1];
+          minValue=dataArg[0].data[0][1];
+          for(let j = 0; j < dataArg.length ; j++){
+            for (let i = 0; i < dataArg[j].data.length - 1; i++) {
+              maxValue = (maxValue < Number(dataArg[j].data[i+1][1]) ? Number(dataArg[j].data[i+1][1]) : maxValue);
+              minValue = (minValue > Number(dataArg[j].data[i+1][1]) ? Number(dataArg[j].data[i+1][1]) : minValue);
+            }
+          }
+        }
+        let chartUnit=chartInfo.unit?chartInfo.unit:2;
+        let unit=chartDataFormat.getUnit(chartUnit);
+        maxValue=chartDataFormat.formatDatas(maxValue,unit.type,'ceil',unit.ascii);
+        minValue=chartDataFormat.formatDatas(minValue,unit.type,'floor',unit.ascii);
+        let oldValue=maxValue;
+        let dot=0;
+        if(maxValue==1){
+          dot++;
+        }
+        if(oldValue>10){
+          while(oldValue>10){
+            oldValue=oldValue/10;
+          }
+        }else if(oldValue<1&&maxValue!==0){
+          while(oldValue<1&&oldValue>0){
+            oldValue=oldValue*10;
+            dot++;
+          }
+          maxValue=Math.floor(oldValue)/Math.pow(10,dot);
+          dot++;
+        }
+        let copies=chartDataFormat.copies(oldValue,unit.type);
+        // console.log(oldValue,copies,maxValue);
+        let oldDot=2;
+        if(maxValue<=1){
+          oldDot=dot>6?6:dot;
+        }
+        return {
+          maxValue,
+          dot,
+          copies,
+          minValue,
+          unit,
+          oldDot
+        }
       }
     },
     mounted() {
