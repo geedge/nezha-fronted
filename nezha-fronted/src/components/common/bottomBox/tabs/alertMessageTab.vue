@@ -5,10 +5,12 @@
         <div class="sub-list-tab-title">
           <template v-if="from == 'asset'">{{obj.host}}</template>
           <template v-if="from == 'alertRule'">{{obj.alertName}}</template>
+          <template v-if="from == 'endpoint'"><div class="sub-list-tab-title">{{$t("project.endpoint.endpointId")}}: {{obj ? obj.id : ''}}</div></template>
         </div><div
-        class="sub-list-tab" @click="changeTab(from == 'asset' || from == 'alertRule' ? 'panel' : 'detail')">{{$t("overall.detail")}}</div><div
+        class="sub-list-tab" @click="changeTab(from == 'asset' || from == 'alertRule' || from == 'endpoint'? 'panel' : 'detail')">{{$t("overall.detail")}}</div><div
         class="sub-list-tab sub-list-tab-active">{{$t("asset.tableTitle.alerts")}}</div><div v-if="from == 'asset'"
         class="sub-list-tab" @click="changeTab('endpoint')">{{$t("asset.tableTitle.modules")}}</div>
+        <div v-if="from == 'endpoint'" class="sub-list-tab" @click="changeTab('endpointQuery')">{{$t("overall.query")}}</div>
       </div>
       <div class="top-tool-right">
         <div class="top-tool-search">
@@ -550,6 +552,8 @@
           this.searchLabel.ruleId = this.obj.id;
         } else if (this.from == "asset") {
           this.searchLabel.assetId = this.obj.id;
+        }else if(this.from == 'endpoint'){
+          this.searchLabel.endpointId=this.obj.id;
         }
         this.pageObj.pageNo = 1;
         for (let item in searchObj) {
@@ -590,6 +594,11 @@
               return item.label != "alertType" && item.label != "asset"
             });
             this.searchLabel.assetId = n.id;
+          } else if(this.from == 'endpoint'){
+            this.searchMsg.searchLabelList = this.searchMsg.searchLabelList.filter((item, index) => {
+              return item.label != "alertType" && item.label != "endpoint"
+            });
+            this.searchLabel.endpointId = n.id;
           }
           if (n.alertNum) {
             this.defaultSearchValue = 1;

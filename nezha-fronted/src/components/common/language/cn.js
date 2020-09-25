@@ -841,8 +841,9 @@ const cn = {
       dialogTitle: "历史值",
       hideSameLabels: "隐藏重复标签",
       stateInfo_230009: "无法获取prometheus服务",
-      stateInfo_230010: "prometheus服务可用",
-      stateInfo_230011: "prometheus服务不可用 "
+      stateInfo_230010: "Prometheus服务可用",
+      stateInfo_230011: "Endpoint 连接错误",
+      alerts:"告警",
     },
     metrics: {
       metrics: "指标",

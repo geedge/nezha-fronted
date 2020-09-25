@@ -20,7 +20,7 @@
         <!--机柜-->
       <cabinet-tab v-show="subResizeShow" v-if="from == 'dc' && targetTab == 'cabinet'" :obj="obj" @changeTab="changeTab"></cabinet-tab>
         <!--告警信息-->
-      <alert-message-tab v-show="subResizeShow" v-if="((from == 'alertRule' || from == 'asset') && targetTab == 'alertMessage')" :from="from" :obj="obj" @changeTab="changeTab"></alert-message-tab>
+      <alert-message-tab v-show="subResizeShow" v-if="((from == 'alertRule' || from == 'asset' || from == 'endpoint') && targetTab == 'alertMessage')" :from="from" :obj="obj" @changeTab="changeTab"></alert-message-tab>
         <!--asset页的endpoint列表-->
       <endpoint-tab v-show="subResizeShow" v-if="from == 'asset' && targetTab == 'endpoint'" :from="from" :obj="obj" @changeTab="changeTab"></endpoint-tab>
         <!--endpoint-query-->
