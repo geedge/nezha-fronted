@@ -849,8 +849,8 @@ const en = {
       hideSameLabels:'Hide same labels',
       stateInfo_230009:'Promserver unavailable',
       stateInfo_230010:'Promserver can be used',
-      stateInfo_230011:'Promserver can not be used',
-
+      stateInfo_230011:'Endpoint connection refused',
+      alerts:'Alerts'
     },
     metrics: {
       metrics: 'Metrics',//"指标"

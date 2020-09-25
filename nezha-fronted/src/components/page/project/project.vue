@@ -61,6 +61,7 @@
           v-scrollBar:el-table="'large'"
           v-show="bottomBox.mainResizeShow"
           ref="endpointTable"
+          :cell-class-name="messageStyle"
           v-loading="tools.loading"
           style="width: 100%;"
           @sort-change="tableDataSort"
@@ -86,6 +87,15 @@
               </template>
               <template v-else>-</template>
             </span>
+              <template v-else-if="item.prop=='alerts'">
+                <el-tooltip :content="scope.row.alertNum+' '+$t('overall.active')" placement="top" effect="light" :disabled=" scope.row.alertNum < 99">
+                  <span :id="'endpoint-alerts-'+scope.row.id" @click="jumpToAlertMsg(scope.row)" class="link">
+                    {{(scope.row.alertNum < 99 ? scope.row.alertNum : 99)}}
+                      <sup class="linkSup" v-if="scope.row.alertNum > 99">+</sup>
+                    {{' ' + $t('overall.active')}}
+                  </span>
+                </el-tooltip>
+              </template>
               <template v-else-if="item.prop == 'type'">{{currentModule.type}}</template>
               <div v-else-if="item.prop == 'option'" class="content-right-options">
                 <span :title="$t('overall.view')" @click="detailEndpoint(scope.row)" class="content-right-option" :id="'edp-detail-'+scope.row.id"><i class="nz-icon nz-icon-view"></i></span>
@@ -131,9 +141,19 @@
     </template>
 
     <transition name="el-zoom-in-bottom">
-      <bottom-box v-if="bottomBox.showSubList" :sub-resize-show="bottomBox.subResizeShow" :is-full-screen="bottomBox.isFullScreen"
-                  :from="'endpoint'" :target-tab.sync="bottomBox.targetTab" :detail="bottomBox.endpointDetail" :obj="endpoint" :asset-detail="bottomBox.assetDetail"
-                  @closeSubList="bottomBox.showSubList = false" @fullScreen="fullScreen" @exitFullScreen="exitFullScreen" @listResize="listResize" ></bottom-box>
+      <bottom-box v-if="bottomBox.showSubList"
+                  :sub-resize-show="bottomBox.subResizeShow"
+                  :is-full-screen="bottomBox.isFullScreen"
+                  :from="'endpoint'"
+                  :target-tab.sync="bottomBox.targetTab"
+                  :detail="bottomBox.endpointDetail"
+                  :obj="endpoint"
+                  :detail-list="bottomBox.alertList"
+                  :asset-detail="bottomBox.assetDetail"
+                  @closeSubList="bottomBox.showSubList = false"
+                  @fullScreen="fullScreen"
+                  @exitFullScreen="exitFullScreen"
+                  @listResize="listResize" ></bottom-box>
     </transition>
     <transition name="right-box">
       <add-endpoint-box v-if="rightBox.addEndpoint.show" :current-project="currentProject" :current-module="currentModule" @close="closeAddEndpointRightBox" ref="addEndpointBox"></add-endpoint-box>
@@ -168,7 +188,7 @@
         /*二级页面相关*/
         bottomBox: {
           endpoint: {}, //asset详情
-          endpointDetail: [],
+          endpointDetail: null,
           mainResizeShow: true, //dom高度改变时部分内容是否展示
           subResizeShow: true,
           isFullScreen: false, //是否是全屏，用来控制拖动条是否展示,
@@ -211,6 +231,10 @@
           },{
             label: this.$t("project.endpoint.port"),
             prop: 'port',
+            show: true,
+          },{
+            label: this.$t("project.endpoint.alerts"),
+            prop: 'alerts',
             show: true,
           },{
             label: this.$t("overall.type"),
@@ -387,7 +411,6 @@
         this.bottomBox.showSubList = false;
         this.currentProject = project;
       },
-
       //弹出endpoint编辑页
       editEndpoint(endpoint) {
         this.endpoint = JSON.parse(JSON.stringify(endpoint));
@@ -410,6 +433,11 @@
       detailEndpoint(endpoint) {
         this.endpoint = Object.assign({}, endpoint);
         this.bottomBox.targetTab = "panel";
+        this.bottomBox.showSubList = true;
+      },
+      jumpToAlertMsg(endpoint) {
+        this.endpoint = Object.assign({}, endpoint);
+        this.bottomBox.targetTab = 'alertMessage';
         this.bottomBox.showSubList = true;
       },
       addModule() {
@@ -585,7 +613,17 @@
         bus.$on("endpoint-list-change", menu => {
           this.getEndpointTableData();
         });
-      }
+      },
+      messageStyle(e) {
+        if (e.column.label == 'Alerts' || e.column.label == this.$t("asset.tableTitle.alerts")) {
+          if (e.row.alertNum > 0) {
+            return 'danger';
+          } else {
+            return 'success';
+          }
+        }
+        return '';
+      },
     },
     created() {
       this.currentProject = this.$store.state.currentProject;
