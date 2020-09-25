@@ -753,7 +753,7 @@ export default {
       return interVal
     }
     if(interValType==='max'){
-      return value
+      return value?value:1;
     }
     return 1;
     // let interVal=value/copies;
