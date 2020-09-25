@@ -97,7 +97,9 @@
                    width="90%"
                    @close="screenModal = false;screenLegendListMore=[]"
                    style="margin-top: 1vh !important;"
-                   @opened="initDialog">
+                   @opened="initDialog"
+                   :modal-append-to-body="false"
+        >
           <el-popover
             v-if="isError"
             placement="top-start"
@@ -1718,6 +1720,7 @@
     },
     beforeDestroy() {
       this.clearChart();
+      getChart(this.chartIndex).dispose();
     },
   };
 
