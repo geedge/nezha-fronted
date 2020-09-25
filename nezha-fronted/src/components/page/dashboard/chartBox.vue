@@ -1090,7 +1090,7 @@
         }else {
           this.setIsOtherChart();
           if(chartType === 'bar'||chartType === 'line'||chartType === 'stackArea'){
-            this.editChart.param={threshold:''}
+            this.editChart.param={threshold:'',legendValue:{min:'off',max:'off',avg:'off',last:'off',total:'off'}}
           }
           /*if(this.$refs.chartTag){
             this.$refs.chartTag.forEach((item, index) => {
