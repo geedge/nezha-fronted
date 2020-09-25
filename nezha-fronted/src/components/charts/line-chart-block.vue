@@ -284,7 +284,7 @@
     methods: {
       startResize(e) {
         let vm = this;
-        this.$chartResizeTool.start(vm, this.chartData, e);
+        this.$chartResizeTool.start(vm, this.chartData, e,this.chartIndex);
       },
       setDivFirstShow(showDiv){
         this.divFirstShow = showDiv;

@@ -1,5 +1,5 @@
 import PerfectScrollbar from "perfect-scrollbar";
-
+import {getChart} from "./common";
 //top置顶按钮公共方法
 export function toTop(type, wrap) {
   if (type == 'el') {
@@ -380,7 +380,7 @@ export const chartResizeTool = {
     }
     return height-this.chartBlankHeight;
   },
-  start(vm, originalData, event) {
+  start(vm, originalData, event, chartIndexs) {
     let $self=this;
     let data = JSON.parse(JSON.stringify(originalData)); //将初始对象复制，后续操作使用复制对象
     let shadow = vm.$refs.resizeShadow; //缩放时底部阴影dom
@@ -443,7 +443,7 @@ export const chartResizeTool = {
       document.removeEventListener("mousemove", moveListener);
       document.removeEventListener("mouseup", mouseupListener);
     }
-    function boxStepHandler(width, height) { //param: 宽高变化量，大于0放大，小于0缩小
+    function boxStepHandler(width, height, chartIndex) { //param: 宽高变化量，大于0放大，小于0缩小
       let widthChange = false;
       let heightChange = false;
       if (width > stepWidth/2) { //放大shadow宽
@@ -479,7 +479,7 @@ export const chartResizeTool = {
         $self.timeouter=setTimeout(()=>{
           //step时chart重绘
           if (box.classList.contains("resize-box-echarts")) { //echarts类型
-            vm.echartStore.resize({width: shadow.offsetWidth-16, height: shadow.offsetHeight-titleHeight-vm.$refs.legendArea.offsetHeight});
+            getChart(chartIndexs).resize({width: shadow.offsetWidth-16, height: shadow.offsetHeight-titleHeight-vm.$refs.legendArea.offsetHeight});
           }
         },500)
         //chart外层宽高调整
