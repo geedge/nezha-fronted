@@ -426,6 +426,7 @@
       clearData(){
         if(getChart(this.chartIndex)){
           getChart(this.chartIndex).clear();
+          // getChart(this.chartIndex).dispose();//关闭销毁实例 不再占用内存
         }
       },
       formatLegend(chartWidth,name){
@@ -557,6 +558,12 @@
             /*enterable:true, 导致tooltip不消失，显示多个tooltip*/
             position:function(point,params,dom,rect,size){
               dom.style.transform = "translateZ(0)";
+              var windowWidth=window.innerWidth;//窗口宽度
+              var windowHeight=window.innerHeight;//窗口高度
+              var windowMouse={
+                x:window.event.pageX,
+                y:window.event.pageY,
+              }
               //提示框位置
               var x=0;
               var y=0;
@@ -591,15 +598,16 @@
                   }
                   return [x,y];
                 }else {//preview page
-                  if(pointX<(viewWidth/2)){//说明鼠标在左边放不下提示框
-                    x=pointX+10;
+
+                  if(windowMouse.x<(windowWidth/2)){//说明鼠标在左边放不下提示框
+                    x=pointX + 15;
                   }else{
-                    x = pointX - boxWidth;
+                    x = pointX - boxWidth - 15;
                   }
-                  if(pointY<(viewHeight/2)){//说明鼠标上面放不下提示框
-                    y = pointY+10;
+                  if(windowMouse.y + 15 +boxHeight<windowHeight){//说明鼠标上面放不下提示框
+                    y = pointY + 15;
                   }else {
-                    y = pointY-boxHeight;
+                    y = pointY - boxHeight - 15;
                   }
                   return [x,y];
                 }
