@@ -746,7 +746,6 @@
                 let chartUnit=chartInfo.unit;
                 chartUnit=chartUnit?chartUnit:2;
                 let unit=chartDataFormat.getUnit(chartUnit);
-                // console.log(unit);
                 let flag=JSON.stringify(value).length>JSON.stringify(chartDataFormat.Interval(maxValue,copies,unit.type)).length;
                 if(dot===0&&flag){
                   dot=1;
@@ -909,7 +908,6 @@
             let divHeight = legendDiv.offsetHeight;
             let screenHeight = document.documentElement.clientHeight || document.body.clientHeight;
             let sumHeight = Math.floor(screenHeight*0.99*0.8);//margin-top:1vh; dailog:80%
-            //console.log("11____00",sumHeight,divHeight,legendDiv)
             self.$refs.screenShowArea.style.height = `${sumHeight - divHeight - self.screenTitleHeight}px`;
             self.echartModalStore.resize({height: (sumHeight - divHeight - self.screenTitleHeight)});//图表的高度
             setTimeout(function () {
@@ -933,7 +931,6 @@
                 let divHeight = legendDiv.offsetHeight;
                 let screenHeight = document.documentElement.clientHeight || document.body.clientHeight;
                 let sumHeight = Math.floor(screenHeight*0.99*0.8);//margin-top:1vh; dailog:80%
-                //console.log("11____00",sumHeight,divHeight,legendDiv)
                 self.$refs.screenShowArea.style.height = `${sumHeight - divHeight - self.screenTitleHeight}px`;
                 self.echartModalStore.resize({height: (sumHeight - divHeight - self.screenTitleHeight)});//图表的高度
                 self.echartModalStore.off('finished');
@@ -1415,7 +1412,6 @@
         this.divFirstShow = true;
       },
       dealLegendAlias:function(legend,expression){
-        // console.log(legend,expression,'123123');
         if(/\{\{.+\}\}/.test(expression)){
           let labelValue=expression.replace(/(\{\{.+?\}\})/g,function(i){
             let label=i.substr(i.indexOf('{{')+2,i.indexOf('}}')-i.indexOf('{{')-2);
@@ -1454,8 +1450,6 @@
       loadMore(){
         this.seriesItemArr=this.seriesItem;
         this.legendListMore=this.legendList;
-        //console.log(this.seriesItem,'irate(mysql_global_status_commands_total[5m])>0');
-        //console.log(this.data);
         let chartInfo=this.data;
         let dataArg=this.seriesItem;
         let maxValueCopies = this.getMaxValue(dataArg,chartInfo);
@@ -1513,7 +1507,6 @@
           let divHeight = legendDiv.offsetHeight;
           let screenHeight = document.documentElement.clientHeight || document.body.clientHeight;
           let sumHeight = Math.floor(screenHeight*0.99*0.8);//margin-top:1vh; dailog:80%
-          //console.log("11____00",sumHeight,divHeight,legendDiv)
           this.$refs.screenShowArea.style.height = `${sumHeight - divHeight - this.screenTitleHeight}px`;
           this.echartModalStore.resize({height: (sumHeight - divHeight - this.screenTitleHeight)});//图表的高度
         })
@@ -1672,7 +1665,6 @@
           dot++;
         }
         let copies=chartDataFormat.copies(oldValue,unit.type);
-        // console.log(oldValue,copies,maxValue);
         let oldDot=2;
         if(maxValue<=1){
           oldDot=dot>6?6:dot;

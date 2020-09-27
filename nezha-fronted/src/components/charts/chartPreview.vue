@@ -1244,7 +1244,7 @@
         this.clearChart();
       },
       findLegendOptions:function(){
-        if((!this.chart.param.legendValue) || Object.keys(this.chart.param.legendValue)<1) return false;
+        if((!this.chart.param) || (!this.chart.param.legendValue) || Object.keys(this.chart.param.legendValue)<1) return false;
         let legendOptions= this.chart.param.legendValue;
         let onVal=Object.keys(legendOptions).find(item=>{return legendOptions[item] == 'on'});
 

@@ -131,20 +131,6 @@
                           @on-drag-chart="editChartForDrag"
                           @on-edit-chart-block="editData"
         ></chart-alert-list>
-        <!--<vis-network-->
-          <!--v-if="item.type === 'topology'"-->
-          <!--@on-refresh-data="refreshChart"-->
-          <!--@on-search-data="searchData"-->
-          <!--@on-remove-chart-block="removeChart"-->
-          <!--@on-duplicate-chart-block="duplicateChart"-->
-          <!--@on-drag-chart="editChartForDrag"-->
-          <!--@on-edit-chart-block="editData"-->
-          <!--:panel-id="filter.panelId"-->
-          <!--:chart-data="item"-->
-          <!--:chart-index="index"-->
-        <!--&gt;-->
-
-        <!--</vis-network>-->
       </div>
    </draggable>
     <el-row v-if="dataList.length === 0"  class="noData"></el-row>

@@ -662,7 +662,6 @@
           x:e.layerX,
           y:e.layerY,
         };
-        console.log();
         if(e.path[0].nodeName!=='CANVAS'){
           this.expressionsInfoShow=false;
           this.$refs['network'].removeEventListener('mousemove',this.modelTopMouseMoveEdge);

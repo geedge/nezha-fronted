@@ -162,7 +162,7 @@
       },
     },
     mounted(){
-      // console.log(vm.$t('overall.exportAll'));
+
     },
   }
 

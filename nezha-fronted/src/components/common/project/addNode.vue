@@ -351,7 +351,7 @@
         return false;
       },
       handleAvatarSuccess(file,res){
-        console.log(res);
+
       },
       upload() {
         let form = new FormData();

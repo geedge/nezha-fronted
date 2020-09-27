@@ -283,17 +283,14 @@
         let arr1=[];
         if(!arr){return arr1}
         arr.forEach((item)=>{
-          console.log(item);
           item.from=item.source;
           item.to=item.target;
           item.label='';
           item.title='title';
-          console.log(item.expressions);
           item.expressions.forEach((item1,index)=>{
             this.$get('/prom/api/v1/query?query=' + item1.metric).then(res=>{
               // item.value=res.data.result[0].value;i
               item1.value=res.data.result;
-              console.log(res);
             });
           })
 
@@ -306,7 +303,6 @@
           //   item.dataFlow='right'
           // }
         });
-        console.log(arr);
         return arr
       },
       dealImg(url) {
