@@ -45,6 +45,7 @@
       class="nz-table endpoint-table"
       :height="$tableHeight.noPagination"
       v-scrollBar:el-table="'large'"
+      :cell-class-name="messageStyle"
       ref="endpointTable"
       style="width: 100%;"
       @sort-change="tableDataSort"
@@ -89,6 +90,15 @@
               </div>
             </el-popover>
           </span>
+          <template v-else-if="item.prop=='alerts'">
+                <el-tooltip :content="scope.row.alertNum+' '+$t('overall.active')" placement="top" effect="light" :disabled=" scope.row.alertNum < 99">
+                  <span :id="'endpoint-alerts-'+scope.row.id" >
+                    {{(scope.row.alertNum < 99 ? scope.row.alertNum : 99)}}
+                      <sup class="linkSup" v-if="scope.row.alertNum > 99">+</sup>
+                    {{' ' + $t('overall.active')}}
+                  </span>
+                </el-tooltip>
+              </template>
           <span v-else-if="scope.row[item.prop]">{{scope.row[item.prop]}}</span>
           <template v-else>-</template>
         </template>
@@ -188,6 +198,10 @@
           },{
             label: this.$t("alert.list.state"),
             prop: 'state',
+            show: true,
+          },{
+            label: this.$t("project.endpoint.alerts"),
+            prop: 'alerts',
             show: true,
           },
           /*{
@@ -377,6 +391,16 @@
         }
         this.$set(this.endpointSearchLabel, "orderBy", orderBy);
         this.getTableData();
+      },
+      messageStyle(e) {
+        if (e.column.label == 'Alerts' || e.column.label == this.$t("asset.tableTitle.alerts")) {
+          if (e.row.alertNum > 0) {
+            return 'danger';
+          } else {
+            return 'success';
+          }
+        }
+        return '';
       },
     },
     watch: {

@@ -233,10 +233,6 @@
             prop: 'port',
             show: true,
           },{
-            label: this.$t("project.endpoint.alerts"),
-            prop: 'alerts',
-            show: true,
-          },{
             label: this.$t("overall.type"),
             prop: 'type',
             show: false,
@@ -251,6 +247,10 @@
           },{
             label: this.$t("alert.list.state"),
             prop: 'state',
+            show: true,
+          },{
+            label: this.$t("project.endpoint.alerts"),
+            prop: 'alerts',
             show: true,
           },
           // {
