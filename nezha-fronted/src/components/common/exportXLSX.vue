@@ -216,6 +216,9 @@
         if (this.importUrl.indexOf('panel') > -1){
           delete params.panelId
         }
+        if (this.importUrl.indexOf('endpoint') > -1){
+          delete params.moduleId
+        }
         params.language=localStorage.getItem('nz-language') || 'en';
 
         this.exportExcel(this.exportUrl,params,this.exportFileName+'-'+this.getTimeString()+'.xlsx');
