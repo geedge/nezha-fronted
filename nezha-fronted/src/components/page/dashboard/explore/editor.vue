@@ -67,6 +67,7 @@
         detailItem:{},
         formatTimer:null,
         userChangeTimer:null,
+        filterTimer:null,
       }
     },
     created(){
@@ -81,7 +82,10 @@
           //console.log('pivotalCursorIndex',this.pivotalCursorIndex,'cursorIndex',this.cursorIndex)
           newContent=newContent.substring(this.pivotalCursorIndex,this.cursorIndex);
         }
-        this.filterItems(newContent);
+        clearTimeout(this.filterTimer)
+        this.filterTimer=setTimeout(()=>{
+          this.filterItems(newContent);
+        },300)
       },
       dealSpecilChar:function(char,operation){//控制括号的成对添加和删除
         // console.log('specil char',char)
@@ -528,36 +532,45 @@
 
       filterItems:function(input){ //过滤下拉选显示
         let suggestions=this.deepClone(this.noStyleSuggestions)
-
-        for(let key in suggestions){
-          let typeValues=suggestions[key];
-          typeValues=typeValues.filter(item=>{
-            let index=item.insertText.toLowerCase().indexOf(input.toLowerCase());
-            //console.log('index',index,'input',input)
-            if(index != -1){
-              // console.log('item',item.label,'input',input)
-              // item.label=item.label.replace(input,`<mark>${input}</mark>`);
-              let label=item.label;
-              let pre=label.substring(0,index)
-              let middle=label.substring(index,index+input.length)
-              let suf=label.substring(index+input.length,label.length)
-              item.label=`${pre}<mark>${middle}</mark>${suf}`
+        let hasResolve=false;
+        new Promise((resolve => {
+          let counter = 0;
+          this.orders.forEach(key=>{
+            let typeValues=suggestions[key];
+            this.showSuggestions[key]=[];
+            typeValues&&typeValues.forEach(item=>{
+              let index=item.insertText.toLowerCase().indexOf(input.toLowerCase());
+              //console.log('index',index,'input',input)
+              if(index != -1){
+                // console.log('item',item.label,'input',input)
+                // item.label=item.label.replace(input,`<mark>${input}</mark>`);
+                let label=item.label;
+                let pre=label.substring(0,index)
+                let middle=label.substring(index,index+input.length)
+                let suf=label.substring(index+input.length,label.length)
+                item.label=`${pre}<mark>${middle}</mark>${suf}`
+                this.showSuggestions[key].push(item);
+                if(++counter > 20){
+                  hasResolve=true;
+                  resolve();
+                }
+              }
+            });
+            if(this.showSuggestions[key].length<1){
+              delete this.showSuggestions[key]
             }
-            return index != -1;
           })
-          if(typeValues.length<1){
-            delete suggestions[key]
-          }else{
-            suggestions[key]=typeValues;
+          if(!hasResolve){
+            resolve();
           }
-        }
+        })).then(()=>{
+          if(Object.keys(this.showSuggestions).length>0){
+            this.showType=true;
+          }else{
+            this.showType=false
+          }
+        })
 
-        this.showSuggestions=this.deepClone(suggestions)
-        if(Object.keys(this.showSuggestions).length>0){
-          this.showType=true;
-        }else{
-          this.showType=false
-        }
         let scroll=this.$refs.scroll.wrap;
         scroll.scrollTop=0;
       },
@@ -616,7 +629,7 @@
           this.$nextTick(()=>{
             let offset=this.quill.getLength();
             this.setCursor(offset)
-          },200)
+          },100)
         })
       },
       moveScroll:function(){
@@ -783,7 +796,7 @@
         setTimeout(()=>{
           $temp.setContent(text);
           $temp.quill.setSelection($temp.cursorIndex+text.length);
-        },300)//此值必须大于userChangeTimer的值
+        },200)//此值必须大于userChangeTimer的值
       })
       this.quill.on('text-change',function(delta, oldDelta, source){
         if(source != 'silent'){
@@ -825,13 +838,13 @@
               promise.then(()=>{ //存储完光标后再进行后面的操作
                   $temp.userChange(char,operation,newContent,oldContent)
               })
-            },200)
+            },100)
           }
           $temp.content=$temp.getContent();
           //console.log('current content-->',$temp.content)
           $temp.getPosition();
           clearTimeout($temp.formatTimer)
-          $temp.formatTimer=setTimeout($temp.formatContent,300)
+          $temp.formatTimer=setTimeout($temp.formatContent,100)
         }
         //监听文本区域的高度
         let lineHeight = 16;
