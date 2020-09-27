@@ -649,9 +649,9 @@ export default {
       while(value<1){
         pow++;
         value=value*10;
-        console.log(value);
+        //console.log(value);
       }
-      console.log( Math.floor(value+1)/Math.pow(10,pow));
+      //console.log( Math.floor(value+1)/Math.pow(10,pow));
       return Math.floor(value+1)/Math.pow(10,pow);
     }
     if(type ==='Time'){

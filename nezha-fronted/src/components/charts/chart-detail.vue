@@ -389,7 +389,7 @@
             show:true,
           }
         });
-        console.info(labels);
+        //console.info(labels);
         return labels;
       },
       replaceSplit(key){
