@@ -637,6 +637,7 @@
                 this.dataTotalListBak.push(newItem);
               }
               this.panelData = this.dataTotalListBak;
+              this.showPanelList = this.panelData.filter(item=> this.showPanelList.find(t=> t.id == item.id))
             }else {
               if(response.msg){
                 this.$message.error(response.msg);
