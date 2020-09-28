@@ -59,14 +59,12 @@
       >
         <template slot-scope="scope" :column="item">
           <template v-if="item.prop == 'alertRule'">
-            <span class="too-long-split pointer" v-if="scope.row[item.prop].alertName" @mouseover="alertMessagehover(scope.row,scope.$index)">
-                    <el-tooltip
-                      :placement="scope.$index==0?'right-start':(scope.$index==tableData.length-1?'right-end':'right')"
-                      effect="light">
-                      <alertRuleInfo slot="content" :id="scope.row.alertRule.id" :messageLoad="scope.row.loading"></alertRuleInfo>
-                      <span>{{scope.row[item.prop].alertName}}</span>
-                    </el-tooltip>
-                  </span>
+            <div class="too-long-split pointer"v-if="scope.row.alertRule.alertName" >
+              <span @mouseenter="alertMessagehover(scope.row.alertRule, true, $event)" @mouseleave="alertMessagehover(scope.row.alertRule, false)">
+                <span>{{scope.row.alertRule.alertName}}</span>
+              </span>
+              <alertRuleInfo v-if="scope.row.alertRule.loading" :id="scope.row.alertRule.id" :that="scope.row.alertRule"></alertRuleInfo>
+            </div>
             <template v-else>-</template>
           </template>
           <template v-else-if="item.prop == 'summary'">
@@ -78,12 +76,31 @@
             <span v-else>-</span>
           </template>
           <span v-else-if="item.prop == 'severity'">
-                <span v-if="scope.row[item.prop] == 'high'"><i class="nz-icon nz-icon-arrow-up"></i>&nbsp;{{returnSeverityLabel(scope.row[item.prop])}}</span>
-                <span style="padding-left: 18px;" v-if="scope.row[item.prop] == 'medium'">{{returnSeverityLabel(scope.row[item.prop])}}</span>
-                <span v-if="scope.row[item.prop] == 'low'"><i class="nz-icon nz-icon-arrow-down"></i>&nbsp;{{returnSeverityLabel(scope.row[item.prop])}}</span>
-              </span>
+            <span v-if="scope.row[item.prop] == 'high'"><i class="nz-icon nz-icon-arrow-up"></i>&nbsp;{{returnSeverityLabel(scope.row[item.prop])}}</span>
+            <span style="padding-left: 18px;" v-if="scope.row[item.prop] == 'medium'">{{returnSeverityLabel(scope.row[item.prop])}}</span>
+            <span v-if="scope.row[item.prop] == 'low'"><i class="nz-icon nz-icon-arrow-down"></i>&nbsp;{{returnSeverityLabel(scope.row[item.prop])}}</span>
+          </span>
           <template v-else-if="item.prop == 'labels'" class="labels">
-            <el-tooltip
+            <div v-for="(item,i) in labelsSort(scope.row.labels)">
+              <span @mouseenter="labelHover(scope.row, item.label, true, $event)" @mouseleave="labelHover(scope.row, item.label, false)">
+                <nz-alert-tag
+                   :label="item.label" :type="tagType(item.label)" style="margin: 5px 0 5px 5px;"
+                   :cursor-point="tagType(item.label) == 'info' ? false : true"
+                   :key="item.label"
+                   v-if="item.label != 'alertname' && item.label != 'severity'"
+                >
+                 {{item.value}}
+                </nz-alert-tag>
+              </span>
+              <alertLabel
+                v-if="(item.label === 'asset' ||item.label === 'module' || item.label === 'project') && scope.row[item.label] && scope.row[item.label].loading"
+                :id="scope.row[item.label].id"
+                :that="scope.row[item.label]"
+                :type="item.label"
+              ></alertLabel>
+            </div>
+
+            <!--<el-tooltip
               v-for="(item,i) in labelsSort(scope.row.labels)"
               :placement="scope.$index==0?'right-start':(scope.$index==tableData.length-1?'right-end':'right')"
               effect="light"
@@ -107,7 +124,8 @@
                        {{item.value}}
                      </nz-alert-tag>
               </span>
-            </el-tooltip>
+            </el-tooltip>-->
+
           </template>
           <div v-else-if="item.prop == 'state'">
                 <span class="">
@@ -755,17 +773,28 @@
         }
       },
       // alertNmae鼠标划入
-      alertMessagehover(item,index){
-        item.loading=true;
-        this.$set(this.tableData,index,item);// 调用父组件
+      alertMessagehover(item, loading, e) {
+        if (e) {
+          let dom = e.currentTarget;
+          let position = dom.getBoundingClientRect();
+          this.$set(item, "position", position);
+        }
+        this.$set(item, "loading", loading);
+        //item.loading = true;
+       //this.$set(this.tableData,index,item);// 调用父组件
       },
       // label 鼠标划入
-      labelHover(item,index,type){
+      labelHover(item, type, loading, e){
         if(this.labelToolTipDis(type)){
-          return
+          return;
         }
-        item[type].loading=true;
-        this.$set(this.tableData,index,item);// 调用父组件
+        if (e) {
+          let dom = e.currentTarget;
+          let position = dom.getBoundingClientRect();
+          this.$set(item[type], "position", position);
+        }
+        this.$set(item[type], "loading", loading);
+        //this.$set(this.tableData,index,item);// 调用父组件
       },
       // Severity Label
       returnSeverityLabel(key){

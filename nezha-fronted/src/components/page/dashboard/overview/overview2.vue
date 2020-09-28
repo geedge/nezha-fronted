@@ -112,7 +112,7 @@
         <div class="content-col-box">
           <div class="content-col-title">{{$t("dashboard.overview.dataCenter.dataCenter")}}</div>
           <div class="content-col-content">
-            <chart-box  chart-type="map" :tooltip-formatter="mapTooltipFormatter" :map="map" ref="dataCenterMap" @is-loading="(isLoading)=>{this.mapLoading = isLoading}"></chart-box>
+            <chart-box chart-type="map" :tooltip-formatter="mapTooltipFormatter" :map="map" ref="dataCenterMap" @is-loading="(isLoading)=>{this.mapLoading = isLoading}"></chart-box>
             <div class="right-bottom-zoom">
               <div class="zoom-option" style="border-bottom: 1px solid #c5c8cb;" @click="zoomMap(1)"><span><i class="nz-icon nz-icon-enlarge"></i></span></div>
               <div class="zoom-option" @click="zoomMap(-1)"><span><i class="nz-icon nz-icon-narrow"></i></span></div>
@@ -686,7 +686,7 @@
           geoJson: {geoJson: world.worldData}
         };
 
-        setTimeout(()=>{this.queryDataCenterMapData();this.$refs.dataCenterMap.endLoading();},200)
+        setTimeout(()=>{this.queryDataCenterMapData();},1000)
       },
       queryDataCenterMapData() {
         let language=localStorage.getItem("nz-language") ? localStorage.getItem("nz-language") : 'en';
@@ -767,6 +767,7 @@
               data:seriesDatas
             }]
             this.$refs.dataCenterMap.setSeries(this.dataCenterMapSeries);
+            this.$refs.dataCenterMap.endLoading();
           }
         })
       },

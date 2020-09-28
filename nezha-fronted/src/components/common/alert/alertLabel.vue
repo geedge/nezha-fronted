@@ -1,5 +1,5 @@
 <template>
-  <span>
+  <div class="alert-label" :style="calcPosition(that.position)">
     <div class="alert-label-info" v-if="type==='asset'" v-loading="loading">
       <div class="alert-label-box">
         <div class="alert-label-title">ID</div>
@@ -58,7 +58,7 @@
         <div class="alert-label-title">Administrator</div>
         <div class="alert-label-value">{{alertLabelData?alertLabelData.principal:''}}</div>
       </div>
-  </div>
+    </div>
 
     <div class="alert-label-info" v-if="type==='module'" v-loading="loading">
       <div class="alert-label-box">
@@ -93,7 +93,7 @@
         <div class="alert-label-value">{{alertLabelData?(alertLabelData.remark?alertLabelData.remark:'-'):''}}</div>
       </div>
     </div>
-  </span>
+  </div>
 </template>
 
 <script>
@@ -102,53 +102,65 @@
     props:{
       id:{},
       type:{},
-      labelLoading:{},
+      //labelLoading:{},
       that:{}
     },
-    watch:{
-      labelLoading(){
-        if(this.type==='asset'){
-          this.$get('/asset/info?id='+this.id).then((res)=>{
-            if(res.msg==='success'){
-              this.loading=false;
-              this.alertLabelData=res.data.Basic;
-            } else{
-              this.$message.error(res.msg);
-            }
-          })
-        }
-        if(this.type==='project'){
-          this.$get('/project/info?id='+this.id).then((res)=>{
-            if(res.msg==='success'){
-              this.loading=false;
-              this.alertLabelData=res.data.basic;
-            } else{
-              this.$message.error(res.msg);
-            }
-          })
-        }
-        if(this.type==='module'){
-          this.$get('/module?id='+this.id).then((res)=>{
-            if(res.msg==='success'){
-              this.loading=false;
-              this.alertLabelData=res.data.list[0];
-            } else{
-              this.$message.error(res.msg);
-            }
-          })
+    /*watch:{
+      labelLoading: {
+        immediate: true,
+        handler(n) {
+          if(this.type==='asset'){
+            this.$get('/asset/info?id='+this.id).then((res)=>{
+              if(res.msg==='success'){
+                this.loading=false;
+                this.alertLabelData=res.data.Basic;
+              } else{
+                this.$message.error(res.msg);
+              }
+            })
+          }
+          if(this.type==='project'){
+            this.$get('/project/info?id='+this.id).then((res)=>{
+              if(res.msg==='success'){
+                this.loading=false;
+                this.alertLabelData=res.data.basic;
+              } else{
+                this.$message.error(res.msg);
+              }
+            })
+          }
+          if(this.type==='module'){
+            this.$get('/module?id='+this.id).then((res)=>{
+              if(res.msg==='success'){
+                this.loading=false;
+                this.alertLabelData=res.data.list[0];
+              } else{
+                this.$message.error(res.msg);
+              }
+            })
+          }
         }
       }
-    },
+    },*/
     data() {
       return {
         alertLabelData:null,
-        loading:true
+        loading: true
       }
     },
     components:{
 
     },
-
+    computed: {
+      calcPosition() {
+        return function(position) {
+          return {
+            left: `${position.left + position.width + 20}px`,
+            top: `${position.top - 20}px`,
+          }
+        }
+      }
+    },
     methods:{
       alertActiveStr(){
         return vm.$t('overall.active');
@@ -162,13 +174,66 @@
       },
     },
     mounted(){
-
+      if(this.type==='asset'){
+        this.$get('/asset/info?id='+this.id).then((res)=>{
+          if(res.msg==='success'){
+            this.loading=false;
+            this.alertLabelData=res.data.Basic;
+          } else{
+            this.$message.error(res.msg);
+          }
+        })
+      }
+      if(this.type==='project'){
+        this.$get('/project/info?id='+this.id).then((res)=>{
+          if(res.msg==='success'){
+            this.loading=false;
+            this.alertLabelData=res.data.basic;
+          } else{
+            this.$message.error(res.msg);
+          }
+        })
+      }
+      if(this.type==='module'){
+        this.$get('/module?id='+this.id).then((res)=>{
+          if(res.msg==='success'){
+            this.loading=false;
+            this.alertLabelData=res.data.list[0];
+          } else{
+            this.$message.error(res.msg);
+          }
+        })
+      }
     },
   }
 
 </script>
 
 <style scoped>
+  .alert-label {
+    position: fixed;
+    background-color: white;
+    z-index: 3000;
+    padding: 10px;
+    border-radius: 4px;
+    box-shadow: -1px 1px 9px -1px rgba(205,205,205,0.77);
+  }
+  .alert-label::after {
+    content: '';
+    display: block;
+    width:0;
+    height:0;
+    overflow: hidden;
+    font-size: 0;
+    line-height: 0;
+    border: 5px;
+    border-style: dashed solid dashed dashed;
+    border-color: transparent #fff transparent transparent;
+    position: absolute;
+    top: 20px;
+    left: 0;
+    transform: translate(-100%, -50%);
+  }
   .alert-label-info{
     border: 1px solid #ebeef5;
     border-bottom: none;
