@@ -13,6 +13,7 @@
     padding: 5px 15px 5px 10px;
     box-sizing: border-box;
     overflow: hidden;/*避免鼠标第一次放到曲线时，x轴出现滚动条后消失*/
+    min-height: calc(100vh - 150px);
   }
 </style>
 <style lang="scss">

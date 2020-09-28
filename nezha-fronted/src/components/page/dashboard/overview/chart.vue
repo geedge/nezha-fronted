@@ -308,11 +308,12 @@
           }else{
             x = pointX - boxWidth;
           }
-          if((parClientHeight-pointY-(parTop-parScrollTop)-20)>=boxHeight){//说明鼠标上面放不下提示框
-            y = pointY+10;
-          }else {
-            y = pointY-boxHeight;
-          }
+          // if((parClientHeight-pointY-(parTop-parScrollTop)-20)>=boxHeight){//说明鼠标上面放不下提示框
+          //   y = pointY+10;
+          // }else {
+          //   y = pointY-boxHeight;
+          // }
+          y = pointY+10;
           return [x,y];
         }else {
           x = pointX - boxWidth;

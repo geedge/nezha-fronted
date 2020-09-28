@@ -770,6 +770,7 @@
 
   .box-content {
     position: relative;
+    min-height: 100%;
   }
 
   /* end-chart list*/

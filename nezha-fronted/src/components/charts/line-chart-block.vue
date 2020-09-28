@@ -575,10 +575,10 @@
                   }else{
                     x = pointX - boxWidth;
                   }
-                  if((parClientHeight-pointY-(parTop-parScrollTop)-20)>=boxHeight){//说明鼠标上面放不下提示框
-                    y = pointY+10;
+                  if(windowMouse.y + 15 +boxHeight<windowHeight){//说明鼠标上面放不下提示框
+                    y = pointY + 15;
                   }else {
-                    y = pointY-boxHeight;
+                    y = pointY - boxHeight - 15;
                   }
                   return [x,y];
                 }else {//preview page
@@ -601,10 +601,10 @@
                 }else{
                   x = pointX - boxWidth;
                 }
-                if(pointY<(viewHeight/2)){//说明鼠标上面放不下提示框
-                  y = pointY+10;
+                if(windowMouse.y + 15 +boxHeight<windowHeight){//说明鼠标上面放不下提示框
+                  y = pointY + 15;
                 }else {
-                  y = pointY-boxHeight;
+                  y = pointY - boxHeight - 15;
                 }
                 return [x,y];
               }
@@ -747,6 +747,9 @@
                 chartUnit=chartUnit?chartUnit:2;
                 let unit=chartDataFormat.getUnit(chartUnit);
                 let flag=JSON.stringify(value).length>JSON.stringify(chartDataFormat.Interval(maxValue,copies,unit.type)).length;
+                if(chartDataFormat.Interval(maxValue,copies,unit.type,'min')<1){
+                  dot=1;
+                }
                 if(dot===0&&flag){
                   dot=1;
                 }
@@ -1037,7 +1040,7 @@
       // 设置数据, filter区分
       setData(chartItem, seriesItem, panelId, filter,legend,area,errorMsg) {
         this.setColor(legend.length);
-        legend.forEach((t,i)=>{t.color = this.bgColorList[i]})
+        legend.forEach((t,i)=>{t.color = this.bgColorList[i]});
         this.filter.from = filter.from;
         if(errorMsg && errorMsg!==''){
           this.isError = true;
