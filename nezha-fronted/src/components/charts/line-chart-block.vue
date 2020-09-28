@@ -575,10 +575,10 @@
                   }else{
                     x = pointX - boxWidth;
                   }
-                  if(windowMouse.y + 15 +boxHeight<windowHeight){//说明鼠标上面放不下提示框
+                  if(windowMouse.y + 50 +boxHeight<windowHeight){//说明鼠标上面放不下提示框
                     y = pointY + 15;
                   }else {
-                    y = pointY - boxHeight - 15;
+                    y = pointY - boxHeight - 10;
                   }
                   return [x,y];
                 }else {//preview page
@@ -588,10 +588,10 @@
                   }else{
                     x = pointX - boxWidth - 15;
                   }
-                  if(windowMouse.y + 15 +boxHeight<windowHeight){//说明鼠标上面放不下提示框
+                  if(windowMouse.y + 50 +boxHeight<windowHeight){//说明鼠标上面放不下提示框
                     y = pointY + 15;
                   }else {
-                    y = pointY - boxHeight - 15;
+                    y = pointY - boxHeight - 10;
                   }
                   return [x,y];
                 }
@@ -601,10 +601,10 @@
                 }else{
                   x = pointX - boxWidth;
                 }
-                if(windowMouse.y + 15 +boxHeight<windowHeight){//说明鼠标上面放不下提示框
+                if(windowMouse.y + 50 +boxHeight<windowHeight){//说明鼠标上面放不下提示框
                   y = pointY + 15;
                 }else {
-                  y = pointY - boxHeight - 15;
+                  y = pointY - boxHeight - 10;
                 }
                 return [x,y];
               }
