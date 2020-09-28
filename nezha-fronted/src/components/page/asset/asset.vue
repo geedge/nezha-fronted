@@ -428,7 +428,21 @@
         this.bottomBox.asset = JSON.parse(JSON.stringify(asset));
         this.bottomBox.showSubList = true;
       },
+      checkSearchLabel(n, o) {
+        let nKeys = Object.keys(n);
+        let oKeys = Object.keys(o);
+        if (nKeys.length != oKeys.length) {
+          return true;
+        } else {
+          let flag = false;
+          nKeys.forEach(key => {
+            n[key] != o[key] && (flag = true);
+          });
+          return flag;
+        }
+      },
       getTableData() {
+        let oldSearchLabel = JSON.parse(JSON.stringify(this.searchLabel));
         this.searchLabel = Object.assign(this.searchLabel, this.pageObj);
         this.tools.loading = true;
         if(this.searchLabel.tags && this.searchLabel.tags!=''){
@@ -625,6 +639,7 @@
       },
       initEvent() {
         bus.$on("asset-filter-change", (column, content) => {
+          let oldPageObj = JSON.parse(JSON.stringify(this.pageObj));
           if(column == 'multiParam'){
             let $self=this;
             if(content instanceof Array && content.length>0){
@@ -635,7 +650,8 @@
           }else{
             this.pageObj[column] = content;
           }
-          this.getTableData();
+          let isSame = this.checkSearchLabel(JSON.parse(JSON.stringify(this.pageObj)), oldPageObj);
+          isSame && this.getTableData();
         });
       },
       dispatchEvent(event,param){
@@ -714,7 +730,7 @@
 
       this.loadKeys();
 
-      console.log('load end')
+      //console.log('load end')
 
       //初始化数据
       this.getUserData();
