@@ -193,6 +193,8 @@
           url = "/alert/rule/template";
         } else if (this.importUrl.indexOf('panel') > -1){
           url = "/panel/template";
+        }else if(this.importUrl.indexOf('endpoint') > -1){
+          url = '/endpoint/template'
         }
 
         let param={language:language}
