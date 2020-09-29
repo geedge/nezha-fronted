@@ -19,19 +19,13 @@ function short(value,index,type=1,dot){
 
 }
 function percent01(value,index){
-  let len=JSON.stringify(value);
-  if(len.length>5){
-    len=len.slice(0,5);
-  }
-  return `${len} %`;
+  value=parseFloat((value).toPrecision(12));
+  return `${value} %`;
 }
 function percent02(value,index){
-  value=value*100;
-  let len=JSON.stringify(value);
-  if(len.length>5&&value<100){
-    len=len.slice(0,5);
-  }
-  return `${len} %`;
+  console.log(value);
+  value=parseFloat((value*100).toPrecision(12));
+  return `${value} %`;
 }
 function localFormat(value,index){
   let num = (value || 0).toString();
