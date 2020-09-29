@@ -619,7 +619,7 @@
                     + [t_date.getHours(), t_date.getMinutes(),t_date.getSeconds()].join(':');
                   str +=`<br/>`;
                 }
-                let val = parseFloat(Number(item.data[1]).toFixed(2));
+                let val =item.data[1]?parseFloat(Number(item.data[1]).toFixed(2)):'';
                 if(val===0){
                   val = Number(item.data[1]);
                 }

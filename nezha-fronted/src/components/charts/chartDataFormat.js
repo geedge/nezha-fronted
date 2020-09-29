@@ -323,6 +323,9 @@ function days(value,index,type=1,dot){
 * dot：保留的小数位，
 * */
 function asciiCompute(num,ascii,units,dot=2){
+  if(!num && num!==0 && num!=='0'){
+    return ''
+  }
   num=Number(num)
   let carry=0;
   if(num > 1){
