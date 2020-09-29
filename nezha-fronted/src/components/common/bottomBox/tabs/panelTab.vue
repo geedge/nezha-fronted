@@ -28,11 +28,29 @@
           </el-input>
         </div>
         <pick-time :refresh-data-func="dateChange" v-model="searchTime" :use-chart-unit="false" v-if="from=='asset'"></pick-time>
-        <button @click="addChart" :title="$t('overall.createChart')" v-if="from != 'alertRule' && from != 'endpoint'"
-                class="nz-btn nz-btn-size-normal nz-btn-style-light ">
+        <export-excel
+          export-file-name="chart"
+          export-url="/panel/export"
+          import-url="/panel/import"
+          :params="filter"
+          :from="'asset'"
+          :link="obj"
+          @afterImport="dateChange"
+          v-if="$route.path==='/asset' || $route.path==='/model'"
+        >
+          <template slot="optionZone">
+            <button @click="addChart" :title="$t('overall.createChart')" v-if="from != 'alertRule' && from != 'endpoint'"
+                    class="nz-btn nz-btn-size-normal nz-btn-style-light ">
+              <i class="nz-icon-create-square nz-icon"></i>
+            </button>
+          </template>
+        </export-excel>
+        <span v-else>
+          <button @click="addChart" :title="$t('overall.createChart')" v-if="from != 'alertRule' && from != 'endpoint'"
+                  class="nz-btn nz-btn-size-normal nz-btn-style-light ">
           <i class="nz-icon-create-square nz-icon"></i>
         </button>
-
+        </span>
         <button @click="syncChart" :title="$t('overall.syncChart')" v-if="from == 'asset'||from == 'model'" style="margin-left: 20px;"
                 class="nz-btn nz-btn-size-normal nz-btn-style-light ">
           <i class="nz-icon-sync nz-icon"></i>
@@ -77,7 +95,8 @@
   import ChartBox from "../../../page/dashboard/chartBox";
   import ChartList from '../../../charts/chart-list';
   import bus from '../../../../libs/bus';
-  import timePicker from '../../../common/timePicker'
+  import timePicker from '../../../common/timePicker';
+  import exportXLSX from "../../../common/exportXLSX";
 
   export default {
     name: "panel",
@@ -154,7 +173,8 @@
     components: {
       'chart-box': ChartBox,
       'chart-list': ChartList,
-      'time-picker':timePicker
+      'time-picker':timePicker,
+      'export-excel':exportXLSX,
     },
     methods: {
       //刷新

@@ -104,6 +104,7 @@
       params:{type:Object},
       exportFileName:{type:String},
       importUrl: {type:String,required:true},
+      link:{type:Object},
     },
     data:function(){
       return {
@@ -112,9 +113,13 @@
         importFileList:[],
         importResult:null,
         exportShow: false,
+        paramsType:''
       }
     },
     created(){
+    },
+    mounted(){
+      this.getParamsType();
     },
     methods: {
       importChange:function(file,fileList){
@@ -152,6 +157,12 @@
         if(this.importFile && this.importFile.raw){
           let form = new FormData();
           form.append('excelFile',this.importFile.raw);
+          if(this.paramsType){
+            form.append('type',this.paramsType);
+            if(this.paramsType==='asset' || this.paramsType==='model'){
+              form.append('linkId',this.link.id);
+            }
+          }
           this.$post(this.importUrl,form,{'Content-Type': 'multipart/form-data'}).then(response=>{
             if(response.code==200 && response.msg=='success'){
               this.importResult=response.data;
@@ -228,6 +239,9 @@
       },
       exportExcel:function(url,params,fileName){
         let temp=this;
+        if(this.paramsType){
+          params.type=this.paramsType;
+        }
         axios.get(url,{responseType:'blob',params:params}).then(res=>{
           if(window.navigator.msSaveOrOpenBlob){
             // 兼容ie11
@@ -248,6 +262,10 @@
       showImportBox:function(type){
         this.importBox.show=true;
         this.importBox.type=type;
+        if(type == 2&&(this.$route.path==='/asset'|| this.$route.path==='/model')){
+          this.exportCur()
+          return
+        }
         if(type == 1){//import
           this.importBox.title=this.$t('overall.importExcel');
           this.importBox.width='600px';
@@ -269,6 +287,16 @@
       },
       formatNum:function(num){
         return num>9?num:'0'+num;
+      },
+      getParamsType(){
+        console.log(this.$route);
+        let path=this.$route.path;
+        switch(path){
+          case '/panel': this.paramsType='dashboard';break;
+          case '/asset': this.paramsType='asset';break;
+          case '/model': this.paramsType='model';break;
+          default: this.paramsType='';break;
+        }
       }
     }
   }
