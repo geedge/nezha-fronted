@@ -135,7 +135,7 @@ export function uSize(rule, value, callback){
       callback(new Error(vm.$t('validate.number')))
     }else{
       let num=Number(value);
-      if(num<0 || num > 49 ){
+      if(num<0 || num > 47 ){
         callback(new Error(vm.$t('validate.usize')))
       }else{
         callback();

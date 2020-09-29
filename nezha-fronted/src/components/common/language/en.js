@@ -353,7 +353,7 @@ const en = {
     tel:'Invalid phone number',//'不合法的电话号码'
     host:'Invalid Host',//'不合法的Host'
     domain:'Invalid domain',
-    usize:'Must be number(1 - 49)',
+    usize:'Must be number(1 - 47)',
     fileSize:'File exceed max size',//File exceed max size.
     port:'Invalid port',
     url:'Invalid URL',
