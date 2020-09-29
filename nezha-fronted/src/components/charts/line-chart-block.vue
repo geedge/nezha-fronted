@@ -186,7 +186,7 @@
   import {randomcolor} from  '../common/js/radomcolor/randomcolor.js';
   import timePicker from '../common/timePicker';
   import chartConfig from "../page/dashboard/overview/chartConfig";
-  import {getChart, setChart} from "../common/js/common";
+  import {getChart, setChart,lineChartMove,getMousePoint} from "../common/js/common";
 
   export default {
     name: 'lineChartBlock',
@@ -544,10 +544,7 @@
               dom.style.transform = "translateZ(0)";
               var windowWidth=window.innerWidth;//窗口宽度
               var windowHeight=window.innerHeight;//窗口高度
-              var windowMouse={
-                x:window.event.pageX,
-                y:window.event.pageY,
-              }
+              var windowMouse=getMousePoint();
               //提示框位置
               var x=0;
               var y=0;
@@ -1684,10 +1681,16 @@
     },
     mounted() {
       this.firstLoad = false;
+      if(!document.onmousemove){// 添加鼠标移动事件监听
+        document.onmousemove=lineChartMove
+      }
     },
     beforeDestroy() {
       this.clearChart();
       getChart(this.chartIndex).dispose();
+      if(!document.onmousemove){// 移除鼠标移动事件监听
+        document.onmousemove=null;
+      }
     },
   };
 

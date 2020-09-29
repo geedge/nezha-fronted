@@ -25,3 +25,18 @@ export function getChart(key) {
 export function setChart(key, value) {
   chartCache[`chart${key}`] = value;
 }
+
+const mousePoint={ //在echart tooltip中获取不到鼠标在窗口的位置，在火狐没有window。event 在此兼容火狐 获取鼠标在窗口位置
+  x:'',
+  y:''
+};
+
+export function lineChartMove(e){
+  let event=e|| window.event;
+  mousePoint.x=event.pageX;
+  mousePoint.y=event.pageY;
+}
+
+export function getMousePoint(){
+  return mousePoint
+}
