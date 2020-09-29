@@ -744,8 +744,8 @@
                 chartUnit=chartUnit?chartUnit:2;
                 let unit=chartDataFormat.getUnit(chartUnit);
                 let flag=JSON.stringify(value).length>JSON.stringify(chartDataFormat.Interval(maxValue,copies,unit.type)).length;
-                if(chartDataFormat.Interval(maxValue,copies,unit.type,'min')<1){
-                  dot=1;
+                if(chartDataFormat.Interval(maxValue,copies,unit.type,'min')<1&&dot<2){
+                  dot=2;
                 }
                 if(dot===0&&flag){
                   dot=1;
