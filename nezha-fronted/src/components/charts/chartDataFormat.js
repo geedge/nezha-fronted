@@ -326,16 +326,18 @@ function asciiCompute(num,ascii,units,dot=2){
   if(!num && num!==0 && num!=='0'){
     return ''
   }
-  num=Number(num)
+  num=Number(num);
   let carry=0;
   if(num > 1){
-    let log=Math.log(num)/Math.log(ascii)
+    let log=Math.log(num)/Math.log(ascii);
     carry = parseInt(log)
     num = num / Math.pow(ascii,carry)
   }
   if(Number.isInteger(num)){
+    console.log(num +' '+units[carry],dot);
     return num +' '+units[carry];
   }else{
+    console.log(num.toFixed(dot) +' '+units[carry],dot);
     return num.toFixed(dot) +' '+units[carry];
   }
 }
@@ -655,7 +657,7 @@ export default {
         //console.log(value);
       }
       //console.log( Math.floor(value+1)/Math.pow(10,pow));
-      return Math.floor(value+1)/Math.pow(10,pow);
+      return Math.ceil(value+1)/Math.pow(10,pow);
     }
     if(type ==='Time'){
         return value
@@ -721,6 +723,13 @@ export default {
     }
   },
   Interval:function(value,copies,type,interValType){
+    if(interValType==='max'&&value<1){
+      if(value<1){
+        value=1;
+      }
+      return value?value:1;
+    }
+    
     if(value<1024&&type==='Data'){
       let interVal=value/copies;
       return interVal
@@ -754,9 +763,6 @@ export default {
       }
       interVal = interVal || 1;
       return interVal
-    }
-    if(interValType==='max'){
-      return value?value:1;
     }
     return 1;
     // let interVal=value/copies;
