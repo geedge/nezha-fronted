@@ -152,7 +152,13 @@
           <el-input size="small" type="textarea" maxlength="1024" show-word-limit v-model="editChart.param.url"></el-input>
         </el-form-item>
 
-        <el-form-item v-if="editChart.type == 'line' || editChart.type == 'bar' || editChart.type == 'stackArea'" :label='$t("dashboard.panel.chartForm.threshold")' prop="param.threshold"  class="half-form-item">
+        <el-form-item  v-if="editChart.type == 'line' || editChart.type == 'bar' || editChart.type == 'stackArea'" :label='"Null Type"' prop="nullType"  class="half-form-item">
+          <el-select class="right-box-row-with-btn"  popper-class="chart-box-dropdown-small" v-model="editChart.param.nullType" placeholder="" size="mini" @change="$forceUpdate()">
+            <el-option v-for="item in nullTypeList" :key="item.value" :label="item.label" :value="item.value"></el-option>
+          </el-select>
+        </el-form-item>
+
+        <el-form-item v-if="editChart.type == 'line' || editChart.type == 'bar' || editChart.type == 'stackArea'" :label='$t("dashboard.panel.chartForm.threshold")' prop="param.threshold"  class="half-form-item" style="width: 415px">
           <el-input size="mini" type="input" v-model="editChart.param.threshold"></el-input>
         </el-form-item>
 
@@ -374,6 +380,16 @@
         elementTarget: [], // 本地保存数据
         alertParams:{},
         spanList: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
+        nullTypeList:[{
+          label:'connected',
+          value:'connected'
+        },{
+          label:'null',
+          value:'null'
+        },{
+          label:'zero',
+          value:'zero'
+        }],
         // 是否为编辑已有信息
         isedit: false,
         //productId: 0,//不需要这个参数，可以删除
@@ -717,6 +733,7 @@
             }
             if(this.editChart.type==='line'||this.editChart.type==='bar'||this.editChart.type==='stackArea'){
               params.param.threshold=this.editChart.param.threshold;
+              params.param.nullType=this.editChart.param.nullType;
             } else {
               delete params.param.threshold;
             }
@@ -993,6 +1010,9 @@
           }else{
             this.editChart.param.threshold='';
           }
+          if((this.editChart.type==='line'||this.editChart.type==='bar'||this.editChart.type==='stackArea')&&data.param){
+            this.editChart.param.nullType=data.param.nullType;
+          }
           this.setIsOtherChart();
           //this.getSuggestMetric();//获得指标列表
           // 指标
@@ -1029,7 +1049,8 @@
         param.url='';
         param.threshold='';
         param.valueMapping={type:'text',mapping:[{value:'',text:''}]};
-        param.legendValue={min:'off',max:'off',avg:'off',last:'off',total:'off'}
+        param.legendValue={min:'off',max:'off',avg:'off',last:'off',total:'off'};
+        param.nullType='connected';
         this.$set(this.editChart, "param", param);
         this.elements = [1];
         this.elementTarget = [];
@@ -1090,7 +1111,7 @@
         }else {
           this.setIsOtherChart();
           if(chartType === 'bar'||chartType === 'line'||chartType === 'stackArea'){
-            this.editChart.param={threshold:'',legendValue:{min:'off',max:'off',avg:'off',last:'off',total:'off'}}
+            this.editChart.param={nullType:this.editChart.param.nullType,threshold:'',legendValue:{min:'off',max:'off',avg:'off',last:'off',total:'off'}}
           }
           /*if(this.$refs.chartTag){
             this.$refs.chartTag.forEach((item, index) => {
@@ -1163,9 +1184,11 @@
               }
               if(this.editChart.type==='line'||this.editChart.type==='bar'||this.editChart.type==='stackArea'){
                 params.param.threshold=this.editChart.param.threshold;
+                params.param.nullType=this.editChart.param.nullType;
                 params.param.legendValue=this.editChart.param.legendValue;
               } else {
                 delete params.param.threshold;
+                delete params.param.nullType;
               }
               //生成指标数组
               const elements = [];
@@ -1254,6 +1277,9 @@
         immediate: true,
         handler(n) {
           this.editChart = JSON.parse(JSON.stringify(n));
+          if(!n.param.nullType){
+            this.editChart.param.nullType='connected';
+          }
           if (n.type === 'url') {
             this.setIsUrl();
           } else if(n.type === 'alertList'){

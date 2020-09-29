@@ -659,23 +659,6 @@
             }
 
             this.dataList = [...this.dataTotalList];
-            // this.dataList.push({ // 拓扑图
-            //   id: -10,
-            //   panelId: 0,
-            //   title: this.$t("alert.config.chart.alertNumTrend"),
-            //   span: 8,
-            //   height: 800,
-            //   type: "topology",
-            //   prev: -11,
-            //   next: -1,
-            //   unit: 1,
-            //   buildIn: 1,
-            //   elements: [{
-            //     id: '',
-            //     expression: `nz_alert_nums{id="${3333}"}`,
-            //     type: ''
-            //   }]
-            // });
             this.$nextTick(() => {
               if (this.dataList.length > 0 ) {
                 this.dataList.forEach((item,index) => {
@@ -854,6 +837,10 @@
               const axiosArr = chartItem.elements.map((ele) => {
                 const filterItem = ele;
                 let query = encodeURIComponent(filterItem.expression);
+                if(chartInfo.type==='line'||chartInfo.type==='bar'||chartInfo.type==='stackArea'){//如果是这三个 默认给connected
+                  chartInfo.param.nullType=chartInfo.param.nullType||'connected';
+                  query+='&nullType='+chartInfo.param.nullType;
+                }
                 return this.$get('/prom/api/v1/query_range?query=' + query + "&start=" + this.$stringTimeParseToUnix(startTime) + "&end=" + this.$stringTimeParseToUnix(endTime) + '&step=' + step);
               });
               // 一个图表的所有element单独获取数据
@@ -1249,6 +1236,10 @@
           let step = bus.getStep(startTime, endTime);
           this.$nextTick(() => {
             let query = chartInfo.elements[0].expression;
+            if(chartInfo.type==='line'||chartInfo.type==='bar'||chartInfo.type==='stackArea'){
+              chartInfo.param.nullType=chartInfo.param.nullType||'connected';
+              query+='&nullType='+chartInfo.param.nullType;
+            }
             this.$get('/prom/api/v1/query_range?query='+query+"&start="+this.$stringTimeParseToUnix(startTime)+"&end="+this.$stringTimeParseToUnix(endTime)+'&step=5m').then(response => {
               if (response.status === 'success') {
                 if (response.data.result) {
@@ -1683,6 +1674,7 @@
     mounted() {
       this.tempDomInit();
     },
+
   };
 
 </script>

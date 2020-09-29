@@ -1229,15 +1229,27 @@
             axiosArr = this.data.elements.map((ele) => {
               const filterItem = ele;
               let query = encodeURIComponent(filterItem.expression);
+              if(this.chartInfo.type==='line'||this.chartInfo.type==='bar'||this.chartInfo.type==='stackArea'){//如果是这三个 默认给connected
+                this.chartInfo.param.nullType=this.chartInfo.param.nullType||'connected';
+                query+='&nullType='+this.chartInfo.param.nullType;
+              }
               return  this.$get('/prom/api/v1/query_range?query='+query+"&start="+this.$stringTimeParseToUnix(startTime)+"&end="+this.$stringTimeParseToUnix(endTime)+'&step='+step);
             });
           } else if (type === 'dashboard') { // 概览模式,指标概览中使用
             // 概览模式,需要区分单独一个和多个
             if (this.stableFilter.chartCount === 'multiple') {
               let query = encodeURIComponent(this.data.title);
+              if(this.chartInfo.type==='line'||this.chartInfo.type==='bar'||this.chartInfo.type==='stackArea'){//如果是这三个 默认给connected
+                this.chartInfo.param.nullType=this.chartInfo.param.nullType||'connected';
+                query+='&nullType='+this.chartInfo.param.nullType;
+              }
               axiosArr = [this.$get('/prom/api/v1/query_range?query='+query+"&start="+this.$stringTimeParseToUnix(startTime)+"&end="+this.$stringTimeParseToUnix(endTime)+'&step='+step)];
             } else {
               let query = encodeURIComponent(this.data.elements[0].expression);
+              if(this.chartInfo.type==='line'||this.chartInfo.type==='bar'||this.chartInfo.type==='stackArea'){//如果是这三个 默认给connected
+                this.chartInfo.param.nullType=this.chartInfo.param.nullType||'connected';
+                query+='&nullType='+this.chartInfo.param.nullType;
+              }
               axiosArr = [this.$get('/prom/api/v1/query_range?query='+query+"&start="+this.$stringTimeParseToUnix(startTime)+"&end="+this.$stringTimeParseToUnix(endTime)+'&step='+step)];
             }
           }
@@ -1677,7 +1689,7 @@
           unit,
           oldDot
         }
-      }
+      },
     },
     mounted() {
       this.firstLoad = false;
