@@ -51,7 +51,7 @@
         :minWidth="item.minWidth"
         :key="`col-${index}`"
         :label="item.label"
-        :show-overflow-tooltip="item.prop != 'labels'"
+        :show-overflow-tooltip="item.prop != 'labels' && item.prop != 'alertRule'"
         min-width="110px"
         :sortable="$tableSet.sortableShow(item.prop,'alertMessage')"
         :prop="$tableSet.propTitle(item.prop,'alertMessage')"
@@ -59,10 +59,8 @@
       >
         <template slot-scope="scope" :column="item">
           <template v-if="item.prop == 'alertRule'">
-            <div class="too-long-split pointer"v-if="scope.row.alertRule.alertName" >
-              <span @mouseenter="alertMessagehover(scope.row.alertRule, true, $event)" @mouseleave="alertMessagehover(scope.row.alertRule, false)">
-                <span>{{scope.row.alertRule.alertName}}</span>
-              </span>
+            <div v-if="scope.row.alertRule.alertName" >
+              <span @mouseenter="alertMessagehover(scope.row.alertRule, true, $event)" @mouseleave="alertMessagehover(scope.row.alertRule, false)">{{scope.row.alertRule.alertName}}</span>
               <alertRuleInfo v-if="scope.row.alertRule.loading" :id="scope.row.alertRule.id" :that="scope.row.alertRule"></alertRuleInfo>
             </div>
             <template v-else>-</template>
@@ -127,12 +125,10 @@
             </el-tooltip>-->
 
           </template>
-          <div v-else-if="item.prop == 'state'">
-                <span class="">
-                  {{scope.row['state'] == 1 ? "Pending" : ""}}
-                  {{scope.row['state'] == 2 ? "Expired" : ""}}
-                </span>
-          </div>
+          <span v-else-if="item.prop == 'state'" :class="{'green': scope.row['state'] == 2, 'red': scope.row['state'] == 1}">
+              {{scope.row['state'] == 1 ? "Pending" : ""}}
+              {{scope.row['state'] == 2 ? "Expired" : ""}}
+          </span>
           <div v-else-if="item.prop == 'current'" class="too-long-split pointer" @click="detail(scope.row)">
             <span v-if="!scope.row.current">-</span>
             <el-popover v-else placement="right" trigger="hover">
@@ -707,6 +703,12 @@
       labelsClassName(row) {
         if (row.column.label == this.$t("alert.list.labels")) {
           return "alert-message-list-labels";
+        } else if (row.column.label == this.$t("alert.list.state")) {
+          if (row.row.state == 1) {
+            return "danger";
+          } else if (row.row.state == 2) {
+            return "success";
+          }
         } else {
           return "";
         }

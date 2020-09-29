@@ -635,7 +635,7 @@ li{
   align-content: center;
 }
 .has-sub-popper {
-  color: red;
+  color: $danger-color;
 }
 .main-list {
   height: 100%;
@@ -785,13 +785,13 @@ li{
   background-color: $content-right-background-color;
 }
 .nz-table td.danger .cell>span {
-  background-color: #d64f40;
+  background-color: $danger-color;
   color: white;
   padding:2px 5px;
   border-radius: 4px;
 }
 .nz-table td.success .cell>span {
-  background-color: #50d050;
+  background-color: $success-color;
   color: white;
   padding:2px 5px;
   border-radius: 4px;
@@ -1622,11 +1622,11 @@ li{
 }
 .red {
   //background-color: #d64f40 !important;
-  background-color: #ec7f66 !important;
+  background-color: $danger-color !important;
 }
 .green {
   //background-color:#50d050 !important;
-  background-color:#23bf9a !important;
+  background-color:$success-color !important;
 }
 .grey {
   background-color:lightGrey;
