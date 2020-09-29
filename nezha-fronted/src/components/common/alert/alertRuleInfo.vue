@@ -63,7 +63,7 @@
         return function(position) {
           return {
             left: `${position.left + position.width + 20}px`,
-            top: `${position.top + 20}px`,
+            top: `${position.top - 10}px`,
           }
         }
       }
