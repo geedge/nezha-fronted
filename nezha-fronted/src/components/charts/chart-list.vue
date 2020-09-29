@@ -837,7 +837,7 @@
               const axiosArr = chartItem.elements.map((ele) => {
                 const filterItem = ele;
                 let query = encodeURIComponent(filterItem.expression);
-                if(chartInfo.type==='line'||chartInfo.type==='bar'||chartInfo.type==='stackArea'){//如果是这三个 默认给connected
+                if((chartInfo.type==='line'||chartInfo.type==='bar'||chartInfo.type==='stackArea')&&chartInfo.param){//如果是这三个 默认给connected
                   chartInfo.param.nullType=chartInfo.param.nullType||'connected';
                   query+='&nullType='+chartInfo.param.nullType;
                 }
@@ -1236,7 +1236,7 @@
           let step = bus.getStep(startTime, endTime);
           this.$nextTick(() => {
             let query = chartInfo.elements[0].expression;
-            if(chartInfo.type==='line'||chartInfo.type==='bar'||chartInfo.type==='stackArea'){
+            if((chartInfo.type==='line'||chartInfo.type==='bar'||chartInfo.type==='stackArea')&&chartInfo.param){
               chartInfo.param.nullType=chartInfo.param.nullType||'connected';
               query+='&nullType='+chartInfo.param.nullType;
             }
