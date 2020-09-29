@@ -75,11 +75,9 @@
         })
       });
       this.total=index;
-      console.log(this.expressionsData);
     },
     methods:{
       dataFormat(unit,value){
-        console.log(value);
         if(value.value){
           value=value.value[1]
         }else{
@@ -101,7 +99,6 @@
           });
           if(Object.keys(metric).length>0){
             let arr=labelValue.split(' ');
-            console.log(arr);
             labelValue='';
             arr.forEach((item)=>{
               if(metric[item]){

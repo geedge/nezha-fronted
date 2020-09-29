@@ -63,7 +63,7 @@
           </el-dropdown>
         </div>
         <!--<div  v-if="seriesItem.length!==seriesItemArr.length" class="more"><i class="el-icon-warning"></i> {{$t('dashboard.panel.moreFirstTitle')}} {{seriesLength}}{{$t('dashboard.panel.moreSecondTitle')}}<span @click="loadMore" class="moreClick">{{$t('dashboard.panel.moreThirdTitle')}}{{seriesItem.length}}</span></div>-->
-        <div class="line-area"  ref="lineChartArea"  :id="'lineChartArea'+chartIndex" v-show="firstShow" style="width:100%;height: calc( 100% - 60px )"></div>
+        <div class="line-area"  ref="lineChartArea"  :id="'lineChartArea'+chartIndex" v-show="firstShow" style="height:calc(100% - 60px)"></div>
         <div class="chart-no-data" v-show="noData">No Data</div>
         <div class='legend-container' id="legendArea" ref="legendArea" v-show="firstShow" v-scrollBar:legend>
           <div v-for="(item, index) in legendListMore" :title="item.alias?item.alias:item.name"  @click="clickLegend(item.name,index)" class="legend-item" :class="{'ft-gr':isGrey[index]}" :key="'legend_' + item.name+'_'+index">
@@ -138,6 +138,7 @@
   import {randomcolor} from  '@/components/common/js/radomcolor/randomcolor.js'
   import timePicker from '@/components/common/timePicker'
   import chartConfig from "@/components/page/dashboard/overview/chartConfig";
+  import {getChart, setChart,lineChartMove,getMousePoint} from "@/components/common/js/common";
   export default {
     name: 'lineChartBlock',
     components: {
@@ -239,8 +240,8 @@
       },
       mouseEnterChart(){
         this.caretShow=true;
-        if (this.echartStore) {
-          this.echartStore.setOption({
+        if (getChart(this.chartIndex)) {
+          getChart(this.chartIndex).setOption({
             toolbox: {
               show:true,
             }
@@ -249,8 +250,8 @@
       },
       mouseLeaveChart(){
         this.caretShow=false;
-        if (this.echartStore) {
-          this.echartStore.setOption({
+        if (getChart(this.chartIndex)) {
+          getChart(this.chartIndex).setOption({
             toolbox: {
               show:false,
             }
@@ -278,28 +279,28 @@
       clickLegend(legendName,index){
         //点击图表某一个legend，图表只显示当前点击的曲线或柱状图，其它隐藏，再次点击已选中的legend ，显示全部
         let curIsGrey=this.isGrey[index];
-        if(this.echartStore){
-          this.legendList.forEach((item,i)=>{
+        if(getChart(this.chartIndex)){
+          this.legendListMore.forEach((item,i)=>{
             let isGrey = this.isGrey[i];
             if(index != i){
               if(!curIsGrey && !isGrey){
-                this.echartStore.dispatchAction({
+                getChart(this.chartIndex).dispatchAction({
                   type: 'legendUnSelect',
                   name: item.name
                 });
               }else if(!curIsGrey && isGrey){
-                this.echartStore.dispatchAction({
+                getChart(this.chartIndex).dispatchAction({
                   type: 'legendSelect',
                   name: item.name
                 });
               }else{
-                this.echartStore.dispatchAction({
+                getChart(this.chartIndex).dispatchAction({
                   type: 'legendUnSelect',
                   name: item.name
                 });
               }
             }else {
-              this.echartStore.dispatchAction({
+              getChart(this.chartIndex).dispatchAction({
                 type: 'legendSelect',
                 name: item.name
               });
@@ -370,8 +371,9 @@
         }
       },
       clearData(){
-        if(this.echartStore){
-          this.echartStore.clear();
+        if(getChart(this.chartIndex)){
+          getChart(this.chartIndex).clear();
+          // getChart(this.chartIndex).dispose();//关闭销毁实例 不再占用内存
         }
       },
       formatLegend(chartWidth,name){
@@ -420,13 +422,18 @@
           maxTime = dataArg[0].data[len][0];
         }
         if (chartSite === 'local') {
-          this.echartStore = echarts.init(ele);
+          this.$nextTick(()=>{
+            setChart(this.chartIndex, echarts.init(ele));
+            console.log(123);
+          })
           //chartId='lineChartArea';
         }else if (chartSite === 'screen') {
           this.echartModalStore = echarts.init(ele);
           //chartId='screenShowArea';
         }
         var chartWidth = ele.clientWidth;
+        var chartHeight = ele.clientHeight;
+        console.log(ele.offsetHeight);
         var title = {
           show:false,
           text: chartInfo.title || null,
@@ -443,44 +450,20 @@
         };
         let stackIconBorderColor = (chartInfo.type==='stackArea'?'#53a3cb':'#7e7e7e');
         let stackIconChooseBorderColor = (chartInfo.type==='stackArea'?'#7e7e7e':'#53a3cb');
-        let maxValue=0;
-        let minValue=0;
         if(chartInfo.unit &&dataArg.length>0){
           maxValue=dataArg[0].data[0][1];
           minValue=dataArg[0].data[0][1];
           for(let j = 0; j < dataArg.length ; j++){
-            for (let i = 0; i < dataArg[j].data.length - 1; i++) {
-              maxValue = (maxValue < Number(dataArg[j].data[i+1][1]) ? Number(dataArg[j].data[i+1][1]) : maxValue);
-              minValue = (minValue > Number(dataArg[j].data[i+1][1]) ? Number(dataArg[j].data[i+1][1]) : minValue);
-            }
+            dataArg[j].showAllSymbol=false;
           }
         }
-        let chartUnit=chartInfo.unit?chartInfo.unit:2;
-        let unit=chartDataFormat.getUnit(chartUnit);
-        maxValue=chartDataFormat.formatDatas(maxValue,unit.type,'ceil',unit.ascii);
-        minValue=chartDataFormat.formatDatas(minValue,unit.type,'floor',unit.ascii);
-        let oldValue=maxValue;
-        let dot=0;
-        if(maxValue==1){
-          dot++;
-        }
-        if(oldValue>10){
-          while(oldValue>10){
-            oldValue=oldValue/10;
-          }
-        }else if(oldValue<1&&maxValue!==0){
-          while(oldValue<1&&oldValue>0){
-            oldValue=oldValue*10;
-            dot++;
-          }
-          maxValue=Math.ceil(oldValue)/Math.pow(10,dot);
-          dot++;
-        }
-        let copies=chartDataFormat.copies(oldValue,unit.type);
-        let oldDot=2;
-        if(maxValue<=1){
-          oldDot=dot>6?6:dot;
-        }
+        let maxValueCopies = this.getMaxValue(dataArg,chartInfo);
+        let maxValue=maxValueCopies.maxValue;
+        let minValue=maxValueCopies.minValue;
+        let dot=maxValueCopies.dot;
+        let copies=maxValueCopies.copies;
+        let unit=maxValueCopies.unit;
+        let oldDot=maxValueCopies.oldDot;
         var option = {
           title:{
             show:false,
@@ -523,6 +506,9 @@
             /*enterable:true, 导致tooltip不消失，显示多个tooltip*/
             position:function(point,params,dom,rect,size){
               dom.style.transform = "translateZ(0)";
+              var windowWidth=window.innerWidth;//窗口宽度
+              var windowHeight=window.innerHeight;//窗口高度
+              var windowMouse=getMousePoint();
               //提示框位置
               var x=0;
               var y=0;
@@ -550,22 +536,23 @@
                   }else{
                     x = pointX - boxWidth;
                   }
-                  if((parClientHeight-pointY-(parTop-parScrollTop)-20)>=boxHeight){//说明鼠标上面放不下提示框
-                    y = pointY+10;
+                  if(windowMouse.y + 50 +boxHeight<windowHeight){//说明鼠标上面放不下提示框
+                    y = pointY + 15;
                   }else {
-                    y = pointY-boxHeight;
+                    y = pointY - boxHeight - 10;
                   }
                   return [x,y];
                 }else {//preview page
-                  if(pointX<(viewWidth/2)){//说明鼠标在左边放不下提示框
-                    x=pointX+10;
+
+                  if(windowMouse.x<(windowWidth/2)){//说明鼠标在左边放不下提示框
+                    x=pointX + 15;
                   }else{
-                    x = pointX - boxWidth;
+                    x = pointX - boxWidth - 15;
                   }
-                  if(pointY<(viewHeight/2)){//说明鼠标上面放不下提示框
-                    y = pointY+10;
+                  if(windowMouse.y + 50 +boxHeight<windowHeight){//说明鼠标上面放不下提示框
+                    y = pointY + 15;
                   }else {
-                    y = pointY-boxHeight;
+                    y = pointY - boxHeight - 10;
                   }
                   return [x,y];
                 }
@@ -575,25 +562,22 @@
                 }else{
                   x = pointX - boxWidth;
                 }
-                if(pointY<(viewHeight/2)){//说明鼠标上面放不下提示框
-                  y = pointY+10;
+                if(windowMouse.y + 50 +boxHeight<windowHeight){//说明鼠标上面放不下提示框
+                  y = pointY + 15;
                 }else {
-                  y = pointY-boxHeight;
+                  y = pointY - boxHeight - 10;
                 }
                 return [x,y];
               }
             },
             formatter:function(params){
-              //display:inline-block;white-space:nowrap;overflow-x:hidden;text-overflow:ellipsis;
               let str = `<div>`;
-
-              //let str = `<div  style='white-space:nowrap;overflow-x:hidden;text-overflow:ellipsis;min-width:150px;max-width:600px;display:inline-block;line-height: 18px;font-size:12px;font-family: Roboto,Helvetica Neue,Arial,sans-serif;'>`;
               let sum = 0;
               params.forEach((item, i) => {
                 let tip=legend[item.seriesIndex];
                 let color = self.bgColorList[item.seriesIndex];
                 if(i===0){
-                  let value=bus.computeTimezone(item.data[0]);
+                  let value=item.data[0];
                   let t_date = new Date(value);
                   str += [t_date.getFullYear(), t_date.getMonth() + 1, t_date.getDate()].join('-') + " "
                     + [t_date.getHours(), t_date.getMinutes(),t_date.getSeconds()].join(':');
@@ -604,10 +588,10 @@
                   val = Number(item.data[1]);
                 }
                 sum +=val;
-                str += `<div style="white-space:nowrap;overflow-x:hidden;text-overflow:ellipsis;display: flex; justify-content: space-between; min-width: 150px; max-width: 200px; line-height: 18px; font-size: 12px;">`;
+                str += `<div style="white-space:nowrap;overflow-x:hidden;text-overflow:ellipsis;display: flex; justify-content: space-between; min-width: 150px; max-width: 600px; line-height: 18px; font-size: 12px;">`;
                 str += `<div style="max-width: 500px;white-space:nowrap;overflow-x:hidden;text-overflow:ellipsis;"><span style='display:inline-block;margin-right:5px;border-radius:10px;width:15px;height:5px;background-color: ${color};}'></span>${tip?(tip.alias?tip.alias:tip.name):item.seriesName}  </div>`;
                 str += `<div style="padding-left: 10px;">`;
-                str += chartDataFormat.getUnit(chartInfo.unit?chartInfo.unit:2).compute(val,null,2);
+                str += chartDataFormat.getUnit(chartInfo.unit?chartInfo.unit:2).compute(val,null,-1,oldDot);
                 str += `</div>`;
                 str += `</div>`;
               });
@@ -789,21 +773,21 @@
           this.legendListMore=this.legendList.filter((item,index)=>index<this.seriesLength);
           this.$nextTick(() => {
             setTimeout(function () {
-              let divHeight = 111;
+              let divHeight = self.$refs.legendArea.offsetHeight;
               if(!chartInfo.height){
-                self.echartStore.resize({height:228});
+                getChart(self.chartIndex).resize({height:(318-divHeight-self.$chartResizeTool.titleHeight-self.$chartResizeTool.chartBlankHeight)});
               }else {
-                self.echartStore.resize({height:(chartInfo.height-divHeight-this.$chartResizeTool.titleHeight-this.$chartResizeTool.chartBlankHeight)});
+                getChart(self.chartIndex).resize({height:(chartInfo.height-divHeight-self.$chartResizeTool.titleHeight-self.$chartResizeTool.chartBlankHeight)});
               }
               if(dataArg&&dataArg.length>0){
-                self.echartStore.clear();
-                self.echartStore.setOption(option);//创建图表
+                getChart(self.chartIndex).clear();
+                getChart(self.chartIndex).setOption(option);//创建图表
                 self.noData=false;
               }else{
                 self.noData=true;
                 option=chartConfig.getOption('noData')
-                self.echartStore.clear();
-                self.echartStore.setOption(option);//创建图表
+                getChart(self.chartIndex).clear();
+                getChart(self.chartIndex).setOption(option);//创建图表
               }
 
               self.$refs['localLoading'+self.chartIndex].endLoading();
@@ -811,9 +795,9 @@
             }, 100);
 
             window.addEventListener('resize', function () {
-              self.echartStore.resize();
+              getChart(self.chartIndex).resize();
             });
-            this.echartStore.on('magictypechanged', function (params) {
+            getChart(this.chartIndex).on('magictypechanged', function (params) {
               self.isStackArea = !self.isStackArea;
               if(self.isStackArea){
                 this.setOption({
@@ -847,7 +831,7 @@
                       params.forEach((item, i) => {let tip=legend[item.seriesIndex];
                         let color = self.bgColorList[item.seriesIndex];
                         if(i===0){
-                          let value=bus.computeTimezone(item.data[0]);
+                          let value=item.data[0];
                           let t_date = new Date(value);
                           str += [t_date.getFullYear(), t_date.getMonth() + 1, t_date.getDate()].join('-') + " "
                             + [t_date.getHours(), t_date.getMinutes(),t_date.getSeconds()].join(':');
@@ -1111,8 +1095,8 @@
         chartBox.style.height = `${this.$chartResizeTool.calculateHeight(chartItem.height)}px`;
       },
       clearChart(){
-        if(this.echartStore){
-          this.echartStore.clear();
+        if(getChart(this.chartIndex)){
+          getChart(this.chartIndex).clear();
         }
         if(this.echartModalStore){
           this.echartModalStore.clear();
@@ -1465,15 +1449,31 @@
       loadMore(){
         this.seriesItemArr=this.seriesItem;
         this.legendListMore=this.legendList;
-        this.echartStore.setOption({
-          series:this.seriesItem
+        let chartInfo=this.data;
+        let dataArg=this.seriesItem;
+        let maxValueCopies = this.getMaxValue(dataArg,chartInfo);
+        let maxValue=maxValueCopies.maxValue;
+        let minValue=maxValueCopies.minValue;
+        let dot=maxValueCopies.dot;
+        let copies=maxValueCopies.copies;
+        let unit=maxValueCopies.unit;
+        let oldDot=maxValueCopies.oldDot;
+        getChart(this.chartIndex).setOption({
+          series:this.seriesItem,
+          yAxis:{
+            minInterval: chartDataFormat.Interval(maxValue,copies,unit.type,'min'),
+            maxInterval: chartDataFormat.Interval(maxValue,copies,unit.type,'max'),
+          }
         });
+        if(this.hasLegendOptions){
+          this.computeLegendData(this.legendListMore,this.seriesItemArr,'local')
+        }
         this.$nextTick(()=>{
           let divHeight = this.$refs.legendArea.offsetHeight;
           if(!this.chartInfo.height){
-            this.echartStore.resize({height:228});
+            getChart(this.chartIndex).resize({height:(400-divHeight-this.$chartResizeTool.titleHeight-this.$chartResizeTool.chartBlankHeight)});
           }else {
-            this.echartStore.resize({height:(this.chartInfo.height-divHeight-this.$chartResizeTool.titleHeight-this.$chartResizeTool.chartBlankHeight)});
+            getChart(this.chartIndex).resize({height:(this.chartInfo.height-divHeight-this.$chartResizeTool.titleHeight-this.$chartResizeTool.chartBlankHeight)});
           }
         })
       },
@@ -1481,9 +1481,26 @@
       loadScreenMore(){
         this.seriesItemArrScreen=this.seriesItemScreen;
         this.screenLegendListMore=this.screenLegendList;
+        let chartInfo=this.data;
+        let dataArg=this.seriesItem;
+
+        let maxValueCopies = this.getMaxValue(dataArg,chartInfo);
+        let maxValue=maxValueCopies.maxValue;
+        let minValue=maxValueCopies.minValue;
+        let dot=maxValueCopies.dot;
+        let copies=maxValueCopies.copies;
+        let unit=maxValueCopies.unit;
+        let oldDot=maxValueCopies.oldDot;
         this.echartModalStore.setOption({
-          series:this.seriesItemScreen
+          series:this.seriesItemScreen,
+          yAxis:{
+            minInterval: chartDataFormat.Interval(maxValue,copies,unit.type,'min'),
+            maxInterval: chartDataFormat.Interval(maxValue,copies,unit.type,'max'),
+          }
         });
+        if(this.hasLegendOptions){
+          this.computeLegendData(this.screenLegendListMore,this.seriesItemArrScreen,'screen')
+        }
         this.$nextTick(()=>{
           let legendDiv = document.getElementById('screenLegendArea'+this.chartIndex);
           let divHeight = legendDiv.offsetHeight;
@@ -1492,13 +1509,68 @@
           this.$refs.screenShowArea.style.height = `${sumHeight - divHeight - this.screenTitleHeight}px`;
           this.echartModalStore.resize({height: (sumHeight - divHeight - this.screenTitleHeight)});//图表的高度
         })
-      }
+      },
+      getMaxValue(dataArg,chartInfo){
+        let maxValue=0;
+        let minValue=0;
+        if(chartInfo.unit &&dataArg.length>0){
+          maxValue=dataArg[0].data[0][1];
+          minValue=dataArg[0].data[0][1];
+          for(let j = 0; j < dataArg.length ; j++){
+            for (let i = 0; i < dataArg[j].data.length - 1; i++) {
+              maxValue = (maxValue < Number(dataArg[j].data[i+1][1]) ? Number(dataArg[j].data[i+1][1]) : maxValue);
+              minValue = (minValue > Number(dataArg[j].data[i+1][1]) ? Number(dataArg[j].data[i+1][1]) : minValue);
+            }
+          }
+        }
+        let chartUnit=chartInfo.unit?chartInfo.unit:2;
+        let unit=chartDataFormat.getUnit(chartUnit);
+        maxValue=chartDataFormat.formatDatas(maxValue,unit.type,'ceil',unit.ascii);
+        minValue=chartDataFormat.formatDatas(minValue,unit.type,'floor',unit.ascii);
+        let oldValue=maxValue;
+        let dot=0;
+        if(maxValue==1){
+          dot++;
+        }
+        if(oldValue>10){
+          while(oldValue>10){
+            oldValue=oldValue/10;
+          }
+        }else if(oldValue<1&&maxValue!==0){
+          while(oldValue<1&&oldValue>0){
+            oldValue=oldValue*10;
+            dot++;
+          }
+          maxValue=Math.floor(oldValue)/Math.pow(10,dot);
+          dot++;
+        }
+        let copies=chartDataFormat.copies(oldValue,unit.type);
+        let oldDot=2;
+        if(maxValue<=1){
+          oldDot=dot>6?6:dot;
+        }
+        return {
+          maxValue,
+          dot,
+          copies,
+          minValue,
+          unit,
+          oldDot
+        }
+      },
     },
     mounted() {
       this.firstLoad = false;
+      if(!document.onmousemove){// 添加鼠标移动事件监听
+        document.onmousemove=lineChartMove
+      }
     },
     beforeDestroy() {
       this.clearChart();
+      getChart(this.chartIndex).dispose();
+      if(!document.onmousemove){// 移除鼠标移动事件监听
+        document.onmousemove=null;
+      }
     },
   };
 
