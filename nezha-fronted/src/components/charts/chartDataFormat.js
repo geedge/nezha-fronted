@@ -19,11 +19,11 @@ function short(value,index,type=1,dot){
 
 }
 function percent01(value,index){
-  value=parseFloat(new Number(value).toPrecision(12));
   return `${value} %`;
 }
 function percent02(value,index){
-  value=parseFloat((new Number(value)*100).toPrecision(12));
+  // value=parseFloat((new Number(value)*100).toPrecision(12));
+  value=parseFloat(value*100);
   return `${value} %`;
 }
 function localFormat(value,index){
@@ -327,10 +327,8 @@ function asciiCompute(num,ascii,units,dot=2){
     num = num / Math.pow(ascii,carry)
   }
   if(Number.isInteger(num)){
-    //console.log(num +' '+units[carry],dot);
     return num +' '+units[carry];
   }else{
-    //console.log(num.toFixed(dot) +' '+units[carry],dot);
     return num.toFixed(dot) +' '+units[carry];
   }
 }
@@ -647,9 +645,7 @@ export default {
       while(value<1){
         pow++;
         value=value*10;
-        //console.log(value);
       }
-      //console.log( Math.floor(value+1)/Math.pow(10,pow));
       return Math.ceil(value+1)/Math.pow(10,pow);
     }
     if(type ==='Time'){
@@ -760,7 +756,6 @@ export default {
     return 1;
     // let interVal=value/copies;
     // interVal = interVal || 1;
-    // console.log(interVal);
     // return interVal
   }
 }
