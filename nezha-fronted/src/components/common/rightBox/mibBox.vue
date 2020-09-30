@@ -31,7 +31,7 @@
             clearable></el-cascader>
         </el-form-item>
         <el-form-item :label="$t('config.mib.remark')" prop="remark">
-          <el-input maxlength="512" rows="4" show-word-limit type="textarea" placeholder="" v-model.trim="editMib.remark" size="small"></el-input>
+          <el-input maxlength="512" rows="4" show-word-limit type="textarea" placeholder="" v-model="editMib.remark" size="small"></el-input>
         </el-form-item>
         <el-form-item :label="$t('config.mib.mibFiles')" prop="file" :rules="[{validator:checkMibFile,trigger:'change'}]" :class="{'add-required':!editMib.id}">
           <el-upload drag :multiple="false" action="" :file-list="uploadFileList" :on-change="uploadChange" :auto-upload="false" accept="" :on-remove="afterClearFile" ref="mibFileUpload" class="mib-upload right-box-form-row">
