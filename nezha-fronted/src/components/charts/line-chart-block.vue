@@ -1699,7 +1699,9 @@
     },
     beforeDestroy() {
       this.clearChart();
-      getChart(this.chartIndex).dispose();
+      if(getChart(this.chartIndex)){
+        getChart(this.chartIndex).dispose();
+      }
       if(!document.onmousemove){// 移除鼠标移动事件监听
         document.onmousemove=null;
       }
