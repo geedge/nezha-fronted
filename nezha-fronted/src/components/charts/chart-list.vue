@@ -574,27 +574,28 @@
         }
         //endpoint单独处理
         if (param.from == "endpoint") {
+          console.log("endpoint");
           this.dataList = [];
-          this.dataList.push({
-            id: -8,
-            panelId: 0,
-            title: this.$t("alert.alertList"),
-            span: 8,
-            height: 700,
-            type: "alertList",
-            prev: -9,
-            next: -1,
-            buildIn: 1,
-            draggable: false,
-            resizable: false,
-            editable: false,
-          });
+          // this.dataList.push({
+          //   id: -8,
+          //   panelId: 0,
+          //   title: this.$t("alert.alertList"),
+          //   span: 8,
+          //   height: 700,
+          //   type: "alertList",
+          //   prev: -9,
+          //   next: -1,
+          //   buildIn: 1,
+          //   draggable: false,
+          //   resizable: false,
+          //   editable: false,
+          // });
           this.dataList.push({
             id: -10,
             panelId: 0,
             dataId: this.additionalInfo.id,
             title: this.$t("project.chart.endpointInfo"),
-            span: 4,
+            span: 6,
             height: 350,
             type: "endpointInfo",
             prev: 0,
@@ -611,7 +612,7 @@
             id: -9,
             panelId: 0,
             title: this.$t("asset.assetInfo"),
-            span: 4,
+            span: 6,
             height: 350,
             type: "assetInfo",
             prev: -10,

@@ -479,6 +479,21 @@
         this.endLoading();
       },
       initChart(series) {
+        series.forEach((item)=>{
+          item.areaStyle={
+            // color: {
+            //   type: 'linear',
+            //   x: 0,
+            //   y: 0,
+            //   colorStops: [{
+            //     offset: 0, color: 'rgb(255, 158, 68)' // 0% 处的颜色
+            //   }, {
+            //     offset: 1, color: 'rgb(255, 70, 131)' // 100% 处的颜色
+            //   }],
+            //   global: false
+            // }
+          }
+        });
         let option = {
           title: {show: false},
           grid: {top: 20, bottom: 20},
@@ -519,18 +534,18 @@
             show: false
           },
           useUTC: false,//使用本地时间
-          visualMap: {
-            show: false,
-            pieces: [{
-              gt: -0.5,
-              lt: 0.5,
-              color: '#d64f40'
-            }, {
-              gt: 0.6,
-              lt: 1.5,
-              color: '#50d050'
-            }]
-          },
+          // visualMap: {
+          //   show: false,
+          //   pieces: [{
+          //     gt: -0.5,
+          //     lt: 0.5,
+          //     color: '#d64f40'
+          //   }, {
+          //     gt: 0.6,
+          //     lt: 1.5,
+          //     color: '#50d050'
+          //   }]
+          // },
           series: series
         };
         let chart = echarts.init(document.querySelector("#littleChart"));
