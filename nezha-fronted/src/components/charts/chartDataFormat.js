@@ -19,11 +19,11 @@ function short(value,index,type=1,dot){
 
 }
 function percent01(value,index){
+  value=parseFloat((new Number(value)).toPrecision(12));
   return `${value} %`;
 }
 function percent02(value,index){
   value=parseFloat((new Number(value)*100).toPrecision(12));
-  // value=parseFloat(value*100);
   return `${value} %`;
 }
 function localFormat(value,index){

@@ -409,7 +409,7 @@
           this.$set(item[type], "position", position);
         }
         this.$set(item[type], "loading", loading);
-        //this.$set(this.tableData,index,item);// 调用父组件
+        this.$set(this.tableData,index,item);// 调用父组件
       },
       // label tooltip是否显示
       labelToolTipDis(labelType){
