@@ -232,24 +232,25 @@
       reload(){
         this.topologyLoading=true;
         this.editVisNetwork=false;
-        this.$get('/project/topo',{projectId:this.projectInfo.id}).then(res=>{
-          if(res.data.topo&&res.data.topo.nodes&&res.data.topo.nodes.length>0){
-            this.nodesArray=[];
-            this.edgesArray=[];
-            this.nodesArrayOther=this.formatNodesArr(res.data.topo.nodes);
-            this.edgesArrayOther=this.formatEdgesArr(res.data.topo.lines);
-          }else{
-            this.nodesArray=[];
-            this.edgesArray=[];
-            setTimeout(()=>{
-              this.topologyLoading=false;
-              this.$refs['topology'].setData();
-            },500)
-          }
-          this.$refs['topology'].viewsCenter=res.data.topo.viewsCenter?res.data.topo.viewsCenter:{x:0,y:0};
-          this.$refs['topology'].zoom=res.data.topo.zoom?(res.data.topo.zoom*this.screenX/1920):1;
-          this.$refs['topology'].selNodeId='';
-        })
+        this.getNetworkData(this.projectInfo);
+        // this.$get('/project/topo',{projectId:this.projectInfo.id}).then(res=>{
+        //   if(res.data.topo&&res.data.topo.nodes&&res.data.topo.nodes.length>0){
+        //     this.nodesArray=[];
+        //     this.edgesArray=[];
+        //     this.nodesArrayOther=this.formatNodesArr(res.data.topo.nodes);
+        //     this.edgesArrayOther=this.formatEdgesArr(res.data.topo.lines);
+        //   }else{
+        //     this.nodesArray=[];
+        //     this.edgesArray=[];
+        //     setTimeout(()=>{
+        //       this.topologyLoading=false;
+        //       this.$refs['topology'].setData();
+        //     },500)
+        //   }
+        //   this.$refs['topology'].viewsCenter=res.data.topo.viewsCenter?res.data.topo.viewsCenter:{x:0,y:0};
+        //   this.$refs['topology'].zoom=res.data.topo.zoom?(res.data.topo.zoom*this.screenX/1920):1;
+        //   this.$refs['topology'].selNodeId='';
+        // })
       },
       formatNodesArr(arr){
         let arr1=[];
@@ -263,6 +264,19 @@
           if(this.allModuleInfo.module){
             item.label=this.allModuleInfo.module.find(item1=>item1.id===item.id).name;
           }
+          this.$get('/module/stat',{id:item.id}).then(res=>{
+            item.state=res.data;
+            // if(index===arr.length-1){
+            //   setTimeout(()=>{
+            //     this.nodesArray=[...this.nodesArrayOther];
+            //     this.edgesArray=[...this.edgesArrayOther];
+            //     setTimeout(()=>{
+            //       this.topologyLoading=false;
+            //       this.$refs['topology'].setData();
+            //     },500)
+            //   })
+            // }
+          });
           this.dealImg(`/project/topo/icon/${item.iconId}`).then((data)=>{
             item.image=data;
             if(index===arr.length-1){

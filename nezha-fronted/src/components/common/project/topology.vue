@@ -32,8 +32,15 @@
         class="network-pop"
         :style="{transform:'scale('+zoom+')',width:'0',height:'0'}"
         v-show="networkPopShow"
+        ref="network-pop"
       >
-        <i v-if="networkPopShow" :class="{'nz-icon':true,'nz-icon-hexagonBorder':true,'selpop':selpopIs(item)}"  v-for="item in popData"  :style="{top:item.top,left:item.left}" @click="popClick(item.id)" :title="item.title">
+        <i v-if="networkPopShow"
+           :class="{'nz-icon':true,'nz-icon-hexagonBorder':true,'selpop':selpopIs(item),'error-model-stat':modelPopError(item)}"
+           v-for="item in popData"
+           :style="{top:item.top,left:item.left}"
+           @click="popClick(item.id)"
+           :title="item.title"
+        >
           <i class="nz-icon nz-icon-liubianxing"></i>
           <i :class="[item.className,{'nz-icon':item.className},'noMove']"></i>
         </i>
@@ -55,17 +62,19 @@
       <!--图谱图右侧-->
       <!--<div class="networkContent">33333</div>-->
       <!--model上的图标-->
-      <i class="nz-icon nz-icon-shuidi"
-         v-show="item.show"
-         v-for="(item,index) in modelTop"
-         :style="{top:(item.y- 80 + 49*(1-zoom))+'px',left:(item.x- 26 + 6*(1-zoom))+'px',transform:'scale('+zoom+')'}"
-         :ref="'modelTopId'+index"
-         @mousedown="modelTopClick(item,index)"
+      <div :style="{top:(item.y- 80 + 80*(1-zoom))+'px',left:(item.x- 26 + 26*(1-zoom))+'px',transform:'scale('+zoom+')',position:'absolute'}"
+           v-for="(item,index) in modelTop"
       >
-        <!--@mousedown="(e)=>modelTopMouseDown(item,index,e)"-->
-        <!--@mouseup="modelTopMouseUp(item,index)"-->
-        <i class="nz-icon nz-icon-model"></i>
-      </i>
+        <i :class="{'nz-icon':true, 'nz-icon-shuidi':true,'model-error':item.error&&index!==activeIndex,'model-error-active':item.error&&index===activeIndex}"
+           v-show="item.show"
+           :ref="'modelTopId'+index"
+           @mousedown="modelTopClick(item,index)"
+        >
+          <!--@mousedown="(e)=>modelTopMouseDown(item,index,e)"-->
+          <!--@mouseup="modelTopMouseUp(item,index)"-->
+          <i class="nz-icon nz-icon-model"></i>
+        </i>
+      </div>
       <!--悬浮network部分-->
       <div class="network-info">
         <div  v-if="popDataShow.main">
@@ -276,6 +285,8 @@
           main:false,
         },
         modelTop:[],
+        activeIndex:'',
+        activeModelItem:{},
         //viewsCenter
         viewsCenter:{
           x:0,y:0
@@ -397,7 +408,7 @@
               align:'bottom',
               vadjust:10,
             },
-            selfReferenceSize:40,
+            selfReference:{size:30, angle:Math.PI / 4},
             arrowStrikethrough:false,
             chosen:{
               edge:(values, id, selected, hovering)=>{
@@ -498,13 +509,16 @@
         }else{
           model={...model,...this.network.DOMtoCanvas({x:80,y:100})};
         }
-        nodesArray.push(model);
-        this.$emit("setTopologyData",nodesArray,this.edgesArray);
-        this.setNetworkData(nodesArray,this.edgesArray);
-        this.$nextTick(()=>{
-          this.arrayDiff();
-          this.$emit('editVisNetworkChange',true);
-        })
+        this.$get('/module/stat',{id:model.id}).then(res=>{
+          model.state=res.data;
+          nodesArray.push(model);
+          this.$emit("setTopologyData",nodesArray,this.edgesArray);
+          this.setNetworkData(nodesArray,this.edgesArray);
+          this.$nextTick(()=>{
+            this.arrayDiff();
+            this.$emit('editVisNetworkChange',true);
+          })
+        });
       },
       addModelShow(){ // 显示添加节点弹窗
         this.addNodeShow=true;
@@ -607,12 +621,32 @@
         this.modelTop=[];
         this.nodesArray.forEach((item)=>{
           let position=this.network.canvasToDOM({x:item.x,y:item.y});
-          this.modelTop.push({
+          let obj={
             show:true,
             x:position.x,
             y:position.y,
             id:item.id,
-          })
+            error:false,
+            assetError:false,
+            alertError:false,
+            endpointError:false,
+            state:item.state,
+          };
+          if(item.state){
+            if(item.state.assetStat.down>0){
+              obj.error=true;
+              obj.assetError=true;
+            }
+            if(item.state.endpointStat.down>0){
+              obj.error=true;
+              obj.endpointError=true;
+            }
+            if(item.state.alertStat.high> 0 || item.state.alertStat.low>0 || item.state.alertStat.medium>0){
+              obj.error=true;
+              obj.alertError=true;
+            }
+          }
+          this.modelTop.push(obj);
         })
       },
       selNodeArrUpdate(){// 选中框位置更新
@@ -641,21 +675,21 @@
           x:e.clientX-this.relativeModelTop.x,
           y:e.clientY-this.relativeModelTop.y
         };
-        this.$refs['modelTopId'+this.index][0].style.top=position.y+'px';
-        this.$refs['modelTopId'+this.index][0].style.left=position.x+'px';
-        // {top:(item.y- 80 + 5*(10-zoom*10))+'px',left:(item.x-26)+'px'
-        let cancvs=this.network.DOMtoCanvas({
-          x:position.x+26-5*(1-this.zoom),
-          y:position.y+80-(50*(1-this.zoom)),
-        });
-        this.network.moveNode(this.selNodeId,cancvs.x,cancvs.y);
-        let selItem = this.nodesArray.find((item)=>item.id===this.selNodeId);
-        selItem.x=cancvs.x;
-        selItem.y=cancvs.y;
-        this.$emit("setTopologyData",this.nodesArray,this.edgesArray);
-        if(this.networkPopShow){
-          this.setPopPosition(this.selNodeId);
-        }
+        // this.$refs['modelTopId'+this.index][0].style.top=position.y+'px';
+        // this.$refs['modelTopId'+this.index][0].style.left=position.x+'px';
+        // // {top:(item.y- 80 + 5*(10-zoom*10))+'px',left:(item.x-26)+'px'
+        // let cancvs=this.network.DOMtoCanvas({
+        //   x:position.x+26-5*(1-this.zoom),
+        //   y:position.y+80-(50*(1-this.zoom)),
+        // });
+        // this.network.moveNode(this.selNodeId,cancvs.x,cancvs.y);
+        // let selItem = this.nodesArray.find((item)=>item.id===this.selNodeId);
+        // selItem.x=cancvs.x;
+        // selItem.y=cancvs.y;
+        // this.$emit("setTopologyData",this.nodesArray,this.edgesArray);
+        // if(this.networkPopShow){
+        //   this.setPopPosition(this.selNodeId);
+        // }
       },
       modelTopMouseMoveEdge(e){
         let position={
@@ -670,6 +704,8 @@
         this.expressionsInfoPosition=position;
       },
       modelTopClick(item,index){
+        this.activeIndex=index;
+        this.activeModelItem=item;
         this.index=index;
         this.selNodeId=item.id;
         if(this.selNodeId){
@@ -717,11 +753,33 @@
           // this.setPopPosition(this.selNodeId);
         }
       },
+      topologyZoom(scale){
+        if(scale<0.1){//每次缩小0.1 保证缩放大于0
+          scale=0.1;
+        }
+        if(scale>3){
+          scale=3;
+        }
+        this.zoom=scale;
+        this.network.moveTo({
+          position: this.viewsCenter,
+          scale: this.zoom,
+          offset: {x:0, y:0},
+        });
+        this.$nextTick(()=>{
+          this.modelTopUpdate();
+          this.setPopPosition(this.selNodeId);
+          this.popDataShowUpdate();
+        })
+      },
       //拓扑图放大缩小
       zoomChange(num){
         this.zoom+=num;
         if(this.zoom<0){//每次缩小0.1 保证缩放大于0
-          this.zoom=0.01;
+          this.zoom=0.1;
+        }
+        if(this.zoom>5){
+          this.zoom=5;
         }
         this.network.moveTo({
           position: this.viewsCenter,
@@ -734,7 +792,7 @@
           this.popDataShowUpdate();
         })
       },
-      selpopIs(item){
+      selpopIs(item){//判断是否有图表
         let flag=true;
         if(item.id==='other'){
           flag=false;
@@ -744,6 +802,19 @@
           flag=false;
         }
         return flag
+      },
+      modelPopError(item){
+        // console.log(item,this.activeModelItem);
+        if(item.id==='asset'&&this.activeModelItem.assetError){
+          return true;
+        }
+        if(item.id==='alert'&&this.activeModelItem.alertError){
+          return true;
+        }
+        if(item.id==='endpoint'&&this.activeModelItem.endpointError){
+          return true;
+        }
+        return false;
       },
       qqq(){
         let nodesArray=[...this.nodesArray];
@@ -783,6 +854,7 @@
          let this_=this;
          this.init('modal');
          this.network.on("click", function (params) {
+           this_.activeIndex='';
            this_.networkPopClose();
            if(!params.edges.length&&!params.nodes.length){
              this_.popDataShowUpdate('',true);
@@ -910,6 +982,7 @@
            if(this_.networkPopShow){
              this_.setPopPosition(this_.selNodeId);
            }
+           this_.topologyZoom(params.scale);
            return false
          });
 
@@ -959,6 +1032,9 @@
     font-size: 48px;
     color: #84d5c2;
   }
+  .network-pop .nz-icon-hexagonBorder.error-model-stat{
+    color: #DE5D3F;
+  }
   .network-pop  .nz-icon-liubianxing{
     color:#e2f3ef;
     font-size: 44px;
@@ -968,12 +1044,18 @@
     transform: scale(1.02);
     z-index: -1;
   }
-  .nz-icon.noMove{
+  .network-pop .error-model-stat .nz-icon-liubianxing{
+    color: rgba(222,93,63,0.45);
+  }
+  .network-pop .nz-icon.noMove{
     position: absolute;
     top: 0;
     left: 14px;
     font-size: 20px;
     color: #27c09c;
+  }
+  .network-pop .error-model-stat .nz-icon.noMove{
+    color: #DE5D3F;
   }
   .network-pop .selpop:hover{
     transform: scale(1.2);
@@ -982,7 +1064,6 @@
     transform: scale(1.1);
     left: 4px;
     font-size: 41px;
-    color: #D7FAF1;
     top: 0;
   }
   .network-pop .selpop:hover .noMove{
@@ -1104,6 +1185,28 @@
     left: -60px;
     top: -60px;
   }
+  @keyframes model-error-animation{
+    0%   {
+      transform: scale(0.7);
+    }
+    50%   {
+      transform: scale(1);
+    }
+    100% {
+      transform: scale(0.7);
+    }
+  }
+  @keyframes model-icon-animation{
+    0%   {
+      transform: scale(1.2) translateX(1px);
+    }
+    50%   {
+      transform: scale(0.9) translateX(0px);
+    }
+    100% {
+      transform: scale(1.2) translateX(1px);
+    }
+  }
   .nz-icon-shuidi{
     position: absolute;
     font-size: 48px;
@@ -1112,12 +1215,28 @@
     height: 60px;
     width: 38px;
   }
+  .model-error.nz-icon-shuidi{
+    color: rgba(222,93,63,0.45);
+    animation: model-error-animation .6s infinite ease-in-out;
+    animation-direction:normal;
+  }
+  .model-error-active.nz-icon-shuidi{
+    color: rgba(222,93,63,0.45);
+  }
   .nz-icon-model{
     color: #23BF9A;
     position: absolute;
     top: 17px;
     left: 15px;
     font-size: 18px;
+  }
+  .model-error .nz-icon-model{
+    color: #DE5D3F;
+    animation: model-icon-animation .6s infinite ease-in-out;
+    animation-direction:normal;
+  }
+  .model-error-active .nz-icon-model{
+    color: #DE5D3F;
   }
   .network-info{
     position: absolute;
