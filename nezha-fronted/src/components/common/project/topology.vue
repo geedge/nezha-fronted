@@ -692,11 +692,13 @@
         // }
       },
       modelTopMouseMoveEdge(e){
+        e = window.event || e;
         let position={
           x:e.layerX,
           y:e.layerY,
         };
-        if(e.path[0].nodeName!=='CANVAS'){
+        let nodeName=e.path?e.path[0].nodeName!=='CANVAS':e.target.tagName;
+        if(nodeName!=='CANVAS'){
           this.expressionsInfoShow=false;
           this.$refs['network'].removeEventListener('mousemove',this.modelTopMouseMoveEdge);
           return
