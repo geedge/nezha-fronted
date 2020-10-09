@@ -426,7 +426,6 @@
         if (chartSite === 'local') {
           this.$nextTick(()=>{
             setChart(this.chartIndex, echarts.init(ele));
-            console.log(123);
           })
           //chartId='lineChartArea';
         }else if (chartSite === 'screen') {
@@ -435,7 +434,6 @@
         }
         var chartWidth = ele.clientWidth;
         var chartHeight = ele.clientHeight;
-        console.log(ele.offsetHeight);
         var title = {
           show:false,
           text: chartInfo.title || null,

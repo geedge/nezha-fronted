@@ -289,7 +289,6 @@
         return num>9?num:'0'+num;
       },
       getParamsType(){
-        console.log(this.$route);
         let path=this.$route.path;
         switch(path){
           case '/panel': this.paramsType='dashboard';break;
