@@ -750,6 +750,7 @@
         }
         if(key==='asset' || key==='alert' || key==='endpoint'){
           this.networkPopShow=false;
+          this.selNodeId='';
           // this.setPopPosition(this.selNodeId);
         }
       },
@@ -856,6 +857,8 @@
          this.network.on("click", function (params) {
            this_.activeIndex='';
            this_.networkPopClose();
+           this_.network.selectNodes([]);
+           this_.selNodeId='';
            if(!params.edges.length&&!params.nodes.length){
              this_.popDataShowUpdate('',true);
            }
