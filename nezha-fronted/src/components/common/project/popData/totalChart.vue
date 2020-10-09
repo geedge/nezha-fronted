@@ -728,6 +728,6 @@
     position: relative;
     max-height: calc(100vh - 100px);
     padding: 3px 15px 50px 15px;
-    z-index: 0;
+    z-index: 11;
   }
 </style>

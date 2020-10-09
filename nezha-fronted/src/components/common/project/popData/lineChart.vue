@@ -77,6 +77,8 @@
                    :visible.sync="screenModal"
                    width="90%"
                    @close="screenModal = false;screenLegendListMore=[]"
+                   :append-to-body="false"
+                   :modal-append-to-body="false"
                    style="margin-top: 1vh !important;"
                    @opened="initDialog">
           <el-popover
