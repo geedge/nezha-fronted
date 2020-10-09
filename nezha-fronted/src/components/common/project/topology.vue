@@ -1038,7 +1038,10 @@
     color: #84d5c2;
   }
   .network-pop .nz-icon-hexagonBorder.error-model-stat{
-    color: #DE5D3F;
+    color: #F5BAAC;
+  }
+  .network-pop .nz-icon-hexagonBorder.error-model-stat:hover{
+    color: #EC7F66;
   }
   .network-pop  .nz-icon-liubianxing{
     color:#e2f3ef;
@@ -1050,7 +1053,7 @@
     z-index: -1;
   }
   .network-pop .error-model-stat .nz-icon-liubianxing{
-    color: rgba(222,93,63,0.45);
+    color: #FADED7 ;
   }
   .network-pop .nz-icon.noMove{
     position: absolute;
@@ -1060,7 +1063,7 @@
     color: #27c09c;
   }
   .network-pop .error-model-stat .nz-icon.noMove{
-    color: #DE5D3F;
+    color: #EC7F66;
   }
   .network-pop .selpop:hover{
     transform: scale(1.2);
@@ -1221,12 +1224,12 @@
     width: 38px;
   }
   .model-error.nz-icon-shuidi{
-    color: rgba(222,93,63,0.45);
+    color: #FADED7 ;
     animation: model-error-animation .6s infinite ease-in-out;
     animation-direction:normal;
   }
   .model-error-active.nz-icon-shuidi{
-    color: rgba(222,93,63,0.45);
+    color: #FADED7 ;
   }
   .nz-icon-model{
     color: #23BF9A;
@@ -1236,12 +1239,12 @@
     font-size: 18px;
   }
   .model-error .nz-icon-model{
-    color: #DE5D3F;
+    color: #EC7F66;
     animation: model-icon-animation .6s infinite ease-in-out;
     animation-direction:normal;
   }
   .model-error-active .nz-icon-model{
-    color: #DE5D3F;
+    color: #EC7F66;
   }
   .network-info{
     position: absolute;
