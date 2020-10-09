@@ -615,7 +615,7 @@
         });
       },
       messageStyle(e) {
-        if (e.column.label == 'Alerts' || e.column.label == this.$t("asset.tableTitle.alerts")) {
+        if (e.column.label == 'Alerts' || e.column.label == this.$t("project.endpoint.alerts")) {
           if (e.row.alertNum > 0) {
             return 'danger';
           } else {
