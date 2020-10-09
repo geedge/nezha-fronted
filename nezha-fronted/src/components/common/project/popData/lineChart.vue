@@ -1471,7 +1471,7 @@
         this.$nextTick(()=>{
           let divHeight = this.$refs.legendArea.offsetHeight;
           if(!this.chartInfo.height){
-            getChart(this.chartIndex).resize({height:(400-divHeight-this.$chartResizeTool.titleHeight-this.$chartResizeTool.chartBlankHeight)});
+            getChart(this.chartIndex).resize({height:(318-divHeight-this.$chartResizeTool.titleHeight-this.$chartResizeTool.chartBlankHeight)});
           }else {
             getChart(this.chartIndex).resize({height:(this.chartInfo.height-divHeight-this.$chartResizeTool.titleHeight-this.$chartResizeTool.chartBlankHeight)});
           }
