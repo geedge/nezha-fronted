@@ -79,7 +79,7 @@
             <span v-if="scope.row[item.prop] == 'low'"><i class="nz-icon nz-icon-arrow-down"></i>&nbsp;{{returnSeverityLabel(scope.row[item.prop])}}</span>
           </span>
           <template v-else-if="item.prop == 'labels'" class="labels">
-            <div v-for="(item,i) in labelsSort(scope.row.labels)">
+            <span v-for="(item,i) in labelsSort(scope.row.labels)">
               <span @mouseenter="labelHover(scope.row, item.label, true, $event)" @mouseleave="labelHover(scope.row, item.label, false)">
                 <nz-alert-tag
                    :label="item.label" :type="tagType(item.label)" style="margin: 5px 0 5px 5px;"
@@ -96,7 +96,7 @@
                 :that="scope.row[item.label]"
                 :type="item.label"
               ></alertLabel>
-            </div>
+            </span>
 
             <!--<el-tooltip
               v-for="(item,i) in labelsSort(scope.row.labels)"

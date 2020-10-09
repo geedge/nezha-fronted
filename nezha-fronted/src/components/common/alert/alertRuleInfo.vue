@@ -140,6 +140,9 @@
     width: 150px;
     color: #1a1a1a;
     padding: 0 3px 0 13px;
+    word-wrap: break-word;
+    white-space: normal;
+    overflow: hidden;
   }
 /*  .alert-rule-info::after {
     content: '';

@@ -89,8 +89,8 @@
                 <span v-if="scope.row[item.prop] == 'low'"><i class="nz-icon nz-icon-arrow-down"></i>&nbsp;{{returnSeverityLabel(scope.row[item.prop])}}</span>
               </span>
               <template v-else-if="item.prop == 'labels'" class="labels">
-                <div v-for="(item,i) in labelsSort(scope.row.labels)">
-              <span @mouseenter="labelHover(scope.row, item.label, true, $event)" @mouseleave="labelHover(scope.row, item.label, false)">
+                <span v-for="(item,i) in labelsSort(scope.row.labels)">
+              <span @mouseenter="labelHover(scope.row,scope.$index, item.label, true, $event)" @mouseleave="labelHover(scope.row,scope.$index, item.label, false)">
                 <nz-alert-tag
                   :label="item.label" :type="tagType(item.label)" style="margin: 5px 0 5px 5px;"
                   :cursor-point="tagType(item.label) == 'info' ? false : true"
@@ -106,7 +106,7 @@
                     :that="scope.row[item.label]"
                     :type="item.label"
                   ></alertLabel>
-                </div>
+                </span>
 
                 <!--<el-tooltip
                   v-for="(item,i) in labelsSort(scope.row.labels)"
@@ -135,12 +135,10 @@
                 </el-tooltip>-->
 
               </template>
-              <div v-else-if="item.prop == 'state'">
-                <span class="">
-                  {{scope.row['state'] == 1 ? "Pending" : ""}}
-                  {{scope.row['state'] == 2 ? "Expired" : ""}}
-                </span>
-              </div>
+              <span v-else-if="item.prop == 'state'" :class="{'green': scope.row['state'] == 2, 'red': scope.row['state'] == 1}">
+                {{scope.row['state'] == 1 ? "Pending" : ""}}
+                {{scope.row['state'] == 2 ? "Expired" : ""}}
+              </span>
               <div v-else-if="item.prop == 'current'" class="too-long-split pointer" @click="detail(scope.row)">
                 <span v-if="!scope.row.current">-</span>
                 <el-popover v-else placement="right" trigger="hover">
@@ -399,7 +397,7 @@
         //this.$set(this.tableData,index,item);// 调用父组件
       },
       // label 鼠标划入
-      labelHover(item, type, loading, e){
+      labelHover(item,index, type, loading, e){
         if(this.labelToolTipDis(type)){
           return;
         }
@@ -498,6 +496,11 @@
   }
   /deep/.el-tooltip{
     display: inline-block;
+  }
+  .red,.green{
+    color: white;
+    padding: 2px 5px;
+    border-radius: 4px;
   }
   /* end--table*/
 </style>
