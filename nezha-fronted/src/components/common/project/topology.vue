@@ -692,18 +692,18 @@
         // }
       },
       modelTopMouseMoveEdge(e){
-        e = window.event || e;
+        e = e || window.event;
         let position={
           x:e.layerX,
           y:e.layerY,
         };
-        let nodeName=e.path?e.path[0].nodeName!=='CANVAS':e.target.tagName;
+        let nodeName=e.path?e.path[0].nodeName:e.target.tagName;
         if(nodeName!=='CANVAS'){
           this.expressionsInfoShow=false;
           this.$refs['network'].removeEventListener('mousemove',this.modelTopMouseMoveEdge);
           return
         }
-        this.expressionsInfoPosition=position;
+        this.expressionsInfoPosition={...position};
       },
       modelTopClick(item,index){
         this.activeIndex=index;
@@ -778,7 +778,7 @@
       //拓扑图放大缩小
       zoomChange(num){
         this.zoom+=num;
-        if(this.zoom<0){//每次缩小0.1 保证缩放大于0
+        if(this.zoom<0.1){//每次缩小0.1 保证缩放大于0
           this.zoom=0.1;
         }
         if(this.zoom>5){
