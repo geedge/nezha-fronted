@@ -546,15 +546,15 @@
                   return [x,y];
                 }else {//preview page
 
-                  if(windowMouse.x<(windowWidth/2)){//说明鼠标在左边放不下提示框
-                    x=pointX + 15;
+                  if(pointX<(viewWidth/2)){//说明鼠标在左边放不下提示框
+                    x=pointX+10;
                   }else{
-                    x = pointX - boxWidth - 15;
+                    x = pointX - boxWidth;
                   }
-                  if(windowMouse.y + 50 +boxHeight<windowHeight){//说明鼠标上面放不下提示框
-                    y = pointY + 15;
+                  if(pointY<(viewHeight/2)){//说明鼠标上面放不下提示框
+                    y = pointY+10;
                   }else {
-                    y = pointY - boxHeight - 10;
+                    y = pointY-boxHeight;
                   }
                   return [x,y];
                 }
