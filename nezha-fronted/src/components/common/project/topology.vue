@@ -750,7 +750,7 @@
             this.popDataShow[key]=true;
           })
         }
-        if(flag){
+        if(flag){ // 处理关闭后 缩放后显示工具按钮的问题
           this.selNodeId='';
         }
         if(key==='asset' || key==='alert' || key==='endpoint'){
