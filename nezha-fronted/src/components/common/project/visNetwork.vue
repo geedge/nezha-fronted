@@ -179,7 +179,7 @@
         dragTitleShow:false,
         dropdownMenuShow:false,
         editVisNetwork:false,
-        topologyLoading:false,
+        topologyLoading:true,
         total:1,
         searchTime: bus.getTimezontDateRange(),
         screenX:window.screen.width,
@@ -208,7 +208,7 @@
             setTimeout(()=>{
               this.topologyLoading=false;
               this.$refs['topology'].setData();
-            },500)
+            },100)
           }
           this.$refs['topology'].viewsCenter=res.data.topo.viewsCenter?res.data.topo.viewsCenter:{x:0,y:0};
           this.$refs['topology'].zoom=res.data.topo.zoom?(res.data.topo.zoom*this.screenX/1920):1;

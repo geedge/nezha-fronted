@@ -132,6 +132,7 @@
 		  getProjectData(n){
 		    //获取projectInfo
         this.projectInfo.loading=true;
+        this.$refs['visNetwork'].topologyLoading=true;
         this.$get('project/info', {id:n.id}).then(response => {
           if (response.code === 200) {
             this.projectInfo.loading=false;
