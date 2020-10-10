@@ -126,15 +126,15 @@
     </transition>
     <!--endpoint-->
     <transition name="right-box">
-      <endpointTable v-if="popDataShow.endpoint"  :moduleId="this.selNodeId" :projectId="this.allModuleInfo.basic.id" @close="popDataShowUpdate">endpoint</endpointTable>
+      <endpointTable v-if="popDataShow.endpoint"  :moduleId="this.selNodeId" :projectId="this.allModuleInfo.basic.id" @close="popDataShowUpdate('',true)">endpoint</endpointTable>
     </transition>
     <!--asset-->
     <transition name="right-box">
-      <assetTable v-if="popDataShow.asset" :moduleId="this.selNodeId" :projectId="this.allModuleInfo.basic.id" @close="popDataShowUpdate">alert</assetTable>
+      <assetTable v-if="popDataShow.asset" :moduleId="this.selNodeId" :projectId="this.allModuleInfo.basic.id" @close="popDataShowUpdate('',true)">alert</assetTable>
     </transition>
     <!--alert-->
     <transition name="right-box">
-      <alertTable v-if="popDataShow.alert" :moduleId="this.selNodeId" :projectId="this.allModuleInfo.basic.id" @close="popDataShowUpdate">alert</alertTable>
+      <alertTable v-if="popDataShow.alert" :moduleId="this.selNodeId" :projectId="this.allModuleInfo.basic.id" @close="popDataShowUpdate('',true)">alert</alertTable>
     </transition>
   </div>
 </template>
@@ -750,9 +750,12 @@
             this.popDataShow[key]=true;
           })
         }
+        if(flag){
+          this.selNodeId='';
+        }
         if(key==='asset' || key==='alert' || key==='endpoint'){
           this.networkPopShow=false;
-          this.selNodeId='';
+          // this.selNodeId='';
           // this.setPopPosition(this.selNodeId);
         }
       },
@@ -862,7 +865,7 @@
            this_.network.selectNodes([]);
            this_.selNodeId='';
            if(!params.edges.length&&!params.nodes.length){
-             this_.popDataShowUpdate('',true);
+             this_.popDataShowUpdate('');
            }
          });
 
