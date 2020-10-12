@@ -266,7 +266,7 @@
               scrape_interval:[{required:true,message:this.$t('validate.required'),trigger:'blur'},{validator:positiveInteger,trigger:'blur'}],
               storage_local_retention:[{required:true,message:this.$t('validate.required'),trigger:'blur'},{validator:positiveInteger,trigger:'blur'}],
               timezone:[{required:true,message:this.$t('validate.required'),trigger:'blur'}],
-              default_cabinet_usize:[{validator:positiveInteger,trigger:'blur'},{validator:uSize,trigger:'blur'}],
+              default_cabinet_usize:[{required:true,message:this.$t('validate.required'),trigger:'blur'},{validator:positiveInteger,trigger:'blur'},{validator:uSize,trigger:'blur'}],
             },
             basicRules2:{
               system_name:[{required:true,message:this.$t('validate.required'),trigger:'blur'},],
