@@ -333,7 +333,7 @@
               name: 'Type',
               data: typeSeriesData.sort((a, b) => {return a.value > b.value ? -1 : 1}),
               type: 'pie',
-              radius: ["58%", "75%"],
+              radius: ["43%", "55%"],
               center: ["40%", "50%"],
               minAngle: 15,
               itemStyle: {
