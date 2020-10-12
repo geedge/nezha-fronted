@@ -87,15 +87,20 @@
         :disabled="isPopoverDisabled"
         trigger="hover"
         id="panel-calender-popover">
-        <el-row  :gutter="10" class="calendar-popover">
-          <el-col :span="24" class="calendar-popover-text">{{searchTime[0]}}</el-col>
-        </el-row>
-        <el-row  :gutter="10" class="calendar-popover">
-          <el-col :span="24" class="calendar-popover-text">{{$t('dashboard.panel.to')}}</el-col>
-        </el-row>
-        <el-row  :gutter="10" class="calendar-popover">
-          <el-col :span="24" class="calendar-popover-text">{{searchTime[1]}}</el-col>
-        </el-row>
+        <template v-if="this.searchTime&&this.searchTime.length>1">
+          <el-row  :gutter="10" class="calendar-popover">
+            <el-col :span="24" class="calendar-popover-text">{{searchTime[0]}}</el-col>
+          </el-row>
+          <el-row  :gutter="10" class="calendar-popover">
+            <el-col :span="24" class="calendar-popover-text">{{$t('dashboard.panel.to')}}</el-col>
+          </el-row>
+          <el-row  :gutter="10" class="calendar-popover">
+            <el-col :span="24" class="calendar-popover-text">{{searchTime[1]}}</el-col>
+          </el-row>
+        </template>
+        <template v-else>
+          <div style="text-align: center;width: 100%;color: #909399;font-family: NotoSans !important;font-size: 12px !important;">{{$t("dashboard.panel.noDate")}}</div>
+        </template>
         <div  class="el-dropdown-link" slot="reference">
           <i class="nz-icon nz-icon-time" style="width:20px;"></i>
           <span class="panel-list-title" id="timePickerContent">{{showTime.text}}</span>
@@ -104,10 +109,12 @@
       </el-popover>
       <el-dropdown-menu class="nz-dashboard-dropdown" slot="dropdown">
         <!-- <el-dropdown-item >{{$t('dashboard.panel.customTimeRange')}}</el-dropdown-item>  -->
-        <el-dropdown-item v-for="item in timeData" :key="item.id+1"
-                          :class="showTime.id==item.id?'nz-dashboard-dropdown-bg':''" :command="item">
-          {{item.text}}
-        </el-dropdown-item>
+        <template v-for="item in timeData" >
+          <el-dropdown-item :class="showTime.id==item.id?'nz-dashboard-dropdown-bg':''" :command="item" v-if="item.id != 12 || showEmpty">
+            {{item.text}}
+          </el-dropdown-item>
+        </template>
+
       </el-dropdown-menu>
     </el-dropdown>
     <!--
@@ -124,6 +131,8 @@ import bus from '../../libs/bus';
 export default {
   name: "timePicker",
   props: {
+    defaultPick:Number,
+    showEmpty:{default:false,type:Boolean}
   },
   data() {
     return {
@@ -141,6 +150,11 @@ export default {
         {
           id:0,
           text:this.$t("dashboard.panel.customTimeRange"),
+        },
+        {
+          id:12,
+          text:this.$t("dashboard.panel.noDate"),
+
         },
         {
           id:1,
@@ -269,7 +283,11 @@ export default {
           this.$refs.calendar.focus();
         }else {
           this.isCustom = false;
+          if(this.showEmpty&& id === 12){
+            this.searchTime=[]
+          }
           this.$emit('change', this.searchTime);
+
         }
       }
     },
@@ -319,6 +337,24 @@ export default {
         this.isPopoverDisabled = false;
       }
     },
+  },
+  created() {
+  },
+  watch:{
+    defaultPick:{
+      immediate:true,
+      handler(n,o){
+        if(n&&Number.isInteger(n)){
+          let showTime=this.timeData.find(item=>item.id == n);
+          if(showTime){
+            this.showTime = Object.assign({},showTime);
+          }
+          if(this.showEmpty&& this.defaultPick === 12){
+            this.searchTime=[]
+          }
+        }
+      }
+    }
   },
   mounted: function () {
     /*

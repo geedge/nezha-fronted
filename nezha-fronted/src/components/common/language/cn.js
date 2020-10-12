@@ -208,6 +208,7 @@ const cn = {
       curMonth: "本月",
       lastMonth: "上月",
       customTimeRange: "Custom time range",
+      noDate:'无',
       lastFiveMin: "最近5分钟",
       lastFifteenMin: "最近15分钟",
       lastThirtyMin: "最近30分钟",

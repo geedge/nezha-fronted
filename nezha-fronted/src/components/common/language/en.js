@@ -214,6 +214,7 @@ const en = {
       curMonth:'This month',//'本月'
       lastMonth:'Last month',//'上月'
       customTimeRange:'Custom time range',
+      noDate:'Empty',
       lastFiveMin:'Last 5 minutes',
       lastFifteenMin:'Last 15 minutes',
       lastThirtyMin:'Last 30 minutes',

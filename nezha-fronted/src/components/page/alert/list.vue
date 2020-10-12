@@ -21,6 +21,7 @@
     <div class="main-list main-and-sub-transition" :class="{'main-list-with-sub': bottomBox.showSubList}">
       <div class="top-tools" v-show="bottomBox.mainResizeShow">
         <div class="top-tool-main-right" :class="{'top-tool-main-right-to-left': bottomBox.showSubList}">
+          <pick-time :refresh-data-func="getAlertList" v-model="searchTime" :use-chart-unit="false" :use-refresh="false" :default-pick="12" :show-empty="true"></pick-time>
           <div class="top-tool-search">
             <search-input :searchMsg="searchMsg" @search="search" :bottomBox.inTransform="bottomBox.inTransform"></search-input>
           </div>
@@ -96,6 +97,7 @@
   import axios from 'axios';
   import nzAlertTag from './nzAlertTag';
   import chart from '../../page/dashboard/overview/chart'
+  import pickTime from "../../common/pickTime";
   import chartDataFormat from "../../charts/chartDataFormat";
   import alertRuleInfo from '../../common/alert/alertRuleInfo'
   import alertLabel from '../../common/alert/alertLabel'
@@ -108,6 +110,7 @@
       'alertRuleInfo':alertRuleInfo,
       'alertLabel':alertLabel,
       'alertMessageTable':alertMessageTable,
+      'pick-time':pickTime,
     },
     data() {
       return {
@@ -143,7 +146,7 @@
         chartDatas: [],
         sameLabels: ['instance','module','project','asset','endpoint','datacenter'],
         legend: [],
-        searchTime: [new Date().setHours(new Date().getHours() - 1), new Date()],
+        searchTime: [],
         currentMsg: {},
         chartUnit: 5,
 
@@ -325,161 +328,17 @@
         })
         return result;
       },
-      chartUnitChange:function(unit){
-        this.chartUnit=unit;
-        this.$nextTick(()=>{
-          this.queryChartDate()
-        })
-      },
-      formatThreshold:function(value,unit){
-        let unitMethod=chartDataFormat.getUnit(unit)
-        if(unitMethod&&value){
-          return unitMethod.compute(value,null,2);
-        }else{
-          return value
-        }
-      },
-      queryChartDate() {
-        let $temp=this;
-        let start = this.searchTime[0]?this.searchTime[0]:this.getTime(-1, 'h');
-        let end = this.searchTime[1]?this.searchTime[1]:this.getTime(0, 'h')
-        this.searchTime = [start, end];
-        let timeDiff = (new Date(end).getTime()-new Date(start).getTime())/1000/(24*60*60);
-        let step = '15s';
-        if(timeDiff< 1){
-          step='15s';
-        }else if(timeDiff < 7){
-          step='5m';
-        }else if(timeDiff<30){
-          step='10m';
-        }else{
-          step='30m';
-        }
-        this.$refs.messageChart.startLoading();
-        let axiosArr=[];
-        let paramStr = JSON.stringify(this.promQueryParamConvert(this.currentMsg));
-		    axiosArr.push(axios.get("/prom/api/v1/query_range?query="+paramStr.substring(1, paramStr.length-1).replace(/\+/g, "%2B").replace(/ /g, "%20").replace(/\\/g, "")+"&start="+this.$stringTimeParseToUnix(start)+"&end="+this.$stringTimeParseToUnix(end)+"&step="+step));
-        this.legend = [];
-        this.chartDatas = [];
-        axios.all(axiosArr).then(res =>{
-          try {
-            res.forEach((response, promIndex) => {
-              if (response.status == 200) {
-                if (response.data.status == 'success') {
-                  let queryData = response.data.data.result[0];
-                  if (queryData) {
-                    let chartData = {
-                      type: "line",
-                      symbol: 'none',  //去掉点
-                      smooth: 0.2,  //曲线变平滑
-                      name: '',
-                      lineStyle: {
-                        width: 1,
-                        opacity: 0.9
-                      },
-                      markLine: {
-                        silent: true,
-                        symbol: ['circle', 'circle'],
-                        label: {
-                          distance: this.computeDistance(chartDataFormat.getUnit(this.currentMsg.alertRule.unit ? this.currentMsg.alertRule.unit : 2).compute(this.currentMsg.alertRule.threshold)),
-                          formatter: function (params) {
-                            return chartDataFormat.getUnit($temp.currentMsg.alertRule.unit ? $temp.currentMsg.alertRule.unit : 2).compute(params.value)
-                          }
-                        },
-                        lineStyle: {
-                          color:'#d64f40',
-                          width:2,
-                          type:'dotted'
-                        },
-                        data: [{
-                          yAxis: Number(this.currentMsg.alertRule.threshold)
-                        }, ]
-                      },
-                      markArea:{
-                        itemStyle:{
-                          color:'#d64f40',
-                          opacity:0.1
-                        },
-                        data:[this.returnMarkArea()]
-                      }
-                    };
-                    if(this.currentMsg.alertRule.operator=='=='||this.currentMsg.alertRule.operator=='!='){
-                      delete chartData.markArea;
-                    }
-                    chartData.name += "{";
-                    alias += "{";
-                    Object.keys(queryData.metric).forEach((item, index) => {
-                      let label = item;
-                      let value = queryData.metric[label];
-                      chartData.name += label + "='" + value + "',";
-                    });
-                    chartData.name = chartData.name.charAt(chartData.name.length - 1) == "," ? chartData.name.substr(0, chartData.name.length - 1) : chartData.name;
-                    chartData.name += "}";
-                    let alias = chartData.name;
-                    let legend = {
-                      name: chartData.name,
-                      alias: alias,
-                      isGray: false
-                    }
-                    this.legend.push(legend);
-                    chartData.data = queryData.values.map((dpsItem, dpsIndex) => {
-                      return [bus.computeTimezone(dpsItem[0]) * 1000, parseFloat(dpsItem[1]).toFixed(2)];
-                    });
-                    this.chartDatas.push(chartData);
-                  }
-                } else {
-                  this.$message.error(response.data.error)
-                  console.error(response.data)
-                }
-              }
-            });
-            this.$nextTick(() => {
-              this.$refs.messageChart.setRandomColors(this.chartDatas.length);
-              this.$refs.messageChart.setLegend(this.legend);
-              this.$refs.messageChart.setSeries(this.chartDatas);
-              this.$refs.messageChart.endLoading();
-            });
-          } catch(err) {
-            this.$message.error(err);
-            this.$refs.messageChart.endLoading();
-          }
-        })
-      },
-      computeDistance:function(str){
-        var width = 0;
-        var html = document.createElement('span');
-        html.innerText = str;
-        html.className = 'getTextWidth';
-        document.querySelector('body').appendChild(html);
-        width = document.querySelector('.getTextWidth').offsetWidth;
-        document.querySelector('.getTextWidth').remove();
-        return Number('-'+(width+5));
-      },
-      returnMarkArea:function(){
-        if(this.currentMsg){
-          if(this.currentMsg.alertRule.operator=='>'||this.currentMsg.alertRule.operator=='>='){
-            return[{yAxis:this.currentMsg.alertRule.threshold},{}]
-          }else{
-            return[{},{yAxis:this.currentMsg.alertRule.threshold}]
-          }
-        }
-      },
-      detail(obj) {
-        this.chartDatas = [];
-        this.legend = [];
-        this.graphShow = true;
-        this.currentMsg = obj;
-        this.chartUnit=obj.alertRule.unit?obj.alertRule.unit:5;
-        this.$nextTick(() => {
-          this.queryChartDate();
-        });
-      },
-      dialogClose() {
-        this.graphShow = false;
-      },
+
       getAlertList: function () {
         this.$set(this.searchLabel, "pageNo", this.pageObj.pageNo);
         this.$set(this.searchLabel, "pageSize", this.pageObj.pageSize);
+        if(this.searchTime&& this.searchTime.length>1){
+          this.$set(this.searchLabel, "startAt", bus.timeFormate(this.searchTime[0], 'yyyy-MM-dd hh:mm:ss'));
+          this.$set(this.searchLabel, "endAt", bus.timeFormate(this.searchTime[1], 'yyyy-MM-dd hh:mm:ss'));
+        }else{
+          delete this.searchLabel.startAt
+          delete this.searchLabel.endAt
+        }
         this.tools.loading = true;
         this.$get('alert/message', this.searchLabel).then(response => {
           this.tools.loading = false;

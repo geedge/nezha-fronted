@@ -104,7 +104,6 @@
       params:{type:Object},
       exportFileName:{type:String},
       importUrl: {type:String,required:true},
-      link:{type:Object},
     },
     data:function(){
       return {
@@ -159,9 +158,6 @@
           form.append('excelFile',this.importFile.raw);
           if(this.paramsType){
             form.append('type',this.paramsType);
-            if(this.paramsType==='asset' || this.paramsType==='model'){
-              form.append('linkId',this.link.id);
-            }
           }
           this.$post(this.importUrl,form,{'Content-Type': 'multipart/form-data'}).then(response=>{
             if(response.code==200 && response.msg=='success'){
