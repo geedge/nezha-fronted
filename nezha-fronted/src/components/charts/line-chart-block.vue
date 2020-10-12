@@ -763,6 +763,7 @@
         if (chartSite === 'local') { // 本地显示
           if(legend){
             this.legendList = [];
+            this.isGrey=[];
             legend.forEach((item, i) => {
               const legend = {
                 name:item.name,
@@ -880,6 +881,7 @@
           // eslint-disable-next-line
           if(legend){
             this.screenLegendList = [];
+            this.isGreyScreen=[]
             legend.forEach((item, i) => {
               const legend = {
                 name:item.name,
