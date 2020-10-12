@@ -83,10 +83,13 @@
                 <template v-if="scope.row[item.prop]">{{scope.row[item.prop]}}</template>
                 <span v-else>-</span>
               </template>
-              <span v-else-if="item.prop == 'severity'">
-                <span v-if="scope.row[item.prop] == 'high'"><i class="nz-icon nz-icon-arrow-up"></i>&nbsp;{{returnSeverityLabel(scope.row[item.prop])}}</span>
-                <span style="padding-left: 18px;" v-if="scope.row[item.prop] == 'medium'">{{returnSeverityLabel(scope.row[item.prop])}}</span>
-                <span v-if="scope.row[item.prop] == 'low'"><i class="nz-icon nz-icon-arrow-down"></i>&nbsp;{{returnSeverityLabel(scope.row[item.prop])}}</span>
+              <span v-else-if="item.prop == 'severity'" class="severity">
+                <span v-if="scope.row[item.prop] == 'high'" class="high">P1</span>
+                    <!--<i class="nz-icon nz-icon-arrow-up"></i> {{returnSeverityLabel(scope.row[item.prop])}}-->
+                <span v-if="scope.row[item.prop] == 'medium'" class="medium">P2</span>
+                    <!--{{returnSeverityLabel(scope.row[item.prop])}}-->
+                <span v-if="scope.row[item.prop] == 'low'" class="low">P3</span>
+                    <!--<i class="nz-icon nz-icon-arrow-down"></i>&nbsp;{{returnSeverityLabel(scope.row[item.prop])}}-->
               </span>
               <template v-else-if="item.prop == 'labels'" class="labels">
                 <span v-for="(item,i) in labelsSort(scope.row.labels)">
@@ -501,6 +504,27 @@
     color: white;
     padding: 2px 5px;
     border-radius: 4px;
+  }
+  .severity .high{
+    background: #F2866E;
+    border-radius: 2px;
+    font-size: 12px;
+    color: #FFFFFF;
+    padding: 2px 6px;
+  }
+  .severity .medium{
+    background: #F89984;
+    border-radius: 2px;
+    font-size: 12px;
+    color: #FFFFFF;
+    padding: 2px 6px;
+  }
+  .severity .low{
+    background: #F7BA78;
+    border-radius: 2px;
+    font-size: 12px;
+    color: #FFFFFF;
+    padding: 2px 6px;
   }
   /* end--table*/
 </style>
