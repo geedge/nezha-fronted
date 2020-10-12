@@ -183,7 +183,7 @@
               </el-table>
               <div class="el-form-item__error" :style="{opacity: endpointTouch && this.endpointList.length == 0 ? '1' : '0'}" style="left: unset; transition: all .2s">{{$t('validate.required')}}</div>
               <div>
-                <button id="clear-select-asset" type="button" @click="clearSelection" class="nz-btn nz-btn-size-normal nz-btn-style-light endpoints-clear-btn">{{$t('overall.clear')}}</button>
+                <button id="clear-select-asset" type="button" @click="clearSelection" class="nz-btn nz-btn-size-small-new nz-btn-style-light-new endpoints-clear-btn">{{$t('overall.clear')}}</button>
                 <span style="display: inline-block; font-size: 14px; float: right;line-height: 35px;padding-right: 15px;">All: {{this.endpointList.length}}</span>
               </div>
             </div>
@@ -195,10 +195,10 @@
 
     <!--底部按钮-->
     <div class="right-box-bottom-btns">
-      <button @click="esc" id="ep-esc" class="nz-btn nz-btn-size-normal nz-btn-style-light nz-btn-min-width-100">
+      <button @click="esc" id="ep-esc" class="nz-btn nz-btn-size-normal-new nz-btn-style-light-new">
         <span>{{$t('overall.cancel')}}</span>
       </button>
-      <button @click="save" id="ep-add" class="nz-btn nz-btn-size-normal nz-btn-style-normal nz-btn-min-width-100">
+      <button @click="save" id="ep-add" class="nz-btn nz-btn-size-normal-new nz-btn-style-normal-new">
         <span>{{$t('overall.save')}}</span>
       </button>
     </div>

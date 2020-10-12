@@ -249,6 +249,57 @@ li{
 .nz-btn.nz-btn-style-pure-white:hover:not(.nz-btn-disabled) {
   background-color: #dedede;
 }
+
+.nz-btn.nz-btn-size-normal-new{
+  height: 30px;
+  line-height: 30px;
+  text-align: center;
+  width: 74px;
+}
+.nz-btn.nz-btn-size-small-new{
+  height: 24px;
+  line-height: 24px;
+  text-align: center;
+  width: 60px;
+}
+.nz-btn.nz-btn-style-normal-new { /* 新版橙色按钮 */
+  background: $btn-normal-background-color-new;
+  color: $btn-normal-txt-color-new;
+  //box-shadow: $btn-normal-shadow;
+  border: 0px;
+}
+.nz-btn.nz-btn-style-light-new { /* 新版浅色按钮 */
+  background: #fff;
+  border: 1px solid $btn-light-border-color-new;
+  color: $btn-light-txt-color-new;
+  //box-shadow: $btn-light-shadow;
+  letter-spacing: 0;
+}
+.nz-btn.nz-btn-style-normal-new:hover:not(.nz-btn-disabled) { /* 新版橙色按钮hover */
+  background: $btn-normal-background-color-hover-new;
+  color: $btn-normal-txt-color-new;
+  //box-shadow: $btn-normal-shadow;
+  border: 0px;
+}
+.nz-btn.nz-btn-style-light-new:hover:not(.nz-btn-disabled) { /* 新版浅色按钮hover */
+  border: 1px solid $btn-light-border-color-hover-new;
+  color: $btn-light-border-color-hover-new;
+  //box-shadow: $btn-light-shadow;
+  letter-spacing: 0;
+}
+.nz-btn.nz-btn-style-normal-new:active:not(.nz-btn-disabled) { /* 新版橙色按钮active' */
+  background: $btn-normal-background-color-active-new;
+  color: $btn-normal-txt-color-new;
+  //box-shadow: $btn-normal-shadow;
+  border: 0px;
+}
+.nz-btn.nz-btn-style-light-new:active:not(.nz-btn-disabled) { /* 新版浅色按钮active*/
+  border: 1px solid $btn-light-border-color-active-new;
+  color: $btn-light-border-color-active-new;
+  //box-shadow: $btn-light-shadow;
+  letter-spacing: 0;
+}
+
 .nz-btn:focus {
   outline: 0;
 }
