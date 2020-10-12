@@ -1,7 +1,7 @@
 <style scoped>
   .chartBox {
     float:left;
-    padding: 10px 10px 0 0;
+    padding: 0px 10px 10px 0;
     position:relative;
     box-sizing: border-box;
   }

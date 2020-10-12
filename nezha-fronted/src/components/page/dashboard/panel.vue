@@ -763,7 +763,7 @@
 
   /* begin-chart list*/
   .table-list {
-    margin-top: 6px;
+    margin-top: 0px;
     overflow-y: auto;
     height: calc(100% - 92px);
   }

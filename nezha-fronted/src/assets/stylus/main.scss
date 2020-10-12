@@ -2086,3 +2086,6 @@ li{
 /deep/ .el-input--mini .el-input__icon{
   line-height: 24px;
 }
+.content-row-box .content-col-box:first-child{
+  margin-left: 0;
+}
