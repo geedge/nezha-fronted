@@ -643,7 +643,7 @@
     display: flex;
     margin-bottom: 5px;
     height: 20px;
-    line-height: 20px;
+    line-height: 18px;
     justify-content: flex-end;
   }
   .tab-tags-item .tag-item-key{

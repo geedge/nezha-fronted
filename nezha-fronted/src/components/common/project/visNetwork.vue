@@ -444,7 +444,7 @@
     align-items:flex-start;
   }
   .facade-top-right-content > div{
-    width: 80px;
+    min-width: 84px;
     height: 22px;
     display: flex;
     justify-content: space-between;

@@ -531,7 +531,7 @@ li{
 /* begin--右侧内容*/
 .content-right {
   height: 100%;
-  padding: 0 5px;
+  padding: 0 5px 0 10px;
   display: inline-block;
   box-sizing: border-box;
   background-color: $content-right-background-color;
@@ -1614,8 +1614,8 @@ li{
 /*列表中状态字段 的小圆点*/
 .active-icon{
   margin-top:15px;
-  width:10px;
-  height:10px;
+  width:8px;
+  height:8px;
   border-radius:50%;
   display: inline-block;
   margin-right: 5px;
@@ -2071,4 +2071,18 @@ li{
   .zoom-option:hover{
     cursor: pointer;
   }
+}
+.nz-icon-arrow-down{
+  font-size: 14px;
+}
+.nz-icon-caret-bottom{
+  font-size: 12px;
+}
+//.create-square-box{
+//  background: #ECECEC;
+//  border-radius: 4px;
+//  padding: 7px 10px;
+//}
+/deep/ .el-input--mini .el-input__icon{
+  line-height: 24px;
 }

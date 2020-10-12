@@ -164,7 +164,11 @@
 
         <div v-if="!isUrl&&!isAlert" class="right-box-sub-title">
           <span>{{$t('alert.config.expr')}}</span>
-          <span v-if="!isSingleStat" class="float-right" @click="addExpression"><i style="font-size: 16px; cursor: pointer;" class="nz-icon nz-icon-create-square"></i></span>
+          <span v-if="!isSingleStat" style="height: 19px;display: inline-block;line-height: 1;" class="float-right" @click="addExpression">
+            <span class="create-square-box">
+              <i style="font-size: 17px; cursor: pointer;" class="nz-icon nz-icon-create-square"></i>
+            </span>
+          </span>
         </div>
         <div v-if="isAlert" class="right-box-sub-title">{{$t('dashboard.panel.chartForm.alertParam.param')}}</div>
         <div v-if="!isUrl" class="line-100"></div>
@@ -190,7 +194,7 @@
               <el-col style="width: 120px; padding-right: 20px; text-align: right; color: #666">
                 {{$t('dashboard.panel.chartForm.legend')}}&nbsp;
                 <el-popover :content="$t('dashboard.panel.chartForm.legendTip')" placement="top" width="150" trigger="hover">
-                  <i slot="reference" class="nz-icon nz-icon-info-normal" style="font-size: 12px; -webkit-transform:scale(0.75);display:inline-block;" @mouseover="rz"></i>
+                  <i slot="reference" class="nz-icon nz-icon-info-normal" style="font-size: 14px; -webkit-transform:scale(0.75);display:inline-block;" @mouseover="rz"></i>
                 </el-popover>
               </el-col>
               <el-col style="width: calc(100% - 120px);">
@@ -261,7 +265,7 @@
             <span style="margin-left: 50px;"></span>
             <template v-for="item in sortedOptionKeys">
               <div style="flex: 1">
-                <span style="margin-right: 10px;">{{item.label}}</span>
+                <span style="margin-right: 10px;color:rgb(102, 102, 102)">{{item.label}}</span>
                 <el-switch
                   v-model="editChart.param.legendValue[item.key]"
                   active-value="on"

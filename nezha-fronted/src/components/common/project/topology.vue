@@ -1068,18 +1068,39 @@
   .network-pop .error-model-stat .nz-icon.noMove{
     color: #EC7F66;
   }
-  .network-pop .selpop:hover{
+  .network-pop .selpop.nz-icon-hexagonBorder:hover{
     transform: scale(1.2);
+    color: #4BB49B;
   }
   .network-pop .selpop:hover .nz-icon-liubianxing{
     transform: scale(1.1);
     left: 4px;
     font-size: 41px;
     top: 0;
+    color:  #D7FAF1;
   }
   .network-pop .selpop:hover .noMove{
     transform: scale(1.2);
+    color: #4BB49B;
   }
+  .network-pop .selpop.nz-icon-hexagonBorder.error-model-stat:hover{
+    transform: scale(1.2);
+    color: #EC7F66;
+  }
+  .network-pop .selpop.error-model-stat:hover .nz-icon-liubianxing{
+    transform: scale(1.1);
+    left: 4px;
+    font-size: 41px;
+    top: 0;
+    color: #FBE7E3;
+  }
+  .network-pop .selpop.error-model-stat:hover .noMove{
+    transform: scale(1.2);
+    color: #EC7F66;
+  }
+  /*.network-pop .nz-icon-hexagonBorder.error-model-stat:hover{*/
+    /*color: #EC7F66;*/
+  /*}*/
   /*.btmTriangle{*/
     /*position: absolute;*/
     /*width: 0;*/
@@ -1141,7 +1162,7 @@
   .edit-topology{
     color: #1a1a1a;
     font-size: 18px;
-    font-weight: bold;
+    /*font-weight: bold;*/
     height: 28px;
     position: absolute;
     top: 15px;
@@ -1158,6 +1179,13 @@
     color: #1989fa;
     margin-left: 30px;
     cursor: pointer;
+  }
+  .edit-topology-add{
+    display: inline-block;
+    width: 30px;
+  }
+  .edit-topology-add:hover,.edit-topology-remove:active,.edit-topologyCancel{
+    font-weight: bold;
   }
   .sel-node{
     position: absolute;

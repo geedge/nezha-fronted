@@ -80,7 +80,9 @@
           <div class="right-box-form-btns">
           <button style="display: none;">第一个button会出现意料之外的hover样式，找不到原因，只好加个不可见的button规避问题</button>
           <button id="module-add-param" type="button" @click="addTag">
-            <span><i style="font-size: 12px;" class="nz-icon nz-icon-create-square"></i></span>
+           <span class="create-square-box">
+              <i style="font-size: 17px; cursor: pointer;" class="nz-icon nz-icon-create-square"></i>
+            </span>
           </button>
         </div></div>
         <div class="line-100 right-box-line"></div>

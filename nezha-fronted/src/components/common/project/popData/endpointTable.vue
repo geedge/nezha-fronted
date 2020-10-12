@@ -334,7 +334,7 @@
 
 <style scoped>
   .right-box-project-alert{
-    width: 1220px;
+    width: 850px;
     padding-right: 30px;
   }
   .right-box-title{

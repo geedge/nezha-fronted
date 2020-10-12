@@ -254,7 +254,7 @@
             label: this.$t('alert.summary'),
             prop: 'summary',
             show: true,
-            minWidth:200
+            minWidth:100
           },  {
             label: this.$t('alert.list.state'),
             prop: 'state',
@@ -477,7 +477,7 @@
 
 <style scoped>
   .right-box-project-alert{
-    width: 1220px;
+    width: 850px;
     padding-right: 30px;
   }
   .right-box-title{

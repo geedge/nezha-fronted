@@ -34,7 +34,7 @@
         <el-form-item label="Icon" prop="iconId" class="icon">
           <el-select v-model="form.iconId" placeholder=""  popper-class="asset-dropdown" size="small" :loading="imgageLoading">
             <div slot="prefix" class="sel-image">
-              <img v-if="form.iconId" :src="selImage.image" style="height: 28px"/>
+              <img v-if="form.iconId" :src="selImage.image" style="height: 24px;margin-top: 2px"/>
               <span v-if="form.iconId" class="sel-image-name">{{selImage.imageName}}</span>
             </div>
             <el-option
@@ -43,7 +43,7 @@
               :label="item.label"
               :value="item.id">
               <span style="float: left;width: 50%">
-                <img :src="item.image" style="width: 24px;height: 32px"/>
+                <img :src="item.image" style="height: 28px;margin-top: 2px"/>
               </span>
               <span style="float: right; color: #8492a6; font-size: 13px">{{ item.imageName }}</span>
             </el-option>

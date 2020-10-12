@@ -714,7 +714,7 @@
   .panel-dropdown-title {
     line-height:24px;
     padding-left:5px;
-    margin-left:10px;
+    /*margin-left:10px;*/
     margin-top: 3px;
     text-align:left;
     border-radius:4px;

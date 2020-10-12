@@ -250,7 +250,7 @@
                 <span><i class="nz-icon nz-icon-delete"></i></span>
               </button>
               <button id="module-add-param" type="button" @click="addParam" class="nz-btn nz-btn-size-normal nz-btn-style-light">
-                <span><i style="font-size: 12px;" class="nz-icon nz-icon-create-square"></i></span>
+                <span><i style="font-size: 16px;" class="nz-icon nz-icon-create-square"></i></span>
               </button>
             </div>
           </template>

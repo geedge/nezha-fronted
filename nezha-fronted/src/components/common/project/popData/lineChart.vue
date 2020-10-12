@@ -127,7 +127,7 @@
           <loading  :ref="'localLoadingScreen'+chartIndex"></loading>
         </el-dialog>
       </div>
-      <span class="vue-resizable-handle" @mousedown="startResize" v-if="filter.from != 'alertRule'"></span>
+      <!--<span class="vue-resizable-handle" @mousedown="startResize" v-if="filter.from != 'alertRule'"></span>-->
     </div>
   </div>
 </template>

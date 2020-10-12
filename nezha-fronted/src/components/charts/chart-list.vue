@@ -1,7 +1,7 @@
 <style scoped>
   .chartBox {
     float:left;
-    padding: 20px 10px 0 10px;
+    padding: 10px 10px 0 0;
     position:relative;
     box-sizing: border-box;
   }
@@ -10,7 +10,7 @@
   }
   .list-width{
     width: calc(100% - 14px);
-    padding: 5px 15px 5px 10px;
+    padding: 5px 15px 5px 0px;
     box-sizing: border-box;
     overflow: hidden;/*避免鼠标第一次放到曲线时，x轴出现滚动条后消失*/
     min-height: calc(100vh - 150px);
