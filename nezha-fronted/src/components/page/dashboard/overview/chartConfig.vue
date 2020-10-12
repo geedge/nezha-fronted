@@ -23,7 +23,7 @@
       "#8abafc","#d181e8","#d88d50","#cce8ff",
       "#161ef9"];*/
 
-    let pieColor = ["#FAd4ab", "#d0e8d0", "#EEA694", "#9fb5e4", "#92C9DF"];/*['#d64f40', '#e66f60', '#f68f80', '#f6afa0',
+    let pieColor = ["#95E2C2", "#84C9E6", "#8CABEF", "#FAA995", "#FDD462"];/*['#d64f40', '#e66f60', '#f68f80', '#f6afa0',
       '#ffdb28', '#ffeb38', '#fffb48', '#ffffbb'];*/
 
     const commonOption={
