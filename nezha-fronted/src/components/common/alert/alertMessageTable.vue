@@ -292,7 +292,7 @@
             prop: 'labels',
             show: true,
             NotSet:true,
-            minWidth:200
+            minWidth: 250
           }, {
             label: this.$t("alert.severity"),
             prop: 'severity',
@@ -823,6 +823,8 @@
       this.tools.customTableTitle = localStorage.getItem("nz-tableTitle-" + localStorage.getItem("nz-username") + "-" + '/alertList')
         ? JSON.parse(localStorage.getItem("nz-tableTitle-" + localStorage.getItem("nz-username") + "-" + '/alertList'))
         : this.tableTitle;
+
+      console.info(this.tools.customTableTitle)
       //是否存在分页缓存
       let pageSize = localStorage.getItem('nz-pageSize-' + localStorage.getItem('nz-username') + '-' + this.tableId);
       if (pageSize != 'undefined' && pageSize != null) {
