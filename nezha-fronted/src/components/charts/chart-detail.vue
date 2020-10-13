@@ -537,24 +537,21 @@
             show: false
           },
           useUTC: false,//使用本地时间
-          // visualMap: {
-          //   show: false,
-          //   pieces: [{
-          //     gt: -0.5,
-          //     lt: 0.5,
-          //     color: '#d64f40'
-          //   }, {
-          //     gt: 0.6,
-          //     lt: 1.5,
-          //     color: '#50d050'
-          //   }]
-          // },
+          visualMap: {
+            show: false,
+            pieces: [{
+              gt: -0.5,
+              lt: 0.5,
+              color: '#d64f40'
+            }, {
+              gt: 0.6,
+              lt: 1.5,
+              color: '#50d050'
+            }]
+          },
           series: series
         };
         let chart = echarts.init(document.querySelector("#littleChart"));
-        option.series.forEach((item)=>{
-          item.lineStyle.color='rgb(35,191,154)';
-        })
         chart.setOption(option);//创建图表
       }
     },

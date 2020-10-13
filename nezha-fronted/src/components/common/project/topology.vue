@@ -872,7 +872,9 @@
          this.network.on("selectNode", function (params) { //选择节点
            let selId=params.nodes[0];
            if(selId){
-             this_.selNodeId=selId;
+             setTimeout(()=>{
+               this_.selNodeId=selId;
+             })
              this_.cursorMove=true;
              this_.nodeData=this_.nodesArray.find((item)=>item.id===selId);
              if(this_.NodeArr.indexOf(selId)!==-1){
