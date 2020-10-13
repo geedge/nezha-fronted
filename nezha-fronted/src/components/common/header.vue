@@ -325,7 +325,7 @@
           this.rightBox.module.show = true;
           this.editModule = {
             name: '',
-            project: this.$store.state.currentProject,
+            project: {},
             port: 9100,
             path: '',
             param: '',

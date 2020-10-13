@@ -736,7 +736,7 @@
               show:false
             },
             minInterval: chartDataFormat.Interval(maxValue,copies,unit.type,'min'),
-            maxInterval: chartDataFormat.Interval(maxValue,copies,unit.type,'max'),
+            // maxInterval: chartDataFormat.Interval(maxValue,copies,unit.type,'max'),
             axisTick: {
               show: false,
             },
@@ -760,6 +760,7 @@
         if (chartSite === 'local') { // 本地显示
           if(legend){
             this.legendList = [];
+            this.isGrey=[];
             legend.forEach((item, i) => {
               const legend = {
                 name:item.name,
@@ -873,6 +874,7 @@
           // eslint-disable-next-line
           if(legend){
             this.screenLegendList = [];
+            this.isGreyScreen=[]
             legend.forEach((item, i) => {
               const legend = {
                 name:item.name,
@@ -1514,19 +1516,22 @@
         let maxValue=0;
         let minValue=0;
         if(chartInfo.unit &&dataArg.length>0){
-          maxValue=dataArg[0].data[0][1];
-          minValue=dataArg[0].data[0][1];
+          maxValue=0;
+          minValue=0;
           for(let j = 0; j < dataArg.length ; j++){
             for (let i = 0; i < dataArg[j].data.length - 1; i++) {
-              maxValue = (maxValue < Number(dataArg[j].data[i+1][1]) ? Number(dataArg[j].data[i+1][1]) : maxValue);
-              minValue = (minValue > Number(dataArg[j].data[i+1][1]) ? Number(dataArg[j].data[i+1][1]) : minValue);
+              if(dataArg[j].data[i+1][1]!=='NaN'){
+                maxValue = (maxValue < Number(dataArg[j].data[i+1][1]) ? Number(dataArg[j].data[i+1][1]) : maxValue);
+                minValue = (minValue > Number(dataArg[j].data[i+1][1]) ? Number(dataArg[j].data[i+1][1]) : minValue);
+              }
             }
           }
         }
         let chartUnit=chartInfo.unit?chartInfo.unit:2;
         let unit=chartDataFormat.getUnit(chartUnit);
+        minValue=minValue>0?0:minValue;
+        maxValue=maxValue-minValue;
         maxValue=chartDataFormat.formatDatas(maxValue,unit.type,'ceil',unit.ascii);
-        minValue=chartDataFormat.formatDatas(minValue,unit.type,'floor',unit.ascii);
         let oldValue=maxValue;
         let dot=0;
         if(maxValue==1){

@@ -166,7 +166,7 @@
           currentProjectTitle: '',
           currentProject: {id: '', name: '', remark: ''}, //endpoint弹框、module列表用来回显project
           module: {}, //编辑的module
-          blankModule: {id: '', type: '', name: '', project: {}, port: '', path: '', param: '', paramObj: [], snmpParam: ''}, //空白module
+          blankModule: {name: '', project: {}, port: 9100, path: '', param: '', type: 'http', paramObj: [], snmpParam: '', walk: [], version: 2, max_repetitions: 25, retries: 3, timeout: 10, community: 'public', username: '', security_level: 'noAuthNoPriv', password: '', auth_protocol: 'MD5', priv_protocol: 'DES', priv_password: '', context_name: ''}, //空白module
           currentModule: {id: '', type: '', name: '', project: {}, port: '', path: '', param: '', paramObj: [], snmpParam: ''}, //用来回显的module
           ready: false,
           rightBox: {module: {show: false}},
@@ -340,7 +340,9 @@
           });
         },
         newModule() {
-          return JSON.parse(JSON.stringify(this.blankModule));
+          let module=JSON.parse(JSON.stringify(this.blankModule));
+          module.project = this.$store.state.currentProject
+          return module
         },
         //弹出module编辑页
         editModule(module) {

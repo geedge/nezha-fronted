@@ -381,6 +381,7 @@
     methods: {
       labelsSort:function(obj){
         let buildIn=['asset','endpoint','module','project','datacenter']
+        if(typeof obj == "string") obj=JSON.parse(obj)
         let labels=JSON.parse(JSON.stringify(obj));
         let result=[];
         for(let key of buildIn){
@@ -938,21 +939,21 @@
     cursor: pointer;
   }
   .severity .high{
-    background: #F2866E;
+    background: #F5846A;
     border-radius: 2px;
     font-size: 12px;
     color: #FFFFFF;
     padding: 2px 6px;
   }
   .severity .medium{
-    background: #F89984;
+    background: #F7A54A;
     border-radius: 2px;
     font-size: 12px;
     color: #FFFFFF;
     padding: 2px 6px;
   }
   .severity .low{
-    background: #F7BA78;
+    background: #F1C13D;
     border-radius: 2px;
     font-size: 12px;
     color: #FFFFFF;
