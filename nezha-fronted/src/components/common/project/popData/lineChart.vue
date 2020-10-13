@@ -736,7 +736,7 @@
               show:false
             },
             minInterval: chartDataFormat.Interval(maxValue,copies,unit.type,'min'),
-            maxInterval: chartDataFormat.Interval(maxValue,copies,unit.type,'max'),
+            // maxInterval: chartDataFormat.Interval(maxValue,copies,unit.type,'max'),
             axisTick: {
               show: false,
             },
