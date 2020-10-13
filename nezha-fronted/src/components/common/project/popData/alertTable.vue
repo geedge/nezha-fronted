@@ -515,21 +515,21 @@
     border-radius: 4px;
   }
   .severity .high{
-    background: #F2866E;
+    background: #F5846A;
     border-radius: 2px;
     font-size: 12px;
     color: #FFFFFF;
     padding: 2px 6px;
   }
   .severity .medium{
-    background: #F89984;
+    background: #F7A54A;
     border-radius: 2px;
     font-size: 12px;
     color: #FFFFFF;
     padding: 2px 6px;
   }
   .severity .low{
-    background: #F7BA78;
+    background: #F1C13D;
     border-radius: 2px;
     font-size: 12px;
     color: #FFFFFF;
