@@ -283,13 +283,13 @@
 
     <!--底部按钮-->
     <div class="right-box-bottom-btns">
-      <button @click="esc(false)" id="chart-box-esc" class="nz-btn nz-btn-size-normal nz-btn-style-light nz-btn-min-width-100">
+      <button @click="esc(false)" id="chart-box-esc" class="nz-btn nz-btn-size-normal-new nz-btn-style-light-new">
         <span>{{$t('overall.cancel')}}</span>
       </button>
-      <button @click="preview" id="chart-box-preview" class="nz-btn nz-btn-size-normal nz-btn-style-normal nz-btn-min-width-100">
+      <button @click="preview" id="chart-box-preview" class="nz-btn nz-btn-size-normal-new nz-btn-style-normal-new">
         <span>{{$t('overall.preview')}}</span>
       </button>
-      <button @click="confirmAdd" id="chart-box-save" class="nz-btn nz-btn-size-normal nz-btn-style-normal nz-btn-min-width-100">
+      <button @click="confirmAdd" id="chart-box-save" class="nz-btn nz-btn-size-normal-new nz-btn-style-normal-new">
         <span>{{$t('overall.save')}}</span>
       </button>
     </div>

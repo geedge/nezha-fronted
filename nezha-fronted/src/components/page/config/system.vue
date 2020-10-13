@@ -36,8 +36,8 @@
               </el-select>
             </el-form-item>
             <el-form-item>
-              <el-button class="nz-btn nz-btn-size-normal nz-btn-style-light nz-btn-min-width-100" @click="resetForm('basicForm','basic')" style="top:2px">{{$t('overall.reset')}}</el-button>
-              <el-button type="primary" @click="saveSetInfo('basic','basicForm')" class="nz-btn nz-btn-size-normal nz-btn-style-normal nz-btn-min-width-100">{{$t('overall.submit')}}</el-button>
+              <button class="nz-btn nz-btn-size-normal-new nz-btn-style-light-new" @click="resetForm('basicForm','basic')" style="top:2px">{{$t('overall.reset')}}</button>
+              <button type="primary" @click="saveSetInfo('basic','basicForm')" class="nz-btn nz-btn-size-normal-new nz-btn-style-normal-new">{{$t('overall.submit')}}</button>
             </el-form-item>
           </el-form>
         </div>
@@ -82,9 +82,9 @@
               </el-row>
             </el-form-item>
             <el-form-item>
-              <el-button class="nz-btn nz-btn-size-normal nz-btn-style-light nz-btn-min-width-100" @click="resetForm('emailForm','email')" style="top:2px">{{$t('overall.reset')}}</el-button>
-              <el-button class="nz-btn nz-btn-size-normal nz-btn-style-light nz-btn-min-width-100" :class="{'nz-btn-disabled':email.email_enable == 'off'}" :disabled="email.email_enable == 'off'" @click="testSetInfo('email','emailForm')" style="top:2px">{{$t('config.system.email.testConnection')}}</el-button>
-              <el-button type="primary" @click="saveSetInfo('email','emailForm')" class="nz-btn nz-btn-size-normal nz-btn-style-normal nz-btn-min-width-100">{{$t('overall.submit')}}</el-button>
+              <button class="nz-btn nz-btn-size-normal-new nz-btn-style-light-new" @click="resetForm('emailForm','email')" style="top:2px">{{$t('overall.reset')}}</button>
+              <button class="nz-btn nz-btn-size-normal-new nz-btn-style-light-new" :class="{'nz-btn-disabled':email.email_enable == 'off'}" :disabled="email.email_enable == 'off'" @click="testSetInfo('email','emailForm')" style="top:2px">{{$t('config.system.email.testConnection')}}</button>
+              <button type="primary" @click="saveSetInfo('email','emailForm')" class="nz-btn nz-btn-size-normal-new nz-btn-style-normal-new">{{$t('overall.submit')}}</button>
             </el-form-item>
           </el-form>
         </div>
@@ -96,7 +96,7 @@
               <el-input v-model.number="terminal.max_terminal_num"></el-input>
             </el-form-item>
             <el-form-item>
-              <el-button type="primary" @click="saveSetInfo('terminal','terminalForm')" class="nz-btn nz-btn-size-normal nz-btn-style-normal nz-btn-min-width-100">{{$t('overall.submit')}}</el-button>
+              <button type="primary" @click="saveSetInfo('terminal','terminalForm')" class="nz-btn nz-btn-size-normal-new nz-btn-style-normal-new">{{$t('overall.submit')}}</button>
             </el-form-item>
           </el-form>
         </div>
@@ -126,9 +126,9 @@
               <el-input v-model="ldap.ldap_mapping"></el-input>
             </el-form-item>
             <el-form-item>
-              <el-button class="nz-btn nz-btn-size-normal nz-btn-style-light nz-btn-min-width-100" @click="resetForm('ldapForm','ldap')" style="top:2px">{{$t('overall.reset')}}</el-button>
-              <el-button class="nz-btn nz-btn-size-normal nz-btn-style-light nz-btn-min-width-100" @click="testSetInfo('ldap','ldapForm')" style="top:2px">{{$t('config.system.email.testConnection')}}</el-button>
-              <el-button type="primary" @click="saveSetInfo('ldap','ldapForm')" class="nz-btn nz-btn-size-normal nz-btn-style-normal nz-btn-min-width-100">{{$t('overall.submit')}}</el-button>
+              <button class="nz-btn nz-btn-size-normal-new nz-btn-style-light-new" @click="resetForm('ldapForm','ldap')" style="top:2px">{{$t('overall.reset')}}</button>
+              <button class="nz-btn nz-btn-size-normal-new nz-btn-style-light-new" @click="testSetInfo('ldap','ldapForm')" style="top:2px">{{$t('config.system.email.testConnection')}}</button>
+              <button type="primary" @click="saveSetInfo('ldap','ldapForm')" class="nz-btn nz-btn-size-normal-new nz-btn-style-normal-new">{{$t('overall.submit')}}</button>
             </el-form-item>
           </el-form>
         </div>
@@ -177,8 +177,8 @@
                   <el-input  v-model="item.url" width="460px" />
                 </el-form-item>
                 <el-form-item  prop="btn">
-                  <el-button type="primary" class="linkBtn nz-btn nz-btn-size-normal nz-btn-style-normal nz-btn-min-width-75" @click="linkUpdate(item)">Update</el-button>
-                  <el-button class="linkBtn nz-btn nz-btn-size-normal nz-btn-style-light nz-btn-min-width-75" @click="linkCancel(item)">Cancel</el-button>
+                  <button type="primary" class="linkBtn nz-btn nz-btn-size-small-new nz-btn-style-normal-new" @click="linkUpdate(item)">Update</button>
+                  <button class="linkBtn nz-btn nz-btn-size-small-new nz-btn-style-light-new" @click="linkCancel(item)">Cancel</button>
                 </el-form-item>
               </el-form>
                 <div class="linkFormContent" v-else>
@@ -222,7 +222,7 @@
               </div>
             </el-form-item>
             <el-form-item>
-              <el-button class="nz-btn nz-btn-size-normal nz-btn-style-normal nz-btn-min-width-100" @click="resetSys()" style="top:2px">{{$t('overall.reset')}}</el-button>
+              <button class="nz-btn nz-btn-size-normal-new nz-btn-style-normal-new" @click="resetSys()" style="top:2px">{{$t('overall.reset')}}</button>
             </el-form-item>
           </el-form>
         </div>

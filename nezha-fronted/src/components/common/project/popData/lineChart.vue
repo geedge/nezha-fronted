@@ -736,7 +736,7 @@
               show:false
             },
             minInterval: chartDataFormat.Interval(maxValue,copies,unit.type,'min'),
-            // maxInterval: chartDataFormat.Interval(maxValue,copies,unit.type,'max'),
+            maxInterval: chartDataFormat.Interval(maxValue,copies,unit.type,'max')*Math.ceil(dataArg.length/5),
             axisTick: {
               show: false,
             },
@@ -1462,7 +1462,7 @@
           series:this.seriesItem,
           yAxis:{
             minInterval: chartDataFormat.Interval(maxValue,copies,unit.type,'min'),
-            maxInterval: chartDataFormat.Interval(maxValue,copies,unit.type,'max'),
+            maxInterval: chartDataFormat.Interval(maxValue,copies,unit.type,'max')*Math.ceil(dataArg.length/5),
           }
         });
         if(this.hasLegendOptions){
@@ -1495,7 +1495,7 @@
           series:this.seriesItemScreen,
           yAxis:{
             minInterval: chartDataFormat.Interval(maxValue,copies,unit.type,'min'),
-            maxInterval: chartDataFormat.Interval(maxValue,copies,unit.type,'max'),
+            maxInterval: chartDataFormat.Interval(maxValue,copies,unit.type,'max')*Math.ceil(dataArg.length/5),
           }
         });
         if(this.hasLegendOptions){

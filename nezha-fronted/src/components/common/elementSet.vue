@@ -22,17 +22,17 @@
       </el-scrollbar>
     </div>
     <div class="custom-bottom-btns">
-      <button v-if="isCancel" type="button" @click="batchHandler(false)" class="nz-btn nz-btn-size-small nz-btn-style-light nz-btn-min-width-35 is-cancel">
+      <button v-if="isCancel" type="button" @click="batchHandler(false)" class="nz-btn nz-btn-size-small-new nz-btn-style-light-new is-cancel">
         <span class="top-tool-btn-txt">{{$t('overall.clear')}}</span>
       </button>
-      <button v-if="!isCancel" type="button" @click="batchHandler(true)" class="nz-btn nz-btn-size-small nz-btn-style-light nz-btn-min-width-35">
+      <button v-if="!isCancel" type="button" @click="batchHandler(true)" class="nz-btn nz-btn-size-small-new nz-btn-style-light-new">
         <span class="top-tool-btn-txt">{{$t('overall.all')}}</span>
       </button>
       <div>
-        <button type="button" @click="esc" class="nz-btn nz-btn-size-small nz-btn-style-light nz-btn-min-width-35">
+        <button type="button" @click="esc" class="nz-btn nz-btn-size-small-new nz-btn-style-light-new">
           <span class="top-tool-btn-txt">{{$t('overall.esc')}}</span>
         </button>
-        <button type="button" @click="save" class="nz-btn nz-btn-size-small nz-btn-style-normal nz-btn-min-width-35">
+        <button type="button" @click="save" class="nz-btn nz-btn-size-small-new nz-btn-style-normal-new">
           <span class="top-tool-btn-txt">{{$t('overall.save')}}</span>
         </button>
       </div>
