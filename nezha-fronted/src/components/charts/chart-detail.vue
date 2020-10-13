@@ -467,6 +467,7 @@
 
         this.panelIdInner = panelId;
         this.data = chartItem;
+        console.log(detail);
         this.detail = detail;
         if (this.detail[0] && this.detail[0].type && this.detail[0].type == "endpointInfo") { //endpointInfo的小图表
           this.$nextTick(() => {
@@ -481,17 +482,19 @@
       initChart(series) {
         series.forEach((item)=>{
           item.areaStyle={
-            // color: {
-            //   type: 'linear',
-            //   x: 0,
-            //   y: 0,
-            //   colorStops: [{
-            //     offset: 0, color: 'rgb(255, 158, 68)' // 0% 处的颜色
-            //   }, {
-            //     offset: 1, color: 'rgb(255, 70, 131)' // 100% 处的颜色
-            //   }],
-            //   global: false
-            // }
+            color: {
+              type: 'linear',
+              x: 0,
+              y: 0,
+              x2: 0,
+              y2: 1,
+              colorStops: [{
+                offset: 0, color: 'rgb(35,191,154)' // 0% 处的颜色
+              }, {
+                offset: 1, color: 'rgb(255, 255, 255)' // 100% 处的颜色
+              }],
+              global: false
+            }
           }
         });
         let option = {
@@ -549,6 +552,9 @@
           series: series
         };
         let chart = echarts.init(document.querySelector("#littleChart"));
+        option.series.forEach((item)=>{
+          item.lineStyle.color='rgb(35,191,154)';
+        })
         chart.setOption(option);//创建图表
       }
     },

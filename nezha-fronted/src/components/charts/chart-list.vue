@@ -1225,7 +1225,7 @@
         }
       },
       getEndpointInfoChartData(chartInfo) {
-        let detail = [];
+        let detail = [null,null];
         this.$refs['editChart'+chartInfo.id][0].showLoad();
         chartInfo.title = this.$t("project.chart.endpointInfo");
 
@@ -1274,7 +1274,7 @@
                   });
                   basicInfo.stateSeries = [series];
                   basicInfo.state = "";
-                  detail.push({title: this.$t("project.chart.basicTitle"), data: basicInfo, type: "endpointInfo"});
+                  detail[0]={title: this.$t("project.chart.basicTitle"), data: basicInfo, type: "endpointInfo"};
                   resolve(true);
                 }
               }
@@ -1303,7 +1303,7 @@
                   }
                 });
               }();
-              detail.push({title: this.$t("overall.alert"), data: alerts});
+              detail[1]={title: this.$t("overall.alert"), data: alerts};
               resolve(true);
             }
           });
