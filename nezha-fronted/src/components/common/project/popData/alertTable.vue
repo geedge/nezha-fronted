@@ -17,6 +17,7 @@
       <!-- begin搜素框-->
       <div class="top-tools">
         <div class="top-tool-main-right" :class="{'top-tool-main-right-to-left': false}">
+          <pick-time :refresh-data-func="getAlertList" v-model="searchTime" :use-chart-unit="false" :use-refresh="false" :default-pick="12" :show-empty="true"></pick-time>
           <div class="top-tool-search">
             <search-input :searchMsg="searchMsg" @search="search" :bottomBox.inTransform="true"></search-input>
           </div>
@@ -267,6 +268,7 @@
             width: 150
           },
         ],
+        searchTime: [],
         searchMsg: { //给搜索框子组件传递的信息
           zheze_none: true,
           searchLabelList: [{
@@ -337,6 +339,13 @@
         this.$set(this.searchLabel, "pageNo", this.pageObj.pageNo);
         this.$set(this.searchLabel, "pageSize", this.pageObj.pageSize);
         this.$set(this.searchLabel, "moduleId", this.moduleId);
+        if(this.searchTime&& this.searchTime.length>1){
+          this.$set(this.searchLabel, "startAt", bus.timeFormate(this.searchTime[0], 'yyyy-MM-dd hh:mm:ss'));
+          this.$set(this.searchLabel, "endAt", bus.timeFormate(this.searchTime[1], 'yyyy-MM-dd hh:mm:ss'));
+        }else{
+          delete this.searchLabel.startAt
+          delete this.searchLabel.endAt
+        }
         this.$get('alert/message', {...this.searchLabel}).then(response => {
           this.loading=false;
           if (response.code == 200) {

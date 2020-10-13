@@ -13,6 +13,7 @@
         <div v-if="from == 'endpoint'" class="sub-list-tab" @click="changeTab('endpointQuery')">{{$t("overall.query")}}</div>
       </div>
       <div class="top-tool-right">
+        <pick-time :refresh-data-func="getAlertList" v-model="searchTime" :use-chart-unit="false" :use-refresh="false" :default-pick="defaultPick" :show-empty="true"></pick-time>
         <div class="top-tool-search">
           <search-input :default-item="'alertMessageState'" :default-value="defaultSearchValue" :searchMsg="searchMsg" @search="search"></search-input>
         </div>
@@ -102,7 +103,7 @@
         chartDatas: [],
         legend: [],
         sameLabels: ['instance','module','project','asset','endpoint','datacenter'],
-        searchTime: [new Date().setHours(new Date().getHours() - 1), new Date()],
+        searchTime:[],
         currentMsg: {},
         chartUnit: 5,
         requestIndex:0,
@@ -226,6 +227,7 @@
         tablelable: [],
         dropCol: [],
         tableData: [],
+        defaultPick:12,
       }
     },
     computed: {
@@ -294,7 +296,6 @@
         this.$emit('changeTab', tab);
       },
       deleteMessage(deleteBox,cb) {
-        console.log(deleteBox)
         this.$put("alert/message", deleteBox).then(res => {
           if (res.code === 200) {
             this.$message({duration: 2000, type: 'success', message: this.$t("tip.deleteSuccess")});
@@ -470,6 +471,14 @@
         this.loading = true;
         this.$set(this.searchLabel, "pageNo", this.pageObj.pageNo);
         this.$set(this.searchLabel, "pageSize", this.pageObj.pageSize);
+
+        if(this.searchTime&& this.searchTime.length>1){
+          this.$set(this.searchLabel, "startAt", bus.timeFormate(this.searchTime[0], 'yyyy-MM-dd hh:mm:ss'));
+          this.$set(this.searchLabel, "endAt", bus.timeFormate(this.searchTime[1], 'yyyy-MM-dd hh:mm:ss'));
+        }else{
+          delete this.searchLabel.startAt
+          delete this.searchLabel.endAt
+        }
         setTimeout(() => {
           this.$get('alert/message', this.searchLabel).then(response => {
             if (response.code == 200) {
@@ -584,6 +593,11 @@
         immediate: true,
         deep: true,
         handler(n) {
+          if(n.alertNum==0){
+            this.defaultPick=8
+          }else{
+            this.defaultPick=12;
+          }
           if (this.from == "alertRule") {
             this.searchMsg.searchLabelList = this.searchMsg.searchLabelList.filter((item, index) => {
               return item.label != "alertName" && item.label != "severity"

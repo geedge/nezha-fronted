@@ -1,6 +1,6 @@
 <template>
   <div class="interval-refresh ">
-    <time-picker v-if="showTimePicker" ref="timePicker" class="time-picker" @change="dateChange"></time-picker>
+    <time-picker v-if="showTimePicker" ref="timePicker" class="time-picker" @change="dateChange" :default-pick="defaultPick" :show-empty="showEmpty"></time-picker>
     <chart-unit v-model="unit" v-if="useChartUnit"></chart-unit>
       <div class="nz-btn-group nz-btn-group-size-normal nz-btn-group-light margin-r-20" v-show="useRefresh" style="height: 24px;line-height: 24px;vertical-align: middle;">
         <button style="border-right: 1px solid rgba(162,162,162,0.50);" type="button" class="nz-btn nz-btn-size-normal nz-btn-style-light" @click="refreshDataFunc">
@@ -55,7 +55,9 @@
       showTimePicker:{
         type:Boolean,
         default:true,
-      }
+      },
+      defaultPick:Number,
+      showEmpty:{type:Boolean,default:false}
     },
     data(){
       return{
@@ -107,6 +109,9 @@
         this.refreshDataFunc();
       },
       timeFormate(timeRange){
+        if(timeRange&&timeRange.length<2){
+          return []
+        }
         const startTime = bus.timeFormate(timeRange[0], 'yyyy-MM-dd hh:mm:ss');
         const endTime = bus.timeFormate(timeRange[1], 'yyyy-MM-dd hh:mm:ss');
         return [startTime, endTime];

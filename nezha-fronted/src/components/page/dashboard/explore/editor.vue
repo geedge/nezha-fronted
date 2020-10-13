@@ -85,7 +85,7 @@
         clearTimeout(this.filterTimer)
         this.filterTimer=setTimeout(()=>{
           this.filterItems(newContent);
-        },300)
+        },200)
       },
       dealSpecilChar:function(char,operation){//控制括号的成对添加和删除
         // console.log('specil char',char)
@@ -832,19 +832,20 @@
           let promise=$temp.storeCursor(char);
           if(source == 'user'){
             //console.log(delta,oldDelta,oldContent)
-            clearTimeout($temp.userChangeTimer)
-            $temp.userChangeTimer=setTimeout(()=>{
+            // clearTimeout($temp.userChangeTimer)
+            // $temp.userChangeTimer=setTimeout(()=>{
               let newContent=$temp.getContent()
               promise.then(()=>{ //存储完光标后再进行后面的操作
                   $temp.userChange(char,operation,newContent,oldContent)
               })
-            },100)
+            // },100)
           }
           $temp.content=$temp.getContent();
           //console.log('current content-->',$temp.content)
           $temp.getPosition();
-          clearTimeout($temp.formatTimer)
-          $temp.formatTimer=setTimeout($temp.formatContent,100)
+          /*clearTimeout($temp.formatTimer)
+          $temp.formatTimer=setTimeout($temp.formatContent,100)*/
+          $temp.formatContent()
         }
         //监听文本区域的高度
         let lineHeight = 16;
