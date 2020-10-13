@@ -35,7 +35,7 @@
         </el-form-item>
         <!--threshold-->
         <el-form-item :label="$t('alert.config.threshold')" prop="threshold" style="width: 415px;display: inline-block;">
-          <el-input type="text" placeholder="" v-model="editAlertRule.threshold" size="small">
+          <el-input type="text" placeholder="" v-model="editAlertRule.threshold" size="small" >
           </el-input>
         </el-form-item>
         <!--unit-->
@@ -111,6 +111,7 @@
 <script>
   import chartDataFormat from "../../charts/chartDataFormat";
   import promqlInput from "../../page/dashboard/explore/promqlInput";
+  import { nzNumber} from "../js/validate";
   export default {
     name: "alertConfigBox",
     props: {
@@ -152,6 +153,7 @@
           ],
           threshold:[
             {required:true,message:this.$t('validate.required'),trigger:'blur'},
+            {validator:nzNumber,trigger: 'blur'}
           ],
         },
         operators:[
