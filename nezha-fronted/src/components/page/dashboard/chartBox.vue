@@ -306,6 +306,7 @@
   import {getUUID, resetZIndex} from "../../common/js/common";
   import alertChartParam from "./alertChartParam";
   import promqlInput from "./explore/promqlInput";
+  import {nzNumber} from "../../common/js/validate";
   var rz = {
     methods: {
       rz(e) {
@@ -348,6 +349,9 @@
           ],
           url: [
             {required: true,  message: this.$t('validate.required'),  trigger: 'blur'}
+          ],
+          'param.threshold':[
+            {validator:nzNumber,trigger: 'blur'}
           ]
         },
         chartTypeList: [
