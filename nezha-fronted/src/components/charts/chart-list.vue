@@ -1225,7 +1225,7 @@
         }
       },
       getEndpointInfoChartData(chartInfo) {
-        let detail = [null,null];
+        let detail = [];
         this.$refs['editChart'+chartInfo.id][0].showLoad();
         chartInfo.title = this.$t("project.chart.endpointInfo");
 
@@ -1274,8 +1274,7 @@
                   });
                   basicInfo.stateSeries = [series];
                   basicInfo.state = "";
-                  detail[0]={title: this.$t("project.chart.basicTitle"), data: basicInfo, type: "endpointInfo"};
-                  resolve(true);
+                  resolve({title: this.$t("project.chart.basicTitle"), data: basicInfo, type: "endpointInfo"});
                 }
               }
             });
@@ -1284,31 +1283,25 @@
 
         let endpointId = this.additionalInfo.id;
         let alertMsg = new Promise((resolve, reject) => {
-          this.$get('/alert/message?endpointId=' + endpointId).then(response => {
+          this.$get('/alert/message?endpointId=' + endpointId+"&state=1&pageSize=-1").then(response => {
             if (response.code == 200) {
               let alerts = {};
-              response.data && function () {
-                response.data.list.forEach(item => {
-                  let alertName = item.alertRule.alertName;
-                  let hasAlert = false;
-                  for (let alert in alerts) {
-                    if (alertName == alert) {
-                      hasAlert = true;
-                    }
+              if(response.data){
+                response.data.list.forEach(t=>{
+                  let alertRule = t.alertRule.alertName;
+                  if(alerts[alertRule]){
+                    alerts[alertRule]++
+                  }else{
+                    alerts[alertRule]=1
                   }
-                  if (hasAlert) {
-                    alerts[alertName]++;
-                  } else {
-                    alerts[alertName] = 1;
-                  }
-                });
-              }();
-              detail[1]={title: this.$t("overall.alert"), data: alerts};
-              resolve(true);
+                })
+              }
+              resolve({title: this.$t("overall.alert"), data: alerts});
             }
           });
         });
         Promise.all([basicInfoReq, alertMsg]).then(resolves => {
+          resolves.forEach(t=>detail.push(t))
           this.$refs['editChart'+chartInfo.id][0].setData(chartInfo, detail);
         });
       },
