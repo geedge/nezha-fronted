@@ -3,7 +3,7 @@
     <div :id="id" class="editor-core" ref="editor" :style="{height: styleType == 2 ? 'auto' : ''}"></div>
     <span class="nz-input-append editor-clear" style="display: none" @click="clearContent"><i class="nz-icon nz-icon-circle-close"></i></span>
     <div class="metric-editor-popper" :style="{left:popperPos.left+'px'}">
-      <div class="metric-popper-main" v-show="showType&&Object.keys(showSuggestions).length>0">
+      <div class="metric-popper-main" v-show="showType">
         <el-scrollbar style="height: 100%;width:100%" class="el-scrollbar-small" ref="scroll">
           <div v-for="(key, index) in orders" >
             <div v-html="key" class="popper-group" v-show="showSuggestions[key]"></div>
@@ -153,7 +153,6 @@
           this.packageTypeInfo();
         }else if(type == 'range'){
           this.noStyleSuggestions={range:suggestions.getRateRange()}
-          this.showSuggestions=this.deepClone(this.noStyleSuggestions)
         }
       },
       packageTypeInfo:function(){
@@ -267,7 +266,6 @@
         this.$set(this.noStyleSuggestions,'metrics',this.tempStoreMetric)
         // this.$set(this.noStyleSuggestions,'operators',suggestions.getOperators())
         this.$set(this.noStyleSuggestions,'functions',suggestions.getFunctions())
-        this.showSuggestions=this.deepClone(this.noStyleSuggestions)
       },
       queryValues:function(){
         let labelValuesReg=/\{((\w*?(=|!=|=~|!~).*?,{0,1})+?)\}/
@@ -298,7 +296,6 @@
             let values=this.labelValues.get(label);
 
             this.noStyleSuggestions={values:values}
-            this.showSuggestions=this.deepClone(this.noStyleSuggestions)
           }
         }
       },
@@ -362,11 +359,9 @@
             })
 
             this.noStyleSuggestions={labels:labels}
-            this.showSuggestions=this.deepClone(this.noStyleSuggestions);
             //console.log('change labels',this.showSuggestions)
           }else{
             this.noStyleSuggestions={};
-            this.showSuggestions=this.deepClone(this.noStyleSuggestions)
           }
         })
       },
@@ -532,12 +527,12 @@
 
       filterItems:function(input){ //过滤下拉选显示
         let suggestions=this.deepClone(this.noStyleSuggestions)
-        let hasResolve=false;
         new Promise((resolve => {
-          let counter = 0;
+          let start = new Date().getTime();
+          let result={};
           this.orders.forEach(key=>{
             let typeValues=suggestions[key];
-            this.showSuggestions[key]=[];
+            result[key]=[];
             typeValues&&typeValues.forEach(item=>{
               let index=item.insertText.toLowerCase().indexOf(input.toLowerCase());
               //console.log('index',index,'input',input)
@@ -549,20 +544,17 @@
                 let middle=label.substring(index,index+input.length)
                 let suf=label.substring(index+input.length,label.length)
                 item.label=`${pre}<mark>${middle}</mark>${suf}`
-                this.showSuggestions[key].push(item);
-                if(++counter > 20){
-                  hasResolve=true;
-                  resolve();
-                }
+                result[key].push(item);
               }
             });
-            if(this.showSuggestions[key].length<1){
-              delete this.showSuggestions[key]
+            if(result[key].length<1){
+              delete result[key]
             }
           })
-          if(!hasResolve){
-            resolve();
-          }
+          this.showSuggestions=result;
+          let end = new Date().getTime();
+          console.log("filter time:",(end - start),'ms')
+          resolve();
         })).then(()=>{
           if(Object.keys(this.showSuggestions).length>0){
             this.showType=true;
