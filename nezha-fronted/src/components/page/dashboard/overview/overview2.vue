@@ -131,7 +131,7 @@
           <div class="content-col-content">
             <chart-box chart-type="pie" ref="assetTypePie" :show-toolbox="false" name="assetTypePie" :tooltip-formatter="assetTypeFormatter" @is-loading="(isLoading)=>{this.assetTypeLoading = isLoading}"></chart-box>
 <!--                <div class="no-data-tip" v-if="!assetTypeLoading && assetData.typeStat && assetData.typeStat.length == 0">N/A</div>-->
-<!--                <div class="chart-no-data"v-if="!assetTypeLoading && assetData.typeStat && assetData.typeStat.length == 0">No Data</div>-->
+            <div class="chart-no-data"v-if="!assetTypeLoading && (!assetData.typeStat || assetData.typeStat.length == 0)">No Data</div>
           </div>
         </div>
 
@@ -155,6 +155,7 @@
           <div class="content-col-content">
             <chart-box axis-tooltip="y" v-show="alertMessageShow == 'asset'" :tooltip-formatter="simpleFormatter" chart-type="ruleBar" ref="assetMessage" name="assetMessage" :show-toolbox="false" @is-loading="(isLoading)=>{this.assetMessageLoading = isLoading}"></chart-box>
             <chart-box axis-tooltip="y" v-show="alertMessageShow == 'module'" :tooltip-formatter="simpleFormatter" chart-type="bar" ref="moduleMessage" name="moduleMessage" :show-toolbox="false" @is-loading="(isLoading)=>{this.moduleMessageLoading = isLoading}"></chart-box>
+            <div class="chart-no-data" v-if="!alertMessageLoading && ((!messageByAssetSeries.data && !messageByAssetSeries.category) || (messageByAssetSeries.data.length == 0 && messageByAssetSeries.category.length == 0))">No Data</div>
           </div>
         </div>
         <!--第三个图-->
@@ -171,7 +172,7 @@
           <div class="content-col-content">
             <chart-box axis-tooltip="y" chart-type="ruleBar" ref="ruleMessage" :tooltip-formatter="simpleFormatter" :show-toolbox="false" name="ruleMessage" @is-loading="(isLoading)=>{this.ruleMessageLoading = isLoading}"></chart-box>
             <!--                <div class="no-data-tip" v-if="!ruleMessageLoading && ((!messageByRuleSeries.data && !messageByRuleSeries.category) || (messageByRuleSeries.data.length == 0 && messageByRuleSeries.category.length == 0))">N/A</div>-->
-            <!--                <div class="chart-no-data" v-if="!ruleMessageLoading && ((!messageByRuleSeries.data && !messageByRuleSeries.category) || (messageByRuleSeries.data.length == 0 && messageByRuleSeries.category.length == 0))">No Data</div>-->
+            <div class="chart-no-data" v-if="!ruleMessageLoading && ((!messageByRuleSeries.data && !messageByRuleSeries.category) || (messageByRuleSeries.data.length == 0 && messageByRuleSeries.category.length == 0))">No Data</div>
           </div>
         </div>
       </div>
@@ -686,7 +687,7 @@
           geoJson: {geoJson: world.worldData}
         };
 
-        setTimeout(()=>{this.queryDataCenterMapData();},1000)
+        setTimeout(()=>{this.queryDataCenterMapData();},1500)
       },
       queryDataCenterMapData() {
         let language=localStorage.getItem("nz-language") ? localStorage.getItem("nz-language") : 'en';
