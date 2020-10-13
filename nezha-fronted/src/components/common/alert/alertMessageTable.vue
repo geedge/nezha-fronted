@@ -381,6 +381,7 @@
     methods: {
       labelsSort:function(obj){
         let buildIn=['asset','endpoint','module','project','datacenter']
+        if(typeof obj == "string") obj=JSON.parse(obj)
         let labels=JSON.parse(JSON.stringify(obj));
         let result=[];
         for(let key of buildIn){
