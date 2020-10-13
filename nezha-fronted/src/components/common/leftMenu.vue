@@ -241,7 +241,6 @@
           immediate: true,
           deep: true,
           handler(n, o) {
-            console.log(n)
             bus.$emit("current-project-change", n); //告知project.vue
           },
         },
