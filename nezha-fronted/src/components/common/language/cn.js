@@ -129,6 +129,7 @@ const cn = {
         url: "URL",
         statistics:'Statistics',
         sync: '同步到设备',
+        last:'Last',
         threshold:'阈值',
         typeVal: {
           line: {

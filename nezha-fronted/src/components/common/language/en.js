@@ -138,6 +138,7 @@ const en = {
         statistics:'Statistics',
         legendTip:'Controls the name of the time series, using name or pattern. For example {{hostname}} will be replaced with label value for the label hostname.',
         sync: 'Sync to assets',
+        last:'Last',
         threshold:'Threshold',
         typeVal:{
           line:{

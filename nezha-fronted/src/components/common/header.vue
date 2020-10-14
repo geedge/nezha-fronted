@@ -724,7 +724,6 @@
     width: 100%;
     height: 50px;
     background-color: #232f3e;
-    z-index: 1;
 
   }
 
