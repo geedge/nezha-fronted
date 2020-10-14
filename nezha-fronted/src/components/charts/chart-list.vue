@@ -842,6 +842,9 @@
                   chartInfo.param.nullType=chartInfo.param.nullType||'connected';
                   query+='&nullType='+chartInfo.param.nullType;
                 }
+                if(chartInfo.type === 'table'&&chartInfo.param&&chartInfo.param.last == 1){
+                  return this.$get('/prom/api/v1/query_range?query=' + query + "&start=" + this.$stringTimeParseToUnix(endTime) + "&end=" + this.$stringTimeParseToUnix(endTime) + '&step=' + step);
+                }
                 return this.$get('/prom/api/v1/query_range?query=' + query + "&start=" + this.$stringTimeParseToUnix(startTime) + "&end=" + this.$stringTimeParseToUnix(endTime) + '&step=' + step);
               });
               // 一个图表的所有element单独获取数据

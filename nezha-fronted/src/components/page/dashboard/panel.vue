@@ -84,7 +84,7 @@
     <button class="to-top" :class="{'to-top-is-hover': tableHover}" v-show="showTopBtn" @click="$toTop('el', $refs.dashboardScrollbar.wrap)" style="bottom: 0;"><i class="nz-icon nz-icon-top"></i></button>
 
     <transition name="right-box">
-      <chart-box @close="closeChartBox" :chart="chart" v-if="rightBox.chart.show" ref="addChartModal" :show-panel="showPanel" :panel-data="panelData" @reload="panelReload" @on-create-success="createSuccess" @on-delete-success="delChartOk" @reloadOnlyPanel="panelReloadOnlyPanel"></chart-box>
+      <chart-box @close="closeChartBox" @delete-chart="delChart" :chart="chart" v-if="rightBox.chart.show" ref="addChartModal" :show-panel="showPanel" :panel-data="panelData" @reload="panelReload" @on-create-success="createSuccess" @on-delete-success="delChartOk" @reloadOnlyPanel="panelReloadOnlyPanel"></chart-box>
     </transition>
     <transition name="right-box">
       <panel-box v-if="closePanelBox" :panel="panel" @reload="panelReload" @reloadForDel="panelReloadForDel" ref="panelBox"></panel-box>
@@ -321,6 +321,7 @@
                 type: 'success',
                 message: this.$t("tip.deleteSuccess")
               });
+              this.rightBox.chart.show = false;
               let chartList=this.$refs.chartList.dataList;
               let nextChart=null,prevChart=null
               for (let i =0;i< chartList.length;i++){
