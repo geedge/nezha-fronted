@@ -500,7 +500,6 @@
                    }
                  } else {
                    this.$message.error(response.data.error)
-                   console.error(response.data)
                  }
                }
              });
@@ -597,7 +596,6 @@
         this.$emit('deleteMessage',this.deleteBox,()=>{
           this.deleteBox.ids=[];
         });
-        //console.log(this.deleteBox);
         this.deleteBox.show = false;
       },
       selectChange(s) {
@@ -824,8 +822,6 @@
       this.tools.customTableTitle = localStorage.getItem("nz-tableTitle-" + localStorage.getItem("nz-username") + "-" + '/alertList')
         ? JSON.parse(localStorage.getItem("nz-tableTitle-" + localStorage.getItem("nz-username") + "-" + '/alertList'))
         : this.tableTitle;
-
-      // console.info(this.tools.customTableTitle)
       //是否存在分页缓存
       let pageSize = localStorage.getItem('nz-pageSize-' + localStorage.getItem('nz-username') + '-' + this.tableId);
       if (pageSize != 'undefined' && pageSize != null) {
@@ -859,7 +855,6 @@
         this.dropCol = localStorage.getItem("nz-tableTitle-" + localStorage.getItem("nz-username") + "-" + this.$route.path)
           ? JSON.parse(localStorage.getItem("nz-tableTitle-" + localStorage.getItem("nz-username") + "-" + this.$route.path))
           : this.tableTitle;
-        console.log(1);
       }
       if(this.from=='alertMessageTab'  || this.from=='chartList'){
         this.tablelable = localStorage.getItem("nz-tableTitle-" + localStorage.getItem("nz-username") + "-/alertList")
@@ -868,9 +863,8 @@
         this.dropCol = localStorage.getItem("nz-tableTitle-" + localStorage.getItem("nz-username") + "-/alertList")
           ? JSON.parse(localStorage.getItem("nz-tableTitle-" + localStorage.getItem("nz-username") + "-/alertList"))
           : this.tableTitle;
-        console.log(2);
       }
-      console.log( this.tableTitle,this.fromPath,this.form,this.tablelable);*/
+    */
     }
   }
 

@@ -172,7 +172,6 @@
         dropDownVisible:function(n,o){
           if(this.$refs.metricSelector){
             this.$refs.metricSelector.dropDownVisible=n;
-            console.log(this.cascaderValue)
             if(!this.expressionList[this.index]||this.expressionList[this.index] == ''){
               this.cascaderValue="";
             }

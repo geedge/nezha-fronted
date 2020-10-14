@@ -57,7 +57,6 @@
     },
     created() {
       this.option=chartConfig.getOption(this.chartType);
-      console.log(this.option);
       if(this.showToolbox == false){
         //this.option.grid.top = 10;
       }
@@ -166,13 +165,11 @@
             this.option.yAxis.axisLabel.formatter=this.defaultYAxisFormatter
           }
         }
-        // console.log(this.option)
         if(this.series){
           this.$set(this.option,'series',this.series);
           this.noData=false;
           this.chart.clear();
           this.optionSeriesAll=[...this.option.series];
-          // console.log( this.optionSeriesAll);
           if(this.option.series instanceof Array){
             this.option.series=this.option.series.filter((item,index)=>index<this.dataSize);
           }
@@ -361,7 +358,6 @@
         let chartUnit=this.unit;
         chartUnit=chartUnit?chartUnit:2;
         let unit=chartDataFormat.getUnit(chartUnit);
-        // console.log(unit);
         let flag=JSON.stringify(value).length>JSON.stringify(chartDataFormat.Interval(maxValue,copies,unit.type)).length;
         if(dot===0&&flag){
           dot=1;
@@ -401,7 +397,6 @@
         let option={
           series:this.optionSeriesAll
         };
-        // console.log(option);
         this.chart.setOption(option);
         this.chart.resize()
       },
@@ -463,7 +458,6 @@
     mounted() {
       this.chartInit();
       EleResize.on(this.$el, this.resize, this.chartType);
-      // console.log(this.chartType)
     },
     watch:{
 

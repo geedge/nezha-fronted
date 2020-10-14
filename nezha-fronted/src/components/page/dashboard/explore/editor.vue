@@ -553,7 +553,6 @@
           })
           this.showSuggestions=result;
           let end = new Date().getTime();
-          console.log("filter time:",(end - start),'ms')
           resolve();
         })).then(()=>{
           if(Object.keys(this.showSuggestions).length>0){

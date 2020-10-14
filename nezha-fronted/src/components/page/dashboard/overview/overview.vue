@@ -830,7 +830,6 @@
                     symbolSize=smallScatter;
                   }
 
-                  console.log(dcStat.name+'-->'+ symbolSize)
                   seriesDatas.push({
                     name:areaName,
                     value:[areaInfo.longitude,areaInfo.latitude,dcStat],
