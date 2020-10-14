@@ -103,6 +103,8 @@
                 <span :title="$t('overall.query')" @click="query(scope.row)" class="content-right-option" :id="'edp-query-'+scope.row.id"><i class="nz-icon nz-icon-search"></i></span>
                 &nbsp;
                 <span :title="$t('overall.edit')" @click="editEndpoint(scope.row)" class="content-right-option" :id="'edp-edit-'+scope.row.id"><i class="nz-icon nz-icon-edit"></i></span>
+
+                <span :title="$t('overall.delete')" @click.stop="delEndpoint(scope.row)" class="content-right-option" :id="'asset-del-'+scope.row.id"><i class="nz-icon nz-icon-delete"></i></span>
               </div>
               <span v-else-if="item.prop == 'state'" >
               <el-popover placement="right" width="50" trigger="hover" :popper-class="scope.row.state == '1'?'small-pop':''">
@@ -438,6 +440,22 @@
         this.endpoint = Object.assign({}, endpoint);
         this.bottomBox.targetTab = "panel";
         this.bottomBox.showSubList = true;
+      },
+      delEndpoint(endpoint) {
+        this.$confirm(this.$t("tip.confirmDelete"), {
+          confirmButtonText: this.$t("tip.yes"),
+          cancelButtonText: this.$t("tip.no"),
+          type: 'warning'
+        }).then(() => {
+          this.$delete("endpoint?ids=" + endpoint.id).then(response => {
+            if (response.code === 200) {
+              this.$message({duration: 1000, type: 'success', message: this.$t("tip.deleteSuccess")});
+              this.getEndpointTableData();
+            } else {
+              this.$message.error(response.msg);
+            }
+          });
+        });
       },
       jumpToAlertMsg(endpoint) {
         this.endpoint = Object.assign({}, endpoint);
