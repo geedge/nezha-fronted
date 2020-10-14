@@ -143,6 +143,9 @@
           <span class="nz-input-append">px</span>
         </el-form-item>
 
+        <el-form-item :label="$t('dashboard.panel.chartForm.last')" v-if="editChart.type == 'table'">
+          <el-switch class="exporter-switch" v-model="editChart.param.last" active-color="#ee9d3f" :active-value="1" :inactive-value="0"></el-switch>
+        </el-form-item>
 
         <el-form-item :label="$t('dashboard.panel.chartForm.sync')" v-if="showPanel.type && showPanel.type == 'model'">
           <el-switch class="exporter-switch" v-model="editChart.sync" active-color="#ee9d3f" :active-value="1" :inactive-value="0"></el-switch>
@@ -531,24 +534,8 @@
           }
         });
       },
-      del(u) {
-        this.$confirm(this.$t("tip.confirmDelete"), {
-          confirmButtonText: this.$t("tip.yes"),
-          cancelButtonText: this.$t("tip.no"),
-          type: 'warning'
-        }).then(() => {
-          this.$delete("panel/" + this.panelId + "/charts?ids=" + u.id).then(response => {
-            if (response.code === 200) {
-              if(this.$refs.chartForm){
-                this.$refs.chartForm.resetFields();//清空表单
-              }
-              this.$message({duration: 1000, type: 'success', message: this.$t("tip.deleteSuccess")});
-              this.esc(true);
-            } else {
-              this.$message.error(response.msg);
-            }
-          })
-        });
+      del() {
+          this.$emit('delete-chart',this.editChart)
       },
       //----------------------------------
 
@@ -1054,6 +1041,7 @@
         this.editChart.height = 400+'';
         this.editChart.unit=2;
         let param = {};
+        param.last=0;
         param.url='';
         param.threshold='';
         param.valueMapping={type:'text',mapping:[{value:'',text:''}]};
@@ -1120,6 +1108,8 @@
           this.setIsOtherChart();
           if(chartType === 'bar'||chartType === 'line'||chartType === 'stackArea'){
             this.editChart.param={nullType:this.editChart.param.nullType,threshold:'',legendValue:{min:'off',max:'off',avg:'off',last:'off',total:'off'}}
+          }else if(chartType == 'table'){
+            this.editChart.param.last= 0;
           }
           /*if(this.$refs.chartTag){
             this.$refs.chartTag.forEach((item, index) => {
@@ -1295,7 +1285,9 @@
           } else if(n.type === 'singleStat'){
             n.param&&!n.param.valueMapping&&this.$set(this.editChart.param,'valueMapping',{type:'value',mapping:[{text:'',value:''}]})
             this.setIsSingleStat();
-          } else {
+          } else if(n.type  === 'table'){
+            n.param.last?this.$set(this.editChart.param,'last',n.param.last):this.$set(this.editChart.param,'last',0)
+          }else {
             this.setIsOtherChart();
             n.param&&!n.param.legendValue&&this.$set(this.editChart.param,'legendValue',{min:'off',max:'off',avg:'off',last:'off',total:'off'})
           }
