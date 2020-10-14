@@ -176,7 +176,7 @@
         <div v-if="isAlert" class="right-box-sub-title">{{$t('dashboard.panel.chartForm.alertParam.param')}}</div>
         <div v-if="!isUrl" style="width: 100%"></div>
 
-        <el-row v-if="isAlert" class="element-item">
+        <el-row v-if="isAlert" class="element-item" style="width: calc(100% - 108px);margin-left: 108px">
           <alert-chart-param ref="alertParamBox" @on-enter-complate="getAlertParam"></alert-chart-param>
         </el-row>
 
@@ -241,7 +241,7 @@
             </el-form-item>
             <el-form-item :label="$t('dashboard.panel.chartForm.valMapping.text')" prop="span" class="half-form-item-other">
               <el-input size="mini" type="input" v-model="mapping.text" style="display: inline-block;width:calc(100% - 40px);"></el-input>
-              <span  @click="delMapping(index)" class="nz-icon-minus-medium" style="margin-left: 7px"><i class="nz-icon nz-icon-minus"></i></span>
+              <span  @click="delMapping(index)" class="nz-icon-minus-medium" style="margin-left: 7px;padding: 6px"><i class="nz-icon nz-icon-minus" style="color: #EC7F66"></i></span>
             </el-form-item>
           </template>
         </template>
@@ -257,7 +257,7 @@
             </div>
             <el-form-item :label="$t('dashboard.panel.chartForm.valMapping.text')" prop="span" class="half-form-item-other">
               <el-input size="mini" type="input" v-model="mapping.text" style="display: inline-block;width:calc(100% - 40px);" ></el-input>
-              <div @click="delMapping(index)" style="display: inline-block"><i class="nz-icon nz-icon-minus"></i></div>
+              <span @click="delMapping(index)" class="nz-icon-minus-medium" style="margin-left: 7px;padding: 6px"><i class="nz-icon nz-icon-minus"  style="color: #EC7F66"></i></span>
             </el-form-item>
           </template>
         </template>
