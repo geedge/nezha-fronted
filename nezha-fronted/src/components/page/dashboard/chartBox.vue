@@ -96,8 +96,8 @@
           <el-input size="small" maxlength="64" show-word-limit v-model="editChart.title"></el-input>
         </el-form-item>
 
-        <div class="right-box-sub-title">{{$t('dashboard.panel.chartForm.option')}}</div>
-        <div class="line-100" style="margin-bottom: 20px;"></div>
+        <div class="right-box-small-title">{{$t('dashboard.panel.chartForm.option')}}</div>
+        <div style="margin-bottom: 20px;width: 100%"></div>
 
         <!-- type unit start-->
         <el-form-item :label="$t('dashboard.panel.chartForm.type')" prop="type" class="half-form-item">
@@ -108,7 +108,7 @@
           </el-select>
         </el-form-item>
 
-        <el-form-item :label="$t('dashboard.panel.chartForm.unit')" prop="unit" class="half-form-item" style="width: 415px;">
+        <el-form-item :label="$t('dashboard.panel.chartForm.unit')" prop="unit" class="half-form-item">
           <el-cascader filterable placeholder="" popper-class="dc-dropdown" size="mini"  style="width: 100%"
                        :options="unitOptions"
                        :props="{ expandTrigger: 'hover',emitPath:false }"
@@ -128,7 +128,7 @@
           </el-select>
         </el-form-item>
 
-        <el-form-item :label="$t('dashboard.panel.chartForm.high')" prop="hight"  class="half-form-item" style="width: 415px;">
+        <el-form-item :label="$t('dashboard.panel.chartForm.high')" prop="hight"  class="half-form-item">
           <el-autocomplete
             v-model="editChart.height"
             :fetch-suggestions="querySearch"
@@ -158,11 +158,11 @@
           </el-select>
         </el-form-item>
 
-        <el-form-item v-if="editChart.type == 'line' || editChart.type == 'bar' || editChart.type == 'stackArea'" :label='$t("dashboard.panel.chartForm.threshold")' prop="param.threshold"  class="half-form-item" style="width: 415px">
+        <el-form-item v-if="editChart.type == 'line' || editChart.type == 'bar' || editChart.type == 'stackArea'" :label='$t("dashboard.panel.chartForm.threshold")' prop="param.threshold"  class="half-form-item">
           <el-input size="mini" type="input" v-model="editChart.param.threshold"></el-input>
         </el-form-item>
 
-        <div v-if="!isUrl&&!isAlert" class="right-box-sub-title">
+        <div v-if="!isUrl&&!isAlert" class="right-box-sub-title" style="margin-bottom: 20px">
           <span>{{$t('alert.config.expr')}}</span>
           <span v-if="!isSingleStat" style="height: 19px;display: inline-block;line-height: 1;" class="float-right" @click="addExpression">
             <span class="create-square-box">
@@ -171,13 +171,13 @@
           </span>
         </div>
         <div v-if="isAlert" class="right-box-sub-title">{{$t('dashboard.panel.chartForm.alertParam.param')}}</div>
-        <div v-if="!isUrl" class="line-100"></div>
+        <div v-if="!isUrl" style="width: 100%"></div>
 
         <el-row v-if="isAlert" class="element-item">
           <alert-chart-param ref="alertParamBox" @on-enter-complate="getAlertParam"></alert-chart-param>
         </el-row>
 
-        <el-row v-if="!isUrl &&!isAlert" class="element-item" style="" v-for="index of promqlKeys.length" :key="'ele' + index">
+        <el-row v-if="!isUrl &&!isAlert" class="element-item form-row-item" style="" v-for="index of promqlKeys.length" :key="'ele' + index">
           <promql-input
             :ref="'promql-'+(index-1)"
             :id="promqlKeys[index-1]"
@@ -188,6 +188,7 @@
             :plugins="['metric-selector', 'metric-input', 'remove']"
             @change="expressionChange"
             @removeExpression="removeExpression"
+            :showRemove="false"
           ></promql-input>
           <el-row>
             <template v-if="editChart.type != 'singleStat'">
@@ -214,13 +215,16 @@
               </el-col>
             </template>
           </el-row>
+          <span class="nz-icon-minus-medium nz-icon-minus-position">
+            <i class="nz-icon nz-icon-minus" @click="removeExpression"></i>
+          </span>
         </el-row>
         <!--value mapping start-->
         <div  class="right-box-sub-title" v-if="editChart.type == 'singleStat'">
           <span>{{$t('dashboard.panel.chartForm.valMapping.name')}}</span>
           <span  class="float-right" @click="addMapping"><i style="font-size: 16px; cursor: pointer;" class="nz-icon nz-icon-create-square"></i></span>
         </div>
-        <div class="line-100" style="margin-bottom: 20px;" v-if="editChart.type == 'singleStat'"></div>
+        <div style="margin-bottom: 20px; width: 100%" v-if="editChart.type == 'singleStat'"></div>
         <el-form-item :label="$t('dashboard.panel.chartForm.type')" prop="span" v-if="editChart.type == 'singleStat'">
           <el-radio-group v-model="editChart.param.valueMapping.type" fill="#FA901C" text-color="#FA901C" size="small" class="val-mapping-type"  @change="valueMappingChange">
             <el-radio-button label="value" border class="no-fill">{{$t('dashboard.panel.chartForm.valMapping.value')}}</el-radio-button>
@@ -229,18 +233,18 @@
         </el-form-item>
         <template v-if="editChart.type == 'singleStat'&&editChart.param.valueMapping.type == 'value'">
           <template  v-for="(mapping,index) in editChart.param.valueMapping.mapping">
-            <el-form-item :label="$t('dashboard.panel.chartForm.valMapping.value')" prop="span" class="half-form-item" >
-              <el-input size="mini" type="input" v-model="mapping.value"></el-input>
+            <el-form-item :label="$t('dashboard.panel.chartForm.valMapping.value')" prop="span" class="half-form-item-other" >
+              <el-input size="mini" type="input" v-model="mapping.value" style="display: inline-block;;"></el-input>
             </el-form-item>
-            <el-form-item :label="$t('dashboard.panel.chartForm.valMapping.text')" prop="span" class="half-form-item" style="width: 415px;">
-              <el-input size="mini" type="input" v-model="mapping.text" style="display: inline-block;width:calc(100% - 21px);"></el-input>
-              <div  @click="delMapping(index)" style="display: inline-block"><i class="nz-icon nz-icon-minus"></i></div>
+            <el-form-item :label="$t('dashboard.panel.chartForm.valMapping.text')" prop="span" class="half-form-item-other">
+              <el-input size="mini" type="input" v-model="mapping.text" style="display: inline-block;width:calc(100% - 40px);"></el-input>
+              <span  @click="delMapping(index)" class="nz-icon-minus-medium" style="margin-left: 7px"><i class="nz-icon nz-icon-minus"></i></span>
             </el-form-item>
           </template>
         </template>
         <template v-if="editChart.type == 'singleStat'&&editChart.param.valueMapping.type == 'range'">
           <template  v-for="(mapping,index) in editChart.param.valueMapping.mapping">
-            <div class="half-form-item">
+            <div class="half-form-item-other" style="display: inline-block;margin-left: 70px">
               <el-form-item :label="$t('dashboard.panel.chartForm.valMapping.from')" prop="span" class="one-third-form-item-left" >
                 <el-input size="mini" type="input" v-model="mapping.from"></el-input>
               </el-form-item>
@@ -248,8 +252,8 @@
                 <el-input size="mini" type="input" v-model="mapping.to"></el-input>
               </el-form-item>
             </div>
-            <el-form-item :label="$t('dashboard.panel.chartForm.valMapping.text')" prop="span" class="half-form-item" style="width: 415px;">
-              <el-input size="mini" type="input" v-model="mapping.text" style="display: inline-block;width:calc(100% - 21px);" ></el-input>
+            <el-form-item :label="$t('dashboard.panel.chartForm.valMapping.text')" prop="span" class="half-form-item-other">
+              <el-input size="mini" type="input" v-model="mapping.text" style="display: inline-block;width:calc(100% - 40px);" ></el-input>
               <div @click="delMapping(index)" style="display: inline-block"><i class="nz-icon nz-icon-minus"></i></div>
             </el-form-item>
           </template>
@@ -260,9 +264,9 @@
           <div  class="right-box-sub-title" >
             <span>{{$t('dashboard.panel.chartForm.legendValue')}}</span>
           </div>
-          <div class="line-100" style="margin-bottom: 20px;" ></div>
+          <div style="margin-bottom: 20px; width: 100%" ></div>
           <div style="display: flex;">
-            <span style="margin-left: 50px;"></span>
+            <span style="margin-left: 150px;"></span>
             <template v-for="item in sortedOptionKeys">
               <div style="flex: 1">
                 <span style="margin-right: 10px;color:rgb(102, 102, 102)">{{item.label}}</span>
@@ -587,11 +591,9 @@
           this.subCount = 0;
           // 保存完成,进行删除操作
           //('box第二步，deleteIndex='+this.deleteIndex+'=开始删除一个元素')
-          //console.log('box第二步，删除之前，elements='+JSON.stringify(this.elements)+'  elementTarget='+JSON.stringify(this.elementTarget)+'  bus='+JSON.stringify(bus.chartAddInfo.metricTarget));
           this.elements.splice(this.deleteIndex, 1);
           this.elementTarget.splice(this.deleteIndex, 1);//没有作用，此处是[]
           bus.chartAddInfo.metricTarget.splice(this.deleteIndex, 1);
-          //console.log('box第二步，删除完毕，elements='+JSON.stringify(this.elements),'  elementTarget='+JSON.stringify(this.elementTarget),'  bus='+JSON.stringify(bus.chartAddInfo.metricTarget));
 
           this.$nextTick(() => {
             this.$refs.chartTag.forEach((item, index) => {
@@ -1207,7 +1209,6 @@
                   legend: this.legends[index],
                 });
               });
-              //console.info(elements)
               params.elements = elements;
               if (valid) {
                 this.$refs.chartsPreview.show(params);
@@ -1299,7 +1300,6 @@
             this.setIsOtherChart();
             n.param&&!n.param.legendValue&&this.$set(this.editChart.param,'legendValue',{min:'off',max:'off',avg:'off',last:'off',total:'off'})
           }
-          //console.info(this.showPanel);
           this.$set(this.editChart, "panelName", this.showPanel.name);
           if (this.showPanel.id) {
             this.panelId = this.showPanel.id;
@@ -1315,7 +1315,6 @@
         deep: true,
         immediate: true,
         handler(n) {
-          // console.info((JSON.parse(JSON.stringify(n))))
           let panel = this.panelData.find(p => {
             return p.name == n.panelName;
           });
