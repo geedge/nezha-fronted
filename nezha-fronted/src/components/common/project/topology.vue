@@ -706,15 +706,21 @@
         this.expressionsInfoPosition={...position};
       },
       modelTopClick(item,index){
-        if(this.selNodeId && this.selNodeId===item.id){return;}
-        this.activeIndex=index;
-        this.activeModelItem=item;
-        this.index=index;
-        this.selNodeId=item.id;
-        if(this.selNodeId){
-          this.setPopPosition(this.selNodeId);
-          this.popDataShowUpdate('main');
-          this.network.selectNodes([this.selNodeId]);
+        if(this.selNodeId && this.selNodeId===item.id){
+          if(this.selNodeId){
+            this.setPopPosition(this.selNodeId);
+            this.network.selectNodes([this.selNodeId]);
+          }
+        }else{
+          this.activeIndex=index;
+          this.activeModelItem=item;
+          this.index=index;
+          this.selNodeId=item.id;
+          if(this.selNodeId){
+            this.setPopPosition(this.selNodeId);
+            this.popDataShowUpdate('main');
+            this.network.selectNodes([this.selNodeId]);
+          }
         }
       },
       // 数组取差集
@@ -775,7 +781,9 @@
         });
         this.$nextTick(()=>{
           this.modelTopUpdate();
-          this.setPopPosition(this.selNodeId);
+          if(this.networkPopShow){
+            this.setPopPosition(this.selNodeId);
+          }
           this.popDataShowUpdate();
         })
       },
@@ -868,7 +876,8 @@
              this_.popDataShowUpdate('');
            }
            let selId=params.nodes[0];
-           if(this_.selNodeId&& this_.selNodeId===selId){return;}
+           console.log(this_.selNodeId,selId,"click");
+           // if(this_.selNodeId&& this_.selNodeId===selId){return;}
            if(selId){
              this_.selNodeId=selId;
            }else{
@@ -878,26 +887,46 @@
 
          this.network.on("selectNode", function (params) { //选择节点
            let selId=params.nodes[0];
-           if(this_.selNodeId&& this_.selNodeId===selId){return;}
-           if(selId){
-             this_.selNodeId=selId;
-             this_.cursorMove=true;
-             this_.nodeData=this_.nodesArray.find((item)=>item.id===selId);
-             if(this_.NodeArr.indexOf(selId)!==-1){
-               let index = this_.NodeArr.indexOf(selId);
-               this_.NodeArr=this_.NodeArr.filter((item,i)=> i !== index);
-               return
+           console.log(this_.selNodeId,selId,"selectNode")
+           if(this_.selNodeId&& this_.selNodeId===selId){
+             if(selId){
+               this_.cursorMove=true;
+               if(this_.NodeArr.indexOf(selId)!==-1){
+                 let index = this_.NodeArr.indexOf(selId);
+                 this_.NodeArr=this_.NodeArr.filter((item,i)=> i !== index);
+                 return
+               }
+               if(this_.selectNodeTitle&&this_.NodeArrShow){
+                 this_.NodeArr.push(selId);
+                 this_.network.selectNodes(this_.NodeArr,true);
+                 return
+               }
+               if(this_.NodeArr.length===0&&this_.editVisNetwork){
+                 this_.nodeEdit();
+               }
+               this_.setPopPosition(selId,params);
              }
-             if(this_.selectNodeTitle&&this_.NodeArrShow){
-               this_.NodeArr.push(selId);
-               this_.network.selectNodes(this_.NodeArr,true);
-               return
+           }else{
+             if(selId){
+               this_.selNodeId=selId;
+               this_.cursorMove=true;
+               this_.nodeData=this_.nodesArray.find((item)=>item.id===selId);
+               if(this_.NodeArr.indexOf(selId)!==-1){
+                 let index = this_.NodeArr.indexOf(selId);
+                 this_.NodeArr=this_.NodeArr.filter((item,i)=> i !== index);
+                 return
+               }
+               if(this_.selectNodeTitle&&this_.NodeArrShow){
+                 this_.NodeArr.push(selId);
+                 this_.network.selectNodes(this_.NodeArr,true);
+                 return
+               }
+               if(this_.NodeArr.length===0&&this_.editVisNetwork){
+                 this_.nodeEdit();
+               }
+               this_.setPopPosition(selId,params);
+               this_.popDataShowUpdate('main');
              }
-             if(this_.NodeArr.length===0&&this_.editVisNetwork){
-               this_.nodeEdit();
-             }
-             this_.setPopPosition(selId,params);
-             this_.popDataShowUpdate('main');
            }
          });
 
