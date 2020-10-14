@@ -706,6 +706,7 @@
         this.expressionsInfoPosition={...position};
       },
       modelTopClick(item,index){
+        if(this.selNodeId && this.selNodeId===item.id){return;}
         this.activeIndex=index;
         this.activeModelItem=item;
         this.index=index;
@@ -863,18 +864,23 @@
            this_.activeIndex='';
            this_.networkPopClose();
            this_.network.selectNodes([]);
-           this_.selNodeId='';
            if(!params.edges.length&&!params.nodes.length){
              this_.popDataShowUpdate('');
+           }
+           let selId=params.nodes[0];
+           if(this_.selNodeId&& this_.selNodeId===selId){return;}
+           if(selId){
+             this_.selNodeId=selId;
+           }else{
+             this_.selNodeId='';
            }
          });
 
          this.network.on("selectNode", function (params) { //选择节点
            let selId=params.nodes[0];
+           if(this_.selNodeId&& this_.selNodeId===selId){return;}
            if(selId){
-             setTimeout(()=>{
-               this_.selNodeId=selId;
-             })
+             this_.selNodeId=selId;
              this_.cursorMove=true;
              this_.nodeData=this_.nodesArray.find((item)=>item.id===selId);
              if(this_.NodeArr.indexOf(selId)!==-1){
