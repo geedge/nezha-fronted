@@ -31,7 +31,7 @@
               export-url="/endpoint/export"
               import-url="/endpoint/import"
               :params="endpointSearchLabel"
-              @afterImport="getEndpointTableData"
+              @afterImport="afterCloseImport"
               class="margin-l-20"
             >
               <template slot="optionZone">
@@ -341,6 +341,10 @@
             }
           });
         }
+      },
+      afterCloseImport:function(){
+        this.getEndpointTableData();
+        bus.$emit('module-list-change')
       },
       endpointPageNo(val) {
         this.endpointPageObj.pageNo = val;
