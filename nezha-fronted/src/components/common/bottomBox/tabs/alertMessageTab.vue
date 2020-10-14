@@ -15,7 +15,7 @@
       <div class="top-tool-right">
         <pick-time :refresh-data-func="getAlertList" v-model="searchTime" :use-chart-unit="false" :use-refresh="false" :default-pick="defaultPick" :show-empty="true"></pick-time>
         <div class="top-tool-search">
-          <search-input :default-item="'alertMessageState'" :default-value="defaultSearchValue" :searchMsg="searchMsg" @search="search"></search-input>
+          <search-input :default-item="'alertMessageState'" :default-value="defaultSearchValue" :searchMsg="searchMsg" @search="search" position="alert-bottom"></search-input>
         </div>
         <button type="button" @click="importBox.show = true" :title="$t('overall.exportExcelLower')"
             class="nz-btn nz-btn-size-normal nz-btn-style-light margin-l-20" id="alert-list-export">

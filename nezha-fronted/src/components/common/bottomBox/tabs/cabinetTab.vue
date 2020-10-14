@@ -8,7 +8,7 @@
       </div>
       <div class="top-tool-right">
         <div class="top-tool-search">
-          <search-input :searchMsg="searchMsg" @search="search"></search-input>
+          <search-input :searchMsg="searchMsg" @search="search" position="cabinet-bottom"></search-input>
         </div>
         <button type="button" @click="add" :title="$t('overall.createCabinet')"
                 class="nz-btn nz-btn-size-normal nz-btn-style-light float-right margin-l-20" id="cab-add">

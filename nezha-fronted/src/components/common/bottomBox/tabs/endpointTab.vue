@@ -9,7 +9,7 @@
       </div>
       <div class="top-tool-right">
         <div class="top-tool-search">
-          <search-input :searchMsg="searchMsg" @search="search"></search-input>
+          <search-input :searchMsg="searchMsg" @search="search" position="endpoint-bottom"></search-input>
         </div>
         <export-excel
           export-file-name="endpoint"

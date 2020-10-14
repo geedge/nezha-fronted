@@ -219,7 +219,8 @@
                 delcriteriaBool:false,
                 selectInfo:false,
                 disabaled:true,
-                downBool:false
+                downBool:false,
+                where:this.$route.path
             }
         },
         watch: {
@@ -343,8 +344,14 @@
                   }
               }
           },
+          where: {
+            immediate: true,
+            handler(n, o) {
+              console.log('where', n)
+            }
+          }
         },
-        props:['searchMsg','defaultItem','defaultValue','inTransform'],
+        props:{'searchMsg':Object,'defaultItem':Object,'defaultValue':Object,'inTransform':Boolean,position:{defualt:''}},
         methods: {
               //dc
               clearSearch() {
@@ -528,6 +535,7 @@
             look_history(e){
                 this.stop_click(e);
                 this.localStorage_display=!this.localStorage_display;
+                this.restructure_historyDate();
             },
             backtime(t){
                 let myDate=new Date(t);
@@ -688,16 +696,16 @@
                 this.getHeight()
                 //搜索完成后存储在本地历史记录中
                 if(this.select_list.length!=0){
-                    if (JSON.parse(localStorage.getItem('nz-history-'+this.$route.path)) == undefined || JSON.parse(localStorage.getItem('nz-history-'+this.$route.path)) == []) {
+                    if (JSON.parse(localStorage.getItem('nz-history-'+this.where)) == undefined || JSON.parse(localStorage.getItem('nz-history-'+this.where)) == []) {
                         this.historyList.unshift(this.select_list);
-                        localStorage.setItem('nz-history-'+this.$route.path, JSON.stringify(this.historyList));
+                        localStorage.setItem('nz-history-'+this.where, JSON.stringify(this.historyList));
                     } else {
-                        this.historyList = JSON.parse(localStorage.getItem('nz-history-'+this.$route.path));
+                        this.historyList = JSON.parse(localStorage.getItem('nz-history-'+this.where));
                         this.historyList.unshift(this.select_list);
                         if (this.historyList.length > 10) {
                             this.historyList.length = 10;
                         }
-                        localStorage.setItem('nz-history-'+this.$route.path, JSON.stringify(this.historyList));
+                        localStorage.setItem('nz-history-'+this.where, JSON.stringify(this.historyList));
                     }
                 }
                 this.input_list = true;
@@ -709,7 +717,7 @@
             clear_history() {
                 this.historyList = [];
                 this.history_once = [];
-                localStorage.setItem('nz-history-'+this.$route.path, JSON.stringify(this.historyList));
+                localStorage.setItem('nz-history-'+this.where, JSON.stringify(this.historyList));
             },
             //再次点击之前的历史记录
             select_history(ind,e) {
@@ -718,7 +726,7 @@
                 this.change_sreach_show = true;
                 this.localStorage_display = !this.localStorage_display;
                 this.select_list = [];
-                JSON.parse(localStorage.getItem('nz-history-'+this.$route.path)).splice(ind,1);
+                JSON.parse(localStorage.getItem('nz-history-'+this.where)).splice(ind,1);
                 this.select_list = JSON.parse(JSON.stringify(this.history_once[ind]));
                 this.sreach_num = this.select_list.length;
                 this.select_list.forEach(val => {
@@ -732,8 +740,8 @@
             },
             // 获取历史记录  数据进行处理以便循环展示
             restructure_historyDate() {
-                if (localStorage.getItem('nz-history-'+this.$route.path) !== undefined && localStorage.getItem('nz-history-'+this.$route.path) !== null) {
-                    this.history_once = JSON.parse(localStorage.getItem('nz-history-'+this.$route.path));
+                if (localStorage.getItem('nz-history-'+this.where) !== undefined && localStorage.getItem('nz-history-'+this.where) !== null) {
+                    this.history_once = JSON.parse(localStorage.getItem('nz-history-'+this.where));
                 }
             },
             clear_search_list(e){
@@ -1229,6 +1237,9 @@
           }
         },
         mounted() {
+            if(this.position){
+              this.where=this.$route.path + this.position
+            }
             /*this.defaultItem ? this.select_list.push({name:this.defaultItem,label:this.defaultItem}) : '';
             this.defaultValue != '' ? this.no_condition=this.defaultValue:'';*/
             this.restructure_historyDate();
