@@ -56,7 +56,7 @@
             :before-upload="beforeAvatarUpload"
             :auto-upload="true"
           >
-           上传文件
+            {{$t('project.topology.upload')}}
           </el-upload>
         </el-form-item>
         <div  class="right-box-sub-title">
@@ -178,7 +178,6 @@
       },
       moduleDataS:{
         handler(n){
-          // console.log(n)
         },
         immediate: true,
         deep: true,

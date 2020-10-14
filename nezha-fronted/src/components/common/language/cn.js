@@ -879,6 +879,7 @@ const cn = {
       lineType:'线型',
       straight:'直线',
       curve:'曲线',
+      upload:'上传文件',
       requiredName:'名称不能为空'
     },
   },

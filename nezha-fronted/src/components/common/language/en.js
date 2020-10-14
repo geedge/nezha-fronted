@@ -886,6 +886,7 @@ const en = {
       lineType:'linetype',
       straight:'straight',
       curve:'curve',
+      upload:'upload',
       requiredName:'The name of the required'
     },
   },
