@@ -6,22 +6,23 @@
       </div>
       <template v-else>
         <div class="top-tool-main-left">
-          <el-dropdown @command="panelChange" class="panel-dropdown-title" trigger="click" placement="bottom-start" v-scrollBar:el-dropdown >
-            <el-row @click.native="scrollbarHeightHandler" :gutter="10" class="el-dropdown-link" style="padding-right: 5px">
+          <el-dropdown @command="panelChange" class="panel-dropdown-title" trigger="click" placement="bottom-start" >
+            <el-row  :gutter="10" class="el-dropdown-link" style="padding-right: 5px">
               <el-col :span="21" class="panel-list-title" :title="showPanel.name">{{showPanel.name}}</el-col>
               <el-col :span="3" style="padding-left:0px !important;"><i class="nz-icon nz-icon-arrow-down"></i></el-col>
             </el-row>
-            <el-dropdown-menu class="nz-dashboard-dropdown" slot="dropdown">
+            <el-dropdown-menu class="nz-dashboard-dropdown panel-dropdown-title-space" slot="dropdown"  >
               <!--<el-dropdown-item>{{$t('dashboard.panel.createPanelTitleSec')}}</el-dropdown-item>-->
-              <el-dropdown-item >
-                <el-row class="panel-list-width" :gutter="10" >
-                  <el-col :span="21"><el-input size="mini" v-model="filterPanel"  @click.native.stop="filterPanelFocus($event)" @input="filterPanelFunc" clearable :placeholder="$t('overall.search')"></el-input></el-col>
-                  <el-col :span="3"><span :title='$t("dashboard.panel.createPanelTitleSec")' @click="toAdd"><i class="nz-icon nz-icon-plus"></i></span></el-col>
-                </el-row>
-              </el-dropdown-item>
-              <draggable v-model="panelData" @start="start" @end="end" :move="move" :key
-                         :scroll-sensitivity="150"
-                         :options="{
+              <el-scrollbar style="height: 100%;">
+                <el-dropdown-item >
+                  <el-row class="panel-list-width" :gutter="10" >
+                    <el-col :span="21"><el-input size="mini" v-model="filterPanel"  @click.native.stop="filterPanelFocus($event)" @input="filterPanelFunc" clearable :placeholder="$t('overall.search')"></el-input></el-col>
+                    <el-col :span="3"><span :title='$t("dashboard.panel.createPanelTitleSec")' @click="toAdd"><i class="nz-icon nz-icon-plus"></i></span></el-col>
+                  </el-row>
+                </el-dropdown-item>
+                <draggable v-model="panelData" @start="start" @end="end" :move="move" :key
+                           :scroll-sensitivity="150"
+                           :options="{
                group:{name:'chartGroup',pull:'false'},
                dragClass:'drag-chart-class',
                fallbackClass:'fallback-class',
@@ -33,18 +34,19 @@
                animation:150,
                handle:'.panelContent',
              }"  >
-                <el-dropdown-item v-for="item in showPanelList" :key="item.id+1" class="panel-title-li"
-                                  :class="showPanel.id==item.id?'nz-dashboard-dropdown-bg':''" :command="item">
-                  <!--{{item.name}}-->
-                  <el-row  :gutter="10" class="panel-list-width" >
-                    <el-col :span="2" class="panelContent move-area"><i class="nz-icon nz-icon-sort4"></i></el-col>
-                    <el-col :span="17" class="panel-list-item" :title="item.name">{{item.name}}</el-col>
-                    <el-col :span="1"><span class="panel-dropdown-btn panel-dropdown-btn-delete" @click.stop="del(item)"><i class="nz-icon nz-icon-delete"></i></span></el-col>
-                    <el-col :span="1">&nbsp;</el-col>
-                    <el-col :span="1"><span class="panel-dropdown-btn" @click.stop="edit(item)"><i class="nz-icon nz-icon-edit"></i></span></el-col>
-                  </el-row>
-                </el-dropdown-item>
-              </draggable>
+                  <el-dropdown-item v-for="item in showPanelList" :key="item.id+1" class="panel-title-li"
+                                    :class="showPanel.id==item.id?'nz-dashboard-dropdown-bg':''" :command="item">
+                    <!--{{item.name}}-->
+                    <el-row  :gutter="10" class="panel-list-width" >
+                      <el-col :span="2" class="panelContent move-area"><i class="nz-icon nz-icon-sort4"></i></el-col>
+                      <el-col :span="17" class="panel-list-item" :title="item.name">{{item.name}}</el-col>
+                      <el-col :span="1"><span class="panel-dropdown-btn panel-dropdown-btn-delete" @click.stop="del(item)"><i class="nz-icon nz-icon-delete"></i></span></el-col>
+                      <el-col :span="1">&nbsp;</el-col>
+                      <el-col :span="1"><span class="panel-dropdown-btn" @click.stop="edit(item)"><i class="nz-icon nz-icon-edit"></i></span></el-col>
+                    </el-row>
+                  </el-dropdown-item>
+                </draggable>
+              </el-scrollbar>
             </el-dropdown-menu>
           </el-dropdown>
         </div>
@@ -274,6 +276,7 @@
           document.querySelector("body>.el-dropdown-menu").addEventListener("ps-y-reach-end", () => {
             let yDom = document.querySelector("body>.el-dropdown-menu>.ps__rail-y");
             let yDom2 = document.querySelector("body>.el-dropdown-menu>.ps__rail-y>.ps__thumb-y");
+            console.log('top',top,top2)
             if (top) {
               yDom.style.top = top;
             } else {
@@ -691,7 +694,9 @@
         }else{
           this.showPanelList = this.panelData;
         }
-
+        this.$nextTick(()=>{
+          document.querySelector(".panel-dropdown-title-space")._ps_.update()
+        })
       }
     },
     created() {
@@ -864,7 +869,7 @@
 
   .nz-dashboard-dropdown {
     height: 300px;
-    overflow-y: auto;
+    overflow-y: hidden;
     li {
       /*padding: 0 20px !important;*/
       padding-left:20px !important;
