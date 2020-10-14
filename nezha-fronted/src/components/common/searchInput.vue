@@ -344,14 +344,8 @@
                   }
               }
           },
-          where: {
-            immediate: true,
-            handler(n, o) {
-              console.log('where', n)
-            }
-          }
         },
-        props:{'searchMsg':Object,'defaultItem':Object,'defaultValue':Object,'inTransform':Boolean,position:{defualt:''}},
+        props:['searchMsg','defaultItem','defaultValue','inTransform','position'],
         methods: {
               //dc
               clearSearch() {
