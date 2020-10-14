@@ -641,7 +641,7 @@
               obj.error=true;
               obj.endpointError=true;
             }
-            if(item.state.alertStat.high> 0 || item.state.alertStat.low>0 || item.state.alertStat.medium>0){
+            if(item.state.alertStat.P1> 0 || item.state.alertStat.P3>0 || item.state.alertStat.P2>0){
               obj.error=true;
               obj.alertError=true;
             }

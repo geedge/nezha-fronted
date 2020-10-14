@@ -175,7 +175,7 @@
       formatAssetData:function(data,totalData){
         if(data && totalData){
           data=data.map((item)=>{
-            item.alertInfo=`<span style="color: #FE6565;">${item.alertHigh}</span>/<span style="color: orange;">${item.alertMedium}</span>/<span style="color: #90ee90">${item.alertLow}</span>`;
+            item.alertInfo=`<span style="color: #FE6565;">${item.alertP1}</span>/<span style="color: orange;">${item.alertP2}</span>/<span style="color: #90ee90">${item.alertP3}</span>`;
             return item;
           })
           let assetStatData={
@@ -203,16 +203,16 @@
                     value:totalData.outStock
                   },
                   {
-                    label:this.$t('dashboard.overview.asset.alertLow'),
-                    value:totalData.alertLow
+                    label:this.$t('dashboard.overview.asset.alertP3'),
+                    value:totalData.alertP3
                   },
                   {
-                    label:this.$t('dashboard.overview.asset.alertMedium'),
-                    value:totalData.alertMedium
+                    label:this.$t('dashboard.overview.asset.alertP2'),
+                    value:totalData.alertP2
                   },
                   {
-                    label:this.$t('dashboard.overview.asset.alertHigh'),
-                    value:totalData.alertHigh
+                    label:this.$t('dashboard.overview.asset.alertP1'),
+                    value:totalData.alertP1
                   },
                 ]
               },
@@ -267,16 +267,16 @@
                       prop:'alertTotal'
                     },
                     {
-                      label:this.$t('dashboard.overview.asset.alertLow'),
-                      prop:'alertLow'
+                      label:this.$t('dashboard.overview.asset.alertP3'),
+                      prop:'alertP3'
                     },
                     {
-                      label:this.$t('dashboard.overview.asset.alertMedium'),
-                      prop:'alertMedium'
+                      label:this.$t('dashboard.overview.asset.alertP2'),
+                      prop:'alertP2'
                     },
                     {
-                      label:this.$t('dashboard.overview.asset.alertHigh'),
-                      prop:'alertHigh'
+                      label:this.$t('dashboard.overview.asset.alertP1'),
+                      prop:'alertP1'
                     },
                   ]
                 }
@@ -516,16 +516,16 @@
                   showPopover: true,
                   popover: [
                     {
-                      label:this.$t('dashboard.overview.asset.alertLow'),
-                      prop:'alertLow'
+                      label:this.$t('dashboard.overview.asset.alertP3'),
+                      prop:'alertP3'
                     },
                     {
-                      label:this.$t('dashboard.overview.asset.alertMedium'),
-                      prop:'alertMedium'
+                      label:this.$t('dashboard.overview.asset.alertP2'),
+                      prop:'alertP2'
                     },
                     {
-                      label:this.$t('dashboard.overview.asset.alertHigh'),
-                      prop:'alertHigh'
+                      label:this.$t('dashboard.overview.asset.alertP1'),
+                      prop:'alertP1'
                     },
                   ]
                 }
@@ -893,16 +893,16 @@
                             </tr>
                             <tr>
                                 <td rowspan="3">${this.$t('dashboard.overview.mapTooltip.alert')}</td>
-                                <td >${this.$t('dashboard.overview.mapTooltip.high')}</td>
-                                <td >${dcStat.alertHigh}</td>
+                                <td >${this.$t('dashboard.overview.mapTooltip.P1')}</td>
+                                <td >${dcStat.alertP1}</td>
                             </tr>
                             <tr>
-                                <td >${this.$t('dashboard.overview.mapTooltip.medium')}</td>
-                                <td >${dcStat.alertMedium}</td>
+                                <td >${this.$t('dashboard.overview.mapTooltip.P2')}</td>
+                                <td >${dcStat.alertP2}</td>
                             </tr>
                             <tr>
-                                <td >${this.$t('dashboard.overview.mapTooltip.low')}</td>
-                                <td >${dcStat.alertLow}</td>
+                                <td >${this.$t('dashboard.overview.mapTooltip.P3')}</td>
+                                <td >${dcStat.alertP3}</td>
                             </tr>
                         </table>
                    </div>

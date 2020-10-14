@@ -2,21 +2,21 @@
   .config {
     height: 100%;
   }
-  .severity .high{
+  .severity .P1{
     background: #F5846A;
     border-radius: 2px;
     font-size: 12px;
     color: #FFFFFF;
     padding: 2px 6px;
   }
-  .severity .medium{
+  .severity .P2{
     background: #F7A54A;
     border-radius: 2px;
     font-size: 12px;
     color: #FFFFFF;
     padding: 2px 6px;
   }
-  .severity .low{
+  .severity .P3{
     background: #F1C13D;
     border-radius: 2px;
     font-size: 12px;
@@ -96,11 +96,11 @@
               <span :title="$t('overall.delete')" @click="del(scope.row)" class="content-right-option" :id="'alert-del-'+scope.row.id"><i  class="nz-icon nz-icon-delete"></i></span>
             </div>
             <span v-else-if="item.prop == 'severity'" class="severity">
-              <span v-if="scope.row[item.prop] == 'high'" class="high">P1</span>
+              <span v-if="scope.row[item.prop] == 'P1'" class="P1">P1</span>
                 <!--<i class="nz-icon nz-icon-arrow-up"></i> {{returnSeverityLabel(scope.row[item.prop])}}-->
-              <span v-if="scope.row[item.prop] == 'medium'" class="medium">P2</span>
+              <span v-if="scope.row[item.prop] == 'P2'" class="P2">P2</span>
                 <!--{{returnSeverityLabel(scope.row[item.prop])}}-->
-              <span v-if="scope.row[item.prop] == 'low'" class="low">P3</span>
+              <span v-if="scope.row[item.prop] == 'P3'" class="P3">P3</span>
                 <!--<i class="nz-icon nz-icon-arrow-down"></i>&nbsp;{{returnSeverityLabel(scope.row[item.prop])}}-->
             </span>
             <template v-else-if="item.prop == 'alertNum'">
@@ -189,7 +189,7 @@
           unit:2,
           operator: '>',
           last: 60,
-          severity: 'medium',
+          severity: 'P2',
           summary: '',
           description: '',
         },

@@ -988,16 +988,16 @@
                             </tr>
                             <tr>
                                 <td rowspan="3">${this.$t('dashboard.overview.mapTooltip.alert')}</td>
-                                <td >${this.$t('dashboard.overview.mapTooltip.high')}</td>
-                                <td >${dcStat.alertHigh}</td>
+                                <td >${this.$t('dashboard.overview.mapTooltip.P1')}</td>
+                                <td >${dcStat.alertP1}</td>
                             </tr>
                             <tr>
-                                <td >${this.$t('dashboard.overview.mapTooltip.medium')}</td>
-                                <td >${dcStat.alertMedium}</td>
+                                <td >${this.$t('dashboard.overview.mapTooltip.P2')}</td>
+                                <td >${dcStat.alertP2}</td>
                             </tr>
                             <tr>
-                                <td >${this.$t('dashboard.overview.mapTooltip.low')}</td>
-                                <td >${dcStat.alertLow}</td>
+                                <td >${this.$t('dashboard.overview.mapTooltip.P3')}</td>
+                                <td >${dcStat.alertP3}</td>
                             </tr>
                         </table>
                    </div>

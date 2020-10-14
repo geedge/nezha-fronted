@@ -182,7 +182,7 @@ const en = {
           param:'Parameters',
           select:'Select',
           alertRule:'Alert rule',
-          level:'Level',
+          level:'Priority',
           state:'State'
         },
         valMapping:{
@@ -280,9 +280,9 @@ const en = {
         num:'Num',
         alert:'Alert',
         alertTotal:'Total',
-        alertLow:'Low',
-        alertMedium:'Medium',
-        alertHigh:'High',
+        alertP3:'P3',
+        alertP2:'P2',
+        alertP1:'P1',
         inStock:'In stock',
         outStock:'Out stock',
         pingUp:'Up',
@@ -313,7 +313,7 @@ const en = {
       },
       alert:{
         alertMessage: 'Alert messages',
-        level:'Level',
+        level:'Priority',
         alertRule:'Alert rule',
         ruleNum:'Rule num',
         alertNum:'Alert num',
@@ -334,9 +334,9 @@ const en = {
         active:'active',
         inactive:'inactive',
         alert:'alert',
-        high:'high',
-        medium:'medium',
-        low:'low',
+        P1: "P1",
+        P2: "P2",
+        P3: "P3",
         endpoint:'endpoint',
         total:'total',
         up:'up',
@@ -743,7 +743,7 @@ const en = {
     alertList: 'Alert message',//"告警信息"
     alertConfig: 'Alert rule',//"告警规则"
     alertName: 'Alert name',//"告警名称"
-    severity: 'Level',//"等级"
+    severity: 'Priority',//"等级"
     description: 'Description',//"描述"
     summary: 'Summary',//"概要"
     startAt: 'Start time',//"开始时间"
@@ -774,10 +774,10 @@ const en = {
       alertConfig: 'Alert rule',//"告警规则"
       createAlertConfig: 'New alert rule',//"新增告警规则"
       editAlertConfig: 'Edit alert rule',//"修改告警规则"
-      medium: 'Medium',//"中"
       alertNum: 'Alert number', //告警信息数量
-      high: 'High',//"高"
-      low: 'Low',//"低"
+      P1: "P1",
+      P2: "P2",
+      P3: "P3",
       typeOption: {
         project: 'Project',//'系统'
         module: 'Module',//'组件'
