@@ -747,7 +747,7 @@
                 if(chartDataFormat.Interval(maxValue,copies,unit.type,'min')<1&&dot<2){
                   dot=2;
                 }
-                if(dot===0&&flag){
+                if(flag || dot==0){
                   dot=1;
                 }
                 return unit.compute(value,index,-1,dot);
