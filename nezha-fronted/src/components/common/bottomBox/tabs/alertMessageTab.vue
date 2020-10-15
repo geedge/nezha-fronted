@@ -307,7 +307,16 @@
         })
       },
       exportCur:function(){
-        this.exportExcel(this.searchLabel);
+        let searchLabel=Object.assign({},this.searchLabel)
+        this.$set(searchLabel,'language',localStorage.getItem("nz-language") ? localStorage.getItem("nz-language") : 'en')
+        this.exportExcel(searchLabel);
+        this.importBox.show = false;
+      },
+      exportAll:function(){
+        let temp = JSON.parse(JSON.stringify(this.searchLabel));
+        temp.pageSize = -1;
+        this.$set(temp,'language',localStorage.getItem("nz-language") ? localStorage.getItem("nz-language") : 'en')
+        this.exportExcel(temp);
         this.importBox.show = false;
       },
       getTimeString:function(){
@@ -323,12 +332,6 @@
       },
       formatNum:function(num){
         return num>9?num:'0'+num;
-      },
-      exportAll:function(){
-        let temp = JSON.parse(JSON.stringify(this.searchLabel));
-        temp.pageSize = -1;
-        this.exportExcel(temp);
-        this.importBox.show = false;
       },
       exportExcel:function(params){
         let temp=this;
@@ -485,25 +488,27 @@
               this.tableData = response.data.list;
               this.tableData.forEach((item) => {
                 item.labels = JSON.parse(item.labels);
-                let paramStr = JSON.stringify(this.promQueryParamConvert(item));
-                this.$get('/prom/api/v1/query?query=' + paramStr.substring(1, paramStr.length-1).replace(/\+/g, "%2B").replace(/ /g, "%20").replace(/\\/g, "")).then(response2 => {
-                  let current = [];
-                  if (response2.data && response2.data.result && response2.data.result.length > 0) {
-                    current = response2.data.result[0].value.map((item, i) => {
-                      if (i == 0) {
-                        return bus.computeTimezone(item);
-                      } else {
-                        return parseFloat(item).toFixed(2);
-                      }
-                    });
-                  }
-                  this.requestIndex+=1;
-                  item.current=current;
-                  if(this.requestIndex===this.tableData.length){
-                    this.$set(item, "current", current);
-                    this.requestIndex=0;
-                  }
-                });
+                if(item.alertRule.buildIn != 1) {
+                  let paramStr = JSON.stringify(this.promQueryParamConvert(item));
+                  this.$get('/prom/api/v1/query?query=' + paramStr.substring(1, paramStr.length - 1).replace(/\+/g, "%2B").replace(/ /g, "%20").replace(/\\/g, "")).then(response2 => {
+                    let current = [];
+                    if (response2.data && response2.data.result && response2.data.result.length > 0) {
+                      current = response2.data.result[0].value.map((item, i) => {
+                        if (i == 0) {
+                          return bus.computeTimezone(item);
+                        } else {
+                          return parseFloat(item).toFixed(2);
+                        }
+                      });
+                    }
+                    this.requestIndex += 1;
+                    item.current = current;
+                    if (this.requestIndex === this.tableData.length) {
+                      this.$set(item, "current", current);
+                      this.requestIndex = 0;
+                    }
+                  });
+                }
               });
               this.pageObj.total = response.data.total;
               this.loading = false;

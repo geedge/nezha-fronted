@@ -133,7 +133,7 @@
               {{scope.row['state'] == 2 ? "Expired" : ""}}
           </span>
           <div v-else-if="item.prop == 'current'" class="too-long-split pointer" @click="detail(scope.row)">
-            <span v-if="!scope.row.current">-</span>
+            <span v-if="!scope.row.current || scope.row.alertRule.buildIn == 1">-</span>
             <el-popover v-else placement="right" trigger="hover">
               <div slot="reference">
                 <span class="content-right-option" :id="'alert-list-detail-'+scope.row.id"><i class="nz-icon nz-icon-chart"></i></span>
@@ -614,12 +614,15 @@
         this.deleteBox.show = false;
       },
       exportCur:function(){
-        this.exportExcel(this.searchLabel);
+        let searchLabel=Object.assign({},this.searchLabel)
+        this.$set(searchLabel,'language',localStorage.getItem("nz-language") ? localStorage.getItem("nz-language") : 'en')
+        this.exportExcel(searchLabel);
         this.closeDialog();
       },
       exportAll:function(){
         let temp = JSON.parse(JSON.stringify(this.searchLabel));
         temp.pageSize = -1;
+        this.$set(temp,'language',localStorage.getItem("nz-language") ? localStorage.getItem("nz-language") : 'en')
         this.exportExcel(temp);
         this.closeDialog();
       },

@@ -348,27 +348,29 @@
             this.$nextTick(() => {
               this.tableData.forEach((item) => {
                 item.labels = JSON.parse(item.labels);
-                let paramStr = JSON.stringify(this.promQueryParamConvert(item));
-                this.$get('/prom/api/v1/query?query=' + paramStr.substring(1, paramStr.length-1).replace(/\+/g, "%2B").replace(/ /g, "%20").replace(/\\/g, "")).then(response2 => {
-                  let current = [];
-                  if (response2.data && response2.data.result && response2.data.result.length > 0) {
-                    current = response2.data.result[0].value.map((item, i) => {
-                      if (i == 0) {
-                        return bus.computeTimezone(item);
-                      } else {
-                        return parseFloat(item).toFixed(2);
-                      }
-                    });
-                  }else{
-                    current=[null,null]
-                  }
-                  this.requestIndex+=1;
-                  item.current=current;
-                  if(this.requestIndex===this.tableData.length){
-                    this.$set(item, "current", current);
-                    this.requestIndex=0;
-                  }
-                });
+                if(item.alertRule.buildIn != 1){
+                  let paramStr = JSON.stringify(this.promQueryParamConvert(item));
+                  this.$get('/prom/api/v1/query?query=' + paramStr.substring(1, paramStr.length-1).replace(/\+/g, "%2B").replace(/ /g, "%20").replace(/\\/g, "")).then(response2 => {
+                    let current = [];
+                    if (response2.data && response2.data.result && response2.data.result.length > 0) {
+                      current = response2.data.result[0].value.map((item, i) => {
+                        if (i == 0) {
+                          return bus.computeTimezone(item);
+                        } else {
+                          return parseFloat(item).toFixed(2);
+                        }
+                      });
+                    }else{
+                      current=[null,null]
+                    }
+                    this.requestIndex+=1;
+                    item.current=current;
+                    if(this.requestIndex===this.tableData.length){
+                      this.$set(item, "current", current);
+                      this.requestIndex=0;
+                    }
+                  });
+                }
               });
             });
             this.deleteBox.ids='';
