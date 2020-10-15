@@ -4,7 +4,7 @@
     <chart-unit v-model="unit" v-if="useChartUnit"></chart-unit>
       <div class="nz-btn-group nz-btn-group-size-normal nz-btn-group-light margin-r-20" v-show="useRefresh" style="height: 24px;line-height: 24px;vertical-align: middle;">
         <button style="border-right: 1px solid rgba(162,162,162,0.50);" type="button" class="nz-btn nz-btn-size-normal nz-btn-style-light" @click="refreshDataFunc">
-          <i style="font-size: 12px" class="global-active-color nz-icon nz-icon-refresh"></i>&nbsp;
+          <i style="font-size: 14px" class="global-active-color nz-icon nz-icon-refresh"></i>&nbsp;
           <span class="nz-btn nz-btn-text" ><slot name="added-text"></slot></span>
         </button>
         <el-popover v-model="visible" placement="bottom-start" :width="50" trigger="click" popper-class="interval-refresh-popover" >
@@ -14,7 +14,7 @@
             </li>
           </ul>
           <button type="button" style="border-radius: 0 4px 4px 0;" class="nz-btn nz-btn-size-normal nz-btn-style-light" slot="reference">
-            <span class="nz-btn nz-btn-text">{{interval.value != -1 ? interval.label : ''}}&nbsp</span><i style="font-size: 12px" class="nz-icon nz-icon-arrow-down"></i>
+            <span class="nz-btn nz-btn-text">{{interval.value != -1 ? interval.label : ''}}&nbsp</span><i style="font-size: 14px" class="nz-icon nz-icon-arrow-down"></i>
           </button>
         </el-popover>
       </div>

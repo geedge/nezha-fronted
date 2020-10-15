@@ -40,7 +40,7 @@
           </template>
         </div>
       </div>
-      <div v-if="styleType == 1">
+      <div v-if="styleType == 1" style="margin-left: 10px">
         <div class="query-options nz-btn-group nz-btn-group-size-normal nz-btn-group-light">
           <div class="option nz-btn nz-btn-size-normal nz-btn-style-light" @click="addExpression" v-if="plugins.indexOf('add') > -1"><i class="nz-icon nz-icon-plus"></i></div>
           <div class="option nz-btn nz-btn-size-normal nz-btn-style-light" @click="removeExpression" v-if="plugins.indexOf('remove') > -1"><i class="nz-icon nz-icon-minus"></i></div>

@@ -19,13 +19,13 @@
       </el-submenu>
       <el-submenu :index="'-1'" class="icon-menu-item" popper-class="display-none">
         <div slot="title" class="el-submenu__title" @click="cli" >
-          <i class="nz-icon nz-icon-cli"></i>
+          <i class="nz-icon nz-icon-cli" style="font-size: 18px;"></i>
           <div class="right-tip" v-show="$store.state.consoleCount>0">{{$store.state.consoleCount<=10?$store.state.consoleCount:'10+'}}</div>
         </div>
       </el-submenu>
       <el-submenu index="0" popper-class="nz-submenu" class="icon-menu-item">
         <template slot="title">
-         <i class="nz-icon-create-square nz-icon"></i>
+         <i class="nz-icon-create-square nz-icon" style="font-size: 18px;"></i>
         </template>
         <template v-for="(item, index) in createMenu">
           <el-menu-item :index="'0-' + index">

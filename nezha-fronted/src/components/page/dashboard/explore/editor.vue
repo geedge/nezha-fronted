@@ -949,7 +949,7 @@
     padding: 0;
   }
   .ql-editor{
-    padding:10px !important;
+    padding:7px 10px 10px 10px !important;
     overflow: hidden;
   }
   .metric-editor.metric-editor-rb {

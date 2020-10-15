@@ -45,14 +45,14 @@
           </div>
           <div class="chart-view right-margin" v-show="!showIntroduce"
                :class="{'shrink-view':!chartVisible || !defaultChartVisible}" style="position:relative;">
-            <div class="view-title" @click="changeChartVisible" style="position:absolute;z-index: 1000"><i class="nz-icon nz-icon-caret-top" ></i>&nbsp;graph</div>
+            <div class="view-title" @click="changeChartVisible" style="position:absolute;z-index: 1000;top:10px;"><i class="nz-icon nz-icon-caret-top" ></i>&nbsp;graph</div>
             <div class="chart-room">
               <chart ref="exploreChart" :unit="chartUnit"></chart>
             </div>
           </div>
           <div class="table-view right-margin" v-show="!showIntroduce"
-               :class="{'shrink-view':!tableVisible || !defaultTableVisible}">
-            <div class="view-title" @click="changeTableVisible"><i class="nz-icon nz-icon-caret-top"></i>&nbsp;table</div>
+               :class="{'shrink-view':!tableVisible || !defaultTableVisible}" style="position: relative">
+            <div class="view-title" @click="changeTableVisible" style="position:absolute;z-index: 1000;top:10px;"><i class="nz-icon nz-icon-caret-top"></i>&nbsp;table</div>
             <div class="table-room">
               <!-- 自定义table列 -->
               <transition name="el-zoom-in-top">
@@ -624,7 +624,7 @@ instance_cpu_time_ns{app="fox", proc="widget", rev="4d3a513", env="prod", job="c
   }
 
   .explore .chart-view, .table-view {
-    padding: 10px;
+    padding: 22px 10px 10px 10px;
     border: 1px solid lightgrey;
     box-sizing: inherit;
     margin-bottom: 5px;
@@ -648,6 +648,7 @@ instance_cpu_time_ns{app="fox", proc="widget", rev="4d3a513", env="prod", job="c
   }
   .table-room {
     position: relative;
+    margin-top: 10px;
   }
   .explore .view-title {
     font-weight: 500;
