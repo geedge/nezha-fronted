@@ -1,9 +1,9 @@
 <template>
   <div class="right-box right-box-prom" v-clickoutside="clickOutside">
     <!-- begin--顶部按钮-->
-    <div class="right-box-top-btns">
+    <div class="right-box-top-btns right-box-form-delete">
       <button type="button" v-if="editPromServer.id" @click="del"
-              class="nz-btn nz-btn-size-normal nz-btn-size-alien nz-btn-style-light"
+              class="nz-btn nz-btn-size-normal nz-btn-size-alien"
               id="promServer-edit-del">
         <span class="right-box-top-btn-icon"><i class="nz-icon nz-icon-delete"></i></span>
         <span class="right-box-top-btn-txt">{{$t('overall.delete')}}</span>
@@ -17,7 +17,7 @@
 
     <!-- begin--表单-->
     <el-scrollbar class="right-box-form-box">
-      <el-form class="right-box-form" :model="editPromServer" label-position="top" :rules="rules" ref="promServerForm">
+      <el-form class="right-box-form right-box-form-left" :model="editPromServer" label-position="right" label-width="120px" :rules="rules" ref="promServerForm">
         <!--DC-->
         <el-form-item :label="$t('config.dc.dc')" prop="idc.name">
           <div class="right-box-form-content">

@@ -111,14 +111,14 @@
             <i class="el-icon-more"></i>
           </button>
         </el-popover>
-        <div class="right-box-row-btn" @click="delSelf"><i class="nz-icon nz-icon-minus"></i></div>
+        <span class="right-box-form-minus-box" @click="delSelf" style="vertical-align: middle"><i class="nz-icon nz-icon-minus"></i></span>
         <div>
           <span style="color:#F56C6C;font-size: 12px;" v-if="hostRepeat">{{$t('validate.repeat')}}</span>
           <span style="color:#F56C6C;font-size: 12px;" v-if="hostInvalid">{{$t('validate.host')}}</span>
           <span style="color:#F56C6C;font-size: 12px;" v-if="hostEmpty">{{$t('validate.required')}}</span>
         </div>
       </el-form-item>
-      <div class="endpoints-box-endpoints">
+      <div class="endpoints-box-endpoints" style="border: 1px solid #E7EAED;border-radius: 2px;padding-bottom: 10px">
         <el-table :data="assetSetting.configs"
                   tooltip-effect="light"
                   v-scrollBar:el-table="'large'"
@@ -131,7 +131,7 @@
                   v-if="refreshTab"
                   style="width: 100%;">
           <el-table-column
-            label-class-name="endpoints-box-endpoints-title"
+            label-class-name="traffic-set-table-title"
             :resizable="false"
             show-overflow-tooltip
             v-for="(item, index) in tableLabels"
@@ -220,14 +220,16 @@
               </template>
             </template>
           </el-table-column>
-          <el-table-column label="" :width="30">
+          <el-table-column label="" :width="40" :show-overflow-tooltip="false">
             <template slot-scope="scope">
-              <el-button @click.stop="delTabRow(scope.$index,scope.row)" :disabled="assetSetting.host == null" style="width: 18px;height: 18px; line-height: 18px; padding:0;" size="mini"><i class="nz-icon nz-icon-minus"></i></el-button>
+              <span @click.stop="delTabRow(scope.$index,scope.row)" :disabled="assetSetting.host == null" class=".right-box-form-delete" size="mini"><i class="nz-icon nz-icon-minus"></i></span>
             </template>
           </el-table-column>
         </el-table>
-        <div class="add-btn">
-          <el-button @click="addTabRow"  style="height: 18px; line-height: 18px; padding-top: 0; padding-bottom: 0;" size="mini"><i class="nz-icon nz-icon-plus"></i></el-button>
+        <div class="add-btn" style="margin-top: 10px;">
+          <span @click="addTabRow" size="mini" class="right-box-form-add">
+            <i class="nz-icon nz-icon-plus"></i>
+          </span>
         </div>
       </div>
       <sub-box ref="subBox" @after="refreshTabFunc"></sub-box>
@@ -270,14 +272,14 @@
           {
             label:'ifDescr',
             prop:'ifdescr',
-            width:250,
+            width:100,
             required:false,
             errRows:[],
           },
           {
             label:this.$t('config.dc.traffic.direction'),
             prop:'direction',
-            width:200,
+            width:100,
             required:true,
             errRows:[],
           },
@@ -605,14 +607,15 @@
 
 <style scoped>
   .asset-config-tab{
-    width: calc(100% - 30px);
+    width: calc(100% - 160px);
     min-height: 100px;
     max-height: 400px;
     border: 1px solid lightgrey;
     border-radius: 5px;
-    padding:10px 20px 10px 10px;
+    padding:18px 50px 25px 40px;
     margin: 0;
     margin-bottom: 10px;
+    margin-left: 70px;
     position: relative;
   }
   .asset-config-tab .add-btn{
@@ -628,6 +631,12 @@
   }
   .asset-config-tab .right-box-row-with-btn{
     width: calc(100% - 69px);
+  }
+  /deep/ .el-table tr:last-child td{
+    border-bottom: none;
+  }
+  /deep/ .el-table .traffic-set-table-title{
+    color: #0275b8;
   }
 </style>
 <style lang="scss">

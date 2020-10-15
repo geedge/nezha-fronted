@@ -1,8 +1,8 @@
 <template>
   <div class="right-box right-box-alert-config" v-clickoutside="clickOutside">
     <!-- begin--顶部按钮-->
-    <div class="right-box-top-btns">
-      <button type="button" v-if="alertRule.id" id="alert-box-del" @click="del" class="nz-btn nz-btn-size-normal nz-btn-size-alien nz-btn-style-light">
+    <div class="right-box-top-btns right-box-form-delete">
+      <button type="button" v-if="alertRule.id" id="alert-box-del" @click="del" class="nz-btn nz-btn-size-normal nz-btn-size-alien">
         <span class="right-box-top-btn-icon"><i class="nz-icon nz-icon-delete"></i></span>
         <span class="right-box-top-btn-txt">{{$t('overall.delete')}}</span>
       </button>
@@ -20,13 +20,15 @@
         <el-form-item :label='$t("alert.config.name")' prop="alertName">
           <el-input placeholder="" maxlength="64" show-word-limit v-model="editAlertRule.alertName" size="small"></el-input>
         </el-form-item>
-        <promql-input
-          ref="promql"
-          :expression-list.sync="expressions"
-          :index="0"
-          :styleType="2"
-          :plugins="['metric-input']"
-        ></promql-input>
+        <div style="width: calc(100% - 70px);margin-left: 70px">
+          <promql-input
+            ref="promql"
+            :expression-list.sync="expressions"
+            :index="0"
+            :styleType="2"
+            :plugins="['metric-input']"
+          ></promql-input>
+        </div>
         <!--operator-->
         <el-form-item :label="$t('alert.config.operator')" prop="operator" style="width: 400px;display: inline-block;">
           <el-select popper-class="config-dropdown" v-model="editAlertRule.operator" placeholder=""  size="small">

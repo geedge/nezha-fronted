@@ -1,8 +1,8 @@
 <template>
   <div class="right-box right-box-module" v-clickoutside="clickOutside">
     <!-- begin--顶部按钮-->
-    <div class="right-box-top-btns">
-      <button id="module-del" type="button" v-if="editModule.id" @click="del" class="nz-btn nz-btn-size-normal nz-btn-size-alien nz-btn-style-light">
+    <div class="right-box-top-btns right-box-form-delete">
+      <button id="module-del" type="button" v-if="editModule.id" @click="del" class="nz-btn nz-btn-size-normal nz-btn-size-alien">
         <span class="right-box-top-btn-icon"><i class="nz-icon nz-icon-delete"></i></span>
         <span class="right-box-top-btn-txt">{{$t('overall.delete')}}</span>
       </button>
@@ -21,11 +21,11 @@
             <el-option :id="'module-project-'+item.id" v-for="item in projectList" :key="item.id" :label="item.name" :value="item"></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item :label='$t("project.module.moduleName")' prop="name">
+        <el-form-item :label='$t("project.module.moduleName")' prop="name" label-width="180px" style="width: calc(100% - 8px);margin-left: 8px;">
           <el-input placeholder="" maxlength="64" show-word-limit v-model="editModule.name" size="small"></el-input>
         </el-form-item>
 
-        <div class="nz-tab module-box-type">
+        <div class="nz-tab module-box-type" style="margin-bottom: 15px;">
           <div class="nz-tab-item-box" @click="changeType('http')" id="module-type-1">
             <div class="nz-tab-item" :class="{'nz-tab-item-active' : editModule.type.toLowerCase() == 'http', 'unclickable': editModule.id}">HTTP</div>
           </div>
@@ -37,7 +37,7 @@
         <!-- snmp表单 -->
         <span class="snmp-form" v-if="editModule.type && editModule.type == 'snmp'">
           <div class="right-box-sub-title">SNMP settings</div>
-          <div class="line-100 right-box-line"></div>
+          <div class="right-box-line"></div>
 
           <el-row>
             <el-col :span="6">
@@ -118,10 +118,9 @@
           </el-row>
 
           <el-row>
-            <el-col :span="1">&nbsp;</el-col>
-            <el-col :span="23">
+            <el-col :span="24">
               <div class="right-box-sub-title">Auth</div>
-              <div class="line-100 right-box-line"></div>
+              <div class="right-box-line"></div>
             </el-col>
           </el-row>
 
@@ -227,9 +226,9 @@
           </el-row>
         </span>
 
-        <div class="right-box-form-tip">
+        <div class="right-box-form-tip" :style="{'margin-bottom': '15px','margin-left':editModule.type.toLowerCase()=='snmp'?'100px':'0'}">
           {{$t('project.module.tip.defaultEndpointSet')}}
-          <div class="line-100"></div>
+          <div></div>
           {{$t('project.module.tip.relation')}}
         </div>
 
@@ -241,19 +240,17 @@
           <el-input placeholder="" v-model="editModule.path" size="small"></el-input>
         </el-form-item>
 
-        <el-form-item class="right-box-form-param" v-if="editModule.type.toLowerCase() == 'http'">
-          <template slot="label">
-            <span>{{$t('project.endpoint.param')}}</span>
-            <div class="right-box-form-btns">
-              <button style="display: none;">第一个button会出现意料之外的hover样式，找不到原因，只好加个不可见的button规避问题</button>
-              <button id="module-clear-all" type="button" @click="clearAllParam" class="nz-btn nz-btn-size-normal nz-btn-style-light">
-                <span><i class="nz-icon nz-icon-delete"></i></span>
-              </button>
-              <button id="module-add-param" type="button" @click="addParam" class="nz-btn nz-btn-size-normal nz-btn-style-light">
-                <span><i style="font-size: 16px;" class="nz-icon nz-icon-create-square"></i></span>
-              </button>
-            </div>
-          </template>
+        <el-form-item :label="$t('project.endpoint.param')" class="right-box-form-param" v-if="editModule.type.toLowerCase() == 'http'">
+
+          <div style="text-align: right;margin-bottom: 5px">
+            <button style="display: none;">第一个button会出现意料之外的hover样式，找不到原因，只好加个不可见的button规避问题</button>
+            <!--<button id="module-clear-all" type="button" @click="clearAllParam" class="nz-btn nz-btn-size-normal nz-btn-style-light">-->
+            <!--<span><i class="nz-icon nz-icon-delete"></i></span>-->
+            <!--</button>-->
+            <span id="module-add-param" type="button" @click="addParam" class="right-box-form-add">
+              <span><i style="font-size: 16px;" class="nz-icon nz-icon-create-square"></i></span>
+            </span>
+          </div>
 
           <div class="param-box param-box-module">
             <el-scrollbar ref="paramBoxScrollbar" style="height: 100%">
@@ -265,7 +262,7 @@
                 <el-form-item class="param-box-row-value" :rules="{required: true, message: $t('validate.required'), trigger: 'blur'}" :prop="'paramObj.' + index + '.value'">
                   <el-input placeholder="value" size="mini" v-model="item.value"></el-input>
                 </el-form-item>
-                <span class="param-box-row-symbol" :id="'moduel-remove-param-'+index" @click="removeParam(index)"><i class="nz-icon nz-icon-shanchu1"></i></span>
+                <span class="param-box-row-symbol" :id="'moduel-remove-param-'+index" @click="removeParam(index)"><i class="nz-icon nz-icon-shanchu1" style="color:#666;"></i></span>
               </div>
             </el-scrollbar>
           </div>
@@ -689,6 +686,10 @@
   }
   .right-box-module .el-cascader .el-input__inner {
     height: 150px;
+  }
+  .right-box-form-tip{
+    color: #999999;
+    line-height: 21px;
   }
 </style>
 <style>

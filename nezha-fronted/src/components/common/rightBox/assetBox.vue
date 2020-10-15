@@ -1,9 +1,9 @@
 <template>
   <div class="right-box right-box-asset" v-clickoutside="clickOutside">
     <!--顶部按钮-->
-    <div class="right-box-top-btns">
+    <div class="right-box-top-btns right-box-form-delete">
       <button v-if="editAsset.id" type="button" @click="del" id="asset-edit-del"
-              class="nz-btn nz-btn-size-normal nz-btn-size-alien nz-btn-style-light nz-btn-min-width-82">
+              class="nz-btn nz-btn-size-normal nz-btn-size-alien nz-btn-min-width-82">
         <span class="right-box-top-btn-icon"><i class="nz-icon nz-icon-delete"></i></span>
         <span class="right-box-top-btn-txt">{{$t('overall.delete')}}</span>
       </button>
@@ -33,7 +33,7 @@
           </div>
         </el-form-item>
         <div class="right-box-sub-title">{{$t('asset.assetInfo')}}</div>
-        <div class="line-100 right-box-line"></div>
+        <div class="right-box-line"></div>
         <!------------------------------------------资产类型---------------------------------------------->
         <el-form-item :label="$t('asset.assetType')" class="right-box-form-content" prop="model.type.code">
           <el-select popper-class="asset-dropdown" size="small" v-model="editAsset.model.type.code" @change="getVendorAndModelOptionData(editAsset.model.type.code,$event)">
@@ -61,7 +61,7 @@
             @change="modelChange"
           >
           </el-cascader>
-          <div class="right-box-row-btn" @click="addVendor(editAsset.model.type.code)"><i class="nz-icon nz-icon-plus"></i></div>
+          <span style="vertical-align: middle"  class="right-box-form-add" @click="addVendor(editAsset.model.type.code)"><i class="nz-icon nz-icon-plus"></i></span>
         </el-form-item>
         <el-form-item :label="$t('asset.purchaseDate')">
           <div class="select-style">
@@ -75,6 +75,9 @@
             </el-date-picker>
           </div>
         </el-form-item>
+        <el-form-item :label="$t('asset.location')" prop="locationInfo" :rules="[{validator:locationValidator, trigger:'blur'}]">
+          <location-cascader :disabled="editAsset.modelId ? false : true" :default-model-u-size="modelSize" @change="setLocationData" ref="locationCascader" :idc-option="dcData"></location-cascader>
+        </el-form-item>
         <!--tag-->
         <div class="right-box-sub-title">{{$t('overall.tag')}}
           <div class="right-box-form-btns">
@@ -85,7 +88,7 @@
             </span>
           </button>
         </div></div>
-        <div class="line-100 right-box-line"></div>
+        <div class="right-box-line"></div>
         <el-form-item>
           <template slot="label">
             <span></span>
@@ -104,31 +107,28 @@
                 <el-form-item class="tag-edit tag-edit-value" :rules="{required: true, message: $t('validate.required'), trigger: 'change'}" :prop="'tags.' + index + '.value'">
                   <el-autocomplete placeholder="value" size="mini" v-model="item.value" :fetch-suggestions="filterValue" popper-class="no-style-class"></el-autocomplete>
                 </el-form-item>
-                <div class="param-box-row-symbol" :id="'asset-tag-remove-'+index" @click.stop="removeTag(index)"><i class="nz-icon nz-icon-shanchu1"></i></div>
+                <div class="param-box-row-symbol" :id="'asset-tag-remove-'+index" @click.stop="removeTag(index)"><i class="nz-icon nz-icon-shanchu1" style="color: #666666"></i></div>
               </div>
             </el-scrollbar>
           </div>
         </el-form-item>
 
-        <div class="right-box-sub-title">{{$t('asset.location')}}</div>
-        <div class="line-100 right-box-line"></div>
+        <!--<div class="right-box-sub-title">{{$t('asset.location')}}</div>-->
+        <!--<div class="right-box-line"></div>-->
         <!------------------------------------------IDC---------------------------------------------->
-        <el-form-item :label="$t('asset.location')" prop="locationInfo" :rules="[{validator:locationValidator, trigger:'blur'}]">
-          <location-cascader :disabled="editAsset.modelId ? false : true" :default-model-u-size="modelSize" @change="setLocationData" ref="locationCascader" :idc-option="dcData"></location-cascader>
-        </el-form-item>
         <!--cli-->
         <div class="right-box-sub-title">{{$t('config.account.account')}}
           <el-popover placement="right" width="70" trigger="click" :disabled="editAsset.accounts.length == 3" v-model.sync="showAccountOp" popper-class="no-style-class">
             <button slot="reference" id="add-type" type="button" class="float-right" :class="{'nz-btn-disabled': editAsset.accounts.length == 3}">
-              <span><i style="font-size: 12px;" class="nz-icon nz-icon-create-square"></i></span>
+              <span><i class="nz-icon nz-icon-create-square"></i></span>
             </button>
             <ul class="el-select-dropdown__list">
               <li @click="addAccount(type)" v-for="(type, index) in selectableAccountTypes" :key="index" class="el-select-dropdown__item"><span>{{type}}</span></li>
             </ul>
           </el-popover>
         </div>
-        <div class="line-100 right-box-line"></div>
-        <div class="nz-tab" style="padding-left: 30px;">
+        <div class="right-box-line"></div>
+        <div class="nz-tab" style="padding-left: 70px;">
           <div class="nz-tab-item-box" v-for="(account, index) in editAsset.accounts" :key="index" @click="changeProtocolType(account.protocol)" :id="`account-login-type-${index}`">
             <div class="nz-tab-item" :class="{'nz-tab-item-active': accountType == account.protocol}" style="position: relative;">
               <span>{{account.protocol}}</span>
@@ -142,7 +142,7 @@
         <account-config-box v-for="(account,index) in editAsset.accounts" :account="account" v-show="account.protocol == accountType" :key="index" ref="accountConfigBox" @setValidateResult="setAccountValidResult" @protocol-type-change="protocolTypeChange"></account-config-box>
 
         <template v-if="accountType == 'SSH' && !editAsset.id">
-          <el-form-item :label="$t('asset.exporter')" class="exporter-label">
+          <el-form-item :label="$t('asset.exporter')" class="exporter-label" style="margin-left: 66px">
             <el-switch class="exporter-switch" v-model="editAsset.exporter" active-color="#ee9d3f" active-value="1" inactive-value="0" :show="!exporterDisableSwitch"></el-switch>
           </el-form-item>
         </template>

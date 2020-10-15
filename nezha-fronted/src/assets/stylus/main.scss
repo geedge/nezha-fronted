@@ -2192,9 +2192,35 @@ li{
   width: 390px;
   margin-left: 0;
 }
-.right-box-form .add{
+.right-box .right-box-form-add,.right-box  .right-box-form-minus-box{
   background: rgba(250,144,28,.1);
+  padding:4px 6px;
+  border-radius: 4px;
+  cursor: pointer;
 }
-.right-box-form .add .nz-icon-create-square{
+.right-box .right-box-form-add .nz-icon-create-square{
   color: #FA901C;
+  cursor: pointer;
 }
+.right-box .right-box-form-add .nz-icon-plus{
+  color: #FA901C;
+  cursor: pointer;
+}
+.right-box  .right-box-form-minus-box .nz-icon-minus{
+  color: #FA901C;
+  cursor: pointer;
+}
+.right-box .right-box-form-delete .nz-btn-size-alien{
+  border: none;
+  border-radius: 6px 0 6px 6px;
+  padding-bottom: 8px;
+  padding-top: 3px;
+  height: 45px;
+}
+.right-box .right-box-form-delete .nz-btn-size-alien:hover{
+  background: #D8D7D7;
+}
+.right-box .right-box-form-delete .nz-icon-delete{
+
+}
+

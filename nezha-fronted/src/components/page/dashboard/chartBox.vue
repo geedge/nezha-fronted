@@ -42,6 +42,10 @@
     border-bottom: 1px dashed #dfe7f2;
     width: 100%;
   }
+  .right-box-form .element-item.form-row-item{
+    width: calc(100% - 120px);
+    padding: 20px 20px 20px 0;
+  }
   /*metric样式--end*/
   .label-center{
     vertical-align: middle;
@@ -62,8 +66,8 @@
     </transition>
 
     <!-- begin--顶部按钮-->
-    <div class="right-box-top-btns">
-      <button id="chart-box-delete" type="button" v-if="editChart.id" @click="del" class="nz-btn nz-btn-size-normal nz-btn-size-alien nz-btn-style-light nz-btn-min-width-82">
+    <div class="right-box-top-btns right-box-form-delete">
+      <button id="chart-box-delete" type="button" v-if="editChart.id" @click="del" class="nz-btn nz-btn-size-normal nz-btn-size-alien nz-btn-min-width-82">
         <span class="right-box-top-btn-icon"><i class="nz-icon nz-icon-delete"></i></span>
         <span class="right-box-top-btn-txt">{{$t('overall.delete')}}</span>
       </button>
@@ -493,6 +497,9 @@
         this.promqlKeys.push(getUUID());
         this.elementIds.push("");
         this.promqlCount++;
+        this.$nextTick(() => {
+          this.$refs.scrollbar.update();
+        });
       },
       removeExpression(index) {
         if (this.promqlCount > 1) {
@@ -509,6 +516,9 @@
             });
           });
         }
+        this.$nextTick(() => {
+          this.$refs.scrollbar.update();
+        });
       },
       save() {
         this.$refs['chartForm'].validate((valid) => {

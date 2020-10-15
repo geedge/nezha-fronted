@@ -2,8 +2,8 @@
   <div class="mc" @click.self="clickOutside">
     <div class="right-box right-box-edit-endpoint">
     <!-- begin--顶部按钮-->
-    <div class="right-box-top-btns" v-if="nodeData.id">
-      <button id="edit-ep-del" type="button" @click="del" class="nz-btn nz-btn-size-normal nz-btn-size-alien nz-btn-style-light ">
+    <div class="right-box-top-btns right-box-form-delete" v-if="nodeData.id">
+      <button id="edit-ep-del" type="button" @click="del" class="nz-btn nz-btn-size-normal nz-btn-size-alien">
         <span class="right-box-top-btn-icon"><i class="nz-icon nz-icon-delete"></i></span>
         <span class="right-box-top-btn-txt">{{$t('overall.delete')}}</span>
       </button>
@@ -18,7 +18,7 @@
     <!-- end--标题-->
 
     <!-- begin--表单-->
-    <el-scrollbar class="right-box-form-box">
+    <el-scrollbar class="right-box-form-box" ref="scrollbar">
       <el-form class="right-box-form  right-box-form-left" ref="form" :model="form" label-width="160px" :rules="rules">
         <el-form-item label="Module Name" prop="moduleId">
           <el-select v-model="form.moduleId" placeholder=""  popper-class="asset-dropdown" size="small">
@@ -59,11 +59,12 @@
             {{$t('project.topology.upload')}}
           </el-upload>
         </el-form-item>
-        <div  class="right-box-sub-title">
+        <div  class="right-box-sub-title" style="padding-bottom: 8px;margin-bottom: 20px">
           <span>{{$t('alert.config.expr')}}</span>
           <span class="float-right" @click="addExpression"><i style="font-size: 16px; cursor: pointer;" class="nz-icon nz-icon-create-square"></i></span>
         </div>
-        <el-row class="element-item expr" style="" v-for="index of promqlKeys.length" :key="'ele' + index">
+        <el-row class="element-item expr form-row-item" style="" v-for="index of promqlKeys.length" :key="'ele' + index">
+          <span class="nz-icon-minus-medium nz-icon-minus-position" style="padding: 0 8px"><i class="nz-icon nz-icon-minus" @click="removeExpression(index-1)"></i></span>
           <el-form-item  :rules="{required: true,message: '名称不能为空', trigger: 'blur'}" :prop="'name.' + (index-1)">
             <el-row>
               <template>
@@ -77,7 +78,6 @@
                     size="small"
                   ></el-input>
                 </el-col>
-                <el-col  style="width: 20px"> <i class="nz-icon nz-icon-minus" @click="removeExpression(index-1)"></i></el-col>
               </template>
             </el-row>
           </el-form-item>
@@ -94,25 +94,27 @@
               ></el-cascader>
             </el-col>
           </el-row>
-          <promql-input
-            :ref="'promql-'+(index-1)"
-            :id="promqlKeys[index-1]"
-            :key="promqlKeys[index-1]"
-            :expression-list="expressions"
-            :index="index-1"
-            :styleType="2"
-            :plugins="['metric-selector', 'metric-input', 'remove']"
-            @change="expressionChange"
-            @removeExpression="removeExpression"
-            :showRemove="false"
-            :projectRightBox="true"
-          ></promql-input>
+          <div>
+            <promql-input
+              :ref="'promql-'+(index-1)"
+              :id="promqlKeys[index-1]"
+              :key="promqlKeys[index-1]"
+              :expression-list="expressions"
+              :index="index-1"
+              :styleType="2"
+              :plugins="['metric-selector', 'metric-input', 'remove']"
+              @change="expressionChange"
+              @removeExpression="removeExpression"
+              :showRemove="false"
+              :projectRightBox="true"
+            ></promql-input>
+          </div>
           <el-row>
             <template>
               <el-col class="expr-title">
                 {{$t('dashboard.panel.chartForm.legend')}}&nbsp;
                 <el-popover :content="$t('dashboard.panel.chartForm.legendTip')" placement="top" width="150" trigger="hover">
-                  <i slot="reference" class="nz-icon nz-icon-info-normal" style="font-size: 12px; -webkit-transform:scale(0.75);display:inline-block;" @mouseover="rz"></i>
+                  <i slot="reference" class="nz-icon nz-icon-info-normal" @mouseover="rz"></i>
                 </el-popover>
               </el-col>
               <el-col style="width: calc(100% - 120px);">
@@ -304,6 +306,9 @@
         this.promqlKeys.push(getUUID());
         this.elementIds.push("");
         this.promqlCount++;
+        this.$nextTick(() => {
+          this.$refs.scrollbar.update();
+        });
       },
       removeExpression(index) {
         if (this.promqlCount >= 1) {
@@ -322,6 +327,9 @@
             });
           });
         }
+        this.$nextTick(() => {
+          this.$refs.scrollbar.update();
+        });
       },
       /*关闭弹框*/
       esc(refresh) {
@@ -390,7 +398,6 @@
   }
   .nz-icon-minus{
     vertical-align: middle;
-    margin-left: 5px;
   }
   .sel-image{
     height: 28px;
@@ -445,6 +452,9 @@
     font-size: 14px;
     letter-spacing: 0;
     line-height: 22px;
+  }
+  /deep/.promqlInput .expr-title{
+    padding-right: 0;
   }
   /* begin--搜索框*/
   .endpoint-asset-search {

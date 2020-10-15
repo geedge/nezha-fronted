@@ -2,8 +2,8 @@
   <transition name="right-box-580">
     <div class="right-box right-box-panel z-top" v-if="rightBox.show" v-clickoutside="clickos">
       <!-- begin--顶部按钮-->
-      <div class="right-box-top-btns">
-        <button type="button" v-if="panel.id != ''" @click="del(panel)" class="nz-btn nz-btn-size-normal nz-btn-size-alien nz-btn-style-light nz-btn-min-width-82">
+      <div class="right-box-top-btns right-box-form-delete">
+        <button type="button" v-if="panel.id != ''" @click="del(panel)" class="nz-btn nz-btn-size-normal nz-btn-size-alien nz-btn-min-width-82">
           <span class="right-box-top-btn-icon"><i class="nz-icon nz-icon-delete"></i></span>
           <span class="right-box-top-btn-txt">{{$t('overall.delete')}}</span>
         </button>

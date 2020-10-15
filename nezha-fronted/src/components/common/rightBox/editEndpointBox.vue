@@ -1,8 +1,8 @@
 <template>
   <div class="right-box right-box-edit-endpoint" v-clickoutside="clickOutside">
     <!-- begin--顶部按钮-->
-    <div class="right-box-top-btns">
-      <button id="edit-ep-del" type="button" v-if="editEndpoint.id" @click="del" class="nz-btn nz-btn-size-normal nz-btn-size-alien nz-btn-style-light ">
+    <div class="right-box-top-btns right-box-form-delete">
+      <button id="edit-ep-del" type="button" v-if="editEndpoint.id" @click="del" class="nz-btn nz-btn-size-normal nz-btn-size-alien">
         <span class="right-box-top-btn-icon"><i class="nz-icon nz-icon-delete"></i></span>
         <span class="right-box-top-btn-txt">{{$t('overall.delete')}}</span>
       </button>
@@ -65,8 +65,8 @@
             <!--<button type="button" id="edit-clear-all" @click="clearAllParam" class="nz-btn nz-btn-size-normal nz-btn-style-light">-->
               <!--<span><i class="nz-icon nz-icon-delete"></i></span>-->
             <!--</button>-->
-            <span id="edit-add-param" @click="addParam" class="add">
-              <i style="font-size: 12px;" class="nz-icon nz-icon-create-square"></i>
+            <span id="edit-add-param" @click="addParam" class="right-box-form-add">
+              <i style="" class="nz-icon nz-icon-create-square"></i>
             </span>
           </div>
           <div class="param-box param-box-module">
@@ -79,7 +79,7 @@
                 <el-form-item class="param-box-row-value" :rules="{required: true, message: $t('validate.required'), trigger: 'blur'}" :prop="'paramObj.' + index + '.value'">
                   <el-input placeholder="value" size="mini" v-model="item.value"></el-input>
                 </el-form-item>
-                <span class="param-box-row-symbol" @click="removeParam(index)"><i class="nz-icon nz-icon-shanchu1"></i></span>
+                <span class="param-box-row-symbol" @click="removeParam(index)"><i class="nz-icon nz-icon-shanchu1" style="color: #666666"></i></span>
               </div>
             </el-scrollbar>
           </div>

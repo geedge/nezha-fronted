@@ -1,8 +1,8 @@
 <template>
   <div class="right-box right-box-model" v-clickoutside="clickOutside" @click="inputHandler">
     <!-- begin--顶部按钮-->
-    <div class="right-box-top-btns">
-      <button id="model-del" type="button" v-if="editModel.id" @click="del" class="nz-btn nz-btn-size-normal nz-btn-size-alien nz-btn-style-light">
+    <div class="right-box-top-btns right-box-form-delete">
+      <button id="model-del" type="button" v-if="editModel.id" @click="del" class="nz-btn nz-btn-size-normal nz-btn-size-alien">
         <span class="right-box-top-btn-icon"><i class="nz-icon nz-icon-delete"></i></span>
         <span class="right-box-top-btn-txt">{{$t('overall.delete')}}</span>
       </button>

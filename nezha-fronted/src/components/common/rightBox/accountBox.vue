@@ -1,9 +1,9 @@
 <template>
   <div class="right-box right-box-account" v-clickoutside="clickOutside">
     <!-- begin--顶部按钮-->
-    <div class="right-box-top-btns">
+    <div class="right-box-top-btns right-box-form-delete">
       <button type="button" v-if="editUser.userId" @click="del"
-              class="nz-btn nz-btn-size-normal nz-btn-size-alien nz-btn-style-light"
+              class="nz-btn nz-btn-size-normal nz-btn-size-alien"
               id="account-edit-del">
         <span class="right-box-top-btn-icon"><i class="nz-icon nz-icon-delete"></i></span>
         <span class="right-box-top-btn-txt">{{$t('overall.delete')}}</span>
@@ -17,7 +17,7 @@
 
     <!-- begin--表单-->
     <el-scrollbar class="right-box-form-box">
-      <el-form class="right-box-form" :model="editUser" label-position="top" :rules="rules" ref="accountForm">
+      <el-form class="right-box-form right-box-form-left" :model="editUser" :rules="rules" ref="accountForm" label-position="right" label-width="120px">
         <!--username-->
         <el-form-item :label="$t('config.account.account')" prop="username">
           <el-input autocomplete="new-password" type="text" placeholder=""
