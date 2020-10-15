@@ -60,7 +60,10 @@
         <template slot-scope="scope" :column="item">
           <template v-if="item.prop == 'alertRule'">
             <div v-if="scope.row.alertRule.alertName" >
-              <span @mouseenter="alertMessagehover(scope.row.alertRule, true, $event)" @mouseleave="alertMessagehover(scope.row.alertRule, false)">{{scope.row.alertRule.alertName}}</span>
+              <span
+                @mouseenter="alertMessagehover(scope.row.alertRule, true, $event)"
+                @mouseleave="alertMessagehover(scope.row.alertRule, false)"
+              >{{scope.row.alertRule.alertName}}</span>
               <alertRuleInfo v-if="scope.row.alertRule.loading" :id="scope.row.alertRule.id" :that="scope.row.alertRule"></alertRuleInfo>
             </div>
             <template v-else>-</template>
@@ -83,7 +86,9 @@
           </span>
           <template v-else-if="item.prop == 'labels'" class="labels">
             <span v-for="(item,i) in labelsSort(scope.row.labels)">
-              <span @mouseenter="labelHover(scope.row, item.label, true, $event)" @mouseleave="labelHover(scope.row, item.label, false)">
+              <span
+                @mouseenter="labelHover(scope.row, item.label, true, $event)"
+                @mouseleave="labelHover(scope.row, item.label, false)">
                 <nz-alert-tag
                    :label="item.label" :type="tagType(item.label)" style="margin: 5px 0 5px 5px;"
                    :cursor-point="tagType(item.label) == 'info' ? false : true"

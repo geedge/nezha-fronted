@@ -37,6 +37,7 @@
       toolbox:{
         show:false,
         top:'0',
+        right:'18',
         showTitle:true,
         tooltip:{
           show:false,

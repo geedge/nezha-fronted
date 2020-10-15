@@ -90,7 +90,13 @@
             </el-popover>
           </div>
           <template v-if="item.prop=='Module'">
-            <span class="link" @click="showEndpoint(scope.row)">{{scope.row.endpointNum}}</span>
+            <el-tooltip placement="right" effect="light">
+              <div slot="content">
+                {{scope.row.endpointNum-scope.row.endpointDownNum}}&nbsp;{{$t('asset.endpointUpNum')}}<br/>
+                {{scope.row.endpointNum}}&nbsp;{{$t('asset.endpointNum')}}
+              </div>
+              <span class="link" @click="showEndpoint(scope.row)" style="padding: 2px 8px">{{scope.row.endpointNum-scope.row.endpointDownNum}}/{{scope.row.endpointNum}}</span>
+            </el-tooltip>
           </template>
           <template v-if="item.prop=='Alert'">
             <el-tooltip :content="scope.row.alertNum+' '+$t('overall.active')" placement="top" effect="light" :disabled=" scope.row.alertNum < 99">
@@ -469,6 +475,13 @@
       messageStyle(e) {
         if (e.column.label == 'Alerts' || e.column.label == this.$t("asset.tableTitle.alerts")) {
           if (e.row.alertNum > 0) {
+            return 'danger';
+          } else {
+            return 'success';
+          }
+        }
+        if(e.column.label == 'Module' || e.column.label == this.$t("asset.tableTitle.modules")){
+          if (e.row.endpointDownNum > 0) {
             return 'danger';
           } else {
             return 'success';
