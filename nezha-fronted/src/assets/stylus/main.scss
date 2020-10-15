@@ -285,7 +285,7 @@ li{
 }
 .nz-btn.nz-btn-style-light-new:hover:not(.nz-btn-disabled) { /* 新版浅色按钮hover */
   border: 1px solid $btn-light-border-color-hover-new;
-  color: $btn-light-border-color-hover-new;
+  color: $btn-light-txt-color-hover-new;
   //box-shadow: $btn-light-shadow;
   letter-spacing: 0;
 }
@@ -1331,6 +1331,9 @@ li{
 .right-box-form .el-select {
   width: 100%;
 }
+.right-box-form .select-warp .el-select {
+  width: calc(100% - 120px);
+}
 .right-box-form .el-form-item .el-form-item__label {
   padding: 0;
   font-size: 14px;
@@ -2188,4 +2191,10 @@ li{
   display: inline-block;
   width: 390px;
   margin-left: 0;
+}
+.right-box-form .add{
+  background: rgba(250,144,28,.1);
+}
+.right-box-form .add .nz-icon-create-square{
+  color: #FA901C;
 }

@@ -12,13 +12,13 @@
     <el-scrollbar class="right-box-form-box">
       <el-form class="right-box-form right-box-form-left" label-position="right" ref="addEndpoint" :model="endpoint" :rules="rules">
         <!--project-->
-        <el-form-item :label='$t("project.project.project")' prop="projectId">
+        <el-form-item :label='$t("project.project.project")' prop="projectId" class="select-warp">
           <el-select @change="((val) => {changeProject(val)})" value-key="id" popper-class="config-dropdown" v-model="currentProjectCopy" placeholder="" size="small">
             <el-option v-for="item in projectList" :key="item.id" :label="item.name" :value="item" :id="'project-'+item.id"></el-option>
           </el-select>
         </el-form-item>
         <!--module-->
-        <el-form-item :label='$t("project.module.module")' prop="moduleId">
+        <el-form-item :label='$t("project.module.module")' prop="moduleId" class="select-warp">
           <el-select @change="((val) => {changeModule(val)})" value-key="id" popper-class="config-dropdown" v-model="currentModuleCopy" placeholder="" size="small">
             <el-option v-for="item in moduleList" :key="item.id" :label="item.name" :value="item" :id="'module-'+item.id"></el-option>
           </el-select>
@@ -30,8 +30,8 @@
             <div class="right-child-box-title">{{$t('asset.asset')}}</div>
             <!--end--标题-->
             <!--begin--搜索框-->
-            <div style="float: right;padding: 9px 0px 0px 0px;">
-              <div class="nz-btn-group nz-btn-group-size-small nz-btn-group-light endpoint-asset-search">
+            <div style="float: right;padding: 9px 9px 0px 0px;">
+              <div class="nz-btn-group nz-btn-group-size-small nz-btn-group-light endpoint-asset-search" style="margin: 0">
                 <button id="search-asset-drop" type="button" class="nz-btn nz-btn-size-small nz-btn-style-light nz-btn-style-square nz-input-group-prepend" @click="assetSearch.dropdownShow = !assetSearch.dropdownShow">
                   <span class="endpoint-asset-label-txt">{{assetSearch.label}}</span>
                   <span>
@@ -694,7 +694,7 @@
 
   /* begin--小盒子*/
   .right-child-boxes {
-    height: calc(100% - 180px);
+    height: calc(100% - 120px);
     position: relative;
   }
   .endpoint-to-right-symbol {
@@ -737,7 +737,7 @@
     top: 5px;
   }
   .right-child-box-title {
-    padding: 9px 0 0 4px;
+    padding: 9px 0 0 9px;
     display: inline-block;
   }
   .endpoints-box-module-info {
