@@ -32,16 +32,16 @@
       <div class="main-box-title">Alert messages</div>
       <div class="main-box-content">
         <div class="content-box">
-          <span class="content-title"><i class="nz-icon nz-icon-jiantou-top colorFFF bg23BF9A"></i>high</span>
-          <span class="float-right">{{moduleInfo.alertStat.high}}</span>
+          <span class="content-title"><i class="nz-icon nz-icon-jiantou-top colorFFF bg23BF9A"></i>P1</span>
+          <span class="float-right">{{moduleInfo.alertStat.P1}}</span>
         </div>
         <div class="content-box">
-          <span class="content-title"><i class="nz-icon nz-icon-jiantou-right colorFFF bg3C92F1"></i>medium</span>
-          <span class="float-right">{{moduleInfo.alertStat.medium}}</span>
+          <span class="content-title"><i class="nz-icon nz-icon-jiantou-right colorFFF bg3C92F1"></i>P2</span>
+          <span class="float-right">{{moduleInfo.alertStat.P2}}</span>
         </div>
         <div class="content-box">
-          <span class="content-title"><i class="nz-icon nz-icon-jiantou-down colorFFF bgEC7F66"></i>low</span>
-          <span class="float-right">{{moduleInfo.alertStat.low}}</span>
+          <span class="content-title"><i class="nz-icon nz-icon-jiantou-down colorFFF bgEC7F66"></i>P3</span>
+          <span class="float-right">{{moduleInfo.alertStat.P3}}</span>
         </div>
       </div>
     </div>
@@ -64,9 +64,9 @@
 		  return{
         moduleInfo:{
           alertStat:{
-            high:0,
-            low:0,
-            medium:0,
+            P1:0,
+            P3:0,
+            P2:0,
           },
           assetStat:{
             down:0,

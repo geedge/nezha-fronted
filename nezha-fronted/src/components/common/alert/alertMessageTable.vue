@@ -74,11 +74,11 @@
             <span v-else>-</span>
           </template>
           <span v-else-if="item.prop == 'severity'" class="severity">
-            <span v-if="scope.row[item.prop] == 'high'" class="high">P1</span>
+            <span v-if="scope.row[item.prop] == 'P1'" class="P1">P1</span>
             <!--<i class="nz-icon nz-icon-arrow-up"></i> {{returnSeverityLabel(scope.row[item.prop])}}-->
-            <span v-if="scope.row[item.prop] == 'medium'" class="medium">P2</span>
+            <span v-if="scope.row[item.prop] == 'P2'" class="P2">P2</span>
             <!--{{returnSeverityLabel(scope.row[item.prop])}}-->
-            <span v-if="scope.row[item.prop] == 'low'" class="low">P3</span>
+            <span v-if="scope.row[item.prop] == 'P3'" class="P3">P3</span>
             <!--<i class="nz-icon nz-icon-arrow-down"></i>&nbsp;{{returnSeverityLabel(scope.row[item.prop])}}-->
           </span>
           <template v-else-if="item.prop == 'labels'" class="labels">
@@ -500,7 +500,6 @@
                    }
                  } else {
                    this.$message.error(response.data.error)
-                   console.error(response.data)
                  }
                }
              });
@@ -597,7 +596,6 @@
         this.$emit('deleteMessage',this.deleteBox,()=>{
           this.deleteBox.ids=[];
         });
-        //console.log(this.deleteBox);
         this.deleteBox.show = false;
       },
       selectChange(s) {
@@ -824,8 +822,6 @@
       this.tools.customTableTitle = localStorage.getItem("nz-tableTitle-" + localStorage.getItem("nz-username") + "-" + '/alertList')
         ? JSON.parse(localStorage.getItem("nz-tableTitle-" + localStorage.getItem("nz-username") + "-" + '/alertList'))
         : this.tableTitle;
-
-      console.info(this.tools.customTableTitle)
       //是否存在分页缓存
       let pageSize = localStorage.getItem('nz-pageSize-' + localStorage.getItem('nz-username') + '-' + this.tableId);
       if (pageSize != 'undefined' && pageSize != null) {
@@ -859,7 +855,6 @@
         this.dropCol = localStorage.getItem("nz-tableTitle-" + localStorage.getItem("nz-username") + "-" + this.$route.path)
           ? JSON.parse(localStorage.getItem("nz-tableTitle-" + localStorage.getItem("nz-username") + "-" + this.$route.path))
           : this.tableTitle;
-        console.log(1);
       }
       if(this.from=='alertMessageTab'  || this.from=='chartList'){
         this.tablelable = localStorage.getItem("nz-tableTitle-" + localStorage.getItem("nz-username") + "-/alertList")
@@ -868,9 +863,8 @@
         this.dropCol = localStorage.getItem("nz-tableTitle-" + localStorage.getItem("nz-username") + "-/alertList")
           ? JSON.parse(localStorage.getItem("nz-tableTitle-" + localStorage.getItem("nz-username") + "-/alertList"))
           : this.tableTitle;
-        console.log(2);
       }
-      console.log( this.tableTitle,this.fromPath,this.form,this.tablelable);*/
+    */
     }
   }
 
@@ -938,25 +932,30 @@
   .pointer{
     cursor: pointer;
   }
-  .severity .high{
+  .severity .P1{
     background: #F5846A;
     border-radius: 2px;
     font-size: 12px;
     color: #FFFFFF;
     padding: 2px 6px;
   }
-  .severity .medium{
+  .severity .P2{
     background: #F7A54A;
     border-radius: 2px;
     font-size: 12px;
     color: #FFFFFF;
     padding: 2px 6px;
   }
-  .severity .low{
+  .severity .P3{
     background: #F1C13D;
     border-radius: 2px;
     font-size: 12px;
     color: #FFFFFF;
     padding: 2px 6px;
+  }
+  .red,.green{
+    color: white;
+    padding: 2px 5px;
+    border-radius: 4px;
   }
 </style>

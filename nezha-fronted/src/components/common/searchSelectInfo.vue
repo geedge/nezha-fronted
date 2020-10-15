@@ -3,16 +3,16 @@
   const searchSelectInfo = { // value: 传给后台的值；label：显示给用户看的值
     severity: [ //告警级别
       {
-        value: 'medium',
-        label: i18n.t("alert.config.medium")
+        value: 'P2',
+        label: i18n.t("alert.config.P2")
       },
       {
-        value: 'high',
-        label: i18n.t("alert.config.high")
+        value: 'P1',
+        label: i18n.t("alert.config.P1")
       },
       {
-        value: 'low',
-        label: i18n.t("alert.config.low")
+        value: 'P3',
+        label: i18n.t("alert.config.P3")
       }
     ],
     promType: [ //promServer类型

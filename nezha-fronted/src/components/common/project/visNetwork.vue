@@ -66,24 +66,24 @@
               </div>
               <div class="facade-top-right-content">
                 <div>
-                  <div class="content-high-title">
-                    {{returnSeverityLabel('high')}}
+                  <div class="content-P1-title">
+                    {{returnSeverityLabel('P1')}}
                   </div>
                   <div>
                     {{projectInfo.alertStat[0] || 0}}
                   </div>
                 </div>
                 <div>
-                  <div class="content-medium-title">
-                    {{returnSeverityLabel('medium')}}
+                  <div class="content-P2-title">
+                    {{returnSeverityLabel('P2')}}
                   </div>
                   <div>
                     {{projectInfo.alertStat[1] || 0}}
                   </div>
                 </div>
                 <div style="margin-bottom: 20px;">
-                  <div class="content-low-title">
-                    {{returnSeverityLabel('low')}}
+                  <div class="content-P3-title">
+                    {{returnSeverityLabel('P3')}}
                   </div>
                   <div>
                     {{projectInfo.alertStat[2] || 0}}
@@ -451,6 +451,7 @@
     color: #fff;
     text-align: center;
     margin-bottom: 5px;
+    line-height: 22px;
   }
   .facade-top-right-content > div > div:last-child{
     text-align: center;
@@ -458,44 +459,44 @@
     flex: 1;
     height: calc(100% - 2px);
   }
-  .content-high-title{
+  .content-P1-title{
     background: #F2866E;
     border-radius: 4px 0 0 4px;
     width: 54px;
     height: 100%;
   }
-  .content-high-title + div{
+  .content-P1-title + div{
     border: 1px solid #F4907A;
     font-size: 12px;
     color: #F4907A;
   }
 
-  .content-medium-title{
+  .content-P2-title{
     background: #F89984;
     border-radius: 4px 0 0 4px;
     width: 54px;
     height: 100%;
   }
-  .content-medium-title + div{
+  .content-P2-title + div{
     border: 1px solid #F9A28F;
     font-size: 12px;
     color: #F9A28F;
   }
 
-  .content-low-title{
+  .content-P3-title{
     background: #F7BA78;
     border-radius: 4px 0 0 4px;
     width: 54px;
     height: 100%;
   }
-  .content-low-title + div{
+  .content-P3-title + div{
     border: 1px solid #F7BA78;
     font-size: 12px;
     color: #F7BA78;
   }
 
 
-  .right-content-high{
+  .right-content-P1{
     border: 1px solid ;
   }
   .align--center{

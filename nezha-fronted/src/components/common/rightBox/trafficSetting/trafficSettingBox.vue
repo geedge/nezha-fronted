@@ -314,7 +314,6 @@
               return item;
             })
           }else{
-            console.log('query asset informations faild,cause :'+response.msg)
             this.$message.error(response.msg);
           }
         })

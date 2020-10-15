@@ -163,13 +163,13 @@
     },
     methods:{
       alertActiveStr(){
-        return vm.$t('overall.active');
+        return this.$t('overall.active');
       },
       alertStateStr(num){
         if( num == 1){
-          return vm.$t('asset.inStock')
+          return this.$t('asset.inStock')
         } else {
-          return vm.$t('asset.notInStock')
+          return this.$t('asset.notInStock')
         }
       },
     },

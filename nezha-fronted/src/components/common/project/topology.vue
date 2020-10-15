@@ -12,8 +12,8 @@
         <!--<span class="edit-topology-remove" @click="lineDel">Remove</span>-->
       </span>
       <span v-show="!selectNodeTitle&&editVisNetwork" class="edit-topologyLine">
-        <el-button @click="saveTopology" class="saveTopology">{{$t('project.topology.save')}}</el-button>
-        <el-button @click="cancelTopology" class="cancelTopology">{{$t('project.topology.cancel')}}</el-button>
+        <button @click="saveTopology" class="nz-btn nz-btn-size-small-new nz-btn-style-normal-new">{{$t('project.topology.save')}}</button>
+        <button @click="cancelTopology" class="nz-btn nz-btn-size-small-new nz-btn-style-light-new">{{$t('project.topology.cancel')}}</button>
       </span>
       <span class="edit-topology-line-cancel" v-show="selectNodeTitle&&editVisNetwork"> {{$t('project.topology.selTwoNode')}} <span class="edit-topologyCancel" @click="closeAddLine">{{$t('project.topology.cancel')}}</span></span>
     </div>
@@ -641,7 +641,7 @@
               obj.error=true;
               obj.endpointError=true;
             }
-            if(item.state.alertStat.high> 0 || item.state.alertStat.low>0 || item.state.alertStat.medium>0){
+            if(item.state.alertStat.P1> 0 || item.state.alertStat.P3>0 || item.state.alertStat.P2>0){
               obj.error=true;
               obj.alertError=true;
             }
@@ -876,7 +876,6 @@
              this_.popDataShowUpdate('');
            }
            let selId=params.nodes[0];
-           console.log(this_.selNodeId,selId,"click");
            // if(this_.selNodeId&& this_.selNodeId===selId){return;}
            if(selId){
              this_.selNodeId=selId;
@@ -887,7 +886,6 @@
 
          this.network.on("selectNode", function (params) { //选择节点
            let selId=params.nodes[0];
-           console.log(this_.selNodeId,selId,"selectNode")
            if(this_.selNodeId&& this_.selNodeId===selId){
              if(selId){
                this_.cursorMove=true;
@@ -1219,7 +1217,7 @@
   }
   .edit-topology-add{
     display: inline-block;
-    width: 30px;
+    width: 36px;
   }
   .edit-topology-add:hover,.edit-topology-remove:active,.edit-topologyCancel{
     font-weight: bold;

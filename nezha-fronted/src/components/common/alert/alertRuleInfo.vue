@@ -16,9 +16,9 @@
       <div class="alert-rule-box">
         <div class="alert-rule-title">Level</div>
         <div class="alert-rule-value">
-          <span v-if="alertRuleData && alertRuleData.severity === 'high'"><i class="nz-icon nz-icon-arrow-up"></i>&nbsp;{{$CONSTANTS.alertMessage.severityData.find(s => {return s.value == 'high'}).label}}</span>
-          <span style="padding-left: 18px;" v-if="alertRuleData && alertRuleData.severity === 'medium'">{{$CONSTANTS.alertMessage.severityData.find(s => {return s.value == 'medium'}).label}}</span>
-          <span v-if="alertRuleData && alertRuleData.severity === 'low'"><i class="nz-icon nz-icon-arrow-down"></i>&nbsp;{{$CONSTANTS.alertMessage.severityData.find(s => {return s.value == 'low'}).label}}</span>
+          <span v-if="alertRuleData && alertRuleData.severity === 'P1'"><i class="nz-icon nz-icon-arrow-up"></i>&nbsp;{{$CONSTANTS.alertMessage.severityData.find(s => {return s.value == 'P1'}).label}}</span>
+          <span style="padding-left: 18px;" v-if="alertRuleData && alertRuleData.severity === 'P2'">{{$CONSTANTS.alertMessage.severityData.find(s => {return s.value == 'P2'}).label}}</span>
+          <span v-if="alertRuleData && alertRuleData.severity === 'P3'"><i class="nz-icon nz-icon-arrow-down"></i>&nbsp;{{$CONSTANTS.alertMessage.severityData.find(s => {return s.value == 'P3'}).label}}</span>
         </div>
       </div>
     </div>

@@ -97,9 +97,9 @@ export const asset = {
 
 export const alertMessage = {
   severityData: [
-    {value: 'medium', label: i18n.t("alert.config.medium")},
-    {value: 'high', label: i18n.t("alert.config.high")},
-    {value: 'low', label: i18n.t("alert.config.low")}
+    {value: 'P2', label: i18n.t("alert.config.P2")},
+    {value: 'P1', label: i18n.t("alert.config.P1")},
+    {value: 'P3', label: i18n.t("alert.config.P3")}
   ],
   typeData: [
     {value: 1, label: i18n.t('alert.config.typeOption.project')},
@@ -107,9 +107,9 @@ export const alertMessage = {
     {value: 3, label: i18n.t('alert.config.typeOption.asset')}
   ],
   levels:[
-    {value: 'medium', label: i18n.t("alert.config.medium")},
-    {value: 'high', label: i18n.t("alert.config.high")},
-    {value: 'low', label: i18n.t("alert.config.low")}
+    {value: 'P2', label: i18n.t("alert.config.P2")},
+    {value: 'P1', label: i18n.t("alert.config.P1")},
+    {value: 'P3', label: i18n.t("alert.config.P3")}
   ],
   states:[
     {value: '1', label: i18n.t('alert.list.pending')},
