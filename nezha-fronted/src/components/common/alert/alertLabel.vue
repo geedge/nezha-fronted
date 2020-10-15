@@ -156,7 +156,7 @@
         let self=this;
         return function(position) {
           let clientHeight = (document.body.clientHeight<document.documentElement.clientHeight)?document.body.clientHeight:document.documentElement.clientHeight;
-          let elHeight=self.type==='asset'?370:(self.type==='project'?50:70);
+          let elHeight=self.type==='asset'?370:(self.type==='project'?70:70);
           console.log(elHeight);
           if(position.top+elHeight>clientHeight){
             return {
@@ -175,7 +175,7 @@
         let self=this;
         return function(position) {
           let clientHeight = (document.body.clientHeight<document.documentElement.clientHeight)?document.body.clientHeight:document.documentElement.clientHeight;
-          let elHeight=self.type==='asset'?370:(self.type==='project'?50:70);
+          let elHeight=self.type==='asset'?370:(self.type==='project'?70:70);
            if(position.top+elHeight>clientHeight){
              return 'alert-labelUp'
            }else{
@@ -198,7 +198,6 @@
       },
     },
     mounted(){
-      console.log(this);
       if(this.type==='asset'){
         this.$get('/asset/info?id='+this.id).then((res)=>{
           if(res.msg==='success'){
@@ -210,10 +209,10 @@
         })
       }
       if(this.type==='project'){
-        this.$get('/project/info?id='+this.id).then((res)=>{
+        this.$get('/project?id='+this.id).then((res)=>{
           if(res.msg==='success'){
             this.loading=false;
-            this.alertLabelData=res.data.basic;
+            this.alertLabelData=res.data.list[0];
           } else{
             this.$message.error(res.msg);
           }
