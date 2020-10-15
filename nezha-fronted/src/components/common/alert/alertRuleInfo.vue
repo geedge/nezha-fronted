@@ -1,5 +1,5 @@
 <template>
-  <div class="alert-rule-tip" :style="calcPosition(that.position)" v-loading="loading">
+  <div :class="calcHeight(that.position,that)" :style="calcPosition(that.position,that)" v-loading="loading">
     <div class="alert-rule-info" >
       <div class="alert-rule-box">
         <div class="alert-rule-title">ID</div>
@@ -60,11 +60,35 @@
     },
     computed: {
       calcPosition() {
+        let self=this;
         return function(position) {
-          return {
-            left: `${position.left + position.width + 20}px`,
-            top: `${position.top - 10}px`,
+          let clientHeight = (document.body.clientHeight<document.documentElement.clientHeight)?document.body.clientHeight:document.documentElement.clientHeight;
+          let elHeight=50;
+          console.log(elHeight);
+          if(position.top+elHeight>clientHeight){
+            return {
+              left: `${position.left + position.width + 20}px`,
+              top: `${position.top -elHeight- 20}px`,
+            }
+          }else{
+            return {
+              left: `${position.left + position.width + 20}px`,
+              top: `${position.top - 20}px`,
+            }
           }
+        }
+      },
+      calcHeight(){
+        let self=this;
+        return function(position) {
+          let clientHeight = (document.body.clientHeight<document.documentElement.clientHeight)?document.body.clientHeight:document.documentElement.clientHeight;
+          let elHeight=50;
+          if(position.top+elHeight>clientHeight){
+            return 'alert-rule-tip-Up'
+          }else{
+            return 'alert-rule-tip'
+          }
+
         }
       }
     },
@@ -114,6 +138,30 @@
     border-color: transparent #fff transparent transparent;
     position: absolute;
     top: 20px;
+    left: 0;
+    transform: translate(-100%, -50%);
+  }
+  .alert-rule-tip-Up {
+    position: fixed;
+    background-color: white;
+    z-index: 3000;
+    padding: 10px;
+    border-radius: 4px;
+    box-shadow: -1px 1px 9px -1px rgba(205,205,205,0.77);
+  }
+  .alert-rule-tip-Up::after {
+    content: '';
+    display: block;
+    width:0;
+    height:0;
+    overflow: hidden;
+    font-size: 0;
+    line-height: 0;
+    border: 5px;
+    border-style: dashed solid dashed dashed;
+    border-color: transparent #fff transparent transparent;
+    position: absolute;
+    bottom: 20px;
     left: 0;
     transform: translate(-100%, -50%);
   }

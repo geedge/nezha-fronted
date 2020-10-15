@@ -1,98 +1,98 @@
 <template>
-  <div class="alert-label" :style="calcPosition(that.position)">
-    <div class="alert-label-info" v-if="type==='asset'" v-loading="loading">
-      <div class="alert-label-box">
-        <div class="alert-label-title">ID</div>
-        <div class="alert-label-value">{{alertLabelData?alertLabelData.id:''}}</div>
-      </div>
-      <div class="alert-label-box">
-        <div class="alert-label-title">SN</div>
-        <div class="alert-label-value">{{alertLabelData?alertLabelData.sn:''}}</div>
-      </div>
-      <div class="alert-label-box">
-        <div class="alert-label-title">Host</div>
-        <div class="alert-label-value">{{alertLabelData?alertLabelData.host:''}}</div>
-      </div>
-      <div class="alert-label-box">
-        <div class="alert-label-title">State</div>
-        <div class="alert-label-value">{{alertLabelData?(alertStateStr(alertLabelData.state)):''}}</div>
-      </div>
-      <div class="alert-label-box">
-        <div class="alert-label-title">Ping</div>
-        <div class="alert-label-value">
-          <div v-if="alertLabelData" :class="{'active-icon green':alertLabelData.pingStatus == 1,'active-icon red':alertLabelData.pingStatus == 0}"></div>
-          <span v-if="alertLabelData">{{alertLabelData.pingRtt?alertLabelData.pingRtt+'ms':''}}</span>
+  <div :class="calcHeight(that.position,that)" :style="calcPosition(that.position,that)" ref="alertLabels">
+      <div class="alert-label-info" v-if="type==='asset'" v-loading="loading">
+        <div class="alert-label-box">
+          <div class="alert-label-title">ID</div>
+          <div class="alert-label-value">{{alertLabelData?alertLabelData.id:''}}</div>
+        </div>
+        <div class="alert-label-box">
+          <div class="alert-label-title">SN</div>
+          <div class="alert-label-value">{{alertLabelData?alertLabelData.sn:''}}</div>
+        </div>
+        <div class="alert-label-box">
+          <div class="alert-label-title">Host</div>
+          <div class="alert-label-value">{{alertLabelData?alertLabelData.host:''}}</div>
+        </div>
+        <div class="alert-label-box">
+          <div class="alert-label-title">State</div>
+          <div class="alert-label-value">{{alertLabelData?(alertStateStr(alertLabelData.state)):''}}</div>
+        </div>
+        <div class="alert-label-box">
+          <div class="alert-label-title">Ping</div>
+          <div class="alert-label-value">
+            <div v-if="alertLabelData" :class="{'active-icon green':alertLabelData.pingStatus == 1,'active-icon red':alertLabelData.pingStatus == 0}"></div>
+            <span v-if="alertLabelData">{{alertLabelData.pingRtt?alertLabelData.pingRtt+'ms':''}}</span>
+          </div>
+        </div>
+        <div class="alert-label-box">
+          <div class="alert-label-title">Asset Type</div>
+          <div class="alert-label-value">{{alertLabelData?alertLabelData.assetType:''}}</div>
+        </div>
+        <div class="alert-label-box">
+          <div class="alert-label-title">Vendor</div>
+          <div class="alert-label-value">{{alertLabelData?alertLabelData.vendor:''}}</div>
+        </div>
+        <div class="alert-label-box">
+          <div class="alert-label-title">Model</div>
+          <div class="alert-label-value">{{alertLabelData?alertLabelData.model:''}}</div>
+        </div>
+        <div class="alert-label-box">
+          <div class="alert-label-title">PingLastReply</div>
+          <div class="alert-label-value">{{alertLabelData?alertLabelData.pingLastReply:''}}</div>
+        </div>
+        <div class="alert-label-box">
+          <div class="alert-label-title">Alert</div>
+          <div class="alert-label-value">
+            <span v-if="alertLabelData" :class="{danger:alertLabelData.alert>0,success:alertLabelData.alert<=0}">{{alertLabelData.alert + alertActiveStr()}}</span>
+          </div>
+        </div>
+        <div class="alert-label-box">
+          <div class="alert-label-title">DC</div>
+          <div class="alert-label-value">{{alertLabelData?alertLabelData.dataCenter:''}}</div>
+        </div>
+        <div class="alert-label-box">
+          <div class="alert-label-title">Endpoint</div>
+          <div class="alert-label-value">{{alertLabelData?alertLabelData.endpoint:''}}</div>
+        </div>
+        <div class="alert-label-box">
+          <div class="alert-label-title">Administrator</div>
+          <div class="alert-label-value">{{alertLabelData?alertLabelData.principal:''}}</div>
         </div>
       </div>
-      <div class="alert-label-box">
-        <div class="alert-label-title">Asset Type</div>
-        <div class="alert-label-value">{{alertLabelData?alertLabelData.assetType:''}}</div>
-      </div>
-      <div class="alert-label-box">
-        <div class="alert-label-title">Vendor</div>
-        <div class="alert-label-value">{{alertLabelData?alertLabelData.vendor:''}}</div>
-      </div>
-      <div class="alert-label-box">
-        <div class="alert-label-title">Model</div>
-        <div class="alert-label-value">{{alertLabelData?alertLabelData.model:''}}</div>
-      </div>
-      <div class="alert-label-box">
-        <div class="alert-label-title">PingLastReply</div>
-        <div class="alert-label-value">{{alertLabelData?alertLabelData.pingLastReply:''}}</div>
-      </div>
-      <div class="alert-label-box">
-        <div class="alert-label-title">Alert</div>
-        <div class="alert-label-value">
-          <span v-if="alertLabelData" :class="{danger:alertLabelData.alert>0,success:alertLabelData.alert<=0}">{{alertLabelData.alert + alertActiveStr()}}</span>
+
+      <div class="alert-label-info" v-if="type==='module'" v-loading="loading">
+        <div class="alert-label-box">
+          <div class="alert-label-title">ID</div>
+          <div class="alert-label-value">{{alertLabelData?alertLabelData.id:''}}</div>
+        </div>
+        <div class="alert-label-box">
+          <div class="alert-label-title">Name</div>
+          <div class="alert-label-value">{{alertLabelData?alertLabelData.name:''}}</div>
+        </div>
+        <div class="alert-label-box">
+          <div class="alert-label-title">Project</div>
+          <div class="alert-label-value">{{alertLabelData?alertLabelData.project.name:''}}</div>
+        </div>
+        <div class="alert-label-box">
+          <div class="alert-label-title">Description</div>
+          <div class="alert-label-value">{{alertLabelData?(alertLabelData.remark?alertLabelData.remark:'-'):''}}</div>
         </div>
       </div>
-      <div class="alert-label-box">
-        <div class="alert-label-title">DC</div>
-        <div class="alert-label-value">{{alertLabelData?alertLabelData.dataCenter:''}}</div>
-      </div>
-      <div class="alert-label-box">
-        <div class="alert-label-title">Endpoint</div>
-        <div class="alert-label-value">{{alertLabelData?alertLabelData.endpoint:''}}</div>
-      </div>
-      <div class="alert-label-box">
-        <div class="alert-label-title">Administrator</div>
-        <div class="alert-label-value">{{alertLabelData?alertLabelData.principal:''}}</div>
-      </div>
-    </div>
 
-    <div class="alert-label-info" v-if="type==='module'" v-loading="loading">
-      <div class="alert-label-box">
-        <div class="alert-label-title">ID</div>
-        <div class="alert-label-value">{{alertLabelData?alertLabelData.id:''}}</div>
+      <div class="alert-label-info" v-if="type==='project'" v-loading="loading">
+        <div class="alert-label-box">
+          <div class="alert-label-title">ID</div>
+          <div class="alert-label-value">{{alertLabelData?alertLabelData.id:''}}</div>
+        </div>
+        <div class="alert-label-box">
+          <div class="alert-label-title">Name</div>
+          <div class="alert-label-value">{{alertLabelData?alertLabelData.name:''}}</div>
+        </div>
+        <div class="alert-label-box">
+          <div class="alert-label-title">Description</div>
+          <div class="alert-label-value">{{alertLabelData?(alertLabelData.remark?alertLabelData.remark:'-'):''}}</div>
+        </div>
       </div>
-      <div class="alert-label-box">
-        <div class="alert-label-title">Name</div>
-        <div class="alert-label-value">{{alertLabelData?alertLabelData.name:''}}</div>
-      </div>
-      <div class="alert-label-box">
-        <div class="alert-label-title">Project</div>
-        <div class="alert-label-value">{{alertLabelData?alertLabelData.project.name:''}}</div>
-      </div>
-      <div class="alert-label-box">
-        <div class="alert-label-title">Description</div>
-        <div class="alert-label-value">{{alertLabelData?(alertLabelData.remark?alertLabelData.remark:'-'):''}}</div>
-      </div>
-    </div>
-
-    <div class="alert-label-info" v-if="type==='project'" v-loading="loading">
-      <div class="alert-label-box">
-        <div class="alert-label-title">ID</div>
-        <div class="alert-label-value">{{alertLabelData?alertLabelData.id:''}}</div>
-      </div>
-      <div class="alert-label-box">
-        <div class="alert-label-title">Name</div>
-        <div class="alert-label-value">{{alertLabelData?alertLabelData.name:''}}</div>
-      </div>
-      <div class="alert-label-box">
-        <div class="alert-label-title">Description</div>
-        <div class="alert-label-value">{{alertLabelData?(alertLabelData.remark?alertLabelData.remark:'-'):''}}</div>
-      </div>
-    </div>
   </div>
 </template>
 
@@ -153,11 +153,35 @@
     },
     computed: {
       calcPosition() {
+        let self=this;
         return function(position) {
-          return {
-            left: `${position.left + position.width + 20}px`,
-            top: `${position.top - 20}px`,
+          let clientHeight = (document.body.clientHeight<document.documentElement.clientHeight)?document.body.clientHeight:document.documentElement.clientHeight;
+          let elHeight=self.type==='asset'?370:(self.type==='project'?50:70);
+          console.log(elHeight);
+          if(position.top+elHeight>clientHeight){
+            return {
+              left: `${position.left + position.width + 20}px`,
+              top: `${position.top -elHeight- 20}px`,
+            }
+          }else{
+            return {
+              left: `${position.left + position.width + 20}px`,
+              top: `${position.top - 20}px`,
+            }
           }
+        }
+      },
+      calcHeight(){
+        let self=this;
+        return function(position) {
+          let clientHeight = (document.body.clientHeight<document.documentElement.clientHeight)?document.body.clientHeight:document.documentElement.clientHeight;
+          let elHeight=self.type==='asset'?370:(self.type==='project'?50:70);
+           if(position.top+elHeight>clientHeight){
+             return 'alert-labelUp'
+           }else{
+             return 'alert-label'
+           }
+
         }
       }
     },
@@ -174,6 +198,7 @@
       },
     },
     mounted(){
+      console.log(this);
       if(this.type==='asset'){
         this.$get('/asset/info?id='+this.id).then((res)=>{
           if(res.msg==='success'){
@@ -218,6 +243,14 @@
     border-radius: 4px;
     box-shadow: -1px 1px 9px -1px rgba(205,205,205,0.77);
   }
+  .alert-labelUp {
+    position: fixed;
+    background-color: white;
+    z-index: 3000;
+    padding: 10px;
+    border-radius: 4px;
+    box-shadow: -1px 1px 9px -1px rgba(205,205,205,0.77);
+  }
   .alert-label::after {
     content: '';
     display: block;
@@ -231,6 +264,22 @@
     border-color: transparent #fff transparent transparent;
     position: absolute;
     top: 20px;
+    left: 0;
+    transform: translate(-100%, -50%);
+  }
+  .alert-labelUp::after {
+    content: '';
+    display: block;
+    width:0;
+    height:0;
+    overflow: hidden;
+    font-size: 0;
+    line-height: 0;
+    border: 5px;
+    border-style: dashed solid dashed dashed;
+    border-color: transparent #fff transparent transparent;
+    position: absolute;
+    bottom: 20px;
     left: 0;
     transform: translate(-100%, -50%);
   }
