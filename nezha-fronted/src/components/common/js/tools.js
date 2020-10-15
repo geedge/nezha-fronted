@@ -194,7 +194,7 @@ export const bottomBoxWindow = {
     let contentHideHeight = 100; //主、副列表高度低于100时隐藏内容
     let mainModalDom = document.querySelector(".main-modal"); //主列表遮罩
     let resizeModalDom = document.querySelector(".resize-modal"); //副列表遮罩
-    let resizeBarDom = document.querySelector(".sub-list-resize"); //副列表遮罩
+    let resizeBarDom = document.querySelector(".sub-list-resize"); //拖动条
 
     let contentRightHeight = contentRightDom.offsetHeight;//可视高度
     //点击时俩dom的初始高度：
@@ -215,7 +215,7 @@ export const bottomBoxWindow = {
       resizeModalEndHeight = subInitialHeight-mouseMoveY;
       resizeModalDom.style.height = `${resizeModalEndHeight}px`;
 
-      // 主、副列表最小高度限制
+      // 主、副列表高度限制
       if(resizeModalEndHeight > contentRightHeight-minHeight){
         resizeModalDom.style.height = `${contentRightHeight-minHeight}px`;
       }

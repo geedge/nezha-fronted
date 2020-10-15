@@ -77,11 +77,8 @@ export default {
         this.setFontSize(this.fontSize);
       })
     },
-    resizeServiceConsole(){
-      const consoleBox = document.getElementById('ternimalContainer'+this.idIndex);
+    resizeServiceConsole(height){
       let width = document.body.clientWidth;//可视宽度
-      let height = parseInt(consoleBox.style.height);
-      if(height==null||!height){height=this.termimalHeight;}
       const winStyle={
         width:width,
         height:height,

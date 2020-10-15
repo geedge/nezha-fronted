@@ -2,10 +2,17 @@
   @import './webSSH.scss';
 </style>
 <template>
-    <div id="shell-service"  data-yunlog-scope="popup" :class="{'shell-service-max': isFullScreen,'shell-service':true}" v-show="consoleShow">
-    <div id="shell-service-resize-mask"></div>
-    <div id="shell-split" class="shell-split shell-iconfont" @mousedown="dragEagle" v-show="!isFullScreen">一</div>
-    <div style='position: relative;'>
+<!--  <div id="shell-service" data-yunlog-scope="popup" :class="{'shell-service-max': isFullScreen,'shell-service':true}" v-show="consoleShow">
+    <div class="resize-modal">
+      <div class="sub-list-resize-copy">一</div>
+    </div>
+    <div id="shell-split" class="shell-split shell-iconfont" @mousedown="dragEagle" v-show="!isFullScreen">一</div>-->
+  <div id="shell-service" class="sub-box" data-yunlog-scope="popup" :class="{'shell-service-max': isFullScreen,'shell-service':true}" v-show="consoleShow">
+    <div class="resize-modal">
+      <div class="sub-list-resize-copy">一</div>
+    </div>
+    <div id="shell-split" class="sub-list-resize" @mousedown="dragEagle" v-show="!isFullScreen">一</div>
+    <div style='position: relative;' class="sub-list">
       <!--el-drawer 打开后会对第一个未隐藏的元素聚焦 所以添加一隐藏的input 防止聚焦-->
       <input style='width: 0;height: 0;opacity: 0;display: inherit;' />
       <el-menu  mode="horizontal" @select="handleSelect" style='position: absolute;left:0px;top:0px;border-top: 1px solid #DCDFE6;'>
@@ -497,85 +504,145 @@
           });
         }
       },
-      dragEagle:function(e){
+      /*dragEagle:function(e){
+        var targetDiv= document.getElementById('shell-service'); //e.target.parentNode.parentNode;.children[0]
+
+        //得到点击时该容器的宽高：
+        var targetDivHeight=targetDiv.offsetHeight;
+        var startY=e.clientY;
+        var _this=this;
+
+        document.onmousemove=function(e){
+          e.preventDefault();
+          //得到鼠标拖动的宽高距离：取绝对值
+          var distY=Math.abs(e.clientY-startY);
+
+          //往上方拖动：
+          if( e.clientY < startY){
+            targetDiv.style.height=targetDivHeight+distY+'px';
+          }
+          //往下方拖动：
+          if (e.clientY > startY) {
+            targetDiv.style.height=(targetDivHeight-distY)+'px';
+          }
+          let height = document.body.clientHeight;//可视高度
+          if(parseInt(targetDiv.style.height)>=height){
+            targetDiv.style.height=height+'px';
+          }
+          if(parseInt(targetDiv.style.height)<=10){
+            targetDiv.style.height=20+'px';
+          }
+
+          _this.editableTabs.forEach((tab, index) => {
+            _this.$refs['console'+index][0].resizeConsole(parseInt(targetDiv.style.height));
+          });
+        }
+
+        document.onmouseup=function(){
+          document.onmousemove=null;
+          _this.editableTabs.forEach((tab, index) => {
+           // _this.$refs['console'+index][0].resizeServiceConsole(parseInt(targetDiv.style.height));
+            _this.$refs['console'+index][0].resizeServiceConsole();
+          });
+
+          _this.consoleHeight = parseInt(targetDiv.style.height);
+          if(_this.consoleHeight===null || !_this.consoleHeight){_this.consoleHeight = _this.initConsoleHeight;}
+        }
+      },*/
+      dragEagle(e) {
+        //let mainListDom = document.querySelector(".main-list"); //主列表
+        let subBoxDom = document.querySelector(".sub-box"); //副列表
+        let subListDom = document.querySelector(".sub-list"); //副列表
+        let contentRightDom = document.querySelector(".content-right"); //右侧内容区
+        let resizeBarHeight = 9; //resize横条高度
+        let minHeight = 15; //terminal最小高度限制为15
+        //let contentHideHeight = 100; //主、副列表高度低于100时隐藏内容
+        //let mainModalDom = document.querySelector(".main-modal"); //主列表遮罩
+        let resizeModalDom = document.querySelector(".resize-modal"); //副列表遮罩
+        let resizeBarDom = document.querySelector(".sub-list-resize"); //拖动条
+
+        let contentRightHeight = contentRightDom.offsetHeight;//可视高度
+        //点击时俩dom的初始高度：
+        let subInitialHeight = subListDom.offsetHeight+resizeBarHeight;
+
+        //mainModalDom.style.display = "block";
+        resizeModalDom.style.cssText = `height: ${subInitialHeight}px; display: block;`;
+        resizeBarDom.style.display = "none";
+        let resizeModalEndHeight;
+        //点击时鼠标的Y轴位置
+        let mouseInitialY = e.clientY;
+
+        document.onmousemove = (e) => {
+          window.resizing = true;
+          e.preventDefault();
+          //得到鼠标拖动的距离
+          let mouseMoveY = e.clientY-mouseInitialY;
+          resizeModalEndHeight = subInitialHeight-mouseMoveY;
+          resizeModalDom.style.height = `${resizeModalEndHeight}px`;
+
+          // 主、副列表最大、最小高度限制
+          if(resizeModalEndHeight > contentRightHeight-minHeight){
+            resizeModalEndHeight = contentRightHeight-minHeight;
+          }
+          if(resizeModalEndHeight < minHeight){
+            resizeModalEndHeight = minHeight;
+          }
+          resizeModalDom.style.height = `${resizeModalEndHeight}px`;
+        };
+        let vm = this;
+        document.onmouseup = () => {
+          window.resizing = false;
+          //mainListDom.style.height = `${contentRightHeight-resizeModalEndHeight}px`;
+          subBoxDom.style.height = `${resizeModalEndHeight}px`;
+          subListDom.style.height = `${resizeModalEndHeight-resizeBarHeight}px`;
+          resizeModalDom.style.display = "none";
+          //mainModalDom.style.display = "none";
+          resizeBarDom.style.display = "";
+
+          vm.consoleHeight = resizeModalEndHeight;
+          vm.editableTabs.forEach((tab, index) => {
+            vm.$refs['console'+index][0].resizeConsole(resizeModalEndHeight);
+            vm.$refs['console'+index][0].resizeServiceConsole(resizeModalEndHeight);
+          });
+
+          document.onmousemove = null;
+          document.onmouseup = null;
+        }
+      },
+
+      debounce(operate, delay) {
+        let time = null
+        let timer = null
+        let newTime = null
+        function task() {
+          newTime = +new Date()
+          if(newTime - time < delay){
+            timer = setTimeout(task, delay)
+          }else {
+            operate()
+            timer = null
+          }
+          time = newTime
+        }
+        return function () {
+          // 更新时间戳
+          time = +new Date()
+          if(!timer){
+            timer = setTimeout(task, delay)
+          }
+        }
+      },
+      windowChange(){
+        //alert('winChange');
+        if(this.editableTabs&&this.editableTabs.length>0){
+          let width = document.body.clientWidth;//可视宽度
           var targetDiv= document.getElementById('shell-service'); //e.target.parentNode.parentNode;.children[0]
-
-          //得到点击时该容器的宽高：
           var targetDivHeight=targetDiv.offsetHeight;
-          var startY=e.clientY;
-          var _this=this;
-
-          document.onmousemove=function(e){
-            e.preventDefault();
-            //得到鼠标拖动的宽高距离：取绝对值
-            var distY=Math.abs(e.clientY-startY);
-
-            //往上方拖动：
-            if( e.clientY < startY){
-              targetDiv.style.height=targetDivHeight+distY+'px';
-            }
-            //往下方拖动：
-            if (e.clientY > startY) {
-              targetDiv.style.height=(targetDivHeight-distY)+'px';
-            }
-            let height = document.body.clientHeight;//可视高度
-            if(parseInt(targetDiv.style.height)>=height){
-              targetDiv.style.height=height+'px';
-            }
-            if(parseInt(targetDiv.style.height)<=10){
-              targetDiv.style.height=20+'px';
-            }
-
-            _this.editableTabs.forEach((tab, index) => {
-              _this.$refs['console'+index][0].resizeConsole(parseInt(targetDiv.style.height));
-            });
-          }
-
-          document.onmouseup=function(){
-            document.onmousemove=null;
-            _this.editableTabs.forEach((tab, index) => {
-             // _this.$refs['console'+index][0].resizeServiceConsole(parseInt(targetDiv.style.height));
-              _this.$refs['console'+index][0].resizeServiceConsole();
-            });
-
-            _this.consoleHeight = parseInt(targetDiv.style.height);
-            if(_this.consoleHeight===null || !_this.consoleHeight){_this.consoleHeight = _this.initConsoleHeight;}
-          }
-        },
-
-        debounce(operate, delay) {
-          let time = null
-          let timer = null
-          let newTime = null
-          function task() {
-            newTime = +new Date()
-            if(newTime - time < delay){
-              timer = setTimeout(task, delay)
-            }else {
-              operate()
-              timer = null
-            }
-            time = newTime
-          }
-          return function () {
-            // 更新时间戳
-            time = +new Date()
-            if(!timer){
-              timer = setTimeout(task, delay)
-            }
-          }
-        },
-        windowChange(){
-          //alert('winChange');
-          if(this.editableTabs&&this.editableTabs.length>0){
-            let width = document.body.clientWidth;//可视宽度
-            var targetDiv= document.getElementById('shell-service'); //e.target.parentNode.parentNode;.children[0]
-            var targetDivHeight=targetDiv.offsetHeight;
-            this.editableTabs.forEach((tab, index) => {
-              this.$refs['console'+index][0].resize(targetDivHeight,width);
-            });
-          }
-        },
+          this.editableTabs.forEach((tab, index) => {
+            this.$refs['console'+index][0].resize(targetDivHeight,width);
+          });
+        }
+      },
       //改变黑窗口字体大小
       changeFontSize(fontSize){
         // this.$refs['console'+this.index].setFontSize(fontSize);
