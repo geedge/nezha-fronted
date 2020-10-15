@@ -112,12 +112,13 @@
         <div class="content-col-box">
           <div class="content-col-title">{{$t("dashboard.overview.dataCenter.dataCenter")}}</div>
           <div class="content-col-content">
-            <chart-box chart-type="map" :tooltip-formatter="mapTooltipFormatter" :map="map" ref="dataCenterMap" @is-loading="(isLoading)=>{this.mapLoading = isLoading}"></chart-box>
-            <div class="right-bottom-zoom">
+            <!--<chart-box chart-type="map" :tooltip-formatter="mapTooltipFormatter" :map="map" ref="dataCenterMap" @is-loading="(isLoading)=>{this.mapLoading = isLoading}"></chart-box>-->
+            <div id="map" style="height: 100%; width: 100%"></div>
+            <!--<div class="right-bottom-zoom">
               <div class="zoom-option" style="border-bottom: 1px solid #c5c8cb;" @click="zoomMap(1)"><span><i class="nz-icon nz-icon-enlarge"></i></span></div>
               <div class="zoom-option" @click="zoomMap(-1)"><span><i class="nz-icon nz-icon-narrow"></i></span></div>
               <div></div>
-            </div>
+            </div>-->
           </div>
         </div>
       </div>
@@ -192,6 +193,11 @@
   import timePicker from '../../../common/timePicker';
   import VueCountUp from 'vue-countupjs';
   import * as world from "../../../common/js/world";
+  import 'leaflet/dist/leaflet.css'
+  // 引入Leaflet对象 挂载到Vue上，便于全局使用，也可以单独页面中单独引用
+  import * as L from 'leaflet'
+  import icon from 'leaflet/dist/images/marker-icon.png';
+  import iconShadow from 'leaflet/dist/images/marker-shadow.png';
 
   var timeout; //第三行第三个图的dropdown下拉菜单timeout
   export default {
@@ -300,7 +306,8 @@
         this.queryAlertMessageData();
         this.queryAlertRuleData();
         this.queryAlertTrendData();
-        this.queryMapChartGeoJson();
+        // this.queryMapChartGeoJson();
+        this.initMap();
         this.queryAlertStatByRule();
         this.queryAlertStatByAsset();
         this.getDcTrafficData();
@@ -659,6 +666,53 @@
         //console.info("params", params);
         return params;
       },
+      initMap() {
+        this.loadMapConfig().then((mapConfig)=>{
+          if(mapConfig&&this.map){
+            this.loadDataCenterMapData()
+          }
+        })
+      },
+      loadMapConfig:function(){
+        return new Promise(resolve => {
+          let DefaultIcon = L.icon({
+            iconUrl: icon,
+            shadowUrl: iconShadow
+          });
+          L.Marker.prototype.options.icon = DefaultIcon;
+          let param={paramKey:'map_center_config'}
+          this.$get('sysConfig',param).then(response=>{
+            if(response.code == 200){
+              let mapConfig=JSON.parse(response.data.paramKey.map_center_config);
+              let map = L.map("map",{
+                minZoom:2,
+                maxZoom:7,
+                attributionControl:false,
+                zoomControl:false,
+              }).setView([mapConfig.longitude,mapConfig.latitude],mapConfig.zoom);
+              this.map = map;
+
+              L.tileLayer(
+                "/static/Tiles/{z}/{x}/{y}.png"
+              ).addTo(map);
+
+              let attribution=L.control.attribution({position:'bottomright',prefix:''})
+              attribution.addAttribution(' © OpenStreetMap contributors')
+              attribution.addTo(map)
+
+              L.control.zoom({
+                position:'bottomright',
+                zoomInText:`<i class="nz-icon nz-icon-enlarge"></i>`,
+                zoomOutText:`<i class="nz-icon nz-icon-narrow"></i>`,
+                zoomInTitle:'',
+                zoomOutTitle:'',
+              }).addTo(map)
+
+              resolve(mapConfig);
+            }
+          })
+        })
+      },
       queryMapChartGeoJson() {
         this.$refs.dataCenterMap.startLoading();
         /*this.$get('/sysConfig?paramKey=geoJson').then(response=>{
@@ -688,6 +742,67 @@
         };
 
         setTimeout(()=>{this.queryDataCenterMapData();},1500)
+      },
+      loadDataCenterMapData:function(){
+        let language=localStorage.getItem("nz-language") ? localStorage.getItem("nz-language") : 'en';
+        let requests=[axios.get('/idc?pageSize=-1'),axios.get('/overview/datacenterStat')];
+        axios.all(requests).then((result)=>{
+            if(result) {
+              let idcInfos = null;
+              let dcStats = null;
+              if (result[0].data && result[0].data.code == 200) {
+                idcInfos = result[0].data.data.list;
+              }
+              if (result[1].data && result[1].data.code == 200) {
+                dcStats = result[1].data.data.dcStat;
+              }
+              if (idcInfos && dcStats) {
+                let dcStatsCopy=Object.assign([],dcStats);
+                dcStatsCopy.sort((a,b)=>{
+                  return a.assetTotal - b.assetTotal;
+                });
+                let bigScatter=10;
+                let mediumScatter=8;
+                let smallScatter=6;
+                let maxAssetTotal=dcStatsCopy[dcStatsCopy.length-1].assetTotal;
+
+                let bigBoundary=Number.parseInt(maxAssetTotal/3*2);
+                let mediumBoundary=Number.parseInt(maxAssetTotal/3);
+                for (let dcStat of dcStats) {
+                  console.log('dcStat',dcStat)
+                  let dcId = dcStat.id;
+                  let dcInfo = idcInfos.find((item) => {
+                    return item.id == dcId;
+                  })
+                  let areaInfo = dcInfo.area;
+                  if (areaInfo) {
+                    let areaName = '';
+                    if (areaInfo.i18n) {
+                      areaName = JSON.parse(areaInfo.i18n)[language];
+                    } else {
+                      areaName = areaInfo.name;
+                    }
+
+                    let symbolSize=mediumScatter;
+                    if(dcStat.assetTotal>=bigBoundary){
+                      symbolSize=bigScatter;
+                    }else if(dcStat.assetTotal<bigBoundary && dcStat.assetTotal>= mediumBoundary){
+                      symbolSize=mediumScatter;
+                    }else{
+                      symbolSize=smallScatter;
+                    }
+
+                    let hasAlert=dcStat.alertP1!=0||dcStat.alertP2!=0||dcStat.alertP3!=0||dcStat.assetPingDown!=0||dcStat.endpointDown!=0||dcStat.promDown!=0;
+
+                    let marker=L.circleMarker([areaInfo.latitude,areaInfo.longitude], {color: hasAlert?'#DE5D3F':'orange',opacity:0.42,fillColor: hasAlert?'#DE5D3F':'orange',fillOpacity: 0.5, radius: symbolSize,className:hasAlert?'error-item':''})
+                    marker.bindTooltip(this.mapTooltipFormatter(dcStat),{sticky:true})
+                    marker.addTo(this.map)
+
+                  }
+                }
+              }
+            }
+          });
       },
       queryDataCenterMapData() {
         let language=localStorage.getItem("nz-language") ? localStorage.getItem("nz-language") : 'en';
@@ -959,8 +1074,7 @@
         });
       },
 
-      mapTooltipFormatter(params){
-        let dcStat = params.data.value[2];
+      mapTooltipFormatter(dcStat){
         let tooltip=`
             <div class="tooltip">
                 <div style="margin-left: 12px; color: black">${dcStat.name}</div>
@@ -984,20 +1098,20 @@
                             </tr>
                             <tr>
                                 <td >${this.$t('dashboard.overview.mapTooltip.inactive')}</td>
-                                <td >${dcStat.assetPingDown}</td>
+                                <td ><span class="${dcStat.assetPingDown!=0?'error-color':''}">${dcStat.assetPingDown}</span></td>
                             </tr>
                             <tr>
                                 <td rowspan="3">${this.$t('dashboard.overview.mapTooltip.alert')}</td>
                                 <td >${this.$t('dashboard.overview.mapTooltip.P1')}</td>
-                                <td >${dcStat.alertP1}</td>
+                                <td ><span class="${dcStat.alertP1!=0?'error-color':''}">${dcStat.alertP1}</span></td>
                             </tr>
                             <tr>
                                 <td >${this.$t('dashboard.overview.mapTooltip.P2')}</td>
-                                <td >${dcStat.alertP2}</td>
+                                <td ><span class="${dcStat.alertP2!=0?'error-color':''}">${dcStat.alertP2}</span></td>
                             </tr>
                             <tr>
                                 <td >${this.$t('dashboard.overview.mapTooltip.P3')}</td>
-                                <td >${dcStat.alertP3}</td>
+                                <td ><span class="${dcStat.alertP3!=0?'error-color':''}">${dcStat.alertP3}</span></td>
                             </tr>
                         </table>
                    </div>
@@ -1011,7 +1125,7 @@
                             </tr>
                             <tr>
                                 <td>${this.$t('dashboard.overview.mapTooltip.down')}</td>
-                                <td>${dcStat.endpointDown}</td>
+                                <td><span class="${dcStat.endpointDown!=0?'error-color':''}">${dcStat.endpointDown}</span></td>
                             </tr>
                         </table>
                       </div>
@@ -1024,7 +1138,7 @@
                             </tr>
                             <tr>
                                 <td>${this.$t('dashboard.overview.mapTooltip.down')}</td>
-                                <td>${dcStat.promDown}</td>
+                                <td><span class="${dcStat.promDown!=0?'error-color':''}">${dcStat.promDown}</span></td>
                             </tr>
                            </table>
                         </div>
@@ -1388,5 +1502,30 @@
   .column-box{
     flex-direction: column;
     justify-content: space-between !important;
+  }
+  .leaflet-control-zoom{
+    border: 1px solid #E7EAED !important;
+    box-shadow: -1px 1px 9px -1px rgba(205,205,205,0.77) !important;
+    .leaflet-control-zoom-out,.leaflet-control-zoom-in{
+      opacity: .7;
+      background: #FFF;
+    }
+  }
+  .leaflet-control-attribution{
+    background-color: unset !important;
+    color: rgba(178, 178, 178, 0.77);
+  }
+  @keyframes error-animation{
+    0% {fill-opacity:.5}
+    50% {fill-opacity:0.75}
+    100% {fill-opacity:1}
+  }
+  .error-item{
+    color: #FADED7 ;
+    animation: error-animation 1s infinite ease-in-out;
+    animation-direction:normal;
+  }
+  .error-color{
+
   }
 </style>
