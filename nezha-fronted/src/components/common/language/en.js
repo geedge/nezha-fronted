@@ -437,6 +437,8 @@ const en = {
       ping:'Ping',
     },
     featureTitle:'Attribute',
+    endpointUpNum:'It\'s a normal number',
+    endpointNum:'Represents the total quantity',
     editAssetTab:{
       title:'New asset',//'新增资产'
       sn:'SN',//SN

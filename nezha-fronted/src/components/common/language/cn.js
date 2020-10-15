@@ -524,7 +524,9 @@ const cn = {
     notInStock: "出库",
     principal: "负责人",
     tel: "电话",
-    featureTitle: "属性"
+    featureTitle: "属性",
+    endpointUpNum:'代表正常的数量',
+    endpointNum:'代表总的数量',
   },
   config: {
     config: "设置",
