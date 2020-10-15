@@ -191,9 +191,9 @@
         isFullScreen:false,
         closeConfirmShow:false,
         closeRemember:false,
-        initConsoleHeight:300,//只读,初始化高度
-        consoleHeight:300,//console高度
-        resizeConsoleHeight: 300, //resize后的高度，用于记录最大化、最小化前的高度
+        initConsoleHeight:250,//只读,初始化高度
+        consoleHeight:250,//console高度
+        resizeConsoleHeight: 250, //resize后的高度，用于记录最大化、最小化前的高度
         currentTransform:0,
         editableTabsValue: '-1',//当前显示的console
         currentIndex:'-1',
@@ -290,6 +290,7 @@
             this.closeConfirmShow = true;
           }
         }
+        document.querySelector(".sub-list").style.height = "";
       },
       cancleConfirm(){
         this.closeConfirmShow = false;

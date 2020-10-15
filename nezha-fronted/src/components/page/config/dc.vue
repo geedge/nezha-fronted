@@ -108,11 +108,11 @@
       <div class="pagination-bottom" v-show="!bottomBox.showSubList">
         <Pagination :tableId="tableId" :pageObj="pageObj" @pageNo='pageNo' @pageSize='pageSize' ref="Pagination"></Pagination>
       </div>
-      <transition name="el-zoom-in-bottom">
-        <bottom-box v-if="bottomBox.showSubList" :sub-resize-show="bottomBox.subResizeShow" :obj="bottomBox.dc" :is-full-screen="bottomBox.isFullScreen" :from="'dc'" :target-tab.sync="bottomBox.targetTab" :detail="bottomBox.dcDetail"
-                     @closeSubList="bottomBox.showSubList = false" @fullScreen="fullScreen" @exitFullScreen="exitFullScreen" @listResize="listResize" ></bottom-box>
-      </transition>
     </div>
+    <transition name="el-zoom-in-bottom">
+      <bottom-box v-if="bottomBox.showSubList" :sub-resize-show="bottomBox.subResizeShow" :obj="bottomBox.dc" :is-full-screen="bottomBox.isFullScreen" :from="'dc'" :target-tab.sync="bottomBox.targetTab" :detail="bottomBox.dcDetail"
+                  @closeSubList="bottomBox.showSubList = false" @fullScreen="fullScreen" @exitFullScreen="exitFullScreen" @listResize="listResize" ></bottom-box>
+    </transition>
     <!--dc table end-->
     <transition name="right-box">
       <dc-box @close="closeDcBox" :dc="dc" :user-data="userData" @reload="getTableData" v-if="rightBox.dc.show"></dc-box>
