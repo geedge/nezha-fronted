@@ -329,7 +329,7 @@
               this.$refs.overviewLoading.endLoading();
             }
           })
-        },60*1000)
+        },5*60*1000)
       },
       querySystemState:function(){
         return new Promise(resolve => {

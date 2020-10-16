@@ -70,13 +70,13 @@
             </div>
             <div>
               <div class="result-title">{{$t('overall.result.failedDetail')}}:</div>
-              <el-scrollbar style="height: 100%">
                 <div class="result-detail" v-if="importResult&&importResult.failDetail">
-                  <ul>
-                    <li v-for="(item,index) in importResult.failDetail"><span>{{item.lineNo}}</span>:<span>{{item.errorMsg}}</span> </li>
-                  </ul>
+                  <el-scrollbar style="height: 100%">
+                    <ul>
+                      <li v-for="(item,index) in importResult.failDetail"><span>{{item.lineNo}}</span>:<span>{{item.errorMsg}}</span> </li>
+                    </ul>
+                  </el-scrollbar>
                 </div>
-              </el-scrollbar>
             </div>
           </div>
           <div slot="footer" class="footer">
