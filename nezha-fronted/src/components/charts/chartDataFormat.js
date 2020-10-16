@@ -372,9 +372,6 @@ function asciiCompute2(num,ascii,units,dot=2,unitIndex=0){
 * unit:设置的单位
 * */
 function timeCompute(value,unit,dot=0){
-  if(Number.isInteger(value)) {
-    dot=0;
-  }
   if(unit == 'year'){
     return `${value.toFixed(dot)} ${unit}`;
   }
@@ -394,10 +391,16 @@ function timeCompute(value,unit,dot=0){
     if(u.unit == unit){ //找到最小单位
       let result = (time,minUnit)=>{
         if(minUnit.unit == 'year'){
+          if(Number.isInteger(time)) {
+            dot=0;
+          }
           return `${time.toFixed(dot)} ${minUnit.unit}`
         }
         let quotient = time / minUnit.ascii;
         if(quotient < 1){
+          if(Number.isInteger(time)) {
+            dot=0;
+          }
           return `${Number(time).toFixed(dot)} ${minUnit.unit}`;
         }else{
           minUnit = units[++i];
