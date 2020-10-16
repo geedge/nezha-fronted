@@ -202,7 +202,7 @@
       </el-tab-pane>
       <el-tab-pane :label="$t('config.system.reset.reset')" name="reset">
         <div class="system-config-form">
-          <el-form :model="reset"  label-width="180px" size="small" ref="resetForm" :rules="resetRules" :validate-on-rule-change="false" class="reset-form">
+          <el-form :model="reset"  label-width="82px" size="small" ref="resetForm" :rules="resetRules" :validate-on-rule-change="false" class="reset-form">
             <el-form-item  prop="type">
 <!--                <el-checkbox-group v-model="reset.type">-->
 <!--                  <div v-for="(item,index) in resetOptions" :key="item.value+index">-->
@@ -212,7 +212,7 @@
               <div class="el-checkbox-group">
                 <div v-for="(item,index) in resetOptions" :key="item.value+index" >
                   <label class="el-checkbox sys-reset-label" :for="item.value" >
-                    <span class="el-checkbox__label" style="width: 100px;text-align: right;">{{item.label}}</span>
+                    <span class="el-checkbox__label" style="width: 100px;text-align: right;margin-right: 10px">{{item.label}}</span>
                     <span class="el-checkbox__input">
                       <input type="checkbox" name="resetType" :value="item.value" class="el-checkbox__original" aria-hidden="true" :id="item.value" @change="resetCheckBoxChange"/>
                       <span class="el-checkbox__inner"></span>
@@ -222,7 +222,7 @@
               </div>
             </el-form-item>
             <el-form-item>
-              <button class="nz-btn nz-btn-size-normal-new nz-btn-style-normal-new" @click="resetSys()" style="top:2px">{{$t('overall.reset')}}</button>
+              <button type="button" class="nz-btn nz-btn-size-normal-new nz-btn-style-normal-new" @click="resetSys()" style="top:2px">{{$t('overall.reset')}}</button>
             </el-form-item>
           </el-form>
         </div>

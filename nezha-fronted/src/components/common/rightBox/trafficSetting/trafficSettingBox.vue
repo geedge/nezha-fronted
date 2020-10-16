@@ -16,10 +16,10 @@
 
     <!--底部按钮-->
     <div class="right-box-bottom-btns">
-      <button @click="esc" id="project-esc" class="nz-btn nz-btn-size-normal-new nz-btn-style-light-new">
+      <button type="button" @click="esc" id="project-esc" class="nz-btn nz-btn-size-normal-new nz-btn-style-light-new">
         <span>{{$t('overall.cancel')}}</span>
       </button>
-      <button @click="save" id="project-save" class="nz-btn nz-btn-size-normal-new nz-btn-style-normal-new">
+      <button type="button" @click="save" id="project-save" class="nz-btn nz-btn-size-normal-new nz-btn-style-normal-new">
         <span>{{$t('overall.save')}}</span>
       </button>
     </div>
