@@ -63,12 +63,12 @@
       <!--<div class="networkContent">33333</div>-->
       <!--model上的图标-->
       <div :style="{top:(item.y- 80 + 80*(1-zoom))+'px',left:(item.x- 26 + 26*(1-zoom))+'px',transform:'scale('+zoom+')',position:'absolute'}"
-           v-for="(item,index) in modelTop"
+           v-for="(item,indexj) in modelTop"
       >
-        <i :class="{'nz-icon':true, 'nz-icon-shuidi':true,'model-error':item.error&&index!==activeIndex,'model-error-active':item.error&&index===activeIndex}"
+        <i :class="{'nz-icon':true, 'nz-icon-shuidi':true,'model-error':item.error&&(indexj!==activeIndex),'model-error-active':item.error&&indexj==activeIndex}"
            v-show="item.show"
-           :ref="'modelTopId'+index"
-           @mousedown="modelTopClick(item,index)"
+           :ref="'modelTopId'+indexj"
+           @click="modelTopClick(item,indexj)"
         >
           <!--@mousedown="(e)=>modelTopMouseDown(item,index,e)"-->
           <!--@mouseup="modelTopMouseUp(item,index)"-->
@@ -210,15 +210,9 @@
         handler(n){
           this.allModuleInfos={...n};
           this.arrayDiff();
+          this.topologyReset();
         },
       },
-      // nodesArray:{
-      //   immediate: true,
-      //   deep: true,
-      //   handler(n){
-      //    this.setNetworkData(n,this.edgesArray);
-      //   },
-      // },
     },
     data(){
 		  return {
@@ -831,6 +825,12 @@
         }
         return false;
       },
+      topologyReset(){//重置topology默认数据
+        this.index='';
+        this.activeIndex='';
+        this.selNodeId='';
+        this.NodeArr=[];
+      },
       qqq(){
         let nodesArray=[...this.nodesArray];
         let edgesArray=[...this.edgesArray];
@@ -967,6 +967,9 @@
 
          this.network.on("dragStart", function (params) {//节点移动开始
            this_.NodeArrShow=false;
+           this_.networkPopShow=false;
+           this_.index='';
+           this_.activeIndex='';
            let selId=params.nodes[0];
            if(selId){
              this_.selNodeId=selId
@@ -1004,6 +1007,9 @@
            }
            if(this_.NodeArr.length>0){
              this_.NodeArrShow=true;
+           }
+           if(!this_.networkPopShow){
+             this_.selNodeId=''
            }
            this_.modelTopUpdate();
            this_.selNodeArrUpdate();

@@ -57,7 +57,9 @@
     },
     watch:{
       moduleId(n){
-        this.init();
+        if(n){
+          this.init();
+        }
       }
     },
     data(){
