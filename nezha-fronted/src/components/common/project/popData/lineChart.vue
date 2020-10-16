@@ -756,6 +756,9 @@
           useUTC: false,//使用本地时间
           series: dataArg
         };
+        if(unit.type=='Time'){
+          delete option.yAxis.maxInterval;
+        }
         // params.series = dataArg;
         if (chartSite === 'local') { // 本地显示
           if(legend){

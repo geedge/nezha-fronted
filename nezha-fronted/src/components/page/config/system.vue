@@ -55,10 +55,10 @@
               <el-input v-model.number="email.email_smtp_port" :disabled="email.email_enable == 'off'"></el-input>
             </el-form-item>
             <el-form-item :label="$t('config.system.email.smtpAccount')" prop="email_smtp_account">
-              <el-input v-model="email.email_smtp_account" :disabled="email.email_enable == 'off'"></el-input>
+              <el-input  v-model="email.email_smtp_account" :disabled="email.email_enable == 'off'"> autocomplete="off"</el-input>
             </el-form-item>
             <el-form-item :label="$t('config.system.email.smtpPwd')" prop="email_smtp_password">
-              <el-input v-model="email.email_smtp_password" type="password" :show-password="false" :disabled="email.email_enable == 'off'"></el-input>
+              <el-input v-model="email.email_smtp_password" type="password" :show-password="false" :disabled="email.email_enable == 'off'"  autocomplete="off"></el-input>
               <div><span>{{$t('config.system.email.pwdTip')}}</span></div>
             </el-form-item>
             <el-form-item :label="$t('config.system.email.sendAccount')" prop="email_send_account">
