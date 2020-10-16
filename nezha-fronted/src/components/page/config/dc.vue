@@ -468,7 +468,7 @@
   }
 </script>
 <style scoped>
-  .nz-icon-gear:before{
+  /deep/ td .nz-icon-gear:before{
     color: #606266;
   }
 </style>

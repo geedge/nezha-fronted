@@ -97,8 +97,8 @@ export const asset = {
 
 export const alertMessage = {
   severityData: [
-    {value: 'P2', label: i18n.t("alert.config.P2")},
     {value: 'P1', label: i18n.t("alert.config.P1")},
+    {value: 'P2', label: i18n.t("alert.config.P2")},
     {value: 'P3', label: i18n.t("alert.config.P3")}
   ],
   typeData: [
