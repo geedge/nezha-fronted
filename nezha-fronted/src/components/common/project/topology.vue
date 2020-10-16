@@ -1225,7 +1225,7 @@
     display: inline-block;
     width: 36px;
   }
-  .edit-topology-add:hover,.edit-topology-remove:active,.edit-topologyCancel{
+  .edit-topology-add:hover,.edit-topology-remove:active,.edit-topologyCancel:hover{
     font-weight: bold;
   }
   .sel-node{

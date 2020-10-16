@@ -84,14 +84,14 @@
                 <div slot="prefix">
                   <div class="width-option">
                     <div v-if='form.arrows==="from"' class="width-option-line" :style="{height:0,width:'80%',borderTop:'1px solid #899FB7'}">
-                      <i class="nz-icon nz-icon-caret-right position-right" style="top: -15px;"></i>
+                      <i class="nz-icon nz-icon-sanjiaoxing position-right" style="top: -15px;"></i>
                     </div>
                     <div  v-if='form.arrows==="to"' class="width-option-line" :style="{height:0,width:'80%',borderTop:'1px solid #899FB7'}">
-                      <i class="nz-icon nz-icon-caret-left position-left" style="top: -15px;"></i>
+                      <i class="nz-icon nz-icon-sanjiaoxing position-left" style="top: -15px;"></i>
                     </div>
                     <div v-if='form.arrows==="from;to"' class="width-option-line" :style="{height:0,width:'80%',borderTop:'1px solid #899FB7'}">
-                      <i class="nz-icon nz-icon-caret-left position-left" style="top: -15px;"></i>
-                      <i class="nz-icon nz-icon-caret-right position-right" style="top: -15px;"></i>
+                      <i class="nz-icon nz-icon-sanjiaoxing position-left" style="top: -15px;"></i>
+                      <i class="nz-icon nz-icon-sanjiaoxing position-right" style="top: -15px;"></i>
                     </div>
                     <div v-if='form.arrows==="0"' class="width-option-line" :style="{height:0,width:'80%',borderTop:'1px solid #899FB7'}"></div>
                   </div>
@@ -99,22 +99,22 @@
                 <el-option label="from" value="from">
                   <div class="width-option">
                     <div class="width-option-line" :style="{height:0,width:'80%',borderTop:'1px solid #899FB7'}">
-                      <i class="nz-icon nz-icon-caret-right position-right"></i>
+                      <i class="nz-icon nz-icon-sanjiaoxing position-right"></i>
                     </div>
                   </div>
                 </el-option>
                 <el-option label="to" value="to">
                   <div class="width-option">
                     <div class="width-option-line" :style="{height:0,width:'80%',borderTop:'1px solid #899FB7'}">
-                      <i class="nz-icon nz-icon-caret-left position-left"></i>
+                      <i class="nz-icon nz-icon-sanjiaoxing position-left"></i>
                     </div>
                   </div>
                 </el-option>
                 <el-option label="from;to" value="from;to">
                   <div class="width-option">
                     <div class="width-option-line" :style="{height:0,width:'80%',borderTop:'1px solid #899FB7'}">
-                      <i class="nz-icon nz-icon-caret-left position-left"></i>
-                      <i class="nz-icon nz-icon-caret-right position-right"></i>
+                      <i class="nz-icon nz-icon-sanjiaoxing position-left"></i>
+                      <i class="nz-icon nz-icon-sanjiaoxing position-right"></i>
                     </div>
                   </div>
                 </el-option>
@@ -567,6 +567,7 @@
     position: absolute;
     left:-4px ;
     top: -18px;
+    transform: rotate(180deg);
   }
   .position-right{
     position: absolute;
