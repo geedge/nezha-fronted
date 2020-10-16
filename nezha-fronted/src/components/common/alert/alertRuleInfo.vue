@@ -11,14 +11,21 @@
       <!--</div>-->
       <div class="alert-rule-box">
         <div class="alert-rule-title">Expression</div>
-        <div class="alert-rule-value">{{alertRuleData?(alertRuleData.expr + alertRuleData.operator + formatThreshold(alertRuleData.threshold,alertRuleData.unit)):''}}</div>
+        <div class="alert-rule-value" v-if="alertRuleData.buildIn!==1">{{alertRuleData?(alertRuleData.expr + alertRuleData.operator + formatThreshold(alertRuleData.threshold,alertRuleData.unit)):'-'}}</div>
+        <div class="alert-rule-value" v-if="alertRuleData.buildIn===1">-</div>
       </div>
       <div class="alert-rule-box">
         <div class="alert-rule-title">Level</div>
-        <div class="alert-rule-value">
-          <span v-if="alertRuleData && alertRuleData.severity === 'P1'"><i class="nz-icon nz-icon-arrow-up"></i>&nbsp;{{$CONSTANTS.alertMessage.severityData.find(s => {return s.value == 'P1'}).label}}</span>
-          <span style="padding-left: 18px;" v-if="alertRuleData && alertRuleData.severity === 'P2'">{{$CONSTANTS.alertMessage.severityData.find(s => {return s.value == 'P2'}).label}}</span>
-          <span v-if="alertRuleData && alertRuleData.severity === 'P3'"><i class="nz-icon nz-icon-arrow-down"></i>&nbsp;{{$CONSTANTS.alertMessage.severityData.find(s => {return s.value == 'P3'}).label}}</span>
+        <div class="alert-rule-value severity">
+          <span v-if="alertRuleData && alertRuleData.severity === 'P1'" class="P1">
+            {{$CONSTANTS.alertMessage.severityData.find(s => {return s.value == 'P1'}).label}}
+          </span>
+          <span v-if="alertRuleData && alertRuleData.severity === 'P2'" class="P2">
+            {{$CONSTANTS.alertMessage.severityData.find(s => {return s.value == 'P2'}).label}}
+          </span>
+          <span v-if="alertRuleData && alertRuleData.severity === 'P3'" class="P3">
+            {{$CONSTANTS.alertMessage.severityData.find(s => {return s.value == 'P3'}).label}}
+          </span>
         </div>
       </div>
     </div>
@@ -191,6 +198,27 @@
     word-wrap: break-word;
     white-space: normal;
     overflow: hidden;
+  }
+  .severity .P1{
+    background: #F5846A;
+    border-radius: 2px;
+    font-size: 12px;
+    color: #FFFFFF;
+    padding: 2px 6px;
+  }
+  .severity .P2{
+    background: #F7A54A;
+    border-radius: 2px;
+    font-size: 12px;
+    color: #FFFFFF;
+    padding: 2px 6px;
+  }
+  .severity .P3{
+    background: #F1C13D;
+    border-radius: 2px;
+    font-size: 12px;
+    color: #FFFFFF;
+    padding: 2px 6px;
   }
 /*  .alert-rule-info::after {
     content: '';
