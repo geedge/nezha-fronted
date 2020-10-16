@@ -255,6 +255,7 @@ export default new Vue({
       }
       return statisticsRlt;
     },
+    //将本地时区转为系统配置的时区
     computeTimezone:function(sourceTime){
       let offset=localStorage.getItem('nz-sys-timezone');
       if(offset&& offset != 'undefined' && offset != null){
@@ -290,7 +291,34 @@ export default new Vue({
         }, delay);
       }
     },
+    UTCTimeToConfigTimezone:function(utcTime){
+      let offset=localStorage.getItem('nz-sys-timezone');
+      if(offset&& offset != 'undefined' && offset != null){
+        let time = utcTime;
+        if(typeof time == 'string' && /(\d+?-){2}\d+?\s(\d+?:)*\d+/.test(time)){
+          time = new Date(time).getTime();
+        }
+        offset=Number.parseInt(offset);
+        return time += offset * 60*60*1000
 
+      }else{
+        return utcTime;
+      }
+    },
+    configTimezoneToUTCTime:function(configTime){
+      let offset=localStorage.getItem('nz-sys-timezone');
+      if(offset&& offset != 'undefined' && offset != null){
+        let time = configTime;
+        if(typeof time == 'string' && /(\d+?-){2}\d+?\s(\d+?:)*\d+/.test(time)){
+          time = new Date(time).getTime();
+        }
+        offset=Number.parseInt(offset);
+        return time -= offset * 60*60*1000
+
+      }else{
+        return configTime;
+      }
+    }
   },
   created() {
     this.getDefaultDate();

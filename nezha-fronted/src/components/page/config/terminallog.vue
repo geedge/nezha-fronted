@@ -51,6 +51,7 @@
                           {{scope.row[item.prop] == 'zh' ? '中文' : ''}}
                           {{scope.row[item.prop] == 'ru' ? 'русский' : ''}}
                       </span>
+          <span v-else-if="item.prop == 'time'">{{utcTimeToTimezoneStr(scope.row[item.prop])}}</span>
           <template v-else-if="item.prop == 'status'">
             <span>{{scope.row.status==='1' ? $t("config.terminallog.success") : $t("config.terminallog.fail")}}</span>
           </template>
@@ -92,7 +93,7 @@
           show: false,
           isEdit: false, //false查看，true编辑
           title: ''
-          
+
         },
         rightBoxResize: { //resize弹出框相关
           show: false,

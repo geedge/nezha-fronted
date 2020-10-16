@@ -84,6 +84,8 @@
             <span v-if="scope.row[item.prop] == 'P3'" class="P3">P3</span>
             <!--<i class="nz-icon nz-icon-arrow-down"></i>&nbsp;{{returnSeverityLabel(scope.row[item.prop])}}-->
           </span>
+          <span v-else-if="item.prop == 'startAt'">{{utcTimeToTimezoneStr(scope.row[item.prop])}}</span>
+          <span v-else-if="item.prop == 'endAt'">{{utcTimeToTimezoneStr(scope.row[item.prop])}}</span>
           <template v-else-if="item.prop == 'labels'" class="labels">
             <span v-for="(item,i) in labelsSort(scope.row.labels)">
               <span
@@ -231,6 +233,7 @@
       'alertRuleInfo':alertRuleInfo,
       'alertLabel':alertLabel,
     },
+    mixins:[bus],
     props:{
       tableData:{},
       loading:{},

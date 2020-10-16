@@ -894,6 +894,17 @@ const en = {
       requiredName:'The name of the required'
     },
   },
+  date:{
+    week:{
+      one:'MON',
+      two:'TUE',
+      three:'WED',
+      four:'THU',
+      five:'FRI',
+      six:'SAT',
+      seven:'SUN',
+    }
+  },
   ...enLocale
 }
 

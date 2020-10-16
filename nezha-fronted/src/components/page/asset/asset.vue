@@ -628,7 +628,7 @@
         }
         let ds='-';
         let ts=':';
-        let time=new Date(str);
+        let time=new Date(bus.UTCTimeToConfigTimezone(str));
         let year=time.getFullYear();
         let month=time.getMonth()+1 > 9 ? time.getMonth()+1 : ('0'+(time.getMonth()+1));
         let day=time.getDate() > 9 ? time.getDate():('0'+time.getDate());

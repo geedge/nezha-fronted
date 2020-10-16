@@ -476,8 +476,8 @@
         this.$set(this.searchLabel, "pageSize", this.pageObj.pageSize);
 
         if(this.searchTime&& this.searchTime.length>1){
-          this.$set(this.searchLabel, "startAt", bus.timeFormate(this.searchTime[0], 'yyyy-MM-dd hh:mm:ss'));
-          this.$set(this.searchLabel, "endAt", bus.timeFormate(this.searchTime[1], 'yyyy-MM-dd hh:mm:ss'));
+          this.$set(this.searchLabel, "startAt", this.timezoneToUtcTimeStr(this.searchTime[0]));
+          this.$set(this.searchLabel, "endAt", this.timezoneToUtcTimeStr(this.searchTime[1]));
         }else{
           delete this.searchLabel.startAt
           delete this.searchLabel.endAt

@@ -79,6 +79,7 @@
                               @change="(val)=>{statusChange(scope.row)}">
                             </el-switch>
                         </span>
+            <span v-else-if="item.prop == 'createTime'">{{utcTimeToTimezoneStr(scope.row[item.prop])}}</span>
             <span v-else>{{scope.row[item.prop]}}</span>
           </template>
         </el-table-column>

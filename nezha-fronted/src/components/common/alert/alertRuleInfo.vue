@@ -11,8 +11,7 @@
       <!--</div>-->
       <div class="alert-rule-box">
         <div class="alert-rule-title">Expression</div>
-        <div class="alert-rule-value" v-if="alertRuleData.buildIn!==1">{{alertRuleData?(alertRuleData.expr + alertRuleData.operator + formatThreshold(alertRuleData.threshold,alertRuleData.unit)):'-'}}</div>
-        <div class="alert-rule-value" v-if="alertRuleData.buildIn===1">-</div>
+        <div class="alert-rule-value">{{alertRuleData?(alertRuleData.expr + alertRuleData.operator + formatThreshold(alertRuleData.threshold,alertRuleData.unit)):''}}</div>
       </div>
       <div class="alert-rule-box">
         <div class="alert-rule-title">Level</div>

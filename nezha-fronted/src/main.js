@@ -44,6 +44,7 @@ import loading from "./components/common/loading";
 import mibBox from "./components/common/rightBox/mibBox";
 import leftMenu from "./components/common/leftMenu";
 import pickTime from "./components/common/pickTime";
+import bus from "./libs/bus";
 
 Vue.component("Pagination", Pagination);
 Vue.component("searchInput", searchInput);
@@ -87,6 +88,34 @@ Vue.prototype.$tableHeight = { //列表页表格的高度
   toTopBtnTop: 'calc(100% - 73px)',
   noPagination: 'calc(100% - 60px)', //特例：没有翻页组件
 };
+
+Vue.mixin({
+    methods: {
+      utcTimeToTimezone:function(time){
+        if(time){
+          return bus.UTCTimeToConfigTimezone(time)
+        }
+      },
+      utcTimeToTimezoneStr:function(time,format='yyyy-MM-dd hh:mm:ss'){
+        if(time){
+          return bus.timeFormate(bus.UTCTimeToConfigTimezone(time),format)
+        }else{
+          return '-'
+        }
+      },
+      timezoneToUtcTime:function(time){
+        if(time){
+          return bus.configTimezoneToUTCTime(time)
+        }
+      },
+      timezoneToUtcTimeStr:function(time,format='yyyy-MM-dd hh:mm:ss'){
+        if(time){
+          return bus.timeFormate(this.timezoneToUtcTime(time),format)
+        }
+      }
+    }
+})
+
 
 Vue.config.productionTip = false;
 Vue.use(ElementUI);

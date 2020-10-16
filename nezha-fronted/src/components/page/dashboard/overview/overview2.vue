@@ -3,6 +3,7 @@
     <!--标题-->
     <div class="overview-content-header">
       <div class="header-title" :class="{'hide-div':!isFullScreen}">{{systemName&&systemName != 'undefined'&&systemName != null?systemName: $t('dashboard.overview.contentTitle')}}</div>
+      <div class="overview-loading"><loading ref="overviewLoading" ></loading></div>
       <div class="header-tool">
         <div class="tool-container">
           <div class="time">{{sysTime}}</div>
@@ -187,7 +188,7 @@
 
 <script>
   import chart from "./chart";
-  import chartDataFormat from "../../../charts/chartDataFormat";
+  import i18n from '../../../../components/common/i18n'
   import axios from 'axios';
   import bus from '../../../../libs/bus';
   import timePicker from '../../../common/timePicker';
@@ -257,6 +258,9 @@
           asset: 10,
           module: 10
         },
+        system_server_time:null,
+        freshDateTimer:null,
+        freshDataTimer:null
       }
     },
     filters: {
@@ -299,240 +303,290 @@
     methods: {
       /*初始化数据 start*/
       initData() {
-        this.queryAssetData();
-        this.queryProjectData();
-        this.queryModuleData();
-        this.queryEndpointData();
-        this.queryAlertMessageData();
-        this.queryAlertRuleData();
-        this.queryAlertTrendData();
-        // this.queryMapChartGeoJson();
-        this.initMap();
-        this.queryAlertStatByRule();
-        this.queryAlertStatByAsset();
-        this.getDcTrafficData();
+        return [
+          this.querySystemState(),
+          this.queryAssetData(),
+          this.queryProjectData(),
+          this.queryModuleData(),
+          this.queryEndpointData(),
+          this.queryAlertMessageData(),
+          this.queryAlertRuleData(),
+          this.queryAlertTrendData(),
+          // this.queryMapChartGeoJson();
+          this.initMap(),
+          this.queryAlertStatByRule(),
+          this.queryAlertStatByAsset(),
+          this.getDcTrafficData()
+        ]
+      },
+      setFreshDataTimer:function(){
+        this.freshDataTimer=setInterval(()=>{
+          if(this.$refs.overviewLoading){
+            this.$refs.overviewLoading.startLoading();
+          }
+          Promise.all(this.initData()).then(()=>{
+            if(this.$refs.overviewLoading){
+              this.$refs.overviewLoading.endLoading();
+            }
+          })
+        },60*1000)
+      },
+      querySystemState:function(){
+        return new Promise(resolve => {
+          this.$get('/healthy').then(response=>{
+            if(response.code==200){
+              this.system_server_time=this.utcTimeToTimezone(response.time)
+            }else{
+              this.system_server_time=bus.computeTimezone(new Date().getTime())
+            }
+            resolve();
+          })
+        })
       },
       queryAssetData() {
-        this.assetLoading = true;
-        this.$refs.assetTypePie.startLoading();
-        this.$get('overview/assetStat').then(response => {
-          this.assetLoading = false;
-          if (response.code === 200) {
-            this.assetData = response.data;
+        return new Promise(resolve => {
+          this.assetLoading = true;
+          this.$refs.assetTypePie.startLoading();
+          this.$get('overview/assetStat').then(response => {
+            this.assetLoading = false;
+            if (response.code === 200) {
+              this.assetData = response.data;
 
-            /*饼图*/
-            let legendData = [];
-            let typeSeriesData = [];
+              /*饼图*/
+              let legendData = [];
+              let typeSeriesData = [];
 
-            let vm = this;
-            let assetTotalCount = function() {
-              let count = 0;
-              vm.assetData.typeStat.forEach(item => {
-                count += item.total;
+              let vm = this;
+              let assetTotalCount = function() {
+                let count = 0;
+                vm.assetData.typeStat.forEach(item => {
+                  count += item.total;
+                });
+                return count;
+              }();
+
+              this.assetData.typeStat.forEach(item => {
+                legendData.push([item.name, (item.total*100/assetTotalCount).toFixed(2)]);
+                typeSeriesData.push({name: item.name, value: item.total, up: item.pingUp, down: item.pingDown});
               });
-              return count;
-            }();
-
-            this.assetData.typeStat.forEach(item => {
-              legendData.push([item.name, (item.total*100/assetTotalCount).toFixed(2)]);
-              typeSeriesData.push({name: item.name, value: item.total, up: item.pingUp, down: item.pingDown});
-            });
-            let series = [{
-              name: 'Type',
-              data: typeSeriesData.sort((a, b) => {return a.value > b.value ? -1 : 1}),
-              type: 'pie',
-              radius: ["43%", "55%"],
-              center: ["40%", "50%"],
-              minAngle: 15,
-              itemStyle: {
-                borderColor: "#fff",
-                borderWidth: 1,
-              },
-              label: {show: false},
-              tooltip: {
-                backgroundColor: "rgba(255, 255, 255, 0.66)",
-                extraCssText: "box-shadow: 1px 2px 8px 0 rgba(0, 0, 0, 0.24);",
-                textStyle: {color: "#333333"},
-                renderMode: 'html',
-                formatter: function(params) {
-                  return `
+              let series = [{
+                name: 'Type',
+                data: typeSeriesData.sort((a, b) => {return a.value > b.value ? -1 : 1}),
+                type: 'pie',
+                radius: ["43%", "55%"],
+                center: ["40%", "50%"],
+                minAngle: 15,
+                itemStyle: {
+                  borderColor: "#fff",
+                  borderWidth: 1,
+                },
+                label: {show: false},
+                tooltip: {
+                  backgroundColor: "rgba(255, 255, 255, 0.66)",
+                  extraCssText: "box-shadow: 1px 2px 8px 0 rgba(0, 0, 0, 0.24);",
+                  textStyle: {color: "#333333"},
+                  renderMode: 'html',
+                  formatter: function(params) {
+                    return `
                   <div class="overview-tooltip-box">
                     <div class="tooltip-item"><div class="item-status red"></div>${params.data.down}</div>
                     <div class="tooltip-item"><div class="item-status green"></div>${params.data.up}</div>
                   </div>`;
-                }
-              },
-              label: {
-                normal: {
-                  show: false,
-                  position: 'center',
-                  formatter: function(param){ // 设置圆饼图中间文字排版
-                    return ['{name|' + param.name + '}',
-                      '{percent|(' + param.percent + '%)}']
-                      .join("\n");
-                  },
-                  rich: {
-                    name: {
-                      textAlign: 'center',
-                      color: "#333",
-                      fontSize: 19,
-                      padding: 10
-                    },
-                    percent: {
-                      textAlign: 'center',
-                      color: "#333",
-                      fontSize: 12,
-                      padding: 10
-                    }
                   }
                 },
-                emphasis: {
-                  show: true, //文字至于中间时，这里需为true
+                label: {
+                  normal: {
+                    show: false,
+                    position: 'center',
+                    formatter: function(param){ // 设置圆饼图中间文字排版
+                      return ['{name|' + param.name + '}',
+                        '{percent|(' + param.percent + '%)}']
+                        .join("\n");
+                    },
+                    rich: {
+                      name: {
+                        textAlign: 'center',
+                        color: "#333",
+                        fontSize: 19,
+                        padding: 10
+                      },
+                      percent: {
+                        textAlign: 'center',
+                        color: "#333",
+                        fontSize: 12,
+                        padding: 10
+                      }
+                    }
+                  },
+                  emphasis: {
+                    show: true, //文字至于中间时，这里需为true
+                  },
                 },
-              },
-            }];
-            let legend = {
-              show: true,
-              orient: "vertical",
-              top: "30%",
-              right: 25,
-              icon: "circle",
-            };
-            this.$refs.assetTypePie.setSeries(series, legend, legendData);
-            this.$refs.assetTypePie.endLoading();
-          }
+              }];
+              let legend = {
+                show: true,
+                orient: "vertical",
+                top: "30%",
+                right: 25,
+                icon: "circle",
+              };
+              this.$refs.assetTypePie.setSeries(series, legend, legendData);
+              this.$refs.assetTypePie.endLoading();
+            }
+            resolve()
+          })
         })
       },
       queryProjectData() {
-        this.projectLoading = true;
-        this.$get('overview/projectStat').then(response => {
-          this.projectLoading = false;
-          if (response.code === 200) {
-            this.projectData = response.data;
-          }
+        return new Promise(resolve => {
+          this.projectLoading = true;
+          this.$get('overview/projectStat').then(response => {
+            this.projectLoading = false;
+            if (response.code === 200) {
+              this.projectData = response.data;
+            }
+            resolve();
+          })
         })
       },
       queryModuleData() {
-        this.moduleLoading = true;
-        this.$get('overview/moduleStat').then(response => {
-          this.moduleLoading = false;
-          if (response.code === 200) {
-            this.moduleData = response.data;
-          }
+        return new Promise(resolve => {
+          this.moduleLoading = true;
+          this.$get('overview/moduleStat').then(response => {
+            this.moduleLoading = false;
+            if (response.code === 200) {
+              this.moduleData = response.data;
+            }
+            resolve();
+          })
         })
       },
       queryEndpointData() {
-        this.endpointLoading = true;
-        this.$get('overview/endpointStat').then(response => {
-          this.endpointLoading = false;
-          if (response.code === 200) {
-            this.endpointData = response.data;
-          }
+        return new Promise(resolve => {
+          this.endpointLoading = true;
+          this.$get('overview/endpointStat').then(response => {
+            this.endpointLoading = false;
+            if (response.code === 200) {
+              this.endpointData = response.data;
+            }
+            resolve();
+          })
         })
       },
       queryAlertMessageData() {
-        this.alertMessageLoading = true;
-        this.$get('overview/alertMessageStat').then(response => {
-          this.alertMessageLoading = false;
-          if (response.code === 200) {
-            this.alertMessageData = response.data;
-          }
+        return new Promise(resolve => {
+          this.alertMessageLoading = true;
+          this.$get('overview/alertMessageStat').then(response => {
+            this.alertMessageLoading = false;
+            if (response.code === 200) {
+              this.alertMessageData = response.data;
+            }
+            resolve();
+          })
         })
       },
       queryAlertRuleData() {
-        this.$get('overview/alertRuleStat').then(response => {
-          if (response.code === 200) {
-            this.alertRuleData = response.data;
-          }
+        return new Promise(resolve => {
+          this.$get('overview/alertRuleStat').then(response => {
+            if (response.code === 200) {
+              this.alertRuleData = response.data;
+            }
+            resolve();
+          })
         })
       },
       queryAlertTrendData() {
-        this.$refs.chartbox.startLoading();
-        this.chartSeries = [];
-        let rxPromise = new Promise((resolve, reject) => {
-          this.$get('/prom/api/v1/query_range', this.trendParamHandle('rx')).then(response=>{
-            if(response.status == 'success'){
-              if(response.data.result){
-                let series={
-                  name: 'RX',
-                  symbol:'none',  //去掉点
-                  smooth:0.2,  //曲线变平滑
-                  data: [],
-                  type:'line',
-                  lineStyle: {
-                    width: 1,
-                    opacity: 0.9
-                  },
-                };
-                if (response.data.result.length > 0) {
-                  series.data=response.data.result[0].values.map((item)=>{
-                    return [item[0]*1000,item[1]];
-                  });
+        return new Promise(res => {
+
+          this.$refs.chartbox.startLoading();
+          this.chartSeries = [];
+          let rxPromise = new Promise((resolve, reject) => {
+            this.$get('/prom/api/v1/query_range', this.trendParamHandle('rx')).then(response=>{
+              if(response.status == 'success'){
+                if(response.data.result){
+                  let series={
+                    name: 'RX',
+                    symbol:'none',  //去掉点
+                    smooth:0.2,  //曲线变平滑
+                    data: [],
+                    type:'line',
+                    lineStyle: {
+                      width: 1,
+                      opacity: 0.9
+                    },
+                  };
+                  if (response.data.result.length > 0) {
+                    series.data=response.data.result[0].values.map((item)=>{
+                      return [item[0]*1000,item[1]];
+                    });
+                  }
+                  this.chartSeries.push(series);
+                  if (this.chartSeries.length == 2) {
+                    this.$refs.chartbox.modifyOption("tooltip", "backgroundColor", "rgba(255, 255, 255, 0.66)");
+                    this.$refs.chartbox.modifyOption("tooltip", "extraCssText", "box-shadow: 1px 2px 8px 0 rgba(0, 0, 0, 0.24);");
+                    this.$refs.chartbox.modifyOption("tooltip", "textStyle", {color: "#000"});
+                    this.$refs.chartbox.modifyOption("grid", "top", 40);
+                    this.$refs.chartbox.modifyOption("grid", "left", 10);
+                    this.$refs.chartbox.modifyOption("grid", "right", 40);
+                    this.$refs.chartbox.modifyOption("grid", "bottom", 18);
+                    this.$refs.chartbox.modifyOption("grid", "containLabel", true);
+                    this.$refs.chartbox.setSeries(this.chartSeries);
+                  }
                 }
-                this.chartSeries.push(series);
-                if (this.chartSeries.length == 2) {
-                  this.$refs.chartbox.modifyOption("tooltip", "backgroundColor", "rgba(255, 255, 255, 0.66)");
-                  this.$refs.chartbox.modifyOption("tooltip", "extraCssText", "box-shadow: 1px 2px 8px 0 rgba(0, 0, 0, 0.24);");
-                  this.$refs.chartbox.modifyOption("tooltip", "textStyle", {color: "#000"});
-                  this.$refs.chartbox.modifyOption("grid", "top", 40);
-                  this.$refs.chartbox.modifyOption("grid", "left", 10);
-                  this.$refs.chartbox.modifyOption("grid", "right", 40);
-                  this.$refs.chartbox.modifyOption("grid", "bottom", 18);
-                  this.$refs.chartbox.modifyOption("grid", "containLabel", true);
-                  this.$refs.chartbox.setSeries(this.chartSeries);
-                }
+                resolve(true);
+              }else{
+                console.error(response);
+                resolve(false);
               }
-              resolve(true);
-            }else{
-              console.error(response);
-              resolve(false);
-            }
+            });
           });
-        });
-        let txPromise = new Promise((resolve, reject) => {
-          this.$get('/prom/api/v1/query_range', this.trendParamHandle('tx')).then(response=>{
-            if(response.status == 'success'){
-              if(response.data.result){
-                let series={
-                  name: 'TX',
-                  symbol:'none',  //去掉点
-                  smooth:0.2,  //曲线变平滑
-                  data: [],
-                  type:'line',
-                  lineStyle: {
-                    width: 1,
-                    opacity: 0.9
-                  },
-                };
-                if (response.data.result.length > 0) {
-                  series.data=response.data.result[0].values.map((item)=>{
-                    return [item[0]*1000,item[1]];
-                  });
+          let txPromise = new Promise((resolve, reject) => {
+            this.$get('/prom/api/v1/query_range', this.trendParamHandle('tx')).then(response=>{
+              if(response.status == 'success'){
+                if(response.data.result){
+                  let series={
+                    name: 'TX',
+                    symbol:'none',  //去掉点
+                    smooth:0.2,  //曲线变平滑
+                    data: [],
+                    type:'line',
+                    lineStyle: {
+                      width: 1,
+                      opacity: 0.9
+                    },
+                  };
+                  if (response.data.result.length > 0) {
+                    series.data=response.data.result[0].values.map((item)=>{
+                      return [item[0]*1000,item[1]];
+                    });
+                  }
+                  this.chartSeries.push(series);
+                  if (this.chartSeries.length == 2) {
+                    this.$refs.chartbox.modifyOption("tooltip", "backgroundColor", "rgba(255, 255, 255, 0.66)");
+                    this.$refs.chartbox.modifyOption("tooltip", "extraCssText", "box-shadow: 1px 2px 8px 0 rgba(0, 0, 0, 0.24);");
+                    this.$refs.chartbox.modifyOption("tooltip", "textStyle", {color: "#000"});
+                    this.$refs.chartbox.modifyOption("grid", "top", 40);
+                    this.$refs.chartbox.modifyOption("grid", "left", 10);
+                    this.$refs.chartbox.modifyOption("grid", "right", 40);
+                    this.$refs.chartbox.modifyOption("grid", "bottom", 18);
+                    this.$refs.chartbox.setSeries(this.chartSeries);
+                  }
                 }
-                this.chartSeries.push(series);
-                if (this.chartSeries.length == 2) {
-                  this.$refs.chartbox.modifyOption("tooltip", "backgroundColor", "rgba(255, 255, 255, 0.66)");
-                  this.$refs.chartbox.modifyOption("tooltip", "extraCssText", "box-shadow: 1px 2px 8px 0 rgba(0, 0, 0, 0.24);");
-                  this.$refs.chartbox.modifyOption("tooltip", "textStyle", {color: "#000"});
-                  this.$refs.chartbox.modifyOption("grid", "top", 40);
-                  this.$refs.chartbox.modifyOption("grid", "left", 10);
-                  this.$refs.chartbox.modifyOption("grid", "right", 40);
-                  this.$refs.chartbox.modifyOption("grid", "bottom", 18);
-                  this.$refs.chartbox.setSeries(this.chartSeries);
-                }
+                resolve(true);
+              }else{
+                console.error(response)
+                resolve(false);
               }
-              resolve(true);
-            }else{
-              console.error(response)
-              resolve(false);
-            }
+            });
           });
-        });
-        Promise.all([rxPromise, txPromise]).then(resolve => {
-          this.$refs.chartbox.endLoading();
-        }, reject => {
-          this.$refs.chartbox.endLoading();
-        });
+          Promise.all([rxPromise, txPromise]).then(resolve => {
+            this.$refs.chartbox.endLoading();
+            res()
+          }, reject => {
+            this.$refs.chartbox.endLoading();
+            res()
+          });
+        })
       },
       trendParamHandle(t) {
         let before;
@@ -667,11 +721,13 @@
         return params;
       },
       initMap() {
+        let loadPromise;
         this.loadMapConfig().then((mapConfig)=>{
           if(mapConfig&&this.map){
-            this.loadDataCenterMapData()
+            loadPromise=this.loadDataCenterMapData()
           }
         })
+        return loadPromise;
       },
       loadMapConfig:function(){
         return new Promise(resolve => {
@@ -685,8 +741,8 @@
             if(response.code == 200){
               let mapConfig=JSON.parse(response.data.paramKey.map_center_config);
               let map = L.map("map",{
-                minZoom:2,
-                maxZoom:7,
+                minZoom:mapConfig.minZoom,
+                maxZoom:mapConfig.maxZoom,
                 attributionControl:false,
                 zoomControl:false,
               }).setView([mapConfig.longitude,mapConfig.latitude],mapConfig.zoom);
@@ -744,9 +800,11 @@
         setTimeout(()=>{this.queryDataCenterMapData();},1500)
       },
       loadDataCenterMapData:function(){
-        let language=localStorage.getItem("nz-language") ? localStorage.getItem("nz-language") : 'en';
-        let requests=[axios.get('/idc?pageSize=-1'),axios.get('/overview/datacenterStat')];
-        axios.all(requests).then((result)=>{
+        return new Promise(res=>{
+
+          let language=localStorage.getItem("nz-language") ? localStorage.getItem("nz-language") : 'en';
+          let requests=[axios.get('/idc?pageSize=-1'),axios.get('/overview/datacenterStat')];
+          axios.all(requests).then((result)=>{
             if(result) {
               let idcInfos = null;
               let dcStats = null;
@@ -802,7 +860,9 @@
                 }
               }
             }
+            res();
           });
+        })
       },
       queryDataCenterMapData() {
         let language=localStorage.getItem("nz-language") ? localStorage.getItem("nz-language") : 'en';
@@ -888,93 +948,105 @@
         })
       },
       queryAlertStatByRule() {
-        this.$refs.ruleMessage.startLoading();
-        this.$get('overview/alertStatByRule', {top: this.topFilter.rule}).then(response => {
-          if (response.code === 200) {
-            let seriesData = [];
-            let categoryData = [];
-            response.data.list.forEach(item => {
-              seriesData.splice(0, 0, item.nums);
-              categoryData.splice(0, 0, item.alertName);
-            });
-            this.messageByRuleSeries = {
-              name: 'alertStatByRule',
-              data: seriesData,
-              type: 'bar',
-              barMaxWidth: 15,
-              itemStyle: {
-                color: function(params) {
-                  let colorList =  ["#FAd4ab", "#d0e8d0"];
-                  if(params.dataIndex % 2 == 0){
-                    return colorList[0]
-                  }else{
-                    return colorList[1]
-                  }
+        return new Promise(resolve=>{
+
+          this.$refs.ruleMessage.startLoading();
+          this.$get('overview/alertStatByRule', {top: this.topFilter.rule}).then(response => {
+            if (response.code === 200) {
+              let seriesData = [];
+              let categoryData = [];
+              response.data.list.forEach(item => {
+                seriesData.splice(0, 0, item.nums);
+                categoryData.splice(0, 0, item.alertName);
+              });
+              this.messageByRuleSeries = {
+                name: 'alertStatByRule',
+                data: seriesData,
+                type: 'bar',
+                barMaxWidth: 15,
+                itemStyle: {
+                  color: function(params) {
+                    let colorList =  ["#FAd4ab", "#d0e8d0"];
+                    if(params.dataIndex % 2 == 0){
+                      return colorList[0]
+                    }else{
+                      return colorList[1]
+                    }
+                  },
                 },
-              },
-              category: categoryData, //自定义，用来判断N/A是否显示
-            };
-            this.$refs.ruleMessage.modifyOption('yAxis', 'data', categoryData);
-            this.$refs.ruleMessage.setSeries(this.messageByRuleSeries);
-            this.$refs.ruleMessage.endLoading();
-          }
-        });
+                category: categoryData, //自定义，用来判断N/A是否显示
+              };
+              this.$refs.ruleMessage.modifyOption('yAxis', 'data', categoryData);
+              this.$refs.ruleMessage.setSeries(this.messageByRuleSeries);
+              this.$refs.ruleMessage.endLoading();
+            }
+            resolve()
+          });
+        })
       },
       queryAlertStatByAsset() {
-        this.$refs.assetMessage.startLoading();
-        this.$get('overview/alertStatByAsset', {top: this.topFilter.asset}).then(response => {
-          if (response.code === 200) {
-            let seriesData = [];
-            let categoryData = [];
-            response.data.list.forEach(item => {
-              seriesData.splice(0, 0, item.nums);
-              categoryData.splice(0, 0, item.host);
-            });
-            this.messageByAssetSeries = {
-              name: 'alertStatByAsset',
-              data: seriesData,
-              type: 'bar',
-              barMaxWidth: 15,
-              category: categoryData,
-              itemStyle: {
-                color: function(params) {
-                  let colorList = ["#FAd4ab", "#d0e8d0"];;
-                  if(params.dataIndex % 2 == 0){
-                    return colorList[0]
-                  }else{
-                    return colorList[1]
-                  }
+        return new Promise(resolve => {
+
+          this.$refs.assetMessage.startLoading();
+          this.$get('overview/alertStatByAsset', {top: this.topFilter.asset}).then(response => {
+            if (response.code === 200) {
+              let seriesData = [];
+              let categoryData = [];
+              response.data.list.forEach(item => {
+                seriesData.splice(0, 0, item.nums);
+                categoryData.splice(0, 0, item.host);
+              });
+              this.messageByAssetSeries = {
+                name: 'alertStatByAsset',
+                data: seriesData,
+                type: 'bar',
+                barMaxWidth: 15,
+                category: categoryData,
+                itemStyle: {
+                  color: function(params) {
+                    let colorList = ["#FAd4ab", "#d0e8d0"];;
+                    if(params.dataIndex % 2 == 0){
+                      return colorList[0]
+                    }else{
+                      return colorList[1]
+                    }
+                  },
                 },
-              },
-            };
-            this.$refs.assetMessage.modifyOption('yAxis', 'data', categoryData);
-            this.$refs.assetMessage.setSeries(this.messageByAssetSeries);
-            this.$refs.assetMessage.endLoading();
-          }
-        });
+              };
+              this.$refs.assetMessage.modifyOption('yAxis', 'data', categoryData);
+              this.$refs.assetMessage.setSeries(this.messageByAssetSeries);
+              this.$refs.assetMessage.endLoading();
+            }
+            resolve();
+          });
+        })
       },
       queryAlertStatByModule() {
-        this.$refs.moduleMessage.startLoading();
-        this.$get('overview/alertStatByModule', {top: this.topFilter.module}).then(response => {
-          if (response.code === 200) {
-            let seriesData = [];
-            let categoryData = [];
-            response.data.list.forEach(item => {
-              seriesData.splice(0, 0, item.nums);
-              categoryData.splice(0, 0, item.module);
-            });
-            this.messageByModuleSeries = {
-              name: 'alertStatByModule',
-              data: seriesData,
-              type: 'bar',
-              barMaxWidth: 30,
-              category: categoryData
-            };
-            this.$refs.moduleMessage.modifyOption('xAxis', 'data', categoryData);
-            this.$refs.moduleMessage.setSeries(this.messageByModuleSeries);
-            this.$refs.moduleMessage.endLoading();
-          }
-        });
+        return new Promise(resolve => {
+
+          this.$refs.moduleMessage.startLoading();
+          this.$get('overview/alertStatByModule', {top: this.topFilter.module}).then(response => {
+            if (response.code === 200) {
+              let seriesData = [];
+              let categoryData = [];
+              response.data.list.forEach(item => {
+                seriesData.splice(0, 0, item.nums);
+                categoryData.splice(0, 0, item.module);
+              });
+              this.messageByModuleSeries = {
+                name: 'alertStatByModule',
+                data: seriesData,
+                type: 'bar',
+                barMaxWidth: 30,
+                category: categoryData
+              };
+              this.$refs.moduleMessage.modifyOption('xAxis', 'data', categoryData);
+              this.$refs.moduleMessage.setSeries(this.messageByModuleSeries);
+              this.$refs.moduleMessage.endLoading();
+            }
+            resolve();
+          });
+        })
       },
       getDcTrafficData() {
         this.$get('idc/trafficSetting', {pageSize: -1}).then(response => {
@@ -1194,46 +1266,43 @@
       },
       /*header 时间处理 start*/
       initDate:function(){
-        this.sysTime=this.getTime();
-        this.sysDate=this.getDate();
-        this.sysWeek=this.getWeek();
+        this.sysTime=this.getTime(0);
+        this.sysDate=this.getDate(0);
+        this.sysWeek=this.getWeek(0);
         this.freshTime();
       },
       freshTime:function(){
         let $temp=this;
-        setInterval(function(){
-          $temp.sysTime=$temp.getTime()
-          $temp.sysDate=$temp.getDate();
-          $temp.sysWeek=$temp.getWeek();
+        let counter=0;
+        this.freshDateTimer=setInterval(function(){
+          counter ++;
+          $temp.sysTime=$temp.getTime(counter)
+          $temp.sysDate=$temp.getDate(counter);
+          $temp.sysWeek=$temp.getWeek(counter);
         },1000)
       },
-      getTime:function(){
-        let date=new Date();
+      getTime:function(counter){
+        let date=new Date(this.system_server_time);
+        date.setSeconds(date.getSeconds()+counter)
         let hours=date.getHours()>9?date.getHours():'0'+date.getHours();
         let minutes=date.getMinutes()>9?date.getMinutes():'0'+date.getMinutes();
         let seconds=date.getSeconds()>9?date.getSeconds():'0'+date.getSeconds();
         return hours+':'+minutes+':'+seconds;
       },
-      getDate:function(){
-        let date=new Date();
+      getDate:function(counter){
+        let date=new Date(this.system_server_time);
+        date.setSeconds(date.getSeconds()+counter)
         let years=date.getFullYear();
         let months=date.getMonth()+1>9?date.getMonth()+1:'0'+(date.getMonth()+1);
         let days=date.getDate()>9?date.getDate():'0'+date.getDate();
         return years+'-'+months+'-'+days;
       },
-      getWeek:function(){
-        let language=localStorage.getItem("nz-language") ? localStorage.getItem("nz-language") : 'en';
-        let enWeeks=['SUN','MON','TUE','WED','THU','FRI','SAT'];
-        let cnWeeks=['星期日','星期一','星期二','星期三','星期四','星期五','星期六'];
-        let date=new Date();
+      getWeek:function(counter){
+        let weeks=[i18n.t('date.week.seven'),i18n.t('date.week.one'),i18n.t('date.week.two'),i18n.t('date.week.three'),i18n.t('date.week.four'),i18n.t('date.week.five'),i18n.t('date.week.six')]
+        let date=new Date(this.system_server_time);
+        date.setSeconds(date.getSeconds()+counter)
         let day=date.getDay();
-        if(language == 'en'){
-          return enWeeks[day];
-        }else if(language == 'cn'){
-          return cnWeeks[day];
-        }else{
-          return enWeeks[day];
-        }
+        return weeks[day]
       },
       dateFormat:function(fmt, date) {
         let ret;
@@ -1454,16 +1523,21 @@
     },
     mounted() {
       this.initData();
-      this.initDate();
+      this.querySystemState().then(()=>{
+        this.initDate();
+        this.setFreshDataTimer();
+      })
+
       /*window.onresize = () => {
         setTimeout(() => {
           this.$parent.$parent.update();
         }, 100);
       }*/
     },
-    /*destroyed() {
-      window.onresize = null;
-    }*/
+    destroyed() {
+      clearInterval(this.freshDataTimer)
+      clearInterval(this.freshDateTimer)
+    }
   }
 </script>
 

@@ -887,6 +887,17 @@ const cn = {
       requiredName:'名称不能为空'
     },
   },
+  date:{
+    week:{
+      one:'星期一',
+      two:'星期二',
+      three:'星期三',
+      four:'星期四',
+      five:'星期五',
+      six:'星期六',
+      seven:'星期日',
+    }
+  },
   el: {
     colorpicker: {
       confirm: "确定",

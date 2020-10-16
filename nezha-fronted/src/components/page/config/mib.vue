@@ -73,6 +73,7 @@
                 </el-scrollbar>
               </div>
             </template>
+            <span v-else-if="item.prop == 'updateAt'">{{utcTimeToTimezoneStr(scope.row[item.prop])}}</span>
             <div v-else-if="item.prop == 'option'" class="content-right-options">
               <span :title="$t('overall.download')" @click="downloadMib(scope.row)" class="content-right-option" :id="'mib-download-'+scope.row.id"><i class="nz-icon nz-icon-download1"></i></span>
               &nbsp;
