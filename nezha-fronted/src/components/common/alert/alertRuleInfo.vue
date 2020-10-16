@@ -71,7 +71,6 @@
         return function(position) {
           let clientHeight = (document.body.clientHeight<document.documentElement.clientHeight)?document.body.clientHeight:document.documentElement.clientHeight;
           let elHeight=50;
-          console.log(elHeight);
           if(position.top+elHeight>clientHeight){
             return {
               left: `${position.left + position.width + 20}px`,

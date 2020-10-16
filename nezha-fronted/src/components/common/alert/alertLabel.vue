@@ -157,7 +157,6 @@
         return function(position) {
           let clientHeight = (document.body.clientHeight<document.documentElement.clientHeight)?document.body.clientHeight:document.documentElement.clientHeight;
           let elHeight=self.type==='asset'?370:(self.type==='project'?70:70);
-          console.log(elHeight);
           if(position.top+elHeight>clientHeight){
             return {
               left: `${position.left + position.width + 20}px`,
