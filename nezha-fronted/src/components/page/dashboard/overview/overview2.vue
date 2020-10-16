@@ -794,7 +794,7 @@
 
                     let hasAlert=dcStat.alertP1!=0||dcStat.alertP2!=0||dcStat.alertP3!=0||dcStat.assetPingDown!=0||dcStat.endpointDown!=0||dcStat.promDown!=0;
 
-                    let marker=L.circleMarker([areaInfo.latitude,areaInfo.longitude], {color: hasAlert?'#DE5D3F':'orange',opacity:0.42,fillColor: hasAlert?'#DE5D3F':'orange',fillOpacity: 0.5, radius: symbolSize,className:hasAlert?'error-item':''})
+                    let marker=L.circleMarker([areaInfo.latitude,areaInfo.longitude], {color: hasAlert?'#DE5D3F':'#23BF9A',opacity:0.42,fillColor: hasAlert?'#DE5D3F':'#23BF9A',fillOpacity: 0.5, radius: symbolSize,className:hasAlert?'error-item':''})
                     marker.bindTooltip(this.mapTooltipFormatter(dcStat),{sticky:true})
                     marker.addTo(this.map)
 

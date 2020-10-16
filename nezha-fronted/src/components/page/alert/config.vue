@@ -207,13 +207,7 @@
             type: 'input',
             label: 'alertName',
             disabled: false
-          }, {
-            id: 3,
-            name: this.$t('alert.list.type'),
-            type: 'select',
-            label: 'alertType',
-            disabled: false
-          }, {
+          },  {
             id: 4,
             name: this.$t('alert.severity'),
             type: 'selectString',
