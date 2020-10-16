@@ -88,7 +88,7 @@
         },200)
       },
       dealSpecilChar:function(char,operation){//控制括号的成对添加和删除
-        console.log('specil char',char)
+        // console.log('specil char',char)
         if(/^[\{\(\[\,]$/g.test(char)){
           if(operation=='insert'){
             if(char == '{'||char==','){
@@ -791,7 +791,7 @@
       })
       this.quill.on('text-change',function(delta, oldDelta, source){
         if(source != 'silent'){
-          console.log('delta',delta,'oldDelta',oldDelta,'source',source)
+          // console.log('delta',delta,'oldDelta',oldDelta,'source',source)
           let char='',operation='';
           let oldContent='';
           oldDelta.ops.forEach((item,index)=>{

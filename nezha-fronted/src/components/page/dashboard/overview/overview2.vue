@@ -827,7 +827,6 @@
                 let bigBoundary=Number.parseInt(maxAssetTotal/3*2);
                 let mediumBoundary=Number.parseInt(maxAssetTotal/3);
                 for (let dcStat of dcStats) {
-                  console.log('dcStat',dcStat)
                   let dcId = dcStat.id;
                   let dcInfo = idcInfos.find((item) => {
                     return item.id == dcId;
