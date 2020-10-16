@@ -90,10 +90,10 @@
         </div>
       </el-tab-pane>
       <el-tab-pane :label="$t('config.system.terminal.terminal')" name="terminal">
-        <div class="system-config-form">
+        <div class="system-config-form terminal">
           <el-form :model="terminal"  label-width="180px" size="small" ref="terminalForm" :rules="terminalRules">
             <el-form-item :label="$t('config.system.terminal.terminalNum')" prop="max_terminal_num">
-              <el-input v-model.number="terminal.max_terminal_num"></el-input>
+              <el-input-number v-model="terminal.max_terminal_num" controls-position="right" @change="handleChange" :min="1" :max="50"></el-input-number>
             </el-form-item>
             <el-form-item>
               <button type="primary" @click="saveSetInfo('terminal','terminalForm')" class="nz-btn nz-btn-size-normal-new nz-btn-style-normal-new">{{$t('overall.submit')}}</button>
@@ -762,13 +762,20 @@
   .linkUrlTip{
     width: 430px;
   }
+  .system-config-form.terminal  /deep/ .el-input-number--small{
+    width: 512px;
+  }
+  .system-config-form  /deep/ .el-input input{
+    text-align: left;
+  }
 </style>
 <style>
   .system-config-form .el-form-item__content{
     width: 512px;
   }
   .system-config-form .el-input{
-    width:512px
+    width:512px;
+    text-align: left;
   }
   .system-config-form .el-input__inner{
     height: 28px;
