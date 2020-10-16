@@ -223,7 +223,7 @@
             </template>
           </el-row>
           <span class="nz-icon-minus-medium nz-icon-minus-position">
-            <i class="nz-icon nz-icon-minus" @click="removeExpression"></i>
+            <i class="nz-icon nz-icon-minus" @click="removeExpression(index - 1)"></i>
           </span>
         </el-row>
         <!--value mapping start-->
