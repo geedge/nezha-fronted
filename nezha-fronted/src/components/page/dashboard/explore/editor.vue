@@ -88,7 +88,7 @@
         },200)
       },
       dealSpecilChar:function(char,operation){//控制括号的成对添加和删除
-        // console.log('specil char',char)
+        console.log('specil char',char)
         if(/^[\{\(\[\,]$/g.test(char)){
           if(operation=='insert'){
             if(char == '{'||char==','){
@@ -780,18 +780,18 @@
       this.options.modules.keyboard.bindings=bindings;
       this.quill = new Quill(this.$refs.editor, this.options);
       $temp.$el.addEventListener('paste', function(even) {
-        let text='';
+        /*let text='';
         setTimeout(()=>{
           text=$temp.getContent();
         },100)//此值必须小于userChangeTimer的值
         setTimeout(()=>{
           $temp.setContent(text);
           $temp.quill.setSelection($temp.cursorIndex+text.length);
-        },200)//此值必须大于userChangeTimer的值
+        },200)//此值必须大于userChangeTimer的值*/
       })
       this.quill.on('text-change',function(delta, oldDelta, source){
         if(source != 'silent'){
-          // console.log('delta',delta,'oldDelta',oldDelta,'source',source)
+          console.log('delta',delta,'oldDelta',oldDelta,'source',source)
           let char='',operation='';
           let oldContent='';
           oldDelta.ops.forEach((item,index)=>{
@@ -809,7 +809,7 @@
             }else{
               console.error('unknow operation')
             }
-          }else{
+          }else if(delta.ops.length == 2){
             if(delta.ops[1].insert){
               char=delta.ops[1].insert
               operation='insert';
