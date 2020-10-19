@@ -532,7 +532,6 @@ instance_cpu_time_ns{app="fox", proc="widget", rev="4d3a513", env="prod", job="c
       },
       saveChart() {
         let chart = {
-          id:'',
           title: '',
           type:'line',
           span:12,
@@ -553,7 +552,6 @@ instance_cpu_time_ns{app="fox", proc="widget", rev="4d3a513", env="prod", job="c
         this.rightBox.show = true;
       },
       createSuccess(type, response, param, panel) { //添加chart成功
-        console.info(response, param, panel);
         this.$confirm(this.$t("dashboard.metric.goPanelTip"), this.$t("tip.saveSuccess"), {
           confirmButtonText: this.$t("tip.yes"),
           cancelButtonText: this.$t("tip.no"),

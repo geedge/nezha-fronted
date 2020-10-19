@@ -20,9 +20,9 @@
             <el-form-item :label="$t('config.system.basic.defaultCabinetUsize')" prop="default_cabinet_usize">
               <el-input v-model.number="basic.default_cabinet_usize" ></el-input>
             </el-form-item>
-            <el-form-item :label="$t('config.system.basic.exporterTarget')" prop="node_exporter_target_path">
+            <!--<el-form-item :label="$t('config.system.basic.exporterTarget')" prop="node_exporter_target_path">
               <el-input v-model="basic.node_exporter_target_path"></el-input>
-            </el-form-item>
+            </el-form-item>-->
             <el-form-item :label="$t('config.system.basic.scrapeInterval')" prop="scrape_interval">
               <el-input v-model.number="basic.scrape_interval" ></el-input><span class="nz-input-append">{{$t('config.system.basic.second')}}</span>
             </el-form-item>
@@ -260,7 +260,7 @@
             basicCopy:null,
             basicRules:{
               system_name:[{required:true,message:this.$t('validate.required'),trigger:'blur'},],
-              node_exporter_target_path:[{required:true,message:this.$t('validate.required'),trigger:'blur'},],
+              // node_exporter_target_path:[{required:true,message:this.$t('validate.required'),trigger:'blur'},],
               alert_api:[{required:true,message:this.$t('validate.required'),trigger:'blur'},{validator:host,trigger: 'blur'}],
               asset_ping_interval:[{required:true,message:this.$t('validate.required'),trigger:'blur'},{validator:positiveInteger,trigger:'blur'}],
               scrape_interval:[{required:true,message:this.$t('validate.required'),trigger:'blur'},{validator:positiveInteger,trigger:'blur'}],

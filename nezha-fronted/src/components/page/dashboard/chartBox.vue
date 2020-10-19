@@ -100,7 +100,7 @@
           <el-input size="small" maxlength="64" show-word-limit v-model="editChart.title"></el-input>
         </el-form-item>
 
-        <div class="right-box-small-title">{{$t('dashboard.panel.chartForm.option')}}</div>
+        <div class="right-box-sub-title">{{$t('dashboard.panel.chartForm.option')}}</div>
         <div style="margin-bottom: 20px;width: 100%"></div>
 
         <!-- type unit start-->
@@ -646,32 +646,40 @@
       // 新建图表
       addCharts(params) {
         let panelId;
+        let panel;
         //先处理panel
-        if (this.panelId) {
-          panelId = this.panelId;
-        } else if (this.showPanel && this.showPanel.type != "dashboard") {
-          panelId = this.panelData[0].id;
-        } else {
-          panelId = this.autocompleteExist(this.editChart.panelName);
-          if (!panelId) {
-            this.$post('panel', {name: this.editChart.panelName}).then(response => {
-              if (response.code === 200) {
-                this.$emit("reloadOnlyPanel");
-                this.$store.commit('panelListChange', true);
-                panelId = this.autocompleteExist(this.editChart.panelName);
-              } else {
-                if(response.msg){
-                  this.$message.error(response.msg);
-                }else {
-                  this.$message.error(response);
-                }
-              }
-            });
-          }
-        }
+        let panelPromise=new Promise(resolve => {
+          if (this.panelId) {
+            panelId = this.panelId;
+            panel=this.panelData.find(p => p.id === this.panelId);
+            resolve()
+          } else if (this.showPanel && this.showPanel.type != "dashboard" && this.showPanel.type != 'explore') {
+            panelId = this.panelData[0].id;
+            panel = this.panelData[0]
+            resolve()
+          } else {
+            panelId = this.autocompleteExist(this.editChart.panelName);
+            if (!panelId) {
+              this.$post('panel', {name: this.editChart.panelName}).then(response => {
+                if (response.code === 200) {
+                  this.$emit("reloadOnlyPanel");
+                  panel = response.data.panel
+                  panelId=panel.id;
 
-        let intervalTime = 1; //设置3秒超时
-        let interval = setInterval(() => {
+                  resolve()
+                } else {
+                  if(response.msg){
+                    this.$message.error(response.msg);
+                  }else {
+                    this.$message.error(response);
+                  }
+                }
+              });
+            }
+          }
+        })
+
+        panelPromise.then(()=>{
           if (panelId) {
             this.panelId = panelId;
             this.$post('panel/' + this.panelId + '/charts', params ? params : this.editChart).then(response => {
@@ -679,24 +687,17 @@
                 this.esc();
                 this.$message({duration: 1000, type: 'success', message: this.$t("tip.saveSuccess")});
                 this.$refs.chartForm.resetFields();//清空表单
-                let panel = this.panelData.find(p => p.id === this.panelId);
                 this.$emit('on-create-success', 'create', response.data, params, panel);
               } else {
-                if(response.msg){
+                if (response.msg) {
                   this.$message.error(response.msg);
-                }else {
+                } else {
                   this.$message.error(response);
                 }
               }
             });
-            clearInterval(interval);
-          } else if (intervalTime > 15) {
-            this.$message.error("Time out");
-            clearInterval(interval);
-          } else {
-            intervalTime++;
           }
-        }, 200);
+        })
       },
       // 更新图表
       updateCharts(params) {
@@ -1320,7 +1321,12 @@
           let panel = this.panelData.find(p => {
             return p.name == n.panelName;
           });
-          panel && (this.panelId = panel.id);
+
+          if(panel){
+            this.panelId = panel.id;
+          }else{
+            this.panelId = null;
+          }
         }
       }
       /*panelData: {
