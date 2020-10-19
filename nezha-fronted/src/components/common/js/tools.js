@@ -213,15 +213,15 @@ export const bottomBoxWindow = {
       //得到鼠标拖动的距离
       let mouseMoveY = e.clientY-mouseInitialY;
       resizeModalEndHeight = subInitialHeight-mouseMoveY;
-      resizeModalDom.style.height = `${resizeModalEndHeight}px`;
 
       // 主、副列表高度限制
       if(resizeModalEndHeight > contentRightHeight-minHeight){
-        resizeModalDom.style.height = `${contentRightHeight-minHeight}px`;
+        resizeModalEndHeight = contentRightHeight-minHeight;
       }
       if(resizeModalEndHeight < minHeight){
-        resizeModalDom.style.height = `${minHeight}px`;
+        resizeModalEndHeight = minHeight;
       }
+      resizeModalDom.style.height = `${resizeModalEndHeight}px`;
     };
     document.onmouseup = () => {
       window.resizing = false;
