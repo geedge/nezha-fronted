@@ -359,13 +359,13 @@
               let vm = this;
               let assetTotalCount = function() {
                 let count = 0;
-                vm.assetData.typeStat.forEach(item => {
+                vm.assetData.typeStat && vm.assetData.typeStat.forEach(item => {
                   count += item.total;
                 });
                 return count;
               }();
 
-              this.assetData.typeStat.forEach(item => {
+              vm.assetData.typeStat && this.assetData.typeStat.forEach(item => {
                 legendData.push([item.name, (item.total*100/assetTotalCount).toFixed(2)]);
                 typeSeriesData.push({name: item.name, value: item.total, up: item.pingUp, down: item.pingDown});
               });
@@ -430,7 +430,7 @@
                 right: 25,
                 icon: "circle",
               };
-              this.$refs.assetTypePie.setSeries(series, legend, legendData);
+              this.assetData.typeStat && this.$refs.assetTypePie.setSeries(series, legend, legendData);
               this.$refs.assetTypePie.endLoading();
             }
             resolve()

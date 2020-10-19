@@ -96,13 +96,13 @@
         if(!this.option){
           this.option = chartConfig.getOption(this.chartType);
         }
-        if (legend && legendData) {
+        if (legend && legendData && legendData.length > 0) {
           legend.formatter = function(name) {
             let type = legendData.find(item => {
               return item[0] == name;
             });
-            return `${name} (${type[1]}%)`;
-          }
+            return type ? `${name} (${type[1]}%)` : null;
+          };
           this.$set(this.option, "legend", legend);
         }
 
