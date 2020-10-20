@@ -153,6 +153,9 @@ const cn = {
           },
           alertList:{
             label:"告警列表"
+          },
+          text:{
+            label:"文本"
           }
         },
         statisticsVal:{
@@ -188,7 +191,8 @@ const cn = {
           value:'Value',
           range:'Range',
         },
-        legendValue:'Legend option'
+        legendValue:'Legend option',
+        content:'内容'
       },
       chartTableColumn: {
         metric: "指标",

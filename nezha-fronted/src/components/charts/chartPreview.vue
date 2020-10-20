@@ -59,7 +59,7 @@
         <span class="nz-dialog-title chart-title-text">{{chart.title}}</span>
         <div class="float-right panel-calendar dialog-tool"  v-if="chart.type!=='url' && chart.type !=='alertList'">
 
-          <time-picker ref="calendarPanel" class="nz-dashboard-picker" style="margin-top: -12px;" @change="dateChange"></time-picker>
+          <time-picker ref="calendarPanel" class="nz-dashboard-picker" style="margin-top: -12px;" @change="dateChange" v-if="chart.type !='text'"></time-picker>
           <!--
           <el-date-picker ref="calendar" prefix-icon=" " size="mini" class="nz-preview-picker"
                           format="yyyy/MM/dd HH:mm"
@@ -161,6 +161,10 @@
 
       <chart-alert-list v-if="chart.type === 'alertList'" ref="alertListChart" id="chartAlertListPreview" :chart-info="chart"></chart-alert-list>
 
+      <template v-if="chart.type==='text'">
+          <div v-html="chart.param.text" id="chartTextPreview"></div>
+      </template>
+
       <loading  ref="loadingPreview"></loading>
     </el-dialog>
 </template>
@@ -174,13 +178,14 @@
   import timePicker from '../common/timePicker'
   import chartAlertList from './chart-alert-list'
   import chartConfig from "../page/dashboard/overview/chartConfig";
-
+  import textChart from './text-chart'
   export default {
     name: 'chartPreview',
     components: {
       'loading': loading,
       'time-picker':timePicker,
       'chart-alert-list':chartAlertList,
+      'text-chart':textChart
     },
     props: {
       panelId:Number,
@@ -271,6 +276,8 @@
           chartContainerId = 'chartSingleStatPreview';
         }else if(chartType === 'alertList'){
           chartContainerId = 'chartAlertListPreview';
+        }else if(chartType == 'text'){
+          chartContainerId = 'chartTextPreview'
         }
 
         //设置高度 chart-table
@@ -312,13 +319,11 @@
             if (iframe.attachEvent) {
               iframe.attachEvent('onload', function () {
                 // iframe加载完毕以后执行操作
-                console.log('iframe已加载完毕');
                 that.$refs.loadingPreview.endLoading();
               })
             } else {
               iframe.onload = function () {
                 // iframe加载完毕以后执行操作
-                console.log('iframe已加载完毕');
                 that.$refs.loadingPreview.endLoading();
               }
             }
@@ -342,10 +347,10 @@
 
         }
         //后台获得数据
-        if(this.chart.type!=='url'){
+        if(this.chart.type!=='url'&&this.chart.type !=='text'){
           this.$refs.loadingPreview.startLoading();
           this.getChartData();
-        }else {
+        }else if(this.chart.type == 'url'){
           this.$refs.loadingPreview.startLoading();
           this.urlShow = true;
           this.setLoadFrame();

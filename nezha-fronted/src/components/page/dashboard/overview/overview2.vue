@@ -335,7 +335,11 @@
         return new Promise(resolve => {
           this.$get('/healthy').then(response=>{
             if(response.code==200){
-              this.system_server_time=this.utcTimeToTimezone(response.time)
+              if(response.time){
+                this.system_server_time=this.utcTimeToTimezone(response.time)
+              }else{
+                this.system_server_time=bus.computeTimezone(new Date().getTime())
+              }
             }else{
               this.system_server_time=bus.computeTimezone(new Date().getTime())
             }

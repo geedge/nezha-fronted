@@ -112,7 +112,7 @@
           </el-select>
         </el-form-item>
 
-        <el-form-item :label="$t('dashboard.panel.chartForm.unit')" prop="unit" class="half-form-item">
+        <el-form-item :label="$t('dashboard.panel.chartForm.unit')" prop="unit" class="half-form-item" v-show="editChart.type !='text'">
           <el-cascader filterable placeholder="" popper-class="dc-dropdown" size="mini"  style="width: 100%"
                        :options="unitOptions"
                        :props="{ expandTrigger: 'hover',emitPath:false }"
@@ -169,13 +169,16 @@
           <el-input size="mini" type="input" v-model="editChart.param.threshold"></el-input>
         </el-form-item>
 
-        <div v-if="!isUrl&&!isAlert" class="right-box-sub-title" style="margin-bottom: 20px">
+        <div v-if="!isUrl&&!isAlert&& editChart.type != 'text'" class="right-box-sub-title" style="margin-bottom: 20px">
           <span>{{$t('alert.config.expr')}}</span>
           <span v-if="!isSingleStat" style="height: 19px;display: inline-block;line-height: 1;" class="float-right" @click="addExpression">
             <span class="create-square-box">
               <i style="font-size: 17px; cursor: pointer;" class="nz-icon nz-icon-create-square"></i>
             </span>
           </span>
+        </div>
+        <div v-if="editChart.type == 'text'" class="right-box-sub-title" style="margin-bottom: 20px">
+          <span>{{$t('dashboard.panel.chartForm.content')}}</span>
         </div>
         <div v-if="isAlert" class="right-box-sub-title">{{$t('dashboard.panel.chartForm.alertParam.param')}}</div>
         <div v-if="!isUrl" style="width: 100%"></div>
@@ -184,7 +187,7 @@
           <alert-chart-param ref="alertParamBox" @on-enter-complate="getAlertParam"></alert-chart-param>
         </el-row>
 
-        <el-row v-if="!isUrl &&!isAlert" class="element-item form-row-item" style="" v-for="index of promqlKeys.length" :key="'ele' + index">
+        <el-row v-if="!isUrl &&!isAlert && editChart.type != 'text'" class="element-item form-row-item" style="" v-for="index of promqlKeys.length" :key="'ele' + index">
           <promql-input
             :ref="'promql-'+(index-1)"
             :id="promqlKeys[index-1]"
@@ -288,6 +291,9 @@
             </template>
           </div>
         </template>
+        <template v-if="editChart.type=='text'&&textShow">
+          <rich-text-editor ref="richTextEditor" :edit-data="editChart.param.text"></rich-text-editor>
+        </template>
 
       </el-form>
     </el-scrollbar>
@@ -318,6 +324,7 @@
   import alertChartParam from "./alertChartParam";
   import promqlInput from "./explore/promqlInput";
   import {nzNumber} from "../../common/js/validate";
+  import richTextEditor from "../../charts/richTextEditor";
   var rz = {
     methods: {
       rz(e) {
@@ -391,9 +398,14 @@
             name:this.$t("dashboard.panel.chartForm.typeVal.alertList.label")
           },
           {
+            id:'text',
+            name:this.$t("dashboard.panel.chartForm.typeVal.text.label")
+          },
+          {
             id:'url',
             name:this.$t("dashboard.panel.chartForm.typeVal.url.label")
           },
+
         ],
         elements: [1], // 指标部分 tarNum
         elementTarget: [], // 本地保存数据
@@ -427,7 +439,8 @@
         },
         heightSuggestions:['300','400','500','600'],
         unitOptions:chartDataFormat.unitOptions(),
-        sortedOptionKeys:[{key:'min',label:'Min'},{key:'max',label:'Max'},{key:'avg',label:'Avg'},{key:'last',label:'Last'},{key:'total',label:'Total'}]
+        sortedOptionKeys:[{key:'min',label:'Min'},{key:'max',label:'Max'},{key:'avg',label:'Avg'},{key:'last',label:'Last'},{key:'total',label:'Total'}],
+        textShow:false
       }
     },
     components:{
@@ -435,11 +448,17 @@
       'chart-preview':chartPreview,
       'alert-chart-param':alertChartParam,
       'promql-input': promqlInput,
+      'rich-text-editor':richTextEditor
     },
     mounted() {
       this.$nextTick(() => {
         this.initElements();
+
       });
+
+      setTimeout(()=>{
+        this.textShow=true;
+      },300)
     },
     methods: {
       clickOutside() {
@@ -817,7 +836,7 @@
       },
       confirmAdd() {
         this.elementTarget = []; // 初始化清空参数
-        if(this.editChart.type!=='url'){
+        if(this.editChart.type!=='url'&&this.editChart.type != 'text'){
           /*if(this.editChart.type == 'alertList'){
             this.$refs.alertParamBox.saveParam();
           }else{
@@ -847,29 +866,54 @@
             this.addCharts();
           }
         }else {
-          this.$refs.chartForm.validate((valid) => {
-            const params = {
-              title: this.editChart.title,//this.editChart
-              span: this.editChart.span,
-              height: this.editChart.height,
-              type: this.editChart.type,
-              unit:this.editChart.unit,
-              param:{
-                url:this.editChart.param.url,
-              },
-              sync: this.editChart.sync
-            };
+          if(this.editChart.type == 'url'){
+            this.$refs.chartForm.validate((valid) => {
+              const params = {
+                title: this.editChart.title,//this.editChart
+                span: this.editChart.span,
+                height: this.editChart.height,
+                type: this.editChart.type,
+                unit:this.editChart.unit,
+                param:{
+                  url:this.editChart.param.url,
+                },
+                sync: this.editChart.sync
+              };
 
-            if (valid) {
-              params.elements = [];
-              if (this.isedit) {
-                params.id = this.editChart.id;
-                this.updateCharts(params);
-              } else {
-                this.addCharts(params);
+              if (valid) {
+                params.elements = [];
+                if (this.isedit) {
+                  params.id = this.editChart.id;
+                  this.updateCharts(params);
+                } else {
+                  this.addCharts(params);
+                }
               }
-            }
-          });
+            });
+          }else{
+            this.$refs.chartForm.validate((valid) => {
+              const params = {
+                title: this.editChart.title,//this.editChart
+                span: this.editChart.span,
+                height: this.editChart.height,
+                type: this.editChart.type,
+                param:{
+                  text:this.$refs.richTextEditor.getHtml()
+                },
+                sync: this.editChart.sync
+              };
+
+              if (valid) {
+                params.elements = [];
+                if (this.isedit) {
+                  params.id = this.editChart.id;
+                  this.updateCharts(params);
+                } else {
+                  this.addCharts(params);
+                }
+              }
+            });
+          }
         }
       },
       // 获取metric列表
@@ -1166,7 +1210,7 @@
         //验证图表数据是否合法？？，合法了再显示预览窗口
         this.elementTarget = []; // 初始化清空参数
         this.alertParams={};
-        if(this.editChart.type!=='url'){
+        if(this.editChart.type!=='url'&&this.editChart.type!=='text'){
           if(this.editChart.type == 'alertList'){
             this.$refs.alertParamBox.saveParam('preview');
           }else{
@@ -1217,7 +1261,7 @@
               }
             });
           }
-        }else {
+        }else if(this.editChart.type=='url'){
           this.$refs.chartForm.validate((valid) => {
             const params = {
               title: this.editChart.title,//this.editChart
@@ -1227,6 +1271,26 @@
               unit:this.editChart.unit,
               param:{
                 url:this.editChart.param.url,
+              }
+            };
+
+            if (valid) {
+              if (this.isedit) {
+                params.id = this.editChart.id;
+              }
+              this.$refs.chartsPreview.show(params);
+            }
+          });
+        }else{
+          this.$refs.chartForm.validate((valid) => {
+            const params = {
+              title: this.editChart.title,//this.editChart
+              span: this.editChart.span,
+              height: this.editChart.height,
+              type: this.editChart.type,
+              unit:this.editChart.unit,
+              param:{
+                text:this.$refs.richTextEditor.getHtml()
               }
             };
 
@@ -1277,7 +1341,7 @@
       },
       delMapping:function(index){
         this.editChart.param.valueMapping.mapping.splice(index,1)
-      }
+      },
     },
     created() {
       this.getSuggestMetric();

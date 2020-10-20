@@ -474,7 +474,7 @@
       box-sizing: border-box;
     }
   }
-  .line-chart-block, .chart-table, .chart-single-stat, .chart-url, .chart-asset-info, .chart-alert-info, .chart-project-info, .chart-alert-rule-info ,.vis-network{
+  .line-chart-block, .chart-table, .chart-single-stat, .chart-url,.chart-text, .chart-asset-info, .chart-alert-info, .chart-project-info, .chart-alert-rule-info ,.vis-network{
     height: 100%;
     position: relative;
     background-color: white;
@@ -604,4 +604,25 @@
     padding: 20px 20px 0px;
   }
 
+}
+.chart-text{
+  width: 100%;
+}
+.rich-text-container .text-content{
+  padding: 10px;
+  width: calc(100% - 20px);
+  flex-grow: 1;
+  height: calc(100% - 28px);
+  white-space: pre-wrap;
+}
+.rich-text-screen-container{
+  height: 100%;
+
+}
+
+.rich-text-screen-container .text-content{
+  padding: 15px;
+  //border: 1px rgba(205,205,205,0.77);
+  //box-shadow:-1px 1px 9px -1px rgba(205,205,205,0.77);
+  height: calc(100% - 10px);
 }

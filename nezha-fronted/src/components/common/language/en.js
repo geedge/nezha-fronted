@@ -162,6 +162,9 @@ const en = {
           },
           alertList:{
             label:"Alert list"
+          },
+          text:{
+            label:'Text'
           }
         },
         statisticsVal:{
@@ -194,7 +197,8 @@ const en = {
           value:'Value',
           range:'Range',
         },
-        legendValue:'Legend option'
+        legendValue:'Legend option',
+        content:'Content'
       },
       chartTableColumn:{
         metric:'Metric', //'指标'
@@ -513,7 +517,7 @@ const en = {
       lastReply:'Ping last reply',
       modules: 'Endpoint',//'组件'
       alerts: 'Alerts',//'告警信息'
-      dataCenter: 'DC',//DC
+      dataCenter: 'Data Center',//DC
       cabinet: 'Cabinet',//'机柜'
       model: 'Model',//'型号'
       vendor: 'Vendor',//'厂商'

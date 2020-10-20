@@ -119,6 +119,17 @@
                           :editChartId="'editChartId' + item.id"
         ></chart-detail>
 
+        <text-chart v-if="item.type === 'text'" :key="'inner' + item.id" :ref="'editChart'+item.id"
+                    @on-refresh-data="refreshChart"
+                    @on-remove-chart-block="removeChart"
+                    @on-duplicate-chart-block="duplicateChart"
+                    @on-drag-chart="editChartForDrag"
+                    @on-edit-chart-block="editData"
+                    :panel-id="filter.panelId"
+                    :chart-data="item"
+                    :chart-index="index"
+        ></text-chart>
+
         <chart-alert-list  :ref="'editChart'+item.id"
                            :panel-id="filter.panelId"
                           :chart-index="index"
@@ -149,6 +160,7 @@
   import draggable from 'vuedraggable'
   import chartDataFormat from "./chartDataFormat";
   import chartAlertList from './chart-alert-list'
+  import textChart from './text-chart'
   // import visNetwork from './visNetwork'
   export default {
     name: 'chartList',
@@ -167,6 +179,7 @@
       chartUrl,
       chartSingleStat,
       draggable,
+      textChart
       // visNetwork,
     },
     watch:{
@@ -361,9 +374,7 @@
         }
       },
       dragPosition:function(e){
-        console.log('===',e.clientY,e.clientX);
         let odiv=e;//目标元素e.target
-        console.log('odiv====',odiv);
         //var targetDiv= document.getElementById('lineChartDiv'+this.chartIndex); //
         //得到点击时该容器的：
         var startY=e.clientY;
@@ -374,12 +385,10 @@
         var distX=e.clientX-odiv.offsetTop;
         document.onmousemove=function(e){
           e.preventDefault();
-          console.log('===onmousemove',e.clientY,e.clientX);
           let left=e.clientX-distX;
           let top=e.clientY-distY;
           odiv.style.top=top+'px';
           odiv.style.left=left+'px';
-          console.log('odiv====',odiv);
         };
 
         document.onmouseup=function(){
@@ -403,7 +412,6 @@
           return
         }
         const newItems = [...this.dataList];
-        console.log(newItems);
         const src = newItems.indexOf(this.dragging);
         const dst = newItems.indexOf(item);
 
@@ -574,7 +582,6 @@
         }
         //endpoint单独处理
         if (param.from == "endpoint") {
-          console.log("endpoint");
           this.dataList = [];
           // this.dataList.push({
           //   id: -8,
@@ -763,6 +770,14 @@
                 this.$refs['editChart'+chartItem.id][0].setData(chartItem, singleStatRlt,
                   this.filter.panelId, this.filter,'',errorMsg);
               }
+            }else if(chartItem.type == 'text'){
+              if (filterType === 'showFullScreen') {//全屏查询
+                this.$refs['editChart'+chartItem.id][0].setData(chartItem, null,
+                  panelId, filter, null, filterType);
+              } else {
+                this.$refs['editChart'+chartItem.id][0].setData(chartItem, null,
+                  panelId, filter, null,'');
+              }
             }
           }
         }else {
@@ -796,6 +811,19 @@
         }
         if(chartItem.type === 'alertRuleInfo'){
           this.getAlertRuleChartData(chartItem);
+          return;
+        }
+
+        if(chartItem.type == 'text'){
+          if (this.$refs['editChart' + chartItem.id] && this.$refs['editChart' + chartItem.id].length > 0) {
+              if (filterType === 'showFullScreen') {//全屏查询
+                this.$refs['editChart' + chartItem.id][0].setData(chartItem, null,
+                  this.filter.panelId, null, filterType);
+              } else {
+                this.$refs['editChart' + chartItem.id][0].setData(chartItem, null,
+                  this.filter.panelId, null, '');
+              }
+            }
           return;
         }
 
@@ -1098,9 +1126,11 @@
       },
       computeDistance:function(str){
         let span = document.querySelector(".temp-dom");
-        span.textContent = str;
-        let txtWidth = parseFloat(window.getComputedStyle(span).width);
-        return Number('-'+(txtWidth+5));
+        if(span){
+          span.textContent = str;
+          let txtWidth = parseFloat(window.getComputedStyle(span).width);
+          return Number('-'+(txtWidth+5));
+        }
       },
       modelStaticData(chartInfo, filterType) {
         let series = [];
@@ -1467,7 +1497,6 @@
           });
         });
         req.then(result => {
-          console.info(detail);
           this.$refs['editChart'+chartInfo.id][0].setData(chartInfo, detail);
         }, err => {});
 
