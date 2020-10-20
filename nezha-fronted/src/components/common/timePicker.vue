@@ -223,6 +223,12 @@ export default {
           value:30,
         }
       ],
+      nowTimeType:{
+        id:4,
+        text:this.$t("dashboard.panel.lastOneHour"),
+        type:'hour',
+        value:1,
+      },
     };
   },
   methods: {
@@ -260,6 +266,7 @@ export default {
     //left(){},
     //right(){},
     timeChange(val) {
+      this.nowTimeType=val;
       this.$set(this.showTime, 'id', val.id);
       this.$set(this.showTime, 'text', val.text);
       if (!val) {
@@ -354,7 +361,7 @@ export default {
           }
         }
       }
-    }
+    },
   },
   mounted: function () {
     /*

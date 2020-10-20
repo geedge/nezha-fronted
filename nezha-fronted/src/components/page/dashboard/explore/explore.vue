@@ -4,7 +4,7 @@
         <!-- 顶部工具栏 -->
         <div class="top-tools" style="z-index: 1">
           <div class="top-tool-main-right">
-            <pick-time :refresh-data-func="expressionChange" v-model="filterTime" @unitChange="chartUnitChange">
+            <pick-time :refresh-data-func="expressionChange" v-model="filterTime" @unitChange="chartUnitChange" ref="pickTime">
               <template slot="added-text">{{$t('dashboard.metricPreview.runQuery')}}</template>
             </pick-time>
             <button :disabled="saveDisabled" type="button" @click="saveChart"
@@ -424,12 +424,36 @@ instance_cpu_time_ns{app="fox", proc="widget", rev="4d3a513", env="prod", job="c
           }, 200)
       },
       expressionChange: function () {
-        //console.log(this.filterTime)
+        let nowTimeType=this.$refs.pickTime.$refs.timePicker.nowTimeType;
+        console.log(this.filterTime,nowTimeType);
+        this.setSearchTime(nowTimeType.type,nowTimeType.value);
         if (this.expressions && this.expressions.length >= 1) {
           this.queryTableData();
           this.queryChartData()
           this.storeHistory();
         }
+      },
+      setSearchTime(type,val){//设置searchTime
+        if(type==='minute'){
+          let startTime = bus.timeFormate(new Date(bus.computeTimezone(new Date().getTime())).setMinutes(new Date(bus.computeTimezone(new Date().getTime())).getMinutes() - val),'yyyy-MM-dd hh:mm:ss');
+          let endTime = bus.timeFormate(new Date(bus.computeTimezone(new Date().getTime())),'yyyy-MM-dd hh:mm:ss');
+          this.$set(this.filterTime, 0, startTime);
+          this.$set(this.filterTime, 1, endTime);
+          this.$set(this.filterTime, 2, val + "m");
+        }else if(type==='hour'){
+          let startTime = bus.timeFormate(new Date(bus.computeTimezone(new Date().getTime())).setHours(new Date(bus.computeTimezone(new Date().getTime())).getHours() - val),'yyyy-MM-dd hh:mm:ss');
+          let endTime = bus.timeFormate(new Date(bus.computeTimezone(new Date().getTime())),'yyyy-MM-dd hh:mm:ss');
+          this.$set(this.filterTime, 0, startTime);
+          this.$set(this.filterTime, 1, endTime);
+          this.$set(this.filterTime, 2, val + "h");
+        }else if(type==='date'){
+          let startTime = bus.timeFormate(new Date(bus.computeTimezone(new Date().getTime())).setDate(new Date(bus.computeTimezone(new Date().getTime())).getDate() - val),'yyyy-MM-dd hh:mm:ss');
+          let endTime = bus.timeFormate(new Date(bus.computeTimezone(new Date().getTime())),'yyyy-MM-dd hh:mm:ss');
+          this.$set(this.filterTime, 0, startTime);
+          this.$set(this.filterTime, 1, endTime);
+          this.$set(this.filterTime, 2, val + "d");
+        }
+        this.$refs.pickTime.$refs.timePicker.searchTime=this.filterTime;
       },
       storeHistory:function(){
         let expire=24;

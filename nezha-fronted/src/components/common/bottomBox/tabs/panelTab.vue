@@ -27,7 +27,7 @@
             <i slot="suffix" class="el-input__icon nz-icon nz-icon-search" @click="focusInput" style="float: right"></i>
           </el-input>
         </div>
-        <pick-time :refresh-data-func="dateChange" v-model="searchTime" :use-chart-unit="false" v-if="from=='asset'"></pick-time>
+        <pick-time :refresh-data-func="dateChange" v-model="searchTime" :use-chart-unit="false" v-if="from=='asset'" ref="pickTime"></pick-time>
         <export-excel
           export-file-name="chart"
           export-url="/panel/export"
@@ -67,7 +67,7 @@
           </el-input>
         </div>
 
-        <pick-time :refresh-data-func="dateChange" v-model="searchTime" :use-chart-unit="false"></pick-time>
+        <pick-time :refresh-data-func="dateChange" v-model="searchTime" :use-chart-unit="false" ref="pickTime"></pick-time>
         <button @click="addChart" :title="$t('overall.createChart')"
                 class="nz-btn nz-btn-size-normal nz-btn-style-light ">
           <i class="nz-icon-create-square nz-icon"></i>
@@ -309,12 +309,36 @@
       // 选择日期变化
       dateChange(val) {
         // this.searchTime = [...val];
+        let nowTimeType=this.$refs.pickTime.$refs.timePicker.nowTimeType;
+        this.setSearchTime(nowTimeType.type,nowTimeType.value);
         this.filter.start_time = bus.timeFormate(this.searchTime[0], 'yyyy-MM-dd hh:mm:ss');
         this.filter.end_time = bus.timeFormate(this.searchTime[1], 'yyyy-MM-dd hh:mm:ss');
         this.filter.panelId = this.showPanel.id;
         this.getData(this.filter);
       },
       /*时间条件查询--end*/
+      setSearchTime(type,val){//设置searchTime
+        if(type==='minute'){
+          let startTime = bus.timeFormate(new Date(bus.computeTimezone(new Date().getTime())).setMinutes(new Date(bus.computeTimezone(new Date().getTime())).getMinutes() - val),'yyyy-MM-dd hh:mm:ss');
+          let endTime = bus.timeFormate(new Date(bus.computeTimezone(new Date().getTime())),'yyyy-MM-dd hh:mm:ss');
+          this.$set(this.searchTime, 0, startTime);
+          this.$set(this.searchTime, 1, endTime);
+          this.$set(this.searchTime, 2, val + "m");
+        }else if(type==='hour'){
+          let startTime = bus.timeFormate(new Date(bus.computeTimezone(new Date().getTime())).setHours(new Date(bus.computeTimezone(new Date().getTime())).getHours() - val),'yyyy-MM-dd hh:mm:ss');
+          let endTime = bus.timeFormate(new Date(bus.computeTimezone(new Date().getTime())),'yyyy-MM-dd hh:mm:ss');
+          this.$set(this.searchTime, 0, startTime);
+          this.$set(this.searchTime, 1, endTime);
+          this.$set(this.searchTime, 2, val + "h");
+        }else if(type==='date'){
+          let startTime = bus.timeFormate(new Date(bus.computeTimezone(new Date().getTime())).setDate(new Date(bus.computeTimezone(new Date().getTime())).getDate() - val),'yyyy-MM-dd hh:mm:ss');
+          let endTime = bus.timeFormate(new Date(bus.computeTimezone(new Date().getTime())),'yyyy-MM-dd hh:mm:ss');
+          this.$set(this.searchTime, 0, startTime);
+          this.$set(this.searchTime, 1, endTime);
+          this.$set(this.searchTime, 2, val + "d");
+        }
+        this.$refs.pickTime.$refs.timePicker.searchTime=this.searchTime;
+      },
       //公用操作
       getTableData(linkId) {
         if (this.from == "alertRule" || this.from == "endpoint") {
