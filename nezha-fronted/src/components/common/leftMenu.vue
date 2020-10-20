@@ -24,7 +24,7 @@
                   </div>
                 </template>
                 <div class="sidebar-info sub-sidebar-info" >
-                  <div v-if="getProjectModule(item.id).length == 0" class="sidebar-info-item sidebar-info-item-add" @click="addModule" :title="$t('overall.createModule')">
+                  <div v-if="getProjectModule(item.id).length == 0" class="sidebar-info-item sidebar-info-item-add" @click="addModule(item)" :title="$t('overall.createModule')">
                     <i class="nz-icon nz-icon-create-square"></i>
                   </div>
                   <template v-else>
@@ -187,7 +187,7 @@
           tagCheckMap:{},
           lastCheckSize:0,
           assetPingSwitch:true,
-          isRouterAlive: true
+          isRouterAlive: true,
         }
       },
       computed: {
@@ -332,16 +332,19 @@
           this.changeCurrentModule(module);
           bus.$emit("project-page-type", "endpoint");  //告知project.vue
         },
-        addModule() {
-          this.module = this.newModule();
+        addModule(obj) {
+          this.module = this.newModule(obj);
           this.rightBox.module.show = true;
           this.$nextTick(() => {
             this.$refs.moduleBox.initWalk();
           });
         },
-        newModule() {
+        newModule(obj) {
           let module=JSON.parse(JSON.stringify(this.blankModule));
-          module.project = this.$store.state.currentProject
+          module.project = this.$store.state.currentProject;
+          if(obj){
+            module.project=obj;
+          }
           return module
         },
         //弹出module编辑页
