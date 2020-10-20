@@ -701,7 +701,8 @@
       },
       // 更新图表
       updateCharts(params) {
-        this.$put('panel/' + this.panelId + '/charts', params ? params : this.editChart).then(response2 => {
+        let panelId=this.panelId?this.panelId:this.chart.panelId;
+        this.$put('panel/' + panelId + '/charts', params ? params : this.editChart).then(response2 => {
           if (response2.code === 200) {
             this.esc();
             this.$message({duration: 1000, type: 'success', message: this.$t("tip.saveSuccess")});
