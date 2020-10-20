@@ -787,8 +787,8 @@
         if(this.zoom<0.1){//每次缩小0.1 保证缩放大于0
           this.zoom=0.1;
         }
-        if(this.zoom>5){
-          this.zoom=5;
+        if(this.zoom>3){
+          this.zoom=3;
         }
         this.network.moveTo({
           position: this.viewsCenter,

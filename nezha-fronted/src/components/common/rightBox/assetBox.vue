@@ -712,7 +712,6 @@
 </style>
 <style scoped>
   #module-add-param,#add-type{
-    background: #fff;
     border: none;
     cursor: pointer;
     outline: none;
