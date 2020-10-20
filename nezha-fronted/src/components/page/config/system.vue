@@ -93,7 +93,7 @@
         <div class="system-config-form terminal">
           <el-form :model="terminal"  label-width="180px" size="small" ref="terminalForm" :rules="terminalRules">
             <el-form-item :label="$t('config.system.terminal.terminalNum')" prop="max_terminal_num">
-              <el-input-number v-model="terminal.max_terminal_num" controls-position="right" @change="handleChange" :min="1" :max="50"></el-input-number>
+              <el-input-number v-model="terminal.max_terminal_num" controls-position="right" :min="1" :max="50"></el-input-number>
             </el-form-item>
             <el-form-item>
               <button type="primary" @click="saveSetInfo('terminal','terminalForm')" class="nz-btn nz-btn-size-normal-new nz-btn-style-normal-new">{{$t('overall.submit')}}</button>
