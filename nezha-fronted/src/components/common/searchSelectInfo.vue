@@ -3,12 +3,12 @@
   const searchSelectInfo = { // value: 传给后台的值；label：显示给用户看的值
     severity: [ //告警级别
       {
-        value: 'P2',
-        label: i18n.t("alert.config.P2")
-      },
-      {
         value: 'P1',
         label: i18n.t("alert.config.P1")
+      },
+      {
+        value: 'P2',
+        label: i18n.t("alert.config.P2")
       },
       {
         value: 'P3',

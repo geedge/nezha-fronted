@@ -185,7 +185,7 @@
                   <el-col class="expr-title" style="">
                     {{$t('project.topology.chartName')}}
                   </el-col>
-                  <el-col style="width: calc(100% - 140px);">
+                  <el-col style="width: calc(100% - 122px);">
                     <el-input
                       v-model="form.name[index-1]"
                       type="text"
