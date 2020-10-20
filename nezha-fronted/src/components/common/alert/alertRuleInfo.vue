@@ -183,7 +183,7 @@
   }
   .alert-rule-title{
     text-align: left;
-    width: 90px;
+    width: 110px;
     border-right: 1px solid #ebeef5;
     color: #666;
     padding: 0 3px 0 13px;
