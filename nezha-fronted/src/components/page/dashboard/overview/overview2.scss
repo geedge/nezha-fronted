@@ -376,6 +376,15 @@
   width: 390px;
   height: 285px;
 }
+.leaflet-pane.leaflet-my-pane {
+  position: absolute;
+  top: -150px;
+  left: -420px;
+
+  .leaflet-tooltip {
+    transform: unset !important;
+  }
+}
 .tooltip--title {
   color: #333333;
   font-size: 14px;

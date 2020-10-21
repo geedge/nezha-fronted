@@ -474,7 +474,10 @@
           radius: [14, 22],
           data: [],
           label: {
-            show: false
+            show: true,
+            formatter: "",
+            color: "#666666",
+            position: "center",
           }
         }
       ]

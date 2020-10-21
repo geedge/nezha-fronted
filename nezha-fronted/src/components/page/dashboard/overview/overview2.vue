@@ -1,5 +1,7 @@
 <template>
   <div class="overview" style="background-color: #f9f9f9;">
+    <!--自定义地图鼠标悬浮提示dom，避免被overflow：hidden裁剪-->
+    <div class="my-pane" :style="{'left': `${tooltip.x}px`, 'top': `${tooltip.y}px`}"></div>
     <!--标题-->
     <div class="overview-content-header">
       <div class="header-title" :class="{'hide-div':!isFullScreen}">{{systemName&&systemName != 'undefined'&&systemName != null?systemName: $t('dashboard.overview.contentTitle')}}</div>
@@ -115,8 +117,7 @@
           <div class="content-col-content">
             <!--<chart-box chart-type="map" :tooltip-formatter="mapTooltipFormatter" :map="map" ref="dataCenterMap" @is-loading="(isLoading)=>{this.mapLoading = isLoading}"></chart-box>-->
             <div id="map" style="height: 100%; width: 100%"></div>
-            <!--自定义地图鼠标悬浮提示dom，避免被overflow：hidden裁剪-->
-            <div class="my-pane"></div>
+
             <!--<div class="right-bottom-zoom">
               <div class="zoom-option" style="border-bottom: 1px solid #c5c8cb;" @click="zoomMap(1)"><span><i class="nz-icon nz-icon-enlarge"></i></span></div>
               <div class="zoom-option" @click="zoomMap(-1)"><span><i class="nz-icon nz-icon-narrow"></i></span></div>
@@ -268,7 +269,12 @@
         },
         system_server_time:null,
         freshDateTimer:null,
-        freshDataTimer:null
+        freshDataTimer:null,
+
+        tooltip: {
+          x: 0,
+          y: 0
+        }
       }
     },
     filters: {
@@ -747,12 +753,14 @@
         tooltipPrometheusChart = echarts.init(document.querySelector("#tooltip-chart--prometheus"));
         let endpointOption = chartConfig.getOption("tooltipPie"),
             prometheusOption = chartConfig.getOption("tooltipPie");
+        endpointOption.series[0].label.formatter = data.endpointTotal + "";
         endpointOption.series[0].data = [
           {name: this.$t("dashboard.overview.asset.pingUp"), value: data.endpointUp ? data.endpointUp : 0},
           {name: this.$t("dashboard.overview.asset.pingDown"), value: data.endpointDown ? data.endpointDown : 0}
         ];
         endpointOption.title.text = this.$t("project.endpoint.endpoint");
         endpointOption.legend.data = [this.$t("dashboard.overview.asset.pingUp"), this.$t("dashboard.overview.asset.pingDown")];
+        prometheusOption.series[0].label.formatter = data.promTotal + "";
         prometheusOption.series[0].data = [
           {name: this.$t("dashboard.overview.asset.pingUp"), value: data.promUp ? data.promUp : 0},
           {name: this.$t("dashboard.overview.asset.pingDown"), value: data.promDown ? data.promDown : 0}
@@ -787,6 +795,10 @@
               map.createPane("myPane", document.querySelector(".my-pane"));
               map.on("tooltipopen", function(param) {
                 vm.initTooltipChart(param);
+              });
+              map.on("tooltipclose", function(param) {
+                tooltipEndpointChart && tooltipEndpointChart.clear();
+                tooltipPrometheusChart && tooltipPrometheusChart.clear();
               });
               this.map = map;
 
@@ -895,6 +907,14 @@
 
                     let marker=L.circleMarker([areaInfo.latitude,areaInfo.longitude], {color: hasAlert?'#DE5D3F':'#23BF9A',opacity:0.42,fillColor: hasAlert?'#DE5D3F':'#23BF9A',fillOpacity: 0.5, radius: symbolSize,className:hasAlert?'error-item':''})
                     marker.bindTooltip(this.mapTooltipFormatter(dcStat), {sticky: false, pane: "myPane", direction: "left", data: dcStat});
+                    marker.on("mouseover", (param) => {
+                      //console.info(param);
+                      let pane = document.querySelector(".leaflet-pane.leaflet-my-pane");
+                      let point = param.containerPoint;
+                      let event = param.originalEvent;
+                      this.tooltip.x = event.clientX+point.x-event.layerX;
+                      this.tooltip.y = event.clientY+point.y-event.layerY;
+                    });
                     marker.addTo(this.map);
                   }
                 }
@@ -1453,7 +1473,7 @@
             }
           }
         }
-      }
+      },
     },
     watch: {
       "trendSearchParam.select": function(n, o) {
@@ -1472,11 +1492,11 @@
         setTimeout(() => {
           //vm.map.
         }, 500);
-      }
+      };
     },
     destroyed() {
-      clearInterval(this.freshDataTimer)
-      clearInterval(this.freshDateTimer)
+      clearInterval(this.freshDataTimer);
+      clearInterval(this.freshDateTimer);
     }
   }
 </script>
@@ -1512,10 +1532,8 @@
   .my-pane {
     position: fixed;
     width: 1px;
-    z-index: 9999;
+    z-index: 99999;
     height: 1px;
-    left: 0;
-    top: 9px;
     background-color: transparent;
   }
 </style>
