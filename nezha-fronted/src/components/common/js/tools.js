@@ -360,10 +360,10 @@ export function unixTimeParseToString(unixTime,fmt='yyyy-MM-dd hh:mm:ss'){
 //chart-resize工具
 export const chartResizeTool = {
   minHeight: 200, //图表最小高度
-  chartPaddingTop: 20, //图表padding-top
-  chartBlankHeight: 22, //图表空白占位高度(padding-top + border)
+  chartPaddingTop: 10, //图表padding-top
+  chartBlankHeight: 12, //图表空白占位高度(padding-top + border)
   chartTableBlankHeight: 6, //表格型图表额外空白占位高度
-  chartBlankWidth: 20, //图表空白占位宽度
+  chartBlankWidth: 10, //图表空白占位宽度
   containerBlankWidth: 25, //容器空白占位宽度（#listContainer的padding）
   titleHeight: 28, //标题dom高度
   stepHeight: 50, //单元高度
