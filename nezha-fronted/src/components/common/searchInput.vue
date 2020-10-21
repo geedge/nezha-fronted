@@ -583,12 +583,13 @@
                         no_condition_str='name';
                       }
                       if(no_condition_str=='name'){
-                        this.select_list.push({name: this.select_title.name, id:2, type:'input',val:this.no_condition,label:'name'});
-                        this.searchLabelList.forEach((val,ind)=>{
-                          if(val.id == 2){
-                            this.searchLabelList.splice(ind,1);
-                          }
-                        })
+                        // 处理空白输入时不可作为搜索条件
+                        // this.select_list.push({name: this.select_title.name, id:2, type:'input',val:this.no_condition,label:'name'});
+                        // this.searchLabelList.forEach((val,ind)=>{
+                        //   if(val.id == 2){
+                        //     this.searchLabelList.splice(ind,1);
+                        //   }
+                        // })
                       }else if(no_condition_str=='modifyBy'){
                         this.select_list.push({name: this.select_title.Operator, id:6, type:'input',val:this.no_condition,label:'modifyBy'});
                         this.searchLabelList.forEach((val,ind)=>{
@@ -1103,9 +1104,11 @@
               this.no_condition = '';
               this.searchMsg.zheze_none = false;
               if(!disabled){
-                if (ind == 0) {
-                  this.select()
-                }else if(id == 7){
+                // 下标为0 不再直接执行查询
+                // if (ind == 0) {
+                //   this.select()
+                // } else
+                  if(id == 7){
                   this.searchLabelList.splice(ind, 1)
                   this.select_list.push({
                     name: val,

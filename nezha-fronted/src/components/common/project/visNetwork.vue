@@ -210,8 +210,10 @@
               this.$refs['topology'].setData();
             },100)
           }
-          this.$refs['topology'].viewsCenter=res.data.topo.viewsCenter?res.data.topo.viewsCenter:{x:0,y:0};
-          this.$refs['topology'].zoom=res.data.topo.zoom?(res.data.topo.zoom*this.screenX/1920):1;
+          if(res.data.topo){
+            this.$refs['topology'].viewsCenter=res.data.topo.viewsCenter?res.data.topo.viewsCenter:{x:0,y:0};
+            this.$refs['topology'].zoom=res.data.topo.zoom?(res.data.topo.zoom*this.screenX/1920):1;
+          }
           this.$refs['topology'].selNodeId='';
         })
       },
