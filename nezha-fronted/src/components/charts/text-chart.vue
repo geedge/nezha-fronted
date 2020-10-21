@@ -31,7 +31,7 @@
         <div class="mt-10 rich-text-container" v-cloak  v-show="firstShow" >
           <div :id="'chartContainer'+chartIndex"  ref="chartContainer" class="text-content"  >
             <el-scrollbar style="height: 100%;" class="el-scrollbar-normal">
-              <div style="height: 100%;" v-html="text"></div>
+              <div style="height: 100%;" v-html="text" ></div>
             </el-scrollbar>
           </div>
         </div>
@@ -43,7 +43,11 @@
             <span class="nz-dialog-title">{{data.title}}</span>
           </div>
           <div class="rich-text-screen-container"  >
-            <div id="chartScreenContainer"  ref="chartScreenContainer" class="text-content" v-html="screenText" v-scrollBar></div>
+            <div id="chartScreenContainer"  ref="chartScreenContainer" class="text-content" >
+              <el-scrollbar style="height: 100%;" class="el-scrollbar-normal">
+                <div style="height: 100%;" v-html="screenText" ></div>
+              </el-scrollbar>
+            </div>
           </div>
           <loading  :ref="'localLoadingScreen'+chartIndex"></loading>
         </el-dialog>
@@ -54,12 +58,9 @@
 </template>
 
 <script>
-  import bus from '../../libs/bus';
-  import {Loading} from 'element-ui';
-  import chartDataFormat from './chartDataFormat'
   import loading from "../common/loading";
   import timePicker from '../common/timePicker'
-
+  import 'quill/dist/quill.snow.css'
   export default {
     name: 'chartSingleStat',
     components: {

@@ -22,7 +22,7 @@
             toolbar:[
               [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
               ['bold', 'italic', 'underline', 'strike'],
-              ['link'],
+              ['link','code-block'],
               [{ 'list': 'ordered'}, { 'list': 'bullet' }],
               [{ 'color': [] }, { 'background': [] }],
               [{ 'align': [] }],
@@ -54,7 +54,7 @@
       },
       getHtml:function(){
         let html=this.quill.root.innerHTML;
-        return html;
+        return `<div  class="editor-core ql-container ql-snow"><div class="ql-editor">${html}</div></div>`;
       },
       guid() {
         function S4() {
