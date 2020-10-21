@@ -147,14 +147,6 @@
           <span class="nz-input-append">px</span>
         </el-form-item>
 
-        <el-form-item :label="$t('dashboard.panel.chartForm.last')" v-if="editChart.type == 'table'">
-          <el-switch class="exporter-switch" v-model="editChart.param.last" active-color="#ee9d3f" :active-value="1" :inactive-value="0"></el-switch>
-        </el-form-item>
-
-        <el-form-item :label="$t('dashboard.panel.chartForm.sync')" v-if="showPanel.type && showPanel.type == 'model'">
-          <el-switch class="exporter-switch" v-model="editChart.sync" active-color="#ee9d3f" :active-value="1" :inactive-value="0"></el-switch>
-        </el-form-item>
-
         <el-form-item v-if="isUrl" :label='$t("dashboard.panel.chartForm.url")' prop="param.url" :rules="{ required: true,  message: $t('validate.required'), trigger: 'blur' }">
           <el-input size="small" type="textarea" maxlength="1024" show-word-limit v-model="editChart.param.url"></el-input>
         </el-form-item>
@@ -168,6 +160,14 @@
         <el-form-item v-if="editChart.type == 'line' || editChart.type == 'bar' || editChart.type == 'stackArea'" :label='$t("dashboard.panel.chartForm.threshold")' prop="param.threshold"  class="half-form-item">
           <el-input size="mini" type="input" v-model="editChart.param.threshold"></el-input>
         </el-form-item>
+
+        <el-form-item :label="$t('dashboard.panel.chartForm.last')" v-if="editChart.type == 'table'">
+          <el-switch class="exporter-switch" v-model="editChart.param.last" active-color="#ee9d3f" :active-value="1" :inactive-value="0"></el-switch>
+        </el-form-item>
+
+        <!--<el-form-item :label="$t('dashboard.panel.chartForm.sync')" v-if="showPanel.type && showPanel.type == 'model'">-->
+          <!--<el-switch class="exporter-switch" v-model="editChart.sync" active-color="#ee9d3f" :active-value="1" :inactive-value="0"></el-switch>-->
+        <!--</el-form-item>-->
 
         <div v-if="!isUrl&&!isAlert&& editChart.type != 'text'" class="right-box-sub-title" style="margin-bottom: 20px">
           <span>{{$t('alert.config.expr')}}</span>
@@ -246,7 +246,7 @@
             <el-form-item :label="$t('dashboard.panel.chartForm.valMapping.value')" prop="span" class="half-form-item-other" >
               <el-input size="mini" type="input" v-model="mapping.value" style="display: inline-block;;"></el-input>
             </el-form-item>
-            <el-form-item :label="$t('dashboard.panel.chartForm.valMapping.text')" prop="span" class="half-form-item-other">
+            <el-form-item :label="$t('dashboard.panel.chartForm.valMapping.text')" prop="span" class="half-form-item-other  half-form-item-other-two">
               <el-input size="mini" type="input" v-model="mapping.text" style="display: inline-block;width:calc(100% - 40px);"></el-input>
               <span  @click="delMapping(index)" class="nz-icon-minus-medium" style="margin-left: 7px;padding: 6px"><i class="nz-icon nz-icon-minus" style="color: #EC7F66"></i></span>
             </el-form-item>
@@ -303,12 +303,12 @@
       <button @click="esc(false)" id="chart-box-esc" class="nz-btn nz-btn-size-normal-new nz-btn-style-light-new">
         <span>{{$t('overall.cancel')}}</span>
       </button>
-      <button @click="preview" id="chart-box-preview" class="nz-btn nz-btn-size-normal-new nz-btn-style-normal-new">
+      <button @click="SyncSave" id="chart-box-Sync" class="nz-btn nz-btn-size-normal-new nz-btn-style-normal-new" v-if="showPanel.type && showPanel.type == 'model'">
+        <span>{{$t('overall.SyncSave')}}</span>
+      </button>
+      <button @click="preview" id="chart-box-preview" class="nz-btn nz-btn-size-normal-new nz-btn-style-normal-new" v-else>
         <span>{{$t('overall.preview')}}</span>
       </button>
-      <!--<button @click="SyncSave" id="chart-box-Sync" class="nz-btn nz-btn-size-normal-new nz-btn-style-normal-new">-->
-        <!--<span>{{$t('overall.SyncSave')}}</span>-->
-      <!--</button>-->
       <button @click="confirmAdd" id="chart-box-save" class="nz-btn nz-btn-size-normal-new nz-btn-style-normal-new">
         <span>{{$t('overall.save')}}</span>
       </button>
@@ -699,7 +699,7 @@
               });
             }
           }
-        })
+        });
 
         panelPromise.then(()=>{
           if (panelId) {
@@ -836,6 +836,10 @@
             }
           }
         })
+      },
+      SyncSave(){
+        this.editChart.sync=1;
+        this.confirmAdd();
       },
       confirmAdd() {
         this.elementTarget = []; // 初始化清空参数

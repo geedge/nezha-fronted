@@ -86,7 +86,8 @@ const en = {
       back:'Area scaling restore',
       stack:'Show stack chart',
       stackBack:'Back to original chart'
-    }
+    },
+    SyncSave:'Save&Sync'
   },
   pageSize: '/page',
   webshell:{

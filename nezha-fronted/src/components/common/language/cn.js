@@ -82,7 +82,8 @@ const cn = {
       back:'区域缩放还原',
       stack: "查看堆叠图",
       stackBack:'返回原始图'
-    }
+    },
+    SyncSave:'保存同时更新 Assets'
   },
   webshell: {
     shellTitle: "本地 Shell",
