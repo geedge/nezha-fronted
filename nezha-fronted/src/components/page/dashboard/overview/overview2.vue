@@ -748,7 +748,7 @@
       },
       initTooltipChart(param) {
         let data = param.tooltip.options.data;
-        //console.info(data);
+        //console.info(tooltipEndpointChart);
         tooltipEndpointChart = echarts.init(document.querySelector("#tooltip-chart--endpoint"));
         tooltipPrometheusChart = echarts.init(document.querySelector("#tooltip-chart--prometheus"));
         let endpointOption = chartConfig.getOption("tooltipPie"),

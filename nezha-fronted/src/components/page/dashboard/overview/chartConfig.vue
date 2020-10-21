@@ -470,7 +470,43 @@
       series: [
         {
           type: "pie",
+          animation: false,
           center: [40, 63],
+          radius: [14, 22],
+          data: [],
+          label: {
+            show: true,
+            formatter: "",
+            color: "#666666",
+            position: "center",
+          }
+        }
+      ]
+    };
+    const topoPieOption = {
+      color: ["#60C6B4", "#EEA694"],
+      title: {
+        show: false,
+      },
+      legend: {
+        data: [],
+        show: true,
+        left: 60,
+        top: 6,
+        icon: "circle",
+        itemHeight: 4,
+        orient: "vertical",
+        itemGap: 6,
+        textStyle: {
+          fontSize: 12,
+          padding: [0, 0, 0, -10]
+        },
+      },
+      series: [
+        {
+          type: "pie",
+          animation: false,
+          center: [30, 25],
           radius: [14, 22],
           data: [],
           label: {
@@ -501,6 +537,7 @@
       assetBar: {name: 'assetMessage', option: alertMessageBarByAsset},
       noData:{name:'noData',option:noDataOption},
       tooltipPie: {option: tooltipPieOption},
+      topoPie: {option: topoPieOption},
     };
     export default {
       getOption:function(type){

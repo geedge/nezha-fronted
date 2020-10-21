@@ -376,7 +376,7 @@
   /*}*/
   .vis-network{
     z-index: 0;
-  };
+  }
   .vis-network .nz-icon-refresh{
     margin-right: 12px;
     margin-top: 10px;
