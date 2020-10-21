@@ -789,6 +789,18 @@
           $temp.quill.setSelection($temp.cursorIndex+text.length);
         },200)//此值必须大于userChangeTimer的值*/
       })
+       this.quill.clipboard.addMatcher(Node.ELEMENT_NODE, (node, delta) => {
+        let ops = []
+        delta.ops.forEach(op => {
+          if (op.insert && typeof op.insert === 'string') {
+            ops.push({
+              insert: op.insert
+            })
+          }
+        })
+        delta.ops = ops
+        return delta
+      })
       this.quill.on('text-change',function(delta, oldDelta, source){
         if(source != 'silent'){
           // console.log('delta',delta,'oldDelta',oldDelta,'source',source)

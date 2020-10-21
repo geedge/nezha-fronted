@@ -143,7 +143,7 @@
         if(!cabinet){
           return ;
         }
-        console.log('load u',cabinet,isInit)
+        // console.log('load u',cabinet,isInit)
         this.selectedData.cabinet=cabinet;
         this.selectedData.u=null;
         let cabinetUKey='cabinet-'+this.selectedData.idc.id+'-'+cabinet.id
@@ -238,20 +238,20 @@
             }
           }
         }else{
-          console.log('选中操作')
+          // console.log('选中操作')
           let checkValues=this.findUnoccupyU(data);
           let checkValue=data[data.length-1]; //当前选中的u
-          console.log('选中的',checkValues,'default usize',this.defaultModelUSize)
+          // console.log('选中的',checkValues,'default usize',this.defaultModelUSize)
           if(checkValues.length < this.defaultModelUSize){ //如果小于model 规定的大小，需要自动选择
             let suitU=this.findSuitableU(checkValue);
-            console.log('u size 不够，需要补充,合适u位',suitU)
+            // console.log('u size 不够，需要补充,合适u位',suitU)
             if(suitU.length>0){ //有合适的u位
               while(this.uChecked.length - this.occupyU.length < this.defaultModelUSize){
                 let popU=suitU.splice(0,1)[0]
                 this.uChecked.push(popU);
               }
             }else{
-              console.log('u size 不够，取消当前选中')
+              // console.log('u size 不够，取消当前选中')
               this.uChecked.splice(this.uChecked.length-1,1);
             }
           }else{//至少已经选择了defaultCabinetUsize 个u ，这里需要处理不连续选择的情况
@@ -297,8 +297,8 @@
           }
 
         }
-        console.log('最终选择结果：')
-        console.log(this.uChecked)
+        // console.log('最终选择结果：')
+        // console.log(this.uChecked)
         this.oldUChecked=this.uChecked;
         this.selectedData.u=this.findOldCheckedMinMax(this.uChecked);
       },
@@ -320,8 +320,8 @@
 
       },
       findUnoccupyU:function(arr){
-        console.log('findUnoccupyU')
-        console.log(this.occupyU)
+        // console.log('findUnoccupyU')
+        // console.log(this.occupyU)
         return  arr.filter((item,index)=>{
          return !this.occupyU.includes(item);
         })
