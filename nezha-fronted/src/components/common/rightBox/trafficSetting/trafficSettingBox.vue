@@ -10,7 +10,7 @@
           <el-input :disabled="true" v-model="dc.name"></el-input>
         </el-form-item>
         <traffic-setting-tab ref="trafficSetting" :post-asset-list="assetList" v-for="(item,index) in traffic.setting" :index="index" :asset-setting="item" :key="uuids[index]" :id="uuids[index]" @delSelf="delAssetSetting" :validate-repeat-func="valiateRepeatFunc"></traffic-setting-tab>
-        <button @click="addAssetSetting" class="nz-btn nz-btn-size-normal-new nz-btn-style-light-new" style="margin:5px 1px 5px 70px">{{$t('config.dc.traffic.add')}}</button>
+        <button type="button" @click="addAssetSetting" class="nz-btn nz-btn-size-normal-new nz-btn-style-light-new" style="margin:5px 1px 5px 70px">{{$t('config.dc.traffic.add')}}</button>
       </el-form>
     </el-scrollbar>
 

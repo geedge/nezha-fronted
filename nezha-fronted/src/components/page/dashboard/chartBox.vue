@@ -728,7 +728,7 @@
           if (response2.code === 200) {
             this.esc();
             this.$message({duration: 1000, type: 'success', message: this.$t("tip.saveSuccess")});
-            this.$refs.chartForm.resetFields();//清空表单
+            // this.$refs.chartForm.resetFields();//清空表单
             this.$emit('on-create-success', 'update', response2.data, params);
           } else {
             if(response2.msg){

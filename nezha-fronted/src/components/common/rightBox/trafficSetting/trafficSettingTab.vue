@@ -107,7 +107,7 @@
               </el-row>
             </template>
           </div>
-          <button slot="reference"  class="nz-btn nz-btn-size-normal nz-btn-style-light" id="snmp-advanced">
+          <button type="button" slot="reference"  class="nz-btn nz-btn-size-normal nz-btn-style-light" id="snmp-advanced">
             <i class="el-icon-more"></i>
           </button>
         </el-popover>
@@ -626,8 +626,7 @@
     border-bottom-left-radius: 0px;
     height: 30px;
     position: relative;
-    left: -4px;
-    top:1px;
+    left: -3px;
   }
   .asset-config-tab .right-box-row-with-btn{
     width: calc(100% - 69px);
