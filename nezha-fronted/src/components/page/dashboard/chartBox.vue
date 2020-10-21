@@ -306,6 +306,9 @@
       <button @click="preview" id="chart-box-preview" class="nz-btn nz-btn-size-normal-new nz-btn-style-normal-new">
         <span>{{$t('overall.preview')}}</span>
       </button>
+      <!--<button @click="SyncSave" id="chart-box-Sync" class="nz-btn nz-btn-size-normal-new nz-btn-style-normal-new">-->
+        <!--<span>{{$t('overall.SyncSave')}}</span>-->
+      <!--</button>-->
       <button @click="confirmAdd" id="chart-box-save" class="nz-btn nz-btn-size-normal-new nz-btn-style-normal-new">
         <span>{{$t('overall.save')}}</span>
       </button>
@@ -353,7 +356,7 @@
         expressions: [],
         legends: [],
         statistics: "",
-
+        isEdit:false,
         editInfo: {},
         isUrl:false,
         isSingleStat:false,
@@ -1351,6 +1354,10 @@
         deep: true,
         immediate: true,
         handler(n) {
+          console.log(n);
+          if(n.title){
+            this.isEdit=true;
+          }
           this.editChart = JSON.parse(JSON.stringify(n));
           if(!n.param.nullType){
             this.editChart.param.nullType='connected';
