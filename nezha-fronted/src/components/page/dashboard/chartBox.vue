@@ -1178,7 +1178,7 @@
           if(chartType === 'bar'||chartType === 'line'||chartType === 'stackArea'){
             this.editChart.param={nullType:this.editChart.param.nullType,threshold:'',legendValue:{min:'off',max:'off',avg:'off',last:'off',total:'off'}}
           }else if(chartType == 'table'){
-            this.editChart.param.last= 0;
+            this.$set(this.editChart.param,'last',0)
           }
           /*if(this.$refs.chartTag){
             this.$refs.chartTag.forEach((item, index) => {
