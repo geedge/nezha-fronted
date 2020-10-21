@@ -363,7 +363,8 @@ const cn = {
     usize: "必须是(1 - 49)的数字",
     url: "不合法的URL",
     uSize: "必须是(1 - 47)的数字",
-    requiredIdc:'机房为必选项'
+    requiredIdc:'机房为必选项',
+    tooLong:"文本太长"
   },
   search: {
     searchTip: "点击或回车执行搜索",

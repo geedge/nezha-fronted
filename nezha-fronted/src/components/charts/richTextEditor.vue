@@ -1,6 +1,7 @@
 <template>
-    <div >
+    <div style="position: relative" class="rich-text-editor" :class="{'rich-text-editor-error':tooLong}">
       <div :id="id" class="editor-core" ref="editor" style="height:350px;"></div>
+      <div class="text-too-long" v-if="tooLong">{{$t('validate.tooLong')}}</div>
     </div>
 </template>
 
@@ -29,6 +30,8 @@
             ]
           }
         },
+        maxLength:0,//记录最大长度
+        tooLong:false,
       }
     },
     created() {
@@ -47,14 +50,31 @@
               }
             }
           })
+          this.quill.on('text-change',function(delta, oldDelta, source){
+            let length=$self.getHtml().length;
+            if(length>60000){
+              $self.quill.deleteText($self.maxLength-1,$self.quill.getText().length-1,'api')
+              $self.tooLong=true;
+            }else{
+              $self.maxLength=$self.quill.getText().length;
+              $self.tooLong=false;
+            }
+          })
           this.$nextTick(()=>{
             this.$emit('after-init')
           })
         }
       },
       getHtml:function(){
-        let html=this.quill.root.innerHTML;
-        return `<div  class="editor-core ql-container ql-snow"><div class="ql-editor">${html}</div></div>`;
+        let html=`<div  class="editor-core ql-container ql-snow"><div class="ql-editor">${this.quill.root.innerHTML}</div></div>`;
+        return html;
+      },
+      getContent:function(){
+        if(this.tooLong){
+          return false;
+        }else{
+          return this.getHtml();
+        }
       },
       guid() {
         function S4() {
@@ -84,7 +104,26 @@
   .ql-editor{
     overflow: auto;
   }
-  .ql-tooltip{
-
+  .text-too-long{
+    color: #F56C6C;
+    font-size: 12px;
+    line-height: 1;
+    padding-top: 4px;
+    position: absolute;
+    top: 100%;
+    left: 0;
   }
+  .rich-text-editor-error  {
+    border: 1px solid #F56C6C;
+  }
+  .rich-text-editor-error .ql-container.ql-snow {
+    border: unset !important
+  }
+
+  .rich-text-editor-error .ql-toolbar.ql-snow{
+    border-top: unset !important;
+    border-left: unset !important;
+    border-right: unset !important;
+  }
+
 </style>

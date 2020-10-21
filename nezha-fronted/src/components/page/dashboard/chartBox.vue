@@ -565,7 +565,7 @@
               });
             }
           } else {
-            console.log('error submit!!');
+            console.error('error submit!!');
             return false;
           }
         });
@@ -895,13 +895,17 @@
             });
           }else{
             this.$refs.chartForm.validate((valid) => {
+              let text=this.$refs.richTextEditor.getContent();
+              if(!text){
+                valid=false;
+              }
               const params = {
                 title: this.editChart.title,//this.editChart
                 span: this.editChart.span,
                 height: this.editChart.height,
                 type: this.editChart.type,
                 param:{
-                  text:this.$refs.richTextEditor.getHtml()
+                  text:text
                 },
                 sync: this.editChart.sync
               };
@@ -1286,6 +1290,10 @@
           });
         }else{
           this.$refs.chartForm.validate((valid) => {
+            let text=this.$refs.richTextEditor.getContent();
+            if(!text){
+              valid=false;
+            }
             const params = {
               title: this.editChart.title,//this.editChart
               span: this.editChart.span,
@@ -1293,7 +1301,7 @@
               type: this.editChart.type,
               unit:this.editChart.unit,
               param:{
-                text:this.$refs.richTextEditor.getHtml()
+                text:text
               }
             };
 

@@ -162,7 +162,11 @@
       <chart-alert-list v-if="chart.type === 'alertList'" ref="alertListChart" id="chartAlertListPreview" :chart-info="chart"></chart-alert-list>
 
       <template v-if="chart.type==='text'">
-          <div v-html="chart.param.text" id="chartTextPreview"></div>
+          <div  id="chartTextPreview" class="chart-text-preview">
+            <el-scrollbar style="height: 100%;" class="el-scrollbar-normal">
+              <div style="height: 100%;" v-html="chart.param.text" ></div>
+            </el-scrollbar>
+          </div>
       </template>
 
       <loading  ref="loadingPreview"></loading>
