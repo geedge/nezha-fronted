@@ -101,8 +101,8 @@
 </script>
 
 <style>
-  .ql-editor{
-    overflow: auto;
+  .rich-text-editor .ql-editor{
+    overflow: auto !important;
   }
   .text-too-long{
     color: #F56C6C;

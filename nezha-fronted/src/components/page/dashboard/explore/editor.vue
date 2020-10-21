@@ -948,7 +948,7 @@
     background: inherit;
     padding: 0;
   }
-  .ql-editor{
+  .metric-editor .ql-editor{
     padding:7px 10px 10px 10px !important;
     overflow: hidden;
   }

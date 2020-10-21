@@ -683,7 +683,7 @@
     border: 1px solid;
     border-color: white;
     border-radius: 4px;
-    padding-left: 10px;
+    padding-left: 4px;
     background-color: white;
   }
   .input-error .el-input__inner,.input-error .el-input__inner:hover,.input-error .el-input__inner:focus,

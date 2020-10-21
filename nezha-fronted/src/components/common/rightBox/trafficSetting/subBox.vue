@@ -39,7 +39,7 @@
           this.curConfigs=configs;
           let position = e.target.getBoundingClientRect();
           this.editTagsBox.top = position.top + 25;
-          this.editTagsBox.left = position.left - 48;
+          this.editTagsBox.left = position.left + 80;
           this.tempTagsObj=[];
           this.inputKeyErr=[];
           let obj=null;

@@ -580,6 +580,9 @@
           if(this.locationInfo.u && this.locationInfo.u.length > 0) {
             this.editAsset.cabinetStart = this.locationInfo.u[0];
             this.editAsset.cabinetEnd = this.locationInfo.u[1];
+          }else{
+            this.editAsset.cabinetStart = null;
+            this.editAsset.cabinetEnd = null;
           }
         }
 
