@@ -442,6 +442,43 @@
       },
       series: null,
     };
+    const tooltipPieOption = {
+      color: ["#60C6B4", "#EEA694"],
+      title: {
+        show: true,
+        textStyle: {
+          color: "#333333",
+          fontSize: 14,
+        },
+        top: 8,
+        left: 8
+      },
+      legend: {
+        data: [],
+        show: true,
+        left: 70,
+        top: 44,
+        icon: "circle",
+        itemHeight: 4,
+        orient: "vertical",
+        itemGap: 6,
+        textStyle: {
+          fontSize: 12,
+          padding: [0, 0, 0, -10]
+        },
+      },
+      series: [
+        {
+          type: "pie",
+          center: [40, 63],
+          radius: [14, 22],
+          data: [],
+          label: {
+            show: false
+          }
+        }
+      ]
+    };
     function createTempTimes(){
       let times=[];
       for(let i=0;i<10;i++){
@@ -460,10 +497,11 @@
       ruleBar: {name: 'ruleMessage', option: alertMessageBarByRule},
       assetBar: {name: 'assetMessage', option: alertMessageBarByAsset},
       noData:{name:'noData',option:noDataOption},
+      tooltipPie: {option: tooltipPieOption},
     };
     export default {
       getOption:function(type){
-        return Object.assign({},chartTypes[type].option);
+        return JSON.parse(JSON.stringify(chartTypes[type].option));
       },
       setMap:function(map){
         mapOptions.geo.map=map

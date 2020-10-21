@@ -366,3 +366,184 @@
   top: -5px;
   left: 0px;
 }
+
+.tooltip{
+  opacity: 0.99;
+  background: rgba(255,255,255,0.94);
+  border-radius: 2px;
+  padding: 10px 20px;
+  box-sizing: border-box;
+  width: 390px;
+  height: 285px;
+}
+.tooltip--title {
+  color: #333333;
+  font-size: 14px;
+  font-weight: 600;
+  padding-bottom: 10px;
+}
+.tooltip--row {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
+  position: relative;
+
+  .legend-value {
+    font-size: 12px;
+    color: #333333;
+    position: absolute;
+    left: 132px;
+    top: 45px;
+  }
+  .legend-value + .legend-value {
+    left: 310px;
+  }
+
+  .tooltip-asset {
+    width: 240px;
+    height: 124px;
+    border: 1px solid #DEDEDE;
+    border-radius: 2px;
+
+    .tooltip-asset--title {
+      padding: 0 10px;
+      height: 24px;
+      line-height: 24px;
+      font-size: 14px;
+      color: #333333;
+      display: flex;
+      justify-content: space-between;
+      border-bottom: 1px solid #DEDEDE;
+      box-sizing: border-box;
+    }
+    .tooltip-asset--title span:first-of-type {
+      font-weight: 600;
+    }
+
+    .tooltip-asset--row {
+      display: flex;
+      height: 50px;
+      box-sizing: border-box;
+      border-bottom: 1px solid #DEDEDE;
+    }
+    .tooltip-asset--row + .tooltip-asset--row {
+      border-bottom: none;
+    }
+    .tooltip-asset--row>div {
+      line-height: 25px;
+    }
+    .tooltip-asset--row>div:first-of-type {
+      width: 70px;
+      padding-left: 10px;
+      line-height: 50px;
+      font-size: 14px;
+      border-right: 1px solid #DEDEDE;
+      color: #333333;
+      box-sizing: border-box;
+    }
+    .tooltip-asset--sub-row {
+      padding-left: 10px;
+      font-size: 13px;
+      color: #333333;
+      line-height: 25px;
+      display: flex;
+
+      .sub-row--label {
+        width: 94px;
+      }
+      .sub-row--value {
+        position: relative;
+
+        .sign {
+          position: absolute;
+          height: 5px;
+          width: 5px;
+          border-radius: 50%;
+          top: 50%;
+          transform: translateY(-50%);
+          left: 0;
+        }
+        .red-sign {
+          background-color: $danger-color;
+        }
+        .green-sign {
+          background-color: $success-color;
+        }
+
+        span {
+          position: absolute;
+          left: 11px;
+        }
+      }
+    }
+  }
+  .tooltip-alert {
+    width: 96px;
+    height: 125px;
+    box-shadow: 1px 2px 4px 0 rgba(0,0,0,0.12), -1px 1px 4px -1px rgba(205,205,205,0.47);
+
+    .tooltip-alert--title {
+      height: 36px;
+      line-height: 36px;
+      font-size: 14px;
+      padding: 0 10px;
+    }
+    .tooltip-alert--title span:first-of-type {
+      font-weight: 600;
+    }
+    .tooltip-alert--title span:last-of-type {
+      padding-left: 10px;
+    }
+    .tooltip-alert--row {
+      padding: 0 10px;
+      margin-bottom: 10px;
+      height: 20px;
+      font-size: 12px;
+      display: flex;
+
+      .row--label {
+        width: 36px;
+        border-radius: 4px 0 0 4px;
+        color: white;
+        text-align: center;
+      }
+      .row--label__p1 {
+        background-color: #F2866E;
+        border-color: #F2866E;
+      }
+      .row--label__p2 {
+        background-color: #F89984;
+        border-color: #F89984;
+      }
+      .row--label__p3 {
+        background-color: #F7BA78;
+        border-color: #F7BA78;
+      }
+      .row--value {
+        width: 40px;
+        border: 1px solid;
+        border-radius: 0 4px 4px 0;
+        text-align: center;
+      }
+      .row--value__p1 {
+        color: #F2866E;
+        border-color: #F2866E;
+      }
+      .row--value__p2 {
+        color: #F89984;
+        border-color: #F89984;
+      }
+      .row--value__p3 {
+        color: #F7BA78;
+        border-color: #F7BA78;
+      }
+    }
+  }
+
+  .tooltip-chart {
+    width: calc(50% - 7px);
+    height: 100px;
+    box-shadow: 1px 2px 4px 0 rgba(0,0,0,0.12), -1px 1px 4px -1px rgba(205,205,205,0.47);
+  }
+}
+

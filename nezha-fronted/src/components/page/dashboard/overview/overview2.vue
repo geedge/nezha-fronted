@@ -115,6 +115,8 @@
           <div class="content-col-content">
             <!--<chart-box chart-type="map" :tooltip-formatter="mapTooltipFormatter" :map="map" ref="dataCenterMap" @is-loading="(isLoading)=>{this.mapLoading = isLoading}"></chart-box>-->
             <div id="map" style="height: 100%; width: 100%"></div>
+            <!--自定义地图鼠标悬浮提示dom，避免被overflow：hidden裁剪-->
+            <div class="my-pane"></div>
             <!--<div class="right-bottom-zoom">
               <div class="zoom-option" style="border-bottom: 1px solid #c5c8cb;" @click="zoomMap(1)"><span><i class="nz-icon nz-icon-enlarge"></i></span></div>
               <div class="zoom-option" @click="zoomMap(-1)"><span><i class="nz-icon nz-icon-narrow"></i></span></div>
@@ -199,8 +201,14 @@
   import * as L from 'leaflet'
   import icon from 'leaflet/dist/images/marker-icon.png';
   import iconShadow from 'leaflet/dist/images/marker-shadow.png';
+  import echarts from "echarts";
+  import chartConfig from './chartConfig'
 
   var timeout; //第三行第三个图的dropdown下拉菜单timeout
+
+  var tooltipEndpointChart;
+  var tooltipPrometheusChart;
+
   export default {
     name: "overview2",
     components:{
@@ -312,7 +320,6 @@
           this.queryAlertMessageData(),
           this.queryAlertRuleData(),
           this.queryAlertTrendData(),
-          // this.queryMapChartGeoJson();
           this.initMap(),
           this.queryAlertStatByRule(),
           this.queryAlertStatByAsset(),
@@ -730,10 +737,37 @@
           if(mapConfig&&this.map){
             loadPromise=this.loadDataCenterMapData()
           }
-        })
+        });
         return loadPromise;
       },
+      initTooltipChart(param) {
+        let data = param.tooltip.options.data;
+        //console.info(data);
+        tooltipEndpointChart = echarts.init(document.querySelector("#tooltip-chart--endpoint"));
+        tooltipPrometheusChart = echarts.init(document.querySelector("#tooltip-chart--prometheus"));
+        let endpointOption = chartConfig.getOption("tooltipPie"),
+            prometheusOption = chartConfig.getOption("tooltipPie");
+        endpointOption.series[0].data = [
+          {name: this.$t("dashboard.overview.asset.pingUp"), value: data.endpointUp ? data.endpointUp : 0},
+          {name: this.$t("dashboard.overview.asset.pingDown"), value: data.endpointDown ? data.endpointDown : 0}
+        ];
+        endpointOption.title.text = this.$t("project.endpoint.endpoint");
+        endpointOption.legend.data = [this.$t("dashboard.overview.asset.pingUp"), this.$t("dashboard.overview.asset.pingDown")];
+        prometheusOption.series[0].data = [
+          {name: this.$t("dashboard.overview.asset.pingUp"), value: data.promUp ? data.promUp : 0},
+          {name: this.$t("dashboard.overview.asset.pingDown"), value: data.promDown ? data.promDown : 0}
+        ];
+        prometheusOption.title.text = "Prometheus";
+        prometheusOption.legend.data = [this.$t("dashboard.overview.asset.pingUp"), this.$t("dashboard.overview.asset.pingDown")];
+        tooltipEndpointChart.setOption(endpointOption, true);
+        tooltipPrometheusChart.setOption(prometheusOption, true);
+        /*setTimeout(function() {
+          tooltipEndpointChart.setOption(endpointOption);
+          tooltipPrometheusChart.setOption(prometheusOption);
+        }, 100);*/
+      },
       loadMapConfig:function(){
+        let vm = this;
         return new Promise(resolve => {
           let DefaultIcon = L.icon({
             iconUrl: icon,
@@ -750,6 +784,10 @@
                 attributionControl:false,
                 zoomControl:false,
               }).setView([mapConfig.longitude,mapConfig.latitude],mapConfig.zoom);
+              map.createPane("myPane", document.querySelector(".my-pane"));
+              map.on("tooltipopen", function(param) {
+                vm.initTooltipChart(param);
+              });
               this.map = map;
 
               L.tileLayer(
@@ -856,9 +894,8 @@
                     let hasAlert=dcStat.alertP1!=0||dcStat.alertP2!=0||dcStat.alertP3!=0||dcStat.assetPingDown!=0||dcStat.endpointDown!=0||dcStat.promDown!=0;
 
                     let marker=L.circleMarker([areaInfo.latitude,areaInfo.longitude], {color: hasAlert?'#DE5D3F':'#23BF9A',opacity:0.42,fillColor: hasAlert?'#DE5D3F':'#23BF9A',fillOpacity: 0.5, radius: symbolSize,className:hasAlert?'error-item':''})
-                    marker.bindTooltip(this.mapTooltipFormatter(dcStat),{sticky:true})
-                    marker.addTo(this.map)
-
+                    marker.bindTooltip(this.mapTooltipFormatter(dcStat), {sticky: false, pane: "myPane", direction: "left", data: dcStat});
+                    marker.addTo(this.map);
                   }
                 }
               }
@@ -1112,31 +1149,6 @@
           this.queryAlertStatByRule();
         }
       },
-      /*selectDatacenter(dc) {
-        let index = this.trendSearchParam.dc.indexOf(parseInt(dc.id));
-        if (index == -1) {
-          this.trendSearchParam.dc.push(parseInt(dc.id));
-        } else {
-          this.trendSearchParam.dc.splice(index, 1);
-        }
-        this.queryAlertTrendData();
-      },
-      selectTag(tag) {
-        let index = -1;
-        this.trendSearchParam.tag.some((item, i) => {
-          if (item.name == tag.name && item.value == tag.value) {
-            index = i;
-            return true;
-          }
-          return false;
-        });
-        if (index == -1) {
-          this.trendSearchParam.tag.push(tag);
-        } else {
-          this.trendSearchParam.tag.splice(index, 1);
-        }
-        this.queryAlertTrendData();
-      },*/
       alertMessageChange(type) {
         this.bottom3DropdownShow = false;
         this.alertMessageShow = type;
@@ -1150,79 +1162,66 @@
       },
 
       mapTooltipFormatter(dcStat){
-        let tooltip=`
-            <div class="tooltip">
-                <div style="margin-left: 12px; color: black">${dcStat.name}</div>
-                <div class="flex-box">
-                   <div style="width: 60%;">
-                        <table  style="width: 100%;" class="tooltip-table">
-                            <tr ><td colspan="3"><div style="display: flex;justify-content: space-between"><div>${this.$t('dashboard.overview.mapTooltip.asset')}</div><div>${this.$t('dashboard.overview.mapTooltip.total')}: ${dcStat.assetTotal}</div></div></td></tr>
-                            <tr>
-                                <td rowspan="2">${this.$t('dashboard.overview.mapTooltip.state')}</td>
-                                <td >${this.$t('dashboard.overview.mapTooltip.inStock')}</td>
-                                <td >${dcStat.assetInStock}</td>
-                            </tr>
-                            <tr>
-                                <td >${this.$t('dashboard.overview.mapTooltip.outStock')}</td>
-                                <td >${dcStat.assetOutStock}</td>
-                            </tr>
-                            <tr>
-                                <td rowspan="2">${this.$t('dashboard.overview.mapTooltip.ping')}</td>
-                                <td >${this.$t('dashboard.overview.mapTooltip.active')}</td>
-                                <td >${dcStat.assetPingUp}</td>
-                            </tr>
-                            <tr>
-                                <td >${this.$t('dashboard.overview.mapTooltip.inactive')}</td>
-                                <td ><span class="${dcStat.assetPingDown!=0?'error-color':''}">${dcStat.assetPingDown}</span></td>
-                            </tr>
-                            <tr>
-                                <td rowspan="3">${this.$t('dashboard.overview.mapTooltip.alert')}</td>
-                                <td >${this.$t('dashboard.overview.mapTooltip.P1')}</td>
-                                <td ><span class="${dcStat.alertP1!=0?'error-color':''}">${dcStat.alertP1}</span></td>
-                            </tr>
-                            <tr>
-                                <td >${this.$t('dashboard.overview.mapTooltip.P2')}</td>
-                                <td ><span class="${dcStat.alertP2!=0?'error-color':''}">${dcStat.alertP2}</span></td>
-                            </tr>
-                            <tr>
-                                <td >${this.$t('dashboard.overview.mapTooltip.P3')}</td>
-                                <td ><span class="${dcStat.alertP3!=0?'error-color':''}">${dcStat.alertP3}</span></td>
-                            </tr>
-                        </table>
-                   </div>
-                   <div style="width: 30%;" class="flex-box column-box">
-                      <div  >
-                        <table style="width: 100%;" class="tooltip-table">
-                            <tr><td colspan="2"><div style="display: flex;justify-content: space-between"><div>${this.$t('dashboard.overview.mapTooltip.endpoint')}</div><div>${this.$t('dashboard.overview.mapTooltip.total')}: ${dcStat.endpointTotal}</div></div></td></tr>
-                            <tr>
-                                <td>${this.$t('dashboard.overview.mapTooltip.up')}</td>
-                                <td>${dcStat.endpointUp}</td>
-                            </tr>
-                            <tr>
-                                <td>${this.$t('dashboard.overview.mapTooltip.down')}</td>
-                                <td><span class="${dcStat.endpointDown!=0?'error-color':''}">${dcStat.endpointDown}</span></td>
-                            </tr>
-                        </table>
-                      </div>
-                       <div >
-                           <table style="width: 100%;" class="tooltip-table">
-                            <tr><td colspan="2"><div style="display: flex;justify-content: space-between"><div>${this.$t('dashboard.overview.mapTooltip.prometheus')}</div><div>${this.$t('dashboard.overview.mapTooltip.total')}: ${dcStat.promTotal}</div></div></td></tr>
-                            <tr>
-                                <td>${this.$t('dashboard.overview.mapTooltip.up')}</td>
-                                <td>${dcStat.promUp}</td>
-                            </tr>
-                            <tr>
-                                <td>${this.$t('dashboard.overview.mapTooltip.down')}</td>
-                                <td><span class="${dcStat.promDown!=0?'error-color':''}">${dcStat.promDown}</span></td>
-                            </tr>
-                           </table>
-                        </div>
-                    </div>
+        return `<div class="tooltip">
+          <div class="tooltip--title">${dcStat.name}</div>
+          <div class="tooltip--row">
+            <div class="tooltip-asset">
+              <div class="tooltip-asset--title"><span>${this.$t('asset.asset')}</span><span>Total：${dcStat.assetTotal}</span></div>
+              <div class="tooltip-asset--row">
+                <div>${this.$t('asset.state')}</div>
+                <div class="tooltip-asset--sub-rows">
+                  <div class="tooltip-asset--sub-row">
+                    <div class="sub-row--label">${this.$t("asset.inStock")}</div>
+                    <div class="sub-row--value"><div class="sign green-sign"></div><span>${dcStat.assetInStock}</span></div>
+                  </div>
+                  <div class="tooltip-asset--sub-row">
+                    <div class="sub-row--label">${this.$t("asset.notInStock")}</div>
+                    <div class="sub-row--value"><div class="sign red-sign"></div><span>${dcStat.assetOutStock}</span></div>
+                  </div>
                 </div>
+              </div>
+              <div class="tooltip-asset--row">
+                <div>${this.$t('asset.left.ping')}</div>
+                <div class="tooltip-asset--sub-rows">
+                  <div class="tooltip-asset--sub-row">
+                    <div class="sub-row--label">${this.$t("dashboard.overview.asset.pingUp")}</div>
+                    <div class="sub-row--value"><div class="sign green-sign"></div><span>${dcStat.assetPingUp}</span></div>
+                  </div>
+                  <div class="tooltip-asset--sub-row">
+                    <div class="sub-row--label">${this.$t("dashboard.overview.asset.pingDown")}</div>
+                    <div class="sub-row--value"><div class="sign red-sign"></div><span>${dcStat.assetPingDown}</span></div>
+                  </div>
+                </div>
+              </div>
             </div>
-        `;
+            <div class="tooltip-alert">
+              <div class="tooltip-alert--title"><span>${this.$t("dashboard.overview.asset.alert")}</span><span>${dcStat.alertTotal}</span></div>
+              <div class="tooltip-alert--row">
+                <div class="row--label row--label__p1">P1</div><div class="row--value row--value__p1">${dcStat.alertP1}</div>
+              </div>
+              <div class="tooltip-alert--row">
+                <div class="row--label row--label__p2">P2</div><div class="row--value row--value__p2">${dcStat.alertP2}</div>
+              </div>
+              <div class="tooltip-alert--row">
+                <div class="row--label row--label__p3">P3</div><div class="row--value row--value__p3">${dcStat.alertP3}</div>
+              </div>
+            </div>
+          </div>
+          <div class="tooltip--row">
+            <div class="legend-value">
+              <div>${dcStat.endpointUp}</div>
+              <div>${dcStat.endpointDown}</div>
+            </div>
+            <div class="legend-value">
+              <div>${dcStat.promUp}</div>
+              <div>${dcStat.promDown}</div>
+            </div>
+            <div class="tooltip-chart" id="tooltip-chart--endpoint"></div>
+            <div class="tooltip-chart" id="tooltip-chart--prometheus"></div>
+          </div>
+        </div>`;
 
-        return tooltip;
+        //return tooltip;
       },
       simpleFormatter(params) {
         return `<div class="tooltip" style="min-width: unset;">${params.name}:&nbsp;${params.value}</div>`;
@@ -1458,70 +1457,7 @@
     },
     watch: {
       "trendSearchParam.select": function(n, o) {
-        /*console.info("n", n);
-        console.info("o", o);*/
         this.queryAlertTrendData();
-        /*let tempN = JSON.parse(JSON.stringify(n));
-        if (n.length == o.length || !this.trendSearchParam.watch) {
-          this.trendSearchParam.watch = true;
-          return false;
-        }
-        let isAdd = tempN.length > o.length ? true : false; //true是新增，false是减少
-        let difference = isAdd ? this.trendTool('difference', o, tempN) : this.trendTool('difference', tempN, o);
-        console.info("difference", difference);
-        if (difference[0][0].length == 1) {
-
-        } else if (difference[0][0].length == 2) {
-          if (isAdd) { //二级选中，三级全取消则全选中
-            let level3 = this.trendTool('sameLevel', difference[0][0], this.trafficData, 3);
-            if (level3.length > 0) {
-              let level2Index = this.trendTool('containArray', difference[0][0], tempN, 2); //二级的index
-              if (level2Index[0] != -1) {
-                for (let i = level3.length-1; i >= 0; i--) {
-                  tempN.splice(difference[0][1]+1, 0, level3[i]);
-                }
-                this.trendSearchParam.watch = false;
-              }
-            }
-          } else { //二级取消，三级有选中则全取消，无选中不变
-            let temp = JSON.parse(JSON.stringify(difference[0][0]));
-            temp.push("temp");
-            let indexes = this.trendTool('sameLevelActive', temp, tempN, 3);
-            //console.info("indexes", indexes);
-            if (indexes.length > 0) {
-              for (let i = indexes.length-1; i >= 0; i--) {
-                tempN.splice(indexes[i], 1);
-              }
-              this.trendSearchParam.watch = false;
-            }
-          }
-        } else if (difference[0][0].length == 3) {
-          if (isAdd) { //三级选中，二级取消则选中
-            let index = this.trendTool('containArray', [difference[0][0][0], difference[0][0][1]], tempN, 2); //二级的index
-            console.info("index", index);
-            if (index[0] == -1) {
-              tempN.splice(difference[0][1], 0, [difference[0][0][0], difference[0][0][1]]); //插入二级
-              //let afterIndex = this.trendTool('containArray', [difference[0][0][0], difference[0][0][1]], tempN, 2); //插入后的index
-              //console.info("afterIndex", afterIndex);
-              //this.trendTool('active', 2, index[1], true); //dom处理
-              this.trendSearchParam.watch = false;
-            }
-          } else { //三级取消，若同级全取消则二级取消
-            let indexes = this.trendTool('sameLevelActive', difference[0][0], tempN, 3);
-            //console.info("indexes", indexes);
-            if (indexes.length == 0) {
-              let level2Index = this.trendTool('containArray', [difference[0][0][0], difference[0][0][1]], tempN, 2);
-              //console.info("level2Index", level2Index);
-              if (level2Index[0] > -1) {
-                this.trendTool('active', 2, level2Index[1], false);
-                tempN.splice(level2Index[0], 1);
-                this.trendSearchParam.watch = false;
-              }
-            }
-          }
-        }
-        this.trendSearchParam.select = JSON.parse(JSON.stringify(tempN));
-        this.queryAlertTrendData();*/
       }
     },
     mounted() {
@@ -1531,11 +1467,12 @@
         this.setFreshDataTimer();
       })
 
-      /*window.onresize = () => {
+      window.onresize = () => {
+        let vm = this;
         setTimeout(() => {
-          this.$parent.$parent.update();
-        }, 100);
-      }*/
+          //vm.map.
+        }, 500);
+      }
     },
     destroyed() {
       clearInterval(this.freshDataTimer)
@@ -1546,40 +1483,7 @@
 
 <style lang="scss">
   @import "./overview2.scss";
-  .tooltip{
-    padding: 5px;
-    min-width: 500px;
-    background-color: rgba(255, 255, 255, 0.7);
-    box-shadow: 1px 2px 8px 0 rgba(0, 0, 0, 0.24);
-  }
-  .tooltip-table{
-    border-spacing: 0;
-    border-collapse: collapse;
-  }
-  .tooltip-table tr{
-    display: table-row;
-    vertical-align: inherit;
-  }
-  .tooltip-table td{
-    min-width: 0;
-    -webkit-box-sizing: border-box;
-    box-sizing: border-box;
-    text-overflow: ellipsis;
-    vertical-align: middle;
-    text-align: left;
-    border: 1px solid #ccc;
-    display: table-cell;
-    padding: 0 5px ;
-    color: black;
-  }
-  .flex-box{
-    display: flex;
-    justify-content: space-around;
-  }
-  .column-box{
-    flex-direction: column;
-    justify-content: space-between !important;
-  }
+
   .leaflet-control-zoom{
     border: 1px solid #E7EAED !important;
     box-shadow: -1px 1px 9px -1px rgba(205,205,205,0.77) !important;
@@ -1604,5 +1508,14 @@
   }
   .error-color{
 
+  }
+  .my-pane {
+    position: fixed;
+    width: 1px;
+    z-index: 9999;
+    height: 1px;
+    left: 0;
+    top: 9px;
+    background-color: transparent;
   }
 </style>
