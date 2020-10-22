@@ -849,7 +849,7 @@
 
   .panel-dropdown-btn-delete {
     color: #F98D9A;
-    font-size: 12px
+    font-size: 13px
   }
 
   .panel-dropdown-btn-delete:hover {
@@ -982,7 +982,7 @@
   }
 
   .nz-dashboard-dropdown .nz-icon-edit {
-    font-size: 12px;
+    font-size: 16px;
   }
   .panel-title-li{
     .panel-dropdown-btn{
