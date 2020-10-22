@@ -10,9 +10,15 @@
 export default {
   name: 'App',
   mounted() {
-     /*this.$http.get("config.json").then((result)=>{
-       this.$axios.defaults.baseURL = result.body.baseUrl;
-     });*/
+     // this.$http.get("config.json").then((result)=>{
+     //   this.$axios.defaults.baseURL = result.body.baseUrl;
+     //   const version=result.body.version;
+     //   if(version!==localStorage.getItem('nz-version')){
+     //      sessionStorage.clear();
+     //      localStorage.clear();
+     //      localStorage.setItem('nz-version',version);
+     //   }
+     // });
     this.$axios.defaults.baseURL = 'http://192.168.40.42:8080/nz-admin';
   }
 }
