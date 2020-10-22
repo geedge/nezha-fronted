@@ -467,7 +467,6 @@
 
         this.panelIdInner = panelId;
         this.data = chartItem;
-        console.log(detail);
         this.detail = detail;
         if (this.detail[0] && this.detail[0].type && this.detail[0].type == "endpointInfo") { //endpointInfo的小图表
           this.$nextTick(() => {

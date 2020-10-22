@@ -16,14 +16,6 @@ axios.interceptors.request.use(config => {
       if (token) {
           config.headers['Authorization'] = token //请求头token
         }
-        config.data={
-          ...(config.data||{}),
-          _t:new Date().getTime(),
-        };
-        config.params={
-          ...(config.params||{}),
-          _t:new Date().getTime(),
-        };
         return config;
       },
       err => Promise.reject(err)
