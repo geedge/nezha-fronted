@@ -37,7 +37,16 @@
     <div class="main-box">
       <div class="main-box-title">Alert messages</div>
       <div class="main-box-content">
-        <div class="content-box">
+        <div class="tooltip-alert--row">
+          <div class="row--label row--label__p1">P1</div><div class="row--value row--value__p1">{{moduleInfo.alertStat.P1}}</div>
+        </div>
+        <div class="tooltip-alert--row">
+          <div class="row--label row--label__p2">P2</div><div class="row--value row--value__p2">{{moduleInfo.alertStat.P2}}</div>
+        </div>
+        <div class="tooltip-alert--row">
+          <div class="row--label row--label__p3">P3</div><div class="row--value row--value__p3">{{moduleInfo.alertStat.P3}}</div>
+        </div>
+        <!--<div class="content-box">
           <span class="content-title"><i class="nz-icon nz-icon-jiantou-top colorFFF bg23BF9A"></i>P1</span>
           <span class="float-right">{{moduleInfo.alertStat.P1}}</span>
         </div>
@@ -48,7 +57,7 @@
         <div class="content-box">
           <span class="content-title"><i class="nz-icon nz-icon-jiantou-down colorFFF bgEC7F66"></i>P3</span>
           <span class="float-right">{{moduleInfo.alertStat.P3}}</span>
-        </div>
+        </div>-->
       </div>
     </div>
   </div>
@@ -150,6 +159,70 @@
         width: 100%;
       }
     }
+
+    .tooltip-alert--title span:first-of-type {
+      font-weight: 600;
+    }
+
+    .tooltip-alert--title span:last-of-type {
+      padding-left: 10px;
+    }
+
+    .tooltip-alert--row:last-of-type {
+      margin-bottom: unset;
+    }
+    .tooltip-alert--row {
+      padding: 0 10px;
+      margin-bottom: 10px;
+      height: 20px;
+      font-size: 12px;
+      display: flex;
+
+      .row--label {
+        width: 40px;
+        border-radius: 4px 0 0 4px;
+        color: white;
+        text-align: center;
+      }
+
+      .row--label__p1 {
+        background-color: #F2866E;
+        border-color: #F2866E;
+      }
+
+      .row--label__p2 {
+        background-color: #F89984;
+        border-color: #F89984;
+      }
+
+      .row--label__p3 {
+        background-color: #F7BA78;
+        border-color: #F7BA78;
+      }
+
+      .row--value {
+        padding: 0 8px;
+        min-width: 40px;
+        border: 1px solid;
+        border-radius: 0 4px 4px 0;
+        text-align: center;
+      }
+
+      .row--value__p1 {
+        color: #F2866E;
+        border-color: #F2866E;
+      }
+
+      .row--value__p2 {
+        color: #F89984;
+        border-color: #F89984;
+      }
+
+      .row--value__p3 {
+        color: #F7BA78;
+        border-color: #F7BA78;
+      }
+    }
   }
   .main-box{
     background: #FFFFFF;
@@ -194,4 +267,5 @@
   .bg3C92F1{
     background: #3C92F1;
   }
+
 </style>
