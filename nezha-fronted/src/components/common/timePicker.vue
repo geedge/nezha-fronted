@@ -15,7 +15,7 @@
     margin-top: 0px !important;
     text-align:left;
     border-radius:4px;
-    min-width:120px;
+    min-width:80px;
     height:24px;
     border:solid 1px  #d8dce1;
     white-space: nowrap;
