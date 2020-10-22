@@ -700,21 +700,14 @@
         this.expressionsInfoPosition={...position};
       },
       modelTopClick(item,index){
-        if(this.selNodeId && this.selNodeId===item.id){
-          if(this.selNodeId){
-            this.setPopPosition(this.selNodeId);
-            this.network.selectNodes([this.selNodeId]);
-          }
-        }else{
-          this.activeIndex=index;
-          this.activeModelItem=item;
-          this.index=index;
-          this.selNodeId=item.id;
-          if(this.selNodeId){
-            this.setPopPosition(this.selNodeId);
-            this.popDataShowUpdate('main');
-            this.network.selectNodes([this.selNodeId]);
-          }
+        this.activeIndex=index;
+        this.activeModelItem=item;
+        this.index=index;
+        this.selNodeId=item.id;
+        if(this.selNodeId){
+          this.setPopPosition(this.selNodeId);
+          this.popDataShowUpdate('main');
+          this.network.selectNodes([this.selNodeId]);
         }
       },
       // 数组取差集
