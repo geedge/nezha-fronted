@@ -19,11 +19,11 @@
       <template slot="footer">
         <div class="right-box-bottom-btns" >
           <button @click="close" id="account-esc"
-                  class="nz-btn nz-btn-size-normal nz-btn-style-light nz-btn-min-width-100">
+                  class="nz-btn nz-btn-size-normal-new nz-btn-style-light-new">
             <span>{{$t('overall.cancel')}}</span>
           </button>
           <button  @click="changePwd" id="account-save"
-                   class="nz-btn nz-btn-size-normal nz-btn-style-normal nz-btn-min-width-100">
+                   class="nz-btn nz-btn-size-normal-new nz-btn-style-normal-new">
             <span>{{$t('overall.save')}}</span>
           </button>
         </div>
