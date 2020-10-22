@@ -849,7 +849,7 @@
 
   .panel-dropdown-btn-delete {
     color: #F98D9A;
-    font-size: 13px
+    font-size: 12px
   }
 
   .panel-dropdown-btn-delete:hover {
