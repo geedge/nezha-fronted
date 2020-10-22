@@ -983,6 +983,10 @@
 
   .nz-dashboard-dropdown .nz-icon-edit {
     font-size: 16px;
+    vertical-align: middle;
+  }
+  .nz-dashboard-dropdown .nz-icon-delete {
+    vertical-align: middle;
   }
   .panel-title-li{
     .panel-dropdown-btn{
