@@ -156,7 +156,7 @@
           let maxValue=maxValueCopies.maxValue;
           let copies=maxValueCopies.copies;
           let unit=maxValueCopies.unit;
-          this.option.yAxis.minInterval=chartDataFormat.Interval(maxValue,copies,unit.type,'min');
+          // this.option.yAxis.minInterval=chartDataFormat.Interval(maxValue,copies,unit.type,'min');
           if(this.yAxisFormatter){
             this.option.yAxis.axisLabel.formatter=this.yAxisFormatter;
           }else{
