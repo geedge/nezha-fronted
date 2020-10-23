@@ -610,7 +610,8 @@ const cn = {
         title:'流量配置',
         add:'添加',
         direction:'方向',
-        tags:'标签'
+        tags:'标签',
+        snmpSetting:'SNMP设置',
       },
       createDc: "新建数据中心",
       editDc: "编辑数据中心",

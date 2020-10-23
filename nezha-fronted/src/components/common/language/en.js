@@ -589,7 +589,8 @@ const en = {
         title:'Traffic Setting',
         add:'Add',
         direction:'Direction',
-        tags:'Tags'
+        tags:'Tags',
+        snmpSetting:'SNMP setting',
       }
     },
     model: {
