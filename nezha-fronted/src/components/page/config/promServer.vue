@@ -149,7 +149,7 @@
             show: true,
             width: 80
           }, {
-            label: 'DataCenter',
+            label: 'Data Center',
             prop: 'idc',
             show: true,
           }, {

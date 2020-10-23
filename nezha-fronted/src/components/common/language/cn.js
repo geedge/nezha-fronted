@@ -565,7 +565,8 @@ const cn = {
       createProm: "新增Prometheus服务",
       editProm: "修改Prometheus服务",
       type: "类别",
-      checkTime: "检查时间"
+      checkTime: "检查时间",
+      dataCenter:'数据中心',
     },
     terminallog: {
       terminallog: "终端日志",
