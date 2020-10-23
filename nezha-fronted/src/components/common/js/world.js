@@ -1,5 +1,3 @@
-import * as jsonData from "./geoJSONData";
-
 const scale = 6; //默认缩放比
 const coordinateSpanByZoom = { //各缩放比例下map显示范围的经纬度跨度
   6: [60, 20]
