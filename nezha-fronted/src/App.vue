@@ -7,17 +7,20 @@
 </template>
 
 <script>
-import config from '../static/config.json'
 export default {
   name: 'App',
   mounted() {
-    this.$axios.defaults.baseURL =config.baseUrl;
-    const version=config.version;
-    if(version!==localStorage.getItem('nz-version')){
-      sessionStorage.clear();
-      localStorage.clear();
-      localStorage.setItem('nz-version',version);
-    }
+    const Timestamp=new Date().getTime();
+    let url="static/config.json?Timestamp="+Timestamp;
+    this.$http.get(url).then((result)=>{
+      this.$axios.defaults.baseURL = result.body.baseUrl;
+      const version=result.body.version;
+      if(version!==localStorage.getItem('nz-version')){
+        sessionStorage.clear();
+        localStorage.clear();
+        localStorage.setItem('nz-version',version);
+      }
+    });
   }
 }
 </script>
