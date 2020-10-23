@@ -151,14 +151,12 @@
           this.modifyOption('tooltip', 'formatter', this.defaultTooltipFormatter)
         }
 
-        if(this.chartType == 'line'){
+        if(this.chartType == 'line' || this.chartType == 'overviewLine'){
           let maxValueCopies = this.getMaxValue(this.series,{unit:this.unit});
           let maxValue=maxValueCopies.maxValue;
           let copies=maxValueCopies.copies;
           let unit=maxValueCopies.unit;
-          this.option.yAxis.minInterval=chartDataFormat.Interval(maxValue,copies,unit.type,'min')
-          this.option.yAxis.maxInterval=chartDataFormat.Interval(maxValue,copies,unit.type,'max')
-
+          this.option.yAxis.minInterval=chartDataFormat.Interval(maxValue,copies,unit.type,'min');
           if(this.yAxisFormatter){
             this.option.yAxis.axisLabel.formatter=this.yAxisFormatter;
           }else{
