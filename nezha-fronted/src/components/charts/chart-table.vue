@@ -41,14 +41,14 @@
           </el-dropdown>
         </div>
         <div class="mt-10 table-container" v-cloak  v-show="firstShow">
-          <el-table class="nz-table" :id="'tableContainer'+chartIndex" ref="tableContainer" :height="tableHeight" :data="seriesItem" border  tooltip-effect="light" v-cloak v-scrollBar:el-table>
-            <el-table-column sortable prop="time" :label="$t('dashboard.panel.chartTableColumn.time')" min-width="100" ></el-table-column>
-              <el-table-column sortable prop="element" :show-overflow-tooltip="true" :label="$t('dashboard.panel.chartTableColumn.element')" min-width="260">
+          <el-table class="nz-table" :id="'tableContainer'+chartIndex" ref="tableContainer" :height="tableHeight" :data="seriesItem" border  tooltip-effect="light" v-cloak v-scrollBar:el-table @sort-change="tableDataSort">
+            <el-table-column sortable prop="time" :label="$t('dashboard.panel.chartTableColumn.time')" min-width="100" :sort-orders="['ascending', 'descending']"  :sortable="'custom'"></el-table-column>
+              <el-table-column sortable prop="element" :show-overflow-tooltip="true" :label="$t('dashboard.panel.chartTableColumn.element')" min-width="260" :sort-orders="['ascending', 'descending']"  :sortable="'custom'">
                 <template slot-scope="scope">
                   {{ scope.row.element.alias?scope.row.element.alias:scope.row.element.element}}
                 </template>
               </el-table-column>
-              <el-table-column sortable prop="value" :label="$t('dashboard.panel.chartTableColumn.value')" min-width="90" :resizable="false">
+              <el-table-column sortable prop="value" :label="$t('dashboard.panel.chartTableColumn.value')" min-width="90" :resizable="false" :sort-orders="['ascending', 'descending']"  :sortable="'custom'">
                 <template slot-scope="scope">
                   {{ unit.compute(scope.row.value,null,2)}}
                 </template>
@@ -64,14 +64,14 @@
               <time-picker ref="calendarPanel" class="nz-dashboard-picker" style="margin-top: -12px;" @change="dateChange"></time-picker>
             </div>
           </div>
-          <el-table style="margin-top: 10px;" class="nz-table" height="95%" :data="seriesItemScreen" border  tooltip-effect="light" v-scrollBar:el-table>
-            <el-table-column sortable prop="time" :label="$t('dashboard.panel.chartTableColumn.time')" min-width="100" ></el-table-column>
-            <el-table-column sortable prop="element" :show-overflow-tooltip="true" :label="$t('dashboard.panel.chartTableColumn.element')" min-width="420">
+          <el-table style="margin-top: 10px;" class="nz-table" height="95%" :data="seriesItemScreen" border  tooltip-effect="light" v-scrollBar:el-table @sort-change="tableDataSortScreen">
+            <el-table-column sortable prop="time" :label="$t('dashboard.panel.chartTableColumn.time')" min-width="100" :sort-orders="['ascending', 'descending']"  :sortable="'custom'"></el-table-column>
+            <el-table-column sortable prop="element" :show-overflow-tooltip="true" :label="$t('dashboard.panel.chartTableColumn.element')" min-width="420" :sort-orders="['ascending', 'descending']"  :sortable="'custom'">
               <template slot-scope="scope">
                 {{ scope.row.element.alias?scope.row.element.alias:scope.row.element.element}}
               </template>
             </el-table-column>
-            <el-table-column sortable prop="value" :label="$t('dashboard.panel.chartTableColumn.value')" min-width="90" :resizable="false">
+            <el-table-column sortable prop="value" :label="$t('dashboard.panel.chartTableColumn.value')" min-width="90" :resizable="false" :sort-orders="['ascending', 'descending']"  :sortable="'custom'">
               <template slot-scope="scope">
                 {{ unit.compute(scope.row.value,null,2)}}
               </template>
@@ -135,10 +135,14 @@ export default {
         pageSize: 50,
         total: 0
       },
+      storedTableDataOld:[],//原始信息
+      storedTableDataScreenOld:[],//全屏原始信息
       storedTableData:[],
       storedScreanTableData:[],
       seriesItem: [], // 保存信息
-      seriesItemScreen:[],//全屏数据
+      seriesItemScreen:[],//全屏数据,
+      orderBy:null,//排序非全屏
+      orderByScreen:null,//排序全屏
       images: '',
       loading:Object,
       items: {
@@ -192,14 +196,35 @@ export default {
   methods: {
     pageNo(val) {
       this.pageObj.pageNo = val;
-      this.seriesItem=this.filterShowData(this.storedTableData,this.pageObj)
+      this.seriesItem=this.filterShowData(this.storedTableData,this.pageObj,'series')
     },
     pageSize(val) {
       this.pageObj.pageSize = val;
-      this.seriesItem=this.filterShowData(this.storedTableData,this.pageObj)
+      this.seriesItem=this.filterShowData(this.storedTableData,this.pageObj,'series')
     },
-    filterShowData(source,pageObj){
+    filterShowData(source,pageObj,from){
+      let orderBy=null;
+      let sourceData=null;
+      if(from==='series'){
+        sourceData=this.storedTableDataOld;
+        orderBy=this.orderBy;
+      }
+      if(from==='seriesScreen'){
+        sourceData=this.storedTableDataScreenOld;
+        orderBy=this.orderByScreen;
+      }
+      if(!orderBy || !orderBy.order){//没有排序 恢复默认值
+        source=Object.assign([],sourceData);
+      }else{//排序之后的顺序
+        if(orderBy.order==='ascending'){
+          source=source.sort(this.$tableSet.asce(orderBy.prop));
+        }
+        if(orderBy.order==='descending'){
+          source=source.sort(this.$tableSet.desc(orderBy.prop));
+        }
+      }
       return source.slice((pageObj.pageNo-1)*pageObj.pageSize,pageObj.pageNo*pageObj.pageSize)
+
     },
     startResize(e) {
       let vm = this;
@@ -207,11 +232,11 @@ export default {
     },
     screenPageNo(val) {
       this.screenPageObj.pageNo = val;
-      this.seriesItemScreen=this.filterShowData(this.storedScreanTableData, this.screenPageObj)
+      this.seriesItemScreen=this.filterShowData(this.storedScreanTableData, this.screenPageObj,'seriesScreen')
     },
     screenPageSize(val) {
       this.screenPageObj.pageSize = val;
-      this.seriesItemScreen=this.filterShowData(this.storedScreanTableData, this.screenPageObj)
+      this.seriesItemScreen=this.filterShowData(this.storedScreanTableData, this.screenPageObj,'seriesScreen')
     },
     startLoading(area){
       if(area==='screen'){
@@ -332,8 +357,9 @@ export default {
         // this.seriesItemScreen = seriesItem;
         this.storedScreanTableData=seriesItem;
         this.storedScreanTableData=Object.assign([],this.storedScreanTableData.reverse());
+        this.storedTableDataScreenOld=Object.assign([],this.storedScreanTableData);
         this.screenPageObj.total=this.storedScreanTableData.length;
-        this.seriesItemScreen=this.filterShowData(this.storedScreanTableData,this.screenPageObj);
+        this.seriesItemScreen=this.filterShowData(this.storedScreanTableData,this.screenPageObj,'seriesScreen');
         this.endLoading('screen');
       } else{
         //设置高度 chart-table
@@ -350,10 +376,12 @@ export default {
         this.storedScreanTableData=seriesItem;
         this.storedTableData=Object.assign([],this.storedTableData.reverse());
         this.storedScreanTableData=Object.assign([],this.storedScreanTableData.reverse());
+        this.storedTableDataOld =Object.assign([],this.storedTableData);
+        this.storedTableDataScreenOld =Object.assign([],this.storedScreanTableData);
         this.pageObj.total=this.storedTableData.length;
         this.screenPageObj.total=this.storedScreanTableData.length;
-        this.seriesItem=this.filterShowData(this.storedTableData,this.pageObj);
-        this.seriesItemScreen =this.filterShowData(this.storedScreanTableData,this.screenPageObj)
+        this.seriesItem=this.filterShowData(this.storedTableData,this.pageObj,'series');
+        this.seriesItemScreen =this.filterShowData(this.storedScreanTableData,this.screenPageObj,'seriesScreen')
         if (filter) { // 保存数据,用于同步时间
           this.searchTime[0] = filter.start_time;//将列表的查询时间复制给全屏的查询时间
           this.searchTime[1] = filter.end_time;
@@ -362,6 +390,16 @@ export default {
         }
         this.endLoading();
       }
+    },
+    // 数据排序
+    tableDataSort(item){
+      this.orderBy={order:item.order,prop:item.prop};
+      this.seriesItem=this.filterShowData(this.storedTableData,this.pageObj,'series');
+    },
+    // 全屏数据排序
+    tableDataSortScreen(item){
+      this.orderByScreen={order:item.order,prop:item.prop};
+      this.seriesItemScreen =this.filterShowData(this.storedScreanTableData,this.screenPageObj,'seriesScreen')
     },
     dealLegendAlias:function(legend,expression){
       if(/\{\{.+\}\}/.test(expression)){

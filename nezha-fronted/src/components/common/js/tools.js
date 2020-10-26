@@ -662,6 +662,82 @@ export const tableSet = {
       default: break;
     }
   },
+  // 本地正序
+  desc (prop) {
+    return function (obj1, obj2) {
+      let val1 = obj1[prop];
+      let val2 = obj2[prop];
+      if (!isNaN(val1) && !isNaN(val2) && prop==='value') {
+        val1 = Number(val1);
+        val2 = Number(val2);
+      }
+      if(prop==='time'){
+        val1 = tableSet.strTodate(val1);
+        val2 = tableSet.strTodate(val2);
+      }
+      if(prop==='element'){
+        if(val1.alias){
+          val1 = JSON.stringify(obj1[prop].alias).replace(/\s*/g,"");
+        }else{
+          val1 = JSON.stringify(obj1[prop].element).replace(/\s*/g,"");
+        }
+        if(val2.alias){
+          val2 = JSON.stringify(obj2[prop].alias).replace(/\s*/g,"");
+        }else{
+          val2 = JSON.stringify(obj2[prop].element).replace(/\s*/g,"");
+        }
+      }
+      if (val1 < val2) {
+        return -1;
+      } else if (val1 > val2) {
+        return 1;
+      } else {
+        return 0;
+      }
+    }
+  },
+  //本地倒序
+  asce (prop) {
+    return function (obj1, obj2) {
+      let val1 = obj1[prop];
+      let val2 = obj2[prop];
+      console.log(val1,val2);
+      if (!isNaN(Number(val1)) && !isNaN(Number(val2)) && prop!=='time') {
+        val1 = Number(val1);
+        val2 = Number(val2);
+      }
+      if(prop==='time'){
+        val1 = tableSet.strTodate(val1);
+        val2 = tableSet.strTodate(val2);
+      }
+      if(prop==='element'){
+        if(val1.alias){
+          val1 = JSON.stringify(obj1[prop].alias).replace(/\s*/g,"");
+        }else{
+          val1 = JSON.stringify(obj1[prop].element).replace(/\s*/g,"");
+        }
+        if(val2.alias){
+          val2 = JSON.stringify(obj2[prop].alias).replace(/\s*/g,"");
+        }else{
+          val2 = JSON.stringify(obj2[prop].element).replace(/\s*/g,"");
+        }
+      }
+      if (val1 < val2) {
+        return 1;
+      } else if (val1 > val2) {
+        return -1;
+      } else {
+        return 0;
+      }
+    }
+  },
+  // 转化时间字符串为时间戳
+  strTodate(str){
+    let date = str.trim();
+    date = date.substring(0,19);
+    date = date.replace(/-/g,'/'); //必须把日期'-'转为'/'
+    return new Date(date).getTime();
+  }
 }
 
 export function blankPromise() {
