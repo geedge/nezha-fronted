@@ -449,7 +449,7 @@
               if(typeSeriesData.length===0 || !vm.assetData.typeStat || vm.assetData.typeStat.length == 0) {
                 legend.show=false;
               }
-              this.assetData.typeStat && this.assetData.typeStat.length === 0 && this.$refs.assetTypePie.setSeries(series, legend, legendData);
+              this.assetData.typeStat && this.assetData.typeStat.length !== 0 && this.$refs.assetTypePie.setSeries(series, legend, legendData);
               this.$refs.assetTypePie.endLoading();
             }
             resolve()
