@@ -24,7 +24,8 @@ const store = new Vuex.Store({
       start_time: '',
       end_time: '',
       searchName: ''
-    }
+    },
+    idcArr:[],
   },
   getters: {
     getLinkData(state){
@@ -35,6 +36,9 @@ const store = new Vuex.Store({
     },
     getReloadFacade(state){
       return state.reloadFacade
+    },
+    getIdcArr(state){
+      return state.idcArr
     },
   },
   mutations: {
@@ -94,6 +98,9 @@ const store = new Vuex.Store({
       setTimeout(()=>{
         state.reloadFacade=true;
       })
+    },
+    setIdcArr(state,data){
+      state.idcArr = data
     },
     setCurrentDc(state,data){
       state.currentDc = data

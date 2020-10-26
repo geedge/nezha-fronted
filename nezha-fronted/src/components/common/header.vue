@@ -57,7 +57,7 @@
 
       <el-submenu index="3" popper-class="nz-submenu">
         <template slot="title">
-          <div v-if="assetData.length == 0">{{$t('overall.asset')}}</div>
+          <div v-if="assetData.length == 0" @click="jumpToAsset()">{{$t('overall.asset')}}</div>
           <div v-else @click="jumpToAsset()" :class="{'menu-active' : route == '/asset'}">{{$t('overall.asset')}}</div>
         </template>
         <template>
@@ -377,10 +377,11 @@
       getAssetData() {
         this.$get('idc', {pageSize:-1}).then(response => {
           if (response.code == 200) {
-            this.assetData = response.data.list
+            this.assetData = response.data.list;
             this.assetData.forEach(item => {
               this.$set(item, item.name, false)
-            })
+            });
+            this.$store.commit('setIdcArr',this.assetData);
           }
         })
       },
