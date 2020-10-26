@@ -151,7 +151,7 @@
           <el-input size="small" type="textarea" maxlength="1024" show-word-limit v-model="editChart.param.url"></el-input>
         </el-form-item>
 
-        <el-form-item  v-if="editChart.type == 'line' || editChart.type == 'bar' || editChart.type == 'stackArea'" :label='"Null Type"' prop="nullType"  class="half-form-item">
+        <el-form-item  v-if="editChart.type == 'line' || editChart.type == 'bar' || editChart.type == 'stackArea' || editChart.type == 'table'" :label='"Null value"' prop="nullType"  class="half-form-item">
           <el-select class="right-box-row-with-btn"  popper-class="chart-box-dropdown-small" v-model="editChart.param.nullType" placeholder="" size="mini" @change="$forceUpdate()">
             <el-option v-for="item in nullTypeList" :key="item.value" :label="item.label" :value="item.value"></el-option>
           </el-select>
@@ -1249,8 +1249,11 @@
               } else {
                 delete params.param.statistics;
               }
-              if(this.editChart.type==='line'||this.editChart.type==='bar'||this.editChart.type==='stackArea'){
+              if(this.editChart.type==='line'||this.editChart.type==='bar'||this.editChart.type==='stackArea'||this.editChart.type==='table'){
                 params.param.threshold=this.editChart.param.threshold;
+                if(this.editChart.type==='table'){
+                  delete params.param.threshold;
+                }
                 params.param.nullType=this.editChart.param.nullType;
                 params.param.legendValue=this.editChart.param.legendValue;
               } else {

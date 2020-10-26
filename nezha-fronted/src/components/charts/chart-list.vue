@@ -229,6 +229,7 @@
       },
       end (event) {
         //console.info("end event:", event)
+        if(this.dataList.length===1){return}//解决当元素只有一个移动会报错的问题
         let item = event.item;
         let oldIndex = event.oldIndex;
         let newIndex = event.newIndex;
@@ -866,7 +867,7 @@
               const axiosArr = chartItem.elements.map((ele) => {
                 const filterItem = ele;
                 let query = encodeURIComponent(filterItem.expression);
-                if((chartInfo.type==='line'||chartInfo.type==='bar'||chartInfo.type==='stackArea')&&chartInfo.param){//如果是这三个 默认给connected
+                if((chartInfo.type==='line'||chartInfo.type==='bar'||chartInfo.type==='stackArea'||chartInfo.type==='table')&&chartInfo.param){//如果是这三个 默认给connected
                   chartInfo.param.nullType=chartInfo.param.nullType||'connected';
                   query+='&nullType='+chartInfo.param.nullType;
                 }
