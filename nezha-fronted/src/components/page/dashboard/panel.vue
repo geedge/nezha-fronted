@@ -276,7 +276,6 @@
           document.querySelector("body>.el-dropdown-menu").addEventListener("ps-y-reach-end", () => {
             let yDom = document.querySelector("body>.el-dropdown-menu>.ps__rail-y");
             let yDom2 = document.querySelector("body>.el-dropdown-menu>.ps__rail-y>.ps__thumb-y");
-            console.log('top',top,top2)
             if (top) {
               yDom.style.top = top;
             } else {

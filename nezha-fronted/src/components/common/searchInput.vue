@@ -967,7 +967,6 @@
                     }
                   }
                 }*/
-                console.log(ind)
                 this.searchMsg.searchLabelList.forEach((val, key) => {
                     if (this.select_list[ind].id == val.id) {
                         this.searchLabelList.splice(key , 1, val);

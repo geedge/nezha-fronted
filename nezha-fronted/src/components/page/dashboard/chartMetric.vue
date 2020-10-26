@@ -594,7 +594,6 @@ export default {
               this.elementInfo.metric = this.elementInfo.metric[2];
             }
             this.convertLabelValueCascadeVal();//将label，value级联选择的值，转换为selectTagList里
-            console.log('___saveTarget___',this.elementInfo)
             this.$emit('on-add-target-success', this.elementInfo, pointer,optType);
           }
         });

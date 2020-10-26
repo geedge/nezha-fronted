@@ -369,7 +369,6 @@
           let ctxClone = canvasclone.getContext("2d");
           //ctxClone.drawImage(image,0,0);
           image.onload = function(){
-            console.log('clone-image-load',image);
             ctxClone.drawImage(image,0,0);
           }
         }

@@ -701,7 +701,6 @@ export const tableSet = {
     return function (obj1, obj2) {
       let val1 = obj1[prop];
       let val2 = obj2[prop];
-      console.log(val1,val2);
       if (!isNaN(Number(val1)) && !isNaN(Number(val2)) && prop!=='time') {
         val1 = Number(val1);
         val2 = Number(val2);

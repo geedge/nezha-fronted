@@ -120,7 +120,6 @@ export default {
       this.$get('account/reopen.do?id='+id+"&token="+token).then(res => {
         if (res.code === 200) {
           this.token = res.data.token
-          console.log(this.token)
           sessionStorage.setItem("cliToken", this.token);
         }
       })
@@ -158,7 +157,6 @@ export default {
     }
     this.getAssetData()
     if(sessionStorage.getItem('cliToken')){
-      console.log(this.routeData.accountId,sessionStorage.getItem('cliToken'))
       this.getConnect(this.routeData.accountId,sessionStorage.getItem('cliToken'))
     }
   },
