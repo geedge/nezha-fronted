@@ -9,7 +9,7 @@
 <script>
 export default {
   name: 'App',
-  mounted() {
+  created(){
     const Timestamp=new Date().getTime();
     let url="static/config.json?Timestamp="+Timestamp;
     this.$http.get(url).then((result)=>{
