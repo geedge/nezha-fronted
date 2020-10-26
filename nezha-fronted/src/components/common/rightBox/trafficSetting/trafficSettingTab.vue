@@ -19,6 +19,7 @@
         ></el-autocomplete>
         <el-popover trigger="click" placement="bottom" @show="popShow" @hide="popHide" popper-class="no-style-class">
           <div class="mib-browser-ad-search">
+            <el-row class="mib-browser-ad-search-item" style="font-weight: bold">{{$t('config.dc.traffic.snmpSetting')}}</el-row>
             <el-row class="mib-browser-ad-search-item">
               <el-col :span="6"><div class="mib-browser-ad-search-label">{{$t("project.endpoint.port")}}</div></el-col>
               <el-col :span="17">

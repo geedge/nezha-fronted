@@ -675,7 +675,7 @@
             panelId = this.panelId;
             panel=this.panelData.find(p => p.id === this.panelId);
             resolve()
-          } else if (this.showPanel && this.showPanel.type != "dashboard" && this.showPanel.type != 'explore') {
+          } else if (this.showPanel && this.showPanel.type != "dashboard" && this.showPanel.type != 'explore'&& this.showPanel.type != 'endpointQuery') {
             panelId = this.panelData[0].id;
             panel = this.panelData[0]
             resolve()

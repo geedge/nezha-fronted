@@ -12,13 +12,13 @@ axios.interceptors.request.use(config => {
       //   "Content-Type": 'application/x-www-form-urlencoded',
       // }
       // config.data = qs.stringify(config.data);
-      let token = sessionStorage.getItem('nz-token')
+      let token = sessionStorage.getItem('nz-token');
       if (token) {
-        config.headers['Authorization'] = token //请求头token
-      }
-      return config;
-    },
-    err => Promise.reject(err)
+          config.headers['Authorization'] = token //请求头token
+        }
+        return config;
+      },
+      err => Promise.reject(err)
 );
 const accountErrorCode = [518003, 518004, 518005, 518006, 518007, 518008]; //账号锁定等
 axios.interceptors.response.use(

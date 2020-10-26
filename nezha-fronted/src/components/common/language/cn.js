@@ -565,7 +565,8 @@ const cn = {
       createProm: "新增Prometheus服务",
       editProm: "修改Prometheus服务",
       type: "类别",
-      checkTime: "检查时间"
+      checkTime: "检查时间",
+      dataCenter:'数据中心',
     },
     terminallog: {
       terminallog: "终端日志",
@@ -609,7 +610,8 @@ const cn = {
         title:'流量配置',
         add:'添加',
         direction:'方向',
-        tags:'标签'
+        tags:'标签',
+        snmpSetting:'SNMP设置',
       },
       createDc: "新建数据中心",
       editDc: "编辑数据中心",

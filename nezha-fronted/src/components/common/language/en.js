@@ -570,7 +570,8 @@ const en = {
       createProm: 'New prometheus server',//"新增Prometheus Server"
       editProm: 'Edit prometheus server',//"修改Prometheus Server"
       type: 'Type',//"类别"
-      checkTime: 'Check time'
+      checkTime: 'Check time',
+      dataCenter:'Data Center',
     },
     dc: {
       dc: 'Data center',
@@ -588,7 +589,8 @@ const en = {
         title:'Traffic Setting',
         add:'Add',
         direction:'Direction',
-        tags:'Tags'
+        tags:'Tags',
+        snmpSetting:'SNMP setting',
       }
     },
     model: {
