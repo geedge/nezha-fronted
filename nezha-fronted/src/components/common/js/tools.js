@@ -663,7 +663,7 @@ export const tableSet = {
     }
   },
   // 本地正序
-  desc (prop) {
+  asce (prop) {
     return function (obj1, obj2) {
       let val1 = obj1[prop];
       let val2 = obj2[prop];
@@ -697,7 +697,7 @@ export const tableSet = {
     }
   },
   //本地倒序
-  asce (prop) {
+  desc (prop) {
     return function (obj1, obj2) {
       let val1 = obj1[prop];
       let val2 = obj2[prop];
