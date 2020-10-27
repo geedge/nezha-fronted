@@ -156,7 +156,7 @@
         let self=this;
         return function(position) {
           let clientHeight = (document.body.clientHeight<document.documentElement.clientHeight)?document.body.clientHeight:document.documentElement.clientHeight;
-          let elHeight=self.type==='asset'?370:(self.type==='project'?70:70);
+          let elHeight=self.type==='asset'?318:(self.type==='project'?70:70);
           if(position.top+elHeight>clientHeight){
             return {
               left: `${position.left + position.width + 20}px`,
@@ -174,7 +174,7 @@
         let self=this;
         return function(position) {
           let clientHeight = (document.body.clientHeight<document.documentElement.clientHeight)?document.body.clientHeight:document.documentElement.clientHeight;
-          let elHeight=self.type==='asset'?370:(self.type==='project'?70:70);
+          let elHeight=self.type==='asset'?318:(self.type==='project'?70:70);
            if(position.top+elHeight>clientHeight){
              return 'alert-labelUp'
            }else{
