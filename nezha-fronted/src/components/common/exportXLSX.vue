@@ -81,12 +81,12 @@
           </div>
           <div slot="footer" class="footer">
             <div class="el-message-box__btns">
-              <button @click="rollbackImport"  class="el-button el-button--default el-button--small">
+              <button @click="rollbackImport"  class="nz-btn nz-btn-size-normal-new nz-btn-style-error-new">
                 <span>{{$t('overall.rollbackImport')}}</span>
               </button>
-              <button  @click="closeDialog"  class="el-button el-button--default el-button--small">
-                <span>{{$t('overall.cancel')}}</span>
-              </button>
+              <!--<button  @click="closeDialog"  class="el-button el-button&#45;&#45;default el-button&#45;&#45;small">-->
+                <!--<span>{{$t('overall.cancel')}}</span>-->
+              <!--</button>-->
             </div>
           </div>
       </div>

@@ -270,6 +270,12 @@ li{
   //box-shadow: $btn-normal-shadow;
   border: 0px;
 }
+.nz-btn.nz-btn-style-error-new { /* 新版红色色按钮 */
+  background: $btn-error-background-color-new;
+  color: $btn-error-txt-color-new;
+  //box-shadow: $btn-normal-shadow;
+  border: 0px;
+}
 .nz-btn.nz-btn-style-light-new { /* 新版浅色按钮 */
   background: #fff;
   border: 1px solid $btn-light-border-color-new;
@@ -283,6 +289,12 @@ li{
   //box-shadow: $btn-normal-shadow;
   border: 0px;
 }
+.nz-btn.nz-btn-style-error-new:hover:not(.nz-btn-disabled) { /* 新版红色按钮hover */
+  background: $btn-error-background-color-hover-new;
+  color: $btn-error-txt-color-new;
+  //box-shadow: $btn-normal-shadow;
+  border: 0px;
+}
 .nz-btn.nz-btn-style-light-new:hover:not(.nz-btn-disabled) { /* 新版浅色按钮hover */
   border: 1px solid $btn-light-border-color-hover-new;
   color: $btn-light-txt-color-hover-new;
@@ -292,6 +304,12 @@ li{
 .nz-btn.nz-btn-style-normal-new:active:not(.nz-btn-disabled) { /* 新版橙色按钮active' */
   background: $btn-normal-background-color-active-new;
   color: $btn-normal-txt-color-new;
+  //box-shadow: $btn-normal-shadow;
+  border: 0px;
+}
+.nz-btn.nz-btn-style-error-new:active:not(.nz-btn-disabled) { /* 新版红色按钮active' */
+  background: $btn-error-background-color-active-new;
+  color: $btn-error-txt-color-new;
   //box-shadow: $btn-normal-shadow;
   border: 0px;
 }

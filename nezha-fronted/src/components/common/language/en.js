@@ -58,7 +58,7 @@ const en = {
     importExcel:'Import',
     importExcelLower:'import',
     exportExcelLower:'export',
-    rollbackImport:'rollback',
+    rollbackImport:'Rollback',
     exportCur:'Current page',
     exportAll:'All',
     importFile:'Please upload file',
