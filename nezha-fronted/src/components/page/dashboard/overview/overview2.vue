@@ -793,7 +793,7 @@
                 maxZoom:mapConfig.maxZoom,
                 attributionControl:false,
                 zoomControl:false,
-              }).setView([mapConfig.longitude,mapConfig.latitude],mapConfig.zoom);
+              }).setView([mapConfig.latitude,mapConfig.longitude],mapConfig.zoom);
               map.createPane("myPane", document.querySelector(".my-pane"));
               map.on("tooltipopen", function(param) {
                 vm.initTooltipChart(param);
