@@ -60,9 +60,9 @@
               :content="$t('overall.result.total') + '：' + scope.row.alertStat.total + '，' + $t('alert.config.P1') + '：' + scope.row.alertStat.P1 + '，' + $t('alert.config.P2') + '：' + scope.row.alertStat.P2+ '，' + $t('alert.config.P3') + '：' + scope.row.alertStat.P3">
               <div slot="reference" class="dc-asset-states">
                 <span class="dc-asset-state dc-asset-state-total">{{scope.row.alertStat.total}}</span>
-                <span class="dc-asset-state dc-asset-state-P1">{{scope.row.alertStat.P1}}</span>
-                <span class="dc-asset-state dc-asset-state-out">{{scope.row.alertStat.P2}}</span>
-                <span class="dc-asset-state dc-asset-state-in">{{scope.row.alertStat.P3}}</span>
+                <span class="dc-asset-state alert-level-P1">{{scope.row.alertStat.P1}}</span>
+                <span class="dc-asset-state alert-level-P2">{{scope.row.alertStat.P2}}</span>
+                <span class="dc-asset-state alert-level-P3">{{scope.row.alertStat.P3}}</span>
               </div>
             </el-popover>
           </template >
