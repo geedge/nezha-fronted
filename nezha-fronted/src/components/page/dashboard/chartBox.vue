@@ -262,7 +262,7 @@
                 <el-input size="mini" type="input" v-model="mapping.to"></el-input>
               </el-form-item>
             </div>
-            <el-form-item :label="$t('dashboard.panel.chartForm.valMapping.text')" prop="span" class="half-form-item-other">
+            <el-form-item :label="$t('dashboard.panel.chartForm.valMapping.text')" prop="span" class="half-form-item-other-two">
               <el-input size="mini" type="input" v-model="mapping.text" style="display: inline-block;width:calc(100% - 40px);" ></el-input>
               <span @click="delMapping(index)" class="nz-icon-minus-medium" style="margin-left: 7px;padding: 6px"><i class="nz-icon nz-icon-minus"  style="color: #EC7F66"></i></span>
             </el-form-item>
