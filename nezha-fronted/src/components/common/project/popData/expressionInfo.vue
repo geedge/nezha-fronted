@@ -119,6 +119,9 @@
 </script>
 
 <style scoped>
+  /deep/ .el-tooltip__popper{
+    max-width: none;
+  }
   .expressionInfo{
     position: absolute;
     transform: translateX(20px);
