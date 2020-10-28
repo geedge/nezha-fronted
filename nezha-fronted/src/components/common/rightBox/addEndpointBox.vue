@@ -494,7 +494,7 @@
 
       // 获取endpoint弹框中module下拉框数据
       getModuleList(projectId) {
-        this.$get('module', {projectId: projectId}).then(response => {
+        this.$get('module', {projectId: projectId,pageSize:-1}).then(response => {
           if (response.code === 200) {
             for (let i = 0; i < response.data.list.length; i++) {
               try {
