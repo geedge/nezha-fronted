@@ -92,7 +92,7 @@
               <time-picker ref="calendarPanel" class="nz-dashboard-picker" @change="dateChange"></time-picker>
               <span class="content-col-title-tool">
                 <div class="diy-content">
-                  <span>Data center</span>
+                  <span>{{$t("dashboard.overview.dataCenter.dataCenter")}}</span>
                   <i class="el-input__icon nz-icon nz-icon-arrow-down"></i>
                 </div>
                 <el-cascader

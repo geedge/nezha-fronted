@@ -36,7 +36,7 @@ const cn = {
     unavailable: "不可用",
     available: "可用",
     createChart: "新增图表",
-    createProject: "新增业务系统",
+    createProject: "新增系统",
     createEndpoint:'新增Endpoint',
     createAsset: "新增资产",
     createAlertRule: "新增告警规则",
@@ -275,7 +275,7 @@ const cn = {
       traffic: '流量',
       asset: {
         title: "资产",
-        assetType: "资产类型",
+        assetType: "资产类型统计",
         modelStat: "模型",
         dcStat: "数据中心",
         num: "数量",
@@ -296,13 +296,13 @@ const cn = {
         }
       },
       project: {
-        project: "业务系统",
+        project: "系统",
         name: "名称",
-        module: "组件",
+        module: "模块",
         endpoint: "Endpoint"
       },
       module: {
-        module: "组件",
+        module: "模块",
       },
       endpoint: {
         endpoint: "Endpoints",
@@ -316,10 +316,10 @@ const cn = {
         alertMessage: '告警信息',
         level: "级别",
         alertRule: "告警规则",
-        ruleNum: "规则数量",
+        ruleNum: "告警规则总数",
         alertNum: "告警数量",
-        alertRuleTopN: "根据告警规则",
-        assetTopN: "根据资产",
+        alertRuleTopN: "根据告警规则统计告警消息数量TOP10",
+        assetTopN: "根据资产统计告警消息数量TOP10",
         top: "Top",
         chart: {
           chartTitle: "告警趋势"
@@ -400,7 +400,7 @@ const cn = {
       sn: "SN",
       host: "主机",
       state: "状态",
-      modelId: "组件",
+      modelId: "模块",
       alert: "告警信息",
       assetInfo: "资产信息",
       assetType: "资产类型",
@@ -481,7 +481,7 @@ const cn = {
     },
     tagTableTitle: {
       projectName: "系统名称",
-      moduleName: "组件名称",
+      moduleName: "模块名称",
       endPoint: "EndPoint",
       alert: "告警"
     },
@@ -523,7 +523,7 @@ const cn = {
     assetInfo: "资产信息",
     vendorModel: "厂商/模型",
     purchaseDate: "购买日期",
-    location: "地区",
+    location: "位置",
     sn: "SN",
     uSize: "U位",
     inStock: "在库",
@@ -761,7 +761,7 @@ const cn = {
       state: "状态",
       charts: "图表",
       projectAlert: "系统告警",
-      moduleAlert: "组件告警",
+      moduleAlert: "模块告警",
       deviceAlert: "设备告警",
       pending: "待处理",
       expired: "已过期",
@@ -784,7 +784,7 @@ const cn = {
       P3: "P3",
       typeOption: {
         project: "系统",
-        module: "组件",
+        module: "模块",
         asset: "设备"
       },
       alertNum: "告警数量",
@@ -803,7 +803,7 @@ const cn = {
       basicTitle: "基础信息",
       alertStat: "告警状态",
       endpointStat: "Endpoint状态",
-      projectInfo: "业务系统信息",
+      projectInfo: "系统信息",
       endpointInfo: "Endpoint信息"
     },
     project: {
@@ -814,14 +814,14 @@ const cn = {
       createProject: "新增系统"
     },
     module: {
-      module: "组件",
-      moduleName: "组件名称",
-      editModule: "编辑组件",
+      module: "模块",
+      moduleName: "模块名称",
+      editModule: "编辑模块",
       description: "描述",
-      createModule: "新增组件",
+      createModule: "新增模块",
       tip: {
         defaultEndpointSet: "默认的Endpoint设置",
-        relation: "组件关联的Endpoint将默认配置以下端口/路径/参数"
+        relation: "模块关联的Endpoint将默认配置以下端口/路径/参数"
       },
       version: "版本",
       walk: "Walk",
@@ -846,7 +846,7 @@ const cn = {
       path: "路径",
       asset: "设备",
       lastUpdate: "最后更新时间",
-      moduleParameter: "组件参数",
+      moduleParameter: "模块参数",
       addGraph: "查看图表",
       element: "元素",
       value: "值",
@@ -866,9 +866,9 @@ const cn = {
     },
     topology:{
       line:'线',
-      module:'组件',
+      module:'模块',
       add:'添加',
-      selTwoNode:'请选择两个组件',
+      selTwoNode:'请选择两个模块',
       save:'保存',
       cancel:'取消',
       addLine:'添加连线',
@@ -880,13 +880,13 @@ const cn = {
       color:'颜色',
       chartName:'图表名称',
       unit:'单位',
-      addModule:'添加组件',
+      addModule:'添加模块',
       edit:'编辑',
       refresh:'刷新',
       endpoint:'Endpoint Table',
       asset:'资产信息',
       total:'图表',
-      info:'组件信息',
+      info:'模块信息',
       alert:'告警信息',
       lineType:'线型',
       straight:'直线',
