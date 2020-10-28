@@ -127,7 +127,7 @@
         </div>
       </div>
       <!--第三行-->
-      <div class="content-row-box">
+      <div class="content-row-box content-bottom-box">
         <!--第一个图-->
         <div class="content-col-box">
           <div class="content-col-title">
@@ -135,7 +135,7 @@
           </div>
           <div class="content-col-content">
             <chart-box chart-type="pie" ref="assetTypePie" :show-toolbox="false" name="assetTypePie" :tooltip-formatter="assetTypeFormatter" @is-loading="(isLoading)=>{this.assetTypeLoading = isLoading}"></chart-box>
-<!--                <div class="no-data-tip" v-if="!assetTypeLoading && assetData.typeStat && assetData.typeStat.length == 0">N/A</div>-->
+            <!--                <div class="no-data-tip" v-if="!assetTypeLoading && assetData.typeStat && assetData.typeStat.length == 0">N/A</div>-->
             <div class="chart-no-data"v-if="!assetTypeLoading && (!assetData.typeStat || assetData.typeStat.length == 0)">No Data</div>
           </div>
         </div>
@@ -754,7 +754,7 @@
         tooltipEndpointChart = echarts.init(document.querySelector("#tooltip-chart--endpoint"));
         tooltipPrometheusChart = echarts.init(document.querySelector("#tooltip-chart--prometheus"));
         let endpointOption = chartConfig.getOption("tooltipPie"),
-            prometheusOption = chartConfig.getOption("tooltipPie");
+          prometheusOption = chartConfig.getOption("tooltipPie");
         endpointOption.series[0].label.formatter = data.endpointTotal + "";
         endpointOption.series[0].data = [
           {name: this.$t("dashboard.overview.asset.pingUp"), value: data.endpointUp ? data.endpointUp : 0},
