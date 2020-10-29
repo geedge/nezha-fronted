@@ -38,7 +38,7 @@
                     <i v-if="assetSearch.dropdownShow" class="nz-icon nz-icon-caret-up"></i>
                     <i v-if="!assetSearch.dropdownShow" class="nz-icon nz-icon-caret-bottom"></i>
                   </span>
-                </button><el-input style="width: 100px;" class="input-x-mini-24 nz-input-group-middle" placeholder="" v-model="assetSearch.text"></el-input><button
+                </button><el-input style="width: 100px;" @keydown.enter.native="searchAssetKeydown" class="input-x-mini-24 nz-input-group-middle" placeholder="" v-model="assetSearch.text"></el-input><button
                 type="button" class="nz-btn nz-btn-size-small nz-btn-style-light nz-btn-style-square nz-input-group-append" id="search-asset"><i @click="searchAsset" class="nz-icon nz-icon-search"></i></button>
 
                 <div class="endpoint-asset-search-dropdown" v-if="assetSearch.dropdownShow">
@@ -417,7 +417,14 @@
           }
         });
       },
-
+      //回车搜索searchAsset
+      searchAssetKeydown(e){
+        e=e?e:window.event;
+        let keyCode = e.keyCode ? e.keyCode : e.which ? e.which : e.charCode;
+        if(keyCode=== 13){
+          this.searchAsset()
+        }
+      },
       //endpoint弹框中的asset子弹框搜索
       searchAsset() {
         if (this.assetSearch.label == 'IP') {
