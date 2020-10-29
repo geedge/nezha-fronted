@@ -10,13 +10,14 @@
             export-url="/asset/export"
             import-url="/asset/import"
             :params="searchLabel"
-            @afterImport="getTableData"
+            @afterImport="afterTableListChange"
           >
             <template slot="optionZone">
               <button @click.stop="add" :title="$t('overall.createAsset')" class="nz-btn nz-btn-size-normal nz-btn-style-light" id="asset-create-asset">
                 <i class="nz-icon nz-icon-create-square"></i></button>
             </template>
           </export-excel>
+          <delete-button :delete-objs="batchDeleteObjs" api="asset" @after="afterTableListChange"></delete-button>
         </div>
         <div class="pagination-top pagination-top-hide display-none"></div>
       </div>
@@ -44,7 +45,14 @@
         :cell-class-name="messageStyle"
         @sort-change="tableDataSort"
         @row-dblclick="detail"
+        @selection-change="(selection)=>{this.batchDeleteObjs=selection}"
       >
+        <el-table-column
+          :resizable="false"
+          type="selection"
+          width="40"
+          align="center">
+        </el-table-column>
         <el-table-column
           :resizable="false"
           v-for="(item, index) in tools.customTableTitle"
@@ -190,11 +198,13 @@
   import bus from "../../../libs/bus";
   import exportXLSX from "../../common/exportXLSX";
   import endpointStatusPop from "./endpointStatusPop";
+  import deleteButton from "../../common/deleteButton";
   export default {
     name: "asset",
     components:{
       'export-excel':exportXLSX,
       'endpoint-status-pop':endpointStatusPop,
+      'delete-button':deleteButton,
     },
     data() {
       return {
@@ -225,6 +235,7 @@
           showCustomTableTitle: false, //自定义列弹框是否显示
           customTableTitle: [], //自定义列工具的数据
         },
+        batchDeleteObjs:[],
         asset: {},
         blankAsset: {
           id: '',
@@ -507,8 +518,7 @@
           this.$delete("asset?ids=" + asset.id).then(response => {
             if (response.code === 200) {
               this.$message({duration: 2000, type: 'success', message: this.$t("tip.deleteSuccess")});
-              this.getTableData();
-              bus.$emit('asset-list-change')
+             this.afterTableListChange()
             } else {
               this.$message.error(response.msg);
             }
@@ -539,10 +549,13 @@
       closeRightBox(refresh) {
         this.rightBox.show = false;
         if (refresh) {
-          this.getTableData();
-          bus.$emit('asset-list-change')
+         this.afterTableListChange()
           this.loadKeys();
         }
+      },
+      afterTableListChange:function(){
+        this.getTableData();
+        bus.$emit('asset-list-change')
       },
       pageNo(val) {
         this.pageObj.pageNo = val;

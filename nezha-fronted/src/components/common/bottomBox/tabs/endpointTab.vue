@@ -25,6 +25,7 @@
             </button>
           </template>
         </export-excel>
+        <delete-button :delete-objs="batchDeleteObjs" api="endpoint" @after="getTableData"></delete-button>
       </div>
     </div>
     <!-- 自定义table列 -->
@@ -49,7 +50,14 @@
       ref="endpointTable"
       style="width: 100%;"
       @sort-change="tableDataSort"
+      @selection-change="(selection)=>{this.batchDeleteObjs=selection}"
     >
+        <el-table-column
+          :resizable="false"
+          type="selection"
+          width="40"
+          align="center">
+        </el-table-column>
       <el-table-column
         :resizable="false"
         v-for="(item, index) in tools.customTableTitle"
@@ -84,6 +92,7 @@
                   :id="'edp-edit-'+scope.row.id">
                   <i class="nz-icon nz-icon-edit"></i>
                 </span>
+            <span :title="$t('overall.delete')" @click.stop="delEndpoint(scope.row)" class="content-right-option" :id="'asset-del-'+scope.row.id"><i class="nz-icon nz-icon-delete"></i></span>
           </div>
           <span v-else-if="item.prop == 'lastUpdate'">{{dateFormat(scope.row.lastUpdate)}}</span>
           <span v-else-if="item.prop == 'state'" >
@@ -133,10 +142,12 @@
 <script>
   import exportXLSX from "../../exportXLSX";
   import bus from '@/libs/bus'
+  import deleteButton from "../../deleteButton";
   export default {
     name: "endpointTab",
     components: {
-      'export-excel': exportXLSX
+      'export-excel': exportXLSX,
+      'delete-button':deleteButton,
     },
     props: {
       obj: Object, //关联的实体对象
@@ -157,6 +168,7 @@
           showCustomTableTitle: false, //自定义列弹框是否显示
           customTableTitle: [], //自定义列工具的数据
         },
+        batchDeleteObjs:[],
         endpoint: {}, //用来查看详情和编辑的对象
         endpointSearchLabel:{
 
@@ -286,6 +298,22 @@
         if (refresh) {
           this.getTableData();
         }
+      },
+      delEndpoint(endpoint) {
+        this.$confirm(this.$t("tip.confirmDelete"), {
+          confirmButtonText: this.$t("tip.yes"),
+          cancelButtonText: this.$t("tip.no"),
+          type: 'warning'
+        }).then(() => {
+          this.$delete("endpoint?ids=" + endpoint.id).then(response => {
+            if (response.code === 200) {
+              this.$message({duration: 1000, type: 'success', message: this.$t("tip.deleteSuccess")});
+              this.getTableData();
+            } else {
+              this.$message.error(response.msg);
+            }
+          });
+        });
       },
       toEdit(endpoint) {
         this.endpoint = JSON.parse(JSON.stringify(endpoint));

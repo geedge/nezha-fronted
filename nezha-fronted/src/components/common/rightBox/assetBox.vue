@@ -75,7 +75,7 @@
             </el-date-picker>
           </div>
         </el-form-item>
-        <el-form-item :label="$t('asset.location')" prop="locationInfo" :rules="[{validator:locationValidator, trigger:'blur'}]">
+        <el-form-item :label="$t('asset.location')" class="required-marker" prop="locationInfo" :rules="[{validator:locationValidator, trigger:'blur'}]">
           <location-cascader :disabled="editAsset.modelId ? false : true" :default-model-u-size="modelSize" @change="setLocationData" ref="locationCascader" :idc-option="dcData"></location-cascader>
         </el-form-item>
         <!--tag-->

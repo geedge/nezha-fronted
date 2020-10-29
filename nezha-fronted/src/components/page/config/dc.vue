@@ -17,6 +17,7 @@
                   class="nz-btn nz-btn-size-normal nz-btn-style-light margin-l-20" id="dc-add">
             <i class="nz-icon-create-square nz-icon"></i>
           </button>
+          <delete-button :delete-objs="batchDeleteObjs" api="idc" @after="getTableData"></delete-button>
         </div>
         <div class="pagination-top pagination-top-hide display-none"></div>
       </div>
@@ -42,7 +43,15 @@
         v-loading="tools.loading"
         :cell-class-name="assetStatClassName"
         style="width: 100%;"
-        @sort-change="tableDataSort">
+        @sort-change="tableDataSort"
+        @selection-change="(selection)=>{this.batchDeleteObjs=selection}"
+      >
+        <el-table-column
+          :resizable="false"
+          type="selection"
+          width="40"
+          align="center">
+        </el-table-column>
         <el-table-column
           :resizable="false"
           show-overflow-tooltip
@@ -126,11 +135,13 @@
   import bus from '../../../libs/bus';
   import dcBox from "../../common/rightBox/dcBox"; //dc弹框
   import trafficSettingBox from "../../common/rightBox/trafficSetting/trafficSettingBox";
+  import deleteButton from "../../common/deleteButton";
   export default {
     name: "dc",
     components:{
       'traffic-setting-box': trafficSettingBox,
-      'dc-box': dcBox
+      'dc-box': dcBox,
+      'delete-button':deleteButton,
     },
     data() {
       return {
@@ -155,6 +166,7 @@
           showCustomTableTitle: false, //自定义列弹框是否显示
           customTableTitle: [], //自定义列工具的数据
         },
+        batchDeleteObjs:[],
         tableId: 'dcTable', //需要分页的table的id，用于记录每页数量
         dc: {},
         blankDc: {

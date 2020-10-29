@@ -29,16 +29,19 @@
                   class="nz-btn nz-btn-size-normal nz-btn-style-light margin-l-20" id="alert-list-export">
             <i class="nz-icon nz-icon-download1"></i>
           </button>
+          <delete-button :delete-objs="batchDeleteObjs" api="alert/message" @after="getAlertList" :clickFunction="openDelMessageBox"></delete-button>
         </div>
         <div class="pagination-top pagination-top-hide display-none"></div>
       </div>
       <alertMessageTable
+        ref="alertMessageTable"
         :tableData="tableData"
         :loading="tools.loading"
         :tableHeight="mainTableHeight"
         :tableId="tableId"
         @tableDataSort="tableDataSort"
         @deleteMessage="deleteMessage"
+        @select-change="(selection)=>{this.batchDeleteObjs=selection}"
       ></alertMessageTable>
       <div class="pagination-bottom" v-show="!bottomBox.showSubList">
         <Pagination :tableId="tableId" :pageObj="pageObj" @pageNo='pageNo' @pageSize='pageSize' ref="Pagination"></Pagination>
@@ -102,6 +105,7 @@
   import alertRuleInfo from '../../common/alert/alertRuleInfo'
   import alertLabel from '../../common/alert/alertLabel'
   import alertMessageTable from '../../common/alert/alertMessageTable.vue'
+  import deleteButton from "../../common/deleteButton";
   export default {
     name: "alertList",
     components: {
@@ -111,6 +115,7 @@
       'alertLabel':alertLabel,
       'alertMessageTable':alertMessageTable,
       'pick-time':pickTime,
+      'delete-button':deleteButton,
     },
     data() {
       return {
@@ -140,7 +145,7 @@
         //导出相关
         importBox: {show: false, title:this.$t('overall.exportExcel')},
         deleteBox: {show: false, ids: "", remark: '', state: 2},
-
+        batchDeleteObjs:[],
         //详情相关
         graphShow: false,
         chartDatas: [],
@@ -409,6 +414,12 @@
         if (data === 'close') {
           this.viewAssetState = false
           this.$refs['assetEditUnit'].tabView = false
+        }
+      },
+      openDelMessageBox:function(){
+        if(this.batchDeleteObjs.length<1) return;
+        if(this.$refs.alertMessageTable){
+          this.$refs.alertMessageTable.toDeleteMessage(false);
         }
       },
       toDeleteMessage(obj) {

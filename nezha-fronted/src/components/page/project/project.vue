@@ -40,6 +40,7 @@
                 </button>
               </template>
             </export-excel>
+            <delete-button :delete-objs="batchDeleteObjs" api="endpoint" @after="afterCloseImport"></delete-button>
           </div>
           <div class="pagination-top pagination-top-hide display-none"></div>
         </div>
@@ -66,7 +67,14 @@
           style="width: 100%;"
           @sort-change="tableDataSort"
           @row-dblclick="detailEndpoint"
+          @selection-change="(selection)=>{this.batchDeleteObjs=selection}"
         >
+          <el-table-column
+            :resizable="false"
+            type="selection"
+            width="40"
+            align="center">
+          </el-table-column>
           <el-table-column
             :resizable="false"
             v-for="(item, index) in tools.customTableTitle"
@@ -175,6 +183,7 @@
   import panelTab from '../../common/bottomBox/tabs/panelTab'
   import bus from '../../../libs/bus'
   import facade from '@/components/common/project/projectFacade'
+  import deleteButton from "../../common/deleteButton";
   export default {
     name: "project2",
     components: {
@@ -182,6 +191,7 @@
       'loading': loading,
       'panel-tab': panelTab,
       facade,
+      'delete-button':deleteButton,
     },
     data() {
       return {
@@ -213,7 +223,7 @@
           showCustomTableTitle: false, //自定义列弹框是否显示
           customTableTitle: [], //自定义列工具的数据
         },
-
+        batchDeleteObjs:[],
 
         tableId: 'projectTable', //需要分页的table的id，用于记录每页数量
         userData: [],

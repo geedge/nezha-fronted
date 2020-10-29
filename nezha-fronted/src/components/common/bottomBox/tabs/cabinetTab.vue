@@ -13,6 +13,7 @@
                 class="nz-btn nz-btn-size-normal nz-btn-style-light float-right margin-l-20" id="cab-add">
           <i class="nz-icon-create-square nz-icon"></i>
         </button>
+        <delete-button :delete-objs="batchDeleteObjs" api="cabinet" @after="getTableData"></delete-button>
       </div>
     </div>
     <el-table
@@ -24,7 +25,15 @@
       v-scrollBar:el-table="'large'"
       :cell-class-name="assetStatClassName"
       :height="$tableHeight.noPagination"
-      style="width: 100%;">
+      style="width: 100%;"
+      @selection-change="(selection)=>{this.batchDeleteObjs=selection}"
+    >
+        <el-table-column
+          :resizable="false"
+          type="selection"
+          width="40"
+          align="center">
+        </el-table-column>
       <el-table-column
         :resizable="false"
         v-for="(item, index) in tableTitle"
@@ -80,10 +89,12 @@
 
 <script>
   import cabinetBox from "../../rightBox/cabinetBox";
+  import deleteButton from "../../deleteButton";
   export default {
     name: "cabinetTab",
     components: {
-      "cabinet-box": cabinetBox
+      "cabinet-box": cabinetBox,
+      'delete-button':deleteButton,
     },
     props: {
       obj: Object, //关联的实体对象
@@ -99,6 +110,7 @@
           seq:'',
           uSize:1
         },
+        batchDeleteObjs:[],
         rightBox: {show: false},
         showTopBtn: false, //top按钮是否显示
         loading: false,

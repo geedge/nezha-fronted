@@ -48,6 +48,7 @@
               </button>
             </template>
           </export-excel>
+          <delete-button :delete-objs="batchDeleteObjs" api="alert/rule" @after="getTableData"></delete-button>
         </div>
         <div class="pagination-top pagination-top-hide display-none"></div>
       </div>
@@ -75,7 +76,14 @@
         style="width: 100%;"
         @sort-change="tableDataSort"
         @row-dblclick="detail"
+        @selection-change="(selection)=>{this.batchDeleteObjs=selection}"
       >
+        <el-table-column
+          :resizable="false"
+          type="selection"
+          width="40"
+          align="center">
+        </el-table-column>
         <el-table-column
           :resizable="false"
           v-for="(item, index) in tools.customTableTitle"
@@ -145,10 +153,12 @@
   import bus from '../../../libs/bus';
   import exportXLSX from "../../common/exportXLSX";
   import chartDataFormat from "../../charts/chartDataFormat";
+  import deleteButton from "../../common/deleteButton";
   export default {
     name: "alert-config",
     components: {
       'export-excel': exportXLSX,
+      'delete-button':deleteButton,
     },
     data() {
       return {
@@ -178,7 +188,7 @@
           customTableTitle: [], //自定义列工具的数据
         },
         mainTableHeight: this.$tableHeight.normal, //主列表table高度
-
+        batchDeleteObjs:[],
         tableId: 'alertRuleTable', //需要分页的table的id，用于记录每页数量
         alertRule: {},
         blankAlertRule: {

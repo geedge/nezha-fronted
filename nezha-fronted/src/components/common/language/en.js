@@ -377,6 +377,7 @@ const en = {
   },
   tip: {
     confirmDelete: "Are you sure you want to delete?", //Are you sure you want to delete?
+    confirmBatchDelete:'Are you sure to delete these {0} pieces of data',
     assetConfirmDelete: 'Related endpoints and alerts will be removed, are you sure you want to delete this asset?',//Related endpoints and alerts will be removed, are you sure you want to delete this asset?
     yes: 'Yes', //"是"
     no: "No",//No

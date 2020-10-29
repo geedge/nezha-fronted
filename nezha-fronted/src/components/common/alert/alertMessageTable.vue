@@ -3,11 +3,6 @@
 </style>
 <template>
   <div :class="{'contentTable':!projectAlertId,'relative-position':true,'contentProject':projectAlertId}">
-    <transition name="el-zoom-in-bottom">
-      <div class="el-popover alert-clean-pop" @click="toDeleteMessage(false)" v-if="deleteBox.ids.length > 0">
-        <i style="cursor: pointer" class="nz-icon nz-icon-delete"></i>
-      </div>
-    </transition>
     <!-- 自定义table列 -->
     <transition name="el-zoom-in-top">
       <element-set
@@ -39,7 +34,7 @@
       <el-table-column
         :resizable="false"
         type="selection"
-        width="38"
+        width="40"
         align="center"
       >
       </el-table-column>
@@ -187,7 +182,11 @@
     <div class="export-xlsx">
       <el-dialog :visible.sync="deleteBox.show" :title="$t('overall.delete')" :modal-append-to-body='false' :show-close="true" width="300px" @close="closeDialog" class="nz-message">
         <div class="upload-body">
-          <el-input type="textarea" :placeholder="$t('alert.description')" v-model="deleteBox.remark"></el-input>
+          <el-form ref="remarkForm" :model="deleteBox">
+            <el-form-item :rules="[{required: true, message: this.$t('validate.required'), trigger: 'blur'}]" prop="remark">
+              <el-input type="textarea" :placeholder="$t('alert.description')" v-model="deleteBox.remark"></el-input>
+            </el-form-item>
+          </el-form>
           <div style="text-align: right; margin-top: 10px;">
             <button @click="closeDialog" class="el-button el-button--default el-button--small">
               <span>{{$t('tip.no')}}</span>
@@ -409,6 +408,7 @@
           this.queryChartDate()
         })
       },
+
       formatThreshold:function(value,unit){
         let unitMethod=chartDataFormat.getUnit(unit)
         if(unitMethod&&value){
@@ -598,13 +598,19 @@
         if (obj) {
           this.deleteBox.ids = obj.id + "";
         }
+        this.deleteBox.remark="";
         this.deleteBox.show = true;
       },
       deleteMessage() {
-        this.$emit('deleteMessage',this.deleteBox,()=>{
-          this.deleteBox.ids=[];
-        });
-        this.deleteBox.show = false;
+        this.$refs.remarkForm.validate(valid => {
+          console.log('valid',valid)
+          if (valid) {
+            this.$emit('deleteMessage',this.deleteBox,()=>{
+              this.deleteBox.ids=[];
+            });
+            this.deleteBox.show = false;
+          }
+        })
       },
       selectChange(s) {
         let ids = [];
@@ -613,6 +619,7 @@
           ids.push(item.id);
         });
         this.deleteBox.ids = ids.join(",");
+        this.$emit('select-change',s)
       },
       showExportDialog() {
         this.importBox.show = true;

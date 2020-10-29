@@ -2254,3 +2254,10 @@ li{
 .alert-level-P3{
   background: #f7ba78;
 }
+.required-marker {
+  label:before{
+    content: '*';
+    color: #F56C6C;
+    margin-right: 4px;
+  }
+}

@@ -374,6 +374,7 @@ const cn = {
   },
   tip: {
     confirmDelete: "确认删除吗？",
+    confirmBatchDelete:'确定删除这{0}条数据吗？',
     assetConfirmDelete: "关联的Endpoint和告警将会被删除，确认删除吗？",
     yes: "是",
     no: "否",

@@ -21,15 +21,18 @@
             class="nz-btn nz-btn-size-normal nz-btn-style-light margin-l-20" id="alert-list-export">
           <i class="nz-icon nz-icon-download1"></i>
         </button>
+        <delete-button :delete-objs="batchDeleteObjs" api="alert/message" @after="getAlertList" :clickFunction="openDelMessageBox"></delete-button>
       </div>
     </div>
     <alertMessageTable
+      ref="alertMessageTable"
       :tableData="tableData"
       :loading="loading"
       :tableHeight="$tableHeight.openSubList.subList"
       :tableId="tableId"
       @tableDataSort="tableDataSort"
       @deleteMessage="deleteMessage"
+      @select-change="(selection)=>{this.batchDeleteObjs=selection}"
     ></alertMessageTable>
     <Pagination :tableId="tableId" :pageObj="pageObj" @pageNo='pageNo' @pageSize='pageSize' ref="Pagination"></Pagination>
     <!--导出-->
@@ -85,12 +88,14 @@
   import chart from '../../../page/dashboard/overview/chart'
   import bus from '../../../../libs/bus'
   import alertMessageTable from '@/components/common/alert/alertMessageTable.vue'
+  import deleteButton from "../../deleteButton";
   export default {
     name: "alertMessageTab",
     components: {
       'nz-alert-tag': nzAlertTag,
       'chart': chart,
       'alertMessageTable':alertMessageTable,
+      'delete-button':deleteButton,
     },
     props: {
       from: String, //来自哪个主页面，有："asset"、"alertRule"
@@ -109,6 +114,7 @@
         requestIndex:0,
         defaultSearchValue: this.obj.alertNum ? 1 : 0,
         showElementSet: false,
+        batchDeleteObjs:[],
         tableId: 'alertListTable', //需要分页的table的id，用于记录每页数量
         showTopBtn: false, //top按钮是否显示
         loading: false,
@@ -452,6 +458,12 @@
 
       dialogClose() {
         this.graphShow = false;
+      },
+      openDelMessageBox:function(){
+        if(this.batchDeleteObjs.length<1) return;
+        if(this.$refs.alertMessageTable){
+          this.$refs.alertMessageTable.toDeleteMessage(false);
+        }
       },
       del(u) {
         this.$confirm(this.$t("tip.confirmDelete"), {

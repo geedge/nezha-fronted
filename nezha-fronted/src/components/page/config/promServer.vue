@@ -16,6 +16,7 @@
                   class="nz-btn nz-btn-size-normal nz-btn-style-light margin-l-20" id="prom-add">
             <i class="nz-icon-create-square nz-icon"></i>
           </button>
+          <delete-button :delete-objs="batchDeleteObjs" api="promServer" @after="getTableData"></delete-button>
         </div>
         <div class="pagination-top pagination-top-hide display-none"></div>
       </div>
@@ -31,7 +32,15 @@
       </transition>
       <el-table :data="tableData" border v-show="bottomBox.mainResizeShow" :height="mainTableHeight" style="width: 100%;"
                 v-loading="tools.loading" ref="promTable" class="nz-table" v-scrollBar:el-table="'large'"
-                @sort-change="tableDataSort">
+                @sort-change="tableDataSort"
+                @selection-change="(selection)=>{this.batchDeleteObjs=selection}"
+      >
+        <el-table-column
+          :resizable="false"
+          type="selection"
+          width="40"
+          align="center">
+        </el-table-column>
         <el-table-column :resizable="false" v-for="(item, index) in tools.customTableTitle"
                          v-if="item.show"
                          :width="item.width"
@@ -95,11 +104,12 @@
 <script>
   import bus from '../../../libs/bus';
   import promServerBox from '../../common/rightBox/promServerBox';
-
+  import deleteButton from "../../common/deleteButton";
   export default {
     name: "promServer",
     components: {
-      'prom-server-box': promServerBox
+      'prom-server-box': promServerBox,
+      'delete-button':deleteButton,
     },
     data() {
       return {
@@ -128,7 +138,7 @@
           showCustomTableTitle: false, //自定义列弹框是否显示
           customTableTitle: [], //自定义列工具的数据
         },
-
+        batchDeleteObjs:[],
         tableId: 'promTable', //需要分页的table的id，用于记录每页数量
         promServer: {},
         blankPromServer: {

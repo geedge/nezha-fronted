@@ -18,6 +18,7 @@
                   class="nz-btn nz-btn-size-normal nz-btn-style-light margin-l-20" id="account-add">
             <i class="nz-icon-create-square nz-icon"></i>
           </button>
+          <delete-button :delete-objs="batchDeleteObjs" api="sys/user/delete" @after="getTableData" :filter-function="(arr)=>{return '?userIds='+arr.map(t=>t.userId).join(',')}"></delete-button>
         </div>
         <!-- 顶部分页组件，当打开底部上滑框时出现 -->
         <div class="pagination-top pagination-top-hide display-none"></div>
@@ -42,7 +43,15 @@
         v-loading="tools.loading"
         v-scrollBar:el-table="'large'"
         style="width: 100%;"
-        @sort-change="tableDataSort">
+        @sort-change="tableDataSort"
+        @selection-change="(selection)=>{this.batchDeleteObjs=selection}"
+      >
+        <el-table-column
+          :resizable="false"
+          type="selection"
+          width="40"
+          align="center">
+        </el-table-column>
         <el-table-column
           :resizable="false"
           v-for="(item, index) in tools.customTableTitle"
@@ -109,13 +118,14 @@
   </div>
 </template>
 <script>
-  import bus from '../../../libs/bus';
+  import deleteButton from "../../common/deleteButton";
   import accountBox from '../../common/rightBox/accountBox';
 
   export default {
     name: "account",
     components: {
-      'account-box': accountBox
+      'account-box': accountBox,
+      'delete-button':deleteButton,
     },
     data() {
       return {
@@ -145,7 +155,7 @@
           customTableTitle: [], //自定义列工具的数据
         },
         mainTableHeight: this.$tableHeight.normal, //主列表table高度
-
+        batchDeleteObjs:[],
         user: {},
 
         tableId: 'accountTable', //需要分页的table的id，用于记录每页数量

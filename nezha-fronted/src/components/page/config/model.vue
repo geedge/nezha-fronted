@@ -16,6 +16,7 @@
                   id="model-add">
                     <i class="nz-icon-create-square nz-icon"></i>
           </button>
+          <delete-button :delete-objs="batchDeleteObjs" api="model" @after="getTableData"></delete-button>
         </div>
         <div class="pagination-top pagination-top-hide display-none"></div>
       </div>
@@ -40,7 +41,14 @@
                 :height="mainTableHeight"
                 @sort-change="tableDataSort"
                 @row-dblclick="panel"
+                @selection-change="(selection)=>{this.batchDeleteObjs=selection}"
       >
+        <el-table-column
+          :resizable="false"
+          type="selection"
+          width="40"
+          align="center">
+        </el-table-column>
         <el-table-column :resizable="false"
                          v-for="(item, index) in tools.customTableTitle"
                          v-if="item.show"
@@ -101,8 +109,12 @@
 </template>
 <script>
   import bus from '../../../libs/bus';
+  import deleteButton from "../../common/deleteButton";
   export default {
     name: "model",
+    components: {
+      'delete-button':deleteButton,
+    },
     data() {
       return {
         /*二级页面相关*/
@@ -126,6 +138,7 @@
           showCustomTableTitle: false, //自定义列弹框是否显示
           customTableTitle: [], //自定义列工具的数据
         },
+        batchDeleteObjs:[],
         tableId: 'modelTable', //需要分页的table的id，用于记录每页数量
 
         rightBox: {show: false},

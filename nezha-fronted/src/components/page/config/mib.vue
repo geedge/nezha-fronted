@@ -19,10 +19,11 @@
           <div class="top-tool-search">
             <search-input :searchMsg="searchMsg" @search="search"></search-input>
           </div>
-          <button @click="add" class="nz-btn nz-btn-size-normal nz-btn-style-light  margin-l-20"  :title="$t('overall.createMib')"
+          <button type="button" @click="add" class="nz-btn nz-btn-size-normal nz-btn-style-light  margin-l-20"  :title="$t('overall.createMib')"
                   id="mib-add">
             <i class="nz-icon-create-square nz-icon"></i>
           </button>
+          <delete-button :delete-objs="batchDeleteObjs" api="mib" @after="getTableData"></delete-button>
         </div>
       </div>
       <!-- 自定义table列 -->
@@ -35,7 +36,15 @@
           ref="customTableTitle"
         ></element-set>
       </transition>
-      <el-table :data="tableData" border :height="$tableHeight.normal" style="width: 100%;" ref="mibTable" class="nz-table mib-table" v-scrollBar:el-table="'large'" v-loading="tools.loading" @sort-change="tableDataSort">
+      <el-table :data="tableData" border :height="$tableHeight.normal" style="width: 100%;" ref="mibTable" class="nz-table mib-table" v-scrollBar:el-table="'large'" v-loading="tools.loading" @sort-change="tableDataSort"
+                @selection-change="(selection)=>{this.batchDeleteObjs=selection}"
+      >
+        <el-table-column
+          :resizable="false"
+          type="selection"
+          width="40"
+          align="center">
+        </el-table-column>
         <el-table-column :resizable="false" v-for="(item, index) in tools.customTableTitle" v-if="item.show" :width="item.width" :class-name="item.prop == 'modelsDetail'?'detail-column':''"
                          :key="`col-${index}`" :label="item.label" :sortable="$tableSet.sortableShow(item.prop,'mib')"
                          :prop="$tableSet.propTitle(item.prop,'mib')"
@@ -109,11 +118,12 @@
   import axios from 'axios'
   import bus from '../../../libs/bus';
   import mibBrowser from './mibBrowser';
-
+  import deleteButton from "../../common/deleteButton";
   export default {
     name: "mib",
     components: {
-      'mib-browser': mibBrowser
+      'mib-browser': mibBrowser,
+      'delete-button':deleteButton,
     },
     data() {
       return {
@@ -127,6 +137,7 @@
           showCustomTableTitle: false, //自定义列弹框是否显示
           customTableTitle: [], //自定义列工具的数据
         },
+        batchDeleteObjs:[],
         tableId: 'mibTable', //需要分页的table的id，用于记录每页数量
         mib: {},
         blankMib: {
