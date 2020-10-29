@@ -1,6 +1,9 @@
 <template>
   <div class="header">
-    <div class="logo link" @click="jumpTo('/overview')"><img height="45" src="../../assets/img/logo.png"/></div>
+    <div class="logo link" @click="jumpTo('/overview')">
+      <img height="28" src="../../assets/img/logo1-2.png"/>
+      <span class="header-system-name">{{systemName&&systemName != 'undefined'&&systemName != null?systemName: $t('dashboard.overview.contentTitle')}}</span>
+    </div>
     <el-menu
       class="nz-menu float-right"
       mode="horizontal"
@@ -192,7 +195,7 @@
         activeItemIndex: '',
         activeItemIndexes: [],
         hoverItemIndex: '',
-
+        systemName: localStorage.getItem('nz-sys-name'),
         dc: {
           id: '',
           name: '',
@@ -532,7 +535,7 @@
 <style lang="scss">
   .logo {
     position: absolute;
-    top: 5px;
+    top: 9px;
     left: 18px;
   }
   .header {
@@ -828,6 +831,15 @@
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+  }
+  .header-system-name{
+    font-size: 20px;
+    font-weight: 400;
+    color: #fff;
+    vertical-align: bottom;
+    margin-bottom: 5px;
+    display: inline-block;
+    letter-spacing: 2px;
   }
 </style>
 <style>

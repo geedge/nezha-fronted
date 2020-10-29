@@ -183,6 +183,7 @@
             label: this.$t("project.endpoint.host"),
             prop: 'host',
             show: true,
+            width:200,
           },{
             label: this.$t("project.endpoint.port"),
             prop: 'port',
@@ -192,14 +193,17 @@
             label: this.$t("overall.type"),
             prop: 'type',
             show: false,
+            width:200,
           },{
             label: this.$t("project.endpoint.param"),
             prop: 'param',
             show: true,
+            width:200,
           },{
             label: this.$t("project.endpoint.path"),
             prop: 'path',
             show: true,
+            width:200,
           },{
             label: this.$t("alert.list.state"),
             prop: 'state',
@@ -209,6 +213,7 @@
             label: this.$t("project.endpoint.alerts"),
             prop: 'alerts',
             show: true,
+            width:150,
           },
           /*{
             label: this.$t("project.endpoint.lastUpdate"),
