@@ -80,7 +80,10 @@
             :sort-orders="['ascending', 'descending']"
           >
             <template slot-scope="scope" :column="item" >
-              <span v-if="item.prop == 'asset' && scope.row[item.prop]" class="link" @click="detailEndpoint(scope.row)">{{scope.row[item.prop].host}}</span>
+              <span v-if="item.prop == 'asset' && scope.row[item.prop]" class="link" @click="detailEndpoint(scope.row)">
+                {{scope.row[item.prop].sn}} :
+                ({{scope.row[item.prop].host}})
+              </span>
               <span v-else-if="item.prop == 'param'">
               <template v-if="scope.row.paramObj">
                 <span v-for="(p,i) in scope.row.paramObj">{{p.key}}={{p.value}}<span v-if="i < scope.row.paramObj.length-1">，</span></span>
@@ -234,6 +237,7 @@
             label: this.$t("project.endpoint.port"),
             prop: 'port',
             show: true,
+            width:100,
           },{
             label: this.$t("overall.type"),
             prop: 'type',
@@ -250,6 +254,7 @@
             label: this.$t("alert.list.state"),
             prop: 'state',
             show: true,
+            width:80,
           },{
             label: this.$t("project.endpoint.alerts"),
             prop: 'alerts',
@@ -294,8 +299,9 @@
           }, {
             id: 11,
             name: this.$t('asset.asset'),
-            type: 'asset',
-            label: 'asset',
+            // name: this.$t('asset.asset'),
+            type: 'query',
+            label: 'query',
             disabled: false
           }],
         },

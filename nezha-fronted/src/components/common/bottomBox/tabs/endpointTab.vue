@@ -15,7 +15,7 @@
           export-file-name="endpoint"
           export-url="/endpoint/export"
           import-url="/endpoint/import"
-          :params="searchLabel"
+          :params="endpointSearchLabel"
           @afterImport="getTableData"
           class="margin-l-20"
         >
@@ -57,13 +57,16 @@
         :width="item.width"
         :key="`col-${index}`"
         :label="item.label"
-        min-width="110px"
+        :min-width="(item.minWidth?item.minWidth+'px':'110px')"
         :sortable="$tableSet.sortableShow(item.prop,'endpointTab')"
         :prop="$tableSet.propTitle(item.prop,'endpointTab')"
         :sort-orders="['ascending', 'descending']"
       >
         <template slot-scope="scope" :column="item">
-          <span v-if="item.prop == 'asset' && scope.row[item.prop]" class="link" @click="">{{scope.row[item.prop].host}}</span>
+          <span v-if="item.prop == 'asset' && scope.row[item.prop]" class="link" @click="">
+            {{scope.row[item.prop].sn}} :
+            ({{scope.row[item.prop].host}})
+          </span>
           <span v-else-if="item.prop == 'project' && scope.row[item.prop]">{{scope.row.project.name}}</span>
           <span v-else-if="item.prop == 'module' && scope.row[item.prop]">{{scope.row.module.name}}</span>
           <span v-else-if="item.prop == 'param'">
@@ -175,6 +178,7 @@
             label: this.$t("project.endpoint.asset"),
             prop: 'asset',
             show: true,
+            minWidth:'400',
           },{
             label: this.$t("project.endpoint.host"),
             prop: 'host',
@@ -183,6 +187,7 @@
             label: this.$t("project.endpoint.port"),
             prop: 'port',
             show: true,
+            width:'120'
           },{
             label: this.$t("overall.type"),
             prop: 'type',
@@ -199,6 +204,7 @@
             label: this.$t("alert.list.state"),
             prop: 'state',
             show: true,
+            width:'80'
           },{
             label: this.$t("project.endpoint.alerts"),
             prop: 'alerts',
@@ -231,12 +237,12 @@
           }, {
             id: 11,
             name: this.$t('asset.asset'),
-            type: 'asset',
-            label: 'asset',
+            type: 'query',
+            label: 'query',
             disabled: false
           }],
         },
-        searchLabel: { //搜索参数
+        endpointSearchLabel: { //搜索参数
         },
         tableData: [],
       }
@@ -309,18 +315,18 @@
       },
       search(searchObj) {
         let orderBy = '';
-        if(this.searchLabel.orderBy){
-          orderBy=this.searchLabel.orderBy
+        if(this.endpointSearchLabel.orderBy){
+          orderBy=this.endpointSearchLabel.orderBy
         }
-        this.searchLabel = {};
-        this.pageObj.pageNo = 1;
+        this.endpointSearchLabel = {};
+        // this.pageObj.pageNo = 1;
         for (let item in searchObj) {
           if (searchObj[item]) {
-            this.$set(this.searchLabel, item, searchObj[item]);
+            this.$set(this.endpointSearchLabel, item, searchObj[item]);
           }
         }
         if(orderBy){
-          this.$set(this.searchLabel, 'orderBy', orderBy);
+          this.$set(this.endpointSearchLabel, 'orderBy', orderBy);
         }
         this.getTableData();
       },
