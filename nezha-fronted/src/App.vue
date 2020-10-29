@@ -9,18 +9,17 @@
 <script>
 export default {
   name: 'App',
-  created(){
+  async created(){
     const Timestamp=new Date().getTime();
     let url="static/config.json?Timestamp="+Timestamp;
-    this.$http.get(url).then((result)=>{
-      this.$axios.defaults.baseURL = result.body.baseUrl;
-      const version=result.body.version;
-      if(version!==localStorage.getItem('nz-version')){
-        sessionStorage.clear();
-        localStorage.clear();
-        localStorage.setItem('nz-version',version);
-      }
-    });
+    let result= await this.$http.get(url);
+    this.$axios.defaults.baseURL = result.body.baseUrl;
+    const version=result.body.version;
+    if(version!==localStorage.getItem('nz-version')){
+      sessionStorage.clear();
+      localStorage.clear();
+      localStorage.setItem('nz-version',version);
+    }
   }
 }
 </script>
