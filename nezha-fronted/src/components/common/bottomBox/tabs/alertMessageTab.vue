@@ -225,7 +225,14 @@
             type: 'select',
             label: 'alertMessageState',
             disabled: false
-          }],
+          },
+            {
+              id:26,
+              name: this.$t('alert.list.id'),
+              type: 'id',
+              label: 'id',
+              disabled: false
+            }],
         },
         searchLabel: { //搜索参数
 

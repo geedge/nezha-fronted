@@ -768,6 +768,8 @@ const cn = {
       expired: "已过期",
       labels: "标签",
       current: "当前",
+      remark:'备注',
+      id:'ID',
     },
     config: {
       name: "名称",

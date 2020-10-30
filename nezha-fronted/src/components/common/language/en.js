@@ -775,6 +775,8 @@ const en = {
       expired: 'Expired',//"已过期"
       labels: 'Labels',
       current: 'Current',
+      remark:'Remark',
+      id:'ID',
     },
     config: {
       name: 'Name',//"名称"

@@ -146,7 +146,7 @@
             <div v-show="clearSearchShow" class="clear-search" @click="clear_input">
                 <i class="nz-icon nz-icon-circle-close"></i>
             </div>
-            <div :class="input_list?'input_list none':'input_list'" :style="'top:' + selectDom.top" @click="stop_click" id="input_list">
+            <div :class="input_list?'input_list none':'input_list'" :style="'top:' + selectDom.top" @click="stop_click" id="input_list" v-scroll-bar>
                 <ul>
                     <li v-for="(val,ind) in searchLabelList" @click="select_name(val.name,ind,val.id,val.type,val.label,val.disabled,$event)" :key="ind" :class="{'search-style-ind':searchStyleNum==ind,'is-disabled':val.disabled}">
                         <span>{{val.name}}</span>

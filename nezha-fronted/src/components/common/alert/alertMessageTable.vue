@@ -71,6 +71,10 @@
             <template v-if="scope.row[item.prop]">{{scope.row[item.prop]}}</template>
             <span v-else>-</span>
           </template>
+          <template v-else-if="item.prop == 'remark'">
+            <template v-if="scope.row[item.prop]">{{scope.row[item.prop]}}</template>
+            <span v-else>-</span>
+          </template>
           <span v-else-if="item.prop == 'severity'" class="severity">
             <span v-if="scope.row[item.prop] == 'P1'" class="P1">P1</span>
             <!--<i class="nz-icon nz-icon-arrow-up"></i> {{returnSeverityLabel(scope.row[item.prop])}}-->
@@ -164,7 +168,6 @@
       </el-table-column>
     </el-table>
     <!--<弹窗>-->
-    <!--删除弹窗-->
     <!--导出-->
     <div class="export-xlsx">
       <el-dialog :visible.sync="importBox.show" :title="importBox.title" :modal-append-to-body='false' :show-close="true" width="300px" @close="closeDialog" class="nz-dialog">
@@ -178,9 +181,9 @@
         </div>
       </el-dialog>
     </div>
-    <!--export-->
+    <!--删除弹窗-->
     <div class="export-xlsx">
-      <el-dialog :visible.sync="deleteBox.show" :title="$t('overall.delete')" :modal-append-to-body='false' :show-close="true" width="300px" @close="closeDialog" class="nz-message">
+      <el-dialog :visible.sync="deleteBox.show" :title="$t('alert.list.remark')" :modal-append-to-body='false' :show-close="true" width="450px" @close="closeDialog" class="nz-message">
         <div class="upload-body">
           <el-form ref="remarkForm" :model="deleteBox">
             <el-form-item :rules="[{required: true, message: this.$t('validate.required'), trigger: 'blur'}]" prop="remark">
@@ -313,6 +316,11 @@
           }, {
             label: this.$t('alert.description'),
             prop: 'description',
+            show: true,
+            minWidth:200
+          },{
+            label: this.$t('alert.list.remark'),
+            prop: 'remark',
             show: true,
             minWidth:200
           }, {
