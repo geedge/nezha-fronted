@@ -838,7 +838,7 @@
     display: inline-block;
     font-family: Verdana;
     font-size: 12px;
-    color: #F0F0F0;
+    color: #c8c8c8;
     letter-spacing: -0.54px;
   }
 </style>
