@@ -737,6 +737,8 @@
         ? JSON.parse(localStorage.getItem("nz-tableTitle-" + localStorage.getItem("nz-username") + "-" + this.$route.path))
         : this.tableTitle;
 
+      this.tableTitleReset(this.tableTitle,tableTitle);
+
       if (this.assetPingSwitch == 'off') {
         this.dispatchEvent('asset-ping-switch-change',false)
         for (let i in tableTitle) {

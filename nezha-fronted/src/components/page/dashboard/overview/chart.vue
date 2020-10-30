@@ -163,6 +163,18 @@
             this.option.yAxis.axisLabel.formatter=this.defaultYAxisFormatter
           }
         }
+        if(this.chartType == 'overviewLine'){
+          this.option.xAxis.axisLabel.formatter=function(value,index){
+            value=bus.computeTimezone(value)
+            let t_date = new Date(value);
+            let month=t_date.getMonth()+1>9?t_date.getMonth()+1:'0'+(t_date.getMonth()+1);
+            let day = t_date.getDate()>9?t_date.getDate():'0'+t_date.getDate();
+            let hour = t_date.getHours()>9?t_date.getHours():'0'+t_date.getHours();
+            let minute=t_date.getMinutes()>9?t_date.getMinutes():'0'+t_date.getMinutes();
+            return [ month, day].join('-') + "\n"
+              + [hour, minute].join(':');
+          }
+        }
         if(this.series){
           this.$set(this.option,'series',this.series);
           this.noData=false;

@@ -88,7 +88,7 @@
         type: 'time',
         // boundaryGap: false,//line-false; bar-true;
         axisLabel: {
-          intervale: 0,
+          interval: 0,
           rotate: 0,
           formatter: function (value) {
             value=value
@@ -313,19 +313,6 @@
       },
       toolbox:{
         show:false,
-        top:'0',
-        showTitle:false,
-        tooltip:{
-          show:false,
-        },
-        feature:{
-          dataZoom:{
-            yAxisIndex:false
-          },
-          magicType:{
-            type:['stack']
-          },
-        }
       },
       tooltip: {
         trigger: 'axis',
@@ -344,22 +331,8 @@
       xAxis: {
         type: 'time',
         axisLabel: {
-          intervale: 0,
           rotate: 0,
-          formatter: function (value) {
-            value = bus.computeTimezone(value)
-            let now = bus.computeTimezone(new Date().getTime());
-            let t_date = new Date(value);
-            let hhmm = [t_date.getHours(), t_date.getMinutes() < 10 ? "0" + t_date.getMinutes() : t_date.getMinutes()].join(':');
-            let mmdd = [t_date.getMonth() + 1, t_date.getDate() < 10 ? "0" + t_date.getDate() : t_date.getDate()].join('/');
-            if (now-value < 1000*60*60*24) {
-              return hhmm;
-            } else if (now-value >= 1000*60*60*24 && now-value < 1000*60*60*24*30) {
-              return mmdd + " " + hhmm;
-            } else {
-              return mmdd;
-            }
-          },
+
           fontSize: 13*window.devicePixelRatio
         },
         axisPointer: {//y轴上显示指针对应的值

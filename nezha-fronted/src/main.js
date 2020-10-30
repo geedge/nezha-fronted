@@ -112,7 +112,15 @@ Vue.mixin({
         if(time){
           return bus.timeFormate(this.timezoneToUtcTime(time),format)
         }
-      }
+      },
+      tableTitleReset:function(src,dist){
+        dist.forEach(item=>{
+          let title=src.find(t=>t.prop == item.prop)
+          if(title&&title.label){
+            item.label=title.label;
+          }
+        })
+      },
     }
 })
 
