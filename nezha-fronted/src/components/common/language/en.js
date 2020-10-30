@@ -76,7 +76,7 @@ const en = {
       failedDetail:'Failed Detail'
     },
     reset:'Reset',
-    submit:'Submit',
+    submit:'Save',
     noData:'No data',
     tag: 'Tag',
     placeHolder:'Please enter',

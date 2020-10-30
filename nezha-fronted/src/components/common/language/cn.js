@@ -41,8 +41,8 @@ const cn = {
     createAsset: "新增资产",
     createAlertRule: "新增告警规则",
     createAccount: "新增用户名",
-    createPrometheusServer: "新增 prometheus server",
-    createDatacenter: "新增DC",
+    createPrometheusServer: "新增prometheus服务",
+    createDatacenter: "新增数据中心",
     active: "活跃",
     type: "类别",
     preview: "预览",
@@ -72,7 +72,7 @@ const cn = {
       failedDetail: "失败详情"
     },
     reset: "重置",
-    submit: "提交",
+    submit: "保存",
     noData:'没有数据',
     tag: '标签',
     syncChart:'同步图表',
@@ -213,7 +213,7 @@ const cn = {
       recOneMonth: "最近1月",
       curMonth: "本月",
       lastMonth: "上月",
-      customTimeRange: "Custom time range",
+      customTimeRange: "自定义时间区间",
       noDate:'无',
       lastFiveMin: "最近5分钟",
       lastFifteenMin: "最近15分钟",
@@ -415,18 +415,18 @@ const cn = {
       },
       purchaseDate: "购买日期",
       dataSelectTip: "请选择日期",
-      dc: "DC",
-      dcName: "DC名称",
+      dc: "数据中心",
+      dcName: "数据中心名称",
       AddIdcTab: {
-        title: "新增DC",
-        dcName: "DC名称",
+        title: "新增数据中心",
+        dcName: "数据中心名称",
         location: "地区",
         principal: "负责人",
         tel: "电话"
       },
       editIdcTab: {
-        title: "编辑DC",
-        dcName: "DC名称",
+        title: "编辑数据中心",
+        dcName: "数据中心名称",
         location: "地区",
         principal: "负责人",
         tel: "电话"
@@ -440,14 +440,14 @@ const cn = {
         name: "名称",
         uSize: "U位",
         remark: "描述",
-        DC: "DC"
+        DC: "数据中心"
       },
       editCabinetTab: {
         title: "编辑机柜",
         name: "名称",
         uSize: "U位",
         remark: "描述",
-        DC: "DC"
+        DC: "数据中心"
       },
       uSize: "U位",
       remark: "描述",
@@ -468,7 +468,7 @@ const cn = {
       assetState: "状态",
       modules: "Endpoint",
       alerts: "告警信息",
-      dataCenter: "DC",
+      dataCenter: "数据中心",
       cabinet: "机柜",
       model: "型号",
       manufacturer: "厂商",
@@ -601,7 +601,7 @@ const cn = {
     dc: {
       dc: "数据中心",
       area: "地区",
-      dcName: 'DC名称',
+      dcName: '数据中心名称',
       selectArea: "选择地区",
       cabinetNum: "机柜数量",
       assets: "资产",
@@ -847,7 +847,7 @@ const cn = {
       port: "端口",
       param: "参数",
       path: "路径",
-      asset: "设备",
+      asset: "资产",
       lastUpdate: "最后更新时间",
       moduleParameter: "模块参数",
       addGraph: "查看图表",

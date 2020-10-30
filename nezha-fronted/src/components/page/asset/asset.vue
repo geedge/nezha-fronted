@@ -828,7 +828,7 @@
       max-width: calc(100% - 40px); min-width: 20px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;
     }
     .tag-mark{
-      color:orange; width: 40px;
+      color:orange; width: 42px;
     }
   }
   /*/deep/ .sidebar-info-item .el-checkbox__label{*/

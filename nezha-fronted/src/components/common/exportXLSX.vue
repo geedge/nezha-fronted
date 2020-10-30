@@ -5,8 +5,8 @@
         <i class="nz-icon nz-icon-arrow-down"></i>
         <transition name="el-zoom-in-top">
           <ul class="el-dropdown-menu el-popper el-dropdown-menu--mini export-dropdown" v-show="exportShow">
-            <li @click="showImportBox(1)" class="el-dropdown-menu__item dropdown-content"><i class="nz-icon nz-icon-upload"></i>import</li>
-            <li @click="showImportBox(2)" class="el-dropdown-menu__item dropdown-content"><i class="nz-icon nz-icon-download1"></i>export</li>
+            <li @click="showImportBox(1)" class="el-dropdown-menu__item dropdown-content"><i class="nz-icon nz-icon-upload"></i>{{$t('overall.importExcel')}}</li>
+            <li @click="showImportBox(2)" class="el-dropdown-menu__item dropdown-content"><i class="nz-icon nz-icon-download1"></i>{{$t('overall.exportExcel')}}</li>
           </ul>
         </transition>
       </button>

@@ -673,8 +673,14 @@ li{
   margin-top: -2px;
 }*/
 .top-tool-main-right-to-left {
-  right: calc(100% - 341px) !important;
+  right: calc(100% - 390px) !important;
   /*transform: translateX(100%);*/
+}
+.top-tool-main-right-to-left-small{
+  right: calc(100% - 360px) !important;
+}
+.top-tool-main-right-to-left-little{
+  right: calc(100% - 286px) !important;
 }
 /* end--顶部工具栏*/
 

@@ -8,7 +8,7 @@
     <div class="main-list" :class="{'main-list-with-sub': bottomBox.showSubList}">
       <div class="main-modal"></div>
       <div class="top-tools" v-show="bottomBox.mainResizeShow">
-        <div class="top-tool-main-right" :class="{'top-tool-main-right-to-left': bottomBox.showSubList}">
+        <div class="top-tool-main-right" :class="{'top-tool-main-right-to-left-small': bottomBox.showSubList}">
           <div class="top-tool-search">
             <search-input :searchMsg="searchMsg" @search="search" :bottomBox.inTransform="bottomBox.inTransform"></search-input>
           </div>

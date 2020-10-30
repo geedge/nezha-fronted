@@ -7,7 +7,7 @@
   <div class="mib">
     <template v-if="showTab == 'file'">
       <div class="top-tools">
-        <div class="nz-tab top-tool-main-right top-tool-main-right-to-left" style="width: 300px">
+        <div class="nz-tab top-tool-main-right top-tool-main-right-to-left-little" style="width: 300px">
           <div class="nz-tab-item-box" id="module-type-1">
             <div class="nz-tab-item nz-tab-item-active">{{$t("config.mib.mibFiles")}}</div>
           </div>
