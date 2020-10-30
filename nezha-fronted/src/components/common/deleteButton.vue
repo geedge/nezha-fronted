@@ -1,5 +1,5 @@
 <template>
-    <div class="delete-button">
+    <div :class="['delete-button',(deleteObjs.length<1?'':'delete-button-light')]">
       <el-button class="nz-btn nz-btn-size-normal nz-btn-style-light" :class="{'nz-btn-disabled' : deleteObjs.length<1}" @click="batchDelete"><span><i class="nz-icon nz-icon-delete"></i></span></el-button>
     </div>
 </template>
@@ -52,11 +52,17 @@
 <style scoped>
   .delete-button{
     margin-left: 16px;
-  }
-  .delete-button .nz-icon-delete{
-    color: #ee6723;
+    opacity: 0.7;
+    border-radius: 2px;
   }
   .delete-button .nz-btn-disabled .nz-icon-delete{
-    color: #e5e5e5;
+    opacity: 0.5;
+    color: #D14A2B;
+  }
+  .delete-button-light.delete-button{
+    border-radius: 2px;
+  }
+  .delete-button-light .nz-icon-delete{
+    color:  #D14A2B;
   }
 </style>

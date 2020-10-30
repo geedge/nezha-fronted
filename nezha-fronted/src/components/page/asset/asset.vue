@@ -119,7 +119,7 @@
             <span  >{{scope.row.idc.name}}</span>
           </div>
           <template v-if="item.prop=='cabinet'">
-            <span v-if="scope.row.cabinet && scope.row.cabinet != '--'">{{returnData(scope.row.cabinet).name}}</span>
+            <span v-if="scope.row.cabinet && scope.row.cabinet != '--'">{{returnData(scope.row.cabinet).name}}{{returnCabinet( scope.row.cabinetStart, scope.row.cabinetEnd)}}</span>
             <span v-else >{{returnData(scope.row.cabinet)}}</span>
           </template>
           <div v-if="item.prop=='model'">
@@ -581,6 +581,12 @@
         } else {
           return "--";
         }
+      },
+      returnCabinet(start,end){//返回机柜u位信息
+       if(!start|| !end){
+         return ''
+       }
+        return `[${start} - ${end}]`
       },
       closeAllPop() {
         this.$refs.idcConfigBox.forEach((item) => {
