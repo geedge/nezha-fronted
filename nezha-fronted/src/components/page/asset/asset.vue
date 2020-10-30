@@ -374,7 +374,6 @@
         tableData: [],
 
         pageObj: {
-          id: '',
           pageNo: 1,
           pageSize: 50,
           total: 0,
