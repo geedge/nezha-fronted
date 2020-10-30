@@ -261,7 +261,6 @@ export default {
     getTarget(target) {
       // 由于条件限制，每次其实只有一个target
       this.elementTarget = JSON.parse(JSON.stringify(target));
-      console.log('2_+_+_+_+_+_+',JSON.stringify(this.elementTarget));
       /*this.$refs.chartInfo.validate((valid) => {
         if (valid) {*/
           this.loading = true;
@@ -482,9 +481,7 @@ export default {
     getSuggestMetric() {
       //this.$get('/prom/api/v1/label/__name__/values').then(response => {
       this.$get('/module?pageSize=-1').then(response => {
-        console.log('---response---',response);
         if (response.code === 200) {
-          console.log('---response200---',response);
           this.metricList = response.data.list;
           const cascaderMap = new Map();
           this.metricList.forEach((item,index) => {
@@ -527,7 +524,6 @@ export default {
           });
 
           this.metricCascaderList = metricCascaderArr;
-          console.log('---response200metricCascaderList---',this.metricCascaderList);
         }else {
           this.metricList = [];
           this.metricCascaderList = [];

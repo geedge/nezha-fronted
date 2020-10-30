@@ -765,7 +765,7 @@ export default {
         },
         // 设置数据, filter区分
         setData(chartItem, seriesItem, panelId, filter,area,errorMsg) {
-          console.info(chartItem,title)
+          // console.info(chartItem,title)
         },
       // 数据排序
       tableDataSort(item){

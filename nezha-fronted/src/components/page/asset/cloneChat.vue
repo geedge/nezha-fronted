@@ -135,7 +135,7 @@ export default {
       form.append("path", this.uploadFile.path);
       this.$post('account/upload.do', form).then(res => {
         if (res.code === 200) {
-          console.log(res)
+          // console.log(res)
         }
       })
     },

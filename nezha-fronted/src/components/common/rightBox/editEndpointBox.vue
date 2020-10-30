@@ -366,7 +366,6 @@
         immediate: true,
         deep: true,
         handler(n, o) {
-          console.info(n)
           this.editEndpoint = JSON.parse(JSON.stringify(n));
         },
       },

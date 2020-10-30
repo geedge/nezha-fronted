@@ -611,7 +611,6 @@
       },
       deleteMessage() {
         this.$refs.remarkForm.validate(valid => {
-          console.log('valid',valid)
           if (valid) {
             this.$emit('deleteMessage',this.deleteBox,()=>{
               this.deleteBox.ids=[];

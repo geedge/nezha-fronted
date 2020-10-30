@@ -381,7 +381,6 @@
             }
           }
           this.vendorAndModelOptionData = result;
-          console.log('model/vender',this.vendorAndModelOptionData)
         });
       },
       addTag() {
@@ -471,7 +470,6 @@
         }, 100)
       },
       modelChange(modelId) {
-        console.log('model ',this.editAsset.modelId)
         let model = this.modelData.find((item, index)=>{
           return modelId == item.id;
         });
@@ -666,7 +664,6 @@
         }
       },
       filterValue:function(input,callback){
-        console.log(this.tagValues)
         if(!input || input == ''){
           callback(this.tagValues)
         }else{

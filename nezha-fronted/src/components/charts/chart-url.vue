@@ -155,14 +155,14 @@ export default {
           iframe.attachEvent('onload', function () {
             // iframe加载完毕以后执行操作
             that.firstShow = true;
-            console.log('iframe已加载完毕');
+            // console.log('iframe已加载完毕');
             that.endLoading();
           })
         } else {
           iframe.onload = function () {
             // iframe加载完毕以后执行操作
             that.firstShow = true;
-            console.log('iframe已加载完毕');
+            // console.log('iframe已加载完毕');
             that.endLoading();
           }
         }
@@ -256,14 +256,14 @@ export default {
           iframe.attachEvent('onload', function () {
             // iframe加载完毕以后执行操作
             that.firstShow = true;
-            console.log('iframe已加载完毕');
+            // console.log('iframe已加载完毕');
             that.endLoading('screen');
           })
         } else {
           iframe.onload = function () {
             // iframe加载完毕以后执行操作
             that.firstShow = true;
-            console.log('iframe已加载完毕');
+            // console.log('iframe已加载完毕');
             that.endLoading('screen');
           }
         }
