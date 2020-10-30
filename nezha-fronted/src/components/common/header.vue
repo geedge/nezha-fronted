@@ -1,7 +1,7 @@
 <template>
   <div class="header">
     <div class="logo link" @click="jumpTo('/overview')">
-      <img height="30" src="../../assets/img/logo1-2.png"/>
+      <img height="34" src="../../assets/img/logo1-2.png"/>
       <span class="header-system-name">{{systemName&&systemName != 'undefined'&&systemName != null?systemName: $t('dashboard.overview.contentTitle')}}</span>
     </div>
     <el-menu
@@ -535,7 +535,7 @@
 <style lang="scss">
   .logo {
     position: absolute;
-    top: 9px;
+    top: 8px;
     left: 18px;
   }
   .header {
@@ -833,18 +833,13 @@
     white-space: nowrap;
   }
   .header-system-name{
-    /*font-size: 20px;*/
     font-weight: 400;
-    /*color: #fff;*/
-    vertical-align: bottom;
-    margin-bottom: 13px;
+    vertical-align: text-top;
     display: inline-block;
-    /*letter-spacing: 2px;*/
     font-family: Verdana;
-    font-size: 18px;
+    font-size: 12px;
     color: #F0F0F0;
     letter-spacing: -0.54px;
-    line-height: 14px;
   }
 </style>
 <style>
