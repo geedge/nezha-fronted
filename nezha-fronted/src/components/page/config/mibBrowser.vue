@@ -1,7 +1,7 @@
 <template>
   <span class="mib-browser">
     <div class="top-tools">
-      <div class="nz-tab top-tool-main-right top-tool-main-right-to-left" style="width: 300px">
+      <div class="nz-tab top-tool-main-right top-tool-main-right-to-left-little" style="width: 300px">
         <div class="nz-tab-item-box" @click="toFileTab" id="module-type-3">
           <div class="nz-tab-item">{{$t("config.mib.mibFiles")}}</div>
         </div>
