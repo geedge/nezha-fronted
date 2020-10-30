@@ -183,10 +183,10 @@
     </div>
     <!--删除弹窗-->
     <div class="export-xlsx">
-      <el-dialog :visible.sync="deleteBox.show" :title="$t('alert.list.remark')" :modal-append-to-body='false' :show-close="true" width="450px" @close="closeDialog" class="nz-message">
+      <el-dialog :visible.sync="deleteBox.show" :title="$t('alert.list.remark')" :modal-append-to-body='false' :show-close="true" width="450px"  @close="closeDialog" class="nz-message">
         <div class="upload-body">
           <el-form ref="remarkForm" :model="deleteBox">
-            <el-form-item :rules="[{required: true, message: this.$t('validate.required'), trigger: 'blur'}]" prop="remark">
+            <el-form-item prop="remark">
               <el-input type="textarea" :placeholder="$t('alert.description')" v-model="deleteBox.remark"></el-input>
             </el-form-item>
           </el-form>
@@ -983,5 +983,8 @@
     color: white;
     padding: 2px 5px;
     border-radius: 4px;
+  }
+  /deep/ .nz-message .el-textarea textarea{
+    height: 108px !important;
   }
 </style>
