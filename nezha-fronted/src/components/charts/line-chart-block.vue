@@ -66,7 +66,7 @@
         </template>
         <template v-else>
           <div class='legend-container'  ref="legendArea" v-show="firstShow" v-scrollBar:legend>
-            <table style="width: 100%">
+            <table style="width: 100%" border="0" cellpadding="0" cellspacing="0">
               <th style="width: 100%"></th>
               <template v-for="legendOption in legendOptions">
                 <th v-if="legendOption.value == 'on'" class="option-th legend-option-cell" >
@@ -146,7 +146,7 @@
           </template>
           <template v-else>
             <div class="legend-container legend-container-screen"  :id="'screenLegendArea'+chartIndex" @mouseenter="mouseEnterFullChart" @mouseleave="mouseLeaveFullChart" v-show="showLegend" v-scrollBar:legend>
-              <table style="width: 100%">
+              <table style="width: 100%" border="0" cellpadding="0" cellspacing="0">
                 <th style="width: 100%"></th>
                 <template v-for="legendOption in screenLegendOptions">
                   <th v-if="legendOption.value == 'on'" class="option-th legend-option-cell" >

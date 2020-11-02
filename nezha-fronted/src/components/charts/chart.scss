@@ -44,6 +44,10 @@
 .legend-option-cell{
   white-space: nowrap;padding: 0px 5px 0px 5px;
 }
+
+.legend-container table tr:hover{
+  background-color: #e6e6e6;
+}
 .nz-icon-warning{
   color:  #e6a23c;
 }

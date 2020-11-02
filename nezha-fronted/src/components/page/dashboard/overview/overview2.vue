@@ -793,6 +793,7 @@
                 maxZoom:mapConfig.maxZoom,
                 attributionControl:false,
                 zoomControl:false,
+                maxBounds:L.latLngBounds(L.latLng(-90,-180),L.latLng(90,180))
               }).setView([mapConfig.latitude,mapConfig.longitude],mapConfig.zoom);
               map.createPane("myPane", document.querySelector(".my-pane"));
               map.on("tooltipopen", function(param) {
@@ -805,7 +806,8 @@
               this.map = map;
 
               L.tileLayer(
-                "/static/Tiles/{z}/{x}/{y}.png"
+                "/static/Tiles/{z}/{x}/{y}.png",
+                {noWrap:true}
               ).addTo(map);
 
               let attribution=L.control.attribution({position:'bottomright',prefix:''})
