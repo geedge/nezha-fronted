@@ -43,7 +43,7 @@
       data(){
         let temp=this;
         var validatePass = (rule, value, callback) => {
-          if(value && value != '' && value.length >= 6){
+          if(value && value != '' ){
             callback();
           }else{
             callback(new Error(temp.$t('config.account.invalidPwd')))
