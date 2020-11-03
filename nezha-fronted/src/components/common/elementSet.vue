@@ -84,10 +84,12 @@ export default {
     //全选all true 或者全取消cancel false按钮
     batchHandler(state) {
       for (let index = 0; index < this.custom.length; index++) {
-        if (index == 0 || index == 1 || this.custom[index].NotSet) {
-          this.custom[index].show = true;
-        } else {
-          this.custom[index].show = state;
+        if(this.custom[index].type != 'title'){
+          if ((index == 0 || index == 1 || this.custom[index].NotSet)) {
+            this.custom[index].show = true;
+          } else {
+            this.custom[index].show = state;
+          }
         }
       }
     },
@@ -114,7 +116,7 @@ export default {
     isCancel() {
       let isCancel = true;
       for (let i = 0; i < this.custom.length; i++) {
-        if (!this.custom[i].show) {
+        if (!this.custom[i].show&&this.custom[i].type != 'title') {
           isCancel = false;
           break;
         }
