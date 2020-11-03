@@ -52,9 +52,7 @@
                       </el-popover>
                       <span v-else>{{item.name}}</span>
                     </div>
-                    <el-tooltip :content="''+item.total" placement="top" effect="light" :disabled="item.total<99">
-                      <el-badge class="mark" :value="item.total" :max="99"/>
-                    </el-tooltip>
+                    <el-badge class="mark" :value="item.total" />
                   </el-checkbox>
                 </el-checkbox-group>
               </el-collapse-item>
@@ -67,9 +65,7 @@
                       </el-popover>
                       <span v-else>{{item.name}}</span>
                     </div>
-                    <el-tooltip :content="''+item.total" placement="top" effect="light" :disabled="item.total<99">
-                      <el-badge class="mark" :value="item.total" :max="99"/>
-                    </el-tooltip>
+                    <el-badge class="mark" :value="item.total" />
                   </el-checkbox>
                 </el-checkbox-group>
               </el-collapse-item>
@@ -82,9 +78,7 @@
                       </el-popover>
                       <span v-else>{{item.name}}</span>
                     </div>
-                    <el-tooltip :content="''+item.total" placement="top" effect="light" :disabled="item.total<99">
-                      <el-badge class="mark" :value="item.total" :max="99"/>
-                    </el-tooltip>
+                    <el-badge class="mark" :value="item.total" />
                   </el-checkbox>
                 </el-checkbox-group>
               </el-collapse-item>
@@ -94,9 +88,7 @@
                     <div class="sidebar-info-item-txt">
                       <span>{{item.label}}</span>
                     </div>
-                    <el-tooltip :content="''+item.total" placement="top" effect="light" :disabled="item.total < 99">
-                      <el-badge class="mark" :value="item.total" :max="99"/>
-                    </el-tooltip>
+                    <el-badge class="mark" :value="item.total" />
                   </el-checkbox>
                 </el-checkbox-group>
               </el-collapse-item>
@@ -115,9 +107,7 @@
                       </el-popover>
                       <span v-else>{{tag.value}}</span>
                     </div>
-                    <el-tooltip :content="''+tag.total" placement="top" effect="light" :disabled="tag.total<99">
-                      <el-badge class="mark" :value="tag.total" :max="99"/>
-                    </el-tooltip>
+                    <el-badge class="mark" :value="tag.total" :max="99"/>
                   </el-checkbox>
                 </el-checkbox-group>
               </el-collapse-item>
@@ -515,11 +505,16 @@
                 // vendor
                 this.vendorData = response.data.vendor;
                 // ping
-                this.pingData = response.data.ping.map(item => {
-                  item.label = item.name;
-                  item.value = item.status;
+                this.pingData=[{label:'up',value:1,total:0},{label:'down',value:0,total:0}]
+
+                this.pingData.map(item=>{
+                  if(response.data.ping){
+                    let data=response.data.ping.find(t=>t.name == item.label);
+                    item.total = data.total;
+                    item.value = data.status
+                  }
                   return item;
-                });
+                })
 
                 this.tagData = response.data.tag
 

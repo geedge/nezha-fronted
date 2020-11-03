@@ -288,6 +288,12 @@
             type: 'select',
             label: 'pingStatus',
             disabled: false
+          },{
+            id: 23,
+            name: this.$t("asset.tableTitle.cabinet"),
+            type: 'input',
+            label: 'cabinetName',
+            disabled: false
           }],
         },
 

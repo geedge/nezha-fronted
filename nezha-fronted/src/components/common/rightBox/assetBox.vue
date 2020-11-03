@@ -574,6 +574,8 @@
           }
           if(this.locationInfo.cabinet) {
             this.editAsset.cabinetId = this.locationInfo.cabinet.id;
+          }else{
+            this.editAsset.cabinetId = null;
           }
           if(this.locationInfo.u && this.locationInfo.u.length > 0) {
             this.editAsset.cabinetStart = this.locationInfo.u[0];

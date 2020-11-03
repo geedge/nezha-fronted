@@ -56,6 +56,11 @@
                           </template>
                           <template v-else>&nbsp;</template>
                         </div>
+                        <template v-else-if="key == 'cabinet'">
+                          <span v-if="value&&item.data.cabinetStart&&item.data.cabinetEnd">{{value + '['+item.data.cabinetStart+'-'+item.data.cabinetEnd+']'}}</span>
+                          <span v-else-if="value&&!(item.data.cabinetStart||item.data.cabinetEnd)">{{value}}</span>
+                          <span v-else></span>
+                        </template>
                         <template v-else-if="key == 'pingRtt'">
                           <div class="active-icon" :class="{'green': item.data.pingStatus == 1, 'red': item.data.pingStatus == 1 != 1}"></div>
                           <span>{{value ? value + 'ms' : ''}}</span>

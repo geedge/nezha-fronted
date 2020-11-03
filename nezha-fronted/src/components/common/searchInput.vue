@@ -193,7 +193,6 @@
                 input_sreach: '',
                 sreach_num: 0,
                 searchLabelList: [ //下拉列表里的选项
-                    {id: 0, name: this.$t('search.searchTip'), icon: 'nz-icon nz-icon-search'},
                 ],
                 bool: false,
                 no_condition: '',
@@ -916,7 +915,7 @@
                 this.no_condition = ''
                 this.input_sreach = ''
                 this.select_list = []
-                this.searchLabelList = [{id: 0, name: 'Press Enter or click to search', icon: 'nz-icon nz-icon-search'},]
+                this.searchLabelList = []
                 JSON.parse(JSON.stringify(this.searchMsg.searchLabelList)).forEach(val => {
                     this.searchLabelList.push(val)
                 })
@@ -969,7 +968,7 @@
                 }*/
                 this.searchMsg.searchLabelList.forEach((val, key) => {
                     if (this.select_list[ind].id == val.id) {
-                        this.searchLabelList.splice(key , 1, val);
+                        this.searchLabelList.splice(key+1 , 0, val);
                         this.Iskeywords(ind)
                     }
                 });
