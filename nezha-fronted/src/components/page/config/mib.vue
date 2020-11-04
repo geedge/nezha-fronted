@@ -45,7 +45,7 @@
           width="40"
           align="center">
         </el-table-column>
-        <el-table-column :resizable="false" v-for="(item, index) in tools.customTableTitle" v-if="item.show" :width="item.width" :class-name="item.prop == 'modelsDetail'?'detail-column':''"
+        <el-table-column :resizable="true" v-for="(item, index) in tools.customTableTitle" v-if="item.show"  :class-name="item.prop == 'modelsDetail'?'detail-column':''"
                          :key="`col-${index}`" :label="item.label" :sortable="$tableSet.sortableShow(item.prop,'mib')"
                          :prop="$tableSet.propTitle(item.prop,'mib')"
                          :sort-orders="['ascending', 'descending']">

@@ -49,10 +49,9 @@
           width="40"
           align="center">
         </el-table-column>
-        <el-table-column :resizable="false"
+        <el-table-column :resizable="true"
                          v-for="(item, index) in tools.customTableTitle"
                          v-if="item.show"
-                         :width="item.width"
                          :key="`col-${index}`"
                          :label="item.label"
                          :sortable="$tableSet.sortableShow(item.prop,'model')"

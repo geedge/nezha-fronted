@@ -54,15 +54,13 @@
           align="center">
         </el-table-column>
         <el-table-column
-          :resizable="false"
+          :resizable="true"
           v-for="(item, index) in tools.customTableTitle"
           v-if="item.show"
-          :width="item.width"
           :key="`col_${index}`"
           :label="item.label"
           :fixed="item.fixed"
           :show-overflow-tooltip="item.prop != 'Alert' || item.prop != 'Module'"
-          min-width="110px"
           :class-name="item.prop == 'option' ? 'content-right-options' : ''"
           :sortable="$tableSet.sortableShow(item.prop,'asset')"
           :prop="$tableSet.propTitle(item.prop,'asset')"

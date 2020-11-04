@@ -35,10 +35,9 @@
           align="center">
         </el-table-column>
       <el-table-column
-        :resizable="false"
+        :resizable="true"
         v-for="(item, index) in tableTitle"
         v-if="item.show"
-        :width="item.width"
         :key="`col-${index}`"
         :label="item.label"
       >

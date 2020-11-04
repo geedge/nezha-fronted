@@ -93,7 +93,7 @@
                               v-scrollBar:el-table="'small'"
                             >
                               <el-table-column
-                                :resizable="false"
+                                :resizable="true"
                                 v-for="(_item, _index) in setLabels(value)"
                                 v-if="_item.show"
                                 :key="`col-${_index}`"

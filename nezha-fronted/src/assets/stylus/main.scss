@@ -819,6 +819,7 @@ li{
 .nz-table .el-table {
   border: none;
   font-size: 12px;
+  display: table-cell!important;
 }
 .nz-table::before {
   height: 0;

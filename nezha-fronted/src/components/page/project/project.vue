@@ -68,6 +68,7 @@
           @sort-change="tableDataSort"
           @row-dblclick="detailEndpoint"
           @selection-change="(selection)=>{this.batchDeleteObjs=selection}"
+          @header-dragend="()=>{this.$refs.endpointTable.doLayout();}"
         >
           <el-table-column
             :resizable="false"
@@ -76,13 +77,12 @@
             align="center">
           </el-table-column>
           <el-table-column
-            :resizable="false"
+            :resizable="true"
             v-for="(item, index) in tools.customTableTitle"
             v-if="item.show"
-            :width="item.width"
             :key="`col-${index}`"
             :label="item.label"
-            min-width="110px"
+            :min-width="item.width"
             :sortable="$tableSet.sortableShow(item.prop,'project')"
             :prop="$tableSet.propTitle(item.prop,'project')"
             :sort-orders="['ascending', 'descending']"
@@ -132,7 +132,7 @@
               <template v-else>-</template>
             </template>
           </el-table-column>
-          <el-table-column width="28" :resizable="false">
+          <el-table-column width="28" :resizable="true">
             <template slot="header" slot-scope="scope">
             <span @mousedown.stop="!tools.showCustomTableTitle && (tools.showCustomTableTitle = true)" class="nz-table-gear">
               <i class="nz-icon nz-icon-gear"></i>

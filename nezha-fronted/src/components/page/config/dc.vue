@@ -53,11 +53,10 @@
           align="center">
         </el-table-column>
         <el-table-column
-          :resizable="false"
+          :resizable="true"
           show-overflow-tooltip
           v-for="(item, index) in tools.customTableTitle"
           v-if="item.show"
-          :width="item.width"
           :key="`col-${index}`"
           :label="item.label"
           :sortable="$tableSet.sortableShow(item.prop,'dc')"

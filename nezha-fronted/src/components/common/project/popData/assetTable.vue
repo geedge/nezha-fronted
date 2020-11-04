@@ -45,7 +45,7 @@
           @sort-change="tableDataSort"
         >
           <el-table-column
-            :resizable="false"
+            :resizable="true"
             v-for="(item, index) in tableTitle"
             v-if="item.show"
             :width="item.width"

@@ -39,11 +39,9 @@
       >
       </el-table-column>
       <el-table-column
-        :resizable="false"
+        :resizable="true"
         v-for="(item, index) in tools.customTableTitle"
         v-if="item.show"
-        :width="item.width"
-        :minWidth="item.minWidth"
         :key="`col-${index}`"
         :label="item.label"
         :show-overflow-tooltip="item.prop != 'labels' && item.prop != 'alertRule'"
@@ -156,7 +154,7 @@
         </template>
       </el-table-column>
 
-      <el-table-column width="28" :resizable="false">
+      <el-table-column width="28" :resizable="true">
         <template slot="header" slot-scope="scope">
           <span @mousedown.stop="!tools.showCustomTableTitle && (tools.showCustomTableTitle = true)" class="nz-table-gear">
             <i class="nz-icon nz-icon-gear"></i>

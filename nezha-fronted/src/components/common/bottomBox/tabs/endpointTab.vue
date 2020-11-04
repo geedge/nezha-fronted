@@ -59,13 +59,11 @@
           align="center">
         </el-table-column>
       <el-table-column
-        :resizable="false"
+        :resizable="true"
         v-for="(item, index) in tools.customTableTitle"
         v-if="item.show"
-        :width="item.width"
         :key="`col-${index}`"
         :label="item.label"
-        :min-width="(item.minWidth?item.minWidth+'px':'110px')"
         :sortable="$tableSet.sortableShow(item.prop,'endpointTab')"
         :prop="$tableSet.propTitle(item.prop,'endpointTab')"
         :sort-orders="['ascending', 'descending']"
