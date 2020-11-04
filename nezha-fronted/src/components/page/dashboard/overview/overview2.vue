@@ -1511,4 +1511,9 @@
     height: 1px;
     background-color: transparent;
   }
+  .leaflet-bottom{
+    z-index: 409;
+  }
+</style>
+<style scoped>
 </style>
