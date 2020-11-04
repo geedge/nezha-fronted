@@ -72,9 +72,17 @@
               <div class="result-title">{{$t('overall.result.failedDetail')}}:</div>
                 <div class="result-detail" v-if="importResult&&importResult.failDetail">
                   <el-scrollbar style="height: 100%">
-                    <ul>
+                   <!-- <ul>
                       <li v-for="(item,index) in importResult.failDetail"><span>{{item.lineNo}}</span>:<span>{{item.errorMsg}}</span> </li>
-                    </ul>
+                    </ul>-->
+                    <template v-for="(item,index) in importResult.failDetail">
+                      <div class="import-result-block">
+                        <div class="import-result-item">
+                          <div class="line-num">{{$t('overall.result.line',[item.lineNo])}}</div>
+                          <div>{{item.errorMsg}}</div>
+                        </div>
+                      </div>
+                    </template>
                   </el-scrollbar>
                 </div>
             </div>
@@ -323,4 +331,15 @@
     height: 40px;
   }
   /*去除上传文件动画end*/
+</style>
+
+<style>
+  .result-detail .import-result-block{
+  }
+  .result-detail .import-result-block .import-result-item{
+    display: flex;
+  }
+  .import-result-item .line-num{
+    width: 55px;
+  }
 </style>
