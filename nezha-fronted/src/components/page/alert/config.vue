@@ -85,14 +85,12 @@
           align="center">
         </el-table-column>
         <el-table-column
-          :resizable="false"
+          :resizable="true"
           v-for="(item, index) in tools.customTableTitle"
           v-if="item.show"
-          :width="item.width"
           :key="`col-${index}`"
           :label="item.label"
           show-overflow-tooltip
-          min-width="110px"
           :sort-orders="['ascending', 'descending']"
           :sortable="$tableSet.sortableShow(item.prop,'alertRules')"
           :prop="$tableSet.propTitle(item.prop,'alertRules')"

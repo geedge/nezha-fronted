@@ -71,7 +71,8 @@ const cn = {
       total: "总计",
       failed: "失败",
       success: "成功",
-      failedDetail: "失败详情"
+      failedDetail: "失败详情",
+      line:"第{0}行:"
     },
     reset: "重置",
     submit: "保存",

@@ -75,7 +75,8 @@ const en = {
       total:'Total',
       failed:'Failed',
       success:'Success',
-      failedDetail:'Failed Detail'
+      failedDetail:'Failed Detail',
+      line:'Line {0}:'
     },
     reset:'Reset',
     submit:'Save',
