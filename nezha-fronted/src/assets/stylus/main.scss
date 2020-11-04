@@ -672,6 +672,10 @@ li{
 /*.top-tool-main-right>.nz-btn, .top-tool-main-right-to-left>.nz-btn, .top-tool-main-right>.nz-btn-group, .top-tool-main-right>.panel-calendar {
   margin-top: -2px;
 }*/
+.asset .top-tool-main-right-to-left {
+  right: calc(100% - 440px) !important;
+  /*transform: translateX(100%);*/
+}
 .top-tool-main-right-to-left {
   right: calc(100% - 390px) !important;
   /*transform: translateX(100%);*/

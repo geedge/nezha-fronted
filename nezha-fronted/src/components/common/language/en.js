@@ -24,6 +24,8 @@ const en = {
     preview:'Preview',//预览
     search: 'Search', //'搜索'
     add: 'Create', //"新增"
+    addAssetList: "Add",
+    batchEdit:'Batch Edit',
     option: 'Operation', //"操作"
     remark: "Description",
     clear: 'Clear', //"清除"
@@ -401,6 +403,8 @@ const en = {
     assets: 'Assets',//'资产'
     editAsset: 'Edit asset',//'编辑资产'
     createAsset: 'New asset',//'编辑资产'
+    batchEditAsset:'Batch edit asset',
+    selectAsset:'Selected assets',
     host: "Host",
     state: 'State',//'状态'
     pingActive: 'active',//可ping通

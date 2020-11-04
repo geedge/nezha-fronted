@@ -17,6 +17,9 @@
                 <i class="nz-icon nz-icon-create-square"></i></button>
             </template>
           </export-excel>
+          <button style="margin-left: 15px" @click.stop="batchEdit" :title="$t('overall.batchEdit')" class="nz-btn nz-btn-size-normal nz-btn-style-light" id="asset-batch-asset">
+            <i class="nz-icon nz-icon-table-edit"></i>
+          </button>
           <delete-button :delete-objs="batchDeleteObjs" api="asset" @after="afterTableListChange"></delete-button>
         </div>
         <div class="pagination-top pagination-top-hide display-none"></div>
@@ -191,6 +194,9 @@
     <transition name="right-box">
       <asset-box v-if="rightBox.show" :asset="asset" @refresh="getTableData" ref="assetBox" @close="closeRightBox"></asset-box>
     </transition>
+    <transition name="right-box">
+      <batch-edit-asset v-if="rightBox.batchShow"  @refresh="getTableData" ref="assetBox" @close="closeRightBox"></batch-edit-asset>
+    </transition>
   </div>
 </template>
 
@@ -211,6 +217,7 @@
         //侧滑
         rightBox: {
           show: false,
+          batchShow:false,
         },
         /*二级页面相关*/
         bottomBox: {
@@ -548,11 +555,15 @@
         this.asset = this.newAsset();
         this.rightBox.show = true;
       },
+      batchEdit(){
+        this.rightBox.batchShow = true;
+      },
       newAsset() {
         return JSON.parse(JSON.stringify(this.blankAsset));
       },
       closeRightBox(refresh) {
         this.rightBox.show = false;
+        this.rightBox.batchShow = false;
         if (refresh) {
          this.afterTableListChange()
           this.loadKeys();

@@ -33,6 +33,7 @@ import moduleBox from './components/common/rightBox/moduleBox'; //module弹框�
 import editEndpointBox from './components/common/rightBox/editEndpointBox'; //endpoint弹框组件
 import addEndpointBox from './components/common/rightBox/addEndpointBox'; //endpoint弹框组件
 import assetBox from "./components/common/rightBox/assetBox"; //资产添加组件
+import batchEditAsset from "./components/common/rightBox/batchEditAsset"; //资产批量修改组件
 import alertConfigBox from "./components/common/rightBox/alertConfigBox"; //告警规则弹框组件
 import panelBox from "./components/common/rightBox/panelBox"; //面板弹框组件
 import moduleListPop from "./components/page/asset/moduleListPop"; //面板弹框组件
@@ -54,6 +55,7 @@ Vue.component("module-box", moduleBox);
 Vue.component("edit-endpoint-box", editEndpointBox);
 Vue.component("add-endpoint-box", addEndpointBox);
 Vue.component("asset-box", assetBox);
+Vue.component("batch-edit-asset", batchEditAsset);
 Vue.component("alert-config-box", alertConfigBox);
 Vue.component("panel-box", panelBox);
 Vue.component("module-list-pop", moduleListPop);

@@ -18,6 +18,8 @@ const cn = {
     upload: "上传",
     search: "搜索",
     add: "新增",
+    addAssetList: "新增",
+    batchEdit:'批量修改',
     option: "操作",
     remark: "描述",
     clearAll: "清空",
@@ -396,6 +398,8 @@ const cn = {
   asset: {
     asset: "资产",
     assetType:'资产类型',//'资产类型'
+    batchEditAsset:'批量修改资产',
+    selectAsset:'已选择的资产',
     editAssetTab: {
       title: "新增资产",
       sn: "SN",
