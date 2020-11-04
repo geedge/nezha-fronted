@@ -11,9 +11,11 @@
     <!-- end--顶部按钮-->
 
     <!-- begin--标题-->
-    <div class="right-box-title">
-      <!--{{$t("project.endpoint.editEndpoint") + "  ID：" + nodeData.id}}-->
-      Add Module
+    <div class="right-box-title" v-if="!nodeData.id">
+      {{$t("project.topology.addModule")}}
+    </div>
+    <div class="right-box-title" v-if="nodeData.id">
+      {{$t("project.topology.editModule") + "  ID：" + nodeData.id}}
     </div>
     <!-- end--标题-->
 

@@ -11,7 +11,12 @@
       <!-- end--顶部按钮-->
 
       <!-- begin--标题-->
-      <div class="right-box-title">{{$t('project.topology.addLine')}}</div>
+      <div class="right-box-title" v-if="!lineData.id">
+        {{$t('project.topology.addLine')}}
+      </div>
+      <div class="right-box-title" v-if="lineData.id">
+        {{$t("project.topology.editLine") + "  ID：" + nodeData.id}}
+      </div>
       <!-- end--标题-->
 
       <!-- begin--表单-->
