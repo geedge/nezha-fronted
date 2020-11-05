@@ -18,7 +18,7 @@
             </template>
           </export-excel>
           <button style="margin-left: 15px" @click.stop="batchEdit" :title="$t('overall.batchEdit')" class="nz-btn nz-btn-size-normal nz-btn-style-light" id="asset-batch-asset">
-            <i class="nz-icon nz-icon-table-edit"></i>
+            <i class="nz-icon nz-icon-batch-edit"></i>
           </button>
           <delete-button :delete-objs="batchDeleteObjs" api="asset" @after="afterTableListChange"></delete-button>
         </div>

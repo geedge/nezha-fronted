@@ -42,7 +42,7 @@
                 type="button" class="nz-btn nz-btn-size-small nz-btn-style-light nz-btn-style-square nz-input-group-append" id="search-asset"><i @click="searchAsset" class="nz-icon nz-icon-search"></i></button>
 
                 <div class="endpoint-asset-search-dropdown" v-if="assetSearch.dropdownShow">
-                  <div @click="dropdownSelect('IP')" class="endpoint-asset-search-dropdown-item" id="search-asset-ip">IP</div>
+                  <div @click="dropdownSelect('IP')" class="endpoint-asset-search-dropdown-item" id="search-asset-ip">Host</div>
                   <div @click="dropdownSelect('SN')" class="endpoint-asset-search-dropdown-item" id="search-asset-sn">SN</div>
                 </div>
               </div>
@@ -52,11 +52,12 @@
             <!-- begin--table-->
             <div class="endpoint-sub-table">
               <div class="endpoint-sub-table-head">
-                <div class="endpoint-sub-table-col" style="width: 15px;">
-                <el-checkbox v-model="assetListAll" :indeterminate="assetListHalf"
+                <div class="endpoint-sub-table-col" style="width: 15px;position: relative">
+                  <div @click.stop v-if="!currentModuleCopy.id" class="endpoint-sub-table-body-dialog checkbox-mc"></div>
+                  <el-checkbox v-model="assetListAll" :indeterminate="assetListHalf"
                              @change="assetListSelAll"></el-checkbox>
               </div>
-                <div class="endpoint-sub-table-col">IP</div>
+                <div class="endpoint-sub-table-col">Host</div>
                 <div class="endpoint-sub-table-col"  style="width: calc(50% - 55px)">SN</div>
               </div>
               <div class="line-100"></div>
@@ -915,6 +916,14 @@
     display: inline-block;
     width: 100px;
     vertical-align: top;
+  }
+  .checkbox-mc{
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 14px;
+    height: 14px;
+    z-index:1;
   }
   /* end--搜索框*/
 

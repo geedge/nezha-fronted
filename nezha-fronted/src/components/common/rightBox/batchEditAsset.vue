@@ -43,7 +43,7 @@
 
                 <div class="endpoint-asset-search-dropdown" v-if="assetSearch.dropdownShow">
                   <div @click="dropdownSelect('IP')" class="endpoint-asset-search-dropdown-item" id="search-asset-ip">
-                    IP
+                    Host
                   </div>
                   <div @click="dropdownSelect('SN')" class="endpoint-asset-search-dropdown-item" id="search-asset-sn">
                     SN
@@ -60,7 +60,7 @@
                   <el-checkbox v-model="assetListAll" :indeterminate="assetListHalf"
                                @change="assetListSelAll"></el-checkbox>
                 </div>
-                <div class="endpoint-sub-table-col">IP</div>
+                <div class="endpoint-sub-table-col">Host</div>
                 <div class="endpoint-sub-table-col">SN</div>
               </div>
               <div class="line-100"></div>
@@ -87,7 +87,7 @@
               style="margin-top: 3px;">
                 {{$t('overall.addAssetList')}}
               </button>
-              <span style="display: inline-block; font-size: 14px; float: right;line-height: 35px;padding-right: 15px;margin-top: 3px;">All: {{this.assetList.length}}</span>
+              <span style="display: inline-block; font-size: 14px; float: right;padding-right: 15px;margin-top: 3px;">All: {{this.assetList.length}}</span>
             </div>
             <!--end--table-->
           </div>
@@ -894,8 +894,7 @@
     height: 400px;
     position: relative;
     display: flex;
-    padding-left: 190px;
-    width: calc(100% - 190px);
+    width: 100%;
   }
 
   .endpoint-to-right-symbol {
@@ -913,7 +912,7 @@
   .assets-box {
     border: 1px solid #DCDFE6;
     border-radius: 4px;
-    width: 260px;
+    width: 395px;
     height: calc(100% - 22px);
   }
 
@@ -923,7 +922,7 @@
   }
 
   .endpoints-box.endpoints-box-snmp {
-    width: 380px;
+    width: 400px;
   }
 
   .right-child-box .el-input-group {
@@ -1073,8 +1072,8 @@
 
   /* begin--table*/
   .endpoint-sub-table {
-    padding-top: 15px;
-    height: calc(100% - 83px);
+    padding-top: 5px;
+    height: calc(100% - 72px);
   }
 
   .line-100 {
@@ -1128,7 +1127,7 @@
     position: relative;
     overflow: auto;
     height: calc(100% - 37px);
-    width: 260px;
+    width: 390px;
   }
 
   .endpoint-sub-table-body-dialog {
@@ -1141,8 +1140,11 @@
   .endpoints-clear-btn {
     margin: 6px 0 0 7px;
   }
-
+  /deep/.el-table td{
+    padding: 5px 0;
+  }
   /* end--table*/
 
   /* end--子弹框*/
 </style>
+
