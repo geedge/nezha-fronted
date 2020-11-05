@@ -52,21 +52,36 @@
             <!-- begin--table-->
             <div class="endpoint-sub-table">
               <div class="endpoint-sub-table-head">
+                <div class="endpoint-sub-table-col" style="width: 15px;">
+                <el-checkbox v-model="assetListAll" :indeterminate="assetListHalf"
+                             @change="assetListSelAll"></el-checkbox>
+              </div>
                 <div class="endpoint-sub-table-col">IP</div>
-                <div class="endpoint-sub-table-col">SN</div>
+                <div class="endpoint-sub-table-col"  style="width: calc(50% - 55px)">SN</div>
               </div>
               <div class="line-100"></div>
               <div class="endpoint-sub-table-body">
                 <el-scrollbar style="height: 100%" ref="assetScrollbar">
-                  <div @click="selectAsset(item, index)" :data="item.id" v-for="item,index in assetList" class="endpoint-sub-table-row" :id="'select-asset-'+item.id">
+                  <div :data="item.id" v-for="item,index in assetList" class="endpoint-sub-table-row" :id="'select-asset-'+item.id">
+                    <div class="endpoint-sub-table-col" style="width: 15px;">
+                      <el-checkbox v-model="item.sel" @change="selectAsset"></el-checkbox>
+                    </div>
                     <div :id="index" @click.stop v-if="!currentModuleCopy.id" class="endpoint-sub-table-body-dialog"></div>
                     <div class="endpoint-sub-table-col">{{item.host}}</div>
                     <el-popover trigger="hover" placement="right-start" :content="item.sn" >
-                      <div slot="reference" class="endpoint-sub-table-col">{{item.sn}}</div>
+                      <div slot="reference" class="endpoint-sub-table-col"  style="width: calc(50% - 55px)">{{item.sn}}</div>
                     </el-popover>
                   </div>
                 </el-scrollbar>
               </div>
+            </div>
+            <div class="line-100" style="border-color:#dcdfe6"></div>
+            <div>
+              <button type="button" @click="addToEndpointList"
+                      class="nz-btn nz-btn-size-small-new nz-btn-style-light-new endpoints-clear-btn" style="margin-top: 3px;">
+                {{$t('overall.addAssetList')}}
+              </button>
+              <span style="display: inline-block; font-size: 14px; float: right;line-height: 35px;padding-right: 15px;margin-top: 3px;">All: {{this.assetList.length}}</span>
             </div>
             <!--end--table-->
           </div>
@@ -176,7 +191,7 @@
                     <div>
                       <span :id="'ep-asset-toedit-'+scope.row.assetId" v-if="!scope.row.isEdit" class="endpoint-box-row-symbol" @mousedown.stop @click="toEditEndpoint(scope.row)"><i class="el-icon-edit-outline"></i></span>
                       <span :id="'ep-asset-edit-'+scope.row.assetId" v-else class="endpoint-box-row-symbol" @mousedown.stop @click="editEndpoint(scope.row)"><i class="nz-icon nz-icon-check"></i></span>
-                      <span :id="'ep-asset-remove-'+scope.row.assetId" class="endpoint-box-row-symbol" @click="removeEndpoint(scope.row)"><i class="nz-icon nz-icon-shanchu1"></i></span>
+                      <!--<span :id="'ep-asset-remove-'+scope.row.assetId" class="endpoint-box-row-symbol" @click="removeEndpoint(scope.row)"><i class="nz-icon nz-icon-shanchu1"></i></span>-->
                     </div>
                   </template>
                 </el-table-column>
@@ -286,6 +301,8 @@
             show: true,
           }
         ],
+        assetListAll:false,
+        assetListHalf:false,
       }
     },
     methods: {
@@ -405,6 +422,7 @@
           if (response.code === 200) {
             let respData = response.data.list;
             for (let i = 0; i < respData.length; i++) {
+              respData[i].sel=false;
               for (let j = 0; j < this.endpointList.length; j++) {
                 if (respData[i].id == this.endpointList[j].assetId) {
                   respData.splice(i, 1);
@@ -466,25 +484,76 @@
       },
 
       // endpoint弹框中的asset子弹框里asset选择事件
-      selectAsset(obj, index) {
-        this.endpointList.push({
-          isEdit: false,
-          assetId: obj.id,
-          asset: obj,
-          host: obj.host,
-          param: this.currentModuleCopy.param ? this.currentModuleCopy.param : "",
-          paramObj: this.currentModuleCopy.paramObj ? this.currentModuleCopy.paramObj : {},
-          port: this.currentModuleCopy.port,
-          path: this.currentModuleCopy.path,
-          moduleId: this.currentModuleCopy.id
-        });
-        this.assetList.splice(index, 1);
+      selectAsset() {
+        this.$nextTick(()=>{
+          let index=0;
+          this.assetList.forEach(item=>{
+            if(item.sel){
+              index++;
+            }
+          });
+          if(index==0){
+            this.assetListAll=false;
+            this.assetListHalf=false;
+          }else if(index<this.assetList.length){
+            this.assetListAll=true;
+            this.assetListHalf=true;
+          }else{
+            this.assetListAll=true;
+            this.assetListHalf=false;
+          }
+        })
+      },
+      //批量添加到endpoint
+      addToEndpointList(){
+        let arr=[];
+        this.assetListAll=false;
+        this.assetListHalf=false;
+        this.endpointTouch=true;
         this.endpointTouch = true;
         this.endpoint.projectId = this.currentProjectCopy.id;
         this.endpoint.moduleId = this.currentModuleCopy.id;
+        this.assetList=this.assetList.filter(item=>{
+          let flag=item.sel;
+          if(flag){
+            item.sel=false;
+            let obj={
+              isEdit: false,
+              assetId: item.id,
+              asset: item,
+              host: item.host,
+              param: this.currentModuleCopy.param ? this.currentModuleCopy.param : "",
+              paramObj: this.currentModuleCopy.paramObj ? this.currentModuleCopy.paramObj : {},
+              port: this.currentModuleCopy.port,
+              path: this.currentModuleCopy.path,
+              moduleId: this.currentModuleCopy.id
+            };
+            arr.push(obj);
+          }
+          return !flag
+        });
+        this.endpointList=this.endpointList.concat(arr);
         this.$refs.assetScrollbar.update();
       },
-
+      //全选的checkbox的事件
+      assetListSelAll(flag){
+        if(flag){
+          this.assetListHalf=false;
+          this.assetList.forEach(item=>{
+            item.sel=flag;
+          });
+        }else if(!flag&& !this.assetListHalf){
+          this.assetList.forEach(item=>{
+            item.sel=flag;
+          });
+        }else if(!flag&&this.assetListHalf){
+          this.assetListHalf=false;
+          this.assetListAll=true;
+          this.assetList.forEach(item=>{
+            item.sel= !flag;
+          });
+        }
+      },
       //将param转为json字符串格式
       paramToJson(param) {
         let tempParam = {};
@@ -852,7 +921,7 @@
   /* begin--table*/
   .endpoint-sub-table {
     padding-top: 15px;
-    height: calc(100% - 45px);
+    height: calc(100% - 83px);
   }
   .line-100 {
     margin-bottom: 3px;
@@ -903,6 +972,8 @@
     height: 100%;
     background-color: rgba(255, 255, 255, 0.7);
     position: absolute;
+    z-index: 10;
+    top: 0;
   }
   .endpoints-clear-btn {
     margin: 6px 0 0 7px;
