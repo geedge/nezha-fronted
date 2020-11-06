@@ -90,7 +90,7 @@
         axisLabel: {
           interval: 0,
           rotate: 0,
-          formatter: function (value) {
+          formatter: function (value,index) {
             value=value
             var t_date = new Date(value);
             return [t_date.getFullYear(), t_date.getMonth() + 1, t_date.getDate()].join('-') + "\n"

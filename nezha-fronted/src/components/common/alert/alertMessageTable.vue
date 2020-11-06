@@ -508,7 +508,7 @@
                      }
                      this.legend.push(legend);
                      chartData.data = queryData.values.map((dpsItem, dpsIndex) => {
-                       return [bus.computeTimezone(dpsItem[0]) * 1000, parseFloat(dpsItem[1]).toFixed(2)];
+                       return [dpsItem[0] * 1000, parseFloat(dpsItem[1]).toFixed(2)];
                      });
                      this.chartDatas.push(chartData);
                    }
