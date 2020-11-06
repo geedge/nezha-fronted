@@ -51,7 +51,7 @@ const cn = {
     detail: "详细信息",
     changePwd: "修改密码",
     createCabinet: "创建机柜",
-    createModel: "创建模型",
+    createModel: "创建型号",
     createModule: "创建模块",
     createMib: "创建MIB",
     exportExcel: "导出",
@@ -279,7 +279,7 @@ const cn = {
       asset: {
         title: "资产",
         assetType: "资产类型统计",
-        modelStat: "模型",
+        modelStat: "型号",
         dcStat: "数据中心",
         num: "数量",
         alert: "告警",
@@ -294,7 +294,7 @@ const cn = {
         host: "主机",
         dropDownLabel: {
           type: "类型",
-          model: "模型",
+          model: "型号",
           dc: "数据中心"
         }
       },
@@ -527,7 +527,7 @@ const cn = {
     sshKeyWasConfig: "SSH-KEY已配置",
     exporter: "Exporter",
     assetInfo: "资产信息",
-    vendorModel: "厂商/模型",
+    vendorModel: "厂商/型号",
     purchaseDate: "购买日期",
     location: "位置",
     sn: "SN",
@@ -624,11 +624,11 @@ const cn = {
       editCabinet: "编辑机柜"
     },
     model: {
-      model: "资产模型",
+      model: "资产型号",
       vendor: "厂商",
       assets: "资产",
-      editModel: "编辑模型",
-      createModel: "创建模型",
+      editModel: "编辑型号",
+      createModel: "创建型号",
       remark: "备注",
       type: "类型"
     },
@@ -664,8 +664,8 @@ const cn = {
       updateUser: "更新用户",
       updateAt: "更新时间",
       editMib: "编辑MIB",
-      models: "模型",
-      modelTip: "请选择模型",
+      models: "型号",
+      modelTip: "请选择型号",
       createMib: "添加MIB",
       mibFiles: "MIB文件",
       uploadTip: "请上传MIB文件",

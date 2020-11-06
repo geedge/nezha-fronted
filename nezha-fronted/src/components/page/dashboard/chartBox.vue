@@ -213,8 +213,8 @@
               </el-col>
             </template>
             <template v-else>
-              <el-col style="width: 120px; padding-right: 20px; text-align: right; color: #666">
-                {{$t('dashboard.panel.chartForm.statistics')}}&nbsp;
+              <el-col style="width: 120px; padding-right: 20px; text-align: right; color: #666" class="required-marker">
+                <label >{{$t('dashboard.panel.chartForm.statistics')}}</label>&nbsp;
               </el-col>
               <el-col style="width: calc(100% - 120px);">
                 <el-select popper-class="chart-box-dropdown-mini" v-model="statistics" placeholder="" size="small">
