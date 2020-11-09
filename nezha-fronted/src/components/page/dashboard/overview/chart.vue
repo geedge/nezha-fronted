@@ -315,7 +315,6 @@
       defaultXAxisFormatter:function(value,index){
         value=bus.computeTimezone(value)
         let t_date = new Date(value);
-        console.log(t_date)
         let month=t_date.getMonth()+1>9?t_date.getMonth()+1:'0'+(t_date.getMonth()+1);
         let day = t_date.getDate()>9?t_date.getDate():'0'+t_date.getDate();
         let hour = t_date.getHours()>9?t_date.getHours():'0'+t_date.getHours();

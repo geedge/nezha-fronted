@@ -63,7 +63,7 @@
           :key="`col_${index}`"
           :label="item.label"
           :fixed="item.fixed"
-          :show-overflow-tooltip="item.prop != 'Alert' || item.prop != 'Module'"
+          :show-overflow-tooltip="item.prop != 'Alert' && item.prop != 'Module' && item.prop != 'option'"
           :class-name="item.prop == 'option' ? 'content-right-options' : ''"
           :sortable="$tableSet.sortableShow(item.prop,'asset')"
           :prop="$tableSet.propTitle(item.prop,'asset')"
