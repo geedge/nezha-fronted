@@ -91,7 +91,8 @@ export const asset = {
   ],
   stateData: [
     {value: 1, label: i18n.t('asset.inStock')},
-    {value: 2, label: i18n.t('asset.notInStock')}
+    {value: 2, label: i18n.t('asset.notInStock')},
+    {value: 3, label: i18n.t('asset.offStreamUnit')},
   ],
 };
 

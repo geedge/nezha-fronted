@@ -441,6 +441,7 @@ const en = {
     uSize: 'U size',
     inStock: 'In stock',//'在库'
     notInStock: 'Not in stock',//'出库'
+    offStreamUnit:'off stream unit',
     assetType:'Asset type',//'资产类型'
     principal:'Administrator',//'负责人'
     tel:'Telephone', //'电话'
@@ -872,7 +873,8 @@ const en = {
       stateInfo_230009:'Promserver unavailable',
       stateInfo_230010:'Promserver can be used',
       stateInfo_230011:'Endpoint connection refused',
-      alerts:'Alerts'
+      alerts:'Alerts',
+      label:'Label'
     },
     metrics: {
       metrics: 'Metrics',//"指标"
