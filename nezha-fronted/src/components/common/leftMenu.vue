@@ -24,8 +24,8 @@
                   </div>
                 </template>
                 <div class="sidebar-info sub-sidebar-info" >
-                  <div v-if="getProjectModule(item.id).length == 0" class="sidebar-info-item sidebar-info-item-add" @click="addModule(item)" :title="$t('overall.createModule')">
-                    <i class="nz-icon nz-icon-create-square"></i>
+                  <div v-if="getProjectModule(item.id).length == 0" class="sidebar-info-item  sidebar-info-item-project-add" @click="addModule(item)" :title="$t('overall.createModule')">
+                    <span><i class="nz-icon nz-icon-create-square"></i>&nbsp;{{$t("overall.addProject")}}</span>
                   </div>
                   <template v-else>
                     <div v-for="module in getProjectModule(item.id)" class="sidebar-info-sub-item" :class="{'sidebar-info-item-active': module.id == currentModule.id}" @click="changeModule(item, module)" :id="'project-module-'+module.id">
@@ -752,6 +752,19 @@
     .bottom-icon .bottom-divider{
       width: 175px;
     }
+  }
+  .content-left .sidebar-info-item-project-add{
+    border: 1px solid rgba(0,0,0,0.15);
+    border-radius: 4px;
+    text-align: center;
+    font-family: Roboto-Regular;
+    font-size: 14px;
+    color: #535B64;
+    margin-right: 25px;
+    height: 30px;
+    line-height: 30px;
+    display: flex;
+    padding-left: 0;
   }
 </style>
 <style lang="scss">

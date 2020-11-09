@@ -18,6 +18,7 @@ const cn = {
     upload: "上传",
     search: "搜索",
     add: "新增",
+    addProject:"新增",
     addAssetList: "新增",
     batchEdit:'批量修改',
     option: "操作",

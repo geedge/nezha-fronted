@@ -24,6 +24,7 @@ const en = {
     preview:'Preview',//预览
     search: 'Search', //'搜索'
     add: 'Create', //"新增"
+    addProject:'Add',
     addAssetList: "Add",
     batchEdit:'Batch Edit',
     option: 'Operation', //"操作"
