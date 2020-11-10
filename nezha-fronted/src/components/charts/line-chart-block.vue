@@ -1034,8 +1034,14 @@
         }
       },
       setColor(colorNum){
-        this.bgColorList = [];
-        for(let i=0;i<colorNum;i++) {
+        this.bgColorList = [
+          '#FF5200','#3685FF','#FF8D00','#00DCA2',
+          '#954Eff','#FFCB01','#f65A96','#00BFD0',
+          '#FF8BEA','#4D7693','#72577C','#99D750',
+          '#DD8270','#C475EE','#7E83FB','#7EB090',
+          '#FF9094','#00CCF5','#CF6684','#4E55FF'
+        ];
+        for(let i=0;i<colorNum-19;i++) {
           this.bgColorList.push(randomcolor())
         }
       },
