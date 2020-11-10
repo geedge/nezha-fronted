@@ -81,7 +81,7 @@
         this.inputKeyErr.push(false);
       },
       validateInput:function(value,index){
-        if(!/^[a-zA-Z_:][a-zA-Z0-9_:]*/.test(value)){
+        if(!/[a-zA-Z_:][a-zA-Z0-9_:]*/.test(value)){
           this.inputKeyErr.splice(index,1,true)
         }else{
           this.inputKeyErr.splice(index,1,false)

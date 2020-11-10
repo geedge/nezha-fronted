@@ -99,8 +99,8 @@
 
           <div class="param-box param-box-module">
             <el-scrollbar ref="labelBoxScrollbar" style="height: 100%">
-              <div class="param-box-row" v-for="(item, index) in endpoint.labelModule">
-                <el-form-item class="param-box-row-key" :rules="[{required: true, message: $t('validate.required'), trigger: 'blur'},{ pattern: /^[a-zA-Z_:][a-zA-Z0-9_:]*/, message: $t('validate.key') ,trigger: 'blur'}]" :prop="'labelModule.' + index + '.key'">
+              <div class="param-box-row" v-for="(item, index) in editEndpoint.labelModule">
+                <el-form-item class="param-box-row-key" :rules="[{required: true, message: $t('validate.required'), trigger: 'blur'},{ pattern: /[a-zA-Z_:][a-zA-Z0-9_:]*/, message: $t('validate.key') ,trigger: 'blur'}]" :prop="'labelModule.' + index + '.key'">
                   <el-input placeholder="key" size="mini" v-model="item.key"></el-input>
                 </el-form-item>
                 <span class="param-box-row-eq">=</span>
@@ -186,7 +186,7 @@
 
       // 清除param
       clearAllParam() {
-        this.endpoint.paramObj = [];
+        this.editEndpoint.paramObj = [];
         this.$nextTick(() => {
           this.$refs.paramBoxScrollbar.update();
         });
@@ -194,7 +194,7 @@
 
       // 新增param
       addParam() {
-        this.endpoint.paramObj.push({key: '', value: ''});
+        this.editEndpoint.paramObj.push({key: '', value: ''});
         this.$nextTick(() => {
           this.$refs.paramBoxScrollbar.update();
         });
@@ -202,7 +202,7 @@
 
       // 移除单个param
       removeParam(index) {
-        this.endpoint.paramObj.splice(index, 1);
+        this.editEndpoint.paramObj.splice(index, 1);
         this.$nextTick(() => {
           this.$refs.paramBoxScrollbar.update();
         });
@@ -224,15 +224,14 @@
 
       // 新增label
       addLabel() {
-        console.log(123123);
-        this.endpoint.labelModule.push({key: '', value: ''});
+        this.editEndpoint.labelModule.push({key: '', value: ''});
         this.$nextTick(() => {
           this.$refs.labelBoxScrollbar.update();
         });
       },
       // 移除单个Label
       removeLabel(index) {
-        this.endpoint.labelModule.splice(index, 1);
+        this.editEndpoint.labelModule.splice(index, 1);
         this.$nextTick(() => {
           this.$refs.labelBoxScrollbar.update();
         });
