@@ -303,8 +303,10 @@
                 this.moduleList = response.data.list;
                 for (let i = 0; i < this.moduleList.length; i++) {
                   try {
-                    let tempObj = JSON.parse(this.moduleList[i].param);
-                    let tempObj1 = JSON.parse(this.moduleList[i].labels);
+                    let param=this.moduleList[i].param|| '{}';
+                    let tempObj = JSON.parse(param);
+                    let labels=this.moduleList[i].labels|| '{}';
+                    let tempObj1=JSON.parse(labels);
                     this.$set(this.moduleList[i], 'paramObj', []);
                     this.$set(this.moduleList[i], 'labelModule', []);
                     for (let k in tempObj) {

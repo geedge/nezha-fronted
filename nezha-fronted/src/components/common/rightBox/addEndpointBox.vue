@@ -272,8 +272,9 @@
     <transition name="right-sub-box">
       <div @mousedown.stop class="right-sub-box" v-if="editLabelsBox.show" :style="'top: ' + editLabelsBox.top + 'px; left: ' + editLabelsBox.left + 'px;'">
         <div class="param-box">
-          <div class="param-box-row" v-for="(item, index) in tempLabelModule">
-            <el-input placeholder="key" class="param-box-row-key input-x-mini-22" v-model="item.key"></el-input>
+          <div class="param-box-row" v-for="(item, index) in tempLabelModule" style="position: relative">
+            <el-input placeholder="key" class="param-box-row-key input-x-mini-22" :class="{'input-error':inputKeyErr[index]}" v-model="item.key"  @input="validateInput(item.key,index)"></el-input>
+            <span style="color: #F56C6C;font-size: 12px;position: absolute;top:25px;left: 10px" v-if="inputKeyErr[index]">{{$t('validate.key')}}</span>
             <span class="param-box-row-eq">=</span>
             <el-input placeholder="value" class="param-box-row-value input-x-mini-22" v-model="item.value"></el-input>
             <span class="param-box-row-symbol" :id="'remove-param-'+index" @click="removeLabels(index)"><i class="nz-icon nz-icon-shanchu1"></i></span>
@@ -312,6 +313,7 @@
         currentProjectCopy: {id: ''},
         tempParamObj: [],
         tempLabelModule: [],
+        inputKeyErr:[],
         tempEndpoint: {},
         tempEndpoint2: {},
         rightBox: {show: false, title: this.$t('project.endpoint.createEndpoint'),isEdit: false},
@@ -409,8 +411,8 @@
       //子弹框控制  obj: module或endpoint对象  type:1module2endpoint
       showEditLabelsBox(show, obj, type, e) {
         //editLabelsBox tempLabelModule labelModule
-        console.log(123123123123,show, obj, type, e,this.tempLabelModule);
         if (show) {
+          this.inputKeyErr=[];
           let position = e.target.getBoundingClientRect();
           this.editLabelsBox.type = type;
           if (this.editLabelsBox.type == 2) {
@@ -424,12 +426,15 @@
           } else {
             this.tempLabelModule = JSON.parse(JSON.stringify(obj.labelModule));
           }
+          this.tempLabelModule.forEach((item,index)=>{
+            this.inputKeyErr.push(false);
+          })
         } else {
           if (!this.editLabelsBox.show) {
             return;
           }
           for (let i = 0; i < this.tempLabelModule.length; i++) {
-            if (!this.tempLabelModule[i].key || !this.tempLabelModule[i].value) {
+            if (!this.tempLabelModule[i].key || !this.tempLabelModule[i].value || this.inputKeyErr[i]) {
               this.tempLabelModule.splice(i, 1);
               i--;
             }
@@ -471,11 +476,20 @@
       // 新增labels
       addLabels() {
         this.tempLabelModule.push({key: '', value: ''});
+        this.inputKeyErr.push(false);
       },
 
       // 移除单个param
       removeLabels(index) {
         this.tempLabelModule.splice(index, 1);
+        this.inputKeyErr.splice(index, 1);
+      },
+      validateInput:function(value,index){
+        if(!/[a-zA-Z_:][a-zA-Z0-9_:]*/.test(value)){
+          this.inputKeyErr.splice(index,1,true)
+        }else{
+          this.inputKeyErr.splice(index,1,false)
+        }
       },
       //编辑endpoint
       toEditEndpoint(endpoint) {
@@ -687,8 +701,10 @@
           if (response.code === 200) {
             for (let i = 0; i < response.data.list.length; i++) {
               try {
-                let tempObj = JSON.parse(response.data.list[i].param);
-                let tempObj1 = JSON.parse(response.data.list[i].labels);
+                let param=response.data.list[i].param|| '{}';
+                let tempObj = JSON.parse(param);
+                let labels=response.data.list[i].labels|| '{}';
+                let tempObj1=JSON.parse(labels);
                 response.data.list[i].paramObj = [];
                 response.data.list[i].labelsModule = [];
                 for (let k in tempObj) {
@@ -1149,5 +1165,9 @@
   }
   .endpoints-box-endpoints .el-form-item.is-error {
     margin-bottom: 22px;
+  }
+  .input-error .el-input__inner,.input-error .el-input__inner:hover,.input-error .el-input__inner:focus,
+  .input-error .input__inner,.input-error .input__inner:hover,.input-error .input__inner:focus {
+    border-color: #F56C6C !important;
   }
 </style>

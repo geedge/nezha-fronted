@@ -287,9 +287,11 @@
           if (response.code === 200) {
             for (let i = 0; i < response.data.list.length; i++) {
               try {
-                let tempObj = JSON.parse(response.data.list[i].param);
+                let param=response.data.list[i].param|| '{}';
+                let tempObj = JSON.parse(param);
                 response.data.list[i].paramObj = [];
-                let tempObj1 = JSON.parse(response.data.list[i].labels);
+                let labels=response.data.list[i].labels|| '{}';
+                let tempObj1=JSON.parse(labels);
                 response.data.list[i].labelModule = [];
                 for (let k in tempObj) {
                   response.data.list[i].paramObj.push({key: k, value: tempObj[k]})

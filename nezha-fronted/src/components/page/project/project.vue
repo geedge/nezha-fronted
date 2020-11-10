@@ -400,8 +400,10 @@
             if(response.code===200){
               for(let i=0; i<response.data.list.length; i++){
                 try{
-                  let tempObj=JSON.parse(response.data.list[i].param);
-                  let tempObj1=JSON.parse(response.data.list[i].labels);
+                  let param=response.data.list[i].param ||  '{}'
+                  let tempObj=JSON.parse(param);
+                  let labels=response.data.list[i].labels|| '{}';
+                  let tempObj1=JSON.parse(labels);
                   response.data.list[i].paramObj=[];
                   response.data.list[i].labelModule=[];
                   for(let k in tempObj){
@@ -411,7 +413,7 @@
                     response.data.list[i].labelModule.push({key:k,value:tempObj1[k]})
                   }
                 }catch(err){
-                  //console.error(response.data.list[i], err);
+                  // console.error(response.data.list[i], err);
                 }
               }
               this.endpointTableData=response.data.list;
@@ -473,13 +475,20 @@
             this.moduleList=response.data.list;
             for(let i=0; i<this.moduleList.length; i++){
               try{
-                let tempObj=JSON.parse(this.moduleList[i].param);
+                let param= this.moduleList[i].param || '{}';
+                let tempObj=JSON.parse(param);
                 this.$set(this.moduleList[i],'paramObj',[]);
                 for(let k in tempObj){
                   this.moduleList[i].paramObj.push({key:k,value:tempObj[k]});
                 }
+                let labels= this.moduleList[i].labels || '{}';
+                let tempObj1=JSON.parse(labels);
+                this.$set(this.moduleList[i],'labelModule',[]);
+                for(let k in tempObj1){
+                  this.moduleList[i].labelModule.push({key:k,value:tempObj1[k]});
+                }
               }catch(err){
-                //console.error(response.data.list[i], err);
+                console.error(response.data.list[i], err);
               }
             }
           }

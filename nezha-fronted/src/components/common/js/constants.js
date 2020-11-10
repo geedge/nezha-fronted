@@ -92,7 +92,7 @@ export const asset = {
   stateData: [
     {value: 1, label: i18n.t('asset.inStock')},
     {value: 2, label: i18n.t('asset.notInStock')},
-    {value: 3, label: i18n.t('asset.Suspended')},
+    {value: 3, label: i18n.t('asset.suspended')},
   ],
 };
 
@@ -137,3 +137,9 @@ export const intervalList = [
   {value: 900, label: '15m'},
   {value: 1800, label: '30m'}
 ];
+
+export const setting = {
+    DcState:[
+      {value:1,label: i18n.t('setting.usable')}
+    ]
+};

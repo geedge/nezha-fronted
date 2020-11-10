@@ -535,7 +535,7 @@ const cn = {
     uSize: "U位",
     inStock: "在库",
     notInStock: "出库",
-    Suspended:'停用',
+    suspended:'停用',
     principal: "负责人",
     tel: "电话",
     featureTitle: "属性",
@@ -623,7 +623,9 @@ const cn = {
       },
       createDc: "新建数据中心",
       editDc: "编辑数据中心",
-      editCabinet: "编辑机柜"
+      editCabinet: "编辑机柜",
+      usable:'可用',
+      suspended:'停用',
     },
     model: {
       model: "资产型号",

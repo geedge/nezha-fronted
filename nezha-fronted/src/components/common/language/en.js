@@ -441,7 +441,7 @@ const en = {
     uSize: 'U size',
     inStock: 'In stock',//'在库'
     notInStock: 'Not in stock',//'出库'
-    Suspended:'Suspended',
+    suspended:'Suspended',
     assetType:'Asset type',//'资产类型'
     principal:'Administrator',//'负责人'
     tel:'Telephone', //'电话'
@@ -599,7 +599,9 @@ const en = {
         direction:'Direction',
         tags:'Tags',
         snmpSetting:'SNMP setting',
-      }
+      },
+      usable:'Usable',
+      suspended:'Suspended',
     },
     model: {
       model: 'Asset model',
