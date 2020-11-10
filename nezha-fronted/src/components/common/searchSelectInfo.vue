@@ -46,6 +46,9 @@
       }, {
         value: 2,
         label: i18n.t('asset.notInStock')
+      }, {
+        value: 3,
+        label: i18n.t('asset.Suspended')
       }
     ],
     pingStatus:[

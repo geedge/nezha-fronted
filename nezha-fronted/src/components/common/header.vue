@@ -222,8 +222,8 @@
         projectData: [], //顶部菜单project列表中的数据
         editProject: {id: '', name: '', remark: ''}, //新增/编辑的project
         currentProject: {id: '', name: '', remark: ''}, //module/endpoint弹框用来回显project
-        editModule: { type: 'http', name: '', project: {}, port: 9100, path: '', param: '', paramObj: []}, //新增/编辑的module
-        currentModule: {id: '', name: '', project: {}, port: '', path: '', param: '', paramObj: []}, //endpoint弹框用来回显module，此处固定为空对象
+        editModule: { type: 'http', name: '', project: {}, port: 9100, path: '', param: '', paramObj: [], labelModule:[],labels:'',}, //新增/编辑的module
+        currentModule: {id: '', name: '', project: {}, port: '', path: '', param: '', paramObj: [],labels:'',labelModule:[],}, //endpoint弹框用来回显module，此处固定为空对象
         editEndpoint: { //新增/编辑的endpoint
           id: '',
           host: '',
@@ -232,9 +232,10 @@
           path: '',
           asset: {id: '', name: '', host: ''},
           project: {id: '', name: ''},
-          module: {id: '', name: '', param: '', paramObj: {}, projectId: ''},
+          module: {id: '', name: '', param: '', paramObj: {}, projectId: '',labelModule:[],labels:''},
           moduleId: '',
-          assetId: ''
+          assetId: '',
+          labelModule:[]
         },
         editAsset: {
           id: '',
@@ -332,9 +333,11 @@
             port: 9100,
             path: '',
             param: '',
+            labels:'',
             type: 'http',
             paramObj: [],
             snmpParam: '',
+            labelModule:[],
             //snmp setting 下划线命名是因为业务需求
             walk: [],
             version: 2, //2/3

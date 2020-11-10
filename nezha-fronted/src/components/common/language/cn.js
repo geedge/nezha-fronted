@@ -535,7 +535,7 @@ const cn = {
     uSize: "U位",
     inStock: "在库",
     notInStock: "出库",
-    offStreamUnit:'停用',
+    Suspended:'停用',
     principal: "负责人",
     tel: "电话",
     featureTitle: "属性",
@@ -867,7 +867,7 @@ const cn = {
       stateInfo_230010: "Prometheus服务可用",
       stateInfo_230011: "Endpoint 连接错误",
       alerts:"告警",
-      label:'标签',
+      labels:'标签',
     },
     metrics: {
       metrics: "指标",

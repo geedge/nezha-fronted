@@ -268,6 +268,34 @@
           </div>
         </el-form-item>
 
+        <el-form-item :label="$t('project.endpoint.labels')" class="right-box-form-param">
+
+          <div style="text-align: right;margin-bottom: 5px">
+            <button style="display: none;">第一个button会出现意料之外的hover样式，找不到原因，只好加个不可见的button规避问题</button>
+            <!--<button id="module-clear-all" type="button" @click="clearAllParam" class="nz-btn nz-btn-size-normal nz-btn-style-light">-->
+            <!--<span><i class="nz-icon nz-icon-delete"></i></span>-->
+            <!--</button>-->
+            <span id="module-add-label" type="button" @click="addLabel" class="right-box-form-add">
+              <span><i style="font-size: 16px;" class="nz-icon nz-icon-create-square"></i></span>
+            </span>
+          </div>
+
+          <div class="param-box param-box-module">
+            <el-scrollbar ref="labelBoxScrollbar" style="height: 100%">
+              <div class="param-box-row" v-for="(item, index) in editModule.labelModule">
+                <el-form-item class="param-box-row-key" :rules="{required: true, message: $t('validate.required'), trigger: 'blur'}" :prop="'labelModule.' + index + '.key'">
+                  <el-input placeholder="key" size="mini" v-model="item.key"></el-input>
+                </el-form-item>
+                <span class="param-box-row-eq">=</span>
+                <el-form-item class="param-box-row-value" :rules="{required: true, message: $t('validate.required'), trigger: 'blur'}" :prop="'labelModule.' + index + '.value'">
+                  <el-input placeholder="value" size="mini" v-model="item.value"></el-input>
+                </el-form-item>
+                <span class="param-box-row-symbol" :id="'moduel-remove-label-'+index" @click="removeLabel(index)"><i class="nz-icon nz-icon-shanchu1" style="color:#666;"></i></span>
+              </div>
+            </el-scrollbar>
+          </div>
+        </el-form-item>
+
         <el-form-item :label='$t("project.module.description")' prop="remark">
           <el-input type="textarea" placeholder="" maxlength="1024" show-word-limit v-model="editModule.remark" size="small"></el-input>
         </el-form-item>
@@ -446,7 +474,7 @@
           this.$nextTick(()=>{
             this.$refs.selectWalk.show();
           })
-          this.editModule.port= 161
+          this.editModule.port= 161;
         }
         this.updateScrollbar();
       },
@@ -505,7 +533,11 @@
       },
       /*保存*/
       save() {
+        if(this.editModule.type.toLowerCase() == 'snmp'){
+          this.editModule.paramObj=[];//处理snmp可能会带有param的问题
+        }
         this.editModule.param = this.paramToJson(this.editModule.paramObj);
+        this.editModule.labels = this.labelsToJson(this.editModule.labelModule);
         this.$refs.moduleForm.validate((valid) => {
           if (valid) {
             if (this.editModule.type.toLowerCase() == 'snmp') {
@@ -585,7 +617,6 @@
           this.$refs.paramBoxScrollbar.update();
         });
       },
-
       // 移除单个param
       removeParam(index) {
         this.editModule.paramObj.splice(index, 1);
@@ -593,9 +624,36 @@
           this.$refs.paramBoxScrollbar.update();
         });
       },
-
+      // 新增label
+      addLabel() {
+        console.log(123123);
+        this.editModule.labelModule.push({key: '', value: ''});
+        this.$nextTick(() => {
+          this.$refs.labelBoxScrollbar.update();
+        });
+      },
+      // 移除单个Label
+      removeLabel(index) {
+        this.editModule.labelModule.splice(index, 1);
+        this.$nextTick(() => {
+          this.$refs.labelBoxScrollbar.update();
+        });
+      },
       //将param转为json字符串格式
       paramToJson(param) {
+        let tempParam = {};
+        for (let i = 0; i < param.length; i++) {
+          eval('tempParam["' + param[i].key + '"]="' + param[i].value + '"');
+        }
+        let jsonString = JSON.stringify(tempParam);
+        if (jsonString == '{}') {
+          return "";
+        } else {
+          return jsonString;
+        }
+      },
+      //将labels转为json字符串格式
+      labelsToJson(param) {
         let tempParam = {};
         for (let i = 0; i < param.length; i++) {
           eval('tempParam["' + param[i].key + '"]="' + param[i].value + '"');

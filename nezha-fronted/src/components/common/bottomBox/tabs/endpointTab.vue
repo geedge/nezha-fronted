@@ -81,6 +81,12 @@
             </template>
             <template v-else>-</template>
           </span>
+          <span v-else-if="item.prop == 'labels'">
+            <template v-if="scope.row.labelModule">
+              <span v-for="(p,i) in scope.row.labelModule">{{p.key}}={{p.value}}<span v-if="i < scope.row.labelModule.length-1">，</span></span>
+            </template>
+            <template v-else>-</template>
+          </span>
           <template v-else-if="item.prop == 'type'">{{scope.row.module.type}}</template>
           <div v-else-if="item.prop == 'option'">&nbsp;
                 <span
@@ -205,6 +211,11 @@
             show: false,
             width:200,
           },{
+            label: this.$t("project.endpoint.labels"),
+            prop: 'labels',
+            show: true,
+            width:200,
+          },{
             label: this.$t("project.endpoint.param"),
             prop: 'param',
             show: true,
@@ -278,8 +289,13 @@
               try {
                 let tempObj = JSON.parse(response.data.list[i].param);
                 response.data.list[i].paramObj = [];
+                let tempObj1 = JSON.parse(response.data.list[i].labels);
+                response.data.list[i].labelModule = [];
                 for (let k in tempObj) {
                   response.data.list[i].paramObj.push({key: k, value: tempObj[k]})
+                }
+                for (let k in tempObj1) {
+                  response.data.list[i].labelModule.push({key: k, value: tempObj1[k]})
                 }
               } catch (err) {
                 //console.error(response.data.list[i], err);
@@ -333,6 +349,9 @@
         this.rightBox.editEndpoint.show = true;
         if (!this.endpoint.paramObj) {
           this.$set(this.endpoint, 'paramObj', []);
+        }
+        if (!this.endpoint.labelModule) {
+          this.$set(this.endpoint, 'labelModule', []);
         }
       },
       closeEditEndpointRightBox(refresh) {

@@ -84,6 +84,34 @@
             </el-scrollbar>
           </div>
         </el-form-item>
+        <!--label-->
+        <el-form-item :label="$t('project.endpoint.labels')" class="right-box-form-param">
+
+          <div style="text-align: right;margin-bottom: 5px">
+            <button style="display: none;">第一个button会出现意料之外的hover样式，找不到原因，只好加个不可见的button规避问题</button>
+            <!--<button id="module-clear-all" type="button" @click="clearAllParam" class="nz-btn nz-btn-size-normal nz-btn-style-light">-->
+            <!--<span><i class="nz-icon nz-icon-delete"></i></span>-->
+            <!--</button>-->
+            <span id="module-add-label" type="button" @click="addLabel" class="right-box-form-add">
+              <span><i style="font-size: 16px;" class="nz-icon nz-icon-create-square"></i></span>
+            </span>
+          </div>
+
+          <div class="param-box param-box-module">
+            <el-scrollbar ref="labelBoxScrollbar" style="height: 100%">
+              <div class="param-box-row" v-for="(item, index) in endpoint.labelModule">
+                <el-form-item class="param-box-row-key" :rules="{required: true, message: $t('validate.required'), trigger: 'blur'}" :prop="'labelModule.' + index + '.key'">
+                  <el-input placeholder="key" size="mini" v-model="item.key"></el-input>
+                </el-form-item>
+                <span class="param-box-row-eq">=</span>
+                <el-form-item class="param-box-row-value" :rules="{required: true, message: $t('validate.required'), trigger: 'blur'}" :prop="'labelModule.' + index + '.value'">
+                  <el-input placeholder="value" size="mini" v-model="item.value"></el-input>
+                </el-form-item>
+                <span class="param-box-row-symbol" :id="'moduel-remove-label-'+index" @click="removeLabel(index)"><i class="nz-icon nz-icon-shanchu1" style="color:#666;"></i></span>
+              </div>
+            </el-scrollbar>
+          </div>
+        </el-form-item>
       </el-form>
     </el-scrollbar>
 
@@ -194,6 +222,35 @@
         }
       },
 
+      // 新增label
+      addLabel() {
+        console.log(123123);
+        this.endpoint.labelModule.push({key: '', value: ''});
+        this.$nextTick(() => {
+          this.$refs.labelBoxScrollbar.update();
+        });
+      },
+      // 移除单个Label
+      removeLabel(index) {
+        this.endpoint.labelModule.splice(index, 1);
+        this.$nextTick(() => {
+          this.$refs.labelBoxScrollbar.update();
+        });
+      },
+
+      //将labels转为json字符串格式
+      labelsToJson(param) {
+        let tempParam = {};
+        for (let i = 0; i < param.length; i++) {
+          eval('tempParam["' + param[i].key + '"]="' + param[i].value + '"');
+        }
+        let jsonString = JSON.stringify(tempParam);
+        if (jsonString == '{}') {
+          return "";
+        } else {
+          return jsonString;
+        }
+      },
       /*获取project列表*/
       getProjectList() {
         return new Promise(resolve => {
@@ -296,12 +353,12 @@
           }
         });
       },
-
       //保存endpoint
       save() {
         this.$refs.endpointForm.validate((valide=>{
           if(valide){
             this.editEndpoint.param = this.paramToJson(this.editEndpoint.paramObj);
+            this.editEndpoint.labels = this.labelsToJson(this.editEndpoint.labelModule);
             let requestData = [];
             requestData.push(this.editEndpoint);
             this.$put('endpoint', requestData).then(response => {

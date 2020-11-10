@@ -156,8 +156,8 @@
           currentProjectTitle: '',
           currentProject: {id: '', name: '', remark: ''}, //endpoint弹框、module列表用来回显project
           module: {}, //编辑的module
-          blankModule: {name: '', project: {}, port: 9100, path: '', param: '', type: 'http', paramObj: [], snmpParam: '', walk: [], version: 2, max_repetitions: 25, retries: 3, timeout: 10, community: 'public', username: '', security_level: 'noAuthNoPriv', password: '', auth_protocol: 'MD5', priv_protocol: 'DES', priv_password: '', context_name: ''}, //空白module
-          currentModule: {id: '', type: '', name: '', project: {}, port: '', path: '', param: '', paramObj: [], snmpParam: ''}, //用来回显的module
+          blankModule: {name: '', project: {}, port: 9100, path: '', param: '',labels:'', type: 'http', paramObj: [],labelModule:[], snmpParam: '', walk: [], version: 2, max_repetitions: 25, retries: 3, timeout: 10, community: 'public', username: '', security_level: 'noAuthNoPriv', password: '', auth_protocol: 'MD5', priv_protocol: 'DES', priv_password: '', context_name: ''}, //空白module
+          currentModule: {id: '', type: '', name: '', project: {}, port: '', path: '', param: '', paramObj: [], snmpParam: '',labels:'',labelModule:[]}, //用来回显的module
           ready: false,
           rightBox: {module: {show: false}},
 
@@ -304,9 +304,14 @@
                 for (let i = 0; i < this.moduleList.length; i++) {
                   try {
                     let tempObj = JSON.parse(this.moduleList[i].param);
+                    let tempObj1 = JSON.parse(this.moduleList[i].labels);
                     this.$set(this.moduleList[i], 'paramObj', []);
+                    this.$set(this.moduleList[i], 'labelModule', []);
                     for (let k in tempObj) {
                       this.moduleList[i].paramObj.push({key: k, value: tempObj[k]});
+                    }
+                    for (let k in tempObj1) {
+                      this.moduleList[i].labelModule.push({key: k, value: tempObj1[k]});
                     }
                   } catch (err) {}
                 }
@@ -342,6 +347,9 @@
           this.module = JSON.parse(JSON.stringify(module));
           if (!this.module.paramObj) {
             this.$set(this.module, 'paramObj', []);
+          }
+          if (!this.module.labelModule) {
+            this.$set(this.module, 'labelModule', []);
           }
           if (this.module.snmpParam) {
             this.initSnmpParam(this.module);

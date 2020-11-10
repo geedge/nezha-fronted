@@ -1,5 +1,5 @@
 <template>
-  <div class="right-box right-box-add-endpoint" :class="{'right-box-add-endpoint-snmp': currentModuleCopy.type && currentModuleCopy.type.toLowerCase() == 'snmp'}" @mousedown="showEditParamBox(false)" v-clickoutside="clickOutside">
+  <div class="right-box right-box-add-endpoint" :class="{'right-box-add-endpoint-snmp': currentModuleCopy.type && currentModuleCopy.type.toLowerCase() == 'snmp'}" @mousedown="()=>{showEditParamBox(false);showEditLabelsBox(false)}" v-clickoutside="clickOutside">
     <!-- begin--顶部按钮-->
     <div class="right-box-top-btns"></div>
     <!-- end--顶部按钮-->
@@ -94,15 +94,27 @@
               <el-input class="module-info module-info-port input-x-mini-22" :class="{'module-info-port-snmp': currentModuleCopy.type && currentModuleCopy.type.toLowerCase() == 'snmp'}" v-model="currentModuleCopy.port"></el-input>
               <el-popover
                 placement="bottom"
-                width="200"
+                width="100"
                 trigger="hover"
                 v-if="currentModuleCopy.type && currentModuleCopy.type.toLowerCase() == 'http'"
               >
                 <div class="endpoint-param-pop">
                   <div v-for="item,index in currentModuleCopy.paramObj">{{item.key}}={{item.value}}</div>
                 </div>
-                <el-input id="edit-param" @click.native.stop="showEditParamBox(true, currentModuleCopy, 1, $event)" slot="reference" disabled class="module-info module-info-param input-x-mini-22" v-model="currentModuleCopy.param"></el-input>
+                <el-input id="edit-param" @click.native.stop="showEditParamBox(true, currentModuleCopy, 1, $event)" slot="reference" disabled class="module-info module-info-param  input-x-mini-22" v-model="currentModuleCopy.param"></el-input>
               </el-popover>
+
+              <el-popover
+                placement="bottom"
+                width="100"
+                trigger="hover"
+              >
+                <div class="endpoint-param-pop">
+                  <div v-for="item,index in currentModuleCopy.labelModule">{{item.key}}={{item.value}}</div>
+                </div>
+                <el-input id="edit-labels" @click.native.stop="showEditLabelsBox(true, currentModuleCopy, 1, $event)" slot="reference" disabled class="module-info module-info-param module-info-labels input-x-mini-22" :class="{'module-info-labels-snmp': currentModuleCopy.type && currentModuleCopy.type.toLowerCase() == 'snmp'}" v-model="currentModuleCopy.labels"></el-input>
+              </el-popover>
+
               <el-input v-if="currentModuleCopy.type && currentModuleCopy.type.toLowerCase() == 'http'" class="module-info module-info-path input-x-mini-22" v-model="currentModuleCopy.path"></el-input>
               <button type="button" id="cover-param" @click="coverEndpoint" class="nz-btn nz-btn-size-small nz-btn-style-light module-info module-info-cover"><i class="nz-icon nz-icon-override"></i></button>
             </div>
@@ -148,6 +160,26 @@
                       <span @mousedown.stop v-else @click.stop="showEditParamBox(true, scope.row, 2, $event)">
                         <el-form-item :prop="'endpointList[' + scope.row.index + '].param'" :rules="{required: false, message: $t('validate.required'), trigger: 'blur'}">
                           <el-input readonly class="endpoint-info endpoint-info-param input-x-mini-22" v-model="scope.row.param"></el-input>
+                        </el-form-item>
+                      </span>
+                    </span>
+                    <span v-else-if="title.prop == 'labels'">
+                      <el-popover
+                        v-if="!scope.row.isEdit"
+                        placement="bottom"
+                        width="200"
+                        trigger="hover"
+                      >
+                        <div class="endpoint-param-pop">
+                          <div v-for="p in scope.row.labelModule">{{p.key}}={{p.value}}</div>
+                        </div>
+                        <span slot="reference">
+                          <span @mousedown.stop>{{scope.row.labels.length > 8 ? scope.row.labels.substring(0, 8) + '...' : scope.row.labels}}</span>
+                        </span>
+                      </el-popover>
+                      <span @mousedown.stop v-else @click.stop="showEditLabelsBox(true, scope.row, 2, $event)">
+                        <el-form-item :prop="'endpointList[' + scope.row.index + '].param'" :rules="{required: false, message: $t('validate.required'), trigger: 'blur'}">
+                          <el-input readonly class="endpoint-info endpoint-info-param input-x-mini-22" v-model="scope.row.labels"></el-input>
                         </el-form-item>
                       </span>
                     </span>
@@ -236,6 +268,23 @@
       </div>
     </transition>
     <!--end--param编辑框-->
+    <!--start--labels编辑框-->
+    <transition name="right-sub-box">
+      <div @mousedown.stop class="right-sub-box" v-if="editLabelsBox.show" :style="'top: ' + editLabelsBox.top + 'px; left: ' + editLabelsBox.left + 'px;'">
+        <div class="param-box">
+          <div class="param-box-row" v-for="(item, index) in tempLabelModule">
+            <el-input placeholder="key" class="param-box-row-key input-x-mini-22" v-model="item.key"></el-input>
+            <span class="param-box-row-eq">=</span>
+            <el-input placeholder="value" class="param-box-row-value input-x-mini-22" v-model="item.value"></el-input>
+            <span class="param-box-row-symbol" :id="'remove-param-'+index" @click="removeLabels(index)"><i class="nz-icon nz-icon-shanchu1"></i></span>
+          </div>
+        </div>
+        <div style="width: 100%; text-align: center; height: 25px;">
+          <el-button @click="addLabels" id="add-labels" style="height: 18px; line-height: 18px; padding-top: 0; padding-bottom: 0;" size="mini"><i class="nz-icon nz-icon-plus"></i></el-button>
+        </div>
+      </div>
+    </transition>
+    <!--end--param编辑框-->
   </div>
 </template>
 
@@ -262,10 +311,12 @@
         currentModuleCopy: {},
         currentProjectCopy: {id: ''},
         tempParamObj: [],
+        tempLabelModule: [],
         tempEndpoint: {},
         tempEndpoint2: {},
         rightBox: {show: false, title: this.$t('project.endpoint.createEndpoint'),isEdit: false},
         editParamBox: {show: false, top: 0, left: 0, type: 0}, //param编辑弹框
+        editLabelsBox: {show: false, top: 0, left: 0, type: 0}, //param编辑弹框
         moduleParamShow: false, //module默认参数param悬浮窗
         assetSearch: {host: '', sn: '', text: '', label: 'IP', dropdownShow: false}, //侧滑框中asset的搜索相关
         assetPageObj: {pageNo: 1, pageSize: -1},
@@ -278,17 +329,22 @@
           {
             label: this.$t("project.endpoint.asset"),
             prop: 'asset',
-            width: 121,
+            width: 76,
             show: true,
           },{
             label: this.$t("project.endpoint.host"),
             prop: 'host',
-            width: 121,
+            width: 76,
             show: true,
           },{
             label: this.$t("project.endpoint.port"),
             prop: 'port',
             width: 54,
+            show: true,
+          },{
+            label: this.$t("project.endpoint.labels"),
+            prop: 'labels',
+            width: 90,
             show: true,
           },{
             label: this.$t("project.endpoint.param"),
@@ -350,6 +406,50 @@
         this.editParamBox.show = show;
       },
 
+      //子弹框控制  obj: module或endpoint对象  type:1module2endpoint
+      showEditLabelsBox(show, obj, type, e) {
+        //editLabelsBox tempLabelModule labelModule
+        console.log(123123123123,show, obj, type, e,this.tempLabelModule);
+        if (show) {
+          let position = e.target.getBoundingClientRect();
+          this.editLabelsBox.type = type;
+          if (this.editLabelsBox.type == 2) {
+            this.tempEndpoint = obj;
+          }
+          this.editLabelsBox.top = position.top - 227;
+          this.editLabelsBox.left = position.left - 48;
+          if (!obj.labels) {
+            this.$set(obj, 'labelModule', []);
+            this.tempLabelModule = [];
+          } else {
+            this.tempLabelModule = JSON.parse(JSON.stringify(obj.labelModule));
+          }
+        } else {
+          if (!this.editLabelsBox.show) {
+            return;
+          }
+          for (let i = 0; i < this.tempLabelModule.length; i++) {
+            if (!this.tempLabelModule[i].key || !this.tempLabelModule[i].value) {
+              this.tempLabelModule.splice(i, 1);
+              i--;
+            }
+          }
+          if (this.editLabelsBox.type == 1) {
+            this.currentModuleCopy.labelModule = this.tempLabelModule;
+            this.currentModuleCopy.labels = this.paramToJson(this.tempLabelModule);
+          } else if (this.editLabelsBox.type == 2) {
+            for (let i = 0; i < this.endpointList.length; i++) {
+              if (this.endpointList[i].asset.id == this.tempEndpoint.asset.id) {
+                this.endpointList[i].labels = this.paramToJson(this.tempLabelModule);
+                this.endpointList[i].labelModule = this.tempLabelModule;
+                break;
+              }
+            }
+          }
+          this.tempLabelModule = [];
+        }
+        this.editLabelsBox.show = show;
+      },
       clickOutside() {
         this.esc(false);
       },
@@ -368,7 +468,15 @@
       removeParam(index) {
         this.tempParamObj.splice(index, 1);
       },
+      // 新增labels
+      addLabels() {
+        this.tempLabelModule.push({key: '', value: ''});
+      },
 
+      // 移除单个param
+      removeLabels(index) {
+        this.tempLabelModule.splice(index, 1);
+      },
       //编辑endpoint
       toEditEndpoint(endpoint) {
         for (let i = 0; i < this.endpointList.length; i++) {
@@ -462,6 +570,7 @@
         this.endpoint.moduleId = '';
         this.endpoint.projectId = project.id;
         this.editParamBox.show = false;
+        this.editLabelsBox.show = false;
         this.tempParamObj = [];
         this.endpointList = [];
         this.getAssetList();
@@ -471,6 +580,7 @@
       changeModule(module) {
         this.endpoint.moduleId = module.id;
         this.editParamBox.show = false;
+        this.editLabelsBox.show = false;
         this.tempParamObj = [];
       },
 
@@ -525,6 +635,8 @@
               host: item.host,
               param: this.currentModuleCopy.param ? this.currentModuleCopy.param : "",
               paramObj: this.currentModuleCopy.paramObj ? this.currentModuleCopy.paramObj : {},
+              labels: this.currentModuleCopy.labels ? this.currentModuleCopy.labels : "",
+              labelModule: this.currentModuleCopy.labelModule ? this.currentModuleCopy.labelModule : {},
               port: this.currentModuleCopy.port,
               path: this.currentModuleCopy.path,
               moduleId: this.currentModuleCopy.id
@@ -576,9 +688,14 @@
             for (let i = 0; i < response.data.list.length; i++) {
               try {
                 let tempObj = JSON.parse(response.data.list[i].param);
+                let tempObj1 = JSON.parse(response.data.list[i].labels);
                 response.data.list[i].paramObj = [];
+                response.data.list[i].labelsModule = [];
                 for (let k in tempObj) {
                   response.data.list[i].paramObj.push({key: k, value: tempObj[k]})
+                }
+                for (let k in tempObj1) {
+                  response.data.list[i].labelsModule.push({key: k, value: tempObj1[k]})
                 }
               } catch(err) {
                 //console.info(response.data.list[i], err);
@@ -601,7 +718,7 @@
         //对endpointList进行处理，避免携带过多无用数据
         let endpointList = [];
         this.endpointList.forEach((item, index) => {
-          let endpoint = {moduleId: item.moduleId, assetId: item.assetId, port: item.port, param: item.param, path: item.path, host: item.host};
+          let endpoint = {moduleId: item.moduleId, assetId: item.assetId, port: item.port, param: item.param, path: item.path, host: item.host,labels:item.labels};
           endpointList.push(endpoint);
         });
         this.$refs.addEndpoint.validate((valid) => {
@@ -627,6 +744,8 @@
             this.endpointList[i].port = this.currentModuleCopy.port;
             this.endpointList[i].param = this.currentModuleCopy.param;
             this.endpointList[i].paramObj = this.currentModuleCopy.paramObj;
+            this.endpointList[i].labels = this.currentModuleCopy.labels;
+            this.endpointList[i].labelModule = this.currentModuleCopy.labelModule;
             this.endpointList[i].path = this.currentModuleCopy.path;
           }
           this.$message({duration: 1000, type: 'success', message: this.$t("tip.coverSuccess")});
@@ -702,11 +821,11 @@
         immediate: true,
         handler(n, o) {
           if (n.type && n.type.toLowerCase() == 'snmp') {
-            this.endpointTableTitle[3].show = false;
             this.endpointTableTitle[4].show = false;
+            this.endpointTableTitle[5].show = false;
           } else {
-            this.endpointTableTitle[3].show = true;
             this.endpointTableTitle[4].show = true;
+            this.endpointTableTitle[5].show = true;
           }
         }
       },
@@ -831,14 +950,21 @@
   }
   .module-info-port {
     width: 53px;
-    right: 209px;
+    right: 309px;
   }
   .module-info-port-snmp {
-    right: 50px;
+    right: 142px;
   }
   .module-info-param {
     width: 89px;
     right: 116px;
+  }
+  .module-info-labels {
+    width: 89px;
+    right: 216px;
+  }
+  .module-info-labels-snmp {
+    right: 50px;
   }
   .module-info-path {
     width: 70px;
