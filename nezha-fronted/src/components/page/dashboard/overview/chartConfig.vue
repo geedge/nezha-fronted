@@ -210,7 +210,7 @@
       series: [],
       tooltip : {
         backgroundColor: "rgba(255, 255, 255, 0.66)",
-        textStyle: {color: "#333"}
+        textStyle: {color: "#333"},
       },
       xAxis: {
         type: 'value',
@@ -239,7 +239,7 @@
           fontSize: 12,
           formatter: function(value) {
             if (value.length > 15) {
-              return value.substring(0, 11) + "...";
+              return "..."+ value.substring(value.length-12, value.length);
             }
             return value;
           },

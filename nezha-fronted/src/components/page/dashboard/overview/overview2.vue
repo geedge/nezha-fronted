@@ -1218,7 +1218,7 @@
         //return tooltip;
       },
       simpleFormatter(params) {
-        return `<div class="tooltip" style="min-width: unset;">${params.name}:&nbsp;${params.value}</div>`;
+        return `<div class="tooltip" style="min-width: unset;">${params.value}</div>`;
       },
       assetTypeFormatter(params) {
         return `<div class="tooltip" style="min-width: unset;">${params.name}:&nbsp;${params.value}</div>`;
