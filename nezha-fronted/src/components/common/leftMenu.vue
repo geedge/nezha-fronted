@@ -775,6 +775,7 @@
     line-height: 30px;
     display: flex;
     padding-left: 0;
+    justify-content: center;
   }
 </style>
 <style lang="scss">
