@@ -283,7 +283,7 @@
           <div class="param-box param-box-module">
             <el-scrollbar ref="labelBoxScrollbar" style="height: 100%">
               <div class="param-box-row" v-for="(item, index) in editModule.labelModule">
-                <el-form-item class="param-box-row-key" :rules="[{required: true, message: $t('validate.required'), trigger: 'blur'},{ pattern: /[a-zA-Z_:][a-zA-Z0-9_:]*/, message: $t('validate.key') ,trigger: 'blur'}]" :prop="'labelModule.' + index + '.key'">
+                <el-form-item class="param-box-row-key" :rules="[{required: true, message: $t('validate.required'), trigger: 'blur'},{ pattern: /^[a-zA-Z_:][a-zA-Z0-9_:]*/, message: $t('validate.key') ,trigger: 'blur'}]" :prop="'labelModule.' + index + '.key'">
                   <el-input placeholder="key" size="mini" v-model="item.key"></el-input>
                 </el-form-item>
                 <span class="param-box-row-eq">=</span>
