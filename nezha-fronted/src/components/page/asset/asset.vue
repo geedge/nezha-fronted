@@ -103,8 +103,7 @@
           <template v-if="item.prop=='Module'">
             <el-tooltip placement="right" effect="light">
               <div slot="content">
-                {{scope.row.endpointNum-scope.row.endpointDownNum}}&nbsp;{{$t('asset.endpointUpNum')}}<br/>
-                {{scope.row.endpointNum}}&nbsp;{{$t('asset.endpointNum')}}
+                {{$t('asset.active')}} / {{$t('asset.total')}}
               </div>
               <span class="link" @click="showEndpoint(scope.row)" style="padding: 2px 8px">{{scope.row.endpointNum-scope.row.endpointDownNum}}/{{scope.row.endpointNum}}</span>
             </el-tooltip>

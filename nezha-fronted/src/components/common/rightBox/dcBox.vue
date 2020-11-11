@@ -40,13 +40,15 @@
             <!--</select-area>-->
           <!--</el-form-item>-->
           <el-form-item :label='$t("config.dc.state")' prop="state">
-            <el-select value-key="value" popper-class="config-dropdown" v-model="editDc.state" placeholder="" size="small">
-              <el-option @click.native="" v-for="item in $CONSTANTS.setting.DcState" :key="item.value" :label="item.label" :value="item.value" :id="'dc-principal-op-'+item.value">
-                <span>{{item.label}}</span>
-              </el-option>
-            </el-select>
+            <el-switch
+              v-model="editDc.state"
+              active-value="ON"
+              inactive-value="OFF"
+              active-color="#ee9d3f"
+            >
+            </el-switch>
           </el-form-item>
-          <el-form-item :label='$t("config.dc.longitude")' prop="longitude">
+          <el-form-item :label='$t("config.dc.longitude")' prop="longitude" :rules="[{required:editDc.latitude,trigger:'blur'}]">
             <el-input-number
               placeholder=""
               v-model="editDc.longitude"
@@ -58,7 +60,7 @@
               :precision="5"
             />
           </el-form-item>
-          <el-form-item :label='$t("config.dc.latitude")' prop="latitude">
+          <el-form-item :label='$t("config.dc.latitude")' prop="latitude"  :rules="[{required:editDc.longitude,trigger:'blur'}]">
             <el-input-number
               placeholder=""
               v-model="editDc.latitude"
@@ -135,10 +137,10 @@
                 param.areaId = param.area.id;
               }
               if(!regNum.test(param.longitude)){
-                param.longitude=''
+                param.longitude=null
               }
               if(!regNum.test(param.latitude)){
-                param.latitude=''
+                param.latitude=null
               }
 
               this.$put('idc', param).then(response => {
@@ -155,10 +157,10 @@
                 param.areaId = param.area.id;
               }
               if(!regNum.test(param.longitude)){
-                param.longitude=''
+                param.longitude=null;
               }
               if(!regNum.test(param.latitude)){
-                param.latitude=''
+                param.latitude=null;
               }
               this.$post('idc', param).then(response => {
                 if (response.code === 200) {

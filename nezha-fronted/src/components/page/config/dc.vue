@@ -79,8 +79,13 @@
               <template v-else>-</template>
             </template>
             <template v-else-if="item.prop == 'state'">
-              <template v-if="scope.row.state">{{$CONSTANTS.setting.DcState.find(val=>val.value===scope.row.state).label}}</template>
-              <template v-else>-</template>
+              <el-switch
+                v-model="scope.row.state"
+                active-value="ON"
+                inactive-value="OFF"
+                active-color="#ee9d3f"
+                @change="(val)=>{statusChange(scope.row)}"
+              />
             </template>
             <template v-else-if="item.prop == 'longitude'">
               <template v-if="regNumTest(scope.row.longitude)">{{scope.row.longitude}}</template>
@@ -211,10 +216,6 @@
             prop: 'name',
             show: true,
           }, {
-            label: this.$t('config.dc.state'),
-            prop: 'state',
-            show: true
-          }, {
             label: this.$t('config.dc.longitude'),
             prop: 'longitude',
             show: true
@@ -241,6 +242,10 @@
           }, {
             label: this.$t('asset.principal'),
             prop: 'principal',
+            show: true
+          }, {
+            label: this.$t('config.dc.state'),
+            prop: 'state',
             show: true
           }, {
             label: this.$t('config.account.option'),
@@ -377,6 +382,17 @@
               this.$message.error(response.msg);
             }
           });
+        });
+      },
+      statusChange(idc) {
+        this.$put('idc', idc).then(response => {
+          if (response.code === 200) {
+            this.rightBox.show = false;
+            this.$message({duration: 1000, type: 'success', message: this.$t("tip.saveSuccess")});
+          } else {
+            this.$message.error(response.msg);
+          }
+          this.getTableData();
         });
       },
       getTableData() {
