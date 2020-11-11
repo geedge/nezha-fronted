@@ -220,6 +220,7 @@
         axisTick: {
           show: false
         },
+        minInterval:1,
         axisLabel: {
           show:true,
           fontSize: 14
