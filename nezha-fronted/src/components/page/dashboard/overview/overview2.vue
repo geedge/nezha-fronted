@@ -881,23 +881,26 @@
                     }else{
                       symbolSize=smallScatter;
                     }
+                    let shadowMarker=null;
                     let marker=null;
                    if(dcInfo.state==='ON'){
                      let hasAlert=dcStat.alertP1!=0||dcStat.alertP2!=0||dcStat.alertP3!=0||dcStat.assetPingDown!=0||dcStat.endpointDown!=0||dcStat.promDown!=0;
-                     marker=L.circleMarker([dcInfo.latitude,dcInfo.longitude], {color: hasAlert?'#DE5D3F':'#23BF9A',opacity:0.42,fillColor: hasAlert?'#DE5D3F':'#23BF9A',fillOpacity: 0.5, radius: symbolSize,className:hasAlert?'error-item':''});
-                     marker.bindTooltip(this.mapTooltipFormatter(dcStat), {sticky: false, pane: "myPane", direction: "left", data: dcStat});
+                     shadowMarker=L.circleMarker([dcInfo.latitude,dcInfo.longitude], {opacity:0,fillOpacity: 0, radius: symbolSize+10});
+                     marker=L.circleMarker([dcInfo.latitude,dcInfo.longitude], {interactive:false,color: hasAlert?'#DE5D3F':'#23BF9A',opacity:0.42,fillColor: hasAlert?'#DE5D3F':'#23BF9A',fillOpacity: 0.5, radius: symbolSize,className:hasAlert?'real-marker error-item':'real-marker '});
+                     shadowMarker.bindTooltip(this.mapTooltipFormatter(dcStat), {sticky: false, pane: "myPane", direction: "left", data: dcStat});
                    } else{
-                     marker=L.circleMarker([dcInfo.latitude,dcInfo.longitude], {color: '#010101',opacity:0.35,fillColor: '#010101',fillOpacity: 0.35, radius: symbolSize});
+                     marker=L.circleMarker([dcInfo.latitude,dcInfo.longitude], {color: '#010101',opacity:0.35,fillColor: '#010101',fillOpacity: 0.35, radius: symbolSize+5});
                      marker.bindTooltip(this.mapTooltipFormatter(dcStat), {sticky: false, pane: "myPane", direction: "left", data: dcStat});
                    }
-                    marker.on("mouseover", (param) => {
+                    shadowMarker.on("mouseover", (param) => {
                       //console.info(param);
                       let pane = document.querySelector(".leaflet-pane.leaflet-my-pane");
                       let point = param.containerPoint;
                       let event = param.originalEvent;
-                      this.tooltip.x = event.clientX+point.x-event.layerX;
+                      this.tooltip.x = event.clientX+point.x-event.layerX - 5;
                       this.tooltip.y = event.clientY+point.y-event.layerY;
                     });
+                    shadowMarker.addTo(this.map)
                     marker.addTo(this.map);
                   }
                 }
@@ -1509,6 +1512,9 @@
     color: #FADED7 ;
     animation: error-animation 1s infinite ease-in-out;
     animation-direction:normal;
+  }
+  .real-marker{
+    pointer-events: none;
   }
   .error-color{
 
