@@ -749,28 +749,31 @@
         return loadPromise;
       },
       initTooltipChart(param) {
-        let data = param.tooltip.options.data;
-        //console.info(tooltipEndpointChart);
-        tooltipEndpointChart = echarts.init(document.querySelector("#tooltip-chart--endpoint"));
-        tooltipPrometheusChart = echarts.init(document.querySelector("#tooltip-chart--prometheus"));
-        let endpointOption = chartConfig.getOption("tooltipPie"),
-          prometheusOption = chartConfig.getOption("tooltipPie");
-        endpointOption.series[0].label.formatter = data.endpointTotal + "";
-        endpointOption.series[0].data = [
-          {name: this.$t("dashboard.overview.asset.pingUp"), value: data.endpointUp ? data.endpointUp : 0},
-          {name: this.$t("dashboard.overview.asset.pingDown"), value: data.endpointDown ? data.endpointDown : 0}
-        ];
-        endpointOption.title.text = this.$t("project.endpoint.endpoint");
-        endpointOption.legend.data = [this.$t("dashboard.overview.asset.pingUp"), this.$t("dashboard.overview.asset.pingDown")];
-        prometheusOption.series[0].label.formatter = data.promTotal + "";
-        prometheusOption.series[0].data = [
-          {name: this.$t("dashboard.overview.asset.pingUp"), value: data.promUp ? data.promUp : 0},
-          {name: this.$t("dashboard.overview.asset.pingDown"), value: data.promDown ? data.promDown : 0}
-        ];
-        prometheusOption.title.text = "Prometheus";
-        prometheusOption.legend.data = [this.$t("dashboard.overview.asset.pingUp"), this.$t("dashboard.overview.asset.pingDown")];
-        tooltipEndpointChart.setOption(endpointOption, true);
-        tooltipPrometheusChart.setOption(prometheusOption, true);
+        let vm = this;
+        setTimeout(()=>{
+          let data = param.tooltip.options.data;
+          //console.info(tooltipEndpointChart);
+          tooltipEndpointChart = echarts.init(document.querySelector("#tooltip-chart--endpoint"));
+          tooltipPrometheusChart = echarts.init(document.querySelector("#tooltip-chart--prometheus"));
+          let endpointOption = chartConfig.getOption("tooltipPie"),
+            prometheusOption = chartConfig.getOption("tooltipPie");
+          endpointOption.series[0].label.formatter = data.endpointTotal + "";
+          endpointOption.series[0].data = [
+            {name: vm.$t("dashboard.overview.asset.pingUp"), value: data.endpointUp ? data.endpointUp : 0},
+            {name: vm.$t("dashboard.overview.asset.pingDown"), value: data.endpointDown ? data.endpointDown : 0}
+          ];
+          endpointOption.title.text = vm.$t("project.endpoint.endpoint");
+          endpointOption.legend.data = [vm.$t("dashboard.overview.asset.pingUp"), vm.$t("dashboard.overview.asset.pingDown")];
+          prometheusOption.series[0].label.formatter = data.promTotal + "";
+          prometheusOption.series[0].data = [
+            {name: vm.$t("dashboard.overview.asset.pingUp"), value: data.promUp ? data.promUp : 0},
+            {name: vm.$t("dashboard.overview.asset.pingDown"), value: data.promDown ? data.promDown : 0}
+          ];
+          prometheusOption.title.text = "Prometheus";
+          prometheusOption.legend.data = [vm.$t("dashboard.overview.asset.pingUp"), vm.$t("dashboard.overview.asset.pingDown")];
+          tooltipEndpointChart.setOption(endpointOption, true);
+          tooltipPrometheusChart.setOption(prometheusOption, true);
+        },100)
         /*setTimeout(function() {
           tooltipEndpointChart.setOption(endpointOption);
           tooltipPrometheusChart.setOption(prometheusOption);
@@ -797,7 +800,9 @@
               }).setView([mapConfig.latitude,mapConfig.longitude],mapConfig.zoom);
               map.createPane("myPane", document.querySelector(".my-pane"));
               map.on("tooltipopen", function(param) {
-                vm.initTooltipChart(param);
+                setTimeout(()=>{
+                  vm.initTooltipChart(param);
+                },100)
               });
               map.on("tooltipclose", function(param) {
                 tooltipEndpointChart && tooltipEndpointChart.clear();
