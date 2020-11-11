@@ -541,8 +541,8 @@ const cn = {
     featureTitle: "属性",
     endpointUpNum:'代表正常的数量',
     endpointNum:'代表总的数量',
-    active:"Active",
-    Total:"Total",
+    active:"Alive",// "存活",
+    total:"Total", // "总数",
   },
   config: {
     config: "设置",

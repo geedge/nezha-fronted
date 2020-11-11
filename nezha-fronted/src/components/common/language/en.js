@@ -542,8 +542,8 @@ const en = {
       endPoint: 'End point',//'EndPoint'
       alert: 'Alert',//'告警'
     },
-    active:"Active",
-    Total:"Total",
+    active:"Alive",// "存活",
+    total:"Total",// "总数",
   },
   config: {
     config: 'Settings',//"设置"
