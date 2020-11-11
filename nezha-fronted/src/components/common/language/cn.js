@@ -626,6 +626,9 @@ const cn = {
       editCabinet: "编辑机柜",
       usable:'可用',
       suspended:'停用',
+      state:'状态',
+      longitude:'经度',
+      latitude:'纬度',
     },
     model: {
       model: "资产型号",

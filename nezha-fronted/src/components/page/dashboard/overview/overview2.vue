@@ -208,7 +208,7 @@
 
   var tooltipEndpointChart;
   var tooltipPrometheusChart;
-
+  var regNum = /^[0-9]+.?[0-9]*/
   export default {
     name: "overview2",
     components:{
@@ -859,8 +859,8 @@
                   let dcInfo = idcInfos.find((item) => {
                     return item.id == dcId;
                   })
-                  let areaInfo = dcInfo.area;
-                  if (areaInfo) {
+                  let areaInfo = dcInfo;
+                  if (regNum.test(dcInfo.latitude)&&regNum.test(dcInfo.longitude)) {
                     let areaName = '';
                     if (areaInfo.i18n) {
                       areaName = JSON.parse(areaInfo.i18n)[language];
@@ -876,11 +876,15 @@
                     }else{
                       symbolSize=smallScatter;
                     }
-
-                    let hasAlert=dcStat.alertP1!=0||dcStat.alertP2!=0||dcStat.alertP3!=0||dcStat.assetPingDown!=0||dcStat.endpointDown!=0||dcStat.promDown!=0;
-
-                    let marker=L.circleMarker([areaInfo.latitude,areaInfo.longitude], {color: hasAlert?'#DE5D3F':'#23BF9A',opacity:0.42,fillColor: hasAlert?'#DE5D3F':'#23BF9A',fillOpacity: 0.5, radius: symbolSize,className:hasAlert?'error-item':''})
-                    marker.bindTooltip(this.mapTooltipFormatter(dcStat), {sticky: false, pane: "myPane", direction: "left", data: dcStat});
+                    let marker=null;
+                   if(dcInfo.state==='ON'){
+                     let hasAlert=dcStat.alertP1!=0||dcStat.alertP2!=0||dcStat.alertP3!=0||dcStat.assetPingDown!=0||dcStat.endpointDown!=0||dcStat.promDown!=0;
+                     marker=L.circleMarker([dcInfo.latitude,dcInfo.longitude], {color: hasAlert?'#DE5D3F':'#23BF9A',opacity:0.42,fillColor: hasAlert?'#DE5D3F':'#23BF9A',fillOpacity: 0.5, radius: symbolSize,className:hasAlert?'error-item':''});
+                     marker.bindTooltip(this.mapTooltipFormatter(dcStat), {sticky: false, pane: "myPane", direction: "left", data: dcStat});
+                   } else{
+                     marker=L.circleMarker([dcInfo.latitude,dcInfo.longitude], {color: '#010101',opacity:0.35,fillColor: '#010101',fillOpacity: 0.35, radius: symbolSize});
+                     marker.bindTooltip(this.mapTooltipFormatter(dcStat), {sticky: false, pane: "myPane", direction: "left", data: dcStat});
+                   }
                     marker.on("mouseover", (param) => {
                       //console.info(param);
                       let pane = document.querySelector(".leaflet-pane.leaflet-my-pane");
@@ -895,7 +899,7 @@
               }
             }
             res();
-          });
+          })
         })
       },
       queryDataCenterMapData() {
@@ -930,8 +934,8 @@
                 let dcInfo=idcInfos.find((item)=>{
                   return item.id == dcId ;
                 })
-                let areaInfo=dcInfo.area;
-                if(areaInfo){
+                let areaInfo=dcInfo;
+                if(regNum.test(dcInfo.latitude)&&regNum.test(dcInfo.longitude)){
                   let areaName='';
                   if(areaInfo.i18n){
                     areaName=JSON.parse(areaInfo.i18n)[language];
@@ -949,7 +953,7 @@
 
                   seriesDatas.push({
                     name:areaName,
-                    value:[areaInfo.longitude,areaInfo.latitude,dcStat],
+                    value:[dcInfo.longitude,dcInfo.latitude,dcStat],
                     symbolSize:symbolSize,
                   });
                 }

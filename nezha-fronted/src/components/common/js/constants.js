@@ -140,6 +140,7 @@ export const intervalList = [
 
 export const setting = {
     DcState:[
-      {value:1,label: i18n.t('setting.usable')}
+      {value:'ON',label: i18n.t('config.dc.usable')},
+      {value:'OFF',label: i18n.t('config.dc.suspended')}
     ]
 };

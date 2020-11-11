@@ -32,12 +32,43 @@
               </el-option>
             </el-select>
           </el-form-item>
-          <el-form-item :label='$t("config.dc.area")' prop="area">
-            <select-area ref="selectArea" :areaData="areaData" :placement="'bottom-start'" @selectArea="selectArea" :currentArea="editDc.area.id">
-              <template v-slot:trigger>
-                <el-input placeholder="" v-model="editDc.area.name" size="small" readonly="readonly" @click.native="toSelectArea"></el-input>
-              </template>
-            </select-area>
+          <!--<el-form-item :label='$t("config.dc.area")' prop="area">-->
+            <!--<select-area ref="selectArea" :areaData="areaData" :placement="'bottom-start'" @selectArea="selectArea" :currentArea="editDc.area.id">-->
+              <!--<template v-slot:trigger>-->
+                <!--<el-input placeholder="" v-model="editDc.area.name" size="small" readonly="readonly" @click.native="toSelectArea"></el-input>-->
+              <!--</template>-->
+            <!--</select-area>-->
+          <!--</el-form-item>-->
+          <el-form-item :label='$t("config.dc.state")' prop="state">
+            <el-select value-key="value" popper-class="config-dropdown" v-model="editDc.state" placeholder="" size="small">
+              <el-option @click.native="" v-for="item in $CONSTANTS.setting.DcState" :key="item.value" :label="item.label" :value="item.value" :id="'dc-principal-op-'+item.value">
+                <span>{{item.label}}</span>
+              </el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item :label='$t("config.dc.longitude")' prop="longitude">
+            <el-input-number
+              placeholder=""
+              v-model="editDc.longitude"
+              size="small"
+              controls-position="right"
+              :min="-180"
+              :max="180"
+              :step="0.00001"
+              :precision="5"
+            />
+          </el-form-item>
+          <el-form-item :label='$t("config.dc.latitude")' prop="latitude">
+            <el-input-number
+              placeholder=""
+              v-model="editDc.latitude"
+              size="small"
+              controls-position="right"
+              :min="-90"
+              :max="90"
+              :step="0.00001"
+              :precision="5"
+            />
           </el-form-item>
         </el-form>
       </el-scrollbar>
@@ -57,6 +88,7 @@
 
 <script>
   import selectArea from "../popBox/selectArea"; //dc弹框
+  var  regNum = /^[0-9]+.?[0-9]*/;
   export default {
     name: "dcBox",
     props: {
@@ -73,6 +105,9 @@
           name: [
             {required: true, message: this.$t('validate.required'), trigger: 'blur'}
           ],
+          state:[
+            {required: true, message: this.$t('validate.required'), trigger: 'blur'}
+          ]
         },
         areaData: [],
       }
@@ -95,10 +130,18 @@
         this.$refs.dcForm.validate((valid) => {
           if (valid) {
             if (this.editDc.id) {
-              if (this.editDc.area) {
-                this.editDc.areaId = this.editDc.area.id;
+              let param={...this.editDc};
+              if (param.area) {
+                param.areaId = param.area.id;
               }
-              this.$put('idc', this.editDc).then(response => {
+              if(!regNum.test(param.longitude)){
+                param.longitude=''
+              }
+              if(!regNum.test(param.latitude)){
+                param.latitude=''
+              }
+
+              this.$put('idc', param).then(response => {
                 if (response.code === 200) {
                   this.$message({duration: 1000, type: 'success', message: this.$t("tip.saveSuccess")});
                   this.esc(true);
@@ -107,10 +150,17 @@
                 }
               });
             } else {
-              if (this.editDc.area) {
-                this.editDc.areaId = this.editDc.area.id;
+              let param={...this.editDc}
+              if (param.area) {
+                param.areaId = param.area.id;
               }
-              this.$post('idc', this.editDc).then(response => {
+              if(!regNum.test(param.longitude)){
+                param.longitude=''
+              }
+              if(!regNum.test(param.latitude)){
+                param.latitude=''
+              }
+              this.$post('idc', param).then(response => {
                 if (response.code === 200) {
                   this.$message({duration: 1000, type: 'success', message: this.$t("tip.saveSuccess")});
                   this.esc(true);
@@ -141,13 +191,13 @@
           });
         });
       },
-      getAreaData() {
-        this.$get('area', {pid: 0}).then(response => {
-          if (response.code === 200) {
-            this.areaData = response.data.list;
-          }
-        });
-      },
+      // getAreaData() {
+      //   this.$get('area', {pid: 0}).then(response => {
+      //     if (response.code === 200) {
+      //       this.areaData = response.data.list;
+      //     }
+      //   });
+      // },
 
       selectArea(area) {
         this.editDc.area.id = area.id;
@@ -155,7 +205,7 @@
       }
     },
     mounted() {
-      this.getAreaData();
+      // this.getAreaData();
     },
     watch: {
       dc: {

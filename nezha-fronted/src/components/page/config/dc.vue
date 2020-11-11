@@ -59,7 +59,7 @@
           v-if="item.show"
           :key="`col-${index}`"
           :label="item.label"
-          :sortable="$tableSet.sortableShow(item.prop,'dc')"
+          :sortable="sortableShow(item.prop,'dc')"
           :prop="$tableSet.propTitle(item.prop,'dc')"
         >
           <template slot-scope="scope" :column="item">
@@ -78,8 +78,16 @@
               </template>
               <template v-else>-</template>
             </template>
-            <template v-else-if="item.prop == 'area'">
-              <template v-if="scope.row.area">{{scope.row.area.name}}</template>
+            <template v-else-if="item.prop == 'state'">
+              <template v-if="scope.row.state">{{$CONSTANTS.setting.DcState.find(val=>val.value===scope.row.state).label}}</template>
+              <template v-else>-</template>
+            </template>
+            <template v-else-if="item.prop == 'longitude'">
+              <template v-if="regNumTest(scope.row.longitude)">{{scope.row.longitude}}</template>
+              <template v-else>-</template>
+            </template>
+            <template v-else-if="item.prop == 'latitude'">
+              <template v-if="regNumTest(scope.row.latitude)">{{scope.row.latitude}}</template>
               <template v-else>-</template>
             </template>
             <template v-else-if="item.prop == 'assetStat' && scope.row.assetStat">
@@ -135,6 +143,7 @@
   import dcBox from "../../common/rightBox/dcBox"; //dc弹框
   import trafficSettingBox from "../../common/rightBox/trafficSetting/trafficSettingBox";
   import deleteButton from "../../common/deleteButton";
+  var  regNum = /^[0-9]+.?[0-9]*/;
   export default {
     name: "dc",
     components:{
@@ -174,10 +183,13 @@
           location: '',
           tel: '',
           principal: '',
-          area: {
-            id: 0,
-            name: ''
-          }
+          // area: {
+          //   id: 0,
+          //   name: ''
+          // }
+          state:'ON',
+          longitude:undefined,
+          latitude:undefined,
         },
         rightBox: {
           dc: {show: false},
@@ -199,8 +211,16 @@
             prop: 'name',
             show: true,
           }, {
-            label: this.$t('config.dc.area'),
-            prop: 'area',
+            label: this.$t('config.dc.state'),
+            prop: 'state',
+            show: true
+          }, {
+            label: this.$t('config.dc.longitude'),
+            prop: 'longitude',
+            show: true
+          }, {
+            label: this.$t('config.dc.latitude'),
+            prop: 'latitude',
             show: true
           }, {
             label: this.$t("asset.location"),
@@ -263,6 +283,12 @@
       },
       edit(u) {
         this.dc = JSON.parse(JSON.stringify(u));
+        if(!regNum.test(this.dc.longitude)){
+          this.dc.longitude=undefined
+        }
+        if(!regNum.test(this.dc.latitude)){
+          this.dc.latitude=undefined
+        }
         if (!this.dc.area) {
           this.$set(this.dc, 'area', {id: '', name: ''});
         }
@@ -406,6 +432,12 @@
         this.bottomBox.dc = JSON.parse(JSON.stringify(dc));
         this.bottomBox.showSubList = true;
       },
+      sortableShow(label,form){
+        if(label==='state'){
+          return false
+        }
+        return this.$tableSet.sortableShow(label,form)
+      },
       // 数据排序
       tableDataSort(item){
         let orderBy = '';
@@ -418,7 +450,9 @@
         this.$set(this.searchLabel, "orderBy", orderBy);
         this.getTableData();
       },
-
+      regNumTest(val){//校验是否是数字
+        return regNum.test(val)
+      },
       initEvent() {
         bus.$on("dc-list-change", () => {
           this.getTableData();

@@ -602,6 +602,9 @@ const en = {
       },
       usable:'Usable',
       suspended:'Suspended',
+      state:'State',
+      longitude:'Longitude',
+      latitude:'Latitude',
     },
     model: {
       model: 'Asset model',
