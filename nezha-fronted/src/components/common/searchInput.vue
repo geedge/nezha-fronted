@@ -677,7 +677,7 @@
                         } else if (val.type == 'dc') {
                           objectInfo.idcId = val.valnum;
                         } else if (val.type == 'asset') {
-                          objectInfo.assetId = val.valnum;
+                          objectInfo.asset = val.val;
                         } else if (val.type == 'module') {
                           objectInfo.moduleId = val.valnum;
                         } else if (val.type == 'project') {

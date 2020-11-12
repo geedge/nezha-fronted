@@ -813,7 +813,10 @@ const cn = {
         alertNumTrend: "告警数量趋势",
         affectEntity: "影响"
       }
-    }
+    },
+    P1Rule:'P1: 万分紧急，可导致业务瘫痪的告警',
+    P2Rule:'P2: 急需处理，但不影响业务的告警',
+    P3Rule:'P3: 需要处理，但不紧急的告警',
   },
   project: {
     chart: {

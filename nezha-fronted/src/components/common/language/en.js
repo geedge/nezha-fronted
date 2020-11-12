@@ -819,7 +819,10 @@ const en = {
         alertNumTrend: "Alert num trend",
         affectEntity: "Affect entity"
       }
-    }
+    },
+    P1Rule:'P1: Critical, alarm that can cause business paralysis',
+    P2Rule:'P2: Major, alarm that do not affect the business',
+    P3Rule:'P3: Minor, alarm that need to deal with, but not urgent',
   },
   project: {
     chart: {

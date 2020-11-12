@@ -321,7 +321,7 @@
         editLabelsBox: {show: false, top: 0, left: 0, type: 0}, //param编辑弹框
         moduleParamShow: false, //module默认参数param悬浮窗
         assetSearch: {host: '', sn: '', text: '', label: 'IP', dropdownShow: false}, //侧滑框中asset的搜索相关
-        assetPageObj: {pageNo: 1, pageSize: -1},
+        assetPageObj: {pageNo: 1, pageSize: -1,states:1},
         selectedAssets: [], //侧滑框中选中的asset
         projectList: [],
         moduleList: [],

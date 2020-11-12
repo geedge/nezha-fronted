@@ -216,14 +216,6 @@
             prop: 'name',
             show: true,
           }, {
-            label: this.$t('config.dc.longitude'),
-            prop: 'longitude',
-            show: true
-          }, {
-            label: this.$t('config.dc.latitude'),
-            prop: 'latitude',
-            show: true
-          }, {
             label: this.$t("asset.location"),
             prop: 'location',
             show: true,
@@ -243,6 +235,14 @@
             label: this.$t('asset.principal'),
             prop: 'principal',
             show: true
+          }, {
+            label: this.$t('config.dc.longitude'),
+            prop: 'longitude',
+            show: false
+          }, {
+            label: this.$t('config.dc.latitude'),
+            prop: 'latitude',
+            show: false
           }, {
             label: this.$t('config.dc.state'),
             prop: 'state',

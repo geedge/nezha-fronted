@@ -67,6 +67,14 @@
             </el-option>
           </el-select>
         </el-form-item>
+        <div class="rule-severity-remark">
+          <i class="nz-icon nz-icon-info-normal"></i>
+          <div>
+            <p>{{$t('alert.P1Rule')}}</p>
+            <p>{{$t('alert.P2Rule')}}</p>
+            <p>{{$t('alert.P3Rule')}}</p>
+          </div>
+        </div>
         <!--receiver-->
         <el-form-item :label="$t('config.account.receiver')" prop="receiver">
           <el-select
@@ -276,5 +284,24 @@
 <style>
   .unit-popper-class{
     z-index: 2052 !important;
+  }
+</style>
+<style scoped>
+  .rule-severity-remark{
+    display: inline-flex;
+    justify-content: center;
+    justify-items: center;
+    align-items: center;
+    /*width: 376px;*/
+    padding: 10px 15px;
+    background: rgba(244,244,255,1);
+    color: rgba(144,147,158,1);
+    margin-top: -13px;
+    margin-bottom: 18px;
+    margin-left: 190px;
+    font-size: 14px;
+  }
+  .rule-severity-remark .nz-icon-info-normal{
+    margin-right: 10px;
   }
 </style>
