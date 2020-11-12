@@ -889,8 +889,9 @@
                      marker=L.circleMarker([dcInfo.latitude,dcInfo.longitude], {interactive:false,color: hasAlert?'#DE5D3F':'#23BF9A',opacity:0.42,fillColor: hasAlert?'#DE5D3F':'#23BF9A',fillOpacity: 0.5, radius: symbolSize,className:hasAlert?'real-marker error-item':'real-marker '});
                      shadowMarker.bindTooltip(this.mapTooltipFormatter(dcStat), {sticky: false, pane: "myPane", direction: "left", data: dcStat});
                    } else{
+                     shadowMarker=L.circleMarker([dcInfo.latitude,dcInfo.longitude], {opacity:0,fillOpacity: 0, radius: symbolSize+10});
                      marker=L.circleMarker([dcInfo.latitude,dcInfo.longitude], {color: '#010101',opacity:0.35,fillColor: '#010101',fillOpacity: 0.35, radius: symbolSize+5});
-                     marker.bindTooltip(this.mapTooltipFormatter(dcStat), {sticky: false, pane: "myPane", direction: "left", data: dcStat});
+                     shadowMarker.bindTooltip(this.mapTooltipFormatter(dcStat), {sticky: false, pane: "myPane", direction: "left", data: dcStat});
                    }
                     shadowMarker.on("mouseover", (param) => {
                       //console.info(param);
