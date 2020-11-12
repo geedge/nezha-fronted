@@ -48,7 +48,7 @@
             >
             </el-switch>
           </el-form-item>
-          <el-form-item :label='$t("config.dc.longitude")' prop="longitude" :rules="[{required:editDc.latitude,trigger:'blur'}]">
+          <el-form-item :label='$t("config.dc.longitude")' prop="longitude" :rules="[{required:coordinateFlag,trigger:'blur'}]">
             <el-input-number
               placeholder=""
               v-model="editDc.longitude"
@@ -58,9 +58,10 @@
               :max="180"
               :step="0.00001"
               :precision="5"
+              @change="(val)=>{coordinateChange(val,'longitude')}"
             />
           </el-form-item>
-          <el-form-item :label='$t("config.dc.latitude")' prop="latitude"  :rules="[{required:editDc.longitude,trigger:'blur'}]">
+          <el-form-item :label='$t("config.dc.latitude")' prop="latitude"  :rules="[{required:coordinateFlag,trigger:'blur'}]">
             <el-input-number
               placeholder=""
               v-model="editDc.latitude"
@@ -70,6 +71,7 @@
               :max="90"
               :step="0.00001"
               :precision="5"
+              @change="(val)=>{coordinateChange(val,'latitude')}"
             />
           </el-form-item>
         </el-form>
@@ -112,6 +114,7 @@
           ]
         },
         areaData: [],
+        coordinateFlag:false,
       }
     },
     methods: {
@@ -204,7 +207,15 @@
       selectArea(area) {
         this.editDc.area.id = area.id;
         this.editDc.area.name = area.name;
-      }
+      },
+      coordinateChange(val,str){//经纬度改变
+        if(regNum.test(this.editDc.longitude) || regNum.test(this.editDc.latitude)){
+          this.coordinateFlag=true
+        }else{
+          this.coordinateFlag=false;
+          this.$refs['dcForm'].clearValidate(['longitude','latitude'])
+        }
+      },
     },
     mounted() {
       // this.getAreaData();
