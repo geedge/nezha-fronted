@@ -42,7 +42,7 @@
                 type="button" class="nz-btn nz-btn-size-small nz-btn-style-light nz-btn-style-square nz-input-group-append" id="search-asset"><i @click="searchAsset" class="nz-icon nz-icon-search"></i></button>
 
                 <div class="endpoint-asset-search-dropdown" v-if="assetSearch.dropdownShow">
-                  <div @click="dropdownSelect('IP')" class="endpoint-asset-search-dropdown-item" id="search-asset-ip">Host</div>
+                  <div @click="dropdownSelect('Host')" class="endpoint-asset-search-dropdown-item" id="search-asset-ip">Host</div>
                   <div @click="dropdownSelect('SN')" class="endpoint-asset-search-dropdown-item" id="search-asset-sn">SN</div>
                 </div>
               </div>
@@ -320,7 +320,7 @@
         editParamBox: {show: false, top: 0, left: 0, type: 0}, //param编辑弹框
         editLabelsBox: {show: false, top: 0, left: 0, type: 0}, //param编辑弹框
         moduleParamShow: false, //module默认参数param悬浮窗
-        assetSearch: {host: '', sn: '', text: '', label: 'IP', dropdownShow: false}, //侧滑框中asset的搜索相关
+        assetSearch: {host: '', sn: '', text: '', label: 'Host', dropdownShow: false}, //侧滑框中asset的搜索相关
         assetPageObj: {pageNo: 1, pageSize: -1,states:1},
         selectedAssets: [], //侧滑框中选中的asset
         projectList: [],
@@ -568,7 +568,7 @@
       },
       //endpoint弹框中的asset子弹框搜索
       searchAsset() {
-        if (this.assetSearch.label == 'IP') {
+        if (this.assetSearch.label == 'Host') {
           this.assetSearch.host = this.assetSearch.text;
           this.assetSearch.sn = '';
         } else if (this.assetSearch.label == 'SN') {
@@ -794,7 +794,7 @@
       clearEndpoints() {
         this.getAssetList();
         this.endpointList = [];
-        this.assetSearch= {host: '', sn: '', text: '', label: 'IP', dropdownShow: false}
+        this.assetSearch= {host: '', sn: '', text: '', label: 'Host', dropdownShow: false}
       },
 
       setRowIndex({row, rowIndex}) {
@@ -1041,7 +1041,7 @@
   }
   .endpoint-asset-label-txt {
     display: inline-block;
-    width: 19px;
+    min-width: 19px;
     text-align: center;
   }
   .endpoint-asset-search-dropdown-item:first-of-type {
