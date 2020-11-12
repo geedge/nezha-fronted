@@ -45,7 +45,7 @@
         :key="`col-${index}`"
         :label="item.label"
         :show-overflow-tooltip="item.prop != 'labels' && item.prop != 'alertRule'"
-        min-width="110px"
+        :min-width="item.minWidth || item.width"
         :sortable="$tableSet.sortableShow(item.prop,'alertMessage')"
         :prop="$tableSet.propTitle(item.prop,'alertMessage')"
         :sort-orders="['ascending', 'descending']"

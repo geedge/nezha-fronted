@@ -67,6 +67,7 @@
         :sortable="$tableSet.sortableShow(item.prop,'endpointTab')"
         :prop="$tableSet.propTitle(item.prop,'endpointTab')"
         :sort-orders="['ascending', 'descending']"
+        :min-width="item.minWidth || item.width"
       >
         <template slot-scope="scope" :column="item">
           <span v-if="item.prop == 'asset' && scope.row[item.prop]" class="link" @click="">
@@ -186,10 +187,12 @@
             label: this.$t("project.project.project"),
             prop: 'project',
             show: true,
+            width:'120',
           },{
             label: this.$t("project.module.module"),
             prop: 'module',
             show: true,
+            width:'120',
           },{
             label: this.$t("project.endpoint.asset"),
             prop: 'asset',
@@ -199,7 +202,7 @@
             label: this.$t("project.endpoint.host"),
             prop: 'host',
             show: true,
-            width:200,
+            width:120,
           },{
             label: this.$t("project.endpoint.port"),
             prop: 'port',
@@ -209,7 +212,7 @@
             label: this.$t("overall.type"),
             prop: 'type',
             show: false,
-            width:200,
+            width:120,
           },{
             label: this.$t("project.endpoint.labels"),
             prop: 'labels',

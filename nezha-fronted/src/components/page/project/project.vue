@@ -90,7 +90,7 @@
             v-if="item.show"
             :key="`col-${index}`"
             :label="item.label"
-            :min-width="item.width"
+            :min-width="item.width || item.minWidth"
             :sortable="$tableSet.sortableShow(item.prop,'project')"
             :prop="$tableSet.propTitle(item.prop,'project')"
             :sort-orders="['ascending', 'descending']"
@@ -284,6 +284,7 @@
             label:this.$t("project.endpoint.asset"),
             prop:'asset',
             show:true,
+            minWidth:400,
           },{
             label:this.$t("project.endpoint.host"),
             prop:'host',
