@@ -42,7 +42,7 @@
                   id="search-asset"><i @click="searchAsset" class="nz-icon nz-icon-search"></i></button>
 
                 <div class="endpoint-asset-search-dropdown" v-if="assetSearch.dropdownShow">
-                  <div @click="dropdownSelect('IP')" class="endpoint-asset-search-dropdown-item" id="search-asset-ip">
+                  <div @click="dropdownSelect('Host')" class="endpoint-asset-search-dropdown-item" id="search-asset-ip">
                     Host
                   </div>
                   <div @click="dropdownSelect('SN')" class="endpoint-asset-search-dropdown-item" id="search-asset-sn">
@@ -291,7 +291,7 @@
         assetList:[],
         assetListAll:false,
         assetListHalf:false,
-        assetSearch:{host:'',sn:'',text:'',label:'IP',dropdownShow:false}, //侧滑框中asset的搜索相关
+        assetSearch:{host:'',sn:'',text:'',label:'Host',dropdownShow:false}, //侧滑框中asset的搜索相关
         assetPageObj:{pageNo:1,pageSize:-1},
         endpointTouch:false,
         paramBorderColor:'#dcdfe6',
@@ -445,7 +445,7 @@
       },
       //endpoint弹框中的asset子弹框搜索
       searchAsset(){
-        if(this.assetSearch.label=='IP'){
+        if(this.assetSearch.label=='Host'){
           this.assetSearch.host=this.assetSearch.text;
           this.assetSearch.sn='';
         }else if(this.assetSearch.label=='SN'){
@@ -1045,7 +1045,7 @@
 
   .endpoint-asset-label-txt {
     display: inline-block;
-    width: 19px;
+    min-width: 19px;
     text-align: center;
   }
 
