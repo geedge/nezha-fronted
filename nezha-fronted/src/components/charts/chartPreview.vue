@@ -783,7 +783,7 @@
                 }
                 let val = parseFloat(Number(item.data[1]).toFixed(2));
                 if(val===0){
-                  val = Number(item.data[1]);
+                  val = Number(item.data[1]).toExponential(2);
                 }
                 sum +=val;
                 str += `<div style="white-space:nowrap;overflow-x:hidden;text-overflow:ellipsis;display: flex; justify-content: space-between; min-width: 150px; max-width: 600px; line-height: 18px; font-size: 12px;">`;
@@ -957,7 +957,7 @@
                     }
                     let val = parseFloat(Number(item.data[1]).toFixed(2));
                     if(val===0){
-                      val = Number(item.data[1]);
+                      val = Number(item.data[1]).toExponential(2);
                     }
                     sum +=val;
                     str += `<div style="white-space:nowrap;overflow-x:hidden;text-overflow:ellipsis;display: flex; justify-content: space-between; min-width: 150px; max-width: 600px; line-height: 18px; font-size: 12px;">`;

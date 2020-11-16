@@ -622,7 +622,7 @@
                 }
                 let val =item.data[1]?parseFloat(Number(item.data[1]).toFixed(2)):'';
                 if(val===0){
-                  val = Number(item.data[1]);
+                  val = Number(item.data[1]).toExponential(2);
                 }
                 sum +=val;
                 str += `<div style="white-space:nowrap;overflow-x:hidden;text-overflow:ellipsis;display: flex; justify-content: space-between; min-width: 150px; max-width: 600px; line-height: 18px; font-size: 12px;">`;
@@ -740,7 +740,14 @@
             axisLabel: {
               show:true,
               fontSize: 10,
-              formatter: function(value,index){
+              formatter: function(val,index){
+                let value = val;
+                if (val !== 0) {
+                  value = parseFloat(Number(val).toFixed(2));
+                  if(value === 0){
+                    value = Number(val).toExponential(2);
+                  }
+                }
                 let chartUnit=chartInfo.unit;
                 chartUnit=chartUnit?chartUnit:2;
                 let unit=chartDataFormat.getUnit(chartUnit);
@@ -850,7 +857,7 @@
                           }
                           let val = parseFloat(Number(item.data[1]).toFixed(2));
                           if(val===0){
-                            val = Number(item.data[1]);
+                            val = Number(item.data[1]).toExponential(2);
                           }
                           sum +=val;
                           str += `<div style="white-space:nowrap;overflow-x:hidden;text-overflow:ellipsis;display: flex; justify-content: space-between; min-width: 150px; max-width: 600px; line-height: 18px; font-size: 12px;">`;
@@ -985,7 +992,7 @@
                         }
                         let val = parseFloat(Number(item.data[1]).toFixed(2));
                         if(val===0){
-                          val = Number(item.data[1]);
+                          val = Number(item.data[1]).toExponential(2);
                         }
                         sum +=val;
                         str += `<div style="white-space:nowrap;overflow-x:hidden;text-overflow:ellipsis;display: flex; justify-content: space-between; min-width: 150px; max-width: 600px; line-height: 18px; font-size: 12px;">`;
