@@ -289,13 +289,13 @@
 <style scoped>
   .rule-severity-remark{
     display: inline-flex;
-    justify-content: center;
+    justify-content: left;
     justify-items: center;
     align-items: center;
-    /*width: 376px;*/
+    width: calc(100% - 220px);
     padding: 10px 15px;
-    background: rgba(244,244,255,1);
-    color: rgba(144,147,158,1);
+    background: #F6F6F6;
+    color: #999999;
     margin-top: -13px;
     margin-bottom: 18px;
     margin-left: 190px;
