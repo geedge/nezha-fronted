@@ -57,6 +57,14 @@
     },
     created() {
       this.option=chartConfig.getOption(this.chartType);
+      if(this.chartType==='ruleBar'){
+        this.option.yAxis.axisLabel.formatter=function(value) {
+          if (value.length > 12) {
+            return "..."+ value.substring(value.length-12, value.length);
+          }
+          return value;
+        }
+      }
       if(this.showToolbox == false){
         //this.option.grid.top = 10;
       }
