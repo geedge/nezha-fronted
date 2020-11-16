@@ -357,7 +357,12 @@
       'bottomBox.showSubList': function(n) {
         let vm = this;
         this.$bottomBoxWindow.showSubListWatch(vm, n);
-      }
+      },
+      tableData(n){
+        if(this.$refs.accountTable){
+          this.$refs.accountTable.bodyWrapper.scrollTop = 0;
+        }
+      },
     },
     mounted() {
       //初始化表头

@@ -519,12 +519,14 @@
                           return parseFloat(item).toFixed(2);
                         }
                       });
+                    }else{
+                      current=[null,null];
                     }
                     this.requestIndex += 1;
                     item.current = current;
                     if (this.requestIndex === this.tableData.length) {
-                      this.$set(item, "current", current);
-                      this.requestIndex = 0;
+                    this.$set(item, "current", current);
+                    this.requestIndex = 0;
                     }
                   });
                 }
@@ -643,7 +645,14 @@
           }
           this.getAlertList();
         }
-      }
+      },
+      tableData(){
+        if(this.$refs.alertMessageTable&&this.$refs.alertMessageTable.bodyWrapper){
+          this.$nextTick(()=>{
+            this.$refs.alertMessageTable.bodyWrapper.scrollTop = 0;
+          })
+        }
+      },
     },
     mounted() {
       //是否存在分页缓存

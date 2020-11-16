@@ -124,6 +124,11 @@
       'alertLabel':alertLabel,
     },
     watch:{
+      tableData(){
+        if(this.$refs.assetTable&& this.$refs.assetTable.bodyWrapper){
+          this.$refs.assetTable.bodyWrapper.scrollTop = 0;
+        }
+      },
     },
     computed: {
       tagType() {

@@ -487,7 +487,12 @@
       'bottomBox.showSubList': function(n) {
         let vm = this;
         this.$bottomBoxWindow.showSubListWatch(vm, n);
-      }
+      },
+      tableData(){
+        if(this.$refs.dcTable&&this.$refs.dcTable.bodyWrapper){
+          this.$refs.dcTable.bodyWrapper.scrollTop = 0;
+        }
+      },
     },
     destroyed() {
       window.onresize = null;

@@ -368,6 +368,11 @@
         let vm = this;
         this.$bottomBoxWindow.showSubListWatch(vm, n);
       },
+      tableData(){
+        if(this.$refs.modelTable&&this.$refs.modelTable.bodyWrapper){
+          this.$refs.modelTable.bodyWrapper.scrollTop = 0;
+        }
+      },
     }
   }
 </script>

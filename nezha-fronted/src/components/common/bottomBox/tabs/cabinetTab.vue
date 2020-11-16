@@ -259,7 +259,12 @@
             this.getTableData();
           }
         }
-      }
+      },
+      tableData(){
+        if(this.$refs.cabTable&&this.$refs.cabTable.bodyWrapper){
+          this.$refs.cabTable.bodyWrapper.scrollTop = 0;
+        }
+      },
     },
     mounted() {
       this.$nextTick(() => {

@@ -115,6 +115,11 @@
       'alertLabel':alertLabel,
     },
     watch:{
+      tableData(){
+        if(this.$refs.endpointTable){
+          this.$refs.endpointTable.bodyWrapper.scrollTop = 0;
+        }
+      },
     },
     computed: {
       tagType() {

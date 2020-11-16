@@ -427,7 +427,12 @@
             this.dispatchEvent('asset-ping-switch-change',pingTitle.show)
           }
         }
-      }
+      },
+      tableData(){
+        if(this.$refs.assetTable&&this.$refs.assetTable.bodyWrapper){
+          this.$refs.assetTable.bodyWrapper.scrollTop = 0;
+        }
+      },
     },
     methods: {
       fullScreen() {
@@ -480,7 +485,7 @@
           this.tools.loading = false;
           if (response.code === 200) {
             this.tableData = response.data.list;
-            this.pageObj.total = response.data.total
+            this.pageObj.total = response.data.total;
           }
         });
       },

@@ -476,7 +476,12 @@
             })
           }
         }
-      }
+      },
+      tableData(){
+        if(this.$refs.endpointTable&& this.$refs.endpointTable.bodyWrapper){
+          this.$refs.endpointTable.bodyWrapper.scrollTop = 0;
+        }
+      },
     },
     mounted() {
       //初始化表头

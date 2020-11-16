@@ -259,6 +259,13 @@
         this.getTableData();
       },
     },
+    watch:{
+      tableData(){
+        if(this.$refs.operationLogTable&&this.$refs.operationLogTable.bodyWrapper){
+          this.$refs.operationLogTable.bodyWrapper.scrollTop = 0;
+        }
+      },
+    },
     computed: {
       isCurrentUser() {
         return function(username) {

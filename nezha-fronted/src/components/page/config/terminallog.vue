@@ -284,6 +284,13 @@
         this.getTableData();
       },
     },
+    watch:{
+      tableData(){
+        if(this.$refs.terminalLogTablethis.$refs.terminalLogTable.bodyWrapper){
+          this.$refs.terminalLogTable.bodyWrapper.scrollTop = 0;
+        }
+      },
+    },
     mounted() {
       //初始化表头
       this.tools.customTableTitle = localStorage.getItem("nz-tableTitle-" + localStorage.getItem("nz-username") + "-" + this.$route.path)

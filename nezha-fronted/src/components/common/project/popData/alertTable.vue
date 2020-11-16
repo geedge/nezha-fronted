@@ -201,6 +201,11 @@
       'alertLabel':alertLabel,
     },
     watch:{
+      tableData(){
+        if(this.$refs.alertListTable&&this.$refs.alertListTable.bodyWrapper){
+          this.$refs.alertListTable.bodyWrapper.scrollTop = 0;
+        }
+      },
     },
     computed: {
       tagType() {
