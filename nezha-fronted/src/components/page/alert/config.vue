@@ -514,6 +514,9 @@
         bus.$on("dc-list-change", () => {
           this.getTableData();
         });
+        bus.$on('alert-message-change',()=>{
+          this.getTableData();
+        })
       }
     },
     watch: {

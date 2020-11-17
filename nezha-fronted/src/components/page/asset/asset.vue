@@ -700,9 +700,13 @@
           }else{
             this.pageObj[column] = content;
           }
-          let isSame = this.checkSearchLabel(JSON.parse(JSON.stringify(this.pageObj)), oldPageObj);
-          isSame && this.getTableData();
+          // let isSame = this.checkSearchLabel(JSON.parse(JSON.stringify(this.pageObj)), oldPageObj);
+          // isSame && this.getTableData();
+          this.getTableData();
         });
+        bus.$on('alert-message-change',()=>{
+          this.getTableData()
+        })
       },
       dispatchEvent(event,param){
         this.$nextTick(()=>{

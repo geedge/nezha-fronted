@@ -737,6 +737,9 @@
         bus.$on("endpoint-list-change",menu=>{
           this.getEndpointTableData();
         });
+        bus.$on('alert-message-change',()=>{
+          this.getEndpointTableData()
+        })
       },
       messageStyle(e){
         if(e.column.label=='Alerts'||e.column.label==this.$t("project.endpoint.alerts")){

@@ -612,6 +612,7 @@
           if (valid) {
             this.$emit('deleteMessage',this.deleteBox,()=>{
               this.deleteBox.ids=[];
+              bus.$emit("alert-message-change")
             });
             this.deleteBox.show = false;
           }

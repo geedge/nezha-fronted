@@ -336,7 +336,9 @@
                 this.dataTotalListBak.push(newItem);
               }
               this.dataList = this.dataTotalListBak;
-              this.showShadow=false;
+              this.$nextTick(()=>{
+                this.showShadow=false;
+              })
             }else {
               if(response.msg){
                 this.$message.error(response.msg);
@@ -700,6 +702,7 @@
               }
             });
           }
+
         });
       },
       loadChartData(scrollTop){
