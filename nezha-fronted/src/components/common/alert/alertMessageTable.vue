@@ -567,7 +567,31 @@
 
       },
       promQueryParamConvert(obj){
-        let result="(" + obj.alertRule.expr + ")";
+        let r = "(" + obj.alertRule.expr + ")";
+        if (Object.keys(obj.labels).length > 0) {
+          r += " and " + function(){
+            let group = "(group({";
+            let by = " by (";
+
+            for (let k in obj.labels) {
+              if (k != 'alertname' && k != 'severity') {
+                group += k;
+                group += "=";
+                group += ("'" + obj.labels[k] + "',");
+                by += k;
+                by += ","
+              }
+            }
+            group = group.substring(0, group.length-1);
+            group += "})";
+            by = by.substring(0, by.length-1);
+            by += ")";
+
+            return group + by + ")";
+          }();
+        }
+        return r;
+        /*let result="(" + obj.alertRule.expr + ")";
         if(obj.labels){
           if(obj.labels.alertname){
             delete obj.labels.alertname;
@@ -591,7 +615,7 @@
             return q;
           }() + ")";
         }
-        return result;
+        return result;*/
       },
       //asset弹框控制
       tabControl(data) {

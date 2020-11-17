@@ -4,6 +4,7 @@
 * type:自定义参数，用于区分是y轴调用还是tooltip调用,以设置不同精度  type =1 y轴调用 type=2 tooltip调用
 * */
 import {parse} from "echarts/extension-src/dataTool/gexf";
+import bus from "../../libs/bus"
 
 function none(value, index){
   return value;
@@ -412,6 +413,12 @@ function timeCompute(value,unit,dot=0){
   }
 }
 
+function timeFormat34(value) {
+  return bus.timeFormate(value, "yyyy-MM-dd hh:mm:ss");
+}
+function timeFormat35(value) {
+  return bus.timeFormate(value, "MM/dd/yyyy h:mm:ss a");
+}
 //unit转化配置信息
 /*
 * value:传递给数据库的值
@@ -615,7 +622,23 @@ let unitOptions=[
         ascii:7,
       },
     ]
-  }//Time end
+  },//Time end
+  {
+    value:'Date&Time',
+    label: 'Date & Time',
+    children: [
+      {
+        value:34,
+        compute: timeFormat34,
+        label:'YYYY-MM-DD HH:mm:ss',
+      },
+      {
+        value:35,
+        compute: timeFormat35,
+        label:'MM/DD/YYYY h:mm:ss a',
+      }
+    ]
+  }
 ]
 let units=[];
 window.onload=function(){

@@ -100,10 +100,11 @@ export default new Vue({
       const o = {
         'M+': time.getMonth() + 1, // 月份
         'd+': time.getDate(), // 日
-        'h+': time.getHours(), // 小时
+        'hh': time.getHours(), // 小时
         'm+': time.getMinutes(), // 分
         's+': time.getSeconds(), // 秒
         'q+': Math.floor((time.getMonth() + 3) / 3), // 季度
+        'a': time.getHours() > 12 ? "pm" : "am",
         S: time.getMilliseconds(), // 毫秒
         w: week,
       };
@@ -116,6 +117,7 @@ export default new Vue({
             (o[k]) : ((`00${o[k]}`).substr((`${o[k]}`).length)));
         }
       });
+      fm = fm.replace("h", time.getHours() > 12 ? time.getHours()-12 : time.getHours());
       return fm;
     },
     // 格式化tag为字符串表达式
