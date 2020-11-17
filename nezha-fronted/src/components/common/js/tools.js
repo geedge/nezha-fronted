@@ -534,7 +534,7 @@ export const tableSet = {
       case 'idc':
         return'custom';
       case 'state':
-        if(from === 'project' || from === 'endpointTab' || from === 'operationlog'){
+        if( from === 'operationlog'){
           return false
         }else{
           return'custom'
@@ -581,6 +581,7 @@ export const tableSet = {
         case 'project': return'p.name';
         case 'module': return'm.name';
         case 'type':  return'm.type';
+        case 'state' :return 'es.state';
         // case 'path': return'e.path';
         default : return prop;
       }
@@ -601,6 +602,7 @@ export const tableSet = {
           case 'project': return'p.name';
           case 'module': return'm.name';
           case 'type':  return'm.type';
+          case 'state' :return 'es.state';
           // case 'path': return'e.path';
           default : return prop;
         }
