@@ -285,11 +285,6 @@
       },
     },
     watch:{
-      tableData(){
-        if(this.$refs.terminalLogTablethis.$refs.terminalLogTable.bodyWrapper){
-          this.$refs.terminalLogTable.bodyWrapper.scrollTop = 0;
-        }
-      },
     },
     mounted() {
       //初始化表头

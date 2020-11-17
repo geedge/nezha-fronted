@@ -408,6 +408,9 @@
         if(orderBy){
           this.$set(this.searchLabel, 'orderBy', orderBy);
         }
+        if(this.$refs.alertRuleTable && this.$refs.alertRuleTable.bodyWrapper){
+          this.$refs.alertRuleTable.bodyWrapper.scrollTop = 0;
+        }
         this.getTableData();
       },
       // 全屏

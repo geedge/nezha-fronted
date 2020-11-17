@@ -359,6 +359,9 @@
         if(orderBy){
           this.$set(this.searchLabel, 'orderBy', orderBy);
         }
+        if(this.$refs.promTable&&this.$refs.promTable.bodyWrapper){
+          this.$refs.promTable.bodyWrapper.scrollTop = 0;
+        }
         this.getTableData();
       },
       //获取dc数据
@@ -443,11 +446,6 @@
       'bottomBox.showSubList': function(n) {
         let vm = this;
         this.$bottomBoxWindow.showSubListWatch(vm, n);
-      },
-      tableData(){
-        if(this.$refs.promTable&&this.$refs.promTable.bodyWrapper){
-          this.$refs.promTable.bodyWrapper.scrollTop = 0;
-        }
       },
     }
   }

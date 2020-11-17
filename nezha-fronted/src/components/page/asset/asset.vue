@@ -428,11 +428,6 @@
           }
         }
       },
-      tableData(){
-        if(this.$refs.assetTable&&this.$refs.assetTable.bodyWrapper){
-          this.$refs.assetTable.bodyWrapper.scrollTop = 0;
-        }
-      },
     },
     methods: {
       fullScreen() {
@@ -630,6 +625,9 @@
         }
         if(orderBy){
           this.$set(this.searchLabel, 'orderBy', orderBy);
+        }
+        if(this.$refs.assetTable&&this.$refs.assetTable.bodyWrapper){
+          this.$refs.assetTable.bodyWrapper.scrollTop = 0;
         }
         this.getTableData();
       },

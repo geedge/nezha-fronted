@@ -315,6 +315,9 @@
         if(orderBy) {
           this.$set(this.searchLabel, 'orderBy', orderBy);
         }
+        if(this.$refs.modelTable&&this.$refs.modelTable.bodyWrapper){
+          this.$refs.modelTable.bodyWrapper.scrollTop = 0;
+        }
         this.getTableData();
       },
       // 数据排序
@@ -367,11 +370,6 @@
       'bottomBox.showSubList': function(n) {
         let vm = this;
         this.$bottomBoxWindow.showSubListWatch(vm, n);
-      },
-      tableData(){
-        if(this.$refs.modelTable&&this.$refs.modelTable.bodyWrapper){
-          this.$refs.modelTable.bodyWrapper.scrollTop = 0;
-        }
       },
     }
   }

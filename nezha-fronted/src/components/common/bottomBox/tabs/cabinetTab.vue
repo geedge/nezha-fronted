@@ -223,6 +223,9 @@
             this.$set(this.searchLabel, item, searchObj[item]);
           }
         }
+        if(this.$refs.cabTable&&this.$refs.cabTable.bodyWrapper){
+          this.$refs.cabTable.bodyWrapper.scrollTop = 0;
+        }
         this.getTableData();
       },
       assetStatClassName(param) {
@@ -258,11 +261,6 @@
             this.searchLabel = {idcId: this.currentDc.id};
             this.getTableData();
           }
-        }
-      },
-      tableData(){
-        if(this.$refs.cabTable&&this.$refs.cabTable.bodyWrapper){
-          this.$refs.cabTable.bodyWrapper.scrollTop = 0;
         }
       },
     },

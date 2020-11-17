@@ -578,6 +578,9 @@
         if(orderBy){
           this.$set(this.endpointSearchLabel,'orderBy',orderBy);
         }
+        if(this.$refs.endpointTable&&this.$refs.endpointTable.bodyWrapper){
+          this.$refs.endpointTable.bodyWrapper.scrollTop = 0;
+        }
         this.getEndpointTableData();
       },
 
@@ -835,11 +838,6 @@
               this.bottomBox.assetDetail=this.assetConvertToDetail(response.data.list[0]);
             }
           });
-        }
-      },
-      endpointTableData(){
-        if(this.$refs.endpointTable&&this.$refs.endpointTable.bodyWrapper){
-          this.$refs.endpointTable.bodyWrapper.scrollTop = 0;
         }
       },
     },

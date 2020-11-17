@@ -613,6 +613,7 @@
         if(orderBy){
           this.$set(this.searchLabel, 'orderBy', orderBy);
         }
+        this.$refs.alertMessageTable.$refs.alertListTable.bodyWrapper.scrollTop = 0;
         this.getAlertList();
       },
       viewRule: function (id) {

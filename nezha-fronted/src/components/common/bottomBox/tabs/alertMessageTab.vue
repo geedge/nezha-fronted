@@ -623,6 +623,9 @@
         if(orderBy){
           this.$set(this.searchLabel, 'orderBy', orderBy);
         }
+        if(this.$refs.alertMessageTable.$refs.alertListTable &&  this.$refs.alertMessageTable.$refs.alertListTable.bodyWrapper){
+          this.$refs.alertMessageTable.$refs.alertListTable.bodyWrapper.scrollTop = 0;
+        }
         this.getAlertList();
       },
       // 数据排序
@@ -668,13 +671,6 @@
             this.defaultSearchValue = 1;
           }
           this.getAlertList();
-        }
-      },
-      tableData(){
-        if(this.$refs.alertMessageTable&&this.$refs.alertMessageTable.bodyWrapper){
-          this.$nextTick(()=>{
-            this.$refs.alertMessageTable.bodyWrapper.scrollTop = 0;
-          })
         }
       },
     },

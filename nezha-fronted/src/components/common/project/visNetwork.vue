@@ -246,6 +246,7 @@
           this.topologyLoading=false;
           return arr1
         }
+        let promiseArr=[];
         arr.forEach((item,index)=>{
           item.shape='image';
           item.id=item.moduleId;
@@ -255,19 +256,6 @@
           this.$get('/module/stat',{id:item.id}).then(res=>{
             item.state=res.data;
             // if(index===arr.length-1){
-            //   setTimeout(()=>{
-            //     this.nodesArray=[...this.nodesArrayOther];
-            //     this.edgesArray=[...this.edgesArrayOther];
-            //     setTimeout(()=>{
-            //       this.topologyLoading=false;
-            //       this.$refs['topology'].setData();
-            //     },500)
-            //   })
-            // }
-          });
-          this.dealImg(`/project/topo/icon/${item.iconId}`).then((data)=>{
-            item.image=data;
-            if(index===arr.length-1){
               setTimeout(()=>{
                 this.nodesArray=[...this.nodesArrayOther];
                 this.edgesArray=[...this.edgesArrayOther];
@@ -276,7 +264,19 @@
                   this.$refs['topology'].setData();
                 },500)
               })
-            }
+            // }
+          });
+          promiseArr.push( this.dealImg(`/project/topo/icon/${item.iconId}`))
+        });
+        Promise.all(promiseArr).then(res2=>{
+          res2.forEach((item,index)=>{
+            arr[index].image=item;
+          });
+          setTimeout(()=>{
+            this.nodesArray=[...this.nodesArrayOther];
+            this.edgesArray=[...this.edgesArrayOther];
+            this.topologyLoading=false;
+            this.$refs['topology'].setData();
           })
         });
         return arr

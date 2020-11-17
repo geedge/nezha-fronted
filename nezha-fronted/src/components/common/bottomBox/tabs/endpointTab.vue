@@ -383,6 +383,9 @@
         if(orderBy){
           this.$set(this.endpointSearchLabel, 'orderBy', orderBy);
         }
+        if(this.$refs.endpointTable&& this.$refs.endpointTable.bodyWrapper){
+          this.$refs.endpointTable.bodyWrapper.scrollTop = 0;
+        }
         this.getTableData();
       },
       dateFormat(time) {
@@ -475,11 +478,6 @@
               this.getTableData();
             })
           }
-        }
-      },
-      tableData(){
-        if(this.$refs.endpointTable&& this.$refs.endpointTable.bodyWrapper){
-          this.$refs.endpointTable.bodyWrapper.scrollTop = 0;
         }
       },
     },

@@ -325,6 +325,9 @@
             this.$set(this.searchLabel, item, searchObj[item]);
           }
         }
+        if(this.$refs.accountTable){
+          this.$refs.accountTable.bodyWrapper.scrollTop = 0;
+        }
         this.getTableData();
       },
       // 数据排序
@@ -357,11 +360,6 @@
       'bottomBox.showSubList': function(n) {
         let vm = this;
         this.$bottomBoxWindow.showSubListWatch(vm, n);
-      },
-      tableData(n){
-        if(this.$refs.accountTable){
-          this.$refs.accountTable.bodyWrapper.scrollTop = 0;
-        }
       },
     },
     mounted() {

@@ -115,11 +115,6 @@
       'alertLabel':alertLabel,
     },
     watch:{
-      tableData(){
-        if(this.$refs.endpointTable){
-          this.$refs.endpointTable.bodyWrapper.scrollTop = 0;
-        }
-      },
     },
     computed: {
       tagType() {
@@ -329,6 +324,9 @@
         }
         if(orderBy){
           this.$set(this.searchLabel, 'orderBy', orderBy);
+        }
+        if(this.$refs.endpointTable){
+          this.$refs.endpointTable.bodyWrapper.scrollTop = 0;
         }
         this.getEndpointList();
       },

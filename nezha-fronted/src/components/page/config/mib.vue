@@ -292,6 +292,9 @@
         if(orderBy){
           this.$set(this.searchLabel, 'orderBy', orderBy);
         }
+        if(this.$refs.mibTable&&this.$refs.mibTable.bodyWrapper){
+          this.$refs.mibTable.bodyWrapper.scrollTop = 0;
+        }
         this.getTableData();
       },
       downloadMib(mib) {

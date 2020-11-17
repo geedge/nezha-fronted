@@ -184,7 +184,7 @@
       <el-dialog :visible.sync="deleteBox.show" :title="$t('alert.list.remark')" :modal-append-to-body='false' :show-close="true" width="450px"  @close="closeDialog" class="nz-message">
         <div class="upload-body">
           <el-form ref="remarkForm" :model="deleteBox">
-            <el-form-item prop="remark">
+            <el-form-item prop="remark" :rules="[{required:true,message: $t('validate.required'), trigger: 'change'}]">
               <el-input type="textarea" :placeholder="$t('alert.description')" v-model="deleteBox.remark"></el-input>
             </el-form-item>
           </el-form>
@@ -829,11 +829,11 @@
       }
     },
     watch: {
-      tableData(){
+      /*tableData(){
         if(this.$refs.alertListTable&&this.$refs.alertListTable.bodyWrapper){
           this.$refs.alertListTable.bodyWrapper.scrollTop = 0;
         }
-      },
+      },*/
       showSubList(n) {
         this.$bottomBoxWindow.showSubListWatch(vm, n);
       },
