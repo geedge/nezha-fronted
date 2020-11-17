@@ -87,29 +87,44 @@
       <div class="content-row-box">
         <div class="content-col-box">
           <div class="content-col-title">
-            <span>{{$t("dashboard.overview.traffic")}}</span>
-            <span class="content-col-title-tools">
-              <time-picker ref="calendarPanel" class="nz-dashboard-picker" @change="dateChange"></time-picker>
-              <span class="content-col-title-tool">
-                <div class="diy-content">
-                  <span>{{$t("dashboard.overview.dataCenter.dataCenter")}}</span>
-                  <i class="el-input__icon nz-icon nz-icon-arrow-down"></i>
-                </div>
-                <el-cascader
-                  :options="trafficData"
-                  :props="{multiple: true}"
-                  clearable
-                  collapse-tags
-                  placeholder=""
-                  popper-class="trend-cascader"
-                  v-model="trendSearchParam.select"
-                ></el-cascader>
-              </span>
-            </span>
+            <span>{{$t("dashboard.overview.projectTopoLogy")}}</span>
+            <!--<span class="content-col-title-tools">-->
+              <!--<time-picker ref="calendarPanel" class="nz-dashboard-picker" @change="dateChange"></time-picker>-->
+              <!--<span class="content-col-title-tool">-->
+                <!--<div class="diy-content">-->
+                  <!--<span>{{$t("dashboard.overview.dataCenter.dataCenter")}}</span>-->
+                  <!--<i class="el-input__icon nz-icon nz-icon-arrow-down"></i>-->
+                <!--</div>-->
+                <!--<el-cascader-->
+                  <!--:options="trafficData"-->
+                  <!--:props="{multiple: true}"-->
+                  <!--clearable-->
+                  <!--collapse-tags-->
+                  <!--placeholder=""-->
+                  <!--popper-class="trend-cascader"-->
+                  <!--v-model="trendSearchParam.select"-->
+                <!--&gt;</el-cascader>-->
+              <!--</span>-->
+            <!--</span>-->
           </div>
-          <div class="content-col-content">
-            <chart-box chart-type="overviewLine" ref="chartbox" :show-toolbox="false" name="trend" :unit="15" @is-loading="(isLoading)=>{this.trendLoading = isLoading}"></chart-box>
-            <div class="chart-no-data" v-if="!trendLoading && ((!chartSeries[0] && !chartSeries[1]) || (chartSeries[0].data.length == 0 && chartSeries[1] && chartSeries[1].data.length == 0))">No Data</div>
+          <div class="content-col-content"  v-loading="topologyLoading">
+            <transition name = "el-zoom-in-center">
+              <div style="width: 100%;height: 100%;position: relative" v-if="allProject.length>0">
+                <el-carousel :interval="5000" >
+                  <!--arrow="hover" :trigger="'click'"-->
+                  <el-carousel-item v-for="(item,index) in allProject" :key="index">
+                    <div class="maskLayer"></div>
+                    <span class="project-name">{{item.name}}</span>
+                    <topology
+                      :nodesArray="item.nodesArray"
+                      :edgesArray="item.edgesArray"
+                      :viewsCenter="item.topo.viewsCenter"
+                    />
+                  </el-carousel-item>
+                </el-carousel>
+              </div>
+            </transition>
+            <div class="chart-no-data" v-if="allProject.length===0">No Data</div>
           </div>
         </div>
         <div class="content-col-box">
@@ -203,8 +218,11 @@
   import iconShadow from 'leaflet/dist/images/marker-shadow.png';
   import echarts from "echarts";
   import chartConfig from './chartConfig'
+  import overViewTopology from '../../../common/project/overViewTopology'
 
   var timeout; //第三行第三个图的dropdown下拉菜单timeout
+
+
 
   var tooltipEndpointChart;
   var tooltipPrometheusChart;
@@ -214,7 +232,8 @@
     components:{
       'chart-box': chart,
       'time-picker': timePicker,
-      'vue-countup': VueCountUp
+      'vue-countup': VueCountUp,
+      'topology':overViewTopology
     },
     data() {
       return {
@@ -224,7 +243,7 @@
         sysDate: '',
         sysWeek: '',
         systemName: localStorage.getItem('nz-sys-name'),
-
+        topologyLoading:true,
         //data
         assetLoading: false,
         assetTypeLoading: false, //第三行第一个图
@@ -254,7 +273,7 @@
         trafficDatacenterData: [],
         trafficTagData: [],
         trafficData: [],
-
+        allProject:[],
         trendSearchParam: {start: '', end: '', dc: [], tag: [], select: [], watch: true},
 
         alertMessageShow: 'asset', //asset/module
@@ -324,11 +343,12 @@
           this.queryEndpointData(),
           this.queryAlertMessageData(),
           this.queryAlertRuleData(),
-          this.queryAlertTrendData(),
+          // this.queryAlertTrendData(),
           this.initMap(),
           this.queryAlertStatByRule(),
           this.queryAlertStatByAsset(),
-          this.getDcTrafficData()
+          this.getDcTrafficData(),
+          this.queryAllProjectData(),
         ]
       },
       setFreshDataTimer:function(){
@@ -358,6 +378,90 @@
             resolve();
           })
         })
+      },
+      queryAllProjectData(){
+        this.$get('/project',{pageSize:-1}).then(res=>{
+          this.topologyLoading=true;
+          let axiosAll=[];
+          let promiseArr=[];
+          let temp=[];
+          if(res.data.list.length===0){
+            this.topologyLoading=false;
+          }
+          res.data.list.forEach((item)=>{
+            axiosAll.push(axios.get(`/project/topo?projectId=${item.id}`))
+          });
+          axios.all(axiosAll).then(res2=>{
+            res2=res2.map((item,index)=>{
+              return {...item.data.data,...res.data.list[index]}
+            })
+            res2=res2.filter((item)=>item.topo&&(item.topo.nodes.length ||item.topo.lines.length));
+            if(res2.length==0){
+              this.topologyLoading=false;
+            }
+            res2.forEach(item=>{
+              promiseArr.push(this.formatNodesArr(item.topo.nodes));
+              item.edgesArray=this.formatEdgesArr(item.topo.lines);
+              temp.push(item)
+            });
+            Promise.all(promiseArr).then(res=>{
+              temp.forEach((item,index)=>{
+                item.nodesArray=res[index]
+              });
+              this.allProject=temp;
+              this.topologyLoading=false;
+            });
+          })
+        })
+      },
+
+      formatNodesArr(arr){
+        return new Promise(resolve=>{
+          let promiseArr=[];
+          arr.forEach((item,index)=>{
+            item.shape='image';
+            item.id=item.moduleId;
+            this.$get('/module/stat',{id:item.id}).then(res=>{
+              item.state=res.data;
+            });
+            promiseArr.push( this.dealImg(`/project/topo/icon/${item.iconId}`))
+          });
+          Promise.all(promiseArr).then(res=>{
+            arr.forEach((item,index)=>{
+              item.image=res[index]
+            })
+            resolve(arr)
+          });
+        })
+      },
+      formatEdgesArr(arr){
+        arr.forEach((item)=>{
+          item.from=item.source;
+          item.to=item.target;
+          item.label='';
+          item.title='title';
+          item.smooth.roundness=0.4;
+        });
+        return arr
+      },
+      dealImg(url) {
+        // 处理后端传过来的图片流乱码问题
+        if (url) {
+          return new Promise((resolve)=>{
+            this.$axios
+              .get(url, {
+                responseType: "arraybuffer"
+              })
+              .then(res => {
+                return ("data:image/jpeg;base64," +btoa(new Uint8Array(res.data).reduce((data, byte) => data + String.fromCharCode(byte), "")));
+              })
+              .then(data => {
+                resolve(data)
+              })
+              .catch(err => {
+              });
+          })
+        }
       },
       queryAssetData() {
         return new Promise(resolve => {
@@ -1530,6 +1634,45 @@
   .leaflet-bottom{
     z-index: 409;
   }
+  .el-carousel--horizontal{
+    height: 100%;
+  }
+  .el-carousel__container{
+    height: calc(100% - 36px);
+  }
+  .el-carousel__item .project-name {
+    font-size: 18px;
+    margin: 0;
+    position: absolute;
+  }
+
+  .el-carousel__item:nth-child(2n) {
+    /*background-color: #99a9bf;*/
+  }
+
+  .el-carousel__item:nth-child(2n+1) {
+    /*background-color: #d3dce6;*/
+  }
 </style>
 <style scoped>
+  .maskLayer{
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 10;
+  }
+  /deep/ .el-carousel__indicator--horizontal .el-carousel__button{
+    background-color: #C0C4CC;
+    opacity: .24;
+    height: 10px;
+    width: 10px;
+    border-radius: 50%;
+  }
+  /deep/ .el-carousel__indicator--horizontal.is-active .el-carousel__button{
+    opacity: 1;
+  }
+
 </style>

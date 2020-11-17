@@ -277,6 +277,7 @@ const cn = {
       title: "系统总览",
       contentTitle: "Nezha 管理系统",
       traffic: '流量',
+      projectTopoLogy:"系统拓扑",
       asset: {
         title: "资产",
         assetType: "资产类型统计",
