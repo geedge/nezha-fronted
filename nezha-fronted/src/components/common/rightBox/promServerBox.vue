@@ -150,7 +150,7 @@
       },
       //获取dc下拉列表数据
       getDcData() {
-        this.$get('idc').then(response => {
+        this.$get('idc',{pageSize:-1}).then(response => {
           if (response.code === 200) {
             this.dcData = response.data.list;
           }
