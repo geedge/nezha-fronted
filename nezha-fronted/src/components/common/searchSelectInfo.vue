@@ -51,6 +51,15 @@
         label: i18n.t('asset.suspended')
       }
     ],
+    endpointState: [ //资产入库/出库状态
+      {
+        value: 'UP',
+        label: 'UP'
+      }, {
+        value: 'DOWN',
+        label: 'DOWN'
+      }
+    ],
     pingStatus:[
       {
         value: '0',

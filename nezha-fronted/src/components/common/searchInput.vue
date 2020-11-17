@@ -38,7 +38,7 @@
                             <i class="nz-icon nz-icon-close" @click="close_selcet_list(ind,$event)"></i>
                         </div>
                         <div v-else-if="!change_sreach_show && ind==sreach_num && val.id!==7 " class="select_input">
-                            <input type="text" autocomplete="off" id="sreach_input" v-model="input_sreach" @keyup="enter(val.name, $event)" @click="stop_click">
+                            <input type="text" autocomplete="off" id="sreach_input" v-model="input_sreach" :readonly="val.readonly"  @keyup="enter(val, $event)" @click="stop_click">
                             <div class="select_info_list" :style="'top:' + selectDom.top" v-if="val.type == 'select'">
                               <el-scrollbar v-if="selectInfoList[val.label].length > 8" class="el-scrollbar-small" style="height: 240px;">
                                 <ul>
@@ -123,6 +123,12 @@
                                     <li v-for="item in schlist" @click="selectSul(item.name)">{{item.name}}</li>
                                 </ul>
                             </div>
+                          <!--endpoint 状态-->
+                          <div class="select_info_list" :style="'top:' + selectDom.top" v-if="val.type == 'state'&&val.id==33">
+                            <ul>
+                              <li v-for="(item,key) in selectInfoList['endpointState']" :key="key" @click="tr_selectInfo(val.label,item.value,item.label,$event)" :class="search_select_style_num==key?'search-style-ind':''">{{item.label}}</li>
+                            </ul>
+                          </div>
                         </div>
                         <el-date-picker
                                 v-model="timeFrame"
@@ -148,7 +154,7 @@
             </div>
             <div :class="input_list?'input_list none':'input_list'" :style="'top:' + selectDom.top" @click="stop_click" id="input_list" v-scroll-bar>
                 <ul>
-                    <li v-for="(val,ind) in searchLabelList" @click="select_name(val.name,ind,val.id,val.type,val.label,val.disabled,$event)" :key="ind" :class="{'search-style-ind':searchStyleNum==ind,'is-disabled':val.disabled}">
+                    <li v-for="(val,ind) in searchLabelList" @click="select_name(val.name,ind,val.id,val.type,val.label,val.disabled,val.readonly,$event)" :key="ind" :class="{'search-style-ind':searchStyleNum==ind,'is-disabled':val.disabled}">
                         <span>{{val.name}}</span>
                     </li>
                     <!--<li v-for="(val,ind) in searchLabelList"  v-if="val.name=='Protocol'" @click="select_type(val.name,ind,val.id,val.type,val.label,val.disabled)" :key="ind" :class="{'search-style-ind':searchStyleNum==ind,'is-disabled':val.disabled}">
@@ -815,15 +821,17 @@
                             id= this.searchLabelList[this.searchStyleNum].id,
                             type= this.searchLabelList[this.searchStyleNum].type,
                             label= this.searchLabelList[this.searchStyleNum].label,
-                          disabled= this.searchLabelList[this.searchStyleNum].disabled
+                          disabled= this.searchLabelList[this.searchStyleNum].disabled,
+                          readonly= this.searchLabelList[this.searchStyleNum].readonly;
                         this.searchStyleNum = -1
-                        this.select_name(val, ind, id, type,label,disabled)
+                        this.select_name(val, ind, id, type,label,disabled,readonly)
                     }
 
                 }
             },
             // input框监听是按删除还是回车
             enter(val, e) {
+                console.log(val);
               var keyCode = window.event ? e.keyCode : e.which;
               if(val == 'ID'&&keyCode == 13){
                 let id = /^[0-9]*$/
@@ -1090,7 +1098,7 @@
                 this.getSelectPosition(e);
             },
             //点击选择 搜索类型
-            select_name(val, ind, id, type,label,disabled,e ) {
+            select_name(val, ind, id, type,label,disabled,readonly,e ) {
                 // if(id==43||id==45||id==48){  //根据id判断是否开启ip验证
                 //     this.select_conditionsName=true
                 // }
@@ -1113,7 +1121,8 @@
                     id:id,
                     type:type,
                     label:label,
-                    disabled:disabled
+                    disabled:disabled,
+                    readonly
                   })
                   this.change_sreach_show = false
                   this.input_list = !this.input_list
@@ -1124,7 +1133,8 @@
                     id:id,
                     type:type,
                     label:label,
-                    disabled:disabled
+                    disabled:disabled,
+                    readonly
                   })
                   this.change_sreach_show = false
                   this.sreach_num = this.select_list.length-1
@@ -1161,7 +1171,8 @@
                     id:id,
                     type:type,
                     label:label,
-                    disabled:disabled
+                    disabled:disabled,
+                    readonly
                   });
                   this.change_sreach_show = false;
                   this.sreach_num = this.select_list.length-1;

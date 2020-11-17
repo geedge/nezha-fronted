@@ -269,6 +269,14 @@
             type: 'query',
             label: 'query',
             disabled: false
+          },{
+            id:33,
+            name:this.$t('asset.state'),
+            // name: this.$t('asset.asset'),
+            type:'state',
+            label:'state',
+            disabled:false,
+            readonly:true,
           }],
         },
         endpointSearchLabel: { //搜索参数
