@@ -520,8 +520,10 @@
                 this.pingData.map(item=>{
                   if(response.data.ping){
                     let data=response.data.ping.find(t=>t.name == item.label);
-                    item.total = data.total;
-                    item.value = data.status
+                    if(data){
+                      item.total = data.total;
+                      item.value = data.status
+                    }
                   }
                   return item;
                 })

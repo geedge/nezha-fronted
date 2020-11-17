@@ -143,7 +143,7 @@
           </el-table-column>
           <el-table-column sortable prop="value" :label="$t('dashboard.panel.chartTableColumn.value')" width="90">
             <template slot-scope="scope">
-              {{ unit.compute(scope.row.value,null,2)}}
+              {{scope.row.value}}
             </template>
           </el-table-column>
         </el-table>
@@ -1028,8 +1028,25 @@
       },
       // 设置数据
       setTableData(seriesItem) {
+        console.log('set table data',this.chart)
         this.unit = chartDataFormat.getUnit(this.chart.unit);
+        seriesItem=seriesItem.map(item=>{
+          if(this.chart.param.valueMapping && this.chart.param.valueMapping.type){
+            let type=this.chart.param.valueMapping.type;
+            let mappings=this.chart.param.valueMapping.mapping?this.chart.param.valueMapping.mapping:[];
+            let value = item.value;
 
+            let mapping;
+            if(type == 'value'){
+              mapping=mappings.find(t=>{return t.value == value})
+            }else{
+              mapping=mappings.find(t=>{return t.from <= value&& t.to >= value});
+            }
+            item.value = mapping?mapping.text:this.unit.compute(value,null,2);
+            console.log('value',value,'mapping',mapping)
+          }
+          return item;
+        })
         this.storedScreanTableData=seriesItem;
         this.storedScreanTableData=Object.assign([],this.storedScreanTableData.reverse());
         this.screenPageObj.total=this.storedScreanTableData.length;

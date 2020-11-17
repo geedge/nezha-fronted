@@ -98,7 +98,7 @@
                 </nz-alert-tag>
               </span>
               <alertLabel
-                v-if="(item.label === 'asset' ||item.label === 'module' || item.label === 'project') && scope.row[item.label] && scope.row[item.label].loading"
+                v-if="(item.label === 'asset' ||item.label === 'module' || item.label === 'project'||item.label === 'endpoint') && scope.row[item.label] && scope.row[item.label].loading"
                 :id="scope.row[item.label].id"
                 :that="scope.row[item.label]"
                 :type="item.label"
@@ -794,6 +794,7 @@
         switch(labelType){
           case 'asset':
           case 'module':
+          case 'endpoint':
           case 'project':
             return false;
           default: return true;

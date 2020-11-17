@@ -93,6 +93,37 @@
           <div class="alert-label-value">{{alertLabelData?(alertLabelData.remark?alertLabelData.remark:'-'):''}}</div>
         </div>
       </div>
+
+      <div class="alert-label-info" v-if="type==='endpoint'" v-loading="loading">
+        <div class="alert-label-box">
+          <div class="alert-label-title">ID</div>
+          <div class="alert-label-value">{{alertLabelData?alertLabelData.id:''}}</div>
+        </div>
+        <div class="alert-label-box">
+          <div class="alert-label-title">Project</div>
+          <div class="alert-label-value">{{alertLabelData?alertLabelData.project.name:''}}</div>
+        </div>
+        <div class="alert-label-box">
+          <div class="alert-label-title">Module</div>
+          <div class="alert-label-value">{{alertLabelData?alertLabelData.module.name:''}}</div>
+        </div>
+        <div class="alert-label-box">
+          <div class="alert-label-title">Labels</div>
+          <div class="alert-label-value">{{alertLabelData?alertLabelData.labels:''}}</div>
+        </div>
+        <div class="alert-label-box">
+          <div class="alert-label-title">Host</div>
+          <div class="alert-label-value">{{alertLabelData?alertLabelData.host:''}}</div>
+        </div>
+        <div class="alert-label-box">
+          <div class="alert-label-title">Port</div>
+          <div class="alert-label-value">{{alertLabelData?alertLabelData.port:''}}</div>
+        </div>
+        <div class="alert-label-box">
+          <div class="alert-label-title">Path</div>
+          <div class="alert-label-value">{{alertLabelData?alertLabelData.path:''}}</div>
+        </div>
+      </div>
   </div>
 </template>
 
@@ -222,6 +253,17 @@
           if(res.msg==='success'){
             this.loading=false;
             this.alertLabelData=res.data.list[0];
+          } else{
+            this.$message.error(res.msg);
+          }
+        })
+      }
+      if(this.type==='endpoint'){
+        this.$get('/endpoint?id='+this.id).then((res)=>{
+          if(res.msg==='success'){
+            this.loading=false;
+            this.alertLabelData=res.data.list[0];
+            console.log(this.alertLabelData)
           } else{
             this.$message.error(res.msg);
           }

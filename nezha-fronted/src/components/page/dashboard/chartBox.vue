@@ -230,18 +230,18 @@
           </span>
         </el-row>
         <!--value mapping start-->
-        <div  class="right-box-sub-title" v-if="editChart.type == 'singleStat'">
+        <div  class="right-box-sub-title" v-if="editChart.type == 'singleStat'||editChart.type == 'table'">
           <span>{{$t('dashboard.panel.chartForm.valMapping.name')}}</span>
           <span  class="float-right" @click="addMapping"><i style="font-size: 16px; cursor: pointer;" class="nz-icon nz-icon-create-square"></i></span>
         </div>
-        <div style="margin-bottom: 20px; width: 100%" v-if="editChart.type == 'singleStat'"></div>
-        <el-form-item :label="$t('dashboard.panel.chartForm.type')" prop="span" v-if="editChart.type == 'singleStat'">
+        <div style="margin-bottom: 20px; width: 100%" v-if="editChart.type == 'singleStat'||editChart.type == 'table'"></div>
+        <el-form-item :label="$t('dashboard.panel.chartForm.type')" prop="span" v-if="editChart.type == 'singleStat'||editChart.type == 'table'">
           <el-radio-group v-model="editChart.param.valueMapping.type" fill="#FA901C" text-color="#FA901C" size="small" class="val-mapping-type"  @change="valueMappingChange">
             <el-radio-button label="value" border class="no-fill">{{$t('dashboard.panel.chartForm.valMapping.value')}}</el-radio-button>
             <el-radio-button label="range" border class="no-fill">{{$t('dashboard.panel.chartForm.valMapping.range')}}</el-radio-button>
           </el-radio-group>
         </el-form-item>
-        <template v-if="editChart.type == 'singleStat'&&editChart.param.valueMapping.type == 'value'">
+        <template v-if="(editChart.type == 'singleStat'||editChart.type == 'table')&&editChart.param.valueMapping.type == 'value'">
           <template  v-for="(mapping,index) in editChart.param.valueMapping.mapping">
             <el-form-item :label="$t('dashboard.panel.chartForm.valMapping.value')" prop="span" class="half-form-item-other" >
               <el-input size="mini" type="input" v-model="mapping.value" style="display: inline-block;;"></el-input>
@@ -252,7 +252,7 @@
             </el-form-item>
           </template>
         </template>
-        <template v-if="editChart.type == 'singleStat'&&editChart.param.valueMapping.type == 'range'">
+        <template v-if="(editChart.type == 'singleStat'||editChart.type == 'table')&&editChart.param.valueMapping.type == 'range'">
           <template  v-for="(mapping,index) in editChart.param.valueMapping.mapping">
             <div class="half-form-item-other" style="display: inline-block;margin-left: 70px">
               <el-form-item :label="$t('dashboard.panel.chartForm.valMapping.from')" prop="span" class="one-third-form-item-left" >
@@ -1179,6 +1179,13 @@
             this.editChart.param={nullType:this.editChart.param.nullType,threshold:'',legendValue:{min:'off',max:'off',avg:'off',last:'off',total:'off'}}
           }else if(chartType == 'table'){
             this.$set(this.editChart.param,'last',0)
+            this.editChart.param={
+              statistics:'',
+              valueMapping:{
+                type:'value',
+                mapping:[{text:'',value:''}]
+              }
+            }
           }
           /*if(this.$refs.chartTag){
             this.$refs.chartTag.forEach((item, index) => {
@@ -1253,6 +1260,7 @@
                 params.param.threshold=this.editChart.param.threshold;
                 if(this.editChart.type==='table'){
                   delete params.param.threshold;
+                  params.param.valueMapping=this.editChart.param.valueMapping;
                 }
                 params.param.nullType=this.editChart.param.nullType;
                 params.param.legendValue=this.editChart.param.legendValue;
@@ -1386,6 +1394,7 @@
             this.setIsSingleStat();
           } else if(n.type  === 'table'){
             n.param.last?this.$set(this.editChart.param,'last',n.param.last):this.$set(this.editChart.param,'last',0)
+            n.param&&!n.param.valueMapping&&this.$set(this.editChart.param,'valueMapping',{type:'value',mapping:[{text:'',value:''}]})
           }else {
             this.setIsOtherChart();
             n.param&&!n.param.legendValue&&this.$set(this.editChart.param,'legendValue',{min:'off',max:'off',avg:'off',last:'off',total:'off'})

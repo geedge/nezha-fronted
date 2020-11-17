@@ -569,7 +569,7 @@
         }
       },
       afterTableListChange:function(){
-        this.getTableData();
+        // this.getTableData();
         bus.$emit('asset-list-change')
       },
       pageNo(val) {
