@@ -146,6 +146,7 @@
       </div>
    </draggable>
     <el-row v-if="dataList.length === 0"  class="noData"></el-row>
+    <div class="page-shadow" v-if="showShadow"></div>
   </div>
 </template>
 
@@ -208,6 +209,7 @@
         stepHeight: 50,
 
         tempDom: {height: "", width: ""},
+        showShadow:false,
       };
     },
     methods: {
@@ -318,6 +320,7 @@
         };
 
         if(this.dataList.length>1 && oldIndex !== newIndex){
+          this.showShadow=true;
           this.$put('panel/'+ this.pagePanelId+'/charts/modify',modifyParams).then(response => {
             if (response.code === 200) {
               //修改前台列表中元素的顺序
@@ -333,6 +336,7 @@
                 this.dataTotalListBak.push(newItem);
               }
               this.dataList = this.dataTotalListBak;
+              this.showShadow=false;
             }else {
               if(response.msg){
                 this.$message.error(response.msg);
