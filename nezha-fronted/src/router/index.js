@@ -85,6 +85,10 @@ export default new Router({
           component: resolve => require(['../components/page/config/operationlog.vue'], resolve),
         },
         {
+          path: '/about',
+          component: resolve => require(['../components/page/config/about.vue'], resolve),
+        },
+        {
           path: '/mib',
           component: resolve => require(['../components/page/config/mib.vue'], resolve),
         },

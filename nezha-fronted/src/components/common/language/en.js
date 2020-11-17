@@ -31,6 +31,8 @@ const en = {
     remark: "Description",
     clear: 'Clear', //"清除"
     name: 'Name', //'名称'
+    version: "Version", //版本
+    components: "Components", //组件
     cover: 'Override', //'覆盖'
     signOut: 'Logout',//'登出'
     select: 'Select',//'选择'
@@ -39,6 +41,7 @@ const en = {
     all: 'All',//'全选'
     value: 'Value',
     other: 'Others',//"其他"
+    about: 'About',//关于
     detail: 'Detail', //详情
     query: 'Query', //查询
     back: 'Back', //返回
