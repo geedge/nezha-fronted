@@ -66,11 +66,13 @@
         <template>
           <el-menu-item v-if="assetData.length == 0" index="3-0"><div @click="createBox({type: 6})"><i class="nz-icon nz-icon-create-square header-dropdown-add"></i>&nbsp;&nbsp;{{$t("overall.createDatacenter")}}</div></el-menu-item>
           <template v-else>
-            <el-menu-item :index="'3-' + index" v-for="(item, index) in assetData" :key="index">
-              <div @mouseenter="hoverItemIndex = '3-' + index" @mouseleave="hoverItemIndex = ''" @click="jumpToAsset(item)" :class="{'menu-item-active': route == '/asset' && activeItemIndex == item.id}">
-                <span class="too-long-split" style="width: 130px;">{{item.name}}</span>
-              </div>
-            </el-menu-item>
+            <el-scrollbar :style="{height:assetData.length>10?'360px':'auto'}">
+              <el-menu-item :index="'3-' + index" v-for="(item, index) in assetData" :key="index">
+                <div @mouseenter="hoverItemIndex = '3-' + index" @mouseleave="hoverItemIndex = ''" @click="jumpToAsset(item)" :class="{'menu-item-active': route == '/asset' && activeItemIndex == item.id}">
+                  <span class="too-long-split" style="width: 130px;">{{item.name}}</span>
+                </div>
+              </el-menu-item>
+            </el-scrollbar>
           </template>
         </template>
       </el-submenu>
@@ -82,12 +84,14 @@
         <template>
           <el-menu-item v-if="projectData.length == 0" index="2-0"><div @click="createBox({type: 1})"><i class="nz-icon nz-icon-create-square header-dropdown-add"></i>&nbsp;&nbsp;{{$t("overall.createProject")}}</div></el-menu-item>
           <template v-else>
-            <el-menu-item :index="'2-' + index" v-for="(item, index) in projectData" :key="index">
-              <div @mouseenter="hoverItemIndex = '2-' + index" @mouseleave="hoverItemIndex = ''" @click="jumpToProject(item)" :class="{'menu-item-active': route == '/project' && activeItemIndex == item.id}">
-                <span class="too-long-split" style="width: 135px;">{{item.name}}</span>
-                <div v-show="hoverItemIndex == '2-' + index && item.buildIn != 1" @click.stop="toEditProject(item)" class="menu-edit"><i class="nz-icon nz-icon-edit"></i></div>
-              </div>
-            </el-menu-item>
+            <el-scrollbar :style="{height:projectData.length>10?'360px':'auto'}">
+              <el-menu-item :index="'2-' + index" v-for="(item, index) in projectData" :key="index">
+                <div @mouseenter="hoverItemIndex = '2-' + index" @mouseleave="hoverItemIndex = ''" @click="jumpToProject(item)" :class="{'menu-item-active': route == '/project' && activeItemIndex == item.id}">
+                  <span class="too-long-split" style="width: 135px;">{{item.name}}</span>
+                  <div v-show="hoverItemIndex == '2-' + index && item.buildIn != 1" @click.stop="toEditProject(item)" class="menu-edit"><i class="nz-icon nz-icon-edit"></i></div>
+                </div>
+              </el-menu-item>
+            </el-scrollbar>
           </template>
         </template>
       </el-submenu>
@@ -527,6 +531,16 @@
       },
       route() {
         return this.$route.path;
+      },
+      overViewProject(){
+        return this.$store.getters.getOverViewProject;
+      }
+    },
+    watch:{
+      overViewProject(n){
+        if(n){
+          this.jumpToProject(n)
+        }
       }
     },
     destroyed() {

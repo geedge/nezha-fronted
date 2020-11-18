@@ -916,7 +916,10 @@ const cn = {
       straight:'直线',
       curve:'曲线',
       upload:'上传文件',
-      requiredName:'名称不能为空'
+      requiredName:'名称不能为空',
+      imgFormat:'上传图片只能是 JPG/png 格式!',
+      imgSize:'上传图片大小不能超过 2MB!',
+      imgMeasure:'上传的图片宽高必须都大于100!',
     },
   },
   date:{

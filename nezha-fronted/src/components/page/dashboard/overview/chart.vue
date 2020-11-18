@@ -60,9 +60,11 @@
       if(this.chartType==='ruleBar'){
         this.option.yAxis.axisLabel.formatter=function(value) {
           if (value.length > 12) {
-            return "..."+ value.substring(value.length-12, value.length);
+            return value.substring(0, 12) + "...";
+          }else{
+            return value
           }
-          return value;
+
         }
       }
       if(this.showToolbox == false){

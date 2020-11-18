@@ -26,6 +26,7 @@ const store = new Vuex.Store({
       searchName: ''
     },
     idcArr:[],
+    overViewProject:{},
   },
   getters: {
     getLinkData(state){
@@ -39,6 +40,9 @@ const store = new Vuex.Store({
     },
     getIdcArr(state){
       return state.idcArr
+    },
+    getOverViewProject(state){
+      return state.overViewProject
     },
   },
   mutations: {
@@ -104,7 +108,10 @@ const store = new Vuex.Store({
     },
     setCurrentDc(state,data){
       state.currentDc = data
-    }
+    },
+    setOverViewProject(state,data){
+      state.overViewProject=data;
+    },
   },
   actions: {
   }
