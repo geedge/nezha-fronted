@@ -203,8 +203,8 @@
       },
       grid: {
         top: 60,
-        left: 100,
-        right: 30,
+        left: 30,
+        right: 120,
         bottom: 60,
       },
       series: [],
@@ -224,7 +224,8 @@
         axisLabel: {
           show:true,
           fontSize: 14
-        }
+        },
+        inverse:true
       },
       yAxis: {
         type: 'category',

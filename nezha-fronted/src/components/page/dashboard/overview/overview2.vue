@@ -196,7 +196,7 @@
         </div>
       </div>
     </div>
-    <div class="axis-tooltip el-popover"></div>
+    <div class="axis-tooltip el-popover yAxis-text-style"></div>
     <!--用于assetType饼图label-->
     <img src='../../../../assets/img/up.png' id="upPic" style="display: none;">
     <img src='../../../../assets/img/down.png' id="downPic" style="display: none;">

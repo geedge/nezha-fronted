@@ -58,9 +58,10 @@
     created() {
       this.option=chartConfig.getOption(this.chartType);
       if(this.chartType==='ruleBar'){
+        this.option.yAxis.position='right';
         this.option.yAxis.axisLabel.formatter=function(value) {
-          if (value.length > 12) {
-            return value.substring(0, 12) + "...";
+          if (value.length > 15) {
+            return value.substring(0, 15) + "...";
           }else{
             return value
           }
