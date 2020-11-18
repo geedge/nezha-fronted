@@ -345,19 +345,41 @@
         this.esc();
       },
       beforeAvatarUpload(file){
+        let this_=this
         let isJPG = (file.type === 'image/jpeg' || file.type === 'image/png');
 
         const isLt2M = file.size / 1024 / 1024 < 2;
 
         if (!isJPG) {
-          this.$message.error('上传图片只能是 JPG/png 格式!');
+          this.$message.error( this_.$t('project.topology.imgFormat'));
+          return false;
         }
-        if (!isLt2M) {
-          this.$message.error('上传图片大小不能超过 2MB!');
-        }
-        this.file=file;
-        this.upload();
-        return false;
+        // if (!isLt2M) {
+        //   this.$message.error( this_.$t('project.topology.imgSize'));
+        //   return false;
+        // }
+        const isSize = new Promise(function(resolve, reject) {
+          let width = 100;
+          let height = 100;
+          let _URL = window.URL || window.webkitURL;
+          let img = new Image();
+          img.onload = function() {
+            console.log(img.width);
+            let valid = img.width > width && img.height > height;
+            valid ? resolve() : reject();
+          }
+          img.src = _URL.createObjectURL(file);
+        }).then(() => {
+          if(isJPG){
+            this.file=file;
+            this.upload();
+          }
+          return file;
+        }, () => {
+          this.$message.error( this_.$t('project.topology.imgMeasure'));
+          return Promise.reject();
+        });
+       return false;
       },
       handleAvatarSuccess(file,res){
 

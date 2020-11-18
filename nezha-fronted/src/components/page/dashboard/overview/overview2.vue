@@ -112,7 +112,7 @@
               <div style="width: 100%;height: 100%;position: relative" v-if="allProject.length>0">
                 <el-carousel :interval="5000" arrow="hover" :trigger="'click'">
                   <el-carousel-item v-for="(item,index) in allProject" :key="index">
-                    <div class="maskLayer"></div>
+                    <div class="maskLayer" @click="toProject(item)"></div>
                     <span class="project-name">{{item.name}}</span>
                     <topology
                       :nodesArray="item.nodesArray"
@@ -461,6 +461,9 @@
               });
           })
         }
+      },
+      toProject(projectInfo){//跳转对应project页面
+        this.$store.commit("setOverViewProject", projectInfo);
       },
       queryAssetData() {
         return new Promise(resolve => {
@@ -1662,6 +1665,7 @@
     top: 0;
     left: 0;
     z-index: 10;
+    cursor: pointer;
   }
   /deep/ .el-carousel__indicator--horizontal .el-carousel__button{
     background-color: #C0C4CC;
