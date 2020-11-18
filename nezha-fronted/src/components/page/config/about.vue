@@ -23,7 +23,10 @@
     name: "about",
     data() {
       return {
-        version: {}
+        version: {
+          nezha: {name: "", version: ""},
+          components: [{name: "", version: ""}]
+        }
       }
     },
     methods: {

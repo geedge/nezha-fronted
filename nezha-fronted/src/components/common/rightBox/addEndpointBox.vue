@@ -9,7 +9,7 @@
     <!-- end--标题-->
 
     <!-- begin--表单-->
-    <el-scrollbar class="right-box-form-box">
+    <el-scrollbar class="right-box-form-box" style="overflow: hidden">
       <el-form class="right-box-form right-box-form-left" label-position="right" ref="addEndpoint" :model="endpoint" :rules="rules">
         <!--project-->
         <el-form-item :label='$t("project.project.project")' prop="projectId" class="select-warp">
@@ -24,57 +24,106 @@
           </el-select>
         </el-form-item>
         <!--asset和endpoint-->
-        <div class="right-box-form-row right-child-boxes">
+        <div class="right-box-form-row right-child-boxes" style="height: calc(100% - 135px);">
           <div class="right-child-box assets-box">
             <!--begin--标题-->
             <div class="right-child-box-title">{{$t('asset.asset')}}</div>
             <!--end--标题-->
             <!--begin--搜索框-->
-            <div style="float: right;padding: 9px 9px 0px 0px;">
-              <div class="nz-btn-group nz-btn-group-size-small nz-btn-group-light endpoint-asset-search" style="margin: 0">
-                <button id="search-asset-drop" type="button" class="nz-btn nz-btn-size-small nz-btn-style-light nz-btn-style-square nz-input-group-prepend" @click="assetSearch.dropdownShow = !assetSearch.dropdownShow">
+            <div style="padding-left: 15px; display: inline-block;">
+              <div class="nz-btn-group nz-btn-group-size-small nz-btn-group-light endpoint-asset-search">
+                <button id="search-asset-drop" style="width: 62px;" type="button" class="nz-btn nz-btn-size-small nz-btn-style-light nz-btn-style-square nz-input-group-prepend" @click="assetSearch.dropdownShow = !assetSearch.dropdownShow">
                   <span class="endpoint-asset-label-txt">{{assetSearch.label}}</span>
                   <span>
                     <i v-if="assetSearch.dropdownShow" class="nz-icon nz-icon-caret-up"></i>
                     <i v-if="!assetSearch.dropdownShow" class="nz-icon nz-icon-caret-bottom"></i>
                   </span>
-                </button><el-input style="width: 100px;" @keydown.enter.native="searchAssetKeydown" class="input-x-mini-24 nz-input-group-middle" placeholder="" v-model="assetSearch.text"></el-input><button
-                type="button" class="nz-btn nz-btn-size-small nz-btn-style-light nz-btn-style-square nz-input-group-append" id="search-asset"><i @click="searchAsset" class="nz-icon nz-icon-search"></i></button>
-
+                </button><el-input style="width: 100px;" v-if="assetSearch.label === 'Host' || assetSearch.label === 'SN'" @keydown.enter.native="searchAssetKeydown" class="input-x-mini-24 nz-input-group-middle" placeholder="" v-model="assetSearch.text">
+                </el-input><el-select v-else-if="assetSearch.label === 'DC'" v-model="assetSearch.idcId" class="input-x-mini-24 nz-input-group-middle" popper-class="no-style-class">
+                  <el-option v-for="item in dcList" :key="item.id" :label="item.name" :value="item.id"></el-option>
+                </el-select><el-cascader
+                  v-else-if="assetSearch.label === 'Model'"
+                  :options="vendorAndModelOptionData"
+                  :props="{emitPath: false}"
+                  style="width: 100px;"
+                  v-model="assetSearch.text"
+                  size="mini"
+                  clearable
+                  placeholder=""
+                  class="nz-input-group-middle"
+                  @change="selectModel"
+                >
+                </el-cascader><el-select v-else-if="assetSearch.label === 'Type'" v-model="assetSearch.typeIds" class="input-x-mini-24 nz-input-group-middle" popper-class="no-style-class">
+                  <el-option v-for="item in typeList" :key="item.id" :label="item.name" :value="item.id"></el-option>
+                </el-select><!--<el-autocomplete style="width: 100px;" v-else-if="assetSearch.label === 'DC'" @keydown.enter.native="searchAssetKeydown" :fetch-suggestions="filterDCValue" @select="selectDC" class="input-x-mini-24 nz-input-group-middle" placeholder="" v-model="assetSearch.text" value-key="name">
+                </el-autocomplete><el-autocomplete style="width: 100px;" v-else-if="assetSearch.label === 'Type'" @keydown.enter.native="searchAssetKeydown" :fetch-suggestions="filterTypeValue" @select="selectType" class="input-x-mini-24 nz-input-group-middle" placeholder="" v-model="assetSearch.text" value-key="name">
+                </el-autocomplete>--><button type="button" class="nz-btn nz-btn-size-small nz-btn-style-light nz-btn-style-square nz-input-group-append" id="search-asset"><i @click="searchAsset" class="nz-icon nz-icon-search"></i></button>
                 <div class="endpoint-asset-search-dropdown" v-if="assetSearch.dropdownShow">
                   <div @click="dropdownSelect('Host')" class="endpoint-asset-search-dropdown-item" id="search-asset-ip">Host</div>
                   <div @click="dropdownSelect('SN')" class="endpoint-asset-search-dropdown-item" id="search-asset-sn">SN</div>
+                  <div @click="dropdownSelect('DC')" class="endpoint-asset-search-dropdown-item" id="search-asset-dc">DC</div>
+                  <div @click="dropdownSelect('Model')" class="endpoint-asset-search-dropdown-item" id="search-asset-model">Model</div>
+                  <div @click="dropdownSelect('Type')" class="endpoint-asset-search-dropdown-item" id="search-asset-type">Type</div>
                 </div>
               </div>
             </div>
             <!--end--搜索框-->
 
             <!-- begin--table-->
-            <div class="endpoint-sub-table">
-              <div class="endpoint-sub-table-head">
-                <div class="endpoint-sub-table-col" style="width: 15px;position: relative">
-                  <div @click.stop v-if="!currentModuleCopy.id" class="endpoint-sub-table-body-dialog checkbox-mc"></div>
-                  <el-checkbox v-model="assetListAll" :indeterminate="assetListHalf"
-                             @change="assetListSelAll"></el-checkbox>
-              </div>
-                <div class="endpoint-sub-table-col">Host</div>
-                <div class="endpoint-sub-table-col"  style="width: calc(50% - 55px)">SN</div>
-              </div>
-              <div class="line-100"></div>
-              <div class="endpoint-sub-table-body">
-                <el-scrollbar style="height: 100%" ref="assetScrollbar">
+            <div class="endpoint-sub-table" v-loading="assetLoading">
+              <el-scrollbar style="height: 100%; width: 100%;" ref="assetScrollbar">
+                <div class="endpoint-sub-table-head">
+                  <div @click.stop v-if="!currentModuleCopy.id" class="endpoint-sub-table-body-dialog"></div>
+                  <div class="endpoint-sub-table-col" style="width: 15px;position: relative">
+                    <el-checkbox v-model="assetListAll" :indeterminate="assetListHalf"
+                               @change="assetListSelAll"></el-checkbox>
+                  </div>
+                  <div class="endpoint-sub-table-col">Host</div>
+                  <div class="endpoint-sub-table-col">SN</div>
+                  <div class="endpoint-sub-table-col">Model</div>
+                  <div class="endpoint-sub-table-col">DC</div>
+                  <div class="endpoint-sub-table-col">Type</div>
+                </div>
+                <div class="line-100"></div>
+                <div class="endpoint-sub-table-body">
                   <div :data="item.id" v-for="item,index in assetList" class="endpoint-sub-table-row" :id="'select-asset-'+item.id">
-                    <div class="endpoint-sub-table-col" style="width: 15px;">
-                      <el-checkbox v-model="item.sel" @change="selectAsset"></el-checkbox>
-                    </div>
-                    <div :id="index" @click.stop v-if="!currentModuleCopy.id" class="endpoint-sub-table-body-dialog"></div>
-                    <div class="endpoint-sub-table-col">{{item.host}}</div>
-                    <el-popover trigger="hover" placement="right-start" :content="item.sn" >
-                      <div slot="reference" class="endpoint-sub-table-col"  style="width: calc(50% - 55px)">{{item.sn}}</div>
+                    <el-popover trigger="hover" placement="left-start">
+                      <div class="asset-tip" style="display: table">
+                        <div class="tip-row">
+                          <span class="tip-cell">Host</span>
+                          <span class="tip-cell">{{item.host}}</span>
+                        </div>
+                        <div class="tip-row">
+                          <span class="tip-cell">SN</span>
+                          <span class="tip-cell">{{item.sn}}</span>
+                        </div>
+                        <div class="tip-row">
+                          <span class="tip-cell">Model</span>
+                          <span class="tip-cell">{{item.model.name}}</span>
+                        </div>
+                        <div class="tip-row">
+                          <span class="tip-cell">DC</span>
+                          <span class="tip-cell">{{item.idc.name}}</span>
+                        </div>
+                        <div class="tip-row">
+                          <span class="tip-cell">Type</span>
+                          <span class="tip-cell">{{item.model.type.value}}</span>
+                        </div>
+                      </div>
+                      <span slot="reference">
+                      <div class="endpoint-sub-table-col" style="width: 15px;">
+                        <el-checkbox v-model="item.sel" @change="selectAsset"></el-checkbox>
+                      </div>
+                      <div class="endpoint-sub-table-col">{{item.host}}</div>
+                      <div class="endpoint-sub-table-col">{{item.sn}}</div>
+                      <div class="endpoint-sub-table-col">{{item.model.name}}</div>
+                      <div class="endpoint-sub-table-col">{{item.idc.name}}</div>
+                      <div class="endpoint-sub-table-col">{{item.model.type.value}}</div>
+                    </span>
                     </el-popover>
                   </div>
-                </el-scrollbar>
-              </div>
+                </div>
+              </el-scrollbar>
             </div>
             <div class="line-100" style="border-color:#dcdfe6"></div>
             <div>
@@ -82,7 +131,7 @@
                       class="nz-btn nz-btn-size-small-new nz-btn-style-light-new endpoints-clear-btn" style="margin-top: 3px;">
                 {{$t('overall.addAssetList')}}
               </button>
-              <span style="display: inline-block; font-size: 14px; float: right;line-height: 35px;padding-right: 15px;margin-top: 3px;">All: {{this.assetList.length}}</span>
+              <span style="display: inline-block; font-size: 14px; float: right;padding-right: 15px;margin-top: 3px;">All: {{this.assetList.length}}</span>
             </div>
             <!--end--table-->
           </div>
@@ -306,6 +355,7 @@
             {required: true, message: this.$t('validate.required'), trigger: 'change'}
           ],
         },
+        vendorAndModelOptionData: [],
         paramBorderColor: '#dcdfe6',
         endpointTouch: false,
         endpoint: {projectId: '', moduleId: '', endpointList: []},
@@ -316,11 +366,12 @@
         inputKeyErr:[],
         tempEndpoint: {},
         tempEndpoint2: {},
+        assetLoading: true,
         rightBox: {show: false, title: this.$t('project.endpoint.createEndpoint'),isEdit: false},
         editParamBox: {show: false, top: 0, left: 0, type: 0}, //param编辑弹框
         editLabelsBox: {show: false, top: 0, left: 0, type: 0}, //param编辑弹框
         moduleParamShow: false, //module默认参数param悬浮窗
-        assetSearch: {host: '', sn: '', text: '', label: 'Host', dropdownShow: false}, //侧滑框中asset的搜索相关
+        assetSearch: {host: '', sn: '', text: '', label: 'Host', typeIds: "", modelId: "", idcId: "", dropdownShow: false}, //侧滑框中asset的搜索相关
         assetPageObj: {pageNo: 1, pageSize: -1},
         selectedAssets: [], //侧滑框中选中的asset
         projectList: [],
@@ -362,6 +413,9 @@
         ],
         assetListAll:false,
         assetListHalf:false,
+        typeList: [],
+        dcList: [],
+        modelList: []
       }
     },
     methods: {
@@ -539,8 +593,71 @@
         });
       },
 
+      /*获取型号列表*/
+      getModelList() {
+        this.$get('model', {pageSize: -1, pageNo: 1}).then(response => {
+          if (response.code === 200) {
+            let resultData = [];
+            let modelData = response.data.list;
+            for (let i = 0; i < modelData.length; i++) {
+              if (!modelData[i].vendor) {
+                continue;
+              }
+              let obj = {};
+              obj.id = modelData[i].vendor.id;
+              obj.code = modelData[i].vendor.code;
+              obj.value ='vendor-'+ modelData[i].vendor.code;
+              obj.label = modelData[i].vendor.value;
+              obj.children = [];
+              resultData.push(obj);
+            }
+            let result = [];
+            let obj1 = {};
+            for (let i = 0; i < resultData.length; i++) {
+              if (!obj1[resultData[i].id]) {
+                result.push(resultData[i]);
+                obj1[resultData[i].id] = true;
+              }
+            }
+            for (let x = 0; x < result.length; x++) {
+              for (let y = 0; y < modelData.length; y++) {
+                if (!modelData[y].vendor) {
+                  continue;
+                }
+                if (result[x].code === modelData[y].vendor.code) {
+                  let obj2 = {};
+                  obj2.value = modelData[y].id;
+                  obj2.label = modelData[y].name;
+                  result[x].children.push(obj2);
+                }
+              }
+            }
+            this.vendorAndModelOptionData = result;
+          }
+        });
+      },
+
+      /*获取类型列表*/
+      getTypeList() {
+        this.$get('sys/dict/all', {pageSize: -1, pageNo: 1, type: "assetType"}).then(response => {
+          if (response.code === 200) {
+            this.typeList = response.data;
+          }
+        });
+      },
+
+      /*获取DC列表*/
+      getDCList() {
+        this.$get('idc', {pageSize: -1, pageNo: 1}).then(response => {
+          if (response.code === 200) {
+            this.dcList = response.data.list;
+          }
+        });
+      },
+
       // 获取endpoint弹框中的asset子弹框里asset列表数据
       getAssetList() {
+        this.assetLoading = true;
         this.$get('asset', this.assetPageObj).then(response => {
           if (response.code === 200) {
             let respData = response.data.list;
@@ -555,7 +672,14 @@
               }
             }
             this.assetList = response.data.list;
+            this.$nextTick(() => {
+              this.$refs.assetScrollbar.update();
+            });
           }
+        }).finally(() => {
+          setTimeout(() => {
+            this.assetLoading = false;
+          }, 200);
         });
       },
       //回车搜索searchAsset
@@ -568,12 +692,18 @@
       },
       //endpoint弹框中的asset子弹框搜索
       searchAsset() {
+        this.assetSearch.host = "";
+        this.assetSearch.sn = "";
         if (this.assetSearch.label == 'Host') {
           this.assetSearch.host = this.assetSearch.text;
-          this.assetSearch.sn = '';
+          this.assetSearch.modelId = "";
+          this.assetSearch.typeIds = "";
+          this.assetSearch.idcId = "";
         } else if (this.assetSearch.label == 'SN') {
           this.assetSearch.sn = this.assetSearch.text;
-          this.assetSearch.host = '';
+          this.assetSearch.modelId = "";
+          this.assetSearch.typeIds = "";
+          this.assetSearch.idcId = "";
         }
         this.assetPageObj = Object.assign({}, this.assetPageObj, this.assetSearch);
         this.getAssetList();
@@ -787,6 +917,7 @@
       },
       // endpoint弹框的asset子弹框顶部搜索条件选中事件
       dropdownSelect(label) {
+        this.assetSearch.text = "";
         this.assetSearch.label = label;
         this.assetSearch.dropdownShow = false;
       },
@@ -799,11 +930,49 @@
 
       setRowIndex({row, rowIndex}) {
         row.index = rowIndex;
+      },
+
+      filterDCValue(input, callback) {
+        let result = this.dcList.filter(item => {
+          return item.name.toLowerCase().indexOf(input.toLowerCase()) != -1
+        });
+        console.info(input, result)
+        callback(result);
+      },
+      filterModelValue(input, callback) {
+        let result = this.modelList.filter(item => {
+          return item.name.toLowerCase().indexOf(input.toLowerCase()) != -1
+        });
+        callback(result);
+      },
+      filterTypeValue(input, callback) {
+        let result = this.typeList.filter(item => {
+          return item.name.toLowerCase().indexOf(input.toLowerCase()) != -1
+        });
+        callback(result);
+      },
+      selectDC(select) {
+        this.assetSearch.idcId = select.id;
+        this.assetSearch.modelId = "";
+        this.assetSearch.typeIds = "";
+      },
+      selectModel(select) {
+        this.assetSearch.modelId = select;
+        this.assetSearch.idcId = "";
+        this.assetSearch.typeIds = "";
+      },
+      selectType(select) {
+        this.assetSearch.typeIds = select.id;
+        this.assetSearch.idcId = "";
+        this.assetSearch.modelId = "";
       }
     },
     created() {
       this.getProjectList();
       this.getAssetList();
+      this.getDCList();
+      this.getModelList();
+      this.getTypeList();
     },
     watch: {
       endpointList(n, o) {
@@ -1018,7 +1187,8 @@
   /* begin--搜索框*/
   .endpoint-asset-search {
     position: relative;
-    margin-left: 44px;
+    margin: 0;
+    z-index: 11;
   }
   .endpoint-asset-search button {
     height: 24px !important;
@@ -1027,8 +1197,8 @@
     position: absolute;
     top: 25px;
     background-color: #444;
-    border-radius: 4px;
-    width: 44px;
+    border-radius: 2px;
+    width: 58px;
     left: 0;
   }
   .endpoint-asset-search-dropdown-item {
@@ -1071,21 +1241,25 @@
 
   /* begin--table*/
   .endpoint-sub-table {
-    padding-top: 15px;
+    padding-top: 13px;
     height: calc(100% - 83px);
+    width: 260px;
   }
   .line-100 {
     margin-bottom: 3px;
+    width: 600px;
   }
   .endpoint-sub-table-head {
     line-height: 28px;
     height: 30px;
+    width: 600px;
   }
   .endpoint-sub-table-row, .endpoint-sub-table-row-disabled {
     line-height: 28px;
     height: 30px;
     color: #656565;
     position: relative;
+    width: 600px;
   }
   .endpoint-sub-table-row:hover {
     background-color: #dadada;
@@ -1100,8 +1274,8 @@
   }
   .endpoint-sub-table-col {
     display: inline-block;
-    width: calc(50% - 15px);
     padding-left: 10px;
+    width: 100px;
     text-overflow: ellipsis;
     white-space: nowrap;
     overflow: hidden;
@@ -1115,7 +1289,6 @@
   .endpoint-sub-table-body {
     font-size: 15px;
     position: relative;
-    overflow: auto;
     height: calc(100% - 37px);
   }
   .endpoint-sub-table-body-dialog {
@@ -1133,7 +1306,23 @@
 
   /* end--子弹框*/
 </style>
-<style>
+<style lang="scss">
+  .endpoint-asset-search .el-autocomplete>.el-input {
+     position: absolute;
+   }
+  .endpoint-asset-search .el-select {
+    width: 100px;
+  }
+  .endpoint-asset-search .el-cascader .el-input {
+    position: absolute;
+    height: 24px;
+    line-height: 24px;
+
+    input {
+      height: 24px;
+      line-height: 24px;
+    }
+  }
   .endpoints-box-endpoints-title {
     color: black;
     font-weight: 400;
@@ -1169,5 +1358,18 @@
   .input-error .el-input__inner,.input-error .el-input__inner:hover,.input-error .el-input__inner:focus,
   .input-error .input__inner,.input-error .input__inner:hover,.input-error .input__inner:focus {
     border-color: #F56C6C !important;
+  }
+
+  .asset-tip {
+    display: table;
+
+    .tip-row {
+      display: table-row;
+
+      .tip-cell {
+        display: table-cell;
+        padding: 2px 4px;
+      }
+    }
   }
 </style>
