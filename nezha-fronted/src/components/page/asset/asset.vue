@@ -472,6 +472,7 @@
       getTableData() {
         let oldSearchLabel = JSON.parse(JSON.stringify(this.searchLabel));
         this.searchLabel = Object.assign(this.searchLabel, this.pageObj);
+        delete this.searchLabel.total
         this.tools.loading = true;
         if(this.searchLabel.tags && this.searchLabel.tags!=''){
           this.searchLabel.tags=encodeURIComponent(this.searchLabel.tags)
