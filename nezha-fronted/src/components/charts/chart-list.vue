@@ -673,6 +673,7 @@
             }
 
             this.dataList = [...this.dataTotalList];
+            this.showShadow=false;
             this.$nextTick(() => {
               if (this.dataList.length > 0 ) {
                 this.dataList.forEach((item,index) => {
