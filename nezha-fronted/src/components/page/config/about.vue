@@ -3,24 +3,16 @@
     <div class="app-header">
       <div class="header-logo"><img width="70" height="70" src="../../../assets/img/logo1-2.png"></div>
       <div class="header-title">
-        <div class="app-name">Nezha monitoring System</div>
-        <div class="app-version"><span class="about-label">{{$t("overall.version")}}&nbsp;&nbsp;&nbsp;</span><span>1.2.1</span></div>
+        <div class="app-name">{{version.nezha.name}}</div>
+        <div class="app-version"><span class="about-label">{{$t("overall.version")}}&nbsp;&nbsp;&nbsp;</span><span>{{version.nezha.version}}</span></div>
       </div>
     </div>
     <div class="app-component">
       <div class="component-title">{{$t("overall.components")}}</div>
       <div class="component-content">
-        <div class="app-component-row">
-          <div class="component-name">Maria DB</div>
-          <div class="component-version">{{version.mariadb}}</div>
-        </div>
-        <div class="app-component-row">
-          <div class="component-name">Redis</div>
-          <div class="component-version">{{version.redis}}</div>
-        </div>
-        <div class="app-component-row">
-          <div class="component-name">Prometheus</div>
-          <div class="component-version">{{version.prometheus}}</div>
+        <div class="app-component-row" v-for="(item, index) in version.components" :key="index">
+          <div class="component-name">{{item.name}}</div>
+          <div class="component-version">{{item.version}}</div>
         </div>
       </div>
     </div>
@@ -31,13 +23,18 @@
     name: "about",
     data() {
       return {
-        version: {
-          main: "1.2.1",
-          mariadb: "10.5.5-log",
-          redis: "4.1.2",
-          prometheus: "2.21.1"
-        }
+        version: {}
       }
+    },
+    methods: {
+      getVersion() {
+        this.$get("/about").then(response => {
+          this.version = response.data;
+        });
+      }
+    },
+    mounted() {
+      this.getVersion();
     },
   }
 </script>
@@ -55,6 +52,7 @@
 
     .app-header {
       display: flex;
+      width: 325px;
 
       .header-logo {
         font-size: 0;
