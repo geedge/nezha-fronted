@@ -52,7 +52,7 @@
 
     .app-header {
       display: flex;
-      width: 325px;
+      min-width: 325px;
 
       .header-logo {
         font-size: 0;
