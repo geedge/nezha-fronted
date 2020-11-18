@@ -39,7 +39,7 @@
                     <i v-if="!assetSearch.dropdownShow" class="nz-icon nz-icon-caret-bottom"></i>
                   </span>
                 </button><el-input style="width: 100px;" v-if="assetSearch.label === 'Host' || assetSearch.label === 'SN'" @keydown.enter.native="searchAssetKeydown" class="input-x-mini-24 nz-input-group-middle" placeholder="" v-model="assetSearch.text">
-                </el-input><el-select v-else-if="assetSearch.label === 'DC'" v-model="assetSearch.idcId" class="input-x-mini-24 nz-input-group-middle" popper-class="no-style-class">
+                </el-input><el-select placeholder="" v-else-if="assetSearch.label === 'DC'" v-model="assetSearch.idcId" class="input-x-mini-24 nz-input-group-middle" popper-class="no-style-class">
                   <el-option v-for="item in dcList" :key="item.id" :label="item.name" :value="item.id"></el-option>
                 </el-select><el-cascader
                   v-else-if="assetSearch.label === 'Model'"
@@ -53,7 +53,7 @@
                   class="nz-input-group-middle"
                   @change="selectModel"
                 >
-                </el-cascader><el-select v-else-if="assetSearch.label === 'Type'" v-model="assetSearch.typeIds" class="input-x-mini-24 nz-input-group-middle" popper-class="no-style-class">
+                </el-cascader><el-select placeholder="" v-else-if="assetSearch.label === 'Type'" v-model="assetSearch.typeIds" class="input-x-mini-24 nz-input-group-middle" popper-class="no-style-class">
                   <el-option v-for="item in typeList" :key="item.id" :label="item.name" :value="item.id"></el-option>
                 </el-select><!--<el-autocomplete style="width: 100px;" v-else-if="assetSearch.label === 'DC'" @keydown.enter.native="searchAssetKeydown" :fetch-suggestions="filterDCValue" @select="selectDC" class="input-x-mini-24 nz-input-group-middle" placeholder="" v-model="assetSearch.text" value-key="name">
                 </el-autocomplete><el-autocomplete style="width: 100px;" v-else-if="assetSearch.label === 'Type'" @keydown.enter.native="searchAssetKeydown" :fetch-suggestions="filterTypeValue" @select="selectType" class="input-x-mini-24 nz-input-group-middle" placeholder="" v-model="assetSearch.text" value-key="name">
