@@ -12,6 +12,7 @@ export const staticMenus = {
       {route: '/system', name: i18n.t('config.system.system')},
       {route: '/terminallog', name: i18n.t('config.terminallog.terminallog')},
       {route: '/operationlog', name: i18n.t('config.operationlog.operationlog')},
+      {route: '/about', name: i18n.t('overall.about')},
     ],
   },
   alerts: {

@@ -108,7 +108,7 @@
       </el-submenu>
       <el-submenu index="5" popper-class="nz-submenu">
         <template slot="title">
-          <div @click="jumpTo('/account')" :class ="route == '/account' || route == '/promServer' || route == '/dc' || route == '/model' || route == '/mib' || route == '/system' || route == '/terminallog' || route == '/operationlog' ? 'menu-active' : ''">{{$t('overall.config')}}</div>
+          <div @click="jumpTo('/account')" :class ="route == '/account' || route == '/promServer' || route == '/dc' || route == '/model' || route == '/mib' || route == '/system' || route == '/terminallog' || route == '/operationlog' || route == '/about' ? 'menu-active' : ''">{{$t('overall.config')}}</div>
         </template>
         <el-menu-item index="5-0">
           <div @click="jumpTo('/account')" :class="{'menu-item-active' :(route == '/account' )}">{{$t('config.account.account')}}</div>
@@ -133,6 +133,9 @@
         </el-menu-item>
         <el-menu-item index="5-7">
           <div @click="jumpTo('/operationlog')" :class="{'menu-item-active' :(route == '/operationlog' )}">{{$t('config.operationlog.operationlog')}}</div>
+        </el-menu-item>
+        <el-menu-item index="5-8">
+          <div @click="jumpTo('/about')" :class="{'menu-item-active' :(route == '/about' )}">{{$t('overall.about')}}</div>
         </el-menu-item>
       </el-submenu>
       <el-submenu index="6" popper-class="nz-submenu">
