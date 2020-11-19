@@ -707,7 +707,8 @@ const en = {
         timezone:'Timezone',
         defaultCabinetUsize:'Cabinet U Size',
         second:'second',
-        day:'day'
+        day:'day',
+        maxSeries:'Query max series',
       },
       email:{
         email:'Email',
@@ -744,13 +745,25 @@ const en = {
       link: {
         link:'Link',
         name: "Name",
-        url: "URL",
+        filePath: "FilePath",
         operation: "Operation",
         add: "Add",
         update: "Update",
         del: "Delete",
         nameMaxLength:'The length should be less than 64',
         uriRequired:'Please fill in the correct url'
+      },
+      notification: {
+        notification:'Notification',
+        name: "Name",
+        filePath: "filePath",
+        operation: "Operation",
+        add: "Add",
+        update: "Update",
+        del: "Delete",
+        nameMaxLength:'The length should be less than 64',
+        uriRequired:'Required',
+        filePathReg:'Please enter the correct file path'
       },
       reset:{
         reset:'Reset',
