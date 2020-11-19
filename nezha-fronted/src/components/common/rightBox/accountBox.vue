@@ -165,18 +165,18 @@
       },
 
       getScripts() {
-        /*this.$get("/alert/script?pageNo=1&pageSize=-1").then(response => {
+        this.$get("/alert/script?pageNo=1&pageSize=-1").then(response => {
           this.scripts = response.data.list;
           this.getSelectableScripts();
-        });*/
-        this.scripts = [
+        });
+        /*this.scripts = [
           {id: 1, name: "DOLBY"},
           {id: 2, name: "IMAX"},
           {id: 3, name: "CGS"},
           {id: 4, name: "LUXE"},
           {id: 5, name: "DST:X"},
         ];
-        this.getSelectableScripts();
+        this.getSelectableScripts();*/
       },
 
       getSelectableScripts() {
