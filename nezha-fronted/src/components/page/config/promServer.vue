@@ -367,7 +367,7 @@
       //获取dc数据
       getDcData() {
         return new Promise(resolve => {
-          this.$get('idc').then(response => {
+          this.$get('idc', {pageSize: -1}).then(response => {
             if (response.code === 200) {
               this.dcData = response.data.list;
             }
