@@ -570,7 +570,8 @@ const cn = {
       inputConfirmPwd: "请再次输入密码",
       invalidPwd: "无效的密码，最少6个字符",
       confirmPwdErr: "两次密码输入不一致",
-      reinputPwd: "请再次输入密码"
+      reinputPwd: "请再次输入密码",
+      notification: "通知"
     },
     promServer: {
       promServerList: "Prometheus服务",

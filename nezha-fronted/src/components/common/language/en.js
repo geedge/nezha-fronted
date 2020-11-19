@@ -574,7 +574,8 @@ const en = {
       inputConfirmPwd:'Please input confirm password',
       invalidPwd:'invalide password,the length at least 6',
       confirmPwdErr:'The two passwords are inconsistent',
-      reinputPwd:'Enter password again'
+      reinputPwd:'Enter password again',
+      notification: 'Notification'
     },
     promServer: {
       promServerList: 'Prometheus server',//"Prometheus Server"
