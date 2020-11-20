@@ -457,6 +457,7 @@
         el.removeEventListener("ps-scroll-y", this.plpsscrolly.bind('',el,this));
         el.removeEventListener("mouseenter",  this.plmouseenter.bind('',el,this));
         el.removeEventListener("mouseleave", this.plmouseleave.bind('',el,this));
+        el._ps_.destroy();
       }
     }
   }

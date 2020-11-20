@@ -752,6 +752,7 @@
         return '';
       },
       plpsscrolly(el,self){
+        console.log(self.tools.showTopBtn && self.bottomBox.mainResizeShow)
         if (el._ps_.scrollbarYTop > 50) {
           self.tools.showTopBtn = true;
         } else {
@@ -817,16 +818,26 @@
     },
     watch:{
       pageType(n){
+        console.log(n);
         if(n=='endpoint'){
-          this.$nextTick(()=>{
+          setTimeout(()=>{
             //绑定滚动条事件，控制top按钮
             let el=this.$refs.endpointTable.$el.querySelector(".el-table__body-wrapper");
+            console.log(el._ps_);
             if(el._ps_){
               el.addEventListener("ps-scroll-y", this.plpsscrolly.bind('',el,this));
               el.addEventListener("mouseenter",  this.plmouseenter.bind('',el,this));
               el.addEventListener("mouseleave", this.plmouseleave.bind('',el,this));
             }
-          });
+          },100)
+        }else{
+          let el = this.$refs.endpointTable.$el.querySelector(".el-table__body-wrapper");
+          if (el._ps_) {
+            el.removeEventListener("ps-scroll-y", this.plpsscrolly.bind('',el,this));
+            el.removeEventListener("mouseenter",  this.plmouseenter.bind('',el,this));
+            el.removeEventListener("mouseleave", this.plmouseleave.bind('',el,this));
+            el._ps_.destroy();
+          }
         }
       },
       currentModule(n,o){
@@ -865,11 +876,14 @@
       bus.$off('alert-message-change')
     },
     beforeDestroy(){
-      let el = this.$refs.endpointTable.$el.querySelector(".el-table__body-wrapper");
-      if (el._ps_) {
-        el.removeEventListener("ps-scroll-y", this.plpsscrolly.bind('',el,this));
-        el.removeEventListener("mouseenter",  this.plmouseenter.bind('',el,this));
-        el.removeEventListener("mouseleave", this.plmouseleave.bind('',el,this));
+      if(this.$refs.endpointTable){
+        let el = this.$refs.endpointTable.$el.querySelector(".el-table__body-wrapper");
+        if (el._ps_) {
+          el.removeEventListener("ps-scroll-y", this.plpsscrolly.bind('',el,this));
+          el.removeEventListener("mouseenter",  this.plmouseenter.bind('',el,this));
+          el.removeEventListener("mouseleave", this.plmouseleave.bind('',el,this));
+          el._ps_.destroy();
+        }
       }
     }
   }

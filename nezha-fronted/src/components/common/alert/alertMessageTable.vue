@@ -161,7 +161,7 @@
           </span>
         </template>
         <template v-slot="scope">
-          <button v-if="scope.$index == 0" class="to-top" :style="{top: tools.toTopBtnTop}" :class="{'to-top-is-hover': tools.tableHover}" v-show="tools.showTopBtn && tools.mainResizeShow" @click="$toTop('ps', 0)"><i class="nz-icon nz-icon-top"></i></button>
+          <button v-if="scope.$index == 0" class="to-top" :style="{top: tools.toTopBtnTop}" :class="{'to-top-is-hover': tools.tableHover}" v-show="tools.showTopBtn && bottomBox.mainResizeShow" @click="$toTop('ps', 0)"><i class="nz-icon nz-icon-top"></i></button>
         </template>
       </el-table-column>
     </el-table>
@@ -854,16 +854,21 @@
         return this.$CONSTANTS.alertMessage.severityData.find(s => {return s.value == key}).label
       },
       plpsscrolly(el,self){
+        console.log(el._ps_,self.bottomBox.mainResizeShow)
         if (el._ps_.scrollbarYTop > 50) {
+          console.log(true)
           self.tools.showTopBtn = true;
         } else {
+          console.log(false)
           self.tools.showTopBtn = false;
         }
       },
       plmouseenter(el,self){
+        console.log('plmouseenter')
         self.tools.tableHover = true;
       },
       plmouseleave(el,self){
+        console.log('plmouseleave')
         self.tools.tableHover = false;
       }
     },
@@ -899,6 +904,7 @@
       this.$nextTick(() => {
         //绑定滚动条事件，控制top按钮
         let el = this.$refs.alertListTable.$el.querySelector(".el-table__body-wrapper");
+        console.log(el);
         if (el._ps_) {
           el.addEventListener("ps-scroll-y", this.plpsscrolly.bind('',el,this));
           el.addEventListener("mouseenter",  this.plmouseenter.bind('',el,this));
@@ -929,6 +935,7 @@
         el.removeEventListener("ps-scroll-y", this.plpsscrolly.bind('',el,this));
         el.removeEventListener("mouseenter",  this.plmouseenter.bind('',el,this));
         el.removeEventListener("mouseleave", this.plmouseleave.bind('',el,this));
+        el._ps_.destroy();
       }
     }
   }
