@@ -364,7 +364,6 @@
           let _URL = window.URL || window.webkitURL;
           let img = new Image();
           img.onload = function() {
-            console.log(img.width);
             let valid = img.width > width && img.height > height;
             valid ? resolve() : reject();
           }

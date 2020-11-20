@@ -806,7 +806,6 @@
         return flag
       },
       modelPopError(item){
-        // console.log(item,this.activeModelItem);
         if(item.id==='asset'&&this.activeModelItem.assetError){
           return true;
         }
@@ -856,7 +855,6 @@
     mounted(){
       // this.timeInterval=setInterval(()=>{
       //   this.qqq();
-      //   console.log(123);
       // },300);
        setTimeout(()=>{
          let this_=this;
@@ -946,7 +944,6 @@
            this_.cursorMove=true;
            this_.lineId=params.edge;
            this_.$refs['network'].addEventListener('mousemove',this_.modelTopMouseMoveEdge);
-           // console.log(params,'hoverEdge');
          });
 
          this.network.on("blurEdge", function (params) { // 边失去焦点
@@ -955,7 +952,7 @@
            this_.expressionsInfoShow=false;
            this_.lineId='';
            this_.$refs['network'].removeEventListener('mousemove',this_.modelTopMouseMoveEdge);
-           // console.log(params,'blurEdge');
+
          });
 
          this.network.on("dragStart", function (params) {//节点移动开始
@@ -1010,7 +1007,6 @@
 
          this.network.on("hoverNode", function () {//hoverNode
            this_.cursorMove=true;
-           // console.log(123123123);
          });
 
          this.network.on("blurNode", function () {//blurNode

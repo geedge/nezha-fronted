@@ -767,7 +767,6 @@
             this.$refs['notificationTempForm'].clearValidate();
             this.$get('/alert/script').then(response=>{
               this.notification=response.data.list;
-              console.log(this.notification);
               this.notificationReserved=[...this.notification];
             });
           },
