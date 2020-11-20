@@ -258,6 +258,19 @@
         this.$set(this.searchLabel, "orderBy", orderBy);
         this.getTableData();
       },
+      plpsscrolly(el,self){
+        if (el._ps_.scrollbarYTop > 50) {
+          self.tools.showTopBtn = true;
+        } else {
+          self.tools.showTopBtn = false;
+        }
+      },
+      plmouseenter(el,self){
+        self.tools.tableHover = true;
+      },
+      plmouseleave(el,self){
+        self.tools.tableHover = false;
+      }
     },
     watch:{
       tableData(){
