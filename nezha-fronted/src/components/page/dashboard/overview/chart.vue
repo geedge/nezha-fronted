@@ -194,10 +194,7 @@
               tooltipDom.style.display = "block";
               tooltipDom.innerHTML = params.value;
             }
-            this.$refs.chartRoom.addEventListener("mousemove", (event) => {
-              tooltipDom.style.top = event.pageY + "px";
-              tooltipDom.style.left = event.pageX-15 + "px";
-            });
+            this.$refs.chartRoom.addEventListener("mousemove", this.chartRoomMouseMove.bind("",event,tooltipDom));
           });
           this.chart.on('mouseout', (params) => {
             if(params.componentType == this.axisTooltip + "Axis") {
@@ -206,6 +203,10 @@
           });
         }
         this.resize();
+      },
+      chartRoomMouseMove(event,tooltipDom){
+        tooltipDom.style.top = event.pageY + "px";
+        tooltipDom.style.left = event.pageX-15 + "px";
       },
       resize() {
         this.$nextTick(() => {
@@ -476,6 +477,9 @@
     },
     watch:{
 
+    },
+    beforeDestroy(){
+      this.$refs.chartRoom.removeEventListener("mousemove", this.chartRoomMouseMove);
     },
     destroyed() {
       if(this.chart){

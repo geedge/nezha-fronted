@@ -211,21 +211,22 @@
         setTimeout(() => {
           let top = '';
           let top2 = '';
-          document.querySelector("body>.el-dropdown-menu").addEventListener("ps-y-reach-end", () => {
-            let yDom = document.querySelector("body>.el-dropdown-menu>.ps__rail-y");
-            let yDom2 = document.querySelector("body>.el-dropdown-menu>.ps__rail-y>.ps__thumb-y");
-            if (top) {
-              yDom.style.top = top;
-            } else {
-              top = yDom.style.top;
-            }
-            if (top2) {
-              yDom2.style.top = top2;
-            } else {
-              top2 = yDom2.style.top;
-            }
-          });
+          document.querySelector("body>.el-dropdown-menu").addEventListener("ps-y-reach-end", this.psYReachEnd);
         }, 100);
+      },
+      psYReachEnd(){
+        let yDom = document.querySelector("body>.el-dropdown-menu>.ps__rail-y");
+        let yDom2 = document.querySelector("body>.el-dropdown-menu>.ps__rail-y>.ps__thumb-y");
+        if (top) {
+          yDom.style.top = top;
+        } else {
+          top = yDom.style.top;
+        }
+        if (top2) {
+          yDom2.style.top = top2;
+        } else {
+          top2 = yDom2.style.top;
+        }
       },
       // 编辑图表信息,打开编辑弹窗
       editChart(data) {
@@ -471,15 +472,17 @@
           })
         }
       },
+      tableListEnter(self){
+        self.tableHover = true;
+      },
+      tableListLaeve(self){
+        self.tableHover = false;
+      },
     },
     mounted: function () {
       this.onScroll();
-      document.querySelector("#tableList").addEventListener("mouseenter", () => {
-        this.tableHover = true;
-      });
-      document.querySelector("#tableList").addEventListener("mouseleave", () => {
-        this.tableHover = false;
-      });
+      document.querySelector("#tableList").addEventListener("mouseenter", this.tableListEnter.bind('',this));
+      document.querySelector("#tableList").addEventListener("mouseleave", this.tableListLaeve.bind('',this));
     },
     watch: {
       'filter.searchName':function(n,o){
@@ -500,7 +503,9 @@
       }
     },
     beforeDestroy(){
-
+      document.querySelector("#tableList").removeEventListener("mouseenter", this.tableListEnter);
+      document.querySelector("#tableList").removeEventListener("mouseleave", this.tableListLaeve);
+      document.querySelector("body>.el-dropdown-menu").removeEventListener("ps-y-reach-end", this.psYReachEnd);
     }
   }
 </script>
