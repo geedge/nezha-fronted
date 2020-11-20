@@ -1591,6 +1591,7 @@
     destroyed() {
       clearInterval(this.freshDataTimer);
       clearInterval(this.freshDateTimer);
+      this.allProject=null;
     }
   }
 </script>

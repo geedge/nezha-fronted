@@ -851,7 +851,7 @@
         this.selNodeId='';
         this.$emit('setTopologyData',nodesArray, edgesArray);
         this.setNetworkData(nodesArray, edgesArray,true);
-      }
+      },
     },
     mounted(){
       // this.timeInterval=setInterval(()=>{
@@ -1040,7 +1040,10 @@
            return false
          });
        })
-    }
+    },
+    beforeDestroy() {
+      this.network=null;
+    },
 	}
 </script>
 

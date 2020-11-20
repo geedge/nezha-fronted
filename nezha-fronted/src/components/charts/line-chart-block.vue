@@ -1023,6 +1023,7 @@
             });
           });
         }
+        maxValueCopies=null;
       },
       handleLineFeed(str,chartWidth){
         let rlt='';

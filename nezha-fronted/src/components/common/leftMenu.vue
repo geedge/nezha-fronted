@@ -647,6 +647,19 @@
           this.$nextTick(() => (this.isRouterAlive = true))
         }
       },
+      beforeDestroy(){
+        /*bus.$off("parent-menu-change");
+          bus.$off("menu-change");*/
+        bus.$off("header-dc-change");
+        bus.$off("clear-asset-filter");
+        bus.$off("project-list-change");
+        bus.$off("module-list-change");
+        bus.$off('asset-list-change');
+
+        bus.$off('asset-property-change')
+
+        bus.$off('asset-ping-switch-change')
+      }
     }
 </script>
 

@@ -515,6 +515,17 @@
         }
       });
       this.initEvent();
+    },
+    beforeDestroy(){
+      bus.$off("current-project-change", project => {
+        this.currentProject = project;
+      });
+      bus.$on("current-module-change", module => {
+        this.currentModule = module;
+      });
+      // bus.$on("endpoint-list-change", menu => {
+      //   this.getEndpointTableData();
+      // });
     }
   }
 </script>

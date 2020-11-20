@@ -1395,6 +1395,7 @@ export default {
     //this.metricCascaderList = [...this.metricCascaderListTmp];
   },
   beforeDestroy() {
+    bus.$off('clear_history');
   },
 
 };

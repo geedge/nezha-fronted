@@ -29,9 +29,9 @@
             <el-form-item :label="$t('config.system.basic.storageRetention')" prop="storage_local_retention">
               <el-input v-model.number="basic.storage_local_retention" ></el-input><span class="nz-input-append">{{$t('config.system.basic.day')}}</span>
             </el-form-item>
-            <el-form-item :label="$t('config.system.basic.maxSeries')" prop="storage_local_retention">
-              <el-input-number v-model="basic.query_max_series" controls-position="right" :min="-1" :max="1000" :precision="0"></el-input-number>
-            </el-form-item>
+            <!--<el-form-item :label="$t('config.system.basic.maxSeries')" prop="storage_local_retention">-->
+              <!--<el-input-number v-model="basic.query_max_series" controls-position="right" :min="-1" :max="1000" :precision="0"></el-input-number>-->
+            <!--</el-form-item>-->
             <el-form-item :label="$t('config.system.basic.timezone')" prop="timezone">
               <!--                <el-input v-model.number="basic.timezone" ></el-input>-->
               <el-select v-model="basic.timezone">
@@ -136,7 +136,7 @@
           </el-form>
         </div>
       </el-tab-pane>
-      <el-tab-pane :label="$t('config.system.notification.notification')" name="notification"><!--$t('config.system.reset.reset')-->
+     <!-- <el-tab-pane :label="$t('config.system.notification.notification')" name="notification">&lt;!&ndash;$t('config.system.reset.reset')&ndash;&gt;
         <div class="linkBox" >
           <div class="linkTitle">
             <span class="linkTitleHandle"></span>
@@ -144,7 +144,7 @@
             <div class="linkTitleUrl">{{$t('config.system.notification.filePath')}}</div>
             <div class="linkTitleBtn">{{$t('config.system.notification.operation')}}</div>
           </div>
-          <!--linkAdd-->
+          &lt;!&ndash;linkAdd&ndash;&gt;
           <div class="linkContent linkAddBox">
             <span class="linkTitleHandle"></span>
             <el-form :inline="true"  :model="notificationTemp"  label-width="180px" size="small" ref="notificationTempForm" :rules="notificationRules" :validate-on-rule-change="false" class="reset-form">
@@ -159,7 +159,7 @@
               </el-form-item>
             </el-form>
           </div>
-          <!--notificationEdit-->
+          &lt;!&ndash;notificationEdit&ndash;&gt;
           <div  class="scrollBox"
                 v-scrollBar>
             <draggable v-model="notification"
@@ -188,11 +188,11 @@
                 <div class="linkFormContent" v-else>
                   <div class="linkTitleName" :title="item.name">{{item.name}}</div>
                   <div class="linkTitleUrl">
-                    <!--<span class="linkTitleUrlContent" @click="openUrl(item)" @dblclick.stop="linkEdit(item)">-->
-                      <!--<el-tooltip class="item" effect="dark" :content="item.url" placement="top" popper-class="linkUrlTip">-->
+                    &lt;!&ndash;<span class="linkTitleUrlContent" @click="openUrl(item)" @dblclick.stop="linkEdit(item)">&ndash;&gt;
+                      &lt;!&ndash;<el-tooltip class="item" effect="dark" :content="item.url" placement="top" popper-class="linkUrlTip">&ndash;&gt;
                       <span>{{item.filePath}}</span>
-                      <!--</el-tooltip>-->
-                    <!--</span>-->
+                      &lt;!&ndash;</el-tooltip>&ndash;&gt;
+                    &lt;!&ndash;</span>&ndash;&gt;
                   </div>
                   <div class="linkFormBtn">
                     <i class="nz-icon nz-icon-edit" @click.stop="notificationEdit(item)"></i>
@@ -203,7 +203,7 @@
             </draggable>
           </div>
         </div>
-      </el-tab-pane>
+      </el-tab-pane>-->
       <el-tab-pane :label="$t('config.system.link.link')" name="link"><!--$t('config.system.reset.reset')-->
         <div class="linkBox" >
           <div class="linkTitle">
@@ -327,7 +327,7 @@
               current_site_url:'',
               timezone:'',
               default_cabinet_usize:'',
-              query_max_series:''
+              // query_max_series:''
             },
             basicCopy:null,
             basicRules:{

@@ -22,27 +22,9 @@
 
 <script>
   import Vis from 'vis-network/dist/vis-network.js'
-  import addNode from './addNode'
-  import addLine from './addLine'
-  import popDataMain from './popData/Main'
-  import popDataInfo from './popData/Info'
-  import TotalChart from "./popData/totalChart";
-  import alertTable from "./popData/alertTable";
-  import assetTable from "./popData/assetTable";
-  import endpointTable from "./popData/endpointTable";
-  import ExpressionInfo from "./popData/expressionInfo";
   export default {
     name:"topology",
     components: {
-      ExpressionInfo,
-      TotalChart,
-      alertTable,
-      assetTable,
-      endpointTable,
-      'add-model':addNode,
-      'add-line':addLine,
-      'popDataMain':popDataMain,
-      'popDataInfo':popDataInfo,
     },
     props:{
       nodesArray:{
@@ -697,6 +679,10 @@
         this.selNodeId='';
         this.$emit('setTopologyData',nodesArray, edgesArray);
         this.setNetworkData(nodesArray, edgesArray,true);
+      },
+      clearData(){
+        this.nodesArray=null;
+        this.nodesArray
       }
     },
     mounted(){
@@ -869,6 +855,10 @@
           return false
         });
       })
+    },
+    beforeDestroy(){
+      this.network=null;
+      this.clearData();
     }
   }
 </script>

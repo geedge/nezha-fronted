@@ -854,6 +854,13 @@
     },
     destroyed(){
       window.onresize=null;
+      bus.$off("project-page-type");
+      bus.$off("current-project-change");
+      bus.$off("current-module-change");
+      bus.$off("project-list-change");
+      bus.$off("module-list-change");
+      bus.$off("endpoint-list-change");
+      bus.$off('alert-message-change')
     }
   }
 </script>

@@ -492,6 +492,9 @@
         this.$bottomBoxWindow.showSubListWatch(vm, n);
       },
     },
+    beforeDestroy(){
+      bus.$off("dc-list-change");
+    },
     destroyed() {
       window.onresize = null;
     },
