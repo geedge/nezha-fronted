@@ -343,7 +343,7 @@ instance_cpu_time_ns{app="fox", proc="widget", rev="4d3a513", env="prod", job="c
 
                     this.$refs['promql-'+promqlIndex][0].setError('')
                   }else{
-                    console.log(response)
+                    //console.log(response)
                     this.$refs['promql-'+promqlIndex][0].setError(response.error)
                   }
                 })
@@ -425,7 +425,7 @@ instance_cpu_time_ns{app="fox", proc="widget", rev="4d3a513", env="prod", job="c
       },
       expressionChange: function () {
         let nowTimeType=this.$refs.pickTime.$refs.timePicker.nowTimeType;
-        console.log(this.filterTime,nowTimeType);
+        //console.log(this.filterTime,nowTimeType);
         this.setSearchTime(nowTimeType.type,nowTimeType.value);
         if (this.expressions && this.expressions.length >= 1) {
           this.queryTableData();

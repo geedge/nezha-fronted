@@ -1396,8 +1396,10 @@
       this.clearChart();
       //const addChartBox = document.querySelector('.right-box-add-chart');
       //addChartBox.style.cssText =   this.oldChartBoxCss;
-      this.echartModalStore.off('magictypechanged');
-      this.$refs.screenLegendArea._ps_.destroy();
+      try {
+        this.echartModalStore.off('magictypechanged');
+      } finally {}
+      this.$refs.screenLegendArea._ps_ && this.$refs.screenLegendArea._ps_.destroy();
     },
   };
 

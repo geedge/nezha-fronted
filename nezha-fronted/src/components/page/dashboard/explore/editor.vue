@@ -2,7 +2,7 @@
   <div class="metric-editor" v-clickoutside="clickout" :class="{'metric-editor-rb': styleType == 2}">
     <div :id="id" class="editor-core" ref="editor" :style="{height: styleType == 2 ? 'auto' : ''}"></div>
     <span class="nz-input-append editor-clear" style="display: none" @click="clearContent"><i class="nz-icon nz-icon-circle-close"></i></span>
-    <div class="metric-editor-popper" :style="{left:popperPos.left+'px'}">
+    <div class="metric-editor-popper" :style="{left:popperPos.left+'px'}" v-show="false">
       <div class="metric-popper-main" v-show="showType">
         <el-scrollbar style="height: 100%;width:100%" class="el-scrollbar-small" ref="scroll">
           <div v-for="(key, index) in orders" >
