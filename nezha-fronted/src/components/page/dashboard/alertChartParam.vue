@@ -225,6 +225,9 @@
         handler(n,o){
         }
       }
+    },
+    beforeDestroy(){
+
     }
   }
 </script>

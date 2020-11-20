@@ -120,6 +120,9 @@
           return true;
         }
       },
+      beforeDestroy(){
+
+      }
     }
 </script>
 

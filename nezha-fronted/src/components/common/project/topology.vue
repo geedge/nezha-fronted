@@ -1042,6 +1042,17 @@
        })
     },
     beforeDestroy() {
+		  this.network.off('click');
+		  this.network.off('selectNode');
+		  this.network.off('selectEdge');
+		  this.network.off('hoverEdge');
+		  this.network.off('blurEdge');
+		  this.network.off('dragStart');
+		  this.network.off('dragging');
+		  this.network.off('dragEnd');
+		  this.network.off('blurNode');
+		  this.network.off('zoom');
+		  this.network.off('resize');
       this.network=null;
     },
 	}

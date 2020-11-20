@@ -270,6 +270,9 @@
         })
       }
     },
+    beforeDestroy(){
+
+    }
   }
 
 </script>

@@ -1396,6 +1396,7 @@
       this.clearChart();
       //const addChartBox = document.querySelector('.right-box-add-chart');
       //addChartBox.style.cssText =   this.oldChartBoxCss;
+      this.echartModalStore.off('magictypechanged')
     },
   };
 

@@ -399,8 +399,11 @@
         })
       },
     },
+    beforeDestroy(){
 
-	}
+    }
+
+  }
 </script>
 
 <style scoped>

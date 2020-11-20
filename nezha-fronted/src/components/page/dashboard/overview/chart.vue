@@ -480,6 +480,9 @@
     destroyed() {
       if(this.chart){
         this.chart.clear();
+        this.chart.off('mouseover');
+        this.chart.off('mouseout');
+        EleResize.off(this.$el, this.resize, this.chartType);
       }
     }
   }

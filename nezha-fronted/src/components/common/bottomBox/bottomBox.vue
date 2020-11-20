@@ -105,6 +105,9 @@
           }
         }, 500);
       }
+    },
+    beforeDestroy(){
+
     }
   }
 </script>

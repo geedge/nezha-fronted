@@ -29,9 +29,9 @@
             <el-form-item :label="$t('config.system.basic.storageRetention')" prop="storage_local_retention">
               <el-input v-model.number="basic.storage_local_retention" ></el-input><span class="nz-input-append">{{$t('config.system.basic.day')}}</span>
             </el-form-item>
-            <!--<el-form-item :label="$t('config.system.basic.maxSeries')" prop="storage_local_retention">-->
-              <!--<el-input-number v-model="basic.query_max_series" controls-position="right" :min="-1" :max="1000" :precision="0"></el-input-number>-->
-            <!--</el-form-item>-->
+            <el-form-item :label="$t('config.system.basic.maxSeries')" prop="storage_local_retention">
+              <el-input-number v-model="basic.query_max_series" controls-position="right" :min="-1" :max="1000" :precision="0"></el-input-number>
+            </el-form-item>
             <el-form-item :label="$t('config.system.basic.timezone')" prop="timezone">
               <!--                <el-input v-model.number="basic.timezone" ></el-input>-->
               <el-select v-model="basic.timezone">
@@ -327,7 +327,7 @@
               current_site_url:'',
               timezone:'',
               default_cabinet_usize:'',
-              // query_max_series:''
+              query_max_series:''
             },
             basicCopy:null,
             basicRules:{

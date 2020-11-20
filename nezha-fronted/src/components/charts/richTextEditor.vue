@@ -96,6 +96,10 @@
     },
     mounted() {
       this.initEditor();
+    },
+    beforeDestroy(){
+      this.quill.off('selection-change');
+      this.quill.off('text-change');
     }
   }
 </script>

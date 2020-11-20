@@ -70,6 +70,9 @@
       })
     },
     methods:{},
+    beforeDestroy(){
+
+    }
   }
 </script>
 

@@ -70,6 +70,9 @@
           }
         }
       },
+      beforeDestroy(){
+
+      }
     }
 </script>
 

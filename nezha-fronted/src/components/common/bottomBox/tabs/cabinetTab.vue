@@ -278,6 +278,9 @@
           });
         }
       });
+    },
+    beforeDestroy(){
+
     }
   }
 </script>
