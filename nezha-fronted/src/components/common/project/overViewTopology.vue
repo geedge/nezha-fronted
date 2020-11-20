@@ -681,8 +681,8 @@
         this.setNetworkData(nodesArray, edgesArray,true);
       },
       clearData(){
-        this.nodesArray=null;
-        this.nodesArray
+       /* this.nodesArray=null;
+        this.nodesArray*/
       }
     },
     mounted(){

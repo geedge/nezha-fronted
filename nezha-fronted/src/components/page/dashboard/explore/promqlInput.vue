@@ -78,6 +78,7 @@
           errorMsg:null,
           appendMsg:null,
           editorValue:'',
+          firstAddEvent:true
         }
       },
       created() {
@@ -96,16 +97,19 @@
         },
         toggleDropdown:function(){
           this.dropDownVisible=!this.dropDownVisible;
-          if(this.dropDownVisible == true){
+          if(this.dropDownVisible == true&&this.firstAddEvent){
             let $temp=this;
-            document.addEventListener('click',function(e){
-              e.stopPropagation ? e.stopPropagation() : e.cancelBubble = true;
-              $temp.dropDownVisible=false;
-            },false)
-            this.$el.addEventListener('click',function(e){
-              e.stopPropagation ? e.stopPropagation() : e.cancelBubble = true;
-            },false)
+            this.firstAddEvent=false;
+            document.addEventListener('click',this.dropDownDisvisible.bind('',event,this),false)
+            this.$el.addEventListener('click',this.eStopPropagation.bind('',event),false)
           }
+        },
+        dropDownDisvisible(e,self){
+          e.stopPropagation ? e.stopPropagation() : e.cancelBubble = true;
+          self.dropDownVisible=false;
+        },
+        eStopPropagation(e){
+          e.stopPropagation ? e.stopPropagation() : e.cancelBubble = true;
         },
         queryMetrics:function(){
           this.metricOptions=[];
@@ -178,6 +182,10 @@
           }
         },
 
+      },
+      beforeDestroy(){
+        document.removeEventListener('click',this.dropDownDisvisible.bind('',event,this),false)
+        this.$el.removeEventListener('click',this.eStopPropagation.bind('',event),false)
       }
     }
 </script>
