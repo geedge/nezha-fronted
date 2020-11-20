@@ -327,9 +327,6 @@
                 }
               }
             }
-            for(let i=0;i<50;i++){
-              response.data.list.push(response.data.list[0]);
-            }
             this.tableData = response.data.list;
             this.pageObj.total = response.data.total
           }
