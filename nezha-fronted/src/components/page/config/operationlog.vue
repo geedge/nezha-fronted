@@ -305,6 +305,14 @@
           });
         }
       });
+    },
+    beforeDestroy(){
+      let el = this.$refs.operationLogTable.$el.querySelector(".el-table__body-wrapper");
+      if (el._ps_) {
+        el.removeEventListener("ps-scroll-y", this.plpsscrolly.bind('',el,this));
+        el.removeEventListener("mouseenter",  this.plmouseenter.bind('',el,this));
+        el.removeEventListener("mouseleave", this.plmouseleave.bind('',el,this));
+      }
     }
   }
 </script>

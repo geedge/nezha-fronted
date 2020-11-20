@@ -342,6 +342,19 @@
         this.$set(this.searchLabel, "orderBy", orderBy);
         this.getTableData();
       },
+      plpsscrolly(el,self){
+        if (el._ps_.scrollbarYTop > 50) {
+          self.tools.showTopBtn = true;
+        } else {
+          self.tools.showTopBtn = false;
+        }
+      },
+      plmouseenter(el,self){
+        self.tools.tableHover = true;
+      },
+      plmouseleave(el,self){
+        self.tools.tableHover = false;
+      }
     },
     computed: {
       isCurrentUser() {
@@ -379,21 +392,19 @@
         //绑定滚动条事件，控制top按钮
         let el = this.$refs.accountTable.$el.querySelector(".el-table__body-wrapper");
         if (el._ps_) {
-          el.addEventListener("ps-scroll-y", () => {
-            if (el._ps_.scrollbarYTop > 50) {
-              this.tools.showTopBtn = true;
-            } else {
-              this.tools.showTopBtn = false;
-            }
-          });
-          el.addEventListener("mouseenter", () => {
-            this.tools.tableHover = true;
-          });
-          el.addEventListener("mouseleave", () => {
-            this.tools.tableHover = false;
-          });
+          el.addEventListener("ps-scroll-y", this.plpsscrolly.bind('',el,this));
+          el.addEventListener("mouseenter",  this.plmouseenter.bind('',el,this));
+          el.addEventListener("mouseleave", this.plmouseleave.bind('',el,this));
         }
       });
+    },
+    beforeDestroy(){
+      let el = this.$refs.accountTable.$el.querySelector(".el-table__body-wrapper");
+      if (el._ps_) {
+        el.removeEventListener("ps-scroll-y", this.plpsscrolly.bind('',el,this));
+        el.removeEventListener("mouseenter",  this.plmouseenter.bind('',el,this));
+        el.removeEventListener("mouseleave", this.plmouseleave.bind('',el,this));
+      }
     }
   }
 </script>

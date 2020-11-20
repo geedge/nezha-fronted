@@ -1586,6 +1586,9 @@
       if(!document.onmousemove){// 移除鼠标移动事件监听
         document.onmousemove=null;
       }
+      setChart(this.chartIndex, null);
+      window.removeEventListener('resize', this.chartResize);
+      this.$refs.legendArea._ps_.destroy();
     },
   };
 

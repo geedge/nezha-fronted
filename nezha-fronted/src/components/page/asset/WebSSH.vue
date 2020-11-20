@@ -202,7 +202,7 @@ export default {
     }
   },
   created() {
-    window.addEventListener('beforeunload', e => this.beforeunloadFn(e))
+    window.addEventListener('beforeunload', this.beforeunloadFn.bind(e))
   },
   mounted() {
     this.getAssetData()
@@ -234,7 +234,7 @@ export default {
     // };
   },
   beforeDestroy(){
-
+    window.removeEventListener('beforeunload',this.beforeunloadFn)
   }
 }
 </script>

@@ -371,7 +371,7 @@
       });
     },
     beforeDestroy(){
-      let el = this.$refs.promTable.$el.querySelector(".el-table__body-wrapper");
+      let el = this.$refs.mibTable.$el.querySelector(".el-table__body-wrapper");
       if (el._ps_) {
         el.removeEventListener("ps-scroll-y", this.plpsscrolly.bind('',el,this));
         el.removeEventListener("mouseenter",  this.plmouseenter.bind('',el,this));

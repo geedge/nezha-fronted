@@ -687,6 +687,9 @@
     mounted() {
 
     },
+    beforeDestroy(){
+      window.removeEventListener('resize',this.debounce(this.windowChange, 1000),false);
+    }
   }
 </script>
 <style scoped>
