@@ -233,6 +233,9 @@ export default {
     //   }
     // };
   },
+  beforeDestroy(){
+    window.onresize=null
+  }
 }
 </script>
 

@@ -872,6 +872,9 @@
           this.storeSuggestions();
         }
       }
+    },
+    beforeDestroy(){
+      this.quill.off('text-change')
     }
   }
 </script>

@@ -685,6 +685,9 @@
       }, 300);
 
       //});
+    },
+    beforeDestroy(){
+
     }
   }
 </script>

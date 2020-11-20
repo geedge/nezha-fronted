@@ -22,27 +22,9 @@
 
 <script>
   import Vis from 'vis-network/dist/vis-network.js'
-  import addNode from './addNode'
-  import addLine from './addLine'
-  import popDataMain from './popData/Main'
-  import popDataInfo from './popData/Info'
-  import TotalChart from "./popData/totalChart";
-  import alertTable from "./popData/alertTable";
-  import assetTable from "./popData/assetTable";
-  import endpointTable from "./popData/endpointTable";
-  import ExpressionInfo from "./popData/expressionInfo";
   export default {
     name:"topology",
     components: {
-      ExpressionInfo,
-      TotalChart,
-      alertTable,
-      assetTable,
-      endpointTable,
-      'add-model':addNode,
-      'add-line':addLine,
-      'popDataMain':popDataMain,
-      'popDataInfo':popDataInfo,
     },
     props:{
       nodesArray:{
@@ -697,6 +679,10 @@
         this.selNodeId='';
         this.$emit('setTopologyData',nodesArray, edgesArray);
         this.setNetworkData(nodesArray, edgesArray,true);
+      },
+      clearData(){
+        this.nodesArray=null;
+        this.nodesArray
       }
     },
     mounted(){
@@ -707,168 +693,11 @@
       setTimeout(()=>{
         let this_=this;
         this.init('modal');
-        this.network.on("click", function (params) {
-          this_.activeIndex='';
-          this_.networkPopClose();
-          this_.network.selectNodes([]);
-          if(!params.edges.length&&!params.nodes.length){
-            this_.popDataShowUpdate('');
-          }
-          let selId=params.nodes[0];
-          // if(this_.selNodeId&& this_.selNodeId===selId){return;}
-          if(selId){
-            this_.selNodeId=selId;
-          }else{
-            this_.selNodeId='';
-          }
-        });
-
-        this.network.on("selectNode", function (params) { //选择节点
-          let selId=params.nodes[0];
-          if(this_.selNodeId&& this_.selNodeId===selId){
-            if(selId){
-              this_.cursorMove=true;
-              if(this_.NodeArr.indexOf(selId)!==-1){
-                let index = this_.NodeArr.indexOf(selId);
-                this_.NodeArr=this_.NodeArr.filter((item,i)=> i !== index);
-                return
-              }
-              if(this_.selectNodeTitle&&this_.NodeArrShow){
-                this_.NodeArr.push(selId);
-                this_.network.selectNodes(this_.NodeArr,true);
-                return
-              }
-              if(this_.NodeArr.length===0&&this_.editVisNetwork){
-                this_.nodeEdit();
-              }
-              this_.setPopPosition(selId,params);
-            }
-          }else{
-            if(selId){
-              this_.selNodeId=selId;
-              this_.cursorMove=true;
-              this_.nodeData=this_.nodesArray.find((item)=>item.id===selId);
-              if(this_.NodeArr.indexOf(selId)!==-1){
-                let index = this_.NodeArr.indexOf(selId);
-                this_.NodeArr=this_.NodeArr.filter((item,i)=> i !== index);
-                return
-              }
-              if(this_.selectNodeTitle&&this_.NodeArrShow){
-                this_.NodeArr.push(selId);
-                this_.network.selectNodes(this_.NodeArr,true);
-                return
-              }
-              if(this_.NodeArr.length===0&&this_.editVisNetwork){
-                this_.nodeEdit();
-              }
-              this_.setPopPosition(selId,params);
-              this_.popDataShowUpdate('main');
-            }
-          }
-        });
-
-        this.network.on("selectEdge", function (params) { // 选择边
-          this_.selNodeId='';
-          this_.lineData=this_.edgesArray.find((item)=>item.id===params.edges[0]);
-          if(this_.editVisNetwork){
-            this_.lineData.color=this_.lineData.color.color?this_.lineData.color.color:this_.lineData.color;
-            this_.addLineShow=true;
-            this_.isLineAdd=false;
-          }
-          if(!this_.editVisNetwork){
-            if(this_.lineData.expressions&&this_.lineData.expressions.length){
-              this_.expressionsInfoShow=false;
-              this_.popDataShowUpdate('total')
-            }else{
-              this_.popDataShowUpdate()
-            }
-          }
-          // this_.lineData.color=this_.lineData.color.color;
-          // this_.addLineShow=true;
-        });
-
-        this.network.on("dragStart", function (params) {//节点移动开始
-          this_.NodeArrShow=false;
-          this_.networkPopShow=false;
-          this_.index='';
-          this_.activeIndex='';
-          let selId=params.nodes[0];
-          if(selId){
-            this_.selNodeId=selId
-          }
-          // if(!selId){
-          //   this_.modelTop.forEach(item=>{
-          //     item.show=false;
-          //   })
-          // }
-        });
-
-        this.network.on("dragging", function () {//节点移动中
-          this_.viewsCenter=this_.network.getViewPosition();
-          // let selId=params.nodes[0];
-          if(this_.selNodeId){
-            this_.setNodePosition(this_.selNodeId)
-          }
-          if(this_.selNodeId&&this_.networkPopShow){
-            this_.setPopPosition(this_.selNodeId);
-          }
-          if(this_.NodeArr.length>0){
-            this_.NodeArrShow=true;
-          }
-          this_.modelTopUpdate();
-          this_.selNodeArrUpdate();
-        });
-
-        this.network.on("dragEnd", function () {//节点移动结束
-          this_.viewsCenter=this_.network.getViewPosition();
-          if(this_.selNodeId){
-            this_.setNodePosition(this_.selNodeId)
-          }
-          if(this_.selNodeId&&this_.networkPopShow){
-            this_.setPopPosition(this_.selNodeId);
-          }
-          if(this_.NodeArr.length>0){
-            this_.NodeArrShow=true;
-          }
-          if(!this_.networkPopShow){
-            this_.selNodeId=''
-          }
-          this_.modelTopUpdate();
-          this_.selNodeArrUpdate();
-        });
-
-        this.network.on("hoverNode", function () {//hoverNode
-          this_.cursorMove=true;
-          // console.log(123123123);
-        });
-
-        this.network.on("blurNode", function () {//blurNode
-          this_.cursorMove=false;
-        });
-
-        this.network.on("zoom", function (params) {//检测缩放
-          this_.zoom=params.scale;
-          this_.modelTopUpdate();
-          this_.selNodeArrUpdate();
-          if(this_.networkPopShow){
-            this_.setPopPosition(this_.selNodeId);
-          }
-          this_.topologyZoom(params.scale);
-          return false
-        });
-
-        this.network.on("resize", function (params) {//检测resize
-          setTimeout(()=>{
-            this_.zoom=this_.network.canvasToDOM({x:0,y:1}).y-this_.network.canvasToDOM({x:0,y:0}).y;
-            this_.modelTopUpdate();
-            this_.selNodeArrUpdate();
-            if(this_.networkPopShow){
-              this_.setPopPosition(this_.selNodeId);
-            }
-          });
-          return false
-        });
       })
+    },
+    beforeDestroy(){
+      this.network=null;
+      this.clearData();
     }
   }
 </script>

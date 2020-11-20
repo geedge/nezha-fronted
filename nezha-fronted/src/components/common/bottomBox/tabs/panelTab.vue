@@ -498,6 +498,9 @@
           }, 500);
         }
       }
+    },
+    beforeDestroy(){
+
     }
   }
 </script>

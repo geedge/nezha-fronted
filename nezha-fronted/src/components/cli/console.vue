@@ -351,6 +351,9 @@ export default {
   },
   beforeDestroy () {
     this.closeSocket();
+    this.term.off("selection");
+    this.term.off("data")
+
   }
 }
 </script>

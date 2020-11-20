@@ -331,7 +331,9 @@
         this.getEndpointList();
       },
     },
+    beforeDestroy(){
 
+    }
   }
 </script>
 

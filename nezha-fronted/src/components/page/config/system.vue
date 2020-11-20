@@ -2,7 +2,7 @@
   <div class="system" v-scroll-bar>
     <el-tabs type="border-card" @tab-click="selectTab" v-model="activeTab" class="system-tabs" >
       <el-tab-pane :label="$t('config.system.basic.basic')" name="basic">
-        <div class="system-config-form">
+        <div class="system-config-form basicForm">
           <el-form :model="basic"  label-width="180px" size="small" ref="basicForm" :rules="basic.asset_ping_switch == 'on'?basicRules:basicRules2" :validate-on-rule-change="false">
             <el-form-item :label="$t('config.system.basic.systemName')" prop="system_name">
               <el-input v-model="basic.system_name"></el-input>
@@ -29,8 +29,11 @@
             <el-form-item :label="$t('config.system.basic.storageRetention')" prop="storage_local_retention">
               <el-input v-model.number="basic.storage_local_retention" ></el-input><span class="nz-input-append">{{$t('config.system.basic.day')}}</span>
             </el-form-item>
+            <el-form-item :label="$t('config.system.basic.maxSeries')" prop="storage_local_retention">
+              <el-input-number v-model="basic.query_max_series" controls-position="right" :min="-1" :max="1000" :precision="0"></el-input-number>
+            </el-form-item>
             <el-form-item :label="$t('config.system.basic.timezone')" prop="timezone">
-<!--                <el-input v-model.number="basic.timezone" ></el-input>-->
+              <!--                <el-input v-model.number="basic.timezone" ></el-input>-->
               <el-select v-model="basic.timezone">
                 <el-option v-for="(item,index) in timezoneOption" :key="index" :label="item.label" :value="item.value"></el-option>
               </el-select>
@@ -133,6 +136,74 @@
           </el-form>
         </div>
       </el-tab-pane>
+     <!-- <el-tab-pane :label="$t('config.system.notification.notification')" name="notification">&lt;!&ndash;$t('config.system.reset.reset')&ndash;&gt;
+        <div class="linkBox" >
+          <div class="linkTitle">
+            <span class="linkTitleHandle"></span>
+            <div class="linkTitleName">{{$t('config.system.notification.name')}}</div>
+            <div class="linkTitleUrl">{{$t('config.system.notification.filePath')}}</div>
+            <div class="linkTitleBtn">{{$t('config.system.notification.operation')}}</div>
+          </div>
+          &lt;!&ndash;linkAdd&ndash;&gt;
+          <div class="linkContent linkAddBox">
+            <span class="linkTitleHandle"></span>
+            <el-form :inline="true"  :model="notificationTemp"  label-width="180px" size="small" ref="notificationTempForm" :rules="notificationRules" :validate-on-rule-change="false" class="reset-form">
+              <el-form-item  prop="name">
+                <el-input v-model="notificationTemp.name"  class="linkName"/>
+              </el-form-item>
+              <el-form-item  prop="filePath">
+                <el-input  v-model="notificationTemp.filePath" class="linkUrl"/>
+              </el-form-item>
+              <el-form-item  prop="btn">
+                <i class="nz-icon-create-square nz-icon" @click="notificationAdd"></i>
+              </el-form-item>
+            </el-form>
+          </div>
+          &lt;!&ndash;notificationEdit&ndash;&gt;
+          <div  class="scrollBox"
+                v-scrollBar>
+            <draggable v-model="notification"
+                       :options="{group:'people',animation:150,ghostClass:'sortable-ghost',chosenClass:'chosenClass',scroll:true,scrollSensitivity:200}"
+                       @change="change"
+                       @start="start"
+                       @end="notificationEnd"
+                       :move="move"
+                       handle=".handle"
+            >
+              <div v-for="(item,index) in notification" class="linkContent" :id="'notificationDiv'+item.id">
+                <i class="nz-icon nz-icon-sort4 handle" style="display:none"></i>
+                <span style="display: inline-block;width: 26px"></span>
+                <el-form :inline="true"  :model="notification[index]" :ref="'notificationForm'+item.id" label-width="180px" size="small" ref="resetForm" :rules="notificationRules" :validate-on-rule-change="false" class="reset-form" :key="index" v-if="item.isEdit" >
+                  <el-form-item  prop="name" class="linkName">
+                    <el-input v-model="item.name" width="140px" />
+                  </el-form-item>
+                  <el-form-item  prop="filePath" class="linkUrl">
+                    <el-input  v-model="item.filePath" width="460px" />
+                  </el-form-item>
+                  <el-form-item  prop="btn">
+                    <button type="button" class="linkBtn nz-btn nz-btn-size-small-new nz-btn-style-normal-new" @click="notificationUpdate(item)">Update</button>
+                    <button type="button" class="linkBtn nz-btn nz-btn-size-small-new nz-btn-style-light-new" @click="notificationCancel(item)">Cancel</button>
+                  </el-form-item>
+                </el-form>
+                <div class="linkFormContent" v-else>
+                  <div class="linkTitleName" :title="item.name">{{item.name}}</div>
+                  <div class="linkTitleUrl">
+                    &lt;!&ndash;<span class="linkTitleUrlContent" @click="openUrl(item)" @dblclick.stop="linkEdit(item)">&ndash;&gt;
+                      &lt;!&ndash;<el-tooltip class="item" effect="dark" :content="item.url" placement="top" popper-class="linkUrlTip">&ndash;&gt;
+                      <span>{{item.filePath}}</span>
+                      &lt;!&ndash;</el-tooltip>&ndash;&gt;
+                    &lt;!&ndash;</span>&ndash;&gt;
+                  </div>
+                  <div class="linkFormBtn">
+                    <i class="nz-icon nz-icon-edit" @click.stop="notificationEdit(item)"></i>
+                    <i class="nz-icon nz-icon-delete" @click="notificationDel(item)"></i>
+                  </div>
+                </div>
+              </div>
+            </draggable>
+          </div>
+        </div>
+      </el-tab-pane>-->
       <el-tab-pane :label="$t('config.system.link.link')" name="link"><!--$t('config.system.reset.reset')-->
         <div class="linkBox" >
           <div class="linkTitle">
@@ -256,6 +327,7 @@
               current_site_url:'',
               timezone:'',
               default_cabinet_usize:'',
+              query_max_series:''
             },
             basicCopy:null,
             basicRules:{
@@ -267,6 +339,7 @@
               storage_local_retention:[{required:true,message:this.$t('validate.required'),trigger:'blur'},{validator:positiveInteger,trigger:'blur'}],
               timezone:[{required:true,message:this.$t('validate.required'),trigger:'blur'}],
               default_cabinet_usize:[{required:true,message:this.$t('validate.required'),trigger:'blur'},{validator:positiveInteger,trigger:'blur'},{validator:uSize,trigger:'blur'}],
+              query_max_series:[{required:true,message:this.$t('validate.required'),trigger:'blur'},],
             },
             basicRules2:{
               system_name:[{required:true,message:this.$t('validate.required'),trigger:'blur'},],
@@ -276,6 +349,7 @@
               storage_local_retention:[{required:true,message:this.$t('validate.required'),trigger:'blur'},{validator:positiveInteger,trigger:'blur'}],
               timezone:[{required:true,message:this.$t('validate.required'),trigger:'blur'}],
               default_cabinet_usize:[{validator:positiveInteger,trigger:'blur'},{validator:uSize,trigger:'blur'}],
+               query_max_series:[{required:true,message:this.$t('validate.required'),trigger:'blur'},],
             },
             timezoneOption:[
               {label:'UTC-12:00',value:'-12'},
@@ -376,6 +450,22 @@
                 // { type: 'url', message: this.$t('config.system.link.uriRequired'), trigger: 'blur' } /*检验网址是否正确*/
               ]
             },
+            notificationTemp:{
+              name:'',filePath:''
+            },
+            notification:[],
+            notificationReserved:[],
+            notificationRules:{
+              name:[
+                { required: true, message: this.$t('validate.required'), trigger: 'blur' },
+                { max: 64, message: this.$t('config.system.link.nameMaxLength'), trigger: 'blur' }
+              ],
+              filePath:[
+                { required: true, message: this.$t('validate.required'), trigger: 'blur' },
+                { pattern: /^\/(\w+\/?)+$/, message: this.$t('config.system.notification.filePathReg') }
+                // { type: 'url', message: this.$t('config.system.link.uriRequired'), trigger: 'blur' } /*检验网址是否正确*/
+              ]
+            },
             resetRules:{
               type:[{required:true,message:this.$t('validate.required'),trigger:'blur'},],
               password:[{required:true,message:this.$t('validate.required'),trigger:'blur'},],
@@ -411,6 +501,10 @@
             }
             if(type == 'link'){
               this.getLinkData();
+              return
+            }
+            if(type == 'notification'){
+              this.getNotificationData();
               return
             }
             this.$get('sysConfig?type='+type).then(response=>{
@@ -537,6 +631,28 @@
           start: function (evt) {
             // console.log(evt)
           },
+          notificationEnd: function (evt) {
+            let length=this.notification.length;
+            if(evt.newIndex==evt.oldIndex){ // 如果没有移动返回
+              return
+            }
+            let parmas={
+              id:this.notification[evt.newIndex].id,
+              prev:0,
+              next:-1
+            }
+            if(evt.newIndex==length-1){
+              parmas.prev=this.notification[evt.newIndex-1].id;
+            }else if(evt.newIndex==0){
+              parmas.next=this.notification[evt.newIndex+1].id;
+            }else{
+              parmas.prev=this.notification[evt.newIndex-1].id;
+              parmas.next=this.notification[evt.newIndex+1].id;
+            }
+            this.$put('/alert/script/modify',parmas).then((response)=>{
+              // this.$store.commit('setLinkData',this.link);
+            })
+          },
           end: function (evt) {
             let length=this.link.length;
             if(evt.newIndex==evt.oldIndex){ // 如果没有移动返回
@@ -639,6 +755,90 @@
                 this.link=this.link.filter((item1)=>item.id!==item1.id);
                 this.linkReserved=this.linkReserved.filter((item1)=>item.id!==item1.id);
                 this.$store.commit('setLinkData',this.link);
+                this.$message({duration: 2000, type: 'success', message: this.$t("tip.deleteSuccess")});
+              }else{
+                this.$message.error(response.msg);
+              }
+            });
+          },
+
+          getNotificationData(){
+            this.notificationTemp={name:'',filePath:''};
+            this.$refs['notificationTempForm'].clearValidate();
+            this.$get('/alert/script').then(response=>{
+              this.notification=response.data.list;
+              console.log(this.notification);
+              this.notificationReserved=[...this.notification];
+            });
+          },
+          // link add
+          notificationAdd(){
+            this.$refs['notificationTempForm'].validate((valid) => {
+              if (valid) {
+                this.$post('/alert/script',this.notificationTemp).then(response=>{//新增link
+                  if(response.code == 200){
+                    this.notificationTemp={name:'',filePath:''};
+                    this.notificationAddCallBack();
+                    this.$message({duration: 2000, type: 'success', message: this.$t("tip.addSuccess")});
+                  }else{
+                    this.$message.error(response.msg);
+                  }
+                })
+              } else {
+                return false;
+              }
+            });
+          },
+          notificationAddCallBack(){
+            this.$get('/link').then(response=>{
+              this.notification.push(response.data[response.data.length-1]);
+              this.notificationReserved.push(response.data[response.data.length-1]);
+              // this.$store.commit('setLinkData',this.link);
+            });
+          },
+          // link edit
+          notificationEdit(item){
+            let index=this.notification.findIndex((item1)=>item.id==item1.id);
+            this.$set(this.notification,index,{...this.notification[index],isEdit:true});
+          },
+          // link update
+          notificationUpdate(item){
+            this.$refs['notificationForm'+item.id][0].validate((valid) => {
+              if (valid) {
+                let params={
+                  id:item.id,
+                  name:item.name,
+                  filePath:item.filePath,
+                };
+                this.$put('/alert/script',params).then(response=>{
+                  if(response.code == 200){
+                    let index=this.notification.findIndex((item1)=>item.id==item1.id);
+                    this.$set(this.notification,index,{...this.notification[index],isEdit:false});
+                    this.notificationReserved=[...this.notification];
+                    // this.$store.commit('setLinkData',this.notification);
+                    this.$message({duration: 2000, type: 'success', message: this.$t("tip.saveSuccess")});
+                  }else{
+                    this.$message.error(response.msg);
+                  }
+                })
+              } else {
+                return false;
+              }
+            });
+          },
+          // link cancel
+          notificationCancel(item){
+            let index=this.notification.findIndex((item1)=>item.id==item1.id);
+            let indexReserved=this.notificationReserved.findIndex((item1)=>item.id==item1.id);
+            this.$set(this.notification,index,{...this.notificationReserved[indexReserved],isEdit:false});
+          },
+          // link del
+          notificationDel(item){
+            this.$delete('/alert/script?ids='+item.id).then((response)=>{
+              if(response.code == 200){
+                this.notification=this.notification.filter((item1)=>item.id!==item1.id);
+                this.notificationReserved=this.notificationReserved.filter((item1)=>item.id!==item1.id);
+                // this.$store.commit('setLinkData',this.link);
                 this.$message({duration: 2000, type: 'success', message: this.$t("tip.deleteSuccess")});
               }else{
                 this.$message.error(response.msg);
@@ -763,6 +963,9 @@
     width: 430px;
   }
   .system-config-form.terminal  /deep/ .el-input-number--small{
+    width: 512px;
+  }
+  .system-config-form.basicForm  /deep/ .el-input-number--small{
     width: 512px;
   }
   .system-config-form  /deep/ .el-input input{

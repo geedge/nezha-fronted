@@ -212,6 +212,9 @@ export default {
         this.popBox.isEdit=n;
       }
     }
+  },
+  beforeDestroy(){
+
   }
 }
 </script>

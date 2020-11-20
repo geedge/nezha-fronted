@@ -1581,12 +1581,15 @@
         this.setFreshDataTimer();
       })
 
-      window.onresize = () => {
-        let vm = this;
-        setTimeout(() => {
-          //vm.map.
-        }, 500);
-      };
+      // window.onresize = () => {
+      //   let vm = this;
+      //   setTimeout(() => {
+      //     //vm.map.
+      //   }, 500);
+      // };
+    },
+    beforeDestroy(){
+      this.allProject=null;
     },
     destroyed() {
       clearInterval(this.freshDataTimer);

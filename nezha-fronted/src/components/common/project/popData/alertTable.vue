@@ -483,7 +483,9 @@
         this.importBox.show = true;
       },
     },
+    beforeDestroy(){
 
+    }
   }
 </script>
 

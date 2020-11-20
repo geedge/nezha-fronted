@@ -650,6 +650,9 @@ export default {
       this.clearHistory();
     });
   },
+  beforeDestroy(){
+    bus.$off('clear_history');
+  }
 };
 
 </script>

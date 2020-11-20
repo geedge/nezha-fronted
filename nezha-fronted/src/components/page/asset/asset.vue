@@ -829,6 +829,8 @@
     },
     destroyed() {
       window.onresize = null;
+      bus.$off("asset-filter-change");
+      bus.$off('alert-message-change');
     }
   }
 </script>

@@ -741,6 +741,9 @@
           temp.search();
         },1000)
       },
+    },
+    beforeDestroy(){
+
     }
   }
 </script>

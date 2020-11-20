@@ -702,7 +702,8 @@ const cn = {
         timezone: "时区",
         defaultCabinetUsize: "机柜默认U位",
         second:'秒',
-        day:'天'
+        day:'天',
+        maxSeries:'Query max series',
       },
       email: {
         email: "邮件",
@@ -746,6 +747,18 @@ const cn = {
         del: "删除",
         nameMaxLength:"长度应小于64",
         uriRequired:'请填写正确的网址'
+      },
+      notification: {
+        notification:'Notification',
+        name: "名称",
+        filePath: "文件路径",
+        operation: "操作",
+        add: "添加",
+        update: "更新",
+        del: "删除",
+        nameMaxLength:"长度应小于64",
+        uriRequired:'必填项',
+        filePathReg:'请输入正确的文件路径'
       },
       reset: {
         reset: "重置",

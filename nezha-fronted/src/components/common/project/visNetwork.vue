@@ -347,7 +347,11 @@
       },
       topologyLoad(){
         this.topologyLoading=true;
-      }
+      },
+      clearData(){
+        this.nodesArray=null;
+        this.nodesArrayOther=null;
+      },
     },
 
     mounted(){
@@ -355,6 +359,7 @@
     },
     beforeDestroy(){
       this.$refs['pickTime'].selectInterval();
+      this.clearData();
     }
 
   }

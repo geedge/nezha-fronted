@@ -341,7 +341,9 @@
         this.getAssetList();
       },
     },
+    beforeDestroy(){
 
+    }
   }
 </script>
 

@@ -173,6 +173,9 @@
         this.filter.panelId = this.showPanel.id;
         // this.getData(this.filter);
       },
+    },
+    beforeDestroy(){
+
     }
 	}
 </script>
