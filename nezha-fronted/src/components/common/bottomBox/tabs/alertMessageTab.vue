@@ -367,6 +367,19 @@
             a.click();
             a.remove(); //将a标签移除
           }
+        },error=>{
+          let $self=this;
+          let reader = new FileReader();
+          reader.onload = function(event){
+            let responseText = reader.result;
+            let exception = JSON.parse(responseText);
+            if(exception.message){
+              $self.$message.error(exception.message)
+            }else{
+              console.error(error)
+            }
+          };
+          reader.readAsText(error.response.data);
         })
       },
       queryChartDate() {
