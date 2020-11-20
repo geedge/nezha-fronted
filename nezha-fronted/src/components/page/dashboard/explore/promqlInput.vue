@@ -97,9 +97,8 @@
         },
         toggleDropdown:function(){
           this.dropDownVisible=!this.dropDownVisible;
-          if(this.dropDownVisible == true&&this.firstAddEvent){
+          if(this.dropDownVisible == true){
             let $temp=this;
-            this.firstAddEvent=false;
             document.addEventListener('click',this.dropDownDisvisible.bind('',event,this),false)
             this.$el.addEventListener('click',this.eStopPropagation.bind('',event),false)
           }
@@ -107,9 +106,11 @@
         dropDownDisvisible(e,self){
           e.stopPropagation ? e.stopPropagation() : e.cancelBubble = true;
           self.dropDownVisible=false;
+          document.removeEventListener('click',this.dropDownDisvisible.bind('',event,this),false)
         },
         eStopPropagation(e){
           e.stopPropagation ? e.stopPropagation() : e.cancelBubble = true;
+          this.$el.removeEventListener('click',this.eStopPropagation.bind('',event),false);
         },
         queryMetrics:function(){
           this.metricOptions=[];
