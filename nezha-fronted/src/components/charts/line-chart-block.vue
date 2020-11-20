@@ -58,7 +58,7 @@
         <div class="line-area"  ref="lineChartArea"  :id="'lineChartArea'+chartIndex" v-show="firstShow" style="width:100%;"></div>
         <div class="chart-no-data" v-show="noData">No Data</div>
         <template v-if="!hasLegendOptions">
-          <div class='legend-container'  ref="legendArea" v-show="firstShow">
+          <div class='legend-container'  ref="legendArea" v-show="firstShow" v-scrollBar:legend>
             <div v-for="(item, index) in legendListMore" :title="item.alias?item.alias:item.name"  @click="clickLegend(item.name,index)" class="legend-item" :class="{'ft-gr':isGrey[index]}" :key="'legend_' + item.name+'_'+index">
               <span class="legend-shape" :style="{background:(isGrey[index]?'#D3D3D3':item.color)}"></span>{{item.alias?item.alias:item.name}}
             </div>
@@ -1730,6 +1730,7 @@
       }
       setChart(this.chartIndex, null);
       window.removeEventListener('resize', this.chartResize);
+      this.$refs.legendArea._ps_.destroy();
     },
   };
 

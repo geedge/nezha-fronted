@@ -1377,7 +1377,7 @@
         deep: true,
         immediate: true,
         handler(n) {
-          console.log(n);
+          //console.log(n);
           if(n.title){
             this.isEdit=true;
           }

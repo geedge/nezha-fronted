@@ -478,15 +478,13 @@
     watch:{
 
     },
-    beforeDestroy(){
+    beforeDestroy() {
       this.$refs.chartRoom.removeEventListener("mousemove", this.chartRoomMouseMove);
-    },
-    destroyed() {
       if(this.chart){
         this.chart.clear();
-        this.chart.off('mouseover');
+        /*this.chart.off('mouseover');
         this.chart.off('mouseout');
-        EleResize.off(this.$el, this.resize, this.chartType);
+        EleResize.off(this.$el, this.resize, this.chartType);*/
       }
     }
   }
