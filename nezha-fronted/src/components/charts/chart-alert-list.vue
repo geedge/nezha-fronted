@@ -271,6 +271,7 @@ export default {
         chartUnit:5,
         deleteBox: {show: false, ids: "", remark: '', state: 2},
         isPreview:false,
+        ps: null
       };
   },
   computed: {
@@ -678,7 +679,8 @@ export default {
         container.style.height = `calc(100% - ${deHeight}px)`;
         this.tableHeight = `calc(100% - 34px)`;
         this.$nextTick(() => {
-          container.querySelector(".el-table__body-wrapper")._ps_.update();
+          this.ps = container.querySelector(".el-table__body-wrapper")._ps_;
+          this.ps.update();
         });
       },
       showLoad(chartItem) {
@@ -797,6 +799,9 @@ export default {
     },
     beforeDestroy() {
       this.clearChart();
+      if (this.ps) {
+        this.ps.destroy();
+      }
     },
 };
 </script>

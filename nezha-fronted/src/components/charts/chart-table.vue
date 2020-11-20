@@ -209,6 +209,7 @@
           }],
         searchTime: [new Date().setHours(new Date().getHours() - 1), new Date()],//全屏显示的时间
         oldSearchTime: [],
+        ps: null
       };
     },
     created() {
@@ -282,7 +283,10 @@
         container.style.height = `calc(100% - ${deHeight * 2}px)`;
         this.tableHeight = `calc(100% - ${this.$refs.Pagination.$el.offsetHeight}px)`;
         this.$nextTick(() => {
-          container.querySelector(".el-table__body-wrapper")._ps_.update();
+          this.$nextTick(() => {
+            this.ps = container.querySelector(".el-table__body-wrapper")._ps_;
+            this.ps.update();
+          });
         });
       },
       showLoad(chartItem) {
@@ -490,6 +494,9 @@
     },
     beforeDestroy() {
       this.clearChart();
+      if (this.ps) {
+        this.ps.destroy();
+      }
     },
   };
 </script>
