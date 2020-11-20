@@ -263,7 +263,6 @@
           if(res.msg==='success'){
             this.loading=false;
             this.alertLabelData=res.data.list[0];
-            console.log(this.alertLabelData)
           } else{
             this.$message.error(res.msg);
           }

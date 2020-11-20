@@ -503,9 +503,11 @@
       }
     },
     beforeDestroy(){
-      document.querySelector("#tableList").removeEventListener("mouseenter", this.tableListEnter);
-      document.querySelector("#tableList").removeEventListener("mouseleave", this.tableListLaeve);
-      document.querySelector("body>.el-dropdown-menu").removeEventListener("ps-y-reach-end", this.psYReachEnd);
+      if(document.querySelector("#tableList")){
+        document.querySelector("#tableList").removeEventListener("mouseenter", this.tableListEnter);
+        document.querySelector("#tableList").removeEventListener("mouseleave", this.tableListLaeve);
+        document.querySelector("body>.el-dropdown-menu").removeEventListener("ps-y-reach-end", this.psYReachEnd);
+      }
     }
   }
 </script>

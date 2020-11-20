@@ -685,7 +685,7 @@
       this.dropCol = localStorage.getItem("nz-tableTitle-" + localStorage.getItem("nz-username") + "-/alertList")
         ? JSON.parse(localStorage.getItem("nz-tableTitle-" + localStorage.getItem("nz-username") + "-/alertList"))
         : this.tableTitle;
-      this.$refs['alertMessageTable'].bottomBox.mainResizeShow=false;
+      // this.$refs['alertMessageTable'].bottomBox.mainResizeShow=false;
     },
     beforeDestroy(){
 

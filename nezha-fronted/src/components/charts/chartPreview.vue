@@ -1397,9 +1397,11 @@
       //const addChartBox = document.querySelector('.right-box-add-chart');
       //addChartBox.style.cssText =   this.oldChartBoxCss;
       try {
-        this.echartModalStore.off('magictypechanged');
+        if(this.echartModalStore){
+          this.echartModalStore.off('magictypechanged');
+        }
       } finally {}
-      this.$refs.screenLegendArea._ps_ && this.$refs.screenLegendArea._ps_.destroy();
+        this.$refs.screenLegendArea && this.$refs.screenLegendArea._ps_.destroy();
     },
   };
 

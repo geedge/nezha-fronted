@@ -207,7 +207,9 @@
             this.edgesArray=[];
             setTimeout(()=>{
               this.topologyLoading=false;
-              this.$refs['topology'].setData();
+              if(this.$refs['topology']){
+                this.$refs['topology'].setData();
+              }
             },100)
           }
           if(res.data.topo){
@@ -261,7 +263,9 @@
                 this.edgesArray=[...this.edgesArrayOther];
                 setTimeout(()=>{
                   this.topologyLoading=false;
-                  this.$refs['topology'].setData();
+                  if(this.$refs['topology']){
+                    this.$refs['topology'].setData();
+                  }
                 },500)
               })
             // }
@@ -276,7 +280,9 @@
             this.nodesArray=[...this.nodesArrayOther];
             this.edgesArray=[...this.edgesArrayOther];
             this.topologyLoading=false;
-            this.$refs['topology'].setData();
+            if(this.$refs['topology']){
+              this.$refs['topology'].setData();
+            }
           })
         });
         return arr

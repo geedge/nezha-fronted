@@ -339,10 +339,10 @@
           self.tools.showTopBtn = false;
         }
       },
-      plmouseenter(self){
+      plmouseenter(el,self){
         self.tools.tableHover = true;
       },
-      plmouseleave(self){
+      plmouseleave(el,self){
         self.tools.tableHover = false;
       }
     },
