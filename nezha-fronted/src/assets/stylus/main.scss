@@ -156,7 +156,7 @@ li{
   opacity: 0;
   background-color: #aaa;
   outline: none;
-  z-index: 10;
+  z-index: 100;
   color: white;
   transition: opacity .2s linear, top .2s linear;
   transform: translateY(-50%);
@@ -819,6 +819,15 @@ li{
 .nz-table {
   border: none;
   font-size: 12px;
+}
+.nz-table + .to-top-is-hover{
+  display: none;
+}
+.nz-table + .to-top-is-hover:hover{
+  display: block;
+}
+.nz-table:hover + .to-top-is-hover{
+  display: block;
 }
 .nz-table .el-table {
   border: none;

@@ -989,7 +989,6 @@
                     }
                     let shadowMarker=null;
                     let marker=null;
-                    console.log(dcStat);
                    if(dcInfo.state==='ON'){
                      let hasAlert=dcStat.alertP1!=0||dcStat.alertP2!=0||dcStat.alertP3!=0||dcStat.assetPingDown!=0||dcStat.endpointDown!=0||dcStat.promDown!=0;
                      shadowMarker=L.circleMarker([dcInfo.latitude,dcInfo.longitude], {opacity:0,fillOpacity: 0, radius: symbolSize+10});
@@ -1299,7 +1298,7 @@
                 </div>
               </div>
               <div class="tooltip-asset--row tooltip-asset--ping ">
-                <div>${this.$t('asset.left.ping')}</div>
+                <div style="line-height: 50px">${this.$t('asset.left.ping')}</div>
                 <div class="tooltip-asset--sub-rows">
                   <div class="tooltip-asset--sub-row">
                     <div class="sub-row--label">${this.$t("dashboard.overview.asset.pingUp")}</div>

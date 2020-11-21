@@ -37,7 +37,7 @@
       <el-table
         class="nz-table"
         :height="mainTableHeight"
-        style="width: 100%;"
+        style="width: 100%;position: relative;z-index: 99"
         :data="tableData"
         v-scrollBar:el-table="'large'"
         v-show="bottomBox.mainResizeShow"
@@ -48,6 +48,7 @@
         @sort-change="tableDataSort"
         @row-dblclick="detail"
         @selection-change="(selection)=>{this.batchDeleteObjs=selection}"
+        @scroll="plpsscrolly"
       >
         <el-table-column
           :resizable="false"
@@ -119,8 +120,8 @@
             <span  >{{scope.row.idc.name}}</span>
           </div>
           <template v-if="item.prop=='cabinet'">
-            <span v-if="scope.row.cabinet && scope.row.cabinet != '--'">{{returnData(scope.row.cabinet).name}}&nbsp;{{returnCabinet( scope.row.cabinetStart, scope.row.cabinetEnd)}}</span>
-            <span v-else >{{returnData(scope.row.cabinet)}}</span>
+            <span v-if="scope.row.cabinet && scope.row.cabinet != '--'">{{scope.row.cabinet.name}}&nbsp;{{returnCabinet( scope.row.cabinetStart, scope.row.cabinetEnd)}}</span>
+            <span v-else >--</span>
           </template>
           <div v-if="item.prop=='model'">
             <span>{{scope.row.model.name}}</span>
@@ -129,7 +130,8 @@
             <span>{{scope.row.model.vendor.value}}</span>
           </div>
           <div v-if="item.prop=='purchaseDate'">
-            <span>{{returnData(scope.row.purchaseDate)}}</span>
+            <span v-if="scope.row.purchaseDate">{{scope.row.purchaseDate}}</span>
+            <span v-else="scope.row.purchaseDate">==</span>
           </div>
           <div v-if="item.prop=='principal'">
             <span>{{getPrincipalName(scope.row.idc.principal)}}</span>
@@ -161,7 +163,6 @@
                   <el-dropdown-item v-for="(account, index) in scope.row.accounts" v-if="account && account.protocol != 'SNMP'" :key="index" :command="[scope.row.id ,scope.row.host, account]">{{account.protocol}}</el-dropdown-item>
                 </el-dropdown-menu>
               </el-dropdown>
-
             </template>
           </template>
         </el-table-column>
@@ -171,11 +172,9 @@
             <i class="nz-icon nz-icon-gear"></i>
           </span>
           </template>
-          <template v-slot="scope">
-            <button v-if="scope.$index == 0" class="to-top" :style="{top: tools.toTopBtnTop}" :class="{'to-top-is-hover': tools.tableHover}" v-show="tools.showTopBtn && bottomBox.mainResizeShow" @click="$toTop('ps', 0)"><i class="nz-icon nz-icon-top"></i></button>
-          </template>
         </el-table-column>
       </el-table>
+      <button class="to-top" :style="{top: tools.toTopBtnTop}" :class="{'to-top-is-hover': tools.tableHover}" v-show="tools.showTopBtn && bottomBox.mainResizeShow" @click="$toTop('ps', 0)"><i class="nz-icon nz-icon-top"></i></button>
       <div class="pagination-bottom" v-show="!bottomBox.showSubList">
         <Pagination :tableId="tableId" :pageObj="pageObj" @pageNo='pageNo' @pageSize='pageSize' ref="Pagination"></Pagination>
       </div>
@@ -689,6 +688,7 @@
       },
       initEvent() {
         bus.$on("asset-filter-change", (column, content) => {
+          this.pageObj.pageNo=1;
           let oldPageObj = JSON.parse(JSON.stringify(this.pageObj));
           if(column == 'multiParam'){
             let $self=this;
@@ -755,16 +755,20 @@
       plpsscrolly(el,self){
         if (el._ps_.scrollbarYTop > 50) {
           self.tools.showTopBtn = true;
+          self.tools.tableHover = true;
         } else {
           self.tools.showTopBtn = false;
+          self.tools.tableHover = false;
         }
       },
-      plmouseenter(el,self){
-        self.tools.tableHover = true;
-      },
-      plmouseleave(el,self){
-        self.tools.tableHover = false;
-      }
+      // plmouseenter(el,self){
+      //   console.log(123123123123)
+      //   self.tools.tableHover = true;
+      // },
+      // plmouseleave(el,self){
+      //   console.log(123123123123)
+      //   self.tools.tableHover = false;
+      // }
     },
     created(){
       //是否存在分页缓存
@@ -824,8 +828,8 @@
         let el = this.$refs.assetTable.$el.querySelector(".el-table__body-wrapper");
         if (el._ps_) {
           el.addEventListener("ps-scroll-y", this.plpsscrolly.bind('',el,this));
-          el.addEventListener("mouseenter",  this.plmouseenter.bind('',el,this));
-          el.addEventListener("mouseleave", this.plmouseleave.bind('',el,this));
+          // el.addEventListener("mouseenter",  this.plmouseenter.bind('',el,this));
+          // el.addEventListener("mouseleave", this.plmouseleave.bind('',el,this));
         }
         //resize时刷新左侧列表滚动条
         let vm = this;
@@ -839,8 +843,8 @@
       let el = this.$refs.assetTable.$el.querySelector(".el-table__body-wrapper");
       if (el._ps_) {
         el.removeEventListener("ps-scroll-y", this.plpsscrolly.bind('',el,this));
-        el.removeEventListener("mouseenter",  this.plmouseenter.bind('',el,this));
-        el.removeEventListener("mouseleave", this.plmouseleave.bind('',el,this));
+        // el.removeEventListener("mouseenter",  this.plmouseenter.bind('',el,this));
+        // el.removeEventListener("mouseleave", this.plmouseleave.bind('',el,this));
         el._ps_.destroy();
       }
     },

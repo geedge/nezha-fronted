@@ -160,11 +160,9 @@
             <i class="nz-icon nz-icon-gear"></i>
           </span>
         </template>
-        <template v-slot="scope">
-          <button v-if="scope.$index == 0" class="to-top" :style="{top: tools.toTopBtnTop}" :class="{'to-top-is-hover': tools.tableHover}" v-show="tools.showTopBtn && bottomBox.mainResizeShow" @click="$toTop('ps', 0)"><i class="nz-icon nz-icon-top"></i></button>
-        </template>
       </el-table-column>
     </el-table>
+    <button class="to-top" :style="{top: tools.toTopBtnTop}" :class="{'to-top-is-hover': tools.tableHover}" v-show="tools.showTopBtn && bottomBox.mainResizeShow" @click="$toTop('ps', 0)"><i class="nz-icon nz-icon-top"></i></button>
     <!--<弹窗>-->
     <!--导出-->
     <div class="export-xlsx">
@@ -856,16 +854,12 @@
       plpsscrolly(el,self){
         if (el._ps_.scrollbarYTop > 50) {
           self.tools.showTopBtn = true;
+          self.tools.tableHover = true;
         } else {
           self.tools.showTopBtn = false;
+          self.tools.tableHover = false;
         }
       },
-      plmouseenter(el,self){
-        self.tools.tableHover = true;
-      },
-      plmouseleave(el,self){
-        self.tools.tableHover = false;
-      }
     },
     watch: {
       /*tableData(){
@@ -901,8 +895,6 @@
         let el = this.$refs.alertListTable.$el.querySelector(".el-table__body-wrapper");
         if (el._ps_) {
           el.addEventListener("ps-scroll-y", this.plpsscrolly.bind('',el,this));
-          el.addEventListener("mouseenter",  this.plmouseenter.bind('',el,this));
-          el.addEventListener("mouseleave", this.plmouseleave.bind('',el,this));
         }
       });
       /*if(this.from=='alertMessage'){
@@ -927,8 +919,6 @@
       let el = this.$refs.alertListTable.$el.querySelector(".el-table__body-wrapper");
       if (el._ps_) {
         el.removeEventListener("ps-scroll-y", this.plpsscrolly.bind('',el,this));
-        el.removeEventListener("mouseenter",  this.plmouseenter.bind('',el,this));
-        el.removeEventListener("mouseleave", this.plmouseleave.bind('',el,this));
         el._ps_.destroy();
       }
     }

@@ -273,6 +273,13 @@
             type: 'id',
             label: 'id',
             disabled: false
+          },{
+            id:27,
+            name: this.$t('config.dc.dc'),
+            type: 'idc',
+            label: 'idcId',
+            disabled: false,
+            readonly: true,
           }],
         },
         searchLabel: { //搜索参数
