@@ -989,7 +989,6 @@
                     }
                     let shadowMarker=null;
                     let marker=null;
-                    console.log(dcStat);
                    if(dcInfo.state==='ON'){
                      let hasAlert=dcStat.alertP1!=0||dcStat.alertP2!=0||dcStat.alertP3!=0||dcStat.assetPingDown!=0||dcStat.endpointDown!=0||dcStat.promDown!=0;
                      shadowMarker=L.circleMarker([dcInfo.latitude,dcInfo.longitude], {opacity:0,fillOpacity: 0, radius: symbolSize+10});

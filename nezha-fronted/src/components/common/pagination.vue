@@ -149,7 +149,7 @@ export default {
       immediate:true,
       deep:true,
       handler(n,o){
-        console.log(n,n)
+        // console.log(n,n)
       }
     }
   }

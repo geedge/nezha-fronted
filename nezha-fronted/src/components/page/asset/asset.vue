@@ -37,7 +37,7 @@
       <el-table
         class="nz-table"
         :height="mainTableHeight"
-        style="width: 100%;"
+        style="width: 100%;position: relative;z-index: 99"
         :data="tableData"
         v-scrollBar:el-table="'large'"
         v-show="bottomBox.mainResizeShow"
@@ -119,8 +119,8 @@
             <span  >{{scope.row.idc.name}}</span>
           </div>
           <template v-if="item.prop=='cabinet'">
-            <span v-if="scope.row.cabinet && scope.row.cabinet != '--'">{{returnData(scope.row.cabinet).name}}&nbsp;{{returnCabinet( scope.row.cabinetStart, scope.row.cabinetEnd)}}</span>
-            <span v-else >{{returnData(scope.row.cabinet)}}</span>
+            <span v-if="scope.row.cabinet && scope.row.cabinet != '--'">{{scope.row.cabinet.name}}&nbsp;{{returnCabinet( scope.row.cabinetStart, scope.row.cabinetEnd)}}</span>
+            <span v-else >--</span>
           </template>
           <div v-if="item.prop=='model'">
             <span>{{scope.row.model.name}}</span>
@@ -129,7 +129,8 @@
             <span>{{scope.row.model.vendor.value}}</span>
           </div>
           <div v-if="item.prop=='purchaseDate'">
-            <span>{{returnData(scope.row.purchaseDate)}}</span>
+            <span v-if="scope.row.purchaseDate">{{scope.row.purchaseDate}}</span>
+            <span v-else="scope.row.purchaseDate">==</span>
           </div>
           <div v-if="item.prop=='principal'">
             <span>{{getPrincipalName(scope.row.idc.principal)}}</span>

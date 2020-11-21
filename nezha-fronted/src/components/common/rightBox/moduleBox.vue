@@ -626,7 +626,6 @@
       },
       // 新增label
       addLabel() {
-        console.log(123123);
         this.editModule.labelModule.push({key: '', value: ''});
         this.$nextTick(() => {
           this.$refs.labelBoxScrollbar.update();
