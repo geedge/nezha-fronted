@@ -291,7 +291,7 @@
         tooltip: {
           x: 0,
           y: 0
-        }
+        },
       }
     },
     filters: {
@@ -989,6 +989,7 @@
                     }
                     let shadowMarker=null;
                     let marker=null;
+                    console.log(dcStat);
                    if(dcInfo.state==='ON'){
                      let hasAlert=dcStat.alertP1!=0||dcStat.alertP2!=0||dcStat.alertP3!=0||dcStat.assetPingDown!=0||dcStat.endpointDown!=0||dcStat.promDown!=0;
                      shadowMarker=L.circleMarker([dcInfo.latitude,dcInfo.longitude], {opacity:0,fillOpacity: 0, radius: symbolSize+10});
@@ -1291,9 +1292,13 @@
                     <div class="sub-row--label">${this.$t("asset.notInStock")}</div>
                     <div class="sub-row--value"><div class="sign red-sign"></div><span>${dcStat.assetOutStock}</span></div>
                   </div>
+                  <div class="tooltip-asset--sub-row">
+                    <div class="sub-row--label">${this.$t("asset.suspended")}</div>
+                    <div class="sub-row--value"><div class="sign red-sign"></div><span>${dcStat.assetSuspended}</span></div>
+                  </div>
                 </div>
               </div>
-              <div class="tooltip-asset--row">
+              <div class="tooltip-asset--row tooltip-asset--ping ">
                 <div>${this.$t('asset.left.ping')}</div>
                 <div class="tooltip-asset--sub-rows">
                   <div class="tooltip-asset--sub-row">

@@ -125,7 +125,7 @@ export default {
        this.pageSize=this.postPageSizes[0];
        this.resetPageSizes();
     }else{
-      let pageSize = localStorage.getItem('nz-pageSize-' + localStorage.getItem('nz-username') + '-' + this.tableId);
+      let pageSize = '';
       if(pageSize != 'undefined' && pageSize != null){
         this.pageSize=parseInt(pageSize);
       }
@@ -143,6 +143,13 @@ export default {
       immediate:true,
       handler(n,o){
         //console.log(n)
+      }
+    },
+    pageObj:{
+      immediate:true,
+      deep:true,
+      handler(n,o){
+        console.log(n,n)
       }
     }
   }

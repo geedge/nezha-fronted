@@ -51,11 +51,12 @@
               placement="top-start"
               offset="-100"
               trigger="hover"
-              :content="$t('overall.result.total') + '：' + scope.row.assetStat.total + '，' + $t('asset.inStock') + '：' + scope.row.assetStat.inStock + '，' + $t('asset.notInStock') + '：' + scope.row.assetStat.outStock">
+              :content="$t('overall.result.total') + '：' + scope.row.assetStat.total + '，' + $t('asset.inStock') + '：' + scope.row.assetStat.inStock + '，' + $t('asset.notInStock') + '：' + scope.row.assetStat.outStock + $t('asset.suspended') + '：' + scope.row.assetStat.suspended">
               <div slot="reference" class="dc-asset-states">
                 <span class="dc-asset-state dc-asset-state-total">{{scope.row.assetStat.total}}</span>
                 <span class="dc-asset-state dc-asset-state-in">{{scope.row.assetStat.inStock}}</span>
                 <span class="dc-asset-state dc-asset-state-out">{{scope.row.assetStat.outStock}}</span>
+                <span class="dc-asset-state dc-asset-state-suspended">{{scope.row.assetStat.suspended}}</span>
               </div>
             </el-popover>
 
