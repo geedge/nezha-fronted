@@ -88,33 +88,32 @@
               <span v-if="scope.row.state==3">{{ $t('asset.suspended')}}</span>
             </div>
           <div v-if="item.prop == 'pingStatus'">
-            <!--<el-popover-->
-              <!--placement="right"-->
-              <!--width="200"-->
-              <!--trigger="hover"-->
-              <!--:content="formatPingTime(scope.row.pingLastUpdate)">-->
-              <!--<div slot="reference" style="width: 20px">-->
-                <!--<div :class="{'active-icon green':scope.row.pingState == 1,'active-icon red':scope.row.pingState == 0}"></div><span>{{scope.row.pingRtt?scope.row.pingRtt+'ms':''}}</span>-->
-              <!--</div>-->
-            <!--</el-popover>-->
-            <div :class="{'active-icon green':scope.row.pingState == 1,'active-icon red':scope.row.pingState == 0}"></div><span>{{scope.row.pingRtt?scope.row.pingRtt+'ms':''}}</span>
+            <el-popover
+              placement="right"
+              width="200"
+              trigger="hover"
+              :content="formatPingTime(scope.row.pingLastUpdate)">
+              <div slot="reference" style="width: 100%">
+                <div :class="{'active-icon green':scope.row.pingState == 1,'active-icon red':scope.row.pingState == 0}"></div><span>{{scope.row.pingRtt?scope.row.pingRtt+'ms':''}}</span>
+              </div>
+            </el-popover>
           </div>
           <template v-if="item.prop=='Module'">
-            <!--<el-tooltip placement="right" effect="light">-->
-              <!--<div slot="content">-->
-                <!--{{$t('asset.active')}} / {{$t('asset.total')}}-->
-              <!--</div>-->
+            <el-tooltip placement="right" effect="light">
+              <div slot="content">
+                {{$t('asset.active')}} / {{$t('asset.total')}}
+              </div>
               <span class="link" @click="showEndpoint(scope.row)" style="padding: 2px 8px">{{scope.row.endpointNum-scope.row.endpointDownNum}}/{{scope.row.endpointNum}}</span>
-            <!--</el-tooltip>-->
+            </el-tooltip>
           </template>
           <template v-if="item.prop=='Alert'">
-            <!--<el-tooltip :content="scope.row.alertNum+' '+$t('overall.active')" placement="top" effect="light" :disabled=" scope.row.alertNum < 99">-->
+            <el-tooltip :content="scope.row.alertNum+' '+$t('overall.active')" placement="top" effect="light" :disabled=" scope.row.alertNum < 99">
               <span :id="'asset-alerts-'+scope.row.id" @click="jumpToAlertMsg(scope.row)" class="link">
                 {{(scope.row.alertNum < 99 ? scope.row.alertNum : 99)}}
                   <sup class="linkSup" v-if="scope.row.alertNum > 99">+</sup>
                 {{' ' + $t('overall.active')}}
               </span>
-            <!--</el-tooltip>-->
+            </el-tooltip>
           </template>
           <div v-if="item.prop=='dataCenter'">
             <span  >{{scope.row.idc.name}}</span>
