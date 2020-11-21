@@ -57,10 +57,15 @@
           v-for="(item, index) in tools.customTableTitle"
           v-if="item.show"
           :key="`col-${index}`"
+          :fixed="item.fixed"
           :label="item.label"
           :prop="item.prop"
           :sort-orders="['ascending', 'descending']"
         >
+          <template slot-scope="scope" slot="header">
+            <span v-if="item.type == 'tag'" class="tag-header" :title="item.label"><span class="tag-value">{{item.label}}</span><span style="color:orange;">&nbsp;[Notification]</span></span>
+            <span v-else><span>{{item.label}}</span></span>
+          </template>
           <template slot-scope="scope" :column="item">
             <div v-if="item.prop == 'option'" class="content-right-options">
               <!--<span :title="$t('overall.view')" @click="detail(scope.row)" class="content-right-option" :id="'account-detail-'+scope.row.id"><i class="nz-icon nz-icon-view"></i></span>
@@ -70,28 +75,31 @@
               <span :title="$t('overall.delete')" @click="del(scope.row)" class="content-right-option" :id="'account-del-'+scope.row.id"><i class="nz-icon nz-icon-delete"></i></span>
             </div>
             <span v-else-if="item.prop == 'lang'">
-                            {{scope.row[item.prop] == 'en' ? 'English' : ''}}
-                            {{scope.row[item.prop] == 'zh' ? '中文' : ''}}
-                            {{scope.row[item.prop] == 'ru' ? 'русский' : ''}}
-                        </span>
+                {{scope.row[item.prop] == 'en' ? 'English' : ''}}
+                {{scope.row[item.prop] == 'zh' ? '中文' : ''}}
+                {{scope.row[item.prop] == 'ru' ? 'русский' : ''}}
+            </span>
             <span v-else-if="item.prop == 'receiver'">
-                            <template v-for="rec in scope.row[item.prop]">{{rec.name}}&nbsp;&nbsp;</template>
-                        </span>
+                <template v-for="rec in scope.row[item.prop]">{{rec.name}}&nbsp;&nbsp;</template>
+            </span>
             <span v-else-if="item.prop == 'status'">
-                            <el-switch
-                              v-model="scope.row.status"
-                              active-value="1"
-                              inactive-value="0"
-                              active-color="#ee9d3f"
-                              :disabled="isCurrentUser(scope.row.username)"
-                              @change="(val)=>{statusChange(scope.row)}">
-                            </el-switch>
-                        </span>
+                <el-switch
+                  v-model="scope.row.status"
+                  active-value="1"
+                  inactive-value="0"
+                  active-color="#ee9d3f"
+                  :disabled="isCurrentUser(scope.row.username)"
+                  @change="(val)=>{statusChange(scope.row)}">
+                </el-switch>
+            </span>
+            <template v-else-if="item.prop == 'tags'">
+              <span>{{filterTags(item.scriptId, scope)}}</span>
+            </template>
             <span v-else-if="item.prop == 'createTime'">{{utcTimeToTimezoneStr(scope.row[item.prop])}}</span>
             <span v-else>{{scope.row[item.prop]}}</span>
           </template>
         </el-table-column>
-        <el-table-column width="28">
+        <el-table-column width="28" fixed="right">
           <template slot="header" slot-scope="scope" :resizable="false">
             <span @mousedown.stop="!tools.showCustomTableTitle && (tools.showCustomTableTitle = true)" class="nz-table-gear">
               <i class="nz-icon nz-icon-gear"></i>
@@ -165,7 +173,8 @@
           status: '1',
           createTime: '',
           receiver: [],
-          lang: ''
+          lang: '',
+          notifications: []
         },
         pageObj: { //分页对象
           pageNo: 1,
@@ -199,7 +208,8 @@
             label: this.$t('config.account.option'),
             prop: 'option',
             show: true,
-            width: 120
+            width: 120,
+            fixed: "right"
           }
         ],
         tableData: [],
@@ -281,6 +291,13 @@
           if (response.code === 200) {
             for (let i = 0; i < response.data.list.length; i++) {
               response.data.list[i].status = response.data.list[i].status + "";
+              /*response.data.list[i].notifications = [
+                {scriptId: 1, account: "杀死比尔"},
+                {scriptId: 2, account: "虎虎虎"},
+                {scriptId: 3, account: "红海行动"},
+                {scriptId: 4, account: "十面埋伏"},
+                {scriptId: 5, account: "哪吒"},
+              ];*/
             }
             this.tableData = response.data.list;
             this.pageObj.total = response.data.total
@@ -354,6 +371,46 @@
       },
       plmouseleave(el,self){
         self.tools.tableHover = false;
+      }
+
+      resetTableTitle:function(){
+        let title = this.tools.customTableTitle;
+        let tableTitle = title.slice(0, this.tableTitle.length);
+        let tagTitle = title.slice(this.tableTitle.length, title.length);
+        this.$get("/alert/script?pageNo=1&pageSize=-1").then(response => {
+          let scripts = response.data.list;
+          scripts = scripts.map(item => {
+            return {label: item.name, prop: 'tags', show: false, allowed: true, scriptId: item.id, type: "tag"};
+          });
+          let newTags = scripts.filter(item=>{ return !tagTitle.find(t =>{return item.label == t.label})});
+          let keepTags = tagTitle.filter(item=>{ return scripts.find(t =>{return item.label == t.label})});
+          keepTags.forEach(item => {
+            let script = scripts.find(t =>{return item.label == t.label});
+            item.scriptId = script.scriptId;
+          });
+          let result = tableTitle.concat([{label: this.$t("config.account.notification"), show: false, NotSet: true, type: 'title', prop:'table-tag'}]);
+
+          result = result.concat(keepTags).concat(newTags);
+          this.tools.customTableTitle = JSON.parse(JSON.stringify(result));
+        });
+        /*let scripts = [
+          {id: 1, name: "DOLBY"},
+          {id: 2, name: "IMAX"},
+          {id: 3, name: "CGS"},
+          {id: 4, name: "LUXE"},
+          {id: 5, name: "DST:X"},
+        ];*/
+      },
+      filterTags(scriptId, scope) {
+        this.$nextTick(() => {
+          let notification = scope.row.notifications.find(item => {
+            return scriptId === item.scriptId;
+          });
+          if (notification) {
+            return notification.account;
+          }
+        })
+
       }
     },
     computed: {
