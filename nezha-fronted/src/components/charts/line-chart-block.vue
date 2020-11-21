@@ -222,14 +222,14 @@
       return {
         data: {}, // 该图表信息,chartItem
         noData:false,
-        seriesItem: [], // 保存信息
+        /*seriesItem: [], // 保存信息
         seriesItemArr:[],// 初次加载的数据
         seriesLength:20,
         seriesItemScreen:[],
-        seriesItemArrScreen:[],
-        legendListMore:[],
+        seriesItemArrScreen:[],*/
+        /*legendListMore:[],
         screenLegendListMore:[],
-        chartInfo:{},
+        chartInfo:{},*/
         images: '',
         isStackArea:false,
         isError:false,
@@ -244,9 +244,9 @@
         chartName: '',
         firstLoad: false, // 是否第一次加载
         divFirstShow:false,
-        highchartStore: null, // 保存图表数据
+        /*highchartStore: null, // 保存图表数据
         echartStore:null,// 保存图表数据
-        echartModalStore: null, // 全屏查看时数据
+        echartModalStore: null, // 全屏查看时数据*/
         chartType: 'line', // 图表类型
         screenModal: false,
         // 查询数据使用
@@ -256,19 +256,19 @@
           from: ""
         },
         stableFilter: {}, // 保存数据使用,初始化起止时间,单图or多图等
-        legend:[],
+        /*legend:[],
         legendList:[],
-        screenLegendList:[],
+        screenLegendList:[],*/
         isGrey:[],
         isGreyScreen:[],
-        bgColorList: ['#7bbfea', '#b3424a', '#f05b72', '#596032', '#bd6758',
+        /*bgColorList: ['#7bbfea', '#b3424a', '#f05b72', '#596032', '#bd6758',
           '#cd9a5b', '#918597', '#70a19f', '#005344', '#FF00FF',
           '#f7acbc', '#5f5d46', '#66ffff', '#ccFF66', '#f47920',
           '#769149', '#1d953f', '#abc88b', '#7f7522', '#9b95c9',
           '#f3715c', '#ea66a6', '#d1c7b7', '#9d9087', '#77787b',
           '#f58220', '#c37e00', '#00ae9d', '#f26522', '#76becc',
           '#76624c', '#d71345', '#2468a2', '#ca8687', '#1b315e',
-        ],
+        ],*/
         stackTotalColor:null,
         firstShow: false, // 默认不显示操作按钮,
         caretShow:false,
@@ -278,8 +278,8 @@
         oldSearchTime:[],
         screenTitleHeight:58,
         hasLegendOptions:false,
-        legendOptions:[],
-        screenLegendOptions:[],
+        /*legendOptions:[],
+        screenLegendOptions:[],*/
       };
     },
     watch: {},
@@ -1021,7 +1021,8 @@
             });
           });
         }
-        maxValueCopies=null;
+        maxValueCopies = null;
+        setTimeout(() => {option = null}, 1000);
       },
       handleLineFeed(str,chartWidth){
         let rlt='';
@@ -1713,6 +1714,34 @@
       chartResize() {
         getChart(this.chartIndex).resize();
       }
+    },
+    created() {
+      this.legendListMore = [];
+      this.screenLegendListMore = [];
+      this.chartInfo = {};
+      this.seriesItem = []; // 保存信息
+      this.seriesItemArr = [];// 初次加载的数据
+      this.seriesLength = 20;
+      this.seriesItemScreen = [];
+      this.seriesItemArrScreen = [];
+      this.legend = [];
+      this.legendList = [];
+      this.screenLegendList = [];
+      this.legendOptions = [];
+      this.screenLegendOptions = [];
+
+      this.highchartStore = null, // 保存图表数据
+      this.echartStore = null,// 保存图表数据
+      this.echartModalStore = null, // 全屏查看时数据
+
+      this.bgColorList = ['#7bbfea', '#b3424a', '#f05b72', '#596032', '#bd6758',
+        '#cd9a5b', '#918597', '#70a19f', '#005344', '#FF00FF',
+        '#f7acbc', '#5f5d46', '#66ffff', '#ccFF66', '#f47920',
+        '#769149', '#1d953f', '#abc88b', '#7f7522', '#9b95c9',
+        '#f3715c', '#ea66a6', '#d1c7b7', '#9d9087', '#77787b',
+        '#f58220', '#c37e00', '#00ae9d', '#f26522', '#76becc',
+        '#76624c', '#d71345', '#2468a2', '#ca8687', '#1b315e',
+      ];
     },
     mounted() {
       this.firstLoad = false;

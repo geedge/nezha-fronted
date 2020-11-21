@@ -93,7 +93,7 @@
                 </el-switch>
             </span>
             <template v-else-if="item.prop == 'tags'">
-              <span>{{filterTags(item.scriptId, scope)}}</span>
+              <span>{{filterTags(item, scope)}}</span>
             </template>
             <span v-else-if="item.prop == 'createTime'">{{utcTimeToTimezoneStr(scope.row[item.prop])}}</span>
             <span v-else>{{scope.row[item.prop]}}</span>
@@ -371,7 +371,7 @@
       },
       plmouseleave(el,self){
         self.tools.tableHover = false;
-      }
+      },
 
       resetTableTitle:function(){
         let title = this.tools.customTableTitle;
@@ -401,16 +401,15 @@
           {id: 5, name: "DST:X"},
         ];*/
       },
-      filterTags(scriptId, scope) {
-        this.$nextTick(() => {
+      filterTags(head, scope) {
+        if (scope.row.notifications) {
           let notification = scope.row.notifications.find(item => {
-            return scriptId === item.scriptId;
+            return head.scriptId === item.scriptId;
           });
           if (notification) {
             return notification.account;
           }
-        })
-
+        }
       }
     },
     computed: {
@@ -446,6 +445,7 @@
         : this.tableTitle;
       this.tableTitleReset(this.tableTitle,this.tools.customTableTitle);
 
+      this.resetTableTitle();
       this.getTableData();
       this.$nextTick(() => {
         //绑定滚动条事件，控制top按钮

@@ -86,7 +86,9 @@
         }
       },
       addDisabled() {
-        let enabled = this.selectableScripts.filter(item => {return !item.disabled});
+        let enabled = this.selectableScripts.filter(item => {
+          return !item.disabled
+        });
         return enabled.length === 0;
       }
     },
@@ -180,24 +182,37 @@
       },
 
       getSelectableScripts() {
-        this.selectableScripts = this.scripts.map(item => {
-          let exist = this.editUser.notifications.some(n => {
-            return item.id === n.scriptId;
+        let userNotifications = this.editUser.notifications;
+        if (userNotifications) {
+          this.selectableScripts = this.scripts.map(item => {
+            let exist = this.editUser.notifications.some(n => {
+              return item.id === n.scriptId;
+            });
+            if (exist) {
+              this.$set(item, "disabled", true);
+            } else {
+              this.$set(item, "disabled", false);
+            }
+            return item;
           });
-          if (exist) {
-            this.$set(item, "disabled", true);
-          } else {
+        } else {
+          this.selectableScripts = this.scripts.map(item => {
             this.$set(item, "disabled", false);
-          }
-          return item;
-        });
+            return item;
+          });
+        }
       },
 
       addNotification() {
         let scripts = this.selectableScripts.find(item => {
           return item.disabled === false;
         });
-        scripts && this.editUser.notifications.push({scriptId: scripts.id, account: ""});
+        if (scripts) {
+          if (!this.editUser.notifications) {
+            this.editUser.notifications = [];
+          }
+          this.editUser.notifications.push({scriptId: scripts.id, account: ""});
+        }
       },
 
       removeNotification(index) {
@@ -246,9 +261,6 @@
     .el-select {
       width: 100px;
 
-      .el-input__inner {
-        vertical-align: top;
-      }
     }
   }
 </style>
