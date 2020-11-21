@@ -129,6 +129,17 @@
                               <li v-for="(item,key) in selectInfoList['endpointState']" :key="key" @click="tr_selectInfo(val.label,item.value,item.label,$event)" :class="search_select_style_num==key?'search-style-ind':''">{{item.label}}</li>
                             </ul>
                           </div>
+                          <!--alertMessage idc-->
+                          <div class="select_info_list" :style="'top:' + selectDom.top" v-if="val.type == 'idc'&&val.id==27">
+                            <el-scrollbar v-if="dcSelect.length > 8" class="el-scrollbar-small" style="height: 240px;">
+                              <ul>
+                                <li v-for="(item,key) in dcSelect" :key="key" @click="tr_selectInfo(val.label,item.id,item.name,$event)" :class="search_select_style_num==key?'search-style-ind':''">{{item.name}}</li>
+                              </ul>
+                            </el-scrollbar>
+                            <ul v-else>
+                              <li v-for="(item,key) in dcSelect" :key="key" @click="tr_selectInfo(val.label,item.id,item.name,$event)" :class="search_select_style_num==key?'search-style-ind':''">{{item.name}}</li>
+                            </ul>
+                          </div>
                         </div>
                         <el-date-picker
                                 v-model="timeFrame"
@@ -348,6 +359,19 @@
                       this.input_list = true
                   }
               }
+          },
+          searchMsg:{
+            immediate: true,
+            handler(n){
+             console.log(n);
+             if(n){
+               n.searchLabelList.forEach(item=>{
+                 if(item.id===27&&item.type==='idc'&&item.label==='idcId'){
+                   this.getDcData()
+                 }
+               })
+             }
+            }
           },
         },
         props:['searchMsg','defaultItem','defaultValue','inTransform','position'],
@@ -688,6 +712,8 @@
                           objectInfo.moduleId = val.valnum;
                         } else if (val.type == 'project') {
                           objectInfo.projectId = val.valnum;
+                        }else if (val.type == 'idc') {
+                          objectInfo.dcId = val.valnum;
                         } else {
                             objectInfo[val.label] = val.val;
                         }
