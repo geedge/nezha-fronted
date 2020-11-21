@@ -8,7 +8,7 @@
         @current-change="current"
         :current-page="pageObj.pageNo"
         :page-sizes="pageSizes?pageSizes:[50, 100, 200]"
-        :page-size="pageSize"
+        :page-size="Number(pageObj.pageSize)"
         layout="total, prev, pager, next, slot"
         :total="this.pageObj.total"
       >
@@ -125,7 +125,7 @@ export default {
        this.pageSize=this.postPageSizes[0];
        this.resetPageSizes();
     }else{
-      let pageSize = '';
+      let pageSize = localStorage.getItem('nz-pageSize-' + localStorage.getItem('nz-username') + '-' + this.tableId);
       if(pageSize != 'undefined' && pageSize != null){
         this.pageSize=parseInt(pageSize);
       }

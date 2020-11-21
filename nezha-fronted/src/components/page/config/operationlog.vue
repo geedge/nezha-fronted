@@ -286,18 +286,19 @@
         }
       }
     },
+    created(){
+      //是否存在分页缓存
+      let pageSize = localStorage.getItem('nz-pageSize-' + localStorage.getItem('nz-username') + '-' + this.tableId);
+      if (pageSize != 'undefined' && pageSize != null) {
+        this.pageObj.pageSize = pageSize
+      }
+    },
     mounted() {
       //初始化表头
       this.tools.customTableTitle = localStorage.getItem("nz-tableTitle-" + localStorage.getItem("nz-username") + "-" + this.$route.path)
         ? JSON.parse(localStorage.getItem("nz-tableTitle-" + localStorage.getItem("nz-username") + "-" + this.$route.path))
         : this.tableTitle;
       this.tableTitleReset(this.tableTitle,this.tools.customTableTitle);
-      //是否存在分页缓存
-      let pageSize = localStorage.getItem('nz-pageSize-' + localStorage.getItem('nz-username') + '-' + this.tableId);
-      if (pageSize && pageSize != 'undefined') {
-        this.pageObj.pageSize = pageSize
-      }
-
       this.getTableData();
       this.$nextTick(() => {
         //绑定滚动条事件，控制top按钮

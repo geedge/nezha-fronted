@@ -719,6 +719,13 @@
         this.$bottomBoxWindow.showSubListWatch(vm, n);
       },
     },
+    created(){
+      //是否存在分页缓存
+      let pageSize = localStorage.getItem('nz-pageSize-' + localStorage.getItem('nz-username') + '-' + this.tableId);
+      if (pageSize != 'undefined' && pageSize != null) {
+        this.pageObj.pageSize = pageSize
+      }
+    },
     mounted() {
       //初始化表头
       this.tools.customTableTitle = localStorage.getItem("nz-tableTitle-" + localStorage.getItem("nz-username") + "-" + this.$route.path)

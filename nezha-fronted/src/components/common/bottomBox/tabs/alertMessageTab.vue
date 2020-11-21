@@ -686,12 +686,14 @@
         }
       },
     },
-    mounted() {
+    created(){
       //是否存在分页缓存
       let pageSize = localStorage.getItem('nz-pageSize-' + localStorage.getItem('nz-username') + '-' + this.tableId);
       if (pageSize) {
         this.pageObj.pageSize = pageSize
       }
+    },
+    mounted() {
       this.tablelable = localStorage.getItem("nz-tableTitle-" + localStorage.getItem("nz-username") + "-/alertList")
         ? JSON.parse(localStorage.getItem("nz-tableTitle-" + localStorage.getItem("nz-username") + "-/alertList"))
         : this.tableTitle;

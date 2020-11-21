@@ -234,6 +234,13 @@
         deleteBox:{}
       }
     },
+    created(){
+      //是否存在分页缓存
+      let pageSize = localStorage.getItem('nz-pageSize-' + localStorage.getItem('nz-username') + '-' + this.tableId);
+      if (pageSize != 'undefined' && pageSize != null) {
+        this.pageObj.pageSize = pageSize
+      }
+    },
     mounted(){
       this.getTableTitle();
       this.getAssetList();
