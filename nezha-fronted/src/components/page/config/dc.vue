@@ -122,11 +122,9 @@
               <i class="nz-icon nz-icon-gear"></i>
             </span>
           </template>
-          <template v-slot="scope">
-            <button v-if="scope.$index == 0" class="to-top" :style="{top: tools.toTopBtnTop}" :class="{'to-top-is-hover': tools.tableHover}" v-show="tools.showTopBtn && bottomBox.mainResizeShow" @click="$toTop('ps', 0)"><i class="nz-icon nz-icon-top"></i></button>
-          </template>
         </el-table-column>
       </el-table>
+      <button class="to-top" :style="{top: tools.toTopBtnTop}" :class="{'to-top-is-hover': tools.tableHover}" v-show="tools.showTopBtn && bottomBox.mainResizeShow" @click="$toTop('ps', 0)"><i class="nz-icon nz-icon-top"></i></button>
       <div class="pagination-bottom" v-show="!bottomBox.showSubList">
         <Pagination :tableId="tableId" :pageObj="pageObj" @pageNo='pageNo' @pageSize='pageSize' ref="Pagination"></Pagination>
       </div>
@@ -481,15 +479,11 @@
       plpsscrolly(el,self){
         if (el._ps_.scrollbarYTop > 100) {
           self.tools.showTopBtn = true;
+          self.tools.tableHover = true;
         } else {
           self.tools.showTopBtn = false;
+          self.tools.tableHover = false;
         }
-      },
-      plmouseenter(el,self){
-        self.tools.tableHover = true;
-      },
-      plmouseleave(el,self){
-        self.tools.tableHover = false;
       }
     },
     watch: {
@@ -531,8 +525,6 @@
         let el = this.$refs.dcTable.$el.querySelector(".el-table__body-wrapper");
         if (el._ps_) {
           el.addEventListener("ps-scroll-y", this.plpsscrolly.bind('',el,this));
-          el.addEventListener("mouseenter",  this.plmouseenter.bind('',el,this));
-          el.addEventListener("mouseleave", this.plmouseleave.bind('',el,this));
           window.onresize = function() {
             el._ps_.update();
           };
@@ -543,8 +535,6 @@
       let el = this.$refs.dcTable.$el.querySelector(".el-table__body-wrapper");
       if (el._ps_) {
         el.removeEventListener("ps-scroll-y", this.plpsscrolly.bind('',el,this));
-        el.removeEventListener("mouseenter",  this.plmouseenter.bind('',el,this));
-        el.removeEventListener("mouseleave", this.plmouseleave.bind('',el,this));
         el._ps_.destroy();
       }
     }
