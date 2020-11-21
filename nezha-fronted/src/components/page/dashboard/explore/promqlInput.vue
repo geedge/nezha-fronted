@@ -8,7 +8,7 @@
               <el-dropdown class="metric-selector">
                 <el-dropdown-menu style="display: none"></el-dropdown-menu>
                 <el-button class="metric-btn nz-btn nz-btn-size-normal nz-btn-style-light" @click="toggleDropdown">Metric &nbsp;<i class="nz-icon nz-icon-arrow-down"></i></el-button>
-                <el-cascader-panel v-show="dropDownVisible" v-model="cascaderValue"  slot="dropdown" ref="metricSelector" :props="{emitPath:false}" :options="metricOptions"  @change="metricChange" ></el-cascader-panel>
+                <el-cascader-panel v-show="dropDownVisible" v-model="cascaderValue" v-clickoutside="closeDropdown" slot="dropdown" ref="metricSelector" :props="{emitPath:false}" :options="metricOptions"  @change="metricChange" ></el-cascader-panel>
               </el-dropdown>
             </div>
             <div class="input-box" @click="dropDownVisible=false" v-if="plugins.indexOf('metric-input') > -1">
@@ -25,7 +25,7 @@
                 <el-dropdown class="metric-selector" v-if="plugins.indexOf('metric-selector') > -1">
                   <el-dropdown-menu style="display: none"></el-dropdown-menu>
                   <span :class="{'expr-title':projectRightBox}" style="cursor: pointer;" @click="toggleDropdown">Metric&nbsp;<i class="nz-icon nz-icon-arrow-down" style="font-size: 14px; -webkit-transform:scale(0.75);display:inline-block;"></i></span>
-                  <el-cascader-panel v-show="dropDownVisible" v-model="cascaderValue" style="text-align: left;" slot="dropdown" ref="metricSelector" :props="{emitPath:false}" :options="metricOptions"  @change="metricChange"></el-cascader-panel>
+                  <el-cascader-panel v-show="dropDownVisible" v-clickoutside="closeDropdown" v-model="cascaderValue" style="text-align: left;" slot="dropdown" ref="metricSelector" :props="{emitPath:false}" :options="metricOptions"  @change="metricChange"></el-cascader-panel>
                 </el-dropdown>
                 <label style="line-height: 30px;" v-else>{{$t("alert.config.expr")}}</label>
               </el-col>
@@ -85,6 +85,9 @@
         this.queryMetrics();
       },
       methods:{
+        closeDropdown() {
+          this.dropDownVisible = false;
+        },
         clearExpression:function(){
           this.expressionChange();
           this.cascaderValue='';
@@ -95,22 +98,8 @@
         removeExpression:function(){
           this.$emit('removeExpression',this.index);
         },
-        toggleDropdown:function(){
-          this.dropDownVisible=!this.dropDownVisible;
-          if(this.dropDownVisible == true){
-            let $temp=this;
-            document.addEventListener('click',this.dropDownDisvisible.bind('',event,this),false)
-            this.$el.addEventListener('click',this.eStopPropagation.bind('',event),false)
-          }
-        },
-        dropDownDisvisible(e,self){
-          e.stopPropagation ? e.stopPropagation() : e.cancelBubble = true;
-          self.dropDownVisible=false;
-          document.removeEventListener('click',this.dropDownDisvisible.bind('',event,this),false)
-        },
-        eStopPropagation(e){
-          e.stopPropagation ? e.stopPropagation() : e.cancelBubble = true;
-          this.$el.removeEventListener('click',this.eStopPropagation.bind('',event),false);
+        toggleDropdown() {
+          this.dropDownVisible = !this.dropDownVisible;
         },
         queryMetrics:function(){
           this.metricOptions=[];
@@ -182,12 +171,7 @@
             }
           }
         },
-
       },
-      beforeDestroy(){
-        document.removeEventListener('click',this.dropDownDisvisible.bind('',event,this),false)
-        this.$el.removeEventListener('click',this.eStopPropagation.bind('',event),false)
-      }
     }
 </script>
 
