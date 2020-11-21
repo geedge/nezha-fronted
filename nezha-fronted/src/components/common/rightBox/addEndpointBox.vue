@@ -918,6 +918,13 @@
       // endpoint弹框的asset子弹框顶部搜索条件选中事件
       dropdownSelect(label) {
         this.assetSearch.text = "";
+        if(this.assetSearch.label!==label){
+          this.assetSearch.host = '';
+          this.assetSearch.sn = '';
+          this.assetSearch.modelId = "";
+          this.assetSearch.typeIds = "";
+          this.assetSearch.idcId = "";
+        }
         this.assetSearch.label = label;
         this.assetSearch.dropdownShow = false;
       },
