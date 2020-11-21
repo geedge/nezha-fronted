@@ -821,10 +821,13 @@ li{
   font-size: 12px;
 }
 .nz-table + .to-top-is-hover{
-  z-index: 10;
+  display: none;
+}
+.nz-table + .to-top-is-hover:hover{
+  display: block;
 }
 .nz-table:hover + .to-top-is-hover{
-  z-index: 100;
+  display: block;
 }
 .nz-table .el-table {
   border: none;
