@@ -688,6 +688,7 @@
       },
       initEvent() {
         bus.$on("asset-filter-change", (column, content) => {
+          this.pageObj.pageNo=1;
           let oldPageObj = JSON.parse(JSON.stringify(this.pageObj));
           if(column == 'multiParam'){
             let $self=this;
