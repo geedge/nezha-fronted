@@ -1625,7 +1625,7 @@
         background: #fff;
         border-radius: 3px;
         box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        z-index: 9;
+        z-index: 101;
         overflow-y: auto;
         font-size: 12px;
     }

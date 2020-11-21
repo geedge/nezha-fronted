@@ -136,7 +136,7 @@
           </el-form>
         </div>
       </el-tab-pane>
-     <!-- <el-tab-pane :label="$t('config.system.notification.notification')" name="notification">&lt;!&ndash;$t('config.system.reset.reset')&ndash;&gt;
+      <el-tab-pane :label="$t('config.system.notification.notification')" name="notification"><!--$t('config.system.reset.reset')-->
         <div class="linkBox" >
           <div class="linkTitle">
             <span class="linkTitleHandle"></span>
@@ -144,7 +144,7 @@
             <div class="linkTitleUrl">{{$t('config.system.notification.filePath')}}</div>
             <div class="linkTitleBtn">{{$t('config.system.notification.operation')}}</div>
           </div>
-          &lt;!&ndash;linkAdd&ndash;&gt;
+          <!--linkAdd-->
           <div class="linkContent linkAddBox">
             <span class="linkTitleHandle"></span>
             <el-form :inline="true"  :model="notificationTemp"  label-width="180px" size="small" ref="notificationTempForm" :rules="notificationRules" :validate-on-rule-change="false" class="reset-form">
@@ -159,7 +159,7 @@
               </el-form-item>
             </el-form>
           </div>
-          &lt;!&ndash;notificationEdit&ndash;&gt;
+          <!--notificationEdit-->
           <div  class="scrollBox"
                 v-scrollBar>
             <draggable v-model="notification"
@@ -188,11 +188,11 @@
                 <div class="linkFormContent" v-else>
                   <div class="linkTitleName" :title="item.name">{{item.name}}</div>
                   <div class="linkTitleUrl">
-                    &lt;!&ndash;<span class="linkTitleUrlContent" @click="openUrl(item)" @dblclick.stop="linkEdit(item)">&ndash;&gt;
-                      &lt;!&ndash;<el-tooltip class="item" effect="dark" :content="item.url" placement="top" popper-class="linkUrlTip">&ndash;&gt;
+                    <!--<span class="linkTitleUrlContent" @click="openUrl(item)" @dblclick.stop="linkEdit(item)">-->
+                      <!--<el-tooltip class="item" effect="dark" :content="item.url" placement="top" popper-class="linkUrlTip">-->
                       <span>{{item.filePath}}</span>
-                      &lt;!&ndash;</el-tooltip>&ndash;&gt;
-                    &lt;!&ndash;</span>&ndash;&gt;
+                      <!--</el-tooltip>-->
+                    <!--</span>-->
                   </div>
                   <div class="linkFormBtn">
                     <i class="nz-icon nz-icon-edit" @click.stop="notificationEdit(item)"></i>
@@ -203,7 +203,7 @@
             </draggable>
           </div>
         </div>
-      </el-tab-pane>-->
+      </el-tab-pane>
       <el-tab-pane :label="$t('config.system.link.link')" name="link"><!--$t('config.system.reset.reset')-->
         <div class="linkBox" >
           <div class="linkTitle">
