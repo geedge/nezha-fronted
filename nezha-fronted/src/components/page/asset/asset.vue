@@ -480,8 +480,10 @@
             // response.data.list=response.data.list.concat(response.data.list,response.data.list,response.data.list,response.data.list,response.data.list,response.data.list,response.data.list)
             this.tableData = response.data.list;
             this.pageObj.total = response.data.total;
+            bus.$emit('asset-property-change');
           }
         });
+
       },
       getUserData() {
         return new Promise(resolve => {
