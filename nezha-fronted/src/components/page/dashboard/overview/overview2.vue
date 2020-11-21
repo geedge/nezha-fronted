@@ -1299,7 +1299,7 @@
                 </div>
               </div>
               <div class="tooltip-asset--row tooltip-asset--ping ">
-                <div>${this.$t('asset.left.ping')}</div>
+                <div style="line-height: 50px">${this.$t('asset.left.ping')}</div>
                 <div class="tooltip-asset--sub-rows">
                   <div class="tooltip-asset--sub-row">
                     <div class="sub-row--label">${this.$t("dashboard.overview.asset.pingUp")}</div>

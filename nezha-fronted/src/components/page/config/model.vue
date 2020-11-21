@@ -64,7 +64,7 @@
               <el-popover
                 placement="top"
                 trigger="hover"
-                :content="$t('overall.result.total') + '：' + scope.row.assetStat.total + '，' + $t('asset.inStock') + '：' + scope.row.assetStat.inStock + '，' + $t('asset.notInStock') + '：' + scope.row.assetStat.outStock+ + $t('asset.suspended') + '：' + scope.row.assetStat.suspended">
+                :content="$t('overall.result.total') + '：' + scope.row.assetStat.total + '，' + $t('asset.inStock') + '：' + scope.row.assetStat.inStock + '，' + $t('asset.notInStock') + '：' + scope.row.assetStat.outStock + '，' + $t('asset.suspended') + '：' + scope.row.assetStat.suspended">
                   <div slot="reference" class="dc-asset-states">
                     <span class="dc-asset-state dc-asset-state-total">{{scope.row.assetStat.total}}</span>
                     <span class="dc-asset-state dc-asset-state-in">{{scope.row.assetStat.inStock}}</span>
