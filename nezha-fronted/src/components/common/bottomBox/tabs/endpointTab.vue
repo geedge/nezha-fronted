@@ -273,8 +273,8 @@
             id:33,
             name:this.$t('asset.state'),
             // name: this.$t('asset.asset'),
-            type:'state',
-            label:'state',
+            type:'select',
+            label:'endpointState',
             disabled:false,
             readonly:true,
           }],
@@ -385,7 +385,11 @@
         // this.pageObj.pageNo = 1;
         for (let item in searchObj) {
           if (searchObj[item]) {
-            this.$set(this.endpointSearchLabel, item, searchObj[item]);
+            if (item === "endpointState") {
+              this.$set(this.endpointSearchLabel, 'state', searchObj[item]);
+            } else {
+              this.$set(this.endpointSearchLabel,item,searchObj[item]);
+            }
           }
         }
         if(orderBy){

@@ -53,11 +53,14 @@
     ],
     endpointState: [ //资产入库/出库状态
       {
-        value: 'UP',
+        value: 1,
         label: 'UP'
       }, {
-        value: 'DOWN',
+        value: 0,
         label: 'DOWN'
+      }, {
+        value: 2,
+        label: 'SUSPENDED'
       }
     ],
     pingStatus:[
