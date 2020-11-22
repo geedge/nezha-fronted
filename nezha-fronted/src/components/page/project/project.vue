@@ -579,7 +579,7 @@
         this.endpointSearchLabel={};
         this.endpointPageObj.pageNo=1;
         for(let item in searchObj){
-          if(searchObj[item]){
+          if(searchObj[item] || searchObj[item] === 0){
             if (item === "endpointState") {
               this.$set(this.endpointSearchLabel, 'state', searchObj[item]);
             } else {
