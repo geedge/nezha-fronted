@@ -146,7 +146,7 @@
       </div>
    </draggable>
     <el-row v-if="dataList.length === 0"  class="noData"></el-row>
-    <div class="page-shadow" v-if="showShadow"></div>
+    <!--<div class="page-shadow" v-if="showShadow"></div>-->
   </div>
 </template>
 
@@ -205,11 +205,11 @@
         lineNum:3,//每页加载的行数
         pagePanelId:'',//当前分页的panelId
         dragging: null,
-        chartDataCacheGroup:new Map,//图表数据缓存，用于查询：id:{}
+        //chartDataCacheGroup:new Map,//图表数据缓存，用于查询：id:{}
         stepHeight: 50,
 
         tempDom: {height: "", width: ""},
-        showShadow:false,
+        //showShadow:false,
       };
     },
     methods: {
@@ -229,129 +229,19 @@
         }
         this.dataListDragTmp = [...this.dataList];
       },
-      end (event) {
-        //console.info("end event:", event)
-        if(this.dataList.length===1){return}//解决当元素只有一个移动会报错的问题
-        let item = event.item;
-        let oldIndex = event.oldIndex;
-        let newIndex = event.newIndex;
-        let newItem = this.dataList[newIndex];
-        //移动前，移动元素前后元素next及prev修改；移动后，移动元素前后元素next及prev修改--start
-        let len = this.dataListDragTmp.length;//移动之前的元素列表
-        let endIndex = len-1;
-        if(oldIndex===0){//挪动之前为第一个元素
-          let oldNextItem = this.dataListDragTmp[oldIndex+1];
-          let nextItem = this.dataList.find(item => item.id === oldNextItem.id);
-          nextItem.prev = 0;
-        }else if(oldIndex===endIndex){//挪动之前为最后一个元素
-          let oldPrevItem = this.dataListDragTmp[oldIndex-1];
-          let prevItem = this.dataList.find(item => item.id === oldPrevItem.id);
-          prevItem.next = -1;
-        }else{//挪动之前为中间元素
-          let oldPrevItem = this.dataListDragTmp[oldIndex-1];
-          let oldNextItem = this.dataListDragTmp[oldIndex+1];
-          let nextItem = this.dataList.find(item => item.id === oldNextItem.id);
-          let prevItem = this.dataList.find(item => item.id === oldPrevItem.id);
-          prevItem.next = oldNextItem.id;
-          nextItem.prev = oldPrevItem.id;
-        }
-
-        if(newIndex===0){//挪动之后为第一个元素
-          let newNextItem = this.dataList[newIndex+1];
-          newNextItem.prev = newItem.id;
-        }else if(newIndex===endIndex){//挪动之后为最后一个元素
-          let newPrevItem = this.dataList[newIndex-1];
-          newPrevItem.next =newItem.id;
-        }else{//挪动之后为中间元素
-          let newPrevItem = this.dataList[newIndex-1];
-          let newNextItem = this.dataList[newIndex+1];
-          newPrevItem.next = newItem.id;
-          newNextItem.prev = newItem.id;
-        }
-        //移动前，移动元素前后元素next及prev修改；移动后，移动元素前后元素next及prev修改--end
-
-        //前台总列表中的顺序也得修改（dataTotalList及dataTotalListBak），后台接口也得调用
-        if(newIndex<oldIndex){//从后往前移动：
-          //console.log('从后往前移动：oldIndex='+oldIndex+',newIndex='+newIndex)
-          let newNextItem = this.dataList[newIndex+1];
-          newItem.next = newNextItem.id;
-
-          let nextItemIndexInTotal = -1;
-          this.dataTotalListBak.forEach((item,index)=>{
-            if(item.id===newNextItem.id){
-              nextItemIndexInTotal = index;
-            }
-          })
-          // console.log('从后往前移动：next元素在总列表中之前的元素的index='+nextItemIndexInTotal)
-          if(nextItemIndexInTotal>0){//总列表中：移动之后的当前元素后面的元素之前有元素
-            let prevItem = this.dataTotalListBak[nextItemIndexInTotal-1];
-            newItem.prev = prevItem.id;
-          }else{//之前无元素
-            newItem.prev = 0;
-          }
-        }else if(newIndex>oldIndex){//从前往后移动
-          //console.log('从前往后移动：oldIndex='+oldIndex+',newIndex='+newIndex)
-          let newPrevItem = this.dataList[newIndex-1];
-          newItem.prev = newPrevItem.id;
-
-          let prevItemIndexInTotal = -1;
-          this.dataTotalListBak.forEach((item,index)=>{
-            if(item.id===newPrevItem.id){
-              prevItemIndexInTotal = index;
-            }
+      end(event) {
+        if (event.oldIndex !== event.newIndex) {
+          let newWeights = [];
+          this.dataList.forEach((item, index) => {
+            item.weight = index;
+            newWeights.push({id: item.id, weight: index});
           });
-          //console.log('从前往后移动：prev元素在总列表中之后的元素的index='+prevItemIndexInTotal)
-          if(prevItemIndexInTotal<this.dataTotalListBak.length-1){//总列表中：移动之后的当前元素前面的元素之后有元素
-            let nextItem = this.dataTotalListBak[prevItemIndexInTotal+1];
-            newItem.next = nextItem.id;
-          }else{//之后无元素
-            newItem.next = -1;
-          }
-        }else {//oldIndex = newIndex
+          this.$put('panel/'+ this.pagePanelId+'/charts/weights', newWeights).then(response => {
+            if (response.code !== 200) {
 
-        }
-        //更新图表prev和next
-        const modifyParams = {
-          id:newItem.id,
-          span:newItem.span,
-          height:newItem.height,
-          prev:newItem.prev,
-          next:newItem.next,
-        };
-
-        if(this.dataList.length>1 && oldIndex !== newIndex){
-          this.showShadow=true;
-          this.$put('panel/'+ this.pagePanelId+'/charts/modify',modifyParams).then(response => {
-            if (response.code === 200) {
-              //修改前台列表中元素的顺序
-              let curItem = this.dataTotalListBak.find((item,index)=>{return newItem.id===item.id});
-              let curIndex = this.dataTotalListBak.indexOf(curItem);
-              this.dataTotalListBak.splice(curIndex,1);
-
-              let nextItemTmp = this.dataTotalListBak.find((item)=>{return item.id===newItem.next});
-              if(nextItemTmp){
-                let nextIndex = this.dataTotalListBak.indexOf(nextItemTmp);
-                this.dataTotalListBak.splice(nextIndex,0,newItem);
-              }else{//移动到最后一个元素
-                this.dataTotalListBak.push(newItem);
-              }
-              this.dataList = this.dataTotalListBak;
-              this.$nextTick(()=>{
-                this.showShadow=false;
-              })
-            }else {
-              if(response.msg){
-                this.$message.error(response.msg);
-              }else if(response.error){
-                this.$message.error(response.error);
-              }else {
-                this.$message.error(response);
-              }
             }
           });
         }
-        let chartTitle = item.querySelector('.chartTitle');
-        chartTitle.style.background = '';
       },
       move(event, orgin) {
         let dragClass = document.querySelector('.drag-chart-class');//drag-chart-class:yellow chart-ghost:green  fallback-class choose-class:purple
@@ -654,26 +544,27 @@
             });
 
             if(response.data.list){
-              this.dataTotalList =  response.data.list;
+              this.dataTotalListBak =  response.data.list;
             }else {
-              this.dataTotalList = response.data;
+              this.dataTotalListBak = response.data;
             }
-            this.dataTotalListBak = [...this.dataTotalList];
 
+            let chartListTmp = [];
             //查询条件带name
             if(this.filter.searchName&&this.filter.searchName!=''){
-              let chartListTmp = [];
               let searchTitleStr = this.filter.searchName;
               this.dataTotalListBak.forEach((item)=>{
                 if(item.title.indexOf(searchTitleStr)>-1){
                   chartListTmp.push(item);
                 }
               });
-              this.dataTotalList = chartListTmp;
+            } else {
+              chartListTmp = this.dataTotalListBak;
             }
+            this.dataTotalList = [...chartListTmp];
 
             this.dataList = [...this.dataTotalList];
-            this.showShadow=false;
+            //this.showShadow=false;
             this.$nextTick(() => {
               if (this.dataList.length > 0 ) {
                 this.dataList.forEach((item,index) => {
@@ -791,6 +682,7 @@
         }else {
           this.getChartData(chartItem, realIndex);
         }
+        chartData = null;
       },
       // 获取一个图表具体数据,图表信息，图表位置index
       getChartData(chartInfo, pos, filterType) {
@@ -886,16 +778,16 @@
               // 一个图表的所有element单独获取数据
               axios.all(axiosArr).then((res) => {
                 if (res.length > 0) {
-                  const series = [];
+                  let series = [];
                   let singleStatRlt = '';
-                  const legend = [];
-                  const tableData = [];
-                  const sumData = {
+                  let legend = [];
+                  let tableData = [];
+                  /*let sumData = {
                     name: 'sum',
                     data: [],
                     visible: true,
                     threshold: null,
-                  };
+                  };*/
                   let errorMsg = "";
                   res.forEach((response, innerPos) => {
                     if (response.status === 'success') {
@@ -913,7 +805,7 @@
                           }
                         } else {
                           response.data.result.forEach((queryItem, resIndex) => {
-                            const seriesItem = {
+                            let seriesItem = {
                               theData: {
                                 name: '',
                                 symbol: 'emptyCircle',  //去掉点
@@ -1020,7 +912,7 @@
                                 return [dpsItem[0] * 1000, dpsItem[1]];
                               });
                               series.push(seriesItem.theData);
-
+                              seriesItem = null;
                             } else if (chartItem.elements && chartItem.elements[innerPos]) {
                               // 无数据提示
                               /*
@@ -1555,6 +1447,7 @@
       },
       //复制图表
       duplicateChart(chartId,duplicateChartBack){
+        console.info(chartId, duplicateChartBack);
         let duplicateChartId = duplicateChartBack.id;
         let chart;
         let chartIndex = -1;
@@ -1661,6 +1554,7 @@
           }
         });
       },
+      //懒加载，判断网页区域，加载可见区的prom数据
       handleElementInViewport(ele,scrollTop,item,index,isSearch) {
         /*
         网页被卷去的高：document.body.scrollTop
@@ -1704,6 +1598,9 @@
           }
         }, 100);
       },
+    },
+    created() {
+      this.chartDataCacheGroup = new Map;
     },
     mounted() {
       this.tempDomInit();

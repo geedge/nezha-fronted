@@ -67,13 +67,15 @@
         styleType: Number,
         historyParam:{type:Object},
         showRemove:{type:Boolean,default:true},
-        projectRightBox:{type:Boolean,default:false}
+        projectRightBox:{type:Boolean,default:false},
+        metricOptions: {type: Array},
+        metricStore: {type: Array}
       },
       data(){
         return {
           dropDownVisible:false,
-          metricStore:[],
-          metricOptions:[],
+          //metricStore:[],
+          //metricOptions:[],
           cascaderValue:'',
           errorMsg:null,
           appendMsg:null,
@@ -81,9 +83,9 @@
           firstAddEvent:true
         }
       },
-      created() {
+      /*created() {
         this.queryMetrics();
-      },
+      },*/
       methods:{
         closeDropdown() {
           this.dropDownVisible = false;
@@ -101,43 +103,26 @@
         toggleDropdown() {
           this.dropDownVisible = !this.dropDownVisible;
         },
-        queryMetrics:function(){
-          this.metricOptions=[];
-          this.$get('prom/api/v1/label/__name__/values').then(response=>{
-            if(response.status == 'success'){
-              let metrics=response.data.sort();
-              let metricMap=new Map();
-              metrics.forEach((item)=>{
-                let key='';
-                if(/^[a-zA-Z]+?_[a-zA-Z]*/.test(item)){
-                  key=item.split('_')[0];
-                }else if(/^_\w*/.test(item)){
-                  key='      ';
-                }else{
-                  key=item;
-                }
-                if(metricMap.get(key)){
-                  let values=metricMap.get(key);
-                  values.push({label:item,value:item});
-                }else{
-                  let values=[{label:item,value:item}];
-                  metricMap.set(key,values);
-                }
-                this.metricStore.push({label:item,value:item,insertText:item})
-              })
-              for(let key of metricMap.keys()){
-                let option={
-                  label:key,
-                  value:key,
-                }
-                if(metricMap.get(key) && metricMap.get(key).length>1){
-                  option.children=metricMap.get(key);
-                }
-                this.metricOptions.push(option);
-              }
+        /*queryMetrics:function(){
+          this.metrics.forEach((item)=>{
+            let key='';
+            if(/^[a-zA-Z]+?_[a-zA-Z]*!/.test(item)){
+              key=item.split('_')[0];
+            }else if(/^_\w*!/.test(item)){
+              key='      ';
+            }else{
+              key=item;
             }
+            if(metricMap.get(key)){
+              let values=metricMap.get(key);
+              values.push({label:item,value:item});
+            }else{
+              let values=[{label:item,value:item}];
+              metricMap.set(key,values);
+            }
+            this.metricStore.push({label:item,value:item,insertText:item})
           })
-        },
+        },*/
         filterInput:function(queryString, cb){
           let metrics=Object.assign([],this.metricStore);
           let result=queryString?metrics.filter((item)=>{

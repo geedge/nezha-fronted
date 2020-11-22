@@ -193,6 +193,8 @@
             :id="promqlKeys[index-1]"
             :key="promqlKeys[index-1]"
             :expression-list="expressions"
+            :metric-options="metricOptions"
+            :metric-store="metricStore"
             :index="index-1"
             :styleType="2"
             :plugins="['metric-selector', 'metric-input', 'remove']"
@@ -443,7 +445,9 @@
         heightSuggestions:['300','400','500','600'],
         unitOptions:chartDataFormat.unitOptions(),
         sortedOptionKeys:[{key:'min',label:'Min'},{key:'max',label:'Max'},{key:'avg',label:'Avg'},{key:'last',label:'Last'},{key:'total',label:'Total'}],
-        textShow:false
+        textShow:false,
+        metricOptions: [],
+        metricStore: []
       }
     },
     components:{
@@ -1368,9 +1372,47 @@
       delMapping:function(index){
         this.editChart.param.valueMapping.mapping.splice(index,1)
       },
+      queryMetrics() {
+        this.metricOptions = [];
+        this.$get('prom/api/v1/label/__name__/values').then(response=>{
+          if(response.status == 'success'){
+            let metrics=response.data.sort();
+            let metricMap=new Map();
+            metrics.forEach((item)=>{
+              let key='';
+              if(/^[a-zA-Z]+?_[a-zA-Z]*/.test(item)){
+                key=item.split('_')[0];
+              }else if(/^_\w*/.test(item)){
+                key='      ';
+              }else{
+                key=item;
+              }
+              if(metricMap.get(key)){
+                let values=metricMap.get(key);
+                values.push({label:item,value:item});
+              }else{
+                let values=[{label:item,value:item}];
+                metricMap.set(key,values);
+              }
+              this.metricStore.push({label:item,value:item,insertText:item})
+            });
+            for(let key of metricMap.keys()){
+              let option={
+                label:key,
+                value:key,
+              }
+              if(metricMap.get(key) && metricMap.get(key).length>1){
+                option.children=metricMap.get(key);
+              }
+              this.metricOptions.push(option);
+            }
+          }
+        })
+      },
     },
     created() {
       this.getSuggestMetric();
+      this.queryMetrics();
     },
     watch: {
       chart: {
@@ -1425,26 +1467,6 @@
           }
         }
       }
-      /*panelData: {
-        deep: true,
-        immediate: true,
-        handler(n, o) {
-          if(this.showPanel){
-            if (!this.showPanel.type) {
-              if (this.selectFirstPanel) {
-                this.selectFirstPanel = false;
-                this.panelId = n[0].id;
-              } else if (this.panelName) {
-                for (let i = 0; i < n.length; i++) {
-                  if (n[i].name == this.panelName) {
-                    this.panelId = n[i].id;
-                  }
-                }
-              }
-            }
-          }
-        }
-      }*/
     },
     beforeDestroy() {
       if(this.$refs.chartTag){

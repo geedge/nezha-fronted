@@ -462,7 +462,7 @@
               ],
               filePath:[
                 { required: true, message: this.$t('validate.required'), trigger: 'blur' },
-                { pattern: /^\/(\w+\/?)+$/, message: this.$t('config.system.notification.filePathReg') }
+                { pattern: /^\/(.*\.*.+\/?)+$/, message: this.$t('config.system.notification.filePathReg') }
                 // { type: 'url', message: this.$t('config.system.link.uriRequired'), trigger: 'blur' } /*检验网址是否正确*/
               ]
             },

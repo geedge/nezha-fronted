@@ -255,6 +255,7 @@ export default new Vue({
           statisticsRlt = dataArray[dataArray.length-1]-dataArray[0];
         }
       }
+      dataArray = null;
       return statisticsRlt;
     },
     //将本地时区转为系统配置的时区

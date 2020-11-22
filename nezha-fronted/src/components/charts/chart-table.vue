@@ -379,8 +379,8 @@
         }
         this.data = chartItem;
         this.unit = chartDataFormat.getUnit(this.data.unit);
-        seriesItem=seriesItem.map(item=>{
-          if(chartItem.param.valueMapping && chartItem.param.valueMapping.type){
+        seriesItem && (seriesItem = seriesItem.map(item=>{
+          if(chartItem.param && chartItem.param.valueMapping && chartItem.param.valueMapping.type){
             let type=chartItem.param.valueMapping.type;
             let mappings=chartItem.param.valueMapping.mapping?chartItem.param.valueMapping.mapping:[];
             let value = item.value;
@@ -394,7 +394,7 @@
             item.value = mapping?mapping.text:chartDataFormat.getUnit(chartItem.unit?chartItem.unit:2).compute(value,null,2);
           }
           return item;
-        })
+        }));
         if (area === 'showFullScreen') {//全屏按时间查询
 
           this.searchTime[0] = filter.start_time;//将列表的查询时间复制给全屏的查询时间

@@ -363,7 +363,7 @@
           searchMsg:{
             immediate: true,
             handler(n){
-             console.log(n);
+             //console.log(n);
              if(n){
                n.searchLabelList.forEach(item=>{
                  if(item.id===27&&item.type==='idc'&&item.label==='idcId'){
@@ -857,7 +857,7 @@
             },
             // input框监听是按删除还是回车
             enter(val, e) {
-                console.log(val);
+                //console.log(val);
               var keyCode = window.event ? e.keyCode : e.which;
               if(val == 'ID'&&keyCode == 13){
                 let id = /^[0-9]*$/

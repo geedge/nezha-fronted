@@ -222,9 +222,9 @@
       return {
         data: {}, // 该图表信息,chartItem
         noData:false,
+        seriesLength:20,
         /*seriesItem: [], // 保存信息
         seriesItemArr:[],// 初次加载的数据
-        seriesLength:20,
         seriesItemScreen:[],
         seriesItemArrScreen:[],*/
         /*legendListMore:[],
@@ -1054,8 +1054,8 @@
       },
       // 设置数据, filter区分
       setData(chartItem, seriesItem, panelId, filter,legend,area,errorMsg) {
-        this.setColor(legend.length);
-        legend.forEach((t,i)=>{t.color = this.bgColorList[i]});
+        legend && this.setColor(legend.length);
+        legend && legend.forEach((t,i)=>{t.color = this.bgColorList[i]});
         this.filter.from = filter.from;
         if(errorMsg && errorMsg!==''){
           this.isError = true;
@@ -1098,7 +1098,7 @@
             this.oldSearchTime[0] = this.searchTime[0];
             this.oldSearchTime[1] = this.searchTime[1];
           }
-          this.seriesItem=seriesItem;
+          //this.seriesItem=seriesItem;
           let seriesItemArr=seriesItem;
           if(seriesItem.length>this.seriesLength){
             seriesItemArr=seriesItem.filter((item,index)=>index<this.seriesLength); // 只查看前seriesLength条
@@ -1199,7 +1199,7 @@
               type: 'success',
               message: this.$t("tip.duplicateSuccess")
             });
-            this.$emit('on-duplicate-chart-block', this.data.id,response.data);
+            this.$emit('on-duplicate-chart-block', this.data.id, response.data);
           }else {
             if(response.msg){
               this.$message.error(response.msg);
@@ -1721,7 +1721,6 @@
       this.chartInfo = {};
       this.seriesItem = []; // 保存信息
       this.seriesItemArr = [];// 初次加载的数据
-      this.seriesLength = 20;
       this.seriesItemScreen = [];
       this.seriesItemArrScreen = [];
       this.legend = [];

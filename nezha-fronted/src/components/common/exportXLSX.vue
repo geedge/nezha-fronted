@@ -4,7 +4,7 @@
       <slot name="optionZone"></slot><button @mouseenter="exportMenuHandler(true)" @mouseleave="exportMenuHandler(false)" class="nz-btn nz-btn-size-normal nz-btn-style-light export-dropdown-btn" id="browser-go" style="padding: 0">
         <i class="nz-icon nz-icon-arrow-down"></i>
         <transition name="el-zoom-in-top">
-          <ul class="el-dropdown-menu el-popper el-dropdown-menu--mini export-dropdown" v-show="exportShow">
+          <ul class="el-dropdown-menu el-popper el-dropdown-menu--mini export-dropdown" style="z-index: 101" v-show="exportShow">
             <li @click="showImportBox(1)" class="el-dropdown-menu__item dropdown-content"><i class="nz-icon nz-icon-upload"></i>{{$t('overall.importExcel')}}</li>
             <li @click="showImportBox(2)" class="el-dropdown-menu__item dropdown-content"><i class="nz-icon nz-icon-download1"></i>{{$t('overall.exportExcel')}}</li>
           </ul>

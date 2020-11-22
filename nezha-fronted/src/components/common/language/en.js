@@ -757,7 +757,7 @@ const en = {
       notification: {
         notification:'Notification',
         name: "Name",
-        filePath: "filePath",
+        filePath: "File path",
         operation: "Operation",
         add: "Add",
         update: "Update",
