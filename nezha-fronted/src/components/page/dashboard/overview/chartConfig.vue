@@ -418,7 +418,7 @@
       series: null,
     };
     const tooltipPieOption = {
-      color: ["#60C6B4", "#EEA694", "#71706D"],
+      color: ["#60C6B4", "#EEA694", "#9e9c9b"],
       title: {
         show: true,
         textStyle: {
@@ -459,7 +459,7 @@
       ]
     };
     const topoPieOption = {
-      color: ["#60C6B4", "#EEA694", "#71706D"],
+      color: ["#60C6B4", "#EEA694", "#9e9c9b"],
       title: {
         show: false,
       },
