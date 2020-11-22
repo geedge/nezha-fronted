@@ -20,6 +20,7 @@
           <div class="legend-value">
             <div>{{moduleInfo.endpointStat.up}}</div>
             <div>{{moduleInfo.endpointStat.down}}</div>
+            <div>{{moduleInfo.endpointStat.suspended}}</div>
           </div>
           <div class="tooltip-chart" id="chart--endpoint"></div>
         </div>
@@ -116,10 +117,11 @@
           endpointOption.series[0].label.formatter = this.moduleInfo.endpointStat.down+this.moduleInfo.endpointStat.up + "";
           endpointOption.series[0].data = [
             {name: this.$t("dashboard.overview.asset.pingUp"), value: this.moduleInfo.endpointStat.up ? this.moduleInfo.endpointStat.up : 0},
-            {name: this.$t("dashboard.overview.asset.pingDown"), value: this.moduleInfo.endpointStat.down ? this.moduleInfo.endpointStat.down : 0}
+            {name: this.$t("dashboard.overview.asset.pingDown"), value: this.moduleInfo.endpointStat.down ? this.moduleInfo.endpointStat.down : 0},
+            {name: this.$t("asset.suspended"), value: this.moduleInfo.endpointStat.suspended ? this.moduleInfo.endpointStat.suspended : 0}
           ];
           endpointOption.title.show = false;
-          endpointOption.legend.data = [this.$t("dashboard.overview.asset.pingUp"), this.$t("dashboard.overview.asset.pingDown")];
+          endpointOption.legend.data = [this.$t("dashboard.overview.asset.pingUp"), this.$t("dashboard.overview.asset.pingDown"), this.$t("asset.suspended")];
           assetOption.series[0].label.formatter = this.moduleInfo.assetStat.up+this.moduleInfo.assetStat.down + "";
           assetOption.series[0].data = [
             {name: this.$t("dashboard.overview.asset.pingUp"), value: this.moduleInfo.assetStat.up ? this.moduleInfo.assetStat.up : 0},
@@ -144,13 +146,13 @@
 
     .tooltip--row {
       position: relative;
-      height: 50px;
+      height: 70px;
       
       .legend-value {
         font-size: 12px;
         color: #333333;
         position: absolute;
-        left: 125px;
+        left: 150px;
         top: 6px;
       }
 
@@ -227,7 +229,7 @@
   .main-box{
     background: #FFFFFF;
     border: 1px solid #E7EAED;
-    width: 180px;
+    width: 190px;
     margin-bottom: 15px;
   }
   .main-box-title{
@@ -258,7 +260,7 @@
     margin-right: 5px;
     line-height: 1;
   }
-  .bg23BF9A{
+/*  .bg23BF9A{
     background: #23BF9A;
   }
   .bgEC7F66{
@@ -266,6 +268,6 @@
   }
   .bg3C92F1{
     background: #3C92F1;
-  }
+  }*/
 
 </style>

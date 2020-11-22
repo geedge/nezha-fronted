@@ -888,6 +888,18 @@ li{
   padding:2px 5px;
   border-radius: 4px;
 }
+.nz-table td.suspended .cell>span {
+  background-color: $suspended-color;
+  color: white;
+  padding:2px 5px;
+  border-radius: 4px;
+}
+.nz-table td.success .cell>span {
+  background-color: $success-color;
+  color: white;
+  padding:2px 5px;
+  border-radius: 4px;
+}
 .nz-table th {
   padding: 0;
 }
@@ -1733,8 +1745,8 @@ li{
   //background-color:#50d050 !important;
   background-color:$success-color !important;
 }
-.grey {
-  background-color:lightGrey;
+.gray {
+  background-color: $suspended-color !important;
 }
 .dark-red {
   background-color: #aa0000 !important;

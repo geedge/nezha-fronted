@@ -142,12 +142,12 @@
               <el-popover placement="right" width="50" trigger="hover"
                           :popper-class="scope.row.state == '1'?'small-pop':''">
                 <div slot="reference" style="width: 20px">
-                  <div
-                    :class="{'active-icon green':scope.row.state == '1','active-icon red':scope.row.state == '0'}"></div>
+                  <div :class="{'active-icon green':scope.row.state == '1', 'active-icon red':scope.row.state == '0', 'active-icon gray':scope.row.state == '2'}"></div>
                 </div>
                 <div>
                   <div v-if="scope.row.state == '1'">up</div>
-                  <div v-else>down:<br/>{{getStateErrorMsg(scope.row)}}</div>
+                  <div v-else-if="scope.row.state == '0'">down:<br/>{{getStateErrorMsg(scope.row)}}</div>
+                  <div v-else-if="scope.row.state == '2'">suspended</div>
                 </div>
               </el-popover>
             </span>

@@ -866,10 +866,11 @@
           endpointOption.series[0].label.formatter = data.endpointTotal + "";
           endpointOption.series[0].data = [
             {name: vm.$t("dashboard.overview.asset.pingUp"), value: data.endpointUp ? data.endpointUp : 0},
-            {name: vm.$t("dashboard.overview.asset.pingDown"), value: data.endpointDown ? data.endpointDown : 0}
+            {name: vm.$t("dashboard.overview.asset.pingDown"), value: data.endpointDown ? data.endpointDown : 0},
+            {name: vm.$t("asset.suspended"), value: data.endpointSuspended ? data.endpointSuspended : 0}
           ];
           endpointOption.title.text = vm.$t("project.endpoint.endpoint");
-          endpointOption.legend.data = [vm.$t("dashboard.overview.asset.pingUp"), vm.$t("dashboard.overview.asset.pingDown")];
+          endpointOption.legend.data = [vm.$t("dashboard.overview.asset.pingUp"), vm.$t("dashboard.overview.asset.pingDown"), vm.$t("asset.suspended")];
           prometheusOption.series[0].label.formatter = data.promTotal + "";
           prometheusOption.series[0].data = [
             {name: vm.$t("dashboard.overview.asset.pingUp"), value: data.promUp ? data.promUp : 0},
@@ -1293,7 +1294,7 @@
                   </div>
                   <div class="tooltip-asset--sub-row">
                     <div class="sub-row--label">${this.$t("asset.suspended")}</div>
-                    <div class="sub-row--value"><div class="sign red-sign"></div><span>${dcStat.assetSuspended}</span></div>
+                    <div class="sub-row--value"><div class="sign gray-sign"></div><span>${dcStat.assetSuspended}</span></div>
                   </div>
                 </div>
               </div>
@@ -1328,6 +1329,7 @@
             <div class="legend-value">
               <div>${dcStat.endpointUp}</div>
               <div>${dcStat.endpointDown}</div>
+              <div>${dcStat.endpointSuspended}</div>
             </div>
             <div class="legend-value">
               <div>${dcStat.promUp}</div>

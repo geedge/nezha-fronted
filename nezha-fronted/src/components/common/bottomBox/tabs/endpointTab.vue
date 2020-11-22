@@ -103,7 +103,7 @@
           <span v-else-if="item.prop == 'state'" >
             <el-popover placement="right" trigger="hover" :content="getStateContent(scope.row)" popper-class="small-pop">
               <div slot="reference" style="width: 20px">
-                <div :class="{'active-icon green':scope.row.state == '1','active-icon red':scope.row.state == '0'}"></div>
+                <div :class="{'active-icon green':scope.row.state == '1','active-icon red':scope.row.state == '0', 'active-icon gray':scope.row.state == '2'}"></div>
               </div>
             </el-popover>
           </span>
@@ -411,13 +411,13 @@
         return year + "-" + month + "-" + day + " " + hours + ":" + minutes + ":" + seconds;
       },
       getStateContent:function(row){
-        if(row){
-          if(row.state == 1){
+        if (row) {
+          if (row.state == 1) {
             return 'up';
-            //return 'up'+'['+this.formatUpdateTime(row.lastUpdate)+']';
-          }else{
+          } else if (row.state == 0){
             return 'down';
-            //return 'down'+'['+this.getStateErrorMsg(row)+']';
+          } else if (row.state == 2) {
+            return 'suspended';
           }
         }
       },

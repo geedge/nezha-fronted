@@ -546,6 +546,7 @@ const cn = {
     endpointNum:'代表总的数量',
     active:"Alive",// "存活",
     total:"Total", // "总数",
+    down: "Down",
   },
   config: {
     config: "设置",

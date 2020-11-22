@@ -102,9 +102,9 @@
           <template v-if="item.prop=='Module'">
             <el-tooltip placement="right" effect="light">
               <div slot="content">
-                {{$t('asset.active')}} / {{$t('asset.total')}}
+                {{$t('asset.down')}} / {{$t('asset.total')}}
               </div>
-              <span class="link" @click="showEndpoint(scope.row)" style="padding: 2px 8px">{{scope.row.endpointNum-scope.row.endpointDownNum}}/{{scope.row.endpointNum}}</span>
+              <span class="link" @click="showEndpoint(scope.row)" style="padding: 2px 8px">{{scope.row.endpointDownNum}}/{{scope.row.endpointNum}}</span>
             </el-tooltip>
           </template>
           <template v-if="item.prop=='Alert'">
@@ -504,10 +504,14 @@
           }
         }
         if(e.column.label == 'Module' || e.column.label == this.$t("asset.tableTitle.modules")){
-          if (e.row.endpointDownNum > 0) {
-            return 'danger';
+          if (e.row.state == 3) {
+            return 'suspended';
           } else {
-            return 'success';
+            if (e.row.endpointDownNum > 0) {
+              return 'danger';
+            } else {
+              return 'success';
+            }
           }
         }
         return '';

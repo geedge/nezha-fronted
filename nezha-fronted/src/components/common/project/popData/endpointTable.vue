@@ -20,10 +20,6 @@
           <div class="top-tool-search">
             <search-input :searchMsg="searchMsg" @search="search" :bottomBox.inTransform="true"></search-input>
           </div>
-          <!--<button type="button" @click="showExportDialog" :title="$t('overall.exportExcelLower')"-->
-          <!--class="nz-btn nz-btn-size-normal nz-btn-style-light margin-l-20" id="alert-list-export">-->
-          <!--<i class="nz-icon nz-icon-download1"></i>-->
-          <!--</button>-->
         </div>
         <div class="pagination-top pagination-top-hide display-none"></div>
       </div>
@@ -73,11 +69,12 @@
               <span v-else-if="item.prop == 'state'" >
               <el-popover placement="right" width="50" trigger="hover" :popper-class="scope.row.state == '1'?'small-pop':''">
                 <div slot="reference" style="width: 20px">
-                  <div :class="{'active-icon green':scope.row.state == '1','active-icon red':scope.row.state == '0'}"></div>
+                  <div :class="{'active-icon green':scope.row.state == '1','active-icon red':scope.row.state == '0','active-icon gray':scope.row.state == '2'}"></div>
                 </div>
                 <div >
                   <div v-if="scope.row.state == '1'">up</div>
-                  <div v-else>down:<br/>{{getStateErrorMsg(scope.row)}}</div>
+                  <div v-else-if="scope.row.state == '0'">down:<br/>{{getStateErrorMsg(scope.row)}}</div>
+                  <div v-else-if="scope.row.state == '2'">suspended</div>
                 </div>
               </el-popover>
             </span>
@@ -98,8 +95,6 @@
 </template>
 
 <script>
-  import bus from '@/libs/bus';
-  import axios from 'axios';
   import nzAlertTag from '@/components/page/alert/nzAlertTag';
   import alertRuleInfo from '@/components/common/alert/alertRuleInfo'
   import alertLabel from '@/components/common/alert/alertLabel'

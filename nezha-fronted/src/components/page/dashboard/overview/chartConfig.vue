@@ -418,7 +418,7 @@
       series: null,
     };
     const tooltipPieOption = {
-      color: ["#60C6B4", "#EEA694"],
+      color: ["#60C6B4", "#EEA694", "#71706D"],
       title: {
         show: true,
         textStyle: {
@@ -432,7 +432,7 @@
         data: [],
         show: true,
         left: 70,
-        top: 44,
+        top: 35,
         icon: "circle",
         itemHeight: 4,
         orient: "vertical",
@@ -459,15 +459,15 @@
       ]
     };
     const topoPieOption = {
-      color: ["#60C6B4", "#EEA694"],
+      color: ["#60C6B4", "#EEA694", "#71706D"],
       title: {
         show: false,
       },
       legend: {
         data: [],
         show: true,
-        left: 60,
-        top: 6,
+        left: 62,
+        top: 7,
         icon: "circle",
         itemHeight: 4,
         orient: "vertical",
@@ -481,8 +481,8 @@
         {
           type: "pie",
           animation: false,
-          center: [30, 25],
-          radius: [14, 22],
+          center: [30, 35],
+          radius: [18, 26],
           data: [],
           label: {
             show: true,

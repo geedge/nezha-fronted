@@ -373,7 +373,7 @@
   border-radius: 2px;
   padding: 10px 20px;
   box-sizing: border-box;
-  width: 390px;
+  width: 420px;
   height: 320px;
 }
 .content-bottom-box .tooltip{
@@ -409,16 +409,16 @@
       font-size: 12px;
       color: #333333;
       position: absolute;
-      left: 132px;
-      top: 45px;
+      left: 155px;
+      top: 35px;
     }
 
     .legend-value + .legend-value {
-      left: 310px;
+      left: 356px;
     }
 
     .tooltip-asset {
-      width: 240px;
+      width: 260px;
       height: 150px;
       border: 1px solid #DEDEDE;
       border-radius: 2px;
@@ -493,7 +493,7 @@
             border-radius: 50%;
             top: 50%;
             transform: translateY(-50%);
-            left: 0;
+            left: 15px;
           }
 
           .red-sign {
@@ -504,16 +504,20 @@
             background-color: $success-color;
           }
 
+          .gray-sign {
+            background-color: #010101;
+            opacity: 0.35;
+          }
           span {
             position: absolute;
-            left: 11px;
+            left: 26px;
           }
         }
       }
     }
 
     .tooltip-alert {
-      width: 96px;
+      width: 106px;
       height: 150px;
       box-shadow: 1px 2px 4px 0 rgba(0, 0, 0, 0.12), -1px 1px 4px -1px rgba(205, 205, 205, 0.47);
 
