@@ -193,6 +193,19 @@
             :id="promqlKeys[index-1]"
             :key="promqlKeys[index-1]"
             :expression-list="expressions"
+            :index="index-1"
+            :styleType="2"
+            :plugins="['metric-selector', 'metric-input', 'remove']"
+            @change="expressionChange"
+            @removeExpression="removeExpression"
+            :showRemove="false"
+          ></promql-input>
+<!--
+          <promql-input
+            :ref="'promql-'+(index-1)"
+            :id="promqlKeys[index-1]"
+            :key="promqlKeys[index-1]"
+            :expression-list="expressions"
             :metric-options="metricOptions"
             :metric-store="metricStore"
             :index="index-1"
@@ -202,6 +215,7 @@
             @removeExpression="removeExpression"
             :showRemove="false"
           ></promql-input>
+-->
           <el-row>
             <template v-if="editChart.type != 'singleStat'">
               <el-col style="width: 120px; padding-right: 20px; text-align: right; color: #666">
@@ -447,7 +461,7 @@
         sortedOptionKeys:[{key:'min',label:'Min'},{key:'max',label:'Max'},{key:'avg',label:'Avg'},{key:'last',label:'Last'},{key:'total',label:'Total'}],
         textShow:false,
         metricOptions: [],
-        metricStore: []
+        //metricStore: []
       }
     },
     components:{
@@ -1394,13 +1408,13 @@
                 let values=[{label:item,value:item}];
                 metricMap.set(key,values);
               }
-              this.metricStore.push({label:item,value:item,insertText:item})
+              //this.metricStore.push({label:item,value:item,insertText:item})
             });
             for(let key of metricMap.keys()){
               let option={
                 label:key,
                 value:key,
-              }
+              };
               if(metricMap.get(key) && metricMap.get(key).length>1){
                 option.children=metricMap.get(key);
               }
@@ -1409,6 +1423,9 @@
           }
         })
       },
+      getMetricOptions() {
+        return this.metricOptions;
+      }
     },
     created() {
       this.getSuggestMetric();

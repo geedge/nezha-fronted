@@ -16,8 +16,22 @@
         </div>
         <div style="height: calc(100% - 50px);width: 100%;" >
           <el-scrollbar style="height: 100%" class="el-scrollbar-large">
-          <div class="expression-room right-margin" style="padding-top: 5px">
-            <!--坑，这个index居然是从1开始-->
+            <div class="expression-room right-margin" style="padding-top: 5px">
+              <!--坑，这个index居然是从1开始-->
+              <promql-input
+                v-for="index of promqlKeys.length"
+                :ref="'promql-'+(index-1)"
+                :id="promqlKeys[index-1]"
+                :key="promqlKeys[index-1]"
+                :expression-list="expressions"
+                :index="index-1"
+                :styleType="1"
+                :plugins="['metric-selector', 'metric-input', 'add', 'remove']"
+                @change="expressionChange"
+                @addExpression="addExpression"
+                @removeExpression="removeExpression"
+              ></promql-input>
+<!--
             <promql-input
               v-for="index of promqlKeys.length"
               :ref="'promql-'+(index-1)"
@@ -32,16 +46,7 @@
               @addExpression="addExpression"
               @removeExpression="removeExpression"
             ></promql-input>
-<!--                <promql-input-plus-->
-<!--                  v-for="index of promqlKeys.length"-->
-<!--                  :ref="'promql-plus'+(index-1)"-->
-<!--                  :id="promqlKeys[index-1]"-->
-<!--                  :key="promqlKeys[index-1]"-->
-<!--                  :index="index-1"-->
-<!--                  @change="expressionChange"-->
-<!--                  @addExpression="addExpression"-->
-<!--                  @removeExpression="removeExpression"-->
-<!--                ></promql-input-plus>-->
+-->
           </div>
           <div class="chart-view right-margin" v-show="!showIntroduce"
                :class="{'shrink-view':!chartVisible || !defaultChartVisible}" style="position:relative;">
@@ -254,10 +259,12 @@ instance_cpu_time_ns{app="fox", proc="widget", rev="4d3a513", env="prod", job="c
         chartUnit:0,
         historyParam:{useHistory:true,key:'expore-history'},
         chart: {},
+        metricOptions: []
       }
     },
     created() {
       this.getPanelData();
+      this.queryMetrics();
       this.promqlKeys.push(getUUID());
     },
     methods: {
@@ -607,6 +614,46 @@ instance_cpu_time_ns{app="fox", proc="widget", rev="4d3a513", env="prod", job="c
           }
         });
       },
+      queryMetrics() {
+        this.metricOptions = [];
+        this.$get('prom/api/v1/label/__name__/values').then(response=>{
+          if(response.status == 'success'){
+            let metrics = response.data.sort();
+            let metricMap=new Map();
+            metrics.forEach((item)=>{
+              let key='';
+              if(/^[a-zA-Z]+?_[a-zA-Z]*/.test(item)){
+                key=item.split('_')[0];
+              }else if(/^_\w*/.test(item)){
+                key='      ';
+              }else{
+                key=item;
+              }
+              if(metricMap.get(key)){
+                let values=metricMap.get(key);
+                values.push({label:item,value:item});
+              }else{
+                let values=[{label:item,value:item}];
+                metricMap.set(key,values);
+              }
+              //this.metricStore.push({label:item,value:item,insertText:item})
+            });
+            for(let key of metricMap.keys()){
+              let option={
+                label:key,
+                value:key,
+              }
+              if(metricMap.get(key) && metricMap.get(key).length>1){
+                option.children=metricMap.get(key);
+              }
+              this.metricOptions.push(option);
+            }
+          }
+        })
+      },
+      getMetricOptions() {
+        return this.metricOptions;
+      }
     },
     watch: {
       promqlCount: function (n, o) {
