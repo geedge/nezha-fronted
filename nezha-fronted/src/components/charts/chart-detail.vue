@@ -66,7 +66,8 @@
                           <span>{{value ? value + 'ms' : ''}}</span>
                         </template>
                         <template v-else-if="assetKey[key]">
-                          <span class="content-text">{{value ? value : "&nbsp;"}}</span>
+                          <span v-if="key!=='pingLastReply'" class="content-text">{{value ? value : "&nbsp;"}}</span>
+                          <span v-else class="content-text">{{value ? timeFormat(value): "&nbsp;"}}</span>
                           <div class="item-tip-hide item-tip-value el-popover" :class="itemTip(`value-${index}`, key, i, ready)">{{value}}</div>
                         </template>
                       </div>
@@ -557,6 +558,9 @@
         };
         let chart = echarts.init(document.querySelector("#littleChart"));
         chart.setOption(option);//创建图表
+      },
+      timeFormat(val){
+        return this.utcTimeToTimezoneStr(val)
       }
     },
     mounted() {
