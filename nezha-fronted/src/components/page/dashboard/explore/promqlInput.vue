@@ -13,7 +13,8 @@
             </div>
             <div class="input-box" @click="dropDownVisible=false" v-if="plugins.indexOf('metric-input') > -1">
               <!--            <el-autocomplete :placeholder="$t('dashboard.metricPreview.inputTip')" :fetch-suggestions="filterInput" clearable @clear="clearExpression" :trigger-on-focus="false" v-model="expressionList[index]" @blur="expressionChange" style="width: 100%;height:36px"></el-autocomplete>-->
-              <editor :styleType="styleType" :metric-list="metricStore" :history-param="historyParam" v-model="expressionList[index]" ref="editor" @on-enter="expressionChange" @on-blur="expressionChange" ></editor>
+              <!--<editor :styleType="styleType" :metric-list="metricStore" :history-param="historyParam" v-model="expressionList[index]" ref="editor" @on-enter="expressionChange" @on-blur="expressionChange" ></editor>?-->
+              <el-input v-model="expressionList[index]"></el-input>
               <div class="append-msg error" v-if="errorMsg"><span>{{errorMsg}}</span></div>
               <div class="append-msg error" v-if="appendMsg"><span>{{appendMsg}}</span></div>
             </div>
@@ -25,13 +26,14 @@
                 <el-dropdown class="metric-selector" v-if="plugins.indexOf('metric-selector') > -1">
                   <el-dropdown-menu style="display: none"></el-dropdown-menu>
                   <span :class="{'expr-title':projectRightBox}" style="cursor: pointer;" @click="toggleDropdown">Metric&nbsp;<i class="nz-icon nz-icon-arrow-down" style="font-size: 14px; -webkit-transform:scale(0.75);display:inline-block;"></i></span>
-                  <el-cascader-panel v-show="dropDownVisible" v-clickoutside="closeDropdown" v-model="cascaderValue" style="text-align: left;" slot="dropdown" ref="metricSelector" :props="{emitPath:false}" :options="metricOptions"  @change="metricChange"></el-cascader-panel>
+                  <el-cascader-panel v-if="dropDownVisible" v-clickoutside="closeDropdown" v-model="cascaderValue" style="text-align: left;" slot="dropdown" ref="metricSelector" :props="{emitPath:false}" :options="metricOptions"  @change="metricChange"></el-cascader-panel>
                 </el-dropdown>
                 <label style="line-height: 30px;" v-else>{{$t("alert.config.expr")}}</label>
               </el-col>
               <el-col style="width: calc(100% - 120px); height: 100%;">
                 <div class="input-box" @click="dropDownVisible=false" v-if="plugins.indexOf('metric-input') > -1">
-                  <editor :styleType="styleType" :metric-list="metricStore" :historyParam="historyParam" v-model="expressionList[index]" ref="editor" @on-enter="expressionChange" @on-blur="expressionChange" ></editor>
+                  <!--<editor :styleType="styleType" :metric-list="metricStore" :historyParam="historyParam" v-model="expressionList[index]" ref="editor" @on-enter="expressionChange" @on-blur="expressionChange" ></editor>-->
+                  <el-input v-model="expressionList[index]"></el-input>
                   <div class="append-msg error" v-if="errorMsg"><span>{{errorMsg}}</span></div>
                   <div class="append-msg error" v-if="appendMsg"><span>{{appendMsg}}</span></div>
                 </div>
@@ -68,14 +70,14 @@
         historyParam:{type:Object},
         showRemove:{type:Boolean,default:true},
         projectRightBox:{type:Boolean,default:false},
-        metricOptions: {type: Array},
-        metricStore: {type: Array}
+        //metricOptions: {type: Array},
+        //metricStore: {type: Array}
       },
       data(){
         return {
           dropDownVisible:false,
           //metricStore:[],
-          //metricOptions:[],
+          metricOptions: [],
           cascaderValue:'',
           errorMsg:null,
           appendMsg:null,
@@ -132,7 +134,7 @@
         },
         metricChange:function(value){
           this.expressionList[this.index]=value;
-          this.$refs.editor.setContent(value)
+          //this.$refs.editor.setContent(value)
           this.dropDownVisible=false;
           this.$emit('change')
         },
@@ -140,15 +142,28 @@
           this.$emit('change')
         },
         setError:function(errMsg){
-          console.log(errMsg)
+          //console.log(errMsg)
           this.errorMsg=errMsg;
         },
-        setMsg:function(){
+        /*setMsg:function(){
           this.appendMsg
-        }
+        }*/
       },
       watch:{
         dropDownVisible:function(n,o){
+          if (this.styleType == 1) {
+            if (n) {
+              this.metricOptions = this.$parent.$parent.getMetricOptions();
+            } else {
+              this.metricOptions = [];
+            }
+          } else if (this.styleType == 2) {
+            if (n) {
+              this.metricOptions = this.$parent.$parent.$parent.$parent.getMetricOptions();
+            } else {
+              this.metricOptions = [];
+            }
+          }
           if(this.$refs.metricSelector){
             this.$refs.metricSelector.dropDownVisible=n;
             if(!this.expressionList[this.index]||this.expressionList[this.index] == ''){
