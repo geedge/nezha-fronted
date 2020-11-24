@@ -191,7 +191,7 @@
         isFullScreen:false,
         closeConfirmShow:false,
         closeRemember:false,
-        initConsoleHeight:250,//只读,初始化高度
+        initConsoleHeight:300,//只读,初始化高度
         consoleHeight:250,//console高度
         resizeConsoleHeight: 250, //resize后的高度，用于记录最大化、最小化前的高度
         currentTransform:0,
@@ -312,7 +312,7 @@
 
         let targetDiv= document.getElementById('shell-service');
         targetDiv.style.height=this.initConsoleHeight+'px';
-        this.consoleHeight = this.initConsoleHeight;
+        this.consoleHeight = this.initConsoleHeight-50;
 
         this.$store.commit('closeConsole');
 

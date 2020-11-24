@@ -63,15 +63,14 @@ export default {
     resizeConsole(consoleHeigt,consoleWidth){
       //调整终端容器高度
       const consoleBox = document.getElementById('ternimalContainer'+this.idIndex);
-      consoleBox.style.height = `${consoleHeigt}px`;
+      consoleBox.style.height = `${consoleHeigt-55}px`;
       //调整终端高度
-      let rows = (consoleHeigt-this.topMenuHeight-this.dragHeigh)/(this.fontSize+this.fontSpaceHeight);
       let cols = this.term.cols;
       if(consoleWidth){//需要调整宽度???
         cols = consoleWidth/11;//目前字体，一个字母宽11
       }
       //调整终端可视区域高度
-      document.getElementsByClassName('xterm-screen')[this.idIndex].style.height=`${consoleHeigt}px`;
+      document.getElementsByClassName('xterm-screen')[this.idIndex].style.height=`${consoleHeigt-10}px`;
       // this.term.resize(parseInt(cols),(parseInt(rows)-this.minRow));
       this.$nextTick(()=>{// 解决进入全屏和退出全屏是底部隐藏
         this.setFontSize(this.fontSize);
@@ -81,7 +80,7 @@ export default {
       let width = document.body.clientWidth;//可视宽度
       const winStyle={
         width:width,
-        height:height,
+        height:height-100,
         cols:this.term.cols,//cols和rows在resizeConsole方法已经设置
         rows:this.term.rows,
       };
@@ -108,13 +107,13 @@ export default {
       if(isFullScreen){
         //容器高度设置100%
         const consoleBox = document.getElementById('ternimalContainer'+this.idIndex);
-        consoleBox.style.height = `${height}px`;//减去菜单的高度
+        consoleBox.style.height = `${height-25}px`;//减去菜单的高度
       }else {
         //rows = this.termimalRows-this.minRow;
         height = this.termimalHeight;
         //容器高度设置
         const consoleBox = document.getElementById('ternimalContainer'+this.idIndex);
-        consoleBox.style.height = `${this.termimalHeight+this.topMenuHeight}px`;
+        consoleBox.style.height = `${this.termimalHeight+this.topMenuHeight-55}px`;
         rows = (height-10)/(this.fontSize+this.fontSpaceHeight);//padding  5*2
         rows = parseInt(rows);
       }
@@ -122,7 +121,7 @@ export default {
       this.term.resize(this.term.cols,rows);//this.term.setOption('rows', rows);
       const winStyl={
         width:width,
-        height:height,
+        height:height-50,
         cols:this.term.cols,
         rows:parseInt(rows),
       };
