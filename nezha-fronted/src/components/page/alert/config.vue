@@ -539,7 +539,6 @@
       },
     },
     destroyed() {
-      window.onresize = null;
       bus.$off("alert-rule-list-change");
       bus.$off("dc-list-change");
       bus.$off('alert-message-change')

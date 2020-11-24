@@ -789,9 +789,9 @@
 
       //resize时刷新左侧列表滚动条
       let vm=this;
-      window.onresize=function(){
-        // vm.$refs.leftScrollbar.update();
-      };
+      // window.onresize=function(){
+      //   // vm.$refs.leftScrollbar.update();
+      // };
     },
     computed:{
       itemTip(){
@@ -859,7 +859,6 @@
       },
     },
     destroyed(){
-      window.onresize=null;
       bus.$off("project-page-type");
       bus.$off("current-project-change");
       bus.$off("current-module-change");

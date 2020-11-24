@@ -767,6 +767,10 @@
           self.tools.tableHover = false;
         }
       },
+      domResize(){
+        let el = this.$refs.assetTable.$el.querySelector(".el-table__body-wrapper");
+        el._ps_.update();
+      },
       // plmouseenter(el,self){
       //   console.log(123123123123)
       //   self.tools.tableHover = true;
@@ -839,23 +843,18 @@
         }
         //resize时刷新左侧列表滚动条
         let vm = this;
-        window.onresize = function () {
-          // vm.$refs.leftScrollbar.update();
-          el._ps_.update();
-        };
+        window.addEventListener('resize', this.domResize);
       });
     },
     beforeDestroy(){
+      window.removeEventListener('resize', this.domResize);
       let el = this.$refs.assetTable.$el.querySelector(".el-table__body-wrapper");
       if (el._ps_) {
         el.removeEventListener("ps-scroll-y", this.plpsscrolly.bind('',el,this));
-        // el.removeEventListener("mouseenter",  this.plmouseenter.bind('',el,this));
-        // el.removeEventListener("mouseleave", this.plmouseleave.bind('',el,this));
         el._ps_.destroy();
       }
     },
     destroyed() {
-      window.onresize = null;
       bus.$off("asset-filter-change");
       bus.$off('alert-message-change');
     }

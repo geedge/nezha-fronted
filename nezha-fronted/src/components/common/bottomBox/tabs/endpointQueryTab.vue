@@ -3,6 +3,10 @@
     text-align: center;
     margin-top: 16px;
   }
+  .nz-table /deep/  .el-table{
+    display: block !important;
+  }
+
 </style>
 <style>
   .endpoint-dialog .el-dialog__body{
@@ -55,19 +59,21 @@
       </div>
     </div>
     <div class="table-header-inner" @click="clearSelectedMetrics"><span><i style="font-size: 12px;margin-left: 2px;" class="nz-icon nz-icon-close " :class="{'control-icon-unchecked':selectedEndpoints.length<1,'control-icon-checked':selectedEndpoints.length>0}"></i></span></div>
-    <pl-table :row-height="28" use-virtual :datas="tableData" border :empty-text="$t('config.mib.noData')" :header-cell-class-name="cellClass" :style="{height: $tableHeight.noPagination}"
-              class="nz-table endpoint-query-table" style="width: 100%;" v-loading="loading" v-scrollBar:el-table="'large'" :pagination-show="false" ref="endpointQueryTable"
-              @selection-change="selectChange" v-if="tableShow" :border="true">
+     <pl-table :row-height="28" use-virtual :datas="tableData" border :empty-text="$t('config.mib.noData')" :header-cell-class-name="cellClass" :style="{height: $tableHeight.noPagination}"
+               class="nz-table endpoint-query-table" style="width: 100%;" v-loading="loading" v-scrollBar:el-table="'large'" :pagination-show="false" ref="endpointQueryTable"
+               @selection-change="selectChange" v-if="tableShow && plTableSHow" :border="true">
       <pl-table-column
         type="selection"
         width="39"
         align="center"
+        column-key="sel"
         :selectable="selectable">
       </pl-table-column>
       <pl-table-column
         prop="element"
         :resizable="true"
-        min-width="1800"
+        :min-width="1000"
+        column-key="element"
         :label="$t('project.endpoint.element')">
         <template v-slot="scope">
           <el-popover trigger="click" placement="right" v-if="typeof scope.row.metricTip != 'undefined' && scope.row.metricTip != null">
@@ -81,12 +87,13 @@
             </div>
             <span slot="reference"><i class="nz-icon nz-icon-info-normal metric-tip-icon"></i></span>
           </el-popover>
-          <span v-html="hideSameLabels?scope.row.colorSimpleElement: scope.row.colorElement"></span>
+          <span style="word-break: break-all;" v-html="hideSameLabels?scope.row.colorSimpleElement: scope.row.colorElement"></span>
         </template>
       </pl-table-column>
       <pl-table-column
         :resizable="false"
         prop="value"
+        column-key="value"
         :label="$t('project.endpoint.value')"
         min-width="180">
       </pl-table-column>
@@ -161,7 +168,9 @@
         hideSameLabels: true,
         sameLabels:['instance','module','project','asset','endpoint','datacenter'],
         chartUnit:5,
-        rightBox: {show: false}
+        rightBox: {show: false},
+        plTableSHow:true,
+        scrollTop:0,
       }
     },
     methods: {
@@ -479,17 +488,19 @@
             }
           });
           this.$nextTick(()=>{
-            this.$refs.endpointChart.setRandomColors(this.chartDatas.length)
-            this.$refs.endpointChart.setLegend(this.legend)
-            this.$refs.endpointChart.modifyOption("tooltip", "backgroundColor", "rgba(221,228,237,1)");
-            this.$refs.endpointChart.modifyOption("tooltip", "textStyle", {color: "#000"});
-            this.$refs.endpointChart.modifyOption("grid", "top", 30);
-            this.$refs.endpointChart.modifyOption("grid", "left", 0);
-            this.$refs.endpointChart.modifyOption("grid", "right", 30);
-            this.$refs.endpointChart.modifyOption("grid", "bottom", 8);
-            this.$refs.endpointChart.modifyOption("grid", "containLabel", true);
-            this.$refs.endpointChart.setSeries(this.chartDatas);
-            this.$refs.endpointChart.endLoading();
+           if( this.$refs.endpointChart){
+             this.$refs.endpointChart.setRandomColors(this.chartDatas.length)
+             this.$refs.endpointChart.setLegend(this.legend)
+             this.$refs.endpointChart.modifyOption("tooltip", "backgroundColor", "rgba(221,228,237,1)");
+             this.$refs.endpointChart.modifyOption("tooltip", "textStyle", {color: "#000"});
+             this.$refs.endpointChart.modifyOption("grid", "top", 30);
+             this.$refs.endpointChart.modifyOption("grid", "left", 0);
+             this.$refs.endpointChart.modifyOption("grid", "right", 30);
+             this.$refs.endpointChart.modifyOption("grid", "bottom", 8);
+             this.$refs.endpointChart.modifyOption("grid", "containLabel", true);
+             this.$refs.endpointChart.setSeries(this.chartDatas);
+             this.$refs.endpointChart.endLoading();
+           }
           });
 
         })
@@ -640,6 +651,30 @@
             }
           }
         }
+      },
+      plpsscrolly(self){
+        let el = self.$refs.endpointQueryTable.$el.querySelector(".el-table__body-wrapper");
+        self.scrollTop=el.scrollTop;
+        if (el._ps_.scrollbarYTop > 50) {
+          self.showTopBtn = true;
+          self.tableHover = true;
+        } else {
+          self.showTopBtn = false;
+          self.tableHover = false;
+        }
+      },
+      tableResize(self){
+        let el = self.$refs.endpointQueryTable.$el.querySelector(".el-table__body-wrapper");
+        el.removeEventListener("ps-scroll-y", this.plpsscrolly);
+        self.plTableSHow=false;
+        self.$nextTick(()=>{
+          self.plTableSHow=true;
+          setTimeout(()=>{
+            el = self.$refs.endpointQueryTable.$el.querySelector(".el-table__body-wrapper");
+            el.addEventListener("ps-scroll-y", this.plpsscrolly.bind('',self));
+            el.scrollTop = self.scrollTop;
+          },100)
+        });
       }
     },
     watch: {
@@ -659,15 +694,6 @@
           temp.tableFilter();
         }, 500)
       },
-      plpsscrolly(el,self){
-        if (el._ps_.scrollbarYTop > 50) {
-          self.showTopBtn = true;
-          self.tableHover = true;
-        } else {
-          self.showTopBtn = false;
-          self.tableHover = false;
-        }
-      },
     },
     mounted() {
       this.getPanelData();
@@ -677,16 +703,18 @@
         //绑定滚动条事件，控制top按钮
         let el = this.$refs.endpointQueryTable.$el.querySelector(".el-table__body-wrapper");
         if (el._ps_) {
-          el.addEventListener("ps-scroll-y", this.plpsscrolly.bind('',el,this));
+          el.addEventListener("ps-scroll-y", this.plpsscrolly.bind('',this));
         }
       }, 300);
 
       //});
+      window.addEventListener('resize', this.tableResize.bind('',this));
     },
     beforeDestroy(){
+      window.removeEventListener('resize', this.tableResize);
       let el = this.$refs.endpointQueryTable.$el.querySelector(".el-table__body-wrapper");
       if (el._ps_) {
-        el.removeEventListener("ps-scroll-y", this.plpsscrolly.bind('',el,this));
+        el.removeEventListener("ps-scroll-y", this.plpsscrolly);
         el._ps_.destroy();
       }
     }

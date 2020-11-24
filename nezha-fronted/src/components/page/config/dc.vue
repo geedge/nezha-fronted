@@ -484,7 +484,11 @@
           self.tools.showTopBtn = false;
           self.tools.tableHover = false;
         }
-      }
+      },
+      domResize(){
+        let el = this.$refs.dcTable.$el.querySelector(".el-table__body-wrapper");
+        el._ps_.update();
+      },
     },
     watch: {
       'bottomBox.dc': {
@@ -511,7 +515,7 @@
       }
     },
     destroyed() {
-      window.onresize = null;
+
     },
     mounted() {
       //初始化表头
@@ -525,15 +529,14 @@
         let el = this.$refs.dcTable.$el.querySelector(".el-table__body-wrapper");
         if (el._ps_) {
           el.addEventListener("ps-scroll-y", this.plpsscrolly.bind('',el,this));
-          window.onresize = function() {
-            el._ps_.update();
-          };
+          window.addEventListener('resize', this.domResize);
         }
       });
     },
     beforeDestroy(){
       let el = this.$refs.dcTable.$el.querySelector(".el-table__body-wrapper");
       if (el._ps_) {
+        window.removeEventListener('resize', this.domResize);
         el.removeEventListener("ps-scroll-y", this.plpsscrolly.bind('',el,this));
         el._ps_.destroy();
       }
