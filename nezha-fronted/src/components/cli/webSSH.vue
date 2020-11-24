@@ -7,9 +7,9 @@
       <div class="sub-list-resize-copy">一</div>
     </div>
     <div id="shell-split" class="shell-split shell-iconfont" @mousedown="dragEagle" v-show="!isFullScreen">一</div>-->
-  <div id="shell-service" class="sub-box" data-yunlog-scope="popup" :class="{'shell-service-max': isFullScreen,'shell-service':true}" v-show="consoleShow">
+  <div ref="webSShBox" id="shell-service" class="sub-box" data-yunlog-scope="popup" :class="{'shell-service-max': isFullScreen,'shell-service':true}" v-show="consoleShow">
     <div class="resize-modal">
-      <div class="sub-list-resize-copy">一</div>
+      <div class="sub-list-resize-copy" style="width: 100%">一</div>
     </div>
     <div id="shell-split" class="sub-list-resize" @mousedown="dragEagle" v-show="!isFullScreen">一</div>
     <div style='position: relative;' class="sub-list">
@@ -318,6 +318,8 @@
 
         window.removeEventListener('resize',this.windowChange);
         this.closeConfirmShow = false;
+        let subListDom = document.querySelector("#shell-service .sub-list"); //副列表
+        subListDom.style.height = "250px";
       },
       handleClick(){
 
@@ -552,20 +554,20 @@
       },*/
       dragEagle(e) {
         //let mainListDom = document.querySelector(".main-list"); //主列表
-        let subBoxDom = document.querySelector(".sub-box"); //副列表
-        let subListDom = document.querySelector(".sub-list"); //副列表
+        let subBoxDom = document.querySelector("#shell-service.sub-box"); //副列表
+        let subListDom = document.querySelector("#shell-service .sub-list"); //副列表
         let contentRightDom = document.querySelector(".content-right"); //右侧内容区
         let resizeBarHeight = 9; //resize横条高度
         let minHeight = 15; //terminal最小高度限制为15
         //let contentHideHeight = 100; //主、副列表高度低于100时隐藏内容
         //let mainModalDom = document.querySelector(".main-modal"); //主列表遮罩
-        let resizeModalDom = document.querySelector(".resize-modal"); //副列表遮罩
-        let resizeBarDom = document.querySelector(".sub-list-resize"); //拖动条
+        let resizeModalDom = document.querySelector("#shell-service .resize-modal"); //副列表遮罩
+        let resizeBarDom = document.querySelector("#shell-service .sub-list-resize"); //拖动条
 
         let contentRightHeight = contentRightDom.offsetHeight;//可视高度
         //点击时俩dom的初始高度：
         let subInitialHeight = subListDom.offsetHeight+resizeBarHeight;
-
+        console.log(subListDom.offsetHeight);
         //mainModalDom.style.display = "block";
         resizeModalDom.style.cssText = `height: ${subInitialHeight}px; display: block;`;
         resizeBarDom.style.display = "none";
