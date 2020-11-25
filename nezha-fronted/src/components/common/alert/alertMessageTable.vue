@@ -566,13 +566,15 @@
       },
       promQueryParamConvert(obj){
         let r = "(" + obj.alertRule.expr + ")";
+        let intoLabels=false
         if (Object.keys(obj.labels).length > 0) {
-          r += " and " + function(){
-            let group = "(group({";
+          r += function(){
+            let group =" and " +  "(group({";
             let by = " by (";
 
             for (let k in obj.labels) {
               if (k != 'alertname' && k != 'severity') {
+                intoLabels=true;
                 group += k;
                 group += "=";
                 group += ("'" + obj.labels[k] + "',");
@@ -580,12 +582,16 @@
                 by += ","
               }
             }
-            group = group.substring(0, group.length-1);
-            group += "})";
-            by = by.substring(0, by.length-1);
-            by += ")";
+            if(intoLabels){
+              group = group.substring(0, group.length-1);
+              by = by.substring(0, by.length-1);
+              group += "})";
+              by += ")";
+              return group + by + ")";
+            }else{
+              return ''
+            }
 
-            return group + by + ")";
           }();
         }
         return r;
