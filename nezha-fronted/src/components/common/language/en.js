@@ -678,7 +678,7 @@ const en = {
     },
     mib:{
       mib:'SNMP MIB',
-      fileName:'FileName',
+      fileName:'File name',
       remark:'Remark',
       updateUser:'Update user',
       updateAt:'Update time',

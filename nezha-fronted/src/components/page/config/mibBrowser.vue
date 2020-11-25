@@ -620,6 +620,16 @@
           document.onmousemove = null;
         }
       },
+      domResize(){
+        let scrollTop=this.$refs['resultTable'].$el.querySelector(".el-table__body-wrapper").scrollTop;
+        this.showTable=false;
+        this.$nextTick(()=>{
+          this.showTable=true;
+          this.$nextTick(()=>{
+            this.$refs['resultTable'].$el.querySelector(".el-table__body-wrapper").scrollTop=scrollTop
+          })
+        })
+      },
       exportXlsx() {
         if (this.resultData.length == 0) {
           return;
@@ -641,20 +651,16 @@
           )
         } catch (e) {}
         return out
-      }
+      },
     },
     mounted() {
       this.getWalkData();
       this.getModelData();
       this.getAssetData();
-      window.onresize=()=>{
-        console.log(123123,this);
-        this.showTable=false;
-        this.$nextTick(()=>{
-          this.showTable=true;
-          // this.$refs['resultTable'].doLayout();
-        })
-      }
+      window.addEventListener('resize',this.domResize);
+    },
+    beforeDestroy(){
+      window.removeEventListener('resize',this.domResize);
     }
   }
 </script>
