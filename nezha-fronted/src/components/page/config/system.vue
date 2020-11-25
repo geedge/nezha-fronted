@@ -137,6 +137,42 @@
         </div>
       </el-tab-pane>
       <el-tab-pane :label="$t('config.system.notification.notification')" name="notification"><!--$t('config.system.reset.reset')-->
+        <div class="linkBox notificationMessage">
+          <i class="nz-icon nz-icon-info-normal"></i>
+          <div style="margin-left: 15px">
+            <div>. Please make sure the script file exists and has executable permissions</div>
+            <div>. The script file receives two parameters:</div>
+            <div>&nbsp;&nbsp;&nbsp;&nbsp;① Notification account</div>
+            <div>&nbsp;&nbsp;&nbsp;&nbsp;② Alert message(json)
+              <el-tooltip placement="right" effect="light">
+              <pre slot="content" style="word-break: break-all">
+               {
+                  "assetId": 1,
+                  "dcId": 1,
+                  "description": "The endpoint is down, the detailed information
+                  Asset : 192.168.40.161, Project: system, Module: node_exporter,
+                  Data center: center, EndpointId: 1",
+                  "endAt": 1606240496000,
+                  "endpointId": 1,
+                  "hashKey": "34a17b57f289592a94ff65ee0864094b",
+                  "id": 1,
+                  "labels": "{\"severity\":\"P2\",\"endpoint\":\"1\",\"alertname\":\"1\",
+                  \"module\":\"node_exporter\",\"project\":\"system\",\"datacenter\":
+                  \"center\",\"asset\":\"192.168.40.161\"}",
+                  "moduleId": 1,
+                  "projectId": 1,
+                  "ruleId": 1,
+                  "severity": "P2",
+                  "startAt": 1606009916000,
+                  "state": 2,
+                  "summary": "The endpoint is down, endpointId is 1"
+              }
+              </pre>
+                <span class="more">...</span>
+              </el-tooltip>
+            </div>
+          </div>
+        </div>
         <div class="linkBox" >
           <div class="linkTitle">
             <span class="linkTitleHandle"></span>
@@ -970,6 +1006,22 @@
   .system-config-form  /deep/ .el-input input{
     text-align: left;
   }
+  .notificationMessage{
+    display: flex;
+    width: 780px;
+    background: #F6F6F6;
+    color: #999999;
+    margin-bottom: 10px;
+    padding: 10px 10px 5px 10px;
+    font-size: 14px;
+    justify-content: left;
+    justify-items: center;
+    align-items: center;
+  }
+  .notificationMessage .more{
+    font-size: 14px;
+    cursor: pointer;
+  }
 </style>
 <style>
   .system-config-form .el-form-item__content{
@@ -1018,4 +1070,5 @@
   .linkBox .el-form--inline{
     padding: 0;
   }
+
 </style>
