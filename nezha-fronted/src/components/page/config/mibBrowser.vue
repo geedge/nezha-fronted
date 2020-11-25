@@ -220,7 +220,7 @@
           </span>
         </div>
         <pl-table :row-height="28" use-virtual :datas="resultData" border :empty-text="$t('config.mib.noData')" ref="resultTable"
-                  class="mib-browser-table nz-table" style="width: 100%;height: calc(100% - 31px)" v-loading="loading" v-scrollBar:el-table="'large'" :pagination-show="false">
+                  class="mib-browser-table nz-table" style="width: 100%;height: calc(100% - 31px)" v-if="showTable" v-loading="loading" v-scrollBar:el-table="'large'" :pagination-show="false">
           <pl-table-column label="Name/OID" v-slot="{row}">
             <div class="too-long-split" @click="searchParam.oid = row.oid">{{row.name ? row.name : row.oid}}</div>
           </pl-table-column>
@@ -315,7 +315,7 @@
         resultData: [],
         modelData: [],
         assetData: [],
-
+        showTable:true,
         typeData: ["OctetString", "Integer", "OID", "Gauge", "Counter32", "IpAddress", "TimeTicks", "Counter64", "UnsignedInteger", "BITS", "Float", "DateAndTime"],
         assetInputTimer:null,
       }
@@ -433,9 +433,15 @@
                 wrapper.scrollTop = wrapper._ps_.contentHeight;
               }
               this.resultData = this.resultData.concat(response.data.list);
+              console.log(this.resultData);
               if (this.searchParam.operation == 'set') {
                 this.$message({duration: 2000, type: 'success', message: this.$t("tip.success")});
               }
+              this.showTable=false;
+              this.$nextTick(()=>{
+                this.showTable=true;
+                // this.$refs['resultTable'].doLayout();
+              })
             } else {
               this.$message.error(response.msg);
             }
@@ -641,7 +647,14 @@
       this.getWalkData();
       this.getModelData();
       this.getAssetData();
-
+      window.onresize=()=>{
+        console.log(123123,this);
+        this.showTable=false;
+        this.$nextTick(()=>{
+          this.showTable=true;
+          // this.$refs['resultTable'].doLayout();
+        })
+      }
     }
   }
 </script>
@@ -859,4 +872,9 @@
   border-color: unset;
   background-color: unset;
 }
+</style>
+<style scoped>
+  .nz-table /deep/  .el-table{
+    display: block !important;
+  }
 </style>
