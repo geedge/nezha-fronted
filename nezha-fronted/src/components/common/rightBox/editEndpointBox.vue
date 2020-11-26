@@ -112,6 +112,10 @@
             </el-scrollbar>
           </div>
         </el-form-item>
+        <!--enable-->
+        <el-form-item :label="$t('config.account.enable')">
+          <el-switch v-model.number="editEndpoint.enabled" active-color="#ee9d3f" :active-value="1" :inactive-value="0"></el-switch>
+        </el-form-item>
       </el-form>
     </el-scrollbar>
 

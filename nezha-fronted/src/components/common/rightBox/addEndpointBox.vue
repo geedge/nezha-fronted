@@ -1314,6 +1314,16 @@
   /* end--子弹框*/
 </style>
 <style lang="scss">
+
+  .right-box-add-endpoint {
+    .right-box-form>.el-form-item {
+      margin-left: 0;
+    }
+    .right-box-form-left.right-box-form .el-form-item .el-form-item__label {
+      width: 100px;
+    }
+  }
+
   .endpoint-asset-search .el-autocomplete>.el-input {
      position: absolute;
    }
