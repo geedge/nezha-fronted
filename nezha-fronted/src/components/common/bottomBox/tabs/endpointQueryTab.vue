@@ -3,7 +3,7 @@
     text-align: center;
     margin-top: 16px;
   }
-  .nz-table /deep/  .el-table{
+  .plTableBox.nz-table /deep/  .el-table{
     display: block !important;
   }
 
@@ -61,7 +61,7 @@
     <div class="table-header-inner" @click="clearSelectedMetrics"><span><i style="font-size: 12px;margin-left: 2px;" class="nz-icon nz-icon-close " :class="{'control-icon-unchecked':selectedEndpoints.length<1,'control-icon-checked':selectedEndpoints.length>0}"></i></span></div>
      <pl-table :row-height="28" use-virtual :datas="tableData" border :empty-text="$t('config.mib.noData')" :header-cell-class-name="cellClass" :style="{height: $tableHeight.noPagination}"
                class="nz-table endpoint-query-table" style="width: 100%;" v-loading="loading" v-scrollBar:el-table="'large'" :pagination-show="false" ref="endpointQueryTable"
-               @selection-change="selectChange" v-if="tableShow && plTableSHow" :border="true">
+               @selection-change="selectChange" v-if="tableShow && plTableSHow" :border="true" :tooltip-effect="'light'">
       <pl-table-column
         type="selection"
         width="39"
@@ -74,6 +74,7 @@
         :resizable="true"
         :min-width="1000"
         column-key="element"
+        :show-overflow-tooltip="true"
         :label="$t('project.endpoint.element')">
         <template v-slot="scope">
           <el-popover trigger="click" placement="right" v-if="typeof scope.row.metricTip != 'undefined' && scope.row.metricTip != null">
@@ -655,6 +656,7 @@
       plpsscrolly(self){
         let el = self.$refs.endpointQueryTable.$el.querySelector(".el-table__body-wrapper");
         self.scrollTop=el.scrollTop;
+        console.log(self.scrollTop);
         if (el._ps_.scrollbarYTop > 50) {
           self.showTopBtn = true;
           self.tableHover = true;
@@ -663,17 +665,19 @@
           self.tableHover = false;
         }
       },
-      tableResize(self){
-        let el = self.$refs.endpointQueryTable.$el.querySelector(".el-table__body-wrapper");
-        el.removeEventListener("ps-scroll-y", this.plpsscrolly);
-        self.plTableSHow=false;
-        self.$nextTick(()=>{
-          self.plTableSHow=true;
-          setTimeout(()=>{
-            el = self.$refs.endpointQueryTable.$el.querySelector(".el-table__body-wrapper");
-            el.addEventListener("ps-scroll-y", this.plpsscrolly.bind('',self));
-            el.scrollTop = self.scrollTop;
-          },100)
+      tableResize(){
+        let el = this.$refs.endpointQueryTable.$el.querySelector(".el-table__body-wrapper");
+        el.removeEventListener("ps-scroll-y", this.plpsscrolly.bind('',this));
+        this.plTableSHow=false;
+        this.$nextTick(()=>{
+          this.plTableSHow=true;
+          this.$nextTick(()=>{
+            el = this.$refs.endpointQueryTable.$el.querySelector(".el-table__body-wrapper");
+            el.addEventListener("ps-scroll-y", this.plpsscrolly.bind('',this));
+            setTimeout(()=>{
+              el.scrollTop = this.scrollTop;
+            },100)
+          });
         });
       }
     },
@@ -708,7 +712,7 @@
       }, 300);
 
       //});
-      window.addEventListener('resize', this.tableResize.bind('',this));
+      window.addEventListener('resize', this.tableResize);
     },
     beforeDestroy(){
       window.removeEventListener('resize', this.tableResize);

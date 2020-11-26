@@ -156,7 +156,7 @@
             show: true,
             width: 80
           }, {
-            label: 'Data Center',
+            label: this.$t("config.dc.dc"),
             prop: 'idc',
             show: true,
           }, {

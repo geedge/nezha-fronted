@@ -742,7 +742,7 @@ const cn = {
       link: {
         link:'Link',
         name: "名称",
-        url: "URL",
+        url: "Url",
         operation: "操作",
         add: "添加",
         update: "更新",

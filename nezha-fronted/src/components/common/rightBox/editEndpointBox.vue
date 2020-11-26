@@ -37,6 +37,7 @@
             @select="selectAsset"
             @change.native="inputAsset"
             size="small"
+            :disabled="true"
             value-key="host"
             popper-class="no-style-class"
             style="width: 100%;"

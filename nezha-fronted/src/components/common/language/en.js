@@ -50,7 +50,7 @@ const en = {
     changePwd:'Change password',//修改密码
     createChart:'Create chart',
     createProject:'Create project',
-    createEndpoint:'Create Endpoint',
+    createEndpoint:'Create endpoint',
     createAsset:'Create asset',
     createAlertRule:'Create alert rule',
     createAccount:'Create account',
@@ -531,7 +531,7 @@ const en = {
       lastReply:'Ping last reply',
       modules: 'Endpoint',//'组件'
       alerts: 'Alerts',//'告警信息'
-      dataCenter: 'Data Center',//DC
+      dataCenter: 'Data center',//DC
       cabinet: 'Cabinet',//'机柜'
       model: 'Model',//'型号'
       vendor: 'Vendor',//'厂商'
@@ -678,7 +678,7 @@ const en = {
     },
     mib:{
       mib:'SNMP MIB',
-      fileName:'FileName',
+      fileName:'File name',
       remark:'Remark',
       updateUser:'Update user',
       updateAt:'Update time',
@@ -707,7 +707,7 @@ const en = {
         systemName:'System name',
         curUrl:'Current site URL',
         timezone:'Timezone',
-        defaultCabinetUsize:'Cabinet U Size',
+        defaultCabinetUsize:'Cabinet U size',
         second:'second',
         day:'day',
         maxSeries:'Query max series',
@@ -732,7 +732,7 @@ const en = {
       },
       terminal:{
         terminal:'Terminal',
-        terminalNum:'Max Terminal Number'
+        terminalNum:'Max terminal number'
       },
       ldap:{
         ldap:'LDAP',
@@ -741,13 +741,13 @@ const en = {
         pwd:'Password',
         ou:'User OU',
         filter:'User filter',
-        map:'LDAP Field Mapping',
-        active:'LDAP Authentication'
+        map:'LDAP field mapping',
+        active:'LDAP authentication'
       },
       link: {
         link:'Link',
         name: "Name",
-        filePath: "FilePath",
+        url: "Url",
         operation: "Operation",
         add: "Add",
         update: "Update",
@@ -917,8 +917,8 @@ const en = {
       selTwoNode:'Please select two module',
       save:'save',
       cancel:'cancel',
-      addLine:'Add Line',
-      editLine:'Edit Line',
+      addLine:'Add line',
+      editLine:'Edit line',
       lineName:'Line Name',
       width:'thickness',
       dashes:'dotted line',
@@ -927,8 +927,8 @@ const en = {
       color:'color',
       chartName:'Name',
       unit:'Unit',
-      addModule:'Add Module',
-      editModule:'Edit Module',
+      addModule:'Add module',
+      editModule:'Edit module',
       edit:'edit',
       refresh:'refresh',
       endpoint:'Endpoint',
