@@ -285,7 +285,7 @@ const en = {
       title:'Overview',
       contentTitle:'Nezha Management System',
       traffic: 'Traffic',
-      projectTopoLogy:"Project TopoLogy",
+      projectTopoLogy:"Project Topology",
       asset:{
         title:'Assets',
         assetType:'Asset type',
