@@ -401,7 +401,7 @@
               method: "password",
               password: "",
               key: "",
-              passwordKey: ""
+              keyPassword: ""
             }
           });
         } else if (type == "TELNET") {
