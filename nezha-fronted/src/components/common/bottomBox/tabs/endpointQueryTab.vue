@@ -656,6 +656,7 @@
       plpsscrolly(self){
         let el = self.$refs.endpointQueryTable.$el.querySelector(".el-table__body-wrapper");
         self.scrollTop=el.scrollTop;
+        console.log(self.scrollTop);
         if (el._ps_.scrollbarYTop > 50) {
           self.showTopBtn = true;
           self.tableHover = true;
@@ -664,18 +665,18 @@
           self.tableHover = false;
         }
       },
-      tableResize(self){
-        let el = self.$refs.endpointQueryTable.$el.querySelector(".el-table__body-wrapper");
-        console.log(el);
-        el.removeEventListener("ps-scroll-y", this.plpsscrolly.bind('',self));
-        self.plTableSHow=false;
-        self.$nextTick(()=>{
-          self.plTableSHow=true;
-          self.$nextTick(()=>{
-            el = self.$refs.endpointQueryTable.$el.querySelector(".el-table__body-wrapper");
-            console.log(el);
-            el.addEventListener("ps-scroll-y", this.plpsscrolly.bind('',self));
-            el.scrollTop = self.scrollTop;
+      tableResize(){
+        let el = this.$refs.endpointQueryTable.$el.querySelector(".el-table__body-wrapper");
+        el.removeEventListener("ps-scroll-y", this.plpsscrolly.bind('',this));
+        this.plTableSHow=false;
+        this.$nextTick(()=>{
+          this.plTableSHow=true;
+          this.$nextTick(()=>{
+            el = this.$refs.endpointQueryTable.$el.querySelector(".el-table__body-wrapper");
+            el.addEventListener("ps-scroll-y", this.plpsscrolly.bind('',this));
+            setTimeout(()=>{
+              el.scrollTop = this.scrollTop;
+            },100)
           });
         });
       }
@@ -711,7 +712,7 @@
       }, 300);
 
       //});
-      window.addEventListener('resize', this.tableResize.bind('',this));
+      window.addEventListener('resize', this.tableResize);
     },
     beforeDestroy(){
       window.removeEventListener('resize', this.tableResize);
