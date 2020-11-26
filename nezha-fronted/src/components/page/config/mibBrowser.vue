@@ -880,7 +880,7 @@
 }
 </style>
 <style scoped>
-  .nz-table /deep/  .el-table{
+  .plTableBox.nz-table /deep/  .el-table{
     display: block !important;
   }
 </style>
