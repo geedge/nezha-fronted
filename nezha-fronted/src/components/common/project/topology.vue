@@ -408,18 +408,13 @@
             arrowStrikethrough:false,
             chosen:{
               edge:(values, id, selected, hovering)=>{
-                // console.log(values, id, selected, hovering);
                 if(this_.hoverEdge){
                   values.middleArrow=true;
                   values.middleArrowScale=1;
                   values.middleArrowType='circle';
                   this_.expressionsInfoShow=true;
-                  // console.log(values);
                 }
               },
-              // label:(values, id, selected, hovering)=>{
-              //   console.log(values,2222);
-              // },
             },
           },
           layout:{
@@ -580,6 +575,10 @@
         if(this.NodeArr.length===0&&!this.editVisNetwork){
           setTimeout(()=>{
             this.networkPopShow=true;
+            let index=this.modelTop.findIndex((item)=>item.id===selId);
+            this.activeIndex=index;
+            this.activeModelItem=this.modelTop.find((item)=>item.id===selId);
+            this.index=index;
           },100)
         }
         this.NodeArr=[...this.NodeArr]
@@ -707,7 +706,6 @@
         this.expressionsInfoPosition={...position};
       },
       modelTopClick(item,index){
-        console.log(index);
         this.activeIndex=index;
         this.activeModelItem=item;
         this.index=index;
@@ -908,11 +906,6 @@
                this_.selNodeId=selId;
                this_.cursorMove=true;
                this_.nodeData=this_.nodesArray.find((item)=>item.id===selId);
-               let index=this_.modelTop.findIndex((item)=>item.id===selId);
-               console.log(index);
-               this_.activeIndex=index;
-               this_.activeModelItem=this_.modelTop.find((item)=>item.id===selId);
-               this_.index=index;
                if(this_.NodeArr.indexOf(selId)!==-1){
                  let index = this_.NodeArr.indexOf(selId);
                  this_.NodeArr=this_.NodeArr.filter((item,i)=> i !== index);
@@ -973,7 +966,6 @@
            this_.networkPopShow=false;
            this_.index='';
            this_.activeIndex='';
-           console.log(123123);
            let selId=params.nodes[0];
            if(selId){
              this_.selNodeId=selId
