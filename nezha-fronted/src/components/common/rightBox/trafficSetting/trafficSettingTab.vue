@@ -409,7 +409,6 @@
         this.$get('/asset',param).then(response=>{
           if(response.code == 200){
             let data=response.data.list;
-            console.log(data)
             let result=data.map(item=>{
               return {label:item.host,value:item.host}
             })
@@ -424,7 +423,6 @@
 
       },
       popHide() {
-        console.log(this.assetSetting)
         this.queryInterfaceInfos(true);
       },
       showInput:function(){

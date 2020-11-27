@@ -252,7 +252,6 @@
           params.type=this.paramsType;
         }
         axios.get(url,{responseType:'blob',params:params}).then(res=>{
-          console.log(res)
           if(window.navigator.msSaveOrOpenBlob){
             // 兼容ie11
             let blobObject = new Blob([res.data]);

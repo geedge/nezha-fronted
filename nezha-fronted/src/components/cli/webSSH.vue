@@ -567,7 +567,6 @@
         let contentRightHeight = contentRightDom.offsetHeight;//可视高度
         //点击时俩dom的初始高度：
         let subInitialHeight = subListDom.offsetHeight+resizeBarHeight;
-        console.log(subListDom.offsetHeight);
         //mainModalDom.style.display = "block";
         resizeModalDom.style.cssText = `height: ${subInitialHeight}px; display: block;`;
         resizeBarDom.style.display = "none";

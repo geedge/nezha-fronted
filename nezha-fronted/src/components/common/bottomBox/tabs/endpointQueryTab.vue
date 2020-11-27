@@ -656,7 +656,6 @@
       plpsscrolly(self){
         let el = self.$refs.endpointQueryTable.$el.querySelector(".el-table__body-wrapper");
         self.scrollTop=el.scrollTop;
-        console.log(self.scrollTop);
         if (el._ps_.scrollbarYTop > 50) {
           self.showTopBtn = true;
           self.tableHover = true;

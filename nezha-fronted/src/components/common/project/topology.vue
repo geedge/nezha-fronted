@@ -31,19 +31,21 @@
         id="network-pop"
         class="network-pop"
         :style="{transform:'scale('+zoom+')',width:'0',height:'0'}"
-        v-show="networkPopShow"
         ref="network-pop"
       >
-        <i v-if="networkPopShow"
-           :class="{'nz-icon':true,'nz-icon-hexagonBorder':true,'selpop':selpopIs(item),'error-model-stat':modelPopError(item)}"
-           v-for="item in popData"
-           :style="{top:item.top,left:item.left}"
-           @click="popClick(item.id)"
-           :title="item.title"
-        >
-          <i class="nz-icon nz-icon-liubianxing"></i>
-          <i :class="[item.className,{'nz-icon':item.className},'noMove']"></i>
-        </i>
+        <div v-for="item in popData">
+          <transition name="scaleTool">
+            <i v-if="networkPopShow"
+               :class="{'nz-icon':true,'nz-icon-hexagonBorder':true,'selpop':selpopIs(item),'error-model-stat':modelPopError(item)}"
+               :style="{top:item.top,left:item.left}"
+               @click="popClick(item.id)"
+               :title="item.title"
+            >
+              <i class="nz-icon nz-icon-liubianxing"></i>
+              <i :class="[item.className,{'nz-icon':item.className},'noMove']"></i>
+            </i>
+          </transition>
+        </div>
         <!--<i class="nz-icon nz-icon-delete" @click="nodeDel"></i>-->
       </div>
       <!--拓扑图选中-->
@@ -65,7 +67,7 @@
       <div :style="{top:(item.y- 80 + 80*(1-zoom))+'px',left:(item.x- 26 + 26*(1-zoom))+'px',transform:'scale('+zoom+')',position:'absolute'}"
            v-for="(item,indexj) in modelTop"
       >
-        <i :class="{'nz-icon':true, 'nz-icon-shuidi':true,'model-error':item.error&&(indexj!==activeIndex),'model-error-active':item.error&&indexj==activeIndex}"
+        <i :class="{'nz-icon':true, 'nz-icon-shuidi':true,'model-error':item.error&&(indexj!==activeIndex),'model-error-active':item.error&&indexj===activeIndex}"
            v-show="item.show"
            :ref="'modelTopId'+indexj"
            @click="modelTopClick(item,indexj)"
@@ -262,12 +264,12 @@
           image:'',
         },
         popData:[
-          {top:'-20px', left:'-17px',className:'nz-icon-endpoint',id:'endpoint',title:this.$t('project.topology.endpoint')},
-          {top:'-20px', left:'28px',className:'nz-icon-asset',id:'asset',title:this.$t('project.topology.asset')},
-          {top:'18px',  left:'52px',className:'nz-icon-chart',id:'total',title:this.$t('project.topology.total')},
-          {top:'56px', left:'28px',className:'',id:'other',title:''},
-          {top:'56px', left:'-17px',className:'nz-icon-info-normal',id:'info',title:this.$t('project.topology.info')},
-          {top:'18px', left:'-38px',className:'nz-icon-gaojing',id:'alert',title:this.$t('project.topology.alert')},
+          {top:'-14px', left:'-14px',className:'nz-icon-endpoint',id:'endpoint',title:this.$t('project.topology.endpoint')},
+          {top:'-14px', left:'26px',className:'nz-icon-asset',id:'asset',title:this.$t('project.topology.asset')},
+          {top:'22px',  left:'47px',className:'nz-icon-chart',id:'total',title:this.$t('project.topology.total')},
+          {top:'56px', left:'26px',className:'',id:'other',title:''},
+          {top:'56px', left:'-14px',className:'nz-icon-info-normal',id:'info',title:this.$t('project.topology.info')},
+          {top:'22px', left:'-33px',className:'nz-icon-gaojing',id:'alert',title:this.$t('project.topology.alert')},
         ],
         popDataShow:{
           endpoint:false,
@@ -570,10 +572,15 @@
       setPopPosition(selId){//设置节点工具栏位置以及是否显示
         if(!selId){return}
         let position=this.network.canvasToDOM(this.network.getPositions([selId])[selId]);
-        this.networkPop.style.top = position.y - 85 + 85*(1-this.zoom)+'px';
-        this.networkPop.style.left = position.x - 32*this.zoom - 5*(1-this.zoom) +'px';
-        if(!this.isFullScreen&&this.NodeArr.length===0&&!this.editVisNetwork){
-          this.networkPopShow=true;
+        this.networkPopShow=false;
+        setTimeout(()=>{
+          this.networkPop.style.top = position.y - 85 + 85*(1-this.zoom)+'px';
+          this.networkPop.style.left = position.x - 32*this.zoom - 4.8*(1-this.zoom) +'px';
+        },150)
+        if(this.NodeArr.length===0&&!this.editVisNetwork){
+          setTimeout(()=>{
+            this.networkPopShow=true;
+          },100)
         }
         this.NodeArr=[...this.NodeArr]
       },
@@ -700,6 +707,7 @@
         this.expressionsInfoPosition={...position};
       },
       modelTopClick(item,index){
+        console.log(index);
         this.activeIndex=index;
         this.activeModelItem=item;
         this.index=index;
@@ -900,6 +908,11 @@
                this_.selNodeId=selId;
                this_.cursorMove=true;
                this_.nodeData=this_.nodesArray.find((item)=>item.id===selId);
+               let index=this_.modelTop.findIndex((item)=>item.id===selId);
+               console.log(index);
+               this_.activeIndex=index;
+               this_.activeModelItem=this_.modelTop.find((item)=>item.id===selId);
+               this_.index=index;
                if(this_.NodeArr.indexOf(selId)!==-1){
                  let index = this_.NodeArr.indexOf(selId);
                  this_.NodeArr=this_.NodeArr.filter((item,i)=> i !== index);
@@ -960,6 +973,7 @@
            this_.networkPopShow=false;
            this_.index='';
            this_.activeIndex='';
+           console.log(123123);
            let selId=params.nodes[0];
            if(selId){
              this_.selNodeId=selId
@@ -1017,9 +1031,7 @@
            this_.zoom=params.scale;
            this_.modelTopUpdate();
            this_.selNodeArrUpdate();
-           if(this_.networkPopShow){
-             this_.setPopPosition(this_.selNodeId);
-           }
+           this_.networkPopShow=false;
            this_.topologyZoom(params.scale);
            return false
          });
@@ -1029,9 +1041,7 @@
              this_.zoom=this_.network.canvasToDOM({x:0,y:1}).y-this_.network.canvasToDOM({x:0,y:0}).y;
              this_.modelTopUpdate();
              this_.selNodeArrUpdate();
-             if(this_.networkPopShow){
-               this_.setPopPosition(this_.selNodeId);
-             }
+             this_.networkPopShow=false;
            });
            return false
          });
@@ -1113,7 +1123,7 @@
     color: #EC7F66;
   }
   .network-pop .selpop.nz-icon-hexagonBorder:hover{
-    transform: scale(1.2);
+    transform: scale(1.1);
     color: #4BB49B;
   }
   .network-pop .selpop:hover .nz-icon-liubianxing{
@@ -1124,11 +1134,11 @@
     color:  #D7FAF1;
   }
   .network-pop .selpop:hover .noMove{
-    transform: scale(1.2);
+    transform: scale(1.1);
     color: #4BB49B;
   }
   .network-pop .selpop.nz-icon-hexagonBorder.error-model-stat:hover{
-    transform: scale(1.2);
+    transform: scale(1.1);
     color: #EC7F66;
   }
   .network-pop .selpop.error-model-stat:hover .nz-icon-liubianxing{
@@ -1139,7 +1149,7 @@
     color: #FBE7E3;
   }
   .network-pop .selpop.error-model-stat:hover .noMove{
-    transform: scale(1.2);
+    transform: scale(1.1);
     color: #EC7F66;
   }
   /*.network-pop .nz-icon-hexagonBorder.error-model-stat:hover{*/
@@ -1364,5 +1374,18 @@
   }
   #network_id /deep/ .vis-network{
     outline: none;
+  }
+  .scaleTool-enter-active {
+    animation: scaleTool-in .15s;
+  }
+  .scaleTool-leave-active {
+    animation: scaleTool-in .15s reverse;
+  }
+  @keyframes scaleTool-in {
+    from{
+      top:18px;
+      left: 10px;
+      transform: scale(0.5);
+    }
   }
 </style>

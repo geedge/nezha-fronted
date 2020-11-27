@@ -433,7 +433,6 @@
                 wrapper.scrollTop = wrapper._ps_.contentHeight;
               }
               this.resultData = this.resultData.concat(response.data.list);
-              console.log(this.resultData);
               if (this.searchParam.operation == 'set') {
                 this.$message({duration: 2000, type: 'success', message: this.$t("tip.success")});
               }

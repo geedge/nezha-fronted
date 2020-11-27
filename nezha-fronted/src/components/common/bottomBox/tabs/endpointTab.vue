@@ -354,7 +354,6 @@
         });
       },
       editEndpoint(endpoint) {
-        console.log(endpoint);
         this.endpoint = JSON.parse(JSON.stringify(endpoint));
         this.$set(this.endpoint,'projectId',this.endpoint.project.id);
         this.$set(this.endpoint,'moduleId',this.endpoint.moduleId);
