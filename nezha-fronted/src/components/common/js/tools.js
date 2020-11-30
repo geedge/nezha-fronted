@@ -532,6 +532,7 @@ export const tableSet = {
       case 'alertName':
       case 'threshold':
       case 'idc':
+      case 'alertNum':
         return'custom';
       case 'state':
         if( from === 'operationlog'){
