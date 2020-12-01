@@ -904,7 +904,10 @@
             });
           }
           if(this.screenLegendListMore.length!==this.screenLegendList.length){
-            this.screenLegendListMore=this.screenLegendList.filter((item,index)=>index<this.seriesLength);
+            this.screenLegendListMore=[];
+            let screenLegendListMore=this.screenLegendList.filter((item,index)=>index<this.seriesLength);
+            this.$set(this,"screenLegendListMore",screenLegendListMore)
+            this.$forceUpdate();
           }
           if(this.hasLegendOptions){
             this.computeLegendData(this.screenLegendListMore,dataArg,'screen');
