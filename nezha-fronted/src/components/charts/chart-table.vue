@@ -81,6 +81,7 @@
               <time-picker ref="calendarPanel" class="nz-dashboard-picker" style="margin-top: -12px;"
                            @change="dateChange"></time-picker>
             </div>
+            <span class="float-right  dialog-tool" @click="screenRefreshChart" style="margin-right: 15px"><i class="global-active-color nz-icon nz-icon-refresh"/></span>
           </div>
           <el-table style="margin-top: 10px;" class="nz-table" height="95%" :data="seriesItemScreen" border
                     tooltip-effect="light" v-scrollBar:el-table @sort-change="tableDataSortScreen">
@@ -296,6 +297,9 @@
         });
         this.startLoading();
         this.divFirstShow = true;
+      },
+      screenRefreshChart(){
+        this.$refs['calendarPanel'].timeChange(this.$refs['calendarPanel'].nowTimeType,'chart')
       },
       // 重新请求数据 刷新操作-local
       refreshChart() {

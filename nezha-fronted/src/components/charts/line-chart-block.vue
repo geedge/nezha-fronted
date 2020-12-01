@@ -132,7 +132,9 @@
             <div class="float-right panel-calendar dialog-tool">
 
               <time-picker ref="calendarPanel" class="nz-dashboard-picker" style="margin-top: -12px;"  @change="dateChange"></time-picker>
+              <!--<pick-time :refresh-data-func="dateChange" v-model="searchTime" :use-chart-unit="false" ref="pickTime"></pick-time>-->
             </div>
+            <span class="float-right  dialog-tool" @click="screenRefreshChart" style="margin-right: 15px"><i class="global-active-color nz-icon nz-icon-refresh"/></span>
           </div>
           <div class="line-area" ref="screenShowArea"  id="screenShowArea"  style="margin-top:0px;" @mouseenter="mouseEnterFullChart" @mouseleave="mouseLeaveFullChart"></div>
           <div class="chart-no-data" v-show="noData">No Data</div>
@@ -1147,6 +1149,9 @@
         this.$refs['localLoading'+this.chartIndex].startLoading();
         this.firstShow = false;
         this.$emit('on-refresh-data', id);
+      },
+      screenRefreshChart(){
+        this.$refs['calendarPanel'].timeChange(this.$refs['calendarPanel'].nowTimeType,'chart')
       },
       initDialog(){
         //此时初始化，才能获得screenShowArea对象，否则此对象为undefined，无法初始化图表

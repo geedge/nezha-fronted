@@ -392,7 +392,7 @@
                   }
                   this.tableData[index].current=current;
                 })
-                this.tableData=[...this.tableData];
+                this.$set(this.tableData,[...this.tableData])
               })
             });
             this.deleteBox.ids='';

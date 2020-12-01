@@ -52,6 +52,7 @@
             ref="alertListTable"
             :form="'chartList'"
             :fromPath="'/alertList'"
+            :showTopBtn="false"
           ></alertMessageTable>
           <Pagination :pageObj="pageObj" @pageNo='pageNo'  @pageSize='pageSize' ref="Pagination" :append-to-body="false" pop-class="out-popper-fix"></Pagination>
         </div>
@@ -61,6 +62,7 @@
             <span class="nz-dialog-title">{{data.title}}</span>
             <div class="float-right panel-calendar dialog-tool">
             </div>
+            <span class="float-right  dialog-tool" @click="screenRefreshChart"><i class="global-active-color nz-icon nz-icon-refresh"/></span>
           </div>
           <alertMessageTable
             :tableData="storedScreanTableData"
@@ -71,6 +73,7 @@
             @tableDataSort="tableDataSort"
             @deleteMessage="deleteMessage"
             ref="alertListScreenTable"
+            :showTopBtn="false"
           ></alertMessageTable>
           <Pagination :pageObj="screenPageObj"  @pageNo='screenPageNo' @pageSize='screenPageSize' ref="Pagination" ></Pagination>
           <loading  :ref="'localLoadingScreen'+chartIndex"></loading>
@@ -550,30 +553,37 @@ export default {
           if (response.code == 200) {
             this.storedTableData = response.data.list;
             this.storedScreanTableData=response.data.list;
-            this.storedTableData.forEach((item) => {
-              item.labels = JSON.parse(item.labels);
-              let paramStr = JSON.stringify(this.promQueryParamConvert(item));
-              if(paramStr&& paramStr !='""'){
-                this.$get('/prom/api/v1/query?query=' + paramStr.substring(1, paramStr.length-1).replace(/\+/g, "%2B").replace(/ /g, "%20").replace(/\\/g, "")).then(response2 => {
-                  let current = [];
-                  if (response2.data && response2.data.result && response2.data.result.length > 0) {
-                    current = response2.data.result[0].value.map((item, i) => {
-                      if (i == 0) {
-                        return bus.computeTimezone(item);
-                      } else {
-                        return parseFloat(item).toFixed(2);
-                      }
-                    });
-                  }
-                  this.requestIndex+=1;
-                  item.current=current;
-                    if(this.requestIndex===this.storedTableData.length){
-                    this.$set(item, "current", current);
-                    this.requestIndex=0;
-                  }
-                });
-              }
-            });
+            let axiosAll=[]
+            this.$nextTick(() => {
+             this.storedTableData.forEach((item) => {
+               item.labels = JSON.parse(item.labels);
+               if(item.alertRule.buildIn != 1){
+                 let paramStr = JSON.stringify(this.promQueryParamConvert(item));
+                 axiosAll.push(axios.get('/prom/api/v1/query?query=' + paramStr.substring(1, paramStr.length-1).replace(/\+/g, "%2B").replace(/ /g, "%20").replace(/\\/g, "")))
+               }else{
+                 axiosAll.push('')
+               }
+             });
+             axios.all(axiosAll).then(res=>{
+               res.forEach((item,index)=>{
+                 let current = [];
+                 let response2 = item.data;
+                 if (response2.data && response2.data.result && response2.data.result.length > 0) {
+                   current = response2.data.result[0].value.map((item, i) => {
+                     if (i == 0) {
+                       return bus.computeTimezone(item);
+                     } else {
+                       return parseFloat(item).toFixed(2);
+                     }
+                   });
+                 }else{
+                   current=[null,null]
+                 }
+                 this.storedTableData[index].current=current;
+               });
+               this.$set( this.storedTableData,[...this.storedTableData]);
+             })
+           });
             this.pageObj.total = response.data.total;
             this.isError = false;
             this.errorContent = '';
@@ -587,6 +597,100 @@ export default {
             this.errorContent = response.msg;
           }
         });
+      },
+      getAlerScreetList: function (filterType,isPreview=false,chartInfo) {
+        this.resize();
+        this.loadingTable=true;
+        this.isPreview = isPreview;
+        let queryParam={
+          pageSize:this.screenPageObj.pageSize,
+          pageNo:this.screenPageObj.pageNo,
+        }
+        let chart;
+        if(chartInfo){
+          chart=Object.assign({},chartInfo)
+        }else{
+          chart=Object.assign({},this.chartInfo)
+        }
+        if(chart && chart.param){ //按照粒度，project>module>endpoint  查询只传最细粒度
+          let param=chart.param;
+          if(param.endpointId&&param.endpointId != ''){
+            queryParam.endpointId=param.endpointId;
+          }else{
+            if(param.moduleId&&param.moduleId!=''){
+              queryParam.moduleId=param.moduleId;
+            }else{
+              if(param.projectId&&param.projectId!=''){
+                queryParam.projectId=param.projectId;
+              }
+            }
+          }
+
+          if(param.ruleId&&param.ruleId!=''){
+            queryParam.ruleId=param.ruleId;
+          }
+          if(param.severity&&param.severity!=''){
+            queryParam.severity=param.severity;
+          }
+          if(param.state&&param.state!=''){
+            queryParam.state=param.state;
+          }
+        }
+        if(this.searchLabel.orderBy){
+          queryParam.orderBy=this.searchLabel.orderBy;
+        }
+        this.startLoading(filterType);
+        this.$get('/alert/message', queryParam).then(response => {
+          if (response.code == 200) {
+            this.storedTableData = response.data.list;
+            this.storedScreanTableData=response.data.list;
+            let axiosAll=[]
+            this.$nextTick(() => {
+             this.storedScreanTableData.forEach((item) => {
+               item.labels = JSON.parse(item.labels);
+               if(item.alertRule.buildIn != 1){
+                 let paramStr = JSON.stringify(this.promQueryParamConvert(item));
+                 axiosAll.push(axios.get('/prom/api/v1/query?query=' + paramStr.substring(1, paramStr.length-1).replace(/\+/g, "%2B").replace(/ /g, "%20").replace(/\\/g, "")))
+               }else{
+                 axiosAll.push('')
+               }
+             });
+             axios.all(axiosAll).then(res=>{
+               res.forEach((item,index)=>{
+                 let current = [];
+                 let response2 = item.data;
+                 if (response2.data && response2.data.result && response2.data.result.length > 0) {
+                   current = response2.data.result[0].value.map((item, i) => {
+                     if (i == 0) {
+                       return bus.computeTimezone(item);
+                     } else {
+                       return parseFloat(item).toFixed(2);
+                     }
+                   });
+                 }else{
+                   current=[null,null]
+                 }
+                 this.storedScreanTableData[index].current=current;
+               })
+               this.$set(this.storedScreanTableData,[...this.storedScreanTableData])
+             })
+           })
+            this.screenPageObj.total = response.data.total;
+            this.isError = false;
+            this.errorContent = '';
+            this.divFirstShow = true;
+
+            this.firstShow = true; // 展示操作按键
+            this.loadingTable=false;
+            this.endLoading(filterType);
+          }else{
+            this.isError = true;
+            this.errorContent = response.msg;
+          }
+        });
+      },
+      screenRefreshChart(){
+        this.getAlerScreetList();
       },
       promQueryParamConvert(obj) {
         if(obj){
@@ -649,11 +753,11 @@ export default {
 
         screenPageNo(val) {
           this.screenPageObj.pageNo = val;
-          this.getAlertList();
+          this.getAlerScreetList();
         },
         screenPageSize(val) {
           this.screenPageObj.pageSize = val;
-          this.getAlertList();
+          this.getAlerScreetList();
         },
         startLoading(area){
           if(area==='showFullScreen'){
@@ -764,6 +868,7 @@ export default {
             this.screenModal = true;
             this.deleteBox.ids=[];
             this.$refs.alertListTable.$refs.alertListTable.clearSelection();
+            this.screenPageObj={...this.pageObj}
         },
         // 设置数据, filter区分
         setData(chartItem, seriesItem, panelId, filter,area,errorMsg) {
