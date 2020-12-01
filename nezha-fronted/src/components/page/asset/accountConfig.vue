@@ -17,7 +17,7 @@
         <el-input rows="4" type="textarea" placeholder="" v-model="account.params.key" size="small"></el-input>
       </el-form-item>
       <el-form-item :label="$t('asset.password')" v-if="account.params.method == 'key'">
-        <el-input autocomplete="new-password" size="small" type="password" v-model="account.params.passwordKey"/>
+        <el-input autocomplete="new-password" size="small" type="password" v-model="account.params.keyPassword"/>
       </el-form-item>
       <el-form-item :label="$t('asset.port')" prop="port" style="display: inline-block">
         <el-input size="small" v-model.number="account.port"/>

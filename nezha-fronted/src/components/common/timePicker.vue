@@ -259,13 +259,19 @@ export default {
         this.$set(this.searchTime, 0, timeGroup[0]);
         this.$set(this.searchTime, 1, timeGroup[1]);
 
-        this.$set(this.showTime, 'id', 0);
-        this.$set(this.showTime, 'text', this.searchTime[0]+" "+this.$t("dashboard.panel.to")+" "+this.searchTime[1]);
+        this.nowTimeType={
+          id:4,
+          text:this.$t("dashboard.panel.lastOneHour"),
+          type:'hour',
+          value:1,
+        };
+        this.$set(this.showTime, 'id',  this.nowTimeType.id);
+        this.$set(this.showTime, 'text',  this.nowTimeType.text);
       }
     },
     //left(){},
     //right(){},
-    timeChange(val) {
+    timeChange(val,from) {
       this.nowTimeType=val;
       this.$set(this.showTime, 'id', val.id);
       this.$set(this.showTime, 'text', val.text);
@@ -286,8 +292,13 @@ export default {
 
         let id = val.id;
         if(id===0){//custom
-          this.isCustom = true;
-          this.$refs.calendar.focus();
+         if(from==='chart'){
+           this.isCustom = false;
+           this.$emit('change', this.searchTime);
+         } else{
+           this.isCustom = true;
+           this.$refs.calendar.focus();
+         }
         }else {
           this.isCustom = false;
           if(this.showEmpty&& id === 12){

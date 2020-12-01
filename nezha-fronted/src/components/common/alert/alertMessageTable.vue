@@ -162,7 +162,7 @@
         </template>
       </el-table-column>
     </el-table>
-    <button class="to-top" :style="{top: tools.toTopBtnTop}" :class="{'to-top-is-hover': tools.tableHover}" v-show="tools.showTopBtn && bottomBox.mainResizeShow" @click="$toTop('ps', 0)"><i class="nz-icon nz-icon-top"></i></button>
+    <button class="to-top" :style="{top: tools.toTopBtnTop}" :class="{'to-top-is-hover': tools.tableHover}" v-show="tools.showTopBtn && bottomBox.mainResizeShow &&showTopBtn" @click="$toTop('ps', 0)"><i class="nz-icon nz-icon-top"></i></button>
     <!--<弹窗>-->
     <!--导出-->
     <div class="export-xlsx">
@@ -238,6 +238,10 @@
       tableHeight:{},
       tableId:{},
       projectAlertId:{},
+      showTopBtn:{
+        type:Boolean,
+        default:true,
+      },
     },
     data() {
       vm = this;

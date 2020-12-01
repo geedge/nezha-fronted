@@ -825,9 +825,9 @@
             });
           },
           notificationAddCallBack(){
-            this.$get('/link').then(response=>{
-              this.notification.push(response.data[response.data.length-1]);
-              this.notificationReserved.push(response.data[response.data.length-1]);
+            this.$get('/alert/script').then(response=>{
+              this.notification.push(response.data.list[response.data.list.length-1]);
+              this.notificationReserved.push(response.data.list[response.data.list.length-1]);
               // this.$store.commit('setLinkData',this.link);
             });
           },

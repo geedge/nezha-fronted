@@ -13,6 +13,7 @@
             <div class="week">{{sysWeek}}</div>
             <div class="sys-date">{{sysDate}}</div>
           </div>
+          <pick-time  :showTimePicker="false" class="float-right pickTime margin-l-20" :refresh-data-func="setFreshDataTimer" v-model="searchTime" :use-chart-unit="false" ref="pickTime"></pick-time>
           <div class="operation" @click="switchFullScreen" ><span ><i class="nz-icon screen-icon" :class="{'nz-icon-maxview':!isFullScreen,'nz-icon-exit-full-screen':isFullScreen}"></i></span></div>
         </div>
       </div>
@@ -292,6 +293,7 @@
           x: 0,
           y: 0
         },
+        searchTime:bus.getTimezontDateRange(),
       }
     },
     filters: {
@@ -351,16 +353,21 @@
         ]
       },
       setFreshDataTimer:function(){
-        this.freshDataTimer=setInterval(()=>{
+        // this.freshDataTimer=setInterval(()=>{
+        //   if(this.$refs.overviewLoading){
+        //     this.$refs.overviewLoading.startLoading();
+        //   }
+        //   Promise.all(this.initData()).then(()=>{
+        //     if(this.$refs.overviewLoading){
+        //       this.$refs.overviewLoading.endLoading();
+        //     }
+        //   })
+        // },5*60*1000)
+        Promise.all(this.initData()).then(()=>{
           if(this.$refs.overviewLoading){
-            this.$refs.overviewLoading.startLoading();
+            this.$refs.overviewLoading.endLoading();
           }
-          Promise.all(this.initData()).then(()=>{
-            if(this.$refs.overviewLoading){
-              this.$refs.overviewLoading.endLoading();
-            }
-          })
-        },5*60*1000)
+        })
       },
       querySystemState:function(){
         return new Promise(resolve => {
@@ -1584,7 +1591,7 @@
       this.initData();
       this.querySystemState().then(()=>{
         this.initDate();
-        this.setFreshDataTimer();
+        // this.setFreshDataTimer();
       })
 
       // window.onresize = () => {

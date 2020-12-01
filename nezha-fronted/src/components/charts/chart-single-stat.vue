@@ -55,6 +55,7 @@
             <div class="float-right panel-calendar dialog-tool">
               <time-picker ref="calendarPanel" class="nz-dashboard-picker" style="margin-top: -12px;" @change="dateChange"></time-picker>
             </div>
+            <span class="float-right  dialog-tool" @click="screenRefreshChart" style="margin-right: 15px"><i class="global-active-color nz-icon nz-icon-refresh"/></span>
           </div>
           <div class="single-stat-screen-container"  >
             <div id="chartScreenContainer"  ref="chartScreenContainer" class="single-stat-content" >
@@ -318,6 +319,9 @@ export default {
         });
         this.startLoading();
         this.divFirstShow = true;
+      },
+      screenRefreshChart(){
+        this.$refs['calendarPanel'].timeChange(this.$refs['calendarPanel'].nowTimeType,'chart')
       },
       // 重新请求数据 刷新操作-local
       refreshChart() {

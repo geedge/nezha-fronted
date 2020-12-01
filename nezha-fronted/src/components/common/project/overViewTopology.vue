@@ -441,6 +441,9 @@
       },
       modelTopUpdate(){//model上的图标 实时更新
         this.modelTop=[];
+        if(!this.network){
+          return
+        }
         this.nodesArray.forEach((item)=>{
           let position=this.network.canvasToDOM({x:item.x,y:item.y});
           let obj={
@@ -693,6 +696,14 @@
       setTimeout(()=>{
         let this_=this;
         this.init('modal');
+        this.network.on("resize", function (params) {//检测resize
+          setTimeout(()=>{
+            this_.modelTopUpdate();
+            this_.selNodeArrUpdate();
+            this_.networkPopShow=false;
+          });
+          return false
+        });
       })
     },
     beforeDestroy(){

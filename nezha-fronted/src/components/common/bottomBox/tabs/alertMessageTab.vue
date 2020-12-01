@@ -33,6 +33,7 @@
       @tableDataSort="tableDataSort"
       @deleteMessage="deleteMessage"
       @select-change="(selection)=>{this.batchDeleteObjs=selection}"
+      :showTopBtn="false"
     ></alertMessageTable>
     <Pagination :tableId="tableId" :pageObj="pageObj" @pageNo='pageNo' @pageSize='pageSize' ref="Pagination"></Pagination>
     <!--导出-->
@@ -552,7 +553,7 @@
                     }
                     this.tableData[index].current=current;
                   })
-                  this.tableData=[...this.tableData];
+                  this.$set(this.tableData,[...this.tableData])
                 })
               });
               this.pageObj.total = response.data.total;

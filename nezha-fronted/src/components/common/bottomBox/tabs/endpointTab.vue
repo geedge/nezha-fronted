@@ -277,6 +277,20 @@
             label:'endpointState',
             disabled:false,
             readonly:true,
+          },{
+            id:34,
+            name:this.$t('project.project.project'),
+            // name: this.$t('asset.asset'),
+            type:'input',
+            label:'projectName',
+            disabled:false,
+          },{
+            id:35,
+            name:this.$t('project.module.module'),
+            // name: this.$t('asset.asset'),
+            type:'input',
+            label:'moduleName',
+            disabled:false,
           }],
         },
         endpointSearchLabel: { //搜索参数

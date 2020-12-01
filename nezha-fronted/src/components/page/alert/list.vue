@@ -25,8 +25,9 @@
           <div class="top-tool-search">
             <search-input :searchMsg="searchMsg" @search="search" :bottomBox.inTransform="bottomBox.inTransform"></search-input>
           </div>
+          <pick-time  :showTimePicker="false" class="float-right pickTime margin-l-20" :refresh-data-func="getAlertList" v-model="searchTimeSelect" :use-chart-unit="false" ref="pickTime"></pick-time>
           <button type="button" @click="showExportDialog" :title="$t('overall.exportExcelLower')"
-                  class="nz-btn nz-btn-size-normal nz-btn-style-light margin-l-20" id="alert-list-export">
+                  class="nz-btn nz-btn-size-normal nz-btn-style-light" id="alert-list-export">
             <i class="nz-icon nz-icon-download1"></i>
           </button>
           <delete-button :delete-objs="batchDeleteObjs" api="alert/message" @after="getAlertList" :clickFunction="openDelMessageBox"></delete-button>
@@ -152,6 +153,7 @@
         sameLabels: ['instance','module','project','asset','endpoint','datacenter'],
         legend: [],
         searchTime: [],
+        searchTimeSelect: bus.getTimezontDateRange(),
         currentMsg: {},
         chartUnit: 5,
 
@@ -390,7 +392,7 @@
                   }
                   this.tableData[index].current=current;
                 })
-                this.tableData=[...this.tableData];
+                this.$set(this.tableData,[...this.tableData])
               })
             });
             this.deleteBox.ids='';

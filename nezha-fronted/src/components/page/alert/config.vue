@@ -33,13 +33,13 @@
           <div class="top-tool-search float-right">
             <search-input :searchMsg="searchMsg" @search="search" :inTransform="bottomBox.inTransform"></search-input>
           </div>
+          <pick-time  :showTimePicker="false" class="float-right pickTime margin-l-20" :refresh-data-func="getTableData" v-model="searchTime" :use-chart-unit="false" ref="pickTime"></pick-time>
           <export-excel
             export-file-name="AlertRule"
             export-url="/alert/rule/export"
             import-url="/alert/rule/import"
             :params="searchLabel"
             @afterImport="getTableData"
-            class="margin-l-20"
           >
             <template slot="optionZone">
               <button id="alert-add" @click="add"  :title="$t('overall.createAlertRule')"
@@ -288,6 +288,7 @@
         viewProjectData: {},
         viewModuleData: {},
         viewAsset: false,
+        searchTime: bus.getTimezontDateRange(),
       }
     },
     methods: {

@@ -41,6 +41,7 @@
         <el-dialog class="nz-dialog table-chart-dialog" :title="$t('dashboard.panel.view')"  :visible.sync="screenModal" width="96%" @opened="initDialog"  @close="screenModal = false" >
           <div slot="title">
             <span class="nz-dialog-title">{{chartData.title}}</span>
+            <!--<span class="float-right  dialog-tool" @click="screenRefreshChart" style="margin-right: 15px"><i class="global-active-color nz-icon nz-icon-refresh"/></span>-->
           </div>
           <iframe :id="'urlContainerFull'+chartIndex"  frameborder="0" width="100%" height="100%" name="showHereFull" scrolling=auto v-if="!showStatic"
                   style="z-index:5000;padding-bottom:6px;"
@@ -196,6 +197,9 @@ export default {
     },
     clearChart(){
       this.data = {};
+    },
+    screenRefreshChart(){
+     ('urlContainerFull'+this.chartIndex).window.location.reload()
     },
     // 重新请求数据 刷新操作-local
     refreshChart() {

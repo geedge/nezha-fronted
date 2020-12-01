@@ -548,7 +548,7 @@ const en = {
     },
     active:"Alive",// "存活",
     total:"Total",// "总数",
-    down: "Down"
+    down: "Down",
   },
   config: {
     config: 'Settings',//"设置"
