@@ -51,7 +51,7 @@
         <div class="right-box-line"></div>
 
         <el-form-item v-for="(notification, index) in editUser.notifications" :key="index" class="notification-item">
-          <el-select v-model="notification.scriptId" slot="label" placeholder="" popper-class="no-style-class" size="small">
+          <el-select v-model="notification.scriptId" placeholder="" popper-class="no-style-class" size="small" class='form-item-title'>
             <el-option v-for="(item, i) in selectableScripts" :label="item.name" :key="i" :value="item.id" :disabled="item.disabled"></el-option>
           </el-select>
           <el-input placeholder="" v-model="notification.account" size="small" style="width: calc(100% - 37px);"></el-input>
@@ -262,5 +262,11 @@
       width: 100px;
 
     }
+  }
+</style>
+<style scoped>
+  .form-item-title{
+    position: absolute;
+    left: -120px;
   }
 </style>
