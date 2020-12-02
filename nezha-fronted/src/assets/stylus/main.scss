@@ -937,6 +937,9 @@ li{
   line-height: unset;
   padding: 3px;
 }
+.el-table__body tr.hover-row.current-row>td, .el-table__body tr.hover-row.el-table__row--striped.current-row>td, .el-table__body tr.hover-row.el-table__row--striped>td, .el-table__body tr.hover-row>td {
+  background-color: #f0f0f0;
+}
 /*.nz-table .el-table__row td:first-of-type {
    padding-left: 38px;
 }*/
@@ -947,7 +950,7 @@ li{
   border-right-color: #ebeef5;
 }
 .el-table .el-table__body tr:hover>td {
-  background-color: #f0f0f0;
+  background-color: #f0f0f0 !important;
 }
 .nz-table-gear {
   box-sizing: border-box;
