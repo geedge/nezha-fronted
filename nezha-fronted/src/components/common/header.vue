@@ -1,6 +1,6 @@
 <template>
   <div class="header">
-    <div class="logo link" @click="jumpTo('/overview')">
+    <div @click="jumpTo('overview')" class="logo link">
       <img height="34" src="../../assets/img/logo1-2.png"/>
       <span class="header-system-name">{{systemName&&systemName != 'undefined'&&systemName != null?systemName: $t('dashboard.overview.contentTitle')}}</span>
     </div>
@@ -10,7 +10,7 @@
       active="1"
       unique-opened
     >
-      <el-submenu :index="'-3'" popper-class="nz-submenu" class="icon-menu-item" :disabled="!linkData||linkData.length <1" >
+      <el-submenu :disabled="!linkData||linkData.length <1" class="icon-menu-item" index="100" popper-class="nz-submenu" >
         <template slot="title">
           <i class="nz-icon-navmore nz-icon" style="font-size: 17px;"></i>
         </template>
@@ -20,13 +20,13 @@
           </el-menu-item>
         </template>
       </el-submenu>
-      <el-submenu :index="'-1'" class="icon-menu-item" popper-class="display-none">
+      <el-submenu class="icon-menu-item" index="101" popper-class="display-none">
         <div slot="title" class="el-submenu__title" @click="cli" >
           <i class="nz-icon nz-icon-cli" style="font-size: 18px;"></i>
           <div class="right-tip" v-show="$store.state.consoleCount>0">{{$store.state.consoleCount<=10?$store.state.consoleCount:'10+'}}</div>
         </div>
       </el-submenu>
-      <el-submenu index="0" popper-class="nz-submenu" class="icon-menu-item">
+      <el-submenu class="icon-menu-item" index="102" popper-class="nz-submenu">
         <template slot="title">
          <i class="nz-icon-create-square nz-icon" style="font-size: 18px;"></i>
         </template>
@@ -38,10 +38,22 @@
           </el-menu-item>
         </template>
       </el-submenu>
-      <el-menu-item :index="'-2'" >
+      <el-menu-item index="103" >
         <div class="vertical-line" ></div>
       </el-menu-item>
-      <el-submenu index="1" popper-class="nz-submenu">
+
+      <el-submenu :index="`${index}`" :key="index" popper-class="nz-submenu" v-for="(menu, index) in getMenuList">
+        <template slot="title">
+          <div :class ="menuIsActive(menu, 'parent')" @click="jumpTo(menu.route)" >
+            {{$t(menu.i18n)}}
+          </div>
+        </template>
+        <el-menu-item :index="`${index}-${subIndex}`" :key="`${index}-${subIndex}`" v-for="(subMenu, subIndex) in menu.children">
+          <div :class="menuIsActive(subMenu)" @click="jumpTo(subMenu.route)" >{{$t(subMenu.i18n)}}</div>
+        </el-menu-item>
+      </el-submenu>
+
+      <!--<el-submenu index="1" popper-class="nz-submenu">
         <template slot="title">
           <div @click="jumpTo('/overview')" :class ="(route == '/overview' ||route == '/panel' || route == '/explore') ? 'menu-active' :'' " >
             {{$t('overall.dashboard')}}
@@ -57,7 +69,6 @@
           <div @click="jumpTo('/explore')" :class="{'menu-item-active' :route == '/explore'}">{{$t('dashboard.metricPreview.title')}}</div>
         </el-menu-item>
       </el-submenu>
-
       <el-submenu index="3" popper-class="nz-submenu">
         <template slot="title">
           <div v-if="assetData.length == 0" @click="jumpToAsset()">{{$t('overall.asset')}}</div>
@@ -168,7 +179,7 @@
         <el-menu-item index="6-4">
           <div @click="logout">{{$t('overall.signOut')}}</div>
         </el-menu-item>
-      </el-submenu>
+      </el-submenu>-->
     </el-menu>
 
     <transition name="right-box">
@@ -324,7 +335,7 @@
        * @param parentMenu 菜单大类
        * */
       jumpTo(route) {
-        if (route != "/asset") {
+        if (route != "asset") {
           this.activeItemIndexes = [];
         }
         this.$router.push({
@@ -489,7 +500,6 @@
         this.rightBox.project.show = true;
       },
       logout() {
-        localStorage.setItem("nz-parent-menu", "dashboards");
         this.$get('logout');
         this.jumpTo('/login');
       },
@@ -526,6 +536,28 @@
           history.pushState(null, null, document.URL);
           window.addEventListener('popstate', this.cancel, false);
         }
+      },
+      menuIsActive() {
+        return function(menu, isParent) {
+          if (isParent) {
+            let isCurrent = menu.children.some(sub => {
+              return sub.route == this.route;
+            });
+            if (isCurrent) {
+              return "menu-active";
+            } else {
+              return "";
+            }
+          } else {
+            if (menu.route == this.route) {
+              if (isCurrent) {
+                return "menu-item-active";
+              } else {
+                return "";
+              }
+            }
+          }
+        };
       }
     },
     mounted() {

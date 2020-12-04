@@ -14,6 +14,7 @@ import App from './App'
 import router from './router'
 import VueResource from 'vue-resource'
 import axios from 'axios';
+import "./permission";
 
 import plTable from 'pl-table'
 import 'pl-table/themes/index.css'
@@ -123,8 +124,20 @@ Vue.mixin({
           }
         })
       },
+      hasButton(button) {
+        return this.$store.buttonList.indexOf(button) > -1;
+      }
+    },
+    computed: {
+      getMenuList() {
+        console.info(this.$store.state.user.menuList);
+        return this.$store.state.user.menuList;
+      },
+      getButtonList() {
+        return this.$store.state.buttonList;
+      }
     }
-})
+});
 
 
 Vue.config.productionTip = false;
@@ -143,8 +156,11 @@ window.vm = new Vue({
   i18n,
   store,
   components: {App},
-  template: '<App/>'
-})
+  template: '<App/>',
+  mounted() {
+    //store.commit()
+  }
+});
 
 export default vm;
 

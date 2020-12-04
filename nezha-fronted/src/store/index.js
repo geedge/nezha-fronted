@@ -1,8 +1,12 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
+import user from "./user"
 
 Vue.use(Vuex);
 const store = new Vuex.Store({
+  modules: {
+    user
+  },
   state: {
     /* 监听对象变化，用于顶部菜单与底部内容的同步 */
     currentProject: {id: "", name: "", remark: ""},

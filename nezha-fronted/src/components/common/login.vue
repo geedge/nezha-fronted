@@ -31,6 +31,7 @@
 
 <script>
 import bus from '../../libs/bus';
+import {mapActions} from "vuex";
 export default {
   name: "login",
   data() {
@@ -45,30 +46,17 @@ export default {
     }
   },
   methods: {
+    ...mapActions(["loginSuccess"]),
     login() {
       if (this.validateLogin()&&(this.$route.path=='/'||this.$route.path=='/login')) {
-        this.$post('sys/login', (this.loginData)).then(res => {
+        this.$post('sys/login', this.loginData).then(res => {
           if (res.code == 200) {
             //登录成功，记录用户名、token和lang
-            sessionStorage.setItem("nz-token", res.data.token);
             sessionStorage.setItem("nz-username", this.loginData.username);
             localStorage.setItem("nz-username", this.loginData.username);
             localStorage.setItem('nz-language', this.lang);
-            localStorage.setItem('nz-sys-name',res.data.systemName);
-            localStorage.setItem('nz-sys-timezone',res.data.timezone);
-            localStorage.setItem('nz-sys-default-cabinet-usize',res.data.defaultCabinetUsize);
-            localStorage.setItem('nz-sys-max-terminal-num',res.data.maxTerminalNum);
-            localStorage.setItem('nz-sys-asset-ping-switch',res.data.assetPingSwitch);
-            localStorage.setItem('nz-parent-menu', "dashboards");
-            localStorage.setItem('nz-menu', "/overview");
             this.$i18n.locale = this.lang;
-            bus.$emit('login');
-            this.$router.push({
-              path: "/overview",
-              query: {
-                t: +new Date()
-              }
-            });
+            this.loginSuccess(res);
           } else {
             this.$message.error(res.msg);
           }

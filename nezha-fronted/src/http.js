@@ -1,17 +1,6 @@
 import axios from 'axios'
-import router from './router'
-
-//import qs from 'qs'
-//import he from "element-ui/src/locale/lang/he"; //引入数据格式化
-//axios.defaults.baseURL = 'http://localhost:8088/nz-admin';
-// axios.defaults.baseURL = 'http://192.168.41.101:8088/nz-admin';
-//axios.defaults.baseURL = 'http://192.168.40.247:8080/nz-admin';
 
 axios.interceptors.request.use(config => {
-      // config.headers = {
-      //   "Content-Type": 'application/x-www-form-urlencoded',
-      // }
-      // config.data = qs.stringify(config.data);
       let token = sessionStorage.getItem('nz-token');
       if (token) {
           config.headers['Authorization'] = token //请求头token

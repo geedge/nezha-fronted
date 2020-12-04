@@ -14,21 +14,6 @@ export default new Router({
       component: resolve => require(['../components/common/login.vue'], resolve),
     },
     {
-      path: '/terminal',
-      name: "terminal",
-      component: resolve => require(['../components/page/asset/WebSSH.vue'], resolve),
-    },
-    {
-      path: '/cloneChat',
-      name: "cloneChat",
-      component: resolve => require(['../components/page/asset/cloneChat.vue'], resolve),
-    },
-    {
-      path: '/newChat',
-      name: "newChat",
-      component: resolve => require(['../components/page/asset/newChat.vue'], resolve),
-    },
-    {
       path: '/',
       component: resolve => require(['../components/common/home.vue'], resolve),
       children: [
@@ -37,15 +22,11 @@ export default new Router({
           component: resolve => require(['../components/page/dashboard/panel.vue'], resolve),
         },
         {
-          path: '/metricPreview',
-          component: resolve => require(['../components/page/dashboard/metricPreview.vue'], resolve),
-        },
-        {
           path: '/explore',
           component: resolve => require(['../components/page/dashboard/explore/explore.vue'], resolve),
         },
         {
-          path: '/overview',
+          path: 'overview',
           component: resolve => require(['../components/page/dashboard/overview/overview2.vue'],resolve)
         },
         {
@@ -73,11 +54,11 @@ export default new Router({
           component: resolve => require(['../components/page/config/model.vue'], resolve),
         },
         {
-          path: '/terminallog',
+          path: '/terminalLog',
           component: resolve => require(['../components/page/config/terminallog.vue'], resolve),
         },
         {
-          path: '/operationlog',
+          path: '/operationLog',
           component: resolve => require(['../components/page/config/operationlog.vue'], resolve),
         },
         {
