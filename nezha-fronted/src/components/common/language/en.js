@@ -145,6 +145,9 @@ const en = {
         legend:'Legend',
         statistics:'Statistics',
         legendTip:'Controls the name of the time series, using name or pattern. For example {{hostname}} will be replaced with label value for the label hostname.',
+        valueMappingTip: 'Use {{value}} to display the original value\n'+
+          'For example: Total Alive: {{value}}\n'+
+          'The result is: Total Alive: 100',
         sync: 'Sync to assets',
         last:'Last',
         threshold:'Threshold',

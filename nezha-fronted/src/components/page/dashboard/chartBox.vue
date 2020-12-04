@@ -329,7 +329,13 @@
           </el-row>
           <!--value mapping start-->
           <div  class="right-box-sub-title" v-if="editChart.type == 'singleStat'||editChart.type == 'table'">
-            <span>{{$t('dashboard.panel.chartForm.valMapping.name')}}</span>
+            <span>
+              {{$t('dashboard.panel.chartForm.valMapping.name')}}
+              <el-popover  placement="top" width="275" trigger="hover">
+                <div style="white-space: pre-wrap;">{{$t('dashboard.panel.chartForm.valueMappingTip')}}</div>
+                <i slot="reference" class="nz-icon nz-icon-info-normal" style="font-size: 14px; -webkit-transform:scale(0.75);display:inline-block;" @mouseover="rz"></i>
+              </el-popover>
+            </span>
             <span  class="float-right" @click="addMapping"><i style="font-size: 16px; cursor: pointer;" class="nz-icon nz-icon-create-square"></i></span>
           </div>
           <div style="margin-bottom: 20px; width: 100%" v-if="editChart.type == 'singleStat'||editChart.type == 'table'"></div>
@@ -1628,7 +1634,7 @@
         deep: true,
         immediate: true,
         handler(n) {
-          //console.log(n);
+          console.log(n,(n.param&&n.param.valueMapping)&&(n.type === 'singleStat' || n.type === 'table'));
           if((n.param&&n.param.valueMapping)&&(n.type === 'singleStat' || n.type === 'table')){
             n.param.valueMapping.mapping.forEach(item=>{
               this.showPicker.push({bac:false,text:false})

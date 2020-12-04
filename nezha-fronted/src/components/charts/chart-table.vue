@@ -52,7 +52,7 @@
         <div class="mt-10 table-container" v-cloak v-show="firstShow">
           <el-table class="nz-table" :id="'tableContainer'+chartIndex" ref="tableContainer" :height="tableHeight"
                     :data="seriesItem" border tooltip-effect="light" v-cloak v-scrollBar:el-table
-                    @sort-change="tableDataSort">
+                    @sort-change="tableDataSort" >
             <el-table-column sortable prop="time" :label="$t('dashboard.panel.chartTableColumn.time')" min-width="100"
                              :sort-orders="['ascending', 'descending']" :sortable="'custom'"></el-table-column>
             <el-table-column sortable prop="element" :show-overflow-tooltip="true"
@@ -65,7 +65,7 @@
             <el-table-column sortable prop="value" :label="$t('dashboard.panel.chartTableColumn.value')" min-width="90"
                              :resizable="false" :sort-orders="['ascending', 'descending']" :sortable="'custom'">
               <template slot-scope="scope">
-                {{ scope.row.value}}
+                <div :style="{color:mapping?mapping.color.text:'#000',background:mapping?mapping.color.bac:'#fff',margin: '10px 0'}">{{ scope.row.value}}</div>
               </template>
             </el-table-column>
           </el-table>
@@ -97,7 +97,7 @@
             <el-table-column sortable prop="value" :label="$t('dashboard.panel.chartTableColumn.value')" min-width="90"
                              :resizable="false" :sort-orders="['ascending', 'descending']" :sortable="'custom'">
               <template slot-scope="scope">
-                {{ scope.row.value}}
+                <div :style="{color:mapping?mapping.color.text:'#000',background:mapping?mapping.color.bac:'#fff',margin: '10px 0'}">{{ scope.row.value}}</div>
               </template>
             </el-table-column>
           </el-table>
@@ -210,7 +210,8 @@
           }],
         searchTime: [new Date().setHours(new Date().getHours() - 1), new Date()],//全屏显示的时间
         oldSearchTime: [],
-        ps: null
+        ps: null,
+        mapping:{},
       };
     },
     created() {
@@ -395,7 +396,8 @@
             }else{
               mapping=mappings.find(t=>{return t.from <= value&& t.to >= value});
             }
-            item.value = mapping?mapping.text:chartDataFormat.getUnit(chartItem.unit?chartItem.unit:2).compute(value,null,2);
+            this.mapping=mapping;
+            item.value = mapping?mapping.text.replace('{{value}}', item.value):chartDataFormat.getUnit(chartItem.unit?chartItem.unit:2).compute(value,null,2);
           }
           return item;
         }));

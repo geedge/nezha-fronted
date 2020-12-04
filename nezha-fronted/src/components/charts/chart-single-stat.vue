@@ -424,7 +424,7 @@ export default {
               if(this.mapping&&!this.mapping.color){
                 this.mapping.color={bac:'#fff',text:'#000'}
               }
-              this.serieSingleStat = mapping?mapping.text:chartDataFormat.getUnit(chartItem.unit?chartItem.unit:2).compute(singleStatTmp,null,2);
+              this.serieSingleStat = mapping?mapping.text.replace('{{value}}', singleStatTmp):chartDataFormat.getUnit(chartItem.unit?chartItem.unit:2).compute(singleStatTmp,null,2);
             }else{
               this.serieSingleStat = chartDataFormat.getUnit(chartItem.unit?chartItem.unit:2).compute(singleStatTmp,null,2);
             }
@@ -460,7 +460,7 @@ export default {
               if(this.mapping&&!this.mapping.color){
                 this.mapping.color={bac:'#fff',text:'#000'}
               }
-              this.serieSingleStat = mapping?mapping.text:chartDataFormat.getUnit(chartItem.unit?chartItem.unit:2).compute(singleStatTmp,null,2);
+              this.serieSingleStat = mapping?mapping.text.replace('{{value}}', singleStatTmp):chartDataFormat.getUnit(chartItem.unit?chartItem.unit:2).compute(singleStatTmp,null,2);
             }else{
               this.serieSingleStat = chartDataFormat.getUnit(chartItem.unit?chartItem.unit:2).compute(singleStatTmp,null,2);
             }
