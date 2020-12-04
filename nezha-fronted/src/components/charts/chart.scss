@@ -249,8 +249,7 @@
   .chart-single-stat {
     width: 100%;
     .single-stat-container {
-      padding-left: 8px;
-      padding-right: 8px;
+      padding: 8px;
       display: table;
       text-align: center;
       width: calc(100% - 16px);
@@ -260,6 +259,18 @@
         display:table-cell;
         font-size:30px;
       }
+    }
+  }
+  .single-stat-screen-container{
+    height: 100%;
+    .single-stat-content{
+      font-size: 30px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      flex-direction: column;
+      height: 100%;
     }
   }
   .chart-container.chart-detail {

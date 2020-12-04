@@ -72,7 +72,9 @@ export const clickoutside = {
         if (binding.arg) {
           binding.value(e, binding.arg);
         } else {
-          binding.value(e);
+          if(binding.value){
+            binding.value(e);
+          }
         }
 
       }
