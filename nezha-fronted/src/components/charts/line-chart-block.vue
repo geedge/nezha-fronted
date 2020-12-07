@@ -331,6 +331,7 @@
           })
         }
       },
+
       clickLegend(legendName,index){
         //点击图表某一个legend，图表只显示当前点击的曲线或柱状图，其它隐藏，再次点击已选中的legend ，显示全部
         let curIsGrey=this.isGrey[index];
@@ -511,7 +512,7 @@
             show:false,
             top:'0',
             right:'18',
-            showTitle:true,
+            showTitle:false,
             feature:{
               dataZoom:{
                 yAxisIndex:false,
@@ -523,14 +524,27 @@
               magicType:{
                 type:['stack'],
                 title:{
-                  stack:self.$t('overall.toolBox.stack')
+                  stack:self.$t('overall.toolBox.stack'),
                 },
                 iconStyle:{
                   borderColor:stackIconBorderColor,
                 },
                 emphasis:{
                   borderColor:stackIconChooseBorderColor,
-                }
+                },
+              },
+            },
+            tooltip: { // 和 option.tooltip 的配置项相同
+              show: true,
+              position:'top',
+              formatter: function (param) {
+                return param.title; // 自定义的 DOM 结构
+              },
+              backgroundColor:'rgba(255,255,255,0)',
+              borderColor :'rgba(255,255,255,0)',
+              textStyle: {
+                fontSize: 12,
+                color : '#439AC6'
               },
             }
           },
@@ -818,7 +832,8 @@
             getChart(this.chartIndex).on('magictypechanged', function (params) {
                 self.isStackArea = !self.isStackArea;
                 if(self.isStackArea){
-                  this.setOption({
+                  console.log(123123);
+                  getChart(self.chartIndex).setOption({
                     toolbox:{
                       feature:{
                         dataZoom:{
@@ -884,7 +899,33 @@
                         },
                     }
                   });
-                }
+                }else{
+                getChart(self.chartIndex).setOption({
+                  toolbox:{
+                    feature:{
+                      dataZoom:{
+                        yAxisIndex:false,
+                        title:{
+                          zoom:self.$t('overall.toolBox.zoom'),
+                          back:self.$t('overall.toolBox.back'),
+                        }
+                      },
+                      magicType:{
+                        type:['stack'],
+                        title:{
+                          stack:self.$t('overall.toolBox.stack')
+                        },
+                        iconStyle:{
+                          borderColor:'#7e7e7e',
+                        },
+                        emphasis:{
+                          borderColor:stackIconChooseBorderColor,
+                        }
+                      },
+                    }
+                  },
+                })
+              }
             });
           });
         } else if (chartSite === 'screen') { // 全屏显示
@@ -1022,6 +1063,32 @@
                     },
                   }
                 });
+              }else{
+                this.setOption({
+                  toolbox:{
+                    feature:{
+                      dataZoom:{
+                        yAxisIndex:false,
+                        title:{
+                          zoom:self.$t('overall.toolBox.zoom'),
+                          back:self.$t('overall.toolBox.back'),
+                        }
+                      },
+                      magicType:{
+                        type:['stack'],
+                        title:{
+                          stack:self.$t('overall.toolBox.stack')
+                        },
+                        iconStyle:{
+                          borderColor:'#7e7e7e',
+                        },
+                        emphasis:{
+                          borderColor:stackIconChooseBorderColor,
+                        }
+                      },
+                    }
+                  },
+                })
               }
             });
           });

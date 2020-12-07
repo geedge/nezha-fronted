@@ -472,7 +472,8 @@
           toolbox:{
             show:false,
             top:'0',
-            showTitle:true,
+            right:'18',
+            showTitle:false,
             feature:{
               dataZoom:{
                 yAxisIndex:false,
@@ -484,14 +485,27 @@
               magicType:{
                 type:['stack'],
                 title:{
-                  stack:self.$t('overall.toolBox.stack')
+                  stack:self.$t('overall.toolBox.stack'),
                 },
                 iconStyle:{
                   borderColor:stackIconBorderColor,
                 },
                 emphasis:{
                   borderColor:stackIconChooseBorderColor,
-                }
+                },
+              },
+            },
+            tooltip: { // 和 option.tooltip 的配置项相同
+              show: true,
+              position:'top',
+              formatter: function (param) {
+                return param.title; // 自定义的 DOM 结构
+              },
+              backgroundColor:'rgba(255,255,255,0)',
+              borderColor :'rgba(255,255,255,0)',
+              textStyle: {
+                fontSize: 12,
+                color : '#439AC6'
               },
             }
           },
@@ -870,6 +884,32 @@
                     },
                   }
                 });
+              }else{
+                this.setOption({
+                  toolbox:{
+                    feature:{
+                      dataZoom:{
+                        yAxisIndex:false,
+                        title:{
+                          zoom:self.$t('overall.toolBox.zoom'),
+                          back:self.$t('overall.toolBox.back'),
+                        }
+                      },
+                      magicType:{
+                        type:['stack'],
+                        title:{
+                          stack:self.$t('overall.toolBox.stack')
+                        },
+                        iconStyle:{
+                          borderColor:'#7e7e7e',
+                        },
+                        emphasis:{
+                          borderColor:stackIconChooseBorderColor,
+                        }
+                      },
+                    }
+                  },
+                })
               }
             });
           });
@@ -1001,7 +1041,34 @@
                     },
                   }
                 });
+              }else{
+                this.setOption({
+                  toolbox:{
+                    feature:{
+                      dataZoom:{
+                        yAxisIndex:false,
+                        title:{
+                          zoom:self.$t('overall.toolBox.zoom'),
+                          back:self.$t('overall.toolBox.back'),
+                        }
+                      },
+                      magicType:{
+                        type:['stack'],
+                        title:{
+                          stack:self.$t('overall.toolBox.stack')
+                        },
+                        iconStyle:{
+                          borderColor:'#7e7e7e',
+                        },
+                        emphasis:{
+                          borderColor:stackIconChooseBorderColor,
+                        }
+                      },
+                    }
+                  },
+                })
               }
+
             });
           });
         }
