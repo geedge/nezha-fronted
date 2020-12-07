@@ -56,7 +56,7 @@
         <div class="right-box-line"></div>
 
         <el-form-item v-for="(permission,index) in editMenu.permissions" :key="index" :label="index+1+''" >
-          <el-input v-model="editMenu.permissions[index].value" type="text" placeholder="" style="width: calc(100% - 37px);"></el-input>
+          <el-input v-model="editMenu.permissions[index].value" type="text" placeholder="" style="width: calc(100% - 37px);" oninput="this.value = this.value.replace(/[,]/g,'')"></el-input>
           <span @click="removePermission(index)" style="padding-left: 5px;"><i class="nz-icon nz-icon-shanchu1"></i></span>
         </el-form-item>
       </el-form>
@@ -112,9 +112,6 @@
             {required: true, message: this.$t('validate.required'), trigger: 'blur'}
           ],
           i18n: [
-            {required: true, message: this.$t('validate.required'), trigger: 'blur'}
-          ],
-          perms: [
             {required: true, message: this.$t('validate.required'), trigger: 'blur'}
           ],
           orderNum: [
@@ -216,6 +213,10 @@
           }
         })
       },
+      inputValid:function(val){
+        return val.replace(/[,]/g,'')
+        console.log(val)
+      },
     },
     mounted() {
       this.getMenus();
@@ -230,8 +231,6 @@
           if(this.editMenu.perms&&this.editMenu.perms != ''){
             this.$set(this.editMenu,'permissions',this.editMenu.perms.split(',').map(t=>{return {value:t};}))
           }
-
-          console.log('editMenu',this.editMenu)
         }
       },
     },
