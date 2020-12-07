@@ -368,7 +368,6 @@
       // 获取一个图表具体数据
       getChartData() {
         const chartItem = this.chart;
-        console.log(chartItem);
         if(chartItem.type === 'alertList'){
           this.getAlertListChartData(chartItem,null);
           return;
@@ -572,7 +571,6 @@
                         if(this.mapping&&!this.mapping.color){
                           this.mapping.color={bac:'#fff',text:'#000'}
                         }
-                        console.log(mapping)
                         this.serieSingleStat = mapping?mapping.text.replace('{{value}}', singleStatTmp):chartDataFormat.getUnit(chartItem.unit?chartItem.unit:2).compute(singleStatTmp,null,2);
                       }else{
                         this.serieSingleStat = chartDataFormat.getUnit(chartItem.unit?chartItem.unit:2).compute(singleStatTmp,null,2);

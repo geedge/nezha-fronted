@@ -1447,7 +1447,6 @@
                 });
               });
               params.elements = elements;
-              console.log(params,'params');
               if (valid) {
                 this.$refs.chartsPreview.show(params);
               }
@@ -1636,7 +1635,6 @@
         deep: true,
         immediate: true,
         handler(n) {
-          console.log(n,(n.param&&n.param.valueMapping)&&(n.type === 'singleStat' || n.type === 'table'));
           if((n.param&&n.param.valueMapping)&&(n.type === 'singleStat' || n.type === 'table')){
             n.param.valueMapping.mapping.forEach(item=>{
               this.showPicker.push({bac:false,text:false})
