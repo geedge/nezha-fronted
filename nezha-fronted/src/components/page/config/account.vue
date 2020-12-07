@@ -2,6 +2,19 @@
   .account {
     height: 100%;
   }
+  .account .account-role-item{
+    background-color: #409eff;
+    border: 1px solid #409eff;
+    height: 20px;
+    font-size: 12px;
+    line-height: 20px;
+    border-radius: 4px;
+    display: inline-block;
+    box-sizing: content-box;
+    padding:3px;
+    margin-right: 3px;
+    color: white;
+  }
 </style>
 <template>
   <div class="account">
@@ -74,6 +87,16 @@
               &nbsp;
               <span :title="$t('overall.delete')" @click="del(scope.row)" class="content-right-option" :id="'account-del-'+scope.row.id"><i class="nz-icon nz-icon-delete"></i></span>
             </div>
+            <template v-if="item.prop == 'roles'">
+              <template v-if="scope.row[item.prop]">
+                <template  v-for="role in scope.row[item.prop]">
+                  <div class="account-role-item" v-if="role"><span>{{role.i18n?$t(role.i18n):role.name}}</span></div>
+                </template>
+              </template>
+              <template v-else>
+                <span>-</span>
+              </template>
+            </template>
             <span v-else-if="item.prop == 'lang'">
                 {{scope.row[item.prop] == 'en' ? 'English' : ''}}
                 {{scope.row[item.prop] == 'zh' ? '中文' : ''}}
@@ -171,6 +194,7 @@
           status: '1',
           createTime: '',
           receiver: [],
+          roles:[],
           lang: '',
           notifications: []
         },
@@ -188,6 +212,10 @@
           }, {
             label: this.$t("config.account.account"),
             prop: 'username',
+            show: true,
+          }, {
+            label: this.$t("config.account.roles"),
+            prop: 'roles',
             show: true,
           }, {
             label: 'E-mail',

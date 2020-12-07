@@ -559,6 +559,7 @@ const en = {
       accountList: 'Account list',//"用户列表"
       //列表表头
       account: 'Account',//"用户"
+      roles:"Roles",
       language: 'Language',//"语言"
       receiver: 'Receiver',//"用户组"
       createTime: 'Create time',//"创建时间"
@@ -580,6 +581,34 @@ const en = {
       confirmPwdErr:'The two passwords are inconsistent',
       reinputPwd:'Enter password again',
       notification: 'Notification'
+    },
+    roles:{
+      roles:"Roles",
+      name:"Name",
+      remark:"Remark",
+      option: 'Operation',//"操作"
+      permission:"Permission",
+      menu:"Menu",
+      createRole:"Create role",
+      editRole:"Edit role"
+    },
+    menus:{
+      menus:'Menus',
+      name:"Name",
+      remark:"Remark",
+      option: 'Operation',//"操作",
+      code:'Code',
+      i18n:'I18n',
+      type:'Type',
+      route:'Route',
+      perms:'Permission',
+      button:"Button",
+      menu:"Menu",
+      parent:"Previous menu",
+      mainMenu:'Primary menu',
+      createMenu:"Create menu",
+      editMenu:"Edit menu",
+      orderNum:"Order",
     },
     promServer: {
       promServerList: 'Prometheus server',//"Prometheus Server"

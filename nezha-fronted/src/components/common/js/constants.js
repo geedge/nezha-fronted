@@ -5,6 +5,7 @@ export const staticMenus = {
     title: i18n.t('overall.config'),
     menu: [
       {route: '/account', name: i18n.t('config.account.account')},
+      {route: '/roles', name: i18n.t('config.roles.roles')},
       {route: '/promServer', name: i18n.t('config.promServer.promServerList')},
       {route: '/dc', name: i18n.t('config.dc.dc')},
       {route: '/model', name: i18n.t('config.model.model')},
