@@ -27,7 +27,9 @@
             <div class="content-col-content-icon"><i class="nz-icon nz-icon-overview-project"></i></div>
             <div class="content-num-box">
               <div class="content-col-content-num">
-                <vue-countup :start-value="0" :end-value="(assetData ? assetData.totalStat.total  : '') | numberFormat" :decimals="(assetData ? assetData.totalStat.total  : 0) < 1000 ? 0 : 1"></vue-countup>
+                <vue-countup :duration="1" :start-value="0" :end-value="(assetData ? assetData.totalStat.total  : '') | numberFormat"
+                             :decimals="(assetData ? assetData.totalStat.total  : 0) < 1000 ? 0 : 1"></vue-countup>
+                <span v-if="(assetData ? assetData.totalStat.total  : 0) > 1000 " class="over-num">+</span>
                 <span class="overview-row-unit">{{(assetData ? assetData.totalStat.total  : '') | unitFormat}}</span>
               </div>
               <div class="content-col-content-title">{{$t("dashboard.overview.asset.title")}}</div>
@@ -39,7 +41,8 @@
             <div class="content-col-content-icon"><i class="nz-icon nz-icon-project"></i></div>
             <div class="content-num-box">
               <div class="content-col-content-num">
-                <vue-countup :start-value="0" :end-value="(projectData ? projectData.projectStat.length : '') | numberFormat" :decimals="(projectData ? projectData.projectStat.length : 0) < 1000 ? 0 : 1"></vue-countup>
+                <vue-countup :duration="1" :start-value="0" :end-value="(projectData ? projectData.projectStat.length : '') | numberFormat" :decimals="(projectData ? projectData.projectStat.length : 0) < 1000 ? 0 : 1"></vue-countup>
+                <span v-if="(projectData ? projectData.projectStat.length : 0) > 1000 " class="over-num">+</span>
                 <span class="overview-row-unit">{{(projectData ? projectData.projectStat.length  : '') | unitFormat}}</span>
               </div>
               <div class="content-col-content-title">{{$t("dashboard.overview.project.project")}}</div>
@@ -51,7 +54,8 @@
             <div class="content-col-content-icon"><i class="nz-icon nz-icon-overview-module"></i></div>
             <div class="content-num-box">
               <div class="content-col-content-num">
-                <vue-countup :start-value="0" :end-value="(moduleData ? moduleData.moduleStat.length : '') | numberFormat" :decimals="(moduleData ? moduleData.moduleStat.length : 0) < 1000 ? 0 : 1"></vue-countup>
+                <vue-countup :duration="1" :start-value="0" :end-value="(moduleData ? moduleData.moduleStat.length : '') | numberFormat" :decimals="(moduleData ? moduleData.moduleStat.length : 0) < 1000 ? 0 : 1"></vue-countup>
+                <span v-if="(moduleData ? moduleData.moduleStat.length : 0) > 1000 " class="over-num">+</span>
                 <span class="overview-row-unit">{{(moduleData ? moduleData.moduleStat.length  : '') | unitFormat}}</span>
               </div>
               <div class="content-col-content-title">{{$t("dashboard.overview.module.module")}}</div>
@@ -63,7 +67,8 @@
             <div class="content-col-content-icon"><i class="nz-icon nz-icon-overview-endpoint"></i></div>
             <div class="content-num-box">
               <div class="content-col-content-num">
-                <vue-countup :start-value="0" :end-value="(endpointData ? endpointData.total : '') | numberFormat" :decimals="(endpointData ? endpointData.total : 0) < 1000 ? 0 : 1"></vue-countup>
+                <vue-countup :duration="1" :start-value="0" :end-value="(endpointData ? endpointData.total : '') | numberFormat" :decimals="(endpointData ? endpointData.total : 0) < 1000 ? 0 : 1"></vue-countup>
+                <span v-if="(endpointData ? endpointData.total : 0) > 1000 " class="over-num">+</span>
                 <span class="overview-row-unit">{{(endpointData ? endpointData.total : '') | unitFormat}}</span>
               </div>
               <div class="content-col-content-title">{{$t("dashboard.overview.endpoint.endpoint")}}</div>
@@ -75,7 +80,8 @@
             <div class="content-col-content-icon"><i class="nz-icon nz-icon-overview-alert"></i></div>
             <div class="content-num-box">
               <div class="content-col-content-num">
-                <vue-countup :start-value="0" :end-value="(alertMessageData ? alertMessageData.alertMessageTotal : '') | numberFormat" :decimals="(alertMessageData ? alertMessageData.alertMessageTotal : 0) < 1000 ? 0 : 1"></vue-countup>
+                <vue-countup :duration="1" :start-value="0" :end-value="(alertMessageData ? alertMessageData.alertMessageTotal : '') | numberFormat" :decimals="(alertMessageData ? alertMessageData.alertMessageTotal : 0) < 1000 ? 0 : 1"></vue-countup>
+                <span v-if="(alertMessageData ? alertMessageData.alertMessageTotal : 0) > 1000 " class="over-num">+</span>
                 <span class="overview-row-unit">{{(alertMessageData ? alertMessageData.alertMessageTotal : '') | unitFormat}}</span>
               </div>
               <div class="content-col-content-title">{{$t("overall.alert")}}</div>
@@ -305,9 +311,25 @@
             if (num < 1000) {
               return num;
             } else if (num < 1000000) {
-              return (num/1000).toFixed(fixed);
+              num=num/1000;
+              num = num.toString();
+              let index = num.indexOf('.');
+              if (index !== -1) {
+                num = num.substring(0, fixed + index + 1);
+              } else {
+                num = num.substring(0);
+              }
+              return parseFloat(num).toFixed(fixed)
             } else if (num < 1000000000) {
-              return (num/1000000).toFixed(fixed);
+              num=num/1000000;
+              num = num.toString();
+              let index = num.indexOf('.');
+              if (index !== -1) {
+                num = num.substring(0, fixed + index + 1);
+              } else {
+                num = num.substring(0);
+              }
+              return parseFloat(num).toFixed(fixed)
             }
           } catch (err) {
             return 0;
