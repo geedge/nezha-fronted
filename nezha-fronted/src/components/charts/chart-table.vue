@@ -65,7 +65,7 @@
             <el-table-column sortable prop="value" :label="$t('dashboard.panel.chartTableColumn.value')" min-width="90"
                              :resizable="false" :sort-orders="['ascending', 'descending']" :sortable="'custom'">
               <template slot-scope="scope">
-                <div :style="{color:mapping?mapping.color.text:'#000',background:mapping?mapping.color.bac:'#fff',margin: '10px 0'}">{{ scope.row.value}}</div>
+                <div :style="{color:scope.row.mapping?scope.row.mapping.color.text:'#000',background:scope.row.mapping?scope.row.mapping.color.bac:'#fff',margin: '10px 0'}">{{ scope.row.value}}</div>
               </template>
             </el-table-column>
           </el-table>
@@ -397,6 +397,7 @@
               mapping=mappings.find(t=>{return t.from <= value&& t.to >= value});
             }
             this.mapping=mapping;
+            item.mapping=mapping;
             item.value = mapping?mapping.text.replace('{{value}}', item.value):chartDataFormat.getUnit(chartItem.unit?chartItem.unit:2).compute(value,null,2);
           }
           return item;

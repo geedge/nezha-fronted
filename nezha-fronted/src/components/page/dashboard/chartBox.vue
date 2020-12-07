@@ -1432,6 +1432,7 @@
                 }
                 params.param.nullType=this.editChart.param.nullType;
                 params.param.legendValue=this.editChart.param.legendValue;
+                params.param.last=this.editChart.param.last;
               } else {
                 delete params.param.threshold;
                 delete params.param.nullType;
@@ -1446,6 +1447,7 @@
                 });
               });
               params.elements = elements;
+              console.log(params,'params');
               if (valid) {
                 this.$refs.chartsPreview.show(params);
               }

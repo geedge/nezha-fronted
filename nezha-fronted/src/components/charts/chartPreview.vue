@@ -143,7 +143,7 @@
           </el-table-column>
           <el-table-column sortable prop="value" :label="$t('dashboard.panel.chartTableColumn.value')" width="90">
             <template slot-scope="scope">
-              <div :style="{color:mapping&&mapping.color?mapping.color.text:'#000',background:mapping&&mapping.color?mapping.color.bac:'#fff',margin: '10px 0'}">{{ scope.row.value}}</div>
+              <div :style="{color:scope.row.mapping?scope.row.mapping.color.text:'#000',background:scope.row.mapping?scope.row.mapping.color.bac:'#fff',margin: '10px 0'}">{{ scope.row.value}}</div>
             </template>
           </el-table-column>
         </el-table>
@@ -368,6 +368,7 @@
       // 获取一个图表具体数据
       getChartData() {
         const chartItem = this.chart;
+        console.log(chartItem);
         if(chartItem.type === 'alertList'){
           this.getAlertListChartData(chartItem,null);
           return;
@@ -401,6 +402,9 @@
             const axiosArr = chartItem.elements.map((ele) => {
               const filterItem = ele;
               let query = encodeURIComponent(filterItem.expression);
+              if(chartItem.type === 'table'&&chartItem.param&&chartItem.param.last == 1){
+                return this.$get('/prom/api/v1/query_range?query=' + query + "&start=" + this.$stringTimeParseToUnix(endTime) + "&end=" + this.$stringTimeParseToUnix(endTime) + '&step=' + step);
+              }
               return  this.$get('/prom/api/v1/query_range?query='+query+"&start="+this.$stringTimeParseToUnix(startTime)+"&end="+this.$stringTimeParseToUnix(endTime)+'&step='+step);
             });
             // 一个图表的所有element单独获取数据
@@ -1049,6 +1053,7 @@
               mapping=mappings.find(t=>{return t.from <= value&& t.to >= value});
             }
             this.mapping=mapping;
+            item.mapping=mapping;
             item.value = mapping?mapping.text.replace('{{value}}', item.value):this.unit.compute(value,null,2);
           }
           return item;
@@ -1121,6 +1126,8 @@
       // 查询数据,修改日期查询全屏数据
       getQueryChart(type) {
         let axiosArr = [];
+        const chartItem = this.chart;
+        console.log(chartItem);
         this.$nextTick(() => {
           let startTime = bus.timeFormate(this.searchTime[0], 'yyyy-MM-dd hh:mm:ss');
           let endTime = bus.timeFormate(this.searchTime[1], 'yyyy-MM-dd hh:mm:ss');
@@ -1135,6 +1142,9 @@
           axiosArr = this.chart.elements.map((ele) => {
             const filterItem = ele;
             let query = encodeURIComponent(filterItem.expression);
+            if(chartItem.type === 'table'&&chartItem.param&&chartItem.param.last == 1){
+              return this.$get('/prom/api/v1/query_range?query=' + query + "&start=" + this.$stringTimeParseToUnix(endTime) + "&end=" + this.$stringTimeParseToUnix(endTime) + '&step=' + step);
+            }
             return  this.$get('/prom/api/v1/query_range?query='+query+"&start="+this.$stringTimeParseToUnix(startTime)+"&end="+this.$stringTimeParseToUnix(endTime)+'&step='+step);
           });
           // 一个图表
