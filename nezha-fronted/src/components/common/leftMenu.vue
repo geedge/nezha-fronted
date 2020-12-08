@@ -52,7 +52,7 @@
                       </el-popover>
                       <span v-else>{{item.name}}</span>
                     </div>
-                    <el-badge class="mark" :value="item.total" />
+                    <el-badge class="mark" :value="item.total" type="primary"/>
                   </el-checkbox>
                 </el-checkbox-group>
               </el-collapse-item>
@@ -65,7 +65,7 @@
                       </el-popover>
                       <span v-else>{{item.name}}</span>
                     </div>
-                    <el-badge class="mark" :value="item.total" />
+                    <el-badge class="mark" :value="item.total" type="primary"/>
                   </el-checkbox>
                 </el-checkbox-group>
               </el-collapse-item>
@@ -78,7 +78,7 @@
                       </el-popover>
                       <span v-else>{{item.name}}</span>
                     </div>
-                    <el-badge class="mark" :value="item.total" />
+                    <el-badge class="mark" :value="item.total" type="primary"/>
                   </el-checkbox>
                 </el-checkbox-group>
               </el-collapse-item>
@@ -88,7 +88,7 @@
                     <div class="sidebar-info-item-txt">
                       <span>{{item.label}}</span>
                     </div>
-                    <el-badge class="mark" :value="item.total" />
+                    <el-badge class="mark" :value="item.total" type="primary"/>
                   </el-checkbox>
                 </el-checkbox-group>
               </el-collapse-item>
@@ -107,7 +107,7 @@
                       </el-popover>
                       <span v-else>{{tag.value}}</span>
                     </div>
-                    <el-badge class="mark" :value="tag.total" :max="99"/>
+                    <el-badge class="mark" :value="tag.total" :max="99" type="primary"/>
                   </el-checkbox>
                 </el-checkbox-group>
               </el-collapse-item>
@@ -791,6 +791,9 @@
     display: flex;
     padding-left: 0;
     justify-content: center;
+  }
+  /deep/ .el-badge__content--primary{
+    background-color: #74A7FA;
   }
 </style>
 <style lang="scss">
