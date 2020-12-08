@@ -14,7 +14,7 @@
             <div class="input-box" @click="dropDownVisible=false" v-if="plugins.indexOf('metric-input') > -1">
               <!--            <el-autocomplete :placeholder="$t('dashboard.metricPreview.inputTip')" :fetch-suggestions="filterInput" clearable @clear="clearExpression" :trigger-on-focus="false" v-model="expressionList[index]" @blur="expressionChange" style="width: 100%;height:36px"></el-autocomplete>-->
               <!--<editor :styleType="styleType" :metric-list="metricStore" :history-param="historyParam" v-model="expressionList[index]" ref="editor" @on-enter="expressionChange" @on-blur="expressionChange" ></editor>?-->
-              <el-input v-model="expressionList[index]"></el-input>
+              <el-input @keyup.enter.native="expressionChange" v-model="expressionList[index]"></el-input>
               <div class="append-msg error" v-if="errorMsg"><span>{{errorMsg}}</span></div>
               <div class="append-msg error" v-if="appendMsg"><span>{{appendMsg}}</span></div>
             </div>

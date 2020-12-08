@@ -120,7 +120,7 @@
       <template v-if="chart.type==='singleStat'">
         <div id="chartSingleStatPreview" @mouseenter="mouseEnterFullChart" @mouseleave="mouseLeaveFullChart"
          style=" height:100%;display:table;text-align:center;width:calc(100% - 16px);color:#000;" >
-          <div class="line-area" ref="singleStatArea"  id="singleStatArea"  style="margin-top:0px; text-align:center;
+          <div class="line-area" ref="singleStatArea"  id="singleStatArea"  :style="{color:mapping&&mapping.color?mapping.color.text:'#000',background:mapping&&mapping.color?mapping.color.bac:'#fff'}" style="margin-top:0px; text-align:center;
       vertical-align: middle;
       display:table-cell;
       font-size:30px;">
@@ -143,7 +143,7 @@
           </el-table-column>
           <el-table-column sortable prop="value" :label="$t('dashboard.panel.chartTableColumn.value')" width="90">
             <template slot-scope="scope">
-              {{scope.row.value}}
+              <div :style="{color:scope.row.mapping?scope.row.mapping.color.text:'#000',background:scope.row.mapping?scope.row.mapping.color.bac:'#fff',margin: '10px 0'}">{{ scope.row.value}}</div>
             </template>
           </el-table-column>
         </el-table>
@@ -252,6 +252,7 @@
         pageHeight:40,
         hasLegendOptions:false,
         screenLegendOptions:[],
+        mapping:{},
       };
     },
     computed: {
@@ -400,6 +401,9 @@
             const axiosArr = chartItem.elements.map((ele) => {
               const filterItem = ele;
               let query = encodeURIComponent(filterItem.expression);
+              if(chartItem.type === 'table'&&chartItem.param&&chartItem.param.last == 1){
+                return this.$get('/prom/api/v1/query_range?query=' + query + "&start=" + this.$stringTimeParseToUnix(endTime) + "&end=" + this.$stringTimeParseToUnix(endTime) + '&step=' + step);
+              }
               return  this.$get('/prom/api/v1/query_range?query='+query+"&start="+this.$stringTimeParseToUnix(startTime)+"&end="+this.$stringTimeParseToUnix(endTime)+'&step='+step);
             });
             // 一个图表的所有element单独获取数据
@@ -553,7 +557,7 @@
                     this.setData(_chartItem, series, legend);
                   }else if(chartItem.type ==='singleStat'){
                     if(Number(singleStatRlt)){
-                      let singleStatTmp =parseFloat(Number(singleStatRlt).toFixed(2));
+                      let singleStatTmp =parseFloat(Number(singleStatRlt).toFixed(2));//parseFloat ：如果没有小数点，或者小数点后都是零，parseFloat() 会返回整数。
                       if(chartItem.param.valueMapping && chartItem.param.valueMapping.type){
                         let type=chartItem.param.valueMapping.type;
                         let mappings=chartItem.param.valueMapping.mapping?chartItem.param.valueMapping.mapping:[];
@@ -563,7 +567,11 @@
                         }else{
                           mapping=mappings.find(item=>{return item.from <= singleStatTmp&& item.to >= singleStatTmp});
                         }
-                        this.serieSingleStat = mapping?mapping.text:chartDataFormat.getUnit(chartItem.unit?chartItem.unit:2).compute(singleStatTmp,null,2);
+                        this.mapping=mapping;
+                        if(this.mapping&&!this.mapping.color){
+                          this.mapping.color={bac:'#fff',text:'#000'}
+                        }
+                        this.serieSingleStat = mapping?mapping.text.replace('{{value}}', singleStatTmp):chartDataFormat.getUnit(chartItem.unit?chartItem.unit:2).compute(singleStatTmp,null,2);
                       }else{
                         this.serieSingleStat = chartDataFormat.getUnit(chartItem.unit?chartItem.unit:2).compute(singleStatTmp,null,2);
                       }
@@ -1042,8 +1050,9 @@
             }else{
               mapping=mappings.find(t=>{return t.from <= value&& t.to >= value});
             }
-            item.value = mapping?mapping.text:this.unit.compute(value,null,2);
-            console.log('value',value,'mapping',mapping)
+            this.mapping=mapping;
+            item.mapping=mapping;
+            item.value = mapping?mapping.text.replace('{{value}}', item.value):this.unit.compute(value,null,2);
           }
           return item;
         })
@@ -1115,6 +1124,8 @@
       // 查询数据,修改日期查询全屏数据
       getQueryChart(type) {
         let axiosArr = [];
+        const chartItem = this.chart;
+        console.log(chartItem);
         this.$nextTick(() => {
           let startTime = bus.timeFormate(this.searchTime[0], 'yyyy-MM-dd hh:mm:ss');
           let endTime = bus.timeFormate(this.searchTime[1], 'yyyy-MM-dd hh:mm:ss');
@@ -1129,6 +1140,9 @@
           axiosArr = this.chart.elements.map((ele) => {
             const filterItem = ele;
             let query = encodeURIComponent(filterItem.expression);
+            if(chartItem.type === 'table'&&chartItem.param&&chartItem.param.last == 1){
+              return this.$get('/prom/api/v1/query_range?query=' + query + "&start=" + this.$stringTimeParseToUnix(endTime) + "&end=" + this.$stringTimeParseToUnix(endTime) + '&step=' + step);
+            }
             return  this.$get('/prom/api/v1/query_range?query='+query+"&start="+this.$stringTimeParseToUnix(startTime)+"&end="+this.$stringTimeParseToUnix(endTime)+'&step='+step);
           });
           // 一个图表

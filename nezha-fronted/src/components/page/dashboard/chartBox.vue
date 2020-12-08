@@ -58,196 +58,284 @@
   .save-chart-box{
     z-index: 2900;
   }
+  .mc{
+    position: fixed;
+    width: 100vw;
+    height: 100vh;
+    top: 0;
+    left: 0;
+    z-index: 410;
+  }
+  /deep/ .el-color-picker{
+    position: absolute;
+  }
+  .range /deep/ .el-color-picker{
+   left: -17px;
+  }
+  .color-content{
+    height: 0;
+    width: 0;
+    overflow: hidden;
+    position: absolute;
+    top: -280px;
+    left: 140px;
+  }
+  .color-tab{
+    position: absolute;
+    top: -268px;
+    left: -14px;
+    height: 28px;
+    border-radius: 5px 5px 0 0;
+    width: 312px;
+    border: 1px solid #EBEEF5;
+    border-bottom: none;
+    background-color: #FFF;
+    display: flex;
+    justify-content: space-between;
+    box-shadow: 0 2px 12px 0 rgba(0,0,0,.1);
+  }
+  .color-tab div{
+    text-align: center;
+    flex: 1;
+    color: #909399;
+    transition: all .3s cubic-bezier(.645,.045,.355,1);
+    background: #E4E7ED;
+    cursor: pointer;
+  }
+  .color-tab div:first-child{
+    border-right-color: #DCDFE6;
+  }
+  .color-tab div:hover{
+    color: #409EFF;
+  }
+  .color-tab .color-active{
+    color: #409EFF;
+    background-color: #FFF;
+  }
+  .color{
+    position: relative;
+  }
+  .color-show{
+    border: 1px solid #E7EAED;
+    border-radius: 5px;
+    align-items: center;
+    width: 28px;
+    height: 28px;
+    display: inline-block;
+    vertical-align: middle;
+    position: relative;
+  }
+  .color-show-left{
+    width: 28px;
+    height: 28px;
+    border-radius: 5px;
+    text-align: center;
+    line-height: 28px;
+  }
+  .color-arrows{
+    color: #fff;
+    font-weight: bold;
+  }
+  .color-arrows .nz-icon{
+    font-size: 12px;
+  }
 </style>
 <template key="chartBox">
-  <div v-clickoutside="clickOutside" class="right-box right-box-add-chart z-top right-box-chart" :class="boxClass">
-    <transition name="right-box">
-      <panel-box :panel="panel" @reload="panelReload" ref="panelBox2" v-if="!showPanel.type"></panel-box>
-    </transition>
+  <div @click.self="clickOutside" class="mc">
+    <div :class="boxClass" class="right-box right-box-add-chart z-top right-box-chart">
+      <transition name="right-box">
+        <panel-box :panel="panel" @reload="panelReload" ref="panelBox2" v-if="!showPanel.type"></panel-box>
+      </transition>
 
-    <!-- begin--顶部按钮-->
-    <div class="right-box-top-btns right-box-form-delete">
-      <button id="chart-box-delete" type="button" v-if="editChart.id" @click="del" class="nz-btn nz-btn-size-normal nz-btn-size-alien nz-btn-min-width-82">
-        <span class="right-box-top-btn-icon"><i class="nz-icon nz-icon-delete"></i></span>
-        <span class="right-box-top-btn-txt">{{$t('overall.delete')}}</span>
-      </button>
-    </div>
-    <!-- end--顶部按钮-->
+      <!-- begin--顶部按钮-->
+      <div class="right-box-top-btns right-box-form-delete">
+        <button @click="del" class="nz-btn nz-btn-size-normal nz-btn-size-alien nz-btn-min-width-82" id="chart-box-delete" type="button" v-if="editChart.id">
+          <span class="right-box-top-btn-icon"><i class="nz-icon nz-icon-delete"></i></span>
+          <span class="right-box-top-btn-txt">{{$t('overall.delete')}}</span>
+        </button>
+      </div>
+      <!-- end--顶部按钮-->
 
-    <!-- begin--标题-->
-    <div class="right-box-title">{{editChart.id ? $t("dashboard.panel.editChartTitle") : $t("dashboard.panel.createChartTitle")}}</div>
-    <!-- end--标题-->
+      <!-- begin--标题-->
+      <div class="right-box-title">{{editChart.id ? $t("dashboard.panel.editChartTitle") : $t("dashboard.panel.createChartTitle")}}</div>
+      <!-- end--标题-->
 
-    <!-- begin--表单-->
-    <el-scrollbar class="right-box-form-box" ref="scrollbar">
-      <el-form class="right-box-form  right-box-form-left" :model="editChart" label-width="120px" label-position="right" :rules="rules" ref="chartForm">
-        <el-form-item :label="$t('dashboard.panel.title')" prop="panelName" v-if="showPanel.type != 'dashboard' && showPanel.type != 'project' && showPanel.type != 'asset' && showPanel.type != 'model'">
-          <el-autocomplete
-            :fetch-suggestions="panelSuggestion"
-            v-model.trim="editChart.panelName"
-            placeholder=""
-            size="small"
-            value-key="name"
-            v-if="!editChart.id"
-            @input="inputPanel"
-            popper-class="chart-box-autocomplete no-style-class"
-          >
-          </el-autocomplete>
-          <el-input size="small" v-if="editChart.id" readonly="readonly" :value="editChart.panelName"></el-input>
+      <!-- begin--表单-->
+      <el-scrollbar class="right-box-form-box" ref="scrollbar">
+        <el-form :model="editChart" :rules="rules" class="right-box-form  right-box-form-left" label-position="right" label-width="120px" ref="chartForm">
+          <el-form-item :label="$t('dashboard.panel.title')" prop="panelName" v-if="showPanel.type != 'dashboard' && showPanel.type != 'project' && showPanel.type != 'asset' && showPanel.type != 'model'">
+            <el-autocomplete
+              :fetch-suggestions="panelSuggestion"
+              @input="inputPanel"
+              placeholder=""
+              popper-class="chart-box-autocomplete no-style-class"
+              size="small"
+              v-if="!editChart.id"
+              v-model.trim="editChart.panelName"
+              value-key="name"
+            >
+            </el-autocomplete>
+            <el-input :value="editChart.panelName" readonly="readonly" size="small" v-if="editChart.id"></el-input>
 
-        </el-form-item>
-        <el-form-item :label='$t("dashboard.panel.chartForm.chartName")' prop="title">
-          <el-input size="small" maxlength="64" show-word-limit v-model="editChart.title"></el-input>
-        </el-form-item>
+          </el-form-item>
+          <el-form-item :label='$t("dashboard.panel.chartForm.chartName")' prop="title">
+            <el-input maxlength="64" show-word-limit size="small" v-model="editChart.title"></el-input>
+          </el-form-item>
 
-        <div class="right-box-sub-title">{{$t('dashboard.panel.chartForm.option')}}</div>
-        <div style="margin-bottom: 20px;width: 100%"></div>
+          <div class="right-box-sub-title">{{$t('dashboard.panel.chartForm.option')}}</div>
+          <div style="margin-bottom: 20px;width: 100%"></div>
 
-        <!-- type unit start-->
-        <el-form-item :label="$t('dashboard.panel.chartForm.type')" prop="type" class="half-form-item">
-          <el-select class="right-box-row-with-btn" @change="chartTypeChange" value-key="chartType" popper-class="chart-box-dropdown-small" v-model="editChart.type" placeholder="" size="mini">
-            <el-option v-for="item in chartTypeList" :key="item.id" :label="item.name" :value="item.id">
-              <span class="panel-dropdown-label-txt" >{{item.name}}</span>
-            </el-option>
-          </el-select>
-        </el-form-item>
+          <!-- type unit start-->
+          <el-form-item :label="$t('dashboard.panel.chartForm.type')" class="half-form-item" prop="type">
+            <el-select @change="chartTypeChange" class="right-box-row-with-btn" placeholder="" popper-class="chart-box-dropdown-small" size="mini" v-model="editChart.type" value-key="chartType">
+              <el-option :key="item.id" :label="item.name" :value="item.id" v-for="item in chartTypeList">
+                <span class="panel-dropdown-label-txt" >{{item.name}}</span>
+              </el-option>
+            </el-select>
+          </el-form-item>
 
-        <el-form-item :label="$t('dashboard.panel.chartForm.unit')" prop="unit" class="half-form-item" v-show="editChart.type !='text'">
-          <el-cascader filterable placeholder="" popper-class="dc-dropdown" size="mini"  style="width: 100%"
-                       :options="unitOptions"
-                       :props="{ expandTrigger: 'hover',emitPath:false }"
-                       :show-all-levels="false"
-                       v-model="editChart.unit"
-                       @change="unitSelected"
-          >
-          </el-cascader>
-        </el-form-item>
-        <!--type unit end-->
+          <el-form-item :label="$t('dashboard.panel.chartForm.unit')" class="half-form-item" prop="unit" v-show="editChart.type !='text'">
+            <el-cascader :options="unitOptions" :props="{ expandTrigger: 'hover',emitPath:false }" :show-all-levels="false" @change="unitSelected"  filterable
+                         placeholder=""
+                         popper-class="dc-dropdown"
+                         size="mini"
+                         style="width: 100%"
+                         v-model="editChart.unit"
+            >
+            </el-cascader>
+          </el-form-item>
+          <!--type unit end-->
 
-        <el-form-item :label="$t('dashboard.panel.chartForm.width')" prop="span" class="half-form-item">
-          <el-select class="right-box-row-with-btn"  value-key="chartSpan" popper-class="chart-box-dropdown-mini" v-model="editChart.span" placeholder="" size="mini">
-            <el-option v-for="item in spanList" :key="item" :label="'span-' + item" :value="item">
-              <span class="panel-dropdown-label-txt" > span-{{item}}</span>
-            </el-option>
-          </el-select>
-        </el-form-item>
+          <el-form-item :label="$t('dashboard.panel.chartForm.width')" class="half-form-item" prop="span">
+            <el-select class="right-box-row-with-btn"  placeholder="" popper-class="chart-box-dropdown-mini" size="mini" v-model="editChart.span" value-key="chartSpan">
+              <el-option :key="item" :label="'span-' + item" :value="item" v-for="item in spanList">
+                <span class="panel-dropdown-label-txt" > span-{{item}}</span>
+              </el-option>
+            </el-select>
+          </el-form-item>
 
-        <el-form-item :label="$t('dashboard.panel.chartForm.high')" prop="hight"  class="half-form-item">
-          <el-autocomplete
-            v-model="editChart.height"
-            :fetch-suggestions="querySearch"
-            placeholder=""
-            size="mini"
-            popper-class="popper-z-index no-style-class"
-            @select="handleSelect">
-            <template slot-scope="{ item }">
-              <div class="name">{{ item }}</div>
-            </template>
-          </el-autocomplete>
-          <span class="nz-input-append">px</span>
-        </el-form-item>
+          <el-form-item :label="$t('dashboard.panel.chartForm.high')" class="half-form-item"  prop="hight">
+            <el-autocomplete
+              :fetch-suggestions="querySearch"
+              @select="handleSelect"
+              placeholder=""
+              popper-class="popper-z-index no-style-class"
+              size="mini"
+              v-model="editChart.height">
+              <template slot-scope="{ item }">
+                <div class="name">{{ item }}</div>
+              </template>
+            </el-autocomplete>
+            <span class="nz-input-append">px</span>
+          </el-form-item>
 
-        <el-form-item v-if="isUrl" :label='$t("dashboard.panel.chartForm.url")' prop="param.url" :rules="{ required: true,  message: $t('validate.required'), trigger: 'blur' }">
-          <el-input size="small" type="textarea" maxlength="1024" show-word-limit v-model="editChart.param.url"></el-input>
-        </el-form-item>
+          <el-form-item :label='$t("dashboard.panel.chartForm.url")' :rules="{ required: true,  message: $t('validate.required'), trigger: 'blur' }" prop="param.url" v-if="isUrl">
+            <el-input maxlength="1024" show-word-limit size="small" type="textarea" v-model="editChart.param.url"></el-input>
+          </el-form-item>
 
-        <el-form-item  v-if="editChart.type == 'line' || editChart.type == 'bar' || editChart.type == 'stackArea' || editChart.type == 'table'" :label='"Null value"' prop="nullType"  class="half-form-item">
-          <el-select class="right-box-row-with-btn"  popper-class="chart-box-dropdown-small" v-model="editChart.param.nullType" placeholder="" size="mini" @change="$forceUpdate()">
-            <el-option v-for="item in nullTypeList" :key="item.value" :label="item.label" :value="item.value"></el-option>
-          </el-select>
-        </el-form-item>
+          <el-form-item  :label='"Null value"' class="half-form-item" prop="nullType"  v-if="editChart.type == 'line' || editChart.type == 'bar' || editChart.type == 'stackArea' || editChart.type == 'table'">
+            <el-select @change="$forceUpdate()"  class="right-box-row-with-btn" placeholder="" popper-class="chart-box-dropdown-small" size="mini" v-model="editChart.param.nullType">
+              <el-option :key="item.value" :label="item.label" :value="item.value" v-for="item in nullTypeList"></el-option>
+            </el-select>
+          </el-form-item>
 
-        <el-form-item v-if="editChart.type == 'line' || editChart.type == 'bar' || editChart.type == 'stackArea'" :label='$t("dashboard.panel.chartForm.threshold")' prop="param.threshold"  class="half-form-item">
-          <el-input size="mini" type="input" v-model="editChart.param.threshold"></el-input>
-        </el-form-item>
+          <el-form-item :label='$t("dashboard.panel.chartForm.threshold")' class="half-form-item" prop="param.threshold"  v-if="editChart.type == 'line' || editChart.type == 'bar' || editChart.type == 'stackArea'">
+            <el-input size="mini" type="input" v-model="editChart.param.threshold"></el-input>
+          </el-form-item>
 
-        <el-form-item :label="$t('dashboard.panel.chartForm.last')" v-if="editChart.type == 'table'">
-          <el-switch class="exporter-switch" v-model="editChart.param.last" active-color="#ee9d3f" :active-value="1" :inactive-value="0"></el-switch>
-        </el-form-item>
+          <el-form-item :label="$t('dashboard.panel.chartForm.last')" v-if="editChart.type == 'table'">
+            <el-switch :active-value="1" :inactive-value="0" active-color="#ee9d3f" class="exporter-switch" v-model="editChart.param.last"></el-switch>
+          </el-form-item>
 
-        <!--<el-form-item :label="$t('dashboard.panel.chartForm.sync')" v-if="showPanel.type && showPanel.type == 'model'">-->
+          <!--<el-form-item :label="$t('dashboard.panel.chartForm.sync')" v-if="showPanel.type && showPanel.type == 'model'">-->
           <!--<el-switch class="exporter-switch" v-model="editChart.sync" active-color="#ee9d3f" :active-value="1" :inactive-value="0"></el-switch>-->
-        <!--</el-form-item>-->
+          <!--</el-form-item>-->
 
-        <div v-if="!isUrl&&!isAlert&& editChart.type != 'text'" class="right-box-sub-title" style="margin-bottom: 20px">
-          <span>{{$t('alert.config.expr')}}</span>
-          <span v-if="!isSingleStat" style="height: 19px;display: inline-block;line-height: 1;" class="float-right" @click="addExpression">
+          <div class="right-box-sub-title" style="margin-bottom: 20px" v-if="!isUrl&&!isAlert&& editChart.type != 'text'">
+            <span>{{$t('alert.config.expr')}}</span>
+            <span @click="addExpression" class="float-right" style="height: 19px;display: inline-block;line-height: 1;" v-if="!isSingleStat">
             <span class="create-square-box">
               <i style="font-size: 17px; cursor: pointer;" class="nz-icon nz-icon-create-square"></i>
             </span>
           </span>
-        </div>
-        <div v-if="editChart.type == 'text'" class="right-box-sub-title" style="margin-bottom: 20px">
-          <span>{{$t('dashboard.panel.chartForm.content')}}</span>
-        </div>
-        <div v-if="isAlert" class="right-box-sub-title">{{$t('dashboard.panel.chartForm.alertParam.param')}}</div>
-        <div v-if="!isUrl" style="width: 100%"></div>
+          </div>
+          <div class="right-box-sub-title" style="margin-bottom: 20px" v-if="editChart.type == 'text'">
+            <span>{{$t('dashboard.panel.chartForm.content')}}</span>
+          </div>
+          <div class="right-box-sub-title" v-if="isAlert">{{$t('dashboard.panel.chartForm.alertParam.param')}}</div>
+          <div style="width: 100%" v-if="!isUrl"></div>
 
-        <el-row v-if="isAlert" class="element-item" style="width: calc(100% - 108px);margin-left: 108px">
-          <alert-chart-param ref="alertParamBox" @on-enter-complate="getAlertParam"></alert-chart-param>
-        </el-row>
-
-        <el-row v-if="!isUrl &&!isAlert && editChart.type != 'text'" class="element-item form-row-item" style="" v-for="index of promqlKeys.length" :key="'ele' + index">
-          <promql-input
-            :ref="'promql-'+(index-1)"
-            :id="promqlKeys[index-1]"
-            :key="promqlKeys[index-1]"
-            :expression-list="expressions"
-            :index="index-1"
-            :styleType="2"
-            :plugins="['metric-selector', 'metric-input', 'remove']"
-            @change="expressionChange"
-            @removeExpression="removeExpression"
-            :showRemove="false"
-          ></promql-input>
-<!--
-          <promql-input
-            :ref="'promql-'+(index-1)"
-            :id="promqlKeys[index-1]"
-            :key="promqlKeys[index-1]"
-            :expression-list="expressions"
-            :metric-options="metricOptions"
-            :metric-store="metricStore"
-            :index="index-1"
-            :styleType="2"
-            :plugins="['metric-selector', 'metric-input', 'remove']"
-            @change="expressionChange"
-            @removeExpression="removeExpression"
-            :showRemove="false"
-          ></promql-input>
--->
-          <el-row>
-            <template v-if="editChart.type != 'singleStat'">
-              <el-col style="width: 120px; padding-right: 20px; text-align: right; color: #666">
-                {{$t('dashboard.panel.chartForm.legend')}}&nbsp;
-                <el-popover :content="$t('dashboard.panel.chartForm.legendTip')" placement="top" width="150" trigger="hover">
-                  <i slot="reference" class="nz-icon nz-icon-info-normal" style="font-size: 14px; -webkit-transform:scale(0.75);display:inline-block;" @mouseover="rz"></i>
-                </el-popover>
-              </el-col>
-              <el-col style="width: calc(100% - 120px);">
-                <el-input v-model="legends[index-1]" type="text" size="small"></el-input>
-              </el-col>
-            </template>
-            <template v-else>
-              <el-col style="width: 120px; padding-right: 20px; text-align: right; color: #666" class="required-marker">
-                <label >{{$t('dashboard.panel.chartForm.statistics')}}</label>&nbsp;
-              </el-col>
-              <el-col style="width: calc(100% - 120px);">
-                <el-select popper-class="chart-box-dropdown-mini" v-model="statistics" placeholder="" size="small">
-                  <el-option v-for="item in statisticsList" :key="item.value" :label="item.label" :value="item.value">
-                    <span class="panel-dropdown-label-txt" >{{item.label}}</span>
-                  </el-option>
-                </el-select>
-              </el-col>
-            </template>
+          <el-row class="element-item" style="width: calc(100% - 108px);margin-left: 108px" v-if="isAlert">
+            <alert-chart-param @on-enter-complate="getAlertParam" ref="alertParamBox"></alert-chart-param>
           </el-row>
-          <span class="nz-icon-minus-medium nz-icon-minus-position">
+
+          <el-row :key="'ele' + index" class="element-item form-row-item" style="" v-for="index of promqlKeys.length" v-if="!isUrl &&!isAlert && editChart.type != 'text'">
+            <promql-input
+              :expression-list="expressions"
+              :id="promqlKeys[index-1]"
+              :index="index-1"
+              :key="promqlKeys[index-1]"
+              :plugins="['metric-selector', 'metric-input', 'remove']"
+              :ref="'promql-'+(index-1)"
+              :showRemove="false"
+              :styleType="2"
+              @change="expressionChange"
+              @removeExpression="removeExpression"
+            ></promql-input>
+            <!--
+                      <promql-input
+                        :ref="'promql-'+(index-1)"
+                        :id="promqlKeys[index-1]"
+                        :key="promqlKeys[index-1]"
+                        :expression-list="expressions"
+                        :metric-options="metricOptions"
+                        :metric-store="metricStore"
+                        :index="index-1"
+                        :styleType="2"
+                        :plugins="['metric-selector', 'metric-input', 'remove']"
+                        @change="expressionChange"
+                        @removeExpression="removeExpression"
+                        :showRemove="false"
+                      ></promql-input>
+            -->
+            <el-row>
+              <template v-if="editChart.type != 'singleStat'">
+                <el-col style="width: 120px; padding-right: 20px; text-align: right; color: #666">
+                  {{$t('dashboard.panel.chartForm.legend')}}&nbsp;
+                  <el-popover :content="$t('dashboard.panel.chartForm.legendTip')" placement="top" trigger="hover" width="150">
+                    <i @mouseover="rz" class="nz-icon nz-icon-info-normal" slot="reference" style="font-size: 14px; -webkit-transform:scale(0.75);display:inline-block;"></i>
+                  </el-popover>
+                </el-col>
+                <el-col style="width: calc(100% - 120px);">
+                  <el-input size="small" type="text" v-model="legends[index-1]"></el-input>
+                </el-col>
+              </template>
+              <template v-else>
+                <el-col class="required-marker" style="width: 120px; padding-right: 20px; text-align: right; color: #666">
+                  <label >{{$t('dashboard.panel.chartForm.statistics')}}</label>&nbsp;
+                </el-col>
+                <el-col style="width: calc(100% - 120px);">
+                  <el-select placeholder="" popper-class="chart-box-dropdown-mini" size="small" v-model="statistics">
+                    <el-option :key="item.value" :label="item.label" :value="item.value" v-for="item in statisticsList">
+                      <span class="panel-dropdown-label-txt" >{{item.label}}</span>
+                    </el-option>
+                  </el-select>
+                </el-col>
+              </template>
+            </el-row>
+            <span class="nz-icon-minus-medium nz-icon-minus-position">
             <i class="nz-icon nz-icon-minus" @click="removeExpression(index - 1)"></i>
           </span>
         </el-row>
         <!--value mapping start-->
         <div  class="right-box-sub-title" v-if="editChart.type == 'singleStat'||editChart.type == 'table'">
-          <span>{{$t('dashboard.panel.chartForm.valMapping.name')}}</span>
+          <span>
+            {{$t('dashboard.panel.chartForm.valMapping.name')}}
+            <el-popover  placement="top" trigger="hover" width="275">
+              <div style="white-space: pre-wrap;">{{$t('dashboard.panel.chartForm.valueMappingTip')}}</div>
+              <i @mouseover="rz" class="nz-icon nz-icon-info-normal" slot="reference" style="font-size: 14px; -webkit-transform:scale(0.75);display:inline-block;"></i>
+            </el-popover>
+          </span>
           <span  class="float-right" @click="addMapping"><i style="font-size: 16px; cursor: pointer;" class="nz-icon nz-icon-create-square"></i></span>
         </div>
         <div style="margin-bottom: 20px; width: 100%" v-if="editChart.type == 'singleStat'||editChart.type == 'table'"></div>
@@ -258,18 +346,47 @@
           </el-radio-group>
         </el-form-item>
         <template v-if="(editChart.type == 'singleStat'||editChart.type == 'table')&&editChart.param.valueMapping.type == 'value'">
-          <template v-for="(mapping,index) in editChart.param.valueMapping.mapping">
+          <template  v-for="(mapping,index) in editChart.param.valueMapping.mapping">
             <el-form-item :label="$t('dashboard.panel.chartForm.valMapping.value')" prop="span" class="half-form-item-other" >
               <el-input size="mini" type="input" v-model="mapping.value" style="display: inline-block;;"></el-input>
             </el-form-item>
             <el-form-item :label="$t('dashboard.panel.chartForm.valMapping.text')" prop="span" class="half-form-item-other  half-form-item-other-two">
-              <el-input size="mini" type="input" v-model="mapping.text" style="display: inline-block;width:calc(100% - 40px);"></el-input>
+              <el-input size="mini" style="display: inline-block;width:calc(100% - 80px);" type="input" v-model="mapping.text"></el-input>
+              <!--颜色选择器 start-->
+              <div @click="colorPickerClick(index)" class="color-show" v-clickoutside="(e)=>{colorOut(index,e)}">
+                <div :style="{background:mapping.color.bac}" class="color-show-left">
+                     <span :style="{color:mapping.color.text}" class="color-arrows">
+                  <!--<i class="nz-icon nz-icon-arrow-down" v-show="!showPicker[index].bac && !showPicker[index].text" :style="{color:mapping.color.text}"></i>-->
+                       <!--<i class="nz-icon nz-icon-arrow-up" v-show="showPicker[index].bac ||  showPicker[index].text" :style="{color:mapping.color.text}"></i>-->
+                    T
+                </span>
+                </div>
+              </div>
+              <div class="color-content" ref="color-content">
+                <el-color-picker
+                  :ref="'colorPickerBac'+index"
+                  @active-change="(val)=>colorChange(mapping,showPicker[index].bac,val)"
+                  v-model="showPicker[index].bac?mapping.color.bac:mapping.color.text"
+                >
+                </el-color-picker>
+                <!--<el-color-picker-->
+                <!--v-model="mapping.color.text"-->
+                <!--:ref="'colorPickerText'+index"-->
+                <!--@active-change="(val)=>colorChange(mapping,'text',val)"-->
+                <!--&gt;-->
+                <!--</el-color-picker>-->
+              </div>
+              <div class="color-tab" v-show="showPicker[index].bac ||  showPicker[index].text">
+                <div :class="{'color-active':showPicker[index].text}" @click="changeShowPicker(index ,'text')">Text</div>
+                <div :class="{'color-active':showPicker[index].bac}" @click="changeShowPicker(index , 'bac')">Background</div>
+              </div>
+              <!--颜色选择器 end-->
               <span  @click="delMapping(index)" class="nz-icon-minus-medium" style="margin-left: 7px;padding: 6px"><i class="nz-icon nz-icon-minus" style="color: #EC7F66"></i></span>
             </el-form-item>
           </template>
         </template>
         <template v-if="(editChart.type == 'singleStat'||editChart.type == 'table')&&editChart.param.valueMapping.type == 'range'">
-          <template v-for="(mapping,index) in editChart.param.valueMapping.mapping">
+          <template  v-for="(mapping,index) in editChart.param.valueMapping.mapping">
             <div class="half-form-item-other" style="display: inline-block;margin-left: 70px">
               <el-form-item :label="$t('dashboard.panel.chartForm.valMapping.from')" prop="span" class="one-third-form-item-left" >
                 <el-input size="mini" type="input" v-model="mapping.from"></el-input>
@@ -278,8 +395,37 @@
                 <el-input size="mini" type="input" v-model="mapping.to"></el-input>
               </el-form-item>
             </div>
-            <el-form-item :label="$t('dashboard.panel.chartForm.valMapping.text')" prop="span" class="half-form-item-other-two">
-              <el-input size="mini" type="input" v-model="mapping.text" style="display: inline-block;width:calc(100% - 40px);" ></el-input>
+            <el-form-item :label="$t('dashboard.panel.chartForm.valMapping.text')" class="half-form-item-other-two range" prop="span">
+              <el-input size="mini" style="display: inline-block;width:calc(100% - 80px);" type="input" v-model="mapping.text" ></el-input>
+              <!--颜色选择器 start-->
+              <div @click="colorPickerClick(index)" class="color-show" v-clickoutside="(e)=>{colorOut(index,e)}">
+                <div :style="{background:mapping.color.bac}" class="color-show-left">
+                     <span :style="{color:mapping.color.text}" class="color-arrows">
+                  <!--<i class="nz-icon nz-icon-arrow-down" v-show="!showPicker[index].bac && !showPicker[index].text" :style="{color:mapping.color.text}"></i>-->
+                       <!--<i class="nz-icon nz-icon-arrow-up" v-show="showPicker[index].bac ||  showPicker[index].text" :style="{color:mapping.color.text}"></i>-->
+                    T
+                </span>
+                </div>
+              </div>
+              <div class="color-content" ref="color-content">
+                <el-color-picker
+                  :ref="'colorPickerBac'+index"
+                  @active-change="(val)=>colorChange(mapping,showPicker[index].bac,val)"
+                  v-model="showPicker[index].bac?mapping.color.bac:mapping.color.text"
+                >
+                </el-color-picker>
+                <!--<el-color-picker-->
+                <!--v-model="mapping.color.text"-->
+                <!--:ref="'colorPickerText'+index"-->
+                <!--@active-change="(val)=>colorChange(mapping,'text',val)"-->
+                <!--&gt;-->
+                <!--</el-color-picker>-->
+              </div>
+              <div class="color-tab" v-show="showPicker[index].bac ||  showPicker[index].text">
+                <div :class="{'color-active':showPicker[index].text}" @click="changeShowPicker(index ,'text')">Text</div>
+                <div :class="{'color-active':showPicker[index].bac}" @click="changeShowPicker(index , 'bac')">Background</div>
+              </div>
+              <!--颜色选择器 end-->
               <span @click="delMapping(index)" class="nz-icon-minus-medium" style="margin-left: 7px;padding: 6px"><i class="nz-icon nz-icon-minus"  style="color: #EC7F66"></i></span>
             </el-form-item>
           </template>
@@ -287,7 +433,7 @@
 
         <!--value mapping end-->
         <template v-if="editChart.type == 'line' || editChart.type == 'bar' || editChart.type == 'stackArea'">
-          <div class="right-box-sub-title" >
+          <div  class="right-box-sub-title" >
             <span>{{$t('dashboard.panel.chartForm.legendValue')}}</span>
           </div>
           <div style="margin-bottom: 20px; width: 100%" ></div>
@@ -311,8 +457,8 @@
           <rich-text-editor ref="richTextEditor" :edit-data="editChart.param.text"></rich-text-editor>
         </template>
 
-      </el-form>
-    </el-scrollbar>
+        </el-form>
+      </el-scrollbar>
 
     <!--底部按钮-->
     <div class="right-box-bottom-btns">
@@ -462,6 +608,7 @@
         sortedOptionKeys:[{key:'min',label:'Min'},{key:'max',label:'Max'},{key:'avg',label:'Avg'},{key:'last',label:'Last'},{key:'total',label:'Total'}],
         textShow:false,
         metricOptions: [],
+        showPicker:[],
         //metricStore: []
       }
     },
@@ -1132,7 +1279,7 @@
         param.last=0;
         param.url='';
         param.threshold='';
-        param.valueMapping={type:'text',mapping:[{value:'',text:''}]};
+        param.valueMapping={type:'text',mapping:[{value:'',text:'',color:{bac:'#fff',text:'#000'}}]};
         param.legendValue={min:'off',max:'off',avg:'off',last:'off',total:'off'};
         param.nullType='connected';
         this.$set(this.editChart, "param", param);
@@ -1189,9 +1336,10 @@
             statistics:'',
             valueMapping:{
               type:'value',
-              mapping:[{text:'',value:''}]
+              mapping:[{text:'',value:'',color:{bac:'#fff',text:'#000'}}]
             }
           }
+          this.showPicker=[{bac:false,text:false}];
         }else {
           this.setIsOtherChart();
           if(chartType === 'bar'||chartType === 'line'||chartType === 'stackArea'){
@@ -1202,9 +1350,10 @@
               statistics:'',
               valueMapping:{
                 type:'value',
-                mapping:[{text:'',value:''}]
+                mapping:[{text:'',value:'',color:{bac:'#fff',text:'#000'}}]
               }
             }
+            this.showPicker=[{bac:false,text:false}];
           }
           /*if(this.$refs.chartTag){
             this.$refs.chartTag.forEach((item, index) => {
@@ -1283,6 +1432,7 @@
                 }
                 params.param.nullType=this.editChart.param.nullType;
                 params.param.legendValue=this.editChart.param.legendValue;
+                params.param.last=this.editChart.param.last;
               } else {
                 delete params.param.threshold;
                 delete params.param.nullType;
@@ -1372,17 +1522,65 @@
       },
       valueMappingChange:function(value){
         if(this.editChart.param.valueMapping.type == 'value'){
-          this.editChart.param.valueMapping.mapping =[{text:'',value:''}];
+          this.editChart.param.valueMapping.mapping =[{text:'',value:'',color:{bac:'#fff',text:'#000'}}];
+          this.showPicker=[{bac:false,text:false}]
         }else{
-          this.editChart.param.valueMapping.mapping =[{from:'',to:'',text:''}];
+          this.editChart.param.valueMapping.mapping =[{from:'',to:'',text:'',color:{bac:'#fff',text:'#000'}}];
+          this.showPicker=[{bac:false,text:false}]
         }
       },
       addMapping:function(){
         if(this.editChart.param.valueMapping.type == 'value'){
-          this.editChart.param.valueMapping.mapping .push({text:'',value:''});
+          this.editChart.param.valueMapping.mapping .push({text:'',value:'',color:{bac:'#fff',text:'#000'}});
+          this.showPicker.push({bac:false,text:false})
         }else{
-          this.editChart.param.valueMapping.mapping .push({from:'',to:'',text:''});
+          this.editChart.param.valueMapping.mapping .push({from:'',to:'',text:'',color:{bac:'#fff',text:'#000'}});
+          this.showPicker.push({bac:false,text:false})
         }
+      },
+      colorPickerClick(index){
+        if(this.showPicker[index].bac|| this.showPicker[index].text){//再次点击关闭
+          this.showPicker[index].bac=false;
+          this.showPicker[index].text=false;
+          return
+        }
+        this.showPicker[index].bac=true;
+        this.$refs['colorPickerBac'+ index][0].showPicker=true;
+      },
+      changeShowPicker(index,atr){
+        this.$refs['colorPickerBac'  + index][0].showPicker=true;
+        this.showPicker[index].bac=false;
+        this.showPicker[index].text=false;
+        this.showPicker[index][atr]=true;
+        // atr=atr.toLowerCase().replace(/( |^)[a-z]/g,(L)=>L.toUpperCase());
+      },
+      colorChange(mapping,flag,val){
+        if(flag){
+          mapping.color['bac']=this.colorRGBtoHex(val)
+        }else{
+          mapping.color['text']=this.colorRGBtoHex(val)
+        }
+      },
+      colorRGBtoHex(color) {
+        let rgb = color.split(',');
+        let r = parseInt(rgb[0].split('(')[1]);
+        let g = parseInt(rgb[1]);
+        let b = parseInt(rgb[2].split(')')[0]);
+        let hex = "#" + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
+        return hex;
+      },
+      colorOut(index,e){
+        let flag=false;
+        e.path.forEach((item)=>{
+          if(item.className==='el-color-dropdown el-color-picker__panel' || item.className==='color-tab'){
+            flag=true
+          }
+        })
+        if(flag){
+          return
+        }
+        this.showPicker[index].bac=false;
+        this.showPicker[index].text=false;
       },
       delMapping:function(index){
         this.editChart.param.valueMapping.mapping.splice(index,1)
@@ -1437,7 +1635,15 @@
         deep: true,
         immediate: true,
         handler(n) {
-          //console.log(n);
+          if((n.param&&n.param.valueMapping)&&(n.type === 'singleStat' || n.type === 'table')){
+            n.param.valueMapping.mapping.forEach(item=>{
+              this.showPicker.push({bac:false,text:false})
+              if(!item.color){
+                item.color={bac:'#fff',text:'#000'};
+              }
+            })
+          }
+
           if(n.title){
             this.isEdit=true;
           }
@@ -1450,11 +1656,11 @@
           } else if(n.type === 'alertList'){
             this.setIsAlertList();
           } else if(n.type === 'singleStat'){
-            n.param&&!n.param.valueMapping&&this.$set(this.editChart.param,'valueMapping',{type:'value',mapping:[{text:'',value:''}]})
+            n.param&&!n.param.valueMapping&&this.$set(this.editChart.param,'valueMapping',{type:'value',mapping:[{text:'',value:'',color:{bac:'#fff',text:'#000'}}]})
             this.setIsSingleStat();
           } else if(n.type  === 'table'){
             n.param.last?this.$set(this.editChart.param,'last',n.param.last):this.$set(this.editChart.param,'last',0)
-            n.param&&!n.param.valueMapping&&this.$set(this.editChart.param,'valueMapping',{type:'value',mapping:[{text:'',value:''}]})
+            n.param&&!n.param.valueMapping&&this.$set(this.editChart.param,'valueMapping',{type:'value',mapping:[{text:'',value:'',color:{bac:'#fff',text:'#000'}}]});
           }else {
             this.setIsOtherChart();
             n.param&&!n.param.legendValue&&this.$set(this.editChart.param,'legendValue',{min:'off',max:'off',avg:'off',last:'off',total:'off'})
@@ -1508,6 +1714,9 @@
   }
   .val-mapping-type .no-fill span{
     background-color: unset !important;
+  }
+  .el-color-picker__panel{
+    border-radius: 0 0 5px 5px;
   }
 </style>
 

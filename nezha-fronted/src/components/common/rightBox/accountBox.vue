@@ -38,6 +38,14 @@
                      inactive-value="0">
           </el-switch>
         </el-form-item>
+        <!--roles-->
+        <el-form-item :label="$t('config.account.roles')">
+          <el-select @change="()=>{this.$forceUpdate()}" clearable collapse-tags multiple placeholder="" popper-class="config-dropdown" size="small" v-model="editUser.roleIds">
+            <template v-for="role in roles">
+              <el-option :label="role.i18n?$t(role.i18n):role.name" :value="role.id"></el-option>
+            </template>
+          </el-select>
+        </el-form-item>
         <el-form-item :label="$t('config.account.createTime')" v-if="editUser.userId">
           <div class="right-box-form-content-txt">{{editUser.createTime}}</div>
         </el-form-item>
@@ -51,7 +59,7 @@
         <div class="right-box-line"></div>
 
         <el-form-item v-for="(notification, index) in editUser.notifications" :key="index" class="notification-item">
-          <el-select v-model="notification.scriptId" slot="label" placeholder="" popper-class="no-style-class" size="small">
+          <el-select class='form-item-title' placeholder="" popper-class="no-style-class" size="small" v-model="notification.scriptId">
             <el-option v-for="(item, i) in selectableScripts" :label="item.name" :key="i" :value="item.id" :disabled="item.disabled"></el-option>
           </el-select>
           <el-input placeholder="" v-model="notification.account" size="small" style="width: calc(100% - 37px);"></el-input>
@@ -109,7 +117,8 @@
         },
         editUser: {},
         scripts: [],
-        selectableScripts: []
+        selectableScripts: [],
+        roles:[],
       }
     },
     methods: {
@@ -171,6 +180,7 @@
           this.scripts = response.data.list;
           this.getSelectableScripts();
         });
+        this.getRoles();
         /*this.scripts = [
           {id: 1, name: "DOLBY"},
           {id: 2, name: "IMAX"},
@@ -202,7 +212,16 @@
           });
         }
       },
-
+      getRoles:function(){
+        this.roles = [];
+        this.$get("sys/role").then(response=>{
+          if (response.code  == 200){
+            this.roles = response.data.list;
+          }else{
+            this.$message.error("load roles faild")
+          }
+        })
+      },
       addNotification() {
         let scripts = this.selectableScripts.find(item => {
           return item.disabled === false;
@@ -229,6 +248,8 @@
         deep: true,
         handler(n) {
           this.editUser = JSON.parse(JSON.stringify(n));
+          this.editUser.roleIds=n.roles&&n.roles.map(t=>t.id)
+          console.log(this.editUser)
         }
       },
       "editUser.notifications": {
@@ -236,6 +257,13 @@
         immediate: true,
         handler(n) {
           this.getSelectableScripts();
+        }
+      },
+      editUser:{
+        deep:true,
+        immediate:true,
+        handler(n,o){
+          console.log('editUser',n)
         }
       }
     },
@@ -262,5 +290,11 @@
       width: 100px;
 
     }
+  }
+</style>
+<style scoped>
+  .form-item-title{
+    position: absolute;
+    left: -120px;
   }
 </style>

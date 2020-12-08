@@ -41,7 +41,7 @@
           </el-dropdown>
         </div>
         <div class="mt-10 single-stat-container" v-cloak  v-show="firstShow" >
-          <div :id="'chartContainer'+chartIndex"  ref="chartContainer" class="single-stat-content" >
+          <div :id="'chartContainer'+chartIndex"  :style="{color:mapping?mapping.color.text:'#000',background:mapping?mapping.color.bac:'#fff'}" class="single-stat-content" ref="chartContainer">
             {{serieSingleStat}}
             <div class="chart-no-data" v-show="noData">No Data</div>
           </div>
@@ -58,7 +58,7 @@
             <span class="float-right  dialog-tool" @click="screenRefreshChart" style="margin-right: 15px"><i class="global-active-color nz-icon nz-icon-refresh"/></span>
           </div>
           <div class="single-stat-screen-container"  >
-            <div id="chartScreenContainer"  ref="chartScreenContainer" class="single-stat-content" >
+            <div :style="{color:mapping?mapping.color.text:'#000',background:mapping?mapping.color.bac:'#fff'}"  class="single-stat-content" id="chartScreenContainer" ref="chartScreenContainer">
               {{serieSingleStat}}
               <div class="chart-no-data" v-show="noData">No Data</div>
             </div>
@@ -112,6 +112,7 @@ export default {
       seriesItem: [], // 保存信息
       seriesItemScreen:[],//全屏数据
       serieSingleStat:'',
+      mapping:'',//满足valueMapping时 mapping的值
       images: '',
       loading:Object,
       items: {
@@ -409,8 +410,24 @@ export default {
           this.data = chartItem;
           this.unit = chartDataFormat.getUnit(this.data.unit);
           if(Number(seriesItem)){
-            let singleStatTmp =parseFloat(Number(seriesItem).toFixed(2));
-            this.serieSingleStat = chartDataFormat.getUnit(chartItem.unit?chartItem.unit:2).compute(singleStatTmp,null,2);
+            let singleStatTmp =parseFloat(Number(seriesItem).toFixed(2));//parseFloat ：如果没有小数点，或者小数点后都是零，parseFloat() 会返回整数。
+            if(chartItem.param.valueMapping && chartItem.param.valueMapping.type){
+              let type=chartItem.param.valueMapping.type;
+              let mappings=chartItem.param.valueMapping.mapping?chartItem.param.valueMapping.mapping:[];
+              let mapping;
+              if(type == 'value'){
+                mapping=mappings.find(item=>{return item.value == singleStatTmp})
+              }else{
+                mapping=mappings.find(item=>{return item.from <= singleStatTmp&& item.to >= singleStatTmp});
+              }
+              this.mapping=mapping;
+              if(this.mapping&&!this.mapping.color){
+                this.mapping.color={bac:'#fff',text:'#000'}
+              }
+              this.serieSingleStat = mapping?mapping.text.replace('{{value}}', singleStatTmp):chartDataFormat.getUnit(chartItem.unit?chartItem.unit:2).compute(singleStatTmp,null,2);
+            }else{
+              this.serieSingleStat = chartDataFormat.getUnit(chartItem.unit?chartItem.unit:2).compute(singleStatTmp,null,2);
+            }
           }else {
             this.serieSingleStat =seriesItem;
           }
@@ -439,7 +456,11 @@ export default {
               }else{
                 mapping=mappings.find(item=>{return item.from <= singleStatTmp&& item.to >= singleStatTmp});
               }
-              this.serieSingleStat = mapping?mapping.text:chartDataFormat.getUnit(chartItem.unit?chartItem.unit:2).compute(singleStatTmp,null,2);
+              this.mapping=mapping;
+              if(this.mapping&&!this.mapping.color){
+                this.mapping.color={bac:'#fff',text:'#000'}
+              }
+              this.serieSingleStat = mapping?mapping.text.replace('{{value}}', singleStatTmp):chartDataFormat.getUnit(chartItem.unit?chartItem.unit:2).compute(singleStatTmp,null,2);
             }else{
               this.serieSingleStat = chartDataFormat.getUnit(chartItem.unit?chartItem.unit:2).compute(singleStatTmp,null,2);
             }

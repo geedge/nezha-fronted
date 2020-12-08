@@ -4,7 +4,8 @@
     <!--<div class="content-box" >
       <router-view/>
     </div>-->
-    <left-menu></left-menu>
+    <left-menu ></left-menu>
+    <menus v-if="isMenuPage"></menus>
     <web-ssh ref="webSsh" ></web-ssh>
   </div>
 
@@ -14,12 +15,20 @@
 import Header from "./header";
 import webSSH from "../cli/webSSH";
 import leftMenu from "./leftMenu";
+import menus from "../page/config/menus";
 export default {
   name: "home",
   components: {
     Header,
     'web-ssh': webSSH,
-    'left-menu': leftMenu
+    'left-menu': leftMenu,
+    menus
+  },
+  computed:{
+    isMenuPage:function(){
+      console.log(this.$route.path )
+      return this.$route.path == '/menu'
+    }
   }
 }
 </script>

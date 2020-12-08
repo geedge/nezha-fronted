@@ -191,6 +191,9 @@
         <el-menu-item index="5-0">
           <div @click="jumpTo('/account')" :class="{'menu-item-active' :(route == '/account' )}">{{$t('config.account.account')}}</div>
         </el-menu-item>
+        <el-menu-item index="5-9">
+          <div @click="jumpTo('/roles')" :class="{'menu-item-active' :(route == '/roles' )}">{{$t('config.roles.roles')}}</div>
+        </el-menu-item>
         <el-menu-item index="5-1">
           <div @click="jumpTo('/promServer')" :class="{'menu-item-active' :(route == '/promServer' )}">{{$t('config.promServer.promServerList')}}</div>
         </el-menu-item>

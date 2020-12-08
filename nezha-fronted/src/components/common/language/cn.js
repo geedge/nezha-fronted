@@ -182,6 +182,9 @@ const cn = {
         unit: "单位",
         legend: "图例",
         legendTip: "使用名称或表达式控制时间序列的名称。例如{{hostname}将替换为标签主机名的标签值。",
+        valueMappingTip: '使用{{value}}可以显示原值\n'+
+          '例如：total alive: {{value}}\n'+
+          '结果为：total alive: 100',
         option: "操作",
         alertParam:{
           param:'参数',
@@ -349,7 +352,7 @@ const cn = {
         total: "总计",
         up: "up",
         down: "down",
-        prometheus: "prometheus"
+        prometheus: "prometheus",
       }
     }
   },
@@ -554,6 +557,7 @@ const cn = {
     account: {
       accountList: "用户列表",
       account: "用户",
+      roles:"角色",
       language: "语言",
       receiver: "接收人",
       createTime: "创建时间",
@@ -574,6 +578,35 @@ const cn = {
       confirmPwdErr: "两次密码输入不一致",
       reinputPwd: "请再次输入密码",
       notification: "通知"
+    },
+    roles:{
+      roles:"角色",
+      name:"名称",
+      remark:"备注",
+      option: '操作',//"操作"
+      permission:"权限",
+      menu:"菜单",
+      createRole:"新增角色",
+      editRole:"编辑角色",
+
+    },
+    menus:{
+      menus:'菜单',
+      name:"名称",
+      remark:"备注",
+      option: '操作',//"操作"
+      code:'Code',
+      i18n:'I18n',
+      type:'类型',
+      route:'路由',
+      perms:'权限',
+      button:"按钮",
+      menu:"菜单",
+      parent:"上级菜单",
+      mainMenu:"主菜单",
+      createMenu:"新增菜单",
+      editMenu:"编辑菜单",
+      orderNum:"排序",
     },
     promServer: {
       promServerList: "Prometheus服务",
