@@ -2,7 +2,7 @@
   <div class="right-box right-box-role" v-clickoutside="clickOutside">
     <!-- begin--顶部按钮-->
     <div class="right-box-top-btns right-box-form-delete">
-      <button type="button" v-if="editRole.id" @click="del"
+      <button type="button" v-if="editRole.id && !detail" @click="del"
               class="nz-btn nz-btn-size-normal nz-btn-size-alien"
               id="roles-edit-del">
         <span class="right-box-top-btn-icon"><i class="nz-icon nz-icon-delete"></i></span>
@@ -17,7 +17,7 @@
 
     <!-- begin--表单-->
     <el-scrollbar class="right-box-form-box">
-      <el-form class="right-box-form right-box-form-left" :model="editRole" :rules="rules" ref="roleForm" label-position="right" label-width="120px">
+      <el-form class="right-box-form right-box-form-left" :model="editRole" :rules="rules" ref="roleForm" label-position="right" label-width="120px" :disabled="detail">
         <!--name-->
         <el-form-item :label="$t('config.roles.name')" prop="name">
           <el-input  type="text" placeholder=""
@@ -32,13 +32,21 @@
             <button type="button" class="nz-btn nz-btn-size-small-new nz-btn-style-light-new option-btn" style="margin-left: 0px;" @click="expandAllOrNone" :class="{'btn-active':expandAllFlag}">展开/收缩</button>
             <button type="button" class="nz-btn nz-btn-size-small-new nz-btn-style-light-new option-btn" @click="selectAllOrNone" :class="{'btn-active':selectAllFlag}"><span ><i class="nz-icon nz-icon-delete"></i></span></button>
           </div>-->
-          <el-tree :data="menus" node-key="id" show-checkbox  :default-expand-all="expandAllFlag" :props="{label:labelFormatter}" ref="menuTree" @check-change="selectChange" class="tree-border"></el-tree>
+          <el-tree :data="menus" node-key="id" show-checkbox  :default-expand-all="expandAllFlag" :props="{label:labelFormatter}" ref="menuTree" @check-change="selectChange" class="tree-border">
+            <div slot-scope="{node, data}" >
+              <span>
+                <i v-if="data.type == '1'" class="el-icon-menu"></i>
+                <i v-if="data.type == '2'" class="el-icon-edit"></i>
+              </span>
+              {{data.name}}
+            </div>
+          </el-tree>
         </el-form-item>
       </el-form>
     </el-scrollbar>
     <!-- end--表单-->
     <!--底部按钮-->
-    <div class="right-box-bottom-btns">
+    <div class="right-box-bottom-btns" v-if="!detail">
       <button @click="esc" id="roles-esc"
               class="nz-btn nz-btn-size-normal-new nz-btn-style-light-new">
         <span>{{$t('overall.cancel')}}</span>
@@ -54,7 +62,8 @@
   export default {
     name: "roleBox",
     props: {
-      role: Object
+      role: Object,
+      detail:Boolean,
     },
     computed: {
     },
@@ -153,7 +162,7 @@
       },
       selectChange:function(data,isCheck,childIsCheck){
         if(this.$refs.menuTree){
-          this.editRole.menuIds=this.$refs.menuTree.getCheckedKeys(false);
+          this.editRole.menuIds=this.$refs.menuTree.getCheckedKeys(true);
         }
       },
       selectAllOrNone:function(){

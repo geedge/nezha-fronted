@@ -67,9 +67,14 @@
         </template>
           <template slot-scope="scope" :column="item">
             <div v-if="item.prop == 'option'" class="content-right-options">
-              <span :title="$t('overall.edit')" @click="edit(scope.row)" class="content-right-option" :id="'roles-edit-'+scope.row.id"><i class="nz-icon nz-icon-edit" :class="{'gray-filter':scope.row.buildIn == 1}"></i></span>
-              &nbsp;
-              <span :title="$t('overall.delete')" @click="del(scope.row)" class="content-right-option" :id="'roles-del-'+scope.row.id"><i class="nz-icon nz-icon-delete" :class="{'gray-filter':scope.row.buildIn == 1}"></i></span>
+              <template v-if="scope.row.buildIn != 1">
+                <span :title="$t('overall.edit')" @click="edit(scope.row)" class="content-right-option" :id="'roles-edit-'+scope.row.id"><i class="nz-icon nz-icon-edit" :class="{'gray-filter':scope.row.buildIn == 1}"></i></span>
+                &nbsp;
+                <span :title="$t('overall.delete')" @click="del(scope.row)" class="content-right-option" :id="'roles-del-'+scope.row.id"><i class="nz-icon nz-icon-delete" :class="{'gray-filter':scope.row.buildIn == 1}"></i></span>
+              </template>
+              <template v-else>
+                <span :title="$t('overall.view')" @click="detail(scope.row)" class="content-right-option" :id="'roles-detail-'+scope.row.id"><i class="nz-icon nz-icon-view"></i></span>
+              </template>
             </div>
             <template v-if="item.prop == 'name'">
               <template v-if="scope.row.i18n">
@@ -96,7 +101,7 @@
       <button class="to-top" :style="{top: tools.toTopBtnTop}" :class="{'to-top-is-hover': tools.tableHover}" v-show="tools.showTopBtn " @click="$toTop('ps', 0)"><i class="nz-icon nz-icon-top"></i></button>
     </div>
     <transition name="right-box">
-      <role-box v-if="rightBox.show" :role="role" @close="closeRightBox"></role-box>
+      <role-box v-if="rightBox.show" :role="role" :detail="rightBox.detail" @close="closeRightBox"></role-box>
     </transition>
   </div>
 </template>
@@ -115,6 +120,7 @@
         //侧滑
         rightBox: {
           show: false,
+          detail:false
         },
         /*工具参数*/
         tools: {
@@ -187,6 +193,7 @@
         }
         this.role = JSON.parse(JSON.stringify(u));
         this.rightBox.show = true;
+        this.rightBox.detail=false;
       },
       del(u) {
         if(u.buildIn == 1){
@@ -223,9 +230,16 @@
       add() {
         this.role = this.newRole();
         this.rightBox.show = true;
+        this.rightBox.detail=false;
       },
       esc() {
         this.rightBox.show = false;
+        this.rightBox.detail=false;
+      },
+      detail:function(data){
+        this.role = JSON.parse(JSON.stringify(data))
+        this.rightBox.show = true;
+        this.rightBox.detail=true;
       },
       newRole() {
         return JSON.parse(JSON.stringify(this.blankRole));
