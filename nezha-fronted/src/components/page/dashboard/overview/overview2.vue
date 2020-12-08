@@ -26,7 +26,7 @@
           <div class="content-col-content clickable" v-loading="assetLoading" @click="jumpTo('asset')">
             <div class="content-col-content-icon"><i class="nz-icon nz-icon-overview-project"></i></div>
             <div class="content-num-box">
-              <el-tooltip class="item" effect="light" :content="assetData ? assetData.totalStat.total  : ''" placement="top">
+              <el-tooltip class="item" effect="light" :content="assetData ? assetData.totalStat.total  + '' : ''" placement="top">
               <div class="content-col-content-num">
                 <vue-countup :duration="1" :start-value="0" :end-value="(assetData ? assetData.totalStat.total  : '') | numberFormat"
                              :decimals="(assetData ? assetData.totalStat.total  : 0) < 1000 ? 0 : 1"></vue-countup>
@@ -42,7 +42,7 @@
           <div class="content-col-content" v-loading="projectLoading">
             <div class="content-col-content-icon"><i class="nz-icon nz-icon-project"></i></div>
             <div class="content-num-box">
-              <el-tooltip class="item" effect="light" :content="projectData ? projectData.projectStat.length : ''" placement="top">
+              <el-tooltip class="item" effect="light" :content="projectData ? projectData.projectStat.length + '' : ''" placement="top">
               <div class="content-col-content-num">
                 <vue-countup :duration="1" :start-value="0" :end-value="(projectData ? projectData.projectStat.length : '') | numberFormat" :decimals="(projectData ? projectData.projectStat.length : 0) < 1000 ? 0 : 1"></vue-countup>
                 <span v-if="(projectData ? projectData.projectStat.length : 0) > 1000 " class="over-num">+</span>
@@ -57,7 +57,7 @@
           <div class="content-col-content" v-loading="moduleLoading">
             <div class="content-col-content-icon"><i class="nz-icon nz-icon-overview-module"></i></div>
             <div class="content-num-box">
-              <el-tooltip class="item" effect="light" :content="moduleData ? moduleData.moduleStat.length : ''" placement="top">
+              <el-tooltip class="item" effect="light" :content="moduleData ? moduleData.moduleStat.length + '' : ''" placement="top">
               <div class="content-col-content-num">
                 <vue-countup :duration="1" :start-value="0" :end-value="(moduleData ? moduleData.moduleStat.length : '') | numberFormat" :decimals="(moduleData ? moduleData.moduleStat.length : 0) < 1000 ? 0 : 1"></vue-countup>
                 <span v-if="(moduleData ? moduleData.moduleStat.length : 0) > 1000 " class="over-num">+</span>
@@ -72,7 +72,7 @@
           <div class="content-col-content" v-loading="endpointLoading">
             <div class="content-col-content-icon"><i class="nz-icon nz-icon-overview-endpoint"></i></div>
             <div class="content-num-box">
-              <el-tooltip class="item" effect="light" :content="endpointData ? endpointData.total : ''" placement="top">
+              <el-tooltip class="item" effect="light" :content="endpointData ? endpointData.total + '' : ''" placement="top">
               <div class="content-col-content-num">
                 <vue-countup :duration="1" :start-value="0" :end-value="(endpointData ? endpointData.total : '') | numberFormat" :decimals="(endpointData ? endpointData.total : 0) < 1000 ? 0 : 1"></vue-countup>
                 <span v-if="(endpointData ? endpointData.total : 0) > 1000 " class="over-num">+</span>
@@ -87,7 +87,7 @@
           <div class="content-col-content clickable" v-loading="alertMessageLoading" @click="jumpTo('alertList')">
             <div class="content-col-content-icon"><i class="nz-icon nz-icon-overview-alert"></i></div>
             <div class="content-num-box">
-              <el-tooltip class="item" effect="light" :content="alertMessageData ? alertMessageData.alertMessageTotal : ''" placement="top">
+              <el-tooltip class="item" effect="light" :content="alertMessageData ? alertMessageData.alertMessageTotal + '' : ''" placement="top">
               <div class="content-col-content-num">
                 <vue-countup :duration="1" :start-value="0" :end-value="(alertMessageData ? alertMessageData.alertMessageTotal : '') | numberFormat" :decimals="(alertMessageData ? alertMessageData.alertMessageTotal : 0) < 1000 ? 0 : 1"></vue-countup>
                 <span v-if="(alertMessageData ? alertMessageData.alertMessageTotal : 0) > 1000 " class="over-num">+</span>
