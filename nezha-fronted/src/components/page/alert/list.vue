@@ -26,11 +26,11 @@
             <search-input :searchMsg="searchMsg" @search="search" :bottomBox.inTransform="bottomBox.inTransform"></search-input>
           </div>
           <pick-time  :showTimePicker="false" class="float-right pickTime margin-l-20" :refresh-data-func="getAlertList" v-model="searchTimeSelect" :use-chart-unit="false" ref="pickTime"></pick-time>
-          <button type="button" @click="showExportDialog" :title="$t('overall.exportExcelLower')"
+          <button :title="$t('overall.exportExcelLower')" @click="showExportDialog" type="button" v-has="'message_export'"
                   class="nz-btn nz-btn-size-normal nz-btn-style-light" id="alert-list-export">
             <i class="nz-icon nz-icon-download1"></i>
           </button>
-          <delete-button :delete-objs="batchDeleteObjs" api="alert/message" @after="getAlertList" :clickFunction="openDelMessageBox"></delete-button>
+          <delete-button :clickFunction="openDelMessageBox" :delete-objs="batchDeleteObjs" @after="getAlertList" api="alert/message" v-has="'message_delete'"></delete-button>
         </div>
         <div class="pagination-top pagination-top-hide display-none"></div>
       </div>
@@ -41,6 +41,7 @@
         :tableHeight="mainTableHeight"
         :tableId="tableId"
         @tableDataSort="tableDataSort"
+        :from="$CONSTANTS.fromRoute.message"
         @deleteMessage="deleteMessage"
         @select-change="(selection)=>{this.batchDeleteObjs=selection}"
       ></alertMessageTable>

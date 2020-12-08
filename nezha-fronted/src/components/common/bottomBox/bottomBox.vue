@@ -18,16 +18,16 @@
 
         <!------TAB区------>
         <!--机柜-->
-      <cabinet-tab v-show="subResizeShow" v-if="from == 'dc' && targetTab == 'cabinet'" :obj="obj" @changeTab="changeTab"></cabinet-tab>
+      <cabinet-tab :obj="obj" @changeTab="changeTab" v-if="from == $CONSTANTS.fromRoute.dc && targetTab == 'cabinet'" v-show="subResizeShow"></cabinet-tab>
         <!--告警信息-->
-      <alert-message-tab v-show="subResizeShow" v-if="((from == 'alertRule' || from == 'asset' || from == 'endpoint') && targetTab == 'alertMessage')" :from="from" :obj="obj" @changeTab="changeTab"></alert-message-tab>
+      <alert-message-tab :from="from" :obj="obj" @changeTab="changeTab" v-if="((from == $CONSTANTS.fromRoute.rule || from == $CONSTANTS.fromRoute.asset || from == $CONSTANTS.fromRoute.endpoint) && targetTab == 'alertMessage')" v-show="subResizeShow"></alert-message-tab>
         <!--asset页的endpoint列表-->
-      <endpoint-tab v-show="subResizeShow" v-if="from == 'asset' && targetTab == 'endpoint'" :from="from" :obj="obj" @changeTab="changeTab"></endpoint-tab>
+      <endpoint-tab :from="from" :obj="obj" @changeTab="changeTab" v-if="from == $CONSTANTS.fromRoute.asset && targetTab == $CONSTANTS.fromRoute.endpoint" v-show="subResizeShow"></endpoint-tab>
         <!--endpoint-query-->
-      <endpoint-query-tab v-show="subResizeShow" v-if="(from == 'endpoint' && targetTab == 'endpointQuery')" :from="from" :obj="obj" @changeTab="changeTab" ref="endpointQuery"></endpoint-query-tab>
+      <endpoint-query-tab :from="from" :obj="obj" @changeTab="changeTab" ref="endpointQuery" v-if="(from == $CONSTANTS.fromRoute.endpoint && targetTab == 'endpointQuery')" v-show="subResizeShow"></endpoint-query-tab>
 
         <!-- model-panel/asset-detail/project-overview的panel-->
-      <panel-tab v-if="(from == 'model' || from == 'asset' || from == 'project' || from == 'alertRule' || from == 'endpoint') && targetTab == 'panel'" v-show="subResizeShow" :from="from" :obj="obj" ref="panelTab"
+      <panel-tab :from="from" :obj="obj" ref="panelTab" v-if="(from == $CONSTANTS.fromRoute.model || from == $CONSTANTS.fromRoute.asset || from == $CONSTANTS.fromRoute.project || from == $CONSTANTS.fromRoute.rule || from == $CONSTANTS.fromRoute.endpoint) && targetTab == 'panel'" v-show="subResizeShow"
                  @changeTab="changeTab" :targetTab.sync="targetTab" :detail="detail"></panel-tab>
 
     </div>

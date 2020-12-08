@@ -10,48 +10,104 @@
       active="1"
       unique-opened
     >
-      <el-submenu :disabled="!linkData||linkData.length <1" class="icon-menu-item" index="100" popper-class="nz-submenu" >
-        <template slot="title">
-          <i class="nz-icon-navmore nz-icon" style="font-size: 17px;"></i>
-        </template>
-        <template v-for="(item, index) in linkData">
-          <el-menu-item :index="'0-' + index">
-              <span class="linkTitle"><a :href='item.url' class="nz-a" target="_blank" rel="noopener norefferrer" :title="item.name">{{item.name}}</a></span>
-          </el-menu-item>
-        </template>
-      </el-submenu>
-      <el-submenu class="icon-menu-item" index="101" popper-class="display-none">
-        <div slot="title" class="el-submenu__title" @click="cli" >
-          <i class="nz-icon nz-icon-cli" style="font-size: 18px;"></i>
-          <div class="right-tip" v-show="$store.state.consoleCount>0">{{$store.state.consoleCount<=10?$store.state.consoleCount:'10+'}}</div>
-        </div>
-      </el-submenu>
-      <el-submenu class="icon-menu-item" index="102" popper-class="nz-submenu">
-        <template slot="title">
-         <i class="nz-icon-create-square nz-icon" style="font-size: 18px;"></i>
-        </template>
-        <template v-for="(item, index) in createMenu">
-          <el-menu-item :index="'0-' + index">
-            <div @click="createBox(item)">
-              <span>{{item.label}}</span>
+      <template v-for="(menu, index) in getMenuList" v-if="menu.code == 'header' && menu.children && menu.children.length > 0">
+        <template v-for="(subMenu, subIndex) in menu.children">
+          <el-submenu :disabled="!linkData||linkData.length <1" :index="`${index}-${subIndex}`" class="icon-menu-item" popper-class="nz-submenu" v-if="subMenu.code == 'header_link'">
+            <template slot="title">
+              <i class="nz-icon-navmore nz-icon" style="font-size: 17px;"></i>
+            </template>
+            <template v-for="(item, index) in linkData">
+              <el-menu-item :index="'0-' + index">
+                <span class="linkTitle"><a :href='item.url' :title="item.name" class="nz-a" rel="noopener norefferrer" target="_blank">{{item.name}}</a></span>
+              </el-menu-item>
+            </template>
+          </el-submenu>
+          <el-submenu :index="`${index}-${subIndex}`" class="icon-menu-item" popper-class="display-none" v-if="subMenu.code == 'header_terminal'">
+            <div @click="cli" class="el-submenu__title" slot="title" >
+              <i class="nz-icon nz-icon-cli" style="font-size: 18px;"></i>
+              <div class="right-tip" v-show="$store.state.consoleCount>0">{{$store.state.consoleCount<=10?$store.state.consoleCount:'10+'}}</div>
             </div>
-          </el-menu-item>
+          </el-submenu>
+          <el-submenu :index="`${index}-${subIndex}`" class="icon-menu-item" popper-class="nz-submenu" v-if="subMenu.code == 'header_add'">
+            <template slot="title">
+              <i class="nz-icon-create-square nz-icon" style="font-size: 18px;"></i>
+            </template>
+            <template v-for="(item, createIndex) in createMenu">
+              <el-menu-item :index="`${index}-${subIndex}-${createIndex}`" v-has="item.permission">
+                <div @click="createBox(item)">
+                  <span>{{item.label}}</span>
+                </div>
+              </el-menu-item>
+            </template>
+          </el-submenu>
         </template>
-      </el-submenu>
+      </template>
+
       <el-menu-item index="103" >
         <div class="vertical-line" ></div>
       </el-menu-item>
 
-      <el-submenu :index="`${index}`" :key="index" popper-class="nz-submenu" v-for="(menu, index) in getMenuList">
-        <template slot="title">
-          <div :class ="menuIsActive(menu, 'parent')" @click="jumpTo(menu.route)" >
-            {{$t(menu.i18n)}}
-          </div>
+      <el-submenu :index="`${index}`" :key="index" popper-class="nz-submenu" v-for="(menu, index) in getMenuList" v-if="menu.code != 'header'">
+        <template v-if="menu.code == 'asset'">
+          <template slot="title">
+            <div @click="jumpToAsset()" v-if="assetData.length == 0">{{$t(menu.i18n)}}</div>
+            <div :class="{'menu-active' : route == '/asset'}" @click="jumpToAsset()" v-else>{{$t(menu.i18n)}}</div>
+          </template>
+          <template>
+            <el-menu-item index="3-0" v-if="assetData.length == 0"><div @click="createBox({type: 6})" v-has="'asset_toAdd'"><i class="nz-icon nz-icon-create-square header-dropdown-add"></i>&nbsp;&nbsp;{{$t("overall.createDatacenter")}}</div></el-menu-item>
+            <template v-else>
+              <el-scrollbar style= 'height: 360px' v-if="assetData.length>10">
+                <el-menu-item :index="'3-' + index" :key="index" v-for="(item, index) in assetData">
+                  <div :class="{'menu-item-active': route == '/asset' && activeItemIndex == item.id}" @click="jumpToAsset(item)" @mouseenter="hoverItemIndex = '3-' + index" @mouseleave="hoverItemIndex = ''">
+                    <span class="too-long-split" style="width: 130px;">{{item.name}}</span>
+                  </div>
+                </el-menu-item>
+              </el-scrollbar>
+              <el-menu-item :index="'3-' + index" :key="index" v-else v-for="(item, index) in assetData">
+                <div :class="{'menu-item-active': route == '/asset' && activeItemIndex == item.id}" @click="jumpToAsset(item)" @mouseenter="hoverItemIndex = '3-' + index" @mouseleave="hoverItemIndex = ''">
+                  <span class="too-long-split" style="width: 130px;">{{item.name}}</span>
+                </div>
+              </el-menu-item>
+            </template>
+          </template>
         </template>
-        <el-menu-item :index="`${index}-${subIndex}`" :key="`${index}-${subIndex}`" v-for="(subMenu, subIndex) in menu.children">
-          <div :class="menuIsActive(subMenu)" @click="jumpTo(subMenu.route)" >{{$t(subMenu.i18n)}}</div>
-        </el-menu-item>
+        <template v-else-if="menu.code == 'project'">
+          <template slot="title">
+            <div v-if="projectData.length == 0">{{$t(menu.i18n)}}</div>
+            <div :class ="route == '/project' ? 'menu-active' :''" @click="jumpToProject(projectData[0])" v-else >{{$t(menu.i18n)}}</div>
+          </template>
+          <template>
+            <el-menu-item index="2-0" v-if="projectData.length == 0"><div @click="createBox({type: 1})" v-has="'project_toAdd'"><i class="nz-icon nz-icon-create-square header-dropdown-add"></i>&nbsp;&nbsp;{{$t("overall.createProject")}}</div></el-menu-item>
+            <template v-else>
+              <el-scrollbar style="height:360px" v-if="projectData.length>10">
+                <el-menu-item :index="'2-' + index" :key="index" v-for="(item, index) in projectData">
+                  <div :class="{'menu-item-active': route == '/project' && activeItemIndex == item.id}" @click="jumpToProject(item)" @mouseenter="hoverItemIndex = '2-' + index" @mouseleave="hoverItemIndex = ''">
+                    <span class="too-long-split" style="width: 135px;">{{item.name}}</span>
+                    <div @click.stop="toEditProject(item)" class="menu-edit" v-has="'project_toEdit'" v-show="hoverItemIndex == '2-' + index && item.buildIn != 1"><i class="nz-icon nz-icon-edit"></i></div>
+                  </div>
+                </el-menu-item>
+              </el-scrollbar>
+              <el-menu-item :index="'2-' + index" :key="index" v-else v-for="(item, index) in projectData">
+                <div :class="{'menu-item-active': route == '/project' && activeItemIndex == item.id}" @click="jumpToProject(item)" @mouseenter="hoverItemIndex = '2-' + index" @mouseleave="hoverItemIndex = ''">
+                  <span class="too-long-split" style="width: 135px;">{{item.name}}</span>
+                  <div @click.stop="toEditProject(item)" class="menu-edit" v-has="'project_toEdit'" v-show="hoverItemIndex == '2-' + index && item.buildIn != 1"><i class="nz-icon nz-icon-edit"></i></div>
+                </div>
+              </el-menu-item>
+            </template>
+          </template>
+        </template>
+        <template v-else>
+          <template slot="title">
+            <div :class="menuIsActive(menu, 'parent')" @click="jumpTo(menu.route)" >
+              {{$t(menu.i18n)}}
+            </div>
+          </template>
+          <el-menu-item :index="`${index}-${subIndex}`" :key="`${index}-${subIndex}`" v-for="(subMenu, subIndex) in menu.children">
+            <div :class="menuIsActive(subMenu)" @click="jumpTo(subMenu.route)" >{{$t(subMenu.i18n)}}</div>
+          </el-menu-item>
+        </template>
       </el-submenu>
+
 
       <!--<el-submenu index="1" popper-class="nz-submenu">
         <template slot="title">
@@ -159,27 +215,27 @@
         <el-menu-item index="5-8">
           <div @click="jumpTo('/about')" :class="{'menu-item-active' :(route == '/about' )}">{{$t('overall.about')}}</div>
         </el-menu-item>
-      </el-submenu>
-      <el-submenu index="6" popper-class="nz-submenu">
+      </el-submenu>-->
+      <el-submenu index="101" popper-class="nz-submenu">
         <template slot="title">
           <div class='nz-user'>{{username}}<i class="nz-icon nz-icon-arrow-down"></i></div>
         </template>
-        <el-menu-item index="6-0">
+        <el-menu-item index="101-0">
           <div :style="language=='en'?'color:#f90':''" @click="changeLocal('en')">English</div>
         </el-menu-item>
-        <el-menu-item index="6-1">
+        <el-menu-item index="101-1">
           <div :style="language=='cn'?'color:#f90':''" @click="changeLocal('cn')">中文</div>
         </el-menu-item>
         <el-menu-item class="nz-menu-line" @click.stop index="6-2">
           <div style="height: 1px; width: 100%; background-color: #cccccc;"></div>
         </el-menu-item>
-        <el-menu-item index="6-3">
+        <el-menu-item index="101-3">
           <div @click="showPwdDialog">{{$t('overall.changePwd')}}</div>
         </el-menu-item>
-        <el-menu-item index="6-4">
+        <el-menu-item index="101-4">
           <div @click="logout">{{$t('overall.signOut')}}</div>
         </el-menu-item>
-      </el-submenu>-->
+      </el-submenu>
     </el-menu>
 
     <transition name="right-box">
@@ -299,27 +355,32 @@
           {
             label: this.$t('project.project.project'),
             url: 'project',
-            type: 1
+            type: 1,
+            permission: 'header_add_project'
           },
           {
             label: this.$t('project.module.module'),
             url: 'project',
-            type: 2
+            type: 2,
+            permission: 'header_add_module'
           },
           {
             label: this.$t('project.endpoint.endpoint'),
             url: 'project',
-            type: 3
+            type: 3,
+            permission: 'header_add_endpoint'
           },
           {
             label: this.$t('asset.asset'),
             url: 'asset',
-            type: 4
+            type: 4,
+            permission: 'header_add_asset'
           },
           {
             label: this.$t('alert.config.alertConfig'),
             url: 'alertConfig',
-            type: 5
+            type: 5,
+            permission: 'header_add_rule'
           },
         ],
         showChangePwd:false,
@@ -537,28 +598,6 @@
           window.addEventListener('popstate', this.cancel, false);
         }
       },
-      menuIsActive() {
-        return function(menu, isParent) {
-          if (isParent) {
-            let isCurrent = menu.children.some(sub => {
-              return sub.route == this.route;
-            });
-            if (isCurrent) {
-              return "menu-active";
-            } else {
-              return "";
-            }
-          } else {
-            if (menu.route == this.route) {
-              if (isCurrent) {
-                return "menu-item-active";
-              } else {
-                return "";
-              }
-            }
-          }
-        };
-      }
     },
     mounted() {
       this.$i18n.locale = this.language;
@@ -580,6 +619,26 @@
       },
       overViewProject(){
         return this.$store.getters.getOverViewProject;
+      },
+      menuIsActive() {
+        return function(menu, isParent) {
+          if (isParent) {
+            let isCurrent = menu.children.some(sub => {
+              return sub.route == this.route;
+            });
+            if (isCurrent) {
+              return "menu-active";
+            } else {
+              return "";
+            }
+          } else {
+            if (menu.route == this.route) {
+              return "menu-item-active";
+            } else {
+              return "";
+            }
+          }
+        };
       }
     },
     watch:{

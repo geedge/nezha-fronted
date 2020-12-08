@@ -2,7 +2,7 @@
   <div class="panel">
     <div class="top-tools">
       <div class="top-tool-main-left" v-if="panelData.length == 0" style="margin-left: 10px;">
-        <button @click="toAdd" class="nz-btn nz-btn-style-light nz-btn-size-small"><i class="nz-icon nz-icon-create-square"></i>&nbsp;&nbsp;{{$t("dashboard.panel.createPanelTitleSec")}}</button>
+        <button @click="toAdd" class="nz-btn nz-btn-style-light nz-btn-size-small" v-has="'panel_toAdd'"><i class="nz-icon nz-icon-create-square"></i>&nbsp;&nbsp;{{$t("dashboard.panel.createPanelTitleSec")}}</button>
       </div>
       <template v-else>
         <div class="top-tool-main-left">
@@ -17,32 +17,31 @@
                 <el-dropdown-item >
                   <el-row class="panel-list-width" :gutter="10" >
                     <el-col :span="21"><el-input size="mini" v-model="filterPanel"  @click.native.stop="filterPanelFocus($event)" @input="filterPanelFunc" clearable :placeholder="$t('overall.search')"></el-input></el-col>
-                    <el-col :span="3"><span :title='$t("dashboard.panel.createPanelTitleSec")' @click="toAdd"><i class="nz-icon nz-icon-plus"></i></span></el-col>
+                    <el-col :span="3"><span :title='$t("dashboard.panel.createPanelTitleSec")' @click="toAdd" v-has="'panel_toAdd'"><i class="nz-icon nz-icon-plus"></i></span></el-col>
                   </el-row>
                 </el-dropdown-item>
                 <draggable v-model="panelData" @start="start" @end="end" :move="move" :key
                            :scroll-sensitivity="150"
                            :options="{
-               group:{name:'chartGroup',pull:'false'},
-               dragClass:'drag-chart-class',
-               fallbackClass:'fallback-class',
-               forceFallback:true,
-               ghostClass:'chart-ghost',
-               chosenClass:'choose-class',
-               scroll:true,
-               scrollFn:function(offsetX,offsetY,originalEvent,touchEvt,hoverTargetEI){},
-               animation:150,
-               handle:'.panelContent',
-             }"  >
+                               group:{name:'chartGroup',pull:'false'},
+                               dragClass:'drag-chart-class',
+                               fallbackClass:'fallback-class',
+                               forceFallback:true,
+                               ghostClass:'chart-ghost',
+                               chosenClass:'choose-class',
+                               scroll:true,
+                               scrollFn:function(offsetX,offsetY,originalEvent,touchEvt,hoverTargetEI){},
+                               animation:150,
+                               handle:'.panelContent',
+                             }"  >
                   <el-dropdown-item v-for="item in showPanelList" :key="item.id+1" class="panel-title-li"
                                     :class="showPanel.id==item.id?'nz-dashboard-dropdown-bg':''" :command="item">
-                    <!--{{item.name}}-->
                     <el-row  :gutter="10" class="panel-list-width" >
                       <el-col :span="2" class="panelContent move-area"><i class="nz-icon nz-icon-sort4"></i></el-col>
                       <el-col :span="17" class="panel-list-item" :title="item.name">{{item.name}}</el-col>
-                      <el-col :span="1"><span class="panel-dropdown-btn panel-dropdown-btn-delete" @click.stop="del(item)"><i class="nz-icon nz-icon-delete"></i></span></el-col>
+                      <el-col :span="1"><span @click.stop="del(item)" class="panel-dropdown-btn panel-dropdown-btn-delete" v-has="'panel_delete'"><i class="nz-icon nz-icon-delete"></i></span></el-col>
                       <el-col :span="1">&nbsp;</el-col>
-                      <el-col :span="1"><span class="panel-dropdown-btn" @click.stop="edit(item)"><i class="nz-icon nz-icon-edit"></i></span></el-col>
+                      <el-col :span="1"><span @click.stop="edit(item)" class="panel-dropdown-btn" v-has="'panel_toEdit'"><i class="nz-icon nz-icon-edit"></i></span></el-col>
                     </el-row>
                   </el-dropdown-item>
                 </draggable>
@@ -63,10 +62,14 @@
             export-url="/panel/export"
             import-url="/panel/import"
             :params="filter"
+            :permissions="{
+              import: 'panel_chart_import',
+              export: 'panel_chart_export'
+            }"
             @afterImport="dateChange"
           >
             <template slot="optionZone">
-              <button @click="addChart" :title="$t('overall.createChart')"
+              <button :title="$t('overall.createChart')" @click="addChart" v-has="'panel_chart_toAdd'"
                       class="nz-btn nz-btn-size-normal nz-btn-style-light ">
                 <i class="nz-icon-create-square nz-icon"></i>
               </button>
@@ -78,15 +81,14 @@
     <div class="table-list" id="tableList">
       <el-scrollbar class="el-scrollbar-large" style="height: 100%" ref="dashboardScrollbar">
         <div class="box-content">
-          <chart-list @on-edit-chart="editChart" @on-refresh-time="refreshTime" @on-remove-chart="delChart"
-                      ref="chartList"></chart-list>
+          <chart-list :from="$CONSTANTS.fromRoute.panel" @on-edit-chart="editChart" @on-refresh-time="refreshTime" @on-remove-chart="delChart" ref="chartList"></chart-list>
         </div>
       </el-scrollbar>
     </div>
     <button class="to-top" :class="{'to-top-is-hover': tableHover}" v-show="showTopBtn" @click="$toTop('el', $refs.dashboardScrollbar.wrap)" style="bottom: 0;"><i class="nz-icon nz-icon-top"></i></button>
 
     <transition name="right-box">
-      <chart-box @close="closeChartBox" @delete-chart="delChart" :chart="chart" v-if="rightBox.chart.show" ref="addChartModal" :show-panel="showPanel" :panel-data="panelData" @reload="panelReload" @on-create-success="createSuccess" @on-delete-success="delChartOk" @reloadOnlyPanel="panelReloadOnlyPanel"></chart-box>
+      <chart-box :chart="chart" :from="$CONSTANTS.fromRoute.panel" :panel-data="panelData" :show-panel="showPanel" @close="closeChartBox" @delete-chart="delChart" @on-create-success="createSuccess" @on-delete-success="delChartOk" @reload="panelReload" @reloadOnlyPanel="panelReloadOnlyPanel" ref="addChartModal" v-if="rightBox.chart.show"></chart-box>
     </transition>
     <transition name="right-box">
       <panel-box v-if="closePanelBox" :panel="panel" @reload="panelReload" @reloadForDel="panelReloadForDel" ref="panelBox"></panel-box>
@@ -169,7 +171,7 @@
           panelId: 0,
           start_time: '',
           end_time: '',
-          searchName: ''
+          searchName: '',
         },
         panelId: 0,
         filterPanel:'',

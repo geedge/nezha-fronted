@@ -2,7 +2,7 @@
   <div class="right-box right-box-asset" v-clickoutside="clickOutside">
     <!--顶部按钮-->
     <div class="right-box-top-btns right-box-form-delete">
-      <button v-if="editAsset.id" type="button" @click="del" id="asset-edit-del"
+      <button @click="del" id="asset-edit-del" type="button" v-has="'asset_delete'" v-if="editAsset.id"
               class="nz-btn nz-btn-size-normal nz-btn-size-alien nz-btn-min-width-82">
         <span class="right-box-top-btn-icon"><i class="nz-icon nz-icon-delete"></i></span>
         <span class="right-box-top-btn-txt">{{$t('overall.delete')}}</span>
@@ -61,7 +61,7 @@
             @change="modelChange"
           >
           </el-cascader>
-          <span style="vertical-align: middle"  class="right-box-form-add" @click="addVendor(editAsset.model.type.code)"><i class="nz-icon nz-icon-plus"></i></span>
+          <span @click="addVendor(editAsset.model.type.code)"  class="right-box-form-add" style="vertical-align: middle" v-has="'asset_vendor_toAdd'"><i class="nz-icon nz-icon-plus"></i></span>
         </el-form-item>
         <el-form-item :label="$t('asset.purchaseDate')">
           <div class="select-style">
@@ -154,7 +154,7 @@
       <button @click="esc(false)" class="nz-btn nz-btn-size-normal-new nz-btn-style-light-new" id="asset-edit-cancel">
         <span>{{$t('overall.cancel')}}</span>
       </button>
-      <button @click="save" class="nz-btn nz-btn-size-normal-new nz-btn-style-normal-new" id="asset-edit-save">
+      <button @click="save" class="nz-btn nz-btn-size-normal-new nz-btn-style-normal-new" id="asset-edit-save" v-has="'asset_save'">
         <span>{{$t('overall.save')}}</span>
       </button>
     </div>

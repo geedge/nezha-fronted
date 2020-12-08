@@ -9,11 +9,11 @@
         <div class="top-tool-search">
           <search-input :searchMsg="searchMsg" @search="search" position="cabinet-bottom"></search-input>
         </div>
-        <button type="button" @click="add" :title="$t('overall.createCabinet')"
+        <button :title="$t('overall.createCabinet')" @click="add" type="button" v-has="'dc_cabinet_toAdd'"
                 class="nz-btn nz-btn-size-normal nz-btn-style-light float-right margin-l-20" id="cab-add">
           <i class="nz-icon-create-square nz-icon"></i>
         </button>
-        <delete-button :delete-objs="batchDeleteObjs" api="cabinet" @after="getTableData"></delete-button>
+        <delete-button :delete-objs="batchDeleteObjs" @after="getTableData" api="cabinet" v-has="'dc_cabinet_delete'"></delete-button>
       </div>
     </div>
     <el-table
@@ -43,8 +43,8 @@
       >
         <template slot-scope="scope" :column="item">
           <div v-if="item.prop == 'option'" class="content-right-options">
-            <span :title="$t('overall.edit')" @click="edit(scope.row)" class="content-right-option" :id="'dc-edit-'+scope.row.id"><i class="nz-icon nz-icon-edit"></i></span>
-            <span :title="$t('overall.delete')" @click="del(scope.row)" class="content-right-option" :id="'dc-del-'+scope.row.id"><i class="nz-icon nz-icon-delete"></i></span>
+            <span :id="'dc-edit-'+scope.row.id" :title="$t('overall.edit')" @click="edit(scope.row)" class="content-right-option" v-has="'dc_cabinet_toEdit'"><i class="nz-icon nz-icon-edit"></i></span>
+            <span :id="'dc-del-'+scope.row.id" :title="$t('overall.delete')" @click="del(scope.row)" class="content-right-option" v-has="'dc_cabinet_delete'"><i class="nz-icon nz-icon-delete"></i></span>
           </div>
           <template v-else-if="item.prop == 'assetStat'">
             <el-popover

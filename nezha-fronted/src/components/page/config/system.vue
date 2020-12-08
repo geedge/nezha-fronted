@@ -40,7 +40,7 @@
             </el-form-item>
             <el-form-item>
               <button type="button" class="nz-btn nz-btn-size-normal-new nz-btn-style-light-new" @click="resetForm('basicForm','basic')" style="top:2px">{{$t('overall.reset')}}</button>
-              <button type="button" @click="saveSetInfo('basic','basicForm')" class="nz-btn nz-btn-size-normal-new nz-btn-style-normal-new">{{$t('overall.submit')}}</button>
+              <button @click="saveSetInfo('basic','basicForm')" class="nz-btn nz-btn-size-normal-new nz-btn-style-normal-new" type="button" v-has="'system_basic_save'">{{$t('overall.submit')}}</button>
             </el-form-item>
           </el-form>
         </div>
@@ -87,7 +87,7 @@
             <el-form-item>
               <button type="button" class="nz-btn nz-btn-size-normal-new nz-btn-style-light-new" @click="resetForm('emailForm','email')" style="top:2px">{{$t('overall.reset')}}</button>
               <button type="button" class="nz-btn nz-btn-size-normal-new nz-btn-style-light-new" :class="{'nz-btn-disabled':email.email_enable == 'off'}" :disabled="email.email_enable == 'off'" @click="testSetInfo('email','emailForm')" style="top:2px">{{$t('config.system.email.testConnection')}}</button>
-              <button type="button" @click="saveSetInfo('email','emailForm')" class="nz-btn nz-btn-size-normal-new nz-btn-style-normal-new">{{$t('overall.submit')}}</button>
+              <button @click="saveSetInfo('email','emailForm')" class="nz-btn nz-btn-size-normal-new nz-btn-style-normal-new" type="button" v-has="'system_email_save'">{{$t('overall.submit')}}</button>
             </el-form-item>
           </el-form>
         </div>
@@ -99,7 +99,7 @@
               <el-input-number v-model="terminal.max_terminal_num" controls-position="right" :min="1" :max="50"></el-input-number>
             </el-form-item>
             <el-form-item>
-              <button type="button" @click="saveSetInfo('terminal','terminalForm')" class="nz-btn nz-btn-size-normal-new nz-btn-style-normal-new">{{$t('overall.submit')}}</button>
+              <button @click="saveSetInfo('terminal','terminalForm')" class="nz-btn nz-btn-size-normal-new nz-btn-style-normal-new" type="button" v-has="'system_terminal_save'">{{$t('overall.submit')}}</button>
             </el-form-item>
           </el-form>
         </div>
@@ -131,7 +131,7 @@
             <el-form-item>
               <button type="button" class="nz-btn nz-btn-size-normal-new nz-btn-style-light-new" @click="resetForm('ldapForm','ldap')" style="top:2px">{{$t('overall.reset')}}</button>
               <button type="button" class="nz-btn nz-btn-size-normal-new nz-btn-style-light-new" @click="testSetInfo('ldap','ldapForm')" style="top:2px">{{$t('config.system.email.testConnection')}}</button>
-              <button type="button" @click="saveSetInfo('ldap','ldapForm')" class="nz-btn nz-btn-size-normal-new nz-btn-style-normal-new">{{$t('overall.submit')}}</button>
+              <button @click="saveSetInfo('ldap','ldapForm')" class="nz-btn nz-btn-size-normal-new nz-btn-style-normal-new" type="button" v-has="'system_ldap_save'">{{$t('overall.submit')}}</button>
             </el-form-item>
           </el-form>
         </div>
@@ -191,7 +191,7 @@
                 <el-input  v-model="notificationTemp.filePath" class="linkUrl"/>
               </el-form-item>
               <el-form-item  prop="btn">
-                <i class="nz-icon-create-square nz-icon" @click="notificationAdd"></i>
+                <i @click="notificationAdd" class="nz-icon-create-square nz-icon" v-has="'system_notification_add'"></i>
               </el-form-item>
             </el-form>
           </div>
@@ -217,7 +217,7 @@
                     <el-input  v-model="item.filePath" width="460px" />
                   </el-form-item>
                   <el-form-item  prop="btn">
-                    <button type="button" class="linkBtn nz-btn nz-btn-size-small-new nz-btn-style-normal-new" @click="notificationUpdate(item)">Update</button>
+                    <button @click="notificationUpdate(item)" class="linkBtn nz-btn nz-btn-size-small-new nz-btn-style-normal-new" type="button" v-has="'system_notification_update'">Update</button>
                     <button type="button" class="linkBtn nz-btn nz-btn-size-small-new nz-btn-style-light-new" @click="notificationCancel(item)">Cancel</button>
                   </el-form-item>
                 </el-form>
@@ -231,8 +231,8 @@
                     <!--</span>-->
                   </div>
                   <div class="linkFormBtn">
-                    <i class="nz-icon nz-icon-edit" @click.stop="notificationEdit(item)"></i>
-                    <i class="nz-icon nz-icon-delete" @click="notificationDel(item)"></i>
+                    <i @click.stop="notificationEdit(item)" class="nz-icon nz-icon-edit" v-has="'system_notification_edit'"></i>
+                    <i @click="notificationDel(item)" class="nz-icon nz-icon-delete" v-has="'system_notification_delete'"></i>
                   </div>
                 </div>
               </div>
@@ -259,7 +259,7 @@
                 <el-input  v-model="linkTemp.url" class="linkUrl"/>
               </el-form-item>
               <el-form-item  prop="btn">
-                <i class="nz-icon-create-square nz-icon" @click="linkAdd"></i>
+                <i @click="linkAdd" class="nz-icon-create-square nz-icon" v-has="'system_link_add'"></i>
               </el-form-item>
             </el-form>
           </div>
@@ -284,22 +284,20 @@
                   <el-input  v-model="item.url" width="460px" />
                 </el-form-item>
                 <el-form-item  prop="btn">
-                  <button type="button" class="linkBtn nz-btn nz-btn-size-small-new nz-btn-style-normal-new" @click="linkUpdate(item)">Update</button>
+                  <button @click="linkUpdate(item)" class="linkBtn nz-btn nz-btn-size-small-new nz-btn-style-normal-new" type="button" v-has="'system_link_update'">Update</button>
                   <button type="button" class="linkBtn nz-btn nz-btn-size-small-new nz-btn-style-light-new" @click="linkCancel(item)">Cancel</button>
                 </el-form-item>
               </el-form>
                 <div class="linkFormContent" v-else>
                   <div class="linkTitleName" :title="item.name">{{item.name}}</div>
                   <div class="linkTitleUrl">
-                    <span class="linkTitleUrlContent" @click="openUrl(item)" @dblclick.stop="linkEdit(item)">
-                      <!--<el-tooltip class="item" effect="dark" :content="item.url" placement="top" popper-class="linkUrlTip">-->
+                    <span @click="openUrl(item)" @dblclick.stop="linkEdit(item)" class="linkTitleUrlContent" v-has="'system_link_edit'">
                       <span>{{item.url}}</span>
-                      <!--</el-tooltip>-->
                     </span>
                   </div>
                   <div class="linkFormBtn">
-                    <i class="nz-icon nz-icon-edit" @click.stop="linkEdit(item)" v-if="item.buildIn=='0'"></i>
-                    <i class="nz-icon nz-icon-delete" @click="linkDel(item)" v-if="item.buildIn=='0'"></i>
+                    <i @click.stop="linkEdit(item)" class="nz-icon nz-icon-edit" v-has="'system_link_edit'" v-if="item.buildIn=='0'"></i>
+                    <i @click="linkDel(item)" class="nz-icon nz-icon-delete" v-has="'system_link_delete'" v-if="item.buildIn=='0'"></i>
                   </div>
                 </div>
               </div>
@@ -329,7 +327,7 @@
               </div>
             </el-form-item>
             <el-form-item>
-              <button type="button" class="nz-btn nz-btn-size-normal-new nz-btn-style-normal-new" @click="resetSys()" style="top:2px">{{$t('overall.reset')}}</button>
+              <button @click="resetSys()" class="nz-btn nz-btn-size-normal-new nz-btn-style-normal-new" style="top:2px" type="button" v-has="'system_reset_reset'">{{$t('overall.reset')}}</button>
             </el-form-item>
           </el-form>
         </div>

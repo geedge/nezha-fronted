@@ -14,7 +14,7 @@
         <input v-model="loginData.password" type="password" name="password" autocomplete="on" :placeholder="$t('login.password')"></input>
       </div>
       <div class="login-foot">
-        <button @click="login" class="login-btn" id="login">{{$t("login.login")}}</button>
+        <button @click="login" class="login-btn" id="login" v-loading="loading">{{$t("login.login")}}</button>
         <div class="login-foot-lang" @click.stop="langListShow = !langListShow">
           <i v-if="lang == 'en'" class="nz-icon nz-icon-lang-en"></i>
           <i v-else-if="lang == 'cn'" class="nz-icon nz-icon-lang-zh"></i>
@@ -41,6 +41,7 @@ export default {
         password: '',
         remember: false
       },
+      loading: false,
       lang: localStorage.getItem('nz-language') ? localStorage.getItem('nz-language') : 'en', //en/cn
       langListShow: false,
     }
@@ -48,7 +49,11 @@ export default {
   methods: {
     ...mapActions(["loginSuccess"]),
     login() {
+      if (this.loading) {
+        return;
+      }
       if (this.validateLogin()&&(this.$route.path=='/'||this.$route.path=='/login')) {
+        this.loading = true;
         this.$post('sys/login', this.loginData).then(res => {
           if (res.code == 200) {
             //登录成功，记录用户名、token和lang
@@ -60,6 +65,8 @@ export default {
           } else {
             this.$message.error(res.msg);
           }
+        }).finally(() => {
+          this.loading = false;
         });
       }
     },
@@ -201,6 +208,10 @@ export default {
   font-size: 25px;
   color: white;
   cursor: pointer;
+}
+.login-foot .el-loading-spinner {
+  width: 36px;
+  height: 36px;
 }
 .login-foot-lang-list::before {
   content: " ";

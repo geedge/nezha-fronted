@@ -3,25 +3,25 @@
     <div class="sub-top-tools">
       <div class="sub-list-tabs">
         <div class="sub-list-tab-title">
-          <template v-if="from == 'asset'">{{obj.host}}</template>
-          <template v-if="from == 'alertRule'">{{obj.alertName}}</template>
-          <template v-if="from == 'endpoint'"><div class="sub-list-tab-title">{{$t("project.endpoint.endpointId")}}: {{obj ? obj.id : ''}}</div></template>
+          <template v-if="from == $CONSTANTS.fromRoute.asset">{{obj.host}}</template>
+          <template v-if="from == $CONSTANTS.fromRoute.rule">{{obj.alertName}}</template>
+          <template v-if="from == $CONSTANTS.fromRoute.endpoint"><div class="sub-list-tab-title">{{$t("project.endpoint.endpointId")}}: {{obj ? obj.id : ''}}</div></template>
         </div><div
-        class="sub-list-tab" @click="changeTab(from == 'asset' || from == 'alertRule' || from == 'endpoint'? 'panel' : 'detail')">{{$t("overall.detail")}}</div><div
-        class="sub-list-tab sub-list-tab-active">{{$t("asset.tableTitle.alerts")}}</div><div v-if="from == 'asset'"
+        @click="changeTab(from == $CONSTANTS.fromRoute.asset || from == $CONSTANTS.fromRoute.rule || from == $CONSTANTS.fromRoute.endpoint? 'panel' : 'detail')" class="sub-list-tab">{{$t("overall.detail")}}</div><div
+        class="sub-list-tab sub-list-tab-active">{{$t("asset.tableTitle.alerts")}}</div><div v-if="from == $CONSTANTS.fromRoute.asset"
         class="sub-list-tab" @click="changeTab('endpoint')">{{$t("asset.tableTitle.modules")}}</div>
-        <div v-if="from == 'endpoint'" class="sub-list-tab" @click="changeTab('endpointQuery')">{{$t("overall.query")}}</div>
+        <div @click="changeTab('endpointQuery')" class="sub-list-tab" v-if="from == $CONSTANTS.fromRoute.endpoint">{{$t("overall.query")}}</div>
       </div>
       <div class="top-tool-right">
         <pick-time :refresh-data-func="getAlertList" v-model="searchTime" :use-chart-unit="false" :use-refresh="false" :default-pick="defaultPick" :show-empty="true"></pick-time>
         <div class="top-tool-search">
           <search-input :default-item="'alertMessageState'" :default-value="defaultSearchValue" :searchMsg="searchMsg" @search="search" position="alert-bottom"></search-input>
         </div>
-        <button type="button" @click="importBox.show = true" :title="$t('overall.exportExcelLower')"
+        <button :title="$t('overall.exportExcelLower')" @click="importBox.show = true" type="button" v-has="['rule_alerts_export', 'project_endpoint_alerts_export', 'asset_alerts_export']"
             class="nz-btn nz-btn-size-normal nz-btn-style-light margin-l-20" id="alert-list-export">
           <i class="nz-icon nz-icon-download1"></i>
         </button>
-        <delete-button :delete-objs="batchDeleteObjs" api="alert/message" @after="getAlertList" :clickFunction="openDelMessageBox"></delete-button>
+        <delete-button :clickFunction="openDelMessageBox" :delete-objs="batchDeleteObjs" @after="getAlertList" api="alert/message" v-has="['rule_alerts_delete', 'project_endpoint_alerts_delete', 'asset_alerts_delete']"></delete-button>
       </div>
     </div>
     <alertMessageTable
@@ -34,6 +34,7 @@
       @deleteMessage="deleteMessage"
       @select-change="(selection)=>{this.batchDeleteObjs=selection}"
       :showTopBtn="false"
+      :from="`${from}_alerts`"
     ></alertMessageTable>
     <Pagination :tableId="tableId" :pageObj="pageObj" @pageNo='pageNo' @pageSize='pageSize' ref="Pagination"></Pagination>
     <!--导出-->

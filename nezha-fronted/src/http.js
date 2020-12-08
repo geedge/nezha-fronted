@@ -44,7 +44,11 @@ export function post(url, params,headers) {
     axios.post(url, params,{headers:headers}).then(response => {
       resolve(response.data)
     }).catch(err => {
-      resolve(err.response.data);
+      if(err.response){
+        resolve(err.response.data);
+      }else if(err.message){
+        resolve(err.message);
+      }
     })
   })
 }
@@ -54,8 +58,11 @@ export function put(url, params,headers) {
     axios.put(url, params,{headers:headers}).then(response => {
       resolve(response.data)
     }).catch(err => {
-      console.info(err)
-      resolve(err.response.data);
+      if(err.response){
+        resolve(err.response.data);
+      }else if(err.message){
+        resolve(err.message);
+      }
     })
   })
 }
@@ -65,8 +72,11 @@ export function del(url, params) {
     axios.delete(url, params).then(response => {
       resolve(response.data)
     }).catch(err => {
-      console.info(err)
-      resolve(err.response.data)
+      if(err.response){
+        resolve(err.response.data);
+      }else if(err.message){
+        resolve(err.message);
+      }
     })
   })
 }

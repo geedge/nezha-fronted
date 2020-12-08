@@ -2,7 +2,7 @@
   <div class="right-box right-box-account" v-clickoutside="clickOutside">
     <!-- begin--顶部按钮-->
     <div class="right-box-top-btns right-box-form-delete">
-      <button type="button" v-if="editUser.userId" @click="del"
+      <button @click="del" type="button" v-has="'account_delete'" v-if="editUser.userId"
               class="nz-btn nz-btn-size-normal nz-btn-size-alien"
               id="account-edit-del">
         <span class="right-box-top-btn-icon"><i class="nz-icon nz-icon-delete"></i></span>
@@ -66,7 +66,7 @@
               class="nz-btn nz-btn-size-normal-new nz-btn-style-light-new">
         <span>{{$t('overall.cancel')}}</span>
       </button>
-      <button @click="save" id="account-save"
+      <button @click="save" id="account-save" v-has="'account_save'"
               class="nz-btn nz-btn-size-normal-new nz-btn-style-normal-new">
         <span>{{$t('overall.save')}}</span>
       </button>

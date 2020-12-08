@@ -4,54 +4,58 @@
     <div class="sub-top-tools" v-if="from != 'project'">
       <div class="sub-list-tabs">
         <div class="sub-list-tab-title">
-          <template v-if="from == 'model'">{{obj.name}}</template>
-          <template v-else-if="from == 'asset'">{{obj.host}}</template>
-          <template v-else-if="from == 'alertRule'">{{obj.alertName}}</template>
-          <template v-else-if="from == 'endpoint'">{{$t("project.endpoint.endpointId")}}: {{obj.id}}</template>
-        </div><div class="sub-list-tab sub-list-tab-active" v-if="from == 'model'">{{$t("dashboard.panel.title")}}</div><template v-if="from == 'asset'"><div
+          <template v-if="from == $CONSTANTS.fromRoute.model">{{obj.name}}</template>
+          <template v-else-if="from == $CONSTANTS.fromRoute.asset">{{obj.host}}</template>
+          <template v-else-if="from == $CONSTANTS.fromRoute.rule">{{obj.alertName}}</template>
+          <template v-else-if="from == $CONSTANTS.fromRoute.endpoint">{{$t("project.endpoint.endpointId")}}: {{obj.id}}</template>
+        </div><div class="sub-list-tab sub-list-tab-active" v-if="from == $CONSTANTS.fromRoute.model">{{$t("dashboard.panel.title")}}</div><template v-if="from == $CONSTANTS.fromRoute.asset"><div
           class="sub-list-tab sub-list-tab-active">{{$t("overall.detail")}}</div><div
           class="sub-list-tab" @click="changeTab('alertMessage')">{{$t("asset.tableTitle.alerts")}}</div><div
           class="sub-list-tab" @click="changeTab('endpoint')">{{$t("asset.tableTitle.modules")}}</div>
         </template><template v-if="from == 'alertRule'"><div
           class="sub-list-tab sub-list-tab-active">{{$t("overall.detail")}}</div><div
           class="sub-list-tab" @click="changeTab('alertMessage')">{{$t("asset.tableTitle.alerts")}}</div>
-        </template><template v-if="from == 'endpoint'"><div
+        </template><template v-if="from == $CONSTANTS.fromRoute.endpoint"><div
           class="sub-list-tab sub-list-tab-active">{{$t("overall.detail")}}</div><div
           class="sub-list-tab " @click="changeTab('alertMessage')">{{$t("asset.tableTitle.alerts")}}</div><div
           class="sub-list-tab" @click="changeTab('endpointQuery')">{{$t("overall.query")}}</div>
         </template>
       </div>
       <div class="top-tool-right">
-        <div class="top-tool-search margin-r-20" v-if="from != 'alertRule' && from != 'endpoint'">
+        <div class="top-tool-search margin-r-20" v-if="from != $CONSTANTS.fromRoute.rule && from != $CONSTANTS.fromRoute.endpoint">
           <el-input ref="queryPanel" @clear="clearInput" id="queryPanel" @focus="focusInput"  @blur="blurInput" v-model="filter.searchName" class="query-input-inactive" size="mini" clearable   >
             <i slot="suffix" class="el-input__icon nz-icon nz-icon-search" @click="focusInput" style="float: right"></i>
           </el-input>
         </div>
-        <pick-time :refresh-data-func="dateChange" v-model="searchTime" :use-chart-unit="false" v-if="from=='asset'" ref="pickTime"></pick-time>
+        <pick-time :refresh-data-func="dateChange" :use-chart-unit="false" ref="pickTime" v-if="from == $CONSTANTS.fromRoute.asset" v-model="searchTime"></pick-time>
         <export-excel
           export-file-name="chart"
           export-url="/panel/export"
           import-url="/panel/import"
           :params="filter"
-          :from="'asset'"
+          :from="$CONSTANTS.fromRoute.asset"
           :link="obj"
+          :permissions="{
+            import: `${from}_chart_import`,
+            export: `${from}_chart_export`
+          }"
           @afterImport="dateChange"
           v-if="$route.path==='/asset' || $route.path==='/model'"
         >
           <template slot="optionZone">
-            <button @click="addChart" :title="$t('overall.createChart')" v-if="from != 'alertRule' && from != 'endpoint'"
+            <button :title="$t('overall.createChart')" @click="addChart" v-has="['model_chart_toAdd', 'asset_chart_toAdd']" v-if="from != $CONSTANTS.fromRoute.rule && from != $CONSTANTS.fromRoute.endpoint"
                     class="nz-btn nz-btn-size-normal nz-btn-style-light ">
               <i class="nz-icon-create-square nz-icon"></i>
             </button>
           </template>
         </export-excel>
-        <span v-else>
-          <button @click="addChart" :title="$t('overall.createChart')" v-if="from != 'alertRule' && from != 'endpoint'"
+        <template v-else>
+          <button :title="$t('overall.createChart')" @click="addChart" v-if="from != $CONSTANTS.fromRoute.rule && from != $CONSTANTS.fromRoute.endpoint"
                   class="nz-btn nz-btn-size-normal nz-btn-style-light ">
-          <i class="nz-icon-create-square nz-icon"></i>
-        </button>
-        </span>
-        <button @click="syncChart" :title="$t('overall.syncChart')" v-if="from == 'asset'||from == 'model'" style="margin-left: 20px;"
+            <i class="nz-icon-create-square nz-icon"></i>
+          </button>
+        </template>
+        <button :title="$t('overall.syncChart')" @click="syncChart" style="margin-left: 20px;" v-has="['model_chart_sync', 'asset_chart_sync']" v-if="from == $CONSTANTS.fromRoute.asset||from == $CONSTANTS.fromRoute.model"
                 class="nz-btn nz-btn-size-normal nz-btn-style-light ">
           <i class="nz-icon-sync nz-icon"></i>
         </button>
@@ -59,7 +63,7 @@
     </div>
 
     <!--project的工具栏-->
-    <div class="top-tools" v-else>
+    <!--<div class="top-tools" v-else>
       <div class="top-tool-main-right">
         <div class="top-tool-search relative-position margin-r-20">
           <el-input ref="queryPanel" @clear="clearInput" id="queryPanel2" @focus="focusInput"  @blur="blurInput" v-model="filter.searchName" class="query-input-inactive" size="mini" clearable   >
@@ -73,20 +77,20 @@
           <i class="nz-icon-create-square nz-icon"></i>
         </button>
       </div>
-    </div>
+    </div>-->
 
     <!--图表-->
     <div class="table-list" id="tableList">
       <el-scrollbar class="el-scrollbar-large" style="height: 100%" ref="dashboardScrollbar">
         <div class="box-content">
-          <chart-list @on-edit-chart="editChart" @on-refresh-time="refreshTime" @on-remove-chart="delChart" :draggable="draggable" :detail="detail"
-                      ref="chartList" :is-model="from == 'model'" :additional-info="obj"></chart-list>
+          <chart-list :additional-info="obj" :detail="detail" :draggable="draggable" :from="from" :is-model="from == $CONSTANTS.fromRoute.model" @on-edit-chart="editChart"
+                      @on-refresh-time="refreshTime" @on-remove-chart="delChart" ref="chartList"></chart-list>
         </div>
       </el-scrollbar>
     </div>
     <button class="to-top" :class="{'to-top-is-hover': tableHover}" v-show="showTopBtn" @click="$toTop('el', $refs.dashboardScrollbar.wrap)" style="bottom: 0;"><i class="nz-icon nz-icon-top"></i></button>
     <transition name="right-box">
-      <chart-box @close="closeRightBox" @delete-chart="delChart" :chart="chart" v-if="rightBox.show" ref="addChartModal" :show-panel="showPanel" :panel-data="panelData" @on-create-success="createSuccess" @on-delete-success="delChartOk"></chart-box>
+      <chart-box :chart="chart" :from="from" :panel-data="panelData" :show-panel="showPanel" @close="closeRightBox" @delete-chart="delChart" @on-create-success="createSuccess" @on-delete-success="delChartOk" ref="addChartModal" v-if="rightBox.show"></chart-box>
     </transition>
   </div>
 </template>
@@ -104,7 +108,7 @@
       from: String,
       obj: Object,
       draggable: {type: Boolean, default: true},
-      detail: Object
+      detail: Object,
     },
     data() {
       return {
@@ -448,20 +452,20 @@
         this.$refs.queryPanel.focus();
       },
       syncChart:function(){
-        if(this.from=='asset'||this.from=='model'){
+        if(this.from==$CONSTANTS.fromRoute.asset||this.from==$CONSTANTS.fromRoute.model){
           this.$confirm(this.$t("tip.syncTip"), {
             confirmButtonText: this.$t("tip.yes"),
             cancelButtonText: this.$t("tip.no"),
             type: 'warning'
           }).then(() => {
             let param={
-              modelId:this.from=='model'?this.obj.id:null,
-              assetId:this.from=='asset'?this.obj.id:null,
+              modelId:this.from==$CONSTANTS.fromRoute.model?this.obj.id:null,
+              assetId:this.from==$CONSTANTS.fromRoute.asset?this.obj.id:null,
             }
             this.$put('/model/syncChart',param).then(response=>{
               if(response.code == 200){
                 this.$message({duration: 1000, type: 'success', message: this.$t("tip.syncSuccess")});
-                if(this.from == 'asset'){
+                if(this.from == $CONSTANTS.fromRoute.asset){
                   this.refresh();
                 }
               }else{

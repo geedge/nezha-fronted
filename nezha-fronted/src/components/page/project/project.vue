@@ -38,17 +38,18 @@
               export-url="/endpoint/export"
               import-url="/endpoint/import"
               :params="endpointSearchLabel"
+              :permissions="{import: 'project_endpoint_import', export: 'project_endpoint_export'}"
               @afterImport="afterCloseImport"
               class="margin-l-20"
             >
               <template slot="optionZone">
-                <button @click.stop="addEndpoint" :title="$t('overall.createEndpoint')"
+                <button :title="$t('overall.createEndpoint')" @click.stop="addEndpoint" v-has="'project_endpoint_toAdd'"
                         class="nz-btn nz-btn-size-normal nz-btn-style-light" id="project-create-project">
                   <i class="nz-icon nz-icon-create-square"></i>
                 </button>
               </template>
             </export-excel>
-            <delete-button :delete-objs="batchDeleteObjs" api="endpoint" @after="afterCloseImport"></delete-button>
+            <delete-button :delete-objs="batchDeleteObjs" @after="afterCloseImport" api="endpoint" v-has="'project_endpoint_delete'"></delete-button>
           </div>
           <div class="pagination-top pagination-top-hide display-none"></div>
         </div>
@@ -132,10 +133,10 @@
                 <span :title="$t('overall.query')" @click="query(scope.row)" class="content-right-option"
                       :id="'edp-query-'+scope.row.id"><i class="nz-icon nz-icon-search"></i></span>
                 &nbsp;
-                <span :title="$t('overall.edit')" @click="editEndpoint(scope.row)" class="content-right-option"
+                <span :title="$t('overall.edit')" @click="editEndpoint(scope.row)" class="content-right-option" v-has="'project_endpoint_toEdit'"
                       :id="'edp-edit-'+scope.row.id"><i class="nz-icon nz-icon-edit"></i></span>
 
-                <span :title="$t('overall.delete')" @click.stop="delEndpoint(scope.row)" class="content-right-option"
+                <span :title="$t('overall.delete')" @click.stop="delEndpoint(scope.row)" class="content-right-option" v-has="'project_endpoint_delete'"
                       :id="'asset-del-'+scope.row.id"><i class="nz-icon nz-icon-delete"></i></span>
               </div>
               <span v-else-if="item.prop == 'state'">
@@ -185,7 +186,7 @@
       <bottom-box v-if="bottomBox.showSubList"
                   :sub-resize-show="bottomBox.subResizeShow"
                   :is-full-screen="bottomBox.isFullScreen"
-                  :from="'endpoint'"
+                  :from="$CONSTANTS.fromRoute.endpoint"
                   :target-tab.sync="bottomBox.targetTab"
                   :detail="bottomBox.endpointDetail"
                   :obj="endpoint"

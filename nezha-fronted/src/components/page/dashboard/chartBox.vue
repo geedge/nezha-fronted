@@ -258,7 +258,7 @@
           </el-radio-group>
         </el-form-item>
         <template v-if="(editChart.type == 'singleStat'||editChart.type == 'table')&&editChart.param.valueMapping.type == 'value'">
-          <template  v-for="(mapping,index) in editChart.param.valueMapping.mapping">
+          <template v-for="(mapping,index) in editChart.param.valueMapping.mapping">
             <el-form-item :label="$t('dashboard.panel.chartForm.valMapping.value')" prop="span" class="half-form-item-other" >
               <el-input size="mini" type="input" v-model="mapping.value" style="display: inline-block;;"></el-input>
             </el-form-item>
@@ -269,7 +269,7 @@
           </template>
         </template>
         <template v-if="(editChart.type == 'singleStat'||editChart.type == 'table')&&editChart.param.valueMapping.type == 'range'">
-          <template  v-for="(mapping,index) in editChart.param.valueMapping.mapping">
+          <template v-for="(mapping,index) in editChart.param.valueMapping.mapping">
             <div class="half-form-item-other" style="display: inline-block;margin-left: 70px">
               <el-form-item :label="$t('dashboard.panel.chartForm.valMapping.from')" prop="span" class="one-third-form-item-left" >
                 <el-input size="mini" type="input" v-model="mapping.from"></el-input>
@@ -287,7 +287,7 @@
 
         <!--value mapping end-->
         <template v-if="editChart.type == 'line' || editChart.type == 'bar' || editChart.type == 'stackArea'">
-          <div  class="right-box-sub-title" >
+          <div class="right-box-sub-title" >
             <span>{{$t('dashboard.panel.chartForm.legendValue')}}</span>
           </div>
           <div style="margin-bottom: 20px; width: 100%" ></div>
@@ -319,13 +319,13 @@
       <button @click="esc(false)" id="chart-box-esc" class="nz-btn nz-btn-size-normal-new nz-btn-style-light-new">
         <span>{{$t('overall.cancel')}}</span>
       </button>
-      <button @click="SyncSave" id="chart-box-Sync" class="nz-btn nz-btn-size-normal-new nz-btn-style-normal-new" v-if="showPanel.type && showPanel.type == 'model'">
+      <button @click="SyncSave" class="nz-btn nz-btn-size-normal-new nz-btn-style-normal-new" id="chart-box-Sync" v-has:all="[`${from}_chart_save`, `${from}_chart_sync`]" v-if="showPanel.type && showPanel.type == 'model'">
         <span>{{$t('overall.SyncSave')}}</span>
       </button>
       <button @click="preview" id="chart-box-preview" class="nz-btn nz-btn-size-normal-new nz-btn-style-normal-new" v-else>
         <span>{{$t('overall.preview')}}</span>
       </button>
-      <button @click="confirmAdd" id="chart-box-save" class="nz-btn nz-btn-size-normal-new nz-btn-style-normal-new">
+      <button @click="confirmAdd" class="nz-btn nz-btn-size-normal-new nz-btn-style-normal-new" id="chart-box-save" v-has="`${from}_chart_save`">
         <span>{{$t('overall.save')}}</span>
       </button>
     </div>
@@ -354,10 +354,11 @@
   export default {
     name: "chartBox",
     props: {
-      boxClass:String,
+      boxClass: String,
       panelData: Array,
       showPanel: Object,
-      chart: Object
+      chart: Object,
+      from: {type: String}
     },
     mixins: [rz],
     data() {

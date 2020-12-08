@@ -12,11 +12,11 @@
           <div class="top-tool-search">
             <search-input ref="searchInput" :searchMsg="searchMsg" @search="search" :inTransform="bottomBox.inTransform"></search-input>
           </div>
-          <button type="button" @click="add" :title="$t('overall.createPrometheusServer')"
+          <button :title="$t('overall.createPrometheusServer')" @click="add" type="button" v-has="'prom_toAdd'"
                   class="nz-btn nz-btn-size-normal nz-btn-style-light margin-l-20" id="prom-add">
             <i class="nz-icon-create-square nz-icon"></i>
           </button>
-          <delete-button :delete-objs="batchDeleteObjs" api="promServer" @after="getTableData"></delete-button>
+          <delete-button :delete-objs="batchDeleteObjs" @after="getTableData" api="promServer" v-has="'prom_delete'"></delete-button>
         </div>
         <div class="pagination-top pagination-top-hide display-none"></div>
       </div>
@@ -67,9 +67,9 @@
             <div v-else-if="item.prop == 'option'" class="content-right-options">
               <!--<span :title="$t('overall.view')" @click="detail(scope.row)" class="content-right-option" :id="'prom-detail-'+scope.row.id"><i class="nz-icon nz-icon-view"></i></span>
               &nbsp;-->
-              <span :title="$t('overall.edit')" @click="edit(scope.row)" class="content-right-option" :id="'prom-edit-'+scope.row.id"><i class="nz-icon nz-icon-edit"></i></span>
+              <span :id="'prom-edit-'+scope.row.id" :title="$t('overall.edit')" @click="edit(scope.row)" class="content-right-option" v-has="'prom_toEdit'"><i class="nz-icon nz-icon-edit"></i></span>
               &nbsp;
-              <span :title="$t('overall.delete')" @click="del(scope.row)" class="content-right-option" :id="'prom-del-'+scope.row.id"><i class="nz-icon nz-icon-delete"></i></span>
+              <span :id="'prom-del-'+scope.row.id" :title="$t('overall.delete')" @click="del(scope.row)" class="content-right-option" v-has="'prom_delete'"><i class="nz-icon nz-icon-delete"></i></span>
             </div>
             <span v-else-if="scope.row[item.prop]">{{scope.row[item.prop]}}</span>
             <template v-else>-</template>

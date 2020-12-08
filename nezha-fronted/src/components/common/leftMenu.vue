@@ -1,11 +1,7 @@
 <template>
   <div class="content">
     <div class="content-left left-slot" :class="{'left-slot-shrink': isShrink}">
-      <div class="sidebar-title too-long-split">
-        <template v-if="parentMenu == '/project'">{{$t("overall.project")}}</template>
-        <template v-else-if="parentMenu == '/asset'">{{$t("overall.asset")}}</template>
-        <template v-else>{{$CONSTANTS.staticMenus[parentMenu].title}}</template>
-      </div>
+      <div class="sidebar-title too-long-split">{{$t(parentMenu.i18n)}}</div>
       <div class="sidebar-info" style="height: 90%">
         <el-scrollbar style="height: 100%;">
           <template v-if="parentMenu == '/project'">
@@ -32,7 +28,7 @@
                       <div :id="`module-${module.id}`" class="item-tip">
                         <div class="item-tip-hide item-tip-key el-popover" :class="itemTip(module.id, module.name, ready)">{{module.name}}</div>
                         <span class="too-long-split" style="width: 120px;">{{module.name}}</span>
-                        <div v-show="module.buildIn != 1" class="hid-div side-bar-menu-edit sub-side-bar-menu-edit" @click.stop="editModule(module)" :id="'project-module-edit-'+module.id" ><i class="nz-icon nz-icon-edit"></i></div>
+                        <div :id="'project-module-edit-'+module.id" @click.stop="editModule(module)" class="hid-div side-bar-menu-edit sub-side-bar-menu-edit" v-has="'project_module_toEdit'" v-show="module.buildIn != 1" ><i class="nz-icon nz-icon-edit"></i></div>
                       </div>
                     </div>
                   </template>
@@ -115,8 +111,8 @@
 
           </template>
           <template v-else>
-            <div v-for="menu in $CONSTANTS.staticMenus[parentMenu].menu" class="sidebar-info-item" :class="{'sidebar-info-item-active': menu.route == route}" @click="jumpTo(menu.route)">
-              {{menu.name}}
+            <div :class="{'sidebar-info-item-active': menu.route == route}" @click="jumpTo(menu.route)" class="sidebar-info-item" v-for="menu in parentMenu.children">
+              {{$t(menu.i18n)}}
             </div>
           </template>
         </el-scrollbar>
@@ -146,7 +142,7 @@
       data() {
         return{
           isShrink: localStorage.getItem('nz-left-menu-shrink') == 'true',
-          parentMenu: "dashboards",
+          parentMenu: {},
           //active: "/overview",
 
           //project相关
@@ -265,16 +261,18 @@
           let parentMenu = "";
           let end = false;
           if (route != '/project' && route != '/asset') {
-            for (let r in this.$CONSTANTS.staticMenus) {
+            this.$store.getters.menuList.forEach(menu => {
               if (!end) {
-                this.$CONSTANTS.staticMenus[r].menu.forEach(menu => {
-                  if (route == menu.route) {
-                    parentMenu = r
-                    end = true;
-                  }
-                });
+                if (menu.children) {
+                  menu.children.forEach(subMenu => {
+                    if (subMenu.route == route) {
+                      parentMenu = menu;
+                      end = true;
+                    }
+                  });
+                }
               }
-            }
+            });
           } else {
             parentMenu = route;
           }

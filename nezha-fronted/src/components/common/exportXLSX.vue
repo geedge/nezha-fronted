@@ -1,21 +1,15 @@
 <template>
   <div class="export-xlsx">
     <div class="nz-btn-group nz-btn-group-size-normal nz-btn-group-light">
-      <slot name="optionZone"></slot><button @mouseenter="exportMenuHandler(true)" @mouseleave="exportMenuHandler(false)" class="nz-btn nz-btn-size-normal nz-btn-style-light export-dropdown-btn" id="browser-go" style="padding: 0">
+      <slot name="optionZone"></slot><button @mouseenter="exportMenuHandler(true)" @mouseleave="exportMenuHandler(false)" class="nz-btn nz-btn-size-normal nz-btn-style-light export-dropdown-btn" id="browser-go" style="padding: 0" v-has="[permissions.import, permissions.export]">
         <i class="nz-icon nz-icon-arrow-down"></i>
         <transition name="el-zoom-in-top">
           <ul class="el-dropdown-menu el-popper el-dropdown-menu--mini export-dropdown" style="z-index: 101" v-show="exportShow">
-            <li @click="showImportBox(1)" class="el-dropdown-menu__item dropdown-content"><i class="nz-icon nz-icon-upload"></i>{{$t('overall.importExcel')}}</li>
-            <li @click="showImportBox(2)" class="el-dropdown-menu__item dropdown-content"><i class="nz-icon nz-icon-download1"></i>{{$t('overall.exportExcel')}}</li>
+            <li @click="showImportBox(1)" class="el-dropdown-menu__item dropdown-content" v-has="permissions.import"><i class="nz-icon nz-icon-upload"></i>{{$t('overall.importExcel')}}</li>
+            <li @click="showImportBox(2)" class="el-dropdown-menu__item dropdown-content" v-has="permissions.export"><i class="nz-icon nz-icon-download1"></i>{{$t('overall.exportExcel')}}</li>
           </ul>
         </transition>
       </button>
-      <!--<el-dropdown split-button type="primary" size="mini" class="dropdownBtn">
-        <slot name="optionZone" class="option-button"></slot><el-dropdown-menu slot="dropdown">
-          <el-dropdown-item @click.native="showImportBox(1)" class="dropdown-content"><i class="nz-icon nz-icon-upload1"></i>{{$t('overall.importExcelLower')}}</el-dropdown-item>
-          <el-dropdown-item @click.native="showImportBox(2)" class="dropdown-content"><i class="nz-icon nz-icon-download1"></i>{{$t('overall.exportExcelLower')}}</el-dropdown-item>
-        </el-dropdown-menu>
-      </el-dropdown>-->
     </div>
 
     <el-dialog :visible.sync="importBox.show" :title="importBox.title" modal-append-to-body append-to-body :modal-append-to-body='false' :show-close="true" :width="importBox.width" @close="closeDialog" class="nz-dialog" :close-on-click-modal="importBox.type!=3">
@@ -113,6 +107,7 @@
       exportFileName:{type:String},
       importUrl: {type:String,required:true},
       link:{type:Object},
+      permissions: {type: Object}
     },
     data:function(){
       return {
@@ -121,7 +116,7 @@
         importFileList:[],
         importResult:null,
         exportShow: false,
-        paramsType:''
+        paramsType:'',
       }
     },
     created(){
@@ -129,6 +124,15 @@
     mounted(){
       this.getParamsType();
     },
+    /*watch: {
+      permissions: {
+        immediate: true,
+        deep: true,
+        handler(n) {
+          this.permission = Object(n);
+        }
+      }
+    },*/
     methods: {
       importChange:function(file,fileList){
         if (fileList.length > 0) {

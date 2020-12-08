@@ -19,11 +19,10 @@
           <div class="top-tool-search">
             <search-input :searchMsg="searchMsg" @search="search"></search-input>
           </div>
-          <button type="button" @click="add" class="nz-btn nz-btn-size-normal nz-btn-style-light  margin-l-20"  :title="$t('overall.createMib')"
-                  id="mib-add">
+          <button :title="$t('overall.createMib')" @click="add" class="nz-btn nz-btn-size-normal nz-btn-style-light  margin-l-20" id="mib-add"  type="button" v-has="'snmp_file_toAdd'">
             <i class="nz-icon-create-square nz-icon"></i>
           </button>
-          <delete-button :delete-objs="batchDeleteObjs" api="mib" @after="getTableData"></delete-button>
+          <delete-button :delete-objs="batchDeleteObjs" @after="getTableData" api="mib" v-has="'snmp_file_delete'"></delete-button>
         </div>
       </div>
       <!-- 自定义table列 -->
@@ -52,7 +51,7 @@
           <template slot-scope="scope" :column="item">
             <template v-if="item.prop == 'updateUser'" >{{scope.row[item.prop].name}}</template>
             <template v-else-if="item.prop == 'fileName' && scope.row[item.prop]" >
-              <span class="link" @click="downloadMib(scope.row)">{{scope.row[item.prop]}}</span>
+              <span @click="downloadMib(scope.row)" class="link" v-has="'snmp_file_download'">{{scope.row[item.prop]}}</span>
             </template>
             <template v-else-if="item.prop == 'modelsDetail' && scope.row['modelsDetail'] && scope.row['modelsDetail'].length >0" >
               <div style="height: 100%">
@@ -84,11 +83,11 @@
             </template>
             <span v-else-if="item.prop == 'updateAt'">{{utcTimeToTimezoneStr(scope.row[item.prop])}}</span>
             <div v-else-if="item.prop == 'option'" class="content-right-options">
-              <span :title="$t('overall.download')" @click="downloadMib(scope.row)" class="content-right-option" :id="'mib-download-'+scope.row.id"><i class="nz-icon nz-icon-download1"></i></span>
+              <span :id="'mib-download-'+scope.row.id" :title="$t('overall.download')" @click="downloadMib(scope.row)" class="content-right-option" v-has="'snmp_file_download'"><i class="nz-icon nz-icon-download1"></i></span>
               &nbsp;
-              <span :title="$t('overall.edit')" @click="edit(scope.row)" class="content-right-option" :id="'mib-edit-'+scope.row.id"><i class="nz-icon nz-icon-edit"></i></span>
+              <span :id="'mib-edit-'+scope.row.id" :title="$t('overall.edit')" @click="edit(scope.row)" class="content-right-option" v-has="'snmp_file_toEdit'"><i class="nz-icon nz-icon-edit"></i></span>
               &nbsp;
-              <span :title="$t('overall.delete')" @click="del(scope.row)" class="content-right-option" :id="'mib-del-'+scope.row.id"><i class="nz-icon nz-icon-delete"></i></span>
+              <span :id="'mib-del-'+scope.row.id" :title="$t('overall.delete')" @click="del(scope.row)" class="content-right-option" v-has="'snmp_file_delete'"><i class="nz-icon nz-icon-delete"></i></span>
             </div>
             <template v-else-if="scope.row[item.prop]">{{scope.row[item.prop]}}</template>
             <template v-else>-</template>

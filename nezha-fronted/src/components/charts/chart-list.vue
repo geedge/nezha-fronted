@@ -68,7 +68,7 @@
                }"  >
       <div v-for="(item, index) in dataList" :key="item.id" :id="'chart-' + item.id" :name="item.title" :class="{'drag-disabled': !draggable,'chartBox':true}" v-show="!item.isHide">
         <line-chart-block v-if="item.type === 'line' || item.type === 'bar' ||item.type == 'stackArea' || item.type === 4" :key="'inner' + item.id"
-                          :ref="'editChart'+item.id" :temp-dom="tempDom"
+                          :from="from" :ref="'editChart'+item.id" :temp-dom="tempDom"
                           @on-refresh-data="refreshChart"
                           @on-remove-chart-block="removeChart"
                           @on-duplicate-chart-block="duplicateChart"
@@ -78,7 +78,7 @@
                           :chart-index="index"
                           :chart-data="item"></line-chart-block>
 
-        <chart-single-stat  v-if="item.type === 'singleStat'" :ref="'editChart'+item.id" :key="'inner' + item.id"
+        <chart-single-stat  :from="from" :key="'inner' + item.id" :ref="'editChart'+item.id" v-if="item.type === 'singleStat'"
                      @on-refresh-data="refreshChart"
                      @on-search-data="searchData"
                      @on-remove-chart-block="removeChart"
@@ -89,7 +89,7 @@
                      :panel-id="filter.panelId"
                      :chart-index="index"></chart-single-stat>
 
-        <chart-table  v-if="item.type === 'table'" :ref="'editChart'+item.id" :key="'inner' + item.id"
+        <chart-table  :from="from" :key="'inner' + item.id" :ref="'editChart'+item.id" v-if="item.type === 'table'"
                       @on-refresh-data="refreshChart"
                       @on-search-data="searchData"
                       @on-remove-chart-block="removeChart"
@@ -100,7 +100,7 @@
                       :chart-data="item"
                       :chart-index="index"></chart-table>
 
-        <chart-url  v-if="item.type === 'url'" :ref="'editChart'+item.id" :key="'inner' + item.id"
+        <chart-url  :from="from" :key="'inner' + item.id" :ref="'editChart'+item.id" v-if="item.type === 'url'"
                      @on-refresh-data="refreshChart"
                      @on-search-data="searchData"
                      @on-remove-chart-block="removeChart"
@@ -112,14 +112,14 @@
                      :chart-index="index"></chart-url>
 
         <chart-detail  v-if="item.type === 'assetInfo' || item.type == 'projectInfo' || item.type == 'endpointInfo' || item.type == 'alertRuleInfo'" :ref="'editChart'+item.id" :key="'inner' + item.id"
-                          :panel-id="filter.panelId"
+                          :from="from" :panel-id="filter.panelId"
                           :chart-index="index"
                           @on-refresh-data="refreshChart"
                           :chart-data="item"
                           :editChartId="'editChartId' + item.id"
         ></chart-detail>
 
-        <text-chart v-if="item.type === 'text'" :key="'inner' + item.id" :ref="'editChart'+item.id"
+        <text-chart :from="from" :key="'inner' + item.id" :ref="'editChart'+item.id" v-if="item.type === 'text'"
                     @on-refresh-data="refreshChart"
                     @on-remove-chart-block="removeChart"
                     @on-duplicate-chart-block="duplicateChart"
@@ -130,7 +130,7 @@
                     :chart-index="index"
         ></text-chart>
 
-        <chart-alert-list  :ref="'editChart'+item.id"
+        <chart-alert-list  :from="from" :ref="'editChart'+item.id"
                            :panel-id="filter.panelId"
                           :chart-index="index"
                           v-if="item.type  === 'alertList'"
@@ -169,7 +169,8 @@
       isModel: {type: Boolean, default: false},
       additionalInfo:{},
       draggable: {type: Boolean, default: true},
-      detail: Object
+      detail: Object,
+      from: {type: String}
     },
 
     components: {

@@ -13,11 +13,11 @@
           <div class="top-tool-search">
             <search-input ref="searchInput" :searchMsg="searchMsg" @search="search" :inTransform="bottomBox.inTransform"></search-input>
           </div>
-          <button type="button" @click="add" :title="$t('overall.createDatacenter')"
+          <button :title="$t('overall.createDatacenter')" @click="add" type="button" v-has="'dc_toAdd'"
                   class="nz-btn nz-btn-size-normal nz-btn-style-light margin-l-20" id="dc-add">
             <i class="nz-icon-create-square nz-icon"></i>
           </button>
-          <delete-button :delete-objs="batchDeleteObjs" api="idc" @after="getTableData"></delete-button>
+          <delete-button :delete-objs="batchDeleteObjs" @after="getTableData" api="idc" v-has="'dc_delete'"></delete-button>
         </div>
         <div class="pagination-top pagination-top-hide display-none"></div>
       </div>
@@ -64,11 +64,11 @@
         >
           <template slot-scope="scope" :column="item">
             <div v-if="item.prop == 'option'" class="content-right-options">
-              <span :title="$t('overall.edit')" @click="edit(scope.row)" class="content-right-option" :id="'dc-edit-'+scope.row.id"><i class="nz-icon nz-icon-edit"></i></span>
+              <span :id="'dc-edit-'+scope.row.id" :title="$t('overall.edit')" @click="edit(scope.row)" class="content-right-option" v-has="'dc_toEdit'"><i class="nz-icon nz-icon-edit"></i></span>
               &nbsp;
-              <span :title="$t('config.dc.traffic.title')" @click="configTraffic(scope.row)" class="content-right-option" :id="'dc-setting-'+scope.row.id" ><i class="nz-icon nz-icon-gear"></i></span>
+              <span :id="'dc-setting-'+scope.row.id" :title="$t('config.dc.traffic.title')" @click="configTraffic(scope.row)" class="content-right-option" v-has="'dc_trafficSetting'" ><i class="nz-icon nz-icon-gear"></i></span>
               &nbsp;
-              <span :title="$t('overall.delete')" @click="del(scope.row)" class="content-right-option" :id="'dc-del-'+scope.row.id"><i class="nz-icon nz-icon-delete"></i></span>
+              <span :id="'dc-del-'+scope.row.id" :title="$t('overall.delete')" @click="del(scope.row)" class="content-right-option" v-has="'dc_delete'"><i class="nz-icon nz-icon-delete"></i></span>
             </div>
             <template v-else-if="item.prop == 'principal'">
               <template v-if="scope.row.principal">
@@ -83,6 +83,7 @@
                 v-model="scope.row.state"
                 active-value="ON"
                 inactive-value="OFF"
+                :disabled="!hasButton('dc_toEdit')"
                 active-color="#ee9d3f"
                 @change="(val)=>{statusChange(scope.row)}"
               />
@@ -130,7 +131,7 @@
       </div>
     </div>
     <transition name="el-zoom-in-bottom">
-      <bottom-box v-if="bottomBox.showSubList" :sub-resize-show="bottomBox.subResizeShow" :obj="bottomBox.dc" :is-full-screen="bottomBox.isFullScreen" :from="'dc'" :target-tab.sync="bottomBox.targetTab" :detail="bottomBox.dcDetail"
+      <bottom-box :detail="bottomBox.dcDetail" :from="$CONSTANTS.fromRoute.dc" :is-full-screen="bottomBox.isFullScreen" :obj="bottomBox.dc" :sub-resize-show="bottomBox.subResizeShow" :target-tab.sync="bottomBox.targetTab" v-if="bottomBox.showSubList"
                   @closeSubList="bottomBox.showSubList = false" @fullScreen="fullScreen" @exitFullScreen="exitFullScreen" @listResize="listResize" ></bottom-box>
     </transition>
     <!--dc table end-->

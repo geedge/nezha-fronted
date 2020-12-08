@@ -398,7 +398,8 @@ const cn = {
     resetSuccess: "重置成功",
     syncSuccess:'同步成功',
     syncTip:"此操作可能造成原有数据或图表被覆盖，确认同步吗？",
-    noImportFile:'没有可导入的文件'
+    noImportFile:'没有可导入的文件',
+    noAccess: "无访问权限",
   },
   asset: {
     asset: "资产",

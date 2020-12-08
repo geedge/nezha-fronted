@@ -33,16 +33,17 @@
           <div class="top-tool-search float-right">
             <search-input :searchMsg="searchMsg" @search="search" :inTransform="bottomBox.inTransform"></search-input>
           </div>
-          <pick-time  :showTimePicker="false" class="float-right pickTime margin-l-20" :refresh-data-func="getTableData" v-model="searchTime" :use-chart-unit="false" ref="pickTime"></pick-time>
+          <pick-time :refresh-data-func="getTableData" :showTimePicker="false" :use-chart-unit="false" class="float-right pickTime margin-l-20" ref="pickTime" v-model="searchTime"></pick-time>
           <export-excel
             export-file-name="AlertRule"
             export-url="/alert/rule/export"
             import-url="/alert/rule/import"
             :params="searchLabel"
+            :permissions="{import: 'rule_import', export: 'rule_export'}"
             @afterImport="getTableData"
           >
             <template slot="optionZone">
-              <button id="alert-add" @click="add"  :title="$t('overall.createAlertRule')"
+              <button :title="$t('overall.createAlertRule')" @click="add" id="alert-add" v-has="'rule_toAdd'"
                       class="nz-btn nz-btn-size-normal nz-btn-style-light">
                 <i class="nz-icon-create-square nz-icon"></i>
               </button>
@@ -98,8 +99,8 @@
           <template slot-scope="scope" :column="item">
             <div v-if="item.prop == 'option'" class="content-right-options">
               <span :title="$t('overall.view')" @click="detail(scope.row)" class="content-right-option" :id="'alert-detail-'+scope.row.id"><i class="nz-icon nz-icon-view"></i></span>&nbsp;
-              <span v-if="scope.row.buildIn != 1" :title="$t('overall.edit')" @click="edit(scope.row)" class="content-right-option" :id="'alert-edit-'+scope.row.id"><i class="nz-icon nz-icon-edit"></i></span>&nbsp;
-              <span :title="$t('overall.delete')" @click="del(scope.row)" class="content-right-option" :id="'alert-del-'+scope.row.id"><i  class="nz-icon nz-icon-delete"></i></span>
+              <span :id="'alert-edit-'+scope.row.id" :title="$t('overall.edit')" @click="edit(scope.row)" class="content-right-option" v-has="'rule_toEdit'" v-if="scope.row.buildIn != 1"><i class="nz-icon nz-icon-edit"></i></span>&nbsp;
+              <span :id="'alert-del-'+scope.row.id" :title="$t('overall.delete')" @click="del(scope.row)" class="content-right-option" v-has="'rule_delete'"><i  class="nz-icon nz-icon-delete"></i></span>
             </div>
             <span v-else-if="item.prop == 'severity'" class="severity">
               <span v-if="scope.row[item.prop] == 'P1'" class="P1">P1</span>
@@ -136,7 +137,7 @@
       </div>
     </div>
     <transition name="el-zoom-in-bottom">
-      <bottom-box v-if="bottomBox.showSubList" :sub-resize-show="bottomBox.subResizeShow" :obj="bottomBox.alertRule" :is-full-screen="bottomBox.isFullScreen" :from="'alertRule'" :target-tab.sync="bottomBox.targetTab" :detail="bottomBox.ruleDetail"
+      <bottom-box :detail="bottomBox.ruleDetail" :from="$CONSTANTS.fromRoute.rule" :is-full-screen="bottomBox.isFullScreen" :obj="bottomBox.alertRule" :sub-resize-show="bottomBox.subResizeShow" :target-tab.sync="bottomBox.targetTab" v-if="bottomBox.showSubList"
                   @closeSubList="bottomBox.showSubList = false" @fullScreen="fullScreen" @exitFullScreen="exitFullScreen" @listResize="listResize" ></bottom-box>
     </transition>
     <transition name="right-box">

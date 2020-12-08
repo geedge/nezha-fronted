@@ -1,7 +1,12 @@
-import Vue from 'vue';
 import router from './router';
 import store from './store';
 import {post} from './http';
+import ElementUI from 'element-ui';
+import Vue from 'vue';
+import i18n from './components/common/i18n';
+import VueResource from 'vue-resource'
+
+Vue.use(VueResource);
 
 const loginWhiteList = ['/login']; // 免登陆白名单
 const permissionWhiteList = ['/login']; // 权限白名单
@@ -11,24 +16,28 @@ router.beforeEach((to, from, next) => {
     if (loginWhiteList.indexOf(to.path) !== -1) {
       next();
     } else {
-      new Promise(resolve => {
-        if (store.getters.menuList.length === 0) {
-          post("/sys/user/permissions", {token: sessionStorage.getItem("nz-token")}).then(res => {
-            store.commit("setMenuList", res.data.menus);
-            store.commit("setButtonList", res.data.buttons);
-            store.commit("setRoleList", res.data.roles);
+      let configUrl = "static/config.json?Timestamp=" + new Date().getTime();
+      let result = Vue.http.get(configUrl).then(res => {
+        new Promise(resolve => {
+          if (store.getters.menuList.length === 0) {
+            post(res.body.baseUrl + "/sys/user/permissions", {token: sessionStorage.getItem("nz-token")}).then(res => {
+              store.commit("setMenuList", sortByOrderNum(res.data.menus));
+              store.commit("setButtonList", res.data.buttons);
+              store.commit("setRoleList", res.data.roles);
+              resolve();
+            });
+          } else {
             resolve();
-          });
-        } else {
-          resolve();
-        }
-      }).then(res => {
-        let has = hasMenu(store.getters.menuList, to.path);
-        if (has) {
-          next();
-        } else {
-          next({ path: '/login'})
-        }
+          }
+        }).then(res => {
+          if (to.path) {
+            if (hasMenu(store.getters.menuList, to.path)) {
+              next();
+            } else {
+              ElementUI.Message.error(i18n.t("tip.noAccess"));
+            }
+          }
+        });
       });
     }
   } else {
@@ -40,14 +49,77 @@ router.beforeEach((to, from, next) => {
   }
 });
 
-function hasMenu(menuList, route) {
+//menuList中是否包含route权限
+export function hasMenu(menuList, route) {
   return menuList.some(menu => {
     if (menu.route == route) {
       return true;
     } else {
       if (menu.children) {
-        hasMenu(menu.children, route);
+        if (hasMenu(menu.children, route)) {
+          return true;
+        }
       }
     }
   });
+}
+
+export function hasButton(buttonList, code) {
+  return buttonList.some(button => button == code);
+}
+
+//用法 v-has="code" | v-has="[code...]" 任意匹配一个 | v-has:all="[code...]" 全匹配
+export const hasPermission = {
+  install (Vue, options) {
+    Vue.directive('has', {
+      inserted: (el, binding, vnode)=>{
+        //节点权限处理
+        let buttonCode = binding.value;
+        let arg = binding.arg;
+        if (buttonCode) {
+          if (buttonCode instanceof Array) {
+            let has = true;
+            if (arg && arg === 'all') { //全匹配
+              buttonCode.forEach(button => {
+                if (has) {
+                  has = hasButton(store.getters.buttonList, button);
+                }
+              });
+            } else { //任意匹配
+              has = buttonCode.some(button => {
+                return hasButton(store.getters.buttonList, button);
+              });
+            }
+            if (!has) {
+              el.parentNode.removeChild(el);
+            }
+          } else { //单个匹配
+            if (!hasButton(store.getters.buttonList, buttonCode)) {
+              el.parentNode.removeChild(el);
+            }
+          }
+        }
+      }
+    });
+  }
+};
+
+//根据orderNum排序
+export function sortByOrderNum(menuList) {
+  let r = menuList.sort((a, b) => {
+    return a.orderNum - b.orderNum;
+  });
+  r.forEach(menu => {
+    if (menu.children && getChildMenu(menu).length > 0) {
+      menu.children = menu.children.sort((a, b) => {
+        return a.orderNum - b.orderNum;
+      });
+      menu.route = menu.children[0].route;
+    }
+  });
+  return r;
+}
+
+function getChildMenu(menu) {
+  return menu.children.filter(m => m.type == 1);
 }

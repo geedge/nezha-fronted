@@ -2,7 +2,7 @@
   <div class="right-box right-box-prom" v-clickoutside="clickOutside">
     <!-- begin--顶部按钮-->
     <div class="right-box-top-btns right-box-form-delete">
-      <button type="button" v-if="editPromServer.id" @click="del"
+      <button @click="del" type="button" v-has="'prom_delete'" v-if="editPromServer.id"
               class="nz-btn nz-btn-size-normal nz-btn-size-alien"
               id="promServer-edit-del">
         <span class="right-box-top-btn-icon"><i class="nz-icon nz-icon-delete"></i></span>
@@ -57,7 +57,7 @@
               class="nz-btn nz-btn-size-normal-new nz-btn-style-light-new">
         <span>{{$t('overall.cancel')}}</span>
       </button>
-      <button @click="save" id="prom-save"
+      <button @click="save" id="prom-save" v-has="'prom_save'"
               class="nz-btn nz-btn-size-normal-new nz-btn-style-normal-new">
         <span>{{$t('overall.save')}}</span>
       </button>

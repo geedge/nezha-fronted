@@ -147,7 +147,7 @@
             </el-popover>
           </div>
           <div v-else-if="item.prop == 'option'" class="content-right-options">
-            <span :title="$t('overall.delete')" @click="toDeleteMessage(scope.row)" class="content-right-option" :id="'alert-list-delete-'+scope.row.id"><i  class="nz-icon nz-icon-delete"></i></span>
+            <span :id="'alert-list-delete-'+scope.row.id" :title="$t('overall.delete')" @click="toDeleteMessage(scope.row)" class="content-right-option" v-has="`${from}_delete`"><i  class="nz-icon nz-icon-delete"></i></span>
           </div>
           <span v-else-if="scope.row[item.prop]">{{scope.row[item.prop]}}</span>
           <template v-else>-</template>
@@ -242,6 +242,7 @@
         type:Boolean,
         default:true,
       },
+      from: {type: String}
     },
     data() {
       vm = this;

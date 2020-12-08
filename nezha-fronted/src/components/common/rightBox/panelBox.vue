@@ -3,7 +3,7 @@
     <div class="right-box right-box-panel z-top" v-if="rightBox.show" v-clickoutside="clickos">
       <!-- begin--顶部按钮-->
       <div class="right-box-top-btns right-box-form-delete">
-        <button type="button" v-if="panel.id != ''" @click="del(panel)" class="nz-btn nz-btn-size-normal nz-btn-size-alien nz-btn-min-width-82">
+        <button @click="del(panel)" class="nz-btn nz-btn-size-normal nz-btn-size-alien nz-btn-min-width-82" type="button" v-has="'panel_delete'" v-if="panel.id != ''">
           <span class="right-box-top-btn-icon"><i class="nz-icon nz-icon-delete"></i></span>
           <span class="right-box-top-btn-txt">{{$t('overall.delete')}}</span>
         </button>
@@ -29,7 +29,7 @@
         <button @click="esc" id="module-box-esc" class="nz-btn nz-btn-size-normal-new nz-btn-style-light-new">
           <span>{{$t('overall.cancel')}}</span>
         </button>
-        <button @click="save" id="module-box-save" class="nz-btn nz-btn-size-normal-new nz-btn-style-normal-new">
+        <button @click="save" class="nz-btn nz-btn-size-normal-new nz-btn-style-normal-new" id="module-box-save" v-has="'panel_save'">
           <span>{{$t('overall.save')}}</span>
         </button>
       </div>

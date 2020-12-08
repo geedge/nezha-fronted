@@ -12,9 +12,8 @@
           <div class="top-tool-search">
             <search-input :searchMsg="searchMsg" @search="search" :bottomBox.inTransform="bottomBox.inTransform"></search-input>
           </div>
-          <button @click="add" class="nz-btn nz-btn-size-normal nz-btn-style-light margin-l-20"  :title="$t('overall.createModel')"
-                  id="model-add">
-                    <i class="nz-icon-create-square nz-icon"></i>
+          <button :title="$t('overall.createModel')" @click="add" class="nz-btn nz-btn-size-normal nz-btn-style-light margin-l-20" id="model-add" v-has="'model_toAdd'">
+            <i class="nz-icon-create-square nz-icon"></i>
           </button>
           <delete-button :delete-objs="batchDeleteObjs" api="model" @after="getTableData"></delete-button>
         </div>
@@ -74,9 +73,9 @@
                 </el-popover>
             </template>
             <div v-else-if="item.prop == 'option'" class="content-right-options">
-              <span :title="$t('dashboard.panel.title')" @click="panel(scope.row)" class="content-right-option" :id="'model-panel-'+scope.row.id"><i class="nz-icon nz-icon-template"></i></span>
-              <span :title="$t('overall.edit')" @click="edit(scope.row)" class="content-right-option" :id="'model-edit-'+scope.row.id"><i class="nz-icon nz-icon-edit"></i></span>
-              <span :title="$t('overall.delete')" @click="del(scope.row)" class="content-right-option" :id="'model-del-'+scope.row.id"><i class="nz-icon nz-icon-delete"></i></span>
+              <span :id="'model-panel-'+scope.row.id" :title="$t('dashboard.panel.title')" @click="panel(scope.row)" class="content-right-option" v-has="'model_panel'"><i class="nz-icon nz-icon-template"></i></span>
+              <span :id="'model-edit-'+scope.row.id" :title="$t('overall.edit')" @click="edit(scope.row)" class="content-right-option" v-has="'model_toEdit'"><i class="nz-icon nz-icon-edit"></i></span>
+              <span :id="'model-del-'+scope.row.id" :title="$t('overall.delete')" @click="del(scope.row)" class="content-right-option" v-has="'model_delete'"><i class="nz-icon nz-icon-delete"></i></span>
             </div>
             <template v-else-if="scope.row[item.prop]">{{scope.row[item.prop]}}</template>
             <template v-else>-</template>
@@ -96,7 +95,7 @@
       </div>
     </div>
     <transition name="el-zoom-in-bottom">
-      <bottom-box v-if="bottomBox.showSubList" :sub-resize-show="bottomBox.subResizeShow" :is-fullscreen="bottomBox.isFullScreen" from="model" :target-tab.sync="bottomBox.targetTab" :obj="bottomBox.model"
+      <bottom-box :from="$CONSTANTS.fromRoute.model" :is-fullscreen="bottomBox.isFullScreen" :obj="bottomBox.model" :sub-resize-show="bottomBox.subResizeShow" :target-tab.sync="bottomBox.targetTab" v-if="bottomBox.showSubList"
                   @closeSubList="bottomBox.showSubList = false" @fullScreen="fullScreen" @exitFullScreen="exitFullScreen" @listResize="listResize" ref="panelBox"></bottom-box>
     </transition>
     <transition name="right-box">

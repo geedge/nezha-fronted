@@ -10,17 +10,18 @@
             export-url="/asset/export"
             import-url="/asset/import"
             :params="searchLabel"
+            :permissions="{import: 'asset_import', export: 'asset_export'}"
             @afterImport="afterTableListChange"
           >
             <template slot="optionZone">
-              <button @click.stop="add" :title="$t('overall.createAsset')" class="nz-btn nz-btn-size-normal nz-btn-style-light" id="asset-create-asset">
+              <button :title="$t('overall.createAsset')" @click.stop="add" class="nz-btn nz-btn-size-normal nz-btn-style-light" id="asset-create-asset" v-has="'asset_toAdd'">
                 <i class="nz-icon nz-icon-create-square"></i></button>
             </template>
           </export-excel>
-          <button style="margin-left: 15px" @click.stop="batchEdit" :title="$t('overall.batchEdit')" class="nz-btn nz-btn-size-normal nz-btn-style-light" id="asset-batch-asset">
+          <button :title="$t('overall.batchEdit')" @click.stop="batchEdit" class="nz-btn nz-btn-size-normal nz-btn-style-light" id="asset-batch-asset" style="margin-left: 15px" v-has="'asset_toBatchEdit'">
             <i class="nz-icon nz-icon-batch-edit"></i>
           </button>
-          <delete-button :delete-objs="batchDeleteObjs" api="asset" @after="afterTableListChange"></delete-button>
+          <delete-button :delete-objs="batchDeleteObjs" @after="afterTableListChange" api="asset" v-has="'asset_delete'"></delete-button>
         </div>
         <div class="pagination-top pagination-top-hide display-none"></div>
       </div>
@@ -147,22 +148,22 @@
               class="nz-icon nz-icon-view"></i>
             </span>
               &nbsp;
-              <span :title="$t('overall.edit')" @click.stop="edit(scope.row)" class="content-right-option" :id="'asset-edit-'+scope.row.id"><i
+              <span :id="'asset-edit-'+scope.row.id" :title="$t('overall.edit')" @click.stop="edit(scope.row)" class="content-right-option" v-has="'asset_toEdit'"><i
                 class="nz-icon nz-icon-edit"></i>
             </span>
               &nbsp;
-              <span :title="$t('overall.delete')" @click.stop="del(scope.row)" class="content-right-option" :id="'asset-del-'+scope.row.id"><i
+              <span :id="'asset-del-'+scope.row.id" :title="$t('overall.delete')" @click.stop="del(scope.row)" class="content-right-option" v-has="'asset_delete'"><i
                 class="nz-icon nz-icon-delete"></i>
             </span>
               &nbsp;
-              <el-dropdown trigger="hover" @command="cli">
+            <el-dropdown @command="cli" trigger="hover" v-has="'asset_connect'">
               <span title="CLI" class="content-right-option" :id="'asset-ssh-'+scope.row.id"><i
                 class="nz-icon nz-icon-cli" :class="{'gray-filter': !scope.row.accounts || scope.row.accounts.length == 0 || (scope.row.accounts.length==1&&scope.row.accounts.find(t=>t.protocol == 'SNMP'))}"></i>
               </span>
-                <el-dropdown-menu slot="dropdown">
-                  <el-dropdown-item v-for="(account, index) in scope.row.accounts" v-if="account && account.protocol != 'SNMP'" :key="index" :command="[scope.row.id ,scope.row.host, account]">{{account.protocol}}</el-dropdown-item>
-                </el-dropdown-menu>
-              </el-dropdown>
+              <el-dropdown-menu slot="dropdown">
+                <el-dropdown-item :command="[scope.row.id ,scope.row.host, account]" :key="index" v-for="(account, index) in scope.row.accounts" v-if="account && account.protocol != 'SNMP'">{{account.protocol}}</el-dropdown-item>
+              </el-dropdown-menu>
+            </el-dropdown>
             </template>
           </template>
         </el-table-column>
@@ -180,7 +181,7 @@
       </div>
     </div>
     <transition name="el-zoom-in-bottom">
-      <bottom-box v-if="bottomBox.showSubList" :sub-resize-show="bottomBox.subResizeShow" :obj="bottomBox.asset" :isFullScreen="bottomBox.isFullScreen" :from="'asset'" :targetTab.sync="bottomBox.targetTab" :detail="bottomBox.assetDetail"
+      <bottom-box :detail="bottomBox.assetDetail" :from="$CONSTANTS.fromRoute.asset" :isFullScreen="bottomBox.isFullScreen" :obj="bottomBox.asset" :sub-resize-show="bottomBox.subResizeShow" :targetTab.sync="bottomBox.targetTab" v-if="bottomBox.showSubList"
                   @reload="getTableData"
                   @closeSubList="bottomBox.showSubList = false"
                   @fullScreen="fullScreen"

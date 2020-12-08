@@ -19,7 +19,7 @@
       <button type="button" @click="esc" id="project-esc" class="nz-btn nz-btn-size-normal-new nz-btn-style-light-new">
         <span>{{$t('overall.cancel')}}</span>
       </button>
-      <button type="button" @click="save" id="project-save" class="nz-btn nz-btn-size-normal-new nz-btn-style-normal-new">
+      <button @click="save" class="nz-btn nz-btn-size-normal-new nz-btn-style-normal-new" id="project-save" type="button" v-has="'dc_trafficSetting_save'">
         <span>{{$t('overall.save')}}</span>
       </button>
     </div>

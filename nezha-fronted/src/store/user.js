@@ -1,6 +1,8 @@
 import {post} from '../http';
 import router from '../router';
 import bus from '../libs/bus';
+import {sortByOrderNum} from "../permission";
+import store from "./index";
 
 const user = {
   state: {
@@ -40,13 +42,14 @@ const user = {
       localStorage.setItem('nz-sys-asset-ping-switch',res.data.assetPingSwitch);
 
       post("/sys/user/permissions", {token: res.data.token}).then(res => {
-        store.commit("setMenuList", res.data.menus);
+        let menuList = sortByOrderNum(res.data.menus);
+        store.commit("setMenuList", menuList);
         store.commit("setButtonList", res.data.buttons);
         store.commit("setRoleList", res.data.roles);
 
         bus.$emit("login");
         router.push({
-          path: "/overview",
+          path: menuList.find(menu => menu.route).route,
           query: {
             t: +new Date()
           }

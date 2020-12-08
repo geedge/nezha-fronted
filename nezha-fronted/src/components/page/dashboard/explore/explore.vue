@@ -7,7 +7,7 @@
             <pick-time :refresh-data-func="expressionChange" v-model="filterTime" @unitChange="chartUnitChange" ref="pickTime">
               <template slot="added-text">{{$t('dashboard.metricPreview.runQuery')}}</template>
             </pick-time>
-            <button :disabled="saveDisabled" type="button" @click="saveChart"
+            <button :disabled="saveDisabled" @click="saveChart" type="button" v-has="'explore_chart_toAdd'"
                     class="nz-btn nz-btn-size-large nz-btn-style-normal nz-btn-min-width-120"
                     :class="{'nz-btn-disabled btn-disabled-cursor-not-allowed' : saveDisabled}">
               {{$t('dashboard.metric.saveChart')}}
@@ -201,7 +201,7 @@ instance_cpu_time_ns{app="fox", proc="widget", rev="4d3a513", env="prod", job="c
 
     </div>
     <transition name="right-box">
-      <chart-box v-if="rightBox.show" :chart="chart" ref="addChartModal" @close="handleBox(false)" :panel-data="panelData" @on-create-success="createSuccess" :show-panel="{id: -1, name: '', type: 'explore'}"></chart-box>
+      <chart-box :chart="chart" :from="$CONSTANTS.explore" :panel-data="panelData" :show-panel="{id: -1, name: '', type: 'explore'}" @close="handleBox(false)" @on-create-success="createSuccess" ref="addChartModal" v-if="rightBox.show"></chart-box>
     </transition>
   </div>
 </template>

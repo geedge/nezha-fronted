@@ -14,11 +14,11 @@
           <div class="top-tool-search">
             <search-input ref="searchInput" :searchMsg="searchMsg" @search="search" :inTransform="bottomBox.inTransform"></search-input>
           </div>
-          <button type="button" @click="add" :title="$t('overall.createAccount')"
+          <button :title="$t('overall.createAccount')" @click="add" type="button" v-has="'account_toAdd'"
                   class="nz-btn nz-btn-size-normal nz-btn-style-light margin-l-20" id="account-add">
             <i class="nz-icon-create-square nz-icon"></i>
           </button>
-          <delete-button :delete-objs="batchDeleteObjs" api="sys/user/delete" @after="getTableData" :filter-function="(arr)=>{return '?userIds='+arr.map(t=>t.userId).join(',')}"></delete-button>
+          <delete-button :delete-objs="batchDeleteObjs" :filter-function="(arr)=>{return '?userIds='+arr.map(t=>t.userId).join(',')}" @after="getTableData" api="sys/user/delete" v-has="'account_delete'"></delete-button>
         </div>
         <!-- 顶部分页组件，当打开底部上滑框时出现 -->
         <div class="pagination-top pagination-top-hide display-none"></div>
@@ -68,11 +68,9 @@
           </template>
           <template slot-scope="scope" :column="item">
             <div v-if="item.prop == 'option'" class="content-right-options">
-              <!--<span :title="$t('overall.view')" @click="detail(scope.row)" class="content-right-option" :id="'account-detail-'+scope.row.id"><i class="nz-icon nz-icon-view"></i></span>
-              &nbsp;-->
-              <span :title="$t('overall.edit')" @click="edit(scope.row)" class="content-right-option" :id="'account-edit-'+scope.row.id"><i class="nz-icon nz-icon-edit"></i></span>
+              <span :id="'account-edit-'+scope.row.id" :title="$t('overall.edit')" @click="edit(scope.row)" class="content-right-option" v-has="'account_toEdit'"><i class="nz-icon nz-icon-edit"></i></span>
               &nbsp;
-              <span :title="$t('overall.delete')" @click="del(scope.row)" class="content-right-option" :id="'account-del-'+scope.row.id"><i class="nz-icon nz-icon-delete"></i></span>
+              <span :id="'account-del-'+scope.row.id" :title="$t('overall.delete')" @click="del(scope.row)" class="content-right-option" v-has="'account_delete'"><i class="nz-icon nz-icon-delete"></i></span>
             </div>
             <span v-else-if="item.prop == 'lang'">
                 {{scope.row[item.prop] == 'en' ? 'English' : ''}}
@@ -88,7 +86,7 @@
                   active-value="1"
                   inactive-value="0"
                   active-color="#ee9d3f"
-                  :disabled="isCurrentUser(scope.row.username)"
+                  :disabled="isCurrentUser(scope.row.username) || !hasButton('account_toEdit')"
                   @change="(val)=>{statusChange(scope.row)}">
                 </el-switch>
             </span>

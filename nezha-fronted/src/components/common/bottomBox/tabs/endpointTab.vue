@@ -16,16 +16,17 @@
           export-url="/endpoint/export"
           import-url="/endpoint/import"
           :params="endpointSearchLabel"
+          :permissions="{import: 'asset_endpoint_import', export: 'asset_endpoint_export'}"
           @afterImport="getTableData"
           class="margin-l-20"
         >
           <template slot="optionZone">
-            <button @click.stop="add" :title="$t('overall.createEndpoint')" class="nz-btn nz-btn-size-normal nz-btn-style-light" id="project-create-project">
+            <button :title="$t('overall.createEndpoint')" @click.stop="add" class="nz-btn nz-btn-size-normal nz-btn-style-light" id="project-create-project" v-has="'asset_endpoint_toAdd'">
               <i class="nz-icon nz-icon-create-square"></i>
             </button>
           </template>
         </export-excel>
-        <delete-button :delete-objs="batchDeleteObjs" api="endpoint" @after="getTableData"></delete-button>
+        <delete-button :delete-objs="batchDeleteObjs" @after="getTableData" api="endpoint" v-has="'asset_endpoint_delete'"></delete-button>
       </div>
     </div>
     <!-- 自定义table列 -->
@@ -90,14 +91,15 @@
           </span>
           <template v-else-if="item.prop == 'type'">{{scope.row.module.type}}</template>
           <div v-else-if="item.prop == 'option'">&nbsp;
-                <span
-                  :title="$t('overall.edit')"
-                  @click="editEndpoint(scope.row)"
-                  class="content-right-option"
-                  :id="'edp-edit-'+scope.row.id">
-                  <i class="nz-icon nz-icon-edit"></i>
-                </span>
-            <span :title="$t('overall.delete')" @click.stop="delEndpoint(scope.row)" class="content-right-option" :id="'asset-del-'+scope.row.id"><i class="nz-icon nz-icon-delete"></i></span>
+            <span
+              :id="'edp-edit-'+scope.row.id"
+              :title="$t('overall.edit')"
+              @click="editEndpoint(scope.row)"
+              class="content-right-option"
+              v-has="'asset_endpoint_toEdit'">
+              <i class="nz-icon nz-icon-edit"></i>
+            </span>
+            <span :id="'asset-del-'+scope.row.id" :title="$t('overall.delete')" @click.stop="delEndpoint(scope.row)" class="content-right-option" v-has="'asset_endpoint_delete'"><i class="nz-icon nz-icon-delete"></i></span>
           </div>
           <span v-else-if="item.prop == 'lastUpdate'">{{dateFormat(scope.row.lastUpdate)}}</span>
           <span v-else-if="item.prop == 'state'" >

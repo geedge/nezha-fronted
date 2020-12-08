@@ -145,3 +145,17 @@ export const setting = {
       {value:'OFF',label: i18n.t('config.dc.suspended')}
     ]
 };
+
+//公共组件的跳转来源
+export const fromRoute = {
+  panel: "panel",
+  explore: "explore",
+  message: "message",
+  rule: "rule",
+  model: "model",
+  asset: "asset",
+  dc: "dc",
+  endpoint: "endpoint",
+  project: "project",
+  endpointQuery: "endpointQuery"
+};

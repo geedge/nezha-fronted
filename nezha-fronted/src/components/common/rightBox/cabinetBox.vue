@@ -2,7 +2,7 @@
   <div class="right-box right-box-cabinet" v-clickoutside="clickOutside">
     <!-- begin--顶部按钮-->
     <div class="right-box-top-btns right-box-form-delete">
-      <button id="cab-del" type="button" v-if="!editCabinet.id" @click="del" class="nz-btn nz-btn-size-normal nz-btn-size-alien">
+      <button @click="del" class="nz-btn nz-btn-size-normal nz-btn-size-alien" id="cab-del" type="button" v-has="'dc_cabinet_delete'" v-if="!editCabinet.id">
         <span class="right-box-top-btn-icon"><i class="nz-icon nz-icon-delete"></i></span>
         <span class="right-box-top-btn-txt">{{$t('overall.delete')}}</span>
       </button>
@@ -36,7 +36,7 @@
       <button @click="esc" id="cab-box-esc" class="nz-btn nz-btn-size-normal nz-btn-style-light nz-btn-min-width-100">
         <span>{{$t('overall.cancel')}}</span>
       </button>
-      <button @click="save" id="cab-box-save" class="nz-btn nz-btn-size-normal nz-btn-style-normal nz-btn-min-width-100">
+      <button @click="save" class="nz-btn nz-btn-size-normal nz-btn-style-normal nz-btn-min-width-100" id="cab-box-save" v-has="'dc_cabinet_save'">
         <span>{{$t('overall.save')}}</span>
       </button>
     </div>

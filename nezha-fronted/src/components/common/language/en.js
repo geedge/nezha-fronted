@@ -402,7 +402,8 @@ const en = {
     resetSuccess:'Reset success',
     syncSuccess:'Synchronize success',
     syncTip:'This operation may cause the original data or chart to be overwritten. Are you sure to synchronize?',
-    noImportFile:'No import file found'
+    noImportFile:'No import file found',
+    noAccess: "No access",
   },
   asset:{
     asset: 'Asset',

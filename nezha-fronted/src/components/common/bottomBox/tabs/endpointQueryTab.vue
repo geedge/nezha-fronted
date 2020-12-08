@@ -112,13 +112,13 @@
         {{$t("project.endpoint.dialogTitle")}}
         <div class="float-right panel-calendar dialog-tool" style="display: flex">
           <pick-time :refresh-data-func="queryChartDate" :use-refresh="false" v-model="searchTime" style="height: 28px;" @unitChange="chartUnitChange"></pick-time>
-          <button class="nz-btn nz-btn-size-large nz-btn-style-normal-new" @click="saveChart">{{$t('dashboard.metric.saveChart')}}</button>
+          <button @click="saveChart" class="nz-btn nz-btn-size-large nz-btn-style-normal-new" v-has="'project_endpoint_query_chart_toAdd'">{{$t('dashboard.metric.saveChart')}}</button>
         </div>
       </div>
       <chart ref="endpointChart" :unit="chartUnit"></chart>
     </el-dialog>
     <transition name="right-box">
-      <chart-box v-if="rightBox.show" @close="rightBox.show = false" :chart="chart" ref="addChartModal" :panel-data="panelData" @on-create-success="createSuccess" @reloadOnlyPanel="getPanelData" @reload="getPanelData" :show-panel="{id: -1, name: '', type: 'endpointQuery'}" box-class="save-chart-box"></chart-box>
+      <chart-box :chart="chart" :panel-data="panelData" :show-panel="{id: -1, name: '', type: 'endpointQuery'}" @close="rightBox.show = false" @on-create-success="createSuccess" @reload="getPanelData" @reloadOnlyPanel="getPanelData" box-class="save-chart-box" from="project_endpoint_query" ref="addChartModal" v-if="rightBox.show"></chart-box>
     </transition>
   </span>
 </template>

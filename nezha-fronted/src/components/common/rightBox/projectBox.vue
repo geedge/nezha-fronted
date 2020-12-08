@@ -2,7 +2,7 @@
   <div class="right-box right-box-project" v-clickoutside="clickOutside">
     <!-- begin--顶部按钮-->
     <div class="right-box-top-btns right-box-form-delete">
-      <button id="project-del" type="button" v-if="project.id" @click="del" class="nz-btn nz-btn-size-normal nz-btn-size-alien">
+      <button @click="del" class="nz-btn nz-btn-size-normal nz-btn-size-alien" id="project-del" type="button" v-has="'project_delete'" v-if="project.id">
         <span class="right-box-top-btn-icon"><i class="nz-icon nz-icon-delete"></i></span>
         <span class="right-box-top-btn-txt">{{$t('overall.delete')}}</span>
       </button>
@@ -28,7 +28,7 @@
       <button @click="esc" id="project-esc" class="nz-btn nz-btn-size-normal-new nz-btn-style-light-new">
         <span>{{$t('overall.cancel')}}</span>
       </button>
-      <button @click="save" id="project-save" class="nz-btn nz-btn-size-normal-new nz-btn-style-normal-new">
+      <button @click="save" class="nz-btn nz-btn-size-normal-new nz-btn-style-normal-new" id="project-save" v-has="'project_save'">
         <span>{{$t('overall.save')}}</span>
       </button>
     </div>
