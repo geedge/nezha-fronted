@@ -14,11 +14,11 @@
           <div class="top-tool-search">
             <search-input :searchMsg="searchMsg" @search="search" ref="searchInput" ></search-input>
           </div>
-          <button :title="$t('overall.createRoles')" @click="add" class="nz-btn nz-btn-size-normal nz-btn-style-light margin-l-20"
+          <button :title="$t('overall.createRoles')" @click="add" class="nz-btn nz-btn-size-normal nz-btn-style-light margin-l-20" v-has="'rule_toAdd'"
                   id="roles-add" type="button">
             <i class="nz-icon-create-square nz-icon"></i>
           </button>
-          <delete-button :delete-objs="batchDeleteObjs" :filter-function="(arr)=>{return '?ids='+arr.map(t=>t.id).join(',')}" @after="getTableData" api="sys/role"></delete-button>
+          <delete-button :delete-objs="batchDeleteObjs" :filter-function="(arr)=>{return '?ids='+arr.map(t=>t.id).join(',')}" @after="getTableData" api="sys/role" v-has="'rule_delete'"></delete-button>
         </div>
         <!-- 顶部分页组件，当打开底部上滑框时出现 -->
         <div class="pagination-top pagination-top-hide display-none"></div>
@@ -68,9 +68,9 @@
           <template :column="item" slot-scope="scope">
             <div class="content-right-options" v-if="item.prop == 'option'">
               <template v-if="scope.row.buildIn != 1">
-                <span :id="'roles-edit-'+scope.row.id" :title="$t('overall.edit')" @click="edit(scope.row)" class="content-right-option"><i :class="{'gray-filter':scope.row.buildIn == 1}" class="nz-icon nz-icon-edit"></i></span>
+                <span :id="'roles-edit-'+scope.row.id" :title="$t('overall.edit')" @click="edit(scope.row)" class="content-right-option" v-has="'rule_toEdit'"><i :class="{'gray-filter':scope.row.buildIn == 1}" class="nz-icon nz-icon-edit"></i></span>
                 &nbsp;
-                <span :id="'roles-del-'+scope.row.id" :title="$t('overall.delete')" @click="del(scope.row)" class="content-right-option"><i :class="{'gray-filter':scope.row.buildIn == 1}" class="nz-icon nz-icon-delete"></i></span>
+                <span :id="'roles-del-'+scope.row.id" :title="$t('overall.delete')" @click="del(scope.row)" class="content-right-option" v-has="'rule_delete'"><i :class="{'gray-filter':scope.row.buildIn == 1}" class="nz-icon nz-icon-delete"></i></span>
               </template>
               <template v-else>
                 <span :id="'roles-detail-'+scope.row.id" :title="$t('overall.view')" @click="detail(scope.row)" class="content-right-option"><i class="nz-icon nz-icon-view"></i></span>

@@ -3,7 +3,7 @@
     <!-- begin--顶部按钮-->
     <div class="right-box-top-btns right-box-form-delete">
       <button @click="del" class="nz-btn nz-btn-size-normal nz-btn-size-alien" id="roles-edit-del"
-              type="button"
+              type="button" v-has="'rule_delete'"
               v-if="editRole.id && !detail">
         <span class="right-box-top-btn-icon"><i class="nz-icon nz-icon-delete"></i></span>
         <span class="right-box-top-btn-txt">{{$t('overall.delete')}}</span>
@@ -51,7 +51,7 @@
               id="roles-esc">
         <span>{{$t('overall.cancel')}}</span>
       </button>
-      <button @click="save" class="nz-btn nz-btn-size-normal-new nz-btn-style-normal-new"
+      <button @click="save" class="nz-btn nz-btn-size-normal-new nz-btn-style-normal-new" v-has="'rule_save'"
               id="roles-save">
         <span>{{$t('overall.save')}}</span>
       </button>
