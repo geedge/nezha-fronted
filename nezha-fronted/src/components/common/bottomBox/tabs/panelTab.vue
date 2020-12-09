@@ -452,20 +452,20 @@
         this.$refs.queryPanel.focus();
       },
       syncChart:function(){
-        if(this.from==$CONSTANTS.fromRoute.asset||this.from==$CONSTANTS.fromRoute.model){
+        if(this.from== this.$CONSTANTS.fromRoute.asset||this.from== this.$CONSTANTS.fromRoute.model){
           this.$confirm(this.$t("tip.syncTip"), {
             confirmButtonText: this.$t("tip.yes"),
             cancelButtonText: this.$t("tip.no"),
             type: 'warning'
           }).then(() => {
             let param={
-              modelId:this.from==$CONSTANTS.fromRoute.model?this.obj.id:null,
-              assetId:this.from==$CONSTANTS.fromRoute.asset?this.obj.id:null,
+              modelId:this.from==this.$CONSTANTS.fromRoute.model?this.obj.id:null,
+              assetId:this.from==this.$CONSTANTS.fromRoute.asset?this.obj.id:null,
             }
             this.$put('/model/syncChart',param).then(response=>{
               if(response.code == 200){
                 this.$message({duration: 1000, type: 'success', message: this.$t("tip.syncSuccess")});
-                if(this.from == $CONSTANTS.fromRoute.asset){
+                if(this.from == this.$CONSTANTS.fromRoute.asset){
                   this.refresh();
                 }
               }else{

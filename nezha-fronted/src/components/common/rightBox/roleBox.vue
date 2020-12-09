@@ -38,7 +38,7 @@
                 <i class="el-icon-menu" v-if="data.type == '1'"></i>
                 <i class="el-icon-edit" v-if="data.type == '2'"></i>
               </span>
-              {{data.name}}
+              {{$t(data.i18n)}}
             </div>
           </el-tree>
         </el-form-item>

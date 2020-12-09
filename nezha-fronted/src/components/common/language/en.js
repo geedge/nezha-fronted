@@ -990,6 +990,203 @@ const en = {
       seven:'SUN',
     }
   },
+  buttons: {
+    panel: {
+      toAdd: "Add panel",
+      toEdit: "Edit panel",
+      delete: "Delete panel",
+      save: "Save panel",
+      chart: {
+        toAdd: "Add chart",
+        import: "Import chart",
+        export: "Export chart",
+        toEdit: "Edit chart",
+        save: "Save chart",
+        delete: "Delete chart",
+        duplicate: "Duplicate chart",
+      }
+    },
+    explore: {
+      toAdd: "Add chart",
+      save: "Save chart",
+    },
+    asset: {
+      toAdd: "Add asset",
+      toEdit: "Edit asset",
+      toBatchEdit: "Batch edit asset",
+      delete: "Delete asset",
+      save: "Save asset",
+      import: "Import asset",
+      export: "Export asset",
+      connect: "Connect to asset",
+      endpoint: {
+        view: "View endpoint",
+        toAdd: "Add endpoint",
+        toEdit: "Edit endpoint",
+        delete: "Delete endpoint",
+        save: "Save endpoint",
+        import: "Import endpoint",
+        export: "Export endpoint",
+      },
+      alerts: {
+        view: "View alerts",
+        delete: "Delete alerts",
+        export: "Export alerts",
+      },
+      chart: {
+        toAdd: "Add chart",
+        toEdit: "Edit chart",
+        delete: "Delete chart",
+        save: "Save chart",
+        import: "Import chart",
+        export: "Export chart",
+        duplicate: "Duplicate chart",
+        sync: "Sync chart"
+      },
+      vendor: {
+        toAdd: "Add vendor",
+        save: "Save chart",
+      }
+    },
+    project: {
+      toEdit: "Edit project",
+      delete: "Delete project",
+      save: "Save project",
+      topo: {
+        edit: "Edit topo",
+        save: "Save topo",
+      },
+      module: {
+        toEdit: "Edit module",
+        delete: "Delete module",
+        save: "Save module",
+      },
+      endpoint: {
+        toAdd: "Add endpoint",
+        toEdit: "Edit endpoint",
+        delete: "Delete endpoint",
+        save: "Save endpoint",
+        import: "Import endpoint",
+        export: "Export endpoint",
+        alerts: {
+          view: "View alerts",
+          delete: "Delete alerts",
+          export: "Export alerts",
+        },
+        query: {
+          view: "View query",
+          toAdd: "Add chart",
+          save: "Save chart",
+        }
+      }
+    },
+    message: {
+      delete: "Delete alerts",
+      export: "Export alerts",
+    },
+    rule: {
+      toAdd: "Add rule",
+      toEdit: "Edit rule",
+      delete: "Delete rule",
+      save: "Save rule",
+      alerts: {
+        view: "View alerts",
+        delete: "Delete alerts",
+        export: "Export alerts",
+      },
+    },
+    account: {
+      toAdd: "Add account",
+      toEdit: "Edit account",
+      delete: "Delete account",
+      save: "Save account",
+    },
+    role: {
+      toAdd: "Add role",
+      toEdit: "Edit role",
+      delete: "Delete role",
+      save: "Save role",
+    },
+    prom: {
+      toAdd: "Add prom",
+      toEdit: "Edit prom",
+      delete: "Delete prom",
+      save: "Save prom",
+    },
+    dc: {
+      toAdd: "Add data center",
+      toEdit: "Edit data center",
+      delete: "Delete data center",
+      save: "Save data center",
+      trafficSetting: "Traffic setting",
+      trafficSettingSave: "Save traffic setting",
+      cabinet: {
+        toAdd: "Add cabinet",
+        toEdit: "Edit cabinet",
+        delete: "Delete cabinet",
+        save: "Save cabinet",
+      }
+    },
+    model: {
+      toAdd: "Add model",
+      toEdit: "Edit model",
+      delete: "Delete model",
+      save: "Save model",
+      panel: "View panel",
+      chart: {
+        toAdd: "Add chart",
+        toEdit: "Edit chart",
+        delete: "Delete chart",
+        save: "Save chart",
+        import: "Import chart",
+        export: "Export chart",
+        duplicate: "Duplicate chart",
+        sync: "Sync chart"
+      },
+    },
+    snmp: {
+      toAdd: "Add mib file",
+      toEdit: "Edit mib file",
+      delete: "Delete mib file",
+      save: "Save mib file",
+      download: "Download mib file",
+      browserExport: "Export mib browser",
+    },
+    system: {
+      basic: "Basic save",
+      email: "Email save",
+      terminal: "Terminal save",
+      ldap: "LDAP save",
+      notification: {
+        add: "Add notification",
+        toEdit: "Edit notification",
+        delete: "Delete notification",
+        save: "Save notification",
+      },
+      link: {
+        add: "Add link",
+        toEdit: "Edit link",
+        delete: "Delete link",
+        save: "Save link",
+      },
+      reset: "Reset system config",
+    },
+    header: {
+      header: "Header",
+      link: "Link",
+      terminal: "Terminal",
+      terminalUpload: "Upload in terminal",
+      terminalDownload: "Download in terminal",
+      add: {
+        view: "View add button",
+        project: "Add project",
+        module: "Add module",
+        endpoint: "Add endpoint",
+        rule: "Add rule",
+        asset: "Add asset",
+      }
+    }
+  },
   ...enLocale
 }
 
