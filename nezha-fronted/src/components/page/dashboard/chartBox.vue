@@ -459,7 +459,6 @@
 
         </el-form>
       </el-scrollbar>
-
     <!--底部按钮-->
     <div class="right-box-bottom-btns">
       <button @click="esc(false)" id="chart-box-esc" class="nz-btn nz-btn-size-normal-new nz-btn-style-light-new">
@@ -477,6 +476,7 @@
     </div>
     <!--preview -->
     <chart-preview :panelId="panelId" ref="chartsPreview" ></chart-preview>
+  </div>
   </div>
 </template>
 
