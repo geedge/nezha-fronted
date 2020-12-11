@@ -39,7 +39,7 @@
           </el-switch>
         </el-form-item>
         <!--roles-->
-        <el-form-item :label="$t('config.account.roles')">
+        <el-form-item :label="$t('config.account.roles')" prop="roleIds">
           <el-select @change="()=>{this.$forceUpdate()}" clearable collapse-tags multiple placeholder="" popper-class="config-dropdown" size="small" v-model="editUser.roleIds">
             <template v-for="role in roles">
               <el-option :label="role.i18n?$t(role.i18n):role.name" :value="role.id"></el-option>
@@ -108,6 +108,9 @@
             {required: true, message: this.$t('validate.required'), trigger: 'blur'}
           ],
           password: [
+            {required: true, message: this.$t('validate.required'), trigger: 'blur'}
+          ],
+          roleIds: [
             {required: true, message: this.$t('validate.required'), trigger: 'blur'}
           ],
           email: [

@@ -192,6 +192,7 @@
           status: '1',
           createTime: '',
           receiver: [],
+          roleIds:[],
           roles:[],
           lang: '',
           notifications: []
@@ -333,6 +334,9 @@
         this.rightBox.show = true;
       },
       statusChange(user) {
+        if(user.roles){
+          user.roleIds=user.roles.map(t=>t.id)
+        }
         this.$put('sys/user/update', user).then(response => {
           if (response.code === 200) {
             this.rightBox.show = false;
