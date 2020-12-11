@@ -25,7 +25,17 @@ export function getChart(key) {
 export function setChart(key, value) {
   chartCache[`chart${key}`] = value;
 }
+const hexagonCache = {};
+export function getHexagon(key) {
+  return hexagonCache[`hexagon${key}`];
+}
 
+export function setHexagon(key, value) {
+  hexagonCache[`hexagon${key}`] = value;
+}
+export function delHexagon(key) {
+  delete  hexagonCache[`hexagon${key}`];
+}
 const mousePoint={ //在echart tooltip中获取不到鼠标在窗口的位置，在火狐没有window。event 在此兼容火狐 获取鼠标在窗口位置
   x:'',
   y:''
