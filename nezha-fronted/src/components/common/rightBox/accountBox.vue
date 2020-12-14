@@ -39,8 +39,8 @@
           </el-switch>
         </el-form-item>
         <!--roles-->
-        <el-form-item :label="$t('config.account.roles')">
-          <el-select @change="()=>{this.$forceUpdate()}" clearable collapse-tags multiple placeholder="" popper-class="config-dropdown" size="small" v-model="editUser.roleIds">
+        <el-form-item :label="$t('config.account.roles')" prop="roleIds">
+          <el-select @change="()=>{this.$forceUpdate()}" clearable collapse-tags placeholder="" popper-class="config-dropdown" size="small" v-model="editUser.roleIds">
             <template v-for="role in roles">
               <el-option :label="role.i18n?$t(role.i18n):role.name" :value="role.id"></el-option>
             </template>
@@ -110,6 +110,9 @@
           password: [
             {required: true, message: this.$t('validate.required'), trigger: 'blur'}
           ],
+          roleIds: [
+            {required: true, message: this.$t('validate.required'), trigger: 'blur'}
+          ],
           email: [
             {required: true, message: this.$t('validate.required'), trigger: 'blur'},
             {type: 'email', message: this.$t('validate.email')}
@@ -133,8 +136,10 @@
       save() {
         this.$refs.accountForm.validate(valid => {
           if (valid) {
+            let editUser = JSON.parse(JSON.stringify(this.editUser))
+            editUser.roleIds = [editUser.roleIds]
             if (this.editUser.userId) {
-              this.$put('sys/user/update', this.editUser).then(response => {
+              this.$put('sys/user/update',editUser).then(response => {
                 if (response.code === 200) {
                   this.$message({duration: 1000, type: 'success', message: this.$t("tip.saveSuccess")});
                   this.esc(true);
@@ -143,7 +148,7 @@
                 }
               });
             } else {
-              this.$post('sys/user/save', this.editUser).then(response => {
+              this.$post('sys/user/save', editUser).then(response => {
                 if (response.code === 200) {
                   this.$message({duration: 1000, type: 'success', message: this.$t("tip.saveSuccess")});
                   this.esc(true);
@@ -217,6 +222,9 @@
         this.$get("sys/role").then(response=>{
           if (response.code  == 200){
             this.roles = response.data.list;
+            if(!this.editUser.userId){
+              this.editUser.roleIds = this.roles.find(t=>t.name == 'common').id;
+            }
           }else{
             this.$message.error("load roles faild")
           }
@@ -248,8 +256,7 @@
         deep: true,
         handler(n) {
           this.editUser = JSON.parse(JSON.stringify(n));
-          this.editUser.roleIds=n.roles&&n.roles.map(t=>t.id)
-          console.log(this.editUser)
+          this.editUser.roleIds=n.roles&&n.roles.map(t=>t.id)[0]
         }
       },
       "editUser.notifications": {
@@ -259,13 +266,6 @@
           this.getSelectableScripts();
         }
       },
-      editUser:{
-        deep:true,
-        immediate:true,
-        handler(n,o){
-          console.log('editUser',n)
-        }
-      }
     },
   }
 </script>
