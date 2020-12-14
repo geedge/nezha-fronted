@@ -192,7 +192,7 @@
           status: '1',
           createTime: '',
           receiver: [],
-          roleIds:[],
+          roleIds:0,
           roles:[],
           lang: '',
           notifications: []
