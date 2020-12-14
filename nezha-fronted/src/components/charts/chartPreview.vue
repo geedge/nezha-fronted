@@ -81,7 +81,7 @@
           <div class="chart-no-data" v-show="noData">No Data</div>
 
           <template v-if="!hasLegendOptions">
-            <div class="legend-container legend-container-screen" ref="screenLegendArea"  @mouseenter="mouseEnterFullChart" @mouseleave="mouseLeaveFullChart" v-show="showLegend" v-scrollBar:legend>
+            <div @mouseenter="mouseEnterFullChart" @mouseleave="mouseLeaveFullChart"  class="legend-container legend-container-screen" ref="screenLegendArea" v-show="showLegend">
               <div v-for="(item, index) in screenLegendList" :title="item.alias?item.alias:item.name"  @click="clickScreenLegend(item.name,index)" class="legend-item" :class="{'ft-gr':isGreyScreen[index]}"  :key="'legend_' + item.name+'_'+index">
                 <span class="legend-shape" :style="{background:(isGreyScreen[index]?'#D3D3D3':item.color)}"></span>{{item.alias?item.alias:item.name}}
                 <br/><!--bgColorList[index]-->
@@ -89,7 +89,7 @@
             </div>
           </template>
           <template v-else>
-            <div class="legend-container legend-container-screen" ref="screenLegendArea" @mouseenter="mouseEnterFullChart" @mouseleave="mouseLeaveFullChart" v-show="showLegend" v-scrollBar:legend>
+            <div @mouseenter="mouseEnterFullChart" @mouseleave="mouseLeaveFullChart" class="legend-container legend-container-screen" ref="screenLegendArea" v-show="showLegend">
               <table style="width: 100%" border="0" cellpadding="0" cellspacing="0">
                 <th style="width: 100%"></th>
                 <template v-for="legendOption in screenLegendOptions">
@@ -132,7 +132,7 @@
 
       <template  v-if="chart.type==='table'">
         <div id="chartTablePreview" :class="{'visible':tableShow,'hidden':!tableShow}" >
-        <el-table id="tableContainer" style="margin-top: 10px;" class="nz-table" height="95%" :data="seriesItemScreen" border  tooltip-effect="light" v-scrollBar:el-table >
+        <el-table :data="seriesItemScreen" border class="nz-table" height="95%" id="tableContainer" style="margin-top: 10px;"  tooltip-effect="light">
           <!--                    <el-table-column sortable :show-overflow-tooltip="true" prop="metric" :label="$t('dashboard.panel.chartTableColumn.metric')" ></el-table-column>-->
           <!--                    <el-table-column sortable :show-overflow-tooltip="true" prop="label" :label="$t('dashboard.panel.chartTableColumn.label')" ></el-table-column>-->
           <el-table-column sortable prop="time" :label="$t('dashboard.panel.chartTableColumn.time')" width="145" ></el-table-column>
@@ -155,7 +155,7 @@
         <div id="chartUrlPreview" :class="{'visible':urlShow,'hidden':!urlShow}" class="char-url-preview">
           <iframe id="chartUrlFrame" frameborder="0" width="100%" height="100%" name="showHere" scrolling=auto
                   style="z-index:5000;"
-          ></iframe><!--  style=" position: absolute; width: 100%; height: 100%; top: 0;left:0;"  :src="chart.url" v-scrollBar:char-url-preview-->
+          ></iframe>
         </div>
       </template>
 
@@ -163,9 +163,9 @@
 
       <template v-if="chart.type==='text'">
           <div  id="chartTextPreview" class="chart-text-preview">
-            <el-scrollbar style="height: 100%;" class="el-scrollbar-normal">
+            <div style="height: 100%; overflow: auto;">
               <div style="height: 100%;" v-html="chart.param.text" ></div>
-            </el-scrollbar>
+            </div>
           </div>
       </template>
 
@@ -773,14 +773,9 @@
               return [x,y];
             },
             formatter:function(params){
-              //display:inline-block;white-space:nowrap;overflow-x:hidden;text-overflow:ellipsis;
               let str = `<div>`;
               let sum = 0;
-              //let str = `<div  style='white-space:nowrap;overflow-x:hidden;text-overflow:ellipsis;min-width:150px;max-width:600px;display:inline-block;line-height: 18px;font-size:12px;font-family: Roboto,Helvetica Neue,Arial,sans-serif;'>`;
               params.forEach((item, i) => {
-                //let tip=legend.find((element)=>{
-                  //return element.name == item.seriesName;
-                //});
                 let tip=legend[item.seriesIndex];
                 let color = self.bgColorList[item.seriesIndex];
                 if(i===0){
@@ -1381,7 +1376,7 @@
 
               item['total'] = sum;
             }
-          })
+          });
           resolve();
         })
       },
@@ -1403,19 +1398,13 @@
         }
       }
     },
-    mounted() {
-
-    },
     beforeDestroy() {
       this.clearChart();
-      //const addChartBox = document.querySelector('.right-box-add-chart');
-      //addChartBox.style.cssText =   this.oldChartBoxCss;
       try {
         if(this.echartModalStore){
           this.echartModalStore.off('magictypechanged');
         }
-      } finally {}
-        this.$refs.screenLegendArea && this.$refs.screenLegendArea._ps_.destroy();
+      } finally{}
     },
   };
 

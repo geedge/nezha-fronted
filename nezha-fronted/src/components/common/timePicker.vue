@@ -79,7 +79,7 @@
             class="nz-btn nz-btn-size-normal nz-btn-style-light time-picker-button time-picker-right-button" >
       <i style="font-size: 12px" class="el-icon-arrow-right"></i>
     </button>-->
-    <el-dropdown @command="timeChange" ref="timePickerDropdown"   class="calendar-dropdown-title" trigger="click" v-scrollBar:el-dropdown @visible-change="popoverClick">
+    <el-dropdown @command="timeChange" @visible-change="popoverClick"   class="calendar-dropdown-title" ref="timePickerDropdown" trigger="click">
       <el-popover
         placement="bottom-end"
         min-width="120px"
@@ -117,11 +117,6 @@
 
       </el-dropdown-menu>
     </el-dropdown>
-    <!--
-    <button type="button" style="border-radius: 1px 1px 1px 1px" @click="left()" v-show="isCustom"
-            class="nz-btn nz-btn-size-normal nz-btn-style-light time-picker-button time-picker-left-button" >
-      <i style="font-size: 12px" class="el-icon-arrow-left"></i>
-    </button>-->
   </div>
 </template>
 

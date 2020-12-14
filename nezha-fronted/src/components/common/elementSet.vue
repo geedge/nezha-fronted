@@ -2,7 +2,7 @@
   <div class="pop-custom" v-clickoutside="esc">
     <div class="pop-title">{{$t('overall.select')}}</div>
     <div class="pop-box custom-labels">
-      <el-scrollbar style="height: 100%;">
+      <div style="height: 100%; overflow: auto;">
         <!--NotSet 为true不可设置-->
         <div
           v-for="(item,index) in custom"
@@ -19,7 +19,7 @@
 
 
 
-      </el-scrollbar>
+      </div>
     </div>
     <div class="custom-bottom-btns">
       <button v-if="isCancel" type="button" @click="batchHandler(false)" class="nz-btn nz-btn-size-small-new nz-btn-style-light-new is-cancel">

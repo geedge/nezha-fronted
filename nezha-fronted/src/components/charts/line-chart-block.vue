@@ -57,14 +57,14 @@
         <div class="line-area"  ref="lineChartArea"  :id="'lineChartArea'+chartIndex" v-show="firstShow" style="width:100%;"></div>
         <div class="chart-no-data" v-show="noData">No Data</div>
         <template v-if="!hasLegendOptions">
-          <div class='legend-container'  ref="legendArea" v-show="firstShow" v-scrollBar:legend>
+          <div class='legend-container'  ref="legendArea" v-show="firstShow">
             <div v-for="(item, index) in legendListMore" :title="item.alias?item.alias:item.name"  @click="clickLegend(item.name,index)" class="legend-item" :class="{'ft-gr':isGrey[index]}" :key="'legend_' + item.name+'_'+index">
               <span class="legend-shape" :style="{background:(isGrey[index]?'#D3D3D3':item.color)}"></span>{{item.alias?item.alias:item.name}}
             </div>
           </div>
         </template>
         <template v-else>
-          <div class='legend-container'  ref="legendArea" v-show="firstShow" v-scrollBar:legend>
+          <div class='legend-container'  ref="legendArea" v-show="firstShow">
             <table style="width: 100%" border="0" cellpadding="0" cellspacing="0">
               <th style="width: 100%"></th>
               <template v-for="legendOption in legendOptions">
@@ -138,7 +138,7 @@
           <div class="line-area" ref="screenShowArea"  id="screenShowArea"  style="margin-top:0px;" @mouseenter="mouseEnterFullChart" @mouseleave="mouseLeaveFullChart"></div>
           <div class="chart-no-data" v-show="noData">No Data</div>
           <template v-if="!hasLegendOptions">
-            <div class="legend-container legend-container-screen"  :id="'screenLegendArea'+chartIndex" @mouseenter="mouseEnterFullChart" @mouseleave="mouseLeaveFullChart" v-show="showLegend" v-scrollBar:legend>
+            <div :id="'screenLegendArea'+chartIndex"  @mouseenter="mouseEnterFullChart" @mouseleave="mouseLeaveFullChart" class="legend-container legend-container-screen" v-show="showLegend">
               <div v-for="(item, index) in screenLegendListMore" :title="item.alias?item.alias:item.name"  @click="clickScreenLegend(item.name,index)" class="legend-item" :class="{'ft-gr':isGreyScreen[index]}"  :key="'legend_' + item.name+'_'+index">
                 <span class="legend-shape" :style="{background:(isGreyScreen[index]?'#D3D3D3':item.color)}"></span>{{item.alias?item.alias:item.name}}
                 <br/><!--bgColorList[index]-->
@@ -146,7 +146,7 @@
             </div>
           </template>
           <template v-else>
-            <div class="legend-container legend-container-screen"  :id="'screenLegendArea'+chartIndex" @mouseenter="mouseEnterFullChart" @mouseleave="mouseLeaveFullChart" v-show="showLegend" v-scrollBar:legend>
+            <div :id="'screenLegendArea'+chartIndex"  @mouseenter="mouseEnterFullChart" @mouseleave="mouseLeaveFullChart" class="legend-container legend-container-screen" v-show="showLegend">
               <table style="width: 100%" border="0" cellpadding="0" cellspacing="0">
                 <th style="width: 100%"></th>
                 <template v-for="legendOption in screenLegendOptions">
@@ -1459,14 +1459,6 @@
                         // 将秒改为毫秒
                         //alert('table=='+JSON.stringify(queryItem))
                         seriesItem.theData.data = queryItem.values.map((dpsItem, dpsIndex) => {
-                          /*曲线汇总暂不需要
-                          if (sumData.data[dpsIndex]) {
-                            const sumNum = sumData.data[dpsIndex][1] || 0;
-                            sumData.data[dpsIndex][1] = sumNum + dpsItem[1];
-                          } else {
-                            sumData.data[dpsIndex] = [dpsItem[0] * 1000, dpsItem[1]];
-                          }
-                          */
                           return [dpsItem[0] * 1000, dpsItem[1]];
                         });
                         series.push(seriesItem.theData);
@@ -1846,7 +1838,6 @@
       }
       setChart(this.chartIndex, null);
       window.removeEventListener('resize', this.chartResize);
-      this.$refs.legendArea._ps_.destroy();
     },
   };
 

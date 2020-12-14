@@ -23,7 +23,6 @@
       ref="alertListTable"
       tooltip-effect="light"
       :height="tableHeight"
-      v-scrollBar:el-table="'large'"
       v-loading="tools.loading"
       :cell-class-name="labelsClassName"
       @selection-change="selectChange"
@@ -162,7 +161,7 @@
         </template>
       </el-table-column>
     </el-table>
-    <button class="to-top" :style="{top: tools.toTopBtnTop}" :class="{'to-top-is-hover': tools.tableHover}" v-show="tools.showTopBtn && bottomBox.mainResizeShow &&showTopBtn" @click="$toTop('ps', 0)"><i class="nz-icon nz-icon-top"></i></button>
+    <button :class="{'to-top-is-hover': tools.tableHover}" :style="{top: tools.toTopBtnTop}" @click="toTop(scrollWrap)" class="to-top" v-show="tools.showTopBtn && bottomBox.mainResizeShow &&showTopBtn"><i class="nz-icon nz-icon-top"></i></button>
     <!--<弹窗>-->
     <!--导出-->
     <div class="export-xlsx">
@@ -367,6 +366,8 @@
         viewProjectData: {id: '', name: '', remark: ''},
         viewModuleData: {id: '', name: '', project: {}, port: '', path: '', param: '', paramObj: []},
         viewAssetState: false,
+
+        scrollWrap: null,
       }
     },
     computed: {
@@ -566,8 +567,13 @@
       dialogClose() {
         this.graphShow = false;
       },
-      getAlertList: function () {
-
+      getAlertList() {
+        if (!this.scrollWrap) {
+          this.$nextTick(() => {
+            this.scrollWrap = this.$refs.alertListTable.bodyWrapper;
+            this.toTopBtnHandler(this.scrollWrap);
+          });
+        }
       },
       promQueryParamConvert(obj){
         let r = "(" + obj.alertRule.expr + ")";
@@ -862,7 +868,7 @@
       returnSeverityLabel(key){
         return this.$CONSTANTS.alertMessage.severityData.find(s => {return s.value == key}).label
       },
-      plpsscrolly(el,self){
+      /*plpsscrolly(el,self){
         if (el._ps_.scrollbarYTop > 50) {
           self.tools.showTopBtn = true;
           self.tools.tableHover = true;
@@ -870,14 +876,9 @@
           self.tools.showTopBtn = false;
           self.tools.tableHover = false;
         }
-      },
+      },*/
     },
     watch: {
-      /*tableData(){
-        if(this.$refs.alertListTable&&this.$refs.alertListTable.bodyWrapper){
-          this.$refs.alertListTable.bodyWrapper.scrollTop = 0;
-        }
-      },*/
       showSubList(n) {
         this.$bottomBoxWindow.showSubListWatch(vm, n);
       },
@@ -901,13 +902,6 @@
       }
 
       this.getAlertList();
-      this.$nextTick(() => {
-        //绑定滚动条事件，控制top按钮
-        let el = this.$refs.alertListTable.$el.querySelector(".el-table__body-wrapper");
-        if (el._ps_) {
-          el.addEventListener("ps-scroll-y", this.plpsscrolly.bind('',el,this));
-        }
-      });
       /*if(this.from=='alertMessage'){
         this.tablelable = localStorage.getItem("nz-tableTitle-" + localStorage.getItem("nz-username") + "-" + this.$route.path)
           ? JSON.parse(localStorage.getItem("nz-tableTitle-" + localStorage.getItem("nz-username") + "-" + this.$route.path))
@@ -927,11 +921,7 @@
     */
     },
     beforeDestroy(){
-      let el = this.$refs.alertListTable.$el.querySelector(".el-table__body-wrapper");
-      if (el._ps_) {
-        el.removeEventListener("ps-scroll-y", this.plpsscrolly.bind('',el,this));
-        el._ps_.destroy();
-      }
+      this.scrollbarWrap.removeEventListener('scroll', bus.debounce);
     }
   }
 

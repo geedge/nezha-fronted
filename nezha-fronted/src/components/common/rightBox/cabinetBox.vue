@@ -14,7 +14,7 @@
     <!-- end--标题-->
 
     <!-- begin--表单-->
-    <el-scrollbar class="right-box-form-box">
+    <div class="right-box-form-box">
       <el-form class="right-box-form right-box-form-left" label-width="120px" label-position="right" :model="editCabinet" ref="cabinetForm" :rules="rules">
         <el-form-item :label="$t('overall.name')" prop="name">
           <el-input size='mini' v-model="editCabinet.name"/>
@@ -29,7 +29,7 @@
           <el-input size='mini' v-model="editCabinet.remark" type="textarea" :rows="2"/>
         </el-form-item>
       </el-form>
-    </el-scrollbar>
+    </div>
 
     <!--底部按钮-->
     <div class="right-box-bottom-btns">

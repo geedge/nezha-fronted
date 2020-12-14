@@ -65,7 +65,7 @@
             <div>
               <div class="result-title">{{$t('overall.result.failedDetail')}}:</div>
                 <div class="result-detail" v-if="importResult&&importResult.failDetail">
-                  <el-scrollbar style="height: 100%">
+                  <div style="height: 100%; overflow: auto;">
                    <!-- <ul>
                       <li v-for="(item,index) in importResult.failDetail"><span>{{item.lineNo}}</span>:<span>{{item.errorMsg}}</span> </li>
                     </ul>-->
@@ -77,7 +77,7 @@
                         </div>
                       </div>
                     </template>
-                  </el-scrollbar>
+                  </div>
                 </div>
             </div>
           </div>

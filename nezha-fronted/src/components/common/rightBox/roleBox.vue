@@ -3,7 +3,7 @@
     <!-- begin--顶部按钮-->
     <div class="right-box-top-btns right-box-form-delete">
       <button @click="del" class="nz-btn nz-btn-size-normal nz-btn-size-alien" id="roles-edit-del"
-              type="button" v-has="'rule_delete'"
+              type="button" v-has="'role_delete'"
               v-if="editRole.id && !detail">
         <span class="right-box-top-btn-icon"><i class="nz-icon nz-icon-delete"></i></span>
         <span class="right-box-top-btn-txt">{{$t('overall.delete')}}</span>
@@ -16,7 +16,7 @@
     <!-- end--标题-->
 
     <!-- begin--表单-->
-    <el-scrollbar class="right-box-form-box">
+    <div class="right-box-form-box">
       <el-form :disabled="detail" :model="editRole" :rules="rules" class="right-box-form right-box-form-left" label-position="right" label-width="120px" ref="roleForm">
         <!--name-->
         <el-form-item :label="$t('config.roles.name')" prop="name">
@@ -43,7 +43,7 @@
           </el-tree>
         </el-form-item>
       </el-form>
-    </el-scrollbar>
+    </div>
     <!-- end--表单-->
     <!--底部按钮-->
     <div class="right-box-bottom-btns" v-if="!detail">
@@ -51,7 +51,7 @@
               id="roles-esc">
         <span>{{$t('overall.cancel')}}</span>
       </button>
-      <button @click="save" class="nz-btn nz-btn-size-normal-new nz-btn-style-normal-new" v-has="'rule_save'"
+      <button @click="save" class="nz-btn nz-btn-size-normal-new nz-btn-style-normal-new" v-has="'role_save'"
               id="roles-save">
         <span>{{$t('overall.save')}}</span>
       </button>

@@ -71,7 +71,6 @@
         ref="alertRuleTable"
         tooltip-effect="light"
         :height="mainTableHeight"
-        v-scrollBar:el-table="'large'"
         v-loading="tools.loading"
         :cell-class-name="messageStyle"
         style="width: 100%;"
@@ -131,7 +130,7 @@
           </template>
         </el-table-column>
       </el-table>
-      <button class="to-top" :style="{top: tools.toTopBtnTop}" :class="{'to-top-is-hover': tools.tableHover}" v-show="tools.showTopBtn && bottomBox.mainResizeShow" @click="$toTop('ps', 0)"><i class="nz-icon nz-icon-top"></i></button>
+      <button :class="{'to-top-is-hover': tools.tableHover}" :style="{top: tools.toTopBtnTop}" @click="toTop(scrollWrap)" class="to-top" v-show="tools.showTopBtn && bottomBox.mainResizeShow"><i class="nz-icon nz-icon-top"></i></button>
       <div class="pagination-bottom" v-show="!bottomBox.showSubList">
         <Pagination :tableId="tableId" :pageObj="pageObj" @pageNo='pageNo' @pageSize='pageSize' ref="Pagination"></Pagination>
       </div>
@@ -290,6 +289,7 @@
         viewModuleData: {},
         viewAsset: false,
         searchTime: bus.getTimezontDateRange(),
+        scrollWrap: null,
       }
     },
     methods: {
@@ -372,6 +372,12 @@
             });
             this.tableData = response.data.list;
             this.pageObj.total = response.data.total;
+            if (!this.scrollWrap) {
+              this.$nextTick(() => {
+                this.scrollWrap = this.$refs.alertRuleTable.bodyWrapper;
+                this.toTopBtnHandler(this.scrollWrap);
+              });
+            }
           }
         })
       },
@@ -518,15 +524,6 @@
           this.getTableData();
         })
       },
-      plpsscrolly(el,self){
-        if (el._ps_.scrollbarYTop > 50) {
-          self.tools.showTopBtn = true;
-          self.tools.tableHover = true;
-        } else {
-          self.tools.showTopBtn = false;
-          self.tools.tableHover = false;
-        }
-      },
     },
     watch: {
       'bottomBox.showSubList': function(n) {
@@ -540,10 +537,11 @@
         }
       },
     },
-    destroyed() {
+    beforeDestroy() {
       bus.$off("alert-rule-list-change");
       bus.$off("dc-list-change");
-      bus.$off('alert-message-change')
+      bus.$off('alert-message-change');
+      this.scrollbarWrap.removeEventListener('scroll', bus.debounce);
     },
     created(){
       //是否存在分页缓存
@@ -561,20 +559,6 @@
       this.initEvent();
 
       this.getTableData();
-      this.$nextTick(() => {
-        //绑定滚动条事件，控制top按钮
-        let el = this.$refs.alertRuleTable.$el.querySelector(".el-table__body-wrapper");
-        if (el._ps_) {
-          el.addEventListener("ps-scroll-y", this.plpsscrolly.bind('',el,this));
-        }
-      });
     },
-    beforeDestroy(){
-      let el = this.$refs.alertRuleTable.$el.querySelector(".el-table__body-wrapper");
-      if (el._ps_) {
-        el.removeEventListener("ps-scroll-y", this.plpsscrolly.bind('',el,this));
-        el._ps_.destroy();
-      }
-    }
   }
 </script>

@@ -6,7 +6,7 @@
         <p><span class="metirc-tip-list">OID&nbsp;:&nbsp;</span><span>{{tempWalk.objectID}}</span></p>
         <p><span class="metirc-tip-list">MIB&nbsp;:&nbsp;</span><span>{{mibName(tempWalk.objectID)}}</span></p>
       </div>
-      <el-scrollbar class="select-walk-tree" ref="scrollbar">
+      <div class="select-walk-tree" ref="scrollbar">
         <el-tree
           ref="walkTree"
           node-key="objectID"
@@ -36,7 +36,7 @@
             {{data.name}}
           </div>
         </el-tree>
-      </el-scrollbar>
+      </div>
     </div>
     <div slot="reference">
       <slot name="trigger">

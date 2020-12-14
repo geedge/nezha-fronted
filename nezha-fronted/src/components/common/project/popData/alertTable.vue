@@ -31,7 +31,7 @@
       <!-- end搜素框-->
 
       <!-- begin--表格-->
-      <el-scrollbar class="right-box-form-box">
+      <div class="right-box-form-box">
         <el-table
           class="nz-table tabelH100"
           :data="tableData"
@@ -39,7 +39,6 @@
           ref="alertListTable"
           tooltip-effect="light"
           :height="tableHeight"
-          v-scrollBar:el-table="'large'"
           v-loading="loading"
           :cell-class-name="labelsClassName"
           @selection-change="selectChange"
@@ -160,19 +159,8 @@
               <template v-else>-</template>
             </template>
           </el-table-column>
-
-          <!--<el-table-column width="28" :resizable="false">-->
-            <!--<template slot="header" slot-scope="scope">-->
-          <!--<span @mousedown.stop="!tools.showCustomTableTitle && (tools.showCustomTableTitle = true)" class="nz-table-gear">-->
-            <!--<i class="nz-icon nz-icon-gear"></i>-->
-          <!--</span>-->
-            <!--</template>-->
-            <!--<template v-slot="scope">-->
-              <!--<button v-if="scope.$index == 0" class="to-top" :style="{top: tools.toTopBtnTop}" :class="{'to-top-is-hover': tools.tableHover}" v-show="tools.showTopBtn && tools.mainResizeShow" @click="$toTop('ps', 0)"><i class="nz-icon nz-icon-top"></i></button>-->
-            <!--</template>-->
-          <!--</el-table-column>-->
         </el-table>
-      </el-scrollbar>
+      </div>
       <!-- end--表格-->
 
       <!--底部分頁-->

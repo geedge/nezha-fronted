@@ -46,7 +46,6 @@
         row-key="id"
         style="width: 100%;"
         v-loading="tools.loading"
-        v-scrollBar:el-table="'large'"
       >
         <el-table-column
           :resizable="false"
@@ -297,20 +296,6 @@
         this.$set(this.searchLabel, "orderBy", orderBy);
         this.getTableData();
       },
-      plpsscrolly(el,self){
-        if (el._ps_.scrollbarYTop > 50) {
-          self.tools.showTopBtn = true;
-          self.tools.tableHover = true;
-        } else {
-          self.tools.showTopBtn = false;
-          self.tools.tableHover = true;
-        }
-      },
-
-    },
-    computed: {
-    },
-    watch: {
     },
     created(){
       //是否存在分页缓存
@@ -325,20 +310,6 @@
         ? JSON.parse(localStorage.getItem("nz-tableTitle-" + localStorage.getItem("nz-username") + "-" + this.$route.path))
         : this.tableTitle;
       this.getTableData();
-      this.$nextTick(() => {
-        //绑定滚动条事件，控制top按钮
-        let el = this.$refs.menusTable.$el.querySelector(".el-table__body-wrapper");
-        if (el._ps_) {
-          el.addEventListener("ps-scroll-y", this.plpsscrolly.bind('',el,this));
-        }
-      });
     },
-    beforeDestroy(){
-      let el = this.$refs.menusTable.$el.querySelector(".el-table__body-wrapper");
-      if (el._ps_) {
-        el.removeEventListener("ps-scroll-y", this.plpsscrolly.bind('',el,this));
-        el._ps_.destroy();
-      }
-    }
   }
 </script>

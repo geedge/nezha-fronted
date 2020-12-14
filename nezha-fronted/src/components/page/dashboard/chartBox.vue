@@ -161,7 +161,7 @@
       <!-- end--标题-->
 
       <!-- begin--表单-->
-      <el-scrollbar class="right-box-form-box" ref="scrollbar">
+      <div class="right-box-form-box" ref="scrollbar">
         <el-form :model="editChart" :rules="rules" class="right-box-form  right-box-form-left" label-position="right" label-width="120px" ref="chartForm">
           <el-form-item :label="$t('dashboard.panel.title')" prop="panelName" v-if="showPanel.type != 'dashboard' && showPanel.type != 'project' && showPanel.type != 'asset' && showPanel.type != 'model'">
             <el-autocomplete
@@ -458,7 +458,7 @@
         </template>
 
         </el-form>
-      </el-scrollbar>
+      </div>
     <!--底部按钮-->
     <div class="right-box-bottom-btns">
       <button @click="esc(false)" id="chart-box-esc" class="nz-btn nz-btn-size-normal-new nz-btn-style-light-new">
@@ -685,9 +685,6 @@
         this.promqlKeys.push(getUUID());
         this.elementIds.push("");
         this.promqlCount++;
-        this.$nextTick(() => {
-          this.$refs.scrollbar.update();
-        });
       },
       removeExpression(index) {
         if (this.promqlCount > 1) {
@@ -704,9 +701,6 @@
             });
           });
         }
-        this.$nextTick(() => {
-          this.$refs.scrollbar.update();
-        });
       },
       save() {
         this.$refs['chartForm'].validate((valid) => {
@@ -750,9 +744,6 @@
       // 增加指标,tarNum
       addTarget() {
         this.elements.push(1);
-        this.$nextTick(() => {
-          this.$refs.scrollbar.update();
-        });
       },
       // 删除指标,第一步, 新方法
       deleteTarget(index) {
@@ -762,9 +753,6 @@
         this.$refs.chartTag.forEach((item) => {
           // 子组件保存内容到bus
           item.subSave();
-        });
-        this.$nextTick(() => {
-          this.$refs.scrollbar.update();
         });
       },
       // subSave保存成功后回调,第二步

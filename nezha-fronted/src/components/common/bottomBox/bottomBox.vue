@@ -85,29 +85,10 @@
         this.$emit('update:targetTab', tab);
       },
       afterResize() {
-        let vm = this;
-
         if (this.from == 'endpoint' && this.targetTab == 'endpointQuery') {
           this.$refs.endpointQuery.tableReload();
         }
-
-        //刷新滚动条
-        let intervalFunc = setInterval(function(){
-          if (!window.resizing) {
-            let pss = document.querySelectorAll(".el-table__body-wrapper");
-            if (pss) {
-              pss.forEach(ps => {
-                ps._ps_ && ps._ps_.update();
-              });
-            }
-            vm.$refs.panelTab && vm.$refs.panelTab.$refs.dashboardScrollbar.update();
-            clearInterval(intervalFunc);
-          }
-        }, 500);
       }
     },
-    beforeDestroy(){
-
-    }
   }
 </script>

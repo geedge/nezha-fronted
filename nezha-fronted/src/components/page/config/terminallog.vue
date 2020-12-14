@@ -29,7 +29,6 @@
       border
       ref="terminalLogTable"
       :height="$tableHeight.normal"
-      v-scrollBar:el-table="'large'"
       v-loading="tools.loading"
       :cell-class-name="messageStyle"
       style="width: 100%;"
@@ -65,12 +64,12 @@
         </template>
       </el-table-column>
     </el-table>
-    <button class="to-top" :style="{top: tools.toTopBtnTop}" :class="{'to-top-is-hover': tools.tableHover}" v-show="tools.showTopBtn" @click="$toTop('ps', 0)"><i class="nz-icon nz-icon-top"></i></button>
+    <button :class="{'to-top-is-hover': tools.tableHover}" :style="{top: tools.toTopBtnTop}" @click="toTop(scrollWrap)" class="to-top" v-show="tools.showTopBtn"><i class="nz-icon nz-icon-top"></i></button>
     <Pagination :tableId="tableId" :pageObj="pageObj" @pageNo='pageNo' @pageSize='pageSize' ref="Pagination"></Pagination>
   </div>
 </template>
 <script>
-  import bus from '../../../libs/bus';
+  import bus from "../../../libs/bus";
   export default {
     name: "terminallog",
     data() {
@@ -215,6 +214,7 @@
           ],
         },
         searchLabel: {}, //搜索参数
+        scrollWrap: null,
       }
     },
     methods: {
@@ -229,7 +229,13 @@
               response.data.list[i].status = response.data.list[i].status + "";
             }
             this.tableData = response.data.list;
-            this.pageObj.total = response.data.total
+            this.pageObj.total = response.data.total;
+            if (!this.scrollWrap) {
+              this.$nextTick(() => {
+                this.scrollWrap = this.$refs.terminalLogTable.bodyWrapper;
+                this.toTopBtnHandler(this.scrollWrap);
+              });
+            }
           }
         })
       },
@@ -281,17 +287,9 @@
         this.$set(this.searchLabel, "orderBy", orderBy);
         this.getTableData();
       },
-      plpsscrolly(el,self){
-        if (el._ps_.scrollbarYTop > 50) {
-          self.tools.showTopBtn = true;
-          self.tools.tableHover = true;
-        } else {
-          self.tools.showTopBtn = false;
-          self.tools.tableHover = false;
-        }
-      },
     },
-    watch:{
+    beforeDestroy() {
+      this.scrollbarWrap.removeEventListener('scroll', bus.debounce);
     },
     created(){
       //是否存在分页缓存
@@ -308,20 +306,6 @@
       this.tableTitleReset(this.tableTitle,this.tools.customTableTitle);
 
       this.getTableData();
-      this.$nextTick(() => {
-        //绑定滚动条事件，控制top按钮
-        let el = this.$refs.terminalLogTable.$el.querySelector(".el-table__body-wrapper");
-        if (el._ps_) {
-          el.addEventListener("ps-scroll-y", this.plpsscrolly.bind('',el,this));
-        }
-      });
     },
-    beforeDestroy(){
-      let el = this.$refs.terminalLogTable.$el.querySelector(".el-table__body-wrapper");
-      if (el._ps_) {
-        el.removeEventListener("ps-scroll-y", this.plpsscrolly.bind('',el,this));
-        el._ps_.destroy();
-      }
-    }
   }
 </script>

@@ -16,7 +16,7 @@
     <!-- end--标题-->
 
     <!-- begin--表单-->
-    <el-scrollbar class="right-box-form-box">
+    <div class="right-box-form-box">
       <el-form class="right-box-form right-box-form-left" :model="editUser" :rules="rules" ref="accountForm" label-position="right" label-width="120px">
         <!--username-->
         <el-form-item :label="$t('config.account.account')" prop="username">
@@ -66,7 +66,7 @@
           <span @click="removeNotification(index)" style="padding-left: 5px;"><i class="nz-icon nz-icon-shanchu1"></i></span>
         </el-form-item>
       </el-form>
-    </el-scrollbar>
+    </div>
     <!-- end--表单-->
     <!--底部按钮-->
     <div class="right-box-bottom-btns">

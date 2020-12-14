@@ -51,7 +51,7 @@
         </div>
         <div class="mt-10 table-container" v-cloak v-show="firstShow">
           <el-table class="nz-table" :id="'tableContainer'+chartIndex" ref="tableContainer" :height="tableHeight"
-                    :data="seriesItem" border tooltip-effect="light" v-cloak v-scrollBar:el-table
+                    :data="seriesItem" border tooltip-effect="light" v-cloak
                     @sort-change="tableDataSort" >
             <el-table-column sortable prop="time" :label="$t('dashboard.panel.chartTableColumn.time')" min-width="100"
                              :sort-orders="['ascending', 'descending']" :sortable="'custom'"></el-table-column>
@@ -84,7 +84,7 @@
             <span class="float-right  dialog-tool" @click="screenRefreshChart" style="margin-right: 15px"><i class="global-active-color nz-icon nz-icon-refresh"/></span>
           </div>
           <el-table style="margin-top: 10px;" class="nz-table" height="95%" :data="seriesItemScreen" border
-                    tooltip-effect="light" v-scrollBar:el-table @sort-change="tableDataSortScreen">
+                    @sort-change="tableDataSortScreen" tooltip-effect="light">
             <el-table-column sortable prop="time" :label="$t('dashboard.panel.chartTableColumn.time')" min-width="100"
                              :sort-orders="['ascending', 'descending']" :sortable="'custom'"></el-table-column>
             <el-table-column sortable prop="element" :show-overflow-tooltip="true"
@@ -210,7 +210,6 @@
           }],
         searchTime: [new Date().setHours(new Date().getHours() - 1), new Date()],//全屏显示的时间
         oldSearchTime: [],
-        ps: null,
         mapping:{},
       };
     },
@@ -284,12 +283,6 @@
         let container = document.querySelector('#chartTableDiv' + this.chartIndex + " .table-container");
         container.style.height = `calc(100% - ${deHeight * 2}px)`;
         this.tableHeight = `calc(100% - ${this.$refs.Pagination.$el.offsetHeight}px)`;
-        this.$nextTick(() => {
-          this.$nextTick(() => {
-            this.ps = container.querySelector(".el-table__body-wrapper")._ps_;
-            this.ps.update();
-          });
-        });
       },
       showLoad(chartItem) {
         //设置高度 chart-table
@@ -501,9 +494,6 @@
     },
     beforeDestroy() {
       this.clearChart();
-      if (this.ps) {
-        this.ps.destroy();
-      }
     },
   };
 </script>

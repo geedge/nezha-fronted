@@ -8,7 +8,7 @@
     <div class="dropdown" :class="{'dropdown-active':dropDownVisible == true}" >
       <div class="container">
         <div class="container-item">
-          <el-scrollbar style="height: 100%;">
+          <div style="height: 100%; overflow: auto;">
             <ul v-if="idcInfos&& idcInfos.length>0">
               <li v-for="(item,index) in idcInfos" :key="item.id+'-'+index" @click="loadCabinetInfos(item)">
                 <div class="container-item-content">
@@ -18,10 +18,10 @@
               </li>
             </ul>
             <div v-else class="dropdown-empty">{{$t('overall.noData')}}</div>
-          </el-scrollbar>
+          </div>
         </div>
         <div class="container-item" v-show="isShowCabinet || selectedData.cabinet">
-          <el-scrollbar style="height: 100%;">
+          <div style="height: 100%; overflow: auto;">
             <ul v-if="showCabinetInfos&& showCabinetInfos.length>0">
               <li v-for="(item,index) in showCabinetInfos" :key="item.id+'-'+index" @click="loadCabinetUInfos(item)">
                 <div class="container-item-content">
@@ -31,14 +31,14 @@
               </li>
             </ul>
             <div v-else class="dropdown-empty">{{$t('overall.noData')}}</div>
-          </el-scrollbar>
+          </div>
         </div>
         <div class="container-item" v-show="isShowCabinetU || uChecked.length>0" style="border-right: unset">
-          <el-scrollbar style="height: 100%">
+          <div style="height: 100%; overflow: auto;">
             <el-checkbox-group v-model="uChecked" v-if="refresh" @change="uChange">
               <el-checkbox v-for="(item,index) in showUInfos" :key="index" :label="item.label" :value="item.value" :disabled="item.occupy==true" :checked="item.occupy==true||item.checked==true" :ref="'u-'+selectedData.idc.id+'-'+selectedData.cabinet.id+'-'+item.value" style="width: 50%"></el-checkbox>
             </el-checkbox-group>
-          </el-scrollbar>
+          </div>
         </div>
       </div>
     </div>

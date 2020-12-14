@@ -16,7 +16,7 @@
     <!-- end--标题-->
 
     <!-- begin--表单-->
-    <el-scrollbar class="right-box-form-box">
+    <div class="right-box-form-box">
       <el-form class="right-box-form right-box-form-left" :model="editPromServer" label-position="right" label-width="120px" :rules="rules" ref="promServerForm">
         <!--DC-->
         <el-form-item :label="$t('config.dc.dc')" prop="idc.name">
@@ -49,7 +49,7 @@
             clearable></el-cascader>
         </el-form-item>
       </el-form>
-    </el-scrollbar>
+    </div>
     <!-- end--表单-->
     <!--底部按钮-->
     <div class="right-box-bottom-btns">

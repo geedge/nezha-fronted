@@ -4,12 +4,12 @@
     <span class="nz-input-append editor-clear" style="display: none" @click="clearContent"><i class="nz-icon nz-icon-circle-close"></i></span>
     <div class="metric-editor-popper" :style="{left:popperPos.left+'px'}" v-show="false">
       <div class="metric-popper-main" v-show="showType">
-        <el-scrollbar style="height: 100%;width:100%" class="el-scrollbar-small" ref="scroll">
+        <div ref="scroll" style="height: 100%;width:100%; overflow: auto;">
           <div v-for="(key, index) in orders" >
             <div v-html="key" class="popper-group" v-show="showSuggestions[key]"></div>
             <div class="popper-item" v-for="(item,i) in showSuggestions[key]" v-html="item.label" :key="item.insertText" :type="key" :value="item.insertText" @click.stop="handleItemClick(key,item,$event)" @mouseover="itemHover(item)" @mouseout="itemOut(item)"></div>
           </div>
-        </el-scrollbar>
+        </div>
       </div>
       <div class="metric-popper-desc" v-if="showType&&Object.keys(showSuggestions).length>0&&showDescription && detailItem && detailItem.documentation">
         <div><b>{{detailItem.insertText}}</b></div>
@@ -562,8 +562,8 @@
           }
         })
 
-        let scroll=this.$refs.scroll.wrap;
-        scroll.scrollTop=0;
+        /*let scroll=this.$refs.scroll.wrap;
+        scroll.scrollTop=0;*/
       },
       storeSuggestions:function(){
           this.$nextTick(()=>{
@@ -624,7 +624,7 @@
         })
       },
       moveScroll:function(){
-        let scroll=this.$refs.scroll.wrap;
+        /*let scroll=this.$refs.scroll.wrap;
         //console.log('scroll',scroll)
         if(scroll){
           let curScroll=scroll.scrollTop;//滚动条当前位置
@@ -648,7 +648,7 @@
               }
             }, 20);
           }
-        }
+        }*/
 
 
       },

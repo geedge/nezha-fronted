@@ -13,10 +13,10 @@
             </el-row>
             <el-dropdown-menu class="nz-dashboard-dropdown panel-dropdown-title-space" slot="dropdown"  >
               <!--<el-dropdown-item>{{$t('dashboard.panel.createPanelTitleSec')}}</el-dropdown-item>-->
-              <el-scrollbar style="height: 100%;">
+              <div ref="dashboardScrollbar" style="height: 100%; overflow: auto">
                 <el-dropdown-item >
                   <el-row class="panel-list-width" :gutter="10" >
-                    <el-col :span="21"><el-input size="mini" v-model="filterPanel"  @click.native.stop="filterPanelFocus($event)" @input="filterPanelFunc" clearable :placeholder="$t('overall.search')"></el-input></el-col>
+                    <el-col :span="21"><el-input :placeholder="$t('overall.search')" @click.native.stop="filterPanelFocus($event)" @input="filterPanelFunc" clearable size="mini" v-model="filterPanel"></el-input></el-col>
                     <el-col :span="3"><span :title='$t("dashboard.panel.createPanelTitleSec")' @click="toAdd" v-has="'panel_toAdd'"><i class="nz-icon nz-icon-plus"></i></span></el-col>
                   </el-row>
                 </el-dropdown-item>
@@ -45,7 +45,7 @@
                     </el-row>
                   </el-dropdown-item>
                 </draggable>
-              </el-scrollbar>
+              </div>
             </el-dropdown-menu>
           </el-dropdown>
         </div>
@@ -79,13 +79,13 @@
       </template>
     </div>
     <div class="table-list" id="tableList">
-      <el-scrollbar class="el-scrollbar-large" style="height: 100%" ref="dashboardScrollbar">
+      <div ref="dashboardScrollbar" style="height: 100%; overflow: auto;">
         <div class="box-content">
           <chart-list :from="$CONSTANTS.fromRoute.panel" @on-edit-chart="editChart" @on-refresh-time="refreshTime" @on-remove-chart="delChart" ref="chartList"></chart-list>
         </div>
-      </el-scrollbar>
+      </div>
     </div>
-    <button class="to-top" :class="{'to-top-is-hover': tableHover}" v-show="showTopBtn" @click="$toTop('el', $refs.dashboardScrollbar.wrap)" style="bottom: 0;"><i class="nz-icon nz-icon-top"></i></button>
+    <button :class="{'to-top-is-hover': tableHover}" @click="toTop(scrollbarWrap)" class="to-top" style="bottom: 0;" v-show="showTopBtn"><i class="nz-icon nz-icon-top"></i></button>
 
     <transition name="right-box">
       <chart-box :chart="chart" :from="$CONSTANTS.fromRoute.panel" :panel-data="panelData" :show-panel="showPanel" @close="closeChartBox" @delete-chart="delChart" @on-create-success="createSuccess" @on-delete-success="delChartOk" @reload="panelReload" @reloadOnlyPanel="panelReloadOnlyPanel" ref="addChartModal" v-if="rightBox.chart.show"></chart-box>
@@ -177,6 +177,7 @@
         filterPanel:'',
         showPanelList:[],
         //---图表相关参数--end
+        scrollbarWrap: null,
       }
     },
     components: {
@@ -270,26 +271,6 @@
       },
       newChart() {
         return JSON.parse(JSON.stringify(this.blankChart));
-      },
-      scrollbarHeightHandler() {
-        setTimeout(() => {
-          let top = '';
-          let top2 = '';
-          document.querySelector("body>.el-dropdown-menu").addEventListener("ps-y-reach-end", () => {
-            let yDom = document.querySelector("body>.el-dropdown-menu>.ps__rail-y");
-            let yDom2 = document.querySelector("body>.el-dropdown-menu>.ps__rail-y>.ps__thumb-y");
-            if (top) {
-              yDom.style.top = top;
-            } else {
-              top = yDom.style.top;
-            }
-            if (top2) {
-              yDom2.style.top = top2;
-            } else {
-              top2 = yDom2.style.top;
-            }
-          });
-        }, 100);
       },
       // 编辑图表信息,打开编辑弹窗
       editChart(data) {
@@ -534,19 +515,10 @@
       // 滚动事件触发下拉加载
       onScroll() {
         let _self = this;
-        let scrollbarWrap = this.$refs.dashboardScrollbar.wrap;
-
-        scrollbarWrap.onscroll = bus.debounce(function() {
-          if (scrollbarWrap.scrollTop > 50) {
-            _self.showTopBtn = true;
-          } else {
-            _self.showTopBtn = false;
-          }
-          _self.$refs.chartList.loadChartData(scrollbarWrap.scrollTop);
-          //if (scrollbarWrap.scrollHeight - scrollbarWrap.scrollTop - scrollbarWrap.offsetHeight < 20) {
-            //_self.$refs.chartList.pageDataList(true, _self.showPanel.id);
-          //}
-        },300);
+        this.scrollbarWrap.addEventListener('scroll', bus.debounce(function() {
+          _self.showTopBtn = _self.scrollbarWrap.scrollTop > 50;
+          _self.$refs.chartList.loadChartData(_self.scrollbarWrap.scrollTop);
+        }, 300));
       },
       focusInput() {
         let classVal=document.getElementById('queryPanel').parentElement.getAttribute("class");
@@ -719,15 +691,12 @@
         }else{
           this.showPanelList = this.panelData;
         }
-        this.$nextTick(()=>{
-          document.querySelector(".panel-dropdown-title-space")._ps_.update()
-        })
       },
-      tableListEnter(self){
-        self.tableHover = true;
+      tableListEnter(){
+        this.tableHover = true;
       },
-      tableListLeave(self){
-        self.tableHover = false;
+      tableListLeave(){
+        this.tableHover = false;
       },
 
     },
@@ -735,9 +704,10 @@
       this.getTableData();
     },
     mounted() {
+      this.scrollbarWrap = this.$refs.dashboardScrollbar;
       this.onScroll();
-      document.querySelector("#tableList").addEventListener("mouseenter", this.tableListEnter.bind('',this));
-      document.querySelector("#tableList").addEventListener("mouseleave", this.tableListLeave.bind('',this));
+      document.querySelector("#tableList").addEventListener("mouseenter", this.tableListEnter);
+      document.querySelector("#tableList").addEventListener("mouseleave", this.tableListLeave);
     },
     watch: {
       'filter.searchName': function(n,o){
@@ -748,7 +718,9 @@
       },
     },
     beforeDestroy(){
-
+      document.querySelector("#tableList").removeEventListener("mouseenter", this.tableListEnter);
+      document.querySelector("#tableList").removeEventListener("mouseleave", this.tableListLeave);
+      this.scrollbarWrap.removeEventListener('scroll', bus.debounce);
     }
   }
 </script>

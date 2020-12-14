@@ -20,7 +20,7 @@
     <!-- end--标题-->
 
     <!-- begin--表单-->
-    <el-scrollbar class="right-box-form-box" ref="scrollbar">
+    <div class="right-box-form-box" ref="scrollbar">
       <el-form class="right-box-form  right-box-form-left" ref="form" :model="form" label-width="160px" :rules="rules">
         <el-form-item label="Module Name" prop="moduleId">
           <el-select v-model="form.moduleId" placeholder=""  popper-class="asset-dropdown" size="small">
@@ -126,7 +126,7 @@
           </el-row>
         </el-row>
       </el-form>
-    </el-scrollbar>
+    </div>
     <!-- end--表单-->
 
     <!--底部按钮-->
@@ -308,9 +308,6 @@
         this.promqlKeys.push(getUUID());
         this.elementIds.push("");
         this.promqlCount++;
-        this.$nextTick(() => {
-          this.$refs.scrollbar.update();
-        });
       },
       removeExpression(index) {
         if (this.promqlCount >= 1) {
@@ -329,9 +326,6 @@
             });
           });
         }
-        this.$nextTick(() => {
-          this.$refs.scrollbar.update();
-        });
       },
       /*关闭弹框*/
       esc(refresh) {

@@ -26,13 +26,12 @@
       <!-- end搜素框-->
 
       <!-- begin--表格-->
-      <el-scrollbar class="right-box-form-box">
+      <div class="right-box-form-box">
         <el-table
           :data="tableData"
           border
           class="nz-table endpoint-table"
           :height="mainTableHeight"
-          v-scrollBar:el-table="'large'"
           ref="endpointTable"
           v-loading="loading"
           style="width: 100%;"
@@ -83,7 +82,7 @@
             </template>
           </el-table-column>
         </el-table>
-      </el-scrollbar>
+      </div>
       <!-- end--表格-->
 
       <!--底部分頁-->

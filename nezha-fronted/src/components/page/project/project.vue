@@ -68,7 +68,6 @@
           border
           class="nz-table endpoint-table"
           :height="mainTableHeight"
-          v-scrollBar:el-table="'large'"
           v-show="bottomBox.mainResizeShow"
           ref="endpointTable"
           :cell-class-name="messageStyle"
@@ -169,7 +168,7 @@
         </el-table>
         <button class="to-top" :style="{top: tools.toTopBtnTop}"
                 :class="{'to-top-is-hover': tools.tableHover}"
-                v-show="tools.showTopBtn && bottomBox.mainResizeShow" @click="$toTop('ps', 0)"><i
+                @click="toTop(scrollWrap)" v-show="tools.showTopBtn && bottomBox.mainResizeShow"><i
           class="nz-icon nz-icon-top"></i></button>
         <div class="pagination-bottom" v-show="!bottomBox.showSubList">
           <Pagination :tableId="tableId" v-cloak :pageObj="endpointPageObj" @pageNo='endpointPageNo'
@@ -380,6 +379,7 @@
             readonly:true,
           }],
         },
+        scrollWrap: null
       }
     },
     methods:{
@@ -428,6 +428,12 @@
               }
               this.endpointTableData=response.data.list;
               this.endpointPageObj.total=response.data.total;
+              if (!this.scrollWrap) {
+                this.$nextTick(() => {
+                  this.scrollWrap = this.$refs.endpointTable.bodyWrapper;
+                  this.toTopBtnHandler(this.scrollWrap);
+                });
+              }
             }
           });
         }
@@ -756,15 +762,6 @@
         }
         return '';
       },
-      plpsscrolly(el,self){
-        if (el._ps_.scrollbarYTop > 50) {
-          self.tools.showTopBtn = true;
-          self.tools.tableHover = true;
-        } else {
-          self.tools.showTopBtn = false;
-          self.tools.tableHover = false;
-        }
-      },
     },
     created(){
       this.currentProject=this.$store.state.currentProject;
@@ -787,12 +784,6 @@
       },300);
 
       this.initEvent();
-
-      //resize时刷新左侧列表滚动条
-      let vm=this;
-      // window.onresize=function(){
-      //   // vm.$refs.leftScrollbar.update();
-      // };
     },
     computed:{
       itemTip(){
@@ -817,23 +808,6 @@
       },
     },
     watch:{
-      pageType(n){
-        if(n=='endpoint'){
-          setTimeout(()=>{
-            //绑定滚动条事件，控制top按钮
-            let el=this.$refs.endpointTable.$el.querySelector(".el-table__body-wrapper");
-            if(el._ps_){
-              el.addEventListener("ps-scroll-y", this.plpsscrolly.bind('',el,this));
-            }
-          },100)
-        }else{
-          let el = this.$refs.endpointTable.$el.querySelector(".el-table__body-wrapper");
-          if (el._ps_) {
-            el.removeEventListener("ps-scroll-y", this.plpsscrolly.bind('',el,this));
-            el._ps_.destroy();
-          }
-        }
-      },
       currentModule(n,o){
         this.endpointPageObj.pageNo=1;
         if(n&&n.id){
@@ -859,24 +833,16 @@
         }
       },
     },
-    destroyed(){
+    beforeDestroy() {
       bus.$off("project-page-type");
       bus.$off("current-project-change");
       bus.$off("current-module-change");
       bus.$off("project-list-change");
       bus.$off("module-list-change");
       bus.$off("endpoint-list-change");
-      bus.$off('alert-message-change')
+      bus.$off('alert-message-change');
+      this.scrollbarWrap.removeEventListener('scroll', bus.debounce);
     },
-    beforeDestroy(){
-      if(this.$refs.endpointTable){
-        let el = this.$refs.endpointTable.$el.querySelector(".el-table__body-wrapper");
-        if (el._ps_) {
-          el.removeEventListener("ps-scroll-y", this.plpsscrolly.bind('',el,this));
-          el._ps_.destroy();
-        }
-      }
-    }
   }
 </script>
 

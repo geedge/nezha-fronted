@@ -40,7 +40,6 @@
         :height="mainTableHeight"
         style="width: 100%;position: relative;z-index: 99"
         :data="tableData"
-        v-scrollBar:el-table="'large'"
         v-show="bottomBox.mainResizeShow"
         border
         v-loading="tools.loading"
@@ -49,7 +48,6 @@
         @sort-change="tableDataSort"
         @row-dblclick="detail"
         @selection-change="(selection)=>{this.batchDeleteObjs=selection}"
-        @scroll="plpsscrolly"
       >
         <el-table-column
           :resizable="false"
@@ -175,7 +173,7 @@
           </template>
         </el-table-column>
       </el-table>
-      <button class="to-top" :style="{top: tools.toTopBtnTop}" :class="{'to-top-is-hover': tools.tableHover}" v-show="tools.showTopBtn && bottomBox.mainResizeShow" @click="$toTop('ps', 0)"><i class="nz-icon nz-icon-top"></i></button>
+      <button :class="{'to-top-is-hover': tools.tableHover}" :style="{top: tools.toTopBtnTop}" @click="toTop(scrollWrap)" class="to-top" v-show="tools.showTopBtn && bottomBox.mainResizeShow"><i class="nz-icon nz-icon-top"></i></button>
       <div class="pagination-bottom" v-show="!bottomBox.showSubList">
         <Pagination :tableId="tableId" :pageObj="pageObj" @pageNo='pageNo' @pageSize='pageSize' ref="Pagination"></Pagination>
       </div>
@@ -393,6 +391,8 @@
 
         assetPingSwitch: localStorage.getItem('nz-sys-asset-ping-switch'),
         tagKeys:[],
+
+        scrollWrap: null
       }
     },
     computed:{
@@ -482,6 +482,13 @@
             this.tableData = response.data.list;
             this.pageObj.total = response.data.total;
             bus.$emit('asset-property-change');
+
+            if (!this.scrollWrap) {
+              this.$nextTick(() => {
+                this.scrollWrap = this.$refs.assetTable.bodyWrapper;
+                this.toTopBtnHandler(this.scrollWrap);
+              });
+            }
           }
         });
 
@@ -713,7 +720,7 @@
         });
         bus.$on('alert-message-change',()=>{
           this.getTableData()
-        })
+        });
       },
       dispatchEvent(event,param){
         this.$nextTick(()=>{
@@ -759,27 +766,6 @@
           }
         }
       },
-      plpsscrolly(el,self){
-        if (el._ps_.scrollbarYTop > 50) {
-          self.tools.showTopBtn = true;
-          self.tools.tableHover = true;
-        } else {
-          self.tools.showTopBtn = false;
-          self.tools.tableHover = false;
-        }
-      },
-      domResize(){
-        let el = this.$refs.assetTable.$el.querySelector(".el-table__body-wrapper");
-        el._ps_.update();
-      },
-      // plmouseenter(el,self){
-      //   console.log(123123123123)
-      //   self.tools.tableHover = true;
-      // },
-      // plmouseleave(el,self){
-      //   console.log(123123123123)
-      //   self.tools.tableHover = false;
-      // }
     },
     created(){
       //是否存在分页缓存
@@ -820,8 +806,6 @@
 
       this.loadKeys();
 
-      //console.log('load end')
-
       //初始化数据
       this.getUserData();
 
@@ -834,30 +818,11 @@
         this.pageObj.pageSize = pageSize
       }
       this.initEvent();
-      this.$nextTick(() => {
-        //绑定滚动条事件，控制top按钮
-        let el = this.$refs.assetTable.$el.querySelector(".el-table__body-wrapper");
-        if (el._ps_) {
-          el.addEventListener("ps-scroll-y", this.plpsscrolly.bind('',el,this));
-          // el.addEventListener("mouseenter",  this.plmouseenter.bind('',el,this));
-          // el.addEventListener("mouseleave", this.plmouseleave.bind('',el,this));
-        }
-        //resize时刷新左侧列表滚动条
-        let vm = this;
-        window.addEventListener('resize', this.domResize);
-      });
     },
-    beforeDestroy(){
-      window.removeEventListener('resize', this.domResize);
-      let el = this.$refs.assetTable.$el.querySelector(".el-table__body-wrapper");
-      if (el._ps_) {
-        el.removeEventListener("ps-scroll-y", this.plpsscrolly.bind('',el,this));
-        el._ps_.destroy();
-      }
-    },
-    destroyed() {
+    beforeDestroy() {
       bus.$off("asset-filter-change");
       bus.$off('alert-message-change');
+      this.scrollbarWrap.removeEventListener('scroll', bus.debounce);
     }
   }
 </script>

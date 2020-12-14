@@ -47,7 +47,7 @@
         <div class="vertical-line" ></div>
       </el-menu-item>
 
-      <el-submenu :index="`${index}`" :key="index" popper-class="nz-submenu" v-for="(menu, index) in getMenuList" v-if="menu.code != 'header'">
+      <el-submenu :index="`${index}`" :key="index" popper-class="nz-submenu" v-for="(menu, index) in getMenuList" v-if="menu.code != 'header' && menu.code != 'menu'">
         <template v-if="menu.code == 'asset'">
           <template slot="title">
             <div @click="jumpToAsset()" v-if="assetData.length == 0">{{$t(menu.i18n)}}</div>
@@ -56,13 +56,13 @@
           <template>
             <el-menu-item index="3-0" v-if="assetData.length == 0"><div @click="createBox({type: 6})" v-has="'asset_toAdd'"><i class="nz-icon nz-icon-create-square header-dropdown-add"></i>&nbsp;&nbsp;{{$t("overall.createDatacenter")}}</div></el-menu-item>
             <template v-else>
-              <el-scrollbar style= 'height: 360px' v-if="assetData.length>10">
+              <div style='height: 360px; overflow: auto;' v-if="assetData.length>10">
                 <el-menu-item :index="'3-' + index" :key="index" v-for="(item, index) in assetData">
                   <div :class="{'menu-item-active': route == '/asset' && activeItemIndex == item.id}" @click="jumpToAsset(item)" @mouseenter="hoverItemIndex = '3-' + index" @mouseleave="hoverItemIndex = ''">
                     <span class="too-long-split" style="width: 130px;">{{item.name}}</span>
                   </div>
                 </el-menu-item>
-              </el-scrollbar>
+              </div>
               <el-menu-item :index="'3-' + index" :key="index" v-else v-for="(item, index) in assetData">
                 <div :class="{'menu-item-active': route == '/asset' && activeItemIndex == item.id}" @click="jumpToAsset(item)" @mouseenter="hoverItemIndex = '3-' + index" @mouseleave="hoverItemIndex = ''">
                   <span class="too-long-split" style="width: 130px;">{{item.name}}</span>
@@ -79,14 +79,14 @@
           <template>
             <el-menu-item index="2-0" v-if="projectData.length == 0"><div @click="createBox({type: 1})" v-has="'project_toAdd'"><i class="nz-icon nz-icon-create-square header-dropdown-add"></i>&nbsp;&nbsp;{{$t("overall.createProject")}}</div></el-menu-item>
             <template v-else>
-              <el-scrollbar style="height:360px" v-if="projectData.length>10">
+              <div style="height: 360px; overflow: auto;" v-if="projectData.length>10">
                 <el-menu-item :index="'2-' + index" :key="index" v-for="(item, index) in projectData">
                   <div :class="{'menu-item-active': route == '/project' && activeItemIndex == item.id}" @click="jumpToProject(item)" @mouseenter="hoverItemIndex = '2-' + index" @mouseleave="hoverItemIndex = ''">
                     <span class="too-long-split" style="width: 135px;">{{item.name}}</span>
                     <div @click.stop="toEditProject(item)" class="menu-edit" v-has="'project_toEdit'" v-show="hoverItemIndex == '2-' + index && item.buildIn != 1"><i class="nz-icon nz-icon-edit"></i></div>
                   </div>
                 </el-menu-item>
-              </el-scrollbar>
+              </div>
               <el-menu-item :index="'2-' + index" :key="index" v-else v-for="(item, index) in projectData">
                 <div :class="{'menu-item-active': route == '/project' && activeItemIndex == item.id}" @click="jumpToProject(item)" @mouseenter="hoverItemIndex = '2-' + index" @mouseleave="hoverItemIndex = ''">
                   <span class="too-long-split" style="width: 135px;">{{item.name}}</span>
@@ -108,117 +108,6 @@
         </template>
       </el-submenu>
 
-
-      <!--<el-submenu index="1" popper-class="nz-submenu">
-        <template slot="title">
-          <div @click="jumpTo('/overview')" :class ="(route == '/overview' ||route == '/panel' || route == '/explore') ? 'menu-active' :'' " >
-            {{$t('overall.dashboard')}}
-          </div>
-        </template>
-        <el-menu-item index="1-0">
-          <div @click="jumpTo('/overview')" :class="{'menu-item-active' :route == '/overview'}" >{{$t('dashboard.overview.title')}}</div>
-        </el-menu-item>
-        <el-menu-item index="1-1">
-          <div @click="jumpTo('/panel')" :class="{'menu-item-active' :route == '/panel'}" >{{$t('dashboard.panel.title')}}</div>
-        </el-menu-item>
-        <el-menu-item index="1-2">
-          <div @click="jumpTo('/explore')" :class="{'menu-item-active' :route == '/explore'}">{{$t('dashboard.metricPreview.title')}}</div>
-        </el-menu-item>
-      </el-submenu>
-      <el-submenu index="3" popper-class="nz-submenu">
-        <template slot="title">
-          <div v-if="assetData.length == 0" @click="jumpToAsset()">{{$t('overall.asset')}}</div>
-          <div v-else @click="jumpToAsset()" :class="{'menu-active' : route == '/asset'}">{{$t('overall.asset')}}</div>
-        </template>
-        <template>
-          <el-menu-item v-if="assetData.length == 0" index="3-0"><div @click="createBox({type: 6})"><i class="nz-icon nz-icon-create-square header-dropdown-add"></i>&nbsp;&nbsp;{{$t("overall.createDatacenter")}}</div></el-menu-item>
-          <template v-else>
-            <el-scrollbar v-if="assetData.length>10" style= 'height: 360px'>
-              <el-menu-item :index="'3-' + index" v-for="(item, index) in assetData" :key="index">
-                <div @mouseenter="hoverItemIndex = '3-' + index" @mouseleave="hoverItemIndex = ''" @click="jumpToAsset(item)" :class="{'menu-item-active': route == '/asset' && activeItemIndex == item.id}">
-                  <span class="too-long-split" style="width: 130px;">{{item.name}}</span>
-                </div>
-              </el-menu-item>
-            </el-scrollbar>
-            <el-menu-item v-else :index="'3-' + index" v-for="(item, index) in assetData" :key="index">
-              <div @mouseenter="hoverItemIndex = '3-' + index" @mouseleave="hoverItemIndex = ''" @click="jumpToAsset(item)" :class="{'menu-item-active': route == '/asset' && activeItemIndex == item.id}">
-                <span class="too-long-split" style="width: 130px;">{{item.name}}</span>
-              </div>
-            </el-menu-item>
-          </template>
-        </template>
-      </el-submenu>
-      <el-submenu index="2" popper-class="nz-submenu">
-        <template slot="title">
-          <div v-if="projectData.length == 0">{{$t('overall.project')}}</div>
-          <div v-else @click="jumpToProject(projectData[0])" :class ="route == '/project' ? 'menu-active' :''" >{{$t('overall.project')}}</div>
-        </template>
-        <template>
-          <el-menu-item v-if="projectData.length == 0" index="2-0"><div @click="createBox({type: 1})"><i class="nz-icon nz-icon-create-square header-dropdown-add"></i>&nbsp;&nbsp;{{$t("overall.createProject")}}</div></el-menu-item>
-          <template v-else>
-            <el-scrollbar v-if="projectData.length>10" style="height:360px">
-              <el-menu-item :index="'2-' + index" v-for="(item, index) in projectData" :key="index">
-                <div @mouseenter="hoverItemIndex = '2-' + index" @mouseleave="hoverItemIndex = ''" @click="jumpToProject(item)" :class="{'menu-item-active': route == '/project' && activeItemIndex == item.id}">
-                  <span class="too-long-split" style="width: 135px;">{{item.name}}</span>
-                  <div v-show="hoverItemIndex == '2-' + index && item.buildIn != 1" @click.stop="toEditProject(item)" class="menu-edit"><i class="nz-icon nz-icon-edit"></i></div>
-                </div>
-              </el-menu-item>
-            </el-scrollbar>
-            <el-menu-item v-else :index="'2-' + index" v-for="(item, index) in projectData" :key="index">
-              <div @mouseenter="hoverItemIndex = '2-' + index" @mouseleave="hoverItemIndex = ''" @click="jumpToProject(item)" :class="{'menu-item-active': route == '/project' && activeItemIndex == item.id}">
-                <span class="too-long-split" style="width: 135px;">{{item.name}}</span>
-                <div v-show="hoverItemIndex == '2-' + index && item.buildIn != 1" @click.stop="toEditProject(item)" class="menu-edit"><i class="nz-icon nz-icon-edit"></i></div>
-              </div>
-            </el-menu-item>
-          </template>
-        </template>
-      </el-submenu>
-      <el-submenu index="4" popper-class="nz-submenu">
-        <template slot="title">
-          <div @click="jumpTo('/alertList')" :class ="route == '/alertList' || route == '/alertConfig' ? 'menu-active' : ''">{{$t('overall.alert')}}</div>
-        </template>
-        <el-menu-item index="4-1">
-          <div @click="jumpTo('/alertList')" :class ="route == '/alertList' ? 'menu-item-active' : ''">{{$t('alert.message')}}</div>
-        </el-menu-item>
-        <el-menu-item index="4-2">
-          <div @click="jumpTo('/alertConfig')" :class ="route == '/alertConfig' ? 'menu-item-active' : ''">{{$t('alert.rule')}}</div>
-        </el-menu-item>
-      </el-submenu>
-      <el-submenu index="5" popper-class="nz-submenu">
-        <template slot="title">
-          <div @click="jumpTo('/account')" :class ="route == '/account' || route == '/promServer' || route == '/dc' || route == '/model' || route == '/mib' || route == '/system' || route == '/terminallog' || route == '/operationlog' || route == '/about' ? 'menu-active' : ''">{{$t('overall.config')}}</div>
-        </template>
-        <el-menu-item index="5-0">
-          <div @click="jumpTo('/account')" :class="{'menu-item-active' :(route == '/account' )}">{{$t('config.account.account')}}</div>
-        </el-menu-item>
-        <el-menu-item index="5-9">
-          <div @click="jumpTo('/roles')" :class="{'menu-item-active' :(route == '/roles' )}">{{$t('config.roles.roles')}}</div>
-        </el-menu-item>
-        <el-menu-item index="5-1">
-          <div @click="jumpTo('/promServer')" :class="{'menu-item-active' :(route == '/promServer' )}">{{$t('config.promServer.promServerList')}}</div>
-        </el-menu-item>
-        <el-menu-item index="5-2">
-          <div @click="jumpTo('/dc')" :class="{'menu-item-active' :(route == '/dc' )}">{{$t('config.dc.dc')}}</div>
-        </el-menu-item>
-        <el-menu-item index="5-3">
-          <div @click="jumpTo('/model')" :class="{'menu-item-active' :(route == '/model' )}">{{$t('config.model.model')}}</div>
-        </el-menu-item>
-        <el-menu-item index="5-4">
-          <div @click="jumpTo('/mib')" :class="{'menu-item-active' :(route == '/mib' )}">{{$t('config.mib.mib')}}</div>
-        </el-menu-item>
-        <el-menu-item index="5-5">
-          <div @click="jumpTo('/system')" :class="{'menu-item-active' :(route == '/system' )}">{{$t('config.system.system')}}</div>
-        </el-menu-item>
-        <el-menu-item index="5-6">
-          <div @click="jumpTo('/terminallog')" :class="{'menu-item-active' :(route == '/terminallog' )}">{{$t('config.terminallog.terminallog')}}</div>
-        </el-menu-item>
-        <el-menu-item index="5-7">
-          <div @click="jumpTo('/operationlog')" :class="{'menu-item-active' :(route == '/operationlog' )}">{{$t('config.operationlog.operationlog')}}</div>
-        </el-menu-item>
-        <el-menu-item index="5-8">
-          <div @click="jumpTo('/about')" :class="{'menu-item-active' :(route == '/about' )}">{{$t('overall.about')}}</div>
-        </el-menu-item>
-      </el-submenu>-->
       <el-submenu index="101" popper-class="nz-submenu">
         <template slot="title">
           <div class='nz-user'>{{username}}<i class="nz-icon nz-icon-arrow-down"></i></div>

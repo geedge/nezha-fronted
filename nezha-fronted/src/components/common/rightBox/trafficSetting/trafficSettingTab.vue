@@ -122,7 +122,6 @@
       <div class="endpoints-box-endpoints" style="border: 1px solid #E7EAED;border-radius: 2px;padding-bottom: 10px">
         <el-table :data="assetSetting.configs"
                   tooltip-effect="light"
-                  v-scrollBar:el-table="'large'"
                   max-height="300"
                   height="200"
                   :row-class-name="assetSetting.host == null?'not-allowed':''"

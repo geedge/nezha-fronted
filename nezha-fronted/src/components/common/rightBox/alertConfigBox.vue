@@ -14,7 +14,7 @@
     <!-- end--标题-->
 
     <!-- begin--表单-->
-    <el-scrollbar class="right-box-form-box">
+    <div class="right-box-form-box">
       <el-form class="right-box-form right-box-form-left" :model="editAlertRule" label-position="right" label-width="120px" :rules="rules" ref="alertRuleForm">
         <!--alertName-->
         <el-form-item :label='$t("alert.config.name")' prop="alertName">
@@ -103,7 +103,7 @@
           <el-input maxlength="512" rows="4" show-word-limit type="textarea" placeholder="" v-model="editAlertRule.description" size="small"></el-input>
         </el-form-item>
       </el-form>
-    </el-scrollbar>
+    </div>
     <!-- end--表单-->
 
     <!--底部按钮-->

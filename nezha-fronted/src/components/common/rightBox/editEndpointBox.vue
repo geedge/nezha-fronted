@@ -14,7 +14,7 @@
     <!-- end--标题-->
 
     <!-- begin--表单-->
-    <el-scrollbar class="right-box-form-box">
+    <div class="right-box-form-box">
       <el-form class="right-box-form  right-box-form-left" :model="editEndpoint" label-position="right" label-width="120px" :rules="rules" ref="endpointForm">
         <!--project-->
         <el-form-item :label="$t('project.project.project')" prop="project.id">
@@ -71,7 +71,7 @@
             </span>
           </div>
           <div class="param-box param-box-module">
-            <el-scrollbar ref="paramBoxScrollbar" style="height: 100%">
+            <div style="height: 100%; overflow: auto">
               <div class="param-box-row" v-for="(item, index) in editEndpoint.paramObj">
                 <el-form-item class="param-box-row-key" :rules="{required: true, message: $t('validate.required'), trigger: 'blur'}" :prop="'paramObj.' + index + '.key'">
                   <el-input placeholder="key" size="mini" v-model="item.key"></el-input>
@@ -82,7 +82,7 @@
                 </el-form-item>
                 <span class="param-box-row-symbol" @click="removeParam(index)"><i class="nz-icon nz-icon-shanchu1" style="color: #666666"></i></span>
               </div>
-            </el-scrollbar>
+            </div>
           </div>
         </el-form-item>
         <!--label-->
@@ -99,7 +99,7 @@
           </div>
 
           <div class="param-box param-box-module">
-            <el-scrollbar ref="labelBoxScrollbar" style="height: 100%">
+            <div ref="labelBoxScrollbar" style="height: 100%; overflow: auto;">
               <div class="param-box-row" v-for="(item, index) in editEndpoint.labelModule">
                 <el-form-item class="param-box-row-key" :rules="[{required: true, message: $t('validate.required'), trigger: 'blur'},{ pattern: /[a-zA-Z_:][a-zA-Z0-9_:]*/, message: $t('validate.key') ,trigger: 'blur'}]" :prop="'labelModule.' + index + '.key'">
                   <el-input placeholder="key" size="mini" v-model="item.key"></el-input>
@@ -110,7 +110,7 @@
                 </el-form-item>
                 <span class="param-box-row-symbol" :id="'moduel-remove-label-'+index" @click="removeLabel(index)"><i class="nz-icon nz-icon-shanchu1" style="color:#666;"></i></span>
               </div>
-            </el-scrollbar>
+            </div>
           </div>
         </el-form-item>
         <!--enable-->
@@ -118,7 +118,7 @@
           <el-switch v-model.number="editEndpoint.enabled" active-color="#ee9d3f" :active-value="1" :inactive-value="0"></el-switch>
         </el-form-item>
       </el-form>
-    </el-scrollbar>
+    </div>
 
     <!-- end--表单-->
 
@@ -192,25 +192,16 @@
       // 清除param
       clearAllParam() {
         this.editEndpoint.paramObj = [];
-        this.$nextTick(() => {
-          this.$refs.paramBoxScrollbar.update();
-        });
       },
 
       // 新增param
       addParam() {
         this.editEndpoint.paramObj.push({key: '', value: ''});
-        this.$nextTick(() => {
-          this.$refs.paramBoxScrollbar.update();
-        });
       },
 
       // 移除单个param
       removeParam(index) {
         this.editEndpoint.paramObj.splice(index, 1);
-        this.$nextTick(() => {
-          this.$refs.paramBoxScrollbar.update();
-        });
       },
 
       //将param转为json字符串格式
@@ -230,16 +221,10 @@
       // 新增label
       addLabel() {
         this.editEndpoint.labelModule.push({key: '', value: ''});
-        this.$nextTick(() => {
-          this.$refs.labelBoxScrollbar.update();
-        });
       },
       // 移除单个Label
       removeLabel(index) {
         this.editEndpoint.labelModule.splice(index, 1);
-        this.$nextTick(() => {
-          this.$refs.labelBoxScrollbar.update();
-        });
       },
 
       //将labels转为json字符串格式

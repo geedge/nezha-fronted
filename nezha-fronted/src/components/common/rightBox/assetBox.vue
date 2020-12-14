@@ -11,7 +11,7 @@
 
     <div class="right-box-title">{{editAsset.id ? ($t("asset.editAsset") + "  ID：" + editAsset.id) : $t("asset.createAsset")}}</div>
 
-    <el-scrollbar class="right-box-form-box" ref="scrollbar">
+    <div class="right-box-form-box">
       <el-form ref="assetEditForm" :model="editAsset" label-width="120px" class="right-box-form right-box-form-left" :rules="rules">
         <el-form-item :label="$t('asset.sn')" prop="sn">
           <el-input size="small" v-model="editAsset.sn"/>
@@ -99,7 +99,7 @@
               <div>Value</div>
               <div>Action</div>
             </div>
-            <el-scrollbar ref="tagEditBoxScrollbar" style="height: calc(100% - 32px);">
+            <div style="height: calc(100% - 32px); overflow: auto">
               <div class="tag-edit-box-body" v-for="(item, index) in editAsset.tags">
                 <el-form-item class="tag-edit tag-edit-tag" :rules="{required: true, message: $t('validate.required'), trigger: 'change'}" :prop="'tags.' + index + '.tag'">
                   <el-autocomplete placeholder="tag" size="mini" v-model="item.tag" :fetch-suggestions="filterKey" @blur="loadValues(item)" @select="loadValues" popper-class="no-style-class"></el-autocomplete>
@@ -109,7 +109,7 @@
                 </el-form-item>
                 <div class="param-box-row-symbol" :id="'asset-tag-remove-'+index" @click.stop="removeTag(index)"><i class="nz-icon nz-icon-shanchu1" style="color: #666666"></i></div>
               </div>
-            </el-scrollbar>
+            </div>
           </div>
         </el-form-item>
 
@@ -147,7 +147,7 @@
           </el-form-item>
         </template>
       </el-form>
-    </el-scrollbar>
+    </div>
 
     <!--底部按钮-->
     <div class="right-box-bottom-btns">
@@ -386,9 +386,6 @@
       addTag() {
         !this.editAsset.tags && (this.$set(this.editAsset, "tags", []));
         this.editAsset.tags.push({tag: "", value: ""});
-        this.$nextTick(() => {
-          this.$refs.tagEditBoxScrollbar.update();
-        });
       },
       addAccount(type) {
         if (type == "SSH") {
@@ -435,10 +432,6 @@
         }
         this.accountType = type;
         this.showAccountOp = false;
-        this.$nextTick(() => {
-          let sbWrap = this.$refs.scrollbar.$refs.wrap;
-          sbWrap.scrollTop = sbWrap.scrollHeight;
-        });
       },
       removeAccount(index) {
         this.editAsset.accounts.splice(index, 1);
@@ -450,9 +443,6 @@
       },
       removeTag(index) {
         this.editAsset.tags.splice(index, 1);
-        this.$nextTick(() => {
-          this.$refs.tagEditBoxScrollbar.update();
-        });
       },
       setLocationData(data) {
         this.locationInfo = data;
@@ -562,10 +552,6 @@
       },
       changeProtocolType(type) {
         this.accountType = type;
-        this.$nextTick(() => {
-          let sbWrap = this.$refs.scrollbar.$refs.wrap;
-          sbWrap.scrollTop = sbWrap.scrollHeight;
-        });
       },
       save() {
         if(this.locationInfo) {

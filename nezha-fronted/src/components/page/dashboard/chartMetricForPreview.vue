@@ -240,7 +240,7 @@
 -->
       <el-col :span="24">
         <div class="li-list-part-label-val-list" id="scrollDiv">
-          <el-scrollbar style="height: 100%">
+          <div style="height: 100%; overflow: auto;">
             <el-form-item style="width:99%;" class="metric-title-position right-box-form-content" v-for="(item, index) in elementInfo.selectedTagList" :key="index"  label-width="100" :ref="'tagItem' + index" :prop="'tagList.' + index + '.value'" >
               <el-row :gutter="10" >
                 <el-col :span="4" >
@@ -260,7 +260,7 @@
               -->
                 </el-row>
             </el-form-item>
-          </el-scrollbar>
+          </div>
         </div>
       </el-col>
 
