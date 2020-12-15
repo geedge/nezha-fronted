@@ -307,7 +307,7 @@
           optionals: [10, 20, 50],
           rule: 10,
           asset: 48,
-          module: 20
+          module: 48
         },
         system_server_time:null,
         freshDateTimer:null,
