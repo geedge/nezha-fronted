@@ -445,7 +445,7 @@
     margin-left: 30px;
   }
   .facade-top .facade-top-right{
-    width: 5%;
+    width: auto;
     min-width: 100px;
   }
   .facade-top-right-content{

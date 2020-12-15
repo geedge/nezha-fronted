@@ -21,7 +21,7 @@
                 <span class="panel-info-corner-inner"></span>
             </span>
           </el-popover>
-          <el-dropdown trigger="click" class="nz-chart-top" :key="'chartDropdown'+chartIndex" v-clickoutside="clickos">
+          <el-dropdown trigger="click" class="nz-chart-top" :key="'chartDropdown'+chartIndex" v-clickoutside="clickos" :class="{'move-able':!isLock}">
             <el-dropdown-menu style="display: none"></el-dropdown-menu>
             <span class="el-dropdown-link chart-title" @click.stop="dropdownMenuShow=!dropdownMenuShow">
               <span class="chart-title-text">{{chartData.title}}</span>
@@ -78,10 +78,11 @@
           <div slot="title">
             <span class="nz-dialog-title">{{data.title}}</span>
             <div class="float-right panel-calendar dialog-tool">
-              <time-picker ref="calendarPanel" class="nz-dashboard-picker" style="margin-top: -12px;"
-                           @change="dateChange"></time-picker>
+<!--              <time-picker ref="calendarPanel" class="nz-dashboard-picker" style="margin-top: -12px;"-->
+<!--                           @change="dateChange"></time-picker>-->
+              <pick-time :refresh-data-func="dateChange" v-model="searchTime" :use-chart-unit="false" ref="pickTime" style="height: 28px;"></pick-time>
             </div>
-            <span class="float-right  dialog-tool" @click="screenRefreshChart" style="margin-right: 15px"><i class="global-active-color nz-icon nz-icon-refresh"/></span>
+<!--            <span class="float-right  dialog-tool" @click="screenRefreshChart" style="margin-right: 15px"><i class="global-active-color nz-icon nz-icon-refresh"/></span>-->
           </div>
           <el-table style="margin-top: 10px;" class="nz-table" height="95%" :data="seriesItemScreen" border
                     @sort-change="tableDataSortScreen" tooltip-effect="light">
@@ -105,7 +106,7 @@
                       @pageSize='screenPageSize' ref="Pagination" :popper-append-to-body="false"></Pagination>
           <loading :ref="'localLoadingScreen'+chartIndex"></loading>
         </el-dialog>
-        <span class="vue-resizable-handle" @mousedown="startResize"></span>
+        <span class="vue-resizable-handle" @mousedown="startResize" v-if="!isLock"></span>
       </div>
     </div>
   </div>
@@ -141,7 +142,8 @@
         type: Number,
         default: 0,
       },
-      from: {type: String}
+      from: {type: String},
+      isLock:{type:Boolean,default:false}
     },
     data() {
       return {
@@ -315,7 +317,6 @@
       },
       //全屏时间条件查询
       dateChange(time) {
-        this.searchTime = [...time];
         this.seriesItemScreen = [];
         for (let i = 0; i < 8; i++) {
           this.seriesItemScreen.push({//表格数据
@@ -362,7 +363,7 @@
         this.searchTime = [];
         this.$set(this.searchTime, 0, this.oldSearchTime[0]);
         this.$set(this.searchTime, 1, this.oldSearchTime[1]);
-        this.$refs.calendarPanel.setCustomTime(this.searchTime);
+        // this.$refs.calendarPanel.setCustomTime(this.searchTime);
 
         this.seriesItemScreen = this.seriesItem;
         this.screenModal = true;

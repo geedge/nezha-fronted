@@ -329,12 +329,12 @@ const cn = {
         ruleNum: "告警规则总数",
         alertNum: "告警数量",
         alertRuleTopN: "根据告警规则统计告警消息数量TOP10",
-        assetTopN: "根据资产统计告警消息数量TOP10",
+        assetTopN: "根据资产统计告警消息数量TOP",
         top: "Top",
         chart: {
           chartTitle: "告警趋势"
         },
-        moduleTopN: "根据模块列出Top10告警信息"
+        moduleTopN: "根据模块列出Top告警信息"
       },
       mapTooltip: {
         asset: "资产",

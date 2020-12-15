@@ -30,8 +30,8 @@
               <div class="content-col-content-num">
                 <vue-countup :decimals="(assetData ? assetData.totalStat.total  : 0) < 1000 ? 0 : 1" :duration="1" :end-value="(assetData ? assetData.totalStat.total  : '') | numberFormat"
                              :start-value="0"></vue-countup>
-                <span class="over-num" v-if="(assetData ? assetData.totalStat.total  : 0) > 1000 ">+</span>
                 <span class="overview-row-unit">{{(assetData ? assetData.totalStat.total  : '') | unitFormat}}</span>
+                <span class="over-num" v-if="(assetData ? assetData.totalStat.total  : 0) > 1000 ">+</span>
               </div>
               </el-tooltip>
               <div class="content-col-content-title">{{$t("dashboard.overview.asset.title")}}</div>
@@ -45,8 +45,8 @@
               <el-tooltip :content="projectData ? projectData.projectStat.length + '' : ''" class="item" effect="light" placement="top">
               <div class="content-col-content-num">
                 <vue-countup :decimals="(projectData ? projectData.projectStat.length : 0) < 1000 ? 0 : 1" :duration="1" :end-value="(projectData ? projectData.projectStat.length : '') | numberFormat" :start-value="0"></vue-countup>
-                <span class="over-num" v-if="(projectData ? projectData.projectStat.length : 0) > 1000 ">+</span>
                 <span class="overview-row-unit">{{(projectData ? projectData.projectStat.length  : '') | unitFormat}}</span>
+                <span class="over-num" v-if="(projectData ? projectData.projectStat.length : 0) > 1000 ">+</span>
               </div>
               </el-tooltip>
               <div class="content-col-content-title">{{$t("dashboard.overview.project.project")}}</div>
@@ -60,8 +60,8 @@
               <el-tooltip :content="moduleData ? moduleData.moduleStat.length + '' : ''" class="item" effect="light" placement="top">
               <div class="content-col-content-num">
                 <vue-countup :decimals="(moduleData ? moduleData.moduleStat.length : 0) < 1000 ? 0 : 1" :duration="1" :end-value="(moduleData ? moduleData.moduleStat.length : '') | numberFormat" :start-value="0"></vue-countup>
-                <span class="over-num" v-if="(moduleData ? moduleData.moduleStat.length : 0) > 1000 ">+</span>
                 <span class="overview-row-unit">{{(moduleData ? moduleData.moduleStat.length  : '') | unitFormat}}</span>
+                <span class="over-num" v-if="(moduleData ? moduleData.moduleStat.length : 0) > 1000 ">+</span>
               </div>
               </el-tooltip>
               <div class="content-col-content-title">{{$t("dashboard.overview.module.module")}}</div>
@@ -75,8 +75,8 @@
               <el-tooltip :content="endpointData ? endpointData.total + '' : ''" class="item" effect="light" placement="top">
               <div class="content-col-content-num">
                 <vue-countup :decimals="(endpointData ? endpointData.total : 0) < 1000 ? 0 : 1" :duration="1" :end-value="(endpointData ? endpointData.total : '') | numberFormat" :start-value="0"></vue-countup>
-                <span class="over-num" v-if="(endpointData ? endpointData.total : 0) > 1000 ">+</span>
                 <span class="overview-row-unit">{{(endpointData ? endpointData.total : '') | unitFormat}}</span>
+                <span class="over-num" v-if="(endpointData ? endpointData.total : 0) > 1000 ">+</span>
               </div>
               </el-tooltip>
               <div class="content-col-content-title">{{$t("dashboard.overview.endpoint.endpoint")}}</div>
@@ -90,8 +90,8 @@
               <el-tooltip :content="alertMessageData ? alertMessageData.alertMessageTotal + '' : ''" class="item" effect="light" placement="top">
               <div class="content-col-content-num">
                 <vue-countup :decimals="(alertMessageData ? alertMessageData.alertMessageTotal : 0) < 1000 ? 0 : 1" :duration="1" :end-value="(alertMessageData ? alertMessageData.alertMessageTotal : '') | numberFormat" :start-value="0"></vue-countup>
-                <span class="over-num" v-if="(alertMessageData ? alertMessageData.alertMessageTotal : 0) > 1000 ">+</span>
                 <span class="overview-row-unit">{{(alertMessageData ? alertMessageData.alertMessageTotal : '') | unitFormat}}</span>
+                <span class="over-num" v-if="(alertMessageData ? alertMessageData.alertMessageTotal : 0) > 1000 ">+</span>
               </div>
               </el-tooltip>
               <div class="content-col-content-title">{{$t("overall.alert")}}</div>
@@ -188,16 +188,19 @@
               </span>-->
             </span>
           </div>
-          <div class="content-col-content">
-            <chart-box axis-tooltip="y" v-show="alertMessageShow == 'asset'" :tooltip-formatter="simpleFormatter" chart-type="ruleBar" ref="assetMessage" name="assetMessage" :show-toolbox="false" @is-loading="(isLoading)=>{this.assetMessageLoading = isLoading}"></chart-box>
-            <chart-box axis-tooltip="y" v-show="alertMessageShow == 'module'" :tooltip-formatter="simpleFormatter" chart-type="bar" ref="moduleMessage" name="moduleMessage" :show-toolbox="false" @is-loading="(isLoading)=>{this.moduleMessageLoading = isLoading}"></chart-box>
-            <div class="chart-no-data" v-if="!alertMessageLoading && ((!messageByAssetSeries.data && !messageByAssetSeries.category) || (messageByAssetSeries.data.length == 0 && messageByAssetSeries.category.length == 0))">No Data</div>
+          <div class="content-col-content" style="overflow: hidden">
+            <!--<chart-box axis-tooltip="y" v-show="alertMessageShow == 'asset'" :tooltip-formatter="simpleFormatter" chart-type="ruleBar" ref="assetMessage" name="assetMessage" :show-toolbox="false" @is-loading="(isLoading)=>{this.assetMessageLoading = isLoading}"></chart-box>-->
+            <!--<chart-box axis-tooltip="y" v-show="alertMessageShow == 'module'" :tooltip-formatter="simpleFormatter" chart-type="bar" ref="moduleMessage" name="moduleMessage" :show-toolbox="false" @is-loading="(isLoading)=>{this.moduleMessageLoading = isLoading}"></chart-box>-->
+            <messageAsset v-show="messageAssetData.length>0" :data="messageAssetData" :col="col" :length="length" ref="assetHexagon" :from="'asset'"/>
+            <div class="chart-no-data" v-if="messageAssetData.length===0">No Data</div>
           </div>
         </div>
         <!--第三个图-->
         <div class="content-col-box">
           <div class="content-col-title">
-            <span>{{$t("dashboard.overview.alert.alertRuleTopN")}}</span>
+            <span>{{$t("dashboard.overview.alert.moduleTopN")}}</span>
+            <!--<span> <el-input v-model="col"  size="small"/></span>-->
+            <!--<span> <el-input v-model="length" size="small"/></span>-->
             <!--<el-dropdown trigger="hover" :show-timeout="0" size="small">
               <span>Top&nbsp;{{topFilter.rule}}<i class="nz-icon nz-icon-arrow-down el-icon&#45;&#45;right"></i></span>
               <el-dropdown-menu slot="dropdown">
@@ -205,10 +208,11 @@
               </el-dropdown-menu>
             </el-dropdown>-->
           </div>
-          <div class="content-col-content">
-            <chart-box axis-tooltip="y" chart-type="ruleBar" ref="ruleMessage" :tooltip-formatter="simpleFormatter" :show-toolbox="false" name="ruleMessage" @is-loading="(isLoading)=>{this.ruleMessageLoading = isLoading}"></chart-box>
+          <div class="content-col-content" style="overflow: hidden">
+            <!--<chart-box axis-tooltip="y" chart-type="ruleBar" ref="ruleMessage" :tooltip-formatter="simpleFormatter" :show-toolbox="false" name="ruleMessage" @is-loading="(isLoading)=>{this.ruleMessageLoading = isLoading}"></chart-box>-->
             <!--                <div class="no-data-tip" v-if="!ruleMessageLoading && ((!messageByRuleSeries.data && !messageByRuleSeries.category) || (messageByRuleSeries.data.length == 0 && messageByRuleSeries.category.length == 0))">N/A</div>-->
-            <div class="chart-no-data" v-if="!ruleMessageLoading && ((!messageByRuleSeries.data && !messageByRuleSeries.category) || (messageByRuleSeries.data.length == 0 && messageByRuleSeries.category.length == 0))">No Data</div>
+            <messageAsset v-show="messageModuleData.length>0" :data="messageModuleData" :col="col" :length="length" ref="moduleHexagon" :from="'module'" :hexagonSvgID="'hexagonSvg2'"/>
+            <div class="chart-no-data" v-if="messageModuleData.length===0">No Data</div>
           </div>
         </div>
       </div>
@@ -235,7 +239,7 @@
   import echarts from "echarts";
   import chartConfig from './chartConfig'
   import overViewTopology from '../../../common/project/overViewTopology'
-
+  import messageAsset from '../../../common/overView/messageAsset'
   var timeout; //第三行第三个图的dropdown下拉菜单timeout
 
 
@@ -249,7 +253,8 @@
       'chart-box': chart,
       'time-picker': timePicker,
       'vue-countup': VueCountUp,
-      'topology':overViewTopology
+      'topology':overViewTopology,
+      messageAsset,
     },
     data() {
       return {
@@ -298,8 +303,8 @@
         topFilter:{
           optionals: [10, 20, 50],
           rule: 10,
-          asset: 10,
-          module: 10
+          asset: 48,
+          module: 48
         },
         system_server_time:null,
         freshDateTimer:null,
@@ -310,6 +315,10 @@
           y: 0
         },
         searchTime:bus.getTimezontDateRange(),
+        messageAssetData:[],
+        col:10,
+        length:9,
+        messageModuleData:[],
       }
     },
     filters: {
@@ -378,8 +387,9 @@
           this.queryAlertRuleData(),
           // this.queryAlertTrendData(),
           this.initMap(),
-          this.queryAlertStatByRule(),
-          this.queryAlertStatByAsset(),
+          this.queryAlertStatByRule(),//3-3
+          this.queryAlertStatByAsset(),//3-2 新的也是这个 3-2
+          this.queryAlertStatByModule(),// 新的3-3
           this.getDcTrafficData(),
           this.queryAllProjectData(),
         ]
@@ -1143,7 +1153,7 @@
       queryAlertStatByRule() {
         return new Promise(resolve=>{
 
-          this.$refs.ruleMessage.startLoading();
+          // this.$refs.ruleMessage.startLoading();
           this.$get('overview/alertStatByRule', {top: this.topFilter.rule}).then(response => {
             if (response.code === 200) {
               let seriesData = [];
@@ -1169,9 +1179,9 @@
                 },
                 category: categoryData, //自定义，用来判断N/A是否显示
               };
-              this.$refs.ruleMessage.modifyOption('yAxis', 'data', categoryData);
-              this.$refs.ruleMessage.setSeries(this.messageByRuleSeries);
-              this.$refs.ruleMessage.endLoading();
+              // this.$refs.ruleMessage.modifyOption('yAxis', 'data', categoryData);
+              // this.$refs.ruleMessage.setSeries(this.messageByRuleSeries);
+              // this.$refs.ruleMessage.endLoading();
             }
             resolve()
           });
@@ -1180,35 +1190,11 @@
       queryAlertStatByAsset() {
         return new Promise(resolve => {
 
-          this.$refs.assetMessage.startLoading();
+          this.$refs.assetHexagon.startLoading();
           this.$get('overview/alertStatByAsset', {top: this.topFilter.asset}).then(response => {
             if (response.code === 200) {
-              let seriesData = [];
-              let categoryData = [];
-              response.data.list.forEach(item => {
-                seriesData.splice(0, 0, item.nums);
-                categoryData.splice(0, 0, item.host);
-              });
-              this.messageByAssetSeries = {
-                name: 'alertStatByAsset',
-                data: seriesData,
-                type: 'bar',
-                barMaxWidth: 15,
-                category: categoryData,
-                itemStyle: {
-                  color: function(params) {
-                    let colorList = ["#FAd4ab", "#d0e8d0"];;
-                    if(params.dataIndex % 2 == 0){
-                      return colorList[0]
-                    }else{
-                      return colorList[1]
-                    }
-                  },
-                },
-              };
-              this.$refs.assetMessage.modifyOption('yAxis', 'data', categoryData);
-              this.$refs.assetMessage.setSeries(this.messageByAssetSeries);
-              this.$refs.assetMessage.endLoading();
+              this.messageAssetData= response.data.list;
+              this.$refs.assetHexagon.endLoading();
             }
             resolve();
           });
@@ -1217,25 +1203,11 @@
       queryAlertStatByModule() {
         return new Promise(resolve => {
 
-          this.$refs.moduleMessage.startLoading();
+          this.$refs.moduleHexagon.startLoading();
           this.$get('overview/alertStatByModule', {top: this.topFilter.module}).then(response => {
             if (response.code === 200) {
-              let seriesData = [];
-              let categoryData = [];
-              response.data.list.forEach(item => {
-                seriesData.splice(0, 0, item.nums);
-                categoryData.splice(0, 0, item.module);
-              });
-              this.messageByModuleSeries = {
-                name: 'alertStatByModule',
-                data: seriesData,
-                type: 'bar',
-                barMaxWidth: 30,
-                category: categoryData
-              };
-              this.$refs.moduleMessage.modifyOption('xAxis', 'data', categoryData);
-              this.$refs.moduleMessage.setSeries(this.messageByModuleSeries);
-              this.$refs.moduleMessage.endLoading();
+              this.messageModuleData=response.data.list;
+              this.$refs.moduleHexagon.endLoading();
             }
             resolve();
           });
@@ -1617,7 +1589,7 @@
     watch: {
       "trendSearchParam.select": function(n, o) {
         this.queryAlertTrendData();
-      }
+      },
     },
     mounted() {
       this.initData();

@@ -7,7 +7,7 @@
     <div class="resize-box" ref="resizeBox">
       <div class="chart-container chart-detail" :id="'chartContainerDiv' + chartIndex" @mouseenter="caretShow = true" @mouseleave="caretShow = false">
         <loading :ref="'localLoading' + chartIndex"></loading>
-        <div class="clearfix chart-title" :class="{'drag-disabled': !data.draggable}" :id="'chartTitle' + chartIndex">
+        <div class="clearfix chartTitle" :class="{'drag-disabled': !data.draggable,}" :id="'chartTitle' + chartIndex">
           <el-popover
             v-if="isError"
             :close-delay="10"
@@ -20,7 +20,8 @@
               <span class="panel-info-corner-inner"></span>
             </span>
           </el-popover>
-          <span class="el-dropdown-link chart-title-text" @click="dropdownMenuShow = !dropdownMenuShow">{{data.title}}</span>
+          <span :class="{'move-able':!isLock}"><span class="el-dropdown-link chart-title-text chart-title" @click="dropdownMenuShow = !dropdownMenuShow">{{data.title}}</span></span>
+
         </div>
         <div ref="chartInfo" class="chart-info" :id="'chartInfoDiv' + chartIndex" v-cloak>
           <div ref="scrollbar" style="height: 100%;width:100%; overflow: auto;">
@@ -250,7 +251,7 @@
           </div>
         </div>
       </div>
-      <span v-if="data.resizable" class="vue-resizable-handle" @mousedown="startResize"></span>
+      <span v-if="data.resizable&&!isLock" class="vue-resizable-handle" @mousedown="startResize"></span>
     </div>
     <!--preview -->
     <chart-preview :panelId="panelId" ref="chartsPreview" ></chart-preview>
@@ -286,7 +287,8 @@
       chartIndex:{
         type: Number,
         default: 0,
-      }
+      },
+      isLock:{type:Boolean,default:false}
     },
     data() {
       return {

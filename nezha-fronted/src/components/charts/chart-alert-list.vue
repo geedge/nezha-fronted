@@ -20,7 +20,7 @@
               <span class="panel-info-corner-inner"></span>
             </span>
           </el-popover>
-          <el-dropdown trigger="click" v-show="!isPreview" class="nz-chart-top" :key="'chartDropdown'+chartIndex"  v-clickoutside="clickos">
+          <el-dropdown trigger="click" v-show="!isPreview" class="nz-chart-top" :key="'chartDropdown'+chartIndex"  v-clickoutside="clickos" :class="{'move-able':!isLock}">
             <el-dropdown-menu style="display: none"></el-dropdown-menu>
             <span class="el-dropdown-link chart-title" @click.stop="dropdownMenuShow=!dropdownMenuShow">
               <span class="chart-title-text">{{chartInfo.title}}</span>
@@ -61,8 +61,9 @@
           <div slot="title">
             <span class="nz-dialog-title">{{data.title}}</span>
             <div class="float-right panel-calendar dialog-tool">
+              <pick-time :refresh-data-func="dateChange" v-model="searchTime" :show-time-picker="false" :use-chart-unit="false" ref="pickTime" style="height: 28px;"></pick-time>
             </div>
-            <span class="float-right  dialog-tool" @click="screenRefreshChart"><i class="global-active-color nz-icon nz-icon-refresh"/></span>
+<!--            <span class="float-right  dialog-tool" @click="screenRefreshChart"><i class="global-active-color nz-icon nz-icon-refresh"/></span>-->
           </div>
           <alertMessageTable
             :tableData="storedScreanTableData"
@@ -103,13 +104,13 @@
           <div slot="title">
             {{$t("project.endpoint.dialogTitle")}}
             <div class="float-right panel-calendar dialog-tool" style="display: flex">
-              <pick-time :refresh-data-func="queryChartDate" :use-refresh="false" :use-chart-unit="false" v-model="searchTime" style="height: 28px;" @unitChange="chartUnitChange"></pick-time>
+              <pick-time :refresh-data-func="queryChartDate" :use-refresh="true" :use-chart-unit="false" v-model="searchTime" style="height: 28px;" @unitChange="chartUnitChange"></pick-time>
             </div>
           </div>
           <chart ref="messageChart" name="alertMessageChart" :unit="chartUnit" ></chart>
         </el-dialog>
       </div>
-      <span class="vue-resizable-handle" @mousedown="startResize" v-if="!isPreview && data.resizable"></span>
+      <span class="vue-resizable-handle" @mousedown="startResize" v-if="!isPreview && data.resizable&&!isLock"></span>
     </div>
   </div>
 </template>
@@ -151,7 +152,8 @@ export default {
     },
     chartInfo:{},
     id:'',
-    from: {type: String}
+    from: {type: String},
+    isLock:{type:Boolean,default:false}
   },
   data() {
     return {
@@ -549,7 +551,7 @@ export default {
         if(this.searchLabel.orderBy){
           queryParam.orderBy=this.searchLabel.orderBy;
         }
-        this.startLoading(filterType);
+        // this.startLoading(filterType);
         this.$get('/alert/message', queryParam).then(response => {
           if (response.code == 200) {
             this.storedTableData = response.data.list;
@@ -783,10 +785,6 @@ export default {
         let container = document.querySelector('#chartTableDiv' + this.chartIndex + " .table-container");
         container.style.height = `calc(100% - ${deHeight}px)`;
         this.tableHeight = `calc(100% - 34px)`;
-        this.$nextTick(() => {
-          this.ps = container.querySelector(".el-table__body-wrapper")._ps_;
-          this.ps.update();
-        });
       },
       showLoad(chartItem) {
         //设置高度 chart-table
@@ -818,7 +816,6 @@ export default {
         //this.filter.start_time = bus.timeFormate(this.searchTime[0], 'yyyy-MM-dd hh:mm:ss');
         //this.filter.end_time = bus.timeFormate(this.searchTime[1], 'yyyy-MM-dd hh:mm:ss');
         //this.showTable = false;
-        this.searchTime = [...time];
         this.seriesItemScreen = [];
         for(let i=0;i<8;i++){
           this.seriesItemScreen.push({//表格数据
@@ -829,7 +826,7 @@ export default {
             value: '',//数值
           });
         }
-        this.startLoading('screen');
+        // this.startLoading('screen');
         //this.tableLoading = true;
         //this.firstShow = false;
         this.$emit('on-search-data', this.data.id, this.searchTime);

@@ -36,7 +36,7 @@
         <div v-for="item in popData">
           <transition name="scaleTool">
             <i v-if="networkPopShow"
-               :class="{'nz-icon':true,'nz-icon-hexagonBorder':true,'selpop':selpopIs(item),'error-model-stat':modelPopError(item)}"
+               :class="{'nz-icon':true,'nz-icon-hexagonBorder':true,'selpop':selpopIs(item),'no-selPop':!selpopIs(item),'error-model-stat':modelPopError(item)}"
                :style="{top:item.top,left:item.left}"
                @click="popClick(item.id)"
                :title="item.title"
@@ -1143,6 +1143,15 @@
   .network-pop .selpop.error-model-stat:hover .noMove{
     transform: scale(1.1);
     color: #EC7F66;
+  }
+  .network-pop .no-selPop{
+    color: #666;
+  }
+  .network-pop .no-selPop .nz-icon-liubianxing{
+    color: rgba(102,102,102,0.5);
+  }
+  .network-pop .no-selPop .nz-icon-chart{
+    color: #666;
   }
   /*.network-pop .nz-icon-hexagonBorder.error-model-stat:hover{*/
     /*color: #EC7F66;*/

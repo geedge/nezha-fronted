@@ -66,7 +66,7 @@ export default new Vue({
       }
       return `${yy}${mm}${dd}`;
     },
-    timeFormate(date, fmt) {
+    timeFormate(date, fmt='yyyy-MM-dd hh:mm:ss') {
       const time = new Date(date);
       let fm = fmt;
       // fmt 自定义格式,如：yy-MM-dd

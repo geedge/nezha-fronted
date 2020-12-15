@@ -14,7 +14,7 @@ export const clickoutside = {
         let path = e.path || (e.composedPath && e.composedPath());
         top: for (let i = 0; i < path.length; i++) {
           for (let j = 0; j < exceptClassName.length; j++) {
-            if (path[i].className && path[i].className.indexOf(exceptClassName[j]) != -1) {
+            if (path[i].className && path[i].className.indexOf && path[i].className.indexOf(exceptClassName[j]) != -1) {
               flag = false;
               break top;
             }
@@ -613,4 +613,10 @@ export const tableSet = {
 
 export function blankPromise() {
   return new Promise(resolve => {resolve();});
+}
+
+export function clickLegend(echart,legendName,index){
+  if(echart){
+
+  }
 }

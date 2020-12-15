@@ -249,6 +249,23 @@
       clickLegend(legendName,index){
         let curIsGrey=this.legend[index].isGray;
         if(this.chart){
+          if(curIsGrey){
+            this.chart.dispatchAction({
+              type: 'legendSelect',
+              name: legendName
+            });
+          }else{
+            this.chart.dispatchAction({
+              type: 'legendUnSelect',
+              name: legendName
+            });
+          }
+          this.$set(this.legend,index,!curIsGrey)
+        }
+      },
+      clickLegend2(legendName,index){
+        let curIsGrey=this.legend[index].isGray;
+        if(this.chart){
           this.legend.forEach((item,i)=>{
             let isGrey = item.isGray;
             if(index != i){ //不是当前点击的

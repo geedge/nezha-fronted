@@ -335,8 +335,8 @@ const en = {
         ruleNum:'Rule num',
         alertNum:'Alert num',
         alertRuleTopN: 'Top10 alert message',
-        assetTopN: 'Top10 alert message by Asset',
-        moduleTopN: 'Top10 alert message by Module',
+        assetTopN: 'Top alert message by Asset',
+        moduleTopN: 'Top alert message by Module',
         top:'Top',
         chart:{
           chartTitle:'Alert Trend'
