@@ -81,14 +81,14 @@
 
     <!--图表-->
     <div class="table-list" id="tableList">
-      <el-scrollbar class="el-scrollbar-large" style="height: 100%" ref="dashboardScrollbar">
+      <div ref="dashboardScrollbar" style="height: 100%; overflow: auto;">
         <div class="box-content">
           <chart-list :additional-info="obj" :detail="detail" :draggable="draggable" :from="from" :is-model="from == $CONSTANTS.fromRoute.model" @on-edit-chart="editChart"
                       @on-refresh-time="refreshTime" @on-remove-chart="delChart" ref="chartList"></chart-list>
         </div>
-      </el-scrollbar>
+      </div>
     </div>
-    <button class="to-top" :class="{'to-top-is-hover': tableHover}" v-show="showTopBtn" @click="$toTop('el', $refs.dashboardScrollbar.wrap)" style="bottom: 0;"><i class="nz-icon nz-icon-top"></i></button>
+    <button :class="{'to-top-is-hover': tableHover}" @click="toTop(scrollbarWrap)" class="to-top" style="bottom: 0;" v-show="showTopBtn"><i class="nz-icon nz-icon-top"></i></button>
     <transition name="right-box">
       <chart-box :chart="chart" :from="from" :panel-data="panelData" :show-panel="showPanel" @close="closeRightBox" @delete-chart="delChart" @on-create-success="createSuccess" @on-delete-success="delChartOk" ref="addChartModal" v-if="rightBox.show"></chart-box>
     </transition>
@@ -172,6 +172,7 @@
         //removeModal: false, // 删除弹出
         //deleteObj: {}, // 删除对象
         //---图表相关参数--end
+        scrollbarWrap: null,
       }
     },
     components: {
@@ -209,27 +210,6 @@
         this.rightBox.show = false;
         if (refresh) {
           this.refresh();
-        }
-      },
-      scrollbarHeightHandler() {
-        setTimeout(() => {
-          let top = '';
-          let top2 = '';
-          document.querySelector("body>.el-dropdown-menu").addEventListener("ps-y-reach-end", this.psYReachEnd);
-        }, 100);
-      },
-      psYReachEnd(){
-        let yDom = document.querySelector("body>.el-dropdown-menu>.ps__rail-y");
-        let yDom2 = document.querySelector("body>.el-dropdown-menu>.ps__rail-y>.ps__thumb-y");
-        if (top) {
-          yDom.style.top = top;
-        } else {
-          top = yDom.style.top;
-        }
-        if (top2) {
-          yDom2.style.top = top2;
-        } else {
-          top2 = yDom2.style.top;
         }
       },
       // 编辑图表信息,打开编辑弹窗
@@ -420,18 +400,10 @@
       // 滚动事件触发下拉加载
       onScroll() {
         let _self = this;
-        let scrollbarWrap = this.$refs.dashboardScrollbar.wrap;
-        scrollbarWrap.onscroll = function() {
-          if (scrollbarWrap.scrollTop > 50) {
-            _self.showTopBtn = true;
-          } else {
-            _self.showTopBtn = false;
-          }
-          _self.$refs.chartList.loadChartData(scrollbarWrap.scrollTop);
-          /*if (scrollbarWrap.scrollHeight - scrollbarWrap.scrollTop - scrollbarWrap.offsetHeight < 20) {
-            _self.$refs.chartList.pageDataList(true, _self.panelId);
-          }*/
-        }
+        this.scrollbarWrap.addEventListener('scroll', bus.debounce(function() {
+          _self.showTopBtn = _self.scrollbarWrap.scrollTop > 50;
+          _self.$refs.chartList.loadChartData(_self.scrollbarWrap.scrollTop);
+        }, 300));
       },
       focusInput:function(){
         let classVal=document.getElementById('queryPanel').parentElement.getAttribute("class");
@@ -476,17 +448,18 @@
           })
         }
       },
-      tableListEnter(self){
-        self.tableHover = true;
+      tableListEnter(){
+        this.tableHover = true;
       },
-      tableListLaeve(self){
-        self.tableHover = false;
+      tableListLeave(){
+        this.tableHover = false;
       },
     },
     mounted: function () {
+      this.scrollbarWrap = this.$refs.dashboardScrollbar;
       this.onScroll();
-      document.querySelector("#tableList").addEventListener("mouseenter", this.tableListEnter.bind('',this));
-      document.querySelector("#tableList").addEventListener("mouseleave", this.tableListLaeve.bind('',this));
+      document.querySelector("#tableList").addEventListener("mouseenter", this.tableListEnter);
+      document.querySelector("#tableList").addEventListener("mouseleave", this.tableListLeave);
     },
     watch: {
       'filter.searchName':function(n,o){
@@ -507,11 +480,8 @@
       }
     },
     beforeDestroy(){
-      if(document.querySelector("#tableList")){
-        document.querySelector("#tableList").removeEventListener("mouseenter", this.tableListEnter);
-        document.querySelector("#tableList").removeEventListener("mouseleave", this.tableListLaeve);
-        document.querySelector("body>.el-dropdown-menu").removeEventListener("ps-y-reach-end", this.psYReachEnd);
-      }
+      document.querySelector("#tableList").removeEventListener("mouseenter", this.tableListEnter);
+      document.querySelector("#tableList").removeEventListener("mouseleave", this.tableListLeave);
     }
   }
 </script>

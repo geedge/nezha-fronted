@@ -14,11 +14,11 @@
           <div class="top-tool-search">
             <search-input :searchMsg="searchMsg" @search="search" ref="searchInput" ></search-input>
           </div>
-          <button :title="$t('overall.createRoles')" @click="add" class="nz-btn nz-btn-size-normal nz-btn-style-light margin-l-20" v-has="'rule_toAdd'"
+          <button :title="$t('overall.createRoles')" @click="add" class="nz-btn nz-btn-size-normal nz-btn-style-light margin-l-20" v-has="'role_toAdd'"
                   id="roles-add" type="button">
             <i class="nz-icon-create-square nz-icon"></i>
           </button>
-          <delete-button :delete-objs="batchDeleteObjs" :filter-function="(arr)=>{return '?ids='+arr.map(t=>t.id).join(',')}" @after="getTableData" api="sys/role" v-has="'rule_delete'"></delete-button>
+          <delete-button :delete-objs="batchDeleteObjs" :filter-function="(arr)=>{return '?ids='+arr.map(t=>t.id).join(',')}" @after="getTableData" api="sys/role" v-has="'role_delete'"></delete-button>
         </div>
         <!-- 顶部分页组件，当打开底部上滑框时出现 -->
         <div class="pagination-top pagination-top-hide display-none"></div>
@@ -43,7 +43,6 @@
         ref="rolesTable"
         style="width: 100%;"
         v-loading="tools.loading"
-        v-scrollBar:el-table="'large'"
       >
         <el-table-column
           :resizable="false"
@@ -68,9 +67,9 @@
           <template :column="item" slot-scope="scope">
             <div class="content-right-options" v-if="item.prop == 'option'">
               <template v-if="scope.row.buildIn != 1">
-                <span :id="'roles-edit-'+scope.row.id" :title="$t('overall.edit')" @click="edit(scope.row)" class="content-right-option" v-has="'rule_toEdit'"><i :class="{'gray-filter':scope.row.buildIn == 1}" class="nz-icon nz-icon-edit"></i></span>
+                <span :id="'roles-edit-'+scope.row.id" :title="$t('overall.edit')" @click="edit(scope.row)" class="content-right-option" v-has="'role_toEdit'"><i :class="{'gray-filter':scope.row.buildIn == 1}" class="nz-icon nz-icon-edit"></i></span>
                 &nbsp;
-                <span :id="'roles-del-'+scope.row.id" :title="$t('overall.delete')" @click="del(scope.row)" class="content-right-option" v-has="'rule_delete'"><i :class="{'gray-filter':scope.row.buildIn == 1}" class="nz-icon nz-icon-delete"></i></span>
+                <span :id="'roles-del-'+scope.row.id" :title="$t('overall.delete')" @click="del(scope.row)" class="content-right-option" v-has="'role_delete'"><i :class="{'gray-filter':scope.row.buildIn == 1}" class="nz-icon nz-icon-delete"></i></span>
               </template>
               <template v-else>
                 <span :id="'roles-detail-'+scope.row.id" :title="$t('overall.view')" @click="detail(scope.row)" class="content-right-option"><i class="nz-icon nz-icon-view"></i></span>
@@ -98,7 +97,7 @@
           </template>
         </el-table-column>
       </el-table>
-      <button :class="{'to-top-is-hover': tools.tableHover}" :style="{top: tools.toTopBtnTop}" @click="$toTop('ps', 0)" class="to-top" v-show="tools.showTopBtn "><i class="nz-icon nz-icon-top"></i></button>
+      <button :class="{'to-top-is-hover': tools.tableHover}" :style="{top: tools.toTopBtnTop}" @click="toTop(scrollWrap)" class="to-top" v-show="tools.showTopBtn "><i class="nz-icon nz-icon-top"></i></button>
     </div>
     <transition name="right-box">
       <role-box :detail="rightBox.detail" :role="role" @close="closeRightBox" v-if="rightBox.show"></role-box>
@@ -108,6 +107,7 @@
 <script>
   import deleteButton from "../../common/deleteButton";
   import roleBox from '../../common/rightBox/roleBox';
+  import bus from "../../../libs/bus";
 
   export default {
     name: "roles",
@@ -178,6 +178,7 @@
           }],
         },
         searchLabel: {}, //搜索参数
+        scrollWrap: null,
       }
     },
     methods: {
@@ -224,6 +225,12 @@
             this.tableData = response.data.list;
             this.pageObj.total = response.data.total
             this.tools.loading = false;
+            if (!this.scrollWrap) {
+              this.$nextTick(() => {
+                this.scrollWrap = this.$refs.rolesTable.bodyWrapper;
+                this.toTopBtnHandler(this.scrollWrap);
+              });
+            }
           }
         })
       },
@@ -278,20 +285,6 @@
         this.$set(this.searchLabel, "orderBy", orderBy);
         this.getTableData();
       },
-      plpsscrolly(el,self){
-        if (el._ps_.scrollbarYTop > 50) {
-          self.tools.showTopBtn = true;
-          self.tools.tableHover = true;
-        } else {
-          self.tools.showTopBtn = false;
-          self.tools.tableHover = true;
-        }
-      },
-
-    },
-    computed: {
-    },
-    watch: {
     },
     created(){
       //是否存在分页缓存
@@ -300,26 +293,15 @@
         this.pageObj.pageSize = pageSize
       }
     },
+    beforeDestroy() {
+      this.scrollbarWrap.removeEventListener('scroll', bus.debounce);
+    },
     mounted() {
       //初始化表头
       this.tools.customTableTitle = localStorage.getItem("nz-tableTitle-" + localStorage.getItem("nz-username") + "-" + this.$route.path)
         ? JSON.parse(localStorage.getItem("nz-tableTitle-" + localStorage.getItem("nz-username") + "-" + this.$route.path))
         : this.tableTitle;
       this.getTableData();
-      this.$nextTick(() => {
-        //绑定滚动条事件，控制top按钮
-        let el = this.$refs.rolesTable.$el.querySelector(".el-table__body-wrapper");
-        if (el._ps_) {
-          el.addEventListener("ps-scroll-y", this.plpsscrolly.bind('',el,this));
-        }
-      });
     },
-    beforeDestroy(){
-      let el = this.$refs.rolesTable.$el.querySelector(".el-table__body-wrapper");
-      if (el._ps_) {
-        el.removeEventListener("ps-scroll-y", this.plpsscrolly.bind('',el,this));
-        el._ps_.destroy();
-      }
-    }
   }
 </script>

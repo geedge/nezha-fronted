@@ -21,7 +21,7 @@ import plTable from 'pl-table'
 import 'pl-table/themes/index.css'
 
 import {post, get, put, del} from './http.js'
-import {toTop, clickoutside, scrollBar, bottomBoxWindow, stringTimeParseToUnix, unixTimeParseToString, chartResizeTool, tableSet} from './components/common/js/tools.js';
+import {clickoutside, bottomBoxWindow, stringTimeParseToUnix, unixTimeParseToString, chartResizeTool, tableSet} from './components/common/js/tools.js';
 import * as tools from './components/common/js/tools.js';
 import * as constants from './components/common/js/constants.js'
 
@@ -42,7 +42,6 @@ import moduleListPop from "./components/page/asset/moduleListPop"; //面板弹�
 import cabinetConfigBox from "./components/common/popBox/cabinetConfig"; //面板弹框组件
 import modelBox from "./components/common/rightBox/modelBox"; //model弹框
 import bottomBox from "./components/common/bottomBox/bottomBox"; //上滑框
-import "perfect-scrollbar/css/perfect-scrollbar.css";
 import loading from "./components/common/loading";
 import mibBox from "./components/common/rightBox/mibBox";
 import leftMenu from "./components/common/leftMenu";
@@ -76,7 +75,6 @@ Vue.prototype.$put = put;
 Vue.prototype.$delete = del;
 Vue.prototype.$CONSTANTS = constants;
 Vue.prototype.$TOOLS = tools;
-Vue.prototype.$toTop = toTop; //toTop置顶按钮方法
 Vue.prototype.$bottomBoxWindow = bottomBoxWindow; //底部上滑框控制
 Vue.prototype.$stringTimeParseToUnix = stringTimeParseToUnix;
 Vue.prototype.$unixTimeParseToString = unixTimeParseToString;
@@ -127,6 +125,25 @@ Vue.mixin({
       },
       hasButton(code) {
         return hasButton(this.$store.getters.buttonList, code);
+      },
+      toTop(wrap) {
+        let currentTop = wrap.scrollTop;
+        let interval = currentTop/10;
+        let intervalFunc = setInterval(function(){ //花200ms分10次回到顶部，模拟动画效果
+          if (currentTop == 0) {
+            clearInterval(intervalFunc);
+          } else {
+            currentTop = (currentTop - interval) < interval*0.5 ? 0 : currentTop - interval;
+            wrap.scrollTop = currentTop;
+          }
+        }, 20);
+      },
+      toTopBtnHandler(wrap) {
+        let vm = this;
+        wrap.addEventListener('scroll', bus.debounce(function() {
+          vm.tools.showTopBtn = wrap.scrollTop > 50;
+          vm.tools.tableHover = wrap.scrollTop > 50;
+        }, 100));
       }
     },
     computed: {
@@ -149,7 +166,6 @@ Vue.use(hasPermission);
 
 /*指令*/
 Vue.directive('clickoutside', clickoutside);
-Vue.directive('scrollBar', scrollBar);
 window.resizing = false;
 window.vm = new Vue({
   el: '#app',
@@ -166,8 +182,8 @@ window.vm = new Vue({
 export default vm;
 
 /* 重写组件内容 */
-const elUi = require("element-ui");
+/*const elUi = require("element-ui");
 const pl = require("pl-table");
 //去掉el-table表头右侧的滚动条预留空间
 elUi.Table.components.TableHeader.computed.hasGutter = () => {return false;};
-pl.PlTable.components.ElTable.components.TableHeader.computed.hasGutter = () => {return false;};
+pl.PlTable.components.ElTable.components.TableHeader.computed.hasGutter = () => {return false;};*/

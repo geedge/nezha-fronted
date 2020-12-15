@@ -65,7 +65,7 @@
                     </el-row>
 
                     <el-row class="border-area" v-show="chartCount === 'multiple'">
-                      <el-scrollbar style="height: 100%">
+                      <div style="height: 100%; overflow: auto;">
                         <div class="chartBoxMul" v-for="(item, index) in lineList">
                           <line-chart-block
                             :show-setting="false"
@@ -75,7 +75,7 @@
                             @on-edit-chart-block="editData"
                           ></line-chart-block>
                         </div>
-                      </el-scrollbar>
+                      </div>
                     </el-row>
 
                   </el-col>

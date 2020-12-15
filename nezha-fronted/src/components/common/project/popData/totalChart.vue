@@ -1,8 +1,5 @@
 <template>
-  <div
-      v-scrollBar
-      class="chart-box"
-    >
+  <div class="chart-box">
       <div v-for="(item, index) in dataList" :key="item.id" :id="'chart-' + item.id" :name="item.title"  v-show="!item.isHide" class="chart">
         <lineChars
           v-if="item.type === 'line' || item.type === 'bar' ||item.type == 'stackArea' || item.type === 4"
@@ -212,19 +209,9 @@
                           // 将秒改为毫秒
                           //alert('table=='+JSON.stringify(queryItem))
                           seriesItem.theData.data = tempArr.map((dpsItem, dpsIndex) => {
-                            /*曲线汇总暂不需要
-                            if (sumData.data[dpsIndex]) {
-                              const sumNum = sumData.data[dpsIndex][1] || 0;
-                              sumData.data[dpsIndex][1] = sumNum + dpsItem[1];
-                            } else {
-                              sumData.data[dpsIndex] = [dpsItem[0] * 1000, dpsItem[1]];
-                            }
-                            */
                             let t_date = new Date(dpsItem[0] * 1000);
                             let timeTmp = bus.timeFormate(t_date, 'yyyy-MM-dd hh:mm:ss');
                             tableData.push({//表格数据
-                              // label: host.slice(host.indexOf('{') + 1,host.indexOf('}')),//label
-                              // metric: queryItem.metric.__name__?queryItem.metric.__name__:'',//metric列
                               element: {element: host, alias: alias},
                               time: timeTmp,//采集时间
                               value: dpsItem[1],//数值
@@ -232,18 +219,6 @@
                             return [dpsItem[0] * 1000, dpsItem[1]];
                           });
                           series.push(seriesItem.theData);
-
-                        } else if (chartItem.elements && chartItem.elements[innerPos]) {
-                          // 无数据提示
-                          /*
-                          const currentInfo = chartItem.elements[innerPos];
-                          const errorMsg = `图表 ${chartItem.title} 中 ${currentInfo.metric},${currentInfo.tags} 无数据`;
-                          this.$message.warning({
-                            duration: 15,
-                            content: errorMsg,
-                            closable: true,
-                          });
-                          */
                         }
                       });
                     }
@@ -570,14 +545,6 @@
                               // 将秒改为毫秒
                               //alert('table=='+JSON.stringify(queryItem))
                               seriesItem.theData.data = tempArr.map((dpsItem, dpsIndex) => {
-                                /*曲线汇总暂不需要
-                                if (sumData.data[dpsIndex]) {
-                                  const sumNum = sumData.data[dpsIndex][1] || 0;
-                                  sumData.data[dpsIndex][1] = sumNum + dpsItem[1];
-                                } else {
-                                  sumData.data[dpsIndex] = [dpsItem[0] * 1000, dpsItem[1]];
-                                }
-                                */
                                 let t_date = new Date(dpsItem[0] * 1000);
                                 let timeTmp = bus.timeFormate(t_date, 'yyyy-MM-dd hh:mm:ss');
                                 tableData.push({//表格数据
@@ -591,17 +558,6 @@
                               });
                               series.push(seriesItem.theData);
 
-                            } else if (chartItem.elements && chartItem.elements[innerPos]) {
-                              // 无数据提示
-                              /*
-                              const currentInfo = chartItem.elements[innerPos];
-                              const errorMsg = `图表 ${chartItem.title} 中 ${currentInfo.metric},${currentInfo.tags} 无数据`;
-                              this.$message.warning({
-                                duration: 15,
-                                content: errorMsg,
-                                closable: true,
-                              });
-                              */
                             }
                           });
                         }

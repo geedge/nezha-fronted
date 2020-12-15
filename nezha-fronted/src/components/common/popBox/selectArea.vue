@@ -2,7 +2,7 @@
   <el-popover :placement="placement" width="698" ref="selectAreaPopBox" v-model="popBox.show" popper-class="nz-pop nz-pop-select-area" transition="slide">
     <div>
       <div class="pop-item-wider">
-        <el-scrollbar class="select-area-tree">
+        <div class="select-area-tree">
           <el-tree
             ref="areaTree"
             node-key="id"
@@ -16,7 +16,7 @@
             @node-click="selectArea"
             @check-change="clearOthers">
           </el-tree>
-        </el-scrollbar>
+        </div>
       </div>
     </div>
     <div slot="reference">

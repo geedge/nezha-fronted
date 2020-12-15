@@ -26,7 +26,6 @@ export default {
   },
   computed:{
     isMenuPage:function(){
-      console.log(this.$route.path )
       return this.$route.path == '/menu'
     }
   }

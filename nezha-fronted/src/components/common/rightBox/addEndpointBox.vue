@@ -9,7 +9,7 @@
     <!-- end--标题-->
 
     <!-- begin--表单-->
-    <el-scrollbar class="right-box-form-box" style="overflow: hidden">
+    <div class="right-box-form-box" style="overflow: hidden">
       <el-form class="right-box-form right-box-form-left" label-position="right" ref="addEndpoint" :model="endpoint" :rules="rules">
         <!--project-->
         <el-form-item :label='$t("project.project.project")' prop="projectId" class="select-warp">
@@ -71,7 +71,7 @@
 
             <!-- begin--table-->
             <div class="endpoint-sub-table" v-loading="assetLoading">
-              <el-scrollbar style="height: 100%; width: 100%;" ref="assetScrollbar">
+              <div ref="assetScrollbar" style="overflow: auto; height: 100%; width: 100%;">
                 <div class="endpoint-sub-table-head">
                   <div @click.stop v-if="!currentModuleCopy.id" class="endpoint-sub-table-body-dialog"></div>
                   <div class="endpoint-sub-table-col" style="width: 15px;position: relative">
@@ -123,7 +123,7 @@
                     </el-popover>
                   </div>
                 </div>
-              </el-scrollbar>
+              </div>
             </div>
             <div class="line-100" style="border-color:#dcdfe6"></div>
             <div>
@@ -173,7 +173,6 @@
                 :data="endpointList"
                 ref="endpointTable"
                 style="width: 100%;border-radius: 4px;"
-                v-scrollBar:el-table
                 height="calc(100% - 36px)"
                 :row-class-name="setRowIndex"
                 empty-text=" ">
@@ -288,7 +287,7 @@
         </div>
       </el-form>
 
-    </el-scrollbar>
+    </div>
 
     <!--底部按钮-->
     <div class="right-box-bottom-btns">
@@ -580,7 +579,6 @@
             break;
           }
         }
-        this.$refs.assetScrollbar.update();
       },
 
       /*获取project列表*/
@@ -672,9 +670,6 @@
               }
             }
             this.assetList = response.data.list;
-            this.$nextTick(() => {
-              this.$refs.assetScrollbar.update();
-            });
           }
         }).finally(() => {
           setTimeout(() => {
@@ -790,7 +785,6 @@
           return !flag
         });
         this.endpointList=this.endpointList.concat(arr);
-        this.$refs.assetScrollbar.update();
       },
       //全选的checkbox的事件
       assetListSelAll(flag){

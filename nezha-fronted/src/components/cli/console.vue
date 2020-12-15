@@ -7,7 +7,7 @@
   }
 </style>
 <template>
-    <div class="console" :id="'ternimalContainer'+idIndex"  v-scrollBar:xterm>
+    <div :id="'ternimalContainer'+idIndex" class="console">
         <div :id="'terminal'+idIndex" ></div>
     </div>
 </template>

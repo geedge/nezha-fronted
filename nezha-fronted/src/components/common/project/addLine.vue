@@ -20,7 +20,7 @@
       <!-- end--标题-->
 
       <!-- begin--表单-->
-      <el-scrollbar class="right-box-form-box" ref="scrollbar">
+      <div class="right-box-form-box">
         <el-form class="right-box-form  right-box-form-left" ref="form" :model="form" label-width="120px" :rules="rules">
           <el-form-item :label="$t('project.topology.lineName')" prop="lineName" class="line-name">
             <el-input v-model="form.lineName"  size="small"></el-input>
@@ -243,7 +243,7 @@
             </el-row>
           </el-row>
         </el-form>
-      </el-scrollbar>
+      </div>
 
       <!-- end--表单-->
 
@@ -403,9 +403,6 @@
         this.promqlKeys.push(getUUID());
         this.elementIds.push("");
         this.promqlCount++;
-        this.$nextTick(() => {
-          this.$refs.scrollbar.update();
-        });
       },
       removeExpression(index) {
         if (this.promqlCount >= 1) {
@@ -424,9 +421,6 @@
             });
           });
         }
-        this.$nextTick(() => {
-          this.$refs.scrollbar.update();
-        });
       },
       /*关闭弹框*/
       esc(refresh) {

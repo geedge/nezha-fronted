@@ -11,7 +11,7 @@
 
     <div class="right-box-title">{{$t("asset.batchEditAsset")}}</div>
 
-    <el-scrollbar class="right-box-form-box" ref="scrollbar">
+    <div class="right-box-form-box" ref="scrollbar">
       <el-form ref="assetEditForm" :model="editAsset" label-width="120px" class="right-box-form right-box-form-left"
                :rules="rules">
         <!--assets-->
@@ -21,7 +21,7 @@
             <div class="right-child-box-title">{{$t('asset.asset')}}</div>
             <!--end--标题-->
             <!--begin--搜索框-->
-            <div style="float: right;padding: 9px 9px 0px 0px;">
+            <div style="float: right;padding: 9px 9px 0 0;">
               <div class="nz-btn-group nz-btn-group-size-small nz-btn-group-light endpoint-asset-search"
                    style="margin: 0">
                 <button id="search-asset-drop" type="button"
@@ -65,7 +65,7 @@
               </div>
               <div class="line-100"></div>
               <div class="endpoint-sub-table-body">
-                <el-scrollbar style="height: 100%" ref="assetScrollbar">
+                <div ref="assetScrollbar" style="height: 100%; overflow: auto;">
                   <div :data="item.id" v-for="item,index in assetList" class="endpoint-sub-table-row"
                        :id="'select-asset-'+item.id">
                     <div class="endpoint-sub-table-col" style="width: 15px;">
@@ -77,7 +77,7 @@
                       </div>
                     </el-popover>
                   </div>
-                </el-scrollbar>
+                </div>
               </div>
             </div>
             <div class="line-100" style="border-color:#dcdfe6"></div>
@@ -102,7 +102,6 @@
                 :data="assetSelList"
                 ref="endpointTable"
                 style="width: 100%;border-radius: 4px;"
-                v-scrollBar:el-table
                 height="calc(100% - 36px)"
                 :row-class-name="setRowIndex"
                 empty-text=" ">
@@ -183,7 +182,7 @@
               <div>Value</div>
               <div>Action</div>
             </div>
-            <el-scrollbar ref="tagEditBoxScrollbar" style="height: calc(100% - 32px);">
+            <div ref="tagEditBoxScrollbar" style="height: calc(100% - 32px); overflow: auto;">
               <div class="tag-edit-box-body" v-for="(item, index) in editAsset.tags">
                 <el-form-item class="tag-edit tag-edit-tag"
                               :rules="{required: true, message: $t('validate.required'), trigger: 'change'}"
@@ -201,7 +200,7 @@
                 <div class="param-box-row-symbol" :id="'asset-tag-remove-'+index" @click.stop="removeTag(index)"><i
                   class="nz-icon nz-icon-shanchu1" style="color: #666666"></i></div>
               </div>
-            </el-scrollbar>
+            </div>
           </div>
         </el-form-item>
 
@@ -244,7 +243,7 @@
                             @setValidateResult="setAccountValidResult"
                             @protocol-type-change="protocolTypeChange"></account-config-box>
       </el-form>
-    </el-scrollbar>
+    </div>
 
     <!--底部按钮-->
     <div class="right-box-bottom-btns">
@@ -495,7 +494,6 @@
           return !flag
         });
         this.assetSelList=this.assetSelList.concat(arr);
-        this.$refs.assetScrollbar.update();
       },
       assetListSelAll(flag){
         if(flag){
@@ -538,15 +536,11 @@
             break;
           }
         }
-        this.$refs.assetScrollbar.update();
       },
       //组织符合cascader的数据格式
       addTag(){
         !this.editAsset.tags&&(this.$set(this.editAsset,"tags",[]));
         this.editAsset.tags.push({tag:"",value:""});
-        this.$nextTick(()=>{
-          this.$refs.tagEditBoxScrollbar.update();
-        });
       },
       addAccount(type){
         if(type=="SSH"){
@@ -608,9 +602,6 @@
       },
       removeTag(index){
         this.editAsset.tags.splice(index,1);
-        this.$nextTick(()=>{
-          this.$refs.tagEditBoxScrollbar.update();
-        });
       },
       getUserData(){
         return new Promise(resolve=>{

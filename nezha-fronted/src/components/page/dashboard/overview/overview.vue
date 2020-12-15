@@ -29,7 +29,7 @@
 
         <!--内容-->
         <div class="overview-content">
-          <el-scrollbar style="height: 100%" ref="overviewScrollbar" class="column-flex">
+          <div class="column-flex" ref="overviewScrollbar" style="height: 100%; overflow: auto;">
               <div class="content-row-box" style="flex: 1;height: 100%;">
                 <div class="content-col-box  " style="flex:3;" >
                   <table-box :pop-data="assetStatData" ref="assetTab" ></table-box>
@@ -84,7 +84,7 @@
                   <table-box :pop-data="alertRuleStatData" ref="alertRuleTab"></table-box>
                 </div>
               </div>
-          </el-scrollbar>
+          </div>
         </div>
       </div>
       </left-menu>

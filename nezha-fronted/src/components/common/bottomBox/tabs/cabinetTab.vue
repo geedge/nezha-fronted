@@ -22,7 +22,6 @@
       border
       v-loading="loading"
       ref="cabTable"
-      v-scrollBar:el-table="'large'"
       :cell-class-name="assetStatClassName"
       :height="$tableHeight.noPagination"
       style="width: 100%;"
@@ -251,13 +250,6 @@
           })
         })
       },
-      plpsscrolly(el,self){
-        if (el._ps_.scrollbarYTop > 50) {
-          self.showTopBtn = true;
-        } else {
-          self.showTopBtn = false;
-        }
-      },
     },
     watch: {
       obj: {
@@ -272,21 +264,6 @@
         }
       },
     },
-    mounted() {
-      this.$nextTick(() => {
-        //绑定滚动条事件，控制top按钮
-        let el = this.$refs.cabTable.$el.querySelector(".el-table__body-wrapper");
-        if (el._ps_) {
-          el.addEventListener("ps-scroll-y", this.plpsscrolly.bind('',el,this));
-        }
-      });
-    },
-    beforeDestroy(){
-      let el = this.$refs.cabTable.$el.querySelector(".el-table__body-wrapper");
-      if (el._ps_) {
-        el.removeEventListener("ps-scroll-y", this.plpsscrolly.bind('',el,this));
-      }
-    }
   }
 </script>
 

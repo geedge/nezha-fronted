@@ -1,5 +1,5 @@
 <template>
-  <div class="system" v-scroll-bar>
+  <div class="system">
     <el-tabs type="border-card" @tab-click="selectTab" v-model="activeTab" class="system-tabs" >
       <el-tab-pane :label="$t('config.system.basic.basic')" name="basic">
         <div class="system-config-form basicForm">
@@ -196,8 +196,7 @@
             </el-form>
           </div>
           <!--notificationEdit-->
-          <div  class="scrollBox"
-                v-scrollBar>
+          <div class="scrollBox">
             <draggable v-model="notification"
                        :options="{group:'people',animation:150,ghostClass:'sortable-ghost',chosenClass:'chosenClass',scroll:true,scrollSensitivity:200}"
                        @change="change"
@@ -264,8 +263,7 @@
             </el-form>
           </div>
           <!--linkEdit-->
-          <div  class="scrollBox"
-                v-scrollBar>
+          <div class="scrollBox">
             <draggable v-model="link"
                        :options="{group:'people',animation:150,ghostClass:'sortable-ghost',chosenClass:'chosenClass',scroll:true,scrollSensitivity:200}"
                        @change="change"

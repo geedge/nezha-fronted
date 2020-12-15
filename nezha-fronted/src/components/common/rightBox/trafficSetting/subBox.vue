@@ -2,7 +2,7 @@
   <transition name="right-sub-box">
     <div class="right-sub-box sub-box" v-if="editTagsBox.show" :style="'top: ' + editTagsBox.top + 'px; left: ' + editTagsBox.left + 'px;'" >
       <div class="param-box" style="height: calc(100% - 25px)">
-        <el-scrollbar style="height: 100%">
+        <div style="height: 100%; overflow: auto;">
           <div class="param-box-row" v-for="(item, index) in tempTagsObj" :key="index">
             <el-input placeholder="key" class="param-box-row-key input-x-mini-22" v-model="item.key" @input="validateInput(item.key,index)" :class="{'input-error':inputKeyErr[index]}"></el-input>
             <span class="param-box-row-eq">=</span>
@@ -10,7 +10,7 @@
             <span class="param-box-row-symbol" :id="'remove-param-'+index" @click="removeTags(index)"><i class="nz-icon nz-icon-shanchu1"></i></span>
             <span style="color: #F56C6C;font-size: 12px;" v-if="inputKeyErr[index]">{{$t('validate.key')}}</span>
           </div>
-        </el-scrollbar>
+        </div>
       </div>
       <div class="add-btn">
         <el-button @click="addTags" id="add-param" style="height: 18px; line-height: 18px; padding-top: 0; padding-bottom: 0;" size="mini"><i class="nz-icon nz-icon-plus"></i></el-button>

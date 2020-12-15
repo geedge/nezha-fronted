@@ -15,7 +15,7 @@
           </div>
         </div>
         <div style="height: calc(100% - 50px);width: 100%;" >
-          <el-scrollbar style="height: 100%" class="el-scrollbar-large">
+          <div ref="scrollWrap" style="height: 100%; overflow: auto;">
             <div class="expression-room right-margin" style="padding-top: 5px">
               <!--坑，这个index居然是从1开始-->
               <promql-input
@@ -75,7 +75,6 @@
                         border
                         ref="exploreTable"
                         tooltip-effect="light"
-                        v-scrollBar:el-table="'large'"
                         v-loading="tools.loading"
                         style="width: 100%;">
                 <el-table-column
@@ -196,7 +195,7 @@ instance_cpu_time_ns{app="fox", proc="widget", rev="4d3a513", env="prod", job="c
               </div>
             </div>
           </div>
-      </el-scrollbar>
+      </div>
         </div>
 
     </div>
@@ -927,11 +926,5 @@ instance_cpu_time_ns{app="fox", proc="widget", rev="4d3a513", env="prod", job="c
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
-  }
-  .explore-table .ps__rail-x:hover{
-    opacity: 0.4 !important;
-  }
-  .explore-table .ps__rail-x:focus{
-    opacity: 0.9 !important;
   }
 </style>

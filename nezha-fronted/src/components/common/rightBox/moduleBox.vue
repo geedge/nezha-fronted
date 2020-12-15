@@ -14,7 +14,7 @@
     <!-- end--标题-->
 
     <!-- begin--表单-->
-    <el-scrollbar class="right-box-form-box" ref="scrollbar">
+    <div class="right-box-form-box" ref="scrollbar">
       <el-form class="right-box-form right-box-form-left" :model="editModule" label-position="right" label-width="120px" :rules="rules" ref="moduleForm">
         <el-form-item :label='$t("project.project.project")' prop="project">
           <el-select value-key="id" popper-class="config-dropdown" v-model="editModule.project" placeholder="" size="small">
@@ -52,14 +52,14 @@
                         <input type="text" readonly="readonly" autocomplete="off" class="el-input__inner" aria-expanded="false">
                       </div>
                       <div class="el-cascader__tags">
-                        <el-scrollbar style="height: 100%;" ref="walkScrollbar">
+                        <div ref="walkScrollbar" style="height: 100%; overflow: auto;">
                           <span class="el-tag el-tag--info el-tag--small el-tag--light" v-for="item in editModule.walk">
                             <span v-html="mibName(item)"></span>
                             <div class="walk-close-box" @click.stop="removeWalk(item)">
                               <i class="el-tag__close nz-icon nz-icon-close walk-close"></i>
                             </div>
                           </span>
-                        </el-scrollbar>
+                        </div>
                       </div>
                     </div>
                   </template>
@@ -154,7 +154,7 @@
               </el-col>
               <el-col :span="18">
                 <el-form-item prop="security_level">
-                  <el-radio-group v-model="editModule.security_level" size="small" @change="updateScrollbar">
+                  <el-radio-group size="small" v-model="editModule.security_level">
                     <el-radio-button label="noAuthNoPriv"></el-radio-button>
                     <el-radio-button label="authNoPriv"></el-radio-button>
                     <el-radio-button label="authPriv"></el-radio-button>
@@ -253,7 +253,7 @@
           </div>
 
           <div class="param-box param-box-module">
-            <el-scrollbar ref="paramBoxScrollbar" style="height: 100%">
+            <div style="height: 100%; overflow: auto;">
               <div class="param-box-row" v-for="(item, index) in editModule.paramObj">
                 <el-form-item class="param-box-row-key" :rules="{required: true, message: $t('validate.required'), trigger: 'blur'}" :prop="'paramObj.' + index + '.key'">
                   <el-input placeholder="key" size="mini" v-model="item.key"></el-input>
@@ -264,7 +264,7 @@
                 </el-form-item>
                 <span class="param-box-row-symbol" :id="'moduel-remove-param-'+index" @click="removeParam(index)"><i class="nz-icon nz-icon-shanchu1" style="color:#666;"></i></span>
               </div>
-            </el-scrollbar>
+            </div>
           </div>
         </el-form-item>
 
@@ -281,7 +281,7 @@
           </div>
 
           <div class="param-box param-box-module">
-            <el-scrollbar ref="labelBoxScrollbar" style="height: 100%">
+            <div ref="labelBoxScrollbar" style="height: 100%; overflow: auto;">
               <div class="param-box-row" v-for="(item, index) in editModule.labelModule">
                 <el-form-item class="param-box-row-key" :rules="[{required: true, message: $t('validate.required'), trigger: 'blur'},{ pattern: /[a-zA-Z_:][a-zA-Z0-9_:]*/, message: $t('validate.key') ,trigger: 'blur'}]" :prop="'labelModule.' + index + '.key'">
                   <el-input placeholder="key" size="mini" v-model="item.key"></el-input>
@@ -292,7 +292,7 @@
                 </el-form-item>
                 <span class="param-box-row-symbol" :id="'moduel-remove-label-'+index" @click="removeLabel(index)"><i class="nz-icon nz-icon-shanchu1" style="color:#666;"></i></span>
               </div>
-            </el-scrollbar>
+            </div>
           </div>
         </el-form-item>
 
@@ -301,7 +301,7 @@
         </el-form-item>
 
       </el-form>
-    </el-scrollbar>
+    </div>
 
     <!--底部按钮-->
     <div class="right-box-bottom-btns">
@@ -373,8 +373,6 @@
         } else {
           this.editModule.walk.push(walk);
         }
-
-        this.$refs.walkScrollbar.update();
       },
       //从mibData里取得oid对应的mib名称
       getMibName(walkData, walk) {
@@ -476,7 +474,6 @@
           })
           this.editModule.port= 161;
         }
-        this.updateScrollbar();
       },
       //转化snmpParam属性
       parseSnmpParam(module) {
@@ -605,38 +602,23 @@
       // 清除param
       clearAllParam() {
         this.editModule.paramObj = [];
-        this.$nextTick(() => {
-          this.$refs.paramBoxScrollbar.update();
-        });
       },
 
       // 新增param
       addParam() {
         this.editModule.paramObj.push({key: '', value: ''});
-        this.$nextTick(() => {
-          this.$refs.paramBoxScrollbar.update();
-        });
       },
       // 移除单个param
       removeParam(index) {
         this.editModule.paramObj.splice(index, 1);
-        this.$nextTick(() => {
-          this.$refs.paramBoxScrollbar.update();
-        });
       },
       // 新增label
       addLabel() {
         this.editModule.labelModule.push({key: '', value: ''});
-        this.$nextTick(() => {
-          this.$refs.labelBoxScrollbar.update();
-        });
       },
       // 移除单个Label
       removeLabel(index) {
         this.editModule.labelModule.splice(index, 1);
-        this.$nextTick(() => {
-          this.$refs.labelBoxScrollbar.update();
-        });
       },
       //将param转为json字符串格式
       paramToJson(param) {
@@ -664,9 +646,6 @@
           return jsonString;
         }
       },
-      updateScrollbar() {
-        this.$refs.scrollbar.update();
-      }
     },
     mounted() {
       this.getWalkData();

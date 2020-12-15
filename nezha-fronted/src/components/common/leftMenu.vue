@@ -2,120 +2,118 @@
   <div class="content">
     <div class="content-left left-slot" :class="{'left-slot-shrink': isShrink}">
       <div class="sidebar-title too-long-split">{{$t(parentMenu.i18n)}}</div>
-      <div class="sidebar-info" style="height: 90%">
-        <el-scrollbar style="height: 100%;">
-          <template v-if="parentMenu == '/project'">
-            <el-collapse class="left-menu-bg" accordion style="padding-top: 0;" ref="projectLeft">
-              <el-collapse-item v-for="(item, index) in projectList" :key="item.id" :name="item.id + ''">
-                <template slot="title">
-                  <div class="sidebar-info-item-project sidebar-info-item" :class="{'sidebar-info-item-active': item.id == currentProject.id}" @click="detailProject(item)" :id="'project-module-'+item.id">
-                    <div class="sidebar-info-item-txt">
-                      <el-popover v-if="item.name.length > 14" trigger="hover" placement="top-start" :content="item.name" popper-class="transparent-pop">
-                      <span slot="reference" class="">
-                        {{item.name}}
-                      </span>
-                      </el-popover>
-                      <span v-else>{{item.name}}</span>
+      <div class="sidebar-info" style="height: 90%; overflow: auto;">
+        <template v-if="parentMenu == '/project'">
+          <el-collapse accordion class="left-menu-bg" ref="projectLeft" style="padding-top: 0;">
+            <el-collapse-item :key="item.id" :name="item.id + ''" v-for="(item, index) in projectList">
+              <template slot="title">
+                <div :class="{'sidebar-info-item-active': item.id == currentProject.id}" :id="'project-module-'+item.id" @click="detailProject(item)" class="sidebar-info-item-project sidebar-info-item">
+                  <div class="sidebar-info-item-txt">
+                    <el-popover :content="item.name" placement="top-start" popper-class="transparent-pop" trigger="hover" v-if="item.name.length > 14">
+                    <span class="" slot="reference">
+                      {{item.name}}
+                    </span>
+                    </el-popover>
+                    <span v-else>{{item.name}}</span>
+                  </div>
+                </div>
+              </template>
+              <div class="sidebar-info sub-sidebar-info" >
+                <div :title="$t('overall.createModule')" @click="addModule(item)" class="sidebar-info-item  sidebar-info-item-project-add" v-if="getProjectModule(item.id).length == 0">
+                  <span><i class="nz-icon nz-icon-create-square"></i>&nbsp;{{$t("overall.addProject")}}</span>
+                </div>
+                <template v-else>
+                  <div :class="{'sidebar-info-item-active': module.id == currentModule.id}" :id="'project-module-'+module.id" @click="changeModule(item, module)" class="sidebar-info-sub-item" v-for="module in getProjectModule(item.id)">
+                    <div :id="`module-${module.id}`" class="item-tip">
+                      <div :class="itemTip(module.id, module.name, ready)" class="item-tip-hide item-tip-key el-popover">{{module.name}}</div>
+                      <span class="too-long-split" style="width: 120px;">{{module.name}}</span>
+                      <div :id="'project-module-edit-'+module.id" @click.stop="editModule(module)" class="hid-div side-bar-menu-edit sub-side-bar-menu-edit" v-has="'project_module_toEdit'" v-show="module.buildIn != 1" ><i class="nz-icon nz-icon-edit"></i></div>
                     </div>
                   </div>
                 </template>
-                <div class="sidebar-info sub-sidebar-info" >
-                  <div v-if="getProjectModule(item.id).length == 0" class="sidebar-info-item  sidebar-info-item-project-add" @click="addModule(item)" :title="$t('overall.createModule')">
-                    <span><i class="nz-icon nz-icon-create-square"></i>&nbsp;{{$t("overall.addProject")}}</span>
+              </div>
+            </el-collapse-item>
+          </el-collapse>
+        </template>
+        <template v-else-if="parentMenu == '/asset'">
+          <el-collapse class="left-menu-bg" v-model="activeType">
+            <el-collapse-item :title="$t('asset.left.dataCenter')" name="dataCenter">
+              <el-checkbox-group size="small" v-model="dcCheckList">
+                <el-checkbox :class="{'sidebar-info-item-active': indOf(dcCheckList, item.id)}" :key="key"
+                             :label=item.id class="sidebar-info-item sidebar-info-item-asset" v-for="(item,key) in dcData">
+                  <div class="sidebar-info-item-txt">
+                    <el-popover :content="item.name" placement="top-start" trigger="hover" v-if="item.name.length > 14" >
+                      <span slot="reference">{{item.name}}</span>
+                    </el-popover>
+                    <span v-else>{{item.name}}</span>
                   </div>
-                  <template v-else>
-                    <div v-for="module in getProjectModule(item.id)" class="sidebar-info-sub-item" :class="{'sidebar-info-item-active': module.id == currentModule.id}" @click="changeModule(item, module)" :id="'project-module-'+module.id">
-                      <div :id="`module-${module.id}`" class="item-tip">
-                        <div class="item-tip-hide item-tip-key el-popover" :class="itemTip(module.id, module.name, ready)">{{module.name}}</div>
-                        <span class="too-long-split" style="width: 120px;">{{module.name}}</span>
-                        <div :id="'project-module-edit-'+module.id" @click.stop="editModule(module)" class="hid-div side-bar-menu-edit sub-side-bar-menu-edit" v-has="'project_module_toEdit'" v-show="module.buildIn != 1" ><i class="nz-icon nz-icon-edit"></i></div>
-                      </div>
-                    </div>
-                  </template>
-                </div>
-              </el-collapse-item>
-            </el-collapse>
-          </template>
-          <template v-else-if="parentMenu == '/asset'">
-            <el-collapse v-model="activeType" class="left-menu-bg">
-              <el-collapse-item name="dataCenter" :title="$t('asset.left.dataCenter')">
-                <el-checkbox-group v-model="dcCheckList" size="small">
-                  <el-checkbox class="sidebar-info-item sidebar-info-item-asset" :class="{'sidebar-info-item-active': indOf(dcCheckList, item.id)}"
-                               v-for="(item,key) in dcData" :key="key" :label=item.id>
-                    <div class="sidebar-info-item-txt">
-                      <el-popover v-if="item.name.length > 14" trigger="hover" placement="top-start" :content="item.name" >
-                        <span slot="reference">{{item.name}}</span>
-                      </el-popover>
-                      <span v-else>{{item.name}}</span>
-                    </div>
-                    <el-badge :value="item.total" class="mark" type="primary"/>
-                  </el-checkbox>
-                </el-checkbox-group>
-              </el-collapse-item>
-              <el-collapse-item name="assetType" :title="$t('asset.assetType')">
-                <el-checkbox-group v-model="assetTypeCheckList" size="small" @change="changeAssetTypeCheckBox">
-                  <el-checkbox class="sidebar-info-item" :class="{'sidebar-info-item-active': indOf(assetTypeCheckList, item.id)}" v-for="(item, key) in assetTypeData" :key="key" :label=item.id>
-                    <div class="sidebar-info-item-txt">
-                      <el-popover v-if="item.name.length > 14" trigger="hover" placement="top-start" :content="item.name" >
-                        <span slot="reference">{{item.name}}</span>
-                      </el-popover>
-                      <span v-else>{{item.name}}</span>
-                    </div>
-                    <el-badge :value="item.total" class="mark" type="primary"/>
-                  </el-checkbox>
-                </el-checkbox-group>
-              </el-collapse-item>
-              <el-collapse-item name="vendor" :title="$t('asset.left.vendor')">
-                <el-checkbox-group v-model="vendorCheckList" size="small" @change="changeVendorCheckBox">
-                  <el-checkbox class="sidebar-info-item" :class="{'sidebar-info-item-active': indOf(vendorCheckList, item.id)}" v-for="(item, key) in vendorData" :key="key" :label=item.id>
-                    <div class="sidebar-info-item-txt">
-                      <el-popover v-if="item.name.length > 14" trigger="hover" placement="top-start" :content="item.name" >
-                        <span slot="reference">{{item.name}}</span>
-                      </el-popover>
-                      <span v-else>{{item.name}}</span>
-                    </div>
-                    <el-badge :value="item.total" class="mark" type="primary"/>
-                  </el-checkbox>
-                </el-checkbox-group>
-              </el-collapse-item>
-              <el-collapse-item name="ping" :title="$t('asset.left.ping')" v-if="assetPingSwitch">
-                <el-checkbox-group v-model="pingCheckList" size="small" @change="changePingCheckBox">
-                  <el-checkbox class="sidebar-info-item" :class="{'sidebar-info-item-active': indOf(pingCheckList, item.key)}" v-for="(item, index) in pingData" :key="index" :label="item.value">
-                    <div class="sidebar-info-item-txt">
-                      <span>{{item.label}}</span>
-                    </div>
-                    <el-badge :value="item.total" class="mark" type="primary"/>
-                  </el-checkbox>
-                </el-checkbox-group>
-              </el-collapse-item>
-            </el-collapse>
-            <!--tag 过滤-->
-            <div class="sidebar-title too-long-split orange-font">
-              Tag
-            </div>
-            <el-collapse v-model="activeTag" class="left-menu-bg">
-              <el-collapse-item :name="item.key" :title="item.key" v-for="item in tagData" :key="item.key">
-                <el-checkbox-group v-model="tagCheckList" size="small" >
-                  <el-checkbox class="sidebar-info-item"  v-for="tag in item.values" :key="item.key+'-'+tag.value" :label="item.key+'-'+tag.value" @change="changeTagCheckBox(item,tag.value)">
-                    <div class="sidebar-info-item-txt">
-                      <el-popover v-if="tag.value.length > 14" trigger="hover" placement="top-start" :content="tag.value" >
-                        <span slot="reference">{{tag.value}}</span>
-                      </el-popover>
-                      <span v-else>{{tag.value}}</span>
-                    </div>
-                    <el-badge :max="99" :value="tag.total" class="mark" type="primary"/>
-                  </el-checkbox>
-                </el-checkbox-group>
-              </el-collapse-item>
-            </el-collapse>
+                  <el-badge :value="item.total" class="mark" type="primary"/>
+                </el-checkbox>
+              </el-checkbox-group>
+            </el-collapse-item>
+            <el-collapse-item :title="$t('asset.assetType')" name="assetType">
+              <el-checkbox-group @change="changeAssetTypeCheckBox" size="small" v-model="assetTypeCheckList">
+                <el-checkbox :class="{'sidebar-info-item-active': indOf(assetTypeCheckList, item.id)}" :key="key" :label=item.id class="sidebar-info-item" v-for="(item, key) in assetTypeData">
+                  <div class="sidebar-info-item-txt">
+                    <el-popover :content="item.name" placement="top-start" trigger="hover" v-if="item.name.length > 14" >
+                      <span slot="reference">{{item.name}}</span>
+                    </el-popover>
+                    <span v-else>{{item.name}}</span>
+                  </div>
+                  <el-badge :value="item.total" class="mark" type="primary"/>
+                </el-checkbox>
+              </el-checkbox-group>
+            </el-collapse-item>
+            <el-collapse-item :title="$t('asset.left.vendor')" name="vendor">
+              <el-checkbox-group @change="changeVendorCheckBox" size="small" v-model="vendorCheckList">
+                <el-checkbox :class="{'sidebar-info-item-active': indOf(vendorCheckList, item.id)}" :key="key" :label=item.id class="sidebar-info-item" v-for="(item, key) in vendorData">
+                  <div class="sidebar-info-item-txt">
+                    <el-popover :content="item.name" placement="top-start" trigger="hover" v-if="item.name.length > 14" >
+                      <span slot="reference">{{item.name}}</span>
+                    </el-popover>
+                    <span v-else>{{item.name}}</span>
+                  </div>
+                  <el-badge :value="item.total" class="mark" type="primary"/>
+                </el-checkbox>
+              </el-checkbox-group>
+            </el-collapse-item>
+            <el-collapse-item :title="$t('asset.left.ping')" name="ping" v-if="assetPingSwitch">
+              <el-checkbox-group @change="changePingCheckBox" size="small" v-model="pingCheckList">
+                <el-checkbox :class="{'sidebar-info-item-active': indOf(pingCheckList, item.key)}" :key="index" :label="item.value" class="sidebar-info-item" v-for="(item, index) in pingData">
+                  <div class="sidebar-info-item-txt">
+                    <span>{{item.label}}</span>
+                  </div>
+                  <el-badge :value="item.total" class="mark" type="primary"/>
+                </el-checkbox>
+              </el-checkbox-group>
+            </el-collapse-item>
+          </el-collapse>
+          <!--tag 过滤-->
+          <div class="sidebar-title too-long-split orange-font">
+            Tag
+          </div>
+          <el-collapse class="left-menu-bg" v-model="activeTag">
+            <el-collapse-item :key="item.key" :name="item.key" :title="item.key" v-for="item in tagData">
+              <el-checkbox-group size="small" v-model="tagCheckList" >
+                <el-checkbox :key="item.key+'-'+tag.value"  :label="item.key+'-'+tag.value" @change="changeTagCheckBox(item,tag.value)" class="sidebar-info-item" v-for="tag in item.values">
+                  <div class="sidebar-info-item-txt">
+                    <el-popover :content="tag.value" placement="top-start" trigger="hover" v-if="tag.value.length > 14" >
+                      <span slot="reference">{{tag.value}}</span>
+                    </el-popover>
+                    <span v-else>{{tag.value}}</span>
+                  </div>
+                  <el-badge :max="99" :value="tag.total" class="mark" type="primary"/>
+                </el-checkbox>
+              </el-checkbox-group>
+            </el-collapse-item>
+          </el-collapse>
 
-          </template>
-          <template v-else>
-            <div :class="{'sidebar-info-item-active': menu.route == route}" @click="jumpTo(menu.route)" class="sidebar-info-item" v-for="menu in parentMenu.children">
-              {{$t(menu.i18n)}}
-            </div>
-          </template>
-        </el-scrollbar>
+        </template>
+        <template v-else>
+          <div :class="{'sidebar-info-item-active': menu.route == route}" @click="jumpTo(menu.route)" class="sidebar-info-item" v-for="menu in parentMenu.children">
+            {{$t(menu.i18n)}}
+          </div>
+        </template>
       </div>
       <div @click="toggleStat" class="bottom-icon">
         <div class="bottom-divider"></div>
@@ -664,7 +662,7 @@
 <style scoped lang="scss">
   .content{
     position: relative;
-    height: calc(100% - 50px);
+    height: calc(100% - 54px);
   }
   .slot-content{
     height: 100%;

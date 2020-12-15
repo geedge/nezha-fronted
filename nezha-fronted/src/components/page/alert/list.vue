@@ -758,25 +758,6 @@
       }
 
       this.getAlertList();
-      // this.$nextTick(() => {
-      //   //绑定滚动条事件，控制top按钮
-      //   let el = this.$refs.alertListTable.$el.querySelector(".el-table__body-wrapper");
-      //   if (el._ps_) {
-      //     el.addEventListener("ps-scroll-y", () => {
-      //       if (el._ps_.scrollbarYTop > 50) {
-      //         this.tools.showTopBtn = true;
-      //       } else {
-      //         this.tools.showTopBtn = false;
-      //       }
-      //     });
-      //     el.addEventListener("mouseenter", () => {
-      //       this.tools.tableHover = true;
-      //     });
-      //     el.addEventListener("mouseleave", () => {
-      //       this.tools.tableHover = false;
-      //     });
-      //   }
-      // });
     }
   }
 </script>

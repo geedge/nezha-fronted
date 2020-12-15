@@ -30,13 +30,12 @@
       <!-- end搜素框-->
 
       <!-- begin--表格-->
-      <el-scrollbar class="right-box-form-box">
+      <div class="right-box-form-box">
         <el-table
           class="nz-table"
           :height="mainTableHeight"
           style="width: 100%;"
           :data="tableData"
-          v-scrollBar:el-table="'large'"
           border
           v-loading="loading"
           tooltip-effect="light"
@@ -95,7 +94,7 @@
             </template>
           </el-table-column>
         </el-table>
-      </el-scrollbar>
+      </div>
       <!-- end--表格-->
 
       <!--底部分頁-->

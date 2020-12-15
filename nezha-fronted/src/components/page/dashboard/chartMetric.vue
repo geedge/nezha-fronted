@@ -212,7 +212,6 @@
                      v-model="labelValueCascaderVal"
                      :options="labelValueCascaderOptions"
                      :props="labelValueProps"
-                     v-scrollBar:metric-label-cascader
                      @change="changeTag"
                      clearable>
         </el-cascader>
@@ -510,8 +509,6 @@ export default {
       labelValueProps:{ multiple: true },
     };
   },
-  watch: {},
-  beforeDestroy() {},
   methods: {
     // 删除该选项,第一步,传递要删除的参数
     deleteTarget() {
@@ -1392,7 +1389,6 @@ export default {
     bus.$on('clear_history', () => {
       this.clearHistory();
     });
-    //this.metricCascaderList = [...this.metricCascaderListTmp];
   },
   beforeDestroy() {
     bus.$off('clear_history');

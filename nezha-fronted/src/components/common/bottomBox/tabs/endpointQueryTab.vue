@@ -60,7 +60,7 @@
     </div>
     <div class="table-header-inner" @click="clearSelectedMetrics"><span><i style="font-size: 12px;margin-left: 2px;" class="nz-icon nz-icon-close " :class="{'control-icon-unchecked':selectedEndpoints.length<1,'control-icon-checked':selectedEndpoints.length>0}"></i></span></div>
      <pl-table :row-height="28" use-virtual :datas="tableData" border :empty-text="$t('config.mib.noData')" :header-cell-class-name="cellClass" :style="{height: $tableHeight.noPagination}"
-               class="nz-table endpoint-query-table" style="width: 100%;" v-loading="loading" v-scrollBar:el-table="'large'" :pagination-show="false" ref="endpointQueryTable"
+               :pagination-show="false" class="nz-table endpoint-query-table" ref="endpointQueryTable" style="width: 100%;" v-loading="loading"
                @selection-change="selectChange" v-if="tableShow && plTableSHow" :border="true" :tooltip-effect="'light'">
       <pl-table-column
         type="selection"
@@ -653,32 +653,6 @@
           }
         }
       },
-      plpsscrolly(self){
-        let el = self.$refs.endpointQueryTable.$el.querySelector(".el-table__body-wrapper");
-        self.scrollTop=el.scrollTop;
-        if (el._ps_.scrollbarYTop > 50) {
-          self.showTopBtn = true;
-          self.tableHover = true;
-        } else {
-          self.showTopBtn = false;
-          self.tableHover = false;
-        }
-      },
-      tableResize(){
-        let el = this.$refs.endpointQueryTable.$el.querySelector(".el-table__body-wrapper");
-        el.removeEventListener("ps-scroll-y", this.plpsscrolly.bind('',this));
-        this.plTableSHow=false;
-        this.$nextTick(()=>{
-          this.plTableSHow=true;
-          this.$nextTick(()=>{
-            el = this.$refs.endpointQueryTable.$el.querySelector(".el-table__body-wrapper");
-            el.addEventListener("ps-scroll-y", this.plpsscrolly.bind('',this));
-            setTimeout(()=>{
-              el.scrollTop = this.scrollTop;
-            },100)
-          });
-        });
-      }
     },
     watch: {
       obj: {
@@ -700,26 +674,7 @@
     },
     mounted() {
       this.getPanelData();
-      //this.$nextTick(() => {
       setTimeout(() => {this.$refs.endpointQueryTable.setHeight();}, 700);
-      setTimeout(() => {
-        //绑定滚动条事件，控制top按钮
-        let el = this.$refs.endpointQueryTable.$el.querySelector(".el-table__body-wrapper");
-        if (el._ps_) {
-          el.addEventListener("ps-scroll-y", this.plpsscrolly.bind('',this));
-        }
-      }, 300);
-
-      //});
-      window.addEventListener('resize', this.tableResize);
     },
-    beforeDestroy(){
-      window.removeEventListener('resize', this.tableResize);
-      let el = this.$refs.endpointQueryTable.$el.querySelector(".el-table__body-wrapper");
-      if (el._ps_) {
-        el.removeEventListener("ps-scroll-y", this.plpsscrolly);
-        el._ps_.destroy();
-      }
-    }
   }
 </script>

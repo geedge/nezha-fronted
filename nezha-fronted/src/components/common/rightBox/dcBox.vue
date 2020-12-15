@@ -14,7 +14,7 @@
       <!-- end--标题-->
 
       <!-- begin--表单-->
-      <el-scrollbar class="right-box-form-box">
+      <div class="right-box-form-box">
         <el-form class="right-box-form right-box-form-left" label-width="120px" :model="editDc" label-position="right" :rules="rules" ref="dcForm">
           <el-form-item :label='$t("overall.name")' prop="name">
             <el-input placeholder="" maxlength="64" show-word-limit v-model="editDc.name" size="small"></el-input>
@@ -75,7 +75,7 @@
             />
           </el-form-item>
         </el-form>
-      </el-scrollbar>
+      </div>
 
       <!--底部按钮-->
       <div class="right-box-bottom-btns">

@@ -35,7 +35,7 @@
           ref="customTableTitle"
         ></element-set>
       </transition>
-      <el-table :data="tableData" border :height="$tableHeight.normal" style="width: 100%;" ref="mibTable" class="nz-table mib-table" v-scrollBar:el-table="'large'" v-loading="tools.loading" @sort-change="tableDataSort"
+      <el-table :data="tableData" :height="$tableHeight.normal" @sort-change="tableDataSort" border class="nz-table mib-table" ref="mibTable" style="width: 100%;" v-loading="tools.loading"
                 @selection-change="(selection)=>{this.batchDeleteObjs=selection}"
       >
         <el-table-column
@@ -55,7 +55,7 @@
             </template>
             <template v-else-if="item.prop == 'modelsDetail' && scope.row['modelsDetail'] && scope.row['modelsDetail'].length >0" >
               <div style="height: 100%">
-                <el-scrollbar style="height: 100%">
+                <div style="height: 100%; overflow: auto;">
                   <div v-for="(n,i) in scope.row['modelsDetail']" :key="n.name+'-'+n.id+'-'+i" class="detail-item-content">
                     <el-popover trigger="hover" placement="top" >
                       <div>
@@ -78,7 +78,7 @@
                       </template>
                     </el-popover>
                   </div>
-                </el-scrollbar>
+                </div>
               </div>
             </template>
             <span v-else-if="item.prop == 'updateAt'">{{utcTimeToTimezoneStr(scope.row[item.prop])}}</span>
@@ -101,7 +101,7 @@
           </template>
         </el-table-column>
       </el-table>
-      <button class="to-top" :style="{top: tools.toTopBtnTop}" :class="{'to-top-is-hover': tools.tableHover}" v-show="tools.showTopBtn" @click="$toTop('ps', 0)"><i class="nz-icon nz-icon-top"></i></button>
+      <button :class="{'to-top-is-hover': tools.tableHover}" :style="{top: tools.toTopBtnTop}" @click="toTop(scrollWrap)" class="to-top" v-show="tools.showTopBtn"><i class="nz-icon nz-icon-top"></i></button>
       <Pagination :tableId="tableId" :pageObj="pageObj" @pageNo='pageNo' @pageSize='pageSize' ref="Pagination"></Pagination>
     </template>
     <mib-browser :show-tab="showTab" v-if="showTab == 'browser'" @toFileTab="showTab = 'file'"></mib-browser>
@@ -204,6 +204,7 @@
           }],
         },
         searchLabel: {}, //搜索参数
+        scrollWrap: null,
       }
     },
     methods: {
@@ -261,7 +262,13 @@
           this.tools.loading = false;
           if (response.code === 200) {
             this.tableData = response.data.list;
-            this.pageObj.total = response.data.total
+            this.pageObj.total = response.data.total;
+            if (!this.scrollWrap) {
+              this.$nextTick(() => {
+                this.scrollWrap = this.$refs.mibTable.bodyWrapper;
+                this.toTopBtnHandler(this.scrollWrap);
+              });
+            }
           }
         })
       },
@@ -330,15 +337,6 @@
         this.$set(this.searchLabel, "orderBy", orderBy);
         this.getTableData();
       },
-      plpsscrolly(el,self){
-        if (el._ps_.scrollbarYTop > 50) {
-          self.tools.showTopBtn = true;
-          self.tools.tableHover = true;
-        } else {
-          self.tools.showTopBtn = false;
-          self.tools.tableHover = false;
-        }
-      },
     },
     created(){
       //是否存在分页缓存
@@ -355,20 +353,9 @@
       this.tableTitleReset(this.tableTitle,this.tools.customTableTitle);
 
       this.getTableData();
-      this.$nextTick(() => {
-        //绑定滚动条事件，控制top按钮
-        let el = this.$refs.mibTable.$el.querySelector(".el-table__body-wrapper");
-        if (el._ps_) {
-          el.addEventListener("ps-scroll-y", this.plpsscrolly.bind('',el,this));
-        }
-      });
     },
-    beforeDestroy(){
-      let el = this.$refs.mibTable.$el.querySelector(".el-table__body-wrapper");
-      if (el._ps_) {
-        el.removeEventListener("ps-scroll-y", this.plpsscrolly.bind('',el,this));
-        el._ps_.destroy();
-      }
+    beforeDestroy() {
+      this.scrollbarWrap.removeEventListener('scroll', bus.debounce);
     }
   }
 </script>

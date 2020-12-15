@@ -31,8 +31,7 @@
         ></element-set>
       </transition>
       <el-table :data="tableData" border v-show="bottomBox.mainResizeShow" :height="mainTableHeight" style="width: 100%;"
-                v-loading="tools.loading" ref="promTable" class="nz-table" v-scrollBar:el-table="'large'"
-                @sort-change="tableDataSort"
+                @sort-change="tableDataSort" class="nz-table" ref="promTable" v-loading="tools.loading"
                 @selection-change="(selection)=>{this.batchDeleteObjs=selection}"
       >
         <el-table-column
@@ -83,7 +82,7 @@
           </template>
         </el-table-column>
       </el-table>
-      <button class="to-top" :style="{top: tools.toTopBtnTop}" :class="{'to-top-is-hover': tools.tableHover}" v-show="tools.showTopBtn && bottomBox.mainResizeShow" @click="$toTop('ps', 0)"><i class="nz-icon nz-icon-top"></i></button>
+      <button :class="{'to-top-is-hover': tools.tableHover}" :style="{top: tools.toTopBtnTop}" @click="toTop(scrollWrap)" class="to-top" v-show="tools.showTopBtn && bottomBox.mainResizeShow"><i class="nz-icon nz-icon-top"></i></button>
       <div class="pagination-bottom" v-show="!bottomBox.showSubList">
         <Pagination :tableId="tableId" :pageObj="pageObj" @pageNo='pageNo' @pageSize='pageSize' ref="Pagination"></Pagination>
       </div>
@@ -224,6 +223,7 @@
         },
         searchLabel: {}, //搜索参数
         promServerType:null,
+        scrollWrap: null,
       }
     },
     methods: {
@@ -326,7 +326,13 @@
               }
             }
             this.tableData = response.data.list;
-            this.pageObj.total = response.data.total
+            this.pageObj.total = response.data.total;
+            if (!this.scrollWrap) {
+              this.$nextTick(() => {
+                this.scrollWrap = this.$refs.promTable.bodyWrapper;
+                this.toTopBtnHandler(this.scrollWrap);
+              });
+            }
           }
         })
       },
@@ -396,15 +402,6 @@
           return item.value == type
         })
       },
-      plpsscrolly(el,self){
-        if (el._ps_.scrollbarYTop > 50) {
-          self.tools.showTopBtn = true;
-          self.tools.tableHover = true;
-        } else {
-          self.tools.showTopBtn = false;
-          self.tools.tableHover = false;
-        }
-      },
     },
     created(){
       //是否存在分页缓存
@@ -428,16 +425,9 @@
       if (pageSize != 'undefined' && pageSize != null) {
         this.pageObj.pageSize = pageSize
       }
-
-      this.$nextTick(() => {
-        //绑定滚动条事件，控制top按钮
-        let el = this.$refs.promTable.$el.querySelector(".el-table__body-wrapper");
-        if (el._ps_) {
-          el.addEventListener("ps-scroll-y", this.plpsscrolly.bind('',el,this));
-          /*el.addEventListener("mouseenter",  this.plmouseenter.bind('',el,this));
-          el.addEventListener("mouseleave", this.plmouseleave.bind('',el,this));*/
-        }
-      });
+    },
+    beforeDestroy() {
+      this.scrollbarWrap.removeEventListener('scroll', bus.debounce);
     },
 
     watch: {
@@ -452,14 +442,5 @@
         this.$bottomBoxWindow.showSubListWatch(vm, n);
       },
     },
-    beforeDestroy(){
-      let el = this.$refs.promTable.$el.querySelector(".el-table__body-wrapper");
-      if (el._ps_) {
-        el.removeEventListener("ps-scroll-y", this.plpsscrolly.bind('',el,this));
-       /* el.removeEventListener("mouseenter",  this.plmouseenter.bind('',el,this));
-        el.removeEventListener("mouseleave", this.plmouseleave.bind('',el,this));*/
-        el._ps_.destroy();
-      }
-    }
   }
 </script>

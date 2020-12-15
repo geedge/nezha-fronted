@@ -14,7 +14,7 @@
     <!-- end--标题-->
 
     <!-- begin--表单-->
-    <el-scrollbar class="right-box-form-box">
+    <div class="right-box-form-box">
       <el-form class="right-box-form right-box-form-left" :model="editModel" label-position="right" label-width="120px"  :rules="rules" ref="modelForm">
         <!--model名称-->
         <el-form-item :label='$t("overall.name")' prop="name">
@@ -69,7 +69,7 @@
           <el-input v-model.number="editModel.usize" :max="47" size="small"></el-input>
         </el-form-item>
       </el-form>
-    </el-scrollbar>
+    </div>
 
     <!--底部按钮-->
     <div class="right-box-bottom-btns">

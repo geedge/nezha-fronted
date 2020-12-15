@@ -54,7 +54,6 @@
         ref="accountTable"
         :height="mainTableHeight"
         v-loading="tools.loading"
-        v-scrollBar:el-table="'large'"
         style="width: 100%;"
         @sort-change="tableDataSort"
         @selection-change="(selection)=>{this.batchDeleteObjs=selection}"
@@ -128,7 +127,7 @@
           </template>
         </el-table-column>
       </el-table>
-      <button class="to-top" :style="{top: tools.toTopBtnTop}" :class="{'to-top-is-hover': tools.tableHover}" v-show="tools.showTopBtn && bottomBox.mainResizeShow" @click="$toTop('ps', 0)"><i class="nz-icon nz-icon-top"></i></button>
+      <button :class="{'to-top-is-hover': tools.tableHover}" :style="{top: tools.toTopBtnTop}" @click="toTop(scrollWrap)" class="to-top" v-show="tools.showTopBtn && bottomBox.mainResizeShow"><i class="nz-icon nz-icon-top"></i></button>
       <div class="pagination-bottom" v-show="!bottomBox.showSubList">
         <Pagination :tableId="tableId" :pageObj="pageObj" @pageNo='pageNo' @pageSize='pageSize' ref="Pagination"></Pagination>
       </div>
@@ -146,6 +145,7 @@
 <script>
   import deleteButton from "../../common/deleteButton";
   import accountBox from '../../common/rightBox/accountBox';
+  import bus from "../../../libs/bus";
 
   export default {
     name: "account",
@@ -192,6 +192,7 @@
           status: '1',
           createTime: '',
           receiver: [],
+          roleIds:0,
           roles:[],
           lang: '',
           notifications: []
@@ -248,6 +249,7 @@
           }],
         },
         searchLabel: {}, //搜索参数
+        scrollWrap: null,
       }
     },
     methods: {
@@ -315,16 +317,15 @@
           if (response.code === 200) {
             for (let i = 0; i < response.data.list.length; i++) {
               response.data.list[i].status = response.data.list[i].status + "";
-              /*response.data.list[i].notifications = [
-                {scriptId: 1, account: "杀死比尔"},
-                {scriptId: 2, account: "虎虎虎"},
-                {scriptId: 3, account: "红海行动"},
-                {scriptId: 4, account: "十面埋伏"},
-                {scriptId: 5, account: "哪吒"},
-              ];*/
             }
             this.tableData = response.data.list;
-            this.pageObj.total = response.data.total
+            this.pageObj.total = response.data.total;
+            if (!this.scrollWrap) {
+              this.$nextTick(() => {
+                this.scrollWrap = this.$refs.accountTable.bodyWrapper;
+                this.toTopBtnHandler(this.scrollWrap);
+              });
+            }
           }
         })
       },
@@ -333,6 +334,9 @@
         this.rightBox.show = true;
       },
       statusChange(user) {
+        if(user.roles){
+          user.roleIds=user.roles.map(t=>t.id)
+        }
         this.$put('sys/user/update', user).then(response => {
           if (response.code === 200) {
             this.rightBox.show = false;
@@ -383,16 +387,6 @@
         this.$set(this.searchLabel, "orderBy", orderBy);
         this.getTableData();
       },
-      plpsscrolly(el,self){
-        if (el._ps_.scrollbarYTop > 50) {
-          self.tools.showTopBtn = true;
-          self.tools.tableHover = true;
-        } else {
-          self.tools.showTopBtn = false;
-          self.tools.tableHover = true;
-        }
-      },
-
       resetTableTitle:function(){
         let title = this.tools.customTableTitle;
         let tableTitle = title.slice(0, this.tableTitle.length);
@@ -432,6 +426,9 @@
         }
       }
     },
+    beforeDestroy() {
+      this.scrollbarWrap.removeEventListener('scroll', bus.debounce);
+    },
     computed: {
       isCurrentUser() {
         return function(username) {
@@ -467,20 +464,6 @@
 
       this.resetTableTitle();
       this.getTableData();
-      this.$nextTick(() => {
-        //绑定滚动条事件，控制top按钮
-        let el = this.$refs.accountTable.$el.querySelector(".el-table__body-wrapper");
-        if (el._ps_) {
-          el.addEventListener("ps-scroll-y", this.plpsscrolly.bind('',el,this));
-        }
-      });
     },
-    beforeDestroy(){
-      let el = this.$refs.accountTable.$el.querySelector(".el-table__body-wrapper");
-      if (el._ps_) {
-        el.removeEventListener("ps-scroll-y", this.plpsscrolly.bind('',el,this));
-        el._ps_.destroy();
-      }
-    }
   }
 </script>

@@ -37,7 +37,6 @@
         border
         tooltip-effect="light"
         v-show="bottomBox.mainResizeShow"
-        v-scrollBar:el-table="'large'"
         :height="mainTableHeight"
         ref="dcTable"
         v-loading="tools.loading"
@@ -125,7 +124,7 @@
           </template>
         </el-table-column>
       </el-table>
-      <button class="to-top" :style="{top: tools.toTopBtnTop}" :class="{'to-top-is-hover': tools.tableHover}" v-show="tools.showTopBtn && bottomBox.mainResizeShow" @click="$toTop('ps', 0)"><i class="nz-icon nz-icon-top"></i></button>
+      <button :class="{'to-top-is-hover': tools.tableHover}" :style="{top: tools.toTopBtnTop}" @click="toTop(scrollWrap)" class="to-top" v-show="tools.showTopBtn && bottomBox.mainResizeShow"><i class="nz-icon nz-icon-top"></i></button>
       <div class="pagination-bottom" v-show="!bottomBox.showSubList">
         <Pagination :tableId="tableId" :pageObj="pageObj" @pageNo='pageNo' @pageSize='pageSize' ref="Pagination"></Pagination>
       </div>
@@ -268,6 +267,7 @@
         },
         searchLabel: {}, //搜索参数
         tabShow: 1, // 控制显示一级页面和二级页面 1 dc 2cabinet
+        scrollWrap: null,
       }
     },
     methods: {
@@ -403,7 +403,13 @@
           this.tools.loading = false;
           if (response.code === 200) {
             this.tableData = response.data.list;
-            this.pageObj.total = response.data.total
+            this.pageObj.total = response.data.total;
+            if (!this.scrollWrap) {
+              this.$nextTick(() => {
+                this.scrollWrap = this.$refs.dcTable.bodyWrapper;
+                this.toTopBtnHandler(this.scrollWrap);
+              });
+            }
           }
         })
       },
@@ -477,19 +483,6 @@
           this.getTableData();
         });
       },
-      plpsscrolly(el,self){
-        if (el._ps_.scrollbarYTop > 100) {
-          self.tools.showTopBtn = true;
-          self.tools.tableHover = true;
-        } else {
-          self.tools.showTopBtn = false;
-          self.tools.tableHover = false;
-        }
-      },
-      domResize(){
-        let el = this.$refs.dcTable.$el.querySelector(".el-table__body-wrapper");
-        el._ps_.update();
-      },
     },
     watch: {
       'bottomBox.dc': {
@@ -507,6 +500,7 @@
     },
     beforeDestroy(){
       bus.$off("dc-list-change");
+      this.scrollbarWrap.removeEventListener('scroll', bus.debounce);
     },
     created(){
       //是否存在分页缓存
@@ -525,23 +519,7 @@
         : this.tableTitle;
       this.tableTitleReset(this.tableTitle,this.tools.customTableTitle);
       this.getTableData();
-      this.$nextTick(function(){
-        this.getUserData();//绑定滚动条事件，控制top按钮
-        let el = this.$refs.dcTable.$el.querySelector(".el-table__body-wrapper");
-        if (el._ps_) {
-          el.addEventListener("ps-scroll-y", this.plpsscrolly.bind('',el,this));
-          window.addEventListener('resize', this.domResize);
-        }
-      });
     },
-    beforeDestroy(){
-      let el = this.$refs.dcTable.$el.querySelector(".el-table__body-wrapper");
-      if (el._ps_) {
-        window.removeEventListener('resize', this.domResize);
-        el.removeEventListener("ps-scroll-y", this.plpsscrolly.bind('',el,this));
-        el._ps_.destroy();
-      }
-    }
   }
 </script>
 <style scoped>

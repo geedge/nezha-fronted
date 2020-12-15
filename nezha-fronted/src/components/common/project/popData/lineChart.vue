@@ -65,7 +65,7 @@
         <!--<div  v-if="seriesItem.length!==seriesItemArr.length" class="more"><i class="el-icon-warning"></i> {{$t('dashboard.panel.moreFirstTitle')}} {{seriesLength}}{{$t('dashboard.panel.moreSecondTitle')}}<span @click="loadMore" class="moreClick">{{$t('dashboard.panel.moreThirdTitle')}}{{seriesItem.length}}</span></div>-->
         <div class="line-area"  ref="lineChartArea"  :id="'lineChartArea'+chartIndex" v-show="firstShow" style="height:calc(100% - 60px)"></div>
         <div class="chart-no-data" v-show="noData">No Data</div>
-        <div class='legend-container' id="legendArea" ref="legendArea" v-show="firstShow" v-scrollBar:legend>
+        <div class='legend-container' id="legendArea" ref="legendArea" v-show="firstShow">
           <div v-for="(item, index) in legendListMore" :title="item.alias?item.alias:item.name"  @click="clickLegend(item.name,index)" class="legend-item" :class="{'ft-gr':isGrey[index]}" :key="'legend_' + item.name+'_'+index">
             <span class="legend-shape" :style="{background:(isGrey[index]?'#D3D3D3':bgColorList[index])}"></span>{{item.alias?item.alias:item.name}}
           </div>
@@ -117,7 +117,7 @@
           </div>
           <div class="line-area" ref="screenShowArea"  id="screenShowArea"  style="margin-top:0px;" @mouseenter="mouseEnterFullChart" @mouseleave="mouseLeaveFullChart"></div>
           <div class="chart-no-data" v-show="noData">No Data</div>
-          <div class="legend-container legend-container-screen"  :id="'screenLegendArea'+chartIndex" @mouseenter="mouseEnterFullChart" @mouseleave="mouseLeaveFullChart" v-show="showLegend" v-scrollBar:legend>
+          <div :id="'screenLegendArea'+chartIndex"  @mouseenter="mouseEnterFullChart" @mouseleave="mouseLeaveFullChart" class="legend-container legend-container-screen" v-show="showLegend">
             <div v-for="(item, index) in screenLegendListMore" :title="item.alias?item.alias:item.name"  @click="clickScreenLegend(item.name,index)" class="legend-item" :class="{'ft-gr':isGreyScreen[index]}"  :key="'legend_' + item.name+'_'+index">
               <span class="legend-shape" :style="{background:(isGreyScreen[index]?'#D3D3D3':bgColorList[index])}"></span>{{item.alias?item.alias:item.name}}
               <br/><!--bgColorList[index]-->
@@ -1655,7 +1655,6 @@
       }
       setChart(this.chartIndex, null);
       window.removeEventListener('resize', this.chartResize);
-      this.$refs.legendArea._ps_.destroy();
     },
   };
 

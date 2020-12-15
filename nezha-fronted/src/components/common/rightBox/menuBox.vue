@@ -16,7 +16,7 @@
     <!-- end--标题-->
 
     <!-- begin--表单-->
-    <el-scrollbar class="right-box-form-box">
+    <div class="right-box-form-box">
       <el-form :model="editMenu" :rules="rules" class="right-box-form right-box-form-left" label-position="right" label-width="130px" ref="menuForm" size="small">
         <el-form-item :label="$t('config.menus.parent')" prop="parentId">
           <tree-select :multiple="false" :options="menus" label="id" noChildrenText="" noOptionsText="" placeholder="" v-model="editMenu.parentId"></tree-select>
@@ -60,7 +60,7 @@
           <span @click="removePermission(index)" style="padding-left: 5px;"><i class="nz-icon nz-icon-shanchu1"></i></span>
         </el-form-item>
       </el-form>
-    </el-scrollbar>
+    </div>
     <!-- end--表单-->
     <!--底部按钮-->
     <div class="right-box-bottom-btns">

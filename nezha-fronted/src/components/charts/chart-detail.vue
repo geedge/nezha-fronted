@@ -23,7 +23,7 @@
           <span class="el-dropdown-link chart-title-text" @click="dropdownMenuShow = !dropdownMenuShow">{{data.title}}</span>
         </div>
         <div ref="chartInfo" class="chart-info" :id="'chartInfoDiv' + chartIndex" v-cloak>
-          <el-scrollbar style="height: 100%;width:100%;" ref="scrollbar" class="el-scrollbar-normal">
+          <div ref="scrollbar" style="height: 100%;width:100%; overflow: auto;">
             <div v-for="(item, index) in detail" :key="index" class="chart-sub">
               <div class="chart-sub-title" @click="hideElement(index)">
                 <span><i :class="{'nz-icon nz-icon-caret-right': show.indexOf(index) == -1,'nz-icon nz-icon-caret-bottom': show.indexOf(index) > -1}"></i></span>
@@ -91,7 +91,6 @@
                               tooltip-effect="light"
                               height="100%"
                               ref="dataTable"
-                              v-scrollBar:el-table="'small'"
                             >
                               <el-table-column
                                 :resizable="true"
@@ -248,7 +247,7 @@
                 </div>
               </el-collapse-transition>
             </div>
-          </el-scrollbar>
+          </div>
         </div>
       </div>
       <span v-if="data.resizable" class="vue-resizable-handle" @mousedown="startResize"></span>
@@ -479,9 +478,6 @@
             this.initChart(this.detail[0].data.stateSeries);
           });
         }
-        this.$nextTick(() => {
-          this.$refs.scrollbar.update();
-        });
         this.endLoading();
       },
       initChart(series) {
@@ -565,9 +561,6 @@
     },
     mounted() {
       this.firstLoad = false;
-      this.$nextTick(() => {
-        this.$refs.scrollbar.update();
-      });
       setTimeout(() => {
         this.ready = true;
       }, 300);

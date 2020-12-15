@@ -57,7 +57,6 @@
             <el-table
               class="overview-table"
               :data="showData.table.tableData"
-              v-scrollBar:el-table
               tooltip-effect="light"
               height="100%"
               ref="dataTable"

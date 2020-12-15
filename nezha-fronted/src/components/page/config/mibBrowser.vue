@@ -136,7 +136,7 @@
       <div class="mib-browser-left">
         <div class="mib-browser-tree-title">
           <span>SNMP MIBs</span>
-          <el-dropdown trigger="click" v-scrollBar:el-dropdown="'small'" :hide-on-click="false" @command="selectModel" ref="modelDropdown">
+          <el-dropdown :hide-on-click="false" @command="selectModel" ref="modelDropdown" trigger="click">
             <span class="mib-browser-table-op" @click="scrollbarHeightHandler">{{$t("config.model.model") + " "}}<i class="nz-icon nz-icon-funnel"></i></span>
             <el-dropdown-menu slot="dropdown" class="mib-browser-model-dropdown el-dropdown-multi">
               <el-dropdown-item :class="{'dropdown-item-active': walkParam.models.indexOf(item.id) > -1}" :command="item" v-for="item, index in modelData" :key="index">{{item.name}}</el-dropdown-item>
@@ -144,7 +144,7 @@
           </el-dropdown>
         </div>
         <!--tree-->
-        <el-scrollbar class="el-scrollbar-normal mib-browser-tree" ref="treeScrollbar">
+        <div class="mib-browser-tree" ref="treeScrollbar">
           <el-tree
             ref="walkTree"
             highlight-current
@@ -169,11 +169,11 @@
               {{data.name}}
             </div>
           </el-tree>
-        </el-scrollbar>
+        </div>
         <!--拖拽区-->
         <div class="tree-detail-resize" @mousedown="treeDetailResize"></div>
         <!--detail-->
-        <el-scrollbar class="el-scrollbar-normal mib-browser-detail" ref="detailScrollbar">
+        <div class="mib-browser-detail" ref="detailScrollbar">
           <div class="mib-browser-detail-row">
             <div>Name</div>
             <div>{{currentWalk.name}}</div>
@@ -206,7 +206,7 @@
             <div>Description</div>
             <div>{{currentWalk.description}}</div>
           </div>
-        </el-scrollbar>
+        </div>
       </div>
       <!--拖拽区-->
       <div class="left-right-resize" @mousedown="leftRightResize"></div>
@@ -220,7 +220,7 @@
           </span>
         </div>
         <pl-table :row-height="28" use-virtual :datas="resultData" border :empty-text="$t('config.mib.noData')" ref="resultTable"
-                  class="mib-browser-table nz-table" style="width: 100%;height: calc(100% - 31px)" v-if="showTable" v-loading="loading" v-scrollBar:el-table="'large'" :pagination-show="false">
+                  :pagination-show="false" class="mib-browser-table nz-table" style="width: 100%;height: calc(100% - 31px)" v-if="showTable" v-loading="loading">
           <pl-table-column label="Name/OID" v-slot="{row}">
             <div class="too-long-split" @click="searchParam.oid = row.oid">{{row.name ? row.name : row.oid}}</div>
           </pl-table-column>
@@ -328,28 +328,12 @@
       }
     },
     methods: {
-      scrollbarHeightHandler() {
-        setTimeout(() => {
-          let top = '';
-          document.querySelector("body>.el-dropdown-menu").addEventListener("ps-y-reach-end", () => {
-            let yDom = document.querySelector("body>.el-dropdown-menu>.ps__rail-y");
-            if (top) {
-              yDom.style.top = top;
-            } else {
-              top = yDom.style.top;
-            }
-          });
-        }, 100);
-      },
       toFileTab() {
         this.$emit("toFileTab");
       },
       showDetail(data, node) {
         this.currentWalk = data;
         this.searchParam.oid = data.objectID;
-        this.$nextTick(() => {
-          this.$refs.detailScrollbar.update();
-        });
       },
 
       /*根据oid获取对应的根mib名称*/
@@ -379,9 +363,6 @@
             for (let item in obj) {
               this.walkData.push({name: item, subTree: obj[item]});
             }
-            this.$nextTick(() => {
-              this.$refs.treeScrollbar.update();
-            });
           }
         });
       },
@@ -428,10 +409,6 @@
           this.$post('mib/browser', this.searchParam).then(response => {
             this.loading = false;
             if (response.code === 200) {
-              let wrapper = document.querySelector(".el-table__body-wrapper");
-              if (wrapper._ps_) {
-                wrapper.scrollTop = wrapper._ps_.contentHeight;
-              }
               this.resultData = this.resultData.concat(response.data.list);
               if (this.searchParam.operation == 'set') {
                 this.$message({duration: 2000, type: 'success', message: this.$t("tip.success")});
@@ -439,7 +416,6 @@
               this.showTable=false;
               this.$nextTick(()=>{
                 this.showTable=true;
-                // this.$refs['resultTable'].doLayout();
               })
             } else {
               this.$message.error(response.msg);
@@ -570,7 +546,6 @@
           }
         };
         document.onmouseup = () => {
-          this.$refs.treeScrollbar.update();
           document.onmousemove = null;
         }
       },

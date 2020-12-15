@@ -14,7 +14,7 @@
     <!-- end--标题-->
 
     <!-- begin--表单-->
-    <el-scrollbar class="right-box-form-box">
+    <div class="right-box-form-box">
       <el-form class="right-box-form  right-box-form-left" :model="editMib" label-position="right" label-width="120px" :rules="rules" ref="mibForm">
         <el-form-item :label='$t("config.mib.models")' prop="models" :rules="[{validator:checkModels,trigger:'change'}]" >
           <el-cascader
@@ -44,7 +44,7 @@
           </el-upload>
         </el-form-item>
       </el-form>
-    </el-scrollbar>
+    </div>
 
     <!--底部按钮-->
     <div class="right-box-bottom-btns">
